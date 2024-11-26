@@ -176,6 +176,15 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math專注於數學領域的問題求解，為高難度題提供專業解答。"
   },
+  "Qwen2-72B-Instruct": {
+    "description": "Qwen2 是 Qwen 模型的最新系列，支持 128k 上下文，對比當前最優的開源模型，Qwen2-72B 在自然語言理解、知識、代碼、數學及多語言等多項能力上均顯著超越當前領先的模型。"
+  },
+  "Qwen2-7B-Instruct": {
+    "description": "Qwen2 是 Qwen 模型的最新系列，能夠超越同等規模的最優開源模型甚至更大規模的模型，Qwen2 7B 在多個評測上取得顯著的優勢，尤其是在代碼及中文理解上。"
+  },
+  "Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct 支持 16k 上下文，生成長文本超過 8K。支持 function call 與外部系統無縫互動，極大提升了靈活性和擴展性。模型知識明顯增加，並且大幅提高了編碼和數學能力，多語言支持超過 29 種。"
+  },
   "SenseChat": {
     "description": "基礎版本模型 (V4)，4K上下文長度，通用能力強大"
   },
@@ -205,6 +214,9 @@
   },
   "Tencent/Hunyuan-A52B-Instruct": {
     "description": "Hunyuan-Large 是業界最大的開源 Transformer 架構 MoE 模型，擁有 3890 億總參數量和 520 億激活參數量。"
+  },
+  "Yi-34B-Chat": {
+    "description": "Yi-1.5-34B 在保持原系列模型優秀的通用語言能力的前提下，通過增量訓練 5 千億高質量 token，大幅提高了數學邏輯和代碼能力。"
   },
   "abab5.5-chat": {
     "description": "面向生產力場景，支持複雜任務處理和高效文本生成，適用於專業領域應用。"
@@ -368,6 +380,9 @@
   "codegeex-4": {
     "description": "CodeGeeX-4是一個強大的AI編程助手，支持多種編程語言的智能問答與代碼補全，提升開發效率。"
   },
+  "codegeex4-all-9b": {
+    "description": "CodeGeeX4-ALL-9B 是一個多語言代碼生成模型，支持包括代碼補全和生成、代碼解釋器、網絡搜索、函數調用、倉庫級代碼問答在內的全面功能，覆蓋軟件開發的各種場景。是參數少於 10B 的頂尖代碼生成模型。"
+  },
   "codegemma": {
     "description": "CodeGemma 專用于不同編程任務的輕量級語言模型，支持快速迭代和集成。"
   },
@@ -421,6 +436,9 @@
   },
   "deepseek-chat": {
     "description": "融合通用與代碼能力的全新開源模型，不僅保留了原有 Chat 模型的通用對話能力和 Coder 模型的強大代碼處理能力，還更好地對齊了人類偏好。此外，DeepSeek-V2.5 在寫作任務、指令跟隨等多個方面也實現了大幅提升。"
+  },
+  "deepseek-coder-33B-instruct": {
+    "description": "DeepSeek Coder 33B 是一個代碼語言模型，基於 2 萬億數據訓練而成，其中 87% 為代碼，13% 為中英文語言。模型引入 16K 窗口大小和填空任務，提供項目級別的代碼補全和片段填充功能。"
   },
   "deepseek-coder-v2": {
     "description": "DeepSeek Coder V2 是開源的混合專家代碼模型，在代碼任務方面表現優異，與 GPT4-Turbo 相媲美。"
@@ -476,6 +494,9 @@
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 是 Google 最新的實驗性多模態 AI 模型，具備快速處理能力，支持文本、影像和影片輸入，適用於多種任務的高效擴展。"
   },
+  "gemini-exp-1121": {
+    "description": "Gemini Exp 1121 是 Google 最新的實驗性多模態 AI 模型，具備快速處理能力，支持文本、圖像和視頻輸入，適用於多種任務的高效擴展。"
+  },
   "gemma-7b-it": {
     "description": "Gemma 7B 適合中小規模任務處理，兼具成本效益。"
   },
@@ -502,6 +523,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520是最新模型版本，專為高度複雜和多樣化任務設計，表現卓越。"
+  },
+  "glm-4-9b-chat": {
+    "description": "GLM-4-9B-Chat 在語義、數學、推理、代碼和知識等多方面均表現出較高性能。還具備網頁瀏覽、代碼執行、自定義工具調用和長文本推理。支持包括日語、韓語、德語在內的 26 種語言。"
   },
   "glm-4-air": {
     "description": "GLM-4-Air是性價比高的版本，性能接近GLM-4，提供快速度和實惠的價格。"

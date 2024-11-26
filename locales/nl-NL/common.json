@@ -16,6 +16,8 @@
   "back": "Terug",
   "batchDelete": "Batch verwijderen",
   "blog": "Product Blog",
+  "branching": "Subonderwerp aanmaken",
+  "branchingDisable": "De functie 'Subonderwerp' is alleen beschikbaar in de serverversie. Als je deze functie wilt gebruiken, schakel dan over naar de serverimplementatiemodus of gebruik LobeChat Cloud.",
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",
   "close": "Sluiten",

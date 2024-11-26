@@ -18,7 +18,7 @@ import { agents } from './agent';
 import { files } from './file';
 import { chunks, embeddings } from './rag';
 import { sessions } from './session';
-import { topics } from './topic';
+import { threads, topics } from './topic';
 import { users } from './user';
 
 // @ts-ignore
@@ -51,6 +51,7 @@ export const messages = pgTable(
       .notNull(),
     sessionId: text('session_id').references(() => sessions.id, { onDelete: 'cascade' }),
     topicId: text('topic_id').references(() => topics.id, { onDelete: 'cascade' }),
+    threadId: text('thread_id').references(() => threads.id, { onDelete: 'cascade' }),
     // @ts-ignore
     parentId: text('parent_id').references(() => messages.id, { onDelete: 'set null' }),
     quotaId: text('quota_id').references(() => messages.id, { onDelete: 'set null' }),

@@ -8,6 +8,7 @@
   "agents": "Assistent",
   "artifact": {
     "generating": "Genereren",
+    "inThread": "Je kunt het niet bekijken in het subonderwerp, schakel over naar het hoofdgesprek om het te openen.",
     "thinking": "Denken",
     "thought": "Denken proces",
     "unknownTitle": "Onbenoemd werk"
@@ -65,6 +66,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
+    "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
     "regenerate": "Opnieuw genereren"
   },
   "newAgent": "Nieuwe assistent",
@@ -120,6 +122,11 @@
     "action": "Spraakinvoer",
     "loading": "Bezig met herkennen...",
     "prettifying": "Aan het verfraaien..."
+  },
+  "thread": {
+    "divider": "Subonderwerp",
+    "threadMessageCount": "{{messageCount}} berichten",
+    "title": "Subonderwerp"
   },
   "tokenDetails": {
     "chats": "Chats",

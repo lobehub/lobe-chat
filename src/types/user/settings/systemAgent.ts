@@ -13,6 +13,7 @@ export interface UserSystemAgentConfig {
   agentMeta: SystemAgentItem;
   historyCompress: SystemAgentItem;
   queryRewrite: QueryRewriteSystemAgent;
+  thread: SystemAgentItem;
   topic: SystemAgentItem;
   translation: SystemAgentItem;
 }

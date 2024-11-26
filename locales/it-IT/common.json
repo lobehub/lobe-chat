@@ -16,6 +16,8 @@
   "back": "Indietro",
   "batchDelete": "Elimina in batch",
   "blog": "Blog sui prodotti",
+  "branching": "Crea un sottotema",
+  "branchingDisable": "La funzione «sottotema» è disponibile solo nella versione server. Se desideri utilizzare questa funzione, passa alla modalità di distribuzione server o utilizza LobeChat Cloud.",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
   "close": "Chiudi",
