@@ -107,7 +107,6 @@
     "@aws-sdk/client-bedrock-runtime": "^3.675.0",
     "@aws-sdk/client-s3": "^3.675.0",
     "@aws-sdk/s3-request-presigner": "^3.675.0",
-    "@azure/core-rest-pipeline": "1.16.0",
     "@baiducloud/qianfan": "^0.1.9",
     "@cfworker/json-schema": "^2.0.1",
     "@clerk/localizations": "^3.3.0",
