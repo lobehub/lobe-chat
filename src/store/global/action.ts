@@ -8,6 +8,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
+import { changelogService } from '@/services/changelog';
 import { globalService } from '@/services/global';
 import type { GlobalStore } from '@/store/global/index';
 import { merge } from '@/utils/merge';
@@ -29,6 +30,7 @@ export interface GlobalStoreAction {
   toggleSystemRole: (visible?: boolean) => void;
   toggleZenMode: () => void;
   updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
+  useCheckLatestChangelogId: () => SWRResponse;
   useCheckLatestVersion: (enabledCheck?: boolean) => SWRResponse<string>;
   useInitSystemStatus: () => SWRResponse;
 }
@@ -42,6 +44,7 @@ export const globalActionSlice: StateCreator<
   switchBackToChat: (sessionId) => {
     get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
   },
+
   toggleChatSideBar: (newValue) => {
     const showChatSideBar =
       typeof newValue === 'boolean' ? newValue : !get().status.showChatSideBar;
@@ -95,6 +98,8 @@ export const globalActionSlice: StateCreator<
 
     get().statusStorage.saveToLocalStorage(nextStatus);
   },
+  useCheckLatestChangelogId: () =>
+    useSWR('changelog', async () => changelogService.getLatestChangelogId()),
 
   useCheckLatestVersion: (enabledCheck = true) =>
     useSWR(enabledCheck ? 'checkLatestVersion' : null, globalService.getLatestVersion, {

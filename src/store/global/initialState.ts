@@ -38,6 +38,7 @@ export interface SystemStatus {
   hidePWAInstaller?: boolean;
   hideThreadLimitAlert?: boolean;
   inputHeight: number;
+  latestChangelogId?: string;
   /**
    * 应用初始化时不启用 PGLite，只有当用户手动开启时才启用
    */
