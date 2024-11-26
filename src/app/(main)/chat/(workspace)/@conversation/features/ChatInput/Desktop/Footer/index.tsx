@@ -11,8 +11,8 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { isMacOS } from '@/utils/platform';
 
-import SaveTopic from '../../Topic';
-import LocalFiles from '../FilePreview';
+import LocalFiles from '../../../../../../../../../features/ChatInput/Desktop/FilePreview';
+import SaveTopic from '../../../../../../../../../features/ChatInput/Topic';
 import SendMore from './SendMore';
 import ShortcutHint from './ShortcutHint';
 
@@ -45,12 +45,10 @@ const useStyles = createStyles(({ css, prefixCls, token }) => {
 
 interface FooterProps {
   expand: boolean;
-  saveTopic?: boolean;
-  setExpand?: (expand: boolean) => void;
-  shortcutHint?: boolean;
+  onExpandChange: (expand: boolean) => void;
 }
 
-const Footer = memo<FooterProps>(({ setExpand, expand, shortcutHint = true, saveTopic = true }) => {
+const Footer = memo<FooterProps>(({ onExpandChange, expand }) => {
   const { t } = useTranslation('chat');
 
   const { styles } = useStyles();
@@ -82,8 +80,8 @@ const Footer = memo<FooterProps>(({ setExpand, expand, shortcutHint = true, save
         {expand && <LocalFiles />}
       </Flexbox>
       <Flexbox align={'center'} flex={'none'} gap={8} horizontal>
-        {shortcutHint && <ShortcutHint />}
-        {saveTopic && <SaveTopic />}
+        <ShortcutHint />
+        <SaveTopic />
         <Flexbox style={{ minWidth: 92 }}>
           {isAIGenerating ? (
             <Button
@@ -100,7 +98,7 @@ const Footer = memo<FooterProps>(({ setExpand, expand, shortcutHint = true, save
                 loading={!canSend}
                 onClick={() => {
                   sendMessage();
-                  setExpand?.(false);
+                  onExpandChange?.(false);
                 }}
                 type={'primary'}
               >

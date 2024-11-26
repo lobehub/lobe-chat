@@ -25,6 +25,7 @@ import {
 } from '../../Messages';
 import History from '../History';
 import { markdownElements } from '../MarkdownElements';
+import { InPortalThreadContext } from './InPortalThreadContext';
 import { processWithArtifact } from './utils';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin);
@@ -45,14 +46,24 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 export interface ChatListItemProps {
   actionBar?: ReactNode;
   className?: string;
+  disableEditing?: boolean;
   enableHistoryDivider?: boolean;
   endRender?: ReactNode;
   id: string;
+  inPortalThread?: boolean;
   index: number;
 }
 
 const Item = memo<ChatListItemProps>(
-  ({ className, enableHistoryDivider, id, actionBar, endRender }) => {
+  ({
+    className,
+    enableHistoryDivider,
+    id,
+    actionBar,
+    endRender,
+    disableEditing,
+    inPortalThread = false,
+  }) => {
     const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
     const { t } = useTranslation('common');
     const { styles, cx } = useStyles();
@@ -169,13 +180,13 @@ const Item = memo<ChatListItemProps>(
 
     const onDoubleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
       (e) => {
-        if (!item) return;
+        if (!item || disableEditing) return;
         if (item.id === 'default' || item.error) return;
         if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {
           toggleMessageEditing(id, true);
         }
       },
-      [item],
+      [item, disableEditing],
     );
 
     const text = useMemo(
@@ -197,7 +208,7 @@ const Item = memo<ChatListItemProps>(
 
     return (
       item && (
-        <>
+        <InPortalThreadContext.Provider value={inPortalThread}>
           {enableHistoryDivider && <History />}
           <Flexbox className={cx(styles.message, className, isMessageLoading && styles.loading)}>
             <ChatItem
@@ -225,7 +236,7 @@ const Item = memo<ChatListItemProps>(
             />
             {endRender}
           </Flexbox>
-        </>
+        </InPortalThreadContext.Provider>
       )
     );
   },

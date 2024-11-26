@@ -8,6 +8,7 @@
   "agents": "Assistant",
   "artifact": {
     "generating": "Génération en cours",
+    "inThread": "Impossible de voir dans le sous-sujet, veuillez passer à la zone de discussion principale.",
     "thinking": "En réflexion",
     "thought": "Processus de pensée",
     "unknownTitle": "Œuvre sans nom"
@@ -65,6 +66,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Supprimer et régénérer",
+    "deleteDisabledByThreads": "Il existe des sous-sujets, la suppression n'est pas possible.",
     "regenerate": "Régénérer"
   },
   "newAgent": "Nouvel agent",
@@ -120,6 +122,11 @@
     "action": "Entrée vocale",
     "loading": "En cours de reconnaissance...",
     "prettifying": "En cours d'embellissement..."
+  },
+  "thread": {
+    "divider": "Sous-sujet",
+    "threadMessageCount": "{{messageCount}} messages",
+    "title": "Sous-sujet"
   },
   "tokenDetails": {
     "chats": "Messages de discussion",
