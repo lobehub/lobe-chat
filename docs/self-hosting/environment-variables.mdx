@@ -24,14 +24,14 @@ LobeChat provides some additional configuration options when deployed, which can
 
 ## Building a Custom Image with Overridden NEXT_PUBLIC Variables
 
-If you need to override NEXT_PUBLIC environment variables, you can build a custom Docker image using GitHub Actions
-without forking the entire LobeChat repository. Here's a guide on how to do this:
+If you need to override NEXT_PUBLIC environment variables, you can build a custom Docker image using GitHub Actions without forking the entire LobeChat repository. Here's a guide on how to do this:
 
 1. Create a new GitHub repository for your custom build.
 
 2. In your new repository, create a `.github/workflows` directory.
 
 3. Inside the `.github/workflows` directory, create a file named `build-custom-lobe.yml`:
+
 ```yaml
 name: Build Custom Image
 
@@ -82,13 +82,10 @@ jobs:
             NEXT_PUBLIC_SERVICE_MODE=${{ secrets.NEXT_PUBLIC_SERVICE_MODE }}
 ```
 
-4. In your GitHub Repository settings > Secrets and variables > Actions > Repository secrets,
-add any NEXT_PUBLIC variables you want to override
+4. In your GitHub Repository settings > Secrets and variables > Actions > Repository secrets, add any NEXT_PUBLIC variables you want to override
 
-5. Set "Read and write" permissions for workflows in  Repository settings > Actions > General > Workflow permissions.
+5. Set "Read and write" permissions for workflows in Repository settings > Actions > General > Workflow permissions.
 
-6. To build your custom image, go to the "Actions" tab in your GitHub repository and manually trigger the
-"Build Custom LobeChat Image" workflow.
+6. To build your custom image, go to the "Actions" tab in your GitHub repository and manually trigger the "Build Custom LobeChat Image" workflow.
 
-This approach allows you to create a custom build with your desired NEXT_PUBLIC variables without maintaining
-a full fork of the LobeChat repository. You can trigger a new build whenever you need to update your custom image.
+This approach allows you to create a custom build with your desired NEXT_PUBLIC variables without maintaining a full fork of the LobeChat repository. You can trigger a new build whenever you need to update your custom image.

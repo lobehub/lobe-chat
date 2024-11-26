@@ -1,0 +1,12 @@
+{
+  "$schema": "https://github.com/lobehub/lobe-chat/blob/main/docs/changelog/schema.json",
+  "cloud": [],
+  "community": [
+    {
+      "image": "https://github.com/user-attachments/assets/fa8fab19-ace2-4f85-8428-a3a0e28845bb",
+      "id": "2024-11-25-november-providers",
+      "date": "2024-11-25",
+      "versionRange": ["1.33.0", "1.30.0"]
+    }
+  ]
+}

@@ -16,8 +16,7 @@ tags:
 <Steps>
 ### 创建 Authelia 提供应用
 
-我们现在默认您已经了解了如何使用 Authelia。假设您的 LobeChat 实例部署在 `https://lobe.example.com/` 中。
-注意，目前只有 `localhost` 支持 HTTP 访问，其他域名需要启用 TLS，否则 Authelia 默认将主动中断身份认证。
+我们现在默认您已经了解了如何使用 Authelia。假设您的 LobeChat 实例部署在 `https://lobe.example.com/` 中。注意，目前只有 `localhost` 支持 HTTP 访问，其他域名需要启用 TLS，否则 Authelia 默认将主动中断身份认证。
 
 现在，我们打开 Authelia 实例的配置文件进行编辑：
 
@@ -44,8 +43,7 @@ identity_providers:
       userinfo_signing_algorithm: none
 ```
 
-请您确保 `secret` 和 `redirect_urls` 替换成您自己的值。
-注意！Authelia 中配置 `secret` 是密文，即加盐哈希值。其对应的明文稍后需要填写在 lobeChat 中。
+请您确保 `secret` 和 `redirect_urls` 替换成您自己的值。注意！Authelia 中配置 `secret` 是密文，即加盐哈希值。其对应的明文稍后需要填写在 lobeChat 中。
 
 保存配置文件，然后重启 Authelia 服务。现在我们完成了 Authelia 的配置工作。
 
@@ -59,7 +57,7 @@ identity_providers:
 | `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Authelia 请填写 `authelia`。 |
 | `AUTH_AUTHELIA_ID` | 必选 | 刚刚在 Authelia 配置的 `id`，示例值是 `lobe-chat` |
 | `AUTH_AUTHELIA_SECRET` | 必选 | 刚刚在 Authelia 配置的 `secret` 对应的明文，示例值是 `insecure_secret` |
-| `AUTH_AUTHELIA_ISSUER` | 必选 |您的 Authelia 的网址，例如 `https://sso.example.com` |
+| `AUTH_AUTHELIA_ISSUER` | 必选 | 您的 Authelia 的网址，例如 `https://sso.example.com` |
 | `NEXTAUTH_URL` | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://chat.example.com/api/auth` |
 
   <Callout type={'tip'}>
