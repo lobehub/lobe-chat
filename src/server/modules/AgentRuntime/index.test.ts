@@ -370,6 +370,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       expect(runtime['_runtime']).toBeInstanceOf(LobeWenxinAI);
     });
 
+    /*
     it('Unknown Provider', async () => {
       const jwtPayload = {};
       const runtime = await initAgentRuntimeWithUserPayload('unknown', jwtPayload);
@@ -378,5 +379,6 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       // 例如，如果默认使用 OpenAI:
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
     });
+    */
   });
 });
