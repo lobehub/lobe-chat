@@ -3,6 +3,7 @@
 import { Alert } from '@lobehub/ui';
 import Link from 'next/link';
 import { memo } from 'react';
+import { Trans } from 'react-i18next';
 
 import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
 import DesktopChatInput, { FooterRender } from '@/features/ChatInput/Desktop';
@@ -33,7 +34,7 @@ const Desktop = memo(() => {
           banner
           closable
           message={
-            <div>
+            <Trans i18nKey={'notSupportMultiModals'} ns={'thread'}>
               子话题暂不支持文件/图片上传，如有需求，欢迎留言：
               <Link
                 href={'https://github.com/lobehub/lobe-chat/discussions/4717'}
@@ -41,7 +42,7 @@ const Desktop = memo(() => {
               >
                 💬 讨论
               </Link>
-            </div>
+            </Trans>
           }
           onClose={() => {
             updateSystemStatus({ hideThreadLimitAlert: true });

@@ -1,5 +1,10 @@
 {
   "actions": {
     "confirmRemoveThread": "Zaraz usuniesz ten wątek, po usunięciu nie będzie można go przywrócić, proszę postępować ostrożnie."
-  }
+  },
+  "newPortalThread": {
+    "includeContext": "Zawiera kontekst tematu",
+    "title": "Rozpocznij nowy podtemat"
+  },
+  "notSupportMultiModals": "Podtematy obecnie nie obsługują przesyłania plików/zdjęć. W przypadku potrzeby, zapraszamy do pozostawienia wiadomości: <1>💬 Dyskusja</1>"
 }
