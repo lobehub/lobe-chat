@@ -276,12 +276,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                                | 助手说明                                                                                                                                  |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| [All 译英助手（带音标）](https://chat-preview.lobehub.com/market?agent=translation-assistant)<br/><sup>By **[HttpStatusOK](https://github.com/HttpStatusOK)** on **2024-11-26**</sup>   | 这是一款集翻译和音标于一体的工具，旨在帮助翻译时更好地学习单词。<br/>`翻译` `语言学习`                                                    |
 | [Master E 的技术执行助理（EA）](https://chat-preview.lobehub.com/market?agent=alex)<br/><sup>By **[ApexAppdevelopment](https://github.com/ApexAppdevelopment)** on **2024-11-20**</sup> | 高度智能且忠诚的执行助理（EA），专注于为 Master E 提供软件工程支持和战略解决方案。<br/>`执行助理` `软件工程` `项目管理` `技术支持` `优化` |
 | [人类作者模拟器](https://chat-preview.lobehub.com/market?agent=human-writer-simulator)<br/><sup>By **[yufei96](https://github.com/yufei96)** on **2024-11-20**</sup>                    | 消除 AI 生成内容的特征<br/>`ai交互` `写作` `优化` `咨询`                                                                                  |
 | [智慧引导者](https://chat-preview.lobehub.com/market?agent=life-wisdom-guides)<br/><sup>By **[changjiong](https://github.com/changjiong)** on **2024-11-20**</sup>                      | 擅长引导<br/>`人生指导` `哲学思考` `咨询` `启发式对话`                                                                                    |
-| [Prompt 提示词](https://chat-preview.lobehub.com/market?agent=prompt-ts)<br/><sup>By **[qw1295353129](https://github.com/qw1295353129)** on **2024-11-20**</sup>                        | Prompt 提示词<br/>`prompt提示词`                                                                                                          |
 
-> 📊 Total agents: [<kbd>**439**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**440**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
