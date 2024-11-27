@@ -32,6 +32,7 @@
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "Nessun assistente disponibile",
   "historyRange": "Intervallo cronologico",
+  "historySummary": "Riepilogo della storia",
   "inbox": {
     "desc": "Attiva il cluster cerebrale, accendi la scintilla del pensiero. Il tuo assistente intelligente, qui per comunicare con te su tutto.",
     "title": "Chiacchierata casuale"
