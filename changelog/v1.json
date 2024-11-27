@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve thread i18n locale."]
+    },
+    "date": "2024-11-27",
+    "version": "1.34.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix Qwen baseUrl calling."]
     },
     "date": "2024-11-26",
