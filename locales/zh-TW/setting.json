@@ -98,6 +98,7 @@
       "title": "使用客戶端請求模式"
     },
     "fetcher": {
+      "clear": "清除獲取的模型",
       "fetch": "獲取模型列表",
       "fetching": "正在獲取模型列表...",
       "latestTime": "上次更新時間：{{time}}",
@@ -387,6 +388,11 @@
       "label": "提問重寫模型",
       "modelDesc": "指定用於優化用戶提問的模型",
       "title": "知識庫提問重寫"
+    },
+    "thread": {
+      "label": "子主題命名模型",
+      "modelDesc": "指定用於子主題自動重命名的模型",
+      "title": "子主題自動命名"
     },
     "title": "系統助手",
     "topic": {

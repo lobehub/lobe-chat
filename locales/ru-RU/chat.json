@@ -8,6 +8,7 @@
   "agents": "Ассистент",
   "artifact": {
     "generating": "Генерация",
+    "inThread": "Невозможно просмотреть в подтеме, переключитесь на основную область диалога",
     "thinking": "В процессе размышлений",
     "thought": "Процесс мышления",
     "unknownTitle": "Безымянное произведение"
@@ -65,6 +66,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Удалить и пересоздать",
+    "deleteDisabledByThreads": "Существуют подтемы, удаление невозможно",
     "regenerate": "Пересоздать"
   },
   "newAgent": "Создать помощника",
@@ -120,6 +122,11 @@
     "action": "Голосовой ввод",
     "loading": "Распознавание...",
     "prettifying": "Форматирование..."
+  },
+  "thread": {
+    "divider": "Подтема",
+    "threadMessageCount": "{{messageCount}} сообщений",
+    "title": "Подтема"
   },
   "tokenDetails": {
     "chats": "Чаты",

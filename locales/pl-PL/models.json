@@ -30,7 +30,7 @@
   "@hf/mistral/mistral-7b-instruct-v0.2": {},
   "@hf/nexusflow/starling-lm-7b-beta": {},
   "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
   "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
   "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
   "@hf/thebloke/zephyr-7b-beta-awq": {},
@@ -94,6 +94,7 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO to wysoce elastyczna fuzja wielu modeli, mająca na celu zapewnienie doskonałego doświadczenia twórczego."
   },
+  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) to model poleceń o wysokiej precyzji, idealny do złożonych obliczeń."
   },
@@ -175,6 +176,15 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math koncentruje się na rozwiązywaniu problemów w dziedzinie matematyki, oferując profesjonalne odpowiedzi na trudne pytania."
   },
+  "Qwen2-72B-Instruct": {
+    "description": "Qwen2 to najnowsza seria modeli Qwen, obsługująca kontekst 128k. W porównaniu do obecnie najlepszych modeli open source, Qwen2-72B znacznie przewyższa w zakresie rozumienia języka naturalnego, wiedzy, kodowania, matematyki i wielu języków."
+  },
+  "Qwen2-7B-Instruct": {
+    "description": "Qwen2 to najnowsza seria modeli Qwen, która przewyższa najlepsze modele open source o podobnej skali, a nawet większe. Qwen2 7B osiągnęła znaczną przewagę w wielu testach, szczególnie w zakresie kodowania i rozumienia języka chińskiego."
+  },
+  "Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct obsługuje kontekst 16k, generując długie teksty przekraczające 8K. Wspiera wywołania funkcji i bezproblemową interakcję z systemami zewnętrznymi, znacznie zwiększając elastyczność i skalowalność. Wiedza modelu znacznie wzrosła, a jego zdolności w zakresie kodowania i matematyki uległy znacznemu poprawieniu, z obsługą ponad 29 języków."
+  },
   "SenseChat": {
     "description": "Podstawowa wersja modelu (V4), długość kontekstu 4K, silne zdolności ogólne."
   },
@@ -204,6 +214,9 @@
   },
   "Tencent/Hunyuan-A52B-Instruct": {
     "description": "Hunyuan-Large to największy w branży otwarty model Transformer MoE, z 389 miliardami parametrów ogółem i 52 miliardami aktywowanych parametrów."
+  },
+  "Yi-34B-Chat": {
+    "description": "Yi-1.5-34B, zachowując doskonałe ogólne zdolności językowe oryginalnej serii modeli, znacznie poprawił zdolności logiczne i kodowania dzięki dodatkowym treningom na 500 miliardach wysokiej jakości tokenów."
   },
   "abab5.5-chat": {
     "description": "Skierowany do scenariuszy produkcyjnych, wspierający przetwarzanie złożonych zadań i efektywne generowanie tekstu, odpowiedni do zastosowań w profesjonalnych dziedzinach."
@@ -367,6 +380,9 @@
   "codegeex-4": {
     "description": "CodeGeeX-4 to potężny asystent programowania AI, obsługujący inteligentne pytania i odpowiedzi oraz uzupełnianie kodu w różnych językach programowania, zwiększając wydajność programistów."
   },
+  "codegeex4-all-9b": {
+    "description": "CodeGeeX4-ALL-9B to model generowania kodu w wielu językach, który obsługuje kompleksowe funkcje, w tym uzupełnianie i generowanie kodu, interpreter kodu, wyszukiwanie w sieci, wywołania funkcji oraz pytania i odpowiedzi na poziomie repozytoriów, obejmując różne scenariusze rozwoju oprogramowania. Jest to wiodący model generowania kodu z mniej niż 10B parametrów."
+  },
   "codegemma": {
     "description": "CodeGemma to lekki model językowy, specjalizujący się w różnych zadaniach programistycznych, wspierający szybkie iteracje i integrację."
   },
@@ -421,6 +437,9 @@
   "deepseek-chat": {
     "description": "Nowy otwarty model łączący zdolności ogólne i kodowe, który nie tylko zachowuje ogólne zdolności dialogowe oryginalnego modelu czatu i potężne zdolności przetwarzania kodu modelu Coder, ale także lepiej dostosowuje się do ludzkich preferencji. Ponadto, DeepSeek-V2.5 osiągnął znaczne poprawy w zadaniach pisarskich, przestrzeganiu instrukcji i innych obszarach."
   },
+  "deepseek-coder-33B-instruct": {
+    "description": "DeepSeek Coder 33B to model języka kodu, wytrenowany na 20 bilionach danych, z czego 87% to kod, a 13% to języki chiński i angielski. Model wprowadza okno o rozmiarze 16K oraz zadania uzupełniania, oferując funkcje uzupełniania kodu na poziomie projektu i wypełniania fragmentów."
+  },
   "deepseek-coder-v2": {
     "description": "DeepSeek Coder V2 to otwarty model kodowy Mixture-of-Experts, który doskonale radzi sobie z zadaniami kodowymi, porównywalny z GPT4-Turbo."
   },
@@ -460,9 +479,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 to najnowszy eksperymentalny model, który wykazuje znaczące poprawy wydajności w zastosowaniach tekstowych i multimodalnych."
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827 oferuje zoptymalizowane możliwości przetwarzania multimodalnego, odpowiednie do różnych złożonych scenariuszy zadań."
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash to najnowszy model AI Google o wielu modalnościach, który charakteryzuje się szybkim przetwarzaniem i obsługuje wejścia tekstowe, obrazowe i wideo, co czyni go odpowiednim do efektywnego rozszerzania w różnych zadaniach."
   },
@@ -472,14 +488,14 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 to najnowszy model gotowy do produkcji, oferujący wyższą jakość wyników, ze szczególnym uwzględnieniem zadań matematycznych, długich kontekstów i zadań wizualnych."
   },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801 oferuje doskonałe możliwości przetwarzania multimodalnego, zapewniając większą elastyczność w rozwoju aplikacji."
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827 łączy najnowsze technologie optymalizacji, oferując bardziej efektywne możliwości przetwarzania danych multimodalnych."
-  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro obsługuje do 2 milionów tokenów, co czyni go idealnym wyborem dla średniej wielkości modeli multimodalnych, odpowiednim do wszechstronnej obsługi złożonych zadań."
+  },
+  "gemini-exp-1114": {
+    "description": "Gemini Exp 1114 to najnowszy eksperymentalny model AI o wielu modalnościach od Google, który charakteryzuje się szybkim przetwarzaniem i obsługuje wejścia tekstowe, obrazowe oraz wideo, co umożliwia wydajne rozszerzanie go na różne zadania."
+  },
+  "gemini-exp-1121": {
+    "description": "Gemini Exp 1121 to najnowszy eksperymentalny model AI Google, który charakteryzuje się szybkim przetwarzaniem i obsługuje wejścia tekstowe, obrazowe i wideo, co czyni go wydajnym narzędziem do rozwiązywania różnych zadań."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B nadaje się do przetwarzania zadań średniej i małej skali, łącząc efektywność kosztową."
@@ -507,6 +523,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520 to najnowsza wersja modelu, zaprojektowana do wysoko złożonych i zróżnicowanych zadań, z doskonałymi wynikami."
+  },
+  "glm-4-9b-chat": {
+    "description": "GLM-4-9B-Chat wykazuje wysoką wydajność w wielu aspektach, takich jak semantyka, matematyka, wnioskowanie, kodowanie i wiedza. Posiada również funkcje przeglądania stron internetowych, wykonywania kodu, wywoływania niestandardowych narzędzi oraz wnioskowania z długich tekstów. Obsługuje 26 języków, w tym japoński, koreański i niemiecki."
   },
   "glm-4-air": {
     "description": "GLM-4-Air to opłacalna wersja, której wydajność jest zbliżona do GLM-4, oferująca szybkie działanie i przystępną cenę."
@@ -616,6 +635,9 @@
   "grok-beta": {
     "description": "Oferuje wydajność porównywalną z Grok 2, ale z wyższą efektywnością, prędkością i funkcjonalnością."
   },
+  "grok-vision-beta": {
+    "description": "Najnowszy model rozumienia obrazów, który potrafi przetwarzać różnorodne informacje wizualne, w tym dokumenty, wykresy, zrzuty ekranu i zdjęcia."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B to model językowy łączący kreatywność i inteligencję, zintegrowany z wieloma wiodącymi modelami."
   },
@@ -651,6 +673,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 oferuje inteligentne rozwiązania dialogowe w różnych scenariuszach."
+  },
+  "internlm2-pro-chat": {
+    "description": "Starsza wersja modelu, którą nadal utrzymujemy, dostępna w różnych wariantach parametrów: 7B i 20B."
+  },
+  "internlm2.5-latest": {
+    "description": "Nasza najnowsza seria modeli, charakteryzująca się doskonałymi osiągami wnioskowania, obsługująca długość kontekstu do 1M oraz lepsze możliwości śledzenia instrukcji i wywoływania narzędzi."
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -843,6 +871,7 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 to otwarty duży model językowy (LLM) skierowany do deweloperów, badaczy i przedsiębiorstw, mający na celu pomoc w budowaniu, eksperymentowaniu i odpowiedzialnym rozwijaniu ich pomysłów na generatywną sztuczną inteligencję. Jako część podstawowego systemu innowacji globalnej społeczności, jest idealny dla urządzeń o ograniczonej mocy obliczeniowej i zasobach, a także dla szybszego czasu szkolenia."
   },
+  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/wizardlm 2-7b": {
     "description": "WizardLM 2 7B to najnowszy szybki i lekki model AI od Microsoftu, osiągający wydajność bliską 10-krotności istniejących wiodących modeli open source."
   },
@@ -974,6 +1003,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Model Pixtral wykazuje silne zdolności w zadaniach związanych z analizą wykresów i zrozumieniem obrazów, pytaniami dokumentowymi, wielomodalnym rozumowaniem i przestrzeganiem instrukcji, zdolny do przyjmowania obrazów w naturalnej rozdzielczości i proporcjach, a także do przetwarzania dowolnej liczby obrazów w długim oknie kontekstowym o długości do 128K tokenów."
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large to otwarty model wielomodalny z 124 miliardami parametrów, zbudowany na bazie Mistral Large 2. To nasz drugi model w rodzinie wielomodalnej, który wykazuje zaawansowane zdolności rozumienia obrazów."
   },
   "pro-128k": {
     "description": "Spark Pro 128K jest wyposażony w wyjątkową zdolność przetwarzania kontekstu, mogąc obsługiwać do 128K informacji kontekstowych, co czyni go idealnym do analizy całościowej i długoterminowego przetwarzania logicznych powiązań w długich treściach, zapewniając płynność i spójność logiczną oraz różnorodne wsparcie cytatów w złożonej komunikacji tekstowej."

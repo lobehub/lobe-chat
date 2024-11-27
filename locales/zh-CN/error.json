@@ -98,7 +98,8 @@
     "AgentRuntimeError": "Lobe AI Runtime 执行出错，请根据以下信息排查或重试",
     "FreePlanLimit": "当前为免费用户，无法使用该功能，请升级到付费计划后继续使用",
     "SubscriptionPlanLimit": "您的订阅额度已用尽，无法使用该功能，请升级到更高计划，或购买资源包后继续使用",
-    "InvalidGithubToken": "Github PAT 不正确或为空，请检查 Github PAT 后重试"
+    "InvalidGithubToken": "Github PAT 不正确或为空，请检查 Github PAT 后重试",
+    "ConnectionCheckFailed": "请求返回为空，请检查 API 代理地址末尾是否未包含 `/v1`"
   },
   "stt": {
     "responseError": "服务请求失败，请检查配置或重试"

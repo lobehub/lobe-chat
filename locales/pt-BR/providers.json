@@ -22,6 +22,9 @@
   "fireworksai": {
     "description": "Fireworks AI é um fornecedor líder de serviços de modelos de linguagem avançados, focando em chamadas de função e processamento multimodal. Seu modelo mais recente, Firefunction V2, baseado em Llama-3, é otimizado para chamadas de função, diálogos e seguimento de instruções. O modelo de linguagem visual FireLLaVA-13B suporta entradas mistas de imagem e texto. Outros modelos notáveis incluem a série Llama e a série Mixtral, oferecendo suporte eficiente para seguimento e geração de instruções multilíngues."
   },
+  "giteeai": {
+    "description": "A API Serverless do Gitee AI fornece aos desenvolvedores de IA um serviço de API de inferência de modelos grandes prontos para uso."
+  },
   "github": {
     "description": "Com os Modelos do GitHub, os desenvolvedores podem se tornar engenheiros de IA e construir com os principais modelos de IA da indústria."
   },
@@ -36,6 +39,9 @@
   },
   "hunyuan": {
     "description": "Um modelo de linguagem desenvolvido pela Tencent, com forte capacidade de criação em chinês, habilidade de raciocínio lógico em contextos complexos e capacidade confiável de execução de tarefas."
+  },
+  "internlm": {
+    "description": "Uma organização de código aberto dedicada à pesquisa e desenvolvimento de ferramentas para grandes modelos. Oferece uma plataforma de código aberto eficiente e fácil de usar para todos os desenvolvedores de IA, tornando as tecnologias e algoritmos de ponta acessíveis."
   },
   "minimax": {
     "description": "MiniMax é uma empresa de tecnologia de inteligência artificial geral fundada em 2021, dedicada a co-criar inteligência com os usuários. A MiniMax desenvolveu internamente diferentes modelos gerais de grande escala, incluindo um modelo de texto MoE com trilhões de parâmetros, um modelo de voz e um modelo de imagem. Também lançou aplicações como Conch AI."

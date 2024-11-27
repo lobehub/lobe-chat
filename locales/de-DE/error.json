@@ -68,6 +68,7 @@
     "510": "Es tut uns leid, der Server unterstützt die angeforderte Erweiterungsfunktion nicht. Bitte wenden Sie sich an den Administrator.",
     "524": "Es tut uns leid, der Server hat beim Warten auf eine Antwort die Zeit überschritten, möglicherweise aufgrund einer zu langsamen Antwort. Bitte versuchen Sie es später erneut.",
     "AgentRuntimeError": "Es ist ein Fehler bei der Ausführung des Lobe-Sprachmodells aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "ConnectionCheckFailed": "Die Anfrage brachte eine leere Antwort zurück. Bitte überprüfen Sie, ob die API-Proxy-Adresse am Ende nicht mit `/v1` endet.",
     "FreePlanLimit": "Sie sind derzeit ein kostenloser Benutzer und können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein kostenpflichtiges Abonnement, um fortzufahren.",
     "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",

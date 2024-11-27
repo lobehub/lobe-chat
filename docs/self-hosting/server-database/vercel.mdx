@@ -15,6 +15,7 @@ tags:
 This article will detail how to deploy the server database version of LobeChat on Vercel, including: 1) database configuration; 2) identity authentication service configuration; 3) steps for setting up the S3 storage service.
 
 <Callout type={'warning'}>
+
 Before proceeding, please make sure of the following:
 
 - Export all data, as after deploying the server-side database, existing user data cannot be automatically migrated and can only be manually imported after backup!
@@ -42,7 +43,7 @@ In Vercel's deployment environment variables, add `DATABASE_URL` and other envir
 
 <Tabs items={['Serverless Postgres', 'Node Postgres']}>
 
-<Tab>
+  <Tab>
 
 <Callout type={'warning'}>
   Please confirm the `Postgres` type provided by your vendor. If it is `Node Postgres`, switch to
@@ -68,8 +69,8 @@ An example of filling in Vercel is as follows:
 
 </Tab>
 
-<Tab>
-  Variables to be filled for Node Postgres are as follows:
+  <Tab>
+    Variables to be filled for Node Postgres are as follows:
 
 ```shell
 # Node Postgres DB Url
@@ -93,10 +94,12 @@ An example of filling in Vercel is as follows:
 
 </Tabs>
 
-<Callout type={'info'}>
-  If you wish to enable SSL when connecting to the database, please refer to the
-  [link](https://stackoverflow.com/questions/14021998/using-psql-to-connect-to-postgresql-in-ssl-mode)
-  for setup instructions.
+  <Callout type={'info'}>
+
+    If you wish to enable SSL when connecting to the database, please refer to the
+    [link](https://stackoverflow.com/questions/14021998/using-psql-to-connect-to-postgresql-in-ssl-mode)
+    for setup instructions.
+
 </Callout>
 
 ### Add the `KEY_VAULTS_SECRET` Environment Variable
@@ -125,9 +128,11 @@ The server-side database needs to be paired with a user authentication service t
 
 Go to [Clerk](https://clerk.com?utm_source=lobehub&utm_medium=docs) to register and create an application to obtain the corresponding Public Key and Secret Key.
 
-<Callout type={'info'}>
-  If you are not familiar with Clerk, you can refer to [Authentication
-  Service-Clerk](/en/docs/self-hosting/advanced/authentication#clerk) for details on using Clerk.
+  <Callout type={'info'}>
+
+    If you are not familiar with Clerk, you can refer to [Authentication
+    Service-Clerk](/en/docs/self-hosting/advanced/authentication#clerk) for details on using Clerk.
+
 </Callout>
 
 ### Add Public and Private Key Environment Variables in Vercel
@@ -166,29 +171,25 @@ We need to add an endpoint in Clerk's Webhooks to inform Clerk to send notificat
 
 Fill in the endpoint with the URL of your Vercel project, such as `https://your-project.vercel.app/api/webhooks/clerk`. Then, subscribe to events by checking the three user events (`user.created`, `user.deleted`, `user.updated`), and click create.
 
-<Callout type={'warning'}>
-  The `https://` in the URL is essential to maintain the integrity of the URL.
+  <Callout type={'warning'}>
+
+    The `https://` in the URL is essential to maintain the integrity of the URL.
+
 </Callout>
 
 <Image
-alt={'Configure URL and user events when adding Clerk Webhooks'}
-src={'https://github.com/lobehub/lobe-chat/assets/28616219/0249ea56-ab17-4aa9-a56c-9ebd556c2645'}>
-
->
-
-</Image>
+  alt={'Configure URL and user events when adding Clerk Webhooks'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/0249ea56-ab17-4aa9-a56c-9ebd556c2645'}
+/>
 
 ### Add Webhook Secret to Vercel Environment Variables
 
 After creation, you can find the secret of this Webhook in the bottom right corner:
 
 <Image
-alt={'View Clerk Webhooks secret'}
-src={'https://github.com/lobehub/lobe-chat/assets/28616219/fab4abb2-584b-49de-9340-813382951635'}>
-
->
-
-</Image>
+  alt={'View Clerk Webhooks secret'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/fab4abb2-584b-49de-9340-813382951635'}
+/>
 
 The environment variable corresponding to this secret is `CLERK_WEBHOOK_SECRET`:
 
@@ -212,9 +213,9 @@ By completing these steps, you have successfully configured the Clerk authentica
 In the server-side database, we need to configure the S3 storage service to store files.
 
 <Callout type={'info'}>
-  In this article, S3 refers to a compatible S3 storage solution, which supports object storage
-  systems that comply with the Amazon S3 API. Common examples include Cloudflare R2, Alibaba Cloud
-  OSS, etc., all of which support S3-compatible APIs.
+
+In this article, S3 refers to a compatible S3 storage solution, which supports object storage systems that comply with the Amazon S3 API. Common examples include Cloudflare R2, Alibaba Cloud OSS, etc., all of which support S3-compatible APIs.
+
 </Callout>
 
 <Steps>
@@ -338,7 +339,7 @@ In R2, you can find the CORS configuration in the bucket settings:
 <Image
   alt={'Cloudflare R2 CORS settings'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/ab008be7-26b2-4b78-8bd9-24301bf34d23'}
-></Image>
+/>
 
 Add a CORS rule to allow requests from your domain (in this case, `https://your-project.vercel.app`):
 
@@ -382,12 +383,14 @@ After configuring the environment variables, you need to redeploy the latest com
 If you click on the login button in the top left corner and the login popup appears normally, then you have successfully configured it. Enjoy using it\~
 
 <Image
-alt={'User login popup'}
-src={'https://github.com/lobehub/lobe-chat/assets/28616219/da84edc3-46f7-4e2b-a0cd-dc33a98bf5cb'}/>
+  alt={'User login popup'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/da84edc3-46f7-4e2b-a0cd-dc33a98bf5cb'}
+/>
 
 <Image
-alt={'Login successful state'}
-src={'https://github.com/lobehub/lobe-chat/assets/28616219/9cb5150d-6e1e-4c59-9a18-4e418dce1a5d'}/>
+  alt={'Login successful state'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/9cb5150d-6e1e-4c59-9a18-4e418dce1a5d'}
+/>
 
 </Steps>
 

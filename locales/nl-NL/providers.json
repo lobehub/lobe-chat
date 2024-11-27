@@ -22,6 +22,9 @@
   "fireworksai": {
     "description": "Fireworks AI is een toonaangevende aanbieder van geavanceerde taalmodellen, met een focus op functionele aanroepen en multimodale verwerking. Hun nieuwste model Firefunction V2 is gebaseerd op Llama-3 en geoptimaliseerd voor functieaanroepen, dialogen en het volgen van instructies. Het visuele taalmodel FireLLaVA-13B ondersteunt gemengde invoer van afbeeldingen en tekst. Andere opmerkelijke modellen zijn de Llama-serie en de Mixtral-serie, die efficiënte ondersteuning bieden voor meertalig volgen van instructies en genereren."
   },
+  "giteeai": {
+    "description": "Gitee AI's Serverless API biedt AI ontwikkelaars een out of the box grote model inference API service."
+  },
   "github": {
     "description": "Met GitHub-modellen kunnen ontwikkelaars AI-ingenieurs worden en bouwen met de toonaangevende AI-modellen in de industrie."
   },
@@ -36,6 +39,9 @@
   },
   "hunyuan": {
     "description": "Een door Tencent ontwikkeld groot taalmodel, dat beschikt over krachtige Chinese creatiecapaciteiten, logische redeneervaardigheden in complexe contexten, en betrouwbare taakuitvoeringscapaciteiten."
+  },
+  "internlm": {
+    "description": "Een open-source organisatie die zich richt op onderzoek en ontwikkeling van tools voor grote modellen. Biedt een efficiënt en gebruiksvriendelijk open-source platform voor alle AI-ontwikkelaars, zodat de meest geavanceerde modellen en algoritmische technologieën binnen handbereik zijn."
   },
   "minimax": {
     "description": "MiniMax is een algemeen kunstmatige intelligentietechnologiebedrijf dat in 2021 is opgericht, en zich richt op co-creatie van intelligentie met gebruikers. MiniMax heeft verschillende multimodale algemene grote modellen ontwikkeld, waaronder een MoE-tekstgrootmodel met triljoenen parameters, een spraakgrootmodel en een afbeeldingsgrootmodel. Ze hebben ook toepassingen zoals Conch AI gelanceerd."

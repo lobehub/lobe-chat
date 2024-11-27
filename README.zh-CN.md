@@ -274,14 +274,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                               | 助手说明                                                                                   |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [思考克劳德](https://chat-preview.lobehub.com/market?agent=thinking-claude)<br/><sup>By **[AnoyiX](https://github.com/AnoyiX)** on **2024-11-14**</sup>                                | 让克劳德在回应之前全面思考！<br/>`常见`                                                    |
-| [机器视觉 latex](https://chat-preview.lobehub.com/market?agent=cv-latex)<br/><sup>By **[5xiao0qing5](https://github.com/5xiao0qing5)** on **2024-10-29**</sup>                         | 擅长机器学习与深度学习概念解析<br/>`机器学习` `深度学习` `图像处理` `计算机视觉` `la-te-x` |
-| [域名分析大师](https://chat-preview.lobehub.com/market?agent=domain)<br/><sup>By **[ccbikai](https://github.com/ccbikai)** on **2024-10-29**</sup>                                     | 擅长域名分析与幽默建议<br/>`域名分析` `幽默` `文化` `建站建议` `购买建议`                  |
-| [英戈・豪斯曼](https://chat-preview.lobehub.com/market?agent=pc-beschaffung-ingo-hausmann)<br/><sup>By **[bionicprompter](https://github.com/bionicprompter)** on **2024-10-29**</sup> | 英戈・豪斯曼希望就新购置的电脑进行咨询<br/>`公司` `硬件` `需求分析` `it` `应用`            |
+| 最近新增                                                                                                                                                                           | 助手说明                                                                                                                                                                                |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [后端开发助手](https://chat-preview.lobehub.com/market?agent=backend-assistant)<br/><sup>By **[zeno980](https://github.com/zeno980)** on **2024-11-26**</sup>                      | 擅长后端开发任务<br/>`后端开发` `ai技术` `web应用` `spring` `sql`                                                                                                                       |
+| [双语词典专家](https://chat-preview.lobehub.com/market?agent=english-chinese-dictionary-expert)<br/><sup>By **[swarfte](https://github.com/swarfte)** on **2024-11-26**</sup>      | 双语英语 - 中文词汇翻译和分析专家<br/>`翻译` `语言学习` `词汇` `词典`                                                                                                                   |
+| [SSC 增量](https://chat-preview.lobehub.com/market?agent=great-for-analysis-coding-and-rubber-ducking)<br/><sup>By **[Base03](https://github.com/Base03)** on **2024-11-26**</sup> | Claude 减去 Reddit<br/>`技术` `分析` `软件` `人工智能` `研究`                                                                                                                           |
+| [面试官助手](https://chat-preview.lobehub.com/market?agent=interviewer-assistant)<br/><sup>By **[xandertang](https://github.com/Dr-T)** on **2024-11-26**</sup>                    | Proficient in designing and evaluating interview questions for product managers, generating interview questions based on resume interpretation results.<br/>`面试` `简历` `招聘` `效率` |
 
-> 📊 Total agents: [<kbd>**431**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**446**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

@@ -22,6 +22,9 @@
   "fireworksai": {
     "description": "Fireworks AI 是一家領先的高級語言模型服務商，專注於功能調用和多模態處理。其最新模型 Firefunction V2 基於 Llama-3，優化用於函數調用、對話及指令跟隨。視覺語言模型 FireLLaVA-13B 支持圖像和文本混合輸入。其他 notable 模型包括 Llama 系列和 Mixtral 系列，提供高效的多語言指令跟隨與生成支持。"
   },
+  "giteeai": {
+    "description": "Gitee AI 的 Serverless API 為 AI 開發者提供開箱即用的大模型推理 API 服務。"
+  },
   "github": {
     "description": "透過 GitHub 模型，開發者可以成為 AI 工程師，並使用業界領先的 AI 模型進行建設。"
   },
@@ -36,6 +39,9 @@
   },
   "hunyuan": {
     "description": "由騰訊研發的大語言模型，具備強大的中文創作能力、複雜語境下的邏輯推理能力，以及可靠的任務執行能力"
+  },
+  "internlm": {
+    "description": "致力於大模型研究與開發工具鏈的開源組織。為所有 AI 開發者提供高效、易用的開源平台，讓最前沿的大模型與算法技術觸手可及"
   },
   "minimax": {
     "description": "MiniMax 是 2021 年成立的通用人工智慧科技公司，致力於與用戶共創智能。MiniMax 自主研發了不同模態的通用大模型，其中包括萬億參數的 MoE 文本大模型、語音大模型以及圖像大模型。並推出了海螺 AI 等應用。"

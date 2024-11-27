@@ -98,6 +98,7 @@
       "title": "Utiliser le mode de requête client"
     },
     "fetcher": {
+      "clear": "Effacer le modèle récupéré",
       "fetch": "Obtenir la liste des modèles",
       "fetching": "Récupération de la liste des modèles en cours...",
       "latestTime": "Dernière mise à jour : {{time}}",
@@ -387,6 +388,11 @@
       "label": "Modèle de reformulation des questions",
       "modelDesc": "Modèle utilisé pour optimiser les questions des utilisateurs",
       "title": "Réécriture de la question de la base de connaissances"
+    },
+    "thread": {
+      "label": "Modèle de nomination de sous-thème",
+      "modelDesc": "Modèle utilisé pour le renommage automatique des sous-thèmes",
+      "title": "Nommer automatiquement les sous-thèmes"
     },
     "title": "Agent système",
     "topic": {

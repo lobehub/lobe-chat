@@ -8,23 +8,31 @@ import { CHAT_TEXTAREA_HEIGHT, CHAT_TEXTAREA_MAX_HEIGHT } from '@/const/layoutTo
 
 import { ActionKeys } from '../ActionBar/config';
 import LocalFiles from './FilePreview';
-import Footer from './Footer';
 import Head from './Header';
 
+export type FooterRender = (params: {
+  expand: boolean;
+  onExpandChange: (expand: boolean) => void;
+}) => ReactNode;
+
 interface DesktopChatInputProps {
-  footer?: {
-    saveTopic?: boolean;
-    shortcutHint?: boolean;
-  };
   inputHeight: number;
   leftActions: ActionKeys[];
   onInputHeightChange?: (height: number) => void;
+  renderFooter: FooterRender;
   renderTextArea: (onSend: () => void) => ReactNode;
   rightActions: ActionKeys[];
 }
 
 const DesktopChatInput = memo<DesktopChatInputProps>(
-  ({ leftActions, rightActions, footer, renderTextArea, inputHeight, onInputHeightChange }) => {
+  ({
+    leftActions,
+    rightActions,
+    renderTextArea,
+    inputHeight,
+    onInputHeightChange,
+    renderFooter,
+  }) => {
     const [expand, setExpand] = useState<boolean>(false);
 
     const onSend = useCallback(() => {
@@ -63,7 +71,7 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
               setExpand={setExpand}
             />
             {renderTextArea(onSend)}
-            <Footer expand={expand} setExpand={setExpand} {...footer} />
+            {renderFooter({ expand, onExpandChange: setExpand })}
           </Flexbox>
         </DraggablePanel>
       </>

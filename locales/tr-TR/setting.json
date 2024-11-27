@@ -98,6 +98,7 @@
       "title": "İstemci Tarafından Veri Alımı"
     },
     "fetcher": {
+      "clear": "Alınan modeli temizle",
       "fetch": "Modelleri Al",
       "fetching": "Modelleri alınıyor...",
       "latestTime": "Son güncelleme zamanı: {{time}}",
@@ -387,6 +388,11 @@
       "label": "Soru Yeniden Yazım Modeli",
       "modelDesc": "Kullanıcı sorularını optimize etmek için kullanılan model",
       "title": "Bilgi Tabanı Soru Yeniden Yazımı"
+    },
+    "thread": {
+      "label": "Alt konu adlandırma modeli",
+      "modelDesc": "Alt konuların otomatik olarak yeniden adlandırılması için kullanılan model",
+      "title": "Alt konu otomatik adlandırma"
     },
     "title": "Sistem Asistanı",
     "topic": {

@@ -98,6 +98,7 @@
       "title": "Use Client-Side Fetching Mode"
     },
     "fetcher": {
+      "clear": "Clear fetched model",
       "fetch": "Get Model List",
       "fetching": "Fetching Model List...",
       "latestTime": "Last Updated: {{time}}",
@@ -387,6 +388,11 @@
       "label": "Question Rewriting Model",
       "modelDesc": "Specify the model used to optimize user inquiries",
       "title": "Knowledge Base Question Rewrite"
+    },
+    "thread": {
+      "label": "Subtopic Naming Model",
+      "modelDesc": "The model designated for automatic renaming of subtopics",
+      "title": "Automatic Subtopic Naming"
     },
     "title": "System Assistants",
     "topic": {

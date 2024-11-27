@@ -16,6 +16,8 @@
   "back": "Zurück",
   "batchDelete": "Massenlöschung",
   "blog": "Produkt-Blog",
+  "branching": "Unterthema erstellen",
+  "branchingDisable": "Die Funktion „Unterthema“ ist nur in der Serverversion verfügbar. Wenn Sie diese Funktion benötigen, wechseln Sie bitte in den Serverbereitstellungsmodus oder verwenden Sie LobeChat Cloud.",
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
   "close": "Schließen",

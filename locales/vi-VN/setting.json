@@ -98,6 +98,7 @@
       "title": "Sử dụng chế độ yêu cầu từ khách hàng"
     },
     "fetcher": {
+      "clear": "Xóa mô hình đã lấy",
       "fetch": "Lấy danh sách mô hình",
       "fetching": "Đang lấy danh sách mô hình...",
       "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
@@ -387,6 +388,11 @@
       "label": "Mô hình viết lại câu hỏi",
       "modelDesc": "Mô hình được chỉ định để tối ưu hóa câu hỏi của người dùng",
       "title": "Viết lại câu hỏi trong kho kiến thức"
+    },
+    "thread": {
+      "label": "Mô hình đặt tên chủ đề phụ",
+      "modelDesc": "Mô hình được chỉ định để tự động đổi tên chủ đề phụ",
+      "title": "Tự động đặt tên chủ đề phụ"
     },
     "title": "Trợ lý hệ thống",
     "topic": {

@@ -98,6 +98,7 @@
       "title": "Gebruik de ophaalmodus aan de clientzijde"
     },
     "fetcher": {
+      "clear": "Verwijder opgehaalde model",
       "fetch": "Haal model lijst op",
       "fetching": "Model lijst wordt opgehaald...",
       "latestTime": "Laatst bijgewerkt: {{time}}",
@@ -387,6 +388,11 @@
       "label": "Vraag herschrijvingsmodel",
       "modelDesc": "Model dat is opgegeven voor het optimaliseren van gebruikersvragen",
       "title": "Herformuleren van vragen in de kennisbank"
+    },
+    "thread": {
+      "label": "Subtopic Naamgevingsmodel",
+      "modelDesc": "Model dat wordt gebruikt voor het automatisch hernoemen van subonderwerpen",
+      "title": "Automatische naamgeving van subonderwerpen"
     },
     "title": "Systeemassistent",
     "topic": {

@@ -42,7 +42,7 @@ const FlatMode = memo(() => {
       // components={{ ScrollSeekPlaceholder: Placeholder }}
       computeItemKey={(_, item) => item.id}
       data={topics}
-      fixedItemHeight={44}
+      defaultItemHeight={44}
       initialTopMostItemIndex={Math.max(activeIndex, 0)}
       itemContent={itemContent}
       overscan={44 * 10}

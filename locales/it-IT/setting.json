@@ -98,6 +98,7 @@
       "title": "Utilizzo del modo di richiesta del client"
     },
     "fetcher": {
+      "clear": "Cancella il modello ottenuto",
       "fetch": "Ottenere l'elenco dei modelli",
       "fetching": "Recupero dell'elenco dei modelli in corso...",
       "latestTime": "Ultimo aggiornamento: {{time}}",
@@ -387,6 +388,11 @@
       "label": "Modello di riscrittura delle domande",
       "modelDesc": "Modello specificato per ottimizzare le domande degli utenti",
       "title": "Riscrittura delle domande del knowledge base"
+    },
+    "thread": {
+      "label": "Modello di denominazione dei sottoargomenti",
+      "modelDesc": "Modello designato per la rinominazione automatica dei sottoargomenti",
+      "title": "Rinominazione automatica dei sottoargomenti"
     },
     "title": "Assistente di sistema",
     "topic": {

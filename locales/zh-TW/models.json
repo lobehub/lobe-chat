@@ -94,6 +94,7 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO 是一款高度靈活的多模型合併，旨在提供卓越的創造性體驗。"
   },
+  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) 是高精度的指令模型，適用於複雜計算。"
   },
@@ -175,6 +176,15 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math專注於數學領域的問題求解，為高難度題提供專業解答。"
   },
+  "Qwen2-72B-Instruct": {
+    "description": "Qwen2 是 Qwen 模型的最新系列，支持 128k 上下文，對比當前最優的開源模型，Qwen2-72B 在自然語言理解、知識、代碼、數學及多語言等多項能力上均顯著超越當前領先的模型。"
+  },
+  "Qwen2-7B-Instruct": {
+    "description": "Qwen2 是 Qwen 模型的最新系列，能夠超越同等規模的最優開源模型甚至更大規模的模型，Qwen2 7B 在多個評測上取得顯著的優勢，尤其是在代碼及中文理解上。"
+  },
+  "Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct 支持 16k 上下文，生成長文本超過 8K。支持 function call 與外部系統無縫互動，極大提升了靈活性和擴展性。模型知識明顯增加，並且大幅提高了編碼和數學能力，多語言支持超過 29 種。"
+  },
   "SenseChat": {
     "description": "基礎版本模型 (V4)，4K上下文長度，通用能力強大"
   },
@@ -204,6 +214,9 @@
   },
   "Tencent/Hunyuan-A52B-Instruct": {
     "description": "Hunyuan-Large 是業界最大的開源 Transformer 架構 MoE 模型，擁有 3890 億總參數量和 520 億激活參數量。"
+  },
+  "Yi-34B-Chat": {
+    "description": "Yi-1.5-34B 在保持原系列模型優秀的通用語言能力的前提下，通過增量訓練 5 千億高質量 token，大幅提高了數學邏輯和代碼能力。"
   },
   "abab5.5-chat": {
     "description": "面向生產力場景，支持複雜任務處理和高效文本生成，適用於專業領域應用。"
@@ -367,6 +380,9 @@
   "codegeex-4": {
     "description": "CodeGeeX-4是一個強大的AI編程助手，支持多種編程語言的智能問答與代碼補全，提升開發效率。"
   },
+  "codegeex4-all-9b": {
+    "description": "CodeGeeX4-ALL-9B 是一個多語言代碼生成模型，支持包括代碼補全和生成、代碼解釋器、網絡搜索、函數調用、倉庫級代碼問答在內的全面功能，覆蓋軟件開發的各種場景。是參數少於 10B 的頂尖代碼生成模型。"
+  },
   "codegemma": {
     "description": "CodeGemma 專用于不同編程任務的輕量級語言模型，支持快速迭代和集成。"
   },
@@ -421,6 +437,9 @@
   "deepseek-chat": {
     "description": "融合通用與代碼能力的全新開源模型，不僅保留了原有 Chat 模型的通用對話能力和 Coder 模型的強大代碼處理能力，還更好地對齊了人類偏好。此外，DeepSeek-V2.5 在寫作任務、指令跟隨等多個方面也實現了大幅提升。"
   },
+  "deepseek-coder-33B-instruct": {
+    "description": "DeepSeek Coder 33B 是一個代碼語言模型，基於 2 萬億數據訓練而成，其中 87% 為代碼，13% 為中英文語言。模型引入 16K 窗口大小和填空任務，提供項目級別的代碼補全和片段填充功能。"
+  },
   "deepseek-coder-v2": {
     "description": "DeepSeek Coder V2 是開源的混合專家代碼模型，在代碼任務方面表現優異，與 GPT4-Turbo 相媲美。"
   },
@@ -460,9 +479,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 是最新的實驗性模型，在文本和多模態用例中都有顯著的性能提升。"
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827 提供了優化後的多模態處理能力，適用多種複雜任務場景。"
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash 是 Google 最新的多模態 AI 模型，具備快速處理能力，支持文本、圖像和視頻輸入，適用於多種任務的高效擴展。"
   },
@@ -472,14 +488,14 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 是最新的生產就緒模型，提供更高品質的輸出，特別在數學、長上下文和視覺任務方面有顯著提升。"
   },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801 提供出色的多模態處理能力，為應用開發帶來更大靈活性。"
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827 結合最新優化技術，帶來更高效的多模態數據處理能力。"
-  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro 支持高達 200 萬個 tokens，是中型多模態模型的理想選擇，適用於複雜任務的多方面支持。"
+  },
+  "gemini-exp-1114": {
+    "description": "Gemini Exp 1114 是 Google 最新的實驗性多模態 AI 模型，具備快速處理能力，支持文本、影像和影片輸入，適用於多種任務的高效擴展。"
+  },
+  "gemini-exp-1121": {
+    "description": "Gemini Exp 1121 是 Google 最新的實驗性多模態 AI 模型，具備快速處理能力，支持文本、圖像和視頻輸入，適用於多種任務的高效擴展。"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 適合中小規模任務處理，兼具成本效益。"
@@ -507,6 +523,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520是最新模型版本，專為高度複雜和多樣化任務設計，表現卓越。"
+  },
+  "glm-4-9b-chat": {
+    "description": "GLM-4-9B-Chat 在語義、數學、推理、代碼和知識等多方面均表現出較高性能。還具備網頁瀏覽、代碼執行、自定義工具調用和長文本推理。支持包括日語、韓語、德語在內的 26 種語言。"
   },
   "glm-4-air": {
     "description": "GLM-4-Air是性價比高的版本，性能接近GLM-4，提供快速度和實惠的價格。"
@@ -616,6 +635,9 @@
   "grok-beta": {
     "description": "擁有與 Grok 2 相當的性能，但具備更高的效率、速度和功能。"
   },
+  "grok-vision-beta": {
+    "description": "最新的圖像理解模型，可以處理各種各樣的視覺信息，包括文檔、圖表、截圖和照片等。"
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合併了多個頂尖模型的創意與智能相結合的語言模型。"
   },
@@ -651,6 +673,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 提供多場景下的智能對話解決方案。"
+  },
+  "internlm2-pro-chat": {
+    "description": "我們仍在維護的舊版本模型，有 7B、20B 多種模型參數量可選。"
+  },
+  "internlm2.5-latest": {
+    "description": "我們最新的模型系列，有著卓越的推理性能，支持 1M 的上下文長度以及更強的指令跟隨和工具調用能力。"
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -843,6 +871,7 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 是一款面向開發者、研究人員和企業的開放大型語言模型 (LLM)，旨在幫助他們構建、實驗並負責任地擴展他們的生成 AI 想法。作為全球社區創新的基礎系統的一部分，它非常適合計算能力和資源有限、邊緣設備和更快的訓練時間。"
   },
+  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/wizardlm 2-7b": {
     "description": "WizardLM 2 7B 是微軟AI最新的快速輕量化模型，性能接近於現有開源領導模型的10倍。"
   },
@@ -974,6 +1003,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Pixtral模型在圖表和圖理解、文檔問答、多模態推理和指令遵循等任務上表現出強大的能力，能夠以自然分辨率和寬高比攝入圖像，還能夠在長達128K令牌的長上下文窗口中處理任意數量的圖像。"
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large 是一款擁有 1240 億參數的開源多模態模型，基於 Mistral Large 2 構建。這是我們多模態家族中的第二款模型，展現了前沿水平的圖像理解能力。"
   },
   "pro-128k": {
     "description": "Spark Pro 128K 配置了特大上下文處理能力，能夠處理多達128K的上下文信息，特別適合需通篇分析和長期邏輯關聯處理的長文內容，可在複雜文本溝通中提供流暢一致的邏輯與多樣的引用支持。"

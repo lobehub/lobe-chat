@@ -79,7 +79,7 @@ export const chatTopic: StateCreator<
   createTopic: async () => {
     const { activeId, internal_createTopic } = get();
 
-    const messages = chatSelectors.currentChats(get());
+    const messages = chatSelectors.activeBaseChats(get());
 
     set({ creatingTopic: true }, false, n('creatingTopic/start'));
     const topicId = await internal_createTopic({
@@ -94,7 +94,7 @@ export const chatTopic: StateCreator<
 
   saveToTopic: async () => {
     // if there is no message, stop
-    const messages = chatSelectors.currentChats(get());
+    const messages = chatSelectors.activeBaseChats(get());
     if (messages.length === 0) return;
 
     const { activeId, summaryTopicTitle, internal_createTopic } = get();
@@ -223,7 +223,11 @@ export const chatTopic: StateCreator<
       },
     ),
   switchTopic: async (id, skipRefreshMessage) => {
-    set({ activeTopicId: !id ? (null as any) : id }, false, n('toggleTopic'));
+    set(
+      { activeTopicId: !id ? (null as any) : id, activeThreadId: undefined },
+      false,
+      n('toggleTopic'),
+    );
 
     if (skipRefreshMessage) return;
     await get().refreshMessages();

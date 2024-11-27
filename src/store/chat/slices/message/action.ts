@@ -128,7 +128,7 @@ export const chatMessage: StateCreator<
     if (message.tools) {
       const toolMessageIds = message.tools.flatMap((tool) => {
         const messages = chatSelectors
-          .currentChats(get())
+          .activeBaseChats(get())
           .filter((m) => m.tool_call_id === tool.id);
 
         return messages.map((m) => m.id);
@@ -252,7 +252,7 @@ export const chatMessage: StateCreator<
 
     if (!activeId) return;
 
-    const messages = messagesReducer(chatSelectors.currentChats(get()), payload);
+    const messages = messagesReducer(chatSelectors.activeBaseChats(get()), payload);
 
     const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
 
