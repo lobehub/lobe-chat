@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix fallback behavior of default mode in AgentRuntime."]
+    },
+    "date": "2024-11-27",
+    "version": "1.34.3"
+  },
+  {
+    "children": {
       "improvements": ["Improve thread i18n locale."]
     },
     "date": "2024-11-27",
