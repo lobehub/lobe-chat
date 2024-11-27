@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash';
+import { uniqueId } from 'lodash-es';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 
