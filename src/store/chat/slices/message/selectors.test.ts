@@ -170,7 +170,7 @@ describe('chatSelectors', () => {
         activeId: 'abc',
       });
 
-      const chats = chatSelectors.currentChatsWithHistoryConfig(state);
+      const chats = chatSelectors.mainAIChatsWithHistoryConfig(state);
       expect(chats).toHaveLength(3);
       expect(chats).toEqual(mockedChats);
     });
@@ -196,7 +196,7 @@ describe('chatSelectors', () => {
         });
       });
 
-      const chats = chatSelectors.currentChatsWithHistoryConfig(state);
+      const chats = chatSelectors.mainAIChatsWithHistoryConfig(state);
 
       expect(chats).toHaveLength(2);
       expect(chats).toEqual([
@@ -232,6 +232,19 @@ describe('chatSelectors', () => {
     });
   });
 
+  describe('mainDisplayChats', () => {
+    it('should return existing messages except tool message', () => {
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('someActiveId')]: mockMessages,
+        },
+        activeId: 'someActiveId',
+      });
+      const chats = chatSelectors.mainDisplayChats(state);
+      expect(chats).toEqual(mockedChats.slice(0, 2));
+    });
+  });
+
   describe('chatsMessageString', () => {
     it('should concatenate the contents of all messages returned by currentChatsWithHistoryConfig', () => {
       // Prepare a state with a few messages
@@ -249,7 +262,7 @@ describe('chatSelectors', () => {
         .join('');
 
       // Call the selector and verify the result
-      const concatenatedString = chatSelectors.chatsMessageString(state);
+      const concatenatedString = chatSelectors.mainAIChatsMessageString(state);
       expect(concatenatedString).toBe(expectedString);
 
       // Restore the mocks after the test

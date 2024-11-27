@@ -223,7 +223,11 @@ export const chatTopic: StateCreator<
       },
     ),
   switchTopic: async (id, skipRefreshMessage) => {
-    set({ activeTopicId: !id ? (null as any) : id }, false, n('toggleTopic'));
+    set(
+      { activeTopicId: !id ? (null as any) : id, activeThreadId: undefined },
+      false,
+      n('toggleTopic'),
+    );
 
     if (skipRefreshMessage) return;
     await get().refreshMessages();

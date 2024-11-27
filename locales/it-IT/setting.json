@@ -389,6 +389,11 @@
       "modelDesc": "Modello specificato per ottimizzare le domande degli utenti",
       "title": "Riscrittura delle domande del knowledge base"
     },
+    "thread": {
+      "label": "Modello di denominazione dei sottoargomenti",
+      "modelDesc": "Modello designato per la rinominazione automatica dei sottoargomenti",
+      "title": "Rinominazione automatica dei sottoargomenti"
+    },
     "title": "Assistente di sistema",
     "topic": {
       "label": "Modello di denominazione degli argomenti",

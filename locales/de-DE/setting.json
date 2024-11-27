@@ -389,6 +389,11 @@
       "modelDesc": "Modell zur Optimierung der Benutzeranfragen",
       "title": "Wiederformulierung von Fragen aus der Wissensdatenbank"
     },
+    "thread": {
+      "label": "Unterthema-Namensmodell",
+      "modelDesc": "Modell zur automatischen Umbenennung von Unterthemen",
+      "title": "Automatische Benennung von Unterthemen"
+    },
     "title": "Systemassistent",
     "topic": {
       "label": "Themenbenennungsmodell",

@@ -16,6 +16,8 @@
   "back": "Voltar",
   "batchDelete": "Excluir em massa",
   "blog": "Blog de Produtos",
+  "branching": "Criar subtópico",
+  "branchingDisable": "A funcionalidade de \"subtópico\" está disponível apenas na versão do servidor. Se precisar dessa funcionalidade, mude para o modo de implantação no servidor ou use o LobeChat Cloud.",
   "cancel": "Cancelar",
   "changelog": "Registro de alterações",
   "close": "Fechar",

@@ -22,6 +22,9 @@
   "fireworksai": {
     "description": "Fireworks AI là nhà cung cấp dịch vụ mô hình ngôn ngữ cao cấp hàng đầu, tập trung vào gọi chức năng và xử lý đa phương thức. Mô hình mới nhất của họ, Firefunction V2, dựa trên Llama-3, được tối ưu hóa cho gọi chức năng, đối thoại và tuân theo chỉ dẫn. Mô hình ngôn ngữ hình ảnh FireLLaVA-13B hỗ trợ đầu vào hỗn hợp hình ảnh và văn bản. Các mô hình đáng chú ý khác bao gồm dòng Llama và dòng Mixtral, cung cấp hỗ trợ cho việc tuân theo và tạo ra chỉ dẫn đa ngôn ngữ hiệu quả."
   },
+  "giteeai": {
+    "description": "Serverless API của Gitee AI cung cấp các dịch vụ API lý luận mô hình lớn cho các nhà phát triển AI."
+  },
   "github": {
     "description": "Với GitHub Models, các nhà phát triển có thể trở thành kỹ sư AI và xây dựng với các mô hình AI hàng đầu trong ngành."
   },

@@ -389,6 +389,11 @@
       "modelDesc": "Kullanıcı sorularını optimize etmek için kullanılan model",
       "title": "Bilgi Tabanı Soru Yeniden Yazımı"
     },
+    "thread": {
+      "label": "Alt konu adlandırma modeli",
+      "modelDesc": "Alt konuların otomatik olarak yeniden adlandırılması için kullanılan model",
+      "title": "Alt konu otomatik adlandırma"
+    },
     "title": "Sistem Asistanı",
     "topic": {
       "label": "Konu Adlandırma Modeli",
