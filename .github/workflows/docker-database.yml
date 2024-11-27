@@ -1,9 +1,9 @@
 name: Publish Database Docker Image
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # 保留手动触发选项
   release:
-    types: [published]
+    types: [published]  # 当发布新版本时触发
 
 jobs:
   push_to_registry:
@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
+      
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -24,8 +25,9 @@ jobs:
         with:
           images: ${{ secrets.DOCKER_REGISTRY_USER }}/lobe-chat-clerk
           tags: |
-            type=raw,value=latest
-            type=ref,event=tag
+            type=semver,pattern={{version}}  # 使用语义化版本号
+            type=semver,pattern={{major}}.{{minor}}  # 主次版本号
+            type=raw,value=latest  # 保持最新版本标签
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -37,7 +39,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile.database  # 指定使用 Dockerfile.database 文件
+          file: ./Dockerfile.database
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
