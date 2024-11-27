@@ -1,5 +1,10 @@
 {
   "actions": {
     "confirmRemoveThread": "U staat op het punt dit subonderwerp te verwijderen. Na verwijdering kan het niet worden hersteld, dus wees voorzichtig."
-  }
+  },
+  "newPortalThread": {
+    "includeContext": "Inclusief onderwerpcontext",
+    "title": "Een nieuw subonderwerp starten"
+  },
+  "notSupportMultiModals": "Subonderwerpen ondersteunen momenteel geen bestand/afbeelding uploads. Als u behoefte heeft, laat dan gerust een bericht achter: <1>💬 Discussieforum</1>"
 }
