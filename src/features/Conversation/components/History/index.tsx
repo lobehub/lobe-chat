@@ -4,6 +4,7 @@ import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { ScrollText } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
@@ -28,6 +29,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const History = memo(() => {
   const { styles, theme } = useStyles();
+  const { t } = useTranslation('chat');
   const [content, model] = useChatStore((s) => {
     const history = topicSelectors.currentActiveTopicSummary(s);
     return [history?.content, history?.model];
@@ -46,8 +48,7 @@ const History = memo(() => {
                 style={{ color: theme.colorTextDescription }}
               />
             </Center>
-            <Typography.Text type={'secondary'}>历史消息总结</Typography.Text>
-
+            <Typography.Text type={'secondary'}>{t('historySummary')}</Typography.Text>
             {model && (
               <div>
                 <ModelTag model={model} />
