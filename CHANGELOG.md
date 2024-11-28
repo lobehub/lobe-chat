@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.34.4](https://github.com/lobehub/lobe-chat/compare/v1.34.3...v1.34.4)
+
+<sup>Released on **2024-11-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add switch portal thread.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add switch portal thread, closes [#4819](https://github.com/lobehub/lobe-chat/issues/4819) ([8dbf3ce](https://github.com/lobehub/lobe-chat/commit/8dbf3ce))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.34.3](https://github.com/lobehub/lobe-chat/compare/v1.34.2...v1.34.3)
 
 <sup>Released on **2024-11-27**</sup>

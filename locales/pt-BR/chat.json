@@ -32,6 +32,7 @@
   "duplicateTitle": "{{title}} Cópia",
   "emptyAgent": "Sem assistente disponível",
   "historyRange": "Intervalo de Histórico",
+  "historySummary": "Resumo das mensagens históricas",
   "inbox": {
     "desc": "Ative o cluster cerebral, inspire faíscas de pensamento. Seu assistente inteligente, aqui para conversar sobre tudo.",
     "title": "Conversa Aleatória"

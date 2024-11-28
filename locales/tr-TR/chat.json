@@ -32,6 +32,7 @@
   "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
   "historyRange": "Geçmiş Aralığı",
+  "historySummary": "Tarihsel haber özeti",
   "inbox": {
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
     "title": "Sohbet Et"
