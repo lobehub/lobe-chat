@@ -11,7 +11,7 @@ const ChatList = memo(() => {
   return (
     <Flexbox height={'100%'} style={{ paddingTop: 24, position: 'relative' }}>
       {ids.map((id, index) => (
-        <ChatItem id={id} index={index} key={id} />
+        <ChatItem actionBar={false} id={id} index={index} key={id} />
       ))}
     </Flexbox>
   );

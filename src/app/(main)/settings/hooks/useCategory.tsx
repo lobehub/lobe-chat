@@ -36,6 +36,16 @@ export const useCategory = () => {
             </Link>
           ),
         },
+        {
+          icon: <Icon icon={Bot} />,
+          key: SettingsTabs.Agent,
+          label: (
+            <Link href={'/settings/agent'} onClick={(e) => e.preventDefault()}>
+              {t('tab.agent')}
+            </Link>
+          ),
+        },
+
         enableWebrtc && {
           icon: <Icon icon={Cloudy} />,
           key: SettingsTabs.Sync,
@@ -50,34 +60,41 @@ export const useCategory = () => {
             </Link>
           ),
         },
-        showLLM && {
-          icon: <Icon icon={Brain} />,
-          key: SettingsTabs.LLM,
-          label: (
-            <Link href={'/settings/llm'} onClick={(e) => e.preventDefault()}>
-              {t('tab.llm')}
-            </Link>
-          ),
+        {
+          children: [
+            showLLM && {
+              icon: <Icon icon={Brain} />,
+              key: SettingsTabs.Provider,
+              label: (
+                <Link href={'/settings/provider'} onClick={(e) => e.preventDefault()}>
+                  {t('tab.provider')}
+                </Link>
+              ),
+            },
+            showLLM && {
+              icon: <Icon icon={Brain} />,
+              key: SettingsTabs.LLM,
+              label: (
+                <Link href={'/settings/llm'} onClick={(e) => e.preventDefault()}>
+                  {t('tab.llm')}
+                </Link>
+              ),
+            },
+            enableSTT && {
+              icon: <Icon icon={Mic2} />,
+              key: SettingsTabs.TTS,
+              label: (
+                <Link href={'/settings/tts'} onClick={(e) => e.preventDefault()}>
+                  {t('tab.tts')}
+                </Link>
+              ),
+            },
+          ],
+          key: 'ai',
+          label: 'AI Engine',
+          type: 'group',
         },
 
-        enableSTT && {
-          icon: <Icon icon={Mic2} />,
-          key: SettingsTabs.TTS,
-          label: (
-            <Link href={'/settings/tts'} onClick={(e) => e.preventDefault()}>
-              {t('tab.tts')}
-            </Link>
-          ),
-        },
-        {
-          icon: <Icon icon={Bot} />,
-          key: SettingsTabs.Agent,
-          label: (
-            <Link href={'/settings/agent'} onClick={(e) => e.preventDefault()}>
-              {t('tab.agent')}
-            </Link>
-          ),
-        },
         !hideDocs && {
           icon: <Icon icon={Info} />,
           key: SettingsTabs.About,
