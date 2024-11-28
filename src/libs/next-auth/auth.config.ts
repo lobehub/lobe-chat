@@ -1,5 +1,4 @@
 import type { NextAuthConfig } from 'next-auth';
-import urlJoin from 'url-join';
 
 import { authEnv } from '@/config/auth';
 
