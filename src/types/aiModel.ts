@@ -115,6 +115,13 @@ interface AIBaseModelCard {
   releasedAt?: string;
 }
 
+export interface AiModelConfig {
+  /**
+   * used in azure and doubao
+   */
+  deploymentName?: string;
+}
+
 export interface AIChatModelCard extends AIBaseModelCard {
   abilities?: {
     /**
@@ -130,10 +137,7 @@ export interface AIChatModelCard extends AIBaseModelCard {
      */
     vision?: boolean;
   };
-  /**
-   * used in azure and doubao
-   */
-  deploymentName?: string;
+  config?: AiModelConfig;
   maxOutput?: number;
   pricing?: ChatModelPricing;
   type: 'chat';
@@ -241,6 +245,7 @@ export type CreateAiModelParams = z.infer<typeof CreateAiModelSchema>;
 
 export interface AiProviderModelListItem {
   abilities?: ModelAbilities;
+  config?: AiModelConfig;
   contextWindowTokens?: number;
   displayName?: string;
   enabled: boolean;
@@ -254,6 +259,11 @@ export interface AiProviderModelListItem {
 // Update
 export const UpdateAiModelSchema = z.object({
   abilities: AiModelAbilitiesSchema.optional(),
+  config: z
+    .object({
+      deploymentName: z.string().optional(),
+    })
+    .optional(),
   contextWindowTokens: z.number().optional(),
   displayName: z.string().optional(),
 });
