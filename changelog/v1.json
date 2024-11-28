@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add Google LearnLM model."]
+    },
+    "date": "2024-11-28",
+    "version": "1.34.5"
+  },
+  {
+    "children": {
       "improvements": ["Add switch portal thread."]
     },
     "date": "2024-11-27",
