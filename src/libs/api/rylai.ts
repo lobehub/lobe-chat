@@ -1,15 +1,11 @@
 import { ApiClient } from './api';
 
-if (!process.env.RYLAI_API_URL || !process.env.RYLAI_API_KEY) {
-  throw new Error('Missing required environment variables');
-}
-
 const AppId = 'lobe';
 
 // 创建实例
-const api = new ApiClient(process.env.RYLAI_API_URL, {
+const api = new ApiClient(process.env.RYLAI_API_URL || '', {
   headers: {
-    Authorization: `${process.env.RYLAI_API_KEY}`,
+    Authorization: `${process.env.RYLAI_API_KEY || ''}`,
   },
 });
 
