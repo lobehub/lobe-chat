@@ -32,6 +32,7 @@
   "duplicateTitle": "{{title}} kopia",
   "emptyAgent": "Brak asystenta",
   "historyRange": "Zakres historii",
+  "historySummary": "Podsumowanie wiadomości historycznych",
   "inbox": {
     "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
     "title": "Pogadajmy sobie"
