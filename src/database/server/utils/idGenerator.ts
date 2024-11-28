@@ -10,6 +10,7 @@ const prefixes = {
   plugins: 'plg',
   sessionGroups: 'sg',
   sessions: 'ssn',
+  threads: 'thd',
   topics: 'tpc',
   user: 'user',
 } as const;

@@ -8,6 +8,7 @@
   "agents": "مساعد",
   "artifact": {
     "generating": "جاري الإنشاء",
+    "inThread": "لا يمكن عرض الموضوعات الفرعية، يرجى التبديل إلى منطقة المحادثة الرئيسية لفتحها",
     "thinking": "جاري التفكير",
     "thought": "عملية التفكير",
     "unknownTitle": "عمل غير مسمى"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} نسخة",
   "emptyAgent": "لا يوجد مساعد",
   "historyRange": "نطاق التاريخ",
+  "historySummary": "ملخص الرسائل التاريخية",
   "inbox": {
     "desc": "قم بتشغيل مجموعة الدماغ وأشعل شرارة التفكير. مساعدك الذكي، هنا حيث يمكنك التواصل بكل شيء",
     "title": "دردشة عشوائية"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "حذف وإعادة الإنشاء",
+    "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
     "regenerate": "إعادة الإنشاء"
   },
   "newAgent": "مساعد جديد",
@@ -120,6 +123,11 @@
     "action": "إدخال صوتي",
     "loading": "جارٍ التعرف...",
     "prettifying": "جارٍ التجميل..."
+  },
+  "thread": {
+    "divider": "موضوع فرعي",
+    "threadMessageCount": "{{messageCount}} رسالة",
+    "title": "موضوع فرعي"
   },
   "tokenDetails": {
     "chats": "رسائل المحادثة",

@@ -8,6 +8,7 @@
   "agents": "エージェント",
   "artifact": {
     "generating": "生成中",
+    "inThread": "サブトピックでは表示できません。メインの対話エリアに切り替えてください。",
     "thinking": "思考中",
     "thought": "思考過程",
     "unknownTitle": "未命名の作品"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} のコピー",
   "emptyAgent": "エージェントがいません",
   "historyRange": "履歴範囲",
+  "historySummary": "履歴メッセージの要約",
   "inbox": {
     "desc": "脳のクラスターを起動し、創造性を引き出しましょう。あなたのスマートアシスタントは、あなたとすべてのことについてここでコミュニケーションします。",
     "title": "気軽におしゃべり"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "削除して再生成",
+    "deleteDisabledByThreads": "サブトピックが存在するため、削除できません。",
     "regenerate": "再生成"
   },
   "newAgent": "新しいエージェント",
@@ -120,6 +123,11 @@
     "action": "音声入力",
     "loading": "認識中...",
     "prettifying": "整形中..."
+  },
+  "thread": {
+    "divider": "サブトピック",
+    "threadMessageCount": "{{messageCount}} 件のメッセージ",
+    "title": "サブトピック"
   },
   "tokenDetails": {
     "chats": "チャットメッセージ",

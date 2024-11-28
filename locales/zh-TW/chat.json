@@ -8,6 +8,7 @@
   "agents": "助手",
   "artifact": {
     "generating": "生成中",
+    "inThread": "子話題中無法查看，請切換到主對話區打開",
     "thinking": "思考中",
     "thought": "思考過程",
     "unknownTitle": "未命名作品"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暫無助手",
   "historyRange": "歷史範圍",
+  "historySummary": "歷史消息總結",
   "inbox": {
     "desc": "開啟大腦集群，激發思維火花。你的智能助理，在這裡與你交流一切",
     "title": "隨便聊聊"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "刪除並重新生成",
+    "deleteDisabledByThreads": "存在子話題，無法刪除",
     "regenerate": "重新生成"
   },
   "newAgent": "新建助手",
@@ -120,6 +123,11 @@
     "action": "語音輸入",
     "loading": "識別中...",
     "prettifying": "潤色中..."
+  },
+  "thread": {
+    "divider": "子話題",
+    "threadMessageCount": "{{messageCount}} 條消息",
+    "title": "子話題"
   },
   "tokenDetails": {
     "chats": "聊天訊息",

@@ -98,6 +98,7 @@
       "title": "Usar o modo de solicitação do cliente"
     },
     "fetcher": {
+      "clear": "Limpar o modelo obtido",
       "fetch": "Obter lista de modelos",
       "fetching": "Obtendo lista de modelos...",
       "latestTime": "Última atualização: {{time}}",
@@ -387,6 +388,11 @@
       "label": "Modelo de Reescrita de Perguntas",
       "modelDesc": "Modelo designado para otimizar as perguntas dos usuários",
       "title": "Reescrita de perguntas do banco de dados"
+    },
+    "thread": {
+      "label": "Modelo de Nomeação de Subtópicos",
+      "modelDesc": "Modelo designado para a renomeação automática de subtópicos",
+      "title": "Nomeação Automática de Subtópicos"
     },
     "title": "Assistente do Sistema",
     "topic": {

@@ -8,6 +8,7 @@
   "agents": "Asistente",
   "artifact": {
     "generating": "Generando",
+    "inThread": "No se puede ver en el subtema, cambie a la zona de conversación principal para abrirlo",
     "thinking": "Pensando",
     "thought": "Proceso de pensamiento",
     "unknownTitle": "Obra sin título"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "No hay asistente disponible",
   "historyRange": "Rango de historial",
+  "historySummary": "Resumen de mensajes históricos",
   "inbox": {
     "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
     "title": "Charla casual"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Eliminar y Regenerar",
+    "deleteDisabledByThreads": "Existen subtemas, no se puede eliminar",
     "regenerate": "Regenerar"
   },
   "newAgent": "Nuevo asistente",
@@ -120,6 +123,11 @@
     "action": "Entrada de voz",
     "loading": "Reconociendo...",
     "prettifying": "Embelleciendo..."
+  },
+  "thread": {
+    "divider": "Subtema",
+    "threadMessageCount": "{{messageCount}} mensajes",
+    "title": "Subtema"
   },
   "tokenDetails": {
     "chats": "Mensajes de chat",

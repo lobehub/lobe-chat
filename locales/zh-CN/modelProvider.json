@@ -21,7 +21,7 @@
   },
   "bedrock": {
     "accessKeyId": {
-      "desc": "填入AWS Access Key Id",
+      "desc": "填入 AWS Access Key Id",
       "placeholder": "AWS Access Key Id",
       "title": "AWS Access Key Id"
     },

@@ -8,6 +8,7 @@
   "agents": "دستیار",
   "artifact": {
     "generating": "در حال تولید",
+    "inThread": "در زیرموضوع نمی‌توانید مشاهده کنید، لطفاً به ناحیه اصلی گفتگو بروید",
     "thinking": "در حال تفکر",
     "thought": "فرآیند تفکر",
     "unknownTitle": "اثر بدون نام"
@@ -31,6 +32,7 @@
   "duplicateTitle": "نسخه‌ای از {{title}}",
   "emptyAgent": "دستیار موجود نیست",
   "historyRange": "محدوده تاریخی",
+  "historySummary": "خلاصه پیام‌های تاریخی",
   "inbox": {
     "desc": "خوشه‌های مغزی را فعال کنید و جرقه‌های تفکر را برانگیزید. دستیار هوشمند شما اینجاست تا با شما در مورد هر چیزی صحبت کند.",
     "title": "گپ دوستانه"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "حذف و بازتولید",
+    "deleteDisabledByThreads": "زیرموضوع وجود دارد، نمی‌توان حذف کرد",
     "regenerate": "بازتولید"
   },
   "newAgent": "دستیار جدید",
@@ -120,6 +123,11 @@
     "action": "ورودی صوتی",
     "loading": "در حال شناسایی...",
     "prettifying": "در حال ویرایش..."
+  },
+  "thread": {
+    "divider": "زیرموضوع",
+    "threadMessageCount": "{{messageCount}} پیام",
+    "title": "زیرموضوع"
   },
   "tokenDetails": {
     "chats": "پیام‌های گفتگو",

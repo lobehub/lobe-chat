@@ -9,6 +9,7 @@ export default {
   agents: '助手',
   artifact: {
     generating: '生成中',
+    inThread: '子话题中无法查看，请切换到主对话区打开',
     thinking: '思考中',
     thought: '思考过程',
     unknownTitle: '未命名作品',
@@ -32,6 +33,7 @@ export default {
   duplicateTitle: '{{title}} 副本',
   emptyAgent: '暂无助手',
   historyRange: '历史范围',
+  historySummary: '历史消息总结',
   inbox: {
     desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
     title: '随便聊聊',
@@ -67,6 +69,7 @@ export default {
   },
   messageAction: {
     delAndRegenerate: '删除并重新生成',
+    deleteDisabledByThreads: '存在子话题，不能删除',
     regenerate: '重新生成',
   },
   newAgent: '新建助手',
@@ -123,6 +126,11 @@ export default {
     loading: '识别中...',
     prettifying: '润色中...',
   },
+  thread: {
+    divider: '子话题',
+    threadMessageCount: '{{messageCount}} 条消息',
+    title: '子话题',
+  },
   tokenDetails: {
     chats: '会话消息',
     historySummary: '历史总结',
@@ -152,8 +160,8 @@ export default {
     action: '语音朗读',
     clear: '删除语音',
   },
-  updateAgent: '更新助理信息',
 
+  updateAgent: '更新助理信息',
   upload: {
     action: {
       fileUpload: '上传文件',

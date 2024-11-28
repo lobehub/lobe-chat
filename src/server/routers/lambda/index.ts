@@ -13,6 +13,7 @@ import { pluginRouter } from './plugin';
 import { ragEvalRouter } from './ragEval';
 import { sessionRouter } from './session';
 import { sessionGroupRouter } from './sessionGroup';
+import { threadRouter } from './thread';
 import { topicRouter } from './topic';
 import { userRouter } from './user';
 
@@ -28,6 +29,7 @@ export const lambdaRouter = router({
   ragEval: ragEvalRouter,
   session: sessionRouter,
   sessionGroup: sessionGroupRouter,
+  thread: threadRouter,
   topic: topicRouter,
   user: userRouter,
 });

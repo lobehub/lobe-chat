@@ -8,6 +8,7 @@
   "agents": "Asystent",
   "artifact": {
     "generating": "Generowanie",
+    "inThread": "Nie można przeglądać w wątku, przełącz się na główny obszar rozmowy, aby otworzyć",
     "thinking": "Myślenie",
     "thought": "Proces myślenia",
     "unknownTitle": "Nienazwane dzieło"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} kopia",
   "emptyAgent": "Brak asystenta",
   "historyRange": "Zakres historii",
+  "historySummary": "Podsumowanie wiadomości historycznych",
   "inbox": {
     "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
     "title": "Pogadajmy sobie"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Usuń i wygeneruj ponownie",
+    "deleteDisabledByThreads": "Istnieją podwątki, nie można usunąć",
     "regenerate": "Wygeneruj ponownie"
   },
   "newAgent": "Nowy asystent",
@@ -120,6 +123,11 @@
     "action": "Mowa na tekst",
     "loading": "Rozpoznawanie...",
     "prettifying": "Upiększanie..."
+  },
+  "thread": {
+    "divider": "Podwątek",
+    "threadMessageCount": "{{messageCount}} wiadomości",
+    "title": "Podwątek"
   },
   "tokenDetails": {
     "chats": "Rozmowy",

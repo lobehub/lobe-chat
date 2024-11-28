@@ -68,6 +68,7 @@
     "510": "Xin lỗi, máy chủ không hỗ trợ chức năng mở rộng được yêu cầu, vui lòng liên hệ với quản trị viên",
     "524": "Xin lỗi, máy chủ đã hết thời gian chờ khi đang chờ phản hồi, có thể do phản hồi quá chậm, vui lòng thử lại sau",
     "AgentRuntimeError": "Lobe mô hình ngôn ngữ thực thi gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
+    "ConnectionCheckFailed": "Yêu cầu trả về trống, xin kiểm tra xem địa chỉ API proxy có đang thiếu `/v1` ở cuối không",
     "FreePlanLimit": "Hiện tại bạn đang sử dụng tài khoản miễn phí, không thể sử dụng tính năng này. Vui lòng nâng cấp lên gói trả phí để tiếp tục sử dụng.",
     "InvalidAccessCode": "Mật khẩu truy cập không hợp lệ hoặc trống, vui lòng nhập mật khẩu truy cập đúng hoặc thêm Khóa API tùy chỉnh",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",

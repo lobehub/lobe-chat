@@ -14,16 +14,17 @@ export const genServerLLMConfig = (specificConfig: Record<any, any>) => {
     const providerUpperCase = provider.toUpperCase();
     const providerCard = ProviderCards[`${provider}ProviderCard` as keyof typeof ProviderCards] as ModelProviderCard;
     const providerConfig = specificConfig[provider as keyof typeof specificConfig] || {};
+    const providerModelList = process.env[providerConfig.modelListKey ?? `${providerUpperCase}_MODEL_LIST`];
 
     config[provider] = {
       enabled: llmConfig[providerConfig.enabledKey || `ENABLED_${providerUpperCase}`],
       enabledModels: extractEnabledModels(
-        llmConfig[providerConfig.modelListKey || `${providerUpperCase}_MODEL_LIST`],
+        providerModelList,
         providerConfig.withDeploymentName || false,
       ),
       serverModelCards: transformToChatModelCards({
         defaultChatModels: (providerCard as ModelProviderCard)?.chatModels || [],
-        modelString: llmConfig[providerConfig.modelListKey || `${providerUpperCase}_MODEL_LIST`],
+        modelString: providerModelList,
         withDeploymentName: providerConfig.withDeploymentName || false,
       }),
       ...(providerConfig.fetchOnClient !== undefined && { fetchOnClient: providerConfig.fetchOnClient }),

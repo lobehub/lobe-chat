@@ -20,6 +20,20 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra is de krachtigste versie in de Spark-grootmodelserie, die de netwerkintegratie heeft geüpgraded en de tekstbegrip- en samenvattingscapaciteiten heeft verbeterd. Het is een allesomvattende oplossing voor het verbeteren van de kantoorproductiviteit en het nauwkeurig reageren op behoeften, en is een toonaangevend intelligent product in de industrie."
   },
+  "@cf/meta/llama-3-8b-instruct-awq": {},
+  "@cf/openchat/openchat-3.5-0106": {},
+  "@cf/qwen/qwen1.5-14b-chat-awq": {},
+  "@hf/google/gemma-7b-it": {},
+  "@hf/meta-llama/meta-llama-3-8b-instruct": {
+    "description": "Generatie na generatie toont Meta Llama 3 state-of-the-art prestaties op een breed scala aan industriële benchmarks en biedt nieuwe mogelijkheden, waaronder verbeterd redeneren."
+  },
+  "@hf/mistral/mistral-7b-instruct-v0.2": {},
+  "@hf/nexusflow/starling-lm-7b-beta": {},
+  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
+  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
+  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
+  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Maakt gebruik van zoekversterkingstechnologie om een uitgebreide koppeling tussen het grote model en domeinspecifieke kennis en wereldwijde kennis te realiseren. Ondersteunt het uploaden van verschillende documenten zoals PDF en Word, evenals URL-invoer, met tijdige en uitgebreide informatieverzameling en nauwkeurige, professionele output."
   },
@@ -31,6 +45,12 @@
   },
   "Baichuan4": {
     "description": "Het model heeft de beste prestaties in het binnenland en overtreft buitenlandse mainstream modellen in kennisencyclopedieën, lange teksten en creatieve generaties. Het heeft ook toonaangevende multimodale capaciteiten en presteert uitstekend in verschillende autoritatieve evaluatiebenchmarks."
+  },
+  "Baichuan4-Air": {
+    "description": "Modelcapaciteiten zijn nationaal de beste, overtreft buitenlandse mainstream modellen in kennisencyclopedie, lange teksten en creatieve generatie in Chinese taken. Beschikt ook over toonaangevende multimodale capaciteiten en presteert uitstekend op verschillende autoritatieve evaluatiebenchmarks."
+  },
+  "Baichuan4-Turbo": {
+    "description": "Modelcapaciteiten zijn nationaal de beste, overtreft buitenlandse mainstream modellen in kennisencyclopedie, lange teksten en creatieve generatie in Chinese taken. Beschikt ook over toonaangevende multimodale capaciteiten en presteert uitstekend op verschillende autoritatieve evaluatiebenchmarks."
   },
   "ERNIE-3.5-128K": {
     "description": "De door Baidu ontwikkelde vlaggenschip grote taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met de Baidu zoekplug-in, wat de actualiteit van vraag- en antwoordinformatie waarborgt."
@@ -46,6 +66,9 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat in vergelijking met ERNIE 3.5 een algehele upgrade van de modelcapaciteiten heeft gerealiseerd, en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ERNIE-4.0-Turbo-128K": {
+    "description": "Het vlaggenschip supergrote taalmodel van Baidu, met uitstekende algehele prestaties, breed toepasbaar in complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met Baidu zoekplug-ins, wat de actualiteit van vraag- en antwoordinformatie waarborgt. In vergelijking met ERNIE 4.0 presteert het beter."
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "De zelfontwikkelde vlaggenschip super-grote taalmodel van Baidu, dat uitmuntend presteert in diverse complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in, waarborgt de actualiteit van vraag-antwoordinformatie. Overtreft in performance ten opzichte van ERNIE 4.0."
@@ -71,6 +94,7 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO is een zeer flexibele multi-model combinatie, ontworpen om een uitstekende creatieve ervaring te bieden."
   },
+  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) is een hoogprecisie instructiemodel, geschikt voor complexe berekeningen."
   },
@@ -146,11 +170,20 @@
   "Qwen/Qwen2.5-7B-Instruct-Turbo": {
     "description": "Qwen2.5 is een geheel nieuwe serie grote taalmodellen, ontworpen om de verwerking van instructietaken te optimaliseren."
   },
-  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+  "Qwen/Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder richt zich op het schrijven van code."
   },
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math richt zich op het oplossen van wiskundige vraagstukken en biedt professionele antwoorden op moeilijke vragen."
+  },
+  "Qwen2-72B-Instruct": {
+    "description": "Qwen2 is de nieuwste serie van het Qwen-model, dat 128k context ondersteunt. In vergelijking met de huidige beste open-source modellen, overtreft Qwen2-72B op het gebied van natuurlijke taalbegrip, kennis, code, wiskunde en meertaligheid aanzienlijk de huidige toonaangevende modellen."
+  },
+  "Qwen2-7B-Instruct": {
+    "description": "Qwen2 is de nieuwste serie van het Qwen-model, dat in staat is om de beste open-source modellen van gelijke grootte of zelfs grotere modellen te overtreffen. Qwen2 7B heeft aanzienlijke voordelen behaald in verschillende evaluaties, vooral op het gebied van code en begrip van het Chinees."
+  },
+  "Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct ondersteunt 16k context en genereert lange teksten van meer dan 8K. Het ondersteunt functieaanroepen en naadloze interactie met externe systemen, wat de flexibiliteit en schaalbaarheid aanzienlijk vergroot. De kennis van het model is duidelijk toegenomen en de coderings- en wiskundige vaardigheden zijn sterk verbeterd, met ondersteuning voor meer dan 29 talen."
   },
   "SenseChat": {
     "description": "Basisversie van het model (V4), met een contextlengte van 4K, heeft sterke algemene capaciteiten."
@@ -178,6 +211,12 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B is de open-source versie die een geoptimaliseerde gesprekservaring biedt voor gespreksapplicaties."
+  },
+  "Tencent/Hunyuan-A52B-Instruct": {
+    "description": "Hunyuan-Large is het grootste open source Transformer-architectuur MoE-model in de industrie, met een totaal van 389 miljard parameters en 52 miljard geactiveerde parameters."
+  },
+  "Yi-34B-Chat": {
+    "description": "Yi-1.5-34B heeft de uitstekende algemene taalvaardigheden van de oorspronkelijke modelserie behouden en heeft door incrementele training van 500 miljard hoogwaardige tokens de wiskundige logica en codevaardigheden aanzienlijk verbeterd."
   },
   "abab5.5-chat": {
     "description": "Gericht op productiviteitsscenario's, ondersteunt complexe taakverwerking en efficiënte tekstgeneratie, geschikt voor professionele toepassingen."
@@ -341,6 +380,9 @@
   "codegeex-4": {
     "description": "CodeGeeX-4 is een krachtige AI-programmeerassistent die slimme vraag- en antwoordmogelijkheden en code-aanvulling ondersteunt voor verschillende programmeertalen, waardoor de ontwikkelingssnelheid wordt verhoogd."
   },
+  "codegeex4-all-9b": {
+    "description": "CodeGeeX4-ALL-9B is een meertalig codegeneratiemodel dat uitgebreide functionaliteit biedt, waaronder code-aanvulling en -generatie, code-interpreter, webzoekfunctie, functieaanroepen en repository-niveau codevragen, en dekt verschillende scenario's in softwareontwikkeling. Het is een top codegeneratiemodel met minder dan 10B parameters."
+  },
   "codegemma": {
     "description": "CodeGemma is een lichtgewicht taalmodel dat speciaal is ontworpen voor verschillende programmeertaken, ondersteunt snelle iteratie en integratie."
   },
@@ -395,6 +437,9 @@
   "deepseek-chat": {
     "description": "Een nieuw open-source model dat algemene en code-capaciteiten combineert, behoudt niet alleen de algemene conversatiecapaciteiten van het oorspronkelijke Chat-model en de krachtige codeverwerkingscapaciteiten van het Coder-model, maar is ook beter afgestemd op menselijke voorkeuren. Bovendien heeft DeepSeek-V2.5 aanzienlijke verbeteringen gerealiseerd in schrijfopdrachten, instructievolging en andere gebieden."
   },
+  "deepseek-coder-33B-instruct": {
+    "description": "DeepSeek Coder 33B is een code-taalmodel, getraind op 20 biljoen gegevens, waarvan 87% code en 13% in het Chinees en Engels. Het model introduceert een venstergrootte van 16K en invultaken, en biedt projectniveau code-aanvulling en fragmentinvulfunctionaliteit."
+  },
   "deepseek-coder-v2": {
     "description": "DeepSeek Coder V2 is een open-source hybride expertcode-model, presteert uitstekend in code-taken en is vergelijkbaar met GPT4-Turbo."
   },
@@ -434,9 +479,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 is het nieuwste experimentele model, met aanzienlijke prestatieverbeteringen in tekst- en multimodale toepassingen."
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827 biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash is Google's nieuwste multimodale AI-model, met snelle verwerkingscapaciteiten, ondersteunt tekst-, beeld- en video-invoer, en is geschikt voor efficiënte opschaling van verschillende taken."
   },
@@ -446,14 +488,14 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 is het nieuwste productieklare model, dat hogere kwaliteit output biedt, met name op het gebied van wiskunde, lange contexten en visuele taken."
   },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801 biedt uitstekende multimodale verwerkingscapaciteiten en biedt meer flexibiliteit voor applicatieontwikkeling."
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827 combineert de nieuwste optimalisatietechnologieën en biedt efficiëntere multimodale gegevensverwerkingscapaciteiten."
-  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro ondersteunt tot 2 miljoen tokens en is de ideale keuze voor middelgrote multimodale modellen, geschikt voor veelzijdige ondersteuning van complexe taken."
+  },
+  "gemini-exp-1114": {
+    "description": "Gemini Exp 1114 is Google's nieuwste experimentele multimodale AI-model, met een snelle verwerkingscapaciteit, ondersteunt tekst-, beeld- en video-invoer, geschikt voor efficiënte schaling van diverse taken."
+  },
+  "gemini-exp-1121": {
+    "description": "Gemini Exp 1121 is Google's nieuwste experimentele multimodale AI-model, dat snel kan verwerken en ondersteuning biedt voor tekst-, beeld- en video-invoer, geschikt voor efficiënte opschaling van verschillende taken."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is geschikt voor het verwerken van middelgrote taken, met een goede kosteneffectiviteit."
@@ -481,6 +523,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520 is de nieuwste modelversie, speciaal ontworpen voor zeer complexe en diverse taken, met uitstekende prestaties."
+  },
+  "glm-4-9b-chat": {
+    "description": "GLM-4-9B-Chat presteert goed op het gebied van semantiek, wiskunde, redeneren, code en kennis. Het beschikt ook over webbrowserfunctionaliteit, code-uitvoering, aangepaste toolaanroepen en lange tekstredenering. Ondersteunt 26 talen, waaronder Japans, Koreaans en Duits."
   },
   "glm-4-air": {
     "description": "GLM-4-Air is een kosteneffectieve versie met prestaties die dicht bij GLM-4 liggen, met snelle snelheid en een betaalbare prijs."
@@ -587,6 +632,12 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, en ondersteunt zowel tekst- als beeldinvoer met tekstuitvoer. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
   },
+  "grok-beta": {
+    "description": "Biedt prestaties vergelijkbaar met Grok 2, maar met hogere efficiëntie, snelheid en functionaliteit."
+  },
+  "grok-vision-beta": {
+    "description": "Het nieuwste model voor beeldbegrip, dat een breed scala aan visuele informatie kan verwerken, waaronder documenten, grafieken, screenshots en foto's."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is een taalmodel dat creativiteit en intelligentie combineert door meerdere topmodellen te integreren."
   },
@@ -622,6 +673,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."
+  },
+  "internlm2-pro-chat": {
+    "description": "Onze oudere modelversie die we nog steeds onderhouden, met opties voor 7B en 20B parameters."
+  },
+  "internlm2.5-latest": {
+    "description": "Onze nieuwste modelreeks met uitstekende redeneervaardigheden, ondersteunt een contextlengte van 1M en heeft verbeterde instructievolging en toolaanroepmogelijkheden."
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -814,6 +871,7 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 is een open groot taalmodel (LLM) gericht op ontwikkelaars, onderzoekers en bedrijven, ontworpen om hen te helpen bij het bouwen, experimenteren en verantwoordelijk opschalen van hun generatieve AI-ideeën. Als onderdeel van het basis systeem voor wereldwijde gemeenschapsinnovatie is het zeer geschikt voor apparaten met beperkte rekenkracht en middelen, edge-apparaten en snellere trainingstijden."
   },
+  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/wizardlm 2-7b": {
     "description": "WizardLM 2 7B is het nieuwste snelle en lichte model van Microsoft AI, met prestaties die bijna 10 keer beter zijn dan de huidige toonaangevende open-source modellen."
   },
@@ -946,8 +1004,14 @@
   "pixtral-12b-2409": {
     "description": "Het Pixtral model toont sterke capaciteiten in taken zoals grafiek- en beeldbegrip, documentvraag-en-antwoord, multimodale redenering en instructievolging, en kan afbeeldingen met natuurlijke resolutie en beeldverhouding verwerken, evenals een onbeperkt aantal afbeeldingen in een lange contextvenster van maximaal 128K tokens."
   },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large is een open-source multimodaal model met 124 miljard parameters, gebaseerd op Mistral Large 2. Dit is ons tweede model in de multimodale familie en toont geavanceerde beeldbegripcapaciteiten."
+  },
   "pro-128k": {
     "description": "Spark Pro 128K is uitgerust met een zeer grote contextverwerkingscapaciteit, in staat om tot 128K contextinformatie te verwerken. Het is bijzonder geschikt voor lange teksten die een volledige analyse en langdurige logische verbanden vereisen, en biedt een vloeiende en consistente logica met diverse ondersteuningen voor citaten in complexe tekstcommunicatie."
+  },
+  "qwen-coder-plus-latest": {
+    "description": "Tongyi Qianwen code model."
   },
   "qwen-coder-turbo-latest": {
     "description": "Het Tongyi Qianwen codeermodel."
@@ -1000,14 +1064,11 @@
   "qwen2.5-7b-instruct": {
     "description": "Het 7B model van Tongyi Qianwen 2.5 is open source beschikbaar."
   },
-  "qwen2.5-coder-1.5b-instruct": {
-    "description": "De open source versie van het Tongyi Qianwen codeermodel."
+  "qwen2.5-coder-32b-instruct": {
+    "description": "Open source versie van het Tongyi Qianwen code model."
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "De open source versie van het Tongyi Qianwen codeermodel."
-  },
-  "qwen2.5-math-1.5b-instruct": {
-    "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
@@ -1068,6 +1129,9 @@
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) is geschikt voor verfijnde instructietaken en biedt uitstekende taalverwerkingscapaciteiten."
+  },
+  "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet heeft de industrienormen verbeterd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen, en excelleert in uitgebreide evaluaties, terwijl het de snelheid en kosten van onze middelgrote modellen behoudt."
   },
   "wizardlm2": {
     "description": "WizardLM 2 is een taalmodel van Microsoft AI dat uitblinkt in complexe gesprekken, meertaligheid, inferentie en intelligente assistentie."

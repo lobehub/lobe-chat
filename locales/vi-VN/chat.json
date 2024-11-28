@@ -8,6 +8,7 @@
   "agents": "Trợ lý",
   "artifact": {
     "generating": "Đang tạo",
+    "inThread": "Không thể xem trong chủ đề con, vui lòng chuyển sang khu vực đối thoại chính để mở",
     "thinking": "Đang suy nghĩ",
     "thought": "Quá trình suy nghĩ",
     "unknownTitle": "Tác phẩm chưa được đặt tên"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} Bản sao",
   "emptyAgent": "Không có trợ lý",
   "historyRange": "Phạm vi lịch sử",
+  "historySummary": "Tóm tắt tin tức lịch sử",
   "inbox": {
     "desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
     "title": "Chuyện phiếm"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Xóa và tạo lại",
+    "deleteDisabledByThreads": "Có chủ đề con, không thể xóa",
     "regenerate": "Tạo lại"
   },
   "newAgent": "Tạo trợ lý mới",
@@ -120,6 +123,11 @@
     "action": "Nhập bằng giọng nói",
     "loading": "Đang nhận dạng...",
     "prettifying": "Đang tinh chỉnh..."
+  },
+  "thread": {
+    "divider": "Chủ đề con",
+    "threadMessageCount": "{{messageCount}} tin nhắn",
+    "title": "Chủ đề con"
   },
   "tokenDetails": {
     "chats": "Tin nhắn trò chuyện",

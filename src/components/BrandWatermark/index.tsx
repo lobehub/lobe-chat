@@ -26,6 +26,7 @@ const BrandWatermark = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
   return (
     <Flexbox
       align={'center'}
+      dir={'ltr'}
       flex={'none'}
       gap={4}
       horizontal

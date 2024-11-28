@@ -8,6 +8,7 @@
   "agents": "Assistente",
   "artifact": {
     "generating": "Generazione in corso",
+    "inThread": "Non è possibile visualizzare nei sottoargomenti, passare all'area di discussione principale per aprire",
     "thinking": "In fase di riflessione",
     "thought": "Processo di pensiero",
     "unknownTitle": "Opera non nominata"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "Nessun assistente disponibile",
   "historyRange": "Intervallo cronologico",
+  "historySummary": "Riepilogo della storia",
   "inbox": {
     "desc": "Attiva il cluster cerebrale, accendi la scintilla del pensiero. Il tuo assistente intelligente, qui per comunicare con te su tutto.",
     "title": "Chiacchierata casuale"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Elimina e rigenera",
+    "deleteDisabledByThreads": "Esistono sottoargomenti, non è possibile eliminare",
     "regenerate": "Rigenera"
   },
   "newAgent": "Nuovo assistente",
@@ -120,6 +123,11 @@
     "action": "Input vocale",
     "loading": "Riconoscimento in corso...",
     "prettifying": "Miglioramento in corso..."
+  },
+  "thread": {
+    "divider": "Sottoargomento",
+    "threadMessageCount": "{{messageCount}} messaggi",
+    "title": "Sottoargomento"
   },
   "tokenDetails": {
     "chats": "Chat",

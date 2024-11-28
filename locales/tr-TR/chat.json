@@ -8,6 +8,7 @@
   "agents": "Asistan",
   "artifact": {
     "generating": "Üretiliyor",
+    "inThread": "Alt konu içinde görüntülenemiyor, lütfen ana konuşma alanına geçin",
     "thinking": "Düşünülüyor",
     "thought": "Düşünce Süreci",
     "unknownTitle": "İsimsiz Eser"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
   "historyRange": "Geçmiş Aralığı",
+  "historySummary": "Tarihsel haber özeti",
   "inbox": {
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
     "title": "Sohbet Et"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Sil ve Yeniden Oluştur",
+    "deleteDisabledByThreads": "Alt konular mevcut, silinemez",
     "regenerate": "Yeniden Oluştur"
   },
   "newAgent": "Yeni Asistan",
@@ -120,6 +123,11 @@
     "action": "Ses Girişi",
     "loading": "Tanımlanıyor...",
     "prettifying": "İyileştiriliyor..."
+  },
+  "thread": {
+    "divider": "Alt konu",
+    "threadMessageCount": "{{messageCount}} mesaj",
+    "title": "Alt konu"
   },
   "tokenDetails": {
     "chats": "Sohbetler",

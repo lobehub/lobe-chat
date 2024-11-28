@@ -15,11 +15,15 @@
   "bedrock": {
     "description": "Bedrock, Amazon AWS tarafından sunulan bir hizmettir ve işletmelere gelişmiş yapay zeka dil modelleri ve görsel modeller sağlamaya odaklanmaktadır. Model ailesi, Anthropic'in Claude serisi, Meta'nın Llama 3.1 serisi gibi seçenekleri içermekte olup, metin üretimi, diyalog, görüntü işleme gibi çeşitli görevleri desteklemektedir. Farklı ölçek ve ihtiyaçlara uygun kurumsal uygulamalar için geniş bir yelpaze sunmaktadır."
   },
+  "cloudflare": {},
   "deepseek": {
     "description": "DeepSeek, yapay zeka teknolojisi araştırma ve uygulamalarına odaklanan bir şirkettir. En son modeli DeepSeek-V2.5, genel diyalog ve kod işleme yeteneklerini birleştirerek, insan tercihleriyle uyum, yazma görevleri ve talimat takibi gibi alanlarda önemli iyileştirmeler sağlamaktadır."
   },
   "fireworksai": {
     "description": "Fireworks AI, işlev çağrısı ve çok modlu işleme üzerine odaklanan önde gelen bir gelişmiş dil modeli hizmet sağlayıcısıdır. En son modeli Firefunction V2, Llama-3 tabanlıdır ve işlev çağrısı, diyalog ve talimat takibi için optimize edilmiştir. Görsel dil modeli FireLLaVA-13B, görüntü ve metin karışık girişi desteklemektedir. Diğer dikkat çekici modeller arasında Llama serisi ve Mixtral serisi bulunmaktadır ve etkili çok dilli talimat takibi ve üretim desteği sunmaktadır."
+  },
+  "giteeai": {
+    "description": "Gitee AI'nin Sunucusuz API, AI geliştiricileri kutusun dışında büyük modeller infeksiyon API hizmetini sağlar."
   },
   "github": {
     "description": "GitHub Modelleri ile geliştiriciler, AI mühendisleri olabilir ve sektörün önde gelen AI modelleri ile inşa edebilirler."
@@ -35,6 +39,9 @@
   },
   "hunyuan": {
     "description": "Tencent tarafından geliştirilen büyük bir dil modeli, güçlü Çince yaratım yeteneklerine, karmaşık bağlamlarda mantıksal akıl yürütme yeteneğine ve güvenilir görev yerine getirme yeteneğine sahiptir."
+  },
+  "internlm": {
+    "description": "Büyük model araştırma ve geliştirme araç zincirine adanmış bir açık kaynak organizasyonu. Tüm AI geliştiricilerine verimli ve kullanımı kolay bir açık kaynak platformu sunarak en son büyük model ve algoritma teknolojilerine erişimi kolaylaştırır."
   },
   "minimax": {
     "description": "MiniMax, 2021 yılında kurulan genel yapay zeka teknolojisi şirketidir ve kullanıcılarla birlikte akıllı çözümler yaratmayı hedeflemektedir. MiniMax, farklı modlarda genel büyük modeller geliştirmiştir. Bunlar arasında trilyon parametreli MoE metin büyük modeli, ses büyük modeli ve görüntü büyük modeli bulunmaktadır. Ayrıca, Conch AI gibi uygulamalar da sunmaktadır."
@@ -84,6 +91,9 @@
   },
   "wenxin": {
     "description": "Kurumsal düzeyde tek duraklı büyük model ve AI yerel uygulama geliştirme ve hizmet platformu, en kapsamlı ve kullanımı kolay üretken yapay zeka modeli geliştirme, uygulama geliştirme için tam süreç araç zinciri sunar."
+  },
+  "xai": {
+    "description": "xAI, insan bilimsel keşiflerini hızlandırmak için yapay zeka geliştirmeye adanmış bir şirkettir. Misyonumuz, evrene dair ortak anlayışımızı ilerletmektir."
   },
   "zeroone": {
     "description": "01.AI, yapay zeka 2.0 çağının yapay zeka teknolojisine odaklanmakta ve 'insan + yapay zeka' yenilik ve uygulamalarını teşvik etmektedir. Son derece güçlü modeller ve gelişmiş yapay zeka teknolojileri kullanarak insan üretkenliğini artırmayı ve teknolojik güçlendirmeyi hedeflemektedir."

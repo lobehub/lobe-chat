@@ -8,6 +8,7 @@
   "agents": "도우미",
   "artifact": {
     "generating": "생성 중",
+    "inThread": "하위 주제에서는 볼 수 없습니다. 주 대화 영역으로 전환하여 열어주세요.",
     "thinking": "생각 중",
     "thought": "사고 과정",
     "unknownTitle": "제목 없음"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} 복사본",
   "emptyAgent": "도우미가 없습니다",
   "historyRange": "대화 기록 범위",
+  "historySummary": "역사 메시지 요약",
   "inbox": {
     "desc": "뇌 클러스터를 활성화하여 창의적인 아이디어를 끌어내는 인공지능 비서입니다. 여기서 모든 것에 대해 대화합니다.",
     "title": "무작위 대화"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "삭제하고 다시 생성",
+    "deleteDisabledByThreads": "하위 주제가 존재하여 삭제할 수 없습니다.",
     "regenerate": "다시 생성"
   },
   "newAgent": "새 도우미",
@@ -120,6 +123,11 @@
     "action": "음성 입력",
     "loading": "인식 중...",
     "prettifying": "정제 중..."
+  },
+  "thread": {
+    "divider": "하위 주제",
+    "threadMessageCount": "{{messageCount}}개의 메시지",
+    "title": "하위 주제"
   },
   "tokenDetails": {
     "chats": "채팅 메시지",

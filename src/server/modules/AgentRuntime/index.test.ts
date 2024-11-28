@@ -273,6 +273,16 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
     });
 
+    it('Qwen AI provider: without endpoint', async () => {
+      const jwtPayload: JWTPayload = { apiKey: 'user-qwen-key' };
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
+
+      // 假设 LobeQwenAI 是 Qwen 提供者的实现类
+      expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
+      // endpoint 不存在，应返回 DEFAULT_BASE_URL
+      expect(runtime['_runtime'].baseURL).toBe('https://dashscope.aliyuncs.com/compatible-mode/v1');
+    });
+
     it('Bedrock AI provider: without apikey', async () => {
       const jwtPayload = {};
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);
@@ -360,6 +370,28 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       expect(runtime['_runtime']).toBeInstanceOf(LobeWenxinAI);
     });
 
+    it('OpenAI provider: without apikey with OPENAI_PROXY_URL', async () => {
+      process.env.OPENAI_PROXY_URL = 'https://proxy.example.com/v1';
+
+      const jwtPayload: JWTPayload = {};
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.OpenAI, jwtPayload);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
+      // 应返回 OPENAI_PROXY_URL
+      expect(runtime['_runtime'].baseURL).toBe('https://proxy.example.com/v1');
+    });
+
+    it('Qwen AI provider: without apiKey and endpoint with OPENAI_PROXY_URL', async () => {
+      process.env.OPENAI_PROXY_URL = 'https://proxy.example.com/v1';
+
+      const jwtPayload: JWTPayload = {};
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
+
+      // 假设 LobeQwenAI 是 Qwen 提供者的实现类
+      expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
+      // endpoint 不存在，应返回 DEFAULT_BASE_URL
+      expect(runtime['_runtime'].baseURL).toBe('https://dashscope.aliyuncs.com/compatible-mode/v1');
+    });
+    
     it('Unknown Provider', async () => {
       const jwtPayload = {};
       const runtime = await initAgentRuntimeWithUserPayload('unknown', jwtPayload);

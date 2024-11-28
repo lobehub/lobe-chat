@@ -1,0 +1,2684 @@
+[
+  {
+    "children": {
+      "improvements": ["Add switch portal thread."]
+    },
+    "date": "2024-11-27",
+    "version": "1.34.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fallback behavior of default mode in AgentRuntime."]
+    },
+    "date": "2024-11-27",
+    "version": "1.34.3"
+  },
+  {
+    "children": {
+      "improvements": ["Improve thread i18n locale."]
+    },
+    "date": "2024-11-27",
+    "version": "1.34.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix Qwen baseUrl calling."]
+    },
+    "date": "2024-11-26",
+    "version": "1.34.1"
+  },
+  {
+    "children": {
+      "features": ["Forkable Chat Mode."]
+    },
+    "date": "2024-11-26",
+    "version": "1.34.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update the description translation of Gitee AI."]
+    },
+    "date": "2024-11-26",
+    "version": "1.33.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor getLlmOptionsFromPayload from AgentRuntime."]
+    },
+    "date": "2024-11-26",
+    "version": "1.33.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fetchOnClient functional for Moonshot."]
+    },
+    "date": "2024-11-25",
+    "version": "1.33.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix multi-turns tools calling."]
+    },
+    "date": "2024-11-25",
+    "version": "1.33.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add gemini-exp-1121 model."]
+    },
+    "date": "2024-11-25",
+    "version": "1.33.1"
+  },
+  {
+    "children": {
+      "features": ["Add Gitee AI model provider."]
+    },
+    "date": "2024-11-25",
+    "version": "1.33.0"
+  },
+  {
+    "children": {
+      "improvements": ["Support to reset fetched models."]
+    },
+    "date": "2024-11-24",
+    "version": "1.32.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix XAI_PROXY_URL env missing."]
+    },
+    "date": "2024-11-24",
+    "version": "1.32.8"
+  },
+  {
+    "children": {
+      "fixes": ["Fix tool message display."]
+    },
+    "date": "2024-11-24",
+    "version": "1.32.7"
+  },
+  {
+    "children": {},
+    "date": "2024-11-24",
+    "version": "1.32.6"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the main chat."]
+    },
+    "date": "2024-11-24",
+    "version": "1.32.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the default locale."]
+    },
+    "date": "2024-11-20",
+    "version": "1.32.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add grok-vision-beta model, update Mistral model list, add pixtral-large-latest."
+      ]
+    },
+    "date": "2024-11-20",
+    "version": "1.32.3"
+  },
+  {
+    "children": {},
+    "date": "2024-11-19",
+    "version": "1.32.2"
+  },
+  {
+    "children": {
+      "fixes": ["Keyword search for chat history & sessions."],
+      "improvements": ["Support o1 models using streaming."]
+    },
+    "date": "2024-11-19",
+    "version": "1.32.1"
+  },
+  {
+    "children": {
+      "features": ["Add support InternLM (书生浦语) provider."]
+    },
+    "date": "2024-11-19",
+    "version": "1.32.0"
+  },
+  {
+    "children": {
+      "fixes": ["Connection check logic."]
+    },
+    "date": "2024-11-18",
+    "version": "1.31.11"
+  },
+  {
+    "children": {},
+    "date": "2024-11-16",
+    "version": "1.31.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add gemini-exp-1114 model."]
+    },
+    "date": "2024-11-16",
+    "version": "1.31.9"
+  },
+  {
+    "children": {
+      "improvements": ["Move ChatInput to features/ChatInput."]
+    },
+    "date": "2024-11-15",
+    "version": "1.31.8"
+  },
+  {
+    "children": {
+      "improvements": ["genServerLLMConfig function, get *_MODEL_LIST from env."]
+    },
+    "date": "2024-11-15",
+    "version": "1.31.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the chat conversation implement."]
+    },
+    "date": "2024-11-13",
+    "version": "1.31.6"
+  },
+  {
+    "children": {
+      "improvements": ["Update some provider modellist & fix ai360 baseurl."]
+    },
+    "date": "2024-11-12",
+    "version": "1.31.5"
+  },
+  {
+    "children": {
+      "improvements": ["Fix Cloudflare Workers AI Sort."]
+    },
+    "date": "2024-11-12",
+    "version": "1.31.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor languageModel & DEFAULT_LLM_CONFIG generate."]
+    },
+    "date": "2024-11-12",
+    "version": "1.31.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update deepseek model."]
+    },
+    "date": "2024-11-12",
+    "version": "1.31.2"
+  },
+  {
+    "children": {
+      "improvements": ["Fix Windows always showing scrollbar."]
+    },
+    "date": "2024-11-12",
+    "version": "1.31.1"
+  },
+  {
+    "children": {
+      "features": ["Add support xAI provider."]
+    },
+    "date": "2024-11-11",
+    "version": "1.31.0"
+  },
+  {
+    "children": {
+      "features": ["Support Cloudflare Workers AI."]
+    },
+    "date": "2024-11-11",
+    "version": "1.30.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add Sonnet 3.5 v2 inference model to BedRock."]
+    },
+    "date": "2024-11-10",
+    "version": "1.29.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix summary range."]
+    },
+    "date": "2024-11-10",
+    "version": "1.29.5"
+  },
+  {
+    "children": {
+      "fixes": ["Disregard remoteModelCards when showModelFetcher is disabled."]
+    },
+    "date": "2024-11-09",
+    "version": "1.29.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix the display model of history summary."]
+    },
+    "date": "2024-11-09",
+    "version": "1.29.3"
+  },
+  {
+    "children": {
+      "improvements": ["Allow users to disable SSRF or set a whitelist."]
+    },
+    "date": "2024-11-09",
+    "version": "1.29.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix topic summary field on server db."]
+    },
+    "date": "2024-11-09",
+    "version": "1.29.1"
+  },
+  {
+    "children": {
+      "features": ["Support compress history messages."]
+    },
+    "date": "2024-11-09",
+    "version": "1.29.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix env typo of MS Entra ID."]
+    },
+    "date": "2024-11-09",
+    "version": "1.28.6"
+  },
+  {
+    "children": {},
+    "date": "2024-11-08",
+    "version": "1.28.5"
+  },
+  {
+    "children": {
+      "fixes": ["Disable model fetch for GitHub."]
+    },
+    "date": "2024-11-07",
+    "version": "1.28.4"
+  },
+  {
+    "children": {
+      "improvements": ["Move portal code to features folder."]
+    },
+    "date": "2024-11-06",
+    "version": "1.28.3"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor and clean some code."]
+    },
+    "date": "2024-11-06",
+    "version": "1.28.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update database fields."]
+    },
+    "date": "2024-11-06",
+    "version": "1.28.1"
+  },
+  {
+    "children": {
+      "features": ["Support export as markdown and JSON."]
+    },
+    "date": "2024-11-05",
+    "version": "1.28.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add claude 3.5 haiku model."]
+    },
+    "date": "2024-11-05",
+    "version": "1.27.3"
+  },
+  {
+    "children": {
+      "fixes": ["Remove the 'resetConversation' hot key tip."],
+      "improvements": ["Improve group topic styles."]
+    },
+    "date": "2024-11-05",
+    "version": "1.27.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix /webapi/plugin/store server error."]
+    },
+    "date": "2024-11-04",
+    "version": "1.27.1"
+  },
+  {
+    "children": {
+      "features": ["Support group topics by time."]
+    },
+    "date": "2024-11-04",
+    "version": "1.27.0"
+  },
+  {
+    "children": {
+      "fixes": ["If enable login and not signed in, return unauthorized error."]
+    },
+    "date": "2024-11-04",
+    "version": "1.26.21"
+  },
+  {
+    "children": {
+      "improvements": ["Disable chunking button for unsupported files."]
+    },
+    "date": "2024-11-04",
+    "version": "1.26.20"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix duplicate key value violates unique constraint \"slug_user_id_unique\" when create inbox session."
+      ]
+    },
+    "date": "2024-11-03",
+    "version": "1.26.19"
+  },
+  {
+    "children": {
+      "fixes": ["Fix MS Entra ID and Azure AD authorization."]
+    },
+    "date": "2024-11-03",
+    "version": "1.26.18"
+  },
+  {
+    "children": {
+      "improvements": ["Improve server log on chat api."]
+    },
+    "date": "2024-10-31",
+    "version": "1.26.17"
+  },
+  {
+    "children": {
+      "fixes": ["Fix server Network connection lost error."]
+    },
+    "date": "2024-10-31",
+    "version": "1.26.16"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor embedding as plain vector array."]
+    },
+    "date": "2024-10-31",
+    "version": "1.26.15"
+  },
+  {
+    "children": {
+      "improvements": ["Add fa-ir locale."]
+    },
+    "date": "2024-10-30",
+    "version": "1.26.14"
+  },
+  {
+    "children": {
+      "fixes": ["Fix the artifacts interface not scrolling."]
+    },
+    "date": "2024-10-30",
+    "version": "1.26.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix file image prompts in client mode."]
+    },
+    "date": "2024-10-30",
+    "version": "1.26.12"
+  },
+  {
+    "children": {},
+    "date": "2024-10-29",
+    "version": "1.26.11"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the aiChat slice actions."]
+    },
+    "date": "2024-10-29",
+    "version": "1.26.10"
+  },
+  {
+    "children": {},
+    "date": "2024-10-29",
+    "version": "1.26.9"
+  },
+  {
+    "children": {
+      "fixes": ["Update zhipu param process."]
+    },
+    "date": "2024-10-29",
+    "version": "1.26.8"
+  },
+  {
+    "children": {
+      "fixes": ["Remove PWA Install in Firefox and Arc."]
+    },
+    "date": "2024-10-29",
+    "version": "1.26.7"
+  },
+  {
+    "children": {
+      "improvements": ["Add Qwen2.5-72B-Instruct model on HF provider."]
+    },
+    "date": "2024-10-29",
+    "version": "1.26.6"
+  },
+  {
+    "children": {
+      "improvements": ["Improve user guide when user not login."]
+    },
+    "date": "2024-10-29",
+    "version": "1.26.5"
+  },
+  {
+    "children": {
+      "fixes": ["Remove the 'resetConversation' hot key."]
+    },
+    "date": "2024-10-28",
+    "version": "1.26.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix Huggingface API interrupting when the output exceeds 140 tokens."],
+      "improvements": ["Remove SenseChat-Vision model, due to model limitation."]
+    },
+    "date": "2024-10-28",
+    "version": "1.26.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix page not switch when clicking on the pin assistant."]
+    },
+    "date": "2024-10-28",
+    "version": "1.26.2"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the plugin prompts to xml format."]
+    },
+    "date": "2024-10-27",
+    "version": "1.26.1"
+  },
+  {
+    "children": {
+      "features": ["experimentally support to pin assistant to sidebar."]
+    },
+    "date": "2024-10-27",
+    "version": "1.26.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix the issue of the switch assistant portal not closing."]
+    },
+    "date": "2024-10-27",
+    "version": "1.25.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update stepfun models."]
+    },
+    "date": "2024-10-27",
+    "version": "1.25.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix modelList merge."]
+    },
+    "date": "2024-10-26",
+    "version": "1.25.1"
+  },
+  {
+    "children": {
+      "features": ["Support ZEN mode."]
+    },
+    "date": "2024-10-26",
+    "version": "1.25.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update Google Model list, add gemini-1.5-flash-8b."]
+    },
+    "date": "2024-10-26",
+    "version": "1.24.2"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the Google Gen AI."]
+    },
+    "date": "2024-10-25",
+    "version": "1.24.1"
+  },
+  {
+    "children": {
+      "features": ["Add SenseNova (商汤) model provider."]
+    },
+    "date": "2024-10-25",
+    "version": "1.24.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add *_MODEL_LIST env to all models, update Spark model id & display name."]
+    },
+    "date": "2024-10-25",
+    "version": "1.23.1"
+  },
+  {
+    "children": {
+      "features": ["Support system agent config."]
+    },
+    "date": "2024-10-25",
+    "version": "1.23.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add bedrock claude-3.5-sonnect-v2."]
+    },
+    "date": "2024-10-25",
+    "version": "1.22.27"
+  },
+  {
+    "children": {
+      "improvements": ["Fix some custom branding detail."]
+    },
+    "date": "2024-10-23",
+    "version": "1.22.26"
+  },
+  {
+    "children": {
+      "improvements": ["Remove unused user tables."]
+    },
+    "date": "2024-10-23",
+    "version": "1.22.25"
+  },
+  {
+    "children": {
+      "improvements": ["Support plugin flag."]
+    },
+    "date": "2024-10-23",
+    "version": "1.22.24"
+  },
+  {
+    "children": {
+      "improvements": ["Improve error i18n."]
+    },
+    "date": "2024-10-23",
+    "version": "1.22.23"
+  },
+  {
+    "children": {
+      "improvements": ["Improve i18n."]
+    },
+    "date": "2024-10-23",
+    "version": "1.22.22"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor cookie/headers to async mode."]
+    },
+    "date": "2024-10-23",
+    "version": "1.22.21"
+  },
+  {
+    "children": {
+      "improvements": ["Add new claude-3.5-sonnet model."]
+    },
+    "date": "2024-10-23",
+    "version": "1.22.20"
+  },
+  {
+    "children": {
+      "improvements": ["Move responsive to server utils folder."]
+    },
+    "date": "2024-10-22",
+    "version": "1.22.19"
+  },
+  {
+    "children": {},
+    "date": "2024-10-22",
+    "version": "1.22.18"
+  },
+  {
+    "children": {
+      "improvements": ["Fix dynamic import in rsc layout."]
+    },
+    "date": "2024-10-22",
+    "version": "1.22.17"
+  },
+  {
+    "children": {
+      "fixes": ["Fix azure-ad."]
+    },
+    "date": "2024-10-21",
+    "version": "1.22.16"
+  },
+  {
+    "children": {
+      "improvements": ["Update format utils and shared layout."]
+    },
+    "date": "2024-10-21",
+    "version": "1.22.15"
+  },
+  {
+    "children": {
+      "improvements": ["Update wenxin 4.0 turbo model to latest."]
+    },
+    "date": "2024-10-20",
+    "version": "1.22.14"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add Ministral model, update Together AI model list, add function call & vision."
+      ]
+    },
+    "date": "2024-10-20",
+    "version": "1.22.13"
+  },
+  {
+    "children": {
+      "improvements": ["Add Llama 3.1 Nemotron 70B model & reorder some provider model list."]
+    },
+    "date": "2024-10-20",
+    "version": "1.22.12"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor azure ad to ms entra id."]
+    },
+    "date": "2024-10-20",
+    "version": "1.22.11"
+  },
+  {
+    "children": {},
+    "date": "2024-10-20",
+    "version": "1.22.10"
+  },
+  {
+    "children": {
+      "improvements": ["Update Fireworks AI model list."]
+    },
+    "date": "2024-10-18",
+    "version": "1.22.9"
+  },
+  {
+    "children": {
+      "improvements": ["Add Yi-Lightning model."]
+    },
+    "date": "2024-10-17",
+    "version": "1.22.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add qwen vision model & update qwen2.5 72b to 128k for siliconcloud."]
+    },
+    "date": "2024-10-17",
+    "version": "1.22.7"
+  },
+  {
+    "children": {
+      "fixes": ["Fix images not go in to chat context."]
+    },
+    "date": "2024-10-13",
+    "version": "1.22.6"
+  },
+  {
+    "children": {
+      "improvements": ["Reorder github model list & updata info & add new model."]
+    },
+    "date": "2024-10-13",
+    "version": "1.22.5"
+  },
+  {
+    "children": {
+      "improvements": ["Separate message slice and aiChat slice."]
+    },
+    "date": "2024-10-13",
+    "version": "1.22.4"
+  },
+  {
+    "children": {
+      "improvements": ["Support multi-windows for PWA."]
+    },
+    "date": "2024-10-13",
+    "version": "1.22.3"
+  },
+  {
+    "children": {
+      "fixes": ["Allow use email as name in logto."]
+    },
+    "date": "2024-10-13",
+    "version": "1.22.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix function calling issue, disable stream when using tools."]
+    },
+    "date": "2024-10-12",
+    "version": "1.22.1"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the chat webapi."],
+      "features": ["Add HuggingFace Model Provider."]
+    },
+    "date": "2024-10-12",
+    "version": "1.22.0"
+  },
+  {
+    "children": {},
+    "date": "2024-10-12",
+    "version": "1.21.16"
+  },
+  {
+    "children": {},
+    "date": "2024-10-12",
+    "version": "1.21.15"
+  },
+  {
+    "children": {
+      "improvements": ["Fix artifacts render markdown."]
+    },
+    "date": "2024-10-12",
+    "version": "1.21.14"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor agent runtime implement of stream and ZHIPU provider."]
+    },
+    "date": "2024-10-11",
+    "version": "1.21.13"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the jwt code."]
+    },
+    "date": "2024-10-11",
+    "version": "1.21.12"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the backend code for better organization."]
+    },
+    "date": "2024-10-11",
+    "version": "1.21.11"
+  },
+  {
+    "children": {
+      "improvements": ["Updata gpt-4o model info."]
+    },
+    "date": "2024-10-11",
+    "version": "1.21.10"
+  },
+  {
+    "children": {
+      "improvements": ["Update qwen vl model to latest."]
+    },
+    "date": "2024-10-10",
+    "version": "1.21.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix auto rewrite query when user message is too long."],
+      "improvements": ["Support yml in file chunk."]
+    },
+    "date": "2024-10-08",
+    "version": "1.21.8"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor text-to-image endpoint."]
+    },
+    "date": "2024-10-08",
+    "version": "1.21.7"
+  },
+  {
+    "children": {
+      "improvements": ["Move backend api to (backend) folder group."],
+      "fixes": ["Fix txt-to-image api."]
+    },
+    "date": "2024-10-05",
+    "version": "1.21.6"
+  },
+  {
+    "children": {
+      "improvements": ["Support shadcn in Artifacts."]
+    },
+    "date": "2024-10-05",
+    "version": "1.21.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix recharts deps in the Artifacts React Renderer."]
+    },
+    "date": "2024-10-02",
+    "version": "1.21.4"
+  },
+  {
+    "children": {
+      "improvements": ["Move most /api to /webapi."]
+    },
+    "date": "2024-10-01",
+    "version": "1.21.3"
+  },
+  {
+    "children": {
+      "improvements": ["Adjust Wenxin icon size."]
+    },
+    "date": "2024-10-01",
+    "version": "1.21.2"
+  },
+  {
+    "children": {},
+    "date": "2024-09-30",
+    "version": "1.21.1"
+  },
+  {
+    "children": {
+      "features": ["Add wenxin model provider."]
+    },
+    "date": "2024-09-30",
+    "version": "1.21.0"
+  },
+  {
+    "children": {},
+    "date": "2024-09-30",
+    "version": "1.20.8"
+  },
+  {
+    "children": {
+      "improvements": ["Update groq model list."]
+    },
+    "date": "2024-09-29",
+    "version": "1.20.7"
+  },
+  {
+    "children": {},
+    "date": "2024-09-29",
+    "version": "1.20.6"
+  },
+  {
+    "children": {},
+    "date": "2024-09-29",
+    "version": "1.20.5"
+  },
+  {
+    "children": {},
+    "date": "2024-09-28",
+    "version": "1.20.4"
+  },
+  {
+    "children": {
+      "fixes": ["Improve delete orphan chunks when delete files."]
+    },
+    "date": "2024-09-28",
+    "version": "1.20.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add zhipu glm-4-flashx model."]
+    },
+    "date": "2024-09-27",
+    "version": "1.20.2"
+  },
+  {
+    "children": {},
+    "date": "2024-09-27",
+    "version": "1.20.1"
+  },
+  {
+    "children": {
+      "features": ["Add Hunyuan(Tencent) model provider."]
+    },
+    "date": "2024-09-27",
+    "version": "1.20.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add llama3.2 model for openrouter provider."]
+    },
+    "date": "2024-09-27",
+    "version": "1.19.36"
+  },
+  {
+    "children": {
+      "improvements": ["Add o1-preview and o1-mini model to github model provider."]
+    },
+    "date": "2024-09-27",
+    "version": "1.19.35"
+  },
+  {
+    "children": {},
+    "date": "2024-09-26",
+    "version": "1.19.34"
+  },
+  {
+    "children": {
+      "fixes": ["MiniMax output long content interrupted by non-existent error."],
+      "improvements": ["Update google provider model info."]
+    },
+    "date": "2024-09-25",
+    "version": "1.19.33"
+  },
+  {
+    "children": {
+      "improvements": ["Add function call for taichu_llm."]
+    },
+    "date": "2024-09-25",
+    "version": "1.19.32"
+  },
+  {
+    "children": {
+      "improvements": ["Add google gemini 1.5 002 series."]
+    },
+    "date": "2024-09-24",
+    "version": "1.19.31"
+  },
+  {
+    "children": {
+      "improvements": ["Disable taichu2.0 functioncall & default disable taichu2.0v model."]
+    },
+    "date": "2024-09-24",
+    "version": "1.19.30"
+  },
+  {
+    "children": {
+      "improvements": ["Update taichu provider info & add taichu vision model."]
+    },
+    "date": "2024-09-24",
+    "version": "1.19.29"
+  },
+  {
+    "children": {
+      "improvements": ["Add function call support for Stepfun."]
+    },
+    "date": "2024-09-24",
+    "version": "1.19.28"
+  },
+  {
+    "children": {
+      "improvements": ["Improve images display in chat messages."]
+    },
+    "date": "2024-09-24",
+    "version": "1.19.27"
+  },
+  {
+    "children": {
+      "fixes": ["Fix url config import after user state init."],
+      "improvements": ["Add support function call for 360AI, left sidebar has only assistants."]
+    },
+    "date": "2024-09-24",
+    "version": "1.19.26"
+  },
+  {
+    "children": {
+      "fixes": ["Add missing translations."]
+    },
+    "date": "2024-09-24",
+    "version": "1.19.25"
+  },
+  {
+    "children": {
+      "fixes": ["Fix artifacts code language highlight."]
+    },
+    "date": "2024-09-23",
+    "version": "1.19.24"
+  },
+  {
+    "children": {
+      "improvements": ["Add spark max-32k model."]
+    },
+    "date": "2024-09-23",
+    "version": "1.19.23"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ollama model download panel."]
+    },
+    "date": "2024-09-22",
+    "version": "1.19.22"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to improve branding customization."]
+    },
+    "date": "2024-09-21",
+    "version": "1.19.21"
+  },
+  {
+    "children": {
+      "fixes": ["Fix Content-Security-Policy."]
+    },
+    "date": "2024-09-21",
+    "version": "1.19.20"
+  },
+  {
+    "children": {
+      "fixes": ["Casdoor webhooks providerAccountId not found."]
+    },
+    "date": "2024-09-21",
+    "version": "1.19.19"
+  },
+  {
+    "children": {},
+    "date": "2024-09-21",
+    "version": "1.19.18"
+  },
+  {
+    "children": {
+      "fixes": ["providerAccountId not exist in provider."]
+    },
+    "date": "2024-09-21",
+    "version": "1.19.17"
+  },
+  {
+    "children": {
+      "improvements": ["Improve i18n for discover and improve version check."]
+    },
+    "date": "2024-09-21",
+    "version": "1.19.16"
+  },
+  {
+    "children": {
+      "improvements": ["Improve i18n in discover."]
+    },
+    "date": "2024-09-20",
+    "version": "1.19.15"
+  },
+  {
+    "children": {
+      "fixes": ["Pin shiki@1.17.7 to fix code highlight."]
+    },
+    "date": "2024-09-20",
+    "version": "1.19.14"
+  },
+  {
+    "children": {
+      "fixes": ["Try to implement better ssrf-protect."]
+    },
+    "date": "2024-09-20",
+    "version": "1.19.13"
+  },
+  {
+    "children": {
+      "improvements": ["Support webhooks for casdoor."]
+    },
+    "date": "2024-09-20",
+    "version": "1.19.12"
+  },
+  {
+    "children": {
+      "fixes": ["Custom model initialization not taking effect error."]
+    },
+    "date": "2024-09-20",
+    "version": "1.19.11"
+  },
+  {
+    "children": {
+      "improvements": ["Add qwen2.5 math and coder model for siliconcloud provider."]
+    },
+    "date": "2024-09-20",
+    "version": "1.19.10"
+  },
+  {
+    "children": {
+      "fixes": ["Fix a bug with server agent config when user not exist."]
+    },
+    "date": "2024-09-20",
+    "version": "1.19.9"
+  },
+  {
+    "children": {
+      "improvements": ["Delete siliconflow outdated model & disable stepfun functioncall."]
+    },
+    "date": "2024-09-19",
+    "version": "1.19.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add siliconflow qwen2.5 model."]
+    },
+    "date": "2024-09-19",
+    "version": "1.19.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the tts route url."]
+    },
+    "date": "2024-09-19",
+    "version": "1.19.6"
+  },
+  {
+    "children": {
+      "improvements": ["Enable functioncall for stepfun models, Update qwen models."]
+    },
+    "date": "2024-09-19",
+    "version": "1.19.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the sitemap implement."]
+    },
+    "date": "2024-09-19",
+    "version": "1.19.4"
+  },
+  {
+    "children": {},
+    "date": "2024-09-19",
+    "version": "1.19.3"
+  },
+  {
+    "children": {
+      "improvements": ["Updata qwen model info & add qwen2.5 & reorder provider list."]
+    },
+    "date": "2024-09-19",
+    "version": "1.19.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add mistral provider new models."]
+    },
+    "date": "2024-09-19",
+    "version": "1.19.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Add Ai21Labs model provider, add Github Models provider, support native Artifacts just like Claude."
+      ]
+    },
+    "date": "2024-09-18",
+    "version": "1.19.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix InterceptingRoutes in discover."]
+    },
+    "date": "2024-09-18",
+    "version": "1.18.2"
+  },
+  {
+    "children": {},
+    "date": "2024-09-18",
+    "version": "1.18.1"
+  },
+  {
+    "children": {
+      "features": ["Add Discover Page."]
+    },
+    "date": "2024-09-18",
+    "version": "1.18.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix a corner case of tools_call with empty object."],
+      "improvements": ["Delete duplicate models in ollama."]
+    },
+    "date": "2024-09-16",
+    "version": "1.17.7"
+  },
+  {
+    "children": {
+      "improvements": ["Rename artifacts to plugins in portal."]
+    },
+    "date": "2024-09-15",
+    "version": "1.17.6"
+  },
+  {
+    "children": {
+      "improvements": ["Add MiniCPM-V 8B model entries to Ollama model providers."]
+    },
+    "date": "2024-09-15",
+    "version": "1.17.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update fullscreen loading style."]
+    },
+    "date": "2024-09-15",
+    "version": "1.17.4"
+  },
+  {
+    "children": {
+      "improvements": ["Delete \"-\" in deepseek displayname."]
+    },
+    "date": "2024-09-14",
+    "version": "1.17.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix o1 model list."],
+      "improvements": ["Update openrouter model list."]
+    },
+    "date": "2024-09-13",
+    "version": "1.17.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update zhipu model info."]
+    },
+    "date": "2024-09-13",
+    "version": "1.17.1"
+  },
+  {
+    "children": {
+      "features": ["Support openai new OpenAI o1-preview/o1-mini models."],
+      "improvements": ["Support Google Model List."]
+    },
+    "date": "2024-09-13",
+    "version": "1.17.0"
+  },
+  {
+    "children": {},
+    "date": "2024-09-13",
+    "version": "1.16.14"
+  },
+  {
+    "children": {
+      "improvements": ["Update siliconcloud model."]
+    },
+    "date": "2024-09-13",
+    "version": "1.16.13"
+  },
+  {
+    "children": {
+      "improvements": ["Remove brackets from model names with dates in OpenAI."]
+    },
+    "date": "2024-09-12",
+    "version": "1.16.12"
+  },
+  {
+    "children": {
+      "fixes": ["Support webhooks for logto."],
+      "improvements": ["Default disable mistral provider useless models."]
+    },
+    "date": "2024-09-12",
+    "version": "1.16.11"
+  },
+  {
+    "children": {
+      "improvements": ["Support Environment Variable Inference For NextAuth."],
+      "fixes": ["Qwen model param error."]
+    },
+    "date": "2024-09-12",
+    "version": "1.16.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add model and provider desc and url."]
+    },
+    "date": "2024-09-12",
+    "version": "1.16.9"
+  },
+  {
+    "children": {
+      "improvements": ["Improve models and add more info for providers and models."]
+    },
+    "date": "2024-09-12",
+    "version": "1.16.8"
+  },
+  {
+    "children": {
+      "improvements": ["Optimize model token display method."]
+    },
+    "date": "2024-09-11",
+    "version": "1.16.7"
+  },
+  {
+    "children": {
+      "fixes": ["Pin next@14.2.8 to fix Internal error."]
+    },
+    "date": "2024-09-11",
+    "version": "1.16.6"
+  },
+  {
+    "children": {},
+    "date": "2024-09-11",
+    "version": "1.16.5"
+  },
+  {
+    "children": {},
+    "date": "2024-09-11",
+    "version": "1.16.4"
+  },
+  {
+    "children": {
+      "fixes": ["Add LLM_VISION_IMAGE_USE_BASE64 to support local s3 in vision model."]
+    },
+    "date": "2024-09-11",
+    "version": "1.16.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update Upstage model list."]
+    },
+    "date": "2024-09-11",
+    "version": "1.16.2"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Reorder the provider list, update spark check model to spark-lite & default disable useless model."
+      ]
+    },
+    "date": "2024-09-10",
+    "version": "1.16.1"
+  },
+  {
+    "children": {
+      "features": ["Add Fireworks AI Model Provider, Add Spark model provider."]
+    },
+    "date": "2024-09-10",
+    "version": "1.16.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update CustomLogo."]
+    },
+    "date": "2024-09-10",
+    "version": "1.15.35"
+  },
+  {
+    "children": {
+      "improvements": ["Change empty content stream behavior."]
+    },
+    "date": "2024-09-10",
+    "version": "1.15.34"
+  },
+  {
+    "children": {
+      "fixes": ["Fix /etc/resolv.confedit permission in docker image."]
+    },
+    "date": "2024-09-10",
+    "version": "1.15.33"
+  },
+  {
+    "children": {
+      "fixes": ["Fix tools calling in some edge cases."]
+    },
+    "date": "2024-09-10",
+    "version": "1.15.32"
+  },
+  {
+    "children": {
+      "fixes": ["Baichuan should not introduce freequency_penality parameters."]
+    },
+    "date": "2024-09-10",
+    "version": "1.15.31"
+  },
+  {
+    "children": {
+      "fixes": ["Fix claude 3.5 image with s3 url."]
+    },
+    "date": "2024-09-09",
+    "version": "1.15.30"
+  },
+  {
+    "children": {
+      "fixes": ["Gemini cannot input images when server database is enabled."]
+    },
+    "date": "2024-09-09",
+    "version": "1.15.29"
+  },
+  {
+    "children": {
+      "fixes": ["Update baichuan param."]
+    },
+    "date": "2024-09-09",
+    "version": "1.15.28"
+  },
+  {
+    "children": {
+      "improvements": ["Add siliconcloud new model."]
+    },
+    "date": "2024-09-09",
+    "version": "1.15.27"
+  },
+  {
+    "children": {
+      "improvements": ["Update perplexity model list."]
+    },
+    "date": "2024-09-09",
+    "version": "1.15.26"
+  },
+  {
+    "children": {},
+    "date": "2024-09-09",
+    "version": "1.15.25"
+  },
+  {
+    "children": {
+      "improvements": ["Fix title in about settings."]
+    },
+    "date": "2024-09-09",
+    "version": "1.15.24"
+  },
+  {
+    "children": {
+      "improvements": ["Improve branding implement."]
+    },
+    "date": "2024-09-08",
+    "version": "1.15.23"
+  },
+  {
+    "children": {
+      "improvements": ["Update model display name & Remove Qwen preview model."]
+    },
+    "date": "2024-09-08",
+    "version": "1.15.22"
+  },
+  {
+    "children": {
+      "improvements": ["Temperature range from 0 to 2."]
+    },
+    "date": "2024-09-08",
+    "version": "1.15.21"
+  },
+  {
+    "children": {},
+    "date": "2024-09-08",
+    "version": "1.15.20"
+  },
+  {
+    "children": {},
+    "date": "2024-09-08",
+    "version": "1.15.19"
+  },
+  {
+    "children": {
+      "improvements": ["Support anthropic browser request."]
+    },
+    "date": "2024-09-06",
+    "version": "1.15.18"
+  },
+  {
+    "children": {
+      "fixes": ["Fix auth log."]
+    },
+    "date": "2024-09-06",
+    "version": "1.15.17"
+  },
+  {
+    "children": {
+      "improvements": ["Update Bedrock model list & add AWS_BEDROCK_MODEL_LIST support."]
+    },
+    "date": "2024-09-06",
+    "version": "1.15.16"
+  },
+  {
+    "children": {
+      "improvements": ["Add LLaVA 1.5 7B model in Groq."]
+    },
+    "date": "2024-09-06",
+    "version": "1.15.15"
+  },
+  {
+    "children": {},
+    "date": "2024-09-06",
+    "version": "1.15.14"
+  },
+  {
+    "children": {},
+    "date": "2024-09-06",
+    "version": "1.15.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix typo in RAG prompt."]
+    },
+    "date": "2024-09-04",
+    "version": "1.15.12"
+  },
+  {
+    "children": {},
+    "date": "2024-09-04",
+    "version": "1.15.11"
+  },
+  {
+    "children": {},
+    "date": "2024-09-03",
+    "version": "1.15.10"
+  },
+  {
+    "children": {
+      "fixes": ["Fix speed and rag prompt."]
+    },
+    "date": "2024-09-03",
+    "version": "1.15.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix .PDF can not be chunked."]
+    },
+    "date": "2024-09-03",
+    "version": "1.15.8"
+  },
+  {
+    "children": {
+      "improvements": ["Fix provider disabled title style."]
+    },
+    "date": "2024-09-03",
+    "version": "1.15.7"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Stepfun default enabled model, update Groq model list & add GROQ_MODEL_LIST support."
+      ]
+    },
+    "date": "2024-09-01",
+    "version": "1.15.6"
+  },
+  {
+    "children": {
+      "improvements": ["Update Together AI model list."]
+    },
+    "date": "2024-09-01",
+    "version": "1.15.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update Novita AI model info & add NOVITA_MODEL_LIST support."]
+    },
+    "date": "2024-09-01",
+    "version": "1.15.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add *_MODEL_LIST for Qwen and ZeroOne, fix model info, update Claude 3.5 Sonnet maxOutput vaule."
+      ]
+    },
+    "date": "2024-09-01",
+    "version": "1.15.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update Qwen and Gemini models info."]
+    },
+    "date": "2024-08-30",
+    "version": "1.15.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update the sorting of each provider model."]
+    },
+    "date": "2024-08-30",
+    "version": "1.15.1"
+  },
+  {
+    "children": {
+      "features": ["Add Upstage model provider support."]
+    },
+    "date": "2024-08-30",
+    "version": "1.15.0"
+  },
+  {
+    "children": {
+      "improvements": ["Fix ms doc file preview, Update the sorting of each provider model."]
+    },
+    "date": "2024-08-30",
+    "version": "1.14.12"
+  },
+  {
+    "children": {
+      "improvements": ["Update Stepfun models info."]
+    },
+    "date": "2024-08-30",
+    "version": "1.14.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix file relative chunks."]
+    },
+    "date": "2024-08-30",
+    "version": "1.14.10"
+  },
+  {
+    "children": {},
+    "date": "2024-08-29",
+    "version": "1.14.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix whisper-1 typo."]
+    },
+    "date": "2024-08-29",
+    "version": "1.14.8"
+  },
+  {
+    "children": {
+      "fixes": ["Disable ChatGPT-4o Tools Calling."],
+      "improvements": ["Improve chunk and file preview."]
+    },
+    "date": "2024-08-28",
+    "version": "1.14.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update Gemini models."]
+    },
+    "date": "2024-08-28",
+    "version": "1.14.6"
+  },
+  {
+    "children": {
+      "fixes": ["No user name if Cloudflare Zero Trust with onetimepin."]
+    },
+    "date": "2024-08-28",
+    "version": "1.14.5"
+  },
+  {
+    "children": {
+      "improvements": ["Move model and provider icon components to @lobehub/icons."]
+    },
+    "date": "2024-08-28",
+    "version": "1.14.4"
+  },
+  {
+    "children": {
+      "fixes": ["Improve aysnc error type."]
+    },
+    "date": "2024-08-27",
+    "version": "1.14.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix agent setting."]
+    },
+    "date": "2024-08-27",
+    "version": "1.14.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve zhipu model config."]
+    },
+    "date": "2024-08-27",
+    "version": "1.14.1"
+  },
+  {
+    "children": {
+      "features": ["Supports Cloudflare Zero Trust login."]
+    },
+    "date": "2024-08-27",
+    "version": "1.14.0"
+  },
+  {
+    "children": {
+      "fixes": ["Bypass vercel deployment protection, fix can send message on uploading files."]
+    },
+    "date": "2024-08-27",
+    "version": "1.13.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update Qwen models."]
+    },
+    "date": "2024-08-27",
+    "version": "1.13.1"
+  },
+  {
+    "children": {
+      "features": ["Supports Authelia login."]
+    },
+    "date": "2024-08-27",
+    "version": "1.13.0"
+  },
+  {
+    "children": {
+      "fixes": ["Feature flag knowledge_base doesn't affect ActionBar."]
+    },
+    "date": "2024-08-26",
+    "version": "1.12.20"
+  },
+  {
+    "children": {
+      "fixes": ["Fix cannot clone agent when imported from client."]
+    },
+    "date": "2024-08-25",
+    "version": "1.12.19"
+  },
+  {
+    "children": {
+      "fixes": ["Fix dayjs error in en-US language."]
+    },
+    "date": "2024-08-25",
+    "version": "1.12.18"
+  },
+  {
+    "children": {
+      "fixes": ["Fix multi file upload dupicate."]
+    },
+    "date": "2024-08-25",
+    "version": "1.12.17"
+  },
+  {
+    "children": {
+      "fixes": ["Session not found error on mobile."]
+    },
+    "date": "2024-08-24",
+    "version": "1.12.16"
+  },
+  {
+    "children": {},
+    "date": "2024-08-24",
+    "version": "1.12.15"
+  },
+  {
+    "children": {
+      "fixes": ["Fix tts file saving in server mode."]
+    },
+    "date": "2024-08-24",
+    "version": "1.12.14"
+  },
+  {
+    "children": {
+      "improvements": ["Update 01.AI models."]
+    },
+    "date": "2024-08-24",
+    "version": "1.12.13"
+  },
+  {
+    "children": {},
+    "date": "2024-08-24",
+    "version": "1.12.12"
+  },
+  {
+    "children": {
+      "fixes": ["Remove orphan chunks if there is no related file."]
+    },
+    "date": "2024-08-23",
+    "version": "1.12.11"
+  },
+  {
+    "children": {
+      "fixes": ["Refactor and fix dalle."]
+    },
+    "date": "2024-08-23",
+    "version": "1.12.10"
+  },
+  {
+    "children": {
+      "fixes": ["Improve s3 path-style url."]
+    },
+    "date": "2024-08-23",
+    "version": "1.12.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix NEXT_PUBLIC_S3_DOMAIN error on Docker."]
+    },
+    "date": "2024-08-22",
+    "version": "1.12.8"
+  },
+  {
+    "children": {
+      "fixes": ["Logout button not shown on mobile view when using nextauth."]
+    },
+    "date": "2024-08-22",
+    "version": "1.12.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor s3 env and support path-style for minio."]
+    },
+    "date": "2024-08-22",
+    "version": "1.12.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix clipboard copy issue and improve upload cors feedback."]
+    },
+    "date": "2024-08-22",
+    "version": "1.12.5"
+  },
+  {
+    "children": {
+      "improvements": ["Fix link style."]
+    },
+    "date": "2024-08-22",
+    "version": "1.12.4"
+  },
+  {
+    "children": {
+      "improvements": ["Hide settings in repo."]
+    },
+    "date": "2024-08-22",
+    "version": "1.12.3"
+  },
+  {
+    "children": {},
+    "date": "2024-08-22",
+    "version": "1.12.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix embeddings multi-insert when there is issues with async task."]
+    },
+    "date": "2024-08-21",
+    "version": "1.12.1"
+  },
+  {
+    "children": {
+      "features": ["Files and knowledge base."]
+    },
+    "date": "2024-08-21",
+    "version": "1.12.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fixed bedrock llama model id."]
+    },
+    "date": "2024-08-19",
+    "version": "1.11.9"
+  },
+  {
+    "children": {
+      "improvements": ["Update zhipu models."]
+    },
+    "date": "2024-08-19",
+    "version": "1.11.8"
+  },
+  {
+    "children": {
+      "fixes": ["Fix topic scroll issue."]
+    },
+    "date": "2024-08-18",
+    "version": "1.11.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the SITE_URL to APP_URL."]
+    },
+    "date": "2024-08-18",
+    "version": "1.11.6"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the fetch method to fix response.undefined."]
+    },
+    "date": "2024-08-18",
+    "version": "1.11.5"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add SILICONCLOUD_MODEL_LIST & SILICONCLOUD_PROXY_URL support for SiliconCloud."
+      ]
+    },
+    "date": "2024-08-18",
+    "version": "1.11.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor PanelTitle and move commit from file uploading."]
+    },
+    "date": "2024-08-17",
+    "version": "1.11.3"
+  },
+  {
+    "children": {},
+    "date": "2024-08-17",
+    "version": "1.11.2"
+  },
+  {
+    "children": {
+      "fixes": ["Make S3 upload ACL setting optional."]
+    },
+    "date": "2024-08-15",
+    "version": "1.11.1"
+  },
+  {
+    "children": {
+      "features": ["Add 2 new models to openai provider."]
+    },
+    "date": "2024-08-14",
+    "version": "1.11.0"
+  },
+  {
+    "children": {},
+    "date": "2024-08-14",
+    "version": "1.10.1"
+  },
+  {
+    "children": {
+      "features": ["Add SiliconCloud model provider."]
+    },
+    "date": "2024-08-14",
+    "version": "1.10.0"
+  },
+  {
+    "children": {
+      "improvements": ["Resize the image size in chat message."]
+    },
+    "date": "2024-08-13",
+    "version": "1.9.8"
+  },
+  {
+    "children": {},
+    "date": "2024-08-13",
+    "version": "1.9.7"
+  },
+  {
+    "children": {},
+    "date": "2024-08-09",
+    "version": "1.9.6"
+  },
+  {
+    "children": {
+      "improvements": ["Updated AWS bedrock model list."]
+    },
+    "date": "2024-08-08",
+    "version": "1.9.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix import clerk AuthObject from public api."]
+    },
+    "date": "2024-08-06",
+    "version": "1.9.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor server db schema for better code organize."]
+    },
+    "date": "2024-08-06",
+    "version": "1.9.3"
+  },
+  {
+    "children": {},
+    "date": "2024-08-05",
+    "version": "1.9.2"
+  },
+  {
+    "children": {
+      "fixes": ["Azure modelTag icon display."]
+    },
+    "date": "2024-08-05",
+    "version": "1.9.1"
+  },
+  {
+    "children": {
+      "features": ["Skip login page if only one provider exists."]
+    },
+    "date": "2024-08-05",
+    "version": "1.9.0"
+  },
+  {
+    "children": {
+      "fixes": ["Add PROXY_URL in docker with proxychains-ng."]
+    },
+    "date": "2024-08-03",
+    "version": "1.8.2"
+  },
+  {
+    "children": {
+      "improvements": ["Fix aya, mathstral model tag icon & update ollama model info."]
+    },
+    "date": "2024-08-03",
+    "version": "1.8.1"
+  },
+  {
+    "children": {
+      "features": ["Add NextAuth as authentication service in server database."]
+    },
+    "date": "2024-08-02",
+    "version": "1.8.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add Gemini 1.5 Pro Exp model."]
+    },
+    "date": "2024-08-02",
+    "version": "1.7.10"
+  },
+  {
+    "children": {
+      "fixes": ["Fix Mistral models calling & update model info."],
+      "improvements": ["Fix stepfun & baichuan model tag icon missing, update Perplexity models."]
+    },
+    "date": "2024-08-01",
+    "version": "1.7.9"
+  },
+  {
+    "children": {},
+    "date": "2024-07-30",
+    "version": "1.7.8"
+  },
+  {
+    "children": {
+      "improvements": ["Improve tools calling UI."]
+    },
+    "date": "2024-07-30",
+    "version": "1.7.7"
+  },
+  {
+    "children": {
+      "fixes": ["Disable anthropic browser request."]
+    },
+    "date": "2024-07-29",
+    "version": "1.7.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix create_session  edit_agent feature flags and add more flags."],
+      "improvements": ["Update 360GPT model (360GPT2 Pro)."]
+    },
+    "date": "2024-07-29",
+    "version": "1.7.5"
+  },
+  {
+    "children": {
+      "fixes": ["Improve remote model list fetching for Novita AI."]
+    },
+    "date": "2024-07-29",
+    "version": "1.7.4"
+  },
+  {
+    "children": {
+      "fixes": ["Update minimax models."]
+    },
+    "date": "2024-07-28",
+    "version": "1.7.3"
+  },
+  {
+    "children": {
+      "fixes": ["Avoid baseURL being an empty string, resulting in incorrect client fetch."]
+    },
+    "date": "2024-07-26",
+    "version": "1.7.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix dalle tools calling prompts to avoid content risk."]
+    },
+    "date": "2024-07-26",
+    "version": "1.7.1"
+  },
+  {
+    "children": {
+      "features": ["Enabled function calling on Deepseek models."]
+    },
+    "date": "2024-07-26",
+    "version": "1.7.0"
+  },
+  {
+    "children": {
+      "improvements": ["Fix file upload height."]
+    },
+    "date": "2024-07-26",
+    "version": "1.6.15"
+  },
+  {
+    "children": {
+      "improvements": ["Improve input file upload."]
+    },
+    "date": "2024-07-26",
+    "version": "1.6.14"
+  },
+  {
+    "children": {
+      "improvements": ["Updated Groq model list to include llama-3.1 and llama3-Groq."]
+    },
+    "date": "2024-07-25",
+    "version": "1.6.13"
+  },
+  {
+    "children": {
+      "improvements": ["Add new models to groq which are llama 3.1."]
+    },
+    "date": "2024-07-25",
+    "version": "1.6.12"
+  },
+  {
+    "children": {
+      "fixes": ["Fix UNAUTHORIZED issue with clerk auth provider."]
+    },
+    "date": "2024-07-24",
+    "version": "1.6.11"
+  },
+  {
+    "children": {
+      "improvements": ["Fix the scrolling of the return result area of function calling."]
+    },
+    "date": "2024-07-23",
+    "version": "1.6.10"
+  },
+  {
+    "children": {},
+    "date": "2024-07-23",
+    "version": "1.6.9"
+  },
+  {
+    "children": {
+      "improvements": ["Move server modules."]
+    },
+    "date": "2024-07-23",
+    "version": "1.6.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add new model provider Novita AI."]
+    },
+    "date": "2024-07-23",
+    "version": "1.6.7"
+  },
+  {
+    "children": {},
+    "date": "2024-07-22",
+    "version": "1.6.6"
+  },
+  {
+    "children": {
+      "fixes": ["Content lost unexpectedly on Qwen provider when finish_reason is stop."]
+    },
+    "date": "2024-07-22",
+    "version": "1.6.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add trpc query client with react-query."]
+    },
+    "date": "2024-07-21",
+    "version": "1.6.4"
+  },
+  {
+    "children": {
+      "improvements": ["Update Zhipu models (GLM-4-AllTools & CodeGeeX-4)."]
+    },
+    "date": "2024-07-21",
+    "version": "1.6.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix dayjs render on server."]
+    },
+    "date": "2024-07-21",
+    "version": "1.6.2"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the DragUpload."]
+    },
+    "date": "2024-07-19",
+    "version": "1.6.1"
+  },
+  {
+    "children": {
+      "features": ["Add gpt-4o-mini in OpenAI Provider and set it as the default model."]
+    },
+    "date": "2024-07-19",
+    "version": "1.6.0"
+  },
+  {
+    "children": {
+      "improvements": ["Added Gemma2 instead of outdated Gemma."]
+    },
+    "date": "2024-07-19",
+    "version": "1.5.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix delete session group."]
+    },
+    "date": "2024-07-17",
+    "version": "1.5.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix OpenAI deployment restrictions, fix cant duplicate assistant."]
+    },
+    "date": "2024-07-17",
+    "version": "1.5.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix session not reorder after send message."]
+    },
+    "date": "2024-07-17",
+    "version": "1.5.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve brand url."]
+    },
+    "date": "2024-07-17",
+    "version": "1.5.1"
+  },
+  {
+    "children": {
+      "features": ["Spport qwen-vl and tool call for qwen."]
+    },
+    "date": "2024-07-17",
+    "version": "1.5.0"
+  },
+  {
+    "children": {
+      "fixes": ["Save assistant info on blur."]
+    },
+    "date": "2024-07-15",
+    "version": "1.4.3"
+  },
+  {
+    "children": {
+      "improvements": ["Remove code related to gemini-pro-vision."]
+    },
+    "date": "2024-07-13",
+    "version": "1.4.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add cloud promotion banner."]
+    },
+    "date": "2024-07-13",
+    "version": "1.4.1"
+  },
+  {
+    "children": {
+      "features": ["Add 360AI model provider."]
+    },
+    "date": "2024-07-12",
+    "version": "1.4.0"
+  },
+  {
+    "children": {
+      "improvements": ["Improve agent runtime code."]
+    },
+    "date": "2024-07-11",
+    "version": "1.3.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix assistant meta change race issue."]
+    },
+    "date": "2024-07-10",
+    "version": "1.3.5"
+  },
+  {
+    "children": {
+      "improvements": ["Support disable clientFetch by default."]
+    },
+    "date": "2024-07-09",
+    "version": "1.3.4"
+  },
+  {
+    "children": {
+      "fixes": ["Allow user to use their own WebRTC signaling."]
+    },
+    "date": "2024-07-09",
+    "version": "1.3.3"
+  },
+  {
+    "children": {
+      "fixes": ["Automatic refresh when change language."]
+    },
+    "date": "2024-07-09",
+    "version": "1.3.2"
+  },
+  {
+    "children": {},
+    "date": "2024-07-09",
+    "version": "1.3.1"
+  },
+  {
+    "children": {
+      "features": ["Add Taichu model provider."]
+    },
+    "date": "2024-07-09",
+    "version": "1.3.0"
+  },
+  {
+    "children": {
+      "improvements": ["Provider changes with model in model settings."]
+    },
+    "date": "2024-07-08",
+    "version": "1.2.14"
+  },
+  {
+    "children": {
+      "fixes": ["Fix tool message order."]
+    },
+    "date": "2024-07-07",
+    "version": "1.2.13"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fixed mobile web page navigation issue with inbox assistant, support to disable clerk signup with feature flag."
+      ]
+    },
+    "date": "2024-07-07",
+    "version": "1.2.12"
+  },
+  {
+    "children": {
+      "improvements": ["Update deepseek max token."]
+    },
+    "date": "2024-07-07",
+    "version": "1.2.11"
+  },
+  {
+    "children": {
+      "fixes": ["Improve tools calling error feedback when arguments are not correctly."]
+    },
+    "date": "2024-07-05",
+    "version": "1.2.10"
+  },
+  {
+    "children": {
+      "improvements": ["Fix tool message suspense loading."]
+    },
+    "date": "2024-07-04",
+    "version": "1.2.9"
+  },
+  {
+    "children": {
+      "fixes": ["Allow builtin tools to trigger AI message."]
+    },
+    "date": "2024-07-03",
+    "version": "1.2.8"
+  },
+  {
+    "children": {
+      "improvements": ["Improve delete assistant message with tools."]
+    },
+    "date": "2024-07-03",
+    "version": "1.2.7"
+  },
+  {
+    "children": {
+      "fixes": ["Clerk provider refreshes continously."]
+    },
+    "date": "2024-07-03",
+    "version": "1.2.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix clerk appearance is not applied correctly."]
+    },
+    "date": "2024-07-02",
+    "version": "1.2.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update ProviderAvatar for Baichuan & Stepfun."]
+    },
+    "date": "2024-07-02",
+    "version": "1.2.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the portal implement."]
+    },
+    "date": "2024-07-01",
+    "version": "1.2.3"
+  },
+  {
+    "children": {
+      "fixes": ["Display issue when select default model in System Agent."]
+    },
+    "date": "2024-07-01",
+    "version": "1.2.2"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the portal file."]
+    },
+    "date": "2024-07-01",
+    "version": "1.2.1"
+  },
+  {
+    "children": {
+      "features": ["Add Baichuan model provider."]
+    },
+    "date": "2024-07-01",
+    "version": "1.2.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add Gemini 1.5 stable version model & 2M context window."]
+    },
+    "date": "2024-07-01",
+    "version": "1.1.18"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to prepare for Chat Portal."]
+    },
+    "date": "2024-07-01",
+    "version": "1.1.17"
+  },
+  {
+    "children": {
+      "fixes": ["Fix clerk UNAUTHORIZED error after long-time hang-up."]
+    },
+    "date": "2024-06-29",
+    "version": "1.1.16"
+  },
+  {
+    "children": {
+      "fixes": ["Pin @azure/core-rest-pipeline@1.16.0 to fix azure openai issue."]
+    },
+    "date": "2024-06-28",
+    "version": "1.1.15"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor plugin state."]
+    },
+    "date": "2024-06-27",
+    "version": "1.1.14"
+  },
+  {
+    "children": {
+      "fixes": ["-check_updates cannot be set by FEATURE_FLAGS."]
+    },
+    "date": "2024-06-27",
+    "version": "1.1.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix azure tools calling."]
+    },
+    "date": "2024-06-26",
+    "version": "1.1.12"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor format utils."]
+    },
+    "date": "2024-06-25",
+    "version": "1.1.11"
+  },
+  {
+    "children": {},
+    "date": "2024-06-24",
+    "version": "1.1.10"
+  },
+  {
+    "children": {
+      "fixes": ["Fix agent tags."],
+      "improvements": ["Always show action on mobile."]
+    },
+    "date": "2024-06-24",
+    "version": "1.1.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix anthropic parallel tools calling."]
+    },
+    "date": "2024-06-24",
+    "version": "1.1.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add AES-GCM footer and tooltip."]
+    },
+    "date": "2024-06-24",
+    "version": "1.1.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the server db implement."],
+      "fixes": ["Fix incorrect baseURL for Groq in client mode."]
+    },
+    "date": "2024-06-23",
+    "version": "1.1.6"
+  },
+  {
+    "children": {
+      "improvements": ["Remove deprecated env."]
+    },
+    "date": "2024-06-23",
+    "version": "1.1.5"
+  },
+  {
+    "children": {
+      "fixes": ["Create first-time user on server db."]
+    },
+    "date": "2024-06-22",
+    "version": "1.1.4"
+  },
+  {
+    "children": {
+      "fixes": ["Ollama not enabled client fetch by default."]
+    },
+    "date": "2024-06-21",
+    "version": "1.1.3"
+  },
+  {
+    "children": {},
+    "date": "2024-06-20",
+    "version": "1.1.2"
+  },
+  {
+    "children": {
+      "improvements": ["Fixed System Agent missing in mobile layout."]
+    },
+    "date": "2024-06-20",
+    "version": "1.1.1"
+  },
+  {
+    "children": {
+      "features": ["Supoort Claude 3.5 Sonnet."]
+    },
+    "date": "2024-06-20",
+    "version": "1.1.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix to send image without text."]
+    },
+    "date": "2024-06-20",
+    "version": "1.0.14"
+  },
+  {
+    "children": {
+      "fixes": ["Fix and improve tool calling."]
+    },
+    "date": "2024-06-19",
+    "version": "1.0.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix auto avatar."]
+    },
+    "date": "2024-06-19",
+    "version": "1.0.12"
+  },
+  {
+    "children": {
+      "improvements": ["Fix phi3 icon display under OpenRouter."]
+    },
+    "date": "2024-06-19",
+    "version": "1.0.11"
+  },
+  {
+    "children": {
+      "fixes": ["Typo in reset settings."]
+    },
+    "date": "2024-06-19",
+    "version": "1.0.10"
+  },
+  {
+    "children": {},
+    "date": "2024-06-19",
+    "version": "1.0.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix hydration mismatch on macOS."],
+      "improvements": ["Update brand and improve docs."]
+    },
+    "date": "2024-06-18",
+    "version": "1.0.8"
+  },
+  {
+    "children": {
+      "improvements": ["Remove some i18n text."]
+    },
+    "date": "2024-06-18",
+    "version": "1.0.7"
+  },
+  {
+    "children": {
+      "improvements": ["Fix footer being cut on wide screen."]
+    },
+    "date": "2024-06-17",
+    "version": "1.0.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix onboard and auth for community version."]
+    },
+    "date": "2024-06-17",
+    "version": "1.0.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add stepfun as a new provider."]
+    },
+    "date": "2024-06-17",
+    "version": "1.0.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix clerk UNAUTHORIZED auth error."]
+    },
+    "date": "2024-06-17",
+    "version": "1.0.3"
+  },
+  {
+    "children": {
+      "fixes": ["Openai key and openai proxy are invalid in feature flags."]
+    },
+    "date": "2024-06-17",
+    "version": "1.0.2"
+  },
+  {
+    "children": {
+      "improvements": ["Remove r2 cdn url."]
+    },
+    "date": "2024-06-17",
+    "version": "1.0.1"
+  },
+  {
+    "children": {
+      "features": ["Release LobeChat 1.0."],
+      "improvements": [
+        "Bump version.",
+        "Release LobeChat 1.0, closes #2897 (97bb377)",
+        "Bump version, closes #2896 (6e2d03b)",
+        "Update LICENSE to Apache 2.0",
+        "update to 1.0.0"
+      ]
+    },
+    "date": "2024-06-17",
+    "version": "1.0.0"
+  }
+]

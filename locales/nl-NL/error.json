@@ -68,6 +68,7 @@
     "510": "Het spijt ons, de server ondersteunt de gevraagde uitbreidingsfunctie niet, neem contact op met de beheerder",
     "524": "Het spijt ons, de server heeft een time-out terwijl hij op een antwoord wacht, mogelijk omdat de reactie te traag is, probeer het alstublieft later opnieuw",
     "AgentRuntimeError": "Lobe language model runtime execution error, please troubleshoot or retry based on the following information",
+    "ConnectionCheckFailed": "Het verzoek heeft geen antwoord geleverd. Controleer of het API-proxyadres niet eindigt met `/v1`.",
     "FreePlanLimit": "U bent momenteel een gratis gebruiker en kunt deze functie niet gebruiken. Upgrade naar een betaald plan om door te gaan met gebruiken.",
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
