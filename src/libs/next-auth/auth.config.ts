@@ -41,7 +41,6 @@ export default {
     },
   },
   providers: initSSOProviders(),
-  redirectProxyUrl: process.env.APP_URL ? urlJoin(process.env.APP_URL, '/api/auth') : undefined,
   secret: authEnv.NEXT_AUTH_SECRET,
   trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,
 } satisfies NextAuthConfig;
