@@ -32,6 +32,7 @@
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "No hay asistente disponible",
   "historyRange": "Rango de historial",
+  "historySummary": "Resumen de mensajes históricos",
   "inbox": {
     "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
     "title": "Charla casual"
