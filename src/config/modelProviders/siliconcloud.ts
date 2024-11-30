@@ -67,7 +67,6 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Qwen2.5-7B-Instruct 是阿里云发布的最新大语言模型系列之一。该 7B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升',
       displayName: 'Qwen2.5 7B Instruct (LoRA)',
-      functionCall: true,
       id: 'LoRA/Qwen/Qwen2.5-7B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -463,6 +462,7 @@ const SiliconCloud: ModelProviderCard = {
       description: 'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 8B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
       displayName: 'Llama 3.1 8B Instruct (Free)',
       enabled: true,
+      functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -474,6 +474,7 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 8B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
       displayName: 'Llama 3.1 8B Instruct (Pro)',
+      functionCall: true,
       id: 'Pro/meta-llama/Meta-Llama-3.1-8B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -486,6 +487,7 @@ const SiliconCloud: ModelProviderCard = {
       description: 'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 70B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
       displayName: 'Llama 3.1 70B Instruct',
       enabled: true,
+      functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -539,6 +541,7 @@ const SiliconCloud: ModelProviderCard = {
         output: 1.33,
       },
       tokens: 32_768,
+      vision: true,
     },
   ],
   checkModel: 'Qwen/Qwen2.5-7B-Instruct',
