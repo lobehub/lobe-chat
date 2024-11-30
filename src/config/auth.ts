@@ -16,6 +16,8 @@ declare global {
 
       NEXT_AUTH_SSO_PROVIDERS?: string;
 
+      NEXT_AUTH_DEBUG?: string;
+
       AUTH0_CLIENT_ID?: string;
       AUTH0_CLIENT_SECRET?: string;
       AUTH0_ISSUER?: string;
@@ -156,6 +158,7 @@ export const getAuthConfig = () => {
       // NEXT-AUTH
       NEXT_AUTH_SECRET: z.string().optional(),
       NEXT_AUTH_SSO_PROVIDERS: z.string().optional().default('auth0'),
+      NEXT_AUTH_DEBUG: z.boolean().optional().default(false),
 
       // Auth0
       AUTH0_CLIENT_ID: z.string().optional(),
@@ -217,6 +220,7 @@ export const getAuthConfig = () => {
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: !!process.env.NEXT_AUTH_SECRET,
       NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS,
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
+      NEXT_AUTH_DEBUG: !!process.env.NEXT_AUTH_DEBUG,
 
       // Auth0
       AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
