@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update ollama models."]
+    },
+    "date": "2024-12-01",
+    "version": "1.35.1"
+  },
+  {
+    "children": {
       "features": ["Support ollama tools use."]
     },
     "date": "2024-12-01",
