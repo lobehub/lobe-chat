@@ -2,6 +2,9 @@
   "01-ai/Yi-1.5-34B-Chat-16K": {
     "description": "Yi-1.5 34B는 풍부한 훈련 샘플을 통해 산업 응용에서 우수한 성능을 제공합니다."
   },
+  "01-ai/Yi-1.5-6B-Chat": {
+    "description": "Yi-1.5-6B-Chat은 Yi-1.5 시리즈의 변형으로, 오픈 소스 채팅 모델에 속합니다. Yi-1.5는 Yi의 업그레이드 버전으로, 500B 개의 고품질 코퍼스에서 지속적으로 사전 훈련되었으며, 3M의 다양한 미세 조정 샘플에서 미세 조정되었습니다. Yi에 비해 Yi-1.5는 코딩, 수학, 추론 및 지침 준수 능력에서 더 강력한 성능을 보이며, 뛰어난 언어 이해, 상식 추론 및 독해 능력을 유지합니다. 이 모델은 4K, 16K 및 32K의 컨텍스트 길이 버전을 제공하며, 총 3.6T 개의 토큰으로 사전 훈련되었습니다."
+  },
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9B는 16K 토큰을 지원하며, 효율적이고 매끄러운 언어 생성 능력을 제공합니다."
   },
@@ -91,15 +94,18 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B)는 혁신적인 모델로, 다양한 분야의 응용과 복잡한 작업에 적합합니다."
   },
+  "LoRA/Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct는 Alibaba Cloud에서 발표한 최신 대규모 언어 모델 시리즈 중 하나입니다. 이 72B 모델은 코딩 및 수학 분야에서 상당한 개선된 능력을 가지고 있습니다. 이 모델은 또한 29개 이상의 언어를 포함한 다국어 지원을 제공합니다. 모델은 지침 준수, 구조화된 데이터 이해 및 구조화된 출력 생성(특히 JSON)에서 상당한 향상을 보입니다."
+  },
+  "LoRA/Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct는 Alibaba Cloud에서 발표한 최신 대규모 언어 모델 시리즈 중 하나입니다. 이 7B 모델은 코딩 및 수학 분야에서 상당한 개선된 능력을 가지고 있습니다. 이 모델은 또한 29개 이상의 언어를 포함한 다국어 지원을 제공합니다. 모델은 지침 준수, 구조화된 데이터 이해 및 구조화된 출력 생성(특히 JSON)에서 상당한 향상을 보입니다."
+  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO는 뛰어난 창의적 경험을 제공하기 위해 설계된 고도로 유연한 다중 모델 통합입니다."
   },
   "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)는 고정밀 지시 모델로, 복잡한 계산에 적합합니다."
-  },
-  "NousResearch/Nous-Hermes-2-Yi-34B": {
-    "description": "Nous Hermes-2 Yi (34B)는 최적화된 언어 출력과 다양한 응용 가능성을 제공합니다."
   },
   "OpenGVLab/InternVL2-26B": {
     "description": "InternVL2는 문서 및 차트 이해, 장면 텍스트 이해, OCR, 과학 및 수학 문제 해결을 포함한 다양한 시각 언어 작업에서 뛰어난 성능을 보여줍니다."
@@ -134,17 +140,41 @@
   "Pro/OpenGVLab/InternVL2-8B": {
     "description": "InternVL2는 문서 및 차트 이해, 장면 텍스트 이해, OCR, 과학 및 수학 문제 해결을 포함한 다양한 시각 언어 작업에서 뛰어난 성능을 보여줍니다."
   },
+  "Pro/Qwen/Qwen2-1.5B-Instruct": {
+    "description": "Qwen2-1.5B-Instruct는 Qwen2 시리즈의 지침 미세 조정 대규모 언어 모델로, 파라미터 규모는 1.5B입니다. 이 모델은 Transformer 아키텍처를 기반으로 하며, SwiGLU 활성화 함수, 주의 QKV 편향 및 그룹 쿼리 주의와 같은 기술을 사용합니다. 이 모델은 언어 이해, 생성, 다국어 능력, 코딩, 수학 및 추론 등 여러 벤치마크 테스트에서 뛰어난 성능을 보이며, 대부분의 오픈 소스 모델을 초월합니다. Qwen1.5-1.8B-Chat과 비교할 때, Qwen2-1.5B-Instruct는 MMLU, HumanEval, GSM8K, C-Eval 및 IFEval 등의 테스트에서 상당한 성능 향상을 보였습니다."
+  },
+  "Pro/Qwen/Qwen2-7B-Instruct": {
+    "description": "Qwen2-7B-Instruct는 Qwen2 시리즈의 지침 미세 조정 대규모 언어 모델로, 파라미터 규모는 7B입니다. 이 모델은 Transformer 아키텍처를 기반으로 하며, SwiGLU 활성화 함수, 주의 QKV 편향 및 그룹 쿼리 주의와 같은 기술을 사용합니다. 이 모델은 대규모 입력을 처리할 수 있습니다. 이 모델은 언어 이해, 생성, 다국어 능력, 코딩, 수학 및 추론 등 여러 벤치마크 테스트에서 뛰어난 성능을 보이며, 대부분의 오픈 소스 모델을 초월하고 특정 작업에서 독점 모델과 동등한 경쟁력을 보여줍니다. Qwen2-7B-Instruct는 여러 평가에서 Qwen1.5-7B-Chat보다 우수하여 상당한 성능 향상을 보였습니다."
+  },
   "Pro/Qwen/Qwen2-VL-7B-Instruct": {
     "description": "Qwen2-VL은 Qwen-VL 모델의 최신 반복 버전으로, 시각 이해 기준 테스트에서 최첨단 성능을 달성했습니다."
   },
-  "Qwen/Qwen1.5-110B-Chat": {
-    "description": "Qwen2의 테스트 버전인 Qwen1.5는 대규모 데이터를 사용하여 더 정밀한 대화 기능을 구현하였습니다."
+  "Pro/Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct는 Alibaba Cloud에서 발표한 최신 대규모 언어 모델 시리즈 중 하나입니다. 이 7B 모델은 코딩 및 수학 분야에서 상당한 개선된 능력을 가지고 있습니다. 이 모델은 또한 29개 이상의 언어를 포함한 다국어 지원을 제공합니다. 모델은 지침 준수, 구조화된 데이터 이해 및 구조화된 출력 생성(특히 JSON)에서 상당한 향상을 보입니다."
   },
-  "Qwen/Qwen1.5-72B-Chat": {
-    "description": "Qwen 1.5 Chat (72B)는 빠른 응답과 자연스러운 대화 능력을 제공하며, 다국어 환경에 적합합니다."
+  "Pro/Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coder-7B-Instruct는 Alibaba Cloud에서 발표한 코드 특화 대규모 언어 모델 시리즈의 최신 버전입니다. 이 모델은 Qwen2.5를 기반으로 하여 55조 개의 토큰으로 훈련되어 코드 생성, 추론 및 수정 능력을 크게 향상시켰습니다. 이 모델은 코딩 능력을 강화할 뿐만 아니라 수학 및 일반 능력의 장점도 유지합니다. 모델은 코드 에이전트와 같은 실제 응용 프로그램에 더 포괄적인 기반을 제공합니다."
+  },
+  "Pro/THUDM/glm-4-9b-chat": {
+    "description": "GLM-4-9B-Chat은 Zhizhu AI가 출시한 GLM-4 시리즈의 사전 훈련 모델 중 오픈 소스 버전입니다. 이 모델은 의미, 수학, 추론, 코드 및 지식 등 여러 측면에서 뛰어난 성능을 보입니다. GLM-4-9B-Chat은 다중 회전 대화를 지원할 뿐만 아니라 웹 브라우징, 코드 실행, 사용자 정의 도구 호출(Function Call) 및 긴 텍스트 추론과 같은 고급 기능도 갖추고 있습니다. 이 모델은 중국어, 영어, 일본어, 한국어 및 독일어를 포함한 26개 언어를 지원합니다. 여러 벤치마크 테스트에서 GLM-4-9B-Chat은 AlignBench-v2, MT-Bench, MMLU 및 C-Eval 등에서 뛰어난 성능을 보였습니다. 이 모델은 최대 128K의 컨텍스트 길이를 지원하며, 학술 연구 및 상업적 응용에 적합합니다."
+  },
+  "Pro/google/gemma-2-9b-it": {
+    "description": "Gemma는 Google이 개발한 경량화된 최첨단 오픈 모델 시리즈 중 하나입니다. 이는 단일 디코더 대규모 언어 모델로, 영어를 지원하며 오픈 가중치, 사전 훈련 변형 및 지침 미세 조정 변형을 제공합니다. Gemma 모델은 질문 응답, 요약 및 추론을 포함한 다양한 텍스트 생성 작업에 적합합니다. 이 9B 모델은 80조 개의 토큰으로 훈련되었습니다. 상대적으로 작은 규모로 인해 노트북, 데스크탑 또는 개인 클라우드 인프라와 같은 자원이 제한된 환경에서 배포할 수 있어 더 많은 사람들이 최첨단 AI 모델에 접근하고 혁신을 촉진할 수 있습니다."
+  },
+  "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
+    "description": "Meta Llama 3.1은 Meta가 개발한 다국어 대규모 언어 모델 가족으로, 8B, 70B 및 405B의 세 가지 파라미터 규모의 사전 훈련 및 지침 미세 조정 변형을 포함합니다. 이 8B 지침 미세 조정 모델은 다국어 대화 시나리오에 최적화되어 있으며, 여러 산업 벤치마크 테스트에서 우수한 성능을 보입니다. 모델 훈련에는 15조 개 이상의 공개 데이터 토큰이 사용되었으며, 감독 미세 조정 및 인간 피드백 강화 학습과 같은 기술을 통해 모델의 유용성과 안전성을 향상시켰습니다. Llama 3.1은 텍스트 생성 및 코드 생성을 지원하며, 지식 마감일은 2023년 12월입니다."
+  },
+  "Qwen/QwQ-32B-Preview": {
+    "description": "QwQ-32B-Preview는 Qwen의 최신 실험적 연구 모델로, AI 추론 능력을 향상시키는 데 중점을 두고 있습니다. 언어 혼합, 재귀 추론 등 복잡한 메커니즘을 탐구하며, 주요 장점으로는 강력한 추론 분석 능력, 수학 및 프로그래밍 능력이 포함됩니다. 동시에 언어 전환 문제, 추론 루프, 안전성 고려 및 기타 능력 차이와 같은 문제도 존재합니다."
+  },
+  "Qwen/Qwen2-1.5B-Instruct": {
+    "description": "Qwen2-1.5B-Instruct는 Qwen2 시리즈의 지침 미세 조정 대규모 언어 모델로, 파라미터 규모는 1.5B입니다. 이 모델은 Transformer 아키텍처를 기반으로 하며, SwiGLU 활성화 함수, 주의 QKV 편향 및 그룹 쿼리 주의와 같은 기술을 사용합니다. 이 모델은 언어 이해, 생성, 다국어 능력, 코딩, 수학 및 추론 등 여러 벤치마크 테스트에서 뛰어난 성능을 보이며, 대부분의 오픈 소스 모델을 초월합니다. Qwen1.5-1.8B-Chat과 비교할 때, Qwen2-1.5B-Instruct는 MMLU, HumanEval, GSM8K, C-Eval 및 IFEval 등의 테스트에서 상당한 성능 향상을 보였습니다."
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2는 다양한 지시 유형을 지원하는 고급 범용 언어 모델입니다."
+  },
+  "Qwen/Qwen2-7B-Instruct": {
+    "description": "Qwen2-72B-Instruct는 Qwen2 시리즈의 지침 미세 조정 대규모 언어 모델로, 파라미터 규모는 72B입니다. 이 모델은 Transformer 아키텍처를 기반으로 하며, SwiGLU 활성화 함수, 주의 QKV 편향 및 그룹 쿼리 주의와 같은 기술을 사용합니다. 이 모델은 대규모 입력을 처리할 수 있습니다. 이 모델은 언어 이해, 생성, 다국어 능력, 코딩, 수학 및 추론 등 여러 벤치마크 테스트에서 뛰어난 성능을 보이며, 대부분의 오픈 소스 모델을 초월하고 특정 작업에서 독점 모델과 동등한 경쟁력을 보여줍니다."
   },
   "Qwen/Qwen2-VL-72B-Instruct": {
     "description": "Qwen2-VL은 Qwen-VL 모델의 최신 반복 버전으로, 시각 이해 기준 테스트에서 최첨단 성능을 달성했습니다."
@@ -172,6 +202,9 @@
   },
   "Qwen/Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder는 코드 작성에 중점을 둡니다."
+  },
+  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coder-7B-Instruct는 Alibaba Cloud에서 발표한 코드 특화 대규모 언어 모델 시리즈의 최신 버전입니다. 이 모델은 Qwen2.5를 기반으로 하여 55조 개의 토큰으로 훈련되어 코드 생성, 추론 및 수정 능력을 크게 향상시켰습니다. 이 모델은 코딩 능력을 강화할 뿐만 아니라 수학 및 일반 능력의 장점도 유지합니다. 모델은 코드 에이전트와 같은 실제 응용 프로그램에 더 포괄적인 기반을 제공합니다."
   },
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math는 수학 분야의 문제 해결에 중점을 두고 있으며, 고난이도 문제에 대한 전문적인 해답을 제공합니다."
@@ -209,11 +242,26 @@
   "SenseChat-Turbo": {
     "description": "빠른 질문 응답 및 모델 미세 조정 시나리오에 적합합니다."
   },
+  "THUDM/chatglm3-6b": {
+    "description": "ChatGLM3-6B는 Zhizhu AI가 개발한 ChatGLM 시리즈의 오픈 소스 모델입니다. 이 모델은 이전 모델의 우수한 특성을 유지하면서 대화의 유창함과 배포 장벽을 낮추는 새로운 기능을 도입했습니다. 더 다양한 훈련 데이터, 충분한 훈련 단계 및 합리적인 훈련 전략을 채택하여 10B 이하의 사전 훈련 모델 중에서 뛰어난 성능을 보입니다. ChatGLM3-6B는 다중 회전 대화, 도구 호출, 코드 실행 및 에이전트 작업과 같은 복잡한 시나리오를 지원합니다. 대화 모델 외에도 기본 모델 ChatGLM-6B-Base 및 긴 텍스트 대화 모델 ChatGLM3-6B-32K도 오픈 소스되었습니다. 이 모델은 학술 연구에 완전히 개방되어 있으며, 등록 후 무료 상업적 사용도 허용됩니다."
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 오픈 소스 버전으로, 대화 응용을 위한 최적화된 대화 경험을 제공합니다."
   },
+  "TeleAI/TeleChat2": {
+    "description": "TeleChat2 대모델은 중국 전신이 0에서 1까지 독자적으로 개발한 생성적 의미 대모델로, 백과사전 질문 응답, 코드 생성, 긴 문서 생성 등의 기능을 지원하여 사용자에게 대화 상담 서비스를 제공합니다. 사용자가 질문에 답하고 창작을 도와주며, 효율적이고 편리하게 정보, 지식 및 영감을 얻을 수 있도록 돕습니다. 이 모델은 환각 문제, 긴 문서 생성, 논리 이해 등에서 뛰어난 성능을 보입니다."
+  },
+  "TeleAI/TeleMM": {
+    "description": "TeleMM 다중 모달 대모델은 중국 전신이 독자적으로 개발한 다중 모달 이해 대모델로, 텍스트, 이미지 등 다양한 모달 입력을 처리할 수 있으며, 이미지 이해, 차트 분석 등의 기능을 지원하여 사용자에게 교차 모달 이해 서비스를 제공합니다. 이 모델은 사용자와 다중 모달 상호작용을 통해 입력 내용을 정확하게 이해하고 질문에 답하며 창작을 도와주고, 효율적으로 다중 모달 정보와 영감을 제공합니다. 세밀한 인식, 논리 추론 등 다중 모달 작업에서 뛰어난 성능을 보입니다."
+  },
   "Tencent/Hunyuan-A52B-Instruct": {
     "description": "Hunyuan-Large는 업계에서 가장 큰 오픈 소스 Transformer 아키텍처 MoE 모델로, 총 3890억 개의 매개변수와 520억 개의 활성 매개변수를 가지고 있습니다."
+  },
+  "Vendor-A/Qwen/Qwen2-7B-Instruct": {
+    "description": "Qwen2-72B-Instruct는 Qwen2 시리즈의 지침 미세 조정 대규모 언어 모델로, 파라미터 규모는 72B입니다. 이 모델은 Transformer 아키텍처를 기반으로 하며, SwiGLU 활성화 함수, 주의 QKV 편향 및 그룹 쿼리 주의와 같은 기술을 사용합니다. 이 모델은 대규모 입력을 처리할 수 있습니다. 이 모델은 언어 이해, 생성, 다국어 능력, 코딩, 수학 및 추론 등 여러 벤치마크 테스트에서 뛰어난 성능을 보이며, 대부분의 오픈 소스 모델을 초월하고 특정 작업에서 독점 모델과 동등한 경쟁력을 보여줍니다."
+  },
+  "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct는 Alibaba Cloud에서 발표한 최신 대규모 언어 모델 시리즈 중 하나입니다. 이 72B 모델은 코딩 및 수학 분야에서 상당한 개선된 능력을 가지고 있습니다. 이 모델은 또한 29개 이상의 언어를 포함한 다국어 지원을 제공합니다. 모델은 지침 준수, 구조화된 데이터 이해 및 구조화된 출력 생성(특히 JSON)에서 상당한 향상을 보입니다."
   },
   "Yi-34B-Chat": {
     "description": "Yi-1.5-34B는 원래 시리즈 모델의 뛰어난 일반 언어 능력을 유지하면서, 5000억 개의 고품질 토큰을 통해 점진적으로 훈련하여 수학적 논리 및 코드 능력을 크게 향상시켰습니다."
@@ -290,8 +338,14 @@
   "accounts/fireworks/models/phi-3-vision-128k-instruct": {
     "description": "Phi 3 Vision 지시 모델은 경량 다중 모달 모델로, 복잡한 시각 및 텍스트 정보를 처리할 수 있으며, 강력한 추론 능력을 갖추고 있습니다."
   },
+  "accounts/fireworks/models/qwen-qwq-32b-preview": {
+    "description": "QwQ 모델은 Qwen 팀이 개발한 실험적 연구 모델로, AI 추론 능력을 향상시키는 데 중점을 두고 있습니다."
+  },
   "accounts/fireworks/models/qwen2p5-72b-instruct": {
     "description": "Qwen2.5는 Alibaba Cloud Qwen 팀이 개발한 일련의 디코더 전용 언어 모델입니다. 이러한 모델은 0.5B, 1.5B, 3B, 7B, 14B, 32B 및 72B와 같은 다양한 크기를 제공하며, 기본 버전과 지시 버전 두 가지 변형이 있습니다."
+  },
+  "accounts/fireworks/models/qwen2p5-coder-32b-instruct": {
+    "description": "Qwen2.5 Coder 32B Instruct는 Alibaba Cloud에서 발표한 코드 특화 대규모 언어 모델 시리즈의 최신 버전입니다. 이 모델은 Qwen2.5를 기반으로 하여 55조 개의 토큰으로 훈련되어 코드 생성, 추론 및 수정 능력을 크게 향상시켰습니다. 이 모델은 코딩 능력을 강화할 뿐만 아니라 수학 및 일반 능력의 장점도 유지합니다. 모델은 코드 에이전트와 같은 실제 응용 프로그램에 더 포괄적인 기반을 제공합니다."
   },
   "accounts/fireworks/models/starcoder-16b": {
     "description": "StarCoder 15.5B 모델은 고급 프로그래밍 작업을 지원하며, 다국어 능력이 강화되어 복잡한 코드 생성 및 이해에 적합합니다."
@@ -392,6 +446,9 @@
   "codellama": {
     "description": "Code Llama는 코드 생성 및 논의에 중점을 둔 LLM으로, 광범위한 프로그래밍 언어 지원을 결합하여 개발자 환경에 적합합니다."
   },
+  "codellama/CodeLlama-34b-Instruct-hf": {
+    "description": "Code Llama는 코드 생성 및 논의에 중점을 둔 LLM으로, 광범위한 프로그래밍 언어 지원을 결합하여 개발자 환경에 적합합니다."
+  },
   "codellama:13b": {
     "description": "Code Llama는 코드 생성 및 논의에 중점을 둔 LLM으로, 광범위한 프로그래밍 언어 지원을 결합하여 개발자 환경에 적합합니다."
   },
@@ -427,6 +484,9 @@
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct는 높은 신뢰성을 가진 지시 처리 능력을 제공하며, 다양한 산업 응용을 지원합니다."
+  },
+  "deepseek-ai/DeepSeek-V2-Chat": {
+    "description": "DeepSeek-V2는 강력하고 경제적인 혼합 전문가(MoE) 언어 모델입니다. 81조 개의 고품질 토큰 데이터셋에서 사전 훈련되었으며, 감독 미세 조정(SFT) 및 강화 학습(RL)을 통해 모델 능력을 더욱 향상시켰습니다. DeepSeek 67B와 비교할 때, DeepSeek-V2는 성능이 더 강력하면서도 42.5%의 훈련 비용을 절감하고 93.3%의 KV 캐시를 줄이며 최대 생성 처리량을 5.76배 향상시켰습니다. 이 모델은 128k의 컨텍스트 길이를 지원하며, 표준 벤치마크 테스트와 오픈 생성 평가에서 모두 뛰어난 성능을 보입니다."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5는 이전 버전의 우수한 기능을 집약하여 일반 및 인코딩 능력을 강화했습니다."
@@ -682,6 +742,9 @@
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
+  "learnlm-1.5-pro-experimental": {
+    "description": "LearnLM은 학습 과학 원칙에 맞춰 훈련된 실험적이고 특정 작업에 특화된 언어 모델로, 교육 및 학습 환경에서 시스템 지침을 따르며 전문가 멘토 역할을 수행합니다."
+  },
   "lite": {
     "description": "Spark Lite는 경량 대형 언어 모델로, 매우 낮은 지연 시간과 효율적인 처리 능력을 갖추고 있으며, 완전히 무료로 제공되고 실시간 온라인 검색 기능을 지원합니다. 빠른 응답 특성 덕분에 저전력 장치에서의 추론 응용 및 모델 미세 조정에서 뛰어난 성능을 발휘하며, 사용자에게 뛰어난 비용 효율성과 스마트한 경험을 제공합니다. 특히 지식 질문 응답, 콘텐츠 생성 및 검색 시나리오에서 두각을 나타냅니다."
   },
@@ -872,6 +935,9 @@
     "description": "Meta Llama 3은 개발자, 연구자 및 기업을 위한 오픈 대형 언어 모델(LLM)로, 생성 AI 아이디어를 구축하고 실험하며 책임감 있게 확장하는 데 도움을 주기 위해 설계되었습니다. 전 세계 커뮤니티 혁신의 기초 시스템의 일환으로, 계산 능력과 자원이 제한된 환경, 엣지 장치 및 더 빠른 훈련 시간에 매우 적합합니다."
   },
   "microsoft/Phi-3.5-mini-instruct": {},
+  "microsoft/WizardLM-2-8x22B": {
+    "description": "WizardLM 2는 Microsoft AI가 제공하는 언어 모델로, 복잡한 대화, 다국어, 추론 및 스마트 어시스턴트 분야에서 특히 뛰어난 성능을 보입니다."
+  },
   "microsoft/wizardlm 2-7b": {
     "description": "WizardLM 2 7B는 Microsoft AI의 최신 경량 모델로, 기존 오픈 소스 선도 모델의 성능에 근접합니다."
   },
@@ -955,6 +1021,9 @@
   },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct": {
     "description": "Llama 3.1 Nemotron 70B는 NVIDIA가 맞춤 제작한 대형 언어 모델로, LLM 생성된 응답이 사용자 쿼리에 도움이 되는 정도를 높이기 위해 설계되었습니다."
+  },
+  "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
+    "description": "Llama 3.1 Nemotron 70B는 NVIDIA가 맞춤 제작한 대규모 언어 모델로, LLM이 생성한 응답이 사용자 쿼리에 얼마나 도움이 되는지를 향상시키기 위해 설계되었습니다. 이 모델은 Arena Hard, AlpacaEval 2 LC 및 GPT-4-Turbo MT-Bench와 같은 벤치마크 테스트에서 뛰어난 성능을 보였으며, 2024년 10월 1일 기준으로 모든 자동 정렬 벤치마크 테스트에서 1위를 차지했습니다. 이 모델은 RLHF(특히 REINFORCE), Llama-3.1-Nemotron-70B-Reward 및 HelpSteer2-Preference 프롬프트를 사용하여 Llama-3.1-70B-Instruct 모델을 기반으로 훈련되었습니다."
   },
   "o1-mini": {
     "description": "o1-mini는 프로그래밍, 수학 및 과학 응용 프로그램을 위해 설계된 빠르고 경제적인 추론 모델입니다. 이 모델은 128K의 컨텍스트와 2023년 10월의 지식 기준일을 가지고 있습니다."
@@ -1052,6 +1121,9 @@
   "qwen2": {
     "description": "Qwen2는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
   },
+  "qwen2.5": {
+    "description": "Qwen2.5는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
+  },
   "qwen2.5-14b-instruct": {
     "description": "통의 천문 2.5 외부 오픈 소스 14B 규모 모델입니다."
   },
@@ -1076,6 +1148,15 @@
   "qwen2.5-math-7b-instruct": {
     "description": "Qwen-Math 모델은 강력한 수학 문제 해결 능력을 가지고 있습니다."
   },
+  "qwen2.5:0.5b": {
+    "description": "Qwen2.5는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
+  },
+  "qwen2.5:1.5b": {
+    "description": "Qwen2.5는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
+  },
+  "qwen2.5:72b": {
+    "description": "Qwen2.5는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
+  },
   "qwen2:0.5b": {
     "description": "Qwen2는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
   },
@@ -1084,6 +1165,12 @@
   },
   "qwen2:72b": {
     "description": "Qwen2는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
+  },
+  "qwq": {
+    "description": "QwQ는 AI 추론 능력을 향상시키는 데 중점을 둔 실험 연구 모델입니다."
+  },
+  "qwq-32b-preview": {
+    "description": "QwQ 모델은 Qwen 팀이 개발한 실험적 연구 모델로, AI 추론 능력을 향상시키는 데 중점을 두고 있습니다."
   },
   "solar-1-mini-chat": {
     "description": "Solar Mini는 컴팩트한 LLM으로, GPT-3.5보다 성능이 우수하며, 강력한 다국어 능력을 갖추고 있어 영어와 한국어를 지원하며, 효율적이고 소형 솔루션을 제공합니다."
