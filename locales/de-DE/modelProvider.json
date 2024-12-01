@@ -88,10 +88,10 @@
       "title": "Benutzerdefinierte Modellnamen"
     },
     "download": {
-      "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "Ollama lädt dieses Modell herunter. Bitte schließen Sie diese Seite nicht. Ein erneuter Download wird an der unterbrochenen Stelle fortgesetzt.",
+      "remainingTime": "Verbleibende Zeit",
+      "speed": "Downloadgeschwindigkeit",
+      "title": "Lade Modell {{model}} herunter"
     },
     "endpoint": {
       "desc": "Geben Sie die Proxy-Adresse der Ollama-Schnittstelle ein, leer lassen, wenn lokal nicht spezifiziert",

@@ -88,10 +88,10 @@
       "title": "أسماء النماذج المخصصة"
     },
     "download": {
-      "desc": "Ollama is downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "أولاما يقوم بتنزيل هذا النموذج، يرجى عدم إغلاق هذه الصفحة إذا أمكن. سيتم استئناف التنزيل من النقطة التي تم قطعها عند إعادة التحميل",
+      "remainingTime": "الوقت المتبقي",
+      "speed": "سرعة التنزيل",
+      "title": "جارٍ تنزيل النموذج {{model}} "
     },
     "endpoint": {
       "desc": "أدخل عنوان واجهة برمجة التطبيقات الخاص بـ Ollama، إذا لم يتم تحديده محليًا، يمكن تركه فارغًا",
