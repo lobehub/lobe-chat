@@ -88,10 +88,10 @@
       "title": "Nombre de modelos personalizados"
     },
     "download": {
-      "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "Ollama está descargando este modelo, por favor intenta no cerrar esta página. La descarga se reanudará desde donde se interrumpió",
+      "remainingTime": "Tiempo restante",
+      "speed": "Velocidad de descarga",
+      "title": "Descargando el modelo {{model}} "
     },
     "endpoint": {
       "desc": "Introduce la dirección del proxy de la interfaz de Ollama, déjalo en blanco si no se ha especificado localmente",
