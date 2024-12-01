@@ -39,8 +39,8 @@ export default {
       return session;
     },
   },
+  debug: authEnv.NEXT_AUTH_DEBUG,
   providers: initSSOProviders(),
   secret: authEnv.NEXT_AUTH_SECRET,
   trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,
-  debug: authEnv.NEXT_AUTH_DEBUG,
 } satisfies NextAuthConfig;
