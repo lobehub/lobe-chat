@@ -62,6 +62,14 @@ const TogetherAI: ModelProviderCard = {
       tokens: 130_815,
     },
     {
+      description:
+        'Llama 3.1 Nemotron 70B 是由 NVIDIA 定制的大型语言模型，旨在提高 LLM 生成的响应对用户查询的帮助程度。该模型在 Arena Hard、AlpacaEval 2 LC 和 GPT-4-Turbo MT-Bench 等基准测试中表现出色，截至 2024 年 10 月 1 日，在所有三个自动对齐基准测试中排名第一。该模型使用 RLHF（特别是 REINFORCE）、Llama-3.1-Nemotron-70B-Reward 和 HelpSteer2-Preference 提示在 Llama-3.1-70B-Instruct 模型基础上进行训练',
+      displayName: 'Llama 3.1 Nemotron 70B',
+      enabled: true,
+      id: 'nvidia/Llama-3.1-Nemotron-70B-Instruct-HF',
+      tokens: 32_768,
+    },
+    {
       description: 'Llama 3 8B Instruct Turbo 是一款高效能的大语言模型，支持广泛的应用场景。',
       displayName: 'Llama 3 8B Instruct Turbo',
       id: 'meta-llama/Meta-Llama-3-8B-Instruct-Turbo',
@@ -109,6 +117,12 @@ const TogetherAI: ModelProviderCard = {
       displayName: 'LLaMA-2 (70B)',
       id: 'meta-llama/Llama-2-70b-hf',
       tokens: 4096,
+    },
+    {
+      description: 'Code Llama 是一款专注于代码生成和讨论的 LLM，结合广泛的编程语言支持，适用于开发者环境。',
+      displayName: 'CodeLlama 34B Instruct',
+      id: 'codellama/CodeLlama-34b-Instruct-hf',
+      tokens: 16_384,
     },
     {
       description: 'Gemma 2 9B 由Google开发，提供高效的指令响应和综合能力。',
@@ -178,11 +192,24 @@ const TogetherAI: ModelProviderCard = {
       tokens: 65_536,
     },
     {
+      description: 'WizardLM 2 是微软AI提供的语言模型，在复杂对话、多语言、推理和智能助手领域表现尤为出色。',
+      displayName: 'WizardLM-2 8x22B',
+      id: 'microsoft/WizardLM-2-8x22B',
+      tokens: 65_536,
+    },
+    {
       description: 'DeepSeek LLM Chat (67B) 是创新的 AI 模型 提供深度语言理解和互动能力。',
       displayName: 'DeepSeek LLM Chat (67B)',
       enabled: true,
       id: 'deepseek-ai/deepseek-llm-67b-chat',
       tokens: 4096,
+    },
+    {
+      description: 'QwQ模型是由 Qwen 团队开发的实验性研究模型，专注于增强 AI 推理能力。',
+      displayName: 'QwQ 32B Preview',
+      enabled: true,
+      id: 'Qwen/QwQ-32B-Preview',
+      tokens: 32_768,
     },
     {
       description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
@@ -199,21 +226,15 @@ const TogetherAI: ModelProviderCard = {
       tokens: 32_768,
     },
     {
+      description: 'Qwen2.5 Coder 32B Instruct 是阿里云发布的代码特定大语言模型系列的最新版本。该模型在 Qwen2.5 的基础上，通过 5.5 万亿个 tokens 的训练，显著提升了代码生成、推理和修复能力。它不仅增强了编码能力，还保持了数学和通用能力的优势。模型为代码智能体等实际应用提供了更全面的基础',
+      displayName: 'Qwen 2.5 Coder 32B Instruct',
+      id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
+      tokens: 32_768,
+    },
+    {
       description: 'Qwen 2 Instruct (72B) 为企业级应用提供精准的指令理解和响应。',
       displayName: 'Qwen 2 Instruct (72B)',
       id: 'Qwen/Qwen2-72B-Instruct',
-      tokens: 32_768,
-    },
-    {
-      description: 'Qwen 1.5 Chat (72B) 提供快速响应和自然对话能力，适合多语言环境。',
-      displayName: 'Qwen 1.5 Chat (72B)',
-      id: 'Qwen/Qwen1.5-72B-Chat',
-      tokens: 32_768,
-    },
-    {
-      description: 'Qwen 1.5 Chat (110B) 是一款高效能的对话模型，支持复杂对话场景。',
-      displayName: 'Qwen 1.5 Chat (110B)',
-      id: 'Qwen/Qwen1.5-110B-Chat',
       tokens: 32_768,
     },
     {
@@ -233,12 +254,6 @@ const TogetherAI: ModelProviderCard = {
       displayName: 'Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)',
       id: 'NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO',
       tokens: 32_768,
-    },
-    {
-      description: 'Nous Hermes-2 Yi (34B) 提供优化的语言输出和多样化的应用可能。',
-      displayName: 'Nous Hermes-2 Yi (34B)',
-      id: 'NousResearch/Nous-Hermes-2-Yi-34B',
-      tokens: 4096,
     },
     {
       description: 'MythoMax-L2 (13B) 是一种创新模型，适合多领域应用和复杂任务。',

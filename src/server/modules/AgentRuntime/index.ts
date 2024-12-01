@@ -33,7 +33,7 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
     default: {
       let upperProvider = provider.toUpperCase();
 
-      if (!( `${upperProvider}_API_KEY` in llmConfig)) {
+      if (!(`${upperProvider}_API_KEY` in llmConfig)) {
         upperProvider = ModelProvider.OpenAI.toUpperCase(); // Use OpenAI options as default
       }
 
@@ -41,6 +41,12 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const baseURL = payload?.endpoint || process.env[`${upperProvider}_PROXY_URL`];
 
       return baseURL ? { apiKey, baseURL } : { apiKey };
+    }
+
+    case ModelProvider.Ollama: {
+      const baseURL = payload?.endpoint || process.env.OLLAMA_PROXY_URL;
+
+      return { baseURL };
     }
 
     case ModelProvider.Azure: {
