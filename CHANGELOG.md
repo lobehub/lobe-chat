@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.35.3](https://github.com/lobehub/lobe-chat/compare/v1.35.2...v1.35.3)
+
+<sup>Released on **2024-12-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add gpt-4o-2024-11-20 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add gpt-4o-2024-11-20 model, closes [#4855](https://github.com/lobehub/lobe-chat/issues/4855) ([bc3b396](https://github.com/lobehub/lobe-chat/commit/bc3b396))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.35.2](https://github.com/lobehub/lobe-chat/compare/v1.35.1...v1.35.2)
 
 <sup>Released on **2024-12-01**</sup>
