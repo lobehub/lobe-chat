@@ -1,4 +1,3 @@
-import { readableFromAsyncIterable } from 'ai';
 import { Ollama, Tool } from 'ollama/browser';
 import { ClientOptions } from 'openai';
 
@@ -11,7 +10,7 @@ import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../typ
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { OllamaStream, chatStreamable } from '../utils/streams';
+import { OllamaStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { OllamaMessage } from './type';
 
@@ -47,17 +46,14 @@ export class LobeOllamaAI implements LobeRuntimeAI {
         options: {
           frequency_penalty: payload.frequency_penalty,
           presence_penalty: payload.presence_penalty,
-          temperature: 
-            payload.temperature !== undefined 
-            ? payload.temperature / 2
-            : undefined,
+          temperature: payload.temperature !== undefined ? payload.temperature / 2 : undefined,
           top_p: payload.top_p,
         },
         stream: true,
         tools: payload.tools as Tool[],
       });
 
-      const stream = readableFromAsyncIterable(chatStreamable(response));
+      const stream = convertIterableToStream(response);
       const [prod, debug] = stream.tee();
 
       if (process.env.DEBUG_OLLAMA_CHAT_COMPLETION === '1') {
@@ -68,10 +64,20 @@ export class LobeOllamaAI implements LobeRuntimeAI {
         headers: options?.headers,
       });
     } catch (error) {
-      const e = error as { message: string; name: string; status_code: number };
+      const e = error as {
+        error: any;
+        message: string;
+        name: string;
+        status_code: number;
+      };
 
       throw AgentRuntimeError.chat({
-        error: { message: e.message, name: e.name, status_code: e.status_code },
+        error: {
+          ...e.error,
+          message: String(e.error.message),
+          name: e.name,
+          status_code: e.status_code,
+        },
         errorType: AgentRuntimeErrorType.OllamaBizError,
         provider: ModelProvider.Ollama,
       });
