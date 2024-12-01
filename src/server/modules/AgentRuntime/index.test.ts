@@ -134,6 +134,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Ollama, jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOllamaAI);
+      expect(runtime['_runtime']['baseURL']).toEqual(jwtPayload.endpoint);
     });
 
     it('Perplexity AI provider: with apikey', async () => {
@@ -391,7 +392,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       // endpoint 不存在，应返回 DEFAULT_BASE_URL
       expect(runtime['_runtime'].baseURL).toBe('https://dashscope.aliyuncs.com/compatible-mode/v1');
     });
-    
+
     it('Unknown Provider', async () => {
       const jwtPayload = {};
       const runtime = await initAgentRuntimeWithUserPayload('unknown', jwtPayload);
