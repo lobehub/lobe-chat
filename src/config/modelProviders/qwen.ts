@@ -130,6 +130,17 @@ const Qwen: ModelProviderCard = {
       tokens: 131_072,
     },
     {
+      description: 'QwQ模型是由 Qwen 团队开发的实验性研究模型，专注于增强 AI 推理能力。',
+      displayName: 'QwQ 32B Preview',
+      id: 'qwq-32b-preview',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      tokens: 32_768,
+    },
+    {
       description: '通义千问2.5对外开源的7B规模的模型。',
       displayName: 'Qwen2.5 7B',
       functionCall: true,
