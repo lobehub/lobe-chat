@@ -5,7 +5,7 @@ import { DeepPartial } from 'utility-types';
 import { serverDB } from '@/database/server/core/db';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserGuide, UserPreference } from '@/types/user';
-import { UserSettings } from '@/types/user/settings';
+import { UserKeyVaults, UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
 
 import { NewUser, UserItem, userSettings, users } from '../schemas/lobechat';
@@ -103,6 +103,38 @@ export class UserModel {
       settings,
       userId: id,
     };
+  };
+
+  static getUserApiKeys = async (id: string) => {
+    const result = await serverDB
+      .select({
+        settingsKeyVaults: userSettings.keyVaults,
+      })
+      .from(userSettings)
+      .where(eq(userSettings.id, id));
+
+    if (!result || !result[0]) {
+      throw new UserNotFoundError();
+    }
+
+    const state = result[0];
+
+    // Decrypt keyVaults
+    let decryptKeyVaults = {};
+    if (state.settingsKeyVaults) {
+      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+      const { wasAuthentic, plaintext } = await gateKeeper.decrypt(state.settingsKeyVaults);
+
+      if (wasAuthentic) {
+        try {
+          decryptKeyVaults = JSON.parse(plaintext);
+        } catch (e) {
+          console.error(`Failed to parse keyVaults ,userId: ${id}. Error:`, e);
+        }
+      }
+    }
+
+    return decryptKeyVaults as UserKeyVaults;
   };
 
   async updateUser(id: string, value: Partial<UserItem>) {
