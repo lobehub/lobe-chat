@@ -24,7 +24,7 @@ if (typeof window === 'undefined' && isServerMode && !APP_URL) {
 }
 
 const ASSISTANT_INDEX_URL =
-  'https://registry.npmmirror.com/@lobehub/agents-index/latest/files/public';
+  'https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public';
 
 const PLUGINS_INDEX_URL = 'https://chat-plugins.lobehub.com';
 
