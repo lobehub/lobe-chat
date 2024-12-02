@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { AgentSchema } from '@/database/client/schemas/session';
+import { AgentSchema } from '@/database/_deprecated/schemas/session';
 import { LobeMetaDataSchema } from '@/types/meta';
 
 const generalSechma = z.object({

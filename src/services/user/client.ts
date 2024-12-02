@@ -1,8 +1,8 @@
 import { DeepPartial } from 'utility-types';
 
-import { MessageModel } from '@/database/client/models/message';
-import { SessionModel } from '@/database/client/models/session';
-import { UserModel } from '@/database/client/models/user';
+import { MessageModel } from '@/database/_deprecated/models/message';
+import { SessionModel } from '@/database/_deprecated/models/session';
+import { UserModel } from '@/database/_deprecated/models/user';
 import { UserGuide, UserInitializationState, UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 import { AsyncLocalStorage } from '@/utils/localStorage';
