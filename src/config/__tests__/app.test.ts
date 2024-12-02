@@ -24,7 +24,7 @@ describe('getServerConfig', () => {
   describe('index url', () => {
     it('should return default URLs when no environment variables are set', () => {
       const config = getAppConfig();
-      expect(config.AGENTS_INDEX_URL).toBe('https://chat-agents.lobehub.com');
+      expect(config.AGENTS_INDEX_URL).toBe('https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public');
       expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
     });
 
@@ -41,7 +41,7 @@ describe('getServerConfig', () => {
       process.env.PLUGINS_INDEX_URL = '';
 
       const config = getAppConfig();
-      expect(config.AGENTS_INDEX_URL).toBe('https://chat-agents.lobehub.com');
+      expect(config.AGENTS_INDEX_URL).toBe('https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public');
       expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
     });
   });
