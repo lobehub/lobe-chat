@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { CreateMessageParams, MessageModel } from '@/database/client/models/message';
-import { SessionGroupModel } from '@/database/client/models/sessionGroup';
-import { TopicModel } from '@/database/client/models/topic';
+import { CreateMessageParams, MessageModel } from '@/database/_deprecated/models/message';
+import { SessionGroupModel } from '@/database/_deprecated/models/sessionGroup';
+import { TopicModel } from '@/database/_deprecated/models/topic';
 import { LobeAgentConfig } from '@/types/agent';
 import {
   LobeAgentSession,

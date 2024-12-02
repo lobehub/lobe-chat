@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Deprecated the current client mode code."]
+    },
+    "date": "2024-12-02",
+    "version": "1.35.5"
+  },
+  {
     "children": {},
     "date": "2024-12-02",
     "version": "1.35.4"
