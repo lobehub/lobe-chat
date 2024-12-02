@@ -1,14 +1,14 @@
 import { DeepPartial } from 'utility-types';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { UserModel } from '@/database/client/models/user';
+import { UserModel } from '@/database/_deprecated/models/user';
 import { UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 import { AsyncLocalStorage } from '@/utils/localStorage';
 
 import { ClientService } from './client';
 
-vi.mock('@/database/client/models/user', () => ({
+vi.mock('@/database/_deprecated/models/user', () => ({
   UserModel: {
     getUser: vi.fn(),
     updateSettings: vi.fn(),

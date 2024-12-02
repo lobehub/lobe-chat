@@ -1,4 +1,4 @@
-import { DB_Message } from '@/database/client/schemas/message';
+import { DB_Message } from '@/database/_deprecated/schemas/message';
 import {
   ChatMessage,
   ChatMessageError,

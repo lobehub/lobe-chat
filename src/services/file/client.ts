@@ -1,5 +1,5 @@
-import { FileModel } from '@/database/client/models/file';
-import { DB_File } from '@/database/client/schemas/files';
+import { FileModel } from '@/database/_deprecated/models/file';
+import { DB_File } from '@/database/_deprecated/schemas/files';
 import { FileItem } from '@/types/files';
 
 import { IFileService } from './type';
