@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add QwQ 32B Preview model."]
+    },
+    "date": "2024-12-02",
+    "version": "1.35.6"
+  },
+  {
+    "children": {
       "improvements": ["Deprecated the current client mode code."]
     },
     "date": "2024-12-02",
