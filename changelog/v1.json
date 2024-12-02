@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2024-12-02",
+    "version": "1.35.4"
+  },
+  {
     "children": {
       "improvements": ["Add gpt-4o-2024-11-20 model."]
     },
