@@ -28,6 +28,12 @@ const HuggingFace: ModelProviderCard = {
       tokens: 32_768,
     },
     {
+      description: 'Qwen QwQ 是由 Qwen 团队开发的实验研究模型，专注于提升AI推理能力。',
+      displayName: 'QwQ 32B Preview',
+      id: 'Qwen/QwQ-32B-Preview',
+      tokens: 32_768,
+    },
+    {
       displayName: 'Phi 3.5 mini instruct',
       id: 'microsoft/Phi-3.5-mini-instruct',
       tokens: 32_768,
