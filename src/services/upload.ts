@@ -67,7 +67,7 @@ class UploadService {
   };
 
   uploadToClientDB = async (params: UploadFileParams, file: File) => {
-    const { FileModel } = await import('@/database/client/models/file');
+    const { FileModel } = await import('@/database/_deprecated/models/file');
     const fileArrayBuffer = await file.arrayBuffer();
 
     // save to local storage

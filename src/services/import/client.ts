@@ -1,7 +1,7 @@
-import { MessageModel } from '@/database/client/models/message';
-import { SessionModel } from '@/database/client/models/session';
-import { SessionGroupModel } from '@/database/client/models/sessionGroup';
-import { TopicModel } from '@/database/client/models/topic';
+import { MessageModel } from '@/database/_deprecated/models/message';
+import { SessionModel } from '@/database/_deprecated/models/session';
+import { SessionGroupModel } from '@/database/_deprecated/models/sessionGroup';
+import { TopicModel } from '@/database/_deprecated/models/topic';
 import { ImportResult, ImportResults } from '@/services/config';
 import { useUserStore } from '@/store/user';
 import { ImportStage, ImporterEntryData, OnImportCallbacks } from '@/types/importer';

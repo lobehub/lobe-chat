@@ -1,14 +1,14 @@
 import { Mock, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { SessionModel } from '@/database/client/models/session';
-import { CreateTopicParams, TopicModel } from '@/database/client/models/topic';
+import { SessionModel } from '@/database/_deprecated/models/session';
+import { CreateTopicParams, TopicModel } from '@/database/_deprecated/models/topic';
 import { ChatTopic } from '@/types/topic';
 
 import { ClientService } from './client';
 
 const topicService = new ClientService();
 // Mock the TopicModel
-vi.mock('@/database/client/models/topic', () => {
+vi.mock('@/database/_deprecated/models/topic', () => {
   return {
     TopicModel: {
       create: vi.fn(),

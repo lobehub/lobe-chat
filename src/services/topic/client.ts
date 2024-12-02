@@ -1,4 +1,4 @@
-import { TopicModel } from '@/database/client/models/topic';
+import { TopicModel } from '@/database/_deprecated/models/topic';
 import { ChatTopic } from '@/types/topic';
 
 import { CreateTopicParams, ITopicService, QueryTopicParams } from './type';

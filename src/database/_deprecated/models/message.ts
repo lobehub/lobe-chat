@@ -1,8 +1,8 @@
 import { DeepPartial } from 'utility-types';
 
-import { BaseModel } from '@/database/client/core';
-import { DBModel } from '@/database/client/core/types/db';
-import { DB_Message, DB_MessageSchema } from '@/database/client/schemas/message';
+import { BaseModel } from '@/database/_deprecated/core';
+import { DBModel } from '@/database/_deprecated/core/types/db';
+import { DB_Message, DB_MessageSchema } from '@/database/_deprecated/schemas/message';
 import { ChatMessage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
 

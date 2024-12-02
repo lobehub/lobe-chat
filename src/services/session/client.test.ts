@@ -1,7 +1,7 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { SessionModel } from '@/database/client/models/session';
-import { SessionGroupModel } from '@/database/client/models/sessionGroup';
+import { SessionModel } from '@/database/_deprecated/models/session';
+import { SessionGroupModel } from '@/database/_deprecated/models/sessionGroup';
 import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentSession, LobeSessionType, SessionGroups } from '@/types/session';
 
@@ -10,7 +10,7 @@ import { ClientService } from './client';
 const sessionService = new ClientService();
 
 // Mock the SessionModel
-vi.mock('@/database/client/models/session', () => {
+vi.mock('@/database/_deprecated/models/session', () => {
   return {
     SessionModel: {
       create: vi.fn(),
@@ -33,7 +33,7 @@ vi.mock('@/database/client/models/session', () => {
 });
 
 // Mock the SessionGroupModel
-vi.mock('@/database/client/models/sessionGroup', () => {
+vi.mock('@/database/_deprecated/models/sessionGroup', () => {
   return {
     SessionGroupModel: {
       create: vi.fn(),

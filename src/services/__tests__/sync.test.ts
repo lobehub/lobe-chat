@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { dataSync } from '@/database/client/core';
+import { dataSync } from '@/database/_deprecated/core';
 import { StartDataSyncParams } from '@/types/sync';
 
 import { syncService } from '../sync';
 
-vi.mock('@/database/client/core', () => ({
+vi.mock('@/database/_deprecated/core', () => ({
   dataSync: {
     startDataSync: vi.fn(),
     disconnect: vi.fn(),

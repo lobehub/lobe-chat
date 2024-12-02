@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { SessionModel } from '@/database/client/models/session';
+import { SessionModel } from '@/database/_deprecated/models/session';
 import { SessionGroups } from '@/types/session';
 
 import { DB_SessionGroup } from '../../schemas/sessionGroup';

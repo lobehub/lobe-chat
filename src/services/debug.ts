@@ -1,4 +1,4 @@
-import { DEBUG_MODEL } from '@/database/client/models/__DEBUG';
+import { DEBUG_MODEL } from '@/database/_deprecated/models/__DEBUG';
 
 class DebugService {
   async insertLargeDataToDB() {
