@@ -105,9 +105,6 @@ export class UserModel {
     };
   };
 
-  /**
-   * 解构用户的 API Key
-   */
   static getUserApiKeys = async (id: string) => {
     const result = await serverDB
       .select({
