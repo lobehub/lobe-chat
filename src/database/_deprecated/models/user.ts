@@ -1,6 +1,6 @@
 import { DeepPartial } from 'utility-types';
 
-import { BaseModel } from '@/database/client/core';
+import { BaseModel } from '@/database/_deprecated/core';
 import { LobeAgentConfig } from '@/types/agent';
 import { uuid } from '@/utils/uuid';
 

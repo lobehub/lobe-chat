@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Mock, describe, expect, it, vi } from 'vitest';
 
-import { CreateMessageParams, MessageModel } from '@/database/client/models/message';
+import { CreateMessageParams, MessageModel } from '@/database/_deprecated/models/message';
 import {
   ChatMessage,
   ChatMessageError,
@@ -15,7 +15,7 @@ import { ClientService } from './client';
 const messageService = new ClientService();
 
 // Mock the MessageModel
-vi.mock('@/database/client/models/message', () => {
+vi.mock('@/database/_deprecated/models/message', () => {
   return {
     MessageModel: {
       create: vi.fn(),
