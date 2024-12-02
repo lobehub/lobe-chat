@@ -1,6 +1,6 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 
-import { BaseModel } from '@/database/client/core';
+import { BaseModel } from '@/database/_deprecated/core';
 import { LobeTool } from '@/types/tool';
 import { merge } from '@/utils/merge';
 

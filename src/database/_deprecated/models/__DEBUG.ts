@@ -1,9 +1,9 @@
 // This file is for debugging purposes only.
 // DON'T USE IT IN PRODUCTION.
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { DBModel } from '@/database/client/core/types/db';
-import { DB_Message } from '@/database/client/schemas/message';
-import { DB_Topic } from '@/database/client/schemas/topic';
+import { DBModel } from '@/database/_deprecated/core/types/db';
+import { DB_Message } from '@/database/_deprecated/schemas/message';
+import { DB_Topic } from '@/database/_deprecated/schemas/topic';
 
 import { BaseModel } from '../core';
 import { DB_Session, DB_SessionSchema } from '../schemas/session';

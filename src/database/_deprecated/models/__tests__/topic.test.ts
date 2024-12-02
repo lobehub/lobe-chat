@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { DBModel } from '@/database/client/core/types/db';
-import { CreateMessageParams, MessageModel } from '@/database/client/models/message';
-import { DB_Message } from '@/database/client/schemas/message';
-import { DB_Topic } from '@/database/client/schemas/topic';
+import { DBModel } from '@/database/_deprecated/core/types/db';
+import { CreateMessageParams, MessageModel } from '@/database/_deprecated/models/message';
+import { DB_Message } from '@/database/_deprecated/schemas/message';
+import { DB_Topic } from '@/database/_deprecated/schemas/topic';
 import { nanoid } from '@/utils/uuid';
 import * as uuidUtils from '@/utils/uuid';
 

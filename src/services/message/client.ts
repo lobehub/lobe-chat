@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 
-import { FileModel } from '@/database/client/models/file';
-import { MessageModel } from '@/database/client/models/message';
-import { DB_Message } from '@/database/client/schemas/message';
+import { FileModel } from '@/database/_deprecated/models/file';
+import { MessageModel } from '@/database/_deprecated/models/message';
+import { DB_Message } from '@/database/_deprecated/schemas/message';
 import {
   ChatFileItem,
   ChatMessage,

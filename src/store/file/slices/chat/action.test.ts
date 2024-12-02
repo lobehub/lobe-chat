@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import { Mock, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { notification } from '@/components/AntdStaticMethods';
-import { DB_File } from '@/database/client/schemas/files';
+import { DB_File } from '@/database/_deprecated/schemas/files';
 import { fileService } from '@/services/file';
 import { uploadService } from '@/services/upload';
 
