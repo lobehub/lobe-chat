@@ -57,7 +57,7 @@ describe('useCategory', () => {
       expect(items.some((item) => item.key === 'data')).toBe(true);
       expect(items.some((item) => item.key === 'docs')).toBe(true);
       expect(items.some((item) => item.key === 'feedback')).toBe(true);
-      expect(items.some((item) => item.key === 'discord')).toBe(true);
+      expect(items.some((item) => item.key === 'changelog')).toBe(true);
     });
   });
 
@@ -76,7 +76,7 @@ describe('useCategory', () => {
       expect(items.some((item) => item.key === 'data')).toBe(true);
       expect(items.some((item) => item.key === 'docs')).toBe(true);
       expect(items.some((item) => item.key === 'feedback')).toBe(true);
-      expect(items.some((item) => item.key === 'discord')).toBe(true);
+      expect(items.some((item) => item.key === 'changelog')).toBe(true);
     });
   });
 
@@ -95,7 +95,7 @@ describe('useCategory', () => {
       expect(items.some((item) => item.key === 'data')).toBe(true);
       expect(items.some((item) => item.key === 'docs')).toBe(true);
       expect(items.some((item) => item.key === 'feedback')).toBe(true);
-      expect(items.some((item) => item.key === 'discord')).toBe(true);
+      expect(items.some((item) => item.key === 'changelog')).toBe(true);
       expect(items.some((item) => item.key === 'nextauthSignout')).toBe(true);
     });
   });
@@ -114,7 +114,7 @@ describe('useCategory', () => {
       expect(items.some((item) => item.key === 'data')).toBe(false);
       expect(items.some((item) => item.key === 'docs')).toBe(true);
       expect(items.some((item) => item.key === 'feedback')).toBe(true);
-      expect(items.some((item) => item.key === 'discord')).toBe(true);
+      expect(items.some((item) => item.key === 'changelog')).toBe(true);
       expect(items.some((item) => item.key === 'nextauthSignout')).toBe(false);
     });
   });
