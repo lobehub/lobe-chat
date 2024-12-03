@@ -24,7 +24,7 @@ export const getTestDBInstance = async () => {
     const db = nodeDrizzle(client, { schema });
 
     await nodeMigrator.migrate(db, {
-      migrationsFolder: join(__dirname, '../migrations'),
+      migrationsFolder: join(__dirname, '../../migrations'),
     });
 
     return db;
