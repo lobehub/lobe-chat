@@ -8,7 +8,7 @@ import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
 import { MessageModel } from '@/database/server/models/message';
-import { knowledgeBaseFiles } from '@/database/server/schemas/lobechat';
+import { knowledgeBaseFiles } from '@/database/schemas';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { authedProcedure, router } from '@/libs/trpc';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';

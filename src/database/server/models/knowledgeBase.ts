@@ -4,7 +4,7 @@ import { and, desc } from 'drizzle-orm/expressions';
 import { serverDB } from '@/database/server';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 
-import { NewKnowledgeBase, knowledgeBaseFiles, knowledgeBases } from '../schemas/lobechat';
+import { NewKnowledgeBase, knowledgeBaseFiles, knowledgeBases } from '../../schemas';
 
 export class KnowledgeBaseModel {
   private userId: string;

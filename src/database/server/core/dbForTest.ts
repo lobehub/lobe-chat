@@ -9,7 +9,7 @@ import ws from 'ws';
 
 import { serverDBEnv } from '@/config/db';
 
-import * as schema from '../schemas/lobechat';
+import * as schema from '../../schemas';
 
 export const getTestDBInstance = async () => {
   let connectionString = serverDBEnv.DATABASE_TEST_URL;

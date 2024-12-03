@@ -3,8 +3,8 @@ import { and, desc, eq, exists, isNull, like, or } from 'drizzle-orm/expressions
 
 import { serverDB } from '@/database/server/core/db';
 
-import { NewMessage, TopicItem, messages, topics } from '../schemas/lobechat';
-import { idGenerator } from '../utils/idGenerator';
+import { NewMessage, TopicItem, messages, topics } from '../../schemas';
+import { idGenerator } from '@/database/utils/idGenerator';
 
 export interface CreateTopicParams {
   favorite?: boolean;
