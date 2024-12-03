@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
 import { ThreadModel } from '@/database/server/models/thread';
 import { insertThreadSchema } from '@/database/schemas';
@@ -11,8 +12,8 @@ const threadProcedure = authedProcedure.use(async (opts) => {
 
   return opts.next({
     ctx: {
-      messageModel: new MessageModel(ctx.userId),
-      threadModel: new ThreadModel(ctx.userId),
+      messageModel: new MessageModel(serverDB, ctx.userId),
+      threadModel: new ThreadModel(serverDB, ctx.userId),
     },
   });
 });
