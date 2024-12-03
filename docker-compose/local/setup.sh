@@ -371,7 +371,7 @@ if [ -n "$HOST" ]; then
   echo -e "Server Host: $HOST"
 fi
 echo -e "Casdoor: \n - Username: admin\n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
-echo -e "Minio S3: \n - MinIO User: ${MINIO_ROOT_USER}\n  - MinIO PassWord: ${MINIO_ROOT_PASSWORD}\n  - MinIO Access Key: ${S3_SECRET_ACCESS_KEY}\n"
+echo -e "Minio S3: \n - MinIO User: ${MINIO_ROOT_USER}\n  - MinIO PassWord: ${MINIO_ROOT_PASSWORD}\n"
 
 # ===========================
 # == Display final message ==
