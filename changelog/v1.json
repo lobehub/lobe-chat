@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Refactor the server db model implement."]
+    },
+    "date": "2024-12-03",
+    "version": "1.35.10"
+  },
+  {
     "children": {},
     "date": "2024-12-03",
     "version": "1.35.9"

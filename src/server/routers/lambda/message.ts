@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
 import { updateMessagePluginSchema } from '@/database/schemas';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
@@ -12,7 +13,7 @@ const messageProcedure = authedProcedure.use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
-    ctx: { messageModel: new MessageModel(ctx.userId) },
+    ctx: { messageModel: new MessageModel(serverDB, ctx.userId) },
   });
 });
 
@@ -54,6 +55,7 @@ export const messageRouter = router({
       return ctx.messageModel.queryBySessionId(input.sessionId);
     }),
 
+  // TODO: 未来这部分方法也需要使用 authedProcedure
   getMessages: publicProcedure
     .input(
       z.object({
@@ -66,7 +68,7 @@ export const messageRouter = router({
     .query(async ({ input, ctx }) => {
       if (!ctx.userId) return [];
 
-      const messageModel = new MessageModel(ctx.userId);
+      const messageModel = new MessageModel(serverDB, ctx.userId);
 
       return messageModel.query(input);
     }),
