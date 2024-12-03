@@ -331,24 +331,6 @@ fi
 #  fi
 #fi
 
-# Generate Minio S3 user
-MINIO_ROOT_USER="admin"
-MINIO_ROOT_PASSWORD=$(generate_key 8)
-if [ $? -ne 0 ]; then
-  echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD"
-else
-  # Search and replace the value of MINIO_ROOT_PASSWORD in .env
-  sed -i "s#^MINIO_ROOT_PASSWORD=.*#MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}#" .env
-  if [ $? -ne 0 ]; then
-    echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD in \`.env\`"
-  fi
-  # Modify user
-  sed -i "s/^MINIO_ROOT_USER=.*/MINIO_ROOT_USER=${MINIO_ROOT_USER}/" .env
-  if [ $? -ne 0 ]; then
-    echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_USER in \`.env\`"
-  fi
-fi
-
 # Modify the .env file if the host is specified
 if [ -n "$HOST" ]; then
   # Modify env
@@ -371,7 +353,6 @@ if [ -n "$HOST" ]; then
   echo -e "Server Host: $HOST"
 fi
 echo -e "Casdoor: \n - Username: admin\n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
-echo -e "Minio S3: \n - MinIO User: ${MINIO_ROOT_USER}\n  - MinIO PassWord: ${MINIO_ROOT_PASSWORD}\n"
 
 # ===========================
 # == Display final message ==
