@@ -3,6 +3,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { z } from 'zod';
 
 import { enableClerk } from '@/const/auth';
+import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
 import { SessionModel } from '@/database/server/models/session';
 import { UserModel, UserNotFoundError } from '@/database/server/models/user';
@@ -12,7 +13,7 @@ import { UserGuideSchema, UserInitializationState, UserPreference } from '@/type
 
 const userProcedure = authedProcedure.use(async (opts) => {
   return opts.next({
-    ctx: { userModel: new UserModel() },
+    ctx: { userModel: new UserModel(serverDB, opts.ctx.userId) },
   });
 });
 
@@ -23,7 +24,7 @@ export const userRouter = router({
     // get or create first-time user
     while (!state) {
       try {
-        state = await ctx.userModel.getUserState(ctx.userId);
+        state = await ctx.userModel.getUserState();
       } catch (error) {
         if (enableClerk && error instanceof UserNotFoundError) {
           const user = await currentUser();
@@ -56,10 +57,10 @@ export const userRouter = router({
       }
     }
 
-    const messageModel = new MessageModel(ctx.userId);
+    const messageModel = new MessageModel(serverDB, ctx.userId);
     const messageCount = await messageModel.count();
 
-    const sessionModel = new SessionModel(ctx.userId);
+    const sessionModel = new SessionModel(serverDB, ctx.userId);
     const sessionCount = await sessionModel.count();
 
     return {
@@ -77,25 +78,25 @@ export const userRouter = router({
   }),
 
   makeUserOnboarded: userProcedure.mutation(async ({ ctx }) => {
-    return ctx.userModel.updateUser(ctx.userId, { isOnboarded: true });
+    return ctx.userModel.updateUser({ isOnboarded: true });
   }),
 
   resetSettings: userProcedure.mutation(async ({ ctx }) => {
-    return ctx.userModel.deleteSetting(ctx.userId);
+    return ctx.userModel.deleteSetting();
   }),
 
   updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {
-    return ctx.userModel.updateGuide(ctx.userId, input);
+    return ctx.userModel.updateGuide(input);
   }),
 
   updatePreference: userProcedure.input(z.any()).mutation(async ({ ctx, input }) => {
-    return ctx.userModel.updatePreference(ctx.userId, input);
+    return ctx.userModel.updatePreference(input);
   }),
 
   updateSettings: userProcedure
     .input(z.object({}).passthrough())
     .mutation(async ({ ctx, input }) => {
-      return ctx.userModel.updateSetting(ctx.userId, input);
+      return ctx.userModel.updateSetting(input);
     }),
 });
 
