@@ -11,7 +11,7 @@ dotenv.config();
 
 const runMigrations = async () => {
   await migrator.migrate(serverDB, {
-    migrationsFolder: join(__dirname, '../../src/database/server/migrations'),
+    migrationsFolder: join(__dirname, '../../src/database/migrations'),
   });
   console.log('✅ database migration pass.');
   // eslint-disable-next-line unicorn/no-process-exit

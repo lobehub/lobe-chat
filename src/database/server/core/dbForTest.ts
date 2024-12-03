@@ -9,7 +9,7 @@ import ws from 'ws';
 
 import { serverDBEnv } from '@/config/db';
 
-import * as schema from '../schemas/lobechat';
+import * as schema from '../../schemas';
 
 export const getTestDBInstance = async () => {
   let connectionString = serverDBEnv.DATABASE_TEST_URL;
@@ -24,7 +24,7 @@ export const getTestDBInstance = async () => {
     const db = nodeDrizzle(client, { schema });
 
     await nodeMigrator.migrate(db, {
-      migrationsFolder: join(__dirname, '../migrations'),
+      migrationsFolder: join(__dirname, '../../migrations'),
     });
 
     return db;

@@ -2,7 +2,7 @@ import { and, desc, eq } from 'drizzle-orm/expressions';
 
 import { serverDB } from '@/database/server';
 
-import { InstalledPluginItem, NewInstalledPlugin, installedPlugins } from '../schemas/lobechat';
+import { InstalledPluginItem, NewInstalledPlugin, installedPlugins } from '../../schemas';
 
 export class PluginModel {
   private userId: string;

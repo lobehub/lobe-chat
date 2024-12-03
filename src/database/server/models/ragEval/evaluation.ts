@@ -6,7 +6,7 @@ import {
   evalDatasets,
   evalEvaluation,
   evaluationRecords,
-} from '@/database/server/schemas/lobechat';
+} from '@/database/schemas';
 import { EvalEvaluationStatus, RAGEvalEvaluationItem } from '@/types/eval';
 
 export class EvalEvaluationModel {
