@@ -4,9 +4,11 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { CustomMDX } from '@/components/mdx';
+import Image from '@/components/mdx/Image';
 import { OFFICIAL_SITE } from '@/const/url';
 import { Locales } from '@/locales/resources';
-import { ChangelogIndexItem, changelogService } from '@/services/changelog';
+import { ChangelogService } from '@/server/services/changelog';
+import { ChangelogIndexItem } from '@/types/changelog';
 
 import Cover from './Cover';
 import PublishedTime from './PublishedTime';
@@ -18,13 +20,18 @@ const Post = async ({
   versionRange,
   locale,
 }: ChangelogIndexItem & { branch?: string; locale: Locales; mobile?: boolean }) => {
+  const changelogService = new ChangelogService();
   const data = await changelogService.getPostById(id, { locale });
   const url = urlJoin(OFFICIAL_SITE, 'changelog', id);
+
+  if (!data) return null;
 
   return (
     <Flexbox gap={8}>
       <Link href={url} style={{ color: 'inherit' }} target={'_blank'}>
-        <Cover alt={data.title} src={data.image} />
+        <Cover>
+          <Image alt={data.title} src={data.image} />
+        </Cover>
       </Link>
       <Flexbox gap={8} paddingInline={24}>
         <Typography headerMultiple={0.2} style={{ width: '100%' }}>

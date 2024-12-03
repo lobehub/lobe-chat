@@ -190,6 +190,7 @@
     "pdfjs-dist": "4.8.69",
     "pg": "^8.13.0",
     "pino": "^9.5.0",
+    "plaiceholder": "^3.0.0",
     "polished": "^4.3.1",
     "posthog-js": "^1.174.2",
     "pwa-install-handler": "^2.6.1",

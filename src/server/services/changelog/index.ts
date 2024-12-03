@@ -5,16 +5,12 @@ import semver from 'semver';
 import urlJoin from 'url-join';
 
 import { Locales } from '@/locales/resources';
+import { ChangelogIndexItem } from '@/types/changelog';
 
 const BASE_URL = 'https://raw.githubusercontent.com';
 const LAST_MODIFIED = new Date().toISOString();
 
-export interface ChangelogIndexItem {
-  date: string;
-  id: string;
-  image?: string;
-  versionRange: string[];
-}
+const revalidate: number = 12 * 3600;
 
 export interface ChangelogConfig {
   branch: string;
@@ -26,28 +22,7 @@ export interface ChangelogConfig {
   user: string;
 }
 
-export interface StaticChangelogItem {
-  children: {
-    features?: string[];
-    fixes?: string[];
-    improvements?: string[];
-  };
-  date: string;
-  version: string;
-}
-
-export interface ChangelogDetailsItem {
-  children: string[];
-  version: string;
-}
-
-export interface ChangelogDetails {
-  features: ChangelogDetailsItem[];
-  fixes: ChangelogDetailsItem[];
-  improvements: ChangelogDetailsItem[];
-}
-
-class ChangelogService {
+export class ChangelogService {
   config: ChangelogConfig = {
     branch: process.env.DOCS_BRANCH || 'main',
     changelogPath: 'changelog',
@@ -57,8 +32,6 @@ class ChangelogService {
     type: 'cloud',
     user: 'lobehub',
   };
-
-  revalidate: number = 12 * 3600;
 
   async getLatestChangelogId() {
     const index = await this.getChangelogIndex();
@@ -70,12 +43,12 @@ class ChangelogService {
       const url = this.genUrl(urlJoin(this.config.docsPath, 'index.json'));
 
       const res = await fetch(url, {
-        next: { revalidate: this.revalidate },
+        next: { revalidate },
       });
 
       const data = await res.json();
 
-      return this.mergeChangelogs(data.cloud, data.community);
+      return this.mergeChangelogs(data.cloud, data.community).slice(0, 5);
     } catch {
       console.error('Error getting changlog index');
       return false as any;
@@ -95,7 +68,7 @@ class ChangelogService {
       const url = this.genUrl(urlJoin(this.config.docsPath, filename));
 
       const response = await fetch(url, {
-        next: { revalidate: this.revalidate },
+        next: { revalidate },
       });
       const text = await response.text();
       const { data, content } = matter(text);
@@ -180,5 +153,3 @@ class ChangelogService {
     return urlJoin(BASE_URL, this.config.user, this.config.repo, this.config.branch, path);
   }
 }
-
-export const changelogService = new ChangelogService();

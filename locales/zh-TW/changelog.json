@@ -7,6 +7,10 @@
   "addedWhileAway": "在您離開期間，我們帶來了新的特性。",
   "allChangelog": "查看所有更新日誌",
   "description": "持續追蹤 {{appName}} 的新功能和改進",
+  "pagination": {
+    "older": "查看歷史變更",
+    "prev": "上一頁"
+  },
   "readDetails": "閱讀詳情",
   "title": "更新日誌",
   "versionDetails": "版本詳情",

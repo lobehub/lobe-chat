@@ -7,8 +7,12 @@ type Props = { children: ReactNode };
 
 const Layout = ({ children }: Props) => {
   return (
-    <Flexbox align={'center'} style={{ minHeight: '100vh' }} width={'100%'}>
-      <Flexbox style={{ gap: 24, width: 'min(100%, 1024px)' }}>
+    <Flexbox
+      align={'center'}
+      style={{ height: '100%', overflowX: 'hidden', overflowY: 'auto' }}
+      width={'100%'}
+    >
+      <Flexbox paddingBlock={24} style={{ gap: 24, width: 'min(100%, 1024px)' }}>
         <Hero />
         {children}
       </Flexbox>

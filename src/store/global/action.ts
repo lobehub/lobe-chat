@@ -8,7 +8,6 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
-import { changelogService } from '@/services/changelog';
 import { globalService } from '@/services/global';
 import type { GlobalStore } from '@/store/global/index';
 import { merge } from '@/utils/merge';
@@ -98,8 +97,9 @@ export const globalActionSlice: StateCreator<
 
     get().statusStorage.saveToLocalStorage(nextStatus);
   },
-  useCheckLatestChangelogId: () =>
-    useSWR('changelog', async () => changelogService.getLatestChangelogId()),
+
+  // TODO: 从初始化请求获取
+  useCheckLatestChangelogId: () => useSWR('changelog', async () => []),
 
   useCheckLatestVersion: (enabledCheck = true) =>
     useSWR(enabledCheck ? 'checkLatestVersion' : null, globalService.getLatestVersion, {

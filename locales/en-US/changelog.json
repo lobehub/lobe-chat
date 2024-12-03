@@ -7,6 +7,10 @@
   "addedWhileAway": "We've introduced new features while you were away.",
   "allChangelog": "View all changelogs",
   "description": "Stay updated on the new features and improvements of {{appName}}",
+  "pagination": {
+    "older": "View Historical Changes",
+    "prev": "Previous Page"
+  },
   "readDetails": "Read details",
   "title": "Changelog",
   "versionDetails": "Version details",

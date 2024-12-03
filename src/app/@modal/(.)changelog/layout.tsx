@@ -7,6 +7,7 @@ import { useGlobalStore } from '@/store/global';
 
 import ModalLayout from '../_layout/ModalLayout';
 import Hero from './features/Hero';
+import Pagination from './features/Pagination';
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {
   const [useCheckLatestChangelogId, updateSystemStatus] = useGlobalStore((s) => [
@@ -36,6 +37,9 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
       >
         <Hero />
         {children}
+        <Flexbox padding={24}>
+          <Pagination />
+        </Flexbox>
       </Flexbox>
     </ModalLayout>
   );
