@@ -33,8 +33,6 @@ const {
  * @returns {Adapter}
  */
 export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Adapter {
-  const userModel = new UserModel();
-
   return {
     async createAuthenticator(authenticator): Promise<AdapterAuthenticator> {
       const result = await serverDB
@@ -55,10 +53,10 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     async createUser(user): Promise<AdapterUser> {
       const { id, name, email, emailVerified, image, providerAccountId } = user;
       // return the user if it already exists
-      let existingUser = await UserModel.findByEmail(email);
+      let existingUser = await UserModel.findByEmail(serverDB, email);
       // If the user is not found by email, try to find by providerAccountId
       if (!existingUser && providerAccountId) {
-        existingUser = await UserModel.findById(providerAccountId);
+        existingUser = await UserModel.findById(serverDB, providerAccountId);
       }
       if (existingUser) {
         const adapterUser = mapLobeUserToAdapterUser(existingUser);
@@ -66,6 +64,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       }
       // create a new user if it does not exist
       await UserModel.createUser(
+        serverDB,
         mapAdapterUserToLobeUser({
           email,
           emailVerified,
@@ -91,10 +90,10 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       return;
     },
     async deleteUser(id): Promise<AdapterUser | null | undefined> {
-      const user = await UserModel.findById(id);
+      const user = await UserModel.findById(serverDB, id);
       if (!user) throw new Error('NextAuth: Delete User not found');
 
-      await UserModel.deleteUser(id);
+      await UserModel.deleteUser(serverDB, id);
       return;
     },
 
@@ -145,7 +144,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     async getUser(id): Promise<AdapterUser | null> {
-      const lobeUser = await UserModel.findById(id);
+      const lobeUser = await UserModel.findById(serverDB, id);
       if (!lobeUser) return null;
       return mapLobeUserToAdapterUser(lobeUser);
     },
@@ -170,7 +169,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     async getUserByEmail(email): Promise<AdapterUser | null> {
-      const lobeUser = await UserModel.findByEmail(email);
+      const lobeUser = await UserModel.findByEmail(serverDB, email);
       return lobeUser ? mapLobeUserToAdapterUser(lobeUser) : null;
     },
 
@@ -228,10 +227,11 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     async updateUser(user): Promise<AdapterUser> {
-      const lobeUser = await UserModel.findById(user?.id);
+      const lobeUser = await UserModel.findById(serverDB, user?.id);
       if (!lobeUser) throw new Error('NextAuth: User not found');
+      const userModel = new UserModel(serverDB, user.id);
 
-      const updatedUser = await userModel.updateUser(user.id, {
+      const updatedUser = await userModel.updateUser({
         ...partialMapAdapterUserToLobeUser(user),
       });
       if (!updatedUser) throw new Error('NextAuth: Failed to update user');

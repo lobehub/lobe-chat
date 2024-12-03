@@ -21,12 +21,12 @@ const chunkProcedure = authedProcedure.use(keyVaults).use(async (opts) => {
 
   return opts.next({
     ctx: {
-      asyncTaskModel: new AsyncTaskModel(ctx.userId),
-      chunkModel: new ChunkModel(ctx.userId),
+      asyncTaskModel: new AsyncTaskModel(serverDB, ctx.userId),
+      chunkModel: new ChunkModel(serverDB, ctx.userId),
       chunkService: new ChunkService(ctx.userId),
-      embeddingModel: new EmbeddingModel(ctx.userId),
-      fileModel: new FileModel(ctx.userId),
-      messageModel: new MessageModel(ctx.userId),
+      embeddingModel: new EmbeddingModel(serverDB, ctx.userId),
+      fileModel: new FileModel(serverDB, ctx.userId),
+      messageModel: new MessageModel(serverDB, ctx.userId),
     },
   });
 });
