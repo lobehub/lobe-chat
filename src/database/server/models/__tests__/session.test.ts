@@ -26,7 +26,7 @@ vi.mock('@/database/server/core/db', async () => ({
 }));
 
 const userId = 'session-user';
-const sessionModel = new SessionModel(userId);
+const sessionModel = new SessionModel(serverDB, userId);
 
 beforeEach(async () => {
   await serverDB.delete(users);
@@ -259,7 +259,13 @@ describe('SessionModel', () => {
       ]);
 
       await serverDB.insert(agents).values([
-        { id: 'agent-1', userId, model: 'gpt-3.5-turbo', title: 'Agent 1', description: 'Description with Keyword' },
+        {
+          id: 'agent-1',
+          userId,
+          model: 'gpt-3.5-turbo',
+          title: 'Agent 1',
+          description: 'Description with Keyword',
+        },
         { id: 'agent-2', userId, model: 'gpt-4', title: 'Agent 2' },
       ]);
 
@@ -338,7 +344,7 @@ describe('SessionModel', () => {
     });
   });
 
-  describe.skip('batchCreate', () => {
+  describe('batchCreate', () => {
     it('should batch create sessions', async () => {
       // 调用 batchCreate 方法
       const sessions: NewSession[] = [

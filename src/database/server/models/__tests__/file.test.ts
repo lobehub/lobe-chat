@@ -38,7 +38,7 @@ vi.mock('@/config/db', async () => ({
 }));
 
 const userId = 'file-model-test-user-id';
-const fileModel = new FileModel(userId);
+const fileModel = new FileModel(serverDB, userId);
 
 const knowledgeBase = { id: 'kb1', userId, name: 'knowledgeBase' };
 beforeEach(async () => {

@@ -15,7 +15,7 @@ vi.mock('@/database/server/core/db', async () => ({
 }));
 
 const userId = 'plugin-db';
-const pluginModel = new PluginModel(userId);
+const pluginModel = new PluginModel(serverDB, userId);
 
 beforeEach(async () => {
   await serverDB.transaction(async (trx) => {

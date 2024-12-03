@@ -16,7 +16,7 @@ vi.mock('@/database/server/core/db', async () => ({
 
 const userId = 'topic-user-test';
 const sessionId = 'topic-session';
-const topicModel = new TopicModel(userId);
+const topicModel = new TopicModel(serverDB, userId);
 
 describe('TopicModel', () => {
   beforeEach(async () => {

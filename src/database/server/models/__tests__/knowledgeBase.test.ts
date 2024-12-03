@@ -24,7 +24,7 @@ vi.mock('@/database/server/core/db', async () => ({
 }));
 
 const userId = 'session-group-model-test-user-id';
-const knowledgeBaseModel = new KnowledgeBaseModel(userId);
+const knowledgeBaseModel = new KnowledgeBaseModel(serverDB, userId);
 
 beforeEach(async () => {
   await serverDB.delete(users);
@@ -82,7 +82,7 @@ describe('KnowledgeBaseModel', () => {
       await knowledgeBaseModel.create({ name: 'Test Group 1' });
       await knowledgeBaseModel.create({ name: 'Test Group 333' });
 
-      const anotherSessionGroupModel = new KnowledgeBaseModel('user2');
+      const anotherSessionGroupModel = new KnowledgeBaseModel(serverDB, 'user2');
       await anotherSessionGroupModel.create({ name: 'Test Group 2' });
 
       await knowledgeBaseModel.deleteAll();
@@ -235,7 +235,7 @@ describe('KnowledgeBaseModel', () => {
     it('should find a knowledge base by id without user restriction', async () => {
       const { id } = await knowledgeBaseModel.create({ name: 'Test Group' });
 
-      const group = await KnowledgeBaseModel.findById(id);
+      const group = await KnowledgeBaseModel.findById(serverDB, id);
       expect(group).toMatchObject({
         id,
         name: 'Test Group',
@@ -244,10 +244,10 @@ describe('KnowledgeBaseModel', () => {
     });
 
     it('should find a knowledge base created by another user', async () => {
-      const anotherKnowledgeBaseModel = new KnowledgeBaseModel('user2');
+      const anotherKnowledgeBaseModel = new KnowledgeBaseModel(serverDB, 'user2');
       const { id } = await anotherKnowledgeBaseModel.create({ name: 'Another User Group' });
 
-      const group = await KnowledgeBaseModel.findById(id);
+      const group = await KnowledgeBaseModel.findById(serverDB, id);
       expect(group).toMatchObject({
         id,
         name: 'Another User Group',

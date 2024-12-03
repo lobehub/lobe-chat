@@ -17,7 +17,7 @@ vi.mock('@/database/server/core/db', async () => ({
 }));
 
 const userId = 'async-task-model-test-user-id';
-const asyncTaskModel = new AsyncTaskModel(userId);
+const asyncTaskModel = new AsyncTaskModel(serverDB, userId);
 
 beforeEach(async () => {
   await serverDB.delete(users);

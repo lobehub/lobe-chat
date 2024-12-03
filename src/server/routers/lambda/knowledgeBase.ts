@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database/server';
 import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 import { insertKnowledgeBasesSchema } from '@/database/schemas';
 import { authedProcedure, router } from '@/libs/trpc';
@@ -10,7 +11,7 @@ const knowledgeBaseProcedure = authedProcedure.use(async (opts) => {
 
   return opts.next({
     ctx: {
-      knowledgeBaseModel: new KnowledgeBaseModel(ctx.userId),
+      knowledgeBaseModel: new KnowledgeBaseModel(serverDB, ctx.userId),
     },
   });
 });

@@ -25,7 +25,7 @@ vi.mock('@/database/server/core/db', async () => ({
 }));
 
 const userId = 'agent-model-test-user-id';
-const agentModel = new AgentModel(userId);
+const agentModel = new AgentModel(serverDB, userId);
 
 const knowledgeBase = { id: 'kb1', userId, name: 'knowledgeBase' };
 const fileList = [

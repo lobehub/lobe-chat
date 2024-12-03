@@ -24,7 +24,7 @@ vi.mock('@/database/server/core/db', async () => ({
 }));
 
 const userId = 'chunk-model-test-user-id';
-const chunkModel = new ChunkModel(userId);
+const chunkModel = new ChunkModel(serverDB, userId);
 const sharedFileList = [
   {
     id: '1',

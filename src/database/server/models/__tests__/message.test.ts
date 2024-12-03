@@ -25,7 +25,7 @@ vi.mock('@/database/server/core/db', async () => ({
 }));
 
 const userId = 'message-db';
-const messageModel = new MessageModel(userId);
+const messageModel = new MessageModel(serverDB, userId);
 
 beforeEach(async () => {
   // 在每个测试用例之前，清空表
