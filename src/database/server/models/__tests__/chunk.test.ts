@@ -4,24 +4,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 
-import {
-  chunks,
-  embeddings,
-  fileChunks,
-  files,
-  unstructuredChunks,
-  users,
-} from '../../../schemas';
+import { chunks, embeddings, fileChunks, files, unstructuredChunks, users } from '../../../schemas';
 import { ChunkModel } from '../chunk';
 import { codeEmbedding, designThinkingQuery, designThinkingQuery2 } from './fixtures/embedding';
 
 let serverDB = await getTestDBInstance();
-
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
 
 const userId = 'chunk-model-test-user-id';
 const chunkModel = new ChunkModel(serverDB, userId);

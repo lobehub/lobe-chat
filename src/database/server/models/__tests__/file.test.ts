@@ -6,22 +6,10 @@ import { getServerDBConfig, serverDBEnv } from '@/config/db';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { FilesTabs, SortType } from '@/types/files';
 
-import {
-  files,
-  globalFiles,
-  knowledgeBaseFiles,
-  knowledgeBases,
-  users,
-} from '../../../schemas';
+import { files, globalFiles, knowledgeBaseFiles, knowledgeBases, users } from '../../../schemas';
 import { FileModel } from '../file';
 
 let serverDB = await getTestDBInstance();
-
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
 
 let DISABLE_REMOVE_GLOBAL_FILE = false;
 

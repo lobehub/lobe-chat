@@ -116,11 +116,11 @@ export class UserModel {
       where: eq(users.id, this.userId),
     });
     if (!settings) {
-      await serverDB.insert(userSettings).values({ id: this.userId, ...newValue });
+      await this.db.insert(userSettings).values({ id: this.userId, ...newValue });
       return;
     }
 
-    return serverDB.update(userSettings).set(newValue).where(eq(userSettings.id, this.userId));
+    return this.db.update(userSettings).set(newValue).where(eq(userSettings.id, this.userId));
   }
 
   async updatePreference(value: Partial<UserPreference>) {

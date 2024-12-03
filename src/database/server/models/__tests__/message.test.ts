@@ -18,12 +18,6 @@ import { MessageModel } from '../message';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'message-db';
 const messageModel = new MessageModel(serverDB, userId);
 

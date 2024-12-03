@@ -2,6 +2,7 @@ import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { idGenerator } from '@/database/utils/idGenerator';
 
 import {
   NewSession,
@@ -14,16 +15,9 @@ import {
   topics,
   users,
 } from '../../../schemas';
-import { idGenerator } from '@/database/utils/idGenerator';
 import { SessionModel } from '../session';
 
 let serverDB = await getTestDBInstance();
-
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
 
 const userId = 'session-user';
 const sessionModel = new SessionModel(serverDB, userId);

@@ -18,12 +18,6 @@ import { AgentModel } from '../agent';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'agent-model-test-user-id';
 const agentModel = new AgentModel(serverDB, userId);
 

@@ -8,12 +8,6 @@ import { CreateTopicParams, TopicModel } from '../topic';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'topic-user-test';
 const sessionId = 'topic-session';
 const topicModel = new TopicModel(serverDB, userId);

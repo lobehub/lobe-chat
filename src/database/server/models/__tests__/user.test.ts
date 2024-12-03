@@ -13,12 +13,6 @@ import { UserModel } from '../user';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'user-db';
 const userEmail = 'user@example.com';
 const userModel = new UserModel(serverDB, userId);
