@@ -318,16 +318,18 @@ else
 fi
 
 # Generate Minio S3 access key
-S3_SECRET_ACCESS_KEY=$(generate_key 32)
-if [ $? -ne 0 ]; then
-  echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY"
-else
-  # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
-  sed -i "s#^S3_SECRET_ACCESS_KEY=.*#S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}#" .env
-  if [ $? -ne 0 ]; then
-    echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY in \`.env\`"
-  fi
-fi
+# Temporarily disable key gen for minio because 
+# minio can not start with a access key in envs
+#S3_SECRET_ACCESS_KEY=$(generate_key 32)
+#if [ $? -ne 0 ]; then
+#  echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY"
+#else
+#  # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
+#  sed -i "s#^S3_SECRET_ACCESS_KEY=.*#S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}#" .env
+#  if [ $? -ne 0 ]; then
+#    echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY in \`.env\`"
+#  fi
+#fi
 
 # Generate Minio S3 user
 MINIO_ROOT_USER="admin"
