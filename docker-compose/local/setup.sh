@@ -331,7 +331,7 @@ fi
 
 # Generate Minio S3 user
 MINIO_ROOT_USER="admin"
-MINIO_ROOT_PASSWORD=$(generate_key 6)
+MINIO_ROOT_PASSWORD=$(generate_key 8)
 if [ $? -ne 0 ]; then
   echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD"
 else
