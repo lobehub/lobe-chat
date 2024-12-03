@@ -13,8 +13,8 @@ import {
   sessions,
   topics,
   users,
-} from '../../schemas/lobechat';
-import { idGenerator } from '../../utils/idGenerator';
+} from '../../../schemas';
+import { idGenerator } from '@/database/utils/idGenerator';
 import { SessionModel } from '../session';
 
 let serverDB = await getTestDBInstance();

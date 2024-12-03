@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { MessageModel } from '@/database/server/models/message';
 import { ThreadModel } from '@/database/server/models/thread';
-import { insertThreadSchema } from '@/database/server/schemas/lobechat';
+import { insertThreadSchema } from '@/database/schemas';
 import { authedProcedure, router } from '@/libs/trpc';
 import { ThreadItem, createThreadSchema } from '@/types/topic/thread';
 
