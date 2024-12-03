@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2024-12-03",
+    "version": "1.35.9"
+  },
+  {
     "children": {
       "improvements": ["Move schema and migration folder."]
     },
