@@ -323,7 +323,7 @@ if [ $? -ne 0 ]; then
   echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY"
 else
   # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
-  sed -i "s|^S3_SECRET_ACCESS_KEY=.*|S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}|" .env
+  sed -i "s#^S3_SECRET_ACCESS_KEY=.*#S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}#" .env
   if [ $? -ne 0 ]; then
     echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY in \`.env\`"
   fi
@@ -336,7 +336,7 @@ if [ $? -ne 0 ]; then
   echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD"
 else
   # Search and replace the value of MINIO_ROOT_PASSWORD in .env
-  sed -i "s|^MINIO_ROOT_PASSWORD=.*|MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}|" .env
+  sed -i "s#^MINIO_ROOT_PASSWORD=.*#MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}#" .env
   if [ $? -ne 0 ]; then
     echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD in \`.env\`"
   fi

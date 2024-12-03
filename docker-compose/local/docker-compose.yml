@@ -41,6 +41,8 @@ services:
       - 'MINIO_ROOT_USER=${MINIO_ROOT_USER}'
       - 'MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}'
       - 'MINIO_API_CORS_ALLOW_ORIGIN=http://localhost:${LOBE_PORT}'
+      - 'MINIO_ACCESS_KEY=${S3_ACCESS_KEY_ID}'
+      - 'MINIO_SECRET_KEY=${S3_SECRET_ACCESS_KEY}'
     restart: always
     command: >
       server /etc/minio/data --address ":${MINIO_PORT}" --console-address ":9001"
