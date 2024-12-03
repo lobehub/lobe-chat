@@ -4,7 +4,7 @@ import { and, desc } from 'drizzle-orm/expressions';
 import { serverDB } from '@/database/server';
 import { CreateThreadParams, ThreadStatus } from '@/types/topic';
 
-import { ThreadItem, threads } from '../schemas/lobechat';
+import { ThreadItem, threads } from '../../schemas';
 
 const queryColumns = {
   createdAt: threads.createdAt,

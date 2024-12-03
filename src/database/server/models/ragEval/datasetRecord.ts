@@ -5,7 +5,7 @@ import {
   NewEvalDatasetRecordsItem,
   evalDatasetRecords,
   files,
-} from '@/database/server/schemas/lobechat';
+} from '@/database/schemas';
 import { EvalDatasetRecordRefFile } from '@/types/eval';
 
 export class EvalDatasetRecordModel {
