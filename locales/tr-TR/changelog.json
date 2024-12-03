@@ -7,6 +7,10 @@
   "addedWhileAway": "Siz yokken yeni özellikler ekledik.",
   "allChangelog": "Tüm güncelleme günlüklerini görüntüle",
   "description": "{{appName}}'in yeni özelliklerini ve iyileştirmelerini sürekli takip edin",
+  "pagination": {
+    "older": "Geçmiş değişiklikleri görüntüle",
+    "prev": "Önceki sayfa"
+  },
   "readDetails": "Detayları okuyun",
   "title": "Güncelleme Günlüğü",
   "versionDetails": "Sürüm detayları",

@@ -7,6 +7,10 @@
   "addedWhileAway": "W czasie Twojej nieobecności wprowadziliśmy nowe funkcje.",
   "allChangelog": "Zobacz wszystkie dzienniki zmian",
   "description": "Na bieżąco śledź nowe funkcje i ulepszenia {{appName}}",
+  "pagination": {
+    "older": "Zobacz wcześniejsze zmiany",
+    "prev": "Poprzednia strona"
+  },
   "readDetails": "Przeczytaj szczegóły",
   "title": "Dziennik zmian",
   "versionDetails": "Szczegóły wersji",

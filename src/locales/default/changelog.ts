@@ -7,6 +7,10 @@ export default {
   addedWhileAway: '在您离开期间，我们带来了新的特性。',
   allChangelog: '查看所有更新日志',
   description: '持续追踪 {{appName}} 的新功能和改进',
+  pagination: {
+    older: '查看历史变更',
+    prev: '上一页',
+  },
   readDetails: '阅读详情',
   title: '更新日志',
   versionDetails: '版本详情',

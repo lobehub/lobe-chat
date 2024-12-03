@@ -1,8 +1,7 @@
 'use client';
 
 import { createStyles } from 'antd-style';
-import Image from 'next/image';
-import { memo } from 'react';
+import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(
@@ -41,23 +40,9 @@ const useStyles = createStyles(
   `,
 );
 
-const Cover = memo<{ alt: string; mobile?: boolean; src: string }>(({ alt, mobile, src }) => {
+const Cover = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
-  return (
-    <Flexbox className={styles}>
-      <Image
-        alt={alt}
-        height={mobile ? 187 : 309}
-        src={src}
-        style={{
-          height: 'auto',
-          width: '100%',
-        }}
-        unoptimized
-        width={600}
-      />
-    </Flexbox>
-  );
+  return <Flexbox className={styles}>{children}</Flexbox>;
 });
 
 export default Cover;
