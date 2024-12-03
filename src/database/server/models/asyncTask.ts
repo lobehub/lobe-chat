@@ -9,7 +9,7 @@ import {
   AsyncTaskType,
 } from '@/types/asyncTask';
 
-import { AsyncTaskSelectItem, NewAsyncTaskItem, asyncTasks } from '../schemas/lobechat';
+import { AsyncTaskSelectItem, NewAsyncTaskItem, asyncTasks } from '../../schemas';
 
 // set timeout to about 5 minutes, and give 2s padding time
 export const ASYNC_TASK_TIMEOUT = 298 * 1000;

@@ -18,8 +18,8 @@ import {
   agentsToSessions,
   sessionGroups,
   sessions,
-} from '../schemas/lobechat';
-import { idGenerator } from '../utils/idGenerator';
+} from '../../schemas';
+import { idGenerator } from '@/database/utils/idGenerator';
 
 export class SessionModel {
   private userId: string;

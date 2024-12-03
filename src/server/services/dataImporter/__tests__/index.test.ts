@@ -11,7 +11,7 @@ import {
   sessions,
   topics,
   users,
-} from '@/database/server/schemas/lobechat';
+} from '@/database/schemas';
 import { CURRENT_CONFIG_VERSION } from '@/migrations';
 import { ImportResult } from '@/services/config';
 import { ImporterEntryData } from '@/types/importer';

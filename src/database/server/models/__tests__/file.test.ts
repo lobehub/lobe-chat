@@ -12,7 +12,7 @@ import {
   knowledgeBaseFiles,
   knowledgeBases,
   users,
-} from '../../schemas/lobechat';
+} from '../../../schemas';
 import { FileModel } from '../file';
 
 let serverDB = await getTestDBInstance();

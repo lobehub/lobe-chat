@@ -9,7 +9,7 @@ import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/server/models/asy
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
-import { NewChunkItem, NewEmbeddingsItem } from '@/database/server/schemas/lobechat';
+import { NewChunkItem, NewEmbeddingsItem } from '@/database/schemas';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';

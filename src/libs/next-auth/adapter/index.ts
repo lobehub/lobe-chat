@@ -9,7 +9,7 @@ import type { NeonDatabase } from 'drizzle-orm/neon-serverless';
 import { Adapter, AdapterAccount } from 'next-auth/adapters';
 
 import { UserModel } from '@/database/server/models/user';
-import * as schema from '@/database/server/schemas/lobechat';
+import * as schema from '@/database/schemas';
 import { merge } from '@/utils/merge';
 
 import {
