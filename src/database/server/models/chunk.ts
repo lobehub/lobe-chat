@@ -27,6 +27,8 @@ export class ChunkModel {
 
   bulkCreate = async (params: NewChunkItem[], fileId: string) => {
     return this.db.transaction(async (trx) => {
+      if (params.length === 0) return [];
+
       const result = await trx.insert(chunks).values(params).returning();
 
       const fileChunksData = result.map((chunk) => ({ chunkId: chunk.id, fileId }));
