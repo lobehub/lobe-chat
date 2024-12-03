@@ -236,7 +236,6 @@
     "zustand-utils": "^1.3.2"
   },
   "devDependencies": {
-    "@browserbasehq/stagehand": "1.3.0",
     "@commitlint/cli": "^19.5.0",
     "@edge-runtime/vm": "^4.0.3",
     "@huggingface/tasks": "^0.12.22",
