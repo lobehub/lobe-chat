@@ -2,7 +2,7 @@
 import { boolean, jsonb, pgTable, text, unique } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
-import { idGenerator } from '../../utils/idGenerator';
+import { idGenerator } from '@/database/utils/idGenerator';
 import { timestamps, timestamptz } from './_helpers';
 import { sessions } from './session';
 import { users } from './user';

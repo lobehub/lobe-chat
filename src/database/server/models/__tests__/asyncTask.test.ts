@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 
-import { asyncTasks, users } from '../../schemas/lobechat';
+import { asyncTasks, users } from '../../../schemas';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '../asyncTask';
 
 let serverDB = await getTestDBInstance();

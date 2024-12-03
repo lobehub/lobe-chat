@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { MessageModel } from '@/database/server/models/message';
-import { updateMessagePluginSchema } from '@/database/server/schemas/lobechat';
+import { updateMessagePluginSchema } from '@/database/schemas';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { ChatMessage } from '@/types/message';
 import { BatchTaskResult } from '@/types/service';
