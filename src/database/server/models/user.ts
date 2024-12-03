@@ -2,7 +2,6 @@ import { TRPCError } from '@trpc/server';
 import { eq } from 'drizzle-orm';
 import { DeepPartial } from 'utility-types';
 
-import { serverDB } from '@/database/server/core/db';
 import { LobeChatDatabase } from '@/database/type';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserGuide, UserPreference } from '@/types/user';

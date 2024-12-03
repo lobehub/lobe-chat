@@ -2,7 +2,6 @@
 import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getServerDBConfig, serverDBEnv } from '@/config/db';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { FilesTabs, SortType } from '@/types/files';
 
