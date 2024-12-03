@@ -1,10 +1,11 @@
 import { Column, asc, count, inArray, like, sql } from 'drizzle-orm';
-import { and, desc, eq, isNull, not, or } from 'drizzle-orm/expressions';
+import { and, desc, eq, not, or } from 'drizzle-orm/expressions';
 
 import { appEnv } from '@/config/app';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { LobeChatDatabase } from '@/database/type';
+import { idGenerator } from '@/database/utils/idGenerator';
 import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
 import { ChatSessionList, LobeAgentSession } from '@/types/session';
 import { merge } from '@/utils/merge';
@@ -19,7 +20,6 @@ import {
   sessionGroups,
   sessions,
 } from '../../schemas';
-import { idGenerator } from '@/database/utils/idGenerator';
 
 export class SessionModel {
   private userId: string;
@@ -263,42 +263,6 @@ export class SessionModel {
       model: agent?.model,
     } as any;
   };
-
-  async findSessions(params: {
-    current?: number;
-    group?: string;
-    keyword?: string;
-    pageSize?: number;
-    pinned?: boolean;
-  }) {
-    const { pinned, keyword, group, pageSize = 9999, current = 0 } = params;
-
-    const offset = current * pageSize;
-    return this.db.query.sessions.findMany({
-      limit: pageSize,
-      offset,
-      orderBy: [desc(sessions.updatedAt)],
-      where: and(
-        eq(sessions.userId, this.userId),
-        pinned !== undefined ? eq(sessions.pinned, pinned) : eq(sessions.userId, this.userId),
-        keyword
-          ? or(
-              like(
-                sql`lower(${sessions.title})` as unknown as Column,
-                `%${keyword.toLowerCase()}%`,
-              ),
-              like(
-                sql`lower(${sessions.description})` as unknown as Column,
-                `%${keyword.toLowerCase()}%`,
-              ),
-            )
-          : eq(sessions.userId, this.userId),
-        group ? eq(sessions.groupId, group) : isNull(sessions.groupId),
-      ),
-
-      with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
-    });
-  }
 
   async findSessionsByKeywords(params: { current?: number; keyword: string; pageSize?: number }) {
     const { keyword, pageSize = 9999, current = 0 } = params;
