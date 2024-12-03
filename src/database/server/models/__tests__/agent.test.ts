@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 
@@ -18,14 +18,8 @@ import { AgentModel } from '../agent';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'agent-model-test-user-id';
-const agentModel = new AgentModel(userId);
+const agentModel = new AgentModel(serverDB, userId);
 
 const knowledgeBase = { id: 'kb1', userId, name: 'knowledgeBase' };
 const fileList = [

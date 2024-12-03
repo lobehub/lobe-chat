@@ -1,4 +1,5 @@
 import { JWTPayload } from '@/const/auth';
+import { serverDB } from '@/database/server';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { FileModel } from '@/database/server/models/file';
 import { ChunkContentParams, ContentChunk } from '@/server/modules/ContentChunk';
@@ -21,8 +22,8 @@ export class ChunkService {
 
     this.chunkClient = new ContentChunk();
 
-    this.fileModel = new FileModel(userId);
-    this.asyncTaskModel = new AsyncTaskModel(userId);
+    this.fileModel = new FileModel(serverDB, userId);
+    this.asyncTaskModel = new AsyncTaskModel(serverDB, userId);
   }
 
   async chunkContent(params: ChunkContentParams) {

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database/server';
 import { SessionModel } from '@/database/server/models/session';
 import { SessionGroupModel } from '@/database/server/models/sessionGroup';
 import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
@@ -15,8 +16,8 @@ const sessionProcedure = authedProcedure.use(async (opts) => {
 
   return opts.next({
     ctx: {
-      sessionGroupModel: new SessionGroupModel(ctx.userId),
-      sessionModel: new SessionModel(ctx.userId),
+      sessionGroupModel: new SessionGroupModel(serverDB, ctx.userId),
+      sessionModel: new SessionModel(serverDB, ctx.userId),
     },
   });
 });
@@ -84,7 +85,7 @@ export const sessionRouter = router({
         sessions: [],
       };
 
-    const sessionModel = new SessionModel(ctx.userId);
+    const sessionModel = new SessionModel(serverDB, ctx.userId);
 
     return sessionModel.queryWithGroups();
   }),

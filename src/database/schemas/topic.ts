@@ -3,6 +3,8 @@ import { boolean, jsonb, pgTable, text, unique } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator } from '@/database/utils/idGenerator';
+import { ChatTopicMetadata } from '@/types/topic';
+
 import { timestamps, timestamptz } from './_helpers';
 import { sessions } from './session';
 import { users } from './user';
@@ -21,7 +23,7 @@ export const topics = pgTable(
       .notNull(),
     clientId: text('client_id'),
     historySummary: text('history_summary'),
-    metadata: jsonb('metadata'),
+    metadata: jsonb('metadata').$type<ChatTopicMetadata | undefined>(),
     ...timestamps,
   },
   (t) => ({

@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import { fileEnv } from '@/config/file';
 import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
+import { serverDB } from '@/database/server';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
@@ -28,11 +29,11 @@ const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
 
   return opts.next({
     ctx: {
-      asyncTaskModel: new AsyncTaskModel(ctx.userId),
-      chunkModel: new ChunkModel(ctx.userId),
+      asyncTaskModel: new AsyncTaskModel(serverDB, ctx.userId),
+      chunkModel: new ChunkModel(serverDB, ctx.userId),
       chunkService: new ChunkService(ctx.userId),
-      embeddingModel: new EmbeddingModel(ctx.userId),
-      fileModel: new FileModel(ctx.userId),
+      embeddingModel: new EmbeddingModel(serverDB, ctx.userId),
+      fileModel: new FileModel(serverDB, ctx.userId),
     },
   });
 });
