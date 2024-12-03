@@ -214,4 +214,43 @@ describe('UserModel', () => {
       expect(updatedUser?.preference).toEqual({ ...preference, guide: newGuide });
     });
   });
+
+  describe('getUserApiKeys', () => {
+    it('should get and decrypt user API keys', async () => {
+      const keyVaults = { openai: { apiKey: 'test-key' } };
+      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+      const encryptedKeyVaults = await gateKeeper.encrypt(JSON.stringify(keyVaults));
+
+      const userId = 'user-api-id';
+
+      await serverDB.insert(users).values({ id: userId });
+      await serverDB.insert(userSettings).values({
+        id: userId,
+        keyVaults: encryptedKeyVaults,
+      });
+
+      const result = await UserModel.getUserApiKeys(serverDB, userId);
+      expect(result).toEqual(keyVaults);
+    });
+
+    it('should throw error when user not found', async () => {
+      await expect(UserModel.getUserApiKeys(serverDB, 'non-existent-id')).rejects.toThrow(
+        'user not found',
+      );
+    });
+
+    it('should handle decrypt failure and return empty object', async () => {
+      const userId = 'user-api-test-id';
+      // 模拟解密失败的情况
+      const invalidEncryptedData = 'invalid:-encrypted-:data';
+      await serverDB.insert(users).values({ id: userId });
+      await serverDB.insert(userSettings).values({
+        id: userId,
+        keyVaults: invalidEncryptedData,
+      });
+
+      const result = await UserModel.getUserApiKeys(serverDB, userId);
+      expect(result).toEqual({});
+    });
+  });
 });
