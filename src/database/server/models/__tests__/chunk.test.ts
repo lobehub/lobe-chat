@@ -1,30 +1,18 @@
 // @vitest-environment node
 import { eq } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { uuid } from '@/utils/uuid';
 
-import {
-  chunks,
-  embeddings,
-  fileChunks,
-  files,
-  unstructuredChunks,
-  users,
-} from '../../../schemas';
+import { chunks, embeddings, fileChunks, files, unstructuredChunks, users } from '../../../schemas';
 import { ChunkModel } from '../chunk';
 import { codeEmbedding, designThinkingQuery, designThinkingQuery2 } from './fixtures/embedding';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'chunk-model-test-user-id';
-const chunkModel = new ChunkModel(userId);
+const chunkModel = new ChunkModel(serverDB, userId);
 const sharedFileList = [
   {
     id: '1',
@@ -78,6 +66,27 @@ describe('ChunkModel', () => {
       expect(createdChunks).toHaveLength(2);
       expect(createdChunks[0]).toMatchObject(params[0]);
       expect(createdChunks[1]).toMatchObject(params[1]);
+    });
+
+    // 测试空参数场景
+    it('should handle empty params array', async () => {
+      const result = await chunkModel.bulkCreate([], '1');
+      expect(result).toHaveLength(0);
+    });
+
+    // 测试事务回滚
+    it('should rollback transaction on error', async () => {
+      const invalidParams = [
+        { text: 'Chunk 1', userId },
+        { index: 'abc', userId }, // 这会导致错误
+      ] as any;
+
+      await expect(chunkModel.bulkCreate(invalidParams, '1')).rejects.toThrow();
+
+      const createdChunks = await serverDB.query.chunks.findMany({
+        where: eq(chunks.userId, userId),
+      });
+      expect(createdChunks).toHaveLength(0);
     });
   });
 
@@ -190,6 +199,41 @@ describe('ChunkModel', () => {
       expect(result[0].id).toBe(chunk1.id);
       expect(result[1].id).toBe(chunk2.id);
       expect(result[0].similarity).toBeGreaterThan(result[1].similarity);
+    });
+    // 补充无文件 ID 的搜索场景
+    it('should perform semantic search without fileIds', async () => {
+      const [chunk1, chunk2] = await serverDB
+        .insert(chunks)
+        .values([
+          { text: 'Test Chunk 1', userId },
+          { text: 'Test Chunk 2', userId },
+        ])
+        .returning();
+
+      await serverDB.insert(embeddings).values([
+        { chunkId: chunk1.id, embeddings: designThinkingQuery, userId },
+        { chunkId: chunk2.id, embeddings: codeEmbedding, userId },
+      ]);
+
+      const result = await chunkModel.semanticSearch({
+        embedding: designThinkingQuery2,
+        fileIds: undefined,
+        query: 'design thinking',
+      });
+
+      expect(result).toBeDefined();
+      expect(result).toHaveLength(2);
+    });
+
+    // 测试空结果场景
+    it('should return empty array when no matches found', async () => {
+      const result = await chunkModel.semanticSearch({
+        embedding: designThinkingQuery,
+        fileIds: ['non-existent-file'],
+        query: 'no matches',
+      });
+
+      expect(result).toHaveLength(0);
     });
   });
 
@@ -390,6 +434,101 @@ describe('ChunkModel', () => {
 content in Table html is below:
 <table>...</table>
 `);
+    });
+
+    it('should handle null text', () => {
+      const chunk = {
+        text: null,
+        type: 'Text',
+        metadata: {},
+      };
+
+      const result = chunkModel['mapChunkText'](chunk);
+      expect(result).toBeNull();
+    });
+
+    it('should handle missing metadata for Table type', () => {
+      const chunk = {
+        text: 'Table text',
+        type: 'Table',
+        metadata: {},
+      };
+
+      const result = chunkModel['mapChunkText'](chunk);
+      expect(result).toContain('Table text');
+      expect(result).toContain('content in Table html is below:');
+      expect(result).toContain('undefined'); // metadata.text_as_html is undefined
+    });
+  });
+
+  describe('findById', () => {
+    it('should find a chunk by id', async () => {
+      // Create a test chunk
+      const [chunk] = await serverDB
+        .insert(chunks)
+        .values({ text: 'Test Chunk', userId })
+        .returning();
+
+      const result = await chunkModel.findById(chunk.id);
+
+      expect(result).toBeDefined();
+      expect(result?.id).toBe(chunk.id);
+      expect(result?.text).toBe('Test Chunk');
+    });
+
+    it('should return null for non-existent id', async () => {
+      const result = await chunkModel.findById(uuid());
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('semanticSearchForChat', () => {
+    // 测试空文件 ID 列表场景
+    it('should return empty array when fileIds is empty', async () => {
+      const result = await chunkModel.semanticSearchForChat({
+        embedding: designThinkingQuery,
+        fileIds: [],
+        query: 'test',
+      });
+
+      expect(result).toHaveLength(0);
+    });
+
+    // 测试结果限制
+    it('should limit results to 5 items', async () => {
+      const fileId = '1';
+      // Create 6 chunks
+      const chunkResult = await serverDB
+        .insert(chunks)
+        .values(
+          Array(6)
+            .fill(0)
+            .map((_, i) => ({ text: `Test Chunk ${i}`, userId })),
+        )
+        .returning();
+
+      await serverDB.insert(fileChunks).values(
+        chunkResult.map((chunk) => ({
+          fileId,
+          chunkId: chunk.id,
+        })),
+      );
+
+      await serverDB.insert(embeddings).values(
+        chunkResult.map((chunk) => ({
+          chunkId: chunk.id,
+          embeddings: designThinkingQuery,
+          userId,
+        })),
+      );
+
+      const result = await chunkModel.semanticSearchForChat({
+        embedding: designThinkingQuery2,
+        fileIds: [fileId],
+        query: 'test',
+      });
+
+      expect(result).toHaveLength(5);
     });
   });
 });

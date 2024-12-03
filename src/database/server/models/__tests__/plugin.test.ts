@@ -8,14 +8,8 @@ import { PluginModel } from '../plugin';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'plugin-db';
-const pluginModel = new PluginModel(userId);
+const pluginModel = new PluginModel(serverDB, userId);
 
 beforeEach(async () => {
   await serverDB.transaction(async (trx) => {

@@ -11,6 +11,8 @@ import { serverDBEnv } from '@/config/db';
 
 import * as schema from '../../schemas';
 
+const migrationsFolder = join(__dirname, '../../migrations');
+
 export const getTestDBInstance = async () => {
   let connectionString = serverDBEnv.DATABASE_TEST_URL;
 
@@ -23,9 +25,7 @@ export const getTestDBInstance = async () => {
 
     const db = nodeDrizzle(client, { schema });
 
-    await nodeMigrator.migrate(db, {
-      migrationsFolder: join(__dirname, '../../migrations'),
-    });
+    await nodeMigrator.migrate(db, { migrationsFolder });
 
     return db;
   }
@@ -37,9 +37,7 @@ export const getTestDBInstance = async () => {
 
   const db = neonDrizzle(client, { schema });
 
-  await migrator.migrate(db, {
-    migrationsFolder: join(__dirname, '../migrations'),
-  });
+  await migrator.migrate(db, { migrationsFolder });
 
   return db;
 };
