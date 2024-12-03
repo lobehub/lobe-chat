@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { eq } from 'drizzle-orm';
 import { DeepPartial } from 'utility-types';
 
-import { serverDB } from '@/database/server/core/db';
+import { LobeChatDatabase } from '@/database/type';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserGuide, UserPreference } from '@/types/user';
 import { UserKeyVaults, UserSettings } from '@/types/user/settings';
@@ -18,38 +18,16 @@ export class UserNotFoundError extends TRPCError {
 }
 
 export class UserModel {
-  static createUser = async (params: NewUser) => {
-    // if user already exists, skip creation
-    if (params.id) {
-      const user = await serverDB.query.users.findFirst({ where: eq(users.id, params.id) });
-      if (!!user) return;
-    }
+  private userId: string;
+  private db: LobeChatDatabase;
 
-    const [user] = await serverDB
-      .insert(users)
-      .values({ ...params })
-      .returning();
+  constructor(db: LobeChatDatabase, userId: string) {
+    this.userId = userId;
+    this.db = db;
+  }
 
-    // Create an inbox session for the user
-    const model = new SessionModel(user.id);
-
-    await model.createInbox();
-  };
-
-  static deleteUser = async (id: string) => {
-    return serverDB.delete(users).where(eq(users.id, id));
-  };
-
-  static findById = async (id: string) => {
-    return serverDB.query.users.findFirst({ where: eq(users.id, id) });
-  };
-
-  static findByEmail = async (email: string) => {
-    return serverDB.query.users.findFirst({ where: eq(users.email, email) });
-  };
-
-  getUserState = async (id: string) => {
-    const result = await serverDB
+  async getUserState() {
+    const result = await this.db
       .select({
         isOnboarded: users.isOnboarded,
         preference: users.preference,
@@ -63,7 +41,7 @@ export class UserModel {
         settingsTool: userSettings.tool,
       })
       .from(users)
-      .where(eq(users.id, id))
+      .where(eq(users.id, this.userId))
       .leftJoin(userSettings, eq(users.id, userSettings.id));
 
     if (!result || !result[0]) {
@@ -82,7 +60,7 @@ export class UserModel {
         try {
           decryptKeyVaults = JSON.parse(plaintext);
         } catch (e) {
-          console.error(`Failed to parse keyVaults ,userId: ${id}. Error:`, e);
+          console.error(`Failed to parse keyVaults ,userId: ${this.userId}. Error:`, e);
         }
       }
     }
@@ -101,12 +79,104 @@ export class UserModel {
       isOnboarded: state.isOnboarded,
       preference: state.preference as UserPreference,
       settings,
-      userId: id,
+      userId: this.userId,
     };
+  }
+
+  async updateUser(value: Partial<UserItem>) {
+    return this.db
+      .update(users)
+      .set({ ...value, updatedAt: new Date() })
+      .where(eq(users.id, this.userId));
+  }
+
+  async deleteSetting() {
+    return this.db.delete(userSettings).where(eq(userSettings.id, this.userId));
+  }
+
+  async updateSetting(value: Partial<UserSettings>) {
+    const { keyVaults, ...res } = value;
+
+    // Encrypt keyVaults
+    let encryptedKeyVaults: string | null = null;
+
+    if (keyVaults) {
+      // TODO: better to add a validation
+      const data = JSON.stringify(keyVaults);
+      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+
+      encryptedKeyVaults = await gateKeeper.encrypt(data);
+    }
+
+    const newValue = { ...res, keyVaults: encryptedKeyVaults };
+
+    // update or create user settings
+    const settings = await this.db.query.userSettings.findFirst({
+      where: eq(users.id, this.userId),
+    });
+    if (!settings) {
+      await this.db.insert(userSettings).values({ id: this.userId, ...newValue });
+      return;
+    }
+
+    return this.db.update(userSettings).set(newValue).where(eq(userSettings.id, this.userId));
+  }
+
+  async updatePreference(value: Partial<UserPreference>) {
+    const user = await this.db.query.users.findFirst({ where: eq(users.id, this.userId) });
+    if (!user) return;
+
+    return this.db
+      .update(users)
+      .set({ preference: merge(user.preference, value) })
+      .where(eq(users.id, this.userId));
+  }
+
+  async updateGuide(value: Partial<UserGuide>) {
+    const user = await this.db.query.users.findFirst({ where: eq(users.id, this.userId) });
+    if (!user) return;
+
+    const prevPreference = (user.preference || {}) as UserPreference;
+    return this.db
+      .update(users)
+      .set({ preference: { ...prevPreference, guide: merge(prevPreference.guide || {}, value) } })
+      .where(eq(users.id, this.userId));
+  }
+
+  // Static method
+
+  static createUser = async (db: LobeChatDatabase, params: NewUser) => {
+    // if user already exists, skip creation
+    if (params.id) {
+      const user = await db.query.users.findFirst({ where: eq(users.id, params.id) });
+      if (!!user) return;
+    }
+
+    const [user] = await db
+      .insert(users)
+      .values({ ...params })
+      .returning();
+
+    // Create an inbox session for the user
+    const model = new SessionModel(db, user.id);
+
+    await model.createInbox();
   };
 
-  static getUserApiKeys = async (id: string) => {
-    const result = await serverDB
+  static deleteUser = async (db: LobeChatDatabase, id: string) => {
+    return db.delete(users).where(eq(users.id, id));
+  };
+
+  static findById = async (db: LobeChatDatabase, id: string) => {
+    return db.query.users.findFirst({ where: eq(users.id, id) });
+  };
+
+  static findByEmail = async (db: LobeChatDatabase, email: string) => {
+    return db.query.users.findFirst({ where: eq(users.email, email) });
+  };
+
+  static getUserApiKeys = async (db: LobeChatDatabase, id: string) => {
+    const result = await db
       .select({
         settingsKeyVaults: userSettings.keyVaults,
       })
@@ -136,62 +206,4 @@ export class UserModel {
 
     return decryptKeyVaults as UserKeyVaults;
   };
-
-  async updateUser(id: string, value: Partial<UserItem>) {
-    return serverDB
-      .update(users)
-      .set({ ...value, updatedAt: new Date() })
-      .where(eq(users.id, id));
-  }
-
-  async deleteSetting(id: string) {
-    return serverDB.delete(userSettings).where(eq(userSettings.id, id));
-  }
-
-  async updateSetting(id: string, value: Partial<UserSettings>) {
-    const { keyVaults, ...res } = value;
-
-    // Encrypt keyVaults
-    let encryptedKeyVaults: string | null = null;
-
-    if (keyVaults) {
-      // TODO: better to add a validation
-      const data = JSON.stringify(keyVaults);
-      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
-
-      encryptedKeyVaults = await gateKeeper.encrypt(data);
-    }
-
-    const newValue = { ...res, keyVaults: encryptedKeyVaults };
-
-    // update or create user settings
-    const settings = await serverDB.query.userSettings.findFirst({ where: eq(users.id, id) });
-    if (!settings) {
-      await serverDB.insert(userSettings).values({ id, ...newValue });
-      return;
-    }
-
-    return serverDB.update(userSettings).set(newValue).where(eq(userSettings.id, id));
-  }
-
-  async updatePreference(id: string, value: Partial<UserPreference>) {
-    const user = await serverDB.query.users.findFirst({ where: eq(users.id, id) });
-    if (!user) return;
-
-    return serverDB
-      .update(users)
-      .set({ preference: merge(user.preference, value) })
-      .where(eq(users.id, id));
-  }
-
-  async updateGuide(id: string, value: Partial<UserGuide>) {
-    const user = await serverDB.query.users.findFirst({ where: eq(users.id, id) });
-    if (!user) return;
-
-    const prevPreference = (user.preference || {}) as UserPreference;
-    return serverDB
-      .update(users)
-      .set({ preference: { ...prevPreference, guide: merge(prevPreference.guide || {}, value) } })
-      .where(eq(users.id, id));
-  }
 }
