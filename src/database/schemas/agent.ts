@@ -4,7 +4,7 @@ import { createInsertSchema } from 'drizzle-zod';
 
 import { LobeAgentChatConfig, LobeAgentTTSConfig } from '@/types/agent';
 
-import { idGenerator, randomSlug } from '../../utils/idGenerator';
+import { idGenerator, randomSlug } from '@/database/utils/idGenerator';
 import { timestamps } from './_helpers';
 import { files, knowledgeBases } from './file';
 import { users } from './user';

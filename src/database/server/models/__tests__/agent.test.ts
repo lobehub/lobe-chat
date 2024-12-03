@@ -13,7 +13,7 @@ import {
   knowledgeBases,
   sessions,
   users,
-} from '../../schemas/lobechat';
+} from '../../../schemas';
 import { AgentModel } from '../agent';
 
 let serverDB = await getTestDBInstance();

@@ -3,7 +3,7 @@ import { and, desc } from 'drizzle-orm/expressions';
 
 import { serverDB } from '@/database/server';
 
-import { NewSessionGroup, SessionGroupItem, sessionGroups } from '../schemas/lobechat';
+import { NewSessionGroup, SessionGroupItem, sessionGroups } from '../../schemas';
 
 export class TemplateModel {
   private userId: string;

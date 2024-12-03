@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 
-import { messages, sessions, topics, users } from '../../schemas/lobechat';
+import { messages, sessions, topics, users } from '../../../schemas';
 import { CreateTopicParams, TopicModel } from '../topic';
 
 let serverDB = await getTestDBInstance();
