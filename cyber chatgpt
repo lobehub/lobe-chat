@@ -1,0 +1,63 @@
+def insecure_function(user_input):
+    # Vulnerable to SQL Injection
+    query = f"SELECT * FROM users WHERE username = '{user_input}'"
+    execute_query(query)
+
+
+import sqlite3
+
+def secure_function(user_input):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    # Use parameterized queries to prevent SQL Injection
+    cursor.execute("SELECT * FROM users WHERE username = ?", (user_input,))
+    results = cursor.fetchall()
+    conn.close()
+    return results
+
+#include <stdio.h>
+#include <string.h>
+
+void vulnerable_function(char *input) {
+    char buffer[10];
+    // Vulnerable to buffer overflow
+    strcpy(buffer, input);
+    printf("Buffer: %s\n", buffer);
+}
+
+
+#include <stdio.h>
+#include <string.h>
+
+void secure_function(char *input) {
+    char buffer[10];
+    // Use strncpy to prevent buffer overflow
+    strncpy(buffer, input, sizeof(buffer) - 1);
+    buffer[sizeof(buffer) - 1] = '\0'; // Null-terminate
+    printf("Buffer: %s\n", buffer);
+}
+
+
+# PCI-DSS Compliance Checklist
+- [ ] Install and maintain a firewall configuration
+- [ ] Do not use vendor-supplied defaults for system passwords
+- [ ] Protect stored cardholder data
+- [ ] Encrypt transmission of cardholder data across open and public networks
+
+
+def simulate_phishing(email):
+    # Simulate a phishing email
+    phishing_email = f"""
+    Subject: Urgent: Account Verification Required
+
+    Dear User,
+
+    We noticed unusual activity in your account. Please verify your account by clicking the link below:
+
+    [Phishing Link]
+
+    Thank you,
+    IT Support
+    """
+    return phishing_email
+
