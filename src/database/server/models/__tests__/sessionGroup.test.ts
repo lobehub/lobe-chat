@@ -5,19 +5,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 
-import { sessionGroups, users } from '../../schemas/lobechat';
+import { sessionGroups, users } from '../../../schemas';
 import { SessionGroupModel } from '../sessionGroup';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'session-group-model-test-user-id';
-const sessionGroupModel = new SessionGroupModel(userId);
+const sessionGroupModel = new SessionGroupModel(serverDB, userId);
 
 beforeEach(async () => {
   await serverDB.delete(users);
@@ -75,7 +69,7 @@ describe('SessionGroupModel', () => {
       await sessionGroupModel.create({ name: 'Test Group 1' });
       await sessionGroupModel.create({ name: 'Test Group 333' });
 
-      const anotherSessionGroupModel = new SessionGroupModel('user2');
+      const anotherSessionGroupModel = new SessionGroupModel(serverDB, 'user2');
       await anotherSessionGroupModel.create({ name: 'Test Group 2' });
 
       await sessionGroupModel.deleteAll();

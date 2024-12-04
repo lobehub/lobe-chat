@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Flexbox } from 'react-layout-kit';
 
+import { serverDB } from '@/database/server';
 import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 
 import Head from './Head';
@@ -14,7 +15,7 @@ type Props = { params: Params };
 
 const MenuPage = async ({ params }: Props) => {
   const id = params.id;
-  const item = await KnowledgeBaseModel.findById(params.id);
+  const item = await KnowledgeBaseModel.findById(serverDB, params.id);
 
   if (!item) return notFound();
 

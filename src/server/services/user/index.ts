@@ -1,13 +1,14 @@
 import { UserJSON } from '@clerk/backend';
 import { NextResponse } from 'next/server';
 
+import { serverDB } from '@/database/server';
 import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
 
 export class UserService {
   createUser = async (id: string, params: UserJSON) => {
     // Check if user already exists
-    const res = await UserModel.findById(id);
+    const res = await UserModel.findById(serverDB, id);
 
     // If user already exists, skip creating a new user
     if (res)
@@ -27,7 +28,7 @@ export class UserService {
     /* ↑ cloud slot ↑ */
 
     // 2. create user in database
-    await UserModel.createUser({
+    await UserModel.createUser(serverDB, {
       avatar: params.image_url,
       clerkCreatedAt: new Date(params.created_at),
       email: email?.email_address,
@@ -49,7 +50,7 @@ export class UserService {
     if (id) {
       pino.info('delete user due to clerk webhook');
 
-      await UserModel.deleteUser(id);
+      await UserModel.deleteUser(serverDB, id);
 
       return NextResponse.json({ message: 'user deleted' }, { status: 200 });
     } else {
@@ -61,10 +62,10 @@ export class UserService {
   updateUser = async (id: string, params: UserJSON) => {
     pino.info('updating user due to clerk webhook');
 
-    const userModel = new UserModel();
+    const userModel = new UserModel(serverDB, id);
 
     // Check if user already exists
-    const res = await UserModel.findById(id);
+    const res = await UserModel.findById(serverDB, id);
 
     // If user not exists, skip update the user
     if (!res)
@@ -79,7 +80,7 @@ export class UserService {
     const email = params.email_addresses.find((e) => e.id === params.primary_email_address_id);
     const phone = params.phone_numbers.find((e) => e.id === params.primary_phone_number_id);
 
-    await userModel.updateUser(id, {
+    await userModel.updateUser({
       avatar: params.image_url,
       email: email?.email_address,
       firstName: params.first_name,

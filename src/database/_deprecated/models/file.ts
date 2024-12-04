@@ -1,5 +1,5 @@
-import { DBModel } from '@/database/client/core/types/db';
-import { DB_File, DB_FileSchema } from '@/database/client/schemas/files';
+import { DBModel } from '@/database/_deprecated/core/types/db';
+import { DB_File, DB_FileSchema } from '@/database/_deprecated/schemas/files';
 import { nanoid } from '@/utils/uuid';
 
 import { BaseModel } from '../core';

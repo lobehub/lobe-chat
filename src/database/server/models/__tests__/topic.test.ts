@@ -3,20 +3,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 
-import { messages, sessions, topics, users } from '../../schemas/lobechat';
+import { messages, sessions, topics, users } from '../../../schemas';
 import { CreateTopicParams, TopicModel } from '../topic';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'topic-user-test';
 const sessionId = 'topic-session';
-const topicModel = new TopicModel(userId);
+const topicModel = new TopicModel(serverDB, userId);
 
 describe('TopicModel', () => {
   beforeEach(async () => {

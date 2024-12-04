@@ -88,10 +88,10 @@
       "title": "Aangepaste Modelnamen"
     },
     "download": {
-      "desc": "Ollama is downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "Ollama is het model aan het downloaden, sluit deze pagina alstublieft niet af. Bij een herstart zal het downloaden op de onderbroken plaats verdergaan.",
+      "remainingTime": "Overgebleven tijd",
+      "speed": "Downloadsnelheid",
+      "title": "Model {{model}} wordt gedownload"
     },
     "endpoint": {
       "desc": "Voer het Ollama interface proxyadres in, laat leeg indien niet specifiek aangegeven",
@@ -99,36 +99,36 @@
     },
     "setup": {
       "cors": {
-        "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",
+        "description": "Vanwege beveiligingsbeperkingen in de browser moet je CORS-configuratie voor Ollama instellen om het correct te kunnen gebruiken.",
         "linux": {
-          "env": "Add `Environment` under [Service] section, and set the OLLAMA_ORIGINS environment variable:",
-          "reboot": "Reload systemd and restart Ollama.",
-          "systemd": "Invoke systemd to edit the ollama service:"
+          "env": "Voeg `Environment` toe onder de [Service] sectie en voeg de OLLAMA_ORIGINS omgevingsvariabele toe:",
+          "reboot": "Herlaad systemd en herstart Ollama",
+          "systemd": "Roep systemd aan om de ollama service te bewerken:"
         },
-        "macos": "Open the 'Terminal' application, paste the following command, and press Enter to run it.",
-        "reboot": "Please restart the Ollama service after the execution is complete.",
-        "title": "Configure Ollama for Cross-Origin Access",
-        "windows": "On Windows, go to 'Control Panel' and edit system environment variables. Create a new environment variable named 'OLLAMA_ORIGINS' for your user account, set the value to '*', and click 'OK/Apply' to save."
+        "macos": "Open de 'Terminal' applicatie, plak de volgende opdracht en druk op enter om uit te voeren",
+        "reboot": "Herstart de Ollama service na voltooiing",
+        "title": "Configureer Ollama voor cross-origin toegang",
+        "windows": "Op Windows, klik op 'Configuratiescherm', ga naar systeemomgevingsvariabelen bewerken. Maak een nieuwe omgevingsvariabele met de naam 'OLLAMA_ORIGINS' voor je gebruikersaccount, met de waarde *, en klik op 'OK/Toepassen' om op te slaan"
       },
       "install": {
-        "description": "Zorg ervoor dat Ollama is ingeschakeld. Als je Ollama nog niet hebt gedownload, ga dan naar de officiële website om <1>te downloaden</1>.",
-        "docker": "If you prefer using Docker, Ollama also provides official Docker images. You can pull them using the following command:",
+        "description": "Zorg ervoor dat je Ollama hebt ingeschakeld. Als je Ollama nog niet hebt gedownload, ga dan naar de officiële website <1>om te downloaden</1>",
+        "docker": "Als je de voorkeur geeft aan Docker, biedt Ollama ook een officiële Docker-image aan, die je kunt ophalen met de volgende opdracht:",
         "linux": {
-          "command": "Install using the following command:",
-          "manual": "Alternatively, you can refer to the <1>Linux Manual Installation Guide</1> for manual installation."
+          "command": "Installeer met de volgende opdracht:",
+          "manual": "Of je kunt de <1>Linux handmatige installatiehandleiding</1> raadplegen voor een handmatige installatie"
         },
-        "title": "Install and Start Ollama Locally",
-        "windowsTab": "Windows (Preview)"
+        "title": "Installeer en start de Ollama applicatie lokaal",
+        "windowsTab": "Windows (previewversie)"
       }
     },
     "title": "Ollama",
     "unlock": {
-      "cancel": "Cancel Download",
-      "confirm": "Download",
-      "description": "Enter your Ollama model tag to continue the session",
+      "cancel": "Annuleer download",
+      "confirm": "Downloaden",
+      "description": "Voer je Ollama model label in om door te gaan met de sessie",
       "downloaded": "{{completed}} / {{total}}",
-      "starting": "Starting download...",
-      "title": "Download specified Ollama model"
+      "starting": "Downloaden starten...",
+      "title": "Download het opgegeven Ollama model"
     }
   },
   "sensenova": {

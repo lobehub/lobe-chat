@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
+import { serverDB } from '@/database/server';
 import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 import FileManager from '@/features/FileManager';
 
@@ -10,7 +11,7 @@ interface Params {
 type Props = { params: Params };
 
 export default async ({ params }: Props) => {
-  const item = await KnowledgeBaseModel.findById(params.id);
+  const item = await KnowledgeBaseModel.findById(serverDB, params.id);
 
   if (!item) return redirect('/repos');
 

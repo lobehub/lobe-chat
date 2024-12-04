@@ -8,24 +8,18 @@ import type {
 import { eq } from 'drizzle-orm';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import {
   nextauthAccounts,
   nextauthAuthenticators,
   nextauthSessions,
   nextauthVerificationTokens,
   users,
-} from '@/database/server/schemas/lobechat';
+} from '@/database/schemas';
+import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
 let serverDB = await getTestDBInstance();
 let nextAuthAdapter = LobeNextAuthDbAdapter(serverDB);
-
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
 
 const userId = 'user-db';
 const user: AdapterUser = {
