@@ -152,7 +152,7 @@
           "name": "Logo",
           "visible": true,
           "label": "",
-          "customCss": ".login-logo-box {}",
+          "customCss": ".login-logo-box {} \n.panel-logo {\n    width: 80px;\n}",
           "placeholder": "",
           "rule": "None",
           "isCustom": false
