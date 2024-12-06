@@ -5,19 +5,16 @@ import FileDetail from '@/app/(main)/files/features/FileDetail';
 import FileViewer from '@/features/FileViewer';
 import { createCallerFactory } from '@/libs/trpc';
 import { lambdaRouter } from '@/server/routers/lambda';
+import { PagePropsWithId } from '@/types/next';
 import { getUserAuth } from '@/utils/server/auth';
 
 import Header from './Header';
 
-interface Params {
-  id: string;
-}
-
-type Props = { params: Params };
-
 const createCaller = createCallerFactory(lambdaRouter);
 
-const FilePage = async ({ params }: Props) => {
+const FilePage = async (props: PagePropsWithId) => {
+  const params = await props.params;
+
   const { userId } = await getUserAuth();
 
   const caller = createCaller({ userId });
