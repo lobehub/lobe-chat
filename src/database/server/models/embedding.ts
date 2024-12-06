@@ -1,19 +1,21 @@
 import { count, eq } from 'drizzle-orm';
 import { and } from 'drizzle-orm/expressions';
 
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 
-import { NewEmbeddingsItem, embeddings } from '../schemas/lobechat';
+import { NewEmbeddingsItem, embeddings } from '../../schemas';
 
 export class EmbeddingModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
 
   create = async (value: Omit<NewEmbeddingsItem, 'userId'>) => {
-    const [item] = await serverDB
+    const [item] = await this.db
       .insert(embeddings)
       .values({ ...value, userId: this.userId })
       .returning();
@@ -22,7 +24,7 @@ export class EmbeddingModel {
   };
 
   bulkCreate = async (values: Omit<NewEmbeddingsItem, 'userId'>[]) => {
-    return serverDB
+    return this.db
       .insert(embeddings)
       .values(values.map((item) => ({ ...item, userId: this.userId })))
       .onConflictDoNothing({
@@ -31,25 +33,25 @@ export class EmbeddingModel {
   };
 
   delete = async (id: string) => {
-    return serverDB
+    return this.db
       .delete(embeddings)
       .where(and(eq(embeddings.id, id), eq(embeddings.userId, this.userId)));
   };
 
   query = async () => {
-    return serverDB.query.embeddings.findMany({
+    return this.db.query.embeddings.findMany({
       where: eq(embeddings.userId, this.userId),
     });
   };
 
   findById = async (id: string) => {
-    return serverDB.query.embeddings.findFirst({
+    return this.db.query.embeddings.findFirst({
       where: and(eq(embeddings.id, id), eq(embeddings.userId, this.userId)),
     });
   };
 
   countUsage = async () => {
-    const result = await serverDB
+    const result = await this.db
       .select({
         count: count(),
       })

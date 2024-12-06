@@ -5,7 +5,7 @@ const Google: ModelProviderCard = {
   chatModels: [
     {
       description:
-        'Gemini Exp 1121 是Google最新的实验性多模态AI模型，具备快速处理能力，支持文本、图像和视频输入，适用于多种任务的高效扩展。',
+        'Gemini Exp 1121 是 Google 最新的实验性多模态AI模型，拥有改进的编码、推理和视觉能力。',
       displayName: 'Gemini Experimental 1121',
       enabled: true,
       functionCall: true,
@@ -22,9 +22,8 @@ const Google: ModelProviderCard = {
     },
     {
       description:
-        'Gemini Exp 1114 是Google最新的实验性多模态AI模型，具备快速处理能力，支持文本、图像和视频输入，适用于多种任务的高效扩展。',
+        'Gemini Exp 1114 是 Google 的实验性多模态AI模型，对输出质量有一定改进。',
       displayName: 'Gemini Experimental 1114',
-      enabled: true,
       functionCall: true,
       id: 'gemini-exp-1114',
       maxOutput: 8192,
@@ -39,7 +38,23 @@ const Google: ModelProviderCard = {
     },
     {
       description:
-        'Gemini 1.5 Flash 是Google最新的多模态AI模型，具备快速处理能力，支持文本、图像和视频输入，适用于多种任务的高效扩展。',
+        'LearnLM 是一个实验性的、特定于任务的语言模型，经过训练以符合学习科学原则，可在教学和学习场景中遵循系统指令，充当专家导师等。',
+      displayName: 'LearnLM 1.5 Pro Experimental',
+      functionCall: true,
+      id: 'learnlm-1.5-pro-experimental',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0,
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2024-11-19',
+      tokens: 32_767 + 8192,
+      vision: true,
+    },
+    {
+      description:
+        'Gemini 1.5 Flash 是 Google 最新的多模态AI模型，具备快速处理能力，支持文本、图像和视频输入，适用于多种任务的高效扩展。',
       displayName: 'Gemini 1.5 Flash',
       enabled: true,
       functionCall: true,

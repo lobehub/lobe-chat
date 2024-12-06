@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database/server';
 import { PluginModel } from '@/database/server/models/plugin';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { LobeTool } from '@/types/tool';
@@ -8,7 +9,7 @@ const pluginProcedure = authedProcedure.use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
-    ctx: { pluginModel: new PluginModel(ctx.userId) },
+    ctx: { pluginModel: new PluginModel(serverDB, ctx.userId) },
   });
 });
 
@@ -61,10 +62,11 @@ export const pluginRouter = router({
       return data.identifier;
     }),
 
+  // TODO: 未来这部分方法也需要使用 authedProcedure
   getPlugins: publicProcedure.query(async ({ ctx }): Promise<LobeTool[]> => {
     if (!ctx.userId) return [];
 
-    const pluginModel = new PluginModel(ctx.userId);
+    const pluginModel = new PluginModel(serverDB, ctx.userId);
 
     return pluginModel.query();
   }),

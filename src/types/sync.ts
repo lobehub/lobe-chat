@@ -1,4 +1,4 @@
-import { LobeDBSchemaMap } from '@/database/client/core/db';
+import { LobeDBSchemaMap } from '@/database/_deprecated/core/db';
 
 export type OnSyncEvent = (tableKey: keyof LobeDBSchemaMap) => void;
 export type OnSyncStatusChange = (status: PeerSyncStatus) => void;

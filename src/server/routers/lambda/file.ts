@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { serverDB } from '@/database/server';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { FileModel } from '@/database/server/models/file';
@@ -15,9 +16,9 @@ const fileProcedure = authedProcedure.use(async (opts) => {
 
   return opts.next({
     ctx: {
-      asyncTaskModel: new AsyncTaskModel(ctx.userId),
-      chunkModel: new ChunkModel(ctx.userId),
-      fileModel: new FileModel(ctx.userId),
+      asyncTaskModel: new AsyncTaskModel(serverDB, ctx.userId),
+      chunkModel: new ChunkModel(serverDB, ctx.userId),
+      fileModel: new FileModel(serverDB, ctx.userId),
     },
   });
 });

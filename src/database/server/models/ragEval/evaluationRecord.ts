@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 
 import { serverDB } from '@/database/server';
-import { NewEvaluationRecordsItem, evaluationRecords } from '@/database/server/schemas/lobechat';
+import { NewEvaluationRecordsItem, evaluationRecords } from '@/database/schemas';
 
 export class EvaluationRecordModel {
   private userId: string;

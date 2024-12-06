@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import { chainAnswerWithContext } from '@/chains/answerWithContext';
 import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
+import { serverDB } from '@/database/server';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
@@ -24,13 +25,13 @@ const ragEvalProcedure = asyncAuthedProcedure.use(async (opts) => {
 
   return opts.next({
     ctx: {
-      chunkModel: new ChunkModel(ctx.userId),
+      chunkModel: new ChunkModel(serverDB, ctx.userId),
       chunkService: new ChunkService(ctx.userId),
       datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
-      embeddingModel: new EmbeddingModel(ctx.userId),
+      embeddingModel: new EmbeddingModel(serverDB, ctx.userId),
       evalRecordModel: new EvaluationRecordModel(ctx.userId),
       evaluationModel: new EvalEvaluationModel(ctx.userId),
-      fileModel: new FileModel(ctx.userId),
+      fileModel: new FileModel(serverDB, ctx.userId),
     },
   });
 });

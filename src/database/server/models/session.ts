@@ -1,10 +1,11 @@
 import { Column, asc, count, inArray, like, sql } from 'drizzle-orm';
-import { and, desc, eq, isNull, not, or } from 'drizzle-orm/expressions';
+import { and, desc, eq, not, or } from 'drizzle-orm/expressions';
 
 import { appEnv } from '@/config/app';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { serverDB } from '@/database/server/core/db';
+import { LobeChatDatabase } from '@/database/type';
+import { idGenerator } from '@/database/utils/idGenerator';
 import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
 import { ChatSessionList, LobeAgentSession } from '@/types/session';
 import { merge } from '@/utils/merge';
@@ -18,21 +19,22 @@ import {
   agentsToSessions,
   sessionGroups,
   sessions,
-} from '../schemas/lobechat';
-import { idGenerator } from '../utils/idGenerator';
+} from '../../schemas';
 
 export class SessionModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
   // **************** Query *************** //
 
   async query({ current = 0, pageSize = 9999 } = {}) {
     const offset = current * pageSize;
 
-    return serverDB.query.sessions.findMany({
+    return this.db.query.sessions.findMany({
       limit: pageSize,
       offset,
       orderBy: [desc(sessions.updatedAt)],
@@ -45,7 +47,7 @@ export class SessionModel {
     // 查询所有会话
     const result = await this.query();
 
-    const groups = await serverDB.query.sessionGroups.findMany({
+    const groups = await this.db.query.sessionGroups.findMany({
       orderBy: [asc(sessionGroups.sort), desc(sessionGroups.createdAt)],
       where: eq(sessions.userId, this.userId),
     });
@@ -69,7 +71,7 @@ export class SessionModel {
   async findByIdOrSlug(
     idOrSlug: string,
   ): Promise<(SessionItem & { agent: AgentItem }) | undefined> {
-    const result = await serverDB.query.sessions.findFirst({
+    const result = await this.db.query.sessions.findFirst({
       where: and(
         or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
         eq(sessions.userId, this.userId),
@@ -83,7 +85,7 @@ export class SessionModel {
   }
 
   async count() {
-    const result = await serverDB
+    const result = await this.db
       .select({
         count: count(),
       })
@@ -109,7 +111,7 @@ export class SessionModel {
     slug?: string;
     type: 'agent' | 'group';
   }): Promise<SessionItem> {
-    return serverDB.transaction(async (trx) => {
+    return this.db.transaction(async (trx) => {
       const newAgents = await trx
         .insert(agents)
         .values({
@@ -144,7 +146,7 @@ export class SessionModel {
   }
 
   async createInbox() {
-    const item = await serverDB.query.sessions.findFirst({
+    const item = await this.db.query.sessions.findFirst({
       where: and(eq(sessions.userId, this.userId), eq(sessions.slug, INBOX_SESSION_ID)),
     });
     if (item) return;
@@ -167,7 +169,7 @@ export class SessionModel {
       };
     });
 
-    return serverDB.insert(sessions).values(sessionsToInsert);
+    return this.db.insert(sessions).values(sessionsToInsert);
   }
 
   async duplicate(id: string, newTitle?: string) {
@@ -199,7 +201,7 @@ export class SessionModel {
    * Delete a session, also delete all messages and topics associated with it.
    */
   async delete(id: string) {
-    return serverDB
+    return this.db
       .delete(sessions)
       .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)));
   }
@@ -208,18 +210,18 @@ export class SessionModel {
    * Batch delete sessions, also delete all messages and topics associated with them.
    */
   async batchDelete(ids: string[]) {
-    return serverDB
+    return this.db
       .delete(sessions)
       .where(and(inArray(sessions.id, ids), eq(sessions.userId, this.userId)));
   }
 
   async deleteAll() {
-    return serverDB.delete(sessions).where(eq(sessions.userId, this.userId));
+    return this.db.delete(sessions).where(eq(sessions.userId, this.userId));
   }
   // **************** Update *************** //
 
   async update(id: string, data: Partial<SessionItem>) {
-    return serverDB
+    return this.db
       .update(sessions)
       .set(data)
       .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)))
@@ -227,7 +229,7 @@ export class SessionModel {
   }
 
   async updateConfig(id: string, data: Partial<AgentItem>) {
-    return serverDB
+    return this.db
       .update(agents)
       .set(data)
       .where(and(eq(agents.id, id), eq(agents.userId, this.userId)));
@@ -262,65 +264,22 @@ export class SessionModel {
     } as any;
   };
 
-  async findSessions(params: {
-    current?: number;
-    group?: string;
-    keyword?: string;
-    pageSize?: number;
-    pinned?: boolean;
-  }) {
-    const { pinned, keyword, group, pageSize = 9999, current = 0 } = params;
-
-    const offset = current * pageSize;
-    return serverDB.query.sessions.findMany({
-      limit: pageSize,
-      offset,
-      orderBy: [desc(sessions.updatedAt)],
-      where: and(
-        eq(sessions.userId, this.userId),
-        pinned !== undefined ? eq(sessions.pinned, pinned) : eq(sessions.userId, this.userId),
-        keyword
-          ? or(
-            like(
-              sql`lower(${sessions.title})` as unknown as Column,
-              `%${keyword.toLowerCase()}%`,
-            ),
-            like(
-              sql`lower(${sessions.description})` as unknown as Column,
-              `%${keyword.toLowerCase()}%`,
-            ),
-          )
-          : eq(sessions.userId, this.userId),
-        group ? eq(sessions.groupId, group) : isNull(sessions.groupId),
-      ),
-
-      with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
-    });
-  }
-
-  async findSessionsByKeywords(params: {
-    current?: number;
-    keyword: string;
-    pageSize?: number;
-  }) {
+  async findSessionsByKeywords(params: { current?: number; keyword: string; pageSize?: number }) {
     const { keyword, pageSize = 9999, current = 0 } = params;
     const offset = current * pageSize;
-    const results = await serverDB.query.agents.findMany({
+    const results = await this.db.query.agents.findMany({
       limit: pageSize,
       offset,
       orderBy: [desc(agents.updatedAt)],
       where: and(
         eq(agents.userId, this.userId),
         or(
-          like(
-            sql`lower(${agents.title})` as unknown as Column,
-            `%${keyword.toLowerCase()}%`,
-          ),
+          like(sql`lower(${agents.title})` as unknown as Column, `%${keyword.toLowerCase()}%`),
           like(
             sql`lower(${agents.description})` as unknown as Column,
             `%${keyword.toLowerCase()}%`,
           ),
-        )
+        ),
       ),
       with: { agentsToSessions: { columns: {}, with: { session: true } } },
     });
@@ -328,6 +287,6 @@ export class SessionModel {
       // @ts-expect-error
       return results.map((item) => item.agentsToSessions[0].session);
     } catch {}
-    return []
+    return [];
   }
 }

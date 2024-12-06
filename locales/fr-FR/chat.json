@@ -32,6 +32,7 @@
   "duplicateTitle": "{{title}} Copie",
   "emptyAgent": "Aucun assistant disponible",
   "historyRange": "Plage d'historique",
+  "historySummary": "Résumé des messages historiques",
   "inbox": {
     "desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
     "title": "Discutons un peu"
