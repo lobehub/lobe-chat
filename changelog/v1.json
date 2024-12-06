@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add Higress ai model provider."]
+    },
+    "date": "2024-12-06",
+    "version": "1.36.0"
+  },
+  {
+    "children": {
       "improvements": ["Refactor page params to adapt next15 breaking change."]
     },
     "date": "2024-12-06",
