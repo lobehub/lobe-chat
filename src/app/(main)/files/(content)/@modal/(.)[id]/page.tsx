@@ -1,14 +1,12 @@
+import { PagePropsWithId } from '@/types/next';
+
 import FileDetail from './FileDetail';
 import FilePreview from './FilePreview';
 import FullscreenModal from './FullscreenModal';
 
-interface Params {
-  id: string;
-}
+const Page = async (props: PagePropsWithId) => {
+  const params = await props.params;
 
-type Props = { params: Params };
-
-const Page = ({ params }: Props) => {
   return (
     <FullscreenModal detail={<FileDetail id={params.id} />}>
       <FilePreview id={params.id} />
