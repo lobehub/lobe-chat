@@ -1,7 +1,6 @@
 import analyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 import withSerwistInit from '@serwist/next';
-import type { NextConfig } from 'next';
 
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
@@ -11,7 +10,8 @@ const API_PROXY_ENDPOINT = process.env.API_PROXY_ENDPOINT || '';
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   basePath,
   compress: isProd,
   experimental: {
@@ -192,7 +192,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-const noWrapper = (config: NextConfig) => config;
+const noWrapper = (config) => config;
 
 const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapper;
 
@@ -207,7 +207,7 @@ const withPWA = isProd
 const hasSentry = !!process.env.NEXT_PUBLIC_SENTRY_DSN;
 const withSentry =
   isProd && hasSentry
-    ? (c: NextConfig) =>
+    ? (c) =>
         withSentryConfig(
           c,
           {
@@ -248,4 +248,4 @@ const withSentry =
         )
     : noWrapper;
 
-export default withBundleAnalyzer(withPWA(withSentry(nextConfig) as NextConfig));
+export default withBundleAnalyzer(withPWA(withSentry(nextConfig)));
