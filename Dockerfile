@@ -211,7 +211,9 @@ ENV \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
-    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST=""
+    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST="" \
+    # Higress
+    HIGRESS_API_KEY="" HIGRESS_MODEL_LIST=""
 
 USER nextjs
 
