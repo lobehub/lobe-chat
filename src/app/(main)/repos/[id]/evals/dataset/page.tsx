@@ -21,7 +21,7 @@ interface Params {
   id: string;
 }
 
-type Props = { params: Params };
+type Props = { params: Params & Promise<Params> };
 
 const Dataset = ({ params }: Props) => {
   const { styles } = useStyles();
