@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2024-12-06",
+    "version": "1.35.13"
+  },
+  {
     "children": {
       "fixes": ["Fix typo of prompts."]
     },
