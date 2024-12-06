@@ -35,6 +35,7 @@ export enum ModelProvider {
   Github = 'github',
   Google = 'google',
   Groq = 'groq',
+  Higress = 'higress',
   HuggingFace = 'huggingface',
   Hunyuan = 'hunyuan',
   InternLM = 'internlm',
