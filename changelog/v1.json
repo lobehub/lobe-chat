@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor async params route to adapt next15 breaking change."]
+    },
+    "date": "2024-12-07",
+    "version": "1.36.2"
+  },
+  {
+    "children": {
       "improvements": ["Add gemini-exp-1206 model."]
     },
     "date": "2024-12-07",

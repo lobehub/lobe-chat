@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.36.2](https://github.com/lobehub/lobe-chat/compare/v1.36.1...v1.36.2)
+
+<sup>Released on **2024-12-07**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor async params route to adapt next15 breaking change.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor async params route to adapt next15 breaking change, closes [#4905](https://github.com/lobehub/lobe-chat/issues/4905) ([5d61950](https://github.com/lobehub/lobe-chat/commit/5d61950))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.1](https://github.com/lobehub/lobe-chat/compare/v1.36.0...v1.36.1)
 
 <sup>Released on **2024-12-07**</sup>
