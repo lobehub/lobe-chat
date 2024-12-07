@@ -57,7 +57,7 @@ export const checkAuth =
       const error = errorContent || e;
 
       const params = await options.params;
-      return createErrorResponse(errorType, { error, ...res, provider: params.provider });
+      return createErrorResponse(errorType, { error, ...res, provider: params?.provider });
     }
 
     return handler(req, { ...options, jwtPayload });
