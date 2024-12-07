@@ -21,7 +21,7 @@ describe('Wenxin POST function tests', () => {
     await POST(mockRequest);
     expect(UniverseRoute).toHaveBeenCalledWith(mockRequest, {
       createRuntime: expect.anything(),
-      params: { provider: 'wenxin' },
+      params: Promise.resolve({ provider: 'wenxin' }),
     });
   });
 });
