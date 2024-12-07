@@ -203,6 +203,7 @@
     "react-layout-kit": "^1.9.0",
     "react-lazy-load": "^4.0.1",
     "react-pdf": "^9.1.1",
+    "react-scan": "^0.0.40",
     "react-virtuoso": "^4.12.0",
     "react-wrap-balancer": "^1.1.1",
     "remark": "^14.0.3",
