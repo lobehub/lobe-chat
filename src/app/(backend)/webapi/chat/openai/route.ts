@@ -22,4 +22,5 @@ export const preferredRegion = [
   'syd1',
 ];
 
-export const POST = async (req: Request) => UniverseRoute(req, { params: { provider: 'openai' } });
+export const POST = async (req: Request) =>
+  UniverseRoute(req, { params: Promise.resolve({ provider: 'openai' }) });
