@@ -5,9 +5,25 @@ const Google: ModelProviderCard = {
   chatModels: [
     {
       description:
-        'Gemini Exp 1121 是 Google 最新的实验性多模态AI模型，拥有改进的编码、推理和视觉能力。',
-      displayName: 'Gemini Experimental 1121',
+        'Gemini Exp 1206 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升。',
+      displayName: 'Gemini Experimental 1206',
       enabled: true,
+      functionCall: true,
+      id: 'gemini-exp-1206',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0,
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2024-12-06',
+      tokens: 2_097_152 + 8192,
+      vision: true,
+    },
+    {
+      description:
+        'Gemini Exp 1121 是 Google 的实验性多模态AI模型，拥有改进的编码、推理和视觉能力。',
+      displayName: 'Gemini Experimental 1121',
       functionCall: true,
       id: 'gemini-exp-1121',
       maxOutput: 8192,
