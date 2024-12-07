@@ -1,0 +1,9 @@
+stages:
+  - test
+
+test:
+  stage: test
+  image: python:3.8  # 为 Python 项目选择合适的镜像
+  script:
+    - pip install -r requirements.txt  # 安装依赖
+    - pytest  # 运行测试
