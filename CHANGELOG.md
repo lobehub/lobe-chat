@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.36.1](https://github.com/lobehub/lobe-chat/compare/v1.36.0...v1.36.1)
+
+<sup>Released on **2024-12-07**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove proxy url settings for NextAuth.
+
+#### 💄 Styles
+
+- **misc**: Add gemini-exp-1206 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove proxy url settings for NextAuth, closes [#4826](https://github.com/lobehub/lobe-chat/issues/4826) ([a502c17](https://github.com/lobehub/lobe-chat/commit/a502c17))
+
+#### Styles
+
+- **misc**: Add gemini-exp-1206 model, closes [#4909](https://github.com/lobehub/lobe-chat/issues/4909) ([9ff2c03](https://github.com/lobehub/lobe-chat/commit/9ff2c03))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.36.0](https://github.com/lobehub/lobe-chat/compare/v1.35.14...v1.36.0)
 
 <sup>Released on **2024-12-06**</sup>

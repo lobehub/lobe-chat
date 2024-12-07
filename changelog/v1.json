@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add gemini-exp-1206 model."]
+    },
+    "date": "2024-12-07",
+    "version": "1.36.1"
+  },
+  {
+    "children": {
       "features": ["Add Higress ai model provider."]
     },
     "date": "2024-12-06",
