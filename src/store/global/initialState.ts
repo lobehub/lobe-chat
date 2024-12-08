@@ -37,6 +37,7 @@ export interface SystemStatus {
   hidePWAInstaller?: boolean;
   hideThreadLimitAlert?: boolean;
   inputHeight: number;
+  latestChangelogId?: string;
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
   sessionsWidth: number;
