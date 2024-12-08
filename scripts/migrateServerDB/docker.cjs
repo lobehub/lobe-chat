@@ -27,7 +27,7 @@ const runMigrations = async () => {
 // eslint-disable-next-line unicorn/prefer-top-level-await
 runMigrations().catch((err) => {
   console.error(
-    '❌ Database migrate failed. Please check your database is valid and DATABASE_URL is set correctly. The error detail is below:',
+    '❌ Database migrate failed. Please check if your database is valid and DATABASE_URL is set correctly. The error detail is below:',
   );
   console.error(err);
 
