@@ -157,7 +157,7 @@
     "file-type": "^19.6.0",
     "framer-motion": "^11.11.9",
     "gpt-tokenizer": "^2.5.0",
-    "i18next": "^23.16.1",
+    "i18next": "^24.0.0",
     "i18next-browser-languagedetector": "^7.2.1",
     "i18next-resources-to-backend": "^1.2.1",
     "idb-keyval": "^6.2.1",
