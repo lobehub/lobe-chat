@@ -16,7 +16,8 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
   debug: {
     chatCompletion: () => process.env.DEBUG_TOGETHERAI_CHAT_COMPLETION === '1',
   },
-  models: async ({ apiKey }) => {
+  models: async ({ client }) => {
+    const apiKey = client.apiKey;
     const data = await fetch(`${baseURL}/api/models`, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
