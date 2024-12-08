@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { INBOX_SESSION_ID } from '@/const/session';
+import { MessageItem } from '@/database/schemas';
 import { lambdaClient } from '@/libs/trpc/client';
 import {
   ChatMessage,
@@ -19,7 +20,7 @@ export class ServerService implements IMessageService {
     });
   }
 
-  batchCreateMessages(messages: ChatMessage[]): Promise<any> {
+  batchCreateMessages(messages: MessageItem[]): Promise<any> {
     return lambdaClient.message.batchCreateMessages.mutate(messages);
   }
 
@@ -33,6 +34,7 @@ export class ServerService implements IMessageService {
   getAllMessages(): Promise<ChatMessage[]> {
     return lambdaClient.message.getAllMessages.query();
   }
+
   getAllMessagesInSession(sessionId: string): Promise<ChatMessage[]> {
     return lambdaClient.message.getAllMessagesInSession.query({
       sessionId: this.toDbSessionId(sessionId),
@@ -77,10 +79,6 @@ export class ServerService implements IMessageService {
 
   updateMessagePluginState(id: string, value: any): Promise<any> {
     return lambdaClient.message.updatePluginState.mutate({ id, value });
-  }
-
-  bindMessagesToTopic(_topicId: string, _messageIds: string[]): Promise<any> {
-    throw new Error('Method not implemented.');
   }
 
   removeMessage(id: string): Promise<any> {
