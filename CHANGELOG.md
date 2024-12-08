@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.36.3](https://github.com/lobehub/lobe-chat/compare/v1.36.2...v1.36.3)
+
+<sup>Released on **2024-12-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Support request headers for chat.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Support request headers for chat, closes [#4934](https://github.com/lobehub/lobe-chat/issues/4934) ([8cdc062](https://github.com/lobehub/lobe-chat/commit/8cdc062))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.2](https://github.com/lobehub/lobe-chat/compare/v1.36.1...v1.36.2)
 
 <sup>Released on **2024-12-07**</sup>

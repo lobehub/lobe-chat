@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Support request headers for chat."]
+    },
+    "date": "2024-12-08",
+    "version": "1.36.3"
+  },
+  {
+    "children": {
       "improvements": ["Refactor async params route to adapt next15 breaking change."]
     },
     "date": "2024-12-07",
