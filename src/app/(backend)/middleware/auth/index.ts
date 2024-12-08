@@ -26,21 +26,22 @@ export const checkAuth =
     let jwtPayload: JWTPayload;
 
     try {
-      // get Authorization from header
+      // 1. 获取认证头
       const authorization = req.headers.get(LOBE_CHAT_AUTH_HEADER);
       const oauthAuthorized = !!req.headers.get(OAUTH_AUTHORIZED);
 
       if (!authorization) throw AgentRuntimeError.createError(ChatErrorType.Unauthorized);
 
-      // check the Auth With payload and clerk auth
+      // 2. 检查 Clerk 认证
       let clerkAuth = {} as AuthObject;
-
       if (enableClerk) {
         clerkAuth = getAuth(req as NextRequest);
       }
 
+      // 3. 获取 JWT Payload
       jwtPayload = await getJWTPayload(authorization);
 
+      // 4. 检查认证方法
       checkAuthMethod({
         accessCode: jwtPayload.accessCode,
         apiKey: jwtPayload.apiKey,

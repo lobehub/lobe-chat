@@ -1,5 +1,5 @@
 import { ActionIcon } from '@lobehub/ui';
-import { Compass, FolderClosed, MessageSquare } from 'lucide-react';
+import { Compass, FolderClosed, Images, MessageSquare, Pencil } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +35,38 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           placement={'right'}
           size="large"
           title={t('tab.chat')}
+        />
+      </Link>
+      <Link
+        aria-label={t('tab.images')}
+        href={'/image'}
+        onClick={(e) => {
+          e.preventDefault();
+          switchBackToChat(useSessionStore.getState().activeId);
+        }}
+      >
+        <ActionIcon
+          active={tab === SidebarTabKey.Images && !isPinned}
+          icon={Images}
+          placement={'right'}
+          size="large"
+          title={t('tab.images')}
+        />
+      </Link>
+      <Link
+        aria-label={t('tab.write')}
+        href={'/write'}
+        onClick={(e) => {
+          e.preventDefault();
+          switchBackToChat(useSessionStore.getState().activeId);
+        }}
+      >
+        <ActionIcon
+          active={tab === SidebarTabKey.Write && !isPinned}
+          icon={Pencil}
+          placement={'right'}
+          size="large"
+          title={t('tab.write')}
         />
       </Link>
       {enableKnowledgeBase && (
