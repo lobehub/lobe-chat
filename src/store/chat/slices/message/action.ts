@@ -74,6 +74,7 @@ export interface ChatMessageAction {
    * update the message error with optimistic update
    */
   internal_updateMessageError: (id: string, error: ChatMessageError | null) => Promise<void>;
+  internal_updateMessagePluginError: (id: string, error: ChatMessageError | null) => Promise<void>;
   /**
    * create a message with optimistic update
    */
@@ -264,6 +265,10 @@ export const chatMessage: StateCreator<
   internal_updateMessageError: async (id, error) => {
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
     await messageService.updateMessage(id, { error });
+    await get().refreshMessages();
+  },
+  internal_updateMessagePluginError: async (id, error) => {
+    await messageService.updateMessagePluginError(id, error);
     await get().refreshMessages();
   },
   internal_updateMessageContent: async (id, content, toolCalls) => {
