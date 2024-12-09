@@ -13,6 +13,7 @@ import { MarkdownLoader } from './markdown';
 import { PdfLoader } from './pdf';
 import { PPTXLoader } from './pptx';
 import { TextLoader } from './txt';
+import { CsVLoader} from './csv';
 
 class LangChainError extends Error {
   constructor(message: string) {
@@ -59,6 +60,10 @@ export class ChunkingLoader {
           return await TextLoader(txt);
         }
 
+        case 'csv': {
+          return await CsVLoader(fileBlob);
+        }
+
         default: {
           throw new Error(
             `Unsupported file type [${type}], please check your file is supported, or create report issue here: https://github.com/lobehub/lobe-chat/discussions/3550`,
@@ -89,6 +94,10 @@ export class ChunkingLoader {
 
     if (filename.endsWith('md') || filename.endsWith('mdx')) {
       return 'markdown';
+    }
+
+    if (filename.endsWith('csv') ) {
+      return 'csv';
     }
 
     const ext = filename.split('.').pop();
