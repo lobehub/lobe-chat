@@ -101,6 +101,7 @@
     ]
   },
   "dependencies": {
+    "re-resizable": "6.10.1",
     "@ant-design/icons": "^5.5.1",
     "@ant-design/pro-components": "^2.7.18",
     "@anthropic-ai/sdk": "^0.32.0",
