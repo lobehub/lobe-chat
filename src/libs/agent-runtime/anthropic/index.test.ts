@@ -34,6 +34,7 @@ describe('LobeAnthropicAI', () => {
       const instance = new LobeAnthropicAI({ apiKey: 'test_api_key' });
       expect(instance).toBeInstanceOf(LobeAnthropicAI);
       expect(instance.baseURL).toBe('https://api.anthropic.com');
+      expect(instance['client'].authToken).toBe('test_api_key');
     });
 
     it('should correctly initialize with a baseURL', async () => {

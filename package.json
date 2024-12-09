@@ -194,6 +194,7 @@
     "pwa-install-handler": "^2.6.1",
     "query-string": "^9.1.1",
     "random-words": "^2.0.1",
+    "re-resizable": "6.10.1",
     "react": "^18.3.1",
     "react-confetti": "^6.1.0",
     "react-dom": "^18.3.1",
