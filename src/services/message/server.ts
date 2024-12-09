@@ -50,9 +50,9 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.update.mutate({ id, value: { error } });
   }
 
-  async updateMessagePluginError(id: string, error: ChatMessageError): Promise<any> {
-    return lambdaClient.message.update.mutate({ id, value: { pluginError: error } });
-  }
+  // async updateMessagePluginError(id: string, error: ChatMessageError): Promise<any> {
+  //   return lambdaClient.message.update.mutate({ id, value: { pluginError: error } });
+  // }
 
   async updateMessagePluginArguments(
     id: string,
@@ -77,6 +77,10 @@ export class ServerService implements IMessageService {
 
   updateMessagePluginState(id: string, value: any): Promise<any> {
     return lambdaClient.message.updatePluginState.mutate({ id, value });
+  }
+
+  updateMessagePluginError(id: string, value: any): Promise<any> {
+    return lambdaClient.message.updateMessagePlugin.mutate({ id, value: { error: value } });
   }
 
   bindMessagesToTopic(_topicId: string, _messageIds: string[]): Promise<any> {

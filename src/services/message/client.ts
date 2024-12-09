@@ -86,6 +86,10 @@ export class ClientService implements IMessageService {
     return MessageModel.updatePluginState(id, value);
   }
 
+  async updateMessagePluginError(id: string, error: Record<string, any> | null) {
+    return MessageModel.updatePlugin(id, { error });
+  }
+
   async updateMessagePluginArguments(id: string, value: string | Record<string, any>) {
     const args = typeof value === 'string' ? value : JSON.stringify(value);
 

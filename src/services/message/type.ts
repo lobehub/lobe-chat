@@ -21,6 +21,7 @@ export interface IMessageService {
 
   updateMessageError(id: string, error: ChatMessageError): Promise<any>;
   updateMessage(id: string, message: Partial<DB_Message>): Promise<any>;
+  updateMessagePluginError(id: string, error: ChatMessageError | null): Promise<any>;
   updateMessageTTS(id: string, tts: Partial<ChatTTS> | false): Promise<any>;
   updateMessageTranslate(id: string, translate: Partial<ChatTranslate> | false): Promise<any>;
   updateMessagePluginState(id: string, value: Record<string, any>): Promise<any>;
