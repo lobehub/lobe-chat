@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2024-12-09",
+    "version": "1.36.4"
+  },
+  {
     "children": {
       "fixes": ["Support request headers for chat."]
     },
