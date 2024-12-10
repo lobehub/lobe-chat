@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.36.8](https://github.com/lobehub/lobe-chat/compare/v1.36.7...v1.36.8)
+
+<sup>Released on **2024-12-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `GLM-4V-Flash` from Zhipu.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `GLM-4V-Flash` from Zhipu, closes [#4958](https://github.com/lobehub/lobe-chat/issues/4958) ([17ea86c](https://github.com/lobehub/lobe-chat/commit/17ea86c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.7](https://github.com/lobehub/lobe-chat/compare/v1.36.6...v1.36.7)
 
 <sup>Released on **2024-12-10**</sup>
