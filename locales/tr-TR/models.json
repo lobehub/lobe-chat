@@ -659,6 +659,9 @@
   "glm-4v": {
     "description": "GLM-4V, güçlü görüntü anlama ve akıl yürütme yetenekleri sunar, çeşitli görsel görevleri destekler."
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash, hızlı görsel analiz veya toplu görsel işleme gibi sahnelerde, tek bir görüntü anlayışına odaklanarak etkili bir performans sunar."
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus, video içeriği ve çoklu görüntüleri anlama yeteneğine sahiptir, çok modlu görevler için uygundur."
   },
@@ -711,9 +714,6 @@
     "description": "GPT-4, daha büyük bir bağlam penceresi sunarak daha uzun metin girişlerini işleyebilir, geniş bilgi entegrasyonu ve veri analizi gerektiren senaryolar için uygundur."
   },
   "gpt-4-1106-preview": {
-    "description": "En son GPT-4 Turbo modeli görsel işlevselliğe sahiptir. Artık görsel talepler JSON formatı ve fonksiyon çağrıları ile işlenebilir. GPT-4 Turbo, çok modlu görevler için maliyet etkin bir destek sunan geliştirilmiş bir versiyondur. Doğruluk ve verimlilik arasında bir denge sağlar, gerçek zamanlı etkileşim gerektiren uygulama senaryoları için uygundur."
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "En son GPT-4 Turbo modeli görsel işlevselliğe sahiptir. Artık görsel talepler JSON formatı ve fonksiyon çağrıları ile işlenebilir. GPT-4 Turbo, çok modlu görevler için maliyet etkin bir destek sunan geliştirilmiş bir versiyondur. Doğruluk ve verimlilik arasında bir denge sağlar, gerçek zamanlı etkileşim gerektiren uygulama senaryoları için uygundur."
   },
   "gpt-4-32k": {

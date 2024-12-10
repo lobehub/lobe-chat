@@ -659,6 +659,9 @@
   "glm-4v": {
     "description": "GLM-4V cung cấp khả năng hiểu và suy luận hình ảnh mạnh mẽ, hỗ trợ nhiều nhiệm vụ hình ảnh."
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash tập trung vào hiểu hình ảnh đơn lẻ một cách hiệu quả, phù hợp cho các tình huống phân tích hình ảnh nhanh chóng, chẳng hạn như phân tích hình ảnh theo thời gian thực hoặc xử lý hình ảnh hàng loạt."
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus có khả năng hiểu nội dung video và nhiều hình ảnh, phù hợp cho các nhiệm vụ đa phương tiện."
   },
@@ -711,9 +714,6 @@
     "description": "GPT-4 cung cấp một cửa sổ ngữ cảnh lớn hơn, có khả năng xử lý các đầu vào văn bản dài hơn, phù hợp cho các tình huống cần tích hợp thông tin rộng rãi và phân tích dữ liệu."
   },
   "gpt-4-1106-preview": {
-    "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
   },
   "gpt-4-32k": {

@@ -659,6 +659,9 @@
   "glm-4v": {
     "description": "GLM-4V offre potenti capacità di comprensione e ragionamento visivo, supportando vari compiti visivi."
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash si concentra sulla comprensione efficiente di un'unica immagine, adatta a scenari di analisi rapida delle immagini, come l'analisi delle immagini in tempo reale o l'elaborazione di immagini in batch."
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus ha la capacità di comprendere contenuti video e più immagini, adatto per compiti multimodali."
   },
@@ -711,9 +714,6 @@
     "description": "GPT-4 offre una finestra di contesto più ampia, in grado di gestire input testuali più lunghi, adatta a scenari che richiedono un'integrazione ampia delle informazioni e analisi dei dati."
   },
   "gpt-4-1106-preview": {
-    "description": "L'ultimo modello GPT-4 Turbo ha funzionalità visive. Ora, le richieste visive possono essere effettuate utilizzando il formato JSON e le chiamate di funzione. GPT-4 Turbo è una versione potenziata che offre supporto economico per compiti multimodali. Trova un equilibrio tra accuratezza ed efficienza, adatta a scenari di applicazione che richiedono interazioni in tempo reale."
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "L'ultimo modello GPT-4 Turbo ha funzionalità visive. Ora, le richieste visive possono essere effettuate utilizzando il formato JSON e le chiamate di funzione. GPT-4 Turbo è una versione potenziata che offre supporto economico per compiti multimodali. Trova un equilibrio tra accuratezza ed efficienza, adatta a scenari di applicazione che richiedono interazioni in tempo reale."
   },
   "gpt-4-32k": {
