@@ -258,7 +258,7 @@
     "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4.17.12",
     "@types/lodash-es": "^4.17.12",
-    "@types/node": "^20.16.13",
+    "@types/node": "^22.0.0",
     "@types/numeral": "^2.0.5",
     "@types/pg": "^8.11.10",
     "@types/react": "18.3.13",
