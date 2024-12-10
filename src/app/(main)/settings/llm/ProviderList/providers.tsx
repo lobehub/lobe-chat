@@ -27,6 +27,7 @@ import {
   TogetherAIProviderCard,
   UpstageProviderCard,
   XAIProviderCard,
+  VertexAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
@@ -61,6 +62,7 @@ export const useProviderList = (): ProviderItem[] => {
       AnthropicProviderCard,
       BedrockProvider,
       GoogleProviderCard,
+      VertexAIProviderCard,
       DeepSeekProviderCard,
       HuggingFaceProvider,
       OpenRouterProviderCard,
