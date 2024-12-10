@@ -1,14 +1,17 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import qs from 'query-string';
 import { memo } from 'react';
 
-import CloudBanner from '@/features/AlertBanner/CloudBanner';
 import { useQuery } from '@/hooks/useQuery';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import { LayoutProps } from './type';
+
+const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
+const ChangelogModal = dynamic(() => import('@/features/ChangelogModal'), { ssr: false });
 
 const MOBILE_NAV_ROUTES = new Set([
   '/chat',
@@ -31,6 +34,7 @@ const Layout = memo(({ children, nav }: LayoutProps) => {
   return (
     <>
       {showCloudPromotion && <CloudBanner mobile />}
+      <ChangelogModal />
       {children}
       {showNav && nav}
     </>

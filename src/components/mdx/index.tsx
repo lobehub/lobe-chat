@@ -5,6 +5,7 @@ import { FC } from 'react';
 import remarkGfm from 'remark-gfm';
 
 import CodeBlock from './CodeBlock';
+import Image from './Image';
 import Link from './Link';
 
 export const Typography = ({
@@ -31,6 +32,7 @@ export const CustomMDX: FC<MDXRemoteProps & { mobile?: boolean }> = ({ mobile, .
   const list: any = {};
   Object.entries({
     ...mdxComponents,
+    Image: Image,
     a: Link,
     pre: CodeBlock,
     ...rest.components,
