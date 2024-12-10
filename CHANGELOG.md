@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.36.9](https://github.com/lobehub/lobe-chat/compare/v1.36.8...v1.36.9)
+
+<sup>Released on **2024-12-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the clerk user service implement.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Nullptr errors in NextAuth adapter.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the clerk user service implement, closes [#4965](https://github.com/lobehub/lobe-chat/issues/4965) ([059810b](https://github.com/lobehub/lobe-chat/commit/059810b))
+
+#### What's fixed
+
+- **misc**: Nullptr errors in NextAuth adapter, closes [#4960](https://github.com/lobehub/lobe-chat/issues/4960) ([d242ee0](https://github.com/lobehub/lobe-chat/commit/d242ee0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.8](https://github.com/lobehub/lobe-chat/compare/v1.36.7...v1.36.8)
 
 <sup>Released on **2024-12-10**</sup>
