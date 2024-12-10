@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.36.10](https://github.com/lobehub/lobe-chat/compare/v1.36.9...v1.36.10)
+
+<sup>Released on **2024-12-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Clean the `gpt-4-vision-preview` models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Clean the `gpt-4-vision-preview` models, closes [#4967](https://github.com/lobehub/lobe-chat/issues/4967) ([7094ea6](https://github.com/lobehub/lobe-chat/commit/7094ea6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.9](https://github.com/lobehub/lobe-chat/compare/v1.36.8...v1.36.9)
 
 <sup>Released on **2024-12-10**</sup>
