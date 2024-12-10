@@ -31,7 +31,7 @@ export default defineConfig({
       '**/dist/**',
       '**/build/**',
       'src/database/server/**/**',
-      'src/server/services/!(discover|subscription|budget|user)/**/**',
+      'src/server/services/dataImporter/**/**',
     ],
     globals: true,
     server: {
