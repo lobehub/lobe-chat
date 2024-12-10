@@ -55,6 +55,24 @@
   "Baichuan4-Turbo": {
     "description": "模型能力國內第一，在知識百科、長文本、生成創作等中文任務上超越國外主流模型。還具備行業領先的多模態能力，多項權威評測基準表現優異。"
   },
+  "Doubao-lite-128k": {
+    "description": "Doubao-lite 擁有極致的回應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持 128k 上下文窗口的推理和精調。"
+  },
+  "Doubao-lite-32k": {
+    "description": "Doubao-lite 擁有極致的回應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持 32k 上下文窗口的推理和精調。"
+  },
+  "Doubao-lite-4k": {
+    "description": "Doubao-lite 擁有極致的回應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持 4k 上下文窗口的推理和精調。"
+  },
+  "Doubao-pro-128k": {
+    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持 128k 上下文窗口的推理和精調。"
+  },
+  "Doubao-pro-32k": {
+    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持 32k 上下文窗口的推理和精調。"
+  },
+  "Doubao-pro-4k": {
+    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持 4k 上下文窗口的推理和精調。"
+  },
   "ERNIE-3.5-128K": {
     "description": "百度自研的旗艦級大規模語言模型，覆蓋海量中英文語料，具有強大的通用能力，可滿足絕大部分對話問答、創作生成、插件應用場景要求；支持自動對接百度搜索插件，保障問答信息時效。"
   },
@@ -241,6 +259,21 @@
   },
   "SenseChat-Turbo": {
     "description": "適用於快速問答、模型微調場景"
+  },
+  "Skylark2-lite-8k": {
+    "description": "雲雀（Skylark）第二代模型，Skylark2-lite 模型有較高的回應速度，適用於實時性要求高、成本敏感、對模型精度要求不高的場景，上下文窗口長度為 8k。"
+  },
+  "Skylark2-pro-32k": {
+    "description": "雲雀（Skylark）第二代模型，Skylark2-pro 版本有較高的模型精度，適用於較為複雜的文本生成場景，如專業領域文案生成、小說創作、高品質翻譯等，上下文窗口長度為 32k。"
+  },
+  "Skylark2-pro-4k": {
+    "description": "雲雀（Skylark）第二代模型，Skylark2-pro 模型有較高的模型精度，適用於較為複雜的文本生成場景，如專業領域文案生成、小說創作、高品質翻譯等，上下文窗口長度為 4k。"
+  },
+  "Skylark2-pro-character-4k": {
+    "description": "雲雀（Skylark）第二代模型，Skylark2-pro-character 模型具有優秀的角色扮演和聊天能力，擅長根據用戶 prompt 要求扮演不同角色與用戶展開聊天，角色風格突出，對話內容自然流暢，適用於構建聊天機器人、虛擬助手和在線客服等場景，有較高的回應速度。"
+  },
+  "Skylark2-pro-turbo-8k": {
+    "description": "雲雀（Skylark）第二代模型，Skylark2-pro-turbo-8k 推理更快，成本更低，上下文窗口長度為 8k。"
   },
   "THUDM/chatglm3-6b": {
     "description": "ChatGLM3-6B 是 ChatGLM 系列的開源模型，由智譜 AI 開發。該模型保留了前代模型的優秀特性，如對話流暢和部署門檻低，同時引入了新的特性。它採用了更多樣的訓練數據、更充分的訓練步數和更合理的訓練策略，在 10B 以下的預訓練模型中表現出色。ChatGLM3-6B 支持多輪對話、工具調用、代碼執行和 Agent 任務等複雜場景。除對話模型外，還開源了基礎模型 ChatGLM-6B-Base 和長文本對話模型 ChatGLM3-6B-32K。該模型對學術研究完全開放，在登記後也允許免費商業使用"
@@ -476,6 +509,9 @@
   "cohere-command-r-plus": {
     "description": "Command R+是一個最先進的RAG優化模型，旨在應對企業級工作負載。"
   },
+  "command-light": {
+    "description": ""
+  },
   "command-r": {
     "description": "Command R 是優化用於對話和長上下文任務的 LLM，特別適合動態交互與知識管理。"
   },
@@ -539,6 +575,9 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 是最新的實驗性模型，在文本和多模態用例中都有顯著的性能提升。"
   },
+  "gemini-1.5-flash-exp-0827": {
+    "description": "Gemini 1.5 Flash 0827 提供了優化後的多模態處理能力，適用多種複雜任務場景。"
+  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash 是 Google 最新的多模態 AI 模型，具備快速處理能力，支持文本、圖像和視頻輸入，適用於多種任務的高效擴展。"
   },
@@ -548,6 +587,12 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 是最新的生產就緒模型，提供更高品質的輸出，特別在數學、長上下文和視覺任務方面有顯著提升。"
   },
+  "gemini-1.5-pro-exp-0801": {
+    "description": "Gemini 1.5 Pro 0801 提供出色的多模態處理能力，為應用開發帶來更大靈活性。"
+  },
+  "gemini-1.5-pro-exp-0827": {
+    "description": "Gemini 1.5 Pro 0827 結合最新優化技術，帶來更高效的多模態數據處理能力。"
+  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro 支持高達 200 萬個 tokens，是中型多模態模型的理想選擇，適用於複雜任務的多方面支持。"
   },
@@ -556,6 +601,9 @@
   },
   "gemini-exp-1121": {
     "description": "Gemini Exp 1121 是 Google 最新的實驗性多模態 AI 模型，具備快速處理能力，支持文本、圖像和視頻輸入，適用於多種任務的高效擴展。"
+  },
+  "gemini-exp-1206": {
+    "description": "Gemini Exp 1206 是 Google 最新的實驗性多模態 AI 模型，與歷史版本相比有一定的質量提升。"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 適合中小規模任務處理，兼具成本效益。"
@@ -611,6 +659,9 @@
   "glm-4v": {
     "description": "GLM-4V提供強大的圖像理解與推理能力，支持多種視覺任務。"
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash 專注於高效的單一圖像理解，適用於快速圖像解析的場景，例如即時圖像分析或批量圖像處理。"
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus具備對視頻內容及多圖片的理解能力，適合多模態任務。"
   },
@@ -647,6 +698,12 @@
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo，適用於各種文本生成和理解任務，Currently points to gpt-3.5-turbo-0125"
   },
+  "gpt-35-turbo": {
+    "description": "GPT 3.5 Turbo，OpenAI 提供的高效模型，適用於聊天和文本生成任務，支持並行函數調用。"
+  },
+  "gpt-35-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k，高容量文本生成模型，適合複雜任務。"
+  },
   "gpt-4": {
     "description": "GPT-4提供了一個更大的上下文窗口，能夠處理更長的文本輸入，適用於需要廣泛信息整合和數據分析的場景。"
   },
@@ -657,9 +714,6 @@
     "description": "GPT-4提供了一個更大的上下文窗口，能夠處理更長的文本輸入，適用於需要廣泛信息整合和數據分析的場景。"
   },
   "gpt-4-1106-preview": {
-    "description": "最新的GPT-4 Turbo模型具備視覺功能。現在，視覺請求可以使用JSON模式和函數調用。GPT-4 Turbo是一個增強版本，為多模態任務提供成本效益高的支持。它在準確性和效率之間找到平衡，適合需要進行實時交互的應用程序場景。"
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "最新的GPT-4 Turbo模型具備視覺功能。現在，視覺請求可以使用JSON模式和函數調用。GPT-4 Turbo是一個增強版本，為多模態任務提供成本效益高的支持。它在準確性和效率之間找到平衡，適合需要進行實時交互的應用程序場景。"
   },
   "gpt-4-32k": {
@@ -689,6 +743,9 @@
   "gpt-4o-2024-08-06": {
     "description": "ChatGPT-4o是一款動態模型，實時更新以保持當前最新版本。它結合了強大的語言理解與生成能力，適合於大規模應用場景，包括客戶服務、教育和技術支持。"
   },
+  "gpt-4o-2024-11-20": {
+    "description": "ChatGPT-4o 是一款動態模型，實時更新以保持當前最新版本。它結合了強大的語言理解與生成能力，適合於大規模應用場景，包括客戶服務、教育和技術支持。"
+  },
   "gpt-4o-mini": {
     "description": "GPT-4o mini是OpenAI在GPT-4 Omni之後推出的最新模型，支持圖文輸入並輸出文本。作為他們最先進的小型模型，它比其他近期的前沿模型便宜很多，並且比GPT-3.5 Turbo便宜超過60%。它保持了最先進的智能，同時具有顯著的性價比。GPT-4o mini在MMLU測試中獲得了82%的得分，目前在聊天偏好上排名高於GPT-4。"
   },
@@ -706,6 +763,9 @@
   },
   "hunyuan-functioncall": {
     "description": "混元最新 MOE 架構 FunctionCall 模型，經過高質量的 FunctionCall 數據訓練，上下文窗口達 32K，在多個維度的評測指標上處於領先。"
+  },
+  "hunyuan-large": {
+    "description": ""
   },
   "hunyuan-lite": {
     "description": "升級為 MOE 結構，上下文窗口為 256k，在 NLP、代碼、數學、行業等多項評測集上領先眾多開源模型。"
@@ -786,6 +846,9 @@
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
+  },
+  "llama-3.3-70b-versatile": {
+    "description": "Meta Llama 3.3 多語言大語言模型 (LLM) 是 70B（文本輸入/文本輸出）中的預訓練和指令調整生成模型。Llama 3.3 指令調整的純文本模型針對多語言對話用例進行了優化，並且在常見行業基準上優於許多可用的開源和封閉式聊天模型。"
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B 提供無與倫比的複雜性處理能力，為高要求項目量身定制。"
@@ -1094,11 +1157,20 @@
   "qwen-math-turbo-latest": {
     "description": "通義千問數學模型是專門用於數學解題的語言模型。"
   },
+  "qwen-max": {
+    "description": "通義千問千億級別超大規模語言模型，支持中文、英文等不同語言輸入，當前通義千問 2.5 產品版本背後的 API 模型。"
+  },
   "qwen-max-latest": {
     "description": "通義千問千億級別超大規模語言模型，支持中文、英文等不同語言輸入，當前通義千問2.5產品版本背後的API模型。"
   },
+  "qwen-plus": {
+    "description": "通義千問超大規模語言模型增強版，支持中文、英文等不同語言輸入。"
+  },
   "qwen-plus-latest": {
     "description": "通義千問超大規模語言模型增強版，支持中文、英文等不同語言輸入。"
+  },
+  "qwen-turbo": {
+    "description": "通義千問超大規模語言模型，支持中文、英文等不同語言輸入。"
   },
   "qwen-turbo-latest": {
     "description": "通義千問超大規模語言模型，支持中文、英文等不同語言輸入。"
@@ -1136,11 +1208,17 @@
   "qwen2.5-7b-instruct": {
     "description": "通義千問2.5對外開源的7B規模的模型。"
   },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "通義千問代碼模型開源版。"
+  },
   "qwen2.5-coder-32b-instruct": {
     "description": "通義千問代碼模型開源版。"
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "通義千問代碼模型開源版。"
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Qwen-Math 模型具有強大的數學解題能力。"
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Qwen-Math模型具有強大的數學解題能力。"

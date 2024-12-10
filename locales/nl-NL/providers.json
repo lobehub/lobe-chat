@@ -34,6 +34,9 @@
   "groq": {
     "description": "De LPU-inferentie-engine van Groq presteert uitstekend in de nieuwste onafhankelijke benchmarktests voor grote taalmodellen (LLM), en herdefinieert de normen voor AI-oplossingen met zijn verbazingwekkende snelheid en efficiëntie. Groq is een vertegenwoordiger van onmiddellijke inferentiesnelheid en toont goede prestaties in cloudgebaseerde implementaties."
   },
+  "higress": {
+    "description": ""
+  },
   "huggingface": {
     "description": "HuggingFace Inference API biedt een snelle en gratis manier om duizenden modellen te verkennen voor verschillende taken. Of u nu prototypes voor nieuwe applicaties ontwerpt of de mogelijkheden van machine learning uitprobeert, deze API geeft u directe toegang tot hoogpresterende modellen in meerdere domeinen."
   },

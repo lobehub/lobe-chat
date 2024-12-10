@@ -55,6 +55,24 @@
   "Baichuan4-Turbo": {
     "description": "Mô hình có khả năng hàng đầu trong nước, vượt trội hơn các mô hình chính thống nước ngoài trong các nhiệm vụ tiếng Trung như bách khoa toàn thư, văn bản dài và sáng tạo nội dung. Cũng có khả năng đa phương tiện hàng đầu trong ngành, thể hiện xuất sắc trong nhiều tiêu chuẩn đánh giá uy tín."
   },
+  "Doubao-lite-128k": {
+    "description": "Doubao-lite có tốc độ phản hồi cực nhanh, giá trị tốt hơn, cung cấp sự lựa chọn linh hoạt cho khách hàng trong nhiều tình huống khác nhau. Hỗ trợ suy diễn và tinh chỉnh trong ngữ cảnh 128k."
+  },
+  "Doubao-lite-32k": {
+    "description": "Doubao-lite có tốc độ phản hồi cực nhanh, giá trị tốt hơn, cung cấp sự lựa chọn linh hoạt cho khách hàng trong nhiều tình huống khác nhau. Hỗ trợ suy diễn và tinh chỉnh trong ngữ cảnh 32k."
+  },
+  "Doubao-lite-4k": {
+    "description": "Doubao-lite có tốc độ phản hồi cực nhanh, giá trị tốt hơn, cung cấp sự lựa chọn linh hoạt cho khách hàng trong nhiều tình huống khác nhau. Hỗ trợ suy diễn và tinh chỉnh trong ngữ cảnh 4k."
+  },
+  "Doubao-pro-128k": {
+    "description": "Mô hình chính có hiệu quả tốt nhất, phù hợp để xử lý các nhiệm vụ phức tạp, có hiệu quả tốt trong các tình huống như hỏi đáp tham khảo, tóm tắt, sáng tác, phân loại văn bản, và nhập vai. Hỗ trợ suy diễn và tinh chỉnh trong ngữ cảnh 128k."
+  },
+  "Doubao-pro-32k": {
+    "description": "Mô hình chính có hiệu quả tốt nhất, phù hợp để xử lý các nhiệm vụ phức tạp, có hiệu quả tốt trong các tình huống như hỏi đáp tham khảo, tóm tắt, sáng tác, phân loại văn bản, và nhập vai. Hỗ trợ suy diễn và tinh chỉnh trong ngữ cảnh 32k."
+  },
+  "Doubao-pro-4k": {
+    "description": "Mô hình chính có hiệu quả tốt nhất, phù hợp để xử lý các nhiệm vụ phức tạp, có hiệu quả tốt trong các tình huống như hỏi đáp tham khảo, tóm tắt, sáng tác, phân loại văn bản, và nhập vai. Hỗ trợ suy diễn và tinh chỉnh trong ngữ cảnh 4k."
+  },
   "ERNIE-3.5-128K": {
     "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, có thể đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và các tình huống ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm của Baidu, đảm bảo thông tin hỏi đáp luôn được cập nhật kịp thời."
   },
@@ -241,6 +259,21 @@
   },
   "SenseChat-Turbo": {
     "description": "Phù hợp cho các tình huống hỏi đáp nhanh và tinh chỉnh mô hình."
+  },
+  "Skylark2-lite-8k": {
+    "description": "Mô hình thế hệ thứ hai Skylark, mô hình Skylark2-lite có tốc độ phản hồi cao, phù hợp cho các tình huống yêu cầu tính thời gian thực cao, nhạy cảm với chi phí, không yêu cầu độ chính xác mô hình cao, chiều dài cửa sổ ngữ cảnh là 8k."
+  },
+  "Skylark2-pro-32k": {
+    "description": "Mô hình thế hệ thứ hai Skylark, phiên bản Skylark2-pro có độ chính xác cao hơn, phù hợp cho các tình huống tạo văn bản phức tạp, như tạo nội dung chuyên ngành, sáng tác tiểu thuyết, dịch thuật chất lượng cao, chiều dài cửa sổ ngữ cảnh là 32k."
+  },
+  "Skylark2-pro-4k": {
+    "description": "Mô hình thế hệ thứ hai Skylark, mô hình Skylark2-pro có độ chính xác cao hơn, phù hợp cho các tình huống tạo văn bản phức tạp, như tạo nội dung chuyên ngành, sáng tác tiểu thuyết, dịch thuật chất lượng cao, chiều dài cửa sổ ngữ cảnh là 4k."
+  },
+  "Skylark2-pro-character-4k": {
+    "description": "Mô hình thế hệ thứ hai Skylark, mô hình Skylark2-pro-character có khả năng nhập vai và trò chuyện xuất sắc, giỏi nhập vai theo yêu cầu của người dùng, tạo ra những cuộc trò chuyện tự nhiên, phù hợp để xây dựng chatbot, trợ lý ảo và dịch vụ khách hàng trực tuyến, có tốc độ phản hồi cao."
+  },
+  "Skylark2-pro-turbo-8k": {
+    "description": "Mô hình thế hệ thứ hai Skylark, mô hình Skylark2-pro-turbo-8k có tốc độ suy diễn nhanh hơn, chi phí thấp hơn, chiều dài cửa sổ ngữ cảnh là 8k."
   },
   "THUDM/chatglm3-6b": {
     "description": "ChatGLM3-6B là mô hình mã nguồn mở trong loạt ChatGLM, được phát triển bởi Zhizhu AI. Mô hình này giữ lại những đặc điểm xuất sắc của thế hệ trước, như khả năng đối thoại mượt mà và ngưỡng triển khai thấp, đồng thời giới thiệu các tính năng mới. Nó sử dụng dữ liệu đào tạo đa dạng hơn, số bước đào tạo đầy đủ hơn và chiến lược đào tạo hợp lý hơn, thể hiện xuất sắc trong các mô hình tiền huấn luyện dưới 10B. ChatGLM3-6B hỗ trợ đối thoại nhiều vòng, gọi công cụ, thực thi mã và các nhiệm vụ Agent trong các tình huống phức tạp. Ngoài mô hình đối thoại, còn có mô hình cơ bản ChatGLM-6B-Base và mô hình đối thoại văn bản dài ChatGLM3-6B-32K. Mô hình hoàn toàn mở cho nghiên cứu học thuật và cho phép sử dụng thương mại miễn phí sau khi đăng ký."
@@ -476,6 +509,9 @@
   "cohere-command-r-plus": {
     "description": "Command R+ là mô hình tối ưu hóa RAG hiện đại, được thiết kế để xử lý khối lượng công việc cấp doanh nghiệp."
   },
+  "command-light": {
+    "description": ""
+  },
   "command-r": {
     "description": "Command R là LLM được tối ưu hóa cho các nhiệm vụ đối thoại và ngữ cảnh dài, đặc biệt phù hợp cho tương tác động và quản lý kiến thức."
   },
@@ -539,6 +575,9 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 là mô hình thử nghiệm mới nhất, có sự cải thiện đáng kể về hiệu suất trong các trường hợp sử dụng văn bản và đa phương thức."
   },
+  "gemini-1.5-flash-exp-0827": {
+    "description": "Gemini 1.5 Flash 0827 cung cấp khả năng xử lý đa phương tiện tối ưu, áp dụng cho nhiều tình huống tác vụ phức tạp."
+  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash là mô hình AI đa phương thức mới nhất của Google, có khả năng xử lý nhanh, hỗ trợ đầu vào văn bản, hình ảnh và video, phù hợp cho việc mở rộng hiệu quả cho nhiều nhiệm vụ."
   },
@@ -548,6 +587,12 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 là mô hình sẵn sàng cho sản xuất mới nhất, cung cấp đầu ra chất lượng cao hơn, đặc biệt là trong các nhiệm vụ toán học, ngữ cảnh dài và thị giác."
   },
+  "gemini-1.5-pro-exp-0801": {
+    "description": "Gemini 1.5 Pro 0801 cung cấp khả năng xử lý đa phương tiện xuất sắc, mang lại tính linh hoạt cao hơn cho việc phát triển ứng dụng."
+  },
+  "gemini-1.5-pro-exp-0827": {
+    "description": "Gemini 1.5 Pro 0827 kết hợp công nghệ tối ưu hóa mới nhất, mang lại khả năng xử lý dữ liệu đa phương tiện hiệu quả hơn."
+  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro hỗ trợ lên đến 2 triệu tokens, là lựa chọn lý tưởng cho mô hình đa phương thức trung bình, phù hợp cho hỗ trợ đa diện cho các nhiệm vụ phức tạp."
   },
@@ -556,6 +601,9 @@
   },
   "gemini-exp-1121": {
     "description": "Gemini Exp 1121 là mô hình AI đa phương thức thử nghiệm mới nhất của Google, có khả năng xử lý nhanh chóng, hỗ trợ đầu vào văn bản, hình ảnh và video, phù hợp cho việc mở rộng hiệu quả cho nhiều nhiệm vụ."
+  },
+  "gemini-exp-1206": {
+    "description": "Gemini Exp 1206 là mô hình AI đa phương tiện thử nghiệm mới nhất của Google, có sự cải thiện về chất lượng so với các phiên bản trước."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B phù hợp cho việc xử lý các nhiệm vụ quy mô vừa và nhỏ, đồng thời mang lại hiệu quả chi phí."
@@ -611,6 +659,9 @@
   "glm-4v": {
     "description": "GLM-4V cung cấp khả năng hiểu và suy luận hình ảnh mạnh mẽ, hỗ trợ nhiều nhiệm vụ hình ảnh."
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash tập trung vào hiểu hình ảnh đơn lẻ một cách hiệu quả, phù hợp cho các tình huống phân tích hình ảnh nhanh chóng, chẳng hạn như phân tích hình ảnh theo thời gian thực hoặc xử lý hình ảnh hàng loạt."
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus có khả năng hiểu nội dung video và nhiều hình ảnh, phù hợp cho các nhiệm vụ đa phương tiện."
   },
@@ -647,6 +698,12 @@
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo, phù hợp cho nhiều nhiệm vụ sinh và hiểu văn bản, hiện tại trỏ đến gpt-3.5-turbo-0125."
   },
+  "gpt-35-turbo": {
+    "description": "GPT 3.5 Turbo, mô hình hiệu quả do OpenAI cung cấp, phù hợp cho các tác vụ trò chuyện và tạo văn bản, hỗ trợ gọi hàm song song."
+  },
+  "gpt-35-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k, mô hình tạo văn bản dung lượng cao, phù hợp cho các nhiệm vụ phức tạp."
+  },
   "gpt-4": {
     "description": "GPT-4 cung cấp một cửa sổ ngữ cảnh lớn hơn, có khả năng xử lý các đầu vào văn bản dài hơn, phù hợp cho các tình huống cần tích hợp thông tin rộng rãi và phân tích dữ liệu."
   },
@@ -657,9 +714,6 @@
     "description": "GPT-4 cung cấp một cửa sổ ngữ cảnh lớn hơn, có khả năng xử lý các đầu vào văn bản dài hơn, phù hợp cho các tình huống cần tích hợp thông tin rộng rãi và phân tích dữ liệu."
   },
   "gpt-4-1106-preview": {
-    "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
   },
   "gpt-4-32k": {
@@ -689,6 +743,9 @@
   "gpt-4o-2024-08-06": {
     "description": "ChatGPT-4o là một mô hình động, được cập nhật theo thời gian thực để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và sinh ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
   },
+  "gpt-4o-2024-11-20": {
+    "description": "ChatGPT-4o là một mô hình động, được cập nhật liên tục để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và tạo ngôn ngữ mạnh mẽ, phù hợp cho nhiều ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
+  },
   "gpt-4o-mini": {
     "description": "GPT-4o mini là mô hình mới nhất do OpenAI phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và đầu ra văn bản. Là mô hình nhỏ gọn tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng cao hơn GPT-4 về sở thích trò chuyện."
   },
@@ -706,6 +763,9 @@
   },
   "hunyuan-functioncall": {
     "description": "Mô hình FunctionCall với cấu trúc MOE mới nhất của Hunyuan, được huấn luyện trên dữ liệu FunctionCall chất lượng cao, với cửa sổ ngữ cảnh đạt 32K, dẫn đầu trong nhiều chỉ số đánh giá."
+  },
+  "hunyuan-large": {
+    "description": ""
   },
   "hunyuan-lite": {
     "description": "Nâng cấp lên cấu trúc MOE, với cửa sổ ngữ cảnh 256k, dẫn đầu nhiều mô hình mã nguồn mở trong các bộ đánh giá NLP, mã, toán học, ngành nghề, v.v."
@@ -786,6 +846,9 @@
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 được thiết kế để xử lý các nhiệm vụ kết hợp dữ liệu hình ảnh và văn bản. Nó thể hiện xuất sắc trong các nhiệm vụ mô tả hình ảnh và hỏi đáp hình ảnh, vượt qua rào cản giữa tạo ngôn ngữ và suy luận hình ảnh."
+  },
+  "llama-3.3-70b-versatile": {
+    "description": "Mô hình ngôn ngữ lớn Meta Llama 3.3 (LLM) đa ngôn ngữ là mô hình tạo ra dựa trên 70B (đầu vào/đầu ra văn bản) đã được huấn luyện và điều chỉnh theo chỉ dẫn. Mô hình thuần văn bản Llama 3.3 được tối ưu hóa cho các trường hợp hội thoại đa ngôn ngữ và vượt trội hơn nhiều mô hình trò chuyện mã nguồn mở và đóng khác trên các tiêu chuẩn ngành thông thường."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B cung cấp khả năng xử lý phức tạp vô song, được thiết kế riêng cho các dự án yêu cầu cao."
@@ -1094,11 +1157,20 @@
   "qwen-math-turbo-latest": {
     "description": "Mô hình toán học Qwen được thiết kế đặc biệt để giải quyết các bài toán toán học."
   },
+  "qwen-max": {
+    "description": "Mô hình ngôn ngữ quy mô lớn Qwen cấp tỷ, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác, là mô hình API đằng sau phiên bản sản phẩm Qwen 2.5 hiện tại."
+  },
   "qwen-max-latest": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen với hàng trăm tỷ tham số, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác, là mô hình API đứng sau phiên bản sản phẩm Qwen 2.5 hiện tại."
   },
+  "qwen-plus": {
+    "description": "Mô hình ngôn ngữ quy mô lớn Qwen phiên bản nâng cao, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
+  },
   "qwen-plus-latest": {
     "description": "Phiên bản nâng cao của mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
+  },
+  "qwen-turbo": {
+    "description": "Mô hình ngôn ngữ quy mô lớn Qwen hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
   },
   "qwen-turbo-latest": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
@@ -1136,11 +1208,17 @@
   "qwen2.5-7b-instruct": {
     "description": "Mô hình 7B quy mô mở nguồn của Qwen 2.5."
   },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "Phiên bản mã nguồn mở của mô hình mã Qwen."
+  },
   "qwen2.5-coder-32b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã Qwen."
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã Qwen."
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Mô hình Qwen-Math có khả năng giải toán mạnh mẽ."
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Mô hình Qwen-Math có khả năng giải quyết bài toán toán học mạnh mẽ."

@@ -50,10 +50,28 @@
     "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
   },
   "Baichuan4-Air": {
-    "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
+    "description": ""
   },
   "Baichuan4-Turbo": {
-    "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
+    "description": ""
+  },
+  "Doubao-lite-128k": {
+    "description": "Doubao-lite 拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持128k上下文窗口的推理和精调。"
+  },
+  "Doubao-lite-32k": {
+    "description": "Doubao-lite拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持32k上下文窗口的推理和精调。"
+  },
+  "Doubao-lite-4k": {
+    "description": "Doubao-lite拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持4k上下文窗口的推理和精调。"
+  },
+  "Doubao-pro-128k": {
+    "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持128k上下文窗口的推理和精调。"
+  },
+  "Doubao-pro-32k": {
+    "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持32k上下文窗口的推理和精调。"
+  },
+  "Doubao-pro-4k": {
+    "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持4k上下文窗口的推理和精调。"
   },
   "ERNIE-3.5-128K": {
     "description": "百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。"
@@ -241,6 +259,21 @@
   },
   "SenseChat-Turbo": {
     "description": "适用于快速问答、模型微调场景"
+  },
+  "Skylark2-lite-8k": {
+    "description": "云雀（Skylark）第二代模型，Skylark2-lite模型有较高的响应速度，适用于实时性要求高、成本敏感、对模型精度要求不高的场景，上下文窗口长度为8k。"
+  },
+  "Skylark2-pro-32k": {
+    "description": "云雀（Skylark）第二代模型，Skylark2-pro版本有较高的模型精度，适用于较为复杂的文本生成场景，如专业领域文案生成、小说创作、高质量翻译等，上下文窗口长度为32k。"
+  },
+  "Skylark2-pro-4k": {
+    "description": "云雀（Skylark）第二代模型，Skylark2-pro模型有较高的模型精度，适用于较为复杂的文本生成场景，如专业领域文案生成、小说创作、高质量翻译等，上下文窗口长度为4k。"
+  },
+  "Skylark2-pro-character-4k": {
+    "description": "云雀（Skylark）第二代模型，Skylark2-pro-character模型具有优秀的角色扮演和聊天能力，擅长根据用户prompt要求扮演不同角色与用户展开聊天，角色风格突出，对话内容自然流畅，适用于构建聊天机器人、虚拟助手和在线客服等场景，有较高的响应速度。"
+  },
+  "Skylark2-pro-turbo-8k": {
+    "description": "云雀（Skylark）第二代模型，Skylark2-pro-turbo-8k推理更快，成本更低，上下文窗口长度为8k。"
   },
   "THUDM/chatglm3-6b": {
     "description": "ChatGLM3-6B 是 ChatGLM 系列的开源模型，由智谱 AI 开发。该模型保留了前代模型的优秀特性，如对话流畅和部署门槛低，同时引入了新的特性。它采用了更多样的训练数据、更充分的训练步数和更合理的训练策略，在 10B 以下的预训练模型中表现出色。ChatGLM3-6B 支持多轮对话、工具调用、代码执行和 Agent 任务等复杂场景。除对话模型外，还开源了基础模型 ChatGLM-6B-Base 和长文本对话模型 ChatGLM3-6B-32K。该模型对学术研究完全开放，在登记后也允许免费商业使用"
@@ -476,11 +509,14 @@
   "cohere-command-r-plus": {
     "description": "Command R+是一个最先进的RAG优化模型，旨在应对企业级工作负载。"
   },
+  "command-light": {
+    "description": ""
+  },
   "command-r": {
-    "description": "Command R 是优化用于对话和长上下文任务的LLM，特别适合动态交互与知识管理。"
+    "description": ""
   },
   "command-r-plus": {
-    "description": "Command R+ 是一款高性能的大型语言模型，专为真实企业场景和复杂应用而设计。"
+    "description": ""
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct 提供高可靠性的指令处理能力，支持多行业应用。"
@@ -539,14 +575,23 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 是最新的实验性模型，在文本和多模态用例中都有显著的性能提升。"
   },
+  "gemini-1.5-flash-exp-0827": {
+    "description": "Gemini 1.5 Flash 0827 提供了优化后的多模态处理能力，适用多种复杂任务场景。"
+  },
   "gemini-1.5-flash-latest": {
-    "description": "Gemini 1.5 Flash 是 Google 最新的多模态AI模型，具备快速处理能力，支持文本、图像和视频输入，适用于多种任务的高效扩展。"
+    "description": "Gemini 1.5 Flash 是Google最新的多模态AI模型，具备快速处理能力，支持文本、图像和视频输入，适用于多种任务的高效扩展。"
   },
   "gemini-1.5-pro-001": {
     "description": "Gemini 1.5 Pro 001 是可扩展的多模态AI解决方案，支持广泛的复杂任务。"
   },
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 是最新的生产就绪模型，提供更高质量的输出，特别在数学、长上下文和视觉任务方面有显著提升。"
+  },
+  "gemini-1.5-pro-exp-0801": {
+    "description": "Gemini 1.5 Pro 0801 提供出色的多模态处理能力，为应用开发带来更大灵活性。"
+  },
+  "gemini-1.5-pro-exp-0827": {
+    "description": "Gemini 1.5 Pro 0827 结合最新优化技术，带来更高效的多模态数据处理能力。"
   },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro 支持高达200万个tokens，是中型多模态模型的理想选择，适用于复杂任务的多方面支持。"
@@ -555,7 +600,10 @@
     "description": "Gemini Exp 1114 是 Google 的实验性多模态AI模型，对输出质量有一定改进。"
   },
   "gemini-exp-1121": {
-    "description": "Gemini Exp 1121 是 Google 最新的实验性多模态AI模型，拥有改进的编码、推理和视觉能力。"
+    "description": "Gemini Exp 1121 是 Google 的实验性多模态AI模型，拥有改进的编码、推理和视觉能力。"
+  },
+  "gemini-exp-1206": {
+    "description": "Gemini Exp 1206 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升。"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 适合中小规模任务处理，兼具成本效益。"
@@ -611,6 +659,9 @@
   "glm-4v": {
     "description": "GLM-4V 提供强大的图像理解与推理能力，支持多种视觉任务。"
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash 专注于高效的单一图像理解，适用于快速图像解析的场景，例如实时图像分析或批量图像处理。"
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus 具备对视频内容及多图片的理解能力，适合多模态任务。"
   },
@@ -647,8 +698,14 @@
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125"
   },
+  "gpt-35-turbo": {
+    "description": "GPT 3.5 Turbo，OpenAI提供的高效模型，适用于聊天和文本生成任务，支持并行函数调用。"
+  },
+  "gpt-35-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k，高容量文本生成模型，适合复杂任务。"
+  },
   "gpt-4": {
-    "description": "GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。"
+    "description": "GPT 4 Turbo，多模态模型，提供杰出的语言理解和生成能力，同时支持图像输入。"
   },
   "gpt-4-0125-preview": {
     "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。"
@@ -657,9 +714,6 @@
     "description": "GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。"
   },
   "gpt-4-1106-preview": {
-    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。"
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。"
   },
   "gpt-4-32k": {
@@ -678,7 +732,7 @@
     "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。"
   },
   "gpt-4-vision-preview": {
-    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。"
+    "description": "GPT-4 视觉预览版，专为图像分析和处理任务设计。"
   },
   "gpt-4o": {
     "description": "OpenAI GPT-4系列中最先进的多模态模型，可以处理文本和图像输入。"
@@ -687,6 +741,9 @@
     "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
   },
   "gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
+  },
+  "gpt-4o-2024-11-20": {
     "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
   },
   "gpt-4o-mini": {
@@ -706,6 +763,9 @@
   },
   "hunyuan-functioncall": {
     "description": "混元最新 MOE 架构 FunctionCall 模型，经过高质量的 FunctionCall 数据训练，上下文窗口达 32K，在多个维度的评测指标上处于领先。"
+  },
+  "hunyuan-large": {
+    "description": ""
   },
   "hunyuan-lite": {
     "description": "升级为 MOE 结构，上下文窗口为 256k ，在 NLP，代码，数学，行业等多项评测集上领先众多开源模型。"
@@ -786,6 +846,9 @@
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。"
+  },
+  "llama-3.3-70b-versatile": {
+    "description": "Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。"
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B 提供无与伦比的复杂性处理能力，为高要求项目量身定制。"
@@ -957,13 +1020,13 @@
     "description": "Mistral 是 Mistral AI 发布的 7B 模型，适合多变的语言处理需求。"
   },
   "mistral-large": {
-    "description": "Mixtral Large 是 Mistral 的旗舰模型，结合代码生成、数学和推理的能力，支持 128k 上下文窗口。"
+    "description": "Mistral的旗舰模型，适合需要大规模推理能力或高度专业化的复杂任务（合成文本生成、代码生成、RAG或代理）。"
   },
   "mistral-large-latest": {
     "description": "Mistral Large是旗舰大模型，擅长多语言任务、复杂推理和代码生成，是高端应用的理想选择。"
   },
   "mistral-nemo": {
-    "description": "Mistral Nemo 由 Mistral AI 和 NVIDIA 合作推出，是高效性能的 12B 模型。"
+    "description": "Mistral Nemo是一种尖端的语言模型（LLM），在其尺寸类别中拥有最先进的推理、世界知识和编码能力。"
   },
   "mistral-small": {
     "description": "Mistral Small可用于任何需要高效率和低延迟的基于语言的任务。"
@@ -1094,11 +1157,20 @@
   "qwen-math-turbo-latest": {
     "description": "通义千问数学模型是专门用于数学解题的语言模型。"
   },
+  "qwen-max": {
+    "description": "通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型。"
+  },
   "qwen-max-latest": {
     "description": "通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型。"
   },
+  "qwen-plus": {
+    "description": "通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。"
+  },
   "qwen-plus-latest": {
     "description": "通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。"
+  },
+  "qwen-turbo": {
+    "description": "通义千问超大规模语言模型，支持中文、英文等不同语言输入。"
   },
   "qwen-turbo-latest": {
     "description": "通义千问超大规模语言模型，支持中文、英文等不同语言输入。"
@@ -1136,11 +1208,17 @@
   "qwen2.5-7b-instruct": {
     "description": "通义千问2.5对外开源的7B规模的模型。"
   },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "通义千问代码模型开源版。"
+  },
   "qwen2.5-coder-32b-instruct": {
     "description": "通义千问代码模型开源版。"
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "通义千问代码模型开源版。"
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Qwen-Math 模型具有强大的数学解题能力。"
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Qwen-Math 模型具有强大的数学解题能力。"
