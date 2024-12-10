@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add GLM-4V-Flash from Zhipu."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.8"
+  },
+  {
+    "children": {
       "fixes": ["Fix pricing with 0 digit."]
     },
     "date": "2024-12-10",
