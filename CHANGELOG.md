@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.36.7](https://github.com/lobehub/lobe-chat/compare/v1.36.6...v1.36.7)
+
+<sup>Released on **2024-12-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix pricing with 0 digit.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix pricing with 0 digit, closes [#4964](https://github.com/lobehub/lobe-chat/issues/4964) ([c1061b4](https://github.com/lobehub/lobe-chat/commit/c1061b4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.6](https://github.com/lobehub/lobe-chat/compare/v1.36.5...v1.36.6)
 
 <sup>Released on **2024-12-10**</sup>
