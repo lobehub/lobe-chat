@@ -34,6 +34,9 @@
   "groq": {
     "description": "Silnik inferencyjny LPU firmy Groq wyróżnia się w najnowszych niezależnych testach benchmarkowych dużych modeli językowych (LLM), redefiniując standardy rozwiązań AI dzięki niesamowitej szybkości i wydajności. Groq jest reprezentantem natychmiastowej szybkości inferencji, wykazując dobrą wydajność w wdrożeniach opartych na chmurze."
   },
+  "higress": {
+    "description": ""
+  },
   "huggingface": {
     "description": "HuggingFace Inference API oferuje szybki i bezpłatny sposób na eksplorację tysięcy modeli, które nadają się do różnych zadań. Niezależnie od tego, czy prototypujesz nową aplikację, czy próbujesz funkcji uczenia maszynowego, to API zapewnia natychmiastowy dostęp do wysokowydajnych modeli z wielu dziedzin."
   },
