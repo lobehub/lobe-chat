@@ -121,6 +121,20 @@ const ZhiPu: ModelProviderCard = {
       tokens: 128_000,
     },
     {
+      description: 'GLM-4V-Flash 专注于高效的单一图像理解，适用于快速图像解析的场景，例如实时图像分析或批量图像处理。',
+      displayName: 'GLM-4V-Flash',
+      enabled: true,
+      id: 'glm-4v-flash',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2024-12-09',
+      tokens: 8192,
+      vision: true,
+    },
+    {
       description: 'GLM-4V-Plus 具备对视频内容及多图片的理解能力，适合多模态任务。',
       displayName: 'GLM-4V-Plus',
       enabled: true,

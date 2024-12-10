@@ -34,6 +34,9 @@
   "groq": {
     "description": "El motor de inferencia LPU de Groq ha demostrado un rendimiento excepcional en las pruebas de referencia de modelos de lenguaje de gran tamaño (LLM), redefiniendo los estándares de soluciones de IA con su asombrosa velocidad y eficiencia. Groq es un referente en velocidad de inferencia instantánea, mostrando un buen rendimiento en implementaciones basadas en la nube."
   },
+  "higress": {
+    "description": ""
+  },
   "huggingface": {
     "description": "La API de Inferencia de HuggingFace ofrece una forma rápida y gratuita de explorar miles de modelos para diversas tareas. Ya sea que esté prototipando una nueva aplicación o probando las capacidades del aprendizaje automático, esta API le brinda acceso instantáneo a modelos de alto rendimiento en múltiples dominios."
   },

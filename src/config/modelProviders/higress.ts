@@ -1322,29 +1322,6 @@ const Higress: ModelProviderCard = {
     },
     {
       description:
-        '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。', // Will be discontinued on December 6, 2024
-      displayName: 'GPT-4 Turbo Vision Preview',
-      id: 'gpt-4-vision-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
-      tokens: 128_000,
-      vision: true,
-    },
-    {
-      description:
-        '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。', // Will be discontinued on December 6, 2024
-      id: 'gpt-4-1106-vision-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
-      tokens: 128_000,
-      vision: true,
-    },
-    {
-      description:
         '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
       displayName: 'GPT-4 Turbo Preview 1106',
       functionCall: true,
