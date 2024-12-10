@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update groq, add llama3.3, Upgrade lobe-ui."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.6"
+  },
+  {
+    "children": {
       "fixes": ["Fix wrong email linking in next-auth db adapter."]
     },
     "date": "2024-12-09",
