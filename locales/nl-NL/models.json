@@ -55,6 +55,24 @@
   "Baichuan4-Turbo": {
     "description": "Modelcapaciteiten zijn nationaal de beste, overtreft buitenlandse mainstream modellen in kennisencyclopedie, lange teksten en creatieve generatie in Chinese taken. Beschikt ook over toonaangevende multimodale capaciteiten en presteert uitstekend op verschillende autoritatieve evaluatiebenchmarks."
   },
+  "Doubao-lite-128k": {
+    "description": "Doubao-lite beschikt over een uitstekende responssnelheid en een goede prijs-kwaliteitverhouding, en biedt klanten flexibele keuzes voor verschillende scenario's. Ondersteunt inferentie en fine-tuning met een contextvenster van 128k."
+  },
+  "Doubao-lite-32k": {
+    "description": "Doubao-lite beschikt over een uitstekende responssnelheid en een goede prijs-kwaliteitverhouding, en biedt klanten flexibele keuzes voor verschillende scenario's. Ondersteunt inferentie en fine-tuning met een contextvenster van 32k."
+  },
+  "Doubao-lite-4k": {
+    "description": "Doubao-lite beschikt over een uitstekende responssnelheid en een goede prijs-kwaliteitverhouding, en biedt klanten flexibele keuzes voor verschillende scenario's. Ondersteunt inferentie en fine-tuning met een contextvenster van 4k."
+  },
+  "Doubao-pro-128k": {
+    "description": "Het meest effectieve hoofmodel, geschikt voor het verwerken van complexe taken, met goede resultaten in referentievraag, samenvattingen, creatie, tekstclassificatie, rollenspellen en meer. Ondersteunt inferentie en fine-tuning met een contextvenster van 128k."
+  },
+  "Doubao-pro-32k": {
+    "description": "Het meest effectieve hoofmodel, geschikt voor het verwerken van complexe taken, met goede resultaten in referentievraag, samenvattingen, creatie, tekstclassificatie, rollenspellen en meer. Ondersteunt inferentie en fine-tuning met een contextvenster van 32k."
+  },
+  "Doubao-pro-4k": {
+    "description": "Het meest effectieve hoofmodel, geschikt voor het verwerken van complexe taken, met goede resultaten in referentievraag, samenvattingen, creatie, tekstclassificatie, rollenspellen en meer. Ondersteunt inferentie en fine-tuning met een contextvenster van 4k."
+  },
   "ERNIE-3.5-128K": {
     "description": "De door Baidu ontwikkelde vlaggenschip grote taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met de Baidu zoekplug-in, wat de actualiteit van vraag- en antwoordinformatie waarborgt."
   },
@@ -241,6 +259,21 @@
   },
   "SenseChat-Turbo": {
     "description": "Geschikt voor snelle vraag-en-antwoord en modelafstemming."
+  },
+  "Skylark2-lite-8k": {
+    "description": "De tweede generatie Skylark (Skylark2) model, Skylark2-lite model heeft een hoge responssnelheid, geschikt voor scenario's met hoge realtimevereisten, kostenbewustzijn en lagere modelnauwkeurigheidsvereisten, met een contextvenster lengte van 8k."
+  },
+  "Skylark2-pro-32k": {
+    "description": "De tweede generatie Skylark (Skylark2) model, Skylark2-pro versie heeft een hoge modelnauwkeurigheid, geschikt voor complexere tekstgeneratiescenario's zoals professionele copywriting, romanproductie, en hoogwaardig vertalen, met een contextvenster lengte van 32k."
+  },
+  "Skylark2-pro-4k": {
+    "description": "De tweede generatie Skylark (Skylark2) model, Skylark2-pro model heeft een hoge modelnauwkeurigheid, geschikt voor complexere tekstgeneratiescenario's zoals professionele copywriting, romanproductie, en hoogwaardig vertalen, met een contextvenster lengte van 4k."
+  },
+  "Skylark2-pro-character-4k": {
+    "description": "De tweede generatie Skylark (Skylark2) model, Skylark2-pro-character model heeft uitstekende rolspelin en chatmogelijkheden, en is goed in het aannemen van verschillende rollen op basis van gebruikersprompt, met een natuurlijk vloeiende conversatie. Ideaal voor het bouwen van chatbots, virtuele assistenten en online klantenservice met hoge responssnelheden."
+  },
+  "Skylark2-pro-turbo-8k": {
+    "description": "De tweede generatie Skylark (Skylark2) model, Skylark2-pro-turbo-8k biedt snellere inferentie en lagere kosten, met een contextvenster lengte van 8k."
   },
   "THUDM/chatglm3-6b": {
     "description": "ChatGLM3-6B is het open-source model van de ChatGLM-serie, ontwikkeld door Zhipu AI. Dit model behoudt de uitstekende kenmerken van de vorige generatie, zoals vloeiende gesprekken en lage implementatiedrempels, terwijl het nieuwe functies introduceert. Het maakt gebruik van meer diverse trainingsdata, een groter aantal trainingsstappen en een meer redelijke trainingsstrategie, en presteert uitstekend onder de voorgetrainde modellen van minder dan 10B. ChatGLM3-6B ondersteunt complexe scenario's zoals meerdaagse gesprekken, tool-aanroepen, code-uitvoering en agenttaken. Naast het gespreksmodel zijn ook het basismodel ChatGLM-6B-Base en het lange tekstgespreksmodel ChatGLM3-6B-32K open-source gemaakt. Dit model is volledig open voor academisch onderzoek en staat ook gratis commercieel gebruik toe na registratie."
@@ -476,6 +509,9 @@
   "cohere-command-r-plus": {
     "description": "Command R+ is een state-of-the-art RAG-geoptimaliseerd model ontworpen om enterprise-grade workloads aan te pakken."
   },
+  "command-light": {
+    "description": ""
+  },
   "command-r": {
     "description": "Command R is geoptimaliseerd voor conversatie- en lange contexttaken, bijzonder geschikt voor dynamische interactie en kennisbeheer."
   },
@@ -539,6 +575,9 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 is het nieuwste experimentele model, met aanzienlijke prestatieverbeteringen in tekst- en multimodale toepassingen."
   },
+  "gemini-1.5-flash-exp-0827": {
+    "description": "Gemini 1.5 Flash 0827 biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taak scenario's."
+  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash is Google's nieuwste multimodale AI-model, met snelle verwerkingscapaciteiten, ondersteunt tekst-, beeld- en video-invoer, en is geschikt voor efficiënte opschaling van verschillende taken."
   },
@@ -548,6 +587,12 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 is het nieuwste productieklare model, dat hogere kwaliteit output biedt, met name op het gebied van wiskunde, lange contexten en visuele taken."
   },
+  "gemini-1.5-pro-exp-0801": {
+    "description": "Gemini 1.5 Pro 0801 biedt uitstekende multimodale verwerkingscapaciteiten, wat grotere flexibiliteit in applicatieontwikkeling mogelijk maakt."
+  },
+  "gemini-1.5-pro-exp-0827": {
+    "description": "Gemini 1.5 Pro 0827 combineert de nieuwste optimalisatietechnologieën en biedt efficiëntere multimodale gegevensverwerkingscapaciteiten."
+  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro ondersteunt tot 2 miljoen tokens en is de ideale keuze voor middelgrote multimodale modellen, geschikt voor veelzijdige ondersteuning van complexe taken."
   },
@@ -556,6 +601,9 @@
   },
   "gemini-exp-1121": {
     "description": "Gemini Exp 1121 is Google's nieuwste experimentele multimodale AI-model, dat snel kan verwerken en ondersteuning biedt voor tekst-, beeld- en video-invoer, geschikt voor efficiënte opschaling van verschillende taken."
+  },
+  "gemini-exp-1206": {
+    "description": "Gemini Exp 1206 is Google's nieuwste experimentele multimodale AI-model, met een aanzienlijke kwaliteitsverbetering ten opzichte van eerdere versies."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is geschikt voor het verwerken van middelgrote taken, met een goede kosteneffectiviteit."
@@ -611,6 +659,9 @@
   "glm-4v": {
     "description": "GLM-4V biedt krachtige beeldbegrip- en redeneercapaciteiten, ondersteunt verschillende visuele taken."
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash richt zich op efficiënte enkele afbeelding begrip, en is geschikt voor scenario's met snelle afbeeldingsanalyse, zoals real-time beeldanalyse of batchafbeeldingsverwerking."
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus heeft de capaciteit om video-inhoud en meerdere afbeeldingen te begrijpen, geschikt voor multimodale taken."
   },
@@ -647,6 +698,12 @@
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
   },
+  "gpt-35-turbo": {
+    "description": "GPT 3.5 Turbo, een efficiënt model aangeboden door OpenAI, geschikt voor chat- en tekstgeneratietaken, met ondersteuning voor parallelle functieaanroepen."
+  },
+  "gpt-35-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k, een tekstgeneratiemodel met hoge capaciteit, geschikt voor complexe taken."
+  },
   "gpt-4": {
     "description": "GPT-4 biedt een groter contextvenster en kan langere tekstinvoer verwerken, geschikt voor scenario's die uitgebreide informatie-integratie en data-analyse vereisen."
   },
@@ -657,9 +714,6 @@
     "description": "GPT-4 biedt een groter contextvenster en kan langere tekstinvoer verwerken, geschikt voor scenario's die uitgebreide informatie-integratie en data-analyse vereisen."
   },
   "gpt-4-1106-preview": {
-    "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
   },
   "gpt-4-32k": {
@@ -689,6 +743,9 @@
   "gpt-4o-2024-08-06": {
     "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
   },
+  "gpt-4o-2024-11-20": {
+    "description": "ChatGPT-4o is een dynamisch model dat in real-time wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip en generatiemogelijkheden, geschikt voor grootschalige toepassingen zoals klantenservice, onderwijs en technische ondersteuning."
+  },
   "gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, en ondersteunt zowel tekst- als beeldinvoer met tekstuitvoer. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
   },
@@ -706,6 +763,9 @@
   },
   "hunyuan-functioncall": {
     "description": "Het nieuwste MOE-architectuur FunctionCall-model van Hunyuan, getraind op hoogwaardige FunctionCall-gegevens, met een contextvenster van 32K, en staat voorop in meerdere dimensies van evaluatie-indicatoren."
+  },
+  "hunyuan-large": {
+    "description": ""
   },
   "hunyuan-lite": {
     "description": "Geüpgraded naar een MOE-structuur, met een contextvenster van 256k, en leidt in verschillende evaluatiesets op het gebied van NLP, code, wiskunde en industrie ten opzichte van vele open-source modellen."
@@ -786,6 +846,9 @@
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 is ontworpen om taken te verwerken die visuele en tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraag-en-antwoord, en overbrugt de kloof tussen taalgeneratie en visuele redeneervaardigheden."
+  },
+  "llama-3.3-70b-versatile": {
+    "description": "Meta Llama 3.3 is een meertalige grote taalmodel (LLM) met 70B (tekstinvoer/tekstuitvoer) dat is voorgetraind en aangepast voor instructies. Het pure tekstmodel van Llama 3.3 is geoptimaliseerd voor meertalige gespreksgebruik en scoort beter dan veel beschikbare open-source en gesloten chatmodellen op gangbare industrie benchmarks."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B biedt ongeëvenaarde complexiteitsverwerkingscapaciteiten, op maat gemaakt voor veeleisende projecten."
@@ -1094,11 +1157,20 @@
   "qwen-math-turbo-latest": {
     "description": "Het Tongyi Qianwen wiskundemodel is speciaal ontworpen voor het oplossen van wiskundige problemen."
   },
+  "qwen-max": {
+    "description": "Qwen is een enorme versie van het grootschalige taalmodel, dat ondersteuning biedt voor verschillende taalinputs zoals Chinees en Engels en momenteel de API-modellen achter de Qwen 2.5-productversie vertegenwoordigt."
+  },
   "qwen-max-latest": {
     "description": "Het Tongyi Qianwen model met een schaal van honderden miljarden, ondersteunt invoer in verschillende talen, waaronder Chinees en Engels, en is de API-model achter de huidige Tongyi Qianwen 2.5 productversie."
   },
+  "qwen-plus": {
+    "description": "Qwen is een verbeterde versie van het grootschalige taalmodel dat ondersteuning biedt voor verschillende taalinputs zoals Chinees en Engels."
+  },
   "qwen-plus-latest": {
     "description": "De verbeterde versie van het Tongyi Qianwen supergrote taalmodel ondersteunt invoer in verschillende talen, waaronder Chinees en Engels."
+  },
+  "qwen-turbo": {
+    "description": "Qwen is een grootschalig taalmodel dat ondersteuning biedt voor verschillende taalinputs zoals Chinees en Engels."
   },
   "qwen-turbo-latest": {
     "description": "De Tongyi Qianwen supergrote taalmodel ondersteunt invoer in verschillende talen, waaronder Chinees en Engels."
@@ -1136,11 +1208,17 @@
   "qwen2.5-7b-instruct": {
     "description": "Het 7B model van Tongyi Qianwen 2.5 is open source beschikbaar."
   },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "Qwen-code model open source versie."
+  },
   "qwen2.5-coder-32b-instruct": {
     "description": "Open source versie van het Tongyi Qianwen code model."
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "De open source versie van het Tongyi Qianwen codeermodel."
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Qwen-Math model beschikt over krachtige wiskundige probleemoplossende mogelijkheden."
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."

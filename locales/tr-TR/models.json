@@ -55,6 +55,24 @@
   "Baichuan4-Turbo": {
     "description": "Model yetenekleri ülke içinde birinci, bilgi ansiklopedisi, uzun metinler, yaratıcı üretim gibi Çince görevlerde uluslararası ana akım modelleri aşmaktadır. Ayrıca, sektörde lider çok modlu yeteneklere sahip olup, birçok yetkili değerlendirme ölçütünde mükemmel performans sergilemektedir."
   },
+  "Doubao-lite-128k": {
+    "description": "Doubao-lite, mükemmel yanıt hızı ve daha iyi maliyet Performansı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 128k bağlam penceresi çıkarım ve ince ayar destekler."
+  },
+  "Doubao-lite-32k": {
+    "description": "Doubao-lite, mükemmel yanıt hızı ve daha iyi maliyet Performansı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 32k bağlam penceresi çıkarım ve ince ayar destekler."
+  },
+  "Doubao-lite-4k": {
+    "description": "Doubao-lite, mükemmel yanıt hızı ve daha iyi maliyet Performansı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 4k bağlam penceresi çıkarım ve ince ayar destekler."
+  },
+  "Doubao-pro-128k": {
+    "description": "En iyi performans gösteren ana model, karmaşık görevleri işlemek için uygundur; referanslı soru-cevap, özetleme, yaratım, metin sınıflandırma, rol yapma gibi senaryolar için iyi sonuçlar verir. 128k bağlam penceresi çıkarım ve ince ayar destekler."
+  },
+  "Doubao-pro-32k": {
+    "description": "En iyi performans gösteren ana model, karmaşık görevleri işlemek için uygundur; referanslı soru-cevap, özetleme, yaratım, metin sınıflandırma, rol yapma gibi senaryolar için iyi sonuçlar verir. 32k bağlam penceresi çıkarım ve ince ayar destekler."
+  },
+  "Doubao-pro-4k": {
+    "description": "En iyi performans gösteren ana model, karmaşık görevleri işlemek için uygundur; referanslı soru-cevap, özetleme, yaratım, metin sınıflandırma, rol yapma gibi senaryolar için iyi sonuçlar verir. 4k bağlam penceresi çıkarım ve ince ayar destekler."
+  },
   "ERNIE-3.5-128K": {
     "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
   },
@@ -241,6 +259,21 @@
   },
   "SenseChat-Turbo": {
     "description": "Hızlı soru-cevap ve model ince ayar senaryoları için uygundur."
+  },
+  "Skylark2-lite-8k": {
+    "description": "Skylark'in (Bulut Şarkıcısı) ikinci nesil modeli, Skylark2-lite modeli yüksek yanıt hızı ile donatılmıştır; gerçek zamanlı talep gereksinimleri yüksek, maliyet duyarlı ve model hassasiyetine daha az ihtiyaç duyulan senaryolar için uygundur; bağlam pencere uzunluğu 8k'dır."
+  },
+  "Skylark2-pro-32k": {
+    "description": "Skylark'in (Bulut Şarkıcısı) ikinci nesil modeli, Skylark2-pro sürümüyle yüksek model hassasiyetine sahiptir; profesyonel alan metin üretimi, roman yazımı, yüksek kaliteli çeviri gibi daha karmaşık metin üretim sahneleri için uygundur ve bağlam pencere uzunluğu 32k'dır."
+  },
+  "Skylark2-pro-4k": {
+    "description": "Skylark'in (Bulut Şarkıcısı) ikinci nesil modeli, Skylark2-pro modeli yüksek model hassasiyetine sahiptir; profesyonel alan metin üretimi, roman yazımı, yüksek kaliteli çeviri gibi daha karmaşık metin üretim sahneleri için uygundur ve bağlam pencere uzunluğu 4k'dır."
+  },
+  "Skylark2-pro-character-4k": {
+    "description": "Skylark'in (Bulut Şarkıcısı) ikinci nesil modeli, Skylark2-pro-character modeli, mükemmel rol yapma ve sohbet yeteneklerine sahiptir; kullanıcıdan gelen istem taleplerine göre farklı roller üstlenme kabiliyeti ile sohbet edebilir. Rol stili belirgindir ve diyalog içeriği doğal ve akıcıdır. Chatbot, sanal asistan ve çevrimiçi müşteri hizmetleri gibi senaryolar için uygundur ve yüksek yanıt hızı vardır."
+  },
+  "Skylark2-pro-turbo-8k": {
+    "description": "Skylark'in (Bulut Şarkıcısı) ikinci nesil modeli, Skylark2-pro-turbo-8k ile daha hızlı çıkarım gerçekleştirir, maliyeti düşüktür ve bağlam pencere uzunluğu 8k'dır."
   },
   "THUDM/chatglm3-6b": {
     "description": "ChatGLM3-6B, Zhipu AI tarafından geliştirilen ChatGLM serisinin açık kaynak modelidir. Bu model, önceki nesil modellerin mükemmel özelliklerini korurken, yeni özellikler de eklenmiştir. Daha çeşitli eğitim verileri, daha fazla eğitim adımı ve daha mantıklı eğitim stratejileri kullanarak, 10B altındaki önceden eğitilmiş modeller arasında mükemmel performans sergilemektedir. ChatGLM3-6B, çoklu diyalog, araç çağrısı, kod yürütme ve ajan görevleri gibi karmaşık senaryoları desteklemektedir. Diyalog modelinin yanı sıra, temel model ChatGLM-6B-Base ve uzun metin diyalog modeli ChatGLM3-6B-32K da açık kaynak olarak sunulmuştur. Bu model, akademik araştırmalara tamamen açıktır ve kayıt olduktan sonra ücretsiz ticari kullanımına da izin verilmektedir."
@@ -476,6 +509,9 @@
   "cohere-command-r-plus": {
     "description": "Command R+, kurumsal düzeyde iş yüklerini ele almak için tasarlanmış en son RAG optimize edilmiş bir modeldir."
   },
+  "command-light": {
+    "description": ""
+  },
   "command-r": {
     "description": "Command R, diyalog ve uzun bağlam görevleri için optimize edilmiş bir LLM'dir, dinamik etkileşim ve bilgi yönetimi için özellikle uygundur."
   },
@@ -539,6 +575,9 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924, metin ve çok modlu kullanım durumlarında önemli performans artışları sunan en son deneysel modeldir."
   },
+  "gemini-1.5-flash-exp-0827": {
+    "description": "Gemini 1.5 Flash 0827, optimize edilmiş çok modlu işleme yetenekleri sunarak çeşitli karmaşık görev sahnelerine uygundur."
+  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash, Google'ın en son çok modlu AI modelidir, hızlı işleme yeteneğine sahiptir ve metin, görüntü ve video girişi destekler, çeşitli görevlerin verimli bir şekilde genişletilmesine olanak tanır."
   },
@@ -548,6 +587,12 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002, daha yüksek kaliteli çıktılar sunan en son üretim hazır modeldir; özellikle matematik, uzun bağlam ve görsel görevlerde önemli iyileştirmeler sağlamaktadır."
   },
+  "gemini-1.5-pro-exp-0801": {
+    "description": "Gemini 1.5 Pro 0801, olağanüstü çok modlu işleme yetenekleri sunarak uygulama geliştirmeye daha fazla esneklik getirir."
+  },
+  "gemini-1.5-pro-exp-0827": {
+    "description": "Gemini 1.5 Pro 0827, en son optimize edilmiş teknolojilerle birleştirilmiş daha verimli çok modlu veri işleme yeteneği sunar."
+  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro, 2 milyon token'a kadar destekler, orta ölçekli çok modlu modeller için ideal bir seçimdir ve karmaşık görevler için çok yönlü destek sunar."
   },
@@ -556,6 +601,9 @@
   },
   "gemini-exp-1121": {
     "description": "Gemini Exp 1121, Google'un en yeni deneysel çok modlu AI modelidir. Hızlı işlem yeteneğine sahip olup, metin, görüntü ve video girişi destekler ve çeşitli görevler için verimli bir şekilde ölçeklenebilir."
+  },
+  "gemini-exp-1206": {
+    "description": "Gemini Exp 1206, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere kıyasla belirli bir kalite artırımı sağlar."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B, orta ölçekli görev işleme için uygundur ve maliyet etkinliği sunar."
@@ -611,6 +659,9 @@
   "glm-4v": {
     "description": "GLM-4V, güçlü görüntü anlama ve akıl yürütme yetenekleri sunar, çeşitli görsel görevleri destekler."
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash, hızlı görsel analiz veya toplu görsel işleme gibi sahnelerde, tek bir görüntü anlayışına odaklanarak etkili bir performans sunar."
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus, video içeriği ve çoklu görüntüleri anlama yeteneğine sahiptir, çok modlu görevler için uygundur."
   },
@@ -647,6 +698,12 @@
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo, çeşitli metin üretimi ve anlama görevleri için uygundur, şu anda gpt-3.5-turbo-0125'e işaret ediyor."
   },
+  "gpt-35-turbo": {
+    "description": "GPT 3.5 Turbo, OpenAI tarafından sağlanan verimli bir modeldir ve sohbet ve metin üretim görevleri için uygundur, paralel fonksiyon çağrılarını destekler."
+  },
+  "gpt-35-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k, karmaşık görevler için uygun yüksek kapasiteli bir metin üretim modelidir."
+  },
   "gpt-4": {
     "description": "GPT-4, daha büyük bir bağlam penceresi sunarak daha uzun metin girişlerini işleyebilir, geniş bilgi entegrasyonu ve veri analizi gerektiren senaryolar için uygundur."
   },
@@ -657,9 +714,6 @@
     "description": "GPT-4, daha büyük bir bağlam penceresi sunarak daha uzun metin girişlerini işleyebilir, geniş bilgi entegrasyonu ve veri analizi gerektiren senaryolar için uygundur."
   },
   "gpt-4-1106-preview": {
-    "description": "En son GPT-4 Turbo modeli görsel işlevselliğe sahiptir. Artık görsel talepler JSON formatı ve fonksiyon çağrıları ile işlenebilir. GPT-4 Turbo, çok modlu görevler için maliyet etkin bir destek sunan geliştirilmiş bir versiyondur. Doğruluk ve verimlilik arasında bir denge sağlar, gerçek zamanlı etkileşim gerektiren uygulama senaryoları için uygundur."
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "En son GPT-4 Turbo modeli görsel işlevselliğe sahiptir. Artık görsel talepler JSON formatı ve fonksiyon çağrıları ile işlenebilir. GPT-4 Turbo, çok modlu görevler için maliyet etkin bir destek sunan geliştirilmiş bir versiyondur. Doğruluk ve verimlilik arasında bir denge sağlar, gerçek zamanlı etkileşim gerektiren uygulama senaryoları için uygundur."
   },
   "gpt-4-32k": {
@@ -689,6 +743,9 @@
   "gpt-4o-2024-08-06": {
     "description": "ChatGPT-4o, güncel versiyonunu korumak için gerçek zamanlı olarak güncellenen dinamik bir modeldir. Güçlü dil anlama ve üretme yeteneklerini birleştirir, müşteri hizmetleri, eğitim ve teknik destek gibi geniş ölçekli uygulama senaryoları için uygundur."
   },
+  "gpt-4o-2024-11-20": {
+    "description": "ChatGPT-4o, güncel en son sürümü korumak için gerçek zamanlı olarak güncellenen dinamik bir modeldir. Müşteri hizmetleri, eğitim ve teknik destek gibi büyük ölçekli uygulama senaryoları için güçlü dil anlama ve üretme yeteneklerini bir araya getirir."
+  },
   "gpt-4o-mini": {
     "description": "GPT-4o mini, OpenAI'nin GPT-4 Omni'den sonra tanıttığı en yeni modeldir. Görsel ve metin girişi destekler ve metin çıktısı verir. En gelişmiş küçük model olarak, diğer son zamanlardaki öncü modellere göre çok daha ucuzdur ve GPT-3.5 Turbo'dan %60'tan fazla daha ucuzdur. En son teknolojiyi korurken, önemli bir maliyet etkinliği sunar. GPT-4o mini, MMLU testinde %82 puan almış olup, şu anda sohbet tercihleri açısından GPT-4'ün üzerinde yer almaktadır."
   },
@@ -706,6 +763,9 @@
   },
   "hunyuan-functioncall": {
     "description": "Hunyuan'ın en son MOE mimarisi FunctionCall modeli, yüksek kaliteli FunctionCall verisi ile eğitilmiş olup, bağlam penceresi 32K'ya ulaşmıştır ve birçok boyutta değerlendirme göstergelerinde lider konumdadır."
+  },
+  "hunyuan-large": {
+    "description": ""
   },
   "hunyuan-lite": {
     "description": "MOE yapısına yükseltilmiş, bağlam penceresi 256k, NLP, kod, matematik, endüstri gibi birçok değerlendirme setinde birçok açık kaynak modelden önde."
@@ -786,6 +846,9 @@
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2, görsel ve metin verilerini birleştiren görevleri işlemek için tasarlanmıştır. Görüntü tanımlama ve görsel soru-cevap gibi görevlerde mükemmel performans sergiler, dil üretimi ile görsel akıl yürütme arasındaki uçurumu aşar."
+  },
+  "llama-3.3-70b-versatile": {
+    "description": "Meta Llama 3.3 çok dilli büyük dil modeli (LLM), 70B (metin girişi/metin çıkışı) içindeki önceden eğitilmiş ve talimat ayarlanmış bir üretim modelidir. Llama 3.3 talimat ayarlı saf metin modeli, çok dilli konuşma kullanım durumları için optimize edilmiştir ve yaygın endüstri kıyaslamalarında mevcut birçok açık kaynak ve kapalı sohbet modelinden daha üstündür."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B, eşsiz karmaşıklık işleme yeteneği sunar ve yüksek talepli projeler için özel olarak tasarlanmıştır."
@@ -1094,11 +1157,20 @@
   "qwen-math-turbo-latest": {
     "description": "Tongyi Qianwen matematik modeli, matematik problemlerini çözmek için özel olarak tasarlanmış bir dil modelidir."
   },
+  "qwen-max": {
+    "description": "Tongyi Qianwen, 100 milyar seviyesinde büyük ölçekli bir dil modelidir ve Çince, İngilizce gibi farklı dil girişlerini destekler; şu anda Tongyi Qianwen 2.5 ürün sürümünün arkasındaki API modelidir."
+  },
   "qwen-max-latest": {
     "description": "Tongyi Qianwen, 100 milyar seviyesinde büyük bir dil modeli, Çince, İngilizce ve diğer dillerde girişleri destekler, şu anda Tongyi Qianwen 2.5 ürün versiyonunun arkasındaki API modelidir."
   },
+  "qwen-plus": {
+    "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dil girişlerini destekleyen geliştirilmiş büyük ölçekli bir dil modelidir."
+  },
   "qwen-plus-latest": {
     "description": "Tongyi Qianwen'in geliştirilmiş versiyonu, çok dilli girişleri destekler."
+  },
+  "qwen-turbo": {
+    "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dil girişlerini destekleyen büyük ölçekli bir dil modelidir."
   },
   "qwen-turbo-latest": {
     "description": "Tongyi Qianwen, çok dilli bir dil modeli, Çince, İngilizce ve diğer dillerde girişleri destekler."
@@ -1136,11 +1208,17 @@
   "qwen2.5-7b-instruct": {
     "description": "Tongyi Qianwen 2.5, halka açık 7B ölçeğinde bir modeldir."
   },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "Tongyi Qianwen kodlama modelinin açık kaynak sürümüdür."
+  },
   "qwen2.5-coder-32b-instruct": {
     "description": "Tongyi Qianwen kod modeli açık kaynak versiyonu."
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "Tongyi Qianwen kodlama modelinin açık kaynak versiyonu."
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Qwen-Math modeli, güçlü matematiksel problem çözme yeteneklerine sahiptir."
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Qwen-Math modeli, güçlü matematik problem çözme yeteneklerine sahiptir."

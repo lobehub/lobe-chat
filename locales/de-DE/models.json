@@ -55,6 +55,24 @@
   "Baichuan4-Turbo": {
     "description": "Das Modell hat die höchste Leistungsfähigkeit im Inland und übertrifft ausländische Mainstream-Modelle in Aufgaben wie Wissensdatenbanken, langen Texten und kreativen Generierungen auf Chinesisch. Es verfügt auch über branchenführende multimodale Fähigkeiten und zeigt in mehreren anerkannten Bewertungsbenchmarks hervorragende Leistungen."
   },
+  "Doubao-lite-128k": {
+    "description": "Doubao-lite bietet eine extrem hohe Reaktionsgeschwindigkeit und ein hervorragendes Preis-Leistungs-Verhältnis und bietet den Kunden flexiblere Optionen für verschiedene Szenarien. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem 128k-Kontextfenster."
+  },
+  "Doubao-lite-32k": {
+    "description": "Doubao-lite bietet eine extrem hohe Reaktionsgeschwindigkeit und ein hervorragendes Preis-Leistungs-Verhältnis und bietet den Kunden flexiblere Optionen für verschiedene Szenarien. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem 32k-Kontextfenster."
+  },
+  "Doubao-lite-4k": {
+    "description": "Doubao-lite bietet eine extrem hohe Reaktionsgeschwindigkeit und ein hervorragendes Preis-Leistungs-Verhältnis und bietet den Kunden flexiblere Optionen für verschiedene Szenarien. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem 4k-Kontextfenster."
+  },
+  "Doubao-pro-128k": {
+    "description": "Das leistungsstärkste Hauptmodell, das sich zur Verarbeitung komplexer Aufgaben eignet und in Szenarien wie Referenzfragen, Zusammenfassungen, Kreativität, Textklassifizierung und Rollenspiel sehr gute Ergebnisse erzielt. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem 128k-Kontextfenster."
+  },
+  "Doubao-pro-32k": {
+    "description": "Das leistungsstärkste Hauptmodell, das sich zur Verarbeitung komplexer Aufgaben eignet und in Szenarien wie Referenzfragen, Zusammenfassungen, Kreativität, Textklassifizierung und Rollenspiel sehr gute Ergebnisse erzielt. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem 32k-Kontextfenster."
+  },
+  "Doubao-pro-4k": {
+    "description": "Das leistungsstärkste Hauptmodell, das sich zur Verarbeitung komplexer Aufgaben eignet und in Szenarien wie Referenzfragen, Zusammenfassungen, Kreativität, Textklassifizierung und Rollenspiel sehr gute Ergebnisse erzielt. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem 4k-Kontextfenster."
+  },
   "ERNIE-3.5-128K": {
     "description": "Das von Baidu entwickelte Flaggschiff-Modell für großangelegte Sprachverarbeitung, das eine riesige Menge an chinesischen und englischen Texten abdeckt. Es verfügt über starke allgemeine Fähigkeiten und kann die meisten Anforderungen an Dialogfragen, kreative Generierung und Anwendungsfälle von Plugins erfüllen. Es unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
   },
@@ -241,6 +259,21 @@
   },
   "SenseChat-Turbo": {
     "description": "Geeignet für schnelle Fragen und Antworten sowie Szenarien zur Feinabstimmung des Modells."
+  },
+  "Skylark2-lite-8k": {
+    "description": "Das zweite Modell der Skylark-Reihe, das Skylark2-lite-Modell bietet eine hohe Reaktionsgeschwindigkeit und eignet sich für Szenarien mit hohen Echtzeitanforderungen, kostensensitiven Anforderungen und geringeren Genauigkeitsanforderungen, mit einer Kontextfensterlänge von 8k."
+  },
+  "Skylark2-pro-32k": {
+    "description": "Das zweite Modell der Skylark-Reihe, die Skylark2-pro-Version hat eine hohe Modellgenauigkeit und eignet sich für komplexere Textgenerierungsszenarien, wie z. B. professionelle Texterstellung, Romankreation und hochwertige Übersetzungen, mit einer Kontextfensterlänge von 32k."
+  },
+  "Skylark2-pro-4k": {
+    "description": "Das zweite Modell der Skylark-Reihe, die Skylark2-pro-Version hat eine hohe Modellgenauigkeit und eignet sich für komplexere Textgenerierungsszenarien, wie z. B. professionelle Texterstellung, Romankreation und hochwertige Übersetzungen, mit einer Kontextfensterlänge von 4k."
+  },
+  "Skylark2-pro-character-4k": {
+    "description": "Das zweite Modell der Skylark-Reihe, das Skylark2-pro-character-Modell hat hervorragende Fähigkeiten im Rollenspiel und Chat, kann sich entsprechend den Anforderungen des Benutzers verkleiden und bietet natürliche und flüssige Dialoginhalte. Es eignet sich für den Aufbau von Chatbots, virtuellen Assistenten und Online-Kundensupport und bietet eine hohe Reaktionsgeschwindigkeit."
+  },
+  "Skylark2-pro-turbo-8k": {
+    "description": "Das zweite Modell der Skylark-Reihe, das Skylark2-pro-turbo-8k bietet schnellere Schlussfolgerungen und niedrigere Kosten, mit einer Kontextfensterlänge von 8k."
   },
   "THUDM/chatglm3-6b": {
     "description": "ChatGLM3-6B ist das Open-Source-Modell der ChatGLM-Serie, das von Zhizhu AI entwickelt wurde. Dieses Modell bewahrt die hervorragenden Eigenschaften der Vorgängermodelle, wie flüssige Dialoge und niedrige Bereitstellungskosten, während es neue Funktionen einführt. Es verwendet vielfältigere Trainingsdaten, eine größere Anzahl an Trainingsschritten und eine sinnvollere Trainingsstrategie und zeigt hervorragende Leistungen unter den vortrainierten Modellen mit weniger als 10B. ChatGLM3-6B unterstützt mehrstufige Dialoge, Tool-Aufrufe, Code-Ausführung und Agentenaufgaben in komplexen Szenarien. Neben dem Dialogmodell wurden auch das Basis-Modell ChatGLM-6B-Base und das lange Textdialogmodell ChatGLM3-6B-32K als Open Source veröffentlicht. Dieses Modell ist vollständig für akademische Forschung geöffnet und erlaubt auch kostenlose kommerzielle Nutzung nach Registrierung."
@@ -476,6 +509,9 @@
   "cohere-command-r-plus": {
     "description": "Command R+ ist ein hochmodernes, RAG-optimiertes Modell, das für unternehmensgerechte Arbeitslasten konzipiert ist."
   },
+  "command-light": {
+    "description": ""
+  },
   "command-r": {
     "description": "Command R ist ein LLM, das für Dialoge und Aufgaben mit langen Kontexten optimiert ist und sich besonders gut für dynamische Interaktionen und Wissensmanagement eignet."
   },
@@ -539,6 +575,9 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 ist das neueste experimentelle Modell, das in Text- und multimodalen Anwendungsfällen erhebliche Leistungsverbesserungen aufweist."
   },
+  "gemini-1.5-flash-exp-0827": {
+    "description": "Gemini 1.5 Flash 0827 bietet optimierte multimodale Verarbeitungskapazitäten, die für verschiedene komplexe Aufgaben geeignet sind."
+  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash ist Googles neuestes multimodales KI-Modell, das über schnelle Verarbeitungsfähigkeiten verfügt und Text-, Bild- und Videoeingaben unterstützt, um eine effiziente Skalierung für verschiedene Aufgaben zu ermöglichen."
   },
@@ -548,6 +587,12 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 ist das neueste produktionsbereite Modell, das eine höhere Ausgabequalität bietet, insbesondere bei mathematischen, langen Kontexten und visuellen Aufgaben erhebliche Verbesserungen aufweist."
   },
+  "gemini-1.5-pro-exp-0801": {
+    "description": "Gemini 1.5 Pro 0801 bietet herausragende multimodale Verarbeitungskapazitäten und bringt größere Flexibilität in die Anwendungsentwicklung."
+  },
+  "gemini-1.5-pro-exp-0827": {
+    "description": "Gemini 1.5 Pro 0827 kombiniert die neuesten Optimierungstechnologien, um eine effizientere multimodale Datenverarbeitung zu ermöglichen."
+  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro unterstützt bis zu 2 Millionen Tokens und ist die ideale Wahl für mittelgroße multimodale Modelle, die umfassende Unterstützung für komplexe Aufgaben bieten."
   },
@@ -556,6 +601,9 @@
   },
   "gemini-exp-1121": {
     "description": "Gemini Exp 1121 ist Googles neuestes experimentelles multimodales KI-Modell, das über eine schnelle Verarbeitungskapazität verfügt und Texte, Bilder und Videoeingaben unterstützt, um eine effiziente Skalierung für verschiedene Aufgaben zu ermöglichen."
+  },
+  "gemini-exp-1206": {
+    "description": "Gemini Exp 1206 ist Googles neuestes experimentelles multimodales KI-Modell, das im Vergleich zu historischen Versionen eine gewisse Qualitätssteigerung aufweist."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B eignet sich für die Verarbeitung von mittelgroßen Aufgaben und bietet ein gutes Kosten-Nutzen-Verhältnis."
@@ -611,6 +659,9 @@
   "glm-4v": {
     "description": "GLM-4V bietet starke Fähigkeiten zur Bildverständnis und -schlussfolgerung und unterstützt eine Vielzahl visueller Aufgaben."
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash konzentriert sich auf die effiziente Verarbeitung einzelner Bilder und eignet sich für Szenarien der schnellen Bildanalyse, wie z. B. die Echtzeitanalyse von Bildern oder die Verarbeitung von Bilddaten in großen Mengen."
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus hat die Fähigkeit, Videoinhalte und mehrere Bilder zu verstehen und eignet sich für multimodale Aufgaben."
   },
@@ -647,6 +698,12 @@
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo eignet sich für eine Vielzahl von Textgenerierungs- und Verständnisaufgaben. Derzeit verweist es auf gpt-3.5-turbo-0125."
   },
+  "gpt-35-turbo": {
+    "description": "GPT 3.5 Turbo ist ein effizientes Modell von OpenAI, das für Chat- und Textgenerierungsaufgaben geeignet ist und parallele Funktionsaufrufe unterstützt."
+  },
+  "gpt-35-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k ist ein hochkapazitives Textgenerierungsmodell, das sich für komplexe Aufgaben eignet."
+  },
   "gpt-4": {
     "description": "GPT-4 bietet ein größeres Kontextfenster, das in der Lage ist, längere Texteingaben zu verarbeiten, und eignet sich für Szenarien, die eine umfassende Informationsintegration und Datenanalyse erfordern."
   },
@@ -657,9 +714,6 @@
     "description": "GPT-4 bietet ein größeres Kontextfenster, das in der Lage ist, längere Texteingaben zu verarbeiten, und eignet sich für Szenarien, die eine umfassende Informationsintegration und Datenanalyse erfordern."
   },
   "gpt-4-1106-preview": {
-    "description": "Das neueste GPT-4 Turbo-Modell verfügt über visuelle Funktionen. Jetzt können visuelle Anfragen im JSON-Format und durch Funktionsaufrufe gestellt werden. GPT-4 Turbo ist eine verbesserte Version, die kosteneffiziente Unterstützung für multimodale Aufgaben bietet. Es findet ein Gleichgewicht zwischen Genauigkeit und Effizienz und eignet sich für Anwendungen, die Echtzeitanpassungen erfordern."
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "Das neueste GPT-4 Turbo-Modell verfügt über visuelle Funktionen. Jetzt können visuelle Anfragen im JSON-Format und durch Funktionsaufrufe gestellt werden. GPT-4 Turbo ist eine verbesserte Version, die kosteneffiziente Unterstützung für multimodale Aufgaben bietet. Es findet ein Gleichgewicht zwischen Genauigkeit und Effizienz und eignet sich für Anwendungen, die Echtzeitanpassungen erfordern."
   },
   "gpt-4-32k": {
@@ -689,6 +743,9 @@
   "gpt-4o-2024-08-06": {
     "description": "ChatGPT-4o ist ein dynamisches Modell, das in Echtzeit aktualisiert wird, um die neueste Version zu gewährleisten. Es kombiniert starke Sprachverständnis- und Generierungsfähigkeiten und eignet sich für großangelegte Anwendungsszenarien, einschließlich Kundenservice, Bildung und technische Unterstützung."
   },
+  "gpt-4o-2024-11-20": {
+    "description": "ChatGPT-4o ist ein dynamisches Modell, das in Echtzeit aktualisiert wird, um die neueste Version zu gewährleisten. Es kombiniert starke Sprachverständnis- und Generierungsfähigkeiten und eignet sich für großangelegte Anwendungsbereiche, einschließlich Kundenservice, Bildung und technischen Support."
+  },
   "gpt-4o-mini": {
     "description": "GPT-4o mini ist das neueste Modell von OpenAI, das nach GPT-4 Omni veröffentlicht wurde und sowohl Text- als auch Bildinput unterstützt. Als ihr fortschrittlichstes kleines Modell ist es viel günstiger als andere neueste Modelle und kostet über 60 % weniger als GPT-3.5 Turbo. Es behält die fortschrittliche Intelligenz bei und bietet gleichzeitig ein hervorragendes Preis-Leistungs-Verhältnis. GPT-4o mini erzielte 82 % im MMLU-Test und rangiert derzeit in den Chat-Präferenzen über GPT-4."
   },
@@ -706,6 +763,9 @@
   },
   "hunyuan-functioncall": {
     "description": "Das neueste MOE-Architektur-FunctionCall-Modell von Hunyuan, das mit hochwertigen FunctionCall-Daten trainiert wurde, hat ein Kontextfenster von 32K und führt in mehreren Bewertungsmetriken."
+  },
+  "hunyuan-large": {
+    "description": ""
   },
   "hunyuan-lite": {
     "description": "Aufgerüstet auf eine MOE-Struktur mit einem Kontextfenster von 256k, führt es in mehreren Bewertungssets in NLP, Code, Mathematik und Industrie zahlreiche Open-Source-Modelle an."
@@ -786,6 +846,9 @@
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 ist darauf ausgelegt, Aufgaben zu bearbeiten, die visuelle und textuelle Daten kombinieren. Es zeigt hervorragende Leistungen bei Aufgaben wie Bildbeschreibung und visuellen Fragen und Antworten und überbrückt die Kluft zwischen Sprachgenerierung und visueller Schlussfolgerung."
+  },
+  "llama-3.3-70b-versatile": {
+    "description": "Das Meta Llama 3.3 ist ein mehrsprachiges, großes Sprachmodell (LLM), das aus einem vortrainierten und anweisungsorientierten generativen Modell mit 70B (Text-Eingabe/Text-Ausgabe) besteht. Das anweisungsorientierte Modell von Llama 3.3 ist für mehrsprachige Dialoganwendungen optimiert und übertrifft viele verfügbare Open-Source- und Closed-Source-Chat-Modelle bei gängigen Branchenbenchmarks."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B bietet unvergleichliche Fähigkeiten zur Verarbeitung von Komplexität und ist maßgeschneidert für Projekte mit hohen Anforderungen."
@@ -1094,11 +1157,20 @@
   "qwen-math-turbo-latest": {
     "description": "Das Tongyi Qianwen Mathematikmodell ist speziell für die Lösung von mathematischen Problemen konzipiert."
   },
+  "qwen-max": {
+    "description": "Qwen Max ist ein großangelegtes Sprachmodell auf Billionenebene, das Eingaben in verschiedenen Sprachen wie Chinesisch und Englisch unterstützt und das API-Modell hinter der aktuellen Produktversion von Qwen 2.5 ist."
+  },
   "qwen-max-latest": {
     "description": "Der Tongyi Qianwen ist ein Sprachmodell mit einem Umfang von mehreren Billionen, das Eingaben in verschiedenen Sprachen wie Chinesisch und Englisch unterstützt und die API-Modelle hinter der aktuellen Version 2.5 von Tongyi Qianwen darstellt."
   },
+  "qwen-plus": {
+    "description": "Qwen Plus ist die verbesserte Version des großangelegten Sprachmodells, das Eingaben in verschiedenen Sprachen wie Chinesisch und Englisch unterstützt."
+  },
   "qwen-plus-latest": {
     "description": "Der Tongyi Qianwen ist die erweiterte Version eines groß angelegten Sprachmodells, das Eingaben in verschiedenen Sprachen wie Chinesisch und Englisch unterstützt."
+  },
+  "qwen-turbo": {
+    "description": "Qwen Turbo ist ein großangelegtes Sprachmodell, das Eingaben in verschiedenen Sprachen wie Chinesisch und Englisch unterstützt."
   },
   "qwen-turbo-latest": {
     "description": "Der Tongyi Qianwen ist ein groß angelegtes Sprachmodell, das Eingaben in verschiedenen Sprachen wie Chinesisch und Englisch unterstützt."
@@ -1136,11 +1208,17 @@
   "qwen2.5-7b-instruct": {
     "description": "Das 7B-Modell von Tongyi Qianwen 2.5 ist öffentlich zugänglich."
   },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "Die Open-Source-Version des Qwen-Codemodells."
+  },
   "qwen2.5-coder-32b-instruct": {
     "description": "Open-Source-Version des Tongyi Qianwen Code-Modells."
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "Die Open-Source-Version des Tongyi Qianwen Code-Modells."
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Das Qwen-Math-Modell verfügt über starke Fähigkeiten zur Lösung mathematischer Probleme."
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Das Qwen-Math-Modell verfügt über starke Fähigkeiten zur Lösung mathematischer Probleme."

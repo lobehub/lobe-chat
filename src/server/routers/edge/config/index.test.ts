@@ -45,7 +45,7 @@ describe('configRouter', () => {
 
         it('should work correct with gpt-4', async () => {
           process.env.OPENAI_MODEL_LIST =
-            '-all,+gpt-3.5-turbo-1106,+gpt-3.5-turbo,+gpt-4,+gpt-4-32k,+gpt-4-1106-preview,+gpt-4-vision-preview';
+            '-all,+gpt-3.5-turbo-1106,+gpt-3.5-turbo,+gpt-4,+gpt-4-32k,+gpt-4-1106-preview,+gpt-4-vision';
 
           const response = await router.getGlobalConfig();
 

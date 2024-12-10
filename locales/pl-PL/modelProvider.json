@@ -119,17 +119,17 @@
         },
         "title": "Zainstaluj i uruchom aplikację Ollama lokalnie",
         "windowsTab": "Windows (wersja podglądowa)"
-      },
-      "unlock": {
-        "cancel": "Anuluj pobieranie",
-        "confirm": "Pobierz",
-        "description": "Wprowadź etykietę modelu Ollama, aby kontynuować sesję",
-        "downloaded": "{{completed}} / {{total}}",
-        "starting": "Rozpoczynanie pobierania...",
-        "title": "Pobierz określony model Ollama"
       }
     },
-    "title": "Ollama"
+    "title": "Ollama",
+    "unlock": {
+      "cancel": "Anuluj pobieranie",
+      "confirm": "Pobierz",
+      "description": "Wprowadź etykietę swojego modelu Ollama, aby zakończyć i kontynuować rozmowę",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Rozpoczynam pobieranie...",
+      "title": "Pobierz określony model Ollama"
+    }
   },
   "sensenova": {
     "sensenovaAccessKeyID": {
