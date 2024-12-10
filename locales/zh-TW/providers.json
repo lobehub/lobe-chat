@@ -34,6 +34,9 @@
   "groq": {
     "description": "Groq 的 LPU 推理引擎在最新的獨立大語言模型（LLM）基準測試中表現卓越，以其驚人的速度和效率重新定義了 AI 解決方案的標準。Groq 是一種即時推理速度的代表，在基於雲的部署中展現了良好的性能。"
   },
+  "higress": {
+    "description": ""
+  },
   "huggingface": {
     "description": "HuggingFace Inference API 提供了一種快速且免費的方式，讓您可以探索成千上萬種模型，適用於各種任務。無論您是在為新應用程式進行原型設計，還是在嘗試機器學習的功能，這個 API 都能讓您即時訪問多個領域的高性能模型。"
   },
