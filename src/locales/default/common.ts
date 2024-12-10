@@ -25,7 +25,6 @@ export default {
   defaultAgent: '自定义助手',
   defaultSession: '自定义助手',
   delete: '删除',
-  document: '使用文档',
   download: '下载',
   duplicate: '创建副本',
   edit: '编辑',
@@ -113,12 +112,7 @@ export default {
   layoutInitializing: '正在加载布局...',
   legal: '法律声明',
   loading: '加载中...',
-  mail: {
-    business: '商务合作',
-    support: '邮件支持',
-  },
   oauth: 'SSO 登录',
-  officialSite: '官方网站',
   ok: '确定',
   password: '密码',
   pin: '置顶',
@@ -182,7 +176,6 @@ export default {
   userPanel: {
     anonymousNickName: '匿名用户',
     billing: '账单管理',
-    cloud: '体验 {{name}}',
     data: '数据存储',
     defaultNickname: '社区版用户',
     moveGuide: '设置按钮搬到这里啦',
