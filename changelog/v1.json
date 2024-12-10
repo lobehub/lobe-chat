@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Clean the gpt-4-vision-preview models."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.10"
+  },
+  {
+    "children": {
       "improvements": ["Refactor the clerk user service implement."],
       "fixes": ["Nullptr errors in NextAuth adapter."]
     },
