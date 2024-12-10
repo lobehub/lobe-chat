@@ -110,6 +110,8 @@ export const formatTokenNumber = (num: number): string => {
 export const formatPrice = (price: number, fractionDigits: number = 2) => {
   if (!price && price !== 0) return '--';
 
+  if (fractionDigits === 0) return numeral(price).format('0,0');
+
   const [a, b] = price.toFixed(fractionDigits).split('.');
   return `${numeral(a).format('0,0')}.${b}`;
 };
