@@ -1,5 +1,5 @@
 ## Base image for all building stages
-FROM node:20-slim AS base
+FROM node:23-slim AS base
 
 ARG USE_CN_MIRROR
 
