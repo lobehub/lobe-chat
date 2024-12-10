@@ -19,13 +19,23 @@ curl -sSL https://dokploy.com/install.sh | sh
 ```
 1. Connect your GitHub to Dokploy in the Settings / Git section according to the prompt.
    
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/13853032171380694273.png)
+![](https://github.com/user-attachments/assets/c75eb19e-e0f5-4135-91e4-55be8be8a996)
 
 2. Enter the Projects interface to create a Project.
 
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/16591425558797855614.png)
+![](https://github.com/user-attachments/assets/4e04928d-0171-48d1-afff-e22fc2faaf4e)
 
-### Prepare the Clerk authentication service.
+### Configure S3 Storage Service
+In the server-side database, we need to configure the S3 storage service to store files. For detailed configuration instructions,  please refer to the section [Configure S3 Storage Service](https://lobehub.com/docs/self-hosting/server-database/vercel#3-configure-s-3-storage-service) in the Vercel deployment guide。After the configuration is complete, you will obtain the following environment variables:
+```shell
+S3_ACCESS_KEY_ID=
+S3_SECRET_ACCESS_KEY=
+S3_ENDPOINT=
+S3_BUCKET=
+S3_PUBLIC_DOMAIN=
+S3_ENABLE_PATH_STYLE=
+```
+### Configure the Clerk authentication service.
 Obtain the three environment variables: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `CLERK_WEBHOOK_SECRET`. For detailed configuration steps for Clerk, please refer to the section [Configure Authentication Service](https://lobehub.com/docs/self-hosting/server-database/vercel#2-configure-authentication-service) in the Vercel deployment guide.
 ```shell
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_xxxxxxxxxxx
@@ -35,7 +45,7 @@ CLERK_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxx
 ## 2. Deploying the database on Dokploy
 Enter the previously created Project, click on Create Service, and select Database. In the Database interface, choose PostgreSQL, then set the database name, user, and password. In the Docker image field, enter `pgvector/pgvector:pg17`, and finally click Create to create the database.
 
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/5623702442003438281.png)
+![](https://github.com/user-attachments/assets/97899819-278f-42fd-804a-144d521d4b4f)
 
 Enter the created database and set an unused port in External Credentials to allow external access; otherwise, LobeChat will not be able to connect to the database.
 You can view the Postgres database connection URL in External Host, as shown below:
@@ -44,20 +54,20 @@ postgresql://postgres:wAbLxfXSwkxxxxxx@45.577.281.48:5432/postgres
 ```
 Finally, click Deploy to deploy the database.
 
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/11157006600651144700.png)
+![](https://github.com/user-attachments/assets/b4e89dd4-877b-43fe-aa42-4680de17ba8e)
 
 ## Deploy LobeChat on Dokploy.
 Click "Create Service", select "Application", and create the LobeChat application.
 
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/12753556366250625759.png)
+![](https://github.com/user-attachments/assets/4cbbbcce-36be-48ff-bb0b-31607a0bba5c)
 
 Enter the created LobeChat application, select the forked lobe-chat project and branch, and click Save to save.
 
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/1079936047066026051.png)
+![](https://github.com/user-attachments/assets/2bb4c09d-75bb-4c46-bb2f-faf538308305)
 
 Switch to the Environment section, fill in the environment variables, and click Save.
 
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/14829476901335223163.png)
+![](https://github.com/user-attachments/assets/0f79c266-cce5-4936-aabd-4c8f19196d91)
 
 ```shell
 # Environment variables required for building
@@ -98,14 +108,13 @@ OPENAI_PROXY_URL=
 ```
 After adding the environment variables and saving, click Deploy to initiate the deployment. You can check the deployment progress and log information under Deployments.
 
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/6920727936542816421.png)
+![](https://github.com/user-attachments/assets/411e2002-61f0-4010-9841-18e88ca895ec)
 
 After a successful deployment, bind your own domain to your LobeChat application and request a certificate on the Domains page.
 
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/8919726838978972949.png)
+![](https://github.com/user-attachments/assets/dd6bc4a4-3c20-4162-87fd-5cac57e5d7e7)
 
 ## Check if LobeChat is working properly.
 Go to your LobeChat website, and if you click on the login button in the upper left corner and the login pop-up appears normally, it means you have configured it successfully. Enjoy it to the fullest!
 
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/8494426163514783097.png)
-![](https://beta.appflowy.cloud/api/file_storage/e4e5bffb-f416-4f28-a3d8-e4a55237250d/blob/11882591092313141089.png)
+![](https://github.com/user-attachments/assets/798ddb18-50c7-462a-a083-0c6841351d26)
