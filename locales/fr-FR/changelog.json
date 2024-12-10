@@ -1,0 +1,18 @@
+{
+  "actions": {
+    "followOnX": "Suivez-nous sur X",
+    "subscribeToUpdates": "Abonnez-vous aux mises à jour",
+    "versions": "Détails de la version"
+  },
+  "addedWhileAway": "Nous avons ajouté de nouvelles fonctionnalités pendant votre absence.",
+  "allChangelog": "Voir tous les journaux de mise à jour",
+  "description": "Suivez en continu les nouvelles fonctionnalités et améliorations de {{appName}}",
+  "pagination": {
+    "older": "Voir les modifications antérieures",
+    "prev": "Page précédente"
+  },
+  "readDetails": "Lire les détails",
+  "title": "Journal des mises à jour",
+  "versionDetails": "Détails de la version",
+  "welcomeBack": "Bienvenue de nouveau!"
+}

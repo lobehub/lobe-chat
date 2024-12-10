@@ -1,4 +1,8 @@
 {
+  "changelog": {
+    "description": "Blijf op de hoogte van nieuwe functies en verbeteringen van {{appName}}",
+    "title": "Wijzigingslog"
+  },
   "chat": {
     "description": "{{appName}} biedt je de beste ervaring met ChatGPT, Claude, Gemini, en OLLaMA WebUI",
     "title": "{{appName}}: Persoonlijke AI-efficiëntietool, geef jezelf een slimmer brein"
