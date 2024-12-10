@@ -211,7 +211,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             },
             {
               // https://github.com/lobehub/lobe-chat/pull/318
-              headers: { Accept: '*/*' },
+              headers: { Accept: '*/*', ...options?.requestHeaders },
               signal: options?.signal,
             },
           );
