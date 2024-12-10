@@ -130,6 +130,7 @@ const ZhiPu: ModelProviderCard = {
         input: 0,
         output: 0,
       },
+      releasedAt: '2024-12-09',
       tokens: 8192,
       vision: true,
     },
