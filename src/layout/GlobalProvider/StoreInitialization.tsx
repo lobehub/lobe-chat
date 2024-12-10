@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { LOBE_URL_IMPORT_NAME } from '@/const/url';
+import { migrate } from '@/database/client/migrate';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useAgentStore } from '@/store/agent';
@@ -90,6 +91,11 @@ const StoreInitialization = memo(() => {
     }
   }, [router, mobile]);
 
+  useEffect(() => {
+    migrate().then(() => {
+      console.log('migrate success!');
+    });
+  }, []);
   return null;
 });
 
