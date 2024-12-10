@@ -25,7 +25,6 @@
   "defaultAgent": "自定义助手",
   "defaultSession": "自定义助手",
   "delete": "删除",
-  "document": "使用文档",
   "download": "下载",
   "duplicate": "创建副本",
   "edit": "编辑",
@@ -71,7 +70,6 @@
       "speed": "上传速度"
     }
   },
-  "information": "社区与资讯",
   "installPWA": "安装浏览器应用 (PWA)",
   "lang": {
     "ar": "阿拉伯语",
@@ -119,7 +117,6 @@
     "support": "邮件支持"
   },
   "oauth": "SSO 登录",
-  "officialSite": "官方网站",
   "ok": "确定",
   "password": "密码",
   "pin": "置顶",
