@@ -411,16 +411,6 @@ export const generateAIChat: StateCreator<
       ? agentConfig.params.max_tokens
       : undefined;
 
-    // 5. handle config for the vision model
-    // Due to the gpt-4-vision-preview model's default max_tokens is very small
-    // we need to set the max_tokens a larger one.
-    if (agentConfig.model === 'gpt-4-vision-preview') {
-      /* eslint-disable unicorn/no-lonely-if */
-      if (!agentConfig.params.max_tokens)
-        // refs: https://github.com/lobehub/lobe-chat/issues/837
-        agentConfig.params.max_tokens = 2048;
-    }
-
     let isFunctionCall = false;
     let msgTraceId: string | undefined;
     let output = '';

@@ -53,7 +53,10 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     async createUser(user): Promise<AdapterUser> {
       const { id, name, email, emailVerified, image, providerAccountId } = user;
       // return the user if it already exists
-      let existingUser = email.trim() ? await UserModel.findByEmail(serverDB, email) : undefined;
+      let existingUser =
+        email && typeof email === 'string' && email.trim()
+          ? await UserModel.findByEmail(serverDB, email)
+          : undefined;
       // If the user is not found by email, try to find by providerAccountId
       if (!existingUser && providerAccountId) {
         existingUser = await UserModel.findById(serverDB, providerAccountId);
@@ -169,7 +172,10 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     async getUserByEmail(email): Promise<AdapterUser | null> {
-      const lobeUser = email.trim() ? await UserModel.findByEmail(serverDB, email) : undefined;
+      const lobeUser =
+        email && typeof email === 'string' && email.trim()
+          ? await UserModel.findByEmail(serverDB, email)
+          : undefined;
       return lobeUser ? mapLobeUserToAdapterUser(lobeUser) : null;
     },
 
