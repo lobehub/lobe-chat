@@ -659,6 +659,9 @@
   "glm-4v": {
     "description": "GLM-4V biedt krachtige beeldbegrip- en redeneercapaciteiten, ondersteunt verschillende visuele taken."
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash richt zich op efficiënte enkele afbeelding begrip, en is geschikt voor scenario's met snelle afbeeldingsanalyse, zoals real-time beeldanalyse of batchafbeeldingsverwerking."
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus heeft de capaciteit om video-inhoud en meerdere afbeeldingen te begrijpen, geschikt voor multimodale taken."
   },
@@ -711,9 +714,6 @@
     "description": "GPT-4 biedt een groter contextvenster en kan langere tekstinvoer verwerken, geschikt voor scenario's die uitgebreide informatie-integratie en data-analyse vereisen."
   },
   "gpt-4-1106-preview": {
-    "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
   },
   "gpt-4-32k": {
