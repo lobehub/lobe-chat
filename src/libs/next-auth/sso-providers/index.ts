@@ -9,6 +9,7 @@ import Github from './github';
 import Logto from './logto';
 import MicrosoftEntraID from './microsoft-entra-id';
 import Zitadel from './zitadel';
+import WeChat from './wechat';
 
 export const ssoProviders = [
   Auth0,
@@ -22,4 +23,5 @@ export const ssoProviders = [
   CloudflareZeroTrust,
   Casdoor,
   MicrosoftEntraID,
+  WeChat,
 ];
