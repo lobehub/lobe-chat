@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.36.11](https://github.com/lobehub/lobe-chat/compare/v1.36.10...v1.36.11)
+
+<sup>Released on **2024-12-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor data importer to repos.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor data importer to repos, closes [#4974](https://github.com/lobehub/lobe-chat/issues/4974) ([0259fec](https://github.com/lobehub/lobe-chat/commit/0259fec))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.10](https://github.com/lobehub/lobe-chat/compare/v1.36.9...v1.36.10)
 
 <sup>Released on **2024-12-10**</sup>
