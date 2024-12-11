@@ -2,7 +2,6 @@
 import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import {
   agents,
   agentsToSessions,
@@ -12,6 +11,7 @@ import {
   topics,
   users,
 } from '@/database/schemas';
+import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { CURRENT_CONFIG_VERSION } from '@/migrations';
 import { ImportResult } from '@/services/config';
 import { ImporterEntryData } from '@/types/importer';

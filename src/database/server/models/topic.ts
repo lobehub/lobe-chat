@@ -2,9 +2,9 @@ import { Column, count, inArray, sql } from 'drizzle-orm';
 import { and, desc, eq, exists, isNull, like, or } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
+import { idGenerator } from '@/database/utils/idGenerator';
 
 import { NewMessage, TopicItem, messages, topics } from '../../schemas';
-import { idGenerator } from '@/database/utils/idGenerator';
 
 export interface CreateTopicParams {
   favorite?: boolean;

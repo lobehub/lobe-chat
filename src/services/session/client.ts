@@ -1,9 +1,11 @@
 import { DeepPartial } from 'utility-types';
 
 import { INBOX_SESSION_ID } from '@/const/session';
-import { SessionModel } from '@/database/_deprecated/models/session';
-import { SessionGroupModel } from '@/database/_deprecated/models/sessionGroup';
 import { UserModel } from '@/database/_deprecated/models/user';
+import { clientDB } from '@/database/client/db';
+import { AgentItem } from '@/database/schemas';
+import { SessionModel } from '@/database/server/models/session';
+import { SessionGroupModel } from '@/database/server/models/sessionGroup';
 import { useUserStore } from '@/store/user';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
@@ -20,11 +22,22 @@ import { merge } from '@/utils/merge';
 import { ISessionService } from './type';
 
 export class ClientService implements ISessionService {
-  async createSession(
-    type: LobeSessionType,
-    defaultValue: Partial<LobeAgentSession>,
-  ): Promise<string> {
-    const item = await SessionModel.create(type, defaultValue);
+  private sessionModel: SessionModel;
+  private sessionGroupModel: SessionGroupModel;
+
+  constructor(userId: string) {
+    this.sessionGroupModel = new SessionGroupModel(clientDB as any, userId);
+    this.sessionModel = new SessionModel(clientDB as any, userId);
+  }
+
+  async createSession(type: LobeSessionType, data: Partial<LobeAgentSession>): Promise<string> {
+    const { config, group, meta, ...session } = data;
+
+    const item = await this.sessionModel.create({
+      config: { ...config, ...meta } as any,
+      session: { ...session, groupId: group },
+      type,
+    });
     if (!item) {
       throw new Error('session create Error');
     }
@@ -32,17 +45,18 @@ export class ClientService implements ISessionService {
   }
 
   async batchCreateSessions(importSessions: LobeSessions) {
-    return SessionModel.batchCreate(importSessions);
+    // @ts-ignore
+    return this.sessionModel.batchCreate(importSessions);
   }
 
   async cloneSession(id: string, newTitle: string): Promise<string | undefined> {
-    const res = await SessionModel.duplicate(id, newTitle);
+    const res = await this.sessionModel.duplicate(id, newTitle);
 
     if (res) return res?.id;
   }
 
   async getGroupedSessions(): Promise<ChatSessionList> {
-    return SessionModel.queryWithGroups();
+    return this.sessionModel.queryWithGroups();
   }
 
   async getSessionConfig(id: string): Promise<LobeAgentConfig> {
@@ -50,54 +64,50 @@ export class ClientService implements ISessionService {
       return UserModel.getAgentConfig();
     }
 
-    const res = await SessionModel.findById(id);
+    const res = await this.sessionModel.findByIdOrSlug(id);
 
     if (!res) throw new Error('Session not found');
 
-    return res.config as LobeAgentConfig;
+    return res.agent as LobeAgentConfig;
   }
 
+  /**
+   * 这个方法要对应移除的
+   */
   async getSessionsByType(type: 'agent' | 'group' | 'all' = 'all'): Promise<LobeSessions> {
     switch (type) {
       // TODO: add a filter to get only agents or agents
       case 'group': {
-        return SessionModel.query();
+        // @ts-ignore
+        return this.sessionModel.query();
       }
       case 'agent': {
-        return SessionModel.query();
+        // @ts-ignore
+        return this.sessionModel.query();
       }
 
       case 'all': {
-        return SessionModel.query();
+        // @ts-ignore
+        return this.sessionModel.query();
       }
     }
   }
 
-  async getAllAgents(): Promise<LobeSessions> {
-    // TODO: add a filter to get only agents
-    return await SessionModel.query();
-  }
-
   async countSessions() {
-    return SessionModel.count();
-  }
-
-  async hasSessions() {
-    return (await this.countSessions()) !== 0;
+    return this.sessionModel.count();
   }
 
   async searchSessions(keyword: string) {
-    return SessionModel.queryByKeyword(keyword);
+    return this.sessionModel.queryByKeyword(keyword);
   }
 
   async updateSession(
     id: string,
     data: Partial<Pick<LobeAgentSession, 'group' | 'meta' | 'pinned'>>,
   ) {
-    const pinned = typeof data.pinned === 'boolean' ? (data.pinned ? 1 : 0) : undefined;
-    const prev = await SessionModel.findById(id);
+    const prev = await this.sessionModel.findByIdOrSlug(id);
 
-    return SessionModel.update(id, merge(prev, { ...data, pinned }));
+    return this.sessionModel.update(id, merge(prev, data));
   }
 
   async updateSessionConfig(
@@ -112,7 +122,7 @@ export class ClientService implements ISessionService {
       return useUserStore.getState().updateDefaultAgent({ config });
     }
 
-    return SessionModel.updateConfig(activeId, config);
+    return this.sessionModel.updateConfig(activeId, config as AgentItem);
   }
 
   async updateSessionMeta(
@@ -124,7 +134,7 @@ export class ClientService implements ISessionService {
     // inbox 不允许修改 meta
     if (activeId === INBOX_SESSION_ID) return;
 
-    return SessionModel.update(activeId, { meta });
+    return this.sessionModel.update(activeId, meta);
   }
 
   async updateSessionChatConfig(
@@ -137,11 +147,11 @@ export class ClientService implements ISessionService {
   }
 
   async removeSession(id: string) {
-    return SessionModel.delete(id);
+    return this.sessionModel.delete(id);
   }
 
   async removeAllSessions() {
-    return SessionModel.clearTable();
+    return this.sessionModel.deleteAll();
   }
 
   // ************************************** //
@@ -149,7 +159,7 @@ export class ClientService implements ISessionService {
   // ************************************** //
 
   async createSessionGroup(name: string, sort?: number) {
-    const item = await SessionGroupModel.create(name, sort);
+    const item = await this.sessionGroupModel.create({ name, sort });
     if (!item) {
       throw new Error('session group create Error');
     }
@@ -157,27 +167,28 @@ export class ClientService implements ISessionService {
     return item.id;
   }
 
-  async batchCreateSessionGroups(groups: SessionGroups) {
-    return SessionGroupModel.batchCreate(groups);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async batchCreateSessionGroups(_groups: SessionGroups) {
+    return { added: 0, ids: [], skips: [], success: true };
   }
 
-  async removeSessionGroup(id: string, removeChildren?: boolean) {
-    return await SessionGroupModel.delete(id, removeChildren);
+  async removeSessionGroup(id: string) {
+    return await this.sessionGroupModel.delete(id);
   }
 
   async updateSessionGroup(id: string, data: Partial<SessionGroupItem>) {
-    return SessionGroupModel.update(id, data);
+    return this.sessionGroupModel.update(id, data);
   }
 
   async updateSessionGroupOrder(sortMap: { id: string; sort: number }[]) {
-    return SessionGroupModel.updateOrder(sortMap);
+    return this.sessionGroupModel.updateOrder(sortMap);
   }
 
   async getSessionGroups(): Promise<SessionGroupItem[]> {
-    return SessionGroupModel.query();
+    return this.sessionGroupModel.query();
   }
 
   async removeSessionGroups() {
-    return SessionGroupModel.clear();
+    return this.sessionGroupModel.deleteAll();
   }
 }

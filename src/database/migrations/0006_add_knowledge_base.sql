@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS "unstructured_chunks" (
 	"file_id" varchar
 );
 --> statement-breakpoint
-ALTER TABLE "files_to_messages" RENAME TO "messages_files";
+ALTER TABLE "files_to_messages" RENAME TO "messages_files";--> statement-breakpoint
 DROP TABLE "files_to_agents";--> statement-breakpoint
 ALTER TABLE "files" ADD COLUMN "file_hash" varchar(64);--> statement-breakpoint
 ALTER TABLE "files" ADD COLUMN "chunk_task_id" uuid;--> statement-breakpoint

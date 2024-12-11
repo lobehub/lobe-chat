@@ -8,7 +8,7 @@ import {
   MessageRoleType,
 } from '@/types/message';
 import { MetaData } from '@/types/meta';
-import { SessionGroupId, SessionGroupItem } from '@/types/session';
+import { SessionGroupId } from '@/types/session';
 import { ChatTopic } from '@/types/topic';
 
 interface ImportSession {
@@ -64,9 +64,17 @@ interface ImportMessage {
   updatedAt: number;
 }
 
+interface ImportSessionGroup {
+  createdAt: number;
+  id: string;
+  name: string;
+  sort?: number | null;
+  updatedAt: number;
+}
+
 export interface ImporterEntryData {
   messages?: ImportMessage[];
-  sessionGroups?: SessionGroupItem[];
+  sessionGroups?: ImportSessionGroup[];
   sessions?: ImportSession[];
   topics?: ChatTopic[];
   version: number;
