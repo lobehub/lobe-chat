@@ -50,10 +50,36 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
 a[href="https://github.com/lobehub/lobe-chat"] {
   display: none !important;
 }
-
-/* 删除特定的 flexbox 子元素 */
 .layoutkit-flexbox.css-fr78qt a:last-child {
+	display: none !important;
+}
+
+/* 删除使用文档链接 */
+a[href="https://lobehub.com/zh/docs/usage/start?utm_source=chat_preview"] {
   display: none !important;
+}
+
+/* 主页 logo */
+.css-9tjxg1.acss-x8u4sp > .layoutkit-flexbox::before {
+    content: "CloudOSD";
+    position: absolute;
+    top: 18px;
+    left: 16px;
+    right: 0px;
+    font-size: 20px;
+    font-weight: 700;
+	opacity: 0;
+}
+.css-1mqleeb .css-9tjxg1.acss-x8u4sp > .layoutkit-flexbox::before {
+    background: #222;
+	color: #fff;
+}
+.css-gcermr .css-9tjxg1.acss-x8u4sp > .layoutkit-flexbox::before {
+    background: #fff;
+	color: #000;
+}
+.css-9tjxg1.acss-x8u4sp > .layoutkit-flexbox > div:first-child > svg:first-child {
+    display: none !important;
 }
 
 /* 删除特定的 form 子元素 */
