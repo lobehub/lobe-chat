@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { eq, inArray } from 'drizzle-orm';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import {
@@ -13,22 +13,15 @@ import {
   users,
 } from '@/database/schemas';
 import { CURRENT_CONFIG_VERSION } from '@/migrations';
-import { ImportResult } from '@/services/config';
 import { ImporterEntryData } from '@/types/importer';
 
-import { DataImporterService } from '../index';
+import { DataImporterRepos } from '../index';
 import mockImportData from './fixtures/messages.json';
 
-let serverDB = await getTestDBInstance();
-
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
+const serverDB = await getTestDBInstance();
 
 const userId = 'test-user-id';
-let importer: DataImporterService;
+let importer: DataImporterRepos;
 
 beforeEach(async () => {
   await serverDB.delete(users);
@@ -38,7 +31,7 @@ beforeEach(async () => {
     await tx.insert(users).values({ id: userId });
   });
 
-  importer = new DataImporterService(userId);
+  importer = new DataImporterRepos(serverDB, userId);
 });
 
 describe('DataImporter', () => {
