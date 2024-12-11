@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Add Gemini 2.0 Flash Exp model."]
+    },
+    "date": "2024-12-11",
+    "version": "1.36.13"
+  },
+  {
+    "children": {
+      "improvements": ["Update sql and types."]
+    },
+    "date": "2024-12-11",
+    "version": "1.36.12"
+  },
+  {
+    "children": {
       "improvements": ["Refactor data importer to repos."]
     },
     "date": "2024-12-11",
