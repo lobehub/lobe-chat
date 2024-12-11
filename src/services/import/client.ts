@@ -32,7 +32,7 @@ export class ClientService {
     }
 
     if (sessionGroups.length > 0) {
-      const res = await SessionGroupModel.batchCreate(sessionGroups);
+      const res = await SessionGroupModel.batchCreate(sessionGroups as any);
       sessionGroupResult = this.mapImportResult(res);
     }
 
