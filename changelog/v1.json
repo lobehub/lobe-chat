@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor data importer to repos."]
+    },
+    "date": "2024-12-11",
+    "version": "1.36.11"
+  },
+  {
+    "children": {
       "improvements": ["Clean the gpt-4-vision-preview models."]
     },
     "date": "2024-12-10",
