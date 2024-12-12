@@ -1,7 +1,4 @@
-import { inArray } from 'drizzle-orm';
-import { and, desc, eq } from 'drizzle-orm/expressions';
-
-import { LobeChatDatabase } from '@/database/type';
+import { and, desc, eq, inArray } from 'drizzle-orm/expressions';
 
 import {
   agents,
@@ -11,6 +8,7 @@ import {
   files,
   knowledgeBases,
 } from '@/database/schemas';
+import { LobeChatDatabase } from '@/database/type';
 
 export class AgentModel {
   private userId: string;

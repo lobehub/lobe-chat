@@ -1,5 +1,4 @@
-import { eq } from 'drizzle-orm';
-import { and, asc, desc } from 'drizzle-orm/expressions';
+import { and, asc, desc, eq } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
