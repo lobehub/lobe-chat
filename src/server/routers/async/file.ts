@@ -3,14 +3,15 @@ import { chunk } from 'lodash-es';
 import pMap from 'p-map';
 import { z } from 'zod';
 
+import { serverDBEnv } from '@/config/db';
 import { fileEnv } from '@/config/file';
 import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
+import { NewChunkItem, NewEmbeddingsItem } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
-import { NewChunkItem, NewEmbeddingsItem } from '@/database/schemas';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
@@ -175,7 +176,7 @@ export const fileRouter = router({
         console.error(e);
         // if file not found, delete it from db
         if ((e as any).Code === 'NoSuchKey') {
-          await ctx.fileModel.delete(input.fileId);
+          await ctx.fileModel.delete(input.fileId, serverDBEnv.REMOVE_GLOBAL_FILE);
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
         }
       }
