@@ -105,7 +105,7 @@ RUN npm run build:docker
 ## Application image, copy all the files for production
 FROM busybox:latest AS app
 
-COPY --from=base /distroless/ /
+COPY --from=distroless /distroless/ /
 
 COPY --from=builder /app/public /app/public
 
