@@ -12,9 +12,9 @@ import {
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator } from '@/database/utils/idGenerator';
+
 import { accessedAt, createdAt, timestamps } from './_helpers';
 import { asyncTasks } from './asyncTask';
-import { chunks } from './rag';
 import { users } from './user';
 
 export const globalFiles = pgTable('global_files', {
@@ -58,20 +58,6 @@ export const files = pgTable('files', {
 
 export type NewFile = typeof files.$inferInsert;
 export type FileItem = typeof files.$inferSelect;
-
-export const fileChunks = pgTable(
-  'file_chunks',
-  {
-    fileId: varchar('file_id').references(() => files.id, { onDelete: 'cascade' }),
-    chunkId: uuid('chunk_id').references(() => chunks.id, { onDelete: 'cascade' }),
-    createdAt: createdAt(),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.fileId, t.chunkId] }),
-  }),
-);
-
-export type NewFileChunkItem = typeof fileChunks.$inferInsert;
 
 export const knowledgeBases = pgTable('knowledge_bases', {
   id: text('id')
