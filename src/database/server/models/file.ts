@@ -26,8 +26,21 @@ export class FileModel {
     this.db = db;
   }
 
-  create = async (params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string }) => {
+  create = async (
+    params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string },
+    insertToGlobalFiles?: boolean,
+  ) => {
     const result = await this.db.transaction(async (trx) => {
+      if (insertToGlobalFiles) {
+        await trx.insert(globalFiles).values({
+          fileType: params.fileType,
+          hashId: params.fileHash!,
+          metadata: params.metadata,
+          size: params.size,
+          url: params.url,
+        });
+      }
+
       const result = await trx
         .insert(files)
         .values({ ...params, userId: this.userId })
@@ -51,10 +64,26 @@ export class FileModel {
     return this.db.insert(globalFiles).values(file).returning();
   };
 
-  checkHash = async (hash: string) => {
-    const item = await this.db.query.globalFiles.findFirst({
-      where: eq(globalFiles.hashId, hash),
-    });
+  checkHash = async (hash: string, findInGlobalFiles = true) => {
+    let item:
+      | {
+          fileType: string;
+          metadata: any;
+          size: number;
+          url: string;
+        }
+      | undefined;
+
+    if (findInGlobalFiles) {
+      item = await this.db.query.globalFiles.findFirst({
+        where: eq(globalFiles.hashId, hash),
+      });
+    } else {
+      item = await this.db.query.files.findFirst({
+        where: eq(files.fileHash, hash),
+      });
+    }
+
     if (!item) return { isExist: false };
 
     return {
