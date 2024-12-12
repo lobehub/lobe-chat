@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Enable googleSearch Tool for gemini-2.0-flash-exp."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.15"
+  },
+  {
+    "children": {
       "improvements": ["Refactor database file model to remove server env."]
     },
     "date": "2024-12-12",
