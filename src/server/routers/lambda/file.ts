@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { serverDBEnv } from '@/config/db';
 import { serverDB } from '@/database/server';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
@@ -153,7 +154,7 @@ export const fileRouter = router({
   }),
 
   removeFile: fileProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
-    const file = await ctx.fileModel.delete(input.id);
+    const file = await ctx.fileModel.delete(input.id, serverDBEnv.REMOVE_GLOBAL_FILE);
 
     if (!file) return;
 
@@ -184,7 +185,10 @@ export const fileRouter = router({
   removeFiles: fileProcedure
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input, ctx }) => {
-      const needToRemoveFileList = await ctx.fileModel.deleteMany(input.ids);
+      const needToRemoveFileList = await ctx.fileModel.deleteMany(
+        input.ids,
+        serverDBEnv.REMOVE_GLOBAL_FILE,
+      );
 
       if (!needToRemoveFileList || needToRemoveFileList.length === 0) return;
 
