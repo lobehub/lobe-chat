@@ -154,7 +154,7 @@ export const fileRouter = router({
   }),
 
   removeFile: fileProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
-    const file = await ctx.fileModel.delete(input.id, !serverDBEnv.REMOVE_GLOBAL_FILE);
+    const file = await ctx.fileModel.delete(input.id, serverDBEnv.REMOVE_GLOBAL_FILE);
 
     if (!file) return;
 
