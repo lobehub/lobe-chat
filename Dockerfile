@@ -1,5 +1,9 @@
-## Base image for all building stages
-FROM node:20-slim AS base
+## Set global build ENV
+ARG BUILDER_PLATFORM=$TARGETPLATFORM
+ARG NODEJS_VERSION="20"
+
+## Distroless image
+FROM node:${NODEJS_VERSION}-slim AS distroless
 
 ARG USE_CN_MIRROR
 
@@ -30,7 +34,7 @@ RUN \
     && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 
 ## Builder image, install all the dependencies and build the app
-FROM base AS builder
+FROM --platform=${BUILDER_PLATFORM} node:${NODEJS_VERSION}-slim AS builder
 
 ARG USE_CN_MIRROR
 ARG NEXT_PUBLIC_BASE_PATH
@@ -94,7 +98,7 @@ RUN npm run build:docker
 ## Application image, copy all the files for production
 FROM busybox:latest AS app
 
-COPY --from=base /distroless/ /
+COPY --from=distroless /distroless/ /
 
 COPY --from=builder /app/public /app/public
 
@@ -166,6 +170,8 @@ ENV \
     GOOGLE_API_KEY="" GOOGLE_MODEL_LIST="" GOOGLE_PROXY_URL="" \
     # Groq
     GROQ_API_KEY="" GROQ_MODEL_LIST="" GROQ_PROXY_URL="" \
+    # Higress
+    HIGRESS_API_KEY="" HIGRESS_MODEL_LIST="" \
     # HuggingFace
     HUGGINGFACE_API_KEY="" HUGGINGFACE_MODEL_LIST="" HUGGINGFACE_PROXY_URL="" \
     # Hunyuan
@@ -211,9 +217,7 @@ ENV \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
-    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST="" \
-    # Higress
-    HIGRESS_API_KEY="" HIGRESS_MODEL_LIST=""
+    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST=""
 
 USER nextjs
 
