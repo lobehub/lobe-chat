@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm/expressions';
 import { DeepPartial } from 'utility-types';
 
 import { LobeChatDatabase } from '@/database/type';
