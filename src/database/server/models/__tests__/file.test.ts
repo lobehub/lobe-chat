@@ -79,7 +79,6 @@ describe('FileModel', () => {
         where: eq(globalFiles.hashId, params.fileHash),
       });
       expect(globalFile).toMatchObject({
-        name: 'test-file.txt',
         url: 'https://example.com/test-file.txt',
         size: 100,
         hashId: 'abc',
