@@ -1,6 +1,6 @@
 ## Set global build ENV
 ARG BUILDER_PLATFORM=$TARGETPLATFORM
-ARG NODEJS_VERSION="20"
+ARG NODEJS_VERSION="22"
 
 ## Distroless image
 FROM node:${NODEJS_VERSION}-slim AS distroless
