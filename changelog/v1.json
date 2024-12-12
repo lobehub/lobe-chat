@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor database file model to remove server env."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.14"
+  },
+  {
+    "children": {
       "improvements": ["Add Gemini 2.0 Flash Exp model."]
     },
     "date": "2024-12-11",
