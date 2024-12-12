@@ -26,8 +26,21 @@ export class FileModel {
     this.db = db;
   }
 
-  create = async (params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string }) => {
+  create = async (
+    params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string },
+    insertToGlobalFiles?: boolean,
+  ) => {
     const result = await this.db.transaction(async (trx) => {
+      if (insertToGlobalFiles) {
+        await trx.insert(globalFiles).values({
+          fileType: params.fileType,
+          hashId: params.fileHash!,
+          metadata: params.metadata,
+          size: params.size,
+          url: params.url,
+        });
+      }
+
       const result = await trx
         .insert(files)
         .values({ ...params, userId: this.userId })

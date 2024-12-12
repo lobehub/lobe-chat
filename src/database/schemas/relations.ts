@@ -1,12 +1,14 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { relations } from 'drizzle-orm';
-import { pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
+import { pgTable, primaryKey, text, uuid, varchar } from 'drizzle-orm/pg-core';
+
+import { createdAt } from '@/database/schemas/_helpers';
 
 import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
 import { asyncTasks } from './asyncTask';
 import { files, knowledgeBases } from './file';
 import { messages, messagesFiles } from './message';
-import { unstructuredChunks } from './rag';
+import { chunks, unstructuredChunks } from './rag';
 import { sessionGroups, sessions } from './session';
 import { threads, topics } from './topic';
 
@@ -39,6 +41,19 @@ export const filesToSessions = pgTable(
     pk: primaryKey({ columns: [t.fileId, t.sessionId] }),
   }),
 );
+
+export const fileChunks = pgTable(
+  'file_chunks',
+  {
+    fileId: varchar('file_id').references(() => files.id, { onDelete: 'cascade' }),
+    chunkId: uuid('chunk_id').references(() => chunks.id, { onDelete: 'cascade' }),
+    createdAt: createdAt(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.fileId, t.chunkId] }),
+  }),
+);
+export type NewFileChunkItem = typeof fileChunks.$inferInsert;
 
 export const topicRelations = relations(topics, ({ one }) => ({
   session: one(sessions, {
