@@ -64,26 +64,10 @@ export class FileModel {
     return this.db.insert(globalFiles).values(file).returning();
   };
 
-  checkHash = async (hash: string, findInGlobalFiles = true) => {
-    let item:
-      | {
-          fileType: string;
-          metadata: any;
-          size: number;
-          url: string;
-        }
-      | undefined;
-
-    if (findInGlobalFiles) {
-      item = await this.db.query.globalFiles.findFirst({
-        where: eq(globalFiles.hashId, hash),
-      });
-    } else {
-      item = await this.db.query.files.findFirst({
-        where: eq(files.fileHash, hash),
-      });
-    }
-
+  checkHash = async (hash: string) => {
+    const item = await this.db.query.globalFiles.findFirst({
+      where: eq(globalFiles.hashId, hash),
+    });
     if (!item) return { isExist: false };
 
     return {
