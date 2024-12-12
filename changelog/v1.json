@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Fix claude first message can not be assistant."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.18"
+  },
+  {
     "children": {},
     "date": "2024-12-12",
     "version": "1.36.17"
