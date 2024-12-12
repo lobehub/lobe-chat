@@ -41,8 +41,8 @@ export class DataImporterRepos {
     let sessionIdMap: Record<string, string> = {};
     let topicIdMap: Record<string, string> = {};
 
-    // import sessionGroups
     await this.db.transaction(async (trx) => {
+      // import sessionGroups
       if (data.sessionGroups && data.sessionGroups.length > 0) {
         const query = await trx.query.sessionGroups.findMany({
           where: and(
@@ -164,10 +164,11 @@ export class DataImporterRepos {
         const mapArray = await trx
           .insert(topics)
           .values(
-            data.topics.map(({ id, createdAt, updatedAt, sessionId, ...res }) => ({
+            data.topics.map(({ id, createdAt, updatedAt, sessionId, favorite, ...res }) => ({
               ...res,
               clientId: id,
               createdAt: new Date(createdAt),
+              favorite: Boolean(favorite),
               sessionId: sessionId ? sessionIdMap[sessionId] : null,
               updatedAt: new Date(updatedAt),
               userId: this.userId,
