@@ -1,9 +1,4 @@
 {
-  "button": {
-    "import": "Import Configuration",
-    "market": "Visit Market",
-    "start": "Start Now"
-  },
   "guide": {
     "agents": {
       "replaceBtn": "Replace Batch",

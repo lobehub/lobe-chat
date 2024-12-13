@@ -596,6 +596,9 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro, 2 milyon token'a kadar destekler, orta ölçekli çok modlu modeller için ideal bir seçimdir ve karmaşık görevler için çok yönlü destek sunar."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp, Google'ın en yeni deneysel çok modlu yapay zeka modelidir. Gelecek nesil özellikleri, olağanüstü hızı, yerel araç çağrısı ve çok modlu üretim ile donatılmıştır."
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114, Google'ın en son deneysel çok modlu AI modeli olup, hızlı işleme yeteneğine sahip, metin, görüntü ve video girişlerini desteklemekte ve çeşitli görevlerde verimli bir şekilde ölçeklenmektedir."
   },

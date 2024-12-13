@@ -596,6 +596,9 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro 支持高达200万个tokens，是中型多模态模型的理想选择，适用于复杂任务的多方面支持。"
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp 是 Google 最新的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。"
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 是 Google 的实验性多模态AI模型，对输出质量有一定改进。"
   },

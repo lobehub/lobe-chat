@@ -8,12 +8,11 @@ import { authSelectors } from '@/store/user/selectors';
 
 const Redirect = memo(() => {
   const router = useRouter();
-  const [isLogin, isLoaded, isUserStateInit, isUserHasConversation, isOnboard] = useUserStore(
+  const [isLogin, isLoaded, isUserStateInit, isOnboard] = useUserStore(
     (s) => [
       authSelectors.isLogin(s),
       authSelectors.isLoaded(s),
       s.isUserStateInit,
-      s.isUserHasConversation,
       s.isOnboard,
     ],
   );
@@ -24,7 +23,7 @@ const Redirect = memo(() => {
 
     // this mean user is definitely not login
     if (!isLogin) {
-      router.replace('/welcome');
+      router.replace('/chat');
       return;
     }
 
@@ -38,12 +37,8 @@ const Redirect = memo(() => {
     }
 
     // finally check the conversation status
-    if (isUserHasConversation) {
-      router.replace('/chat');
-    } else {
-      router.replace('/welcome');
-    }
-  }, [isUserStateInit, isLoaded, isUserHasConversation, isOnboard, isLogin]);
+    router.replace('/chat');
+  }, [isUserStateInit, isLoaded, isOnboard, isLogin]);
 
   return null;
 });
