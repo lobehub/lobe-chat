@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2024-12-13",
+    "version": "1.36.21"
+  },
+  {
     "children": {
       "improvements": ["Update locale."]
     },
