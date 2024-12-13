@@ -1,5 +1,8 @@
+## Set global build ENV
+ARG NODEJS_VERSION="22"
+
 ## Base image for all building stages
-FROM node:20-slim AS base
+FROM node:${NODEJS_VERSION}-slim AS base
 
 ARG USE_CN_MIRROR
 
@@ -201,6 +204,8 @@ ENV \
     GOOGLE_API_KEY="" GOOGLE_MODEL_LIST="" GOOGLE_PROXY_URL="" \
     # Groq
     GROQ_API_KEY="" GROQ_MODEL_LIST="" GROQ_PROXY_URL="" \
+    # Higress
+    HIGRESS_API_KEY="" HIGRESS_MODEL_LIST="" HIGRESS_PROXY_URL="" \
     # HuggingFace
     HUGGINGFACE_API_KEY="" HUGGINGFACE_MODEL_LIST="" HUGGINGFACE_PROXY_URL="" \
     # Hunyuan
