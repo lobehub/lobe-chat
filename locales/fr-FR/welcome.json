@@ -1,9 +1,4 @@
 {
-  "button": {
-    "import": "Importer la configuration",
-    "market": "Parcourir le marché",
-    "start": "Démarrer maintenant"
-  },
   "guide": {
     "agents": {
       "replaceBtn": "Remplacer",

@@ -2,6 +2,90 @@
 
 # Changelog
 
+### [Version 1.36.23](https://github.com/lobehub/lobe-chat/compare/v1.36.22...v1.36.23)
+
+<sup>Released on **2024-12-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support csv chunking.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support csv chunking, closes [#4123](https://github.com/lobehub/lobe-chat/issues/4123) ([1b993a8](https://github.com/lobehub/lobe-chat/commit/1b993a8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.36.22](https://github.com/lobehub/lobe-chat/compare/v1.36.21...v1.36.22)
+
+<sup>Released on **2024-12-13**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.36.21](https://github.com/lobehub/lobe-chat/compare/v1.36.20...v1.36.21)
+
+<sup>Released on **2024-12-13**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.36.20](https://github.com/lobehub/lobe-chat/compare/v1.36.19...v1.36.20)
+
+<sup>Released on **2024-12-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update locale.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update locale, closes [#5008](https://github.com/lobehub/lobe-chat/issues/5008) ([6d42d30](https://github.com/lobehub/lobe-chat/commit/6d42d30))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.19](https://github.com/lobehub/lobe-chat/compare/v1.36.18...v1.36.19)
 
 <sup>Released on **2024-12-13**</sup>

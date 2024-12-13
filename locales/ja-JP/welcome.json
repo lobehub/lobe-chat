@@ -1,9 +1,4 @@
 {
-  "button": {
-    "import": "設定をインポート",
-    "market": "市場を見る",
-    "start": "すぐに開始"
-  },
   "guide": {
     "agents": {
       "replaceBtn": "別のグループ",
