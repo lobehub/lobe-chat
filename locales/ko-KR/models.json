@@ -596,6 +596,9 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro는 최대 200만 개의 토큰을 지원하며, 중형 다중 모달 모델의 이상적인 선택으로 복잡한 작업에 대한 다각적인 지원을 제공합니다."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모달 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모달 생성을 갖추고 있습니다."
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114는 Google의 최신 실험적 다중 모달 AI 모델로, 빠른 처리 능력을 갖추고 있으며, 텍스트, 이미지 및 비디오 입력을 지원하여 다양한 작업에 효율적으로 확장할 수 있습니다."
   },
