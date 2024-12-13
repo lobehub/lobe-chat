@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["One of Gemini functionCall error."]
+    },
+    "date": "2024-12-13",
+    "version": "1.36.19"
+  },
+  {
+    "children": {
       "fixes": ["Fix claude first message can not be assistant."]
     },
     "date": "2024-12-12",
