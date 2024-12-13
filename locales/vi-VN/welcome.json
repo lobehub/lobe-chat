@@ -1,9 +1,4 @@
 {
-  "button": {
-    "import": "Nhập Cấu Hình",
-    "market": "Thăm Thị trường",
-    "start": "Bắt Đầu Ngay"
-  },
   "guide": {
     "agents": {
       "replaceBtn": "Thay đổi",

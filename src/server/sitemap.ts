@@ -201,7 +201,6 @@ export class Sitemap {
     return [
       ...this._genSitemap('/', { noLocales: true }),
       ...this._genSitemap('/chat', { noLocales: true }),
-      ...this._genSitemap('/welcome', { noLocales: true }),
       /* ↓ cloud slot ↓ */
 
       /* ↑ cloud slot ↑ */
