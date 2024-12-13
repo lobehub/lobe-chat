@@ -293,6 +293,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   private convertToolToGoogleTool = (tool: ChatCompletionTool): FunctionDeclaration => {
     const functionDeclaration = tool.function;
     const parameters = functionDeclaration.parameters;
+    // refs: https://github.com/lobehub/lobe-chat/pull/5002
     const properties = parameters?.properties && Object.keys(parameters.properties).length > 0
     ? parameters.properties
     : { dummy: { type: 'string' } }; // dummy property to avoid empty object
