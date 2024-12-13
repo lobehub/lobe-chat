@@ -115,6 +115,70 @@ describe('LobeNextAuthDbAdapter', () => {
           await serverDB.query.users.findMany({ where: eq(users.email, user.email) }),
         ).toHaveLength(1);
       });
+
+      it('should create a user if id not exist and email is null', async () => {
+        // In previous version, it will link the account to the existing user if the email is null
+        // issue: https://github.com/lobehub/lobe-chat/issues/4918
+        expect(nextAuthAdapter).toBeDefined();
+        expect(nextAuthAdapter.createUser).toBeDefined();
+
+        const existUserId = 'user-db-1';
+        const existUserName = 'John Doe 1';
+        // @ts-expect-error: createUser is defined
+        await nextAuthAdapter.createUser({
+          ...user,
+          id: existUserId,
+          name: existUserName,
+          email: '',
+        });
+
+        const anotherUserId = 'user-db-2';
+        const anotherUserName = 'John Doe 2';
+        // @ts-expect-error: createUser is defined
+        await nextAuthAdapter.createUser({
+          ...user,
+          id: anotherUserId,
+          name: anotherUserName,
+          email: '',
+        });
+        // Should create a new user if id not exists and email is null
+        expect(
+          await serverDB.query.users.findMany({ where: eq(users.id, anotherUserId) }),
+        ).toHaveLength(1);
+      });
+
+      it('should create a user if id not exist even email is invalid type', async () => {
+        // In previous version, it will link the account to the existing user if the email is null
+        // issue: https://github.com/lobehub/lobe-chat/issues/4918
+        expect(nextAuthAdapter).toBeDefined();
+        expect(nextAuthAdapter.createUser).toBeDefined();
+
+        const existUserId = 'user-db-1';
+        const existUserName = 'John Doe 1';
+        // @ts-expect-error: createUser is defined
+        await nextAuthAdapter.createUser({
+          ...user,
+          id: existUserId,
+          name: existUserName,
+          email: Object({}), // assign a non-string value
+        });
+
+        const anotherUserId = 'user-db-2';
+        const anotherUserName = 'John Doe 2';
+        // @ts-expect-error: createUser is defined
+        await nextAuthAdapter.createUser({
+          ...user,
+          id: anotherUserId,
+          name: anotherUserName,
+          // @ts-expect-error: try to assign undefined value
+          email: undefined,
+        });
+
+        // Should create a new user if id not exists and email is null
+        expect(
+          await serverDB.query.users.findMany({ where: eq(users.id, anotherUserId) }),
+        ).toHaveLength(1);
+      });
     });
 
     describe('deleteUser', () => {

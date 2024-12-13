@@ -2,7 +2,6 @@ import { asc, count, eq, ilike, inArray, notExists, or, sum } from 'drizzle-orm'
 import { and, desc, like } from 'drizzle-orm/expressions';
 import type { PgTransaction } from 'drizzle-orm/pg-core';
 
-import { serverDBEnv } from '@/config/db';
 import { LobeChatDatabase } from '@/database/type';
 import { FilesTabs, QueryFileListParams, SortType } from '@/types/files';
 
@@ -27,8 +26,21 @@ export class FileModel {
     this.db = db;
   }
 
-  create = async (params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string }) => {
+  create = async (
+    params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string },
+    insertToGlobalFiles?: boolean,
+  ) => {
     const result = await this.db.transaction(async (trx) => {
+      if (insertToGlobalFiles) {
+        await trx.insert(globalFiles).values({
+          fileType: params.fileType,
+          hashId: params.fileHash!,
+          metadata: params.metadata,
+          size: params.size,
+          url: params.url,
+        });
+      }
+
       const result = await trx
         .insert(files)
         .values({ ...params, userId: this.userId })
@@ -67,7 +79,7 @@ export class FileModel {
     };
   };
 
-  delete = async (id: string) => {
+  delete = async (id: string, removeGlobalFile: boolean = true) => {
     const file = await this.findById(id);
     if (!file) return;
 
@@ -89,7 +101,7 @@ export class FileModel {
 
       // delete the file from global file if it is not used by other files
       // if `DISABLE_REMOVE_GLOBAL_FILE` is true, we will not remove the global file
-      if (fileCount === 0 && !serverDBEnv.DISABLE_REMOVE_GLOBAL_FILE) {
+      if (fileCount === 0 && removeGlobalFile) {
         await trx.delete(globalFiles).where(eq(globalFiles.hashId, fileHash));
 
         return file;
@@ -112,7 +124,7 @@ export class FileModel {
     return parseInt(result[0].totalSize!) || 0;
   };
 
-  deleteMany = async (ids: string[]) => {
+  deleteMany = async (ids: string[], removeGlobalFile: boolean = true) => {
     const fileList = await this.findByIds(ids);
     const hashList = fileList.map((file) => file.fileHash!);
 
@@ -144,7 +156,7 @@ export class FileModel {
 
       const needToDeleteList = fileHashCounts.filter((item) => item.count === 0);
 
-      if (needToDeleteList.length === 0 || serverDBEnv.DISABLE_REMOVE_GLOBAL_FILE) return;
+      if (needToDeleteList.length === 0 || !removeGlobalFile) return;
 
       // delete the file from global file if it is not used by other files
       await trx.delete(globalFiles).where(

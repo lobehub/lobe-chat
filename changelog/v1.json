@@ -1,6 +1,122 @@
 [
   {
     "children": {
+      "improvements": ["Update locale."]
+    },
+    "date": "2024-12-13",
+    "version": "1.36.20"
+  },
+  {
+    "children": {
+      "fixes": ["One of Gemini functionCall error."]
+    },
+    "date": "2024-12-13",
+    "version": "1.36.19"
+  },
+  {
+    "children": {
+      "fixes": ["Fix claude first message can not be assistant."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.18"
+  },
+  {
+    "children": {},
+    "date": "2024-12-12",
+    "version": "1.36.17"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the file model method."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.16"
+  },
+  {
+    "children": {
+      "improvements": ["Enable googleSearch Tool for gemini-2.0-flash-exp."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.15"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor database file model to remove server env."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.14"
+  },
+  {
+    "children": {
+      "improvements": ["Add Gemini 2.0 Flash Exp model."]
+    },
+    "date": "2024-12-11",
+    "version": "1.36.13"
+  },
+  {
+    "children": {
+      "improvements": ["Update sql and types."]
+    },
+    "date": "2024-12-11",
+    "version": "1.36.12"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor data importer to repos."]
+    },
+    "date": "2024-12-11",
+    "version": "1.36.11"
+  },
+  {
+    "children": {
+      "improvements": ["Clean the gpt-4-vision-preview models."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.10"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the clerk user service implement."],
+      "fixes": ["Nullptr errors in NextAuth adapter."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.9"
+  },
+  {
+    "children": {
+      "improvements": ["Add GLM-4V-Flash from Zhipu."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.8"
+  },
+  {
+    "children": {
+      "fixes": ["Fix pricing with 0 digit."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update groq, add llama3.3, Upgrade lobe-ui."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix wrong email linking in next-auth db adapter."]
+    },
+    "date": "2024-12-09",
+    "version": "1.36.5"
+  },
+  {
+    "children": {},
+    "date": "2024-12-09",
+    "version": "1.36.4"
+  },
+  {
+    "children": {
       "fixes": ["Support request headers for chat."]
     },
     "date": "2024-12-08",

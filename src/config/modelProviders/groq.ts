@@ -6,6 +6,20 @@ const Groq: ModelProviderCard = {
     // TODO: During preview launch, Groq is limiting 3.2 models to max_tokens of 8k.
     {
       description:
+        'Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。',
+      displayName: 'Llama 3.3 70B',
+      enabled: true,
+      functionCall: true,
+      id: 'llama-3.3-70b-versatile',
+      maxOutput: 8192,
+      pricing: {
+        input: 0.05,
+        output: 0.08,
+      },
+      tokens: 131_072,
+    },
+    {
+      description:
         'Llama 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
       displayName: 'Llama 3.2 11B Vision (Preview)',
       enabled: true,
@@ -159,6 +173,7 @@ const Groq: ModelProviderCard = {
   description:
     'Groq 的 LPU 推理引擎在最新的独立大语言模型（LLM）基准测试中表现卓越，以其惊人的速度和效率重新定义了 AI 解决方案的标准。Groq 是一种即时推理速度的代表，在基于云的部署中展现了良好的性能。',
   id: 'groq',
+  modelList: { showModelFetcher: true },
   modelsUrl: 'https://console.groq.com/docs/models',
   name: 'Groq',
   proxyUrl: {

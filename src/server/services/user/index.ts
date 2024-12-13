@@ -1,5 +1,4 @@
 import { UserJSON } from '@clerk/backend';
-import { NextResponse } from 'next/server';
 
 import { serverDB } from '@/database/server';
 import { UserModel } from '@/database/server/models/user';
@@ -12,16 +11,18 @@ export class UserService {
 
     // If user already exists, skip creating a new user
     if (res)
-      return NextResponse.json(
-        {
-          message: 'user not created due to user already existing in the database',
-          success: false,
-        },
-        { status: 200 },
-      );
+      return {
+        message: 'user not created due to user already existing in the database',
+        success: false,
+      };
 
     const email = params.email_addresses.find((e) => e.id === params.primary_email_address_id);
-    const phone = params.phone_numbers.find((e) => e.id === params.primary_phone_number_id);
+
+    const phone = params.phone_numbers.find((e, index) => {
+      if (!!params.primary_phone_number_id) return e.id === params.primary_phone_number_id;
+
+      return index === 0;
+    });
 
     /* ↓ cloud slot ↓ */
 
@@ -43,25 +44,14 @@ export class UserService {
 
     /* ↑ cloud slot ↑ */
 
-    return NextResponse.json({ message: 'user created', success: true }, { status: 200 });
+    return { message: 'user created', success: true };
   };
 
-  deleteUser = async (id?: string) => {
-    if (id) {
-      pino.info('delete user due to clerk webhook');
-
-      await UserModel.deleteUser(serverDB, id);
-
-      return NextResponse.json({ message: 'user deleted' }, { status: 200 });
-    } else {
-      pino.warn('clerk sent a delete user request, but no user ID was included in the payload');
-      return NextResponse.json({ message: 'ok' }, { status: 200 });
-    }
+  deleteUser = async (id: string) => {
+    await UserModel.deleteUser(serverDB, id);
   };
 
   updateUser = async (id: string, params: UserJSON) => {
-    pino.info('updating user due to clerk webhook');
-
     const userModel = new UserModel(serverDB, id);
 
     // Check if user already exists
@@ -69,16 +59,18 @@ export class UserService {
 
     // If user not exists, skip update the user
     if (!res)
-      return NextResponse.json(
-        {
-          message: "user not updated due to the user don't existing in the database",
-          success: false,
-        },
-        { status: 200 },
-      );
+      return {
+        message: "user not updated due to the user don't existing in the database",
+        success: false,
+      };
+
+    pino.info('updating user due to clerk webhook');
 
     const email = params.email_addresses.find((e) => e.id === params.primary_email_address_id);
-    const phone = params.phone_numbers.find((e) => e.id === params.primary_phone_number_id);
+    const phone = params.phone_numbers.find((e, index) => {
+      if (params.primary_phone_number_id) return e.id === params.primary_phone_number_id;
+      return index === 0;
+    });
 
     await userModel.updateUser({
       avatar: params.image_url,
@@ -90,6 +82,6 @@ export class UserService {
       username: params.username,
     });
 
-    return NextResponse.json({ message: 'user updated', success: true }, { status: 200 });
+    return { message: 'user updated', success: true };
   };
 }

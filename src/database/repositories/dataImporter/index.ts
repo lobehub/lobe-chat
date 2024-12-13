@@ -1,7 +1,6 @@
 import { eq, inArray, sql } from 'drizzle-orm';
 import { and } from 'drizzle-orm/expressions';
 
-import { serverDB } from '@/database/server';
 import {
   agents,
   agentsToSessions,
@@ -12,19 +11,22 @@ import {
   sessions,
   topics,
 } from '@/database/schemas';
+import { LobeChatDatabase } from '@/database/type';
 import { ImportResult } from '@/services/config';
 import { ImporterEntryData } from '@/types/importer';
 
-export class DataImporterService {
+export class DataImporterRepos {
   private userId: string;
+  private db: LobeChatDatabase;
 
   /**
    * The version of the importer that this module supports
    */
   supportVersion = 7;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
 
   importData = async (data: ImporterEntryData) => {
@@ -39,8 +41,8 @@ export class DataImporterService {
     let sessionIdMap: Record<string, string> = {};
     let topicIdMap: Record<string, string> = {};
 
-    // import sessionGroups
-    await serverDB.transaction(async (trx) => {
+    await this.db.transaction(async (trx) => {
+      // import sessionGroups
       if (data.sessionGroups && data.sessionGroups.length > 0) {
         const query = await trx.query.sessionGroups.findMany({
           where: and(
@@ -162,10 +164,11 @@ export class DataImporterService {
         const mapArray = await trx
           .insert(topics)
           .values(
-            data.topics.map(({ id, createdAt, updatedAt, sessionId, ...res }) => ({
+            data.topics.map(({ id, createdAt, updatedAt, sessionId, favorite, ...res }) => ({
               ...res,
               clientId: id,
               createdAt: new Date(createdAt),
+              favorite: Boolean(favorite),
               sessionId: sessionId ? sessionIdMap[sessionId] : null,
               updatedAt: new Date(updatedAt),
               userId: this.userId,
