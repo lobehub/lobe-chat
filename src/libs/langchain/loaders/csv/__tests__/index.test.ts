@@ -1,10 +1,7 @@
 // @vitest-environment node
-import { Console } from 'node:console';
 import * as fs from 'node:fs';
 import { join } from 'node:path';
 import { expect } from 'vitest';
-
-import { dataSync } from '@/database/client/core';
 
 import { CsVLoader } from '../index';
 
