@@ -1,9 +1,4 @@
 {
-  "button": {
-    "import": "وارد کردن تنظیمات",
-    "market": "بازدید از بازار",
-    "start": "شروع کن"
-  },
   "guide": {
     "agents": {
       "replaceBtn": "تغییر دسته",
