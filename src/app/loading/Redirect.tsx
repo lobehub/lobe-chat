@@ -24,7 +24,7 @@ const Redirect = memo(() => {
 
     // this mean user is definitely not login
     if (!isLogin) {
-      router.replace('/welcome');
+      router.replace('/chat');
       return;
     }
 
