@@ -596,6 +596,9 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro prend en charge jusqu'à 2 millions de tokens, ce qui en fait un choix idéal pour un modèle multimodal de taille moyenne, adapté à un soutien polyvalent pour des tâches complexes."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp est le dernier modèle d'IA multimodal expérimental de Google, avec des caractéristiques de nouvelle génération, une vitesse exceptionnelle, des appels d'outils natifs et une génération multimodale."
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 est le dernier modèle d'IA multimodale expérimental de Google, offrant une capacité de traitement rapide, prenant en charge les entrées de texte, d'image et de vidéo, et permettant une extension efficace pour une variété de tâches."
   },
