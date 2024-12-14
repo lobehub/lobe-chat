@@ -1,6 +1,23 @@
 [
   {
     "children": {
+      "improvements": ["Support csv chunking."]
+    },
+    "date": "2024-12-13",
+    "version": "1.36.23"
+  },
+  {
+    "children": {},
+    "date": "2024-12-13",
+    "version": "1.36.22"
+  },
+  {
+    "children": {},
+    "date": "2024-12-13",
+    "version": "1.36.21"
+  },
+  {
+    "children": {
       "improvements": ["Update locale."]
     },
     "date": "2024-12-13",
