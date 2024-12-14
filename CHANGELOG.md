@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.36.25](https://github.com/lobehub/lobe-chat/compare/v1.36.24...v1.36.25)
+
+<sup>Released on **2024-12-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add new grok models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add new grok models, closes [#5013](https://github.com/lobehub/lobe-chat/issues/5013) ([8df3212](https://github.com/lobehub/lobe-chat/commit/8df3212))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.24](https://github.com/lobehub/lobe-chat/compare/v1.36.23...v1.36.24)
 
 <sup>Released on **2024-12-14**</sup>
