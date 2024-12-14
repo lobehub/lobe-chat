@@ -133,7 +133,7 @@ const AppTheme = memo<AppThemeProps>(
           cssVar: true,
           token: {
             fontFamily: customFontFamily ? `${customFontFamily},${theme.fontFamily}` : undefined,
-            motion: false,
+            motionUnit: 0.03,
           },
         }}
         themeMode={themeMode}
