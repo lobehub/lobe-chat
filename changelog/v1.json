@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add new grok models."]
+    },
+    "date": "2024-12-14",
+    "version": "1.36.25"
+  },
+  {
+    "children": {
       "improvements": ["Refactor file Url query in message model."]
     },
     "date": "2024-12-14",
