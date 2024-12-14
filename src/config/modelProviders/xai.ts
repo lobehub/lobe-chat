@@ -39,7 +39,6 @@ const XAI: ModelProviderCard = {
         output: 10,
       },
       tokens: 131_072,
-      vision: true,
     },
     {
       description: '该模型在准确性、指令遵循和多语言能力方面有所改进。',
