@@ -1,9 +1,10 @@
 import { z } from 'zod';
 
+import { updateMessagePluginSchema } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
-import { updateMessagePluginSchema } from '@/database/schemas';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
+import { getFullFileUrl } from '@/server/utils/files';
 import { ChatMessage } from '@/types/message';
 import { BatchTaskResult } from '@/types/service';
 
@@ -70,7 +71,7 @@ export const messageRouter = router({
 
       const messageModel = new MessageModel(serverDB, ctx.userId);
 
-      return messageModel.query(input);
+      return messageModel.query(input, { postProcessUrl: (path) => getFullFileUrl(path) });
     }),
 
   removeAllMessages: messageProcedure.mutation(async ({ ctx }) => {
