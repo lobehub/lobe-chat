@@ -211,7 +211,10 @@ describe('MessageModel', () => {
 
       const domain = 'http://abc.com';
       // 调用 query 方法
-      const result = await messageModel.query({}, domain);
+      const result = await messageModel.query(
+        {},
+        { postProcessUrl: async (path) => `${domain}/${path}` },
+      );
 
       // 断言结果
       expect(result).toHaveLength(2);

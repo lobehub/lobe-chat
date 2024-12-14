@@ -71,9 +71,7 @@ export const messageRouter = router({
 
       const messageModel = new MessageModel(serverDB, ctx.userId);
 
-      const domain = await getFullFileUrl('/');
-
-      return messageModel.query(input, domain);
+      return messageModel.query(input, { postProcessUrl: (path) => getFullFileUrl(path) });
     }),
 
   removeAllMessages: messageProcedure.mutation(async ({ ctx }) => {
