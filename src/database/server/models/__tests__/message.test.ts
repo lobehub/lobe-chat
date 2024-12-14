@@ -209,15 +209,19 @@ describe('MessageModel', () => {
         ]);
       });
 
+      const domain = 'http://abc.com';
       // 调用 query 方法
-      const result = await messageModel.query();
+      const result = await messageModel.query(
+        {},
+        { postProcessUrl: async (path) => `${domain}/${path}` },
+      );
 
       // 断言结果
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
       expect(result[0].imageList).toEqual([
-        { alt: 'file-1', id: 'f-0', url: expect.stringContaining('/abc') },
-        { alt: 'file-3', id: 'f-3', url: expect.stringContaining('/abc') },
+        { alt: 'file-1', id: 'f-0', url: `${domain}/abc` },
+        { alt: 'file-3', id: 'f-3', url: `${domain}/abc` },
       ]);
 
       expect(result[1].id).toBe('2');

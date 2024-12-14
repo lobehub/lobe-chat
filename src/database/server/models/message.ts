@@ -3,7 +3,6 @@ import { and, asc, desc, eq, gte, inArray, isNull, like, lt } from 'drizzle-orm/
 
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
-import { getFullFileUrl } from '@/server/utils/files';
 import {
   ChatFileItem,
   ChatImageItem,
@@ -47,12 +46,10 @@ export class MessageModel {
   }
 
   // **************** Query *************** //
-  async query({
-    current = 0,
-    pageSize = 1000,
-    sessionId,
-    topicId,
-  }: QueryMessageParams = {}): Promise<MessageItem[]> {
+  async query(
+    { current = 0, pageSize = 1000, sessionId, topicId }: QueryMessageParams = {},
+    options: { postProcessUrl?: (path: string | null) => Promise<string> } = {},
+  ): Promise<MessageItem[]> {
     const offset = current * pageSize;
 
     // 1. get basic messages
@@ -133,7 +130,7 @@ export class MessageModel {
     const relatedFileList = await Promise.all(
       rawRelatedFileList.map(async (file) => ({
         ...file,
-        url: await getFullFileUrl(file.url),
+        url: options.postProcessUrl ? await options.postProcessUrl(file.url) : (file.url as string),
       })),
     );
 
