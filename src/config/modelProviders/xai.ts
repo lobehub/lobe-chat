@@ -38,6 +38,7 @@ const XAI: ModelProviderCard = {
         input: 2,
         output: 10,
       },
+      releasedAt: '2024-12-12',
       tokens: 131_072,
     },
     {
@@ -50,6 +51,7 @@ const XAI: ModelProviderCard = {
         input: 2,
         output: 10,
       },
+      releasedAt: '2024-12-12',
       tokens: 32_768,
       vision: true,
     },
