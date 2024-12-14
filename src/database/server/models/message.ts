@@ -1,9 +1,9 @@
 import { count } from 'drizzle-orm';
 import { and, asc, desc, eq, gte, inArray, isNull, like, lt } from 'drizzle-orm/expressions';
 
+import { fileUrl } from '@/database/queries/fileUrl';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
-import { getFullFileUrl } from '@/server/utils/files';
 import {
   ChatFileItem,
   ChatImageItem,
@@ -47,12 +47,10 @@ export class MessageModel {
   }
 
   // **************** Query *************** //
-  async query({
-    current = 0,
-    pageSize = 1000,
-    sessionId,
-    topicId,
-  }: QueryMessageParams = {}): Promise<MessageItem[]> {
+  async query(
+    { current = 0, pageSize = 1000, sessionId, topicId }: QueryMessageParams = {},
+    domain?: string,
+  ): Promise<MessageItem[]> {
     const offset = current * pageSize;
 
     // 1. get basic messages
@@ -117,25 +115,18 @@ export class MessageModel {
     if (messageIds.length === 0) return [];
 
     // 2. get relative files
-    const rawRelatedFileList = await this.db
+    const relatedFileList = await this.db
       .select({
         fileType: files.fileType,
         id: messagesFiles.fileId,
         messageId: messagesFiles.messageId,
         name: files.name,
         size: files.size,
-        url: files.url,
+        url: fileUrl(domain),
       })
       .from(messagesFiles)
       .leftJoin(files, eq(files.id, messagesFiles.fileId))
       .where(inArray(messagesFiles.messageId, messageIds));
-
-    const relatedFileList = await Promise.all(
-      rawRelatedFileList.map(async (file) => ({
-        ...file,
-        url: await getFullFileUrl(file.url),
-      })),
-    );
 
     const imageList = relatedFileList.filter((i) => (i.fileType || '').startsWith('image'));
     const fileList = relatedFileList.filter((i) => !(i.fileType || '').startsWith('image'));
