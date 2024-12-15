@@ -151,7 +151,7 @@
     "debug": "^4.3.7",
     "dexie": "^3.2.7",
     "diff": "^5.2.0",
-    "drizzle-orm": "^0.37.0",
+    "drizzle-orm": "^0.38.0",
     "drizzle-zod": "^0.5.1",
     "fast-deep-equal": "^3.1.3",
     "file-type": "^19.6.0",
@@ -203,7 +203,7 @@
     "react-layout-kit": "^1.9.0",
     "react-lazy-load": "^4.0.1",
     "react-pdf": "^9.1.1",
-    "react-scan": "^0.0.40",
+    "react-scan": "^0.0.46",
     "react-virtuoso": "^4.12.0",
     "react-wrap-balancer": "^1.1.1",
     "remark": "^14.0.3",
@@ -238,7 +238,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
-    "@edge-runtime/vm": "^4.0.3",
+    "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.12.22",
     "@lobehub/i18n-cli": "^1.20.0",
     "@lobehub/lint": "^1.24.4",
@@ -275,7 +275,7 @@
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",
     "dpdm-fast": "^1.0.4",
-    "drizzle-kit": "^0.29.0",
+    "drizzle-kit": "^0.30.0",
     "eslint": "^8.57.1",
     "eslint-plugin-mdx": "^2.3.4",
     "eslint-plugin-unused-imports": "4.0.1",
@@ -308,7 +308,7 @@
     "vitest": "~1.2.2",
     "vitest-canvas-mock": "^0.3.3"
   },
-  "packageManager": "pnpm@9.14.4",
+  "packageManager": "pnpm@9.15.0",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
