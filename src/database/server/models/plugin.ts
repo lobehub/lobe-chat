@@ -19,6 +19,10 @@ export class PluginModel {
     const [result] = await this.db
       .insert(installedPlugins)
       .values({ ...params, createdAt: new Date(), updatedAt: new Date(), userId: this.userId })
+      .onConflictDoUpdate({
+        set: { ...params, updatedAt: new Date() },
+        target: [installedPlugins.identifier, installedPlugins.userId],
+      })
       .returning();
 
     return result;
