@@ -9,7 +9,12 @@
       "title": "Benvenuto a {{name}}"
     }
   },
-  "appInitializing": "Applicazione in fase di avvio...",
+  "appLoading": {
+    "goToChat": "(4/4) Caricamento della pagina della chat in corso...",
+    "initAuth": "(2/4) Inizializzazione del servizio di autenticazione...",
+    "initUser": "(3/4) Inizializzazione dello stato utente...",
+    "initializing": "(1/4) Avvio dell'app in corso..."
+  },
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
   "autoGenerateTooltipDisabled": "Si prega di compilare il campo suggerimento per abilitare la funzione di completamento automatico",
@@ -20,6 +25,39 @@
   "branchingDisable": "La funzione «sottotema» è disponibile solo nella versione server. Se desideri utilizzare questa funzione, passa alla modalità di distribuzione server o utilizza LobeChat Cloud.",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
+  "clientDB": {
+    "autoInit": {
+      "title": "Inizializzazione del database PGlite"
+    },
+    "error": {
+      "desc": "Ci scusiamo, si è verificato un errore durante l'inizializzazione del database Pglite. Si prega di fare clic sul pulsante «Riprova».<br><br> Se l'errore persiste, si prega di <1>inviare un problema</1>, ci occuperemo di risolverlo il prima possibile",
+      "retry": "Riprova",
+      "title": "Aggiornamento del database non riuscito"
+    },
+    "initing": {
+      "error": "Si è verificato un errore, si prega di riprovare",
+      "idle": "In attesa di inizializzazione...",
+      "initializing": "In fase di inizializzazione...",
+      "loadingDependencies": "Caricamento delle dipendenze ({ {progress}}%)...",
+      "loadingWasmModule": "Caricamento del modulo WASM ({ {progress}}%)...",
+      "migrating": "In fase di migrazione dei dati...",
+      "ready": "Database pronto"
+    },
+    "modal": {
+      "desc": "Abilita il database client PGlite per memorizzare in modo persistente i dati della chat nel tuo browser e utilizzare funzionalità avanzate come la knowledge base",
+      "enable": "Abilita ora",
+      "init": {
+        "desc": "In fase di inizializzazione del database, il tempo necessario può variare da 5 a 30 secondi a seconda della rete",
+        "title": "Inizializzazione del database PGlite in corso"
+      },
+      "title": "Attiva il database client"
+    },
+    "ready": {
+      "button": "Usa ora",
+      "desc": "Inizia subito",
+      "title": "Database PGlite pronto"
+    }
+  },
   "close": "Chiudi",
   "contact": "Contattaci",
   "copy": "Copia",

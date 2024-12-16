@@ -1,6 +1,32 @@
 [
   {
     "children": {
+      "improvements": ["Improve page loading state."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.30"
+  },
+  {
+    "children": {
+      "fixes": ["Fix discover locale with different default lang."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.29"
+  },
+  {
+    "children": {},
+    "date": "2024-12-16",
+    "version": "1.36.28"
+  },
+  {
+    "children": {
+      "fixes": ["Add unique keys to <ModelList> children."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.27"
+  },
+  {
+    "children": {
       "improvements": ["Update models of Gitee AI provider."]
     },
     "date": "2024-12-16",

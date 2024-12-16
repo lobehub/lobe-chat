@@ -9,7 +9,12 @@
       "title": "{{name}}'i Denemek İçin Hoş Geldiniz"
     }
   },
-  "appInitializing": "Uygulama başlatılıyor...",
+  "appLoading": {
+    "goToChat": "(4/4) Sohbet sayfası yükleniyor...",
+    "initAuth": "(2/4) Kimlik doğrulama hizmeti başlatılıyor...",
+    "initUser": "(3/4) Kullanıcı durumu başlatılıyor...",
+    "initializing": "(1/4) Uygulama başlatılıyor..."
+  },
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
@@ -20,6 +25,39 @@
   "branchingDisable": "«Alt konu» özelliği yalnızca sunucu sürümünde mevcuttur. Bu özelliği kullanmak için lütfen sunucu dağıtım moduna geçin veya LobeChat Cloud'u kullanın.",
   "cancel": "İptal",
   "changelog": "Changelog",
+  "clientDB": {
+    "autoInit": {
+      "title": "PGlite veritabanı başlatılıyor"
+    },
+    "error": {
+      "desc": "Üzgünüz, PGlite veritabanı başlatma sürecinde bir hata oluştu. Lütfen 'Tekrar Dene' butonuna tıklayın.<br><br> Hala hata alıyorsanız, lütfen <1>bir sorun bildirin</1>, size en kısa sürede yardımcı olacağız.",
+      "retry": "Tekrar Dene",
+      "title": "Veritabanı güncellemesi başarısız"
+    },
+    "initing": {
+      "error": "Hata oluştu, lütfen tekrar deneyin",
+      "idle": "Başlatma bekleniyor...",
+      "initializing": "Başlatılıyor...",
+      "loadingDependencies": "Bağımlılıklar yükleniyor ({{progress}}%)...",
+      "loadingWasmModule": "WASM modülü yükleniyor ({{progress}}%)...",
+      "migrating": "Veri taşınıyor...",
+      "ready": "Veritabanı hazır"
+    },
+    "modal": {
+      "desc": "PGlite istemci veritabanını etkinleştirerek, tarayıcınızda sohbet verilerini kalıcı olarak depolayın ve bilgi bankası gibi gelişmiş özellikleri kullanın.",
+      "enable": "Hemen Etkinleştir",
+      "init": {
+        "desc": "Veritabanı başlatılıyor, ağ farklılıklarına bağlı olarak 5-30 saniye sürebilir.",
+        "title": "PGlite veritabanı başlatılıyor"
+      },
+      "title": "İstemci veritabanını aç"
+    },
+    "ready": {
+      "button": "Hemen Kullan",
+      "desc": "Hemen kullanmak istiyorum",
+      "title": "PGlite veritabanı hazır"
+    }
+  },
   "close": "Kapat",
   "contact": "Bize Ulaşın",
   "copy": "Kopyala",
