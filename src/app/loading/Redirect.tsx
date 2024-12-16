@@ -3,27 +3,43 @@
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
-const Redirect = memo(() => {
+interface RedirectProps {
+  setGoToChat: (value: boolean) => void;
+}
+
+const Redirect = memo<RedirectProps>(({ setGoToChat }) => {
   const router = useRouter();
-  const [isLogin, isLoaded, isUserStateInit, isOnboard] = useUserStore(
-    (s) => [
-      authSelectors.isLogin(s),
-      authSelectors.isLoaded(s),
-      s.isUserStateInit,
-      s.isOnboard,
-    ],
-  );
+  const [isLogin, isLoaded, isUserStateInit, isOnboard] = useUserStore((s) => [
+    authSelectors.isLogin(s),
+    authSelectors.isLoaded(s),
+    s.isUserStateInit,
+    s.isOnboard,
+  ]);
+  const isPgliteNotEnabled = useGlobalStore(systemStatusSelectors.isPgliteNotEnabled);
+
+  const navToChat = () => {
+    setGoToChat(true);
+    router.replace('/chat');
+  };
 
   useEffect(() => {
+    // if pglite is not enabled, redirect to chat
+    if (isPgliteNotEnabled) {
+      navToChat();
+      return;
+    }
+
     // if user auth state is not ready, wait for loading
     if (!isLoaded) return;
 
     // this mean user is definitely not login
     if (!isLogin) {
-      router.replace('/chat');
+      navToChat();
       return;
     }
 
@@ -37,8 +53,8 @@ const Redirect = memo(() => {
     }
 
     // finally check the conversation status
-    router.replace('/chat');
-  }, [isUserStateInit, isLoaded, isOnboard, isLogin]);
+    navToChat();
+  }, [isUserStateInit, isLoaded, isOnboard, isLogin, isPgliteNotEnabled]);
 
   return null;
 });

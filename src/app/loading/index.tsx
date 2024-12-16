@@ -1,11 +1,16 @@
-import Client from './Client';
+'use client';
+
+import { useState } from 'react';
+
+import Client from './Content';
 import Redirect from './Redirect';
 
 const ScreenLoading = () => {
+  const [goToChat, setGoToChat] = useState(false);
   return (
     <>
-      <Client />
-      <Redirect />
+      <Client goToChat={goToChat} />
+      <Redirect setGoToChat={setGoToChat} />
     </>
   );
 };
