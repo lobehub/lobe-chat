@@ -10,8 +10,10 @@
     }
   },
   "appLoading": {
-    "goToChat": "대화 페이지 로딩 중...",
-    "initializing": "앱 시작 중..."
+    "goToChat": "(4/4) 대화 페이지 로딩 중...",
+    "initAuth": "(2/4) 인증 서비스 초기화 중...",
+    "initUser": "(3/4) 사용자 상태 초기화 중...",
+    "initializing": "(1/4) 애플리케이션 시작 중..."
   },
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",

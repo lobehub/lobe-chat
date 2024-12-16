@@ -10,8 +10,10 @@
     }
   },
   "appLoading": {
-    "goToChat": "Sohbet sayfası yükleniyor...",
-    "initializing": "Uygulama başlatılıyor..."
+    "goToChat": "(4/4) Sohbet sayfası yükleniyor...",
+    "initAuth": "(2/4) Kimlik doğrulama hizmeti başlatılıyor...",
+    "initUser": "(3/4) Kullanıcı durumu başlatılıyor...",
+    "initializing": "(1/4) Uygulama başlatılıyor..."
   },
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",

@@ -10,8 +10,10 @@
     }
   },
   "appLoading": {
-    "goToChat": "Loading chat page...",
-    "initializing": "Starting application..."
+    "goToChat": "(4/4) Loading chat page...",
+    "initAuth": "(2/4) Initializing authentication service...",
+    "initUser": "(3/4) Initializing user status...",
+    "initializing": "(1/4) Starting up application..."
   },
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",

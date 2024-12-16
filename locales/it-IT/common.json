@@ -10,8 +10,10 @@
     }
   },
   "appLoading": {
-    "goToChat": "Caricamento della pagina di chat...",
-    "initializing": "Avvio dell'applicazione..."
+    "goToChat": "(4/4) Caricamento della pagina della chat in corso...",
+    "initAuth": "(2/4) Inizializzazione del servizio di autenticazione...",
+    "initUser": "(3/4) Inizializzazione dello stato utente...",
+    "initializing": "(1/4) Avvio dell'app in corso..."
   },
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",

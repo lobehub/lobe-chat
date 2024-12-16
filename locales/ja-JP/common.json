@@ -10,8 +10,10 @@
     }
   },
   "appLoading": {
-    "goToChat": "チャットページを読み込んでいます...",
-    "initializing": "アプリを起動しています..."
+    "goToChat": "(4/4) チャットページを読み込んでいます...",
+    "initAuth": "(2/4) 認証サービスの初期化...",
+    "initUser": "(3/4) ユーザー状態の初期化...",
+    "initializing": "(1/4) アプリを起動しています..."
   },
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "ヒントに基づいてエージェントの説明を自動生成します",

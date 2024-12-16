@@ -2,15 +2,17 @@
 
 import { useState } from 'react';
 
+import { AppLoadingStage } from '@/app/loading/type';
+
 import Client from './Content';
 import Redirect from './Redirect';
 
 const ScreenLoading = () => {
-  const [goToChat, setGoToChat] = useState(false);
+  const [loadingStage, setLoadingStage] = useState(AppLoadingStage.Initializing);
   return (
     <>
-      <Client goToChat={goToChat} />
-      <Redirect setGoToChat={setGoToChat} />
+      <Client loadingStage={loadingStage} />
+      <Redirect setLoadingStage={setLoadingStage} />
     </>
   );
 };
