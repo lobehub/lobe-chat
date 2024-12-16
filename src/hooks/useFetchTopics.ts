@@ -12,6 +12,6 @@ export const useFetchTopics = () => {
   const [activeTopicId, useFetchTopics] = useChatStore((s) => [s.activeTopicId, s.useFetchTopics]);
   const isPgliteInited = useGlobalStore(systemStatusSelectors.isPgliteInited);
 
-  useFetchTopics(sessionId, isPgliteInited);
+  useFetchTopics(isPgliteInited, sessionId);
   useFetchThreads(activeTopicId);
 };
