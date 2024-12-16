@@ -50,10 +50,6 @@ export class LobeSparkAI implements LobeRuntimeAI {
 
       const stream = transformSparkResponseToStream(response as unknown as OpenAI.ChatCompletion);
 
-      if (process.env.DEBUG_SPARK_CHAT_COMPLETION === '1') {
-        console.log(stream);
-      }
-
       return StreamingResponse(SparkAIStream(stream, options?.callback), {
         headers: options?.headers,
       });
@@ -81,7 +77,7 @@ export class LobeSparkAI implements LobeRuntimeAI {
     return {
       messages: await convertOpenAIMessages(messages as any),
       ...params,
-      stream: !payload.tools,
+      stream: true,
     };
   }
 }
