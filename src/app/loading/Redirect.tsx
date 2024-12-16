@@ -8,7 +8,11 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
-const Redirect = memo<{ setGoToChat: (value: boolean) => void }>(({ setGoToChat }) => {
+interface RedirectProps {
+  setGoToChat: (value: boolean) => void;
+}
+
+const Redirect = memo<RedirectProps>(({ setGoToChat }) => {
   const router = useRouter();
   const [isLogin, isLoaded, isUserStateInit, isOnboard] = useUserStore((s) => [
     authSelectors.isLogin(s),

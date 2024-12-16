@@ -112,6 +112,12 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) to innowacyjny model, idealny do zastosowań w wielu dziedzinach i złożonych zadań."
   },
+  "InternVL2-8B": {
+    "description": "InternVL2-8B to potężny model językowy wizualny, wspierający przetwarzanie multimodalne obrazów i tekstu, zdolny do precyzyjnego rozpoznawania treści obrazów i generowania odpowiednich opisów lub odpowiedzi."
+  },
+  "InternVL2.5-26B": {
+    "description": "InternVL2.5-26B to potężny model językowy wizualny, wspierający przetwarzanie multimodalne obrazów i tekstu, zdolny do precyzyjnego rozpoznawania treści obrazów i generowania odpowiednich opisów lub odpowiedzi."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct to jeden z najnowszych modeli dużych języków wydanych przez Alibaba Cloud. Model 72B ma znacząco poprawione zdolności w zakresie kodowania i matematyki. Oferuje również wsparcie dla wielu języków, obejmując ponad 29 języków, w tym chiński i angielski. Model ten wykazuje znaczną poprawę w zakresie przestrzegania instrukcji, rozumienia danych strukturalnych oraz generowania strukturalnych wyników (szczególnie JSON)."
   },
@@ -233,8 +239,20 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 to najnowsza seria modeli Qwen, która przewyższa najlepsze modele open source o podobnej skali, a nawet większe. Qwen2 7B osiągnęła znaczną przewagę w wielu testach, szczególnie w zakresie kodowania i rozumienia języka chińskiego."
   },
+  "Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5-14B-Instruct to model językowy z 14 miliardami parametrów, o doskonałej wydajności, optymalizujący scenariusze w języku chińskim i wielojęzyczne, wspierający inteligentne odpowiedzi, generowanie treści i inne zastosowania."
+  },
+  "Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5-32B-Instruct to model językowy z 32 miliardami parametrów, o zrównoważonej wydajności, optymalizujący scenariusze w języku chińskim i wielojęzyczne, wspierający inteligentne odpowiedzi, generowanie treści i inne zastosowania."
+  },
   "Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct obsługuje kontekst 16k, generując długie teksty przekraczające 8K. Wspiera wywołania funkcji i bezproblemową interakcję z systemami zewnętrznymi, znacznie zwiększając elastyczność i skalowalność. Wiedza modelu znacznie wzrosła, a jego zdolności w zakresie kodowania i matematyki uległy znacznemu poprawieniu, z obsługą ponad 29 języków."
+  },
+  "Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct to model językowy z 7 miliardami parametrów, wspierający wywołania funkcji i bezproblemową interakcję z systemami zewnętrznymi, znacznie zwiększając elastyczność i skalowalność. Optymalizuje scenariusze w języku chińskim i wielojęzyczne, wspierając inteligentne odpowiedzi, generowanie treści i inne zastosowania."
+  },
+  "Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder-32B-Instruct to duży model językowy zaprojektowany specjalnie do generowania kodu, rozumienia kodu i efektywnych scenariuszy rozwoju, wykorzystujący wiodącą w branży skalę 32B parametrów, zdolny do zaspokojenia różnorodnych potrzeb programistycznych."
   },
   "SenseChat": {
     "description": "Podstawowa wersja modelu (V4), długość kontekstu 4K, silne zdolności ogólne."
@@ -463,6 +481,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet zapewnia idealną równowagę między inteligencją a szybkością dla obciążeń roboczych w przedsiębiorstwach. Oferuje maksymalną użyteczność przy niższej cenie, jest niezawodny i odpowiedni do dużych wdrożeń."
+  },
+  "code-raccoon-v1": {
+    "description": "Code Raccoon to inteligentny asystent do rozwoju oprogramowania oparty na dużym modelu językowym SenseTime, obejmujący analizę wymagań oprogramowania, projektowanie architektury, pisanie kodu, testowanie oprogramowania i inne etapy, zaspokajający różnorodne potrzeby użytkowników w zakresie pisania kodu i nauki programowania. Code Raccoon wspiera ponad 90 popularnych języków programowania, takich jak Python, Java, JavaScript, C++, Go, SQL oraz popularne IDE, takie jak VS Code i IntelliJ IDEA. W praktyce Code Raccoon może pomóc programistom zwiększyć wydajność programowania o ponad 50%."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 to potężny asystent programowania AI, obsługujący inteligentne pytania i odpowiedzi oraz uzupełnianie kodu w różnych językach programowania, zwiększając wydajność programistów."
@@ -751,6 +772,12 @@
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini to najnowszy model OpenAI, wprowadzony po GPT-4 Omni, obsługujący wejścia tekstowe i wizualne oraz generujący tekst. Jako ich najnowocześniejszy model w małej skali, jest znacznie tańszy niż inne niedawno wprowadzone modele, a jego cena jest o ponad 60% niższa niż GPT-3.5 Turbo. Utrzymuje najnowocześniejszą inteligencję, jednocześnie oferując znaczną wartość za pieniądze. GPT-4o mini uzyskał wynik 82% w teście MMLU i obecnie zajmuje wyższą pozycję w preferencjach czatu niż GPT-4."
+  },
+  "grok-2-1212": {
+    "description": "Model ten poprawił dokładność, przestrzeganie instrukcji oraz zdolności wielojęzyczne."
+  },
+  "grok-2-vision-1212": {
+    "description": "Model ten poprawił dokładność, przestrzeganie instrukcji oraz zdolności wielojęzyczne."
   },
   "grok-beta": {
     "description": "Oferuje wydajność porównywalną z Grok 2, ale z wyższą efektywnością, prędkością i funkcjonalnością."
