@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Fix discover locale with different default lang."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.29"
+  },
+  {
     "children": {},
     "date": "2024-12-16",
     "version": "1.36.28"
