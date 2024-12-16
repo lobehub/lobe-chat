@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.36.27](https://github.com/lobehub/lobe-chat/compare/v1.36.26...v1.36.27)
+
+<sup>Released on **2024-12-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add unique keys to `<ModelList>` children.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add unique keys to `<ModelList>` children, closes [#5042](https://github.com/lobehub/lobe-chat/issues/5042) ([c097d4a](https://github.com/lobehub/lobe-chat/commit/c097d4a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.26](https://github.com/lobehub/lobe-chat/compare/v1.36.25...v1.36.26)
 
 <sup>Released on **2024-12-16**</sup>
