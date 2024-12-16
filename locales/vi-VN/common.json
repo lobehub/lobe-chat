@@ -10,8 +10,10 @@
     }
   },
   "appLoading": {
-    "goToChat": "Đang tải trang trò chuyện...",
-    "initializing": "Đang khởi động ứng dụng..."
+    "goToChat": "(4/4) Đang tải trang trò chuyện...",
+    "initAuth": "(2/4) Đang khởi tạo dịch vụ xác thực...",
+    "initUser": "(3/4) Đang khởi tạo trạng thái người dùng...",
+    "initializing": "(1/4) Đang khởi động ứng dụng..."
   },
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",

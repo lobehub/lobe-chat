@@ -10,8 +10,10 @@
     }
   },
   "appLoading": {
-    "goToChat": "Lade die Chat-Seite...",
-    "initializing": "Anwendung wird gestartet..."
+    "goToChat": "(4/4) Lade die Chat-Seite...",
+    "initAuth": "(2/4) Authentifizierungsdienst wird initialisiert...",
+    "initUser": "(3/4) Benutzerstatus wird initialisiert...",
+    "initializing": "(1/4) Anwendung wird gestartet..."
   },
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",

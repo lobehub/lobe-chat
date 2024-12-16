@@ -10,8 +10,10 @@
     }
   },
   "appLoading": {
-    "goToChat": "Chargement de la page de discussion...",
-    "initializing": "L'application se lance..."
+    "goToChat": "(4/4) Chargement de la page de conversation...",
+    "initAuth": "(2/4) Initialisation du service d'authentification...",
+    "initUser": "(3/4) Initialisation de l'état de l'utilisateur...",
+    "initializing": "(1/4) L'application se lance..."
   },
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",

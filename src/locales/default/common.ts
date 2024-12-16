@@ -11,8 +11,10 @@ export default {
     },
   },
   appLoading: {
-    goToChat: '对话页面加载中...',
-    initializing: '应用启动中...',
+    goToChat: '(4/4) 对话页面加载中...',
+    initAuth: '(2/4) 鉴权服务初始化...',
+    initUser: '(3/4) 用户状态初始化...',
+    initializing: '(1/4) 应用启动中...',
   },
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',

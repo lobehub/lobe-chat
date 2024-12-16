@@ -10,8 +10,10 @@
     }
   },
   "appLoading": {
-    "goToChat": "De chatpagina wordt geladen...",
-    "initializing": "De applicatie wordt gestart..."
+    "goToChat": "(4/4) De chatpagina wordt geladen...",
+    "initAuth": "(2/4) Initialisatie van de autorisatiedienst...",
+    "initUser": "(3/4) Initialisatie van de gebruikersstatus...",
+    "initializing": "(1/4) De applicatie wordt opgestart..."
   },
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",

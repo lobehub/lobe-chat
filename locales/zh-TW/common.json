@@ -10,8 +10,10 @@
     }
   },
   "appLoading": {
-    "goToChat": "對話頁面加載中...",
-    "initializing": "應用啟動中..."
+    "goToChat": "(4/4) 對話頁面加載中...",
+    "initAuth": "(2/4) 鑑權服務初始化...",
+    "initUser": "(3/4) 使用者狀態初始化...",
+    "initializing": "(1/4) 應用啟動中..."
   },
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",

@@ -8,11 +8,13 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
+import { AppLoadingStage } from './type';
+
 interface RedirectProps {
-  setGoToChat: (value: boolean) => void;
+  setLoadingStage: (value: AppLoadingStage) => void;
 }
 
-const Redirect = memo<RedirectProps>(({ setGoToChat }) => {
+const Redirect = memo<RedirectProps>(({ setLoadingStage }) => {
   const router = useRouter();
   const [isLogin, isLoaded, isUserStateInit, isOnboard] = useUserStore((s) => [
     authSelectors.isLogin(s),
@@ -23,7 +25,7 @@ const Redirect = memo<RedirectProps>(({ setGoToChat }) => {
   const isPgliteNotEnabled = useGlobalStore(systemStatusSelectors.isPgliteNotEnabled);
 
   const navToChat = () => {
-    setGoToChat(true);
+    setLoadingStage(AppLoadingStage.GoToChat);
     router.replace('/chat');
   };
 
@@ -35,7 +37,10 @@ const Redirect = memo<RedirectProps>(({ setGoToChat }) => {
     }
 
     // if user auth state is not ready, wait for loading
-    if (!isLoaded) return;
+    if (!isLoaded) {
+      setLoadingStage(AppLoadingStage.InitAuth);
+      return;
+    }
 
     // this mean user is definitely not login
     if (!isLogin) {
@@ -44,7 +49,10 @@ const Redirect = memo<RedirectProps>(({ setGoToChat }) => {
     }
 
     // if user state not init, wait for loading
-    if (!isUserStateInit) return;
+    if (!isUserStateInit) {
+      setLoadingStage(AppLoadingStage.InitUser);
+      return;
+    }
 
     // user need to onboard
     if (!isOnboard) {
