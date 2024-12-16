@@ -1,11 +1,11 @@
 import { Icon } from '@lobehub/ui';
 import { Loader2 } from 'lucide-react';
-import { memo } from 'react';
+import { ReactNode, memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 
-const FullscreenLoading = memo<{ title?: string }>(({ title }) => {
+const FullscreenLoading = memo<{ title?: ReactNode }>(({ title }) => {
   return (
     <Flexbox height={'100%'} style={{ position: 'relative', userSelect: 'none' }} width={'100%'}>
       <Center flex={1} gap={16} width={'100%'}>

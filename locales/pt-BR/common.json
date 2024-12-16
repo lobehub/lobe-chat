@@ -9,7 +9,12 @@
       "title": "Bem-vindo para experimentar {{name}}"
     }
   },
-  "appInitializing": "Aplicativo iniciando...",
+  "appLoading": {
+    "goToChat": "(4/4) Carregando página de conversa...",
+    "initAuth": "(2/4) Inicializando o serviço de autenticação...",
+    "initUser": "(3/4) Inicializando o estado do usuário...",
+    "initializing": "(1/4) Iniciando aplicativo..."
+  },
   "autoGenerate": "Auto completar",
   "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
   "autoGenerateTooltipDisabled": "Por favor, preencha a dica antes de usar a função de preenchimento automático",
@@ -20,6 +25,39 @@
   "branchingDisable": "A funcionalidade de \"subtópico\" está disponível apenas na versão do servidor. Se precisar dessa funcionalidade, mude para o modo de implantação no servidor ou use o LobeChat Cloud.",
   "cancel": "Cancelar",
   "changelog": "Registro de alterações",
+  "clientDB": {
+    "autoInit": {
+      "title": "Inicializando o banco de dados PGlite"
+    },
+    "error": {
+      "desc": "Desculpe, ocorreu uma exceção durante o processo de inicialização do banco de dados PGlite. Por favor, clique no botão 'Tentar Novamente'.<br><br> Se o erro persistir, por favor <1>envie um problema</1>, e nós iremos ajudá-lo o mais rápido possível",
+      "retry": "Tentar Novamente",
+      "title": "Falha na atualização do banco de dados"
+    },
+    "initing": {
+      "error": "Ocorreu um erro, por favor tente novamente",
+      "idle": "Aguardando inicialização...",
+      "initializing": "Inicializando...",
+      "loadingDependencies": "Carregando dependências({{progress}}%)...",
+      "loadingWasmModule": "Carregando módulo WASM({{progress}}%)...",
+      "migrating": "Migrando dados...",
+      "ready": "Banco de dados pronto"
+    },
+    "modal": {
+      "desc": "Ative o banco de dados cliente PGlite para armazenar dados de chat de forma persistente no seu navegador e usar recursos avançados como a base de conhecimento",
+      "enable": "Ativar agora",
+      "init": {
+        "desc": "Inicializando o banco de dados, pode levar de 5 a 30 segundos dependendo da rede",
+        "title": "Inicializando o banco de dados PGlite"
+      },
+      "title": "Ativar banco de dados cliente"
+    },
+    "ready": {
+      "button": "Usar agora",
+      "desc": "Pronto para uso",
+      "title": "Banco de dados PGlite pronto"
+    }
+  },
   "close": "Fechar",
   "contact": "Entre em contato",
   "copy": "Copiar",

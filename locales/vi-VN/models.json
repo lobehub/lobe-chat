@@ -112,6 +112,12 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) là một mô hình sáng tạo, phù hợp cho nhiều lĩnh vực ứng dụng và nhiệm vụ phức tạp."
   },
+  "InternVL2-8B": {
+    "description": "InternVL2-8B là một mô hình ngôn ngữ hình ảnh mạnh mẽ, hỗ trợ xử lý đa phương tiện giữa hình ảnh và văn bản, có khả năng nhận diện chính xác nội dung hình ảnh và tạo ra mô tả hoặc câu trả lời liên quan."
+  },
+  "InternVL2.5-26B": {
+    "description": "InternVL2.5-26B là một mô hình ngôn ngữ hình ảnh mạnh mẽ, hỗ trợ xử lý đa phương tiện giữa hình ảnh và văn bản, có khả năng nhận diện chính xác nội dung hình ảnh và tạo ra mô tả hoặc câu trả lời liên quan."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct là một trong những mô hình ngôn ngữ lớn mới nhất do Alibaba Cloud phát hành. Mô hình 72B này có khả năng cải thiện đáng kể trong các lĩnh vực mã hóa và toán học. Mô hình cũng cung cấp hỗ trợ đa ngôn ngữ, bao gồm hơn 29 ngôn ngữ, bao gồm tiếng Trung, tiếng Anh, v.v. Mô hình đã có sự cải thiện đáng kể trong việc tuân theo chỉ dẫn, hiểu dữ liệu có cấu trúc và tạo ra đầu ra có cấu trúc (đặc biệt là JSON)."
   },
@@ -233,8 +239,20 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 là dòng mô hình mới nhất của Qwen, có khả năng vượt qua các mô hình mã nguồn mở cùng quy mô hoặc thậm chí lớn hơn, Qwen2 7B đạt được lợi thế đáng kể trong nhiều bài kiểm tra, đặc biệt là trong việc hiểu mã và tiếng Trung."
   },
+  "Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5-14B-Instruct là một mô hình ngôn ngữ lớn với 14 tỷ tham số, có hiệu suất xuất sắc, tối ưu cho các tình huống tiếng Trung và đa ngôn ngữ, hỗ trợ các ứng dụng như hỏi đáp thông minh, tạo nội dung."
+  },
+  "Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5-32B-Instruct là một mô hình ngôn ngữ lớn với 32 tỷ tham số, có hiệu suất cân bằng, tối ưu cho các tình huống tiếng Trung và đa ngôn ngữ, hỗ trợ các ứng dụng như hỏi đáp thông minh, tạo nội dung."
+  },
   "Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct hỗ trợ ngữ cảnh 16k, tạo ra văn bản dài hơn 8K. Hỗ trợ gọi hàm và tương tác liền mạch với hệ thống bên ngoài, nâng cao đáng kể tính linh hoạt và khả năng mở rộng. Kiến thức của mô hình đã tăng lên rõ rệt và khả năng mã hóa cũng như toán học được cải thiện đáng kể, hỗ trợ hơn 29 ngôn ngữ."
+  },
+  "Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct là một mô hình ngôn ngữ lớn với 7 tỷ tham số, hỗ trợ gọi hàm và tương tác liền mạch với các hệ thống bên ngoài, nâng cao tính linh hoạt và khả năng mở rộng. Tối ưu cho các tình huống tiếng Trung và đa ngôn ngữ, hỗ trợ các ứng dụng như hỏi đáp thông minh, tạo nội dung."
+  },
+  "Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder-32B-Instruct là một mô hình ngôn ngữ lớn được thiết kế đặc biệt cho việc tạo mã, hiểu mã và các tình huống phát triển hiệu quả, với quy mô 32B tham số hàng đầu trong ngành, có thể đáp ứng nhu cầu lập trình đa dạng."
   },
   "SenseChat": {
     "description": "Mô hình phiên bản cơ bản (V4), độ dài ngữ cảnh 4K, khả năng tổng quát mạnh mẽ."
@@ -463,6 +481,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet cung cấp sự cân bằng lý tưởng giữa trí thông minh và tốc độ cho khối lượng công việc doanh nghiệp. Nó cung cấp hiệu suất tối đa với mức giá thấp hơn, đáng tin cậy và phù hợp cho triển khai quy mô lớn."
+  },
+  "code-raccoon-v1": {
+    "description": "Code Raccoon là một trợ lý phát triển phần mềm thông minh dựa trên mô hình ngôn ngữ lớn của SenseTime, bao phủ các giai đoạn phân tích yêu cầu phần mềm, thiết kế kiến trúc, viết mã, kiểm thử phần mềm, đáp ứng nhu cầu viết mã và học lập trình của người dùng. Code Raccoon hỗ trợ hơn 90 ngôn ngữ lập trình phổ biến như Python, Java, JavaScript, C++, Go, SQL và các IDE phổ biến như VS Code, IntelliJ IDEA. Trong thực tế, Code Raccoon có thể giúp các nhà phát triển nâng cao hiệu suất lập trình hơn 50%."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 là trợ lý lập trình AI mạnh mẽ, hỗ trợ nhiều ngôn ngữ lập trình với câu hỏi thông minh và hoàn thành mã, nâng cao hiệu suất phát triển."
@@ -751,6 +772,12 @@
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini là mô hình mới nhất do OpenAI phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và đầu ra văn bản. Là mô hình nhỏ gọn tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng cao hơn GPT-4 về sở thích trò chuyện."
+  },
+  "grok-2-1212": {
+    "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
+  },
+  "grok-2-vision-1212": {
+    "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
   },
   "grok-beta": {
     "description": "Có hiệu suất tương đương với Grok 2, nhưng hiệu quả, tốc độ và tính năng cao hơn."

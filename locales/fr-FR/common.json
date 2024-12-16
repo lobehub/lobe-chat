@@ -9,7 +9,12 @@
       "title": "Bienvenue à {{name}}"
     }
   },
-  "appInitializing": "L'application est en cours de démarrage...",
+  "appLoading": {
+    "goToChat": "(4/4) Chargement de la page de conversation...",
+    "initAuth": "(2/4) Initialisation du service d'authentification...",
+    "initUser": "(3/4) Initialisation de l'état de l'utilisateur...",
+    "initializing": "(1/4) L'application se lance..."
+  },
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
@@ -20,6 +25,39 @@
   "branchingDisable": "La fonction « sous-sujet » n'est disponible que dans la version serveur. Si vous avez besoin de cette fonctionnalité, veuillez passer en mode de déploiement serveur ou utiliser LobeChat Cloud.",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
+  "clientDB": {
+    "autoInit": {
+      "title": "Initialisation de la base de données PGlite"
+    },
+    "error": {
+      "desc": "Nous sommes désolés, une erreur s'est produite lors de l'initialisation de la base de données PGlite. Veuillez cliquer sur le bouton « Réessayer ». <br><br> Si l'erreur persiste, veuillez <1>soumettre un problème</1>, nous vous aiderons dès que possible.",
+      "retry": "Réessayer",
+      "title": "Échec de la mise à niveau de la base de données"
+    },
+    "initing": {
+      "error": "Une erreur s'est produite, veuillez réessayer",
+      "idle": "En attente d'initialisation...",
+      "initializing": "Initialisation en cours...",
+      "loadingDependencies": "Chargement des dépendances ({{progress}}%)...",
+      "loadingWasmModule": "Chargement du module WASM ({{progress}}%)...",
+      "migrating": "Migration des données en cours...",
+      "ready": "Base de données prête"
+    },
+    "modal": {
+      "desc": "Activez la base de données client PGlite pour stocker de manière persistante les données de discussion dans votre navigateur et utiliser des fonctionnalités avancées telles que la base de connaissances.",
+      "enable": "Activer maintenant",
+      "init": {
+        "desc": "Initialisation de la base de données en cours, cela peut prendre de 5 à 30 secondes selon la connexion réseau.",
+        "title": "Initialisation de la base de données PGlite en cours"
+      },
+      "title": "Activer la base de données client"
+    },
+    "ready": {
+      "button": "Utiliser maintenant",
+      "desc": "Prêt à l'emploi",
+      "title": "Base de données PGlite prête"
+    }
+  },
   "close": "Fermer",
   "contact": "Nous contacter",
   "copy": "Copier",

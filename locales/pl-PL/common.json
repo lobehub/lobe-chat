@@ -9,7 +9,12 @@
       "title": "Witaj w {{name}}"
     }
   },
-  "appInitializing": "Aplikacja uruchamia się...",
+  "appLoading": {
+    "goToChat": "(4/4) Ładowanie strony czatu...",
+    "initAuth": "(2/4) Inicjalizacja usługi autoryzacji...",
+    "initUser": "(3/4) Inicjalizacja stanu użytkownika...",
+    "initializing": "(1/4) Uruchamianie aplikacji..."
+  },
   "autoGenerate": "Automatyczne generowanie",
   "autoGenerateTooltip": "Automatyczne uzupełnianie opisu asystenta na podstawie sugestii",
   "autoGenerateTooltipDisabled": "Proszę wprowadzić słowo kluczowe przed użyciem funkcji automatycznego uzupełniania",
@@ -20,6 +25,39 @@
   "branchingDisable": "Funkcja „podtemat” jest dostępna tylko w wersji serwerowej. Aby skorzystać z tej funkcji, przełącz się na tryb wdrożenia serwera lub użyj LobeChat Cloud.",
   "cancel": "Anuluj",
   "changelog": "Dziennik zmian",
+  "clientDB": {
+    "autoInit": {
+      "title": "Inicjalizacja bazy danych PGlite"
+    },
+    "error": {
+      "desc": "Przepraszamy, wystąpił błąd podczas inicjalizacji bazy danych PGlite. Proszę kliknąć przycisk „Spróbuj ponownie”.<br><br> Jeśli problem nadal występuje, proszę <1>zgłosić problem</1>, a my jak najszybciej pomożemy w jego rozwiązaniu.",
+      "retry": "Spróbuj ponownie",
+      "title": "Niepowodzenie aktualizacji bazy danych"
+    },
+    "initing": {
+      "error": "Wystąpił błąd, proszę spróbować ponownie",
+      "idle": "Oczekiwanie na inicjalizację...",
+      "initializing": "Inicjalizowanie...",
+      "loadingDependencies": "Ładowanie zależności ({{progress}}%)...",
+      "loadingWasmModule": "Ładowanie modułu WASM ({{progress}}%)...",
+      "migrating": "Migracja danych...",
+      "ready": "Baza danych gotowa"
+    },
+    "modal": {
+      "desc": "Włącz klienta bazy danych PGlite, aby trwale przechowywać dane czatu w przeglądarce i korzystać z zaawansowanych funkcji, takich jak baza wiedzy",
+      "enable": "Włącz teraz",
+      "init": {
+        "desc": "Inicjalizacja bazy danych trwa, w zależności od jakości sieci może zająć od 5 do 30 sekund",
+        "title": "Inicjalizacja bazy danych PGlite"
+      },
+      "title": "Włącz bazę danych klienta"
+    },
+    "ready": {
+      "button": "Użyj teraz",
+      "desc": "Chcę użyć teraz",
+      "title": "Baza danych PGlite jest gotowa"
+    }
+  },
   "close": "Zamknij",
   "contact": "Skontaktuj się z nami",
   "copy": "Kopiuj",

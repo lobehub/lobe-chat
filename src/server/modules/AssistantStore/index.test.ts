@@ -8,7 +8,7 @@ describe('AssistantStore', () => {
   it('should return the default index URL when no language is provided', () => {
     const agentMarket = new AssistantStore();
     const url = agentMarket.getAgentIndexUrl();
-    expect(url).toBe(baseURL);
+    expect(url).toBe(`${baseURL}/index.en-US.json`);
   });
 
   it('should return the index URL for a not supported language', () => {
@@ -20,13 +20,17 @@ describe('AssistantStore', () => {
   it('should return the zh-CN URL for zh locale', () => {
     const agentMarket = new AssistantStore();
     const url = agentMarket.getAgentIndexUrl('zh' as any);
-    expect(url).toBe('https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public/index.zh-CN.json');
+    expect(url).toBe(
+      'https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public/index.zh-CN.json',
+    );
   });
 
   it('should return the default URL for en locale', () => {
     const agentMarket = new AssistantStore();
     const url = agentMarket.getAgentIndexUrl('en' as any);
-    expect(url).toBe('https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public');
+    expect(url).toBe(
+      'https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public/index.en-US.json',
+    );
   });
 
   it('should return the base URL if the provided language is not supported', () => {
@@ -38,7 +42,7 @@ describe('AssistantStore', () => {
   it('should return the agent URL with default language when no language is provided', () => {
     const agentMarket = new AssistantStore();
     const url = agentMarket.getAgentUrl('agent-123');
-    expect(url).toBe(`${baseURL}/agent-123.json`);
+    expect(url).toBe(`${baseURL}/agent-123.en-US.json`);
   });
 
   it('should return the agent URL for a  supported language', () => {

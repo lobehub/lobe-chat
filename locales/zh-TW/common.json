@@ -9,7 +9,12 @@
       "title": "歡迎體驗 {{name}}"
     }
   },
-  "appInitializing": "應用啟動中...",
+  "appLoading": {
+    "goToChat": "(4/4) 對話頁面加載中...",
+    "initAuth": "(2/4) 鑑權服務初始化...",
+    "initUser": "(3/4) 使用者狀態初始化...",
+    "initializing": "(1/4) 應用啟動中..."
+  },
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
   "autoGenerateTooltipDisabled": "請填寫提示詞後使用自動補全功能",
@@ -20,6 +25,39 @@
   "branchingDisable": "「子主題」功能僅在伺服器端版本可用，如需該功能，請切換到伺服器端部署模式或使用 LobeChat Cloud",
   "cancel": "取消",
   "changelog": "變更日誌",
+  "clientDB": {
+    "autoInit": {
+      "title": "初始化 PGlite 數據庫"
+    },
+    "error": {
+      "desc": "非常抱歉，Pglite 數據庫初始化過程發生異常。請點擊 「重試」按鈕。<br><br> 如仍然出錯，請 <1>提交問題</1> ，我們將會第一時間幫你排查",
+      "retry": "重試",
+      "title": "數據庫升級失敗"
+    },
+    "initing": {
+      "error": "發生錯誤，請重試",
+      "idle": "等待初始化...",
+      "initializing": "正在初始化...",
+      "loadingDependencies": "加載依賴中({{progress}}%)...",
+      "loadingWasmModule": "加載 WASM 模塊中({{progress}}%)...",
+      "migrating": "正在遷移數據...",
+      "ready": "數據庫已就緒"
+    },
+    "modal": {
+      "desc": "啟用 PGlite 客戶端數據庫，在你的瀏覽器中持久存儲聊天數據，並使用知識庫等進階特性",
+      "enable": "立即啟用",
+      "init": {
+        "desc": "正在初始化數據庫，視網絡差異可能會用時 5~30 秒不等",
+        "title": "正在初始化 PGlite 數據庫"
+      },
+      "title": "開啟客戶端數據庫"
+    },
+    "ready": {
+      "button": "立即使用",
+      "desc": "立即想用",
+      "title": "PGlite 數據庫已就緒"
+    }
+  },
   "close": "關閉",
   "contact": "聯繫我們",
   "copy": "複製",
