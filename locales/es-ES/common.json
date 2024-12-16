@@ -9,7 +9,12 @@
       "title": "Bienvenido a {{name}}"
     }
   },
-  "appInitializing": "Iniciando la aplicación...",
+  "appLoading": {
+    "goToChat": "(4/4) Cargando la página de chat...",
+    "initAuth": "(2/4) Inicializando el servicio de autenticación...",
+    "initUser": "(3/4) Inicializando el estado del usuario...",
+    "initializing": "(1/4) Iniciando la aplicación..."
+  },
   "autoGenerate": "Generación automática",
   "autoGenerateTooltip": "Completar automáticamente la descripción del asistente basándose en las sugerencias",
   "autoGenerateTooltipDisabled": "Por favor, complete la palabra clave antes de usar la función de autocompletar",
@@ -20,6 +25,39 @@
   "branchingDisable": "La función de «subtemas» solo está disponible en la versión del servidor. Si necesita esta función, cambie al modo de implementación del servidor o utilice LobeChat Cloud.",
   "cancel": "Cancelar",
   "changelog": "Registro de cambios",
+  "clientDB": {
+    "autoInit": {
+      "title": "Inicializando la base de datos PGlite"
+    },
+    "error": {
+      "desc": "Lo sentimos, ha ocurrido un error durante el proceso de inicialización de la base de datos Pglite. Por favor, haga clic en el botón 'Reintentar'.<br><br> Si el problema persiste, por favor <1>envíe un problema</1>, y estaremos encantados de ayudarle a resolverlo lo antes posible.",
+      "retry": "Reintentar",
+      "title": "Error en la actualización de la base de datos"
+    },
+    "initing": {
+      "error": "Ha ocurrido un error, por favor reintente",
+      "idle": "Esperando la inicialización...",
+      "initializing": "Inicializando...",
+      "loadingDependencies": "Cargando dependencias ({{progress}}%)...",
+      "loadingWasmModule": "Cargando módulo WASM ({{progress}}%)...",
+      "migrating": "Migrando datos...",
+      "ready": "La base de datos está lista"
+    },
+    "modal": {
+      "desc": "Habilite la base de datos del cliente PGlite para almacenar de forma persistente los datos del chat en su navegador y utilizar características avanzadas como la base de conocimientos.",
+      "enable": "Habilitar ahora",
+      "init": {
+        "desc": "Inicializando la base de datos, el tiempo puede variar de 5 a 30 segundos dependiendo de la red.",
+        "title": "Inicializando la base de datos PGlite"
+      },
+      "title": "Activar la base de datos del cliente"
+    },
+    "ready": {
+      "button": "Usar ahora",
+      "desc": "Listo para usar",
+      "title": "La base de datos PGlite está lista"
+    }
+  },
   "close": "Cerrar",
   "contact": "Contacto",
   "copy": "Copiar",

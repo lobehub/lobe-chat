@@ -112,6 +112,12 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) est un modèle innovant, adapté à des applications dans plusieurs domaines et à des tâches complexes."
   },
+  "InternVL2-8B": {
+    "description": "InternVL2-8B est un puissant modèle de langage visuel, prenant en charge le traitement multimodal d'images et de textes, capable de reconnaître avec précision le contenu des images et de générer des descriptions ou des réponses pertinentes."
+  },
+  "InternVL2.5-26B": {
+    "description": "InternVL2.5-26B est un puissant modèle de langage visuel, prenant en charge le traitement multimodal d'images et de textes, capable de reconnaître avec précision le contenu des images et de générer des descriptions ou des réponses pertinentes."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct est l'un des derniers modèles de langage à grande échelle publiés par Alibaba Cloud. Ce modèle 72B présente des capacités considérablement améliorées dans des domaines tels que le codage et les mathématiques. Le modèle offre également un support multilingue, couvrant plus de 29 langues, y compris le chinois et l'anglais. Il a montré des améliorations significatives dans le suivi des instructions, la compréhension des données structurées et la génération de sorties structurées (en particulier JSON)."
   },
@@ -233,8 +239,20 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 est la dernière série du modèle Qwen, capable de surpasser les meilleurs modèles open source de taille équivalente, voire de plus grande taille. Qwen2 7B a obtenu des résultats significatifs dans plusieurs évaluations, en particulier en ce qui concerne la compréhension du code et du chinois."
   },
+  "Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5-14B-Instruct est un grand modèle de langage de 14 milliards de paramètres, offrant d'excellentes performances, optimisé pour les scénarios en chinois et multilingues, prenant en charge des applications telles que les questions-réponses intelligentes et la génération de contenu."
+  },
+  "Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5-32B-Instruct est un grand modèle de langage de 32 milliards de paramètres, offrant des performances équilibrées, optimisé pour les scénarios en chinois et multilingues, prenant en charge des applications telles que les questions-réponses intelligentes et la génération de contenu."
+  },
   "Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct prend en charge un contexte de 16k, générant des textes longs de plus de 8K. Il permet des appels de fonction et une interaction transparente avec des systèmes externes, augmentant considérablement la flexibilité et l'évolutivité. Les connaissances du modèle ont considérablement augmenté, et ses capacités en codage et en mathématiques ont été grandement améliorées, avec un support multilingue dépassant 29 langues."
+  },
+  "Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct est un grand modèle de langage de 7 milliards de paramètres, prenant en charge les appels de fonction et l'interaction transparente avec des systèmes externes, améliorant considérablement la flexibilité et l'évolutivité. Optimisé pour les scénarios en chinois et multilingues, il prend en charge des applications telles que les questions-réponses intelligentes et la génération de contenu."
+  },
+  "Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder-32B-Instruct est un grand modèle de langage conçu pour la génération de code, la compréhension de code et les scénarios de développement efficaces, avec une échelle de 32 milliards de paramètres, répondant à des besoins de programmation variés."
   },
   "SenseChat": {
     "description": "Modèle de version de base (V4), longueur de contexte de 4K, avec de puissantes capacités générales."
@@ -463,6 +481,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet offre un équilibre idéal entre intelligence et vitesse pour les charges de travail d'entreprise. Il fournit une utilité maximale à un coût inférieur, fiable et adapté à un déploiement à grande échelle."
+  },
+  "code-raccoon-v1": {
+    "description": "Code Raccoon est un assistant de développement intelligent basé sur le grand modèle de langage de SenseTime, couvrant l'analyse des besoins logiciels, la conception d'architecture, la rédaction de code, les tests logiciels, etc., répondant aux divers besoins des utilisateurs en matière de rédaction de code et d'apprentissage de la programmation. Code Raccoon prend en charge plus de 90 langages de programmation populaires tels que Python, Java, JavaScript, C++, Go, SQL, ainsi que des IDE populaires comme VS Code et IntelliJ IDEA. Dans les applications pratiques, Code Raccoon peut aider les développeurs à améliorer leur efficacité de programmation de plus de 50 %."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 est un puissant assistant de programmation AI, prenant en charge des questions intelligentes et l'achèvement de code dans divers langages de programmation, améliorant l'efficacité du développement."
@@ -751,6 +772,12 @@
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini est le dernier modèle lancé par OpenAI après le GPT-4 Omni, prenant en charge les entrées multimodales et produisant des sorties textuelles. En tant que leur modèle compact le plus avancé, il est beaucoup moins cher que d'autres modèles de pointe récents et coûte plus de 60 % de moins que le GPT-3.5 Turbo. Il maintient une intelligence de pointe tout en offrant un rapport qualité-prix significatif. Le GPT-4o mini a obtenu un score de 82 % au test MMLU et se classe actuellement au-dessus du GPT-4 en termes de préférences de chat."
+  },
+  "grok-2-1212": {
+    "description": "Ce modèle a été amélioré en termes de précision, de respect des instructions et de capacités multilingues."
+  },
+  "grok-2-vision-1212": {
+    "description": "Ce modèle a été amélioré en termes de précision, de respect des instructions et de capacités multilingues."
   },
   "grok-beta": {
     "description": "Offre des performances comparables à Grok 2, mais avec une efficacité, une vitesse et des fonctionnalités supérieures."
