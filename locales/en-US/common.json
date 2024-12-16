@@ -9,7 +9,12 @@
       "title": "Launch {{name}}"
     }
   },
-  "appInitializing": "Application is starting...",
+  "appLoading": {
+    "goToChat": "(4/4) Loading chat page...",
+    "initAuth": "(2/4) Initializing authentication service...",
+    "initUser": "(3/4) Initializing user status...",
+    "initializing": "(1/4) Starting up application..."
+  },
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
@@ -20,6 +25,39 @@
   "branchingDisable": "The 'Subtopic' feature is only available in the server version. If you need this feature, please switch to server deployment mode or use LobeChat Cloud.",
   "cancel": "Cancel",
   "changelog": "Changelog",
+  "clientDB": {
+    "autoInit": {
+      "title": "Initializing PGlite Database"
+    },
+    "error": {
+      "desc": "We apologize, an exception occurred during the PGlite database initialization process. Please click the 'Retry' button.<br><br> If the error persists, please <1>submit an issue</1>, and we will assist you as soon as possible.",
+      "retry": "Retry",
+      "title": "Database Upgrade Failed"
+    },
+    "initing": {
+      "error": "An error occurred, please try again",
+      "idle": "Waiting for initialization...",
+      "initializing": "Initializing...",
+      "loadingDependencies": "Loading dependencies ({{progress}}%)...",
+      "loadingWasmModule": "Loading WASM module ({{progress}}%)...",
+      "migrating": "Migrating data...",
+      "ready": "Database is ready"
+    },
+    "modal": {
+      "desc": "Enable the PGlite client database to persistently store chat data in your browser and use advanced features like knowledge base.",
+      "enable": "Enable Now",
+      "init": {
+        "desc": "Initializing the database, which may take 5 to 30 seconds depending on network conditions.",
+        "title": "Initializing PGlite Database"
+      },
+      "title": "Enable Client Database"
+    },
+    "ready": {
+      "button": "Use Now",
+      "desc": "Ready to use",
+      "title": "PGlite Database is Ready"
+    }
+  },
   "close": "Close",
   "contact": "Contact Us",
   "copy": "Copy",
