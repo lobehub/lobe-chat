@@ -1,4 +1,4 @@
-import { headers } from 'next/headers';
+import { type UnsafeUnwrappedHeaders, headers } from 'next/headers';
 import { UAParser } from 'ua-parser-js';
 
 /**
@@ -9,7 +9,7 @@ export const isMobileDevice = () => {
     throw new Error('[Server method] you are importing a server-only module outside of server');
   }
 
-  const { get } = headers();
+  const { get } = headers() as unknown as UnsafeUnwrappedHeaders;
   const ua = get('user-agent');
 
   // console.debug(ua);
@@ -26,7 +26,7 @@ export const gerServerDeviceInfo = () => {
     throw new Error('[Server method] you are importing a server-only module outside of server');
   }
 
-  const { get } = headers();
+  const { get } = headers() as unknown as UnsafeUnwrappedHeaders;
   const ua = get('user-agent');
 
   // console.debug(ua);
