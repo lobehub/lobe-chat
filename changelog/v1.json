@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update models of Gitee AI provider."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.26"
+  },
+  {
+    "children": {
       "improvements": ["Add new grok models."]
     },
     "date": "2024-12-14",
