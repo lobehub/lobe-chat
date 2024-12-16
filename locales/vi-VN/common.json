@@ -9,7 +9,12 @@
       "title": "Chào mừng bạn trải nghiệm {{name}}"
     }
   },
-  "appInitializing": "Đang khởi động ứng dụng...",
+  "appLoading": {
+    "goToChat": "(4/4) Đang tải trang trò chuyện...",
+    "initAuth": "(2/4) Đang khởi tạo dịch vụ xác thực...",
+    "initUser": "(3/4) Đang khởi tạo trạng thái người dùng...",
+    "initializing": "(1/4) Đang khởi động ứng dụng..."
+  },
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
   "autoGenerateTooltipDisabled": "Vui lòng nhập từ gợi ý trước khi sử dụng tính năng tự động hoàn thành",
@@ -20,6 +25,39 @@
   "branchingDisable": "Chức năng «Chủ đề con» chỉ có sẵn trong phiên bản máy chủ. Nếu bạn cần chức năng này, hãy chuyển sang chế độ triển khai máy chủ hoặc sử dụng LobeChat Cloud.",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
+  "clientDB": {
+    "autoInit": {
+      "title": "Khởi tạo cơ sở dữ liệu PGlite"
+    },
+    "error": {
+      "desc": "Rất tiếc, đã xảy ra sự cố trong quá trình khởi tạo cơ sở dữ liệu Pglite. Vui lòng nhấp vào nút 「Thử lại」.<br><br> Nếu vẫn gặp lỗi, vui lòng <1>gửi vấn đề</1> , chúng tôi sẽ giúp bạn kiểm tra ngay lập tức",
+      "retry": "Thử lại",
+      "title": "Cập nhật cơ sở dữ liệu không thành công"
+    },
+    "initing": {
+      "error": "Đã xảy ra lỗi, vui lòng thử lại",
+      "idle": "Đang chờ khởi tạo...",
+      "initializing": "Đang khởi tạo...",
+      "loadingDependencies": "Đang tải phụ thuộc({{progress}}%)...",
+      "loadingWasmModule": "Đang tải mô-đun WASM({{progress}}%)...",
+      "migrating": "Đang di chuyển dữ liệu...",
+      "ready": "Cơ sở dữ liệu đã sẵn sàng"
+    },
+    "modal": {
+      "desc": "Kích hoạt cơ sở dữ liệu khách hàng PGlite, lưu trữ dữ liệu trò chuyện của bạn trong trình duyệt và sử dụng các tính năng nâng cao như kho kiến thức",
+      "enable": "Kích hoạt ngay",
+      "init": {
+        "desc": "Đang khởi tạo cơ sở dữ liệu, thời gian có thể từ 5~30 giây tùy thuộc vào mạng",
+        "title": "Đang khởi tạo cơ sở dữ liệu PGlite"
+      },
+      "title": "Bật cơ sở dữ liệu khách hàng"
+    },
+    "ready": {
+      "button": "Sử dụng ngay",
+      "desc": "Sử dụng ngay",
+      "title": "Cơ sở dữ liệu PGlite đã sẵn sàng"
+    }
+  },
   "close": "Đóng",
   "contact": "Liên hệ chúng tôi",
   "copy": "Sao chép",

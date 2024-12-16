@@ -25,6 +25,9 @@ import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
 const parserFallbackLang = async () => {
+  // if the default language is not 'en-US', just return the default language as fallback lang
+  if (DEFAULT_LANG !== 'en-US') return DEFAULT_LANG;
+
   const header = await headers();
   /**
    * The arguments are as follows:

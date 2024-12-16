@@ -9,7 +9,12 @@
       "title": "{{name}} 开始公测"
     }
   },
-  "appInitializing": "应用启动中...",
+  "appLoading": {
+    "goToChat": "(4/4) 对话页面加载中...",
+    "initAuth": "(2/4) 鉴权服务初始化...",
+    "initUser": "(3/4) 用户状态初始化...",
+    "initializing": "(1/4) 应用启动中..."
+  },
   "autoGenerate": "自动补全",
   "autoGenerateTooltip": "基于提示词自动补全助手描述",
   "autoGenerateTooltipDisabled": "请填写提示词后使用自动补全功能",
@@ -20,6 +25,39 @@
   "branchingDisable": "「子话题」功能仅服务端版本可用，如需该功能，请切换到服务端部署模式或使用 LobeChat Cloud",
   "cancel": "取消",
   "changelog": "更新日志",
+  "clientDB": {
+    "autoInit": {
+      "title": "初始化 PGlite 数据库"
+    },
+    "error": {
+      "desc": "非常抱歉，Pglite 数据库初始化过程发生异常。请点击 「重试」按钮。<br><br> 如仍然出错，请 <1>提交问题</1> ，我们将会第一时间帮你排查",
+      "retry": "重试",
+      "title": "数据库升级失败"
+    },
+    "initing": {
+      "error": "发生错误，请重试",
+      "idle": "等待初始化...",
+      "initializing": "正在初始化...",
+      "loadingDependencies": "加载依赖中({{progress}}%)...",
+      "loadingWasmModule": "加载 WASM 模块中({{progress}}%)...",
+      "migrating": "正在迁移数据...",
+      "ready": "数据库已就绪"
+    },
+    "modal": {
+      "desc": "启用 PGlite 客户端数据库，在你的浏览器中持久存储聊天数据，并使用知识库等进阶特性",
+      "enable": "立即启用",
+      "init": {
+        "desc": "正在初始化数据库，视网络差异可能会用时 5~30 秒不等",
+        "title": "正在初始化 PGlite 数据库"
+      },
+      "title": "开启客户端数据库"
+    },
+    "ready": {
+      "button": "立即使用",
+      "desc": "立即想用",
+      "title": "PGlite 数据库已就绪"
+    }
+  },
   "close": "关闭",
   "contact": "联系我们",
   "copy": "复制",

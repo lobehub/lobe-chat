@@ -9,7 +9,12 @@
       "title": "Willkommen bei {{name}}"
     }
   },
-  "appInitializing": "Anwendung wird gestartet...",
+  "appLoading": {
+    "goToChat": "(4/4) Lade die Chat-Seite...",
+    "initAuth": "(2/4) Authentifizierungsdienst wird initialisiert...",
+    "initUser": "(3/4) Benutzerstatus wird initialisiert...",
+    "initializing": "(1/4) Anwendung wird gestartet..."
+  },
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
   "autoGenerateTooltipDisabled": "Bitte geben Sie einen Hinweis ein, um die automatische Vervollständigung zu aktivieren",
@@ -20,6 +25,39 @@
   "branchingDisable": "Die Funktion „Unterthema“ ist nur in der Serverversion verfügbar. Wenn Sie diese Funktion benötigen, wechseln Sie bitte in den Serverbereitstellungsmodus oder verwenden Sie LobeChat Cloud.",
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
+  "clientDB": {
+    "autoInit": {
+      "title": "Initialisiere PGlite-Datenbank"
+    },
+    "error": {
+      "desc": "Es tut uns leid, während der Initialisierung der Pglite-Datenbank ist ein Fehler aufgetreten. Bitte klicken Sie auf die Schaltfläche „Erneut versuchen“. <br><br> Wenn der Fehler weiterhin besteht, <1>reichen Sie ein Problem ein</1>, und wir werden Ihnen umgehend helfen.",
+      "retry": "Erneut versuchen",
+      "title": "Datenbank-Upgrade fehlgeschlagen"
+    },
+    "initing": {
+      "error": "Ein Fehler ist aufgetreten, bitte versuchen Sie es erneut",
+      "idle": "Warte auf die Initialisierung...",
+      "initializing": "Wird initialisiert...",
+      "loadingDependencies": "Lade Abhängigkeiten ({ {progress}}%)...",
+      "loadingWasmModule": "Lade WASM-Modul ({ {progress}}%)...",
+      "migrating": "Daten werden migriert...",
+      "ready": "Datenbank ist bereit"
+    },
+    "modal": {
+      "desc": "Aktivieren Sie die PGlite-Clientdatenbank, um Chatdaten in Ihrem Browser dauerhaft zu speichern und erweiterte Funktionen wie Wissensdatenbanken zu nutzen.",
+      "enable": "Jetzt aktivieren",
+      "init": {
+        "desc": "Die Datenbank wird initialisiert, je nach Netzwerkbedingungen kann dies 5 bis 30 Sekunden dauern.",
+        "title": "Initialisiere PGlite-Datenbank"
+      },
+      "title": "Clientdatenbank aktivieren"
+    },
+    "ready": {
+      "button": "Jetzt verwenden",
+      "desc": "Jetzt verwenden",
+      "title": "PGlite-Datenbank ist bereit"
+    }
+  },
   "close": "Schließen",
   "contact": "Kontakt",
   "copy": "Kopieren",
