@@ -10,6 +10,7 @@ import { handleOpenAIError } from '../utils/handleOpenAIError';
 import { convertOpenAIMessages } from '../utils/openaiHelpers';
 import { StreamingResponse } from '../utils/response';
 import { SparkAIStream } from '../utils/streams';
+import { transformSparkResponseToStream } from '../utils/streams/spark'
 
 const DEFAULT_BASE_URL = 'https://spark-api-open.xf-yun.com/v1';
 
@@ -35,13 +36,25 @@ export class LobeSparkAI implements LobeRuntimeAI {
         params as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
       );
 
-      const [prod, debug] = response.tee();
+      if (params.stream) {
+        const [prod, debug] = response.tee();
 
-      if (process.env.DEBUG_SPARK_CHAT_COMPLETION === '1') {
-        debugStream(debug.toReadableStream()).catch(console.error);
+        if (process.env.DEBUG_SPARK_CHAT_COMPLETION === '1') {
+          debugStream(debug.toReadableStream()).catch(console.error);
+        }
+
+        return StreamingResponse(SparkAIStream(prod, options?.callback), {
+          headers: options?.headers,
+        });
       }
 
-      return StreamingResponse(SparkAIStream(prod), {
+      const stream = transformSparkResponseToStream(response as unknown as OpenAI.ChatCompletion);
+
+      if (process.env.DEBUG_SPARK_CHAT_COMPLETION === '1') {
+        console.log(stream);
+      }
+
+      return StreamingResponse(SparkAIStream(stream, options?.callback), {
         headers: options?.headers,
       });
     } catch (error) {
@@ -68,7 +81,7 @@ export class LobeSparkAI implements LobeRuntimeAI {
     return {
       messages: await convertOpenAIMessages(messages as any),
       ...params,
-      stream: true,
+      stream: !payload.tools,
     };
   }
 }
