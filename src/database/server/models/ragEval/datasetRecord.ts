@@ -1,11 +1,7 @@
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm/expressions';
 
+import { NewEvalDatasetRecordsItem, evalDatasetRecords, files } from '@/database/schemas';
 import { serverDB } from '@/database/server';
-import {
-  NewEvalDatasetRecordsItem,
-  evalDatasetRecords,
-  files,
-} from '@/database/schemas';
 import { EvalDatasetRecordRefFile } from '@/types/eval';
 
 export class EvalDatasetRecordModel {
@@ -50,8 +46,7 @@ export class EvalDatasetRecordModel {
     const fileItems = await serverDB
       .select({ fileType: files.fileType, id: files.id, name: files.name })
       .from(files)
-      .where(and(inArray(files.id, fileList), eq(files.userId, this.userId)))
-      .execute();
+      .where(and(inArray(files.id, fileList), eq(files.userId, this.userId)));
 
     return list.map((item) => {
       return {

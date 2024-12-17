@@ -87,11 +87,10 @@ export class SessionModel {
   async count() {
     const result = await this.db
       .select({
-        count: count(),
+        count: count(sessions.id),
       })
       .from(sessions)
-      .where(eq(sessions.userId, this.userId))
-      .execute();
+      .where(eq(sessions.userId, this.userId));
 
     return result[0].count;
   }

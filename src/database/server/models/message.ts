@@ -243,9 +243,7 @@ export class MessageModel {
       .select()
       .from(messages)
       .orderBy(messages.createdAt)
-      .where(eq(messages.userId, this.userId))
-
-      .execute();
+      .where(eq(messages.userId, this.userId));
   }
 
   async queryBySessionId(sessionId?: string | null): Promise<MessageItem[]> {
@@ -257,7 +255,6 @@ export class MessageModel {
 
   async queryByKeyword(keyword: string): Promise<MessageItem[]> {
     if (!keyword) return [];
-
     return this.db.query.messages.findMany({
       orderBy: [desc(messages.createdAt)],
       where: and(eq(messages.userId, this.userId), like(messages.content, `%${keyword}%`)),
@@ -267,11 +264,10 @@ export class MessageModel {
   async count() {
     const result = await this.db
       .select({
-        count: count(),
+        count: count(messages.id),
       })
       .from(messages)
-      .where(eq(messages.userId, this.userId))
-      .execute();
+      .where(eq(messages.userId, this.userId));
 
     return result[0].count;
   }
@@ -284,7 +280,7 @@ export class MessageModel {
 
     const result = await this.db
       .select({
-        count: count(),
+        count: count(messages.id),
       })
       .from(messages)
       .where(
@@ -293,8 +289,7 @@ export class MessageModel {
           gte(messages.createdAt, today),
           lt(messages.createdAt, tomorrow),
         ),
-      )
-      .execute();
+      );
 
     return result[0].count;
   }
@@ -460,8 +455,7 @@ export class MessageModel {
         const res = await tx
           .select({ id: messagePlugins.id })
           .from(messagePlugins)
-          .where(inArray(messagePlugins.toolCallId, toolCallIds))
-          .execute();
+          .where(inArray(messagePlugins.toolCallId, toolCallIds));
 
         relatedMessageIds = res.map((row) => row.id);
       }

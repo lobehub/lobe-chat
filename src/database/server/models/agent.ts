@@ -73,15 +73,12 @@ export class AgentModel {
     knowledgeBaseId: string,
     enabled: boolean = true,
   ) => {
-    return this.db
-      .insert(agentsKnowledgeBases)
-      .values({
-        agentId,
-        enabled,
-        knowledgeBaseId,
-        userId: this.userId,
-      })
-      .execute();
+    return this.db.insert(agentsKnowledgeBases).values({
+      agentId,
+      enabled,
+      knowledgeBaseId,
+      userId: this.userId,
+    });
   };
 
   deleteAgentKnowledgeBase = async (agentId: string, knowledgeBaseId: string) => {
@@ -93,8 +90,7 @@ export class AgentModel {
           eq(agentsKnowledgeBases.knowledgeBaseId, knowledgeBaseId),
           eq(agentsKnowledgeBases.userId, this.userId),
         ),
-      )
-      .execute();
+      );
   };
 
   toggleKnowledgeBase = async (agentId: string, knowledgeBaseId: string, enabled?: boolean) => {
@@ -107,8 +103,7 @@ export class AgentModel {
           eq(agentsKnowledgeBases.knowledgeBaseId, knowledgeBaseId),
           eq(agentsKnowledgeBases.userId, this.userId),
         ),
-      )
-      .execute();
+      );
   };
 
   createAgentFiles = async (agentId: string, fileIds: string[], enabled: boolean = true) => {
@@ -134,8 +129,7 @@ export class AgentModel {
       .insert(agentsFiles)
       .values(
         needToInsertFileIds.map((fileId) => ({ agentId, enabled, fileId, userId: this.userId })),
-      )
-      .execute();
+      );
   };
 
   deleteAgentFile = async (agentId: string, fileId: string) => {
@@ -147,8 +141,7 @@ export class AgentModel {
           eq(agentsFiles.fileId, fileId),
           eq(agentsFiles.userId, this.userId),
         ),
-      )
-      .execute();
+      );
   };
 
   toggleFile = async (agentId: string, fileId: string, enabled?: boolean) => {
@@ -161,7 +154,6 @@ export class AgentModel {
           eq(agentsFiles.fileId, fileId),
           eq(agentsFiles.userId, this.userId),
         ),
-      )
-      .execute();
+      );
   };
 }
