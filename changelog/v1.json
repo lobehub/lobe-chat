@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor the drizzle code style."]
+    },
+    "date": "2024-12-17",
+    "version": "1.36.32"
+  },
+  {
+    "children": {
       "improvements": ["Refactor the data fetch with clientDB init check."]
     },
     "date": "2024-12-17",
