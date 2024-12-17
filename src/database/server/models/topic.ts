@@ -43,6 +43,8 @@ export class TopicModel {
       })
       .from(topics)
       .where(and(eq(topics.userId, this.userId), this.matchSession(sessionId)))
+      // In boolean sorting, false is considered "smaller" than true.
+      // So here we use desc to ensure that topics with favorite as true are in front.
       .orderBy(desc(topics.favorite), desc(topics.updatedAt))
       .limit(pageSize)
       .offset(offset);
