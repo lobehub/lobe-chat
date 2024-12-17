@@ -6,13 +6,10 @@ import { message } from '@/components/AntdStaticMethods';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { isServerMode } from '@/const/version';
 import { fileService } from '@/services/file';
-import { ServerService } from '@/services/file/server';
 import { uploadService } from '@/services/upload';
 import { FileMetadata, UploadFileItem } from '@/types/files';
 
 import { FileStore } from '../../store';
-
-const serverFileService = new ServerService();
 
 interface UploadWithProgressParams {
   file: File;
@@ -43,10 +40,6 @@ interface UploadWithProgressResult {
 }
 
 export interface FileUploadAction {
-  internal_uploadToClientDB: (
-    params: Omit<UploadWithProgressParams, 'knowledgeBaseId'>,
-  ) => Promise<UploadWithProgressResult | undefined>;
-  internal_uploadToServer: (params: UploadWithProgressParams) => Promise<UploadWithProgressResult>;
   uploadWithProgress: (
     params: UploadWithProgressParams,
   ) => Promise<UploadWithProgressResult | undefined>;
@@ -57,51 +50,14 @@ export const createFileUploadSlice: StateCreator<
   [['zustand/devtools', never]],
   [],
   FileUploadAction
-> = (set, get) => ({
-  internal_uploadToClientDB: async ({ file, onStatusUpdate, skipCheckFileType }) => {
-    if (!skipCheckFileType && !file.type.startsWith('image')) {
-      onStatusUpdate?.({ id: file.name, type: 'removeFile' });
-      message.info({
-        content: t('upload.fileOnlySupportInServerMode', {
-          cloud: LOBE_CHAT_CLOUD,
-          ext: file.name.split('.').pop(),
-          ns: 'error',
-        }),
-        duration: 5,
-      });
-      return;
-    }
-
-    const fileArrayBuffer = await file.arrayBuffer();
-
-    const hash = sha256(fileArrayBuffer);
-
-    const data = await uploadService.uploadToClientDB(
-      { fileType: file.type, hash, name: file.name, saveMode: 'local', size: file.size },
-      file,
-    );
-
-    onStatusUpdate?.({
-      id: file.name,
-      type: 'updateFile',
-      value: {
-        fileUrl: data.url,
-        id: data.id,
-        status: 'success',
-        uploadState: { progress: 100, restTime: 0, speed: 0 },
-      },
-    });
-
-    return data;
-  },
-
-  internal_uploadToServer: async ({ file, onStatusUpdate, knowledgeBaseId }) => {
+> = () => ({
+  uploadWithProgress: async ({ file, onStatusUpdate, knowledgeBaseId, skipCheckFileType }) => {
     const fileArrayBuffer = await file.arrayBuffer();
 
     // 1. check file hash
     const hash = sha256(fileArrayBuffer);
 
-    const checkStatus = await serverFileService.checkFileHash(hash);
+    const checkStatus = await fileService.checkFileHash(hash);
     let metadata: FileMetadata;
 
     // 2. if file exist, just skip upload
@@ -112,17 +68,37 @@ export const createFileUploadSlice: StateCreator<
         type: 'updateFile',
         value: { status: 'processing', uploadState: { progress: 100, restTime: 0, speed: 0 } },
       });
-    } else {
-      // 2. if file don't exist, need upload files
-      metadata = await uploadService.uploadWithProgress(file, {
-        onProgress: (status, upload) => {
-          onStatusUpdate?.({
-            id: file.name,
-            type: 'updateFile',
-            value: { status: status === 'success' ? 'processing' : status, uploadState: upload },
+    }
+    // 2. if file don't exist, need upload files
+    else {
+      // if is server mode, upload to server s3, or upload to client s3
+      if (isServerMode) {
+        metadata = await uploadService.uploadWithProgress(file, {
+          onProgress: (status, upload) => {
+            onStatusUpdate?.({
+              id: file.name,
+              type: 'updateFile',
+              value: { status: status === 'success' ? 'processing' : status, uploadState: upload },
+            });
+          },
+        });
+      } else {
+        if (!skipCheckFileType && !file.type.startsWith('image')) {
+          onStatusUpdate?.({ id: file.name, type: 'removeFile' });
+          message.info({
+            content: t('upload.fileOnlySupportInServerMode', {
+              cloud: LOBE_CHAT_CLOUD,
+              ext: file.name.split('.').pop(),
+              ns: 'error',
+            }),
+            duration: 5,
           });
-        },
-      });
+          return;
+        }
+
+        // Upload to the indexeddb in the browser
+        metadata = await uploadService.uploadToClientS3(hash, file);
+      }
     }
 
     // 3. use more powerful file type detector to get file type
@@ -138,12 +114,10 @@ export const createFileUploadSlice: StateCreator<
     // 4. create file to db
     const data = await fileService.createFile(
       {
-        createdAt: Date.now(),
         fileType,
         hash,
         metadata,
         name: file.name,
-        saveMode: 'url',
         size: file.size,
         url: metadata.path,
       },
@@ -162,13 +136,5 @@ export const createFileUploadSlice: StateCreator<
     });
 
     return data;
-  },
-
-  uploadWithProgress: async (payload) => {
-    const { internal_uploadToServer, internal_uploadToClientDB } = get();
-
-    if (isServerMode) return internal_uploadToServer(payload);
-
-    return internal_uploadToClientDB(payload);
   },
 });

@@ -1,49 +1,67 @@
 import { DeepPartial } from 'utility-types';
 
-import { MessageModel } from '@/database/_deprecated/models/message';
-import { SessionModel } from '@/database/_deprecated/models/session';
-import { UserModel } from '@/database/_deprecated/models/user';
+import { clientDB } from '@/database/client/db';
+import { users } from '@/database/schemas';
+import { MessageModel } from '@/database/server/models/message';
+import { SessionModel } from '@/database/server/models/session';
+import { UserModel } from '@/database/server/models/user';
+import { BaseClientService } from '@/services/baseClientService';
 import { UserGuide, UserInitializationState, UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 import { AsyncLocalStorage } from '@/utils/localStorage';
+import { uuid } from '@/utils/uuid';
 
 import { IUserService } from './type';
 
-export class ClientService implements IUserService {
+export class ClientService extends BaseClientService implements IUserService {
   private preferenceStorage: AsyncLocalStorage<UserPreference>;
 
-  constructor() {
+  private get userModel(): UserModel {
+    return new UserModel(clientDB as any, this.userId);
+  }
+  private get messageModel(): MessageModel {
+    return new MessageModel(clientDB as any, this.userId);
+  }
+  private get sessionModel(): SessionModel {
+    return new SessionModel(clientDB as any, this.userId);
+  }
+
+  constructor(userId?: string) {
+    super(userId);
     this.preferenceStorage = new AsyncLocalStorage('LOBE_PREFERENCE');
   }
 
   async getUserState(): Promise<UserInitializationState> {
-    const user = await UserModel.getUser();
-    const messageCount = await MessageModel.count();
-    const sessionCount = await SessionModel.count();
+    // if user not exist in the db, create one to make sure the user exist
+    // and init the window.__lobeClientUserId
+    await this.makeSureUserExist();
+
+    const state = await this.userModel.getUserState();
+    const user = await UserModel.findById(clientDB as any, this.userId);
+    const messageCount = await this.messageModel.count();
+    const sessionCount = await this.sessionModel.count();
 
     return {
-      avatar: user.avatar,
+      ...state,
+      avatar: user?.avatar as string,
       canEnablePWAGuide: messageCount >= 4,
       canEnableTrace: messageCount >= 4,
       hasConversation: messageCount > 0 || sessionCount > 0,
       isOnboard: true,
       preference: await this.preferenceStorage.getFromLocalStorage(),
-      settings: user.settings as UserSettings,
-      userId: user.uuid,
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateUserSettings = async (patch: DeepPartial<UserSettings>, _?: any) => {
-    return UserModel.updateSettings(patch);
+  updateUserSettings = async (patch: DeepPartial<UserSettings>) => {
+    return this.userModel.updateSetting(patch as UserSettings);
   };
 
   resetUserSettings = async () => {
-    return UserModel.resetSettings();
+    return this.userModel.deleteSetting();
   };
 
   async updateAvatar(avatar: string) {
-    await UserModel.updateAvatar(avatar);
+    await this.userModel.updateUser({ avatar });
   }
 
   async updatePreference(preference: Partial<UserPreference>) {
@@ -53,5 +71,21 @@ export class ClientService implements IUserService {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars,unused-imports/no-unused-vars
   async updateGuide(guide: Partial<UserGuide>) {
     throw new Error('Method not implemented.');
+  }
+
+  private async makeSureUserExist() {
+    const existUsers = await clientDB.query.users.findMany();
+
+    let user: { id: string };
+    if (existUsers.length === 0) {
+      const result = await clientDB.insert(users).values({ id: uuid() }).returning();
+      user = result[0];
+    } else {
+      user = existUsers[0];
+    }
+
+    if (typeof window !== 'undefined') {
+      window.__lobeClientUserId = user.id;
+    }
   }
 }

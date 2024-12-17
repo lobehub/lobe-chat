@@ -10,14 +10,14 @@ describe('sessionGroupsReducer', () => {
     {
       id: nanoid(),
       name: 'Group 1',
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
     {
       id: nanoid(),
       name: 'Group 2',
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
       sort: 1,
     },
   ];
@@ -26,8 +26,8 @@ describe('sessionGroupsReducer', () => {
     const newItem: SessionGroupItem = {
       id: nanoid(),
       name: 'New Group',
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     const result = sessionGroupsReducer(initialState, {

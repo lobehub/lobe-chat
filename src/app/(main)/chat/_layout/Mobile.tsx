@@ -1,12 +1,13 @@
 'use client';
 
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Migration from '@/app/(main)/chat/features/Migration';
 import { useQuery } from '@/hooks/useQuery';
 
+import InitClientDB from '../features/InitClientDB';
 import { LayoutProps } from './type';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -40,6 +41,9 @@ const Layout = memo<LayoutProps>(({ children, session }) => {
         {children}
       </Flexbox>
       <Migration />
+      <Suspense fallback={null}>
+        <InitClientDB bottom={100} />
+      </Suspense>
     </>
   );
 });

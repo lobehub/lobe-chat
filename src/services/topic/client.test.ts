@@ -1,75 +1,62 @@
-import { Mock, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { eq } from 'drizzle-orm';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { SessionModel } from '@/database/_deprecated/models/session';
-import { CreateTopicParams, TopicModel } from '@/database/_deprecated/models/topic';
+import { clientDB, initializeDB } from '@/database/client/db';
+import { sessions, topics, users } from '@/database/schemas';
 import { ChatTopic } from '@/types/topic';
 
 import { ClientService } from './client';
 
-const topicService = new ClientService();
-// Mock the TopicModel
-vi.mock('@/database/_deprecated/models/topic', () => {
-  return {
-    TopicModel: {
-      create: vi.fn(),
-      query: vi.fn(),
-      delete: vi.fn(),
-      count: vi.fn(),
-      batchDeleteBySessionId: vi.fn(),
-      batchDelete: vi.fn(),
-      clearTable: vi.fn(),
-      toggleFavorite: vi.fn(),
-      batchCreate: vi.fn(),
-      update: vi.fn(),
-      queryAll: vi.fn(),
-      queryByKeyword: vi.fn(),
-    },
-  };
+// Mock data
+const userId = 'topic-user-test';
+const sessionId = 'topic-session';
+const mockTopicId = 'mock-topic-id';
+
+const mockTopic = {
+  id: mockTopicId,
+  title: 'Mock Topic',
+};
+
+const topicService = new ClientService(userId);
+
+beforeEach(async () => {
+  await initializeDB();
+
+  await clientDB.delete(users);
+
+  // 创建测试数据
+  await clientDB.transaction(async (tx) => {
+    await tx.insert(users).values({ id: userId });
+    await tx.insert(sessions).values({ id: sessionId, userId });
+    await tx.insert(topics).values({ ...mockTopic, sessionId, userId });
+  });
 });
 
 describe('TopicService', () => {
-  // Mock data
-  const mockTopicId = 'mock-topic-id';
-  const mockTopic: ChatTopic = {
-    createdAt: 100,
-    updatedAt: 100,
-    id: mockTopicId,
-    title: 'Mock Topic',
-  };
-  const mockTopics = [mockTopic];
-
-  beforeEach(() => {
-    // Reset all mocks before running each test case
-    vi.resetAllMocks();
-  });
-
   describe('createTopic', () => {
     it('should create a topic and return its id', async () => {
       // Setup
-      const createParams: CreateTopicParams = {
+      const createParams = {
         title: 'New Topic',
-        sessionId: '1',
+        sessionId: sessionId,
       };
-      (TopicModel.create as Mock).mockResolvedValue(mockTopic);
 
       // Execute
       const topicId = await topicService.createTopic(createParams);
 
       // Assert
-      expect(TopicModel.create).toHaveBeenCalledWith(createParams);
-      expect(topicId).toBe(mockTopicId);
+      expect(topicId).toBeDefined();
     });
+
     it('should throw an error if topic creation fails', async () => {
       // Setup
-      const createParams: CreateTopicParams = {
+      const createParams = {
         title: 'New Topic',
-        sessionId: '1',
+        sessionId: 123 as any, // sessionId should be string
       };
 
-      (TopicModel.create as Mock).mockResolvedValue(null);
-
       // Execute & Assert
-      await expect(topicService.createTopic(createParams)).rejects.toThrow('topic create Error');
+      await expect(topicService.createTopic(createParams)).rejects.toThrowError();
     });
   });
 
@@ -77,56 +64,46 @@ describe('TopicService', () => {
     // Example for getTopics
     it('should query topics with given parameters', async () => {
       // Setup
-      const queryParams = { sessionId: 'session-id' };
-      (TopicModel.query as Mock).mockResolvedValue(mockTopics);
+      const queryParams = { sessionId };
 
       // Execute
-      const topics = await topicService.getTopics(queryParams);
+      const data = await topicService.getTopics(queryParams);
 
       // Assert
-      expect(TopicModel.query).toHaveBeenCalledWith(queryParams);
-      expect(topics).toBe(mockTopics);
+      expect(data[0]).toMatchObject(mockTopic);
     });
   });
 
   describe('updateTopic', () => {
     // Example for updateFavorite
     it('should toggle favorite status of a topic', async () => {
-      // Setup
-      const newState = true;
-
       // Execute
-      await topicService.updateTopic(mockTopicId, { favorite: newState });
+      const result = await topicService.updateTopic(mockTopicId, { favorite: true });
 
       // Assert
-      expect(TopicModel.update).toHaveBeenCalledWith(mockTopicId, { favorite: 1 });
+      expect(result[0].favorite).toBeTruthy();
     });
 
     it('should update the title of a topic', async () => {
       // Setup
       const newTitle = 'Updated Topic Title';
-      (TopicModel.update as Mock).mockResolvedValue({ ...mockTopic, title: newTitle });
 
       // Execute
       const result = await topicService.updateTopic(mockTopicId, { title: newTitle });
 
       // Assert
-      expect(TopicModel.update).toHaveBeenCalledWith(mockTopicId, { title: newTitle });
-      expect(result).toEqual({ ...mockTopic, title: newTitle });
+      expect(result[0].title).toEqual(newTitle);
     });
   });
 
   describe('removeTopic', () => {
     it('should remove a topic by id', async () => {
-      // Setup
-      (TopicModel.delete as Mock).mockResolvedValue(true);
-
       // Execute
-      const result = await topicService.removeTopic(mockTopicId);
+      await topicService.removeTopic(mockTopicId);
+      const result = await clientDB.query.topics.findFirst({ where: eq(topics.id, mockTopicId) });
 
       // Assert
-      expect(TopicModel.delete).toHaveBeenCalledWith(mockTopicId);
-      expect(result).toBe(true);
+      expect(result).toBeUndefined();
     });
   });
 
@@ -134,111 +111,101 @@ describe('TopicService', () => {
     it('should remove all topics with a given session id', async () => {
       // Setup
       const sessionId = 'session-id';
-      (TopicModel.batchDeleteBySessionId as Mock).mockResolvedValue(true);
 
       // Execute
-      const result = await topicService.removeTopics(sessionId);
+      await topicService.removeTopics(sessionId);
+      const result = await clientDB.query.topics.findMany({
+        where: eq(topics.sessionId, sessionId),
+      });
 
-      // Assert
-      expect(TopicModel.batchDeleteBySessionId).toHaveBeenCalledWith(sessionId);
-      expect(result).toBe(true);
+      expect(result.length).toEqual(0);
     });
   });
 
   describe('batchRemoveTopics', () => {
     it('should batch remove topics', async () => {
+      await clientDB.insert(topics).values([{ id: 'topic-id-1', title: 'topic-title', userId }]);
       // Setup
       const topicIds = [mockTopicId, 'another-topic-id'];
-      (TopicModel.batchDelete as Mock).mockResolvedValue(true);
 
       // Execute
-      const result = await topicService.batchRemoveTopics(topicIds);
+      await topicService.batchRemoveTopics(topicIds);
+
+      const count = await clientDB.$count(topics);
 
       // Assert
-      expect(TopicModel.batchDelete).toHaveBeenCalledWith(topicIds);
-      expect(result).toBe(true);
+      expect(count).toBe(1);
     });
   });
 
   describe('removeAllTopic', () => {
     it('should clear all topics from the table', async () => {
-      // Setup
-      (TopicModel.clearTable as Mock).mockResolvedValue(true);
-
       // Execute
-      const result = await topicService.removeAllTopic();
+      await topicService.removeAllTopic();
 
+      const count = await clientDB.$count(topics);
       // Assert
-      expect(TopicModel.clearTable).toHaveBeenCalled();
-      expect(result).toBe(true);
+      expect(count).toBe(0);
     });
   });
 
   describe('batchCreateTopics', () => {
     it('should batch create topics', async () => {
-      // Setup
-      (TopicModel.batchCreate as Mock).mockResolvedValue(mockTopics);
-
       // Execute
-      const result = await topicService.batchCreateTopics(mockTopics);
+      const result = await topicService.batchCreateTopics([
+        { id: 'topic-id-1', title: 'topic-title' },
+        { id: 'topic-id-2', title: 'topic-title' },
+      ] as ChatTopic[]);
 
       // Assert
-      expect(TopicModel.batchCreate).toHaveBeenCalledWith(mockTopics);
-      expect(result).toBe(mockTopics);
+      expect(result.success).toBeTruthy();
+      expect(result.added).toBe(2);
     });
   });
 
   describe('getAllTopics', () => {
     it('should retrieve all topics', async () => {
-      // Setup
-      (TopicModel.queryAll as Mock).mockResolvedValue(mockTopics);
-
+      await clientDB.insert(topics).values([
+        { id: 'topic-id-1', title: 'topic-title', userId },
+        { id: 'topic-id-2', title: 'topic-title', userId },
+      ]);
       // Execute
       const result = await topicService.getAllTopics();
 
       // Assert
-      expect(TopicModel.queryAll).toHaveBeenCalled();
-      expect(result).toBe(mockTopics);
+      expect(result.length).toEqual(3);
     });
   });
 
   describe('searchTopics', () => {
     it('should return all topics that match the keyword', async () => {
       // Setup
-      const keyword = 'search';
-      (TopicModel.queryByKeyword as Mock).mockResolvedValue(mockTopics);
+      const keyword = 'Topic';
 
       // Execute
-      const result = await topicService.searchTopics(keyword, undefined);
+      const result = await topicService.searchTopics(keyword, sessionId);
 
       // Assert
-      expect(TopicModel.queryByKeyword).toHaveBeenCalledWith(keyword, undefined);
-      expect(result).toBe(mockTopics);
+      expect(result.length).toEqual(1);
+    });
+    it('should return empty topic if not match the keyword', async () => {
+      // Setup
+      const keyword = 'search';
+
+      // Execute
+      const result = await topicService.searchTopics(keyword, sessionId);
+
+      // Assert
+      expect(result.length).toEqual(0);
     });
   });
 
   describe('countTopics', () => {
-    it('should return false if no topics exist', async () => {
-      // Setup
-      (TopicModel.count as Mock).mockResolvedValue(0);
-
+    it('should return topic counts', async () => {
       // Execute
       const result = await topicService.countTopics();
 
       // Assert
-      expect(TopicModel.count).toHaveBeenCalled();
-      expect(result).toBe(0);
-    });
-
-    it('should return true if topics exist', async () => {
-      // Setup
-      (TopicModel.count as Mock).mockResolvedValue(1);
-
-      // Execute
-      const result = await topicService.countTopics();
-
-      // Assert
-      expect(TopicModel.count).toHaveBeenCalled();
       expect(result).toBe(1);
     });
   });

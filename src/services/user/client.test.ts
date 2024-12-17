@@ -1,21 +1,13 @@
+import { eq } from 'drizzle-orm';
 import { DeepPartial } from 'utility-types';
-import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { UserModel } from '@/database/_deprecated/models/user';
+import { clientDB, initializeDB } from '@/database/client/db';
+import { userSettings, users } from '@/database/schemas';
 import { UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
-import { AsyncLocalStorage } from '@/utils/localStorage';
 
 import { ClientService } from './client';
-
-vi.mock('@/database/_deprecated/models/user', () => ({
-  UserModel: {
-    getUser: vi.fn(),
-    updateSettings: vi.fn(),
-    resetSettings: vi.fn(),
-    updateAvatar: vi.fn(),
-  },
-}));
 
 const mockUser = {
   avatar: 'avatar.png',
@@ -26,63 +18,67 @@ const mockUser = {
 const mockPreference = {
   useCmdEnterToSend: true,
 } as UserPreference;
+const clientService = new ClientService(mockUser.uuid);
+
+beforeEach(async () => {
+  vi.clearAllMocks();
+
+  await initializeDB();
+  await clientDB.delete(users);
+
+  await clientDB.insert(users).values({ id: mockUser.uuid, avatar: 'avatar.png' });
+  await clientDB
+    .insert(userSettings)
+    .values({ id: mockUser.uuid, general: { themeMode: 'light' } });
+});
 
 describe('ClientService', () => {
-  let clientService: ClientService;
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-    clientService = new ClientService();
-  });
-
   it('should get user state correctly', async () => {
-    (UserModel.getUser as Mock).mockResolvedValue(mockUser);
     const spyOn = vi
       .spyOn(clientService['preferenceStorage'], 'getFromLocalStorage')
       .mockResolvedValue(mockPreference);
 
     const userState = await clientService.getUserState();
 
-    expect(userState).toEqual({
+    expect(userState).toMatchObject({
       avatar: mockUser.avatar,
       isOnboard: true,
       canEnablePWAGuide: false,
       hasConversation: false,
       canEnableTrace: false,
       preference: mockPreference,
-      settings: mockUser.settings,
+      settings: { general: { themeMode: 'light' } },
       userId: mockUser.uuid,
     });
-    expect(UserModel.getUser).toHaveBeenCalledTimes(1);
     expect(spyOn).toHaveBeenCalledTimes(1);
   });
 
   it('should update user settings correctly', async () => {
     const settingsPatch: DeepPartial<UserSettings> = { general: { themeMode: 'dark' } };
-    (UserModel.updateSettings as Mock).mockResolvedValue(undefined);
 
     await clientService.updateUserSettings(settingsPatch);
 
-    expect(UserModel.updateSettings).toHaveBeenCalledWith(settingsPatch);
-    expect(UserModel.updateSettings).toHaveBeenCalledTimes(1);
+    const result = await clientDB.query.userSettings.findFirst({
+      where: eq(userSettings.id, mockUser.uuid),
+    });
+
+    expect(result).toMatchObject(settingsPatch);
   });
 
   it('should reset user settings correctly', async () => {
-    (UserModel.resetSettings as Mock).mockResolvedValue(undefined);
-
     await clientService.resetUserSettings();
 
-    expect(UserModel.resetSettings).toHaveBeenCalledTimes(1);
+    const result = await clientDB.query.userSettings.findFirst({
+      where: eq(userSettings.id, mockUser.uuid),
+    });
+
+    expect(result).toBeUndefined();
   });
 
   it('should update user avatar correctly', async () => {
     const newAvatar = 'new-avatar.png';
-    (UserModel.updateAvatar as Mock).mockResolvedValue(undefined);
 
     await clientService.updateAvatar(newAvatar);
-
-    expect(UserModel.updateAvatar).toHaveBeenCalledWith(newAvatar);
-    expect(UserModel.updateAvatar).toHaveBeenCalledTimes(1);
   });
 
   it('should update user preference correctly', async () => {
