@@ -60,10 +60,10 @@ export class PluginModel {
     });
   };
 
-  async update(id: string, value: Partial<InstalledPluginItem>) {
+  update = async (id: string, value: Partial<InstalledPluginItem>) => {
     return this.db
       .update(installedPlugins)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(installedPlugins.identifier, id), eq(installedPlugins.userId, this.userId)));
-  }
+  };
 }

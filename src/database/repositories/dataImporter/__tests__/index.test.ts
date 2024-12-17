@@ -1,8 +1,7 @@
 // @vitest-environment node
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm/expressions';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import {
   agents,
   agentsToSessions,
@@ -12,6 +11,7 @@ import {
   topics,
   users,
 } from '@/database/schemas';
+import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { CURRENT_CONFIG_VERSION } from '@/migrations';
 import { ImporterEntryData } from '@/types/importer';
 
@@ -60,8 +60,7 @@ describe('DataImporter', () => {
     it('should skip existing session groups and return correct result', async () => {
       await serverDB
         .insert(sessionGroups)
-        .values({ clientId: 'group1', name: 'Existing Group', userId })
-        .execute();
+        .values({ clientId: 'group1', name: 'Existing Group', userId });
 
       const data: ImporterEntryData = {
         version: CURRENT_CONFIG_VERSION,
@@ -141,7 +140,7 @@ describe('DataImporter', () => {
     });
 
     it('should skip existing sessions and return correct result', async () => {
-      await serverDB.insert(sessions).values({ clientId: 'session1', userId }).execute();
+      await serverDB.insert(sessions).values({ clientId: 'session1', userId });
 
       const data: ImporterEntryData = {
         version: CURRENT_CONFIG_VERSION,
@@ -477,10 +476,7 @@ describe('DataImporter', () => {
     });
 
     it('should skip existing topics and return correct result', async () => {
-      await serverDB
-        .insert(topics)
-        .values({ clientId: 'topic1', title: 'Existing Topic', userId })
-        .execute();
+      await serverDB.insert(topics).values({ clientId: 'topic1', title: 'Existing Topic', userId });
 
       const data: ImporterEntryData = {
         version: CURRENT_CONFIG_VERSION,
@@ -616,15 +612,12 @@ describe('DataImporter', () => {
     });
 
     it('should skip existing messages and return correct result', async () => {
-      await serverDB
-        .insert(messages)
-        .values({
-          clientId: 'msg1',
-          content: 'Existing Message',
-          role: 'user',
-          userId,
-        })
-        .execute();
+      await serverDB.insert(messages).values({
+        clientId: 'msg1',
+        content: 'Existing Message',
+        role: 'user',
+        userId,
+      });
 
       const data: ImporterEntryData = {
         version: CURRENT_CONFIG_VERSION,

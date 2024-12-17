@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
@@ -514,11 +514,7 @@ describe('MessageModel', () => {
       await messageModel.create({ role: 'user', content: 'new message', sessionId: '1' });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.userId, userId))
-        .execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
       expect(result).toHaveLength(1);
       expect(result[0].content).toBe('new message');
     });
@@ -549,11 +545,7 @@ describe('MessageModel', () => {
       });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.userId, userId))
-        .execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
       expect(result[0].id).toBeDefined();
       expect(result[0].id).toHaveLength(18);
     });
@@ -582,8 +574,7 @@ describe('MessageModel', () => {
       const pluginResult = await serverDB
         .select()
         .from(messagePlugins)
-        .where(eq(messagePlugins.id, result.id))
-        .execute();
+        .where(eq(messagePlugins.id, result.id));
       expect(pluginResult).toHaveLength(1);
       expect(pluginResult[0].identifier).toBe('plugin1');
     });
@@ -650,8 +641,7 @@ describe('MessageModel', () => {
       const pluginResult = await serverDB
         .select()
         .from(messagePlugins)
-        .where(eq(messagePlugins.id, result.id))
-        .execute();
+        .where(eq(messagePlugins.id, result.id));
       expect(pluginResult).toHaveLength(1);
       expect(pluginResult[0].identifier).toBe('lobe-web-browsing');
       expect(pluginResult[0].state!).toMatchObject(state);
@@ -670,11 +660,7 @@ describe('MessageModel', () => {
       await messageModel.batchCreate(newMessages);
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.userId, userId))
-        .execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
       expect(result).toHaveLength(2);
       expect(result[0].content).toBe('message 1');
       expect(result[1].content).toBe('message 2');
@@ -692,7 +678,7 @@ describe('MessageModel', () => {
       await messageModel.update('1', { content: 'updated message' });
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result[0].content).toBe('updated message');
     });
 
@@ -706,7 +692,7 @@ describe('MessageModel', () => {
       await messageModel.update('1', { content: 'updated message' });
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result[0].content).toBe('message 1');
     });
 
@@ -745,7 +731,7 @@ describe('MessageModel', () => {
       });
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result[0].tools[0].arguments).toBe(
         '{"query":"2024 杭州暴雨","searchEngines":["duckduckgo","google","brave"]}',
       );
@@ -763,7 +749,7 @@ describe('MessageModel', () => {
       await messageModel.deleteMessage('1');
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(0);
     });
 
@@ -783,14 +769,13 @@ describe('MessageModel', () => {
       await messageModel.deleteMessage('1');
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(0);
 
       const result2 = await serverDB
         .select()
         .from(messagePlugins)
-        .where(eq(messagePlugins.id, '2'))
-        .execute();
+        .where(eq(messagePlugins.id, '2'));
 
       expect(result2).toHaveLength(0);
     });
@@ -805,7 +790,7 @@ describe('MessageModel', () => {
       await messageModel.deleteMessage('1');
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(1);
     });
   });
@@ -822,9 +807,9 @@ describe('MessageModel', () => {
       await messageModel.deleteMessages(['1', '2']);
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(0);
-      const result2 = await serverDB.select().from(messages).where(eq(messages.id, '2')).execute();
+      const result2 = await serverDB.select().from(messages).where(eq(messages.id, '2'));
       expect(result2).toHaveLength(0);
     });
 
@@ -839,7 +824,7 @@ describe('MessageModel', () => {
       await messageModel.deleteMessages(['1', '2']);
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(1);
     });
   });
@@ -857,18 +842,12 @@ describe('MessageModel', () => {
       await messageModel.deleteAllMessages();
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.userId, userId))
-        .execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
+
       expect(result).toHaveLength(0);
 
-      const otherResult = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.userId, '456'))
-        .execute();
+      const otherResult = await serverDB.select().from(messages).where(eq(messages.userId, '456'));
+
       expect(otherResult).toHaveLength(1);
     });
   });
@@ -887,11 +866,8 @@ describe('MessageModel', () => {
       await messageModel.updatePluginState('1', { key2: 'value2' });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messagePlugins)
-        .where(eq(messagePlugins.id, '1'))
-        .execute();
+      const result = await serverDB.select().from(messagePlugins).where(eq(messagePlugins.id, '1'));
+
       expect(result[0].state).toEqual({ key1: 'value1', key2: 'value2' });
     });
 
@@ -916,11 +892,8 @@ describe('MessageModel', () => {
       await messageModel.updateMessagePlugin('1', { identifier: 'plugin2' });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messagePlugins)
-        .where(eq(messagePlugins.id, '1'))
-        .execute();
+      const result = await serverDB.select().from(messagePlugins).where(eq(messagePlugins.id, '1'));
+
       expect(result[0].identifier).toEqual('plugin2');
     });
 
@@ -950,8 +923,8 @@ describe('MessageModel', () => {
       const result = await serverDB
         .select()
         .from(messageTranslates)
-        .where(eq(messageTranslates.id, '1'))
-        .execute();
+        .where(eq(messageTranslates.id, '1'));
+
       expect(result).toHaveLength(1);
       expect(result[0].content).toBe('translated message 1');
     });
@@ -974,8 +947,8 @@ describe('MessageModel', () => {
       const result = await serverDB
         .select()
         .from(messageTranslates)
-        .where(eq(messageTranslates.id, '1'))
-        .execute();
+        .where(eq(messageTranslates.id, '1'));
+
       expect(result[0].content).toBe('updated translated message 1');
     });
   });
@@ -991,11 +964,8 @@ describe('MessageModel', () => {
       await messageModel.updateTTS('1', { contentMd5: 'md5', file: 'f1', voice: 'voice1' });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messageTTS)
-        .where(eq(messageTTS.id, '1'))
-        .execute();
+      const result = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, '1'));
+
       expect(result).toHaveLength(1);
       expect(result[0].voice).toBe('voice1');
     });
@@ -1015,11 +985,8 @@ describe('MessageModel', () => {
       await messageModel.updateTTS('1', { voice: 'updated voice1' });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messageTTS)
-        .where(eq(messageTTS.id, '1'))
-        .execute();
+      const result = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, '1'));
+
       expect(result[0].voice).toBe('updated voice1');
     });
   });
@@ -1037,8 +1004,8 @@ describe('MessageModel', () => {
       const result = await serverDB
         .select()
         .from(messageTranslates)
-        .where(eq(messageTranslates.id, '1'))
-        .execute();
+        .where(eq(messageTranslates.id, '1'));
+
       expect(result).toHaveLength(0);
     });
   });
@@ -1053,11 +1020,7 @@ describe('MessageModel', () => {
       await messageModel.deleteMessageTTS('1');
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messageTTS)
-        .where(eq(messageTTS.id, '1'))
-        .execute();
+      const result = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, '1'));
       expect(result).toHaveLength(0);
     });
   });

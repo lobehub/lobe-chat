@@ -50,7 +50,7 @@ export class EmbeddingModel {
     });
   };
 
-  countUsage = async () => {
+  countUsage = async (): Promise<number> => {
     const result = await this.db
       .select({
         count: count(),
