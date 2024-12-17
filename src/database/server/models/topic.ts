@@ -29,46 +29,42 @@ export class TopicModel {
   }
   // **************** Query *************** //
 
-  async query({ current = 0, pageSize = 9999, sessionId }: QueryTopicParams = {}) {
+  query = async ({ current = 0, pageSize = 9999, sessionId }: QueryTopicParams = {}) => {
     const offset = current * pageSize;
+    return this.db
+      .select({
+        createdAt: topics.createdAt,
+        favorite: topics.favorite,
+        historySummary: topics.historySummary,
+        id: topics.id,
+        metadata: topics.metadata,
+        title: topics.title,
+        updatedAt: topics.updatedAt,
+      })
+      .from(topics)
+      .where(and(eq(topics.userId, this.userId), this.matchSession(sessionId)))
+      // In boolean sorting, false is considered "smaller" than true.
+      // So here we use desc to ensure that topics with favorite as true are in front.
+      .orderBy(desc(topics.favorite), desc(topics.updatedAt))
+      .limit(pageSize)
+      .offset(offset);
+  };
 
-    return (
-      this.db
-        .select({
-          createdAt: topics.createdAt,
-          favorite: topics.favorite,
-          historySummary: topics.historySummary,
-          id: topics.id,
-          metadata: topics.metadata,
-          title: topics.title,
-          updatedAt: topics.updatedAt,
-        })
-        .from(topics)
-        .where(and(eq(topics.userId, this.userId), this.matchSession(sessionId)))
-        // In boolean sorting, false is considered "smaller" than true.
-        // So here we use desc to ensure that topics with favorite as true are in front.
-        .orderBy(desc(topics.favorite), desc(topics.updatedAt))
-        .limit(pageSize)
-        .offset(offset)
-    );
-  }
-
-  async findById(id: string) {
+  findById = async (id: string) => {
     return this.db.query.topics.findFirst({
       where: and(eq(topics.id, id), eq(topics.userId, this.userId)),
     });
-  }
+  };
 
-  async queryAll(): Promise<TopicItem[]> {
+  queryAll = async (): Promise<TopicItem[]> => {
     return this.db
       .select()
       .from(topics)
       .orderBy(topics.updatedAt)
-      .where(eq(topics.userId, this.userId))
-      .execute();
-  }
+      .where(eq(topics.userId, this.userId));
+  };
 
-  async queryByKeyword(keyword: string, sessionId?: string | null): Promise<TopicItem[]> {
+  queryByKeyword = async (keyword: string, sessionId?: string | null): Promise<TopicItem[]> => {
     if (!keyword) return [];
 
     const keywordLowerCase = keyword.toLowerCase();
@@ -92,26 +88,25 @@ export class TopicModel {
         ),
       ),
     });
-  }
+  };
 
-  async count() {
+  count = async (): Promise<number> => {
     const result = await this.db
       .select({
-        count: count(),
+        count: count(topics.id),
       })
       .from(topics)
-      .where(eq(topics.userId, this.userId))
-      .execute();
+      .where(eq(topics.userId, this.userId));
 
     return result[0].count;
-  }
+  };
 
   // **************** Create *************** //
 
-  async create(
+  create = async (
     { messages: messageIds, ...params }: CreateTopicParams,
     id: string = this.genId(),
-  ): Promise<TopicItem> {
+  ): Promise<TopicItem> => {
     return this.db.transaction(async (tx) => {
       // 在 topics 表中插入新的 topic
       const [topic] = await tx
@@ -133,9 +128,9 @@ export class TopicModel {
 
       return topic;
     });
-  }
+  };
 
-  async batchCreate(topicParams: (CreateTopicParams & { id?: string })[]) {
+  batchCreate = async (topicParams: (CreateTopicParams & { id?: string })[]) => {
     // 开始一个事务
     return this.db.transaction(async (tx) => {
       // 在 topics 表中批量插入新的 topics
@@ -167,9 +162,9 @@ export class TopicModel {
 
       return createdTopics;
     });
-  }
+  };
 
-  async duplicate(topicId: string, newTitle?: string) {
+  duplicate = async (topicId: string, newTitle?: string) => {
     return this.db.transaction(async (tx) => {
       // find original topic
       const originalTopic = await tx.query.topics.findFirst({
@@ -217,48 +212,48 @@ export class TopicModel {
         topic: duplicatedTopic,
       };
     });
-  }
+  };
 
   // **************** Delete *************** //
 
   /**
    * Delete a session, also delete all messages and topics associated with it.
    */
-  async delete(id: string) {
+  delete = async (id: string) => {
     return this.db.delete(topics).where(and(eq(topics.id, id), eq(topics.userId, this.userId)));
-  }
+  };
 
   /**
    * Deletes multiple topics based on the sessionId.
    */
-  async batchDeleteBySessionId(sessionId?: string | null) {
+  batchDeleteBySessionId = async (sessionId?: string | null) => {
     return this.db
       .delete(topics)
       .where(and(this.matchSession(sessionId), eq(topics.userId, this.userId)));
-  }
+  };
 
   /**
    * Deletes multiple topics and all messages associated with them in a transaction.
    */
-  async batchDelete(ids: string[]) {
+  batchDelete = async (ids: string[]) => {
     return this.db
       .delete(topics)
       .where(and(inArray(topics.id, ids), eq(topics.userId, this.userId)));
-  }
+  };
 
-  async deleteAll() {
+  deleteAll = async () => {
     return this.db.delete(topics).where(eq(topics.userId, this.userId));
-  }
+  };
 
   // **************** Update *************** //
 
-  async update(id: string, data: Partial<TopicItem>) {
+  update = async (id: string, data: Partial<TopicItem>) => {
     return this.db
       .update(topics)
       .set({ ...data, updatedAt: new Date() })
       .where(and(eq(topics.id, id), eq(topics.userId, this.userId)))
       .returning();
-  }
+  };
 
   // **************** Helper *************** //
 

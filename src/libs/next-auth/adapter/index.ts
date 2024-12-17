@@ -4,7 +4,7 @@ import type {
   AdapterUser,
   VerificationToken,
 } from '@auth/core/adapters';
-import { and, eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm/expressions';
 import type { NeonDatabase } from 'drizzle-orm/neon-serverless';
 import { Adapter, AdapterAccount } from 'next-auth/adapters';
 
