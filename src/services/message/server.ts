@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { INBOX_SESSION_ID } from '@/const/session';
+import { MessageItem } from '@/database/schemas';
 import { lambdaClient } from '@/libs/trpc/client';
 import {
   ChatMessage,
@@ -19,20 +20,23 @@ export class ServerService implements IMessageService {
     });
   }
 
-  batchCreateMessages(messages: ChatMessage[]): Promise<any> {
+  batchCreateMessages(messages: MessageItem[]): Promise<any> {
     return lambdaClient.message.batchCreateMessages.mutate(messages);
   }
 
-  getMessages(sessionId?: string, topicId?: string | undefined): Promise<ChatMessage[]> {
-    return lambdaClient.message.getMessages.query({
+  getMessages = async (sessionId?: string, topicId?: string | undefined) => {
+    const data = await lambdaClient.message.getMessages.query({
       sessionId: this.toDbSessionId(sessionId),
       topicId,
     });
-  }
+
+    return data as unknown as ChatMessage[];
+  };
 
   getAllMessages(): Promise<ChatMessage[]> {
     return lambdaClient.message.getAllMessages.query();
   }
+
   getAllMessagesInSession(sessionId: string): Promise<ChatMessage[]> {
     return lambdaClient.message.getAllMessagesInSession.query({
       sessionId: this.toDbSessionId(sessionId),
@@ -63,7 +67,7 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.updateMessagePlugin.mutate({ id, value: { arguments: args } });
   }
 
-  updateMessage(id: string, message: Partial<ChatMessage>): Promise<any> {
+  updateMessage(id: string, message: Partial<MessageItem>): Promise<any> {
     return lambdaClient.message.update.mutate({ id, value: message });
   }
 
@@ -77,10 +81,6 @@ export class ServerService implements IMessageService {
 
   updateMessagePluginState(id: string, value: any): Promise<any> {
     return lambdaClient.message.updatePluginState.mutate({ id, value });
-  }
-
-  bindMessagesToTopic(_topicId: string, _messageIds: string[]): Promise<any> {
-    throw new Error('Method not implemented.');
   }
 
   removeMessage(id: string): Promise<any> {

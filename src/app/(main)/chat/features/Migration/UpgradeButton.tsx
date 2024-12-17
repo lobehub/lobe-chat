@@ -1,14 +1,12 @@
 import { Button } from 'antd';
-import { createStore, set } from 'idb-keyval';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Migration } from '@/migrations';
 import { configService } from '@/services/config';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 
-import { MIGRATE_KEY, MigrationError, UpgradeStatus, V1DB_NAME, V1DB_TABLE_NAME } from './const';
+import { MigrationError, UpgradeStatus } from './const';
 
 export interface UpgradeButtonProps {
   children?: ReactNode;
@@ -31,21 +29,19 @@ const UpgradeButton = memo<UpgradeButtonProps>(
 
     const upgrade = async () => {
       try {
-        const data = Migration.migrate({ state, version: 1 });
-
         setUpgradeStatus(UpgradeStatus.UPGRADING);
 
         await configService.importConfigState({
           exportType: 'sessions',
-          state: data.state,
-          version: 2,
+          state: state,
+          version: 7,
         });
 
         await refreshSession();
         await refreshMessages();
         await refreshTopic();
 
-        await set(MIGRATE_KEY, true, createStore(V1DB_NAME, V1DB_TABLE_NAME));
+        localStorage.setItem('V2DB_IS_MIGRATED', '1');
 
         setUpgradeStatus(UpgradeStatus.UPGRADED);
 

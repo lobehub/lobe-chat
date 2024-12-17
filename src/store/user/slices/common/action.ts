@@ -46,7 +46,7 @@ export const createCommonSlice: StateCreator<
     await mutate(GET_USER_STATE_KEY);
   },
   updateAvatar: async (avatar) => {
-    const { ClientService } = await import('@/services/user/client');
+    const { ClientService } = await import('@/services/user/pglite');
 
     const clientService = new ClientService();
 
