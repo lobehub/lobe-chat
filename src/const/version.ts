@@ -6,6 +6,7 @@ import { BRANDING_NAME, ORG_NAME } from './branding';
 export const CURRENT_VERSION = pkg.version;
 
 export const isServerMode = getServerDBConfig().NEXT_PUBLIC_ENABLED_SERVER_SERVICE;
+export const isUsePgliteDB = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
 
 // @ts-ignore
 export const isCustomBranding = BRANDING_NAME !== 'LobeChat';

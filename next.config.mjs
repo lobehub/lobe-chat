@@ -26,6 +26,7 @@ const nextConfig = {
       'gpt-tokenizer',
       'chroma-js',
     ],
+    serverComponentsExternalPackages: ['@electric-sql/pglite'],
     webVitalsAttribution: ['CLS', 'LCP'],
   },
 
