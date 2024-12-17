@@ -2,6 +2,7 @@ import React, { memo, useCallback } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { SkeletonList, VirtualizedList } from '@/features/Conversation';
+import { useFetchThreads } from '@/hooks/useFetchThreads';
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
 
@@ -14,8 +15,6 @@ interface ChatListProps {
 const ChatList = memo(({ mobile }: ChatListProps) => {
   const data = useChatStore(threadSelectors.portalDisplayChatIDs);
   const isInit = useChatStore((s) => s.threadsInit);
-
-  const useFetchThreads = useChatStore((s) => s.useFetchThreads);
 
   useFetchThreads();
 

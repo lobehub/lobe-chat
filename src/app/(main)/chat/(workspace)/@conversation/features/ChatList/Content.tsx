@@ -3,9 +3,9 @@
 import React, { memo, useCallback } from 'react';
 
 import { SkeletonList, VirtualizedList } from '@/features/Conversation';
+import { useFetchMessages } from '@/hooks/useFetchMessages';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { useSessionStore } from '@/store/session';
 
 import MainChatItem from './ChatItem';
 import Welcome from './WelcomeChatItem';
@@ -15,15 +15,9 @@ interface ListProps {
 }
 
 const Content = memo<ListProps>(({ mobile }) => {
-  const [activeTopicId, useFetchMessages, isCurrentChatLoaded] = useChatStore((s) => [
-    s.activeTopicId,
-    s.useFetchMessages,
-    chatSelectors.isCurrentChatLoaded(s),
-  ]);
+  const [isCurrentChatLoaded] = useChatStore((s) => [chatSelectors.isCurrentChatLoaded(s)]);
 
-  const [sessionId] = useSessionStore((s) => [s.activeId]);
-  useFetchMessages(sessionId, activeTopicId);
-
+  useFetchMessages();
   const data = useChatStore(chatSelectors.mainDisplayChatIDs);
 
   const itemContent = useCallback(

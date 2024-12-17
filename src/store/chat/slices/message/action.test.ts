@@ -466,7 +466,9 @@ describe('chatMessage actions', () => {
       // 设置模拟返回值
       (messageService.getMessages as Mock).mockResolvedValue(messages);
 
-      const { result } = renderHook(() => useChatStore().useFetchMessages(sessionId, topicId));
+      const { result } = renderHook(() =>
+        useChatStore().useFetchMessages(true, sessionId, topicId),
+      );
 
       // 等待异步操作完成
       await waitFor(() => {

@@ -10,6 +10,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useWorkspaceModal } from '@/app/(main)/chat/(workspace)/features/useWorkspaceModal';
 import PluginStore from '@/features/PluginStore';
+import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
+import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -109,13 +111,11 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
 
   const plugins = useAgentStore((s) => agentSelectors.currentAgentPlugins(s));
 
-  const [useFetchPluginStore, useFetchInstalledPlugins, checkPluginsIsInstalled] = useToolStore(
-    (s) => [s.useFetchPluginStore, s.useFetchInstalledPlugins, s.useCheckPluginsIsInstalled],
-  );
+  const [useFetchPluginStore] = useToolStore((s) => [s.useFetchPluginStore]);
 
   useFetchPluginStore();
   useFetchInstalledPlugins();
-  checkPluginsIsInstalled(plugins);
+  useCheckPluginsIsInstalled(plugins);
 
   return (
     <>
