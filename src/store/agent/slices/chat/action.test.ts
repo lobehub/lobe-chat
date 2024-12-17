@@ -3,7 +3,6 @@ import { mutate } from 'swr';
 import { describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { globalService } from '@/services/global';
 import { sessionService } from '@/services/session';
 import { useAgentStore } from '@/store/agent';
@@ -24,7 +23,9 @@ describe('AgentSlice', () => {
     it('should call togglePlugin with the provided id and false', async () => {
       const { result } = renderHook(() => useAgentStore());
       const pluginId = 'plugin-id';
-      const togglePluginMock = vi.spyOn(result.current, 'togglePlugin');
+      const togglePluginMock = vi
+        .spyOn(result.current, 'togglePlugin')
+        .mockResolvedValue(undefined);
 
       await act(async () => {
         await result.current.removePlugin(pluginId);
@@ -39,8 +40,9 @@ describe('AgentSlice', () => {
     it('should add plugin id to plugins array if not present and open is true or undefined', async () => {
       const { result } = renderHook(() => useAgentStore());
       const pluginId = 'plugin-id';
-      const updateAgentConfigMock = vi.spyOn(result.current, 'updateAgentConfig');
-
+      const updateAgentConfigMock = vi
+        .spyOn(result.current, 'updateAgentConfig')
+        .mockResolvedValue(undefined);
       // 模拟当前配置不包含插件 ID
       vi.spyOn(agentSelectors, 'currentAgentConfig').mockReturnValue({ plugins: [] } as any);
 
@@ -57,8 +59,9 @@ describe('AgentSlice', () => {
     it('should remove plugin id from plugins array if present and open is false', async () => {
       const { result } = renderHook(() => useAgentStore());
       const pluginId = 'plugin-id';
-      const updateAgentConfigMock = vi.spyOn(result.current, 'updateAgentConfig');
-
+      const updateAgentConfigMock = vi
+        .spyOn(result.current, 'updateAgentConfig')
+        .mockResolvedValue(undefined);
       // 模拟当前配置包含插件 ID
       vi.spyOn(agentSelectors, 'currentAgentConfig').mockReturnValue({
         plugins: [pluginId],
@@ -75,7 +78,9 @@ describe('AgentSlice', () => {
     it('should not modify plugins array if plugin id is not present and open is false', async () => {
       const { result } = renderHook(() => useAgentStore());
       const pluginId = 'plugin-id';
-      const updateAgentConfigMock = vi.spyOn(result.current, 'updateAgentConfig');
+      const updateAgentConfigMock = vi
+        .spyOn(result.current, 'updateAgentConfig')
+        .mockResolvedValue(undefined);
 
       // 模拟当前配置不包含插件 ID
       vi.spyOn(agentSelectors, 'currentAgentConfig').mockReturnValue({ plugins: [] } as any);
@@ -93,7 +98,9 @@ describe('AgentSlice', () => {
     it('should update global config if current session is inbox session', async () => {
       const { result } = renderHook(() => useAgentStore());
       const config = { model: 'gpt-3.5-turbo' };
-      const updateSessionConfigMock = vi.spyOn(sessionService, 'updateSessionConfig');
+      const updateSessionConfigMock = vi
+        .spyOn(sessionService, 'updateSessionConfig')
+        .mockResolvedValue(undefined);
       const refreshMock = vi.spyOn(result.current, 'internal_refreshAgentConfig');
 
       await act(async () => {
@@ -113,7 +120,9 @@ describe('AgentSlice', () => {
     it('should update session config if current session is not inbox session', async () => {
       const { result } = renderHook(() => useAgentStore());
       const config = { model: 'gpt-3.5-turbo' };
-      const updateSessionConfigMock = vi.spyOn(sessionService, 'updateSessionConfig');
+      const updateSessionConfigMock = vi
+        .spyOn(sessionService, 'updateSessionConfig')
+        .mockResolvedValue(undefined);
       const refreshMock = vi.spyOn(result.current, 'internal_refreshAgentConfig');
 
       // 模拟当前会话不是收件箱会话
@@ -247,7 +256,9 @@ describe('AgentSlice', () => {
     it('should call sessionService.updateSessionConfig', async () => {
       const { result } = renderHook(() => useAgentStore());
 
-      const updateSessionConfigMock = vi.spyOn(sessionService, 'updateSessionConfig');
+      const updateSessionConfigMock = vi
+        .spyOn(sessionService, 'updateSessionConfig')
+        .mockResolvedValue(undefined);
 
       await act(async () => {
         await result.current.internal_updateAgentConfig('test-session-id', { foo: 'bar' } as any);
