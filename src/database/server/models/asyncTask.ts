@@ -64,7 +64,7 @@ export class AsyncTaskModel {
   /**
    * make the task status to be `error` if the task is not finished in 20 seconds
    */
-  async checkTimeoutTasks(ids: string[]) {
+  checkTimeoutTasks = async (ids: string[]) => {
     const tasks = await this.db
       .select({ id: asyncTasks.id })
       .from(asyncTasks)
@@ -93,5 +93,5 @@ export class AsyncTaskModel {
           ),
         );
     }
-  }
+  };
 }

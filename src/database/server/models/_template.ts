@@ -45,10 +45,10 @@ export class TemplateModel {
     });
   };
 
-  async update(id: string, value: Partial<SessionGroupItem>) {
+  update = async (id: string, value: Partial<SessionGroupItem>) => {
     return this.db
       .update(sessionGroups)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(sessionGroups.id, id), eq(sessionGroups.userId, this.userId)));
-  }
+  };
 }

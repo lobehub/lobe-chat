@@ -71,10 +71,10 @@ export class ThreadModel {
     });
   };
 
-  async update(id: string, value: Partial<ThreadItem>) {
+  update = async (id: string, value: Partial<ThreadItem>) => {
     return this.db
       .update(threads)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(threads.id, id), eq(threads.userId, this.userId)));
-  }
+  };
 }
