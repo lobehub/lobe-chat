@@ -4,7 +4,7 @@ import { edgeClient } from '@/libs/trpc/client';
 import { LobeAgentConfig } from '@/types/agent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 
-const VERSION_URL = 'https://registry.npmmirror.com/@lobehub/chat';
+const VERSION_URL = 'https://registry.npmmirror.com/@lobehub/chat/latest';
 
 class GlobalService {
   /**
@@ -14,7 +14,7 @@ class GlobalService {
     const res = await fetch(VERSION_URL);
     const data = await res.json();
 
-    return data['dist-tags']?.latest;
+    return data['version'];
   };
 
   getGlobalConfig = async (): Promise<GlobalServerConfig> => {
