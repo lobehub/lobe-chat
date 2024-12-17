@@ -10,6 +10,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
@@ -50,7 +51,8 @@ const StoreInitialization = memo(() => {
    * But during initialization, the value of `enableAuth` might be incorrect cause of the async fetch.
    * So we need to use `isSignedIn` only to determine whether request for the default agent config and user state.
    */
-  const isLoginOnInit = enableNextAuth ? isSignedIn : isLogin;
+  const isPgliteInited = useGlobalStore(systemStatusSelectors.isPgliteInited);
+  const isLoginOnInit = isPgliteInited && (enableNextAuth ? isSignedIn : isLogin);
 
   // init inbox agent and default agent config
   useInitAgentStore(isLoginOnInit, serverConfig.defaultAgent?.config);

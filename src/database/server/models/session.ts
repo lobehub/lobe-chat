@@ -229,6 +229,8 @@ export class SessionModel {
   }
 
   async updateConfig(id: string, data: Partial<AgentItem>) {
+    if (Object.keys(data).length === 0) return;
+
     return this.db
       .update(agents)
       .set(data)
