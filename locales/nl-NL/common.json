@@ -9,7 +9,12 @@
       "title": "Welkom bij {{name}}"
     }
   },
-  "appInitializing": "Applicatie wordt gestart...",
+  "appLoading": {
+    "goToChat": "(4/4) De chatpagina wordt geladen...",
+    "initAuth": "(2/4) Initialisatie van de autorisatiedienst...",
+    "initUser": "(3/4) Initialisatie van de gebruikersstatus...",
+    "initializing": "(1/4) De applicatie wordt opgestart..."
+  },
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
   "autoGenerateTooltipDisabled": "Schakel de automatische aanvulling in nadat u een suggestiewoord heeft ingevoerd",
@@ -20,6 +25,39 @@
   "branchingDisable": "De functie 'Subonderwerp' is alleen beschikbaar in de serverversie. Als je deze functie wilt gebruiken, schakel dan over naar de serverimplementatiemodus of gebruik LobeChat Cloud.",
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",
+  "clientDB": {
+    "autoInit": {
+      "title": "Initialiseer de PGlite-database"
+    },
+    "error": {
+      "desc": "Het spijt ons, er is een fout opgetreden tijdens het initialiseren van de PGlite-database. Klik op de knop 'Opnieuw proberen'.<br><br> Als de fout aanhoudt, <1>dien een probleem in</1>, dan helpen we je zo snel mogelijk.",
+      "retry": "Opnieuw proberen",
+      "title": "Database-upgrade mislukt"
+    },
+    "initing": {
+      "error": "Er is een fout opgetreden, probeer het opnieuw",
+      "idle": "Wachten op initialisatie...",
+      "initializing": "Bezig met initialiseren...",
+      "loadingDependencies": "Afhankelijkheden laden ({{progress}}%)...",
+      "loadingWasmModule": "WASM-module laden ({{progress}}%)...",
+      "migrating": "Bezig met gegevens migreren...",
+      "ready": "Database is gereed"
+    },
+    "modal": {
+      "desc": "Schakel de PGlite-clientdatabase in om chatgegevens permanent op te slaan in je browser en gebruik geavanceerde functies zoals de kennisbank.",
+      "enable": "Nu inschakelen",
+      "init": {
+        "desc": "Bezig met het initialiseren van de database, afhankelijk van de netwerksnelheid kan dit 5 tot 30 seconden duren.",
+        "title": "Bezig met het initialiseren van de PGlite-database"
+      },
+      "title": "Schakel de clientdatabase in"
+    },
+    "ready": {
+      "button": "Nu gebruiken",
+      "desc": "Direct gebruiken",
+      "title": "PGlite-database is gereed"
+    }
+  },
   "close": "Sluiten",
   "contact": "Contacteer ons",
   "copy": "Kopiëren",

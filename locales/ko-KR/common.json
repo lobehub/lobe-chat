@@ -9,7 +9,12 @@
       "title": "환영합니다 {{name}}"
     }
   },
-  "appInitializing": "앱 초기화 중...",
+  "appLoading": {
+    "goToChat": "(4/4) 대화 페이지 로딩 중...",
+    "initAuth": "(2/4) 인증 서비스 초기화 중...",
+    "initUser": "(3/4) 사용자 상태 초기화 중...",
+    "initializing": "(1/4) 애플리케이션 시작 중..."
+  },
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
   "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 툴팁을 입력하십시오",
@@ -20,6 +25,39 @@
   "branchingDisable": "「하위 주제」 기능은 서버 버전에서만 사용할 수 있습니다. 이 기능이 필요하시면 서버 배포 모드로 전환하거나 LobeChat Cloud를 사용하세요.",
   "cancel": "취소",
   "changelog": "변경 로그",
+  "clientDB": {
+    "autoInit": {
+      "title": "PGlite 데이터베이스 초기화"
+    },
+    "error": {
+      "desc": "죄송합니다. PGlite 데이터베이스 초기화 과정에서 예외가 발생했습니다. '재시도' 버튼을 클릭해 주세요.<br><br> 여전히 오류가 발생하면 <1>문제를 제출</1>해 주시면, 저희가 즉시 문제를 해결해 드리겠습니다.",
+      "retry": "재시도",
+      "title": "데이터베이스 업그레이드 실패"
+    },
+    "initing": {
+      "error": "오류가 발생했습니다. 재시도해 주세요.",
+      "idle": "초기화 대기 중...",
+      "initializing": "초기화 중...",
+      "loadingDependencies": "의존성 로딩 중({{progress}}%)...",
+      "loadingWasmModule": "WASM 모듈 로딩 중({{progress}}%)...",
+      "migrating": "데이터 마이그레이션 중...",
+      "ready": "데이터베이스 준비 완료"
+    },
+    "modal": {
+      "desc": "PGlite 클라이언트 데이터베이스를 활성화하여 브라우저에서 채팅 데이터를 영구 저장하고 지식베이스 등 고급 기능을 사용하세요.",
+      "enable": "즉시 활성화",
+      "init": {
+        "desc": "데이터베이스를 초기화 중입니다. 네트워크 차이에 따라 5~30초가 소요될 수 있습니다.",
+        "title": "PGlite 데이터베이스 초기화 중"
+      },
+      "title": "클라이언트 데이터베이스 활성화"
+    },
+    "ready": {
+      "button": "즉시 사용",
+      "desc": "즉시 사용하고 싶습니다.",
+      "title": "PGlite 데이터베이스 준비 완료"
+    }
+  },
   "close": "닫기",
   "contact": "연락처",
   "copy": "복사",
