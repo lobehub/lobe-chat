@@ -174,7 +174,7 @@
     "mammoth": "^1.8.0",
     "modern-screenshot": "^4.4.39",
     "nanoid": "^5.0.7",
-    "next": "14.2.8",
+    "next": "14.2.15",
     "next-auth": "beta",
     "next-mdx-remote": "^4.4.1",
     "nextjs-toploader": "^3.7.15",
