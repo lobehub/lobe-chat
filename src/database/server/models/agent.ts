@@ -19,15 +19,15 @@ export class AgentModel {
     this.db = db;
   }
 
-  async getAgentConfigById(id: string) {
+  getAgentConfigById = async (id: string) => {
     const agent = await this.db.query.agents.findFirst({ where: eq(agents.id, id) });
 
     const knowledge = await this.getAgentAssignedKnowledge(id);
 
     return { ...agent, ...knowledge };
-  }
+  };
 
-  async getAgentAssignedKnowledge(id: string) {
+  getAgentAssignedKnowledge = async (id: string) => {
     const knowledgeBaseResult = await this.db
       .select({ enabled: agentsKnowledgeBases.enabled, knowledgeBases })
       .from(agentsKnowledgeBases)
@@ -52,12 +52,12 @@ export class AgentModel {
         enabled: item.enabled,
       })),
     };
-  }
+  };
 
   /**
    * Find agent by session id
    */
-  async findBySessionId(sessionId: string) {
+  findBySessionId = async (sessionId: string) => {
     const item = await this.db.query.agentsToSessions.findFirst({
       where: eq(agentsToSessions.sessionId, sessionId),
     });
@@ -66,7 +66,7 @@ export class AgentModel {
     const agentId = item.agentId;
 
     return this.getAgentConfigById(agentId);
-  }
+  };
 
   createAgentKnowledgeBase = async (
     agentId: string,

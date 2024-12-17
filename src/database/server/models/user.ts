@@ -26,7 +26,7 @@ export class UserModel {
     this.db = db;
   }
 
-  async getUserState() {
+  getUserState = async () => {
     const result = await this.db
       .select({
         isOnboarded: users.isOnboarded,
@@ -81,20 +81,20 @@ export class UserModel {
       settings,
       userId: this.userId,
     };
-  }
+  };
 
-  async updateUser(value: Partial<UserItem>) {
+  updateUser = async (value: Partial<UserItem>) => {
     return this.db
       .update(users)
       .set({ ...value, updatedAt: new Date() })
       .where(eq(users.id, this.userId));
-  }
+  };
 
-  async deleteSetting() {
+  deleteSetting = async () => {
     return this.db.delete(userSettings).where(eq(userSettings.id, this.userId));
-  }
+  };
 
-  async updateSetting(value: Partial<UserSettings>) {
+  updateSetting = async (value: Partial<UserSettings>) => {
     const { keyVaults, ...res } = value;
 
     // Encrypt keyVaults
@@ -120,9 +120,9 @@ export class UserModel {
     }
 
     return this.db.update(userSettings).set(newValue).where(eq(userSettings.id, this.userId));
-  }
+  };
 
-  async updatePreference(value: Partial<UserPreference>) {
+  updatePreference = async (value: Partial<UserPreference>) => {
     const user = await this.db.query.users.findFirst({ where: eq(users.id, this.userId) });
     if (!user) return;
 
@@ -130,9 +130,9 @@ export class UserModel {
       .update(users)
       .set({ preference: merge(user.preference, value) })
       .where(eq(users.id, this.userId));
-  }
+  };
 
-  async updateGuide(value: Partial<UserGuide>) {
+  updateGuide = async (value: Partial<UserGuide>) => {
     const user = await this.db.query.users.findFirst({ where: eq(users.id, this.userId) });
     if (!user) return;
 
@@ -141,7 +141,7 @@ export class UserModel {
       .update(users)
       .set({ preference: { ...prevPreference, guide: merge(prevPreference.guide || {}, value) } })
       .where(eq(users.id, this.userId));
-  }
+  };
 
   // Static method
 
