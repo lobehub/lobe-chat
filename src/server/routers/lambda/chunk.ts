@@ -1,14 +1,14 @@
-import { inArray } from 'drizzle-orm';
+import { inArray } from 'drizzle-orm/expressions';
 import { z } from 'zod';
 
 import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
+import { knowledgeBaseFiles } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
 import { MessageModel } from '@/database/server/models/message';
-import { knowledgeBaseFiles } from '@/database/schemas';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { authedProcedure, router } from '@/libs/trpc';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';

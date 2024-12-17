@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm/expressions';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
