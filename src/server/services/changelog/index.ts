@@ -49,8 +49,8 @@ export class ChangelogService {
       const data = await res.json();
 
       return this.mergeChangelogs(data.cloud, data.community).slice(0, 5);
-    } catch {
-      console.error('Error getting changlog index');
+    } catch (e) {
+      console.error('Error getting changelog lists:', e);
       return false as any;
     }
   }
