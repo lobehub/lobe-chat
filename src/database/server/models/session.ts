@@ -31,7 +31,7 @@ export class SessionModel {
   }
   // **************** Query *************** //
 
-  async query({ current = 0, pageSize = 9999 } = {}) {
+  query = async ({ current = 0, pageSize = 9999 } = {}) => {
     const offset = current * pageSize;
 
     return this.db.query.sessions.findMany({
@@ -41,9 +41,9 @@ export class SessionModel {
       where: and(eq(sessions.userId, this.userId), not(eq(sessions.slug, INBOX_SESSION_ID))),
       with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
     });
-  }
+  };
 
-  async queryWithGroups(): Promise<ChatSessionList> {
+  queryWithGroups = async (): Promise<ChatSessionList> => {
     // 查询所有会话
     const result = await this.query();
 
@@ -56,9 +56,9 @@ export class SessionModel {
       sessionGroups: groups as unknown as ChatSessionList['sessionGroups'],
       sessions: result.map((item) => this.mapSessionItem(item as any)),
     };
-  }
+  };
 
-  async queryByKeyword(keyword: string) {
+  queryByKeyword = async (keyword: string) => {
     if (!keyword) return [];
 
     const keywordLowerCase = keyword.toLowerCase();
@@ -66,11 +66,11 @@ export class SessionModel {
     const data = await this.findSessionsByKeywords({ keyword: keywordLowerCase });
 
     return data.map((item) => this.mapSessionItem(item as any));
-  }
+  };
 
-  async findByIdOrSlug(
+  findByIdOrSlug = async (
     idOrSlug: string,
-  ): Promise<(SessionItem & { agent: AgentItem }) | undefined> {
+  ): Promise<(SessionItem & { agent: AgentItem }) | undefined> => {
     const result = await this.db.query.sessions.findFirst({
       where: and(
         or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
@@ -82,23 +82,22 @@ export class SessionModel {
     if (!result) return;
 
     return { ...result, agent: (result?.agentsToSessions?.[0] as any)?.agent } as any;
-  }
+  };
 
-  async count() {
+  count = async (): Promise<number> => {
     const result = await this.db
       .select({
-        count: count(),
+        count: count(sessions.id),
       })
       .from(sessions)
-      .where(eq(sessions.userId, this.userId))
-      .execute();
+      .where(eq(sessions.userId, this.userId));
 
     return result[0].count;
-  }
+  };
 
   // **************** Create *************** //
 
-  async create({
+  create = async ({
     id = idGenerator('sessions'),
     type = 'agent',
     session = {},
@@ -110,7 +109,7 @@ export class SessionModel {
     session?: Partial<NewSession>;
     slug?: string;
     type: 'agent' | 'group';
-  }): Promise<SessionItem> {
+  }): Promise<SessionItem> => {
     return this.db.transaction(async (trx) => {
       const newAgents = await trx
         .insert(agents)
@@ -143,9 +142,9 @@ export class SessionModel {
 
       return result[0];
     });
-  }
+  };
 
-  async createInbox() {
+  createInbox = async () => {
     const item = await this.db.query.sessions.findFirst({
       where: and(eq(sessions.userId, this.userId), eq(sessions.slug, INBOX_SESSION_ID)),
     });
@@ -158,9 +157,9 @@ export class SessionModel {
       slug: INBOX_SESSION_ID,
       type: 'agent',
     });
-  }
+  };
 
-  async batchCreate(newSessions: NewSession[]) {
+  batchCreate = async (newSessions: NewSession[]) => {
     const sessionsToInsert = newSessions.map((s) => {
       return {
         ...s,
@@ -170,9 +169,9 @@ export class SessionModel {
     });
 
     return this.db.insert(sessions).values(sessionsToInsert);
-  }
+  };
 
-  async duplicate(id: string, newTitle?: string) {
+  duplicate = async (id: string, newTitle?: string) => {
     const result = await this.findByIdOrSlug(id);
 
     if (!result) return;
@@ -193,49 +192,49 @@ export class SessionModel {
       },
       type: 'agent',
     });
-  }
+  };
 
   // **************** Delete *************** //
 
   /**
    * Delete a session, also delete all messages and topics associated with it.
    */
-  async delete(id: string) {
+  delete = async (id: string) => {
     return this.db
       .delete(sessions)
       .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)));
-  }
+  };
 
   /**
    * Batch delete sessions, also delete all messages and topics associated with them.
    */
-  async batchDelete(ids: string[]) {
+  batchDelete = async (ids: string[]) => {
     return this.db
       .delete(sessions)
       .where(and(inArray(sessions.id, ids), eq(sessions.userId, this.userId)));
-  }
+  };
 
-  async deleteAll() {
+  deleteAll = async () => {
     return this.db.delete(sessions).where(eq(sessions.userId, this.userId));
-  }
+  };
   // **************** Update *************** //
 
-  async update(id: string, data: Partial<SessionItem>) {
+  update = async (id: string, data: Partial<SessionItem>) => {
     return this.db
       .update(sessions)
       .set(data)
       .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)))
       .returning();
-  }
+  };
 
-  async updateConfig(id: string, data: Partial<AgentItem>) {
+  updateConfig = async (id: string, data: Partial<AgentItem>) => {
     if (Object.keys(data).length === 0) return;
 
     return this.db
       .update(agents)
       .set(data)
       .where(and(eq(agents.id, id), eq(agents.userId, this.userId)));
-  }
+  };
 
   // **************** Helper *************** //
 
@@ -266,7 +265,11 @@ export class SessionModel {
     } as any;
   };
 
-  async findSessionsByKeywords(params: { current?: number; keyword: string; pageSize?: number }) {
+  findSessionsByKeywords = async (params: {
+    current?: number;
+    keyword: string;
+    pageSize?: number;
+  }) => {
     const { keyword, pageSize = 9999, current = 0 } = params;
     const offset = current * pageSize;
     const results = await this.db.query.agents.findMany({
@@ -290,5 +293,5 @@ export class SessionModel {
       return results.map((item) => item.agentsToSessions[0].session);
     } catch {}
     return [];
-  }
+  };
 }

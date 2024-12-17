@@ -76,7 +76,7 @@ export class ChunkModel {
     });
   };
 
-  async findByFileId(id: string, page = 0) {
+  findByFileId = async (id: string, page = 0) => {
     const data = await this.db
       .select({
         abstract: chunks.abstract,
@@ -100,9 +100,9 @@ export class ChunkModel {
 
       return { ...item, metadata, pageNumber: metadata?.pageNumber } as FileChunk;
     });
-  }
+  };
 
-  async getChunksTextByFileId(id: string): Promise<{ id: string; text: string }[]> {
+  getChunksTextByFileId = async (id: string): Promise<{ id: string; text: string }[]> => {
     const data = await this.db
       .select()
       .from(chunks)
@@ -113,9 +113,9 @@ export class ChunkModel {
       .map((item) => item.chunks)
       .map((chunk) => ({ id: chunk.id, text: this.mapChunkText(chunk) }))
       .filter((chunk) => chunk.text) as { id: string; text: string }[];
-  }
+  };
 
-  async countByFileIds(ids: string[]) {
+  countByFileIds = async (ids: string[]) => {
     if (ids.length === 0) return [];
 
     return this.db
@@ -126,9 +126,9 @@ export class ChunkModel {
       .from(fileChunks)
       .where(inArray(fileChunks.fileId, ids))
       .groupBy(fileChunks.fileId);
-  }
+  };
 
-  async countByFileId(ids: string) {
+  countByFileId = async (ids: string) => {
     const data = await this.db
       .select({
         count: count(fileChunks.chunkId),
@@ -139,16 +139,16 @@ export class ChunkModel {
       .groupBy(fileChunks.fileId);
 
     return data[0]?.count ?? 0;
-  }
+  };
 
-  async semanticSearch({
+  semanticSearch = async ({
     embedding,
     fileIds,
   }: {
     embedding: number[];
     fileIds: string[] | undefined;
     query: string;
-  }) {
+  }) => {
     const similarity = sql<number>`1 - (${cosineDistance(embeddings.embeddings, embedding)})`;
 
     const data = await this.db
@@ -174,16 +174,16 @@ export class ChunkModel {
       ...item,
       metadata: item.metadata as ChunkMetadata,
     }));
-  }
+  };
 
-  async semanticSearchForChat({
+  semanticSearchForChat = async ({
     embedding,
     fileIds,
   }: {
     embedding: number[];
     fileIds: string[] | undefined;
     query: string;
-  }) {
+  }) => {
     const similarity = sql<number>`1 - (${cosineDistance(embeddings.embeddings, embedding)})`;
 
     const hasFiles = fileIds && fileIds.length > 0;
@@ -219,7 +219,7 @@ export class ChunkModel {
         text: this.mapChunkText(item),
       };
     });
-  }
+  };
 
   private mapChunkText = (chunk: { metadata: any; text: string | null; type: string | null }) => {
     let text = chunk.text;
