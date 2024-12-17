@@ -58,7 +58,7 @@ Related discussions:
 ### `OPENAI_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
 
@@ -94,7 +94,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `AZURE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `id->deplymentName=displayName` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `id->deplymentName=displayName` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `gpt-35-turbo->my-deploy=GPT 3.5 Turbo` 或 `gpt-4-turbo->my-gpt4=GPT 4 Turbo<128000:vision:fc>`
 
@@ -117,7 +117,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `GOOGLE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+gemini-1.5-flash-latest,+gemini-1.5-pro-latest`
 
@@ -188,7 +188,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `OPENROUTER_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to specify a custom OpenRouter model list. Model definition syntax rules see
+- Description: Used to specify a custom OpenRouter model list. Model definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta`
 
@@ -204,7 +204,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `GITHUB_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+gpt-4o,+gpt-4o-mini`
 
@@ -220,7 +220,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `TOGETHERAI_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to specify a custom TogetherAI model list. Model definition syntax rules see
+- Description: Used to specify a custom TogetherAI model list. Model definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo,+meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo`
 
@@ -236,7 +236,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `FIREWORKSAI_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+accounts/fireworks/models/firefunction-v2,+accounts/fireworks/models/firefunction-v1`
 
@@ -259,7 +259,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `OLLAMA_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to specify a custom Ollama language model. Model definition syntax rules see
+- Description: Used to specify a custom Ollama language model. Model definition syntax rules see [model-list][model-list]
 - Default: -
 - Example: `llama2:7B`
 
@@ -332,7 +332,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `GROQ_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+gemma2-9b-it,+llama-3.1-8b-instant`
 
@@ -348,7 +348,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `ZHIPU_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+glm-4-alltools,+glm-4-plus`
 
@@ -364,7 +364,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `ZEROONE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+yi-large,+yi-large-rag`
 
@@ -380,7 +380,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `QWEN_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+qwen-turbo-latest,+qwen-plus-latest`
 
@@ -405,7 +405,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `NOVITA_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+meta-llama/llama-3.1-8b-instruct,+meta-llama/llama-3.1-70b-instruct`
 
@@ -455,7 +455,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `SILICONCLOUD_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+deepseek-ai/DeepSeek-V2.5,+Qwen/Qwen2.5-7B-Instruct`
 
@@ -498,6 +498,8 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `HUNYUAN_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+hunyuan-lite,+hunyuan-standard`
+
+[model-list]: /docs/self-hosting/advanced/model-list

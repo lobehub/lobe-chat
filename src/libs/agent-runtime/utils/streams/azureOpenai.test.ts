@@ -1,4 +1,3 @@
-import { desc } from 'drizzle-orm/expressions';
 import { describe, expect, it, vi } from 'vitest';
 
 import { AzureOpenAIStream } from './azureOpenai';

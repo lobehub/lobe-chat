@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
