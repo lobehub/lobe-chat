@@ -98,8 +98,8 @@ export const globalActionSlice: StateCreator<
     get().statusStorage.saveToLocalStorage(nextStatus);
   },
 
-  // TODO: 从初始化请求获取
-  useCheckLatestChangelogId: () => useSWR('changelog', async () => []),
+  useCheckLatestChangelogId: () =>
+    useSWR('changelog', async () => globalService.getLatestChangelogIndex()),
 
   useCheckLatestVersion: (enabledCheck = true) =>
     useSWR(enabledCheck ? 'checkLatestVersion' : null, globalService.getLatestVersion, {
