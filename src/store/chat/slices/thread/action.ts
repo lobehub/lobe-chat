@@ -44,7 +44,7 @@ export interface ChatThreadAction {
   openThreadCreator: (messageId: string) => void;
   openThreadInPortal: (threadId: string, sourceMessageId: string) => void;
   closeThreadPortal: () => void;
-  useFetchThreads: (topicId?: string) => SWRResponse<ThreadItem[]>;
+  useFetchThreads: (enable: boolean, topicId?: string) => SWRResponse<ThreadItem[]>;
   summaryThreadTitle: (threadId: string, messages: ChatMessage[]) => Promise<void>;
   updateThreadTitle: (id: string, title: string) => Promise<void>;
   removeThread: (id: string) => Promise<void>;
@@ -209,9 +209,9 @@ export const chatThreadMessage: StateCreator<
     return data;
   },
 
-  useFetchThreads: (topicId) =>
+  useFetchThreads: (enable, topicId) =>
     useClientDataSWR<ThreadItem[]>(
-      !!topicId && isServerMode ? [SWR_USE_FETCH_THREADS, topicId] : null,
+      enable && !!topicId && isServerMode ? [SWR_USE_FETCH_THREADS, topicId] : null,
       async ([, topicId]: [string, string]) => threadService.getThreads(topicId),
       {
         suspense: true,

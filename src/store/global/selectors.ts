@@ -24,12 +24,18 @@ const threadInputHeight = (s: GlobalStore) => s.status.threadInputHeight;
 
 const isPgliteNotEnabled = () => false;
 
+const isPgliteNotInited = () => false;
+
+const isPgliteInited = (): boolean => true;
+
 export const systemStatusSelectors = {
   filePanelWidth,
   hidePWAInstaller,
   inZenMode,
   inputHeight,
+  isPgliteInited,
   isPgliteNotEnabled,
+  isPgliteNotInited,
   mobileShowPortal,
   mobileShowTopic,
   sessionGroupKeys,
