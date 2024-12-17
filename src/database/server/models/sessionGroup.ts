@@ -46,14 +46,14 @@ export class SessionGroupModel {
     });
   };
 
-  async update(id: string, value: Partial<SessionGroupItem>) {
+  update = async (id: string, value: Partial<SessionGroupItem>) => {
     return this.db
       .update(sessionGroups)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(sessionGroups.id, id), eq(sessionGroups.userId, this.userId)));
-  }
+  };
 
-  async updateOrder(sortMap: { id: string; sort: number }[]) {
+  updateOrder = async (sortMap: { id: string; sort: number }[]) => {
     await this.db.transaction(async (tx) => {
       const updates = sortMap.map(({ id, sort }) => {
         return tx
@@ -64,7 +64,7 @@ export class SessionGroupModel {
 
       await Promise.all(updates);
     });
-  }
+  };
 
   private genId = () => idGenerator('sessionGroups');
 }

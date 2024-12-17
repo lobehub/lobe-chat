@@ -1,5 +1,5 @@
-import { asc, count, eq, ilike, inArray, notExists, or, sum } from 'drizzle-orm';
-import { and, desc, like } from 'drizzle-orm/expressions';
+import { count, sum } from 'drizzle-orm';
+import { and, asc, desc, eq, ilike, inArray, like, notExists, or } from 'drizzle-orm/expressions';
 import type { PgTransaction } from 'drizzle-orm/pg-core';
 
 import { LobeChatDatabase } from '@/database/type';
@@ -276,12 +276,11 @@ export class FileModel {
     return result[0].count;
   };
 
-  async update(id: string, value: Partial<FileItem>) {
-    return this.db
+  update = async (id: string, value: Partial<FileItem>) =>
+    this.db
       .update(files)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(files.id, id), eq(files.userId, this.userId)));
-  }
 
   /**
    * get the corresponding file type prefix according to FilesTabs
@@ -306,17 +305,16 @@ export class FileModel {
     }
   };
 
-  async findByNames(fileNames: string[]) {
-    return this.db.query.files.findMany({
+  findByNames = async (fileNames: string[]) =>
+    this.db.query.files.findMany({
       where: and(
         or(...fileNames.map((name) => like(files.name, `${name}%`))),
         eq(files.userId, this.userId),
       ),
     });
-  }
 
   // 抽象出通用的删除 chunks 方法
-  private async deleteFileChunks(trx: PgTransaction<any>, fileIds: string[]) {
+  private deleteFileChunks = async (trx: PgTransaction<any>, fileIds: string[]) => {
     const BATCH_SIZE = 1000; // 每批处理的数量
 
     // 1. 获取所有关联的 chunk IDs
@@ -339,5 +337,5 @@ export class FileModel {
     }
 
     return chunkIds;
-  }
+  };
 }
