@@ -10,10 +10,16 @@
     }
   },
   "appLoading": {
-    "goToChat": "(4/4) Caricamento della pagina della chat in corso...",
-    "initAuth": "(2/4) Inizializzazione del servizio di autenticazione...",
-    "initUser": "(3/4) Inizializzazione dello stato utente...",
-    "initializing": "(1/4) Avvio dell'app in corso..."
+    "appInitializing": "Avvio dell'app in corso...",
+    "finished": "Inizializzazione del database completata",
+    "goToChat": "Caricamento della pagina di chat in corso...",
+    "initAuth": "Inizializzazione del servizio di autenticazione...",
+    "initUser": "Inizializzazione dello stato utente...",
+    "initializing": "Inizializzazione del database PGlite...",
+    "loadingDependencies": "Inizializzazione delle dipendenze...",
+    "loadingWasm": "Caricamento del modulo WASM...",
+    "migrating": "Esecuzione della migrazione delle tabelle dati...",
+    "ready": "Database pronto"
   },
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
@@ -38,14 +44,28 @@
       "error": "Si è verificato un errore, si prega di riprovare",
       "idle": "In attesa di inizializzazione...",
       "initializing": "In fase di inizializzazione...",
-      "loadingDependencies": "Caricamento delle dipendenze ({ {progress}}%)...",
-      "loadingWasmModule": "Caricamento del modulo WASM ({ {progress}}%)...",
-      "migrating": "In fase di migrazione dei dati...",
+      "loadingDependencies": "Caricamento delle dipendenze in corso...",
+      "loadingWasmModule": "Caricamento del modulo WASM in corso...",
+      "migrating": "Esecuzione della migrazione della tabella dati...",
       "ready": "Database pronto"
     },
     "modal": {
       "desc": "Abilita il database client PGlite per memorizzare in modo persistente i dati della chat nel tuo browser e utilizzare funzionalità avanzate come la knowledge base",
       "enable": "Abilita ora",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Conserva il tuo archivio personale di conoscenze e avvia facilmente conversazioni con il tuo assistente (in arrivo)",
+          "title": "Supporto per conversazioni sull'archivio di conoscenze, attiva il tuo secondo cervello"
+        },
+        "localFirst": {
+          "desc": "I dati delle chat sono completamente memorizzati nel browser, i tuoi dati sono sempre sotto il tuo controllo.",
+          "title": "Locale prima, privacy al primo posto"
+        },
+        "pglite": {
+          "desc": "Costruito su PGlite, supporta nativamente le funzionalità avanzate AI Native (ricerca vettoriale)",
+          "title": "Nuova generazione di architettura di archiviazione client"
+        }
+      },
       "init": {
         "desc": "In fase di inizializzazione del database, il tempo necessario può variare da 5 a 30 secondi a seconda della rete",
         "title": "Inizializzazione del database PGlite in corso"

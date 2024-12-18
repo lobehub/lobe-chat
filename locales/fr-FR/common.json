@@ -10,10 +10,16 @@
     }
   },
   "appLoading": {
-    "goToChat": "(4/4) Chargement de la page de conversation...",
-    "initAuth": "(2/4) Initialisation du service d'authentification...",
-    "initUser": "(3/4) Initialisation de l'état de l'utilisateur...",
-    "initializing": "(1/4) L'application se lance..."
+    "appInitializing": "L'application se charge...",
+    "finished": "Initialisation de la base de données terminée",
+    "goToChat": "Chargement de la page de chat...",
+    "initAuth": "Initialisation du service d'authentification...",
+    "initUser": "Initialisation de l'état de l'utilisateur...",
+    "initializing": "Initialisation de la base de données PGlite...",
+    "loadingDependencies": "Chargement des dépendances...",
+    "loadingWasm": "Chargement du module WASM...",
+    "migrating": "Exécution de la migration des tables de données...",
+    "ready": "La base de données est prête"
   },
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
@@ -38,14 +44,28 @@
       "error": "Une erreur s'est produite, veuillez réessayer",
       "idle": "En attente d'initialisation...",
       "initializing": "Initialisation en cours...",
-      "loadingDependencies": "Chargement des dépendances ({{progress}}%)...",
-      "loadingWasmModule": "Chargement du module WASM ({{progress}}%)...",
-      "migrating": "Migration des données en cours...",
+      "loadingDependencies": "Chargement des dépendances...",
+      "loadingWasmModule": "Chargement du module WASM...",
+      "migrating": "Exécution de la migration des tables de données...",
       "ready": "Base de données prête"
     },
     "modal": {
       "desc": "Activez la base de données client PGlite pour stocker de manière persistante les données de discussion dans votre navigateur et utiliser des fonctionnalités avancées telles que la base de connaissances.",
       "enable": "Activer maintenant",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Consolidez votre base de connaissances personnelle et engagez facilement des conversations avec votre assistant (bientôt disponible)",
+          "title": "Support des conversations de base de connaissances, activez votre deuxième cerveau"
+        },
+        "localFirst": {
+          "desc": "Les données de chat sont entièrement stockées dans le navigateur, vos données sont toujours sous votre contrôle.",
+          "title": "Priorité locale, confidentialité avant tout"
+        },
+        "pglite": {
+          "desc": "Construit sur PGlite, prend en charge nativement les fonctionnalités avancées AI Native (recherche vectorielle)",
+          "title": "Nouvelle architecture de stockage client de nouvelle génération"
+        }
+      },
       "init": {
         "desc": "Initialisation de la base de données en cours, cela peut prendre de 5 à 30 secondes selon la connexion réseau.",
         "title": "Initialisation de la base de données PGlite en cours"

@@ -10,10 +10,16 @@
     }
   },
   "appLoading": {
-    "goToChat": "(4/4) 對話頁面加載中...",
-    "initAuth": "(2/4) 鑑權服務初始化...",
-    "initUser": "(3/4) 使用者狀態初始化...",
-    "initializing": "(1/4) 應用啟動中..."
+    "appInitializing": "應用啟動中...",
+    "finished": "資料庫初始化完成",
+    "goToChat": "對話頁面加載中...",
+    "initAuth": "鑑權服務初始化...",
+    "initUser": "用戶狀態初始化...",
+    "initializing": "PGlite 資料庫初始化...",
+    "loadingDependencies": "初始化依賴...",
+    "loadingWasm": "加載 WASM 模組...",
+    "migrating": "執行資料表遷移...",
+    "ready": "資料庫已就緒"
   },
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
@@ -38,14 +44,28 @@
       "error": "發生錯誤，請重試",
       "idle": "等待初始化...",
       "initializing": "正在初始化...",
-      "loadingDependencies": "加載依賴中({{progress}}%)...",
-      "loadingWasmModule": "加載 WASM 模塊中({{progress}}%)...",
-      "migrating": "正在遷移數據...",
+      "loadingDependencies": "載入依賴中...",
+      "loadingWasmModule": "載入 WASM 模組中...",
+      "migrating": "執行資料表遷移...",
       "ready": "數據庫已就緒"
     },
     "modal": {
       "desc": "啟用 PGlite 客戶端數據庫，在你的瀏覽器中持久存儲聊天數據，並使用知識庫等進階特性",
       "enable": "立即啟用",
+      "features": {
+        "knowledgeBase": {
+          "desc": "沉澱你的個人知識庫，並與你的助手輕鬆開啟知識庫對話（即將上線）",
+          "title": "支持知識庫對話，開啟第二大腦"
+        },
+        "localFirst": {
+          "desc": "聊天數據完全存儲在瀏覽器中，你的數據始終在你的掌握。",
+          "title": "本地優先，隱私至上"
+        },
+        "pglite": {
+          "desc": "基於 PGlite 構建，原生支持 AI Native 高階特性（向量檢索）",
+          "title": "新一代客戶端存儲架構"
+        }
+      },
       "init": {
         "desc": "正在初始化數據庫，視網絡差異可能會用時 5~30 秒不等",
         "title": "正在初始化 PGlite 數據庫"

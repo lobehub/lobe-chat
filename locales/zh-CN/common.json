@@ -10,10 +10,16 @@
     }
   },
   "appLoading": {
-    "goToChat": "(4/4) 对话页面加载中...",
-    "initAuth": "(2/4) 鉴权服务初始化...",
-    "initUser": "(3/4) 用户状态初始化...",
-    "initializing": "(1/4) 应用启动中..."
+    "appInitializing": "应用启动中...",
+    "finished": "数据库初始化完成",
+    "goToChat": "对话页面加载中...",
+    "initAuth": "鉴权服务初始化...",
+    "initUser": "用户状态初始化...",
+    "initializing": "PGlite 数据库初始化...",
+    "loadingDependencies": "初始化依赖...",
+    "loadingWasm": "加载 WASM 模块...",
+    "migrating": "执行数据表迁移...",
+    "ready": "数据库已就绪"
   },
   "autoGenerate": "自动补全",
   "autoGenerateTooltip": "基于提示词自动补全助手描述",
@@ -38,14 +44,28 @@
       "error": "发生错误，请重试",
       "idle": "等待初始化...",
       "initializing": "正在初始化...",
-      "loadingDependencies": "加载依赖中({{progress}}%)...",
-      "loadingWasmModule": "加载 WASM 模块中({{progress}}%)...",
-      "migrating": "正在迁移数据...",
+      "loadingDependencies": "加载依赖中...",
+      "loadingWasmModule": "加载 WASM 模块中...",
+      "migrating": "执行数据表迁移...",
       "ready": "数据库已就绪"
     },
     "modal": {
-      "desc": "启用 PGlite 客户端数据库，在你的浏览器中持久存储聊天数据，并使用知识库等进阶特性",
+      "desc": "立即启用下一代客户端数据库。在你的浏览器中持久存储聊天数据，并使用知识库等进阶特性。",
       "enable": "立即启用",
+      "features": {
+        "knowledgeBase": {
+          "desc": "沉淀你的个人知识库，并与你的助手轻松开启知识库对话（即将上线）",
+          "title": "支持知识库对话，开启第二大脑"
+        },
+        "localFirst": {
+          "desc": "聊天数据完全存储在浏览器中，你的数据始终在你的掌握。",
+          "title": "本地优先，隐私至上"
+        },
+        "pglite": {
+          "desc": "基于 PGlite 构建，原生支持 AI Native 高阶特性（向量检索）",
+          "title": "新一代客户端存储架构"
+        }
+      },
       "init": {
         "desc": "正在初始化数据库，视网络差异可能会用时 5~30 秒不等",
         "title": "正在初始化 PGlite 数据库"
