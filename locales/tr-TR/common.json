@@ -10,10 +10,16 @@
     }
   },
   "appLoading": {
-    "goToChat": "(4/4) Sohbet sayfası yükleniyor...",
-    "initAuth": "(2/4) Kimlik doğrulama hizmeti başlatılıyor...",
-    "initUser": "(3/4) Kullanıcı durumu başlatılıyor...",
-    "initializing": "(1/4) Uygulama başlatılıyor..."
+    "appInitializing": "Uygulama başlatılıyor...",
+    "finished": "Veritabanı başlatma tamamlandı",
+    "goToChat": "Sohbet sayfası yükleniyor...",
+    "initAuth": "Kimlik doğrulama servisi başlatılıyor...",
+    "initUser": "Kullanıcı durumu başlatılıyor...",
+    "initializing": "PGlite veritabanı başlatılıyor...",
+    "loadingDependencies": "Bağımlılıklar yükleniyor...",
+    "loadingWasm": "WASM modülü yükleniyor...",
+    "migrating": "Veri tablosu taşınıyor...",
+    "ready": "Veritabanı hazır"
   },
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
@@ -38,14 +44,28 @@
       "error": "Hata oluştu, lütfen tekrar deneyin",
       "idle": "Başlatma bekleniyor...",
       "initializing": "Başlatılıyor...",
-      "loadingDependencies": "Bağımlılıklar yükleniyor ({{progress}}%)...",
-      "loadingWasmModule": "WASM modülü yükleniyor ({{progress}}%)...",
-      "migrating": "Veri taşınıyor...",
+      "loadingDependencies": "Bağlantılar yükleniyor...",
+      "loadingWasmModule": "WASM modülü yükleniyor...",
+      "migrating": "Veri tablosu taşınıyor...",
       "ready": "Veritabanı hazır"
     },
     "modal": {
       "desc": "PGlite istemci veritabanını etkinleştirerek, tarayıcınızda sohbet verilerini kalıcı olarak depolayın ve bilgi bankası gibi gelişmiş özellikleri kullanın.",
       "enable": "Hemen Etkinleştir",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Kişisel bilgi havuzunuzu oluşturun ve asistanınızla kolayca bilgi havuzu sohbetine başlayın (yakında gelecek)",
+          "title": "Bilgi havuzu sohbetini destekleyin, ikinci beyninizi açın"
+        },
+        "localFirst": {
+          "desc": "Sohbet verileri tamamen tarayıcıda saklanır, verileriniz her zaman sizin kontrolünüzde.",
+          "title": "Yerel öncelik, gizlilik öncelikli"
+        },
+        "pglite": {
+          "desc": "PGlite tabanlı, AI Native yüksek düzey özellikleri (vektör arama) yerel olarak destekler",
+          "title": "Yeni nesil istemci depolama mimarisi"
+        }
+      },
       "init": {
         "desc": "Veritabanı başlatılıyor, ağ farklılıklarına bağlı olarak 5-30 saniye sürebilir.",
         "title": "PGlite veritabanı başlatılıyor"

@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.36.35](https://github.com/lobehub/lobe-chat/compare/v1.36.34...v1.36.35)
+
+<sup>Released on **2024-12-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve home page loading for better UX.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve home page loading for better UX, closes [#5075](https://github.com/lobehub/lobe-chat/issues/5075) ([99026bb](https://github.com/lobehub/lobe-chat/commit/99026bb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.36.34](https://github.com/lobehub/lobe-chat/compare/v1.36.33...v1.36.34)
+
+<sup>Released on **2024-12-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix pdf preview with capital ext.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix pdf preview with capital ext, closes [#5074](https://github.com/lobehub/lobe-chat/issues/5074) ([3f9470f](https://github.com/lobehub/lobe-chat/commit/3f9470f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.33](https://github.com/lobehub/lobe-chat/compare/v1.36.32...v1.36.33)
 
 <sup>Released on **2024-12-18**</sup>

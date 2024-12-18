@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Improve home page loading for better UX."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.35"
+  },
+  {
+    "children": {
+      "fixes": ["Fix pdf preview with capital ext."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.34"
+  },
+  {
+    "children": {
       "fixes": ["Fix GitHub model fetch."]
     },
     "date": "2024-12-18",

@@ -3,12 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
-import { AppLoadingStage } from './type';
+import { AppLoadingStage } from '../stage';
 
 interface RedirectProps {
   setLoadingStage: (value: AppLoadingStage) => void;
@@ -22,7 +20,6 @@ const Redirect = memo<RedirectProps>(({ setLoadingStage }) => {
     s.isUserStateInit,
     s.isOnboard,
   ]);
-  const isPgliteNotEnabled = useGlobalStore(systemStatusSelectors.isPgliteNotEnabled);
 
   const navToChat = () => {
     setLoadingStage(AppLoadingStage.GoToChat);
@@ -30,12 +27,6 @@ const Redirect = memo<RedirectProps>(({ setLoadingStage }) => {
   };
 
   useEffect(() => {
-    // if pglite is not enabled, redirect to chat
-    if (isPgliteNotEnabled) {
-      navToChat();
-      return;
-    }
-
     // if user auth state is not ready, wait for loading
     if (!isLoaded) {
       setLoadingStage(AppLoadingStage.InitAuth);
@@ -60,9 +51,9 @@ const Redirect = memo<RedirectProps>(({ setLoadingStage }) => {
       return;
     }
 
-    // finally check the conversation status
+    // finally go to chat
     navToChat();
-  }, [isUserStateInit, isLoaded, isOnboard, isLogin, isPgliteNotEnabled]);
+  }, [isUserStateInit, isLoaded, isOnboard, isLogin]);
 
   return null;
 });

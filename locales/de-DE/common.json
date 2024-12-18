@@ -10,10 +10,16 @@
     }
   },
   "appLoading": {
-    "goToChat": "(4/4) Lade die Chat-Seite...",
-    "initAuth": "(2/4) Authentifizierungsdienst wird initialisiert...",
-    "initUser": "(3/4) Benutzerstatus wird initialisiert...",
-    "initializing": "(1/4) Anwendung wird gestartet..."
+    "appInitializing": "Anwendung wird gestartet...",
+    "finished": "Datenbankinitialisierung abgeschlossen",
+    "goToChat": "Lade die Chat-Seite...",
+    "initAuth": "Initialisiere den Authentifizierungsdienst...",
+    "initUser": "Initialisiere den Benutzerstatus...",
+    "initializing": "Initialisiere die PGlite-Datenbank...",
+    "loadingDependencies": "Abhängigkeiten werden initialisiert...",
+    "loadingWasm": "WASM-Module werden geladen...",
+    "migrating": "Datenbankmigration wird durchgeführt...",
+    "ready": "Datenbank ist bereit"
   },
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
@@ -38,14 +44,28 @@
       "error": "Ein Fehler ist aufgetreten, bitte versuchen Sie es erneut",
       "idle": "Warte auf die Initialisierung...",
       "initializing": "Wird initialisiert...",
-      "loadingDependencies": "Lade Abhängigkeiten ({ {progress}}%)...",
-      "loadingWasmModule": "Lade WASM-Modul ({ {progress}}%)...",
-      "migrating": "Daten werden migriert...",
+      "loadingDependencies": "Abhängigkeiten werden geladen...",
+      "loadingWasmModule": "WASM-Modul wird geladen...",
+      "migrating": "Datenbankmigration wird durchgeführt...",
       "ready": "Datenbank ist bereit"
     },
     "modal": {
       "desc": "Aktivieren Sie die PGlite-Clientdatenbank, um Chatdaten in Ihrem Browser dauerhaft zu speichern und erweiterte Funktionen wie Wissensdatenbanken zu nutzen.",
       "enable": "Jetzt aktivieren",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Bauen Sie Ihre persönliche Wissensdatenbank auf und führen Sie mühelos Gespräche mit Ihrem Assistenten (demnächst verfügbar)",
+          "title": "Unterstützung für Wissensdatenbankgespräche, aktivieren Sie Ihr zweites Gehirn"
+        },
+        "localFirst": {
+          "desc": "Chat-Daten werden vollständig im Browser gespeichert, Ihre Daten sind immer in Ihrer Kontrolle.",
+          "title": "Lokale Priorität, Datenschutz an erster Stelle"
+        },
+        "pglite": {
+          "desc": "Basierend auf PGlite, unterstützt nativ AI Native fortgeschrittene Funktionen (Vektorsuche)",
+          "title": "Neue Generation der Client-Speicherarchitektur"
+        }
+      },
       "init": {
         "desc": "Die Datenbank wird initialisiert, je nach Netzwerkbedingungen kann dies 5 bis 30 Sekunden dauern.",
         "title": "Initialisiere PGlite-Datenbank"
