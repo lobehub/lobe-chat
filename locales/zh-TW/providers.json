@@ -1,5 +1,7 @@
 {
-  "ai21": {},
+  "ai21": {
+    "description": "AI21 Labs 為企業構建基礎模型和人工智慧系統，加速生成性人工智慧在生產中的應用。"
+  },
   "ai360": {
     "description": "360 AI 是 360 公司推出的 AI 模型和服務平台，提供多種先進的自然語言處理模型，包括 360GPT2 Pro、360GPT Pro、360GPT Turbo 和 360GPT Turbo Responsibility 8K。這些模型結合了大規模參數和多模態能力，廣泛應用於文本生成、語義理解、對話系統與代碼生成等領域。通過靈活的定價策略，360 AI 滿足多樣化用戶需求，支持開發者集成，推動智能化應用的革新和發展。"
   },
@@ -15,7 +17,9 @@
   "bedrock": {
     "description": "Bedrock 是亞馬遜 AWS 提供的一項服務，專注於為企業提供先進的 AI 語言模型和視覺模型。其模型家族包括 Anthropic 的 Claude 系列、Meta 的 Llama 3.1 系列等，涵蓋從輕量級到高性能的多種選擇，支持文本生成、對話、圖像處理等多種任務，適用於不同規模和需求的企業應用。"
   },
-  "cloudflare": {},
+  "cloudflare": {
+    "description": "在 Cloudflare 的全球網絡上運行由無伺服器 GPU 驅動的機器學習模型。"
+  },
   "deepseek": {
     "description": "DeepSeek 是一家專注於人工智慧技術研究和應用的公司，其最新模型 DeepSeek-V2.5 融合了通用對話和代碼處理能力，並在人類偏好對齊、寫作任務和指令跟隨等方面實現了顯著提升。"
   },
@@ -35,7 +39,7 @@
     "description": "Groq 的 LPU 推理引擎在最新的獨立大語言模型（LLM）基準測試中表現卓越，以其驚人的速度和效率重新定義了 AI 解決方案的標準。Groq 是一種即時推理速度的代表，在基於雲的部署中展現了良好的性能。"
   },
   "higress": {
-    "description": ""
+    "description": "Higress 是一款雲原生 API 網關，為了解決 Tengine reload 對長連接業務的影響，以及 gRPC/Dubbo 負載均衡能力不足而在阿里內部誕生。"
   },
   "huggingface": {
     "description": "HuggingFace Inference API 提供了一種快速且免費的方式，讓您可以探索成千上萬種模型，適用於各種任務。無論您是在為新應用程式進行原型設計，還是在嘗試機器學習的功能，這個 API 都能讓您即時訪問多個領域的高性能模型。"
@@ -73,7 +77,9 @@
   "qwen": {
     "description": "通義千問是阿里雲自主研發的超大規模語言模型，具有強大的自然語言理解和生成能力。它可以回答各種問題、創作文字內容、表達觀點看法、撰寫代碼等，在多個領域發揮作用。"
   },
-  "sensenova": {},
+  "sensenova": {
+    "description": "商湯日日新，依托商湯大裝置的強大基礎支撐，提供高效易用的全棧大模型服務。"
+  },
   "siliconcloud": {
     "description": "SiliconFlow 致力於加速 AGI，以惠及人類，通過易用與成本低的 GenAI 堆疊提升大規模 AI 效率。"
   },

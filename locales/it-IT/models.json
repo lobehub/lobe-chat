@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra è la versione più potente della serie di modelli Spark, migliorando la comprensione e la sintesi del contenuto testuale mentre aggiorna il collegamento alla ricerca online. È una soluzione completa per migliorare la produttività lavorativa e rispondere con precisione alle esigenze, rappresentando un prodotto intelligente all'avanguardia nel settore."
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "Generazione dopo generazione, Meta Llama 3 dimostra prestazioni all'avanguardia su una vasta gamma di benchmark del settore e offre nuove capacità, inclusa una ragionamento migliorato."
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Utilizza tecnologie di ricerca avanzate per collegare completamente il grande modello con la conoscenza di settore e la conoscenza globale. Supporta il caricamento di vari documenti come PDF, Word e l'immissione di URL, con acquisizione di informazioni tempestiva e completa, e risultati di output accurati e professionali."
   },
@@ -127,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO è un modello altamente flessibile, progettato per offrire un'esperienza creativa eccezionale."
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) è un modello di istruzioni ad alta precisione, adatto per calcoli complessi."
   },
@@ -530,9 +515,6 @@
   "cohere-command-r-plus": {
     "description": "Command R+ è un modello ottimizzato per RAG all'avanguardia progettato per affrontare carichi di lavoro di livello aziendale."
   },
-  "command-light": {
-    "description": ""
-  },
   "command-r": {
     "description": "Command R è un LLM ottimizzato per compiti di dialogo e contesti lunghi, particolarmente adatto per interazioni dinamiche e gestione della conoscenza."
   },
@@ -794,9 +776,6 @@
   "hunyuan-functioncall": {
     "description": "Ultimo modello FunctionCall con architettura MOE di Hunyuan, addestrato su dati di alta qualità per le chiamate di funzione, con una finestra di contesto di 32K, è in testa in vari indicatori di valutazione."
   },
-  "hunyuan-large": {
-    "description": ""
-  },
   "hunyuan-lite": {
     "description": "Aggiornato a una struttura MOE, con una finestra di contesto di 256k, è in testa a molti modelli open source in vari set di valutazione su NLP, codice, matematica e settori."
   },
@@ -830,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "La nostra ultima serie di modelli, con prestazioni di ragionamento eccezionali, supporta una lunghezza di contesto di 1M e offre una migliore capacità di seguire istruzioni e chiamare strumenti."
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM è un modello linguistico sperimentale, specifico per compiti, addestrato per rispettare i principi della scienza dell'apprendimento, in grado di seguire istruzioni sistematiche in contesti di insegnamento e apprendimento, fungendo da tutor esperto."
   },
@@ -1027,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 è un modello di linguaggio di grandi dimensioni (LLM) open source progettato per sviluppatori, ricercatori e aziende, per aiutarli a costruire, sperimentare e scalare responsabilmente le loro idee di AI generativa. Come parte di un sistema di base per l'innovazione della comunità globale, è particolarmente adatto per dispositivi a bassa potenza e risorse limitate, oltre a garantire tempi di addestramento più rapidi."
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 è un modello linguistico fornito da Microsoft AI, particolarmente efficace in conversazioni complesse, multilingue, ragionamento e assistenti intelligenti."
   },

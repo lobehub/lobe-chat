@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra 是星火大模型系列中最為強大的版本，在升級聯網搜索鏈路同時，提升對文本內容的理解和總結能力。它是用於提升辦公生產力和準確響應需求的全方位解決方案，是引領行業的智能產品。"
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "Generation over generation, Meta Llama 3 demonstrates state-of-the-art performance on a wide range of industry benchmarks and offers new capabilities, including improved reasoning."
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "採用搜索增強技術實現大模型與領域知識、全網知識的全面連結。支持PDF、Word等多種文檔上傳及網址輸入，信息獲取及時、全面，輸出結果準確、專業。"
   },
@@ -127,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO 是一款高度靈活的多模型合併，旨在提供卓越的創造性體驗。"
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) 是高精度的指令模型，適用於複雜計算。"
   },
@@ -530,9 +515,6 @@
   "cohere-command-r-plus": {
     "description": "Command R+是一個最先進的RAG優化模型，旨在應對企業級工作負載。"
   },
-  "command-light": {
-    "description": ""
-  },
   "command-r": {
     "description": "Command R 是優化用於對話和長上下文任務的 LLM，特別適合動態交互與知識管理。"
   },
@@ -794,9 +776,6 @@
   "hunyuan-functioncall": {
     "description": "混元最新 MOE 架構 FunctionCall 模型，經過高質量的 FunctionCall 數據訓練，上下文窗口達 32K，在多個維度的評測指標上處於領先。"
   },
-  "hunyuan-large": {
-    "description": ""
-  },
   "hunyuan-lite": {
     "description": "升級為 MOE 結構，上下文窗口為 256k，在 NLP、代碼、數學、行業等多項評測集上領先眾多開源模型。"
   },
@@ -830,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "我們最新的模型系列，有著卓越的推理性能，支持 1M 的上下文長度以及更強的指令跟隨和工具調用能力。"
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM 是一個實驗性的、特定於任務的語言模型，經過訓練以符合學習科學原則，可在教學和學習場景中遵循系統指令，充當專家導師等。"
   },
@@ -1027,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 是一款面向開發者、研究人員和企業的開放大型語言模型 (LLM)，旨在幫助他們構建、實驗並負責任地擴展他們的生成 AI 想法。作為全球社區創新的基礎系統的一部分，它非常適合計算能力和資源有限、邊緣設備和更快的訓練時間。"
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 是微軟AI提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"
   },

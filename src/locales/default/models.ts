@@ -7,6 +7,7 @@ const locales: {
 } = {};
 
 LOBE_DEFAULT_MODEL_LIST.flat().forEach((model) => {
+  if (!model.description) return;
   locales[model.id] = {
     description: model.description,
   };
