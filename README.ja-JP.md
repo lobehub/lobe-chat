@@ -8,7 +8,7 @@
 音声合成、マルチモーダル、拡張可能な（[function call][docs-functionc-call]）プラグインシステムをサポート。<br/>
 プライベートな OpenAI ChatGPT/Claude/Gemini/Groq/Ollama チャットアプリケーションをワンクリックで**無料**でデプロイ。
 
-[English](./README.md) · [简体中文](./README.zh-CN.md) · **日本語** · [公式サイト][official-site] · [変更履歴](./CHANGELOG.md) · [ドキュメント][docs] · [ブログ][blog] · [フィードバック][github-issues-link]
+[English](./README.md) · [简体中文](./README.zh-CN.md) · **日本語** · [公式サイト][official-site] · [変更履歴][changelog] · [ドキュメント][docs] · [ブログ][blog] · [フィードバック][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -134,6 +134,9 @@ LobeChat の継続的な開発において、AI 会話サービスを提供す�
 - **[OpenRouter](https://lobechat.com/discover/provider/openrouter)**: OpenRouter は、OpenAI、Anthropic、LLaMA などのさまざまな最先端の大規模モデルインターフェースを提供するサービスプラットフォームであり、多様な開発と応用のニーズに適しています。ユーザーは、自身のニーズに応じて最適なモデルと価格を柔軟に選択し、AI 体験の向上を支援します。
 - **[Cloudflare Workers AI](https://lobechat.com/discover/provider/cloudflare)**: Cloudflare のグローバルネットワーク上で、サーバーレス GPU によって駆動される機械学習モデルを実行します。
 - **[GitHub](https://lobechat.com/discover/provider/github)**: GitHub モデルを使用することで、開発者は AI エンジニアになり、業界をリードする AI モデルを使って構築できます。
+
+<details><summary><kbd>See more providers (+26)</kbd></summary>
+
 - **[Novita](https://lobechat.com/discover/provider/novita)**: Novita AI は、さまざまな大規模言語モデルと AI 画像生成の API サービスを提供するプラットフォームであり、柔軟で信頼性が高く、コスト効率に優れています。Llama3、Mistral などの最新のオープンソースモデルをサポートし、生成的 AI アプリケーションの開発に向けた包括的でユーザーフレンドリーかつ自動スケーリングの API ソリューションを提供し、AI スタートアップの急成長を支援します。
 - **[Together AI](https://lobechat.com/discover/provider/togetherai)**: Together AI は、革新的な AI モデルを通じて先進的な性能を実現することに取り組んでおり、迅速なスケーリングサポートや直感的な展開プロセスを含む広範なカスタマイズ能力を提供し、企業のさまざまなニーズに応えています。
 - **[Fireworks AI](https://lobechat.com/discover/provider/fireworksai)**: Fireworks AI は、先進的な言語モデルサービスのリーダーであり、機能呼び出しと多モーダル処理に特化しています。最新のモデル Firefunction V2 は Llama-3 に基づいており、関数呼び出し、対話、指示の遵守に最適化されています。視覚言語モデル FireLLaVA-13B は、画像とテキストの混合入力をサポートしています。他の注目すべきモデルには、Llama シリーズや Mixtral シリーズがあり、高効率の多言語指示遵守と生成サポートを提供しています。
@@ -160,6 +163,8 @@ LobeChat の継続的な開発において、AI 会話サービスを提供す�
 - **[SiliconCloud](https://lobechat.com/discover/provider/siliconcloud)**: SiliconFlow は、AGI を加速させ、人類に利益をもたらすことを目指し、使いやすくコスト効率の高い GenAI スタックを通じて大規模 AI の効率を向上させることに取り組んでいます。
 - **[Higress](https://lobechat.com/discover/provider/higress)**: Higress は、阿里内部で Tengine のリロードが長期接続のビジネスに悪影響を及ぼすことや、gRPC/Dubbo の負荷分散能力が不足している問題を解決するために生まれた、クラウドネイティブな API ゲートウェイです。
 - **[Gitee AI](https://lobechat.com/discover/provider/giteeai)**: Gitee AI の Serverless API は、AI 開発者に開梱即使用の大モデル推論 API サービスを提供する。
+
+</details>
 
 > 📊 Total providers: [<kbd>**36**</kbd>](https://lobechat.com/discover/providers)
 
@@ -704,6 +709,7 @@ This project is [Apache 2.0](./LICENSE) licensed.
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
 [blog]: https://lobehub.com/blog
+[changelog]: https://lobehub.com/changelog
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
 [chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg

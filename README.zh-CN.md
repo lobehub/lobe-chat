@@ -8,7 +8,7 @@
 支持语音合成、多模态、可扩展的（[function call][docs-functionc-call]）插件系统<br/>
 一键**免费**拥有你自己的 ChatGPT/Gemini/Claude/Ollama 应用
 
-[English](./README.md) · **简体中文** · [日本語](./README.ja-JP.md) · [官网][official-site] · [更新日志](./CHANGELOG.md) · [文档][docs] · [博客][blog] · [反馈问题][github-issues-link]
+[English](./README.md) · **简体中文** · [日本語](./README.ja-JP.md) · [官网][official-site] · [更新日志][changelog] · [文档][docs] · [博客][blog] · [反馈问题][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -153,6 +153,9 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[OpenRouter](https://lobechat.com/discover/provider/openrouter)**: OpenRouter 是一个提供多种前沿大模型接口的服务平台，支持 OpenAI、Anthropic、LLaMA 及更多，适合多样化的开发和应用需求。用户可根据自身需求灵活选择最优的模型和价格，助力 AI 体验的提升。
 - **[Cloudflare Workers AI](https://lobechat.com/discover/provider/cloudflare)**: 在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。
 - **[GitHub](https://lobechat.com/discover/provider/github)**: 通过 GitHub 模型，开发人员可以成为 AI 工程师，并使用行业领先的 AI 模型进行构建。
+
+<details><summary><kbd>See more providers (+26)</kbd></summary>
+
 - **[Novita](https://lobechat.com/discover/provider/novita)**: Novita AI 是一个提供多种大语言模型与 AI 图像生成的 API 服务的平台，灵活、可靠且具有成本效益。它支持 Llama3、Mistral 等最新的开源模型，并为生成式 AI 应用开发提供了全面、用户友好且自动扩展的 API 解决方案，适合 AI 初创公司的快速发展。
 - **[Together AI](https://lobechat.com/discover/provider/togetherai)**: Together AI 致力于通过创新的 AI 模型实现领先的性能，提供广泛的自定义能力，包括快速扩展支持和直观的部署流程，满足企业的各种需求。
 - **[Fireworks AI](https://lobechat.com/discover/provider/fireworksai)**: Fireworks AI 是一家领先的高级语言模型服务商，专注于功能调用和多模态处理。其最新模型 Firefunction V2 基于 Llama-3，优化用于函数调用、对话及指令跟随。视觉语言模型 FireLLaVA-13B 支持图像和文本混合输入。其他 notable 模型包括 Llama 系列和 Mixtral 系列，提供高效的多语言指令跟随与生成支持。
@@ -179,6 +182,8 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[SiliconCloud](https://lobechat.com/discover/provider/siliconcloud)**: SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务
 - **[Higress](https://lobechat.com/discover/provider/higress)**: Higress 是一款云原生 API 网关，在阿里内部为解决 Tengine reload 对长连接业务有损，以及 gRPC/Dubbo 负载均衡能力不足而诞生。
 - **[Gitee AI](https://lobechat.com/discover/provider/giteeai)**: Gitee AI 的 Serverless API 为 AI 开发者提供开箱即用的大模型推理 API 服务。
+
+</details>
 
 > 📊 Total providers: [<kbd>**36**</kbd>](https://lobechat.com/discover/providers)
 
@@ -743,6 +748,7 @@ This project is [Apache 2.0](./LICENSE) licensed.
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
 [blog]: https://lobehub.com/zh/blog
+[changelog]: https://lobehub.com/changelog
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
 [chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg

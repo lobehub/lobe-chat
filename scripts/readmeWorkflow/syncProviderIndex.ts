@@ -19,12 +19,24 @@ const runProviderTable = async (lang?: string) => {
     PROVIDER_SPLIT,
     md,
     [
-      PROVIDER_LIST.map((item) =>
-        genProviderTable({
-          ...item,
-          desc: desc?.[item.id]?.description,
-        }),
-      ).join('\n'),
+      PROVIDER_LIST.slice(0, 10)
+        .map((item) =>
+          genProviderTable({
+            ...item,
+            desc: desc?.[item.id]?.description,
+          }),
+        )
+        .join('\n'),
+      `<details><summary><kbd>See more providers (+${PROVIDER_LIST.length - 10})</kbd></summary>`,
+      PROVIDER_LIST.slice(10, PROVIDER_LIST.length)
+        .map((item) =>
+          genProviderTable({
+            ...item,
+            desc: desc?.[item.id]?.description,
+          }),
+        )
+        .join('\n'),
+      '</details>',
       `> 📊 Total providers: ${genLink(`<kbd>**${PROVIDER_LIST.length}**</kbd>`, 'https://lobechat.com/discover/providers')}`,
     ].join('\n\n'),
   );
