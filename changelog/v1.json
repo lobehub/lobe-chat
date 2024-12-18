@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix GitHub model fetch."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.33"
+  },
+  {
+    "children": {
       "improvements": ["Refactor the drizzle code style."]
     },
     "date": "2024-12-17",
