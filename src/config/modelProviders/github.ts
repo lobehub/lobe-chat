@@ -15,7 +15,8 @@ const Github: ModelProviderCard = {
       vision: true,
     },
     {
-      description: '专注于高级推理和解决复杂问题，包括数学和科学任务。非常适合需要深度上下文理解和自主工作流程的应用。',
+      description:
+        '专注于高级推理和解决复杂问题，包括数学和科学任务。非常适合需要深度上下文理解和自主工作流程的应用。',
       displayName: 'OpenAI o1-preview',
       enabled: true,
       functionCall: false,
@@ -45,7 +46,8 @@ const Github: ModelProviderCard = {
       vision: true,
     },
     {
-      description: '一个52B参数（12B活跃）的多语言模型，提供256K长上下文窗口、函数调用、结构化输出和基于事实的生成。',
+      description:
+        '一个52B参数（12B活跃）的多语言模型，提供256K长上下文窗口、函数调用、结构化输出和基于事实的生成。',
       displayName: 'AI21 Jamba 1.5 Mini',
       functionCall: true,
       id: 'ai21-jamba-1.5-mini',
@@ -53,7 +55,8 @@ const Github: ModelProviderCard = {
       tokens: 262_144,
     },
     {
-      description: '一个398B参数（94B活跃）的多语言模型，提供256K长上下文窗口、函数调用、结构化输出和基于事实的生成。',
+      description:
+        '一个398B参数（94B活跃）的多语言模型，提供256K长上下文窗口、函数调用、结构化输出和基于事实的生成。',
       displayName: 'AI21 Jamba 1.5 Large',
       functionCall: true,
       id: 'ai21-jamba-1.5-large',
@@ -61,7 +64,8 @@ const Github: ModelProviderCard = {
       tokens: 262_144,
     },
     {
-      description: 'Command R是一个可扩展的生成模型，旨在针对RAG和工具使用，使企业能够实现生产级AI。',
+      description:
+        'Command R是一个可扩展的生成模型，旨在针对RAG和工具使用，使企业能够实现生产级AI。',
       displayName: 'Cohere Command R',
       id: 'cohere-command-r',
       maxOutput: 4096,
@@ -75,7 +79,8 @@ const Github: ModelProviderCard = {
       tokens: 131_072,
     },
     {
-      description: 'Mistral Nemo是一种尖端的语言模型（LLM），在其尺寸类别中拥有最先进的推理、世界知识和编码能力。',
+      description:
+        'Mistral Nemo是一种尖端的语言模型（LLM），在其尺寸类别中拥有最先进的推理、世界知识和编码能力。',
       displayName: 'Mistral Nemo',
       id: 'mistral-nemo',
       maxOutput: 4096,
@@ -89,7 +94,8 @@ const Github: ModelProviderCard = {
       tokens: 131_072,
     },
     {
-      description: 'Mistral的旗舰模型，适合需要大规模推理能力或高度专业化的复杂任务（合成文本生成、代码生成、RAG或代理）。',
+      description:
+        'Mistral的旗舰模型，适合需要大规模推理能力或高度专业化的复杂任务（合成文本生成、代码生成、RAG或代理）。',
       displayName: 'Mistral Large',
       id: 'mistral-large',
       maxOutput: 4096,
@@ -112,21 +118,24 @@ const Github: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。',
+      description:
+        'Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。',
       displayName: 'Meta Llama 3.1 8B',
       id: 'meta-llama-3.1-8b-instruct',
       maxOutput: 4096,
       tokens: 131_072,
     },
     {
-      description: 'Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。',
+      description:
+        'Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。',
       displayName: 'Meta Llama 3.1 70B',
       id: 'meta-llama-3.1-70b-instruct',
       maxOutput: 4096,
       tokens: 131_072,
     },
     {
-      description: 'Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。',
+      description:
+        'Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。',
       displayName: 'Meta Llama 3.1 405B',
       id: 'meta-llama-3.1-405b-instruct',
       maxOutput: 4096,
@@ -209,7 +218,7 @@ const Github: ModelProviderCard = {
   description: '通过GitHub模型，开发人员可以成为AI工程师，并使用行业领先的AI模型进行构建。',
   enabled: true,
   id: 'github',
-  // modelList: { showModelFetcher: true },
+  modelList: { showModelFetcher: true }, // I'm not sure if it is good to show the model fetcher, as remote list is not complete.
   name: 'GitHub',
   url: 'https://github.com/marketplace/models',
 };
