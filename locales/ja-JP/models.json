@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultraは星火大モデルシリーズの中で最も強力なバージョンで、ネットワーク検索のリンクをアップグレードし、テキストコンテンツの理解と要約能力を向上させています。これは、オフィスの生産性を向上させ、要求に正確に応えるための全方位のソリューションであり、業界をリードするインテリジェントな製品です。"
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "Generation over generation, Meta Llama 3は幅広い業界ベンチマークで最先端のパフォーマンスを示し、改善された推論を含む新しい機能を提供します。"
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "検索強化技術を採用し、大モデルと分野知識、全網知識の全面的なリンクを実現しています。PDF、Wordなどのさまざまな文書のアップロードやURL入力をサポートし、情報取得が迅速かつ包括的で、出力結果は正確かつ専門的です。"
   },
@@ -127,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPOは非常に柔軟なマルチモデル統合で、卓越した創造的体験を提供することを目的としています。"
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)は、高精度の指示モデルであり、複雑な計算に適しています。"
   },
@@ -530,9 +515,6 @@
   "cohere-command-r-plus": {
     "description": "Command R+は、企業グレードのワークロードに対応するために設計された最先端のRAG最適化モデルです。"
   },
-  "command-light": {
-    "description": ""
-  },
   "command-r": {
     "description": "Command Rは、対話と長いコンテキストタスクに最適化されたLLMであり、特に動的なインタラクションと知識管理に適しています。"
   },
@@ -794,9 +776,6 @@
   "hunyuan-functioncall": {
     "description": "混元の最新のMOEアーキテクチャFunctionCallモデルで、高品質のFunctionCallデータトレーニングを経て、コンテキストウィンドウは32Kに達し、複数の次元の評価指標でリーダーシップを発揮しています。"
   },
-  "hunyuan-large": {
-    "description": ""
-  },
   "hunyuan-lite": {
     "description": "MOE構造にアップグレードされ、コンテキストウィンドウは256kで、NLP、コード、数学、業界などの多くの評価セットで多くのオープンソースモデルをリードしています。"
   },
@@ -830,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "私たちの最新のモデルシリーズで、卓越した推論性能を持ち、1Mのコンテキスト長をサポートし、より強力な指示追従とツール呼び出し能力を備えています。"
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLMは、学習科学の原則に従って訓練された実験的なタスク特化型言語モデルで、教育や学習のシーンでシステムの指示に従い、専門的なメンターとして機能します。"
   },
@@ -1027,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3は、開発者、研究者、企業向けのオープンな大規模言語モデル（LLM）であり、生成AIのアイデアを構築、実験、責任を持って拡張するのを支援することを目的としています。世界的なコミュニティの革新の基盤システムの一部として、計算能力とリソースが限られたエッジデバイスや、より迅速なトレーニング時間に非常に適しています。"
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2はMicrosoft AIが提供する言語モデルで、複雑な対話、多言語、推論、インテリジェントアシスタントの分野で特に優れた性能を発揮します。"
   },
