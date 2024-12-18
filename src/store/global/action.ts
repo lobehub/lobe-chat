@@ -99,7 +99,7 @@ export const globalActionSlice: StateCreator<
   },
 
   useCheckLatestChangelogId: () =>
-    useSWR('changelog', async () => globalService.getLatestChangelogIndex()),
+    useSWR('changelog', async () => globalService.getLatestChangelogId()),
 
   useCheckLatestVersion: (enabledCheck = true) =>
     useSWR(enabledCheck ? 'checkLatestVersion' : null, globalService.getLatestVersion, {
