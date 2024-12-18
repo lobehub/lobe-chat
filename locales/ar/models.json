@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra هو أقوى إصدار في سلسلة نماذج Spark، حيث يعزز فهم النصوص وقدرات التلخيص مع تحسين روابط البحث عبر الإنترنت. إنه حل شامل يهدف إلى تعزيز إنتاجية المكتب والاستجابة الدقيقة للاحتياجات، ويعتبر منتجًا ذكيًا رائدًا في الصناعة."
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "من جيل إلى جيل، يظهر Meta Llama 3 أداءً متقدمًا في مجموعة واسعة من معايير الصناعة ويقدم قدرات جديدة، بما في ذلك تحسين التفكير."
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "يستخدم تقنية تعزيز البحث لتحقيق الربط الشامل بين النموذج الكبير والمعرفة الميدانية والمعرفة من جميع أنحاء الشبكة. يدعم تحميل مستندات PDF وWord وغيرها من المدخلات، مما يضمن الحصول على المعلومات بشكل سريع وشامل، ويقدم نتائج دقيقة واحترافية."
   },
@@ -127,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO هو دمج متعدد النماذج مرن للغاية، يهدف إلى تقديم تجربة إبداعية ممتازة."
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) هو نموذج تعليمات عالي الدقة، مناسب للحسابات المعقدة."
   },
@@ -530,9 +515,6 @@
   "cohere-command-r-plus": {
     "description": "نموذج RAG محسّن من الطراز الأول مصمم للتعامل مع أحمال العمل على مستوى المؤسسات."
   },
-  "command-light": {
-    "description": ""
-  },
   "command-r": {
     "description": "Command R هو نموذج LLM محسن لمهام الحوار والسياقات الطويلة، مناسب بشكل خاص للتفاعل الديناميكي وإدارة المعرفة."
   },
@@ -794,9 +776,6 @@
   "hunyuan-functioncall": {
     "description": "نموذج Hunyuan الأحدث من نوع MOE FunctionCall، تم تدريبه على بيانات FunctionCall عالية الجودة، مع نافذة سياق تصل إلى 32K، ويحتل مرتبة متقدمة في مؤشرات التقييم عبر عدة أبعاد."
   },
-  "hunyuan-large": {
-    "description": ""
-  },
   "hunyuan-lite": {
     "description": "تم الترقية إلى هيكل MOE، مع نافذة سياق تصل إلى 256k، متفوقًا على العديد من النماذج مفتوحة المصدر في تقييمات NLP، البرمجة، الرياضيات، والصناعات."
   },
@@ -830,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "سلسلة نماذجنا الأحدث، تتمتع بأداء استدلال ممتاز، تدعم طول سياق يصل إلى 1 مليون، بالإضافة إلى قدرة أقوى على اتباع التعليمات واستدعاء الأدوات."
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM هو نموذج لغوي تجريبي محدد المهام، تم تدريبه ليتماشى مع مبادئ علوم التعلم، يمكنه اتباع التعليمات النظامية في سيناريوهات التعليم والتعلم، ويعمل كمدرب خبير."
   },
@@ -1027,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 هو نموذج لغوي كبير مفتوح (LLM) موجه للمطورين والباحثين والشركات، يهدف إلى مساعدتهم في بناء وتجربة وتوسيع أفكارهم في الذكاء الاصطناعي بشكل مسؤول. كجزء من نظام الابتكار المجتمعي العالمي، فهو مثالي للأجهزة ذات القدرة الحاسوبية والموارد المحدودة، والأجهزة الطرفية، وأوقات التدريب الأسرع."
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 هو نموذج لغوي تقدمه Microsoft AI، يتميز بأداء ممتاز في المحادثات المعقدة، واللغات المتعددة، والاستدلال، ومساعدات الذكاء."
   },

@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra is the most powerful version in the Spark large model series, enhancing text content understanding and summarization capabilities while upgrading online search links. It is a comprehensive solution for improving office productivity and accurately responding to demands, leading the industry as an intelligent product."
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "Generation over generation, Meta Llama 3 demonstrates state-of-the-art performance on a wide range of industry benchmarks and offers new capabilities, including improved reasoning."
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Utilizes search enhancement technology to achieve comprehensive links between large models and domain knowledge, as well as knowledge from the entire web. Supports uploads of various documents such as PDF and Word, and URL input, providing timely and comprehensive information retrieval with accurate and professional output."
   },
@@ -127,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO is a highly flexible multi-model fusion designed to provide an exceptional creative experience."
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) is a high-precision instruction model suitable for complex computations."
   },
@@ -530,9 +515,6 @@
   "cohere-command-r-plus": {
     "description": "Command R+ is a state-of-the-art RAG-optimized model designed to tackle enterprise-grade workloads."
   },
-  "command-light": {
-    "description": ""
-  },
   "command-r": {
     "description": "Command R is an LLM optimized for dialogue and long context tasks, particularly suitable for dynamic interactions and knowledge management."
   },
@@ -794,9 +776,6 @@
   "hunyuan-functioncall": {
     "description": "The latest MOE architecture FunctionCall model from Hunyuan, trained on high-quality FunctionCall data, with a context window of 32K, leading in multiple dimensions of evaluation metrics."
   },
-  "hunyuan-large": {
-    "description": ""
-  },
   "hunyuan-lite": {
     "description": "Upgraded to a MOE structure with a context window of 256k, leading many open-source models in various NLP, coding, mathematics, and industry benchmarks."
   },
@@ -830,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "Our latest model series, featuring exceptional reasoning performance, supporting a context length of 1M, and enhanced instruction following and tool invocation capabilities."
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM is an experimental, task-specific language model trained to align with learning science principles, capable of following systematic instructions in teaching and learning scenarios, acting as an expert tutor, among other roles."
   },
@@ -1027,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 is an open large language model (LLM) aimed at developers, researchers, and enterprises, designed to help them build, experiment, and responsibly scale their generative AI ideas. As part of a foundational system for global community innovation, it is particularly suitable for those with limited computational power and resources, edge devices, and faster training times."
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 is a language model provided by Microsoft AI, excelling in complex dialogues, multilingual capabilities, reasoning, and intelligent assistant tasks."
   },
