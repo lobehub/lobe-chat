@@ -7,6 +7,7 @@ export enum AppLoadingStage {
 }
 
 export const SERVER_LOADING_STAGES = [
+  AppLoadingStage.Idle,
   AppLoadingStage.Initializing,
   AppLoadingStage.InitAuth,
   AppLoadingStage.InitUser,

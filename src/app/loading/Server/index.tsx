@@ -3,19 +3,20 @@
 import { useState } from 'react';
 
 import { AppLoadingStage } from '../stage';
-import Client from './Content';
+import Content from './Content';
 import Redirect from './Redirect';
 
-const ScreenLoading = () => {
+const ServerMode = () => {
   const [loadingStage, setLoadingStage] = useState(AppLoadingStage.Initializing);
+
   return (
     <>
-      <Client loadingStage={loadingStage} />
+      <Content loadingStage={loadingStage} />
       <Redirect setLoadingStage={setLoadingStage} />
     </>
   );
 };
 
-ScreenLoading.displayName = 'ScreenLoading';
+ServerMode.displayName = 'ServerMode';
 
-export default ScreenLoading;
+export default ServerMode;
