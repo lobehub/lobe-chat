@@ -280,14 +280,14 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                 | Description                                                                                                          |
-| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| [Google CSE](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup> | Searches Google through their official CSE API.<br/>`web` `search`                                                   |
-| [Google CSE](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup> | Searches Google through their official CSE API.<br/>`web` `search`                                                   |
-| [Speak](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2024-12-02**</sup>              | Learn how to say anything in another language with Speak, your AI-powered language tutor.<br/>`education` `language` |
-| [Speak](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2024-12-02**</sup>              | Learn how to say anything in another language with Speak, your AI-powered language tutor.<br/>`education` `language` |
+| Recent Submits                                                                                                                            | Description                                                                                                                               |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| [Google CSE](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup>                            | Searches Google through their official CSE API.<br/>`web` `search`                                                                        |
+| [Speak](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2024-12-02**</sup>                                         | Learn how to say anything in another language with Speak, your AI-powered language tutor.<br/>`education` `language`                      |
+| [Tongyi wanxiang Image Generator](https://lobechat.com/discover/plugin/alps-tongyi-image)<br/><sup>By **YoungTx** on **2024-08-09**</sup> | This plugin uses Alibaba's Tongyi Wanxiang model to generate images based on text prompts.<br/>`image` `tongyi` `wanxiang`                |
+| [Shopping tools](https://lobechat.com/discover/plugin/ShoppingTools)<br/><sup>By **shoppingtools** on **2024-07-19**</sup>                | Search for products on eBay & AliExpress, find eBay events & coupons. Get prompt examples.<br/>`shopping` `e-bay` `ali-express` `coupons` |
 
-> 📊 Total plugins: [<kbd>**98**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
