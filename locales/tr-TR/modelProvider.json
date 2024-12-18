@@ -51,6 +51,18 @@
       "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Lütfen doldurun Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Cloudflare hesabınızın ID'sini veya özel API adresinizi girin",
+      "placeholder": "Cloudflare Hesap ID / Özel API Adresi",
+      "title": "Cloudflare Hesap ID / API Adresi"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Github PAT'nizi girin, [buraya](https://github.com/settings/tokens) tıklayarak oluşturun",

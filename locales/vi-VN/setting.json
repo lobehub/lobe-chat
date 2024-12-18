@@ -98,6 +98,7 @@
       "title": "Sử dụng chế độ yêu cầu từ khách hàng"
     },
     "fetcher": {
+      "clear": "Xóa mô hình đã lấy",
       "fetch": "Lấy danh sách mô hình",
       "fetching": "Đang lấy danh sách mô hình...",
       "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
@@ -175,8 +176,8 @@
       "desc": "Có tự động tạo chủ đề trong quá trình trò chuyện hay không, chỉ áp dụng trong chủ đề tạm thời",
       "title": "Tự động tạo chủ đề"
     },
-    "enableCompressThreshold": {
-      "title": "Bật ngưỡng nén độ dài lịch sử"
+    "enableCompressHistory": {
+      "title": "Bật tóm tắt tự động lịch sử tin nhắn"
     },
     "enableHistoryCount": {
       "alias": "Không giới hạn",
@@ -378,10 +379,20 @@
       "placeholder": "Nhập từ gợi ý tùy chỉnh",
       "title": "Từ gợi ý tùy chỉnh"
     },
+    "historyCompress": {
+      "label": "Mô hình lịch sử cuộc trò chuyện",
+      "modelDesc": "Chỉ định mô hình được sử dụng để nén lịch sử cuộc trò chuyện",
+      "title": "Tóm tắt tự động lịch sử cuộc trò chuyện"
+    },
     "queryRewrite": {
       "label": "Mô hình viết lại câu hỏi",
       "modelDesc": "Mô hình được chỉ định để tối ưu hóa câu hỏi của người dùng",
       "title": "Viết lại câu hỏi trong kho kiến thức"
+    },
+    "thread": {
+      "label": "Mô hình đặt tên chủ đề phụ",
+      "modelDesc": "Mô hình được chỉ định để tự động đổi tên chủ đề phụ",
+      "title": "Tự động đặt tên chủ đề phụ"
     },
     "title": "Trợ lý hệ thống",
     "topic": {

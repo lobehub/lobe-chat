@@ -5,11 +5,16 @@ import { Flexbox } from 'react-layout-kit';
 import CircleLoading from '@/components/CircleLoading';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
-import { PageProps } from '../type';
 import EmptyGuide from './EmptyGuide';
 import EvaluationList from './EvaluationList';
 
-const Evaluation = ({ params }: PageProps) => {
+interface Params {
+  id: string;
+}
+
+type Props = { params: Params };
+
+const Evaluation = ({ params }: Props) => {
   const knowledgeBaseId = params.id;
 
   const useFetchEvaluation = useKnowledgeBaseStore((s) => s.useFetchEvaluationList);

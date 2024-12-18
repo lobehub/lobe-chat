@@ -1,8 +1,8 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { PluginModel } from '@/database/client/models/plugin';
-import { DB_Plugin } from '@/database/client/schemas/plugin';
+import { PluginModel } from '@/database/_deprecated/models/plugin';
+import { DB_Plugin } from '@/database/_deprecated/schemas/plugin';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
@@ -13,7 +13,7 @@ const pluginService = new ClientService();
 
 // Mocking modules and functions
 
-vi.mock('@/database/client/models/plugin', () => ({
+vi.mock('@/database/_deprecated/models/plugin', () => ({
   PluginModel: {
     getList: vi.fn(),
     create: vi.fn(),

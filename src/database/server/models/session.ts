@@ -1,10 +1,11 @@
-import { Column, asc, count, inArray, like, sql } from 'drizzle-orm';
-import { and, desc, eq, isNull, not, or } from 'drizzle-orm/expressions';
+import { Column, count, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, like, not, or } from 'drizzle-orm/expressions';
 
 import { appEnv } from '@/config/app';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { serverDB } from '@/database/server/core/db';
+import { LobeChatDatabase } from '@/database/type';
+import { idGenerator } from '@/database/utils/idGenerator';
 import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
 import { ChatSessionList, LobeAgentSession } from '@/types/session';
 import { merge } from '@/utils/merge';
@@ -18,34 +19,35 @@ import {
   agentsToSessions,
   sessionGroups,
   sessions,
-} from '../schemas/lobechat';
-import { idGenerator } from '../utils/idGenerator';
+} from '../../schemas';
 
 export class SessionModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
   // **************** Query *************** //
 
-  async query({ current = 0, pageSize = 9999 } = {}) {
+  query = async ({ current = 0, pageSize = 9999 } = {}) => {
     const offset = current * pageSize;
 
-    return serverDB.query.sessions.findMany({
+    return this.db.query.sessions.findMany({
       limit: pageSize,
       offset,
       orderBy: [desc(sessions.updatedAt)],
       where: and(eq(sessions.userId, this.userId), not(eq(sessions.slug, INBOX_SESSION_ID))),
       with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
     });
-  }
+  };
 
-  async queryWithGroups(): Promise<ChatSessionList> {
+  queryWithGroups = async (): Promise<ChatSessionList> => {
     // 查询所有会话
     const result = await this.query();
 
-    const groups = await serverDB.query.sessionGroups.findMany({
+    const groups = await this.db.query.sessionGroups.findMany({
       orderBy: [asc(sessionGroups.sort), desc(sessionGroups.createdAt)],
       where: eq(sessions.userId, this.userId),
     });
@@ -54,22 +56,22 @@ export class SessionModel {
       sessionGroups: groups as unknown as ChatSessionList['sessionGroups'],
       sessions: result.map((item) => this.mapSessionItem(item as any)),
     };
-  }
+  };
 
-  async queryByKeyword(keyword: string) {
+  queryByKeyword = async (keyword: string) => {
     if (!keyword) return [];
 
     const keywordLowerCase = keyword.toLowerCase();
 
-    const data = await this.findSessions({ keyword: keywordLowerCase });
+    const data = await this.findSessionsByKeywords({ keyword: keywordLowerCase });
 
     return data.map((item) => this.mapSessionItem(item as any));
-  }
+  };
 
-  async findByIdOrSlug(
+  findByIdOrSlug = async (
     idOrSlug: string,
-  ): Promise<(SessionItem & { agent: AgentItem }) | undefined> {
-    const result = await serverDB.query.sessions.findFirst({
+  ): Promise<(SessionItem & { agent: AgentItem }) | undefined> => {
+    const result = await this.db.query.sessions.findFirst({
       where: and(
         or(eq(sessions.id, idOrSlug), eq(sessions.slug, idOrSlug)),
         eq(sessions.userId, this.userId),
@@ -80,23 +82,22 @@ export class SessionModel {
     if (!result) return;
 
     return { ...result, agent: (result?.agentsToSessions?.[0] as any)?.agent } as any;
-  }
+  };
 
-  async count() {
-    const result = await serverDB
+  count = async (): Promise<number> => {
+    const result = await this.db
       .select({
-        count: count(),
+        count: count(sessions.id),
       })
       .from(sessions)
-      .where(eq(sessions.userId, this.userId))
-      .execute();
+      .where(eq(sessions.userId, this.userId));
 
     return result[0].count;
-  }
+  };
 
   // **************** Create *************** //
 
-  async create({
+  create = async ({
     id = idGenerator('sessions'),
     type = 'agent',
     session = {},
@@ -108,8 +109,8 @@ export class SessionModel {
     session?: Partial<NewSession>;
     slug?: string;
     type: 'agent' | 'group';
-  }): Promise<SessionItem> {
-    return serverDB.transaction(async (trx) => {
+  }): Promise<SessionItem> => {
+    return this.db.transaction(async (trx) => {
       const newAgents = await trx
         .insert(agents)
         .values({
@@ -141,10 +142,10 @@ export class SessionModel {
 
       return result[0];
     });
-  }
+  };
 
-  async createInbox() {
-    const item = await serverDB.query.sessions.findFirst({
+  createInbox = async () => {
+    const item = await this.db.query.sessions.findFirst({
       where: and(eq(sessions.userId, this.userId), eq(sessions.slug, INBOX_SESSION_ID)),
     });
     if (item) return;
@@ -156,9 +157,9 @@ export class SessionModel {
       slug: INBOX_SESSION_ID,
       type: 'agent',
     });
-  }
+  };
 
-  async batchCreate(newSessions: NewSession[]) {
+  batchCreate = async (newSessions: NewSession[]) => {
     const sessionsToInsert = newSessions.map((s) => {
       return {
         ...s,
@@ -167,10 +168,10 @@ export class SessionModel {
       };
     });
 
-    return serverDB.insert(sessions).values(sessionsToInsert);
-  }
+    return this.db.insert(sessions).values(sessionsToInsert);
+  };
 
-  async duplicate(id: string, newTitle?: string) {
+  duplicate = async (id: string, newTitle?: string) => {
     const result = await this.findByIdOrSlug(id);
 
     if (!result) return;
@@ -191,47 +192,49 @@ export class SessionModel {
       },
       type: 'agent',
     });
-  }
+  };
 
   // **************** Delete *************** //
 
   /**
    * Delete a session, also delete all messages and topics associated with it.
    */
-  async delete(id: string) {
-    return serverDB
+  delete = async (id: string) => {
+    return this.db
       .delete(sessions)
       .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)));
-  }
+  };
 
   /**
    * Batch delete sessions, also delete all messages and topics associated with them.
    */
-  async batchDelete(ids: string[]) {
-    return serverDB
+  batchDelete = async (ids: string[]) => {
+    return this.db
       .delete(sessions)
       .where(and(inArray(sessions.id, ids), eq(sessions.userId, this.userId)));
-  }
+  };
 
-  async deleteAll() {
-    return serverDB.delete(sessions).where(eq(sessions.userId, this.userId));
-  }
+  deleteAll = async () => {
+    return this.db.delete(sessions).where(eq(sessions.userId, this.userId));
+  };
   // **************** Update *************** //
 
-  async update(id: string, data: Partial<SessionItem>) {
-    return serverDB
+  update = async (id: string, data: Partial<SessionItem>) => {
+    return this.db
       .update(sessions)
       .set(data)
       .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)))
       .returning();
-  }
+  };
 
-  async updateConfig(id: string, data: Partial<AgentItem>) {
-    return serverDB
+  updateConfig = async (id: string, data: Partial<AgentItem>) => {
+    if (Object.keys(data).length === 0) return;
+
+    return this.db
       .update(agents)
       .set(data)
       .where(and(eq(agents.id, id), eq(agents.userId, this.userId)));
-  }
+  };
 
   // **************** Helper *************** //
 
@@ -262,39 +265,33 @@ export class SessionModel {
     } as any;
   };
 
-  async findSessions(params: {
+  findSessionsByKeywords = async (params: {
     current?: number;
-    group?: string;
-    keyword?: string;
+    keyword: string;
     pageSize?: number;
-    pinned?: boolean;
-  }) {
-    const { pinned, keyword, group, pageSize = 9999, current = 0 } = params;
-
+  }) => {
+    const { keyword, pageSize = 9999, current = 0 } = params;
     const offset = current * pageSize;
-    return serverDB.query.sessions.findMany({
+    const results = await this.db.query.agents.findMany({
       limit: pageSize,
       offset,
-      orderBy: [desc(sessions.updatedAt)],
+      orderBy: [desc(agents.updatedAt)],
       where: and(
-        eq(sessions.userId, this.userId),
-        pinned !== undefined ? eq(sessions.pinned, pinned) : eq(sessions.userId, this.userId),
-        keyword
-          ? or(
-              like(
-                sql`lower(${sessions.title})` as unknown as Column,
-                `%${keyword.toLowerCase()}%`,
-              ),
-              like(
-                sql`lower(${sessions.description})` as unknown as Column,
-                `%${keyword.toLowerCase()}%`,
-              ),
-            )
-          : eq(sessions.userId, this.userId),
-        group ? eq(sessions.groupId, group) : isNull(sessions.groupId),
+        eq(agents.userId, this.userId),
+        or(
+          like(sql`lower(${agents.title})` as unknown as Column, `%${keyword.toLowerCase()}%`),
+          like(
+            sql`lower(${agents.description})` as unknown as Column,
+            `%${keyword.toLowerCase()}%`,
+          ),
+        ),
       ),
-
-      with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
+      with: { agentsToSessions: { columns: {}, with: { session: true } } },
     });
-  }
+    try {
+      // @ts-expect-error
+      return results.map((item) => item.agentsToSessions[0].session);
+    } catch {}
+    return [];
+  };
 }

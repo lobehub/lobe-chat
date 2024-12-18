@@ -98,6 +98,7 @@
       "title": "クライアントサイドリクエストモードの使用"
     },
     "fetcher": {
+      "clear": "取得したモデルをクリア",
       "fetch": "モデルリストを取得する",
       "fetching": "モデルリストを取得中...",
       "latestTime": "最終更新時間：{{time}}",
@@ -175,8 +176,8 @@
       "desc": "会話中に自動的にトピックを作成するかどうか。一時的なトピックのみ有効です",
       "title": "自動的にトピックを作成する"
     },
-    "enableCompressThreshold": {
-      "title": "過去メッセージの長さの圧縮閾値を有効にする"
+    "enableCompressHistory": {
+      "title": "履歴メッセージの自動要約を有効にする"
     },
     "enableHistoryCount": {
       "alias": "制限なし",
@@ -378,10 +379,20 @@
       "placeholder": "カスタムプロンプトを入力してください",
       "title": "カスタムプロンプト"
     },
+    "historyCompress": {
+      "label": "会話履歴モデル",
+      "modelDesc": "会話履歴を圧縮するために指定されたモデル",
+      "title": "会話履歴の自動要約"
+    },
     "queryRewrite": {
       "label": "質問リライトモデル",
       "modelDesc": "ユーザーの質問を最適化するために指定されたモデル",
       "title": "知識ベースの質問の書き換え"
+    },
+    "thread": {
+      "label": "サブトピック命名モデル",
+      "modelDesc": "サブトピックの自動命名に使用されるモデルを指定します",
+      "title": "サブトピックの自動命名"
     },
     "title": "システムアシスタント",
     "topic": {

@@ -2,16 +2,14 @@ import { NextResponse } from 'next/server';
 
 import { serverDB } from '@/database/server';
 import { UserModel } from '@/database/server/models/user';
-import { UserItem } from '@/database/server/schemas/lobechat';
+import { UserItem } from '@/database/schemas';
 import { pino } from '@/libs/logger';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
 export class NextAuthUserService {
-  userModel;
   adapter;
 
   constructor() {
-    this.userModel = new UserModel();
     this.adapter = LobeNextAuthDbAdapter(serverDB);
   }
 
@@ -29,8 +27,10 @@ export class NextAuthUserService {
 
     // 2. If found, Update user data from provider
     if (user?.id) {
+      const userModel = new UserModel(serverDB, user.id);
+
       // Perform update
-      await this.userModel.updateUser(user.id, {
+      await userModel.updateUser({
         avatar: data?.avatar,
         email: data?.email,
         fullName: data?.fullName,

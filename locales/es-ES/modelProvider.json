@@ -51,6 +51,18 @@
       "title": "Usar información de autenticación de Bedrock personalizada"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Por favor complete la Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Ingrese el ID de cuenta de Cloudflare o la dirección URL personalizada de API",
+      "placeholder": "ID de cuenta de Cloudflare / URL de API personalizada",
+      "title": "ID de cuenta de Cloudflare / dirección URL de API"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Introduce tu PAT de Github, haz clic [aquí](https://github.com/settings/tokens) para crear uno",
@@ -76,10 +88,10 @@
       "title": "Nombre de modelos personalizados"
     },
     "download": {
-      "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "Ollama está descargando este modelo, por favor intenta no cerrar esta página. La descarga se reanudará desde donde se interrumpió",
+      "remainingTime": "Tiempo restante",
+      "speed": "Velocidad de descarga",
+      "title": "Descargando el modelo {{model}} "
     },
     "endpoint": {
       "desc": "Introduce la dirección del proxy de la interfaz de Ollama, déjalo en blanco si no se ha especificado localmente",

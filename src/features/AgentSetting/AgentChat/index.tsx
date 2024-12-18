@@ -18,20 +18,13 @@ const AgentChat = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
   const { isDarkMode } = useThemeMode();
-  const [
-    displayMode,
-    enableAutoCreateTopic,
-    enableHistoryCount,
-    enableCompressThreshold,
-    updateConfig,
-  ] = useStore((s) => {
+  const [displayMode, enableAutoCreateTopic, enableHistoryCount, updateConfig] = useStore((s) => {
     const config = selectors.chatConfig(s);
 
     return [
       config.displayMode,
       config.enableAutoCreateTopic,
       config.enableHistoryCount,
-      config.enableCompressThreshold,
       s.setChatConfig,
     ];
   });
@@ -110,18 +103,11 @@ const AgentChat = memo(() => {
       },
       {
         children: <Switch />,
-        label: t('settingChat.enableCompressThreshold.title'),
+        hidden: !enableHistoryCount,
+        label: t('settingChat.enableCompressHistory.title'),
         minWidth: undefined,
-        name: 'enableCompressThreshold',
+        name: 'enableCompressHistory',
         valuePropName: 'checked',
-      },
-      {
-        children: <SliderWithInput max={32} min={0} />,
-        desc: t('settingChat.compressThreshold.desc'),
-        divider: false,
-        hidden: !enableCompressThreshold,
-        label: t('settingChat.compressThreshold.title'),
-        name: 'compressThreshold',
       },
     ],
     title: t('settingChat.title'),

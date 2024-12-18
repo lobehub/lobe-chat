@@ -100,6 +100,7 @@ export default {
       title: '使用客户端请求模式',
     },
     fetcher: {
+      clear: '清除获取的模型',
       fetch: '获取模型列表',
       fetching: '正在获取模型列表...',
       latestTime: '上次更新时间：{{time}}',
@@ -177,8 +178,8 @@ export default {
       desc: '会话过程中是否自动创建话题，仅在临时话题中生效',
       title: '自动创建话题',
     },
-    enableCompressThreshold: {
-      title: '是否开启历史消息长度压缩阈值',
+    enableCompressHistory: {
+      title: '开启历史消息自动总结',
     },
     enableHistoryCount: {
       alias: '不限制',
@@ -380,10 +381,20 @@ export default {
       placeholder: '请输入自定义提示词',
       title: '自定义提示词',
     },
+    historyCompress: {
+      label: '会话历史模型',
+      modelDesc: '指定用于压缩会话历史的模型',
+      title: '自动总结会话历史',
+    },
     queryRewrite: {
       label: '提问重写模型',
       modelDesc: '指定用于优化用户提问的模型',
       title: '知识库提问重写',
+    },
+    thread: {
+      label: '子话题命名模型',
+      modelDesc: '指定用于子话题自动重命名的模型',
+      title: '子话题自动命名',
     },
     title: '系统助手',
     topic: {

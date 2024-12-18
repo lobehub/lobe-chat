@@ -1,8 +1,8 @@
 import { Mock, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fileEnv } from '@/config/file';
-import { FileModel } from '@/database/client/models/file';
-import { DB_File } from '@/database/client/schemas/files';
+import { FileModel } from '@/database/_deprecated/models/file';
+import { DB_File } from '@/database/_deprecated/schemas/files';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { createServerConfigStore } from '@/store/serverConfig/store';
 
@@ -14,7 +14,7 @@ beforeAll(() => {
   createServerConfigStore();
 });
 // Mocks for the FileModel
-vi.mock('@/database/client/models/file', () => ({
+vi.mock('@/database/_deprecated/models/file', () => ({
   FileModel: {
     create: vi.fn(),
     delete: vi.fn(),

@@ -4,10 +4,10 @@ const HuggingFace: ModelProviderCard = {
   chatModels: [
     {
       description: 'Mistral AI的指令调优模型',
-      displayName: 'Mistral 7B Instruct v0.2',
+      displayName: 'Mistral 7B Instruct v0.3',
       enabled: true,
-      id: 'mistralai/Mistral-7B-Instruct-v0.2',
-      tokens: 8192,
+      id: 'mistralai/Mistral-7B-Instruct-v0.3',
+      tokens: 32_768,
     },
     {
       description: 'Google的轻量级指令调优模型',
@@ -20,6 +20,28 @@ const HuggingFace: ModelProviderCard = {
       displayName: 'Qwen 2.5 72B Instruct',
       id: 'Qwen/Qwen2.5-72B-Instruct',
       tokens: 32_768,
+    },
+    {
+      description: 'Qwen2.5-Coder 专注于代码编写',
+      displayName: 'Qwen 2.5 Coder 32B Instruct',
+      id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
+      tokens: 32_768,
+    },
+    {
+      description: 'Qwen QwQ 是由 Qwen 团队开发的实验研究模型，专注于提升AI推理能力。',
+      displayName: 'QwQ 32B Preview',
+      id: 'Qwen/QwQ-32B-Preview',
+      tokens: 32_768,
+    },
+    {
+      displayName: 'Phi 3.5 mini instruct',
+      id: 'microsoft/Phi-3.5-mini-instruct',
+      tokens: 32_768,
+    },
+    {
+      displayName: 'Hermes 3 Llama 3.1 8B',
+      id: 'NousResearch/Hermes-3-Llama-3.1-8B',
+      tokens: 16_384,
     },
   ],
   checkModel: 'mistralai/Mistral-7B-Instruct-v0.2',

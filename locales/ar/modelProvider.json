@@ -51,6 +51,18 @@
       "title": "استخدام معلومات المصادقة الخاصة بـ Bedrock المخصصة"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "يرجى ملء Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "أدخل رقم حساب Cloudflare أو عنوان URL API المخصص",
+      "placeholder": "رقم حساب Cloudflare / عنوان URL API المخصص",
+      "title": "رقم حساب Cloudflare / عنوان URL API"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "أدخل رمز الوصول الشخصي الخاص بك على Github، انقر [هنا](https://github.com/settings/tokens) لإنشاء واحد",
@@ -76,10 +88,10 @@
       "title": "أسماء النماذج المخصصة"
     },
     "download": {
-      "desc": "Ollama is downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "أولاما يقوم بتنزيل هذا النموذج، يرجى عدم إغلاق هذه الصفحة إذا أمكن. سيتم استئناف التنزيل من النقطة التي تم قطعها عند إعادة التحميل",
+      "remainingTime": "الوقت المتبقي",
+      "speed": "سرعة التنزيل",
+      "title": "جارٍ تنزيل النموذج {{model}} "
     },
     "endpoint": {
       "desc": "أدخل عنوان واجهة برمجة التطبيقات الخاص بـ Ollama، إذا لم يتم تحديده محليًا، يمكن تركه فارغًا",

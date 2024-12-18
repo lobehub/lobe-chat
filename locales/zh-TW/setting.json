@@ -98,6 +98,7 @@
       "title": "使用客戶端請求模式"
     },
     "fetcher": {
+      "clear": "清除獲取的模型",
       "fetch": "獲取模型列表",
       "fetching": "正在獲取模型列表...",
       "latestTime": "上次更新時間：{{time}}",
@@ -175,8 +176,8 @@
       "desc": "對話過程中是否自動建立話題，僅在臨時話題中生效",
       "title": "自動建立話題"
     },
-    "enableCompressThreshold": {
-      "title": "是否開啟歷史訊息長度壓縮閾值"
+    "enableCompressHistory": {
+      "title": "開啟歷史消息自動總結"
     },
     "enableHistoryCount": {
       "alias": "不限制",
@@ -378,10 +379,20 @@
       "placeholder": "請輸入自訂提示詞",
       "title": "自訂提示詞"
     },
+    "historyCompress": {
+      "label": "會話歷史模型",
+      "modelDesc": "指定用於壓縮會話歷史的模型",
+      "title": "自動總結會話歷史"
+    },
     "queryRewrite": {
       "label": "提問重寫模型",
       "modelDesc": "指定用於優化用戶提問的模型",
       "title": "知識庫提問重寫"
+    },
+    "thread": {
+      "label": "子主題命名模型",
+      "modelDesc": "指定用於子主題自動重命名的模型",
+      "title": "子主題自動命名"
     },
     "title": "系統助手",
     "topic": {

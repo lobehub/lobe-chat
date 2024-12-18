@@ -6,13 +6,17 @@ import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
+import CloudflareProvider from './cloudflare';
 import DeepSeekProvider from './deepseek';
 import FireworksAIProvider from './fireworksai';
+import GiteeAIProvider from './giteeai';
 import GithubProvider from './github';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
+import HigressProvider from './higress';
 import HuggingFaceProvider from './huggingface';
 import HunyuanProvider from './hunyuan';
+import InternLMProvider from './internlm';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
 import MoonshotProvider from './moonshot';
@@ -30,6 +34,7 @@ import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
 import WenxinProvider from './wenxin';
+import XAIProvider from './xai';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -52,19 +57,24 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   PerplexityProvider.chatModels,
   AnthropicProvider.chatModels,
   HuggingFaceProvider.chatModels,
+  XAIProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   NovitaProvider.chatModels,
   BaichuanProvider.chatModels,
   TaichuProvider.chatModels,
+  CloudflareProvider.chatModels,
   Ai360Provider.chatModels,
   SiliconCloudProvider.chatModels,
+  GiteeAIProvider.chatModels,
   UpstageProvider.chatModels,
   SparkProvider.chatModels,
   Ai21Provider.chatModels,
   HunyuanProvider.chatModels,
   WenxinProvider.chatModels,
   SenseNovaProvider.chatModels,
+  InternLMProvider.chatModels,
+  HigressProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -77,6 +87,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   DeepSeekProvider,
   HuggingFaceProvider,
   OpenRouterProvider,
+  CloudflareProvider,
   GithubProvider,
   NovitaProvider,
   TogetherAIProvider,
@@ -86,6 +97,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   MistralProvider,
   Ai21Provider,
   UpstageProvider,
+  XAIProvider,
   QwenProvider,
   WenxinProvider,
   HunyuanProvider,
@@ -99,7 +111,10 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   MinimaxProvider,
   Ai360Provider,
   TaichuProvider,
+  InternLMProvider,
   SiliconCloudProvider,
+  HigressProvider,
+  GiteeAIProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -117,13 +132,17 @@ export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
+export { default as CloudflareProviderCard } from './cloudflare';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as FireworksAIProviderCard } from './fireworksai';
+export { default as GiteeAIProviderCard } from './giteeai';
 export { default as GithubProviderCard } from './github';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
+export { default as HigressProviderCard } from './higress';
 export { default as HuggingFaceProviderCard } from './huggingface';
 export { default as HunyuanProviderCard } from './hunyuan';
+export { default as InternLMProviderCard } from './internlm';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
 export { default as MoonshotProviderCard } from './moonshot';
@@ -141,5 +160,6 @@ export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
 export { default as WenxinProviderCard } from './wenxin';
+export { default as XAIProviderCard } from './xai';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

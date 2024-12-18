@@ -75,8 +75,24 @@ LobeChat supports multimodal AI sessions, including the ability to upload unstru
 <Callout type={'info'}>
   `path-style` and `virtual-host` are different methods of accessing buckets and objects in S3, with differences in URL structure and domain name resolution.
 
-  Assuming the S3 service provider's domain is s3.example.net, the bucket is mybucket, and the object is config.env, the specific differences are:
+Assuming the S3 service provider's domain is s3.example.net, the bucket is mybucket, and the object is config.env, the specific differences are:
 
-  - path-style: `s3.example.net/mybucket/config.env`
-  - virtual-host: `mybucket.s3.example.net/config.env`
+- path-style: `s3.example.net/mybucket/config.env`
+- virtual-host: `mybucket.s3.example.net/config.env`
+
 </Callout>
+
+### `LLM_VISION_IMAGE_USE_BASE64`
+
+- Type: Optional
+- Description: Set to `1` to use base64 encoding for image upload.
+- Default: undefined
+- Example: `1`
+
+When set to `1`, LobeChat will convert images to base64 encoding before
+uploading them to the LLM model. When encountering the following error,
+please consider configuring this environment variable to `1`:
+
+```log
+Route: [xai] ProviderBizError: Fetching images over plain http:// is not supported.
+```

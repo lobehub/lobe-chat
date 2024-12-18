@@ -98,6 +98,7 @@
       "title": "İstemci Tarafından Veri Alımı"
     },
     "fetcher": {
+      "clear": "Alınan modeli temizle",
       "fetch": "Modelleri Al",
       "fetching": "Modelleri alınıyor...",
       "latestTime": "Son güncelleme zamanı: {{time}}",
@@ -175,8 +176,8 @@
       "desc": "Sohbet sırasında otomatik olarak bir konu oluşturup oluşturmayacağınız, yalnızca geçici konularda etkilidir",
       "title": "Otomatik Konu Oluştur"
     },
-    "enableCompressThreshold": {
-      "title": "Geçmiş Mesaj Uzunluğu Sıkıştırma Eşiği Kullan"
+    "enableCompressHistory": {
+      "title": "Geçmiş mesajların otomatik özetini aç"
     },
     "enableHistoryCount": {
       "alias": "Sınırsız",
@@ -378,10 +379,20 @@
       "placeholder": "Lütfen özel ipucu kelimelerini girin",
       "title": "Özel İpucu"
     },
+    "historyCompress": {
+      "label": "Oturum Geçmişi Modeli",
+      "modelDesc": "Oturum geçmişini sıkıştırmak için kullanılan modeli belirtin",
+      "title": "Oturum Geçmişini Otomatik Olarak Özetle"
+    },
     "queryRewrite": {
       "label": "Soru Yeniden Yazım Modeli",
       "modelDesc": "Kullanıcı sorularını optimize etmek için kullanılan model",
       "title": "Bilgi Tabanı Soru Yeniden Yazımı"
+    },
+    "thread": {
+      "label": "Alt konu adlandırma modeli",
+      "modelDesc": "Alt konuların otomatik olarak yeniden adlandırılması için kullanılan model",
+      "title": "Alt konu otomatik adlandırma"
     },
     "title": "Sistem Asistanı",
     "topic": {

@@ -17,10 +17,10 @@ tags:
 本文将详细介绍如何在 Vercel 中部署服务端数据库版 LobeChat，包括： 1）数据库配置；2）身份验证服务配置；3） S3 存储服务的设置步骤。
 
 <Callout type={'warning'}>
-进行后续操作前，请务必确认以下事项：
-  - 导出所有数据，部署服务端数据库后，原有用户数据无法自动迁移，只能提前备份后进行手动导入！
-  - 环境变量中的`ACCESS_CODE`未设置或已清除！
-  - 配置服务端数据库所需要的环境变量时，需全部填入后再进行部署，否则可能遭遇数据库迁移问题！
+  进行后续操作前，请务必确认以下事项： -
+  导出所有数据，部署服务端数据库后，原有用户数据无法自动迁移，只能提前备份后进行手动导入！ -
+  环境变量中的`ACCESS_CODE`未设置或已清除！ -
+  配置服务端数据库所需要的环境变量时，需全部填入后再进行部署，否则可能遭遇数据库迁移问题！
 </Callout>
 
 ## 一、 配置数据库
@@ -61,7 +61,7 @@ tags:
 
       在 Vercel 中填写的示例如下：
 
-      <Image alt={'添加 Serverless Postgres DATABASE_URL'} src={'https://github.com/lobehub/lobe-chat/assets/28616219/d4a710cd-6404-4196-90d0-cd08ca385074'}></Image>
+      <Image alt={'添加 Serverless Postgres DATABASE_URL'} src={'https://github.com/lobehub/lobe-chat/assets/28616219/d4a710cd-6404-4196-90d0-cd08ca385074'}/>
 
 </Tab>
 
@@ -81,7 +81,7 @@ tags:
 
       在 Vercel 中填写的示例如下：
 
-      <Image alt={'添加 Node Postgres DATABASE_URL'} src={'https://github.com/lobehub/lobe-chat/assets/28616219/1c689738-809b-4199-b305-ba5770d39da7'}></Image>
+      <Image alt={'添加 Node Postgres DATABASE_URL'} src={'https://github.com/lobehub/lobe-chat/assets/28616219/1c689738-809b-4199-b305-ba5770d39da7'}/>
 
 </Tab>
 
@@ -130,7 +130,7 @@ KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
 <Image
   alt={'在 Clerk 中找到对应的公私钥环境变量'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/89883703-7a1a-4a11-b944-5d804544e57c'}
-></Image>
+/>
 
 此步骤所需的环境变量如下：
 
@@ -144,7 +144,7 @@ CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxx
 <Image
   alt={'在 Vercel 中添加 Clerk 公私钥环境变量'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/2bfa13df-6e20-4768-97c0-4dad06c85a2f'}
-></Image>
+/>
 
 ### 在 Clerk 中创建并配置 Webhook
 
@@ -155,7 +155,7 @@ CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxx
 <Image
   alt={'Clerk 添加 Webhooks 端点'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/f50f47fb-5e8e-4930-bf4e-8cf6f5b8afb9'}
-></Image>
+/>
 
 在 endppint 中填写你的 Vercel 项目的 URL，如 `https://your-project.vercel.app/api/webhooks/clerk`。然后在订阅事件（Subscribe to events）中，勾选 user 的三个事件（`user.created` 、`user.deleted`、`user.updated`），然后点击创建。
 
@@ -164,7 +164,7 @@ CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxx
 <Image
   alt={'添加 Clerk Webhooks 时，配置 URL 和用户事件'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/0249ea56-ab17-4aa9-a56c-9ebd556c2645'}
-></Image>
+/>
 
 ### 将 Webhook 秘钥添加到 Vercel 环境变量
 
@@ -173,7 +173,7 @@ CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxx
 <Image
   alt={'查看 Clerk Webhooks 秘钥'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/fab4abb2-584b-49de-9340-813382951635'}
-></Image>
+/>
 
 这个秘钥所对应的环境变量名为 `CLERK_WEBHOOK_SECRET`：
 
@@ -186,7 +186,7 @@ CLERK_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxx
 <Image
   alt={'在 Vercel 中 添加 Clerk Webhooks 秘钥'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/5fdc9479-007f-46ab-9d6e-a9603e949116'}
-></Image>
+/>
 
 </Steps>
 
@@ -212,13 +212,13 @@ CLERK_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxx
     <Image
       alt={'Cloudflare R2 存储界面'}
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/41f7f677-0153-4a96-b849-5ac9b7ebefee'}
-    ></Image>
+    />
 
     创建存储桶时将指定其名称，然后点击创建。
     <Image
       alt={'R2 创建存储桶'}
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/9c0d184c-3169-40fa-9115-011cfffb9ca7'}
-    ></Image>
+    />
 
     ### 获取存储桶相关环境变量
 
@@ -227,7 +227,7 @@ CLERK_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxx
     <Image
       alt={'查看存储桶的相关信息'}
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/2ceb210c-eca0-4439-ba27-8734d4ebb3ee'}
-    ></Image>
+    />
 
 其对应的环境变量为：
 
@@ -249,28 +249,28 @@ S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com
     <Image
       alt={'查看存储桶的访问秘钥'}
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/be0c95c0-6693-44ee-a490-7e8dfaa8b34d'}
-    ></Image>
+    />
 
     点击右上角按钮创建 API token，进入创建 API Token 页面
 
     <Image
       alt={'创建对应 API token'}
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/7b0ea46c-5157-40a8-888f-f47664a4884f'}
-    ></Image>
+    />
 
     鉴于我们的服务端数据库需要读写 S3 存储服务，因此权限需要选择`对象读与写`，然后点击创建。
 
     <Image
       alt={'配置 API token 权限'}
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/d6f5a918-7b50-4d6e-83a6-3894ab930ddf'}
-    ></Image>
+    />
 
     创建完成后，就可以看到对应的 S3 API token
 
     <Image
       alt={'复制 API token'}
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/763b18f9-2b5f-44bb-a479-9b56d46f7397'}
-    ></Image>
+    />
 
     其对应的环境变量为：
 
@@ -306,7 +306,7 @@ S3_PUBLIC_DOMAIN=https://s3-dev.your-domain.com
     <Image
       alt={'在  Vercel 中添加 S3 的环境变量'}
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/cd74152d-0ae8-44fd-b815-3307c56a3c18'}
-    ></Image>
+    />
 
     ### 配置跨域
 
@@ -317,14 +317,14 @@ S3_PUBLIC_DOMAIN=https://s3-dev.your-domain.com
     <Image
       alt={'Cloudflare R2 的跨域设置'}
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/ab008be7-26b2-4b78-8bd9-24301bf34d23'}
-    ></Image>
+    />
 
     添加跨域规则，允许你的域名（在上文是 `https://your-project.vercel.app`）来源的请求：
 
     <Image
       alt={'配置允许你的站点域名'}
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/dfcc2cb3-2958-4498-a8a4-51bec584fe7d'}
-    ></Image>
+    />
 
 示例配置如下：
 
@@ -354,7 +354,7 @@ S3_PUBLIC_DOMAIN=https://s3-dev.your-domain.com
 <Image
   alt={'重新部署最新的 commit'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/b3a78112-adc8-4837-b4e3-48f67058f16e'}
-></Image>
+/>
 
 ### 检查功能是否正常
 
@@ -363,12 +363,12 @@ S3_PUBLIC_DOMAIN=https://s3-dev.your-domain.com
 <Image
   alt={'用户登录弹窗'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/da84edc3-46f7-4e2b-a0cd-dc33a98bf5cb'}
-></Image>
+/>
 
 <Image
   alt={'登录成功状态'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/9cb5150d-6e1e-4c59-9a18-4e418dce1a5d'}
-></Image>
+/>
 
 </Steps>
 

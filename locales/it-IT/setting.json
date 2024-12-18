@@ -98,6 +98,7 @@
       "title": "Utilizzo del modo di richiesta del client"
     },
     "fetcher": {
+      "clear": "Cancella il modello ottenuto",
       "fetch": "Ottenere l'elenco dei modelli",
       "fetching": "Recupero dell'elenco dei modelli in corso...",
       "latestTime": "Ultimo aggiornamento: {{time}}",
@@ -175,8 +176,8 @@
       "desc": "Se creare automaticamente un argomento durante la conversazione, valido solo per le conversazioni temporanee",
       "title": "Abilita la creazione automatica di argomenti"
     },
-    "enableCompressThreshold": {
-      "title": "Abilita la soglia di compressione della lunghezza dei messaggi storici"
+    "enableCompressHistory": {
+      "title": "Attiva il riassunto automatico della cronologia dei messaggi"
     },
     "enableHistoryCount": {
       "alias": "Illimitato",
@@ -378,10 +379,20 @@
       "placeholder": "Inserisci il suggerimento personalizzato",
       "title": "Suggerimento personalizzato"
     },
+    "historyCompress": {
+      "label": "Modello di storia delle conversazioni",
+      "modelDesc": "Specifica il modello utilizzato per comprimere la storia delle conversazioni",
+      "title": "Riepilogo automatico della storia delle conversazioni"
+    },
     "queryRewrite": {
       "label": "Modello di riscrittura delle domande",
       "modelDesc": "Modello specificato per ottimizzare le domande degli utenti",
       "title": "Riscrittura delle domande del knowledge base"
+    },
+    "thread": {
+      "label": "Modello di denominazione dei sottoargomenti",
+      "modelDesc": "Modello designato per la rinominazione automatica dei sottoargomenti",
+      "title": "Rinominazione automatica dei sottoargomenti"
     },
     "title": "Assistente di sistema",
     "topic": {

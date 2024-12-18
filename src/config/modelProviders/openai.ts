@@ -49,6 +49,21 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
+      displayName: 'GPT-4o 1120',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-4o-2024-11-20',
+      pricing: {
+        input: 2.5,
+        output: 10,
+      },
+      releasedAt: '2024-11-20',
+      tokens: 128_000,
+      vision: true,
+    },
+    {
+      description:
+        'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
       displayName: 'GPT-4o',
       enabled: true,
       functionCall: true,
@@ -70,6 +85,7 @@ const OpenAI: ModelProviderCard = {
         input: 2.5,
         output: 10,
       },
+      releasedAt: '2024-08-06',
       tokens: 128_000,
       vision: true,
     },
@@ -83,6 +99,7 @@ const OpenAI: ModelProviderCard = {
         input: 5,
         output: 15,
       },
+      releasedAt: '2024-05-13',
       tokens: 128_000,
       vision: true,
     },
@@ -148,29 +165,6 @@ const OpenAI: ModelProviderCard = {
         output: 30,
       },
       tokens: 128_000,
-    },
-    {
-      description:
-        '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。', // Will be discontinued on December 6, 2024
-      displayName: 'GPT-4 Turbo Vision Preview',
-      id: 'gpt-4-vision-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
-      tokens: 128_000,
-      vision: true,
-    },
-    {
-      description:
-        '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。', // Will be discontinued on December 6, 2024
-      id: 'gpt-4-1106-vision-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
-      tokens: 128_000,
-      vision: true,
     },
     {
       description:

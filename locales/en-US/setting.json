@@ -98,6 +98,7 @@
       "title": "Use Client-Side Fetching Mode"
     },
     "fetcher": {
+      "clear": "Clear fetched model",
       "fetch": "Get Model List",
       "fetching": "Fetching Model List...",
       "latestTime": "Last Updated: {{time}}",
@@ -175,8 +176,8 @@
       "desc": "Whether to automatically create a topic during the conversation, only effective in temporary topics",
       "title": "Auto Create Topic"
     },
-    "enableCompressThreshold": {
-      "title": "Enable History Message Length Compression Threshold"
+    "enableCompressHistory": {
+      "title": "Enable Automatic Summary of Chat History"
     },
     "enableHistoryCount": {
       "alias": "Unlimited",
@@ -378,10 +379,20 @@
       "placeholder": "Please enter custom prompt",
       "title": "Custom Prompt"
     },
+    "historyCompress": {
+      "label": "Conversation History Model",
+      "modelDesc": "Specify the model used to compress conversation history",
+      "title": "Automatically Summarize Conversation History"
+    },
     "queryRewrite": {
       "label": "Question Rewriting Model",
       "modelDesc": "Specify the model used to optimize user inquiries",
       "title": "Knowledge Base Question Rewrite"
+    },
+    "thread": {
+      "label": "Subtopic Naming Model",
+      "modelDesc": "The model designated for automatic renaming of subtopics",
+      "title": "Automatic Subtopic Naming"
     },
     "title": "System Assistants",
     "topic": {

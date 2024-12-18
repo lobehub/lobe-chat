@@ -157,11 +157,25 @@ const FireworksAI: ModelProviderCard = {
       vision: true,
     },
     {
+      description: 'QwQ模型是由 Qwen 团队开发的实验性研究模型，专注于增强 AI 推理能力。',
+      displayName: 'QwQ 32B Preview',
+      enabled: true,
+      id: 'accounts/fireworks/models/qwen-qwq-32b-preview',
+      tokens: 32_768,
+    },
+    {
       description: 'Qwen2.5 是由阿里云 Qwen 团队开发的一系列仅包含解码器的语言模型。这些模型提供不同的大小，包括 0.5B、1.5B、3B、7B、14B、32B 和 72B，并且有基础版（base）和指令版（instruct）两种变体。',
       displayName: 'Qwen2.5 72B Instruct',
       enabled: true,
       functionCall: false,
       id: 'accounts/fireworks/models/qwen2p5-72b-instruct',
+      tokens: 32_768,
+    },
+    {
+      description: 'Qwen2.5 Coder 32B Instruct 是阿里云发布的代码特定大语言模型系列的最新版本。该模型在 Qwen2.5 的基础上，通过 5.5 万亿个 tokens 的训练，显著提升了代码生成、推理和修复能力。它不仅增强了编码能力，还保持了数学和通用能力的优势。模型为代码智能体等实际应用提供了更全面的基础',
+      displayName: 'Qwen2.5 Coder 32B Instruct',
+      enabled: false,
+      id: 'accounts/fireworks/models/qwen2p5-coder-32b-instruct',
       tokens: 32_768,
     },
     {
