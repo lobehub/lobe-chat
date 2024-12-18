@@ -17,7 +17,7 @@ class GlobalService {
     return data['version'];
   };
 
-  getLatestChangelogId = async () => {
+  getLatestChangelogId = async (): Promise<string> => {
     return edgeClient.appStatus.getLatestChangelogId.query();
   };
 

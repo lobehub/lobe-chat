@@ -29,7 +29,7 @@ export interface GlobalStoreAction {
   toggleSystemRole: (visible?: boolean) => void;
   toggleZenMode: () => void;
   updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
-  useCheckLatestChangelogId: () => SWRResponse;
+  useCheckLatestChangelogId: () => SWRResponse<string>;
   useCheckLatestVersion: (enabledCheck?: boolean) => SWRResponse<string>;
   useInitSystemStatus: () => SWRResponse;
 }
