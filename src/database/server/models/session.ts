@@ -95,6 +95,16 @@ export class SessionModel {
     return result[0].count;
   };
 
+  hasMoreThanN = async (n: number): Promise<boolean> => {
+    const result = await this.db
+      .select({ id: sessions.id })
+      .from(sessions)
+      .where(eq(sessions.userId, this.userId))
+      .limit(n + 1);
+
+    return result.length > n;
+  };
+
   // **************** Create *************** //
 
   create = async ({
