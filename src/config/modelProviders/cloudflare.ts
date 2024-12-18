@@ -69,8 +69,6 @@ const Cloudflare: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description:
-        'Generation over generation, Meta Llama 3 demonstrates state-of-the-art performance on a wide range of industry benchmarks and offers new capabilities, including improved reasoning.\t',
       displayName: 'meta-llama-3-8b-instruct',
       enabled: true,
       functionCall: false,
@@ -78,6 +76,7 @@ const Cloudflare: ModelProviderCard = {
     },
   ],
   checkModel: '@hf/meta-llama/meta-llama-3-8b-instruct',
+  description: '在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。',
   disableBrowserRequest: true,
   id: 'cloudflare',
   modelList: {
