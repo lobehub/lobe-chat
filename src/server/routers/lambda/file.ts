@@ -32,9 +32,7 @@ export const fileRouter = router({
     }),
 
   createFile: fileProcedure
-    .input(
-      UploadFileSchema.omit({ data: true, saveMode: true, url: true }).extend({ url: z.string() }),
-    )
+    .input(UploadFileSchema.omit({ url: true }).extend({ url: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { isExist } = await ctx.fileModel.checkHash(input.hash!);
 

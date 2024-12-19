@@ -11,7 +11,11 @@ interface InitProps {
   setActiveStage: (value: string) => void;
 }
 
-const Init = memo<InitProps>(() => {
+const Init = memo<InitProps>(({ setActiveStage }) => {
+  const useInitClientDB = useGlobalStore((s) => s.useInitClientDB);
+
+  useInitClientDB({ onStateChange: setActiveStage });
+
   return null;
 });
 

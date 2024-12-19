@@ -1,74 +1,34 @@
-import { MessageModel } from '@/database/_deprecated/models/message';
-import { SessionModel } from '@/database/_deprecated/models/session';
-import { SessionGroupModel } from '@/database/_deprecated/models/sessionGroup';
-import { TopicModel } from '@/database/_deprecated/models/topic';
-import { ImportResult, ImportResults } from '@/services/config';
+import { clientDB } from '@/database/client/db';
+import { DataImporterRepos } from '@/database/repositories/dataImporter';
+import { BaseClientService } from '@/services/baseClientService';
 import { useUserStore } from '@/store/user';
 import { ImportStage, ImporterEntryData, OnImportCallbacks } from '@/types/importer';
 import { UserSettings } from '@/types/user/settings';
 
-export class ClientService {
+export class ClientService extends BaseClientService {
+  private get dataImporter(): DataImporterRepos {
+    return new DataImporterRepos(clientDB as any, this.userId);
+  }
+
   importSettings = async (settings: UserSettings) => {
     await useUserStore.getState().importAppSettings(settings);
   };
 
-  importData = async (
-    config: ImporterEntryData,
-    callbacks?: OnImportCallbacks,
-  ): Promise<ImportResults> => {
+  importData = async (data: ImporterEntryData, callbacks?: OnImportCallbacks) => {
     callbacks?.onStageChange?.(ImportStage.Importing);
     const time = Date.now();
+    try {
+      const result = await this.dataImporter.importData(data);
+      const duration = Date.now() - time;
 
-    const { messages = [], sessionGroups = [], sessions = [], topics = [] } = config;
+      callbacks?.onStageChange?.(ImportStage.Success);
+      callbacks?.onSuccess?.(result, duration);
+    } catch (e) {
+      console.error(e);
+      callbacks?.onStageChange?.(ImportStage.Error);
+      const error = e as Error;
 
-    let messageResult: ImportResult | undefined;
-    let sessionResult: ImportResult | undefined;
-    let sessionGroupResult: ImportResult | undefined;
-    let topicResult: ImportResult | undefined;
-
-    if (messages.length > 0) {
-      const res = await MessageModel.batchCreate(messages as any);
-      messageResult = this.mapImportResult(res);
+      callbacks?.onError?.({ code: 'ImportError', httpStatus: 0, message: error.message });
     }
-
-    if (sessionGroups.length > 0) {
-      const res = await SessionGroupModel.batchCreate(sessionGroups as any);
-      sessionGroupResult = this.mapImportResult(res);
-    }
-
-    if (topics.length > 0) {
-      const res = await TopicModel.batchCreate(topics as any);
-      topicResult = this.mapImportResult(res);
-    }
-
-    if (sessions.length > 0) {
-      const data = await SessionModel.batchCreate(sessions as any);
-      sessionResult = this.mapImportResult(data);
-    }
-
-    const result = {
-      messages: messageResult,
-      sessionGroups: sessionGroupResult,
-      sessions: sessionResult,
-      topics: topicResult,
-    };
-
-    const duration = Date.now() - time;
-    callbacks?.onStageChange?.(ImportStage.Success);
-    callbacks?.onSuccess?.(result, duration);
-
-    return result;
-  };
-
-  private mapImportResult = (input: {
-    added: number;
-    errors?: Error[];
-    skips: string[];
-  }): ImportResult => {
-    return {
-      added: input.added,
-      errors: input.errors?.length || 0,
-      skips: input.skips.length,
-    };
   };
 }

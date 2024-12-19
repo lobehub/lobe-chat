@@ -1,30 +1,29 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { eq } from 'drizzle-orm';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { PluginModel } from '@/database/_deprecated/models/plugin';
-import { DB_Plugin } from '@/database/_deprecated/schemas/plugin';
+import { clientDB, initializeDB } from '@/database/client/db';
+import { installedPlugins, users } from '@/database/schemas';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import { ClientService } from './client';
 import { InstallPluginParams } from './type';
 
-const pluginService = new ClientService();
-
 // Mocking modules and functions
 
-vi.mock('@/database/_deprecated/models/plugin', () => ({
-  PluginModel: {
-    getList: vi.fn(),
-    create: vi.fn(),
-    delete: vi.fn(),
-    update: vi.fn(),
-    clear: vi.fn(),
-  },
-}));
+const userId = 'message-db';
+const pluginService = new ClientService(userId);
 
-beforeEach(() => {
-  vi.resetAllMocks();
+// Mock data
+beforeEach(async () => {
+  await initializeDB();
+
+  // 在每个测试用例之前，重置表数据
+  await clientDB.transaction(async (trx) => {
+    await trx.delete(users);
+    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
+  });
 });
 
 describe('PluginService', () => {
@@ -32,18 +31,19 @@ describe('PluginService', () => {
     it('should install a plugin', async () => {
       // Arrange
       const fakePlugin = {
-        identifier: 'test-plugin',
+        identifier: 'test-plugin-d',
         manifest: { name: 'TestPlugin', version: '1.0.0' } as unknown as LobeChatPluginManifest,
         type: 'plugin',
       } as InstallPluginParams;
-      vi.mocked(PluginModel.create).mockResolvedValue(fakePlugin);
 
       // Act
-      const installedPlugin = await pluginService.installPlugin(fakePlugin);
+      await pluginService.installPlugin(fakePlugin);
 
       // Assert
-      expect(PluginModel.create).toHaveBeenCalledWith(fakePlugin);
-      expect(installedPlugin).toEqual(fakePlugin);
+      const result = await clientDB.query.installedPlugins.findFirst({
+        where: eq(installedPlugins.identifier, fakePlugin.identifier),
+      });
+      expect(result).toMatchObject(fakePlugin);
     });
   });
 
@@ -51,14 +51,14 @@ describe('PluginService', () => {
     it('should return a list of installed plugins', async () => {
       // Arrange
       const fakePlugins = [{ identifier: 'test-plugin', type: 'plugin' }] as LobeTool[];
-      vi.mocked(PluginModel.getList).mockResolvedValue(fakePlugins as DB_Plugin[]);
-
+      await clientDB
+        .insert(installedPlugins)
+        .values([{ identifier: 'test-plugin', type: 'plugin', userId }]);
       // Act
-      const installedPlugins = await pluginService.getInstalledPlugins();
+      const data = await pluginService.getInstalledPlugins();
 
       // Assert
-      expect(PluginModel.getList).toHaveBeenCalled();
-      expect(installedPlugins).toEqual(fakePlugins);
+      expect(data).toMatchObject(fakePlugins);
     });
   });
 
@@ -66,13 +66,15 @@ describe('PluginService', () => {
     it('should uninstall a plugin', async () => {
       // Arrange
       const identifier = 'test-plugin';
-      vi.mocked(PluginModel.delete).mockResolvedValue();
+      await clientDB.insert(installedPlugins).values([{ identifier, type: 'plugin', userId }]);
 
       // Act
-      const result = await pluginService.uninstallPlugin(identifier);
+      await pluginService.uninstallPlugin(identifier);
 
       // Assert
-      expect(PluginModel.delete).toHaveBeenCalledWith(identifier);
+      const result = await clientDB.query.installedPlugins.findFirst({
+        where: eq(installedPlugins.identifier, identifier),
+      });
       expect(result).toBe(undefined);
     });
   });
@@ -81,67 +83,74 @@ describe('PluginService', () => {
     it('should create a custom plugin', async () => {
       // Arrange
       const customPlugin = {
-        identifier: 'custom-plugin',
+        identifier: 'custom-plugin-x',
         manifest: {},
         type: 'customPlugin',
       } as LobeToolCustomPlugin;
-      vi.mocked(PluginModel.create).mockResolvedValue(customPlugin);
 
       // Act
-      const result = await pluginService.createCustomPlugin(customPlugin);
+      await pluginService.createCustomPlugin(customPlugin);
 
       // Assert
-      expect(PluginModel.create).toHaveBeenCalledWith({
-        ...customPlugin,
-        type: 'customPlugin',
+      const result = await clientDB.query.installedPlugins.findFirst({
+        where: eq(installedPlugins.identifier, customPlugin.identifier),
       });
-      expect(result).toEqual(customPlugin);
+      expect(result).toMatchObject(customPlugin);
     });
   });
 
   describe('updatePlugin', () => {
     it('should update a plugin', async () => {
       // Arrange
-      const id = 'plugin-id';
-      const value = { settings: { ab: '1' } } as unknown as LobeToolCustomPlugin;
-      vi.mocked(PluginModel.update).mockResolvedValue(1);
+      const identifier = 'plugin-id';
+      const value = { customParams: { ab: '1' } } as unknown as LobeToolCustomPlugin;
+      await clientDB.insert(installedPlugins).values([{ identifier, type: 'plugin', userId }]);
 
       // Act
-      const result = await pluginService.updatePlugin(id, value);
+      await pluginService.updatePlugin(identifier, value);
 
       // Assert
-      expect(PluginModel.update).toHaveBeenCalledWith(id, value);
-      expect(result).toEqual(undefined);
+      const result = await clientDB.query.installedPlugins.findFirst({
+        where: eq(installedPlugins.identifier, identifier),
+      });
+      expect(result).toMatchObject(value);
     });
   });
 
   describe('updatePluginManifest', () => {
     it('should update a plugin manifest', async () => {
       // Arrange
-      const id = 'plugin-id';
+      const identifier = 'plugin-id';
       const manifest = { name: 'NewPluginManifest' } as unknown as LobeChatPluginManifest;
-      vi.mocked(PluginModel.update).mockResolvedValue(1);
+      await clientDB.insert(installedPlugins).values([{ identifier, type: 'plugin', userId }]);
 
       // Act
-      const result = await pluginService.updatePluginManifest(id, manifest);
+      await pluginService.updatePluginManifest(identifier, manifest);
 
       // Assert
-      expect(PluginModel.update).toHaveBeenCalledWith(id, { manifest });
-      expect(result).toEqual(undefined);
+      const result = await clientDB.query.installedPlugins.findFirst({
+        where: eq(installedPlugins.identifier, identifier),
+      });
+      expect(result).toMatchObject({ manifest });
     });
   });
 
   describe('removeAllPlugins', () => {
     it('should remove all plugins', async () => {
       // Arrange
-      vi.mocked(PluginModel.clear).mockResolvedValue(undefined);
+      await clientDB.insert(installedPlugins).values([
+        { identifier: '123', type: 'plugin', userId },
+        { identifier: '234', type: 'plugin', userId },
+      ]);
 
       // Act
-      const result = await pluginService.removeAllPlugins();
+      await pluginService.removeAllPlugins();
 
       // Assert
-      expect(PluginModel.clear).toHaveBeenCalled();
-      expect(result).toBe(undefined);
+      const result = await clientDB.query.installedPlugins.findMany({
+        where: eq(installedPlugins.userId, userId),
+      });
+      expect(result.length).toEqual(0);
     });
   });
 
@@ -150,13 +159,17 @@ describe('PluginService', () => {
       // Arrange
       const id = 'plugin-id';
       const settings = { color: 'blue' };
+      await clientDB.insert(installedPlugins).values([{ identifier: id, type: 'plugin', userId }]);
 
       // Act
-      const result = await pluginService.updatePluginSettings(id, settings);
+      await pluginService.updatePluginSettings(id, settings);
 
       // Assert
-      expect(PluginModel.update).toHaveBeenCalledWith(id, { settings });
-      expect(result).toEqual(undefined);
+      const result = await clientDB.query.installedPlugins.findFirst({
+        where: eq(installedPlugins.identifier, id),
+      });
+
+      expect(result).toMatchObject({ settings });
     });
   });
 });
