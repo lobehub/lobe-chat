@@ -10,10 +10,16 @@
     }
   },
   "appLoading": {
-    "goToChat": "(4/4) Loading chat page...",
-    "initAuth": "(2/4) Initializing authentication service...",
-    "initUser": "(3/4) Initializing user status...",
-    "initializing": "(1/4) Starting up application..."
+    "appInitializing": "Application is starting...",
+    "finished": "Database initialization completed",
+    "goToChat": "Loading chat page...",
+    "initAuth": "Initializing authentication service...",
+    "initUser": "Initializing user status...",
+    "initializing": "Initializing PGlite database...",
+    "loadingDependencies": "Initializing dependencies...",
+    "loadingWasm": "Loading WASM module...",
+    "migrating": "Performing database migration...",
+    "ready": "Database is ready"
   },
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
@@ -38,14 +44,28 @@
       "error": "An error occurred, please try again",
       "idle": "Waiting for initialization...",
       "initializing": "Initializing...",
-      "loadingDependencies": "Loading dependencies ({{progress}}%)...",
-      "loadingWasmModule": "Loading WASM module ({{progress}}%)...",
-      "migrating": "Migrating data...",
+      "loadingDependencies": "Loading dependencies...",
+      "loadingWasmModule": "Loading WASM module...",
+      "migrating": "Performing database migration...",
       "ready": "Database is ready"
     },
     "modal": {
       "desc": "Enable the PGlite client database to persistently store chat data in your browser and use advanced features like knowledge base.",
       "enable": "Enable Now",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Build your personal knowledge base and easily start conversations with your assistant (coming soon)",
+          "title": "Support for knowledge base conversations, unlock your second brain"
+        },
+        "localFirst": {
+          "desc": "Chat data is stored entirely in the browser, keeping your data always under your control.",
+          "title": "Local first, privacy first"
+        },
+        "pglite": {
+          "desc": "Built on PGlite, natively supports AI Native advanced features (vector retrieval)",
+          "title": "Next-generation client storage architecture"
+        }
+      },
       "init": {
         "desc": "Initializing the database, which may take 5 to 30 seconds depending on network conditions.",
         "title": "Initializing PGlite Database"
