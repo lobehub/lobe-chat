@@ -58,16 +58,17 @@ export const userRouter = router({
     }
 
     const messageModel = new MessageModel(serverDB, ctx.userId);
-    const messageCount = await messageModel.count();
+    const hasMoreThan4Messages = await messageModel.hasMoreThanN(4);
 
     const sessionModel = new SessionModel(serverDB, ctx.userId);
-    const sessionCount = await sessionModel.count();
+    const hasAnyMessages = await messageModel.hasMoreThanN(0);
+    const hasExtraSession = await sessionModel.hasMoreThanN(1);
 
     return {
-      canEnablePWAGuide: messageCount >= 4,
-      canEnableTrace: messageCount >= 4,
+      canEnablePWAGuide: hasMoreThan4Messages,
+      canEnableTrace: hasMoreThan4Messages,
       // 有消息，或者创建过助手，则认为有 conversation
-      hasConversation: messageCount > 0 || sessionCount > 1,
+      hasConversation: hasAnyMessages || hasExtraSession,
 
       // always return true for community version
       isOnboard: state.isOnboarded || true,

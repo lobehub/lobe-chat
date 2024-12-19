@@ -294,6 +294,16 @@ export class MessageModel {
     return result[0].count;
   };
 
+  hasMoreThanN = async (n: number): Promise<boolean> => {
+    const result = await this.db
+      .select({ id: messages.id })
+      .from(messages)
+      .where(eq(messages.userId, this.userId))
+      .limit(n + 1);
+
+    return result.length > n;
+  };
+
   // **************** Create *************** //
 
   create = async (

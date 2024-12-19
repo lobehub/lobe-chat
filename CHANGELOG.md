@@ -2,6 +2,40 @@
 
 # Changelog
 
+### [Version 1.36.37](https://github.com/lobehub/lobe-chat/compare/v1.36.36...v1.36.37)
+
+<sup>Released on **2024-12-19**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.36.36](https://github.com/lobehub/lobe-chat/compare/v1.36.35...v1.36.36)
+
+<sup>Released on **2024-12-19**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.35](https://github.com/lobehub/lobe-chat/compare/v1.36.34...v1.36.35)
 
 <sup>Released on **2024-12-18**</sup>
