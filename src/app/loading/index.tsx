@@ -1,21 +1,9 @@
-'use client';
+import { isServerMode } from '@/const/version';
 
-import { useState } from 'react';
+import Client from './Client';
+import Server from './Server';
 
-import { AppLoadingStage } from '@/app/loading/type';
-
-import Client from './Content';
-import Redirect from './Redirect';
-
-const ScreenLoading = () => {
-  const [loadingStage, setLoadingStage] = useState(AppLoadingStage.Initializing);
-  return (
-    <>
-      <Client loadingStage={loadingStage} />
-      <Redirect setLoadingStage={setLoadingStage} />
-    </>
-  );
-};
+const ScreenLoading = () => (isServerMode ? <Server /> : <Client />);
 
 ScreenLoading.displayName = 'ScreenLoading';
 
