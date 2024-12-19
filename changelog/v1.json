@@ -1,5 +1,15 @@
 [
   {
+    "children": {},
+    "date": "2024-12-19",
+    "version": "1.36.37"
+  },
+  {
+    "children": {},
+    "date": "2024-12-19",
+    "version": "1.36.36"
+  },
+  {
     "children": {
       "improvements": ["Improve home page loading for better UX."]
     },
