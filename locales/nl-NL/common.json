@@ -10,10 +10,16 @@
     }
   },
   "appLoading": {
-    "goToChat": "(4/4) De chatpagina wordt geladen...",
-    "initAuth": "(2/4) Initialisatie van de autorisatiedienst...",
-    "initUser": "(3/4) Initialisatie van de gebruikersstatus...",
-    "initializing": "(1/4) De applicatie wordt opgestart..."
+    "appInitializing": "Applicatie wordt gestart...",
+    "finished": "Database-initialisatie voltooid",
+    "goToChat": "De chatpagina wordt geladen...",
+    "initAuth": "Authenticatiedienst wordt geïnitialiseerd...",
+    "initUser": "Gebruikersstatus wordt geïnitialiseerd...",
+    "initializing": "PGlite-database wordt geïnitialiseerd...",
+    "loadingDependencies": "Afhankelijkheden worden geïnitialiseerd...",
+    "loadingWasm": "WASM-modules worden geladen...",
+    "migrating": "Gegevens migreren...",
+    "ready": "Database is gereed"
   },
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
@@ -38,14 +44,28 @@
       "error": "Er is een fout opgetreden, probeer het opnieuw",
       "idle": "Wachten op initialisatie...",
       "initializing": "Bezig met initialiseren...",
-      "loadingDependencies": "Afhankelijkheden laden ({{progress}}%)...",
-      "loadingWasmModule": "WASM-module laden ({{progress}}%)...",
-      "migrating": "Bezig met gegevens migreren...",
+      "loadingDependencies": "Afhankelijkheden laden...",
+      "loadingWasmModule": "WASM-module laden...",
+      "migrating": "Gegevens migreren...",
       "ready": "Database is gereed"
     },
     "modal": {
       "desc": "Schakel de PGlite-clientdatabase in om chatgegevens permanent op te slaan in je browser en gebruik geavanceerde functies zoals de kennisbank.",
       "enable": "Nu inschakelen",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Bouw je persoonlijke kennisbasis op en start eenvoudig een gesprek met je assistent (binnenkort beschikbaar)",
+          "title": "Ondersteuning voor kennisbasisgesprekken, activeer je tweede brein"
+        },
+        "localFirst": {
+          "desc": "Chatgegevens worden volledig in de browser opgeslagen, jouw gegevens zijn altijd in jouw beheer.",
+          "title": "Lokaal eerst, privacy voorop"
+        },
+        "pglite": {
+          "desc": "Gebaseerd op PGlite, native ondersteuning voor AI Native geavanceerde functies (vectorzoekopdrachten)",
+          "title": "Nieuwe generatie clientopslagarchitectuur"
+        }
+      },
       "init": {
         "desc": "Bezig met het initialiseren van de database, afhankelijk van de netwerksnelheid kan dit 5 tot 30 seconden duren.",
         "title": "Bezig met het initialiseren van de PGlite-database"

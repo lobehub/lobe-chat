@@ -10,10 +10,16 @@
     }
   },
   "appLoading": {
-    "goToChat": "(4/4) Đang tải trang trò chuyện...",
-    "initAuth": "(2/4) Đang khởi tạo dịch vụ xác thực...",
-    "initUser": "(3/4) Đang khởi tạo trạng thái người dùng...",
-    "initializing": "(1/4) Đang khởi động ứng dụng..."
+    "appInitializing": "Đang khởi động ứng dụng...",
+    "finished": "Khởi tạo cơ sở dữ liệu hoàn tất",
+    "goToChat": "Đang tải trang trò chuyện...",
+    "initAuth": "Đang khởi tạo dịch vụ xác thực...",
+    "initUser": "Đang khởi tạo trạng thái người dùng...",
+    "initializing": "Đang khởi tạo cơ sở dữ liệu PGlite...",
+    "loadingDependencies": "Đang khởi tạo phụ thuộc...",
+    "loadingWasm": "Đang tải mô-đun WASM...",
+    "migrating": "Đang thực hiện di chuyển bảng dữ liệu...",
+    "ready": "Cơ sở dữ liệu đã sẵn sàng"
   },
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
@@ -38,14 +44,28 @@
       "error": "Đã xảy ra lỗi, vui lòng thử lại",
       "idle": "Đang chờ khởi tạo...",
       "initializing": "Đang khởi tạo...",
-      "loadingDependencies": "Đang tải phụ thuộc({{progress}}%)...",
-      "loadingWasmModule": "Đang tải mô-đun WASM({{progress}}%)...",
-      "migrating": "Đang di chuyển dữ liệu...",
+      "loadingDependencies": "Đang tải phụ thuộc...",
+      "loadingWasmModule": "Đang tải mô-đun WASM...",
+      "migrating": "Đang thực hiện di chuyển bảng dữ liệu...",
       "ready": "Cơ sở dữ liệu đã sẵn sàng"
     },
     "modal": {
       "desc": "Kích hoạt cơ sở dữ liệu khách hàng PGlite, lưu trữ dữ liệu trò chuyện của bạn trong trình duyệt và sử dụng các tính năng nâng cao như kho kiến thức",
       "enable": "Kích hoạt ngay",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Xây dựng kho kiến thức cá nhân của bạn và dễ dàng bắt đầu cuộc trò chuyện với trợ lý của bạn (sắp ra mắt)",
+          "title": "Hỗ trợ trò chuyện kho kiến thức, mở ra bộ não thứ hai"
+        },
+        "localFirst": {
+          "desc": "Dữ liệu trò chuyện hoàn toàn được lưu trữ trên trình duyệt, dữ liệu của bạn luôn nằm trong tầm kiểm soát của bạn.",
+          "title": "Ưu tiên địa phương, bảo mật hàng đầu"
+        },
+        "pglite": {
+          "desc": "Xây dựng trên nền tảng PGlite, hỗ trợ nguyên bản các tính năng cao cấp AI Native (tìm kiếm vector)",
+          "title": "Kiến trúc lưu trữ khách hàng thế hệ mới"
+        }
+      },
       "init": {
         "desc": "Đang khởi tạo cơ sở dữ liệu, thời gian có thể từ 5~30 giây tùy thuộc vào mạng",
         "title": "Đang khởi tạo cơ sở dữ liệu PGlite"
