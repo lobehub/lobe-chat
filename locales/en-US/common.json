@@ -10,10 +10,19 @@
     }
   },
   "appLoading": {
-    "goToChat": "(4/4) Loading chat page...",
-    "initAuth": "(2/4) Initializing authentication service...",
-    "initUser": "(3/4) Initializing user status...",
-    "initializing": "(1/4) Starting up application..."
+    "appIdle": "Ready to start",
+    "appInitializing": "Application is starting...",
+    "failed": "Sorry, the application initialization failed. Please check the details for troubleshooting.",
+    "finished": "Database initialization completed",
+    "goToChat": "Loading chat page...",
+    "initAuth": "Initializing authentication service...",
+    "initUser": "Initializing user status...",
+    "initializing": "Initializing PGlite database...",
+    "loadingDependencies": "Initializing dependencies...",
+    "loadingWasm": "Loading WASM module...",
+    "migrating": "Performing database migration...",
+    "ready": "Database is ready",
+    "showDetail": "View details"
   },
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
@@ -30,22 +39,37 @@
       "title": "Initializing PGlite Database"
     },
     "error": {
-      "desc": "We apologize, an exception occurred during the PGlite database initialization process. Please click the 'Retry' button.<br><br> If the error persists, please <1>submit an issue</1>, and we will assist you as soon as possible.",
+      "desc": "We apologize, an error occurred during the Pglite database initialization process. Please click the button to retry. If the error persists after multiple attempts, please <1>submit an issue</1>, and we will assist you as soon as possible.",
+      "detail": "Error reason: [{{type}}] {{message}}. Details are as follows:",
       "retry": "Retry",
-      "title": "Database Upgrade Failed"
+      "title": "Database Initialization Failed"
     },
     "initing": {
       "error": "An error occurred, please try again",
       "idle": "Waiting for initialization...",
       "initializing": "Initializing...",
-      "loadingDependencies": "Loading dependencies ({{progress}}%)...",
-      "loadingWasmModule": "Loading WASM module ({{progress}}%)...",
-      "migrating": "Migrating data...",
+      "loadingDependencies": "Loading dependencies...",
+      "loadingWasmModule": "Loading WASM module...",
+      "migrating": "Performing database migration...",
       "ready": "Database is ready"
     },
     "modal": {
       "desc": "Enable the PGlite client database to persistently store chat data in your browser and use advanced features like knowledge base.",
       "enable": "Enable Now",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Build your personal knowledge base and easily start conversations with your assistant (coming soon)",
+          "title": "Support for knowledge base conversations, unlock your second brain"
+        },
+        "localFirst": {
+          "desc": "Chat data is stored entirely in the browser, keeping your data always under your control.",
+          "title": "Local first, privacy first"
+        },
+        "pglite": {
+          "desc": "Built on PGlite, natively supports AI Native advanced features (vector retrieval)",
+          "title": "Next-generation client storage architecture"
+        }
+      },
       "init": {
         "desc": "Initializing the database, which may take 5 to 30 seconds depending on network conditions.",
         "title": "Initializing PGlite Database"

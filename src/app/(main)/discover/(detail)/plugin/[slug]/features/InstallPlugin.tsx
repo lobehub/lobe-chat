@@ -5,6 +5,7 @@ import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
 
@@ -21,21 +22,15 @@ const InstallPlugin = memo<{ identifier: string }>(({ identifier }) => {
   const { t } = useTranslation(['discover', 'plugin']);
   const [loading, setLoading] = useState(false);
   const { modal } = App.useApp();
-  const [
-    useFetchPluginStore,
-    useFetchInstalledPlugins,
-    installed,
-    installing,
-    installPlugin,
-    unInstallPlugin,
-  ] = useToolStore((s) => [
-    s.useFetchPluginStore,
-    s.useFetchInstalledPlugins,
-    pluginSelectors.isPluginInstalled(identifier)(s),
-    pluginStoreSelectors.isPluginInstallLoading(identifier)(s),
-    s.installPlugin,
-    s.uninstallPlugin,
-  ]);
+  const [useFetchPluginStore, installed, installing, installPlugin, unInstallPlugin] = useToolStore(
+    (s) => [
+      s.useFetchPluginStore,
+      pluginSelectors.isPluginInstalled(identifier)(s),
+      pluginStoreSelectors.isPluginInstallLoading(identifier)(s),
+      s.installPlugin,
+      s.uninstallPlugin,
+    ],
+  );
 
   const { isLoading } = useFetchPluginStore();
   const { isLoading: installedPluginLoading } = useFetchInstalledPlugins();

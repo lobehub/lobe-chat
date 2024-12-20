@@ -1,6 +1,72 @@
 [
   {
     "children": {
+      "improvements": ["Seperate user keyVaults encrpyto from user model."]
+    },
+    "date": "2024-12-20",
+    "version": "1.36.40"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to use async headers()."]
+    },
+    "date": "2024-12-20",
+    "version": "1.36.39"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor layout props."]
+    },
+    "date": "2024-12-20",
+    "version": "1.36.38"
+  },
+  {
+    "children": {},
+    "date": "2024-12-19",
+    "version": "1.36.37"
+  },
+  {
+    "children": {},
+    "date": "2024-12-19",
+    "version": "1.36.36"
+  },
+  {
+    "children": {
+      "improvements": ["Improve home page loading for better UX."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.35"
+  },
+  {
+    "children": {
+      "fixes": ["Fix pdf preview with capital ext."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.34"
+  },
+  {
+    "children": {
+      "fixes": ["Fix GitHub model fetch."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.33"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the drizzle code style."]
+    },
+    "date": "2024-12-17",
+    "version": "1.36.32"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the data fetch with clientDB init check."]
+    },
+    "date": "2024-12-17",
+    "version": "1.36.31"
+  },
+  {
+    "children": {
       "improvements": ["Improve page loading state."]
     },
     "date": "2024-12-16",

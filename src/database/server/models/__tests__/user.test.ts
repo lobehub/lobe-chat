@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -7,7 +7,7 @@ import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserGuide, UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 
-import { userSettings, users } from '../../../schemas';
+import { UserSettingsItem, userSettings, users } from '../../../schemas';
 import { SessionModel } from '../session';
 import { UserModel } from '../user';
 
@@ -101,7 +101,7 @@ describe('UserModel', () => {
         keyVaults: encryptedKeyVaults,
       });
 
-      const state = await userModel.getUserState();
+      const state = await userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
 
       expect(state.userId).toBe(userId);
       expect(state.preference).toEqual(preference);
@@ -111,7 +111,9 @@ describe('UserModel', () => {
     it('should throw an error if user not found', async () => {
       const userModel = new UserModel(serverDB, 'invalid-user-id');
 
-      await expect(userModel.getUserState()).rejects.toThrow('user not found');
+      await expect(userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults)).rejects.toThrow(
+        'user not found',
+      );
     });
   });
 
@@ -144,11 +146,10 @@ describe('UserModel', () => {
   });
 
   describe('updateSetting', () => {
-    it('should update user settings with encrypted keyVaults', async () => {
+    it('should update user settings with new item', async () => {
       const settings = {
         general: { language: 'en-US' },
-        keyVaults: { openai: { apiKey: 'secret' } },
-      } as UserSettings;
+      } as UserSettingsItem;
       await serverDB.insert(users).values({ id: userId });
 
       await userModel.updateSetting(settings);
@@ -157,23 +158,18 @@ describe('UserModel', () => {
         where: eq(users.id, userId),
       });
       expect(updatedSettings?.general).toEqual(settings.general);
-      expect(updatedSettings?.keyVaults).not.toBe(JSON.stringify(settings.keyVaults));
-
-      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
-      const { plaintext } = await gateKeeper.decrypt(updatedSettings!.keyVaults!);
-      expect(JSON.parse(plaintext)).toEqual(settings.keyVaults);
     });
 
-    it('should update user settings with encrypted keyVaults', async () => {
+    it('should update user settings with exist item', async () => {
       const settings = {
         general: { language: 'en-US' },
-      } as UserSettings;
+      } as UserSettingsItem;
       await serverDB.insert(users).values({ id: userId });
       await serverDB.insert(userSettings).values({ ...settings, keyVaults: '', id: userId });
 
       const newSettings = {
         general: { fontSize: 16, language: 'zh-CN', themeMode: 'dark' },
-      } as UserSettings;
+      } as UserSettingsItem;
       await userModel.updateSetting(newSettings);
 
       const updatedSettings = await serverDB.query.userSettings.findFirst({
@@ -229,14 +225,18 @@ describe('UserModel', () => {
         keyVaults: encryptedKeyVaults,
       });
 
-      const result = await UserModel.getUserApiKeys(serverDB, userId);
+      const result = await UserModel.getUserApiKeys(
+        serverDB,
+        userId,
+        KeyVaultsGateKeeper.getUserKeyVaults,
+      );
       expect(result).toEqual(keyVaults);
     });
 
     it('should throw error when user not found', async () => {
-      await expect(UserModel.getUserApiKeys(serverDB, 'non-existent-id')).rejects.toThrow(
-        'user not found',
-      );
+      await expect(
+        UserModel.getUserApiKeys(serverDB, 'non-existent-id', KeyVaultsGateKeeper.getUserKeyVaults),
+      ).rejects.toThrow('user not found');
     });
 
     it('should handle decrypt failure and return empty object', async () => {
@@ -249,7 +249,11 @@ describe('UserModel', () => {
         keyVaults: invalidEncryptedData,
       });
 
-      const result = await UserModel.getUserApiKeys(serverDB, userId);
+      const result = await UserModel.getUserApiKeys(
+        serverDB,
+        userId,
+        KeyVaultsGateKeeper.getUserKeyVaults,
+      );
       expect(result).toEqual({});
     });
   });

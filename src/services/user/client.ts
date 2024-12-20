@@ -42,8 +42,8 @@ export class ClientService implements IUserService {
     return UserModel.resetSettings();
   };
 
-  updateAvatar(avatar: string) {
-    return UserModel.updateAvatar(avatar);
+  async updateAvatar(avatar: string) {
+    await UserModel.updateAvatar(avatar);
   }
 
   async updatePreference(preference: Partial<UserPreference>) {

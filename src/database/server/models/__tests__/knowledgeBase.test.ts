@@ -1,6 +1,5 @@
 // @vitest-environment node
-import { eq } from 'drizzle-orm';
-import { and, desc } from 'drizzle-orm/expressions';
+import { and, eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';

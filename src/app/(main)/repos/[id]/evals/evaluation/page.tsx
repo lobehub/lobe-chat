@@ -12,7 +12,7 @@ interface Params {
   id: string;
 }
 
-type Props = { params: Params };
+type Props = { params: Params & Promise<Params> };
 
 const Evaluation = ({ params }: Props) => {
   const knowledgeBaseId = params.id;
