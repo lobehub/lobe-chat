@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.36.39](https://github.com/lobehub/lobe-chat/compare/v1.36.38...v1.36.39)
+
+<sup>Released on **2024-12-20**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor to use async `headers()`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor to use async `headers()`, closes [#5097](https://github.com/lobehub/lobe-chat/issues/5097) ([e368f38](https://github.com/lobehub/lobe-chat/commit/e368f38))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.38](https://github.com/lobehub/lobe-chat/compare/v1.36.37...v1.36.38)
 
 <sup>Released on **2024-12-20**</sup>
