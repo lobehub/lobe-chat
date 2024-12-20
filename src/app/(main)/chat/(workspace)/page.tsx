@@ -18,7 +18,7 @@ export const generateMetadata = async () => {
 };
 
 const Page = async () => {
-  const mobile = isMobileDevice();
+  const mobile = await isMobileDevice();
   const { t } = await translation('metadata');
   const ld = ldModule.generate({
     description: t('chat.title', { appName: BRANDING_NAME }),

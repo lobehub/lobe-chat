@@ -6,14 +6,14 @@ import ChatList from './features/ChatList';
 import ThreadHydration from './features/ThreadHydration';
 import ZenModeToast from './features/ZenModeToast';
 
-const ChatConversation = () => {
-  const mobile = isMobileDevice();
+const ChatConversation = async () => {
+  const mobile = await isMobileDevice();
 
   return (
     <>
       <ZenModeToast />
       <ChatList mobile={mobile} />
-      <ChatInput />
+      <ChatInput mobile={mobile} />
       <ChatHydration />
       <ThreadHydration />
     </>

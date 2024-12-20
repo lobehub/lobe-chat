@@ -68,7 +68,7 @@ const GlobalLayout = async ({ children }: PropsWithChildren) => {
   // get default feature flags to use with ssr
   const serverFeatureFlags = getServerFeatureFlagsValue();
   const serverConfig = getServerGlobalConfig();
-  const isMobile = isMobileDevice();
+  const isMobile = await isMobileDevice();
   return (
     <StyleRegistry>
       <Locale antdLocale={antdLocale} defaultLang={userLocale}>

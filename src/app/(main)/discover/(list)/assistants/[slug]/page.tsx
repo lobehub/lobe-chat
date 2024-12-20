@@ -32,7 +32,7 @@ const Page = async (props: DiscoverPageProps<AssistantCategory>) => {
 
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const { t: td } = await translation('discover', searchParams?.hl);
-  const mobile = isMobileDevice();
+  const mobile = await isMobileDevice();
 
   const discoverService = new DiscoverService();
   const items = await discoverService.getAssistantCategory(locale, params.slug);
