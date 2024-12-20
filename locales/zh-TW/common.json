@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "準備啟動",
     "appInitializing": "應用啟動中...",
+    "failed": "很抱歉，應用初始化失敗，請查看詳情進行排查",
     "finished": "資料庫初始化完成",
     "goToChat": "對話頁面加載中...",
     "initAuth": "鑑權服務初始化...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "初始化依賴...",
     "loadingWasm": "加載 WASM 模組...",
     "migrating": "執行資料表遷移...",
-    "ready": "資料庫已就緒"
+    "ready": "資料庫已就緒",
+    "showDetail": "查看詳情"
   },
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
@@ -36,9 +39,10 @@
       "title": "初始化 PGlite 數據庫"
     },
     "error": {
-      "desc": "非常抱歉，Pglite 數據庫初始化過程發生異常。請點擊 「重試」按鈕。<br><br> 如仍然出錯，請 <1>提交問題</1> ，我們將會第一時間幫你排查",
+      "desc": "非常抱歉，Pglite 資料庫初始化過程發生異常。請點擊按鈕重試。如多次重試後仍重複出錯，請 <1>提交問題</1> ，我們將會第一時間幫你排查",
+      "detail": "錯誤原因：[{{type}}] {{message}}，明細如下：",
       "retry": "重試",
-      "title": "數據庫升級失敗"
+      "title": "資料庫初始化失敗"
     },
     "initing": {
       "error": "發生錯誤，請重試",

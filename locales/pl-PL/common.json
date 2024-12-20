@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "Zarządzanie uruchomieniem",
     "appInitializing": "Aplikacja się uruchamia...",
+    "failed": "Przykro nam, inicjalizacja aplikacji nie powiodła się, proszę sprawdzić szczegóły, aby znaleźć przyczynę.",
     "finished": "Inicjalizacja bazy danych zakończona",
     "goToChat": "Ładowanie strony czatu...",
     "initAuth": "Inicjalizacja usługi autoryzacji...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "Inicjalizacja zależności...",
     "loadingWasm": "Ładowanie modułu WASM...",
     "migrating": "Wykonywanie migracji tabeli danych...",
-    "ready": "Baza danych jest gotowa"
+    "ready": "Baza danych jest gotowa",
+    "showDetail": "Zobacz szczegóły"
   },
   "autoGenerate": "Automatyczne generowanie",
   "autoGenerateTooltip": "Automatyczne uzupełnianie opisu asystenta na podstawie sugestii",
@@ -36,9 +39,10 @@
       "title": "Inicjalizacja bazy danych PGlite"
     },
     "error": {
-      "desc": "Przepraszamy, wystąpił błąd podczas inicjalizacji bazy danych PGlite. Proszę kliknąć przycisk „Spróbuj ponownie”.<br><br> Jeśli problem nadal występuje, proszę <1>zgłosić problem</1>, a my jak najszybciej pomożemy w jego rozwiązaniu.",
+      "desc": "Przykro nam, wystąpił błąd podczas inicjalizacji bazy danych Pglite. Proszę kliknąć przycisk, aby spróbować ponownie. Jeśli błąd powtarza się po wielokrotnych próbach, proszę <1>zgłosić problem</1>, a my jak najszybciej pomożemy w rozwiązaniu.",
+      "detail": "Powód błędu: [{{type}}] {{message}}. Szczegóły poniżej:",
       "retry": "Spróbuj ponownie",
-      "title": "Niepowodzenie aktualizacji bazy danych"
+      "title": "Błąd inicjalizacji bazy danych"
     },
     "initing": {
       "error": "Wystąpił błąd, proszę spróbować ponownie",

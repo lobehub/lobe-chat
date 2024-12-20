@@ -3,6 +3,7 @@ import { UserJSON } from '@clerk/backend';
 import { serverDB } from '@/database/server';
 import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
+import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 
 export class UserService {
   createUser = async (id: string, params: UserJSON) => {
@@ -83,5 +84,9 @@ export class UserService {
     });
 
     return { message: 'user updated', success: true };
+  };
+
+  getUserApiKeys = async (id: string) => {
+    return UserModel.getUserApiKeys(serverDB, id, KeyVaultsGateKeeper.getUserKeyVaults);
   };
 }

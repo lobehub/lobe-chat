@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "Klaar om te starten",
     "appInitializing": "Applicatie wordt gestart...",
+    "failed": "Het spijt ons, de applicatie-initialisatie is mislukt. Bekijk de details voor hulp bij het oplossen.",
     "finished": "Database-initialisatie voltooid",
     "goToChat": "De chatpagina wordt geladen...",
     "initAuth": "Authenticatiedienst wordt geïnitialiseerd...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "Afhankelijkheden worden geïnitialiseerd...",
     "loadingWasm": "WASM-modules worden geladen...",
     "migrating": "Gegevens migreren...",
-    "ready": "Database is gereed"
+    "ready": "Database is gereed",
+    "showDetail": "Bekijk details"
   },
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
@@ -36,9 +39,10 @@
       "title": "Initialiseer de PGlite-database"
     },
     "error": {
-      "desc": "Het spijt ons, er is een fout opgetreden tijdens het initialiseren van de PGlite-database. Klik op de knop 'Opnieuw proberen'.<br><br> Als de fout aanhoudt, <1>dien een probleem in</1>, dan helpen we je zo snel mogelijk.",
+      "desc": "Onze excuses, er is een fout opgetreden tijdens het initialisatieproces van de Pglite-database. Klik op de knop om het opnieuw te proberen. Als het probleem zich blijft voordoen na meerdere pogingen, gelieve <1>een probleem te melden</1> en we zullen u zo snel mogelijk helpen.",
+      "detail": "Fout reden: [[{{type}}] {{message}}. Details zijn als volgt:",
       "retry": "Opnieuw proberen",
-      "title": "Database-upgrade mislukt"
+      "title": "Fout bij database-initialisatie"
     },
     "initing": {
       "error": "Er is een fout opgetreden, probeer het opnieuw",

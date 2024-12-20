@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "Başlatılıyor",
     "appInitializing": "Uygulama başlatılıyor...",
+    "failed": "Üzgünüz, uygulama başlatılırken bir hata oluştu, lütfen ayrıntıları kontrol edin ve sorunu giderin.",
     "finished": "Veritabanı başlatma tamamlandı",
     "goToChat": "Sohbet sayfası yükleniyor...",
     "initAuth": "Kimlik doğrulama servisi başlatılıyor...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "Bağımlılıklar yükleniyor...",
     "loadingWasm": "WASM modülü yükleniyor...",
     "migrating": "Veri tablosu taşınıyor...",
-    "ready": "Veritabanı hazır"
+    "ready": "Veritabanı hazır",
+    "showDetail": "Detayları Görüntüle"
   },
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
@@ -36,9 +39,10 @@
       "title": "PGlite veritabanı başlatılıyor"
     },
     "error": {
-      "desc": "Üzgünüz, PGlite veritabanı başlatma sürecinde bir hata oluştu. Lütfen 'Tekrar Dene' butonuna tıklayın.<br><br> Hala hata alıyorsanız, lütfen <1>bir sorun bildirin</1>, size en kısa sürede yardımcı olacağız.",
+      "desc": "Üzgünüz, Pglite veritabanı başlatma sırasında bir hata oluştu. Lütfen düğmeye tıklayarak tekrar deneyin. Eğer birden fazla denemeden sonra hala hata alıyorsanız, lütfen <1>bir sorun bildirin</1>, size en kısa sürede yardımcı olacağız.",
+      "detail": "Hata Nedeni: [{{type}}] {{message}}. Ayrıntılar aşağıda:",
       "retry": "Tekrar Dene",
-      "title": "Veritabanı güncellemesi başarısız"
+      "title": "Veritabanı başlatma hatası"
     },
     "initing": {
       "error": "Hata oluştu, lütfen tekrar deneyin",
