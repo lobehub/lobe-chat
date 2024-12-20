@@ -1,4 +1,5 @@
 import { getServerDBConfig } from '@/config/db';
+import { UserKeyVaults } from '@/types/user/settings';
 
 interface DecryptionResult {
   plaintext: string;
@@ -89,5 +90,27 @@ If you don't have it, please run \`openssl rand -base64 32\` to create one.
         wasAuthentic: false,
       };
     }
+  };
+
+  static getUserKeyVaults = async (
+    encryptedKeyVaults: string | null,
+    userId?: string,
+  ): Promise<UserKeyVaults> => {
+    if (!encryptedKeyVaults) return {};
+    // Decrypt keyVaults
+    let decryptKeyVaults = {};
+
+    const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+    const { wasAuthentic, plaintext } = await gateKeeper.decrypt(encryptedKeyVaults);
+
+    if (wasAuthentic) {
+      try {
+        decryptKeyVaults = JSON.parse(plaintext);
+      } catch (e) {
+        console.error(`Failed to parse keyVaults, userId: ${userId}. Error:`, e);
+      }
+    }
+
+    return decryptKeyVaults as UserKeyVaults;
   };
 }

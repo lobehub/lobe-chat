@@ -3,13 +3,17 @@ import { eq } from 'drizzle-orm/expressions';
 import { DeepPartial } from 'utility-types';
 
 import { LobeChatDatabase } from '@/database/type';
-import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserGuide, UserPreference } from '@/types/user';
 import { UserKeyVaults, UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
 
-import { NewUser, UserItem, userSettings, users } from '../../schemas';
+import { NewUser, UserItem, UserSettingsItem, userSettings, users } from '../../schemas';
 import { SessionModel } from './session';
+
+type DecryptUserKeyVaults = (
+  encryptKeyVaultsStr: string | null,
+  userId?: string,
+) => Promise<UserKeyVaults>;
 
 export class UserNotFoundError extends TRPCError {
   constructor() {
@@ -26,7 +30,7 @@ export class UserModel {
     this.db = db;
   }
 
-  getUserState = async () => {
+  getUserState = async (decryptor: DecryptUserKeyVaults) => {
     const result = await this.db
       .select({
         isOnboarded: users.isOnboarded,
@@ -51,19 +55,7 @@ export class UserModel {
     const state = result[0];
 
     // Decrypt keyVaults
-    let decryptKeyVaults = {};
-    if (state.settingsKeyVaults) {
-      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
-      const { wasAuthentic, plaintext } = await gateKeeper.decrypt(state.settingsKeyVaults);
-
-      if (wasAuthentic) {
-        try {
-          decryptKeyVaults = JSON.parse(plaintext);
-        } catch (e) {
-          console.error(`Failed to parse keyVaults ,userId: ${this.userId}. Error:`, e);
-        }
-      }
-    }
+    const decryptKeyVaults = await decryptor(state.settingsKeyVaults, this.userId);
 
     const settings: DeepPartial<UserSettings> = {
       defaultAgent: state.settingsDefaultAgent || {},
@@ -94,32 +86,17 @@ export class UserModel {
     return this.db.delete(userSettings).where(eq(userSettings.id, this.userId));
   };
 
-  updateSetting = async (value: Partial<UserSettings>) => {
-    const { keyVaults, ...res } = value;
-
-    // Encrypt keyVaults
-    let encryptedKeyVaults: string | null = null;
-
-    if (keyVaults) {
-      // TODO: better to add a validation
-      const data = JSON.stringify(keyVaults);
-      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
-
-      encryptedKeyVaults = await gateKeeper.encrypt(data);
-    }
-
-    const newValue = { ...res, keyVaults: encryptedKeyVaults };
-
-    // update or create user settings
-    const settings = await this.db.query.userSettings.findFirst({
-      where: eq(users.id, this.userId),
-    });
-    if (!settings) {
-      await this.db.insert(userSettings).values({ id: this.userId, ...newValue });
-      return;
-    }
-
-    return this.db.update(userSettings).set(newValue).where(eq(userSettings.id, this.userId));
+  updateSetting = async (value: Partial<UserSettingsItem>) => {
+    return this.db
+      .insert(userSettings)
+      .values({
+        id: this.userId,
+        ...value,
+      })
+      .onConflictDoUpdate({
+        set: value,
+        target: userSettings.id,
+      });
   };
 
   updatePreference = async (value: Partial<UserPreference>) => {
@@ -175,7 +152,11 @@ export class UserModel {
     return db.query.users.findFirst({ where: eq(users.email, email) });
   };
 
-  static getUserApiKeys = async (db: LobeChatDatabase, id: string) => {
+  static getUserApiKeys = async (
+    db: LobeChatDatabase,
+    id: string,
+    decryptor: DecryptUserKeyVaults,
+  ) => {
     const result = await db
       .select({
         settingsKeyVaults: userSettings.keyVaults,
@@ -190,20 +171,6 @@ export class UserModel {
     const state = result[0];
 
     // Decrypt keyVaults
-    let decryptKeyVaults = {};
-    if (state.settingsKeyVaults) {
-      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
-      const { wasAuthentic, plaintext } = await gateKeeper.decrypt(state.settingsKeyVaults);
-
-      if (wasAuthentic) {
-        try {
-          decryptKeyVaults = JSON.parse(plaintext);
-        } catch (e) {
-          console.error(`Failed to parse keyVaults ,userId: ${id}. Error:`, e);
-        }
-      }
-    }
-
-    return decryptKeyVaults as UserKeyVaults;
+    return await decryptor(state.settingsKeyVaults, id);
   };
 }
