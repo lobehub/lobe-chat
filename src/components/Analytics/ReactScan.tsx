@@ -1,4 +1,4 @@
-import { Monitoring } from 'react-scan/monitoring/next';
+import { MonitoringInner as Monitoring } from 'react-scan/monitoring/next';
 
 interface ReactScanProps {
   apiKey: string;
