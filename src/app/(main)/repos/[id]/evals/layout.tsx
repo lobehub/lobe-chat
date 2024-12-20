@@ -1,14 +1,18 @@
 import { notFound } from 'next/navigation';
-import { PropsWithChildren } from 'react';
+import { ReactNode } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { serverFeatureFlags } from '@/config/featureFlags';
-import { PagePropsWithId } from '@/types/next';
 
 import Container from './components/Container';
 import { Tabs } from './components/Tabs';
 
-export default async (props: PropsWithChildren<PagePropsWithId>) => {
+interface LayoutProps {
+  children: ReactNode;
+  params: Promise<{ id: string }>;
+}
+
+const Layout = async (props: LayoutProps) => {
   const enableRAGEval = serverFeatureFlags().enableRAGEval;
   const params = await props.params;
 
@@ -21,3 +25,5 @@ export default async (props: PropsWithChildren<PagePropsWithId>) => {
     </Flexbox>
   );
 };
+
+export default Layout;
