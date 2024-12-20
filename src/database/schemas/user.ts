@@ -46,6 +46,7 @@ export const userSettings = pgTable('user_settings', {
   defaultAgent: jsonb('default_agent'),
   tool: jsonb('tool'),
 });
+export type UserSettingsItem = typeof userSettings.$inferSelect;
 
 export const installedPlugins = pgTable(
   'user_installed_plugins',

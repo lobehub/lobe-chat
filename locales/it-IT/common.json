@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "Pronto per avviare",
     "appInitializing": "Avvio dell'app in corso...",
+    "failed": "Ci dispiace, l'inizializzazione dell'applicazione è fallita. Si prega di controllare i dettagli per la risoluzione.",
     "finished": "Inizializzazione del database completata",
     "goToChat": "Caricamento della pagina di chat in corso...",
     "initAuth": "Inizializzazione del servizio di autenticazione...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "Inizializzazione delle dipendenze...",
     "loadingWasm": "Caricamento del modulo WASM...",
     "migrating": "Esecuzione della migrazione delle tabelle dati...",
-    "ready": "Database pronto"
+    "ready": "Database pronto",
+    "showDetail": "Mostra dettagli"
   },
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
@@ -36,9 +39,10 @@
       "title": "Inizializzazione del database PGlite"
     },
     "error": {
-      "desc": "Ci scusiamo, si è verificato un errore durante l'inizializzazione del database Pglite. Si prega di fare clic sul pulsante «Riprova».<br><br> Se l'errore persiste, si prega di <1>inviare un problema</1>, ci occuperemo di risolverlo il prima possibile",
+      "desc": "Ci scusiamo, si è verificato un errore durante il processo di inizializzazione del database Pglite. Clicca sul pulsante per riprovare. Se l'errore persiste dopo vari tentativi, per favore <1>invia un problema</1> e noi ci occuperemo di risolverlo il prima possibile",
+      "detail": "Motivo dell'errore: [{{type}}] {{message}}. Dettagli come segue:",
       "retry": "Riprova",
-      "title": "Aggiornamento del database non riuscito"
+      "title": "Inizializzazione del database fallita"
     },
     "initing": {
       "error": "Si è verificato un errore, si prega di riprovare",

@@ -13,6 +13,7 @@ export default {
   appLoading: {
     appIdle: '准备启动',
     appInitializing: '应用启动中...',
+    failed: '很抱歉，应用初始化失败，请查看详情进行排查',
     finished: '数据库初始化完成',
     goToChat: '对话页面加载中...',
     initAuth: '鉴权服务初始化...',
@@ -22,6 +23,7 @@ export default {
     loadingWasm: '加载 WASM 模块...',
     migrating: '执行数据表迁移...',
     ready: '数据库已就绪',
+    showDetail: '查看详情',
   },
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
@@ -39,12 +41,13 @@ export default {
       title: '初始化 PGlite 数据库',
     },
     error: {
-      desc: '非常抱歉，Pglite 数据库初始化过程发生异常。请点击 「重试」按钮。<br><br> 如仍然出错，请 <1>提交问题</1> ，我们将会第一时间帮你排查',
+      desc: '非常抱歉，Pglite 数据库初始化过程发生异常。请点击按钮重试。如多次重试后仍重复出错，请 <1>提交问题</1> ，我们将会第一时间帮你排查',
+      detail: '错误原因：[{{type}}] {{message}}，明细如下：',
       retry: '重试',
-      title: '数据库升级失败',
+      title: '数据库初始化失败',
     },
     initing: {
-      error: '发生错误，请重试',
+      error: '数据库初始化出错，点击查看详情',
       idle: '等待初始化...',
       initializing: '正在初始化...',
       loadingDependencies: '加载依赖中...',

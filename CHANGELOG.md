@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.36.40](https://github.com/lobehub/lobe-chat/compare/v1.36.39...v1.36.40)
+
+<sup>Released on **2024-12-20**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Seperate user keyVaults encrpyto from user model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Seperate user keyVaults encrpyto from user model, closes [#5102](https://github.com/lobehub/lobe-chat/issues/5102) ([09b63cf](https://github.com/lobehub/lobe-chat/commit/09b63cf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.39](https://github.com/lobehub/lobe-chat/compare/v1.36.38...v1.36.39)
 
 <sup>Released on **2024-12-20**</sup>
