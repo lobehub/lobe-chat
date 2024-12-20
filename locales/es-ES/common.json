@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "Listo para iniciar",
     "appInitializing": "Iniciando la aplicación...",
+    "failed": "Lo siento, la inicialización de la aplicación ha fallado. Por favor, consulta los detalles para investigar.",
     "finished": "Inicialización de la base de datos completada",
     "goToChat": "Cargando la página de chat...",
     "initAuth": "Inicializando el servicio de autenticación...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "Inicializando dependencias...",
     "loadingWasm": "Cargando módulo WASM...",
     "migrating": "Ejecutando migración de tablas de datos...",
-    "ready": "Base de datos lista"
+    "ready": "Base de datos lista",
+    "showDetail": "Ver detalles"
   },
   "autoGenerate": "Generación automática",
   "autoGenerateTooltip": "Completar automáticamente la descripción del asistente basándose en las sugerencias",
@@ -36,9 +39,10 @@
       "title": "Inicializando la base de datos PGlite"
     },
     "error": {
-      "desc": "Lo sentimos, ha ocurrido un error durante el proceso de inicialización de la base de datos Pglite. Por favor, haga clic en el botón 'Reintentar'.<br><br> Si el problema persiste, por favor <1>envíe un problema</1>, y estaremos encantados de ayudarle a resolverlo lo antes posible.",
+      "desc": "Lo sentimos, ha ocurrido una excepción en el proceso de inicialización de la base de datos Pglite. Por favor, haga clic en el botón para intentar de nuevo. Si después de varios intentos sigue ocurriendo el mismo error, por favor <1>envíe un problema</1>, y lo resolveremos lo antes posible.",
+      "detail": "Razón del error: [{{type}}] {{message}}. Detalles a continuación:",
       "retry": "Reintentar",
-      "title": "Error en la actualización de la base de datos"
+      "title": "Falló la inicialización de la base de datos"
     },
     "initing": {
       "error": "Ha ocurrido un error, por favor reintente",

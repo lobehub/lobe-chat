@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "Ready to start",
     "appInitializing": "Application is starting...",
+    "failed": "Sorry, the application initialization failed. Please check the details for troubleshooting.",
     "finished": "Database initialization completed",
     "goToChat": "Loading chat page...",
     "initAuth": "Initializing authentication service...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "Initializing dependencies...",
     "loadingWasm": "Loading WASM module...",
     "migrating": "Performing database migration...",
-    "ready": "Database is ready"
+    "ready": "Database is ready",
+    "showDetail": "View details"
   },
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
@@ -36,9 +39,10 @@
       "title": "Initializing PGlite Database"
     },
     "error": {
-      "desc": "We apologize, an exception occurred during the PGlite database initialization process. Please click the 'Retry' button.<br><br> If the error persists, please <1>submit an issue</1>, and we will assist you as soon as possible.",
+      "desc": "We apologize, an error occurred during the Pglite database initialization process. Please click the button to retry. If the error persists after multiple attempts, please <1>submit an issue</1>, and we will assist you as soon as possible.",
+      "detail": "Error reason: [{{type}}] {{message}}. Details are as follows:",
       "retry": "Retry",
-      "title": "Database Upgrade Failed"
+      "title": "Database Initialization Failed"
     },
     "initing": {
       "error": "An error occurred, please try again",

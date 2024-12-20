@@ -301,7 +301,9 @@ export class SessionModel {
     try {
       // @ts-expect-error
       return results.map((item) => item.agentsToSessions[0].session);
-    } catch {}
+    } catch (e) {
+      console.error('findSessionsByKeywords error:', e);
+    }
     return [];
   };
 }

@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "Préparation du démarrage",
     "appInitializing": "L'application se charge...",
+    "failed": "Désolé, l'initialisation de l'application a échoué. Veuillez consulter les détails pour résoudre le problème.",
     "finished": "Initialisation de la base de données terminée",
     "goToChat": "Chargement de la page de chat...",
     "initAuth": "Initialisation du service d'authentification...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "Chargement des dépendances...",
     "loadingWasm": "Chargement du module WASM...",
     "migrating": "Exécution de la migration des tables de données...",
-    "ready": "La base de données est prête"
+    "ready": "La base de données est prête",
+    "showDetail": "Voir les détails"
   },
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
@@ -36,9 +39,10 @@
       "title": "Initialisation de la base de données PGlite"
     },
     "error": {
-      "desc": "Nous sommes désolés, une erreur s'est produite lors de l'initialisation de la base de données PGlite. Veuillez cliquer sur le bouton « Réessayer ». <br><br> Si l'erreur persiste, veuillez <1>soumettre un problème</1>, nous vous aiderons dès que possible.",
+      "desc": "Nous sommes désolés, une erreur est survenue lors de l'initialisation de la base de données Pglite. Veuillez cliquer sur le bouton pour réessayer. Si l'erreur persiste après plusieurs tentatives, veuillez <1>soumettre un problème</1>, nous vous aiderons à le résoudre dans les meilleurs délais.",
+      "detail": "Raison de l'erreur : [[{{type}}] {{message}}. Détails ci-dessous :",
       "retry": "Réessayer",
-      "title": "Échec de la mise à niveau de la base de données"
+      "title": "Échec de l'initialisation de la base de données"
     },
     "initing": {
       "error": "Une erreur s'est produite, veuillez réessayer",

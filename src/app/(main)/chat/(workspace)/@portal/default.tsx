@@ -8,8 +8,8 @@ import Mobile from './_layout/Mobile';
 
 const PortalBody = lazy(() => import('@/features/Portal/router'));
 
-const Inspector = () => {
-  const mobile = isMobileDevice();
+const Inspector = async () => {
+  const mobile = await isMobileDevice();
 
   const Layout = mobile ? Mobile : Desktop;
 
