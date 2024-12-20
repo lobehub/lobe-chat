@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "Sẵn sàng khởi động",
     "appInitializing": "Đang khởi động ứng dụng...",
+    "failed": "Rất tiếc, ứng dụng không khởi tạo được, vui lòng xem chi tiết để kiểm tra.",
     "finished": "Khởi tạo cơ sở dữ liệu hoàn tất",
     "goToChat": "Đang tải trang trò chuyện...",
     "initAuth": "Đang khởi tạo dịch vụ xác thực...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "Đang khởi tạo phụ thuộc...",
     "loadingWasm": "Đang tải mô-đun WASM...",
     "migrating": "Đang thực hiện di chuyển bảng dữ liệu...",
-    "ready": "Cơ sở dữ liệu đã sẵn sàng"
+    "ready": "Cơ sở dữ liệu đã sẵn sàng",
+    "showDetail": "Xem chi tiết"
   },
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
@@ -36,9 +39,10 @@
       "title": "Khởi tạo cơ sở dữ liệu PGlite"
     },
     "error": {
-      "desc": "Rất tiếc, đã xảy ra sự cố trong quá trình khởi tạo cơ sở dữ liệu Pglite. Vui lòng nhấp vào nút 「Thử lại」.<br><br> Nếu vẫn gặp lỗi, vui lòng <1>gửi vấn đề</1> , chúng tôi sẽ giúp bạn kiểm tra ngay lập tức",
+      "desc": "Xin lỗi, đã xảy ra sự cố trong quá trình khởi tạo cơ sở dữ liệu Pglite. Vui lòng nhấn nút để thử lại. Nếu vẫn gặp lỗi sau nhiều lần thử, vui lòng <1>gửi vấn đề</1>, chúng tôi sẽ hỗ trợ bạn kiểm tra ngay lập tức.",
+      "detail": "Lý do lỗi: [{{type}}] {{message}}，Chi tiết như sau：",
       "retry": "Thử lại",
-      "title": "Cập nhật cơ sở dữ liệu không thành công"
+      "title": "Khởi tạo cơ sở dữ liệu thất bại"
     },
     "initing": {
       "error": "Đã xảy ra lỗi, vui lòng thử lại",
