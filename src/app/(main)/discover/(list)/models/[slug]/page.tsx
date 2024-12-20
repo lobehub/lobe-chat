@@ -35,7 +35,7 @@ const Page = async (props: DiscoverPageProps) => {
   const searchParams = await props.searchParams;
 
   const { t, locale } = await translation('metadata', searchParams?.hl);
-  const mobile = isMobileDevice();
+  const mobile = await isMobileDevice();
 
   const discoverService = new DiscoverService();
   const list = await discoverService.getProviderList(locale);

@@ -9,8 +9,8 @@ interface ServerLayoutProps<T> {
 
 const ServerLayout =
   <T extends PropsWithChildren>({ Desktop, Mobile }: ServerLayoutProps<T>): FC<T> =>
-  (props: T) => {
-    const mobile = isMobileDevice();
+  async (props: T) => {
+    const mobile = await isMobileDevice();
     return mobile ? <Mobile {...props} /> : <Desktop {...props} />;
   };
 

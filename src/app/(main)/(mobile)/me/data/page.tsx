@@ -14,8 +14,8 @@ export const generateMetadata = async () => {
   });
 };
 
-const Page = () => {
-  const mobile = isMobileDevice();
+const Page = async () => {
+  const mobile = await isMobileDevice();
 
   if (!mobile) return redirect('/chat');
 

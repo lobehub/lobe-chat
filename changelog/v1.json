@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor to use async headers()."]
+    },
+    "date": "2024-12-20",
+    "version": "1.36.39"
+  },
+  {
+    "children": {
       "improvements": ["Refactor layout props."]
     },
     "date": "2024-12-20",
