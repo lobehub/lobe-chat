@@ -5,10 +5,7 @@ interface ReactScanProps {
 }
 
 const ReactScan = ({ apiKey }: ReactScanProps) => (
-  <Monitoring
-    apiKey={apiKey}
-    url="https://monitoring.react-scan.com/api/v1/ingest"
-  />
+  <Monitoring apiKey={apiKey} url="https://monitoring.react-scan.com/api/v1/ingest" />
 );
 
 export default ReactScan;
