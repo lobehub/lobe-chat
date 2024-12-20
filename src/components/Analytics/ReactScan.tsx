@@ -5,7 +5,12 @@ interface ReactScanProps {
 }
 
 const ReactScan = ({ apiKey }: ReactScanProps) => (
-  <Monitoring apiKey={apiKey} url="https://monitoring.react-scan.com/api/v1/ingest" />
+  <Monitoring
+    apiKey={apiKey}
+    branch={process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF}
+    commit={process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA}
+    url="https://monitoring.react-scan.com/api/v1/ingest"
+  />
 );
 
 export default ReactScan;
