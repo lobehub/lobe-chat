@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "Preparando para iniciar",
     "appInitializing": "Iniciando o aplicativo...",
+    "failed": "Desculpe, a inicialização do aplicativo falhou. Por favor, verifique os detalhes para solucionar o problema.",
     "finished": "Inicialização do banco de dados concluída",
     "goToChat": "Carregando página de conversa...",
     "initAuth": "Inicializando serviço de autenticação...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "Inicializando dependências...",
     "loadingWasm": "Carregando módulo WASM...",
     "migrating": "Executando migração de tabelas de dados...",
-    "ready": "Banco de dados pronto"
+    "ready": "Banco de dados pronto",
+    "showDetail": "Ver detalhes"
   },
   "autoGenerate": "Auto completar",
   "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
@@ -36,9 +39,10 @@
       "title": "Inicializando o banco de dados PGlite"
     },
     "error": {
-      "desc": "Desculpe, ocorreu uma exceção durante o processo de inicialização do banco de dados PGlite. Por favor, clique no botão 'Tentar Novamente'.<br><br> Se o erro persistir, por favor <1>envie um problema</1>, e nós iremos ajudá-lo o mais rápido possível",
+      "desc": "Lamentamos, ocorreu uma exceção durante o processo de inicialização do banco de dados Pglite. Por favor, clique no botão para tentar novamente. Se o erro persistir após várias tentativas, por favor <1>envie um problema</1> e nós iremos ajudá-lo a resolver o quanto antes",
+      "detail": "Causa do erro: [{{type}}] {{message}}. Detalhes abaixo:",
       "retry": "Tentar Novamente",
-      "title": "Falha na atualização do banco de dados"
+      "title": "Falha na inicialização do banco de dados"
     },
     "initing": {
       "error": "Ocorreu um erro, por favor tente novamente",

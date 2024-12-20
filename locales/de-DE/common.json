@@ -10,7 +10,9 @@
     }
   },
   "appLoading": {
+    "appIdle": "Bereit zum Starten",
     "appInitializing": "Anwendung wird gestartet...",
+    "failed": "Es tut uns leid, die Anwendung konnte nicht initialisiert werden. Bitte sehen Sie sich die Details zur Fehlerbehebung an.",
     "finished": "Datenbankinitialisierung abgeschlossen",
     "goToChat": "Lade die Chat-Seite...",
     "initAuth": "Initialisiere den Authentifizierungsdienst...",
@@ -19,7 +21,8 @@
     "loadingDependencies": "Abhängigkeiten werden initialisiert...",
     "loadingWasm": "WASM-Module werden geladen...",
     "migrating": "Datenbankmigration wird durchgeführt...",
-    "ready": "Datenbank ist bereit"
+    "ready": "Datenbank ist bereit",
+    "showDetail": "Details anzeigen"
   },
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
@@ -36,9 +39,10 @@
       "title": "Initialisiere PGlite-Datenbank"
     },
     "error": {
-      "desc": "Es tut uns leid, während der Initialisierung der Pglite-Datenbank ist ein Fehler aufgetreten. Bitte klicken Sie auf die Schaltfläche „Erneut versuchen“. <br><br> Wenn der Fehler weiterhin besteht, <1>reichen Sie ein Problem ein</1>, und wir werden Ihnen umgehend helfen.",
+      "desc": "Es tut uns leid, während des Initialisierungsprozesses der Pglite-Datenbank ist ein Fehler aufgetreten. Bitte klicken Sie auf die Schaltfläche, um es erneut zu versuchen. Wenn der Fehler nach mehreren Versuchen weiterhin auftritt, <1>reichen Sie bitte ein Problem ein</1>, und wir werden Ihnen umgehend bei der Untersuchung helfen.",
+      "detail": "Fehlerursache: [{{type}}] {{message}}. Einzelheiten sind wie folgt:",
       "retry": "Erneut versuchen",
-      "title": "Datenbank-Upgrade fehlgeschlagen"
+      "title": "Datenbankinitialisierung fehlgeschlagen"
     },
     "initing": {
       "error": "Ein Fehler ist aufgetreten, bitte versuchen Sie es erneut",
