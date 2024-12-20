@@ -7,6 +7,7 @@ import {
   Cloudy,
   Download,
   Feather,
+  FileClockIcon,
   HardDriveDownload,
   HardDriveUpload,
   LifeBuoy,
@@ -187,14 +188,11 @@ export const useMenu = () => {
           ),
         },
         {
-          icon: <Icon icon={DiscordIcon} />,
-          key: 'discord',
-          label: (
-            <Link href={DISCORD} target={'_blank'}>
-              {t('userPanel.discord')}
-            </Link>
-          ),
+          icon: <Icon icon={FileClockIcon} />,
+          key: 'changelog',
+          label: <Link href={'/changelog'}>{t('changelog')}</Link>,
         },
+
         {
           children: [
             {
@@ -212,6 +210,15 @@ export const useMenu = () => {
               label: (
                 <Link href={GITHUB_ISSUES} target={'_blank'}>
                   {t('userPanel.feedback')}
+                </Link>
+              ),
+            },
+            {
+              icon: <Icon icon={DiscordIcon} />,
+              key: 'discord',
+              label: (
+                <Link href={DISCORD} target={'_blank'}>
+                  {t('userPanel.discord')}
                 </Link>
               ),
             },

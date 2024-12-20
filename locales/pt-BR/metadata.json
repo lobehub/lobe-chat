@@ -1,4 +1,8 @@
 {
+  "changelog": {
+    "description": "Acompanhe as novas funcionalidades e melhorias do {{appName}}",
+    "title": "Registro de Atualizações"
+  },
   "chat": {
     "description": "{{appName}} traz a você a melhor experiência de uso do ChatGPT, Claude, Gemini e OLLaMA WebUI",
     "title": "{{appName}}: Ferramenta de eficiência pessoal em IA, dê a si mesmo um cérebro mais inteligente"

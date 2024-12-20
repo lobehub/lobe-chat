@@ -103,7 +103,6 @@ const nextConfig = {
       },
     ];
   },
-
   output: buildWithDocker ? 'standalone' : undefined,
   reactStrictMode: true,
   redirects: async () => [
