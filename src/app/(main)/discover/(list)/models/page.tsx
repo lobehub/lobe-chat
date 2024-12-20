@@ -29,7 +29,7 @@ const Page = async (props: Props) => {
   const searchParams = await props.searchParams;
 
   const { t, locale } = await translation('metadata', searchParams?.hl);
-  const mobile = isMobileDevice();
+  const mobile = await isMobileDevice();
 
   const discoverService = new DiscoverService();
   const items = await discoverService.getModelList(locale);

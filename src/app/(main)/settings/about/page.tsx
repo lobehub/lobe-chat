@@ -13,8 +13,8 @@ export const generateMetadata = async () => {
   });
 };
 
-export default () => {
-  const isMobile = isMobileDevice();
+export default async () => {
+  const isMobile = await isMobileDevice();
 
   return <Page mobile={isMobile} />;
 };
