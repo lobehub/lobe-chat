@@ -3,6 +3,7 @@ import { ClientOptions } from 'openai';
 
 import { OpenAIChatMessage } from '@/libs/agent-runtime';
 import { ChatModelCard } from '@/types/llm';
+import { imageUrlToBase64 } from '@/utils/imageToBase64';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -41,7 +42,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
       options?.signal?.addEventListener('abort', abort);
 
       const response = await this.client.chat({
-        messages: this.buildOllamaMessages(payload.messages),
+        messages: await this.buildOllamaMessages(payload.messages),
         model: payload.model,
         options: {
           frequency_penalty: payload.frequency_penalty,
@@ -91,11 +92,15 @@ export class LobeOllamaAI implements LobeRuntimeAI {
     }));
   }
 
-  private buildOllamaMessages(messages: OpenAIChatMessage[]) {
-    return messages.map((message) => this.convertContentToOllamaMessage(message));
+  private async buildOllamaMessages(messages: OpenAIChatMessage[]): Promise<OllamaMessage[]> {
+    return await Promise.all(
+      messages.map(async (message) => this.convertContentToOllamaMessage(message)),
+    );
   }
 
-  private convertContentToOllamaMessage = (message: OpenAIChatMessage): OllamaMessage => {
+  private convertContentToOllamaMessage = async (
+    message: OpenAIChatMessage,
+  ): Promise<OllamaMessage> => {
     if (typeof message.content === 'string') {
       return { content: message.content, role: message.role };
     }
@@ -113,8 +118,12 @@ export class LobeOllamaAI implements LobeRuntimeAI {
           break;
         }
         case 'image_url': {
-          const { base64 } = parseDataUri(content.image_url.url);
+          const { base64, type } = parseDataUri(content.image_url.url);
           if (base64) {
+            ollamaMessage.images ??= [];
+            ollamaMessage.images.push(base64);
+          } else if (type === 'url') {
+            const { base64 } = await imageUrlToBase64(content.image_url.url);
             ollamaMessage.images ??= [];
             ollamaMessage.images.push(base64);
           }
