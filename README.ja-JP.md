@@ -270,7 +270,7 @@ LobeChat のプラグインエコシステムは、そのコア機能の重要�
 | [Tongyi Wanxiang 画像生成器](https://lobechat.com/discover/plugin/alps-tongyi-image)<br/><sup>By **YoungTx** on **2024-08-09**</sup> | このプラグインは、Alibaba の Tongyi Wanxiang モデルを使用して、テキストプロンプトに基づいて画像を生成します。<br/>`画像` `トンギ` `ワンシャン`       |
 | [ショッピングツール](https://lobechat.com/discover/plugin/ShoppingTools)<br/><sup>By **shoppingtools** on **2024-07-19**</sup>       | eBay や AliExpress で商品を検索し、eBay のイベントやクーポンを見つけます。迅速な例を取得します。<br/>`ショッピング` `e-bay` `ali-express` `クーポン` |
 
-> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**47**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
