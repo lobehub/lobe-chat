@@ -10,7 +10,7 @@ const GiteeAI: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'Qwen2.5-72B-Instruct',
-      tokens: 16_000,
+      tokens: 32_768,
     },
     {
       description:
