@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2024-12-21",
+    "version": "1.36.43"
+  },
+  {
     "children": {
       "fixes": ["Fix HUGGINGFACE endpoint url."]
     },
