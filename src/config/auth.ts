@@ -40,6 +40,10 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
+
+      // WeChat
+      WECHAT_CLIENT_ID?: string;
+      WECHAT_CLIENT_SECRET?: string;
     }
   }
 }
@@ -138,6 +142,12 @@ export const getAuthConfig = () => {
   if (process.env.ZITADEL_ISSUER) {
     console.warn(removeTipsTemplate('ZITADEL_ISSUER', 'AUTH_ZITADEL_ISSUER'));
   }
+  if (process.env.WECHAT_CLIENT_ID) {
+    console.warn(removeTipsTemplate('WECHAT_CLIENT_ID', 'AUTH_WECHAT_ID'));
+  }
+  if (process.env.WECHAT_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('WECHAT_CLIENT_SECRET', 'AUTH_WECHAT_SECRET'));
+  }
   // End
 
   return createEnv({
@@ -207,6 +217,10 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: z.string().optional(),
+
+      // WeChat
+      WECHAT_CLIENT_ID: z.string().optional(),
+      WECHAT_CLIENT_SECRET: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -269,6 +283,10 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
+
+      // WeChat
+      WECHAT_CLIENT_ID: process.env.WECHAT_CLIENT_ID,
+      WECHAT_CLIENT_SECRET: process.env.WECHAT_CLIENT_SECRET,
     },
   });
 };
