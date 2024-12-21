@@ -1,4 +1,4 @@
-import { isServerMode } from '@/const/version';
+import { isServerMode, isUsePgliteDB } from '@/const/version';
 import { GlobalStore } from '@/store/global';
 import { DatabaseLoadingState } from '@/types/clientDB';
 
@@ -25,13 +25,13 @@ const inputHeight = (s: GlobalStore) => s.status.inputHeight;
 const threadInputHeight = (s: GlobalStore) => s.status.threadInputHeight;
 
 const isPgliteNotEnabled = (s: GlobalStore) =>
-  !isServerMode && s.isStatusInit && !s.status.isEnablePglite;
+  isUsePgliteDB && !isServerMode && s.isStatusInit && !s.status.isEnablePglite;
 
 /**
  * 当且仅当 client db 模式，且 pglite 未初始化完成时返回 true
  */
 const isPgliteNotInited = (s: GlobalStore) =>
-  !isServerMode &&
+  isUsePgliteDB &&
   s.isStatusInit &&
   s.status.isEnablePglite &&
   s.initClientDBStage !== DatabaseLoadingState.Ready;
@@ -40,8 +40,8 @@ const isPgliteNotInited = (s: GlobalStore) =>
  * 当且仅当 client db 模式，且 pglite 初始化完成时返回 true
  */
 const isPgliteInited = (s: GlobalStore): boolean =>
-  isServerMode ||
-  (s.isStatusInit &&
+  (isUsePgliteDB &&
+    s.isStatusInit &&
     s.status.isEnablePglite &&
     s.initClientDBStage === DatabaseLoadingState.Ready) ||
   false;
