@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Refactor client mode upload to match server mode."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.46"
+  },
+  {
+    "children": {
+      "improvements": ["Add o1 model in GitHub models."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.45"
+  },
+  {
+    "children": {
       "improvements": ["Add Gemini flash thinking model."]
     },
     "date": "2024-12-21",
