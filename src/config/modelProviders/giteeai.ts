@@ -10,7 +10,7 @@ const GiteeAI: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'Qwen2.5-72B-Instruct',
-      tokens: 32_768,
+      tokens: 16_000,
     },
     {
       description:
@@ -46,10 +46,20 @@ const GiteeAI: ModelProviderCard = {
     },
     {
       description:
-        'Qwen2 是 Qwen 模型的最新系列，能够超越同等规模的最优开源模型甚至更大规模的模型，Qwen2 7B 在多个评测上取得显著的优势，尤其是代码及中文理解上。',
-      displayName: 'Qwen2 7B Instruct',
-      id: 'Qwen2-7B-Instruct',
-      tokens: 24_576,
+        'Qwen2-VL-72B是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。',
+      displayName: 'Qwen2 VL 72B',
+      enabled: true,
+      id: 'Qwen2-VL-72B',
+      tokens: 32_768,
+    },
+    {
+      description:
+        'Qwen2.5-Coder-32B-Instruct 是一款专为代码生成、代码理解和高效开发场景设计的大型语言模型，采用了业界领先的32B参数规模，能够满足多样化的编程需求。',
+      displayName: 'Qwen2.5 Coder 32B Instruct',
+      enabled: true,
+      functionCall: true,
+      id: 'Qwen2.5-Coder-32B-Instruct',
+      tokens: 32_768,
     },
     {
       description:
