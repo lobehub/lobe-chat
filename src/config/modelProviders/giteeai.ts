@@ -60,6 +60,7 @@ const GiteeAI: ModelProviderCard = {
       enabled: true,
       id: 'Qwen2-VL-72B',
       tokens: 32_768,
+      vision: true,
     },
     {
       description:
