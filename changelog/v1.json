@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Add Gemini flash thinking model."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.44"
+  },
+  {
     "children": {},
     "date": "2024-12-21",
     "version": "1.36.43"
