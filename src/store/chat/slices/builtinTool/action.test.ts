@@ -2,6 +2,8 @@ import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fileService } from '@/services/file';
+import { ClientService } from '@/services/file/client';
+import { messageService } from '@/services/message';
 import { imageGenerationService } from '@/services/textToImage';
 import { uploadService } from '@/services/upload';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -39,17 +41,23 @@ describe('chatToolSlice', () => {
       vi.spyOn(uploadService, 'getImageFileByUrlWithCORS').mockResolvedValue(
         new File(['1'], 'file.png', { type: 'image/png' }),
       );
-      vi.spyOn(uploadService, 'uploadToClientDB').mockResolvedValue({} as any);
-      vi.spyOn(fileService, 'createFile').mockResolvedValue({ id: mockId, url: '' });
+      vi.spyOn(uploadService, 'uploadToClientS3').mockResolvedValue({} as any);
+      vi.spyOn(ClientService.prototype, 'createFile').mockResolvedValue({
+        id: mockId,
+        url: '',
+      });
       vi.spyOn(result.current, 'toggleDallEImageLoading');
+      vi.spyOn(ClientService.prototype, 'checkFileHash').mockImplementation(async () => ({
+        isExist: false,
+        metadata: {},
+      }));
 
       await act(async () => {
         await result.current.generateImageFromPrompts(prompts, messageId);
       });
       // For each prompt, loading is toggled on and then off
       expect(imageGenerationService.generateImage).toHaveBeenCalledTimes(prompts.length);
-      expect(uploadService.uploadToClientDB).toHaveBeenCalledTimes(prompts.length);
-
+      expect(uploadService.uploadToClientS3).toHaveBeenCalledTimes(prompts.length);
       expect(result.current.toggleDallEImageLoading).toHaveBeenCalledTimes(prompts.length * 2);
     });
   });
@@ -75,6 +83,7 @@ describe('chatToolSlice', () => {
             content: initialMessageContent,
           }) as ChatMessage,
       );
+      vi.spyOn(messageService, 'updateMessage').mockResolvedValueOnce(undefined);
 
       await act(async () => {
         await result.current.updateImageItem(messageId, updateFunction);
