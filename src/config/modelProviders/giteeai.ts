@@ -46,14 +46,6 @@ const GiteeAI: ModelProviderCard = {
     },
     {
       description:
-        'Qwen2-VL-72B是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。',
-      displayName: 'Qwen2 VL 72B',
-      enabled: true,
-      id: 'Qwen2-VL-72B',
-      tokens: 32_768,
-    },
-    {
-      description:
         'Qwen2.5-Coder-32B-Instruct 是一款专为代码生成、代码理解和高效开发场景设计的大型语言模型，采用了业界领先的32B参数规模，能够满足多样化的编程需求。',
       displayName: 'Qwen2.5 Coder 32B Instruct',
       enabled: true,
@@ -63,10 +55,10 @@ const GiteeAI: ModelProviderCard = {
     },
     {
       description:
-        'Qwen2.5-Coder-32B-Instruct 是一款专为代码生成、代码理解和高效开发场景设计的大型语言模型，采用了业界领先的32B参数规模，能够满足多样化的编程需求。',
-      displayName: 'Qwen2.5 Coder 32B Instruct',
+        'Qwen2-VL-72B是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。',
+      displayName: 'Qwen2 VL 72B',
       enabled: true,
-      id: 'Qwen2.5-Coder-32B-Instruct',
+      id: 'Qwen2-VL-72B',
       tokens: 32_768,
     },
     {
