@@ -29,7 +29,7 @@ class _FileModel extends BaseModel<'files'> {
       base64 = Buffer.from(item.data).toString('base64');
     }
 
-    return { ...item, url: `data:${item.fileType};base64,${base64}` };
+    return { ...item, base64, url: `data:${item.fileType};base64,${base64}` };
   }
 
   async delete(id: string) {

@@ -40,8 +40,13 @@ export class ClientService implements IFileService {
       throw new Error('file not found');
     }
 
-    // arrayBuffer to url
-    const url = URL.createObjectURL(new Blob([item.data!], { type: item.fileType }));
+    // arrayBuffer to blob or base64 to blob
+    const blob = !!item.data
+      ? new Blob([item.data!], { type: item.fileType })
+      : // @ts-ignore
+        new Blob([Buffer.from(item.base64!, 'base64')], { type: item.fileType });
+
+    const url = URL.createObjectURL(blob);
 
     return {
       createdAt: new Date(item.createdAt),
