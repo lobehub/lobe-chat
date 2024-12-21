@@ -5,6 +5,16 @@ import { ModelProviderCard } from '@/types/llm';
 const Github: ModelProviderCard = {
   chatModels: [
     {
+      description: '专注于高级推理和解决复杂问题，包括数学和科学任务。非常适合需要深入上下文理解和代理工作流程的应用程序。',
+      displayName: 'OpenAI o1',
+      enabled: true,
+      functionCall: false,
+      id: 'o1',
+      maxOutput: 100_000,
+      tokens: 200_000,
+      vision: true,
+    },
+    {
       description: '比 o1-preview 更小、更快，成本低80%，在代码生成和小上下文操作方面表现良好。',
       displayName: 'OpenAI o1-mini',
       enabled: true,
