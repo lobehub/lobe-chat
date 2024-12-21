@@ -3,6 +3,7 @@ import { Mock, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fileEnv } from '@/config/file';
 import { FileModel } from '@/database/_deprecated/models/file';
 import { DB_File } from '@/database/_deprecated/schemas/files';
+import { clientS3Storage } from '@/services/file/ClientS3';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { createServerConfigStore } from '@/store/serverConfig/store';
 
@@ -45,19 +46,23 @@ beforeEach(() => {
 
 describe('FileService', () => {
   it('createFile should save the file to the database', async () => {
-    const localFile: DB_File = {
+    const localFile = {
       name: 'test',
-      data: new ArrayBuffer(1),
       fileType: 'image/png',
-      saveMode: 'local',
+      url: 'client-s3://123',
       size: 1,
+      hash: '123',
     };
+
+    await clientS3Storage.putObject(
+      '123',
+      new File([new ArrayBuffer(1)], 'test.png', { type: 'image/png' }),
+    );
 
     (FileModel.create as Mock).mockResolvedValue(localFile);
 
     const result = await fileService.createFile(localFile);
 
-    expect(FileModel.create).toHaveBeenCalledWith(localFile);
     expect(result).toEqual({ url: 'data:image/png;base64,AA==' });
   });
 
