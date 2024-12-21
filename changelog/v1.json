@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Upgrade react scan."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.41"
+  },
+  {
+    "children": {
       "improvements": ["Seperate user keyVaults encrpyto from user model."]
     },
     "date": "2024-12-20",
