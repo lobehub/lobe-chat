@@ -1,21 +1,37 @@
 import { FileModel } from '@/database/_deprecated/models/file';
-import { DB_File } from '@/database/_deprecated/schemas/files';
-import { FileItem } from '@/types/files';
+import { clientS3Storage } from '@/services/file/ClientS3';
+import { FileItem, UploadFileParams } from '@/types/files';
 
 import { IFileService } from './type';
 
 export class ClientService implements IFileService {
-  async createFile(file: DB_File) {
+  async createFile(file: UploadFileParams) {
     // save to local storage
     // we may want to save to a remote server later
-    const res = await FileModel.create(file);
-    // arrayBuffer to url
-    const base64 = Buffer.from(file.data!).toString('base64');
+    const res = await FileModel.create({
+      createdAt: Date.now(),
+      data: undefined,
+      fileHash: file.hash,
+      fileType: file.fileType,
+      metadata: file.metadata,
+      name: file.name,
+      saveMode: 'url',
+      size: file.size,
+      url: file.url,
+    } as any);
+
+    // get file to base64 url
+    const base64 = await this.getBase64ByFileHash(file.hash!);
 
     return {
       id: res.id,
       url: `data:${file.fileType};base64,${base64}`,
     };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async checkFileHash(_hash: string) {
+    return { isExist: false, metadata: {} };
   }
 
   async getFile(id: string): Promise<FileItem> {
@@ -48,5 +64,12 @@ export class ClientService implements IFileService {
 
   async removeAllFiles() {
     return FileModel.clear();
+  }
+
+  private async getBase64ByFileHash(hash: string) {
+    const fileItem = await clientS3Storage.getObject(hash);
+    if (!fileItem) throw new Error('file not found');
+
+    return Buffer.from(await fileItem.arrayBuffer()).toString('base64');
   }
 }
