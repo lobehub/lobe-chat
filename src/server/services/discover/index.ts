@@ -328,7 +328,10 @@ export class DiscoverService {
 
   getModelById = async (locale: Locales, id: string): Promise<DiscoverModelItem | undefined> => {
     const list = await this.getModelList(locale);
-    let model = list.find((item) => item.identifier === id);
+    let model = list.find((item) => {
+      const ids = item.identifier.split('/');
+      return ids[1] === id || item.identifier === id;
+    });
 
     if (!model) return;
 
