@@ -1,6 +1,7 @@
 import { Flexbox } from 'react-layout-kit';
 
-import Migration from '../../features/Migration';
+import InitClientDB from '@/features/InitClientDB';
+
 import { LayoutProps } from '../type';
 import SessionPanel from './SessionPanel';
 
@@ -18,7 +19,7 @@ const Layout = ({ children, session }: LayoutProps) => {
           {children}
         </Flexbox>
       </Flexbox>
-      <Migration />
+      <InitClientDB bottom={60} />
       {/* ↓ cloud slot ↓ */}
 
       {/* ↑ cloud slot ↑ */}

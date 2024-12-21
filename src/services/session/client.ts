@@ -166,6 +166,7 @@ export class ClientService implements ISessionService {
   }
 
   async updateSessionGroup(id: string, data: Partial<SessionGroupItem>) {
+    // @ts-ignore
     return SessionGroupModel.update(id, data);
   }
 

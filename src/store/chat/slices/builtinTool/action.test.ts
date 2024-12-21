@@ -47,10 +47,9 @@ describe('chatToolSlice', () => {
         url: '',
       });
       vi.spyOn(result.current, 'toggleDallEImageLoading');
-      vi.spyOn(ClientService.prototype, 'checkFileHash').mockImplementation(async () => ({
-        isExist: false,
-        metadata: {},
-      }));
+      vi.spyOn(ClientService.prototype, 'checkFileHash').mockImplementation(
+        async () => ({ isExist: false }) as any,
+      );
 
       await act(async () => {
         await result.current.generateImageFromPrompts(prompts, messageId);
