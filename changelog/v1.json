@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix HUGGINGFACE endpoint url."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.42"
+  },
+  {
+    "children": {
       "improvements": ["Upgrade react scan."]
     },
     "date": "2024-12-21",
