@@ -5,7 +5,7 @@ import { UserModel } from '@/database/_deprecated/models/user';
 import { UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 
-import { ClientService } from './client';
+import { ClientService } from './_deprecated';
 
 vi.mock('@/database/_deprecated/models/user', () => ({
   UserModel: {

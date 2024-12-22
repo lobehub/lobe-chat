@@ -10,7 +10,7 @@ import {
   ChatTranslate,
 } from '@/types/message';
 
-import { ClientService } from './client';
+import { ClientService } from './_deprecated';
 
 const messageService = new ClientService();
 
