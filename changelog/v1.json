@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Move pglite to client service."]
+    },
+    "date": "2024-12-22",
+    "version": "1.37.2"
+  },
+  {
+    "children": {
       "improvements": ["Refactor the client service to deprecated."]
     },
     "date": "2024-12-22",

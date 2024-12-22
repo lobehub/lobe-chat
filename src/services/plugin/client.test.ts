@@ -7,7 +7,7 @@ import { installedPlugins, users } from '@/database/schemas';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
-import { ClientService } from './pglite';
+import { ClientService } from './client';
 import { InstallPluginParams } from './type';
 
 // Mocking modules and functions

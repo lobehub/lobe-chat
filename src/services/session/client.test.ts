@@ -15,7 +15,7 @@ import {
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { LobeAgentSession, LobeSessionType, SessionGroups } from '@/types/session';
 
-import { ClientService } from './pglite';
+import { ClientService } from './client';
 
 const userId = 'message-db';
 const sessionService = new ClientService(userId);
