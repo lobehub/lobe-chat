@@ -1,4 +1,3 @@
-import type { PGlite } from '@electric-sql/pglite';
 import type { PgliteDatabase } from 'drizzle-orm/pglite';
 import { Md5 } from 'ts-md5';
 
