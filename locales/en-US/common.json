@@ -59,14 +59,14 @@
       "features": {
         "knowledgeBase": {
           "desc": "Build your personal knowledge base and easily start conversations with your assistant (coming soon)",
-          "title": "Support for knowledge base conversations, unlock your second brain"
+          "title": "Support for knowledge base conversations"
         },
         "localFirst": {
           "desc": "Chat data is stored entirely in the browser, keeping your data always under your control.",
           "title": "Local first, privacy first"
         },
         "pglite": {
-          "desc": "Built on PGlite, natively supports AI Native advanced features (vector retrieval)",
+          "desc": "Built on PGlite, natively supports AI Native advanced features (vector search)",
           "title": "Next-generation client storage architecture"
         }
       },

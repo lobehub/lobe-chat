@@ -23,7 +23,7 @@ import {
   CreateMessageParams,
 } from '@/types/message';
 
-import { ClientService } from './pglite';
+import { ClientService } from './client';
 
 const userId = 'message-db';
 const sessionId = '1';
