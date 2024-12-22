@@ -4,7 +4,6 @@ import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserModel } from '@/database/_deprecated/models/user';
 import { UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
-import { AsyncLocalStorage } from '@/utils/localStorage';
 
 import { ClientService } from './client';
 

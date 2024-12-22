@@ -6,6 +6,7 @@ import ReactComponentName from 'react-scan/react-component-name/webpack';
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
 const enableReactScan = !!process.env.REACT_SCAN_MONITOR_API_KEY;
+const isUsePglite = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
 
 // if you need to proxy the api endpoint to remote server
 const API_PROXY_ENDPOINT = process.env.API_PROXY_ENDPOINT || '';
@@ -26,6 +27,7 @@ const nextConfig = {
       'gpt-tokenizer',
       'chroma-js',
     ],
+    serverComponentsExternalPackages: ['@electric-sql/pglite'],
     webVitalsAttribution: ['CLS', 'LCP'],
   },
 
@@ -180,7 +182,8 @@ const nextConfig = {
       layers: true,
     };
 
-    if (enableReactScan) {
+    // 开启该插件会导致 pglite 的 fs bundler 被改表
+    if (enableReactScan && !isUsePglite) {
       config.plugins.push(ReactComponentName({}));
     }
 
