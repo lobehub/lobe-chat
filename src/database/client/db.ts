@@ -1,3 +1,4 @@
+import type { PGlite } from '@electric-sql/pglite';
 import type { PgliteDatabase } from 'drizzle-orm/pglite';
 import { Md5 } from 'ts-md5';
 
@@ -94,10 +95,13 @@ export class DatabaseManager {
     this.callbacks?.onStateChange?.(DatabaseLoadingState.LoadingDependencies);
 
     const imports = [
-      import('@electric-sql/pglite').then((m) => ({ default: m.PGlite })),
+      import('@electric-sql/pglite').then((m) => ({
+        IdbFs: m.IdbFs,
+        MemoryFS: m.MemoryFS,
+        PGlite: m.PGlite,
+      })),
       import('@electric-sql/pglite/vector'),
       import('drizzle-orm/pglite'),
-      import('@electric-sql/pglite'),
     ];
 
     let loaded = 0;
@@ -122,7 +126,7 @@ export class DatabaseManager {
     });
 
     // @ts-ignore
-    const [{ default: PGlite }, { vector }, { drizzle }, { IdbFs, MemoryFS }] = results;
+    const [{ PGlite, IdbFs, MemoryFS }, { vector }, { drizzle }] = results;
 
     return { IdbFs, MemoryFS, PGlite, drizzle, vector };
   }
