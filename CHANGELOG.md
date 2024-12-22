@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.37.0](https://github.com/lobehub/lobe-chat/compare/v1.36.46...v1.37.0)
+
+<sup>Released on **2024-12-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Support to use pglite as client db.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support to use pglite as client db, closes [#4873](https://github.com/lobehub/lobe-chat/issues/4873) ([4131f20](https://github.com/lobehub/lobe-chat/commit/4131f20))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.46](https://github.com/lobehub/lobe-chat/compare/v1.36.45...v1.36.46)
 
 <sup>Released on **2024-12-21**</sup>
