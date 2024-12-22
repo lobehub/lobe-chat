@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.36.46",
+  "version": "1.37.1",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -32,7 +32,8 @@
     "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
     "build:analyze": "ANALYZE=true next build",
     "build:docker": "DOCKER=true next build && npm run build-sitemap",
-    "db:generate": "drizzle-kit generate",
+    "db:generate": "drizzle-kit generate && npm run db:generate-client",
+    "db:generate-client": "tsx ./scripts/migrateClientDB/compile-migrations.ts",
     "db:migrate": "MIGRATION_DB=1 tsx ./scripts/migrateServerDB/index.ts",
     "db:push": "drizzle-kit push",
     "db:push-test": "NODE_ENV=test drizzle-kit push",
@@ -117,6 +118,7 @@
     "@clerk/themes": "^2.1.37",
     "@codesandbox/sandpack-react": "^2.19.9",
     "@cyntler/react-doc-viewer": "^1.17.0",
+    "@electric-sql/pglite": "0.2.13",
     "@google/generative-ai": "^0.21.0",
     "@huggingface/inference": "^2.8.1",
     "@icons-pack/react-simple-icons": "9.6.0",

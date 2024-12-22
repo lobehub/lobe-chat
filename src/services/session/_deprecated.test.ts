@@ -5,7 +5,7 @@ import { SessionGroupModel } from '@/database/_deprecated/models/sessionGroup';
 import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentSession, LobeSessionType, SessionGroups } from '@/types/session';
 
-import { ClientService } from './client';
+import { ClientService } from './_deprecated';
 
 const sessionService = new ClientService();
 

@@ -10,8 +10,8 @@ import { useSessionStore } from '@/store/session';
 export const useFetchTopics = () => {
   const [sessionId] = useSessionStore((s) => [s.activeId]);
   const [activeTopicId, useFetchTopics] = useChatStore((s) => [s.activeTopicId, s.useFetchTopics]);
-  const isPgliteInited = useGlobalStore(systemStatusSelectors.isPgliteInited);
+  const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
 
-  useFetchTopics(isPgliteInited, sessionId);
+  useFetchTopics(isDBInited, sessionId);
   useFetchThreads(activeTopicId);
 };

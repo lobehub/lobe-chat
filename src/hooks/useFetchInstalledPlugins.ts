@@ -3,8 +3,8 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useToolStore } from '@/store/tool';
 
 export const useFetchInstalledPlugins = () => {
-  const isPgliteInited = useGlobalStore(systemStatusSelectors.isPgliteInited);
+  const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
   const [useFetchInstalledPlugins] = useToolStore((s) => [s.useFetchInstalledPlugins]);
 
-  return useFetchInstalledPlugins(isPgliteInited);
+  return useFetchInstalledPlugins(isDBInited);
 };
