@@ -15,7 +15,7 @@ import {
 import { CURRENT_CONFIG_VERSION } from '@/migrations';
 import { ImportResults, ImporterEntryData } from '@/types/importer';
 
-import { ClientService } from './pglite';
+import { ClientService } from './client';
 
 const userId = 'test-user-id';
 const service = new ClientService(userId);
