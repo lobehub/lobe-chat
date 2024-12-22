@@ -6,7 +6,7 @@ import { files, globalFiles, users } from '@/database/schemas';
 import { clientS3Storage } from '@/services/file/ClientS3';
 import { UploadFileParams } from '@/types/files';
 
-import { ClientService } from './pglite';
+import { ClientService } from './client';
 
 const userId = 'file-user';
 

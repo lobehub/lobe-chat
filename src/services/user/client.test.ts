@@ -7,7 +7,7 @@ import { userSettings, users } from '@/database/schemas';
 import { UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 
-import { ClientService } from './pglite';
+import { ClientService } from './client';
 
 const mockUser = {
   avatar: 'avatar.png',
