@@ -166,7 +166,7 @@ export class ClientService implements ISessionService {
   }
 
   async updateSessionGroup(id: string, data: Partial<SessionGroupItem>) {
-    return SessionGroupModel.update(id, data);
+    return SessionGroupModel.update(id, data as any);
   }
 
   async updateSessionGroupOrder(sortMap: { id: string; sort: number }[]) {
