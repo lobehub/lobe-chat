@@ -4,7 +4,7 @@ import { SessionModel } from '@/database/_deprecated/models/session';
 import { CreateTopicParams, TopicModel } from '@/database/_deprecated/models/topic';
 import { ChatTopic } from '@/types/topic';
 
-import { ClientService } from './client';
+import { ClientService } from './_deprecated';
 
 const topicService = new ClientService();
 // Mock the TopicModel
