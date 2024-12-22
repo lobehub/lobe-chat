@@ -7,7 +7,9 @@ import { DatabaseManager } from './db';
 // Mock 所有外部依赖
 vi.mock('@electric-sql/pglite', () => ({
   default: vi.fn(),
+  IdbFs: vi.fn(),
   PGlite: vi.fn(),
+  MemoryFS: vi.fn(),
 }));
 
 vi.mock('@electric-sql/pglite/vector', () => ({
