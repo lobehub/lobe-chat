@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.37.1](https://github.com/lobehub/lobe-chat/compare/v1.37.0...v1.37.1)
+
+<sup>Released on **2024-12-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the client service to deprecated.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the client service to deprecated, closes [#5132](https://github.com/lobehub/lobe-chat/issues/5132) ([e603234](https://github.com/lobehub/lobe-chat/commit/e603234))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.37.0](https://github.com/lobehub/lobe-chat/compare/v1.36.46...v1.37.0)
 
 <sup>Released on **2024-12-22**</sup>
