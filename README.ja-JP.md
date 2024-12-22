@@ -263,14 +263,14 @@ LobeChat のプラグインエコシステムは、そのコア機能の重要�
 
 <!-- PLUGIN LIST -->
 
-| 最近追加                                                                                                                             | 説明                                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Google CSE](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup>                       | 公式の CSE API を通じて Google を検索します。<br/>`ウェブ` `検索`                                                                                    |
-| [話す](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2024-12-02**</sup>                                     | Speak は、AI パワードの言語チューターで、他の言語で何でも言う方法を学ぶことができます。<br/>`教育` `言語`                                            |
-| [Tongyi Wanxiang 画像生成器](https://lobechat.com/discover/plugin/alps-tongyi-image)<br/><sup>By **YoungTx** on **2024-08-09**</sup> | このプラグインは、Alibaba の Tongyi Wanxiang モデルを使用して、テキストプロンプトに基づいて画像を生成します。<br/>`画像` `トンギ` `ワンシャン`       |
-| [ショッピングツール](https://lobechat.com/discover/plugin/ShoppingTools)<br/><sup>By **shoppingtools** on **2024-07-19**</sup>       | eBay や AliExpress で商品を検索し、eBay のイベントやクーポンを見つけます。迅速な例を取得します。<br/>`ショッピング` `e-bay` `ali-express` `クーポン` |
+| 最近追加                                                                                                                             | 説明                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>                | 株を分析し、包括的なリアルタイムの投資データと分析を取得します。<br/>`stock`                                                                   |
+| [Google CSE](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup>                       | 公式の CSE API を通じて Google を検索します。<br/>`ウェブ` `検索`                                                                              |
+| [話す](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2024-12-02**</sup>                                     | Speak は、AI パワードの言語チューターで、他の言語で何でも言う方法を学ぶことができます。<br/>`教育` `言語`                                      |
+| [Tongyi Wanxiang 画像生成器](https://lobechat.com/discover/plugin/alps-tongyi-image)<br/><sup>By **YoungTx** on **2024-08-09**</sup> | このプラグインは、Alibaba の Tongyi Wanxiang モデルを使用して、テキストプロンプトに基づいて画像を生成します。<br/>`画像` `トンギ` `ワンシャン` |
 
-> 📊 Total plugins: [<kbd>**47**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
