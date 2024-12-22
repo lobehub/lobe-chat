@@ -6,7 +6,7 @@ import { DB_Plugin } from '@/database/_deprecated/schemas/plugin';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
-import { ClientService } from './client';
+import { ClientService } from './_deprecated';
 import { InstallPluginParams } from './type';
 
 const pluginService = new ClientService();

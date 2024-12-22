@@ -16,13 +16,21 @@ import {
 
 export interface ISessionService {
   createSession(type: LobeSessionType, defaultValue: Partial<LobeAgentSession>): Promise<string>;
+
+  /**
+   * 需要废弃
+   * @deprecated
+   */
   batchCreateSessions(importSessions: LobeSessions): Promise<any>;
   cloneSession(id: string, newTitle: string): Promise<string | undefined>;
 
   getGroupedSessions(): Promise<ChatSessionList>;
+
+  /**
+   * @deprecated
+   */
   getSessionsByType(type: 'agent' | 'group' | 'all'): Promise<LobeSessions>;
   countSessions(): Promise<number>;
-  hasSessions(): Promise<boolean>;
   searchSessions(keyword: string): Promise<LobeSessions>;
 
   updateSession(
@@ -53,6 +61,11 @@ export interface ISessionService {
   // ************************************** //
 
   createSessionGroup(name: string, sort?: number): Promise<string>;
+
+  /**
+   * 需要废弃
+   * @deprecated
+   */
   batchCreateSessionGroups(groups: SessionGroups): Promise<BatchTaskResult>;
 
   getSessionGroups(): Promise<SessionGroupItem[]>;

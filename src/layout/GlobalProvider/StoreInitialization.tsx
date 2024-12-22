@@ -51,8 +51,8 @@ const StoreInitialization = memo(() => {
    * But during initialization, the value of `enableAuth` might be incorrect cause of the async fetch.
    * So we need to use `isSignedIn` only to determine whether request for the default agent config and user state.
    */
-  const isPgliteInited = useGlobalStore(systemStatusSelectors.isPgliteInited);
-  const isLoginOnInit = isPgliteInited && (enableNextAuth ? isSignedIn : isLogin);
+  const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
+  const isLoginOnInit = isDBInited && (enableNextAuth ? isSignedIn : isLogin);
 
   // init inbox agent and default agent config
   useInitAgentStore(isLoginOnInit, serverConfig.defaultAgent?.config);

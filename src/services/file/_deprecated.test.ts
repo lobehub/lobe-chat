@@ -7,7 +7,7 @@ import { clientS3Storage } from '@/services/file/ClientS3';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { createServerConfigStore } from '@/store/serverConfig/store';
 
-import { ClientService } from './client';
+import { ClientService } from './_deprecated';
 
 const fileService = new ClientService();
 

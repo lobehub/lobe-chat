@@ -1,4 +1,6 @@
+import { isServerMode, isUsePgliteDB } from '@/const/version';
 import { GlobalStore } from '@/store/global';
+import { DatabaseLoadingState } from '@/types/clientDB';
 
 import { INITIAL_STATUS } from './initialState';
 
@@ -22,17 +24,36 @@ const filePanelWidth = (s: GlobalStore) => s.status.filePanelWidth;
 const inputHeight = (s: GlobalStore) => s.status.inputHeight;
 const threadInputHeight = (s: GlobalStore) => s.status.threadInputHeight;
 
-const isPgliteNotEnabled = () => false;
+const isPgliteNotEnabled = (s: GlobalStore) =>
+  isUsePgliteDB && !isServerMode && s.isStatusInit && !s.status.isEnablePglite;
 
-const isPgliteNotInited = () => false;
+/**
+ * 当且仅当 client db 模式，且 pglite 未初始化完成时返回 true
+ */
+const isPgliteNotInited = (s: GlobalStore) =>
+  isUsePgliteDB &&
+  s.isStatusInit &&
+  s.status.isEnablePglite &&
+  s.initClientDBStage !== DatabaseLoadingState.Ready;
 
-const isPgliteInited = (): boolean => true;
+/**
+ * 当且仅当 client db 模式，且 pglite 初始化完成时返回 true
+ */
+const isPgliteInited = (s: GlobalStore): boolean =>
+  (s.isStatusInit &&
+    s.status.isEnablePglite &&
+    s.initClientDBStage === DatabaseLoadingState.Ready) ||
+  false;
+
+// 这个变量控制 clientdb 是否完成初始化，正常来说，只有 pgliteDB 模式下，才会存在变化，其他时候都是 true
+const isDBInited = (s: GlobalStore): boolean => (isUsePgliteDB ? isPgliteInited(s) : true);
 
 export const systemStatusSelectors = {
   filePanelWidth,
   hidePWAInstaller,
   inZenMode,
   inputHeight,
+  isDBInited,
   isPgliteInited,
   isPgliteNotEnabled,
   isPgliteNotInited,
