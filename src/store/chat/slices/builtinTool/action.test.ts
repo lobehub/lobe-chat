@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fileService } from '@/services/file';
-import { ClientService } from '@/services/file/client';
+import { ClientService } from '@/services/file/_deprecated';
 import { messageService } from '@/services/message';
 import { imageGenerationService } from '@/services/textToImage';
 import { uploadService } from '@/services/upload';

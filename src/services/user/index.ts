@@ -1,4 +1,4 @@
-import { ClientService as DeprecatedService } from './client';
+import { ClientService as DeprecatedService } from './_deprecated';
 import { ClientService } from './pglite';
 import { ServerService } from './server';
 
