@@ -21,6 +21,7 @@ export class ClientService implements IMessageService {
     return id;
   }
 
+  // @ts-ignore
   async batchCreateMessages(messages: ChatMessage[]) {
     return MessageModel.batchCreate(messages);
   }
@@ -70,6 +71,7 @@ export class ClientService implements IMessageService {
     return MessageModel.update(id, { error });
   }
 
+  // @ts-ignore
   async updateMessage(id: string, message: Partial<DB_Message>) {
     return MessageModel.update(id, message);
   }

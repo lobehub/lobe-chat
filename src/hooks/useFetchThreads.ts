@@ -3,9 +3,9 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 export const useFetchThreads = (activeTopicId?: string) => {
-  const isPgliteInited = useGlobalStore(systemStatusSelectors.isPgliteInited);
+  const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
 
   const [useFetchThreads] = useChatStore((s) => [s.useFetchThreads]);
 
-  useFetchThreads(isPgliteInited, activeTopicId);
+  useFetchThreads(isDBInited, activeTopicId);
 };

@@ -4,12 +4,12 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 
 export const useFetchMessages = () => {
-  const isPgliteInited = useGlobalStore(systemStatusSelectors.isPgliteInited);
+  const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
   const [sessionId] = useSessionStore((s) => [s.activeId]);
   const [activeTopicId, useFetchMessages] = useChatStore((s) => [
     s.activeTopicId,
     s.useFetchMessages,
   ]);
 
-  useFetchMessages(isPgliteInited, sessionId, activeTopicId);
+  useFetchMessages(isDBInited, sessionId, activeTopicId);
 };
