@@ -25,7 +25,7 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
   const locale = lang?.value || DEFAULT_LANG;
 
   const direction = isRtlLang(locale) ? 'rtl' : 'ltr';
-  const mobile = isMobileDevice();
+  const mobile = await isMobileDevice();
 
   return (
     <html dir={direction} lang={locale} suppressHydrationWarning>
@@ -49,7 +49,7 @@ export default RootLayout;
 export { generateMetadata } from './metadata';
 
 export const generateViewport = async (): ResolvingViewport => {
-  const isMobile = isMobileDevice();
+  const isMobile = await isMobileDevice();
 
   const dynamicScale = isMobile ? { maximumScale: 1, userScalable: false } : {};
 

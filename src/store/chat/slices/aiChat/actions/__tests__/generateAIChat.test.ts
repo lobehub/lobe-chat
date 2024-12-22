@@ -5,6 +5,7 @@ import { LOADING_FLAT } from '@/const/message';
 import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
+import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -48,6 +49,15 @@ vi.mock('@/services/chat', async (importOriginal) => {
     chatService: {
       createAssistantMessage: vi.fn(() => Promise.resolve('assistant-message')),
       createAssistantMessageStream: (module as any).chatService.createAssistantMessageStream,
+    },
+  };
+});
+vi.mock('@/services/session', async (importOriginal) => {
+  const module = await importOriginal();
+
+  return {
+    sessionService: {
+      updateSession: vi.fn(),
     },
   };
 });

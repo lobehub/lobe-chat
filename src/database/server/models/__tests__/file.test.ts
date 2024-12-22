@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
@@ -8,21 +8,7 @@ import { FilesTabs, SortType } from '@/types/files';
 import { files, globalFiles, knowledgeBaseFiles, knowledgeBases, users } from '../../../schemas';
 import { FileModel } from '../file';
 
-let serverDB = await getTestDBInstance();
-
-let DISABLE_REMOVE_GLOBAL_FILE = false;
-
-vi.mock('@/config/db', async () => ({
-  get serverDBEnv() {
-    return {
-      get DISABLE_REMOVE_GLOBAL_FILE() {
-        return DISABLE_REMOVE_GLOBAL_FILE;
-      },
-      DATABASE_TEST_URL: process.env.DATABASE_TEST_URL,
-      DATABASE_DRIVER: 'node',
-    };
-  },
-}));
+const serverDB = await getTestDBInstance();
 
 const userId = 'file-model-test-user-id';
 const fileModel = new FileModel(serverDB, userId);
@@ -72,6 +58,32 @@ describe('FileModel', () => {
         where: eq(knowledgeBaseFiles.fileId, id),
       });
       expect(kbFile).toMatchObject({ fileId: id, knowledgeBaseId: 'kb1' });
+    });
+
+    it('should create a new file with hash', async () => {
+      const params = {
+        name: 'test-file.txt',
+        url: 'https://example.com/test-file.txt',
+        size: 100,
+        fileHash: 'abc',
+        fileType: 'text/plain',
+      };
+
+      const { id } = await fileModel.create(params, true);
+      expect(id).toBeDefined();
+
+      const file = await serverDB.query.files.findFirst({ where: eq(files.id, id) });
+      expect(file).toMatchObject({ ...params, userId });
+
+      const globalFile = await serverDB.query.globalFiles.findFirst({
+        where: eq(globalFiles.hashId, params.fileHash),
+      });
+      expect(globalFile).toMatchObject({
+        url: 'https://example.com/test-file.txt',
+        size: 100,
+        hashId: 'abc',
+        fileType: 'text/plain',
+      });
     });
   });
 
@@ -146,7 +158,6 @@ describe('FileModel', () => {
       expect(globalFile).toBeUndefined();
     });
     it('should delete a file by id but global file not removed ', async () => {
-      DISABLE_REMOVE_GLOBAL_FILE = true;
       await fileModel.createGlobalFile({
         hashId: '1',
         url: 'https://example.com/file1.txt',
@@ -162,7 +173,7 @@ describe('FileModel', () => {
         fileHash: '1',
       });
 
-      await fileModel.delete(id);
+      await fileModel.delete(id, false);
 
       const file = await serverDB.query.files.findFirst({ where: eq(files.id, id) });
       const globalFile = await serverDB.query.globalFiles.findFirst({
@@ -171,7 +182,6 @@ describe('FileModel', () => {
 
       expect(file).toBeUndefined();
       expect(globalFile).toBeDefined();
-      DISABLE_REMOVE_GLOBAL_FILE = false;
     });
   });
 
@@ -225,7 +235,6 @@ describe('FileModel', () => {
       expect(globalFilesResult2).toHaveLength(0);
     });
     it('should delete multiple files but not remove global files if DISABLE_REMOVE_GLOBAL_FILE=true', async () => {
-      DISABLE_REMOVE_GLOBAL_FILE = true;
       await fileModel.createGlobalFile({
         hashId: '1',
         url: 'https://example.com/file1.txt',
@@ -260,7 +269,7 @@ describe('FileModel', () => {
 
       expect(globalFilesResult).toHaveLength(2);
 
-      await fileModel.deleteMany([file1.id, file2.id]);
+      await fileModel.deleteMany([file1.id, file2.id], false);
 
       const remainingFiles = await serverDB.query.files.findMany({
         where: eq(files.userId, userId),
@@ -271,7 +280,6 @@ describe('FileModel', () => {
 
       expect(remainingFiles).toHaveLength(0);
       expect(globalFilesResult2).toHaveLength(2);
-      DISABLE_REMOVE_GLOBAL_FILE = false;
     });
   });
 

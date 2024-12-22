@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra è la versione più potente della serie di modelli Spark, migliorando la comprensione e la sintesi del contenuto testuale mentre aggiorna il collegamento alla ricerca online. È una soluzione completa per migliorare la produttività lavorativa e rispondere con precisione alle esigenze, rappresentando un prodotto intelligente all'avanguardia nel settore."
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "Generazione dopo generazione, Meta Llama 3 dimostra prestazioni all'avanguardia su una vasta gamma di benchmark del settore e offre nuove capacità, inclusa una ragionamento migliorato."
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Utilizza tecnologie di ricerca avanzate per collegare completamente il grande modello con la conoscenza di settore e la conoscenza globale. Supporta il caricamento di vari documenti come PDF, Word e l'immissione di URL, con acquisizione di informazioni tempestiva e completa, e risultati di output accurati e professionali."
   },
@@ -112,6 +98,12 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) è un modello innovativo, adatto per applicazioni in più settori e compiti complessi."
   },
+  "InternVL2-8B": {
+    "description": "InternVL2-8B è un potente modello linguistico visivo, supporta l'elaborazione multimodale di immagini e testo, in grado di riconoscere con precisione il contenuto delle immagini e generare descrizioni o risposte correlate."
+  },
+  "InternVL2.5-26B": {
+    "description": "InternVL2.5-26B è un potente modello linguistico visivo, supporta l'elaborazione multimodale di immagini e testo, in grado di riconoscere con precisione il contenuto delle immagini e generare descrizioni o risposte correlate."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct è uno dei più recenti modelli linguistici di grandi dimensioni rilasciati da Alibaba Cloud. Questo modello da 72B ha capacità notevolmente migliorate in codifica e matematica. Il modello offre anche supporto multilingue, coprendo oltre 29 lingue, tra cui cinese e inglese. Ha mostrato miglioramenti significativi nel seguire istruzioni, comprendere dati strutturati e generare output strutturati (soprattutto JSON)."
   },
@@ -121,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO è un modello altamente flessibile, progettato per offrire un'esperienza creativa eccezionale."
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) è un modello di istruzioni ad alta precisione, adatto per calcoli complessi."
   },
@@ -233,8 +224,20 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 è l'ultima serie del modello Qwen, in grado di superare i modelli open source ottimali di dimensioni simili e anche modelli di dimensioni maggiori. Qwen2 7B ha ottenuto vantaggi significativi in vari test, in particolare nella comprensione del codice e del cinese."
   },
+  "Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5-14B-Instruct è un grande modello linguistico con 14 miliardi di parametri, con prestazioni eccellenti, ottimizzato per scenari in cinese e multilingue, supporta applicazioni di domande e risposte intelligenti, generazione di contenuti e altro."
+  },
+  "Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5-32B-Instruct è un grande modello linguistico con 32 miliardi di parametri, con prestazioni equilibrate, ottimizzato per scenari in cinese e multilingue, supporta applicazioni di domande e risposte intelligenti, generazione di contenuti e altro."
+  },
   "Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct supporta un contesto di 16k, generando testi lunghi oltre 8K. Supporta chiamate di funzione e interazioni senza soluzione di continuità con sistemi esterni, aumentando notevolmente flessibilità e scalabilità. La conoscenza del modello è notevolmente aumentata e ha migliorato significativamente le capacità di codifica e matematica, con supporto per oltre 29 lingue."
+  },
+  "Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct è un grande modello linguistico con 7 miliardi di parametri, supporta chiamate di funzione e interazioni senza soluzione di continuità con sistemi esterni, aumentando notevolmente flessibilità e scalabilità. Ottimizzato per scenari in cinese e multilingue, supporta applicazioni di domande e risposte intelligenti, generazione di contenuti e altro."
+  },
+  "Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder-32B-Instruct è un grande modello linguistico progettato per la generazione di codice, la comprensione del codice e scenari di sviluppo efficienti, con una scala di 32 miliardi di parametri all'avanguardia nel settore, in grado di soddisfare esigenze di programmazione diversificate."
   },
   "SenseChat": {
     "description": "Modello di base (V4), lunghezza del contesto di 4K, con potenti capacità generali."
@@ -464,6 +467,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet offre un equilibrio ideale tra intelligenza e velocità per i carichi di lavoro aziendali. Fornisce la massima utilità a un prezzo inferiore, affidabile e adatto per distribuzioni su larga scala."
   },
+  "code-raccoon-v1": {
+    "description": "Code Raccoon è un assistente intelligente per lo sviluppo software basato su un grande modello linguistico di SenseTime, copre fasi come analisi dei requisiti software, progettazione dell'architettura, scrittura del codice e test del software, soddisfacendo le esigenze degli utenti nella scrittura di codice e nell'apprendimento della programmazione. Code Raccoon supporta oltre 90 linguaggi di programmazione principali come Python, Java, JavaScript, C++, Go, SQL e IDE principali come VS Code, IntelliJ IDEA. Nelle applicazioni pratiche, Code Raccoon può aiutare gli sviluppatori a migliorare l'efficienza della programmazione di oltre il 50%."
+  },
   "codegeex-4": {
     "description": "CodeGeeX-4 è un potente assistente di programmazione AI, supporta domande intelligenti e completamento del codice in vari linguaggi di programmazione, migliorando l'efficienza dello sviluppo."
   },
@@ -508,9 +514,6 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+ è un modello ottimizzato per RAG all'avanguardia progettato per affrontare carichi di lavoro di livello aziendale."
-  },
-  "command-light": {
-    "description": ""
   },
   "command-r": {
     "description": "Command R è un LLM ottimizzato per compiti di dialogo e contesti lunghi, particolarmente adatto per interazioni dinamiche e gestione della conoscenza."
@@ -595,6 +598,9 @@
   },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro supporta fino a 2 milioni di token, è la scelta ideale per modelli multimodali di medie dimensioni, adatta a un supporto multifunzionale per compiti complessi."
+  },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp è il nuovo modello AI multimodale sperimentale di Google, dotato di funzionalità di nuova generazione, velocità straordinaria, chiamate di strumenti native e generazione multimodale."
   },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 è il modello AI multimodale sperimentale più recente di Google, dotato di capacità di elaborazione rapida, supporta input testuali, visivi e video, ed è adatto per un'ampia gamma di compiti con un'efficiente scalabilità."
@@ -749,6 +755,12 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini è il modello più recente lanciato da OpenAI dopo il GPT-4 Omni, supporta input visivi e testuali e produce output testuali. Come il loro modello di punta in formato ridotto, è molto più economico rispetto ad altri modelli all'avanguardia recenti e costa oltre il 60% in meno rispetto a GPT-3.5 Turbo. Mantiene un'intelligenza all'avanguardia, offrendo un rapporto qualità-prezzo significativo. GPT-4o mini ha ottenuto un punteggio dell'82% nel test MMLU e attualmente è classificato più in alto di GPT-4 per preferenze di chat."
   },
+  "grok-2-1212": {
+    "description": "Questo modello ha migliorato l'accuratezza, il rispetto delle istruzioni e le capacità multilingue."
+  },
+  "grok-2-vision-1212": {
+    "description": "Questo modello ha migliorato l'accuratezza, il rispetto delle istruzioni e le capacità multilingue."
+  },
   "grok-beta": {
     "description": "Offre prestazioni comparabili a Grok 2, ma con maggiore efficienza, velocità e funzionalità."
   },
@@ -763,9 +775,6 @@
   },
   "hunyuan-functioncall": {
     "description": "Ultimo modello FunctionCall con architettura MOE di Hunyuan, addestrato su dati di alta qualità per le chiamate di funzione, con una finestra di contesto di 32K, è in testa in vari indicatori di valutazione."
-  },
-  "hunyuan-large": {
-    "description": ""
   },
   "hunyuan-lite": {
     "description": "Aggiornato a una struttura MOE, con una finestra di contesto di 256k, è in testa a molti modelli open source in vari set di valutazione su NLP, codice, matematica e settori."
@@ -800,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "La nostra ultima serie di modelli, con prestazioni di ragionamento eccezionali, supporta una lunghezza di contesto di 1M e offre una migliore capacità di seguire istruzioni e chiamare strumenti."
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM è un modello linguistico sperimentale, specifico per compiti, addestrato per rispettare i principi della scienza dell'apprendimento, in grado di seguire istruzioni sistematiche in contesti di insegnamento e apprendimento, fungendo da tutor esperto."
   },
@@ -997,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 è un modello di linguaggio di grandi dimensioni (LLM) open source progettato per sviluppatori, ricercatori e aziende, per aiutarli a costruire, sperimentare e scalare responsabilmente le loro idee di AI generativa. Come parte di un sistema di base per l'innovazione della comunità globale, è particolarmente adatto per dispositivi a bassa potenza e risorse limitate, oltre a garantire tempi di addestramento più rapidi."
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 è un modello linguistico fornito da Microsoft AI, particolarmente efficace in conversazioni complesse, multilingue, ragionamento e assistenti intelligenti."
   },

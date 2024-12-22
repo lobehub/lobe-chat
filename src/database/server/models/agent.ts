@@ -1,7 +1,4 @@
-import { inArray } from 'drizzle-orm';
-import { and, desc, eq } from 'drizzle-orm/expressions';
-
-import { LobeChatDatabase } from '@/database/type';
+import { and, desc, eq, inArray } from 'drizzle-orm/expressions';
 
 import {
   agents,
@@ -11,6 +8,7 @@ import {
   files,
   knowledgeBases,
 } from '@/database/schemas';
+import { LobeChatDatabase } from '@/database/type';
 
 export class AgentModel {
   private userId: string;
@@ -21,15 +19,15 @@ export class AgentModel {
     this.db = db;
   }
 
-  async getAgentConfigById(id: string) {
+  getAgentConfigById = async (id: string) => {
     const agent = await this.db.query.agents.findFirst({ where: eq(agents.id, id) });
 
     const knowledge = await this.getAgentAssignedKnowledge(id);
 
     return { ...agent, ...knowledge };
-  }
+  };
 
-  async getAgentAssignedKnowledge(id: string) {
+  getAgentAssignedKnowledge = async (id: string) => {
     const knowledgeBaseResult = await this.db
       .select({ enabled: agentsKnowledgeBases.enabled, knowledgeBases })
       .from(agentsKnowledgeBases)
@@ -54,12 +52,12 @@ export class AgentModel {
         enabled: item.enabled,
       })),
     };
-  }
+  };
 
   /**
    * Find agent by session id
    */
-  async findBySessionId(sessionId: string) {
+  findBySessionId = async (sessionId: string) => {
     const item = await this.db.query.agentsToSessions.findFirst({
       where: eq(agentsToSessions.sessionId, sessionId),
     });
@@ -68,22 +66,19 @@ export class AgentModel {
     const agentId = item.agentId;
 
     return this.getAgentConfigById(agentId);
-  }
+  };
 
   createAgentKnowledgeBase = async (
     agentId: string,
     knowledgeBaseId: string,
     enabled: boolean = true,
   ) => {
-    return this.db
-      .insert(agentsKnowledgeBases)
-      .values({
-        agentId,
-        enabled,
-        knowledgeBaseId,
-        userId: this.userId,
-      })
-      .execute();
+    return this.db.insert(agentsKnowledgeBases).values({
+      agentId,
+      enabled,
+      knowledgeBaseId,
+      userId: this.userId,
+    });
   };
 
   deleteAgentKnowledgeBase = async (agentId: string, knowledgeBaseId: string) => {
@@ -95,8 +90,7 @@ export class AgentModel {
           eq(agentsKnowledgeBases.knowledgeBaseId, knowledgeBaseId),
           eq(agentsKnowledgeBases.userId, this.userId),
         ),
-      )
-      .execute();
+      );
   };
 
   toggleKnowledgeBase = async (agentId: string, knowledgeBaseId: string, enabled?: boolean) => {
@@ -109,8 +103,7 @@ export class AgentModel {
           eq(agentsKnowledgeBases.knowledgeBaseId, knowledgeBaseId),
           eq(agentsKnowledgeBases.userId, this.userId),
         ),
-      )
-      .execute();
+      );
   };
 
   createAgentFiles = async (agentId: string, fileIds: string[], enabled: boolean = true) => {
@@ -136,8 +129,7 @@ export class AgentModel {
       .insert(agentsFiles)
       .values(
         needToInsertFileIds.map((fileId) => ({ agentId, enabled, fileId, userId: this.userId })),
-      )
-      .execute();
+      );
   };
 
   deleteAgentFile = async (agentId: string, fileId: string) => {
@@ -149,8 +141,7 @@ export class AgentModel {
           eq(agentsFiles.fileId, fileId),
           eq(agentsFiles.userId, this.userId),
         ),
-      )
-      .execute();
+      );
   };
 
   toggleFile = async (agentId: string, fileId: string, enabled?: boolean) => {
@@ -163,7 +154,6 @@ export class AgentModel {
           eq(agentsFiles.fileId, fileId),
           eq(agentsFiles.userId, this.userId),
         ),
-      )
-      .execute();
+      );
   };
 }

@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra는 스타크 대형 모델 시리즈 중 가장 강력한 버전으로, 업그레이드된 네트워크 검색 링크와 함께 텍스트 내용의 이해 및 요약 능력을 향상시킵니다. 사무 생산성을 높이고 정확한 요구에 응답하기 위한 종합 솔루션으로, 업계를 선도하는 스마트 제품입니다."
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "세대에서 세대로, Meta Llama 3는 다양한 산업 벤치마크에서 최첨단 성능을 보여주며, 개선된 추론을 포함한 새로운 기능을 제공합니다."
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "검색 강화 기술을 통해 대형 모델과 분야 지식, 전 세계 지식의 완전한 연결을 실현합니다. PDF, Word 등 다양한 문서 업로드 및 웹사이트 입력을 지원하며, 정보 획득이 신속하고 포괄적이며, 출력 결과가 정확하고 전문적입니다."
   },
@@ -112,6 +98,12 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B)는 혁신적인 모델로, 다양한 분야의 응용과 복잡한 작업에 적합합니다."
   },
+  "InternVL2-8B": {
+    "description": "InternVL2-8B는 강력한 비주얼 언어 모델로, 이미지와 텍스트의 다중 모달 처리를 지원하며, 이미지 내용을 정확하게 인식하고 관련 설명이나 답변을 생성할 수 있습니다."
+  },
+  "InternVL2.5-26B": {
+    "description": "InternVL2.5-26B는 강력한 비주얼 언어 모델로, 이미지와 텍스트의 다중 모달 처리를 지원하며, 이미지 내용을 정확하게 인식하고 관련 설명이나 답변을 생성할 수 있습니다."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct는 Alibaba Cloud에서 발표한 최신 대규모 언어 모델 시리즈 중 하나입니다. 이 72B 모델은 코딩 및 수학 분야에서 상당한 개선된 능력을 가지고 있습니다. 이 모델은 또한 29개 이상의 언어를 포함한 다국어 지원을 제공합니다. 모델은 지침 준수, 구조화된 데이터 이해 및 구조화된 출력 생성(특히 JSON)에서 상당한 향상을 보입니다."
   },
@@ -121,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO는 뛰어난 창의적 경험을 제공하기 위해 설계된 고도로 유연한 다중 모델 통합입니다."
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)는 고정밀 지시 모델로, 복잡한 계산에 적합합니다."
   },
@@ -233,8 +224,20 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2는 Qwen 모델의 최신 시리즈로, 동등한 규모의 최적 오픈 소스 모델은 물론 더 큰 규모의 모델을 초월할 수 있습니다. Qwen2 7B는 여러 평가에서 현저한 우위를 차지하였으며, 특히 코드 및 중국어 이해에서 두드러진 성과를 보였습니다."
   },
+  "Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5-14B-Instruct는 140억 매개변수를 가진 대형 언어 모델로, 성능이 우수하며 중국어 및 다국어 시나리오를 최적화하여 스마트 Q&A, 콘텐츠 생성 등의 응용을 지원합니다."
+  },
+  "Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5-32B-Instruct는 320억 매개변수를 가진 대형 언어 모델로, 성능이 균형 잡혀 있으며 중국어 및 다국어 시나리오를 최적화하여 스마트 Q&A, 콘텐츠 생성 등의 응용을 지원합니다."
+  },
   "Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct는 16k 컨텍스트를 지원하며, 8K를 초과하는 긴 텍스트를 생성할 수 있습니다. 함수 호출 및 외부 시스템과의 원활한 상호작용을 지원하여 유연성과 확장성을 크게 향상시킵니다. 모델의 지식이 현저히 증가하였고, 인코딩 및 수학 능력이 크게 향상되었으며, 29개 이상의 언어를 지원합니다."
+  },
+  "Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct는 70억 매개변수를 가진 대형 언어 모델로, 함수 호출 및 외부 시스템과의 원활한 상호작용을 지원하여 유연성과 확장성을 크게 향상시킵니다. 중국어 및 다국어 시나리오를 최적화하여 스마트 Q&A, 콘텐츠 생성 등의 응용을 지원합니다."
+  },
+  "Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder-32B-Instruct는 코드 생성, 코드 이해 및 효율적인 개발 시나리오를 위해 설계된 대형 언어 모델로, 업계 최고의 32B 매개변수 규모를 채택하여 다양한 프로그래밍 요구를 충족합니다."
   },
   "SenseChat": {
     "description": "기본 버전 모델(V4), 4K 컨텍스트 길이, 일반적인 능력이 강력합니다."
@@ -464,6 +467,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet은 기업 작업 부하에 이상적인 균형을 제공하며, 더 낮은 가격으로 최대 효용을 제공합니다. 신뢰성이 높고 대규모 배포에 적합합니다."
   },
+  "code-raccoon-v1": {
+    "description": "코드 라쿤은 상상 대형 언어 모델을 기반으로 한 소프트웨어 지능 개발 도우미로, 소프트웨어 요구 분석, 아키텍처 설계, 코드 작성, 소프트웨어 테스트 등 다양한 단계를 포괄하여 사용자 코드 작성 및 프로그래밍 학습 등 다양한 요구를 충족합니다. 코드 라쿤은 Python, Java, JavaScript, C++, Go, SQL 등 90개 이상의 주요 프로그래밍 언어와 VS Code, IntelliJ IDEA 등 주요 IDE를 지원합니다. 실제 응용에서 코드 라쿤은 개발자의 프로그래밍 효율성을 50% 이상 향상시킬 수 있습니다."
+  },
   "codegeex-4": {
     "description": "CodeGeeX-4는 강력한 AI 프로그래밍 도우미로, 다양한 프로그래밍 언어에 대한 스마트 Q&A 및 코드 완성을 지원하여 개발 효율성을 높입니다."
   },
@@ -508,9 +514,6 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+는 기업급 작업을 처리하기 위해 설계된 최첨단 RAG 최적화 모델입니다."
-  },
-  "command-light": {
-    "description": ""
   },
   "command-r": {
     "description": "Command R은 대화 및 긴 컨텍스트 작업에 최적화된 LLM으로, 동적 상호작용 및 지식 관리에 특히 적합합니다."
@@ -595,6 +598,9 @@
   },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro는 최대 200만 개의 토큰을 지원하며, 중형 다중 모달 모델의 이상적인 선택으로 복잡한 작업에 대한 다각적인 지원을 제공합니다."
+  },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모달 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모달 생성을 갖추고 있습니다."
   },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114는 Google의 최신 실험적 다중 모달 AI 모델로, 빠른 처리 능력을 갖추고 있으며, 텍스트, 이미지 및 비디오 입력을 지원하여 다양한 작업에 효율적으로 확장할 수 있습니다."
@@ -749,6 +755,12 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini는 OpenAI가 GPT-4 Omni 이후에 출시한 최신 모델로, 텍스트와 이미지를 입력받아 텍스트를 출력합니다. 이 모델은 최신의 소형 모델로, 최근의 다른 최첨단 모델보다 훨씬 저렴하며, GPT-3.5 Turbo보다 60% 이상 저렴합니다. 최첨단의 지능을 유지하면서도 뛰어난 가성비를 자랑합니다. GPT-4o mini는 MMLU 테스트에서 82%의 점수를 기록했으며, 현재 채팅 선호도에서 GPT-4보다 높은 순위를 차지하고 있습니다."
   },
+  "grok-2-1212": {
+    "description": "이 모델은 정확성, 지시 준수 및 다국어 능력에서 개선되었습니다."
+  },
+  "grok-2-vision-1212": {
+    "description": "이 모델은 정확성, 지시 준수 및 다국어 능력에서 개선되었습니다."
+  },
   "grok-beta": {
     "description": "Grok 2와 유사한 성능을 가지지만, 더 높은 효율성, 속도 및 기능을 제공합니다."
   },
@@ -763,9 +775,6 @@
   },
   "hunyuan-functioncall": {
     "description": "혼원 최신 MOE 구조의 FunctionCall 모델로, 고품질 FunctionCall 데이터 훈련을 거쳤으며, 컨텍스트 윈도우는 32K에 도달하고 여러 차원의 평가 지표에서 선두에 있습니다."
-  },
-  "hunyuan-large": {
-    "description": ""
   },
   "hunyuan-lite": {
     "description": "MOE 구조로 업그레이드되었으며, 컨텍스트 윈도우는 256k로 설정되어 NLP, 코드, 수학, 산업 등 여러 평가 집합에서 많은 오픈 소스 모델을 선도하고 있습니다."
@@ -800,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "우리가 최신으로 선보이는 모델 시리즈로, 뛰어난 추론 성능을 자랑하며 1M의 컨텍스트 길이와 더 강력한 지시 따르기 및 도구 호출 기능을 지원합니다."
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM은 학습 과학 원칙에 맞춰 훈련된 실험적이고 특정 작업에 특화된 언어 모델로, 교육 및 학습 환경에서 시스템 지침을 따르며 전문가 멘토 역할을 수행합니다."
   },
@@ -997,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3은 개발자, 연구자 및 기업을 위한 오픈 대형 언어 모델(LLM)로, 생성 AI 아이디어를 구축하고 실험하며 책임감 있게 확장하는 데 도움을 주기 위해 설계되었습니다. 전 세계 커뮤니티 혁신의 기초 시스템의 일환으로, 계산 능력과 자원이 제한된 환경, 엣지 장치 및 더 빠른 훈련 시간에 매우 적합합니다."
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2는 Microsoft AI가 제공하는 언어 모델로, 복잡한 대화, 다국어, 추론 및 스마트 어시스턴트 분야에서 특히 뛰어난 성능을 보입니다."
   },

@@ -56,7 +56,7 @@ const Page = async (props: Props) => {
   const keywords = decodeURIComponent(q);
 
   const { t, locale } = await translation('metadata', searchParams?.hl);
-  const mobile = isMobileDevice();
+  const mobile = await isMobileDevice();
 
   const ld = ldModule.generate({
     description: t('discover.description'),

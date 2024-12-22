@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra is the most powerful version in the Spark large model series, enhancing text content understanding and summarization capabilities while upgrading online search links. It is a comprehensive solution for improving office productivity and accurately responding to demands, leading the industry as an intelligent product."
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "Generation over generation, Meta Llama 3 demonstrates state-of-the-art performance on a wide range of industry benchmarks and offers new capabilities, including improved reasoning."
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Utilizes search enhancement technology to achieve comprehensive links between large models and domain knowledge, as well as knowledge from the entire web. Supports uploads of various documents such as PDF and Word, and URL input, providing timely and comprehensive information retrieval with accurate and professional output."
   },
@@ -112,6 +98,12 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) is an innovative model suitable for multi-domain applications and complex tasks."
   },
+  "InternVL2-8B": {
+    "description": "InternVL2-8B is a powerful visual language model that supports multimodal processing of images and text, capable of accurately recognizing image content and generating relevant descriptions or answers."
+  },
+  "InternVL2.5-26B": {
+    "description": "InternVL2.5-26B is a powerful visual language model that supports multimodal processing of images and text, capable of accurately recognizing image content and generating relevant descriptions or answers."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct is one of the latest large language models released by Alibaba Cloud. This 72B model shows significant improvements in coding and mathematics. It also provides multilingual support, covering over 29 languages, including Chinese and English. The model has made notable advancements in instruction following, understanding structured data, and generating structured outputs, especially JSON."
   },
@@ -121,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO is a highly flexible multi-model fusion designed to provide an exceptional creative experience."
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) is a high-precision instruction model suitable for complex computations."
   },
@@ -233,8 +224,20 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 is the latest series of the Qwen model, capable of outperforming optimal open-source models of similar size and even larger models. Qwen2 7B has achieved significant advantages in multiple evaluations, especially in coding and Chinese comprehension."
   },
+  "Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5-14B-Instruct is a large language model with 14 billion parameters, delivering excellent performance, optimized for Chinese and multilingual scenarios, and supporting applications such as intelligent Q&A and content generation."
+  },
+  "Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5-32B-Instruct is a large language model with 32 billion parameters, offering balanced performance, optimized for Chinese and multilingual scenarios, and supporting applications such as intelligent Q&A and content generation."
+  },
   "Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct supports 16k context and generates long texts exceeding 8K. It enables seamless interaction with external systems through function calls, greatly enhancing flexibility and scalability. The model's knowledge has significantly increased, and its coding and mathematical abilities have been greatly improved, with multilingual support for over 29 languages."
+  },
+  "Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct is a large language model with 7 billion parameters, supporting function calls and seamless interaction with external systems, greatly enhancing flexibility and scalability. It is optimized for Chinese and multilingual scenarios, supporting applications such as intelligent Q&A and content generation."
+  },
+  "Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder-32B-Instruct is a large language model specifically designed for code generation, code understanding, and efficient development scenarios, featuring an industry-leading 32 billion parameters to meet diverse programming needs."
   },
   "SenseChat": {
     "description": "Basic version model (V4) with a context length of 4K, featuring strong general capabilities."
@@ -464,6 +467,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet provides an ideal balance of intelligence and speed for enterprise workloads. It offers maximum utility at a lower price, reliable and suitable for large-scale deployment."
   },
+  "code-raccoon-v1": {
+    "description": "Code Raccoon is a software intelligent development assistant based on the SenseTime large language model, covering software requirement analysis, architecture design, code writing, software testing, and more, meeting various user needs for code writing and programming learning. Code Raccoon supports over 90 mainstream programming languages, including Python, Java, JavaScript, C++, Go, SQL, and popular IDEs like VS Code and IntelliJ IDEA. In practical applications, Code Raccoon can help developers improve programming efficiency by over 50%."
+  },
   "codegeex-4": {
     "description": "CodeGeeX-4 is a powerful AI programming assistant that supports intelligent Q&A and code completion in various programming languages, enhancing development efficiency."
   },
@@ -508,9 +514,6 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+ is a state-of-the-art RAG-optimized model designed to tackle enterprise-grade workloads."
-  },
-  "command-light": {
-    "description": ""
   },
   "command-r": {
     "description": "Command R is an LLM optimized for dialogue and long context tasks, particularly suitable for dynamic interactions and knowledge management."
@@ -595,6 +598,9 @@
   },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro supports up to 2 million tokens, making it an ideal choice for medium-sized multimodal models, providing multifaceted support for complex tasks."
+  },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool integration, and multimodal generation."
   },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 is Google's latest experimental multimodal AI model, featuring rapid processing capabilities and supporting text, image, and video inputs, making it suitable for efficient scaling across various tasks."
@@ -749,6 +755,12 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini is the latest model released by OpenAI after GPT-4 Omni, supporting both image and text input while outputting text. As their most advanced small model, it is significantly cheaper than other recent cutting-edge models, costing over 60% less than GPT-3.5 Turbo. It maintains state-of-the-art intelligence while offering remarkable cost-effectiveness. GPT-4o mini scored 82% on the MMLU test and currently ranks higher than GPT-4 in chat preferences."
   },
+  "grok-2-1212": {
+    "description": "This model has improved in accuracy, instruction adherence, and multilingual capabilities."
+  },
+  "grok-2-vision-1212": {
+    "description": "This model has improved in accuracy, instruction adherence, and multilingual capabilities."
+  },
   "grok-beta": {
     "description": "Offers performance comparable to Grok 2 but with higher efficiency, speed, and functionality."
   },
@@ -763,9 +775,6 @@
   },
   "hunyuan-functioncall": {
     "description": "The latest MOE architecture FunctionCall model from Hunyuan, trained on high-quality FunctionCall data, with a context window of 32K, leading in multiple dimensions of evaluation metrics."
-  },
-  "hunyuan-large": {
-    "description": ""
   },
   "hunyuan-lite": {
     "description": "Upgraded to a MOE structure with a context window of 256k, leading many open-source models in various NLP, coding, mathematics, and industry benchmarks."
@@ -800,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "Our latest model series, featuring exceptional reasoning performance, supporting a context length of 1M, and enhanced instruction following and tool invocation capabilities."
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM is an experimental, task-specific language model trained to align with learning science principles, capable of following systematic instructions in teaching and learning scenarios, acting as an expert tutor, among other roles."
   },
@@ -997,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 is an open large language model (LLM) aimed at developers, researchers, and enterprises, designed to help them build, experiment, and responsibly scale their generative AI ideas. As part of a foundational system for global community innovation, it is particularly suitable for those with limited computational power and resources, edge devices, and faster training times."
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 is a language model provided by Microsoft AI, excelling in complex dialogues, multilingual capabilities, reasoning, and intelligent assistant tasks."
   },

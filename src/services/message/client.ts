@@ -1,10 +1,11 @@
 import dayjs from 'dayjs';
 
-import { FileModel } from '@/database/_deprecated/models/file';
-import { MessageModel } from '@/database/_deprecated/models/message';
-import { DB_Message } from '@/database/_deprecated/schemas/message';
+import { INBOX_SESSION_ID } from '@/const/session';
+import { clientDB } from '@/database/client/db';
+import { MessageItem } from '@/database/schemas';
+import { MessageModel } from '@/database/server/models/message';
+import { BaseClientService } from '@/services/baseClientService';
 import {
-  ChatFileItem,
   ChatMessage,
   ChatMessageError,
   ChatTTS,
@@ -14,106 +15,104 @@ import {
 
 import { IMessageService } from './type';
 
-export class ClientService implements IMessageService {
-  async createMessage(data: CreateMessageParams) {
-    const { id } = await MessageModel.create(data);
+export class ClientService extends BaseClientService implements IMessageService {
+  private get messageModel(): MessageModel {
+    return new MessageModel(clientDB as any, this.userId);
+  }
+
+  async createMessage({ sessionId, ...params }: CreateMessageParams) {
+    const { id } = await this.messageModel.create({
+      ...params,
+      sessionId: this.toDbSessionId(sessionId) as string,
+    });
 
     return id;
   }
 
-  async batchCreateMessages(messages: ChatMessage[]) {
-    return MessageModel.batchCreate(messages);
+  async batchCreateMessages(messages: MessageItem[]) {
+    return this.messageModel.batchCreate(messages);
   }
 
-  async getMessages(sessionId: string, topicId?: string): Promise<ChatMessage[]> {
-    const messages = await MessageModel.query({ sessionId, topicId });
+  async getMessages(sessionId: string, topicId?: string) {
+    const data = await this.messageModel.query({
+      sessionId: this.toDbSessionId(sessionId),
+      topicId,
+    });
 
-    const fileList = (await Promise.all(
-      messages
-        .flatMap((item) => item.files)
-        .filter(Boolean)
-        .map(async (id) => FileModel.findById(id!)),
-    )) as ChatFileItem[];
-
-    return messages.map((item) => ({
-      ...item,
-      imageList: fileList
-        .filter((file) => item.files?.includes(file.id) && file.fileType.startsWith('image'))
-        .map((file) => ({
-          alt: file.name,
-          id: file.id,
-          url: file.url,
-        })),
-    }));
+    return data as unknown as ChatMessage[];
   }
 
   async getAllMessages() {
-    return MessageModel.queryAll();
+    const data = await this.messageModel.queryAll();
+
+    return data as unknown as ChatMessage[];
   }
 
   async countMessages() {
-    return MessageModel.count();
+    return this.messageModel.count();
   }
 
   async countTodayMessages() {
-    const topics = await MessageModel.queryAll();
+    const topics = await this.messageModel.queryAll();
     return topics.filter(
       (item) => dayjs(item.createdAt).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD'),
     ).length;
   }
 
   async getAllMessagesInSession(sessionId: string) {
-    return MessageModel.queryBySessionId(sessionId);
+    const data = this.messageModel.queryBySessionId(this.toDbSessionId(sessionId));
+
+    return data as unknown as ChatMessage[];
   }
 
   async updateMessageError(id: string, error: ChatMessageError) {
-    return MessageModel.update(id, { error });
+    return this.messageModel.update(id, { error });
   }
 
-  async updateMessage(id: string, message: Partial<DB_Message>) {
-    return MessageModel.update(id, message);
+  async updateMessage(id: string, message: Partial<MessageItem>) {
+    return this.messageModel.update(id, message);
   }
 
   async updateMessageTTS(id: string, tts: Partial<ChatTTS> | false) {
-    return MessageModel.update(id, { tts });
+    return this.messageModel.updateTTS(id, tts as any);
   }
 
   async updateMessageTranslate(id: string, translate: Partial<ChatTranslate> | false) {
-    return MessageModel.update(id, { translate });
+    return this.messageModel.updateTranslate(id, translate as any);
   }
 
   async updateMessagePluginState(id: string, value: Record<string, any>) {
-    return MessageModel.updatePluginState(id, value);
+    return this.messageModel.updatePluginState(id, value);
   }
 
   async updateMessagePluginArguments(id: string, value: string | Record<string, any>) {
     const args = typeof value === 'string' ? value : JSON.stringify(value);
 
-    return MessageModel.updatePlugin(id, { arguments: args });
-  }
-
-  async bindMessagesToTopic(topicId: string, messageIds: string[]) {
-    return MessageModel.batchUpdate(messageIds, { topicId });
+    return this.messageModel.updateMessagePlugin(id, { arguments: args });
   }
 
   async removeMessage(id: string) {
-    return MessageModel.delete(id);
+    return this.messageModel.deleteMessage(id);
   }
 
   async removeMessages(ids: string[]) {
-    return MessageModel.bulkDelete(ids);
+    return this.messageModel.deleteMessages(ids);
   }
 
-  async removeMessagesByAssistant(assistantId: string, topicId?: string) {
-    return MessageModel.batchDelete(assistantId, topicId);
+  async removeMessagesByAssistant(sessionId: string, topicId?: string) {
+    return this.messageModel.deleteMessagesBySession(this.toDbSessionId(sessionId), topicId);
   }
 
   async removeAllMessages() {
-    return MessageModel.clearTable();
+    return this.messageModel.deleteAllMessages();
   }
 
   async hasMessages() {
     const number = await this.countMessages();
     return number > 0;
+  }
+
+  private toDbSessionId(sessionId: string | undefined) {
+    return sessionId === INBOX_SESSION_ID ? undefined : sessionId;
   }
 }

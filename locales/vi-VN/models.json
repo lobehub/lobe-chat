@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra là phiên bản mạnh mẽ nhất trong dòng mô hình lớn Xinghuo, nâng cao khả năng hiểu và tóm tắt nội dung văn bản trong khi nâng cấp liên kết tìm kiếm trực tuyến. Đây là giải pháp toàn diện nhằm nâng cao năng suất văn phòng và đáp ứng chính xác nhu cầu, là sản phẩm thông minh dẫn đầu ngành."
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "Generation over generation, Meta Llama 3 demonstrates state-of-the-art performance on a wide range of industry benchmarks and offers new capabilities, including improved reasoning."
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Sử dụng công nghệ tăng cường tìm kiếm để kết nối toàn diện giữa mô hình lớn và kiến thức lĩnh vực, kiến thức toàn cầu. Hỗ trợ tải lên nhiều loại tài liệu như PDF, Word và nhập URL, thông tin được thu thập kịp thời và toàn diện, kết quả đầu ra chính xác và chuyên nghiệp."
   },
@@ -112,6 +98,12 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) là một mô hình sáng tạo, phù hợp cho nhiều lĩnh vực ứng dụng và nhiệm vụ phức tạp."
   },
+  "InternVL2-8B": {
+    "description": "InternVL2-8B là một mô hình ngôn ngữ hình ảnh mạnh mẽ, hỗ trợ xử lý đa phương tiện giữa hình ảnh và văn bản, có khả năng nhận diện chính xác nội dung hình ảnh và tạo ra mô tả hoặc câu trả lời liên quan."
+  },
+  "InternVL2.5-26B": {
+    "description": "InternVL2.5-26B là một mô hình ngôn ngữ hình ảnh mạnh mẽ, hỗ trợ xử lý đa phương tiện giữa hình ảnh và văn bản, có khả năng nhận diện chính xác nội dung hình ảnh và tạo ra mô tả hoặc câu trả lời liên quan."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct là một trong những mô hình ngôn ngữ lớn mới nhất do Alibaba Cloud phát hành. Mô hình 72B này có khả năng cải thiện đáng kể trong các lĩnh vực mã hóa và toán học. Mô hình cũng cung cấp hỗ trợ đa ngôn ngữ, bao gồm hơn 29 ngôn ngữ, bao gồm tiếng Trung, tiếng Anh, v.v. Mô hình đã có sự cải thiện đáng kể trong việc tuân theo chỉ dẫn, hiểu dữ liệu có cấu trúc và tạo ra đầu ra có cấu trúc (đặc biệt là JSON)."
   },
@@ -121,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO là một mô hình kết hợp đa dạng, nhằm cung cấp trải nghiệm sáng tạo xuất sắc."
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) là mô hình chỉ dẫn chính xác cao, phù hợp cho tính toán phức tạp."
   },
@@ -233,8 +224,20 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 là dòng mô hình mới nhất của Qwen, có khả năng vượt qua các mô hình mã nguồn mở cùng quy mô hoặc thậm chí lớn hơn, Qwen2 7B đạt được lợi thế đáng kể trong nhiều bài kiểm tra, đặc biệt là trong việc hiểu mã và tiếng Trung."
   },
+  "Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5-14B-Instruct là một mô hình ngôn ngữ lớn với 14 tỷ tham số, có hiệu suất xuất sắc, tối ưu cho các tình huống tiếng Trung và đa ngôn ngữ, hỗ trợ các ứng dụng như hỏi đáp thông minh, tạo nội dung."
+  },
+  "Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5-32B-Instruct là một mô hình ngôn ngữ lớn với 32 tỷ tham số, có hiệu suất cân bằng, tối ưu cho các tình huống tiếng Trung và đa ngôn ngữ, hỗ trợ các ứng dụng như hỏi đáp thông minh, tạo nội dung."
+  },
   "Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct hỗ trợ ngữ cảnh 16k, tạo ra văn bản dài hơn 8K. Hỗ trợ gọi hàm và tương tác liền mạch với hệ thống bên ngoài, nâng cao đáng kể tính linh hoạt và khả năng mở rộng. Kiến thức của mô hình đã tăng lên rõ rệt và khả năng mã hóa cũng như toán học được cải thiện đáng kể, hỗ trợ hơn 29 ngôn ngữ."
+  },
+  "Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct là một mô hình ngôn ngữ lớn với 7 tỷ tham số, hỗ trợ gọi hàm và tương tác liền mạch với các hệ thống bên ngoài, nâng cao tính linh hoạt và khả năng mở rộng. Tối ưu cho các tình huống tiếng Trung và đa ngôn ngữ, hỗ trợ các ứng dụng như hỏi đáp thông minh, tạo nội dung."
+  },
+  "Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder-32B-Instruct là một mô hình ngôn ngữ lớn được thiết kế đặc biệt cho việc tạo mã, hiểu mã và các tình huống phát triển hiệu quả, với quy mô 32B tham số hàng đầu trong ngành, có thể đáp ứng nhu cầu lập trình đa dạng."
   },
   "SenseChat": {
     "description": "Mô hình phiên bản cơ bản (V4), độ dài ngữ cảnh 4K, khả năng tổng quát mạnh mẽ."
@@ -464,6 +467,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet cung cấp sự cân bằng lý tưởng giữa trí thông minh và tốc độ cho khối lượng công việc doanh nghiệp. Nó cung cấp hiệu suất tối đa với mức giá thấp hơn, đáng tin cậy và phù hợp cho triển khai quy mô lớn."
   },
+  "code-raccoon-v1": {
+    "description": "Code Raccoon là một trợ lý phát triển phần mềm thông minh dựa trên mô hình ngôn ngữ lớn của SenseTime, bao phủ các giai đoạn phân tích yêu cầu phần mềm, thiết kế kiến trúc, viết mã, kiểm thử phần mềm, đáp ứng nhu cầu viết mã và học lập trình của người dùng. Code Raccoon hỗ trợ hơn 90 ngôn ngữ lập trình phổ biến như Python, Java, JavaScript, C++, Go, SQL và các IDE phổ biến như VS Code, IntelliJ IDEA. Trong thực tế, Code Raccoon có thể giúp các nhà phát triển nâng cao hiệu suất lập trình hơn 50%."
+  },
   "codegeex-4": {
     "description": "CodeGeeX-4 là trợ lý lập trình AI mạnh mẽ, hỗ trợ nhiều ngôn ngữ lập trình với câu hỏi thông minh và hoàn thành mã, nâng cao hiệu suất phát triển."
   },
@@ -508,9 +514,6 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+ là mô hình tối ưu hóa RAG hiện đại, được thiết kế để xử lý khối lượng công việc cấp doanh nghiệp."
-  },
-  "command-light": {
-    "description": ""
   },
   "command-r": {
     "description": "Command R là LLM được tối ưu hóa cho các nhiệm vụ đối thoại và ngữ cảnh dài, đặc biệt phù hợp cho tương tác động và quản lý kiến thức."
@@ -595,6 +598,9 @@
   },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro hỗ trợ lên đến 2 triệu tokens, là lựa chọn lý tưởng cho mô hình đa phương thức trung bình, phù hợp cho hỗ trợ đa diện cho các nhiệm vụ phức tạp."
+  },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, có các tính năng thế hệ tiếp theo, tốc độ vượt trội, khả năng gọi công cụ nguyên bản và tạo ra đa phương thức."
   },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 là mô hình AI đa phương thức thử nghiệm mới nhất của Google, có khả năng xử lý nhanh, hỗ trợ đầu vào văn bản, hình ảnh và video, phù hợp với việc mở rộng hiệu quả cho nhiều nhiệm vụ."
@@ -749,6 +755,12 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini là mô hình mới nhất do OpenAI phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và đầu ra văn bản. Là mô hình nhỏ gọn tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng cao hơn GPT-4 về sở thích trò chuyện."
   },
+  "grok-2-1212": {
+    "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
+  },
+  "grok-2-vision-1212": {
+    "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
+  },
   "grok-beta": {
     "description": "Có hiệu suất tương đương với Grok 2, nhưng hiệu quả, tốc độ và tính năng cao hơn."
   },
@@ -763,9 +775,6 @@
   },
   "hunyuan-functioncall": {
     "description": "Mô hình FunctionCall với cấu trúc MOE mới nhất của Hunyuan, được huấn luyện trên dữ liệu FunctionCall chất lượng cao, với cửa sổ ngữ cảnh đạt 32K, dẫn đầu trong nhiều chỉ số đánh giá."
-  },
-  "hunyuan-large": {
-    "description": ""
   },
   "hunyuan-lite": {
     "description": "Nâng cấp lên cấu trúc MOE, với cửa sổ ngữ cảnh 256k, dẫn đầu nhiều mô hình mã nguồn mở trong các bộ đánh giá NLP, mã, toán học, ngành nghề, v.v."
@@ -800,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "Dòng mô hình mới nhất của chúng tôi, có hiệu suất suy luận xuất sắc, hỗ trợ độ dài ngữ cảnh 1M và khả năng theo dõi chỉ dẫn và gọi công cụ mạnh mẽ hơn."
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM là một mô hình ngôn ngữ thử nghiệm, chuyên biệt cho các nhiệm vụ, được đào tạo để tuân theo các nguyên tắc khoa học học tập, có thể tuân theo các chỉ dẫn hệ thống trong các tình huống giảng dạy và học tập, đóng vai trò như một người hướng dẫn chuyên gia."
   },
@@ -997,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 là một mô hình ngôn ngữ lớn (LLM) mở dành cho các nhà phát triển, nhà nghiên cứu và doanh nghiệp, nhằm giúp họ xây dựng, thử nghiệm và mở rộng ý tưởng AI sinh một cách có trách nhiệm. Là một phần của hệ thống cơ sở hạ tầng đổi mới toàn cầu, nó rất phù hợp cho các thiết bị biên và thời gian huấn luyện nhanh hơn với khả năng tính toán và tài nguyên hạn chế."
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 là mô hình ngôn ngữ do AI của Microsoft cung cấp, thể hiện xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
   },

@@ -1,5 +1,4 @@
-import { eq, inArray } from 'drizzle-orm';
-import { and, desc } from 'drizzle-orm/expressions';
+import { and, desc, eq, inArray } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
@@ -81,16 +80,14 @@ export class KnowledgeBaseModel {
   };
 
   // update
-  async update(id: string, value: Partial<KnowledgeBaseItem>) {
-    return this.db
+  update = async (id: string, value: Partial<KnowledgeBaseItem>) =>
+    this.db
       .update(knowledgeBases)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(knowledgeBases.id, id), eq(knowledgeBases.userId, this.userId)));
-  }
 
-  static async findById(db: LobeChatDatabase, id: string) {
-    return db.query.knowledgeBases.findFirst({
+  static findById = async (db: LobeChatDatabase, id: string) =>
+    db.query.knowledgeBases.findFirst({
       where: eq(knowledgeBases.id, id),
     });
-  }
 }

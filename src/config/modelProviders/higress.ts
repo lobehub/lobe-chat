@@ -2464,7 +2464,8 @@ const Higress: ModelProviderCard = {
     },
   ],
   checkModel: 'qwen-max',
-  description: '',
+  description:
+    'Higress 是一款云原生 API 网关，在阿里内部为解决 Tengine reload 对长连接业务有损，以及 gRPC/Dubbo 负载均衡能力不足而诞生。',
   id: 'higress',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://higress.cn/',

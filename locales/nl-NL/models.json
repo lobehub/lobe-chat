@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra is de krachtigste versie in de Spark-grootmodelserie, die de netwerkintegratie heeft geüpgraded en de tekstbegrip- en samenvattingscapaciteiten heeft verbeterd. Het is een allesomvattende oplossing voor het verbeteren van de kantoorproductiviteit en het nauwkeurig reageren op behoeften, en is een toonaangevend intelligent product in de industrie."
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "Generatie na generatie toont Meta Llama 3 state-of-the-art prestaties op een breed scala aan industriële benchmarks en biedt nieuwe mogelijkheden, waaronder verbeterd redeneren."
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Maakt gebruik van zoekversterkingstechnologie om een uitgebreide koppeling tussen het grote model en domeinspecifieke kennis en wereldwijde kennis te realiseren. Ondersteunt het uploaden van verschillende documenten zoals PDF en Word, evenals URL-invoer, met tijdige en uitgebreide informatieverzameling en nauwkeurige, professionele output."
   },
@@ -112,6 +98,12 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) is een innovatief model, geschikt voor toepassingen in meerdere domeinen en complexe taken."
   },
+  "InternVL2-8B": {
+    "description": "InternVL2-8B is een krachtig visueel taalmodel dat multimodale verwerking van afbeeldingen en tekst ondersteunt, in staat om afbeeldingsinhoud nauwkeurig te identificeren en relevante beschrijvingen of antwoorden te genereren."
+  },
+  "InternVL2.5-26B": {
+    "description": "InternVL2.5-26B is een krachtig visueel taalmodel dat multimodale verwerking van afbeeldingen en tekst ondersteunt, in staat om afbeeldingsinhoud nauwkeurig te identificeren en relevante beschrijvingen of antwoorden te genereren."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct is een van de nieuwste grote taalmodellen die door Alibaba Cloud is uitgebracht. Dit 72B-model heeft aanzienlijke verbeteringen in coderings- en wiskundige vaardigheden. Het model biedt ook meertalige ondersteuning, met meer dan 29 ondersteunde talen, waaronder Chinees en Engels. Het model heeft aanzienlijke verbeteringen in het volgen van instructies, het begrijpen van gestructureerde gegevens en het genereren van gestructureerde uitvoer (vooral JSON)."
   },
@@ -121,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO is een zeer flexibele multi-model combinatie, ontworpen om een uitstekende creatieve ervaring te bieden."
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) is een hoogprecisie instructiemodel, geschikt voor complexe berekeningen."
   },
@@ -233,8 +224,20 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 is de nieuwste serie van het Qwen-model, dat in staat is om de beste open-source modellen van gelijke grootte of zelfs grotere modellen te overtreffen. Qwen2 7B heeft aanzienlijke voordelen behaald in verschillende evaluaties, vooral op het gebied van code en begrip van het Chinees."
   },
+  "Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5-14B-Instruct is een groot taalmodel met 14 miljard parameters, met uitstekende prestaties, geoptimaliseerd voor Chinese en meertalige scenario's, en ondersteunt toepassingen zoals intelligente vraag-en-antwoord en contentgeneratie."
+  },
+  "Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5-32B-Instruct is een groot taalmodel met 32 miljard parameters, met een evenwichtige prestatie, geoptimaliseerd voor Chinese en meertalige scenario's, en ondersteunt toepassingen zoals intelligente vraag-en-antwoord en contentgeneratie."
+  },
   "Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct ondersteunt 16k context en genereert lange teksten van meer dan 8K. Het ondersteunt functieaanroepen en naadloze interactie met externe systemen, wat de flexibiliteit en schaalbaarheid aanzienlijk vergroot. De kennis van het model is duidelijk toegenomen en de coderings- en wiskundige vaardigheden zijn sterk verbeterd, met ondersteuning voor meer dan 29 talen."
+  },
+  "Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct is een groot taalmodel met 7 miljard parameters, dat function calls ondersteunt en naadloos kan interageren met externe systemen, wat de flexibiliteit en schaalbaarheid aanzienlijk vergroot. Geoptimaliseerd voor Chinese en meertalige scenario's, ondersteunt het toepassingen zoals intelligente vraag-en-antwoord en contentgeneratie."
+  },
+  "Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder-32B-Instruct is een groot taalmodel dat speciaal is ontworpen voor codegeneratie, codebegrip en efficiënte ontwikkelingsscenario's, met een toonaangevende parameteromvang van 32B, dat kan voldoen aan diverse programmeerbehoeften."
   },
   "SenseChat": {
     "description": "Basisversie van het model (V4), met een contextlengte van 4K, heeft sterke algemene capaciteiten."
@@ -464,6 +467,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet biedt een ideale balans tussen intelligentie en snelheid voor bedrijfswerkbelastingen. Het biedt maximale bruikbaarheid tegen een lagere prijs, betrouwbaar en geschikt voor grootschalige implementatie."
   },
+  "code-raccoon-v1": {
+    "description": "Code Raccoon is een software-intelligente ontwikkelingsassistent gebaseerd op het SenseTime grote taalmodel, dat softwarebehoefteanalyse, architectuurontwerp, code schrijven, softwaretesten en andere fasen dekt, en voldoet aan de verschillende behoeften van gebruikers voor code schrijven en programmeerleren. Code Raccoon ondersteunt meer dan 90 populaire programmeertalen zoals Python, Java, JavaScript, C++, Go, SQL en populaire IDE's zoals VS Code en IntelliJ IDEA. In de praktijk kan Code Raccoon ontwikkelaars helpen om de programmeerefficiëntie met meer dan 50% te verhogen."
+  },
   "codegeex-4": {
     "description": "CodeGeeX-4 is een krachtige AI-programmeerassistent die slimme vraag- en antwoordmogelijkheden en code-aanvulling ondersteunt voor verschillende programmeertalen, waardoor de ontwikkelingssnelheid wordt verhoogd."
   },
@@ -508,9 +514,6 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+ is een state-of-the-art RAG-geoptimaliseerd model ontworpen om enterprise-grade workloads aan te pakken."
-  },
-  "command-light": {
-    "description": ""
   },
   "command-r": {
     "description": "Command R is geoptimaliseerd voor conversatie- en lange contexttaken, bijzonder geschikt voor dynamische interactie en kennisbeheer."
@@ -595,6 +598,9 @@
   },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro ondersteunt tot 2 miljoen tokens en is de ideale keuze voor middelgrote multimodale modellen, geschikt voor veelzijdige ondersteuning van complexe taken."
+  },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp is Google's nieuwste experimentele multimodale AI-model, met de volgende generatie functies, uitstekende snelheid, ingebouwde tool-aanroepen en multimodale generatie."
   },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 is Google's nieuwste experimentele multimodale AI-model, met een snelle verwerkingscapaciteit, ondersteunt tekst-, beeld- en video-invoer, geschikt voor efficiënte schaling van diverse taken."
@@ -749,6 +755,12 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, en ondersteunt zowel tekst- als beeldinvoer met tekstuitvoer. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
   },
+  "grok-2-1212": {
+    "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
+  },
+  "grok-2-vision-1212": {
+    "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
+  },
   "grok-beta": {
     "description": "Biedt prestaties vergelijkbaar met Grok 2, maar met hogere efficiëntie, snelheid en functionaliteit."
   },
@@ -763,9 +775,6 @@
   },
   "hunyuan-functioncall": {
     "description": "Het nieuwste MOE-architectuur FunctionCall-model van Hunyuan, getraind op hoogwaardige FunctionCall-gegevens, met een contextvenster van 32K, en staat voorop in meerdere dimensies van evaluatie-indicatoren."
-  },
-  "hunyuan-large": {
-    "description": ""
   },
   "hunyuan-lite": {
     "description": "Geüpgraded naar een MOE-structuur, met een contextvenster van 256k, en leidt in verschillende evaluatiesets op het gebied van NLP, code, wiskunde en industrie ten opzichte van vele open-source modellen."
@@ -800,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "Onze nieuwste modelreeks met uitstekende redeneervaardigheden, ondersteunt een contextlengte van 1M en heeft verbeterde instructievolging en toolaanroepmogelijkheden."
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM is een experimenteel, taak-specifiek taalmodel dat is getraind volgens de principes van de leerwetenschap, en kan systeeminstructies volgen in onderwijs- en leeromgevingen, en fungeert als een expertmentor."
   },
@@ -997,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 is een open groot taalmodel (LLM) gericht op ontwikkelaars, onderzoekers en bedrijven, ontworpen om hen te helpen bij het bouwen, experimenteren en verantwoordelijk opschalen van hun generatieve AI-ideeën. Als onderdeel van het basis systeem voor wereldwijde gemeenschapsinnovatie is het zeer geschikt voor apparaten met beperkte rekenkracht en middelen, edge-apparaten en snellere trainingstijden."
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 is een taalmodel van Microsoft AI dat uitblinkt in complexe gesprekken, meertaligheid, redenering en intelligente assistenttoepassingen."
   },

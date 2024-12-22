@@ -1,6 +1,244 @@
 [
   {
     "children": {
+      "improvements": ["Move pglite to client service."]
+    },
+    "date": "2024-12-22",
+    "version": "1.37.2"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the client service to deprecated."]
+    },
+    "date": "2024-12-22",
+    "version": "1.37.1"
+  },
+  {
+    "children": {
+      "features": ["Support to use pglite as client db."]
+    },
+    "date": "2024-12-22",
+    "version": "1.37.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor client mode upload to match server mode."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.46"
+  },
+  {
+    "children": {
+      "improvements": ["Add o1 model in GitHub models."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.45"
+  },
+  {
+    "children": {
+      "improvements": ["Add Gemini flash thinking model."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.44"
+  },
+  {
+    "children": {},
+    "date": "2024-12-21",
+    "version": "1.36.43"
+  },
+  {
+    "children": {
+      "fixes": ["Fix HUGGINGFACE endpoint url."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.42"
+  },
+  {
+    "children": {
+      "improvements": ["Upgrade react scan."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.41"
+  },
+  {
+    "children": {
+      "improvements": ["Seperate user keyVaults encrpyto from user model."]
+    },
+    "date": "2024-12-20",
+    "version": "1.36.40"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to use async headers()."]
+    },
+    "date": "2024-12-20",
+    "version": "1.36.39"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor layout props."]
+    },
+    "date": "2024-12-20",
+    "version": "1.36.38"
+  },
+  {
+    "children": {},
+    "date": "2024-12-19",
+    "version": "1.36.37"
+  },
+  {
+    "children": {},
+    "date": "2024-12-19",
+    "version": "1.36.36"
+  },
+  {
+    "children": {
+      "improvements": ["Improve home page loading for better UX."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.35"
+  },
+  {
+    "children": {
+      "fixes": ["Fix pdf preview with capital ext."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.34"
+  },
+  {
+    "children": {
+      "fixes": ["Fix GitHub model fetch."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.33"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the drizzle code style."]
+    },
+    "date": "2024-12-17",
+    "version": "1.36.32"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the data fetch with clientDB init check."]
+    },
+    "date": "2024-12-17",
+    "version": "1.36.31"
+  },
+  {
+    "children": {
+      "improvements": ["Improve page loading state."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.30"
+  },
+  {
+    "children": {
+      "fixes": ["Fix discover locale with different default lang."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.29"
+  },
+  {
+    "children": {},
+    "date": "2024-12-16",
+    "version": "1.36.28"
+  },
+  {
+    "children": {
+      "fixes": ["Add unique keys to <ModelList> children."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.27"
+  },
+  {
+    "children": {
+      "improvements": ["Update models of Gitee AI provider."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.26"
+  },
+  {
+    "children": {
+      "improvements": ["Add new grok models."]
+    },
+    "date": "2024-12-14",
+    "version": "1.36.25"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor file Url query in message model."]
+    },
+    "date": "2024-12-14",
+    "version": "1.36.24"
+  },
+  {
+    "children": {
+      "improvements": ["Support csv chunking."]
+    },
+    "date": "2024-12-13",
+    "version": "1.36.23"
+  },
+  {
+    "children": {},
+    "date": "2024-12-13",
+    "version": "1.36.22"
+  },
+  {
+    "children": {},
+    "date": "2024-12-13",
+    "version": "1.36.21"
+  },
+  {
+    "children": {
+      "improvements": ["Update locale."]
+    },
+    "date": "2024-12-13",
+    "version": "1.36.20"
+  },
+  {
+    "children": {
+      "fixes": ["One of Gemini functionCall error."]
+    },
+    "date": "2024-12-13",
+    "version": "1.36.19"
+  },
+  {
+    "children": {
+      "fixes": ["Fix claude first message can not be assistant."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.18"
+  },
+  {
+    "children": {},
+    "date": "2024-12-12",
+    "version": "1.36.17"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the file model method."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.16"
+  },
+  {
+    "children": {
+      "improvements": ["Enable googleSearch Tool for gemini-2.0-flash-exp."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.15"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor database file model to remove server env."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.14"
+  },
+  {
+    "children": {
       "improvements": ["Add Gemini 2.0 Flash Exp model."]
     },
     "date": "2024-12-11",

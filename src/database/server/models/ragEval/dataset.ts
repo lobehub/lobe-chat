@@ -1,7 +1,7 @@
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm/expressions';
 
-import { serverDB } from '@/database/server';
 import { NewEvalDatasetsItem, evalDatasets } from '@/database/schemas';
+import { serverDB } from '@/database/server';
 import { RAGEvalDataSetItem } from '@/types/eval';
 
 export class EvalDatasetModel {

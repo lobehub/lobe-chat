@@ -80,3 +80,16 @@ LobeChat 支持多模态的 AI 会话，包括将图片、文件等非结构化�
 - virtual-host : `mybucket.s3.example.net/config.env`
 
 </Callout>
+
+### `LLM_VISION_IMAGE_USE_BASE64`
+
+- 类型：可选
+- 描述：设置为 1 则使用 base64 编码上传图片
+- 默认值：undefined
+- 示例：`1`
+
+当设置为 `1` 时，LobeChat 会将图片转换为 base64 编码后上传到 LLM 模型中，当遇到如下错误时请考虑配置该环境变量为 1
+
+```log
+Route: [xai] ProviderBizError: Fetching images over plain http:// is not supported.
+```

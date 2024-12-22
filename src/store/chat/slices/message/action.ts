@@ -47,7 +47,11 @@ export interface ChatMessageAction {
   modifyMessageContent: (id: string, content: string) => Promise<void>;
   toggleMessageEditing: (id: string, editing: boolean) => void;
   // query
-  useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
+  useFetchMessages: (
+    enable: boolean,
+    sessionId: string,
+    topicId?: string,
+  ) => SWRResponse<ChatMessage[]>;
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
 
@@ -220,9 +224,9 @@ export const chatMessage: StateCreator<
 
     await get().internal_updateMessageContent(id, content);
   },
-  useFetchMessages: (sessionId, activeTopicId) =>
+  useFetchMessages: (enable, sessionId, activeTopicId) =>
     useClientDataSWR<ChatMessage[]>(
-      [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId],
+      enable ? [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId] : null,
       async ([, sessionId, topicId]: [string, string, string | undefined]) =>
         messageService.getMessages(sessionId, topicId),
       {

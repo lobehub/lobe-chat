@@ -1,5 +1,5 @@
-import { count, eq } from 'drizzle-orm';
-import { and } from 'drizzle-orm/expressions';
+import { count } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
 
@@ -50,7 +50,7 @@ export class EmbeddingModel {
     });
   };
 
-  countUsage = async () => {
+  countUsage = async (): Promise<number> => {
     const result = await this.db
       .select({
         count: count(),

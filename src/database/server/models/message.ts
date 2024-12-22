@@ -1,9 +1,8 @@
 import { count } from 'drizzle-orm';
 import { and, asc, desc, eq, gte, inArray, isNull, like, lt } from 'drizzle-orm/expressions';
 
-import { idGenerator } from '@/database/utils/idGenerator';
 import { LobeChatDatabase } from '@/database/type';
-import { getFullFileUrl } from '@/server/utils/files';
+import { idGenerator } from '@/database/utils/idGenerator';
 import {
   ChatFileItem,
   ChatImageItem,
@@ -47,12 +46,10 @@ export class MessageModel {
   }
 
   // **************** Query *************** //
-  async query({
-    current = 0,
-    pageSize = 1000,
-    sessionId,
-    topicId,
-  }: QueryMessageParams = {}): Promise<MessageItem[]> {
+  query = async (
+    { current = 0, pageSize = 1000, sessionId, topicId }: QueryMessageParams = {},
+    options: { postProcessUrl?: (path: string | null) => Promise<string> } = {},
+  ): Promise<MessageItem[]> => {
     const offset = current * pageSize;
 
     // 1. get basic messages
@@ -133,7 +130,7 @@ export class MessageModel {
     const relatedFileList = await Promise.all(
       rawRelatedFileList.map(async (file) => ({
         ...file,
-        url: await getFullFileUrl(file.url),
+        url: options.postProcessUrl ? await options.postProcessUrl(file.url) : (file.url as string),
       })),
     );
 
@@ -215,15 +212,15 @@ export class MessageModel {
         };
       },
     );
-  }
+  };
 
-  async findById(id: string) {
+  findById = async (id: string) => {
     return this.db.query.messages.findFirst({
       where: and(eq(messages.id, id), eq(messages.userId, this.userId)),
     });
-  }
+  };
 
-  async findMessageQueriesById(messageId: string) {
+  findMessageQueriesById = async (messageId: string) => {
     const result = await this.db
       .select({
         embeddings: embeddings.embeddings,
@@ -239,47 +236,43 @@ export class MessageModel {
     if (result.length === 0) return undefined;
 
     return result[0];
-  }
+  };
 
-  async queryAll(): Promise<MessageItem[]> {
+  queryAll = async (): Promise<MessageItem[]> => {
     return this.db
       .select()
       .from(messages)
       .orderBy(messages.createdAt)
-      .where(eq(messages.userId, this.userId))
+      .where(eq(messages.userId, this.userId));
+  };
 
-      .execute();
-  }
-
-  async queryBySessionId(sessionId?: string | null): Promise<MessageItem[]> {
+  queryBySessionId = async (sessionId?: string | null): Promise<MessageItem[]> => {
     return this.db.query.messages.findMany({
       orderBy: [asc(messages.createdAt)],
       where: and(eq(messages.userId, this.userId), this.matchSession(sessionId)),
     });
-  }
+  };
 
-  async queryByKeyword(keyword: string): Promise<MessageItem[]> {
+  queryByKeyword = async (keyword: string): Promise<MessageItem[]> => {
     if (!keyword) return [];
-
     return this.db.query.messages.findMany({
       orderBy: [desc(messages.createdAt)],
       where: and(eq(messages.userId, this.userId), like(messages.content, `%${keyword}%`)),
     });
-  }
+  };
 
-  async count() {
+  count = async (): Promise<number> => {
     const result = await this.db
       .select({
-        count: count(),
+        count: count(messages.id),
       })
       .from(messages)
-      .where(eq(messages.userId, this.userId))
-      .execute();
+      .where(eq(messages.userId, this.userId));
 
     return result[0].count;
-  }
+  };
 
-  async countToday() {
+  countToday = async (): Promise<number> => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
@@ -287,7 +280,7 @@ export class MessageModel {
 
     const result = await this.db
       .select({
-        count: count(),
+        count: count(messages.id),
       })
       .from(messages)
       .where(
@@ -296,15 +289,24 @@ export class MessageModel {
           gte(messages.createdAt, today),
           lt(messages.createdAt, tomorrow),
         ),
-      )
-      .execute();
+      );
 
     return result[0].count;
-  }
+  };
+
+  hasMoreThanN = async (n: number): Promise<boolean> => {
+    const result = await this.db
+      .select({ id: messages.id })
+      .from(messages)
+      .where(eq(messages.userId, this.userId))
+      .limit(n + 1);
+
+    return result.length > n;
+  };
 
   // **************** Create *************** //
 
-  async create(
+  create = async (
     {
       fromModel,
       fromProvider,
@@ -316,7 +318,7 @@ export class MessageModel {
       ...message
     }: CreateMessageParams,
     id: string = this.genId(),
-  ): Promise<MessageItem> {
+  ): Promise<MessageItem> => {
     return this.db.transaction(async (trx) => {
       const [item] = (await trx
         .insert(messages)
@@ -361,31 +363,31 @@ export class MessageModel {
 
       return item;
     });
-  }
+  };
 
-  async batchCreate(newMessages: MessageItem[]) {
+  batchCreate = async (newMessages: MessageItem[]) => {
     const messagesToInsert = newMessages.map((m) => {
       return { ...m, userId: this.userId };
     });
 
     return this.db.insert(messages).values(messagesToInsert);
-  }
+  };
 
-  async createMessageQuery(params: NewMessageQuery) {
+  createMessageQuery = async (params: NewMessageQuery) => {
     const result = await this.db.insert(messageQueries).values(params).returning();
 
     return result[0];
-  }
+  };
   // **************** Update *************** //
 
-  async update(id: string, message: Partial<MessageItem>) {
+  update = async (id: string, message: Partial<MessageItem>) => {
     return this.db
       .update(messages)
       .set(message)
       .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
-  }
+  };
 
-  async updatePluginState(id: string, state: Record<string, any>) {
+  updatePluginState = async (id: string, state: Record<string, any>) => {
     const item = await this.db.query.messagePlugins.findFirst({
       where: eq(messagePlugins.id, id),
     });
@@ -395,18 +397,18 @@ export class MessageModel {
       .update(messagePlugins)
       .set({ state: merge(item.state || {}, state) })
       .where(eq(messagePlugins.id, id));
-  }
+  };
 
-  async updateMessagePlugin(id: string, value: Partial<MessagePluginItem>) {
+  updateMessagePlugin = async (id: string, value: Partial<MessagePluginItem>) => {
     const item = await this.db.query.messagePlugins.findFirst({
       where: eq(messagePlugins.id, id),
     });
     if (!item) throw new Error('Plugin not found');
 
     return this.db.update(messagePlugins).set(value).where(eq(messagePlugins.id, id));
-  }
+  };
 
-  async updateTranslate(id: string, translate: Partial<MessageItem>) {
+  updateTranslate = async (id: string, translate: Partial<MessageItem>) => {
     const result = await this.db.query.messageTranslates.findFirst({
       where: and(eq(messageTranslates.id, id)),
     });
@@ -418,9 +420,9 @@ export class MessageModel {
 
     // or just update the existing one
     return this.db.update(messageTranslates).set(translate).where(eq(messageTranslates.id, id));
-  }
+  };
 
-  async updateTTS(id: string, tts: Partial<ChatTTS>) {
+  updateTTS = async (id: string, tts: Partial<ChatTTS>) => {
     const result = await this.db.query.messageTTS.findFirst({
       where: and(eq(messageTTS.id, id)),
     });
@@ -437,11 +439,11 @@ export class MessageModel {
       .update(messageTTS)
       .set({ contentMd5: tts.contentMd5, fileId: tts.file, voice: tts.voice })
       .where(eq(messageTTS.id, id));
-  }
+  };
 
   // **************** Delete *************** //
 
-  async deleteMessage(id: string) {
+  deleteMessage = async (id: string) => {
     return this.db.transaction(async (tx) => {
       // 1. 查询要删除的 message 的完整信息
       const message = await tx
@@ -463,8 +465,7 @@ export class MessageModel {
         const res = await tx
           .select({ id: messagePlugins.id })
           .from(messagePlugins)
-          .where(inArray(messagePlugins.toolCallId, toolCallIds))
-          .execute();
+          .where(inArray(messagePlugins.toolCallId, toolCallIds));
 
         relatedMessageIds = res.map((row) => row.id);
       }
@@ -475,28 +476,24 @@ export class MessageModel {
       // 5. 删除所有相关的 message
       await tx.delete(messages).where(inArray(messages.id, messageIdsToDelete));
     });
-  }
+  };
 
-  async deleteMessages(ids: string[]) {
-    return this.db
+  deleteMessages = async (ids: string[]) =>
+    this.db
       .delete(messages)
       .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
-  }
 
-  async deleteMessageTranslate(id: string) {
-    return this.db.delete(messageTranslates).where(and(eq(messageTranslates.id, id)));
-  }
+  deleteMessageTranslate = async (id: string) =>
+    this.db.delete(messageTranslates).where(and(eq(messageTranslates.id, id)));
 
-  async deleteMessageTTS(id: string) {
-    return this.db.delete(messageTTS).where(and(eq(messageTTS.id, id)));
-  }
+  deleteMessageTTS = async (id: string) =>
+    this.db.delete(messageTTS).where(and(eq(messageTTS.id, id)));
 
-  async deleteMessageQuery(id: string) {
-    return this.db.delete(messageQueries).where(and(eq(messageQueries.id, id)));
-  }
+  deleteMessageQuery = async (id: string) =>
+    this.db.delete(messageQueries).where(and(eq(messageQueries.id, id)));
 
-  async deleteMessagesBySession(sessionId?: string | null, topicId?: string | null) {
-    return this.db
+  deleteMessagesBySession = async (sessionId?: string | null, topicId?: string | null) =>
+    this.db
       .delete(messages)
       .where(
         and(
@@ -505,11 +502,10 @@ export class MessageModel {
           this.matchTopic(topicId),
         ),
       );
-  }
 
-  async deleteAllMessages() {
+  deleteAllMessages = async () => {
     return this.db.delete(messages).where(eq(messages.userId, this.userId));
-  }
+  };
 
   // **************** Helper *************** //
 

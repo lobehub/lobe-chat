@@ -23,20 +23,6 @@
   "4.0Ultra": {
     "description": "Spark Ultra 是星火大模型系列中最为强大的版本，在升级联网搜索链路同时，提升对文本内容的理解和总结能力。它是用于提升办公生产力和准确响应需求的全方位解决方案，是引领行业的智能产品。"
   },
-  "@cf/meta/llama-3-8b-instruct-awq": {},
-  "@cf/openchat/openchat-3.5-0106": {},
-  "@cf/qwen/qwen1.5-14b-chat-awq": {},
-  "@hf/google/gemma-7b-it": {},
-  "@hf/meta-llama/meta-llama-3-8b-instruct": {
-    "description": "Generation over generation, Meta Llama 3 demonstrates state-of-the-art performance on a wide range of industry benchmarks and offers new capabilities, including improved reasoning.\t"
-  },
-  "@hf/mistral/mistral-7b-instruct-v0.2": {},
-  "@hf/nexusflow/starling-lm-7b-beta": {},
-  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
-  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
-  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
-  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "采用搜索增强技术实现大模型与领域知识、全网知识的全面链接。支持PDF、Word等多种文档上传及网址输入，信息获取及时、全面，输出结果准确、专业。"
   },
@@ -50,10 +36,10 @@
     "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
   },
   "Baichuan4-Air": {
-    "description": ""
+    "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
   },
   "Baichuan4-Turbo": {
-    "description": ""
+    "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持128k上下文窗口的推理和精调。"
@@ -112,6 +98,12 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) 是一种创新模型，适合多领域应用和复杂任务。"
   },
+  "InternVL2-8B": {
+    "description": "InternVL2-8B 是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。"
+  },
+  "InternVL2.5-26B": {
+    "description": "InternVL2.5-26B 是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。"
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
   },
@@ -121,7 +113,6 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO 是一款高度灵活的多模型合并，旨在提供卓越的创造性体验。"
   },
-  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) 是高精度的指令模型，适用于复杂计算。"
   },
@@ -233,8 +224,20 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 是 Qwen 模型的最新系列，能够超越同等规模的最优开源模型甚至更大规模的模型，Qwen2 7B 在多个评测上取得显著的优势，尤其是代码及中文理解上。"
   },
+  "Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5-14B-Instruct 是一款 140 亿参数的大语言模型，性能表现优秀，优化中文和多语言场景，支持智能问答、内容生成等应用。"
+  },
+  "Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5-32B-Instruct 是一款 320 亿参数的大语言模型，性能表现均衡，优化中文和多语言场景，支持智能问答、内容生成等应用。"
+  },
   "Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5-72B-Instruct  支持 16k 上下文, 生成长文本超过 8K 。支持 function call 与外部系统无缝交互，极大提升了灵活性和扩展性。模型知识明显增加，并且大大提高了编码和数学能力, 多语言支持超过 29 种"
+    "description": "Qwen2.5-72B-Instruct 支持 16k 上下文, 生成长文本超过 8K 。支持 function call 与外部系统无缝交互，极大提升了灵活性和扩展性。模型知识明显增加，并且大大提高了编码和数学能力, 多语言支持超过 29 种"
+  },
+  "Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct 是一款 70 亿参数的大语言模型，支持 function call 与外部系统无缝交互，极大提升了灵活性和扩展性。优化中文和多语言场景，支持智能问答、内容生成等应用。"
+  },
+  "Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder-32B-Instruct 是一款专为代码生成、代码理解和高效开发场景设计的大型语言模型，采用了业界领先的32B参数规模，能够满足多样化的编程需求。"
   },
   "SenseChat": {
     "description": "基础版本模型 (V4)，4K上下文长度，通用能力强大"
@@ -464,6 +467,9 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet 在智能和速度方面为企业工作负载提供了理想的平衡。它以更低的价格提供最大效用，可靠且适合大规模部署。"
   },
+  "code-raccoon-v1": {
+    "description": "代码小浣熊是基于商汤大语言模型的软件智能研发助手，覆盖软件需求分析、架构设计、代码编写、软件测试等环节，满足用户代码编写、编程学习等各类需求。代码小浣熊支持 Python、Java、JavaScript、C++、Go、SQL 等 90+主流编程语言和 VS Code、IntelliJ IDEA 等主流 IDE。在实际应用中，代码小浣熊可帮助开发者提升编程效率超 50%。"
+  },
   "codegeex-4": {
     "description": "CodeGeeX-4 是强大的AI编程助手，支持多种编程语言的智能问答与代码补全，提升开发效率。"
   },
@@ -509,14 +515,11 @@
   "cohere-command-r-plus": {
     "description": "Command R+是一个最先进的RAG优化模型，旨在应对企业级工作负载。"
   },
-  "command-light": {
-    "description": ""
-  },
   "command-r": {
-    "description": ""
+    "description": "Command R 是优化用于对话和长上下文任务的LLM，特别适合动态交互与知识管理。"
   },
   "command-r-plus": {
-    "description": ""
+    "description": "Command R+ 是一款高性能的大型语言模型，专为真实企业场景和复杂应用而设计。"
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct 提供高可靠性的指令处理能力，支持多行业应用。"
@@ -595,6 +598,9 @@
   },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro 支持高达200万个tokens，是中型多模态模型的理想选择，适用于复杂任务的多方面支持。"
+  },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp 是 Google 最新的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。"
   },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 是 Google 的实验性多模态AI模型，对输出质量有一定改进。"
@@ -749,6 +755,12 @@
   "gpt-4o-mini": {
     "description": "一种经济高效的AI解决方案，适用于多种文本和图像任务。"
   },
+  "grok-2-1212": {
+    "description": "该模型在准确性、指令遵循和多语言能力方面有所改进。"
+  },
+  "grok-2-vision-1212": {
+    "description": "该模型在准确性、指令遵循和多语言能力方面有所改进。"
+  },
   "grok-beta": {
     "description": "拥有与 Grok 2 相当的性能，但具有更高的效率、速度和功能。"
   },
@@ -763,9 +775,6 @@
   },
   "hunyuan-functioncall": {
     "description": "混元最新 MOE 架构 FunctionCall 模型，经过高质量的 FunctionCall 数据训练，上下文窗口达 32K，在多个维度的评测指标上处于领先。"
-  },
-  "hunyuan-large": {
-    "description": ""
   },
   "hunyuan-lite": {
     "description": "升级为 MOE 结构，上下文窗口为 256k ，在 NLP，代码，数学，行业等多项评测集上领先众多开源模型。"
@@ -800,8 +809,6 @@
   "internlm2.5-latest": {
     "description": "我们最新的模型系列，有着卓越的推理性能，支持 1M 的上下文长度以及更强的指令跟随和工具调用能力。"
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM 是一个实验性的、特定于任务的语言模型，经过训练以符合学习科学原则，可在教学和学习场景中遵循系统指令，充当专家导师等。"
   },
@@ -997,7 +1004,6 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 是一款面向开发者、研究人员和企业的开放大型语言模型 (LLM)，旨在帮助他们构建、实验并负责任地扩展他们的生成 AI 想法。作为全球社区创新的基础系统的一部分，它非常适合计算能力和资源有限、边缘设备和更快的训练时间。"
   },
-  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 是微软AI提供的语言模型，在复杂对话、多语言、推理和智能助手领域表现尤为出色。"
   },
