@@ -71,7 +71,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       message: string;
       name: string;
     }) => ILobeAgentRuntimeErrorType | undefined;
-    handleTtransformResponseToStream?: (
+    handleTransformResponseToStream?: (
       data: OpenAI.ChatCompletion,
     ) => ReadableStream<OpenAI.ChatCompletionChunk>;
     noUserId?: boolean;
@@ -248,7 +248,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
         if (responseMode === 'json') return Response.json(response);
 
-        const transformHandler = chatCompletion?.handleTtransformResponseToStream || transformResponseToStream;
+        const transformHandler = chatCompletion?.handleTransformResponseToStream || transformResponseToStream;
         const stream = transformHandler(response as unknown as OpenAI.ChatCompletion);
 
         const streamHandler = chatCompletion?.handleStream || OpenAIStream;

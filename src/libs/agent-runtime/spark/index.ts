@@ -7,7 +7,7 @@ export const LobeSparkAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://spark-api-open.xf-yun.com/v1',
   chatCompletion: {
     handleStream: SparkAIStream,
-    handleTtransformResponseToStream: transformSparkResponseToStream,
+    handleTransformResponseToStream: transformSparkResponseToStream,
     noUserId: true,
   },
   debug: {

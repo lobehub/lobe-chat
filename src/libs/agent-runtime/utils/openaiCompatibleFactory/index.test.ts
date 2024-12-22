@@ -885,7 +885,7 @@ describe('LobeOpenAICompatibleFactory', () => {
       const LobeMockProvider = LobeOpenAICompatibleFactory({
         baseURL: 'https://api.test.com/v1',
         chatCompletion: {
-          handleTtransformResponseToStream: customTransformHandler,
+          handleTransformResponseToStream: customTransformHandler,
         },
         provider: ModelProvider.OpenAI,
       });
