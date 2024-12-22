@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support to use pglite as client db."]
+    },
+    "date": "2024-12-22",
+    "version": "1.37.0"
+  },
+  {
+    "children": {
       "improvements": ["Refactor client mode upload to match server mode."]
     },
     "date": "2024-12-21",
