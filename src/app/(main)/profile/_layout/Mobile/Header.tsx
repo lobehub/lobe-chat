@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useActiveProfileKey } from '@/hooks/useActiveProfileKey';
+import { useActiveProfileKey } from '@/hooks/useActiveTabKey';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 const Header = memo(() => {

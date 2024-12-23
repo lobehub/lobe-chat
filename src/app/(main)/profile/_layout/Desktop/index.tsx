@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import Footer from '@/features/Setting/Footer';
 import SettingContainer from '@/features/Setting/SettingContainer';
-import { useActiveProfileKey } from '@/hooks/useActiveProfileKey';
+import { useActiveProfileKey } from '@/hooks/useActiveTabKey';
 
 import { LayoutProps } from '../type';
 import Header from './Header';
