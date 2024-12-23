@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.38.0](https://github.com/lobehub/lobe-chat/compare/v1.37.2...v1.38.0)
+
+<sup>Released on **2024-12-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Support thread in client pglite.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support thread in client pglite, closes [#5150](https://github.com/lobehub/lobe-chat/issues/5150) ([848b29f](https://github.com/lobehub/lobe-chat/commit/848b29f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.37.2](https://github.com/lobehub/lobe-chat/compare/v1.37.1...v1.37.2)
 
 <sup>Released on **2024-12-22**</sup>
