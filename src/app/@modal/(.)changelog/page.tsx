@@ -9,7 +9,7 @@ import Loading from './loading';
 
 const Page = async () => {
   const locale = await getLocale();
-  const mobile = isMobileDevice();
+  const mobile = await isMobileDevice();
   const changelogService = new ChangelogService();
   const data = await changelogService.getChangelogIndex();
 
