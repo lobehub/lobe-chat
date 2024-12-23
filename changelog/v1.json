@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Upgrade to next15 and react19."]
+    },
+    "date": "2024-12-23",
+    "version": "1.39.0"
+  },
+  {
+    "children": {
       "features": ["Support thread in client pglite."]
     },
     "date": "2024-12-23",
