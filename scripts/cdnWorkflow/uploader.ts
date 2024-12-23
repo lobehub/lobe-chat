@@ -19,8 +19,8 @@ if (!process.env.DOC_S3_SECRET_ACCESS_KEY) {
   process.exit(1);
 }
 
-if (!process.env.DOC_S3_URL) {
-  consola.error('请配置 Doc S3 存储的环境变量: DOC_S3_URL');
+if (!process.env.DOC_S3_PUBLIC_DOMAIN) {
+  consola.error('请配置 Doc S3 存储的环境变量: DOC_S3_PUBLIC_DOMAIN');
   // eslint-disable-next-line unicorn/no-process-exit
   process.exit(1);
 }
@@ -44,7 +44,7 @@ export const uploader = async (
     accessKeyId: process.env.DOC_S3_ACCESS_KEY_ID || '',
     bucketName: 'hub-apac-1',
     endpoint: 'https://d35842305b91be4b48e06ff9a9ad83f5.r2.cloudflarestorage.com',
-    pathPrefix: process.env.DOC_S3_URL || '',
+    pathPrefix: process.env.DOC_S3_PUBLIC_DOMAIN || '',
     pathStyleAccess: true,
     region: 'auto',
     secretAccessKey: process.env.DOC_S3_SECRET_ACCESS_KEY || '',

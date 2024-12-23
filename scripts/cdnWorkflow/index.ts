@@ -113,7 +113,7 @@ class ImageCDNUploader {
       const cdnUrl = await this.uploadFileToCDN(file, link);
       if (cdnUrl) {
         consola.success(link, '>>>', cdnUrl);
-        cdnLinks[link] = cdnUrl.replaceAll(process.env.DOC_S3_URL || '', '');
+        cdnLinks[link] = cdnUrl.replaceAll(process.env.DOC_S3_PUBLIC_DOMAIN || '', '');
       }
     });
 
