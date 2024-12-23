@@ -27,7 +27,6 @@ const nextConfig: NextConfig = {
       'gpt-tokenizer',
       'chroma-js',
     ],
-    serverComponentsExternalPackages: ['@electric-sql/pglite'],
     webVitalsAttribution: ['CLS', 'LCP'],
   },
 
@@ -107,7 +106,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-
   output: buildWithDocker ? 'standalone' : undefined,
   reactStrictMode: true,
   redirects: async () => [
@@ -169,12 +167,13 @@ const nextConfig: NextConfig = {
       source: '/welcome',
     },
   ],
-
   rewrites: async () => [
     // due to google api not work correct in some countries
     // we need a proxy to bypass the restriction
     { destination: `${API_PROXY_ENDPOINT}/api/chat/google`, source: '/api/chat/google' },
   ],
+
+  serverExternalPackages: ['@electric-sql/pglite'],
 
   webpack(config) {
     config.experiments = {
