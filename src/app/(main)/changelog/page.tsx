@@ -24,7 +24,7 @@ export const generateMetadata = async () => {
 };
 
 const Page = async () => {
-  const mobile = isMobileDevice();
+  const mobile = await isMobileDevice();
   const { t, locale } = await translation('metadata');
   const changelogService = new ChangelogService();
   const data = await changelogService.getChangelogIndex();
