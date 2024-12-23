@@ -3,7 +3,7 @@ import { Copy, Edit, ListRestart, RotateCcw, Split, Trash } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isServerMode } from '@/const/version';
+import { isDeprecatedEdition } from '@/const/version';
 
 interface ChatListActionsBar {
   branching: ActionIconGroupItems;
@@ -23,10 +23,10 @@ export const useChatListActionsBar = ({
   return useMemo(
     () => ({
       branching: {
-        disable: !isServerMode,
+        disable: isDeprecatedEdition,
         icon: Split,
         key: 'branching',
-        label: isServerMode
+        label: !isDeprecatedEdition
           ? t('branching', { defaultValue: 'Create Sub Topic' })
           : t('branchingDisable'),
       },
