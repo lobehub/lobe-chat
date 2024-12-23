@@ -18,7 +18,6 @@ import {
   LLMProviderApiTokenKey,
   LLMProviderBaseUrlKey,
   LLMProviderConfigKey,
-  LLMProviderModelListKey,
 } from '@/app/(main)/settings/llm/const';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { AES_GCM_URL, BASE_PROVIDER_DOC_URL } from '@/const/url';
@@ -26,10 +25,8 @@ import { isServerMode } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors, modelConfigSelectors } from '@/store/user/selectors';
 import { ModelProviderCard } from '@/types/llm';
-import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import Checker from '../Checker';
-import ProviderModelListSelect from '../ProviderModelList';
 
 const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
   aceGcm: css`
@@ -89,7 +86,7 @@ export interface ProviderConfigProps extends Omit<ModelProviderCard, 'id' | 'cha
   className?: string;
   extra?: ReactNode;
   hideSwitch?: boolean;
-  id: GlobalLLMProviderKey;
+  id: string;
   modelList?: {
     azureDeployName?: boolean;
     notFoundContent?: ReactNode;
@@ -206,20 +203,20 @@ const ProviderConfig = memo<ProviderConfigProps>(
           label: t('llm.fetchOnClient.title'),
           minWidth: undefined,
         },
-      {
-        children: (
-          <ProviderModelListSelect
-            notFoundContent={modelList?.notFoundContent}
-            placeholder={modelList?.placeholder ?? t('llm.modelList.placeholder')}
-            provider={id}
-            showAzureDeployName={modelList?.azureDeployName}
-            showModelFetcher={modelList?.showModelFetcher}
-          />
-        ),
-        desc: t('llm.modelList.desc'),
-        label: t('llm.modelList.title'),
-        name: [LLMProviderConfigKey, id, LLMProviderModelListKey],
-      },
+      // {
+      //   children: (
+      //     <ProviderModelListSelect
+      //       notFoundContent={modelList?.notFoundContent}
+      //       placeholder={modelList?.placeholder ?? t('llm.modelList.placeholder')}
+      //       provider={id}
+      //       showAzureDeployName={modelList?.azureDeployName}
+      //       showModelFetcher={modelList?.showModelFetcher}
+      //     />
+      //   ),
+      //   desc: t('llm.modelList.desc'),
+      //   label: t('llm.modelList.title'),
+      //   name: [LLMProviderConfigKey, id, LLMProviderModelListKey],
+      // },
       showChecker
         ? (checkerItem ?? {
             children: <Checker model={checkModel!} provider={id} />,
@@ -231,14 +228,10 @@ const ProviderConfig = memo<ProviderConfigProps>(
       showAceGcm && isServerMode && aceGcmItem,
     ].filter(Boolean) as FormItemProps[];
 
-    /* ↓ cloud slot ↓ */
-
-    /* ↑ cloud slot ↑ */
-
     const model: ItemGroup = {
       children: formItems,
 
-      defaultActive: canDeactivate ? enabled : undefined,
+      defaultActive: true,
 
       extra: (
         <Flexbox align={'center'} gap={8} horizontal>
@@ -283,8 +276,10 @@ const ProviderConfig = memo<ProviderConfigProps>(
       <Form
         className={cx(styles.form, className)}
         form={form}
-        items={[model]}
         onValuesChange={debounce(setSettings, 100)}
+        variant={'pure'}
+        // items={formItems}
+        items={[model]}
         {...FORM_STYLE}
       />
     );
