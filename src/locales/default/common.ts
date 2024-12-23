@@ -33,7 +33,7 @@ export default {
   blog: '产品博客',
   branching: '创建子话题',
   branchingDisable:
-    '「子话题」功能仅服务端版本可用，如需该功能，请切换到服务端部署模式或使用 LobeChat Cloud',
+    '「子话题」功能在当前模式下不可用，如需该功能，请切换到 Postgres/Pglite DB 模式或使用 LobeChat Cloud',
   cancel: '取消',
   changelog: '更新日志',
   clientDB: {
