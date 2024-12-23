@@ -1,6 +1,8 @@
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 
+import Client from './Client';
+
 export const generateMetadata = async () => {
   const { t } = await translation('auth');
   return metadataModule.generate({
@@ -11,7 +13,7 @@ export const generateMetadata = async () => {
 };
 
 const Page = async () => {
-  return <div>TODO</div>;
+  return <Client />;
 };
 
 export default Page;

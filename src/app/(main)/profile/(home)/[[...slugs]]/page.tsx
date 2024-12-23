@@ -6,6 +6,10 @@ import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { isMobileDevice } from '@/utils/server/responsive';
 
+import Client from '../Client';
+
+// 为了兼容 ClerkProfile， 需要使用 [[...slug]]
+
 const ClerkProfile = dynamic(() => import('../../features/ClerkProfile'), {
   loading: () => (
     <div style={{ flex: 1 }}>
@@ -28,7 +32,7 @@ const Page = async () => {
 
   if (enableClerk) return <ClerkProfile mobile={mobile} />;
 
-  return <div>TODO</div>;
+  return <Client mobile={mobile} />;
 };
 
 export default Page;
