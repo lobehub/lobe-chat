@@ -6,10 +6,31 @@ import type { ImgInfo, S3UserConfig, UploadResult } from './s3/types';
 import { formatPath } from './s3/utils';
 
 dotenv.config();
+
+if (!process.env.DOC_S3_ACCESS_KEY_ID) {
+  consola.error('请配置 Doc S3 存储的环境变量: DOC_S3_ACCESS_KEY_ID');
+  // eslint-disable-next-line unicorn/no-process-exit
+  process.exit(1);
+}
+
+if (!process.env.DOC_S3_SECRET_ACCESS_KEY) {
+  consola.error('请配置 Doc S3 存储的环境变量: DOC_S3_SECRET_ACCESS_KEY');
+  // eslint-disable-next-line unicorn/no-process-exit
+  process.exit(1);
+}
+
+if (!process.env.DOC_S3_URL) {
+  consola.error('请配置 Doc S3 存储的环境变量: DOC_S3_URL');
+  // eslint-disable-next-line unicorn/no-process-exit
+  process.exit(1);
+}
+
+export const BASE_PATH = 'blog/assets';
+
 export const uploader = async (
   file: File,
   filename: string,
-  basePath: string = 'blog/assets/',
+  basePath: string = BASE_PATH,
   uploadPath?: string,
 ) => {
   const item: ImgInfo = {
@@ -20,13 +41,13 @@ export const uploader = async (
   };
 
   const userConfig: S3UserConfig = {
-    accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+    accessKeyId: process.env.DOC_S3_ACCESS_KEY_ID || '',
     bucketName: 'hub-apac-1',
     endpoint: 'https://d35842305b91be4b48e06ff9a9ad83f5.r2.cloudflarestorage.com',
-    pathPrefix: 'https://hub-apac-1.lobeobjects.space',
+    pathPrefix: process.env.DOC_S3_URL || '',
     pathStyleAccess: true,
     region: 'auto',
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
+    secretAccessKey: process.env.DOC_S3_SECRET_ACCESS_KEY || '',
     uploadPath: uploadPath || `${basePath}${filename}.{extName}`,
   };
 

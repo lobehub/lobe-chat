@@ -3,25 +3,17 @@
 import { Modal, type ModalProps } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { useRouter } from 'next/navigation';
-import { PropsWithChildren, memo, useState } from 'react';
+import { memo, useState } from 'react';
 
-const ModalLayout = memo<
-  PropsWithChildren<{
-    centered?: boolean;
-    closeIconProps?: ModalProps['closeIconProps'];
-    height?: number | string;
-    minHeight?: number | string;
-    onCancel?: ModalProps['onCancel'];
-    width?: number | string;
-  }>
->(
+const ModalLayout = memo<ModalProps>(
   ({
-    closeIconProps,
-    centered,
     children,
     height = 'min(80vh,750px)',
     width = 'min(80vw, 1024px)',
     onCancel,
+    afterClose,
+    styles,
+    ...rest
   }) => {
     const [open, setOpen] = useState(true);
     const router = useRouter();
@@ -29,9 +21,10 @@ const ModalLayout = memo<
 
     return (
       <Modal
-        afterClose={() => router.back()}
-        centered={centered}
-        closeIconProps={closeIconProps}
+        afterClose={() => {
+          afterClose?.();
+          router.back();
+        }}
         enableResponsive={false}
         footer={null}
         height={height}
@@ -42,17 +35,24 @@ const ModalLayout = memo<
         }}
         open={open}
         styles={{
+          ...styles,
           body: {
             display: 'flex',
             height: height,
             overflow: 'hidden',
             padding: 0,
             position: 'relative',
+            ...styles?.body,
           },
-          content: { border: 'none', boxShadow: `0 0 0 1px ${theme.colorBorderSecondary}` },
+          content: {
+            border: 'none',
+            boxShadow: `0 0 0 1px ${theme.colorBorderSecondary}`,
+            ...styles?.content,
+          },
         }}
         title={false}
         width={width}
+        {...rest}
       >
         {children}
       </Modal>
