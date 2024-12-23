@@ -11,7 +11,7 @@ const BASE_URL = 'https://raw.githubusercontent.com';
 const LAST_MODIFIED = new Date().toISOString();
 
 const revalidate: number = 12 * 3600;
-const docCdnPrefix = process.env.DOC_S3_URL || '';
+const docCdnPrefix = process.env.DOC_S3_PUBLIC_DOMAIN || '';
 
 export interface ChangelogConfig {
   branch: string;
