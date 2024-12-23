@@ -11,9 +11,11 @@ const BASE_URL = 'https://raw.githubusercontent.com';
 const LAST_MODIFIED = new Date().toISOString();
 
 const revalidate: number = 12 * 3600;
+const docCdnPrefix = process.env.DOC_S3_URL || '';
 
 export interface ChangelogConfig {
   branch: string;
+  cdnPath: string;
   changelogPath: string;
   docsPath: string;
   majorVersion: number;
@@ -23,8 +25,12 @@ export interface ChangelogConfig {
 }
 
 export class ChangelogService {
+  cdnUrls: {
+    [key: string]: string;
+  } = {};
   config: ChangelogConfig = {
     branch: process.env.DOCS_BRANCH || 'main',
+    cdnPath: 'docs/.cdn.cache.json',
     changelogPath: 'changelog',
     docsPath: 'docs/changelog',
     majorVersion: 1,
@@ -61,6 +67,7 @@ export class ChangelogService {
   }
 
   async getPostById(id: string, options?: { locale?: Locales }) {
+    await this.cdnInit();
     try {
       const post = await this.getIndexItemById(id);
 
@@ -85,6 +92,16 @@ export class ChangelogService {
         description = matches[1] ? matches[1].trim() : '';
       }
 
+      if (docCdnPrefix) {
+        const images = this.extractHttpsLinks(content);
+        for (const url of images) {
+          const cdnUrl = this.replaceCdnUrl(url);
+          if (cdnUrl && url !== cdnUrl) {
+            description = description.replaceAll(url, cdnUrl);
+          }
+        }
+      }
+
       return {
         date: post?.date
           ? new Date(post.date)
@@ -95,7 +112,7 @@ export class ChangelogService {
           0,
           160,
         ),
-        image: post?.image,
+        image: post?.image ? this.replaceCdnUrl(post.image) : undefined,
         tags: ['changelog'],
         title: match ? match[1] : '',
         ...data,
@@ -151,5 +168,35 @@ export class ChangelogService {
 
   private genUrl(path: string) {
     return urlJoin(BASE_URL, this.config.user, this.config.repo, this.config.branch, path);
+  }
+
+  private extractHttpsLinks(text: string) {
+    const regex = /https:\/\/[^\s"')>]+/g;
+    const links = text.match(regex);
+    return links || [];
+  }
+
+  private async cdnInit() {
+    if (!docCdnPrefix) return;
+    if (!this.cdnUrls) {
+      try {
+        const url = this.genUrl(this.config.cdnPath);
+        const res = await fetch(url, {
+          next: { revalidate },
+        });
+        const data = await res.json();
+        if (!data) return;
+        this.cdnUrls = data;
+      } catch {
+        console.error('Error getting changlog cdn cache');
+      }
+    }
+  }
+
+  private replaceCdnUrl(url: string) {
+    if (!docCdnPrefix || !this.cdnUrls?.[url]) {
+      return url;
+    }
+    return urlJoin(docCdnPrefix, this.cdnUrls[url]);
   }
 }

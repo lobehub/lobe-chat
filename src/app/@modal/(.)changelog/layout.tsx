@@ -1,5 +1,6 @@
 'use client';
 
+import { createStyles } from 'antd-style';
 import { FC, PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -9,7 +10,17 @@ import ModalLayout from '../_layout/ModalLayout';
 import Hero from './features/Hero';
 import Pagination from './features/Pagination';
 
+const useStyles = createStyles(
+  ({ css, prefixCls, token }) => css`
+    .${prefixCls}-modal-close {
+      background: ${token.colorBgElevated} !important;
+      border: 1px solid ${token.colorBorderSecondary};
+    }
+  `,
+);
+
 const Layout: FC<PropsWithChildren> = ({ children }) => {
+  const { styles } = useStyles();
   const [useCheckLatestChangelogId, updateSystemStatus] = useGlobalStore((s) => [
     s.useCheckLatestChangelogId,
     s.updateSystemStatus,
@@ -19,10 +30,7 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <ModalLayout
       centered
-      closeIconProps={{
-        active: true,
-        glass: true,
-      }}
+      className={styles}
       height={'min(90vh, 800px)'}
       onCancel={() => {
         if (!data) return;

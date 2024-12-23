@@ -113,7 +113,7 @@ class ImageCDNUploader {
       const cdnUrl = await this.uploadFileToCDN(file, link);
       if (cdnUrl) {
         consola.success(link, '>>>', cdnUrl);
-        cdnLinks[link] = cdnUrl;
+        cdnLinks[link] = cdnUrl.replaceAll(process.env.DOC_S3_URL || '', '');
       }
     });
 
@@ -205,8 +205,6 @@ class ImageCDNUploader {
       consola.info("Found images that haven't been uploaded to CDN:");
       consola.info(links);
       await this.uploadImagesToCDN(links);
-      this.replaceLinksInPosts();
-      this.replaceLinksInChangelogIndex();
     } else {
       consola.info('No new images to upload.');
     }
