@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -21,21 +22,14 @@ const UserBanner = memo(() => {
 
   return (
     <Flexbox gap={12} paddingBlock={8}>
-      {!enableAuth ? (
+      {!enableAuth || (enableAuth && isLoginWithAuth) ? (
         <>
-          <UserInfo />
-          <DataStatistics paddingInline={12} />
-        </>
-      ) : isLoginWithAuth ? (
-        <>
-          <UserInfo
-            onClick={() => {
-              // Profile page only works with Clerk
-              if (enabledNextAuth) return;
-              router.push('/me/profile');
-            }}
-          />
-          <DataStatistics paddingInline={12} />
+          <Link href={'/profile'} style={{ color: 'inherit' }}>
+            <UserInfo />
+          </Link>
+          <Link href={'/profile/stats'} style={{ color: 'inherit' }}>
+            <DataStatistics paddingInline={12} />
+          </Link>
         </>
       ) : (
         <UserLoginOrSignup
