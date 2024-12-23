@@ -1,6 +1,3 @@
-import { notFound } from 'next/navigation';
-
-import { serverFeatureFlags } from '@/config/featureFlags';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 
@@ -16,8 +13,5 @@ export const generateMetadata = async () => {
 };
 
 export default () => {
-  const showLLM = serverFeatureFlags().showProvider;
-  if (!showLLM) return notFound();
-
   return <Page />;
 };

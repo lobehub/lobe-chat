@@ -1,7 +1,7 @@
 import { ProviderIcon } from '@lobehub/icons';
 import { createStyles } from 'antd-style';
+import Link from 'next/link';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { ModelProviderCard } from '@/types/llm';
 
@@ -12,14 +12,18 @@ export const useStyles = createStyles(({ css, token }) => ({
   container: css`
     cursor: pointer;
 
+    display: flex;
+    gap: 8px;
     padding-block: 8px;
     padding-inline: 12px;
 
+    color: inherit;
     border-radius: ${token.borderRadius}px;
 
     transition: all 0.2s ease-in-out;
 
     &:hover {
+      color: inherit;
       background-color: ${token.colorFillSecondary};
     }
   `,
@@ -28,10 +32,10 @@ export const useStyles = createStyles(({ css, token }) => ({
 const ProviderItem = memo<ModelProviderCard>(({ id, name }) => {
   const { styles } = useStyles();
   return (
-    <Flexbox className={styles.container} gap={8} horizontal>
+    <Link className={styles.container} href={`/settings/provider/${id}`}>
       <ProviderIcon provider={id} size={24} style={{ borderRadius: 6 }} />
       {name}
-    </Flexbox>
+    </Link>
   );
 });
 export default ProviderItem;

@@ -1,3 +1,5 @@
+'use client';
+
 import { Flexbox } from 'react-layout-kit';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
