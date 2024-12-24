@@ -1,24 +1,26 @@
 'use client';
 
-import { Form, type ItemGroup } from '@lobehub/ui';
+import { FormGroup, Grid } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 
-type SettingItemGroup = ItemGroup;
+import TotalAssistants from './features/TotalAssistants';
+import TotalMessages from './features/TotalMessages';
+import TotalTopics from './features/TotalTopics';
 
 const Client = memo<{ mobile?: boolean }>(() => {
-  const [form] = Form.useForm();
   const { t } = useTranslation('auth');
 
-  const overview: SettingItemGroup = {
-    children: [],
-    title: t('tab.stats'),
-  };
-
   return (
-    <Form form={form} items={[overview]} itemsType={'group'} variant={'pure'} {...FORM_STYLE} />
+    <FormGroup style={FORM_STYLE.style} title={t('tab.stats')} variant={'pure'}>
+      <Grid paddingBlock={16}>
+        <TotalAssistants />
+        <TotalTopics />
+        <TotalMessages />
+      </Grid>
+    </FormGroup>
   );
 });
 

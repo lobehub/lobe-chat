@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import useSWR from 'swr';
 
+import { useClientDataSWR } from '@/libs/swr';
 import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
@@ -57,17 +58,17 @@ const formatNumber = (num: any) => {
 const DataStatistics = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest }) => {
   const mobile = useServerConfigStore((s) => s.isMobile);
   // sessions
-  const { data: sessions, isLoading: sessionsLoading } = useSWR(
+  const { data: sessions, isLoading: sessionsLoading } = useClientDataSWR(
     'count-sessions',
     sessionService.countSessions,
   );
   // topics
-  const { data: topics, isLoading: topicsLoading } = useSWR(
+  const { data: topics, isLoading: topicsLoading } = useClientDataSWR(
     'count-topics',
     topicService.countTopics,
   );
   // messages
-  const { data: messages, isLoading: messagesLoading } = useSWR(
+  const { data: messages, isLoading: messagesLoading } = useClientDataSWR(
     'count-messages',
     messageService.countMessages,
   );

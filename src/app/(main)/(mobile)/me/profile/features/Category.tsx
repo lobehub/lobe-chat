@@ -6,6 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Cell, { CellProps } from '@/components/Cell';
+import { isDeprecatedEdition } from '@/const/version';
 import { ProfileTabs } from '@/store/global/initialState';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/slices/auth/selectors';
@@ -33,7 +34,7 @@ const Category = memo(() => {
         label: t('tab.security'),
         onClick: () => router.push('/profile/security'),
       },
-    {
+    !isDeprecatedEdition && {
       icon: ChartColumnBigIcon,
       key: ProfileTabs.Stats,
       label: t('tab.stats'),

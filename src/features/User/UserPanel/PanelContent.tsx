@@ -5,6 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import Menu from '@/components/Menu';
+import { isDeprecatedEdition } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -46,9 +47,11 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
           <Link href={'/profile'} style={{ color: 'inherit' }}>
             <UserInfo />
           </Link>
-          <Link href={'/profile/stats'} style={{ color: 'inherit' }}>
-            <DataStatistics />
-          </Link>
+          {!isDeprecatedEdition && (
+            <Link href={'/profile/stats'} style={{ color: 'inherit' }}>
+              <DataStatistics />
+            </Link>
+          )}
         </>
       ) : (
         <UserLoginOrSignup onClick={handleSignIn} />
