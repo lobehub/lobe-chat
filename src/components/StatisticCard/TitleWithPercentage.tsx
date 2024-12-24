@@ -22,13 +22,13 @@ const TitleWithPercentage = memo<TitleWithPercentageProps>(
     const upStyle: CSSProperties = {
       background: theme.colorSuccessBg,
       borderColor: theme.colorSuccessBorder,
-      color: theme.green10,
+      color: theme.colorSuccess,
     };
 
     const downStyle: CSSProperties = {
       backgroundColor: theme.colorWarningBg,
       borderColor: theme.colorWarningBorder,
-      color: theme.orange10,
+      color: theme.colorWarning,
     };
 
     return (

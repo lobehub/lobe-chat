@@ -18,8 +18,21 @@ export default {
   signup: '注册',
   stats: {
     assistants: '助手数',
+    assistantsRank: {
+      left: '助手名称',
+      right: '消息数',
+      title: '助手使用率',
+    },
+    heatmaps: {
+      title: 'AI 指数',
+    },
     messages: '消息数',
     topics: '话题数',
+    topicsRank: {
+      left: '话题名称',
+      right: '消息数',
+      title: '话题内容量',
+    },
   },
   tab: {
     profile: '个人资料',

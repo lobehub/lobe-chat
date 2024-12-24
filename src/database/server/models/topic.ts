@@ -126,6 +126,8 @@ export class TopicModel {
     return result[0].count;
   };
 
+  rank = async () => {};
+
   // **************** Create *************** //
 
   create = async (

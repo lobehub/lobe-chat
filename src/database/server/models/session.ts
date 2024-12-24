@@ -118,6 +118,8 @@ export class SessionModel {
     return result[0].count;
   };
 
+  rank = async () => {};
+
   hasMoreThanN = async (n: number): Promise<boolean> => {
     const result = await this.db
       .select({ id: sessions.id })
