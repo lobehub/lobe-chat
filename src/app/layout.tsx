@@ -3,13 +3,12 @@ import { ResolvingViewport } from 'next';
 import { ReactNode, Suspense } from 'react';
 
 import Analytics from '@/components/Analytics';
+import CircleLoading from '@/components/CircleLoading';
 import LobeChatTextLoading from '@/components/LobeChatTextLoading';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
 import { isMobileDevice } from '@/utils/server/responsive';
-
-export const experimental_ppr = true;
 
 const inVercel = process.env.VERCEL === '1';
 
@@ -22,25 +21,23 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
   const mobile = await isMobileDevice();
 
   return (
-    <html suppressHydrationWarning>
-      <body>
-        <Suspense
-          fallback={
-            <LobeChatTextLoading />
-          }
-        >
-          <GlobalProvider>
-            <AuthProvider>
-              {children}
-              {!mobile && modal}
-            </AuthProvider>
-            <PWAInstall />
-          </GlobalProvider>
-          <Analytics />
-          {inVercel && <SpeedInsights />}
-        </Suspense>
-      </body>
-    </html>
+    <Suspense fallback={<CircleLoading />}>
+      <html suppressHydrationWarning>
+        <body>
+          <Suspense fallback={<LobeChatTextLoading />}>
+            <GlobalProvider>
+              <AuthProvider>
+                {children}
+                {!mobile && modal}
+              </AuthProvider>
+              <PWAInstall />
+            </GlobalProvider>
+            <Analytics />
+            {inVercel && <SpeedInsights />}
+          </Suspense>
+        </body>
+      </html>
+    </Suspense>
   );
 };
 
