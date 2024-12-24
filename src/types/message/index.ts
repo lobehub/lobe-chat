@@ -56,20 +56,22 @@ export interface ChatFileChunk {
   text: string;
 }
 
+export interface ChatMessageExtra {
+  fromModel?: string;
+  fromProvider?: string;
+  // 翻译
+  translate?: ChatTranslate | false | null;
+  // TTS
+  tts?: ChatTTS;
+}
+
 export interface ChatMessage extends BaseDataModel {
   chunksList?: ChatFileChunk[];
   content: string;
   error?: ChatMessageError | null;
 
   // 扩展字段
-  extra?: {
-    fromModel?: string;
-    fromProvider?: string;
-    // 翻译
-    translate?: ChatTranslate | false | null;
-    // TTS
-    tts?: ChatTTS;
-  } & Record<string, any>;
+  extra?: ChatMessageExtra;
   fileList?: ChatFileItem[];
   /**
    * this is a deprecated field, only use in client db

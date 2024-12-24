@@ -1,13 +1,14 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useUserStore } from '@/store/user';
 import { ServerConfigStoreProvider } from '@/store/serverConfig';
+import { useUserStore } from '@/store/user';
 
 import { useMenu } from '../UserPanel/useMenu';
 
-const wrapper: React.JSXElementConstructor<{ children: React.ReactNode }> = ({ children }) =>
+const wrapper: React.JSXElementConstructor<{ children: React.ReactNode }> = ({ children }) => (
   <ServerConfigStoreProvider>{children}</ServerConfigStoreProvider>
+);
 
 // Mock dependencies
 vi.mock('next/link', () => ({
@@ -77,26 +78,6 @@ describe('useMenu', () => {
 
     act(() => {
       const { mainItems, logoutItems } = result.current;
-      expect(mainItems?.some((item) => item?.key === 'profile')).toBe(false);
-      expect(mainItems?.some((item) => item?.key === 'setting')).toBe(true);
-      expect(mainItems?.some((item) => item?.key === 'import')).toBe(true);
-      expect(mainItems?.some((item) => item?.key === 'export')).toBe(true);
-      expect(mainItems?.some((item) => item?.key === 'discord')).toBe(true);
-      expect(logoutItems.some((item) => item?.key === 'logout')).toBe(true);
-    });
-  });
-
-  it('should provide correct menu items when user is logged in with Clerk', () => {
-    act(() => {
-      useUserStore.setState({ isSignedIn: true });
-    });
-    enableAuth = true;
-    enableClerk = true;
-
-    const { result } = renderHook(() => useMenu(), { wrapper });
-
-    act(() => {
-      const { mainItems, logoutItems } = result.current;
       expect(mainItems?.some((item) => item?.key === 'profile')).toBe(true);
       expect(mainItems?.some((item) => item?.key === 'setting')).toBe(true);
       expect(mainItems?.some((item) => item?.key === 'import')).toBe(true);
@@ -116,7 +97,7 @@ describe('useMenu', () => {
 
     act(() => {
       const { mainItems, logoutItems } = result.current;
-      expect(mainItems?.some((item) => item?.key === 'profile')).toBe(false);
+      expect(mainItems?.some((item) => item?.key === 'profile')).toBe(true);
       expect(mainItems?.some((item) => item?.key === 'setting')).toBe(true);
       expect(mainItems?.some((item) => item?.key === 'import')).toBe(true);
       expect(mainItems?.some((item) => item?.key === 'export')).toBe(true);

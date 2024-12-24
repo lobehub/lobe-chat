@@ -8,12 +8,13 @@ import { LoaderCircle } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
-import useSWR from 'swr';
 
+import { useClientDataSWR } from '@/libs/swr';
 import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
 import { useServerConfigStore } from '@/store/serverConfig';
+import { today } from '@/utils/time';
 
 const useStyles = createStyles(({ css, token }) => ({
   card: css`
@@ -57,21 +58,23 @@ const formatNumber = (num: any) => {
 const DataStatistics = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest }) => {
   const mobile = useServerConfigStore((s) => s.isMobile);
   // sessions
-  const { data: sessions, isLoading: sessionsLoading } = useSWR(
-    'count-sessions',
-    sessionService.countSessions,
+  const { data: sessions, isLoading: sessionsLoading } = useClientDataSWR('count-sessions', () =>
+    sessionService.countSessions(),
   );
   // topics
-  const { data: topics, isLoading: topicsLoading } = useSWR(
-    'count-topics',
-    topicService.countTopics,
+  const { data: topics, isLoading: topicsLoading } = useClientDataSWR('count-topics', () =>
+    topicService.countTopics(),
   );
   // messages
-  const { data: messages, isLoading: messagesLoading } = useSWR(
+  const { data: { messages, messagesToday } = {}, isLoading: messagesLoading } = useClientDataSWR(
     'count-messages',
-    messageService.countMessages,
+    async () => ({
+      messages: await messageService.countMessages(),
+      messagesToday: await messageService.countMessages({
+        startDate: today().format('YYYY-MM-DD'),
+      }),
+    }),
   );
-  const { data: messagesToday } = useSWR('today-messages', messageService.countTodayMessages);
 
   const { styles, theme } = useStyles();
   const { t } = useTranslation('common');

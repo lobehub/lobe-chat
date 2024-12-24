@@ -24,15 +24,13 @@ export const useCategory = () => {
   const router = useRouter();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
-  const [isLogin, isLoginWithAuth, isLoginWithClerk, enableAuth, signOut, isLoginWithNextAuth] =
-    useUserStore((s) => [
-      authSelectors.isLogin(s),
-      authSelectors.isLoginWithAuth(s),
-      authSelectors.isLoginWithClerk(s),
-      authSelectors.enabledAuth(s),
-      s.logout,
-      authSelectors.isLoginWithNextAuth(s),
-    ]);
+  const [isLogin, isLoginWithAuth, enableAuth, signOut, isLoginWithNextAuth] = useUserStore((s) => [
+    authSelectors.isLogin(s),
+    authSelectors.isLoginWithAuth(s),
+    authSelectors.enabledAuth(s),
+    s.logout,
+    authSelectors.isLoginWithNextAuth(s),
+  ]);
 
   const profile: CellProps[] = [
     {
@@ -124,7 +122,7 @@ export const useCategory = () => {
     {
       type: 'divider',
     },
-    ...(isLoginWithClerk ? profile : []),
+    ...(!enableAuth || (enableAuth && isLoginWithAuth) ? profile : []),
     ...(enableAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
     /* ↓ cloud slot ↓ */
 

@@ -9,29 +9,34 @@ interface CreateThreadWithMessageParams extends CreateThreadParams {
   message: CreateMessageParams;
 }
 export class ServerService implements IThreadService {
-  getThreads = (topicId: string): Promise<ThreadItem[]> => {
+  getThreads = async (topicId: string): Promise<ThreadItem[]> => {
     return lambdaClient.thread.getThreads.query({ topicId });
   };
 
-  createThreadWithMessage({
+  createThreadWithMessage = async ({
     message,
     ...params
-  }: CreateThreadWithMessageParams): Promise<{ messageId: string; threadId: string }> {
-    return lambdaClient.thread.createThreadWithMessage.mutate({
+  }: CreateThreadWithMessageParams): Promise<{
+    messageId: string;
+    threadId: string;
+  }> =>
+    lambdaClient.thread.createThreadWithMessage.mutate({
       ...params,
       message: { ...message, sessionId: this.toDbSessionId(message.sessionId) },
     });
-  }
 
-  updateThread(id: string, data: Partial<ThreadItem>): Promise<any> {
-    return lambdaClient.thread.updateThread.mutate({ id, value: data });
-  }
+  updateThread = async (id: string, data: Partial<ThreadItem>): Promise<any> => {
+    return lambdaClient.thread.updateThread.mutate({
+      id,
+      value: data,
+    });
+  };
 
-  removeThread(id: string): Promise<any> {
+  removeThread = async (id: string): Promise<any> => {
     return lambdaClient.thread.removeThread.mutate({ id });
-  }
+  };
 
-  private toDbSessionId(sessionId: string | undefined) {
+  private toDbSessionId = (sessionId: string | undefined) => {
     return sessionId === INBOX_SESSION_ID ? null : sessionId;
-  }
+  };
 }

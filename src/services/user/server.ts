@@ -10,17 +10,17 @@ export class ServerService implements IUserService {
     return lambdaClient.user.getUserState.query();
   };
 
-  async makeUserOnboarded() {
+  makeUserOnboarded = async () => {
     return lambdaClient.user.makeUserOnboarded.mutate();
-  }
+  };
 
-  async updatePreference(preference: Partial<UserPreference>) {
+  updatePreference = async (preference: Partial<UserPreference>) => {
     return lambdaClient.user.updatePreference.mutate(preference);
-  }
+  };
 
-  async updateGuide(guide: Partial<UserGuide>) {
+  updateGuide = async (guide: Partial<UserGuide>) => {
     return lambdaClient.user.updateGuide.mutate(guide);
-  }
+  };
 
   updateUserSettings = async (value: DeepPartial<UserSettings>, signal?: AbortSignal) => {
     return lambdaClient.user.updateSettings.mutate(value, { signal });

@@ -15,32 +15,32 @@ export class ServerService implements IPluginService {
     return lambdaClient.plugin.getPlugins.query();
   };
 
-  async uninstallPlugin(identifier: string) {
+  uninstallPlugin = async (identifier: string) => {
     await lambdaClient.plugin.removePlugin.mutate({ id: identifier });
-  }
+  };
 
-  async createCustomPlugin(customPlugin: LobeToolCustomPlugin) {
+  createCustomPlugin = async (customPlugin: LobeToolCustomPlugin) => {
     await lambdaClient.plugin.createPlugin.mutate({ ...customPlugin, type: 'customPlugin' });
-  }
+  };
 
-  async updatePlugin(id: string, value: LobeToolCustomPlugin) {
+  updatePlugin = async (id: string, value: LobeToolCustomPlugin) => {
     await lambdaClient.plugin.updatePlugin.mutate({
       customParams: value.customParams,
       id,
       manifest: value.manifest,
       settings: value.settings,
     });
-  }
+  };
 
-  async updatePluginManifest(id: string, manifest: LobeChatPluginManifest) {
+  updatePluginManifest = async (id: string, manifest: LobeChatPluginManifest) => {
     await lambdaClient.plugin.updatePlugin.mutate({ id, manifest });
-  }
+  };
 
-  async removeAllPlugins() {
+  removeAllPlugins = async () => {
     await lambdaClient.plugin.removeAllPlugins.mutate();
-  }
+  };
 
-  async updatePluginSettings(id: string, settings: any, signal?: AbortSignal) {
+  updatePluginSettings = async (id: string, settings: any, signal?: AbortSignal) => {
     await lambdaClient.plugin.updatePlugin.mutate({ id, settings }, { signal });
-  }
+  };
 }

@@ -7,7 +7,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
+import { useActiveSettingsKey } from '@/hooks/useActiveTabKey';
 import { SettingsTabs } from '@/store/global/initialState';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';

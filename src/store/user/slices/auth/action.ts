@@ -14,7 +14,6 @@ export interface UserAuthAction {
    * universal login method
    */
   openLogin: () => Promise<void>;
-  openUserProfile: () => Promise<void>;
 }
 
 export const createAuthSlice: StateCreator<
@@ -61,14 +60,6 @@ export const createAuthSlice: StateCreator<
         return;
       }
       signIn();
-    }
-  },
-
-  openUserProfile: async () => {
-    if (enableClerk) {
-      get().clerkOpenUserProfile?.();
-
-      return;
     }
   },
 });

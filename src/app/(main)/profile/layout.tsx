@@ -1,21 +1,11 @@
-import { notFound } from 'next/navigation';
-import { PropsWithChildren } from 'react';
+import ServerLayout from '@/components/server/ServerLayout';
 
-import { enableClerk } from '@/const/auth';
-import { isMobileDevice } from '@/utils/server/responsive';
+import Desktop from './_layout/Desktop';
+import Mobile from './_layout/Mobile';
+import { LayoutProps } from './_layout/type';
 
-import MobileLayout from './_layout/Mobile';
+const ProfileLayout = ServerLayout<LayoutProps>({ Desktop, Mobile });
 
-const Layout = async ({ children }: PropsWithChildren) => {
-  if (!enableClerk) return notFound();
+ProfileLayout.displayName = 'ProfileLayout';
 
-  const mobile = await isMobileDevice();
-
-  if (mobile) return <MobileLayout>{children}</MobileLayout>;
-
-  return children;
-};
-
-Layout.displayName = 'ProfileLayout';
-
-export default Layout;
+export default ProfileLayout;

@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB } from '@/database/client/db';
 import { MessageItem } from '@/database/schemas';
@@ -59,15 +57,8 @@ export class ClientService extends BaseClientService implements IMessageService 
     return data as unknown as ChatMessage[];
   }
 
-  async countMessages() {
-    return this.messageModel.count();
-  }
-
-  async countTodayMessages() {
-    const topics = await this.messageModel.queryAll();
-    return topics.filter(
-      (item) => dayjs(item.createdAt).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD'),
-    ).length;
+  async countMessages(params?: { endDate?: string; range?: [string, string]; startDate?: string }) {
+    return this.messageModel.count(params);
   }
 
   async getAllMessagesInSession(sessionId: string) {

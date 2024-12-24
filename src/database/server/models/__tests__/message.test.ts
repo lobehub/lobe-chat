@@ -1042,41 +1042,6 @@ describe('MessageModel', () => {
     });
   });
 
-  describe('countToday', () => {
-    it('should return the count of messages created today', async () => {
-      // 创建测试数据
-      await serverDB.insert(messages).values([
-        {
-          id: '1',
-          userId,
-          role: 'user',
-          content: 'message 1',
-          createdAt: new Date(),
-        },
-        {
-          id: '2',
-          userId,
-          role: 'user',
-          content: 'message 2',
-          createdAt: new Date(),
-        },
-        {
-          id: '3',
-          userId,
-          role: 'user',
-          content: 'message 3',
-          createdAt: new Date('2023-01-01'),
-        },
-      ]);
-
-      // 调用 countToday 方法
-      const result = await messageModel.countToday();
-
-      // 断言结果
-      expect(result).toBe(2);
-    });
-  });
-
   describe('findMessageQueriesById', () => {
     it('should return undefined for non-existent message query', async () => {
       const result = await messageModel.findMessageQueriesById('non-existent-id');

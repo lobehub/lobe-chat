@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
+import { useActiveSettingsKey } from '@/hooks/useActiveTabKey';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import SettingModalLayout from '../../_layout/SettingModalLayout';

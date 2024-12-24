@@ -27,12 +27,19 @@ export const messageRouter = router({
       return { added: data.rowCount as number, ids: [], skips: [], success: true };
     }),
 
-  count: messageProcedure.query(async ({ ctx }) => {
-    return ctx.messageModel.count();
-  }),
-  countToday: messageProcedure.query(async ({ ctx }) => {
-    return ctx.messageModel.countToday();
-  }),
+  count: messageProcedure
+    .input(
+      z
+        .object({
+          endDate: z.string().optional(),
+          range: z.tuple([z.string(), z.string()]).optional(),
+          startDate: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.messageModel.count(input);
+    }),
 
   createMessage: messageProcedure
     .input(z.object({}).passthrough().partial())

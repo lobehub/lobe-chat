@@ -82,6 +82,11 @@ export class ClientService implements ISessionService {
     return SessionModel.count();
   }
 
+  // @ts-ignore
+  async rankSessions() {
+    throw new Error('Method not implemented.');
+  }
+
   async hasSessions() {
     return (await this.countSessions()) !== 0;
   }
