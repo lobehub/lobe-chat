@@ -1,5 +1,3 @@
-'use client';
-
 import { Center } from 'react-layout-kit';
 
 import LobeChatTextLoading from '@/components/LobeChatTextLoading';
