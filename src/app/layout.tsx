@@ -1,9 +1,11 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ResolvingViewport } from 'next';
-import { ReactNode, Suspense } from 'react';
+import { cookies } from 'next/headers';
+import { ReactNode } from 'react';
+import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
-import LobeChatTextLoading from '@/components/LobeChatTextLoading';
+import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
@@ -17,10 +19,16 @@ type RootLayoutProps = {
 };
 
 const RootLayout = async ({ children, modal }: RootLayoutProps) => {
+  const cookieStore = await cookies();
+
+  const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
+  const locale = lang?.value || DEFAULT_LANG;
+
+  const direction = isRtlLang(locale) ? 'rtl' : 'ltr';
   const mobile = await isMobileDevice();
 
   return (
-    <html suppressHydrationWarning>
+    <html dir={direction} lang={locale} suppressHydrationWarning>
       <body>
         <GlobalProvider>
           <AuthProvider>
