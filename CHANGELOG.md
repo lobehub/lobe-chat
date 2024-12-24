@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.39.1](https://github.com/lobehub/lobe-chat/compare/v1.39.0...v1.39.1)
+
+<sup>Released on **2024-12-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix image input on pglite.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix image input on pglite, closes [#5167](https://github.com/lobehub/lobe-chat/issues/5167) ([5c5b37d](https://github.com/lobehub/lobe-chat/commit/5c5b37d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.39.0](https://github.com/lobehub/lobe-chat/compare/v1.38.0...v1.39.0)
 
 <sup>Released on **2024-12-23**</sup>
