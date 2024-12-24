@@ -178,17 +178,18 @@ export class ChangelogService {
 
   private async cdnInit() {
     if (!docCdnPrefix) return;
-    if (!this.cdnUrls) {
+    if (Object.keys(this.cdnUrls).length === 0) {
       try {
         const url = this.genUrl(this.config.cdnPath);
         const res = await fetch(url, {
           next: { revalidate },
         });
         const data = await res.json();
-        if (!data) return;
-        this.cdnUrls = data;
-      } catch {
-        console.error('Error getting changlog cdn cache');
+        if (data) {
+          this.cdnUrls = data;
+        }
+      } catch (error) {
+        console.error('Error getting changelog cdn cache:', error);
       }
     }
   }

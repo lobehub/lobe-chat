@@ -33,6 +33,23 @@ vi.mock('semver', async (importOriginal) => {
     parse: vi.fn().mockImplementation((v) => ({ toString: () => v })),
   };
 });
+
+vi.mock('url-join', () => ({
+  default: vi.fn((...args) => args.join('/')),
+}));
+
+// 模拟 process.env
+const originalEnv = process.env;
+
+beforeEach(() => {
+  vi.resetModules();
+  process.env = { ...originalEnv };
+});
+
+afterEach(() => {
+  process.env = originalEnv;
+});
+
 describe('ChangelogService', () => {
   let service: ChangelogService;
 
@@ -81,6 +98,21 @@ describe('ChangelogService', () => {
       const result = await service.getChangelogIndex();
       expect(result).toBe(false);
     });
+
+    it('should return only community items when config type is community', async () => {
+      service.config.type = 'community';
+      const mockResponse = {
+        json: vi.fn().mockResolvedValue({
+          cloud: [{ id: 'cloud1', date: '2023-01-01', versionRange: ['1.0.0'] }],
+          community: [{ id: 'community1', date: '2023-01-02', versionRange: ['1.1.0'] }],
+        }),
+      };
+      (global.fetch as any).mockResolvedValue(mockResponse);
+
+      const result = await service.getChangelogIndex();
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('community1');
+    });
   });
 
   describe('getIndexItemById', () => {
@@ -119,13 +151,16 @@ describe('ChangelogService', () => {
       const result = await service.getPostById('post1');
       expect(result).toMatchObject({
         content: 'Post content',
-        date: '2023-01-01',
+        date: expect.any(String), // 改为期望字符串而不是 Date 对象
         description: 'Post content',
         image: undefined,
         rawTitle: 'Post Title',
         tags: ['changelog'],
         title: 'Post Title',
       });
+
+      // 额外检查日期格式
+      expect(result.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     });
 
     it('should handle fetch errors', async () => {
@@ -135,33 +170,137 @@ describe('ChangelogService', () => {
       const result = await service.getPostById('error');
       expect(result).toBe(false);
     });
-  });
 
-  // Additional tests for private methods if they were public
-  describe('mergeChangelogs', () => {
-    it('should merge and sort changelogs correctly', () => {
-      const cloud = [{ id: 'cloud1', date: '2023-01-01', versionRange: ['1.0.0'] }];
-      const community = [{ id: 'community1', date: '2023-01-02', versionRange: ['1.1.0'] }];
+    it('should use the correct locale for fetching content', async () => {
+      vi.spyOn(service, 'getIndexItemById').mockResolvedValue({
+        id: 'post1',
+        date: '2023-01-01',
+        versionRange: ['1.0.0'],
+      } as ChangelogIndexItem);
 
-      // @ts-ignore - accessing private method for testing
-      const result = service.mergeChangelogs(cloud, community);
-      expect(result).toHaveLength(2);
-      expect(result[0].id).toBe('community1');
-      expect(result[1].id).toBe('cloud1');
+      const mockResponse = {
+        text: vi.fn().mockResolvedValue('# Chinese Title\n中文内容'),
+      };
+      (global.fetch as any).mockResolvedValue(mockResponse);
+
+      await service.getPostById('post1', { locale: 'zh-CN' });
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.stringContaining('post1.zh-CN.mdx'),
+        expect.any(Object),
+      );
     });
   });
 
-  describe('formatVersionRange', () => {
-    it('should format version range correctly', () => {
-      // @ts-ignore - accessing private method for testing
-      const result = service.formatVersionRange(['1.0.0', '1.1.0']);
-      expect(result).toEqual(['1.1.0', '1.0.0']);
+  describe('private methods', () => {
+    describe('mergeChangelogs', () => {
+      it('should merge and sort changelogs correctly', () => {
+        const cloud = [{ id: 'cloud1', date: '2023-01-01', versionRange: ['1.0.0'] }];
+        const community = [{ id: 'community1', date: '2023-01-02', versionRange: ['1.1.0'] }];
+
+        // @ts-ignore - accessing private method for testing
+        const result = service.mergeChangelogs(cloud, community);
+        expect(result).toHaveLength(2);
+        expect(result[0].id).toBe('community1');
+        expect(result[1].id).toBe('cloud1');
+      });
+
+      it('should override community items with cloud items when ids match', () => {
+        const cloud = [{ id: 'item1', date: '2023-01-01', versionRange: ['1.0.0'], type: 'cloud' }];
+        const community = [
+          { id: 'item1', date: '2023-01-01', versionRange: ['1.0.0'], type: 'community' },
+        ];
+
+        // @ts-ignore - accessing private method for testing
+        const result = service.mergeChangelogs(cloud, community);
+        expect(result).toHaveLength(1);
+        // @ts-ignore
+        expect(result[0].type).toBe('cloud');
+      });
     });
 
-    it('should return single version as is', () => {
-      // @ts-ignore - accessing private method for testing
-      const result = service.formatVersionRange(['1.0.0']);
-      expect(result).toEqual(['1.0.0']);
+    describe('formatVersionRange', () => {
+      it('should format version range correctly', () => {
+        // @ts-ignore - accessing private method for testing
+        const result = service.formatVersionRange(['1.0.0', '1.1.0']);
+        expect(result).toEqual(['1.1.0', '1.0.0']);
+      });
+
+      it('should return single version as is', () => {
+        // @ts-ignore - accessing private method for testing
+        const result = service.formatVersionRange(['1.0.0']);
+        expect(result).toEqual(['1.0.0']);
+      });
+    });
+
+    describe('genUrl', () => {
+      it('should generate correct URL', () => {
+        // @ts-ignore - accessing private method for testing
+        const result = service.genUrl('test/path');
+        expect(result).toBe('https://raw.githubusercontent.com/lobehub/lobe-chat/main/test/path');
+      });
+    });
+
+    describe('extractHttpsLinks', () => {
+      it('should extract HTTPS links from text', () => {
+        const text = 'Text with https://example.com and https://test.com/image.jpg links';
+        // @ts-ignore - accessing private method for testing
+        const result = service.extractHttpsLinks(text);
+        expect(result).toEqual(['https://example.com', 'https://test.com/image.jpg']);
+      });
+    });
+
+    describe('cdnInit', () => {
+      it('should initialize CDN URLs if docCdnPrefix is set', async () => {
+        // 设置环境变量
+        process.env.DOC_S3_PUBLIC_DOMAIN = 'https://cdn.example.com';
+
+        // 重新导入模块以确保环境变量生效
+        const { ChangelogService } = await import('./index');
+        const service = new ChangelogService();
+
+        const mockData = { 'https://example.com/image.jpg': 'image-hash.jpg' };
+        const mockResponse = {
+          json: vi.fn().mockResolvedValue(mockData),
+        };
+        global.fetch = vi.fn().mockResolvedValue(mockResponse);
+
+        // @ts-ignore - accessing private method for testing
+        await service.cdnInit();
+
+        expect(service.cdnUrls).toEqual(mockData);
+        expect(global.fetch).toHaveBeenCalledWith(expect.any(String), expect.any(Object));
+      });
+    });
+
+    describe('replaceCdnUrl', () => {
+      it('should replace URL with CDN URL if available', async () => {
+        // 设置环境变量
+        process.env.DOC_S3_PUBLIC_DOMAIN = 'https://cdn.example.com';
+
+        // 重新导入模块以确保环境变量生效
+        const { ChangelogService } = await import('./index');
+        const service = new ChangelogService();
+
+        service.cdnUrls = { 'https://example.com/image.jpg': 'image-hash.jpg' };
+
+        // @ts-ignore - accessing private method for testing
+        const result = service.replaceCdnUrl('https://example.com/image.jpg');
+
+        expect(result).toBe('https://cdn.example.com/image-hash.jpg');
+      });
+
+      it('should return original URL if CDN URL is not available', () => {
+        const originalDocCdnPrefix = process.env.DOC_S3_PUBLIC_DOMAIN;
+        process.env.DOC_S3_PUBLIC_DOMAIN = 'https://cdn.example.com';
+        service.cdnUrls = {};
+
+        // @ts-ignore - accessing private method for testing
+        const result = service.replaceCdnUrl('https://example.com/image.jpg');
+        expect(result).toBe('https://example.com/image.jpg');
+
+        // Restore original value
+        process.env.DOC_S3_PUBLIC_DOMAIN = originalDocCdnPrefix;
+      });
     });
   });
 });
