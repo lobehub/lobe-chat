@@ -1,9 +1,5 @@
-import SkeletonLoading from '@/components/SkeletonLoading';
+import FullLoading from '@/components/CircleLoading';
 
 export default () => {
-  return (
-    <div style={{ flex: 1 }}>
-      <SkeletonLoading paragraph={{ rows: 8 }} title={false} />
-    </div>
-  );
+  return <FullLoading />;
 };
