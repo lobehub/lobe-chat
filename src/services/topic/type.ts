@@ -23,6 +23,14 @@ export interface ITopicService {
   getTopics(params: QueryTopicParams): Promise<ChatTopic[]>;
   getAllTopics(): Promise<ChatTopic[]>;
   countTopics(): Promise<number>;
+  rankTopics(): Promise<
+    {
+      id: string;
+      title: string | null;
+      count: number;
+      sessionId: string | null;
+    }[]
+  >;
   searchTopics(keyword: string, sessionId?: string): Promise<ChatTopic[]>;
 
   updateTopic(id: string, data: Partial<ChatTopic>): Promise<any>;

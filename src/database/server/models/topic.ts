@@ -126,7 +126,27 @@ export class TopicModel {
     return result[0].count;
   };
 
-  rank = async () => {};
+  rank = async (): Promise<
+    {
+      count: number;
+      id: string;
+      sessionId: string | null;
+      title: string | null;
+    }[]
+  > => {
+    return this.db
+      .select({
+        count: count(messages.id).as('count'),
+        id: topics.id,
+        sessionId: topics.sessionId,
+        title: topics.title,
+      })
+      .from(topics)
+      .leftJoin(messages, eq(topics.id, messages.topicId))
+      .groupBy(topics.id)
+      .orderBy(desc(sql`count`))
+      .limit(10);
+  };
 
   // **************** Create *************** //
 

@@ -25,6 +25,7 @@ import {
   agentsToSessions,
   sessionGroups,
   sessions,
+  topics,
 } from '../../schemas';
 
 export class SessionModel {
@@ -118,7 +119,31 @@ export class SessionModel {
     return result[0].count;
   };
 
-  rank = async () => {};
+  rank = async (): Promise<
+    {
+      avatar: string | null;
+      backgroundColor: string | null;
+      count: number;
+      id: string;
+      title: string | null;
+    }[]
+  > => {
+    return this.db
+      .select({
+        avatar: agents.avatar,
+        backgroundColor: agents.backgroundColor,
+        count: count(topics.id).as('count'),
+        id: sessions.id,
+        title: agents.title,
+      })
+      .from(sessions)
+      .leftJoin(topics, eq(sessions.id, topics.sessionId))
+      .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+      .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
+      .groupBy(sessions.id, agentsToSessions.agentId, agents.id)
+      .orderBy(desc(sql`count`))
+      .limit(10);
+  };
 
   hasMoreThanN = async (n: number): Promise<boolean> => {
     const result = await this.db

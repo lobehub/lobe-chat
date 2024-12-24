@@ -20,7 +20,7 @@ export default {
     assistants: '助手数',
     assistantsRank: {
       left: '助手名称',
-      right: '消息数',
+      right: '话题数',
       title: '助手使用率',
     },
     heatmaps: {

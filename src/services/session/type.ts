@@ -31,7 +31,20 @@ export interface ISessionService {
    * @deprecated
    */
   getSessionsByType(type?: 'agent' | 'group' | 'all'): Promise<LobeSessions>;
-  countSessions(): Promise<number>;
+  countSessions(params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number>;
+  rankSessions(): Promise<
+    {
+      avatar: string | null;
+      count: number;
+      id: string;
+      title: string | null;
+      backgroundColor: string | null;
+    }[]
+  >;
   searchSessions(keyword: string): Promise<LobeSessions>;
 
   updateSession(id: string, data: Partial<UpdateSessionParams>): Promise<any>;

@@ -59,7 +59,14 @@ export class ClientService extends BaseClientService implements ITopicService {
     return this.topicModel.count(params);
   }
 
-  async rankTopics() {
+  async rankTopics(): Promise<
+    {
+      count: number;
+      id: string;
+      sessionId: string | null;
+      title: string | null;
+    }[]
+  > {
     return this.topicModel.rank();
   }
 

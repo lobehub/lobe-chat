@@ -1,5 +1,6 @@
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 import Client from './Client';
 
@@ -13,7 +14,8 @@ export const generateMetadata = async () => {
 };
 
 const Page = async () => {
-  return <Client />;
+  const mobile = await isMobileDevice();
+  return <Client mobile={mobile} />;
 };
 
 export default Page;

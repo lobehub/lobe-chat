@@ -32,7 +32,14 @@ export class ServerService implements ITopicService {
     return lambdaClient.topic.countTopics.query(params);
   }
 
-  rankTopics = async () => {
+  rankTopics = async (): Promise<
+    {
+      count: number;
+      id: string;
+      sessionId: string | null;
+      title: string | null;
+    }[]
+  > => {
     return lambdaClient.topic.rankTopics.query();
   }
 

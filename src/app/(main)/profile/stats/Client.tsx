@@ -14,7 +14,7 @@ import TotalAssistants from './features/TotalAssistants';
 import TotalMessages from './features/TotalMessages';
 import TotalTopics from './features/TotalTopics';
 
-const Client = memo<{ mobile?: boolean }>(() => {
+const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('auth');
 
   return (
@@ -26,7 +26,7 @@ const Client = memo<{ mobile?: boolean }>(() => {
           <TotalMessages />
         </Grid>
       </FormGroup>
-      <Grid rows={2}>
+      <Grid gap={mobile ? undefined : 48} rows={2}>
         <FormGroup
           style={FORM_STYLE.style}
           title={t('stats.assistantsRank.title')}
