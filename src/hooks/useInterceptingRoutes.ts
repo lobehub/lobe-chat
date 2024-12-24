@@ -1,7 +1,6 @@
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import urlJoin from 'url-join';
 
-import { InterceptContext } from '@/app/@modal/features/InterceptingContext';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
@@ -44,8 +43,4 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Met
       return () => router.push('/chat/settings/modal', { query: { session: activeId, tab } });
     }
   }, [openSettings, mobile, activeId, router, tab]);
-};
-
-export const useInterceptingRoutes = () => {
-  return useContext(InterceptContext);
 };

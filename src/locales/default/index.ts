@@ -1,4 +1,5 @@
 import auth from './auth';
+import changelog from './changelog';
 import chat from './chat';
 import clerk from './clerk';
 import common from './common';
@@ -23,6 +24,7 @@ import welcome from './welcome';
 
 const resources = {
   auth,
+  changelog,
   chat,
   clerk,
   common,

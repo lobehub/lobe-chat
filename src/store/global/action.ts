@@ -29,6 +29,7 @@ export interface GlobalStoreAction {
   toggleSystemRole: (visible?: boolean) => void;
   toggleZenMode: () => void;
   updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
+  useCheckLatestChangelogId: () => SWRResponse<string>;
   useCheckLatestVersion: (enabledCheck?: boolean) => SWRResponse<string>;
   useInitSystemStatus: () => SWRResponse;
 }
@@ -42,6 +43,7 @@ export const globalActionSlice: StateCreator<
   switchBackToChat: (sessionId) => {
     get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
   },
+
   toggleChatSideBar: (newValue) => {
     const showChatSideBar =
       typeof newValue === 'boolean' ? newValue : !get().status.showChatSideBar;
@@ -95,6 +97,9 @@ export const globalActionSlice: StateCreator<
 
     get().statusStorage.saveToLocalStorage(nextStatus);
   },
+
+  useCheckLatestChangelogId: () =>
+    useSWR('changelog', async () => globalService.getLatestChangelogId()),
 
   useCheckLatestVersion: (enabledCheck = true) =>
     useSWR(enabledCheck ? 'checkLatestVersion' : null, globalService.getLatestVersion, {
