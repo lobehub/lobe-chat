@@ -22,17 +22,15 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
   return (
     <html suppressHydrationWarning>
       <body>
-        <Suspense fallback={<LobeChatTextLoading />}>
-          <GlobalProvider>
-            <AuthProvider>
-              {children}
-              {!mobile && modal}
-            </AuthProvider>
-            <PWAInstall />
-          </GlobalProvider>
-          <Analytics />
-          {inVercel && <SpeedInsights />}
-        </Suspense>
+        <GlobalProvider>
+          <AuthProvider>
+            {children}
+            {!mobile && modal}
+          </AuthProvider>
+          <PWAInstall />
+        </GlobalProvider>
+        <Analytics />
+        {inVercel && <SpeedInsights />}
       </body>
     </html>
   );
