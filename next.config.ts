@@ -27,7 +27,6 @@ const nextConfig: NextConfig = {
       'gpt-tokenizer',
       'chroma-js',
     ],
-    ppr: 'incremental',
     webVitalsAttribution: ['CLS', 'LCP'],
   },
 
