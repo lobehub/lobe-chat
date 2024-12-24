@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix image input on pglite."]
+    },
+    "date": "2024-12-24",
+    "version": "1.39.1"
+  },
+  {
+    "children": {
       "features": ["Upgrade to next15 and react19."]
     },
     "date": "2024-12-23",
