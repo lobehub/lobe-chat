@@ -1,15 +1,15 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ResolvingViewport } from 'next';
-import { cookies } from 'next/headers';
-import { ReactNode } from 'react';
-import { isRtlLang } from 'rtl-detect';
+import { ReactNode, Suspense } from 'react';
 
 import Analytics from '@/components/Analytics';
-import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
+import LobeChatTextLoading from '@/components/LobeChatTextLoading';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
 import { isMobileDevice } from '@/utils/server/responsive';
+
+export const experimental_ppr = true;
 
 const inVercel = process.env.VERCEL === '1';
 
@@ -19,26 +19,26 @@ type RootLayoutProps = {
 };
 
 const RootLayout = async ({ children, modal }: RootLayoutProps) => {
-  const cookieStore = await cookies();
-
-  const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
-  const locale = lang?.value || DEFAULT_LANG;
-
-  const direction = isRtlLang(locale) ? 'rtl' : 'ltr';
   const mobile = await isMobileDevice();
 
   return (
-    <html dir={direction} lang={locale} suppressHydrationWarning>
+    <html suppressHydrationWarning>
       <body>
-        <GlobalProvider>
-          <AuthProvider>
-            {children}
-            {!mobile && modal}
-          </AuthProvider>
-          <PWAInstall />
-        </GlobalProvider>
-        <Analytics />
-        {inVercel && <SpeedInsights />}
+        <Suspense
+          fallback={
+            <LobeChatTextLoading />
+          }
+        >
+          <GlobalProvider>
+            <AuthProvider>
+              {children}
+              {!mobile && modal}
+            </AuthProvider>
+            <PWAInstall />
+          </GlobalProvider>
+          <Analytics />
+          {inVercel && <SpeedInsights />}
+        </Suspense>
       </body>
     </html>
   );
