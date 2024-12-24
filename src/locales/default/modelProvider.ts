@@ -134,23 +134,6 @@ export default {
       title: '下载指定的 Ollama 模型',
     },
   },
-  sensenova: {
-    sensenovaAccessKeyID: {
-      desc: '填入 SenseNova Access Key ID',
-      placeholder: 'SenseNova Access Key ID',
-      title: 'Access Key ID',
-    },
-    sensenovaAccessKeySecret: {
-      desc: '填入 SenseNova Access Key Secret',
-      placeholder: 'SenseNova Access Key Secret',
-      title: 'Access Key Secret',
-    },
-    unlock: {
-      description:
-        '输入你的 Access Key ID / Access Key Secret 即可开始会话。应用不会记录你的鉴权配置',
-      title: '使用自定义 SenseNova 鉴权信息',
-    },
-  },
   wenxin: {
     accessKey: {
       desc: '填入百度千帆平台的 Access Key',
