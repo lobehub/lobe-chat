@@ -56,9 +56,19 @@ export const topicRouter = router({
       return data.topic.id;
     }),
 
-  countTopics: topicProcedure.query(async ({ ctx }) => {
-    return ctx.topicModel.count();
-  }),
+  countTopics: topicProcedure
+    .input(
+      z
+        .object({
+          endDate: z.string().optional(),
+          range: z.tuple([z.string(), z.string()]).optional(),
+          startDate: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.topicModel.count(input);
+    }),
 
   createTopic: topicProcedure
     .input(

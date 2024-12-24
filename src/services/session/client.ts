@@ -74,9 +74,9 @@ export class ClientService extends BaseClientService implements ISessionService 
     }
   };
 
-  countSessions: ISessionService['countSessions'] = async () => {
-    return this.sessionModel.count();
-  };
+  async countSessions(params?: { endDate?: string; range?: [string, string]; startDate?: string }) {
+    return this.sessionModel.count(params);
+  }
 
   searchSessions: ISessionService['searchSessions'] = async (keyword) => {
     return this.sessionModel.queryByKeyword(keyword);

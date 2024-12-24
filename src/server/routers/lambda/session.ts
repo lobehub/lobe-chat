@@ -57,9 +57,19 @@ export const sessionRouter = router({
       return data?.id;
     }),
 
-  countSessions: sessionProcedure.query(async ({ ctx }) => {
-    return ctx.sessionModel.count();
-  }),
+  countSessions: sessionProcedure
+    .input(
+      z
+        .object({
+          endDate: z.string().optional(),
+          range: z.tuple([z.string(), z.string()]).optional(),
+          startDate: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.sessionModel.count(input);
+    }),
 
   createSession: sessionProcedure
     .input(

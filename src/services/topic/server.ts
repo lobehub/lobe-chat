@@ -24,7 +24,13 @@ export class ServerService implements ITopicService {
   getAllTopics: ITopicService['getAllTopics'] = () =>
     lambdaClient.topic.getAllTopics.query() as any;
 
-  countTopics: ITopicService['countTopics'] = async () => lambdaClient.topic.countTopics.query();
+  async countTopics(params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> {
+    return lambdaClient.topic.countTopics.query(params);
+  }
 
   searchTopics: ITopicService['searchTopics'] = (keywords, sessionId) =>
     lambdaClient.topic.searchTopics.query({

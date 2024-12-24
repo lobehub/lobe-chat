@@ -2,6 +2,12 @@ import { Column, count, sql } from 'drizzle-orm';
 import { and, desc, eq, exists, inArray, isNull, like, or } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
+import {
+  genEndDateWhere,
+  genRangeWhere,
+  genStartDateWhere,
+  genWhere,
+} from '@/database/utils/genWhere';
 import { idGenerator } from '@/database/utils/idGenerator';
 
 import { NewMessage, TopicItem, messages, topics } from '../../schemas';
@@ -92,13 +98,30 @@ export class TopicModel {
     });
   };
 
-  count = async (): Promise<number> => {
+  count = async (params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
     const result = await this.db
       .select({
         count: count(topics.id),
       })
       .from(topics)
-      .where(eq(topics.userId, this.userId));
+      .where(
+        genWhere([
+          eq(topics.userId, this.userId),
+          params?.range
+            ? genRangeWhere(params.range, topics.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.endDate
+            ? genEndDateWhere(params.endDate, topics.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.startDate
+            ? genStartDateWhere(params.startDate, topics.createdAt, (date) => date.toDate())
+            : undefined,
+        ]),
+      );
 
     return result[0].count;
   };

@@ -5,6 +5,12 @@ import { appEnv } from '@/config/app';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { LobeChatDatabase } from '@/database/type';
+import {
+  genEndDateWhere,
+  genRangeWhere,
+  genStartDateWhere,
+  genWhere,
+} from '@/database/utils/genWhere';
 import { idGenerator } from '@/database/utils/idGenerator';
 import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
 import { ChatSessionList, LobeAgentSession } from '@/types/session';
@@ -84,13 +90,30 @@ export class SessionModel {
     return { ...result, agent: (result?.agentsToSessions?.[0] as any)?.agent } as any;
   };
 
-  count = async (): Promise<number> => {
+  count = async (params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
     const result = await this.db
       .select({
         count: count(sessions.id),
       })
       .from(sessions)
-      .where(eq(sessions.userId, this.userId));
+      .where(
+        genWhere([
+          eq(sessions.userId, this.userId),
+          params?.range
+            ? genRangeWhere(params.range, sessions.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.endDate
+            ? genEndDateWhere(params.endDate, sessions.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.startDate
+            ? genStartDateWhere(params.startDate, sessions.createdAt, (date) => date.toDate())
+            : undefined,
+        ]),
+      );
 
     return result[0].count;
   };

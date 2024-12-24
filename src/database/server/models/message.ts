@@ -1,7 +1,13 @@
 import { count } from 'drizzle-orm';
-import { and, asc, desc, eq, gte, inArray, isNull, like, lt } from 'drizzle-orm/expressions';
+import { and, asc, desc, eq, inArray, isNull, like } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
+import {
+  genEndDateWhere,
+  genRangeWhere,
+  genStartDateWhere,
+  genWhere,
+} from '@/database/utils/genWhere';
 import { idGenerator } from '@/database/utils/idGenerator';
 import {
   ChatFileItem,
@@ -265,34 +271,29 @@ export class MessageModel {
     });
   };
 
-  count = async (): Promise<number> => {
-    const result = await this.db
-      .select({
-        count: count(messages.id),
-      })
-      .from(messages)
-      .where(eq(messages.userId, this.userId));
-
-    return result[0].count;
-  };
-
-  countToday = async (): Promise<number> => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
+  count = async (params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
     const result = await this.db
       .select({
         count: count(messages.id),
       })
       .from(messages)
       .where(
-        and(
+        genWhere([
           eq(messages.userId, this.userId),
-          gte(messages.createdAt, today),
-          lt(messages.createdAt, tomorrow),
-        ),
+          params?.range
+            ? genRangeWhere(params.range, messages.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.endDate
+            ? genEndDateWhere(params.endDate, messages.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.startDate
+            ? genStartDateWhere(params.startDate, messages.createdAt, (date) => date.toDate())
+            : undefined,
+        ]),
       );
 
     return result[0].count;

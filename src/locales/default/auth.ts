@@ -1,5 +1,6 @@
 export default {
   date: {
+    prevMonth: '上个月',
     recent30Days: '最近30天',
   },
   header: {

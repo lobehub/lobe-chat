@@ -52,16 +52,9 @@ export class ClientService extends BaseClientService implements IMessageService 
     return data as unknown as ChatMessage[];
   };
 
-  countMessages: IMessageService['countMessages'] = async () => {
-    return this.messageModel.count();
-  };
-
-  countTodayMessages: IMessageService['countTodayMessages'] = async () => {
-    const topics = await this.messageModel.queryAll();
-    return topics.filter(
-      (item) => dayjs(item.createdAt).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD'),
-    ).length;
-  };
+  async countMessages(params?: { endDate?: string; range?: [string, string]; startDate?: string }) {
+    return this.messageModel.count(params);
+  }
 
   getAllMessagesInSession: IMessageService['getAllMessagesInSession'] = async (sessionId) => {
     const data = this.messageModel.queryBySessionId(this.toDbSessionId(sessionId));

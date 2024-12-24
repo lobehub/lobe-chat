@@ -36,13 +36,13 @@ export class ServerService implements IMessageService {
     });
   };
 
-  countMessages: IMessageService['countMessages'] = async () => {
-    return lambdaClient.message.count.query();
-  };
-
-  countTodayMessages: IMessageService['countTodayMessages'] = async () => {
-    return lambdaClient.message.countToday.query();
-  };
+  countMessages(params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> {
+    return lambdaClient.message.count.query(params);
+  }
 
   updateMessageError: IMessageService['updateMessageError'] = async (id, error) => {
     return lambdaClient.message.update.mutate({ id, value: { error } });
