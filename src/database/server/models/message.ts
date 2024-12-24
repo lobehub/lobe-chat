@@ -48,7 +48,9 @@ export class MessageModel {
   // **************** Query *************** //
   query = async (
     { current = 0, pageSize = 1000, sessionId, topicId }: QueryMessageParams = {},
-    options: { postProcessUrl?: (path: string | null) => Promise<string> } = {},
+    options: {
+      postProcessUrl?: (path: string | null, file: { fileType: string }) => Promise<string>;
+    } = {},
   ): Promise<MessageItem[]> => {
     const offset = current * pageSize;
 
@@ -130,7 +132,9 @@ export class MessageModel {
     const relatedFileList = await Promise.all(
       rawRelatedFileList.map(async (file) => ({
         ...file,
-        url: options.postProcessUrl ? await options.postProcessUrl(file.url) : (file.url as string),
+        url: options.postProcessUrl
+          ? await options.postProcessUrl(file.url, file as any)
+          : (file.url as string),
       })),
     );
 

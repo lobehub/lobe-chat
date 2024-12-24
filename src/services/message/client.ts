@@ -5,6 +5,7 @@ import { clientDB } from '@/database/client/db';
 import { MessageItem } from '@/database/schemas';
 import { MessageModel } from '@/database/server/models/message';
 import { BaseClientService } from '@/services/baseClientService';
+import { clientS3Storage } from '@/services/file/ClientS3';
 import {
   ChatMessage,
   ChatMessageError,
@@ -34,10 +35,20 @@ export class ClientService extends BaseClientService implements IMessageService 
   }
 
   async getMessages(sessionId: string, topicId?: string) {
-    const data = await this.messageModel.query({
-      sessionId: this.toDbSessionId(sessionId),
-      topicId,
-    });
+    const data = await this.messageModel.query(
+      {
+        sessionId: this.toDbSessionId(sessionId),
+        topicId,
+      },
+      {
+        postProcessUrl: async (url, file) => {
+          const hash = (url as string).replace('client-s3://', '');
+          const base64 = await this.getBase64ByFileHash(hash);
+
+          return `data:${file.fileType};base64,${base64}`;
+        },
+      },
+    );
 
     return data as unknown as ChatMessage[];
   }
@@ -114,5 +125,12 @@ export class ClientService extends BaseClientService implements IMessageService 
 
   private toDbSessionId(sessionId: string | undefined) {
     return sessionId === INBOX_SESSION_ID ? undefined : sessionId;
+  }
+
+  private async getBase64ByFileHash(hash: string) {
+    const fileItem = await clientS3Storage.getObject(hash);
+    if (!fileItem) throw new Error('file not found');
+
+    return Buffer.from(await fileItem.arrayBuffer()).toString('base64');
   }
 }
