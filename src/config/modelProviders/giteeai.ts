@@ -14,10 +14,19 @@ const GiteeAI: ModelProviderCard = {
     },
     {
       description:
-        'Qwen2.5-Coder-32B-Instruct 是一款专为代码生成、代码理解和高效开发场景设计的大型语言模型，采用了业界领先的32B参数规模，能够满足多样化的编程需求。',
-      displayName: 'Qwen2.5 Coder 32B Instruct',
+        'Qwen2.5-32B-Instruct 是一款 320 亿参数的大语言模型，性能表现均衡，优化中文和多语言场景，支持智能问答、内容生成等应用。',
+      displayName: 'Qwen2.5 32B Instruct',
       enabled: true,
-      id: 'Qwen2.5-Coder-32B-Instruct',
+      id: 'Qwen2.5-32B-Instruct',
+      tokens: 32_768,
+    },
+    {
+      description:
+        'Qwen2.5-14B-Instruct 是一款 140 亿参数的大语言模型，性能表现优秀，优化中文和多语言场景，支持智能问答、内容生成等应用。',
+      displayName: 'Qwen2.5 14B Instruct',
+      enabled: true,
+      id: 'Qwen2.5-14B-Instruct',
+      tokens: 32_768,
     },
     {
       description:
@@ -26,41 +35,31 @@ const GiteeAI: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'Qwen2.5-7B-Instruct',
-    },
-    {
-      description:
-        'Qwen2.5-32B-Instruct 是一款 320 亿参数的大语言模型，性能表现均衡，优化中文和多语言场景，支持智能问答、内容生成等应用。',
-      displayName: 'Qwen2.5 32B Instruct',
-      enabled: true,
-      id: 'Qwen2.5-32B-Instruct',
-    },
-    {
-      description:
-        'Qwen2.5-14B-Instruct 是一款 140 亿参数的大语言模型，性能表现优秀，优化中文和多语言场景，支持智能问答、内容生成等应用。',
-      displayName: 'Qwen2.5 14B Instruct',
-      enabled: true,
-      id: 'Qwen2.5-14B-Instruct',
+      tokens: 32_768,
     },
     {
       description:
         'Qwen2 是 Qwen 模型的最新系列，支持 128k 上下文，对比当前最优的开源模型，Qwen2-72B 在自然语言理解、知识、代码、数学及多语言等多项能力上均显著超越当前领先的模型。',
       displayName: 'Qwen2 72B Instruct',
       id: 'Qwen2-72B-Instruct',
-      tokens: 6000,
+      tokens: 6144,
     },
     {
       description:
-        'Qwen2 是 Qwen 模型的最新系列，能够超越同等规模的最优开源模型甚至更大规模的模型，Qwen2 7B 在多个评测上取得显著的优势，尤其是代码及中文理解上。',
-      displayName: 'Qwen2 7B Instruct',
-      id: 'Qwen2-7B-Instruct',
-      tokens: 32_000,
-    },
-    {
-      description:
-        'InternVL2-8B 是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。',
-      displayName: 'InternVL2 8B',
+        'Qwen2.5-Coder-32B-Instruct 是一款专为代码生成、代码理解和高效开发场景设计的大型语言模型，采用了业界领先的32B参数规模，能够满足多样化的编程需求。',
+      displayName: 'Qwen2.5 Coder 32B Instruct',
       enabled: true,
-      id: 'InternVL2-8B',
+      functionCall: true,
+      id: 'Qwen2.5-Coder-32B-Instruct',
+      tokens: 32_768,
+    },
+    {
+      description:
+        'Qwen2-VL-72B是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。',
+      displayName: 'Qwen2 VL 72B',
+      enabled: true,
+      id: 'Qwen2-VL-72B',
+      tokens: 32_768,
       vision: true,
     },
     {
@@ -69,6 +68,16 @@ const GiteeAI: ModelProviderCard = {
       displayName: 'InternVL2.5 26B',
       enabled: true,
       id: 'InternVL2.5-26B',
+      tokens: 32_768,
+      vision: true,
+    },
+    {
+      description:
+        'InternVL2-8B 是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。',
+      displayName: 'InternVL2 8B',
+      enabled: true,
+      id: 'InternVL2-8B',
+      tokens: 32_768,
       vision: true,
     },
     {
@@ -77,7 +86,7 @@ const GiteeAI: ModelProviderCard = {
       displayName: 'GLM4 9B Chat',
       enabled: true,
       id: 'glm-4-9b-chat',
-      tokens: 32_000,
+      tokens: 32_768,
     },
     {
       description:
@@ -85,22 +94,25 @@ const GiteeAI: ModelProviderCard = {
       displayName: 'Yi 34B Chat',
       enabled: true,
       id: 'Yi-34B-Chat',
-      tokens: 4000,
+      tokens: 4096,
     },
+/*
+    // not compatible with OpenAI SDK
+    {
+      description:
+        '代码小浣熊是基于商汤大语言模型的软件智能研发助手，覆盖软件需求分析、架构设计、代码编写、软件测试等环节，满足用户代码编写、编程学习等各类需求。代码小浣熊支持 Python、Java、JavaScript、C++、Go、SQL 等 90+主流编程语言和 VS Code、IntelliJ IDEA 等主流 IDE。在实际应用中，代码小浣熊可帮助开发者提升编程效率超 50%。',
+      displayName: 'Code Raccoon v1',
+      enabled: true,
+      id: 'code-raccoon-v1',
+    },
+*/
     {
       description:
         'DeepSeek Coder 33B 是一个代码语言模型， 基于 2 万亿数据训练而成，其中 87% 为代码， 13% 为中英文语言。模型引入 16K 窗口大小和填空任务，提供项目级别的代码补全和片段填充功能。',
       displayName: 'DeepSeek Coder 33B Instruct',
       enabled: true,
       id: 'deepseek-coder-33B-instruct',
-      tokens: 8000,
-    },
-    {
-      description:
-        '代码小浣熊是基于商汤大语言模型的软件智能研发助手，覆盖软件需求分析、架构设计、代码编写、软件测试等环节，满足用户代码编写、编程学习等各类需求。代码小浣熊支持 Python、Java、JavaScript、C++、Go、SQL 等 90+主流编程语言和 VS Code、IntelliJ IDEA 等主流 IDE。在实际应用中，代码小浣熊可帮助开发者提升编程效率超 50%。',
-      displayName: 'code raccoon v1',
-      enabled: true,
-      id: 'code-raccoon-v1',
+      tokens: 8192,
     },
     {
       description:
@@ -108,7 +120,7 @@ const GiteeAI: ModelProviderCard = {
       displayName: 'CodeGeeX4 All 9B',
       enabled: true,
       id: 'codegeex4-all-9b',
-      tokens: 40_000,
+      tokens: 32_768,
     },
   ],
   checkModel: 'Qwen2.5-72B-Instruct',
