@@ -30,7 +30,3 @@
     draw 2s cubic-bezier(0.4, 0, 0.2, 1) infinite,
     fill 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
-
-.lobechat-text {
-  color: var(--loading-color-text);
-}

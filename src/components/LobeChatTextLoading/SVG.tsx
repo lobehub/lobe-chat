@@ -2,11 +2,10 @@ import { memo } from 'react';
 
 const LobeChatText = memo<{ size?: number }>(({ size = '1em' }) => (
   <svg
-    className={'lobechat-text'}
     fill="currentColor"
     fillRule="evenodd"
     height={size}
-    style={{ flex: 'none', lineHeight: 1 }}
+    style={{ flex: 'none', lineHeight: 1, opacity: 0.6 }}
     viewBox="0 0 980 320"
     xmlns="http://www.w3.org/2000/svg"
   >
