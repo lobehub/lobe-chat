@@ -62,7 +62,7 @@ export default {
       desc: '填入 Cloudflare 账户 ID 或 自定义 API 地址',
       placeholder: 'Cloudflare Account ID / custom API URL',
       title: 'Cloudflare 账户 ID / API 地址',
-    }
+    },
   },
   github: {
     personalAccessToken: {
@@ -76,6 +76,17 @@ export default {
       desc: '填入你的 HuggingFace Token，点击 [这里](https://huggingface.co/settings/tokens) 创建',
       placeholder: 'hf_xxxxxxxxx',
       title: 'HuggingFace Token',
+    },
+  },
+  menu: {
+    addCustomProvider: '自定义服务商',
+    all: '全部',
+    notFound: '未找到搜索结果',
+    searchProviders: '搜索服务商...',
+    sort: {
+      alphabet: '按首字母排序',
+      customOrder: '自定义排序',
+      default: '默认排序',
     },
   },
   ollama: {
@@ -174,6 +185,7 @@ export default {
   zeroone: {
     title: '01.AI 零一万物',
   },
+
   zhipu: {
     title: '智谱',
   },

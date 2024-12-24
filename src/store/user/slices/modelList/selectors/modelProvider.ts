@@ -96,6 +96,11 @@ const modelProviderListForModelSelect = (s: UserStore): ModelProviderCard[] =>
       chatModels: provider.chatModels.filter((model) => model.enabled),
     }));
 
+const enabledModelProviderList = (s: UserStore): ModelProviderCard[] =>
+  modelProviderList(s).filter((s) => s.enabled);
+const disabledModelProviderList = (s: UserStore): ModelProviderCard[] =>
+  modelProviderList(s).filter((s) => !s.enabled);
+
 const getModelCardById = (id: string) => (s: UserStore) => {
   const list = modelProviderList(s);
 
@@ -122,26 +127,27 @@ const modelMaxToken = (id: string) => (s: UserStore) => getModelCardById(id)(s)?
 
 export const modelProviderSelectors = {
   defaultModelProviderList,
+  disabledModelProviderList,
+  enabledModelProviderList,
+
   getDefaultEnabledModelsById,
   getDefaultModelCardById,
 
   getEnableModelsById,
   getModelCardById,
-
   getModelCardsById,
   isModelEnabledFiles,
   isModelEnabledFunctionCall,
   isModelEnabledUpload,
-  isModelEnabledVision,
-  isModelHasMaxToken,
 
+  isModelEnabledVision,
+
+  isModelHasMaxToken,
   isProviderEnabled,
 
   modelMaxToken,
   modelProviderList,
-
   modelProviderListForModelSelect,
-
   remoteProviderModelCards,
   serverProviderModelCards,
 };

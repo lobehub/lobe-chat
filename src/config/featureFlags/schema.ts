@@ -11,6 +11,7 @@ export const FeatureFlagsSchema = z.object({
 
   // settings
   language_model_settings: z.boolean().optional(),
+  provider_settings: z.boolean().optional(),
 
   openai_api_key: z.boolean().optional(),
   openai_proxy_url: z.boolean().optional(),
@@ -49,6 +50,7 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   pin_list: false,
 
   language_model_settings: true,
+  provider_settings: true,
 
   openai_api_key: true,
   openai_proxy_url: true,
@@ -87,6 +89,7 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
 
     showCreateSession: config.create_session,
     showLLM: config.language_model_settings,
+    showProvider: config.provider_settings,
     showPinList: config.pin_list,
 
     showOpenAIApiKey: config.openai_api_key,

@@ -1,6 +1,7 @@
 'use client';
 
 import { useResponsive } from 'antd-style';
+import { usePathname } from 'next/navigation';
 import { PropsWithChildren, ReactNode, memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
@@ -21,7 +22,13 @@ const SettingContainer = memo<PropsWithChildren<SettingContainerProps>>(
     ...rest
   }) => {
     const { mobile = false } = useResponsive();
-    return (
+    const pathname = usePathname();
+
+    const isProviderPath = pathname.startsWith('/settings/provider');
+
+    return isProviderPath ? (
+      children
+    ) : (
       <Flexbox
         align={'center'}
         height={'100%'}

@@ -52,10 +52,10 @@ export const useCategory = () => {
         },
         showLLM && {
           icon: <Icon icon={Brain} />,
-          key: SettingsTabs.LLM,
+          key: SettingsTabs.Provider,
           label: (
-            <Link href={'/settings/llm'} onClick={(e) => e.preventDefault()}>
-              {t('tab.llm')}
+            <Link href={'/settings/provider'} onClick={(e) => e.preventDefault()}>
+              {t('tab.provider')}
             </Link>
           ),
         },
