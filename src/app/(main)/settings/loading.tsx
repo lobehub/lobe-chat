@@ -1,5 +1,3 @@
-import FullLoading from '@/components/CircleLoading';
+import FullLoading from '@/components/Loading/BrandTextLoading';
 
-export default () => {
-  return <FullLoading />;
-};
+export default () => <FullLoading />;

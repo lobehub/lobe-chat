@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Loading from '@/components/CircleLoading';
+import Loading from '@/components/Loading/CircleLoading';
 import FileViewer from '@/features/FileViewer';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
