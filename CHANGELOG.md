@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.39.3](https://github.com/lobehub/lobe-chat/compare/v1.39.2...v1.39.3)
+
+<sup>Released on **2024-12-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve loading brand.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve loading brand, closes [#5165](https://github.com/lobehub/lobe-chat/issues/5165) ([9684c98](https://github.com/lobehub/lobe-chat/commit/9684c98))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.39.2](https://github.com/lobehub/lobe-chat/compare/v1.39.1...v1.39.2)
 
 <sup>Released on **2024-12-25**</sup>
