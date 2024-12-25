@@ -1,47 +1,24 @@
 <div align="center"><a name="readme-top"></a>
 
-[![][image-banner]][vercel-link]
-
 # Lobe Chat
 
 An open-source, modern-design ChatGPT/LLMs UI/Framework.<br/>
-Supports speech-synthesis, multi-modal, and extensible ([function call][docs-functionc-call]) plugin system.<br/>
+Supports speech-synthesis, multi-modal, and extensible () plugin system.<br/>
 One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/Ollama chat application.
 
-**English** · [简体中文](./README.zh-CN.md) · [日本語](./README.ja-JP.md) · [Official Site][official-site] · [Changelog][changelog] · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
+**English** · [简体中文](./README.zh-CN.md) · [日本語](./README.ja-JP.md) ·  ·  ·  ·  ·
 
 <!-- SHIELD GROUP -->
 
-[![][github-release-shield]][github-release-link]
-[![][docker-release-shield]][docker-release-link]
-[![][vercel-shield]][vercel-link]
-[![][discord-shield]][discord-link]<br/>
-[![][codecov-shield]][codecov-link]
-[![][github-action-test-shield]][github-action-test-link]
-[![][github-action-release-shield]][github-action-release-link]
-[![][github-releasedate-shield]][github-releasedate-link]<br/>
-[![][github-contributors-shield]][github-contributors-link]
-[![][github-forks-shield]][github-forks-link]
-[![][github-stars-shield]][github-stars-link]
-[![][github-issues-shield]][github-issues-link]
-[![][github-license-shield]][github-license-link]<br>
-[![][sponsor-shield]][sponsor-link]
+<br/>
+
+<br/>
+
+<br>
 
 **Share LobeChat Repository**
 
-[![][share-x-shield]][share-x-link]
-[![][share-telegram-shield]][share-telegram-link]
-[![][share-whatsapp-shield]][share-whatsapp-link]
-[![][share-reddit-shield]][share-reddit-link]
-[![][share-weibo-shield]][share-weibo-link]
-[![][share-mastodon-shield]][share-mastodon-link]
-[![][share-linkedin-shield]][share-linkedin-link]
-
 <sup>Pioneering the new age of thinking and creating. Built for you, the Super Individual.</sup>
-
-[![][github-trending-shield]][github-trending-url]
-
-[![][image-overview]][vercel-link]
 
 </div>
 
@@ -89,17 +66,14 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
 We are a group of e/acc design-engineers, hoping to provide modern design components and tools for AIGC.
 By adopting the Bootstrapping approach, we aim to provide developers and users with a more open, transparent, and user-friendly product ecosystem.
 
-Whether for users or professional developers, LobeHub will be your AI Agent playground. Please be aware that LobeChat is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
+Whether for users or professional developers, LobeHub will be your AI Agent playground. Please be aware that LobeChat is currently under active development, and feedback is welcome for any  encountered.
 
-| [![][vercel-shield-badge]][vercel-link]   | No installation or registration necessary! Visit our website to experience it firsthand.                           |
-| :---------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
-| [![][discord-shield-badge]][discord-link] | Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub. |
+| No installation or registration necessary! Visit our website to experience it firsthand.                           |
+| ------------------------------------------------------------------------------------------------------------------ |
+| Join our Discord community! This is where you can connect with developers and other enthusiastic users of LobeHub. |
 
-> \[!IMPORTANT]
->
-> **Star Us**, You will receive all release notifications from GitHub without any delay \~ ⭐️
-
-[![][image-star]][github-stars-link]
+> \[!IMPORTANT\]
+> \*\***Star Us**, You will receive all release notifications from GitHub without any delay \~ ⭐️
 
 <details>
   <summary><kbd>Star History</kbd></summary>
@@ -111,9 +85,7 @@ Whether for users or professional developers, LobeHub will be your AI Agent play
 
 ## ✨ Features
 
-[![][image-feat-knowledgebase]][docs-feat-knowledgebase]
-
-### `1` [File Upload/Knowledge Base][docs-feat-knowledgebase]
+### `1`
 
 LobeChat supports file upload and knowledge base functionality. You can upload various types of files including documents, images, audio, and video, as well as create knowledge bases, making it convenient for users to manage and search for files. Additionally, you can utilize files and knowledge base features during conversations, enabling a richer dialogue experience.
 
@@ -125,13 +97,9 @@ LobeChat supports file upload and knowledge base functionality. You can upload v
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-privoder]][docs-feat-provider]
-
-### `2` [Multi-Model Service Provider Support][docs-feat-provider]
+### `2`
 
 In the continuous development of LobeChat, we deeply understand the importance of diversity in model service providers for meeting the needs of the community when providing AI conversation services. Therefore, we have expanded our support to multiple model service providers, rather than being limited to a single one, in order to offer users a more diverse and rich selection of conversations.
 
@@ -185,7 +153,7 @@ We have implemented support for the following model service providers:
 
 </details>
 
-> 📊 Total providers: [<kbd>**36**</kbd>](https://lobechat.com/discover/providers)
+> 📊 Total providers: <kbd>[**36**](https://lobechat.com/discover/providers)</kbd>
 
  <!-- PROVIDER LIST -->
 
@@ -193,29 +161,21 @@ At the same time, we are also planning to support more model service providers. 
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-local]][docs-feat-local]
-
-### `3` [Local Large Language Model (LLM) Support][docs-feat-local]
+### `3`
 
 To meet the specific needs of users, LobeChat also supports the use of local models based on [Ollama](https://ollama.ai), allowing users to flexibly use their own or third-party models.
 
-> \[!TIP]
+> \[!TIP\]
 >
-> Learn more about [📘 Using Ollama in LobeChat][docs-usage-ollama] by checking it out.
+> Learn more about  by checking it out.
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-vision]][docs-feat-vision]
-
-### `4` [Model Visual Recognition][docs-feat-vision]
+### `4`
 
 LobeChat now supports OpenAI's latest [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) model with visual recognition capabilities,
 a multimodal intelligence that can perceive visuals. Users can easily upload or drag and drop images into the dialogue box,
@@ -227,13 +187,9 @@ Whether it's sharing images in daily use or interpreting images within specific 
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-tts]][docs-feat-tts]
-
-### `5` [TTS & STT Voice Conversation][docs-feat-tts]
+### `5`
 
 LobeChat supports Text-to-Speech (TTS) and Speech-to-Text (STT) technologies, enabling our application to convert text messages into clear voice outputs,
 allowing users to interact with our conversational agent as if they were talking to a real person. Users can choose from a variety of voices to pair with the agent.
@@ -244,13 +200,9 @@ Users can choose the voice that suits their personal preferences or specific sce
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-t2i]][docs-feat-t2i]
-
-### `6` [Text to Image Generation][docs-feat-t2i]
+### `6`
 
 With support for the latest text-to-image generation technology, LobeChat now allows users to invoke image creation tools directly within conversations with the agent. By leveraging the capabilities of AI tools such as [`DALL-E 3`](https://openai.com/dall-e-3), [`MidJourney`](https://www.midjourney.com/), and [`Pollinations`](https://pollinations.ai/), the agents are now equipped to transform your ideas into images.
 
@@ -258,25 +210,19 @@ This enables a more private and immersive creative process, allowing for the sea
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-plugin]][docs-feat-plugin]
-
-### `7` [Plugin System (Function Calling)][docs-feat-plugin]
+### `7`
 
 The plugin ecosystem of LobeChat is an important extension of its core functionality, greatly enhancing the practicality and flexibility of the LobeChat assistant.
-
-<video controls src="https://github.com/lobehub/lobe-chat/assets/28616219/f29475a3-f346-4196-a435-41a6373ab9e2" muted="false"></video>
 
 By utilizing plugins, LobeChat assistants can obtain and process real-time information, such as searching for web information and providing users with instant and relevant news.
 
 In addition, these plugins are not limited to news aggregation, but can also extend to other practical functions, such as quickly searching documents, generating images, obtaining data from various platforms like Bilibili, Steam, and interacting with various third-party services.
 
-> \[!TIP]
+> \[!TIP\]
 >
-> Learn more about [📘 Plugin Usage][docs-usage-plugin] by checking it out.
+> Learn more about  by checking it out.
 
 <!-- PLUGIN LIST -->
 
@@ -287,27 +233,23 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [Speak](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2024-12-02**</sup>                                         | Learn how to say anything in another language with Speak, your AI-powered language tutor.<br/>`education` `language`       |
 | [Tongyi wanxiang Image Generator](https://lobechat.com/discover/plugin/alps-tongyi-image)<br/><sup>By **YoungTx** on **2024-08-09**</sup> | This plugin uses Alibaba's Tongyi Wanxiang model to generate images based on text prompts.<br/>`image` `tongyi` `wanxiang` |
 
-> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: <kbd>[**48**](https://lobechat.com/discover/plugins)</kbd>
 
  <!-- PLUGIN LIST -->
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-agent]][docs-feat-agent]
-
-### `8` [Agent Market (GPTs)][docs-feat-agent]
+### `8`
 
 In LobeChat Agent Marketplace, creators can discover a vibrant and innovative community that brings together a multitude of well-designed agents,
 which not only play an important role in work scenarios but also offer great convenience in learning processes.
 Our marketplace is not just a showcase platform but also a collaborative space. Here, everyone can contribute their wisdom and share the agents they have developed.
 
-> \[!TIP]
+> \[!TIP\]
 >
-> By [🤖/🏪 Submit Agents][submit-agents-link], you can easily submit your agent creations to our platform.
+> By , you can easily submit your agent creations to our platform.
 > Importantly, LobeChat has established a sophisticated automated internationalization (i18n) workflow,
 > capable of seamlessly translating your agent into multiple language versions.
 > This means that no matter what language your users speak, they can experience your agent without barriers.
@@ -326,19 +268,15 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 | [Poetry Card Designer](https://lobechat.com/discover/assistant/poetry-card-designer)<br/><sup>By **[lianxin255](https://github.com/lianxin255)** on **2024-12-03**</sup>        | Skilled in designing poetry cards to enhance artistic sense and appeal<br/>`poetry-card-design` `card` `creativity` `artistic-expression`                                |
 | [Daily Doctor](https://lobechat.com/discover/assistant/yunchat-docter)<br/><sup>By **[yuyun2000](https://github.com/yuyun2000)** on **2024-11-30**</sup>                        | Specializes in surgical diagnosis and personalized health management<br/>`general-medicine` `surgery` `health-consultation` `personalized-treatment` `medical-education` |
 
-> 📊 Total agents: [<kbd>**453**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: <kbd>[**453**](https://lobechat.com/discover/assistants)</kbd>[ ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-database]][docs-feat-database]
-
-### `9` [Support Local / Remote Database][docs-feat-database]
+### `9`
 
 LobeChat supports the use of both server-side and local databases. Depending on your needs, you can choose the appropriate deployment solution:
 
@@ -349,13 +287,9 @@ Regardless of which database you choose, LobeChat can provide you with an excell
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-auth]][docs-feat-auth]
-
-### `10` [Support Multi-User Management][docs-feat-auth]
+### `10`
 
 LobeChat supports multi-user management and provides two main user authentication and management solutions to meet different needs:
 
@@ -367,13 +301,9 @@ Regardless of which user management solution you choose, LobeChat can provide yo
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-pwa]][docs-feat-pwa]
-
-### `11` [Progressive Web App (PWA)][docs-feat-pwa]
+### `11`
 
 We deeply understand the importance of providing a seamless experience for users in today's multi-device environment.
 Therefore, we have adopted Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology,
@@ -394,25 +324,17 @@ providing smooth animations, responsive layouts, and adapting to different devic
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-mobile]][docs-feat-mobile]
-
-### `12` [Mobile Device Adaptation][docs-feat-mobile]
+### `12`
 
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
-[![][image-feat-theme]][docs-feat-theme]
-
-### `13` [Custom Themes][docs-feat-theme]
+### `13`
 
 As a design-engineering-oriented application, LobeChat places great emphasis on users' personalized experiences,
 hence introducing flexible and diverse theme modes, including a light mode for daytime and a dark mode for nighttime.
@@ -425,8 +347,6 @@ Whether it's a desire for a sober dark blue, a lively peach pink, or a professio
 > For users who like to manually control details, LobeChat also offers intuitive setting options and a choice between chat bubble mode and document mode for conversation scenarios.
 
 <div align="right">
-
-[![][back-to-top]](#readme-top)
 
 </div>
 
@@ -444,40 +364,37 @@ Beside these features, LobeChat also have much better basic technique undergroun
 
 ---
 
-> \[!NOTE]
+> \[!NOTE\]
 >
-> You can find our upcoming [Roadmap][github-project-link] plans in the Projects section.
+> You can find our upcoming  plans in the Projects section.
 
 <div align="right">
-
-[![][back-to-top]](#readme-top)
 
 </div>
 
 ## ⚡️ Performance
 
-> \[!NOTE]
+> \[!NOTE\]
 >
-> The complete list of reports can be found in the [📘 Lighthouse Reports][docs-lighthouse]
+> The complete list of reports can be found in the
 
-|                   Desktop                   |                   Mobile                   |
-| :-----------------------------------------: | :----------------------------------------: |
-|              ![][chat-desktop]              |              ![][chat-mobile]              |
-| [📑 Lighthouse Report][chat-desktop-report] | [📑 Lighthouse Report][chat-mobile-report] |
+|     |     | Desktop | Mobile |
+| --- | --- | ------- | ------ |
+|     |     |         |        |
+|     |     |         |        |
+
 
 <div align="right">
-
-[![][back-to-top]](#readme-top)
 
 </div>
 
 ## 🛳 Self Hosting
 
-LobeChat provides Self-Hosted Version with Vercel, Alibaba Cloud, and [Docker Image][docker-release-link]. This allows you to deploy your own chatbot within a few minutes without any prior knowledge.
+LobeChat provides Self-Hosted Version with Vercel, Alibaba Cloud, and . This allows you to deploy your own chatbot within a few minutes without any prior knowledge.
 
-> \[!TIP]
+> \[!TIP\]
 >
-> Learn more about [📘 Build your own LobeChat][docs-self-hosting] by checking it out.
+> Learn more about  by checking it out.
 
 ### `A` Deploying with Vercel, Zeabur , Sealos or Alibaba Cloud
 
@@ -490,9 +407,10 @@ LobeChat provides Self-Hosted Version with Vercel, Alibaba Cloud, and [Docker Im
 
 <div align="center">
 
-|           Deploy with Vercel            |                     Deploy with Zeabur                      |                     Deploy with Sealos                      |                       Deploy with RepoCloud                       |                         Deploy with Alibaba Cloud                         |
-| :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------------: | :-----------------------------------------------------------------------: |
-| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] | [![][deploy-on-repocloud-button-image]][deploy-on-repocloud-link] | [![][deploy-on-alibaba-cloud-button-image]][deploy-on-alibaba-cloud-link] |
+|     |     |     |     |     | Deploy with Vercel | Deploy with Zeabur | Deploy with Sealos | Deploy with RepoCloud | Deploy with Alibaba Cloud |
+| --- | --- | --- | --- | --- | ------------------ | ------------------ | ------------------ | --------------------- | ------------------------- |
+|     |     |     |     |     |                    |                    |                    |                       |                           |
+
 
 </div>
 
@@ -504,17 +422,13 @@ After fork, only retain the upstream sync action and disable other actions in yo
 
 If you have deployed your own project following the one-click deployment steps in the README, you might encounter constant prompts indicating "updates available." This is because Vercel defaults to creating a new project instead of forking this one, resulting in an inability to detect updates accurately.
 
-> \[!TIP]
+> \[!TIP\]
 >
-> We suggest you redeploy using the following steps, [📘 Auto Sync With Latest][docs-upstream-sync]
+> We suggest you redeploy using the following steps,
 
 <br/>
 
 ### `B` Deploying with Docker
-
-[![][docker-release-shield]][docker-release-link]
-[![][docker-size-shield]][docker-size-link]
-[![][docker-pulls-shield]][docker-pulls-link]
 
 We provide a Docker image for deploying the LobeChat service on your own private device. Use the following command to start the LobeChat service:
 
@@ -539,9 +453,9 @@ $ docker run -d -p 3210:3210 \
   lobehub/lobe-chat
 ```
 
-> \[!NOTE]
+> \[!NOTE\]
 >
-> For detailed instructions on deploying with Docker, please refer to the [📘 Docker Deployment Guide][docs-docker]
+> For detailed instructions on deploying with Docker, please refer to the
 
 <br/>
 
@@ -556,34 +470,31 @@ This project provides some additional configuration items set with environment v
 | `ACCESS_CODE`        | No       | Add a password to access this service; you can set a long password to avoid leaking. If this value contains a comma, it is a password array.                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                                            |
 | `OPENAI_MODEL_LIST`  | No       | Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas. | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                                |
 
-> \[!NOTE]
+> \[!NOTE\]
 >
-> The complete list of environment variables can be found in the [📘 Environment Variables][docs-env-var]
+> The complete list of environment variables can be found in the
 
 <div align="right">
-
-[![][back-to-top]](#readme-top)
 
 </div>
 
 ## 📦 Ecosystem
 
-| NPM                               | Repository                              | Description                                                                                           | Version                                   |
-| --------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| [@lobehub/ui][lobe-ui-link]       | [lobehub/lobe-ui][lobe-ui-github]       | Open-source UI component library dedicated to building AIGC web applications.                         | [![][lobe-ui-shield]][lobe-ui-link]       |
-| [@lobehub/icons][lobe-icons-link] | [lobehub/lobe-icons][lobe-icons-github] | Popular AI / LLM Model Brand SVG Logo and Icon Collection.                                            | [![][lobe-icons-shield]][lobe-icons-link] |
-| [@lobehub/tts][lobe-tts-link]     | [lobehub/lobe-tts][lobe-tts-github]     | High-quality & reliable TTS/STT React Hooks library                                                   | [![][lobe-tts-shield]][lobe-tts-link]     |
-| [@lobehub/lint][lobe-lint-link]   | [lobehub/lobe-lint][lobe-lint-github]   | Configurations for ESlint, Stylelint, Commitlint, Prettier, Remark, and Semantic Release for LobeHub. | [![][lobe-lint-shield]][lobe-lint-link]   |
+|                                                                                                       |     |     | NPM | Repository | Description | Version |
+| ----------------------------------------------------------------------------------------------------- | --- | --- | --- | ---------- | ----------- | ------- |
+| Open-source UI component library dedicated to building AIGC web applications.                         |     |     |     |            |             |         |
+| Popular AI / LLM Model Brand SVG Logo and Icon Collection.                                            |     |     |     |            |             |         |
+| High-quality & reliable TTS/STT React Hooks library                                                   |     |     |     |            |             |         |
+| Configurations for ESlint, Stylelint, Commitlint, Prettier, Remark, and Semantic Release for LobeHub. |     |     |     |            |             |         |
+
 
 <div align="right">
-
-[![][back-to-top]](#readme-top)
 
 </div>
 
 ## 🧩 Plugins
 
-Plugins provide a means to extend the [Function Calling][docs-functionc-call] capabilities of LobeChat. They can be used to introduce new function calls and even new ways to render message results. If you are interested in plugin development, please refer to our [📘 Plugin Development Guide][docs-plugin-dev] in the Wiki.
+Plugins provide a means to extend the  capabilities of LobeChat. They can be used to introduce new function calls and even new ways to render message results. If you are interested in plugin development, please refer to our  in the Wiki.
 
 - [lobe-chat-plugins][lobe-chat-plugins]: This is the plugin index for LobeChat. It accesses index.json from this repository to display a list of available plugins for LobeChat to the user.
 - [chat-plugin-template][chat-plugin-template]: This is the plugin template for LobeChat plugin development.
@@ -600,15 +511,11 @@ Plugins provide a means to extend the [Function Calling][docs-functionc-call] ca
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
 ## ⌨️ Local Development
 
 You can use GitHub Codespaces for online development:
-
-[![][codespaces-shield]][codespaces-link]
 
 Or clone it for local development:
 
@@ -619,29 +526,22 @@ $ pnpm install
 $ pnpm dev
 ```
 
-If you would like to learn more details, please feel free to look at our [📘 Development Guide][docs-dev-guide].
+If you would like to learn more details, please feel free to look at our .
 
 <div align="right">
-
-[![][back-to-top]](#readme-top)
 
 </div>
 
 ## 🤝 Contributing
 
-Contributions of all types are more than welcome; if you are interested in contributing code, feel free to check out our GitHub [Issues][github-issues-link] and [Projects][github-project-link] to get stuck in to show us what you’re made of.
+Contributions of all types are more than welcome; if you are interested in contributing code, feel free to check out our GitHub  and  to get stuck in to show us what you’re made of.
 
-> \[!TIP]
+> \[!TIP\]
 >
 > We are creating a technology-driven forum, fostering knowledge interaction and the exchange of ideas that may culminate in mutual inspiration and collaborative innovation.
 >
 > Help us make LobeChat better. Welcome to provide product design feedback, user experience discussions directly to us.
->
-> **Principal Maintainers:** [@arvinxx](https://github.com/arvinxx) [@canisminor1990](https://github.com/canisminor1990)
-
-[![][pr-welcome-shield]][pr-welcome-link]
-[![][submit-agents-shield]][submit-agents-link]
-[![][submit-plugin-shield]][submit-plugin-link]
+> \*\***Principal Maintainers:** [@arvinxx](https://github.com/arvinxx) [@canisminor1990](https://github.com/canisminor1990)
 
 <a href="https://github.com/lobehub/lobe-chat/graphs/contributors" target="_blank">
   <table>
@@ -677,8 +577,6 @@ Contributions of all types are more than welcome; if you are interested in contr
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
 ## ❤️ Sponsor
@@ -694,20 +592,16 @@ Every bit counts and your one-time donation sparkles in our galaxy of support! Y
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
-
 </div>
 
 ## 🔗 More Products
 
-- **[🅰️ Lobe SD Theme][lobe-theme]:** Modern theme for Stable Diffusion WebUI, exquisite interface design, highly customizable UI, and efficiency-boosting features.
-- **[⛵️ Lobe Midjourney WebUI][lobe-midjourney-webui]:** WebUI for Midjourney, leverages AI to quickly generate a wide array of rich and diverse images from text prompts, sparking creativity and enhancing conversations.
-- **[🌏 Lobe i18n][lobe-i18n] :** Lobe i18n is an automation tool for the i18n (internationalization) translation process, powered by ChatGPT. It supports features such as automatic splitting of large files, incremental updates, and customization options for the OpenAI model, API proxy, and temperature.
-- **[💌 Lobe Commit][lobe-commit]:** Lobe Commit is a CLI tool that leverages Langchain/ChatGPT to generate Gitmoji-based commit messages.
+- **:** Modern theme for Stable Diffusion WebUI, exquisite interface design, highly customizable UI, and efficiency-boosting features.
+- **:** WebUI for Midjourney, leverages AI to quickly generate a wide array of rich and diverse images from text prompts, sparking creativity and enhancing conversations.
+- **:** Lobe i18n is an automation tool for the i18n (internationalization) translation process, powered by ChatGPT. It supports features such as automatic splitting of large files, incremental updates, and customization options for the OpenAI model, API proxy, and temperature.
+- **:** Lobe Commit is a CLI tool that leverages Langchain/ChatGPT to generate Gitmoji-based commit messages.
 
 <div align="right">
-
-[![][back-to-top]](#readme-top)
 
 </div>
 
@@ -715,153 +609,9 @@ Every bit counts and your one-time donation sparkles in our galaxy of support! Y
 
 <details><summary><h4>📝 License</h4></summary>
 
-[![][fossa-license-shield]][fossa-license-link]
-
 </details>
 
-Copyright © 2024 [LobeHub][profile-link]. <br />
+Copyright © 2024 . <br />
 This project is [Apache 2.0](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
-
-[back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
-[blog]: https://lobehub.com/blog
-[changelog]: https://lobehub.com/changelog
-[chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
-[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
-[chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
-[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_preview_lobehub_com_chat.html
-[chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
-[chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
-[chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
-[codecov-link]: https://codecov.io/gh/lobehub/lobe-chat
-[codecov-shield]: https://img.shields.io/codecov/c/github/lobehub/lobe-chat?labelColor=black&style=flat-square&logo=codecov&logoColor=white
-[codespaces-link]: https://codespaces.new/lobehub/lobe-chat
-[codespaces-shield]: https://github.com/codespaces/badge.svg
-[deploy-button-image]: https://vercel.com/button
-[deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY,ACCESS_CODE&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%7C%20Access%20Code%20can%20protect%20your%20website&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
-[deploy-on-alibaba-cloud-button-image]: https://service-info-public.oss-cn-hangzhou.aliyuncs.com/computenest-en.svg
-[deploy-on-alibaba-cloud-link]: https://computenest.console.aliyun.com/service/instance/create/default?type=user&ServiceName=LobeChat%E7%A4%BE%E5%8C%BA%E7%89%88
-[deploy-on-repocloud-button-image]: https://d16t0pc4846x52.cloudfront.net/deploylobe.svg
-[deploy-on-repocloud-link]: https://repocloud.io/details/?app_id=248
-[deploy-on-sealos-button-image]: https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg
-[deploy-on-sealos-link]: https://cloud.sealos.io/?openapp=system-template%3FtemplateName%3Dlobe-chat
-[deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
-[deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
-[discord-link]: https://discord.gg/AYFPHvv2jT
-[discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
-[discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
-[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square
-[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
-[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
-[docs]: https://lobehub.com/docs/usage/start
-[docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
-[docs-docker]: https://lobehub.com/docs/self-hosting/platform/docker
-[docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
-[docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
-[docs-feat-auth]: https://lobehub.com/docs/usage/features/auth
-[docs-feat-database]: https://lobehub.com/docs/usage/features/database
-[docs-feat-knowledgebase]: https://lobehub.com/blog/knowledge-base
-[docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
-[docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
-[docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
-[docs-feat-provider]: https://lobehub.com/docs/usage/features/multi-ai-providers
-[docs-feat-pwa]: https://lobehub.com/docs/usage/features/pwa
-[docs-feat-t2i]: https://lobehub.com/docs/usage/features/text-to-image
-[docs-feat-theme]: https://lobehub.com/docs/usage/features/theme
-[docs-feat-tts]: https://lobehub.com/docs/usage/features/tts
-[docs-feat-vision]: https://lobehub.com/docs/usage/features/vision
-[docs-functionc-call]: https://lobehub.com/blog/openai-function-call
-[docs-lighthouse]: https://github.com/lobehub/lobe-chat/wiki/Lighthouse
-[docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development
-[docs-self-hosting]: https://lobehub.com/docs/self-hosting/start
-[docs-upstream-sync]: https://lobehub.com/docs/self-hosting/advanced/upstream-sync
-[docs-usage-ollama]: https://lobehub.com/docs/usage/providers/ollama
-[docs-usage-plugin]: https://lobehub.com/docs/usage/plugins/basic
-[fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
-[fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
-[github-action-release-link]: https://github.com/actions/workflows/lobehub/lobe-chat/release.yml
-[github-action-release-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/release.yml?label=release&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
-[github-action-test-link]: https://github.com/actions/workflows/lobehub/lobe-chat/test.yml
-[github-action-test-shield]: https://img.shields.io/github/actions/workflow/status/lobehub/lobe-chat/test.yml?label=test&labelColor=black&logo=githubactions&logoColor=white&style=flat-square
-[github-contributors-link]: https://github.com/lobehub/lobe-chat/graphs/contributors
-[github-contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat?color=c4f042&labelColor=black&style=flat-square
-[github-forks-link]: https://github.com/lobehub/lobe-chat/network/members
-[github-forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat?color=8ae8ff&labelColor=black&style=flat-square
-[github-issues-link]: https://github.com/lobehub/lobe-chat/issues
-[github-issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat?color=ff80eb&labelColor=black&style=flat-square
-[github-license-link]: https://github.com/lobehub/lobe-chat/blob/main/LICENSE
-[github-license-shield]: https://img.shields.io/badge/license-apache%202.0-white?labelColor=black&style=flat-square
-[github-project-link]: https://github.com/lobehub/lobe-chat/projects
-[github-release-link]: https://github.com/lobehub/lobe-chat/releases
-[github-release-shield]: https://img.shields.io/github/v/release/lobehub/lobe-chat?color=369eff&labelColor=black&logo=github&style=flat-square
-[github-releasedate-link]: https://github.com/lobehub/lobe-chat/releases
-[github-releasedate-shield]: https://img.shields.io/github/release-date/lobehub/lobe-chat?labelColor=black&style=flat-square
-[github-stars-link]: https://github.com/lobehub/lobe-chat/network/stargazers
-[github-stars-shield]: https://img.shields.io/github/stars/lobehub/lobe-chat?color=ffcb47&labelColor=black&style=flat-square
-[github-trending-shield]: https://trendshift.io/api/badge/repositories/2256
-[github-trending-url]: https://trendshift.io/repositories/2256
-[image-banner]: https://github.com/lobehub/lobe-chat/assets/28616219/9f155dff-4737-429f-9cad-a70a1a860c5f
-[image-feat-agent]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png
-[image-feat-auth]: https://github.com/lobehub/lobe-chat/assets/17870709/8ce70e15-40df-451e-b700-66090fe5b8c2
-[image-feat-database]: https://github.com/lobehub/lobe-chat/assets/17870709/c27a0234-a4e9-40e5-8bcb-42d5ce7e40f9
-[image-feat-knowledgebase]: https://github.com/user-attachments/assets/77e58e1c-c82f-4341-b159-f4eeede9967f
-[image-feat-local]: https://github.com/lobehub/lobe-chat/assets/28616219/ca9a21bc-ea6c-4c90-bf4a-fa53b4fb2b5c
-[image-feat-mobile]: https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp
-[image-feat-plugin]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png
-[image-feat-privoder]: https://github.com/lobehub/lobe-chat/assets/28616219/b164bc54-8ba2-4c1e-b2f2-f4d7f7e7a551
-[image-feat-pwa]: https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp
-[image-feat-t2i]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/297746445-0ff762b9-aa08-4337-afb7-12f932b6efbb.png
-[image-feat-theme]: https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp
-[image-feat-tts]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png
-[image-feat-vision]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072129-382bdf30-e3d6-4411-b5a0-249710b8ba08.png
-[image-overview]: https://github.com/lobehub/lobe-chat/assets/17870709/56b95d48-f573-41cd-8b38-387bf88bc4bf
-[image-star]: https://github.com/lobehub/lobe-chat/assets/17870709/cb06b748-513f-47c2-8740-d876858d7855
-[issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
-[lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
-[lobe-commit]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-commit
-[lobe-i18n]: https://github.com/lobehub/lobe-commit/tree/master/packages/lobe-i18n
-[lobe-icons-github]: https://github.com/lobehub/lobe-icons
-[lobe-icons-link]: https://www.npmjs.com/package/@lobehub/icons
-[lobe-icons-shield]: https://img.shields.io/npm/v/@lobehub/icons?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-lint-github]: https://github.com/lobehub/lobe-lint
-[lobe-lint-link]: https://www.npmjs.com/package/@lobehub/lint
-[lobe-lint-shield]: https://img.shields.io/npm/v/@lobehub/lint?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-midjourney-webui]: https://github.com/lobehub/lobe-midjourney-webui
-[lobe-theme]: https://github.com/lobehub/sd-webui-lobe-theme
-[lobe-tts-github]: https://github.com/lobehub/lobe-tts
-[lobe-tts-link]: https://www.npmjs.com/package/@lobehub/tts
-[lobe-tts-shield]: https://img.shields.io/npm/v/@lobehub/tts?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[lobe-ui-github]: https://github.com/lobehub/lobe-ui
-[lobe-ui-link]: https://www.npmjs.com/package/@lobehub/ui
-[lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
-[official-site]: https://lobehub.com
-[pr-welcome-link]: https://github.com/lobehub/lobe-chat/pulls
-[pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
-[profile-link]: https://github.com/lobehub
-[share-linkedin-link]: https://linkedin.com/feed
-[share-linkedin-shield]: https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square
-[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source,%20extensible%20(Function%20Calling),%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT/LLM%20web%20application.%20https://github.com/lobehub/lobe-chat%20#chatbot%20#chatGPT%20#openAI
-[share-mastodon-shield]: https://img.shields.io/badge/-share%20on%20mastodon-black?labelColor=black&logo=mastodon&logoColor=white&style=flat-square
-[share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
-[share-reddit-shield]: https://img.shields.io/badge/-share%20on%20reddit-black?labelColor=black&logo=reddit&logoColor=white&style=flat-square
-[share-telegram-link]: https://t.me/share/url"?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
-[share-telegram-shield]: https://img.shields.io/badge/-share%20on%20telegram-black?labelColor=black&logo=telegram&logoColor=white&style=flat-square
-[share-weibo-link]: http://service.weibo.com/share/share.php?sharesource=weibo&title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
-[share-weibo-shield]: https://img.shields.io/badge/-share%20on%20weibo-black?labelColor=black&logo=sinaweibo&logoColor=white&style=flat-square
-[share-whatsapp-link]: https://api.whatsapp.com/send?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat%20%23chatbot%20%23chatGPT%20%23openAI
-[share-whatsapp-shield]: https://img.shields.io/badge/-share%20on%20whatsapp-black?labelColor=black&logo=whatsapp&logoColor=white&style=flat-square
-[share-x-link]: https://x.com/intent/tweet?hashtags=chatbot%2CchatGPT%2CopenAI&text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
-[share-x-shield]: https://img.shields.io/badge/-share%20on%20x-black?labelColor=black&logo=x&logoColor=white&style=flat-square
-[sponsor-link]: https://opencollective.com/lobehub 'Become ❤️ LobeHub Sponsor'
-[sponsor-shield]: https://img.shields.io/badge/-Sponsor%20LobeHub-f04f88?logo=opencollective&logoColor=white&style=flat-square
-[submit-agents-link]: https://github.com/lobehub/lobe-chat-agents
-[submit-agents-shield]: https://img.shields.io/badge/🤖/🏪_submit_agent-%E2%86%92-c4f042?labelColor=black&style=for-the-badge
-[submit-plugin-link]: https://github.com/lobehub/lobe-chat-plugins
-[submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-95f3d9?labelColor=black&style=for-the-badge
-[vercel-link]: https://chat-preview.lobehub.com
-[vercel-shield]: https://img.shields.io/badge/vercel-online-55b467?labelColor=black&logo=vercel&style=flat-square
-[vercel-shield-badge]: https://img.shields.io/badge/TRY%20LOBECHAT-ONLINE-55b467?labelColor=black&logo=vercel&style=for-the-badge
