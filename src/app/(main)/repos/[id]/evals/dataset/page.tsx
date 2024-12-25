@@ -3,7 +3,7 @@
 import { createStyles } from 'antd-style';
 import { Flexbox } from 'react-layout-kit';
 
-import CircleLoading from '@/components/CircleLoading';
+import CircleLoading from '@/components/Loading/BrandTextLoading';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import DatasetDetail from './DatasetDetail';

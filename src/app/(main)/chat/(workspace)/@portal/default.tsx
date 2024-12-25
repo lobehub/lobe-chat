@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 
-import Loading from '@/components/CircleLoading';
+import Loading from '@/components/Loading/BrandTextLoading';
 import { isMobileDevice } from '@/utils/server/responsive';
 
 import Desktop from './_layout/Desktop';
