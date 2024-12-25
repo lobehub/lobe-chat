@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import FullscreenLoading from '@/components/FullscreenLoading';
+import FullscreenLoading from '@/components/Loading/FullscreenLoading';
 
 import { AppLoadingStage, SERVER_LOADING_STAGES } from '../stage';
 
