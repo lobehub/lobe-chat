@@ -333,7 +333,7 @@ class AgentRuntime {
       }
 
       case ModelProvider.SenseNova: {
-        runtimeModel = await LobeSenseNovaAI.fromAPIKey(params.sensenova);
+        runtimeModel = new LobeSenseNovaAI(params.sensenova);
         break;
       }
 

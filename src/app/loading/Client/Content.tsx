@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import FullscreenLoading from '@/components/FullscreenLoading';
+import FullscreenLoading from '@/components/Loading/FullscreenLoading';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { DatabaseLoadingState } from '@/types/clientDB';

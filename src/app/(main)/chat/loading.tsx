@@ -1,3 +1,3 @@
-import CircleLoading from '@/components/CircleLoading';
+import CircleLoading from '@/components/Loading/BrandTextLoading';
 
 export default () => <CircleLoading />;

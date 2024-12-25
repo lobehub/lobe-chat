@@ -33,6 +33,7 @@ const SettingContainer = memo<PropsWithChildren<SettingContainerProps>>(
       >
         {addonBefore}
         <Flexbox
+          flex={1}
           gap={64}
           paddingInline={mobile ? undefined : 24}
           style={{
