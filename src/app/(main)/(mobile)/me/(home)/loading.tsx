@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Divider from '@/components/Cell/Divider';
-import SkeletonLoading from '@/components/SkeletonLoading';
+import SkeletonLoading from 'src/components/Loading/SkeletonLoading';
 
 const Loading = memo(() => {
   return (
