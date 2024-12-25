@@ -10,7 +10,6 @@ import { ChangelogIndexItem } from '@/types/changelog';
 const BASE_URL = 'https://raw.githubusercontent.com';
 const LAST_MODIFIED = new Date().toISOString();
 
-const revalidate: number = 12 * 3600;
 const docCdnPrefix = process.env.DOC_S3_PUBLIC_DOMAIN || '';
 
 export interface ChangelogConfig {
@@ -48,9 +47,7 @@ export class ChangelogService {
     try {
       const url = this.genUrl(urlJoin(this.config.docsPath, 'index.json'));
 
-      const res = await fetch(url, {
-        next: { revalidate },
-      });
+      const res = await fetch(url);
 
       const data = await res.json();
 
@@ -74,9 +71,7 @@ export class ChangelogService {
       const filename = options?.locale === 'en-US' ? `${id}.mdx` : `${id}.zh-CN.mdx`;
       const url = this.genUrl(urlJoin(this.config.docsPath, filename));
 
-      const response = await fetch(url, {
-        next: { revalidate },
-      });
+      const response = await fetch(url);
       const text = await response.text();
       const { data, content } = matter(text);
 
@@ -181,9 +176,7 @@ export class ChangelogService {
     if (Object.keys(this.cdnUrls).length === 0) {
       try {
         const url = this.genUrl(this.config.cdnPath);
-        const res = await fetch(url, {
-          next: { revalidate },
-        });
+        const res = await fetch(url);
         const data = await res.json();
         if (data) {
           this.cdnUrls = data;

@@ -1,22 +1,21 @@
 'use client';
 
+import { useTimeout } from 'ahooks';
 import { useRouter } from 'next/navigation';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 
 import { useGlobalStore } from '@/store/global';
 
-const ChangelogModal = memo(() => {
+const ChangelogModal = memo<{ currentId?: string }>(({ currentId }) => {
+  const latestChangelogId = useGlobalStore((s) => s.status.latestChangelogId);
   const router = useRouter();
-  const [useCheckLatestChangelogId, latestChangelogId] = useGlobalStore((s) => [
-    s.useCheckLatestChangelogId,
-    s.status.latestChangelogId,
-  ]);
-  const { data } = useCheckLatestChangelogId();
 
-  useEffect(() => {
-    if (!data) return;
-    if (latestChangelogId !== data) router.push('/changelog');
-  }, [data, latestChangelogId]);
+  useTimeout(() => {
+    if (latestChangelogId !== currentId) {
+      console.log('ChangelogModal', currentId, latestChangelogId);
+      router.push('/changelog');
+    }
+  }, 1000);
 
   return null;
 });

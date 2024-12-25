@@ -12,7 +12,7 @@ const Layout = ({ children }: Props) => {
       style={{ height: '100%', overflowX: 'hidden', overflowY: 'auto' }}
       width={'100%'}
     >
-      <Flexbox paddingBlock={24} style={{ gap: 24, width: 'min(100%, 1024px)' }}>
+      <Flexbox gap={24} paddingBlock={24} paddingInline={16} style={{ width: 'min(100%, 1024px)' }}>
         <Hero />
         {children}
       </Flexbox>

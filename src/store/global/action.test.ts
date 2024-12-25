@@ -277,57 +277,6 @@ describe('createPreferenceSlice', () => {
     });
   });
 
-  describe('useCheckLatestChangelogId', () => {
-    beforeEach(() => {
-      vi.resetAllMocks();
-    });
-
-    it('should call getLatestChangelogId and return the result', async () => {
-      const mockChangelogId = 'changelog-123';
-      vi.spyOn(globalService, 'getLatestChangelogId').mockResolvedValueOnce(mockChangelogId);
-
-      const { result } = renderHook(() => useGlobalStore().useCheckLatestChangelogId(), {
-        wrapper: withSWR,
-      });
-
-      // 等待 SWR 完成数据获取
-      await waitFor(() => {
-        expect(result.current.data).toBe(mockChangelogId);
-      });
-
-      expect(globalService.getLatestChangelogId).toHaveBeenCalledTimes(1);
-    });
-
-    it('should return undefined while loading', () => {
-      vi.spyOn(globalService, 'getLatestChangelogId').mockImplementation(
-        () => new Promise((resolve) => setTimeout(() => resolve('changelog-123'), 1000)),
-      );
-
-      const { result } = renderHook(() => useGlobalStore().useCheckLatestChangelogId(), {
-        wrapper: withSWR,
-      });
-
-      expect(result.current.data).toBeUndefined();
-    });
-
-    it('should handle error when fetching fails', async () => {
-      const mockError = new Error('Failed to fetch changelog ID');
-      vi.spyOn(globalService, 'getLatestChangelogId').mockRejectedValueOnce(mockError);
-
-      const { result } = renderHook(() => useGlobalStore().useCheckLatestChangelogId(), {
-        wrapper: withSWR,
-      });
-
-      // 等待 SWR 完成数据获取（在这种情况下是错误）
-      await waitFor(() => {
-        expect(result.current.error).toBeDefined();
-      });
-
-      expect(result.current.error).toEqual(mockError);
-      expect(result.current.data).toBeUndefined();
-    });
-  });
-
   describe('useCheckLatestVersion', () => {
     it('should set hasNewVersion to false if there is no new version', async () => {
       const latestVersion = '0.0.1';

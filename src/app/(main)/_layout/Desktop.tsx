@@ -12,7 +12,6 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 import { LayoutProps } from './type';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
-const ChangelogModal = dynamic(() => import('@/features/ChangelogModal'), { ssr: false });
 
 const Layout = memo<LayoutProps>(({ children, nav }) => {
   const { isPWA } = usePlatform();
@@ -23,7 +22,6 @@ const Layout = memo<LayoutProps>(({ children, nav }) => {
   return (
     <>
       {showCloudPromotion && <CloudBanner />}
-      <ChangelogModal />
       <Flexbox
         height={showCloudPromotion ? `calc(100% - ${BANNER_HEIGHT}px)` : '100%'}
         horizontal

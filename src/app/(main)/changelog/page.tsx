@@ -1,9 +1,11 @@
 import { Divider, Skeleton } from 'antd';
+import { notFound } from 'next/navigation';
 import { Fragment, Suspense } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Pagination from '@/app/@modal/(.)changelog/features/Pagination';
 import StructuredData from '@/components/StructuredData';
+import { serverFeatureFlags } from '@/config/featureFlags';
 import { BRANDING_NAME } from '@/const/branding';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
@@ -24,6 +26,10 @@ export const generateMetadata = async () => {
 };
 
 const Page = async () => {
+  const hideChangelog = serverFeatureFlags().hideChangelog;
+
+  if (hideChangelog) return notFound();
+
   const mobile = await isMobileDevice();
   const { t, locale } = await translation('metadata');
   const changelogService = new ChangelogService();

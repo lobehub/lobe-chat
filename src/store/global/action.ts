@@ -1,7 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { gt, parse, valid } from 'semver';
-import useSWR, { SWRResponse } from 'swr';
+import { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -29,7 +29,6 @@ export interface GlobalStoreAction {
   toggleSystemRole: (visible?: boolean) => void;
   toggleZenMode: () => void;
   updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
-  useCheckLatestChangelogId: () => SWRResponse<string>;
   useCheckLatestVersion: (enabledCheck?: boolean) => SWRResponse<string>;
   useInitSystemStatus: () => SWRResponse;
 }
@@ -98,32 +97,33 @@ export const globalActionSlice: StateCreator<
     get().statusStorage.saveToLocalStorage(nextStatus);
   },
 
-  useCheckLatestChangelogId: () =>
-    useSWR('changelog', async () => globalService.getLatestChangelogId()),
-
   useCheckLatestVersion: (enabledCheck = true) =>
-    useSWR(enabledCheck ? 'checkLatestVersion' : null, globalService.getLatestVersion, {
-      // check latest version every 30 minutes
-      focusThrottleInterval: 1000 * 60 * 30,
-      onSuccess: (data: string) => {
-        if (!valid(CURRENT_VERSION) || !valid(data)) return;
+    useOnlyFetchOnceSWR(
+      enabledCheck ? 'checkLatestVersion' : null,
+      async () => globalService.getLatestVersion(),
+      {
+        // check latest version every 30 minutes
+        focusThrottleInterval: 1000 * 60 * 30,
+        onSuccess: (data: string) => {
+          if (!valid(CURRENT_VERSION) || !valid(data)) return;
 
-        // Parse versions to ensure we're working with valid SemVer objects
-        const currentVersion = parse(CURRENT_VERSION);
-        const latestVersion = parse(data);
+          // Parse versions to ensure we're working with valid SemVer objects
+          const currentVersion = parse(CURRENT_VERSION);
+          const latestVersion = parse(data);
 
-        if (!currentVersion || !latestVersion) return;
+          if (!currentVersion || !latestVersion) return;
 
-        // only compare major and minor versions
-        // solve the problem of frequent patch updates
-        const currentMajorMinor = `${currentVersion.major}.${currentVersion.minor}.0`;
-        const latestMajorMinor = `${latestVersion.major}.${latestVersion.minor}.0`;
+          // only compare major and minor versions
+          // solve the problem of frequent patch updates
+          const currentMajorMinor = `${currentVersion.major}.${currentVersion.minor}.0`;
+          const latestMajorMinor = `${latestVersion.major}.${latestVersion.minor}.0`;
 
-        if (gt(latestMajorMinor, currentMajorMinor)) {
-          set({ hasNewVersion: true, latestVersion: data }, false, n('checkLatestVersion'));
-        }
+          if (gt(latestMajorMinor, currentMajorMinor)) {
+            set({ hasNewVersion: true, latestVersion: data }, false, n('checkLatestVersion'));
+          }
+        },
       },
-    }),
+    ),
 
   useInitSystemStatus: () =>
     useOnlyFetchOnceSWR<SystemStatus>(

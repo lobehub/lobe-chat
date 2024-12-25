@@ -100,32 +100,4 @@ describe('GlobalService', () => {
       expect(config).toEqual({ model: 'gemini-pro' });
     });
   });
-
-  describe('getLatestChangelogId', () => {
-    it('should return the latest changelog ID when query is successful', async () => {
-      // Arrange
-      const mockChangelogId = 'changelog-123';
-      vi.spyOn(edgeClient.appStatus.getLatestChangelogId, 'query').mockResolvedValue(
-        mockChangelogId,
-      );
-
-      // Act
-      const changelogId = await globalService.getLatestChangelogId();
-
-      // Assert
-      expect(changelogId).toBe(mockChangelogId);
-      expect(edgeClient.appStatus.getLatestChangelogId.query).toHaveBeenCalledTimes(1);
-    });
-
-    it('should throw an error when the query fails', async () => {
-      // Arrange
-      const mockError = new Error('Failed to fetch changelog ID');
-      vi.spyOn(edgeClient.appStatus.getLatestChangelogId, 'query').mockRejectedValue(mockError);
-
-      // Act & Assert
-      await expect(globalService.getLatestChangelogId()).rejects.toThrow(
-        'Failed to fetch changelog ID',
-      );
-    });
-  });
 });
