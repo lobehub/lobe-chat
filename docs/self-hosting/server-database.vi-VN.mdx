@@ -1,0 +1,152 @@
+---
+title: Triển Khai Cơ Sở Dữ Liệu Phía Máy Chủ cho LobeChat
+description: Học cách triển khai cơ sở dữ liệu phía máy chủ của LobeChat bằng Postgres.
+tags:
+  - LobeChat
+  - Cơ Sở Dữ Liệu Phía Máy Chủ
+  - Postgres
+  - Hướng Dẫn Triển Khai
+---
+
+# Triển Khai Cơ Sở Dữ Liệu Phía Máy Chủ
+
+LobeChat mặc định sử dụng cơ sở dữ liệu phía máy khách (IndexedDB) nhưng cũng hỗ trợ triển khai cơ sở dữ liệu phía máy chủ. LobeChat sử dụng Postgres làm cơ sở dữ liệu lưu trữ backend.
+
+<Callout>
+  PostgreSQL là một hệ quản trị cơ sở dữ liệu quan hệ mã nguồn mở mạnh mẽ với tính mở rộng cao
+  và hỗ trợ chuẩn SQL. Nó cung cấp các kiểu dữ liệu phong phú, kiểm soát đồng thời, toàn vẹn dữ liệu,
+  bảo mật và khả năng lập trình, làm cho nó phù hợp cho các ứng dụng phức tạp và quản lý dữ liệu quy mô lớn.
+</Callout>
+
+Hướng dẫn này sẽ giới thiệu quy trình và nguyên tắc triển khai phiên bản cơ sở dữ liệu phía máy chủ của LobeChat trên bất kỳ nền tảng nào từ góc độ khung, để bạn có thể hiểu cả cái gì và tại sao, sau đó triển khai theo nhu cầu cụ thể của bạn.
+
+Nếu bạn đã quen thuộc với các nguyên tắc hoàn chỉnh, bạn có thể nhanh chóng bắt đầu bằng cách kiểm tra các hướng dẫn triển khai cho mỗi nền tảng:
+
+<PlatformCards urlPrefix={'server-database'} />
+
+---
+
+Đối với phiên bản cơ sở dữ liệu phía máy chủ của LobeChat, một quy trình triển khai thông thường thường bao gồm cấu hình ba mô-đun:
+
+1. Cấu hình cơ sở dữ liệu;
+2. Cấu hình dịch vụ xác thực;
+3. Cấu hình dịch vụ lưu trữ S3.
+
+## Cấu Hình Cơ Sở Dữ Liệu
+
+Trước khi triển khai, hãy đảm bảo bạn đã sẵn sàng với một phiên bản cơ sở dữ liệu Postgres. Bạn có thể chọn từ các phiên bản sau:
+
+- `A.` Sử dụng các phiên bản Postgres không máy chủ như Vercel/Neon;
+- `B.` Sử dụng các phiên bản Postgres tự triển khai như Docker/Railway/Zeabur, được gọi chung là các phiên bản Node Postgres;
+
+<Callout>
+  Có sự khác biệt nhỏ về cách chúng được cấu hình về biến môi trường.
+</Callout>
+
+Vì chúng tôi hỗ trợ các cuộc đối thoại dựa trên tệp/cơ sở kiến thức, chúng tôi cần cài đặt plugin `pgvector` cho Postgres. Plugin này cung cấp khả năng tìm kiếm vector và là một thành phần chính cho LobeChat để triển khai RAG.
+
+<Steps>
+
+### `NEXT_PUBLIC_SERVICE_MODE`
+
+LobeChat hỗ trợ cả cơ sở dữ liệu phía máy khách và phía máy chủ, vì vậy chúng tôi cung cấp một biến môi trường để chuyển đổi chế độ, đó là `NEXT_PUBLIC_SERVICE_MODE`, với giá trị mặc định là `client`.
+
+Đối với các kịch bản triển khai cơ sở dữ liệu phía máy chủ, bạn cần đặt `NEXT_PUBLIC_SERVICE_MODE` thành `server`.
+
+<Callout type={'info'}>
+  Trong hình ảnh Docker `lobe-chat-database` chính thức, biến môi trường này đã được đặt mặc định thành
+  `server`. Vì thế, nếu bạn triển khai bằng cách sử dụng hình ảnh Docker, bạn không cần cấu hình
+  lại biến môi trường này.
+</Callout>
+
+<Callout type={'tip'}>
+Vì các biến môi trường bắt đầu bằng `NEXT_PUBLIC` có hiệu lực trong mã nguồn phía giao diện người dùng, nên chúng không thể được thay đổi thông qua việc tiêm lúc chạy của container. (Tham khảo tài liệu `next.js` [Configuring: Environment Variables | Next.js (nextjs.org)](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables)). Vì lý do này, chúng tôi đã chọn tạo một hình ảnh phiên bản DB riêng.
+
+Nếu bạn cần thay đổi các biến có tiền tố `NEXT_PUBLIC` trong triển khai Docker, bạn phải tự xây dựng hình ảnh và trong quá trình build, tiêm vào các biến môi trường có tiền tố `NEXT_PUBLIC`.
+
+</Callout>
+
+### `DATABASE_URL`
+
+Cốt lõi của việc cấu hình cơ sở dữ liệu là thêm biến môi trường `DATABASE_URL` và điền vào URL kết nối cơ sở dữ liệu Postgres bạn đã chuẩn bị. Định dạng thường thấy của URL kết nối cơ sở dữ liệu là `postgres://username:password@host:port/database`.
+
+<Callout type={'info'}>
+  Nếu bạn muốn bật SSL khi kết nối với cơ sở dữ liệu, vui lòng tham khảo [tài liệu](https://stackoverflow.com/questions/14021998/using-psql-to-connect-to-postgresql-in-ssl-mode) để biết hướng dẫn thiết lập.
+</Callout>
+
+### `DATABASE_DRIVER`
+
+Biến môi trường `DATABASE_DRIVER` được dùng để phân biệt giữa hai loại phiên bản cơ sở dữ liệu Postgres, với các giá trị là `node` hoặc `neon`.
+
+Để đơn giản hóa việc triển khai, chúng tôi đã đặt các giá trị mặc định dựa trên đặc điểm của các nền tảng khác nhau:
+
+- Trên nền tảng Vercel, `DATABASE_DRIVER` mặc định là `neon`;
+- Trong hình ảnh Docker `lobe-chat-database` mà chúng tôi cung cấp, `DATABASE_DRIVER` mặc định là `node`.
+
+Do đó, nếu bạn sử dụng các phương pháp triển khai tiêu chuẩn dưới đây, bạn không cần phải thủ công cấu hình biến môi trường `DATABASE_DRIVER`:
+
+- Vercel + Serverless Postgres
+- Hình ảnh Docker + Node Postgres
+
+### `KEY_VAULTS_SECRET`
+
+Xét rằng người dùng sẽ lưu trữ các thông tin nhạy cảm như Khóa API và baseURL vào cơ sở dữ liệu, chúng tôi cần một khóa để mã hóa thông tin này nhằm ngăn chặn sự rò rỉ trong trường hợp cơ sở dữ liệu bị xâm nhập. Vì vậy, có biến môi trường `KEY_VAULTS_SECRET` dùng để mã hóa các thông tin nhạy cảm như apikey mà người dùng lưu trữ.
+
+<Callout type={'info'}>
+  Bạn có thể tạo một chuỗi ngẫu nhiên 32 ký tự làm giá trị cho `KEY_VAULTS_SECRET` bằng cách sử dụng `openssl
+  rand -base64 32`.
+</Callout>
+
+</Steps>
+
+## Cấu Hình Dịch Vụ Xác Thực
+
+Trong chế độ cơ sở dữ liệu phía máy chủ, chúng tôi cần một dịch vụ xác thực để phân biệt danh tính của người dùng khác nhau. Có rất nhiều giải pháp xác thực hoàn thiện trong cộng đồng mã nguồn mở. Chúng tôi đã tích hợp hai dịch vụ xác thực khác nhau để đáp ứng các yêu cầu trong các tình huống khác nhau, một là Clerk, và cái khác là NextAuth.
+
+### Clerk
+
+[Clerk](https://clerk.com?utm_source=lobehub&utm_medium=docs) là dịch vụ SaaS xác thực cung cấp khả năng xác thực sẵn có, sản phẩm hóa cao, chi phí tích hợp thấp, trải nghiệm người dùng tuyệt vời. Với những ai cung cấp các sản phẩm SaaS, Clerk là một lựa chọn tốt. [LobeChat Cloud](https://lobechat.com) chính thức của chúng tôi sử dụng Clerk làm dịch vụ xác thực.
+
+Việc tích hợp Clerk cũng khá dễ dàng, chỉ cần cấu hình các biến môi trường `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` và `CLERK_SECRET_KEY`, có thể lấy từ bảng điều khiển Clerk, và `CLERK_WEBHOOK_SECRET`, được tạo bằng cách làm theo các hướng dẫn sau: [Cấu Hình Dịch Vụ Xác Thực Clerk](/docs/self-hosting/advanced/auth/clerk#create-and-configure-webhook-in-clerk).
+
+<Callout type={'tip'}>
+  Trong chế độ triển khai Vercel, chúng tôi khuyến nghị sử dụng Clerk làm dịch vụ xác thực để có trải nghiệm người dùng tốt hơn.
+</Callout>
+
+Tuy nhiên, loại xác thực này phụ thuộc vào dịch vụ chính thức của Clerk, do đó có thể có một số hạn chế trong một số tình huống:
+
+- Ví dụ, khi sử dụng Clerk ở Trung Quốc, có thể bị ảnh hưởng bởi môi trường mạng.
+- Clerk không phù hợp cho các tình huống yêu cầu triển khai hoàn toàn riêng tư.
+- Phải phụ thuộc vào `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, có thể không thể sử dụng ngay lập tức với các hình ảnh Docker công cộng.
+
+Do đó, với các tình huống trên, chúng tôi cũng cung cấp NextAuth như một giải pháp thay thế.
+
+### NextAuth
+
+NextAuth là một thư viện xác thực mã nguồn mở hỗ trợ nhiều nhà cung cấp danh tính, bao gồm Auth0, Cognito, GitHub, Google, Facebook, Apple, Twitter và nhiều hơn nữa. NextAuth tự nó cung cấp một giải pháp xác thực đầy đủ, bao gồm đăng ký người dùng, đăng nhập, khôi phục mật khẩu, tích hợp với các nhà cung cấp danh tính khác nhau và nhiều hơn nữa.
+
+Để biết thêm thông tin về cấu hình NextAuth, bạn có thể tham khảo tài liệu [Xác thực](/docs/self-hosting/advanced/authentication).
+
+<Callout type={'tip'}>
+  Trong hình ảnh Docker chính thức `lobe-chat-database`, chúng tôi khuyến nghị sử dụng NextAuth làm dịch vụ xác thực.
+</Callout>
+
+## Cấu Hình Dịch Vụ Lưu Trữ S3
+
+LobeChat đã hỗ trợ đối thoại AI đa phương thức từ [rất lâu trước đây](https://x.com/lobehub/status/1724289575672291782), bao gồm chức năng tải lên hình ảnh vào các mô hình lớn. Trong giải pháp cơ sở dữ liệu phía máy khách, các tệp hình ảnh được lưu dưới dạng dữ liệu nhị phân trực tiếp trong cơ sở dữ liệu IndexedDB của trình duyệt. Tuy nhiên, đối với cơ sở dữ liệu phía máy chủ, giải pháp này không khả thi. Việc lưu trữ dữ liệu nhị phân tương tự tệp trực tiếp trong Postgres sẽ lãng phí rất nhiều không gian lưu trữ cơ sở dữ liệu quý giá và làm chậm hiệu suất tính toán.
+
+Thực tiễn tốt nhất trong lĩnh vực này là sử dụng dịch vụ lưu trữ tệp (S3) để lưu trữ các tệp hình ảnh, đồng thời S3 cũng là giải pháp lưu trữ mà các chức năng tải lên tệp/chức năng cơ sở kiến thức phụ thuộc.
+
+<Callout type={'info'}>
+  Trong tài liệu này, khi nhắc đến S3, đó là chỉ đến một giải pháp lưu trữ S3 tương thích,
+  hỗ trợ hệ thống lưu trữ đối tượng tương thích với API Amazon S3. Các ví dụ phổ biến bao gồm
+  Cloudflare R2, Alibaba Cloud OSS, và Minio tự triển khai, tất cả đều hỗ trợ API tương thích S3.
+</Callout>
+
+Để biết hướng dẫn cấu hình chi tiết về S3, vui lòng tham khảo [Lưu trữ đối tượng S3](/docs/self-hosting/advanced/s3) để biết thêm thông tin.
+
+## Bắt Đầu Triển Khai
+
+Trên đây là giải thích chi tiết về cấu hình LobeChat với cơ sở dữ liệu phía máy chủ. Bạn có thể cấu hình theo tình huống thực tế của mình và sau đó chọn nền tảng triển khai phù hợp để bắt đầu triển khai:
+
+<PlatformCards urlPrefix={'server-database'} />

@@ -1,0 +1,90 @@
+---
+title: Biến Môi Trường LobeChat - Hướng Dẫn Tùy Biến
+description: >-
+  Tìm hiểu cách tùy chỉnh cấu hình LobeChat bằng cách sử dụng các biến môi trường cho các tính năng và tùy chọn bổ sung.
+tags:
+  - LobeChat
+  - Biến Môi Trường
+  - Cấu Hình
+  - Tùy Biến
+---
+
+# Biến Môi Trường
+
+LobeChat cung cấp một số tùy chọn cấu hình bổ sung khi triển khai, có thể được tùy chỉnh bằng cách sử dụng các biến môi trường.
+
+<Cards>
+  <Card href={'environment-variables/basic'} title={'Các Biến Môi Trường Cơ Bản'} />
+  <Card href={'environment-variables/model-provider'} title={'Các Nhà Cung Cấp Dịch Vụ Mô Hình'} />
+  <Card href={'environment-variables/auth'} title={'Xác Thực'} />
+  <Card href={'environment-variables/s3'} title={'Dịch Vụ Lưu Trữ S3'} />
+  <Card href={'environment-variables/analytics'} title={'Phân Tích Dữ Liệu'} />
+</Cards>
+
+## Xây Dựng Hình Ảnh Tùy Chỉnh Với Các Biến NEXT_PUBLIC Ghi Đè
+
+Nếu bạn cần ghi đè các biến môi trường NEXT_PUBLIC, bạn có thể xây dựng một hình ảnh Docker tùy chỉnh bằng cách sử dụng GitHub Actions mà không cần phải fork toàn bộ kho lưu trữ LobeChat. Dưới đây là hướng dẫn:
+
+1. Tạo một kho lưu trữ GitHub mới cho bản dựng tùy chỉnh của bạn.
+
+2. Trong kho lưu trữ mới của bạn, tạo thư mục `.github/workflows`.
+
+3. Bên trong thư mục `.github/workflows`, tạo một tệp tên `build-custom-lobe.yml`:
+
+```yaml
+name: Build Custom Image
+
+on:
+  workflow_dispatch: # Manual trigger
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository_owner }}/lobe-chat-database # Tên của hình ảnh
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          repository: lobehub/lobe-chat
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile.database # Thay đổi Dockerfile nếu cần
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Liệt kê tất cả các biến bạn cần ghi đè
+          build-args: |
+            NEXT_PUBLIC_BASE_PATH=${{ secrets.NEXT_PUBLIC_BASE_PATH }}
+            NEXT_PUBLIC_SERVICE_MODE=${{ secrets.NEXT_PUBLIC_SERVICE_MODE }}
+```
+
+4. Trong cài đặt kho của bạn trong GitHub > Secrets và biến > Hành động > Bí mật kho mang tính chất hành động, thêm bất kỳ biến NEXT_PUBLIC nào bạn muốn ghi đè.
+
+5. Thiết lập quyền "Đọc và viết" cho các workflow trong Cài đặt kho > Hành động > Chung > Quyền workflow.
+
+6. Để xây dựng hình ảnh tùy chỉnh của bạn, đi đến tab "Hành động" trong kho lưu trữ GitHub và kích hoạt thủ công workflow "Build Custom LobeChat Image".
+
+Cách tiếp cận này cho phép bạn tạo một bản dựng tùy chỉnh với các biến NEXT_PUBLIC mong muốn của bạn mà không phải duy trì một fork đầy đủ của kho lưu trữ LobeChat. Bạn có thể kích hoạt bản dựng mới bất cứ khi nào cần cập nhật hình ảnh tùy chỉnh của mình.
