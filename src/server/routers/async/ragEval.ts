@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import { chainAnswerWithContext } from '@/chains/answerWithContext';
 import { DEFAULT_MODEL } from '@/const/settings';
+import { serverDB } from '@/database/server';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
