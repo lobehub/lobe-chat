@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve loading brand."]
+    },
+    "date": "2024-12-25",
+    "version": "1.39.3"
+  },
+  {
+    "children": {
       "improvements": ["Refactor sensenova provider with LobeOpenAICompatibleFactory."]
     },
     "date": "2024-12-25",
