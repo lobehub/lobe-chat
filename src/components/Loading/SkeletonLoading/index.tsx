@@ -15,7 +15,7 @@ const useStyles = createStyles(
 const SkeletonLoading = memo<SkeletonProps>(({ className, ...rest }) => {
   const { cx, styles } = useStyles();
 
-  return <Skeleton className={cx(styles, className)} paragraph={{ rows: 8 }} {...rest} />;
+  return <Skeleton active className={cx(styles, className)} paragraph={{ rows: 8 }} {...rest} />;
 });
 
 export default SkeletonLoading;

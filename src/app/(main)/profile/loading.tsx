@@ -1,6 +1,6 @@
 import { Flexbox } from 'react-layout-kit';
 
-import SkeletonLoading from '@/components/SkeletonLoading';
+import SkeletonLoading from '@/components/Loading/SkeletonLoading';
 import { isMobileDevice } from '@/utils/server/responsive';
 
 const Loading = async () => {
