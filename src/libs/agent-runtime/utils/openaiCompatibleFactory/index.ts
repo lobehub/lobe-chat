@@ -275,6 +275,12 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         .filter(Boolean) as ChatModelCard[];
     }
 
+    /**
+     * Due to the limitation of a maximum of 8k tokens per request in
+     * the openai interface provided by other vendors
+     * the current chunked input array size exceeds 8k tokens
+     * Therefore, a single array with multiple concurrent requests is used.
+     */
     async embeddings(
       payload: EmbeddingsPayload,
       options?: EmbeddingsOptions,
@@ -301,12 +307,12 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     async invokeEmbeddings(
       payload: EmbeddingsPayload,
       options?: EmbeddingsOptions,
-    ): Promise<EmbeddingItem[]> {
+    ): Promise<Embeddings[]> {
       const res = await this.client.embeddings.create(
         { ...payload, user: options?.user },
         { headers: options?.headers, signal: options?.signal },
       );
-      return res.data;
+      return res.data.map((item) => item.embedding);
     }
 
     async textToImage(payload: TextToImagePayload) {

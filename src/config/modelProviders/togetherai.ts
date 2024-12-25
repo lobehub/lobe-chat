@@ -5,14 +5,16 @@ import { ModelProviderCard } from '@/types/llm';
 const TogetherAI: ModelProviderCard = {
   chatModels: [
     {
-      description: 'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
+      description:
+        'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
       displayName: 'Llama 3.2 3B Instruct Turbo',
       enabled: true,
       id: 'meta-llama/Llama-3.2-3B-Instruct-Turbo',
       tokens: 131_072,
     },
     {
-      description: 'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
+      description:
+        'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
       displayName: 'Llama 3.2 11B Vision Instruct Turbo (Free)',
       enabled: true,
       id: 'meta-llama/Llama-Vision-Free',
@@ -20,14 +22,16 @@ const TogetherAI: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
+      description:
+        'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
       displayName: 'Llama 3.2 11B Vision Instruct Turbo',
       id: 'meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo',
       tokens: 131_072,
       vision: true,
     },
     {
-      description: 'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
+      description:
+        'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
       displayName: 'Llama 3.2 90B Vision Instruct Turbo',
       enabled: true,
       id: 'meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo',
@@ -119,7 +123,8 @@ const TogetherAI: ModelProviderCard = {
       tokens: 4096,
     },
     {
-      description: 'Code Llama 是一款专注于代码生成和讨论的 LLM，结合广泛的编程语言支持，适用于开发者环境。',
+      description:
+        'Code Llama 是一款专注于代码生成和讨论的 LLM，结合广泛的编程语言支持，适用于开发者环境。',
       displayName: 'CodeLlama 34B Instruct',
       id: 'codellama/CodeLlama-34b-Instruct-hf',
       tokens: 16_384,
@@ -165,7 +170,8 @@ const TogetherAI: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      description: 'Mistral 7B是一款紧凑但高性能的模型，擅长批量处理和简单任务，如分类和文本生成，具有良好的推理能力。',
+      description:
+        'Mistral 7B是一款紧凑但高性能的模型，擅长批量处理和简单任务，如分类和文本生成，具有良好的推理能力。',
       displayName: 'Mistral (7B)',
       id: 'mistralai/Mistral-7B-v0.1',
       tokens: 8192,
@@ -179,7 +185,8 @@ const TogetherAI: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description: 'Mixtral 8x7B是一个稀疏专家模型，利用多个参数提高推理速度，适合处理多语言和代码生成任务。',
+      description:
+        'Mixtral 8x7B是一个稀疏专家模型，利用多个参数提高推理速度，适合处理多语言和代码生成任务。',
       displayName: 'Mixtral-8x7B (46.7B)',
       id: 'mistralai/Mixtral-8x7B-v0.1',
       tokens: 32_768,
@@ -192,7 +199,8 @@ const TogetherAI: ModelProviderCard = {
       tokens: 65_536,
     },
     {
-      description: 'WizardLM 2 是微软AI提供的语言模型，在复杂对话、多语言、推理和智能助手领域表现尤为出色。',
+      description:
+        'WizardLM 2 是微软AI提供的语言模型，在复杂对话、多语言、推理和智能助手领域表现尤为出色。',
       displayName: 'WizardLM-2 8x22B',
       id: 'microsoft/WizardLM-2-8x22B',
       tokens: 65_536,
@@ -226,7 +234,8 @@ const TogetherAI: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description: 'Qwen2.5 Coder 32B Instruct 是阿里云发布的代码特定大语言模型系列的最新版本。该模型在 Qwen2.5 的基础上，通过 5.5 万亿个 tokens 的训练，显著提升了代码生成、推理和修复能力。它不仅增强了编码能力，还保持了数学和通用能力的优势。模型为代码智能体等实际应用提供了更全面的基础',
+      description:
+        'Qwen2.5 Coder 32B Instruct 是阿里云发布的代码特定大语言模型系列的最新版本。该模型在 Qwen2.5 的基础上，通过 5.5 万亿个 tokens 的训练，显著提升了代码生成、推理和修复能力。它不仅增强了编码能力，还保持了数学和通用能力的优势。模型为代码智能体等实际应用提供了更全面的基础',
       displayName: 'Qwen 2.5 Coder 32B Instruct',
       id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
       tokens: 32_768,

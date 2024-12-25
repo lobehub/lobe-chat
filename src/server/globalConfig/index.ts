@@ -7,9 +7,9 @@ import { enableNextAuth } from '@/const/auth';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 
+import { FilesStore } from '../modules/Files';
+import { genServerLLMConfig } from './genServerLLMConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
-
-import { genServerLLMConfig } from './genServerLLMConfig'
 
 export const getServerGlobalConfig = () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
@@ -53,4 +53,8 @@ export const getServerDefaultAgentConfig = () => {
   const { DEFAULT_AGENT_CONFIG } = getAppConfig();
 
   return parseAgentConfig(DEFAULT_AGENT_CONFIG) || {};
+};
+
+export const getServerDefaultFilesConfig = () => {
+  return new FilesStore(parseSystemAgent(knowledgeEnv.DEFAULT_FILES_CONFIG));
 };

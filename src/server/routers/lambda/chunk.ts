@@ -1,16 +1,16 @@
 import { inArray } from 'drizzle-orm/expressions';
 import { z } from 'zod';
 
+import { knowledgeBaseFiles } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
 import { MessageModel } from '@/database/server/models/message';
-import { knowledgeBaseFiles } from '@/database/server/schemas/lobechat';
 import { authedProcedure, router } from '@/libs/trpc';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
-import { getServerGlobalConfig } from '@/server/globalConfig';
+import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { SemanticSearchSchema } from '@/types/rag';
@@ -105,8 +105,8 @@ export const chunkRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       console.time('embedding');
-      const model = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string;
-      const provider = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.provider as string;
+      const model = getServerDefaultFilesConfig().getEmbeddingModel();
+      const provider = getServerDefaultFilesConfig().getEmbeddingProvider();
       const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
       const embeddings = await agentRuntime.embeddings({
@@ -127,8 +127,8 @@ export const chunkRouter = router({
     .input(SemanticSearchSchema)
     .mutation(async ({ ctx, input }) => {
       const item = await ctx.messageModel.findMessageQueriesById(input.messageId);
-      const model = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string;
-      const provider = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.provider as string;
+      const model = getServerDefaultFilesConfig().getEmbeddingModel();
+      const provider = getServerDefaultFilesConfig().getEmbeddingProvider();
       let embedding: number[];
       let ragQueryId: string;
       console.log('embeddingProvider:', provider);

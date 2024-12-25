@@ -9,7 +9,7 @@ import { AgentRuntimeErrorType } from '../error';
 import {
   ChatCompetitionOptions,
   ChatStreamPayload,
-  EmbeddingItem,
+  Embeddings,
   EmbeddingsPayload,
   ModelProvider,
 } from '../types';
@@ -90,7 +90,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
     }
   }
 
-  async embeddings(payload: EmbeddingsPayload): Promise<EmbeddingItem[]> {
+  async embeddings(payload: EmbeddingsPayload): Promise<Embeddings[]> {
     const input = Array.isArray(payload.input) ? payload.input : [payload.input];
     const promises = input.map((inputText: string, index: number) =>
       this.invokeEmbeddingModel({
@@ -110,17 +110,13 @@ export class LobeOllamaAI implements LobeRuntimeAI {
     }));
   }
 
-  private invokeEmbeddingModel = async (payload: EmbeddingsPayload): Promise<EmbeddingItem> => {
+  private invokeEmbeddingModel = async (payload: EmbeddingsPayload): Promise<Embeddings> => {
     try {
       const responseBody = await this.client.embeddings({
         model: payload.model,
         prompt: payload.input as string,
       });
-      return {
-        embedding: responseBody.embedding,
-        index: payload.index as number,
-        object: 'embedding',
-      };
+      return responseBody.embedding;
     } catch (error) {
       const e = error as { message: string; name: string; status_code: number };
 

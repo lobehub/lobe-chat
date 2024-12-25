@@ -2,7 +2,7 @@
 import { integer, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 
 import { DEFAULT_MODEL } from '@/const/settings';
-import { getServerGlobalConfig } from '@/server/globalConfig';
+import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { EvalEvaluationStatus } from '@/types/eval';
 
 import { timestamps } from './_helpers';
@@ -61,8 +61,8 @@ export const evalEvaluation = pgTable('rag_eval_evaluations', {
     onDelete: 'cascade',
   }),
   languageModel: text('language_model').$defaultFn(() => DEFAULT_MODEL),
-  embeddingModel: text('embedding_model').$defaultFn(
-    () => getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string,
+  embeddingModel: text('embedding_model').$defaultFn(() =>
+    getServerDefaultFilesConfig().getEmbeddingModel(),
   ),
 
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),

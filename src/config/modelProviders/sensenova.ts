@@ -21,7 +21,8 @@ const SenseNova: ModelProviderCard = {
     /*
     // Not compatible with local mode (Not support Base64 Image)
     {
-      description: '最新版本模型 (V5.5)，16K上下文长度，支持多图的输入，全面实现模型基础能力优化，在对象属性识别、空间关系、动作事件识别、场景理解、情感识别、逻辑常识推理和文本理解生成上都实现了较大提升。',
+      description:
+        '最新版本模型 (V5.5)，16K上下文长度，支持多图的输入，全面实现模型基础能力优化，在对象属性识别、空间关系、动作事件识别、场景理解、情感识别、逻辑常识推理和文本理解生成上都实现了较大提升。',
       displayName: 'SenseChat 5.5 Vision',
       enabled: true,
       id: 'SenseChat-Vision',

@@ -47,6 +47,6 @@ export interface KnowledgeItem {
 }
 export interface SystemEmbeddingConfig {
   embedding_model?: SystemAgentItem;
-  query_mode?: SystemAgentItem;
+  query_model?: SystemAgentItem;
   reranker_model?: SystemAgentItem;
 }
