@@ -1,14 +1,15 @@
 import { appEnv, getAppConfig } from '@/config/app';
 import { authEnv } from '@/config/auth';
 import { fileEnv } from '@/config/file';
+import { knowledgeEnv } from '@/config/knowledge';
 import { langfuseEnv } from '@/config/langfuse';
 import { enableNextAuth } from '@/const/auth';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
+import { FilesStore } from '@/server/modules/Files';
 import { GlobalServerConfig } from '@/types/serverConfig';
 
+import { genServerLLMConfig } from './genServerLLMConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
-
-import { genServerLLMConfig } from './genServerLLMConfig'
 
 export const getServerGlobalConfig = () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
@@ -51,4 +52,8 @@ export const getServerDefaultAgentConfig = () => {
   const { DEFAULT_AGENT_CONFIG } = getAppConfig();
 
   return parseAgentConfig(DEFAULT_AGENT_CONFIG) || {};
+};
+
+export const getServerDefaultFilesConfig = () => {
+  return new FilesStore(parseSystemAgent(knowledgeEnv.DEFAULT_FILES_CONFIG));
 };
