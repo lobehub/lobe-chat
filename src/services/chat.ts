@@ -277,7 +277,7 @@ class ChatService {
        */
       fetcher = async () => {
         try {
-          return this.fetchOnClient({ payload, provider, signal });
+          return await this.fetchOnClient({ payload, provider, signal });
         } catch (e) {
           const {
             errorType = ChatErrorType.BadRequest,
