@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ModalLayout from '../_layout/ModalLayout';
+import ModalLayout from '../../_layout/ModalLayout';
 import Hero from './features/Hero';
 import Pagination from './features/Pagination';
 

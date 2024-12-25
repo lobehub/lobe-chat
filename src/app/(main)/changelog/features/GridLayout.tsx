@@ -11,7 +11,7 @@ const GridLayout: FC<PropsWithChildren<{ date?: ReactNode; mobile?: boolean }>> 
       <Flexbox flex={1} style={{ minWidth: 150, position: 'relative' }}>
         {date}
       </Flexbox>
-      <Flexbox flex={3} gap={16} style={{ minWidth: 600, position: 'relative' }}>
+      <Flexbox flex={3} gap={16} style={{ minWidth: 'min(600px, 100%)', position: 'relative' }}>
         {children}
       </Flexbox>
       {!mobile && <Flexbox flex={1} style={{ minWidth: 150, position: 'relative' }} />}

@@ -35,7 +35,7 @@ const Page = async () => {
       <StructuredData ld={ld} />
       <PageTitle />
       <TelemetryNotification mobile={mobile} />
-      {!hideDocs && (
+      {!hideDocs && !mobile && (
         <ChangelogModal currentId={await new ChangelogService().getLatestChangelogId()} />
       )}
     </>

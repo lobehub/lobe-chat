@@ -12,8 +12,7 @@ const ChangelogModal = memo<{ currentId?: string }>(({ currentId }) => {
 
   useTimeout(() => {
     if (latestChangelogId !== currentId) {
-      console.log('ChangelogModal', currentId, latestChangelogId);
-      router.push('/changelog');
+      router.push('/changelog/modal');
     }
   }, 1000);
 

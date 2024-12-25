@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Fragment, Suspense } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import Pagination from '@/app/@modal/(.)changelog/features/Pagination';
+import Pagination from '@/app/@modal/(.)changelog/modal/features/Pagination';
 import StructuredData from '@/components/StructuredData';
 import { serverFeatureFlags } from '@/config/featureFlags';
 import { BRANDING_NAME } from '@/const/branding';
@@ -44,7 +44,7 @@ const Page = async () => {
   return (
     <>
       <StructuredData ld={ld} />
-      <Flexbox gap={48}>
+      <Flexbox gap={mobile ? 16 : 48}>
         {data.map((item) => (
           <Fragment key={item.id}>
             <Suspense
