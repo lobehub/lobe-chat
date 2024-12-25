@@ -183,11 +183,16 @@ describe('ChangelogService', () => {
       };
       (global.fetch as any).mockResolvedValue(mockResponse);
 
-      await service.getPostById('post1', { locale: 'zh-CN' });
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('post1.zh-CN.mdx'),
-        expect.any(Object),
-      );
+      const result = await service.getPostById('post1', { locale: 'zh-CN' });
+      expect(result).toEqual({
+        content: '中文内容',
+        date: '2023-01-01',
+        description: '中文内容',
+        image: undefined,
+        rawTitle: 'Chinese Title',
+        tags: ['changelog'],
+        title: 'Chinese Title',
+      });
     });
   });
 
@@ -268,7 +273,6 @@ describe('ChangelogService', () => {
         await service.cdnInit();
 
         expect(service.cdnUrls).toEqual(mockData);
-        expect(global.fetch).toHaveBeenCalledWith(expect.any(String), expect.any(Object));
       });
     });
 

@@ -1,6 +1,7 @@
 import {
   Book,
   CircleUserRound,
+  Cloudy,
   Database,
   Download,
   Feather,
@@ -12,12 +13,13 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { CellProps } from '@/components/Cell';
-import { DOCUMENTS, FEEDBACK } from '@/const/url';
+import { LOBE_CHAT_CLOUD } from '@/const/branding';
+import { DOCUMENTS, FEEDBACK, OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
 import { isServerMode } from '@/const/version';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
-import { authSelectors } from '@/store/user/slices/auth/selectors';
+import { authSelectors } from '@/store/user/selectors';
 
 import { useCategory as useSettingsCategory } from '../../settings/features/useCategory';
 
@@ -25,7 +27,7 @@ export const useCategory = () => {
   const router = useRouter();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
-  const { hideDocs } = useServerConfigStore(featureFlagsSelectors);
+  const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
   const [isLogin, isLoginWithAuth, isLoginWithClerk, enableAuth, signOut, isLoginWithNextAuth] =
     useUserStore((s) => [
       authSelectors.isLogin(s),
@@ -93,6 +95,12 @@ export const useCategory = () => {
   ];
 
   const helps: CellProps[] = [
+    showCloudPromotion && {
+      icon: Cloudy,
+      key: 'cloud',
+      label: t('userPanel.cloud', { name: LOBE_CHAT_CLOUD }),
+      onClick: () => window.open(`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}`, '__blank'),
+    },
     {
       icon: Book,
       key: 'docs',
@@ -111,7 +119,7 @@ export const useCategory = () => {
       label: t('changelog'),
       onClick: () => router.push('/changelog'),
     },
-  ];
+  ].filter(Boolean) as CellProps[];
 
   const nextAuthSignOut: CellProps[] = [
     {
