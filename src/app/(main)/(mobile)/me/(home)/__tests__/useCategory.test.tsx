@@ -35,11 +35,6 @@ vi.mock('@/const/auth', () => ({
   },
 }));
 
-afterEach(() => {
-  enableAuth = true;
-  enableClerk = false;
-});
-
 // 目前对 enableAuth 的判定是在 useUserStore 中，所以需要 mock useUserStore
 // 类型定义： enableAuth: () => boolean
 describe('useCategory', () => {

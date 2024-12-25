@@ -15,6 +15,7 @@ import { CellProps } from '@/components/Cell';
 import { DOCUMENTS, FEEDBACK } from '@/const/url';
 import { isServerMode } from '@/const/version';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/slices/auth/selectors';
 
@@ -24,6 +25,7 @@ export const useCategory = () => {
   const router = useRouter();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
+  const { hideDocs } = useServerConfigStore(featureFlagsSelectors);
   const [isLogin, isLoginWithAuth, isLoginWithClerk, enableAuth, signOut, isLoginWithNextAuth] =
     useUserStore((s) => [
       authSelectors.isLogin(s),
@@ -131,7 +133,7 @@ export const useCategory = () => {
     /* ↑ cloud slot ↑ */
     ...(canInstall ? pwa : []),
     ...(isLogin && !isServerMode ? data : []),
-    ...helps,
+    ...(!hideDocs ? helps : []),
     ...(enableAuth && isLoginWithNextAuth ? nextAuthSignOut : []),
   ].filter(Boolean) as CellProps[];
 

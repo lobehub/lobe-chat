@@ -21,7 +21,7 @@ export const generateMetadata = async () => {
 };
 
 const Page = async () => {
-  const hideChangelog = serverFeatureFlags().hideChangelog;
+  const hideDocs = serverFeatureFlags().hideDocs;
   const mobile = await isMobileDevice();
   const { t } = await translation('metadata');
   const ld = ldModule.generate({
@@ -35,7 +35,7 @@ const Page = async () => {
       <StructuredData ld={ld} />
       <PageTitle />
       <TelemetryNotification mobile={mobile} />
-      {!hideChangelog && (
+      {!hideDocs && (
         <ChangelogModal currentId={await new ChangelogService().getLatestChangelogId()} />
       )}
     </>

@@ -11,9 +11,9 @@ import UpdateChangelogStatus from './features/UpdateChangelogStatus';
 import Loading from './loading';
 
 const Page = async () => {
-  const hideChangelog = serverFeatureFlags().hideChangelog;
+  const hideDocs = serverFeatureFlags().hideDocs;
 
-  if (hideChangelog) return notFound();
+  if (hideDocs) return notFound();
 
   const locale = await getLocale();
   const mobile = await isMobileDevice();

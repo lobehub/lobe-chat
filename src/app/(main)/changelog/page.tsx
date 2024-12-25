@@ -26,9 +26,9 @@ export const generateMetadata = async () => {
 };
 
 const Page = async () => {
-  const hideChangelog = serverFeatureFlags().hideChangelog;
+  const hideDocs = serverFeatureFlags().hideDocs;
 
-  if (hideChangelog) return notFound();
+  if (hideDocs) return notFound();
 
   const mobile = await isMobileDevice();
   const { t, locale } = await translation('metadata');

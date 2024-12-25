@@ -196,14 +196,14 @@ export class Sitemap {
   }
 
   async getPage(): Promise<MetadataRoute.Sitemap> {
-    const hideChangelog = serverFeatureFlags().hideChangelog;
+    const hideDocs = serverFeatureFlags().hideDocs;
     const assistantsCategory = Object.values(AssistantCategory);
     const pluginCategory = Object.values(PluginCategory);
     const modelCategory = await this.discoverService.getProviderList(DEFAULT_LANG);
     return [
       ...this._genSitemap('/', { noLocales: true }),
       ...this._genSitemap('/chat', { noLocales: true }),
-      ...(!hideChangelog ? this._genSitemap('/changelog', { noLocales: true }) : []),
+      ...(!hideDocs ? this._genSitemap('/changelog', { noLocales: true }) : []),
       /* ↓ cloud slot ↓ */
 
       /* ↑ cloud slot ↑ */
