@@ -2,16 +2,17 @@ import { DefaultErrorShape } from '@trpc/server/unstable-core-do-not-import';
 
 import { edgeClient, lambdaClient } from '@/libs/trpc/client';
 import { useUserStore } from '@/store/user';
-import { ImportStage, ImporterEntryData, OnImportCallbacks } from '@/types/importer';
-import { UserSettings } from '@/types/user/settings';
+import { ImportStage, OnImportCallbacks } from '@/types/importer';
 import { uuid } from '@/utils/uuid';
 
-export class ServerService {
-  importSettings = async (settings: UserSettings) => {
+import { IImportService } from './type';
+
+export class ServerService implements IImportService {
+  importSettings: IImportService['importSettings'] = async (settings) => {
     await useUserStore.getState().importAppSettings(settings);
   };
 
-  importData = async (data: ImporterEntryData, callbacks?: OnImportCallbacks): Promise<void> => {
+  importData: IImportService['importData'] = async (data, callbacks) => {
     const handleError = (e: unknown) => {
       callbacks?.onStageChange?.(ImportStage.Error);
       const error = e as DefaultErrorShape;

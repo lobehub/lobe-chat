@@ -1,13 +1,10 @@
-import { DeepPartial } from 'utility-types';
-
 import { clientDB } from '@/database/client/db';
 import { users } from '@/database/schemas';
 import { MessageModel } from '@/database/server/models/message';
 import { SessionModel } from '@/database/server/models/session';
 import { UserModel } from '@/database/server/models/user';
 import { BaseClientService } from '@/services/baseClientService';
-import { UserGuide, UserInitializationState, UserPreference } from '@/types/user';
-import { UserSettings } from '@/types/user/settings';
+import { UserPreference } from '@/types/user';
 import { AsyncLocalStorage } from '@/utils/localStorage';
 
 import { IUserService } from './type';
@@ -30,7 +27,7 @@ export class ClientService extends BaseClientService implements IUserService {
     this.preferenceStorage = new AsyncLocalStorage('LOBE_PREFERENCE');
   }
 
-  async getUserState(): Promise<UserInitializationState> {
+  getUserState: IUserService['getUserState'] = async () => {
     // if user not exist in the db, create one to make sure the user exist
     await this.makeSureUserExist();
 
@@ -51,32 +48,31 @@ export class ClientService extends BaseClientService implements IUserService {
       isOnboard: true,
       preference: await this.preferenceStorage.getFromLocalStorage(),
     };
-  }
+  };
 
-  updateUserSettings = async (value: DeepPartial<UserSettings>) => {
+  updateUserSettings: IUserService['updateUserSettings'] = async (value) => {
     const { keyVaults, ...res } = value;
 
     return this.userModel.updateSetting({ ...res, keyVaults: JSON.stringify(keyVaults) });
   };
 
-  resetUserSettings = async () => {
+  resetUserSettings: IUserService['resetUserSettings'] = async () => {
     return this.userModel.deleteSetting();
   };
 
-  async updateAvatar(avatar: string) {
+  updateAvatar = async (avatar: string) => {
     await this.userModel.updateUser({ avatar });
-  }
+  };
 
-  async updatePreference(preference: Partial<UserPreference>) {
+  updatePreference: IUserService['updatePreference'] = async (preference) => {
     await this.preferenceStorage.saveToLocalStorage(preference);
-  }
+  };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,unused-imports/no-unused-vars
-  async updateGuide(guide: Partial<UserGuide>) {
+  updateGuide: IUserService['updateGuide'] = async () => {
     throw new Error('Method not implemented.');
-  }
+  };
 
-  async makeSureUserExist() {
+  makeSureUserExist = async () => {
     const existUsers = await clientDB.query.users.findMany();
 
     let user: { id: string };
@@ -88,5 +84,5 @@ export class ClientService extends BaseClientService implements IUserService {
     }
 
     return user;
-  }
+  };
 }

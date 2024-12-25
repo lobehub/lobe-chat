@@ -277,7 +277,7 @@ class ChatService {
        */
       fetcher = async () => {
         try {
-          return await this.fetchOnClient({ payload, provider, signal });
+          return this.fetchOnClient({ payload, provider, signal });
         } catch (e) {
           const {
             errorType = ChatErrorType.BadRequest,
@@ -499,7 +499,7 @@ class ChatService {
     return this.reorderToolMessages(postMessages);
   };
 
-  private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
+  private mapTrace = (trace?: TracePayload, tag?: TraceTagMap): TracePayload => {
     const tags = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
 
     const enabled = preferenceSelectors.userAllowTrace(useUserStore.getState());
@@ -512,7 +512,7 @@ class ChatService {
       tags: [tag, ...(trace?.tags || []), ...tags].filter(Boolean) as string[],
       userId: userProfileSelectors.userId(useUserStore.getState()),
     };
-  }
+  };
 
   /**
    * Fetch chat completion on the client side.

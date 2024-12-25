@@ -64,7 +64,7 @@ export class OllamaService {
   getModels = async (): Promise<ListResponse> => {
     let response: Response | ListResponse;
     try {
-      return await this.getOllamaClient().list();
+      return this.getOllamaClient().list();
     } catch {
       response = createErrorResponse(ChatErrorType.OllamaServiceUnavailable, {
         host: this.getHost(),
