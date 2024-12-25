@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor sensenova provider with LobeOpenAICompatibleFactory."]
+    },
+    "date": "2024-12-25",
+    "version": "1.39.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix image input on pglite."]
     },
     "date": "2024-12-24",
