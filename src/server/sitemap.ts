@@ -3,6 +3,7 @@ import { MetadataRoute } from 'next';
 import qs from 'query-string';
 import urlJoin from 'url-join';
 
+import { serverFeatureFlags } from '@/config/featureFlags';
 import { DEFAULT_LANG } from '@/const/locale';
 import { SITEMAP_BASE_URL } from '@/const/url';
 import { Locales, locales as allLocales } from '@/locales/resources';
@@ -195,12 +196,14 @@ export class Sitemap {
   }
 
   async getPage(): Promise<MetadataRoute.Sitemap> {
+    const hideDocs = serverFeatureFlags().hideDocs;
     const assistantsCategory = Object.values(AssistantCategory);
     const pluginCategory = Object.values(PluginCategory);
     const modelCategory = await this.discoverService.getProviderList(DEFAULT_LANG);
     return [
       ...this._genSitemap('/', { noLocales: true }),
       ...this._genSitemap('/chat', { noLocales: true }),
+      ...(!hideDocs ? this._genSitemap('/changelog', { noLocales: true }) : []),
       /* ↓ cloud slot ↓ */
 
       /* ↑ cloud slot ↑ */
@@ -227,7 +230,7 @@ export class Sitemap {
         }),
       ),
       ...this._genSitemap('/discover/providers', { changeFrequency: 'daily', priority: 0.7 }),
-    ];
+    ].filter(Boolean);
   }
   getRobots() {
     return [

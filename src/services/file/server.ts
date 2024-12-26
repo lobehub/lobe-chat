@@ -1,10 +1,5 @@
 import { lambdaClient } from '@/libs/trpc/client';
-import {
-  FileItem,
-  QueryFileListParams,
-  QueryFileListSchemaType,
-  UploadFileParams,
-} from '@/types/files';
+import { QueryFileListParams, QueryFileListSchemaType, UploadFileParams } from '@/types/files';
 
 import { IFileService } from './type';
 
@@ -14,11 +9,11 @@ interface CreateFileParams extends Omit<UploadFileParams, 'url'> {
 }
 
 export class ServerService implements IFileService {
-  async createFile(params: UploadFileParams, knowledgeBaseId?: string) {
+  createFile: IFileService['createFile'] = async (params, knowledgeBaseId) => {
     return lambdaClient.file.createFile.mutate({ ...params, knowledgeBaseId } as CreateFileParams);
-  }
+  };
 
-  async getFile(id: string): Promise<FileItem> {
+  getFile: IFileService['getFile'] = async (id) => {
     const item = await lambdaClient.file.findById.query({ id });
 
     if (!item) {
@@ -26,33 +21,33 @@ export class ServerService implements IFileService {
     }
 
     return { ...item, type: item.fileType };
-  }
+  };
 
-  async removeFile(id: string) {
+  removeFile: IFileService['removeFile'] = async (id) => {
     await lambdaClient.file.removeFile.mutate({ id });
-  }
+  };
 
-  async removeFiles(ids: string[]) {
+  removeFiles: IFileService['removeFiles'] = async (ids) => {
     await lambdaClient.file.removeFiles.mutate({ ids });
-  }
+  };
 
-  async removeAllFiles() {
+  removeAllFiles: IFileService['removeAllFiles'] = async () => {
     await lambdaClient.file.removeAllFiles.mutate();
-  }
+  };
 
-  async getFiles(params: QueryFileListParams) {
+  getFiles = async (params: QueryFileListParams) => {
     return lambdaClient.file.getFiles.query(params as QueryFileListSchemaType);
-  }
+  };
 
-  async getFileItem(id: string) {
+  getFileItem = async (id: string) => {
     return lambdaClient.file.getFileItemById.query({ id });
-  }
+  };
 
-  async checkFileHash(hash: string) {
+  checkFileHash: IFileService['checkFileHash'] = async (hash) => {
     return lambdaClient.file.checkFileHash.mutate({ hash });
-  }
+  };
 
-  async removeFileAsyncTask(id: string, type: 'embedding' | 'chunk') {
-    return await lambdaClient.file.removeFileAsyncTask.mutate({ id, type });
-  }
+  removeFileAsyncTask = async (id: string, type: 'embedding' | 'chunk') => {
+    return lambdaClient.file.removeFileAsyncTask.mutate({ id, type });
+  };
 }

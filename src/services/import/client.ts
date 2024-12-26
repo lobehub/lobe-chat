@@ -2,19 +2,20 @@ import { clientDB } from '@/database/client/db';
 import { DataImporterRepos } from '@/database/repositories/dataImporter';
 import { BaseClientService } from '@/services/baseClientService';
 import { useUserStore } from '@/store/user';
-import { ImportStage, ImporterEntryData, OnImportCallbacks } from '@/types/importer';
-import { UserSettings } from '@/types/user/settings';
+import { ImportStage } from '@/types/importer';
 
-export class ClientService extends BaseClientService {
+import { IImportService } from './type';
+
+export class ClientService extends BaseClientService implements IImportService {
   private get dataImporter(): DataImporterRepos {
     return new DataImporterRepos(clientDB as any, this.userId);
   }
 
-  importSettings = async (settings: UserSettings) => {
+  importSettings: IImportService['importSettings'] = async (settings) => {
     await useUserStore.getState().importAppSettings(settings);
   };
 
-  importData = async (data: ImporterEntryData, callbacks?: OnImportCallbacks) => {
+  importData: IImportService['importData'] = async (data, callbacks) => {
     callbacks?.onStageChange?.(ImportStage.Importing);
     const time = Date.now();
     try {
