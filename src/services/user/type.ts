@@ -6,6 +6,7 @@ import { UserSettings } from '@/types/user/settings';
 export interface IUserService {
   getUserState: () => Promise<UserInitializationState>;
   resetUserSettings: () => Promise<any>;
+  updateAvatar: (url: string) => Promise<any>;
   updateGuide: (guide: Partial<UserGuide>) => Promise<any>;
   updatePreference: (preference: Partial<UserPreference>) => Promise<any>;
   updateUserSettings: (value: DeepPartial<UserSettings>, signal?: AbortSignal) => Promise<any>;

@@ -29,7 +29,7 @@ const Client = memo<{ mobile?: boolean }>(() => {
   const profile: SettingItemGroup = {
     children: [
       {
-        children: enableAuth && isLoginWithNextAuth ? <UserAvatar /> : <AvatarWithUpload />,
+        children: <AvatarWithUpload />,
         label: t('profile.avatar'),
         minWidth: undefined,
       },

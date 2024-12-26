@@ -5,6 +5,7 @@ import type { StateCreator } from 'zustand/vanilla';
 import { DEFAULT_PREFERENCE } from '@/const/user';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
+import { useFileStore } from '@/store/file';
 import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
 import { UserInitializationState } from '@/types/user';
@@ -25,7 +26,7 @@ const GET_USER_STATE_KEY = 'initUserState';
 export interface CommonAction {
   refreshUserState: () => Promise<void>;
 
-  updateAvatar: (avatar: string) => Promise<void>;
+  updateAvatar: (avatar: File) => Promise<void>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
   useInitUserState: (
     isLogin: boolean | undefined,
@@ -45,10 +46,12 @@ export const createCommonSlice: StateCreator<
   refreshUserState: async () => {
     await mutate(GET_USER_STATE_KEY);
   },
-  updateAvatar: async (avatar) => {
-    const { userClientService } = await import('@/services/user');
+  updateAvatar: async (avatarFile) => {
+    const result = await useFileStore.getState().uploadWithProgress({ file: avatarFile });
 
-    await userClientService.updateAvatar(avatar);
+    if (!result?.url) return;
+
+    await userService.updateAvatar(result.url);
     await get().refreshUserState();
   },
 

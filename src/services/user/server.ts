@@ -6,6 +6,10 @@ export class ServerService implements IUserService {
     return lambdaClient.user.getUserState.query();
   };
 
+  updateAvatar: IUserService['updateAvatar'] = async (avatar) => {
+    return lambdaClient.user.updateInfo.mutate({ avatar });
+  };
+
   makeUserOnboarded = async () => {
     return lambdaClient.user.makeUserOnboarded.mutate();
   };

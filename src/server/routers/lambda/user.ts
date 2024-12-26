@@ -67,11 +67,11 @@ export const userRouter = router({
     const hasExtraSession = await sessionModel.hasMoreThanN(1);
 
     return {
+      avatar: state.avatar,
       canEnablePWAGuide: hasMoreThan4Messages,
       canEnableTrace: hasMoreThan4Messages,
       // 有消息，或者创建过助手，则认为有 conversation
       hasConversation: hasAnyMessages || hasExtraSession,
-
       // always return true for community version
       isOnboard: state.isOnboarded || true,
       preference: state.preference as UserPreference,
@@ -91,6 +91,20 @@ export const userRouter = router({
   updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updateGuide(input);
   }),
+
+  updateInfo: userProcedure
+    .input(
+      z.object({
+        avatar: z.string().optional(),
+        email: z.string().email().optional(),
+        firstName: z.string().optional(),
+        lastName: z.string().optional(),
+        phone: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.userModel.updateUser(input);
+    }),
 
   updatePreference: userProcedure.input(z.any()).mutation(async ({ ctx, input }) => {
     return ctx.userModel.updatePreference(input);
