@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 import React from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import CircleLoading from '@/components/CircleLoading';
+import CircleLoading from '@/components/Loading/CircleLoading';
 
 const useStyles = createStyles(({ css, token }) => ({
   page: css`

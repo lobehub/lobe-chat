@@ -72,7 +72,7 @@ export interface ModelCardProps extends DiscoverModelItem, FlexboxProps {
 }
 
 const ModelCard = memo<ModelCardProps>(({ className, meta, identifier, ...rest }) => {
-  const { description, title, functionCall, vision, tokens } = meta;
+  const { description, title, functionCall, vision, contextWindowTokens } = meta;
   const { t } = useTranslation('models');
   const { cx, styles } = useStyles();
 
@@ -107,7 +107,11 @@ const ModelCard = memo<ModelCardProps>(({ className, meta, identifier, ...rest }
           </Paragraph>
         )}
 
-        <ModelFeatureTags functionCall={functionCall} tokens={tokens} vision={vision} />
+        <ModelFeatureTags
+          functionCall={functionCall}
+          tokens={contextWindowTokens}
+          vision={vision}
+        />
       </Flexbox>
     </Flexbox>
   );

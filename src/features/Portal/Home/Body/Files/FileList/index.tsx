@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import Balancer from 'react-wrap-balancer';
 
-import SkeletonLoading from '@/components/SkeletonLoading';
+import SkeletonLoading from '@/components/Loading/SkeletonLoading';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
