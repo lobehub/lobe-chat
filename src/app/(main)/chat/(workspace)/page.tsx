@@ -22,7 +22,7 @@ export const generateMetadata = async () => {
 };
 
 const Page = async () => {
-  const hideDocs = serverFeatureFlags().hideDocs;
+  const { hideDocs, showChangelog } = serverFeatureFlags();
   const mobile = await isMobileDevice();
   const { t } = await translation('metadata');
   const ld = ldModule.generate({
@@ -36,7 +36,7 @@ const Page = async () => {
       <StructuredData ld={ld} />
       <PageTitle />
       <TelemetryNotification mobile={mobile} />
-      {!hideDocs && !mobile && (
+      {showChangelog && !hideDocs && !mobile && (
         <Suspense>
           <Changelog />
         </Suspense>
