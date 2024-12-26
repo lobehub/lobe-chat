@@ -48,7 +48,7 @@ export const TopicsRank = memo(() => {
           };
         }) || []
       }
-      height={420}
+      height={340}
       leftLabel={t('stats.topicsRank.left')}
       loading={isLoading}
       onValueChange={(item) => router.push(item.link)}

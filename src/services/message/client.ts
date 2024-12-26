@@ -54,6 +54,10 @@ export class ClientService extends BaseClientService implements IMessageService 
     return this.messageModel.count(params);
   };
 
+  getHeatmaps: IMessageService['getHeatmaps'] = async () => {
+    return this.messageModel.getHeatmaps();
+  };
+
   getAllMessagesInSession: IMessageService['getAllMessagesInSession'] = async (sessionId) => {
     const data = this.messageModel.queryBySessionId(this.toDbSessionId(sessionId));
 

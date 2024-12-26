@@ -139,7 +139,7 @@ export class TopicModel {
       .leftJoin(messages, eq(topics.id, messages.topicId))
       .groupBy(topics.id)
       .orderBy(desc(sql`count`))
-      .limit(10);
+      .limit(8);
   };
 
   // **************** Create *************** //

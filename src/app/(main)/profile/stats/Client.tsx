@@ -43,7 +43,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
         </FormGroup>
       </Grid>
       <FormGroup style={FORM_STYLE.style} title={t('stats.heatmaps.title')} variant={'pure'}>
-        <Flexbox paddingBlock={16}>
+        <Flexbox paddingBlock={24}>
           <AiHeatmaps />
         </Flexbox>
       </FormGroup>

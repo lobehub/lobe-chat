@@ -56,6 +56,11 @@ export class ClientService implements IMessageService {
     return MessageModel.count();
   }
 
+  // @ts-ignore
+  async getHeatmaps() {
+    throw new Error('Method not implemented.');
+  }
+
   async countTodayMessages() {
     const topics = await MessageModel.queryAll();
     return topics.filter(

@@ -7,6 +7,28 @@ export default {
     desc: '管理您的账户信息。',
     title: '账户',
   },
+  heatmaps: {
+    legend: {
+      less: '不活跃',
+      more: '活跃',
+    },
+    months: {
+      apr: '四月',
+      aug: '八月',
+      dec: '十二月',
+      feb: '二月',
+      jan: '一月',
+      jul: '七月',
+      jun: '六月',
+      mar: '三月',
+      may: '五月',
+      nov: '十一月',
+      oct: '十月',
+      sep: '九月',
+    },
+    tooltip: '{{date}} 当日发送 {{count}} 条消息',
+    totalCount: '过去一年共发送 {{count}} 条消息',
+  },
   login: '登录',
   loginOrSignup: '登录 / 注册',
   profile: {
@@ -24,7 +46,7 @@ export default {
       title: '助手使用率',
     },
     heatmaps: {
-      title: 'AI 指数',
+      title: '创作指数',
     },
     messages: '消息数',
     topics: '话题数',

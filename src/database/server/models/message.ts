@@ -1,4 +1,6 @@
-import { count } from 'drizzle-orm';
+import type { HeatmapsProps } from '@lobehub/charts';
+import dayjs from 'dayjs';
+import { count, sql } from 'drizzle-orm';
 import { and, asc, desc, eq, inArray, isNull, like } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
@@ -17,6 +19,7 @@ import {
   CreateMessageParams,
 } from '@/types/message';
 import { merge } from '@/utils/merge';
+import { today } from '@/utils/time';
 
 import {
   MessageItem,
@@ -297,6 +300,54 @@ export class MessageModel {
       );
 
     return result[0].count;
+  };
+
+  getHeatmaps = async (): Promise<HeatmapsProps['data']> => {
+    const startDate = today().subtract(1, 'year').startOf('day');
+    const endDate = today().endOf('day');
+
+    const result = await this.db
+      .select({
+        count: count(messages.id),
+        date: sql`DATE(${messages.createdAt})`.as('heatmaps_date'),
+      })
+      .from(messages)
+      .where(
+        genWhere([
+          eq(messages.userId, this.userId),
+          genRangeWhere(
+            [startDate.format('YYYY-MM-DD'), endDate.add(1, 'day').format('YYYY-MM-DD')],
+            messages.createdAt,
+            (date) => date.toDate(),
+          ),
+        ]),
+      )
+      .groupBy(sql`heatmaps_date`)
+      .orderBy(desc(sql`heatmaps_date`));
+
+    const heatmapData: HeatmapsProps['data'] = [];
+    let currentDate = startDate;
+
+    while (currentDate.isBefore(endDate) || currentDate.isSame(endDate, 'day')) {
+      const formattedDate = currentDate.format('YYYY-MM-DD');
+      const matchingResult = result.find(
+        (r) => r?.date && dayjs(r.date as string).format('YYYY-MM-DD') === formattedDate,
+      );
+
+      const count = matchingResult ? matchingResult.count : 0;
+      const levelCount = count > 0 ? Math.floor(count / 5) : 0;
+      const level = levelCount > 4 ? 4 : levelCount;
+
+      heatmapData.push({
+        count,
+        date: formattedDate,
+        level,
+      });
+
+      currentDate = currentDate.add(1, 'day');
+    }
+
+    return heatmapData;
   };
 
   hasMoreThanN = async (n: number): Promise<boolean> => {

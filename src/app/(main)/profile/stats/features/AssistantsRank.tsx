@@ -51,7 +51,7 @@ export const AssistantsRank = memo(() => {
           };
         }) || []
       }
-      height={420}
+      height={340}
       leftLabel={t('stats.assistantsRank.left')}
       loading={isLoading}
       onValueChange={(item) => router.push(item.link)}

@@ -40,6 +40,10 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.count.query(params);
   };
 
+  getHeatmaps: IMessageService['getHeatmaps'] = async () => {
+    return lambdaClient.message.getHeatmaps.query();
+  };
+
   updateMessageError: IMessageService['updateMessageError'] = async (id, error) => {
     return lambdaClient.message.update.mutate({ id, value: { error } });
   };

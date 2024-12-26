@@ -134,7 +134,7 @@ export class SessionModel {
       .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
       .groupBy(sessions.id, agentsToSessions.agentId, agents.id)
       .orderBy(desc(sql`count`))
-      .limit(10);
+      .limit(8);
   };
 
   hasMoreThanN = async (n: number): Promise<boolean> => {

@@ -63,6 +63,10 @@ export const messageRouter = router({
       return ctx.messageModel.queryBySessionId(input.sessionId);
     }),
 
+  getHeatmaps: messageProcedure.query(async ({ ctx }) => {
+    return ctx.messageModel.getHeatmaps();
+  }),
+
   // TODO: 未来这部分方法也需要使用 authedProcedure
   getMessages: publicProcedure
     .input(
