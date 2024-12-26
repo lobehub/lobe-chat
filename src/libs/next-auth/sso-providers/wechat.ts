@@ -1,15 +1,13 @@
 import WeChat from '@auth/core/providers/wechat';
 
-import { authEnv } from '@/config/auth';
-
 import { CommonProviderConfig } from './sso.config';
 
 const provider = {
   id: 'wechat',
   provider: WeChat({
     ...CommonProviderConfig,
-    clientId: authEnv.WECHAT_CLIENT_ID ?? process.env.AUTH_WECHAT_ID,
-    clientSecret: authEnv.WECHAT_CLIENT_SECRET ?? process.env.AUTH_WECHAT_SECRET,
+    clientId: process.env.AUTH_WECHAT_ID,
+    clientSecret: process.env.AUTH_WECHAT_SECRET,
     platformType: 'WebsiteApp',
     profile: (profile) => {
       return {

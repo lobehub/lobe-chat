@@ -142,12 +142,6 @@ export const getAuthConfig = () => {
   if (process.env.ZITADEL_ISSUER) {
     console.warn(removeTipsTemplate('ZITADEL_ISSUER', 'AUTH_ZITADEL_ISSUER'));
   }
-  if (process.env.WECHAT_CLIENT_ID) {
-    console.warn(removeTipsTemplate('WECHAT_CLIENT_ID', 'AUTH_WECHAT_ID'));
-  }
-  if (process.env.WECHAT_CLIENT_SECRET) {
-    console.warn(removeTipsTemplate('WECHAT_CLIENT_SECRET', 'AUTH_WECHAT_SECRET'));
-  }
   // End
 
   return createEnv({
