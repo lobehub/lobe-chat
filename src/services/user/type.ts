@@ -8,5 +8,5 @@ export interface IUserService {
   resetUserSettings: () => Promise<any>;
   updateGuide: (guide: Partial<UserGuide>) => Promise<any>;
   updatePreference: (preference: Partial<UserPreference>) => Promise<any>;
-  updateUserSettings: (patch: DeepPartial<UserSettings>) => Promise<any>;
+  updateUserSettings: (value: DeepPartial<UserSettings>, signal?: AbortSignal) => Promise<any>;
 }
