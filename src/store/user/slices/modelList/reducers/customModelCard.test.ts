@@ -21,7 +21,7 @@ describe('customModelCardsReducer', () => {
       isCustom: true,
       legacy: false,
       maxOutput: 1000,
-      tokens: 2048,
+      contextWindowTokens: 2048,
       vision: false,
     },
     {
@@ -33,7 +33,7 @@ describe('customModelCardsReducer', () => {
       isCustom: true,
       legacy: true,
       maxOutput: 500,
-      tokens: 1024,
+      contextWindowTokens: 1024,
       vision: true,
     },
   ];
@@ -49,7 +49,7 @@ describe('customModelCardsReducer', () => {
       isCustom: true,
       legacy: false,
       maxOutput: 2000,
-      tokens: 4096,
+      contextWindowTokens: 4096,
       vision: false,
     };
 
@@ -75,7 +75,7 @@ describe('customModelCardsReducer', () => {
       isCustom: true,
       legacy: false,
       maxOutput: 1000,
-      tokens: 2048,
+      contextWindowTokens: 2048,
       vision: false,
     };
 
@@ -147,7 +147,7 @@ describe('customModelCardsReducer', () => {
       isCustom: true,
       legacy: false,
       maxOutput: 1500,
-      tokens: 2048,
+      contextWindowTokens: 2048,
       vision: false,
     };
 
@@ -187,7 +187,7 @@ describe('customModelCardsReducer', () => {
       isCustom: true,
       legacy: false,
       maxOutput: 1500,
-      tokens: 2048,
+      contextWindowTokens: 2048,
       vision: false,
     };
 
