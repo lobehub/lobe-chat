@@ -2,9 +2,9 @@
 import { boolean, jsonb, pgTable, primaryKey, text, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
+import { idGenerator, randomSlug } from '@/database/utils/idGenerator';
 import { LobeAgentChatConfig, LobeAgentTTSConfig } from '@/types/agent';
 
-import { idGenerator, randomSlug } from '@/database/utils/idGenerator';
 import { timestamps } from './_helpers';
 import { files, knowledgeBases } from './file';
 import { users } from './user';
