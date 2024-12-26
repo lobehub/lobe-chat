@@ -121,14 +121,14 @@ describe('LLMSettingsSliceAction', () => {
           enabled: true,
           functionCall: true,
           id: 'gpt-4-0125-preview',
-          tokens: 128000,
+          contextWindowTokens: 128000,
         },
         {
           displayName: 'ChatGPT-4 Vision',
           enabled: true,
           functionCall: true,
           id: 'gpt-4-turbo-2024-04-09',
-          tokens: 128000,
+          contextWindowTokens: 128000,
           vision: true,
         },
       ]);

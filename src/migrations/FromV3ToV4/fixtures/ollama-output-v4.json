@@ -49,7 +49,7 @@
               "displayName": "LLaVA 7B",
               "enabled": true,
               "id": "llava",
-              "tokens": 4096,
+              "contextWindowTokens": 4096,
               "vision": true
             }
           ]
