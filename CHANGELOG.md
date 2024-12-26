@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 1.40.0](https://github.com/lobehub/lobe-chat/compare/v1.39.3...v1.40.0)
+
+<sup>Released on **2024-12-26**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor services code style.
+
+#### ✨ Features
+
+- **misc**: Add changelog modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor services code style, closes [#5180](https://github.com/lobehub/lobe-chat/issues/5180) ([e98ece8](https://github.com/lobehub/lobe-chat/commit/e98ece8))
+
+#### What's improved
+
+- **misc**: Add changelog modal, closes [#4800](https://github.com/lobehub/lobe-chat/issues/4800) ([df3ac87](https://github.com/lobehub/lobe-chat/commit/df3ac87))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.39.3](https://github.com/lobehub/lobe-chat/compare/v1.39.2...v1.39.3)
 
 <sup>Released on **2024-12-25**</sup>
