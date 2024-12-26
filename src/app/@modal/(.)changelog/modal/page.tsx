@@ -20,9 +20,11 @@ const Page = async () => {
   const changelogService = new ChangelogService();
   const data = await changelogService.getChangelogIndex();
 
+  if (!data) return notFound();
+
   return (
     <>
-      {data.map((item) => (
+      {data?.map((item) => (
         <Suspense fallback={<Loading />} key={item.id}>
           <Post locale={locale} mobile={mobile} {...item} />
         </Suspense>

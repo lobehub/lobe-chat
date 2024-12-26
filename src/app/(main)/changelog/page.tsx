@@ -38,6 +38,8 @@ const Page = async () => {
   const changelogService = new ChangelogService();
   const data = await changelogService.getChangelogIndex();
 
+  if (!data) return notFound();
+
   const ld = ldModule.generate({
     description: t('changelog.description', { appName: BRANDING_NAME }),
     title: t('changelog.title', { appName: BRANDING_NAME }),
@@ -48,7 +50,7 @@ const Page = async () => {
     <>
       <StructuredData ld={ld} />
       <Flexbox gap={mobile ? 16 : 48}>
-        {data.map((item) => (
+        {data?.map((item) => (
           <Fragment key={item.id}>
             <Suspense
               fallback={

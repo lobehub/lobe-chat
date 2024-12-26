@@ -54,7 +54,7 @@ export class ChangelogService {
       return this.mergeChangelogs(data.cloud, data.community).slice(0, 5);
     } catch (e) {
       console.error('Error getting changelog lists:', e);
-      return false as any;
+      return [];
     }
   }
 
