@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
+import { insertThreadSchema } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
 import { ThreadModel } from '@/database/server/models/thread';
-import { insertThreadSchema } from '@/database/schemas';
 import { authedProcedure, router } from '@/libs/trpc';
 import { ThreadItem, createThreadSchema } from '@/types/topic/thread';
 

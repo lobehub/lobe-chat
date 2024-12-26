@@ -37,7 +37,7 @@ describe('parseModelString', () => {
       expect(result.add[0]).toEqual({
         displayName: 'ChatGLM 6B',
         id: 'chatglm-6b',
-        tokens: 4096,
+        contextWindowTokens: 4096,
       });
     });
 
@@ -48,7 +48,7 @@ describe('parseModelString', () => {
         displayName: '讯飞星火 v3.5',
         functionCall: true,
         id: 'spark-v3.5',
-        tokens: 8192,
+        contextWindowTokens: 8192,
       });
     });
 
@@ -62,7 +62,7 @@ describe('parseModelString', () => {
           displayName: 'Gemini 1.5 Flash',
           vision: true,
           id: 'gemini-1.5-flash-latest',
-          tokens: 16000,
+          contextWindowTokens: 16000,
         },
         {
           displayName: 'ChatGPT Plus',
@@ -70,7 +70,7 @@ describe('parseModelString', () => {
           functionCall: true,
           files: true,
           id: 'gpt-4-all',
-          tokens: 128000,
+          contextWindowTokens: 128000,
         },
       ]);
     });
@@ -85,14 +85,14 @@ describe('parseModelString', () => {
           files: true,
           functionCall: true,
           id: 'gpt-4-0125-preview',
-          tokens: 128000,
+          contextWindowTokens: 128000,
         },
         {
           displayName: 'ChatGPT-4 Vision',
           files: true,
           functionCall: true,
           id: 'gpt-4-turbo-2024-04-09',
-          tokens: 128000,
+          contextWindowTokens: 128000,
           vision: true,
         },
       ]);
@@ -100,27 +100,27 @@ describe('parseModelString', () => {
 
     it('should handle empty extension capability value', () => {
       const result = parseModelString('model1<1024:>');
-      expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024 });
+      expect(result.add[0]).toEqual({ id: 'model1', contextWindowTokens: 1024 });
     });
 
     it('should handle empty extension capability name', () => {
       const result = parseModelString('model1<1024::file>');
-      expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024, files: true });
+      expect(result.add[0]).toEqual({ id: 'model1', contextWindowTokens: 1024, files: true });
     });
 
     it('should handle duplicate extension capabilities', () => {
       const result = parseModelString('model1<1024:vision:vision>');
-      expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024, vision: true });
+      expect(result.add[0]).toEqual({ id: 'model1', contextWindowTokens: 1024, vision: true });
     });
 
     it('should handle case-sensitive extension capability names', () => {
       const result = parseModelString('model1<1024:VISION:FC:file>');
-      expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024, files: true });
+      expect(result.add[0]).toEqual({ id: 'model1', contextWindowTokens: 1024, files: true });
     });
 
     it('should handle case-sensitive extension capability values', () => {
       const result = parseModelString('model1<1024:vision:Fc:File>');
-      expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024, vision: true });
+      expect(result.add[0]).toEqual({ id: 'model1', contextWindowTokens: 1024, vision: true });
     });
 
     it('should handle empty angle brackets', () => {
@@ -155,27 +155,27 @@ describe('parseModelString', () => {
 
     it('should handle digits followed by non-colon characters inside angle brackets', () => {
       const result = parseModelString('model1<1024abc>');
-      expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024 });
+      expect(result.add[0]).toEqual({ id: 'model1', contextWindowTokens: 1024 });
     });
 
     it('should handle digits followed by multiple colons inside angle brackets', () => {
       const result = parseModelString('model1<1024::>');
-      expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024 });
+      expect(result.add[0]).toEqual({ id: 'model1', contextWindowTokens: 1024 });
     });
 
     it('should handle digits followed by a colon and non-letter characters inside angle brackets', () => {
       const result = parseModelString('model1<1024:123>');
-      expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024 });
+      expect(result.add[0]).toEqual({ id: 'model1', contextWindowTokens: 1024 });
     });
 
     it('should handle digits followed by a colon and spaces inside angle brackets', () => {
       const result = parseModelString('model1<1024: vision>');
-      expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024 });
+      expect(result.add[0]).toEqual({ id: 'model1', contextWindowTokens: 1024 });
     });
 
     it('should handle digits followed by multiple colons and spaces inside angle brackets', () => {
       const result = parseModelString('model1<1024: : vision>');
-      expect(result.add[0]).toEqual({ id: 'model1', tokens: 1024 });
+      expect(result.add[0]).toEqual({ id: 'model1', contextWindowTokens: 1024 });
     });
   });
 

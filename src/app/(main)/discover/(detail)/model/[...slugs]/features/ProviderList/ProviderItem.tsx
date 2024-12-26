@@ -45,7 +45,7 @@ const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) =
   const items: StatisticProps[] = [
     {
       title: t('models.contentLength'),
-      value: model?.tokens ? formatTokenNumber(model.tokens) : '--',
+      value: model?.contextWindowTokens ? formatTokenNumber(model.contextWindowTokens) : '--',
     },
     {
       title: t('models.providerInfo.maxOutput'),

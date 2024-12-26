@@ -102,19 +102,22 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
             </div>
           </Tooltip>
         )}
-        {model.tokens !== undefined && (
+        {model.contextWindowTokens !== undefined && (
           <Tooltip
             overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
             title={t('ModelSelect.featureTag.tokens', {
-              tokens: model.tokens === 0 ? '∞' : numeral(model.tokens).format('0,0'),
+              tokens:
+                model.contextWindowTokens === 0
+                  ? '∞'
+                  : numeral(model.contextWindowTokens).format('0,0'),
             })}
           >
             <Center className={styles.token} title="">
-              {model.tokens === 0 ? (
+              {model.contextWindowTokens === 0 ? (
                 <Infinity size={17} strokeWidth={1.6} />
               ) : (
-                formatTokenNumber(model.tokens)
+                formatTokenNumber(model.contextWindowTokens)
               )}
             </Center>
           </Tooltip>

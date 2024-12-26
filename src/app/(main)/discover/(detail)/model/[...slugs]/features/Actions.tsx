@@ -31,7 +31,7 @@ const ModelActions = memo<ModelActionsProps>(({ identifier, providerData, data }
           tags: (
             <ModelFeatureTags
               functionCall={data.meta.functionCall}
-              tokens={data.meta.tokens}
+              tokens={data.meta.contextWindowTokens}
               vision={data.meta.vision}
             />
           ),
