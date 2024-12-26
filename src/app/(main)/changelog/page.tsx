@@ -2,11 +2,13 @@ import { Divider, Skeleton } from 'antd';
 import { notFound } from 'next/navigation';
 import { Fragment, Suspense } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import urlJoin from 'url-join';
 
 import Pagination from '@/app/@modal/(.)changelog/modal/features/Pagination';
 import StructuredData from '@/components/StructuredData';
 import { serverFeatureFlags } from '@/config/featureFlags';
 import { BRANDING_NAME } from '@/const/branding';
+import { OFFICIAL_SITE } from '@/const/url';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { ChangelogService } from '@/server/services/changelog';
@@ -19,6 +21,7 @@ import Post from './features/Post';
 export const generateMetadata = async () => {
   const { t } = await translation('metadata');
   return metadataModule.generate({
+    canonical: urlJoin(OFFICIAL_SITE, 'changelog'),
     description: t('changelog.description', { appName: BRANDING_NAME }),
     title: t('changelog.title'),
     url: '/changelog',
