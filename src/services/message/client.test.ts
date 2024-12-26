@@ -1,133 +1,155 @@
 import dayjs from 'dayjs';
-import { Mock, describe, expect, it, vi } from 'vitest';
+import { and, eq } from 'drizzle-orm';
+import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CreateMessageParams, MessageModel } from '@/database/_deprecated/models/message';
+import { MessageModel } from '@/database/_deprecated/models/message';
+import { clientDB, initializeDB } from '@/database/client/db';
+import {
+  MessageItem,
+  files,
+  messagePlugins,
+  messageTTS,
+  messageTranslates,
+  messages,
+  sessions,
+  topics,
+  users,
+} from '@/database/schemas';
 import {
   ChatMessage,
   ChatMessageError,
-  ChatPluginPayload,
   ChatTTS,
   ChatTranslate,
+  CreateMessageParams,
 } from '@/types/message';
 
 import { ClientService } from './client';
 
-const messageService = new ClientService();
+const userId = 'message-db';
+const sessionId = '1';
+const topicId = 'topic-id';
 
-// Mock the MessageModel
-vi.mock('@/database/_deprecated/models/message', () => {
-  return {
-    MessageModel: {
-      create: vi.fn(),
-      batchCreate: vi.fn(),
-      count: vi.fn(),
-      query: vi.fn(),
-      delete: vi.fn(),
-      bulkDelete: vi.fn(),
-      queryBySessionId: vi.fn(),
-      update: vi.fn(),
-      updatePlugin: vi.fn(),
-      batchDelete: vi.fn(),
-      clearTable: vi.fn(),
-      batchUpdate: vi.fn(),
-      queryAll: vi.fn(),
-      updatePluginState: vi.fn(),
-    },
-  };
+// Mock data
+const mockMessageId = 'mock-message-id';
+const mockMessage = {
+  id: mockMessageId,
+  content: 'Mock message content',
+  sessionId,
+  role: 'user',
+} as ChatMessage;
+
+const mockMessages = [mockMessage];
+
+beforeEach(async () => {
+  await initializeDB();
+
+  // 在每个测试用例之前，清空表
+  await clientDB.transaction(async (trx) => {
+    await trx.delete(users);
+    await trx.insert(users).values([{ id: userId }, { id: '456' }]);
+
+    await trx.insert(sessions).values([{ id: sessionId, userId }]);
+    await trx.insert(topics).values([{ id: topicId, sessionId, userId }]);
+    await trx.insert(files).values({
+      id: 'f1',
+      userId: userId,
+      url: 'abc',
+      name: 'file-1',
+      fileType: 'image/png',
+      size: 1000,
+    });
+  });
 });
 
+afterEach(async () => {
+  // 在每个测试用例之后，清空表
+  await clientDB.delete(users);
+});
+
+const messageService = new ClientService(userId);
+
 describe('MessageClientService', () => {
-  // Mock data
-  const mockMessageId = 'mock-message-id';
-  const mockMessage = {
-    id: mockMessageId,
-    content: 'Mock message content',
-    sessionId: 'mock-session-id',
-    createdAt: 100,
-    updatedAt: 100,
-    role: 'user',
-    // ... other properties
-  } as ChatMessage;
-  const mockMessages = [mockMessage];
-
-  beforeEach(() => {
-    // Reset all mocks before running each test case
-    vi.resetAllMocks();
-  });
-
   describe('create', () => {
     it('should create a message and return its id', async () => {
       // Setup
-      const createParams = {
+      const createParams: CreateMessageParams = {
         content: 'New message content',
-        sessionId: '1',
-        // ... other properties
-      } as CreateMessageParams;
-      (MessageModel.create as Mock).mockResolvedValue({ id: mockMessageId });
+        sessionId,
+        role: 'user',
+      };
 
       // Execute
       const messageId = await messageService.createMessage(createParams);
 
       // Assert
-      expect(MessageModel.create).toHaveBeenCalledWith(createParams);
-      expect(messageId).toBe(mockMessageId);
+      expect(messageId).toMatch(/^msg_/);
     });
   });
 
   describe('batchCreate', () => {
     it('should batch create messages', async () => {
-      // Setup
-      (MessageModel.batchCreate as Mock).mockResolvedValue(mockMessages);
-
       // Execute
-      const result = await messageService.batchCreateMessages(mockMessages);
+      await messageService.batchCreateMessages([
+        {
+          content: 'Mock message content',
+          sessionId,
+          role: 'user',
+        },
+        {
+          content: 'Mock message content',
+          sessionId,
+          role: 'user',
+        },
+      ] as MessageItem[]);
+      const count = await clientDB.$count(messages);
 
       // Assert
-      expect(MessageModel.batchCreate).toHaveBeenCalledWith(mockMessages);
-      expect(result).toBe(mockMessages);
+      expect(count).toBe(2);
     });
   });
 
   describe('removeMessage', () => {
     it('should remove a message by id', async () => {
-      // Setup
-      (MessageModel.delete as Mock).mockResolvedValue(true);
-
       // Execute
-      const result = await messageService.removeMessage(mockMessageId);
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
+      await messageService.removeMessage(mockMessageId);
 
       // Assert
-      expect(MessageModel.delete).toHaveBeenCalledWith(mockMessageId);
-      expect(result).toBe(true);
+      const count = await clientDB.$count(messages);
+
+      expect(count).toBe(0);
     });
   });
   describe('removeMessages', () => {
     it('should remove a message by id', async () => {
       // Setup
-      (MessageModel.bulkDelete as Mock).mockResolvedValue(true);
+      await clientDB.insert(messages).values([
+        { id: mockMessageId, role: 'user', userId },
+        { role: 'assistant', userId },
+      ]);
 
       // Execute
-      const result = await messageService.removeMessages([mockMessageId]);
+      await messageService.removeMessages([mockMessageId]);
 
       // Assert
-      expect(MessageModel.bulkDelete).toHaveBeenCalledWith([mockMessageId]);
-      expect(result).toBe(true);
+      const count = await clientDB.$count(messages);
+
+      expect(count).toBe(1);
     });
   });
 
   describe('getMessages', () => {
     it('should retrieve messages by sessionId and topicId', async () => {
       // Setup
-      const sessionId = 'session-id';
-      const topicId = 'topic-id';
-      (MessageModel.query as Mock).mockResolvedValue(mockMessages);
+      await clientDB
+        .insert(messages)
+        .values({ id: mockMessageId, sessionId, topicId, role: 'user', userId });
 
       // Execute
-      const messages = await messageService.getMessages(sessionId, topicId);
+      const data = await messageService.getMessages(sessionId, topicId);
 
       // Assert
-      expect(MessageModel.query).toHaveBeenCalledWith({ sessionId, topicId });
-      expect(messages).toEqual(mockMessages.map((i) => ({ ...i, imageList: [] })));
+      expect(data[0]).toMatchObject({ id: mockMessageId, role: 'user' });
     });
   });
 
@@ -135,14 +157,21 @@ describe('MessageClientService', () => {
     it('should retrieve all messages in a session', async () => {
       // Setup
       const sessionId = 'session-id';
-      (MessageModel.queryBySessionId as Mock).mockResolvedValue(mockMessages);
+      await clientDB.insert(sessions).values([
+        { id: 'bbb', userId },
+        { id: sessionId, userId },
+      ]);
+      await clientDB.insert(messages).values([
+        { sessionId, topicId, role: 'user', userId },
+        { sessionId, topicId, role: 'assistant', userId },
+        { sessionId: 'bbb', topicId, role: 'assistant', userId },
+      ]);
 
       // Execute
-      const messages = await messageService.getAllMessagesInSession(sessionId);
+      const data = await messageService.getAllMessagesInSession(sessionId);
 
       // Assert
-      expect(MessageModel.queryBySessionId).toHaveBeenCalledWith(sessionId);
-      expect(messages).toBe(mockMessages);
+      expect(data.length).toBe(2);
     });
   });
 
@@ -150,77 +179,85 @@ describe('MessageClientService', () => {
     it('should batch remove messages by assistantId and topicId', async () => {
       // Setup
       const assistantId = 'assistant-id';
-      const topicId = 'topic-id';
-      (MessageModel.batchDelete as Mock).mockResolvedValue(true);
+      const sessionId = 'session-id';
+      await clientDB.insert(sessions).values([
+        { id: 'bbb', userId },
+        { id: sessionId, userId },
+      ]);
+      await clientDB.insert(messages).values([
+        { sessionId, topicId, role: 'user', userId },
+        { sessionId, topicId, role: 'assistant', userId },
+        { sessionId: 'bbb', topicId, role: 'assistant', userId },
+      ]);
 
       // Execute
-      const result = await messageService.removeMessagesByAssistant(assistantId, topicId);
+      await messageService.removeMessagesByAssistant(sessionId, topicId);
 
       // Assert
-      expect(MessageModel.batchDelete).toHaveBeenCalledWith(assistantId, topicId);
-      expect(result).toBe(true);
+      const result = await clientDB.query.messages.findMany({
+        where: and(eq(messages.sessionId, sessionId), eq(messages.topicId, topicId)),
+      });
+
+      expect(result.length).toBe(0);
     });
   });
 
   describe('clearAllMessage', () => {
     it('should clear all messages from the table', async () => {
       // Setup
-      (MessageModel.clearTable as Mock).mockResolvedValue(true);
+      await clientDB.insert(users).values({ id: 'another' });
+      await clientDB.insert(messages).values([
+        { id: mockMessageId, role: 'user', userId },
+        { role: 'user', userId: 'another' },
+      ]);
 
       // Execute
-      const result = await messageService.removeAllMessages();
+      await messageService.removeAllMessages();
 
       // Assert
-      expect(MessageModel.clearTable).toHaveBeenCalled();
-      expect(result).toBe(true);
-    });
-  });
-
-  describe('bindMessagesToTopic', () => {
-    it('should batch update messages to bind them to a topic', async () => {
-      // Setup
-      const topicId = 'topic-id';
-      const messageIds = [mockMessageId];
-      (MessageModel.batchUpdate as Mock).mockResolvedValue(mockMessages);
-
-      // Execute
-      const result = await messageService.bindMessagesToTopic(topicId, messageIds);
-
-      // Assert
-      expect(MessageModel.batchUpdate).toHaveBeenCalledWith(messageIds, { topicId });
-      expect(result).toBe(mockMessages);
+      const result = await clientDB.query.messages.findMany({
+        where: eq(messages.userId, userId),
+      });
+      expect(result.length).toBe(0);
     });
   });
 
   describe('getAllMessages', () => {
     it('should retrieve all messages', async () => {
-      // Setup
-      (MessageModel.queryAll as Mock).mockResolvedValue(mockMessages);
+      await clientDB.insert(messages).values([
+        { sessionId, topicId, content: '1', role: 'user', userId },
+        { sessionId, topicId, content: '2', role: 'assistant', userId },
+      ]);
 
       // Execute
-      const messages = await messageService.getAllMessages();
+      const data = await messageService.getAllMessages();
 
       // Assert
-      expect(MessageModel.queryAll).toHaveBeenCalled();
-      expect(messages).toBe(mockMessages);
+      expect(data).toMatchObject([
+        { sessionId, topicId, content: '1', role: 'user', userId },
+        { sessionId, topicId, content: '2', role: 'assistant', userId },
+      ]);
     });
   });
 
   describe('updateMessageError', () => {
     it('should update the error field of a message', async () => {
       // Setup
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
       const newError = {
         type: 'InvalidProviderAPIKey',
         message: 'Error occurred',
       } as ChatMessageError;
-      (MessageModel.update as Mock).mockResolvedValue({ ...mockMessage, error: newError });
 
       // Execute
-      const result = await messageService.updateMessageError(mockMessageId, newError);
+      await messageService.updateMessageError(mockMessageId, newError);
 
       // Assert
-      expect(MessageModel.update).toHaveBeenCalledWith(mockMessageId, { error: newError });
-      expect(result).toEqual({ ...mockMessage, error: newError });
+      const result = await clientDB.query.messages.findFirst({
+        where: eq(messages.id, mockMessageId),
+      });
+
+      expect(result!.error).toEqual(newError);
     });
   });
 
@@ -248,88 +285,85 @@ describe('MessageClientService', () => {
   describe('updateMessagePluginState', () => {
     it('should update the plugin state of a message', async () => {
       // Setup
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
+      await clientDB.insert(messagePlugins).values({ id: mockMessageId });
       const key = 'stateKey';
       const value = 'stateValue';
       const newPluginState = { [key]: value };
-      (MessageModel.updatePluginState as Mock).mockResolvedValue({
-        ...mockMessage,
-        pluginState: newPluginState,
-      });
 
       // Execute
-      const result = await messageService.updateMessagePluginState(mockMessageId, { key: value });
+      await messageService.updateMessagePluginState(mockMessageId, { stateKey: value });
 
       // Assert
-      expect(MessageModel.updatePluginState).toHaveBeenCalledWith(mockMessageId, { key: value });
-      expect(result).toEqual({ ...mockMessage, pluginState: newPluginState });
+      const result = await clientDB.query.messagePlugins.findFirst({
+        where: eq(messagePlugins.id, mockMessageId),
+      });
+      expect(result!.state).toEqual(newPluginState);
     });
   });
 
   describe('updateMessagePluginArguments', () => {
     it('should update the plugin arguments object of a message', async () => {
       // Setup
-      const key = 'stateKey';
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
+      await clientDB.insert(messagePlugins).values({ id: mockMessageId });
       const value = 'stateValue';
-      (MessageModel.updatePlugin as Mock).mockResolvedValue({});
 
       // Execute
       await messageService.updateMessagePluginArguments(mockMessageId, { key: value });
 
       // Assert
-      expect(MessageModel.updatePlugin).toHaveBeenCalledWith(mockMessageId, {
-        arguments: '{"key":"stateValue"}',
+      const result = await clientDB.query.messagePlugins.findFirst({
+        where: eq(messageTTS.id, mockMessageId),
       });
+      expect(result).toMatchObject({ arguments: '{"key":"stateValue"}' });
     });
     it('should update the plugin arguments string of a message', async () => {
       // Setup
-      const key = 'stateKey';
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
+      await clientDB.insert(messagePlugins).values({ id: mockMessageId });
       const value = 'stateValue';
-      (MessageModel.updatePlugin as Mock).mockResolvedValue({});
-
       // Execute
       await messageService.updateMessagePluginArguments(
         mockMessageId,
-        JSON.stringify({ key: value }),
+        JSON.stringify({ abc: value }),
       );
 
       // Assert
-      expect(MessageModel.updatePlugin).toHaveBeenCalledWith(mockMessageId, {
-        arguments: '{"key":"stateValue"}',
+      const result = await clientDB.query.messagePlugins.findFirst({
+        where: eq(messageTTS.id, mockMessageId),
       });
+      expect(result).toMatchObject({ arguments: '{"abc":"stateValue"}' });
     });
   });
 
   describe('countMessages', () => {
     it('should count the total number of messages', async () => {
       // Setup
-      const mockCount = 10;
-      (MessageModel.count as Mock).mockResolvedValue(mockCount);
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
 
       // Execute
       const count = await messageService.countMessages();
 
       // Assert
-      expect(MessageModel.count).toHaveBeenCalled();
-      expect(count).toBe(mockCount);
+      expect(count).toBe(1);
     });
   });
 
   describe('countTodayMessages', () => {
     it('should count the number of messages created today', async () => {
       // Setup
-      const today = dayjs().format('YYYY-MM-DD');
       const mockMessages = [
-        { ...mockMessage, createdAt: today },
-        { ...mockMessage, createdAt: today },
-        { ...mockMessage, createdAt: '2023-01-01' },
+        { ...mockMessage, id: undefined, createdAt: new Date(), userId },
+        { ...mockMessage, id: undefined, createdAt: new Date(), userId },
+        { ...mockMessage, id: undefined, createdAt: new Date('2023-01-01'), userId },
       ];
-      (MessageModel.queryAll as Mock).mockResolvedValue(mockMessages);
+      await clientDB.insert(messages).values(mockMessages);
 
       // Execute
       const count = await messageService.countTodayMessages();
 
       // Assert
-      expect(MessageModel.queryAll).toHaveBeenCalled();
       expect(count).toBe(2);
     });
   });
@@ -337,45 +371,46 @@ describe('MessageClientService', () => {
   describe('updateMessageTTS', () => {
     it('should update the TTS field of a message', async () => {
       // Setup
-      const newTTS: ChatTTS = {
-        contentMd5: 'abc',
-        file: 'file-abc',
-      };
-
-      (MessageModel.update as Mock).mockResolvedValue({ ...mockMessage, tts: newTTS });
+      await clientDB
+        .insert(files)
+        .values({ id: 'file-abc', fileType: 'text', name: 'abc', url: 'abc', size: 100, userId });
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
+      const newTTS: ChatTTS = { contentMd5: 'abc', file: 'file-abc' };
 
       // Execute
-      const result = await messageService.updateMessageTTS(mockMessageId, newTTS);
+      await messageService.updateMessageTTS(mockMessageId, newTTS);
 
       // Assert
-      expect(MessageModel.update).toHaveBeenCalledWith(mockMessageId, { tts: newTTS });
-      expect(result).toEqual({ ...mockMessage, tts: newTTS });
+      const result = await clientDB.query.messageTTS.findFirst({
+        where: eq(messageTTS.id, mockMessageId),
+      });
+
+      expect(result).toMatchObject({ contentMd5: 'abc', fileId: 'file-abc', id: mockMessageId });
     });
   });
 
   describe('updateMessageTranslate', () => {
     it('should update the translate field of a message', async () => {
       // Setup
-      const newTranslate: ChatTranslate = {
-        content: 'Translated text',
-        to: 'es',
-      };
-
-      (MessageModel.update as Mock).mockResolvedValue({ ...mockMessage, translate: newTranslate });
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
+      const newTranslate: ChatTranslate = { content: 'Translated text', to: 'es' };
 
       // Execute
-      const result = await messageService.updateMessageTranslate(mockMessageId, newTranslate);
+      await messageService.updateMessageTranslate(mockMessageId, newTranslate);
 
       // Assert
-      expect(MessageModel.update).toHaveBeenCalledWith(mockMessageId, { translate: newTranslate });
-      expect(result).toEqual({ ...mockMessage, translate: newTranslate });
+      const result = await clientDB.query.messageTranslates.findFirst({
+        where: eq(messageTranslates.id, mockMessageId),
+      });
+
+      expect(result).toMatchObject(newTranslate);
     });
   });
 
   describe('hasMessages', () => {
     it('should return true if there are messages', async () => {
       // Setup
-      (MessageModel.count as Mock).mockResolvedValue(1);
+      await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
 
       // Execute
       const result = await messageService.hasMessages();
@@ -385,9 +420,6 @@ describe('MessageClientService', () => {
     });
 
     it('should return false if there are no messages', async () => {
-      // Setup
-      (MessageModel.count as Mock).mockResolvedValue(0);
-
       // Execute
       const result = await messageService.hasMessages();
 

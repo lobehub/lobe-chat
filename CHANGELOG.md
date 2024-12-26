@@ -2,6 +2,289 @@
 
 # Changelog
 
+### [Version 1.40.2](https://github.com/lobehub/lobe-chat/compare/v1.40.1...v1.40.2)
+
+<sup>Released on **2024-12-26**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor `tokens` to `contextWindowTokens`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor `tokens` to `contextWindowTokens`, closes [#5185](https://github.com/lobehub/lobe-chat/issues/5185) ([a2aa99a](https://github.com/lobehub/lobe-chat/commit/a2aa99a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.40.1](https://github.com/lobehub/lobe-chat/compare/v1.40.0...v1.40.1)
+
+<sup>Released on **2024-12-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix o1Models list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix o1Models list, closes [#5183](https://github.com/lobehub/lobe-chat/issues/5183) ([10d9904](https://github.com/lobehub/lobe-chat/commit/10d9904))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.40.0](https://github.com/lobehub/lobe-chat/compare/v1.39.3...v1.40.0)
+
+<sup>Released on **2024-12-26**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor services code style.
+
+#### ✨ Features
+
+- **misc**: Add changelog modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor services code style, closes [#5180](https://github.com/lobehub/lobe-chat/issues/5180) ([e98ece8](https://github.com/lobehub/lobe-chat/commit/e98ece8))
+
+#### What's improved
+
+- **misc**: Add changelog modal, closes [#4800](https://github.com/lobehub/lobe-chat/issues/4800) ([df3ac87](https://github.com/lobehub/lobe-chat/commit/df3ac87))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.39.3](https://github.com/lobehub/lobe-chat/compare/v1.39.2...v1.39.3)
+
+<sup>Released on **2024-12-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve loading brand.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve loading brand, closes [#5165](https://github.com/lobehub/lobe-chat/issues/5165) ([9684c98](https://github.com/lobehub/lobe-chat/commit/9684c98))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.39.2](https://github.com/lobehub/lobe-chat/compare/v1.39.1...v1.39.2)
+
+<sup>Released on **2024-12-25**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor sensenova provider with LobeOpenAICompatibleFactory.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor sensenova provider with LobeOpenAICompatibleFactory, closes [#5116](https://github.com/lobehub/lobe-chat/issues/5116) ([5656f39](https://github.com/lobehub/lobe-chat/commit/5656f39))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.39.1](https://github.com/lobehub/lobe-chat/compare/v1.39.0...v1.39.1)
+
+<sup>Released on **2024-12-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix image input on pglite.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix image input on pglite, closes [#5167](https://github.com/lobehub/lobe-chat/issues/5167) ([5c5b37d](https://github.com/lobehub/lobe-chat/commit/5c5b37d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.39.0](https://github.com/lobehub/lobe-chat/compare/v1.38.0...v1.39.0)
+
+<sup>Released on **2024-12-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Upgrade to next15 and react19.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Upgrade to next15 and react19, closes [#4450](https://github.com/lobehub/lobe-chat/issues/4450) ([07d7417](https://github.com/lobehub/lobe-chat/commit/07d7417))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.38.0](https://github.com/lobehub/lobe-chat/compare/v1.37.2...v1.38.0)
+
+<sup>Released on **2024-12-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Support thread in client pglite.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support thread in client pglite, closes [#5150](https://github.com/lobehub/lobe-chat/issues/5150) ([848b29f](https://github.com/lobehub/lobe-chat/commit/848b29f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.37.2](https://github.com/lobehub/lobe-chat/compare/v1.37.1...v1.37.2)
+
+<sup>Released on **2024-12-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move pglite to client service.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move pglite to client service, closes [#5133](https://github.com/lobehub/lobe-chat/issues/5133) ([c2ded24](https://github.com/lobehub/lobe-chat/commit/c2ded24))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.37.1](https://github.com/lobehub/lobe-chat/compare/v1.37.0...v1.37.1)
+
+<sup>Released on **2024-12-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the client service to deprecated.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the client service to deprecated, closes [#5132](https://github.com/lobehub/lobe-chat/issues/5132) ([e603234](https://github.com/lobehub/lobe-chat/commit/e603234))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.37.0](https://github.com/lobehub/lobe-chat/compare/v1.36.46...v1.37.0)
+
+<sup>Released on **2024-12-22**</sup>
+
+#### ✨ Features
+
+- **misc**: Support to use pglite as client db.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support to use pglite as client db, closes [#4873](https://github.com/lobehub/lobe-chat/issues/4873) ([4131f20](https://github.com/lobehub/lobe-chat/commit/4131f20))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.36.46](https://github.com/lobehub/lobe-chat/compare/v1.36.45...v1.36.46)
 
 <sup>Released on **2024-12-21**</sup>
