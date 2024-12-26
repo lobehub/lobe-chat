@@ -9,12 +9,9 @@ export const LobeMoonshotAI = LobeOpenAICompatibleFactory({
     handlePayload: (payload: ChatStreamPayload) => {
       const { temperature, ...rest } = payload;
 
-      return { 
-        ...rest, 
-        temperature: 
-          temperature !== undefined 
-          ? temperature / 2
-          : undefined,
+      return {
+        ...rest,
+        temperature: temperature !== undefined ? temperature / 2 : undefined,
       } as OpenAI.ChatCompletionCreateParamsStreaming;
     },
   },

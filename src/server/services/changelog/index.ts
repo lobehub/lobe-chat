@@ -53,8 +53,16 @@ export class ChangelogService {
 
       return this.mergeChangelogs(data.cloud, data.community).slice(0, 5);
     } catch (e) {
-      console.error('Error getting changelog lists:', e);
-      return false as any;
+      const cause = (e as Error).cause as { code: string };
+      if (cause.code.includes('ETIMEDOUT')) {
+        console.warn(
+          '[ChangelogFetchTimeout] fail to fetch changelog lists due to network timeout. Please check your network connection.',
+        );
+      } else {
+        console.error('Error getting changelog lists:', e);
+      }
+
+      return [];
     }
   }
 

@@ -129,8 +129,8 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
     switch (model) {
       case 'abab6.5t-chat':
       case 'abab6.5g-chat':
-      case 'abab5.5s-chat': 
-      case 'abab5.5-chat':{
+      case 'abab5.5s-chat':
+      case 'abab5.5-chat': {
         return 4096;
       }
       case 'abab6.5s-chat': {
@@ -145,16 +145,11 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
     return {
       ...params,
       frequency_penalty: undefined,
-      max_tokens: 
-        payload.max_tokens !== undefined 
-        ? payload.max_tokens 
-        : this.getMaxTokens(payload.model),
+      max_tokens:
+        payload.max_tokens !== undefined ? payload.max_tokens : this.getMaxTokens(payload.model),
       presence_penalty: undefined,
       stream: true,
-      temperature: 
-        temperature === undefined || temperature <= 0
-        ? undefined
-        : temperature / 2,
+      temperature: temperature === undefined || temperature <= 0 ? undefined : temperature / 2,
 
       tools: params.tools?.map((tool) => ({
         function: {

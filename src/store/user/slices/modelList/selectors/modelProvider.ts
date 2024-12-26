@@ -116,9 +116,10 @@ const isModelEnabledUpload = (id: string) => (s: UserStore) =>
   isModelEnabledVision(id)(s) || isModelEnabledFiles(id)(s);
 
 const isModelHasMaxToken = (id: string) => (s: UserStore) =>
-  typeof getModelCardById(id)(s)?.tokens !== 'undefined';
+  typeof getModelCardById(id)(s)?.contextWindowTokens !== 'undefined';
 
-const modelMaxToken = (id: string) => (s: UserStore) => getModelCardById(id)(s)?.tokens || 0;
+const modelMaxToken = (id: string) => (s: UserStore) =>
+  getModelCardById(id)(s)?.contextWindowTokens || 0;
 
 export const modelProviderSelectors = {
   defaultModelProviderList,

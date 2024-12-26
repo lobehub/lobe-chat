@@ -11,19 +11,18 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
         ...payload,
         model,
         stream: true,
-        ...(model === "glm-4-alltools" ? {
-          temperature: temperature !== undefined 
-            ? Math.max(0.01, Math.min(0.99, temperature / 2)) 
-            : undefined,
-          top_p: top_p !== undefined 
-            ? Math.max(0.01, Math.min(0.99, top_p)) 
-            : undefined,
-        } : {
-          temperature: temperature !== undefined 
-            ? temperature / 2
-            : undefined,
-          top_p,
-        }),
+        ...(model === 'glm-4-alltools'
+          ? {
+              temperature:
+                temperature !== undefined
+                  ? Math.max(0.01, Math.min(0.99, temperature / 2))
+                  : undefined,
+              top_p: top_p !== undefined ? Math.max(0.01, Math.min(0.99, top_p)) : undefined,
+            }
+          : {
+              temperature: temperature !== undefined ? temperature / 2 : undefined,
+              top_p,
+            }),
       }) as OpenAI.ChatCompletionCreateParamsStreaming,
   },
   debug: {

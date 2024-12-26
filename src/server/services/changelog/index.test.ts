@@ -93,10 +93,12 @@ describe('ChangelogService', () => {
     });
 
     it('should handle fetch errors', async () => {
-      (global.fetch as any).mockRejectedValue(new Error('Fetch failed'));
+      (global.fetch as any).mockRejectedValue(
+        new Error('Fetch failed', { cause: { code: 'Timeout' } }),
+      );
 
       const result = await service.getChangelogIndex();
-      expect(result).toBe(false);
+      expect(result).toEqual([]);
     });
 
     it('should return only community items when config type is community', async () => {

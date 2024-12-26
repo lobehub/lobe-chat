@@ -62,7 +62,7 @@ export default {
       desc: '填入 Cloudflare 账户 ID 或 自定义 API 地址',
       placeholder: 'Cloudflare Account ID / custom API URL',
       title: 'Cloudflare 账户 ID / API 地址',
-    }
+    },
   },
   github: {
     personalAccessToken: {
