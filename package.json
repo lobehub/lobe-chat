@@ -138,7 +138,7 @@
     "antd": "^5.20.2",
     "antd-style": "^3.6.2",
     "brotli-wasm": "^3.0.1",
-    "chroma-js": "^3.0.0",
+    "chroma-js": "^3.1.2",
     "dayjs": "^1.11.13",
     "debug": "^4.3.6",
     "dexie": "^3.2.7",
