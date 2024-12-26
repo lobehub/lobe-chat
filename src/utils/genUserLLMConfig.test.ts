@@ -1,15 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { genUserLLMConfig } from './genUserLLMConfig';
-
 import { ModelProviderCard } from '@/types/llm';
+
+import { genUserLLMConfig } from './genUserLLMConfig';
 
 // Mock ModelProvider enum
 vi.mock('@/libs/agent-runtime', () => ({
   ModelProvider: {
     Ollama: 'ollama',
     OpenAI: 'openai',
-  }
+  },
 }));
 
 // Mock ProviderCards and filterEnabledModels
@@ -27,7 +27,7 @@ describe('genUserLLMConfig', () => {
   it('should generate correct LLM config for Ollama and OpenAI', () => {
     const specificConfig = {
       ollama: { enabled: true, fetchOnClient: true },
-      openai: { enabled: true }
+      openai: { enabled: true },
     };
     const config = genUserLLMConfig(specificConfig);
 

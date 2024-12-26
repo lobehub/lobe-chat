@@ -96,7 +96,7 @@ describe('ChangelogService', () => {
       (global.fetch as any).mockRejectedValue(new Error('Fetch failed'));
 
       const result = await service.getChangelogIndex();
-      expect(result).toBe(false);
+      expect(result).toEqual([]);
     });
 
     it('should return only community items when config type is community', async () => {

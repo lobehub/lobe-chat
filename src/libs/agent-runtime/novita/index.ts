@@ -17,12 +17,12 @@ export const LobeNovitaAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as NovitaModelCard;
 
       return {
+        contextWindowTokens: model.context_size,
         description: model.description,
         displayName: model.title,
         enabled: model.status === 1,
         functionCall: model.description.toLowerCase().includes('function calling'),
         id: model.id,
-        tokens: model.context_size,
       };
     },
   },

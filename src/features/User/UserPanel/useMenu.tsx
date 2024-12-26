@@ -188,7 +188,7 @@ export const useMenu = () => {
     {
       icon: <Icon icon={FileClockIcon} />,
       key: 'changelog',
-      label: <Link href={'/changelog'}>{t('changelog')}</Link>,
+      label: <Link href={'/changelog/modal'}>{t('changelog')}</Link>,
     },
     {
       children: [
