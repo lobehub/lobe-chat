@@ -31,23 +31,25 @@ export class TopicModel {
 
   query = async ({ current = 0, pageSize = 9999, sessionId }: QueryTopicParams = {}) => {
     const offset = current * pageSize;
-    return this.db
-      .select({
-        createdAt: topics.createdAt,
-        favorite: topics.favorite,
-        historySummary: topics.historySummary,
-        id: topics.id,
-        metadata: topics.metadata,
-        title: topics.title,
-        updatedAt: topics.updatedAt,
-      })
-      .from(topics)
-      .where(and(eq(topics.userId, this.userId), this.matchSession(sessionId)))
-      // In boolean sorting, false is considered "smaller" than true.
-      // So here we use desc to ensure that topics with favorite as true are in front.
-      .orderBy(desc(topics.favorite), desc(topics.updatedAt))
-      .limit(pageSize)
-      .offset(offset);
+    return (
+      this.db
+        .select({
+          createdAt: topics.createdAt,
+          favorite: topics.favorite,
+          historySummary: topics.historySummary,
+          id: topics.id,
+          metadata: topics.metadata,
+          title: topics.title,
+          updatedAt: topics.updatedAt,
+        })
+        .from(topics)
+        .where(and(eq(topics.userId, this.userId), this.matchSession(sessionId)))
+        // In boolean sorting, false is considered "smaller" than true.
+        // So here we use desc to ensure that topics with favorite as true are in front.
+        .orderBy(desc(topics.favorite), desc(topics.updatedAt))
+        .limit(pageSize)
+        .offset(offset)
+    );
   };
 
   findById = async (id: string) => {

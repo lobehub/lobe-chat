@@ -6,9 +6,8 @@ import { enableNextAuth } from '@/const/auth';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 
+import { genServerLLMConfig } from './genServerLLMConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
-
-import { genServerLLMConfig } from './genServerLLMConfig'
 
 export const getServerGlobalConfig = () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();

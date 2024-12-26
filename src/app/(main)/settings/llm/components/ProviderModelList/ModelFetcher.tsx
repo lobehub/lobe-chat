@@ -80,8 +80,8 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
           title={
             latestFetchTime
               ? t('llm.fetcher.latestTime', {
-                time: dayjs(latestFetchTime).format('YYYY-MM-DD HH:mm:ss'),
-              })
+                  time: dayjs(latestFetchTime).format('YYYY-MM-DD HH:mm:ss'),
+                })
               : t('llm.fetcher.noLatestTime')
           }
         >

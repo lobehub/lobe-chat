@@ -4,6 +4,7 @@ import { ModelProviderCard } from '@/types/llm';
 const Ai21: ModelProviderCard = {
   chatModels: [
     {
+      contextWindowTokens: 256_000,
       displayName: 'Jamba 1.5 Mini',
       enabled: true,
       functionCall: true,
@@ -12,9 +13,9 @@ const Ai21: ModelProviderCard = {
         input: 0.2,
         output: 0.4,
       },
-      tokens: 256_000,
     },
     {
+      contextWindowTokens: 256_000,
       displayName: 'Jamba 1.5 Large',
       enabled: true,
       functionCall: true,
@@ -23,7 +24,6 @@ const Ai21: ModelProviderCard = {
         input: 2,
         output: 8,
       },
-      tokens: 256_000,
     },
   ],
   checkModel: 'jamba-1.5-mini',

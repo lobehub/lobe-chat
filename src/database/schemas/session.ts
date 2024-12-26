@@ -3,6 +3,7 @@ import { boolean, integer, pgTable, text, unique, uniqueIndex, varchar } from 'd
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator, randomSlug } from '@/database/utils/idGenerator';
+
 import { timestamps } from './_helpers';
 import { users } from './user';
 

@@ -56,7 +56,7 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
 
     if (capabilities.length > 0) {
       const [maxTokenStr, ...capabilityList] = capabilities[0].replace('>', '').split(':');
-      model.tokens = parseInt(maxTokenStr, 10) || undefined;
+      model.contextWindowTokens = parseInt(maxTokenStr, 10) || undefined;
 
       for (const capability of capabilityList) {
         switch (capability) {

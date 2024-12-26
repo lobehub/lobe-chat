@@ -4,6 +4,7 @@ import { ModelProviderCard } from '@/types/llm';
 const XAI: ModelProviderCard = {
   chatModels: [
     {
+      contextWindowTokens: 131_072,
       description: '拥有与 Grok 2 相当的性能，但具有更高的效率、速度和功能。',
       displayName: 'Grok Beta',
       enabled: true,
@@ -13,9 +14,9 @@ const XAI: ModelProviderCard = {
         input: 5,
         output: 15,
       },
-      tokens: 131_072,
     },
     {
+      contextWindowTokens: 8192,
       description: '最新的图像理解模型，可以处理各种各样的视觉信息，包括文档、图表、截图和照片等。',
       displayName: 'Grok Vision Beta',
       enabled: true,
@@ -25,10 +26,10 @@ const XAI: ModelProviderCard = {
         input: 5,
         output: 15,
       },
-      tokens: 8192,
       vision: true,
     },
     {
+      contextWindowTokens: 131_072,
       description: '该模型在准确性、指令遵循和多语言能力方面有所改进。',
       displayName: 'Grok 2 1212',
       enabled: true,
@@ -39,9 +40,9 @@ const XAI: ModelProviderCard = {
         output: 10,
       },
       releasedAt: '2024-12-12',
-      tokens: 131_072,
     },
     {
+      contextWindowTokens: 32_768,
       description: '该模型在准确性、指令遵循和多语言能力方面有所改进。',
       displayName: 'Grok 2 Vision 1212',
       enabled: true,
@@ -52,7 +53,6 @@ const XAI: ModelProviderCard = {
         output: 10,
       },
       releasedAt: '2024-12-12',
-      tokens: 32_768,
       vision: true,
     },
   ],
