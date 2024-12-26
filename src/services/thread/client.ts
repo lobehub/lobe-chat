@@ -3,29 +3,23 @@ import { clientDB } from '@/database/client/db';
 import { MessageModel } from '@/database/server/models/message';
 import { ThreadModel } from '@/database/server/models/thread';
 import { BaseClientService } from '@/services/baseClientService';
-import { CreateMessageParams } from '@/types/message';
-import { CreateThreadParams, ThreadItem } from '@/types/topic';
 
 import { IThreadService } from './type';
 
-interface CreateThreadWithMessageParams extends CreateThreadParams {
-  message: CreateMessageParams;
-}
 export class ClientService extends BaseClientService implements IThreadService {
   private get threadModel(): ThreadModel {
     return new ThreadModel(clientDB as any, this.userId);
   }
+
   private get messageModel(): MessageModel {
     return new MessageModel(clientDB as any, this.userId);
   }
 
-  getThreads = async (topicId: string): Promise<ThreadItem[]> => {
+  getThreads: IThreadService['getThreads'] = async (topicId) => {
     return this.threadModel.queryByTopicId(topicId);
   };
 
-  createThreadWithMessage = async (
-    input: CreateThreadWithMessageParams,
-  ): Promise<{ messageId: string; threadId: string }> => {
+  createThreadWithMessage: IThreadService['createThreadWithMessage'] = async (input) => {
     const thread = await this.threadModel.create({
       parentThreadId: input.parentThreadId,
       sourceMessageId: input.sourceMessageId,
@@ -43,15 +37,15 @@ export class ClientService extends BaseClientService implements IThreadService {
     return { messageId: message?.id, threadId: thread?.id };
   };
 
-  updateThread(id: string, data: Partial<ThreadItem>): Promise<any> {
+  updateThread: IThreadService['updateThread'] = async (id, data) => {
     return this.threadModel.update(id, data);
-  }
+  };
 
-  removeThread(id: string): Promise<any> {
+  removeThread: IThreadService['removeThread'] = async (id) => {
     return this.threadModel.delete(id);
-  }
+  };
 
-  private toDbSessionId(sessionId: string | undefined) {
+  private toDbSessionId = (sessionId: string | undefined) => {
     return sessionId === INBOX_SESSION_ID ? null : sessionId;
-  }
+  };
 }
