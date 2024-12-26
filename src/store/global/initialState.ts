@@ -42,6 +42,7 @@ export interface SystemStatus {
    * 应用初始化时不启用 PGLite，只有当用户手动开启时才启用
    */
   isEnablePglite?: boolean;
+  latestChangelogId?: string;
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
   sessionsWidth: number;

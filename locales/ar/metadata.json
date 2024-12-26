@@ -1,4 +1,8 @@
 {
+  "changelog": {
+    "description": "تابع الميزات الجديدة والتحسينات في {{appName}} باستمرار",
+    "title": "سجل التحديثات"
+  },
   "chat": {
     "description": "{{appName}} يقدم لك أفضل تجربة لاستخدام ChatGPT وClaude وGemini وOLLaMA WebUI",
     "title": "{{appName}}: أداة الذكاء الاصطناعي الشخصية، امنح نفسك دماغًا أكثر ذكاءً"
