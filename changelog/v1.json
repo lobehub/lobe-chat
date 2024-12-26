@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix fetch error in changelog modal."]
+    },
+    "date": "2024-12-26",
+    "version": "1.40.3"
+  },
+  {
+    "children": {
       "improvements": ["Refactor tokens to contextWindowTokens."]
     },
     "date": "2024-12-26",

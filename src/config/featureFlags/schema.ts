@@ -24,6 +24,7 @@ export const FeatureFlagsSchema = z.object({
   token_counter: z.boolean().optional(),
 
   welcome_suggest: z.boolean().optional(),
+  changelog: z.boolean().optional(),
 
   clerk_sign_up: z.boolean().optional(),
 
@@ -72,6 +73,7 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   market: true,
   speech_to_text: true,
+  changelog: true,
 
   // the flags below can only be used with commercial license
   // if you want to use it in the commercial usage
@@ -94,6 +96,7 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
 
     enablePlugins: config.plugins,
     showDalle: config.dalle,
+    showChangelog: config.changelog,
 
     enableCheckUpdates: config.check_updates,
     showWelcomeSuggest: config.welcome_suggest,
