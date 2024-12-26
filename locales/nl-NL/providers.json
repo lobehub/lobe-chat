@@ -1,5 +1,7 @@
 {
-  "ai21": {},
+  "ai21": {
+    "description": "AI21 Labs bouwt basismodellen en AI-systemen voor bedrijven, en versnelt de toepassing van generatieve AI in de productie."
+  },
   "ai360": {
     "description": "360 AI is een AI-model- en serviceplatform gelanceerd door het bedrijf 360, dat verschillende geavanceerde modellen voor natuurlijke taalverwerking biedt, waaronder 360GPT2 Pro, 360GPT Pro, 360GPT Turbo en 360GPT Turbo Responsibility 8K. Deze modellen combineren grootschalige parameters en multimodale capaciteiten, en worden breed toegepast in tekstgeneratie, semantisch begrip, dialoogsystemen en codegeneratie. Met flexibele prijsstrategieën voldoet 360 AI aan diverse gebruikersbehoeften, ondersteunt het ontwikkelaars bij integratie en bevordert het de innovatie en ontwikkeling van intelligente toepassingen."
   },
@@ -15,7 +17,9 @@
   "bedrock": {
     "description": "Bedrock is een dienst van Amazon AWS die zich richt op het bieden van geavanceerde AI-taalmodellen en visuele modellen voor bedrijven. De modellenfamilie omvat de Claude-serie van Anthropic, de Llama 3.1-serie van Meta, en meer, met opties variërend van lichtgewicht tot hoge prestaties, en ondersteunt tekstgeneratie, dialogen, beeldverwerking en meer, geschikt voor bedrijfsapplicaties van verschillende schalen en behoeften."
   },
-  "cloudflare": {},
+  "cloudflare": {
+    "description": "Voer machine learning-modellen aan, aangedreven door serverloze GPU's, uit op het wereldwijde netwerk van Cloudflare."
+  },
   "deepseek": {
     "description": "DeepSeek is een bedrijf dat zich richt op onderzoek en toepassing van kunstmatige intelligentietechnologie, en hun nieuwste model DeepSeek-V2.5 combineert algemene dialoog- en codeverwerkingscapaciteiten, met significante verbeteringen in het afstemmen op menselijke voorkeuren, schrijfopdrachten en het volgen van instructies."
   },
@@ -33,6 +37,9 @@
   },
   "groq": {
     "description": "De LPU-inferentie-engine van Groq presteert uitstekend in de nieuwste onafhankelijke benchmarktests voor grote taalmodellen (LLM), en herdefinieert de normen voor AI-oplossingen met zijn verbazingwekkende snelheid en efficiëntie. Groq is een vertegenwoordiger van onmiddellijke inferentiesnelheid en toont goede prestaties in cloudgebaseerde implementaties."
+  },
+  "higress": {
+    "description": "Higress is een cloud-native API-gateway, ontwikkeld binnen Alibaba om de nadelige effecten van Tengine reload op langdurige verbindingen en de onvoldoende load balancing capaciteiten van gRPC/Dubbo aan te pakken."
   },
   "huggingface": {
     "description": "HuggingFace Inference API biedt een snelle en gratis manier om duizenden modellen te verkennen voor verschillende taken. Of u nu prototypes voor nieuwe applicaties ontwerpt of de mogelijkheden van machine learning uitprobeert, deze API geeft u directe toegang tot hoogpresterende modellen in meerdere domeinen."
@@ -70,7 +77,9 @@
   "qwen": {
     "description": "Tongyi Qianwen is een door Alibaba Cloud zelf ontwikkeld grootschalig taalmodel met krachtige mogelijkheden voor natuurlijke taalbegrip en -generatie. Het kan verschillende vragen beantwoorden, tekstinhoud creëren, meningen uiten, code schrijven, en speelt een rol in verschillende domeinen."
   },
-  "sensenova": {},
+  "sensenova": {
+    "description": "SenseNova, ondersteund door de krachtige infrastructuur van SenseTime, biedt efficiënte en gebruiksvriendelijke full-stack modelservices."
+  },
   "siliconcloud": {
     "description": "SiliconFlow streeft ernaar AGI te versnellen ten behoeve van de mensheid, door de efficiëntie van grootschalige AI te verbeteren met een gebruiksvriendelijke en kosteneffectieve GenAI-stack."
   },

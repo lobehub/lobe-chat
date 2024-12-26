@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react';
 
+import CircleLoading from '@/components/Loading/CircleLoading';
 import ServerLayout from '@/components/server/ServerLayout';
 
 import Desktop from './_layout/Desktop';
@@ -13,14 +14,14 @@ const Layout = ServerLayout({ Desktop, Mobile });
 
 const Session = () => {
   return (
-    <>
+    <Suspense fallback={<CircleLoading />}>
       <Layout>
         <Suspense fallback={<SkeletonList />}>
           <SessionListContent />
         </Suspense>
       </Layout>
       <SessionHydration />
-    </>
+    </Suspense>
   );
 };
 

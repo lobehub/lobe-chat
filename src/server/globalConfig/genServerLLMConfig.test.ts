@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { genServerLLMConfig } from './genServerLLMConfig';
-
 import { getLLMConfig } from '@/config/llm';
+
+import { genServerLLMConfig } from './genServerLLMConfig';
 
 // Mock ModelProvider enum
 vi.mock('@/libs/agent-runtime', () => ({
@@ -10,7 +10,7 @@ vi.mock('@/libs/agent-runtime', () => ({
     Azure: 'azure',
     Bedrock: 'bedrock',
     Ollama: 'ollama',
-  }
+  },
 }));
 
 // Mock ProviderCards
@@ -86,7 +86,7 @@ describe('genServerLLMConfig', () => {
 
     expect(config.ollama).toEqual({
       enabled: true,
-      enabledModels: ['ollamaModels'], 
+      enabledModels: ['ollamaModels'],
       fetchOnClient: true,
       serverModelCards: ['ollamaModel1', 'ollamaModel2'],
     });

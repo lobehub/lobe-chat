@@ -1,16 +1,14 @@
 import { redirect } from 'next/navigation';
 
+import { serverDB } from '@/database/server';
 import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 import FileManager from '@/features/FileManager';
+import { PagePropsWithId } from '@/types/next';
 
-interface Params {
-  id: string;
-}
+export default async (props: PagePropsWithId) => {
+  const params = await props.params;
 
-type Props = { params: Params };
-
-export default async ({ params }: Props) => {
-  const item = await KnowledgeBaseModel.findById(params.id);
+  const item = await KnowledgeBaseModel.findById(serverDB, params.id);
 
   if (!item) return redirect('/repos');
 

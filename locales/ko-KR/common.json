@@ -9,7 +9,21 @@
       "title": "환영합니다 {{name}}"
     }
   },
-  "appInitializing": "앱 초기화 중...",
+  "appLoading": {
+    "appIdle": "시작 준비 중",
+    "appInitializing": "앱을 초기화하는 중...",
+    "failed": "죄송합니다. 애플리케이션 초기화에 실패했습니다. 상세 정보를 확인하여 문제를 해결해 주세요.",
+    "finished": "데이터베이스 초기화 완료",
+    "goToChat": "대화 페이지 로딩 중...",
+    "initAuth": "인증 서비스 초기화 중...",
+    "initUser": "사용자 상태 초기화 중...",
+    "initializing": "PGlite 데이터베이스 초기화 중...",
+    "loadingDependencies": "의존성 초기화 중...",
+    "loadingWasm": "WASM 모듈 로드 중...",
+    "migrating": "데이터베이스 테이블 마이그레이션 중...",
+    "ready": "데이터베이스 준비 완료",
+    "showDetail": "자세히 보기"
+  },
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
   "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 툴팁을 입력하십시오",
@@ -20,6 +34,54 @@
   "branchingDisable": "「하위 주제」 기능은 서버 버전에서만 사용할 수 있습니다. 이 기능이 필요하시면 서버 배포 모드로 전환하거나 LobeChat Cloud를 사용하세요.",
   "cancel": "취소",
   "changelog": "변경 로그",
+  "clientDB": {
+    "autoInit": {
+      "title": "PGlite 데이터베이스 초기화"
+    },
+    "error": {
+      "desc": "죄송합니다. Pglite 데이터베이스 초기화 과정에서 예외가 발생했습니다. 버튼을 클릭하여 다시 시도해 주십시오. 여러 번 시도한 후에도 여전히 문제가 발생하면 <1>문제를 제출</1>해 주십시오. 저희가 즉시 문제를 해결해 드리겠습니다.",
+      "detail": "오류 원인: [[[{{type}}]]] {{message}}，상세 내용은 다음과 같습니다：",
+      "retry": "재시도",
+      "title": "데이터베이스 초기화 실패"
+    },
+    "initing": {
+      "error": "오류가 발생했습니다. 재시도해 주세요.",
+      "idle": "초기화 대기 중...",
+      "initializing": "초기화 중...",
+      "loadingDependencies": "의존성 로드 중...",
+      "loadingWasmModule": "WASM 모듈 로드 중...",
+      "migrating": "데이터베이스 마이그레이션 실행 중...",
+      "ready": "데이터베이스 준비 완료"
+    },
+    "modal": {
+      "desc": "PGlite 클라이언트 데이터베이스를 활성화하여 브라우저에서 채팅 데이터를 영구 저장하고 지식베이스 등 고급 기능을 사용하세요.",
+      "enable": "즉시 활성화",
+      "features": {
+        "knowledgeBase": {
+          "desc": "개인 지식 기반을 구축하고, 당신의 도우미와 쉽게 지식 기반 대화를 시작하세요(곧 출시 예정)",
+          "title": "지식 기반 대화 지원, 두 번째 뇌를 열다"
+        },
+        "localFirst": {
+          "desc": "채팅 데이터는 완전히 브라우저에 저장되며, 당신의 데이터는 항상 당신의 손에 있습니다.",
+          "title": "로컬 우선, 프라이버시 최우선"
+        },
+        "pglite": {
+          "desc": "PGlite를 기반으로 구축되어, AI 네이티브 고급 기능(벡터 검색)을 원활하게 지원합니다.",
+          "title": "차세대 클라이언트 저장 아키텍처"
+        }
+      },
+      "init": {
+        "desc": "데이터베이스를 초기화 중입니다. 네트워크 차이에 따라 5~30초가 소요될 수 있습니다.",
+        "title": "PGlite 데이터베이스 초기화 중"
+      },
+      "title": "클라이언트 데이터베이스 활성화"
+    },
+    "ready": {
+      "button": "즉시 사용",
+      "desc": "즉시 사용하고 싶습니다.",
+      "title": "PGlite 데이터베이스 준비 완료"
+    }
+  },
   "close": "닫기",
   "contact": "연락처",
   "copy": "복사",
@@ -156,6 +218,7 @@
   "pinOff": "고정 해제",
   "privacy": "개인정보 보호 정책",
   "regenerate": "재생성",
+  "releaseNotes": "버전 세부정보",
   "rename": "이름 바꾸기",
   "reset": "재설정",
   "retry": "재시도",

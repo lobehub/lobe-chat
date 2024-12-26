@@ -34,7 +34,7 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
     default: {
       let upperProvider = provider.toUpperCase();
 
-      if (!( `${upperProvider}_API_KEY` in llmConfig)) {
+      if (!(`${upperProvider}_API_KEY` in llmConfig)) {
         upperProvider = ModelProvider.OpenAI.toUpperCase(); // Use OpenAI options as default
       }
 
@@ -42,6 +42,12 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const baseURL = payload?.endpoint || process.env[`${upperProvider}_PROXY_URL`];
 
       return baseURL ? { apiKey, baseURL } : { apiKey };
+    }
+
+    case ModelProvider.Ollama: {
+      const baseURL = payload?.endpoint || process.env.OLLAMA_PROXY_URL;
+
+      return { baseURL };
     }
 
     case ModelProvider.Azure: {
@@ -92,21 +98,6 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const { GITHUB_TOKEN } = llmConfig;
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || GITHUB_TOKEN);
-
-      return { apiKey };
-    }
-
-    case ModelProvider.SenseNova: {
-      const { SENSENOVA_ACCESS_KEY_ID, SENSENOVA_ACCESS_KEY_SECRET } = llmConfig;
-
-      const sensenovaAccessKeyID = apiKeyManager.pick(
-        payload?.sensenovaAccessKeyID || SENSENOVA_ACCESS_KEY_ID,
-      );
-      const sensenovaAccessKeySecret = apiKeyManager.pick(
-        payload?.sensenovaAccessKeySecret || SENSENOVA_ACCESS_KEY_SECRET,
-      );
-
-      const apiKey = sensenovaAccessKeyID + ':' + sensenovaAccessKeySecret;
 
       return { apiKey };
     }

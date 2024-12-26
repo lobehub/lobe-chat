@@ -904,7 +904,7 @@ describe('ChatService', () => {
  * initialization of AgentRuntime with different providers
  */
 vi.mock('../_auth', async (importOriginal) => {
-  return await importOriginal();
+  return importOriginal();
 });
 describe('AgentRuntimeOnClient', () => {
   describe('initializeWithClientStore', () => {

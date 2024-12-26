@@ -1,5 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { processDoubleData } from './minimax'; // 假设文件名为 minimax.ts
+import { describe, expect, it } from 'vitest';
+
+import { processDoubleData } from './minimax';
+
+// 假设文件名为 minimax.ts
 
 describe('processDoubleData', () => {
   it('should remove the second "data: {"id": and everything after it when matchCount is 2', () => {

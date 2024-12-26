@@ -1,7 +1,7 @@
 import { ChunkingLoader } from 'src/libs/langchain';
 import { Strategy } from 'unstructured-client/sdk/models/shared';
 
-import { NewChunkItem, NewUnstructuredChunkItem } from '@/database/server/schemas/lobechat';
+import { NewChunkItem, NewUnstructuredChunkItem } from '@/database/schemas';
 import { ChunkingStrategy, Unstructured } from '@/libs/unstructured';
 
 export interface ChunkContentParams {

@@ -1,10 +1,6 @@
 import { importJWK, jwtVerify } from 'jose';
 
-import {
-  JWTPayload,
-  JWT_SECRET_KEY,
-  NON_HTTP_PREFIX,
-} from '@/const/auth';
+import { JWTPayload, JWT_SECRET_KEY, NON_HTTP_PREFIX } from '@/const/auth';
 
 export const getJWTPayload = async (token: string): Promise<JWTPayload> => {
   //如果是 HTTP 协议发起的请求，直接解析 token

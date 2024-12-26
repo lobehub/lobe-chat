@@ -9,7 +9,21 @@
       "title": "Witaj w {{name}}"
     }
   },
-  "appInitializing": "Aplikacja uruchamia się...",
+  "appLoading": {
+    "appIdle": "Zarządzanie uruchomieniem",
+    "appInitializing": "Aplikacja się uruchamia...",
+    "failed": "Przykro nam, inicjalizacja aplikacji nie powiodła się, proszę sprawdzić szczegóły, aby znaleźć przyczynę.",
+    "finished": "Inicjalizacja bazy danych zakończona",
+    "goToChat": "Ładowanie strony czatu...",
+    "initAuth": "Inicjalizacja usługi autoryzacji...",
+    "initUser": "Inicjalizacja stanu użytkownika...",
+    "initializing": "Inicjalizacja bazy danych PGlite...",
+    "loadingDependencies": "Inicjalizacja zależności...",
+    "loadingWasm": "Ładowanie modułu WASM...",
+    "migrating": "Wykonywanie migracji tabeli danych...",
+    "ready": "Baza danych jest gotowa",
+    "showDetail": "Zobacz szczegóły"
+  },
   "autoGenerate": "Automatyczne generowanie",
   "autoGenerateTooltip": "Automatyczne uzupełnianie opisu asystenta na podstawie sugestii",
   "autoGenerateTooltipDisabled": "Proszę wprowadzić słowo kluczowe przed użyciem funkcji automatycznego uzupełniania",
@@ -20,6 +34,54 @@
   "branchingDisable": "Funkcja „podtemat” jest dostępna tylko w wersji serwerowej. Aby skorzystać z tej funkcji, przełącz się na tryb wdrożenia serwera lub użyj LobeChat Cloud.",
   "cancel": "Anuluj",
   "changelog": "Dziennik zmian",
+  "clientDB": {
+    "autoInit": {
+      "title": "Inicjalizacja bazy danych PGlite"
+    },
+    "error": {
+      "desc": "Przykro nam, wystąpił błąd podczas inicjalizacji bazy danych Pglite. Proszę kliknąć przycisk, aby spróbować ponownie. Jeśli błąd powtarza się po wielokrotnych próbach, proszę <1>zgłosić problem</1>, a my jak najszybciej pomożemy w rozwiązaniu.",
+      "detail": "Powód błędu: [{{type}}] {{message}}. Szczegóły poniżej:",
+      "retry": "Spróbuj ponownie",
+      "title": "Błąd inicjalizacji bazy danych"
+    },
+    "initing": {
+      "error": "Wystąpił błąd, proszę spróbować ponownie",
+      "idle": "Oczekiwanie na inicjalizację...",
+      "initializing": "Inicjalizowanie...",
+      "loadingDependencies": "Ładowanie zależności...",
+      "loadingWasmModule": "Ładowanie modułu WASM...",
+      "migrating": "Wykonywanie migracji tabeli danych...",
+      "ready": "Baza danych gotowa"
+    },
+    "modal": {
+      "desc": "Włącz klienta bazy danych PGlite, aby trwale przechowywać dane czatu w przeglądarce i korzystać z zaawansowanych funkcji, takich jak baza wiedzy",
+      "enable": "Włącz teraz",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Zgromadź swoją osobistą bazę wiedzy i łatwo rozpocznij rozmowę z asystentem (wkrótce dostępne)",
+          "title": "Wsparcie dla rozmów w bazie wiedzy, uruchomienie drugiego mózgu"
+        },
+        "localFirst": {
+          "desc": "Dane czatu są całkowicie przechowywane w przeglądarce, twoje dane są zawsze pod twoją kontrolą.",
+          "title": "Lokalnie najpierw, prywatność przede wszystkim"
+        },
+        "pglite": {
+          "desc": "Zbudowane na PGlite, natywne wsparcie dla zaawansowanych funkcji AI Native (wyszukiwanie wektorowe)",
+          "title": "Nowa generacja architektury przechowywania klienta"
+        }
+      },
+      "init": {
+        "desc": "Inicjalizacja bazy danych trwa, w zależności od jakości sieci może zająć od 5 do 30 sekund",
+        "title": "Inicjalizacja bazy danych PGlite"
+      },
+      "title": "Włącz bazę danych klienta"
+    },
+    "ready": {
+      "button": "Użyj teraz",
+      "desc": "Chcę użyć teraz",
+      "title": "Baza danych PGlite jest gotowa"
+    }
+  },
   "close": "Zamknij",
   "contact": "Skontaktuj się z nami",
   "copy": "Kopiuj",
@@ -156,6 +218,7 @@
   "pinOff": "Odepnij",
   "privacy": "Polityka prywatności",
   "regenerate": "Regeneruj",
+  "releaseNotes": "Szczegóły wersji",
   "rename": "Zmień nazwę",
   "reset": "Resetuj",
   "retry": "Ponów",

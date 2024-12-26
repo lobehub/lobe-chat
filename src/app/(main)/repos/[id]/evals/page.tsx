@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
 
-interface Params {
-  id: string;
-}
+import { PagePropsWithId } from '@/types/next';
 
-type Props = { params: Params };
+export default async (props: PagePropsWithId) => {
+  const params = await props.params;
 
-export default ({ params }: Props) => redirect(`/repos/${params.id}/evals/dataset`);
+  return redirect(`/repos/${params.id}/evals/dataset`);
+};

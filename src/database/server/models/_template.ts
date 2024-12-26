@@ -1,19 +1,20 @@
-import { eq } from 'drizzle-orm';
-import { and, desc } from 'drizzle-orm/expressions';
+import { and, desc, eq } from 'drizzle-orm/expressions';
 
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 
-import { NewSessionGroup, SessionGroupItem, sessionGroups } from '../schemas/lobechat';
+import { NewSessionGroup, SessionGroupItem, sessionGroups } from '../../schemas';
 
 export class TemplateModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
 
   create = async (params: NewSessionGroup) => {
-    const [result] = await serverDB
+    const [result] = await this.db
       .insert(sessionGroups)
       .values({ ...params, userId: this.userId })
       .returning();
@@ -22,32 +23,32 @@ export class TemplateModel {
   };
 
   delete = async (id: string) => {
-    return serverDB
+    return this.db
       .delete(sessionGroups)
       .where(and(eq(sessionGroups.id, id), eq(sessionGroups.userId, this.userId)));
   };
 
   deleteAll = async () => {
-    return serverDB.delete(sessionGroups).where(eq(sessionGroups.userId, this.userId));
+    return this.db.delete(sessionGroups).where(eq(sessionGroups.userId, this.userId));
   };
 
   query = async () => {
-    return serverDB.query.sessionGroups.findMany({
+    return this.db.query.sessionGroups.findMany({
       orderBy: [desc(sessionGroups.updatedAt)],
       where: eq(sessionGroups.userId, this.userId),
     });
   };
 
   findById = async (id: string) => {
-    return serverDB.query.sessionGroups.findFirst({
+    return this.db.query.sessionGroups.findFirst({
       where: and(eq(sessionGroups.id, id), eq(sessionGroups.userId, this.userId)),
     });
   };
 
-  async update(id: string, value: Partial<SessionGroupItem>) {
-    return serverDB
+  update = async (id: string, value: Partial<SessionGroupItem>) => {
+    return this.db
       .update(sessionGroups)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(sessionGroups.id, id), eq(sessionGroups.userId, this.userId)));
-  }
+  };
 }

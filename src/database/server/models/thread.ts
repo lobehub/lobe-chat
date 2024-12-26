@@ -1,10 +1,9 @@
-import { eq } from 'drizzle-orm';
-import { and, desc } from 'drizzle-orm/expressions';
+import { and, desc, eq } from 'drizzle-orm/expressions';
 
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 import { CreateThreadParams, ThreadStatus } from '@/types/topic';
 
-import { ThreadItem, threads } from '../schemas/lobechat';
+import { ThreadItem, threads } from '../../schemas';
 
 const queryColumns = {
   createdAt: threads.createdAt,
@@ -20,14 +19,16 @@ const queryColumns = {
 
 export class ThreadModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
 
   create = async (params: CreateThreadParams) => {
     // @ts-ignore
-    const [result] = await serverDB
+    const [result] = await this.db
       .insert(threads)
       .values({ ...params, status: ThreadStatus.Active, userId: this.userId })
       .onConflictDoNothing()
@@ -37,15 +38,15 @@ export class ThreadModel {
   };
 
   delete = async (id: string) => {
-    return serverDB.delete(threads).where(and(eq(threads.id, id), eq(threads.userId, this.userId)));
+    return this.db.delete(threads).where(and(eq(threads.id, id), eq(threads.userId, this.userId)));
   };
 
   deleteAll = async () => {
-    return serverDB.delete(threads).where(eq(threads.userId, this.userId));
+    return this.db.delete(threads).where(eq(threads.userId, this.userId));
   };
 
   query = async () => {
-    const data = await serverDB
+    const data = await this.db
       .select(queryColumns)
       .from(threads)
       .where(eq(threads.userId, this.userId))
@@ -55,7 +56,7 @@ export class ThreadModel {
   };
 
   queryByTopicId = async (topicId: string) => {
-    const data = await serverDB
+    const data = await this.db
       .select(queryColumns)
       .from(threads)
       .where(and(eq(threads.topicId, topicId), eq(threads.userId, this.userId)))
@@ -65,15 +66,15 @@ export class ThreadModel {
   };
 
   findById = async (id: string) => {
-    return serverDB.query.threads.findFirst({
+    return this.db.query.threads.findFirst({
       where: and(eq(threads.id, id), eq(threads.userId, this.userId)),
     });
   };
 
-  async update(id: string, value: Partial<ThreadItem>) {
-    return serverDB
+  update = async (id: string, value: Partial<ThreadItem>) => {
+    return this.db
       .update(threads)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(threads.id, id), eq(threads.userId, this.userId)));
-  }
+  };
 }

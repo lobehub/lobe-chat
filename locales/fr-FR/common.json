@@ -9,7 +9,21 @@
       "title": "Bienvenue à {{name}}"
     }
   },
-  "appInitializing": "L'application est en cours de démarrage...",
+  "appLoading": {
+    "appIdle": "Préparation du démarrage",
+    "appInitializing": "L'application se charge...",
+    "failed": "Désolé, l'initialisation de l'application a échoué. Veuillez consulter les détails pour résoudre le problème.",
+    "finished": "Initialisation de la base de données terminée",
+    "goToChat": "Chargement de la page de chat...",
+    "initAuth": "Initialisation du service d'authentification...",
+    "initUser": "Initialisation de l'état de l'utilisateur...",
+    "initializing": "Initialisation de la base de données PGlite...",
+    "loadingDependencies": "Chargement des dépendances...",
+    "loadingWasm": "Chargement du module WASM...",
+    "migrating": "Exécution de la migration des tables de données...",
+    "ready": "La base de données est prête",
+    "showDetail": "Voir les détails"
+  },
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
@@ -20,6 +34,54 @@
   "branchingDisable": "La fonction « sous-sujet » n'est disponible que dans la version serveur. Si vous avez besoin de cette fonctionnalité, veuillez passer en mode de déploiement serveur ou utiliser LobeChat Cloud.",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
+  "clientDB": {
+    "autoInit": {
+      "title": "Initialisation de la base de données PGlite"
+    },
+    "error": {
+      "desc": "Nous sommes désolés, une erreur est survenue lors de l'initialisation de la base de données Pglite. Veuillez cliquer sur le bouton pour réessayer. Si l'erreur persiste après plusieurs tentatives, veuillez <1>soumettre un problème</1>, nous vous aiderons à le résoudre dans les meilleurs délais.",
+      "detail": "Raison de l'erreur : [[{{type}}] {{message}}. Détails ci-dessous :",
+      "retry": "Réessayer",
+      "title": "Échec de l'initialisation de la base de données"
+    },
+    "initing": {
+      "error": "Une erreur s'est produite, veuillez réessayer",
+      "idle": "En attente d'initialisation...",
+      "initializing": "Initialisation en cours...",
+      "loadingDependencies": "Chargement des dépendances...",
+      "loadingWasmModule": "Chargement du module WASM...",
+      "migrating": "Exécution de la migration des tables de données...",
+      "ready": "Base de données prête"
+    },
+    "modal": {
+      "desc": "Activez la base de données client PGlite pour stocker de manière persistante les données de discussion dans votre navigateur et utiliser des fonctionnalités avancées telles que la base de connaissances.",
+      "enable": "Activer maintenant",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Consolidez votre base de connaissances personnelle et engagez facilement des conversations avec votre assistant (bientôt disponible)",
+          "title": "Support des conversations de base de connaissances, activez votre deuxième cerveau"
+        },
+        "localFirst": {
+          "desc": "Les données de chat sont entièrement stockées dans le navigateur, vos données sont toujours sous votre contrôle.",
+          "title": "Priorité locale, confidentialité avant tout"
+        },
+        "pglite": {
+          "desc": "Construit sur PGlite, prend en charge nativement les fonctionnalités avancées AI Native (recherche vectorielle)",
+          "title": "Nouvelle architecture de stockage client de nouvelle génération"
+        }
+      },
+      "init": {
+        "desc": "Initialisation de la base de données en cours, cela peut prendre de 5 à 30 secondes selon la connexion réseau.",
+        "title": "Initialisation de la base de données PGlite en cours"
+      },
+      "title": "Activer la base de données client"
+    },
+    "ready": {
+      "button": "Utiliser maintenant",
+      "desc": "Prêt à l'emploi",
+      "title": "Base de données PGlite prête"
+    }
+  },
   "close": "Fermer",
   "contact": "Nous contacter",
   "copy": "Copier",
@@ -156,6 +218,7 @@
   "pinOff": "Désactiver l'épinglage",
   "privacy": "Politique de confidentialité",
   "regenerate": "Régénérer",
+  "releaseNotes": "Détails de la version",
   "rename": "Renommer",
   "reset": "Réinitialiser",
   "retry": "Réessayer",

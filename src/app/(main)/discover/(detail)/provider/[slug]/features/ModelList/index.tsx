@@ -5,7 +5,7 @@ import { Icon } from '@lobehub/ui';
 import { Button, Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import { Brain, ChevronsUpDown } from 'lucide-react';
-import { memo, useState } from 'react';
+import { Fragment, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -38,10 +38,10 @@ const ModelList = memo<ModelListProps>(({ mobile, modelData, identifier }) => {
       title={t('providers.supportedModels')}
     >
       {list.map((item, index) => (
-        <>
-          <ModelItem key={item.identifier} mobile={mobile} {...item} />
-          {index < modelData.length - 1 && <Divider key={index} style={{ margin: 0 }} />}
-        </>
+        <Fragment key={item.identifier}>
+          <ModelItem mobile={mobile} {...item} />
+          {index < modelData.length - 1 && <Divider style={{ margin: 0 }} />}
+        </Fragment>
       ))}
       {modelData.length > DEFAULT_LENGTH && !showAll && (
         <Flexbox padding={16}>

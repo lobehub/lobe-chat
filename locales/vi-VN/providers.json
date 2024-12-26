@@ -1,5 +1,7 @@
 {
-  "ai21": {},
+  "ai21": {
+    "description": "AI21 Labs xây dựng các mô hình cơ bản và hệ thống trí tuệ nhân tạo cho doanh nghiệp, tăng tốc ứng dụng trí tuệ nhân tạo sinh sinh trong sản xuất."
+  },
   "ai360": {
     "description": "360 AI là nền tảng mô hình và dịch vụ AI do công ty 360 phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên tiên tiến, bao gồm 360GPT2 Pro, 360GPT Pro, 360GPT Turbo và 360GPT Turbo Responsibility 8K. Những mô hình này kết hợp giữa tham số quy mô lớn và khả năng đa phương thức, được ứng dụng rộng rãi trong tạo văn bản, hiểu ngữ nghĩa, hệ thống đối thoại và tạo mã. Thông qua chiến lược giá linh hoạt, 360 AI đáp ứng nhu cầu đa dạng của người dùng, hỗ trợ nhà phát triển tích hợp, thúc đẩy sự đổi mới và phát triển ứng dụng thông minh."
   },
@@ -15,7 +17,9 @@
   "bedrock": {
     "description": "Bedrock là dịch vụ do Amazon AWS cung cấp, tập trung vào việc cung cấp các mô hình ngôn ngữ AI và mô hình hình ảnh tiên tiến cho doanh nghiệp. Gia đình mô hình của nó bao gồm dòng Claude của Anthropic, dòng Llama 3.1 của Meta, v.v., bao quát nhiều lựa chọn từ nhẹ đến hiệu suất cao, hỗ trợ nhiều nhiệm vụ như tạo văn bản, đối thoại, xử lý hình ảnh, phù hợp cho các ứng dụng doanh nghiệp với quy mô và nhu cầu khác nhau."
   },
-  "cloudflare": {},
+  "cloudflare": {
+    "description": "Chạy các mô hình học máy được hỗ trợ bởi GPU không máy chủ trên mạng lưới toàn cầu của Cloudflare."
+  },
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
   },
@@ -33,6 +37,9 @@
   },
   "groq": {
     "description": "Bộ máy suy diễn LPU của Groq thể hiện xuất sắc trong các bài kiểm tra chuẩn mô hình ngôn ngữ lớn (LLM) độc lập mới nhất, định nghĩa lại tiêu chuẩn cho các giải pháp AI với tốc độ và hiệu quả đáng kinh ngạc. Groq là đại diện cho tốc độ suy diễn tức thì, thể hiện hiệu suất tốt trong triển khai dựa trên đám mây."
+  },
+  "higress": {
+    "description": "Higress là một cổng API gốc đám mây, được phát triển trong nội bộ của Alibaba để giải quyết vấn đề Tengine reload ảnh hưởng đến các dịch vụ kết nối dài hạn, cũng như khả năng cân bằng tải gRPC/Dubbo chưa đủ."
   },
   "huggingface": {
     "description": "HuggingFace Inference API cung cấp một cách nhanh chóng và miễn phí để bạn khám phá hàng ngàn mô hình cho nhiều nhiệm vụ khác nhau. Dù bạn đang thiết kế nguyên mẫu cho một ứng dụng mới hay đang thử nghiệm khả năng của học máy, API này cho phép bạn truy cập ngay lập tức vào các mô hình hiệu suất cao trong nhiều lĩnh vực."
@@ -70,7 +77,9 @@
   "qwen": {
     "description": "Qwen là mô hình ngôn ngữ quy mô lớn tự phát triển của Alibaba Cloud, có khả năng hiểu và tạo ngôn ngữ tự nhiên mạnh mẽ. Nó có thể trả lời nhiều câu hỏi, sáng tác nội dung văn bản, bày tỏ quan điểm, viết mã, v.v., hoạt động trong nhiều lĩnh vực."
   },
-  "sensenova": {},
+  "sensenova": {
+    "description": "SenseTime luôn đổi mới, dựa vào nền tảng mạnh mẽ của SenseTime để cung cấp dịch vụ mô hình lớn toàn diện, hiệu quả và dễ sử dụng."
+  },
   "siliconcloud": {
     "description": "SiliconFlow cam kết tăng tốc AGI để mang lại lợi ích cho nhân loại, nâng cao hiệu quả AI quy mô lớn thông qua một ngăn xếp GenAI dễ sử dụng và chi phí thấp."
   },

@@ -29,11 +29,7 @@ export const useCloudflareProvider = (): ProviderItem => {
         name: [KeyVaultsConfigKey, providerKey, 'apiKey'],
       },
       {
-        children: (
-          <Input
-            placeholder={t(`${providerKey}.baseURLOrAccountID.placeholder`)}
-          />
-        ),
+        children: <Input placeholder={t(`${providerKey}.baseURLOrAccountID.placeholder`)} />,
         desc: t(`${providerKey}.baseURLOrAccountID.desc`),
         label: t(`${providerKey}.baseURLOrAccountID.title`),
         name: [KeyVaultsConfigKey, providerKey, 'baseURLOrAccountID'],

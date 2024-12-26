@@ -1,4 +1,4 @@
-import { dataSync } from '@/database/client/core';
+import { dataSync } from '@/database/_deprecated/core';
 import { StartDataSyncParams } from '@/types/sync';
 
 class SyncService {

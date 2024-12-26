@@ -47,7 +47,7 @@ export interface SuggestionItemProps
 }
 
 const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
-  const { title, tokens, vision, functionCall } = meta;
+  const { title, contextWindowTokens, vision, functionCall } = meta;
   const { xl = true } = useResponsive();
   const { t } = useTranslation('discover');
   const { styles, theme } = useStyles();
@@ -57,7 +57,7 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
   const items: StatisticProps[] = [
     {
       title: t('models.contentLength'),
-      value: meta?.tokens ? formatTokenNumber(meta.tokens) : '--',
+      value: meta?.contextWindowTokens ? formatTokenNumber(meta.contextWindowTokens) : '--',
     },
     {
       title: t('models.providerInfo.maxOutput'),
@@ -98,7 +98,7 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
           </Flexbox>
         </Flexbox>
       </Link>
-      <ModelFeatureTags functionCall={functionCall} tokens={tokens} vision={vision} />
+      <ModelFeatureTags functionCall={functionCall} tokens={contextWindowTokens} vision={vision} />
     </Flexbox>
   );
 

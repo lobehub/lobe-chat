@@ -1,6 +1,509 @@
 [
   {
     "children": {
+      "improvements": ["Refactor tokens to contextWindowTokens."]
+    },
+    "date": "2024-12-26",
+    "version": "1.40.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix o1Models list."]
+    },
+    "date": "2024-12-26",
+    "version": "1.40.1"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor services code style."],
+      "features": ["Add changelog modal."]
+    },
+    "date": "2024-12-26",
+    "version": "1.40.0"
+  },
+  {
+    "children": {
+      "improvements": ["Improve loading brand."]
+    },
+    "date": "2024-12-25",
+    "version": "1.39.3"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor sensenova provider with LobeOpenAICompatibleFactory."]
+    },
+    "date": "2024-12-25",
+    "version": "1.39.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix image input on pglite."]
+    },
+    "date": "2024-12-24",
+    "version": "1.39.1"
+  },
+  {
+    "children": {
+      "features": ["Upgrade to next15 and react19."]
+    },
+    "date": "2024-12-23",
+    "version": "1.39.0"
+  },
+  {
+    "children": {
+      "features": ["Support thread in client pglite."]
+    },
+    "date": "2024-12-23",
+    "version": "1.38.0"
+  },
+  {
+    "children": {
+      "improvements": ["Move pglite to client service."]
+    },
+    "date": "2024-12-22",
+    "version": "1.37.2"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the client service to deprecated."]
+    },
+    "date": "2024-12-22",
+    "version": "1.37.1"
+  },
+  {
+    "children": {
+      "features": ["Support to use pglite as client db."]
+    },
+    "date": "2024-12-22",
+    "version": "1.37.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor client mode upload to match server mode."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.46"
+  },
+  {
+    "children": {
+      "improvements": ["Add o1 model in GitHub models."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.45"
+  },
+  {
+    "children": {
+      "improvements": ["Add Gemini flash thinking model."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.44"
+  },
+  {
+    "children": {},
+    "date": "2024-12-21",
+    "version": "1.36.43"
+  },
+  {
+    "children": {
+      "fixes": ["Fix HUGGINGFACE endpoint url."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.42"
+  },
+  {
+    "children": {
+      "improvements": ["Upgrade react scan."]
+    },
+    "date": "2024-12-21",
+    "version": "1.36.41"
+  },
+  {
+    "children": {
+      "improvements": ["Seperate user keyVaults encrpyto from user model."]
+    },
+    "date": "2024-12-20",
+    "version": "1.36.40"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to use async headers()."]
+    },
+    "date": "2024-12-20",
+    "version": "1.36.39"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor layout props."]
+    },
+    "date": "2024-12-20",
+    "version": "1.36.38"
+  },
+  {
+    "children": {},
+    "date": "2024-12-19",
+    "version": "1.36.37"
+  },
+  {
+    "children": {},
+    "date": "2024-12-19",
+    "version": "1.36.36"
+  },
+  {
+    "children": {
+      "improvements": ["Improve home page loading for better UX."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.35"
+  },
+  {
+    "children": {
+      "fixes": ["Fix pdf preview with capital ext."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.34"
+  },
+  {
+    "children": {
+      "fixes": ["Fix GitHub model fetch."]
+    },
+    "date": "2024-12-18",
+    "version": "1.36.33"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the drizzle code style."]
+    },
+    "date": "2024-12-17",
+    "version": "1.36.32"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the data fetch with clientDB init check."]
+    },
+    "date": "2024-12-17",
+    "version": "1.36.31"
+  },
+  {
+    "children": {
+      "improvements": ["Improve page loading state."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.30"
+  },
+  {
+    "children": {
+      "fixes": ["Fix discover locale with different default lang."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.29"
+  },
+  {
+    "children": {},
+    "date": "2024-12-16",
+    "version": "1.36.28"
+  },
+  {
+    "children": {
+      "fixes": ["Add unique keys to <ModelList> children."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.27"
+  },
+  {
+    "children": {
+      "improvements": ["Update models of Gitee AI provider."]
+    },
+    "date": "2024-12-16",
+    "version": "1.36.26"
+  },
+  {
+    "children": {
+      "improvements": ["Add new grok models."]
+    },
+    "date": "2024-12-14",
+    "version": "1.36.25"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor file Url query in message model."]
+    },
+    "date": "2024-12-14",
+    "version": "1.36.24"
+  },
+  {
+    "children": {
+      "improvements": ["Support csv chunking."]
+    },
+    "date": "2024-12-13",
+    "version": "1.36.23"
+  },
+  {
+    "children": {},
+    "date": "2024-12-13",
+    "version": "1.36.22"
+  },
+  {
+    "children": {},
+    "date": "2024-12-13",
+    "version": "1.36.21"
+  },
+  {
+    "children": {
+      "improvements": ["Update locale."]
+    },
+    "date": "2024-12-13",
+    "version": "1.36.20"
+  },
+  {
+    "children": {
+      "fixes": ["One of Gemini functionCall error."]
+    },
+    "date": "2024-12-13",
+    "version": "1.36.19"
+  },
+  {
+    "children": {
+      "fixes": ["Fix claude first message can not be assistant."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.18"
+  },
+  {
+    "children": {},
+    "date": "2024-12-12",
+    "version": "1.36.17"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the file model method."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.16"
+  },
+  {
+    "children": {
+      "improvements": ["Enable googleSearch Tool for gemini-2.0-flash-exp."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.15"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor database file model to remove server env."]
+    },
+    "date": "2024-12-12",
+    "version": "1.36.14"
+  },
+  {
+    "children": {
+      "improvements": ["Add Gemini 2.0 Flash Exp model."]
+    },
+    "date": "2024-12-11",
+    "version": "1.36.13"
+  },
+  {
+    "children": {
+      "improvements": ["Update sql and types."]
+    },
+    "date": "2024-12-11",
+    "version": "1.36.12"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor data importer to repos."]
+    },
+    "date": "2024-12-11",
+    "version": "1.36.11"
+  },
+  {
+    "children": {
+      "improvements": ["Clean the gpt-4-vision-preview models."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.10"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the clerk user service implement."],
+      "fixes": ["Nullptr errors in NextAuth adapter."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.9"
+  },
+  {
+    "children": {
+      "improvements": ["Add GLM-4V-Flash from Zhipu."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.8"
+  },
+  {
+    "children": {
+      "fixes": ["Fix pricing with 0 digit."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update groq, add llama3.3, Upgrade lobe-ui."]
+    },
+    "date": "2024-12-10",
+    "version": "1.36.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix wrong email linking in next-auth db adapter."]
+    },
+    "date": "2024-12-09",
+    "version": "1.36.5"
+  },
+  {
+    "children": {},
+    "date": "2024-12-09",
+    "version": "1.36.4"
+  },
+  {
+    "children": {
+      "fixes": ["Support request headers for chat."]
+    },
+    "date": "2024-12-08",
+    "version": "1.36.3"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor async params route to adapt next15 breaking change."]
+    },
+    "date": "2024-12-07",
+    "version": "1.36.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add gemini-exp-1206 model."]
+    },
+    "date": "2024-12-07",
+    "version": "1.36.1"
+  },
+  {
+    "children": {
+      "features": ["Add Higress ai model provider."]
+    },
+    "date": "2024-12-06",
+    "version": "1.36.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor page params to adapt next15 breaking change."]
+    },
+    "date": "2024-12-06",
+    "version": "1.35.14"
+  },
+  {
+    "children": {},
+    "date": "2024-12-06",
+    "version": "1.35.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix typo of prompts."]
+    },
+    "date": "2024-12-05",
+    "version": "1.35.12"
+  },
+  {
+    "children": {},
+    "date": "2024-12-04",
+    "version": "1.35.11"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the server db model implement."]
+    },
+    "date": "2024-12-03",
+    "version": "1.35.10"
+  },
+  {
+    "children": {},
+    "date": "2024-12-03",
+    "version": "1.35.9"
+  },
+  {
+    "children": {
+      "improvements": ["Move schema and migration folder."]
+    },
+    "date": "2024-12-03",
+    "version": "1.35.8"
+  },
+  {
+    "children": {},
+    "date": "2024-12-03",
+    "version": "1.35.7"
+  },
+  {
+    "children": {
+      "improvements": ["Add QwQ 32B Preview model."]
+    },
+    "date": "2024-12-02",
+    "version": "1.35.6"
+  },
+  {
+    "children": {
+      "improvements": ["Deprecated the current client mode code."]
+    },
+    "date": "2024-12-02",
+    "version": "1.35.5"
+  },
+  {
+    "children": {},
+    "date": "2024-12-02",
+    "version": "1.35.4"
+  },
+  {
+    "children": {
+      "improvements": ["Add gpt-4o-2024-11-20 model."]
+    },
+    "date": "2024-12-01",
+    "version": "1.35.3"
+  },
+  {
+    "children": {
+      "improvements": ["Improve i18n."]
+    },
+    "date": "2024-12-01",
+    "version": "1.35.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update ollama models."]
+    },
+    "date": "2024-12-01",
+    "version": "1.35.1"
+  },
+  {
+    "children": {
+      "features": ["Support ollama tools use."]
+    },
+    "date": "2024-12-01",
+    "version": "1.35.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add QWEN_PROXY_URL support for Qwen, update model list, add qwq-32b-preview."
+      ]
+    },
+    "date": "2024-12-01",
+    "version": "1.34.6"
+  },
+  {
+    "children": {
+      "improvements": ["Add Google LearnLM model."]
+    },
+    "date": "2024-11-28",
+    "version": "1.34.5"
+  },
+  {
+    "children": {
       "improvements": ["Add switch portal thread."]
     },
     "date": "2024-11-27",

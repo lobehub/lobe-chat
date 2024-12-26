@@ -10,6 +10,7 @@ import {
   GiteeAIProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  HigressProviderCard,
   HunyuanProviderCard,
   InternLMProviderCard,
   MinimaxProviderCard,
@@ -19,6 +20,7 @@ import {
   OpenRouterProviderCard,
   PerplexityProviderCard,
   QwenProviderCard,
+  SenseNovaProviderCard,
   SiliconCloudProviderCard,
   SparkProviderCard,
   StepfunProviderCard,
@@ -39,7 +41,6 @@ import { useHuggingFaceProvider } from './HuggingFace';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
 import { useWenxinProvider } from './Wenxin';
-import { useSenseNovaProvider } from './SenseNova';
 
 export const useProviderList = (): ProviderItem[] => {
   const AzureProvider = useAzureProvider();
@@ -50,7 +51,6 @@ export const useProviderList = (): ProviderItem[] => {
   const GithubProvider = useGithubProvider();
   const HuggingFaceProvider = useHuggingFaceProvider();
   const WenxinProvider = useWenxinProvider();
-  const SenseNovaProvider = useSenseNovaProvider();
 
   return useMemo(
     () => [
@@ -80,7 +80,7 @@ export const useProviderList = (): ProviderItem[] => {
       SparkProviderCard,
       ZhiPuProviderCard,
       ZeroOneProviderCard,
-      SenseNovaProvider,
+      SenseNovaProviderCard,
       StepfunProviderCard,
       MoonshotProviderCard,
       BaichuanProviderCard,
@@ -89,6 +89,7 @@ export const useProviderList = (): ProviderItem[] => {
       TaichuProviderCard,
       InternLMProviderCard,
       SiliconCloudProviderCard,
+      HigressProviderCard,
       GiteeAIProviderCard,
     ],
     [
@@ -100,7 +101,6 @@ export const useProviderList = (): ProviderItem[] => {
       GithubProvider,
       WenxinProvider,
       HuggingFaceProvider,
-      SenseNovaProvider,
     ],
   );
 };

@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
+import { insertSessionGroupSchema } from '@/database/schemas';
+import { serverDB } from '@/database/server';
 import { SessionGroupModel } from '@/database/server/models/sessionGroup';
-import { insertSessionGroupSchema } from '@/database/server/schemas/lobechat';
 import { authedProcedure, router } from '@/libs/trpc';
 import { SessionGroupItem } from '@/types/session';
 
@@ -10,7 +11,7 @@ const sessionProcedure = authedProcedure.use(async (opts) => {
 
   return opts.next({
     ctx: {
-      sessionGroupModel: new SessionGroupModel(ctx.userId),
+      sessionGroupModel: new SessionGroupModel(serverDB, ctx.userId),
     },
   });
 });

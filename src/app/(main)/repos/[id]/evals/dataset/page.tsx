@@ -3,10 +3,9 @@
 import { createStyles } from 'antd-style';
 import { Flexbox } from 'react-layout-kit';
 
-import CircleLoading from '@/components/CircleLoading';
+import CircleLoading from '@/components/Loading/BrandTextLoading';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
-import { PageProps } from '../type';
 import DatasetDetail from './DatasetDetail';
 import DatasetList from './DatasetList';
 import EmptyGuide from './EmptyGuide';
@@ -18,7 +17,13 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Dataset = ({ params }: PageProps) => {
+interface Params {
+  id: string;
+}
+
+type Props = { params: Params & Promise<Params> };
+
+const Dataset = ({ params }: Props) => {
   const { styles } = useStyles();
   const knowledgeBaseId = params.id;
 

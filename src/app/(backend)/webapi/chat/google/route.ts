@@ -21,4 +21,5 @@ export const preferredRegion = [
   'gru1',
 ];
 
-export const POST = async (req: Request) => UniverseRoute(req, { params: { provider: 'google' } });
+export const POST = async (req: Request) =>
+  UniverseRoute(req, { params: Promise.resolve({ provider: 'google' }) });

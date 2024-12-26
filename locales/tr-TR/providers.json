@@ -1,5 +1,7 @@
 {
-  "ai21": {},
+  "ai21": {
+    "description": "AI21 Labs, işletmeler için temel modeller ve yapay zeka sistemleri geliştirerek, üretimde jeneratif yapay zekanın uygulanmasını hızlandırır."
+  },
   "ai360": {
     "description": "360 AI, 360 şirketi tarafından sunulan yapay zeka modeli ve hizmet platformudur. 360GPT2 Pro, 360GPT Pro, 360GPT Turbo ve 360GPT Turbo Responsibility 8K gibi çeşitli gelişmiş doğal dil işleme modelleri sunmaktadır. Bu modeller, büyük ölçekli parametreler ve çok modlu yetenekleri birleştirerek metin üretimi, anlamsal anlama, diyalog sistemleri ve kod üretimi gibi alanlarda geniş bir uygulama yelpazesine sahiptir. Esnek fiyatlandırma stratejileri ile 360 AI, çeşitli kullanıcı ihtiyaçlarını karşılamakta ve geliştiricilerin entegrasyonunu destekleyerek akıllı uygulamaların yenilik ve gelişimini teşvik etmektedir."
   },
@@ -15,7 +17,9 @@
   "bedrock": {
     "description": "Bedrock, Amazon AWS tarafından sunulan bir hizmettir ve işletmelere gelişmiş yapay zeka dil modelleri ve görsel modeller sağlamaya odaklanmaktadır. Model ailesi, Anthropic'in Claude serisi, Meta'nın Llama 3.1 serisi gibi seçenekleri içermekte olup, metin üretimi, diyalog, görüntü işleme gibi çeşitli görevleri desteklemektedir. Farklı ölçek ve ihtiyaçlara uygun kurumsal uygulamalar için geniş bir yelpaze sunmaktadır."
   },
-  "cloudflare": {},
+  "cloudflare": {
+    "description": "Cloudflare'ın küresel ağı üzerinde sunucusuz GPU destekli makine öğrenimi modelleri çalıştırın."
+  },
   "deepseek": {
     "description": "DeepSeek, yapay zeka teknolojisi araştırma ve uygulamalarına odaklanan bir şirkettir. En son modeli DeepSeek-V2.5, genel diyalog ve kod işleme yeteneklerini birleştirerek, insan tercihleriyle uyum, yazma görevleri ve talimat takibi gibi alanlarda önemli iyileştirmeler sağlamaktadır."
   },
@@ -33,6 +37,9 @@
   },
   "groq": {
     "description": "Groq'un LPU çıkarım motoru, en son bağımsız büyük dil modeli (LLM) benchmark testlerinde mükemmel performans sergilemekte ve olağanüstü hız ve verimliliği ile yapay zeka çözümlerinin standartlarını yeniden tanımlamaktadır. Groq, bulut tabanlı dağıtımlarda iyi bir performans sergileyen anlık çıkarım hızının temsilcisidir."
+  },
+  "higress": {
+    "description": "Higress, uzun süreli bağlantı işlerine zarar veren Tengine yeniden yükleme sorununu ve gRPC/Dubbo yük dengeleme yeteneklerinin yetersizliğini çözmek için Alibaba içinde geliştirilmiş bir bulut yerel API geçididir."
   },
   "huggingface": {
     "description": "HuggingFace Inference API, binlerce modeli keşfetmenin hızlı ve ücretsiz bir yolunu sunar, çeşitli görevler için uygundur. Yeni uygulamalar için prototip oluşturuyor ya da makine öğreniminin yeteneklerini deniyorsanız, bu API size birçok alanda yüksek performanslı modellere anında erişim sağlar."
@@ -70,7 +77,9 @@
   "qwen": {
     "description": "Tongyi Qianwen, Alibaba Cloud tarafından geliştirilen büyük ölçekli bir dil modelidir ve güçlü doğal dil anlama ve üretme yeteneklerine sahiptir. Çeşitli soruları yanıtlayabilir, metin içeriği oluşturabilir, görüşlerini ifade edebilir ve kod yazabilir. Birçok alanda etkili bir şekilde kullanılmaktadır."
   },
-  "sensenova": {},
+  "sensenova": {
+    "description": "SenseTime, güçlü altyapısına dayanarak, verimli ve kullanımı kolay tam yığın büyük model hizmetleri sunar."
+  },
   "siliconcloud": {
     "description": "SiliconFlow, insanlığa fayda sağlamak amacıyla AGI'yi hızlandırmaya odaklanmakta ve kullanıcı dostu ve maliyet etkin GenAI yığınları ile büyük ölçekli yapay zeka verimliliğini artırmayı hedeflemektedir."
   },

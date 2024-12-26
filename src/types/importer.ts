@@ -8,10 +8,9 @@ import {
   MessageRoleType,
 } from '@/types/message';
 import { MetaData } from '@/types/meta';
-import { SessionGroupId, SessionGroupItem } from '@/types/session';
-import { ChatTopic } from '@/types/topic';
+import { SessionGroupId } from '@/types/session';
 
-interface ImportSession {
+export interface ImportSession {
   config: LobeAgentConfig;
   createdAt: string;
   group?: SessionGroupId;
@@ -22,7 +21,7 @@ interface ImportSession {
   updatedAt: string;
 }
 
-interface ImportMessage {
+export interface ImportMessage {
   content: string;
   createdAt: number;
   error?: ChatMessageError;
@@ -64,11 +63,32 @@ interface ImportMessage {
   updatedAt: number;
 }
 
+export interface ImportSessionGroup {
+  createdAt: number;
+  id: string;
+  name: string;
+  sort?: number | null;
+  updatedAt: number;
+}
+export interface ImportTopic {
+  createdAt: number;
+  favorite?: boolean;
+  historySummary?: string;
+  id: string;
+  metadata?: {
+    model?: string;
+    provider?: string;
+  };
+  sessionId?: string;
+  title: string;
+  updatedAt: number;
+}
+
 export interface ImporterEntryData {
   messages?: ImportMessage[];
-  sessionGroups?: SessionGroupItem[];
+  sessionGroups?: ImportSessionGroup[];
   sessions?: ImportSession[];
-  topics?: ChatTopic[];
+  topics?: ImportTopic[];
   version: number;
 }
 
