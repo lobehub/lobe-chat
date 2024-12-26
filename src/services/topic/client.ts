@@ -4,14 +4,14 @@ import { TopicModel } from '@/database/server/models/topic';
 import { BaseClientService } from '@/services/baseClientService';
 import { ChatTopic } from '@/types/topic';
 
-import { CreateTopicParams, ITopicService, QueryTopicParams } from './type';
+import { ITopicService } from './type';
 
 export class ClientService extends BaseClientService implements ITopicService {
   private get topicModel(): TopicModel {
     return new TopicModel(clientDB as any, this.userId);
   }
 
-  async createTopic(params: CreateTopicParams): Promise<string> {
+  createTopic: ITopicService['createTopic'] = async (params) => {
     const item = await this.topicModel.create({
       ...params,
       sessionId: this.toDbSessionId(params.sessionId),
@@ -22,62 +22,62 @@ export class ClientService extends BaseClientService implements ITopicService {
     }
 
     return item.id;
-  }
+  };
 
-  async batchCreateTopics(importTopics: ChatTopic[]) {
+  batchCreateTopics: ITopicService['batchCreateTopics'] = async (importTopics) => {
     const data = await this.topicModel.batchCreate(importTopics as any);
 
     return { added: data.length, ids: [], skips: [], success: true };
-  }
+  };
 
-  async cloneTopic(id: string, newTitle?: string) {
+  cloneTopic: ITopicService['cloneTopic'] = async (id, newTitle) => {
     const data = await this.topicModel.duplicate(id, newTitle);
     return data.topic.id;
-  }
+  };
 
-  async getTopics(params: QueryTopicParams) {
+  getTopics: ITopicService['getTopics'] = async (params) => {
     const data = await this.topicModel.query({
       ...params,
       sessionId: this.toDbSessionId(params.sessionId),
     });
     return data as unknown as Promise<ChatTopic[]>;
-  }
+  };
 
-  async searchTopics(keyword: string, sessionId?: string) {
+  searchTopics: ITopicService['searchTopics'] = async (keyword, sessionId) => {
     const data = await this.topicModel.queryByKeyword(keyword, this.toDbSessionId(sessionId));
 
     return data as unknown as Promise<ChatTopic[]>;
-  }
+  };
 
-  async getAllTopics() {
+  getAllTopics: ITopicService['getAllTopics'] = async () => {
     const data = await this.topicModel.queryAll();
 
     return data as unknown as Promise<ChatTopic[]>;
-  }
+  };
 
-  async countTopics() {
+  countTopics: ITopicService['countTopics'] = async () => {
     return this.topicModel.count();
-  }
+  };
 
-  async updateTopic(id: string, data: Partial<ChatTopic>) {
+  updateTopic: ITopicService['updateTopic'] = async (id, data) => {
     return this.topicModel.update(id, data as any);
-  }
+  };
 
-  async removeTopic(id: string) {
+  removeTopic: ITopicService['removeTopic'] = async (id) => {
     return this.topicModel.delete(id);
-  }
+  };
 
-  async removeTopics(sessionId: string) {
+  removeTopics: ITopicService['removeTopics'] = async (sessionId) => {
     return this.topicModel.batchDeleteBySessionId(this.toDbSessionId(sessionId));
-  }
+  };
 
-  async batchRemoveTopics(topics: string[]) {
+  batchRemoveTopics: ITopicService['batchRemoveTopics'] = async (topics) => {
     return this.topicModel.batchDelete(topics);
-  }
+  };
 
-  async removeAllTopic() {
+  removeAllTopic: ITopicService['removeAllTopic'] = async () => {
     return this.topicModel.deleteAll();
-  }
+  };
 
   private toDbSessionId(sessionId?: string | null) {
     return sessionId === INBOX_SESSION_ID ? null : sessionId;

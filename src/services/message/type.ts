@@ -24,11 +24,11 @@ export interface IMessageService {
   updateMessageTTS(id: string, tts: Partial<ChatTTS> | false): Promise<any>;
   updateMessageTranslate(id: string, translate: Partial<ChatTranslate> | false): Promise<any>;
   updateMessagePluginState(id: string, value: Record<string, any>): Promise<any>;
-
+  updateMessagePluginArguments(id: string, value: string | Record<string, any>): Promise<any>;
   removeMessage(id: string): Promise<any>;
   removeMessages(ids: string[]): Promise<any>;
   removeMessagesByAssistant(assistantId: string, topicId?: string): Promise<any>;
   removeAllMessages(): Promise<any>;
-
+  messageCountToCheckTrace(): Promise<boolean>;
   hasMessages(): Promise<boolean>;
 }
