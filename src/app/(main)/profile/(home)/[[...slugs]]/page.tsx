@@ -1,6 +1,6 @@
+import { Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
 
-import SkeletonLoading from '@/components/SkeletonLoading';
 import { enableClerk } from '@/const/auth';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
@@ -13,7 +13,7 @@ import Client from '../Client';
 const ClerkProfile = dynamic(() => import('../../features/ClerkProfile'), {
   loading: () => (
     <div style={{ flex: 1 }}>
-      <SkeletonLoading paragraph={{ rows: 8 }} title={false} />
+      <Skeleton paragraph={{ rows: 8 }} title={false} />
     </div>
   ),
 });

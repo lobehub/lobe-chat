@@ -13,7 +13,7 @@ import {
 } from '@/database/utils/genWhere';
 import { idGenerator } from '@/database/utils/idGenerator';
 import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
-import { ChatSessionList, LobeAgentSession } from '@/types/session';
+import { ChatSessionList, LobeAgentSession, SessionRankItem } from '@/types/session';
 import { merge } from '@/utils/merge';
 
 import {
@@ -119,15 +119,7 @@ export class SessionModel {
     return result[0].count;
   };
 
-  rank = async (): Promise<
-    {
-      avatar: string | null;
-      backgroundColor: string | null;
-      count: number;
-      id: string;
-      title: string | null;
-    }[]
-  > => {
+  rank = async (): Promise<SessionRankItem[]> => {
     return this.db
       .select({
         avatar: agents.avatar,

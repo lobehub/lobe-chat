@@ -24,24 +24,13 @@ export class ServerService implements ITopicService {
   getAllTopics: ITopicService['getAllTopics'] = () =>
     lambdaClient.topic.getAllTopics.query() as any;
 
-  countTopics = async(params?: {
-    endDate?: string;
-    range?: [string, string];
-    startDate?: string;
-  }): Promise<number> => {
+  countTopics: ITopicService['countTopics'] = async (params) => {
     return lambdaClient.topic.countTopics.query(params);
-  }
+  };
 
-  rankTopics = async (): Promise<
-    {
-      count: number;
-      id: string;
-      sessionId: string | null;
-      title: string | null;
-    }[]
-  > => {
+  rankTopics: ITopicService['rankTopics'] = async () => {
     return lambdaClient.topic.rankTopics.query();
-  }
+  };
 
   searchTopics: ITopicService['searchTopics'] = (keywords, sessionId) =>
     lambdaClient.topic.searchTopics.query({

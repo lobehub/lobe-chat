@@ -9,6 +9,7 @@ import {
   genWhere,
 } from '@/database/utils/genWhere';
 import { idGenerator } from '@/database/utils/idGenerator';
+import { TopicRankItem } from '@/types/topic';
 
 import { NewMessage, TopicItem, messages, topics } from '../../schemas';
 
@@ -126,14 +127,7 @@ export class TopicModel {
     return result[0].count;
   };
 
-  rank = async (): Promise<
-    {
-      count: number;
-      id: string;
-      sessionId: string | null;
-      title: string | null;
-    }[]
-  > => {
+  rank = async (): Promise<TopicRankItem[]> => {
     return this.db
       .select({
         count: count(messages.id).as('count'),

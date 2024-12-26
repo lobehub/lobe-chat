@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB } from '@/database/client/db';
 import { MessageModel } from '@/database/server/models/message';
@@ -52,9 +50,9 @@ export class ClientService extends BaseClientService implements IMessageService 
     return data as unknown as ChatMessage[];
   };
 
-  async countMessages(params?: { endDate?: string; range?: [string, string]; startDate?: string }) {
+  countMessages: IMessageService['countMessages'] = async (params) => {
     return this.messageModel.count(params);
-  }
+  };
 
   getAllMessagesInSession: IMessageService['getAllMessagesInSession'] = async (sessionId) => {
     const data = this.messageModel.queryBySessionId(this.toDbSessionId(sessionId));

@@ -55,20 +55,13 @@ export class ClientService extends BaseClientService implements ITopicService {
     return data as unknown as Promise<ChatTopic[]>;
   };
 
-  async countTopics(params?: { endDate?: string; range?: [string, string]; startDate?: string }) {
+  countTopics: ITopicService['countTopics'] = async (params) => {
     return this.topicModel.count(params);
-  }
+  };
 
-  async rankTopics(): Promise<
-    {
-      count: number;
-      id: string;
-      sessionId: string | null;
-      title: string | null;
-    }[]
-  > {
+  rankTopics: ITopicService['rankTopics'] = async () => {
     return this.topicModel.rank();
-  }
+  };
 
   updateTopic: ITopicService['updateTopic'] = async (id, data) => {
     return this.topicModel.update(id, data as any);

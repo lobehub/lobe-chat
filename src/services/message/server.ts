@@ -36,13 +36,9 @@ export class ServerService implements IMessageService {
     });
   };
 
-  countMessages = async (params?: {
-    endDate?: string;
-    range?: [string, string];
-    startDate?: string;
-  }): Promise<number> => {
+  countMessages: IMessageService['countMessages'] = async (params) => {
     return lambdaClient.message.count.query(params);
-  }
+  };
 
   updateMessageError: IMessageService['updateMessageError'] = async (id, error) => {
     return lambdaClient.message.update.mutate({ id, value: { error } });

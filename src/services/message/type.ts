@@ -16,7 +16,11 @@ export interface IMessageService {
   getMessages(sessionId: string, topicId?: string): Promise<ChatMessage[]>;
   getAllMessages(): Promise<ChatMessage[]>;
   getAllMessagesInSession(sessionId: string): Promise<ChatMessage[]>;
-  countMessages(): Promise<number>;
+  countMessages(params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number>;
 
   updateMessageError(id: string, error: ChatMessageError): Promise<any>;
   updateMessage(id: string, message: Partial<MessageItem>): Promise<any>;

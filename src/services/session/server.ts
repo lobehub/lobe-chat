@@ -36,12 +36,12 @@ export class ServerService implements ISessionService {
     return lambdaClient.session.getGroupedSessions.query();
   };
 
-  countSessions = async (params?: {
-    endDate?: string;
-    range?: [string, string];
-    startDate?: string;
-  }): Promise<number> => {
+  countSessions: ISessionService['countSessions'] = async (params) => {
     return lambdaClient.session.countSessions.query(params);
+  };
+
+  rankSessions: ISessionService['rankSessions'] = async () => {
+    return lambdaClient.session.rankSessions.query();
   };
 
   updateSession: ISessionService['updateSession'] = (id, data) => {
