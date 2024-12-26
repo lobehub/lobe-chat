@@ -1,14 +1,15 @@
+import { Suspense } from 'react';
+
 import StructuredData from '@/components/StructuredData';
 import { serverFeatureFlags } from '@/config/featureFlags';
 import { BRANDING_NAME } from '@/const/branding';
-import ChangelogModal from '@/features/ChangelogModal';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
-import { ChangelogService } from '@/server/services/changelog';
 import { translation } from '@/server/translation';
 import { isMobileDevice } from '@/utils/server/responsive';
 
 import PageTitle from '../features/PageTitle';
+import Changelog from './features/ChangelogModal';
 import TelemetryNotification from './features/TelemetryNotification';
 
 export const generateMetadata = async () => {
@@ -36,7 +37,9 @@ const Page = async () => {
       <PageTitle />
       <TelemetryNotification mobile={mobile} />
       {!hideDocs && !mobile && (
-        <ChangelogModal currentId={await new ChangelogService().getLatestChangelogId()} />
+        <Suspense>
+          <Changelog />
+        </Suspense>
       )}
     </>
   );
