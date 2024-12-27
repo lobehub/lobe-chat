@@ -1,16 +1,12 @@
 import { DEFAULT_SYSTEM_AGENT_CONFIG } from '@/const/settings';
-import { SYSTEM_EMBEDDING_CONFIG } from '@/const/settings/knowledge';
-import { SystemEmbeddingConfig } from '@/types/knowledgeBase';
 import { UserSystemAgentConfig } from '@/types/user/settings';
 
-const protectedKeys = Object.keys({ ...DEFAULT_SYSTEM_AGENT_CONFIG, ...SYSTEM_EMBEDDING_CONFIG });
+const protectedKeys = Object.keys(DEFAULT_SYSTEM_AGENT_CONFIG);
 
-export interface CommonSystemConfig extends UserSystemAgentConfig, SystemEmbeddingConfig {}
-
-export const parseSystemAgent = (envString: string = ''): Partial<CommonSystemConfig> => {
+export const parseSystemAgent = (envString: string = ''): Partial<UserSystemAgentConfig> => {
   if (!envString) return {};
 
-  const config: Partial<CommonSystemConfig> = {};
+  const config: Partial<UserSystemAgentConfig> = {};
 
   // 处理全角逗号和多余空格
   let envValue = envString.replaceAll('，', ',').trim();
@@ -24,12 +20,12 @@ export const parseSystemAgent = (envString: string = ''): Partial<CommonSystemCo
       const [provider, ...modelParts] = value.split('/');
       const model = modelParts.join('/');
 
-      if (!provider) {
+      if (!provider || !model) {
         throw new Error('Missing model or provider value');
       }
 
       if (protectedKeys.includes(key)) {
-        config[key as keyof CommonSystemConfig] = {
+        config[key as keyof UserSystemAgentConfig] = {
           enabled: key === 'queryRewrite' ? true : undefined,
           model: model.trim(),
           provider: provider.trim(),

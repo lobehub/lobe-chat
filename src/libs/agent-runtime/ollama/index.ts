@@ -92,10 +92,9 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
   async embeddings(payload: EmbeddingsPayload): Promise<Embeddings[]> {
     const input = Array.isArray(payload.input) ? payload.input : [payload.input];
-    const promises = input.map((inputText: string, index: number) =>
+    const promises = input.map((inputText: string) =>
       this.invokeEmbeddingModel({
         dimensions: payload.dimensions,
-        index: index,
         input: inputText,
         model: payload.model,
       }),

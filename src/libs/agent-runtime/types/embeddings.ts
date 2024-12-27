@@ -4,7 +4,6 @@ export interface EmbeddingsPayload {
    * supported in `text-embedding-3` and later models.
    */
   dimensions?: number;
-  index?: number;
   /**
    * Input text to embed, encoded as a string or array of tokens. To embed multiple
    * inputs in a single request, pass an array of strings .
