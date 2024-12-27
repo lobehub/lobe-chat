@@ -1,30 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { INBOX_SESSION_ID } from '@/const/session';
-import { MessageItem } from '@/database/schemas';
 import { lambdaClient } from '@/libs/trpc/client';
-import {
-  ChatMessage,
-  ChatMessageError,
-  ChatTTS,
-  ChatTranslate,
-  CreateMessageParams,
-} from '@/types/message';
+import { ChatMessage, ChatMessageError, ChatTranslate } from '@/types/message';
 
 import { IMessageService } from './type';
 
 export class ServerService implements IMessageService {
-  createMessage({ sessionId, ...params }: CreateMessageParams): Promise<string> {
+  createMessage: IMessageService['createMessage'] = async ({ sessionId, ...params }) => {
     return lambdaClient.message.createMessage.mutate({
       ...params,
       sessionId: this.toDbSessionId(sessionId),
     });
-  }
+  };
 
-  batchCreateMessages(messages: MessageItem[]): Promise<any> {
+  batchCreateMessages: IMessageService['batchCreateMessages'] = async (messages) => {
     return lambdaClient.message.batchCreateMessages.mutate(messages);
-  }
+  };
 
-  getMessages = async (sessionId?: string, topicId?: string | undefined) => {
+  getMessages: IMessageService['getMessages'] = async (sessionId, topicId) => {
     const data = await lambdaClient.message.getMessages.query({
       sessionId: this.toDbSessionId(sessionId),
       topicId,
@@ -33,85 +26,89 @@ export class ServerService implements IMessageService {
     return data as unknown as ChatMessage[];
   };
 
-  getAllMessages(): Promise<ChatMessage[]> {
+  getAllMessages: IMessageService['getAllMessages'] = async () => {
     return lambdaClient.message.getAllMessages.query();
-  }
+  };
 
-  getAllMessagesInSession(sessionId: string): Promise<ChatMessage[]> {
+  getAllMessagesInSession: IMessageService['getAllMessagesInSession'] = async (sessionId) => {
     return lambdaClient.message.getAllMessagesInSession.query({
       sessionId: this.toDbSessionId(sessionId),
     });
-  }
+  };
 
-  countMessages(): Promise<number> {
+  countMessages: IMessageService['countMessages'] = async () => {
     return lambdaClient.message.count.query();
-  }
-  countTodayMessages(): Promise<number> {
+  };
+
+  countTodayMessages: IMessageService['countTodayMessages'] = async () => {
     return lambdaClient.message.countToday.query();
-  }
+  };
 
-  updateMessageError(id: string, error: ChatMessageError): Promise<any> {
+  updateMessageError: IMessageService['updateMessageError'] = async (id, error) => {
     return lambdaClient.message.update.mutate({ id, value: { error } });
-  }
+  };
 
-  async updateMessagePluginError(id: string, error: ChatMessageError): Promise<any> {
+  updateMessagePluginError = async (id: string, error: ChatMessageError): Promise<any> => {
     return lambdaClient.message.update.mutate({ id, value: { pluginError: error } });
-  }
+  };
 
-  async updateMessagePluginArguments(
-    id: string,
-    value: string | Record<string, any>,
-  ): Promise<any> {
+  updateMessagePluginArguments: IMessageService['updateMessagePluginArguments'] = async (
+    id,
+    value,
+  ) => {
     const args = typeof value === 'string' ? value : JSON.stringify(value);
-
     return lambdaClient.message.updateMessagePlugin.mutate({ id, value: { arguments: args } });
-  }
+  };
 
-  updateMessage(id: string, message: Partial<MessageItem>): Promise<any> {
+  updateMessage: IMessageService['updateMessage'] = async (id, message) => {
     return lambdaClient.message.update.mutate({ id, value: message });
-  }
+  };
 
-  updateMessageTranslate(id: string, translate: Partial<ChatTranslate> | false): Promise<any> {
+  updateMessageTranslate: IMessageService['updateMessageTranslate'] = async (id, translate) => {
     return lambdaClient.message.updateTranslate.mutate({ id, value: translate as ChatTranslate });
-  }
+  };
 
-  updateMessageTTS(id: string, tts: Partial<ChatTTS> | false): Promise<any> {
+  updateMessageTTS: IMessageService['updateMessageTTS'] = async (id, tts) => {
     return lambdaClient.message.updateTTS.mutate({ id, value: tts });
-  }
+  };
 
-  updateMessagePluginState(id: string, value: any): Promise<any> {
+  updateMessagePluginState: IMessageService['updateMessagePluginState'] = async (id, value) => {
     return lambdaClient.message.updatePluginState.mutate({ id, value });
-  }
+  };
 
-  removeMessage(id: string): Promise<any> {
+  removeMessage: IMessageService['removeMessage'] = async (id) => {
     return lambdaClient.message.removeMessage.mutate({ id });
-  }
+  };
 
-  removeMessages(ids: string[]): Promise<any> {
+  removeMessages: IMessageService['removeMessages'] = async (ids) => {
     return lambdaClient.message.removeMessages.mutate({ ids });
-  }
+  };
 
-  removeMessagesByAssistant(sessionId: string, topicId?: string | undefined): Promise<any> {
+  removeMessagesByAssistant: IMessageService['removeMessagesByAssistant'] = async (
+    sessionId,
+    topicId,
+  ) => {
     return lambdaClient.message.removeMessagesByAssistant.mutate({
       sessionId: this.toDbSessionId(sessionId),
       topicId,
     });
-  }
-  removeAllMessages(): Promise<any> {
+  };
+
+  removeAllMessages: IMessageService['removeAllMessages'] = async () => {
     return lambdaClient.message.removeAllMessages.mutate();
-  }
+  };
 
-  private toDbSessionId(sessionId: string | undefined) {
+  private toDbSessionId = (sessionId: string | undefined) => {
     return sessionId === INBOX_SESSION_ID ? null : sessionId;
-  }
+  };
 
-  async hasMessages() {
+  hasMessages: IMessageService['hasMessages'] = async () => {
     const number = await this.countMessages();
     return number > 0;
-  }
+  };
 
-  async messageCountToCheckTrace() {
+  messageCountToCheckTrace: IMessageService['messageCountToCheckTrace'] = async () => {
     const number = await this.countMessages();
     return number >= 4;
-  }
+  };
 }

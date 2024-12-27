@@ -4,6 +4,7 @@ import { ModelProviderCard } from '@/types/llm';
 const OpenAI: ModelProviderCard = {
   chatModels: [
     {
+      contextWindowTokens: 128_000,
       description:
         'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
       displayName: 'OpenAI o1-mini',
@@ -15,9 +16,9 @@ const OpenAI: ModelProviderCard = {
         output: 12,
       },
       releasedAt: '2024-09-12',
-      tokens: 128_000,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
       displayName: 'OpenAI o1-preview',
@@ -29,9 +30,9 @@ const OpenAI: ModelProviderCard = {
         output: 60,
       },
       releasedAt: '2024-09-12',
-      tokens: 128_000,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         'GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。',
       displayName: 'GPT-4o mini',
@@ -43,10 +44,10 @@ const OpenAI: ModelProviderCard = {
         input: 0.15,
         output: 0.6,
       },
-      tokens: 128_000,
       vision: true,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
       displayName: 'GPT-4o 1120',
@@ -58,10 +59,10 @@ const OpenAI: ModelProviderCard = {
         output: 10,
       },
       releasedAt: '2024-11-20',
-      tokens: 128_000,
       vision: true,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
       displayName: 'GPT-4o',
@@ -72,10 +73,10 @@ const OpenAI: ModelProviderCard = {
         input: 2.5,
         output: 10,
       },
-      tokens: 128_000,
       vision: true,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
       displayName: 'GPT-4o 0806',
@@ -86,10 +87,10 @@ const OpenAI: ModelProviderCard = {
         output: 10,
       },
       releasedAt: '2024-08-06',
-      tokens: 128_000,
       vision: true,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
       displayName: 'GPT-4o 0513',
@@ -100,10 +101,10 @@ const OpenAI: ModelProviderCard = {
         output: 15,
       },
       releasedAt: '2024-05-13',
-      tokens: 128_000,
       vision: true,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
       displayName: 'ChatGPT-4o',
@@ -113,10 +114,10 @@ const OpenAI: ModelProviderCard = {
         input: 5,
         output: 15,
       },
-      tokens: 128_000,
       vision: true,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
       displayName: 'GPT-4 Turbo',
@@ -126,10 +127,10 @@ const OpenAI: ModelProviderCard = {
         input: 10,
         output: 30,
       },
-      tokens: 128_000,
       vision: true,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
       displayName: 'GPT-4 Turbo Vision 0409',
@@ -139,10 +140,10 @@ const OpenAI: ModelProviderCard = {
         input: 10,
         output: 30,
       },
-      tokens: 128_000,
       vision: true,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
       displayName: 'GPT-4 Turbo Preview',
@@ -152,9 +153,9 @@ const OpenAI: ModelProviderCard = {
         input: 10,
         output: 30,
       },
-      tokens: 128_000,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
       displayName: 'GPT-4 Turbo Preview 0125',
@@ -164,9 +165,9 @@ const OpenAI: ModelProviderCard = {
         input: 10,
         output: 30,
       },
-      tokens: 128_000,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
       displayName: 'GPT-4 Turbo Preview 1106',
@@ -176,9 +177,9 @@ const OpenAI: ModelProviderCard = {
         input: 10,
         output: 30,
       },
-      tokens: 128_000,
     },
     {
+      contextWindowTokens: 8192,
       description:
         'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
       displayName: 'GPT-4',
@@ -188,9 +189,9 @@ const OpenAI: ModelProviderCard = {
         input: 30,
         output: 60,
       },
-      tokens: 8192,
     },
     {
+      contextWindowTokens: 8192,
       description:
         'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
       displayName: 'GPT-4 0613',
@@ -200,11 +201,12 @@ const OpenAI: ModelProviderCard = {
         input: 30,
         output: 60,
       },
-      tokens: 8192,
     },
     {
+      contextWindowTokens: 32_768,
       description:
-        'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。', // Will be discontinued on June 6, 2025
+        'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
+      // Will be discontinued on June 6, 2025
       displayName: 'GPT-4 32K',
       functionCall: true,
       id: 'gpt-4-32k',
@@ -212,9 +214,9 @@ const OpenAI: ModelProviderCard = {
         input: 60,
         output: 120,
       },
-      tokens: 32_768,
     },
     {
+      contextWindowTokens: 32_768,
       // Will be discontinued on June 6, 2025
       description:
         'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
@@ -225,9 +227,9 @@ const OpenAI: ModelProviderCard = {
         input: 60,
         output: 120,
       },
-      tokens: 32_768,
     },
     {
+      contextWindowTokens: 16_385,
       description:
         'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
       displayName: 'GPT-3.5 Turbo',
@@ -237,9 +239,9 @@ const OpenAI: ModelProviderCard = {
         input: 0.5,
         output: 1.5,
       },
-      tokens: 16_385,
     },
     {
+      contextWindowTokens: 16_385,
       description:
         'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
       displayName: 'GPT-3.5 Turbo 0125',
@@ -249,9 +251,9 @@ const OpenAI: ModelProviderCard = {
         input: 0.5,
         output: 1.5,
       },
-      tokens: 16_385,
     },
     {
+      contextWindowTokens: 16_385,
       description:
         'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
       displayName: 'GPT-3.5 Turbo 1106',
@@ -261,9 +263,9 @@ const OpenAI: ModelProviderCard = {
         input: 1,
         output: 2,
       },
-      tokens: 16_385,
     },
     {
+      contextWindowTokens: 4096,
       description:
         'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
       displayName: 'GPT-3.5 Turbo Instruct',
@@ -272,7 +274,6 @@ const OpenAI: ModelProviderCard = {
         input: 1.5,
         output: 2,
       },
-      tokens: 4096,
     },
   ],
   checkModel: 'gpt-4o-mini',

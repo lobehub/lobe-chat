@@ -2,7 +2,6 @@ import { clientDB } from '@/database/client/db';
 import { FileModel } from '@/database/server/models/file';
 import { BaseClientService } from '@/services/baseClientService';
 import { clientS3Storage } from '@/services/file/ClientS3';
-import { FileItem, UploadFileParams } from '@/types/files';
 
 import { IFileService } from './type';
 
@@ -11,7 +10,7 @@ export class ClientService extends BaseClientService implements IFileService {
     return new FileModel(clientDB as any, this.userId);
   }
 
-  async createFile(file: UploadFileParams) {
+  createFile: IFileService['createFile'] = async (file) => {
     // save to local storage
     // we may want to save to a remote server later
     const res = await this.fileModel.create(
@@ -34,9 +33,9 @@ export class ClientService extends BaseClientService implements IFileService {
       id: res.id,
       url: `data:${file.fileType};base64,${base64}`,
     };
-  }
+  };
 
-  async getFile(id: string): Promise<FileItem> {
+  getFile: IFileService['getFile'] = async (id) => {
     const item = await this.fileModel.findById(id);
     if (!item) {
       throw new Error('file not found');
@@ -57,28 +56,28 @@ export class ClientService extends BaseClientService implements IFileService {
       updatedAt: new Date(item.updatedAt),
       url,
     };
-  }
+  };
 
-  async removeFile(id: string) {
+  removeFile: IFileService['removeFile'] = async (id) => {
     await this.fileModel.delete(id, false);
-  }
+  };
 
-  async removeFiles(ids: string[]) {
+  removeFiles: IFileService['removeFiles'] = async (ids) => {
     await this.fileModel.deleteMany(ids, false);
-  }
+  };
 
-  async removeAllFiles() {
+  removeAllFiles: IFileService['removeAllFiles'] = async () => {
     return this.fileModel.clear();
-  }
+  };
 
-  async checkFileHash(hash: string) {
+  checkFileHash: IFileService['checkFileHash'] = async (hash) => {
     return this.fileModel.checkHash(hash);
-  }
+  };
 
-  private async getBase64ByFileHash(hash: string) {
+  private getBase64ByFileHash = async (hash: string) => {
     const fileItem = await clientS3Storage.getObject(hash);
     if (!fileItem) throw new Error('file not found');
 
     return Buffer.from(await fileItem.arrayBuffer()).toString('base64');
-  }
+  };
 }

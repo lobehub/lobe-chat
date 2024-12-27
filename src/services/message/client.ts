@@ -2,17 +2,10 @@ import dayjs from 'dayjs';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB } from '@/database/client/db';
-import { MessageItem } from '@/database/schemas';
 import { MessageModel } from '@/database/server/models/message';
 import { BaseClientService } from '@/services/baseClientService';
 import { clientS3Storage } from '@/services/file/ClientS3';
-import {
-  ChatMessage,
-  ChatMessageError,
-  ChatTTS,
-  ChatTranslate,
-  CreateMessageParams,
-} from '@/types/message';
+import { ChatMessage } from '@/types/message';
 
 import { IMessageService } from './type';
 
@@ -21,20 +14,20 @@ export class ClientService extends BaseClientService implements IMessageService 
     return new MessageModel(clientDB as any, this.userId);
   }
 
-  async createMessage({ sessionId, ...params }: CreateMessageParams) {
+  createMessage: IMessageService['createMessage'] = async ({ sessionId, ...params }) => {
     const { id } = await this.messageModel.create({
       ...params,
       sessionId: this.toDbSessionId(sessionId) as string,
     });
 
     return id;
-  }
+  };
 
-  async batchCreateMessages(messages: MessageItem[]) {
+  batchCreateMessages: IMessageService['batchCreateMessages'] = async (messages) => {
     return this.messageModel.batchCreate(messages);
-  }
+  };
 
-  async getMessages(sessionId: string, topicId?: string) {
+  getMessages: IMessageService['getMessages'] = async (sessionId, topicId) => {
     const data = await this.messageModel.query(
       {
         sessionId: this.toDbSessionId(sessionId),
@@ -51,86 +44,97 @@ export class ClientService extends BaseClientService implements IMessageService 
     );
 
     return data as unknown as ChatMessage[];
-  }
+  };
 
-  async getAllMessages() {
+  getAllMessages: IMessageService['getAllMessages'] = async () => {
     const data = await this.messageModel.queryAll();
 
     return data as unknown as ChatMessage[];
-  }
+  };
 
-  async countMessages() {
+  countMessages: IMessageService['countMessages'] = async () => {
     return this.messageModel.count();
-  }
+  };
 
-  async countTodayMessages() {
+  countTodayMessages: IMessageService['countTodayMessages'] = async () => {
     const topics = await this.messageModel.queryAll();
     return topics.filter(
       (item) => dayjs(item.createdAt).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD'),
     ).length;
-  }
+  };
 
-  async getAllMessagesInSession(sessionId: string) {
+  getAllMessagesInSession: IMessageService['getAllMessagesInSession'] = async (sessionId) => {
     const data = this.messageModel.queryBySessionId(this.toDbSessionId(sessionId));
 
     return data as unknown as ChatMessage[];
-  }
+  };
 
-  async updateMessageError(id: string, error: ChatMessageError) {
+  updateMessageError: IMessageService['updateMessageError'] = async (id, error) => {
     return this.messageModel.update(id, { error });
-  }
+  };
 
-  async updateMessage(id: string, message: Partial<MessageItem>) {
+  updateMessage: IMessageService['updateMessage'] = async (id, message) => {
     return this.messageModel.update(id, message);
-  }
+  };
 
-  async updateMessageTTS(id: string, tts: Partial<ChatTTS> | false) {
+  updateMessageTTS: IMessageService['updateMessageTTS'] = async (id, tts) => {
     return this.messageModel.updateTTS(id, tts as any);
-  }
+  };
 
-  async updateMessageTranslate(id: string, translate: Partial<ChatTranslate> | false) {
+  updateMessageTranslate: IMessageService['updateMessageTranslate'] = async (id, translate) => {
     return this.messageModel.updateTranslate(id, translate as any);
-  }
+  };
 
-  async updateMessagePluginState(id: string, value: Record<string, any>) {
+  updateMessagePluginState: IMessageService['updateMessagePluginState'] = async (id, value) => {
     return this.messageModel.updatePluginState(id, value);
-  }
+  };
 
-  async updateMessagePluginArguments(id: string, value: string | Record<string, any>) {
+  updateMessagePluginArguments: IMessageService['updateMessagePluginArguments'] = async (
+    id,
+    value,
+  ) => {
     const args = typeof value === 'string' ? value : JSON.stringify(value);
 
     return this.messageModel.updateMessagePlugin(id, { arguments: args });
-  }
+  };
 
-  async removeMessage(id: string) {
+  removeMessage: IMessageService['removeMessage'] = async (id) => {
     return this.messageModel.deleteMessage(id);
-  }
+  };
 
-  async removeMessages(ids: string[]) {
+  removeMessages: IMessageService['removeMessages'] = async (ids) => {
     return this.messageModel.deleteMessages(ids);
-  }
+  };
 
-  async removeMessagesByAssistant(sessionId: string, topicId?: string) {
+  removeMessagesByAssistant: IMessageService['removeMessagesByAssistant'] = async (
+    sessionId,
+    topicId,
+  ) => {
     return this.messageModel.deleteMessagesBySession(this.toDbSessionId(sessionId), topicId);
-  }
+  };
 
-  async removeAllMessages() {
+  removeAllMessages: IMessageService['removeAllMessages'] = async () => {
     return this.messageModel.deleteAllMessages();
-  }
+  };
 
-  async hasMessages() {
+  hasMessages: IMessageService['hasMessages'] = async () => {
     const number = await this.countMessages();
     return number > 0;
-  }
+  };
 
-  private toDbSessionId(sessionId: string | undefined) {
+  messageCountToCheckTrace: IMessageService['messageCountToCheckTrace'] = async () => {
+    const number = await this.countMessages();
+    return number >= 4;
+  };
+
+  private toDbSessionId = (sessionId: string | undefined) => {
     return sessionId === INBOX_SESSION_ID ? undefined : sessionId;
-  }
+  };
 
-  private async getBase64ByFileHash(hash: string) {
+  private getBase64ByFileHash = async (hash: string) => {
     const fileItem = await clientS3Storage.getObject(hash);
     if (!fileItem) throw new Error('file not found');
 
     return Buffer.from(await fileItem.arrayBuffer()).toString('base64');
-  }
+  };
 }

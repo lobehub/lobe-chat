@@ -11,57 +11,60 @@ import {
 
 class RAGEvalService {
   // Dataset
-  async createDataset(params: CreateNewEvalDatasets): Promise<number | undefined> {
-    return await lambdaClient.ragEval.createDataset.mutate(params);
-  }
+  createDataset = async (params: CreateNewEvalDatasets): Promise<number | undefined> => {
+    return lambdaClient.ragEval.createDataset.mutate(params);
+  };
 
-  async getDatasets(knowledgeBaseId: string): Promise<RAGEvalDataSetItem[]> {
+  getDatasets = async (knowledgeBaseId: string): Promise<RAGEvalDataSetItem[]> => {
     return lambdaClient.ragEval.getDatasets.query({ knowledgeBaseId });
-  }
+  };
 
-  async removeDataset(id: number): Promise<void> {
+  removeDataset = async (id: number): Promise<void> => {
     await lambdaClient.ragEval.removeDataset.mutate({ id });
-  }
+  };
 
-  async updateDataset(id: number, value: Partial<typeof insertEvalDatasetsSchema>): Promise<void> {
+  updateDataset = async (
+    id: number,
+    value: Partial<typeof insertEvalDatasetsSchema>,
+  ): Promise<void> => {
     await lambdaClient.ragEval.updateDataset.mutate({ id, value });
-  }
+  };
 
   // Dataset Records
-  async getDatasetRecords(datasetId: number): Promise<EvalDatasetRecord[]> {
+  getDatasetRecords = async (datasetId: number): Promise<EvalDatasetRecord[]> => {
     return lambdaClient.ragEval.getDatasetRecords.query({ datasetId });
-  }
+  };
 
-  async removeDatasetRecord(id: number): Promise<void> {
+  removeDatasetRecord = async (id: number): Promise<void> => {
     await lambdaClient.ragEval.removeDatasetRecords.mutate({ id });
-  }
+  };
 
-  async importDatasetRecords(datasetId: number, file: File): Promise<void> {
+  importDatasetRecords = async (datasetId: number, file: File): Promise<void> => {
     const { path } = await uploadService.uploadWithProgress(file, { directory: 'ragEval' });
 
     await lambdaClient.ragEval.importDatasetRecords.mutate({ datasetId, pathname: path });
-  }
+  };
 
   // Evaluation
-  async createEvaluation(params: CreateNewEvalEvaluation): Promise<number | undefined> {
-    return await lambdaClient.ragEval.createEvaluation.mutate(params);
-  }
+  createEvaluation = async (params: CreateNewEvalEvaluation): Promise<number | undefined> => {
+    return lambdaClient.ragEval.createEvaluation.mutate(params);
+  };
 
-  async getEvaluationList(knowledgeBaseId: string): Promise<RAGEvalEvaluationItem[]> {
+  getEvaluationList = async (knowledgeBaseId: string): Promise<RAGEvalEvaluationItem[]> => {
     return lambdaClient.ragEval.getEvaluationList.query({ knowledgeBaseId });
-  }
+  };
 
-  async startEvaluationTask(id: number) {
+  startEvaluationTask = async (id: number) => {
     return lambdaClient.ragEval.startEvaluationTask.mutate({ id });
-  }
+  };
 
-  async removeEvaluation(id: number): Promise<void> {
+  removeEvaluation = async (id: number): Promise<void> => {
     await lambdaClient.ragEval.removeEvaluation.mutate({ id });
-  }
+  };
 
-  async checkEvaluationStatus(id: number): Promise<{ success: boolean }> {
+  checkEvaluationStatus = async (id: number): Promise<{ success: boolean }> => {
     return lambdaClient.ragEval.checkEvaluationStatus.query({ id });
-  }
+  };
 }
 
 export const ragEvalService = new RAGEvalService();

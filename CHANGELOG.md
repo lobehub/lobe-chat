@@ -2,6 +2,114 @@
 
 # Changelog
 
+### [Version 1.40.3](https://github.com/lobehub/lobe-chat/compare/v1.40.2...v1.40.3)
+
+<sup>Released on **2024-12-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fetch error in changelog modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fetch error in changelog modal, closes [#5194](https://github.com/lobehub/lobe-chat/issues/5194) ([e9433be](https://github.com/lobehub/lobe-chat/commit/e9433be))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.40.2](https://github.com/lobehub/lobe-chat/compare/v1.40.1...v1.40.2)
+
+<sup>Released on **2024-12-26**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor `tokens` to `contextWindowTokens`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor `tokens` to `contextWindowTokens`, closes [#5185](https://github.com/lobehub/lobe-chat/issues/5185) ([a2aa99a](https://github.com/lobehub/lobe-chat/commit/a2aa99a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.40.1](https://github.com/lobehub/lobe-chat/compare/v1.40.0...v1.40.1)
+
+<sup>Released on **2024-12-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix o1Models list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix o1Models list, closes [#5183](https://github.com/lobehub/lobe-chat/issues/5183) ([10d9904](https://github.com/lobehub/lobe-chat/commit/10d9904))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.40.0](https://github.com/lobehub/lobe-chat/compare/v1.39.3...v1.40.0)
+
+<sup>Released on **2024-12-26**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor services code style.
+
+#### ✨ Features
+
+- **misc**: Add changelog modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor services code style, closes [#5180](https://github.com/lobehub/lobe-chat/issues/5180) ([e98ece8](https://github.com/lobehub/lobe-chat/commit/e98ece8))
+
+#### What's improved
+
+- **misc**: Add changelog modal, closes [#4800](https://github.com/lobehub/lobe-chat/issues/4800) ([df3ac87](https://github.com/lobehub/lobe-chat/commit/df3ac87))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.39.3](https://github.com/lobehub/lobe-chat/compare/v1.39.2...v1.39.3)
 
 <sup>Released on **2024-12-25**</sup>
