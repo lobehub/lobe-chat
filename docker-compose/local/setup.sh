@@ -326,19 +326,17 @@ else
   fi
 fi
 
-# Generate Minio S3 access key
-# Temporarily disable key gen for minio because 
-# minio can not start with a access key in envs
-#S3_SECRET_ACCESS_KEY=$(generate_key 32)
-#if [ $? -ne 0 ]; then
-#  echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY"
-#else
-#  # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
-#  $SED_COMMAND "s#^S3_SECRET_ACCESS_KEY=.*#S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}#" .env
-#  if [ $? -ne 0 ]; then
-#    echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY in \`.env\`"
-#  fi
-#fi
+# Generate Minio S3 User Password
+MINIO_ROOT_PASSWORD=$(generate_key 8)
+if [ $? -ne 0 ]; then
+ echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD"
+else
+ # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
+ $SED_COMMAND "s#^MINIO_ROOT_PASSWORD=.*#MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}#" .env
+ if [ $? -ne 0 ]; then
+   echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD in \`.env\`"
+ fi
+fi
 
 # Modify the .env file if the host is specified
 if [ -n "$HOST" ]; then
@@ -362,6 +360,7 @@ if [ -n "$HOST" ]; then
   echo -e "Server Host: $HOST"
 fi
 echo -e "Casdoor: \n - Username: admin\n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
+echo -e "Minio: \n - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
 
 # ===========================
 # == Display final message ==
