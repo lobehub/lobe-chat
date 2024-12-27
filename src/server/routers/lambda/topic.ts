@@ -110,8 +110,8 @@ export const topicRouter = router({
     return (await ctx.topicModel.count()) === 0;
   }),
 
-  rankTopics: topicProcedure.query(async ({ ctx }) => {
-    return ctx.topicModel.rank();
+  rankTopics: topicProcedure.input(z.number().optional()).query(async ({ ctx, input }) => {
+    return ctx.topicModel.rank(input);
   }),
 
   removeAllTopics: topicProcedure.mutation(async ({ ctx }) => {

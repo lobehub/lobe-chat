@@ -1,17 +1,21 @@
 import { BarList } from '@lobehub/charts';
-import { Icon } from '@lobehub/ui';
+import { ActionIcon, FormGroup, Icon, Modal } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { MessageSquareIcon } from 'lucide-react';
+import { MaximizeIcon, MessageSquareIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import qs from 'query-string';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
+import { FORM_STYLE } from '@/const/layoutTokens';
 import { useClientDataSWR } from '@/libs/swr';
 import { topicService } from '@/services/topic';
+import { TopicRankItem } from '@/types/topic';
 
 export const TopicsRank = memo(() => {
+  const [open, setOpen] = useState(false);
   const { t } = useTranslation('auth');
   const theme = useTheme();
   const router = useRouter();
@@ -19,41 +23,70 @@ export const TopicsRank = memo(() => {
     topicService.rankTopics(),
   );
 
+  const mapData = (item: TopicRankItem) => {
+    const link = qs.stringifyUrl({
+      query: {
+        session: item.sessionId,
+        topic: item.id,
+      },
+      url: '/chat',
+    });
+    return {
+      icon: (
+        <Icon color={theme.colorTextDescription} icon={MessageSquareIcon} size={{ fontSize: 16 }} />
+      ),
+      link,
+      name: (
+        <Link href={link} style={{ color: 'inherit' }}>
+          {item.title}
+        </Link>
+      ),
+      value: item.count,
+    };
+  };
+
   return (
-    <BarList
-      data={
-        data?.map((item) => {
-          const link = qs.stringifyUrl({
-            query: {
-              session: item.sessionId,
-              topic: item.id,
-            },
-            url: '/chat',
-          });
-          return {
-            icon: (
-              <Icon
-                color={theme.colorTextDescription}
-                icon={MessageSquareIcon}
-                size={{ fontSize: 16 }}
-              />
-            ),
-            link,
-            name: (
-              <Link href={link} style={{ color: 'inherit' }}>
-                {item.title}
-              </Link>
-            ),
-            value: item.count,
-          };
-        }) || []
-      }
-      height={340}
-      leftLabel={t('stats.topicsRank.left')}
-      loading={isLoading}
-      onValueChange={(item) => router.push(item.link)}
-      rightLabel={t('stats.topicsRank.right')}
-    />
+    <>
+      <FormGroup
+        extra={
+          <ActionIcon
+            icon={MaximizeIcon}
+            onClick={() => setOpen(true)}
+            size={{ blockSize: 28, fontSize: 20 }}
+          />
+        }
+        style={FORM_STYLE.style}
+        title={t('stats.topicsRank.title')}
+        variant={'pure'}
+      >
+        <Flexbox paddingBlock={16}>
+          <BarList
+            data={data?.slice(0, 5).map((item) => mapData(item)) || []}
+            height={220}
+            leftLabel={t('stats.topicsRank.left')}
+            loading={isLoading || !data}
+            onValueChange={(item) => router.push(item.link)}
+            rightLabel={t('stats.topicsRank.right')}
+          />
+        </Flexbox>
+      </FormGroup>
+      <Modal
+        footer={null}
+        loading={isLoading || !data}
+        onCancel={() => setOpen(false)}
+        open={open}
+        title={t('stats.topicsRank.title')}
+      >
+        <BarList
+          data={data?.map((item) => mapData(item)) || []}
+          height={340}
+          leftLabel={t('stats.assistantsRank.left')}
+          loading={isLoading || !data}
+          onValueChange={(item) => router.push(item.link)}
+          rightLabel={t('stats.assistantsRank.right')}
+        />
+      </Modal>
+    </>
   );
 });
 

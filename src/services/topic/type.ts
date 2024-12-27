@@ -27,7 +27,7 @@ export interface ITopicService {
     range?: [string, string];
     startDate?: string;
   }): Promise<number>;
-  rankTopics(): Promise<TopicRankItem[]>;
+  rankTopics(limit?: number): Promise<TopicRankItem[]>;
   searchTopics(keyword: string, sessionId?: string): Promise<ChatTopic[]>;
 
   updateTopic(id: string, data: Partial<ChatTopic>): Promise<any>;

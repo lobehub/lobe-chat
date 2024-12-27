@@ -3,7 +3,6 @@
 import { FormGroup, Grid } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 
@@ -27,26 +26,10 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
         </Grid>
       </FormGroup>
       <Grid gap={mobile ? undefined : 48} rows={2}>
-        <FormGroup
-          style={FORM_STYLE.style}
-          title={t('stats.assistantsRank.title')}
-          variant={'pure'}
-        >
-          <Flexbox paddingBlock={16}>
-            <AssistantsRank />
-          </Flexbox>
-        </FormGroup>
-        <FormGroup style={FORM_STYLE.style} title={t('stats.topicsRank.title')} variant={'pure'}>
-          <Flexbox paddingBlock={16}>
-            <TopicsRank />
-          </Flexbox>
-        </FormGroup>
+        <AssistantsRank />
+        <TopicsRank />
       </Grid>
-      <FormGroup style={FORM_STYLE.style} title={t('stats.heatmaps.title')} variant={'pure'}>
-        <Flexbox paddingBlock={24}>
-          <AiHeatmaps />
-        </Flexbox>
-      </FormGroup>
+      <AiHeatmaps />
     </>
   );
 });

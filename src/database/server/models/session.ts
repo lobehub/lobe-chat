@@ -119,7 +119,7 @@ export class SessionModel {
     return result[0].count;
   };
 
-  rank = async (): Promise<SessionRankItem[]> => {
+  rank = async (limit: number = 10): Promise<SessionRankItem[]> => {
     return this.db
       .select({
         avatar: agents.avatar,
@@ -134,7 +134,7 @@ export class SessionModel {
       .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
       .groupBy(sessions.id, agentsToSessions.agentId, agents.id)
       .orderBy(desc(sql`count`))
-      .limit(8);
+      .limit(limit);
   };
 
   hasMoreThanN = async (n: number): Promise<boolean> => {

@@ -19,7 +19,7 @@ const TotalMessages = memo(() => {
 
   return (
     <StatisticCard
-      loading={isLoading}
+      loading={isLoading || !data}
       statistic={{
         description: (
           <Statistic

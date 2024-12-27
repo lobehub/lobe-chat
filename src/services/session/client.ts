@@ -78,8 +78,8 @@ export class ClientService extends BaseClientService implements ISessionService 
     return this.sessionModel.count(params);
   };
 
-  rankSessions: ISessionService['rankSessions'] = async () => {
-    return this.sessionModel.rank();
+  rankSessions: ISessionService['rankSessions'] = async (limit) => {
+    return this.sessionModel.rank(limit);
   };
 
   searchSessions: ISessionService['searchSessions'] = async (keyword) => {

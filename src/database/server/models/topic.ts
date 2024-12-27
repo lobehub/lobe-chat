@@ -127,7 +127,7 @@ export class TopicModel {
     return result[0].count;
   };
 
-  rank = async (): Promise<TopicRankItem[]> => {
+  rank = async (limit: number = 10): Promise<TopicRankItem[]> => {
     return this.db
       .select({
         count: count(messages.id).as('count'),
@@ -139,7 +139,7 @@ export class TopicModel {
       .leftJoin(messages, eq(topics.id, messages.topicId))
       .groupBy(topics.id)
       .orderBy(desc(sql`count`))
-      .limit(8);
+      .limit(limit);
   };
 
   // **************** Create *************** //

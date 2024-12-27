@@ -59,8 +59,8 @@ export class ClientService extends BaseClientService implements ITopicService {
     return this.topicModel.count(params);
   };
 
-  rankTopics: ITopicService['rankTopics'] = async () => {
-    return this.topicModel.rank();
+  rankTopics: ITopicService['rankTopics'] = async (limit) => {
+    return this.topicModel.rank(limit);
   };
 
   updateTopic: ITopicService['updateTopic'] = async (id, data) => {

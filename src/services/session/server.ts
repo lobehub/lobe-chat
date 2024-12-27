@@ -40,8 +40,8 @@ export class ServerService implements ISessionService {
     return lambdaClient.session.countSessions.query(params);
   };
 
-  rankSessions: ISessionService['rankSessions'] = async () => {
-    return lambdaClient.session.rankSessions.query();
+  rankSessions: ISessionService['rankSessions'] = async (limit) => {
+    return lambdaClient.session.rankSessions.query(limit);
   };
 
   updateSession: ISessionService['updateSession'] = (id, data) => {

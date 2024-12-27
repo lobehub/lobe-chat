@@ -37,7 +37,7 @@ export interface ISessionService {
     range?: [string, string];
     startDate?: string;
   }): Promise<number>;
-  rankSessions(): Promise<SessionRankItem[]>;
+  rankSessions(limit?: number): Promise<SessionRankItem[]>;
   searchSessions(keyword: string): Promise<LobeSessions>;
 
   updateSession(id: string, data: Partial<UpdateSessionParams>): Promise<any>;
