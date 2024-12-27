@@ -40,10 +40,6 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
-
-      // WeChat
-      WECHAT_CLIENT_ID?: string;
-      WECHAT_CLIENT_SECRET?: string;
     }
   }
 }
@@ -211,10 +207,6 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: z.string().optional(),
-
-      // WeChat
-      WECHAT_CLIENT_ID: z.string().optional(),
-      WECHAT_CLIENT_SECRET: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -277,10 +269,6 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
-
-      // WeChat
-      WECHAT_CLIENT_ID: process.env.WECHAT_CLIENT_ID,
-      WECHAT_CLIENT_SECRET: process.env.WECHAT_CLIENT_SECRET,
     },
   });
 };
