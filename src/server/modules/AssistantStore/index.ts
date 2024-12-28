@@ -35,6 +35,11 @@ export class AssistantStore {
         res = await fetch(this.getAgentIndexUrl(DEFAULT_LANG), { next: { revalidate } });
       }
 
+      if (!res.ok) {
+        console.error('fetch agent index error:', await res.text());
+        return [];
+      }
+
       const data: AgentStoreIndex = await res.json();
 
       // Get the assistant whitelist from Edge Config
