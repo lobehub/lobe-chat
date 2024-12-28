@@ -8,7 +8,7 @@ import { useGlobalStore } from '@/store/global';
 import { ChatSettingsTabs, SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
-import { useOpenChatSettings, useOpenSettings } from './useInterceptingRoutes';
+import { useOpenChatSettings } from './useInterceptingRoutes';
 
 // Mocks
 vi.mock('next/navigation', () => ({
@@ -31,20 +31,6 @@ vi.mock('@/store/global', () => ({
     setState: vi.fn(),
   },
 }));
-
-describe('useOpenSettings', () => {
-  it('should handle mobile route correctly', () => {
-    vi.mocked(useIsMobile).mockReturnValue(true);
-    const { result } = renderHook(() => useOpenSettings(SettingsTabs.Common));
-    expect(result.current()).toBe('/settings/common');
-  });
-
-  it('should handle desktop route correctly', () => {
-    vi.mocked(useIsMobile).mockReturnValue(false);
-    const { result } = renderHook(() => useOpenSettings(SettingsTabs.Agent));
-    expect(result.current()).toBe('/settings/modal?tab=agent');
-  });
-});
 
 describe('useOpenChatSettings', () => {
   it('should handle inbox session id correctly', () => {

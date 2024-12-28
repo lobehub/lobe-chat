@@ -8,24 +8,8 @@ import { useGlobalStore } from '@/store/global';
 import { ChatSettingsTabs, SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
-export const useOpenSettings = (tab: SettingsTabs = SettingsTabs.Common) => {
-  const activeId = useSessionStore((s) => s.activeId);
-  const router = useQueryRoute();
-  const mobile = useIsMobile();
-
-  return useMemo(() => {
-    if (mobile) {
-      return () => router.push(urlJoin('/settings', tab));
-    } else {
-      // use Intercepting Routes on Desktop
-      return () => router.push('/settings/modal', { query: { session: activeId, tab } });
-    }
-  }, [mobile, tab, activeId, router]);
-};
-
 export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Meta) => {
   const activeId = useSessionStore((s) => s.activeId);
-  const openSettings = useOpenSettings(SettingsTabs.Agent);
   const router = useQueryRoute();
   const mobile = useIsMobile();
 
@@ -34,7 +18,7 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Met
       useGlobalStore.setState({
         sidebarKey: SidebarTabKey.Setting,
       });
-      return openSettings;
+      return () => router.push(urlJoin('/settings', SettingsTabs.Agent));
     }
     if (mobile) {
       return () => router.push('/chat/settings');
@@ -42,5 +26,5 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Met
       // use Intercepting Routes on Desktop
       return () => router.push('/chat/settings/modal', { query: { session: activeId, tab } });
     }
-  }, [openSettings, mobile, activeId, router, tab]);
+  }, [mobile, activeId, router, tab]);
 };
