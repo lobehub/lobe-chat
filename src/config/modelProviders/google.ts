@@ -6,6 +6,23 @@ const Google: ModelProviderCard = {
     {
       contextWindowTokens: 32_767 + 8192,
       description:
+        'Gemini 2.0 Flash Thinking是一个具有快速推理能力的增强版大型语言模型，可以提供更实时的响应和更复杂问题的解答。',
+      displayName: 'Gemini 2.0 Flash Thinking',
+      enabled: true,
+      functionCall: true,
+      id: 'gemini-2.0-flash-thinking-exp',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0,
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2024-12-20',
+      tokens: 32_768 + 8192,
+      vision: true,
+    },
+    {
+      description:
         'Gemini 2.0 Flash Exp 是 Google 最新的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。',
       displayName: 'Gemini 2.0 Flash Thinking Experimental 1219',
       enabled: true,
