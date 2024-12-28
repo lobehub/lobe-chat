@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.40.4](https://github.com/lobehub/lobe-chat/compare/v1.40.3...v1.40.4)
+
+<sup>Released on **2024-12-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update deepseek V3 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update deepseek V3 model, closes [#5199](https://github.com/lobehub/lobe-chat/issues/5199) ([868f556](https://github.com/lobehub/lobe-chat/commit/868f556))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.40.3](https://github.com/lobehub/lobe-chat/compare/v1.40.2...v1.40.3)
 
 <sup>Released on **2024-12-26**</sup>
