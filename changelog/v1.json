@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support white list for discover assistant."]
+    },
+    "date": "2024-12-28",
+    "version": "1.41.0"
+  },
+  {
+    "children": {
       "improvements": ["Update deepseek V3 model."]
     },
     "date": "2024-12-28",

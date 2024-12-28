@@ -50,20 +50,9 @@ export class DiscoverService {
   };
 
   getAssistantList = async (locale: Locales): Promise<DiscoverAssistantItem[]> => {
-    let res = await fetch(this.assistantStore.getAgentIndexUrl(locale), {
-      next: { revalidate },
-    });
+    const json = await this.assistantStore.getAgentIndex(locale, revalidate);
 
-    if (!res.ok) {
-      res = await fetch(this.assistantStore.getAgentIndexUrl(DEFAULT_LANG), {
-        next: { revalidate },
-      });
-    }
-
-    if (!res.ok) return [];
-
-    const json = await res.json();
-
+    // @ts-expect-error 目前类型不一致，未来要统一
     return json.agents;
   };
 
