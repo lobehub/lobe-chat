@@ -1,10 +1,13 @@
 // @vitest-environment node
 import OpenAI from 'openai';
+import type { Stream } from 'openai/streaming';
+
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   AgentRuntimeErrorType,
   ChatStreamCallbacks,
+  ChatStreamPayload,
   LobeOpenAICompatibleRuntime,
   ModelProvider,
 } from '@/libs/agent-runtime';
@@ -795,6 +798,134 @@ describe('LobeOpenAICompatibleFactory', () => {
         // 清理
         mockCreateMethod.mockRestore();
       });
+    });
+
+    it('should use custom stream handler when provided', async () => {
+      // Create a custom stream handler that handles both ReadableStream and OpenAI Stream
+      const customStreamHandler = vi.fn((stream: ReadableStream | Stream<OpenAI.ChatCompletionChunk>) => {
+        const readableStream = stream instanceof ReadableStream ? stream : stream.toReadableStream();
+        return new ReadableStream({
+          start(controller) {
+            const reader = readableStream.getReader();
+            const process = async () => {
+              try {
+                while (true) {
+                  const { done, value } = await reader.read();
+                  if (done) break;
+                  controller.enqueue(value);
+                }
+              } finally {
+                controller.close();
+              }
+            };
+            process();
+          },
+        });
+      });
+
+      const LobeMockProvider = LobeOpenAICompatibleFactory({
+        baseURL: 'https://api.test.com/v1',
+        chatCompletion: {
+          handleStream: customStreamHandler,
+        },
+        provider: ModelProvider.OpenAI,
+      });
+
+      const instance = new LobeMockProvider({ apiKey: 'test' });
+
+      // Create a mock stream
+      const mockStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue({
+            id: 'test-id',
+            choices: [{ delta: { content: 'Hello' }, index: 0 }],
+            created: Date.now(),
+            model: 'test-model',
+            object: 'chat.completion.chunk',
+          });
+          controller.close();
+        },
+      });
+
+      vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue({
+        tee: () => [mockStream, mockStream],
+      } as any);
+
+      const payload: ChatStreamPayload = {
+        messages: [{ content: 'Test', role: 'user' }],
+        model: 'test-model',
+        temperature: 0.7,
+      };
+
+      await instance.chat(payload);
+
+      expect(customStreamHandler).toHaveBeenCalled();
+    });
+
+    it('should use custom transform handler for non-streaming response', async () => {
+      const customTransformHandler = vi.fn((data: OpenAI.ChatCompletion): ReadableStream => {
+        return new ReadableStream({
+          start(controller) {
+            // Transform the completion to chunk format
+            controller.enqueue({
+              id: data.id,
+              choices: data.choices.map((choice) => ({
+                delta: { content: choice.message.content },
+                index: choice.index,
+              })),
+              created: data.created,
+              model: data.model,
+              object: 'chat.completion.chunk',
+            });
+            controller.close();
+          },
+        });
+      });
+
+      const LobeMockProvider = LobeOpenAICompatibleFactory({
+        baseURL: 'https://api.test.com/v1',
+        chatCompletion: {
+          handleTransformResponseToStream: customTransformHandler,
+        },
+        provider: ModelProvider.OpenAI,
+      });
+
+      const instance = new LobeMockProvider({ apiKey: 'test' });
+
+      const mockResponse: OpenAI.ChatCompletion = {
+        id: 'test-id',
+        choices: [
+          {
+            index: 0,
+            message: { 
+              role: 'assistant', 
+              content: 'Test response',
+              refusal: null
+            },
+            logprobs: null,
+            finish_reason: 'stop',
+          },
+        ],
+        created: Date.now(),
+        model: 'test-model',
+        object: 'chat.completion',
+        usage: { completion_tokens: 2, prompt_tokens: 1, total_tokens: 3 },
+      };
+
+      vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+        mockResponse as any,
+      );
+
+      const payload: ChatStreamPayload = {
+        messages: [{ content: 'Test', role: 'user' }],
+        model: 'test-model',
+        temperature: 0.7,
+        stream: false,
+      };
+
+      await instance.chat(payload);
+
+      expect(customTransformHandler).toHaveBeenCalledWith(mockResponse);
     });
 
     describe('DEBUG', () => {

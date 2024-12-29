@@ -25,6 +25,7 @@ import { handleOpenAIError } from '../handleOpenAIError';
 import { convertOpenAIMessages } from '../openaiHelpers';
 import { StreamingResponse } from '../response';
 import { OpenAIStream, OpenAIStreamOptions } from '../streams';
+import { ChatStreamCallbacks } from '../../types';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
 export const CHAT_MODELS_BLOCK_LIST = [
@@ -62,10 +63,17 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       payload: ChatStreamPayload,
       options: ConstructorOptions<T>,
     ) => OpenAI.ChatCompletionCreateParamsStreaming;
+    handleStream?: (
+      stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
+      callbacks?: ChatStreamCallbacks,
+    ) => ReadableStream;
     handleStreamBizErrorType?: (error: {
       message: string;
       name: string;
     }) => ILobeAgentRuntimeErrorType | undefined;
+    handleTransformResponseToStream?: (
+      data: OpenAI.ChatCompletion,
+    ) => ReadableStream<OpenAI.ChatCompletionChunk>;
     noUserId?: boolean;
   };
   constructorOptions?: ConstructorOptions<T>;
@@ -228,7 +236,8 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             debugStream(useForDebugStream).catch(console.error);
           }
 
-          return StreamingResponse(OpenAIStream(prod, streamOptions), {
+          const streamHandler = chatCompletion?.handleStream || OpenAIStream;
+          return StreamingResponse(streamHandler(prod, streamOptions), {
             headers: options?.headers,
           });
         }
@@ -239,9 +248,11 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
         if (responseMode === 'json') return Response.json(response);
 
-        const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
+        const transformHandler = chatCompletion?.handleTransformResponseToStream || transformResponseToStream;
+        const stream = transformHandler(response as unknown as OpenAI.ChatCompletion);
 
-        return StreamingResponse(OpenAIStream(stream, streamOptions), {
+        const streamHandler = chatCompletion?.handleStream || OpenAIStream;
+        return StreamingResponse(streamHandler(stream, streamOptions), {
           headers: options?.headers,
         });
       } catch (error) {
