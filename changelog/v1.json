@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add custom stream handle support for LobeOpenAICompatibleFactory."]
+    },
+    "date": "2024-12-29",
+    "version": "1.42.0"
+  },
+  {
+    "children": {
       "features": ["Support white list for discover assistant."]
     },
     "date": "2024-12-28",
