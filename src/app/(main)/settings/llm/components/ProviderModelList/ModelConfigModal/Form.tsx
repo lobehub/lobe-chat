@@ -66,7 +66,7 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
           >
             <Input placeholder={t('llm.customModelCards.modelConfig.displayName.placeholder')} />
           </Form.Item>
-          <Form.Item label={t('llm.customModelCards.modelConfig.tokens.title')} name={'tokens'}>
+          <Form.Item label={t('llm.customModelCards.modelConfig.tokens.title')} name={'contextWindowTokens'}>
             <MaxTokenSlider />
           </Form.Item>
           <Form.Item
