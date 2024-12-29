@@ -1,6 +1,34 @@
 [
   {
     "children": {
+      "features": ["Add custom stream handle support for LobeOpenAICompatibleFactory."]
+    },
+    "date": "2024-12-29",
+    "version": "1.42.0"
+  },
+  {
+    "children": {
+      "features": ["Support white list for discover assistant."]
+    },
+    "date": "2024-12-28",
+    "version": "1.41.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update deepseek V3 model."]
+    },
+    "date": "2024-12-28",
+    "version": "1.40.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fetch error in changelog modal."]
+    },
+    "date": "2024-12-26",
+    "version": "1.40.3"
+  },
+  {
+    "children": {
       "improvements": ["Refactor tokens to contextWindowTokens."]
     },
     "date": "2024-12-26",

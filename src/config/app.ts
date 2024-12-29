@@ -47,6 +47,8 @@ export const getAppConfig = () => {
       PLUGIN_SETTINGS: z.string().optional(),
 
       APP_URL: z.string().optional(),
+      VERCEL_EDGE_CONFIG: z.string().optional(),
+
       CDN_USE_GLOBAL: z.boolean().optional(),
       CUSTOM_FONT_FAMILY: z.string().optional(),
       CUSTOM_FONT_URL: z.string().optional(),
@@ -74,6 +76,8 @@ export const getAppConfig = () => {
         : PLUGINS_INDEX_URL,
 
       PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
+
+      VERCEL_EDGE_CONFIG: process.env.VERCEL_EDGE_CONFIG,
 
       APP_URL,
       CUSTOM_FONT_FAMILY: process.env.CUSTOM_FONT_FAMILY,

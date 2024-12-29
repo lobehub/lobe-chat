@@ -21,6 +21,7 @@ describe('featureFlagsSelectors', () => {
       isAgentEditable: false,
       enablePlugins: true,
       showCreateSession: true,
+      showChangelog: true,
       enableRAGEval: false,
       showDalle: true,
       enableKnowledgeBase: true,
