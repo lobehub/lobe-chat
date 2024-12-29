@@ -152,7 +152,7 @@
     "chroma-js": "^3.1.2",
     "dayjs": "^1.11.13",
     "debug": "^4.3.7",
-    "dexie": "^3.2.7",
+    "dexie": "^4.0.0",
     "diff": "^5.2.0",
     "drizzle-orm": "^0.38.0",
     "drizzle-zod": "^0.5.1",
