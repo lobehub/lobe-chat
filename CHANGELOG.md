@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.42.1](https://github.com/lobehub/lobe-chat/compare/v1.42.0...v1.42.1)
+
+<sup>Released on **2024-12-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix custom max_token not saved from customModelCards.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix custom max_token not saved from customModelCards, closes [#5226](https://github.com/lobehub/lobe-chat/issues/5226) ([ab6d17c](https://github.com/lobehub/lobe-chat/commit/ab6d17c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.42.0](https://github.com/lobehub/lobe-chat/compare/v1.41.0...v1.42.0)
 
 <sup>Released on **2024-12-29**</sup>
