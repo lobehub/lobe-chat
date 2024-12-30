@@ -38,7 +38,23 @@ const defaultMiddleware = (request: NextRequest) => {
   const response = NextResponse.next();
 
   // 4. 设置自定义头
-  response.headers.set('rsc', preference);
+  response.headers.set('x-user-preference', preference);
+  // 获取现有的 Vary 头
+  const existingVary = response.headers.get('Vary') || '';
+
+  // 合并 Vary 头，确保保留 RSC
+  const varyHeaders = existingVary
+    .split(',')
+    .map((h) => h.trim())
+    .filter(Boolean);
+
+  // 添加我们的自定义头到 Vary
+  if (!varyHeaders.includes('x-user-preference')) {
+    varyHeaders.push('x-user-preference');
+  }
+
+  // 设置合并后的 Vary 头
+  response.headers.set('Vary', varyHeaders.join(', '));
 
   response.headers.set('CDN-cache-control', 'public, s-maxage=3600, stale-while-revalidate=86400');
 
