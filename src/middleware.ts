@@ -38,10 +38,7 @@ const defaultMiddleware = (request: NextRequest) => {
   const response = NextResponse.next();
 
   // 4. 设置自定义头
-  response.headers.set('x-user-preference', preference);
-
-  // 5. 使用自定义头作为缓存变体的依据
-  response.headers.set('Vary', 'x-user-preference');
+  response.headers.set('rsc', preference);
 
   response.headers.set('CDN-cache-control', 'public, s-maxage=3600, stale-while-revalidate=86400');
 
