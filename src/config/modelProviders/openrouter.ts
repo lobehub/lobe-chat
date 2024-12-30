@@ -39,7 +39,7 @@ const OpenRouter: ModelProviderCard = {
         input: 15,
         output: 60,
       },
-      releasedAt: '2024-09-12',
+      releasedAt: '2024-12-17',
       vision: true,
     },    
     {
