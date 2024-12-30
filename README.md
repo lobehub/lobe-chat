@@ -2,7 +2,10 @@
 
 [![][image-banner]][vercel-link]
 
-# Lobe Chat - AFT
+# Lobe Chat - AFT 
+
+Todo: 
+* Auth0 ekleme işlemi yapıldı.
 
 An open-source, modern-design ChatGPT/LLMs UI/Framework.<br/>
 Supports speech-synthesis, multi-modal, and extensible ([function call][docs-functionc-call]) plugin system.<br/>
