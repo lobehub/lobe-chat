@@ -2,10 +2,11 @@
 
 [![][image-banner]][vercel-link]
 
-# Lobe Chat - AFT 
+# Lobe Chat - AFT
 
-Todo: 
-* Auth0 ekleme işlemi yapıldı.
+Todo:
+
+- Auth0 ekleme işlemi yapıldı.
 
 An open-source, modern-design ChatGPT/LLMs UI/Framework.<br/>
 Supports speech-synthesis, multi-modal, and extensible ([function call][docs-functionc-call]) plugin system.<br/>
@@ -290,7 +291,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [Speak](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2024-12-02**</sup>                                         | Learn how to say anything in another language with Speak, your AI-powered language tutor.<br/>`education` `language`       |
 | [Tongyi wanxiang Image Generator](https://lobechat.com/discover/plugin/alps-tongyi-image)<br/><sup>By **YoungTx** on **2024-08-09**</sup> | This plugin uses Alibaba's Tongyi Wanxiang model to generate images based on text prompts.<br/>`image` `tongyi` `wanxiang` |
 
-> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**47**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
