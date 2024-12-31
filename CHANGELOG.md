@@ -2,6 +2,133 @@
 
 # Changelog
 
+### [Version 1.42.1](https://github.com/lobehub/lobe-chat/compare/v1.42.0...v1.42.1)
+
+<sup>Released on **2024-12-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix custom max_token not saved from customModelCards.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix custom max_token not saved from customModelCards, closes [#5226](https://github.com/lobehub/lobe-chat/issues/5226) ([ab6d17c](https://github.com/lobehub/lobe-chat/commit/ab6d17c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.42.0](https://github.com/lobehub/lobe-chat/compare/v1.41.0...v1.42.0)
+
+<sup>Released on **2024-12-29**</sup>
+
+#### ✨ Features
+
+- **misc**: Add custom stream handle support for LobeOpenAICompatibleFactory.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add custom stream handle support for LobeOpenAICompatibleFactory, closes [#5039](https://github.com/lobehub/lobe-chat/issues/5039) ([ea7e732](https://github.com/lobehub/lobe-chat/commit/ea7e732))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.41.0](https://github.com/lobehub/lobe-chat/compare/v1.40.4...v1.41.0)
+
+<sup>Released on **2024-12-28**</sup>
+
+#### ✨ Features
+
+- **auth**: Add WeChat authentication support.
+- **misc**: Support white list for discover assistant.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **auth**: Add WeChat authentication support, closes [#5195](https://github.com/lobehub/lobe-chat/issues/5195) ([95153a4](https://github.com/lobehub/lobe-chat/commit/95153a4))
+- **misc**: Support white list for discover assistant, closes [#5216](https://github.com/lobehub/lobe-chat/issues/5216) ([90bb20d](https://github.com/lobehub/lobe-chat/commit/90bb20d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.40.4](https://github.com/lobehub/lobe-chat/compare/v1.40.3...v1.40.4)
+
+<sup>Released on **2024-12-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update deepseek V3 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update deepseek V3 model, closes [#5199](https://github.com/lobehub/lobe-chat/issues/5199) ([868f556](https://github.com/lobehub/lobe-chat/commit/868f556))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.40.3](https://github.com/lobehub/lobe-chat/compare/v1.40.2...v1.40.3)
+
+<sup>Released on **2024-12-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fetch error in changelog modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fetch error in changelog modal, closes [#5194](https://github.com/lobehub/lobe-chat/issues/5194) ([e9433be](https://github.com/lobehub/lobe-chat/commit/e9433be))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.40.2](https://github.com/lobehub/lobe-chat/compare/v1.40.1...v1.40.2)
 
 <sup>Released on **2024-12-26**</sup>
