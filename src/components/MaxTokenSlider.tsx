@@ -4,8 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
 
-import { useServerConfigStore } from '@/store/serverConfig';
-import { serverConfigSelectors } from '@/store/serverConfig/selectors';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const Kibi = 1024;
 
@@ -20,7 +19,7 @@ interface MaxTokenSliderProps {
 }
 
 const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValue }) => {
-  const { t } = useTranslation('setting');
+  const { t } = useTranslation('components');
 
   const [token, setTokens] = useMergeState(0, {
     defaultValue,
@@ -45,7 +44,7 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
     setPowValue(exponent(value / Kibi));
   };
 
-  const isMobile = useServerConfigStore(serverConfigSelectors.isMobile);
+  const isMobile = useIsMobile();
 
   const marks = useMemo(() => {
     return {
@@ -74,7 +73,7 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
           tooltip={{
             formatter: (x) => {
               if (typeof x === 'undefined') return;
-              if (x === 0) return t('llm.customModelCards.modelConfig.tokens.unlimited');
+              if (x === 0) return t('MaxTokenSlider.unlimited');
 
               let value = getRealValue(x);
               if (value < 125) return value.toFixed(0) + 'K';

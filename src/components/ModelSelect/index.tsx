@@ -9,6 +9,7 @@ import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { ModelAbilities } from '@/types/aiModel';
 import { ChatModelCard } from '@/types/llm';
 import { formatTokenNumber } from '@/utils/format';
 
@@ -57,8 +58,10 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface ModelInfoTagsProps extends ChatModelCard {
+interface ModelInfoTagsProps extends ModelAbilities {
+  contextWindowTokens?: number | null;
   directionReverse?: boolean;
+  isCustom?: boolean;
   placement?: 'top' | 'right';
 }
 
@@ -102,7 +105,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
             </div>
           </Tooltip>
         )}
-        {model.contextWindowTokens !== undefined && (
+        {typeof model.contextWindowTokens === 'number' && (
           <Tooltip
             overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
@@ -117,7 +120,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
               {model.contextWindowTokens === 0 ? (
                 <Infinity size={17} strokeWidth={1.6} />
               ) : (
-                formatTokenNumber(model.contextWindowTokens)
+                formatTokenNumber(model.contextWindowTokens as number)
               )}
             </Center>
           </Tooltip>

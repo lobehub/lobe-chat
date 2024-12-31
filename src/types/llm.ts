@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 
+import { ChatModelPricing } from '@/types/aiModel';
+
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
 export interface ChatModelCard {
@@ -38,23 +40,7 @@ export interface ChatModelCard {
    */
   legacy?: boolean;
   maxOutput?: number;
-  pricing?: {
-    cachedInput?: number;
-    /**
-     * the currency of the pricing
-     * @default USD
-     */
-    currency?: ModelPriceCurrency;
-    /**
-     * the input pricing, e.g. $1 / 1M tokens
-     */
-    input?: number;
-    /**
-     * the output pricing, e.g. $2 / 1M tokens
-     */
-    output?: number;
-    writeCacheInput?: number;
-  };
+  pricing?: ChatModelPricing;
   releasedAt?: string;
 
   /**
