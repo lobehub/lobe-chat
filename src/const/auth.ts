@@ -25,6 +25,9 @@ export interface JWTPayload {
    * this will be used as the checker whether to use frontend key
    */
   apiKey?: string;
+  /**
+   * Represents the endpoint of provider
+   */
   baseURL?: string;
 
   azureApiVersion?: string;
