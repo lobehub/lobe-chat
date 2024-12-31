@@ -119,9 +119,12 @@ export const initAgentRuntimeWithUserPayload = async (
   // user subscription
   if (payload.userId) {
     try {
+      if (!process.env.ONEAI_API_URL) {
+        throw new Error('ONEAI_API_URL is not set');
+      }
       const subscription = await getUserSubscription(payload.userId);
       if (subscription.is_subscribed === 1) {
-        payload.endpoint = subscription.oneai_base_url;
+        payload.endpoint = process.env.ONEAI_API_URL;
         payload.apiKey = subscription.oneai_token;
       } else {
         throw new Error('User is not subscribed');
