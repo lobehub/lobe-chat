@@ -1,9 +1,15 @@
 name: Publish Database Docker Image
 
 on:
+  push:
+    tags:
+      - '*'
+      - '!*-alpha*'
   workflow_dispatch:
-  release:
-    types: [published]
+    inputs:
+      name:
+        description: 'reason'
+        required: false
 
 jobs:
   push_to_registry:
