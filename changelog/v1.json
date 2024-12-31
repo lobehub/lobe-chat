@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add o1 model in openai and openrouter models."]
+    },
+    "date": "2024-12-31",
+    "version": "1.42.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix custom max_token not saved from customModelCards."]
     },
     "date": "2024-12-29",

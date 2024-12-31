@@ -939,6 +939,7 @@ describe('AgentRuntimeOnClient', () => {
             },
           },
         } as UserSettingsState) as unknown as UserStore;
+
         const runtime = await initializeWithClientStore(ModelProvider.Azure, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
