@@ -291,12 +291,9 @@ echo $(show_message "security_secrect_regenerate")
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS
     SED_COMMAND="sed -i ''"
-elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    # Linux
-    SED_COMMAND="sed -i"
 else
-    echo "Unsupported OS"
-    exit 1
+    # not macOS
+    SED_COMMAND="sed -i"
 fi
 
 # Generate CASDOOR_SECRET
