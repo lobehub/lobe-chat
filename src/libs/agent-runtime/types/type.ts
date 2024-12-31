@@ -41,6 +41,7 @@ export enum ModelProvider {
   InternLM = 'internlm',
   Minimax = 'minimax',
   Mistral = 'mistral',
+  ModelScope = 'modelscope',
   Moonshot = 'moonshot',
   Novita = 'novita',
   Ollama = 'ollama',

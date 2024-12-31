@@ -77,6 +77,13 @@
       "title": "Mã thông báo HuggingFace"
     }
   },
+  "modelscope": {
+    "accessToken": {
+      "desc": "Nhập mã thông báo truy cập ModelScope của bạn, nhấp vào [đây](https://www.modelscope.cn/my/myaccesstoken) để lấy",
+      "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "title": "Mã thông báo truy cập ModelScope"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không",

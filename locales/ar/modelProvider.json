@@ -77,6 +77,13 @@
       "title": "رمز HuggingFace"
     }
   },
+  "modelscope": {
+    "accessToken": {
+      "desc": "أدخل رمز الوصول الخاص بك لـ ModelScope، انقر [هنا](https://www.modelscope.cn/my/myaccesstoken) للحصول عليه",
+      "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "title": "رمز الوصول لـ ModelScope"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح",

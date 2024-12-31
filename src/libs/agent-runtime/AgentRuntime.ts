@@ -22,6 +22,7 @@ import { LobeHunyuanAI } from './hunyuan';
 import { LobeInternLMAI } from './internlm';
 import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
+import { LobeModelScopeAI } from './modelscope';
 import { LobeMoonshotAI } from './moonshot';
 import { LobeNovitaAI } from './novita';
 import { LobeOllamaAI } from './ollama';
@@ -149,6 +150,7 @@ class AgentRuntime {
       internlm: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
       mistral: Partial<ClientOptions>;
+      modelscope: Partial<ClientOptions>;
       moonshot: Partial<ClientOptions>;
       novita: Partial<ClientOptions>;
       ollama: Partial<ClientOptions>;
@@ -239,6 +241,11 @@ class AgentRuntime {
 
       case ModelProvider.Mistral: {
         runtimeModel = new LobeMistralAI(params.mistral);
+        break;
+      }
+
+      case ModelProvider.ModelScope: {
+        runtimeModel = new LobeModelScopeAI(params.modelscope);
         break;
       }
 

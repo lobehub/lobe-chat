@@ -77,6 +77,13 @@
       "title": "HuggingFace Token"
     }
   },
+  "modelscope": {
+    "accessToken": {
+      "desc": "ModelScope erişim belirtecini girin, almak için [buraya](https://www.modelscope.cn/my/myaccesstoken) tıklayın",
+      "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "title": "ModelScope Erişim Belirteci"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Proxy adresinin doğru girilip girilmediğini test edin",

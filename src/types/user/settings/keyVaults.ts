@@ -47,6 +47,7 @@ export interface UserKeyVaults {
   lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
   mistral?: OpenAICompatibleKeyVault;
+  modelscope?: OpenAICompatibleKeyVault;
   moonshot?: OpenAICompatibleKeyVault;
   novita?: OpenAICompatibleKeyVault;
   ollama?: OpenAICompatibleKeyVault;

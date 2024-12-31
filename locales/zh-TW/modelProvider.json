@@ -77,6 +77,13 @@
       "title": "HuggingFace Token"
     }
   },
+  "modelscope": {
+    "accessToken": {
+      "desc": "填入你的 ModelScope 訪問令牌，點擊 [這裡](https://www.modelscope.cn/my/myaccesstoken) 獲取",
+      "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "title": "ModelScope 訪問令牌"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "測試代理地址是否正確填寫",

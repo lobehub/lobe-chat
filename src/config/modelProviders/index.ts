@@ -19,6 +19,7 @@ import HunyuanProvider from './hunyuan';
 import InternLMProvider from './internlm';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
+import ModelScopeProvider from './modelscope';
 import MoonshotProvider from './moonshot';
 import NovitaProvider from './novita';
 import OllamaProvider from './ollama';
@@ -49,6 +50,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   GithubProvider.chatModels,
   MinimaxProvider.chatModels,
   MistralProvider.chatModels,
+  ModelScopeProvider.chatModels,
   MoonshotProvider.chatModels,
   OllamaProvider.chatModels,
   OpenRouterProvider.chatModels,
@@ -106,6 +108,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   ZeroOneProvider,
   SenseNovaProvider,
   StepfunProvider,
+  ModelScopeProvider,
   MoonshotProvider,
   BaichuanProvider,
   MinimaxProvider,
@@ -145,6 +148,7 @@ export { default as HunyuanProviderCard } from './hunyuan';
 export { default as InternLMProviderCard } from './internlm';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
+export { default as ModelScopeProviderCard } from './modelscope';
 export { default as MoonshotProviderCard } from './moonshot';
 export { default as NovitaProviderCard } from './novita';
 export { default as OllamaProviderCard } from './ollama';

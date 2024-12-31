@@ -77,6 +77,13 @@
       "title": "توکن HuggingFace"
     }
   },
+  "modelscope": {
+    "accessToken": {
+      "desc": "توکن دسترسی ModelScope خود را وارد کنید، برای دریافت آن [اینجا](https://www.modelscope.cn/my/myaccesstoken) را کلیک کنید",
+      "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "title": "توکن دسترسی ModelScope"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "آزمایش کنید که آیا آدرس پروکسی به درستی وارد شده است",

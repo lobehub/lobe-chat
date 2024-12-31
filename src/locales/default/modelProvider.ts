@@ -78,6 +78,13 @@ export default {
       title: 'HuggingFace Token',
     },
   },
+  modelscope: {
+    accessToken: {
+      desc: '填入你的 ModelScope 访问令牌，点击 [这里](https://www.modelscope.cn/my/myaccesstoken) 获取',
+      placeholder: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+      title: 'ModelScope 访问令牌',
+    },
+  },
   ollama: {
     checker: {
       desc: '测试代理地址是否正确填写',

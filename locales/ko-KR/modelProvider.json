@@ -77,6 +77,13 @@
       "title": "HuggingFace 토큰"
     }
   },
+  "modelscope": {
+    "accessToken": {
+      "desc": "ModelScope 액세스 토큰을 입력하세요. 토큰을 얻으려면 [여기](https://www.modelscope.cn/my/myaccesstoken)를 클릭하세요",
+      "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "title": "ModelScope 액세스 토큰"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다",
