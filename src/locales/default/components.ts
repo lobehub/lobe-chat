@@ -70,6 +70,9 @@ export default {
   GoBack: {
     back: '返回',
   },
+  MaxTokenSlider: {
+    unlimited: '无限制',
+  },
   ModelSelect: {
     featureTag: {
       custom: '自定义模型，默认设定同时支持函数调用与视觉识别，请根据实际情况验证上述能力的可用性',

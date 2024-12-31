@@ -29,7 +29,10 @@ describe('LobeOllamaAI', () => {
       try {
         new LobeOllamaAI({ baseURL: 'invalid-url' });
       } catch (e) {
-        expect(e).toEqual(AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs));
+        expect(e).toEqual({
+          error: new TypeError('Invalid URL'),
+          errorType: 'InvalidOllamaArgs',
+        });
       }
     });
   });
