@@ -48,7 +48,7 @@ export interface ChatTopicAction {
   summaryTopicTitle: (topicId: string, messages: ChatMessage[]) => Promise<void>;
   switchTopic: (id?: string, skipRefreshMessage?: boolean) => Promise<void>;
   updateTopicTitle: (id: string, title: string) => Promise<void>;
-  useFetchTopics: (sessionId: string) => SWRResponse<ChatTopic[]>;
+  useFetchTopics: (enable: boolean, sessionId: string) => SWRResponse<ChatTopic[]>;
   useSearchTopics: (keywords?: string, sessionId?: string) => SWRResponse<ChatTopic[]>;
 
   internal_updateTopicTitleInSummary: (id: string, title: string) => void;
@@ -190,9 +190,9 @@ export const chatTopic: StateCreator<
   },
 
   // query
-  useFetchTopics: (sessionId) =>
+  useFetchTopics: (enable, sessionId) =>
     useClientDataSWR<ChatTopic[]>(
-      [SWR_USE_FETCH_TOPIC, sessionId],
+      enable ? [SWR_USE_FETCH_TOPIC, sessionId] : null,
       async ([, sessionId]: [string, string]) => topicService.getTopics({ sessionId }),
       {
         suspense: true,

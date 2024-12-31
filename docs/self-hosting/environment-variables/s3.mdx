@@ -81,3 +81,18 @@ Assuming the S3 service provider's domain is s3.example.net, the bucket is mybuc
 - virtual-host: `mybucket.s3.example.net/config.env`
 
 </Callout>
+
+### `LLM_VISION_IMAGE_USE_BASE64`
+
+- Type: Optional
+- Description: Set to `1` to use base64 encoding for image upload.
+- Default: undefined
+- Example: `1`
+
+When set to `1`, LobeChat will convert images to base64 encoding before
+uploading them to the LLM model. When encountering the following error,
+please consider configuring this environment variable to `1`:
+
+```log
+Route: [xai] ProviderBizError: Fetching images over plain http:// is not supported.
+```

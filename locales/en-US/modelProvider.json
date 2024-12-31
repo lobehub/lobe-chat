@@ -90,7 +90,7 @@
     "download": {
       "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
       "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
+      "speed": "Speed",
       "title": "Downloading model {{model}}"
     },
     "endpoint": {

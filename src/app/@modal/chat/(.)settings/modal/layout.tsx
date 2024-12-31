@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import ModalLayout from '@/app/@modal/_layout/ModalLayout';
 import StoreUpdater from '@/features/AgentSetting/StoreUpdater';
 import { Provider, createStore } from '@/features/AgentSetting/store';
 import { useQuery } from '@/hooks/useQuery';
@@ -35,23 +36,25 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
   ]);
 
   return (
-    <SettingModalLayout
-      activeTitle={t(`agentTab.${tab as ChatSettingsTabs}`)}
-      category={<CategoryContent />}
-      desc={t('header.sessionDesc')}
-      title={t('header.session')}
-    >
-      <Provider createStore={createStore}>
-        <StoreUpdater
-          config={config}
-          id={id}
-          meta={meta}
-          onConfigChange={updateAgentConfig}
-          onMetaChange={updateAgentMeta}
-        />
-        {children}
-      </Provider>
-    </SettingModalLayout>
+    <ModalLayout>
+      <SettingModalLayout
+        activeTitle={t(`agentTab.${tab as ChatSettingsTabs}`)}
+        category={<CategoryContent />}
+        desc={t('header.sessionDesc')}
+        title={t('header.session')}
+      >
+        <Provider createStore={createStore}>
+          <StoreUpdater
+            config={config}
+            id={id}
+            meta={meta}
+            onConfigChange={updateAgentConfig}
+            onMetaChange={updateAgentMeta}
+          />
+          {children}
+        </Provider>
+      </SettingModalLayout>
+    </ModalLayout>
   );
 });
 

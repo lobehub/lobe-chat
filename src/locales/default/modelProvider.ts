@@ -62,7 +62,7 @@ export default {
       desc: '填入 Cloudflare 账户 ID 或 自定义 API 地址',
       placeholder: 'Cloudflare Account ID / custom API URL',
       title: 'Cloudflare 账户 ID / API 地址',
-    }
+    },
   },
   github: {
     personalAccessToken: {
@@ -132,23 +132,6 @@ export default {
       downloaded: '{{completed}} / {{total}}',
       starting: '开始下载...',
       title: '下载指定的 Ollama 模型',
-    },
-  },
-  sensenova: {
-    sensenovaAccessKeyID: {
-      desc: '填入 SenseNova Access Key ID',
-      placeholder: 'SenseNova Access Key ID',
-      title: 'Access Key ID',
-    },
-    sensenovaAccessKeySecret: {
-      desc: '填入 SenseNova Access Key Secret',
-      placeholder: 'SenseNova Access Key Secret',
-      title: 'Access Key Secret',
-    },
-    unlock: {
-      description:
-        '输入你的 Access Key ID / Access Key Secret 即可开始会话。应用不会记录你的鉴权配置',
-      title: '使用自定义 SenseNova 鉴权信息',
     },
   },
   wenxin: {

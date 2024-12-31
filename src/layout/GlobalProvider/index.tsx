@@ -17,6 +17,7 @@ import { ServerConfigStoreProvider } from '@/store/serverConfig';
 import { getAntdLocale } from '@/utils/locale';
 import { isMobileDevice } from '@/utils/server/responsive';
 
+import AntdV5MonkeyPatch from './AntdV5MonkeyPatch';
 import AppTheme from './AppTheme';
 import Debug from './Debug';
 import Locale from './Locale';
@@ -25,6 +26,9 @@ import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
 const parserFallbackLang = async () => {
+  // if the default language is not 'en-US', just return the default language as fallback lang
+  if (DEFAULT_LANG !== 'en-US') return DEFAULT_LANG;
+
   const header = await headers();
   /**
    * The arguments are as follows:
@@ -65,7 +69,7 @@ const GlobalLayout = async ({ children }: PropsWithChildren) => {
   // get default feature flags to use with ssr
   const serverFeatureFlags = getServerFeatureFlagsValue();
   const serverConfig = getServerGlobalConfig();
-  const isMobile = isMobileDevice();
+  const isMobile = await isMobileDevice();
   return (
     <StyleRegistry>
       <Locale antdLocale={antdLocale} defaultLang={userLocale}>
@@ -88,6 +92,7 @@ const GlobalLayout = async ({ children }: PropsWithChildren) => {
           <DebugUI />
           <Debug />
         </AppTheme>
+        <AntdV5MonkeyPatch />
       </Locale>
     </StyleRegistry>
   );

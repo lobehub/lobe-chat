@@ -7,7 +7,6 @@ export enum FilesTabs {
   Websites = 'websites',
 }
 
-
 export interface FileItem {
   createdAt: Date;
   enabled?: boolean;

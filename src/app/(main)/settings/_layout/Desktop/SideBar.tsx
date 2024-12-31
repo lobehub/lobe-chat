@@ -33,7 +33,7 @@ const SidebarLayout = ({ children, className, title, desc, ...rest }: SidebarLay
       {...rest}
     >
       <PanelTitle desc={desc || t('header.desc')} title={title || t('header.title')} />
-      {children}
+      <Flexbox flex={1}>{children}</Flexbox>
       <BrandWatermark paddingInline={12} />
     </Flexbox>
   );

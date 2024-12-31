@@ -1,10 +1,10 @@
 import { Flexbox } from 'react-layout-kit';
 
-import SkeletonLoading from '@/components/SkeletonLoading';
+import SkeletonLoading from '@/components/Loading/SkeletonLoading';
 import { isMobileDevice } from '@/utils/server/responsive';
 
-const Loading = () => {
-  const mobile = isMobileDevice();
+const Loading = async () => {
+  const mobile = await isMobileDevice();
   if (mobile) return <SkeletonLoading paragraph={{ rows: 8 }} />;
   return (
     <Flexbox horizontal style={{ position: 'relative' }} width={'100%'}>

@@ -75,7 +75,7 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
       {data.meta.description && <div>{t(`${identifier}.description`, { ns: 'models' })}</div>}
       <ModelFeatureTags
         functionCall={data.meta.functionCall}
-        tokens={data.meta.tokens}
+        tokens={data.meta.contextWindowTokens}
         vision={data.meta.vision}
       />
     </Flexbox>

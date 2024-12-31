@@ -45,7 +45,7 @@ export interface SuggestionItemProps
     FlexboxProps {}
 
 const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier, ...rest }) => {
-  const { title, description, tokens, vision, functionCall } = meta;
+  const { title, description, contextWindowTokens, vision, functionCall } = meta;
   const { t } = useTranslation('models');
   const { cx, styles } = useStyles();
 
@@ -67,7 +67,7 @@ const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier,
           {t(`${identifier}.description`)}
         </Paragraph>
       )}
-      <ModelFeatureTags functionCall={functionCall} tokens={tokens} vision={vision} />
+      <ModelFeatureTags functionCall={functionCall} tokens={contextWindowTokens} vision={vision} />
     </Flexbox>
   );
 });

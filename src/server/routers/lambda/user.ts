@@ -3,16 +3,19 @@ import { currentUser } from '@clerk/nextjs/server';
 import { z } from 'zod';
 
 import { enableClerk } from '@/const/auth';
+import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
 import { SessionModel } from '@/database/server/models/session';
 import { UserModel, UserNotFoundError } from '@/database/server/models/user';
 import { authedProcedure, router } from '@/libs/trpc';
+import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserService } from '@/server/services/user';
 import { UserGuideSchema, UserInitializationState, UserPreference } from '@/types/user';
+import { UserSettings } from '@/types/user/settings';
 
 const userProcedure = authedProcedure.use(async (opts) => {
   return opts.next({
-    ctx: { userModel: new UserModel() },
+    ctx: { userModel: new UserModel(serverDB, opts.ctx.userId) },
   });
 });
 
@@ -23,7 +26,7 @@ export const userRouter = router({
     // get or create first-time user
     while (!state) {
       try {
-        state = await ctx.userModel.getUserState(ctx.userId);
+        state = await ctx.userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
       } catch (error) {
         if (enableClerk && error instanceof UserNotFoundError) {
           const user = await currentUser();
@@ -56,17 +59,18 @@ export const userRouter = router({
       }
     }
 
-    const messageModel = new MessageModel(ctx.userId);
-    const messageCount = await messageModel.count();
+    const messageModel = new MessageModel(serverDB, ctx.userId);
+    const hasMoreThan4Messages = await messageModel.hasMoreThanN(4);
 
-    const sessionModel = new SessionModel(ctx.userId);
-    const sessionCount = await sessionModel.count();
+    const sessionModel = new SessionModel(serverDB, ctx.userId);
+    const hasAnyMessages = await messageModel.hasMoreThanN(0);
+    const hasExtraSession = await sessionModel.hasMoreThanN(1);
 
     return {
-      canEnablePWAGuide: messageCount >= 4,
-      canEnableTrace: messageCount >= 4,
+      canEnablePWAGuide: hasMoreThan4Messages,
+      canEnableTrace: hasMoreThan4Messages,
       // 有消息，或者创建过助手，则认为有 conversation
-      hasConversation: messageCount > 0 || sessionCount > 1,
+      hasConversation: hasAnyMessages || hasExtraSession,
 
       // always return true for community version
       isOnboard: state.isOnboarded || true,
@@ -77,25 +81,40 @@ export const userRouter = router({
   }),
 
   makeUserOnboarded: userProcedure.mutation(async ({ ctx }) => {
-    return ctx.userModel.updateUser(ctx.userId, { isOnboarded: true });
+    return ctx.userModel.updateUser({ isOnboarded: true });
   }),
 
   resetSettings: userProcedure.mutation(async ({ ctx }) => {
-    return ctx.userModel.deleteSetting(ctx.userId);
+    return ctx.userModel.deleteSetting();
   }),
 
   updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {
-    return ctx.userModel.updateGuide(ctx.userId, input);
+    return ctx.userModel.updateGuide(input);
   }),
 
   updatePreference: userProcedure.input(z.any()).mutation(async ({ ctx, input }) => {
-    return ctx.userModel.updatePreference(ctx.userId, input);
+    return ctx.userModel.updatePreference(input);
   }),
 
   updateSettings: userProcedure
     .input(z.object({}).passthrough())
     .mutation(async ({ ctx, input }) => {
-      return ctx.userModel.updateSetting(ctx.userId, input);
+      const { keyVaults, ...res } = input as Partial<UserSettings>;
+
+      // Encrypt keyVaults
+      let encryptedKeyVaults: string | null = null;
+
+      if (keyVaults) {
+        // TODO: better to add a validation
+        const data = JSON.stringify(keyVaults);
+        const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+
+        encryptedKeyVaults = await gateKeeper.encrypt(data);
+      }
+
+      const nextValue = { ...res, keyVaults: encryptedKeyVaults };
+
+      return ctx.userModel.updateSetting(nextValue);
     }),
 });
 

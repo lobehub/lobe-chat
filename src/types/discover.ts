@@ -4,12 +4,10 @@ import { LobeChatPluginMeta, Meta } from '@lobehub/chat-plugin-sdk/lib/types/mar
 import { Locales } from '@/locales/resources';
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import { MetaData } from '@/types/meta';
+import { PageProps } from '@/types/next';
 import { LobeAgentSettings } from '@/types/session';
 
-export interface DiscoverPageProps {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ hl?: Locales }>;
-}
+export type DiscoverPageProps<T = string> = PageProps<{ slug: T }, { hl?: Locales }>;
 
 export enum AssistantCategory {
   Academic = 'academic',
@@ -155,4 +153,24 @@ export interface FilterBy {
   time?: TimePeriod;
   token?: number;
   vision?: boolean;
+}
+
+interface AgentIndexItem {
+  author: string;
+  createAt: string;
+  createdAt: string;
+  homepage: string;
+  identifier: string;
+  meta: {
+    avatar: string;
+    category: string;
+    description: string;
+    tags: string[];
+    title: string;
+  };
+}
+
+export interface AgentStoreIndex {
+  agents: AgentIndexItem[];
+  schemaVersion: number;
 }

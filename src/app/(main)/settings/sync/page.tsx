@@ -15,12 +15,12 @@ export const generateMetadata = async () => {
     url: '/settings/sync',
   });
 };
-export default () => {
+export default async () => {
   const enableWebrtc = serverFeatureFlags().enableWebrtc;
   if (!enableWebrtc) return notFound();
 
-  const isMobile = isMobileDevice();
-  const { os, browser } = gerServerDeviceInfo();
+  const isMobile = await isMobileDevice();
+  const { os, browser } = await gerServerDeviceInfo();
 
   return <Page browser={browser} mobile={isMobile} os={os} />;
 };

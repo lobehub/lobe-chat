@@ -9,7 +9,21 @@
       "title": "Launch {{name}}"
     }
   },
-  "appInitializing": "Application is starting...",
+  "appLoading": {
+    "appIdle": "Ready to start",
+    "appInitializing": "Application is starting...",
+    "failed": "Sorry, the application initialization failed. Please check the details for troubleshooting.",
+    "finished": "Database initialization completed",
+    "goToChat": "Loading chat page...",
+    "initAuth": "Initializing authentication service...",
+    "initUser": "Initializing user status...",
+    "initializing": "Initializing PGlite database...",
+    "loadingDependencies": "Initializing dependencies...",
+    "loadingWasm": "Loading WASM module...",
+    "migrating": "Performing database migration...",
+    "ready": "Database is ready",
+    "showDetail": "View details"
+  },
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
@@ -20,6 +34,54 @@
   "branchingDisable": "The 'Subtopic' feature is only available in the server version. If you need this feature, please switch to server deployment mode or use LobeChat Cloud.",
   "cancel": "Cancel",
   "changelog": "Changelog",
+  "clientDB": {
+    "autoInit": {
+      "title": "Initializing PGlite Database"
+    },
+    "error": {
+      "desc": "We apologize, an error occurred during the Pglite database initialization process. Please click the button to retry. If the error persists after multiple attempts, please <1>submit an issue</1>, and we will assist you as soon as possible.",
+      "detail": "Error reason: [{{type}}] {{message}}. Details are as follows:",
+      "retry": "Retry",
+      "title": "Database Initialization Failed"
+    },
+    "initing": {
+      "error": "An error occurred, please try again",
+      "idle": "Waiting for initialization...",
+      "initializing": "Initializing...",
+      "loadingDependencies": "Loading dependencies...",
+      "loadingWasmModule": "Loading WASM module...",
+      "migrating": "Performing database migration...",
+      "ready": "Database is ready"
+    },
+    "modal": {
+      "desc": "Enable the PGlite client database to persistently store chat data in your browser and use advanced features like knowledge base.",
+      "enable": "Enable Now",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Build your personal knowledge base and easily start conversations with your assistant (coming soon)",
+          "title": "Support for knowledge base conversations"
+        },
+        "localFirst": {
+          "desc": "Chat data is stored entirely in the browser, keeping your data always under your control.",
+          "title": "Local first, privacy first"
+        },
+        "pglite": {
+          "desc": "Built on PGlite, natively supports AI Native advanced features (vector search)",
+          "title": "Next-generation client storage architecture"
+        }
+      },
+      "init": {
+        "desc": "Initializing the database, which may take 5 to 30 seconds depending on network conditions.",
+        "title": "Initializing PGlite Database"
+      },
+      "title": "Enable Client Database"
+    },
+    "ready": {
+      "button": "Use Now",
+      "desc": "Ready to use",
+      "title": "PGlite Database is Ready"
+    }
+  },
   "close": "Close",
   "contact": "Contact Us",
   "copy": "Copy",
@@ -156,6 +218,7 @@
   "pinOff": "Unpin",
   "privacy": "Privacy Policy",
   "regenerate": "Regenerate",
+  "releaseNotes": "Version Details",
   "rename": "Rename",
   "reset": "Reset",
   "retry": "Retry",

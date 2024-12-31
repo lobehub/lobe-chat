@@ -4,6 +4,7 @@ import { useQueryState } from 'nuqs';
 import { memo, useEffect, useLayoutEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
+import { useFetchThreads } from '@/hooks/useFetchThreads';
 import { useChatStore } from '@/store/chat';
 
 // sync outside state to useChatStore
@@ -34,10 +35,7 @@ const ThreadHydration = memo(() => {
     }
   }, [portalThread]);
 
-  const [activeTopicId, useFetchThreads] = useChatStore((s) => [
-    s.activeTopicId,
-    s.useFetchThreads,
-  ]);
+  const activeTopicId = useChatStore((s) => s.activeTopicId);
 
   useFetchThreads(activeTopicId);
 

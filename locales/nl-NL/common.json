@@ -9,7 +9,21 @@
       "title": "Welkom bij {{name}}"
     }
   },
-  "appInitializing": "Applicatie wordt gestart...",
+  "appLoading": {
+    "appIdle": "Klaar om te starten",
+    "appInitializing": "Applicatie wordt gestart...",
+    "failed": "Het spijt ons, de applicatie-initialisatie is mislukt. Bekijk de details voor hulp bij het oplossen.",
+    "finished": "Database-initialisatie voltooid",
+    "goToChat": "De chatpagina wordt geladen...",
+    "initAuth": "Authenticatiedienst wordt geïnitialiseerd...",
+    "initUser": "Gebruikersstatus wordt geïnitialiseerd...",
+    "initializing": "PGlite-database wordt geïnitialiseerd...",
+    "loadingDependencies": "Afhankelijkheden worden geïnitialiseerd...",
+    "loadingWasm": "WASM-modules worden geladen...",
+    "migrating": "Gegevens migreren...",
+    "ready": "Database is gereed",
+    "showDetail": "Bekijk details"
+  },
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
   "autoGenerateTooltipDisabled": "Schakel de automatische aanvulling in nadat u een suggestiewoord heeft ingevoerd",
@@ -20,6 +34,54 @@
   "branchingDisable": "De functie 'Subonderwerp' is alleen beschikbaar in de serverversie. Als je deze functie wilt gebruiken, schakel dan over naar de serverimplementatiemodus of gebruik LobeChat Cloud.",
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",
+  "clientDB": {
+    "autoInit": {
+      "title": "Initialiseer de PGlite-database"
+    },
+    "error": {
+      "desc": "Onze excuses, er is een fout opgetreden tijdens het initialisatieproces van de Pglite-database. Klik op de knop om het opnieuw te proberen. Als het probleem zich blijft voordoen na meerdere pogingen, gelieve <1>een probleem te melden</1> en we zullen u zo snel mogelijk helpen.",
+      "detail": "Fout reden: [[{{type}}] {{message}}. Details zijn als volgt:",
+      "retry": "Opnieuw proberen",
+      "title": "Fout bij database-initialisatie"
+    },
+    "initing": {
+      "error": "Er is een fout opgetreden, probeer het opnieuw",
+      "idle": "Wachten op initialisatie...",
+      "initializing": "Bezig met initialiseren...",
+      "loadingDependencies": "Afhankelijkheden laden...",
+      "loadingWasmModule": "WASM-module laden...",
+      "migrating": "Gegevens migreren...",
+      "ready": "Database is gereed"
+    },
+    "modal": {
+      "desc": "Schakel de PGlite-clientdatabase in om chatgegevens permanent op te slaan in je browser en gebruik geavanceerde functies zoals de kennisbank.",
+      "enable": "Nu inschakelen",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Bouw je persoonlijke kennisbasis op en start eenvoudig een gesprek met je assistent (binnenkort beschikbaar)",
+          "title": "Ondersteuning voor kennisbasisgesprekken, activeer je tweede brein"
+        },
+        "localFirst": {
+          "desc": "Chatgegevens worden volledig in de browser opgeslagen, jouw gegevens zijn altijd in jouw beheer.",
+          "title": "Lokaal eerst, privacy voorop"
+        },
+        "pglite": {
+          "desc": "Gebaseerd op PGlite, native ondersteuning voor AI Native geavanceerde functies (vectorzoekopdrachten)",
+          "title": "Nieuwe generatie clientopslagarchitectuur"
+        }
+      },
+      "init": {
+        "desc": "Bezig met het initialiseren van de database, afhankelijk van de netwerksnelheid kan dit 5 tot 30 seconden duren.",
+        "title": "Bezig met het initialiseren van de PGlite-database"
+      },
+      "title": "Schakel de clientdatabase in"
+    },
+    "ready": {
+      "button": "Nu gebruiken",
+      "desc": "Direct gebruiken",
+      "title": "PGlite-database is gereed"
+    }
+  },
   "close": "Sluiten",
   "contact": "Contacteer ons",
   "copy": "Kopiëren",
@@ -156,6 +218,7 @@
   "pinOff": "Vastzetten uitschakelen",
   "privacy": "Privacybeleid",
   "regenerate": "Opnieuw genereren",
+  "releaseNotes": "Versie details",
   "rename": "Naam wijzigen",
   "reset": "Resetten",
   "retry": "Opnieuw proberen",
