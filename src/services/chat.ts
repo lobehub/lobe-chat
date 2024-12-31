@@ -100,9 +100,8 @@ export function initializeWithClientStore(provider: string, payload: any) {
     }
     case ModelProvider.Azure: {
       providerOptions = {
+        apiKey: providerAuthPayload?.apiKey,
         apiVersion: providerAuthPayload?.azureApiVersion,
-        // That's a wired properity, but just remapped it
-        apikey: providerAuthPayload?.apiKey,
       };
       break;
     }

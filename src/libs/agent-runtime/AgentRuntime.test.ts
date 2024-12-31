@@ -75,8 +75,8 @@ describe('AgentRuntime', () => {
     describe('Azure OpenAI provider', () => {
       it('should initialize correctly', async () => {
         const jwtPayload = {
-          apikey: 'user-azure-key',
-          endpoint: 'user-azure-endpoint',
+          apiKey: 'user-azure-key',
+          baseURL: 'user-azure-endpoint',
           apiVersion: '2024-06-01',
         };
 
@@ -90,8 +90,8 @@ describe('AgentRuntime', () => {
       });
       it('should initialize with azureOpenAIParams correctly', async () => {
         const jwtPayload = {
-          apikey: 'user-openai-key',
-          endpoint: 'user-endpoint',
+          apiKey: 'user-openai-key',
+          baseURL: 'user-endpoint',
           apiVersion: 'custom-version',
         };
 
@@ -106,8 +106,8 @@ describe('AgentRuntime', () => {
 
       it('should initialize with AzureAI correctly', async () => {
         const jwtPayload = {
-          apikey: 'user-azure-key',
-          endpoint: 'user-azure-endpoint',
+          apiKey: 'user-azure-key',
+          baseURL: 'user-azure-endpoint',
         };
         const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Azure, {
           azure: jwtPayload,
@@ -171,7 +171,7 @@ describe('AgentRuntime', () => {
 
     describe('Ollama provider', () => {
       it('should initialize correctly', async () => {
-        const jwtPayload: JWTPayload = { baseURL: 'user-ollama-url' };
+        const jwtPayload: JWTPayload = { baseURL: 'https://user-ollama-url' };
         const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Ollama, {
           ollama: jwtPayload,
         });
