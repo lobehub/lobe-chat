@@ -130,6 +130,17 @@ describe('UserModel', () => {
     });
   });
 
+  describe('getUserSettings', () => {
+    it('should get user settings', async () => {
+      await serverDB.insert(users).values({ id: userId });
+      await serverDB.insert(userSettings).values({ id: userId, general: { language: 'en-US' } });
+
+      const data = await userModel.getUserSettings();
+
+      expect(data).toMatchObject({ id: userId, general: { language: 'en-US' } });
+    });
+  });
+
   describe('deleteSetting', () => {
     it('should delete user settings', async () => {
       await serverDB.insert(users).values({ id: userId });

@@ -70,23 +70,23 @@ vi.mock('@/config/llm', () => ({
 describe('initAgentRuntimeWithUserPayload method', () => {
   describe('should initialize with options correctly', () => {
     it('OpenAI provider: with apikey and endpoint', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
+      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.OpenAI, jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
-      expect(runtime['_runtime'].baseURL).toBe(jwtPayload.endpoint);
+      expect(runtime['_runtime'].baseURL).toBe(jwtPayload.baseURL);
     });
 
     it('Azure AI provider: with apikey, endpoint and apiversion', async () => {
       const jwtPayload: JWTPayload = {
         apiKey: 'user-azure-key',
-        endpoint: 'user-azure-endpoint',
+        baseURL: 'user-azure-endpoint',
         azureApiVersion: '2024-06-01',
       };
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Azure, jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
-      expect(runtime['_runtime'].baseURL).toBe(jwtPayload.endpoint);
+      expect(runtime['_runtime'].baseURL).toBe(jwtPayload.baseURL);
     });
 
     it('ZhiPu AI provider: with apikey', async () => {
@@ -130,11 +130,11 @@ describe('initAgentRuntimeWithUserPayload method', () => {
     });
 
     it('Ollama provider: with endpoint', async () => {
-      const jwtPayload: JWTPayload = { endpoint: 'http://user-ollama-url' };
+      const jwtPayload: JWTPayload = { baseURL: 'http://user-ollama-url' };
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Ollama, jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOllamaAI);
-      expect(runtime['_runtime']['baseURL']).toEqual(jwtPayload.endpoint);
+      expect(runtime['_runtime']['baseURL']).toEqual(jwtPayload.baseURL);
     });
 
     it('Perplexity AI provider: with apikey', async () => {
@@ -220,12 +220,12 @@ describe('initAgentRuntimeWithUserPayload method', () => {
     it('Unknown Provider: with apikey and endpoint, should initialize to OpenAi', async () => {
       const jwtPayload: JWTPayload = {
         apiKey: 'user-unknown-key',
-        endpoint: 'user-unknown-endpoint',
+        baseURL: 'user-unknown-endpoint',
       };
       const runtime = await initAgentRuntimeWithUserPayload('unknown', jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
-      expect(runtime['_runtime'].baseURL).toBe(jwtPayload.endpoint);
+      expect(runtime['_runtime'].baseURL).toBe(jwtPayload.baseURL);
     });
   });
 
