@@ -29,9 +29,9 @@ const OpenAI: ModelProviderCard = {
         input: 15,
         output: 60,
       },
-      vision: true,      
       releasedAt: '2024-12-17',
-    },    
+      vision: true,
+    },
     {
       contextWindowTokens: 128_000,
       description:
