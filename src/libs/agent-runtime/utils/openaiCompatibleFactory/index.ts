@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
@@ -280,11 +281,15 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
           const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === item.id);
 
-          if (knownModel)
+          if (knownModel) {
+            dayjs.extend(utc);
+
             return {
               ...knownModel,
-              releasedAt: knownModel.releasedAt ?? dayjs(item.created * 1000).format('YYYY-MM-DD'),
+              releasedAt:
+                knownModel.releasedAt ?? dayjs.utc(item.created * 1000).format('YYYY-MM-DD'),
             };
+          }
 
           return { id: item.id };
         })
