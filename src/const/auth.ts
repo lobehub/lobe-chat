@@ -26,9 +26,11 @@ export interface JWTPayload {
    */
   apiKey?: string;
   /**
+   * @deprecated
    * Represents the endpoint of provider
    */
   endpoint?: string;
+  baseURL?: string;
 
   azureApiVersion?: string;
 
