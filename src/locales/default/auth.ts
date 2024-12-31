@@ -45,6 +45,7 @@ export default {
       right: '话题数',
       title: '助手使用率',
     },
+    createdAt: '用户创建于',
     heatmaps: {
       title: '创作指数',
     },
@@ -55,6 +56,8 @@ export default {
       right: '消息数',
       title: '话题内容量',
     },
+    updatedAt: '数据更新至',
+    welcome: '{{username}}, 这是你和 {{appName}} 相伴的第 <span>{{days}}</span> 天',
   },
   tab: {
     profile: '个人资料',

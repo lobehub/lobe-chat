@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm/expressions';
 import { DeepPartial } from 'utility-types';
 
@@ -6,6 +7,7 @@ import { LobeChatDatabase } from '@/database/type';
 import { UserGuide, UserPreference } from '@/types/user';
 import { UserKeyVaults, UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
+import { today } from '@/utils/time';
 
 import { NewUser, UserItem, UserSettingsItem, userSettings, users } from '../../schemas';
 import { SessionModel } from './session';
@@ -29,6 +31,26 @@ export class UserModel {
     this.userId = userId;
     this.db = db;
   }
+
+  getUserRegistrationDuration = async (): Promise<{
+    createdAt: string;
+    duration: number;
+    updatedAt: string;
+  }> => {
+    const user = await this.db.query.users.findFirst({ where: eq(users.id, this.userId) });
+    if (!user)
+      return {
+        createdAt: today().format('YYYY-MM-DD'),
+        duration: 1,
+        updatedAt: today().format('YYYY-MM-DD'),
+      };
+
+    return {
+      createdAt: dayjs(user.createdAt).format('YYYY-MM-DD'),
+      duration: dayjs().diff(dayjs(user.createdAt), 'day') + 1,
+      updatedAt: today().format('YYYY-MM-DD'),
+    };
+  };
 
   getUserState = async (decryptor: DecryptUserKeyVaults) => {
     const result = await this.db

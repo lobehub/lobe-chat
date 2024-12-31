@@ -12,12 +12,14 @@ import TopicsRank from './features/TopicsRank';
 import TotalAssistants from './features/TotalAssistants';
 import TotalMessages from './features/TotalMessages';
 import TotalTopics from './features/TotalTopics';
+import Welcome from './features/Welcome';
 
 const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('auth');
 
   return (
     <>
+      <Welcome />
       <FormGroup style={FORM_STYLE.style} title={t('tab.stats')} variant={'pure'}>
         <Grid maxItemWidth={200} paddingBlock={16} rows={3}>
           <TotalAssistants />

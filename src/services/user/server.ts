@@ -2,6 +2,10 @@ import { lambdaClient } from '@/libs/trpc/client';
 import { IUserService } from '@/services/user/type';
 
 export class ServerService implements IUserService {
+  getUserRegistrationDuration: IUserService['getUserRegistrationDuration'] = async () => {
+    return lambdaClient.user.getUserRegistrationDuration.query();
+  };
+
   getUserState: IUserService['getUserState'] = async () => {
     return lambdaClient.user.getUserState.query();
   };
