@@ -171,7 +171,7 @@ describe('AgentRuntime', () => {
 
     describe('Ollama provider', () => {
       it('should initialize correctly', async () => {
-        const jwtPayload: JWTPayload = { endpoint: 'user-ollama-url' };
+        const jwtPayload: JWTPayload = { baseURL: 'user-ollama-url' };
         const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Ollama, {
           ollama: jwtPayload,
         });
@@ -255,7 +255,7 @@ describe('AgentRuntime', () => {
 
   describe('AgentRuntime chat method', () => {
     it('should run correctly', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
+      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
       const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.OpenAI, {
         openai: jwtPayload,
       });
@@ -271,7 +271,7 @@ describe('AgentRuntime', () => {
       await runtime.chat(payload);
     });
     it('should handle options correctly', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
+      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
       const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.OpenAI, {
         openai: jwtPayload,
       });
@@ -300,7 +300,7 @@ describe('AgentRuntime', () => {
     });
 
     describe('callback', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', endpoint: 'user-endpoint' };
+      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
       const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.OpenAI, {
         openai: jwtPayload,
       });

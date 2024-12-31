@@ -94,7 +94,7 @@ export function initializeWithClientStore(provider: string, payload: any) {
     default:
     case ModelProvider.OpenAI: {
       providerOptions = {
-        baseURL: providerAuthPayload?.endpoint,
+        baseURL: providerAuthPayload?.baseURL,
       };
       break;
     }
@@ -108,7 +108,7 @@ export function initializeWithClientStore(provider: string, payload: any) {
     }
     case ModelProvider.Google: {
       providerOptions = {
-        baseURL: providerAuthPayload?.endpoint,
+        baseURL: providerAuthPayload?.baseURL,
       };
       break;
     }
@@ -125,27 +125,27 @@ export function initializeWithClientStore(provider: string, payload: any) {
     }
     case ModelProvider.Ollama: {
       providerOptions = {
-        baseURL: providerAuthPayload?.endpoint,
+        baseURL: providerAuthPayload?.baseURL,
       };
       break;
     }
     case ModelProvider.Perplexity: {
       providerOptions = {
         apikey: providerAuthPayload?.apiKey,
-        baseURL: providerAuthPayload?.endpoint,
+        baseURL: providerAuthPayload?.baseURL,
       };
       break;
     }
     case ModelProvider.Anthropic: {
       providerOptions = {
-        baseURL: providerAuthPayload?.endpoint,
+        baseURL: providerAuthPayload?.baseURL,
       };
       break;
     }
     case ModelProvider.Groq: {
       providerOptions = {
         apikey: providerAuthPayload?.apiKey,
-        baseURL: providerAuthPayload?.endpoint,
+        baseURL: providerAuthPayload?.baseURL,
       };
       break;
     }
