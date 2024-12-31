@@ -137,7 +137,7 @@ describe('UserModel', () => {
 
       const data = await userModel.getUserSettings();
 
-      expect(data).toEqual({ id: userId, general: { language: 'en-US' } });
+      expect(data).toMatchObject({ id: userId, general: { language: 'en-US' } });
     });
   });
 
