@@ -62,6 +62,8 @@ const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'> & { inShare?: boolean }>(
         gap={4}
         horizontal
         style={{
+          alignSelf: 'center',
+          flex: 'none',
           zoom: 0.9,
         }}
       >
@@ -113,13 +115,9 @@ const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'> & { inShare?: boolean }>(
 
     return (
       <FormGroup
+        extra={tags}
         style={FORM_STYLE.style}
-        title={
-          <Flexbox align={'center'} gap={12} horizontal>
-            <span>{t('stats.lastYearActivity')}</span>
-            {tags}
-          </Flexbox>
-        }
+        title={t('stats.lastYearActivity')}
         variant={'pure'}
       >
         <Flexbox paddingBlock={24}>{content}</Flexbox>
