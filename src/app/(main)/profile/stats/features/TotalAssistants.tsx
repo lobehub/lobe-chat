@@ -1,3 +1,4 @@
+import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,9 +10,9 @@ import { sessionService } from '@/services/session';
 import { formatIntergerNumber } from '@/utils/format';
 import { lastMonth } from '@/utils/time';
 
-const TotalMessages = memo(() => {
+const TotalMessages = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('auth');
-
+  const theme = useTheme();
   const { data, isLoading } = useClientDataSWR('stats-sessions', async () => ({
     count: await sessionService.countSessions(),
     prevCount: await sessionService.countSessions({ endDate: lastMonth().format('YYYY-MM-DD') }),
@@ -19,6 +20,7 @@ const TotalMessages = memo(() => {
 
   return (
     <StatisticCard
+      highlight={mobile ? undefined : theme.purple}
       loading={isLoading || !data}
       statistic={{
         description: (

@@ -36,7 +36,7 @@ export const AssistantsRank = memo(() => {
         <Avatar
           alt={item.title || t('defaultAgent', { ns: 'chat' })}
           avatar={item.avatar || DEFAULT_AVATAR}
-          background={item.backgroundColor || theme.colorFillSecondary}
+          background={theme.colorFillSecondary}
           size={28}
           style={{
             backdropFilter: 'blur(8px)',

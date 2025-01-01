@@ -23,9 +23,9 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Welcome mobile={mobile} />
       <FormGroup style={FORM_STYLE.style} title={t('tab.stats')} variant={'pure'}>
         <Grid maxItemWidth={150} paddingBlock={16} rows={4}>
-          <TotalAssistants />
-          <TotalTopics />
-          <TotalMessages />
+          <TotalAssistants mobile={mobile} />
+          <TotalTopics mobile={mobile} />
+          <TotalMessages mobile={mobile} />
           <TotalWords />
         </Grid>
       </FormGroup>
