@@ -10,13 +10,23 @@ import { sessionService } from '@/services/session';
 import { formatIntergerNumber } from '@/utils/format';
 import { lastMonth } from '@/utils/time';
 
-const TotalMessages = memo<{ mobile?: boolean }>(({ mobile }) => {
+import TotalCard from './ShareButton/TotalCard';
+
+const TotalMessages = memo<{ inShare?: boolean; mobile?: boolean }>(({ mobile, inShare }) => {
   const { t } = useTranslation('auth');
   const theme = useTheme();
   const { data, isLoading } = useClientDataSWR('stats-sessions', async () => ({
     count: await sessionService.countSessions(),
     prevCount: await sessionService.countSessions({ endDate: lastMonth().format('YYYY-MM-DD') }),
   }));
+
+  if (inShare)
+    return (
+      <TotalCard
+        count={formatIntergerNumber(data?.prevCount) || '--'}
+        title={t('stats.assistants')}
+      />
+    );
 
   return (
     <StatisticCard

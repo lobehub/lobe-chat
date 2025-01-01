@@ -3,11 +3,13 @@
 import { FormGroup, Grid } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 
 import AiHeatmaps from './features/AiHeatmaps';
 import AssistantsRank from './features/AssistantsRank';
+import ShareButton from './features/ShareButton';
 import TopicsRank from './features/TopicsRank';
 import TotalAssistants from './features/TotalAssistants';
 import TotalMessages from './features/TotalMessages';
@@ -20,7 +22,15 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <>
-      <Welcome mobile={mobile} />
+      {mobile ? (
+        <Welcome mobile />
+      ) : (
+        <Flexbox align={'flex-start'} gap={16} horizontal justify={'space-between'}>
+          <Welcome />
+          <ShareButton />
+        </Flexbox>
+      )}
+
       <FormGroup style={FORM_STYLE.style} title={t('tab.stats')} variant={'pure'}>
         <Grid maxItemWidth={150} paddingBlock={16} rows={4}>
           <TotalAssistants mobile={mobile} />
@@ -33,7 +43,11 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
         <AssistantsRank />
         <TopicsRank />
       </Grid>
-      <AiHeatmaps />
+      <FormGroup style={FORM_STYLE.style} title={t('stats.aiheatmaps')} variant={'pure'}>
+        <Flexbox paddingBlock={24}>
+          <AiHeatmaps />
+        </Flexbox>
+      </FormGroup>
     </>
   );
 });

@@ -9,12 +9,15 @@ import { Flexbox } from 'react-layout-kit';
 import { useActiveProfileKey } from '@/hooks/useActiveTabKey';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
+import ShareButton from '../../stats/features/ShareButton';
+
 const Header = memo(() => {
   const { t } = useTranslation('auth');
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeSettingsKey = useActiveProfileKey();
+  const isStats = activeSettingsKey === 'stats';
 
   const handleBackClick = () => {
     if (searchParams.has('session') && searchParams.has('showMobileWorkspace')) {
@@ -35,6 +38,7 @@ const Header = memo(() => {
         />
       }
       onBackClick={handleBackClick}
+      right={isStats ? <ShareButton mobile /> : undefined}
       showBackButton
       style={mobileHeaderSticky}
     />

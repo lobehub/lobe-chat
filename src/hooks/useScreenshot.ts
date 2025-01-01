@@ -1,16 +1,46 @@
+import { SegmentedProps } from 'antd';
 import dayjs from 'dayjs';
 import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
 import { useCallback, useState } from 'react';
 
 import { BRANDING_NAME } from '@/const/branding';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 
-import { ImageType } from './type';
+export enum ImageType {
+  JPG = 'jpg',
+  PNG = 'png',
+  SVG = 'svg',
+  WEBP = 'webp',
+}
 
-export const useScreenshot = (imageType: ImageType) => {
+export const imageTypeOptions: SegmentedProps['options'] = [
+  {
+    label: 'JPG',
+    value: ImageType.JPG,
+  },
+  {
+    label: 'PNG',
+    value: ImageType.PNG,
+  },
+  {
+    label: 'SVG',
+    value: ImageType.SVG,
+  },
+  {
+    label: 'WEBP',
+    value: ImageType.WEBP,
+  },
+];
+
+export const useScreenshot = ({
+  imageType,
+  title = 'share',
+  id = '#preview',
+}: {
+  id?: string;
+  imageType: ImageType;
+  title?: string;
+}) => {
   const [loading, setLoading] = useState(false);
-  const title = useSessionStore(sessionMetaSelectors.currentAgentTitle);
 
   const handleDownload = useCallback(async () => {
     setLoading(true);
@@ -35,7 +65,7 @@ export const useScreenshot = (imageType: ImageType) => {
         }
       }
 
-      const dataUrl = await screenshotFn(document.querySelector('#preview') as HTMLDivElement, {
+      const dataUrl = await screenshotFn(document.querySelector(id) as HTMLDivElement, {
         features: {
           // 不启用移除控制符，否则会导致 safari emoji 报错
           removeControlCharacter: false,
