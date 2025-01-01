@@ -298,7 +298,7 @@
     "mime": "^4.0.4",
     "node-fetch": "^3.3.2",
     "node-gyp": "^11.0.0",
-    "openapi-typescript": "^6.7.6",
+    "openapi-typescript": "^7.0.0",
     "p-map": "^7.0.2",
     "prettier": "^3.3.3",
     "remark-cli": "^11.0.0",
