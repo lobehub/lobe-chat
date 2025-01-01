@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "戻る"
   },
+  "MaxTokenSlider": {
+    "unlimited": "無制限"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "カスタムモデル、デフォルトでは関数呼び出しとビジョン認識の両方をサポートしています。上記機能の有効性を確認してください。",

@@ -84,8 +84,7 @@
         },
         "modalTitle": "Konfiguracja niestandardowego modelu",
         "tokens": {
-          "title": "Maksymalna liczba tokenów",
-          "unlimited": "Nieograniczony"
+          "title": "Maksymalna liczba tokenów"
         },
         "vision": {
           "extra": "Ta konfiguracja włączy jedynie możliwość przesyłania obrazów w aplikacji, a to, czy rozpoznawanie będzie wspierane, zależy całkowicie od samego modelu. Proszę samodzielnie przetestować dostępność rozpoznawania wizualnego w tym modelu.",

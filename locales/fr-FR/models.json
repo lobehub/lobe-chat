@@ -602,6 +602,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp est le dernier modèle d'IA multimodal expérimental de Google, avec des caractéristiques de nouvelle génération, une vitesse exceptionnelle, des appels d'outils natifs et une génération multimodale."
   },
+  "gemini-2.0-flash-thinking-exp-1219": {
+    "description": "Gemini 2.0 Flash Exp est le dernier modèle d'IA multimodal expérimental de Google, doté de caractéristiques de nouvelle génération, d'une vitesse exceptionnelle, d'appels d'outils natifs et de génération multimodale."
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 est le dernier modèle d'IA multimodale expérimental de Google, offrant une capacité de traitement rapide, prenant en charge les entrées de texte, d'image et de vidéo, et permettant une extension efficace pour une variété de tâches."
   },
@@ -1094,6 +1097,12 @@
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B est un modèle de langage à grande échelle personnalisé par NVIDIA, conçu pour améliorer l'aide fournie par les réponses générées par LLM aux requêtes des utilisateurs. Ce modèle a excellé dans des tests de référence tels que Arena Hard, AlpacaEval 2 LC et GPT-4-Turbo MT-Bench, se classant premier dans les trois tests d'alignement automatique au 1er octobre 2024. Le modèle utilise RLHF (en particulier REINFORCE), Llama-3.1-Nemotron-70B-Reward et HelpSteer2-Preference pour l'entraînement sur la base du modèle Llama-3.1-70B-Instruct."
   },
+  "o1": {
+    "description": "Axé sur le raisonnement avancé et la résolution de problèmes complexes, y compris les tâches mathématiques et scientifiques. Idéal pour les applications nécessitant une compréhension approfondie du contexte et des flux de travail d'agent."
+  },
+  "o1-2024-12-17": {
+    "description": "o1 est le nouveau modèle de raisonnement d'OpenAI, prenant en charge les entrées multimodales et produisant du texte, adapté aux tâches complexes nécessitant des connaissances générales étendues. Ce modèle dispose d'un contexte de 200K et d'une date limite de connaissances en octobre 2023."
+  },
   "o1-mini": {
     "description": "o1-mini est un modèle de raisonnement rapide et économique conçu pour les applications de programmation, de mathématiques et de sciences. Ce modèle dispose d'un contexte de 128K et d'une date limite de connaissance en octobre 2023."
   },
@@ -1120,6 +1129,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini est le dernier modèle d'OpenAI lancé après GPT-4 Omni, prenant en charge les entrées d'images et de texte et produisant du texte en sortie. En tant que leur modèle compact le plus avancé, il est beaucoup moins cher que d'autres modèles de pointe récents et coûte plus de 60 % de moins que GPT-3.5 Turbo. Il maintient une intelligence de pointe tout en offrant un rapport qualité-prix significatif. GPT-4o mini a obtenu un score de 82 % au test MMLU et se classe actuellement au-dessus de GPT-4 en termes de préférences de chat."
+  },
+  "openai/o1": {
+    "description": "o1 est le nouveau modèle de raisonnement d'OpenAI, prenant en charge les entrées multimodales et produisant du texte, adapté aux tâches complexes nécessitant des connaissances générales étendues. Ce modèle dispose d'un contexte de 200K et d'une date limite de connaissances en octobre 2023."
   },
   "openai/o1-mini": {
     "description": "o1-mini est un modèle de raisonnement rapide et économique conçu pour les applications de programmation, de mathématiques et de sciences. Ce modèle dispose d'un contexte de 128K et d'une date limite de connaissance en octobre 2023."

@@ -84,8 +84,7 @@
         },
         "modalTitle": "Özel Model Yapılandırması",
         "tokens": {
-          "title": "Maksimum token sayısı",
-          "unlimited": "Sınırsız"
+          "title": "Maksimum token sayısı"
         },
         "vision": {
           "extra": "Bu yapılandırma yalnızca uygulamadaki resim yükleme yapılandırmasını açacaktır; tanıma desteği tamamen modele bağlıdır, lütfen bu modelin görsel tanıma yeteneğini kendiniz test edin.",

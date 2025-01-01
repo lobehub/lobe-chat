@@ -84,8 +84,7 @@
         },
         "modalTitle": "Benutzerdefinierte Modellkonfiguration",
         "tokens": {
-          "title": "Maximale Token-Anzahl",
-          "unlimited": "unbegrenzt"
+          "title": "Maximale Token-Anzahl"
         },
         "vision": {
           "extra": "Diese Konfiguration aktiviert nur die Bild-Upload-Einstellungen innerhalb der Anwendung. Ob die Erkennung unterstützt wird, hängt vollständig vom Modell selbst ab. Bitte teste die Verwendbarkeit der visuellen Erkennungsfähigkeit des Modells selbst.",

@@ -602,6 +602,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。"
   },
+  "gemini-2.0-flash-thinking-exp-1219": {
+    "description": "Gemini 2.0 Flash Exp 是 Google 最新的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。"
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 是 Google 的实验性多模态AI模型，对输出质量有一定改进。"
   },
@@ -1094,6 +1097,12 @@
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B 是由 NVIDIA 定制的大型语言模型，旨在提高 LLM 生成的响应对用户查询的帮助程度。该模型在 Arena Hard、AlpacaEval 2 LC 和 GPT-4-Turbo MT-Bench 等基准测试中表现出色，截至 2024 年 10 月 1 日，在所有三个自动对齐基准测试中排名第一。该模型使用 RLHF（特别是 REINFORCE）、Llama-3.1-Nemotron-70B-Reward 和 HelpSteer2-Preference 提示在 Llama-3.1-70B-Instruct 模型基础上进行训练"
   },
+  "o1": {
+    "description": "专注于高级推理和解决复杂问题，包括数学和科学任务。非常适合需要深入上下文理解和代理工作流程的应用程序。"
+  },
+  "o1-2024-12-17": {
+    "description": "o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。"
+  },
   "o1-mini": {
     "description": "比 o1-preview 更小、更快，成本低80%，在代码生成和小上下文操作方面表现良好。"
   },
@@ -1120,6 +1129,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。"
+  },
+  "openai/o1": {
+    "description": "o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。"
   },
   "openai/o1-mini": {
     "description": "o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。"
