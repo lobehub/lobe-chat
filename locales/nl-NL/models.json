@@ -602,6 +602,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp is Google's nieuwste experimentele multimodale AI-model, met de volgende generatie functies, uitstekende snelheid, ingebouwde tool-aanroepen en multimodale generatie."
   },
+  "gemini-2.0-flash-thinking-exp-1219": {
+    "description": "Gemini 2.0 Flash Exp is Google's nieuwste experimentele multimodale AI-model, met next-gen functies, uitstekende snelheid, native tool-aanroepen en multimodale generatie."
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 is Google's nieuwste experimentele multimodale AI-model, met een snelle verwerkingscapaciteit, ondersteunt tekst-, beeld- en video-invoer, geschikt voor efficiënte schaling van diverse taken."
   },
@@ -1094,6 +1097,12 @@
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B is een op maat gemaakt groot taalmodel van NVIDIA, ontworpen om de hulp van LLM-gegenereerde reacties op gebruikersvragen te verbeteren. Dit model presteert uitstekend in benchmarktests zoals Arena Hard, AlpacaEval 2 LC en GPT-4-Turbo MT-Bench, en staat per 1 oktober 2024 op de eerste plaats in alle drie de automatische afstemmingsbenchmarktests. Het model is getraind met RLHF (met name REINFORCE), Llama-3.1-Nemotron-70B-Reward en HelpSteer2-Preference prompts op basis van het Llama-3.1-70B-Instruct model."
   },
+  "o1": {
+    "description": "Gefocust op geavanceerd redeneren en het oplossen van complexe problemen, inclusief wiskunde en wetenschappelijke taken. Zeer geschikt voor toepassingen die diepgaand begrip van context en agentwerkstromen vereisen."
+  },
+  "o1-2024-12-17": {
+    "description": "o1 is het nieuwe redeneer model van OpenAI, dat tekst- en afbeeldingsinvoer ondersteunt en tekstuitvoer genereert, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 200K en een kennisafkapdatum van oktober 2023."
+  },
   "o1-mini": {
     "description": "o1-mini is een snel en kosteneffectief redeneermodel dat is ontworpen voor programmeer-, wiskunde- en wetenschappelijke toepassingen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
   },
@@ -1120,6 +1129,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, dat tekst- en afbeeldingsinvoer ondersteunt en tekstuitvoer genereert. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
+  },
+  "openai/o1": {
+    "description": "o1 is het nieuwe redeneer model van OpenAI, dat tekst- en afbeeldingsinvoer ondersteunt en tekstuitvoer genereert, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 200K en een kennisafkapdatum van oktober 2023."
   },
   "openai/o1-mini": {
     "description": "o1-mini is een snel en kosteneffectief redeneermodel dat is ontworpen voor programmeer-, wiskunde- en wetenschappelijke toepassingen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
