@@ -602,6 +602,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en yeni deneysel çok modlu yapay zeka modelidir. Gelecek nesil özellikleri, olağanüstü hızı, yerel araç çağrısı ve çok modlu üretim ile donatılmıştır."
   },
+  "gemini-2.0-flash-thinking-exp-1219": {
+    "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, üstün hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114, Google'ın en son deneysel çok modlu AI modeli olup, hızlı işleme yeteneğine sahip, metin, görüntü ve video girişlerini desteklemekte ve çeşitli görevlerde verimli bir şekilde ölçeklenmektedir."
   },
@@ -1094,6 +1097,12 @@
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B, NVIDIA tarafından özelleştirilmiş büyük bir dil modelidir ve LLM tarafından üretilen yanıtların kullanıcı sorgularına yardımcı olma düzeyini artırmayı amaçlamaktadır. Bu model, Arena Hard, AlpacaEval 2 LC ve GPT-4-Turbo MT-Bench gibi standart testlerde mükemmel performans sergilemiştir ve 1 Ekim 2024 itibarıyla tüm üç otomatik hizalama testinde birinci sıradadır. Model, Llama-3.1-70B-Instruct modelinin temelinde RLHF (özellikle REINFORCE), Llama-3.1-Nemotron-70B-Reward ve HelpSteer2-Preference ipuçları kullanılarak eğitilmiştir."
   },
+  "o1": {
+    "description": "Gelişmiş çıkarım ve karmaşık sorunları çözmeye odaklanır, matematik ve bilim görevlerini içerir. Derin bağlam anlayışı ve aracılık iş akışları gerektiren uygulamalar için son derece uygundur."
+  },
+  "o1-2024-12-17": {
+    "description": "o1, OpenAI'nin yeni çıkarım modelidir, metin ve görsel girişi destekler ve metin çıktısı verir, geniş genel bilgi gerektiren karmaşık görevler için uygundur. Bu model, 200K bağlam ve 2023 Ekim bilgi kesim tarihi ile donatılmıştır."
+  },
   "o1-mini": {
     "description": "o1-mini, programlama, matematik ve bilim uygulama senaryoları için tasarlanmış hızlı ve ekonomik bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
   },
@@ -1120,6 +1129,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini, OpenAI'nin GPT-4 Omni'den sonra sunduğu en son modeldir; görsel ve metin girişi destekler ve metin çıktısı verir. En gelişmiş küçük model olarak, diğer son zamanlardaki öncü modellere göre çok daha ucuzdur ve GPT-3.5 Turbo'dan %60'tan fazla daha ucuzdur. En son teknolojiyi korurken, önemli bir maliyet etkinliği sunar. GPT-4o mini, MMLU testinde %82 puan almış olup, şu anda sohbet tercihleri açısından GPT-4'ün üzerinde bir sıralamaya sahiptir."
+  },
+  "openai/o1": {
+    "description": "o1, OpenAI'nin yeni çıkarım modelidir, metin ve görsel girişi destekler ve metin çıktısı verir, geniş genel bilgi gerektiren karmaşık görevler için uygundur. Bu model, 200K bağlam ve 2023 Ekim bilgi kesim tarihi ile donatılmıştır."
   },
   "openai/o1-mini": {
     "description": "o1-mini, programlama, matematik ve bilim uygulama senaryoları için tasarlanmış hızlı ve ekonomik bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."

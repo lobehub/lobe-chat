@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-01-01",
+    "version": "1.42.3"
+  },
+  {
     "children": {
       "improvements": ["Add o1 model in openai and openrouter models."]
     },

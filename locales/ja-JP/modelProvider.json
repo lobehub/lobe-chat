@@ -131,22 +131,6 @@
       "title": "指定されたOllamaモデルをダウンロード"
     }
   },
-  "sensenova": {
-    "sensenovaAccessKeyID": {
-      "desc": "SenseNova アクセスキー ID を入力してください",
-      "placeholder": "SenseNova アクセスキー ID",
-      "title": "アクセスキー ID"
-    },
-    "sensenovaAccessKeySecret": {
-      "desc": "SenseNova アクセスキーシークレットを入力してください",
-      "placeholder": "SenseNova アクセスキーシークレット",
-      "title": "アクセスキーシークレット"
-    },
-    "unlock": {
-      "description": "あなたのアクセスキー ID / アクセスキーシークレットを入力すると、セッションが開始されます。アプリはあなたの認証設定を記録しません",
-      "title": "カスタム SenseNova 認証情報を使用"
-    }
-  },
   "wenxin": {
     "accessKey": {
       "desc": "百度千帆プラットフォームのAccess Keyを入力してください",
