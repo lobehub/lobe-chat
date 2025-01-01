@@ -47,6 +47,8 @@ export default {
       title: '助手使用率',
     },
     createdAt: '用户创建于',
+    days: '天',
+    lastYearActivity: '过去一年活跃度',
     messages: '消息数',
     share: {
       title: '我的 AI 活跃指数',

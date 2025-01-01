@@ -43,11 +43,8 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
         <AssistantsRank />
         <TopicsRank />
       </Grid>
-      <FormGroup style={FORM_STYLE.style} title={t('stats.aiheatmaps')} variant={'pure'}>
-        <Flexbox paddingBlock={24}>
-          <AiHeatmaps />
-        </Flexbox>
-      </FormGroup>
+
+      <AiHeatmaps />
     </>
   );
 });

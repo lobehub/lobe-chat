@@ -35,6 +35,9 @@ const TotalWords = memo<{ inShare?: boolean }>(({ inShare }) => {
           />
         ),
         precision: 0,
+        style: {
+          fontWeight: 'bold',
+        },
         value: formatShortenNumber(data?.count) || '--',
       }}
       title={

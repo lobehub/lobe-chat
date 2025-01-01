@@ -1,49 +1,131 @@
 import { Heatmaps, HeatmapsProps } from '@lobehub/charts';
-import { useResponsive } from 'antd-style';
+import { FormGroup, Icon } from '@lobehub/ui';
+import { Tag } from 'antd';
+import { useResponsive, useTheme } from 'antd-style';
+import { FlameIcon } from 'lucide-react';
+import { readableColor } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
+import { FORM_STYLE } from '@/const/layoutTokens';
 import { useClientDataSWR } from '@/libs/swr';
 import { messageService } from '@/services/message';
 
-const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'>>(({ ...rest }) => {
-  const { t } = useTranslation('auth');
-  const { mobile } = useResponsive();
-  const { data, isLoading } = useClientDataSWR('stats-heatmaps', async () =>
-    messageService.getHeatmaps(),
-  );
+const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'> & { inShare?: boolean }>(
+  ({ inShare, ...rest }) => {
+    const { t } = useTranslation('auth');
+    const theme = useTheme();
+    const { mobile } = useResponsive();
+    const { data, isLoading } = useClientDataSWR('stats-heatmaps', async () =>
+      messageService.getHeatmaps(),
+    );
 
-  return (
-    <Heatmaps
-      blockSize={mobile ? 8 : 14}
-      data={data || []}
-      labels={{
-        legend: {
-          less: t('heatmaps.legend.less'),
-          more: t('heatmaps.legend.more'),
-        },
-        months: [
-          t('heatmaps.months.jan'),
-          t('heatmaps.months.feb'),
-          t('heatmaps.months.mar'),
-          t('heatmaps.months.apr'),
-          t('heatmaps.months.may'),
-          t('heatmaps.months.jun'),
-          t('heatmaps.months.jul'),
-          t('heatmaps.months.aug'),
-          t('heatmaps.months.sep'),
-          t('heatmaps.months.oct'),
-          t('heatmaps.months.nov'),
-          t('heatmaps.months.dec'),
-        ],
-        tooltip: t('heatmaps.tooltip'),
-        totalCount: t('heatmaps.totalCount'),
-      }}
-      loading={isLoading || !data}
-      maxLevel={4}
-      {...rest}
-    />
-  );
-});
+    const days = data?.filter((item) => item.level > 0).length || '--';
+    const hotDays = data?.filter((item) => item.level >= 3).length || '--';
+
+    const content = (
+      <Heatmaps
+        blockSize={mobile ? 8 : 14}
+        data={data || []}
+        labels={{
+          legend: {
+            less: t('heatmaps.legend.less'),
+            more: t('heatmaps.legend.more'),
+          },
+          months: [
+            t('heatmaps.months.jan'),
+            t('heatmaps.months.feb'),
+            t('heatmaps.months.mar'),
+            t('heatmaps.months.apr'),
+            t('heatmaps.months.may'),
+            t('heatmaps.months.jun'),
+            t('heatmaps.months.jul'),
+            t('heatmaps.months.aug'),
+            t('heatmaps.months.sep'),
+            t('heatmaps.months.oct'),
+            t('heatmaps.months.nov'),
+            t('heatmaps.months.dec'),
+          ],
+          tooltip: t('heatmaps.tooltip'),
+          totalCount: t('heatmaps.totalCount'),
+        }}
+        loading={isLoading || !data}
+        maxLevel={4}
+        {...rest}
+      />
+    );
+
+    const fillColor = readableColor(theme.gold);
+    const tags = (
+      <Flexbox
+        gap={4}
+        horizontal
+        style={{
+          zoom: 0.9,
+        }}
+      >
+        <Tag
+          bordered={false}
+          style={{
+            background: theme.colorText,
+            color: theme.colorBgLayout,
+            fontWeight: 500,
+            margin: 0,
+          }}
+        >
+          {[days, t('stats.days')].join(' ')}
+        </Tag>
+        <Tag
+          bordered={false}
+          color={'gold'}
+          icon={<Icon color={fillColor} fill={fillColor} icon={FlameIcon} />}
+          style={{
+            background: theme.gold,
+            color: fillColor,
+            fontWeight: 500,
+            margin: 0,
+          }}
+        >
+          {[hotDays, t('stats.days')].join(' ')}
+        </Tag>
+      </Flexbox>
+    );
+
+    if (inShare) {
+      return (
+        <Flexbox gap={4}>
+          <Flexbox align={'baseline'} gap={4} horizontal justify={'space-between'}>
+            <div
+              style={{
+                color: theme.colorTextDescription,
+                fontSize: 12,
+              }}
+            >
+              {t('stats.lastYearActivity')}
+            </div>
+            {tags}
+          </Flexbox>
+          {content}
+        </Flexbox>
+      );
+    }
+
+    return (
+      <FormGroup
+        style={FORM_STYLE.style}
+        title={
+          <Flexbox align={'center'} gap={12} horizontal>
+            <span>{t('stats.lastYearActivity')}</span>
+            {tags}
+          </Flexbox>
+        }
+        variant={'pure'}
+      >
+        <Flexbox paddingBlock={24}>{content}</Flexbox>
+      </FormGroup>
+    );
+  },
+);
 
 export default AiHeatmaps;

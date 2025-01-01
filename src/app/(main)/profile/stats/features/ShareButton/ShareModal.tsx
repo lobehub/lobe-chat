@@ -26,13 +26,14 @@ const DEFAULT_FIELD_VALUE: FieldType = {
   imageType: ImageType.JPG,
 };
 
-const ShareModal = memo<FormModalProps>(({ open, onCancel }) => {
+const ShareModal = memo<FormModalProps & { mobile?: boolean }>(({ open, onCancel, mobile }) => {
   const { t } = useTranslation(['chat', 'common']);
   const [fieldValue, setFieldValue] = useState<FieldType>(DEFAULT_FIELD_VALUE);
   const { styles } = useStyles();
   const { loading, onDownload } = useScreenshot({
     imageType: fieldValue.imageType,
     title: 'stats',
+    width: mobile ? 440 : undefined,
   });
 
   const items: FormItemProps[] = [

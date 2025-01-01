@@ -19,7 +19,7 @@ const ShareButton = memo<{ mobile?: boolean }>(({ mobile }) => {
         onClick={() => setOpen(true)}
         size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}
       />
-      <ShareModal onCancel={() => setOpen(false)} open={open} />
+      <ShareModal mobile={mobile} onCancel={() => setOpen(false)} open={open} />
     </>
   );
 });

@@ -17,7 +17,13 @@ const TotalCard = memo<TotalCardProps>(({ title, count }) => {
         borderRadius: theme.borderRadiusLG,
       }}
     >
-      <div>{title}</div>
+      <div
+        style={{
+          fontSize: 13,
+        }}
+      >
+        {title}
+      </div>
       <div
         style={{
           fontSize: 20,

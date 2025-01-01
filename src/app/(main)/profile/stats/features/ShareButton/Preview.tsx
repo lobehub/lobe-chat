@@ -1,3 +1,4 @@
+import { Github } from '@lobehub/icons';
 import { Grid } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
@@ -6,6 +7,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 import { OFFICIAL_URL, imageUrl } from '@/const/url';
+import { isServerMode } from '@/const/version';
 import UserAvatar from '@/features/User/UserAvatar';
 
 import TotalMessages from '..//TotalMessages';
@@ -19,6 +21,9 @@ const useStyles = createStyles(({ css, token, stylish, cx, responsive }) => ({
     border: 4px solid ${token.colorBgLayout};
   `,
   background: css`
+    position: relative;
+
+    width: 100%;
     padding: 24px;
 
     background-color: ${token.colorBgLayout};
@@ -28,16 +33,26 @@ const useStyles = createStyles(({ css, token, stylish, cx, responsive }) => ({
   `,
 
   container: css`
+    position: relative;
+
     overflow: hidden;
+
+    width: 100%;
 
     background: ${token.colorBgLayout};
     border: 1px solid ${token.colorBorder};
     border-radius: ${token.borderRadiusLG * 2}px;
     box-shadow: ${token.boxShadow};
   `,
+  decs: css`
+    font-size: 12px;
+    color: ${token.colorTextDescription};
+  `,
+  footer: css`
+    font-size: 12px;
+    color: ${token.colorTextDescription};
+  `,
   heatmaps: css`
-    margin-block: -12px 12px;
-
     .legend-month,
     footer {
       display: none;
@@ -74,14 +89,12 @@ const useStyles = createStyles(({ css, token, stylish, cx, responsive }) => ({
     font-weight: bold;
     text-align: center;
   `,
-  url: css`
-    color: ${token.colorTextDescription};
-  `,
 }));
 
 const Preview = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('auth');
+  const isOfficial = !isServerMode && OFFICIAL_URL.includes(location.host);
 
   return (
     <div className={styles.preview}>
@@ -110,19 +123,33 @@ const Preview = memo(() => {
               <ProductLogo size={40} />
             </Center>
           </Flexbox>
-          <AiHeatmaps
-            blockMargin={2}
-            blockRadius={1}
-            blockSize={4.5}
-            className={styles.heatmaps}
-            width={'100%'}
-          />
-          <Grid gap={8} maxItemWidth={100} rows={2} width={'100%'}>
-            <TotalMessages inShare />
-            <TotalWords inShare />
-          </Grid>
-
-          <div className={styles.url}>{OFFICIAL_URL}</div>
+          <Flexbox gap={12} paddingBlock={12} width={'100%'}>
+            <AiHeatmaps
+              blockMargin={2}
+              blockRadius={1}
+              blockSize={4.5}
+              className={styles.heatmaps}
+              inShare
+              style={{
+                marginTop: -12,
+              }}
+              width={'100%'}
+            />
+            <Grid gap={8} maxItemWidth={100} rows={2} width={'100%'}>
+              <TotalMessages inShare />
+              <TotalWords inShare />
+            </Grid>
+          </Flexbox>
+          <div className={styles.footer}>
+            {isOfficial ? (
+              OFFICIAL_URL
+            ) : (
+              <Flexbox align={'center'} gap={8} horizontal>
+                <Github size={16} />
+                <span>lobehub/lobe-chat</span>
+              </Flexbox>
+            )}
+          </div>
         </Center>
       </div>
     </div>

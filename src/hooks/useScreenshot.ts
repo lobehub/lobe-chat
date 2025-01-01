@@ -35,10 +35,12 @@ export const useScreenshot = ({
   imageType,
   title = 'share',
   id = '#preview',
+  width,
 }: {
   id?: string;
   imageType: ImageType;
   title?: string;
+  width?: number;
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -65,13 +67,26 @@ export const useScreenshot = ({
         }
       }
 
-      const dataUrl = await screenshotFn(document.querySelector(id) as HTMLDivElement, {
+      const dom: HTMLDivElement = document.querySelector(id) as HTMLDivElement;
+      let copy: HTMLDivElement = dom;
+
+      if (width) {
+        copy = dom.cloneNode(true) as HTMLDivElement;
+        copy.style.width = `${width}px`;
+        document.body.append(copy);
+      }
+
+      const dataUrl = await screenshotFn(width ? copy : dom, {
         features: {
           // 不启用移除控制符，否则会导致 safari emoji 报错
           removeControlCharacter: false,
         },
         scale: 2,
+        width,
       });
+
+      if (width && copy) copy?.remove();
+
       const link = document.createElement('a');
       link.download = `${BRANDING_NAME}_${title}_${dayjs().format('YYYY-MM-DD')}.${imageType}`;
       link.href = dataUrl;
