@@ -602,6 +602,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, có các tính năng thế hệ tiếp theo, tốc độ vượt trội, khả năng gọi công cụ nguyên bản và tạo ra đa phương thức."
   },
+  "gemini-2.0-flash-thinking-exp-1219": {
+    "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, với các tính năng thế hệ tiếp theo, tốc độ vượt trội, gọi công cụ bản địa và tạo ra đa phương thức."
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 là mô hình AI đa phương thức thử nghiệm mới nhất của Google, có khả năng xử lý nhanh, hỗ trợ đầu vào văn bản, hình ảnh và video, phù hợp với việc mở rộng hiệu quả cho nhiều nhiệm vụ."
   },
@@ -1094,6 +1097,12 @@
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B là một mô hình ngôn ngữ quy mô lớn tùy chỉnh bởi NVIDIA, nhằm nâng cao mức độ hỗ trợ của phản hồi do LLM tạo ra đối với các truy vấn của người dùng. Mô hình này đã thể hiện xuất sắc trong các bài kiểm tra chuẩn như Arena Hard, AlpacaEval 2 LC và GPT-4-Turbo MT-Bench, đứng đầu trong cả ba bài kiểm tra tự động cho đến ngày 1 tháng 10 năm 2024. Mô hình sử dụng RLHF (đặc biệt là REINFORCE), Llama-3.1-Nemotron-70B-Reward và HelpSteer2-Preference để đào tạo trên cơ sở mô hình Llama-3.1-70B-Instruct."
   },
+  "o1": {
+    "description": "Tập trung vào suy diễn nâng cao và giải quyết các vấn đề phức tạp, bao gồm các nhiệm vụ toán học và khoa học. Rất phù hợp cho các ứng dụng cần hiểu biết sâu sắc về ngữ cảnh và quy trình làm việc đại diện."
+  },
+  "o1-2024-12-17": {
+    "description": "o1 là mô hình suy diễn mới của OpenAI, hỗ trợ đầu vào hình ảnh và văn bản và xuất ra văn bản, phù hợp cho các nhiệm vụ phức tạp cần kiến thức chung rộng rãi. Mô hình này có ngữ cảnh 200K và thời điểm cắt đứt kiến thức vào tháng 10 năm 2023."
+  },
   "o1-mini": {
     "description": "o1-mini là một mô hình suy diễn nhanh chóng và tiết kiệm chi phí, được thiết kế cho các ứng dụng lập trình, toán học và khoa học. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
   },
@@ -1120,6 +1129,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini là mô hình mới nhất của OpenAI, được phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và văn bản, và đầu ra văn bản. Là mô hình nhỏ tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng đầu về sở thích trò chuyện so với GPT-4."
+  },
+  "openai/o1": {
+    "description": "o1 là mô hình suy diễn mới của OpenAI, hỗ trợ đầu vào hình ảnh và văn bản và xuất ra văn bản, phù hợp cho các nhiệm vụ phức tạp cần kiến thức chung rộng rãi. Mô hình này có ngữ cảnh 200K và thời điểm cắt đứt kiến thức vào tháng 10 năm 2023."
   },
   "openai/o1-mini": {
     "description": "o1-mini là một mô hình suy diễn nhanh chóng và tiết kiệm chi phí, được thiết kế cho các ứng dụng lập trình, toán học và khoa học. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."

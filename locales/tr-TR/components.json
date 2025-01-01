@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "Geri dön"
   },
+  "MaxTokenSlider": {
+    "unlimited": "Sınırsız"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, yukarıdaki yeteneklerin kullanılabilirliğini doğrulamak için lütfen gerçek durumu kontrol edin",
