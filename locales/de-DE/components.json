@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "Zurück"
   },
+  "MaxTokenSlider": {
+    "unlimited": "Unbegrenzt"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Benutzerdefiniertes Modell, standardmäßig unterstützt es sowohl Funktionsaufrufe als auch visuelle Erkennung. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Gegebenheiten.",

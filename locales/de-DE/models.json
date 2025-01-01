@@ -602,6 +602,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit Next-Gen-Funktionen, herausragender Geschwindigkeit, nativer Werkzeuganwendung und multimodaler Generierung."
   },
+  "gemini-2.0-flash-thinking-exp-1219": {
+    "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit der nächsten Generation von Funktionen, außergewöhnlicher Geschwindigkeit, nativen Toolaufrufen und multimodaler Generierung."
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 ist Googles neuestes experimentelles multimodales KI-Modell, das über eine schnelle Verarbeitungskapazität verfügt und Texte, Bilder und Videoeingaben unterstützt, um eine effiziente Skalierung für verschiedene Aufgaben zu ermöglichen."
   },
@@ -1094,6 +1097,12 @@
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B ist ein von NVIDIA maßgeschneidertes großes Sprachmodell, das darauf abzielt, die Hilfsfähigkeit der von LLM generierten Antworten auf Benutzeranfragen zu verbessern. Dieses Modell hat in Benchmark-Tests wie Arena Hard, AlpacaEval 2 LC und GPT-4-Turbo MT-Bench hervorragende Leistungen gezeigt und belegt bis zum 1. Oktober 2024 den ersten Platz in allen drei automatischen Ausrichtungsbenchmarks. Das Modell wurde mit RLHF (insbesondere REINFORCE), Llama-3.1-Nemotron-70B-Reward und HelpSteer2-Preference-Prompts auf dem Llama-3.1-70B-Instruct-Modell trainiert."
   },
+  "o1": {
+    "description": "Konzentriert sich auf fortgeschrittene Inferenz und die Lösung komplexer Probleme, einschließlich mathematischer und wissenschaftlicher Aufgaben. Besonders geeignet für Anwendungen, die ein tiefes Verständnis des Kontexts und die Abwicklung von Arbeitsabläufen erfordern."
+  },
+  "o1-2024-12-17": {
+    "description": "o1 ist OpenAIs neues Inferenzmodell, das Text- und Bildinput unterstützt und Textausgaben erzeugt. Es eignet sich für komplexe Aufgaben, die umfassendes Allgemeinwissen erfordern. Dieses Modell hat einen Kontext von 200K und einen Wissensstand bis Oktober 2023."
+  },
   "o1-mini": {
     "description": "o1-mini ist ein schnelles und kosteneffizientes Inferenzmodell, das für Programmier-, Mathematik- und Wissenschaftsanwendungen entwickelt wurde. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
   },
@@ -1120,6 +1129,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini ist das neueste Modell von OpenAI, das nach GPT-4 Omni veröffentlicht wurde und Text- und Bild-Eingaben unterstützt. Als ihr fortschrittlichstes kleines Modell ist es viel günstiger als andere neueste Modelle und über 60 % günstiger als GPT-3.5 Turbo. Es behält die fortschrittlichste Intelligenz bei und bietet gleichzeitig ein hervorragendes Preis-Leistungs-Verhältnis. GPT-4o mini erzielte 82 % im MMLU-Test und rangiert derzeit in den Chat-Präferenzen über GPT-4."
+  },
+  "openai/o1": {
+    "description": "o1 ist OpenAIs neues Inferenzmodell, das Text- und Bildinput unterstützt und Textausgaben erzeugt. Es eignet sich für komplexe Aufgaben, die umfassendes Allgemeinwissen erfordern. Dieses Modell hat einen Kontext von 200K und einen Wissensstand bis Oktober 2023."
   },
   "openai/o1-mini": {
     "description": "o1-mini ist ein schnelles und kosteneffizientes Inferenzmodell, das für Programmier-, Mathematik- und Wissenschaftsanwendungen entwickelt wurde. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
