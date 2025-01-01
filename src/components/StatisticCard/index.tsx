@@ -30,6 +30,12 @@ const useStyles = createStyles(
 
       .${prefixCls}-pro-card-title {
         overflow: hidden;
+
+        ${responsive.mobile} {
+          margin: 0;
+          font-size: 14px;
+          line-height: 16px !important;
+        }
       }
 
       .${prefixCls}-pro-card-body {
