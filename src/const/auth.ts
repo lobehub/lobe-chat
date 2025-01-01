@@ -28,7 +28,7 @@ export interface JWTPayload {
   /**
    * Represents the endpoint of provider
    */
-  endpoint?: string;
+  baseURL?: string;
 
   azureApiVersion?: string;
 

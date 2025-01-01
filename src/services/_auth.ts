@@ -45,14 +45,14 @@ export const getProviderAuthPayload = (provider: string) => {
       return {
         apiKey: azure.apiKey,
         azureApiVersion: azure.apiVersion,
-        endpoint: azure.endpoint,
+        baseURL: azure.endpoint,
       };
     }
 
     case ModelProvider.Ollama: {
       const config = keyVaultsConfigSelectors.ollamaConfig(useUserStore.getState());
 
-      return { endpoint: config?.baseURL };
+      return { baseURL: config?.baseURL };
     }
 
     case ModelProvider.Cloudflare: {
@@ -69,7 +69,7 @@ export const getProviderAuthPayload = (provider: string) => {
         useUserStore.getState(),
       );
 
-      return { apiKey: config?.apiKey, endpoint: config?.baseURL };
+      return { apiKey: config?.apiKey, baseURL: config?.baseURL };
     }
   }
 };

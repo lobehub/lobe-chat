@@ -51,6 +51,7 @@ describe('modelProviderSelectors', () => {
       const result = modelProviderSelectors.getDefaultEnabledModelsById('openai')(s);
       expect(result).toEqual([
         'o1-mini',
+        'o1-2024-12-17',
         'o1-preview',
         'gpt-4o-mini',
         'gpt-4o-2024-11-20',
