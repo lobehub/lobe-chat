@@ -14,46 +14,49 @@ import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
 import { formatIntergerNumber } from '@/utils/format';
 
-const Welcome = memo(() => {
+const Welcome = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('auth');
   const theme = useTheme();
   const [nickname, username] = useUserStore((s) => [
     userProfileSelectors.nickName(s),
     userProfileSelectors.username(s),
   ]);
+
   const { data, isLoading } = useClientDataSWR('welcome', async () =>
     userService.getUserRegistrationDuration(),
   );
 
   return (
-    <Flexbox gap={8}>
+    <Flexbox gap={8} padding={mobile ? 16 : 0}>
       <Flexbox
         align={'center'}
         gap={8}
         horizontal
         style={{
-          fontSize: 20,
+          fontSize: mobile ? 16 : 20,
           fontWeight: 500,
         }}
       >
-        <FluentEmoji emoji={'👋'} size={28} type={'anim'} />
-        <Trans
-          components={{
-            span:
-              isLoading || !data ? (
-                <Skeleton.Button active style={{ height: 24 }} />
-              ) : (
-                <span style={{ fontWeight: 'bold' }} />
-              ),
-          }}
-          i18nKey="stats.welcome"
-          ns={'auth'}
-          values={{
-            appName: BRANDING_NAME,
-            days: formatIntergerNumber(data?.duration),
-            username: nickname || username,
-          }}
-        />
+        <div>
+          <Trans
+            components={{
+              span:
+                isLoading || !data ? (
+                  <Skeleton.Button active style={{ height: 24 }} />
+                ) : (
+                  <span style={{ fontWeight: 'bold' }} />
+                ),
+            }}
+            i18nKey="stats.welcome"
+            ns={'auth'}
+            values={{
+              appName: BRANDING_NAME,
+              days: formatIntergerNumber(data?.duration),
+              username: nickname || username,
+            }}
+          />
+        </div>
+        {!mobile && <FluentEmoji emoji={'🫶'} size={32} type={'anim'} />}
       </Flexbox>
       <Flexbox
         gap={16}

@@ -34,7 +34,7 @@ describe('createCommonSlice', () => {
   describe('updateAvatar', () => {
     it('should update avatar', async () => {
       const { result } = renderHook(() => useUserStore());
-      const avatar = new File([''], 'avatar.png', { type: 'image/png' });
+      const avatar = 'data:image/png;base64,';
 
       const spyOn = vi.spyOn(result.current, 'refreshUserState');
       const updateAvatarSpy = vi

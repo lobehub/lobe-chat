@@ -23,6 +23,11 @@ export interface IMessageService {
     range?: [string, string];
     startDate?: string;
   }): Promise<number>;
+  countWords(params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number>;
   getHeatmaps(): Promise<HeatmapsProps['data']>;
   updateMessageError(id: string, error: ChatMessageError): Promise<any>;
   updateMessage(id: string, message: Partial<MessageItem>): Promise<any>;

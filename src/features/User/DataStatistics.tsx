@@ -22,6 +22,10 @@ const useStyles = createStyles(({ css, token }) => ({
     padding-inline: 8px;
     background: ${token.colorFillTertiary};
     border-radius: ${token.borderRadius}px;
+
+    &:hover {
+      background: ${token.colorFillSecondary};
+    }
   `,
   count: css`
     font-size: 16px;

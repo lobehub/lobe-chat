@@ -12,6 +12,7 @@ import TopicsRank from './features/TopicsRank';
 import TotalAssistants from './features/TotalAssistants';
 import TotalMessages from './features/TotalMessages';
 import TotalTopics from './features/TotalTopics';
+import TotalWords from './features/TotalWords';
 import Welcome from './features/Welcome';
 
 const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
@@ -19,15 +20,16 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <>
-      <Welcome />
+      <Welcome mobile={mobile} />
       <FormGroup style={FORM_STYLE.style} title={t('tab.stats')} variant={'pure'}>
-        <Grid maxItemWidth={200} paddingBlock={16} rows={3}>
+        <Grid maxItemWidth={150} paddingBlock={16} rows={4}>
           <TotalAssistants />
           <TotalTopics />
           <TotalMessages />
+          <TotalWords />
         </Grid>
       </FormGroup>
-      <Grid gap={mobile ? undefined : 48} rows={2}>
+      <Grid gap={mobile ? 0 : 48} rows={2}>
         <AssistantsRank />
         <TopicsRank />
       </Grid>

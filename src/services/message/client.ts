@@ -54,6 +54,10 @@ export class ClientService extends BaseClientService implements IMessageService 
     return this.messageModel.count(params);
   };
 
+  countWords: IMessageService['countWords'] = async (params) => {
+    return this.messageModel.countWords(params);
+  };
+
   getHeatmaps: IMessageService['getHeatmaps'] = async () => {
     return this.messageModel.getHeatmaps();
   };

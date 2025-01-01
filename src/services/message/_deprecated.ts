@@ -57,6 +57,11 @@ export class ClientService implements IMessageService {
   }
 
   // @ts-ignore
+  async countWords(): Promise<number> {
+    throw new Error('Method not implemented.');
+  }
+
+  // @ts-ignore
   async getHeatmaps() {
     throw new Error('Method not implemented.');
   }

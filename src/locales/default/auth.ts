@@ -39,6 +39,7 @@ export default {
   signout: '退出登录',
   signup: '注册',
   stats: {
+    aiheatmaps: 'AI 指数',
     assistants: '助手数',
     assistantsRank: {
       left: '助手名称',
@@ -46,9 +47,6 @@ export default {
       title: '助手使用率',
     },
     createdAt: '用户创建于',
-    heatmaps: {
-      title: '创作指数',
-    },
     messages: '消息数',
     topics: '话题数',
     topicsRank: {
@@ -58,6 +56,7 @@ export default {
     },
     updatedAt: '数据更新至',
     welcome: '{{username}}, 这是你和 {{appName}} 相伴的第 <span>{{days}}</span> 天',
+    words: '总字数',
   },
   tab: {
     profile: '个人资料',

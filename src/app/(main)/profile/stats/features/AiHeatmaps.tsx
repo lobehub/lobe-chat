@@ -17,7 +17,7 @@ const AiHeatmaps = memo(() => {
   );
 
   return (
-    <FormGroup style={FORM_STYLE.style} title={t('stats.heatmaps.title')} variant={'pure'}>
+    <FormGroup style={FORM_STYLE.style} title={t('stats.aiheatmaps')} variant={'pure'}>
       <Flexbox paddingBlock={24}>
         <Heatmaps
           blockSize={mobile ? 8 : 14}

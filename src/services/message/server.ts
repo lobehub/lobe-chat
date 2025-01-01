@@ -40,6 +40,10 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.count.query(params);
   };
 
+  countWords: IMessageService['countWords'] = async (params) => {
+    return lambdaClient.message.countWords.query(params);
+  };
+
   getHeatmaps: IMessageService['getHeatmaps'] = async () => {
     return lambdaClient.message.getHeatmaps.query();
   };

@@ -41,6 +41,20 @@ export const messageRouter = router({
       return ctx.messageModel.count(input);
     }),
 
+  countWords: messageProcedure
+    .input(
+      z
+        .object({
+          endDate: z.string().optional(),
+          range: z.tuple([z.string(), z.string()]).optional(),
+          startDate: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.messageModel.countWords(input);
+    }),
+
   createMessage: messageProcedure
     .input(z.object({}).passthrough().partial())
     .mutation(async ({ input, ctx }) => {

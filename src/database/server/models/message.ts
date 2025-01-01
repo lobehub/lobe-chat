@@ -302,6 +302,34 @@ export class MessageModel {
     return result[0].count;
   };
 
+  countWords = async (params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
+    const result = await this.db
+      .select({
+        count: sql<number>`sum(length(${messages.content}))`.as('total_length'),
+      })
+      .from(messages)
+      .where(
+        genWhere([
+          eq(messages.userId, this.userId),
+          params?.range
+            ? genRangeWhere(params.range, messages.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.endDate
+            ? genEndDateWhere(params.endDate, messages.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.startDate
+            ? genStartDateWhere(params.startDate, messages.createdAt, (date) => date.toDate())
+            : undefined,
+        ]),
+      );
+
+    return result[0].count;
+  };
+
   getHeatmaps = async (): Promise<HeatmapsProps['data']> => {
     const startDate = today().subtract(1, 'year').startOf('day');
     const endDate = today().endOf('day');

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
+import UserAvatar from '@/features/User/UserAvatar';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
@@ -13,7 +14,8 @@ type SettingItemGroup = ItemGroup;
 
 const Client = memo<{ mobile?: boolean }>(() => {
   const [isLoginWithNextAuth] = useUserStore((s) => [authSelectors.isLoginWithNextAuth(s)]);
-  const [nickname, username, userProfile] = useUserStore((s) => [
+  const [enableAuth, nickname, username, userProfile] = useUserStore((s) => [
+    s.enableAuth(),
     userProfileSelectors.nickName(s),
     userProfileSelectors.username(s),
     userProfileSelectors.userProfile(s),
