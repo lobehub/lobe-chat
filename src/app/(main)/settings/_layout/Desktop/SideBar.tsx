@@ -27,19 +27,19 @@ const SidebarLayout = ({ children, className, title, desc, ...rest }: SidebarLay
   const { cx, styles } = useStyles();
   const { t } = useTranslation('setting');
   return (
-    <Suspense fallback={<CircleLoading />}>
-      <Flexbox
-        className={cx(styles.container, className)}
-        flex={'none'}
-        gap={20}
-        width={280}
-        {...rest}
-      >
-        <PanelTitle desc={desc || t('header.desc')} title={title || t('header.title')} />
-        <Flexbox flex={1}>{children}</Flexbox>
-        <BrandWatermark paddingInline={12} />
+    <Flexbox
+      className={cx(styles.container, className)}
+      flex={'none'}
+      gap={20}
+      width={280}
+      {...rest}
+    >
+      <PanelTitle desc={desc || t('header.desc')} title={title || t('header.title')} />
+      <Flexbox flex={1}>
+        <Suspense fallback={<CircleLoading />}>{children}</Suspense>
       </Flexbox>
-    </Suspense>
+      <BrandWatermark paddingInline={12} />
+    </Flexbox>
   );
 };
 
