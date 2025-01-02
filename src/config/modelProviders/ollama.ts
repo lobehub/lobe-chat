@@ -341,6 +341,12 @@ const Ollama: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://ollama.com/library',
   name: 'Ollama',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'ollama',
+    showApiKey: false,
+    showModelFetcher: true,
+  },
   showApiKey: false,
   url: 'https://ollama.com',
 };

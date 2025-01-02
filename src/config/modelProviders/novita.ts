@@ -115,6 +115,11 @@ const Novita: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://novita.ai/model-api/product/llm-api',
   name: 'Novita',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://novita.ai',
 };
 

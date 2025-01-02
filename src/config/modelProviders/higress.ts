@@ -2476,6 +2476,15 @@ const Higress: ModelProviderCard = {
     placeholder: 'https://127.0.0.1:8080/v1',
     title: 'AI Gateway地址',
   },
+  settings: {
+    proxyUrl: {
+      desc: '输入Higress AI Gateway的访问地址',
+      placeholder: 'https://127.0.0.1:8080/v1',
+      title: 'AI Gateway地址',
+    },
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://apig.console.aliyun.com/',
 };
 

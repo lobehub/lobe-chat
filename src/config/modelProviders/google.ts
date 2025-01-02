@@ -277,6 +277,16 @@ const Google: ModelProviderCard = {
   proxyUrl: {
     placeholder: 'https://generativelanguage.googleapis.com',
   },
+  settings: {
+    proxyUrl: {
+      placeholder: 'https://generativelanguage.googleapis.com',
+    },
+    sdkType: 'google',
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
+  },
   smoothing: {
     speed: 2,
     text: true,
