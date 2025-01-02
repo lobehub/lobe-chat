@@ -69,6 +69,11 @@ const Ai360: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://ai.360.cn/platform/docs/overview',
   name: '360 AI',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://ai.360.com',
 };
 

@@ -1,5 +1,19 @@
 [
   {
+    "children": {
+      "fixes": ["Fix topic mobile view ui error."]
+    },
+    "date": "2025-01-02",
+    "version": "1.42.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor provider info and improve settings side bar loading."]
+    },
+    "date": "2025-01-02",
+    "version": "1.42.4"
+  },
+  {
     "children": {},
     "date": "2025-01-01",
     "version": "1.42.3"
