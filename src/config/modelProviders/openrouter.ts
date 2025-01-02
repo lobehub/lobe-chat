@@ -41,7 +41,7 @@ const OpenRouter: ModelProviderCard = {
       },
       releasedAt: '2024-12-17',
       vision: true,
-    },    
+    },
     {
       contextWindowTokens: 128_000,
       description:
@@ -236,6 +236,10 @@ const OpenRouter: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://openrouter.ai/models',
   name: 'OpenRouter',
+  settings: {
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://openrouter.ai',
 };
 

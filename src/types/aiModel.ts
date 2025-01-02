@@ -273,3 +273,18 @@ export const ToggleAiModelEnableSchema = z.object({
 });
 
 export type ToggleAiModelEnableParams = z.infer<typeof ToggleAiModelEnableSchema>;
+
+//
+
+interface AiModelForSelect {
+  abilities: ModelAbilities;
+  contextWindowTokens?: number;
+  displayName?: string;
+  id: string;
+}
+
+export interface EnabledProviderWithModels {
+  children: AiModelForSelect[];
+  id: string;
+  name: string;
+}

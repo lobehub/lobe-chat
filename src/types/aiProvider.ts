@@ -1,6 +1,31 @@
 import { z } from 'zod';
 
+import { AiModelSourceType, AiModelType, ModelAbilities } from '@/types/aiModel';
 import { SmoothingParams } from '@/types/llm';
+
+export const AiProviderSourceEnum = {
+  Builtin: 'builtin',
+  Custom: 'custom',
+} as const;
+export type AiProviderSourceType = (typeof AiProviderSourceEnum)[keyof typeof AiProviderSourceEnum];
+
+/**
+ * only when provider use different sdk
+ * we will add a type
+ */
+export const AiProviderSDKEnum = {
+  Anthropic: 'anthropic',
+  Azure: 'azure',
+  Bedrock: 'bedrock',
+  Cloudflare: 'cloudflare',
+  Google: 'google',
+  Huggingface: 'huggingface',
+  Ollama: 'ollama',
+  Openai: 'openai',
+  Wenxin: 'wenxin',
+} as const;
+
+export type AiProviderSDKType = (typeof AiProviderSDKEnum)[keyof typeof AiProviderSDKEnum];
 
 // create
 export const CreateAiProviderSchema = z.object({
@@ -11,6 +36,7 @@ export const CreateAiProviderSchema = z.object({
   logo: z.string().optional(),
   name: z.string(),
   sdkType: z.enum(['openai', 'anthropic']).optional(),
+  source: z.enum(['builtin', 'custom']),
   // checkModel: z.string().optional(),
   // homeUrl: z.string().optional(),
   // modelsUrl: z.string().optional(),
@@ -27,12 +53,12 @@ export interface AiProviderListItem {
   logo?: string;
   name?: string;
   sort?: number;
-  source: 'builtin' | 'custom';
+  source: AiProviderSourceType;
 }
 
 // Detail Query
 
-interface AiProviderConfig {
+export interface AiProviderSettings {
   /**
    * whether provider show browser request option by default
    *
@@ -55,11 +81,15 @@ interface AiProviderConfig {
     | false;
 
   /**
+   * default openai
+   */
+  sdkType?: AiProviderSDKType;
+
+  /**
    * whether show api key in the provider config
    * so provider like ollama don't need api key field
    */
   showApiKey?: boolean;
-
   /**
    * whether show checker in the provider config
    */
@@ -72,12 +102,12 @@ interface AiProviderConfig {
   smoothing?: SmoothingParams;
 }
 
-export interface AiProviderItem {
+export interface AiProviderCard {
   /**
    * the default model that used for connection check
    */
   checkModel?: string;
-  config: AiProviderConfig;
+  config: AiProviderSettings;
   description?: string;
   enabled: boolean;
   enabledChatModels: string[];
@@ -95,11 +125,6 @@ export interface AiProviderItem {
    * the name show for end user
    */
   name: string;
-  /**
-   * default openai
-   */
-  sdkType?: 'openai' | 'anthropic';
-  source: 'builtin' | 'custom';
 }
 
 export interface AiProviderDetailItem {
@@ -107,7 +132,6 @@ export interface AiProviderDetailItem {
    * the default model that used for connection check
    */
   checkModel?: string;
-  config: AiProviderConfig;
   description?: string;
   enabled: boolean;
   fetchOnClient?: boolean;
@@ -126,14 +150,21 @@ export interface AiProviderDetailItem {
    * the name show for end user
    */
   name: string;
-  /**
-   * default openai
-   */
-  sdkType?: 'openai' | 'anthropic';
-  source: 'builtin' | 'custom';
+  settings: AiProviderSettings;
+  source: AiProviderSourceType;
 }
 
 // Update
+export const UpdateAiProviderSchema = z.object({
+  config: z.object({}).passthrough().optional(),
+  description: z.string().optional(),
+  logo: z.string().optional(),
+  name: z.string(),
+  sdkType: z.enum(['openai', 'anthropic']).optional(),
+});
+
+export type UpdateAiProviderParams = z.infer<typeof UpdateAiProviderSchema>;
+
 export const UpdateAiProviderConfigSchema = z.object({
   checkModel: z.string().optional(),
   fetchOnClient: z.boolean().optional(),
@@ -145,4 +176,27 @@ export type UpdateAiProviderConfigParams = z.infer<typeof UpdateAiProviderConfig
 export interface AiProviderSortMap {
   id: string;
   sort: number;
+}
+
+// --------
+
+export interface EnabledProvider {
+  id: string;
+  name?: string;
+  source: AiModelSourceType;
+}
+
+export interface EnabledAiModel {
+  abilities: ModelAbilities;
+  contextWindowTokens?: number;
+  displayName?: string;
+  id: string;
+  providerId: string;
+  type: AiModelType;
+}
+
+export interface AiProviderInitState {
+  enabledAiModels: EnabledAiModel[];
+  enabledAiProviders: EnabledProvider[];
+  keyVaults: Record<string, object>;
 }
