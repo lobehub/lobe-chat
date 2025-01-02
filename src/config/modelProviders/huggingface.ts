@@ -52,6 +52,11 @@ const HuggingFace: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://huggingface.co/docs/api-inference/en/supported-models',
   name: 'HuggingFace',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'huggingface',
+    showModelFetcher: true,
+  },
   url: 'https://huggingface.co',
 };
 

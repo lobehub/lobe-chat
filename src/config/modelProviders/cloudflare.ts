@@ -84,6 +84,11 @@ const Cloudflare: ModelProviderCard = {
     showModelFetcher: true,
   },
   name: 'Cloudflare Workers AI',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'cloudflare',
+    showModelFetcher: true,
+  },
   url: 'https://developers.cloudflare.com/workers-ai/models',
 };
 

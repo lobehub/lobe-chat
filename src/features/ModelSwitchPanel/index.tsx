@@ -2,7 +2,6 @@ import { Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
-import isEqual from 'fast-deep-equal';
 import { LucideArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, memo, useMemo } from 'react';
@@ -10,12 +9,11 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
+import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
-import { ModelProviderCard } from '@/types/llm';
+import { EnabledProviderWithModels } from '@/types/aiModel';
 import { withBasePath } from '@/utils/basePath';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
@@ -54,13 +52,13 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
 
   const router = useRouter();
 
-  const enabledList = useUserStore(modelProviderSelectors.modelProviderListForModelSelect, isEqual);
+  const enabledList = useEnabledChatModels();
 
   const items = useMemo<ItemType[]>(() => {
-    const getModelItems = (provider: ModelProviderCard) => {
-      const items = provider.chatModels.map((model) => ({
+    const getModelItems = (provider: EnabledProviderWithModels) => {
+      const items = provider.children.map((model) => ({
         key: menuKey(provider.id, model.id),
-        label: <ModelItemRender {...model} />,
+        label: <ModelItemRender {...model} {...model.abilities} />,
         onClick: () => {
           updateAgentConfig({ model: model.id, provider: provider.id });
         },
