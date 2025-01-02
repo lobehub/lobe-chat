@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.42.5](https://github.com/lobehub/lobe-chat/compare/v1.42.4...v1.42.5)
+
+<sup>Released on **2025-01-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix topic mobile view ui error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix topic mobile view ui error, closes [#5266](https://github.com/lobehub/lobe-chat/issues/5266) ([421a1b3](https://github.com/lobehub/lobe-chat/commit/421a1b3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.42.4](https://github.com/lobehub/lobe-chat/compare/v1.42.3...v1.42.4)
 
 <sup>Released on **2025-01-02**</sup>
