@@ -66,6 +66,13 @@ const XAI: ModelProviderCard = {
   proxyUrl: {
     placeholder: 'https://api.x.ai/v1',
   },
+  settings: {
+    proxyUrl: {
+      placeholder: 'https://api.x.ai/v1',
+    },
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://x.ai/api',
 };
 

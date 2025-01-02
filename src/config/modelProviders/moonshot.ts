@@ -40,6 +40,16 @@ const Moonshot: ModelProviderCard = {
   proxyUrl: {
     placeholder: 'https://api.moonshot.cn/v1',
   },
+  settings: {
+    proxyUrl: {
+      placeholder: 'https://api.moonshot.cn/v1',
+    },
+    sdkType: 'openai',
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
+  },
   smoothing: {
     speed: 2,
     text: true,

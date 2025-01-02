@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
@@ -18,6 +20,7 @@ import type {
   TextToSpeechOptions,
   TextToSpeechPayload,
 } from '../../types';
+import { ChatStreamCallbacks } from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
@@ -25,7 +28,6 @@ import { handleOpenAIError } from '../handleOpenAIError';
 import { convertOpenAIMessages } from '../openaiHelpers';
 import { StreamingResponse } from '../response';
 import { OpenAIStream, OpenAIStreamOptions } from '../streams';
-import { ChatStreamCallbacks } from '../../types';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
 export const CHAT_MODELS_BLOCK_LIST = [
@@ -248,7 +250,8 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
         if (responseMode === 'json') return Response.json(response);
 
-        const transformHandler = chatCompletion?.handleTransformResponseToStream || transformResponseToStream;
+        const transformHandler =
+          chatCompletion?.handleTransformResponseToStream || transformResponseToStream;
         const stream = transformHandler(response as unknown as OpenAI.ChatCompletion);
 
         const streamHandler = chatCompletion?.handleStream || OpenAIStream;
@@ -278,7 +281,15 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
           const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === item.id);
 
-          if (knownModel) return knownModel;
+          if (knownModel) {
+            dayjs.extend(utc);
+
+            return {
+              ...knownModel,
+              releasedAt:
+                knownModel.releasedAt ?? dayjs.utc(item.created * 1000).format('YYYY-MM-DD'),
+            };
+          }
 
           return { id: item.id };
         })

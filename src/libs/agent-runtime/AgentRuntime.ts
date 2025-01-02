@@ -133,7 +133,7 @@ class AgentRuntime {
       ai21: Partial<ClientOptions>;
       ai360: Partial<ClientOptions>;
       anthropic: Partial<ClientOptions>;
-      azure: { apiVersion?: string; apikey?: string; endpoint?: string };
+      azure: { apiKey?: string; apiVersion?: string; baseURL?: string };
       baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
       cloudflare: Partial<LobeCloudflareParams>;
@@ -180,8 +180,8 @@ class AgentRuntime {
 
       case ModelProvider.Azure: {
         runtimeModel = new LobeAzureOpenAI(
-          params.azure?.endpoint,
-          params.azure?.apikey,
+          params.azure?.baseURL,
+          params.azure?.apiKey,
           params.azure?.apiVersion,
         );
         break;

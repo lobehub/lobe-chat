@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "Quay lại"
   },
+  "MaxTokenSlider": {
+    "unlimited": "Không giới hạn"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Mô hình tùy chỉnh, mặc định hỗ trợ cả cuộc gọi hàm và nhận diện hình ảnh, vui lòng xác minh khả năng sử dụng của chúng theo tình hình cụ thể",

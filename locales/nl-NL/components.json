@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "Terug"
   },
+  "MaxTokenSlider": {
+    "unlimited": "Onbeperkt"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual needs.",

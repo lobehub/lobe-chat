@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "Retour"
   },
+  "MaxTokenSlider": {
+    "unlimited": "Illimité"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Modèle personnalisé par défaut prenant en charge à la fois les appels de fonction et la reconnaissance visuelle. Veuillez vérifier la disponibilité de ces capacités en fonction de vos besoins réels.",
