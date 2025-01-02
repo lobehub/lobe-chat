@@ -17,11 +17,21 @@ export const getProviderAuthPayload = (provider: string) => {
       const apiKey = (awsSecretAccessKey || '') + (awsAccessKeyId || '');
 
       return {
-        apiKey,
-        awsAccessKeyId,
-        awsRegion: region,
+        // Parameters for client fetch
+accessKeyId,
+        
+accessKeySecret: awsSecretAccessKey,
+        
+apiKey,
+        
+awsAccessKeyId,
+        
+awsRegion: region,
+        
         awsSecretAccessKey,
         awsSessionToken: sessionToken,
+        region,
+        sessionToken,
       };
     }
 

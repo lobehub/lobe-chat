@@ -82,90 +82,25 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
  * **Note**: if you try to fetch directly, use `fetchOnClient` instead.
  */
 export function initializeWithClientStore(provider: string, payload: any) {
-  // add auth payload
+  /**
+   * Since PR #5250, we no longer need to map the provider options here.
+   * Provider options mapping is now be done at `getProviderAuthPayload`.
+   * @see {@link https://github.com/lobehub/lobe-chat/pull/5250}
+   * @see {@file src/auth/provider.ts#getProviderAuthPayload}
+   */
   const providerAuthPayload = getProviderAuthPayload(provider);
   const commonOptions = {
-    // Some provider base openai sdk, so enable it run on browser
+    // Allow OpenAI SDK to run on browser
     dangerouslyAllowBrowser: true,
   };
-  let providerOptions = {};
-
-  switch (provider) {
-    default:
-    case ModelProvider.OpenAI: {
-      providerOptions = {
-        baseURL: providerAuthPayload?.baseURL,
-      };
-      break;
-    }
-    case ModelProvider.Azure: {
-      providerOptions = {
-        apiKey: providerAuthPayload?.apiKey,
-        apiVersion: providerAuthPayload?.azureApiVersion,
-      };
-      break;
-    }
-    case ModelProvider.Google: {
-      providerOptions = {
-        baseURL: providerAuthPayload?.baseURL,
-      };
-      break;
-    }
-    case ModelProvider.Bedrock: {
-      if (providerAuthPayload?.apiKey) {
-        providerOptions = {
-          accessKeyId: providerAuthPayload?.awsAccessKeyId,
-          accessKeySecret: providerAuthPayload?.awsSecretAccessKey,
-          region: providerAuthPayload?.awsRegion,
-          sessionToken: providerAuthPayload?.awsSessionToken,
-        };
-      }
-      break;
-    }
-    case ModelProvider.Ollama: {
-      providerOptions = {
-        baseURL: providerAuthPayload?.baseURL,
-      };
-      break;
-    }
-    case ModelProvider.Perplexity: {
-      providerOptions = {
-        apikey: providerAuthPayload?.apiKey,
-        baseURL: providerAuthPayload?.baseURL,
-      };
-      break;
-    }
-    case ModelProvider.Anthropic: {
-      providerOptions = {
-        baseURL: providerAuthPayload?.baseURL,
-      };
-      break;
-    }
-    case ModelProvider.Groq: {
-      providerOptions = {
-        apikey: providerAuthPayload?.apiKey,
-        baseURL: providerAuthPayload?.baseURL,
-      };
-      break;
-    }
-    case ModelProvider.Cloudflare: {
-      providerOptions = {
-        apikey: providerAuthPayload?.apiKey,
-        baseURLOrAccountID: providerAuthPayload?.cloudflareBaseURLOrAccountID,
-      };
-      break;
-    }
-  }
-
   /**
    * Configuration override order:
-   * payload -> providerOptions -> providerAuthPayload -> commonOptions
+   * payload -> providerAuthPayload -> commonOptions
    */
   return AgentRuntime.initializeWithProviderOptions(provider, {
     [provider]: {
       ...commonOptions,
       ...providerAuthPayload,
-      ...providerOptions,
       ...payload,
     },
   });
