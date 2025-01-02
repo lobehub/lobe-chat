@@ -218,6 +218,10 @@ const FireworksAI: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://fireworks.ai/models?show=Serverless',
   name: 'Fireworks AI',
+  settings: {
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://fireworks.ai',
 };
 

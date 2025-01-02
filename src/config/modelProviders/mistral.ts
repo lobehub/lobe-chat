@@ -152,6 +152,9 @@ const Mistral: ModelProviderCard = {
   id: 'mistral',
   modelsUrl: 'https://docs.mistral.ai/getting-started/models',
   name: 'Mistral',
+  settings: {
+    sdkType: 'openai',
+  },
   url: 'https://mistral.ai',
 };
 

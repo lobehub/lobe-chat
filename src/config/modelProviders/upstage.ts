@@ -37,6 +37,10 @@ const Upstage: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://developers.upstage.ai/docs/getting-started/models',
   name: 'Upstage',
+  settings: {
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://upstage.ai',
 };
 

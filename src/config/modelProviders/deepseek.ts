@@ -27,6 +27,10 @@ const DeepSeek: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.deepseek.com/api-docs/zh-cn/quick_start/pricing',
   name: 'DeepSeek',
+  settings: {
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://deepseek.com',
 };
 
