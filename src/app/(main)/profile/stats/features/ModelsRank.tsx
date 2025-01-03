@@ -71,9 +71,9 @@ export const TopicsRank = memo(() => {
           <BarList
             data={data?.map((item) => mapData(item)) || []}
             height={340}
-            leftLabel={t('stats.assistantsRank.left')}
+            leftLabel={t('stats.modelsRank.left')}
             loading={isLoading || !data}
-            rightLabel={t('stats.assistantsRank.right')}
+            rightLabel={t('stats.modelsRank.right')}
           />
         </Modal>
       )}

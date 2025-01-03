@@ -130,6 +130,7 @@ export class SessionModel {
         title: agents.title,
       })
       .from(sessions)
+      .where(and(eq(sessions.userId, this.userId)))
       .leftJoin(topics, eq(sessions.id, topics.sessionId))
       .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
       .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
@@ -146,7 +147,7 @@ export class SessionModel {
         count: count(topics.id).as('count'),
       })
       .from(topics)
-      .where(isNull(topics.sessionId));
+      .where(and(eq(topics.userId, this.userId), isNull(topics.sessionId)));
 
     const inboxCount = inboxResult[0].count;
 

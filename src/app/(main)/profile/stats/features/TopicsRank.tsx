@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { INBOX_SESSION_ID } from '@/const/session';
 import { useClientDataSWR } from '@/libs/swr';
 import { topicService } from '@/services/topic';
 import { TopicRankItem } from '@/types/topic';
@@ -28,7 +29,7 @@ export const TopicsRank = memo(() => {
   const mapData = (item: TopicRankItem) => {
     const link = qs.stringifyUrl({
       query: {
-        session: item.sessionId,
+        session: item.sessionId || INBOX_SESSION_ID,
         topic: item.id,
       },
       url: '/chat',
@@ -89,10 +90,10 @@ export const TopicsRank = memo(() => {
           <BarList
             data={data?.map((item) => mapData(item)) || []}
             height={340}
-            leftLabel={t('stats.assistantsRank.left')}
+            leftLabel={t('stats.topicsRank.left')}
             loading={isLoading || !data}
             onValueChange={(item) => router.push(item.link)}
-            rightLabel={t('stats.assistantsRank.right')}
+            rightLabel={t('stats.topicsRank.right')}
           />
         </Modal>
       )}
