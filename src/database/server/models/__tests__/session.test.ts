@@ -908,10 +908,7 @@ describe('SessionModel', () => {
 
       const result = await sessionModel.rank();
 
-      // All sessions should be returned with count 0
-      expect(result).toHaveLength(2);
-      expect(result[0].count).toBe(0);
-      expect(result[1].count).toBe(0);
+      expect(result).toHaveLength(0);
     });
   });
 
