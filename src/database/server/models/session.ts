@@ -24,7 +24,6 @@ import {
   SessionItem,
   agents,
   agentsToSessions,
-  messages,
   sessionGroups,
   sessions,
   topics,
@@ -148,7 +147,7 @@ export class SessionModel {
         count: count(topics.id).as('count'),
       })
       .from(topics)
-      .where(and(eq(messages.userId, this.userId), isNull(topics.sessionId)));
+      .where(and(eq(topics.userId, this.userId), isNull(topics.sessionId)));
 
     const inboxCount = inboxResult[0].count;
 
