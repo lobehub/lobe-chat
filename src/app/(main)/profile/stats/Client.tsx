@@ -22,7 +22,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('auth');
 
   return (
-    <>
+    <Flexbox gap={24}>
       {mobile ? (
         <Welcome mobile />
       ) : (
@@ -39,13 +39,13 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
           <TotalWords />
         </Grid>
       </FormGroup>
+      <AiHeatmaps />
       <Grid gap={mobile ? 0 : 48} rows={3}>
         <ModelsRank />
         <AssistantsRank />
         <TopicsRank />
       </Grid>
-      <AiHeatmaps />
-    </>
+    </Flexbox>
   );
 });
 

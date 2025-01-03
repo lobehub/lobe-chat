@@ -310,7 +310,7 @@ export class MessageModel {
   }): Promise<number> => {
     const result = await this.db
       .select({
-        count: sql<number>`sum(length(${messages.content}))`.as('total_length'),
+        count: sql<string>`sum(length(${messages.content}))`.as('total_length'),
       })
       .from(messages)
       .where(
@@ -328,7 +328,7 @@ export class MessageModel {
         ]),
       );
 
-    return result[0].count;
+    return Number(result[0].count);
   };
 
   rankModels = async (): Promise<ModelRankItem[]> => {
