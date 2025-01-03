@@ -1,9 +1,3 @@
-import { Center } from 'react-layout-kit';
+import Loading from '@/components/Loading/BrandTextLoading';
 
-import CircleLoading from '@/components/Loading/BrandTextLoading';
-
-export default () => (
-  <Center height={'90vh'} width={'100%'}>
-    <CircleLoading />
-  </Center>
-);
+export default () => <Loading />;

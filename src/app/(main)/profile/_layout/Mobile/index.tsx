@@ -1,16 +1,23 @@
-import { PropsWithChildren } from 'react';
+import MobileContentLayout from '@/components/server/MobileNavLayout';
+import InitClientDB from '@/features/InitClientDB';
+import Footer from '@/features/Setting/Footer';
 
+import { LayoutProps } from '../type';
 import Header from './Header';
 
-const Layout = ({ children }: PropsWithChildren) => {
+const Layout = ({ children }: LayoutProps) => {
   return (
     <>
-      <Header />
-      {children}
+      <MobileContentLayout header={<Header />}>
+        {children}
+        <div style={{ flex: 1 }} />
+        <Footer />
+      </MobileContentLayout>
+      <InitClientDB />
     </>
   );
 };
 
-Layout.displayName = 'ProfileMobileLayout';
+Layout.displayName = 'MobileProfileLayout';
 
 export default Layout;

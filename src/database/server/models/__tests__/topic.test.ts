@@ -620,4 +620,140 @@ describe('TopicModel', () => {
       );
     });
   });
+
+  describe('rank', () => {
+    it('should return ranked topics based on message count', async () => {
+      // 创建测试数据
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(topics).values([
+          { id: 'topic1', title: 'Topic 1', sessionId, userId },
+          { id: 'topic2', title: 'Topic 2', sessionId, userId },
+          { id: 'topic3', title: 'Topic 3', sessionId, userId },
+        ]);
+
+        // topic1 有 3 条消息
+        await tx.insert(messages).values([
+          { id: 'msg1', role: 'user', topicId: 'topic1', userId },
+          { id: 'msg2', role: 'assistant', topicId: 'topic1', userId },
+          { id: 'msg3', role: 'user', topicId: 'topic1', userId },
+        ]);
+
+        // topic2 有 2 条消息
+        await tx.insert(messages).values([
+          { id: 'msg4', role: 'user', topicId: 'topic2', userId },
+          { id: 'msg5', role: 'assistant', topicId: 'topic2', userId },
+        ]);
+
+        // topic3 有 1 条消息
+        await tx.insert(messages).values([{ id: 'msg6', role: 'user', topicId: 'topic3', userId }]);
+      });
+
+      // 调用 rank 方法
+      const result = await topicModel.rank(2);
+
+      // 断言返回结果符合预期
+      expect(result).toHaveLength(2);
+      expect(result[0]).toMatchObject({
+        id: 'topic1',
+        title: 'Topic 1',
+        count: 3,
+        sessionId,
+      });
+      expect(result[1]).toMatchObject({
+        id: 'topic2',
+        title: 'Topic 2',
+        count: 2,
+        sessionId,
+      });
+    });
+
+    it('should return empty array if no topics exist', async () => {
+      const result = await topicModel.rank();
+      expect(result).toHaveLength(0);
+    });
+
+    it('should respect the limit parameter', async () => {
+      // 创建测试数据
+      await serverDB.transaction(async (tx) => {
+        await tx.insert(topics).values([
+          { id: 'topic1', title: 'Topic 1', sessionId, userId },
+          { id: 'topic2', title: 'Topic 2', sessionId, userId },
+        ]);
+
+        await tx.insert(messages).values([
+          { id: 'msg1', role: 'user', topicId: 'topic1', userId },
+          { id: 'msg2', role: 'user', topicId: 'topic2', userId },
+        ]);
+      });
+
+      // 使用限制为 1 调用 rank 方法
+      const result = await topicModel.rank(1);
+
+      // 断言只返回一个结果
+      expect(result).toHaveLength(1);
+    });
+  });
+
+  describe('count with date filters', () => {
+    beforeEach(async () => {
+      // 创建测试数据
+      await serverDB.insert(topics).values([
+        {
+          id: 'topic1',
+          userId,
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: 'topic2',
+          userId,
+          createdAt: new Date('2023-02-01'),
+        },
+        {
+          id: 'topic3',
+          userId,
+          createdAt: new Date('2023-03-01'),
+        },
+      ]);
+    });
+
+    it('should count topics with start date filter', async () => {
+      const result = await topicModel.count({
+        startDate: '2023-02-01',
+      });
+
+      expect(result).toBe(2); // should count topics from Feb 1st onwards
+    });
+
+    it('should count topics with end date filter', async () => {
+      const result = await topicModel.count({
+        endDate: '2023-02-01',
+      });
+
+      expect(result).toBe(2); // should count topics up to Feb 1st
+    });
+
+    it('should count topics within date range', async () => {
+      const result = await topicModel.count({
+        range: ['2023-01-15', '2023-02-15'],
+      });
+
+      expect(result).toBe(1); // should only count topic2
+    });
+
+    it('should return 0 if no topics match date filters', async () => {
+      const result = await topicModel.count({
+        range: ['2024-01-01', '2024-12-31'],
+      });
+
+      expect(result).toBe(0);
+    });
+
+    it('should handle invalid date filters gracefully', async () => {
+      const result = await topicModel.count({
+        startDate: 'invalid-date',
+      });
+
+      expect(result).toBe(3); // should return all topics if date is invalid
+    });
+  });
 });

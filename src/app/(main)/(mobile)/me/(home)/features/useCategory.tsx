@@ -6,7 +6,6 @@ import {
   Download,
   Feather,
   FileClockIcon,
-  LogOut,
   Settings2,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -28,15 +27,11 @@ export const useCategory = () => {
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
   const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
-  const [isLogin, isLoginWithAuth, isLoginWithClerk, enableAuth, signOut, isLoginWithNextAuth] =
-    useUserStore((s) => [
-      authSelectors.isLogin(s),
-      authSelectors.isLoginWithAuth(s),
-      authSelectors.isLoginWithClerk(s),
-      authSelectors.enabledAuth(s),
-      s.logout,
-      authSelectors.isLoginWithNextAuth(s),
-    ]);
+  const [isLogin, isLoginWithAuth, enableAuth] = useUserStore((s) => [
+    authSelectors.isLogin(s),
+    authSelectors.isLoginWithAuth(s),
+    authSelectors.enabledAuth(s),
+  ]);
 
   const profile: CellProps[] = [
     {
@@ -121,20 +116,11 @@ export const useCategory = () => {
     },
   ].filter(Boolean) as CellProps[];
 
-  const nextAuthSignOut: CellProps[] = [
-    {
-      icon: LogOut,
-      key: 'nextauthSignout',
-      label: t('auth:signout'),
-      onClick: signOut,
-    },
-  ];
-
   const mainItems = [
     {
       type: 'divider',
     },
-    ...(isLoginWithClerk ? profile : []),
+    ...(!enableAuth || (enableAuth && isLoginWithAuth) ? profile : []),
     ...(enableAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
     /* ↓ cloud slot ↓ */
 
@@ -142,7 +128,6 @@ export const useCategory = () => {
     ...(canInstall ? pwa : []),
     ...(isLogin && !isServerMode ? data : []),
     ...(!hideDocs ? helps : []),
-    ...(enableAuth && isLoginWithNextAuth ? nextAuthSignOut : []),
   ].filter(Boolean) as CellProps[];
 
   return mainItems;

@@ -1,9 +1,4 @@
-export enum ImageType {
-  JPG = 'jpg',
-  PNG = 'png',
-  SVG = 'svg',
-  WEBP = 'webp',
-}
+import { ImageType } from '@/hooks/useScreenshot';
 
 export type FieldType = {
   imageType: ImageType;
