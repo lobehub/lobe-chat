@@ -1,7 +1,7 @@
 'use client';
 
 import { MobileNavBar, MobileNavBarTitle } from '@lobehub/ui';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -15,17 +15,13 @@ const Header = memo(() => {
   const { t } = useTranslation('auth');
 
   const router = useRouter();
-  const searchParams = useSearchParams();
   const activeSettingsKey = useActiveProfileKey();
   const isStats = activeSettingsKey === 'stats';
 
   const handleBackClick = () => {
-    if (searchParams.has('session') && searchParams.has('showMobileWorkspace')) {
-      router.push(`/chat?${searchParams.toString()}`);
-    } else {
-      router.push('/me/profile');
-    }
+    router.push('/me/profile');
   };
+
   return (
     <MobileNavBar
       center={

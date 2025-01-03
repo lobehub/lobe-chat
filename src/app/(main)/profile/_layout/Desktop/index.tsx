@@ -21,23 +21,25 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
   const activeKey = useActiveProfileKey();
 
   return (
-    <Flexbox
-      height={'100%'}
-      horizontal={md}
-      ref={ref}
-      style={{ position: 'relative' }}
-      width={'100%'}
-    >
-      {md ? (
-        <SideBar>{category}</SideBar>
-      ) : (
-        <Header getContainer={() => ref.current} title={<>{t(`tab.${activeKey}`)}</>}>
-          {category}
-        </Header>
-      )}
-      <SettingContainer addonAfter={<Footer />}>{children}</SettingContainer>
+    <>
+      <Flexbox
+        height={'100%'}
+        horizontal={md}
+        ref={ref}
+        style={{ position: 'relative' }}
+        width={'100%'}
+      >
+        {md ? (
+          <SideBar>{category}</SideBar>
+        ) : (
+          <Header getContainer={() => ref.current} title={<>{t(`tab.${activeKey}`)}</>}>
+            {category}
+          </Header>
+        )}
+        <SettingContainer addonAfter={<Footer />}>{children}</SettingContainer>
+      </Flexbox>
       <InitClientDB />
-    </Flexbox>
+    </>
   );
 });
 

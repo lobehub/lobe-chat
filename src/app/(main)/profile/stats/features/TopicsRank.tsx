@@ -69,6 +69,10 @@ export const TopicsRank = memo(() => {
             height={220}
             leftLabel={t('stats.topicsRank.left')}
             loading={isLoading || !data}
+            noDataText={{
+              desc: t('stats.empty.desc'),
+              title: t('stats.empty.title'),
+            }}
             onValueChange={(item) => router.push(item.link)}
             rightLabel={t('stats.topicsRank.right')}
           />

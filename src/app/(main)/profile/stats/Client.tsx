@@ -22,7 +22,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('auth');
 
   return (
-    <Flexbox gap={24}>
+    <Flexbox gap={mobile ? 0 : 24}>
       {mobile ? (
         <Welcome mobile />
       ) : (

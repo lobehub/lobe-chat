@@ -7,11 +7,14 @@ import Header from './Header';
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <MobileContentLayout header={<Header />}>
-      {children}
-      <Footer />
+    <>
+      <MobileContentLayout header={<Header />}>
+        {children}
+        <div style={{ flex: 1 }} />
+        <Footer />
+      </MobileContentLayout>
       <InitClientDB />
-    </MobileContentLayout>
+    </>
   );
 };
 

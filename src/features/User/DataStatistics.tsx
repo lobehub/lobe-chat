@@ -3,7 +3,7 @@
 import { Icon, Tooltip } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { createStyles } from 'antd-style';
-import { isNumber } from 'lodash-es';
+import { isNumber, isUndefined } from 'lodash-es';
 import { LoaderCircle } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -87,17 +87,17 @@ const DataStatistics = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
 
   const items = [
     {
-      count: sessionsLoading ? loading : sessions,
+      count: sessionsLoading || isUndefined(sessions) ? loading : sessions,
       key: 'sessions',
       title: t('dataStatistics.sessions'),
     },
     {
-      count: topicsLoading ? loading : topics,
+      count: topicsLoading || isUndefined(topics) ? loading : topics,
       key: 'topics',
       title: t('dataStatistics.topics'),
     },
     {
-      count: messagesLoading ? loading : messages,
+      count: messagesLoading || isUndefined(messages) ? loading : messages,
       countToady: messagesToday,
       key: 'messages',
       title: t('dataStatistics.messages'),

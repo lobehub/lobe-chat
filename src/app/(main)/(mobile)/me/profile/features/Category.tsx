@@ -40,9 +40,10 @@ const Category = memo(() => {
       label: t('tab.stats'),
       onClick: () => router.push('/profile/stats'),
     },
-    {
-      type: 'divider',
-    },
+    enableAuth &&
+      isLogin && {
+        type: 'divider',
+      },
     enableAuth &&
       isLogin && {
         icon: LogOut,
