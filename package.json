@@ -318,5 +318,14 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "@inkjs/ui": {
+        "dependencies": {
+          "react": "^18"
+        }
+      }
+    }
   }
 }
