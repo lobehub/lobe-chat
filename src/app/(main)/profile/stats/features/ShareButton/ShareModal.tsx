@@ -1,14 +1,27 @@
 'use client';
 
 import { type FormItemProps, FormModal, FormModalProps } from '@lobehub/ui';
-import { Segmented } from 'antd';
+import { Segmented, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
+import dynamic from 'next/dynamic';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ImageType, imageTypeOptions, useScreenshot } from '@/hooks/useScreenshot';
 
-import Preview from './Preview';
+const Preview = dynamic(() => import('./Preview'), {
+  loading: () => (
+    <Skeleton.Button
+      active
+      block
+      size={'large'}
+      style={{
+        height: 400,
+        width: '100%',
+      }}
+    />
+  ),
+});
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   preview: css`
