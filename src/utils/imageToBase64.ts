@@ -40,7 +40,7 @@ export const imageUrlToBase64 = async (
   imageUrl: string,
 ): Promise<{ base64: string; mimeType: string }> => {
   try {
-    const res = await fetch(imageUrl);
+    const res = await fetch(imageUrl, { cache: 'no-store' });
     const blob = await res.blob();
     const arrayBuffer = await blob.arrayBuffer();
 
