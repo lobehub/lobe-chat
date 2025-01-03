@@ -136,6 +136,7 @@ export class TopicModel {
         title: topics.title,
       })
       .from(topics)
+      .where(and(eq(topics.userId, this.userId)))
       .leftJoin(messages, eq(topics.id, messages.topicId))
       .groupBy(topics.id)
       .orderBy(desc(sql`count`))
