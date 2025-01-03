@@ -1,7 +1,8 @@
 import { Column, count, sql } from 'drizzle-orm';
-import { and, asc, desc, eq, inArray, like, not, or } from 'drizzle-orm/expressions';
+import { and, asc, desc, eq, inArray, isNull, like, not, or } from 'drizzle-orm/expressions';
 
 import { appEnv } from '@/config/app';
+import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { LobeChatDatabase } from '@/database/type';
@@ -119,7 +120,7 @@ export class SessionModel {
     return result[0].count;
   };
 
-  rank = async (limit: number = 10): Promise<SessionRankItem[]> => {
+  _rank = async (limit: number = 10): Promise<SessionRankItem[]> => {
     return this.db
       .select({
         avatar: agents.avatar,
@@ -135,6 +136,33 @@ export class SessionModel {
       .groupBy(sessions.id, agentsToSessions.agentId, agents.id)
       .orderBy(desc(sql`count`))
       .limit(limit);
+  };
+
+  // TODO: 未来将 Inbox id 入库后可以直接使用 _rank 方法
+  rank = async (limit: number = 10): Promise<SessionRankItem[]> => {
+    const inboxResult = await this.db
+      .select({
+        count: count(topics.id).as('count'),
+      })
+      .from(topics)
+      .where(isNull(topics.sessionId));
+
+    const inboxCount = inboxResult[0].count;
+
+    if (!inboxCount || inboxCount === 0) return this._rank(limit);
+
+    const result = await this._rank(limit ? limit - 1 : undefined);
+
+    return [
+      {
+        avatar: DEFAULT_INBOX_AVATAR,
+        backgroundColor: null,
+        count: inboxCount,
+        id: INBOX_SESSION_ID,
+        title: 'inbox.title',
+      },
+      ...result,
+    ].sort((a, b) => b.count - a.count);
   };
 
   hasMoreThanN = async (n: number): Promise<boolean> => {
