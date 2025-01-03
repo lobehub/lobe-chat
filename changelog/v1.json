@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "features": ["Add User Stats and Refactor Profile."],
+      "fixes": ["Fix chat page error."]
+    },
+    "date": "2025-01-03",
+    "version": "1.43.0"
+  },
+  {
+    "children": {
       "improvements": ["Fix zero-sized element in topic list."]
     },
     "date": "2025-01-03",
