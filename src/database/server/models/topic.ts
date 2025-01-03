@@ -1,5 +1,5 @@
 import { Column, count, sql } from 'drizzle-orm';
-import { and, desc, eq, exists, inArray, isNull, like, or } from 'drizzle-orm/expressions';
+import { and, desc, eq, exists, gt, inArray, isNull, like, or } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
 import {
@@ -139,6 +139,7 @@ export class TopicModel {
       .leftJoin(messages, eq(topics.id, messages.topicId))
       .groupBy(topics.id)
       .orderBy(desc(sql`count`))
+      .having(({ count }) => gt(count, 0))
       .limit(limit);
   };
 

@@ -1,7 +1,7 @@
 import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
 import { count, sql } from 'drizzle-orm';
-import { and, asc, desc, eq, inArray, isNotNull, isNull, like } from 'drizzle-orm/expressions';
+import { and, asc, desc, eq, gt, inArray, isNotNull, isNull, like } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
 import {
@@ -331,7 +331,7 @@ export class MessageModel {
     return Number(result[0].count);
   };
 
-  rankModels = async (): Promise<ModelRankItem[]> => {
+  rankModels = async (limit: number = 10): Promise<ModelRankItem[]> => {
     return this.db
       .select({
         count: count(messages.id).as('count'),
@@ -339,8 +339,10 @@ export class MessageModel {
       })
       .from(messages)
       .where(and(eq(messages.userId, this.userId), isNotNull(messages.model)))
+      .having(({ count }) => gt(count, 0))
       .groupBy(messages.model)
-      .orderBy(desc(sql`count`), asc(messages.model));
+      .orderBy(desc(sql`count`), asc(messages.model))
+      .limit(limit);
   };
 
   getHeatmaps = async (): Promise<HeatmapsProps['data']> => {

@@ -14,8 +14,15 @@ import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
 import { formatIntergerNumber } from '@/utils/format';
 
+const formatEnglishNumber = (number: number) => {
+  if (number === 1) return '1st';
+  if (number === 2) return '2nd';
+  if (number === 3) return '3rd';
+  return `${formatIntergerNumber(number)}th`;
+};
+
 const Welcome = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const { t } = useTranslation('auth');
+  const { t, i18n } = useTranslation('auth');
   const theme = useTheme();
   const [nickname, username] = useUserStore((s) => [
     userProfileSelectors.nickName(s),
@@ -51,7 +58,10 @@ const Welcome = memo<{ mobile?: boolean }>(({ mobile }) => {
             ns={'auth'}
             values={{
               appName: BRANDING_NAME,
-              days: formatIntergerNumber(data?.duration),
+              days:
+                i18n.language === 'en-US'
+                  ? formatEnglishNumber(Number(data?.duration || 1))
+                  : formatIntergerNumber(Number(data?.duration || 1)),
               username: nickname || username,
             }}
           />

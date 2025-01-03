@@ -1,5 +1,5 @@
 import { Column, count, sql } from 'drizzle-orm';
-import { and, asc, desc, eq, inArray, isNull, like, not, or } from 'drizzle-orm/expressions';
+import { and, asc, desc, eq, gt, inArray, isNull, like, not, or } from 'drizzle-orm/expressions';
 
 import { appEnv } from '@/config/app';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
@@ -134,6 +134,7 @@ export class SessionModel {
       .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
       .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
       .groupBy(sessions.id, agentsToSessions.agentId, agents.id)
+      .having(({ count }) => gt(count, 0))
       .orderBy(desc(sql`count`))
       .limit(limit);
   };
