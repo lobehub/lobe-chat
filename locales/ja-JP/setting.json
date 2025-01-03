@@ -411,6 +411,7 @@
     "common": "一般設定",
     "experiment": "実験",
     "llm": "言語モデル",
+    "provider": "AIサービスプロバイダー",
     "sync": "クラウド同期",
     "system-agent": "システムアシスタント",
     "tts": "音声サービス"

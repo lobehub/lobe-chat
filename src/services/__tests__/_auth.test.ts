@@ -34,29 +34,19 @@ const setModelProviderConfig = <T extends GlobalLLMProviderKey>(
 
 describe('getProviderAuthPayload', () => {
   it('should return correct payload for ZhiPu provider', () => {
-    act(() => {
-      setModelProviderConfig('zhipu', { apiKey: mockZhiPuAPIKey });
-    });
-
-    const payload = getProviderAuthPayload(ModelProvider.ZhiPu);
+    const payload = getProviderAuthPayload(ModelProvider.ZhiPu, { apiKey: mockZhiPuAPIKey });
     expect(payload).toEqual({ apiKey: mockZhiPuAPIKey });
   });
 
   it('should return correct payload for Moonshot provider', () => {
-    act(() => {
-      setModelProviderConfig('moonshot', { apiKey: mockMoonshotAPIKey });
-    });
-
-    const payload = getProviderAuthPayload(ModelProvider.Moonshot);
+    const payload = getProviderAuthPayload(ModelProvider.Moonshot, { apiKey: mockMoonshotAPIKey });
     expect(payload).toEqual({ apiKey: mockMoonshotAPIKey });
   });
 
   it('should return correct payload for Anthropic provider', () => {
-    act(() => {
-      setModelProviderConfig('anthropic', { apiKey: mockAnthropicAPIKey });
+    const payload = getProviderAuthPayload(ModelProvider.Anthropic, {
+      apiKey: mockAnthropicAPIKey,
     });
-
-    const payload = getProviderAuthPayload(ModelProvider.Anthropic);
     expect(payload).toEqual({ apiKey: mockAnthropicAPIKey });
   });
 
@@ -65,34 +55,26 @@ describe('getProviderAuthPayload', () => {
       setModelProviderConfig('mistral', { apiKey: mockMistralAPIKey });
     });
 
-    const payload = getProviderAuthPayload(ModelProvider.Mistral);
+    const payload = getProviderAuthPayload(ModelProvider.Mistral, { apiKey: mockMistralAPIKey });
     expect(payload).toEqual({ apiKey: mockMistralAPIKey });
   });
 
   it('should return correct payload for OpenRouter provider', () => {
-    act(() => {
-      setModelProviderConfig('openrouter', { apiKey: mockOpenRouterAPIKey });
+    const payload = getProviderAuthPayload(ModelProvider.OpenRouter, {
+      apiKey: mockOpenRouterAPIKey,
     });
-
-    const payload = getProviderAuthPayload(ModelProvider.OpenRouter);
     expect(payload).toEqual({ apiKey: mockOpenRouterAPIKey });
   });
 
   it('should return correct payload for TogetherAI provider', () => {
-    act(() => {
-      setModelProviderConfig('togetherai', { apiKey: mockTogetherAIAPIKey });
+    const payload = getProviderAuthPayload(ModelProvider.TogetherAI, {
+      apiKey: mockTogetherAIAPIKey,
     });
-
-    const payload = getProviderAuthPayload(ModelProvider.TogetherAI);
     expect(payload).toEqual({ apiKey: mockTogetherAIAPIKey });
   });
 
   it('should return correct payload for Google provider', () => {
-    act(() => {
-      setModelProviderConfig('google', { apiKey: mockGoogleAPIKey });
-    });
-
-    const payload = getProviderAuthPayload(ModelProvider.Google);
+    const payload = getProviderAuthPayload(ModelProvider.Google, { apiKey: mockGoogleAPIKey });
     expect(payload).toEqual({ apiKey: mockGoogleAPIKey });
   });
 
@@ -103,11 +85,8 @@ describe('getProviderAuthPayload', () => {
       region: 'bedrock-region',
       secretAccessKey: 'bedrock-secret-access-key',
     };
-    act(() => {
-      setModelProviderConfig('bedrock', mockBedrockConfig);
-    });
 
-    const payload = getProviderAuthPayload(ModelProvider.Bedrock);
+    const payload = getProviderAuthPayload(ModelProvider.Bedrock, mockBedrockConfig);
     expect(payload).toEqual({
       apiKey: mockBedrockConfig.secretAccessKey + mockBedrockConfig.accessKeyId,
       awsAccessKeyId: mockBedrockConfig.accessKeyId,
@@ -123,11 +102,8 @@ describe('getProviderAuthPayload', () => {
       apiVersion: 'azure-api-version',
       endpoint: 'azure-endpoint',
     };
-    act(() => {
-      setModelProviderConfig('azure', mockAzureConfig);
-    });
 
-    const payload = getProviderAuthPayload(ModelProvider.Azure);
+    const payload = getProviderAuthPayload(ModelProvider.Azure, mockAzureConfig);
     expect(payload).toEqual({
       apiKey: mockAzureConfig.apiKey,
       azureApiVersion: mockAzureConfig.apiVersion,
@@ -138,11 +114,8 @@ describe('getProviderAuthPayload', () => {
   it('should return correct payload for Ollama provider', () => {
     // 假设的 Ollama 配置
     const mockOllamaProxyUrl = 'ollama-proxy-url';
-    act(() => {
-      setModelProviderConfig('ollama', { baseURL: mockOllamaProxyUrl });
-    });
 
-    const payload = getProviderAuthPayload(ModelProvider.Ollama);
+    const payload = getProviderAuthPayload(ModelProvider.Ollama, { baseURL: mockOllamaProxyUrl });
     expect(payload).toEqual({
       baseURL: mockOllamaProxyUrl,
     });
@@ -156,11 +129,8 @@ describe('getProviderAuthPayload', () => {
       useAzure: true,
       azureApiVersion: 'openai-azure-api-version',
     };
-    act(() => {
-      setModelProviderConfig('openai', mockOpenAIConfig);
-    });
 
-    const payload = getProviderAuthPayload(ModelProvider.OpenAI);
+    const payload = getProviderAuthPayload(ModelProvider.OpenAI, mockOpenAIConfig);
     expect(payload).toEqual({
       apiKey: mockOpenAIConfig.apiKey,
       baseURL: mockOpenAIConfig.baseURL,
@@ -173,11 +143,8 @@ describe('getProviderAuthPayload', () => {
       apiKey: 'stepfun-api-key',
       baseURL: 'stepfun-baseURL',
     };
-    act(() => {
-      setModelProviderConfig('stepfun', mockOpenAIConfig);
-    });
 
-    const payload = getProviderAuthPayload(ModelProvider.Stepfun);
+    const payload = getProviderAuthPayload(ModelProvider.Stepfun, mockOpenAIConfig);
     expect(payload).toEqual({
       apiKey: mockOpenAIConfig.apiKey,
       baseURL: mockOpenAIConfig.baseURL,
@@ -185,7 +152,7 @@ describe('getProviderAuthPayload', () => {
   });
 
   it('should return an empty object or throw an error for an unknown provider', () => {
-    const payload = getProviderAuthPayload('UnknownProvider');
+    const payload = getProviderAuthPayload('UnknownProvider', {});
     expect(payload).toEqual({});
   });
 });

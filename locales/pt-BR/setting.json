@@ -411,6 +411,7 @@
     "common": "Configurações Comuns",
     "experiment": "Experimento",
     "llm": "Modelo de Linguagem",
+    "provider": "Fornecedor de IA",
     "sync": "Sincronização na nuvem",
     "system-agent": "Assistente do Sistema",
     "tts": "Serviço de Voz"

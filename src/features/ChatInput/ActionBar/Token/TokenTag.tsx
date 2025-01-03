@@ -6,6 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -45,7 +46,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   const maxTokens = useUserStore(modelProviderSelectors.modelMaxToken(model));
 
   // Tool usage token
-  const canUseTool = useUserStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
+  const canUseTool = useModelSupportToolUse(model);
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins);
   const toolsString = useToolStore((s) => {
     const pluginSystemRoles = toolSelectors.enabledSystemRoles(plugins)(s);

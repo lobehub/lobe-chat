@@ -413,6 +413,7 @@ export default {
     'common': '通用设置',
     'experiment': '实验',
     'llm': '语言模型',
+    'provider': 'AI 服务商',
     'sync': '云端同步',
     'system-agent': '系统助手',
     'tts': '语音服务',

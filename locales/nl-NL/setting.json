@@ -411,6 +411,7 @@
     "common": "Algemene instellingen",
     "experiment": "Experiment",
     "llm": "Taalmodel",
+    "provider": "AI-dienstverlener",
     "sync": "Cloudsynchronisatie",
     "system-agent": "Systeemassistent",
     "tts": "Spraakdienst"

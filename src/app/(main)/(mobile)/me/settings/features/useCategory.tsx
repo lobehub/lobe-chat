@@ -6,6 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { CellProps } from '@/components/Cell';
+import { isServerMode } from '@/const/version';
 import { SettingsTabs } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -37,11 +38,17 @@ export const useCategory = () => {
         </Flexbox>
       ),
     },
-    showLLM && {
-      icon: Brain,
-      key: SettingsTabs.LLM,
-      label: t('tab.llm'),
-    },
+    showLLM && isServerMode
+      ? {
+          icon: Brain,
+          key: SettingsTabs.Provider,
+          label: t('tab.provider'),
+        }
+      : {
+          icon: Brain,
+          key: SettingsTabs.LLM,
+          label: t('tab.llm'),
+        },
     { icon: Mic2, key: SettingsTabs.TTS, label: t('tab.tts') },
     {
       icon: Bot,

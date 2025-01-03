@@ -411,6 +411,7 @@
     "common": "Common Settings",
     "experiment": "Experiment",
     "llm": "Language Model",
+    "provider": "AI Service Provider",
     "sync": "Cloud Sync",
     "system-agent": "System Assistant",
     "tts": "Text-to-Speech"

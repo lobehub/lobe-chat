@@ -1,4 +1,5 @@
 export * from './agent';
+export * from './aiInfra';
 export * from './asyncTask';
 export * from './file';
 export * from './message';

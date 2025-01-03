@@ -411,6 +411,7 @@
     "common": "일반 설정",
     "experiment": "실험",
     "llm": "언어 모델",
+    "provider": "AI 서비스 제공자",
     "sync": "클라우드 동기화",
     "system-agent": "시스템 도우미",
     "tts": "음성 서비스"
