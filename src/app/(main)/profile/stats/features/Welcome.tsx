@@ -49,7 +49,7 @@ const Welcome = memo<{ mobile?: boolean }>(({ mobile }) => {
             components={{
               span:
                 isLoading || !data ? (
-                  <Skeleton.Button active style={{ height: 24 }} />
+                  <Skeleton.Button active style={{ height: 24, minWidth: 40, width: 40 }} />
                 ) : (
                   <span style={{ fontWeight: 'bold' }} />
                 ),
