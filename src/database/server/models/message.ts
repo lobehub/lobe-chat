@@ -340,7 +340,7 @@ export class MessageModel {
       .from(messages)
       .where(and(eq(messages.userId, this.userId), isNotNull(messages.model)))
       .groupBy(messages.model)
-      .orderBy(desc(sql`count`));
+      .orderBy(desc(sql`count`), asc(messages.model));
   };
 
   getHeatmaps = async (): Promise<HeatmapsProps['data']> => {

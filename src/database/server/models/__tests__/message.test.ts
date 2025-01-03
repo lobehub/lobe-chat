@@ -1464,8 +1464,8 @@ describe('MessageModel', () => {
       // 断言结果
       expect(result).toHaveLength(3);
       expect(result[0]).toEqual({ id: 'gpt-3.5', count: 3 }); // 最多使用
-      expect(result[2]).toEqual({ id: 'claude', count: 1 });
-      expect(result[1]).toEqual({ id: 'gpt-4', count: 1 });
+      expect(result[1]).toEqual({ id: 'claude', count: 1 });
+      expect(result[2]).toEqual({ id: 'gpt-4', count: 1 });
     });
   });
 
