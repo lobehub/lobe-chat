@@ -44,6 +44,10 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.countWords.query(params);
   };
 
+  rankModels: IMessageService['rankModels'] = async () => {
+    return lambdaClient.message.rankModels.query();
+  };
+
   getHeatmaps: IMessageService['getHeatmaps'] = async () => {
     return lambdaClient.message.getHeatmaps.query();
   };

@@ -24,6 +24,8 @@ export const AssistantsRank = memo(() => {
     sessionService.rankSessions(),
   );
 
+  const showExtra = Boolean(data && data?.length > 5);
+
   const mapData = (item: SessionRankItem) => {
     const link = qs.stringifyUrl({
       query: {
@@ -57,11 +59,13 @@ export const AssistantsRank = memo(() => {
     <>
       <FormGroup
         extra={
-          <ActionIcon
-            icon={MaximizeIcon}
-            onClick={() => setOpen(true)}
-            size={{ blockSize: 28, fontSize: 20 }}
-          />
+          showExtra && (
+            <ActionIcon
+              icon={MaximizeIcon}
+              onClick={() => setOpen(true)}
+              size={{ blockSize: 28, fontSize: 20 }}
+            />
+          )
         }
         style={FORM_STYLE.style}
         title={t('stats.assistantsRank.title')}
@@ -78,22 +82,24 @@ export const AssistantsRank = memo(() => {
           />
         </Flexbox>
       </FormGroup>
-      <Modal
-        footer={null}
-        loading={isLoading || !data}
-        onCancel={() => setOpen(false)}
-        open={open}
-        title={t('stats.assistantsRank.title')}
-      >
-        <BarList
-          data={data?.map((item) => mapData(item)) || []}
-          height={340}
-          leftLabel={t('stats.assistantsRank.left')}
+      {showExtra && (
+        <Modal
+          footer={null}
           loading={isLoading || !data}
-          onValueChange={(item) => router.push(item.link)}
-          rightLabel={t('stats.assistantsRank.right')}
-        />
-      </Modal>
+          onCancel={() => setOpen(false)}
+          open={open}
+          title={t('stats.assistantsRank.title')}
+        >
+          <BarList
+            data={data?.map((item) => mapData(item)) || []}
+            height={340}
+            leftLabel={t('stats.assistantsRank.left')}
+            loading={isLoading || !data}
+            onValueChange={(item) => router.push(item.link)}
+            rightLabel={t('stats.assistantsRank.right')}
+          />
+        </Modal>
+      )}
     </>
   );
 });

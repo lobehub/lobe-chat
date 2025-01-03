@@ -50,6 +50,11 @@ export default {
     days: '天',
     lastYearActivity: '过去一年活跃度',
     messages: '消息数',
+    modelsRank: {
+      left: '模型名称',
+      right: '消息数',
+      title: '模型使用率',
+    },
     share: {
       title: '我的 AI 活跃指数',
     },

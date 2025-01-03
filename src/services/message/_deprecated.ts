@@ -10,6 +10,7 @@ import {
   ChatTTS,
   ChatTranslate,
   CreateMessageParams,
+  ModelRankItem,
 } from '@/types/message';
 
 import { IMessageService } from './type';
@@ -54,6 +55,11 @@ export class ClientService implements IMessageService {
 
   async countMessages() {
     return MessageModel.count();
+  }
+
+  // @ts-ignore
+  async rankModels(): Promise<ModelRankItem[]> {
+    throw new Error('Method not implemented.');
   }
 
   // @ts-ignore

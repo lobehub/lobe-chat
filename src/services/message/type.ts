@@ -7,6 +7,7 @@ import {
   ChatTTS,
   ChatTranslate,
   CreateMessageParams,
+  ModelRankItem,
 } from '@/types/message';
 
 /* eslint-disable typescript-sort-keys/interface */
@@ -28,6 +29,7 @@ export interface IMessageService {
     range?: [string, string];
     startDate?: string;
   }): Promise<number>;
+  rankModels(): Promise<ModelRankItem[]>;
   getHeatmaps(): Promise<HeatmapsProps['data']>;
   updateMessageError(id: string, error: ChatMessageError): Promise<any>;
   updateMessage(id: string, message: Partial<MessageItem>): Promise<any>;

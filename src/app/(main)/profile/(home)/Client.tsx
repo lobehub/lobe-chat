@@ -38,8 +38,9 @@ const Client = memo<{ mobile?: boolean }>(() => {
       },
       {
         children: userProfile?.email || '--',
-        hidden: !isLoginWithNextAuth,
+        hidden: !isLoginWithNextAuth || !userProfile?.email,
         label: t('profile.email'),
+        minWidth: undefined,
       },
     ],
     title: t('tab.profile'),

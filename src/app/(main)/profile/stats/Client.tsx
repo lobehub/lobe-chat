@@ -9,6 +9,7 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 
 import AiHeatmaps from './features/AiHeatmaps';
 import AssistantsRank from './features/AssistantsRank';
+import ModelsRank from './features/ModelsRank';
 import ShareButton from './features/ShareButton';
 import TopicsRank from './features/TopicsRank';
 import TotalAssistants from './features/TotalAssistants';
@@ -30,7 +31,6 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
           <ShareButton />
         </Flexbox>
       )}
-
       <FormGroup style={FORM_STYLE.style} title={t('tab.stats')} variant={'pure'}>
         <Grid maxItemWidth={150} paddingBlock={16} rows={4}>
           <TotalAssistants mobile={mobile} />
@@ -39,11 +39,11 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
           <TotalWords />
         </Grid>
       </FormGroup>
-      <Grid gap={mobile ? 0 : 48} rows={2}>
+      <Grid gap={mobile ? 0 : 48} rows={3}>
+        <ModelsRank />
         <AssistantsRank />
         <TopicsRank />
       </Grid>
-
       <AiHeatmaps />
     </>
   );

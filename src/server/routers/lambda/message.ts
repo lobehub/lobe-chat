@@ -99,6 +99,10 @@ export const messageRouter = router({
       return messageModel.query(input, { postProcessUrl: (path) => getFullFileUrl(path) });
     }),
 
+  rankModels: messageProcedure.query(async ({ ctx }) => {
+    return ctx.messageModel.rankModels();
+  }),
+
   removeAllMessages: messageProcedure.mutation(async ({ ctx }) => {
     return ctx.messageModel.deleteAllMessages();
   }),
