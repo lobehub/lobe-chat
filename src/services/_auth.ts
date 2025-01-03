@@ -48,6 +48,7 @@ export const getProviderAuthPayload = (provider: string) => {
 
       return {
         apiKey: azure.apiKey,
+        apiVersion: azure.apiVersion,
         azureApiVersion: azure.apiVersion,
         baseURL: azure.endpoint,
       };
@@ -64,6 +65,7 @@ export const getProviderAuthPayload = (provider: string) => {
 
       return {
         apiKey: config?.apiKey,
+        baseURLOrAccountID: config?.baseURLOrAccountID,
         cloudflareBaseURLOrAccountID: config?.baseURLOrAccountID,
       };
     }
