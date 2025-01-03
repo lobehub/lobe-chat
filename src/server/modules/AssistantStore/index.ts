@@ -36,7 +36,7 @@ export class AssistantStore {
       }
 
       if (!res.ok) {
-        console.error('fetch agent index error:', await res.text());
+        console.warn('fetch agent index error:', await res.text());
         return [];
       }
 
@@ -55,7 +55,8 @@ export class AssistantStore {
 
       return data;
     } catch (e) {
-      console.error('fetch agent index error:', e);
+      console.error('[AgentIndexFetchError] failed to fetch agent index, error detail:');
+      console.error(e);
 
       throw e;
     }

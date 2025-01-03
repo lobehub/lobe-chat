@@ -34,7 +34,7 @@ describe('createCommonSlice', () => {
   describe('updateAvatar', () => {
     it('should update avatar', async () => {
       const { result } = renderHook(() => useUserStore());
-      const avatar = 'new-avatar';
+      const avatar = 'data:image/png;base64,';
 
       const spyOn = vi.spyOn(result.current, 'refreshUserState');
       const updateAvatarSpy = vi
@@ -45,7 +45,7 @@ describe('createCommonSlice', () => {
         await result.current.updateAvatar(avatar);
       });
 
-      expect(updateAvatarSpy).toHaveBeenCalledWith(avatar);
+      expect(updateAvatarSpy).toHaveBeenCalledWith('data:image/png;base64,');
       expect(spyOn).toHaveBeenCalled();
     });
   });

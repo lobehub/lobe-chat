@@ -1,11 +1,8 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { mutate } from 'swr';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { withSWR } from '~test-utils';
 
-import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
-import { switchLang } from '@/utils/client/switchLang';
 
 vi.mock('zustand/traditional');
 
@@ -168,35 +165,6 @@ describe('createAuthSlice', () => {
       const { signIn } = await import('next-auth/react');
 
       expect(signIn).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('openUserProfile', () => {
-    it('should call clerkOpenUserProfile when Clerk is enabled', async () => {
-      enableClerk = true;
-
-      const clerkOpenUserProfileMock = vi.fn();
-      useUserStore.setState({ clerkOpenUserProfile: clerkOpenUserProfileMock });
-
-      const { result } = renderHook(() => useUserStore());
-
-      await act(async () => {
-        await result.current.openUserProfile();
-      });
-
-      expect(clerkOpenUserProfileMock).toHaveBeenCalled();
-    });
-    it('should not call clerkOpenUserProfile when Clerk is disabled', async () => {
-      const clerkOpenUserProfileMock = vi.fn();
-      useUserStore.setState({ clerkOpenUserProfile: clerkOpenUserProfileMock });
-
-      const { result } = renderHook(() => useUserStore());
-
-      await act(async () => {
-        await result.current.openUserProfile();
-      });
-
-      expect(clerkOpenUserProfileMock).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,7 +1,15 @@
-import { count } from 'drizzle-orm';
-import { and, asc, desc, eq, gte, inArray, isNull, like, lt } from 'drizzle-orm/expressions';
+import type { HeatmapsProps } from '@lobehub/charts';
+import dayjs from 'dayjs';
+import { count, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, inArray, isNotNull, isNull, like } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
+import {
+  genEndDateWhere,
+  genRangeWhere,
+  genStartDateWhere,
+  genWhere,
+} from '@/database/utils/genWhere';
 import { idGenerator } from '@/database/utils/idGenerator';
 import {
   ChatFileItem,
@@ -9,8 +17,10 @@ import {
   ChatTTS,
   ChatToolPayload,
   CreateMessageParams,
+  ModelRankItem,
 } from '@/types/message';
 import { merge } from '@/utils/merge';
+import { today } from '@/utils/time';
 
 import {
   MessageItem,
@@ -265,37 +275,122 @@ export class MessageModel {
     });
   };
 
-  count = async (): Promise<number> => {
-    const result = await this.db
-      .select({
-        count: count(messages.id),
-      })
-      .from(messages)
-      .where(eq(messages.userId, this.userId));
-
-    return result[0].count;
-  };
-
-  countToday = async (): Promise<number> => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
+  count = async (params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
     const result = await this.db
       .select({
         count: count(messages.id),
       })
       .from(messages)
       .where(
-        and(
+        genWhere([
           eq(messages.userId, this.userId),
-          gte(messages.createdAt, today),
-          lt(messages.createdAt, tomorrow),
-        ),
+          params?.range
+            ? genRangeWhere(params.range, messages.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.endDate
+            ? genEndDateWhere(params.endDate, messages.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.startDate
+            ? genStartDateWhere(params.startDate, messages.createdAt, (date) => date.toDate())
+            : undefined,
+        ]),
       );
 
     return result[0].count;
+  };
+
+  countWords = async (params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
+    const result = await this.db
+      .select({
+        count: sql<string>`sum(length(${messages.content}))`.as('total_length'),
+      })
+      .from(messages)
+      .where(
+        genWhere([
+          eq(messages.userId, this.userId),
+          params?.range
+            ? genRangeWhere(params.range, messages.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.endDate
+            ? genEndDateWhere(params.endDate, messages.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.startDate
+            ? genStartDateWhere(params.startDate, messages.createdAt, (date) => date.toDate())
+            : undefined,
+        ]),
+      );
+
+    return Number(result[0].count);
+  };
+
+  rankModels = async (limit: number = 10): Promise<ModelRankItem[]> => {
+    return this.db
+      .select({
+        count: count(messages.id).as('count'),
+        id: messages.model,
+      })
+      .from(messages)
+      .where(and(eq(messages.userId, this.userId), isNotNull(messages.model)))
+      .having(({ count }) => gt(count, 0))
+      .groupBy(messages.model)
+      .orderBy(desc(sql`count`), asc(messages.model))
+      .limit(limit);
+  };
+
+  getHeatmaps = async (): Promise<HeatmapsProps['data']> => {
+    const startDate = today().subtract(1, 'year').startOf('day');
+    const endDate = today().endOf('day');
+
+    const result = await this.db
+      .select({
+        count: count(messages.id),
+        date: sql`DATE(${messages.createdAt})`.as('heatmaps_date'),
+      })
+      .from(messages)
+      .where(
+        genWhere([
+          eq(messages.userId, this.userId),
+          genRangeWhere(
+            [startDate.format('YYYY-MM-DD'), endDate.add(1, 'day').format('YYYY-MM-DD')],
+            messages.createdAt,
+            (date) => date.toDate(),
+          ),
+        ]),
+      )
+      .groupBy(sql`heatmaps_date`)
+      .orderBy(desc(sql`heatmaps_date`));
+
+    const heatmapData: HeatmapsProps['data'] = [];
+    let currentDate = startDate;
+
+    while (currentDate.isBefore(endDate) || currentDate.isSame(endDate, 'day')) {
+      const formattedDate = currentDate.format('YYYY-MM-DD');
+      const matchingResult = result.find(
+        (r) => r?.date && dayjs(r.date as string).format('YYYY-MM-DD') === formattedDate,
+      );
+
+      const count = matchingResult ? matchingResult.count : 0;
+      const levelCount = count > 0 ? Math.floor(count / 5) : 0;
+      const level = levelCount > 4 ? 4 : levelCount;
+
+      heatmapData.push({
+        count,
+        date: formattedDate,
+        level,
+      });
+
+      currentDate = currentDate.add(1, 'day');
+    }
+
+    return heatmapData;
   };
 
   hasMoreThanN = async (n: number): Promise<boolean> => {

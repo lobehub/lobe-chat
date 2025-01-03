@@ -27,6 +27,10 @@ export class ClientService extends BaseClientService implements IUserService {
     this.preferenceStorage = new AsyncLocalStorage('LOBE_PREFERENCE');
   }
 
+  getUserRegistrationDuration: IUserService['getUserRegistrationDuration'] = async () => {
+    return this.userModel.getUserRegistrationDuration();
+  };
+
   getUserState: IUserService['getUserState'] = async () => {
     // if user not exist in the db, create one to make sure the user exist
     await this.makeSureUserExist();
