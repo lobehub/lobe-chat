@@ -16,6 +16,10 @@ export class ClientService implements IUserService {
     this.preferenceStorage = new AsyncLocalStorage('LOBE_PREFERENCE');
   }
 
+  getUserRegistrationDuration = async () => {
+    throw new Error('Method not implemented.');
+  };
+
   async getUserState(): Promise<UserInitializationState> {
     const user = await UserModel.getUser();
     const messageCount = await MessageModel.count();

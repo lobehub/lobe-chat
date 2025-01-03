@@ -88,7 +88,7 @@ export const formatNumber = (num: any, fractionDigits?: number) => {
   return `${numeral(a).format('0,0')}.${b}`;
 };
 
-export const formatIntergerNumber = (num: any) => {
+export const formatIntergerNumber = (num?: any) => {
   if (!num && num !== 0) return '--';
 
   return numeral(num).format('0,0');
