@@ -1,7 +1,7 @@
 import { Heatmaps, HeatmapsProps } from '@lobehub/charts';
 import { FormGroup, Icon } from '@lobehub/ui';
 import { Tag } from 'antd';
-import { useResponsive, useTheme } from 'antd-style';
+import { useTheme } from 'antd-style';
 import { FlameIcon } from 'lucide-react';
 import { readableColor } from 'polished';
 import { memo } from 'react';
@@ -12,11 +12,10 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { useClientDataSWR } from '@/libs/swr';
 import { messageService } from '@/services/message';
 
-const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'> & { inShare?: boolean }>(
-  ({ inShare, ...rest }) => {
+const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'> & { inShare?: boolean; mobile?: boolean }>(
+  ({ inShare, mobile, ...rest }) => {
     const { t } = useTranslation('auth');
     const theme = useTheme();
-    const { mobile } = useResponsive();
     const { data, isLoading } = useClientDataSWR('stats-heatmaps', async () =>
       messageService.getHeatmaps(),
     );
@@ -26,7 +25,9 @@ const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'> & { inShare?: boolean }>(
 
     const content = (
       <Heatmaps
-        blockSize={mobile ? 8 : 14}
+        blockMargin={mobile ? 3 : undefined}
+        blockRadius={mobile ? 2 : undefined}
+        blockSize={mobile ? 6 : 14}
         data={data || []}
         labels={{
           legend: {

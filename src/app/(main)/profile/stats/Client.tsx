@@ -39,7 +39,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
           <TotalWords />
         </Grid>
       </FormGroup>
-      <AiHeatmaps />
+      <AiHeatmaps mobile={mobile} />
       <Grid gap={mobile ? 0 : 48} rows={3}>
         <ModelsRank />
         <AssistantsRank />
