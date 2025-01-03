@@ -55,7 +55,7 @@ export class AssistantStore {
 
       return data;
     } catch (e) {
-      console.error('fetch agent index error,error detail:');
+      console.error('[AgentIndexFetchError] failed to fetch agent index, error detail:');
       console.error(e);
 
       throw e;
