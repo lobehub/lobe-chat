@@ -1,22 +1,40 @@
 'use client';
 
 import { MobileNavBar, MobileNavBarTitle } from '@lobehub/ui';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
+import { useActiveProfileKey } from '@/hooks/useActiveTabKey';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
+
+import ShareButton from '../../stats/features/ShareButton';
 
 const Header = memo(() => {
   const { t } = useTranslation('auth');
 
   const router = useRouter();
-  const pathname = usePathname();
-  const isSecurity = pathname.startsWith('/prifile/security');
+  const activeSettingsKey = useActiveProfileKey();
+  const isStats = activeSettingsKey === 'stats';
+
+  const handleBackClick = () => {
+    router.push('/me/profile');
+  };
+
   return (
     <MobileNavBar
-      center={<MobileNavBarTitle title={t(isSecurity ? 'security' : 'profile')} />}
-      onBackClick={() => router.push('/me/profile')}
+      center={
+        <MobileNavBarTitle
+          title={
+            <Flexbox align={'center'} gap={8} horizontal>
+              <span style={{ lineHeight: 1.2 }}> {t(`tab.${activeSettingsKey}`)}</span>
+            </Flexbox>
+          }
+        />
+      }
+      onBackClick={handleBackClick}
+      right={isStats ? <ShareButton mobile /> : undefined}
       showBackButton
       style={mobileHeaderSticky}
     />

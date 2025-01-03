@@ -31,6 +31,12 @@ export enum SettingsTabs {
   TTS = 'tts',
 }
 
+export enum ProfileTabs {
+  Profile = 'profile',
+  Security = 'security',
+  Stats = 'stats',
+}
+
 export interface SystemStatus {
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];

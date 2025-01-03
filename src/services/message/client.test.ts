@@ -350,24 +350,6 @@ describe('MessageClientService', () => {
     });
   });
 
-  describe('countTodayMessages', () => {
-    it('should count the number of messages created today', async () => {
-      // Setup
-      const mockMessages = [
-        { ...mockMessage, id: undefined, createdAt: new Date(), userId },
-        { ...mockMessage, id: undefined, createdAt: new Date(), userId },
-        { ...mockMessage, id: undefined, createdAt: new Date('2023-01-01'), userId },
-      ];
-      await clientDB.insert(messages).values(mockMessages);
-
-      // Execute
-      const count = await messageService.countTodayMessages();
-
-      // Assert
-      expect(count).toBe(2);
-    });
-  });
-
   describe('updateMessageTTS', () => {
     it('should update the TTS field of a message', async () => {
       // Setup

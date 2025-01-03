@@ -11,6 +11,7 @@ import {
   LobeSessions,
   SessionGroupItem,
   SessionGroups,
+  SessionRankItem,
   UpdateSessionParams,
 } from '@/types/session';
 
@@ -31,7 +32,12 @@ export interface ISessionService {
    * @deprecated
    */
   getSessionsByType(type?: 'agent' | 'group' | 'all'): Promise<LobeSessions>;
-  countSessions(): Promise<number>;
+  countSessions(params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number>;
+  rankSessions(limit?: number): Promise<SessionRankItem[]>;
   searchSessions(keyword: string): Promise<LobeSessions>;
 
   updateSession(id: string, data: Partial<UpdateSessionParams>): Promise<any>;

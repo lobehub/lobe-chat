@@ -38,6 +38,11 @@ export class ClientService implements ITopicService {
     return TopicModel.count();
   }
 
+  // @ts-ignore
+  async rankTopics() {
+    throw new Error('Method not implemented.');
+  }
+
   async updateTopicFavorite(id: string, favorite?: boolean) {
     return this.updateTopic(id, { favorite });
   }

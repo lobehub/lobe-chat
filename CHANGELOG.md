@@ -2,6 +2,64 @@
 
 # Changelog
 
+### [Version 1.43.1](https://github.com/lobehub/lobe-chat/compare/v1.43.0...v1.43.1)
+
+<sup>Released on **2025-01-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix stats data query issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix stats data query issue, closes [#5283](https://github.com/lobehub/lobe-chat/issues/5283) ([f3fdee7](https://github.com/lobehub/lobe-chat/commit/f3fdee7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.43.0](https://github.com/lobehub/lobe-chat/compare/v1.42.6...v1.43.0)
+
+<sup>Released on **2025-01-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Add User Stats and Refactor Profile.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix chat page error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add User Stats and Refactor Profile, closes [#5149](https://github.com/lobehub/lobe-chat/issues/5149) ([cbc219c](https://github.com/lobehub/lobe-chat/commit/cbc219c))
+
+#### What's fixed
+
+- **misc**: Fix chat page error, closes [#5280](https://github.com/lobehub/lobe-chat/issues/5280) ([315e626](https://github.com/lobehub/lobe-chat/commit/315e626))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.42.6](https://github.com/lobehub/lobe-chat/compare/v1.42.5...v1.42.6)
 
 <sup>Released on **2025-01-03**</sup>
