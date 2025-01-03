@@ -13,7 +13,7 @@ export const genStartDateWhere = (
   key: any,
   format: (date: Dayjs) => any,
 ): SQL | undefined => {
-  if (!date) return;
+  if (!date || !dayjs(date).isValid()) return;
   return gte(key, format(dayjs(new Date(date))));
 };
 
@@ -22,7 +22,7 @@ export const genEndDateWhere = (
   key: any,
   format: (date: Dayjs) => any,
 ): SQL | undefined => {
-  if (!date) return;
+  if (!date || !dayjs(date).isValid()) return;
   return lte(key, format(dayjs(new Date(date)).add(1, 'day')));
 };
 
@@ -32,5 +32,8 @@ export const genRangeWhere = (
   format: (date: Dayjs) => any,
 ): SQL | undefined => {
   if (!range) return;
+  if (!dayjs(range[0]).isValid() && !dayjs(range[1]).isValid()) return;
+  if (!dayjs(range[0]).isValid()) return genEndDateWhere(range[1], key, format);
+  if (!dayjs(range[1]).isValid()) return genStartDateWhere(range[0], key, format);
   return and(genStartDateWhere(range[0], key, format), genEndDateWhere(range[1], key, format));
 };
