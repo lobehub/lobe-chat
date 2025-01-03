@@ -321,7 +321,7 @@
   },
   "pnpm": {
     "packageExtensions": {
-      "@lobehub/i18n-cli": {
+      "@inkjs/ui": {
         "dependencies": {
           "react": "^18"
         }
