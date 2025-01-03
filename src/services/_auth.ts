@@ -60,6 +60,7 @@ export const getProviderAuthPayload = (
         apiKey: keyVaults.apiKey,
         azureApiVersion: keyVaults.apiVersion,
         baseURL: keyVaults.baseURL || keyVaults.endpoint,
+        apiVersion: keyVaults.apiVersion,
       };
     }
 
@@ -71,6 +72,7 @@ export const getProviderAuthPayload = (
       return {
         apiKey: keyVaults?.apiKey,
         cloudflareBaseURLOrAccountID: keyVaults?.baseURLOrAccountID,
+        baseURLOrAccountID: keyVaults?.baseURLOrAccountID,
       };
     }
 
