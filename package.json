@@ -318,5 +318,14 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
+  },
+  "pnpm": {
+    "packageExtensions": {
+      "@lobehub/i18n-cli": {
+        "dependencies": {
+          "react": "^18"
+        }
+      }
+    }
   }
 }
