@@ -70,7 +70,6 @@ FILES=(
   "$SUB_DIR/docker-compose.yml"
   "$SUB_DIR/.env.example"
   "$SUB_DIR/init_data.json"
-  "$SUB_DIR/s3_data.tar.gz"
 )
 
 # Supported languages and messages
@@ -216,24 +215,6 @@ download_file() {
   wget -q --show-progress "$file_url" -O "$local_file"
 }
 
-extract_file() {
-  local file_name=$1
-  local target_dir=$2
-
-  if [ -e "$file_name" ]; then
-    tar -zxvf "$file_name" -C "$target_dir" > /dev/null 2>&1
-    if [ $? -eq 0 ]; then
-      echo "$file_name" $(show_message "extracted_success") "$target_dir"
-    else
-      echo "$file_name" $(show_message "extracted_failed")
-      exit 1
-    fi
-  else
-    echo "$file_name" $(show_message "file_not_exists")
-    exit 1
-  fi
-}
-
 # Define colors
 declare -A colors
 colors=(
@@ -268,10 +249,6 @@ download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
 download_file "$SOURCE_URL/${FILES[1]}" ".env"
 download_file "$SOURCE_URL/${FILES[2]}" "init_data.json"
 download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
-
-# Extract .tar.gz file without output
-extract_file "s3_data.tar.gz" "."
-rm s3_data.tar.gz
 
 # ==========================
 # === Regenerate Secrets ===
