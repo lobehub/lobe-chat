@@ -242,6 +242,10 @@ FILES=(
   "$SUB_DIR/docker-compose.yml"
   "$SUB_DIR/init_data.json"
 )
+ENV_EXAMPLES=(
+  "$SUB_DIR/.env.zh-CN.example"
+  "$SUB_DIR/.env.example"
+)
 
 # Download files asynchronously
 download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
@@ -249,9 +253,9 @@ download_file "$SOURCE_URL/${FILES[1]}" "init_data.json"
 
 # Download .env.example with the specified language
 if [ "$LANGUAGE" = "zh_CN" ]; then
-  download_file "$SOURCE_URL/.env.zh-CN.example" ".env"
+  download_file "$SOURCE_URL/${ENV_EXAMPLES[0]}" ".env"
 else
-  download_file "$SOURCE_URL/.env.example" ".env"
+  download_file "$SOURCE_URL/${ENV_EXAMPLES[1]}" ".env"
 fi
 
 # ==========================
@@ -299,6 +303,7 @@ CASDOOR_USER="admin"
 CASDOOR_PASSWORD=$(generate_key 6)
 if [ $? -ne 0 ]; then
   echo $(show_message "security_secrect_regenerate_failed") "CASDOOR_PASSWORD"
+  CASDOOR_PASSWORD="123"
 else
   # replace `password` in init_data.json
   $SED_COMMAND "s/"123"/${CASDOOR_PASSWORD}/" init_data.json
@@ -310,7 +315,8 @@ fi
 # Generate Minio S3 User Password
 MINIO_ROOT_PASSWORD=$(generate_key 8)
 if [ $? -ne 0 ]; then
- echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD"
+  echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD"
+  MINIO_ROOT_PASSWORD="YOUR_MINIO_PASSWORD"
 else
  # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
  $SED_COMMAND "s#^MINIO_ROOT_PASSWORD=.*#MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}#" .env
