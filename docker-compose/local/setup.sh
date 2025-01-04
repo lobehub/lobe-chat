@@ -61,17 +61,6 @@ while getopts "fl:-:" opt; do
   esac
 done
 
-# ===============
-# == Variables ==
-# ===============
-# File list
-SUB_DIR="docker-compose/local"
-FILES=(
-  "$SUB_DIR/docker-compose.yml"
-  "$SUB_DIR/.env.example"
-  "$SUB_DIR/init_data.json"
-)
-
 # Supported languages and messages
 # Arg: -l --lang
 # If the language is not supported, default to English
@@ -244,11 +233,26 @@ print_centered() {
   printf "%*s${colors[$color]}%s${colors[reset]}\n" $padding "" "$text"
 }
 
+# ===============
+# == Variables ==
+# ===============
+# File list
+SUB_DIR="docker-compose/local"
+FILES=(
+  "$SUB_DIR/docker-compose.yml"
+  "$SUB_DIR/init_data.json"
+)
+
 # Download files asynchronously
 download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
-download_file "$SOURCE_URL/${FILES[1]}" ".env"
-download_file "$SOURCE_URL/${FILES[2]}" "init_data.json"
-download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
+download_file "$SOURCE_URL/${FILES[1]}" "init_data.json"
+
+# Download .env.example with the specified language
+if [ "$LANGUAGE" = "zh_CN" ]; then
+  download_file "$SOURCE_URL/.env.zh-CN.example" ".env"
+else
+  download_file "$SOURCE_URL/.env.example" ".env"
+fi
 
 # ==========================
 # === Regenerate Secrets ===
