@@ -36,6 +36,7 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
         ...(model.startsWith('qwen-vl') ? {
           top_p: (top_p !== undefined && top_p > 0 && top_p <= 1) ? top_p : undefined,
         } : {
+          // Note: The Qwen-VL, Qwen open-source, and Qwen-Long currently do not support configuring this parameter
           enable_search: model.startsWith('qwen-max') || model.startsWith('qwen-plus') || model.startsWith('qwen-turbo'),
           top_p: (top_p !== undefined && top_p > 0 && top_p < 1) ? top_p : undefined,
         }),
