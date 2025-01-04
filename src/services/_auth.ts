@@ -17,11 +17,15 @@ export const getProviderAuthPayload = (provider: string) => {
       const apiKey = (awsSecretAccessKey || '') + (awsAccessKeyId || '');
 
       return {
+        accessKeyId,
+        accessKeySecret: awsSecretAccessKey,
         apiKey,
         awsAccessKeyId,
         awsRegion: region,
         awsSecretAccessKey,
         awsSessionToken: sessionToken,
+        region,
+        sessionToken,
       };
     }
 
@@ -44,6 +48,7 @@ export const getProviderAuthPayload = (provider: string) => {
 
       return {
         apiKey: azure.apiKey,
+        apiVersion: azure.apiVersion,
         azureApiVersion: azure.apiVersion,
         baseURL: azure.endpoint,
       };
@@ -60,6 +65,7 @@ export const getProviderAuthPayload = (provider: string) => {
 
       return {
         apiKey: config?.apiKey,
+        baseURLOrAccountID: config?.baseURLOrAccountID,
         cloudflareBaseURLOrAccountID: config?.baseURLOrAccountID,
       };
     }

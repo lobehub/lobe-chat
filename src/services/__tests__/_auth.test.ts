@@ -8,6 +8,7 @@ import {
   UserKeyVaults,
   UserModelProviderConfig,
 } from '@/types/user/settings';
+import { merge } from '@/utils/merge';
 
 import { getProviderAuthPayload } from '../_auth';
 
@@ -108,12 +109,21 @@ describe('getProviderAuthPayload', () => {
     });
 
     const payload = getProviderAuthPayload(ModelProvider.Bedrock);
-    expect(payload).toEqual({
+    // For server
+    const serverPayload = {
       apiKey: mockBedrockConfig.secretAccessKey + mockBedrockConfig.accessKeyId,
       awsAccessKeyId: mockBedrockConfig.accessKeyId,
       awsRegion: mockBedrockConfig.region,
       awsSecretAccessKey: mockBedrockConfig.secretAccessKey,
-    });
+    };
+    // For client
+    const clientPayload = {
+      apiKey: mockBedrockConfig.secretAccessKey + mockBedrockConfig.accessKeyId,
+      accessKeyId: mockBedrockConfig.accessKeyId,
+      region: mockBedrockConfig.region,
+      accessKeySecret: mockBedrockConfig.secretAccessKey,
+    };
+    expect(payload).toEqual(merge(serverPayload, clientPayload));
   });
 
   it('should return correct payload for Azure provider', () => {
@@ -128,11 +138,19 @@ describe('getProviderAuthPayload', () => {
     });
 
     const payload = getProviderAuthPayload(ModelProvider.Azure);
-    expect(payload).toEqual({
+    // For server
+    const serverPayload = {
       apiKey: mockAzureConfig.apiKey,
       azureApiVersion: mockAzureConfig.apiVersion,
       baseURL: mockAzureConfig.endpoint,
-    });
+    };
+    // For client
+    const clientPayload = {
+      apiKey: mockAzureConfig.apiKey,
+      apiVersion: mockAzureConfig.apiVersion,
+      baseURL: mockAzureConfig.endpoint,
+    };
+    expect(payload).toEqual(merge(serverPayload, clientPayload));
   });
 
   it('should return correct payload for Ollama provider', () => {
@@ -182,6 +200,30 @@ describe('getProviderAuthPayload', () => {
       apiKey: mockOpenAIConfig.apiKey,
       baseURL: mockOpenAIConfig.baseURL,
     });
+  });
+
+  it('should return correct payload for Cloudflare provider', () => {
+    // 假设的 Cloudflare 配置
+    const mockCloudflareConfig = {
+      apiKey: 'cloudflare-api-key',
+      baseURLOrAccountID: 'cloudflare-base-url-or-account-id',
+    };
+    act(() => {
+      setModelProviderConfig('cloudflare', mockCloudflareConfig);
+    });
+
+    const payload = getProviderAuthPayload(ModelProvider.Cloudflare);
+    // For server
+    const serverPayload = {
+      apiKey: mockCloudflareConfig.apiKey,
+      cloudflareBaseURLOrAccountID: mockCloudflareConfig.baseURLOrAccountID,
+    };
+    // For client
+    const clientPayload = {
+      apiKey: mockCloudflareConfig.apiKey,
+      baseURLOrAccountID: mockCloudflareConfig.baseURLOrAccountID,
+    };
+    expect(payload).toEqual(merge(serverPayload, clientPayload));
   });
 
   it('should return an empty object or throw an error for an unknown provider', () => {
