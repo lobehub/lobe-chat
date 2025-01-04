@@ -77,6 +77,13 @@
       "title": "Токен HuggingFace"
     }
   },
+  "modelscope": {
+    "accessToken": {
+      "desc": "Введите токен доступа ModelScope, нажмите [здесь](https://www.modelscope.cn/my/myaccesstoken), чтобы получить",
+      "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "title": "Токен доступа ModelScope"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Проверить правильность адреса прокси",

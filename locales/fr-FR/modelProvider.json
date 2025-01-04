@@ -77,6 +77,13 @@
       "title": "Jeton HuggingFace"
     }
   },
+  "modelscope": {
+    "accessToken": {
+      "desc": "Entrez votre jeton d'accès ModelScope, cliquez [ici](https://www.modelscope.cn/my/myaccesstoken) pour l'obtenir",
+      "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "title": "Jeton d'accès ModelScope"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Vérifiez si l'adresse du proxy est correctement saisie",

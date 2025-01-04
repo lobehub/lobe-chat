@@ -15,6 +15,7 @@ import {
   InternLMProviderCard,
   MinimaxProviderCard,
   MistralProviderCard,
+  ModelScopeProviderCard,
   MoonshotProviderCard,
   NovitaProviderCard,
   OpenRouterProviderCard,
@@ -38,6 +39,7 @@ import { useBedrockProvider } from './Bedrock';
 import { useCloudflareProvider } from './Cloudflare';
 import { useGithubProvider } from './Github';
 import { useHuggingFaceProvider } from './HuggingFace';
+import { useModelScopeProvider } from './ModelScope';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
 import { useWenxinProvider } from './Wenxin';
@@ -51,6 +53,7 @@ export const useProviderList = (): ProviderItem[] => {
   const GithubProvider = useGithubProvider();
   const HuggingFaceProvider = useHuggingFaceProvider();
   const WenxinProvider = useWenxinProvider();
+  const ModelScopeProvider = useModelScopeProvider();
 
   return useMemo(
     () => [
@@ -91,6 +94,7 @@ export const useProviderList = (): ProviderItem[] => {
       SiliconCloudProviderCard,
       HigressProviderCard,
       GiteeAIProviderCard,
+      ModelScopeProviderCard,
     ],
     [
       AzureProvider,
@@ -101,6 +105,7 @@ export const useProviderList = (): ProviderItem[] => {
       GithubProvider,
       WenxinProvider,
       HuggingFaceProvider,
+      ModelScopeProvider,
     ],
   );
 };

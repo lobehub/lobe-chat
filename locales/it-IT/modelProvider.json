@@ -77,6 +77,13 @@
       "title": "Token HuggingFace"
     }
   },
+  "modelscope": {
+    "accessToken": {
+      "desc": "Inserisci il tuo token di accesso ModelScope, clicca [qui](https://www.modelscope.cn/my/myaccesstoken) per ottenerlo",
+      "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "title": "Token di accesso ModelScope"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente",

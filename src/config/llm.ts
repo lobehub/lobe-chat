@@ -123,6 +123,9 @@ export const getLLMConfig = () => {
 
       ENABLED_HIGRESS: z.boolean(),
       HIGRESS_API_KEY: z.string().optional(),
+
+      ENABLED_MODELSCOPE: z.boolean(),
+      MODELSCOPE_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -244,6 +247,9 @@ export const getLLMConfig = () => {
 
       ENABLED_HIGRESS: !!process.env.HIGRESS_API_KEY,
       HIGRESS_API_KEY: process.env.HIGRESS_API_KEY,
+
+      ENABLED_MODELSCOPE: !!process.env.MODELSCOPE_API_KEY,
+      MODELSCOPE_API_KEY: process.env.MODELSCOPE_API_KEY,
     },
   });
 };

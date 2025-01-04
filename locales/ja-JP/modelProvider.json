@@ -77,6 +77,13 @@
       "title": "HuggingFace トークン"
     }
   },
+  "modelscope": {
+    "accessToken": {
+      "desc": "ModelScope アクセストークンを入力してください。取得するには、[こちら](https://www.modelscope.cn/my/myaccesstoken) をクリックしてください",
+      "placeholder": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "title": "ModelScope アクセストークン"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "プロキシアドレスが正しく入力されているかをテストします",
