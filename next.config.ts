@@ -28,7 +28,6 @@ const nextConfig: NextConfig = {
     ],
     webVitalsAttribution: ['CLS', 'LCP'],
   },
-
   async headers() {
     return [
       {
@@ -171,8 +170,9 @@ const nextConfig: NextConfig = {
     // we need a proxy to bypass the restriction
     { destination: `${API_PROXY_ENDPOINT}/api/chat/google`, source: '/api/chat/google' },
   ],
-
   serverExternalPackages: ['@electric-sql/pglite'],
+
+  transpilePackages: ['pdfjs-dist'],
 
   webpack(config) {
     config.experiments = {
