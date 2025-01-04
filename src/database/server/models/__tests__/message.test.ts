@@ -1356,7 +1356,7 @@ describe('MessageModel', () => {
         (item) => item.date === today.subtract(4, 'day').format('YYYY-MM-DD'),
       );
       expect(fourDaysAgo?.count).toBe(1);
-      expect(fourDaysAgo?.level).toBe(0);
+      expect(fourDaysAgo?.level).toBe(1);
 
       const threeDaysAgo = result.find(
         (item) => item.date === today.subtract(3, 'day').format('YYYY-MM-DD'),
