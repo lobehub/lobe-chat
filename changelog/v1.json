@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix heatmap and manifest."]
+    },
+    "date": "2025-01-04",
+    "version": "1.43.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix stats data query issue."]
     },
     "date": "2025-01-03",
