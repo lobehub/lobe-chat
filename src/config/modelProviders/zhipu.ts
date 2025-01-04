@@ -201,6 +201,7 @@ const ZhiPu: ModelProviderCard = {
   id: 'zhipu',
   modelsUrl: 'https://open.bigmodel.cn/dev/howuse/model',
   name: 'ZhiPu',
+  settings: { sdkType: 'openai' },
   url: 'https://zhipuai.cn',
 };
 

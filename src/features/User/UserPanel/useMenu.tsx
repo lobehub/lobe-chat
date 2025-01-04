@@ -68,19 +68,17 @@ export const useMenu = () => {
   const hasNewVersion = useNewVersion();
   const { t } = useTranslation(['common', 'setting', 'auth']);
   const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
-  const [isLogin, isLoginWithAuth, isLoginWithClerk, openUserProfile] = useUserStore((s) => [
+  const [enableAuth, isLogin, isLoginWithAuth] = useUserStore((s) => [
+    authSelectors.enabledAuth(s),
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
-    authSelectors.isLoginWithClerk(s),
-    s.openUserProfile,
   ]);
 
   const profile: MenuProps['items'] = [
     {
       icon: <Icon icon={CircleUserRound} />,
       key: 'profile',
-      label: t('userPanel.profile'),
-      onClick: () => openUserProfile(),
+      label: <Link href={'/profile'}>{t('userPanel.profile')}</Link>,
     },
   ];
 
@@ -227,7 +225,7 @@ export const useMenu = () => {
     {
       type: 'divider',
     },
-    ...(isLoginWithClerk ? profile : []),
+    ...(!enableAuth || (enableAuth && isLoginWithAuth) ? profile : []),
     ...(isLogin ? settings : []),
     /* ↓ cloud slot ↓ */
 

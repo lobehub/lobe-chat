@@ -1,34 +1,17 @@
 import { Form, type FormItemProps } from '@lobehub/ui';
-import { Button, Segmented, SegmentedProps, Switch } from 'antd';
+import { Button, Segmented, Switch } from 'antd';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { ImageType, imageTypeOptions, useScreenshot } from '@/hooks/useScreenshot';
+import { useSessionStore } from '@/store/session';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import Preview from './Preview';
-import { FieldType, ImageType } from './type';
-import { useScreenshot } from './useScreenshot';
-
-export const imageTypeOptions: SegmentedProps['options'] = [
-  {
-    label: 'JPG',
-    value: ImageType.JPG,
-  },
-  {
-    label: 'PNG',
-    value: ImageType.PNG,
-  },
-  {
-    label: 'SVG',
-    value: ImageType.SVG,
-  },
-  {
-    label: 'WEBP',
-    value: ImageType.WEBP,
-  },
-];
+import { FieldType } from './type';
 
 const DEFAULT_FIELD_VALUE: FieldType = {
   imageType: ImageType.JPG,
@@ -39,9 +22,13 @@ const DEFAULT_FIELD_VALUE: FieldType = {
 };
 
 const ShareImage = memo(() => {
+  const currentAgentTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const [fieldValue, setFieldValue] = useState<FieldType>(DEFAULT_FIELD_VALUE);
-  const { t } = useTranslation('chat');
-  const { loading, onDownload, title } = useScreenshot(fieldValue.imageType);
+  const { t } = useTranslation(['chat', 'common']);
+  const { loading, onDownload, title } = useScreenshot({
+    imageType: fieldValue.imageType,
+    title: currentAgentTitle,
+  });
 
   const settings: FormItemProps[] = [
     {

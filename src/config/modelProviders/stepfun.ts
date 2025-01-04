@@ -133,6 +133,15 @@ const Stepfun: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.stepfun.com/docs/llm/text',
   name: 'Stepfun',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'openai',
+    showModelFetcher: true,
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
+  },
   smoothing: {
     speed: 2,
     text: true,

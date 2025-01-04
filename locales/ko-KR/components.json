@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "뒤로 가기"
   },
+  "MaxTokenSlider": {
+    "unlimited": "무제한"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "사용자 정의 모델, 기본적으로 함수 호출 및 시각 인식을 모두 지원하며, 실제 기능을 확인하세요",

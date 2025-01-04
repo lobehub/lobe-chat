@@ -96,6 +96,14 @@ const Baichuan: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.baichuan-ai.com/price',
   name: 'Baichuan',
+  settings: {
+    sdkType: 'openai',
+    showModelFetcher: true,
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
+  },
   smoothing: {
     speed: 2,
     text: true,

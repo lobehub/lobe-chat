@@ -131,22 +131,6 @@
       "title": "下载指定的 Ollama 模型"
     }
   },
-  "sensenova": {
-    "sensenovaAccessKeyID": {
-      "desc": "SenseNova Erişim Anahtar Kimliği girin",
-      "placeholder": "SenseNova Erişim Anahtar Kimliği",
-      "title": "Erişim Anahtar Kimliği"
-    },
-    "sensenovaAccessKeySecret": {
-      "desc": "SenseNova Erişim Anahtar Gizli Anahtarını girin",
-      "placeholder": "SenseNova Erişim Anahtar Gizli Anahtarı",
-      "title": "Erişim Anahtar Gizli Anahtarı"
-    },
-    "unlock": {
-      "description": "Oturuma başlamak için Erişim Anahtar Kimliğinizi / Erişim Anahtar Gizli Anahtarınızı girin. Uygulama kimlik doğrulama yapılandırmanızı kaydetmeyecek",
-      "title": "Özel SenseNova kimlik doğrulama bilgilerini kullan"
-    }
-  },
   "wenxin": {
     "accessKey": {
       "desc": "Baidu Qianfan platform için Access Key girin",
