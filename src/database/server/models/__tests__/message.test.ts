@@ -1278,14 +1278,14 @@ describe('MessageModel', () => {
         (item) => item.date === today.subtract(2, 'day').format('YYYY-MM-DD'),
       );
       expect(twoDaysAgo?.count).toBe(2);
-      expect(twoDaysAgo?.level).toBe(0);
+      expect(twoDaysAgo?.level).toBe(1);
 
       // 检查一天前的数据
       const oneDayAgo = result.find(
         (item) => item.date === today.subtract(1, 'day').format('YYYY-MM-DD'),
       );
       expect(oneDayAgo?.count).toBe(1);
-      expect(oneDayAgo?.level).toBe(0);
+      expect(oneDayAgo?.level).toBe(1);
 
       // 检查今天的数据
       const todayData = result.find((item) => item.date === today.format('YYYY-MM-DD'));
@@ -1356,25 +1356,25 @@ describe('MessageModel', () => {
         (item) => item.date === today.subtract(4, 'day').format('YYYY-MM-DD'),
       );
       expect(fourDaysAgo?.count).toBe(1);
-      expect(fourDaysAgo?.level).toBe(0);
+      expect(fourDaysAgo?.level).toBe(1);
 
       const threeDaysAgo = result.find(
         (item) => item.date === today.subtract(3, 'day').format('YYYY-MM-DD'),
       );
       expect(threeDaysAgo?.count).toBe(6);
-      expect(threeDaysAgo?.level).toBe(1);
+      expect(threeDaysAgo?.level).toBe(2);
 
       const twoDaysAgo = result.find(
         (item) => item.date === today.subtract(2, 'day').format('YYYY-MM-DD'),
       );
       expect(twoDaysAgo?.count).toBe(11);
-      expect(twoDaysAgo?.level).toBe(2);
+      expect(twoDaysAgo?.level).toBe(3);
 
       const oneDayAgo = result.find(
         (item) => item.date === today.subtract(1, 'day').format('YYYY-MM-DD'),
       );
       expect(oneDayAgo?.count).toBe(16);
-      expect(oneDayAgo?.level).toBe(3);
+      expect(oneDayAgo?.level).toBe(4);
 
       const todayData = result.find((item) => item.date === today.format('YYYY-MM-DD'));
       expect(todayData?.count).toBe(21);

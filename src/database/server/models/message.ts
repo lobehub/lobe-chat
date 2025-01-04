@@ -378,7 +378,7 @@ export class MessageModel {
       );
 
       const count = matchingResult ? matchingResult.count : 0;
-      const levelCount = count > 0 ? Math.floor(count / 5) : 0;
+      const levelCount = count > 0 ? Math.ceil(count / 5) : 0;
       const level = levelCount > 4 ? 4 : levelCount;
 
       heatmapData.push({
