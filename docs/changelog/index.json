@@ -3,6 +3,12 @@
   "cloud": [],
   "community": [
     {
+      "image": "https://github.com/user-attachments/assets/3d80e0f5-d32a-4412-85b2-e709731460a0",
+      "id": "2025-01-03-user-profile",
+      "date": "2025-01-03",
+      "versionRange": ["1.43.0", "1.43.1"]
+    },
+    {
       "image": "https://github.com/user-attachments/assets/2048b4c2-4a56-4029-acf9-71e35ff08652",
       "id": "2024-11-27-forkable-chat",
       "date": "2024-11-27",

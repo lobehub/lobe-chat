@@ -54,8 +54,8 @@ const isProtectedRoute = createRouteMatcher([
 
 export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
   ? clerkMiddleware(
-      (auth, req) => {
-        if (isProtectedRoute(req)) auth().protect();
+      async (auth, req) => {
+        if (isProtectedRoute(req)) await auth.protect();
       },
       {
         // https://github.com/lobehub/lobe-chat/pull/3084
