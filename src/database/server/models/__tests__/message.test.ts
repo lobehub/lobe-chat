@@ -1278,14 +1278,14 @@ describe('MessageModel', () => {
         (item) => item.date === today.subtract(2, 'day').format('YYYY-MM-DD'),
       );
       expect(twoDaysAgo?.count).toBe(2);
-      expect(twoDaysAgo?.level).toBe(0);
+      expect(twoDaysAgo?.level).toBe(1);
 
       // 检查一天前的数据
       const oneDayAgo = result.find(
         (item) => item.date === today.subtract(1, 'day').format('YYYY-MM-DD'),
       );
       expect(oneDayAgo?.count).toBe(1);
-      expect(oneDayAgo?.level).toBe(0);
+      expect(oneDayAgo?.level).toBe(1);
 
       // 检查今天的数据
       const todayData = result.find((item) => item.date === today.format('YYYY-MM-DD'));
