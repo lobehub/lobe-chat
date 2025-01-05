@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  REGISTRY_IMAGE: coulsontl/lobe-chat-database
+  REGISTRY_IMAGE: lobehub/lobe-chat-database
 
 jobs:
   build:
@@ -21,6 +21,7 @@ jobs:
             os: ubuntu-latest
           - platform: linux/arm64
             os: ubuntu-latest
+            # os: [self-hosted, linux, ARM64]
     runs-on: ${{ matrix.os }}
     name: Build ${{ matrix.platform }} Image
     steps:
