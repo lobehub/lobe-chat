@@ -16,7 +16,6 @@ import {
   formatTokenNumber,
 } from './format';
 
-// 保留你已经编写的测试用例
 describe('format', () => {
   describe('formatSize', () => {
     it('should format bytes to KB correctly', () => {
@@ -128,10 +127,13 @@ describe('format', () => {
       expect(formatShortenNumber(9999)).toBe('9,999');
     });
 
-    it('should format numbers between 10,000 and 9,999,999 correctly', () => {
+    it('should format numbers between 10,000 and 999,999 correctly', () => {
       expect(formatShortenNumber(10000)).toBe('10.0K');
       expect(formatShortenNumber(123456)).toBe('123.5K');
-      expect(formatShortenNumber(9999999)).toBe('10000.0K');
+      expect(formatShortenNumber(998000)).toBe('998.0K');
+      expect(formatShortenNumber(999999)).toBe('1000.0K');
+      expect(formatShortenNumber(1000000)).toBe('1.0M');
+      expect(formatShortenNumber(9999999)).toBe('10.0M');
     });
 
     it('should format numbers 10,000,000 and above correctly', () => {
