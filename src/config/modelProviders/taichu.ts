@@ -5,23 +5,31 @@ const Taichu: ModelProviderCard = {
   chatModels: [
     {
       contextWindowTokens: 32_768,
-      description: 'Taichu 2.0 基于海量高质数据训练，具有更强的文本理解、内容创作、对话问答等能力',
+      description: '基于海量高质数据训练，具有更强的文本理解、内容创作、对话问答等能力',
       displayName: 'Taichu 2.0',
       enabled: true,
       functionCall: true,
       id: 'taichu_llm',
+      pricing: {
+        currency: 'CNY',
+        input: 2,
+        output: 2,
+      },
     },
-    /*
-    // TODO: Not support for now
     {
+      contextWindowTokens: 4096,
       description:
-        'Taichu 2.0V 融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出',
+        '融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出',
       displayName: 'Taichu 2.0V',
-      id: 'taichu_vqa',
-      tokens: 4096,
+      enabled: true,
+      id: 'taichu2_mm',
       vision: true,
+      pricing: {
+        currency: 'CNY',
+        input: 5,
+        output: 5,
+      },
     },
-*/
   ],
   checkModel: 'taichu_llm',
   description:
