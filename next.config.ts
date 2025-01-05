@@ -166,6 +166,8 @@ const nextConfig: NextConfig = {
   ],
   serverExternalPackages: ['@electric-sql/pglite'],
 
+  transpilePackages: ['pdfjs-dist', 'mermaid'],
+
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
