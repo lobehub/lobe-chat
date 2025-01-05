@@ -10,12 +10,16 @@ import { UserModel, UserNotFoundError } from '@/database/server/models/user';
 import { authedProcedure, router } from '@/libs/trpc';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserService } from '@/server/services/user';
-import { UserGuideSchema, UserInitializationState, UserPreference } from '@/types/user';
+import { UserGuideSchema, UserInitializationState, UserPreference, NextAuthAccountSchame } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
+import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
 const userProcedure = authedProcedure.use(async (opts) => {
   return opts.next({
-    ctx: { userModel: new UserModel(serverDB, opts.ctx.userId) },
+    ctx: {
+      userModel: new UserModel(serverDB, opts.ctx.userId),
+      nextAuthDbAdapter: LobeNextAuthDbAdapter(serverDB),
+    },
   });
 });
 
@@ -26,6 +30,26 @@ export const userRouter = router({
 
   getUserSSOProviders: userProcedure.query(async ({ ctx }) => {
     return ctx.userModel.getUserSSOProviders();
+  }),
+
+  unlinkSSOProvider: userProcedure.input(NextAuthAccountSchame).mutation(async ({ ctx, input }) => {
+    const { provider, providerAccountId } = input;
+    if (
+      ctx.nextAuthDbAdapter?.unlinkAccount && typeof ctx.nextAuthDbAdapter.unlinkAccount === 'function' &&
+      ctx.nextAuthDbAdapter?.getAccount && typeof ctx.nextAuthDbAdapter.getAccount === 'function'
+    ) {
+      try {
+        const account = await ctx.nextAuthDbAdapter.getAccount(providerAccountId,provider);
+        // The userId can either get from ctx.nextAuth?.id or ctx.userId
+        if (!account || account.userId !== ctx.userId) return Promise.reject(new Error('The account does not exist'));
+        await ctx.nextAuthDbAdapter.unlinkAccount({ providerAccountId, provider });
+        return Promise.resolve();
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    } else {
+      return Promise.reject(new Error('The method in LobeNextAuthDbAdapter `unlinkAccount` is not implemented'));
+    }
   }),
 
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
