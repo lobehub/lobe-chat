@@ -10,6 +10,10 @@ export class ServerService implements IUserService {
     return lambdaClient.user.getUserState.query();
   };
 
+  getUserSSOProviders: IUserService['getUserSSOProviders'] = async () => {
+    return lambdaClient.user.getUserSSOProviders.query();
+  };
+
   makeUserOnboarded = async () => {
     return lambdaClient.user.makeUserOnboarded.mutate();
   };
