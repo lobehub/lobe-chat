@@ -10,6 +10,7 @@ import AvatarWithUpload from '@/features/AvatarWithUpload';
 import UserAvatar from '@/features/User/UserAvatar';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
+import SSOProvidersList from './features/SSOProvidersList';
 
 type SettingItemGroup = ItemGroup;
 
@@ -41,6 +42,14 @@ const Client = memo<{ mobile?: boolean }>(() => {
         hidden: !isLoginWithNextAuth || !userProfile?.email,
         label: t('profile.email'),
         minWidth: undefined,
+      },
+      {
+        children: <SSOProvidersList />,
+        hidden: !isLoginWithNextAuth,
+        label: 'profile.ssoProviders',
+        minWidth: undefined,
+        layout: 'vertical',
+        labelAlign: 'left'
       },
     ],
     title: t('tab.profile'),
