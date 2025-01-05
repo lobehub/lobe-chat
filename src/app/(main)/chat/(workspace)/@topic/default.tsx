@@ -10,8 +10,8 @@ import SystemRole from './features/SystemRole';
 
 const TopicContent = lazy(() => import('./features/TopicListContent'));
 
-const Topic = () => {
-  const mobile = isMobileDevice();
+const Topic = async () => {
+  const mobile = await isMobileDevice();
 
   const Layout = mobile ? Mobile : Desktop;
 

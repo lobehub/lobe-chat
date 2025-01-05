@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
+import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { SessionModel } from '@/database/server/models/session';
 import { SessionGroupModel } from '@/database/server/models/sessionGroup';
-import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { AgentChatConfigSchema } from '@/types/agent';
 import { LobeMetaDataSchema } from '@/types/meta';
@@ -57,9 +57,19 @@ export const sessionRouter = router({
       return data?.id;
     }),
 
-  countSessions: sessionProcedure.query(async ({ ctx }) => {
-    return ctx.sessionModel.count();
-  }),
+  countSessions: sessionProcedure
+    .input(
+      z
+        .object({
+          endDate: z.string().optional(),
+          range: z.tuple([z.string(), z.string()]).optional(),
+          startDate: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.sessionModel.count(input);
+    }),
 
   createSession: sessionProcedure
     .input(
@@ -102,6 +112,10 @@ export const sessionRouter = router({
 
       return ctx.sessionModel.query({ current, pageSize });
     }),
+
+  rankSessions: sessionProcedure.input(z.number().optional()).query(async ({ ctx, input }) => {
+    return ctx.sessionModel.rank(input);
+  }),
 
   removeAllSessions: sessionProcedure.mutation(async ({ ctx }) => {
     return ctx.sessionModel.deleteAll();

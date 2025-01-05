@@ -8,7 +8,7 @@ export const LobePerplexityAI = LobeOpenAICompatibleFactory({
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
       // Set a default frequency penalty value greater than 0
-      const { presence_penalty, frequency_penalty, stream = true, temperature,  ...res } = payload;
+      const { presence_penalty, frequency_penalty, stream = true, temperature, ...res } = payload;
 
       let param;
 
@@ -21,9 +21,9 @@ export const LobePerplexityAI = LobeOpenAICompatibleFactory({
         param = { frequency_penalty: frequency_penalty || defaultFrequencyPenalty };
       }
 
-      return { 
-        ...res, 
-        ...param, 
+      return {
+        ...res,
+        ...param,
         stream,
         temperature: temperature >= 2 ? undefined : temperature,
       } as OpenAI.ChatCompletionCreateParamsStreaming;

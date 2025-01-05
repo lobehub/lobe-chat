@@ -626,8 +626,6 @@ describe('SessionModel', () => {
     });
   });
 
-  // 在原有的 describe('SessionModel') 中添加以下测试套件
-
   describe('createInbox', () => {
     it('should create inbox session if not exists', async () => {
       const inbox = await sessionModel.createInbox();
@@ -780,6 +778,191 @@ describe('SessionModel', () => {
         model: 'gpt-3.5-turbo',
         title: 'Original Title',
       });
+    });
+  });
+
+  describe('rank', () => {
+    it('should return ranked sessions based on topic count', async () => {
+      // Create test data
+      await serverDB.transaction(async (trx) => {
+        // Create sessions
+        await trx.insert(sessions).values([
+          { id: '1', userId },
+          { id: '2', userId },
+          { id: '3', userId },
+        ]);
+
+        // Create agents
+        await trx.insert(agents).values([
+          { id: 'a1', userId, title: 'Agent 1', avatar: 'avatar1', backgroundColor: 'bg1' },
+          { id: 'a2', userId, title: 'Agent 2', avatar: 'avatar2', backgroundColor: 'bg2' },
+          { id: 'a3', userId, title: 'Agent 3', avatar: 'avatar3', backgroundColor: 'bg3' },
+        ]);
+
+        // Link agents to sessions
+        await trx.insert(agentsToSessions).values([
+          { sessionId: '1', agentId: 'a1' },
+          { sessionId: '2', agentId: 'a2' },
+          { sessionId: '3', agentId: 'a3' },
+        ]);
+
+        // Create topics (different counts for ranking)
+        await trx.insert(topics).values([
+          { id: 't1', sessionId: '1', userId },
+          { id: 't2', sessionId: '1', userId },
+          { id: 't3', sessionId: '1', userId }, // Session 1 has 3 topics
+          { id: 't4', sessionId: '2', userId },
+          { id: 't5', sessionId: '2', userId }, // Session 2 has 2 topics
+          { id: 't6', sessionId: '3', userId }, // Session 3 has 1 topic
+        ]);
+      });
+
+      // Get ranked sessions with default limit
+      const result = await sessionModel.rank();
+
+      // Verify results
+      expect(result).toHaveLength(3);
+      // Should be ordered by topic count (descending)
+      expect(result[0]).toMatchObject({
+        id: '1',
+        count: 3,
+        title: 'Agent 1',
+        avatar: 'avatar1',
+        backgroundColor: 'bg1',
+      });
+      expect(result[1]).toMatchObject({
+        id: '2',
+        count: 2,
+        title: 'Agent 2',
+        avatar: 'avatar2',
+        backgroundColor: 'bg2',
+      });
+      expect(result[2]).toMatchObject({
+        id: '3',
+        count: 1,
+        title: 'Agent 3',
+        avatar: 'avatar3',
+        backgroundColor: 'bg3',
+      });
+    });
+
+    it('should respect the limit parameter', async () => {
+      // Create test data
+      await serverDB.transaction(async (trx) => {
+        // Create sessions and related data
+        await trx.insert(sessions).values([
+          { id: '1', userId },
+          { id: '2', userId },
+          { id: '3', userId },
+        ]);
+
+        await trx.insert(agents).values([
+          { id: 'a1', userId, title: 'Agent 1' },
+          { id: 'a2', userId, title: 'Agent 2' },
+          { id: 'a3', userId, title: 'Agent 3' },
+        ]);
+
+        await trx.insert(agentsToSessions).values([
+          { sessionId: '1', agentId: 'a1' },
+          { sessionId: '2', agentId: 'a2' },
+          { sessionId: '3', agentId: 'a3' },
+        ]);
+
+        await trx.insert(topics).values([
+          { id: 't1', sessionId: '1', userId },
+          { id: 't2', sessionId: '1', userId },
+          { id: 't3', sessionId: '2', userId },
+          { id: 't4', sessionId: '3', userId },
+        ]);
+      });
+
+      // Get ranked sessions with limit of 2
+      const result = await sessionModel.rank(2);
+
+      // Verify results
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe('1'); // Most topics (2)
+      expect(result[1].id).toBe('2'); // Second most topics (1)
+    });
+
+    it('should handle sessions with no topics', async () => {
+      // Create test data
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values([
+          { id: '1', userId },
+          { id: '2', userId },
+        ]);
+
+        await trx.insert(agents).values([
+          { id: 'a1', userId, title: 'Agent 1' },
+          { id: 'a2', userId, title: 'Agent 2' },
+        ]);
+
+        await trx.insert(agentsToSessions).values([
+          { sessionId: '1', agentId: 'a1' },
+          { sessionId: '2', agentId: 'a2' },
+        ]);
+
+        // No topics created
+      });
+
+      const result = await sessionModel.rank();
+
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe('hasMoreThanN', () => {
+    it('should return true when session count is more than N', async () => {
+      // Create test data
+      await serverDB.insert(sessions).values([
+        { id: '1', userId },
+        { id: '2', userId },
+        { id: '3', userId },
+      ]);
+
+      const result = await sessionModel.hasMoreThanN(2);
+      expect(result).toBe(true);
+    });
+
+    it('should return false when session count is equal to N', async () => {
+      // Create test data
+      await serverDB.insert(sessions).values([
+        { id: '1', userId },
+        { id: '2', userId },
+      ]);
+
+      const result = await sessionModel.hasMoreThanN(2);
+      expect(result).toBe(false);
+    });
+
+    it('should return false when session count is less than N', async () => {
+      // Create test data
+      await serverDB.insert(sessions).values([{ id: '1', userId }]);
+
+      const result = await sessionModel.hasMoreThanN(2);
+      expect(result).toBe(false);
+    });
+
+    it('should only count sessions for the current user', async () => {
+      // Create sessions for current user and another user
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(users).values([{ id: 'other-user' }]);
+        await trx.insert(sessions).values([
+          { id: '1', userId }, // Current user
+          { id: '2', userId: 'other-user' }, // Other user
+          { id: '3', userId: 'other-user' }, // Other user
+        ]);
+      });
+
+      const result = await sessionModel.hasMoreThanN(1);
+      // Should return false as current user only has 1 session
+      expect(result).toBe(false);
+    });
+
+    it('should return false when no sessions exist', async () => {
+      const result = await sessionModel.hasMoreThanN(0);
+      expect(result).toBe(false);
     });
   });
 });

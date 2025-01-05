@@ -86,7 +86,6 @@ export default {
         modalTitle: '自定义模型配置',
         tokens: {
           title: '最大 token 数',
-          unlimited: '无限制',
         },
         vision: {
           extra:

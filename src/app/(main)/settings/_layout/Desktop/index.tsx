@@ -6,9 +6,10 @@ import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import InitClientDB from '@/features/InitClientDB';
 import Footer from '@/features/Setting/Footer';
 import SettingContainer from '@/features/Setting/SettingContainer';
-import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
+import { useActiveSettingsKey } from '@/hooks/useActiveTabKey';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import { LayoutProps } from '../type';
@@ -45,6 +46,7 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
         </Header>
       )}
       <SettingContainer addonAfter={<Footer />}>{children}</SettingContainer>
+      <InitClientDB />
     </Flexbox>
   );
 });

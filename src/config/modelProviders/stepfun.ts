@@ -5,6 +5,7 @@ import { ModelProviderCard } from '@/types/llm';
 const Stepfun: ModelProviderCard = {
   chatModels: [
     {
+      contextWindowTokens: 8000,
       description: '高速模型，适合实时对话。',
       displayName: 'Step 1 Flash',
       enabled: true,
@@ -15,9 +16,9 @@ const Stepfun: ModelProviderCard = {
         input: 1,
         output: 4,
       },
-      tokens: 8000,
     },
     {
+      contextWindowTokens: 8000,
       description: '小型模型，适合轻量级任务。',
       displayName: 'Step 1 8K',
       enabled: true,
@@ -28,9 +29,9 @@ const Stepfun: ModelProviderCard = {
         input: 5,
         output: 20,
       },
-      tokens: 8000,
     },
     {
+      contextWindowTokens: 32_000,
       description: '支持中等长度的对话，适用于多种应用场景。',
       displayName: 'Step 1 32K',
       enabled: true,
@@ -41,9 +42,9 @@ const Stepfun: ModelProviderCard = {
         input: 15,
         output: 70,
       },
-      tokens: 32_000,
     },
     {
+      contextWindowTokens: 128_000,
       description: '平衡性能与成本，适合一般场景。',
       displayName: 'Step 1 128K',
       enabled: true,
@@ -54,9 +55,9 @@ const Stepfun: ModelProviderCard = {
         input: 40,
         output: 200,
       },
-      tokens: 128_000,
     },
     {
+      contextWindowTokens: 256_000,
       description: '具备超长上下文处理能力，尤其适合长文档分析。',
       displayName: 'Step 1 256K',
       functionCall: true,
@@ -66,9 +67,9 @@ const Stepfun: ModelProviderCard = {
         input: 95,
         output: 300,
       },
-      tokens: 256_000,
     },
     {
+      contextWindowTokens: 16_000,
       description: '支持大规模上下文交互，适合复杂对话场景。',
       displayName: 'Step 2 16K',
       enabled: true,
@@ -79,9 +80,9 @@ const Stepfun: ModelProviderCard = {
         input: 38,
         output: 120,
       },
-      tokens: 16_000,
     },
     {
+      contextWindowTokens: 8000,
       description: '小型视觉模型，适合基本的图文任务。',
       displayName: 'Step 1V 8K',
       enabled: true,
@@ -92,10 +93,10 @@ const Stepfun: ModelProviderCard = {
         input: 5,
         output: 20,
       },
-      tokens: 8000,
       vision: true,
     },
     {
+      contextWindowTokens: 32_000,
       description: '支持视觉输入，增强多模态交互体验。',
       displayName: 'Step 1V 32K',
       enabled: true,
@@ -106,10 +107,10 @@ const Stepfun: ModelProviderCard = {
         input: 15,
         output: 70,
       },
-      tokens: 32_000,
       vision: true,
     },
     {
+      contextWindowTokens: 32_000,
       description: '该模型拥有强大的视频理解能力。',
       displayName: 'Step 1.5V Mini',
       enabled: true,
@@ -119,7 +120,6 @@ const Stepfun: ModelProviderCard = {
         input: 8,
         output: 35,
       },
-      tokens: 32_000,
       vision: true,
     },
   ],
@@ -133,6 +133,15 @@ const Stepfun: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.stepfun.com/docs/llm/text',
   name: 'Stepfun',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'openai',
+    showModelFetcher: true,
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
+  },
   smoothing: {
     speed: 2,
     text: true,

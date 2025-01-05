@@ -8,7 +8,7 @@ import { useGlobalStore } from '@/store/global';
 import { ChatSettingsTabs, SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
-import { useOpenChatSettings, useOpenSettings } from './useInterceptingRoutes';
+import { useOpenChatSettings } from './useInterceptingRoutes';
 
 // Mocks
 vi.mock('next/navigation', () => ({
@@ -32,26 +32,12 @@ vi.mock('@/store/global', () => ({
   },
 }));
 
-describe('useOpenSettings', () => {
-  it('should handle mobile route correctly', () => {
-    vi.mocked(useIsMobile).mockReturnValue(true);
-    const { result } = renderHook(() => useOpenSettings(SettingsTabs.Common));
-    expect(result.current()).toBe('/settings/common');
-  });
-
-  it('should handle desktop route correctly', () => {
-    vi.mocked(useIsMobile).mockReturnValue(false);
-    const { result } = renderHook(() => useOpenSettings(SettingsTabs.Agent));
-    expect(result.current()).toBe('/settings/modal?tab=agent');
-  });
-});
-
 describe('useOpenChatSettings', () => {
   it('should handle inbox session id correctly', () => {
     vi.mocked(useSessionStore).mockReturnValue(INBOX_SESSION_ID);
     const { result } = renderHook(() => useOpenChatSettings());
 
-    expect(result.current()).toBe('/settings/modal?session=inbox&tab=agent'); // Assuming openSettings returns a function
+    expect(result.current()).toBe('/settings/agent'); // Assuming openSettings returns a function
   });
 
   it('should handle mobile route for chat settings', () => {

@@ -1,22 +1,24 @@
-import { DiscordIcon } from '@lobehub/ui';
 import {
   Book,
   CircleUserRound,
+  Cloudy,
   Database,
   Download,
   Feather,
-  LogOut,
+  FileClockIcon,
   Settings2,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { CellProps } from '@/components/Cell';
-import { DISCORD, DOCUMENTS, FEEDBACK } from '@/const/url';
+import { LOBE_CHAT_CLOUD } from '@/const/branding';
+import { DOCUMENTS, FEEDBACK, OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
 import { isServerMode } from '@/const/version';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
-import { authSelectors } from '@/store/user/slices/auth/selectors';
+import { authSelectors } from '@/store/user/selectors';
 
 import { useCategory as useSettingsCategory } from '../../settings/features/useCategory';
 
@@ -24,15 +26,12 @@ export const useCategory = () => {
   const router = useRouter();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
-  const [isLogin, isLoginWithAuth, isLoginWithClerk, enableAuth, signOut, isLoginWithNextAuth] =
-    useUserStore((s) => [
-      authSelectors.isLogin(s),
-      authSelectors.isLoginWithAuth(s),
-      authSelectors.isLoginWithClerk(s),
-      authSelectors.enabledAuth(s),
-      s.logout,
-      authSelectors.isLoginWithNextAuth(s),
-    ]);
+  const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
+  const [isLogin, isLoginWithAuth, enableAuth] = useUserStore((s) => [
+    authSelectors.isLogin(s),
+    authSelectors.isLoginWithAuth(s),
+    authSelectors.enabledAuth(s),
+  ]);
 
   const profile: CellProps[] = [
     {
@@ -91,6 +90,12 @@ export const useCategory = () => {
   ];
 
   const helps: CellProps[] = [
+    showCloudPromotion && {
+      icon: Cloudy,
+      key: 'cloud',
+      label: t('userPanel.cloud', { name: LOBE_CHAT_CLOUD }),
+      onClick: () => window.open(`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}`, '__blank'),
+    },
     {
       icon: Book,
       key: 'docs',
@@ -104,35 +109,25 @@ export const useCategory = () => {
       onClick: () => window.open(FEEDBACK, '__blank'),
     },
     {
-      icon: DiscordIcon,
-      key: 'discord',
-      label: 'Discord',
-      onClick: () => window.open(DISCORD, '__blank'),
+      icon: FileClockIcon,
+      key: 'changelog',
+      label: t('changelog'),
+      onClick: () => router.push('/changelog'),
     },
-  ];
-
-  const nextAuthSignOut: CellProps[] = [
-    {
-      icon: LogOut,
-      key: 'nextauthSignout',
-      label: t('auth:signout'),
-      onClick: signOut,
-    },
-  ];
+  ].filter(Boolean) as CellProps[];
 
   const mainItems = [
     {
       type: 'divider',
     },
-    ...(isLoginWithClerk ? profile : []),
+    ...(!enableAuth || (enableAuth && isLoginWithAuth) ? profile : []),
     ...(enableAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
     /* ↓ cloud slot ↓ */
 
     /* ↑ cloud slot ↑ */
     ...(canInstall ? pwa : []),
     ...(isLogin && !isServerMode ? data : []),
-    ...helps,
-    ...(enableAuth && isLoginWithNextAuth ? nextAuthSignOut : []),
+    ...(!hideDocs ? helps : []),
   ].filter(Boolean) as CellProps[];
 
   return mainItems;

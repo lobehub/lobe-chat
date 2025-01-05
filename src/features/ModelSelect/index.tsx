@@ -1,12 +1,10 @@
 import { Select, SelectProps } from 'antd';
 import { createStyles } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { memo, useMemo } from 'react';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
-import { ModelProviderCard } from '@/types/llm';
+import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
+import { EnabledProviderWithModels } from '@/types/aiModel';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   select: css`
@@ -29,14 +27,14 @@ interface ModelSelectProps {
 }
 
 const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = true }) => {
-  const enabledList = useUserStore(modelProviderSelectors.modelProviderListForModelSelect, isEqual);
+  const enabledList = useEnabledChatModels();
 
   const { styles } = useStyles();
 
   const options = useMemo<SelectProps['options']>(() => {
-    const getChatModels = (provider: ModelProviderCard) =>
-      provider.chatModels.map((model) => ({
-        label: <ModelItemRender {...model} showInfoTag={showAbility} />,
+    const getChatModels = (provider: EnabledProviderWithModels) =>
+      provider.children.map((model) => ({
+        label: <ModelItemRender {...model} {...model.abilities} showInfoTag={showAbility} />,
         provider: provider.id,
         value: `${provider.id}/${model.id}`,
       }));

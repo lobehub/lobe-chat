@@ -7,16 +7,16 @@ import { isMobileDevice } from '@/utils/server/responsive';
 import Category from './features/Category';
 
 export const generateMetadata = async () => {
-  const { t } = await translation('clerk');
+  const { t } = await translation('auth');
   return metadataModule.generate({
-    description: t('userProfile.navbar.title'),
-    title: t('userProfile.navbar.description'),
+    description: t('header.desc'),
+    title: t('header.title'),
     url: '/me/profile',
   });
 };
 
-const Page = () => {
-  const mobile = isMobileDevice();
+const Page = async () => {
+  const mobile = await isMobileDevice();
 
   if (!mobile) return redirect('/profile');
 

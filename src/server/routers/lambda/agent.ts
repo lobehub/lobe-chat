@@ -101,7 +101,7 @@ export const agentRouter = router({
       if (!session) throw new Error('Session not found');
       const sessionId = session.id;
 
-      return await ctx.agentModel.findBySessionId(sessionId);
+      return ctx.agentModel.findBySessionId(sessionId);
     }),
 
   getKnowledgeBasesAndFiles: agentProcedure

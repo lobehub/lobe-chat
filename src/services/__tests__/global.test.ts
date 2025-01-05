@@ -18,6 +18,9 @@ vi.mock('@/libs/trpc/client', () => {
         getGlobalConfig: { query: vi.fn() },
         getDefaultAgentConfig: { query: vi.fn() },
       },
+      appStatus: {
+        getLatestChangelogId: { query: vi.fn() },
+      },
     },
   };
 });
@@ -28,14 +31,14 @@ describe('GlobalService', () => {
       // Arrange
       const mockVersion = '1.0.0';
       (fetch as Mock).mockResolvedValue({
-        json: () => Promise.resolve({ 'dist-tags': { latest: mockVersion } }),
+        json: () => Promise.resolve({ version: mockVersion }),
       });
 
       // Act
       const version = await globalService.getLatestVersion();
 
       // Assert
-      expect(fetch).toHaveBeenCalledWith('https://registry.npmmirror.com/@lobehub/chat');
+      expect(fetch).toHaveBeenCalledWith('https://registry.npmmirror.com/@lobehub/chat/latest');
       expect(version).toBe(mockVersion);
     });
 

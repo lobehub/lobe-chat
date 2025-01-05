@@ -1,5 +1,6 @@
 import { DBModel } from '@/database/_deprecated/core/types/db';
 import { DB_File, DB_FileSchema } from '@/database/_deprecated/schemas/files';
+import { clientS3Storage } from '@/services/file/ClientS3';
 import { nanoid } from '@/utils/uuid';
 
 import { BaseModel } from '../core';
@@ -20,9 +21,15 @@ class _FileModel extends BaseModel<'files'> {
     if (!item) return;
 
     // arrayBuffer to url
-    const base64 = Buffer.from(item.data!).toString('base64');
+    let base64;
+    if (!item.data) {
+      const hash = (item.url as string).replace('client-s3://', '');
+      base64 = await this.getBase64ByFileHash(hash);
+    } else {
+      base64 = Buffer.from(item.data).toString('base64');
+    }
 
-    return { ...item, url: `data:${item.fileType};base64,${base64}` };
+    return { ...item, base64, url: `data:${item.fileType};base64,${base64}` };
   }
 
   async delete(id: string) {
@@ -31,6 +38,13 @@ class _FileModel extends BaseModel<'files'> {
 
   async clear() {
     return this.table.clear();
+  }
+
+  private async getBase64ByFileHash(hash: string) {
+    const fileItem = await clientS3Storage.getObject(hash);
+    if (!fileItem) throw new Error('file not found');
+
+    return Buffer.from(await fileItem.arrayBuffer()).toString('base64');
   }
 }
 

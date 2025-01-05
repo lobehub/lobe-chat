@@ -2,7 +2,7 @@
 
 import { Flexbox } from 'react-layout-kit';
 
-import CircleLoading from '@/components/CircleLoading';
+import Loading from '@/components/Loading/BrandTextLoading';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import EmptyGuide from './EmptyGuide';
@@ -12,7 +12,7 @@ interface Params {
   id: string;
 }
 
-type Props = { params: Params };
+type Props = { params: Params & Promise<Params> };
 
 const Evaluation = ({ params }: Props) => {
   const knowledgeBaseId = params.id;
@@ -24,7 +24,7 @@ const Evaluation = ({ params }: Props) => {
   const isEmpty = data?.length === 0;
 
   return isLoading ? (
-    <CircleLoading />
+    <Loading />
   ) : isEmpty ? (
     <EmptyGuide knowledgeBaseId={knowledgeBaseId} />
   ) : (
