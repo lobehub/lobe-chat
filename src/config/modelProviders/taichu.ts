@@ -18,8 +18,7 @@ const Taichu: ModelProviderCard = {
     },
     {
       contextWindowTokens: 4096,
-      description:
-        '融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出',
+      description: '融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出',
       displayName: 'Taichu 2.0V',
       enabled: true,
       id: 'taichu2_mm',
