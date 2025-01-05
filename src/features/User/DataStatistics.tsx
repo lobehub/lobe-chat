@@ -3,7 +3,7 @@
 import { Icon, Tooltip } from '@lobehub/ui';
 import { Badge } from 'antd';
 import { createStyles } from 'antd-style';
-import { isNumber, isUndefined } from 'lodash-es';
+import { isUndefined } from 'lodash-es';
 import { LoaderCircle } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
 import { useServerConfigStore } from '@/store/serverConfig';
+import { formatShortenNumber } from '@/utils/format';
 import { today } from '@/utils/time';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -41,23 +42,6 @@ const useStyles = createStyles(({ css, token }) => ({
     font-size: 12px;
   `,
 }));
-
-const formatNumber = (num: any) => {
-  if (!isNumber(num)) return num;
-  // 使用Intl.NumberFormat来添加千分号
-  const formattedWithComma = new Intl.NumberFormat('en-US').format(num);
-
-  // 格式化为 K 或 M
-  if (num >= 10_000_000) {
-    return (num / 1_000_000).toFixed(1) + 'M';
-  } else if (num >= 10_000) {
-    return (num / 1000).toFixed(1) + 'K';
-  } else if (num === 0) {
-    return 0;
-  } else {
-    return formattedWithComma;
-  }
-};
 
 const DataStatistics = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest }) => {
   const mobile = useServerConfigStore((s) => s.isMobile);
@@ -128,7 +112,7 @@ const DataStatistics = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
               key={item.key}
             >
               <Flexbox gap={2}>
-                <div className={styles.count}>{formatNumber(item.count)}</div>
+                <div className={styles.count}>{formatShortenNumber(item.count)}</div>
                 <div className={styles.title}>{item.title}</div>
               </Flexbox>
               {showBadge && (
@@ -150,7 +134,7 @@ const DataStatistics = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
         return (
           <Flexbox className={styles.card} flex={1} gap={2} key={item.key}>
             <Flexbox horizontal>
-              <div className={styles.count}>{formatNumber(item.count)}</div>
+              <div className={styles.count}>{formatShortenNumber(item.count)}</div>
             </Flexbox>
             <div className={styles.title}>{item.title}</div>
           </Flexbox>
