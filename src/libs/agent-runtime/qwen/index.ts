@@ -5,7 +5,7 @@ import { QwenAIStream } from '../utils/streams';
 
 /*
   QwenEnableSearchModelSeries: An array of Qwen model series that support the enable_search parameter.
-  Currently, enable_search is only supported on Qwen commercial series, excluding Qwen-VL series and Qwen-Long.
+  Currently, enable_search is only supported on Qwen commercial series, excluding Qwen-VL and Qwen-Long series.
 */
 export const QwenEnableSearchModelSeries = [
   'qwen-max',
