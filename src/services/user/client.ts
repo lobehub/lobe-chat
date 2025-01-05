@@ -54,6 +54,11 @@ export class ClientService extends BaseClientService implements IUserService {
     };
   };
 
+  getUserSSOProviders: IUserService['getUserSSOProviders'] = async () => {
+    // Account not exist on next-auth in client mode
+    return [];
+  };
+
   updateUserSettings: IUserService['updateUserSettings'] = async (value) => {
     const { keyVaults, ...res } = value;
 

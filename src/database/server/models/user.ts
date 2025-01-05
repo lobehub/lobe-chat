@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm/expressions';
+import type { AdapterAccount } from 'next-auth/adapters';
 import { DeepPartial } from 'utility-types';
 
 import { LobeChatDatabase } from '@/database/type';
@@ -9,7 +10,14 @@ import { UserKeyVaults, UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
 
-import { NewUser, UserItem, UserSettingsItem, userSettings, users } from '../../schemas';
+import {
+  NewUser,
+  UserItem,
+  UserSettingsItem,
+  nextauthAccounts,
+  userSettings,
+  users,
+} from '../../schemas';
 
 type DecryptUserKeyVaults = (
   encryptKeyVaultsStr: string | null,
@@ -94,6 +102,25 @@ export class UserModel {
       settings,
       userId: this.userId,
     };
+  };
+
+  getUserSSOProviders = async () => {
+    return this.db.query.nextauthAccounts
+      .findMany({
+        where: eq(nextauthAccounts.userId, this.userId),
+      })
+      .then((accounts) =>
+        accounts.map((account) => {
+          // Pick necessary fields, don't expose the sensitive information
+          return {
+            expires_at: account?.expires_at,
+            provider: account?.provider,
+            providerAccountId: account?.providerAccountId,
+            scope: account?.scope,
+            type: account?.type,
+          } as unknown as AdapterAccount;
+        }),
+      ) as Promise<AdapterAccount[]>;
   };
 
   getUserSettings = async () => {
