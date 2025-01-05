@@ -1,3 +1,4 @@
+'use client';  // 在顶部添加这一行
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ResolvingViewport } from 'next';
 import { cookies } from 'next/headers';
