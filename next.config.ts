@@ -10,7 +10,6 @@ const enableReactScan = !!process.env.REACT_SCAN_MONITOR_API_KEY;
 const isUsePglite = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
 
 // if you need to proxy the api endpoint to remote server
-const API_PROXY_ENDPOINT = process.env.API_PROXY_ENDPOINT || '';
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
 
@@ -165,14 +164,7 @@ const nextConfig: NextConfig = {
       source: '/welcome',
     },
   ],
-  rewrites: async () => [
-    // due to google api not work correct in some countries
-    // we need a proxy to bypass the restriction
-    { destination: `${API_PROXY_ENDPOINT}/api/chat/google`, source: '/api/chat/google' },
-  ],
   serverExternalPackages: ['@electric-sql/pglite'],
-
-  transpilePackages: ['pdfjs-dist'],
 
   webpack(config) {
     config.experiments = {
