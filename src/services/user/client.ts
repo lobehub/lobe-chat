@@ -55,8 +55,12 @@ export class ClientService extends BaseClientService implements IUserService {
   };
 
   getUserSSOProviders: IUserService['getUserSSOProviders'] = async () => {
-    // Account not exist on next-auth in client mode
+    // Account not exist on next-auth in client mode, no need to implement this method
     return [];
+  };
+
+  unlinkSSOProvider: IUserService['unlinkSSOProvider'] = async () => {
+    // Account not exist on next-auth in client mode, no need to implement this method
   };
 
   updateUserSettings: IUserService['updateUserSettings'] = async (value) => {
