@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.43.4](https://github.com/lobehub/lobe-chat/compare/v1.43.3...v1.43.4)
+
+<sup>Released on **2025-01-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix format short number.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix format short number, closes [#5294](https://github.com/lobehub/lobe-chat/issues/5294) ([d8a29ec](https://github.com/lobehub/lobe-chat/commit/d8a29ec))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.43.3](https://github.com/lobehub/lobe-chat/compare/v1.43.2...v1.43.3)
 
 <sup>Released on **2025-01-04**</sup>
