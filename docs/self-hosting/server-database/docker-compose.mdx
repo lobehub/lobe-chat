@@ -81,7 +81,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
 docker compose up -d
 ```
 
-The default login account is the default account of Casdoor, with the username admin. You can find the password in the init_data.json file that is downloaded during setup. Note that the secret might fail to generate, please check the shell output.
+The default login account is the default account of Casdoor, with the username `admin`. You can find the password in the `init_data.json` file that is downloaded during setup. Note that the secret might fail to generate, please check the shell output. Note that the secret might fail to generate, please check the shell output.
 
 ### Check Logs
 
@@ -123,15 +123,15 @@ docker compose up -d
 Next, you need to modify the downloaded `docker-compose.yml` file, performing a global replacement to change `localhost` to `your_server_ip`, and then restart:
 
 ```sh
-sed -i 's/localhost/your_server_ip/g' docker-compose.yml
-docker compose up -d
+sed -i 's/localhost/your_server_ip/g' docker-compose.ml
+docke compose up -d
 ```
 
 ### Configuring Casdoor
 
-1. After starting with the setup.sh script, the default port for Casdoor WebUI is 8000. You can access it via http://your_server_ip:8000, with the default username admin. The password can be found in the init_data.json file that is downloaded during setup. Note that the secret might fail to generate, please check the shell output.
+1. After starting with the `setup.sh` script, the default port for Casdoor WebUI is `8000`. You can access it via `http://your_server_ip:8000`, with the default username `admin`. The password can be found in the `init_data.json` file that is downloaded during setup. Note that the secret might fail to generate, please check the shell output.
 
-2. In `Identity -> Applications`, add a new line:
+2. In `Identity - Applications`, add a new line:
 
    ```
    http://your_server_ip:3210/api/auth/callback/casdoor
@@ -190,7 +190,7 @@ docker compose up -d
 
    The Client ID and Client Secret should be the `Access Key` and `Secret Key` from the previous step, and `192.168.31.251` should be replaced with `your_server_ip`.
 
-5. In Casdoor's `Identity -> Applications`, add the provider to the `app-built-in` application, select `minio`, save and exit.
+5. In Casdoor's `Identity > Applications`, add the provider to the `app-built-in` application, select `minio`, save and exit.
 
 6. You can try uploading a file in Casdoor's `Identity -> Resources` to test if the configuration is correct.
 
@@ -300,7 +300,7 @@ You first need to visit the WebUI for configuration:
      src="https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837"
    />
 
-7. Optionally, in the left panel under `Sign-in experience`, you can disable `Enable user registration` in `Sign-up and sign-in - Advanced Options` to prevent users from registering on their own. If you disable user registration, you will need to manually add users in the left panel under `User Management`.
+7. Optionally, in the left panel under `Sign-in experience`, you can disable `Enable user registration` in `Sign-up and sign-in - Advanced Options` to prevent users from registering on their own. If you disable user registration, you will need to manually add users in the left panel under `User Maagement`.
 
    <Image
      alt="Disable User Registration"
@@ -357,7 +357,7 @@ You first need to visit the WebUI for configuration:
      src="https://github.com/user-attachments/assets/d8109f4e-71fc-4ba8-8402-ede92669d5e0"
    />
 
-4. In the left panel under User / Access Keys, click `Create New Access Key`, without any extra modifications, and fill the generated `Access Key` and `Secret Key` into your `.env` file under `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY`.
+4. In the left panel under User / Access Keys, click `Create New Access Key`, without any extra modifications, and fill the generated `Access Key` and `Secret Key` into your `.env` file under `S3_ACCESS_KEY_ID` and `S3_SECRET_CCESS_KEY`.
 
    <Image
      alt="Create MinIO Access Key"
