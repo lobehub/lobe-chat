@@ -142,7 +142,6 @@ const Anthropic: ModelProviderCard = {
       placeholder: 'https://api.anthropic.com',
     },
     sdkType: 'anthropic',
-    showModelFetcher: true,
     smoothing: {
       speed: 5,
       text: true,

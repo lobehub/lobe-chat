@@ -3,6 +3,12 @@ import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 import { QwenAIStream } from '../utils/streams';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
+
+export interface QwenModelCard {
+  id: string;
+}
+
 /*
   QwenLegacyModels: A set of legacy Qwen models that do not support presence_penalty.
   Currently, presence_penalty is only supported on Qwen commercial models and open-source models starting from Qwen 1.5 and later.
@@ -45,6 +51,25 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_QWEN_CHAT_COMPLETION === '1',
+  },
+    models: {
+    transformModel: (m) => {
+      const functionCallKeywords = [
+        'qwen-max',
+        'qwen-plus',
+        'qwen-turbo',
+        'qwen2.5',
+      ];
+
+      const model = m as unknown as QwenModelCard;
+
+      return {
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        functionCall: functionCallKeywords.some(keyword => model.id.includes(keyword)),
+        id: model.id,
+        vision: model.id.includes('vl'),
+      };
+    },
   },
   provider: ModelProvider.Qwen,
 });
