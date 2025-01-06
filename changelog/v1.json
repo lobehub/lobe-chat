@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix format short number."]
+    },
+    "date": "2025-01-06",
+    "version": "1.43.4"
+  },
+  {
+    "children": {
       "improvements": ["Upgrade @clerk/nextjs to v6."]
     },
     "date": "2025-01-04",
