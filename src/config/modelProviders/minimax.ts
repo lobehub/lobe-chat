@@ -16,6 +16,7 @@ const Minimax: ModelProviderCard = {
         input: 10,
         output: 10,
       },
+      vision: true,
     },
     {
       contextWindowTokens: 245_760,
@@ -30,6 +31,7 @@ const Minimax: ModelProviderCard = {
         input: 1,
         output: 1,
       },
+      vision: true,
     },
     {
       contextWindowTokens: 8192,
