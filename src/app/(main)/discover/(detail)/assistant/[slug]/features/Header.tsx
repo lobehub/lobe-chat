@@ -19,9 +19,9 @@ import Back from '../../../features/Back';
 
 export const useStyles = createStyles(({ css, token }) => ({
   tag: css`
+    border: none;
     color: ${token.colorTextSecondary};
     background: ${token.colorFillSecondary};
-    border: none;
   `,
   time: css`
     font-size: 12px;

@@ -81,7 +81,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
 docker compose up -d
 ```
 
-The default login account is the default account of Casdoor, with the username `admin` and password `123`.
+The default login account is the default account of Casdoor, with the username `admin`. You can find the password in the `init_data.json` file that is downloaded during setup. Note that the secret might fail to generate, please check the shell output.
 
 ### Check Logs
 
@@ -129,7 +129,7 @@ docker compose up -d
 
 ### Configuring Casdoor
 
-1. After starting with the `setup.sh` script, the default port for Casdoor WebUI is `8000`. You can access it via `http://your_server_ip:8000`, with the default username `admin` and password `123`.
+1. After starting with the `setup.sh` script, the default port for Casdoor WebUI is `8000`. You can access it via `http://your_server_ip:8000`, with the default username `admin`. The password can be found in the `init_data.json` file that is downloaded during setup. Note that the secret might fail to generate, please check the shell output.
 
 2. In `Identity -> Applications`, add a new line:
 

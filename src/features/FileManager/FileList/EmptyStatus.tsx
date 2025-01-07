@@ -25,12 +25,12 @@ const useStyles = createStyles(({ css, token }) => ({
 
     width: 200px;
     height: 140px;
+    border-radius: ${token.borderRadiusLG}px;
 
     font-weight: 500;
     text-align: center;
 
     background: ${token.colorFillTertiary};
-    border-radius: ${token.borderRadiusLG}px;
     box-shadow: 0 0 0 1px ${token.colorFillTertiary} inset;
 
     transition: background 0.3s ease-in-out;

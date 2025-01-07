@@ -19,7 +19,6 @@ const useStyles = createStyles(({ css, token }) => ({
     margin-block-end: 2px;
     padding-block: 12px;
     padding-inline: 8px;
-
     border-radius: 8px;
 
     &:hover {
