@@ -269,7 +269,12 @@
       "releasedAt": "Phát hành vào {{releasedAt}}"
     },
     "list": {
+      "addNew": "Thêm mô hình",
       "disabled": "Chưa được kích hoạt",
+      "empty": {
+        "desc": "Vui lòng tạo mô hình tùy chỉnh hoặc kéo mô hình để bắt đầu sử dụng",
+        "title": "Chưa có mô hình nào khả dụng"
+      },
       "enabled": "Đã được kích hoạt",
       "enabledActions": {
         "disableAll": "Vô hiệu hóa tất cả",

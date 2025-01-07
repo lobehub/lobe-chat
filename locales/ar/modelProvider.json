@@ -269,7 +269,12 @@
       "releasedAt": "صدر في {{releasedAt}}"
     },
     "list": {
+      "addNew": "إضافة نموذج",
       "disabled": "غير مفعل",
+      "empty": {
+        "desc": "يرجى إنشاء نموذج مخصص أو سحب نموذج للبدء في الاستخدام",
+        "title": "لا توجد نماذج متاحة"
+      },
       "enabled": "مفعل",
       "enabledActions": {
         "disableAll": "تعطيل الكل",

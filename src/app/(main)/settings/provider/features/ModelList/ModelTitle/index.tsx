@@ -23,6 +23,7 @@ const ModelTitle = memo<ModelFetcherProps>(({ provider }) => {
   const [
     searchKeyword,
     totalModels,
+    isEmpty,
     hasRemoteModels,
     fetchRemoteModelList,
     clearObtainedModels,
@@ -30,6 +31,7 @@ const ModelTitle = memo<ModelFetcherProps>(({ provider }) => {
   ] = useAiInfraStore((s) => [
     s.modelSearchKeyword,
     aiModelSelectors.totalAiProviderModelList(s),
+    aiModelSelectors.isEmptyAiProviderModelList(s),
     aiModelSelectors.hasRemoteModels(s),
     s.fetchRemoteModelList,
     s.clearRemoteModels,
@@ -86,7 +88,7 @@ const ModelTitle = memo<ModelFetcherProps>(({ provider }) => {
         </Flexbox>
         {isLoading ? (
           <Skeleton.Button active size={'small'} style={{ width: 120 }} />
-        ) : (
+        ) : isEmpty ? null : (
           <Flexbox gap={8} horizontal>
             {!mobile && (
               <Search

@@ -269,7 +269,12 @@
       "releasedAt": "リリース日: {{releasedAt}}"
     },
     "list": {
+      "addNew": "モデルを追加",
       "disabled": "無効",
+      "empty": {
+        "desc": "カスタムモデルを作成するか、モデルを取得してから使用を開始してください",
+        "title": "利用可能なモデルはありません"
+      },
       "enabled": "有効",
       "enabledActions": {
         "disableAll": "すべて無効にする",

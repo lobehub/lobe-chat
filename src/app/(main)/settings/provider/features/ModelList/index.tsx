@@ -4,26 +4,31 @@ import { ReactNode, Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useAiInfraStore } from '@/store/aiInfra';
+import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import DisabledModels from './DisabledModels';
+import EmptyModels from './EmptyModels';
 import EnabledModelList from './EnabledModelList';
 import ModelTitle from './ModelTitle';
 import SearchResult from './SearchResult';
 import SkeletonList from './SkeletonList';
 
 const Content = memo<{ id: string }>(({ id }) => {
-  const [isSearching, useFetchAiProviderModels] = useAiInfraStore((s) => [
+  const [isSearching, isEmpty, useFetchAiProviderModels] = useAiInfraStore((s) => [
     !!s.modelSearchKeyword,
+    aiModelSelectors.isEmptyAiProviderModelList(s),
     s.useFetchAiProviderModels,
   ]);
+
   const { isLoading } = useFetchAiProviderModels(id);
 
   if (isLoading) return <SkeletonList />;
 
   if (isSearching) return <SearchResult />;
 
-  return (
+  return isEmpty ? (
+    <EmptyModels provider={id} />
+  ) : (
     <Flexbox>
       <EnabledModelList />
       <DisabledModels />

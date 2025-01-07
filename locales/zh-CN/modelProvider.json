@@ -269,7 +269,12 @@
       "releasedAt": "发布于{{releasedAt}}"
     },
     "list": {
+      "addNew": "添加模型",
       "disabled": "未启用",
+      "empty": {
+        "desc": "请创建自定义模型或拉取模型后开始使用吧",
+        "title": "暂无可用模型"
+      },
       "enabled": "已启用",
       "enabledActions": {
         "disableAll": "全部禁用",

@@ -269,7 +269,12 @@
       "releasedAt": "Lançado em {{releasedAt}}"
     },
     "list": {
+      "addNew": "Adicionar Modelo",
       "disabled": "Não habilitado",
+      "empty": {
+        "desc": "Por favor, crie um modelo personalizado ou importe um modelo para começar a usar.",
+        "title": "Nenhum modelo disponível"
+      },
       "enabled": "Habilitado",
       "enabledActions": {
         "disableAll": "Desabilitar todos",

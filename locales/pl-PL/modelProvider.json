@@ -269,7 +269,12 @@
       "releasedAt": "Wydano {{releasedAt}}"
     },
     "list": {
+      "addNew": "Dodaj model",
       "disabled": "Nieaktywne",
+      "empty": {
+        "desc": "Proszę utworzyć model niestandardowy lub pobrać model, aby rozpocząć korzystanie.",
+        "title": "Brak dostępnych modeli"
+      },
       "enabled": "Aktywne",
       "enabledActions": {
         "disableAll": "Dezaktywuj wszystkie",
