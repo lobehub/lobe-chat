@@ -4,8 +4,8 @@ import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
 import dynamic from 'next/dynamic';
 import qs from 'query-string';
-import { memo } from 'react';
-import { Center, Flexbox, FlexboxProps } from 'react-layout-kit';
+import { CSSProperties, memo } from 'react';
+import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { DiscoverPlugintem } from '@/types/discover';
@@ -64,21 +64,22 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 }));
 
 interface PluginCardProps
-  extends Omit<DiscoverPlugintem, 'manifest' | 'suggestions' | 'socialData'>,
-    Omit<FlexboxProps, 'children'> {
+  extends Omit<DiscoverPlugintem, 'manifest' | 'suggestions' | 'socialData'> {
+  className?: string;
   showCategory?: boolean;
+  style?: CSSProperties;
   variant?: 'default' | 'compact';
 }
 
 const PluginCard = memo<PluginCardProps>(
-  ({ className, showCategory, meta, createdAt, author, variant, ...rest }) => {
+  ({ className, showCategory, meta, createdAt, author, variant, style }) => {
     const { avatar, title, description, tags = [], category } = meta;
     const categoryItem = useCategoryItem(category, 12);
     const { cx, styles, theme } = useStyles();
     const isCompact = variant === 'compact';
 
     return (
-      <Flexbox className={cx(styles.container, className)} gap={24} {...rest}>
+      <Flexbox className={cx(styles.container, className)} gap={24} style={style}>
         {!isCompact && <CardBanner avatar={avatar} />}
         <Flexbox className={styles.inner} gap={12}>
           <Flexbox align={'flex-end'} gap={16} horizontal justify={'space-between'} width={'100%'}>

@@ -40,8 +40,10 @@ const Clear = memo(() => {
     >
       <ActionIcon
         icon={Eraser}
-        overlayStyle={{ maxWidth: 'none' }}
         placement={'bottom'}
+        styles={{
+          root: { maxWidth: 'none' },
+        }}
         title={actionTitle}
       />
     </Popconfirm>
