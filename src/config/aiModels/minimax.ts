@@ -14,8 +14,8 @@ const minimaxChatModels: AIChatModelCard[] = [
     maxOutput: 245_760,
     pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 1,
+      input: 10,
+      output: 10,
     },
     type: 'chat',
   },
