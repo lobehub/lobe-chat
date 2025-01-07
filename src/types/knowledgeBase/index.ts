@@ -47,7 +47,7 @@ export interface KnowledgeItem {
 }
 
 export interface SystemEmbeddingConfig {
-  embedding_model: FilesConfigItem;
-  query_model: string;
-  reranker_model: FilesConfigItem;
+  embeddingModel: FilesConfigItem;
+  queryModel: string;
+  rerankerModel: FilesConfigItem;
 }

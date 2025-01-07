@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import { serverDBEnv } from '@/config/db';
 import { fileEnv } from '@/config/file';
+import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
 import { NewChunkItem, NewEmbeddingsItem } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/server/models/asyncTask';
@@ -55,8 +56,8 @@ export const fileRouter = router({
 
       const asyncTask = await ctx.asyncTaskModel.findById(input.taskId);
 
-      const model = getServerDefaultFilesConfig().embedding_model.model;
-      const provider = getServerDefaultFilesConfig().embedding_model.provider;
+      const { model, provider } =
+        getServerDefaultFilesConfig().embeddingModel || DEFAULT_FILE_EMBEDDING_MODEL_ITEM;
 
       if (!asyncTask) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Async Task not found' });
 
@@ -101,7 +102,7 @@ export const fileRouter = router({
                 const embeddings = await agentRuntime.embeddings({
                   dimensions: 1024,
                   input: chunks.map((c) => c.text),
-                  model: model,
+                  model,
                 });
                 console.timeEnd(`任务[${number}]: embeddings`);
 
@@ -110,7 +111,7 @@ export const fileRouter = router({
                     chunkId: chunks[idx].id,
                     embeddings: e,
                     fileId: input.fileId,
-                    model: model,
+                    model,
                   })) || [];
 
                 console.time(`任务[${number}]: insert db`);

@@ -2,7 +2,11 @@ import { DEFAULT_FILES_CONFIG } from '@/const/settings/knowledge';
 import { SystemEmbeddingConfig } from '@/types/knowledgeBase';
 import { FilesConfig } from '@/types/user/settings/filesConfig';
 
-const protectedKeys = Object.keys(DEFAULT_FILES_CONFIG);
+const protectedKeys = Object.keys({
+  embedding_model: null,
+  query_model: null,
+  reranker_model: null,
+});
 
 export const parseFilesConfig = (envString: string = ''): SystemEmbeddingConfig => {
   if (!envString) return DEFAULT_FILES_CONFIG;
@@ -29,13 +33,19 @@ export const parseFilesConfig = (envString: string = ''): SystemEmbeddingConfig 
       }
 
       if (protectedKeys.includes(key)) {
-        if (key === 'query_model') {
-          config.query_model = value;
-        } else {
-          config[key as keyof FilesConfig] = {
-            model: model.trim(),
-            provider: provider.trim(),
-          } as any;
+        switch (key) {
+          case 'embedding_model': {
+            config.embeddingModel = { model: model.trim(), provider: provider.trim() };
+            break;
+          }
+          case 'reranker_model': {
+            config.rerankerModel = { model: model.trim(), provider: provider.trim() };
+            break;
+          }
+          case 'query_model': {
+            config.queryModel = value;
+            break;
+          }
         }
       }
     } else {
