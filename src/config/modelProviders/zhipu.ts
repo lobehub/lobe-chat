@@ -6,6 +6,18 @@ import { ModelProviderCard } from '@/types/llm';
 const ZhiPu: ModelProviderCard = {
   chatModels: [
     {
+      contextWindowTokens: 16_384,
+      description: 'GLM-Zero-Preview具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
+      displayName: 'GLM-Zero-Preview',
+      enabled: true,
+      id: 'glm-zero-preview',
+      pricing: {
+        currency: 'CNY',
+        input: 10,
+        output: 10,
+      },
+    },
+    {
       contextWindowTokens: 128_000,
       description: 'GLM-4-Flash 是处理简单任务的理想选择，速度最快且免费。',
       displayName: 'GLM-4-Flash',
