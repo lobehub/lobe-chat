@@ -78,26 +78,6 @@ describe('useMenu', () => {
 
     act(() => {
       const { mainItems, logoutItems } = result.current;
-      expect(mainItems?.some((item) => item?.key === 'profile')).toBe(false);
-      expect(mainItems?.some((item) => item?.key === 'setting')).toBe(true);
-      expect(mainItems?.some((item) => item?.key === 'import')).toBe(true);
-      expect(mainItems?.some((item) => item?.key === 'export')).toBe(true);
-      expect(mainItems?.some((item) => item?.key === 'changelog')).toBe(true);
-      expect(logoutItems.some((item) => item?.key === 'logout')).toBe(true);
-    });
-  });
-
-  it('should provide correct menu items when user is logged in with Clerk', () => {
-    act(() => {
-      useUserStore.setState({ isSignedIn: true });
-    });
-    enableAuth = true;
-    enableClerk = true;
-
-    const { result } = renderHook(() => useMenu(), { wrapper });
-
-    act(() => {
-      const { mainItems, logoutItems } = result.current;
       expect(mainItems?.some((item) => item?.key === 'profile')).toBe(true);
       expect(mainItems?.some((item) => item?.key === 'setting')).toBe(true);
       expect(mainItems?.some((item) => item?.key === 'import')).toBe(true);
@@ -117,7 +97,7 @@ describe('useMenu', () => {
 
     act(() => {
       const { mainItems, logoutItems } = result.current;
-      expect(mainItems?.some((item) => item?.key === 'profile')).toBe(false);
+      expect(mainItems?.some((item) => item?.key === 'profile')).toBe(true);
       expect(mainItems?.some((item) => item?.key === 'setting')).toBe(true);
       expect(mainItems?.some((item) => item?.key === 'import')).toBe(true);
       expect(mainItems?.some((item) => item?.key === 'export')).toBe(true);

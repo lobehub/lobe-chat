@@ -2,10 +2,9 @@ import { Checkbox, Form, FormInstance, Input } from 'antd';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import MaxTokenSlider from '@/components/MaxTokenSlider';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { ChatModelCard } from '@/types/llm';
-
-import MaxTokenSlider from './MaxTokenSlider';
 
 interface ModelConfigFormProps {
   initialValues?: ChatModelCard;
@@ -66,7 +65,10 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
           >
             <Input placeholder={t('llm.customModelCards.modelConfig.displayName.placeholder')} />
           </Form.Item>
-          <Form.Item label={t('llm.customModelCards.modelConfig.tokens.title')} name={'tokens'}>
+          <Form.Item
+            label={t('llm.customModelCards.modelConfig.tokens.title')}
+            name={'contextWindowTokens'}
+          >
             <MaxTokenSlider />
           </Form.Item>
           <Form.Item

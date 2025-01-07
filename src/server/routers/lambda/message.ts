@@ -27,12 +27,33 @@ export const messageRouter = router({
       return { added: data.rowCount as number, ids: [], skips: [], success: true };
     }),
 
-  count: messageProcedure.query(async ({ ctx }) => {
-    return ctx.messageModel.count();
-  }),
-  countToday: messageProcedure.query(async ({ ctx }) => {
-    return ctx.messageModel.countToday();
-  }),
+  count: messageProcedure
+    .input(
+      z
+        .object({
+          endDate: z.string().optional(),
+          range: z.tuple([z.string(), z.string()]).optional(),
+          startDate: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.messageModel.count(input);
+    }),
+
+  countWords: messageProcedure
+    .input(
+      z
+        .object({
+          endDate: z.string().optional(),
+          range: z.tuple([z.string(), z.string()]).optional(),
+          startDate: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.messageModel.countWords(input);
+    }),
 
   createMessage: messageProcedure
     .input(z.object({}).passthrough().partial())
@@ -56,6 +77,10 @@ export const messageRouter = router({
       return ctx.messageModel.queryBySessionId(input.sessionId);
     }),
 
+  getHeatmaps: messageProcedure.query(async ({ ctx }) => {
+    return ctx.messageModel.getHeatmaps();
+  }),
+
   // TODO: 未来这部分方法也需要使用 authedProcedure
   getMessages: publicProcedure
     .input(
@@ -73,6 +98,10 @@ export const messageRouter = router({
 
       return messageModel.query(input, { postProcessUrl: (path) => getFullFileUrl(path) });
     }),
+
+  rankModels: messageProcedure.query(async ({ ctx }) => {
+    return ctx.messageModel.rankModels();
+  }),
 
   removeAllMessages: messageProcedure.mutation(async ({ ctx }) => {
     return ctx.messageModel.deleteAllMessages();

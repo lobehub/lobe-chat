@@ -1,3 +1,3 @@
-import FullLoading from '@/components/Loading/BrandTextLoading';
+import Loading from '@/components/Loading/BrandTextLoading';
 
-export default () => <FullLoading />;
+export default () => <Loading />;

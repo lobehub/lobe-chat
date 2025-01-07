@@ -602,6 +602,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool integration, and multimodal generation."
   },
+  "gemini-2.0-flash-thinking-exp-1219": {
+    "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 is Google's latest experimental multimodal AI model, featuring rapid processing capabilities and supporting text, image, and video inputs, making it suitable for efficient scaling across various tasks."
   },
@@ -1094,6 +1097,12 @@
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B is a large language model customized by NVIDIA, designed to enhance the helpfulness of LLM-generated responses to user queries. The model has excelled in benchmark tests such as Arena Hard, AlpacaEval 2 LC, and GPT-4-Turbo MT-Bench, ranking first in all three automatic alignment benchmarks as of October 1, 2024. The model is trained using RLHF (specifically REINFORCE), Llama-3.1-Nemotron-70B-Reward, and HelpSteer2-Preference prompts based on the Llama-3.1-70B-Instruct model."
   },
+  "o1": {
+    "description": "Focused on advanced reasoning and solving complex problems, including mathematical and scientific tasks. It is particularly well-suited for applications that require deep contextual understanding and agent workflow."
+  },
+  "o1-2024-12-17": {
+    "description": "O1 is OpenAI's new reasoning model that supports both image and text input and outputs text, suitable for complex tasks requiring extensive general knowledge. This model has a context length of 200K and a knowledge cutoff date of October 2023."
+  },
   "o1-mini": {
     "description": "o1-mini is a fast and cost-effective reasoning model designed for programming, mathematics, and scientific applications. This model features a 128K context and has a knowledge cutoff date of October 2023."
   },
@@ -1120,6 +1129,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini is the latest model released by OpenAI following GPT-4 Omni, supporting both text and image input while outputting text. As their most advanced small model, it is significantly cheaper than other recent cutting-edge models and over 60% cheaper than GPT-3.5 Turbo. It maintains state-of-the-art intelligence while offering remarkable cost-effectiveness. GPT-4o mini scored 82% on the MMLU test and currently ranks higher than GPT-4 in chat preferences."
+  },
+  "openai/o1": {
+    "description": "O1 is OpenAI's new reasoning model that supports both image and text input and outputs text, suitable for complex tasks requiring extensive general knowledge. This model has a context length of 200K and a knowledge cutoff date of October 2023."
   },
   "openai/o1-mini": {
     "description": "o1-mini is a fast and cost-effective reasoning model designed for programming, mathematics, and scientific applications. This model features a 128K context and has a knowledge cutoff date of October 2023."

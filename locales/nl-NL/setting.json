@@ -84,8 +84,7 @@
         },
         "modalTitle": "Aangepaste modelconfiguratie",
         "tokens": {
-          "title": "Maximaal tokenaantal",
-          "unlimited": "onbeperkt"
+          "title": "Maximaal tokenaantal"
         },
         "vision": {
           "extra": "Deze configuratie zal alleen de mogelijkheid voor het uploaden van afbeeldingen in de applicatie inschakelen. Of herkenning wordt ondersteund, hangt volledig af van het model zelf. Test de beschikbaarheid van visuele herkenning van dit model zelf.",

@@ -266,6 +266,18 @@ const Qwen: ModelProviderCard = {
   proxyUrl: {
     placeholder: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   },
+  settings: {
+    disableBrowserRequest: true,
+    proxyUrl: {
+      placeholder: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    },
+    sdkType: 'openai',
+    showModelFetcher: true,
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
+  },
   smoothing: {
     speed: 2,
     text: true,

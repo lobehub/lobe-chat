@@ -28,8 +28,8 @@ export class LobeOllamaAI implements LobeRuntimeAI {
   constructor({ baseURL }: ClientOptions = {}) {
     try {
       if (baseURL) new URL(baseURL);
-    } catch {
-      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs);
+    } catch (e) {
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs, e);
     }
 
     this.client = new Ollama(!baseURL ? undefined : { host: baseURL });

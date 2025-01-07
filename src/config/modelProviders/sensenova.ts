@@ -124,6 +124,11 @@ const SenseNova: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.sensenova.cn/pricing',
   name: 'SenseNova',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://platform.sensenova.cn/home',
 };
 

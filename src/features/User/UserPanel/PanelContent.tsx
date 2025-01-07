@@ -1,9 +1,11 @@
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import Menu from '@/components/Menu';
+import { isDeprecatedEdition } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -17,20 +19,13 @@ import { useMenu } from './useMenu';
 const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
   const router = useRouter();
   const isLoginWithAuth = useUserStore(authSelectors.isLoginWithAuth);
-  const [openSignIn, signOut, openUserProfile, enableAuth, enabledNextAuth] = useUserStore((s) => [
+  const [openSignIn, signOut, enableAuth, enabledNextAuth] = useUserStore((s) => [
     s.openLogin,
     s.logout,
-    s.openUserProfile,
     s.enableAuth(),
     s.enabledNextAuth,
   ]);
   const { mainItems, logoutItems } = useMenu();
-
-  const handleOpenProfile = () => {
-    if (!enableAuth) return;
-    openUserProfile();
-    closePopover();
-  };
 
   const handleSignIn = () => {
     openSignIn();
@@ -47,15 +42,16 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
 
   return (
     <Flexbox gap={2} style={{ minWidth: 300 }}>
-      {!enableAuth ? (
+      {!enableAuth || (enableAuth && isLoginWithAuth) ? (
         <>
-          <UserInfo />
-          <DataStatistics />
-        </>
-      ) : isLoginWithAuth ? (
-        <>
-          <UserInfo onClick={handleOpenProfile} />
-          <DataStatistics />
+          <Link href={'/profile'} style={{ color: 'inherit' }}>
+            <UserInfo />
+          </Link>
+          {!isDeprecatedEdition && (
+            <Link href={'/profile/stats'} style={{ color: 'inherit' }}>
+              <DataStatistics />
+            </Link>
+          )}
         </>
       ) : (
         <UserLoginOrSignup onClick={handleSignIn} />

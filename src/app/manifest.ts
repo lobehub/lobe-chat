@@ -3,13 +3,10 @@ import type { MetadataRoute } from 'next';
 
 import { BRANDING_LOGO_URL, BRANDING_NAME } from '@/const/branding';
 import { manifestModule } from '@/server/manifest';
-import { translation } from '@/server/translation';
 
-const manifest = async (): Promise<MetadataRoute.Manifest | any> => {
-  const { t } = await translation('metadata');
-
+const manifest = (): MetadataRoute.Manifest | any => {
   return manifestModule.generate({
-    description: t('chat.description', { appName: BRANDING_NAME }),
+    description: `${BRANDING_NAME} brings you the best UI experience for ChatGPT, Claude, Gemini, and OLLaMA.`,
     icons: [
       {
         purpose: 'any',

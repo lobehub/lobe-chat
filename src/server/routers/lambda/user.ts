@@ -20,6 +20,10 @@ const userProcedure = authedProcedure.use(async (opts) => {
 });
 
 export const userRouter = router({
+  getUserRegistrationDuration: userProcedure.query(async ({ ctx }) => {
+    return ctx.userModel.getUserRegistrationDuration();
+  }),
+
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
     let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
 

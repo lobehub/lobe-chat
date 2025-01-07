@@ -154,3 +154,23 @@ export interface FilterBy {
   token?: number;
   vision?: boolean;
 }
+
+interface AgentIndexItem {
+  author: string;
+  createAt: string;
+  createdAt: string;
+  homepage: string;
+  identifier: string;
+  meta: {
+    avatar: string;
+    category: string;
+    description: string;
+    tags: string[];
+    title: string;
+  };
+}
+
+export interface AgentStoreIndex {
+  agents: AgentIndexItem[];
+  schemaVersion: number;
+}

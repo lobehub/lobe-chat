@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "Indietro"
   },
+  "MaxTokenSlider": {
+    "unlimited": "Illimitato"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Modello personalizzato: di default supporta sia la chiamata di funzioni che il riconoscimento visivo. Verifica l'effettiva disponibilità di tali funzionalità.",
