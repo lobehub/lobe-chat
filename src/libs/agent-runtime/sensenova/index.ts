@@ -34,7 +34,7 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
   },
   models: async ({ client }) => {
     const functionCallKeywords = [
-      'SenseChat-5',
+      'sensechat-5',
     ];
 
     client.baseURL = 'https://api.sensenova.cn/v1/llm';
