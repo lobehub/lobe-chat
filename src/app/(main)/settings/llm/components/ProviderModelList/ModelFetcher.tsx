@@ -76,7 +76,7 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
           )}
         </div>
         <Tooltip
-          overlayStyle={{ pointerEvents: 'none' }}
+          styles={{ root: { pointerEvents: 'none' } }}
           title={
             latestFetchTime
               ? t('llm.fetcher.latestTime', {

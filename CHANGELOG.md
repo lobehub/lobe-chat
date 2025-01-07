@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.43.6](https://github.com/lobehub/lobe-chat/compare/v1.43.5...v1.43.6)
+
+<sup>Released on **2025-01-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix portal suspense error when first open.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix portal suspense error when first open, closes [#5322](https://github.com/lobehub/lobe-chat/issues/5322) ([0d4c487](https://github.com/lobehub/lobe-chat/commit/0d4c487))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.43.5](https://github.com/lobehub/lobe-chat/compare/v1.43.4...v1.43.5)
+
+<sup>Released on **2025-01-07**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix style warning in antd 5.23.0 and some error logs.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix style warning in antd 5.23.0 and some error logs, closes [#5319](https://github.com/lobehub/lobe-chat/issues/5319) ([4fcf5d6](https://github.com/lobehub/lobe-chat/commit/4fcf5d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.43.4](https://github.com/lobehub/lobe-chat/compare/v1.43.3...v1.43.4)
 
 <sup>Released on **2025-01-06**</sup>
