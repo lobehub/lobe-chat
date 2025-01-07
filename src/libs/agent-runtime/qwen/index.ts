@@ -64,10 +64,12 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as QwenModelCard;
 
       return {
+        abilities: {
+          functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
+          vision: model.id.toLowerCase().includes('vl'),
+        },
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
-        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         id: model.id,
-        vision: model.id.toLowerCase().includes('vl'),
       };
     },
   },

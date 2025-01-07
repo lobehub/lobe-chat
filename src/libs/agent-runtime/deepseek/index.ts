@@ -17,8 +17,10 @@ export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as DeepSeekModelCard;
 
       return {
+        abilities: {
+          functionCall: true,
+        },
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
-        functionCall: true,
         id: model.id,
       };
     },
