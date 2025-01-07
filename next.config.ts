@@ -24,7 +24,6 @@ const nextConfig: NextConfig = {
       '@icons-pack/react-simple-icons',
       '@lobehub/ui',
       'gpt-tokenizer',
-      'chroma-js',
     ],
     webVitalsAttribution: ['CLS', 'LCP'],
   },
