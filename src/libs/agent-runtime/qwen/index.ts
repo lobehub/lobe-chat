@@ -65,9 +65,9 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
 
       return {
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
-        functionCall: functionCallKeywords.some(keyword => model.id.includes(keyword)),
+        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         id: model.id,
-        vision: model.id.includes('vl'),
+        vision: model.id.toLowerCase().includes('vl'),
       };
     },
   },

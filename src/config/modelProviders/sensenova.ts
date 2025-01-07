@@ -121,11 +121,13 @@ const SenseNova: ModelProviderCard = {
   description: '商汤日日新，依托商汤大装置的强大的基础支撑，提供高效易用的全栈大模型服务。',
   disableBrowserRequest: true,
   id: 'sensenova',
+  modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.sensenova.cn/pricing',
   name: 'SenseNova',
   settings: {
     disableBrowserRequest: true,
     sdkType: 'openai',
+    showModelFetcher: true,
   },
   url: 'https://platform.sensenova.cn/home',
 };

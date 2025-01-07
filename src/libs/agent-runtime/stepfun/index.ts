@@ -28,7 +28,7 @@ export const LobeStepfunAI = LobeOpenAICompatibleFactory({
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
         functionCall: model.id !== 'step-1.5v-mini',
         id: model.id,
-        vision: model.id.includes('v'),
+        vision: model.id.toLowerCase().includes('v'),
       };
     },
   },

@@ -20,7 +20,7 @@ export const LobeXAI = LobeOpenAICompatibleFactory({
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
         functionCall: true,
         id: model.id,
-        vision: model.id.includes('vision'),
+        vision: model.id.toLowerCase().includes('vision'),
       };
     },
   },
