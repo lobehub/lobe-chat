@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Fix style warning in antd 5.23.0 and some error logs."]
+    },
+    "date": "2025-01-07",
+    "version": "1.43.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix format short number."]
     },
     "date": "2025-01-06",
