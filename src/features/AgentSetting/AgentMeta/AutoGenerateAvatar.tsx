@@ -1,12 +1,15 @@
-import { ActionIcon, EmojiPicker } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Wand2 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
+
+const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
 export interface AutoGenerateAvatarProps {
   background?: string;
