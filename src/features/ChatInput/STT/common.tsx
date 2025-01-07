@@ -12,8 +12,8 @@ const useStyles = createStyles(({ css, token }) => ({
   recording: css`
     width: 8px;
     height: 8px;
-    background: ${token.colorError};
     border-radius: 50%;
+    background: ${token.colorError};
   `,
 }));
 

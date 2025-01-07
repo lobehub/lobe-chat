@@ -19,15 +19,14 @@ const useStyles = createStyles(({ css, token }) => {
       width: 320px;
       height: 200px;
       padding: ${token.borderRadiusLG + 4}px;
+      border-radius: 16px;
 
       background: ${token.geekblue};
-      border-radius: 16px;
     `,
     content: css`
       width: 100%;
       height: 100%;
       padding: 16px;
-
       border: 1.5px dashed #fff;
       border-radius: ${token.borderRadiusLG}px;
     `,
@@ -37,9 +36,9 @@ const useStyles = createStyles(({ css, token }) => {
       color: #fff;
     `,
     icon: css`
+      border-radius: ${token.borderRadiusLG}px;
       color: ${darken(0.05, token.geekblue)};
       background: ${lighten(0.38, token.geekblue)};
-      border-radius: ${token.borderRadiusLG}px;
     `,
     iconGroup: css`
       margin-block-start: -44px;

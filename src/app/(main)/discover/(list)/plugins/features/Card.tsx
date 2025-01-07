@@ -33,9 +33,9 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
     height: 100%;
     min-height: 162px;
+    border-radius: ${token.borderRadiusLG}px;
 
     background: ${token.colorBgContainer};
-    border-radius: ${token.borderRadiusLG}px;
     box-shadow: 0 0 1px 1px ${isDarkMode ? token.colorFillQuaternary : token.colorFillSecondary}
       inset;
 

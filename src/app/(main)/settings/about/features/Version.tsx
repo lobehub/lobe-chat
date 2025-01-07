@@ -15,8 +15,8 @@ import { useGlobalStore } from '@/store/global';
 const useStyles = createStyles(({ css, token }) => ({
   logo: css`
     overflow: hidden;
-    background: ${token.colorBgContainer};
     border-radius: ${token.borderRadiusLG * 2}px;
+    background: ${token.colorBgContainer};
     box-shadow: 0 0 0 1px ${token.colorFillSecondary} inset;
   `,
 }));

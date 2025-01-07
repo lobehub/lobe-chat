@@ -7,8 +7,8 @@ import { Flexbox } from 'react-layout-kit';
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     padding: 16px;
-    background: ${token.colorBgContainer};
     border-radius: 8px;
+    background: ${token.colorBgContainer};
   `,
 }));
 

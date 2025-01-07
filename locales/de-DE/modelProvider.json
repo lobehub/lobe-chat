@@ -63,6 +63,44 @@
       "title": "Cloudflare-Kundenkennung / API-Adresse"
     }
   },
+  "createNewAiProvider": {
+    "apiKey": {
+      "placeholder": "Bitte geben Sie Ihren API-Schlüssel ein",
+      "required": "Bitte geben Sie Ihren API-Schlüssel ein",
+      "title": "API-Schlüssel"
+    },
+    "basicTitle": "Grundinformationen",
+    "configTitle": "Konfigurationsinformationen",
+    "confirm": "Neu erstellen",
+    "createSuccess": "Erstellung erfolgreich",
+    "description": {
+      "placeholder": "Beschreibung des Anbieters (optional)",
+      "title": "Beschreibung des Anbieters"
+    },
+    "id": {
+      "placeholder": "Empfohlen in Kleinbuchstaben, z.B. openai, nach der Erstellung nicht mehr änderbar",
+      "required": "Bitte geben Sie die Anbieter-ID ein",
+      "title": "Anbieter-ID"
+    },
+    "logo": {
+      "required": "Bitte laden Sie das korrekte Anbieter-Logo hoch",
+      "title": "Anbieter-Logo"
+    },
+    "name": {
+      "placeholder": "Bitte geben Sie den angezeigten Namen des Anbieters ein",
+      "required": "Bitte geben Sie den Namen des Anbieters ein",
+      "title": "Name des Anbieters"
+    },
+    "proxyUrl": {
+      "placeholder": "Bitte geben Sie Ihre Anforderungsadresse ein, wenn nicht angegeben, wird die entsprechende Anforderungsadresse des SDK verwendet",
+      "title": "Proxy-Adresse"
+    },
+    "sdkType": {
+      "required": "Bitte wählen Sie den SDK-Typ aus",
+      "title": "Anforderungsformat"
+    },
+    "title": "Erstellen Sie einen benutzerdefinierten AI-Anbieter"
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Geben Sie Ihr GitHub-PAT ein und klicken Sie [hier](https://github.com/settings/tokens), um eines zu erstellen.",
@@ -76,6 +114,23 @@
       "placeholder": "hf_xxxxxxxxx",
       "title": "HuggingFace-Token"
     }
+  },
+  "list": {
+    "title": {
+      "disabled": "Dienstanbieter nicht aktiviert",
+      "enabled": "Dienstanbieter aktiviert"
+    }
+  },
+  "menu": {
+    "addCustomProvider": "Benutzerdefinierten Anbieter hinzufügen",
+    "all": "Alle",
+    "list": {
+      "disabled": "Nicht aktiviert",
+      "enabled": "Aktiviert"
+    },
+    "notFound": "Keine Suchergebnisse gefunden",
+    "searchProviders": "Anbieter suchen...",
+    "sort": "Benutzerdefinierte Sortierung"
   },
   "ollama": {
     "checker": {
@@ -130,6 +185,127 @@
       "starting": "Starting download...",
       "title": "Download specified Ollama model"
     }
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "Ihr Schlüssel und die Proxy-Adresse werden mit dem <1>AES-GCM</1>-Verschlüsselungsalgorithmus verschlüsselt",
+      "apiKey": {
+        "desc": "Bitte geben Sie Ihren {{name}} API-Schlüssel ein",
+        "placeholder": "{{name}} API-Schlüssel",
+        "title": "API-Schlüssel"
+      },
+      "baseURL": {
+        "desc": "Muss http(s):// enthalten",
+        "placeholder": "https://your-proxy-url.com/v1",
+        "title": "API-Proxy-Adresse"
+      },
+      "checker": {
+        "button": "Überprüfen",
+        "desc": "Testen Sie, ob der API-Schlüssel und die Proxy-Adresse korrekt eingegeben wurden",
+        "pass": "Überprüfung bestanden",
+        "title": "Verbindungsprüfung"
+      },
+      "fetchOnClient": {
+        "desc": "Der Client-Anforderungsmodus initiiert die Sitzung direkt aus dem Browser, was die Reaktionsgeschwindigkeit erhöhen kann",
+        "title": "Client-Anforderungsmodus verwenden"
+      },
+      "helpDoc": "Konfigurationsanleitung",
+      "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte warten Sie"
+    },
+    "createNew": {
+      "title": "Erstellen Sie ein benutzerdefiniertes AI-Modell"
+    },
+    "item": {
+      "config": "Modell konfigurieren",
+      "customModelCards": {
+        "addNew": "Erstellen und hinzufügen {{id}} Modell",
+        "confirmDelete": "Das benutzerdefinierte Modell wird gelöscht, nach dem Löschen kann es nicht wiederhergestellt werden. Bitte vorsichtig vorgehen."
+      },
+      "delete": {
+        "confirm": "Bestätigen Sie das Löschen des Modells {{displayName}}?",
+        "success": "Löschung erfolgreich",
+        "title": "Modell löschen"
+      },
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Feld, das in Azure OpenAI tatsächlich angefordert wird",
+          "placeholder": "Bitte geben Sie den Modellbereitstellungsnamen in Azure ein",
+          "title": "Modellbereitstellungsname"
+        },
+        "displayName": {
+          "placeholder": "Bitte geben Sie den angezeigten Namen des Modells ein, z.B. ChatGPT, GPT-4 usw.",
+          "title": "Anzeigename des Modells"
+        },
+        "files": {
+          "extra": "Der aktuelle Datei-Upload ist nur eine Hack-Lösung und nur für eigene Versuche gedacht. Warten Sie auf die vollständige Datei-Upload-Funktionalität.",
+          "title": "Datei-Upload unterstützen"
+        },
+        "functionCall": {
+          "extra": "Diese Konfiguration aktiviert nur die Funktionalität zum Aufrufen von Funktionen in der Anwendung. Ob Funktionen unterstützt werden, hängt vollständig vom Modell selbst ab. Bitte testen Sie die Verwendbarkeit der Funktionalität des Modells selbst.",
+          "title": "Funktionaufrufe unterstützen"
+        },
+        "id": {
+          "extra": "Wird als Modell-Tag angezeigt",
+          "placeholder": "Bitte geben Sie die Modell-ID ein, z.B. gpt-4-turbo-preview oder claude-2.1",
+          "title": "Modell-ID"
+        },
+        "modalTitle": "Benutzerdefinierte Modellkonfiguration",
+        "tokens": {
+          "title": "Maximale Token-Anzahl",
+          "unlimited": "Unbegrenzt"
+        },
+        "vision": {
+          "extra": "Diese Konfiguration aktiviert nur die Bild-Upload-Funktionalität in der Anwendung. Ob die Erkennung unterstützt wird, hängt vollständig vom Modell selbst ab. Bitte testen Sie die Verwendbarkeit der visuellen Erkennungsfähigkeit des Modells selbst.",
+          "title": "Visuelle Erkennung unterstützen"
+        }
+      },
+      "pricing": {
+        "image": "${{amount}}/Bild",
+        "inputCharts": "${{amount}}/M Zeichen",
+        "inputMinutes": "${{amount}}/Minuten",
+        "inputTokens": "Eingabe ${{amount}}/M",
+        "outputTokens": "Ausgabe ${{amount}}/M"
+      },
+      "releasedAt": "Veröffentlicht am {{releasedAt}}"
+    },
+    "list": {
+      "addNew": "Modell hinzufügen",
+      "disabled": "Nicht aktiviert",
+      "empty": {
+        "desc": "Bitte erstellen Sie ein benutzerdefiniertes Modell oder ziehen Sie ein Modell, um zu beginnen.",
+        "title": "Keine verfügbaren Modelle"
+      },
+      "enabled": "Aktiviert",
+      "enabledActions": {
+        "disableAll": "Alle deaktivieren",
+        "enableAll": "Alle aktivieren",
+        "sort": "Benutzerdefinierte Modellreihenfolge"
+      },
+      "enabledEmpty": "Keine aktivierten Modelle vorhanden, bitte aktivieren Sie Ihre bevorzugten Modelle aus der Liste unten~",
+      "fetcher": {
+        "clear": "Abgerufene Modelle löschen",
+        "fetch": "Modellliste abrufen",
+        "fetching": "Modellliste wird abgerufen...",
+        "latestTime": "Letzte Aktualisierung: {{time}}",
+        "noLatestTime": "Liste wurde noch nicht abgerufen"
+      },
+      "search": "Modelle suchen...",
+      "searchResult": "{{count}} Modelle gefunden",
+      "title": "Modellliste",
+      "total": "Insgesamt {{count}} verfügbare Modelle"
+    },
+    "searchNotFound": "Keine Suchergebnisse gefunden"
+  },
+  "sortModal": {
+    "success": "Sortierung erfolgreich aktualisiert",
+    "title": "Benutzerdefinierte Sortierung",
+    "update": "Aktualisieren"
+  },
+  "updateAiProvider": {
+    "confirmDelete": "Der AI-Anbieter wird gelöscht, nach dem Löschen kann er nicht wiederhergestellt werden. Bestätigen Sie, ob Sie löschen möchten?",
+    "deleteSuccess": "Löschung erfolgreich",
+    "tooltip": "Aktualisieren Sie die grundlegenden Anbieterinformationen",
+    "updateSuccess": "Aktualisierung erfolgreich"
   },
   "wenxin": {
     "accessKey": {
