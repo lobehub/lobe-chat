@@ -1,6 +1,13 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
+import Minimax from '@/config/modelProviders/minimax';
+
+export const getMinimaxMaxOutputs = (modelId: string): number | undefined => {
+  const model = Minimax.chatModels.find(model => model.id === modelId);
+  return model ? model.maxOutput : undefined;
+};
+
 export const LobeMinimaxAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.minimax.chat/v1',
   chatCompletion: {
@@ -10,6 +17,7 @@ export const LobeMinimaxAI = LobeOpenAICompatibleFactory({
       return {
         ...params,
         frequency_penalty: undefined,
+        max_tokens: payload.max_tokens !== undefined ? payload.max_tokens : getMinimaxMaxOutputs(payload.model),
         presence_penalty: undefined,
         stream: true,
         temperature: temperature === undefined || temperature <= 0 ? undefined : temperature / 2,
