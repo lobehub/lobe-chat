@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
       '@icons-pack/react-simple-icons',
       '@lobehub/ui',
       'gpt-tokenizer',
+      'chroma-js',
     ],
     webVitalsAttribution: ['CLS', 'LCP'],
   },
@@ -164,7 +165,7 @@ const nextConfig: NextConfig = {
       source: '/welcome',
     },
   ],
-  serverExternalPackages: ['@electric-sql/pglite'],
+  serverExternalPackages: ['@electric-sql/pglite', 'shiki/wasm', 'sharp'],
 
   transpilePackages: ['pdfjs-dist', 'mermaid'],
 

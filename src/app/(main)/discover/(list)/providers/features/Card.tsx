@@ -3,9 +3,9 @@ import { Tag } from '@lobehub/ui';
 import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { memo } from 'react';
+import { CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { DiscoverProviderItem } from '@/types/discover';
@@ -69,17 +69,19 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
 }));
 
-export interface ProviderCardProps extends DiscoverProviderItem, FlexboxProps {
+export interface ProviderCardProps extends DiscoverProviderItem {
+  className?: string;
   mobile?: boolean;
+  style?: CSSProperties;
 }
 
-const ProviderCard = memo<ProviderCardProps>(({ models, className, meta, identifier, ...rest }) => {
+const ProviderCard = memo<ProviderCardProps>(({ models, className, meta, identifier, style }) => {
   const { description } = meta;
   const { t } = useTranslation(['discover', 'providers']);
   const { cx, styles, theme } = useStyles();
 
   return (
-    <Flexbox className={cx(styles.container, className)} gap={24} {...rest}>
+    <Flexbox className={cx(styles.container, className)} gap={24} style={style}>
       <Flexbox gap={12} padding={16} width={'100%'}>
         <ProviderCombine
           provider={identifier}
