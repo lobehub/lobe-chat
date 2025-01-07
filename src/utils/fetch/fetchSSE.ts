@@ -1,3 +1,5 @@
+import { isObject } from 'lodash-es';
+
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
 import { ChatErrorType } from '@/types/fetch';
@@ -243,7 +245,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   const textSmoothing = typeof smoothing === 'boolean' ? smoothing : smoothing?.text;
   const toolsCallingSmoothing =
     typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? true);
-  const smoothingSpeed = typeof smoothing === 'object' ? smoothing.speed : undefined;
+  const smoothingSpeed = isObject(smoothing) ? smoothing.speed : undefined;
 
   const textController = createSmoothMessage({
     onTextUpdate: (delta, text) => {

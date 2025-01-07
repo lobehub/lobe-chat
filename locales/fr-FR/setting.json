@@ -411,6 +411,7 @@
     "common": "Paramètres généraux",
     "experiment": "Expérience",
     "llm": "Modèle de langue",
+    "provider": "Fournisseur de services d'IA",
     "sync": "Synchronisation cloud",
     "system-agent": "Agent système",
     "tts": "Service vocal"
