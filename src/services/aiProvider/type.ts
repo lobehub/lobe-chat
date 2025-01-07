@@ -14,7 +14,7 @@ export interface IAiProviderService {
 
   getAiProviderList: () => Promise<any>;
 
-  getAiProviderRuntimeState: () => Promise<AiProviderRuntimeState>;
+  getAiProviderRuntimeState: (isLogin?: boolean) => Promise<AiProviderRuntimeState>;
 
   toggleProviderEnabled: (id: string, enabled: boolean) => Promise<any>;
 
