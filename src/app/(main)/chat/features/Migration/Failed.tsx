@@ -70,8 +70,10 @@ const Failed = memo<FailedProps>(({ error, state, setUpgradeStatus, setError, up
                 type: 'primary',
               }}
               onConfirm={clearLocal}
-              overlayInnerStyle={{ background: lighten(0.03, theme.colorBgElevated) }}
-              overlayStyle={{ width: 340 }}
+              styles={{
+                body: { background: lighten(0.03, theme.colorBgElevated) },
+                root: { width: 340 },
+              }}
               title={t('dbV1.clear.confirm')}
             >
               <Button size={'large'}>{t('dbV1.action.clearDB')}</Button>

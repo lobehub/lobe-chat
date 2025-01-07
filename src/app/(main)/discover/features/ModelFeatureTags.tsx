@@ -37,7 +37,12 @@ const ModelFeatureTags = memo<TagsProps>(({ children, tokens, vision, functionCa
   return (
     <Flexbox align={'center'} gap={4} horizontal wrap={'wrap'} {...rest}>
       {tokens && (
-        <Tooltip overlayStyle={{ pointerEvents: 'none' }} title={t('models.contentLength')}>
+        <Tooltip
+          styles={{
+            root: { pointerEvents: 'none' },
+          }}
+          title={t('models.contentLength')}
+        >
           <Tag bordered={false} className={styles.token} style={{ flex: 'none', margin: 0 }}>
             {formatTokenNumber(tokens)}
           </Tag>
@@ -45,7 +50,9 @@ const ModelFeatureTags = memo<TagsProps>(({ children, tokens, vision, functionCa
       )}
       {vision && (
         <Tooltip
-          overlayStyle={{ pointerEvents: 'none' }}
+          styles={{
+            root: { pointerEvents: 'none' },
+          }}
           title={t('ModelSelect.featureTag.vision', { ns: 'components' })}
         >
           <Tag
@@ -58,7 +65,9 @@ const ModelFeatureTags = memo<TagsProps>(({ children, tokens, vision, functionCa
       )}
       {functionCall && (
         <Tooltip
-          overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
+          styles={{
+            root: { maxWidth: 'unset', pointerEvents: 'none' },
+          }}
           title={t('ModelSelect.featureTag.functionCall', { ns: 'components' })}
         >
           <Tag

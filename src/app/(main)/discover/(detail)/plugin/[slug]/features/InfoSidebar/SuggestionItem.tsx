@@ -1,8 +1,8 @@
 import { Avatar } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
+import { CSSProperties, memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import { DiscoverPlugintem } from '@/types/discover';
 
@@ -30,16 +30,18 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 }));
 
 export interface SuggestionItemProps
-  extends Omit<DiscoverPlugintem, 'suggestions' | 'socialData' | 'category' | 'manifest'>,
-    FlexboxProps {}
+  extends Omit<DiscoverPlugintem, 'suggestions' | 'socialData' | 'category' | 'manifest'> {
+  className?: string;
+  style?: CSSProperties;
+}
 
-const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier, ...rest }) => {
+const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier, style }) => {
   const { avatar, title, description } = meta;
 
   const { cx, styles, theme } = useStyles();
 
   return (
-    <Flexbox className={cx(styles.container, className)} gap={12} key={identifier} {...rest}>
+    <Flexbox className={cx(styles.container, className)} gap={12} key={identifier} style={style}>
       <Flexbox align={'center'} gap={12} horizontal width={'100%'}>
         <Avatar
           alt={title}

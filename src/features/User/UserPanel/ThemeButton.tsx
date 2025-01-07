@@ -52,10 +52,12 @@ const ThemeButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement
     <Popover
       arrow={false}
       content={<Menu items={items} selectable selectedKeys={[themeMode]} />}
-      overlayInnerStyle={{
-        padding: 0,
-      }}
       placement={placement}
+      styles={{
+        body: {
+          padding: 0,
+        },
+      }}
       trigger={['click', 'hover']}
     >
       <ActionIcon

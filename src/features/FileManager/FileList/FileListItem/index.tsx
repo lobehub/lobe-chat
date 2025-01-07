@@ -162,7 +162,9 @@ const FileRenderItem = memo<FileRenderItemProps>(
             {isCreatingFileParseTask || isNull(chunkingStatus) || !chunkingStatus ? (
               <div className={isCreatingFileParseTask ? undefined : styles.hover}>
                 <Tooltip
-                  overlayStyle={{ pointerEvents: 'none' }}
+                  styles={{
+                    root: { pointerEvents: 'none' },
+                  }}
                   title={t(
                     isSupportedForChunking
                       ? 'FileManager.actions.chunkingTooltip'

@@ -1,9 +1,9 @@
 import { ModelIcon } from '@lobehub/icons';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import { DiscoverModelItem } from '@/types/discover';
 
@@ -67,17 +67,19 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
 }));
 
-export interface ModelCardProps extends DiscoverModelItem, FlexboxProps {
+export interface ModelCardProps extends DiscoverModelItem {
+  className?: string;
   showCategory?: boolean;
+  style?: CSSProperties;
 }
 
-const ModelCard = memo<ModelCardProps>(({ className, meta, identifier, ...rest }) => {
+const ModelCard = memo<ModelCardProps>(({ className, meta, identifier, style }) => {
   const { description, title, functionCall, vision, contextWindowTokens } = meta;
   const { t } = useTranslation('models');
   const { cx, styles } = useStyles();
 
   return (
-    <Flexbox className={cx(styles.container, className)} gap={24} key={identifier} {...rest}>
+    <Flexbox className={cx(styles.container, className)} gap={24} key={identifier} style={style}>
       <Flexbox
         gap={12}
         padding={16}
