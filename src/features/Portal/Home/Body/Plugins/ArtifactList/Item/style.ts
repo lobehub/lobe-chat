@@ -8,11 +8,11 @@ export const useStyles = createStyles(({ css, token }) => ({
     padding-block: 10px;
     padding-inline: 8px;
     padding-inline-end: 12px;
+    border-radius: 8px;
 
     color: ${token.colorText};
 
     background: ${token.colorBgElevated};
-    border-radius: 8px;
 
     &:hover {
       background: ${token.colorFillSecondary};
@@ -33,7 +33,6 @@ export const useStyles = createStyles(({ css, token }) => ({
 
     width: 24px;
     height: 24px;
-
     border-radius: 4px;
   `,
   tagBlue: css`

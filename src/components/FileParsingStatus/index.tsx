@@ -14,12 +14,12 @@ import EmbeddingStatus from './EmbeddingStatus';
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   errorReason: css`
     padding: 4px;
+    border-radius: 4px;
 
     font-family: monospace;
     font-size: 12px;
 
     background: ${isDarkMode ? darken(0.1, token.colorText) : lighten(0.1, token.colorText)};
-    border-radius: 4px;
   `,
 }));
 
@@ -54,7 +54,7 @@ const FileParsingStatus = memo<FileParsingStatusProps>(
       case AsyncTaskStatus.Processing: {
         return (
           <Tooltip
-            overlayStyle={{ pointerEvents: 'none' }}
+            styles={{ root: { pointerEvents: 'none' } }}
             title={t('FileParsingStatus.chunks.status.processingTip')}
           >
             <Tag
@@ -73,7 +73,7 @@ const FileParsingStatus = memo<FileParsingStatusProps>(
       case AsyncTaskStatus.Error: {
         return (
           <Tooltip
-            overlayStyle={{ maxWidth: 340, pointerEvents: 'none' }}
+            styles={{ root: { maxWidth: 340, pointerEvents: 'none' } }}
             title={
               <Flexbox gap={4}>
                 {t('FileParsingStatus.chunks.status.errorResult')}
@@ -109,7 +109,7 @@ const FileParsingStatus = memo<FileParsingStatusProps>(
           return (
             <Flexbox horizontal>
               <Tooltip
-                overlayStyle={{ pointerEvents: 'none' }}
+                styles={{ root: { pointerEvents: 'none' } }}
                 title={t('FileParsingStatus.chunks.embeddingStatus.empty')}
               >
                 <Tag

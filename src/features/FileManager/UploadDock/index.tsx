@@ -18,8 +18,8 @@ const useStyles = createStyles(({ css, token }) => {
   return {
     body: css`
       height: 400px;
-      background: ${lighten(0.05, token.colorBgLayout)};
       border-radius: 8px;
+      background: ${lighten(0.05, token.colorBgLayout)};
     `,
     container: css`
       position: fixed;
@@ -30,9 +30,9 @@ const useStyles = createStyles(({ css, token }) => {
       overflow: hidden;
 
       width: 360px;
-
       border: 1px solid ${token.colorSplit};
       border-radius: 8px;
+
       box-shadow: ${token.boxShadow};
     `,
     header: css`
@@ -40,9 +40,9 @@ const useStyles = createStyles(({ css, token }) => {
 
       padding-block: 8px;
       padding-inline: 24px 12px;
+      border-radius: 8px;
 
       background: ${token.colorBgContainer};
-      border-radius: 8px;
 
       transition: all 0.3s ease-in-out;
 
@@ -58,9 +58,9 @@ const useStyles = createStyles(({ css, token }) => {
       inset-inline: 0 1%;
 
       height: 100%;
+      border-block-end: 3px solid ${token.geekblue};
 
       background: ${token.colorFillTertiary};
-      border-block-end: 3px solid ${token.geekblue};
     `,
     title: css`
       height: 36px;

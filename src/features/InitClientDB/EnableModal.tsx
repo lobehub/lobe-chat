@@ -31,8 +31,8 @@ const useStyles = createStyles(({ css, token, isDarkMode, responsive }) => ({
   iconCtn: css`
     width: 72px;
     height: 72px;
-    background: ${isDarkMode ? token.blue1 : token.geekblue1};
     border-radius: 50%;
+    background: ${isDarkMode ? token.blue1 : token.geekblue1};
   `,
   intro: css`
     ${responsive.mobile} {

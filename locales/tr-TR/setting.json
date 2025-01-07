@@ -411,6 +411,7 @@
     "common": "Genel Ayarlar",
     "experiment": "Deney",
     "llm": "Modeller",
+    "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "sync": "Bulut Senkronizasyonu",
     "system-agent": "Sistem Asistanı",
     "tts": "Metin Seslendirme"

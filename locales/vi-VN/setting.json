@@ -411,6 +411,7 @@
     "common": "Cài đặt chung",
     "experiment": "Thử nghiệm",
     "llm": "Mô hình ngôn ngữ",
+    "provider": "Nhà cung cấp AI",
     "sync": "Đồng bộ trên đám mây",
     "system-agent": "Trợ lý hệ thống",
     "tts": "Dịch vụ giọng nói"

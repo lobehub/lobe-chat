@@ -3,11 +3,10 @@ import { Blocks, LucideLoader2 } from 'lucide-react';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
 
 import DropdownMenu from './Dropdown';
 
@@ -16,7 +15,7 @@ const Tools = memo(() => {
   const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
-  const enableFC = useUserStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
+  const enableFC = useModelSupportToolUse(model);
 
   return (
     enablePlugins && (

@@ -7,14 +7,14 @@ const useStyles = createStyles(
   ({ css, token }) => css`
     width: ${token.controlHeight}px;
     height: ${token.controlHeight}px;
+    border: 1px solid ${token.colorBorder};
+    border-radius: 8px;
 
     font-size: 16px;
     color: ${token.colorText};
     text-align: center;
 
     background: ${token.colorBgContainer};
-    border: 1px solid ${token.colorBorder};
-    border-radius: 8px;
 
     &:focus,
     &:focus-visible {
