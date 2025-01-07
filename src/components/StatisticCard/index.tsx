@@ -16,16 +16,16 @@ const useStyles = createStyles(
       border-radius: ${token.borderRadiusLG}px;
 
       ${responsive.mobile} {
-        background: ${token.colorBgContainer};
         border: none;
         border-radius: 0;
+        background: ${token.colorBgContainer};
       }
     `,
     container: css`
       ${responsive.mobile} {
-        background: ${token.colorBgContainer};
         border: none;
         border-radius: 0;
+        background: ${token.colorBgContainer};
       }
 
       .${prefixCls}-pro-card-title {
@@ -56,7 +56,6 @@ const useStyles = createStyles(
 
           margin: 0;
           padding: 0;
-
           border-end-start-radius: ${token.borderRadiusLG}px;
           border-end-end-radius: ${token.borderRadiusLG}px;
         }
@@ -132,6 +131,7 @@ const useStyles = createStyles(
 
         width: 66%;
         height: 50%;
+        border-radius: 50%;
 
         opacity: ${isDarkMode ? 1 : 0.33};
         background-image: linear-gradient(
@@ -143,7 +143,6 @@ const useStyles = createStyles(
         background-position: center left;
         background-size: contain;
         filter: blur(32px);
-        border-radius: 50%;
       }
 
       > div {
@@ -151,12 +150,12 @@ const useStyles = createStyles(
       }
     `,
     icon: css`
-      background: ${token.colorFillSecondary};
       border-radius: ${token.borderRadius}px;
+      background: ${token.colorFillSecondary};
     `,
     pure: css`
-      background: transparent !important;
       border: none !important;
+      background: transparent !important;
     `,
   }),
 );

@@ -4,8 +4,8 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
   container: css`
-    background: ${token.colorFillTertiary};
     border-radius: ${token.borderRadius}px;
+    background: ${token.colorFillTertiary};
 
     .${responsive.mobile} {
       width: 100%;

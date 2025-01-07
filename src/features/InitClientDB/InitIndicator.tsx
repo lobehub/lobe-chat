@@ -17,8 +17,8 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
   bg: css`
     padding-block: 8px;
     padding-inline: 8px 32px;
-    background: ${token.colorText};
     border-radius: 40px;
+    background: ${token.colorText};
   `,
   container: css`
     position: fixed;

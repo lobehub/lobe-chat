@@ -4,10 +4,9 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
+import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
 
 import PluginTag from '../../../features/PluginTag';
 import KnowledgeTag from './KnowledgeTag';
@@ -20,7 +19,7 @@ const TitleTags = memo(() => {
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins, isEqual);
   const enabledKnowledge = useAgentStore(agentSelectors.currentEnabledKnowledge, isEqual);
 
-  const showPlugin = useUserStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
+  const showPlugin = useModelSupportToolUse(model);
 
   return (
     <Flexbox align={'center'} horizontal>

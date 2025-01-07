@@ -13,8 +13,8 @@ const useStyles = createStyles(({ token, css }) => ({
   container: css`
     padding-block: 0 16px;
     padding-inline: 12px;
-    background: ${token.colorBgContainer};
     border-inline-end: 1px solid ${token.colorBorder};
+    background: ${token.colorBgContainer};
   `,
 }));
 

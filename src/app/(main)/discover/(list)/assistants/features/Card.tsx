@@ -4,8 +4,8 @@ import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
 import dynamic from 'next/dynamic';
 import qs from 'query-string';
-import { memo } from 'react';
-import { Center, Flexbox, FlexboxProps } from 'react-layout-kit';
+import { CSSProperties, memo } from 'react';
+import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { DiscoverAssistantItem } from '@/types/discover';
@@ -34,9 +34,9 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
     height: 100%;
     min-height: 162px;
+    border-radius: ${token.borderRadiusLG}px;
 
     background: ${token.colorBgContainer};
-    border-radius: ${token.borderRadiusLG}px;
     box-shadow: 0 0 1px 1px ${isDarkMode ? token.colorFillQuaternary : token.colorFillSecondary}
       inset;
 
@@ -62,14 +62,15 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 }));
 
 export interface AssistantCardProps
-  extends Omit<DiscoverAssistantItem, 'suggestions' | 'socialData' | 'config'>,
-    Omit<FlexboxProps, 'children'> {
+  extends Omit<DiscoverAssistantItem, 'suggestions' | 'socialData' | 'config'> {
+  className?: string;
   showCategory?: boolean;
+  style?: CSSProperties;
   variant?: 'default' | 'compact';
 }
 
 const AssistantCard = memo<AssistantCardProps>(
-  ({ showCategory, className, meta, createdAt, author, variant, ...rest }) => {
+  ({ showCategory, className, meta, createdAt, author, variant, style }) => {
     const { avatar, title, description, tags = [], category } = meta;
     const { cx, styles, theme } = useStyles();
     const categoryItem = useCategoryItem(category, 12);
@@ -88,7 +89,7 @@ const AssistantCard = memo<AssistantCardProps>(
     );
 
     return (
-      <Flexbox className={cx(styles.container, className)} gap={24} {...rest}>
+      <Flexbox className={cx(styles.container, className)} gap={24} style={style}>
         {!isCompact && <CardBanner avatar={avatar} />}
         <Flexbox gap={12} padding={16}>
           <Flexbox

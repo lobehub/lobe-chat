@@ -6,8 +6,8 @@ import { ExampleTopic } from '@/types/discover';
 
 const useStyles = createStyles(({ css, token }) => ({
   active: css`
-    background: ${token.colorBgElevated};
     border-inline-start: 4px solid ${token.colorFill};
+    background: ${token.colorBgElevated};
     box-shadow: 0 0 0 1px ${token.colorFillSecondary} inset;
   `,
   container: css`
@@ -20,15 +20,16 @@ const useStyles = createStyles(({ css, token }) => ({
   item: css`
     cursor: pointer;
 
-    background: ${token.colorFillTertiary};
     border-inline-start: 4px solid transparent;
     border-radius: ${token.borderRadiusLG}px;
+
+    background: ${token.colorFillTertiary};
 
     transition: all 0.2s ${token.motionEaseInOut};
 
     &:hover {
-      background: ${token.colorBgElevated};
       border-inline-start: 4px solid ${token.colorFill};
+      background: ${token.colorBgElevated};
       box-shadow: 0 0 0 1px ${token.colorFillSecondary} inset;
     }
   `,

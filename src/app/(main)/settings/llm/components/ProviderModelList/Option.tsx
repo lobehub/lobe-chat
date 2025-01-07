@@ -51,9 +51,9 @@ const OptionRender = memo<OptionRenderProps>(({ displayName, id, provider, isAzu
       </Flexbox>
       {removed && (
         <Tooltip
-          overlayStyle={{ maxWidth: 300 }}
           placement={'top'}
           style={{ pointerEvents: 'none' }}
+          styles={{ root: { maxWidth: 300 } }}
           title={t('ModelSelect.removed')}
         >
           <ActionIcon icon={Recycle} style={{ color: theme.colorWarning }} />
