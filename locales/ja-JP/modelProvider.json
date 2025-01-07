@@ -63,6 +63,44 @@
       "title": "Cloudflare アカウント ID / API アドレス"
     }
   },
+  "createNewAiProvider": {
+    "apiKey": {
+      "placeholder": "あなたの API キーを入力してください",
+      "required": "あなたの API キーを入力してください",
+      "title": "API キー"
+    },
+    "basicTitle": "基本情報",
+    "configTitle": "設定情報",
+    "confirm": "新規作成",
+    "createSuccess": "新規作成に成功しました",
+    "description": {
+      "placeholder": "サービスプロバイダーの紹介（任意）",
+      "title": "サービスプロバイダーの紹介"
+    },
+    "id": {
+      "placeholder": "小文字で入力してください（例: openai）。作成後は変更できません",
+      "required": "サービスプロバイダー ID を入力してください",
+      "title": "サービスプロバイダー ID"
+    },
+    "logo": {
+      "required": "正しいサービスプロバイダーのロゴをアップロードしてください",
+      "title": "サービスプロバイダーのロゴ"
+    },
+    "name": {
+      "placeholder": "サービスプロバイダーの表示名を入力してください",
+      "required": "サービスプロバイダー名を入力してください",
+      "title": "サービスプロバイダー名"
+    },
+    "proxyUrl": {
+      "placeholder": "リクエストアドレスを入力してください。未入力の場合は SDK に対応するリクエストアドレスが使用されます",
+      "title": "プロキシアドレス"
+    },
+    "sdkType": {
+      "required": "SDK タイプを選択してください",
+      "title": "リクエスト形式"
+    },
+    "title": "カスタム AI サービスプロバイダーの作成"
+  },
   "github": {
     "personalAccessToken": {
       "desc": "あなたのGithub PATを入力してください。[こちら](https://github.com/settings/tokens)をクリックして作成します",
@@ -76,6 +114,23 @@
       "placeholder": "hf_xxxxxxxxx",
       "title": "HuggingFace トークン"
     }
+  },
+  "list": {
+    "title": {
+      "disabled": "サービスプロバイダーは無効です",
+      "enabled": "サービスプロバイダーは有効です"
+    }
+  },
+  "menu": {
+    "addCustomProvider": "カスタムサービスプロバイダーを追加",
+    "all": "すべて",
+    "list": {
+      "disabled": "未使用",
+      "enabled": "使用中"
+    },
+    "notFound": "検索結果が見つかりません",
+    "searchProviders": "サービスプロバイダーを検索...",
+    "sort": "カスタムソート"
   },
   "ollama": {
     "checker": {
@@ -130,6 +185,127 @@
       "starting": "ダウンロードを開始しています...",
       "title": "指定されたOllamaモデルをダウンロード"
     }
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "あなたのキーとプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムを使用して暗号化されます",
+      "apiKey": {
+        "desc": "あなたの {{name}} API キーを入力してください",
+        "placeholder": "{{name}} API キー",
+        "title": "API キー"
+      },
+      "baseURL": {
+        "desc": "http(s):// を含める必要があります",
+        "placeholder": "https://your-proxy-url.com/v1",
+        "title": "API プロキシアドレス"
+      },
+      "checker": {
+        "button": "チェック",
+        "desc": "API キーとプロキシアドレスが正しく入力されているかテストします",
+        "pass": "チェックに合格しました",
+        "title": "接続性チェック"
+      },
+      "fetchOnClient": {
+        "desc": "クライアントリクエストモードはブラウザから直接セッションリクエストを発起し、応答速度を向上させます",
+        "title": "クライアントリクエストモードを使用"
+      },
+      "helpDoc": "設定ガイド",
+      "waitingForMore": "さらに多くのモデルが <1>接続予定</1> です。お楽しみに"
+    },
+    "createNew": {
+      "title": "カスタム AI モデルの作成"
+    },
+    "item": {
+      "config": "モデルを設定",
+      "customModelCards": {
+        "addNew": "{{id}} モデルを作成して追加",
+        "confirmDelete": "このカスタムモデルを削除しようとしています。削除後は復元できませんので、慎重に操作してください。"
+      },
+      "delete": {
+        "confirm": "モデル {{displayName}} を削除してもよろしいですか？",
+        "success": "削除に成功しました",
+        "title": "モデルを削除"
+      },
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Azure OpenAI で実際にリクエストされるフィールド",
+          "placeholder": "Azure でのモデルデプロイ名を入力してください",
+          "title": "モデルデプロイ名"
+        },
+        "displayName": {
+          "placeholder": "モデルの表示名を入力してください（例: ChatGPT、GPT-4 など）",
+          "title": "モデル表示名"
+        },
+        "files": {
+          "extra": "現在のファイルアップロード実装は一つのハック手法に過ぎず、自己責任での試行に限られます。完全なファイルアップロード機能は今後の実装をお待ちください",
+          "title": "ファイルアップロードをサポート"
+        },
+        "functionCall": {
+          "extra": "この設定はアプリ内の関数呼び出し機能のみを有効にします。関数呼び出しのサポートはモデル自体に依存しますので、そのモデルの関数呼び出し機能の可用性を自分でテストしてください",
+          "title": "関数呼び出しをサポート"
+        },
+        "id": {
+          "extra": "モデルラベルとして表示されます",
+          "placeholder": "モデル ID を入力してください（例: gpt-4-turbo-preview または claude-2.1）",
+          "title": "モデル ID"
+        },
+        "modalTitle": "カスタムモデル設定",
+        "tokens": {
+          "title": "最大トークン数",
+          "unlimited": "無制限"
+        },
+        "vision": {
+          "extra": "この設定はアプリ内の画像アップロード設定のみを有効にします。認識のサポートはモデル自体に依存しますので、そのモデルの視覚認識機能の可用性を自分でテストしてください",
+          "title": "視覚認識をサポート"
+        }
+      },
+      "pricing": {
+        "image": "${{amount}}/画像",
+        "inputCharts": "${{amount}}/M 文字",
+        "inputMinutes": "${{amount}}/分",
+        "inputTokens": "入力 ${{amount}}/M",
+        "outputTokens": "出力 ${{amount}}/M"
+      },
+      "releasedAt": "リリース日: {{releasedAt}}"
+    },
+    "list": {
+      "addNew": "モデルを追加",
+      "disabled": "無効",
+      "empty": {
+        "desc": "カスタムモデルを作成するか、モデルを取得してから使用を開始してください",
+        "title": "利用可能なモデルはありません"
+      },
+      "enabled": "有効",
+      "enabledActions": {
+        "disableAll": "すべて無効にする",
+        "enableAll": "すべて有効にする",
+        "sort": "カスタムモデルの並べ替え"
+      },
+      "enabledEmpty": "有効なモデルはありません。下のリストからお気に入りのモデルを有効にしてください〜",
+      "fetcher": {
+        "clear": "取得したモデルをクリア",
+        "fetch": "モデルリストを取得",
+        "fetching": "モデルリストを取得中...",
+        "latestTime": "最終更新日時：{{time}}",
+        "noLatestTime": "まだリストを取得していません"
+      },
+      "search": "モデルを検索...",
+      "searchResult": "{{count}} 個のモデルが見つかりました",
+      "title": "モデルリスト",
+      "total": "利用可能なモデルは合計 {{count}} 件です"
+    },
+    "searchNotFound": "検索結果が見つかりませんでした"
+  },
+  "sortModal": {
+    "success": "ソートが更新されました",
+    "title": "カスタムソート",
+    "update": "更新"
+  },
+  "updateAiProvider": {
+    "confirmDelete": "この AI サービスプロバイダーを削除しようとしています。削除後は復元できません。削除してもよろしいですか？",
+    "deleteSuccess": "削除に成功しました",
+    "tooltip": "サービスプロバイダーの基本設定を更新",
+    "updateSuccess": "更新に成功しました"
   },
   "wenxin": {
     "accessKey": {

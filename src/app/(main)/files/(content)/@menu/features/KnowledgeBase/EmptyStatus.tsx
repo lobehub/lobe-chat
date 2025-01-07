@@ -16,8 +16,8 @@ const useStyles = createStyles(({ css, token }) => ({
     kbd {
       margin-inline: 2px;
       padding-inline: 6px;
-      background: ${token.colorFillTertiary};
       border-radius: 4px;
+      background: ${token.colorFillTertiary};
     }
   `,
 }));

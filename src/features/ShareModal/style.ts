@@ -8,10 +8,10 @@ export const useContainerStyles = createStyles(({ css, token, stylish, cx, respo
 
       width: 100%;
       max-height: 70dvh;
-
-      background: ${token.colorBgLayout};
       border: 1px solid ${token.colorBorder};
       border-radius: ${token.borderRadiusLG}px;
+
+      background: ${token.colorBgLayout};
 
       * {
         pointer-events: none;

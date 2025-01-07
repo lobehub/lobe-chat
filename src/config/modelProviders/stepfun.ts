@@ -129,7 +129,9 @@ const Stepfun: ModelProviderCard = {
   // after test, currently https://api.stepfun.com/v1/chat/completions has the CORS issue
   // So we should close the browser request mode
   disableBrowserRequest: true,
+
   id: 'stepfun',
+
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.stepfun.com/docs/llm/text',
   name: 'Stepfun',

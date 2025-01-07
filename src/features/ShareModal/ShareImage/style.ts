@@ -30,14 +30,14 @@ export const useStyles = createStyles(({ css, token, cx }, withBackground: boole
   header: css`
     margin-block-end: -24px;
     padding: 16px;
-    background: ${token.colorBgContainer};
     border-block-end: 1px solid ${token.colorBorder};
+    background: ${token.colorBgContainer};
   `,
   role: css`
     margin-block-start: 12px;
     padding-block-start: 12px;
-    opacity: 0.75;
     border-block-start: 1px dashed ${token.colorBorderSecondary};
+    opacity: 0.75;
 
     * {
       font-size: 12px !important;

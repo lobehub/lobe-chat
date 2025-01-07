@@ -19,9 +19,9 @@ const useStyles = createStyles(
 
     margin-block: 16px 32px;
     padding: 16px;
+    border-radius: ${token.borderRadiusLG}px;
 
     background: ${token.colorFillTertiary};
-    border-radius: ${token.borderRadiusLG}px;
   `,
 );
 
