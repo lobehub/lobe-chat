@@ -264,7 +264,7 @@
     "@types/node": "^20.17.12",
     "@types/numeral": "^2.0.5",
     "@types/pg": "^8.11.10",
-    "@types/react": "18.3.13",
+    "@types/react": "19.0.3",
     "@types/react-dom": "^19.0.2",
     "@types/rtl-detect": "^1.0.3",
     "@types/semver": "^7.5.8",
