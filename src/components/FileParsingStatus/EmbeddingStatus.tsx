@@ -37,7 +37,9 @@ const EmbeddingStatus = memo<EmbeddingStatusProps>(
         return (
           <Flexbox horizontal>
             <Tooltip
-              overlayStyle={{ pointerEvents: 'none' }}
+              styles={{
+                root: { pointerEvents: 'none' },
+              }}
               title={t('FileParsingStatus.chunks.embeddingStatus.processing')}
             >
               <Tag
@@ -57,7 +59,9 @@ const EmbeddingStatus = memo<EmbeddingStatusProps>(
       case AsyncTaskStatus.Error: {
         return (
           <Tooltip
-            overlayStyle={{ maxWidth: 340, pointerEvents: 'none' }}
+            styles={{
+              root: { maxWidth: 340, pointerEvents: 'none' },
+            }}
             title={
               <Flexbox gap={4}>
                 {t('FileParsingStatus.chunks.embeddingStatus.errorResult')}
@@ -91,7 +95,7 @@ const EmbeddingStatus = memo<EmbeddingStatusProps>(
         return (
           <Flexbox horizontal>
             <Tooltip
-              overlayStyle={{ pointerEvents: 'none' }}
+              styles={{ root: { pointerEvents: 'none' } }}
               title={t('FileParsingStatus.chunks.embeddingStatus.success')}
             >
               <Tag

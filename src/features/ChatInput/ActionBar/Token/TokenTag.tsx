@@ -75,7 +75,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
       <Flexbox align={'center'} gap={4} horizontal justify={'space-between'} width={'100%'}>
         <div style={{ color: theme.colorTextDescription }}>{t('tokenDetails.title')}</div>
         <Tooltip
-          overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
+          styles={{ root: { maxWidth: 'unset', pointerEvents: 'none' } }}
           title={t('ModelSelect.featureTag.tokens', {
             ns: 'components',
             tokens: numeral(maxTokens).format('0,0'),

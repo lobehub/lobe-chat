@@ -105,7 +105,7 @@ const Page = async (props: Props) => {
         actions={<Actions data={data} identifier={identifier} providerData={providerData} />}
         header={<Header data={data} identifier={identifier} mobile={mobile} />}
         mobile={mobile}
-        sidebar={<InfoSidebar data={data} identifier={identifier} mobile={mobile} />}
+        sidebar={<InfoSidebar data={data} identifier={identifier} />}
         /* ↓ cloud slot ↓ */
 
         /* ↑ cloud slot ↑ */
