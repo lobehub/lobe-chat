@@ -27,12 +27,10 @@ export const LobeGiteeAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as GiteeAIModelCard;
 
       return {
-        abilities: {
-          functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('qwen2.5-coder'),
-          vision: visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
-        },
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('qwen2.5-coder'),
         id: model.id,
+        vision: visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
       };
     },
   },

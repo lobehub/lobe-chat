@@ -35,14 +35,12 @@ export const LobeMistralAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as MistralModelCard;
 
       return {
-        abilities: {
-          functionCall: model.capabilities.function_calling,
-          vision: model.capabilities.vision,
-        },
         contextWindowTokens: model.max_context_length,
         description: model.description,
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        functionCall: model.capabilities.function_calling,
         id: model.id,
+        vision: model.capabilities.vision,
       };
     },
   },

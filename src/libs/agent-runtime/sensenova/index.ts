@@ -45,12 +45,10 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
     return modelList
       .map((model) => {
         return {
-          abilities: {
-            functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
-            vision: model.id.toLowerCase().includes('vision'),
-          },
           enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+          functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
           id: model.id,
+          vision: model.id.toLowerCase().includes('vision'),
         };
       })
       .filter(Boolean) as ChatModelCard[];

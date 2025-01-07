@@ -38,12 +38,10 @@ export const LobeBaichuanAI = LobeOpenAICompatibleFactory({
     return modelList
       .map((model) => {
         return {
-          abilities: {
-            functionCall: model.function_call,
-          },
           contextWindowTokens: model.max_input_length,
           displayName: model.model_show_name,
           enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.model.endsWith(m.id))?.enabled || false,
+          functionCall: model.function_call,
           id: model.model,
           maxTokens: model.max_tokens,
         };

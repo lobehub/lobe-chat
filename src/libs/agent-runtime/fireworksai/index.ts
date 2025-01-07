@@ -20,13 +20,11 @@ export const LobeFireworksAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as FireworksAIModelCard;
 
       return {
-        abilities: {
-          functionCall: model.supports_tools,
-          vision: model.supports_image_input,
-        },
         contextWindowTokens: model.context_length,
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        functionCall: model.supports_tools,
         id: model.id,
+        vision: model.supports_image_input,
       };
     },
   },

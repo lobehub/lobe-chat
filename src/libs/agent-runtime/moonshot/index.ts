@@ -29,10 +29,8 @@ export const LobeMoonshotAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as MoonshotModelCard;
 
       return {
-        abilities: {
-          functionCall: true,
-        },
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        functionCall: true,
         id: model.id,
       };
     },

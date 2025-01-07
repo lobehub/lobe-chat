@@ -41,12 +41,10 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as SiliconCloudModelCard;
 
       return {
-        abilities: {
-          functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
-          vision: visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
-        },
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         id: model.id,
+        vision: visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
       };
     },
   },

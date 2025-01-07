@@ -25,12 +25,10 @@ export const LobeStepfunAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as StepfunModelCard;
 
       return {
-        abilities: {
-          functionCall: model.id !== 'step-1.5v-mini',
-          vision: model.id.toLowerCase().includes('v'),
-        },
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        functionCall: model.id !== 'step-1.5v-mini',
         id: model.id,
+        vision: model.id.toLowerCase().includes('v'),
       };
     },
   },
