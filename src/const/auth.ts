@@ -28,7 +28,7 @@ export interface JWTPayload {
   /**
    * Represents the endpoint of provider
    */
-  endpoint?: string;
+  baseURL?: string;
 
   azureApiVersion?: string;
 
@@ -41,9 +41,6 @@ export interface JWTPayload {
 
   wenxinAccessKey?: string;
   wenxinSecretKey?: string;
-
-  sensenovaAccessKeyID?: string;
-  sensenovaAccessKeySecret?: string;
 
   /**
    * user id

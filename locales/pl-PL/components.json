@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "Wróć"
   },
+  "MaxTokenSlider": {
+    "unlimited": "Bez ograniczeń"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Niestandardowy model, domyślnie obsługujący zarówno wywołania funkcji, jak i rozpoznawanie wizualne. Proszę zweryfikować możliwość użycia tych funkcji w praktyce.",

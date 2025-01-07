@@ -4,6 +4,7 @@ import { ModelProviderCard } from '@/types/llm';
 const Baichuan: ModelProviderCard = {
   chatModels: [
     {
+      contextWindowTokens: 32_768,
       description:
         '模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。',
       displayName: 'Baichuan 4',
@@ -16,9 +17,9 @@ const Baichuan: ModelProviderCard = {
         input: 100,
         output: 100,
       },
-      tokens: 32_768,
     },
     {
+      contextWindowTokens: 32_768,
       description:
         '模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。',
       displayName: 'Baichuan 4 Turbo',
@@ -31,9 +32,9 @@ const Baichuan: ModelProviderCard = {
         input: 15,
         output: 15,
       },
-      tokens: 32_768,
     },
     {
+      contextWindowTokens: 32_768,
       description:
         '模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。',
       displayName: 'Baichuan 4 Air',
@@ -46,9 +47,9 @@ const Baichuan: ModelProviderCard = {
         input: 0.98,
         output: 0.98,
       },
-      tokens: 32_768,
     },
     {
+      contextWindowTokens: 32_768,
       description:
         '针对企业高频场景优化，效果大幅提升，高性价比。相对于Baichuan2模型，内容创作提升20%，知识问答提升17%， 角色扮演能力提升40%。整体效果比GPT3.5更优。',
       displayName: 'Baichuan 3 Turbo',
@@ -60,9 +61,9 @@ const Baichuan: ModelProviderCard = {
         input: 12,
         output: 12,
       },
-      tokens: 32_768,
     },
     {
+      contextWindowTokens: 128_000,
       description:
         '具备 128K 超长上下文窗口，针对企业高频场景优化，效果大幅提升，高性价比。相对于Baichuan2模型，内容创作提升20%，知识问答提升17%， 角色扮演能力提升40%。整体效果比GPT3.5更优。',
       displayName: 'Baichuan 3 Turbo 128k',
@@ -73,9 +74,9 @@ const Baichuan: ModelProviderCard = {
         input: 24,
         output: 24,
       },
-      tokens: 128_000,
     },
     {
+      contextWindowTokens: 32_768,
       description:
         '采用搜索增强技术实现大模型与领域知识、全网知识的全面链接。支持PDF、Word等多种文档上传及网址输入，信息获取及时、全面，输出结果准确、专业。',
       displayName: 'Baichuan 2 Turbo',
@@ -86,7 +87,6 @@ const Baichuan: ModelProviderCard = {
         input: 8,
         output: 8,
       },
-      tokens: 32_768,
     },
   ],
   checkModel: 'Baichuan3-Turbo',
@@ -96,6 +96,14 @@ const Baichuan: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.baichuan-ai.com/price',
   name: 'Baichuan',
+  settings: {
+    sdkType: 'openai',
+    showModelFetcher: true,
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
+  },
   smoothing: {
     speed: 2,
     text: true,

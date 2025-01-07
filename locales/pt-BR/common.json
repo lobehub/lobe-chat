@@ -9,7 +9,21 @@
       "title": "Bem-vindo para experimentar {{name}}"
     }
   },
-  "appInitializing": "Aplicativo iniciando...",
+  "appLoading": {
+    "appIdle": "Preparando para iniciar",
+    "appInitializing": "Iniciando o aplicativo...",
+    "failed": "Desculpe, a inicialização do aplicativo falhou. Por favor, verifique os detalhes para solucionar o problema.",
+    "finished": "Inicialização do banco de dados concluída",
+    "goToChat": "Carregando página de conversa...",
+    "initAuth": "Inicializando serviço de autenticação...",
+    "initUser": "Inicializando estado do usuário...",
+    "initializing": "Inicializando banco de dados PGlite...",
+    "loadingDependencies": "Inicializando dependências...",
+    "loadingWasm": "Carregando módulo WASM...",
+    "migrating": "Executando migração de tabelas de dados...",
+    "ready": "Banco de dados pronto",
+    "showDetail": "Ver detalhes"
+  },
   "autoGenerate": "Auto completar",
   "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
   "autoGenerateTooltipDisabled": "Por favor, preencha a dica antes de usar a função de preenchimento automático",
@@ -20,6 +34,54 @@
   "branchingDisable": "A funcionalidade de \"subtópico\" está disponível apenas na versão do servidor. Se precisar dessa funcionalidade, mude para o modo de implantação no servidor ou use o LobeChat Cloud.",
   "cancel": "Cancelar",
   "changelog": "Registro de alterações",
+  "clientDB": {
+    "autoInit": {
+      "title": "Inicializando o banco de dados PGlite"
+    },
+    "error": {
+      "desc": "Lamentamos, ocorreu uma exceção durante o processo de inicialização do banco de dados Pglite. Por favor, clique no botão para tentar novamente. Se o erro persistir após várias tentativas, por favor <1>envie um problema</1> e nós iremos ajudá-lo a resolver o quanto antes",
+      "detail": "Causa do erro: [{{type}}] {{message}}. Detalhes abaixo:",
+      "retry": "Tentar Novamente",
+      "title": "Falha na inicialização do banco de dados"
+    },
+    "initing": {
+      "error": "Ocorreu um erro, por favor tente novamente",
+      "idle": "Aguardando inicialização...",
+      "initializing": "Inicializando...",
+      "loadingDependencies": "Carregando dependências...",
+      "loadingWasmModule": "Carregando módulo WASM...",
+      "migrating": "Executando migração de tabela de dados...",
+      "ready": "Banco de dados pronto"
+    },
+    "modal": {
+      "desc": "Ative o banco de dados cliente PGlite para armazenar dados de chat de forma persistente no seu navegador e usar recursos avançados como a base de conhecimento",
+      "enable": "Ativar agora",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Consolide seu repositório de conhecimento pessoal e inicie conversas sobre ele com seu assistente de forma fácil (em breve)",
+          "title": "Suporte a conversas sobre o repositório de conhecimento, ative seu segundo cérebro"
+        },
+        "localFirst": {
+          "desc": "Os dados do chat são armazenados completamente no navegador, seus dados estão sempre sob seu controle.",
+          "title": "Prioridade local, privacidade em primeiro lugar"
+        },
+        "pglite": {
+          "desc": "Construído com base no PGlite, suporte nativo para recursos avançados de IA (busca vetorial)",
+          "title": "Nova geração de arquitetura de armazenamento de cliente"
+        }
+      },
+      "init": {
+        "desc": "Inicializando o banco de dados, pode levar de 5 a 30 segundos dependendo da rede",
+        "title": "Inicializando o banco de dados PGlite"
+      },
+      "title": "Ativar banco de dados cliente"
+    },
+    "ready": {
+      "button": "Usar agora",
+      "desc": "Pronto para uso",
+      "title": "Banco de dados PGlite pronto"
+    }
+  },
   "close": "Fechar",
   "contact": "Entre em contato",
   "copy": "Copiar",
@@ -156,6 +218,7 @@
   "pinOff": "Desafixar",
   "privacy": "Política de Privacidade",
   "regenerate": "Regenerar",
+  "releaseNotes": "Notas da versão",
   "rename": "Renomear",
   "reset": "Redefinir",
   "retry": "Tentar novamente",

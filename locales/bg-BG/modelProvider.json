@@ -88,10 +88,10 @@
       "title": "Имена на персонализирани модели"
     },
     "download": {
-      "desc": "Ollama is downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "Ollama изтегля този модел, моля, не затваряйте тази страница. При повторно изтегляне ще продължи от мястото, на което е прекъснато",
+      "remainingTime": "Оставащо време",
+      "speed": "Скорост на изтегляне",
+      "title": "Изтегляне на модел {{model}} "
     },
     "endpoint": {
       "desc": "Въведете адрес на Ollama интерфейсния прокси, оставете празно, ако локално не е указано специално",
@@ -123,28 +123,12 @@
     },
     "title": "Ollama",
     "unlock": {
-      "cancel": "Cancel Download",
-      "confirm": "Download",
-      "description": "Enter your Ollama model tag to continue the session",
+      "cancel": "Отмяна на изтеглянето",
+      "confirm": "Изтегляне",
+      "description": "Въведете етикета на вашия Ollama модел, за да продължите сесията",
       "downloaded": "{{completed}} / {{total}}",
-      "starting": "Starting download...",
-      "title": "Download specified Ollama model"
-    }
-  },
-  "sensenova": {
-    "sensenovaAccessKeyID": {
-      "desc": "Въведете SenseNova Access Key ID",
-      "placeholder": "SenseNova Access Key ID",
-      "title": "Access Key ID"
-    },
-    "sensenovaAccessKeySecret": {
-      "desc": "Въведете SenseNova Access Key Secret",
-      "placeholder": "SenseNova Access Key Secret",
-      "title": "Access Key Secret"
-    },
-    "unlock": {
-      "description": "Въведете вашия Access Key ID / Access Key Secret, за да започнете сесия. Приложението няма да записва вашите конфигурации за удостоверяване",
-      "title": "Използвайте персонализирана информация за удостоверяване на SenseNova"
+      "starting": "Започва изтеглянето...",
+      "title": "Изтегляне на зададения Ollama модел"
     }
   },
   "wenxin": {

@@ -131,7 +131,7 @@ describe('getProviderAuthPayload', () => {
     expect(payload).toEqual({
       apiKey: mockAzureConfig.apiKey,
       azureApiVersion: mockAzureConfig.apiVersion,
-      endpoint: mockAzureConfig.endpoint,
+      baseURL: mockAzureConfig.endpoint,
     });
   });
 
@@ -144,7 +144,7 @@ describe('getProviderAuthPayload', () => {
 
     const payload = getProviderAuthPayload(ModelProvider.Ollama);
     expect(payload).toEqual({
-      endpoint: mockOllamaProxyUrl,
+      baseURL: mockOllamaProxyUrl,
     });
   });
 
@@ -152,8 +152,7 @@ describe('getProviderAuthPayload', () => {
     // 假设的 OpenAI 配置
     const mockOpenAIConfig = {
       apiKey: 'openai-api-key',
-      baseURL: 'openai-baseURL',
-      endpoint: 'openai-endpoint',
+      baseURL: 'openai-endpoint',
       useAzure: true,
       azureApiVersion: 'openai-azure-api-version',
     };
@@ -164,7 +163,7 @@ describe('getProviderAuthPayload', () => {
     const payload = getProviderAuthPayload(ModelProvider.OpenAI);
     expect(payload).toEqual({
       apiKey: mockOpenAIConfig.apiKey,
-      endpoint: mockOpenAIConfig.baseURL,
+      baseURL: mockOpenAIConfig.baseURL,
     });
   });
 
@@ -181,7 +180,7 @@ describe('getProviderAuthPayload', () => {
     const payload = getProviderAuthPayload(ModelProvider.Stepfun);
     expect(payload).toEqual({
       apiKey: mockOpenAIConfig.apiKey,
-      endpoint: mockOpenAIConfig.baseURL,
+      baseURL: mockOpenAIConfig.baseURL,
     });
   });
 

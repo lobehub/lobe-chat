@@ -88,10 +88,10 @@
       "title": "Nom du modèle personnalisé"
     },
     "download": {
-      "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "Ollama est en train de télécharger ce modèle, veuillez essayer de ne pas fermer cette page. Le téléchargement reprendra à l'endroit où il a été interrompu.",
+      "remainingTime": "Temps restant",
+      "speed": "Vitesse de téléchargement",
+      "title": "Téléchargement du modèle {{model}} en cours"
     },
     "endpoint": {
       "desc": "Saisissez l'adresse du proxy Ollama, laissez vide si non spécifié localement",
@@ -99,52 +99,36 @@
     },
     "setup": {
       "cors": {
-        "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",
+        "description": "En raison des restrictions de sécurité du navigateur, vous devez configurer CORS pour Ollama afin de l'utiliser correctement.",
         "linux": {
-          "env": "Add `Environment` under [Service] section, and set the OLLAMA_ORIGINS environment variable:",
-          "reboot": "Reload systemd and restart Ollama.",
-          "systemd": "Invoke systemd to edit the ollama service:"
+          "env": "Ajoutez `Environment` sous la section [Service], en ajoutant la variable d'environnement OLLAMA_ORIGINS :",
+          "reboot": "Rechargez systemd et redémarrez Ollama",
+          "systemd": "Appelez systemd pour éditer le service ollama :"
         },
-        "macos": "Open the Terminal application, paste the following command, and press Enter.",
-        "reboot": "Restart the Ollama service after the execution is complete.",
-        "title": "Configure Ollama for Cross-Origin Access",
-        "windows": "On Windows, go to 'Control Panel' and edit system environment variables. Create a new environment variable named 'OLLAMA_ORIGINS' for your user account, set the value to '*', and click 'OK/Apply' to save."
+        "macos": "Veuillez ouvrir l'application « Terminal » et coller la commande suivante, puis appuyez sur Entrée pour l'exécuter.",
+        "reboot": "Veuillez redémarrer le service Ollama après l'exécution.",
+        "title": "Configurer Ollama pour autoriser l'accès CORS",
+        "windows": "Sous Windows, cliquez sur « Panneau de configuration », puis accédez à l'édition des variables d'environnement système. Créez une nouvelle variable d'environnement nommée « OLLAMA_ORIGINS » pour votre compte utilisateur, avec la valeur *, puis cliquez sur « OK/Appliquer » pour enregistrer."
       },
       "install": {
-        "description": "Veuillez vous assurer que vous avez activé Ollama. Si vous n'avez pas encore téléchargé Ollama, veuillez vous rendre sur le site officiel pour le <1>télécharger</1>.",
-        "docker": "If you prefer using Docker, Ollama also provides an official Docker image. You can pull it using the following command:",
+        "description": "Veuillez vous assurer que vous avez démarré Ollama. Si vous n'avez pas téléchargé Ollama, veuillez vous rendre sur le site officiel <1>pour le télécharger</1>.",
+        "docker": "Si vous préférez utiliser Docker, Ollama propose également une image Docker officielle que vous pouvez tirer avec la commande suivante :",
         "linux": {
-          "command": "Install using the following command:",
-          "manual": "Alternatively, you can refer to the <1>Linux Manual Installation Guide</1> for manual installation."
+          "command": "Installez avec la commande suivante :",
+          "manual": "Ou, vous pouvez également consulter le <1>guide d'installation manuelle pour Linux</1> pour l'installer vous-même."
         },
-        "title": "Install and Start Ollama Locally",
-        "windowsTab": "Windows (Preview)"
+        "title": "Installer et démarrer l'application Ollama localement",
+        "windowsTab": "Windows (version préliminaire)"
       }
     },
     "title": "Ollama",
     "unlock": {
-      "cancel": "Cancel Download",
-      "confirm": "Download",
-      "description": "Enter your Ollama model tag to continue the session",
+      "cancel": "Annuler le téléchargement",
+      "confirm": "Télécharger",
+      "description": "Entrez l'étiquette de votre modèle Ollama pour continuer la session.",
       "downloaded": "{{completed}} / {{total}}",
-      "starting": "Starting download...",
-      "title": "Download specified Ollama model"
-    }
-  },
-  "sensenova": {
-    "sensenovaAccessKeyID": {
-      "desc": "Entrez l'ID de clé d'accès SenseNova",
-      "placeholder": "ID de clé d'accès SenseNova",
-      "title": "ID de clé d'accès"
-    },
-    "sensenovaAccessKeySecret": {
-      "desc": "Entrez le secret de clé d'accès SenseNova",
-      "placeholder": "Secret de clé d'accès SenseNova",
-      "title": "Secret de clé d'accès"
-    },
-    "unlock": {
-      "description": "Entrez votre ID de clé d'accès / secret de clé d'accès pour commencer la session. L'application ne conservera pas vos configurations d'authentification",
-      "title": "Utiliser des informations d'authentification SenseNova personnalisées"
+      "starting": "Début du téléchargement...",
+      "title": "Télécharger le modèle Ollama spécifié"
     }
   },
   "wenxin": {

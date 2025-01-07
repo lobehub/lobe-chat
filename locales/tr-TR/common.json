@@ -9,7 +9,21 @@
       "title": "{{name}}'i Denemek İçin Hoş Geldiniz"
     }
   },
-  "appInitializing": "Uygulama başlatılıyor...",
+  "appLoading": {
+    "appIdle": "Başlatılıyor",
+    "appInitializing": "Uygulama başlatılıyor...",
+    "failed": "Üzgünüz, uygulama başlatılırken bir hata oluştu, lütfen ayrıntıları kontrol edin ve sorunu giderin.",
+    "finished": "Veritabanı başlatma tamamlandı",
+    "goToChat": "Sohbet sayfası yükleniyor...",
+    "initAuth": "Kimlik doğrulama servisi başlatılıyor...",
+    "initUser": "Kullanıcı durumu başlatılıyor...",
+    "initializing": "PGlite veritabanı başlatılıyor...",
+    "loadingDependencies": "Bağımlılıklar yükleniyor...",
+    "loadingWasm": "WASM modülü yükleniyor...",
+    "migrating": "Veri tablosu taşınıyor...",
+    "ready": "Veritabanı hazır",
+    "showDetail": "Detayları Görüntüle"
+  },
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
@@ -20,6 +34,54 @@
   "branchingDisable": "«Alt konu» özelliği yalnızca sunucu sürümünde mevcuttur. Bu özelliği kullanmak için lütfen sunucu dağıtım moduna geçin veya LobeChat Cloud'u kullanın.",
   "cancel": "İptal",
   "changelog": "Changelog",
+  "clientDB": {
+    "autoInit": {
+      "title": "PGlite veritabanı başlatılıyor"
+    },
+    "error": {
+      "desc": "Üzgünüz, Pglite veritabanı başlatma sırasında bir hata oluştu. Lütfen düğmeye tıklayarak tekrar deneyin. Eğer birden fazla denemeden sonra hala hata alıyorsanız, lütfen <1>bir sorun bildirin</1>, size en kısa sürede yardımcı olacağız.",
+      "detail": "Hata Nedeni: [{{type}}] {{message}}. Ayrıntılar aşağıda:",
+      "retry": "Tekrar Dene",
+      "title": "Veritabanı başlatma hatası"
+    },
+    "initing": {
+      "error": "Hata oluştu, lütfen tekrar deneyin",
+      "idle": "Başlatma bekleniyor...",
+      "initializing": "Başlatılıyor...",
+      "loadingDependencies": "Bağlantılar yükleniyor...",
+      "loadingWasmModule": "WASM modülü yükleniyor...",
+      "migrating": "Veri tablosu taşınıyor...",
+      "ready": "Veritabanı hazır"
+    },
+    "modal": {
+      "desc": "PGlite istemci veritabanını etkinleştirerek, tarayıcınızda sohbet verilerini kalıcı olarak depolayın ve bilgi bankası gibi gelişmiş özellikleri kullanın.",
+      "enable": "Hemen Etkinleştir",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Kişisel bilgi havuzunuzu oluşturun ve asistanınızla kolayca bilgi havuzu sohbetine başlayın (yakında gelecek)",
+          "title": "Bilgi havuzu sohbetini destekleyin, ikinci beyninizi açın"
+        },
+        "localFirst": {
+          "desc": "Sohbet verileri tamamen tarayıcıda saklanır, verileriniz her zaman sizin kontrolünüzde.",
+          "title": "Yerel öncelik, gizlilik öncelikli"
+        },
+        "pglite": {
+          "desc": "PGlite tabanlı, AI Native yüksek düzey özellikleri (vektör arama) yerel olarak destekler",
+          "title": "Yeni nesil istemci depolama mimarisi"
+        }
+      },
+      "init": {
+        "desc": "Veritabanı başlatılıyor, ağ farklılıklarına bağlı olarak 5-30 saniye sürebilir.",
+        "title": "PGlite veritabanı başlatılıyor"
+      },
+      "title": "İstemci veritabanını aç"
+    },
+    "ready": {
+      "button": "Hemen Kullan",
+      "desc": "Hemen kullanmak istiyorum",
+      "title": "PGlite veritabanı hazır"
+    }
+  },
   "close": "Kapat",
   "contact": "Bize Ulaşın",
   "copy": "Kopyala",
@@ -156,6 +218,7 @@
   "pinOff": "Unpin",
   "privacy": "Gizlilik Politikası",
   "regenerate": "Tekrarla",
+  "releaseNotes": "Sürüm Detayları",
   "rename": "Yeniden İsimlendir",
   "reset": "Reset",
   "retry": "Yeniden Dene",

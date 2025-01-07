@@ -9,6 +9,7 @@ import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { ModelAbilities } from '@/types/aiModel';
 import { ChatModelCard } from '@/types/llm';
 import { formatTokenNumber } from '@/utils/format';
 
@@ -57,8 +58,10 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface ModelInfoTagsProps extends ChatModelCard {
+interface ModelInfoTagsProps extends ModelAbilities {
+  contextWindowTokens?: number | null;
   directionReverse?: boolean;
+  isCustom?: boolean;
   placement?: 'top' | 'right';
 }
 
@@ -71,8 +74,8 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
       <Flexbox direction={directionReverse ? 'horizontal-reverse' : 'horizontal'} gap={4}>
         {model.files && (
           <Tooltip
-            overlayStyle={{ pointerEvents: 'none' }}
             placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
             title={t('ModelSelect.featureTag.file')}
           >
             <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
@@ -82,8 +85,8 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.vision && (
           <Tooltip
-            overlayStyle={{ pointerEvents: 'none' }}
             placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
             title={t('ModelSelect.featureTag.vision')}
           >
             <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
@@ -93,8 +96,10 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.functionCall && (
           <Tooltip
-            overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
+            styles={{
+              root: { maxWidth: 'unset', pointerEvents: 'none' },
+            }}
             title={t('ModelSelect.featureTag.functionCall')}
           >
             <div className={cx(styles.tag, styles.tagBlue)} style={{ cursor: 'pointer' }} title="">
@@ -102,19 +107,24 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
             </div>
           </Tooltip>
         )}
-        {model.tokens !== undefined && (
+        {typeof model.contextWindowTokens === 'number' && (
           <Tooltip
-            overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
+            styles={{
+              root: { maxWidth: 'unset', pointerEvents: 'none' },
+            }}
             title={t('ModelSelect.featureTag.tokens', {
-              tokens: model.tokens === 0 ? '∞' : numeral(model.tokens).format('0,0'),
+              tokens:
+                model.contextWindowTokens === 0
+                  ? '∞'
+                  : numeral(model.contextWindowTokens).format('0,0'),
             })}
           >
             <Center className={styles.token} title="">
-              {model.tokens === 0 ? (
+              {model.contextWindowTokens === 0 ? (
                 <Infinity size={17} strokeWidth={1.6} />
               ) : (
-                formatTokenNumber(model.tokens)
+                formatTokenNumber(model.contextWindowTokens as number)
               )}
             </Center>
           </Tooltip>

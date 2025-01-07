@@ -88,10 +88,10 @@
       "title": "사용자 정의 모델 이름"
     },
     "download": {
-      "desc": "Ollama is downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "Ollama가 모델을 다운로드하고 있습니다. 이 페이지를 닫지 마세요. 다시 다운로드할 경우 중단된 지점에서 계속됩니다.",
+      "remainingTime": "남은 시간",
+      "speed": "다운로드 속도",
+      "title": "모델 {{model}} 다운로드 중"
     },
     "endpoint": {
       "desc": "Ollama 인터페이스 프록시 주소를 입력하세요. 로컬에서 별도로 지정하지 않은 경우 비워둘 수 있습니다",
@@ -123,28 +123,12 @@
     },
     "title": "Ollama",
     "unlock": {
-      "cancel": "Cancel Download",
-      "confirm": "Download",
-      "description": "Enter your Ollama model tag to continue the session",
+      "cancel": "다운로드 취소",
+      "confirm": "다운로드",
+      "description": "Ollama 모델 태그를 입력하여 세션을 계속 진행하세요.",
       "downloaded": "{{completed}} / {{total}}",
-      "starting": "Starting download...",
-      "title": "Download specified Ollama model"
-    }
-  },
-  "sensenova": {
-    "sensenovaAccessKeyID": {
-      "desc": "SenseNova Access Key ID를 입력하세요",
-      "placeholder": "SenseNova Access Key ID",
-      "title": "Access Key ID"
-    },
-    "sensenovaAccessKeySecret": {
-      "desc": "SenseNova Access Key Secret를 입력하세요",
-      "placeholder": "SenseNova Access Key Secret",
-      "title": "Access Key Secret"
-    },
-    "unlock": {
-      "description": "Access Key ID / Access Key Secret를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
-      "title": "사용자 정의 SenseNova 인증 정보 사용"
+      "starting": "다운로드 시작 중...",
+      "title": "지정된 Ollama 모델 다운로드"
     }
   },
   "wenxin": {

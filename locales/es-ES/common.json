@@ -9,7 +9,21 @@
       "title": "Bienvenido a {{name}}"
     }
   },
-  "appInitializing": "Iniciando la aplicación...",
+  "appLoading": {
+    "appIdle": "Listo para iniciar",
+    "appInitializing": "Iniciando la aplicación...",
+    "failed": "Lo siento, la inicialización de la aplicación ha fallado. Por favor, consulta los detalles para investigar.",
+    "finished": "Inicialización de la base de datos completada",
+    "goToChat": "Cargando la página de chat...",
+    "initAuth": "Inicializando el servicio de autenticación...",
+    "initUser": "Inicializando el estado del usuario...",
+    "initializing": "Inicializando la base de datos PGlite...",
+    "loadingDependencies": "Inicializando dependencias...",
+    "loadingWasm": "Cargando módulo WASM...",
+    "migrating": "Ejecutando migración de tablas de datos...",
+    "ready": "Base de datos lista",
+    "showDetail": "Ver detalles"
+  },
   "autoGenerate": "Generación automática",
   "autoGenerateTooltip": "Completar automáticamente la descripción del asistente basándose en las sugerencias",
   "autoGenerateTooltipDisabled": "Por favor, complete la palabra clave antes de usar la función de autocompletar",
@@ -20,6 +34,54 @@
   "branchingDisable": "La función de «subtemas» solo está disponible en la versión del servidor. Si necesita esta función, cambie al modo de implementación del servidor o utilice LobeChat Cloud.",
   "cancel": "Cancelar",
   "changelog": "Registro de cambios",
+  "clientDB": {
+    "autoInit": {
+      "title": "Inicializando la base de datos PGlite"
+    },
+    "error": {
+      "desc": "Lo sentimos, ha ocurrido una excepción en el proceso de inicialización de la base de datos Pglite. Por favor, haga clic en el botón para intentar de nuevo. Si después de varios intentos sigue ocurriendo el mismo error, por favor <1>envíe un problema</1>, y lo resolveremos lo antes posible.",
+      "detail": "Razón del error: [{{type}}] {{message}}. Detalles a continuación:",
+      "retry": "Reintentar",
+      "title": "Falló la inicialización de la base de datos"
+    },
+    "initing": {
+      "error": "Ha ocurrido un error, por favor reintente",
+      "idle": "Esperando la inicialización...",
+      "initializing": "Inicializando...",
+      "loadingDependencies": "Cargando dependencias...",
+      "loadingWasmModule": "Cargando módulo WASM...",
+      "migrating": "Ejecutando migración de tablas de datos...",
+      "ready": "La base de datos está lista"
+    },
+    "modal": {
+      "desc": "Habilite la base de datos del cliente PGlite para almacenar de forma persistente los datos del chat en su navegador y utilizar características avanzadas como la base de conocimientos.",
+      "enable": "Habilitar ahora",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Consolida tu base de conocimientos personal y comienza conversaciones sobre ella con tu asistente fácilmente (próximamente)",
+          "title": "Soporte para conversaciones de base de conocimientos, activa tu segundo cerebro"
+        },
+        "localFirst": {
+          "desc": "Los datos de chat se almacenan completamente en el navegador, tus datos siempre están bajo tu control.",
+          "title": "Prioridad local, privacidad ante todo"
+        },
+        "pglite": {
+          "desc": "Construido sobre PGlite, soporte nativo para características avanzadas de AI Native (búsqueda vectorial)",
+          "title": "Nueva arquitectura de almacenamiento de cliente de próxima generación"
+        }
+      },
+      "init": {
+        "desc": "Inicializando la base de datos, el tiempo puede variar de 5 a 30 segundos dependiendo de la red.",
+        "title": "Inicializando la base de datos PGlite"
+      },
+      "title": "Activar la base de datos del cliente"
+    },
+    "ready": {
+      "button": "Usar ahora",
+      "desc": "Listo para usar",
+      "title": "La base de datos PGlite está lista"
+    }
+  },
   "close": "Cerrar",
   "contact": "Contacto",
   "copy": "Copiar",
@@ -156,6 +218,7 @@
   "pinOff": "Quitar fijación",
   "privacy": "Política de privacidad",
   "regenerate": "Regenerar",
+  "releaseNotes": "Detalles de la versión",
   "rename": "Renombrar",
   "reset": "Restablecer",
   "retry": "Reintentar",

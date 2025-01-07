@@ -1,7 +1,6 @@
-import { eq, inArray, lt } from 'drizzle-orm';
-import { and } from 'drizzle-orm/expressions';
+import { and, eq, inArray, lt } from 'drizzle-orm/expressions';
 
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 import {
   AsyncTaskError,
   AsyncTaskErrorType,
@@ -9,20 +8,22 @@ import {
   AsyncTaskType,
 } from '@/types/asyncTask';
 
-import { AsyncTaskSelectItem, NewAsyncTaskItem, asyncTasks } from '../schemas/lobechat';
+import { AsyncTaskSelectItem, NewAsyncTaskItem, asyncTasks } from '../../schemas';
 
 // set timeout to about 5 minutes, and give 2s padding time
 export const ASYNC_TASK_TIMEOUT = 298 * 1000;
 
 export class AsyncTaskModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
 
   create = async (params: Pick<NewAsyncTaskItem, 'type' | 'status'>): Promise<string> => {
-    const data = await serverDB
+    const data = await this.db
       .insert(asyncTasks)
       .values({ ...params, userId: this.userId })
       .returning();
@@ -31,17 +32,17 @@ export class AsyncTaskModel {
   };
 
   delete = async (id: string) => {
-    return serverDB
+    return this.db
       .delete(asyncTasks)
       .where(and(eq(asyncTasks.id, id), eq(asyncTasks.userId, this.userId)));
   };
 
   findById = async (id: string) => {
-    return serverDB.query.asyncTasks.findFirst({ where: and(eq(asyncTasks.id, id)) });
+    return this.db.query.asyncTasks.findFirst({ where: and(eq(asyncTasks.id, id)) });
   };
 
   update(taskId: string, value: Partial<AsyncTaskSelectItem>) {
-    return serverDB
+    return this.db
       .update(asyncTasks)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(asyncTasks.id, taskId)));
@@ -52,7 +53,7 @@ export class AsyncTaskModel {
 
     if (taskIds.length > 0) {
       await this.checkTimeoutTasks(taskIds);
-      chunkTasks = await serverDB.query.asyncTasks.findMany({
+      chunkTasks = await this.db.query.asyncTasks.findMany({
         where: and(inArray(asyncTasks.id, taskIds), eq(asyncTasks.type, type)),
       });
     }
@@ -63,8 +64,8 @@ export class AsyncTaskModel {
   /**
    * make the task status to be `error` if the task is not finished in 20 seconds
    */
-  async checkTimeoutTasks(ids: string[]) {
-    const tasks = await serverDB
+  checkTimeoutTasks = async (ids: string[]) => {
+    const tasks = await this.db
       .select({ id: asyncTasks.id })
       .from(asyncTasks)
       .where(
@@ -76,7 +77,7 @@ export class AsyncTaskModel {
       );
 
     if (tasks.length > 0) {
-      await serverDB
+      await this.db
         .update(asyncTasks)
         .set({
           error: new AsyncTaskError(
@@ -92,5 +93,5 @@ export class AsyncTaskModel {
           ),
         );
     }
-  }
+  };
 }

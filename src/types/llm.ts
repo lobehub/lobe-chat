@@ -1,8 +1,15 @@
 import { ReactNode } from 'react';
 
+import { ChatModelPricing } from '@/types/aiModel';
+import { AiProviderSettings } from '@/types/aiProvider';
+
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
 export interface ChatModelCard {
+  /**
+   * the context window (or input + output tokens limit)
+   */
+  contextWindowTokens?: number;
   /**
    * only used in azure
    */
@@ -12,7 +19,6 @@ export interface ChatModelCard {
    * the name show for end user
    */
   displayName?: string;
-
   /**
    * whether model is enabled by default
    */
@@ -35,28 +41,8 @@ export interface ChatModelCard {
    */
   legacy?: boolean;
   maxOutput?: number;
-  pricing?: {
-    cachedInput?: number;
-    /**
-     * the currency of the pricing
-     * @default USD
-     */
-    currency?: ModelPriceCurrency;
-    /**
-     * the input pricing, e.g. $1 / 1M tokens
-     */
-    input?: number;
-    /**
-     * the output pricing, e.g. $2 / 1M tokens
-     */
-    output?: number;
-    writeCacheInput?: number;
-  };
+  pricing?: ChatModelPricing;
   releasedAt?: string;
-  /**
-   * the context window (or input + output tokens limit)
-   */
-  tokens?: number;
 
   /**
    *  whether model supports vision
@@ -71,6 +57,9 @@ export interface SmoothingParams {
 }
 
 export interface ModelProviderCard {
+  /**
+   * @deprecated
+   */
   chatModels: ChatModelCard[];
   /**
    * the default model that used for connection check
@@ -78,7 +67,7 @@ export interface ModelProviderCard {
   checkModel?: string;
   /**
    * whether provider show browser request option by default
-   *
+   * @deprecated
    * @default false
    */
   defaultShowBrowserRequest?: boolean;
@@ -86,7 +75,7 @@ export interface ModelProviderCard {
   /**
    * some provider server like stepfun and aliyun don't support browser request,
    * So we should disable it
-   *
+   * @deprecated
    * @default false
    */
   disableBrowserRequest?: boolean;
@@ -95,6 +84,9 @@ export interface ModelProviderCard {
    */
   enabled?: boolean;
   id: string;
+  /**
+   * @deprecated
+   */
   modelList?: {
     azureDeployName?: boolean;
     notFoundContent?: ReactNode;
@@ -109,6 +101,9 @@ export interface ModelProviderCard {
    * the name show for end user
    */
   name: string;
+  /**
+   * @deprecated
+   */
   proxyUrl?:
     | {
         desc?: string;
@@ -117,20 +112,25 @@ export interface ModelProviderCard {
       }
     | false;
 
+  settings: AiProviderSettings;
   /**
    * whether show api key in the provider config
    * so provider like ollama don't need api key field
+   * @deprecated
    */
   showApiKey?: boolean;
+
   /**
    * whether show checker in the provider config
+   * @deprecated
    */
   showChecker?: boolean;
+
   /**
    * whether to smoothing the output
+   * @deprecated
    */
   smoothing?: SmoothingParams;
-
   /**
    * provider's website url
    */

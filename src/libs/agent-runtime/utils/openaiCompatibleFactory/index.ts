@@ -1,22 +1,26 @@
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
-import { ChatModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
-import {
+import type {
   ChatCompetitionOptions,
   ChatCompletionErrorPayload,
   ChatStreamPayload,
   Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
+  ModelProvider,
   TextToImagePayload,
   TextToSpeechOptions,
   TextToSpeechPayload,
 } from '../../types';
+import { ChatStreamCallbacks } from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
@@ -26,7 +30,7 @@ import { StreamingResponse } from '../response';
 import { OpenAIStream, OpenAIStreamOptions } from '../streams';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
-const CHAT_MODELS_BLOCK_LIST = [
+export const CHAT_MODELS_BLOCK_LIST = [
   'embedding',
   'davinci',
   'curie',
@@ -61,10 +65,17 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       payload: ChatStreamPayload,
       options: ConstructorOptions<T>,
     ) => OpenAI.ChatCompletionCreateParamsStreaming;
+    handleStream?: (
+      stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
+      callbacks?: ChatStreamCallbacks,
+    ) => ReadableStream;
     handleStreamBizErrorType?: (error: {
       message: string;
       name: string;
     }) => ILobeAgentRuntimeErrorType | undefined;
+    handleTransformResponseToStream?: (
+      data: OpenAI.ChatCompletion,
+    ) => ReadableStream<OpenAI.ChatCompletionChunk>;
     noUserId?: boolean;
   };
   constructorOptions?: ConstructorOptions<T>;
@@ -77,7 +88,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     invalidAPIKey: ILobeAgentRuntimeErrorType;
   };
   models?:
-    | ((params: { apiKey: string }) => Promise<ChatModelCard[]>)
+    | ((params: { client: OpenAI }) => Promise<ChatModelCard[]>)
     | {
         transformModel?: (model: OpenAI.Model) => ChatModelCard;
       };
@@ -157,7 +168,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     client!: OpenAI;
 
     baseURL!: string;
-    private _options: ConstructorOptions<T>;
+    protected _options: ConstructorOptions<T>;
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
       const _options = {
@@ -211,7 +222,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             },
             {
               // https://github.com/lobehub/lobe-chat/pull/318
-              headers: { Accept: '*/*' },
+              headers: { Accept: '*/*', ...options?.requestHeaders },
               signal: options?.signal,
             },
           );
@@ -227,7 +238,8 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             debugStream(useForDebugStream).catch(console.error);
           }
 
-          return StreamingResponse(OpenAIStream(prod, streamOptions), {
+          const streamHandler = chatCompletion?.handleStream || OpenAIStream;
+          return StreamingResponse(streamHandler(prod, streamOptions), {
             headers: options?.headers,
           });
         }
@@ -238,9 +250,12 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
         if (responseMode === 'json') return Response.json(response);
 
-        const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
+        const transformHandler =
+          chatCompletion?.handleTransformResponseToStream || transformResponseToStream;
+        const stream = transformHandler(response as unknown as OpenAI.ChatCompletion);
 
-        return StreamingResponse(OpenAIStream(stream, streamOptions), {
+        const streamHandler = chatCompletion?.handleStream || OpenAIStream;
+        return StreamingResponse(streamHandler(stream, streamOptions), {
           headers: options?.headers,
         });
       } catch (error) {
@@ -249,7 +264,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     }
 
     async models() {
-      if (typeof models === 'function') return models({ apiKey: this.client.apiKey });
+      if (typeof models === 'function') return models({ client: this.client });
 
       const list = await this.client.models.list();
 
@@ -266,7 +281,15 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
           const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === item.id);
 
-          if (knownModel) return knownModel;
+          if (knownModel) {
+            dayjs.extend(utc);
+
+            return {
+              ...knownModel,
+              releasedAt:
+                knownModel.releasedAt ?? dayjs.utc(item.created * 1000).format('YYYY-MM-DD'),
+            };
+          }
 
           return { id: item.id };
         })
@@ -312,7 +335,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
       }
     }
 
-    private handleError(error: any): ChatCompletionErrorPayload {
+    protected handleError(error: any): ChatCompletionErrorPayload {
       let desensitizedEndpoint = this.baseURL;
 
       // refs: https://github.com/lobehub/lobe-chat/issues/842
@@ -337,7 +360,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
               endpoint: desensitizedEndpoint,
               error: error as any,
               errorType: ErrorType.invalidAPIKey,
-              provider: provider as any,
+              provider: provider as ModelProvider,
             });
           }
 
@@ -353,7 +376,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         endpoint: desensitizedEndpoint,
         error: errorResult,
         errorType: RuntimeError || ErrorType.bizError,
-        provider: provider as any,
+        provider: provider as ModelProvider,
       });
     }
   };

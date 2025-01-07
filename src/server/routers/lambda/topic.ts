@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database/server';
 import { TopicModel } from '@/database/server/models/topic';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { BatchTaskResult } from '@/types/service';
@@ -8,7 +9,7 @@ const topicProcedure = authedProcedure.use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
-    ctx: { topicModel: new TopicModel(ctx.userId) },
+    ctx: { topicModel: new TopicModel(serverDB, ctx.userId) },
   });
 });
 
@@ -55,9 +56,19 @@ export const topicRouter = router({
       return data.topic.id;
     }),
 
-  countTopics: topicProcedure.query(async ({ ctx }) => {
-    return ctx.topicModel.count();
-  }),
+  countTopics: topicProcedure
+    .input(
+      z
+        .object({
+          endDate: z.string().optional(),
+          range: z.tuple([z.string(), z.string()]).optional(),
+          startDate: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.topicModel.count(input);
+    }),
 
   createTopic: topicProcedure
     .input(
@@ -78,6 +89,7 @@ export const topicRouter = router({
     return ctx.topicModel.queryAll();
   }),
 
+  // TODO: this procedure should be used with authedProcedure
   getTopics: publicProcedure
     .input(
       z.object({
@@ -89,13 +101,17 @@ export const topicRouter = router({
     .query(async ({ input, ctx }) => {
       if (!ctx.userId) return [];
 
-      const topicModel = new TopicModel(ctx.userId);
+      const topicModel = new TopicModel(serverDB, ctx.userId);
 
       return topicModel.query(input);
     }),
 
   hasTopics: topicProcedure.query(async ({ ctx }) => {
     return (await ctx.topicModel.count()) === 0;
+  }),
+
+  rankTopics: topicProcedure.input(z.number().optional()).query(async ({ ctx, input }) => {
+    return ctx.topicModel.rank(input);
   }),
 
   removeAllTopics: topicProcedure.mutation(async ({ ctx }) => {

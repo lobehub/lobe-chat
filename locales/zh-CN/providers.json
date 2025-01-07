@@ -1,5 +1,7 @@
 {
-  "ai21": {},
+  "ai21": {
+    "description": "AI21 Labs 为企业构建基础模型和人工智能系统，加速生成性人工智能在生产中的应用。"
+  },
   "ai360": {
     "description": "360 AI 是 360 公司推出的 AI 模型和服务平台，提供多种先进的自然语言处理模型，包括 360GPT2 Pro、360GPT Pro、360GPT Turbo 和 360GPT Turbo Responsibility 8K。这些模型结合了大规模参数和多模态能力，广泛应用于文本生成、语义理解、对话系统与代码生成等领域。通过灵活的定价策略，360 AI 满足多样化用户需求，支持开发者集成，推动智能化应用的革新和发展。"
   },
@@ -15,9 +17,11 @@
   "bedrock": {
     "description": "Bedrock 是亚马逊 AWS 提供的一项服务，专注于为企业提供先进的 AI 语言模型和视觉模型。其模型家族包括 Anthropic 的 Claude 系列、Meta 的 Llama 3.1 系列等，涵盖从轻量级到高性能的多种选择，支持文本生成、对话、图像处理等多种任务，适用于不同规模和需求的企业应用。"
   },
-  "cloudflare": {},
+  "cloudflare": {
+    "description": "在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。"
+  },
   "deepseek": {
-    "description": "DeepSeek 是一家专注于人工智能技术研究和应用的公司，其最新模型 DeepSeek-V2.5 融合了通用对话和代码处理能力，并在人类偏好对齐、写作任务和指令跟随等方面实现了显著提升。"
+    "description": "DeepSeek 是一家专注于人工智能技术研究和应用的公司，其最新模型 DeepSeek-V3 多项评测成绩超越 Qwen2.5-72B 和 Llama-3.1-405B 等开源模型，性能对齐领军闭源模型 GPT-4o 与 Claude-3.5-Sonnet。"
   },
   "fireworksai": {
     "description": "Fireworks AI 是一家领先的高级语言模型服务商，专注于功能调用和多模态处理。其最新模型 Firefunction V2 基于 Llama-3，优化用于函数调用、对话及指令跟随。视觉语言模型 FireLLaVA-13B 支持图像和文本混合输入。其他 notable 模型包括 Llama 系列和 Mixtral 系列，提供高效的多语言指令跟随与生成支持。"
@@ -33,6 +37,9 @@
   },
   "groq": {
     "description": "Groq 的 LPU 推理引擎在最新的独立大语言模型（LLM）基准测试中表现卓越，以其惊人的速度和效率重新定义了 AI 解决方案的标准。Groq 是一种即时推理速度的代表，在基于云的部署中展现了良好的性能。"
+  },
+  "higress": {
+    "description": "Higress 是一款云原生 API 网关，在阿里内部为解决 Tengine reload 对长连接业务有损，以及 gRPC/Dubbo 负载均衡能力不足而诞生。"
   },
   "huggingface": {
     "description": "HuggingFace Inference API 提供了一种快速且免费的方式，让您可以探索成千上万种模型，适用于各种任务。无论您是在为新应用程序进行原型设计，还是在尝试机器学习的功能，这个 API 都能让您即时访问多个领域的高性能模型。"
@@ -70,7 +77,9 @@
   "qwen": {
     "description": "通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。"
   },
-  "sensenova": {},
+  "sensenova": {
+    "description": "商汤日日新，依托商汤大装置的强大的基础支撑，提供高效易用的全栈大模型服务。"
+  },
   "siliconcloud": {
     "description": "SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务"
   },

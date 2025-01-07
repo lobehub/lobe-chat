@@ -1,14 +1,9 @@
-import Client from './Client';
-import Redirect from './Redirect';
+import { isServerMode } from '@/const/version';
 
-const ScreenLoading = () => {
-  return (
-    <>
-      <Client />
-      <Redirect />
-    </>
-  );
-};
+import Client from './Client';
+import Server from './Server';
+
+const ScreenLoading = () => (isServerMode ? <Server /> : <Client />);
 
 ScreenLoading.displayName = 'ScreenLoading';
 

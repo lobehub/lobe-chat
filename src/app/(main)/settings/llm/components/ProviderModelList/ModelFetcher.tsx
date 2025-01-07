@@ -76,12 +76,12 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
           )}
         </div>
         <Tooltip
-          overlayStyle={{ pointerEvents: 'none' }}
+          styles={{ root: { pointerEvents: 'none' } }}
           title={
             latestFetchTime
               ? t('llm.fetcher.latestTime', {
-                time: dayjs(latestFetchTime).format('YYYY-MM-DD HH:mm:ss'),
-              })
+                  time: dayjs(latestFetchTime).format('YYYY-MM-DD HH:mm:ss'),
+                })
               : t('llm.fetcher.noLatestTime')
           }
         >

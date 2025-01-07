@@ -1,5 +1,7 @@
 {
-  "ai21": {},
+  "ai21": {
+    "description": "AI21 Labs costruisce modelli di base e sistemi di intelligenza artificiale per le imprese, accelerando l'adozione dell'intelligenza artificiale generativa in produzione."
+  },
   "ai360": {
     "description": "360 AI è una piattaforma di modelli e servizi AI lanciata da 360 Company, che offre vari modelli avanzati di elaborazione del linguaggio naturale, tra cui 360GPT2 Pro, 360GPT Pro, 360GPT Turbo e 360GPT Turbo Responsibility 8K. Questi modelli combinano parametri su larga scala e capacità multimodali, trovando ampio utilizzo in generazione di testo, comprensione semantica, sistemi di dialogo e generazione di codice. Con strategie di prezzo flessibili, 360 AI soddisfa le esigenze diversificate degli utenti, supportando l'integrazione degli sviluppatori e promuovendo l'innovazione e lo sviluppo delle applicazioni intelligenti."
   },
@@ -15,7 +17,9 @@
   "bedrock": {
     "description": "Bedrock è un servizio offerto da Amazon AWS, focalizzato sulla fornitura di modelli linguistici e visivi AI avanzati per le aziende. La sua famiglia di modelli include la serie Claude di Anthropic, la serie Llama 3.1 di Meta e altro, coprendo una varietà di opzioni da leggere a ad alte prestazioni, supportando generazione di testo, dialogo, elaborazione di immagini e altro, adatta a diverse applicazioni aziendali di varie dimensioni e necessità."
   },
-  "cloudflare": {},
+  "cloudflare": {
+    "description": "Esegui modelli di machine learning alimentati da GPU serverless sulla rete globale di Cloudflare."
+  },
   "deepseek": {
     "description": "DeepSeek è un'azienda focalizzata sulla ricerca e applicazione della tecnologia AI, il cui ultimo modello DeepSeek-V2.5 combina capacità di dialogo generico e elaborazione del codice, realizzando miglioramenti significativi nell'allineamento delle preferenze umane, nei compiti di scrittura e nel rispetto delle istruzioni."
   },
@@ -33,6 +37,9 @@
   },
   "groq": {
     "description": "Il motore di inferenza LPU di Groq ha mostrato prestazioni eccezionali nei recenti benchmark indipendenti sui modelli di linguaggio di grandi dimensioni (LLM), ridefinendo gli standard delle soluzioni AI con la sua incredibile velocità ed efficienza. Groq rappresenta una velocità di inferenza istantanea, mostrando buone prestazioni nelle implementazioni basate su cloud."
+  },
+  "higress": {
+    "description": "Higress è un gateway API cloud-native, nato all'interno di Alibaba per risolvere i problemi causati dal ricaricamento di Tengine sulle connessioni persistenti e per migliorare le capacità di bilanciamento del carico di gRPC/Dubbo."
   },
   "huggingface": {
     "description": "L'API di Inferenza di HuggingFace offre un modo rapido e gratuito per esplorare migliaia di modelli per una varietà di compiti. Che tu stia prototipando una nuova applicazione o cercando di sperimentare le funzionalità del machine learning, questa API ti consente di accedere immediatamente a modelli ad alte prestazioni in diversi ambiti."
@@ -70,7 +77,9 @@
   "qwen": {
     "description": "Qwen è un modello di linguaggio di grande scala sviluppato autonomamente da Alibaba Cloud, con potenti capacità di comprensione e generazione del linguaggio naturale. Può rispondere a varie domande, creare contenuti testuali, esprimere opinioni e scrivere codice, svolgendo un ruolo in vari settori."
   },
-  "sensenova": {},
+  "sensenova": {
+    "description": "SenseTime offre servizi di modelli di grandi dimensioni full-stack, supportati dalla potente infrastruttura di SenseTime."
+  },
   "siliconcloud": {
     "description": "SiliconFlow si impegna ad accelerare l'AGI per il bene dell'umanità, migliorando l'efficienza dell'AI su larga scala attraverso stack GenAI facili da usare e a basso costo."
   },

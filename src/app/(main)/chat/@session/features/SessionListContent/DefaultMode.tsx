@@ -3,12 +3,11 @@ import isEqual from 'fast-deep-equal';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useFetchSessions } from '@/hooks/useFetchSessions';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
-import { useUserStore } from '@/store/user';
-import { authSelectors } from '@/store/user/selectors';
 import { SessionDefaultGroup } from '@/types/session';
 
 import Actions from '../SessionListContent/CollapseGroup/Actions';
@@ -25,9 +24,7 @@ const DefaultMode = memo(() => {
   const [renameGroupModalOpen, setRenameGroupModalOpen] = useState(false);
   const [configGroupModalOpen, setConfigGroupModalOpen] = useState(false);
 
-  const isLogin = useUserStore(authSelectors.isLogin);
-  const [useFetchSessions] = useSessionStore((s) => [s.useFetchSessions]);
-  useFetchSessions(isLogin);
+  useFetchSessions();
 
   const defaultSessions = useSessionStore(sessionSelectors.defaultSessions, isEqual);
   const customSessionGroups = useSessionStore(sessionSelectors.customSessionGroups, isEqual);

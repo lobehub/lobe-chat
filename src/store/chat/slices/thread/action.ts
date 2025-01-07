@@ -6,7 +6,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { LOADING_FLAT, THREAD_DRAFT_ID } from '@/const/message';
-import { isServerMode } from '@/const/version';
+import { isDeprecatedEdition } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { threadService } from '@/services/thread';
@@ -44,7 +44,7 @@ export interface ChatThreadAction {
   openThreadCreator: (messageId: string) => void;
   openThreadInPortal: (threadId: string, sourceMessageId: string) => void;
   closeThreadPortal: () => void;
-  useFetchThreads: (topicId?: string) => SWRResponse<ThreadItem[]>;
+  useFetchThreads: (enable: boolean, topicId?: string) => SWRResponse<ThreadItem[]>;
   summaryThreadTitle: (threadId: string, messages: ChatMessage[]) => Promise<void>;
   updateThreadTitle: (id: string, title: string) => Promise<void>;
   removeThread: (id: string) => Promise<void>;
@@ -209,9 +209,9 @@ export const chatThreadMessage: StateCreator<
     return data;
   },
 
-  useFetchThreads: (topicId) =>
+  useFetchThreads: (enable, topicId) =>
     useClientDataSWR<ThreadItem[]>(
-      !!topicId && isServerMode ? [SWR_USE_FETCH_THREADS, topicId] : null,
+      enable && !!topicId && !isDeprecatedEdition ? [SWR_USE_FETCH_THREADS, topicId] : null,
       async ([, topicId]: [string, string]) => threadService.getThreads(topicId),
       {
         suspense: true,

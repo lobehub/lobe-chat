@@ -1,7 +1,8 @@
 import { fileEnv } from '@/config/file';
 import { edgeClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
-import { FileMetadata, UploadFileParams } from '@/types/files';
+import { clientS3Storage } from '@/services/file/ClientS3';
+import { FileMetadata } from '@/types/files';
 import { FileUploadState, FileUploadStatus } from '@/types/files/upload';
 import { uuid } from '@/utils/uuid';
 
@@ -66,23 +67,14 @@ class UploadService {
     return result;
   };
 
-  uploadToClientDB = async (params: UploadFileParams, file: File) => {
-    const { FileModel } = await import('@/database/client/models/file');
-    const fileArrayBuffer = await file.arrayBuffer();
-
-    // save to local storage
-    // we may want to save to a remote server later
-    const res = await FileModel.create({
-      createdAt: Date.now(),
-      ...params,
-      data: fileArrayBuffer,
-    });
-    // arrayBuffer to url
-    const base64 = Buffer.from(fileArrayBuffer).toString('base64');
+  uploadToClientS3 = async (hash: string, file: File): Promise<FileMetadata> => {
+    await clientS3Storage.putObject(hash, file);
 
     return {
-      id: res.id,
-      url: `data:${params.fileType};base64,${base64}`,
+      date: (Date.now() / 1000 / 60 / 60).toFixed(0),
+      dirname: '',
+      filename: file.name,
+      path: `client-s3://${hash}`,
     };
   };
 

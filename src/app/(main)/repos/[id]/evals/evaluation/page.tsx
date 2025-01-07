@@ -2,14 +2,19 @@
 
 import { Flexbox } from 'react-layout-kit';
 
-import CircleLoading from '@/components/CircleLoading';
+import Loading from '@/components/Loading/BrandTextLoading';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
-import { PageProps } from '../type';
 import EmptyGuide from './EmptyGuide';
 import EvaluationList from './EvaluationList';
 
-const Evaluation = ({ params }: PageProps) => {
+interface Params {
+  id: string;
+}
+
+type Props = { params: Params & Promise<Params> };
+
+const Evaluation = ({ params }: Props) => {
   const knowledgeBaseId = params.id;
 
   const useFetchEvaluation = useKnowledgeBaseStore((s) => s.useFetchEvaluationList);
@@ -19,7 +24,7 @@ const Evaluation = ({ params }: PageProps) => {
   const isEmpty = data?.length === 0;
 
   return isLoading ? (
-    <CircleLoading />
+    <Loading />
   ) : isEmpty ? (
     <EmptyGuide knowledgeBaseId={knowledgeBaseId} />
   ) : (

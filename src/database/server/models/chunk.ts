@@ -1,8 +1,8 @@
-import { asc, cosineDistance, count, eq, inArray, sql } from 'drizzle-orm';
-import { and, desc, isNull } from 'drizzle-orm/expressions';
+import { cosineDistance, count, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull } from 'drizzle-orm/expressions';
 import { chunk } from 'lodash-es';
 
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 import { ChunkMetadata, FileChunk } from '@/types/chunk';
 
 import {
@@ -13,17 +13,22 @@ import {
   fileChunks,
   files,
   unstructuredChunks,
-} from '../schemas/lobechat';
+} from '../../schemas';
 
 export class ChunkModel {
   private userId: string;
 
-  constructor(userId: string) {
+  private db: LobeChatDatabase;
+
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
 
   bulkCreate = async (params: NewChunkItem[], fileId: string) => {
-    return serverDB.transaction(async (trx) => {
+    return this.db.transaction(async (trx) => {
+      if (params.length === 0) return [];
+
       const result = await trx.insert(chunks).values(params).returning();
 
       const fileChunksData = result.map((chunk) => ({ chunkId: chunk.id, fileId }));
@@ -37,15 +42,15 @@ export class ChunkModel {
   };
 
   bulkCreateUnstructuredChunks = async (params: NewUnstructuredChunkItem[]) => {
-    return serverDB.insert(unstructuredChunks).values(params);
+    return this.db.insert(unstructuredChunks).values(params);
   };
 
   delete = async (id: string) => {
-    return serverDB.delete(chunks).where(and(eq(chunks.id, id), eq(chunks.userId, this.userId)));
+    return this.db.delete(chunks).where(and(eq(chunks.id, id), eq(chunks.userId, this.userId)));
   };
 
   deleteOrphanChunks = async () => {
-    const orphanedChunks = await serverDB
+    const orphanedChunks = await this.db
       .select({ chunkId: chunks.id })
       .from(chunks)
       .leftJoin(fileChunks, eq(chunks.id, fileChunks.chunkId))
@@ -56,7 +61,7 @@ export class ChunkModel {
 
     const list = chunk(ids, 500);
 
-    await serverDB.transaction(async (trx) => {
+    await this.db.transaction(async (trx) => {
       await Promise.all(
         list.map(async (chunkIds) => {
           await trx.delete(chunks).where(inArray(chunks.id, chunkIds));
@@ -66,13 +71,13 @@ export class ChunkModel {
   };
 
   findById = async (id: string) => {
-    return serverDB.query.chunks.findFirst({
+    return this.db.query.chunks.findFirst({
       where: and(eq(chunks.id, id)),
     });
   };
 
-  async findByFileId(id: string, page = 0) {
-    const data = await serverDB
+  findByFileId = async (id: string, page = 0) => {
+    const data = await this.db
       .select({
         abstract: chunks.abstract,
         createdAt: chunks.createdAt,
@@ -95,10 +100,10 @@ export class ChunkModel {
 
       return { ...item, metadata, pageNumber: metadata?.pageNumber } as FileChunk;
     });
-  }
+  };
 
-  async getChunksTextByFileId(id: string): Promise<{ id: string; text: string }[]> {
-    const data = await serverDB
+  getChunksTextByFileId = async (id: string): Promise<{ id: string; text: string }[]> => {
+    const data = await this.db
       .select()
       .from(chunks)
       .innerJoin(fileChunks, eq(chunks.id, fileChunks.chunkId))
@@ -108,12 +113,12 @@ export class ChunkModel {
       .map((item) => item.chunks)
       .map((chunk) => ({ id: chunk.id, text: this.mapChunkText(chunk) }))
       .filter((chunk) => chunk.text) as { id: string; text: string }[];
-  }
+  };
 
-  async countByFileIds(ids: string[]) {
+  countByFileIds = async (ids: string[]) => {
     if (ids.length === 0) return [];
 
-    return serverDB
+    return this.db
       .select({
         count: count(fileChunks.chunkId),
         id: fileChunks.fileId,
@@ -121,10 +126,10 @@ export class ChunkModel {
       .from(fileChunks)
       .where(inArray(fileChunks.fileId, ids))
       .groupBy(fileChunks.fileId);
-  }
+  };
 
-  async countByFileId(ids: string) {
-    const data = await serverDB
+  countByFileId = async (ids: string) => {
+    const data = await this.db
       .select({
         count: count(fileChunks.chunkId),
         id: fileChunks.fileId,
@@ -134,19 +139,19 @@ export class ChunkModel {
       .groupBy(fileChunks.fileId);
 
     return data[0]?.count ?? 0;
-  }
+  };
 
-  async semanticSearch({
+  semanticSearch = async ({
     embedding,
     fileIds,
   }: {
     embedding: number[];
     fileIds: string[] | undefined;
     query: string;
-  }) {
+  }) => {
     const similarity = sql<number>`1 - (${cosineDistance(embeddings.embeddings, embedding)})`;
 
-    const data = await serverDB
+    const data = await this.db
       .select({
         fileId: fileChunks.fileId,
         fileName: files.name,
@@ -169,23 +174,23 @@ export class ChunkModel {
       ...item,
       metadata: item.metadata as ChunkMetadata,
     }));
-  }
+  };
 
-  async semanticSearchForChat({
+  semanticSearchForChat = async ({
     embedding,
     fileIds,
   }: {
     embedding: number[];
     fileIds: string[] | undefined;
     query: string;
-  }) {
+  }) => {
     const similarity = sql<number>`1 - (${cosineDistance(embeddings.embeddings, embedding)})`;
 
     const hasFiles = fileIds && fileIds.length > 0;
 
     if (!hasFiles) return [];
 
-    const result = await serverDB
+    const result = await this.db
       .select({
         fileId: files.id,
         fileName: files.name,
@@ -214,7 +219,7 @@ export class ChunkModel {
         text: this.mapChunkText(item),
       };
     });
-  }
+  };
 
   private mapChunkText = (chunk: { metadata: any; text: string | null; type: string | null }) => {
     let text = chunk.text;

@@ -13,7 +13,7 @@ import { getTracePayload } from '@/utils/trace';
 export const runtime = 'edge';
 
 export const POST = checkAuth(async (req: Request, { params, jwtPayload, createRuntime }) => {
-  const { provider } = params;
+  const { provider } = await params;
 
   try {
     // ============  1. init chat model   ============ //

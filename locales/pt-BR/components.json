@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "Voltar"
   },
+  "MaxTokenSlider": {
+    "unlimited": "Ilimitado"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Modelo personalizado, por padrão, suporta chamadas de função e reconhecimento visual. Por favor, verifique a disponibilidade dessas capacidades de acordo com a situação real.",

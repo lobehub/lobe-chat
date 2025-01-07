@@ -1,9 +1,4 @@
 {
-  "button": {
-    "import": "استيراد التكوين",
-    "market": "تسوق في السوق",
-    "start": "ابدأ الآن"
-  },
   "guide": {
     "agents": {
       "replaceBtn": "تغيير",

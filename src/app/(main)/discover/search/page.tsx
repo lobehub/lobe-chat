@@ -7,6 +7,7 @@ import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
+import { PageProps } from '@/types/next';
 import { isMobileDevice } from '@/utils/server/responsive';
 
 import { ListLoadingWithoutBanner } from '../components/ListLoading';
@@ -24,15 +25,18 @@ const ProvidersResult = dynamic(() => import('./features/ProvidersResult'), {
   loading: () => <ListLoadingWithoutBanner />,
 });
 
-type Props = {
-  searchParams: {
+type Props = PageProps<
+  undefined,
+  {
     hl?: Locales;
     q?: string;
     type?: 'assistants' | 'plugins' | 'models' | 'providers';
-  };
-};
+  }
+>;
 
-export const generateMetadata = async ({ searchParams }: Props) => {
+export const generateMetadata = async (props: Props) => {
+  const searchParams = await props.searchParams;
+
   const { t, locale } = await translation('metadata', searchParams?.hl);
 
   return metadataModule.generate({
@@ -44,13 +48,15 @@ export const generateMetadata = async ({ searchParams }: Props) => {
   });
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async (props: Props) => {
+  const searchParams = await props.searchParams;
+
   const { q, type = 'assistants' } = searchParams;
   if (!q) redirect(urlJoin(`/discover`, type));
   const keywords = decodeURIComponent(q);
 
   const { t, locale } = await translation('metadata', searchParams?.hl);
-  const mobile = isMobileDevice();
+  const mobile = await isMobileDevice();
 
   const ld = ldModule.generate({
     description: t('discover.description'),

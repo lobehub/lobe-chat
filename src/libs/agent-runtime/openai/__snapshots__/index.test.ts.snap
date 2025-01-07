@@ -3,6 +3,7 @@
 exports[`LobeOpenAI > models > should get models 1`] = `
 [
   {
+    "contextWindowTokens": 16385,
     "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
     "displayName": "GPT-3.5 Turbo",
     "functionCall": true,
@@ -11,7 +12,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 0.5,
       "output": 1.5,
     },
-    "tokens": 16385,
+    "releasedAt": "2023-02-28",
   },
   {
     "id": "gpt-3.5-turbo-16k",
@@ -20,19 +21,13 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-16k-0613",
   },
   {
-    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
     "id": "gpt-4-1106-vision-preview",
-    "pricing": {
-      "input": 10,
-      "output": 30,
-    },
-    "tokens": 128000,
-    "vision": true,
   },
   {
     "id": "gpt-3.5-turbo-instruct-0914",
   },
   {
+    "contextWindowTokens": 128000,
     "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
     "displayName": "GPT-4 Turbo Preview 0125",
     "functionCall": true,
@@ -41,9 +36,10 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 10,
       "output": 30,
     },
-    "tokens": 128000,
+    "releasedAt": "2024-01-23",
   },
   {
+    "contextWindowTokens": 128000,
     "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
     "displayName": "GPT-4 Turbo Preview",
     "functionCall": true,
@@ -52,9 +48,10 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 10,
       "output": 30,
     },
-    "tokens": 128000,
+    "releasedAt": "2024-01-23",
   },
   {
+    "contextWindowTokens": 4096,
     "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
     "displayName": "GPT-3.5 Turbo Instruct",
     "id": "gpt-3.5-turbo-instruct",
@@ -62,7 +59,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 1.5,
       "output": 2,
     },
-    "tokens": 4096,
+    "releasedAt": "2023-08-24",
   },
   {
     "id": "gpt-3.5-turbo-0301",
@@ -71,6 +68,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-0613",
   },
   {
+    "contextWindowTokens": 16385,
     "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
     "displayName": "GPT-3.5 Turbo 1106",
     "functionCall": true,
@@ -79,9 +77,10 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 1,
       "output": 2,
     },
-    "tokens": 16385,
+    "releasedAt": "2023-11-02",
   },
   {
+    "contextWindowTokens": 128000,
     "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
     "displayName": "GPT-4 Turbo Preview 1106",
     "functionCall": true,
@@ -90,20 +89,19 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 10,
       "output": 30,
     },
-    "tokens": 128000,
+    "releasedAt": "2023-11-02",
   },
   {
-    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
-    "displayName": "GPT-4 Turbo Vision Preview",
+    "contextWindowTokens": 128000,
+    "deploymentName": "gpt-4-vision",
+    "description": "GPT-4 视觉预览版，专为图像分析和处理任务设计。",
+    "displayName": "GPT 4 Turbo with Vision Preview",
     "id": "gpt-4-vision-preview",
-    "pricing": {
-      "input": 10,
-      "output": 30,
-    },
-    "tokens": 128000,
+    "releasedAt": "2023-11-02",
     "vision": true,
   },
   {
+    "contextWindowTokens": 8192,
     "description": "GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。",
     "displayName": "GPT-4",
     "functionCall": true,
@@ -112,9 +110,10 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 30,
       "output": 60,
     },
-    "tokens": 8192,
+    "releasedAt": "2023-06-27",
   },
   {
+    "contextWindowTokens": 16385,
     "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
     "displayName": "GPT-3.5 Turbo 0125",
     "functionCall": true,
@@ -123,9 +122,10 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 0.5,
       "output": 1.5,
     },
-    "tokens": 16385,
+    "releasedAt": "2024-01-23",
   },
   {
+    "contextWindowTokens": 8192,
     "description": "GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。",
     "displayName": "GPT-4 0613",
     "functionCall": true,
@@ -134,7 +134,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 30,
       "output": 60,
     },
-    "tokens": 8192,
+    "releasedAt": "2023-06-12",
   },
 ]
 `;

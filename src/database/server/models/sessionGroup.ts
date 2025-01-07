@@ -1,20 +1,21 @@
-import { eq } from 'drizzle-orm';
-import { and, asc, desc } from 'drizzle-orm/expressions';
+import { and, asc, desc, eq } from 'drizzle-orm/expressions';
 
-import { serverDB } from '@/database/server';
-import { idGenerator } from '@/database/server/utils/idGenerator';
+import { LobeChatDatabase } from '@/database/type';
+import { idGenerator } from '@/database/utils/idGenerator';
 
-import { SessionGroupItem, sessionGroups } from '../schemas/lobechat';
+import { SessionGroupItem, sessionGroups } from '../../schemas';
 
 export class SessionGroupModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
 
   create = async (params: { name: string; sort?: number }) => {
-    const [result] = await serverDB
+    const [result] = await this.db
       .insert(sessionGroups)
       .values({ ...params, id: this.genId(), userId: this.userId })
       .returning();
@@ -23,37 +24,37 @@ export class SessionGroupModel {
   };
 
   delete = async (id: string) => {
-    return serverDB
+    return this.db
       .delete(sessionGroups)
       .where(and(eq(sessionGroups.id, id), eq(sessionGroups.userId, this.userId)));
   };
 
   deleteAll = async () => {
-    return serverDB.delete(sessionGroups).where(eq(sessionGroups.userId, this.userId));
+    return this.db.delete(sessionGroups).where(eq(sessionGroups.userId, this.userId));
   };
 
   query = async () => {
-    return serverDB.query.sessionGroups.findMany({
+    return this.db.query.sessionGroups.findMany({
       orderBy: [asc(sessionGroups.sort), desc(sessionGroups.createdAt)],
       where: eq(sessionGroups.userId, this.userId),
     });
   };
 
   findById = async (id: string) => {
-    return serverDB.query.sessionGroups.findFirst({
+    return this.db.query.sessionGroups.findFirst({
       where: and(eq(sessionGroups.id, id), eq(sessionGroups.userId, this.userId)),
     });
   };
 
-  async update(id: string, value: Partial<SessionGroupItem>) {
-    return serverDB
+  update = async (id: string, value: Partial<SessionGroupItem>) => {
+    return this.db
       .update(sessionGroups)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(sessionGroups.id, id), eq(sessionGroups.userId, this.userId)));
-  }
+  };
 
-  async updateOrder(sortMap: { id: string; sort: number }[]) {
-    await serverDB.transaction(async (tx) => {
+  updateOrder = async (sortMap: { id: string; sort: number }[]) => {
+    await this.db.transaction(async (tx) => {
       const updates = sortMap.map(({ id, sort }) => {
         return tx
           .update(sessionGroups)
@@ -63,7 +64,7 @@ export class SessionGroupModel {
 
       await Promise.all(updates);
     });
-  }
+  };
 
   private genId = () => idGenerator('sessionGroups');
 }

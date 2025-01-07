@@ -1,22 +1,23 @@
-import { eq, inArray } from 'drizzle-orm';
-import { and, desc } from 'drizzle-orm/expressions';
+import { and, desc, eq, inArray } from 'drizzle-orm/expressions';
 
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 
-import { NewKnowledgeBase, knowledgeBaseFiles, knowledgeBases } from '../schemas/lobechat';
+import { NewKnowledgeBase, knowledgeBaseFiles, knowledgeBases } from '../../schemas';
 
 export class KnowledgeBaseModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
 
   // create
 
   create = async (params: Omit<NewKnowledgeBase, 'userId'>) => {
-    const [result] = await serverDB
+    const [result] = await this.db
       .insert(knowledgeBases)
       .values({ ...params, userId: this.userId })
       .returning();
@@ -25,7 +26,7 @@ export class KnowledgeBaseModel {
   };
 
   addFilesToKnowledgeBase = async (id: string, fileIds: string[]) => {
-    return serverDB
+    return this.db
       .insert(knowledgeBaseFiles)
       .values(fileIds.map((fileId) => ({ fileId, knowledgeBaseId: id, userId: this.userId })))
       .returning();
@@ -33,17 +34,17 @@ export class KnowledgeBaseModel {
 
   // delete
   delete = async (id: string) => {
-    return serverDB
+    return this.db
       .delete(knowledgeBases)
       .where(and(eq(knowledgeBases.id, id), eq(knowledgeBases.userId, this.userId)));
   };
 
   deleteAll = async () => {
-    return serverDB.delete(knowledgeBases).where(eq(knowledgeBases.userId, this.userId));
+    return this.db.delete(knowledgeBases).where(eq(knowledgeBases.userId, this.userId));
   };
 
   removeFilesFromKnowledgeBase = async (knowledgeBaseId: string, ids: string[]) => {
-    return serverDB.delete(knowledgeBaseFiles).where(
+    return this.db.delete(knowledgeBaseFiles).where(
       and(
         eq(knowledgeBaseFiles.knowledgeBaseId, knowledgeBaseId),
         inArray(knowledgeBaseFiles.fileId, ids),
@@ -53,7 +54,7 @@ export class KnowledgeBaseModel {
   };
   // query
   query = async () => {
-    const data = await serverDB
+    const data = await this.db
       .select({
         avatar: knowledgeBases.avatar,
         createdAt: knowledgeBases.createdAt,
@@ -73,22 +74,20 @@ export class KnowledgeBaseModel {
   };
 
   findById = async (id: string) => {
-    return serverDB.query.knowledgeBases.findFirst({
+    return this.db.query.knowledgeBases.findFirst({
       where: and(eq(knowledgeBases.id, id), eq(knowledgeBases.userId, this.userId)),
     });
   };
 
   // update
-  async update(id: string, value: Partial<KnowledgeBaseItem>) {
-    return serverDB
+  update = async (id: string, value: Partial<KnowledgeBaseItem>) =>
+    this.db
       .update(knowledgeBases)
       .set({ ...value, updatedAt: new Date() })
       .where(and(eq(knowledgeBases.id, id), eq(knowledgeBases.userId, this.userId)));
-  }
 
-  static async findById(id: string) {
-    return serverDB.query.knowledgeBases.findFirst({
+  static findById = async (db: LobeChatDatabase, id: string) =>
+    db.query.knowledgeBases.findFirst({
       where: eq(knowledgeBases.id, id),
     });
-  }
 }
