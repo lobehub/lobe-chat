@@ -99,14 +99,7 @@ const Page = async (props: DiscoverPageProps) => {
         actions={<Actions data={data} identifier={identifier} />}
         header={<Header data={data} identifier={identifier} mobile={mobile} />}
         mobile={mobile}
-        sidebar={
-          <InfoSidebar
-            data={data}
-            identifier={identifier}
-            mobile={mobile}
-            pluginData={pluginData}
-          />
-        }
+        sidebar={<InfoSidebar data={data} identifier={identifier} pluginData={pluginData} />}
         /* ↓ cloud slot ↓ */
 
         /* ↑ cloud slot ↑ */

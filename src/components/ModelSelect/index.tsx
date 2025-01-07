@@ -74,8 +74,8 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
       <Flexbox direction={directionReverse ? 'horizontal-reverse' : 'horizontal'} gap={4}>
         {model.files && (
           <Tooltip
-            overlayStyle={{ pointerEvents: 'none' }}
             placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
             title={t('ModelSelect.featureTag.file')}
           >
             <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
@@ -85,8 +85,8 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.vision && (
           <Tooltip
-            overlayStyle={{ pointerEvents: 'none' }}
             placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
             title={t('ModelSelect.featureTag.vision')}
           >
             <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
@@ -96,8 +96,10 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.functionCall && (
           <Tooltip
-            overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
+            styles={{
+              root: { maxWidth: 'unset', pointerEvents: 'none' },
+            }}
             title={t('ModelSelect.featureTag.functionCall')}
           >
             <div className={cx(styles.tag, styles.tagBlue)} style={{ cursor: 'pointer' }} title="">
@@ -107,8 +109,10 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {typeof model.contextWindowTokens === 'number' && (
           <Tooltip
-            overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
+            styles={{
+              root: { maxWidth: 'unset', pointerEvents: 'none' },
+            }}
             title={t('ModelSelect.featureTag.tokens', {
               tokens:
                 model.contextWindowTokens === 0
