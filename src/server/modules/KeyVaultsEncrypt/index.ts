@@ -105,7 +105,7 @@ If you don't have it, please run \`openssl rand -base64 32\` to create one.
 
     if (wasAuthentic) {
       try {
-        decryptKeyVaults = JSON.parse(plaintext);
+        if (!!plaintext) decryptKeyVaults = JSON.parse(plaintext);
       } catch (e) {
         console.error(`Failed to parse keyVaults, userId: ${userId}. Error:`, e);
       }

@@ -23,8 +23,8 @@ const useStyles = createStyles(({ css, cx, responsive, isDarkMode, token, stylis
   content: css`
     z-index: 2;
     padding: 8px;
-    background: ${rgba(token.colorBgContainer, isDarkMode ? 0.7 : 1)};
     border-radius: ${token.borderRadiusLG - 1}px;
+    background: ${rgba(token.colorBgContainer, isDarkMode ? 0.7 : 1)};
   `,
   glow: cx(
     stylish.gradientAnimation,

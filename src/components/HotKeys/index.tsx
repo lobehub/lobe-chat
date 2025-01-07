@@ -19,13 +19,13 @@ const useStyles = createStyles(
       min-width: 16px;
       height: 22px;
       padding-inline: 8px;
+      border-radius: ${token.borderRadius}px;
 
       line-height: 22px;
       color: ${inverseTheme ? token.colorTextTertiary : token.colorTextSecondary};
       text-align: center;
 
       background: ${inverseTheme ? rgba(token.colorTextTertiary, 0.15) : token.colorFillTertiary};
-      border-radius: ${token.borderRadius}px;
     }
   `,
 );

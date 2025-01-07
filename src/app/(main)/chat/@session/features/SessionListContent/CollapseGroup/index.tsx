@@ -8,8 +8,8 @@ const useStyles = createStyles(({ css, prefixCls, token, responsive }) => ({
   container: css`
     .${prefixCls}-collapse-header {
       padding-inline: 16px 10px !important;
-      color: ${token.colorTextDescription} !important;
       border-radius: ${token.borderRadius}px !important;
+      color: ${token.colorTextDescription} !important;
 
       ${responsive.mobile} {
         border-radius: 0 !important;

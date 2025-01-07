@@ -411,6 +411,7 @@
     "common": "Allgemeine Einstellungen",
     "experiment": "Experiment",
     "llm": "Sprachmodell",
+    "provider": "KI-Dienstanbieter",
     "sync": "Cloud-Synchronisierung",
     "system-agent": "Systemassistent",
     "tts": "Sprachdienste"
