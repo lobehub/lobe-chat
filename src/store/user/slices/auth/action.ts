@@ -29,14 +29,24 @@ export const createAuthSlice: StateCreator<
   logout: async () => {
     if (enableClerk) {
       get().clerkSignOut?.({ redirectUrl: location.toString() });
-
       return;
     }
 
     const enableNextAuth = get().enabledNextAuth;
     if (enableNextAuth) {
       const { signOut } = await import('next-auth/react');
-      signOut();
+      await signOut({ redirect: false });
+
+      // Logto 登出
+      const config = window.__HP_CLIENT_CONFIG__;
+      if (config.ssoProvider === 'logto') {
+        const endSessionUrl = `${config.logto.issuer}/session/end`;
+        const logoutUrl = new URL(endSessionUrl);
+        logoutUrl.searchParams.append('client_id', config.logto.clientId || '');
+        logoutUrl.searchParams.append('post_logout_redirect_uri', config.appUrl || '');
+
+        window.location.href = logoutUrl.toString();
+      }
     }
   },
   openLogin: async () => {

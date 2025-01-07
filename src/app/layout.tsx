@@ -18,6 +18,16 @@ type RootLayoutProps = {
   modal: ReactNode;
 };
 
+// 客户端配置
+interface HpClientConfig {
+  appUrl: string;
+  logto: {
+    clientId: string;
+    issuer: string;
+  };
+  ssoProvider: string;
+}
+
 const RootLayout = async ({ children, modal }: RootLayoutProps) => {
   const cookieStore = await cookies();
 
@@ -26,6 +36,15 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
 
   const direction = isRtlLang(locale) ? 'rtl' : 'ltr';
   const mobile = await isMobileDevice();
+
+  const hpClientConfig: HpClientConfig = {
+    appUrl: process.env.APP_URL || '',
+    logto: {
+      clientId: process.env.AUTH_LOGTO_ID || '',
+      issuer: process.env.AUTH_LOGTO_ISSUER || '',
+    },
+    ssoProvider: process.env.NEXT_AUTH_SSO_PROVIDERS || '',
+  };
 
   return (
     <html dir={direction} lang={locale} suppressHydrationWarning>
@@ -39,6 +58,11 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
         </GlobalProvider>
         <Analytics />
         {inVercel && <SpeedInsights />}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__HP_CLIENT_CONFIG__ = ${JSON.stringify(hpClientConfig)};`,
+          }}
+        />
       </body>
     </html>
   );
