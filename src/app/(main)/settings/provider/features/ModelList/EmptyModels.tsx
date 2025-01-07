@@ -14,14 +14,14 @@ const useStyles = createStyles(({ css, token }) => ({
   circle: css`
     width: 80px;
     height: 80px;
-    background: ${token.colorFillSecondary};
     border-radius: 50%;
+    background: ${token.colorFillSecondary};
   `,
   container: css`
     width: 100%;
-    background: ${token.colorBgContainer};
     border: 1px dashed ${token.colorBorder};
     border-radius: 12px;
+    background: ${token.colorBgContainer};
   `,
   description: css`
     max-width: 280px;

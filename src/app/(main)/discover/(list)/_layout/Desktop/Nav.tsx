@@ -28,7 +28,6 @@ export const useStyles = createStyles(({ css, token }) => ({
 
     height: auto;
     padding-block: 4px;
-
     border-color: transparent;
 
     transition: all 0.3s ${token.motionEaseInOut};

@@ -15,9 +15,9 @@ const useStyles = createStyles(({ css, token }) => ({
     width: 100%;
     margin: 12px;
     padding: 24px;
+    border-radius: 4px;
 
     background: ${token.colorBgContainer};
-    border-radius: 4px;
     box-shadow: ${token.boxShadowTertiary};
   `,
 }));

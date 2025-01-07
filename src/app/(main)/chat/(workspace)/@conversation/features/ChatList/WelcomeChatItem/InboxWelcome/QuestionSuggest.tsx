@@ -20,11 +20,11 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
 
     padding-block: 12px;
     padding-inline: 24px;
+    border-radius: 48px;
 
     color: ${token.colorText};
 
     background: ${token.colorBgContainer};
-    border-radius: 48px;
 
     &:hover {
       background: ${token.colorBgElevated};

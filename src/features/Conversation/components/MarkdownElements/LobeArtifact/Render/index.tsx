@@ -16,18 +16,18 @@ import ArtifactIcon from './Icon';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   avatar: css`
-    background: ${token.colorFillQuaternary};
     border-inline-end: 1px solid ${token.colorSplit};
+    background: ${token.colorFillQuaternary};
   `,
   container: css`
     cursor: pointer;
 
     margin-block-start: 12px;
+    border: 1px solid ${token.colorBorder};
+    border-radius: 8px;
 
     color: ${token.colorText};
 
-    border: 1px solid ${token.colorBorder};
-    border-radius: 8px;
     box-shadow: ${isDarkMode ? token.boxShadowSecondary : token.boxShadowTertiary};
 
     &:hover {

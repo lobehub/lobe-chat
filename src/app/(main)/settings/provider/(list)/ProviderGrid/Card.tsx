@@ -23,9 +23,9 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     overflow: hidden;
 
     height: 100%;
+    border-radius: 12px;
 
     background: ${token.colorBgContainer};
-    border-radius: 12px;
     box-shadow: 0 0 1px 1px ${isDarkMode ? token.colorFillQuaternary : token.colorFillSecondary}
       inset;
 

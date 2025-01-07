@@ -36,9 +36,9 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     }
 
     :hover::-webkit-scrollbar-thumb {
+      border: 3px solid transparent;
       background-color: ${token.colorText};
       background-clip: content-box;
-      border: 3px solid transparent;
     }
 
     ::-webkit-scrollbar-track {

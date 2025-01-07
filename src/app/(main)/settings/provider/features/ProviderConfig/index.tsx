@@ -65,12 +65,13 @@ const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
     }
   `,
   help: css`
+    border-radius: 50%;
+
     font-size: 12px;
     font-weight: 500;
     color: ${token.colorTextDescription};
 
     background: ${token.colorFillTertiary};
-    border-radius: 50%;
 
     &:hover {
       color: ${token.colorText};

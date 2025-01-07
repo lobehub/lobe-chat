@@ -23,10 +23,9 @@ export const useStyles = createStyles(({ css, token }) => ({
 
     padding-block: 8px;
     padding-inline: 12px;
+    border-radius: ${token.borderRadius}px;
 
     color: inherit;
-
-    border-radius: ${token.borderRadius}px;
 
     transition: all 0.2s ease-in-out;
 
