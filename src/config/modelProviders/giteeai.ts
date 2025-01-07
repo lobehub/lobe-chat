@@ -141,11 +141,13 @@ const GiteeAI: ModelProviderCard = {
   description: 'Gitee AI 的 Serverless API 为 AI 开发者提供开箱即用的大模型推理 API 服务。',
   disableBrowserRequest: true,
   id: 'giteeai',
+  modelList: { showModelFetcher: true },
   modelsUrl: 'https://ai.gitee.com/docs/openapi/v1#tag/serverless/POST/chat/completions',
   name: 'Gitee AI',
   settings: {
     disableBrowserRequest: true,
     sdkType: 'openai',
+    showModelFetcher: true,
   },
   url: 'https://ai.gitee.com',
 };
