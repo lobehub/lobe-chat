@@ -68,6 +68,9 @@
   "GoBack": {
     "back": "返回"
   },
+  "MaxTokenSlider": {
+    "unlimited": "無限制"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "自訂模型，預設支援函式呼叫與視覺辨識，請根據實際情況驗證上述能力的可用性",

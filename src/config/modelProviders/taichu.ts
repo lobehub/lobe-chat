@@ -30,6 +30,10 @@ const Taichu: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://ai-maas.wair.ac.cn/#/doc',
   name: 'Taichu',
+  settings: {
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://ai-maas.wair.ac.cn',
 };
 

@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
@@ -18,6 +20,7 @@ import type {
   TextToSpeechOptions,
   TextToSpeechPayload,
 } from '../../types';
+import { ChatStreamCallbacks } from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
@@ -62,10 +65,17 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       payload: ChatStreamPayload,
       options: ConstructorOptions<T>,
     ) => OpenAI.ChatCompletionCreateParamsStreaming;
+    handleStream?: (
+      stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
+      callbacks?: ChatStreamCallbacks,
+    ) => ReadableStream;
     handleStreamBizErrorType?: (error: {
       message: string;
       name: string;
     }) => ILobeAgentRuntimeErrorType | undefined;
+    handleTransformResponseToStream?: (
+      data: OpenAI.ChatCompletion,
+    ) => ReadableStream<OpenAI.ChatCompletionChunk>;
     noUserId?: boolean;
   };
   constructorOptions?: ConstructorOptions<T>;
@@ -228,7 +238,8 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             debugStream(useForDebugStream).catch(console.error);
           }
 
-          return StreamingResponse(OpenAIStream(prod, streamOptions), {
+          const streamHandler = chatCompletion?.handleStream || OpenAIStream;
+          return StreamingResponse(streamHandler(prod, streamOptions), {
             headers: options?.headers,
           });
         }
@@ -239,9 +250,12 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
         if (responseMode === 'json') return Response.json(response);
 
-        const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
+        const transformHandler =
+          chatCompletion?.handleTransformResponseToStream || transformResponseToStream;
+        const stream = transformHandler(response as unknown as OpenAI.ChatCompletion);
 
-        return StreamingResponse(OpenAIStream(stream, streamOptions), {
+        const streamHandler = chatCompletion?.handleStream || OpenAIStream;
+        return StreamingResponse(streamHandler(stream, streamOptions), {
           headers: options?.headers,
         });
       } catch (error) {
@@ -267,7 +281,15 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
           const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === item.id);
 
-          if (knownModel) return knownModel;
+          if (knownModel) {
+            dayjs.extend(utc);
+
+            return {
+              ...knownModel,
+              releasedAt:
+                knownModel.releasedAt ?? dayjs.utc(item.created * 1000).format('YYYY-MM-DD'),
+            };
+          }
 
           return { id: item.id };
         })

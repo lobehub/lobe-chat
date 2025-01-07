@@ -1,6 +1,103 @@
 [
   {
     "children": {
+      "fixes": ["Fix format short number."]
+    },
+    "date": "2025-01-06",
+    "version": "1.43.4"
+  },
+  {
+    "children": {
+      "improvements": ["Upgrade @clerk/nextjs to v6."]
+    },
+    "date": "2025-01-04",
+    "version": "1.43.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix heatmap and manifest."]
+    },
+    "date": "2025-01-04",
+    "version": "1.43.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix stats data query issue."]
+    },
+    "date": "2025-01-03",
+    "version": "1.43.1"
+  },
+  {
+    "children": {
+      "features": ["Add User Stats and Refactor Profile."],
+      "fixes": ["Fix chat page error."]
+    },
+    "date": "2025-01-03",
+    "version": "1.43.0"
+  },
+  {
+    "children": {
+      "improvements": ["Fix zero-sized element in topic list."]
+    },
+    "date": "2025-01-03",
+    "version": "1.42.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix topic mobile view ui error."]
+    },
+    "date": "2025-01-02",
+    "version": "1.42.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor provider info and improve settings side bar loading."]
+    },
+    "date": "2025-01-02",
+    "version": "1.42.4"
+  },
+  {
+    "children": {},
+    "date": "2025-01-01",
+    "version": "1.42.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add o1 model in openai and openrouter models."]
+    },
+    "date": "2024-12-31",
+    "version": "1.42.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix custom max_token not saved from customModelCards."]
+    },
+    "date": "2024-12-29",
+    "version": "1.42.1"
+  },
+  {
+    "children": {
+      "features": ["Add custom stream handle support for LobeOpenAICompatibleFactory."]
+    },
+    "date": "2024-12-29",
+    "version": "1.42.0"
+  },
+  {
+    "children": {
+      "features": ["Support white list for discover assistant."]
+    },
+    "date": "2024-12-28",
+    "version": "1.41.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update deepseek V3 model."]
+    },
+    "date": "2024-12-28",
+    "version": "1.40.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix fetch error in changelog modal."]
     },
     "date": "2024-12-26",

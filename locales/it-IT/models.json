@@ -602,6 +602,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp è il nuovo modello AI multimodale sperimentale di Google, dotato di funzionalità di nuova generazione, velocità straordinaria, chiamate di strumenti native e generazione multimodale."
   },
+  "gemini-2.0-flash-thinking-exp-1219": {
+    "description": "Gemini 2.0 Flash Exp è il più recente modello AI multimodale sperimentale di Google, dotato di funzionalità di nuova generazione, velocità eccezionale, chiamate a strumenti nativi e generazione multimodale."
+  },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 è il modello AI multimodale sperimentale più recente di Google, dotato di capacità di elaborazione rapida, supporta input testuali, visivi e video, ed è adatto per un'ampia gamma di compiti con un'efficiente scalabilità."
   },
@@ -1094,6 +1097,12 @@
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B è un modello linguistico di grandi dimensioni personalizzato da NVIDIA, progettato per migliorare l'utilità delle risposte generate dai LLM alle domande degli utenti. Questo modello ha ottenuto risultati eccellenti nei benchmark come Arena Hard, AlpacaEval 2 LC e GPT-4-Turbo MT-Bench, classificandosi al primo posto in tutti e tre i benchmark di allineamento automatico fino al 1 ottobre 2024. Il modello è stato addestrato utilizzando RLHF (in particolare REINFORCE), Llama-3.1-Nemotron-70B-Reward e HelpSteer2-Preference come suggerimenti, basandosi sul modello Llama-3.1-70B-Instruct."
   },
+  "o1": {
+    "description": "Focalizzato su inferenze avanzate e risoluzione di problemi complessi, inclusi compiti matematici e scientifici. È particolarmente adatto per applicazioni che richiedono una comprensione profonda del contesto e flussi di lavoro agenti."
+  },
+  "o1-2024-12-17": {
+    "description": "o1 è il nuovo modello di inferenza di OpenAI, che supporta input testuali e visivi e produce output testuali, adatto a compiti complessi che richiedono una vasta conoscenza generale. Questo modello ha un contesto di 200K e una data di scadenza della conoscenza di ottobre 2023."
+  },
   "o1-mini": {
     "description": "o1-mini è un modello di inferenza rapido ed economico progettato per applicazioni di programmazione, matematica e scienza. Questo modello ha un contesto di 128K e una data di cutoff della conoscenza di ottobre 2023."
   },
@@ -1120,6 +1129,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini è il modello più recente di OpenAI, lanciato dopo GPT-4 Omni, che supporta input visivi e testuali e produce output testuali. Come il loro modello di piccole dimensioni più avanzato, è molto più economico rispetto ad altri modelli all'avanguardia recenti e costa oltre il 60% in meno rispetto a GPT-3.5 Turbo. Mantiene un'intelligenza all'avanguardia, offrendo un notevole rapporto qualità-prezzo. GPT-4o mini ha ottenuto un punteggio dell'82% nel test MMLU e attualmente è classificato più in alto di GPT-4 per preferenze di chat."
+  },
+  "openai/o1": {
+    "description": "o1 è il nuovo modello di inferenza di OpenAI, che supporta input testuali e visivi e produce output testuali, adatto a compiti complessi che richiedono una vasta conoscenza generale. Questo modello ha un contesto di 200K e una data di scadenza della conoscenza di ottobre 2023."
   },
   "openai/o1-mini": {
     "description": "o1-mini è un modello di inferenza rapido ed economico progettato per applicazioni di programmazione, matematica e scienza. Questo modello ha un contesto di 128K e una data di cutoff della conoscenza di ottobre 2023."

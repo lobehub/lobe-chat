@@ -162,6 +162,14 @@ const BaiduWenxin: ModelProviderCard = {
   id: 'wenxin',
   modelsUrl: 'https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu#%E5%AF%B9%E8%AF%9Dchat',
   name: 'Wenxin',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'wenxin',
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
+  },
   smoothing: {
     speed: 2,
     text: true,

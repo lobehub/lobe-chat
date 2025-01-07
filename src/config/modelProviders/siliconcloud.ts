@@ -598,6 +598,13 @@ const SiliconCloud: ModelProviderCard = {
   proxyUrl: {
     placeholder: 'https://api.siliconflow.cn/v1',
   },
+  settings: {
+    proxyUrl: {
+      placeholder: 'https://api.siliconflow.cn/v1',
+    },
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://siliconflow.cn/zh-cn/siliconcloud',
 };
 

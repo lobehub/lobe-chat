@@ -148,7 +148,7 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[Anthropic](https://lobechat.com/discover/provider/anthropic)**: Anthropic 是一家专注于人工智能研究和开发的公司，提供了一系列先进的语言模型，如 Claude 3.5 Sonnet、Claude 3 Sonnet、Claude 3 Opus 和 Claude 3 Haiku。这些模型在智能、速度和成本之间取得了理想的平衡，适用于从企业级工作负载到快速响应的各种应用场景。Claude 3.5 Sonnet 作为其最新模型，在多项评估中表现优异，同时保持了较高的性价比。
 - **[Bedrock](https://lobechat.com/discover/provider/bedrock)**: Bedrock 是亚马逊 AWS 提供的一项服务，专注于为企业提供先进的 AI 语言模型和视觉模型。其模型家族包括 Anthropic 的 Claude 系列、Meta 的 Llama 3.1 系列等，涵盖从轻量级到高性能的多种选择，支持文本生成、对话、图像处理等多种任务，适用于不同规模和需求的企业应用。
 - **[Google](https://lobechat.com/discover/provider/google)**: Google 的 Gemini 系列是其最先进、通用的 AI 模型，由 Google DeepMind 打造，专为多模态设计，支持文本、代码、图像、音频和视频的无缝理解与处理。适用于从数据中心到移动设备的多种环境，极大提升了 AI 模型的效率与应用广泛性。
-- **[DeepSeek](https://lobechat.com/discover/provider/deepseek)**: DeepSeek 是一家专注于人工智能技术研究和应用的公司，其最新模型 DeepSeek-V2.5 融合了通用对话和代码处理能力，并在人类偏好对齐、写作任务和指令跟随等方面实现了显著提升。
+- **[DeepSeek](https://lobechat.com/discover/provider/deepseek)**: DeepSeek 是一家专注于人工智能技术研究和应用的公司，其最新模型 DeepSeek-V3 多项评测成绩超越 Qwen2.5-72B 和 Llama-3.1-405B 等开源模型，性能对齐领军闭源模型 GPT-4o 与 Claude-3.5-Sonnet。
 - **[HuggingFace](https://lobechat.com/discover/provider/huggingface)**: HuggingFace Inference API 提供了一种快速且免费的方式，让您可以探索成千上万种模型，适用于各种任务。无论您是在为新应用程序进行原型设计，还是在尝试机器学习的功能，这个 API 都能让您即时访问多个领域的高性能模型。
 - **[OpenRouter](https://lobechat.com/discover/provider/openrouter)**: OpenRouter 是一个提供多种前沿大模型接口的服务平台，支持 OpenAI、Anthropic、LLaMA 及更多，适合多样化的开发和应用需求。用户可根据自身需求灵活选择最优的模型和价格，助力 AI 体验的提升。
 - **[Cloudflare Workers AI](https://lobechat.com/discover/provider/cloudflare)**: 在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。
@@ -273,12 +273,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                                     | 描述                                                                             |
-| ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>        | 分析股票并获取全面的实时投资数据和分析。<br/>`股票`                              |
-| [谷歌自定义搜索引擎](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup>       | 通过他们的官方自定义搜索引擎 API 搜索谷歌。<br/>`网络` `搜索`                    |
-| [Speak](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2024-12-02**</sup>                            | 使用 Speak，您的 AI 语言导师，学习如何用另一种语言说任何事情。<br/>`教育` `语言` |
-| [通义万象图像生成器](https://lobechat.com/discover/plugin/alps-tongyi-image)<br/><sup>By **YoungTx** on **2024-08-09**</sup> | 此插件使用阿里巴巴的通义万象模型根据文本提示生成图像。<br/>`图像` `通义` `万象`  |
+| 最近新增                                                                                                               | 描述                                                                             |
+| ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| [MintbaseSearch](https://lobechat.com/discover/plugin/mintbasesearch)<br/><sup>By **mintbase** on **2024-12-31**</sup> | 在 NEAR 协议上查找任何 NFT 数据。<br/>`加密货币` `nft`                           |
+| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>  | 分析股票并获取全面的实时投资数据和分析。<br/>`股票`                              |
+| [谷歌自定义搜索引擎](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup> | 通过他们的官方自定义搜索引擎 API 搜索谷歌。<br/>`网络` `搜索`                    |
+| [Speak](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2024-12-02**</sup>                      | 使用 Speak，您的 AI 语言导师，学习如何用另一种语言说任何事情。<br/>`教育` `语言` |
 
 > 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
 

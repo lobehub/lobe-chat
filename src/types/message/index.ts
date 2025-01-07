@@ -161,3 +161,8 @@ export interface SendThreadMessageParams {
   message: string;
   onlyAddUserMessage?: boolean;
 }
+
+export interface ModelRankItem {
+  count: number;
+  id: string | null;
+}

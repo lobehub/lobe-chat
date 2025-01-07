@@ -131,22 +131,6 @@
       "title": "Download specified Ollama model"
     }
   },
-  "sensenova": {
-    "sensenovaAccessKeyID": {
-      "desc": "Geben Sie die SenseNova Access Key ID ein",
-      "placeholder": "SenseNova Access Key ID",
-      "title": "Access Key ID"
-    },
-    "sensenovaAccessKeySecret": {
-      "desc": "Geben Sie den SenseNova Access Key Secret ein",
-      "placeholder": "SenseNova Access Key Secret",
-      "title": "Access Key Secret"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihre Access Key ID / Access Key Secret ein, um die Sitzung zu starten. Die Anwendung speichert Ihre Authentifizierungsinformationen nicht",
-      "title": "Verwenden Sie benutzerdefinierte SenseNova Authentifizierungsinformationen"
-    }
-  },
   "wenxin": {
     "accessKey": {
       "desc": "Geben Sie den Access Key der Baidu Qianfan-Plattform ein",

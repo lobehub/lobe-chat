@@ -54,7 +54,7 @@ const ByTimeMode = memo(() => {
 
   const groupContent = useCallback(
     (index: number) => {
-      if (index === 0) return undefined;
+      if (index === 0) return <div style={{ height: 1 }} />;
 
       const topicGroup = groups[index];
       return <TopicGroupItem {...topicGroup} />;
