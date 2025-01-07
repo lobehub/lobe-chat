@@ -411,6 +411,7 @@
     "common": "Impostazioni comuni",
     "experiment": "实验",
     "llm": "Modello linguistico",
+    "provider": "Fornitore di servizi AI",
     "sync": "云端同步",
     "system-agent": "Assistente di sistema",
     "tts": "Servizio vocale"
