@@ -81,35 +81,39 @@ const ProviderCard = memo<ProviderCardProps>(
     return (
       <Flexbox className={cx(styles.container)} gap={24}>
         <Flexbox gap={12} padding={16} width={'100%'}>
-          <Flexbox align={'center'} horizontal justify={'space-between'}>
-            <Link href={`/settings/provider/${id}`}>
-              {source === 'builtin' ? (
-                <ProviderCombine
-                  provider={id}
-                  size={24}
-                  style={{ color: theme.colorText }}
-                  title={name}
-                />
-              ) : (
-                <Flexbox align={'center'} gap={12} horizontal>
-                  {logo ? (
-                    <Avatar alt={name || id} avatar={logo} size={28} />
-                  ) : (
-                    <ProviderIcon
-                      provider={id}
-                      size={24}
-                      style={{ borderRadius: 6 }}
-                      type={'avatar'}
-                    />
-                  )}
-                  <Typography.Text>{name || id}</Typography.Text>
-                </Flexbox>
-              )}
-            </Link>
-          </Flexbox>
-          <Paragraph className={styles.desc} ellipsis={{ rows: 2, tooltip: true }}>
-            {source === 'custom' ? description : t(`${id}.description`)}
-          </Paragraph>
+          <Link href={`/settings/provider/${id}`}>
+            <Flexbox gap={12} width={'100%'}>
+              <Flexbox align={'center'} horizontal justify={'space-between'}>
+                {source === 'builtin' ? (
+                  <ProviderCombine
+                    provider={id}
+                    size={24}
+                    style={{ color: theme.colorText }}
+                    title={name}
+                  />
+                ) : (
+                  <Flexbox align={'center'} gap={12} horizontal>
+                    {logo ? (
+                      <Avatar alt={name || id} avatar={logo} size={28} />
+                    ) : (
+                      <ProviderIcon
+                        provider={id}
+                        size={24}
+                        style={{ borderRadius: 6 }}
+                        type={'avatar'}
+                      />
+                    )}
+                    <Typography.Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                      {name || id}
+                    </Typography.Text>
+                  </Flexbox>
+                )}
+              </Flexbox>
+              <Paragraph className={styles.desc} ellipsis={{ rows: 2, tooltip: true }}>
+                {source === 'custom' ? description : t(`${id}.description`)}
+              </Paragraph>
+            </Flexbox>
+          </Link>
           <Divider style={{ margin: '4px 0' }} />
           <Flexbox horizontal justify={'space-between'} paddingBlock={'8px 0'}>
             <div />
