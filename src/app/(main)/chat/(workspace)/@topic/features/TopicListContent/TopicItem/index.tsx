@@ -25,7 +25,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     margin-block: 2px;
     margin-inline: 8px;
     padding: 8px;
-
     border-radius: ${token.borderRadius}px;
 
     &.topic-item {

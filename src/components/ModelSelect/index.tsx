@@ -17,13 +17,13 @@ const useStyles = createStyles(({ css, token }) => ({
   custom: css`
     width: 36px;
     height: 20px;
+    border-radius: 4px;
 
     font-family: ${token.fontFamilyCode};
     font-size: 12px;
     color: ${rgba(token.colorWarning, 0.75)};
 
     background: ${token.colorWarningBg};
-    border-radius: 4px;
   `,
   tag: css`
     cursor: default;
@@ -34,7 +34,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     width: 20px;
     height: 20px;
-
     border-radius: 4px;
   `,
   tagBlue: css`
@@ -48,13 +47,13 @@ const useStyles = createStyles(({ css, token }) => ({
   token: css`
     width: 36px;
     height: 20px;
+    border-radius: 4px;
 
     font-family: ${token.fontFamilyCode};
     font-size: 11px;
     color: ${token.colorTextSecondary};
 
     background: ${token.colorFillTertiary};
-    border-radius: 4px;
   `,
 }));
 

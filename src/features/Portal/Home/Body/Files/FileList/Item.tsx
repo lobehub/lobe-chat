@@ -17,9 +17,9 @@ const useStyles = createStyles(({ css, token }) => ({
     max-width: 420px;
     padding-block: 8px;
     padding-inline: 12px;
+    border-radius: 8px;
 
     background: ${token.colorFillTertiary};
-    border-radius: 8px;
 
     &:hover {
       background: ${token.colorFillSecondary};

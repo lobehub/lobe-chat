@@ -17,11 +17,11 @@ const useStyles = createStyles(({ css, responsive, token }) => ({
     height: 20px;
     padding-block: 0;
     padding-inline: 6px;
+    border-radius: 12px;
 
     color: ${token.colorTextDescription};
 
     background: ${token.colorFillSecondary};
-    border-radius: 12px;
   `,
   grid: css`
     grid-template-columns: repeat(2, 1fr);

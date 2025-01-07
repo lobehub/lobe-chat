@@ -17,8 +17,8 @@ import AiHeatmaps from '../AiHeatmaps';
 const useStyles = createStyles(({ css, token, stylish, cx, responsive }) => ({
   avatar: css`
     box-sizing: content-box;
-    background: ${token.colorText};
     border: 4px solid ${token.colorBgLayout};
+    background: ${token.colorText};
   `,
   background: css`
     position: relative;
@@ -38,10 +38,10 @@ const useStyles = createStyles(({ css, token, stylish, cx, responsive }) => ({
     overflow: hidden;
 
     width: 100%;
-
-    background: ${token.colorBgLayout};
     border: 1px solid ${token.colorBorder};
     border-radius: ${token.borderRadiusLG * 2}px;
+
+    background: ${token.colorBgLayout};
     box-shadow: ${token.boxShadow};
   `,
   decs: css`
@@ -65,10 +65,10 @@ const useStyles = createStyles(({ css, token, stylish, cx, responsive }) => ({
 
       width: 100%;
       max-height: 70dvh;
-
-      background: ${token.colorBgLayout};
       border: 1px solid ${token.colorBorder};
       border-radius: ${token.borderRadiusLG}px;
+
+      background: ${token.colorBgLayout};
 
       * {
         pointer-events: none;

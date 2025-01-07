@@ -22,7 +22,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     padding-block: 4px;
     padding-inline: 8px;
-
     border-radius: ${token.borderRadius}px;
 
     transition: all 0.2s ease-in-out;

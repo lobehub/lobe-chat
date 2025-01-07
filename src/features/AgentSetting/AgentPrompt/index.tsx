@@ -15,14 +15,14 @@ export const useStyles = createStyles(({ css, token, responsive }) => ({
   container: css`
     position: relative;
     width: 100%;
-    background: ${token.colorFillSecondary};
     border-radius: ${token.borderRadiusLG}px;
+    background: ${token.colorFillSecondary};
   `,
   content: css`
     z-index: 2;
     padding: 8px;
-    background: ${token.colorBgContainer};
     border-radius: ${token.borderRadiusLG - 1}px;
+    background: ${token.colorBgContainer};
   `,
   markdown: css`
     border: unset;

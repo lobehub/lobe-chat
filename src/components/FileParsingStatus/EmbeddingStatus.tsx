@@ -12,12 +12,12 @@ import { AsyncTaskStatus, FileParsingTask } from '@/types/asyncTask';
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   errorReason: css`
     padding: 4px;
+    border-radius: 4px;
 
     font-family: monospace;
     font-size: 12px;
 
     background: ${isDarkMode ? darken(0.1, token.colorText) : lighten(0.1, token.colorText)};
-    border-radius: 4px;
   `,
 }));
 
