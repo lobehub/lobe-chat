@@ -2,6 +2,7 @@ import { uniqBy } from 'lodash-es';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { isServerMode } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
@@ -9,8 +10,8 @@ import { AiInfraStore } from '@/store/aiInfra/store';
 import { ModelAbilities } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
-  AiProviderInitState,
   AiProviderListItem,
+  AiProviderRuntimeState,
   AiProviderSortMap,
   AiProviderSourceEnum,
   CreateAiProviderParams,
@@ -40,12 +41,12 @@ export interface AiProviderAction {
   useFetchAiProviderItem: (id: string) => SWRResponse<AiProviderDetailItem | undefined>;
   useFetchAiProviderList: (params?: { suspense?: boolean }) => SWRResponse<AiProviderListItem[]>;
   /**
-   * init provider keyVaults and user enabled model list
+   * fetch provider keyVaults and user enabled model list
    * @param isLoginOnInit
    */
   useFetchAiProviderRuntimeState: (
     isLoginOnInit: boolean | undefined,
-  ) => SWRResponse<AiProviderInitState | undefined>;
+  ) => SWRResponse<AiProviderRuntimeState | undefined>;
 }
 
 export const createAiProviderSlice: StateCreator<
@@ -152,10 +153,21 @@ export const createAiProviderSlice: StateCreator<
       },
     ),
 
-  useFetchAiProviderRuntimeState: (isLoginOnInit) =>
-    useClientDataSWR<AiProviderInitState | undefined>(
-      isLoginOnInit && isServerMode ? AiProviderSwrKey.fetchAiProviderRuntimeState : null,
-      () => aiProviderService.getAiProviderRuntimeState(),
+  useFetchAiProviderRuntimeState: (isLogin) =>
+    useClientDataSWR<AiProviderRuntimeState | undefined>(
+      isServerMode ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin] : null,
+      async ([, isLogin]) => {
+        if (isLogin) return aiProviderService.getAiProviderRuntimeState();
+
+        const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+        return {
+          enabledAiModels: LOBE_DEFAULT_MODEL_LIST.filter((m) => m.enabled),
+          enabledAiProviders: DEFAULT_MODEL_PROVIDER_LIST.filter(
+            (provider) => provider.enabled,
+          ).map((item) => ({ id: item.id, name: item.name, source: 'builtin' })),
+          runtimeConfig: {},
+        };
+      },
       {
         onSuccess: (data) => {
           if (!data) return;

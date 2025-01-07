@@ -1,6 +1,6 @@
 import { lambdaClient } from '@/libs/trpc/client';
 import {
-  AiProviderInitState,
+  AiProviderRuntimeState,
   AiProviderSortMap,
   CreateAiProviderParams,
   UpdateAiProviderConfigParams,
@@ -39,8 +39,8 @@ class AiProviderService {
     return lambdaClient.aiProvider.removeAiProvider.mutate({ id });
   };
 
-  getAiProviderRuntimeState = async (): Promise<AiProviderInitState> => {
-    return lambdaClient.aiProvider.getAiProviderRuntimeState.query();
+  getAiProviderRuntimeState = async (isLogin?: boolean): Promise<AiProviderRuntimeState> => {
+    return lambdaClient.aiProvider.getAiProviderRuntimeState.query({ isLogin });
   };
 }
 

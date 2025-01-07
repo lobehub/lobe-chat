@@ -16,7 +16,8 @@ export type AiModelType =
   | 'stt'
   | 'image'
   | 'text2video'
-  | 'text2music';
+  | 'text2music'
+  | 'realtime';
 
 export interface ModelAbilities {
   /**
@@ -91,7 +92,7 @@ export interface ChatModelPricing extends BasicModelPricing {
   writeCacheInput?: number;
 }
 
-interface AIBaseModelCard {
+export interface AIBaseModelCard {
   /**
    * the context window (or input + output tokens limit)
    */
@@ -223,6 +224,21 @@ export interface AIRealtimeModelCard extends AIBaseModelCard {
   maxOutput?: number;
   pricing?: ChatModelPricing;
   type: 'realtime';
+}
+
+export interface AiFullModelCard extends AIBaseModelCard {
+  abilities?: ModelAbilities;
+  contextWindowTokens?: number;
+  displayName?: string;
+  id: string;
+  maxDimension?: number;
+  pricing?: ChatModelPricing;
+  type: AiModelType;
+}
+
+export interface LobeDefaultAiModelListItem extends AiFullModelCard {
+  abilities: ModelAbilities;
+  providerId: string;
 }
 
 // create

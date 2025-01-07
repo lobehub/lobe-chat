@@ -202,7 +202,7 @@ export interface AiProviderRuntimeConfig {
   settings: AiProviderSettings;
 }
 
-export interface AiProviderInitState {
+export interface AiProviderRuntimeState {
   enabledAiModels: EnabledAiModel[];
   enabledAiProviders: EnabledProvider[];
   runtimeConfig: Record<string, AiProviderRuntimeConfig>;

@@ -33,6 +33,7 @@ export class AiInfraRepos {
    */
   getAiProviderList = async () => {
     const userProviders = await this.aiProviderModel.getAiProviderList();
+
     // 1. 先创建一个基于 DEFAULT_MODEL_PROVIDER_LIST id 顺序的映射
     const orderMap = new Map(DEFAULT_MODEL_PROVIDER_LIST.map((item, index) => [item.id, index]));
 
@@ -56,7 +57,7 @@ export class AiInfraRepos {
     });
   };
 
-  getEnabledProviderList = async () => {
+  getUserEnabledProviderList = async () => {
     const list = await this.getAiProviderList();
     return list
       .filter((item) => item.enabled)
@@ -65,11 +66,12 @@ export class AiInfraRepos {
   };
 
   getEnabledModels = async () => {
-    const providers = await this.getEnabledProviderList();
+    const providers = await this.getAiProviderList();
+    const enabledProviders = providers.filter((item) => item.enabled);
 
     const userEnabledModels = await this.aiModelModel.getEnabledModels();
     const modelList = await pMap(
-      providers,
+      enabledProviders,
       async (provider) => {
         const aiModels = await this.fetchBuiltinModels(provider.id);
 

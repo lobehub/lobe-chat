@@ -9,7 +9,7 @@ import { getServerGlobalConfig } from '@/server/globalConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import {
   AiProviderDetailItem,
-  AiProviderInitState,
+  AiProviderRuntimeState,
   CreateAiProviderSchema,
   UpdateAiProviderConfigSchema,
 } from '@/types/aiProvider';
@@ -55,18 +55,19 @@ export const aiProviderRouter = router({
     return await ctx.aiInfraRepos.getAiProviderList();
   }),
 
-  getAiProviderRuntimeState: aiProviderProcedure.query(
-    async ({ ctx }): Promise<AiProviderInitState> => {
+  getAiProviderRuntimeState: aiProviderProcedure
+    .input(z.object({ isLogin: z.boolean().optional() }))
+    .query(async ({ ctx }): Promise<AiProviderRuntimeState> => {
       const runtimeConfig = await ctx.aiProviderModel.getAiProviderRuntimeConfig(
         KeyVaultsGateKeeper.getUserKeyVaults,
       );
-      const enabledAiProviders = await ctx.aiInfraRepos.getEnabledProviderList();
+
+      const enabledAiProviders = await ctx.aiInfraRepos.getUserEnabledProviderList();
 
       const enabledAiModels = await ctx.aiInfraRepos.getEnabledModels();
 
       return { enabledAiModels, enabledAiProviders, runtimeConfig };
-    },
-  ),
+    }),
 
   removeAiProvider: aiProviderProcedure
     .input(z.object({ id: z.string() }))
