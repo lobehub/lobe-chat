@@ -1,7 +1,7 @@
 import { TextArea } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { TextAreaRef } from 'antd/es/input/TextArea';
-import { memo, useEffect, useRef } from 'react';
+import { RefObject, memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
@@ -45,7 +45,7 @@ const InputArea = memo<InputAreaProps>(({ onSend, value, loading, onChange }) =>
 
   const useCmdEnterToSend = useUserStore(preferenceSelectors.useCmdEnterToSend);
 
-  useAutoFocus(ref);
+  useAutoFocus(ref as RefObject<TextAreaRef>);
 
   const hasValue = !!value;
 

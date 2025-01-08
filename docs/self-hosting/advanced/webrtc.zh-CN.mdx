@@ -10,45 +10,38 @@ tags:
 
 ## WebRTC 简介
 
-WebRTC (Web Real-Time Communication) 是一项实现浏览器之间点对点通信的技术。在 LobeChat 中,我们实验性地基于 WebRTC 和 YJS 实现了设备间的实时数据同步,无需依赖传统的服务器数据库。这种方案具有高度隐私性、零冲突性，并能提供实时会话同步体验。
+WebRTC (Web Real-Time Communication) 是一项实现浏览器之间点对点通信的技术。在 LobeChat 中，我们实验性地基于 WebRTC 和 YJS 实现了设备间的实时数据同步，无需依赖传统的服务器数据库。这种方案具有高度隐私性、零冲突性，并能提供实时会话同步体验。
 
 ## 配置 WebRTC 并实现同步
 
-要使用 LobeChat 的 WebRTC 同步功能,需要完成以下步骤:
+要使用 LobeChat 的 WebRTC 同步功能，需要完成以下步骤:
 
 <Steps>
+  ### 部署信令服务器
 
-### 部署信令服务器
+  使用 Zeabur 平台一键部署 WebRTC 信令服务器：
 
-使用 Zeabur 平台一键部署 WebRTC 信令服务器：
+  [![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/MY0JZG?referralCode=arvinxx)
 
-[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/MY0JZG?referralCode=arvinxx)
+  或者查看 [源码](https://github.com/lobehub/y-webrtc-signaling) 自行部署。
 
-或者查看 [源码](https://github.com/lobehub/y-webrtc-signaling) 自行部署。
+  部署完成后，可以得到一个 URL，例如：`https://my-signaling-server.zeabur.app`。
 
-部署完成后，可以得到一个 URL，例如：`https://my-signaling-server.zeabur.app`。
+  ### 在部署实例中开启 WebRTC 同步
 
-### 在部署实例中开启 WebRTC 同步
+  LobeChat 默认隐藏了 WebRTC 同步功能，需要通过添加环境变量 `FEATURE_FLAGS=+webrtc_sync` 来开启 WebRTC 同步特性。
 
-LobeChat 默认隐藏了 WebRTC 同步功能，需要通过添加环境变量 `FEATURE_FLAGS=+webrtc_sync` 来开启 WebRTC 同步特性。
+  ### 配置 LobeChat 的 WebRTC 同步设置
 
-### 配置 LobeChat 的 WebRTC 同步设置
+  1. 打开 LobeChat 设置 -> 数据同步
+  2. 在 WebRTC 同步中填写信令服务器地址；
+  3. 设置同步频道名称和密码
 
-1. 打开 LobeChat 设置 -> 数据同步
-2. 在 WebRTC 同步中填写信令服务器地址；
-3. 设置同步频道名称和密码
+  <Image alt={'LobeChat 数据同步设置页'} height={356} inStep src={'https://github.com/lobehub/lobe-chat/assets/28616219/bf86bf1e-87fb-4015-8587-15ff28bb9c24'} />
 
-<Image
-  alt={'LobeChat 数据同步设置页'}
-  height={356}
-  inStep
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/bf86bf1e-87fb-4015-8587-15ff28bb9c24'}
-/>
+  ### 在需要同步的设备上重复以上配置
 
-### 在需要同步的设备上重复以上配置
-
-确保所有设备使用相同的信令服务器、频道名称和密码，完成配置后,设备间应该可以开始自动同步数据。
-
+  确保所有设备使用相同的信令服务器、频道名称和密码，完成配置后，设备间应该可以开始自动同步数据。
 </Steps>
 
 ## 使用局限性和已知问题
@@ -67,17 +60,17 @@ WebRTC 要求设备同时在线才能进行同步，这意味着无法在一台�
 
 由于 WebRTC 的实现机制，其点对点通信对于网络要求非常苛刻，我们的很多用户反馈：
 
-- 在 PC 上可以互相同步、 手机 sim 卡无法和 PC 同步、但是换成和PC一样的WIFI可以和 PC 同步；
+- 在 PC 上可以互相同步、 手机 sim 卡无法和 PC 同步、但是换成和 PC 一样的 WIFI 可以和 PC 同步；
 - 任何切换网络都无法同步；
 
 ### 稳定性与性能问题
 
 - 部分用户报告在 Firefox 浏览器上遇到 ICE 连接失败的问题：[WebRTC Data Sync Feedback](https://github.com/lobehub/lobe-chat/issues/1683#issuecomment-2094745907)
-- 对于超长文本或大量对话记录,同步过程可能变慢或不稳定：[当模型输出超长对话时，对话末尾会出现同步相关的内容标签，导致同步失败](https://github.com/lobehub/lobe-chat/issues/1962)
+- 对于超长文本或大量对话记录，同步过程可能变慢或不稳定：[当模型输出超长对话时，对话末尾会出现同步相关的内容标签，导致同步失败](https://github.com/lobehub/lobe-chat/issues/1962)
 
 ## 我们的建议
 
-鉴于以上原因，我们建议用户将 WebRTC 同步功能视为实验性功能,并定期备份重要数据。
+鉴于以上原因，我们建议用户将 WebRTC 同步功能视为实验性功能，并定期备份重要数据。
 
 目前我们已经发布了更稳定、更用户友好的服务端数据库同步方案（[部署指南](/zh/docs/self-hosting/advanced/server-database)），我们建议用户优先考虑使用服务端数据库同步方案。
 

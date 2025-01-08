@@ -45,7 +45,7 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
   ]);
   const [isCheckingStatus, setCheckingStatus] = useState(false);
   const { modal } = App.useApp();
-  const actionRef = useRef<ActionType>();
+  const actionRef = useRef<ActionType>(null);
 
   const columns: ProColumns<RAGEvalEvaluationItem>[] = [
     {
