@@ -192,6 +192,7 @@ export interface EnabledAiModel {
   config?: AiModelConfig;
   contextWindowTokens?: number;
   displayName?: string;
+  enabled?: boolean;
   id: string;
   providerId: string;
   sort?: number;

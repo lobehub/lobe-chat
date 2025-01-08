@@ -69,19 +69,28 @@ export class AiInfraRepos {
     const providers = await this.getAiProviderList();
     const enabledProviders = providers.filter((item) => item.enabled);
 
-    const userEnabledModels = await this.aiModelModel.getEnabledModels();
+    const allModels = await this.aiModelModel.getAllModels();
+    const userEnabledModels = allModels.filter((item) => item.enabled);
+
     const modelList = await pMap(
       enabledProviders,
       async (provider) => {
         const aiModels = await this.fetchBuiltinModels(provider.id);
 
         return (aiModels || [])
-          .filter((i) => i.enabled)
-          .map<EnabledAiModel>((item) => ({
-            ...item,
-            abilities: item.abilities || {},
-            providerId: provider.id,
-          }));
+          .map<EnabledAiModel & { enabled?: boolean | null }>((item) => {
+            const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
+
+            const enabled = !!user ? user.enabled : item.enabled;
+
+            return {
+              ...item,
+              abilities: item.abilities || {},
+              enabled,
+              providerId: provider.id,
+            };
+          })
+          .filter((i) => i.enabled);
       },
       { concurrency: 10 },
     );
@@ -100,6 +109,9 @@ export class AiInfraRepos {
     return mergeArrayById(defaultModels, aiModels) as AiProviderModelListItem[];
   };
 
+  /**
+   * Fetch builtin models from config
+   */
   private fetchBuiltinModels = async (
     providerId: string,
   ): Promise<AiProviderModelListItem[] | undefined> => {
