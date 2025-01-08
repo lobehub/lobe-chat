@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Update Remark."]
+    },
+    "date": "2025-01-08",
+    "version": "1.45.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix provider enabled issue."]
     },
     "date": "2025-01-08",
