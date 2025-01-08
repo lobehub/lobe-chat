@@ -328,5 +328,8 @@
         }
       }
     }
+  },
+  "overrides": {
+    "@lobehub/ui": "https://pkg.pr.new/lobehub/lobe-ui/@lobehub/ui@af17b35"
   }
 }
