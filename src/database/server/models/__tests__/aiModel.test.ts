@@ -193,17 +193,15 @@ describe('AiModelModel', () => {
     });
   });
 
-  describe('getEnabledModels', () => {
+  describe('getAllModels', () => {
     it('should only return enabled models', async () => {
       await serverDB.insert(aiModels).values([
         { id: 'model1', providerId: 'openai', enabled: true, source: 'custom', userId },
-        { id: 'model2', providerId: 'openai', enabled: false, source: 'custom', userId },
+        { id: 'model2', providerId: 'b', enabled: false, source: 'custom', userId },
       ]);
 
-      const models = await aiProviderModel.getEnabledModels();
-      expect(models).toHaveLength(1);
-      expect(models[0].id).toBe('model1');
-      expect(models[0].enabled).toBe(true);
+      const models = await aiProviderModel.getAllModels();
+      expect(models).toHaveLength(2);
     });
   });
 
