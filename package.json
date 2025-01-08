@@ -113,9 +113,9 @@
     "@azure/openai": "1.0.0-beta.12",
     "@baiducloud/qianfan": "^0.1.9",
     "@cfworker/json-schema": "^4.1.0",
-    "@clerk/localizations": "^3.9.5",
-    "@clerk/nextjs": "^6.9.6",
-    "@clerk/themes": "^2.2.3",
+    "@clerk/localizations": "^3.9.6",
+    "@clerk/nextjs": "^6.9.7",
+    "@clerk/themes": "^2.2.4",
     "@codesandbox/sandpack-react": "^2.19.10",
     "@cyntler/react-doc-viewer": "^1.17.0",
     "@electric-sql/pglite": "0.2.13",
@@ -129,7 +129,7 @@
     "@lobehub/chat-plugins-gateway": "^1.9.0",
     "@lobehub/icons": "^1.61.1",
     "@lobehub/tts": "^1.28.0",
-    "@lobehub/ui": "https://pkg.pr.new/lobehub/lobe-ui/@lobehub/ui@4ffd711",
+    "@lobehub/ui": "^1.163.0",
     "@neondatabase/serverless": "^0.10.4",
     "@next/third-parties": "^15.1.4",
     "@react-spring/web": "^9.7.5",
@@ -202,7 +202,7 @@
     "react-dom": "^19.0.0",
     "react-fast-marquee": "^1.6.5",
     "react-hotkeys-hook": "^4.6.1",
-    "react-i18next": "^15.4.0",
+    "react-i18next": "14.0.2",
     "react-layout-kit": "^1.9.1",
     "react-lazy-load": "^4.0.1",
     "react-pdf": "^9.2.1",
@@ -328,8 +328,5 @@
         }
       }
     }
-  },
-  "overrides": {
-    "@lobehub/ui": "https://pkg.pr.new/lobehub/lobe-ui/@lobehub/ui@4ffd711"
   }
 }
