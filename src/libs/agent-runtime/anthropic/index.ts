@@ -114,7 +114,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   }
 
   async models() {
-    const url = `${DEFAULT_BASE_URL}/v1/models`;
+    const url = `${this.baseURL}/v1/models`;
     const response = await fetch(url, {
       headers: {
         'anthropic-version': '2023-06-01',
