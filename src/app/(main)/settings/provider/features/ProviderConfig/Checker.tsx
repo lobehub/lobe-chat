@@ -12,12 +12,8 @@ import { TraceNameMap } from '@/const/trace';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
+import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { ChatMessageError } from '@/types/message';
-
-interface ConnectionCheckerProps {
-  model: string;
-  provider: string;
-}
 
 const Error = memo<{ error: ChatMessageError }>(({ error }) => {
   const { t } = useTranslation('error');
@@ -42,8 +38,15 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
   );
 });
 
+interface ConnectionCheckerProps {
+  model: string;
+  provider: string;
+}
+
 const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
   const { t } = useTranslation('setting');
+
+  const disabled = useAiInfraStore(aiProviderSelectors.isProviderConfigUpdating(provider));
 
   const [loading, setLoading] = useState(false);
   const [pass, setPass] = useState(false);
@@ -108,7 +111,7 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
             {t('llm.checker.pass')}
           </Flexbox>
         )}
-        <Button loading={loading} onClick={checkConnection}>
+        <Button disabled={disabled} loading={loading} onClick={checkConnection}>
           {t('llm.checker.button')}
         </Button>
       </Flexbox>

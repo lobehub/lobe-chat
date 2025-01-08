@@ -84,6 +84,9 @@ const providerConfigById =
     return s.aiProviderRuntimeConfig?.[id];
   };
 
+const isProviderConfigUpdating = (id: string) => (s: AIProviderStoreState) =>
+  s.aiProviderConfigUpdatingIds.includes(id);
+
 export const aiProviderSelectors = {
   activeProviderConfig,
   disabledAiProviderList,
@@ -91,6 +94,7 @@ export const aiProviderSelectors = {
   isActiveProviderApiKeyNotEmpty,
   isActiveProviderEndpointNotEmpty,
   isAiProviderConfigLoading,
+  isProviderConfigUpdating,
   isProviderEnabled,
   isProviderFetchOnClient,
   isProviderLoading,
