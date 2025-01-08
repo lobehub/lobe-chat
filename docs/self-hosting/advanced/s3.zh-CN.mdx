@@ -12,7 +12,7 @@ tags:
 
 LobeChat 在 [很早以前](https://x.com/lobehub/status/1724289575672291782) 就支持了多模态的 AI 会话，其中涉及到图片上传给大模型的功能。在客户端数据库方案中，图片文件直接以二进制数据存储在浏览器 IndexedDB 数据库，但在服务端数据库中这个方案并不可行。因为在 Postgres 中直接存储文件类二进制数据会大大浪费宝贵的数据库存储空间，并拖慢计算性能。
 
-这块最佳实践是使用文件存储服务（S3）来存储图片文件，同时 S3 也是文件上传/知识库功能所依赖的大容量静态文件存储方案。
+这块最佳实践是使用文件存储服务（S3）来存储图片文件，同时 S3 也是文件上传 / 知识库功能所依赖的大容量静态文件存储方案。
 
 <Callout type={'info'}>
   在本文档库中，S3 所指代的是指兼容 S3 存储方案，即支持 Amazon S3 API 的对象存储系统，常见例如
@@ -24,58 +24,52 @@ LobeChat 在 [很早以前](https://x.com/lobehub/status/1724289575672291782) �
 <Steps>
   ### `S3_ACCESS_KEY_ID` 与 `S3_SECRET_ACCESS_KEY`
 
-所有 S3 兼容存储服务都需要的两个密钥，用于访问 S3 存储服务，不详细展开。
+  所有 S3 兼容存储服务都需要的两个密钥，用于访问 S3 存储服务，不详细展开。
 
-### `S3_ENDPOINT`
+  ### `S3_ENDPOINT`
 
-存储桶的请求端点， 注意此处链接不应该包含存储桶的名称。
+  存储桶的请求端点， 注意此处链接不应该包含存储桶的名称。
 
-<Callout type={'warning'}>`S3_ENDPOINT`必须删除后缀路径，否则会无法访问所上传文件</Callout>
+  <Callout type={'warning'}>`S3_ENDPOINT`必须删除后缀路径，否则会无法访问所上传文件</Callout>
 
-例如 Cloudflare 为：
+  例如 Cloudflare 为：
 
-```shell
-S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
-```
+  ```shell
+  S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
+  ```
 
-### `S3_BUCKET` 和 `S3_REGION`
+  ### `S3_BUCKET` 和 `S3_REGION`
 
-存储桶的名称和区域，`S3_BUCKET` 是必须的，用于指定存储桶的名称。 `S3_REGION` 是可选的，用于指定存储桶的区域，一般来说不需要添加，但某些服务商则需要配置。
+  存储桶的名称和区域，`S3_BUCKET` 是必须的，用于指定存储桶的名称。 `S3_REGION` 是可选的，用于指定存储桶的区域，一般来说不需要添加，但某些服务商则需要配置。
 
-### `S3_SET_ACL`
+  ### `S3_SET_ACL`
 
-是否在上传文件时设置 ACL 为 `public-read`。该选项默认启用。如果服务商不支持为文件设置单独的 ACL（即所有文件继承存储桶的 ACL），启用此选项可能会导致请求错误，将 `S3_SET_ACL` 设置为 `0` 即可关闭。
+  是否在上传文件时设置 ACL 为 `public-read`。该选项默认启用。如果服务商不支持为文件设置单独的 ACL（即所有文件继承存储桶的 ACL），启用此选项可能会导致请求错误，将 `S3_SET_ACL` 设置为 `0` 即可关闭。
 
-### `S3_PUBLIC_DOMAIN`
+  ### `S3_PUBLIC_DOMAIN`
 
-存储桶对外的访问域名，用于访问存储桶中的文件，这个地址需要**允许互联网可读**。 原因是 OpenAI 的 gpt-4o 等视觉模型识别图片时，OpenAI 会尝试在他们的服务器中下载这个图片链接，因此这个链接必须是公开可访问的，如果是私有的链接，OpenAI 将无法访问到这个图片，进而无法正常识别到图片内容。
+  存储桶对外的访问域名，用于访问存储桶中的文件，这个地址需要**允许互联网可读**。 原因是 OpenAI 的 gpt-4o 等视觉模型识别图片时，OpenAI 会尝试在他们的服务器中下载这个图片链接，因此这个链接必须是公开可访问的，如果是私有的链接，OpenAI 将无法访问到这个图片，进而无法正常识别到图片内容。
 
   <Callout type={'warning'}>
     此外，由于该访问域名往往是一个独立的网址，因此需要配置允许站点的跨域访问，否则会在浏览器中出现跨域问题。
+  </Callout>
 
-</Callout>
+  ### `S3_ENABLE_PATH_STYLE`
 
-### `S3_ENABLE_PATH_STYLE`
+  是否启用 S3 的 `path-style` 访问模式。此选项默认禁用。如果您的 S3 服务提供商使用 `path-style`，请将 `S3_ENABLE_PATH_STYLE` 设置为 `1` 以启用它。
 
-是否启用 S3 的 `path-style` 访问模式。此选项默认禁用。如果您的 S3 服务提供商使用 `path-style`，请将 `S3_ENABLE_PATH_STYLE` 设置为 `1` 以启用它。
+  <Callout type={'info'}>
+    `path-style` 和 `virtual-host` 在 S3 中是访问 bucket 和 object 的不同方式，URL 的结构和域名解析不太一样
 
-<Callout type={'info'}>
+    假设 S3 服务商的域名是 s3.example.net ，bucket 为 mybucket，object 为 config.env，具体区别如下：
 
-`path-style` 和 `virtual-host` 在 S3 中是访问 bucket 和 object 的不同方式，URL 的结构和域名解析不太一样
+    - path-style : `s3.example.net/mybucket/config.env`
+    - virtual-host : `mybucket.s3.example.net/config.env`
+  </Callout>
 
-假设 S3 服务商的域名是 s3.example.net ，bucket为mybucket，object为config.env，具体区别如下：
-
-- path-style : `s3.example.net/mybucket/config.env`
-- virtual-host : `mybucket.s3.example.net/config.env`
-
-</Callout>
-
-<Callout type={'tip'}>
-
-常见的 S3 Cloud 服务商往往默认采用 `virtual-host` 模式，而自部署服务 minio 则默认使用的是 `path-style`。 因此如果你使用了 minio 作为 S3 服务，你需要设置 `S3_ENABLE_PATH_STYLE=1` 。
-
-</Callout>
-
+  <Callout type={'tip'}>
+    常见的 S3 Cloud 服务商往往默认采用 `virtual-host` 模式，而自部署服务 minio 则默认使用的是 `path-style`。 因此如果你使用了 minio 作为 S3 服务，你需要设置 `S3_ENABLE_PATH_STYLE=1` 。
+  </Callout>
 </Steps>
 
 ## S3 配置指南
@@ -84,6 +78,7 @@ S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 
 <Cards>
   <Card href={'/zh/docs/self-hosting/advanced/s3/cloudflare-r2'} title={'Cloudflare R2'} />
+
   <Card href={'/zh/docs/self-hosting/advanced/s3/tencent-cloud'} title={'腾讯云 COS'} />
 </Cards>
 

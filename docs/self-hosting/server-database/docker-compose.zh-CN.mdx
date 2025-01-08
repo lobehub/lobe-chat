@@ -13,10 +13,9 @@ tags:
 <div style={{display:"flex", gap: 4}}>
   [![][docker-release-shield]][docker-release-link]
 
-[![][docker-size-shield]][docker-size-link]
+  [![][docker-size-shield]][docker-size-link]
 
-[![][docker-pulls-shield]][docker-pulls-link]
-
+  [![][docker-pulls-shield]][docker-pulls-link]
 </div>
 
 <Callout type="info">
@@ -29,8 +28,7 @@ tags:
   由于无法使用 Docker 环境变量暴露 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`，使用 Docker / Docker Compose
   部署 LobeChat 时，你不能使用 Clerk 作为登录鉴权服务。
 
-如果你确实需要 Clerk 作为登录鉴权服务，你可以考虑使用 Vercel 部署或者自行构建镜像。
-
+  如果你确实需要 Clerk 作为登录鉴权服务，你可以考虑使用 Vercel 部署或者自行构建镜像。
 </Callout>
 
 一般来讲，想要完整的运行 LobeChat 数据库版本，你需要至少拥有如下四个服务
@@ -58,47 +56,46 @@ tags:
 <Steps>
   ### 一键启动脚本
 
-新建一个 `lobe-chat-db` 目录，用于存放你的配置文件和后续的数据库文件。
+  新建一个 `lobe-chat-db` 目录，用于存放你的配置文件和后续的数据库文件。
 
-```sh
-mkdir lobe-chat-db
-cd lobe-chat-db
-```
+  ```sh
+  mkdir lobe-chat-db
+  cd lobe-chat-db
+  ```
 
-我们提供了一个一键启动脚本 `setup.sh`，可以自动使用默认配置并启动服务：
+  我们提供了一个一键启动脚本 `setup.sh`，可以自动使用默认配置并启动服务：
 
-```sh
-bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f -l zh_CN
-```
+  ```sh
+  bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f -l zh_CN
+  ```
 
-### 启动 Docker
+  ### 启动 Docker
 
-```sh
-docker compose up -d
-```
+  ```sh
+  docker compose up -d
+  ```
 
-默认登录账号即 Casdoor 的默认账号，账号名 `admin`，密码 `123`
+  默认登录账号即 Casdoor 的默认账号，账号名 `admin`，密码 `123`
 
-### 检查日志
+  ### 检查日志
 
-```sh
-docker logs -f lobe-chat
-```
+  ```sh
+  docker logs -f lobe-chat
+  ```
 
-如果你在容器中看到了以下日志，则说明已经启动成功：
+  如果你在容器中看到了以下日志，则说明已经启动成功：
 
-```log
-[Database] Start to migration...
-✅ database migration pass.
--------------------------------------
-  ▲ Next.js 14.x.x
-  - Local:        http://localhost:3210
-  - Network:      http://0.0.0.0:3210
+  ```log
+  [Database] Start to migration...
+  ✅ database migration pass.
+  -------------------------------------
+    ▲ Next.js 14.x.x
+    - Local:        http://localhost:3210
+    - Network:      http://0.0.0.0:3210
 
- ✓ Starting...
- ✓ Ready in 95ms
-```
-
+   ✓ Starting...
+   ✓ Ready in 95ms
+  ```
 </Steps>
 
 至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `http://localhost:3210` 访问你的 LobeChat 服务。
@@ -215,10 +212,9 @@ docker compose up -d
 <Callout type="warning">
   请务必注意，CORS 跨域是在 MinIO / Logto 服务端内部配置的，请勿在你的反向代理中额外配置 CORS，这会导致错误。
 
-对于 minio 非 443 端口时，Host 必须是 `$http_host`（带端口号），否则会 403 错误：`proxy_set_header Host $http_host`。
+  对于 minio 非 443 端口时，Host 必须是 `$http_host`（带端口号），否则会 403 错误：`proxy_set_header Host $http_host`。
 
-如果你需要配置 SSL 证书，请统一在外层的 Nginx 反向代理中配置，而不是在 MinIO 中配置。
-
+  如果你需要配置 SSL 证书，请统一在外层的 Nginx 反向代理中配置，而不是在 MinIO 中配置。
 </Callout>
 
 ### 配置文件
@@ -264,8 +260,7 @@ docker compose up -d # 重新启动
 <Callout type="warning">
   请记得注意配置对应登录鉴权服务提供商的 CORS 跨域配置，以确保 LobeChat 能够正常访问登录鉴权服务。
 
-在本文中，你需要允许 `https://lobe.example.com` 的跨域请求。
-
+  在本文中，你需要允许 `https://lobe.example.com` 的跨域请求。
 </Callout>
 
 你需要首先访问 WebUI 来进行配置：
@@ -281,26 +276,17 @@ docker compose up -d # 重新启动
 
 4. 配置 `CORS allowed origins` 为 `https://lobe.example.com`
 
-   <Image
-     alt="配置 Logto"
-     src="https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523"
-   />
+   <Image alt="配置 Logto" src="https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523" />
 
 5. 获取 `App ID` 和 `App secrets`，填入你的 `.env` 文件中的 `AUTH_LOGTO_ID` 和 `AUTH_LOGTO_SECRET` 中
 
 6. 配置你的 `.env` 文件中 `AUTH_LOGTO_ISSUER` 为 `https://lobe-auth-api.example.com/oidc`
 
-   <Image
-     alt="配置 Logto 环境变量"
-     src="https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837"
-   />
+   <Image alt="配置 Logto 环境变量" src="https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837" />
 
 7. 可选，在左侧 `Sign-in experience` 面板的 `Sign-up and sign-in - Advanced Options` 中关闭 `Enable user registration`，禁止用户自行注册。如果你禁止了用户自行注册，那么你只能在左侧 `User Management` 里手动添加用户。
 
-   <Image
-     alt="关闭用户注册"
-     src="https://github.com/user-attachments/assets/6b2e6f7b-fec5-41c6-864a-a1add40f74a0"
-   />
+   <Image alt="关闭用户注册" src="https://github.com/user-attachments/assets/6b2e6f7b-fec5-41c6-864a-a1add40f74a0" />
 
 8. 重启 LobeChat 服务：
 
@@ -319,10 +305,9 @@ docker compose up -d # 重新启动
 <Callout type="warning">
   请记得注意配置对应 S3 服务商的 CORS 跨域配置，以确保 LobeChat 能够正常访问 S3 服务。
 
-在本文中，你需要允许 `https://lobe.example.com` 的跨域请求。这既可以在 MinIO WebUI 的 `Configuration - API - Cors Allow Origin` 中配置，也可以在 Docker Compose 中的 `minio - environment - MINIO_API_CORS_ALLOW_ORIGIN` 中配置。
+  在本文中，你需要允许 `https://lobe.example.com` 的跨域请求。这既可以在 MinIO WebUI 的 `Configuration - API - Cors Allow Origin` 中配置，也可以在 Docker Compose 中的 `minio - environment - MINIO_API_CORS_ALLOW_ORIGIN` 中配置。
 
-如果你使用第二种方法（这也是默认的方法）进行配置，你将无法再在 MinIO WebUI 中配置。
-
+  如果你使用第二种方法（这也是默认的方法）进行配置，你将无法再在 MinIO WebUI 中配置。
 </Callout>
 
 你需要首先访问 WebUI 来进行配置：
@@ -334,29 +319,17 @@ docker compose up -d # 重新启动
 
 2. 在左侧面板 Administer / Buckets 中点击 `Create Bucket`，输入 `lobe`（对应你的 `S3_BUCKET` 环境变量），然后点击 `Create`
 
-   <Image
-     alt="创建 MinIO 桶"
-     src="https://github.com/user-attachments/assets/79f44a13-00d3-4302-a6bc-5f4c6cdbffab"
-   />
+   <Image alt="创建 MinIO 桶" src="https://github.com/user-attachments/assets/79f44a13-00d3-4302-a6bc-5f4c6cdbffab" />
 
 3. 选中你的桶，点击 Summary - Access Policy，编辑，选择 `Custom`，输入 `minio-bucket-config.json` 中的内容（见附录）并保存（同样默认你的桶名为 `lobe`）：
 
-   <Image
-     alt="选中 MinIO 桶策略"
-     src="https://github.com/user-attachments/assets/57032a82-7604-45d3-ba12-884af6fbcb7c"
-   />
+   <Image alt="选中 MinIO 桶策略" src="https://github.com/user-attachments/assets/57032a82-7604-45d3-ba12-884af6fbcb7c" />
 
-   <Image
-     alt="配置 MinIO 桶策略"
-     src="https://github.com/user-attachments/assets/d8109f4e-71fc-4ba8-8402-ede92669d5e0"
-   />
+   <Image alt="配置 MinIO 桶策略" src="https://github.com/user-attachments/assets/d8109f4e-71fc-4ba8-8402-ede92669d5e0" />
 
 4. 在左侧面板 User / Access Keys 处，点击 `Create New Access Key`，无需额外修改，将生成的 `Access Key` 和 `Secret Key` 填入你的 `.env` 文件中的 `S3_ACCESS_KEY_ID` 和 `S3_SECRET_ACCESS_KEY` 中
 
-   <Image
-     alt="创建 MinIO 访问密钥"
-     src="https://github.com/user-attachments/assets/72f02ce5-9991-425b-9864-9113ee1ed6bf"
-   />
+   <Image alt="创建 MinIO 访问密钥" src="https://github.com/user-attachments/assets/72f02ce5-9991-425b-9864-9113ee1ed6bf" />
 
 5. 重启 LobeChat 服务：
 

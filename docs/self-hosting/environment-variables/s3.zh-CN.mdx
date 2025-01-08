@@ -10,7 +10,7 @@ tags:
 
 # 配置 S3 存储服务
 
-LobeChat 支持多模态的 AI 会话，包括将图片、文件等非结构化数据上传给大模型的功能。为了优化存储和性能，我们使用 S3 兼容的文件存储服务来存储图片文件和支持文件上传/知识库功能。
+LobeChat 支持多模态的 AI 会话，包括将图片、文件等非结构化数据上传给大模型的功能。为了优化存储和性能，我们使用 S3 兼容的文件存储服务来存储图片文件和支持文件上传 / 知识库功能。
 
 ## 核心环境变量
 
@@ -71,14 +71,12 @@ LobeChat 支持多模态的 AI 会话，包括将图片、文件等非结构化�
 - 示例：`1`
 
 <Callout type={'info'}>
+  `path-style` 和 `virtual-host` 在 S3 中是访问 bucket 和 object 的不同方式，URL 的结构和域名解析不太一样
 
-`path-style` 和 `virtual-host` 在 S3 中是访问 bucket 和 object 的不同方式，URL 的结构和域名解析不太一样
+  假设 S3 服务商的域名是 s3.example.net ，bucket 为 mybucket，object 为 config.env，具体区别如下：
 
-假设 S3 服务商的域名是 s3.example.net ，bucket为mybucket，object为config.env，具体区别如下：
-
-- path-style : `s3.example.net/mybucket/config.env`
-- virtual-host : `mybucket.s3.example.net/config.env`
-
+  - path-style : `s3.example.net/mybucket/config.env`
+  - virtual-host : `mybucket.s3.example.net/config.env`
 </Callout>
 
 ### `LLM_VISION_IMAGE_USE_BASE64`

@@ -15,10 +15,9 @@ tags:
 <div style={{display:"flex", gap: 4}}>
   [![][docker-release-shield]][docker-release-link]
 
-[![][docker-size-shield]][docker-size-link]
+  [![][docker-size-shield]][docker-size-link]
 
-[![][docker-pulls-shield]][docker-pulls-link]
-
+  [![][docker-pulls-shield]][docker-pulls-link]
 </div>
 
 <Callout type="info">
@@ -32,8 +31,7 @@ tags:
 <Callout type="warning">
   Due to the inability to expose `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` using Docker environment variables, you cannot use Clerk as an authentication service when deploying LobeChat using Docker / Docker Compose.
 
-If you do need Clerk as an authentication service, you might consider deploying using Vercel or building your own image.
-
+  If you do need Clerk as an authentication service, you might consider deploying using Vercel or building your own image.
 </Callout>
 
 ## Deploying on a Linux Server
@@ -41,89 +39,87 @@ If you do need Clerk as an authentication service, you might consider deploying 
 Here is the process for deploying the LobeChat server database version on a Linux server:
 
 <Steps>
+  ### Create a Postgres Database Instance
 
-### Create a Postgres Database Instance
+  Please create a Postgres database instance with the PGVector plugin according to your needs, for example:
 
-Please create a Postgres database instance with the PGVector plugin according to your needs, for example:
+  ```sh
+  docker network create pg
 
-```sh
-docker network create pg
+  docker run --name my-postgres --network pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d pgvector/pgvector:pg16
+  ```
 
-docker run --name my-postgres --network pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d pgvector/pgvector:pg16
-```
+  The above command will create a PG instance named `my-postgres` on the network `pg`, where `pgvector/pgvector:pg16` is a Postgres 16 image with the pgvector plugin installed by default.
 
-The above command will create a PG instance named `my-postgres` on the network `pg`, where `pgvector/pgvector:pg16` is a Postgres 16 image with the pgvector plugin installed by default.
+  <Callout type="info">
+    The pgvector plugin provides vector search capabilities for Postgres, which is an important
+    component for LobeChat to implement RAG.
+  </Callout>
 
-<Callout type="info">
-  The pgvector plugin provides vector search capabilities for Postgres, which is an important
-  component for LobeChat to implement RAG.
-</Callout>
+  <Callout type="warning">
+    The above command does not specify a persistent storage location for the pg instance, so it is
+    only for testing/demonstration purposes. Please configure persistent storage for production
+    environments.
+  </Callout>
 
-<Callout type="warning">
-  The above command does not specify a persistent storage location for the pg instance, so it is
-  only for testing/demonstration purposes. Please configure persistent storage for production
-  environments.
-</Callout>
+  ### Create a file named `lobe-chat.env` to store environment variables:
 
-### Create a file named `lobe-chat.env` to store environment variables:
+  ```shell
+  # Website domain
+  APP_URL=https://your-prod-domain.com
 
-```shell
-# Website domain
-APP_URL=https://your-prod-domain.com
+  # DB required environment variables
+  KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
+  # Postgres database connection string
+  # Format: postgres://username:password@host:port/dbname; if your pg instance is a Docker container, use the container name
+  DATABASE_URL=postgres://postgres:mysecretpassword@my-postgres:5432/postgres
 
-# DB required environment variables
-KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
-# Postgres database connection string
-# Format: postgres://username:password@host:port/dbname; if your pg instance is a Docker container, use the container name
-DATABASE_URL=postgres://postgres:mysecretpassword@my-postgres:5432/postgres
+  # NEXT_AUTH related, can use auth0, Azure AD, GitHub, Authentik, zitadel, etc. If you have other access requirements, feel free to submit a PR
+  NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250
+  NEXT_AUTH_SSO_PROVIDERS=auth0
+  NEXTAUTH_URL=https://your-prod-domain.com/api/auth
+  AUTH_AUTH0_ID=xxxxxx
+  AUTH_AUTH0_SECRET=cSX_xxxxx
+  AUTH_AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
 
-# NEXT_AUTH related, can use auth0, Azure AD, GitHub, Authentik, zitadel, etc. If you have other access requirements, feel free to submit a PR
-NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250
-NEXT_AUTH_SSO_PROVIDERS=auth0
-NEXTAUTH_URL=https://your-prod-domain.com/api/auth
-AUTH_AUTH0_ID=xxxxxx
-AUTH_AUTH0_SECRET=cSX_xxxxx
-AUTH_AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
+  # S3 related
+  S3_ACCESS_KEY_ID=xxxxxxxxxx
+  S3_SECRET_ACCESS_KEY=xxxxxxxxxx
+  S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com
+  S3_BUCKET=lobechat
+  S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com
 
-# S3 related
-S3_ACCESS_KEY_ID=xxxxxxxxxx
-S3_SECRET_ACCESS_KEY=xxxxxxxxxx
-S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com
-S3_BUCKET=lobechat
-S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com
+  # Other environment variables, as needed. You can refer to the environment variables configuration for the client version, making sure not to have ACCESS_CODE.
+  # OPENAI_API_KEY=sk-xxxx
+  # OPENAI_PROXY_URL=https://api.openai.com/v1
+  # OPENAI_MODEL_LIST=...
+  ```
 
-# Other environment variables, as needed. You can refer to the environment variables configuration for the client version, making sure not to have ACCESS_CODE.
-# OPENAI_API_KEY=sk-xxxx
-# OPENAI_PROXY_URL=https://api.openai.com/v1
-# OPENAI_MODEL_LIST=...
-```
+  ### Start the lobe-chat-database Docker image
 
-### Start the lobe-chat-database Docker image
+  ```sh
+  docker run -it -d -p 3210:3210 --network pg --env-file lobe-chat.env --name lobe-chat-database lobehub/lobe-chat-database
+  ```
 
-```sh
-docker run -it -d -p 3210:3210 --network pg --env-file lobe-chat.env --name lobe-chat-database lobehub/lobe-chat-database
-```
+  You can use the following command to check the logs:
 
-You can use the following command to check the logs:
+  ```sh
+  docker logs -f lobe-chat-database
+  ```
 
-```sh
-docker logs -f lobe-chat-database
-```
+  If you see the following logs in the container, it means it has started successfully:
 
-If you see the following logs in the container, it means it has started successfully:
+  ```log
+  [Database] Start to migration...
+  ✅ database migration pass.
+  -------------------------------------
+    ▲ Next.js 14.x.x
+    - Local:        http://localhost:3210
+    - Network:      http://0.0.0.0:3210
 
-```log
-[Database] Start to migration...
-✅ database migration pass.
--------------------------------------
-  ▲ Next.js 14.x.x
-  - Local:        http://localhost:3210
-  - Network:      http://0.0.0.0:3210
-
- ✓ Starting...
- ✓ Ready in 95ms
-```
-
+   ✓ Starting...
+   ✓ Ready in 95ms
+  ```
 </Steps>
 
 <Callout type="tip">
