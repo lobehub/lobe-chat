@@ -105,6 +105,7 @@ const modelProviderListForModelSelect = (s: UserStore): EnabledProviderWithModel
           displayName: m.displayName,
           id: m.id,
         })),
+      source: 'builtin',
     }));
 
 const getModelCardById = (id: string) => (s: UserStore) => {
