@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix provider enabled issue."]
+    },
+    "date": "2025-01-08",
+    "version": "1.44.3"
+  },
+  {
+    "children": {
       "fixes": ["Add provider id validate."]
     },
     "date": "2025-01-08",

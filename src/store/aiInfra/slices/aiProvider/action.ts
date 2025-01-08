@@ -215,7 +215,7 @@ export const createAiProviderSlice: StateCreator<
               enabledChatModelList,
             },
             false,
-            'useInitAiProviderKeyVaults',
+            'useFetchAiProviderRuntimeState',
           );
         },
       },
