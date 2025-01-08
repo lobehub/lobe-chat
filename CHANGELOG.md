@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.44.2](https://github.com/lobehub/lobe-chat/compare/v1.44.1...v1.44.2)
+
+<sup>Released on **2025-01-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add provider id validate.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add provider id validate, closes [#5336](https://github.com/lobehub/lobe-chat/issues/5336) ([7f8a1b6](https://github.com/lobehub/lobe-chat/commit/7f8a1b6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.44.1](https://github.com/lobehub/lobe-chat/compare/v1.44.0...v1.44.1)
+
+<sup>Released on **2025-01-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix model select not auto update and sort issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix model select not auto update and sort issue, closes [#5330](https://github.com/lobehub/lobe-chat/issues/5330) ([dc76d6f](https://github.com/lobehub/lobe-chat/commit/dc76d6f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.44.0](https://github.com/lobehub/lobe-chat/compare/v1.43.6...v1.44.0)
 
 <sup>Released on **2025-01-07**</sup>

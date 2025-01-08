@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Add provider id validate."]
+    },
+    "date": "2025-01-08",
+    "version": "1.44.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix model select not auto update and sort issue."]
+    },
+    "date": "2025-01-08",
+    "version": "1.44.1"
+  },
+  {
+    "children": {
       "features": ["Brand new AI provider."]
     },
     "date": "2025-01-07",

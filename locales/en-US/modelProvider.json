@@ -78,6 +78,8 @@
       "title": "Provider Description"
     },
     "id": {
+      "desc": "Unique identifier for the service provider, which cannot be modified after creation",
+      "format": "Can only contain lowercase letters, hyphens (-), and underscores (_) ",
       "placeholder": "Suggested all lowercase, e.g., openai, cannot be modified after creation",
       "required": "Please enter the provider ID",
       "title": "Provider ID"

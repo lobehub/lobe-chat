@@ -78,6 +78,8 @@
       "title": "Opis dostawcy usług"
     },
     "id": {
+      "desc": "Unikalny identyfikator dostawcy usług, po utworzeniu nie można go zmienić",
+      "format": "Może zawierać tylko małe litery, myślniki (-) i podkreślenia (_)",
       "placeholder": "Zaleca się użycie małych liter, np. openai, po utworzeniu nie można edytować",
       "required": "Proszę wpisać identyfikator dostawcy",
       "title": "Identyfikator dostawcy"

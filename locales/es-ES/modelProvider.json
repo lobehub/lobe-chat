@@ -78,6 +78,8 @@
       "title": "Descripción del proveedor"
     },
     "id": {
+      "desc": "Identificador único del proveedor de servicios, no se puede modificar una vez creado",
+      "format": "Solo puede contener letras minúsculas, guiones (-) y guiones bajos (_)",
       "placeholder": "Se recomienda en minúsculas, por ejemplo openai, no se puede modificar después de crear",
       "required": "Por favor, introduce el ID del proveedor",
       "title": "ID del proveedor"

@@ -28,6 +28,7 @@ enum AiProviderSwrKey {
 export interface AiProviderAction {
   createNewAiProvider: (params: CreateAiProviderParams) => Promise<void>;
   deleteAiProvider: (id: string) => Promise<void>;
+  internal_toggleAiProviderConfigUpdating: (id: string, loading: boolean) => void;
   internal_toggleAiProviderLoading: (id: string, loading: boolean) => void;
   refreshAiProviderDetail: () => Promise<void>;
   refreshAiProviderList: () => Promise<void>;
@@ -64,6 +65,20 @@ export const createAiProviderSlice: StateCreator<
 
     await get().refreshAiProviderList();
   },
+  internal_toggleAiProviderConfigUpdating: (id, loading) => {
+    set(
+      (state) => {
+        if (loading)
+          return { aiProviderConfigUpdatingIds: [...state.aiProviderConfigUpdatingIds, id] };
+
+        return {
+          aiProviderConfigUpdatingIds: state.aiProviderConfigUpdatingIds.filter((i) => i !== id),
+        };
+      },
+      false,
+      'toggleAiProviderLoading',
+    );
+  },
   internal_toggleAiProviderLoading: (id, loading) => {
     set(
       (state) => {
@@ -84,7 +99,7 @@ export const createAiProviderSlice: StateCreator<
     await get().refreshAiProviderRuntimeState();
   },
   refreshAiProviderRuntimeState: async () => {
-    await mutate(AiProviderSwrKey.fetchAiProviderRuntimeState);
+    await mutate([AiProviderSwrKey.fetchAiProviderRuntimeState, true]);
   },
   removeAiProvider: async (id) => {
     await aiProviderService.deleteAiProvider(id);
@@ -109,11 +124,11 @@ export const createAiProviderSlice: StateCreator<
   },
 
   updateAiProviderConfig: async (id, value) => {
-    get().internal_toggleAiProviderLoading(id, true);
+    get().internal_toggleAiProviderConfigUpdating(id, true);
     await aiProviderService.updateAiProviderConfig(id, value);
     await get().refreshAiProviderDetail();
 
-    get().internal_toggleAiProviderLoading(id, false);
+    get().internal_toggleAiProviderConfigUpdating(id, false);
   },
 
   updateAiProviderSort: async (items) => {
@@ -187,8 +202,8 @@ export const createAiProviderSlice: StateCreator<
 
           // 3. 组装最终数据结构
           const enabledChatModelList = data.enabledAiProviders.map((provider) => ({
+            ...provider,
             children: getModelListByType(provider.id, 'chat'),
-            id: provider.id,
             name: provider.name || provider.id,
           }));
 
