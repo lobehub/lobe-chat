@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.44.3](https://github.com/lobehub/lobe-chat/compare/v1.44.2...v1.44.3)
+
+<sup>Released on **2025-01-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix provider enabled issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix provider enabled issue, closes [#5337](https://github.com/lobehub/lobe-chat/issues/5337) ([8e0b634](https://github.com/lobehub/lobe-chat/commit/8e0b634))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.44.2](https://github.com/lobehub/lobe-chat/compare/v1.44.1...v1.44.2)
 
 <sup>Released on **2025-01-08**</sup>
