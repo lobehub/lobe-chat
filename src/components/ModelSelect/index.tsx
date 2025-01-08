@@ -1,5 +1,5 @@
 import { IconAvatarProps, ModelIcon, ProviderIcon } from '@lobehub/icons';
-import { Icon, Tooltip } from '@lobehub/ui';
+import { Avatar, Icon, Tooltip } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { Infinity, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { ModelAbilities } from '@/types/aiModel';
+import { AiProviderSourceType } from '@/types/aiProvider';
 import { ChatModelCard } from '@/types/llm';
 import { formatTokenNumber } from '@/utils/format';
 
@@ -153,16 +154,26 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
 });
 
 interface ProviderItemRenderProps {
+  logo?: string;
   name: string;
   provider: string;
+  source?: AiProviderSourceType;
 }
 
-export const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider, name }) => (
-  <Flexbox align={'center'} gap={4} horizontal>
-    <ProviderIcon provider={provider} size={20} type={'mono'} />
-    {name}
-  </Flexbox>
-));
+export const ProviderItemRender = memo<ProviderItemRenderProps>(
+  ({ provider, name, source, logo }) => {
+    return (
+      <Flexbox align={'center'} gap={4} horizontal>
+        {source === 'custom' && !!logo ? (
+          <Avatar avatar={logo} size={20} style={{ filter: 'grayscale(1)' }} title={name} />
+        ) : (
+          <ProviderIcon provider={provider} size={20} type={'mono'} />
+        )}
+        {name}
+      </Flexbox>
+    );
+  },
+);
 
 interface LabelRendererProps {
   Icon: FC<IconAvatarProps>;

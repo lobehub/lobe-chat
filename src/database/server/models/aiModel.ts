@@ -93,6 +93,7 @@ export class AiModelModel {
         enabled: aiModels.enabled,
         id: aiModels.id,
         providerId: aiModels.providerId,
+        sort: aiModels.sort,
         source: aiModels.source,
         type: aiModels.type,
       })

@@ -307,19 +307,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description:
       'Qwen2-72B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 72B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它能够处理大规模输入。该模型在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型，并在某些任务上展现出与专有模型相当的竞争力',
-    displayName: 'Qwen2 72B Instruct',
-    id: 'Qwen/Qwen2-7B-Instruct',
-    pricing: {
-      currency: 'CNY',
-      input: 4.13,
-      output: 4.13,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description:
-      'Qwen2-72B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 72B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它能够处理大规模输入。该模型在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型，并在某些任务上展现出与专有模型相当的竞争力',
     displayName: 'Qwen2 72B Instruct (Vendor-A)',
     id: 'Vendor-A/Qwen/Qwen2-7B-Instruct',
     pricing: {

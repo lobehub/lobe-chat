@@ -78,6 +78,8 @@
       "title": "Hizmet Sağlayıcı Tanımı"
     },
     "id": {
+      "desc": "Hizmet sağlayıcının benzersiz kimliği, oluşturulduktan sonra değiştirilemez",
+      "format": "Sadece küçük harfler, tire (-) ve alt çizgi (_) içerebilir",
       "placeholder": "Küçük harflerle yazılması önerilir, örneğin openai, oluşturduktan sonra değiştirilemez",
       "required": "Lütfen hizmet sağlayıcı ID'sini girin",
       "title": "Hizmet Sağlayıcı ID"

@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { AiProviderSourceType } from '@/types/aiProvider';
+
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
 export const AiModelSourceEnum = {
@@ -312,5 +314,7 @@ interface AiModelForSelect {
 export interface EnabledProviderWithModels {
   children: AiModelForSelect[];
   id: string;
+  logo?: string;
   name: string;
+  source: AiProviderSourceType;
 }
