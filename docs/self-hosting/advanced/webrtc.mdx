@@ -22,38 +22,31 @@ WebRTC (Web Real-Time Communication) is a technology that enables peer-to-peer c
 To use the WebRTC synchronization feature in LobeChat, you need to complete the following steps:
 
 <Steps>
+  ### Deploy Signaling Server
 
-### Deploy Signaling Server
+  Deploy a WebRTC signaling server with one click using the Zeabur platform:
 
-Deploy a WebRTC signaling server with one click using the Zeabur platform:
+  [![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/MY0JZG?referralCode=arvinxx)
 
-[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/MY0JZG?referralCode=arvinxx)
+  Alternatively, you can view the [source code](https://github.com/lobehub/y-webrtc-signaling) and deploy it on your own.
 
-Alternatively, you can view the [source code](https://github.com/lobehub/y-webrtc-signaling) and deploy it on your own.
+  After deployment, you will receive a URL, for example: `https://my-signaling-server.zeabur.app`.
 
-After deployment, you will receive a URL, for example: `https://my-signaling-server.zeabur.app`.
+  ### Enable WebRTC Sync in the Deployment Instance
 
-### Enable WebRTC Sync in the Deployment Instance
+  The WebRTC sync feature in LobeChat is hidden by default and needs to be enabled by adding the environment variable `FEATURE_FLAGS=+webrtc_sync`.
 
-The WebRTC sync feature in LobeChat is hidden by default and needs to be enabled by adding the environment variable `FEATURE_FLAGS=+webrtc_sync`.
+  ### Configure WebRTC Sync Settings in LobeChat
 
-### Configure WebRTC Sync Settings in LobeChat
+  1. Open LobeChat settings -> Data Sync
+  2. Enter the signaling server address in the WebRTC sync section;
+  3. Set the sync channel name and password
 
-1. Open LobeChat settings -> Data Sync
-2. Enter the signaling server address in the WebRTC sync section;
-3. Set the sync channel name and password
+  <Image alt={'LobeChat Data Sync Settings Page'} height={356} inStep src={'https://github.com/lobehub/lobe-chat/assets/28616219/bf86bf1e-87fb-4015-8587-15ff28bb9c24'} />
 
-<Image
-  alt={'LobeChat Data Sync Settings Page'}
-  height={356}
-  inStep
-  src={'https://github.com/lobehub/lobe-chat/assets/28616219/bf86bf1e-87fb-4015-8587-15ff28bb9c24'}
-/>
+  ### Repeat the Above Configuration on Devices that Need to Sync
 
-### Repeat the Above Configuration on Devices that Need to Sync
-
-Ensure all devices use the same signaling server, channel name, and password. Once configured, the devices should automatically start syncing data.
-
+  Ensure all devices use the same signaling server, channel name, and password. Once configured, the devices should automatically start syncing data.
 </Steps>
 
 ## Limitations and Known Issues
