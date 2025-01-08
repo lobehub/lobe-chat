@@ -8,6 +8,7 @@ import {
   AiProviderModelListItem,
   ToggleAiModelEnableParams,
 } from '@/types/aiModel';
+import { EnabledAiModel } from '@/types/aiProvider';
 
 import { AiModelSelectItem, NewAiModelItem, aiModels } from '../../schemas';
 
@@ -83,8 +84,8 @@ export class AiModelModel {
     return result as AiProviderModelListItem[];
   };
 
-  getEnabledModels = async () => {
-    return this.db
+  getAllModels = async () => {
+    const data = await this.db
       .select({
         abilities: aiModels.abilities,
         config: aiModels.config,
@@ -93,11 +94,14 @@ export class AiModelModel {
         enabled: aiModels.enabled,
         id: aiModels.id,
         providerId: aiModels.providerId,
+        sort: aiModels.sort,
         source: aiModels.source,
         type: aiModels.type,
       })
       .from(aiModels)
-      .where(and(eq(aiModels.userId, this.userId), eq(aiModels.enabled, true)));
+      .where(and(eq(aiModels.userId, this.userId)));
+
+    return data as EnabledAiModel[];
   };
 
   findById = async (id: string) => {

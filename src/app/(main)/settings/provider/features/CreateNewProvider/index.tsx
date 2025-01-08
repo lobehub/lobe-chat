@@ -43,10 +43,17 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
       children: (
         <Input autoFocus placeholder={t('createNewAiProvider.id.placeholder')} variant={'filled'} />
       ),
+      desc: t('createNewAiProvider.id.desc'),
       label: t('createNewAiProvider.id.title'),
       minWidth: 400,
       name: 'id',
-      rules: [{ message: t('createNewAiProvider.id.required'), required: true }],
+      rules: [
+        { message: t('createNewAiProvider.id.required'), required: true },
+        {
+          message: t('createNewAiProvider.id.format'),
+          pattern: /^[_a-z-]+$/,
+        },
+      ],
     },
     {
       children: (

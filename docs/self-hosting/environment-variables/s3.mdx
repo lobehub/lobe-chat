@@ -75,11 +75,10 @@ LobeChat supports multimodal AI sessions, including the ability to upload unstru
 <Callout type={'info'}>
   `path-style` and `virtual-host` are different methods of accessing buckets and objects in S3, with differences in URL structure and domain name resolution.
 
-Assuming the S3 service provider's domain is s3.example.net, the bucket is mybucket, and the object is config.env, the specific differences are:
+  Assuming the S3 service provider's domain is s3.example.net, the bucket is mybucket, and the object is config.env, the specific differences are:
 
-- path-style: `s3.example.net/mybucket/config.env`
-- virtual-host: `mybucket.s3.example.net/config.env`
-
+  - path-style: `s3.example.net/mybucket/config.env`
+  - virtual-host: `mybucket.s3.example.net/config.env`
 </Callout>
 
 ### `LLM_VISION_IMAGE_USE_BASE64`

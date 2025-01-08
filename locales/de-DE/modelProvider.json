@@ -78,6 +78,8 @@
       "title": "Beschreibung des Anbieters"
     },
     "id": {
+      "desc": "Eindeutige Kennung des Anbieters, die nach der Erstellung nicht mehr geändert werden kann",
+      "format": "Darf nur aus Kleinbuchstaben, Bindestrichen (-) und Unterstrichen (_) bestehen",
       "placeholder": "Empfohlen in Kleinbuchstaben, z.B. openai, nach der Erstellung nicht mehr änderbar",
       "required": "Bitte geben Sie die Anbieter-ID ein",
       "title": "Anbieter-ID"

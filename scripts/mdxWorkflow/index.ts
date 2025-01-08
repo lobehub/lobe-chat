@@ -37,6 +37,13 @@ const run = () => {
         .replaceAll(` \\*\\*`, ' **')
         .replaceAll(/\n{2,}/g, '\n\n');
 
+      if (!data?.title) {
+        const regex = /^#\s(.+)/;
+        const match = regex.exec(formatedContent.trim());
+        const title = match ? match[1] : '';
+        data.title = title;
+      }
+
       writeFileSync(post, matter.stringify(formatedContent, data));
     } catch (error) {
       consola.error(post);

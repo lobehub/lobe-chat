@@ -1,6 +1,6 @@
 'use client';
 
-import { ChatHeader } from '@lobehub/ui';
+import { ChatHeader } from '@lobehub/ui/chat';
 import Link from 'next/link';
 import { memo } from 'react';
 

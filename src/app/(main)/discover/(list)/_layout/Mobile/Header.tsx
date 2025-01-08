@@ -1,6 +1,7 @@
 'use client';
 
-import { ActionIcon, MobileNavBar } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
+import { MobileNavBar } from '@lobehub/ui/mobile';
 import { createStyles } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
 import { memo, useState } from 'react';

@@ -15,124 +15,114 @@ tags:
 # Docker Compose Deployment Guide
 
 <div style={{display:"flex", gap: 4}}>
+  [![][docker-release-shield]][docker-release-link]
 
-[![][docker-release-shield]][docker-release-link]
+  [![][docker-size-shield]][docker-size-link]
 
-[![][docker-size-shield]][docker-size-link]
-
-[![][docker-pulls-shield]][docker-pulls-link]
-
+  [![][docker-pulls-shield]][docker-pulls-link]
 </div>
 
 We provide a [Docker image][docker-release-link] for deploying the LobeChat service on your private device.
 
 <Steps>
+  ### Install Docker Container Environment
 
-### Install Docker Container Environment
+  (Skip this step if already installed)
 
-(Skip this step if already installed)
+  <Tabs items={['Ubuntu', 'CentOS']}>
+    <Tab>
+      ```fish
+      $ apt install docker.io
+      ```
+    </Tab>
 
-<Tabs items={['Ubuntu', 'CentOS']}>
+    <Tab>
+      ```fish
+      $ yum install docker
+      ```
+    </Tab>
+  </Tabs>
 
-<Tab>
+  ### Run Docker Compose Deployment Command
 
-```fish
-$ apt install docker.io
-```
+  When using `docker-compose`, the configuration file is as follows:
 
-</Tab>
+  ```yml
+  version: '3.8'
 
-<Tab>
+  services:
+    lobe-chat:
+      image: lobehub/lobe-chat
+      container_name: lobe-chat
+      restart: always
+      ports:
+        - '3210:3210'
+      environment:
+        OPENAI_API_KEY: sk-xxxx
+        OPENAI_PROXY_URL: https://api-proxy.com/v1
+        ACCESS_CODE: lobe66
+  ```
 
-```fish
-$ yum install docker
-```
+  Run the following command to start the Lobe Chat service:
 
-</Tab>
+  ```bash
+  $ docker-compose up -d
+  ```
 
-</Tabs>
+  ### Crontab Automatic Update Script (Optional)
 
-### Run Docker Compose Deployment Command
+  Similarly, you can use the following script to automatically update Lobe Chat. When using `Docker Compose`, no additional configuration of environment variables is required.
 
-When using `docker-compose`, the configuration file is as follows:
+  ```bash
+  #!/bin/bash
+  # auto-update-lobe-chat.sh
 
-```yml
-version: '3.8'
+  # Set proxy (optional)
+  export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
 
-services:
-  lobe-chat:
-    image: lobehub/lobe-chat
-    container_name: lobe-chat
-    restart: always
-    ports:
-      - '3210:3210'
-    environment:
-      OPENAI_API_KEY: sk-xxxx
-      OPENAI_PROXY_URL: https://api-proxy.com/v1
-      ACCESS_CODE: lobe66
-```
+  # Pull the latest image and store the output in a variable
+  output=$(docker pull lobehub/lobe-chat:latest 2>&1)
 
-Run the following command to start the Lobe Chat service:
+  # Check if the pull command was executed successfully
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
 
-```bash
-$ docker-compose up -d
-```
+  # Check if the output contains a specific string
+  echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
 
-### Crontab Automatic Update Script (Optional)
+  # If the image is already up to date, do nothing
+  if [ $? -eq 0 ]; then
+    exit 0
+  fi
 
-Similarly, you can use the following script to automatically update Lobe Chat. When using `Docker Compose`, no additional configuration of environment variables is required.
+  echo "Detected Lobe-Chat update"
 
-```bash
-#!/bin/bash
-# auto-update-lobe-chat.sh
+  # Remove the old container
+  echo "Removed: $(docker rm -f Lobe-Chat)"
 
-# Set proxy (optional)
-export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+  # You may need to navigate to the directory where `docker-compose.yml` is located first
+  # cd /path/to/docker-compose-folder
 
-# Pull the latest image and store the output in a variable
-output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+  # Run the new container
+  echo "Started: $(docker-compose up)"
 
-# Check if the pull command was executed successfully
-if [ $? -ne 0 ]; then
-  exit 1
-fi
+  # Print the update time and version
+  echo "Update time: $(date)"
+  echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
 
-# Check if the output contains a specific string
-echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+  # Clean up unused images
+  docker images | grep 'lobehub/lobe-chat' | grep -v 'lobehub/lobe-chat-database' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+  echo "Removed old images."
+  ```
 
-# If the image is already up to date, do nothing
-if [ $? -eq 0 ]; then
-  exit 0
-fi
+  This script can also be used in Crontab, but ensure that your Crontab can find the correct Docker command. It is recommended to use absolute paths.
 
-echo "Detected Lobe-Chat update"
+  Configure Crontab to execute the script every 5 minutes:
 
-# Remove the old container
-echo "Removed: $(docker rm -f Lobe-Chat)"
-
-# You may need to navigate to the directory where `docker-compose.yml` is located first
-# cd /path/to/docker-compose-folder
-
-# Run the new container
-echo "Started: $(docker-compose up)"
-
-# Print the update time and version
-echo "Update time: $(date)"
-echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
-
-# Clean up unused images
-docker images | grep 'lobehub/lobe-chat' | grep -v 'lobehub/lobe-chat-database' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
-echo "Removed old images."
-```
-
-This script can also be used in Crontab, but ensure that your Crontab can find the correct Docker command. It is recommended to use absolute paths.
-
-Configure Crontab to execute the script every 5 minutes:
-
-```bash
-*/5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
-```
-
+  ```bash
+  */5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
+  ```
 </Steps>
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
