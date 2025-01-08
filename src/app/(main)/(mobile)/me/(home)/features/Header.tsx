@@ -1,6 +1,7 @@
 'use client';
 
-import { ActionIcon, MobileNavBar } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
+import { MobileNavBar } from '@lobehub/ui/mobile';
 import { useTheme } from 'antd-style';
 import { Moon, Sun } from 'lucide-react';
 import { memo } from 'react';
