@@ -78,6 +78,8 @@
       "title": "Beschrijving van de provider"
     },
     "id": {
+      "desc": "Een unieke identificatie voor de dienstverlener, kan na creatie niet meer worden gewijzigd",
+      "format": "Mag alleen kleine letters, koppeltekens (-) en underscores (_) bevatten",
       "placeholder": "Gebruik alleen kleine letters, bijvoorbeeld openai, kan niet worden gewijzigd na aanmaak",
       "required": "Vul de provider ID in",
       "title": "Provider ID"
