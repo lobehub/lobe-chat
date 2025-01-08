@@ -230,6 +230,7 @@ export interface AIRealtimeModelCard extends AIBaseModelCard {
 
 export interface AiFullModelCard extends AIBaseModelCard {
   abilities?: ModelAbilities;
+  config?: AiModelConfig;
   contextWindowTokens?: number;
   displayName?: string;
   id: string;

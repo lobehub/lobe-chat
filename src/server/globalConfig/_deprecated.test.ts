@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { getLLMConfig } from '@/config/llm';
-
-import { genServerLLMConfig } from './genServerLLMConfig';
+import { genServerLLMConfig } from './_deprecated';
 
 // Mock ModelProvider enum
 vi.mock('@/libs/agent-runtime', () => ({
