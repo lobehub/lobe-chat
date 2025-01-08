@@ -5,7 +5,7 @@ import { Avatar, Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from 
 import { useDebounceFn } from 'ahooks';
 import { Input, Skeleton, Switch } from 'antd';
 import { createStyles } from 'antd-style';
-import { LockIcon } from 'lucide-react';
+import { Loader2Icon, LockIcon } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode, memo, useLayoutEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -128,7 +128,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
     } = settings;
     const { t } = useTranslation('modelProvider');
     const [form] = Form.useForm();
-    const { cx, styles } = useStyles();
+    const { cx, styles, theme } = useStyles();
 
     const [
       toggleProviderEnabled,
@@ -136,6 +136,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       updateAiProviderConfig,
       enabled,
       isLoading,
+      configUpdating,
       isFetchOnClient,
       isProviderEndpointNotEmpty,
       isProviderApiKeyNotEmpty,
@@ -145,6 +146,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       s.updateAiProviderConfig,
       aiProviderSelectors.isProviderEnabled(id)(s),
       aiProviderSelectors.isAiProviderConfigLoading(id)(s),
+      aiProviderSelectors.isProviderConfigUpdating(id)(s),
       aiProviderSelectors.isProviderFetchOnClient(id)(s),
       aiProviderSelectors.isActiveProviderEndpointNotEmpty(s),
       aiProviderSelectors.isActiveProviderApiKeyNotEmpty(s),
@@ -173,6 +175,11 @@ const ProviderConfig = memo<ProviderConfigProps>(
               <Input.Password
                 autoComplete={'new-password'}
                 placeholder={t(`providerModels.config.apiKey.placeholder`, { name })}
+                suffix={
+                  configUpdating && (
+                    <Icon icon={Loader2Icon} spin style={{ color: theme.colorTextTertiary }} />
+                  )
+                }
               />
             ),
             desc: t(`providerModels.config.apiKey.desc`, { name }),
@@ -211,6 +218,11 @@ const ProviderConfig = memo<ProviderConfigProps>(
                 (!!proxyUrl && proxyUrl?.placeholder) ||
                 t('providerModels.config.baseURL.placeholder')
               }
+              suffix={
+                configUpdating && (
+                  <Icon icon={Loader2Icon} spin style={{ color: theme.colorTextTertiary }} />
+                )
+              }
             />
           ),
           desc: (!!proxyUrl && proxyUrl?.desc) || t('providerModels.config.baseURL.desc'),
@@ -235,7 +247,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       children: isLoading ? (
         <Skeleton.Button active className={styles.switchLoading} />
       ) : (
-        <Switch disabled={isLoading} value={isFetchOnClient} />
+        <Switch disabled={configUpdating} value={isFetchOnClient} />
       ),
       desc: t('providerModels.config.fetchOnClient.desc'),
       label: t('providerModels.config.fetchOnClient.title'),

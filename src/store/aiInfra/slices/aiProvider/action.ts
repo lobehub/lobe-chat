@@ -28,6 +28,7 @@ enum AiProviderSwrKey {
 export interface AiProviderAction {
   createNewAiProvider: (params: CreateAiProviderParams) => Promise<void>;
   deleteAiProvider: (id: string) => Promise<void>;
+  internal_toggleAiProviderConfigUpdating: (id: string, loading: boolean) => void;
   internal_toggleAiProviderLoading: (id: string, loading: boolean) => void;
   refreshAiProviderDetail: () => Promise<void>;
   refreshAiProviderList: () => Promise<void>;
@@ -63,6 +64,20 @@ export const createAiProviderSlice: StateCreator<
     await aiProviderService.deleteAiProvider(id);
 
     await get().refreshAiProviderList();
+  },
+  internal_toggleAiProviderConfigUpdating: (id, loading) => {
+    set(
+      (state) => {
+        if (loading)
+          return { aiProviderConfigUpdatingIds: [...state.aiProviderConfigUpdatingIds, id] };
+
+        return {
+          aiProviderConfigUpdatingIds: state.aiProviderConfigUpdatingIds.filter((i) => i !== id),
+        };
+      },
+      false,
+      'toggleAiProviderLoading',
+    );
   },
   internal_toggleAiProviderLoading: (id, loading) => {
     set(
@@ -109,11 +124,11 @@ export const createAiProviderSlice: StateCreator<
   },
 
   updateAiProviderConfig: async (id, value) => {
-    get().internal_toggleAiProviderLoading(id, true);
+    get().internal_toggleAiProviderConfigUpdating(id, true);
     await aiProviderService.updateAiProviderConfig(id, value);
     await get().refreshAiProviderDetail();
 
-    get().internal_toggleAiProviderLoading(id, false);
+    get().internal_toggleAiProviderConfigUpdating(id, false);
   },
 
   updateAiProviderSort: async (items) => {
