@@ -16,8 +16,8 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
     box-shadow: 0 3px 4px -2px ${token.colorBgLayout};
 
     ${responsive.mobile} {
-      background: ${token.colorBgElevated};
-      box-shadow: 0 3px 4px -2px ${token.colorBgElevated};
+      background: ${token.colorBgContainer};
+      box-shadow: 0 3px 4px -2px ${token.colorBgContainer};
     }
   `,
 }));

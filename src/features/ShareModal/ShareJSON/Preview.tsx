@@ -7,8 +7,8 @@ const Preview = memo<{ content: string }>(({ content }) => {
   const { styles } = useContainerStyles();
 
   return (
-    <div className={styles.preview}>
-      <Highlighter language={'json'} wrap>
+    <div className={styles.preview} style={{ padding: 16 }}>
+      <Highlighter language={'json'} type={'pure'} wrap>
         {content}
       </Highlighter>
     </div>

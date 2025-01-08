@@ -58,7 +58,7 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
           style={{ width: '100%' }}
           value={tab}
         />
-        {tab === Tab.Screenshot && <ShareImage />}
+        {tab === Tab.Screenshot && <ShareImage mobile={isMobile} />}
         {tab === Tab.Text && <ShareText />}
         {tab === Tab.JSON && <ShareJSON />}
       </Flexbox>

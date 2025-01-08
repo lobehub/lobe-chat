@@ -47,58 +47,56 @@ Before deployment, make sure you have a Postgres database instance ready. You ca
 Since we support file-based conversations/knowledge base conversations, we need to install the `pgvector` plugin for Postgres. This plugin provides vector search capabilities and is a key component for LobeChat to implement RAG.
 
 <Steps>
-### `NEXT_PUBLIC_SERVICE_MODE`
+  ### `NEXT_PUBLIC_SERVICE_MODE`
 
-LobeChat supports both client-side and server-side databases, so we provide an environment variable for switching modes, which is `NEXT_PUBLIC_SERVICE_MODE`, with a default value of `client`.
+  LobeChat supports both client-side and server-side databases, so we provide an environment variable for switching modes, which is `NEXT_PUBLIC_SERVICE_MODE`, with a default value of `client`.
 
-For server-side database deployment scenarios, you need to set `NEXT_PUBLIC_SERVICE_MODE` to `server`.
+  For server-side database deployment scenarios, you need to set `NEXT_PUBLIC_SERVICE_MODE` to `server`.
 
-<Callout type={'info'}>
-  In the official `lobe-chat-database` Docker image, this environment variable is already set to
-  `server` by default. Therefore, if you deploy using the Docker image, you do not need to configure
-  this environment variable again.
-</Callout>
+  <Callout type={'info'}>
+    In the official `lobe-chat-database` Docker image, this environment variable is already set to
+    `server` by default. Therefore, if you deploy using the Docker image, you do not need to configure
+    this environment variable again.
+  </Callout>
 
-<Callout type={'tip'}>
-Since environment variables starting with `NEXT_PUBLIC` take effect in the front-end code, they cannot be modified through container runtime injection. (Refer to the `next.js` documentation [Configuring: Environment Variables | Next.js (nextjs.org)](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables)). This is why we chose to create a separate DB version image.
+  <Callout type={'tip'}>
+    Since environment variables starting with `NEXT_PUBLIC` take effect in the front-end code, they cannot be modified through container runtime injection. (Refer to the `next.js` documentation [Configuring: Environment Variables | Next.js (nextjs.org)](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables)). This is why we chose to create a separate DB version image.
 
-If you need to modify variables with the `NEXT_PUBLIC` prefix in a Docker deployment, you must build the image yourself and inject your own `NEXT_PUBLIC` prefixed environment variables during the build.
+    If you need to modify variables with the `NEXT_PUBLIC` prefix in a Docker deployment, you must build the image yourself and inject your own `NEXT_PUBLIC` prefixed environment variables during the build.
+  </Callout>
 
-</Callout>
+  ### `DATABASE_URL`
 
-### `DATABASE_URL`
+  The core of configuring the database is to add the `DATABASE_URL` environment variable and fill in the Postgres database connection URL you have prepared. The typical format of the database connection URL is `postgres://username:password@host:port/database`.
 
-The core of configuring the database is to add the `DATABASE_URL` environment variable and fill in the Postgres database connection URL you have prepared. The typical format of the database connection URL is `postgres://username:password@host:port/database`.
+  <Callout type={'info'}>
+    If you want to enable SSL when connecting to the database, please refer to the
+    [documentation](https://stackoverflow.com/questions/14021998/using-psql-to-connect-to-postgresql-in-ssl-mode)
+    for setup instructions.
+  </Callout>
 
-<Callout type={'info'}>
-  If you want to enable SSL when connecting to the database, please refer to the
-  [documentation](https://stackoverflow.com/questions/14021998/using-psql-to-connect-to-postgresql-in-ssl-mode)
-  for setup instructions.
-</Callout>
+  ### `DATABASE_DRIVER`
 
-### `DATABASE_DRIVER`
+  The `DATABASE_DRIVER` environment variable is used to distinguish between the two types of Postgres database instances, with values of `node` or `neon`.
 
-The `DATABASE_DRIVER` environment variable is used to distinguish between the two types of Postgres database instances, with values of `node` or `neon`.
+  To streamline deployment, we have set default values based on the characteristics of different platforms:
 
-To streamline deployment, we have set default values based on the characteristics of different platforms:
+  - On the Vercel platform, `DATABASE_DRIVER` defaults to `neon`;
+  - In our provided Docker image `lobe-chat-database`, `DATABASE_DRIVER` defaults to `node`.
 
-- On the Vercel platform, `DATABASE_DRIVER` defaults to `neon`;
-- In our provided Docker image `lobe-chat-database`, `DATABASE_DRIVER` defaults to `node`.
+  Therefore, if you follow the standard deployment methods below, you do not need to manually configure the `DATABASE_DRIVER` environment variable:
 
-Therefore, if you follow the standard deployment methods below, you do not need to manually configure the `DATABASE_DRIVER` environment variable:
+  - Vercel + Serverless Postgres
+  - Docker image + Node Postgres
 
-- Vercel + Serverless Postgres
-- Docker image + Node Postgres
+  ### `KEY_VAULTS_SECRET`
 
-### `KEY_VAULTS_SECRET`
+  Considering that users will store sensitive information such as their API Key and baseURL in the database, we need a key to encrypt this information to prevent leakage in case of a database breach. Hence, the `KEY_VAULTS_SECRET` environment variable is used to encrypt sensitive information like user-stored apikeys.
 
-Considering that users will store sensitive information such as their API Key and baseURL in the database, we need a key to encrypt this information to prevent leakage in case of a database breach. Hence, the `KEY_VAULTS_SECRET` environment variable is used to encrypt sensitive information like user-stored apikeys.
-
-<Callout type={'info'}>
-  You can generate a random 32-character string as the value of `KEY_VAULTS_SECRET` using `openssl
-  rand -base64 32`.
-</Callout>
-
+  <Callout type={'info'}>
+    You can generate a random 32-character string as the value of `KEY_VAULTS_SECRET` using `openssl
+                      rand -base64 32`.
+  </Callout>
 </Steps>
 
 ## Configuring Authentication Services
@@ -107,7 +105,7 @@ In the server-side database mode, we need an authentication service to distingui
 
 ### Clerk
 
-[Clerk](https://clerk.com?utm_source=lobehub&utm_medium=docs) is an authentication SaaS service that provides out-of-the-box authentication capabilities with high productization, low integration costs, and a great user experience. For those who offer SaaS products, Clerk is a good choice. Our official [LobeChat Cloud](https://lobechat.com) uses Clerk as the authentication service.
+[Clerk](https://clerk.com?utm_source=lobehub\&utm_medium=docs) is an authentication SaaS service that provides out-of-the-box authentication capabilities with high productization, low integration costs, and a great user experience. For those who offer SaaS products, Clerk is a good choice. Our official [LobeChat Cloud](https://lobechat.com) uses Clerk as the authentication service.
 
 The integration of Clerk is relatively simple, requiring only the configuration of these environment variables:
 
