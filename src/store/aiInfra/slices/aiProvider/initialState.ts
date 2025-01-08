@@ -10,6 +10,7 @@ import {
 export interface AIProviderState {
   activeAiProvider?: string;
   activeProviderModelList: any[];
+  aiProviderConfigUpdatingIds: string[];
   aiProviderDetail?: AiProviderDetailItem | null;
   aiProviderList: AiProviderListItem[];
   aiProviderLoadingIds: string[];
@@ -24,6 +25,7 @@ export interface AIProviderState {
 
 export const initialAIProviderState: AIProviderState = {
   activeProviderModelList: [],
+  aiProviderConfigUpdatingIds: [],
   aiProviderList: [],
   aiProviderLoadingIds: [],
   aiProviderRuntimeConfig: {},
