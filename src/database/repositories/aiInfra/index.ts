@@ -62,7 +62,7 @@ export class AiInfraRepos {
     return list
       .filter((item) => item.enabled)
       .sort((a, b) => a.sort! - b.sort!)
-      .map((item) => ({ id: item.id, name: item.name, source: item.source }));
+      .map((item) => ({ id: item.id, logo: item.logo, name: item.name, source: item.source }));
   };
 
   getEnabledModels = async () => {
@@ -86,7 +86,9 @@ export class AiInfraRepos {
       { concurrency: 10 },
     );
 
-    return [...modelList.flat(), ...userEnabledModels] as EnabledAiModel[];
+    return [...modelList.flat(), ...userEnabledModels].sort(
+      (a, b) => (a?.sort || -1) - (b?.sort || -1),
+    ) as EnabledAiModel[];
   };
 
   getAiProviderModelList = async (providerId: string) => {

@@ -84,7 +84,7 @@ export const createAiProviderSlice: StateCreator<
     await get().refreshAiProviderRuntimeState();
   },
   refreshAiProviderRuntimeState: async () => {
-    await mutate(AiProviderSwrKey.fetchAiProviderRuntimeState);
+    await mutate([AiProviderSwrKey.fetchAiProviderRuntimeState, true]);
   },
   removeAiProvider: async (id) => {
     await aiProviderService.deleteAiProvider(id);
@@ -187,8 +187,8 @@ export const createAiProviderSlice: StateCreator<
 
           // 3. 组装最终数据结构
           const enabledChatModelList = data.enabledAiProviders.map((provider) => ({
+            ...provider,
             children: getModelListByType(provider.id, 'chat'),
-            id: provider.id,
             name: provider.name || provider.id,
           }));
 
