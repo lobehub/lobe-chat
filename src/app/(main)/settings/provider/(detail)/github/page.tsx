@@ -43,16 +43,16 @@ const useProviderCard = (): ProviderItem => {
         ) : (
           <Input.Password
             autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.personalAccessToken.placeholder`)}
+            placeholder={t(`github.personalAccessToken.placeholder`)}
           />
         ),
         desc: (
           <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
-            {t(`${providerKey}.personalAccessToken.desc`)}
+            {t(`github.personalAccessToken.desc`)}
           </Markdown>
         ),
-        label: t(`${providerKey}.personalAccessToken.title`),
-        name: [KeyVaultsConfigKey, providerKey, LLMProviderApiTokenKey],
+        label: t(`github.personalAccessToken.title`),
+        name: [KeyVaultsConfigKey, LLMProviderApiTokenKey],
       },
     ],
   };
