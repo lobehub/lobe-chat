@@ -1,5 +1,4 @@
 import { and, asc, desc, eq, inArray } from 'drizzle-orm/expressions';
-import pMap from 'p-map';
 
 import { LobeChatDatabase } from '@/database/type';
 import {
@@ -131,51 +130,21 @@ export class AiModelModel {
   };
 
   batchUpdateAiModels = async (providerId: string, models: AiProviderModelListItem[]) => {
-    return this.db.transaction(async (trx) => {
-      const records = models.map(({ id, ...model }) => ({
-        ...model,
-        id,
-        providerId,
-        updatedAt: new Date(),
-        userId: this.userId,
-      }));
+    const records = models.map(({ id, ...model }) => ({
+      ...model,
+      id,
+      providerId,
+      updatedAt: new Date(),
+      userId: this.userId,
+    }));
 
-      // 第一步：尝试插入所有记录，忽略冲突
-      const insertedRecords = await trx
-        .insert(aiModels)
-        .values(records)
-        .onConflictDoNothing({
-          target: [aiModels.id, aiModels.userId, aiModels.providerId],
-        })
-        .returning();
-      // 第二步：找出需要更新的记录（即插入时发生冲突的记录）
-      // 找出未能插入的记录（需要更新的记录）
-      const insertedIds = new Set(insertedRecords.map((r) => r.id));
-      const recordsToUpdate = records.filter((r) => !insertedIds.has(r.id));
-
-      // 第三步：更新已存在的记录
-      if (recordsToUpdate.length > 0) {
-        await pMap(
-          recordsToUpdate,
-          async (record) => {
-            await trx
-              .update(aiModels)
-              .set({
-                ...record,
-                updatedAt: new Date(),
-              })
-              .where(
-                and(
-                  eq(aiModels.id, record.id),
-                  eq(aiModels.userId, this.userId),
-                  eq(aiModels.providerId, providerId),
-                ),
-              );
-          },
-          { concurrency: 10 }, // 限制并发数为 10
-        );
-      }
-    });
+    return this.db
+      .insert(aiModels)
+      .values(records)
+      .onConflictDoNothing({
+        target: [aiModels.id, aiModels.userId, aiModels.providerId],
+      })
+      .returning();
   };
 
   batchToggleAiModels = async (providerId: string, models: string[], enabled: boolean) => {
