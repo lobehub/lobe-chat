@@ -167,7 +167,7 @@ const nextConfig: NextConfig = {
   ],
   serverExternalPackages: ['@electric-sql/pglite', 'sharp'],
 
-  transpilePackages: ['pdfjs-dist', 'mermaid', 'micromark-util-character'],
+  transpilePackages: ['pdfjs-dist', 'mermaid'],
 
   webpack(config) {
     config.experiments = {
