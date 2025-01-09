@@ -119,9 +119,6 @@
   "OpenGVLab/InternVL2-26B": {
     "description": "InternVL2 pokazuje wyjątkowe wyniki w różnych zadaniach językowych i wizualnych, w tym zrozumieniu dokumentów i wykresów, zrozumieniu tekstu w scenach, OCR, rozwiązywaniu problemów naukowych i matematycznych."
   },
-  "OpenGVLab/InternVL2-Llama3-76B": {
-    "description": "InternVL2 pokazuje wyjątkowe wyniki w różnych zadaniach językowych i wizualnych, w tym zrozumieniu dokumentów i wykresów, zrozumieniu tekstu w scenach, OCR, rozwiązywaniu problemów naukowych i matematycznych."
-  },
   "Phi-3-medium-128k-instruct": {
     "description": "Ten sam model Phi-3-medium, ale z większym rozmiarem kontekstu do RAG lub kilku strzałowego wywoływania."
   },
@@ -215,9 +212,6 @@
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder-7B-Instruct to najnowsza wersja serii dużych modeli językowych specyficznych dla kodu wydana przez Alibaba Cloud. Model ten, oparty na Qwen2.5, został przeszkolony na 55 bilionach tokenów, znacznie poprawiając zdolności generowania kodu, wnioskowania i naprawy. Wzmacnia on nie tylko zdolności kodowania, ale także utrzymuje przewagę w zakresie matematyki i ogólnych umiejętności. Model ten stanowi bardziej kompleksową podstawę dla rzeczywistych zastosowań, takich jak inteligentne agenty kodowe."
   },
-  "Qwen/Qwen2.5-Math-72B-Instruct": {
-    "description": "Qwen2.5-Math koncentruje się na rozwiązywaniu problemów w dziedzinie matematyki, oferując profesjonalne odpowiedzi na trudne pytania."
-  },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 to najnowsza seria modeli Qwen, obsługująca kontekst 128k. W porównaniu do obecnie najlepszych modeli open source, Qwen2-72B znacznie przewyższa w zakresie rozumienia języka naturalnego, wiedzy, kodowania, matematyki i wielu języków."
   },
@@ -289,12 +283,6 @@
   },
   "TeleAI/TeleMM": {
     "description": "Model TeleMM to model wielomodalny opracowany przez China Telecom, który potrafi przetwarzać różne rodzaje wejść, takie jak tekst i obrazy, wspierając funkcje rozumienia obrazów oraz analizy wykresów, oferując użytkownikom usługi rozumienia międzymodalnego. Model ten potrafi prowadzić interakcje wielomodalne z użytkownikami, dokładnie rozumiejąc wprowadzone treści, odpowiadając na pytania, wspierając twórczość oraz efektywnie dostarczając informacji i inspiracji w różnych modalnościach. Wykazuje doskonałe wyniki w zadaniach wielomodalnych, takich jak precyzyjne postrzeganie i rozumowanie logiczne."
-  },
-  "Tencent/Hunyuan-A52B-Instruct": {
-    "description": "Hunyuan-Large to największy w branży otwarty model Transformer MoE, z 389 miliardami parametrów ogółem i 52 miliardami aktywowanych parametrów."
-  },
-  "Vendor-A/Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2-72B-Instruct to model dużego języka z serii Qwen2, dostosowany do instrukcji, o rozmiarze parametrów wynoszącym 72B. Model ten oparty jest na architekturze Transformer, wykorzystując funkcję aktywacji SwiGLU, przesunięcia QKV w uwadze oraz grupowe zapytania uwagi. Może obsługiwać duże wejścia. Model ten wykazuje doskonałe wyniki w wielu testach benchmarkowych dotyczących rozumienia języka, generowania, zdolności wielojęzycznych, kodowania, matematyki i wnioskowania, przewyższając większość modeli open-source i wykazując konkurencyjność z modelami własnościowymi w niektórych zadaniach."
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct to jeden z najnowszych modeli dużych języków wydanych przez Alibaba Cloud. Model 72B ma znacząco poprawione zdolności w zakresie kodowania i matematyki. Oferuje również wsparcie dla wielu języków, obejmując ponad 29 języków, w tym chiński i angielski. Model ten wykazuje znaczną poprawę w zakresie przestrzegania instrukcji, rozumienia danych strukturalnych oraz generowania strukturalnych wyników (szczególnie JSON)."
@@ -521,11 +509,14 @@
   "command-r-plus": {
     "description": "Command R+ to model językowy o wysokiej wydajności, zaprojektowany z myślą o rzeczywistych scenariuszach biznesowych i złożonych zastosowaniach."
   },
+  "dall-e-2": {
+    "description": "Druga generacja modelu DALL·E, obsługująca bardziej realistyczne i dokładne generowanie obrazów, o rozdzielczości czterokrotnie większej niż pierwsza generacja."
+  },
+  "dall-e-3": {
+    "description": "Najnowocześniejszy model DALL·E, wydany w listopadzie 2023 roku. Obsługuje bardziej realistyczne i dokładne generowanie obrazów, z lepszą zdolnością do oddawania szczegółów."
+  },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct oferuje wysoką niezawodność w przetwarzaniu poleceń, wspierając różne branże."
-  },
-  "deepseek-ai/DeepSeek-V2-Chat": {
-    "description": "DeepSeek-V2 to potężny, ekonomiczny model językowy typu mieszany ekspert (MoE). Został wstępnie przeszkolony na wysokiej jakości korpusie danych liczącym 8,1 biliona tokenów, a jego zdolności zostały dodatkowo poprawione dzięki nadzorowanemu dostrajaniu (SFT) i uczeniu przez wzmacnianie (RL). W porównaniu do DeepSeek 67B, DeepSeek-V2 osiąga lepszą wydajność, oszczędzając 42,5% kosztów szkolenia, redukując 93,3% pamięci podręcznej KV i zwiększając maksymalną przepustowość generacji do 5,76 razy. Model obsługuje długość kontekstu 128k i osiąga doskonałe wyniki w standardowych testach benchmarkowych oraz w otwartych ocenach generacji."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 łączy doskonałe cechy wcześniejszych wersji, wzmacniając zdolności ogólne i kodowania."
@@ -704,6 +695,9 @@
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo, odpowiedni do różnych zadań generowania i rozumienia tekstu, obecnie wskazuje na gpt-3.5-turbo-0125."
   },
+  "gpt-3.5-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k, model generacji tekstu o dużej pojemności, odpowiedni do złożonych zadań."
+  },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo, odpowiedni do różnych zadań generowania i rozumienia tekstu, obecnie wskazuje na gpt-3.5-turbo-0125."
   },
@@ -755,8 +749,23 @@
   "gpt-4o-2024-11-20": {
     "description": "ChatGPT-4o to dynamiczny model, aktualizowany w czasie rzeczywistym, aby być zawsze na bieżąco z najnowszą wersją. Łączy potężne zdolności rozumienia i generowania języka, idealny do zastosowań w dużej skali, w tym obsłudze klienta, edukacji i wsparciu technicznym."
   },
+  "gpt-4o-audio-preview": {
+    "description": "Model audio GPT-4o, obsługujący wejście i wyjście audio."
+  },
   "gpt-4o-mini": {
     "description": "GPT-4o mini to najnowszy model OpenAI, wprowadzony po GPT-4 Omni, obsługujący wejścia tekstowe i wizualne oraz generujący tekst. Jako ich najnowocześniejszy model w małej skali, jest znacznie tańszy niż inne niedawno wprowadzone modele, a jego cena jest o ponad 60% niższa niż GPT-3.5 Turbo. Utrzymuje najnowocześniejszą inteligencję, jednocześnie oferując znaczną wartość za pieniądze. GPT-4o mini uzyskał wynik 82% w teście MMLU i obecnie zajmuje wyższą pozycję w preferencjach czatu niż GPT-4."
+  },
+  "gpt-4o-mini-realtime-preview": {
+    "description": "Wersja na żywo GPT-4o-mini, obsługująca wejście i wyjście audio oraz tekstowe w czasie rzeczywistym."
+  },
+  "gpt-4o-realtime-preview": {
+    "description": "Wersja na żywo GPT-4o, obsługująca wejście i wyjście audio oraz tekstowe w czasie rzeczywistym."
+  },
+  "gpt-4o-realtime-preview-2024-10-01": {
+    "description": "Wersja na żywo GPT-4o, obsługująca wejście i wyjście audio oraz tekstowe w czasie rzeczywistym."
+  },
+  "gpt-4o-realtime-preview-2024-12-17": {
+    "description": "Wersja na żywo GPT-4o, obsługująca wejście i wyjście audio oraz tekstowe w czasie rzeczywistym."
   },
   "grok-2-1212": {
     "description": "Model ten poprawił dokładność, przestrzeganie instrukcji oraz zdolności wielojęzyczne."
@@ -935,6 +944,9 @@
   "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
     "description": "LLaMA 3.2 zaprojektowana do przetwarzania zadań łączących dane wizualne i tekstowe. Doskonała w zadaniach takich jak opisywanie obrazów i wizualne pytania odpowiedzi, przekracza granice między generowaniem języka a wnioskowaniem wizualnym."
   },
+  "meta-llama/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 to najnowocześniejszy wielojęzyczny model językowy open-source z serii Llama, oferujący wydajność porównywalną z modelem 405B przy bardzo niskich kosztach. Oparty na strukturze Transformer, poprawiony dzięki nadzorowanemu dostrajaniu (SFT) oraz uczeniu się z ludzkiego feedbacku (RLHF), co zwiększa użyteczność i bezpieczeństwo. Jego wersja dostosowana do instrukcji jest zoptymalizowana do wielojęzycznych rozmów, osiągając lepsze wyniki w wielu branżowych benchmarkach niż wiele modeli czatu open-source i zamkniętych. Data graniczna wiedzy to grudzień 2023 roku."
+  },
   "meta-llama/Llama-Vision-Free": {
     "description": "LLaMA 3.2 zaprojektowana do przetwarzania zadań łączących dane wizualne i tekstowe. Doskonała w zadaniach takich jak opisywanie obrazów i wizualne pytania odpowiedzi, przekracza granice między generowaniem języka a wnioskowaniem wizualnym."
   },
@@ -1091,17 +1103,11 @@
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B to ulepszona wersja Nous Hermes 2, zawierająca najnowsze wewnętrznie opracowane zbiory danych."
   },
-  "nvidia/Llama-3.1-Nemotron-70B-Instruct": {
-    "description": "Llama 3.1 Nemotron 70B to duży model językowy stworzony przez NVIDIA, zaprojektowany w celu zwiększenia użyteczności odpowiedzi generowanych przez LLM dla zapytań użytkowników."
-  },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B to dostosowany przez NVIDIA duży model językowy, mający na celu zwiększenie użyteczności odpowiedzi generowanych przez LLM w odpowiedzi na zapytania użytkowników. Model ten osiągnął doskonałe wyniki w testach benchmarkowych, takich jak Arena Hard, AlpacaEval 2 LC i GPT-4-Turbo MT-Bench, zajmując pierwsze miejsce we wszystkich trzech automatycznych testach do 1 października 2024 roku. Model został przeszkolony przy użyciu RLHF (szczególnie REINFORCE), Llama-3.1-Nemotron-70B-Reward i HelpSteer2-Preference na bazie modelu Llama-3.1-70B-Instruct."
   },
   "o1": {
     "description": "Skupia się na zaawansowanym wnioskowaniu i rozwiązywaniu złożonych problemów, w tym zadań matematycznych i naukowych. Doskonale nadaje się do aplikacji wymagających głębokiego zrozumienia kontekstu i zarządzania procesami."
-  },
-  "o1-2024-12-17": {
-    "description": "o1 to nowy model wnioskowania OpenAI, który obsługuje wejścia tekstowe i graficzne oraz generuje tekst, idealny do złożonych zadań wymagających szerokiej wiedzy ogólnej. Model ma kontekst 200K i datę graniczną wiedzy do października 2023 roku."
   },
   "o1-mini": {
     "description": "o1-mini to szybki i ekonomiczny model wnioskowania zaprojektowany z myślą o programowaniu, matematyce i zastosowaniach naukowych. Model ten ma kontekst 128K i datę graniczną wiedzy z października 2023 roku."
@@ -1129,9 +1135,6 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini to najnowszy model OpenAI, wydany po GPT-4 Omni, obsługujący wejścia tekstowe i wizualne. Jako ich najnowocześniejszy mały model, jest znacznie tańszy od innych niedawnych modeli czołowych i kosztuje o ponad 60% mniej niż GPT-3.5 Turbo. Utrzymuje najnowocześniejszą inteligencję, oferując jednocześnie znaczną wartość za pieniądze. GPT-4o mini uzyskał wynik 82% w teście MMLU i obecnie zajmuje wyższą pozycję w preferencjach czatu niż GPT-4."
-  },
-  "openai/o1": {
-    "description": "o1 to nowy model wnioskowania OpenAI, który obsługuje wejścia tekstowe i graficzne oraz generuje tekst, idealny do złożonych zadań wymagających szerokiej wiedzy ogólnej. Model ma kontekst 200K i datę graniczną wiedzy do października 2023 roku."
   },
   "openai/o1-mini": {
     "description": "o1-mini to szybki i ekonomiczny model wnioskowania zaprojektowany z myślą o programowaniu, matematyce i zastosowaniach naukowych. Model ten ma kontekst 128K i datę graniczną wiedzy z października 2023 roku."
@@ -1307,14 +1310,29 @@
   "taichu_llm": {
     "description": "Model językowy TaiChu charakteryzuje się wyjątkową zdolnością rozumienia języka oraz umiejętnościami w zakresie tworzenia tekstów, odpowiadania na pytania, programowania, obliczeń matematycznych, wnioskowania logicznego, analizy emocji i streszczenia tekstu. Innowacyjnie łączy wstępne uczenie się na dużych zbiorach danych z bogatą wiedzą z wielu źródeł, stale doskonaląc technologię algorytmiczną i nieustannie przyswajając nową wiedzę z zakresu słownictwa, struktury, gramatyki i semantyki z ogromnych zbiorów danych tekstowych, co prowadzi do ciągłej ewolucji modelu. Umożliwia użytkownikom łatwiejszy dostęp do informacji i usług oraz bardziej inteligentne doświadczenia."
   },
+  "text-embedding-3-large": {
+    "description": "Najpotężniejszy model wektoryzacji, odpowiedni do zadań w języku angielskim i innych językach."
+  },
+  "text-embedding-3-small": {
+    "description": "Nowej generacji model Embedding, efektywny i ekonomiczny, odpowiedni do wyszukiwania wiedzy, aplikacji RAG i innych scenariuszy."
+  },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) oferuje zwiększoną moc obliczeniową dzięki efektywnym strategiom i architekturze modelu."
+  },
+  "tts-1": {
+    "description": "Najnowocześniejszy model tekstu na mowę, zoptymalizowany pod kątem szybkości w scenariuszach w czasie rzeczywistym."
+  },
+  "tts-1-hd": {
+    "description": "Najnowocześniejszy model tekstu na mowę, zoptymalizowany pod kątem jakości."
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) jest przeznaczony do precyzyjnych zadań poleceniowych, oferując doskonałe możliwości przetwarzania języka."
   },
   "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet podnosi standardy branżowe, przewyższając modele konkurencji oraz Claude 3 Opus, osiągając doskonałe wyniki w szerokim zakresie ocen, przy zachowaniu prędkości i kosztów naszych modeli średniego poziomu."
+  },
+  "whisper-1": {
+    "description": "Uniwersalny model rozpoznawania mowy, obsługujący rozpoznawanie mowy w wielu językach, tłumaczenie mowy i rozpoznawanie języków."
   },
   "wizardlm2": {
     "description": "WizardLM 2 to model językowy dostarczany przez Microsoft AI, który wyróżnia się w złożonych dialogach, wielojęzyczności, wnioskowaniu i inteligentnych asystentach."
