@@ -321,6 +321,9 @@
     "registry": "https://registry.npmjs.org"
   },
   "pnpm": {
+    "overrides": {
+      "mdast-util-gfm-autolink-literal": "2.0.0"
+    },
     "packageExtensions": {
       "@inkjs/ui": {
         "dependencies": {
@@ -328,5 +331,8 @@
         }
       }
     }
+  },
+  "overrides": {
+    "mdast-util-gfm-autolink-literal": "2.0.0"
   }
 }
