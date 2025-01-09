@@ -85,7 +85,7 @@ export class AiInfraRepos {
               abilities: !!user ? user.abilities : item.abilities || {},
               config: !!user ? user.config : item.config,
               contextWindowTokens: !!user ? user.contextWindowTokens : item.contextWindowTokens,
-              displayName: !!user ? user.displayName : item.displayName,
+              displayName: user?.displayName ?? item.displayName,
               enabled: !!user ? user.enabled : item.enabled,
               id: item.id,
               providerId: provider.id,
