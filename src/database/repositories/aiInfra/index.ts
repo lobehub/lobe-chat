@@ -81,13 +81,16 @@ export class AiInfraRepos {
           .map<EnabledAiModel & { enabled?: boolean | null }>((item) => {
             const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
 
-            const enabled = !!user ? user.enabled : item.enabled;
-
             return {
-              ...item,
-              abilities: item.abilities || {},
-              enabled,
+              abilities: !!user ? user.abilities : item.abilities || {},
+              config: !!user ? user.config : item.config,
+              contextWindowTokens: !!user ? user.contextWindowTokens : item.contextWindowTokens,
+              displayName: user?.displayName || item.displayName,
+              enabled: !!user ? user.enabled : item.enabled,
+              id: item.id,
               providerId: provider.id,
+              sort: !!user ? user.sort : undefined,
+              type: item.type,
             };
           })
           .filter((i) => i.enabled);
