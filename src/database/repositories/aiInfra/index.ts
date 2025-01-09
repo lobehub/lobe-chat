@@ -82,12 +82,16 @@ export class AiInfraRepos {
             const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
 
             const enabled = !!user ? user.enabled : item.enabled;
+            const sort = !!user ? user.sort : undefined;
+            const displayName = !!user ? user.displayName : item.displayName;
 
             return {
               ...item,
               abilities: item.abilities || {},
+              displayName,
               enabled,
               providerId: provider.id,
+              sort,
             };
           })
           .filter((i) => i.enabled);
