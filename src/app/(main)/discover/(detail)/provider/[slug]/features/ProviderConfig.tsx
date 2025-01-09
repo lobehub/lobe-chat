@@ -10,6 +10,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlexboxProps } from 'react-layout-kit';
 
+import { isServerMode } from '@/const/version';
 import { DiscoverProviderItem } from '@/types/discover';
 
 const useStyles = createStyles(({ css }) => ({
@@ -25,13 +26,13 @@ interface ProviderConfigProps extends FlexboxProps {
   identifier: string;
 }
 
-const ProviderConfig = memo<ProviderConfigProps>(({ data }) => {
+const ProviderConfig = memo<ProviderConfigProps>(({ data, identifier }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('discover');
 
   const router = useRouter();
   const openSettings = () => {
-    router.push('/settings/llm');
+    router.push(!isServerMode ? '/settings/llm' : `/settings/provider/${identifier}`);
   };
 
   const icon = <Icon icon={SquareArrowOutUpRight} size={{ fontSize: 16 }} />;
