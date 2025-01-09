@@ -62,6 +62,7 @@ export interface UserKeyVaults {
   taichu?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   upstage?: OpenAICompatibleKeyVault;
+  vertexai?: undefined;
   wenxin?: WenxinKeyVault;
   xai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;

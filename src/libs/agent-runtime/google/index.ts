@@ -1,9 +1,12 @@
+import type { VertexAI } from '@google-cloud/vertexai';
 import {
   Content,
   FunctionCallPart,
   FunctionDeclaration,
   Tool as GoogleFunctionCallTool,
   GoogleGenerativeAI,
+  HarmBlockThreshold,
+  HarmCategory,
   Part,
   SchemaType,
 } from '@google/generative-ai';
@@ -27,26 +30,21 @@ import { StreamingResponse } from '../utils/response';
 import { GoogleGenerativeAIStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 
-enum HarmCategory {
-  HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
-  HARM_CATEGORY_HARASSMENT = 'HARM_CATEGORY_HARASSMENT',
-  HARM_CATEGORY_HATE_SPEECH = 'HARM_CATEGORY_HATE_SPEECH',
-  HARM_CATEGORY_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-}
-
-enum HarmBlockThreshold {
-  BLOCK_NONE = 'BLOCK_NONE',
+interface LobeGoogleAIParams {
+  apiKey?: string;
+  baseURL?: string;
+  client?: GoogleGenerativeAI | VertexAI;
 }
 
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
   baseURL?: string;
 
-  constructor({ apiKey, baseURL }: { apiKey?: string; baseURL?: string } = {}) {
+  constructor({ apiKey, baseURL, client }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    this.client = new GoogleGenerativeAI(apiKey);
-    this.baseURL = baseURL;
+    this.client = client ? (client as GoogleGenerativeAI) : new GoogleGenerativeAI(apiKey);
+    this.baseURL = client ? undefined : baseURL;
   }
 
   async chat(rawPayload: ChatStreamPayload, options?: ChatCompetitionOptions) {
