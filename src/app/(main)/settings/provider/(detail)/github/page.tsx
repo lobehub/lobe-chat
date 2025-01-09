@@ -52,7 +52,7 @@ const useProviderCard = (): ProviderItem => {
           </Markdown>
         ),
         label: t(`${providerKey}.personalAccessToken.title`),
-        name: [KeyVaultsConfigKey, providerKey, LLMProviderApiTokenKey],
+        name: [KeyVaultsConfigKey, LLMProviderApiTokenKey],
       },
     ],
   };
