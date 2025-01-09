@@ -38,7 +38,7 @@ vi.mock('@/config/llm', () => ({
 }));
 
 // Mock parse models utils
-vi.mock('@/utils/parseModels', () => ({
+vi.mock('@/utils/_deprecated/parseModels', () => ({
   extractEnabledModels: (modelString: string, withDeploymentName?: boolean) => {
     // Returns different format if withDeploymentName is true
     return withDeploymentName ? [`${modelString}_withDeployment`] : [modelString];
