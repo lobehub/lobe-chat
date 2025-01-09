@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
       'gpt-tokenizer',
     ],
     webVitalsAttribution: ['CLS', 'LCP'],
+    webpackMemoryOptimizations: true,
   },
   async headers() {
     return [
