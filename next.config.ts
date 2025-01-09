@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
       'gpt-tokenizer',
     ],
     webVitalsAttribution: ['CLS', 'LCP'],
+    webpackMemoryOptimizations: true,
   },
   async headers() {
     return [
@@ -166,7 +167,7 @@ const nextConfig: NextConfig = {
   ],
   serverExternalPackages: ['@electric-sql/pglite', 'sharp'],
 
-  transpilePackages: ['pdfjs-dist', 'mermaid'],
+  transpilePackages: ['pdfjs-dist', 'mermaid', 'micromark-util-character'],
 
   webpack(config) {
     config.experiments = {
