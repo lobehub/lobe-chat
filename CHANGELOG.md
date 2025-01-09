@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.45.5](https://github.com/lobehub/lobe-chat/compare/v1.45.4...v1.45.5)
+
+<sup>Released on **2025-01-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Revert officeparser.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Revert officeparser, closes [#5370](https://github.com/lobehub/lobe-chat/issues/5370) ([ea116c2](https://github.com/lobehub/lobe-chat/commit/ea116c2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.4](https://github.com/lobehub/lobe-chat/compare/v1.45.3...v1.45.4)
+
+<sup>Released on **2025-01-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix GitHub and huggingface provider config unusable.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix GitHub and huggingface provider config unusable, closes [#5366](https://github.com/lobehub/lobe-chat/issues/5366) ([aec67b4](https://github.com/lobehub/lobe-chat/commit/aec67b4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.45.3](https://github.com/lobehub/lobe-chat/compare/v1.45.2...v1.45.3)
 
 <sup>Released on **2025-01-09**</sup>
