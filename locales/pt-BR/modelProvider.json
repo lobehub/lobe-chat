@@ -79,7 +79,7 @@
     },
     "id": {
       "desc": "Identificador único do provedor de serviços, não pode ser modificado após a criação",
-      "format": "Pode conter apenas letras minúsculas, hífens (-) e sublinhados (_)",
+      "format": "Só pode conter números, letras minúsculas, hífens (-) e sublinhados (_) ",
       "placeholder": "Sugestão: tudo em minúsculas, por exemplo, openai, não poderá ser modificado após a criação",
       "required": "Por favor, insira o ID do provedor",
       "title": "ID do Provedor"
