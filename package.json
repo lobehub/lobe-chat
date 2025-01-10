@@ -181,7 +181,7 @@
     "next-mdx-remote": "^5.0.0",
     "nextjs-toploader": "^3.7.15",
     "numeral": "^2.0.6",
-    "nuqs": "^1.20.0",
+    "nuqs": "^2.0.0",
     "officeparser": "^4.2.0",
     "ollama": "^0.5.11",
     "openai": "^4.77.3",
