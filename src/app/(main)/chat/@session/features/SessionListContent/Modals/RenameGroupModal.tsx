@@ -1,7 +1,7 @@
 import { Input, Modal, type ModalProps } from '@lobehub/ui';
 import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSessionStore } from '@/store/session';
@@ -21,6 +21,11 @@ const RenameGroupModal = memo<RenameGroupModalProps>(({ id, open, onCancel }) =>
   const [loading, setLoading] = useState(false);
 
   const { message } = App.useApp();
+
+  useEffect(() => {
+    setInput(group?.name);
+  }, [group]);
+
   return (
     <Modal
       allowFullscreen
