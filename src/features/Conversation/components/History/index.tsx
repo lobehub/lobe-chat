@@ -57,7 +57,7 @@ const History = memo(() => {
           </Flexbox>
           <Flexbox align={'flex-start'} gap={8} horizontal>
             <Flexbox align={'center'} padding={8} width={20}>
-              <div className={styles.line}></div>
+              <div className={styles.line} />
             </Flexbox>
             <Markdown className={styles.content} variant={'chat'}>
               {content}
