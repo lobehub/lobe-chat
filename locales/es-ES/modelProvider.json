@@ -151,7 +151,7 @@
       "title": "Descargando el modelo {{model}} "
     },
     "endpoint": {
-      "desc": "Introduce la dirección del proxy de la interfaz de Ollama, déjalo en blanco si no se ha especificado localmente",
+      "desc": "Debe incluir http(s)://, se puede dejar vacío si no se especifica localmente",
       "title": "Dirección del proxy de la interfaz"
     },
     "setup": {

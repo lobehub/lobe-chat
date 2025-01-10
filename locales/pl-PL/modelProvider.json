@@ -151,7 +151,7 @@
       "title": "Pobieranie modelu {{model}}"
     },
     "endpoint": {
-      "desc": "Wprowadź adres rest API Ollama, jeśli lokalnie nie określono, pozostaw puste",
+      "desc": "Musi zawierać http(s)://, lokalnie, jeśli nie określono inaczej, można pozostawić puste",
       "title": "Adres proxy API"
     },
     "setup": {

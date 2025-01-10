@@ -6,19 +6,41 @@ import { enableNextAuth } from '@/const/auth';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 
-import { genServerLLMConfig } from './genServerLLMConfig';
+import { genServerLLMConfig } from './_deprecated';
+import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
 
 export const getServerGlobalConfig = () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
 
   const config: GlobalServerConfig = {
+    aiProvider: genServerAiProvidersConfig({
+      azure: {
+        enabledKey: 'ENABLED_AZURE_OPENAI',
+        withDeploymentName: true,
+      },
+      bedrock: {
+        enabledKey: 'ENABLED_AWS_BEDROCK',
+        modelListKey: 'AWS_BEDROCK_MODEL_LIST',
+      },
+      giteeai: {
+        enabledKey: 'ENABLED_GITEE_AI',
+        modelListKey: 'GITEE_AI_MODEL_LIST',
+      },
+      ollama: {
+        fetchOnClient: !process.env.OLLAMA_PROXY_URL,
+      },
+    }),
     defaultAgent: {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
     enableUploadFileToServer: !!fileEnv.S3_SECRET_ACCESS_KEY,
     enabledAccessCode: ACCESS_CODES?.length > 0,
+
     enabledOAuthSSO: enableNextAuth,
+    /**
+     * @deprecated
+     */
     languageModel: genServerLLMConfig({
       azure: {
         enabledKey: 'ENABLED_AZURE_OPENAI',
