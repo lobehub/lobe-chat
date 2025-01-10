@@ -61,18 +61,6 @@ while getopts "fl:-:" opt; do
   esac
 done
 
-# ===============
-# == Variables ==
-# ===============
-# File list
-SUB_DIR="docker-compose/local"
-FILES=(
-  "$SUB_DIR/docker-compose.yml"
-  "$SUB_DIR/.env.example"
-  "$SUB_DIR/init_data.json"
-  "$SUB_DIR/s3_data.tar.gz"
-)
-
 # Supported languages and messages
 # Arg: -l --lang
 # If the language is not supported, default to English
@@ -216,24 +204,6 @@ download_file() {
   wget -q --show-progress "$file_url" -O "$local_file"
 }
 
-extract_file() {
-  local file_name=$1
-  local target_dir=$2
-
-  if [ -e "$file_name" ]; then
-    tar -zxvf "$file_name" -C "$target_dir" > /dev/null 2>&1
-    if [ $? -eq 0 ]; then
-      echo "$file_name" $(show_message "extracted_success") "$target_dir"
-    else
-      echo "$file_name" $(show_message "extracted_failed")
-      exit 1
-    fi
-  else
-    echo "$file_name" $(show_message "file_not_exists")
-    exit 1
-  fi
-}
-
 # Define colors
 declare -A colors
 colors=(
@@ -263,15 +233,30 @@ print_centered() {
   printf "%*s${colors[$color]}%s${colors[reset]}\n" $padding "" "$text"
 }
 
+# ===============
+# == Variables ==
+# ===============
+# File list
+SUB_DIR="docker-compose/local"
+FILES=(
+  "$SUB_DIR/docker-compose.yml"
+  "$SUB_DIR/init_data.json"
+)
+ENV_EXAMPLES=(
+  "$SUB_DIR/.env.zh-CN.example"
+  "$SUB_DIR/.env.example"
+)
+
 # Download files asynchronously
 download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
-download_file "$SOURCE_URL/${FILES[1]}" ".env"
-download_file "$SOURCE_URL/${FILES[2]}" "init_data.json"
-download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
+download_file "$SOURCE_URL/${FILES[1]}" "init_data.json"
 
-# Extract .tar.gz file without output
-extract_file "s3_data.tar.gz" "."
-rm s3_data.tar.gz
+# Download .env.example with the specified language
+if [ "$LANGUAGE" = "zh_CN" ]; then
+  download_file "$SOURCE_URL/${ENV_EXAMPLES[0]}" ".env"
+else
+  download_file "$SOURCE_URL/${ENV_EXAMPLES[1]}" ".env"
+fi
 
 # ==========================
 # === Regenerate Secrets ===
@@ -309,6 +294,7 @@ CASDOOR_USER="admin"
 CASDOOR_PASSWORD=$(generate_key 6)
 if [ $? -ne 0 ]; then
   echo $(show_message "security_secrect_regenerate_failed") "CASDOOR_PASSWORD"
+  CASDOOR_PASSWORD="123"
 else
   # replace `password` in init_data.json
   sed -i "s/"123"/${CASDOOR_PASSWORD}/" init_data.json
@@ -317,19 +303,18 @@ else
   fi
 fi
 
-# Generate Minio S3 access key
-# Temporarily disable key gen for minio because 
-# minio can not start with a access key in envs
-#S3_SECRET_ACCESS_KEY=$(generate_key 32)
-#if [ $? -ne 0 ]; then
-#  echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY"
-#else
-#  # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
-#  sed -i "s#^S3_SECRET_ACCESS_KEY=.*#S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}#" .env
-#  if [ $? -ne 0 ]; then
-#    echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY in \`.env\`"
-#  fi
-#fi
+# Generate Minio S3 User Password
+MINIO_ROOT_PASSWORD=$(generate_key 8)
+if [ $? -ne 0 ]; then
+  echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD"
+  MINIO_ROOT_PASSWORD="YOUR_MINIO_PASSWORD"
+else
+  # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
+  sed -i "s#^MINIO_ROOT_PASSWORD=.*#MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}#" .env
+  if [ $? -ne 0 ]; then
+    echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD in \`.env\`"
+  fi
+fi
 
 # Modify the .env file if the host is specified
 if [ -n "$HOST" ]; then
@@ -353,6 +338,7 @@ if [ -n "$HOST" ]; then
   echo -e "Server Host: $HOST"
 fi
 echo -e "Casdoor: \n - Username: admin\n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
+echo -e "Minio: \n - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
 
 # ===========================
 # == Display final message ==
