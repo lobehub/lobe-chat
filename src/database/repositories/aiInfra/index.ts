@@ -120,7 +120,9 @@ export class AiInfraRepos {
   ): Promise<AiProviderModelListItem[] | undefined> => {
     try {
       const { default: providerModels } = await import(`@/config/aiModels/${providerId}`);
-      return (providerModels as AIChatModelCard[]).map<AiProviderModelListItem>((m) => ({
+
+      const presetList = this.providerConfigs[providerId]?.serverModelLists || providerModels;
+      return (presetList as AIChatModelCard[]).map<AiProviderModelListItem>((m) => ({
         ...m,
         enabled: m.enabled || false,
         source: AiModelSourceEnum.Builtin,

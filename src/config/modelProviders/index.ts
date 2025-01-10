@@ -38,6 +38,9 @@ import XAIProvider from './xai';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
+/**
+ * @deprecated
+ */
 export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   OpenAIProvider.chatModels,
   QwenProvider.chatModels,

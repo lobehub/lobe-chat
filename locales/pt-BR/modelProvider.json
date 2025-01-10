@@ -151,7 +151,7 @@
       "title": "Baixando o modelo {{model}} "
     },
     "endpoint": {
-      "desc": "Insira o endereço do proxy de interface da Ollama, se não foi especificado localmente, pode deixar em branco",
+      "desc": "Deve incluir http(s)://, pode deixar em branco se não houver especificação local adicional",
       "title": "Endereço do Proxy de Interface"
     },
     "setup": {
