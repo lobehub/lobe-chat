@@ -152,7 +152,7 @@ export default {
       title: '正在下载模型 {{model}} ',
     },
     endpoint: {
-      desc: '填入 Ollama 接口代理地址，本地未额外指定可留空',
+      desc: '必须包含http(s)://，本地未额外指定可留空',
       title: 'Ollama 服务地址',
     },
     setup: {

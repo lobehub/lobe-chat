@@ -18,7 +18,7 @@ import { ProviderConfig } from '@/types/user/settings';
 const aiProviderProcedure = authedProcedure.use(async (opts) => {
   const { ctx } = opts;
 
-  const { languageModel } = getServerGlobalConfig();
+  const { aiProvider } = getServerGlobalConfig();
 
   const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
   return opts.next({
@@ -26,7 +26,7 @@ const aiProviderProcedure = authedProcedure.use(async (opts) => {
       aiInfraRepos: new AiInfraRepos(
         serverDB,
         ctx.userId,
-        languageModel as Record<string, ProviderConfig>,
+        aiProvider as Record<string, ProviderConfig>,
       ),
       aiProviderModel: new AiProviderModel(serverDB, ctx.userId),
       gateKeeper,

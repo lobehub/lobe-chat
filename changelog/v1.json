@@ -1,6 +1,48 @@
 [
   {
     "children": {
+      "fixes": ["Fix *_MODEL_LIST env in new provider."]
+    },
+    "date": "2025-01-10",
+    "version": "1.45.6"
+  },
+  {
+    "children": {
+      "fixes": ["Revert officeparser."]
+    },
+    "date": "2025-01-09",
+    "version": "1.45.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix GitHub and huggingface provider config unusable."]
+    },
+    "date": "2025-01-09",
+    "version": "1.45.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix some ai provider known issues."]
+    },
+    "date": "2025-01-09",
+    "version": "1.45.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update siliconcloud model list."]
+    },
+    "date": "2025-01-09",
+    "version": "1.45.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix remark gfm regex breaks in Safari versions < 16.4."]
+    },
+    "date": "2025-01-09",
+    "version": "1.45.1"
+  },
+  {
+    "children": {
       "features": ["Update Remark."]
     },
     "date": "2025-01-08",

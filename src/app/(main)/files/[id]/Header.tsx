@@ -32,7 +32,7 @@ const Header = memo<HeaderProps>(({ filename, url }) => {
     >
       <Flexbox align={'baseline'} horizontal>
         <Button
-          icon={<Icon icon={ArrowLeftIcon}></Icon>}
+          icon={<Icon icon={ArrowLeftIcon} />}
           onClick={() => {
             router.push('/files');
           }}

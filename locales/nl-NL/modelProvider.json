@@ -151,7 +151,7 @@
       "title": "Model {{model}} wordt gedownload"
     },
     "endpoint": {
-      "desc": "Voer het Ollama interface proxyadres in, laat leeg indien niet specifiek aangegeven",
+      "desc": "Moet http(s):// bevatten, kan leeg gelaten worden als lokaal niet specifiek opgegeven",
       "title": "Interface Proxyadres"
     },
     "setup": {
