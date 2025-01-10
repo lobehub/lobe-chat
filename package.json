@@ -244,7 +244,7 @@
     "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.13.13",
     "@lobehub/i18n-cli": "^1.20.3",
-    "@lobehub/lint": "^1.25.3",
+    "@lobehub/lint": "^1.25.5",
     "@lobehub/seo-cli": "^1.4.3",
     "@next/bundle-analyzer": "^15.1.4",
     "@next/eslint-plugin-next": "^15.1.4",
