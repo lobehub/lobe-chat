@@ -151,7 +151,7 @@
       "title": "Đang tải mô hình {{model}}"
     },
     "endpoint": {
-      "desc": "Nhập địa chỉ proxy API của Ollama, có thể để trống nếu không chỉ định cụ thể",
+      "desc": "Phải bao gồm http(s)://, có thể để trống nếu không chỉ định thêm cho địa phương",
       "title": "Địa chỉ proxy API"
     },
     "setup": {

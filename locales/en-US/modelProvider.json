@@ -151,7 +151,7 @@
       "title": "Downloading model {{model}}"
     },
     "endpoint": {
-      "desc": "Enter the Ollama interface proxy address, leave blank if not specified locally",
+      "desc": "Must include http(s)://; can be left blank if not specified locally.",
       "title": "Interface proxy address"
     },
     "setup": {

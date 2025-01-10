@@ -151,7 +151,7 @@
       "title": "Téléchargement du modèle {{model}} en cours"
     },
     "endpoint": {
-      "desc": "Saisissez l'adresse du proxy Ollama, laissez vide si non spécifié localement",
+      "desc": "Doit inclure http(s)://, peut rester vide si non spécifié localement",
       "title": "Adresse du proxy"
     },
     "setup": {

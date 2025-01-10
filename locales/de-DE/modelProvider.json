@@ -151,7 +151,7 @@
       "title": "Lade Modell {{model}} herunter"
     },
     "endpoint": {
-      "desc": "Geben Sie die Proxy-Adresse der Ollama-Schnittstelle ein, leer lassen, wenn lokal nicht spezifiziert",
+      "desc": "Muss http(s):// enthalten, kann leer gelassen werden, wenn lokal nicht zusätzlich angegeben.",
       "title": "Schnittstellen-Proxy-Adresse"
     },
     "setup": {

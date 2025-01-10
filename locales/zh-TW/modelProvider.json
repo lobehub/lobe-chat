@@ -151,7 +151,7 @@
       "title": "正在下載模型 {{model}}"
     },
     "endpoint": {
-      "desc": "填入 Ollama 接口代理地址，本地未額外指定可留空",
+      "desc": "必須包含http(s)://，本地未額外指定可留空",
       "title": "接口代理地址"
     },
     "setup": {
