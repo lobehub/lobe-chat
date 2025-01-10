@@ -80,7 +80,7 @@ export default {
     },
     id: {
       desc: '作为服务商唯一标识，创建后将不可修改',
-      format: '只能包含小写字母、连字符（-）和下划线（_）',
+      format: '只能包含数字、小写字母、连字符（-）和下划线（_）',
       placeholder: '例如 openai、gemini 等',
       required: '请填写服务商 ID',
       title: '服务商 ID',

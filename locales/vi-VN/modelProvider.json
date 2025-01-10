@@ -79,7 +79,7 @@
     },
     "id": {
       "desc": "Là định danh duy nhất của nhà cung cấp dịch vụ, không thể sửa đổi sau khi tạo",
-      "format": "Chỉ có thể chứa chữ cái thường, dấu gạch ngang (-) và dấu gạch dưới (_)",
+      "format": "Chỉ có thể chứa số, chữ cái thường, dấu gạch ngang (-) và dấu gạch dưới (_) ",
       "placeholder": "Nên viết toàn bộ bằng chữ thường, ví dụ openai, không thể sửa sau khi tạo",
       "required": "Vui lòng nhập ID nhà cung cấp",
       "title": "ID nhà cung cấp"
