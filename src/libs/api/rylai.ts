@@ -5,7 +5,7 @@ const AppId = 'lobe';
 // 创建实例
 const api = new ApiClient(process.env.RYLAI_API_URL || '', {
   headers: {
-    Authorization: `${process.env.RYLAI_API_KEY || ''}`,
+    'rylai-gateway-key': process.env.RYLAI_API_KEY || '',
   },
 });
 
@@ -22,7 +22,7 @@ export interface UserSubscription {
 export const getUserSubscription = async (userId: string): Promise<UserSubscription> => {
   try {
     const response = await api.get<{ code: number; data: UserSubscription; message: string }>(
-      '/v1/admin/user-subscriptions/app-plan',
+      '/gateway/user/get-subscription',
       {
         app_id: AppId,
         sso_user_id: userId,
