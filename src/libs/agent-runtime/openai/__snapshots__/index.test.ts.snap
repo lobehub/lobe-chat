@@ -16,15 +16,19 @@ exports[`LobeOpenAI > models > should get models 1`] = `
   },
   {
     "id": "gpt-3.5-turbo-16k",
+    "releasedAt": "2023-05-10",
   },
   {
     "id": "gpt-3.5-turbo-16k-0613",
+    "releasedAt": "2023-05-30",
   },
   {
     "id": "gpt-4-1106-vision-preview",
+    "releasedAt": "2024-03-26",
   },
   {
     "id": "gpt-3.5-turbo-instruct-0914",
+    "releasedAt": "2023-09-07",
   },
   {
     "contextWindowTokens": 128000,
@@ -63,9 +67,11 @@ exports[`LobeOpenAI > models > should get models 1`] = `
   },
   {
     "id": "gpt-3.5-turbo-0301",
+    "releasedAt": "2023-03-01",
   },
   {
     "id": "gpt-3.5-turbo-0613",
+    "releasedAt": "2023-06-12",
   },
   {
     "contextWindowTokens": 16385,
