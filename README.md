@@ -510,7 +510,18 @@ If you have deployed your own project following the one-click deployment steps i
 
 <br/>
 
-### `B` Deploying with Docker
+### `B` Deploying with TencentCloud Lighthouse
+Tencent Cloud Lighthouse provides a one-click deployment solution for the LobeChat service. With a single click, you can quickly set up a LobeChat service on Lighthouse.
+- Prepare your [OpenAI API Key](https://platform.openai.com/account/api-keys).
+- Click the button below to register/login to your Tencent Cloud account and then start the deployment： 
+
+|                    Deploy with TencentCloud Lighthouse                    |    
+|:-------------------------------------------------------------------------:|
+| [![][deploy-on-tecnent-cloud-button-image]][deploy-on-tecnent-cloud-link] |
+
+- After deployment, you can start using it.
+
+### `C` Deploying with Docker
 
 [![][docker-release-shield]][docker-release-link]
 [![][docker-size-shield]][docker-size-link]
@@ -748,6 +759,8 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [deploy-on-sealos-link]: https://cloud.sealos.io/?openapp=system-template%3FtemplateName%3Dlobe-chat
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
 [deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
+[deploy-on-tecnent-cloud-button-image]: https://cloudcache.tencent-cloud.com/qcloud/ui/static/static_source_business/d65fb782-4fb0-4348-ad85-f2943d6bee8f.svg
+[deploy-on-tecnent-cloud-link]: https://buy.tencentcloud.com/lighthouse?blueprintType=APP_OS&blueprintOfficialId=lhbp-6u0ti132&regionId=9&zone=ap-singapore-3&bundleId=bundle_starter_nmc_lin_med2_01&loginSet=AUTO&rule=true&from=lobechat
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
