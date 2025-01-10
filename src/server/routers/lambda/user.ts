@@ -24,6 +24,10 @@ export const userRouter = router({
     return ctx.userModel.getUserRegistrationDuration();
   }),
 
+  getUserSSOProviders: userProcedure.query(async ({ ctx }) => {
+    return ctx.userModel.getUserSSOProviders();
+  }),
+
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
     let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
 
