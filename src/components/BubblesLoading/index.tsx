@@ -49,9 +49,9 @@ const BubblesLoadingIcon: IconType = forwardRef(
         xmlns="http://www.w3.org/2000/svg"
         {...rest}
       >
-        <circle cx="7" cy="16" r="6"></circle>
-        <circle cx="30" cy="16" r="6"></circle>
-        <circle cx="53" cy="16" r="6"></circle>
+        <circle cx="7" cy="16" r="6" />
+        <circle cx="30" cy="16" r="6" />
+        <circle cx="53" cy="16" r="6" />
       </svg>
     );
   },

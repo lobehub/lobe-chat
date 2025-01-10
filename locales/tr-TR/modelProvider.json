@@ -151,7 +151,7 @@
       "title": "正在下载模型 {{model}} "
     },
     "endpoint": {
-      "desc": "Ollama arayüz proxy adresini girin, yerel olarak belirtilmemişse boş bırakılabilir",
+      "desc": "http(s):// içermelidir, yerel olarak belirtilmemişse boş bırakılabilir",
       "title": "Arayüz Proxy Adresi"
     },
     "setup": {
