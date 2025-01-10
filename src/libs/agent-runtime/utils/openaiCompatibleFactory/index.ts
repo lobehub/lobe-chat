@@ -285,11 +285,11 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
           if (knownModel) {
             dayjs.extend(utc);
 
-            return {
-              ...knownModel,
-              releasedAt:
-                knownModel.releasedAt ?? dayjs.utc(item.created * 1000).format('YYYY-MM-DD'),
-            };
+            const releasedAt =
+              knownModel.releasedAt ??
+              (item.created ? dayjs.utc(item.created * 1000).format('YYYY-MM-DD') : undefined);
+
+            return { ...knownModel, releasedAt };
           }
 
           return { id: item.id };

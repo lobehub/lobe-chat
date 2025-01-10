@@ -1,7 +1,6 @@
 // @vitest-environment node
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
-
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -11,6 +10,7 @@ import {
   LobeOpenAICompatibleRuntime,
   ModelProvider,
 } from '@/libs/agent-runtime';
+import officalOpenAIModels from '@/libs/agent-runtime/openai/fixtures/openai-models.json';
 import { sleep } from '@/utils/sleep';
 
 import * as debugStreamModule from '../debugStream';
@@ -802,26 +802,29 @@ describe('LobeOpenAICompatibleFactory', () => {
 
     it('should use custom stream handler when provided', async () => {
       // Create a custom stream handler that handles both ReadableStream and OpenAI Stream
-      const customStreamHandler = vi.fn((stream: ReadableStream | Stream<OpenAI.ChatCompletionChunk>) => {
-        const readableStream = stream instanceof ReadableStream ? stream : stream.toReadableStream();
-        return new ReadableStream({
-          start(controller) {
-            const reader = readableStream.getReader();
-            const process = async () => {
-              try {
-                while (true) {
-                  const { done, value } = await reader.read();
-                  if (done) break;
-                  controller.enqueue(value);
+      const customStreamHandler = vi.fn(
+        (stream: ReadableStream | Stream<OpenAI.ChatCompletionChunk>) => {
+          const readableStream =
+            stream instanceof ReadableStream ? stream : stream.toReadableStream();
+          return new ReadableStream({
+            start(controller) {
+              const reader = readableStream.getReader();
+              const process = async () => {
+                try {
+                  while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    controller.enqueue(value);
+                  }
+                } finally {
+                  controller.close();
                 }
-              } finally {
-                controller.close();
-              }
-            };
-            process();
-          },
-        });
-      });
+              };
+              process();
+            },
+          });
+        },
+      );
 
       const LobeMockProvider = LobeOpenAICompatibleFactory({
         baseURL: 'https://api.test.com/v1',
@@ -897,10 +900,10 @@ describe('LobeOpenAICompatibleFactory', () => {
         choices: [
           {
             index: 0,
-            message: { 
-              role: 'assistant', 
+            message: {
+              role: 'assistant',
               content: 'Test response',
-              refusal: null
+              refusal: null,
             },
             logprobs: null,
             finish_reason: 'stop',
@@ -967,6 +970,51 @@ describe('LobeOpenAICompatibleFactory', () => {
         // 恢复原始环境变量值
         process.env.DEBUG_MOCKPROVIDER_CHAT_COMPLETION = originalDebugValue;
       });
+    });
+  });
+
+  describe('models', () => {
+    it('should get models with third party model list', async () => {
+      vi.spyOn(instance['client'].models, 'list').mockResolvedValue({
+        data: [
+          { id: 'gpt-4o', object: 'model' },
+          { id: 'claude-3-haiku-20240307', object: 'model' },
+        ],
+      } as any);
+
+      const list = await instance.models();
+
+      expect(list).toEqual([
+        {
+          contextWindowTokens: 128000,
+          description:
+            'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
+          displayName: 'GPT-4o',
+          enabled: true,
+          functionCall: true,
+          id: 'gpt-4o',
+          pricing: {
+            input: 2.5,
+            output: 10,
+          },
+          vision: true,
+        },
+        {
+          contextWindowTokens: 200000,
+          description:
+            'Claude 3 Haiku 是 Anthropic 的最快且最紧凑的模型，旨在实现近乎即时的响应。它具有快速且准确的定向性能。',
+          displayName: 'Claude 3 Haiku',
+          functionCall: true,
+          id: 'claude-3-haiku-20240307',
+          maxOutput: 4096,
+          pricing: {
+            input: 0.25,
+            output: 1.25,
+          },
+          releasedAt: '2024-03-07',
+          vision: true,
+        },
+      ]);
     });
   });
 });

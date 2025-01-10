@@ -79,7 +79,7 @@
     },
     "id": {
       "desc": "Identifiant unique du fournisseur de services, qui ne peut pas être modifié après sa création",
-      "format": "Ne peut contenir que des lettres minuscules, des tirets (-) et des underscores (_) ",
+      "format": "Ne peut contenir que des chiffres, des lettres minuscules, des tirets (-) et des underscores (_) ",
       "placeholder": "Utilisez uniquement des lettres minuscules, par exemple openai, non modifiable après création",
       "required": "Veuillez entrer l'ID du fournisseur",
       "title": "ID du fournisseur"
