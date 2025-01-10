@@ -977,8 +977,10 @@ describe('LobeOpenAICompatibleFactory', () => {
     it('should get models with third party model list', async () => {
       vi.spyOn(instance['client'].models, 'list').mockResolvedValue({
         data: [
-          { id: 'gpt-4o', object: 'model' },
+          { id: 'gpt-4o', object: 'model', created: 1698218177 },
           { id: 'claude-3-haiku-20240307', object: 'model' },
+          { id: 'gpt-4o-mini', object: 'model', created: 1698318177 * 1000 },
+          { id: 'gemini', object: 'model', created: 1736499509125 },
         ],
       } as any);
 
@@ -987,6 +989,7 @@ describe('LobeOpenAICompatibleFactory', () => {
       expect(list).toEqual([
         {
           contextWindowTokens: 128000,
+          releasedAt: '2023-10-25',
           description:
             'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
           displayName: 'GPT-4o',
@@ -1013,6 +1016,26 @@ describe('LobeOpenAICompatibleFactory', () => {
           },
           releasedAt: '2024-03-07',
           vision: true,
+        },
+        {
+          contextWindowTokens: 128000,
+          description:
+            'GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。',
+          displayName: 'GPT-4o mini',
+          enabled: true,
+          functionCall: true,
+          id: 'gpt-4o-mini',
+          maxOutput: 16385,
+          pricing: {
+            input: 0.15,
+            output: 0.6,
+          },
+          releasedAt: '2023-10-26',
+          vision: true,
+        },
+        {
+          id: 'gemini',
+          releasedAt: '2025-01-10',
         },
       ]);
     });
