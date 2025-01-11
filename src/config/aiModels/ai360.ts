@@ -2,16 +2,29 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const ai360ChatModels: AIChatModelCard[] = [
   {
-    contextWindowTokens: 8192,
+    contextWindowTokens: 8000,
     description:
-      '360GPT2 Pro 是 360 公司推出的高级自然语言处理模型，具备卓越的文本生成和理解能力，尤其在生成与创作领域表现出色，能够处理复杂的语言转换和角色演绎任务。',
+      '360gpt2-o1 使用树搜索构建思维链，并引入了反思机制，使用强化学习训练，模型具备自我反思与纠错的能力。',
+    displayName: '360GPT2 o1',
+    enabled: true,
+    id: '360gpt2-o1',
+    pricing: {
+      currency: 'CNY',
+      input: 20,
+      output: 50,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 8000,
+    description:
+      '360智脑系列效果最好的主力千亿级大模型，广泛适用于各领域复杂任务场景。',
     displayName: '360GPT2 Pro',
     enabled: true,
     id: '360gpt2-pro',
-    maxOutput: 7000,
     pricing: {
       currency: 'CNY',
-      input: 5,
+      input: 2,
       output: 5,
     },
     type: 'chat',
@@ -20,46 +33,29 @@ const ai360ChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 8192,
+    contextWindowTokens: 8000,
     description:
-      '360GPT Pro 作为 360 AI 模型系列的重要成员，以高效的文本处理能力满足多样化的自然语言应用场景，支持长文本理解和多轮对话等功能。',
+      '360智脑系列效果最好的主力千亿级大模型，广泛适用于各领域复杂任务场景。',
     displayName: '360GPT Pro',
     enabled: true,
     id: '360gpt-pro',
-    maxOutput: 7000,
     pricing: {
       currency: 'CNY',
-      input: 5,
+      input: 2,
       output: 5,
     },
     type: 'chat',
   },
   {
-    contextWindowTokens: 8192,
+    contextWindowTokens: 7000,
     description:
-      '360GPT Turbo 提供强大的计算和对话能力，具备出色的语义理解和生成效率，是企业和开发者理想的智能助理解决方案。',
+      '兼顾性能和效果的百亿级大模型，适合对性能/成本要求较高 的场景。',
     displayName: '360GPT Turbo',
     enabled: true,
     id: '360gpt-turbo',
-    maxOutput: 7000,
     pricing: {
       currency: 'CNY',
-      input: 2,
-      output: 2,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    description:
-      '360GPT Turbo Responsibility 8K 强调语义安全和责任导向，专为对内容安全有高度要求的应用场景设计，确保用户体验的准确性与稳健性。',
-    displayName: '360GPT Turbo Responsibility 8K',
-    enabled: true,
-    id: '360gpt-turbo-responsibility-8k',
-    maxOutput: 2048,
-    pricing: {
-      currency: 'CNY',
-      input: 2,
+      input: 1,
       output: 2,
     },
     type: 'chat',

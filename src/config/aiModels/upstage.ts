@@ -22,7 +22,7 @@ const upstageChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 4096,
+    contextWindowTokens: 32_768,
     description:
       'Solar Pro 是 Upstage 推出的一款高智能LLM，专注于单GPU的指令跟随能力，IFEval得分80以上。目前支持英语，正式版本计划于2024年11月推出，将扩展语言支持和上下文长度。',
     displayName: 'Solar Pro',
