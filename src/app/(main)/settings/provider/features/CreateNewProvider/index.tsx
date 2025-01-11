@@ -51,7 +51,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
         { message: t('createNewAiProvider.id.required'), required: true },
         {
           message: t('createNewAiProvider.id.format'),
-          pattern: /^[_a-z-]+$/,
+          pattern: /^[\d_a-z-]+$/,
         },
       ],
     },
