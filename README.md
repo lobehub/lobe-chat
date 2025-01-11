@@ -8,7 +8,7 @@ An open-source, modern-design ChatGPT/LLMs UI/Framework.<br/>
 Supports speech-synthesis, multi-modal, and extensible ([function call][docs-functionc-call]) plugin system.<br/>
 One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/Ollama chat application.
 
-**English** · [简体中文](./README.zh-CN.md) · [日本語](./README.ja-JP.md) · [Official Site][official-site] · [Changelog][changelog] · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
+**English** · [繁體中文](./README.zh-TW.md) · [简体中文](./README.zh-CN.md) · [日本語](./README.ja-JP.md) · [Official Site][official-site] · [Changelog][changelog] · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -50,33 +50,39 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
 
 #### TOC
 
-- [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
-- [✨ Features](#-features)
-  - [`1` File Upload/Knowledge Base](#1-file-uploadknowledge-base)
-  - [`2` Multi-Model Service Provider Support](#2-multi-model-service-provider-support)
-  - [`3` Local Large Language Model (LLM) Support](#3-local-large-language-model-llm-support)
-  - [`4` Model Visual Recognition](#4-model-visual-recognition)
-  - [`5` TTS & STT Voice Conversation](#5-tts--stt-voice-conversation)
-  - [`6` Text to Image Generation](#6-text-to-image-generation)
-  - [`7` Plugin System (Function Calling)](#7-plugin-system-function-calling)
-  - [`8` Agent Market (GPTs)](#8-agent-market-gpts)
-  - [`9` Support Local / Remote Database](#9-support-local--remote-database)
-  - [`10` Support Multi-User Management](#10-support-multi-user-management)
-  - [`11` Progressive Web App (PWA)](#11-progressive-web-app-pwa)
-  - [`12` Mobile Device Adaptation](#12-mobile-device-adaptation)
-  - [`13` Custom Themes](#13-custom-themes)
-  - [`*` What's more](#-whats-more)
-- [⚡️ Performance](#️-performance)
-- [🛳 Self Hosting](#-self-hosting)
-  - [`A` Deploying with Vercel, Zeabur , Sealos or Alibaba Cloud](#a-deploying-with-vercel-zeabur--sealos-or-alibaba-cloud)
-  - [`B` Deploying with Docker](#b-deploying-with-docker)
-  - [Environment Variable](#environment-variable)
-- [📦 Ecosystem](#-ecosystem)
-- [🧩 Plugins](#-plugins)
-- [⌨️ Local Development](#️-local-development)
-- [🤝 Contributing](#-contributing)
-- [❤️ Sponsor](#️-sponsor)
-- [🔗 More Products](#-more-products)
+- [Lobe Chat](#lobe-chat)
+      - [TOC](#toc)
+      - [](#)
+  - [👋🏻 Getting Started \& Join Our Community](#-getting-started--join-our-community)
+  - [✨ Features](#-features)
+    - [`1` File Upload/Knowledge Base](#1-file-uploadknowledge-base)
+    - [`2` Multi-Model Service Provider Support](#2-multi-model-service-provider-support)
+      - [Supported Model Service Providers](#supported-model-service-providers)
+    - [`3` Local Large Language Model (LLM) Support](#3-local-large-language-model-llm-support)
+    - [`4` Model Visual Recognition](#4-model-visual-recognition)
+    - [`5` TTS \& STT Voice Conversation](#5-tts--stt-voice-conversation)
+    - [`6` Text to Image Generation](#6-text-to-image-generation)
+    - [`7` Plugin System (Function Calling)](#7-plugin-system-function-calling)
+    - [`8` Agent Market (GPTs)](#8-agent-market-gpts)
+    - [`9` Support Local / Remote Database](#9-support-local--remote-database)
+    - [`10` Support Multi-User Management](#10-support-multi-user-management)
+    - [`11` Progressive Web App (PWA)](#11-progressive-web-app-pwa)
+    - [`12` Mobile Device Adaptation](#12-mobile-device-adaptation)
+    - [`13` Custom Themes](#13-custom-themes)
+    - [`*` What's more](#-whats-more)
+  - [⚡️ Performance](#️-performance)
+  - [🛳 Self Hosting](#-self-hosting)
+    - [`A` Deploying with Vercel, Zeabur , Sealos or Alibaba Cloud](#a-deploying-with-vercel-zeabur--sealos-or-alibaba-cloud)
+      - [After Fork](#after-fork)
+      - [Keep Updated](#keep-updated)
+    - [`B` Deploying with Docker](#b-deploying-with-docker)
+    - [Environment Variable](#environment-variable)
+  - [📦 Ecosystem](#-ecosystem)
+  - [🧩 Plugins](#-plugins)
+  - [⌨️ Local Development](#️-local-development)
+  - [🤝 Contributing](#-contributing)
+  - [❤️ Sponsor](#️-sponsor)
+  - [🔗 More Products](#-more-products)
 
 ####
 

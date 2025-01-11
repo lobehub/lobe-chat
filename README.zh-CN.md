@@ -8,7 +8,7 @@
 支持语音合成、多模态、可扩展的（[function call][docs-functionc-call]）插件系统<br/>
 一键**免费**拥有你自己的 ChatGPT/Gemini/Claude/Ollama 应用
 
-[English](./README.md) · **简体中文** · [日本語](./README.ja-JP.md) · [官网][official-site] · [更新日志][changelog] · [文档][docs] · [博客][blog] · [反馈问题][github-issues-link]
+[English](./README.md) · [繁體中文](./README.zh-TW.md) · **简体中文** · [日本語](./README.ja-JP.md) · [官网][official-site] · [更新日志][changelog] · [文档][docs] · [博客][blog] · [反馈问题][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -50,13 +50,14 @@
 
 #### TOC
 
-- [👋🏻 开始使用 & 交流](#-开始使用--交流)
+- [👋🏻 开始使用 \& 交流](#-开始使用--交流)
 - [✨ 特性一览](#-特性一览)
   - [`1` 文件上传 / 知识库](#1-文件上传--知识库)
   - [`2` 多模型服务商支持](#2-多模型服务商支持)
+    - [已支持的模型服务商](#已支持的模型服务商)
   - [`3` 支持本地大语言模型 (LLM)](#3-支持本地大语言模型-llm)
   - [`4` 模型视觉识别 (Model Visual)](#4-模型视觉识别-model-visual)
-  - [`5` TTS & STT 语音会话](#5-tts--stt-语音会话)
+  - [`5` TTS \& STT 语音会话](#5-tts--stt-语音会话)
   - [`6` Text to Image 文生图](#6-text-to-image-文生图)
   - [`7` 插件系统 (Tools Calling)](#7-插件系统-tools-calling)
   - [`8` 助手市场 (GPTs)](#8-助手市场-gpts)
@@ -69,9 +70,13 @@
 - [⚡️ 性能测试](#️-性能测试)
 - [🛳 开箱即用](#-开箱即用)
   - [`A` 使用 Vercel、Zeabur 、Sealos 或 阿里云计算巢 部署](#a-使用-vercelzeabur-sealos-或-阿里云计算巢-部署)
+    - [Fork 之后](#fork-之后)
+    - [保持更新](#保持更新)
   - [`B` 使用 Docker 部署](#b-使用-docker-部署)
   - [环境变量](#环境变量)
   - [获取 OpenAI API Key](#获取-openai-api-key)
+    - [`A` 通过 OpenAI 官方渠道](#a-通过-openai-官方渠道)
+    - [`B` 通过 OpenAI 第三方代理商](#b-通过-openai-第三方代理商)
 - [📦 生态系统](#-生态系统)
 - [🧩 插件体系](#-插件体系)
 - [⌨️ 本地开发](#️-本地开发)
