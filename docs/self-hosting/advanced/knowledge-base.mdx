@@ -62,3 +62,12 @@ Unstructured.io is a powerful document processing tool.
 - **Note**: Evaluate processing needs based on document complexity
 
 By correctly configuring and integrating these core components, you can build a powerful and efficient knowledge base system for LobeChat. Each component plays a crucial role in the overall architecture, supporting advanced document management and intelligent retrieval functions.
+
+### 5. Custom Embedding
+
+- **Purpose**: Use different Embedding generate vector representations for semantic search
+- **Options**: support model provider list: zhipu/github/openai/bedrock/ollama
+- **Deployment Tip**: Used to configure the default Embedding model
+```
+environment: DEFAULT_FILES_CONFIG=embedding_model=openai/embedding-text-3-small
+```

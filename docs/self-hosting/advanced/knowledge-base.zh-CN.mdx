@@ -60,3 +60,12 @@ Unstructured.io 是一个强大的文档处理工具。
 - **注意事项**：评估处理需求，根据文档复杂度决定是否部署
 
 通过正确配置和集成这些核心组件，您可以为 LobeChat 构建一个强大、高效的知识库系统。每个组件都在整体架构中扮演着关键角色，共同支持高级的文档管理和智能检索功能。
+
+### 5. 自定义 Embedding（可选）
+
+- **用途**: 使用不同的嵌入模型（Embedding）生成文本的向量表示，用于语义搜索
+- **选项**: 支持的模型提供商:zhipu/github/openai/bedrock/ollama
+- **部署建议**: 使用环境变量配置默认嵌入模型
+```
+environment: DEFAULT_FILES_CONFIG=embedding_model=openai/embedding-text-3-small
+```
