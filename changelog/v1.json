@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix released at for undefined condition."]
+    },
+    "date": "2025-01-13",
+    "version": "1.45.7"
+  },
+  {
+    "children": {
       "fixes": ["Fix *_MODEL_LIST env in new provider."]
     },
     "date": "2025-01-10",
