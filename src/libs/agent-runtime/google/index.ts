@@ -71,19 +71,19 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             safetySettings: [
               {
                 category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: model.includes('2.0') ? HarmBlockThreshold.OFF : HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: model.includes('2.0') ? HarmBlockThreshold.OFF : HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: model.includes('2.0') ? HarmBlockThreshold.OFF : HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: model.includes('2.0') ? HarmBlockThreshold.OFF : HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
             ],
           },
