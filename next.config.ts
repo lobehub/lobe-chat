@@ -168,12 +168,13 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['@electric-sql/pglite', 'sharp'],
 
   transpilePackages: ['pdfjs-dist', 'mermaid'],
-
   webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
       layers: true,
     };
+
+    config.optimization.minimize = false;
 
     // 开启该插件会导致 pglite 的 fs bundler 被改表
     if (enableReactScan && !isUsePglite) {

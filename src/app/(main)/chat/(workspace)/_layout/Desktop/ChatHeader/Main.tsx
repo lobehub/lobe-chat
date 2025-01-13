@@ -1,7 +1,6 @@
 'use client';
 
-import { ActionIcon, Avatar } from '@lobehub/ui';
-import { ChatHeaderTitle } from '@lobehub/ui/chat';
+import { ActionIcon, Avatar, ChatHeaderTitle } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { parseAsBoolean, useQueryState } from 'nuqs';

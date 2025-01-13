@@ -1,7 +1,6 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
-import { EditableMessage } from '@lobehub/ui/chat';
+import { ActionIcon, EditableMessage } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { Edit } from 'lucide-react';
 import { memo, useState } from 'react';
