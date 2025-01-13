@@ -30,15 +30,27 @@ If you deployed your project according to the one-click deployment steps in the 
 
 After forking the project, due to Github's limitations, you need to manually enable Workflows on the Actions page of your forked project and start the Upstream Sync Action. Once enabled, you can set up automatic updates to occur every hour.
 
-<Image alt="Enable Automatic Updates S1" src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png" />
+<Image
+  alt="Enable Automatic Updates S1"
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png"
+/>
 
-<Image alt="Enable Automatic Updates S2" src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png" />
+<Image
+  alt="Enable Automatic Updates S2"
+  src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png"
+/>
 
 If you encounter a sync failure, you need to manually click "Update Branch" once.
 
-<Image alt="GitHub Action Sync Failure" src="https://github.com/user-attachments/assets/9baacac6-5af4-460b-862d-682b76c18459" />
+<Image
+  alt="GitHub Action Sync Failure"
+  src="https://github.com/user-attachments/assets/9baacac6-5af4-460b-862d-682b76c18459"
+/>
 
-<Image alt="Manually Sync 'Update Branch'" src="https://github.com/user-attachments/assets/d524c20d-306a-45bc-971b-96920b87fab4" />
+<Image
+  alt="Manually Sync 'Update Branch'"
+  src="https://github.com/user-attachments/assets/d524c20d-306a-45bc-971b-96920b87fab4"
+/>
 
 ## `B` Docker Deployment
 
@@ -47,33 +59,34 @@ Upgrading the Docker deployment version is very simple, you just need to redeplo
 <Steps>
   ### Stop and Remove the Current Running LobeChat Container
 
-  Assuming the LobeChat container is named `lobe-chat`, use the following commands to stop and remove the currently running LobeChat container:
+Assuming the LobeChat container is named `lobe-chat`, use the following commands to stop and remove the currently running LobeChat container:
 
-  ```fish
-  docker stop lobe-chat
-  docker rm lobe-chat
-  ```
+```fish
+docker stop lobe-chat
+docker rm lobe-chat
+```
 
-  ### Pull the Latest LobeChat Image
+### Pull the Latest LobeChat Image
 
-  Use the following command to pull the latest Docker image for LobeChat:
+Use the following command to pull the latest Docker image for LobeChat:
 
-  ```fish
-  docker pull lobehub/lobe-chat
-  ```
+```fish
+docker pull lobehub/lobe-chat
+```
 
-  ### Restart the Docker Container
+### Restart the Docker Container
 
-  Redeploy the LobeChat container using the newly pulled image:
+Redeploy the LobeChat container using the newly pulled image:
 
-  ```fish
-  docker run -d -p 3210:3210 \
-    -e OPENAI_API_KEY=sk-xxxx \
-    -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
-    -e ACCESS_CODE=lobe66 \
-    --name lobe-chat \
-    lobehub/lobe-chat
-  ```
+```fish
+docker run -d -p 3210:3210 \
+  -e OPENAI_API_KEY=sk-xxxx \
+  -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
+  -e ACCESS_CODE=lobe66 \
+  --name lobe-chat \
+  lobehub/lobe-chat
+```
+
 </Steps>
 
 Ensure that you have sufficient permissions to stop and remove the container before executing these commands, and that Docker has sufficient permissions to pull the new image.
@@ -81,77 +94,80 @@ Ensure that you have sufficient permissions to stop and remove the container bef
 <Callout type={'tip'}>
   **If I redeploy, will I lose my local chat records?**
 
-  No need to worry, you won't. All of LobeChat's chat records are stored in your local browser. Therefore, when redeploying LobeChat using Docker, your chat records will not be lost.
+No need to worry, you won't. All of LobeChat's chat records are stored in your local browser. Therefore, when redeploying LobeChat using Docker, your chat records will not be lost.
+
 </Callout>
 
 If you wish to automate the above steps, you can follow the method below and use Crontab scheduling to complete it. The specific steps are as follows.
 
 <Steps>
-  ### Write automatic update scripts and configuration files
 
-  First, create a `lobe.env` configuration file with various environment variables, for example:
+### Write automatic update scripts and configuration files
 
-  ```env
-  OPENAI_API_KEY=sk-xxxx
-  OPENAI_PROXY_URL=https://api-proxy.com/v1
-  ACCESS_CODE=arthals2333
-  OPENAI_MODEL_LIST=-gpt-4,-gpt-4-32k,-gpt-3.5-turbo-16k,gpt-3.5-turbo-1106=gpt-3.5-turbo-16k,gpt-4-0125-preview=gpt-4-turbo,gpt-4-vision-preview=gpt-4-vision
-  ```
+First, create a `lobe.env` configuration file with various environment variables, for example:
 
-  Then, you can use the following script to automate the update:
+```env
+OPENAI_API_KEY=sk-xxxx
+OPENAI_PROXY_URL=https://api-proxy.com/v1
+ACCESS_CODE=arthals2333
+OPENAI_MODEL_LIST=-gpt-4,-gpt-4-32k,-gpt-3.5-turbo-16k,gpt-3.5-turbo-1106=gpt-3.5-turbo-16k,gpt-4-0125-preview=gpt-4-turbo,gpt-4-vision-preview=gpt-4-vision
+```
 
-  ```bash
-  #!/bin/bash
-  # auto-update-lobe-chat.sh
+Then, you can use the following script to automate the update:
 
-  # Set up proxy (optional)
-  export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+```bash
+#!/bin/bash
+# auto-update-lobe-chat.sh
 
-  # Pull the latest image and store the output in a variable
-  output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+# Set up proxy (optional)
+export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
 
-  # Check if the pull command was executed successfully
-  if [ $? -ne 0 ]; then
-    exit 1
-  fi
+# Pull the latest image and store the output in a variable
+output=$(docker pull lobehub/lobe-chat:latest 2>&1)
 
-  # Check if the output contains a specific string
-  echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+# Check if the pull command was executed successfully
+if [ $? -ne 0 ]; then
+  exit 1
+fi
 
-  # If the image is already up to date, do nothing
-  if [ $? -eq 0 ]; then
-    exit 0
-  fi
+# Check if the output contains a specific string
+echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
 
-  echo "Detected lobe-chat update"
+# If the image is already up to date, do nothing
+if [ $? -eq 0 ]; then
+  exit 0
+fi
 
-  # Remove the old container
-  echo "Removed: $(docker rm -f lobe-chat)"
+echo "Detected lobe-chat update"
 
-  # Run the new container(Please change the path to the env file)
-  echo "Started: $(docker run -d --network=host --env-file /path/to/lobe.env --name=lobe-chat --restart=always lobehub/lobe-chat)"
+# Remove the old container
+echo "Removed: $(docker rm -f lobe-chat)"
 
-  # Print the update time and version
-  echo "Update time: $(date)"
-  echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+# Run the new container(Please change the path to the env file)
+echo "Started: $(docker run -d --network=host --env-file /path/to/lobe.env --name=lobe-chat --restart=always lobehub/lobe-chat)"
 
-  # Clean up unused images
-  docker images | grep 'lobehub/lobe-chat' | grep -v 'lobehub/lobe-chat-database' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
-  echo "Removed old images."
-  ```
+# Print the update time and version
+echo "Update time: $(date)"
+echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
 
-  <Callout type={'warning'}>
-    This script can be used in Crontab, but please ensure that your Crontab can find the correct
-    Docker command. It is recommended to use absolute paths.
-  </Callout>
+# Clean up unused images
+docker images | grep 'lobehub/lobe-chat' | grep -v 'lobehub/lobe-chat-database' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+echo "Removed old images."
+```
 
-  Configure Crontab to execute the script every 5 minutes:
+<Callout type={'warning'}>
+  This script can be used in Crontab, but please ensure that your Crontab can find the correct
+  Docker command. It is recommended to use absolute paths.
+</Callout>
 
-  ### Configure Crontab to automatically execute scripts
+Configure Crontab to execute the script every 5 minutes:
 
-  The following command configures Crontab to execute scripts every 5 minutes, or as often as you like:
+### Configure Crontab to automatically execute scripts
 
-  ```bash
-  */5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
-  ```
+The following command configures Crontab to execute scripts every 5 minutes, or as often as you like:
+
+```bash
+*/5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
+```
+
 </Steps>

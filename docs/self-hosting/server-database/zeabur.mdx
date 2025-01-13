@@ -32,45 +32,47 @@ The template on Zeabur includes 4 services:
 Here is the process for deploying the LobeChat server database version on Zeabur:
 
 <Steps>
-  ### Go to the template page on Zeabur
 
-  Go to the [LobeChat Database template page](https://zeabur.com/templates/RRSPSD) on Zeabur and click on the "Deploy" button.
+### Go to the template page on Zeabur
 
-  ### Fill in the required environment variables
+Go to the [LobeChat Database template page](https://zeabur.com/templates/RRSPSD) on Zeabur and click on the "Deploy" button.
 
-  After you click on the "Deploy" button, you will see a modal pop-up where you can fill in the required environment variables.
+### Fill in the required environment variables
 
-  Here are the environment variables you need to fill in:
+After you click on the "Deploy" button, you will see a modal pop-up where you can fill in the required environment variables.
 
-  - OpenAI API key: Your OpenAI API key to get responses from OpenAI.
+Here are the environment variables you need to fill in:
 
-  - LobeChat Domain: A free subdomain with `.zeabur.app` suffix.
+- OpenAI API key: Your OpenAI API key to get responses from OpenAI.
 
-  - MinIO Public Domain: A free subdomain with `.zeabur.app` suffix for yout MinIO web port to enable public access for the uploaded files.
+- LobeChat Domain: A free subdomain with `.zeabur.app` suffix.
 
-  - Logto Console Domain: A free subdomain with `.zeabur.app` suffix for your Logto console.
+- MinIO Public Domain: A free subdomain with `.zeabur.app` suffix for yout MinIO web port to enable public access for the uploaded files.
 
-  - Logto API Domain: A free subdomain with `.zeabur.app` suffix for your Logto api.
+- Logto Console Domain: A free subdomain with `.zeabur.app` suffix for your Logto console.
 
-  ### Select a region and deploy
+- Logto API Domain: A free subdomain with `.zeabur.app` suffix for your Logto api.
 
-  After you fill all the required environment variables, select a region where you want to deploy your LobeChat Database and click on the "Deploy" button.
+### Select a region and deploy
 
-  You will see another modal pop-up where you can see the deployment progress.
+After you fill all the required environment variables, select a region where you want to deploy your LobeChat Database and click on the "Deploy" button.
 
-  ### Configure Logto
+You will see another modal pop-up where you can see the deployment progress.
 
-  After the deployment is done, you need to configure your Logto service to enable authrization.
+### Configure Logto
 
-  Access your Logto console with the console domain you just binded, and then create a `Next.js 14(App router)` application to get the client ID and client secret, and fill in the cors and callback URLs. You can check [this document](../advanced/auth.mdx) for a more detailed guide.
+After the deployment is done, you need to configure your Logto service to enable authrization.
 
-  Fill in those variables into your LobeChat service on Zeabur, here is a more detailed guide for [editing environment variables on Zeabur](https://zeabur.com/docs/deploy/variables).
+Access your Logto console with the console domain you just binded, and then create a `Next.js 14(App router)` application to get the client ID and client secret, and fill in the cors and callback URLs. You can check [this document](../advanced/auth.mdx) for a more detailed guide.
 
-  For detailed configuration of Logto, refer to [this document](/docs/self-hosting/advanced/auth/next-auth/logto).
+Fill in those variables into your LobeChat service on Zeabur, here is a more detailed guide for [editing environment variables on Zeabur](https://zeabur.com/docs/deploy/variables).
 
-  ### Access your LobeChat Instance
+For detailed configuration of Logto, refer to [this document](/docs/self-hosting/advanced/auth/next-auth/logto).
 
-  Press on the `LobeChat-Database` and you can see the public domain you just created, click on it to access your LobeChat Database.
+### Access your LobeChat Instance
 
-  You can also bind a custom domain for your services if you want, here is a guide on how to [bind a custom domain on Zeabur](https://zeabur.com/docs/deploy/domain-binding).
+Press on the `LobeChat-Database` and you can see the public domain you just created, click on it to access your LobeChat Database.
+
+You can also bind a custom domain for your services if you want, here is a guide on how to [bind a custom domain on Zeabur](https://zeabur.com/docs/deploy/domain-binding).
+
 </Steps>
