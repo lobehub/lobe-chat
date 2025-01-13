@@ -22,11 +22,18 @@ export const LobeStepfunAI = LobeOpenAICompatibleFactory({
   },
   models: {
     transformModel: (m) => {
+      // ref: https://platform.stepfun.com/docs/llm/modeloverview
+      const functionCallKeywords = [
+        'step-1-',
+        'step-2-',
+        'step-1v-',
+      ];
+
       const model = m as unknown as StepfunModelCard;
 
       return {
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
-        functionCall: model.id !== 'step-1.5v-mini',
+        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         id: model.id,
         vision: model.id.toLowerCase().includes('v'),
       };
