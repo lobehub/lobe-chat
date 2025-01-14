@@ -1,3 +1,1 @@
-import NotFound from '@/components/404';
-
-export default NotFound;
+export { default } from '@/components/404';
