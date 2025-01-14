@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.45.12](https://github.com/lobehub/lobe-chat/compare/v1.45.11...v1.45.12)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `enable_search` parameter intro condition in Qwen.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `enable_search` parameter intro condition in Qwen, closes [#5297](https://github.com/lobehub/lobe-chat/issues/5297) ([0b19c20](https://github.com/lobehub/lobe-chat/commit/0b19c20))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.45.11](https://github.com/lobehub/lobe-chat/compare/v1.45.10...v1.45.11)
 
 <sup>Released on **2025-01-14**</sup>
