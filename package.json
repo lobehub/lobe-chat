@@ -322,7 +322,8 @@
   },
   "pnpm": {
     "overrides": {
-      "mdast-util-gfm-autolink-literal": "2.0.0"
+      "mdast-util-gfm-autolink-literal": "2.0.0",
+      "react-markdown": "^9.0.3"
     },
     "packageExtensions": {
       "@inkjs/ui": {
@@ -333,6 +334,7 @@
     }
   },
   "overrides": {
-    "mdast-util-gfm-autolink-literal": "2.0.0"
+    "mdast-util-gfm-autolink-literal": "2.0.0",
+    "react-markdown": "^9.0.3"
   }
 }
