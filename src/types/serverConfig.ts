@@ -20,6 +20,7 @@ export interface ServerModelProviderConfig {
 export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerModelProviderConfig>>;
 
 export interface GlobalServerConfig {
+  aiProvider?: ServerLanguageModel;
   defaultAgent?: DeepPartial<UserDefaultAgent>;
   enableUploadFileToServer?: boolean;
   enabledAccessCode?: boolean;

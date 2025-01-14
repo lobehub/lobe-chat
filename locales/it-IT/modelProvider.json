@@ -79,7 +79,7 @@
     },
     "id": {
       "desc": "Identificatore unico del fornitore di servizi, non modificabile dopo la creazione",
-      "format": "Può contenere solo lettere minuscole, trattini (-) e underscore (_)",
+      "format": "Può contenere solo numeri, lettere minuscole, trattini (-) e underscore (_) ",
       "placeholder": "Si consiglia di utilizzare solo lettere minuscole, ad esempio openai, non modificabile dopo la creazione",
       "required": "Inserisci l'ID del fornitore",
       "title": "ID del fornitore"
@@ -151,7 +151,7 @@
       "title": "Download del modello in corso {{model}}"
     },
     "endpoint": {
-      "desc": "Inserisci l'indirizzo del proxy dell'interfaccia Ollama. Lascia vuoto se non specificato localmente",
+      "desc": "Deve includere http(s)://, può rimanere vuoto se non specificato localmente",
       "title": "Indirizzo del proxy dell'interfaccia"
     },
     "setup": {
@@ -243,17 +243,18 @@
           "title": "Supporto per il caricamento file"
         },
         "functionCall": {
-          "extra": "Questa configurazione abiliterà solo la capacità di chiamata di funzione nell'app, la disponibilità della chiamata di funzione dipende interamente dal modello stesso, testare autonomamente la disponibilità della chiamata di funzione di questo modello.",
-          "title": "Supporto per chiamate di funzione"
+          "extra": "Questa configurazione abiliterà solo la capacità del modello di utilizzare strumenti, consentendo così di aggiungere plugin di tipo strumento al modello. Tuttavia, se il modello supporta realmente l'uso degli strumenti dipende interamente dal modello stesso; si prega di testarne l'usabilità",
+          "title": "Supporto all'uso degli strumenti"
         },
         "id": {
-          "extra": "Sarà visualizzato come etichetta del modello",
-          "placeholder": "Inserisci l'id del modello, ad esempio gpt-4-turbo-preview o claude-2.1",
+          "extra": "Non modificabile dopo la creazione, verrà utilizzato come ID del modello durante la chiamata all'AI",
+          "placeholder": "Inserisci l'ID del modello, ad esempio gpt-4o o claude-3.5-sonnet",
           "title": "ID del modello"
         },
         "modalTitle": "Configurazione modello personalizzato",
         "tokens": {
-          "title": "Numero massimo di token",
+          "extra": "Imposta il numero massimo di token supportati dal modello",
+          "title": "Finestra di contesto massima",
           "unlimited": "Illimitato"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "Aggiungi modello",
       "disabled": "Non attivato",
+      "disabledActions": {
+        "showMore": "Mostra tutto"
+      },
       "empty": {
         "desc": "Si prega di creare un modello personalizzato o di importare un modello per iniziare a utilizzarlo",
         "title": "Nessun modello disponibile"

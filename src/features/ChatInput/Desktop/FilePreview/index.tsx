@@ -1,18 +1,18 @@
 import { memo } from 'react';
 
 import DragUpload from '@/components/DragUpload';
+import { useModelSupportVision } from '@/hooks/useModelSupportVision';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useFileStore } from '@/store/file';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
 
 import FileItemList from './FileList';
 
 const FilePreview = memo(() => {
   const model = useAgentStore(agentSelectors.currentAgentModel);
+  const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
 
-  const canUploadImage = useUserStore(modelProviderSelectors.isModelEnabledUpload(model));
+  const canUploadImage = useModelSupportVision(model, provider);
 
   const [uploadFiles] = useFileStore((s) => [s.uploadChatFiles]);
 

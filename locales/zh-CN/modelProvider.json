@@ -79,7 +79,7 @@
     },
     "id": {
       "desc": "作为服务商唯一标识，创建后将不可修改",
-      "format": "只能包含小写字母、连字符（-）和下划线（_）",
+      "format": "只能包含数字、小写字母、连字符（-）和下划线（_）",
       "placeholder": "例如 openai、gemini 等",
       "required": "请填写服务商 ID",
       "title": "服务商 ID"
@@ -151,7 +151,7 @@
       "title": "正在下载模型 {{model}} "
     },
     "endpoint": {
-      "desc": "填入 Ollama 接口代理地址，本地未额外指定可留空",
+      "desc": "必须包含http(s)://，本地未额外指定可留空",
       "title": "Ollama 服务地址"
     },
     "setup": {
@@ -243,17 +243,18 @@
           "title": "支持文件上传"
         },
         "functionCall": {
-          "extra": "此配置将仅开启应用中的函数调用能力，是否支持函数调用完全取决于模型本身，请自行测试该模型的函数调用能力可用性",
-          "title": "支持函数调用"
+          "extra": "此配置将仅开启模型使用工具的能力，进而可以为模型添加工具类的插件。但是否支持真正使用工具完全取决于模型本身，请自行测试的可用性",
+          "title": "支持工具使用"
         },
         "id": {
-          "extra": "将作为模型标签进行展示",
-          "placeholder": "请输入模型id，例如 gpt-4-turbo-preview 或 claude-2.1",
+          "extra": "创建后不可修改，调用 AI 时将作为模型 id 使用",
+          "placeholder": "请输入模型 id，例如 gpt-4o 或 claude-3.5-sonnet",
           "title": "模型 ID"
         },
         "modalTitle": "自定义模型配置",
         "tokens": {
-          "title": "最大 token 数",
+          "extra": "设置模型支持的最大 Token 数",
+          "title": "最大上下文窗口",
           "unlimited": "无限制"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "添加模型",
       "disabled": "未启用",
+      "disabledActions": {
+        "showMore": "显示全部"
+      },
       "empty": {
         "desc": "请创建自定义模型或拉取模型后开始使用吧",
         "title": "暂无可用模型"

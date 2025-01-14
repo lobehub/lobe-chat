@@ -79,7 +79,7 @@
     },
     "id": {
       "desc": "Een unieke identificatie voor de dienstverlener, kan na creatie niet meer worden gewijzigd",
-      "format": "Mag alleen kleine letters, koppeltekens (-) en underscores (_) bevatten",
+      "format": "Mag alleen cijfers, kleine letters, koppeltekens (-) en onderstrepingstekens (_) bevatten",
       "placeholder": "Gebruik alleen kleine letters, bijvoorbeeld openai, kan niet worden gewijzigd na aanmaak",
       "required": "Vul de provider ID in",
       "title": "Provider ID"
@@ -151,7 +151,7 @@
       "title": "Model {{model}} wordt gedownload"
     },
     "endpoint": {
-      "desc": "Voer het Ollama interface proxyadres in, laat leeg indien niet specifiek aangegeven",
+      "desc": "Moet http(s):// bevatten, kan leeg gelaten worden als lokaal niet specifiek opgegeven",
       "title": "Interface Proxyadres"
     },
     "setup": {
@@ -243,17 +243,18 @@
           "title": "Ondersteuning voor bestandsupload"
         },
         "functionCall": {
-          "extra": "Deze configuratie zal alleen de functieaanroepcapaciteit in de applicatie inschakelen, of functies worden ondersteund hangt volledig af van het model zelf, test de beschikbaarheid van de functieaanroepcapaciteit van dit model zelf.",
-          "title": "Ondersteuning voor functieaanroep"
+          "extra": "Deze configuratie schakelt alleen de mogelijkheid in voor het model om tools te gebruiken, waardoor het mogelijk is om plug-ins voor tools aan het model toe te voegen. Of het model daadwerkelijk tools kan gebruiken, hangt echter volledig af van het model zelf; test de bruikbaarheid zelf.",
+          "title": "Ondersteuning voor het gebruik van tools"
         },
         "id": {
-          "extra": "Zal worden weergegeven als modellabel",
-          "placeholder": "Voer model-id in, bijvoorbeeld gpt-4-turbo-preview of claude-2.1",
+          "extra": "Kan niet worden gewijzigd na creatie, wordt gebruikt als model-id bij het aanroepen van AI",
+          "placeholder": "Voer model-id in, bijvoorbeeld gpt-4o of claude-3.5-sonnet",
           "title": "Model ID"
         },
         "modalTitle": "Configuratie van aangepast model",
         "tokens": {
-          "title": "Maximaal aantal tokens",
+          "extra": "Stel het maximale aantal tokens in dat door het model wordt ondersteund",
+          "title": "Maximale contextvenster",
           "unlimited": "Onbeperkt"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "Model toevoegen",
       "disabled": "Niet ingeschakeld",
+      "disabledActions": {
+        "showMore": "Toon alles"
+      },
       "empty": {
         "desc": "Maak een aangepast model of haal een model op om te beginnen met gebruiken.",
         "title": "Geen beschikbare modellen"

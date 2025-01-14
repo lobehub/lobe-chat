@@ -8,6 +8,7 @@ import { AiModelType } from '@/types/aiModel';
 import { ChatModelCard } from '@/types/llm';
 
 interface ModelConfigFormProps {
+  idEditable?: boolean;
   initialValues?: ChatModelCard;
   onFormInstanceReady: (instance: FormInstance) => void;
   showAzureDeployName?: boolean;
@@ -15,8 +16,8 @@ interface ModelConfigFormProps {
 }
 
 const ModelConfigForm = memo<ModelConfigFormProps>(
-  ({ showAzureDeployName, onFormInstanceReady, initialValues }) => {
-    const { t } = useTranslation('setting');
+  ({ showAzureDeployName, idEditable = true, onFormInstanceReady, initialValues }) => {
+    const { t } = useTranslation('modelProvider');
 
     const [formInstance] = Form.useForm();
 
@@ -44,54 +45,59 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
           wrapperCol={isMobile ? { span: 18 } : { offset: 1, span: 18 }}
         >
           <Form.Item
-            extra={t('llm.customModelCards.modelConfig.id.extra')}
-            label={t('llm.customModelCards.modelConfig.id.title')}
+            extra={t('providerModels.item.modelConfig.id.extra')}
+            label={t('providerModels.item.modelConfig.id.title')}
             name={'id'}
+            rules={[{ required: true }]}
           >
-            <Input placeholder={t('llm.customModelCards.modelConfig.id.placeholder')} />
+            <Input
+              disabled={!idEditable}
+              placeholder={t('providerModels.item.modelConfig.id.placeholder')}
+            />
           </Form.Item>
           {showAzureDeployName && (
             <Form.Item
-              extra={t('llm.customModelCards.modelConfig.azureDeployName.extra')}
-              label={t('llm.customModelCards.modelConfig.azureDeployName.title')}
+              extra={t('providerModels.item.modelConfig.azureDeployName.extra')}
+              label={t('providerModels.item.modelConfig.azureDeployName.title')}
               name={['config', 'deploymentName']}
             >
               <Input
-                placeholder={t('llm.customModelCards.modelConfig.azureDeployName.placeholder')}
+                placeholder={t('providerModels.item.modelConfig.azureDeployName.placeholder')}
               />
             </Form.Item>
           )}
           <Form.Item
-            label={t('llm.customModelCards.modelConfig.displayName.title')}
+            label={t('providerModels.item.modelConfig.displayName.title')}
             name={'displayName'}
           >
-            <Input placeholder={t('llm.customModelCards.modelConfig.displayName.placeholder')} />
+            <Input placeholder={t('providerModels.item.modelConfig.displayName.placeholder')} />
           </Form.Item>
           <Form.Item
-            label={t('llm.customModelCards.modelConfig.tokens.title')}
+            extra={t('providerModels.item.modelConfig.tokens.extra')}
+            label={t('providerModels.item.modelConfig.tokens.title')}
             name={'contextWindowTokens'}
           >
             <MaxTokenSlider />
           </Form.Item>
           <Form.Item
-            extra={t('llm.customModelCards.modelConfig.functionCall.extra')}
-            label={t('llm.customModelCards.modelConfig.functionCall.title')}
+            extra={t('providerModels.item.modelConfig.functionCall.extra')}
+            label={t('providerModels.item.modelConfig.functionCall.title')}
             name={['abilities', 'functionCall']}
             valuePropName={'checked'}
           >
             <Checkbox />
           </Form.Item>
           <Form.Item
-            extra={t('llm.customModelCards.modelConfig.vision.extra')}
-            label={t('llm.customModelCards.modelConfig.vision.title')}
+            extra={t('providerModels.item.modelConfig.vision.extra')}
+            label={t('providerModels.item.modelConfig.vision.title')}
             name={['abilities', 'vision']}
             valuePropName={'checked'}
           >
             <Checkbox />
           </Form.Item>
           {/*<Form.Item*/}
-          {/*  extra={t('llm.customModelCards.modelConfig.files.extra')}*/}
-          {/*  label={t('llm.customModelCards.modelConfig.files.title')}*/}
+          {/*  extra={t('providerModels.item.modelConfig.files.extra')}*/}
+          {/*  label={t('providerModels.item.modelConfig.files.title')}*/}
           {/*  name={['abilities', 'files']}*/}
           {/*  valuePropName={'checked'}*/}
           {/*>*/}

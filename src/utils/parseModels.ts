@@ -1,13 +1,14 @@
 import { produce } from 'immer';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
-import { ChatModelCard } from '@/types/llm';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { AiFullModelCard } from '@/types/aiModel';
+import { merge } from '@/utils/merge';
 
 /**
  * Parse model string to add or remove models.
  */
 export const parseModelString = (modelString: string = '', withDeploymentName = false) => {
-  let models: ChatModelCard[] = [];
+  let models: AiFullModelCard[] = [];
   let removeAll = false;
   const removedModels: string[] = [];
   const modelNames = modelString.split(/[,，]/).filter(Boolean);
@@ -45,13 +46,16 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
       models.splice(existingIndex, 1);
     }
 
-    const model: ChatModelCard = {
+    const model: AiFullModelCard = {
+      abilities: {},
       displayName: displayName || undefined,
       id,
+      // TODO: 临时写死为 chat ，后续基于元数据迭代成对应的类型
+      type: 'chat',
     };
 
     if (deploymentName) {
-      model.deploymentName = deploymentName;
+      model.config = { deploymentName };
     }
 
     if (capabilities.length > 0) {
@@ -61,15 +65,15 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
       for (const capability of capabilityList) {
         switch (capability) {
           case 'vision': {
-            model.vision = true;
+            model.abilities!.vision = true;
             break;
           }
           case 'fc': {
-            model.functionCall = true;
+            model.abilities!.functionCall = true;
             break;
           }
           case 'file': {
-            model.files = true;
+            model.abilities!.files = true;
             break;
           }
           default: {
@@ -92,15 +96,17 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
 /**
  * Extract a special method to process chatModels
  */
-export const transformToChatModelCards = ({
+export const transformToAiChatModelList = ({
   modelString = '',
   defaultChatModels,
+  providerId,
   withDeploymentName = false,
 }: {
-  defaultChatModels: ChatModelCard[];
+  defaultChatModels: AiFullModelCard[];
   modelString?: string;
+  providerId: string;
   withDeploymentName?: boolean;
-}): ChatModelCard[] | undefined => {
+}): AiFullModelCard[] | undefined => {
   if (!modelString) return undefined;
 
   const modelConfig = parseModelString(modelString, withDeploymentName);
@@ -115,7 +121,14 @@ export const transformToChatModelCards = ({
     // 处理添加或替换逻辑
     for (const toAddModel of modelConfig.add) {
       // first try to find the model in LOBE_DEFAULT_MODEL_LIST to confirm if it is a known model
-      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === toAddModel.id);
+      let knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+        (model) => model.id === toAddModel.id && model.providerId === providerId,
+      );
+
+      if (!knownModel) {
+        knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === toAddModel.id);
+        if (knownModel) knownModel.providerId = providerId;
+      }
 
       // if the model is known, update it based on the known model
       if (knownModel) {
@@ -124,20 +137,20 @@ export const transformToChatModelCards = ({
 
         // if the model is already in chatModels, update it
         if (modelInList) {
-          draft[index] = {
-            ...modelInList,
+          draft[index] = merge(modelInList, {
             ...toAddModel,
             displayName: toAddModel.displayName || modelInList.displayName || modelInList.id,
             enabled: true,
-          };
+          });
         } else {
           // if the model is not in chatModels, add it
-          draft.push({
-            ...knownModel,
-            ...toAddModel,
-            displayName: toAddModel.displayName || knownModel.displayName || knownModel.id,
-            enabled: true,
-          });
+          draft.push(
+            merge(knownModel, {
+              ...toAddModel,
+              displayName: toAddModel.displayName || knownModel.displayName || knownModel.id,
+              enabled: true,
+            }),
+          );
         }
       } else {
         // if the model is not in LOBE_DEFAULT_MODEL_LIST, add it as a new custom model

@@ -11,7 +11,7 @@ describe('Prompt Generation Utils', () => {
         desc: 'Test API Description',
       };
 
-      expect(apiPrompt(api)).toBe(`<api name="testApi">Test API Description</api>`);
+      expect(apiPrompt(api)).toBe(`<api identifier="testApi">Test API Description</api>`);
     });
   });
 
@@ -30,10 +30,10 @@ describe('Prompt Generation Utils', () => {
         ],
       };
 
-      const expected = `<tool name="testTool" identifier="test-id">
-<tool_instructions>Test System Role</tool_instructions>
-<api name="api1">API 1 Description</api>
-</tool>`;
+      const expected = `<collection name="testTool">
+<collection.instructions>Test System Role</collection.instructions>
+<api identifier="api1">API 1 Description</api>
+</collection>`;
 
       expect(toolPrompt(tool)).toBe(expected);
     });
@@ -50,10 +50,10 @@ describe('Prompt Generation Utils', () => {
         ],
       };
 
-      const expected = `<tool name="testTool" identifier="test-id">
+      const expected = `<collection name="testTool">
 
-<api name="api1">API 1 Description</api>
-</tool>`;
+<api identifier="api1">API 1 Description</api>
+</collection>`;
 
       expect(toolPrompt(tool)).toBe(expected);
     });
@@ -85,17 +85,14 @@ describe('Prompt Generation Utils', () => {
         },
       ];
 
-      const expected = `<tools>
-<description>The tools you can use below</description>
-<tool name="tool1" identifier="id1">
+      const expected = `<collection name="tool1">
 
-<api name="api1">API 1</api>
-</tool>
-<tool name="tool2" identifier="id2">
+<api identifier="api1">API 1</api>
+</collection>
+<collection name="tool2">
 
-<api name="api2">API 2</api>
-</tool>
-</tools>`;
+<api identifier="api2">API 2</api>
+</collection>`;
 
       expect(toolsPrompts(tools)).toBe(expected);
     });

@@ -19,15 +19,15 @@ const SyncSwitch = memo<SyncSwitchProps>(({ value, onChange }) => {
           role="switch"
           type="checkbox"
         />
-        <span className="switch__base-outer"></span>
-        <span className="switch__base-inner"></span>
+        <span className="switch__base-outer" />
+        <span className="switch__base-inner" />
         <svg className="switch__base-neon" height="24px" viewBox="0 0 40 24" width="40px">
           <defs>
             <filter id="switch-glow">
-              <feGaussianBlur result="coloredBlur" stdDeviation="1"></feGaussianBlur>
+              <feGaussianBlur result="coloredBlur" stdDeviation="1" />
               <feMerge>
-                <feMergeNode in="coloredBlur"></feMergeNode>
-                <feMergeNode in="SourceGraphic"></feMergeNode>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
             <linearGradient id="switch-gradient1" x1="0" x2="1" y1="0" y2="0">
@@ -51,7 +51,7 @@ const SyncSwitch = memo<SyncSwitchProps>(({ value, onChange }) => {
             strokeWidth="1"
           />
         </svg>
-        <span className="switch__knob-shadow"></span>
+        <span className="switch__knob-shadow" />
         <span className="switch__knob-container">
           <span className="switch__knob">
             <svg className="switch__knob-neon" height="48px" viewBox="0 0 48 48" width="48px">
@@ -69,7 +69,7 @@ const SyncSwitch = memo<SyncSwitchProps>(({ value, onChange }) => {
             </svg>
           </span>
         </span>
-        <span className="switch__led"></span>
+        <span className="switch__led" />
         <span className="switch__text">Power</span>
       </label>
     </div>

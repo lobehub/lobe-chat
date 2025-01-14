@@ -230,6 +230,7 @@ export interface AIRealtimeModelCard extends AIBaseModelCard {
 
 export interface AiFullModelCard extends AIBaseModelCard {
   abilities?: ModelAbilities;
+  config?: AiModelConfig;
   contextWindowTokens?: number;
   displayName?: string;
   id: string;
@@ -282,8 +283,8 @@ export const UpdateAiModelSchema = z.object({
       deploymentName: z.string().optional(),
     })
     .optional(),
-  contextWindowTokens: z.number().optional(),
-  displayName: z.string().optional(),
+  contextWindowTokens: z.number().nullable().optional(),
+  displayName: z.string().nullable().optional(),
 });
 
 export type UpdateAiModelParams = z.infer<typeof UpdateAiModelSchema>;

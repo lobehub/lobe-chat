@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.45.0",
+  "version": "1.45.16",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -129,7 +129,7 @@
     "@lobehub/chat-plugins-gateway": "^1.9.0",
     "@lobehub/icons": "^1.61.1",
     "@lobehub/tts": "^1.28.0",
-    "@lobehub/ui": "^1.163.0",
+    "@lobehub/ui": "^1.164.2",
     "@neondatabase/serverless": "^0.10.4",
     "@next/third-parties": "^15.1.4",
     "@react-spring/web": "^9.7.5",
@@ -182,7 +182,7 @@
     "nextjs-toploader": "^3.7.15",
     "numeral": "^2.0.6",
     "nuqs": "^1.20.0",
-    "officeparser": "^5.1.1",
+    "officeparser": "^4.2.0",
     "ollama": "^0.5.11",
     "openai": "^4.77.3",
     "openapi-fetch": "^0.13.4",
@@ -236,15 +236,15 @@
     "yaml": "^2.7.0",
     "yjs": "^13.6.21",
     "zod": "^3.24.1",
-    "zustand": "5.0.1",
-    "zustand-utils": "^1.3.2"
+    "zustand": "^5.0.3",
+    "zustand-utils": "^2"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
     "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.13.13",
     "@lobehub/i18n-cli": "^1.20.3",
-    "@lobehub/lint": "^1.25.3",
+    "@lobehub/lint": "^1.25.5",
     "@lobehub/seo-cli": "^1.4.3",
     "@next/bundle-analyzer": "^15.1.4",
     "@next/eslint-plugin-next": "^15.1.4",
@@ -315,12 +315,15 @@
     "vitest": "~1.2.2",
     "vitest-canvas-mock": "^0.3.3"
   },
-  "packageManager": "pnpm@9.15.2",
+  "packageManager": "pnpm@9.15.3",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
   "pnpm": {
+    "overrides": {
+      "mdast-util-gfm-autolink-literal": "2.0.0"
+    },
     "packageExtensions": {
       "@inkjs/ui": {
         "dependencies": {
@@ -328,5 +331,8 @@
         }
       }
     }
+  },
+  "overrides": {
+    "mdast-util-gfm-autolink-literal": "2.0.0"
   }
 }

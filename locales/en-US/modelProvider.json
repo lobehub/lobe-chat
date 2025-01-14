@@ -79,7 +79,7 @@
     },
     "id": {
       "desc": "Unique identifier for the service provider, which cannot be modified after creation",
-      "format": "Can only contain lowercase letters, hyphens (-), and underscores (_) ",
+      "format": "Can only contain numbers, lowercase letters, hyphens (-), and underscores (_) ",
       "placeholder": "Suggested all lowercase, e.g., openai, cannot be modified after creation",
       "required": "Please enter the provider ID",
       "title": "Provider ID"
@@ -151,7 +151,7 @@
       "title": "Downloading model {{model}}"
     },
     "endpoint": {
-      "desc": "Enter the Ollama interface proxy address, leave blank if not specified locally",
+      "desc": "Must include http(s)://; can be left blank if not specified locally.",
       "title": "Interface proxy address"
     },
     "setup": {
@@ -243,17 +243,18 @@
           "title": "File Upload Support"
         },
         "functionCall": {
-          "extra": "This configuration will only enable function calling capabilities in the application. Whether function calling is supported depends entirely on the model itself. Please test the function calling capabilities of the model yourself.",
-          "title": "Support Function Calling"
+          "extra": "This configuration will only enable the model's ability to use tools, allowing for the addition of tool-type plugins. However, whether the model can truly use the tools depends entirely on the model itself; please test for usability on your own.",
+          "title": "Support for Tool Usage"
         },
         "id": {
-          "extra": "Will be displayed as the model label",
-          "placeholder": "Please enter model id, e.g., gpt-4-turbo-preview or claude-2.1",
+          "extra": "This cannot be modified after creation and will be used as the model ID when calling AI",
+          "placeholder": "Please enter the model ID, e.g., gpt-4o or claude-3.5-sonnet",
           "title": "Model ID"
         },
         "modalTitle": "Custom Model Configuration",
         "tokens": {
-          "title": "Maximum Token Count",
+          "extra": "Set the maximum number of tokens supported by the model",
+          "title": "Maximum Context Window",
           "unlimited": "Unlimited"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "Add Model",
       "disabled": "Disabled",
+      "disabledActions": {
+        "showMore": "Show All"
+      },
       "empty": {
         "desc": "Please create a custom model or pull a model to get started.",
         "title": "No available models"
