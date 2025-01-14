@@ -9,7 +9,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import DataStyleModal from '@/components/DataStyleModal';
 import { useGlobalStore } from '@/store/global';
 
-import PGliteIcon from './PGliteIcon';
+import PGliteSVG from './PGliteSVG';
 
 const useStyles = createStyles(({ css, token, isDarkMode, responsive }) => ({
   desc: css`
@@ -59,7 +59,7 @@ const EnableClientDBModal = memo<EnableClientDBModalProps>(({ open }) => {
   const markPgliteEnabled = useGlobalStore((s) => s.markPgliteEnabled);
   const features = [
     {
-      avatar: PGliteIcon,
+      avatar: PGliteSVG,
       desc: t('clientDB.modal.features.pglite.desc'),
       title: t('clientDB.modal.features.pglite.title'),
     },

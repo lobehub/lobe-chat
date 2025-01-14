@@ -1,9 +1,9 @@
 import { ProviderCombine } from '@lobehub/icons';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { CSSProperties, memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import { DiscoverProviderItem } from '@/types/discover';
 
@@ -44,19 +44,17 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 }));
 
 export interface SuggestionItemProps
-  extends Omit<DiscoverProviderItem, 'suggestions' | 'socialData'> {
-  className?: string;
-  style?: CSSProperties;
-}
+  extends Omit<DiscoverProviderItem, 'suggestions' | 'socialData'>,
+    FlexboxProps {}
 
 const SuggestionItem = memo<SuggestionItemProps>(
-  ({ className, meta, identifier, models, style }) => {
+  ({ className, meta, identifier, models, ...rest }) => {
     const { title, description } = meta;
     const { t } = useTranslation(['discover', 'providers']);
     const { cx, styles, theme } = useStyles();
 
     return (
-      <Flexbox className={cx(styles.container, className)} gap={12} key={identifier} style={style}>
+      <Flexbox className={cx(styles.container, className)} gap={12} key={identifier} {...rest}>
         <ProviderCombine provider={identifier} size={24} title={title} />
         <Flexbox gap={8} horizontal style={{ fontSize: 12, marginTop: -8 }}>
           <div style={{ color: theme.colorTextSecondary }}>@{meta.title}</div>

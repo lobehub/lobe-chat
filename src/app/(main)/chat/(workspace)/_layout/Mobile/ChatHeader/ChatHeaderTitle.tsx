@@ -1,5 +1,4 @@
-import { ActionIcon } from '@lobehub/ui';
-import { MobileNavBarTitle } from '@lobehub/ui/mobile';
+import { ActionIcon, MobileNavBarTitle } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { ChevronDown } from 'lucide-react';
 import { memo } from 'react';

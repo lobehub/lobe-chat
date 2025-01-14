@@ -1,6 +1,6 @@
 'use client';
 
-import { ChatHeader, ChatHeaderTitle } from '@lobehub/ui/chat';
+import { ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
