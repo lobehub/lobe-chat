@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix enable_search parameter intro condition in Qwen."]
+    },
+    "date": "2025-01-14",
+    "version": "1.45.12"
+  },
+  {
+    "children": {
       "fixes": ["Support Gemini 2.0 HarmBlockThreshold."]
     },
     "date": "2025-01-14",
