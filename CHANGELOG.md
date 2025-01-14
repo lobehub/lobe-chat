@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.45.13](https://github.com/lobehub/lobe-chat/compare/v1.45.12...v1.45.13)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve model config form modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve model config form modal, closes [#5438](https://github.com/lobehub/lobe-chat/issues/5438) ([9b303e0](https://github.com/lobehub/lobe-chat/commit/9b303e0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.45.12](https://github.com/lobehub/lobe-chat/compare/v1.45.11...v1.45.12)
 
 <sup>Released on **2025-01-14**</sup>
