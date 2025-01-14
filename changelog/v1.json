@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Fix pull models error in new ai provider."]
+    },
+    "date": "2025-01-14",
+    "version": "1.45.15"
+  },
+  {
     "children": {},
     "date": "2025-01-14",
     "version": "1.45.14"
