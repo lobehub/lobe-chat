@@ -274,7 +274,7 @@
       "addNew": "Thêm mô hình",
       "disabled": "Chưa được kích hoạt",
       "disabledActions": {
-        "showMore": "Chưa kích hoạt"
+        "showMore": "Hiển thị tất cả"
       },
       "empty": {
         "desc": "Vui lòng tạo mô hình tùy chỉnh hoặc kéo mô hình để bắt đầu sử dụng",

@@ -274,7 +274,7 @@
       "addNew": "Model toevoegen",
       "disabled": "Niet ingeschakeld",
       "disabledActions": {
-        "showMore": "Niet ingeschakeld"
+        "showMore": "Toon alles"
       },
       "empty": {
         "desc": "Maak een aangepast model of haal een model op om te beginnen met gebruiken.",

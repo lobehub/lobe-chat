@@ -274,7 +274,7 @@
       "addNew": "Ajouter un modèle",
       "disabled": "Non activé",
       "disabledActions": {
-        "showMore": "Non activé"
+        "showMore": "Afficher tout"
       },
       "empty": {
         "desc": "Veuillez créer un modèle personnalisé ou importer un modèle pour commencer à l'utiliser.",

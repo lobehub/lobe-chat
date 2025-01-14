@@ -274,7 +274,7 @@
       "addNew": "モデルを追加",
       "disabled": "無効",
       "disabledActions": {
-        "showMore": "表示しない"
+        "showMore": "すべて表示"
       },
       "empty": {
         "desc": "カスタムモデルを作成するか、モデルを取得してから使用を開始してください",
