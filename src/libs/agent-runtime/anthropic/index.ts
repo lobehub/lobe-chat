@@ -13,7 +13,7 @@ import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicH
 import { StreamingResponse } from '../utils/response';
 import { AnthropicStream } from '../utils/streams';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 export interface AnthropicModelCard {

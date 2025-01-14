@@ -3,7 +3,7 @@ import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 import { QwenAIStream } from '../utils/streams';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 
 export interface QwenModelCard {
   id: string;

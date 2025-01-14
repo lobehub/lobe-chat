@@ -1,6 +1,6 @@
 import { uniqueId } from 'lodash-es';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
