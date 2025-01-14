@@ -243,17 +243,18 @@
           "title": "Wsparcie dla przesyłania plików"
         },
         "functionCall": {
-          "extra": "Ta konfiguracja włączy tylko możliwość wywoływania funkcji w aplikacji, czy model obsługuje wywołania funkcji zależy od samego modelu, proszę samodzielnie przetestować dostępność wywołań funkcji tego modelu.",
-          "title": "Wsparcie dla wywołań funkcji"
+          "extra": "Ta konfiguracja włączy jedynie możliwość korzystania z narzędzi przez model, co pozwoli na dodanie wtyczek narzędziowych. Jednakże, czy model rzeczywiście obsługuje korzystanie z narzędzi, zależy całkowicie od samego modelu, proszę samodzielnie przetestować jego użyteczność",
+          "title": "Wsparcie dla korzystania z narzędzi"
         },
         "id": {
-          "extra": "Będzie wyświetlane jako etykieta modelu",
-          "placeholder": "Proszę wpisać id modelu, np. gpt-4-turbo-preview lub claude-2.1",
+          "extra": "Nie można zmieniać po utworzeniu, będzie używane jako identyfikator modelu podczas wywoływania AI",
+          "placeholder": "Wprowadź identyfikator modelu, na przykład gpt-4o lub claude-3.5-sonnet",
           "title": "ID modelu"
         },
         "modalTitle": "Konfiguracja niestandardowego modelu",
         "tokens": {
-          "title": "Maksymalna liczba tokenów",
+          "extra": "Ustaw maksymalną liczbę tokenów wspieranych przez model",
+          "title": "Maksymalne okno kontekstu",
           "unlimited": "Bez ograniczeń"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "Dodaj model",
       "disabled": "Nieaktywne",
+      "disabledActions": {
+        "showMore": "Pokaż więcej"
+      },
       "empty": {
         "desc": "Proszę utworzyć model niestandardowy lub pobrać model, aby rozpocząć korzystanie.",
         "title": "Brak dostępnych modeli"

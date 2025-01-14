@@ -12,14 +12,15 @@ import PluginTag from '../../../features/PluginTag';
 import KnowledgeTag from './KnowledgeTag';
 
 const TitleTags = memo(() => {
-  const [model, hasKnowledge] = useAgentStore((s) => [
+  const [model, provider, hasKnowledge] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
+    agentSelectors.currentAgentModelProvider(s),
     agentSelectors.hasKnowledge(s),
   ]);
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins, isEqual);
   const enabledKnowledge = useAgentStore(agentSelectors.currentEnabledKnowledge, isEqual);
 
-  const showPlugin = useModelSupportToolUse(model);
+  const showPlugin = useModelSupportToolUse(model, provider);
 
   return (
     <Flexbox align={'center'} horizontal>

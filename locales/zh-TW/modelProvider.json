@@ -243,17 +243,18 @@
           "title": "支持文件上傳"
         },
         "functionCall": {
-          "extra": "此配置將僅開啟應用中的函數調用能力，是否支持函數調用完全取決於模型本身，請自行測試該模型的函數調用能力可用性",
-          "title": "支持函數調用"
+          "extra": "此配置將僅開啟模型使用工具的能力，進而可以為模型添加工具類的插件。但是否支持真正使用工具完全取決於模型本身，請自行測試其可用性",
+          "title": "支持工具使用"
         },
         "id": {
-          "extra": "將作為模型標籤進行展示",
-          "placeholder": "請輸入模型id，例如 gpt-4-turbo-preview 或 claude-2.1",
+          "extra": "創建後不可修改，調用 AI 時將作為模型 id 使用",
+          "placeholder": "請輸入模型 id，例如 gpt-4o 或 claude-3.5-sonnet",
           "title": "模型 ID"
         },
         "modalTitle": "自定義模型配置",
         "tokens": {
-          "title": "最大 token 數",
+          "extra": "設定模型支持的最大 Token 數",
+          "title": "最大上下文窗口",
           "unlimited": "無限制"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "新增模型",
       "disabled": "未啟用",
+      "disabledActions": {
+        "showMore": "顯示全部"
+      },
       "empty": {
         "desc": "請創建自定義模型或拉取模型後開始使用吧",
         "title": "暫無可用模型"

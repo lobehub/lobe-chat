@@ -243,17 +243,18 @@
           "title": "Suporte a Upload de Arquivos"
         },
         "functionCall": {
-          "extra": "Esta configuração apenas habilitará a capacidade de chamada de função no aplicativo, se a função for suportada depende do modelo em si, teste a capacidade de chamada de função desse modelo.",
-          "title": "Suporte a Chamada de Função"
+          "extra": "Esta configuração ativará apenas a capacidade do modelo de usar ferramentas, permitindo assim a adição de plugins do tipo ferramenta. No entanto, se o uso real das ferramentas é suportado depende inteiramente do modelo em si, teste a usabilidade por conta própria.",
+          "title": "Suporte ao uso de ferramentas"
         },
         "id": {
-          "extra": "Será exibido como uma etiqueta do modelo",
-          "placeholder": "Por favor, insira o id do modelo, por exemplo, gpt-4-turbo-preview ou claude-2.1",
+          "extra": "Não pode ser modificado após a criação, será usado como ID do modelo ao chamar a IA",
+          "placeholder": "Insira o ID do modelo, por exemplo, gpt-4o ou claude-3.5-sonnet",
           "title": "ID do Modelo"
         },
         "modalTitle": "Configuração do Modelo Personalizado",
         "tokens": {
-          "title": "Número máximo de tokens",
+          "extra": "Configurar o número máximo de tokens suportados pelo modelo",
+          "title": "Janela de contexto máxima",
           "unlimited": "Ilimitado"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "Adicionar Modelo",
       "disabled": "Não habilitado",
+      "disabledActions": {
+        "showMore": "Mostrar tudo"
+      },
       "empty": {
         "desc": "Por favor, crie um modelo personalizado ou importe um modelo para começar a usar.",
         "title": "Nenhum modelo disponível"

@@ -2,6 +2,156 @@
 
 # Changelog
 
+### [Version 1.45.15](https://github.com/lobehub/lobe-chat/compare/v1.45.14...v1.45.15)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix pull models error in new ai provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix pull models error in new ai provider, closes [#5441](https://github.com/lobehub/lobe-chat/issues/5441) ([1726d85](https://github.com/lobehub/lobe-chat/commit/1726d85))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.14](https://github.com/lobehub/lobe-chat/compare/v1.45.13...v1.45.14)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### ♻ Code Refactoring
+
+- **plugin**: Update plugin prompt.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **plugin**: Update plugin prompt, closes [#5083](https://github.com/lobehub/lobe-chat/issues/5083) ([ddd3b53](https://github.com/lobehub/lobe-chat/commit/ddd3b53))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.13](https://github.com/lobehub/lobe-chat/compare/v1.45.12...v1.45.13)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve model config form modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve model config form modal, closes [#5438](https://github.com/lobehub/lobe-chat/issues/5438) ([9b303e0](https://github.com/lobehub/lobe-chat/commit/9b303e0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.12](https://github.com/lobehub/lobe-chat/compare/v1.45.11...v1.45.12)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `enable_search` parameter intro condition in Qwen.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `enable_search` parameter intro condition in Qwen, closes [#5297](https://github.com/lobehub/lobe-chat/issues/5297) ([0b19c20](https://github.com/lobehub/lobe-chat/commit/0b19c20))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.11](https://github.com/lobehub/lobe-chat/compare/v1.45.10...v1.45.11)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Support Gemini 2.0 HarmBlockThreshold.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Support Gemini 2.0 HarmBlockThreshold, closes [#5422](https://github.com/lobehub/lobe-chat/issues/5422) ([4d1a4cd](https://github.com/lobehub/lobe-chat/commit/4d1a4cd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.10](https://github.com/lobehub/lobe-chat/compare/v1.45.9...v1.45.10)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix some providers issues.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix some providers issues, closes [#5429](https://github.com/lobehub/lobe-chat/issues/5429) ([b7edbd3](https://github.com/lobehub/lobe-chat/commit/b7edbd3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.45.9](https://github.com/lobehub/lobe-chat/compare/v1.45.8...v1.45.9)
 
 <sup>Released on **2025-01-14**</sup>
