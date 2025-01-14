@@ -21,8 +21,8 @@ const useStyles = createStyles(({ css, token }) => ({
   card: css`
     padding-block: 6px;
     padding-inline: 8px;
-    background: ${token.colorFillTertiary};
     border-radius: ${token.borderRadius}px;
+    background: ${token.colorFillTertiary};
 
     &:hover {
       background: ${token.colorFillSecondary};

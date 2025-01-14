@@ -10,10 +10,10 @@ export const useStyles = createStyles(({ css, token, prefixCls, isDarkMode, resp
 
         width: min(90vw, 450px);
         padding: 0;
-
-        background: ${isDarkMode ? token.colorBgElevated : token.colorBgLayout};
         border: 1px solid ${token.colorSplit};
         border-radius: ${token.borderRadiusLG}px;
+
+        background: ${isDarkMode ? token.colorBgElevated : token.colorBgLayout};
 
         ${responsive.mobile} {
           width: unset;

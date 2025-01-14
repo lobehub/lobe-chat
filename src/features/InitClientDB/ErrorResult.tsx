@@ -19,9 +19,9 @@ const useStyles = createStyles(({ css, token }) => ({
 
     padding-block: 8px;
     padding-inline: 24px;
+    border-radius: 40px;
 
     background: ${token.red6};
-    border-radius: 40px;
 
     transition: transform 0.2s;
 

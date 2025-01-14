@@ -119,9 +119,6 @@
   "OpenGVLab/InternVL2-26B": {
     "description": "InternVL2 toont uitstekende prestaties bij diverse visuele taaltaken, waaronder document- en grafiekbegrip, scène-tekstbegrip, OCR, en het oplossen van wetenschappelijke en wiskundige problemen."
   },
-  "OpenGVLab/InternVL2-Llama3-76B": {
-    "description": "InternVL2 toont uitstekende prestaties bij diverse visuele taaltaken, waaronder document- en grafiekbegrip, scène-tekstbegrip, OCR, en het oplossen van wetenschappelijke en wiskundige problemen."
-  },
   "Phi-3-medium-128k-instruct": {
     "description": "Hetzelfde Phi-3-medium model, maar met een grotere contextgrootte voor RAG of few shot prompting."
   },
@@ -215,9 +212,6 @@
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder-7B-Instruct is de nieuwste versie van de code-specifieke grote taalmodelreeks die door Alibaba Cloud is uitgebracht. Dit model is aanzienlijk verbeterd in codegeneratie, redenering en herstelcapaciteiten door training met 55 biljoen tokens, gebaseerd op Qwen2.5. Het versterkt niet alleen de coderingscapaciteiten, maar behoudt ook de voordelen van wiskundige en algemene vaardigheden. Het model biedt een meer uitgebreide basis voor praktische toepassingen zoals code-agenten."
   },
-  "Qwen/Qwen2.5-Math-72B-Instruct": {
-    "description": "Qwen2.5-Math richt zich op het oplossen van wiskundige vraagstukken en biedt professionele antwoorden op moeilijke vragen."
-  },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 is de nieuwste serie van het Qwen-model, dat 128k context ondersteunt. In vergelijking met de huidige beste open-source modellen, overtreft Qwen2-72B op het gebied van natuurlijke taalbegrip, kennis, code, wiskunde en meertaligheid aanzienlijk de huidige toonaangevende modellen."
   },
@@ -289,12 +283,6 @@
   },
   "TeleAI/TeleMM": {
     "description": "Het TeleMM multimodale grote model is een door China Telecom ontwikkeld model voor multimodale begrip, dat verschillende modaliteiten zoals tekst en afbeeldingen kan verwerken, en ondersteunt functies zoals beeldbegrip en grafiekanalyse, en biedt gebruikers cross-modale begripdiensten. Het model kan met gebruikers communiceren in meerdere modaliteiten, de invoer nauwkeurig begrijpen, vragen beantwoorden, helpen bij creatie en efficiënt multimodale informatie en inspiratie bieden. Het presteert uitstekend in multimodale taken zoals fijne perceptie en logische redenering."
-  },
-  "Tencent/Hunyuan-A52B-Instruct": {
-    "description": "Hunyuan-Large is het grootste open source Transformer-architectuur MoE-model in de industrie, met een totaal van 389 miljard parameters en 52 miljard geactiveerde parameters."
-  },
-  "Vendor-A/Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2-72B-Instruct is een instructie-fijn afgesteld groot taalmodel in de Qwen2-serie, met een parameter grootte van 72B. Dit model is gebaseerd op de Transformer-architectuur en maakt gebruik van technieken zoals de SwiGLU-activeringsfunctie, aandacht QKV-bias en groepsquery-aandacht. Het kan grote invoer verwerken. Dit model presteert uitstekend in taalbegrip, generatie, meertalige capaciteiten, codering, wiskunde en redenering in verschillende benchmarktests, en overtreft de meeste open-source modellen, en toont in sommige taken een concurrentievermogen vergelijkbaar met dat van propriëtaire modellen."
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct is een van de nieuwste grote taalmodellen die door Alibaba Cloud is uitgebracht. Dit 72B-model heeft aanzienlijke verbeteringen in coderings- en wiskundige vaardigheden. Het model biedt ook meertalige ondersteuning, met meer dan 29 ondersteunde talen, waaronder Chinees en Engels. Het model heeft aanzienlijke verbeteringen in het volgen van instructies, het begrijpen van gestructureerde gegevens en het genereren van gestructureerde uitvoer (vooral JSON)."
@@ -521,11 +509,14 @@
   "command-r-plus": {
     "description": "Command R+ is een hoogpresterend groot taalmodel, speciaal ontworpen voor echte zakelijke scenario's en complexe toepassingen."
   },
+  "dall-e-2": {
+    "description": "De tweede generatie DALL·E model, ondersteunt realistischere en nauwkeurigere beeldgeneratie, met een resolutie die vier keer zo hoog is als die van de eerste generatie."
+  },
+  "dall-e-3": {
+    "description": "Het nieuwste DALL·E model, uitgebracht in november 2023. Ondersteunt realistischere en nauwkeurigere beeldgeneratie met een sterkere detailweergave."
+  },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct biedt betrouwbare instructieverwerkingscapaciteiten en ondersteunt toepassingen in verschillende sectoren."
-  },
-  "deepseek-ai/DeepSeek-V2-Chat": {
-    "description": "DeepSeek-V2 is een krachtig en kosteneffectief hybride expert (MoE) taalmodel. Het is voorgetraind op een hoogwaardige corpus van 81 biljoen tokens en verder verbeterd door middel van supervisie-fijnafstemming (SFT) en versterkend leren (RL). In vergelijking met DeepSeek 67B bespaart DeepSeek-V2 42,5% van de trainingskosten, vermindert 93,3% van de KV-cache en verhoogt de maximale generatiedoorvoer met 5,76 keer. Dit model ondersteunt een contextlengte van 128k en presteert uitstekend in standaard benchmarktests en open generatieve evaluaties."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 combineert de uitstekende kenmerken van eerdere versies en versterkt de algemene en coderingscapaciteiten."
@@ -704,6 +695,9 @@
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
   },
+  "gpt-3.5-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k, een model voor tekstgeneratie met hoge capaciteit, geschikt voor complexe taken."
+  },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
   },
@@ -755,8 +749,23 @@
   "gpt-4o-2024-11-20": {
     "description": "ChatGPT-4o is een dynamisch model dat in real-time wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip en generatiemogelijkheden, geschikt voor grootschalige toepassingen zoals klantenservice, onderwijs en technische ondersteuning."
   },
+  "gpt-4o-audio-preview": {
+    "description": "GPT-4o Audio model, ondersteunt audio-invoer en -uitvoer."
+  },
   "gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, en ondersteunt zowel tekst- als beeldinvoer met tekstuitvoer. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
+  },
+  "gpt-4o-mini-realtime-preview": {
+    "description": "GPT-4o-mini realtime versie, ondersteunt audio en tekst realtime invoer en uitvoer."
+  },
+  "gpt-4o-realtime-preview": {
+    "description": "GPT-4o realtime versie, ondersteunt audio en tekst realtime invoer en uitvoer."
+  },
+  "gpt-4o-realtime-preview-2024-10-01": {
+    "description": "GPT-4o realtime versie, ondersteunt audio en tekst realtime invoer en uitvoer."
+  },
+  "gpt-4o-realtime-preview-2024-12-17": {
+    "description": "GPT-4o realtime versie, ondersteunt audio en tekst realtime invoer en uitvoer."
   },
   "grok-2-1212": {
     "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
@@ -935,6 +944,9 @@
   "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
     "description": "LLaMA 3.2 is ontworpen voor taken die zowel visuele als tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraagstukken, en overbrugt de kloof tussen taalgeneratie en visuele redenering."
   },
+  "meta-llama/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 is het meest geavanceerde meertalige open-source grote taalmodel uit de Llama-serie, dat een vergelijkbare prestatie biedt als het 405B model tegen zeer lage kosten. Gebaseerd op de Transformer-structuur en verbeterd in bruikbaarheid en veiligheid door middel van supervisie-fijnstelling (SFT) en versterkend leren met menselijke feedback (RLHF). De instructie-geoptimaliseerde versie is speciaal ontworpen voor meertalige gesprekken en presteert beter dan veel open-source en gesloten chatmodellen op verschillende industriële benchmarks. Kennisafkapdatum is december 2023."
+  },
   "meta-llama/Llama-Vision-Free": {
     "description": "LLaMA 3.2 is ontworpen voor taken die zowel visuele als tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraagstukken, en overbrugt de kloof tussen taalgeneratie en visuele redenering."
   },
@@ -1091,17 +1103,11 @@
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B is een upgrade van Nous Hermes 2, met de nieuwste intern ontwikkelde datasets."
   },
-  "nvidia/Llama-3.1-Nemotron-70B-Instruct": {
-    "description": "Llama 3.1 Nemotron 70B is een op maat gemaakt groot taalmodel van NVIDIA, ontworpen om de hulp te verbeteren die LLM-gebaseerde reacties bieden op gebruikersvragen."
-  },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B is een op maat gemaakt groot taalmodel van NVIDIA, ontworpen om de hulp van LLM-gegenereerde reacties op gebruikersvragen te verbeteren. Dit model presteert uitstekend in benchmarktests zoals Arena Hard, AlpacaEval 2 LC en GPT-4-Turbo MT-Bench, en staat per 1 oktober 2024 op de eerste plaats in alle drie de automatische afstemmingsbenchmarktests. Het model is getraind met RLHF (met name REINFORCE), Llama-3.1-Nemotron-70B-Reward en HelpSteer2-Preference prompts op basis van het Llama-3.1-70B-Instruct model."
   },
   "o1": {
     "description": "Gefocust op geavanceerd redeneren en het oplossen van complexe problemen, inclusief wiskunde en wetenschappelijke taken. Zeer geschikt voor toepassingen die diepgaand begrip van context en agentwerkstromen vereisen."
-  },
-  "o1-2024-12-17": {
-    "description": "o1 is het nieuwe redeneer model van OpenAI, dat tekst- en afbeeldingsinvoer ondersteunt en tekstuitvoer genereert, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 200K en een kennisafkapdatum van oktober 2023."
   },
   "o1-mini": {
     "description": "o1-mini is een snel en kosteneffectief redeneermodel dat is ontworpen voor programmeer-, wiskunde- en wetenschappelijke toepassingen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
@@ -1129,9 +1135,6 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, dat tekst- en afbeeldingsinvoer ondersteunt en tekstuitvoer genereert. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
-  },
-  "openai/o1": {
-    "description": "o1 is het nieuwe redeneer model van OpenAI, dat tekst- en afbeeldingsinvoer ondersteunt en tekstuitvoer genereert, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 200K en een kennisafkapdatum van oktober 2023."
   },
   "openai/o1-mini": {
     "description": "o1-mini is een snel en kosteneffectief redeneermodel dat is ontworpen voor programmeer-, wiskunde- en wetenschappelijke toepassingen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
@@ -1307,14 +1310,29 @@
   "taichu_llm": {
     "description": "Het Zido Tai Chu-taalmodel heeft een sterke taalbegripcapaciteit en kan tekstcreatie, kennisvragen, codeprogrammering, wiskundige berekeningen, logische redenering, sentimentanalyse, tekstsamenvattingen en meer aan. Het combineert innovatief grote data voortraining met rijke kennis uit meerdere bronnen, door algoritmische technologie continu te verfijnen en voortdurend nieuwe kennis op te nemen uit enorme tekstdata op het gebied van vocabulaire, structuur, grammatica en semantiek, waardoor de modelprestaties voortdurend evolueren. Het biedt gebruikers gemakkelijkere informatie en diensten en een meer intelligente ervaring."
   },
+  "text-embedding-3-large": {
+    "description": "Het krachtigste vectorisatie model, geschikt voor Engelse en niet-Engelse taken."
+  },
+  "text-embedding-3-small": {
+    "description": "Een efficiënte en kosteneffectieve nieuwe generatie Embedding model, geschikt voor kennisretrieval, RAG-toepassingen en andere scenario's."
+  },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) biedt verbeterde rekenkracht door middel van efficiënte strategieën en modelarchitectuur."
+  },
+  "tts-1": {
+    "description": "Het nieuwste tekst-naar-spraak model, geoptimaliseerd voor snelheid in realtime scenario's."
+  },
+  "tts-1-hd": {
+    "description": "Het nieuwste tekst-naar-spraak model, geoptimaliseerd voor kwaliteit."
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) is geschikt voor verfijnde instructietaken en biedt uitstekende taalverwerkingscapaciteiten."
   },
   "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet heeft de industrienormen verbeterd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen, en excelleert in uitgebreide evaluaties, terwijl het de snelheid en kosten van onze middelgrote modellen behoudt."
+  },
+  "whisper-1": {
+    "description": "Algemeen spraakherkenningsmodel, ondersteunt meertalige spraakherkenning, spraakvertaling en taalherkenning."
   },
   "wizardlm2": {
     "description": "WizardLM 2 is een taalmodel van Microsoft AI dat uitblinkt in complexe gesprekken, meertaligheid, inferentie en intelligente assistentie."

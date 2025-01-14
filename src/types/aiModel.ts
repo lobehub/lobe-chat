@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { AiProviderSourceType } from '@/types/aiProvider';
+
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
 export const AiModelSourceEnum = {
@@ -16,7 +18,8 @@ export type AiModelType =
   | 'stt'
   | 'image'
   | 'text2video'
-  | 'text2music';
+  | 'text2music'
+  | 'realtime';
 
 export interface ModelAbilities {
   /**
@@ -91,7 +94,7 @@ export interface ChatModelPricing extends BasicModelPricing {
   writeCacheInput?: number;
 }
 
-interface AIBaseModelCard {
+export interface AIBaseModelCard {
   /**
    * the context window (or input + output tokens limit)
    */
@@ -115,6 +118,13 @@ interface AIBaseModelCard {
   releasedAt?: string;
 }
 
+export interface AiModelConfig {
+  /**
+   * used in azure and doubao
+   */
+  deploymentName?: string;
+}
+
 export interface AIChatModelCard extends AIBaseModelCard {
   abilities?: {
     /**
@@ -130,10 +140,7 @@ export interface AIChatModelCard extends AIBaseModelCard {
      */
     vision?: boolean;
   };
-  /**
-   * used in azure and doubao
-   */
-  deploymentName?: string;
+  config?: AiModelConfig;
   maxOutput?: number;
   pricing?: ChatModelPricing;
   type: 'chat';
@@ -221,6 +228,22 @@ export interface AIRealtimeModelCard extends AIBaseModelCard {
   type: 'realtime';
 }
 
+export interface AiFullModelCard extends AIBaseModelCard {
+  abilities?: ModelAbilities;
+  config?: AiModelConfig;
+  contextWindowTokens?: number;
+  displayName?: string;
+  id: string;
+  maxDimension?: number;
+  pricing?: ChatModelPricing;
+  type: AiModelType;
+}
+
+export interface LobeDefaultAiModelListItem extends AiFullModelCard {
+  abilities: ModelAbilities;
+  providerId: string;
+}
+
 // create
 export const CreateAiModelSchema = z.object({
   abilities: AiModelAbilitiesSchema.optional(),
@@ -241,6 +264,7 @@ export type CreateAiModelParams = z.infer<typeof CreateAiModelSchema>;
 
 export interface AiProviderModelListItem {
   abilities?: ModelAbilities;
+  config?: AiModelConfig;
   contextWindowTokens?: number;
   displayName?: string;
   enabled: boolean;
@@ -254,6 +278,11 @@ export interface AiProviderModelListItem {
 // Update
 export const UpdateAiModelSchema = z.object({
   abilities: AiModelAbilitiesSchema.optional(),
+  config: z
+    .object({
+      deploymentName: z.string().optional(),
+    })
+    .optional(),
   contextWindowTokens: z.number().optional(),
   displayName: z.string().optional(),
 });
@@ -286,5 +315,7 @@ interface AiModelForSelect {
 export interface EnabledProviderWithModels {
   children: AiModelForSelect[];
   id: string;
+  logo?: string;
   name: string;
+  source: AiProviderSourceType;
 }

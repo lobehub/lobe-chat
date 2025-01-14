@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { AiModelSourceType, AiModelType, ModelAbilities } from '@/types/aiModel';
+import { AiModelConfig, AiModelType, ModelAbilities } from '@/types/aiModel';
 import { SmoothingParams } from '@/types/llm';
 
 export const AiProviderSourceEnum = {
@@ -167,7 +167,7 @@ export type UpdateAiProviderParams = z.infer<typeof UpdateAiProviderSchema>;
 
 export const UpdateAiProviderConfigSchema = z.object({
   checkModel: z.string().optional(),
-  fetchOnClient: z.boolean().optional(),
+  fetchOnClient: z.boolean().nullable().optional(),
   keyVaults: z.object({}).passthrough().optional(),
 });
 
@@ -182,21 +182,31 @@ export interface AiProviderSortMap {
 
 export interface EnabledProvider {
   id: string;
+  logo?: string;
   name?: string;
-  source: AiModelSourceType;
+  source: AiProviderSourceType;
 }
 
 export interface EnabledAiModel {
   abilities: ModelAbilities;
+  config?: AiModelConfig;
   contextWindowTokens?: number;
   displayName?: string;
+  enabled?: boolean;
   id: string;
   providerId: string;
+  sort?: number;
   type: AiModelType;
 }
 
-export interface AiProviderInitState {
+export interface AiProviderRuntimeConfig {
+  fetchOnClient?: boolean;
+  keyVaults: Record<string, object>;
+  settings: AiProviderSettings;
+}
+
+export interface AiProviderRuntimeState {
   enabledAiModels: EnabledAiModel[];
   enabledAiProviders: EnabledProvider[];
-  keyVaults: Record<string, object>;
+  runtimeConfig: Record<string, AiProviderRuntimeConfig>;
 }

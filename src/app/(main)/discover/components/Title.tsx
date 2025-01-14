@@ -19,13 +19,13 @@ const useStyles = createStyles(({ css, responsive, token }) => ({
 
     padding-block: 0.1em;
     padding-inline: 0.3em;
+    border-radius: ${token.borderRadius}px;
 
     font-size: 18px;
     font-weight: 500;
     color: ${token.colorTextSecondary};
 
     background: ${token.colorFillSecondary};
-    border-radius: ${token.borderRadius}px;
     ${responsive.mobile} {
       font-size: 14px;
     }

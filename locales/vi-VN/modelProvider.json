@@ -63,6 +63,46 @@
       "title": "ID tài khoản Cloudflare / địa chỉ API"
     }
   },
+  "createNewAiProvider": {
+    "apiKey": {
+      "placeholder": "Vui lòng nhập API Key của bạn",
+      "required": "Vui lòng nhập API Key của bạn",
+      "title": "API Key"
+    },
+    "basicTitle": "Thông tin cơ bản",
+    "configTitle": "Thông tin cấu hình",
+    "confirm": "Tạo mới",
+    "createSuccess": "Tạo mới thành công",
+    "description": {
+      "placeholder": "Giới thiệu về nhà cung cấp (tùy chọn)",
+      "title": "Giới thiệu về nhà cung cấp"
+    },
+    "id": {
+      "desc": "Là định danh duy nhất của nhà cung cấp dịch vụ, không thể sửa đổi sau khi tạo",
+      "format": "Chỉ có thể chứa số, chữ cái thường, dấu gạch ngang (-) và dấu gạch dưới (_) ",
+      "placeholder": "Nên viết toàn bộ bằng chữ thường, ví dụ openai, không thể sửa sau khi tạo",
+      "required": "Vui lòng nhập ID nhà cung cấp",
+      "title": "ID nhà cung cấp"
+    },
+    "logo": {
+      "required": "Vui lòng tải lên Logo nhà cung cấp hợp lệ",
+      "title": "Logo nhà cung cấp"
+    },
+    "name": {
+      "placeholder": "Vui lòng nhập tên hiển thị của nhà cung cấp",
+      "required": "Vui lòng nhập tên nhà cung cấp",
+      "title": "Tên nhà cung cấp"
+    },
+    "proxyUrl": {
+      "placeholder": "Vui lòng nhập địa chỉ yêu cầu của bạn, nếu không sẽ sử dụng địa chỉ yêu cầu tương ứng của SDK",
+      "title": "Địa chỉ proxy"
+    },
+    "sdkType": {
+      "required": "Vui lòng chọn loại SDK",
+      "title": "Định dạng yêu cầu"
+    },
+    "title": "Tạo nhà cung cấp AI tùy chỉnh"
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Nhập mã truy cập cá nhân Github của bạn, nhấp vào [đây](https://github.com/settings/tokens) để tạo",
@@ -76,6 +116,23 @@
       "placeholder": "hf_xxxxxxxxx",
       "title": "Mã thông báo HuggingFace"
     }
+  },
+  "list": {
+    "title": {
+      "disabled": "Nhà cung cấp chưa được kích hoạt",
+      "enabled": "Nhà cung cấp đã được kích hoạt"
+    }
+  },
+  "menu": {
+    "addCustomProvider": "Thêm nhà cung cấp tùy chỉnh",
+    "all": "Tất cả",
+    "list": {
+      "disabled": "Chưa kích hoạt",
+      "enabled": "Đã kích hoạt"
+    },
+    "notFound": "Không tìm thấy kết quả tìm kiếm",
+    "searchProviders": "Tìm kiếm nhà cung cấp...",
+    "sort": "Sắp xếp tùy chỉnh"
   },
   "ollama": {
     "checker": {
@@ -94,7 +151,7 @@
       "title": "Đang tải mô hình {{model}}"
     },
     "endpoint": {
-      "desc": "Nhập địa chỉ proxy API của Ollama, có thể để trống nếu không chỉ định cụ thể",
+      "desc": "Phải bao gồm http(s)://, có thể để trống nếu không chỉ định thêm cho địa phương",
       "title": "Địa chỉ proxy API"
     },
     "setup": {
@@ -130,6 +187,127 @@
       "starting": "Bắt đầu tải xuống...",
       "title": "Tải xuống mô hình Ollama đã chỉ định"
     }
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "Khóa của bạn và địa chỉ proxy sẽ được mã hóa bằng thuật toán <1>AES-GCM</1>",
+      "apiKey": {
+        "desc": "Vui lòng nhập {{name}} API Key của bạn",
+        "placeholder": "{{name}} API Key",
+        "title": "API Key"
+      },
+      "baseURL": {
+        "desc": "Phải bao gồm http(s)://",
+        "placeholder": "https://your-proxy-url.com/v1",
+        "title": "Địa chỉ proxy API"
+      },
+      "checker": {
+        "button": "Kiểm tra",
+        "desc": "Kiểm tra xem API Key và địa chỉ proxy có được nhập đúng không",
+        "pass": "Kiểm tra thành công",
+        "title": "Kiểm tra kết nối"
+      },
+      "fetchOnClient": {
+        "desc": "Chế độ yêu cầu từ khách hàng sẽ phát động yêu cầu phiên trực tiếp từ trình duyệt, có thể cải thiện tốc độ phản hồi",
+        "title": "Sử dụng chế độ yêu cầu từ khách hàng"
+      },
+      "helpDoc": "Hướng dẫn cấu hình",
+      "waitingForMore": "Nhiều mô hình hơn đang <1>được lên kế hoạch</1>, xin hãy chờ đợi"
+    },
+    "createNew": {
+      "title": "Tạo mô hình AI tùy chỉnh"
+    },
+    "item": {
+      "config": "Cấu hình mô hình",
+      "customModelCards": {
+        "addNew": "Tạo và thêm mô hình {{id}}",
+        "confirmDelete": "Sắp xóa mô hình tùy chỉnh này, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận."
+      },
+      "delete": {
+        "confirm": "Xác nhận xóa mô hình {{displayName}}?",
+        "success": "Xóa thành công",
+        "title": "Xóa mô hình"
+      },
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Trường thực tế được yêu cầu trong Azure OpenAI",
+          "placeholder": "Vui lòng nhập tên triển khai mô hình trong Azure",
+          "title": "Tên triển khai mô hình"
+        },
+        "displayName": {
+          "placeholder": "Vui lòng nhập tên hiển thị của mô hình, ví dụ ChatGPT, GPT-4, v.v.",
+          "title": "Tên hiển thị mô hình"
+        },
+        "files": {
+          "extra": "Hiện tại, việc tải lên tệp chỉ là một giải pháp Hack, chỉ dành cho thử nghiệm cá nhân. Vui lòng chờ đợi khả năng tải lên tệp hoàn chỉnh trong các bản cập nhật sau.",
+          "title": "Hỗ trợ tải lên tệp"
+        },
+        "functionCall": {
+          "extra": "Cấu hình này chỉ mở khả năng gọi hàm trong ứng dụng, việc hỗ trợ gọi hàm hoàn toàn phụ thuộc vào mô hình, xin hãy tự kiểm tra khả năng gọi hàm của mô hình này.",
+          "title": "Hỗ trợ gọi hàm"
+        },
+        "id": {
+          "extra": "Sẽ được hiển thị như một nhãn mô hình",
+          "placeholder": "Vui lòng nhập id mô hình, ví dụ gpt-4-turbo-preview hoặc claude-2.1",
+          "title": "ID mô hình"
+        },
+        "modalTitle": "Cấu hình mô hình tùy chỉnh",
+        "tokens": {
+          "title": "Số lượng token tối đa",
+          "unlimited": "Không giới hạn"
+        },
+        "vision": {
+          "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong ứng dụng, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào mô hình, xin hãy tự kiểm tra khả năng nhận diện hình ảnh của mô hình này.",
+          "title": "Hỗ trợ nhận diện hình ảnh"
+        }
+      },
+      "pricing": {
+        "image": "${{amount}}/Hình ảnh",
+        "inputCharts": "${{amount}}/Ký tự M",
+        "inputMinutes": "${{amount}}/Phút",
+        "inputTokens": "Nhập ${{amount}}/M",
+        "outputTokens": "Xuất ${{amount}}/M"
+      },
+      "releasedAt": "Phát hành vào {{releasedAt}}"
+    },
+    "list": {
+      "addNew": "Thêm mô hình",
+      "disabled": "Chưa được kích hoạt",
+      "empty": {
+        "desc": "Vui lòng tạo mô hình tùy chỉnh hoặc kéo mô hình để bắt đầu sử dụng",
+        "title": "Chưa có mô hình nào khả dụng"
+      },
+      "enabled": "Đã được kích hoạt",
+      "enabledActions": {
+        "disableAll": "Vô hiệu hóa tất cả",
+        "enableAll": "Kích hoạt tất cả",
+        "sort": "Sắp xếp mô hình tùy chỉnh"
+      },
+      "enabledEmpty": "Chưa có mô hình nào được kích hoạt, hãy kích hoạt mô hình bạn yêu thích từ danh sách bên dưới nhé~",
+      "fetcher": {
+        "clear": "Xóa mô hình đã lấy",
+        "fetch": "Lấy danh sách mô hình",
+        "fetching": "Đang lấy danh sách mô hình...",
+        "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
+        "noLatestTime": "Chưa lấy danh sách"
+      },
+      "search": "Tìm kiếm mô hình...",
+      "searchResult": "Tìm thấy {{count}} mô hình",
+      "title": "Danh sách mô hình",
+      "total": "Có tổng cộng {{count}} mô hình khả dụng"
+    },
+    "searchNotFound": "Không tìm thấy kết quả tìm kiếm"
+  },
+  "sortModal": {
+    "success": "Cập nhật sắp xếp thành công",
+    "title": "Sắp xếp tùy chỉnh",
+    "update": "Cập nhật"
+  },
+  "updateAiProvider": {
+    "confirmDelete": "Sắp xóa nhà cung cấp AI này, sau khi xóa sẽ không thể khôi phục, xác nhận có xóa không?",
+    "deleteSuccess": "Xóa thành công",
+    "tooltip": "Cập nhật cấu hình cơ bản của nhà cung cấp",
+    "updateSuccess": "Cập nhật thành công"
   },
   "wenxin": {
     "accessKey": {

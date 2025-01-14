@@ -12,10 +12,10 @@ const useStyles = createStyles(({ css, token }) => ({
     overflow-x: scroll;
 
     width: 100%;
-
-    background: ${lighten(0.01, token.colorBgLayout)};
     border-start-start-radius: 8px;
     border-start-end-radius: 8px;
+
+    background: ${lighten(0.01, token.colorBgLayout)};
   `,
 }));
 

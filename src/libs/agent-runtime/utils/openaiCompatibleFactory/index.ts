@@ -279,19 +279,34 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             return models.transformModel(item);
           }
 
+          const toReleasedAt = () => {
+            if (!item.created) return;
+
+            // guarantee item.created in Date String format
+            if (
+              typeof (item.created as any) === 'string' ||
+              // or in milliseconds
+              item.created.toFixed(0).length === 13
+            ) {
+              return dayjs.utc(item.created).format('YYYY-MM-DD');
+            }
+
+            // by default, the created time is in seconds
+            return dayjs.utc(item.created * 1000).format('YYYY-MM-DD');
+          };
+
+          // TODO: should refactor after remove v1 user/modelList code
           const knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === item.id);
 
           if (knownModel) {
             dayjs.extend(utc);
 
-            return {
-              ...knownModel,
-              releasedAt:
-                knownModel.releasedAt ?? dayjs.utc(item.created * 1000).format('YYYY-MM-DD'),
-            };
+            const releasedAt = knownModel.releasedAt ?? toReleasedAt();
+
+            return { ...knownModel, releasedAt };
           }
 
-          return { id: item.id };
+          return { id: item.id, releasedAt: toReleasedAt() };
         })
 
         .filter(Boolean) as ChatModelCard[];

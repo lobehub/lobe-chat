@@ -10,7 +10,7 @@ import { DiscoverProviderItem } from '@/types/discover';
 
 import SearchResultCount from '../../../components/SearchResultCount';
 import Title from '../../../components/Title';
-import { VirtuosoList } from '../../../components/VirtuosoGridList';
+import VirtuosoGridList from '../../../components/VirtuosoGridList';
 import Card from './Card';
 
 export interface ListProps {
@@ -27,7 +27,7 @@ const List = memo<ListProps>(({ searchKeywords, items = [], mobile }) => {
     return (
       <>
         <SearchResultCount count={items.length} keyword={searchKeywords} />
-        <VirtuosoList
+        <VirtuosoGridList
           data={items}
           initialItemCount={6}
           itemContent={(_, item) => (
@@ -35,6 +35,7 @@ const List = memo<ListProps>(({ searchKeywords, items = [], mobile }) => {
               <Card {...item} mobile={mobile} style={{ minHeight: 'unset' }} />
             </Link>
           )}
+          rows={2}
           style={{
             minHeight: '75vh',
           }}
@@ -46,7 +47,7 @@ const List = memo<ListProps>(({ searchKeywords, items = [], mobile }) => {
   return (
     <>
       <Title tag={items.length}>{t('providers.list')}</Title>
-      <VirtuosoList
+      <VirtuosoGridList
         data={items}
         initialItemCount={6}
         itemContent={(_, item) => (
@@ -54,6 +55,7 @@ const List = memo<ListProps>(({ searchKeywords, items = [], mobile }) => {
             <Card {...item} mobile={mobile} style={{ minHeight: 'unset' }} />
           </Link>
         )}
+        rows={2}
         style={{
           minHeight: '75vh',
         }}

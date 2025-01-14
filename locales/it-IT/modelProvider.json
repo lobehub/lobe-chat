@@ -63,6 +63,46 @@
       "title": "ID account Cloudflare / indirizzo API"
     }
   },
+  "createNewAiProvider": {
+    "apiKey": {
+      "placeholder": "Inserisci la tua API Key",
+      "required": "Inserisci la tua API Key",
+      "title": "API Key"
+    },
+    "basicTitle": "Informazioni di base",
+    "configTitle": "Informazioni di configurazione",
+    "confirm": "Crea",
+    "createSuccess": "Creazione avvenuta con successo",
+    "description": {
+      "placeholder": "Descrizione del fornitore (opzionale)",
+      "title": "Descrizione del fornitore"
+    },
+    "id": {
+      "desc": "Identificatore unico del fornitore di servizi, non modificabile dopo la creazione",
+      "format": "Può contenere solo numeri, lettere minuscole, trattini (-) e underscore (_) ",
+      "placeholder": "Si consiglia di utilizzare solo lettere minuscole, ad esempio openai, non modificabile dopo la creazione",
+      "required": "Inserisci l'ID del fornitore",
+      "title": "ID del fornitore"
+    },
+    "logo": {
+      "required": "Carica un logo del fornitore valido",
+      "title": "Logo del fornitore"
+    },
+    "name": {
+      "placeholder": "Inserisci il nome visualizzato del fornitore",
+      "required": "Inserisci il nome del fornitore",
+      "title": "Nome del fornitore"
+    },
+    "proxyUrl": {
+      "placeholder": "Inserisci il tuo indirizzo di richiesta, se non specificato verrà utilizzato l'indirizzo di richiesta corrispondente all'SDK",
+      "title": "Indirizzo proxy"
+    },
+    "sdkType": {
+      "required": "Seleziona il tipo di SDK",
+      "title": "Formato della richiesta"
+    },
+    "title": "Crea fornitore AI personalizzato"
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Inserisci il tuo PAT di Github, clicca [qui](https://github.com/settings/tokens) per crearne uno",
@@ -76,6 +116,23 @@
       "placeholder": "hf_xxxxxxxxx",
       "title": "Token HuggingFace"
     }
+  },
+  "list": {
+    "title": {
+      "disabled": "Fornitore non attivato",
+      "enabled": "Fornitore attivato"
+    }
+  },
+  "menu": {
+    "addCustomProvider": "Aggiungi fornitore personalizzato",
+    "all": "Tutti",
+    "list": {
+      "disabled": "Non attivato",
+      "enabled": "Attivato"
+    },
+    "notFound": "Nessun risultato trovato",
+    "searchProviders": "Cerca fornitori...",
+    "sort": "Ordinamento personalizzato"
   },
   "ollama": {
     "checker": {
@@ -94,7 +151,7 @@
       "title": "Download del modello in corso {{model}}"
     },
     "endpoint": {
-      "desc": "Inserisci l'indirizzo del proxy dell'interfaccia Ollama. Lascia vuoto se non specificato localmente",
+      "desc": "Deve includere http(s)://, può rimanere vuoto se non specificato localmente",
       "title": "Indirizzo del proxy dell'interfaccia"
     },
     "setup": {
@@ -130,6 +187,127 @@
       "starting": "Inizio download...",
       "title": "Scarica il modello Ollama specificato"
     }
+  },
+  "providerModels": {
+    "config": {
+      "aesGcm": "La tua chiave e l'indirizzo proxy saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
+      "apiKey": {
+        "desc": "Inserisci la tua {{name}} API Key",
+        "placeholder": "{{name}} API Key",
+        "title": "API Key"
+      },
+      "baseURL": {
+        "desc": "Deve contenere http(s)://",
+        "placeholder": "https://your-proxy-url.com/v1",
+        "title": "Indirizzo proxy API"
+      },
+      "checker": {
+        "button": "Controlla",
+        "desc": "Verifica se l'API Key e l'indirizzo proxy sono stati inseriti correttamente",
+        "pass": "Controllo superato",
+        "title": "Verifica connettività"
+      },
+      "fetchOnClient": {
+        "desc": "La modalità di richiesta client avvierà direttamente la richiesta di sessione dal browser, migliorando la velocità di risposta",
+        "title": "Utilizza la modalità di richiesta client"
+      },
+      "helpDoc": "Guida alla configurazione",
+      "waitingForMore": "Altri modelli sono in fase di <1>implementazione</1>, resta sintonizzato"
+    },
+    "createNew": {
+      "title": "Crea modello AI personalizzato"
+    },
+    "item": {
+      "config": "Configura modello",
+      "customModelCards": {
+        "addNew": "Crea e aggiungi modello {{id}}",
+        "confirmDelete": "Stai per eliminare questo modello personalizzato, una volta eliminato non sarà recuperabile, procedi con cautela."
+      },
+      "delete": {
+        "confirm": "Confermi di voler eliminare il modello {{displayName}}?",
+        "success": "Eliminazione avvenuta con successo",
+        "title": "Elimina modello"
+      },
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Campo effettivamente richiesto in Azure OpenAI",
+          "placeholder": "Inserisci il nome di distribuzione del modello in Azure",
+          "title": "Nome di distribuzione del modello"
+        },
+        "displayName": {
+          "placeholder": "Inserisci il nome visualizzato del modello, ad esempio ChatGPT, GPT-4, ecc.",
+          "title": "Nome visualizzato del modello"
+        },
+        "files": {
+          "extra": "L'attuale implementazione del caricamento file è solo una soluzione temporanea, limitata a tentativi personali. Attendere implementazioni complete per il caricamento file.",
+          "title": "Supporto per il caricamento file"
+        },
+        "functionCall": {
+          "extra": "Questa configurazione abiliterà solo la capacità di chiamata di funzione nell'app, la disponibilità della chiamata di funzione dipende interamente dal modello stesso, testare autonomamente la disponibilità della chiamata di funzione di questo modello.",
+          "title": "Supporto per chiamate di funzione"
+        },
+        "id": {
+          "extra": "Sarà visualizzato come etichetta del modello",
+          "placeholder": "Inserisci l'id del modello, ad esempio gpt-4-turbo-preview o claude-2.1",
+          "title": "ID del modello"
+        },
+        "modalTitle": "Configurazione modello personalizzato",
+        "tokens": {
+          "title": "Numero massimo di token",
+          "unlimited": "Illimitato"
+        },
+        "vision": {
+          "extra": "Questa configurazione abiliterà solo la configurazione di caricamento immagini nell'app, la disponibilità di riconoscimento dipende interamente dal modello stesso, testare autonomamente la disponibilità di riconoscimento visivo di questo modello.",
+          "title": "Supporto per riconoscimento visivo"
+        }
+      },
+      "pricing": {
+        "image": "${{amount}}/Immagine",
+        "inputCharts": "${{amount}}/M caratteri",
+        "inputMinutes": "${{amount}}/minuti",
+        "inputTokens": "Ingresso ${{amount}}/M",
+        "outputTokens": "Uscita ${{amount}}/M"
+      },
+      "releasedAt": "Rilasciato il {{releasedAt}}"
+    },
+    "list": {
+      "addNew": "Aggiungi modello",
+      "disabled": "Non attivato",
+      "empty": {
+        "desc": "Si prega di creare un modello personalizzato o di importare un modello per iniziare a utilizzarlo",
+        "title": "Nessun modello disponibile"
+      },
+      "enabled": "Attivato",
+      "enabledActions": {
+        "disableAll": "Disattiva tutto",
+        "enableAll": "Attiva tutto",
+        "sort": "Ordinamento modelli personalizzato"
+      },
+      "enabledEmpty": "Nessun modello attivato, attiva i modelli desiderati dall'elenco qui sotto~",
+      "fetcher": {
+        "clear": "Cancella i modelli recuperati",
+        "fetch": "Recupera l'elenco dei modelli",
+        "fetching": "Recupero dell'elenco dei modelli in corso...",
+        "latestTime": "Ultimo aggiornamento: {{time}}",
+        "noLatestTime": "Nessun elenco recuperato finora"
+      },
+      "search": "Cerca modelli...",
+      "searchResult": "Trovati {{count}} modelli",
+      "title": "Elenco dei modelli",
+      "total": "Totale di {{count}} modelli disponibili"
+    },
+    "searchNotFound": "Nessun risultato trovato"
+  },
+  "sortModal": {
+    "success": "Ordinamento aggiornato con successo",
+    "title": "Ordinamento personalizzato",
+    "update": "Aggiorna"
+  },
+  "updateAiProvider": {
+    "confirmDelete": "Stai per eliminare questo fornitore AI, una volta eliminato non sarà recuperabile, confermi di voler eliminare?",
+    "deleteSuccess": "Eliminazione avvenuta con successo",
+    "tooltip": "Aggiorna la configurazione di base del fornitore",
+    "updateSuccess": "Aggiornamento avvenuto con successo"
   },
   "wenxin": {
     "accessKey": {

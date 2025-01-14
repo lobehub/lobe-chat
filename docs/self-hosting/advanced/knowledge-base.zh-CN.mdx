@@ -1,3 +1,14 @@
+---
+title: LobeChat 知识库 / 文件上传
+description: 了解 LobeChat 的文件上传和知识库管理核心组件，助力成功部署。
+tags:
+  - LobeChat
+  - 文件上传
+  - 知识库管理
+  - PostgreSQL
+  - OpenAI
+---
+
 # 知识库 / 文件上传
 
 LobeChat 支持文件上传 / 知识库管理。该功能依赖于以下核心技术组件，了解这些组件将有助于你成功部署和维护知识库系统。
@@ -32,9 +43,7 @@ S3（或兼容 S3 协议的存储服务）用于存储上传的文件。
 OpenAI 的嵌入（Embedding）服务用于将文本转化为向量表示。
 
 <Callout type={'info'}>
-
-LobeChat 当前默认使用 OpenAI `text-embedding-3-small` 模型，请确保你的 API Key 可以访问该模型。
-
+  LobeChat 当前默认使用 OpenAI `text-embedding-3-small` 模型，请确保你的 API Key 可以访问该模型。
 </Callout>
 
 - **用途**：生成文本的向量表示，用于语义搜索

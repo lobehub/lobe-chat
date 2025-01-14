@@ -16,11 +16,11 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     padding-block: 8px;
     padding-inline: 12px;
     padding-inline-end: 12px;
+    border-radius: 8px;
 
     color: ${token.colorText};
 
     background: ${token.colorFillTertiary};
-    border-radius: 8px;
 
     &:hover {
       background: ${isDarkMode ? '' : token.colorFillSecondary};
@@ -65,7 +65,7 @@ const FileChunks = memo<FileChunksProps>(({ data }) => {
       {showDetail && (
         <Flexbox gap={8} horizontal wrap={'wrap'}>
           {data.map((item, index) => {
-            return <ChunkItem index={index} key={item.id} {...item}></ChunkItem>;
+            return <ChunkItem index={index} key={item.id} {...item} />;
           })}
         </Flexbox>
       )}

@@ -20,10 +20,9 @@ const useStyles = createStyles(({ css, token }) => ({
 
     padding-block: 4px;
     padding-inline: 6px;
+    border-radius: 6px;
 
     font-size: 12px;
-
-    border-radius: 6px;
 
     &:hover {
       background: ${token.colorFillTertiary};

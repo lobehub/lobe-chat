@@ -1,24 +1,24 @@
+import {
+  SiBrave,
+  SiFirefox,
+  SiGooglechrome,
+  SiMicrosoftedge,
+  SiOpera,
+  SiSafari,
+  SiSamsung,
+} from '@icons-pack/react-simple-icons';
 import React, { memo } from 'react';
 
-import Brave from './components/Brave';
-import Chrome from './components/Chrome';
-import Chromium from './components/Chromium';
-import Edge from './components/Edge';
-import Firefox from './components/Firefox';
-import Opera from './components/Opera';
-import Safari from './components/Safari';
-import Samsung from './components/Samsung';
-
 const lastVersion = {
-  'Brave': Brave,
-  'Chrome': Chrome,
-  'Chromium': Chromium,
-  'Edge': Edge,
-  'Firefox': Firefox,
-  'Mobile Safari': Safari,
-  'Opera': Opera,
-  'Safari': Safari,
-  'Samsung': Samsung,
+  'Brave': SiBrave,
+  'Chrome': SiGooglechrome,
+  'Chromium': SiGooglechrome,
+  'Edge': SiMicrosoftedge,
+  'Firefox': SiFirefox,
+  'Mobile Safari': SiSafari,
+  'Opera': SiOpera,
+  'Safari': SiSafari,
+  'Samsung': SiSamsung,
 };
 
 export type Browsers = keyof typeof lastVersion;
@@ -35,16 +35,5 @@ export const BrowserIcon = memo<BrowserIconProps>(({ browser, className, style, 
 
   if (!Component) return null;
 
-  return (
-    <Component
-      className={className}
-      height={size}
-      style={{
-        ...style,
-        minHeight: size,
-        minWidth: size,
-      }}
-      width={size}
-    />
-  );
+  return <Component className={className} size={size} style={style} />;
 });

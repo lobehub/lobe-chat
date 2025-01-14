@@ -20,8 +20,9 @@ const useStyles = createStyles(({ css, token }) => ({
     inset-block-start: -4px;
     inset-inline-end: -4px;
 
-    background: ${token.colorBgElevated};
     border-radius: 5px;
+
+    background: ${token.colorBgElevated};
     box-shadow:
       0 0 0 0.5px ${token.colorFillSecondary} inset,
       ${token.boxShadowTertiary};
@@ -32,9 +33,9 @@ const useStyles = createStyles(({ css, token }) => ({
     width: ${FILE_ITEM_SIZE}px;
     min-width: ${FILE_ITEM_SIZE}px;
     height: ${FILE_ITEM_SIZE}px;
+    border-radius: 8px;
 
     background: ${token.colorBgContainer};
-    border-radius: 8px;
   `,
   image: css`
     margin-block: 0 !important;

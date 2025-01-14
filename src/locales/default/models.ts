@@ -1,4 +1,4 @@
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 
 const locales: {
   [key: string]: {
@@ -6,7 +6,7 @@ const locales: {
   };
 } = {};
 
-LOBE_DEFAULT_MODEL_LIST.flat().forEach((model) => {
+LOBE_DEFAULT_MODEL_LIST.forEach((model) => {
   if (!model.description) return;
   locales[model.id] = {
     description: model.description,

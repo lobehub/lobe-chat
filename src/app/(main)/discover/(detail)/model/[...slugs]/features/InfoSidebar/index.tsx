@@ -4,7 +4,7 @@ import { Skeleton } from 'antd';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox, FlexboxProps } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { DiscoverModelItem } from '@/types/discover';
@@ -12,17 +12,16 @@ import { DiscoverModelItem } from '@/types/discover';
 import Block from '../../../../features/Block';
 import SuggestionItem from './SuggestionItem';
 
-interface InfoSidebarProps extends FlexboxProps {
+interface InfoSidebarProps {
   data: DiscoverModelItem;
   identifier: string;
-  mobile?: boolean;
 }
 
-const InfoSidebar = memo<InfoSidebarProps>(({ data, ...rest }) => {
+const InfoSidebar = memo<InfoSidebarProps>(({ data }) => {
   const { t } = useTranslation('discover');
 
   return (
-    <Flexbox gap={48} style={{ position: 'relative' }} width={'100%'} {...rest}>
+    <Flexbox gap={48} style={{ position: 'relative' }} width={'100%'}>
       <Block
         gap={24}
         more={t('models.more')}

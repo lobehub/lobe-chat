@@ -1,6 +1,6 @@
 'use client';
 
-import { ChatHeader } from '@lobehub/ui';
+import { ChatHeader } from '@lobehub/ui/chat';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
@@ -28,7 +28,6 @@ export const useStyles = createStyles(({ css, token }) => ({
 
     height: auto;
     padding-block: 4px;
-
     border-color: transparent;
 
     transition: all 0.3s ${token.motionEaseInOut};

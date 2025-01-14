@@ -22,8 +22,8 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   header: css`
     height: 40px;
     min-height: 40px;
-    color: ${token.colorTextDescription};
     border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
+    color: ${token.colorTextDescription};
   `,
   headerItem: css`
     padding-block: 0;
