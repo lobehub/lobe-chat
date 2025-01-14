@@ -273,6 +273,9 @@
     "list": {
       "addNew": "모델 추가",
       "disabled": "비활성화",
+      "disabledActions": {
+        "showMore": "모두 보기"
+      },
       "empty": {
         "desc": "사용할 수 있는 모델이 없습니다. 사용자 정의 모델을 생성하거나 모델을 가져온 후 시작하세요.",
         "title": "사용 가능한 모델이 없습니다."

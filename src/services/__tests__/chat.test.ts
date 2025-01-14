@@ -797,6 +797,7 @@ describe('ChatService', () => {
         const output = chatService['processMessages']({
           messages,
           model: 'gpt-4o',
+          provider: 'openai',
         });
 
         expect(output).toEqual([

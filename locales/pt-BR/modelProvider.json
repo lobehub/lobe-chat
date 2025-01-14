@@ -273,6 +273,9 @@
     "list": {
       "addNew": "Adicionar Modelo",
       "disabled": "Não habilitado",
+      "disabledActions": {
+        "showMore": "Mostrar tudo"
+      },
       "empty": {
         "desc": "Por favor, crie um modelo personalizado ou importe um modelo para começar a usar.",
         "title": "Nenhum modelo disponível"
