@@ -278,6 +278,7 @@ export default {
     list: {
       addNew: '添加模型',
       disabled: '未启用',
+      disabledActions: { showMore: '显示全部' },
       empty: {
         desc: '请创建自定义模型或拉取模型后开始使用吧',
         title: '暂无可用模型',

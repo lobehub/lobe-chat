@@ -15,7 +15,9 @@ const Tools = memo(() => {
   const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
-  const enableFC = useModelSupportToolUse(model);
+  const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
+
+  const enableFC = useModelSupportToolUse(model, provider);
 
   return (
     enablePlugins && (

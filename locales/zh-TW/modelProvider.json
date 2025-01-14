@@ -273,6 +273,9 @@
     "list": {
       "addNew": "新增模型",
       "disabled": "未啟用",
+      "disabledActions": {
+        "showMore": "顯示全部"
+      },
       "empty": {
         "desc": "請創建自定義模型或拉取模型後開始使用吧",
         "title": "暫無可用模型"
