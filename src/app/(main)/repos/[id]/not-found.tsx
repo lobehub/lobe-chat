@@ -1,3 +1,3 @@
-import dynamic from 'next/dynamic';
+import NotFound from '@/components/404';
 
-export default dynamic(() => import('@/components/404'));
+export default NotFound;
