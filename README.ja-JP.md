@@ -158,11 +158,11 @@ LobeChat の継続的な開発において、AI 会話サービスを提供す�
 - **[Baichuan](https://lobechat.com/discover/provider/baichuan)**: 百川智能は、人工知能大モデルの研究開発に特化した企業であり、そのモデルは国内の知識百科、長文処理、生成創作などの中国語タスクで卓越したパフォーマンスを示し、海外の主流モデルを超えています。百川智能は、業界をリードする多モーダル能力を持ち、複数の権威ある評価で優れたパフォーマンスを示しています。そのモデルには、Baichuan 4、Baichuan 3 Turbo、Baichuan 3 Turbo 128k などが含まれ、異なるアプリケーションシーンに最適化され、高コストパフォーマンスのソリューションを提供しています。
 - **[Minimax](https://lobechat.com/discover/provider/minimax)**: MiniMax は 2021 年に設立された汎用人工知能テクノロジー企業であり、ユーザーと共に知能を共創することに取り組んでいます。MiniMax は、さまざまなモードの汎用大モデルを独自に開発しており、トリリオンパラメータの MoE テキスト大モデル、音声大モデル、画像大モデルを含んでいます。また、海螺 AI などのアプリケーションも展開しています。
 - **[360 AI](https://lobechat.com/discover/provider/ai360)**: 360 AI は、360 社が提供する AI モデルとサービスプラットフォームであり、360GPT2 Pro、360GPT Pro、360GPT Turbo、360GPT Turbo Responsibility 8K など、さまざまな先進的な自然言語処理モデルを提供しています。これらのモデルは、大規模なパラメータと多モーダル能力を組み合わせており、テキスト生成、意味理解、対話システム、コード生成などの分野で広く使用されています。柔軟な価格戦略を通じて、360 AI は多様なユーザーのニーズに応え、開発者の統合をサポートし、スマートアプリケーションの革新と発展を促進します。
-- **[Taichu](https://lobechat.com/discover/provider/taichu)**: 中科院自動化研究所と武漢人工知能研究院が新世代の多モーダル大モデルを発表し、多輪問答、テキスト創作、画像生成、3D 理解、信号分析などの包括的な問答タスクをサポートし、より強力な認知、理解、創作能力を持ち、新しいインタラクティブな体験を提供します。
-- **[InternLM](https://lobechat.com/discover/provider/internlm)**: 大規模モデルの研究と開発ツールチェーンに特化したオープンソース組織です。すべての AI 開発者に対して、高効率で使いやすいオープンプラットフォームを提供し、最先端の大規模モデルとアルゴリズム技術を身近に感じられるようにします。
 - **[SiliconCloud](https://lobechat.com/discover/provider/siliconcloud)**: SiliconFlow は、AGI を加速させ、人類に利益をもたらすことを目指し、使いやすくコスト効率の高い GenAI スタックを通じて大規模 AI の効率を向上させることに取り組んでいます。
+- **[InternLM](https://lobechat.com/discover/provider/internlm)**: 大規模モデルの研究と開発ツールチェーンに特化したオープンソース組織です。すべての AI 開発者に対して、高効率で使いやすいオープンプラットフォームを提供し、最先端の大規模モデルとアルゴリズム技術を身近に感じられるようにします。
 - **[Higress](https://lobechat.com/discover/provider/higress)**: Higress は、阿里内部で Tengine のリロードが長期接続のビジネスに悪影響を及ぼすことや、gRPC/Dubbo の負荷分散能力が不足している問題を解決するために生まれた、クラウドネイティブな API ゲートウェイです。
 - **[Gitee AI](https://lobechat.com/discover/provider/giteeai)**: Gitee AI の Serverless API は、AI 開発者に開梱即使用の大モデル推論 API サービスを提供する。
+- **[Taichu](https://lobechat.com/discover/provider/taichu)**: 中科院自動化研究所と武漢人工知能研究院が新世代の多モーダル大モデルを発表し、多輪問答、テキスト創作、画像生成、3D 理解、信号分析などの包括的な問答タスクをサポートし、より強力な認知、理解、創作能力を持ち、新しいインタラクティブな体験を提供します。
 
 </details>
 
