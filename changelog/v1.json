@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix pin package manager to pnpm@9 for docker."]
+    },
+    "date": "2025-01-14",
+    "version": "1.45.9"
+  },
+  {
+    "children": {
       "fixes": ["Refactor dynamic import in RSC."]
     },
     "date": "2025-01-14",
