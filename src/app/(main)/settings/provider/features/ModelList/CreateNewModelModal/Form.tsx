@@ -48,6 +48,7 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
             extra={t('providerModels.item.modelConfig.id.extra')}
             label={t('providerModels.item.modelConfig.id.title')}
             name={'id'}
+            rules={[{ required: true }]}
           >
             <Input
               disabled={!idEditable}
