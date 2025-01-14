@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-01-14",
+    "version": "1.45.14"
+  },
+  {
     "children": {
       "improvements": ["Improve model config form modal."]
     },
