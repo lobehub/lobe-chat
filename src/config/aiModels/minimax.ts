@@ -17,6 +17,7 @@ const minimaxChatModels: AIChatModelCard[] = [
       input: 10,
       output: 10,
     },
+    releasedAt: '2024-11-06',
     type: 'chat',
   },
   {
