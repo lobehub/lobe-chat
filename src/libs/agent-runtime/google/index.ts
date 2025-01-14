@@ -36,6 +36,7 @@ enum HarmCategory {
 
 enum HarmBlockThreshold {
   BLOCK_NONE = 'BLOCK_NONE',
+  OFF = 'OFF', // https://discuss.ai.google.dev/t/59352
 }
 
 export class LobeGoogleAI implements LobeRuntimeAI {
@@ -70,19 +71,19 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             safetySettings: [
               {
                 category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
             ],
           },

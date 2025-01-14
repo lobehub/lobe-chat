@@ -1,6 +1,46 @@
 [
   {
     "children": {
+      "fixes": ["Fix pull models error in new ai provider."]
+    },
+    "date": "2025-01-14",
+    "version": "1.45.15"
+  },
+  {
+    "children": {},
+    "date": "2025-01-14",
+    "version": "1.45.14"
+  },
+  {
+    "children": {
+      "improvements": ["Improve model config form modal."]
+    },
+    "date": "2025-01-14",
+    "version": "1.45.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix enable_search parameter intro condition in Qwen."]
+    },
+    "date": "2025-01-14",
+    "version": "1.45.12"
+  },
+  {
+    "children": {
+      "fixes": ["Support Gemini 2.0 HarmBlockThreshold."]
+    },
+    "date": "2025-01-14",
+    "version": "1.45.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix some providers issues."]
+    },
+    "date": "2025-01-14",
+    "version": "1.45.10"
+  },
+  {
+    "children": {
       "fixes": ["Fix pin package manager to pnpm@9 for docker."]
     },
     "date": "2025-01-14",

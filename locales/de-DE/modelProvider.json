@@ -243,17 +243,18 @@
           "title": "Datei-Upload unterstützen"
         },
         "functionCall": {
-          "extra": "Diese Konfiguration aktiviert nur die Funktionalität zum Aufrufen von Funktionen in der Anwendung. Ob Funktionen unterstützt werden, hängt vollständig vom Modell selbst ab. Bitte testen Sie die Verwendbarkeit der Funktionalität des Modells selbst.",
-          "title": "Funktionaufrufe unterstützen"
+          "extra": "Diese Konfiguration aktiviert nur die Fähigkeit des Modells, Werkzeuge zu verwenden, und ermöglicht es, pluginartige Werkzeuge hinzuzufügen. Ob das Modell tatsächlich in der Lage ist, Werkzeuge zu verwenden, hängt jedoch vollständig vom Modell selbst ab. Bitte testen Sie die Verwendbarkeit selbst.",
+          "title": "Unterstützung der Werkzeugnutzung"
         },
         "id": {
-          "extra": "Wird als Modell-Tag angezeigt",
-          "placeholder": "Bitte geben Sie die Modell-ID ein, z.B. gpt-4-turbo-preview oder claude-2.1",
+          "extra": "Nach der Erstellung nicht mehr änderbar, wird als Modell-ID verwendet, wenn AI aufgerufen wird",
+          "placeholder": "Bitte Modell-ID eingeben, z. B. gpt-4o oder claude-3.5-sonnet",
           "title": "Modell-ID"
         },
         "modalTitle": "Benutzerdefinierte Modellkonfiguration",
         "tokens": {
-          "title": "Maximale Token-Anzahl",
+          "extra": "Maximale Token-Anzahl für das Modell festlegen",
+          "title": "Maximales Kontextfenster",
           "unlimited": "Unbegrenzt"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "Modell hinzufügen",
       "disabled": "Nicht aktiviert",
+      "disabledActions": {
+        "showMore": "Alle anzeigen"
+      },
       "empty": {
         "desc": "Bitte erstellen Sie ein benutzerdefiniertes Modell oder ziehen Sie ein Modell, um zu beginnen.",
         "title": "Keine verfügbaren Modelle"

@@ -243,17 +243,18 @@
           "title": "Dosya Yüklemeyi Destekle"
         },
         "functionCall": {
-          "extra": "Bu yapılandırma yalnızca uygulamadaki fonksiyon çağırma yeteneğini açacaktır, fonksiyon çağırma desteği tamamen modele bağlıdır, lütfen bu modelin fonksiyon çağırma yeteneğini test edin.",
-          "title": "Fonksiyon Çağırmayı Destekle"
+          "extra": "Bu yapılandırma, modelin araçları kullanma yeteneğini açacak ve böylece modele araç sınıfı eklentileri eklenebilecektir. Ancak, gerçek araç kullanımı tamamen modele bağlıdır, kullanılabilirliğini kendiniz test etmelisiniz.",
+          "title": "Araç kullanımını destekle"
         },
         "id": {
-          "extra": "Model etiketi olarak gösterilecektir",
-          "placeholder": "Lütfen model id'sini girin, örneğin gpt-4-turbo-preview veya claude-2.1",
+          "extra": "Oluşturulduktan sonra değiştirilemez, AI çağrıldığında model kimliği olarak kullanılacaktır",
+          "placeholder": "Model kimliğini girin, örneğin gpt-4o veya claude-3.5-sonnet",
           "title": "Model ID"
         },
         "modalTitle": "Özel Model Yapılandırması",
         "tokens": {
-          "title": "Maksimum token sayısı",
+          "extra": "Modelin desteklediği maksimum Token sayısını ayarlayın",
+          "title": "Maksimum bağlam penceresi",
           "unlimited": "Sınırsız"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "Model Ekle",
       "disabled": "Devre dışı",
+      "disabledActions": {
+        "showMore": "Hepsini Göster"
+      },
       "empty": {
         "desc": "Lütfen özel bir model oluşturun veya kullanmaya başlamadan önce bir model çekin",
         "title": "Kullanılabilir model yok"

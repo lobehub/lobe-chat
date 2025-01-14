@@ -283,8 +283,8 @@ export const UpdateAiModelSchema = z.object({
       deploymentName: z.string().optional(),
     })
     .optional(),
-  contextWindowTokens: z.number().optional(),
-  displayName: z.string().optional(),
+  contextWindowTokens: z.number().nullable().optional(),
+  displayName: z.string().nullable().optional(),
 });
 
 export type UpdateAiModelParams = z.infer<typeof UpdateAiModelSchema>;
