@@ -18,29 +18,32 @@ const DisabledModels = memo(() => {
   const disabledModels = useAiInfraStore(aiModelSelectors.disabledAiProviderModelList, isEqual);
 
   const displayModels = showMore ? disabledModels : disabledModels.slice(0, 10);
+
   return (
-    <Flexbox>
-      <Typography.Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
-        {t('providerModels.list.disabled')}
-      </Typography.Text>
-      {displayModels.map((item) => (
-        <ModelItem {...item} key={item.id} />
-      ))}
-      {!showMore && (
-        <Button
-          block
-          color={'default'}
-          icon={<Icon icon={ChevronDown} />}
-          onClick={() => {
-            setShowMore(true);
-          }}
-          size={'small'}
-          variant={'filled'}
-        >
-          {t('providerModels.list.disabledActions.showMore')}
-        </Button>
-      )}
-    </Flexbox>
+    disabledModels.length > 0 && (
+      <Flexbox>
+        <Typography.Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
+          {t('providerModels.list.disabled')}
+        </Typography.Text>
+        {displayModels.map((item) => (
+          <ModelItem {...item} key={item.id} />
+        ))}
+        {!showMore && disabledModels.length > 10 && (
+          <Button
+            block
+            color={'default'}
+            icon={<Icon icon={ChevronDown} />}
+            onClick={() => {
+              setShowMore(true);
+            }}
+            size={'small'}
+            variant={'filled'}
+          >
+            {t('providerModels.list.disabledActions.showMore')}
+          </Button>
+        )}
+      </Flexbox>
+    )
   );
 });
 
