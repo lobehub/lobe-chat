@@ -273,6 +273,9 @@
     "list": {
       "addNew": "Dodaj model",
       "disabled": "Nieaktywne",
+      "disabledActions": {
+        "showMore": "Pokaż więcej"
+      },
       "empty": {
         "desc": "Proszę utworzyć model niestandardowy lub pobrać model, aby rozpocząć korzystanie.",
         "title": "Brak dostępnych modeli"

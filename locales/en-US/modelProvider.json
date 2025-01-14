@@ -273,6 +273,9 @@
     "list": {
       "addNew": "Add Model",
       "disabled": "Disabled",
+      "disabledActions": {
+        "showMore": "Show All"
+      },
       "empty": {
         "desc": "Please create a custom model or pull a model to get started.",
         "title": "No available models"

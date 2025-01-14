@@ -40,13 +40,13 @@ import { createTraceHeader, getTraceId } from '@/utils/trace';
 import { createHeaderWithAuth, createPayloadWithKeyVaults } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
-const isCanUseFC = (model: string) => {
+const isCanUseFC = (model: string, provider: string) => {
   // TODO: remove isDeprecatedEdition condition in V2.0
   if (!isServerMode) {
     return modelProviderSelectors.isModelEnabledFunctionCall(model)(useUserStore.getState());
   }
 
-  return aiModelSelectors.isModelSupportToolUse(model)(useAiInfraStore.getState());
+  return aiModelSelectors.isModelSupportToolUse(model, provider)(useAiInfraStore.getState());
 };
 
 const findAzureDeploymentName = (model: string) => {
@@ -232,6 +232,7 @@ class ChatService {
       {
         messages,
         model: payload.model,
+        provider: payload.provider!,
         tools: enabledPlugins,
       },
       options,
@@ -242,7 +243,7 @@ class ChatService {
     const filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
 
     // check this model can use function call
-    const canUseFC = isCanUseFC(payload.model);
+    const canUseFC = isCanUseFC(payload.model, payload.provider!);
 
     // the rule that model can use tools:
     // 1. tools is not empty
@@ -440,9 +441,11 @@ class ChatService {
       messages,
       tools,
       model,
+      provider,
     }: {
       messages: ChatMessage[];
       model: string;
+      provider: string;
       tools?: string[];
     },
     options?: FetchOptions,
@@ -513,7 +516,7 @@ class ChatService {
 
       // Inject Tool SystemRole
       const hasTools = tools && tools?.length > 0;
-      const hasFC = hasTools && isCanUseFC(model);
+      const hasFC = hasTools && isCanUseFC(model, provider);
       const toolsSystemRoles =
         hasFC && toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
 

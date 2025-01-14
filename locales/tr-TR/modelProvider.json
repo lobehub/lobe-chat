@@ -273,6 +273,9 @@
     "list": {
       "addNew": "Model Ekle",
       "disabled": "Devre dışı",
+      "disabledActions": {
+        "showMore": "Hepsini Göster"
+      },
       "empty": {
         "desc": "Lütfen özel bir model oluşturun veya kullanmaya başlamadan önce bir model çekin",
         "title": "Kullanılabilir model yok"
