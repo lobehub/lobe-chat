@@ -243,17 +243,18 @@
           "title": "Téléchargement de fichiers pris en charge"
         },
         "functionCall": {
-          "extra": "Cette configuration n'activera que la capacité d'appel de fonction dans l'application, la prise en charge des appels de fonction dépend entièrement du modèle lui-même, veuillez tester la disponibilité des capacités d'appel de fonction de ce modèle.",
-          "title": "Appels de fonction pris en charge"
+          "extra": "Cette configuration activera uniquement la capacité du modèle à utiliser des outils, permettant ainsi d'ajouter des plugins de type outil au modèle. Cependant, la prise en charge de l'utilisation réelle des outils dépend entièrement du modèle lui-même, veuillez tester la disponibilité par vous-même.",
+          "title": "Support de l'utilisation des outils"
         },
         "id": {
-          "extra": "S'affichera comme une étiquette de modèle",
-          "placeholder": "Veuillez entrer l'id du modèle, par exemple gpt-4-turbo-preview ou claude-2.1",
+          "extra": "Une fois créé, il ne peut pas être modifié et sera utilisé comme identifiant du modèle lors de l'appel à l'IA",
+          "placeholder": "Veuillez entrer l'identifiant du modèle, par exemple gpt-4o ou claude-3.5-sonnet",
           "title": "ID du modèle"
         },
         "modalTitle": "Configuration du modèle personnalisé",
         "tokens": {
-          "title": "Nombre maximum de tokens",
+          "extra": "Définir le nombre maximal de tokens pris en charge par le modèle",
+          "title": "Fenêtre de contexte maximale",
           "unlimited": "Illimité"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "Ajouter un modèle",
       "disabled": "Non activé",
+      "disabledActions": {
+        "showMore": "Afficher tout"
+      },
       "empty": {
         "desc": "Veuillez créer un modèle personnalisé ou importer un modèle pour commencer à l'utiliser.",
         "title": "Aucun modèle disponible"

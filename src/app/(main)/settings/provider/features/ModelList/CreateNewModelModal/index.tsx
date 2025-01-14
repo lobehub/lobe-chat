@@ -42,10 +42,16 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ open, setOpen }) => {
             const data = formInstance.getFieldsValue();
 
             setLoading(true);
-            await createNewAiModel({ ...data, providerId: editingProvider });
-            setLoading(false);
 
-            closeModal();
+            try {
+              await formInstance.validateFields();
+              await createNewAiModel({ ...data, providerId: editingProvider });
+              setLoading(false);
+              closeModal();
+            } catch {
+              /*  */
+              setLoading(false);
+            }
           }}
           style={{ marginInlineStart: '16px' }}
           type="primary"

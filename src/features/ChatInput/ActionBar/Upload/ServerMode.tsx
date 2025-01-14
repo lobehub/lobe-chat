@@ -25,8 +25,9 @@ const FileUpload = memo(() => {
   const upload = useFileStore((s) => s.uploadChatFiles);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
+  const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
 
-  const canUploadImage = useModelSupportVision(model);
+  const canUploadImage = useModelSupportVision(model, provider);
 
   const items: MenuProps['items'] = [
     {
