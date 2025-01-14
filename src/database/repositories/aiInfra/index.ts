@@ -62,31 +62,45 @@ export class AiInfraRepos {
     return list
       .filter((item) => item.enabled)
       .sort((a, b) => a.sort! - b.sort!)
-      .map((item) => ({ id: item.id, name: item.name, source: item.source }));
+      .map((item) => ({ id: item.id, logo: item.logo, name: item.name, source: item.source }));
   };
 
   getEnabledModels = async () => {
     const providers = await this.getAiProviderList();
     const enabledProviders = providers.filter((item) => item.enabled);
 
-    const userEnabledModels = await this.aiModelModel.getEnabledModels();
+    const allModels = await this.aiModelModel.getAllModels();
+    const userEnabledModels = allModels.filter((item) => item.enabled);
+
     const modelList = await pMap(
       enabledProviders,
       async (provider) => {
         const aiModels = await this.fetchBuiltinModels(provider.id);
 
         return (aiModels || [])
-          .filter((i) => i.enabled)
-          .map<EnabledAiModel>((item) => ({
-            ...item,
-            abilities: item.abilities || {},
-            providerId: provider.id,
-          }));
+          .map<EnabledAiModel & { enabled?: boolean | null }>((item) => {
+            const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
+
+            return {
+              abilities: !!user ? user.abilities : item.abilities || {},
+              config: !!user ? user.config : item.config,
+              contextWindowTokens: !!user ? user.contextWindowTokens : item.contextWindowTokens,
+              displayName: user?.displayName || item.displayName,
+              enabled: !!user ? user.enabled : item.enabled,
+              id: item.id,
+              providerId: provider.id,
+              sort: !!user ? user.sort : undefined,
+              type: item.type,
+            };
+          })
+          .filter((i) => i.enabled);
       },
       { concurrency: 10 },
     );
 
-    return [...modelList.flat(), ...userEnabledModels] as EnabledAiModel[];
+    return [...modelList.flat(), ...userEnabledModels].sort(
+      (a, b) => (a?.sort || -1) - (b?.sort || -1),
+    ) as EnabledAiModel[];
   };
 
   getAiProviderModelList = async (providerId: string) => {
@@ -98,12 +112,17 @@ export class AiInfraRepos {
     return mergeArrayById(defaultModels, aiModels) as AiProviderModelListItem[];
   };
 
+  /**
+   * Fetch builtin models from config
+   */
   private fetchBuiltinModels = async (
     providerId: string,
   ): Promise<AiProviderModelListItem[] | undefined> => {
     try {
       const { default: providerModels } = await import(`@/config/aiModels/${providerId}`);
-      return (providerModels as AIChatModelCard[]).map<AiProviderModelListItem>((m) => ({
+
+      const presetList = this.providerConfigs[providerId]?.serverModelLists || providerModels;
+      return (presetList as AIChatModelCard[]).map<AiProviderModelListItem>((m) => ({
         ...m,
         enabled: m.enabled || false,
         source: AiModelSourceEnum.Builtin,

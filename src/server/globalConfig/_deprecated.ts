@@ -2,7 +2,7 @@ import { getLLMConfig } from '@/config/llm';
 import * as ProviderCards from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { ModelProviderCard } from '@/types/llm';
-import { extractEnabledModels, transformToChatModelCards } from '@/utils/parseModels';
+import { extractEnabledModels, transformToChatModelCards } from '@/utils/_deprecated/parseModels';
 
 export const genServerLLMConfig = (specificConfig: Record<any, any>) => {
   const llmConfig = getLLMConfig() as Record<string, any>;

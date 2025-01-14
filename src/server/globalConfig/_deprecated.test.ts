@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { getLLMConfig } from '@/config/llm';
-
-import { genServerLLMConfig } from './genServerLLMConfig';
+import { genServerLLMConfig } from './_deprecated';
 
 // Mock ModelProvider enum
 vi.mock('@/libs/agent-runtime', () => ({
@@ -40,7 +38,7 @@ vi.mock('@/config/llm', () => ({
 }));
 
 // Mock parse models utils
-vi.mock('@/utils/parseModels', () => ({
+vi.mock('@/utils/_deprecated/parseModels', () => ({
   extractEnabledModels: (modelString: string, withDeploymentName?: boolean) => {
     // Returns different format if withDeploymentName is true
     return withDeploymentName ? [`${modelString}_withDeployment`] : [modelString];

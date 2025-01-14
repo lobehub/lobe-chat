@@ -1,6 +1,6 @@
 'use client';
 
-import { MobileNavBar } from '@lobehub/ui';
+import { MobileNavBar } from '@lobehub/ui/mobile';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import urlJoin from 'url-join';

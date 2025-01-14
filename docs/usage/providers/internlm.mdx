@@ -12,59 +12,42 @@ tags:
 
 # Using InternLM in LobeChat
 
-<Image
-  cover
-  src={'https://github.com/user-attachments/assets/be7dcd49-0165-4f7b-bf90-0739cc9dd212'}
-/>
+<Image cover src={'https://github.com/user-attachments/assets/be7dcd49-0165-4f7b-bf90-0739cc9dd212'} />
 
 [InternLM](https://platform.sensenova.cn/home) is a large pre-trained language model jointly launched by the Shanghai Artificial Intelligence Laboratory and Shusheng Group. This model focuses on natural language processing, aimed at understanding and generating human language, boasting powerful semantic comprehension and text generation capabilities.
 
 This article will guide you on how to use InternLM in LobeChat.
 
 <Steps>
+  ### Step 1: Obtain the InternLM API Key
 
-### Step 1: Obtain the InternLM API Key
+  - Register and log in to [InternLM API](https://InternLM.intern-ai.org.cn/api/tokens)
+  - Create an API token
+  - Save the API token in the pop-up window
 
-- Register and log in to [InternLM API](https://InternLM.intern-ai.org.cn/api/tokens)
-- Create an API token
-- Save the API token in the pop-up window
+  <Image alt={'Save API Token'} inStep src={'https://github.com/user-attachments/assets/0e2fdc5d-9623-4a74-a7f6-dcb802d52297'} />
 
-<Image
-  alt={'Save API Token'}
-  inStep
-  src={'https://github.com/user-attachments/assets/0e2fdc5d-9623-4a74-a7f6-dcb802d52297'}
-/>
+  <Callout type={'warning'}>
+    Please store the API token shown in the pop-up securely; it will only appear once. If you lose it,
+    you will need to create a new API token.
+  </Callout>
 
-<Callout type={'warning'}>
-  Please store the API token shown in the pop-up securely; it will only appear once. If you lose it,
-  you will need to create a new API token.
-</Callout>
+  ### Step 2: Configure InternLM in LobeChat
 
-### Step 2: Configure InternLM in LobeChat
+  - Go to the `Settings` interface in LobeChat
+  - Find the settings option for `InternLM` under `Language Models`
 
-- Go to the `Settings` interface in LobeChat
-- Find the settings option for `InternLM` under `Language Models`
+  <Image alt={'Enter API Key'} inStep src={'https://github.com/user-attachments/assets/8ec7656e-1e3d-41e0-95a0-f6883135c2fc'} />
 
-<Image
-  alt={'Enter API Key'}
-  inStep
-  src={'https://github.com/user-attachments/assets/8ec7656e-1e3d-41e0-95a0-f6883135c2fc'}
-/>
+  - Enter the obtained `AccessKey ID` and `AccessKey Secret`
+  - Choose a InternLM model for your AI assistant to start a conversation
 
-- Enter the obtained `AccessKey ID` and `AccessKey Secret`
-- Choose a InternLM model for your AI assistant to start a conversation
+  <Image alt={'Select InternLM Model and Start Conversation'} inStep src={'https://github.com/user-attachments/assets/76ad163e-ee19-4f95-a712-85bea764d3ec'} />
 
-<Image
-  alt={'Select InternLM Model and Start Conversation'}
-  inStep
-  src={'https://github.com/user-attachments/assets/76ad163e-ee19-4f95-a712-85bea764d3ec'}
-/>
-
-<Callout type={'warning'}>
-  During usage, you may need to pay the API service provider; please refer to the pricing policy
-  regarding InternLM.
-</Callout>
-
+  <Callout type={'warning'}>
+    During usage, you may need to pay the API service provider; please refer to the pricing policy
+    regarding InternLM.
+  </Callout>
 </Steps>
 
 You are now ready to engage in conversations using the models provided by InternLM in LobeChat.
