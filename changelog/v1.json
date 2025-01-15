@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add auth support for PROXY_URL."]
+    },
+    "date": "2025-01-15",
+    "version": "1.46.1"
+  },
+  {
+    "children": {
       "features": ["Add lm studio provider, support to customize Embedding model with env."]
     },
     "date": "2025-01-15",
