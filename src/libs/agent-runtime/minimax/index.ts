@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import Minimax from '@/config/modelProviders/minimax';
+import Minimax from '@/config/aiModels/minimax';
 
 export const getMinimaxMaxOutputs = (modelId: string): number | undefined => {
   const model = Minimax.chatModels.find(model => model.id === modelId);
