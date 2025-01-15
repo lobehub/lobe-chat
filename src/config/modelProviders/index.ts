@@ -113,11 +113,11 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   BaichuanProvider,
   MinimaxProvider,
   Ai360Provider,
-  TaichuProvider,
-  InternLMProvider,
   SiliconCloudProvider,
+  InternLMProvider,
   HigressProvider,
   GiteeAIProvider,
+  TaichuProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
