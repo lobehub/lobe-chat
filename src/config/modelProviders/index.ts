@@ -116,7 +116,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   MinimaxProvider,
   LMStudioProvider,
   InternLMProvider,
-  InternLMProvider,
   HigressProvider,
   GiteeAIProvider,
   TaichuProvider,
