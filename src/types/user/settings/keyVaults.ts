@@ -6,6 +6,10 @@ export interface OpenAICompatibleKeyVault {
 export interface AzureOpenAIKeyVault {
   apiKey?: string;
   apiVersion?: string;
+  baseURL?: string;
+  /**
+   * @deprecated
+   */
   endpoint?: string;
 }
 
