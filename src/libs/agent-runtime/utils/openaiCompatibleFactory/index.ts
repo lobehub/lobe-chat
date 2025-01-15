@@ -3,7 +3,7 @@ import utc from 'dayjs/plugin/utc';
 import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
