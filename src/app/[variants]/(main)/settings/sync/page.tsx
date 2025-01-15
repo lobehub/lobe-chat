@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 
+import { withSuspense } from '@/components/withSuspense';
 import { serverFeatureFlags } from '@/config/featureFlags';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
@@ -15,7 +16,7 @@ export const generateMetadata = async () => {
     url: '/settings/sync',
   });
 };
-export default async () => {
+export default withSuspense(async () => {
   const enableWebrtc = serverFeatureFlags().enableWebrtc;
   if (!enableWebrtc) return notFound();
 
@@ -23,4 +24,4 @@ export default async () => {
   const { os, browser } = await gerServerDeviceInfo();
 
   return <Page browser={browser} mobile={isMobile} os={os} />;
-};
+});

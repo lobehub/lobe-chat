@@ -7,6 +7,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
+import { withSuspense } from '@/components/withSuspense';
 import { DiscoverPlugintem } from '@/types/discover';
 
 import SearchResultCount from '../../../components/SearchResultCount';
@@ -84,4 +85,4 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
   );
 });
 
-export default List;
+export default withSuspense(List);

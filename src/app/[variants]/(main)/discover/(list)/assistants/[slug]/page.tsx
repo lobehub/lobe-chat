@@ -1,6 +1,7 @@
 import urlJoin from 'url-join';
 
 import StructuredData from '@/components/StructuredData';
+import { withSuspense } from '@/components/withSuspense';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
@@ -64,4 +65,4 @@ export const generateStaticParams = async () => {
 
 Page.DisplayName = 'DiscoverAssistantsCategory';
 
-export default Page;
+export default withSuspense(Page);

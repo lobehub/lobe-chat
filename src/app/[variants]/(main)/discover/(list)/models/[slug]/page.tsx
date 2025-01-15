@@ -1,6 +1,7 @@
 import urlJoin from 'url-join';
 
 import StructuredData from '@/components/StructuredData';
+import { withSuspense } from '@/components/withSuspense';
 import { DEFAULT_LANG } from '@/const/locale';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
@@ -70,4 +71,4 @@ export const generateStaticParams = async () => {
 
 Page.DisplayName = 'DiscoverModelsCategory';
 
-export default Page;
+export default withSuspense(Page);
