@@ -35,6 +35,7 @@ export interface UserKeyVaults {
   bedrock?: AWSBedrockKeyVault;
   cloudflare?: CloudflareKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
+  doubao?: OpenAICompatibleKeyVault;
   fireworksai?: OpenAICompatibleKeyVault;
   giteeai?: OpenAICompatibleKeyVault;
   github?: OpenAICompatibleKeyVault;
