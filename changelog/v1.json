@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add lm studio provider, support to customize Embedding model with env."]
+    },
+    "date": "2025-01-15",
+    "version": "1.46.0"
+  },
+  {
+    "children": {
       "improvements": ["Refactor Minimax with LobeOpenAICompatibleFactory."]
     },
     "date": "2025-01-15",
