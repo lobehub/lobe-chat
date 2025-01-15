@@ -2,6 +2,82 @@
 
 # Changelog
 
+### [Version 1.46.1](https://github.com/lobehub/lobe-chat/compare/v1.46.0...v1.46.1)
+
+<sup>Released on **2025-01-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add auth support for `PROXY_URL`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add auth support for `PROXY_URL`, closes [#5304](https://github.com/lobehub/lobe-chat/issues/5304) ([eb26c79](https://github.com/lobehub/lobe-chat/commit/eb26c79))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.46.0](https://github.com/lobehub/lobe-chat/compare/v1.45.17...v1.46.0)
+
+<sup>Released on **2025-01-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Add lm studio provider, support to customize Embedding model with env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add lm studio provider, closes [#4483](https://github.com/lobehub/lobe-chat/issues/4483) ([0ac5802](https://github.com/lobehub/lobe-chat/commit/0ac5802))
+- **misc**: Support to customize Embedding model with env, closes [#5177](https://github.com/lobehub/lobe-chat/issues/5177) ([eed9357](https://github.com/lobehub/lobe-chat/commit/eed9357))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.17](https://github.com/lobehub/lobe-chat/compare/v1.45.16...v1.45.17)
+
+<sup>Released on **2025-01-15**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor Minimax with LobeOpenAICompatibleFactory.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor Minimax with LobeOpenAICompatibleFactory, closes [#5325](https://github.com/lobehub/lobe-chat/issues/5325) ([da11b55](https://github.com/lobehub/lobe-chat/commit/da11b55))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.45.16](https://github.com/lobehub/lobe-chat/compare/v1.45.15...v1.45.16)
 
 <sup>Released on **2025-01-14**</sup>
