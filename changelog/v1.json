@@ -1,6 +1,18 @@
 [
   {
     "children": {
+      "fixes": ["Fix azure in new ai provider."]
+    },
+    "date": "2025-01-15",
+    "version": "1.46.3"
+  },
+  {
+    "children": {},
+    "date": "2025-01-15",
+    "version": "1.46.2"
+  },
+  {
+    "children": {
       "improvements": ["Add auth support for PROXY_URL."]
     },
     "date": "2025-01-15",
