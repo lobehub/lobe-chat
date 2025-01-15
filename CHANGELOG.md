@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version 1.46.3](https://github.com/lobehub/lobe-chat/compare/v1.46.2...v1.46.3)
+
+<sup>Released on **2025-01-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix azure in new ai provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix azure in new ai provider, closes [#5448](https://github.com/lobehub/lobe-chat/issues/5448) ([b5042c3](https://github.com/lobehub/lobe-chat/commit/b5042c3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.46.2](https://github.com/lobehub/lobe-chat/compare/v1.46.1...v1.46.2)
+
+<sup>Released on **2025-01-15**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.46.1](https://github.com/lobehub/lobe-chat/compare/v1.46.0...v1.46.1)
 
 <sup>Released on **2025-01-15**</sup>
