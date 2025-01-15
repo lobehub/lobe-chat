@@ -50,6 +50,9 @@
   "internlm": {
     "description": "Organizacja open source poświęcona badaniom i rozwojowi narzędzi dla dużych modeli. Oferuje wszystkim deweloperom AI wydajną i łatwą w użyciu platformę open source, umożliwiającą dostęp do najnowocześniejszych technologii modeli i algorytmów."
   },
+  "lmstudio": {
+    "description": "LM Studio to aplikacja desktopowa do rozwijania i eksperymentowania z LLM-ami na Twoim komputerze."
+  },
   "minimax": {
     "description": "MiniMax to firma technologiczna zajmująca się ogólną sztuczną inteligencją, założona w 2021 roku, dążąca do współtworzenia inteligencji z użytkownikami. MiniMax opracowało różne modele dużych modeli o różnych modalnościach, w tym model tekstowy MoE z bilionem parametrów, model głosowy oraz model obrazowy. Wprowadziło również aplikacje takie jak Conch AI."
   },

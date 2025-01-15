@@ -44,6 +44,7 @@ export interface UserKeyVaults {
   huggingface?: OpenAICompatibleKeyVault;
   hunyuan?: OpenAICompatibleKeyVault;
   internlm?: OpenAICompatibleKeyVault;
+  lmstudio?: OpenAICompatibleKeyVault;
   lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
   mistral?: OpenAICompatibleKeyVault;

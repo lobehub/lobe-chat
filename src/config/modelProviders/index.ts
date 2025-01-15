@@ -17,6 +17,7 @@ import HigressProvider from './higress';
 import HuggingFaceProvider from './huggingface';
 import HunyuanProvider from './hunyuan';
 import InternLMProvider from './internlm';
+import LMStudioProvider from './lmstudio';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
 import MoonshotProvider from './moonshot';
@@ -104,20 +105,21 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   QwenProvider,
   WenxinProvider,
   HunyuanProvider,
-  SparkProvider,
   ZhiPuProvider,
+  SiliconCloudProvider,
   ZeroOneProvider,
+  SparkProvider,
   SenseNovaProvider,
   StepfunProvider,
   MoonshotProvider,
   BaichuanProvider,
   MinimaxProvider,
-  Ai360Provider,
-  SiliconCloudProvider,
+  LMStudioProvider,
   InternLMProvider,
   HigressProvider,
   GiteeAIProvider,
   TaichuProvider,
+  Ai360Provider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -146,6 +148,7 @@ export { default as HigressProviderCard } from './higress';
 export { default as HuggingFaceProviderCard } from './huggingface';
 export { default as HunyuanProviderCard } from './hunyuan';
 export { default as InternLMProviderCard } from './internlm';
+export { default as LMStudioProviderCard } from './lmstudio';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
 export { default as MoonshotProviderCard } from './moonshot';
