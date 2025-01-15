@@ -17,6 +17,7 @@ export const config = {
     '/(api|trpc|webapi)(.*)',
     // include the /
     '/',
+    '/discover(.*)',
     '/chat(.*)',
     '/settings(.*)',
     '/files(.*)',
@@ -41,13 +42,12 @@ const defaultMiddleware = (request: NextRequest) => {
     theme: theme as any,
   });
 
-  console.log('rewrite route:', route);
-
   const url = new URL(request.url);
-
   if (['/api', '/trpc', '/webapi'].some((path) => url.pathname.startsWith(path)))
     return NextResponse.next();
 
+  console.log('nextUrl:', request.nextUrl);
+  console.log('origin', url.pathname, 'rewrite route:', route);
   // 3. 处理 URL 重写
   // 构建新路径: /${route}${originalPathname}
   url.pathname = urlJoin(route, url.pathname);
@@ -55,11 +55,13 @@ const defaultMiddleware = (request: NextRequest) => {
   return NextResponse.rewrite(url);
 };
 
+const publicRoute = ['/', '/discover'];
+
 // Initialize an Edge compatible NextAuth middleware
 const nextAuthMiddleware = NextAuthEdge.auth((req) => {
   const response = defaultMiddleware(req);
   // skip the '/' route
-  if (req.nextUrl.pathname === '/') return response;
+  if (publicRoute.some((url) => req.nextUrl.pathname.startsWith(url))) return response;
 
   // Just check if session exists
   const session = req.auth;

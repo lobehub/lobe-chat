@@ -4,7 +4,7 @@ import { Fragment, Suspense } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import Pagination from '@/app/@modal/(.)changelog/modal/features/Pagination';
+import Pagination from '@/app/[variants]/@modal/(.)changelog/modal/features/Pagination';
 import StructuredData from '@/components/StructuredData';
 import { serverFeatureFlags } from '@/config/featureFlags';
 import { BRANDING_NAME } from '@/const/branding';
