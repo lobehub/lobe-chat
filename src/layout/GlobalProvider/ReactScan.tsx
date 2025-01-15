@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 import React, { memo } from 'react';
 
-const Debug = memo(() => {
+const ReactScan = memo(() => {
   const searchParams = useSearchParams();
 
   const debug = searchParams.get('debug');
@@ -12,4 +12,4 @@ const Debug = memo(() => {
   return !!debug && <Script src="https://unpkg.com/react-scan/dist/auto.global.js" />;
 });
 
-export default Debug;
+export default ReactScan;

@@ -1,5 +1,5 @@
 import { cookies, headers } from 'next/headers';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
 import { resolveAcceptLanguage } from 'resolve-accept-language';
 
 import { appEnv } from '@/config/app';
@@ -19,9 +19,9 @@ import { isMobileDevice } from '@/utils/server/responsive';
 
 import AntdV5MonkeyPatch from './AntdV5MonkeyPatch';
 import AppTheme from './AppTheme';
-import Debug from './Debug';
 import Locale from './Locale';
 import QueryProvider from './Query';
+import ReactScan from './ReactScan';
 import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
@@ -87,10 +87,12 @@ const GlobalLayout = async ({ children }: PropsWithChildren) => {
             serverConfig={serverConfig}
           >
             <QueryProvider>{children}</QueryProvider>
-            <StoreInitialization />
+            <Suspense>
+              <StoreInitialization />
+              <ReactScan />
+            </Suspense>
           </ServerConfigStoreProvider>
           <DebugUI />
-          <Debug />
         </AppTheme>
         <AntdV5MonkeyPatch />
       </Locale>
