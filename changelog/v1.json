@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Fix azure in new ai provider."]
+    },
+    "date": "2025-01-15",
+    "version": "1.46.3"
+  },
+  {
     "children": {},
     "date": "2025-01-15",
     "version": "1.46.2"
