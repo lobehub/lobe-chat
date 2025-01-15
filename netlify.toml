@@ -3,7 +3,7 @@ command = "pnpm run build"
 publish = ".next"
 
 [build.environment]
-NODE_OPTIONS = "--max_old_space_size=4096"
+NODE_OPTIONS = "--max-old-space-size=4096"
 
 [template.environment]
 OPENAI_API_KEY = "set your OpenAI API Key"
