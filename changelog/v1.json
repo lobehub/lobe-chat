@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "improvements": ["Add auth support for PROXY_URL."]
+    },
+    "date": "2025-01-15",
+    "version": "1.46.1"
+  },
+  {
+    "children": {
+      "features": ["Add lm studio provider, support to customize Embedding model with env."]
+    },
+    "date": "2025-01-15",
+    "version": "1.46.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor Minimax with LobeOpenAICompatibleFactory."]
+    },
+    "date": "2025-01-15",
+    "version": "1.45.17"
+  },
+  {
+    "children": {
       "improvements": ["Improve ai provider code."]
     },
     "date": "2025-01-14",
