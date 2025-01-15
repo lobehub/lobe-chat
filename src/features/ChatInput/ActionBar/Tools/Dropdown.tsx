@@ -8,7 +8,7 @@ import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useWorkspaceModal } from '@/app/(main)/chat/(workspace)/features/useWorkspaceModal';
+import { useWorkspaceModal } from '@/app/[variants]/(main)/chat/(workspace)/features/useWorkspaceModal';
 import PluginStore from '@/features/PluginStore';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';

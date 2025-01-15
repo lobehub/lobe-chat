@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import PluginTag from '@/app/(main)/chat/(workspace)/features/PluginTag';
+import PluginTag from '@/app/[variants]/(main)/chat/(workspace)/features/PluginTag';
 import { ProductLogo } from '@/components/Branding';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
