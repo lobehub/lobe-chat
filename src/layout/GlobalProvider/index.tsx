@@ -1,14 +1,8 @@
-import { headers } from 'next/headers';
 import { ReactNode } from 'react';
-import { resolveAcceptLanguage } from 'resolve-accept-language';
 
 import { appEnv } from '@/config/app';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
-import { DEFAULT_LANG } from '@/const/locale';
-
-
 import DebugUI from '@/features/DebugUI';
-import { locales } from '@/locales/resources';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ServerConfigStoreProvider } from '@/store/serverConfig';
 import { getAntdLocale } from '@/utils/locale';
@@ -20,30 +14,6 @@ import Locale from './Locale';
 import QueryProvider from './Query';
 import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
-
-const parserFallbackLang = async () => {
-  // if the default language is not 'en-US', just return the default language as fallback lang
-  if (DEFAULT_LANG !== 'en-US') return DEFAULT_LANG;
-
-  const header = await headers();
-  /**
-   * The arguments are as follows:
-   *
-   * 1) The HTTP accept-language header.
-   * 2) The available locales (they must contain the default locale).
-   * 3) The default locale.
-   */
-  let fallbackLang: string = resolveAcceptLanguage(
-    header.get('accept-language') || '',
-    //  Invalid locale identifier 'ar'. A valid locale should follow the BCP 47 'language-country' format.
-    locales.map((locale) => (locale === 'ar' ? 'ar-EG' : locale)),
-    DEFAULT_LANG,
-  );
-  // if match the ar-EG then fallback to ar
-  if (fallbackLang === 'ar-EG') fallbackLang = 'ar';
-
-  return fallbackLang;
-};
 
 interface GlobalLayoutProps {
   appearance: string;
