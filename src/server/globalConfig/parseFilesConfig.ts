@@ -23,14 +23,16 @@ export const parseFilesConfig = (envString: string = ''): SystemEmbeddingConfig 
     if (key && value) {
       const [provider, ...modelParts] = value.split('/');
       const model = modelParts.join('/');
-
-      if ((!provider || !model) && key !== 'query_model') {
+      // Validation should be added when supporting query mode in the future
+      if (!provider || !model) {
         throw new Error('Missing model or provider value');
       }
 
-      if (key === 'query_model' && value === '') {
-        throw new Error('Missing query mode value');
-      }
+      // rerank model verification logic
+
+      // if (key === 'query_mode' && value === '') {
+      //   throw new Error('Missing query mode value');
+      // }
 
       if (protectedKeys.includes(key)) {
         switch (key) {
