@@ -20,11 +20,10 @@ export const getAntdLocale = async (lang?: string) => {
 
 /**
  * Parse the browser language and return the fallback language
- * @param headers
  */
-export const parseBrowserLanguage = (headers: Headers) => {
+export const parseBrowserLanguage = (headers: Headers, defaultLang: string = DEFAULT_LANG) => {
   // if the default language is not 'en-US', just return the default language as fallback lang
-  if (DEFAULT_LANG !== 'en-US') return DEFAULT_LANG;
+  if (defaultLang !== 'en-US') return defaultLang;
 
   /**
    * The arguments are as follows:
@@ -37,7 +36,7 @@ export const parseBrowserLanguage = (headers: Headers) => {
     headers.get('accept-language') || '',
     //  Invalid locale identifier 'ar'. A valid locale should follow the BCP 47 'language-country' format.
     locales.map((locale) => (locale === 'ar' ? 'ar-EG' : locale)),
-    DEFAULT_LANG,
+    defaultLang,
   );
   // if match the ar-EG then fallback to ar
   if (fallbackLang === 'ar-EG') fallbackLang = 'ar';
