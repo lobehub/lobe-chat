@@ -18,6 +18,7 @@ export const AiProviderSDKEnum = {
   Azure: 'azure',
   Bedrock: 'bedrock',
   Cloudflare: 'cloudflare',
+  Doubao: 'doubao',
   Google: 'google',
   Huggingface: 'huggingface',
   Ollama: 'ollama',

@@ -58,12 +58,24 @@ const Doubao: ModelProviderCard = {
       id: 'Doubao-pro-128k',
     },
   ],
-  checkModel: 'Doubao-lite-4k',
+  // checkModel: 'Doubao-lite-4k',
   description: '字节跳动推出的自研大模型。通过字节跳动内部50+业务场景实践验证，每日万亿级tokens大使用量持续打磨，提供多种模态能力，以优质模型效果为企业打造丰富的业务体验。',
-  disableBrowserRequest: true, // CORS error
+  // disableBrowserRequest: true, // CORS error
   id: 'doubao',
   modelsUrl: 'https://www.volcengine.com/product/doubao',
   name: '豆包',
+  settings: {
+    disableBrowserRequest: true,
+    proxyUrl: {
+      placeholder: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    },
+    sdkType: 'doubao',
+    showModelFetcher: true,
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
+  },
   url: 'https://www.volcengine.com/product/doubao',
 };
 
