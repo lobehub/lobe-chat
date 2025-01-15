@@ -172,7 +172,7 @@
     "langfuse": "3.29.1",
     "langfuse-core": "3.29.1",
     "lodash-es": "^4.17.21",
-    "lucide-react": "^0.469.0",
+    "lucide-react": "^0.471.0",
     "mammoth": "^1.9.0",
     "modern-screenshot": "^4.5.5",
     "nanoid": "^5.0.9",
