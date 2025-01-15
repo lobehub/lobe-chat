@@ -50,6 +50,9 @@
   "internlm": {
     "description": "An open-source organization dedicated to the research and development of large model toolchains. It provides an efficient and user-friendly open-source platform for all AI developers, making cutting-edge large models and algorithm technologies easily accessible."
   },
+  "lmstudio": {
+    "description": "LM Studio is a desktop application for developing and experimenting with LLMs on your computer."
+  },
   "minimax": {
     "description": "MiniMax is a general artificial intelligence technology company established in 2021, dedicated to co-creating intelligence with users. MiniMax has independently developed general large models of different modalities, including trillion-parameter MoE text models, voice models, and image models, and has launched applications such as Conch AI."
   },
