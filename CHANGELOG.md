@@ -2,6 +2,32 @@
 
 # Changelog
 
+## [Version 1.46.0](https://github.com/lobehub/lobe-chat/compare/v1.45.17...v1.46.0)
+
+<sup>Released on **2025-01-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Add lm studio provider, support to customize Embedding model with env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add lm studio provider, closes [#4483](https://github.com/lobehub/lobe-chat/issues/4483) ([0ac5802](https://github.com/lobehub/lobe-chat/commit/0ac5802))
+- **misc**: Support to customize Embedding model with env, closes [#5177](https://github.com/lobehub/lobe-chat/issues/5177) ([eed9357](https://github.com/lobehub/lobe-chat/commit/eed9357))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.45.17](https://github.com/lobehub/lobe-chat/compare/v1.45.16...v1.45.17)
 
 <sup>Released on **2025-01-15**</sup>
