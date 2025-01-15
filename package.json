@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.45.6",
+  "version": "1.45.17",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -27,11 +27,11 @@
   "sideEffects": false,
   "scripts": {
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
+    "build:docker": "DOCKER=true next build && npm run build-sitemap",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
     "build-migrate-db": "bun run db:migrate",
     "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
-    "build:analyze": "ANALYZE=true next build",
-    "build:docker": "DOCKER=true next build && npm run build-sitemap",
     "db:generate": "drizzle-kit generate && npm run db:generate-client",
     "db:generate-client": "tsx ./scripts/migrateClientDB/compile-migrations.ts",
     "db:migrate": "MIGRATION_DB=1 tsx ./scripts/migrateServerDB/index.ts",
@@ -59,11 +59,11 @@
     "start": "next start -p 3210",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "test": "npm run test-app && npm run test-server",
+    "test:update": "vitest -u",
     "test-app": "vitest run --config vitest.config.ts",
     "test-app:coverage": "vitest run --config vitest.config.ts  --coverage",
     "test-server": "vitest run --config vitest.server.config.ts",
     "test-server:coverage": "vitest run --config vitest.server.config.ts --coverage",
-    "test:update": "vitest -u",
     "type-check": "tsc --noEmit",
     "webhook:ngrok": "ngrok http http://localhost:3011",
     "workflow:cdn": "tsx ./scripts/cdnWorkflow/index.ts",
@@ -236,8 +236,8 @@
     "yaml": "^2.7.0",
     "yjs": "^13.6.21",
     "zod": "^3.24.1",
-    "zustand": "5.0.1",
-    "zustand-utils": "^1.3.2"
+    "zustand": "^5.0.3",
+    "zustand-utils": "^2"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
@@ -315,7 +315,7 @@
     "vitest": "~1.2.2",
     "vitest-canvas-mock": "^0.3.3"
   },
-  "packageManager": "pnpm@9.15.2",
+  "packageManager": "pnpm@9.15.3",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"

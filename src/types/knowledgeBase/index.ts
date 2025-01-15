@@ -1,3 +1,5 @@
+import { FilesConfigItem } from '../user/settings/filesConfig';
+
 export enum KnowledgeBaseTabs {
   Files = 'files',
   Settings = 'Settings',
@@ -42,4 +44,10 @@ export interface KnowledgeItem {
   id: string;
   name: string;
   type: KnowledgeType;
+}
+
+export interface SystemEmbeddingConfig {
+  embeddingModel: FilesConfigItem;
+  queryModel: string;
+  rerankerModel: FilesConfigItem;
 }

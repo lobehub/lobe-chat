@@ -6,9 +6,8 @@ import { useTranslation } from 'react-i18next';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { AiModelSourceEnum } from '@/types/aiModel';
 
-import ModelConfigForm from './Form';
+import ModelConfigForm from '../CreateNewModelModal/Form';
 
 interface ModelConfigModalProps {
   id: string;
@@ -64,7 +63,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ id, open, setOpen }) => 
       zIndex={1251} // Select is 1150
     >
       <ModelConfigForm
-        idEditable={model?.source !== AiModelSourceEnum.Builtin}
+        idEditable={false}
         initialValues={model}
         onFormInstanceReady={setFormInstance}
         showAzureDeployName={editingProvider === ModelProvider.Azure}

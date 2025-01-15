@@ -243,17 +243,18 @@
           "title": "Hỗ trợ tải lên tệp"
         },
         "functionCall": {
-          "extra": "Cấu hình này chỉ mở khả năng gọi hàm trong ứng dụng, việc hỗ trợ gọi hàm hoàn toàn phụ thuộc vào mô hình, xin hãy tự kiểm tra khả năng gọi hàm của mô hình này.",
-          "title": "Hỗ trợ gọi hàm"
+          "extra": "Cấu hình này chỉ kích hoạt khả năng sử dụng công cụ của mô hình, từ đó có thể thêm các plugin loại công cụ cho mô hình. Tuy nhiên, việc hỗ trợ sử dụng công cụ thực sự hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra tính khả dụng",
+          "title": "Hỗ trợ sử dụng công cụ"
         },
         "id": {
-          "extra": "Sẽ được hiển thị như một nhãn mô hình",
-          "placeholder": "Vui lòng nhập id mô hình, ví dụ gpt-4-turbo-preview hoặc claude-2.1",
+          "extra": "Không thể sửa đổi sau khi tạo, sẽ được sử dụng làm id mô hình khi gọi AI",
+          "placeholder": "Vui lòng nhập id mô hình, ví dụ gpt-4o hoặc claude-3.5-sonnet",
           "title": "ID mô hình"
         },
         "modalTitle": "Cấu hình mô hình tùy chỉnh",
         "tokens": {
-          "title": "Số lượng token tối đa",
+          "extra": "Cài đặt số Token tối đa mà mô hình hỗ trợ",
+          "title": "Cửa sổ ngữ cảnh tối đa",
           "unlimited": "Không giới hạn"
         },
         "vision": {
@@ -273,6 +274,9 @@
     "list": {
       "addNew": "Thêm mô hình",
       "disabled": "Chưa được kích hoạt",
+      "disabledActions": {
+        "showMore": "Hiển thị tất cả"
+      },
       "empty": {
         "desc": "Vui lòng tạo mô hình tùy chỉnh hoặc kéo mô hình để bắt đầu sử dụng",
         "title": "Chưa có mô hình nào khả dụng"
