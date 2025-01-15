@@ -32,6 +32,7 @@ export const LobeMoonshotAI = LobeOpenAICompatibleFactory({
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
         functionCall: true,
         id: model.id,
+        vision: model.id.toLowerCase().includes('vision'),
       };
     },
   },
