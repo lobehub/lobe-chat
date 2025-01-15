@@ -10,6 +10,7 @@ import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { ProfileTabs, SettingsTabs } from '@/store/global/initialState';
 
 import { useCategory } from '../../hooks/useCategory';
+import { withSuspense } from '@/components/withSuspense';
 
 const CategoryContent = memo<{ modal?: boolean }>(({ modal }) => {
   const activeTab = useActiveSettingsKey();
@@ -35,4 +36,4 @@ const CategoryContent = memo<{ modal?: boolean }>(({ modal }) => {
   );
 });
 
-export default CategoryContent;
+export default withSuspense(CategoryContent);

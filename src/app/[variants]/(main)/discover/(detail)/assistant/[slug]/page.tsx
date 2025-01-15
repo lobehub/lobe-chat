@@ -14,6 +14,7 @@ import Actions from './features/Actions';
 import Header from './features/Header';
 import InfoSidebar from './features/InfoSidebar';
 import Temp from './features/Temp';
+import { Suspense } from 'react';
 
 // import ConversationExample from './features/ConversationExample';
 // import SystemRole from './features/SystemRole';
@@ -93,7 +94,7 @@ const Page = async (props: DiscoverPageProps) => {
   });
 
   return (
-    <>
+    <Suspense>
       <StructuredData ld={ld} />
       <DetailLayout
         actions={<Actions data={data} identifier={identifier} />}
@@ -109,7 +110,7 @@ const Page = async (props: DiscoverPageProps) => {
         {/*<ConversationExample data={data} identifier={identifier} />*/}
         {/*<SystemRole>{data?.config?.systemRole}</SystemRole>*/}
       </DetailLayout>
-    </>
+    </Suspense>
   );
 };
 

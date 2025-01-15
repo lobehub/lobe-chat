@@ -1,14 +1,15 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeAppearance } from 'antd-style';
 import { ResolvingViewport } from 'next';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
+import BrandTextLoading from '@/components/Loading/BrandTextLoading';
+import { DEFAULT_LANG } from '@/const/locale';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
-import { locales } from '@/locales/resources';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 const inVercel = process.env.VERCEL === '1';
@@ -31,8 +32,10 @@ const RootLayout = async ({ children, modal, params }: RootLayoutProps) => {
       <body>
         <GlobalProvider appearance={theme} isMobile={isMobile} locale={locale}>
           <AuthProvider>
-            {children}
-            {!isMobile && modal}
+            <Suspense fallback={<BrandTextLoading />}>
+              {children}
+              {!isMobile && modal}
+            </Suspense>
           </AuthProvider>
           <PWAInstall />
         </GlobalProvider>
@@ -71,10 +74,12 @@ export const generateViewport = async (props: {
 export const generateStaticParams = () => {
   const themes: ThemeAppearance[] = ['dark', 'light'];
   const mobileOptions = [true, false];
+  // only static for serveral page, other go to dynamtic
+  const staticLocales = [DEFAULT_LANG, 'zh-CN'];
 
   const variants: { variants: string }[] = [];
 
-  for (const locale of locales) {
+  for (const locale of staticLocales) {
     for (const theme of themes) {
       for (const isMobile of mobileOptions) {
         variants.push({

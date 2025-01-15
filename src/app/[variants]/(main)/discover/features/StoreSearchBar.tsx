@@ -13,6 +13,7 @@ import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
 
 import { useNav } from './useNav';
+import { withSuspense } from '@/components/withSuspense';
 
 export const useStyles = createStyles(({ css, prefixCls, token }) => ({
   active: css`
@@ -81,4 +82,4 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
   );
 });
 
-export default StoreSearchBar;
+export default withSuspense(StoreSearchBar);

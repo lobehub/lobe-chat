@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import urlJoin from 'url-join';
 
+import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { PluginCategory } from '@/types/discover';
 
@@ -42,4 +43,4 @@ const Category = memo(() => {
   );
 });
 
-export default Category;
+export default withSuspense(Category);

@@ -7,6 +7,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { withSuspense } from '@/components/withSuspense';
 import { useActiveSettingsKey } from '@/hooks/useActiveTabKey';
 import { SettingsTabs } from '@/store/global/initialState';
 import { useUserStore } from '@/store/user';
@@ -51,4 +52,4 @@ const Header = memo(() => {
   );
 });
 
-export default Header;
+export default withSuspense(Header);

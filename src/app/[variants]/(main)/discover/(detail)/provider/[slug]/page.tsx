@@ -16,6 +16,7 @@ import Actions from './features/Actions';
 import Header from './features/Header';
 import InfoSidebar from './features/InfoSidebar';
 import ModelList from './features/ModelList';
+import { Suspense } from 'react';
 
 export const generateMetadata = async (props: DiscoverPageProps) => {
   const params = await props.params;
@@ -97,7 +98,7 @@ const Page = async (props: DiscoverPageProps) => {
   });
 
   return (
-    <>
+    <Suspense>
       <StructuredData ld={ld} />
       <DetailLayout
         actions={<Actions data={data} identifier={identifier} />}
@@ -111,7 +112,7 @@ const Page = async (props: DiscoverPageProps) => {
         <ModelList identifier={identifier} mobile={mobile} modelData={modelData} />
         {doc && <CustomMDX mobile={mobile} source={doc.content} />}
       </DetailLayout>
-    </>
+    </Suspense>
   );
 };
 

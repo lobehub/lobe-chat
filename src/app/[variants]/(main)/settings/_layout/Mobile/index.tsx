@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 import InitClientDB from '@/features/InitClientDB';
 import Footer from '@/features/Setting/Footer';
@@ -7,7 +9,13 @@ import Header from './Header';
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <MobileContentLayout header={<Header />}>
+    <MobileContentLayout
+      header={
+        <Suspense>
+          <Header />
+        </Suspense>
+      }
+    >
       {children}
       <Footer />
       <InitClientDB />

@@ -17,6 +17,7 @@ import Header from './features/Header';
 import InfoSidebar from './features/InfoSidebar';
 import ParameterList from './features/ParameterList';
 import ProviderList from './features/ProviderList';
+import { Suspense } from 'react';
 
 type Props = PageProps<{ slugs: string[] }, { hl?: Locales }>;
 
@@ -99,7 +100,7 @@ const Page = async (props: Props) => {
   });
 
   return (
-    <>
+    <Suspense>
       <StructuredData ld={ld} />
       <DetailLayout
         actions={<Actions data={data} identifier={identifier} providerData={providerData} />}
@@ -113,7 +114,7 @@ const Page = async (props: Props) => {
         <ProviderList data={providerData} identifier={identifier} mobile={mobile} />
         <ParameterList data={data} identifier={identifier} />
       </DetailLayout>
-    </>
+    </Suspense>
   );
 };
 

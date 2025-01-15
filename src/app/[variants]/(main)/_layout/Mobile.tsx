@@ -9,6 +9,7 @@ import { useQuery } from '@/hooks/useQuery';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import { LayoutProps } from './type';
+import { withSuspense } from '@/components/withSuspense';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 const MOBILE_NAV_ROUTES = new Set([
@@ -40,4 +41,4 @@ const Layout = memo(({ children, nav }: LayoutProps) => {
 
 Layout.displayName = 'MobileMainLayout';
 
-export default Layout;
+export default withSuspense(Layout);

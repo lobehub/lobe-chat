@@ -11,6 +11,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
+import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverProviderItem } from '@/types/discover';
 
@@ -64,4 +65,4 @@ const Category = memo<{ data: DiscoverProviderItem[] }>(({ data }) => {
   );
 });
 
-export default Category;
+export default withSuspense(Category);

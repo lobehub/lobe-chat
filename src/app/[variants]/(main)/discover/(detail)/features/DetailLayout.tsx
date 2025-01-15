@@ -4,6 +4,7 @@ import { useResponsive } from 'antd-style';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { withSuspense } from '@/components/withSuspense';
 import Footer from '@/features/Setting/Footer';
 
 import SidebarContainer from './SidebarContainer';
@@ -56,4 +57,4 @@ const DetailLayout = memo<DetailLayoutProps>(
   },
 );
 
-export default DetailLayout;
+export default withSuspense(DetailLayout);

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import qs from 'query-string';
 import { memo } from 'react';
 
+import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
 
@@ -38,4 +39,4 @@ const Category = memo(() => {
   );
 });
 
-export default Category;
+export default withSuspense(Category);

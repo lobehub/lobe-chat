@@ -4,6 +4,7 @@ import { memo } from 'react';
 import urlJoin from 'url-join';
 
 import Menu from '@/components/Menu';
+import { withSuspense } from '@/components/withSuspense';
 import { useActiveSettingsKey } from '@/hooks/useActiveTabKey';
 import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
@@ -34,4 +35,4 @@ const CategoryContent = memo<{ modal?: boolean }>(({ modal }) => {
   );
 });
 
-export default CategoryContent;
+export default withSuspense(CategoryContent);
