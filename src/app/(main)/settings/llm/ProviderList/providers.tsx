@@ -6,6 +6,7 @@ import {
   AnthropicProviderCard,
   BaichuanProviderCard,
   DeepSeekProviderCard,
+  DoubaoProviderCard,
   FireworksAIProviderCard,
   GiteeAIProviderCard,
   GoogleProviderCard,
@@ -36,6 +37,7 @@ import { ProviderItem } from '../type';
 import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
 import { useCloudflareProvider } from './Cloudflare';
+import { useDoubaoProvider } from './Doubao';
 import { useGithubProvider } from './Github';
 import { useHuggingFaceProvider } from './HuggingFace';
 import { useOllamaProvider } from './Ollama';
@@ -48,6 +50,7 @@ export const useProviderList = (): ProviderItem[] => {
   const OpenAIProvider = useOpenAIProvider();
   const BedrockProvider = useBedrockProvider();
   const CloudflareProvider = useCloudflareProvider();
+  const DoubaoProvider = useDoubaoProvider();
   const GithubProvider = useGithubProvider();
   const HuggingFaceProvider = useHuggingFaceProvider();
   const WenxinProvider = useWenxinProvider();
@@ -91,6 +94,7 @@ export const useProviderList = (): ProviderItem[] => {
       SiliconCloudProviderCard,
       HigressProviderCard,
       GiteeAIProviderCard,
+      DoubaoProviderCard,
     ],
     [
       AzureProvider,
@@ -98,6 +102,7 @@ export const useProviderList = (): ProviderItem[] => {
       OpenAIProvider,
       BedrockProvider,
       CloudflareProvider,
+      DoubaoProvider,
       GithubProvider,
       WenxinProvider,
       HuggingFaceProvider,
