@@ -44,6 +44,8 @@ export class S3 {
       endpoint: fileEnv.S3_ENDPOINT,
       forcePathStyle: fileEnv.S3_ENABLE_PATH_STYLE,
       region: fileEnv.S3_REGION || DEFAULT_S3_REGION,
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     });
   }
 
