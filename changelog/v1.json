@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Gemini models HarmBlockThreshold."]
+    },
+    "date": "2025-01-16",
+    "version": "1.46.6"
+  },
+  {
     "children": {},
     "date": "2025-01-16",
     "version": "1.46.5"
