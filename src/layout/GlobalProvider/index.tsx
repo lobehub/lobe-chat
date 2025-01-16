@@ -9,7 +9,7 @@ import {
   LOBE_THEME_NEUTRAL_COLOR,
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
-import DebugUI from '@/features/DebugUI';
+import DebugUI from '@/features/DevPanel';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ServerConfigStoreProvider } from '@/store/serverConfig';
 import { getAntdLocale, parseBrowserLanguage } from '@/utils/locale';
