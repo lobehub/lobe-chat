@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.46.6](https://github.com/lobehub/lobe-chat/compare/v1.46.5...v1.46.6)
+
+<sup>Released on **2025-01-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Gemini models HarmBlockThreshold.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Gemini models HarmBlockThreshold, closes [#5477](https://github.com/lobehub/lobe-chat/issues/5477) ([f98375c](https://github.com/lobehub/lobe-chat/commit/f98375c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.46.5](https://github.com/lobehub/lobe-chat/compare/v1.46.4...v1.46.5)
 
 <sup>Released on **2025-01-16**</sup>
