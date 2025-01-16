@@ -6,6 +6,10 @@ export interface OpenAICompatibleKeyVault {
 export interface AzureOpenAIKeyVault {
   apiKey?: string;
   apiVersion?: string;
+  baseURL?: string;
+  /**
+   * @deprecated
+   */
   endpoint?: string;
 }
 
@@ -44,6 +48,7 @@ export interface UserKeyVaults {
   huggingface?: OpenAICompatibleKeyVault;
   hunyuan?: OpenAICompatibleKeyVault;
   internlm?: OpenAICompatibleKeyVault;
+  lmstudio?: OpenAICompatibleKeyVault;
   lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
   mistral?: OpenAICompatibleKeyVault;

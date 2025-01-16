@@ -6,7 +6,13 @@ import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
+import {
+  ChatCompetitionOptions,
+  ChatStreamPayload,
+  Embeddings,
+  EmbeddingsPayload,
+  ModelProvider,
+} from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
@@ -84,12 +90,42 @@ export class LobeOllamaAI implements LobeRuntimeAI {
     }
   }
 
+  async embeddings(payload: EmbeddingsPayload): Promise<Embeddings[]> {
+    const input = Array.isArray(payload.input) ? payload.input : [payload.input];
+    const promises = input.map((inputText: string) =>
+      this.invokeEmbeddingModel({
+        dimensions: payload.dimensions,
+        input: inputText,
+        model: payload.model,
+      }),
+    );
+    return await Promise.all(promises);
+  }
+
   async models(): Promise<ChatModelCard[]> {
     const list = await this.client.list();
     return list.models.map((model) => ({
       id: model.name,
     }));
   }
+
+  private invokeEmbeddingModel = async (payload: EmbeddingsPayload): Promise<Embeddings> => {
+    try {
+      const responseBody = await this.client.embeddings({
+        model: payload.model,
+        prompt: payload.input as string,
+      });
+      return responseBody.embedding;
+    } catch (error) {
+      const e = error as { message: string; name: string; status_code: number };
+
+      throw AgentRuntimeError.chat({
+        error: { message: e.message, name: e.name, status_code: e.status_code },
+        errorType: AgentRuntimeErrorType.OllamaBizError,
+        provider: ModelProvider.Ollama,
+      });
+    }
+  };
 
   private buildOllamaMessages(messages: OpenAIChatMessage[]) {
     return messages.map((message) => this.convertContentToOllamaMessage(message));

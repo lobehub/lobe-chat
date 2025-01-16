@@ -40,6 +40,9 @@ export default {
     },
   },
   debug: authEnv.NEXT_AUTH_DEBUG,
+  pages: {
+    error: '/next-auth/error',
+  },
   providers: initSSOProviders(),
   secret: authEnv.NEXT_AUTH_SECRET,
   trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,

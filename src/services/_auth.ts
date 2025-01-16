@@ -55,7 +55,7 @@ export const getProviderAuthPayload = (
       return {
         apiKey: keyVaults.apiKey,
         azureApiVersion: keyVaults.apiVersion,
-        baseURL: keyVaults.endpoint,
+        baseURL: keyVaults.baseURL || keyVaults.endpoint,
       };
     }
 
