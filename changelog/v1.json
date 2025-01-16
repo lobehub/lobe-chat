@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-01-16",
+    "version": "1.46.5"
+  },
+  {
     "children": {
       "improvements": ["Refactor some implement for the next performance improvement."]
     },
