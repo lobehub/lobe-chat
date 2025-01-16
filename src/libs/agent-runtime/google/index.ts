@@ -39,7 +39,7 @@ enum HarmBlockThreshold {
 }
 
 function getThreshold(model: string): HarmBlockThreshold {
-  const useOFF = ['gemini-2.0-flash-exp', 'gemini-exp-1206'];
+  const useOFF = ['gemini-2.0-flash-exp'];
   if (useOFF.includes(model)) {
     return 'OFF' as HarmBlockThreshold; // https://discuss.ai.google.dev/t/59352
   }
