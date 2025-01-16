@@ -27,10 +27,20 @@ export const parseFilesConfig = (envString: string = ''): SystemEmbeddingConfig 
       if (protectedKeys.includes(key)) {
         switch (key) {
           case 'embedding_model': {
+            if (!provider || !model) {
+              throw new Error(
+                'Invalid environment variable format.  expected of the form embedding_model=provider/model',
+              );
+            }
             config.embeddingModel = { model: model.trim(), provider: provider.trim() };
             break;
           }
           case 'reranker_model': {
+            if (!provider || !model) {
+              throw new Error(
+                'Invalid environment variable format.  expected of the form reranker_model=provider/model',
+              );
+            }
             config.rerankerModel = { model: model.trim(), provider: provider.trim() };
             break;
           }
@@ -46,7 +56,7 @@ export const parseFilesConfig = (envString: string = ''): SystemEmbeddingConfig 
         }
       }
     } else {
-      throw new Error('Invalid environment variable format');
+      throw new Error('Invalid environment variable format.');
     }
   }
   return config;

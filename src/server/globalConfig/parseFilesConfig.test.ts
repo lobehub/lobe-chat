@@ -66,4 +66,71 @@ describe('parseFilesConfig', () => {
     };
     expect(parseFilesConfig(envStr)).toEqual(expected);
   });
+
+  it('should throw an error for invalid embedding_model format', () => {
+    const envStr =
+      'reranker_model=cohere/rerank-english-v3.0,embedding_model=/embedding-text-3-small';
+    expect(() => {
+      parseFilesConfig(envStr);
+    }).toThrow(
+      new Error(
+        'Invalid environment variable format.  expected of the form embedding_model=provider/model',
+      ),
+    );
+  });
+
+  it('should throw an error for invalid embedding_model format', () => {
+    const envStr = 'reranker_model=cohere/rerank-english-v3.0,embedding_model=openai';
+    expect(() => {
+      parseFilesConfig(envStr);
+    }).toThrow(
+      new Error(
+        'Invalid environment variable format.  expected of the form embedding_model=provider/model',
+      ),
+    );
+  });
+
+  it('should throw an error for invalid embedding_model format', () => {
+    const envStr = 'reranker_model=cohere/rerank-english-v3.0,embedding_model=';
+    expect(() => {
+      parseFilesConfig(envStr);
+    }).toThrowError(new Error('Invalid environment variable format.'));
+  });
+
+  it('should throw an error for invalid reranker_model format', () => {
+    const envStr =
+      'reranker_model=/rerank-english-v3.0,embedding_model=openai/embedding-text-3-small';
+    expect(() => {
+      parseFilesConfig(envStr);
+    }).toThrow(
+      new Error(
+        'Invalid environment variable format.  expected of the form reranker_model=provider/model',
+      ),
+    );
+  });
+
+  it('should throw an error for invalid reranker_model format', () => {
+    const envStr = 'reranker_model=cohere/,embedding_model=openai/embedding-text-3-small';
+    expect(() => {
+      parseFilesConfig(envStr);
+    }).toThrow(
+      new Error(
+        'Invalid environment variable format.  expected of the form reranker_model=provider/model',
+      ),
+    );
+  });
+
+  it('should throw an error for invalid reranker_model format', () => {
+    const envStr = 'reranker_model=,embedding_model=openai/embedding-text-3-small';
+    expect(() => {
+      parseFilesConfig(envStr);
+    }).toThrow(new Error('Invalid environment variable format.'));
+  });
+
+  it('should throw an error for invalid query_mode format', () => {
+    const envStr = 'query_mode=';
+    expect(() => {
+      parseFilesConfig(envStr);
+    }).toThrow(new Error('Invalid environment variable format.'));
+  });
 });
