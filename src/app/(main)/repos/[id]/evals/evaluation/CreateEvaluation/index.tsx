@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useCreateDatasetModal } from '../CreateEvaluation/useModal';
+import { useCreateDatasetModal } from './useModal';
 
 interface CreateEvaluationProps {
   knowledgeBaseId: string;
