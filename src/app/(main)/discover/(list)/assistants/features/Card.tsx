@@ -12,7 +12,7 @@ import { DiscoverAssistantItem } from '@/types/discover';
 
 import CardBanner from '../../../components/CardBanner';
 import GitHubAvatar from '../../../components/GitHubAvatar';
-import { useCategoryItem } from '../../assistants/features/useCategory';
+import { useCategoryItem } from './useCategory';
 
 const Link = dynamic(() => import('next/link'), {
   loading: () => <Skeleton.Button size={'small'} style={{ height: 22 }} />,

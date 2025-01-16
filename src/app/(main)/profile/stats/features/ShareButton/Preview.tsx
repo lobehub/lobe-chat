@@ -10,9 +10,9 @@ import { OFFICIAL_URL, imageUrl } from '@/const/url';
 import { isServerMode } from '@/const/version';
 import UserAvatar from '@/features/User/UserAvatar';
 
-import TotalMessages from '..//TotalMessages';
-import TotalWords from '..//TotalWords';
 import AiHeatmaps from '../AiHeatmaps';
+import TotalMessages from '../TotalMessages';
+import TotalWords from '../TotalWords';
 
 const useStyles = createStyles(({ css, token, stylish, cx, responsive }) => ({
   avatar: css`
