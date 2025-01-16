@@ -1,6 +1,6 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
-const deepseekChatModels: AIChatModelCard[] = [
+const doubaoChatModels: AIChatModelCard[] = [
     {
         contextWindowTokens: 4096,
         description: 
@@ -57,6 +57,6 @@ const deepseekChatModels: AIChatModelCard[] = [
     },
 ];
 
-export const allModels = [...deepseekChatModels];
+export const allModels = [...doubaoChatModels];
 
 export default allModels;
