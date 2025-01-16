@@ -38,6 +38,9 @@ const doubaoChatModels: AIChatModelCard[] = [
         type: 'chat',
     },
     {
+        config: {
+          deploymentName: 'Doubao-pro-32k',
+        },
         contextWindowTokens: 32_768,
         description: 
             '效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 32k 上下文窗口的推理和精调。',
