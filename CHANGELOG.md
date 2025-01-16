@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.46.4](https://github.com/lobehub/lobe-chat/compare/v1.46.3...v1.46.4)
+
+<sup>Released on **2025-01-16**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor some implement for the next performance improvement.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor some implement for the next performance improvement, closes [#5462](https://github.com/lobehub/lobe-chat/issues/5462) ([b5e1146](https://github.com/lobehub/lobe-chat/commit/b5e1146))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.46.3](https://github.com/lobehub/lobe-chat/compare/v1.46.2...v1.46.3)
 
 <sup>Released on **2025-01-15**</sup>
