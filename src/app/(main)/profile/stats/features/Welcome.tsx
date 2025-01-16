@@ -6,13 +6,14 @@ import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import TimeLabel from '@/app/(main)/profile/stats/features/TimeLabel';
 import { BRANDING_NAME } from '@/const/branding';
 import { useClientDataSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { formatIntergerNumber } from '@/utils/format';
+
+import TimeLabel from './TimeLabel';
 
 const formatEnglishNumber = (number: number) => {
   if (number === 1) return '1st';

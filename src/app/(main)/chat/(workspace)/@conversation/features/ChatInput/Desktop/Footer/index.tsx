@@ -6,13 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import StopLoadingIcon from '@/components/StopLoading';
+import LocalFiles from '@/features/ChatInput/Desktop/FilePreview';
+import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { isMacOS } from '@/utils/platform';
 
-import LocalFiles from '../../../../../../../../../features/ChatInput/Desktop/FilePreview';
-import SaveTopic from '../../../../../../../../../features/ChatInput/Topic';
 import SendMore from './SendMore';
 import ShortcutHint from './ShortcutHint';
 
