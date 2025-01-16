@@ -11,7 +11,6 @@ import { genServerLLMConfig } from './_deprecated';
 import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
 import { parseFilesConfig } from './parseFilesConfig';
-import { doubao } from '@/config/aiModels';
 
 export const getServerGlobalConfig = () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
