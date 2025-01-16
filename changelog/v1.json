@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor some implement for the next performance improvement."]
+    },
+    "date": "2025-01-16",
+    "version": "1.46.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix azure in new ai provider."]
     },
     "date": "2025-01-15",
