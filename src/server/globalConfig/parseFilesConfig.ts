@@ -4,7 +4,7 @@ import { FilesConfig } from '@/types/user/settings/filesConfig';
 
 const protectedKeys = Object.keys({
   embedding_model: null,
-  query_model: null,
+  query_mode: null,
   reranker_model: null,
 });
 
@@ -23,16 +23,6 @@ export const parseFilesConfig = (envString: string = ''): SystemEmbeddingConfig 
     if (key && value) {
       const [provider, ...modelParts] = value.split('/');
       const model = modelParts.join('/');
-      // Validation should be added when supporting query mode in the future
-      if (!provider || !model) {
-        throw new Error('Missing model or provider value');
-      }
-
-      // rerank model verification logic
-
-      // if (key === 'query_mode' && value === '') {
-      //   throw new Error('Missing query mode value');
-      // }
 
       if (protectedKeys.includes(key)) {
         switch (key) {
@@ -44,9 +34,14 @@ export const parseFilesConfig = (envString: string = ''): SystemEmbeddingConfig 
             config.rerankerModel = { model: model.trim(), provider: provider.trim() };
             break;
           }
-          case 'query_model': {
-            config.queryModel = value;
+          case 'query_mode': {
+            config.queryMode = value;
             break;
+          }
+          default: {
+            throw new Error(
+              'Invalid environment variable format. expected one of embedding_model, reranker_model, query_mode',
+            );
           }
         }
       }
@@ -54,6 +49,5 @@ export const parseFilesConfig = (envString: string = ''): SystemEmbeddingConfig 
       throw new Error('Invalid environment variable format');
     }
   }
-
   return config;
 };
