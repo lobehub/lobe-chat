@@ -38,6 +38,14 @@ enum HarmBlockThreshold {
   BLOCK_NONE = 'BLOCK_NONE',
 }
 
+function getThreshold(model: string): HarmBlockThreshold {
+  const useOFF = ['gemini-2.0-flash-exp', 'gemini-exp-1206'];
+  if (useOFF.includes(model)) {
+    return 'OFF' as HarmBlockThreshold; // https://discuss.ai.google.dev/t/59352
+  }
+  return HarmBlockThreshold.BLOCK_NONE;
+}
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
   baseURL?: string;
@@ -55,14 +63,6 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const model = payload.model;
 
       const contents = await this.buildGoogleMessages(payload.messages, model);
-
-      function getThreshold(model: string): HarmBlockThreshold {
-        const useOFF = ['gemini-2.0-flash-exp', 'gemini-exp-1206'];
-        if (useOFF.includes(model)) {
-          return 'OFF' as HarmBlockThreshold; // https://discuss.ai.google.dev/t/59352
-        }
-        return HarmBlockThreshold.BLOCK_NONE;
-      }
 
       const geminiStreamResult = await this.client
         .getGenerativeModel(
