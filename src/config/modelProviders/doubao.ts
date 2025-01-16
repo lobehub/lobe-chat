@@ -41,7 +41,7 @@ const Doubao: ModelProviderCard = {
     },
     {
       contextWindowTokens: 32_768,
-      deploymentName: 'Doubao-pro-32k',
+      // deploymentName: 'Doubao-pro-32k',
       description: 
         '效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 32k 上下文窗口的推理和精调。',
       displayName: 'Doubao Pro 32k',

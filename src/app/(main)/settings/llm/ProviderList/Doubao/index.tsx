@@ -24,5 +24,8 @@ export const useDoubaoProvider = (): ProviderItem => {
   return {
     ...DoubaoProviderCard,
     checkModel,
+    modelList: {
+      azureDeployName: true,
+    },
   };
 };
