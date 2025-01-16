@@ -7,6 +7,8 @@ import React, { useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Rnd } from 'react-rnd';
 
+import PostgresViewer from './PostgresViewer';
+
 // 定义样式
 const useStyles = createStyles(({ token, css }) => {
   return {
@@ -18,7 +20,7 @@ const useStyles = createStyles(({ token, css }) => {
     content: css`
       overflow: auto;
       flex: 1;
-      padding: ${token.padding}px;
+      height: 100%;
       color: ${token.colorText};
 
       &::-webkit-scrollbar {
@@ -65,26 +67,23 @@ const useStyles = createStyles(({ token, css }) => {
       background: ${token.colorBgContainer};
       box-shadow: ${token.boxShadow};
 
-      transition:
-        transform 80ms linear,
-        opacity ${token.motionDurationMid} ${token.motionEaseInOut};
+      transition: opacity ${token.motionDurationMid} ${token.motionEaseInOut};
     `,
   };
 });
 
-const CollapsibleFloatPanel = ({
-  children = 'content',
-  defaultPosition = { x: 400, y: 200 },
-  defaultSize = { height: 600, width: 800 },
-  minWidth = 800,
-  minHeight = 600,
-}) => {
+const minWidth = 800;
+const minHeight = 600;
+
+const CollapsibleFloatPanel = () => {
   const { styles } = useStyles();
   const [isExpanded, setIsExpanded] = useState(false);
   const [position, setPosition] = useLocalStorageState('debug-panel-position', {
-    defaultValue: defaultPosition,
+    defaultValue: { x: 400, y: 200 },
   });
-  const [size, setSize] = useState(defaultSize);
+  const [size, setSize] = useLocalStorageState('debug-panel-size', {
+    defaultValue: { height: minHeight, width: minWidth },
+  });
 
   return (
     <>
@@ -112,7 +111,7 @@ const CollapsibleFloatPanel = ({
         position={position}
         size={size}
       >
-        <Flexbox>
+        <Flexbox height={'100%'}>
           <Flexbox
             align={'center'}
             className={`panel-drag-handle ${styles.header}`}
@@ -122,7 +121,9 @@ const CollapsibleFloatPanel = ({
             开发者面板
             <ActionIcon icon={XIcon} onClick={() => setIsExpanded(false)} />
           </Flexbox>
-          <div className={styles.content}>{children}</div>
+          <Flexbox className={styles.content}>
+            <PostgresViewer />
+          </Flexbox>
         </Flexbox>
       </Rnd>
     </>
