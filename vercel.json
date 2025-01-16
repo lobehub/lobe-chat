@@ -1,4 +1,4 @@
 {
   "buildCommand": "NODE_OPTIONS=--max-old-space-size=6144 next build"
-  "installCommand": "bun install"
+  "installCommand": "npx bun@1.0.30 install"
 }
