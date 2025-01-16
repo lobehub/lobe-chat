@@ -11,6 +11,7 @@ import { genServerLLMConfig } from './_deprecated';
 import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
 import { parseFilesConfig } from './parseFilesConfig';
+import { doubao } from '@/config/aiModels';
 
 export const getServerGlobalConfig = () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
@@ -24,6 +25,9 @@ export const getServerGlobalConfig = () => {
       bedrock: {
         enabledKey: 'ENABLED_AWS_BEDROCK',
         modelListKey: 'AWS_BEDROCK_MODEL_LIST',
+      },
+      doubao: {
+        withDeploymentName: true,
       },
       giteeai: {
         enabledKey: 'ENABLED_GITEE_AI',
@@ -51,6 +55,9 @@ export const getServerGlobalConfig = () => {
       bedrock: {
         enabledKey: 'ENABLED_AWS_BEDROCK',
         modelListKey: 'AWS_BEDROCK_MODEL_LIST',
+      },
+      doubao: {
+        withDeploymentName: true,
       },
       giteeai: {
         enabledKey: 'ENABLED_GITEE_AI',
