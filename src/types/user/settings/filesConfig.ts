@@ -4,6 +4,6 @@ export interface FilesConfigItem {
 }
 export interface FilesConfig {
   embeddingModel: FilesConfigItem;
-  queryModel: string;
+  queryMode: string;
   rerankerModel: FilesConfigItem;
 }

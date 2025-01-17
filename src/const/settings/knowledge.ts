@@ -20,6 +20,6 @@ export const DEFAULT_FILE_RERANK_MODEL_ITEM: FilesConfigItem = {
 
 export const DEFAULT_FILES_CONFIG: FilesConfig = {
   embeddingModel: DEFAULT_FILE_EMBEDDING_MODEL_ITEM,
-  queryModel: DEFAULT_RERANK_QUERY_MODE,
+  queryMode: DEFAULT_RERANK_QUERY_MODE,
   rerankerModel: DEFAULT_FILE_RERANK_MODEL_ITEM,
 };
