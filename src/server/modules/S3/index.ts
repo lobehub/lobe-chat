@@ -44,6 +44,9 @@ export class S3 {
       endpoint: fileEnv.S3_ENDPOINT,
       forcePathStyle: fileEnv.S3_ENABLE_PATH_STYLE,
       region: fileEnv.S3_REGION || DEFAULT_S3_REGION,
+      // refs: https://github.com/lobehub/lobe-chat/pull/5479
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     });
   }
 

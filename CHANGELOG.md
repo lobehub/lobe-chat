@@ -2,6 +2,99 @@
 
 # Changelog
 
+### [Version 1.47.2](https://github.com/lobehub/lobe-chat/compare/v1.47.1...v1.47.2)
+
+<sup>Released on **2025-01-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix api key in api key form.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix api key in api key form, closes [#5498](https://github.com/lobehub/lobe-chat/issues/5498) ([b4a160b](https://github.com/lobehub/lobe-chat/commit/b4a160b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.47.1](https://github.com/lobehub/lobe-chat/compare/v1.47.0...v1.47.1)
+
+<sup>Released on **2025-01-17**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.47.0](https://github.com/lobehub/lobe-chat/compare/v1.46.7...v1.47.0)
+
+<sup>Released on **2025-01-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Support new ai provider in client pglite.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support new ai provider in client pglite, closes [#5488](https://github.com/lobehub/lobe-chat/issues/5488) ([08f505f](https://github.com/lobehub/lobe-chat/commit/08f505f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.46.7](https://github.com/lobehub/lobe-chat/compare/v1.46.6...v1.46.7)
+
+<sup>Released on **2025-01-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve validation for provider and model in parseFilesConfig, temporarily disable S3 client integrity check for Cloudflare R2.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve validation for provider and model in parseFilesConfig, closes [#5454](https://github.com/lobehub/lobe-chat/issues/5454) ([b4808f8](https://github.com/lobehub/lobe-chat/commit/b4808f8))
+- **misc**: Temporarily disable S3 client integrity check for Cloudflare R2, closes [#5479](https://github.com/lobehub/lobe-chat/issues/5479) ([a638238](https://github.com/lobehub/lobe-chat/commit/a638238))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.46.6](https://github.com/lobehub/lobe-chat/compare/v1.46.5...v1.46.6)
 
 <sup>Released on **2025-01-16**</sup>
