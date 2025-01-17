@@ -282,5 +282,16 @@
     "bps": true,
     "folderMillis": 1731858381716,
     "hash": "d8263bfefe296ed366379c7b7fc65195d12e6a1c0a9f1c96097ea28f2123fe50"
+  },
+  {
+    "sql": [
+      "CREATE TABLE \"ai_models\" (\n\t\"id\" varchar(150) NOT NULL,\n\t\"display_name\" varchar(200),\n\t\"description\" text,\n\t\"organization\" varchar(100),\n\t\"enabled\" boolean,\n\t\"provider_id\" varchar(64) NOT NULL,\n\t\"type\" varchar(20) DEFAULT 'chat' NOT NULL,\n\t\"sort\" integer,\n\t\"user_id\" text NOT NULL,\n\t\"pricing\" jsonb,\n\t\"parameters\" jsonb DEFAULT '{}'::jsonb,\n\t\"config\" jsonb,\n\t\"abilities\" jsonb DEFAULT '{}'::jsonb,\n\t\"context_window_tokens\" integer,\n\t\"source\" varchar(20),\n\t\"released_at\" varchar(10),\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"ai_models_id_provider_id_user_id_pk\" PRIMARY KEY(\"id\",\"provider_id\",\"user_id\")\n);\n",
+      "\nCREATE TABLE \"ai_providers\" (\n\t\"id\" varchar(64) NOT NULL,\n\t\"name\" text,\n\t\"user_id\" text NOT NULL,\n\t\"sort\" integer,\n\t\"enabled\" boolean,\n\t\"fetch_on_client\" boolean,\n\t\"check_model\" text,\n\t\"logo\" text,\n\t\"description\" text,\n\t\"key_vaults\" text,\n\t\"source\" varchar(20),\n\t\"settings\" jsonb,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"ai_providers_id_user_id_pk\" PRIMARY KEY(\"id\",\"user_id\")\n);\n",
+      "\nALTER TABLE \"ai_models\" ADD CONSTRAINT \"ai_models_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"ai_providers\" ADD CONSTRAINT \"ai_providers_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;"
+    ],
+    "bps": true,
+    "folderMillis": 1735834653361,
+    "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
   }
 ]

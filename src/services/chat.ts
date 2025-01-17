@@ -7,7 +7,7 @@ import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
-import { isServerMode } from '@/const/version';
+import { isDeprecatedEdition, isServerMode } from '@/const/version';
 import {
   AgentRuntime,
   AgentRuntimeError,
@@ -42,7 +42,7 @@ import { API_ENDPOINTS } from './_url';
 
 const isCanUseFC = (model: string, provider: string) => {
   // TODO: remove isDeprecatedEdition condition in V2.0
-  if (!isServerMode) {
+  if (isDeprecatedEdition) {
     return modelProviderSelectors.isModelEnabledFunctionCall(model)(useUserStore.getState());
   }
 
@@ -53,7 +53,7 @@ const findAzureDeploymentName = (model: string) => {
   let deploymentId = model;
 
   // TODO: remove isDeprecatedEdition condition in V2.0
-  if (!isServerMode) {
+  if (isDeprecatedEdition) {
     const chatModelCards = modelProviderSelectors.getModelCardsById(ModelProvider.Azure)(
       useUserStore.getState(),
     );
@@ -74,7 +74,7 @@ const findAzureDeploymentName = (model: string) => {
 
 const isEnableFetchOnClient = (provider: string) => {
   // TODO: remove this condition in V2.0
-  if (!isServerMode) {
+  if (isDeprecatedEdition) {
     return modelConfigSelectors.isProviderFetchOnClient(provider)(useUserStore.getState());
   } else {
     return aiProviderSelectors.isProviderFetchOnClient(provider)(useAiInfraStore.getState());
@@ -341,7 +341,7 @@ class ChatService {
     const isBuiltin = Object.values(ModelProvider).includes(provider as any);
 
     // TODO: remove `!isDeprecatedEdition` condition in V2.0
-    if (isServerMode && !isBuiltin) {
+    if (!isDeprecatedEdition && !isBuiltin) {
       const providerConfig = aiProviderSelectors.providerConfigById(provider)(
         useAiInfraStore.getState(),
       );

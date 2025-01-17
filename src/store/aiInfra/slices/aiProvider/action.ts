@@ -3,7 +3,7 @@ import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { isServerMode } from '@/const/version';
+import { isDeprecatedEdition } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
 import { AiInfraStore } from '@/store/aiInfra/store';
@@ -170,7 +170,7 @@ export const createAiProviderSlice: StateCreator<
 
   useFetchAiProviderRuntimeState: (isLogin) =>
     useClientDataSWR<AiProviderRuntimeState | undefined>(
-      isServerMode ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin] : null,
+      !isDeprecatedEdition ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin] : null,
       async ([, isLogin]) => {
         if (isLogin) return aiProviderService.getAiProviderRuntimeState();
 
