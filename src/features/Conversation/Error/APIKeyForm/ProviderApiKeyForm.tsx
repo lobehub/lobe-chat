@@ -6,11 +6,10 @@ import { useTranslation } from 'react-i18next';
 
 import { useProviderName } from '@/hooks/useProviderName';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useUserStore } from '@/store/user';
-import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import { FormAction } from '../style';
+import { useApiKey } from './useApiKey';
 
 interface ProviderApiKeyFormProps {
   apiKeyPlaceholder?: string;
@@ -25,11 +24,7 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
     const { t: errorT } = useTranslation('error');
     const [showProxy, setShow] = useState(false);
 
-    const [apiKey, proxyUrl, setConfig] = useUserStore((s) => [
-      keyVaultsConfigSelectors.getVaultByProvider(provider)(s)?.apiKey,
-      keyVaultsConfigSelectors.getVaultByProvider(provider)(s)?.baseURL,
-      s.updateKeyVaultConfig,
-    ]);
+    const { apiKey, baseURL, setConfig } = useApiKey(provider);
     const { showOpenAIProxyUrl } = useServerConfigStore(featureFlagsSelectors);
     const providerName = useProviderName(provider);
 
@@ -58,7 +53,7 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
               }}
               placeholder={'https://api.openai.com/v1'}
               type={'block'}
-              value={proxyUrl}
+              value={baseURL}
             />
           ) : (
             <Button
