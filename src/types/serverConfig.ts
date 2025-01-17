@@ -24,7 +24,13 @@ export interface GlobalServerConfig {
   defaultAgent?: DeepPartial<UserDefaultAgent>;
   enableUploadFileToServer?: boolean;
   enabledAccessCode?: boolean;
+  /**
+   * @deprecated
+   */
   enabledOAuthSSO?: boolean;
+  /**
+   * @deprecated
+   */
   languageModel?: ServerLanguageModel;
   oAuthSSOProviders?: string[];
   systemAgent?: DeepPartial<UserSystemAgentConfig>;
