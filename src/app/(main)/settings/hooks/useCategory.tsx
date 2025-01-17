@@ -53,7 +53,7 @@ export const useCategory = () => {
         },
         showLLM &&
         // TODO: Remove /llm when v2.0
-        isDeprecatedEdition
+        (isDeprecatedEdition
           ? {
               icon: <Icon icon={Brain} />,
               key: SettingsTabs.LLM,
@@ -71,7 +71,7 @@ export const useCategory = () => {
                   {t('tab.provider')}
                 </Link>
               ),
-            },
+            }),
 
         enableSTT && {
           icon: <Icon icon={Mic2} />,
