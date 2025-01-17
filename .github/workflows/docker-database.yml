@@ -15,6 +15,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
+          registry: registry.si.icu
           username: ${{ secrets.DOCKER_REGISTRY_USER }}
           password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
 
@@ -22,7 +23,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: lobehub/lobe-chat-database
+          images: registry.si.icu/lobe-chat-database
           tags: |
             type=raw,value=latest
             type=ref,event=tag
