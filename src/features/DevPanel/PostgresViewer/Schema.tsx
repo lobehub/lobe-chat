@@ -10,6 +10,7 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import TableColumns from './TableColumns';
+import useSWR from 'swr';
 
 // 样式定义
 const useStyles = createStyles(({ token, css }) => ({
@@ -140,7 +141,7 @@ const SchemaPanel = ({ onTableSelect, selectedTable }: SchemaPanelProps) => {
 
   const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
 
-  const { data, isLoading } = useClientDataSWR(isDBInited ? 'fetch-tables' : null, () =>
+  const { data, isLoading } = useSWR(isDBInited ? 'fetch-tables' : null, () =>
     tableViewerService.getAllTables(),
   );
 

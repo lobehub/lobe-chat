@@ -5,9 +5,6 @@ import { BaseClientService } from '@/services/baseClientService';
 
 import { IAiProviderService } from './type';
 
-const encrypt = async (keyVaults: any) => JSON.stringify(keyVaults);
-const decrypt = (str: string | null) => JSON.parse(str as string);
-
 export class ClientService extends BaseClientService implements IAiProviderService {
   private get aiProviderModel(): AiProviderModel {
     return new AiProviderModel(clientDB as any, this.userId);
@@ -22,13 +19,13 @@ export class ClientService extends BaseClientService implements IAiProviderServi
   }
 
   createAiProvider: IAiProviderService['createAiProvider'] = async (params) => {
-    const data = await this.aiProviderModel.create(params, encrypt);
+    const data = await this.aiProviderModel.create(params);
 
     return data?.id;
   };
 
   getAiProviderById: IAiProviderService['getAiProviderById'] = async (id) => {
-    return this.aiProviderModel.getAiProviderById(id, decrypt);
+    return this.aiProviderModel.getAiProviderById(id);
   };
 
   getAiProviderList: IAiProviderService['getAiProviderList'] = async () => {
@@ -36,7 +33,7 @@ export class ClientService extends BaseClientService implements IAiProviderServi
   };
 
   getAiProviderRuntimeState: IAiProviderService['getAiProviderRuntimeState'] = async () => {
-    const runtimeConfig = await this.aiProviderModel.getAiProviderRuntimeConfig(decrypt);
+    const runtimeConfig = await this.aiProviderModel.getAiProviderRuntimeConfig();
 
     const enabledAiProviders = await this.aiInfraRepos.getUserEnabledProviderList();
 
@@ -54,7 +51,7 @@ export class ClientService extends BaseClientService implements IAiProviderServi
   };
 
   updateAiProviderConfig: IAiProviderService['updateAiProviderConfig'] = async (id, value) => {
-    return this.aiProviderModel.updateConfig(id, value, encrypt);
+    return this.aiProviderModel.updateConfig(id, value);
   };
 
   updateAiProviderOrder: IAiProviderService['updateAiProviderOrder'] = async (items) => {

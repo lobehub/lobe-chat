@@ -2,13 +2,13 @@ import { createStyles } from 'antd-style';
 import React from 'react';
 import { Center } from 'react-layout-kit';
 import { TableVirtuoso } from 'react-virtuoso';
+import useSWR from 'swr';
 
-import { useTableColumns } from '@/features/DevPanel/PostgresViewer/useTableColumns';
-import { useClientDataSWR } from '@/libs/swr';
 import { tableViewerService } from '@/services/tableViewer';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
+import { useTableColumns } from '../useTableColumns';
 import TableCell from './TableCell';
 
 const useStyles = createStyles(({ token, css }) => ({
@@ -100,7 +100,7 @@ const Table = ({ tableName }: TableProps) => {
   const tableColumns = useTableColumns(tableName);
   const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
 
-  const tableData = useClientDataSWR(
+  const tableData = useSWR(
     isDBInited && tableName ? ['fetch-table-data', tableName] : null,
     ([, table]) => tableViewerService.getTableData(table),
   );

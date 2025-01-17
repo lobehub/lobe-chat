@@ -165,7 +165,7 @@ export class AiProviderModel {
 
   getAiProviderById = async (
     id: string,
-    decryptor: DecryptUserKeyVaults,
+    decryptor?: DecryptUserKeyVaults,
   ): Promise<AiProviderDetailItem | undefined> => {
     const query = this.db
       .select({
@@ -205,7 +205,7 @@ export class AiProviderModel {
     return { ...result, keyVaults } as AiProviderDetailItem;
   };
 
-  getAiProviderRuntimeConfig = async (decryptor: DecryptUserKeyVaults) => {
+  getAiProviderRuntimeConfig = async (decryptor?: DecryptUserKeyVaults) => {
     const result = await this.db
       .select({
         fetchOnClient: aiProviders.fetchOnClient,

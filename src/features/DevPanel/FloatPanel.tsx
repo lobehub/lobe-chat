@@ -95,38 +95,40 @@ const CollapsibleFloatPanel = ({ children }: PropsWithChildren) => {
         onClick={() => setIsExpanded(!isExpanded)}
         style={{ bottom: 24, right: 24 }}
       />
-      <Rnd
-        bounds="window"
-        className={`${styles.panel} ${isExpanded ? styles.expanded : styles.collapsed}`}
-        dragHandleClassName="panel-drag-handle"
-        minHeight={minHeight}
-        minWidth={minWidth}
-        onDragStop={(e, d) => {
-          setPosition({ x: d.x, y: d.y });
-        }}
-        onResizeStop={(e, direction, ref, delta, position) => {
-          setSize({
-            height: Number(ref.style.height),
-            width: Number(ref.style.width),
-          });
-          setPosition(position);
-        }}
-        position={position}
-        size={size}
-      >
-        <Flexbox height={'100%'}>
-          <Flexbox
-            align={'center'}
-            className={`panel-drag-handle ${styles.header}`}
-            horizontal
-            justify={'space-between'}
-          >
-            开发者面板
-            <ActionIcon icon={XIcon} onClick={() => setIsExpanded(false)} />
+      {isExpanded && (
+        <Rnd
+          bounds="window"
+          className={`${styles.panel} ${isExpanded ? styles.expanded : styles.collapsed}`}
+          dragHandleClassName="panel-drag-handle"
+          minHeight={minHeight}
+          minWidth={minWidth}
+          onDragStop={(e, d) => {
+            setPosition({ x: d.x, y: d.y });
+          }}
+          onResizeStop={(e, direction, ref, delta, position) => {
+            setSize({
+              height: Number(ref.style.height),
+              width: Number(ref.style.width),
+            });
+            setPosition(position);
+          }}
+          position={position}
+          size={size}
+        >
+          <Flexbox height={'100%'}>
+            <Flexbox
+              align={'center'}
+              className={`panel-drag-handle ${styles.header}`}
+              horizontal
+              justify={'space-between'}
+            >
+              开发者面板
+              <ActionIcon icon={XIcon} onClick={() => setIsExpanded(false)} />
+            </Flexbox>
+            <Flexbox className={styles.content}>{children}</Flexbox>
           </Flexbox>
-          <Flexbox className={styles.content}>{children}</Flexbox>
-        </Flexbox>
-      </Rnd>
+        </Rnd>
+      )}
     </>
   );
 };
