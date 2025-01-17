@@ -72,7 +72,6 @@ const ConfigGroupModal = memo<ConfigGroupModalProps>(({ open, onCancel, defaultI
               id: item.id,
               sort: index,
             }));
-            console.log(sortMap);
             setLoading(true);
             await updateAiProviderSort(sortMap);
             setLoading(false);

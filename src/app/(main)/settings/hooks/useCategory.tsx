@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import type { MenuProps } from '@/components/Menu';
-import { isServerMode } from '@/const/version';
+import { isDeprecatedEdition } from '@/const/version';
 import { SettingsTabs } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -53,7 +53,7 @@ export const useCategory = () => {
         },
         showLLM &&
         // TODO: Remove /llm when v2.0
-        !isServerMode
+        (isDeprecatedEdition
           ? {
               icon: <Icon icon={Brain} />,
               key: SettingsTabs.LLM,
@@ -71,7 +71,7 @@ export const useCategory = () => {
                   {t('tab.provider')}
                 </Link>
               ),
-            },
+            }),
 
         enableSTT && {
           icon: <Icon icon={Mic2} />,
