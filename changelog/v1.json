@@ -1,5 +1,17 @@
 [
   {
+    "children": {},
+    "date": "2025-01-17",
+    "version": "1.47.1"
+  },
+  {
+    "children": {
+      "features": ["Support new ai provider in client pglite."]
+    },
+    "date": "2025-01-17",
+    "version": "1.47.0"
+  },
+  {
     "children": {
       "fixes": [
         "Improve validation for provider and model in parseFilesConfig, temporarily disable S3 client integrity check for Cloudflare R2."

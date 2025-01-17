@@ -1,4 +1,4 @@
-import { isServerMode } from '@/const/version';
+import { isDeprecatedEdition } from '@/const/version';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
@@ -12,7 +12,7 @@ export const useModelHasContextWindowToken = () => {
 
   // TODO: remove this in V2.0
   const oldValue = useUserStore(modelProviderSelectors.isModelHasMaxToken(model));
-  if (!isServerMode) return oldValue;
+  if (isDeprecatedEdition) return oldValue;
   //
 
   return newValue;
