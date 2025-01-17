@@ -48,6 +48,6 @@ export interface KnowledgeItem {
 
 export interface SystemEmbeddingConfig {
   embeddingModel: FilesConfigItem;
-  queryModel: string;
+  queryMode: string;
   rerankerModel: FilesConfigItem;
 }

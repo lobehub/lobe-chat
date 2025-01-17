@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "fixes": [
+        "Improve validation for provider and model in parseFilesConfig, temporarily disable S3 client integrity check for Cloudflare R2."
+      ]
+    },
+    "date": "2025-01-17",
+    "version": "1.46.7"
+  },
+  {
+    "children": {
       "fixes": ["Gemini models HarmBlockThreshold."]
     },
     "date": "2025-01-16",
