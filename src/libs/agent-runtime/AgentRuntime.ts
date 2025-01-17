@@ -367,7 +367,7 @@ class AgentRuntime {
       }
 
       case ModelProvider.Doubao: {
-        runtimeModel = new LobeDoubaoAI(params.doubao ?? {});
+        runtimeModel = new LobeDoubaoAI(params.doubao);
         break;
       }
     }
