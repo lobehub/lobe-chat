@@ -201,7 +201,7 @@ export interface EnabledAiModel {
 
 export interface AiProviderRuntimeConfig {
   fetchOnClient?: boolean;
-  keyVaults: Record<string, object>;
+  keyVaults: Record<string, string>;
   settings: AiProviderSettings;
 }
 
