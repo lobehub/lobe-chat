@@ -8,7 +8,6 @@ import { useTableColumns } from './useTableColumns';
 const useStyles = createStyles(({ token, css }) => ({
   container: css`
     margin-inline: 40px 4px;
-
     font-size: ${token.fontSizeSM}px;
     color: ${token.colorTextSecondary};
   `,
@@ -18,8 +17,8 @@ const useStyles = createStyles(({ token, css }) => ({
     font-family: ${token.fontFamilyCode};
   `,
   type: css`
-    color: ${token.red9};
     font-size: 10px;
+    color: ${token.red9};
   `,
 }));
 

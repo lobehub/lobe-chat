@@ -50,10 +50,10 @@ const useStyles = createStyles(({ token, css }) => ({
     background: ${token.colorBgContainer};
   `,
   schema: css`
-    font-size: 12px;
-    color: ${token.colorTextTertiary};
-    font-weight: normal;
     font-family: ${token.fontFamilyCode};
+    font-size: 12px;
+    font-weight: normal;
+    color: ${token.colorTextTertiary};
   `,
   schemaHeader: css`
     display: flex;

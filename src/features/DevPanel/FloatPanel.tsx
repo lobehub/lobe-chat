@@ -46,10 +46,10 @@ const useStyles = createStyles(({ token, css }) => {
       position: fixed;
       z-index: 1000;
 
+      overflow: hidden;
       display: flex;
 
       border-radius: 12px;
-      overflow: hidden;
 
       background: ${token.colorBgContainer};
       box-shadow: ${token.boxShadow};
