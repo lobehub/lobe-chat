@@ -3,11 +3,9 @@ import { useLocalStorageState } from 'ahooks';
 import { FloatButton } from 'antd';
 import { createStyles } from 'antd-style';
 import { BugIcon, BugOff, XIcon } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Rnd } from 'react-rnd';
-
-import PostgresViewer from './PostgresViewer';
 
 // 定义样式
 const useStyles = createStyles(({ token, css }) => {
@@ -22,30 +20,19 @@ const useStyles = createStyles(({ token, css }) => {
       flex: 1;
       height: 100%;
       color: ${token.colorText};
-
-      &::-webkit-scrollbar {
-        width: ${token.controlHeightSM / 2}px;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        border-radius: ${token.borderRadiusXS}px;
-        background: ${token.colorFillSecondary};
-
-        &:hover {
-          background: ${token.colorFillTertiary};
-        }
-      }
     `,
+
     expanded: css`
       pointer-events: auto;
       transform: scale(1);
       opacity: 1;
     `,
+
     header: css`
       cursor: move;
       user-select: none;
 
-      padding-block: 12px;
+      padding-block: 8px;
       padding-inline: 16px;
       border-block-end: 1px solid ${token.colorBorderSecondary};
       border-start-start-radius: 12px;
@@ -63,6 +50,7 @@ const useStyles = createStyles(({ token, css }) => {
       display: flex;
 
       border-radius: 12px;
+      overflow: hidden;
 
       background: ${token.colorBgContainer};
       box-shadow: ${token.boxShadow};
@@ -75,15 +63,31 @@ const useStyles = createStyles(({ token, css }) => {
 const minWidth = 800;
 const minHeight = 600;
 
-const CollapsibleFloatPanel = () => {
+const CollapsibleFloatPanel = ({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [position, setPosition] = useLocalStorageState('debug-panel-position', {
-    defaultValue: { x: 400, y: 200 },
-  });
-  const [size, setSize] = useLocalStorageState('debug-panel-size', {
-    defaultValue: { height: minHeight, width: minWidth },
-  });
+  const [position, setPosition] = useState({ x: 100, y: 100 });
+  const [size, setSize] = useState({ height: minHeight, width: minWidth });
+
+  useEffect(() => {
+    try {
+      const localStoragePosition = localStorage.getItem('debug-panel-position');
+      if (localStoragePosition && JSON.parse(localStoragePosition)) {
+        setPosition(JSON.parse(localStoragePosition));
+      }
+    } catch {
+      /* empty */
+    }
+
+    try {
+      const localStorageSize = localStorage.getItem('debug-panel-size');
+      if (localStorageSize && JSON.parse(localStorageSize)) {
+        setSize(JSON.parse(localStorageSize));
+      }
+    } catch {
+      /* empty */
+    }
+  }, []);
 
   return (
     <>
@@ -121,9 +125,7 @@ const CollapsibleFloatPanel = () => {
             开发者面板
             <ActionIcon icon={XIcon} onClick={() => setIsExpanded(false)} />
           </Flexbox>
-          <Flexbox className={styles.content}>
-            <PostgresViewer />
-          </Flexbox>
+          <Flexbox className={styles.content}>{children}</Flexbox>
         </Flexbox>
       </Rnd>
     </>

@@ -1,20 +1,12 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { FC } from 'react';
+import FloatPanel from './FloatPanel';
+import PostgresViewer from './PostgresViewer';
 
-import { getDebugConfig } from '@/config/debug';
+const DevPanel = () => (
+  <FloatPanel>
+    <PostgresViewer />
+  </FloatPanel>
+);
 
-let DebugUI: FC = () => null;
-
-// we need use Constant Folding to remove code below in production
-// refs: https://webpack.js.org/plugins/internal-plugins/#constplugin
-if (process.env.NODE_ENV === 'development') {
-  // eslint-disable-next-line unicorn/no-lonely-if
-  if (getDebugConfig().DEBUG_MODE) {
-    // @ts-ignore
-    DebugUI = dynamic(() => import('./FloatPanel'), { ssr: false });
-  }
-}
-
-export default DebugUI;
+export default DevPanel;

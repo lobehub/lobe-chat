@@ -6,9 +6,14 @@ import React from 'react';
 import { Center } from 'react-layout-kit';
 import { TableVirtuoso } from 'react-virtuoso';
 
-import { MOCK_DATA, MOCK_TABLES } from '@/features/DevPanel/PostgresViewer/mockData';
+import { useClientDataSWR } from '@/libs/swr';
+import { tableViewerService } from '@/services/tableViewer';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
-// 样式定义
+import { useTableColumns } from '../useTableColumns';
+import TableCell from './TableCell';
+
 const useStyles = createStyles(({ token, css }) => ({
   button: css`
     cursor: pointer;
@@ -61,12 +66,18 @@ const useStyles = createStyles(({ token, css }) => ({
       width: 100%;
     }
 
+    thead {
+      tr {
+        outline: 1px solid ${token.colorBorderSecondary};
+      }
+    }
+
     th {
       position: sticky;
       z-index: 1;
       inset-block-start: 0;
 
-      padding: ${token.padding}px;
+      padding: 12px;
       border-block-end: 1px solid ${token.colorBorderSecondary};
 
       font-weight: ${token.fontWeightStrong};
@@ -80,9 +91,11 @@ const useStyles = createStyles(({ token, css }) => ({
       padding: ${token.padding}px;
       border-block-end: 1px solid ${token.colorBorderSecondary};
       text-wrap: nowrap;
+    }
 
-      &:hover {
-        background: ${token.colorFillQuaternary};
+    tbody {
+      tr:hover {
+        background: ${token.colorFillTertiary};
       }
     }
   `,
@@ -93,14 +106,10 @@ const useStyles = createStyles(({ token, css }) => ({
     gap: ${token.padding}px;
     align-items: center;
 
-    padding: ${token.padding}px;
+    padding: 12px;
     border-radius: ${token.borderRadius}px;
 
     color: ${token.colorText};
-
-    &:hover {
-      background: ${token.colorFillSecondary};
-    }
   `,
   toolbar: css`
     display: flex;
@@ -113,7 +122,7 @@ const useStyles = createStyles(({ token, css }) => ({
   `,
   toolbarButtons: css`
     display: flex;
-    gap: ${token.padding}px;
+    gap: 4px;
   `,
   toolbarTitle: css`
     font-size: ${token.fontSizeLG}px;
@@ -122,21 +131,32 @@ const useStyles = createStyles(({ token, css }) => ({
   `,
 }));
 
-interface DataPanelProps {
-  selectedTable: string;
+interface DataTableProps {
+  tableName: string;
 }
 
-const DataPanel = ({ selectedTable }: DataPanelProps) => {
+const DataTable = ({ tableName }: DataTableProps) => {
   const { styles } = useStyles();
-  const columns = MOCK_TABLES.find((t) => t.name === selectedTable)?.columns || [];
 
+  const tableColumns = useTableColumns(tableName);
+  const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
+
+  const tableData = useClientDataSWR(
+    isDBInited && tableName ? ['fetch-table-data', tableName] : null,
+    ([, table]) => tableViewerService.getTableData(table),
+  );
+
+  const columns = tableColumns.data?.map((t) => t.name) || [];
+  const isLoading = tableColumns.isLoading || tableData.isLoading;
+
+  console.log(tableData.data);
   return (
     <div className={styles.dataPanel}>
       {/* Toolbar */}
       <div className={styles.toolbar}>
-        <div className={styles.toolbarTitle}>{selectedTable || 'Select a table'}</div>
+        <div className={styles.toolbarTitle}>{tableName || 'Select a table'}</div>
         <div className={styles.toolbarButtons}>
-          <Button className={styles.button} icon={<Icon icon={Filter} />}>
+          <Button color={'default'} icon={<Icon icon={Filter} />} variant={'filled'}>
             Filter
           </Button>
           <ActionIcon icon={Download} title={'Export'} />
@@ -146,29 +166,33 @@ const DataPanel = ({ selectedTable }: DataPanelProps) => {
 
       {/* Table */}
       <div className={styles.table}>
-        {selectedTable ? (
-          <TableVirtuoso
-            data={MOCK_DATA}
-            fixedHeaderContent={() => (
-              <tr>
-                {columns.map((column) => (
-                  <th key={column}>{column}</th>
-                ))}
-              </tr>
-            )}
-            itemContent={(index, row) => (
-              <>
-                {columns.map((column) => (
-                  <td key={column} onDoubleClick={() => console.log('Edit cell:', index, column)}>
-                    {
-                      // @ts-expect-error
-                      row[column]
-                    }
-                  </td>
-                ))}
-              </>
-            )}
-          />
+        {tableName ? (
+          isLoading ? (
+            <Center height={'80%'}>Loading...</Center>
+          ) : (
+            <TableVirtuoso
+              data={tableData.data?.data || []}
+              fixedHeaderContent={() => (
+                <tr>
+                  {columns.map((column) => (
+                    <th key={column}>{column}</th>
+                  ))}
+                </tr>
+              )}
+              itemContent={(index, row) => (
+                <>
+                  {columns.map((column) => (
+                    <TableCell
+                      column={column}
+                      dataItem={row}
+                      key={`${column}_${index}`}
+                      rowIndex={index}
+                    />
+                  ))}
+                </>
+              )}
+            />
+          )
         ) : (
           <Center height={'80%'}>Select a table to view data</Center>
         )}
@@ -177,4 +201,4 @@ const DataPanel = ({ selectedTable }: DataPanelProps) => {
   );
 };
 
-export default DataPanel;
+export default DataTable;

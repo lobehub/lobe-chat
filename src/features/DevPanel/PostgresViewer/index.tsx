@@ -11,7 +11,7 @@ const DatabasePanel = () => {
   return (
     <Flexbox height={'100%'} horizontal>
       <SchemaPanel onTableSelect={setSelectedTable} />
-      <DataTable selectedTable={selectedTable} />
+      <DataTable tableName={selectedTable} />
     </Flexbox>
   );
 };

@@ -3,7 +3,12 @@ import { ChevronDown, ChevronRight, Database, Table as TableIcon } from 'lucide-
 import React, { useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { MOCK_TABLES } from '@/features/DevPanel/PostgresViewer/mockData';
+import { useClientDataSWR } from '@/libs/swr';
+import { tableViewerService } from '@/services/tableViewer';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
+
+import TableColumns from './TableColumns';
 
 // 样式定义
 const useStyles = createStyles(({ token, css }) => ({
@@ -27,16 +32,6 @@ const useStyles = createStyles(({ token, css }) => ({
 
     &:hover {
       background: ${token.colorFillTertiary};
-    }
-  `,
-  columnList: css`
-    margin-inline-start: 32px;
-    font-size: ${token.fontSizeSM}px;
-    color: ${token.colorTextSecondary};
-
-    > div {
-      padding-block: ${token.paddingXS}px;
-      padding-inline: 0;
     }
   `,
   dataPanel: css`
@@ -63,7 +58,7 @@ const useStyles = createStyles(({ token, css }) => ({
   schemaPanel: css`
     overflow: scroll;
 
-    width: 200px;
+    width: 280px;
     height: 100%;
     border-inline-end: 1px solid ${token.colorBorderSecondary};
 
@@ -128,6 +123,12 @@ const SchemaPanel = ({ onTableSelect }: SchemaPanelProps) => {
   const { styles } = useStyles();
   const [expandedTables, setExpandedTables] = useState(new Set());
 
+  const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
+
+  const { data, isLoading } = useClientDataSWR(isDBInited ? 'fetch-tables' : null, () =>
+    tableViewerService.getAllTables(),
+  );
+
   const toggleTable = (tableName: string) => {
     const newExpanded = new Set(expandedTables);
     if (newExpanded.has(tableName)) {
@@ -142,37 +143,35 @@ const SchemaPanel = ({ onTableSelect }: SchemaPanelProps) => {
     <div className={styles.schemaPanel}>
       <div className={styles.schemaHeader}>
         <Database size={16} />
-        <span>Schema</span>
+        <span>Tables {data?.length}</span>
       </div>
-      <Flexbox>
-        {MOCK_TABLES.map((table) => (
-          <div key={table.name}>
-            <Flexbox
-              className={styles.tableItem}
-              horizontal
-              onClick={() => {
-                toggleTable(table.name);
-                onTableSelect(table.name);
-              }}
-            >
-              {expandedTables.has(table.name) ? (
-                <ChevronDown size={16} />
-              ) : (
-                <ChevronRight size={16} />
-              )}
-              <TableIcon size={16} />
-              <span>{table.name}</span>
-            </Flexbox>
-            {expandedTables.has(table.name) && (
-              <div className={styles.columnList}>
-                {table.columns.map((column) => (
-                  <div key={column}>{column}</div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </Flexbox>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <Flexbox>
+          {data?.map((table) => (
+            <div key={table.name}>
+              <Flexbox
+                className={styles.tableItem}
+                horizontal
+                onClick={() => {
+                  toggleTable(table.name);
+                  onTableSelect(table.name);
+                }}
+              >
+                {expandedTables.has(table.name) ? (
+                  <ChevronDown size={16} />
+                ) : (
+                  <ChevronRight size={16} />
+                )}
+                <TableIcon size={16} />
+                <span>{table.name}</span>
+              </Flexbox>
+              {expandedTables.has(table.name) && <TableColumns tableName={table.name} />}
+            </div>
+          ))}
+        </Flexbox>
+      )}
     </div>
   );
 };
