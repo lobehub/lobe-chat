@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  lobe-chat:
+    image: lobehub/lobe-chat-database
+    container_name: lobe-chat
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.database
+    ports:
+      - '3210:3210'
+    env_file:
+      - .env
+  postgresql:
+    image: pgvector/pgvector:pg16
+    container_name: lobe-postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'postgresql_data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_DB=${LOBE_DB_NAME}'
+      - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+volumes:
+  postgresql_data: {}
