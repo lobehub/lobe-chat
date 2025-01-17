@@ -29,8 +29,8 @@ const useStyles = createStyles(({ token, css }) => ({
     table {
       border-collapse: collapse;
       width: 100%;
+      margin-inline-end: 12px;
       font-family: ${token.fontFamilyCode};
-      margin-right: 12px;
     }
 
     thead {
@@ -41,12 +41,14 @@ const useStyles = createStyles(({ token, css }) => ({
 
     th,
     td {
-      padding: 8px 12px;
-      font-size: 12px;
-      border-right: 1px solid ${token.colorBorderSecondary};
+      overflow: hidden;
 
       max-width: 200px;
-      overflow: hidden;
+      padding-block: 8px;
+      padding-inline: 12px;
+      border-inline-end: 1px solid ${token.colorBorderSecondary};
+
+      font-size: 12px;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
