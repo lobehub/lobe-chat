@@ -7,7 +7,7 @@ import { useTableColumns } from '@/features/DevPanel/PostgresViewer/useTableColu
 
 const useStyles = createStyles(({ token, css }) => ({
   container: css`
-    margin-inline: 32px 8px;
+    margin-inline: 40px 4px;
 
     font-size: ${token.fontSizeSM}px;
     color: ${token.colorTextSecondary};

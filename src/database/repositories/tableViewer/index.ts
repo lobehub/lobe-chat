@@ -1,4 +1,5 @@
 import { sql } from 'drizzle-orm';
+import pMap from 'p-map';
 
 import { LobeChatDatabase } from '@/database/type';
 import {
@@ -20,18 +21,29 @@ export class TableViewerRepo {
   /**
    * 获取数据库中所有的表
    */
-  async getAllTables(): Promise<TableBasicInfo[]> {
+  async getAllTables(schema = 'public'): Promise<TableBasicInfo[]> {
     const query = sql`
       SELECT
         table_name as name,
         table_type as type
       FROM information_schema.tables
-      WHERE table_schema = 'public'
+      WHERE table_schema = ${schema}
       ORDER BY table_name;
     `;
 
     const tables = await this.db.execute(query);
-    return tables.rows as unknown as TableBasicInfo[];
+
+    const tableNames = tables.rows.map((row) => row.name) as string[];
+
+    const counts = await pMap(tableNames, async (name) => this.getTableCount(name), {
+      concurrency: 10,
+    });
+
+    return tables.rows.map((row, index) => ({
+      count: counts[index],
+      name: row.name,
+      type: row.type,
+    })) as TableBasicInfo[];
   }
 
   /**

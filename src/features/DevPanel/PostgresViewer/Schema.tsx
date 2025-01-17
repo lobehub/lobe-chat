@@ -1,3 +1,4 @@
+import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronDown, ChevronRight, Database, Table as TableIcon } from 'lucide-react';
 import React, { useState } from 'react';
@@ -34,6 +35,10 @@ const useStyles = createStyles(({ token, css }) => ({
       background: ${token.colorFillTertiary};
     }
   `,
+  count: css`
+    font-size: 12px;
+    color: ${token.colorTextTertiary};
+  `,
   dataPanel: css`
     overflow: hidden;
     display: flex;
@@ -43,6 +48,12 @@ const useStyles = createStyles(({ token, css }) => ({
     height: 100%;
 
     background: ${token.colorBgContainer};
+  `,
+  schema: css`
+    font-size: 12px;
+    color: ${token.colorTextTertiary};
+    font-weight: normal;
+    font-family: ${token.fontFamilyCode};
   `,
   schemaHeader: css`
     display: flex;
@@ -63,6 +74,9 @@ const useStyles = createStyles(({ token, css }) => ({
     border-inline-end: 1px solid ${token.colorBorderSecondary};
 
     background: ${token.colorBgContainer};
+  `,
+  selected: css`
+    background: ${token.colorFillSecondary};
   `,
   table: css`
     overflow: hidden;
@@ -118,9 +132,10 @@ const useStyles = createStyles(({ token, css }) => ({
 
 interface SchemaPanelProps {
   onTableSelect: (tableName: string) => void;
+  selectedTable?: string;
 }
-const SchemaPanel = ({ onTableSelect }: SchemaPanelProps) => {
-  const { styles } = useStyles();
+const SchemaPanel = ({ onTableSelect, selectedTable }: SchemaPanelProps) => {
+  const { styles, cx } = useStyles();
   const [expandedTables, setExpandedTables] = useState(new Set());
 
   const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
@@ -143,7 +158,10 @@ const SchemaPanel = ({ onTableSelect }: SchemaPanelProps) => {
     <div className={styles.schemaPanel}>
       <div className={styles.schemaHeader}>
         <Database size={16} />
-        <span>Tables {data?.length}</span>
+        <Flexbox align={'center'} horizontal justify={'space-between'}>
+          <span>Tables {data?.length}</span>
+          <span className={styles.schema}>public</span>
+        </Flexbox>
       </div>
       {isLoading ? (
         <div>Loading...</div>
@@ -152,20 +170,19 @@ const SchemaPanel = ({ onTableSelect }: SchemaPanelProps) => {
           {data?.map((table) => (
             <div key={table.name}>
               <Flexbox
-                className={styles.tableItem}
+                className={cx(styles.tableItem, selectedTable === table.name && styles.selected)}
                 horizontal
                 onClick={() => {
                   toggleTable(table.name);
                   onTableSelect(table.name);
                 }}
               >
-                {expandedTables.has(table.name) ? (
-                  <ChevronDown size={16} />
-                ) : (
-                  <ChevronRight size={16} />
-                )}
+                <Icon icon={expandedTables.has(table.name) ? ChevronDown : ChevronRight} />
                 <TableIcon size={16} />
-                <span>{table.name}</span>
+                <Flexbox align={'center'} horizontal justify={'space-between'}>
+                  <span>{table.name}</span>
+                  <span className={styles.count}>{table.count}</span>
+                </Flexbox>
               </Flexbox>
               {expandedTables.has(table.name) && <TableColumns tableName={table.name} />}
             </div>

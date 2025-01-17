@@ -1,4 +1,5 @@
 export interface TableBasicInfo {
+  count: number;
   name: string;
   type: 'BASE TABLE' | 'VIEW';
 }
