@@ -1,5 +1,4 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
-import { useLocalStorageState } from 'ahooks';
 import { FloatButton } from 'antd';
 import { createStyles } from 'antd-style';
 import { BugIcon, BugOff, XIcon } from 'lucide-react';

@@ -125,7 +125,9 @@ const Table = ({ tableName }: TableProps) => {
     <div className={styles.table}>
       {dataSource.length === 0 ? (
         <>
-          <table>{header}</table>
+          <table>
+            <thead>{header}</thead>
+          </table>
           <Center height={400}>no rows</Center>
         </>
       ) : (
