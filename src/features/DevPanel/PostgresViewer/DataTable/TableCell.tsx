@@ -13,8 +13,11 @@ const TableCell = ({ dataItem, column, rowIndex }: TableCellProps) => {
       case 'object': {
         return JSON.stringify(data);
       }
-      case 'boolean':
+
+      case 'boolean': {
         return data ? 'True' : 'False';
+      }
+
       default: {
         return data;
       }

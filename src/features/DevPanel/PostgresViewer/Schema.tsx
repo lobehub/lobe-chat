@@ -3,14 +3,13 @@ import { createStyles } from 'antd-style';
 import { ChevronDown, ChevronRight, Database, Table as TableIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
+import useSWR from 'swr';
 
-import { useClientDataSWR } from '@/libs/swr';
 import { tableViewerService } from '@/services/tableViewer';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
 import TableColumns from './TableColumns';
-import useSWR from 'swr';
 
 // 样式定义
 const useStyles = createStyles(({ token, css }) => ({

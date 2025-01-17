@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import React from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useTableColumns } from '@/features/DevPanel/PostgresViewer/useTableColumns';
+import { useTableColumns } from './useTableColumns';
 
 const useStyles = createStyles(({ token, css }) => ({
   container: css`
