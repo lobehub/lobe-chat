@@ -39,7 +39,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     {
         config: {
-          deploymentName: 'Doubao-pro-32k',
+          deploymentName: 'Doubao-pro-test',
         },
         contextWindowTokens: 32_768,
         description: 
