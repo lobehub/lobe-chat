@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  lobe-chat:
+    image: lobehub/lobe-chat
+    container_name: lobe-chat
+    restart: always
+    ports:
+      - '3210:3210'
+    environment:
+      OPENAI_API_KEY: sk-
+      OPENAI_PROXY_URL: https://api.aigc369.com/v1
+      # OPENAI_MODEL_LIST: -all,o1-all,+o1-pro-all
+      ENABLED_OLLAMA: 0
+      ACCESS_CODE: lobe66
+
