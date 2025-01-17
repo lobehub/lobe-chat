@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Fix api key in api key form."]
+    },
+    "date": "2025-01-17",
+    "version": "1.47.2"
+  },
+  {
     "children": {},
     "date": "2025-01-17",
     "version": "1.47.1"
