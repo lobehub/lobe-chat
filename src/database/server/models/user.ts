@@ -105,22 +105,18 @@ export class UserModel {
   };
 
   getUserSSOProviders = async () => {
-    return this.db.query.nextauthAccounts
-      .findMany({
-        where: eq(nextauthAccounts.userId, this.userId),
+    const result = await this.db
+      .select({
+        expiresAt: nextauthAccounts.expires_at,
+        provider: nextauthAccounts.provider,
+        providerAccountId: nextauthAccounts.providerAccountId,
+        scope: nextauthAccounts.scope,
+        type: nextauthAccounts.type,
+        userId: nextauthAccounts.userId,
       })
-      .then((accounts) =>
-        accounts.map((account) => {
-          // Pick necessary fields, don't expose the sensitive information
-          return {
-            expires_at: account?.expires_at,
-            provider: account?.provider,
-            providerAccountId: account?.providerAccountId,
-            scope: account?.scope,
-            type: account?.type,
-          } as unknown as AdapterAccount;
-        }),
-      ) as Promise<AdapterAccount[]>;
+      .from(nextauthAccounts)
+      .where(eq(nextauthAccounts.userId, this.userId));
+    return result as unknown as AdapterAccount[];
   };
 
   getUserSettings = async () => {
