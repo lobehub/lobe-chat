@@ -100,6 +100,7 @@ COPY . .
 
 # run build standalone for docker version
 RUN npm run build:docker
+RUN rm -f .env
 
 ## Application image, copy all the files for production
 FROM busybox:latest AS app

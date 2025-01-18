@@ -18,7 +18,9 @@ jobs:
           registry: registry.si.icu
           username: ${{ secrets.DOCKER_REGISTRY_USER }}
           password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-
+      - name: ready to env
+        run: |
+          echo "${{ secrets.DOCKER_ENV }}" > .env
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
