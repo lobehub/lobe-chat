@@ -23,7 +23,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: registry.si.icu/lobe-chat-database
+          images: registry.si.icu/sijinhui/lobe-chat-database
           tags: |
             type=raw,value=latest
             type=ref,event=tag
@@ -41,6 +41,7 @@ jobs:
           file: ./Dockerfile.database  # 指定使用 Dockerfile.database 文件
           platforms: linux/amd64,linux/arm64
           push: true
+          provenance: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
