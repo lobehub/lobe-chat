@@ -1,11 +1,6 @@
 import { PGliteWorker } from '@electric-sql/pglite/worker';
 
-interface InitMeta {
-  dbName: string;
-  fsBundle: Blob;
-  vectorBundlePath: string;
-  wasmModule: WebAssembly.Module;
-}
+import { InitMeta } from './type';
 
 export const initPgliteWorker = async (meta: InitMeta) => {
   const worker = await PGliteWorker.create(

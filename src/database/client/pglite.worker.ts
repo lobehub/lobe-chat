@@ -1,11 +1,6 @@
 import { worker } from '@electric-sql/pglite/worker';
 
-interface InitMeta {
-  dbName: string;
-  fsBundle: Blob;
-  vectorBundlePath: string;
-  wasmModule: WebAssembly.Module;
-}
+import { InitMeta } from './type';
 
 worker({
   async init(options) {
