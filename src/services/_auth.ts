@@ -34,9 +34,13 @@ export const getProviderAuthPayload = (
         accessKeyId,
         accessKeySecret: awsSecretAccessKey,
         apiKey,
+        /** @deprecated */
         awsAccessKeyId,
+        /** @deprecated */
         awsRegion: region,
+        /** @deprecated */
         awsSecretAccessKey,
+        /** @deprecated */
         awsSessionToken: sessionToken,
         region,
         sessionToken,
@@ -58,9 +62,11 @@ export const getProviderAuthPayload = (
     case ModelProvider.Azure: {
       return {
         apiKey: keyVaults.apiKey,
-        azureApiVersion: keyVaults.apiVersion,
-        baseURL: keyVaults.baseURL || keyVaults.endpoint,
+        
         apiVersion: keyVaults.apiVersion,
+        /** @deprecated */
+azureApiVersion: keyVaults.apiVersion,
+        baseURL: keyVaults.baseURL || keyVaults.endpoint,
       };
     }
 
@@ -71,8 +77,10 @@ export const getProviderAuthPayload = (
     case ModelProvider.Cloudflare: {
       return {
         apiKey: keyVaults?.apiKey,
-        cloudflareBaseURLOrAccountID: keyVaults?.baseURLOrAccountID,
+        
         baseURLOrAccountID: keyVaults?.baseURLOrAccountID,
+        /** @deprecated */
+cloudflareBaseURLOrAccountID: keyVaults?.baseURLOrAccountID,
       };
     }
 
