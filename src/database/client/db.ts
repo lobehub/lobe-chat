@@ -1,4 +1,4 @@
-import type { PgliteDatabase } from 'drizzle-orm/pglite';
+import { PgliteDatabase, drizzle } from 'drizzle-orm/pglite';
 import { Md5 } from 'ts-md5';
 
 import { ClientDBLoadingProgress, DatabaseLoadingState } from '@/types/clientDB';
@@ -27,6 +27,12 @@ export class DatabaseManager {
   // CDN 配置
   private static WASM_CDN_URL =
     'https://registry.npmmirror.com/@electric-sql/pglite/0.2.13/files/dist/postgres.wasm';
+
+  private static FSBUNDLER_CDN_URL =
+    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.13/files/dist/postgres.data';
+
+  private static VECTOR_CDN_URL =
+    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.13/files/dist/vector.tar.gz';
 
   private constructor() {}
 
@@ -88,6 +94,12 @@ export class DatabaseManager {
     return WebAssembly.compile(wasmBytes);
   }
 
+  private fetchFsBundle = async () => {
+    const res = await fetch(DatabaseManager.FSBUNDLER_CDN_URL);
+
+    return await res.blob();
+  };
+
   // 异步加载 PGlite 相关依赖
   private async loadDependencies() {
     const start = Date.now();
@@ -100,7 +112,7 @@ export class DatabaseManager {
         PGlite: m.PGlite,
       })),
       import('@electric-sql/pglite/vector'),
-      import('drizzle-orm/pglite'),
+      this.fetchFsBundle(),
     ];
 
     let loaded = 0;
@@ -125,9 +137,9 @@ export class DatabaseManager {
     });
 
     // @ts-ignore
-    const [{ PGlite, IdbFs, MemoryFS }, { vector }, { drizzle }] = results;
+    const [{ PGlite, IdbFs, MemoryFS }, { vector }, fsBundle] = results;
 
-    return { IdbFs, MemoryFS, PGlite, drizzle, vector };
+    return { IdbFs, MemoryFS, PGlite, fsBundle, vector };
   }
 
   // 数据库迁移方法
@@ -177,17 +189,34 @@ export class DatabaseManager {
         this.callbacks?.onStateChange?.(DatabaseLoadingState.Initializing);
 
         // 加载依赖
-        const { PGlite, vector, drizzle, IdbFs, MemoryFS } = await this.loadDependencies();
+        const { fsBundle, PGlite, MemoryFS, IdbFs, vector } = await this.loadDependencies();
 
         // 加载并编译 WASM 模块
         const wasmModule = await this.loadWasmModule();
 
-        const db = new PGlite({
-          extensions: { vector },
-          fs: typeof window === 'undefined' ? new MemoryFS('lobechat') : new IdbFs('lobechat'),
-          relaxedDurability: true,
-          wasmModule,
-        });
+        const { initPgliteWorker } = await import('./pglite');
+
+        let db: typeof PGlite;
+
+        const dbName = 'lobechat';
+
+        // make db as web worker if worker is available
+        if (typeof Worker !== 'undefined') {
+          db = await initPgliteWorker({
+            dbName,
+            fsBundle: fsBundle as Blob,
+            vectorBundlePath: DatabaseManager.VECTOR_CDN_URL,
+            wasmModule,
+          });
+        } else {
+          // in edge runtime or test runtime, we don't have worker
+          db = new PGlite({
+            extensions: { vector },
+            fs: typeof window === 'undefined' ? new MemoryFS(dbName) : new IdbFs(dbName),
+            relaxedDurability: true,
+            wasmModule,
+          });
+        }
 
         this.dbInstance = drizzle({ client: db, schema });
 
@@ -210,6 +239,8 @@ export class DatabaseManager {
           name: error.name,
           stack: error.stack,
         });
+
+        console.error(error);
         throw error;
       }
     })();
