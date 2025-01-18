@@ -13,6 +13,8 @@ const SystemIcon = memo<{ title?: string }>(({ title }) => {
 
   if (['Mac OS', 'iOS', 'iPadOS'].includes(title)) return <SiApple size={24} />;
 
+  // Remove Microsoft brands in @icons-pack/react-simple-icons v10
+  // https://github.com/simple-icons/simple-icons/pull/10019
   if (['Windows'].includes(title)) return <SiWindows11 size={24} />;
 
   if (title === 'Android') return <SiAndroid size={24} />;

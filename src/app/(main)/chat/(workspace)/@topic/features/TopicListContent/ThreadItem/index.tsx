@@ -27,7 +27,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }, index: number) => ({
       inset-inline-start: 26px;
 
       width: 18px;
-
       border-block-end: 2px solid ${token.colorBorderSecondary};
       border-inline-start: 2px solid ${token.colorBorderSecondary};
       border-end-start-radius: 8px;
@@ -47,7 +46,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }, index: number) => ({
     margin-block: 2px;
     padding-block: 4px;
     padding-inline: 8px;
-
     border-radius: ${token.borderRadius}px;
 
     &:hover {

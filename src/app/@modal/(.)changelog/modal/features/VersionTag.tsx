@@ -10,10 +10,9 @@ const useStyles = createStyles(({ token, css }) => {
       margin: 0;
       padding-block: 4px;
       padding-inline: 12px;
+      border-radius: 16px;
 
       color: ${token.colorTextSecondary};
-
-      border-radius: 16px;
     `,
   };
 });

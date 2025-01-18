@@ -8,10 +8,10 @@ export const useContainerStyles = createStyles(({ css, token, stylish, cx, respo
 
       width: 100%;
       max-height: 70dvh;
-
-      background: ${token.colorBgLayout};
       border: 1px solid ${token.colorBorder};
       border-radius: ${token.borderRadiusLG}px;
+
+      background: ${token.colorBgLayout};
 
       * {
         pointer-events: none;
@@ -27,4 +27,34 @@ export const useContainerStyles = createStyles(({ css, token, stylish, cx, respo
       }
     `,
   ),
+}));
+
+export const useStyles = createStyles(({ responsive, token, css }) => ({
+  body: css`
+    ${responsive.mobile} {
+      padding-block-end: 68px;
+    }
+  `,
+  footer: css`
+    ${responsive.mobile} {
+      position: absolute;
+      inset-block-end: 0;
+      inset-inline: 0;
+
+      width: 100%;
+      margin: 0;
+      padding: 16px;
+
+      background: ${token.colorBgContainer};
+    }
+  `,
+  sidebar: css`
+    flex: none;
+    width: max(240px, 25%);
+    ${responsive.mobile} {
+      flex: 1;
+      width: unset;
+      margin-inline: -16px;
+    }
+  `,
 }));

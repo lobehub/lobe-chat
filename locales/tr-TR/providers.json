@@ -50,6 +50,9 @@
   "internlm": {
     "description": "Büyük model araştırma ve geliştirme araç zincirine adanmış bir açık kaynak organizasyonu. Tüm AI geliştiricilerine verimli ve kullanımı kolay bir açık kaynak platformu sunarak en son büyük model ve algoritma teknolojilerine erişimi kolaylaştırır."
   },
+  "lmstudio": {
+    "description": "LM Studio, bilgisayarınızda LLM'ler geliştirmek ve denemeler yapmak için bir masaüstü uygulamasıdır."
+  },
   "minimax": {
     "description": "MiniMax, 2021 yılında kurulan genel yapay zeka teknolojisi şirketidir ve kullanıcılarla birlikte akıllı çözümler yaratmayı hedeflemektedir. MiniMax, farklı modlarda genel büyük modeller geliştirmiştir. Bunlar arasında trilyon parametreli MoE metin büyük modeli, ses büyük modeli ve görüntü büyük modeli bulunmaktadır. Ayrıca, Conch AI gibi uygulamalar da sunmaktadır."
   },

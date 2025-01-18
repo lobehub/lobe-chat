@@ -12,122 +12,112 @@ tags:
 # Docker Compose 部署指引
 
 <div style={{display:"flex", gap: 4}}>
+  [![](https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff\&label=docker\&labelColor=black\&logo=docker\&logoColor=white\&style=flat-square)](https://hub.docker.com/r/lobehub/lobe-chat)
 
-[![](https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square)](https://hub.docker.com/r/lobehub/lobe-chat)
+  [![](https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff\&labelColor=black\&style=flat-square)](https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff\&labelColor=black\&style=flat-square)
 
-[![](https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square)](https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square)
-
-[![](https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square)](https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square)
-
+  [![](https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11\&labelColor=black\&style=flat-square)](https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11\&labelColor=black\&style=flat-square)
 </div>
 
 我们提供了 [Docker 镜像](https://hub.docker.com/r/lobehub/lobe-chat) ，供你在自己的私有设备上部署 LobeChat 服务。
 
 <Steps>
+  ### 安装 Docker 容器环境
 
-### 安装 Docker 容器环境
+  （如果已安装，请跳过此步）
 
-（如果已安装，请跳过此步）
+  <Tabs items={['Ubuntu', 'CentOS']}>
+    <Tab>
+      ```fish
+      $ apt install docker.io
+      ```
+    </Tab>
 
-<Tabs items={['Ubuntu', 'CentOS']}>
+    <Tab>
+      ```fish
+      $ yum install docker
+      ```
+    </Tab>
+  </Tabs>
 
-<Tab>
+  ### 运行 Docker Compose 部署指令
 
-```fish
-$ apt install docker.io
-```
+  使用 `docker-compose` 时配置文件如下:
 
-</Tab>
+  ```yml
+  version: '3.8'
 
-<Tab>
+  services:
+    lobe-chat:
+      image: lobehub/lobe-chat
+      container_name: lobe-chat
+      restart: always
+      ports:
+        - '3210:3210'
+      environment:
+        OPENAI_API_KEY: sk-xxxx
+        OPENAI_PROXY_URL: https://api-proxy.com/v1
+        ACCESS_CODE: lobe66
+  ```
 
-```fish
-$ yum install docker
-```
+  运行以下命令启动 Lobe Chat 服务：
 
-</Tab>
+  ```bash
+  $ docker-compose up -d
+  ```
 
-</Tabs>
+  ### Crontab 自动更新脚本（可选）
 
-### 运行 Docker Compose 部署指令
+  类似地，你可以使用以下脚本来自动更新 Lobe Chat，使用 `Docker Compose` 时，环境变量无需额外配置。
 
-使用 `docker-compose` 时配置文件如下:
+  ```bash
+  #!/bin/bash
+  # auto-update-lobe-chat.sh
 
-```yml
-version: '3.8'
+  # Set proxy (optional)
+  export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
 
-services:
-  lobe-chat:
-    image: lobehub/lobe-chat
-    container_name: lobe-chat
-    restart: always
-    ports:
-      - '3210:3210'
-    environment:
-      OPENAI_API_KEY: sk-xxxx
-      OPENAI_PROXY_URL: https://api-proxy.com/v1
-      ACCESS_CODE: lobe66
-```
+  # Pull the latest image and store the output in a variable
+  output=$(docker pull lobehub/lobe-chat:latest 2>&1)
 
-运行以下命令启动 Lobe Chat 服务：
+  # Check if the pull command was executed successfully
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
 
-```bash
-$ docker-compose up -d
-```
+  # Check if the output contains a specific string
+  echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
 
-### Crontab 自动更新脚本（可选）
+  # If the image is already up to date, do nothing
+  if [ $? -eq 0 ]; then
+    exit 0
+  fi
 
-类似地，你可以使用以下脚本来自动更新 Lobe Chat，使用 `Docker Compose` 时，环境变量无需额外配置。
+  echo "Detected Lobe-Chat update"
 
-```bash
-#!/bin/bash
-# auto-update-lobe-chat.sh
+  # Remove the old container
+  echo "Removed: $(docker rm -f Lobe-Chat)"
 
-# Set proxy (optional)
-export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+  # You may need to navigate to the directory where `docker-compose.yml` is located first
+  # cd /path/to/docker-compose-folder
 
-# Pull the latest image and store the output in a variable
-output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+  # Run the new container
+  echo "Started: $(docker-compose up)"
 
-# Check if the pull command was executed successfully
-if [ $? -ne 0 ]; then
-  exit 1
-fi
+  # Print the update time and version
+  echo "Update time: $(date)"
+  echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
 
-# Check if the output contains a specific string
-echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+  # Clean up unused images
+  docker images | grep 'lobehub/lobe-chat' | grep -v 'lobehub/lobe-chat-database' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+  echo "Removed old images."
+  ```
 
-# If the image is already up to date, do nothing
-if [ $? -eq 0 ]; then
-  exit 0
-fi
+  This script can also be used in Crontab, but ensure that your Crontab can find the correct Docker command. It is recommended to use absolute paths.
 
-echo "Detected Lobe-Chat update"
+  Configure Crontab to execute the script every 5 minutes:
 
-# Remove the old container
-echo "Removed: $(docker rm -f Lobe-Chat)"
-
-# You may need to navigate to the directory where `docker-compose.yml` is located first
-# cd /path/to/docker-compose-folder
-
-# Run the new container
-echo "Started: $(docker-compose up)"
-
-# Print the update time and version
-echo "Update time: $(date)"
-echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
-
-# Clean up unused images
-docker images | grep 'lobehub/lobe-chat' | grep -v 'lobehub/lobe-chat-database' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
-echo "Removed old images."
-```
-
-This script can also be used in Crontab, but ensure that your Crontab can find the correct Docker command. It is recommended to use absolute paths.
-
-Configure Crontab to execute the script every 5 minutes:
-
-```bash
-*/5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
-```
-
+  ```bash
+  */5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
+  ```
 </Steps>

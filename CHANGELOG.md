@@ -2,6 +2,884 @@
 
 # Changelog
 
+### [Version 1.47.2](https://github.com/lobehub/lobe-chat/compare/v1.47.1...v1.47.2)
+
+<sup>Released on **2025-01-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix api key in api key form.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix api key in api key form, closes [#5498](https://github.com/lobehub/lobe-chat/issues/5498) ([b4a160b](https://github.com/lobehub/lobe-chat/commit/b4a160b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.47.1](https://github.com/lobehub/lobe-chat/compare/v1.47.0...v1.47.1)
+
+<sup>Released on **2025-01-17**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.47.0](https://github.com/lobehub/lobe-chat/compare/v1.46.7...v1.47.0)
+
+<sup>Released on **2025-01-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Support new ai provider in client pglite.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support new ai provider in client pglite, closes [#5488](https://github.com/lobehub/lobe-chat/issues/5488) ([08f505f](https://github.com/lobehub/lobe-chat/commit/08f505f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.46.7](https://github.com/lobehub/lobe-chat/compare/v1.46.6...v1.46.7)
+
+<sup>Released on **2025-01-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve validation for provider and model in parseFilesConfig, temporarily disable S3 client integrity check for Cloudflare R2.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve validation for provider and model in parseFilesConfig, closes [#5454](https://github.com/lobehub/lobe-chat/issues/5454) ([b4808f8](https://github.com/lobehub/lobe-chat/commit/b4808f8))
+- **misc**: Temporarily disable S3 client integrity check for Cloudflare R2, closes [#5479](https://github.com/lobehub/lobe-chat/issues/5479) ([a638238](https://github.com/lobehub/lobe-chat/commit/a638238))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.46.6](https://github.com/lobehub/lobe-chat/compare/v1.46.5...v1.46.6)
+
+<sup>Released on **2025-01-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Gemini models HarmBlockThreshold.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Gemini models HarmBlockThreshold, closes [#5477](https://github.com/lobehub/lobe-chat/issues/5477) ([f98375c](https://github.com/lobehub/lobe-chat/commit/f98375c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.46.5](https://github.com/lobehub/lobe-chat/compare/v1.46.4...v1.46.5)
+
+<sup>Released on **2025-01-16**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.46.4](https://github.com/lobehub/lobe-chat/compare/v1.46.3...v1.46.4)
+
+<sup>Released on **2025-01-16**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor some implement for the next performance improvement.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor some implement for the next performance improvement, closes [#5462](https://github.com/lobehub/lobe-chat/issues/5462) ([b5e1146](https://github.com/lobehub/lobe-chat/commit/b5e1146))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.46.3](https://github.com/lobehub/lobe-chat/compare/v1.46.2...v1.46.3)
+
+<sup>Released on **2025-01-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix azure in new ai provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix azure in new ai provider, closes [#5448](https://github.com/lobehub/lobe-chat/issues/5448) ([b5042c3](https://github.com/lobehub/lobe-chat/commit/b5042c3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.46.2](https://github.com/lobehub/lobe-chat/compare/v1.46.1...v1.46.2)
+
+<sup>Released on **2025-01-15**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.46.1](https://github.com/lobehub/lobe-chat/compare/v1.46.0...v1.46.1)
+
+<sup>Released on **2025-01-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add auth support for `PROXY_URL`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add auth support for `PROXY_URL`, closes [#5304](https://github.com/lobehub/lobe-chat/issues/5304) ([eb26c79](https://github.com/lobehub/lobe-chat/commit/eb26c79))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.46.0](https://github.com/lobehub/lobe-chat/compare/v1.45.17...v1.46.0)
+
+<sup>Released on **2025-01-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Add lm studio provider, support to customize Embedding model with env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add lm studio provider, closes [#4483](https://github.com/lobehub/lobe-chat/issues/4483) ([0ac5802](https://github.com/lobehub/lobe-chat/commit/0ac5802))
+- **misc**: Support to customize Embedding model with env, closes [#5177](https://github.com/lobehub/lobe-chat/issues/5177) ([eed9357](https://github.com/lobehub/lobe-chat/commit/eed9357))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.17](https://github.com/lobehub/lobe-chat/compare/v1.45.16...v1.45.17)
+
+<sup>Released on **2025-01-15**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor Minimax with LobeOpenAICompatibleFactory.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor Minimax with LobeOpenAICompatibleFactory, closes [#5325](https://github.com/lobehub/lobe-chat/issues/5325) ([da11b55](https://github.com/lobehub/lobe-chat/commit/da11b55))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.16](https://github.com/lobehub/lobe-chat/compare/v1.45.15...v1.45.16)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Improve ai provider code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Improve ai provider code, closes [#5442](https://github.com/lobehub/lobe-chat/issues/5442) ([32013b4](https://github.com/lobehub/lobe-chat/commit/32013b4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.15](https://github.com/lobehub/lobe-chat/compare/v1.45.14...v1.45.15)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix pull models error in new ai provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix pull models error in new ai provider, closes [#5441](https://github.com/lobehub/lobe-chat/issues/5441) ([1726d85](https://github.com/lobehub/lobe-chat/commit/1726d85))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.14](https://github.com/lobehub/lobe-chat/compare/v1.45.13...v1.45.14)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### ♻ Code Refactoring
+
+- **plugin**: Update plugin prompt.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **plugin**: Update plugin prompt, closes [#5083](https://github.com/lobehub/lobe-chat/issues/5083) ([ddd3b53](https://github.com/lobehub/lobe-chat/commit/ddd3b53))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.13](https://github.com/lobehub/lobe-chat/compare/v1.45.12...v1.45.13)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve model config form modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve model config form modal, closes [#5438](https://github.com/lobehub/lobe-chat/issues/5438) ([9b303e0](https://github.com/lobehub/lobe-chat/commit/9b303e0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.12](https://github.com/lobehub/lobe-chat/compare/v1.45.11...v1.45.12)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `enable_search` parameter intro condition in Qwen.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `enable_search` parameter intro condition in Qwen, closes [#5297](https://github.com/lobehub/lobe-chat/issues/5297) ([0b19c20](https://github.com/lobehub/lobe-chat/commit/0b19c20))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.11](https://github.com/lobehub/lobe-chat/compare/v1.45.10...v1.45.11)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Support Gemini 2.0 HarmBlockThreshold.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Support Gemini 2.0 HarmBlockThreshold, closes [#5422](https://github.com/lobehub/lobe-chat/issues/5422) ([4d1a4cd](https://github.com/lobehub/lobe-chat/commit/4d1a4cd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.10](https://github.com/lobehub/lobe-chat/compare/v1.45.9...v1.45.10)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix some providers issues.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix some providers issues, closes [#5429](https://github.com/lobehub/lobe-chat/issues/5429) ([b7edbd3](https://github.com/lobehub/lobe-chat/commit/b7edbd3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.9](https://github.com/lobehub/lobe-chat/compare/v1.45.8...v1.45.9)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix pin package manager to pnpm\@9 for docker.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix pin package manager to pnpm\@9 for docker, closes [#5436](https://github.com/lobehub/lobe-chat/issues/5436) ([00dc29b](https://github.com/lobehub/lobe-chat/commit/00dc29b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.8](https://github.com/lobehub/lobe-chat/compare/v1.45.7...v1.45.8)
+
+<sup>Released on **2025-01-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Refactor dynamic import in RSC.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Refactor dynamic import in RSC, closes [#5434](https://github.com/lobehub/lobe-chat/issues/5434) ([6a663a7](https://github.com/lobehub/lobe-chat/commit/6a663a7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.7](https://github.com/lobehub/lobe-chat/compare/v1.45.6...v1.45.7)
+
+<sup>Released on **2025-01-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix released at for undefined condition.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix released at for undefined condition, closes [#5391](https://github.com/lobehub/lobe-chat/issues/5391) ([9c5822a](https://github.com/lobehub/lobe-chat/commit/9c5822a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.6](https://github.com/lobehub/lobe-chat/compare/v1.45.5...v1.45.6)
+
+<sup>Released on **2025-01-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `*_MODEL_LIST` env in new provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `*_MODEL_LIST` env in new provider, closes [#5350](https://github.com/lobehub/lobe-chat/issues/5350) ([2b1b2a2](https://github.com/lobehub/lobe-chat/commit/2b1b2a2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.5](https://github.com/lobehub/lobe-chat/compare/v1.45.4...v1.45.5)
+
+<sup>Released on **2025-01-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Revert officeparser.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Revert officeparser, closes [#5370](https://github.com/lobehub/lobe-chat/issues/5370) ([ea116c2](https://github.com/lobehub/lobe-chat/commit/ea116c2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.4](https://github.com/lobehub/lobe-chat/compare/v1.45.3...v1.45.4)
+
+<sup>Released on **2025-01-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix GitHub and huggingface provider config unusable.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix GitHub and huggingface provider config unusable, closes [#5366](https://github.com/lobehub/lobe-chat/issues/5366) ([aec67b4](https://github.com/lobehub/lobe-chat/commit/aec67b4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.3](https://github.com/lobehub/lobe-chat/compare/v1.45.2...v1.45.3)
+
+<sup>Released on **2025-01-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix some ai provider known issues.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix some ai provider known issues, closes [#5361](https://github.com/lobehub/lobe-chat/issues/5361) ([b2775b5](https://github.com/lobehub/lobe-chat/commit/b2775b5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.2](https://github.com/lobehub/lobe-chat/compare/v1.45.1...v1.45.2)
+
+<sup>Released on **2025-01-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update siliconcloud model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update siliconcloud model list, closes [#5360](https://github.com/lobehub/lobe-chat/issues/5360) ([69085ac](https://github.com/lobehub/lobe-chat/commit/69085ac))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.45.1](https://github.com/lobehub/lobe-chat/compare/v1.45.0...v1.45.1)
+
+<sup>Released on **2025-01-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix remark gfm regex breaks in Safari versions < 16.4.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix remark gfm regex breaks in Safari versions < 16.4, closes [#5357](https://github.com/lobehub/lobe-chat/issues/5357) ([9086570](https://github.com/lobehub/lobe-chat/commit/9086570))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.45.0](https://github.com/lobehub/lobe-chat/compare/v1.44.3...v1.45.0)
+
+<sup>Released on **2025-01-08**</sup>
+
+#### ✨ Features
+
+- **misc**: Update Remark.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Update Remark, closes [#5340](https://github.com/lobehub/lobe-chat/issues/5340) ([2c3331a](https://github.com/lobehub/lobe-chat/commit/2c3331a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.44.3](https://github.com/lobehub/lobe-chat/compare/v1.44.2...v1.44.3)
+
+<sup>Released on **2025-01-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix provider enabled issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix provider enabled issue, closes [#5337](https://github.com/lobehub/lobe-chat/issues/5337) ([8e0b634](https://github.com/lobehub/lobe-chat/commit/8e0b634))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.44.2](https://github.com/lobehub/lobe-chat/compare/v1.44.1...v1.44.2)
+
+<sup>Released on **2025-01-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add provider id validate.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add provider id validate, closes [#5336](https://github.com/lobehub/lobe-chat/issues/5336) ([7f8a1b6](https://github.com/lobehub/lobe-chat/commit/7f8a1b6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.44.1](https://github.com/lobehub/lobe-chat/compare/v1.44.0...v1.44.1)
+
+<sup>Released on **2025-01-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix model select not auto update and sort issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix model select not auto update and sort issue, closes [#5330](https://github.com/lobehub/lobe-chat/issues/5330) ([dc76d6f](https://github.com/lobehub/lobe-chat/commit/dc76d6f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.44.0](https://github.com/lobehub/lobe-chat/compare/v1.43.6...v1.44.0)
+
+<sup>Released on **2025-01-07**</sup>
+
+#### ✨ Features
+
+- **misc**: Brand new AI provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Brand new AI provider, closes [#5158](https://github.com/lobehub/lobe-chat/issues/5158) ([bde6d64](https://github.com/lobehub/lobe-chat/commit/bde6d64))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.43.6](https://github.com/lobehub/lobe-chat/compare/v1.43.5...v1.43.6)
+
+<sup>Released on **2025-01-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix portal suspense error when first open.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix portal suspense error when first open, closes [#5322](https://github.com/lobehub/lobe-chat/issues/5322) ([0d4c487](https://github.com/lobehub/lobe-chat/commit/0d4c487))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.43.5](https://github.com/lobehub/lobe-chat/compare/v1.43.4...v1.43.5)
+
+<sup>Released on **2025-01-07**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix style warning in antd 5.23.0 and some error logs.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix style warning in antd 5.23.0 and some error logs, closes [#5319](https://github.com/lobehub/lobe-chat/issues/5319) ([4fcf5d6](https://github.com/lobehub/lobe-chat/commit/4fcf5d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.43.4](https://github.com/lobehub/lobe-chat/compare/v1.43.3...v1.43.4)
+
+<sup>Released on **2025-01-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix format short number.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix format short number, closes [#5294](https://github.com/lobehub/lobe-chat/issues/5294) ([d8a29ec](https://github.com/lobehub/lobe-chat/commit/d8a29ec))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.43.3](https://github.com/lobehub/lobe-chat/compare/v1.43.2...v1.43.3)
 
 <sup>Released on **2025-01-04**</sup>

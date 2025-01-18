@@ -22,10 +22,10 @@ const useStyles = createStyles(({ css, token }) => ({
     height: 64px;
     padding-block: 4px;
     padding-inline: 8px 24px;
-
-    background: ${token.colorFillTertiary};
     border: 1px solid ${token.colorBorder};
     border-radius: 8px;
+
+    background: ${token.colorFillTertiary};
   `,
   deleteButton: css`
     position: absolute;

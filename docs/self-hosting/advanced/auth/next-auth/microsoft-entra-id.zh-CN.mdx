@@ -17,68 +17,55 @@ tags:
 <Steps>
   ### 创建 Microsoft Entra ID 应用
 
-在你的 [Microsoft Azure Portal][microsoft-azure-portal] 进入 Microsoft Entra ID -> App registrations -> New registration 创建一个新的应用。
+  在你的 [Microsoft Azure Portal][microsoft-azure-portal] 进入 Microsoft Entra ID -> App registrations -> New registration 创建一个新的应用。
 
-填写你想向组织用户显示的应用名称，选择你期望支持的账户类型，如果只支持内部用户请选择 `Accounts in this organizational directory only (Default Directory only - Single tenant)`。
+  填写你想向组织用户显示的应用名称，选择你期望支持的账户类型，如果只支持内部用户请选择 `Accounts in this organizational directory only (Default Directory only - Single tenant)`。
 
-在 `Redirect URI (optional)` 中，应用类型选择 `Web`，Callback URL, 处填写：
+  在 `Redirect URI (optional)` 中，应用类型选择 `Web`，Callback URL, 处填写：
 
-```bash
-https://your-domain/api/auth/callback/microsoft-entra-id
-```
+  ```bash
+  https://your-domain/api/auth/callback/microsoft-entra-id
+  ```
 
-<Callout type={'info'}>
-  - 可以在 Register 后再填写或修改 Redirect URIs，但是务必保证填写的 URL 与部署的 URL 一致。 -
-  your-domain 请填写自己的域名
-</Callout>
+  <Callout type={'info'}>
+    - 可以在 Register 后再填写或修改 Redirect URIs，但是务必保证填写的 URL 与部署的 URL 一致。 -
+      your-domain 请填写自己的域名
+  </Callout>
 
-<Image
-  alt="App Register"
-  inStep
-  src="https://github.com/lobehub/lobe-chat/assets/13883964/4f9d83bd-b3fc-4abc-bcf4-ccbad65c219d"
-/>
+  <Image alt="App Register" inStep src="https://github.com/lobehub/lobe-chat/assets/13883964/4f9d83bd-b3fc-4abc-bcf4-ccbad65c219d" />
 
-点击「Register」
+  点击「Register」
 
-创建成功后，点击相应的应用，进入应用详情页，切换到「Overview」标签页，就可以看到相应的配置信息。
+  创建成功后，点击相应的应用，进入应用详情页，切换到「Overview」标签页，就可以看到相应的配置信息。
 
-<Image
-  alt="App Overview"
-  inStep
-  src="https://github.com/lobehub/lobe-chat/assets/13883964/48a0b702-05bd-4ce4-a007-a8ad00a36e5a"
-/>
+  <Image alt="App Overview" inStep src="https://github.com/lobehub/lobe-chat/assets/13883964/48a0b702-05bd-4ce4-a007-a8ad00a36e5a" />
 
-进入「Certificates & secrets」，选择「Client secrets」标签，点击「New client secret」，填写描述，选择过期时间，点击「Add」，创建一个新的客户端密钥。
+  进入「Certificates & secrets」，选择「Client secrets」标签，点击「New client secret」，填写描述，选择过期时间，点击「Add」，创建一个新的客户端密钥。
 
-<Image
-  alt="Create App Client Secret"
-  inStep
-  src="https://github.com/lobehub/lobe-chat/assets/13883964/c9d66fa0-158c-4bd3-a1fa-969e638259d2"
-/>
+  <Image alt="Create App Client Secret" inStep src="https://github.com/lobehub/lobe-chat/assets/13883964/c9d66fa0-158c-4bd3-a1fa-969e638259d2" />
 
-<Callout type={'important'}>请务必保存好你的客户端密钥，因为这是你唯一的机会查看它。</Callout>
+  <Callout type={'important'}>请务必保存好你的客户端密钥，因为这是你唯一的机会查看它。</Callout>
 
-### 新增用户
+  ### 新增用户
 
-回到「Microsoft Entra ID」界面，进入「Users」，点击「New user」，填写用户信息，点击「Create」，创建用户以使用 LobeChat。
+  回到「Microsoft Entra ID」界面，进入「Users」，点击「New user」，填写用户信息，点击「Create」，创建用户以使用 LobeChat。
 
-### 配置环境变量
+  ### 配置环境变量
 
-在部署 LobeChat 时，你需要配置以下环境变量：
+  在部署 LobeChat 时，你需要配置以下环境变量：
 
-| 环境变量 | 类型 | 描述 |
-| --- | --- | --- |
-| `NEXT_AUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32` |
-| `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Microsoft Entra ID 请填写 `microsoft-entra-id`。 |
-| `AUTH_MICROSOFT_ENTRA_ID_ID` | 必选 | Microsoft Entra ID 应用程序的 Client ID |
-| `AUTH_MICROSOFT_ENTRA_ID_SECRET` | 必选 | Microsoft Entra ID 应用程序的 Client Secret |
-| `AUTH_MICROSOFT_ENTRA_ID_TENANT_ID` | 必选 | Microsoft Entra ID 应用程序的 Tenant ID |
-| `NEXTAUTH_URL` | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
+  | 环境变量                                | 类型 | 描述                                                                                          |
+  | ----------------------------------- | -- | ------------------------------------------------------------------------------------------- |
+  | `NEXT_AUTH_SECRET`                  | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`                               |
+  | `NEXT_AUTH_SSO_PROVIDERS`           | 必选 | 选择 LoboChat 的单点登录提供商。使用 Microsoft Entra ID 请填写 `microsoft-entra-id`。                        |
+  | `AUTH_MICROSOFT_ENTRA_ID_ID`        | 必选 | Microsoft Entra ID 应用程序的 Client ID                                                          |
+  | `AUTH_MICROSOFT_ENTRA_ID_SECRET`    | 必选 | Microsoft Entra ID 应用程序的 Client Secret                                                      |
+  | `AUTH_MICROSOFT_ENTRA_ID_TENANT_ID` | 必选 | Microsoft Entra ID 应用程序的 Tenant ID                                                          |
+  | `NEXTAUTH_URL`                      | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
 
   <Callout type={'tip'}>
     前往 [📘 环境变量](/zh/docs/self-hosting/environment-variable#microsoft-entra-id) 可查阅相关变量详情。
-
-</Callout>
+  </Callout>
 </Steps>
 
 <Callout type={'info'}>

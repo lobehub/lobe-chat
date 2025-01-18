@@ -12,10 +12,9 @@ const useStyles = createStyles(({ css, token }) => {
       width: fit-content;
       height: 24px;
       padding-inline: 8px;
+      border-radius: 6px;
 
       color: ${token.colorTextTertiary};
-
-      border-radius: 6px;
 
       &:hover {
         color: ${token.colorTextSecondary};

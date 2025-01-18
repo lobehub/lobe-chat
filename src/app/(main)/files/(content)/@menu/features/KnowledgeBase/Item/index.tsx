@@ -20,7 +20,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     margin-inline: 8px;
     padding-block: 4px;
     padding-inline: 8px;
-
     border-radius: ${token.borderRadius}px;
 
     &.${knowledgeItemClass} {

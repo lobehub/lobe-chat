@@ -31,52 +31,43 @@ If you are using Logto Cloud, assume its endpoint domain is `https://example.log
 <Steps>
   ### Create Logto Application
 
-Access your privately deployed Logto WebUI or [Logto Cloud](http://cloud.logto.io/) to enter the console, and create a `Next.js (App Router)` application under `Applications` with any name.
+  Access your privately deployed Logto WebUI or [Logto Cloud](http://cloud.logto.io/) to enter the console, and create a `Next.js (App Router)` application under `Applications` with any name.
 
-### Configure Logto
+  ### Configure Logto
 
-Set the `Redirect URI` to `https://lobe.example.com/api/auth/callback/logto` and the `Post sign-out redirect URI` to `https://lobe.example.com/`.
+  Set the `Redirect URI` to `https://lobe.example.com/api/auth/callback/logto` and the `Post sign-out redirect URI` to `https://lobe.example.com/`.
 
-Set `CORS allowed origins` to `https://lobe.example.com`.
+  Set `CORS allowed origins` to `https://lobe.example.com`.
 
-<Image
-  alt="Configure Logto"
-  inStep
-  src="https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523"
-/>
+  <Image alt="Configure Logto" inStep src="https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523" />
 
-After successful creation, save the `Client ID` and `Client Secret`.
+  After successful creation, save the `Client ID` and `Client Secret`.
 
-### Configure Environment Variables
+  ### Configure Environment Variables
 
-<Image
-  alt="Configure Environment Variables"
-  inStep
-  src="https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837"
-/>
+  <Image alt="Configure Environment Variables" inStep src="https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837" />
 
-Set the obtained `Client ID` and `Client Secret` as `AUTH_LOGTO_ID` and `AUTH_LOGTO_SECRET` in the LobeChat environment variables.
+  Set the obtained `Client ID` and `Client Secret` as `AUTH_LOGTO_ID` and `AUTH_LOGTO_SECRET` in the LobeChat environment variables.
 
-Configure `AUTH_LOGTO_ISSUER` in the LobeChat environment variables as follows:
+  Configure `AUTH_LOGTO_ISSUER` in the LobeChat environment variables as follows:
 
-- `https://lobe-auth-api.example.com/oidc` if you are using a privately deployed Logto
-- `https://example.logto.app/oidc` if you are using Logto Cloud
+  - `https://lobe-auth-api.example.com/oidc` if you are using a privately deployed Logto
+  - `https://example.logto.app/oidc` if you are using Logto Cloud
 
-When deploying LobeChat, you need to configure the following environment variables:
+  When deploying LobeChat, you need to configure the following environment variables:
 
-| Environment Variable | Type | Description |
-| --- | --- | --- |
-| `NEXT_AUTH_SECRET` | Required | The key used to encrypt Auth.js session tokens. You can generate a key using the command: `openssl rand -base64 32` |
-| `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the single sign-on provider for LobeChat. For Logto, enter `logto`. |
-| `AUTH_LOGTO_ID` | Required | The Client ID from the Logto App details page |
-| `AUTH_LOGTO_SECRET` | Required | The Client Secret from the Logto App details page |
-| `AUTH_LOGTO_ISSUER` | Required | OpenID Connect issuer of the Logto provider |
-| `NEXTAUTH_URL` | Required | This URL specifies the callback address for Auth.js during OAuth verification, needed only if the default generated redirect address is incorrect. `https://lobe.example.com/api/auth` |
+  | Environment Variable      | Type     | Description                                                                                                                                                                            |
+  | ------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `NEXT_AUTH_SECRET`        | Required | The key used to encrypt Auth.js session tokens. You can generate a key using the command: `openssl rand -base64 32`                                                                    |
+  | `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the single sign-on provider for LobeChat. For Logto, enter `logto`.                                                                                                             |
+  | `AUTH_LOGTO_ID`           | Required | The Client ID from the Logto App details page                                                                                                                                          |
+  | `AUTH_LOGTO_SECRET`       | Required | The Client Secret from the Logto App details page                                                                                                                                      |
+  | `AUTH_LOGTO_ISSUER`       | Required | OpenID Connect issuer of the Logto provider                                                                                                                                            |
+  | `NEXTAUTH_URL`            | Required | This URL specifies the callback address for Auth.js during OAuth verification, needed only if the default generated redirect address is incorrect. `https://lobe.example.com/api/auth` |
 
   <Callout type={'tip'}>
     Visit [📘 Environment Variables](/docs/self-hosting/environment-variables/auth#logto) for details on related variables.
-
-</Callout>
+  </Callout>
 </Steps>
 
 ### Troubleshooting
@@ -84,22 +75,22 @@ When deploying LobeChat, you need to configure the following environment variabl
 If you encounter issues during the Logto deployment process, refer to the following common problems:
 
 - `Only roles with the xxx attribute may create roles`:
-Check your database user's permissions and ensure that the user in your Logto database has the `admin` role to create roles.
+  Check your database user's permissions and ensure that the user in your Logto database has the `admin` role to create roles.
 
 - Error executing `logto db seed` on third-party databases like `Neon`:
-Try using the `logto db seed --encrypt-base-role` command.
+  Try using the `logto db seed --encrypt-base-role` command.
 
 - Database seeding failed:
-Try skipping the seeding process with the `--skip-seed` parameter.
+  Try skipping the seeding process with the `--skip-seed` parameter.
 
 - `Error: role xxx already exists`:
-Delete the existing role in the database.
+  Delete the existing role in the database.
 
 - Database migration failed after a version upgrade:
-Try using the command `npx @logto/cli db alteration deploy $version` (e.g., `npx @logto/cli db alteration deploy 1.22.0`).
+  Try using the command `npx @logto/cli db alteration deploy $version` (e.g., `npx @logto/cli db alteration deploy 1.22.0`).
 
 - I am using Docker deployment and want a one-click upgrade:
-Execute the custom command in the container: `sh -c "npm run cli db seed -- --swe --encrypt-base-role" && npx @logto/cli db alteration deploy $version && npm start`
+  Execute the custom command in the container: `sh -c "npm run cli db seed -- --swe --encrypt-base-role" && npx @logto/cli db alteration deploy $version && npm start`
 
 <Callout type={'info'}>
   After successful deployment, users will be able to authenticate via Logto and use LobeChat.

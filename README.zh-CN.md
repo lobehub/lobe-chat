@@ -8,7 +8,7 @@
 支持语音合成、多模态、可扩展的（[function call][docs-functionc-call]）插件系统<br/>
 一键**免费**拥有你自己的 ChatGPT/Gemini/Claude/Ollama 应用
 
-[English](./README.md) · **简体中文** · [日本語](./README.ja-JP.md) · [官网][official-site] · [更新日志][changelog] · [文档][docs] · [博客][blog] · [反馈问题][github-issues-link]
+[English](./README.md) · [繁體中文](./README.zh-TW.md) · **简体中文** · [日本語](./README.ja-JP.md) · [官网][official-site] · [更新日志][changelog] · [文档][docs] · [博客][blog] · [反馈问题][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -168,20 +168,20 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[Qwen](https://lobechat.com/discover/provider/qwen)**: 通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。
 - **[Wenxin](https://lobechat.com/discover/provider/wenxin)**: 企业级一站式大模型与 AI 原生应用开发及服务平台，提供最全面易用的生成式人工智能模型开发、应用开发全流程工具链
 - **[Hunyuan](https://lobechat.com/discover/provider/hunyuan)**: 由腾讯研发的大语言模型，具备强大的中文创作能力，复杂语境下的逻辑推理能力，以及可靠的任务执行能力
-- **[Spark](https://lobechat.com/discover/provider/spark)**: 科大讯飞星火大模型提供多领域、多语言的强大 AI 能力，利用先进的自然语言处理技术，构建适用于智能硬件、智慧医疗、智慧金融等多种垂直场景的创新应用。
 - **[ZhiPu](https://lobechat.com/discover/provider/zhipu)**: 智谱 AI 提供多模态与语言模型的开放平台，支持广泛的 AI 应用场景，包括文本处理、图像理解与编程辅助等。
+- **[SiliconCloud](https://lobechat.com/discover/provider/siliconcloud)**: SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务
 - **[01.AI](https://lobechat.com/discover/provider/zeroone)**: 零一万物致力于推动以人为本的 AI 2.0 技术革命，旨在通过大语言模型创造巨大的经济和社会价值，并开创新的 AI 生态与商业模式。
+- **[Spark](https://lobechat.com/discover/provider/spark)**: 科大讯飞星火大模型提供多领域、多语言的强大 AI 能力，利用先进的自然语言处理技术，构建适用于智能硬件、智慧医疗、智慧金融等多种垂直场景的创新应用。
 - **[SenseNova](https://lobechat.com/discover/provider/sensenova)**: 商汤日日新，依托商汤大装置的强大的基础支撑，提供高效易用的全栈大模型服务。
 - **[Stepfun](https://lobechat.com/discover/provider/stepfun)**: 阶级星辰大模型具备行业领先的多模态及复杂推理能力，支持超长文本理解和强大的自主调度搜索引擎功能。
 - **[Moonshot](https://lobechat.com/discover/provider/moonshot)**: Moonshot 是由北京月之暗面科技有限公司推出的开源平台，提供多种自然语言处理模型，应用领域广泛，包括但不限于内容创作、学术研究、智能推荐、医疗诊断等，支持长文本处理和复杂生成任务。
 - **[Baichuan](https://lobechat.com/discover/provider/baichuan)**: 百川智能是一家专注于人工智能大模型研发的公司，其模型在国内知识百科、长文本处理和生成创作等中文任务上表现卓越，超越了国外主流模型。百川智能还具备行业领先的多模态能力，在多项权威评测中表现优异。其模型包括 Baichuan 4、Baichuan 3 Turbo 和 Baichuan 3 Turbo 128k 等，分别针对不同应用场景进行优化，提供高性价比的解决方案。
 - **[Minimax](https://lobechat.com/discover/provider/minimax)**: MiniMax 是 2021 年成立的通用人工智能科技公司，致力于与用户共创智能。MiniMax 自主研发了不同模态的通用大模型，其中包括万亿参数的 MoE 文本大模型、语音大模型以及图像大模型。并推出了海螺 AI 等应用。
-- **[360 AI](https://lobechat.com/discover/provider/ai360)**: 360 AI 是 360 公司推出的 AI 模型和服务平台，提供多种先进的自然语言处理模型，包括 360GPT2 Pro、360GPT Pro、360GPT Turbo 和 360GPT Turbo Responsibility 8K。这些模型结合了大规模参数和多模态能力，广泛应用于文本生成、语义理解、对话系统与代码生成等领域。通过灵活的定价策略，360 AI 满足多样化用户需求，支持开发者集成，推动智能化应用的革新和发展。
-- **[Taichu](https://lobechat.com/discover/provider/taichu)**: 中科院自动化研究所和武汉人工智能研究院推出新一代多模态大模型，支持多轮问答、文本创作、图像生成、3D 理解、信号分析等全面问答任务，拥有更强的认知、理解、创作能力，带来全新互动体验。
 - **[InternLM](https://lobechat.com/discover/provider/internlm)**: 致力于大模型研究与开发工具链的开源组织。为所有 AI 开发者提供高效、易用的开源平台，让最前沿的大模型与算法技术触手可及
-- **[SiliconCloud](https://lobechat.com/discover/provider/siliconcloud)**: SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务
 - **[Higress](https://lobechat.com/discover/provider/higress)**: Higress 是一款云原生 API 网关，在阿里内部为解决 Tengine reload 对长连接业务有损，以及 gRPC/Dubbo 负载均衡能力不足而诞生。
 - **[Gitee AI](https://lobechat.com/discover/provider/giteeai)**: Gitee AI 的 Serverless API 为 AI 开发者提供开箱即用的大模型推理 API 服务。
+- **[Taichu](https://lobechat.com/discover/provider/taichu)**: 中科院自动化研究所和武汉人工智能研究院推出新一代多模态大模型，支持多轮问答、文本创作、图像生成、3D 理解、信号分析等全面问答任务，拥有更强的认知、理解、创作能力，带来全新互动体验。
+- **[360 AI](https://lobechat.com/discover/provider/ai360)**: 360 AI 是 360 公司推出的 AI 模型和服务平台，提供多种先进的自然语言处理模型，包括 360GPT2 Pro、360GPT Pro、360GPT Turbo 和 360GPT Turbo Responsibility 8K。这些模型结合了大规模参数和多模态能力，广泛应用于文本生成、语义理解、对话系统与代码生成等领域。通过灵活的定价策略，360 AI 满足多样化用户需求，支持开发者集成，推动智能化应用的革新和发展。
 
 </details>
 

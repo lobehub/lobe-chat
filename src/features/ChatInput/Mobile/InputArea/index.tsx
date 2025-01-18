@@ -15,8 +15,8 @@ const useStyles = createStyles(({ css, token }) => {
     container: css`
       flex: none;
       padding-block: 12px 12px;
-      background: ${token.colorFillQuaternary};
       border-block-start: 1px solid ${rgba(token.colorBorder, 0.25)};
+      background: ${token.colorFillQuaternary};
     `,
     expand: css`
       position: absolute;

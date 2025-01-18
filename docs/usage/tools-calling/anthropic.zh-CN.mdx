@@ -15,12 +15,12 @@ tags:
 
 Anthropic Claude 系列模型 Tools Calling 能力一览：
 
-| 模型 | 支持 Tools Calling | 流式 （Stream） | 并发（Parallel） | 简单指令得分 | 复杂指令 |
-| --- | --- | --- | --- | --- | --- |
-| Claude 3.5 Sonnet | ✅ | ✅ | ✅ | 🌟🌟🌟 | 🌟🌟 |
-| Claude 3 Opus | ✅ | ✅ | ❌ | 🌟 | ⛔️ |
-| Claude 3 Sonnet | ✅ | ✅ | ❌ | 🌟🌟 | ⛔️ |
-| Claude 3 Haiku | ✅ | ✅ | ❌ | 🌟🌟 | ⛔️ |
+| 模型                | 支持 Tools Calling | 流式 （Stream） | 并发（Parallel） | 简单指令得分 | 复杂指令 |
+| ----------------- | ---------------- | ----------- | ------------ | ------ | ---- |
+| Claude 3.5 Sonnet | ✅                | ✅           | ✅            | 🌟🌟🌟 | 🌟🌟 |
+| Claude 3 Opus     | ✅                | ✅           | ❌            | 🌟     | ⛔️   |
+| Claude 3 Sonnet   | ✅                | ✅           | ❌            | 🌟🌟   | ⛔️   |
+| Claude 3 Haiku    | ✅                | ✅           | ❌            | 🌟🌟   | ⛔️   |
 
 ## Claude 3.5 Sonnet
 
@@ -30,18 +30,13 @@ Anthropic Claude 系列模型 Tools Calling 能力一览：
 
 <Video src="https://github.com/lobehub/lobe-chat/assets/28616219/42a6980c-ea2a-44fd-b61f-a7989827f5a5" />
 
-<Image
-  alt="Claude 3.5 Sonnet 简单指令的 Tools Calling"
-  src="https://github.com/lobehub/lobe-chat/assets/28616219/71146b75-2c73-48c3-9688-1d8814d2a791"
-/>
+<Image alt="Claude 3.5 Sonnet 简单指令的 Tools Calling" src="https://github.com/lobehub/lobe-chat/assets/28616219/71146b75-2c73-48c3-9688-1d8814d2a791" />
 
 <details>
   <summary>Tools Calling 原始输出：</summary>
 
-```yml
-
-```
-
+  ```yml
+  ```
 </details>
 
 ### 复杂调用指令：文生图
@@ -52,21 +47,16 @@ Anthropic Claude 系列模型 Tools Calling 能力一览：
 
 从上述视频中可以看到：
 
-1.  Sonnet 3.5 支持流式 Tools Calling 和 Parallel Tools Calling；
-2.  在流式 Tools Calling 时，表现出来的特征是在创建长句会等待住（详见 Tools Calling 原始输出 `[chunk 40]` 和 `[chunk 41]` 中间的耗时达到 6s）。所以相对来说会在 Tools Calling 的起始阶段有一个较长的等待时间。
+1. Sonnet 3.5 支持流式 Tools Calling 和 Parallel Tools Calling；
+2. 在流式 Tools Calling 时，表现出来的特征是在创建长句会等待住（详见 Tools Calling 原始输出 `[chunk 40]` 和 `[chunk 41]` 中间的耗时达到 6s）。所以相对来说会在 Tools Calling 的起始阶段有一个较长的等待时间。
 
-<Image
-  alt="Claude 3.5 Sonnet 复杂指令的 Tools Calling"
-  src="https://github.com/lobehub/lobe-chat/assets/28616219/23e2d7e5-a6f3-4f4c-9c6a-5651f35a5910"
-/>
+<Image alt="Claude 3.5 Sonnet 复杂指令的 Tools Calling" src="https://github.com/lobehub/lobe-chat/assets/28616219/23e2d7e5-a6f3-4f4c-9c6a-5651f35a5910" />
 
 <details>
   <summary>Tools Calling 原始输出：</summary>
 
-```yml
-
-```
-
+  ```yml
+  ```
 </details>
 
 ## Claude 3 Opus
@@ -83,14 +73,10 @@ Anthropic Claude 系列模型 Tools Calling 能力一览：
 2. Opus 会触发两次 Tools Calling，说明它并不支持 Parallel Tools Calling；
 3. 从 Tools Calling 的原始输出来看， Opus 也是支持流式 Tools Calling 的
 
-<Image
-  alt="Claude 3 Opus 简单指令的 Tools Calling"
-  src="https://github.com/lobehub/lobe-chat/assets/28616219/fa2f89bc-b9d5-43e3-a15e-1e79174d002c"
-/>
+<Image alt="Claude 3 Opus 简单指令的 Tools Calling" src="https://github.com/lobehub/lobe-chat/assets/28616219/fa2f89bc-b9d5-43e3-a15e-1e79174d002c" />
 
-  <details>
-    <summary>Tools Calling 原始输出：</summary>
-
+<details>
+  <summary>Tools Calling 原始输出：</summary>
 </details>
 
 ### 复杂调用指令：文生图
@@ -104,14 +90,10 @@ Anthropic Claude 系列模型 Tools Calling 能力一览：
 1. 结合简单任务， Opus 的工具调用一定会输出 `<thinking>` 标签，这其实对体验影响非常大
 2. Opus 输出的 prompts 字段是字符串，而不是数组，导致报错，无法正常调用插件。
 
-<Image
-  alt="Claude 3 Opus 复杂指令的 Tools Calling"
-  src="https://github.com/lobehub/lobe-chat/assets/28616219/1eee785d-932f-4320-845e-eed0bee4b1ae"
-/>
+<Image alt="Claude 3 Opus 复杂指令的 Tools Calling" src="https://github.com/lobehub/lobe-chat/assets/28616219/1eee785d-932f-4320-845e-eed0bee4b1ae" />
 
 <details>
   <summary>Tools Calling 原始输出：</summary>
-
 </details>
 
 ## Claude 3 Sonnet
@@ -124,14 +106,10 @@ Anthropic Claude 系列模型 Tools Calling 能力一览：
 
 从上述视频中可以看出，Claude 3 Sonnet 会调用两次 Tools Calling，说明它并不支持 Parallel Tools Calling。
 
-<Image
-  alt="Claude 3 Sonnet 简单指令的 Tools Calling"
-  src="https://github.com/lobehub/lobe-chat/assets/28616219/e82f5c69-7607-488f-8c10-0482fb380c6c"
-/>
+<Image alt="Claude 3 Sonnet 简单指令的 Tools Calling" src="https://github.com/lobehub/lobe-chat/assets/28616219/e82f5c69-7607-488f-8c10-0482fb380c6c" />
 
 <details>
   <summary>Tools Calling 原始输出：</summary>
-
 </details>
 
 ### 复杂调用指令：文生图
@@ -142,14 +120,10 @@ Anthropic Claude 系列模型 Tools Calling 能力一览：
 
 从上述视频中可以看到， Sonnet 3 在复杂指令调用下就失败了。报错原因是 prompts 原本预期为一个数组，但是生成的却是一个字符串。
 
-<Image
-  alt="Claude 3.5 Sonnet 复杂指令的 Tools Calling"
-  src="https://github.com/lobehub/lobe-chat/assets/28616219/b7d84e26-920d-4a82-8798-1b1060ebb341"
-/>
+<Image alt="Claude 3.5 Sonnet 复杂指令的 Tools Calling" src="https://github.com/lobehub/lobe-chat/assets/28616219/b7d84e26-920d-4a82-8798-1b1060ebb341" />
 
 <details>
   <summary>Tools Calling 原始输出：</summary>
-
 </details>
 
 ## Claude 3 Haiku
@@ -161,10 +135,7 @@ Anthropic Claude 系列模型 Tools Calling 能力一览：
 1. Claude 3 Haiku 会调用两次 Tools Calling，说明它也不支持 Parallel Tools Calling；
 2. Haiku 并没有回答好的，也是直接调用的工具；
 
-<Image
-  alt="Claude 3 Haiku 简单指令的 Tools Calling"
-  src="https://github.com/lobehub/lobe-chat/assets/28616219/9081b586-cf43-440f-8ef8-1de5d8658694"
-/>
+<Image alt="Claude 3 Haiku 简单指令的 Tools Calling" src="https://github.com/lobehub/lobe-chat/assets/28616219/9081b586-cf43-440f-8ef8-1de5d8658694" />
 
 ### 复杂调用指令：文生图
 
@@ -174,12 +145,8 @@ Anthropic Claude 系列模型 Tools Calling 能力一览：
 
 从上述视频中可以看到， Haiku 3 在复杂指令调用下也是失败的。报错原因同样是 prompts 生成了字符串而不是数组。
 
-<Image
-  alt="Claude 3 Haiku 复杂指令的 Tools Calling"
-  src="https://github.com/lobehub/lobe-chat/assets/28616219/cde80220-4615-43bb-934f-35fe0de88754"
-/>
+<Image alt="Claude 3 Haiku 复杂指令的 Tools Calling" src="https://github.com/lobehub/lobe-chat/assets/28616219/cde80220-4615-43bb-934f-35fe0de88754" />
 
 <details>
   <summary>Tools Calling 原始输出：</summary>
-
 </details>

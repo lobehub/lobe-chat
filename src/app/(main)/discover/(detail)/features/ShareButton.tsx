@@ -17,9 +17,10 @@ const useStyles = createStyles(({ css, token }) => {
     banner: css`
       overflow: hidden;
 
-      background: ${token.colorBgContainer};
       border: 1px solid ${token.colorBorderSecondary};
       border-radius: ${token.borderRadiusLG}px;
+
+      background: ${token.colorBgContainer};
       box-shadow: ${token.boxShadowTertiary};
     `,
     copy: css`

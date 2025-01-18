@@ -9,12 +9,12 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
+import { isDeprecatedEdition } from '@/const/version';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { EnabledProviderWithModels } from '@/types/aiModel';
-import { withBasePath } from '@/utils/basePath';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   menu: css`
@@ -76,7 +76,9 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
               </Flexbox>
             ),
             onClick: () => {
-              router.push(withBasePath('/settings/llm'));
+              router.push(
+                isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`,
+              );
             },
           },
         ];
@@ -88,7 +90,14 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
     return enabledList.map((provider) => ({
       children: getModelItems(provider),
       key: provider.id,
-      label: <ProviderItemRender name={provider.name} provider={provider.id} />,
+      label: (
+        <ProviderItemRender
+          logo={provider.logo}
+          name={provider.name}
+          provider={provider.id}
+          source={provider.source}
+        />
+      ),
       type: 'group',
     }));
   }, [enabledList]);
