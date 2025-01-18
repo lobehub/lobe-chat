@@ -93,15 +93,12 @@ describe('getProviderAuthPayload', () => {
       awsAccessKeyId: mockBedrockConfig.accessKeyId,
       awsRegion: mockBedrockConfig.region,
       awsSecretAccessKey: mockBedrockConfig.secretAccessKey,
-    };
-    // For client
-    const clientPayload = {
-      apiKey: mockBedrockConfig.secretAccessKey + mockBedrockConfig.accessKeyId,
       accessKeyId: mockBedrockConfig.accessKeyId,
-      region: mockBedrockConfig.region,
       accessKeySecret: mockBedrockConfig.secretAccessKey,
-    };
-    expect(payload).toEqual(merge(serverPayload, clientPayload));
+      awsSessionToken: undefined,
+      region: mockBedrockConfig.region,
+      sessionToken: undefined,
+    });
   });
 
   it('should return correct payload for Azure provider', () => {
@@ -116,15 +113,9 @@ describe('getProviderAuthPayload', () => {
     expect(payload).toEqual({
       apiKey: mockAzureConfig.apiKey,
       azureApiVersion: mockAzureConfig.apiVersion,
-      baseURL: mockAzureConfig.endpoint,
-    };
-    // For client
-    const clientPayload = {
-      apiKey: mockAzureConfig.apiKey,
       apiVersion: mockAzureConfig.apiVersion,
       baseURL: mockAzureConfig.endpoint,
-    };
-    expect(payload).toEqual(merge(serverPayload, clientPayload));
+    });
   });
 
   it('should return correct payload for Ollama provider', () => {
@@ -177,18 +168,12 @@ describe('getProviderAuthPayload', () => {
       setModelProviderConfig('cloudflare', mockCloudflareConfig);
     });
 
-    const payload = getProviderAuthPayload(ModelProvider.Cloudflare);
-    // For server
-    const serverPayload = {
-      apiKey: mockCloudflareConfig.apiKey,
-      cloudflareBaseURLOrAccountID: mockCloudflareConfig.baseURLOrAccountID,
-    };
-    // For client
-    const clientPayload = {
+    const payload = getProviderAuthPayload(ModelProvider.Cloudflare, mockCloudflareConfig);
+    expect(payload).toEqual({
       apiKey: mockCloudflareConfig.apiKey,
       baseURLOrAccountID: mockCloudflareConfig.baseURLOrAccountID,
-    };
-    expect(payload).toEqual(merge(serverPayload, clientPayload));
+      cloudflareBaseURLOrAccountID: mockCloudflareConfig.baseURLOrAccountID,
+    });
   });
 
   it('should return an empty object or throw an error for an unknown provider', () => {
