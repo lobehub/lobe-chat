@@ -1,5 +1,5 @@
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
-import { isServerMode } from '@/const/version';
+import { isDeprecatedEdition } from '@/const/version';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useUserStore } from '@/store/user';
@@ -94,7 +94,7 @@ export const createPayloadWithKeyVaults = (provider: string) => {
   let keyVaults = {};
 
   // TODO: remove this condition in V2.0
-  if (!isServerMode) {
+  if (isDeprecatedEdition) {
     keyVaults = keyVaultsConfigSelectors.getVaultByProvider(provider as any)(
       useUserStore.getState(),
     );

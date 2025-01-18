@@ -10,7 +10,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlexboxProps } from 'react-layout-kit';
 
-import { isServerMode } from '@/const/version';
+import { isDeprecatedEdition } from '@/const/version';
 import { DiscoverProviderItem } from '@/types/discover';
 
 const useStyles = createStyles(({ css }) => ({
@@ -32,7 +32,7 @@ const ProviderConfig = memo<ProviderConfigProps>(({ data, identifier }) => {
 
   const router = useRouter();
   const openSettings = () => {
-    router.push(!isServerMode ? '/settings/llm' : `/settings/provider/${identifier}`);
+    router.push(isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${identifier}`);
   };
 
   const icon = <Icon icon={SquareArrowOutUpRight} size={{ fontSize: 16 }} />;
