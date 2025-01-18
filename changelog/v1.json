@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix hydration error."]
+    },
+    "date": "2025-01-18",
+    "version": "1.47.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix api key in api key form."]
     },
     "date": "2025-01-17",
