@@ -8,7 +8,6 @@ import {
   UserKeyVaults,
   UserModelProviderConfig,
 } from '@/types/user/settings';
-import { merge } from '@/utils/merge';
 
 import { getProviderAuthPayload } from '../_auth';
 
