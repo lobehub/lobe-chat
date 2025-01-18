@@ -124,7 +124,12 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
  * **Note**: if you try to fetch directly, use `fetchOnClient` instead.
  */
 export function initializeWithClientStore(provider: string, payload: any) {
-  // add auth payload
+  /**
+   * Since #5267, we map parameters for client-fetch in function `getProviderAuthPayload`
+   * which called by `createPayloadWithKeyVaults` below.
+   * @see https://github.com/lobehub/lobe-chat/pull/5267
+   * @file src/services/_auth.ts
+   */
   const providerAuthPayload = { ...payload, ...createPayloadWithKeyVaults(provider) };
   const commonOptions = {
     // Allow OpenAI SDK and Anthropic SDK run on browser
