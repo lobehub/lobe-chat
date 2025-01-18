@@ -4,8 +4,7 @@ import urlJoin from 'url-join';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
-import { useGlobalStore } from '@/store/global';
-import { ChatSettingsTabs, SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
+import { ChatSettingsTabs, SettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
 export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Meta) => {
@@ -15,9 +14,6 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Met
 
   return useMemo(() => {
     if (activeId === INBOX_SESSION_ID) {
-      useGlobalStore.setState({
-        sidebarKey: SidebarTabKey.Setting,
-      });
       return () => router.push(urlJoin('/settings', SettingsTabs.Agent));
     }
     if (mobile) {
