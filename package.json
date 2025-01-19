@@ -207,7 +207,7 @@
     "react-lazy-load": "^4.0.1",
     "react-pdf": "^9.2.1",
     "react-rnd": "^10.4.14",
-    "react-scan": "^0.0.54",
+    "react-scan": "^0.1.0",
     "react-virtuoso": "^4.12.3",
     "react-wrap-balancer": "^1.1.1",
     "remark": "^15.0.1",
