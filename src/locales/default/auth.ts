@@ -34,6 +34,11 @@ export default {
   profile: {
     avatar: '头像',
     email: '电子邮件地址',
+    sso: {
+      loading: '正在加载已绑定的第三方账户',
+      providers: '第三方账户绑定',
+      unlink: '是否解绑该第三方账户 {{provider}} ？',
+    },
     username: '用户名',
   },
   signout: '退出登录',

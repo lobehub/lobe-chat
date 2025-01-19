@@ -2,6 +2,7 @@ import { ActionIcon, CopyButton, List } from '@lobehub/ui';
 import { Popconfirm } from 'antd';
 import { RotateCw, Unlink } from 'lucide-react';
 import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
@@ -13,19 +14,24 @@ const { Item } = List;
 
 export const SSOProvidersList = memo(() => {
   const [allowUnlink, setAllowUnlink] = useState<boolean>(false);
+
   const { data, isLoading, mutate } = useOnlyFetchOnceSWR('profile-sso-providers', async () => {
     const list = await userService.getUserSSOProviders();
     setAllowUnlink(list?.length > 1);
     return list;
   });
+
   const handleUnlinkSSO = async (provider: string, providerAccountId: string) => {
     await userService.unlinkSSOProvider(provider, providerAccountId);
     mutate();
   };
+
+  const { t } = useTranslation('auth');
+
   return isLoading ? (
     <Flexbox align={'center'} gap={4} horizontal>
       <ActionIcon icon={RotateCw} spin />
-      {'stats.modelsRank.loading'}
+      {t('profile.sso.loading')}
     </Flexbox>
   ) : (
     <Flexbox>
@@ -37,7 +43,7 @@ export const SSOProvidersList = memo(() => {
               <Popconfirm
                 onConfirm={() => handleUnlinkSSO(item.provider, item.providerAccountId)}
                 placement="topRight"
-                title="Are you sure to unlink this account?"
+                title={t('profile.sso.unlink', { provider: item.provider })}
               >
                 <ActionIcon disable={!allowUnlink} icon={Unlink} size={'small'} />
               </Popconfirm>
