@@ -10,6 +10,7 @@ import AvatarWithUpload from '@/features/AvatarWithUpload';
 import UserAvatar from '@/features/User/UserAvatar';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
+
 import SSOProvidersList from './features/SSOProvidersList';
 
 type SettingItemGroup = ItemGroup;
@@ -46,10 +47,10 @@ const Client = memo<{ mobile?: boolean }>(() => {
       {
         children: <SSOProvidersList />,
         hidden: !isLoginWithNextAuth,
-        label: 'profile.sso.providers',
-        minWidth: undefined,
+        label: t('profile.sso.providers'),
+        labelAlign: 'left',
         layout: 'vertical',
-        labelAlign: 'left'
+        minWidth: undefined,
       },
     ],
     title: t('tab.profile'),
