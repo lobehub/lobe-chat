@@ -36,6 +36,7 @@ export const SSOProvidersList = memo(() => {
               <CopyButton content={item.providerAccountId} size={'small'} />
               <Popconfirm
                 onConfirm={() => handleUnlinkSSO(item.provider, item.providerAccountId)}
+                placement="topRight"
                 title="Are you sure to unlink this account?"
               >
                 <ActionIcon disable={!allowUnlink} icon={Unlink} size={'small'} />
