@@ -5,6 +5,7 @@ import { DEFAULT_LANG, isLocaleNotSupport } from '@/const/locale';
 import { Locales, normalizeLocale } from '@/locales/resources';
 import { EdgeConfig } from '@/server/modules/EdgeConfig';
 import { AgentStoreIndex } from '@/types/discover';
+import { RevalidateTag } from '@/types/requestCache';
 
 export class AssistantStore {
   private readonly baseUrl: string;
@@ -29,10 +30,14 @@ export class AssistantStore {
     try {
       let res: Response;
 
-      res = await fetch(this.getAgentIndexUrl(locale as any), { next: { revalidate } });
+      res = await fetch(this.getAgentIndexUrl(locale as any), {
+        next: { revalidate, tags: [RevalidateTag.AgentIndex] },
+      });
 
       if (res.status === 404) {
-        res = await fetch(this.getAgentIndexUrl(DEFAULT_LANG), { next: { revalidate } });
+        res = await fetch(this.getAgentIndexUrl(DEFAULT_LANG), {
+          next: { revalidate, tags: [RevalidateTag.AgentIndex] },
+        });
       }
 
       if (!res.ok) {
