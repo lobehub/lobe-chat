@@ -11,7 +11,7 @@ const DeepSeek: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'deepseek-chat',
-      pricing: { // 2025.2.28 之后涨价
+      pricing: { // 2025.2.9 之后涨价
         cachedInput: 0.1,
         currency: 'CNY',
         input: 1,
