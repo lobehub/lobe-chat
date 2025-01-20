@@ -119,13 +119,15 @@ export interface ModelProviderCard {
    * @deprecated
    */
   showApiKey?: boolean;
-
   /**
    * whether show checker in the provider config
    * @deprecated
    */
   showChecker?: boolean;
-
+  /**
+   * whether to show the provider config
+   */
+  showConfig?: boolean;
   /**
    * whether to smoothing the output
    * @deprecated
