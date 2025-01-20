@@ -1,5 +1,26 @@
 [
   {
+    "children": {
+      "improvements": ["Remove redundant payload remapping in client-fetch."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor provider code."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.6"
+  },
+  {
+    "children": {
+      "improvements": ["Improve ai provider code."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.5"
+  },
+  {
     "children": {},
     "date": "2025-01-18",
     "version": "1.47.4"
