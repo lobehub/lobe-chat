@@ -31,14 +31,23 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
     // ============  1. preprocess messages   ============ //
     const camelCasePayload = this.camelCaseKeys(payload);
     const { messages, model, maxTokens = 2048, ...params } = camelCasePayload;
-
+    console.log('--------', messages, model, maxTokens, params);
     // ============  2. send api   ============ //
+    // si
+    // 适配o1接口的参数
+    let requestPayload: GetChatCompletionsOptions = { ...params, abortSignal: options?.signal };
+    if (model.startsWith('o1')) {
+      // @ts-ignore
+      requestPayload['max_completion_tokens'] = maxTokens;
+    } else {
+      requestPayload['maxTokens'] = maxTokens;
+    }
 
     try {
       const response = await this.client.streamChatCompletions(
         model,
         messages as ChatRequestMessage[],
-        { ...params, abortSignal: options?.signal, maxTokens } as GetChatCompletionsOptions,
+        requestPayload,
       );
 
       const [debug, prod] = response.tee();
