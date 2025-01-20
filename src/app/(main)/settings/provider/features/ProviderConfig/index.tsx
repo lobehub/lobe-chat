@@ -12,7 +12,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import InstantSwitch from '@/components/InstantSwitch';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { AES_GCM_URL, BASE_PROVIDER_DOC_URL } from '@/const/url';
 import { isServerMode } from '@/const/version';
@@ -26,6 +25,7 @@ import {
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
 import Checker from './Checker';
 import { SkeletonInput } from './SkeletonInput';
+import EnableSwitch from './EnableSwitch';
 import UpdateProviderInfo from './UpdateProviderInfo';
 
 const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
@@ -131,7 +131,6 @@ const ProviderConfig = memo<ProviderConfigProps>(
     const { cx, styles, theme } = useStyles();
 
     const [
-      toggleProviderEnabled,
       useFetchAiProviderItem,
       updateAiProviderConfig,
       enabled,
@@ -141,7 +140,6 @@ const ProviderConfig = memo<ProviderConfigProps>(
       isProviderEndpointNotEmpty,
       isProviderApiKeyNotEmpty,
     ] = useAiInfraStore((s) => [
-      s.toggleProviderEnabled,
       s.useFetchAiProviderItem,
       s.updateAiProviderConfig,
       aiProviderSelectors.isProviderEnabled(id)(s),
@@ -285,16 +283,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
           {extra}
 
           {isCustom && <UpdateProviderInfo />}
-          {isLoading ? (
-            <Skeleton.Button active className={styles.switchLoading} />
-          ) : (
-            <InstantSwitch
-              enabled={enabled}
-              onChange={async (enabled) => {
-                await toggleProviderEnabled(id as any, enabled);
-              }}
-            />
-          )}
+          <EnableSwitch id={id} />
         </Flexbox>
       ),
       title: (
