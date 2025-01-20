@@ -25,7 +25,7 @@ import {
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
 import Checker from './Checker';
 import { SkeletonInput } from './SkeletonInput';
-import EnableSwitch from './Switch';
+import EnableSwitch from './EnableSwitch';
 import UpdateProviderInfo from './UpdateProviderInfo';
 
 const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
