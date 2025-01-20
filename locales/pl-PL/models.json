@@ -305,6 +305,9 @@
   "abab6.5t-chat": {
     "description": "Optymalizowany do scenariuszy dialogowych w języku chińskim, oferujący płynne i zgodne z chińskimi zwyczajami generowanie dialogów."
   },
+  "abab7-chat-preview": {
+    "description": "W porównaniu do modeli z serii abab6.5, znacznie zwiększono zdolności w obszarach takich jak długie teksty, matematyka i pisanie."
+  },
   "accounts/fireworks/models/firefunction-v1": {
     "description": "Open source model wywołań funkcji od Fireworks, oferujący doskonałe możliwości wykonania poleceń i otwarte, konfigurowalne cechy."
   },

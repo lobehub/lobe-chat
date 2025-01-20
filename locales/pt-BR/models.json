@@ -305,6 +305,9 @@
   "abab6.5t-chat": {
     "description": "Otimizado para cenários de diálogo de personagens em chinês, oferecendo capacidade de geração de diálogos fluentes e que respeitam os hábitos de expressão em chinês."
   },
+  "abab7-chat-preview": {
+    "description": "Em relação à série de modelos abab6.5, houve um grande avanço em habilidades como texto longo, matemática e redação."
+  },
   "accounts/fireworks/models/firefunction-v1": {
     "description": "Modelo de chamada de função de código aberto da Fireworks, oferecendo excelente capacidade de execução de instruções e características personalizáveis."
   },

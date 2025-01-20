@@ -305,6 +305,9 @@
   "abab6.5t-chat": {
     "description": "중국어 캐릭터 대화 시나리오에 최적화되어 있으며, 유창하고 중국어 표현 습관에 맞는 대화 생성 능력을 제공합니다."
   },
+  "abab7-chat-preview": {
+    "description": "abab6.5 시리즈 모델에 비해 긴 글, 수학, 작문 등에서 능력이 크게 향상되었습니다."
+  },
   "accounts/fireworks/models/firefunction-v1": {
     "description": "Fireworks 오픈 소스 함수 호출 모델로, 뛰어난 지시 실행 능력과 개방형 커스터마이징 기능을 제공합니다."
   },

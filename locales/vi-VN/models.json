@@ -305,6 +305,9 @@
   "abab6.5t-chat": {
     "description": "Tối ưu hóa cho các tình huống đối thoại bằng tiếng Trung, cung cấp khả năng sinh đối thoại mượt mà và phù hợp với thói quen diễn đạt tiếng Trung."
   },
+  "abab7-chat-preview": {
+    "description": "So với mô hình trong loạt abab6.5, nó có sự cải thiện đáng kể về khả năng xử lý văn bản dài, toán học và viết lách."
+  },
   "accounts/fireworks/models/firefunction-v1": {
     "description": "Mô hình gọi hàm mã nguồn mở của Fireworks, cung cấp khả năng thực hiện chỉ dẫn xuất sắc và tính năng tùy chỉnh mở."
   },

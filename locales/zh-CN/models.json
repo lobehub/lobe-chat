@@ -305,6 +305,9 @@
   "abab6.5t-chat": {
     "description": "针对中文人设对话场景优化，提供流畅且符合中文表达习惯的对话生成能力。"
   },
+  "abab7-chat-preview": {
+    "description": "相对于abab6.5系列模型在长文、数学、写作等能力有大幅度提升。"
+  },
   "accounts/fireworks/models/firefunction-v1": {
     "description": "Fireworks 开源函数调用模型，提供卓越的指令执行能力和开放可定制的特性。"
   },
