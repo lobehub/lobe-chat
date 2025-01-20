@@ -42,14 +42,20 @@ export class AssistantStore {
 
       const data: AgentStoreIndex = await res.json();
 
-      // Get the assistant whitelist from Edge Config
-      const edgeConfig = new EdgeConfig();
+      if (EdgeConfig.isEnabled()) {
+        // Get the assistant whitelist from Edge Config
+        const edgeConfig = new EdgeConfig();
 
-      if (!!appEnv.VERCEL_EDGE_CONFIG) {
-        const assistantWhitelist = await edgeConfig.getAgentWhitelist();
+        const { whitelist, blacklist } = await edgeConfig.getAgentRestrictions();
 
-        if (assistantWhitelist && assistantWhitelist?.length > 0) {
-          data.agents = data.agents.filter((item) => assistantWhitelist.includes(item.identifier));
+        // use whitelist mode first
+        if (whitelist && whitelist?.length > 0) {
+          data.agents = data.agents.filter((item) => whitelist.includes(item.identifier));
+        }
+
+        // if no whitelist, use blacklist mode
+        else if (blacklist && blacklist?.length > 0) {
+          data.agents = data.agents.filter((item) => !blacklist.includes(item.identifier));
         }
       }
 
