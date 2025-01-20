@@ -1,6 +1,53 @@
 [
   {
     "children": {
+      "improvements": ["Improve error code."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.9"
+  },
+  {
+    "children": {
+      "improvements": ["Add deepseek r1 model."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.8"
+  },
+  {
+    "children": {
+      "improvements": ["Remove redundant payload remapping in client-fetch."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor provider code."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.6"
+  },
+  {
+    "children": {
+      "improvements": ["Improve ai provider code."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.5"
+  },
+  {
+    "children": {},
+    "date": "2025-01-18",
+    "version": "1.47.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix hydration error."]
+    },
+    "date": "2025-01-18",
+    "version": "1.47.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix api key in api key form."]
     },
     "date": "2025-01-17",

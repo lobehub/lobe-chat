@@ -20,6 +20,22 @@ const deepseekChatModels: AIChatModelCard[] = [
     releasedAt: '2024-12-26',
     type: 'chat',
   },
+  {
+    contextWindowTokens: 65_536,
+    description:
+      'DeepSeek 推出的推理模型。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
+    displayName: 'DeepSeek R1',
+    enabled: true,
+    id: 'deepseek-reasoner',
+    pricing: {
+      cachedInput: 1,
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    releasedAt: '2025-01-20',
+    type: 'chat',
+  },
 ];
 
 export const allModels = [...deepseekChatModels];
