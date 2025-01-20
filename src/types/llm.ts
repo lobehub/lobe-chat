@@ -31,6 +31,10 @@ export interface ChatModelCard {
    * whether model supports function call
    */
   functionCall?: boolean;
+  /**
+   * whether model supports hot tag
+   */
+  hot?: boolean;
   id: string;
   /**
    * whether model is custom

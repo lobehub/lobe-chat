@@ -2,7 +2,7 @@ import { IconAvatarProps, ModelIcon, ProviderIcon } from '@lobehub/icons';
 import { Avatar, Icon, Tooltip } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { Infinity, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
+import { Infinity, LucideEye, LucideFlame, LucidePaperclip, ToyBrick } from 'lucide-react';
 import numeral from 'numeral';
 import { rgba } from 'polished';
 import { FC, memo } from 'react';
@@ -45,6 +45,10 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.green};
     background: ${token.green1};
   `,
+  tagRed: css`
+    color: ${token.red};
+    background: ${token.red1};
+  `,
   token: css`
     width: 36px;
     height: 20px;
@@ -72,6 +76,17 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
 
     return (
       <Flexbox direction={directionReverse ? 'horizontal-reverse' : 'horizontal'} gap={4}>
+        {model.hot && (
+          <Tooltip
+            placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
+            title={t('ModelSelect.featureTag.hot')}
+          >
+            <div className={cx(styles.tag, styles.tagRed)} style={{ cursor: 'pointer' }} title="">
+              <Icon icon={LucideFlame} />
+            </div>
+          </Tooltip>
+        )}
         {model.files && (
           <Tooltip
             placement={placement}

@@ -72,6 +72,10 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
             model.files = true;
             break;
           }
+          case 'hot': {
+            model.hot = true;
+            break;
+          }
           default: {
             console.warn(`Unknown capability: ${capability}`);
           }
