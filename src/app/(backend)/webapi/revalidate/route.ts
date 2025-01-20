@@ -1,12 +1,11 @@
 import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   if (!process.env.REVALIDATE_SECRET) {
     return NextResponse.json('REVALIDATE_SECRET is not set', { status: 501 });
   }
 
-  // 直接获取并验证 Authorization 头的值
   const authToken = request.headers.get('Authorization');
 
   if (!authToken || authToken !== process.env.REVALIDATE_SECRET) {
@@ -22,4 +21,4 @@ export async function GET(request: NextRequest) {
   revalidateTag(tag);
 
   return Response.json({ now: Date.now(), revalidated: true });
-}
+};
