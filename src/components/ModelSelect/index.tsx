@@ -138,13 +138,51 @@ interface ModelItemRenderProps extends ChatModelCard {
   showInfoTag?: boolean;
 }
 
+// author: si
+// 自定义样式：将括号内的内容用灰色样式包裹
+const HighlightBrackets = ({ text }: { text: string }) => {
+  // 正则表达式匹配英文括号及括号内的内容
+  const regex = /\(([^)]+)\)/g;
+
+  // 用于存储解析后的 JSX 片段
+  const elements = [];
+  let lastIndex = 0;
+
+  // 使用正则表达式匹配字符串
+  text.replaceAll(regex, (match, group, offset) => {
+    // 将括号前的普通文本保存到数组中
+    if (offset > lastIndex) {
+      elements.push(text.slice(lastIndex, offset));
+    }
+
+    // 将括号和内容用灰色样式包裹，并存入数组
+    elements.push(
+      <span key={offset} style={{ color: 'gray' }}>
+        {match}
+      </span>,
+    );
+
+    // 更新 lastIndex
+    lastIndex = offset + match.length;
+
+    return match; // replace 的 callback 需要返回一个值
+  });
+
+  // 将剩余的普通文本添加到数组中
+  if (lastIndex < text.length) {
+    elements.push(text.slice(lastIndex));
+  }
+
+  return elements;
+};
+
 export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true, ...model }) => {
   return (
     <Flexbox align={'center'} gap={32} horizontal justify={'space-between'}>
       <Flexbox align={'center'} gap={8} horizontal>
         <ModelIcon model={model.id} size={20} />
         <Typography.Paragraph ellipsis={false} style={{ marginBottom: 0 }}>
-          {model.displayName || model.id}
+          <HighlightBrackets text={model.displayName || model.id} />
         </Typography.Paragraph>
       </Flexbox>
 
