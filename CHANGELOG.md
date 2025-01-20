@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.47.8](https://github.com/lobehub/lobe-chat/compare/v1.47.7...v1.47.8)
+
+<sup>Released on **2025-01-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add deepseek r1 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add deepseek r1 model, closes [#5520](https://github.com/lobehub/lobe-chat/issues/5520) ([414477f](https://github.com/lobehub/lobe-chat/commit/414477f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.47.7](https://github.com/lobehub/lobe-chat/compare/v1.47.6...v1.47.7)
 
 <sup>Released on **2025-01-20**</sup>
