@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.47.6](https://github.com/lobehub/lobe-chat/compare/v1.47.5...v1.47.6)
+
+<sup>Released on **2025-01-20**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor provider code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor provider code, closes [#5516](https://github.com/lobehub/lobe-chat/issues/5516) ([fa1a07f](https://github.com/lobehub/lobe-chat/commit/fa1a07f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.47.5](https://github.com/lobehub/lobe-chat/compare/v1.47.4...v1.47.5)
 
 <sup>Released on **2025-01-20**</sup>
