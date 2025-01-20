@@ -12,6 +12,12 @@ export const genServerAiProvidersConfig = (specificConfig: Record<any, any>) => 
     (config, provider) => {
       const providerUpperCase = provider.toUpperCase();
       const providerCard = AiModels[provider] as AiFullModelCard[];
+
+      if (!providerCard)
+        throw new Error(
+          `Provider [${provider}] not found in aiModels, please make sure you have exported the provider in the \`aiModels/index.ts\``,
+        );
+
       const providerConfig = specificConfig[provider as keyof typeof specificConfig] || {};
       const providerModelList =
         process.env[providerConfig.modelListKey ?? `${providerUpperCase}_MODEL_LIST`];
