@@ -5,7 +5,7 @@ import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { AiProviderListItem, AiProviderSourceEnum } from '@/types/aiProvider';
 
@@ -62,7 +62,16 @@ const ProviderItem = memo<AiProviderListItem>(({ id, name, source, enabled, logo
         )}
         {name}
       </Flexbox>
-      {enabled && <Badge status="success" />}
+      <Flexbox horizontal>
+        {enabled && (
+          <Center width={24}>
+            <Badge status="success" />
+          </Center>
+        )}
+        {/* cloud slot */}
+
+        {/* cloud slot */}
+      </Flexbox>
     </Link>
   );
 });
