@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.47.7](https://github.com/lobehub/lobe-chat/compare/v1.47.6...v1.47.7)
+
+<sup>Released on **2025-01-20**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove redundant payload remapping in client-fetch.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove redundant payload remapping in client-fetch, closes [#5267](https://github.com/lobehub/lobe-chat/issues/5267) ([0c7dd82](https://github.com/lobehub/lobe-chat/commit/0c7dd82))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.47.6](https://github.com/lobehub/lobe-chat/compare/v1.47.5...v1.47.6)
 
 <sup>Released on **2025-01-20**</sup>
