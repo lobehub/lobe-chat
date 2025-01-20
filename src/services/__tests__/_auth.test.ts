@@ -92,6 +92,11 @@ describe('getProviderAuthPayload', () => {
       awsAccessKeyId: mockBedrockConfig.accessKeyId,
       awsRegion: mockBedrockConfig.region,
       awsSecretAccessKey: mockBedrockConfig.secretAccessKey,
+      accessKeyId: mockBedrockConfig.accessKeyId,
+      accessKeySecret: mockBedrockConfig.secretAccessKey,
+      awsSessionToken: undefined,
+      region: mockBedrockConfig.region,
+      sessionToken: undefined,
     });
   });
 
@@ -107,6 +112,7 @@ describe('getProviderAuthPayload', () => {
     expect(payload).toEqual({
       apiKey: mockAzureConfig.apiKey,
       azureApiVersion: mockAzureConfig.apiVersion,
+      apiVersion: mockAzureConfig.apiVersion,
       baseURL: mockAzureConfig.endpoint,
     });
   });
@@ -148,6 +154,24 @@ describe('getProviderAuthPayload', () => {
     expect(payload).toEqual({
       apiKey: mockOpenAIConfig.apiKey,
       baseURL: mockOpenAIConfig.baseURL,
+    });
+  });
+
+  it('should return correct payload for Cloudflare provider', () => {
+    // 假设的 Cloudflare 配置
+    const mockCloudflareConfig = {
+      apiKey: 'cloudflare-api-key',
+      baseURLOrAccountID: 'cloudflare-base-url-or-account-id',
+    };
+    act(() => {
+      setModelProviderConfig('cloudflare', mockCloudflareConfig);
+    });
+
+    const payload = getProviderAuthPayload(ModelProvider.Cloudflare, mockCloudflareConfig);
+    expect(payload).toEqual({
+      apiKey: mockCloudflareConfig.apiKey,
+      baseURLOrAccountID: mockCloudflareConfig.baseURLOrAccountID,
+      cloudflareBaseURLOrAccountID: mockCloudflareConfig.baseURLOrAccountID,
     });
   });
 
