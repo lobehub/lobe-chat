@@ -4,13 +4,23 @@ import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.deepseek.com/v1',
   chatCompletion: {
-    handlePayload: ({ model, presence_penalty, ...payload }: ChatStreamPayload) =>
+    handlePayload: ({ frequency_penalty, model, presence_penalty, temperature, top_p, ...payload }: ChatStreamPayload) =>
       ({
         ...payload,
         model,
         ...(model === 'deepseek-reasoner'
-          ? { presence_penalty: undefined }
-          : { presence_penalty }),
+          ? {
+              frequency_penalty: undefined,
+              presence_penalty: undefined,
+              temperature: undefined,
+              top_p: undefined,
+            }
+          : {
+              frequency_penalty,
+              presence_penalty,
+              temperature,
+              top_p,
+            }),
       }) as OpenAI.ChatCompletionCreateParamsStreaming,
   },
   debug: {
