@@ -2,18 +2,18 @@
 
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { memo } from 'react';
+import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
 import { usePlatform } from '@/hooks/usePlatform';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import { LayoutProps } from './type';
+import SideBar from './SideBar';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 
-const Layout = memo<LayoutProps>(({ children, nav }) => {
+const Layout = memo<PropsWithChildren>(({ children }) => {
   const { isPWA } = usePlatform();
   const theme = useTheme();
 
@@ -31,7 +31,7 @@ const Layout = memo<LayoutProps>(({ children, nav }) => {
         }}
         width={'100%'}
       >
-        {nav}
+        <SideBar />
         {children}
       </Flexbox>
     </>

@@ -29,6 +29,10 @@ const useStyles = createStyles(({ css, responsive, token }) => ({
     ${responsive.desktop} {
       grid-template-columns: repeat(3, 1fr);
     }
+
+    ${responsive.md} {
+      grid-template-columns: repeat(1, 1fr);
+    }
   `,
 }));
 
@@ -51,7 +55,7 @@ const List = memo(() => {
             {t('list.title.enabled')}
           </Typography.Text>
         </Flexbox>
-        <Grid>
+        <Grid className={styles.grid}>
           {loadingArr.map((item) => (
             <Card enabled={false} id={item} key={item} loading source={'builtin'} />
           ))}
