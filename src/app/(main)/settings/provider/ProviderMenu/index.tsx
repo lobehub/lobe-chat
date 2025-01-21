@@ -31,7 +31,7 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
 
   const width = mobile ? undefined : 260;
   return (
-    <Flexbox style={{ minWidth: width, overflow: 'scroll' }} width={width}>
+    <Flexbox style={{ minWidth: width, overflow: mobile ? undefined : 'scroll' }} width={width}>
       <Flexbox
         gap={8}
         horizontal
