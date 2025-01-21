@@ -5,6 +5,7 @@ import { DEFAULT_LANG, isLocaleNotSupport } from '@/const/locale';
 import { Locales, normalizeLocale } from '@/locales/resources';
 import { EdgeConfig } from '@/server/modules/EdgeConfig';
 import { AgentStoreIndex } from '@/types/discover';
+import { RevalidateTag } from '@/types/requestCache';
 
 export class AssistantStore {
   private readonly baseUrl: string;
@@ -29,10 +30,14 @@ export class AssistantStore {
     try {
       let res: Response;
 
-      res = await fetch(this.getAgentIndexUrl(locale as any), { next: { revalidate } });
+      res = await fetch(this.getAgentIndexUrl(locale as any), {
+        next: { revalidate, tags: [RevalidateTag.AgentIndex] },
+      });
 
       if (res.status === 404) {
-        res = await fetch(this.getAgentIndexUrl(DEFAULT_LANG), { next: { revalidate } });
+        res = await fetch(this.getAgentIndexUrl(DEFAULT_LANG), {
+          next: { revalidate, tags: [RevalidateTag.AgentIndex] },
+        });
       }
 
       if (!res.ok) {
@@ -42,14 +47,20 @@ export class AssistantStore {
 
       const data: AgentStoreIndex = await res.json();
 
-      // Get the assistant whitelist from Edge Config
-      const edgeConfig = new EdgeConfig();
+      if (EdgeConfig.isEnabled()) {
+        // Get the assistant whitelist from Edge Config
+        const edgeConfig = new EdgeConfig();
 
-      if (!!appEnv.VERCEL_EDGE_CONFIG) {
-        const assistantWhitelist = await edgeConfig.getAgentWhitelist();
+        const { whitelist, blacklist } = await edgeConfig.getAgentRestrictions();
 
-        if (assistantWhitelist && assistantWhitelist?.length > 0) {
-          data.agents = data.agents.filter((item) => assistantWhitelist.includes(item.identifier));
+        // use whitelist mode first
+        if (whitelist && whitelist?.length > 0) {
+          data.agents = data.agents.filter((item) => whitelist.includes(item.identifier));
+        }
+
+        // if no whitelist, use blacklist mode
+        else if (blacklist && blacklist?.length > 0) {
+          data.agents = data.agents.filter((item) => !blacklist.includes(item.identifier));
         }
       }
 

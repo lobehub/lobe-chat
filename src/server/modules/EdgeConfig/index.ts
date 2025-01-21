@@ -2,12 +2,16 @@ import { EdgeConfigClient, createClient } from '@vercel/edge-config';
 
 import { appEnv } from '@/config/app';
 
-enum EdgeConfigKeys {
+const EdgeConfigKeys = {
   /**
    * Assistant whitelist
    */
-  AssistantWhitelist = 'assistant_whitelist',
-}
+  AssistantBlacklist: 'assistant_blacklist',
+  /**
+   * Assistant whitelist
+   */
+  AssistantWhitelist: 'assistant_whitelist',
+};
 
 export class EdgeConfig {
   get client(): EdgeConfigClient {
@@ -17,7 +21,23 @@ export class EdgeConfig {
     return createClient(appEnv.VERCEL_EDGE_CONFIG);
   }
 
-  getAgentWhitelist = async (): Promise<string[] | undefined> => {
-    return this.client.get<string[]>(EdgeConfigKeys.AssistantWhitelist);
+  /**
+   * Check if Edge Config is enabled
+   */
+  static isEnabled() {
+    return !!appEnv.VERCEL_EDGE_CONFIG;
+  }
+
+  getAgentRestrictions = async () => {
+    const { assistant_blacklist: blacklist, assistant_whitelist: whitelist } =
+      await this.client.getAll([
+        EdgeConfigKeys.AssistantWhitelist,
+        EdgeConfigKeys.AssistantBlacklist,
+      ]);
+
+    return { blacklist, whitelist } as {
+      blacklist: string[] | undefined;
+      whitelist: string[] | undefined;
+    };
   };
 }
