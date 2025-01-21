@@ -25,7 +25,10 @@ export const genServerAiProvidersConfig = (specificConfig: Record<any, any>) => 
       const defaultChatModels = providerCard.filter((c) => c.type === 'chat');
 
       config[provider] = {
-        enabled: llmConfig[providerConfig.enabledKey || `ENABLED_${providerUpperCase}`],
+        enabled:
+          providerConfig.enabled ||
+          llmConfig[providerConfig.enabledKey || `ENABLED_${providerUpperCase}`],
+
         enabledModels: extractEnabledModels(
           providerModelList,
           providerConfig.withDeploymentName || false,
