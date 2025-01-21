@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.47.10](https://github.com/lobehub/lobe-chat/compare/v1.47.9...v1.47.10)
+
+<sup>Released on **2025-01-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support assistant blacklist.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support assistant blacklist, closes [#5527](https://github.com/lobehub/lobe-chat/issues/5527) ([3534c0d](https://github.com/lobehub/lobe-chat/commit/3534c0d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.47.9](https://github.com/lobehub/lobe-chat/compare/v1.47.8...v1.47.9)
 
 <sup>Released on **2025-01-20**</sup>
