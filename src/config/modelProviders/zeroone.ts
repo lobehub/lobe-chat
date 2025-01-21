@@ -141,9 +141,13 @@ const ZeroOne: ModelProviderCard = {
   description:
     '零一万物致力于推动以人为本的AI 2.0技术革命，旨在通过大语言模型创造巨大的经济和社会价值，并开创新的AI生态与商业模式。',
   id: 'zeroone',
+  modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.lingyiwanwu.com/docs#模型与计费',
   name: '01.AI',
-  settings: { sdkType: 'openai' },
+  settings: {
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://www.lingyiwanwu.com/',
 };
 
