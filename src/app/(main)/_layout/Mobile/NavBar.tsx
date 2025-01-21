@@ -27,7 +27,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Nav = memo(() => {
+const NavBar = memo(() => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
   const activeKey = useActiveTabKey();
@@ -75,6 +75,6 @@ const Nav = memo(() => {
   return <MobileTabBar activeKey={activeKey} className={styles.container} items={items} />;
 });
 
-Nav.displayName = 'MobileNav';
+NavBar.displayName = 'NavBar';
 
-export default Nav;
+export default NavBar;
