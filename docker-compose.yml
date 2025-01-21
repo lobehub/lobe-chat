@@ -15,7 +15,7 @@ services:
     ports:
       - '23210:3210'
     env_file:
-      - .env.local
+      - .env
 #  postgresql:
 #    image: pgvector/pgvector:pg16
 #    container_name: lobe-postgres
