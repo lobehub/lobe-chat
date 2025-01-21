@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support assistant blacklist."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.10"
+  },
+  {
+    "children": {
       "improvements": ["Improve error code."]
     },
     "date": "2025-01-20",
