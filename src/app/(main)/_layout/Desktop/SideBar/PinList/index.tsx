@@ -24,17 +24,19 @@ const useStyles = createStyles(({ css, token }) => ({
   ink: css`
     &::before {
       content: '';
+
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline: -${12 + 3}px;
+      transform: translateY(-50%);
+
       width: 4px;
       height: 0;
       border-radius: 50px;
-      position: absolute;
-      inset-inline: -${12 + 3}px;
 
-      inset-block-start: 50%;
-      transform: translateY(-50%);
+      background: ${token.colorPrimary};
 
       transition: height 150ms ease-out;
-      background: ${token.colorPrimary};
     }
   `,
   inkActive: css`
