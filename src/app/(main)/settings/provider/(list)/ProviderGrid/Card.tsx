@@ -6,10 +6,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import InstantSwitch from '@/components/InstantSwitch';
-import { useAiInfraStore } from '@/store/aiInfra';
 import { AiProviderListItem } from '@/types/aiProvider';
 
+import EnableSwitch from './EnableSwitch';
 import { useStyles } from './style';
 
 const { Paragraph } = Typography;
@@ -21,7 +20,6 @@ const ProviderCard = memo<ProviderCardProps>(
   ({ id, description, name, enabled, source, logo, loading }) => {
     const { t } = useTranslation('providers');
     const { cx, styles, theme } = useStyles();
-    const toggleProviderEnabled = useAiInfraStore((s) => s.toggleProviderEnabled);
 
     if (loading)
       return (
@@ -73,13 +71,7 @@ const ProviderCard = memo<ProviderCardProps>(
           <Divider style={{ margin: '4px 0' }} />
           <Flexbox horizontal justify={'space-between'} paddingBlock={'8px 0'}>
             <div />
-            <InstantSwitch
-              enabled={enabled}
-              onChange={async (checked) => {
-                await toggleProviderEnabled(id, checked);
-              }}
-              size={'small'}
-            />
+            <EnableSwitch enabled={enabled} id={id} />
           </Flexbox>
         </Flexbox>
       </Flexbox>

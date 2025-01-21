@@ -21,9 +21,29 @@ const useStyles = createStyles(({ css, token }) => ({
       box-shadow: 0 0 0 2px ${token.colorPrimary};
     }
   `,
-  avatarActive: css`
-    background: ${token.colorFillQuaternary};
-    box-shadow: 0 0 0 2px ${token.colorPrimaryBorder};
+  ink: css`
+    &::before {
+      content: '';
+
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline: -${12 + 3}px;
+      transform: translateY(-50%);
+
+      width: 4px;
+      height: 0;
+      border-radius: 50px;
+
+      background: ${token.colorPrimary};
+
+      transition: height 150ms ease-out;
+    }
+  `,
+  inkActive: css`
+    &::before {
+      width: 8px;
+      height: 32px;
+    }
   `,
 }));
 
@@ -61,28 +81,33 @@ const PinList = () => {
         <Divider style={{ margin: '8px 12px' }} />
         <Flexbox flex={1} gap={12} height={'100%'}>
           {list.slice(0, 9).map((item, index) => (
-            <Tooltip
-              key={item.id}
-              placement={'right'}
-              title={
-                <Flexbox gap={8} horizontal>
-                  {sessionHelpers.getTitle(item.meta)}
-                  <HotKeys inverseTheme keys={`ctrl+${index + 1}`} />
+            <Flexbox key={item.id} style={{ position: 'relative' }}>
+              <Tooltip
+                placement={'right'}
+                title={
+                  <Flexbox gap={8} horizontal>
+                    {sessionHelpers.getTitle(item.meta)}
+                    <HotKeys inverseTheme keys={`ctrl+${index + 1}`} />
+                  </Flexbox>
+                }
+              >
+                <Flexbox
+                  className={cx(
+                    styles.ink,
+                    isPinned && activeId === item.id ? styles.inkActive : undefined,
+                  )}
+                >
+                  <Avatar
+                    avatar={sessionHelpers.getAvatar(item.meta)}
+                    background={item.meta.backgroundColor}
+                    className={cx(styles.avatar)}
+                    onClick={() => {
+                      switchAgent(item.id);
+                    }}
+                  />
                 </Flexbox>
-              }
-            >
-              <Avatar
-                avatar={sessionHelpers.getAvatar(item.meta)}
-                background={item.meta.backgroundColor}
-                className={cx(
-                  styles.avatar,
-                  isPinned && activeId === item.id ? styles.avatarActive : undefined,
-                )}
-                onClick={() => {
-                  switchAgent(item.id);
-                }}
-              />
-            </Tooltip>
+              </Tooltip>
+            </Flexbox>
           ))}
         </Flexbox>
       </>
