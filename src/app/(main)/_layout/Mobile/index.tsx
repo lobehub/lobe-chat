@@ -3,12 +3,12 @@
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import qs from 'query-string';
-import { memo } from 'react';
+import { PropsWithChildren, memo } from 'react';
 
 import { useQuery } from '@/hooks/useQuery';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import { LayoutProps } from './type';
+import NavBar from './NavBar';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 const MOBILE_NAV_ROUTES = new Set([
@@ -21,7 +21,7 @@ const MOBILE_NAV_ROUTES = new Set([
   '/me',
 ]);
 
-const Layout = memo(({ children, nav }: LayoutProps) => {
+const Layout = memo(({ children }: PropsWithChildren) => {
   const { showMobileWorkspace } = useQuery();
   const pathname = usePathname();
   const { url } = qs.parseUrl(pathname);
@@ -33,7 +33,7 @@ const Layout = memo(({ children, nav }: LayoutProps) => {
     <>
       {showCloudPromotion && <CloudBanner mobile />}
       {children}
-      {showNav && nav}
+      {showNav && <NavBar />}
     </>
   );
 });
