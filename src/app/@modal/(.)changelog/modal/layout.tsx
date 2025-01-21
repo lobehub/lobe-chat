@@ -11,8 +11,8 @@ import Pagination from './features/Pagination';
 const useStyles = createStyles(
   ({ css, prefixCls, token }) => css`
     .${prefixCls}-modal-close {
-      background: ${token.colorBgElevated} !important;
       border: 1px solid ${token.colorBorderSecondary};
+      background: ${token.colorBgElevated} !important;
     }
   `,
 );

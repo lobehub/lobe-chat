@@ -138,6 +138,11 @@ const Hunyuan: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://cloud.tencent.com/document/product/1729/104753',
   name: 'Hunyuan',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://hunyuan.tencent.com',
 };
 

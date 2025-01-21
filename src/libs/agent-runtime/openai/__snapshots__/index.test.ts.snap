@@ -12,18 +12,23 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 0.5,
       "output": 1.5,
     },
+    "releasedAt": "2023-02-28",
   },
   {
     "id": "gpt-3.5-turbo-16k",
+    "releasedAt": "2023-05-10",
   },
   {
     "id": "gpt-3.5-turbo-16k-0613",
+    "releasedAt": "2023-05-30",
   },
   {
     "id": "gpt-4-1106-vision-preview",
+    "releasedAt": "2024-03-26",
   },
   {
     "id": "gpt-3.5-turbo-instruct-0914",
+    "releasedAt": "2023-09-07",
   },
   {
     "contextWindowTokens": 128000,
@@ -35,6 +40,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 10,
       "output": 30,
     },
+    "releasedAt": "2024-01-23",
   },
   {
     "contextWindowTokens": 128000,
@@ -46,6 +52,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 10,
       "output": 30,
     },
+    "releasedAt": "2024-01-23",
   },
   {
     "contextWindowTokens": 4096,
@@ -56,12 +63,15 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 1.5,
       "output": 2,
     },
+    "releasedAt": "2023-08-24",
   },
   {
     "id": "gpt-3.5-turbo-0301",
+    "releasedAt": "2023-03-01",
   },
   {
     "id": "gpt-3.5-turbo-0613",
+    "releasedAt": "2023-06-12",
   },
   {
     "contextWindowTokens": 16385,
@@ -73,6 +83,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 1,
       "output": 2,
     },
+    "releasedAt": "2023-11-02",
   },
   {
     "contextWindowTokens": 128000,
@@ -84,6 +95,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 10,
       "output": 30,
     },
+    "releasedAt": "2023-11-02",
   },
   {
     "contextWindowTokens": 128000,
@@ -91,6 +103,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "description": "GPT-4 视觉预览版，专为图像分析和处理任务设计。",
     "displayName": "GPT 4 Turbo with Vision Preview",
     "id": "gpt-4-vision-preview",
+    "releasedAt": "2023-11-02",
     "vision": true,
   },
   {
@@ -103,6 +116,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 30,
       "output": 60,
     },
+    "releasedAt": "2023-06-27",
   },
   {
     "contextWindowTokens": 16385,
@@ -114,6 +128,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 0.5,
       "output": 1.5,
     },
+    "releasedAt": "2024-01-23",
   },
   {
     "contextWindowTokens": 8192,
@@ -125,6 +140,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
       "input": 30,
       "output": 60,
     },
+    "releasedAt": "2023-06-12",
   },
 ]
 `;

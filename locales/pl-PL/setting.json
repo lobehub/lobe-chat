@@ -84,8 +84,7 @@
         },
         "modalTitle": "Konfiguracja niestandardowego modelu",
         "tokens": {
-          "title": "Maksymalna liczba tokenów",
-          "unlimited": "Nieograniczony"
+          "title": "Maksymalna liczba tokenów"
         },
         "vision": {
           "extra": "Ta konfiguracja włączy jedynie możliwość przesyłania obrazów w aplikacji, a to, czy rozpoznawanie będzie wspierane, zależy całkowicie od samego modelu. Proszę samodzielnie przetestować dostępność rozpoznawania wizualnego w tym modelu.",
@@ -412,6 +411,7 @@
     "common": "Ustawienia ogólne",
     "experiment": "Eksperyment",
     "llm": "Model językowy",
+    "provider": "Dostawca usług AI",
     "sync": "Synchronizacja w chmurze",
     "system-agent": "System Agent",
     "tts": "Usługa głosowa"

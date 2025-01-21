@@ -6,36 +6,11 @@ const SiliconCloud: ModelProviderCard = {
     {
       contextWindowTokens: 32_768,
       description:
-        'Hunyuan-Large 是业界最大的开源 Transformer 架构 MoE 模型，拥有 3890 亿总参数量和 520 亿激活参数量。',
-      displayName: 'Hunyuan A52B Instruct',
-      enabled: true,
-      id: 'Tencent/Hunyuan-A52B-Instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 21,
-        output: 21,
-      },
-    },
-    {
-      contextWindowTokens: 32_768,
-      description:
         'DeepSeek-V2.5 是 DeepSeek-V2-Chat 和 DeepSeek-Coder-V2-Instruct 的升级版本，集成了两个先前版本的通用和编码能力。该模型在多个方面进行了优化，包括写作和指令跟随能力，更好地与人类偏好保持一致。DeepSeek-V2.5 在各种评估基准上都取得了显著的提升，如 AlpacaEval 2.0、ArenaHard、AlignBench 和 MT-Bench 等',
       displayName: 'DeepSeek V2.5',
       enabled: true,
       functionCall: true,
       id: 'deepseek-ai/DeepSeek-V2.5',
-      pricing: {
-        currency: 'CNY',
-        input: 1.33,
-        output: 1.33,
-      },
-    },
-    {
-      contextWindowTokens: 32_768,
-      description:
-        'DeepSeek-V2 是一个强大、经济高效的混合专家（MoE）语言模型。它在 8.1 万亿个 token 的高质量语料库上进行了预训练，并通过监督微调（SFT）和强化学习（RL）进一步提升了模型能力。与 DeepSeek 67B 相比， DeepSeek-V2 在性能更强的同时，节省了 42.5% 的训练成本，减少了 93.3% 的 KV 缓存，并将最大生成吞吐量提高到了 5.76 倍。该模型支持 128k 的上下文长度，在标准基准测试和开放式生成评估中都表现出色',
-      displayName: 'DeepSeek V2 Chat',
-      id: 'deepseek-ai/DeepSeek-V2-Chat',
       pricing: {
         currency: 'CNY',
         input: 1.33,
@@ -209,18 +184,6 @@ const SiliconCloud: ModelProviderCard = {
       },
     },
     {
-      contextWindowTokens: 4096,
-      description:
-        'Qwen2.5-Math-72B 是阿里云发布的 Qwen2.5-Math 系列数学大语言模型之一。该模型支持使用思维链（CoT）和工具集成推理（TIR）方法解决中文和英文数学问题。相比前代 Qwen2-Math 系列，Qwen2.5-Math 系列在中英文数学基准测试中取得了显著的性能提升。该模型在处理精确计算、符号操作和算法操作方面表现出色，尤其适合解决复杂的数学和算法推理任务',
-      displayName: 'Qwen2.5 Math 72B Instruct',
-      id: 'Qwen/Qwen2.5-Math-72B-Instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 4.13,
-        output: 4.13,
-      },
-    },
-    {
       contextWindowTokens: 32_768,
       description:
         'Qwen2-1.5B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 1.5B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型。与 Qwen1.5-1.8B-Chat 相比，Qwen2-1.5B-Instruct 在 MMLU、HumanEval、GSM8K、C-Eval 和 IFEval 等测试中均显示出显著的性能提升，尽管参数量略少',
@@ -278,18 +241,6 @@ const SiliconCloud: ModelProviderCard = {
         currency: 'CNY',
         input: 4.13,
         output: 4.13,
-      },
-    },
-    {
-      contextWindowTokens: 32_768,
-      description:
-        'Qwen2-72B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 72B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它能够处理大规模输入。该模型在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型，并在某些任务上展现出与专有模型相当的竞争力',
-      displayName: 'Qwen2 72B Instruct (Vendor-A)',
-      id: 'Vendor-A/Qwen/Qwen2-7B-Instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 1,
       },
     },
     {
@@ -369,19 +320,6 @@ const SiliconCloud: ModelProviderCard = {
         currency: 'CNY',
         input: 1,
         output: 1,
-      },
-      vision: true,
-    },
-    {
-      contextWindowTokens: 8192,
-      description:
-        'InternVL2-Llama3-76B 是 InternVL 2.0 系列中的大规模多模态模型。它由 InternViT-6B-448px-V1-5 视觉模型、MLP 投影层和 Hermes-2-Theta-Llama-3-70B 语言模型组成。该模型在各种视觉语言任务上表现出色，包括文档和图表理解、信息图表问答、场景文本理解和 OCR 任务等。InternVL2-Llama3-76B 使用 8K 上下文窗口训练，能够处理长文本、多图像和视频输入，显著提升了模型在这些任务上的处理能力，在多项基准测试中达到或接近最先进的商业模型水平',
-      displayName: 'InternVL2 Llama3 76B',
-      id: 'OpenGVLab/InternVL2-Llama3-76B',
-      pricing: {
-        currency: 'CNY',
-        input: 4.13,
-        output: 4.13,
       },
       vision: true,
     },
@@ -553,10 +491,11 @@ const SiliconCloud: ModelProviderCard = {
     {
       contextWindowTokens: 32_768,
       description:
-        'Llama-3.1-Nemotron-70B-Instruct 是由 NVIDIA 定制的大型语言模型，旨在提高 LLM 生成的响应对用户查询的帮助程度。该模型在 Arena Hard、AlpacaEval 2 LC 和 GPT-4-Turbo MT-Bench 等基准测试中表现出色，截至 2024 年 10 月 1 日，在所有三个自动对齐基准测试中排名第一。该模型使用 RLHF（特别是 REINFORCE）、Llama-3.1-Nemotron-70B-Reward 和 HelpSteer2-Preference 提示在 Llama-3.1-70B-Instruct 模型基础上进行训练',
-      displayName: 'Llama 3.1 Nemotron 70B Instruct',
+        'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
+      displayName: 'Llama 3.3 70B Instruct',
       enabled: true,
-      id: 'nvidia/Llama-3.1-Nemotron-70B-Instruct',
+      functionCall: true,
+      id: 'meta-llama/Llama-3.3-70B-Instruct',
       pricing: {
         currency: 'CNY',
         input: 4.13,
@@ -597,6 +536,13 @@ const SiliconCloud: ModelProviderCard = {
   name: 'SiliconCloud',
   proxyUrl: {
     placeholder: 'https://api.siliconflow.cn/v1',
+  },
+  settings: {
+    proxyUrl: {
+      placeholder: 'https://api.siliconflow.cn/v1',
+    },
+    sdkType: 'openai',
+    showModelFetcher: true,
   },
   url: 'https://siliconflow.cn/zh-cn/siliconcloud',
 };

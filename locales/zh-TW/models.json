@@ -119,9 +119,6 @@
   "OpenGVLab/InternVL2-26B": {
     "description": "InternVL2在各種視覺語言任務上展現出了卓越的性能，包括文檔和圖表理解、場景文本理解、OCR、科學和數學問題解決等。"
   },
-  "OpenGVLab/InternVL2-Llama3-76B": {
-    "description": "InternVL2在各種視覺語言任務上展現出了卓越的性能，包括文檔和圖表理解、場景文本理解、OCR、科學和數學問題解決等。"
-  },
   "Phi-3-medium-128k-instruct": {
     "description": "相同的Phi-3-medium模型，但具有更大的上下文大小，適用於RAG或少量提示。"
   },
@@ -215,9 +212,6 @@
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder-7B-Instruct 是阿里雲發布的代碼特定大語言模型系列的最新版本。該模型在 Qwen2.5 的基礎上，通過 5.5 萬億個 tokens 的訓練，顯著提升了代碼生成、推理和修復能力。它不僅增強了編碼能力，還保持了數學和通用能力的優勢。模型為代碼智能體等實際應用提供了更全面的基礎"
   },
-  "Qwen/Qwen2.5-Math-72B-Instruct": {
-    "description": "Qwen2.5-Math專注於數學領域的問題求解，為高難度題提供專業解答。"
-  },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 是 Qwen 模型的最新系列，支持 128k 上下文，對比當前最優的開源模型，Qwen2-72B 在自然語言理解、知識、代碼、數學及多語言等多項能力上均顯著超越當前領先的模型。"
   },
@@ -289,12 +283,6 @@
   },
   "TeleAI/TeleMM": {
     "description": "TeleMM多模態大模型是由中國電信自主研發的多模態理解大模型，能夠處理文本、圖像等多種模態輸入，支持圖像理解、圖表分析等功能，為用戶提供跨模態的理解服務。模型能夠與用戶進行多模態互動，準確理解輸入內容，回答問題、協助創作，並高效提供多模態信息和靈感支持。在細粒度感知，邏輯推理等多模態任務上有出色表現"
-  },
-  "Tencent/Hunyuan-A52B-Instruct": {
-    "description": "Hunyuan-Large 是業界最大的開源 Transformer 架構 MoE 模型，擁有 3890 億總參數量和 520 億激活參數量。"
-  },
-  "Vendor-A/Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2-72B-Instruct 是 Qwen2 系列中的指令微調大語言模型，參數規模為 72B。該模型基於 Transformer 架構，採用了 SwiGLU 激活函數、注意力 QKV 偏置和組查詢注意力等技術。它能夠處理大規模輸入。該模型在語言理解、生成、多語言能力、編碼、數學和推理等多個基準測試中表現出色，超越了大多數開源模型，並在某些任務上展現出與專有模型相當的競爭力"
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct 是阿里雲發布的最新大語言模型系列之一。該 72B 模型在編碼和數學等領域具有顯著改進的能力。該模型還提供了多語言支持，覆蓋超過 29 種語言，包括中文、英文等。模型在指令跟隨、理解結構化數據以及生成結構化輸出（尤其是 JSON）方面都有顯著提升"
@@ -521,11 +509,14 @@
   "command-r-plus": {
     "description": "Command R+ 是一款高性能的大型語言模型，專為真實企業場景和複雜應用而設計。"
   },
+  "dall-e-2": {
+    "description": "第二代 DALL·E 模型，支持更真實、準確的圖像生成，解析度是第一代的4倍"
+  },
+  "dall-e-3": {
+    "description": "最新的 DALL·E 模型，於2023年11月發布。支持更真實、準確的圖像生成，具有更強的細節表現力"
+  },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct 提供高可靠性的指令處理能力，支持多行業應用。"
-  },
-  "deepseek-ai/DeepSeek-V2-Chat": {
-    "description": "DeepSeek-V2 是一個強大、經濟高效的混合專家（MoE）語言模型。它在 8.1 萬億個 token 的高質量語料庫上進行了預訓練，並通過監督微調（SFT）和強化學習（RL）進一步提升了模型能力。與 DeepSeek 67B 相比， DeepSeek-V2 在性能更強的同時，節省了 42.5% 的訓練成本，減少了 93.3% 的 KV 緩存，並將最大生成吞吐量提高到了 5.76 倍。該模型支持 128k 的上下文長度，在標準基準測試和開放式生成評估中都表現出色"
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 集合了先前版本的優秀特徵，增強了通用和編碼能力。"
@@ -600,6 +591,9 @@
     "description": "Gemini 1.5 Pro 支持高達 200 萬個 tokens，是中型多模態模型的理想選擇，適用於複雜任務的多方面支持。"
   },
   "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
+  },
+  "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
   },
   "gemini-exp-1114": {
@@ -701,6 +695,9 @@
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo，適用於各種文本生成和理解任務，Currently points to gpt-3.5-turbo-0125"
   },
+  "gpt-3.5-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k，高容量文本生成模型，適合複雜任務。"
+  },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo，適用於各種文本生成和理解任務，Currently points to gpt-3.5-turbo-0125"
   },
@@ -752,8 +749,23 @@
   "gpt-4o-2024-11-20": {
     "description": "ChatGPT-4o 是一款動態模型，實時更新以保持當前最新版本。它結合了強大的語言理解與生成能力，適合於大規模應用場景，包括客戶服務、教育和技術支持。"
   },
+  "gpt-4o-audio-preview": {
+    "description": "GPT-4o Audio 模型，支持音頻輸入輸出"
+  },
   "gpt-4o-mini": {
     "description": "GPT-4o mini是OpenAI在GPT-4 Omni之後推出的最新模型，支持圖文輸入並輸出文本。作為他們最先進的小型模型，它比其他近期的前沿模型便宜很多，並且比GPT-3.5 Turbo便宜超過60%。它保持了最先進的智能，同時具有顯著的性價比。GPT-4o mini在MMLU測試中獲得了82%的得分，目前在聊天偏好上排名高於GPT-4。"
+  },
+  "gpt-4o-mini-realtime-preview": {
+    "description": "GPT-4o-mini 實時版本，支持音頻和文本實時輸入輸出"
+  },
+  "gpt-4o-realtime-preview": {
+    "description": "GPT-4o 實時版本，支持音頻和文本實時輸入輸出"
+  },
+  "gpt-4o-realtime-preview-2024-10-01": {
+    "description": "GPT-4o 實時版本，支持音頻和文本實時輸入輸出"
+  },
+  "gpt-4o-realtime-preview-2024-12-17": {
+    "description": "GPT-4o 實時版本，支持音頻和文本實時輸入輸出"
   },
   "grok-2-1212": {
     "description": "該模型在準確性、指令遵循和多語言能力方面有所改進。"
@@ -932,6 +944,9 @@
   "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
     "description": "LLaMA 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
   },
+  "meta-llama/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 是 Llama 系列最先進的多語言開源大型語言模型，以極低成本體驗媲美 405B 模型的性能。基於 Transformer 結構，並通過監督微調（SFT）和人類反饋強化學習（RLHF）提升有用性和安全性。其指令調優版本專為多語言對話優化，在多項行業基準上表現優於眾多開源和封閉聊天模型。知識截止日期為 2023 年 12 月"
+  },
   "meta-llama/Llama-Vision-Free": {
     "description": "LLaMA 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
   },
@@ -1088,11 +1103,11 @@
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"
   },
-  "nvidia/Llama-3.1-Nemotron-70B-Instruct": {
-    "description": "Llama 3.1 Nemotron 70B 是由 NVIDIA 定製的大型語言模型，旨在提升 LLM 生成的回應對用戶查詢的幫助程度。"
-  },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B 是由 NVIDIA 定制的大型語言模型，旨在提高 LLM 生成的回應對用戶查詢的幫助程度。該模型在 Arena Hard、AlpacaEval 2 LC 和 GPT-4-Turbo MT-Bench 等基準測試中表現出色，截至 2024 年 10 月 1 日，在所有三個自動對齊基準測試中排名第一。該模型使用 RLHF（特別是 REINFORCE）、Llama-3.1-Nemotron-70B-Reward 和 HelpSteer2-Preference 提示在 Llama-3.1-70B-Instruct 模型基礎上進行訓練"
+  },
+  "o1": {
+    "description": "專注於高級推理和解決複雜問題，包括數學和科學任務。非常適合需要深入上下文理解和代理工作流程的應用程序。"
   },
   "o1-mini": {
     "description": "o1-mini是一款針對程式設計、數學和科學應用場景而設計的快速、經濟高效的推理模型。該模型具有128K上下文和2023年10月的知識截止日期。"
@@ -1295,14 +1310,29 @@
   "taichu_llm": {
     "description": "紫東太初語言大模型具備超強語言理解能力以及文本創作、知識問答、代碼編程、數學計算、邏輯推理、情感分析、文本摘要等能力。創新性地將大數據預訓練與多源豐富知識相結合，通過持續打磨算法技術，並不斷吸收海量文本數據中詞彙、結構、語法、語義等方面的新知識，實現模型效果不斷進化。為用戶提供更加便捷的信息和服務以及更為智能化的體驗。"
   },
+  "text-embedding-3-large": {
+    "description": "最強大的向量化模型，適用於英文和非英文任務"
+  },
+  "text-embedding-3-small": {
+    "description": "高效且經濟的新一代 Embedding 模型，適用於知識檢索、RAG 應用等場景"
+  },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) 通過高效的策略和模型架構，提供增強的計算能力。"
+  },
+  "tts-1": {
+    "description": "最新的文本轉語音模型，針對即時場景優化速度"
+  },
+  "tts-1-hd": {
+    "description": "最新的文本轉語音模型，針對品質進行優化"
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) 適用於精細化指令任務，提供出色的語言處理能力。"
   },
   "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet 提升了行業標準，性能超越競爭對手模型和 Claude 3 Opus，在廣泛的評估中表現出色，同時具備我們中等層級模型的速度和成本。"
+  },
+  "whisper-1": {
+    "description": "通用語音識別模型，支持多語言語音識別、語音翻譯和語言識別"
   },
   "wizardlm2": {
     "description": "WizardLM 2 是微軟 AI 提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"

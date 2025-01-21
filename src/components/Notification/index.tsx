@@ -22,9 +22,10 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
     overflow: hidden;
 
-    background: ${token.colorBgContainer};
     border: 1px solid ${token.colorSplit};
     border-radius: 8px;
+
+    background: ${token.colorBgContainer};
     box-shadow: ${token.boxShadowSecondary};
   `,
   mobileContainer: css`

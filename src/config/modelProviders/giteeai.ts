@@ -118,6 +118,11 @@ const GiteeAI: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://ai.gitee.com/docs/openapi/v1#tag/serverless/POST/chat/completions',
   name: 'Gitee AI',
+  settings: {
+    disableBrowserRequest: true,
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://ai.gitee.com',
 };
 

@@ -16,9 +16,9 @@ const useStyles = createStyles(({ css, token }) => {
       inset-inline: 0 1%;
 
       height: 100%;
+      border-block-end: 3px solid ${token.geekblue};
 
       background: ${token.colorFillTertiary};
-      border-block-end: 3px solid ${token.geekblue};
     `,
     title: css`
       overflow: hidden;

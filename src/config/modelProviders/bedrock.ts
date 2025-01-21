@@ -309,6 +309,7 @@ const Bedrock: ModelProviderCard = {
   id: 'bedrock',
   modelsUrl: 'https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html',
   name: 'Bedrock',
+  settings: { sdkType: 'bedrock' },
   url: 'https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html',
 };
 

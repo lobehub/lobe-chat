@@ -29,7 +29,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => {
         inset-block: 56px 50px;
 
         width: 32px;
-
         border-block-end: 2px solid ${borderColor};
       }
     `,

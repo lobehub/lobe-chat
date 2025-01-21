@@ -17,7 +17,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     max-width: 420px;
     padding-block: 8px;
     padding-inline: 12px 32px;
-
     border: 1px solid ${isDarkMode ? token.colorBorder : token.colorSplit};
     border-radius: 8px;
 

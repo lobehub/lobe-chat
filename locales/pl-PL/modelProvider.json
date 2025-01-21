@@ -63,6 +63,46 @@
       "title": "ID konta Cloudflare / adres API"
     }
   },
+  "createNewAiProvider": {
+    "apiKey": {
+      "placeholder": "Proszę wpisać swój klucz API",
+      "required": "Proszę wpisać swój klucz API",
+      "title": "Klucz API"
+    },
+    "basicTitle": "Podstawowe informacje",
+    "configTitle": "Informacje konfiguracyjne",
+    "confirm": "Utwórz",
+    "createSuccess": "Utworzenie zakończone sukcesem",
+    "description": {
+      "placeholder": "Opis dostawcy usług (opcjonalnie)",
+      "title": "Opis dostawcy usług"
+    },
+    "id": {
+      "desc": "Unikalny identyfikator dostawcy usług, po utworzeniu nie można go zmienić",
+      "format": "Może zawierać tylko cyfry, małe litery, myślniki (-) i podkreślenia (_) ",
+      "placeholder": "Zaleca się użycie małych liter, np. openai, po utworzeniu nie można edytować",
+      "required": "Proszę wpisać identyfikator dostawcy",
+      "title": "Identyfikator dostawcy"
+    },
+    "logo": {
+      "required": "Proszę przesłać poprawne logo dostawcy",
+      "title": "Logo dostawcy"
+    },
+    "name": {
+      "placeholder": "Proszę wpisać nazwę wyświetlaną dostawcy",
+      "required": "Proszę wpisać nazwę dostawcy",
+      "title": "Nazwa dostawcy"
+    },
+    "proxyUrl": {
+      "placeholder": "Proszę wpisać adres żądania, jeśli nie zostanie podany, użyty zostanie odpowiedni adres żądania SDK",
+      "title": "Adres proxy"
+    },
+    "sdkType": {
+      "required": "Proszę wybrać typ SDK",
+      "title": "Format żądania"
+    },
+    "title": "Utwórz niestandardowego dostawcę AI"
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Wprowadź swój osobisty token dostępu GitHub (PAT), kliknij [tutaj](https://github.com/settings/tokens), aby go utworzyć",
@@ -76,6 +116,23 @@
       "placeholder": "hf_xxxxxxxxx",
       "title": "Token HuggingFace"
     }
+  },
+  "list": {
+    "title": {
+      "disabled": "Usługa nieaktywna",
+      "enabled": "Usługa aktywna"
+    }
+  },
+  "menu": {
+    "addCustomProvider": "Dodaj niestandardowego dostawcę",
+    "all": "Wszystko",
+    "list": {
+      "disabled": "Nieaktywny",
+      "enabled": "Aktywny"
+    },
+    "notFound": "Nie znaleziono wyników wyszukiwania",
+    "searchProviders": "Szukaj dostawców...",
+    "sort": "Niestandardowe sortowanie"
   },
   "ollama": {
     "checker": {
@@ -94,7 +151,7 @@
       "title": "Pobieranie modelu {{model}}"
     },
     "endpoint": {
-      "desc": "Wprowadź adres rest API Ollama, jeśli lokalnie nie określono, pozostaw puste",
+      "desc": "Musi zawierać http(s)://, lokalnie, jeśli nie określono inaczej, można pozostawić puste",
       "title": "Adres proxy API"
     },
     "setup": {
@@ -131,21 +188,130 @@
       "title": "Pobierz określony model Ollama"
     }
   },
-  "sensenova": {
-    "sensenovaAccessKeyID": {
-      "desc": "Wprowadź SenseNova Access Key ID",
-      "placeholder": "SenseNova Access Key ID",
-      "title": "Access Key ID"
+  "providerModels": {
+    "config": {
+      "aesGcm": "Twój klucz oraz adres proxy będą szyfrowane za pomocą <1>AES-GCM</1>",
+      "apiKey": {
+        "desc": "Proszę wpisać swój {{name}} klucz API",
+        "placeholder": "{{name}} klucz API",
+        "title": "Klucz API"
+      },
+      "baseURL": {
+        "desc": "Musi zawierać http(s)://",
+        "placeholder": "https://your-proxy-url.com/v1",
+        "title": "Adres proxy API"
+      },
+      "checker": {
+        "button": "Sprawdź",
+        "desc": "Testuj, czy klucz API i adres proxy są poprawnie wpisane",
+        "pass": "Sprawdzenie zakończone sukcesem",
+        "title": "Sprawdzenie łączności"
+      },
+      "fetchOnClient": {
+        "desc": "Tryb żądania klienta rozpocznie sesję bezpośrednio z przeglądarki, co może przyspieszyć czas odpowiedzi",
+        "title": "Użyj trybu żądania klienta"
+      },
+      "helpDoc": "Dokumentacja konfiguracyjna",
+      "waitingForMore": "Więcej modeli jest w <1>planach integracji</1>, proszę czekać"
     },
-    "sensenovaAccessKeySecret": {
-      "desc": "Wprowadź SenseNova Access Key Secret",
-      "placeholder": "SenseNova Access Key Secret",
-      "title": "Access Key Secret"
+    "createNew": {
+      "title": "Utwórz niestandardowy model AI"
     },
-    "unlock": {
-      "description": "Wprowadź swój Access Key ID / Access Key Secret, aby rozpocząć sesję. Aplikacja nie zapisze twojej konfiguracji autoryzacji",
-      "title": "Użyj niestandardowych informacji autoryzacyjnych SenseNova"
-    }
+    "item": {
+      "config": "Konfiguracja modelu",
+      "customModelCards": {
+        "addNew": "Utwórz i dodaj model {{id}}",
+        "confirmDelete": "Zaraz usuniesz ten niestandardowy model, po usunięciu nie będzie można go przywrócić, proszę działać ostrożnie."
+      },
+      "delete": {
+        "confirm": "Czy na pewno chcesz usunąć model {{displayName}}?",
+        "success": "Usunięcie zakończone sukcesem",
+        "title": "Usuń model"
+      },
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Pole, które jest rzeczywiście używane w Azure OpenAI",
+          "placeholder": "Proszę wpisać nazwę wdrożenia modelu w Azure",
+          "title": "Nazwa wdrożenia modelu"
+        },
+        "displayName": {
+          "placeholder": "Proszę wpisać nazwę wyświetlaną modelu, np. ChatGPT, GPT-4 itp.",
+          "title": "Nazwa wyświetlana modelu"
+        },
+        "files": {
+          "extra": "Obecna implementacja przesyłania plików jest jedynie rozwiązaniem hackowym, przeznaczonym do samodzielnego testowania. Pełna funkcjonalność przesyłania plików będzie dostępna w przyszłości.",
+          "title": "Wsparcie dla przesyłania plików"
+        },
+        "functionCall": {
+          "extra": "Ta konfiguracja włączy jedynie możliwość korzystania z narzędzi przez model, co pozwoli na dodanie wtyczek narzędziowych. Jednakże, czy model rzeczywiście obsługuje korzystanie z narzędzi, zależy całkowicie od samego modelu, proszę samodzielnie przetestować jego użyteczność",
+          "title": "Wsparcie dla korzystania z narzędzi"
+        },
+        "id": {
+          "extra": "Nie można zmieniać po utworzeniu, będzie używane jako identyfikator modelu podczas wywoływania AI",
+          "placeholder": "Wprowadź identyfikator modelu, na przykład gpt-4o lub claude-3.5-sonnet",
+          "title": "ID modelu"
+        },
+        "modalTitle": "Konfiguracja niestandardowego modelu",
+        "tokens": {
+          "extra": "Ustaw maksymalną liczbę tokenów wspieranych przez model",
+          "title": "Maksymalne okno kontekstu",
+          "unlimited": "Bez ograniczeń"
+        },
+        "vision": {
+          "extra": "Ta konfiguracja włączy tylko możliwość przesyłania obrazów w aplikacji, czy model obsługuje rozpoznawanie zależy od samego modelu, proszę samodzielnie przetestować dostępność rozpoznawania wizualnego tego modelu.",
+          "title": "Wsparcie dla rozpoznawania wizualnego"
+        }
+      },
+      "pricing": {
+        "image": "${{amount}}/obraz",
+        "inputCharts": "${{amount}}/M znaków",
+        "inputMinutes": "${{amount}}/minut",
+        "inputTokens": "Wprowadzenie ${{amount}}/M",
+        "outputTokens": "Wyjście ${{amount}}/M"
+      },
+      "releasedAt": "Wydano {{releasedAt}}"
+    },
+    "list": {
+      "addNew": "Dodaj model",
+      "disabled": "Nieaktywne",
+      "disabledActions": {
+        "showMore": "Pokaż więcej"
+      },
+      "empty": {
+        "desc": "Proszę utworzyć model niestandardowy lub pobrać model, aby rozpocząć korzystanie.",
+        "title": "Brak dostępnych modeli"
+      },
+      "enabled": "Aktywne",
+      "enabledActions": {
+        "disableAll": "Dezaktywuj wszystkie",
+        "enableAll": "Aktywuj wszystkie",
+        "sort": "Sortowanie modeli niestandardowych"
+      },
+      "enabledEmpty": "Brak aktywnych modeli, aktywuj ulubione modele z poniższej listy~",
+      "fetcher": {
+        "clear": "Wyczyść pobrane modele",
+        "fetch": "Pobierz listę modeli",
+        "fetching": "Pobieranie listy modeli...",
+        "latestTime": "Ostatnia aktualizacja: {{time}}",
+        "noLatestTime": "Lista nie została jeszcze pobrana"
+      },
+      "search": "Szukaj modeli...",
+      "searchResult": "Znaleziono {{count}} modeli",
+      "title": "Lista modeli",
+      "total": "Łącznie dostępnych modeli: {{count}}"
+    },
+    "searchNotFound": "Nie znaleziono wyników wyszukiwania"
+  },
+  "sortModal": {
+    "success": "Aktualizacja sortowania zakończona sukcesem",
+    "title": "Niestandardowe sortowanie",
+    "update": "Aktualizuj"
+  },
+  "updateAiProvider": {
+    "confirmDelete": "Zaraz usuniesz tego dostawcę AI, po usunięciu nie będzie można go przywrócić, czy na pewno chcesz usunąć?",
+    "deleteSuccess": "Usunięcie zakończone sukcesem",
+    "tooltip": "Aktualizuj podstawowe ustawienia dostawcy",
+    "updateSuccess": "Aktualizacja zakończona sukcesem"
   },
   "wenxin": {
     "accessKey": {

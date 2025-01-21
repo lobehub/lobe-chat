@@ -1,5 +1,5 @@
 import { IconAvatarProps, ModelIcon, ProviderIcon } from '@lobehub/icons';
-import { Icon, Tooltip } from '@lobehub/ui';
+import { Avatar, Icon, Tooltip } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { Infinity, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
@@ -9,6 +9,8 @@ import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { ModelAbilities } from '@/types/aiModel';
+import { AiProviderSourceType } from '@/types/aiProvider';
 import { ChatModelCard } from '@/types/llm';
 import { formatTokenNumber } from '@/utils/format';
 
@@ -16,13 +18,13 @@ const useStyles = createStyles(({ css, token }) => ({
   custom: css`
     width: 36px;
     height: 20px;
+    border-radius: 4px;
 
     font-family: ${token.fontFamilyCode};
     font-size: 12px;
     color: ${rgba(token.colorWarning, 0.75)};
 
     background: ${token.colorWarningBg};
-    border-radius: 4px;
   `,
   tag: css`
     cursor: default;
@@ -33,7 +35,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     width: 20px;
     height: 20px;
-
     border-radius: 4px;
   `,
   tagBlue: css`
@@ -47,18 +48,20 @@ const useStyles = createStyles(({ css, token }) => ({
   token: css`
     width: 36px;
     height: 20px;
+    border-radius: 4px;
 
     font-family: ${token.fontFamilyCode};
     font-size: 11px;
     color: ${token.colorTextSecondary};
 
     background: ${token.colorFillTertiary};
-    border-radius: 4px;
   `,
 }));
 
-interface ModelInfoTagsProps extends ChatModelCard {
+interface ModelInfoTagsProps extends ModelAbilities {
+  contextWindowTokens?: number | null;
   directionReverse?: boolean;
+  isCustom?: boolean;
   placement?: 'top' | 'right';
 }
 
@@ -71,8 +74,8 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
       <Flexbox direction={directionReverse ? 'horizontal-reverse' : 'horizontal'} gap={4}>
         {model.files && (
           <Tooltip
-            overlayStyle={{ pointerEvents: 'none' }}
             placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
             title={t('ModelSelect.featureTag.file')}
           >
             <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
@@ -82,8 +85,8 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.vision && (
           <Tooltip
-            overlayStyle={{ pointerEvents: 'none' }}
             placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
             title={t('ModelSelect.featureTag.vision')}
           >
             <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
@@ -93,8 +96,10 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.functionCall && (
           <Tooltip
-            overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
+            styles={{
+              root: { maxWidth: 'unset', pointerEvents: 'none' },
+            }}
             title={t('ModelSelect.featureTag.functionCall')}
           >
             <div className={cx(styles.tag, styles.tagBlue)} style={{ cursor: 'pointer' }} title="">
@@ -102,10 +107,12 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
             </div>
           </Tooltip>
         )}
-        {model.contextWindowTokens !== undefined && (
+        {typeof model.contextWindowTokens === 'number' && (
           <Tooltip
-            overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
+            styles={{
+              root: { maxWidth: 'unset', pointerEvents: 'none' },
+            }}
             title={t('ModelSelect.featureTag.tokens', {
               tokens:
                 model.contextWindowTokens === 0
@@ -117,7 +124,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
               {model.contextWindowTokens === 0 ? (
                 <Infinity size={17} strokeWidth={1.6} />
               ) : (
-                formatTokenNumber(model.contextWindowTokens)
+                formatTokenNumber(model.contextWindowTokens as number)
               )}
             </Center>
           </Tooltip>
@@ -147,16 +154,26 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
 });
 
 interface ProviderItemRenderProps {
+  logo?: string;
   name: string;
   provider: string;
+  source?: AiProviderSourceType;
 }
 
-export const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider, name }) => (
-  <Flexbox align={'center'} gap={4} horizontal>
-    <ProviderIcon provider={provider} size={20} type={'mono'} />
-    {name}
-  </Flexbox>
-));
+export const ProviderItemRender = memo<ProviderItemRenderProps>(
+  ({ provider, name, source, logo }) => {
+    return (
+      <Flexbox align={'center'} gap={4} horizontal>
+        {source === 'custom' && !!logo ? (
+          <Avatar avatar={logo} size={20} style={{ filter: 'grayscale(1)' }} title={name} />
+        ) : (
+          <ProviderIcon provider={provider} size={20} type={'mono'} />
+        )}
+        {name}
+      </Flexbox>
+    );
+  },
+);
 
 interface LabelRendererProps {
   Icon: FC<IconAvatarProps>;

@@ -84,8 +84,7 @@
         },
         "modalTitle": "自定义模型配置",
         "tokens": {
-          "title": "最大 token 数",
-          "unlimited": "无限制"
+          "title": "最大 token 数"
         },
         "vision": {
           "extra": "此配置将仅开启应用中的图片上传配置，是否支持识别完全取决于模型本身，请自行测试该模型的视觉识别能力可用性",
@@ -412,6 +411,7 @@
     "common": "通用设置",
     "experiment": "实验",
     "llm": "语言模型",
+    "provider": "AI 服务商",
     "sync": "云端同步",
     "system-agent": "系统助手",
     "tts": "语音服务"

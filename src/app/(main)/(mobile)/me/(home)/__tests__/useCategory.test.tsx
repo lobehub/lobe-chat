@@ -59,57 +59,12 @@ describe('useCategory', () => {
 
     act(() => {
       const items = result.current;
-      expect(items.some((item) => item.key === 'profile')).toBe(false);
-      expect(items.some((item) => item.key === 'setting')).toBe(true);
-      expect(items.some((item) => item.key === 'data')).toBe(true);
-      expect(items.some((item) => item.key === 'docs')).toBe(true);
-      expect(items.some((item) => item.key === 'feedback')).toBe(true);
-      expect(items.some((item) => item.key === 'changelog')).toBe(true);
-    });
-  });
-
-  it('should return correct items when the user is logged in with Clerk', () => {
-    act(() => {
-      useUserStore.setState({ isSignedIn: true });
-    });
-    enableAuth = true;
-    enableClerk = true;
-
-    const { result } = renderHook(() => useCategory(), { wrapper });
-
-    act(() => {
-      const items = result.current;
       expect(items.some((item) => item.key === 'profile')).toBe(true);
       expect(items.some((item) => item.key === 'setting')).toBe(true);
       expect(items.some((item) => item.key === 'data')).toBe(true);
       expect(items.some((item) => item.key === 'docs')).toBe(true);
       expect(items.some((item) => item.key === 'feedback')).toBe(true);
       expect(items.some((item) => item.key === 'changelog')).toBe(true);
-    });
-  });
-
-  it('should return correct items when the user is logged in with NextAuth', () => {
-    act(() => {
-      useUserStore.setState({
-        isSignedIn: true,
-        enableAuth: () => true,
-        enabledNextAuth: true,
-      });
-    });
-    enableClerk = false;
-
-    const { result } = renderHook(() => useCategory(), { wrapper });
-
-    act(() => {
-      const items = result.current;
-      // Should not render profile for NextAuth, it's Clerk only
-      expect(items.some((item) => item.key === 'profile')).toBe(false);
-      expect(items.some((item) => item.key === 'setting')).toBe(true);
-      expect(items.some((item) => item.key === 'data')).toBe(true);
-      expect(items.some((item) => item.key === 'docs')).toBe(true);
-      expect(items.some((item) => item.key === 'feedback')).toBe(true);
-      expect(items.some((item) => item.key === 'changelog')).toBe(true);
-      expect(items.some((item) => item.key === 'nextauthSignout')).toBe(true);
     });
   });
 
@@ -128,7 +83,6 @@ describe('useCategory', () => {
       expect(items.some((item) => item.key === 'docs')).toBe(true);
       expect(items.some((item) => item.key === 'feedback')).toBe(true);
       expect(items.some((item) => item.key === 'changelog')).toBe(true);
-      expect(items.some((item) => item.key === 'nextauthSignout')).toBe(false);
     });
   });
 

@@ -51,9 +51,9 @@ const useStyles = createStyles(({ css, token }) => ({
 
     padding-block: 12px;
     padding-inline: 16px;
+    border-radius: 9999px;
 
     background: ${token.colorText};
-    border-radius: 9999px;
     box-shadow: ${token.boxShadowSecondary};
   `,
 }));

@@ -284,6 +284,10 @@ const TogetherAI: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://docs.together.ai/docs/chat-models',
   name: 'Together AI',
+  settings: {
+    sdkType: 'openai',
+    showModelFetcher: true,
+  },
   url: 'https://www.together.ai',
 };
 

@@ -63,6 +63,46 @@
       "title": "Cloudflare-account ID / API-URL"
     }
   },
+  "createNewAiProvider": {
+    "apiKey": {
+      "placeholder": "Vul je API-sleutel in",
+      "required": "Vul je API-sleutel in",
+      "title": "API-sleutel"
+    },
+    "basicTitle": "Basisinformatie",
+    "configTitle": "Configuratie-informatie",
+    "confirm": "Nieuw aanmaken",
+    "createSuccess": "Succesvol aangemaakt",
+    "description": {
+      "placeholder": "Beschrijving van de provider (optioneel)",
+      "title": "Beschrijving van de provider"
+    },
+    "id": {
+      "desc": "Een unieke identificatie voor de dienstverlener, kan na creatie niet meer worden gewijzigd",
+      "format": "Mag alleen cijfers, kleine letters, koppeltekens (-) en onderstrepingstekens (_) bevatten",
+      "placeholder": "Gebruik alleen kleine letters, bijvoorbeeld openai, kan niet worden gewijzigd na aanmaak",
+      "required": "Vul de provider ID in",
+      "title": "Provider ID"
+    },
+    "logo": {
+      "required": "Upload een correcte provider-logo",
+      "title": "Provider-logo"
+    },
+    "name": {
+      "placeholder": "Voer de weergavenaam van de provider in",
+      "required": "Vul de naam van de provider in",
+      "title": "Naam van de provider"
+    },
+    "proxyUrl": {
+      "placeholder": "Vul je aanvraagadres in, als je dit niet invult, wordt het overeenkomstige aanvraagadres van de SDK gebruikt",
+      "title": "Proxy-adres"
+    },
+    "sdkType": {
+      "required": "Selecteer het SDK-type",
+      "title": "Aanvraagformaat"
+    },
+    "title": "Maak een aangepaste AI-provider"
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Vul je Github PAT in, klik [hier](https://github.com/settings/tokens) om er een te maken",
@@ -76,6 +116,23 @@
       "placeholder": "hf_xxxxxxxxx",
       "title": "HuggingFace Token"
     }
+  },
+  "list": {
+    "title": {
+      "disabled": "Dienstverlener niet ingeschakeld",
+      "enabled": "Dienstverlener ingeschakeld"
+    }
+  },
+  "menu": {
+    "addCustomProvider": "Voeg aangepaste provider toe",
+    "all": "Alles",
+    "list": {
+      "disabled": "Niet ingeschakeld",
+      "enabled": "Ingeschakeld"
+    },
+    "notFound": "Geen zoekresultaten gevonden",
+    "searchProviders": "Zoek providers...",
+    "sort": "Aangepaste sortering"
   },
   "ollama": {
     "checker": {
@@ -94,7 +151,7 @@
       "title": "Model {{model}} wordt gedownload"
     },
     "endpoint": {
-      "desc": "Voer het Ollama interface proxyadres in, laat leeg indien niet specifiek aangegeven",
+      "desc": "Moet http(s):// bevatten, kan leeg gelaten worden als lokaal niet specifiek opgegeven",
       "title": "Interface Proxyadres"
     },
     "setup": {
@@ -131,21 +188,130 @@
       "title": "Download het opgegeven Ollama model"
     }
   },
-  "sensenova": {
-    "sensenovaAccessKeyID": {
-      "desc": "Vul je SenseNova Access Key ID in",
-      "placeholder": "SenseNova Access Key ID",
-      "title": "Access Key ID"
+  "providerModels": {
+    "config": {
+      "aesGcm": "Je sleutel en proxy-adres worden versleuteld met <1>AES-GCM</1> encryptie-algoritme",
+      "apiKey": {
+        "desc": "Vul je {{name}} API-sleutel in",
+        "placeholder": "{{name}} API-sleutel",
+        "title": "API-sleutel"
+      },
+      "baseURL": {
+        "desc": "Moet http(s):// bevatten",
+        "placeholder": "https://your-proxy-url.com/v1",
+        "title": "API-proxy-adres"
+      },
+      "checker": {
+        "button": "Controleer",
+        "desc": "Test of de API-sleutel en proxy-adres correct zijn ingevuld",
+        "pass": "Controle geslaagd",
+        "title": "Connectiviteitstest"
+      },
+      "fetchOnClient": {
+        "desc": "Clientaanvraagmodus zal sessieaanvragen rechtstreeks vanuit de browser initiëren, wat de responssnelheid kan verbeteren",
+        "title": "Gebruik clientaanvraagmodus"
+      },
+      "helpDoc": "Configuratiehandleiding",
+      "waitingForMore": "Meer modellen zijn in <1>planning voor integratie</1>, blijf op de hoogte"
     },
-    "sensenovaAccessKeySecret": {
-      "desc": "Vul je SenseNova Access Key Secret in",
-      "placeholder": "SenseNova Access Key Secret",
-      "title": "Access Key Secret"
+    "createNew": {
+      "title": "Maak een aangepast AI-model"
     },
-    "unlock": {
-      "description": "Voer je Access Key ID / Access Key Secret in om de sessie te starten. De applicatie registreert je authenticatie-instellingen niet",
-      "title": "Gebruik aangepaste SenseNova authenticatie-informatie"
-    }
+    "item": {
+      "config": "Configureer model",
+      "customModelCards": {
+        "addNew": "Maak en voeg {{id}} model toe",
+        "confirmDelete": "Je staat op het punt dit aangepaste model te verwijderen, na verwijdering kan het niet worden hersteld, wees voorzichtig."
+      },
+      "delete": {
+        "confirm": "Bevestig verwijdering van model {{displayName}}?",
+        "success": "Verwijdering geslaagd",
+        "title": "Verwijder model"
+      },
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Het veld dat daadwerkelijk wordt aangevraagd in Azure OpenAI",
+          "placeholder": "Voer de modelimplementatienaam in Azure in",
+          "title": "Modelimplementatienaam"
+        },
+        "displayName": {
+          "placeholder": "Voer de weergavenaam van het model in, bijvoorbeeld ChatGPT, GPT-4, enz.",
+          "title": "Weergavenaam van het model"
+        },
+        "files": {
+          "extra": "De huidige bestandsuploadimplementatie is slechts een hackoplossing, alleen voor eigen gebruik. Volledige bestandsuploadcapaciteit komt later beschikbaar.",
+          "title": "Ondersteuning voor bestandsupload"
+        },
+        "functionCall": {
+          "extra": "Deze configuratie schakelt alleen de mogelijkheid in voor het model om tools te gebruiken, waardoor het mogelijk is om plug-ins voor tools aan het model toe te voegen. Of het model daadwerkelijk tools kan gebruiken, hangt echter volledig af van het model zelf; test de bruikbaarheid zelf.",
+          "title": "Ondersteuning voor het gebruik van tools"
+        },
+        "id": {
+          "extra": "Kan niet worden gewijzigd na creatie, wordt gebruikt als model-id bij het aanroepen van AI",
+          "placeholder": "Voer model-id in, bijvoorbeeld gpt-4o of claude-3.5-sonnet",
+          "title": "Model ID"
+        },
+        "modalTitle": "Configuratie van aangepast model",
+        "tokens": {
+          "extra": "Stel het maximale aantal tokens in dat door het model wordt ondersteund",
+          "title": "Maximale contextvenster",
+          "unlimited": "Onbeperkt"
+        },
+        "vision": {
+          "extra": "Deze configuratie zal alleen de afbeeldinguploadcapaciteit in de applicatie inschakelen, of herkenning wordt ondersteund hangt volledig af van het model zelf, test de beschikbaarheid van de visuele herkenningscapaciteit van dit model zelf.",
+          "title": "Ondersteuning voor visuele herkenning"
+        }
+      },
+      "pricing": {
+        "image": "${{amount}}/Afbeelding",
+        "inputCharts": "${{amount}}/M Tekens",
+        "inputMinutes": "${{amount}}/Minuten",
+        "inputTokens": "Invoer ${{amount}}/M",
+        "outputTokens": "Uitvoer ${{amount}}/M"
+      },
+      "releasedAt": "Uitgebracht op {{releasedAt}}"
+    },
+    "list": {
+      "addNew": "Model toevoegen",
+      "disabled": "Niet ingeschakeld",
+      "disabledActions": {
+        "showMore": "Toon alles"
+      },
+      "empty": {
+        "desc": "Maak een aangepast model of haal een model op om te beginnen met gebruiken.",
+        "title": "Geen beschikbare modellen"
+      },
+      "enabled": "Ingeschakeld",
+      "enabledActions": {
+        "disableAll": "Alle uitschakelen",
+        "enableAll": "Alle inschakelen",
+        "sort": "Aangepaste model sortering"
+      },
+      "enabledEmpty": "Geen ingeschakelde modellen, schakel de modellen hieronder in die je leuk vindt~",
+      "fetcher": {
+        "clear": "Verwijder de opgehaalde modellen",
+        "fetch": "Haal modellenlijst op",
+        "fetching": "Bezig met het ophalen van de modellenlijst...",
+        "latestTime": "Laatste update tijd: {{time}}",
+        "noLatestTime": "Lijst nog niet opgehaald"
+      },
+      "search": "Zoek modellen...",
+      "searchResult": "Gevonden {{count}} modellen",
+      "title": "Modellenlijst",
+      "total": "In totaal {{count}} modellen beschikbaar"
+    },
+    "searchNotFound": "Geen zoekresultaten gevonden"
+  },
+  "sortModal": {
+    "success": "Sortering succesvol bijgewerkt",
+    "title": "Aangepaste sortering",
+    "update": "Bijwerken"
+  },
+  "updateAiProvider": {
+    "confirmDelete": "Je staat op het punt deze AI-provider te verwijderen, na verwijdering kan deze niet worden hersteld, bevestig je verwijdering?",
+    "deleteSuccess": "Verwijdering geslaagd",
+    "tooltip": "Werk basisconfiguratie van provider bij",
+    "updateSuccess": "Bijwerking geslaagd"
   },
   "wenxin": {
     "accessKey": {

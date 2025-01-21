@@ -1,3 +1,16 @@
+---
+title: LobeChat Knowledge Base / File Upload
+description: >-
+  Explore LobeChat's file upload and knowledge base management features with
+  core components.
+tags:
+  - LobeChat
+  - File Upload
+  - Knowledge Base
+  - PostgreSQL
+  - OpenAI Embedding
+---
+
 # Knowledge Base / File Upload
 
 LobeChat supports file upload and knowledge base management. This feature relies on the following core technical components. Understanding these components will help you successfully deploy and maintain the knowledge base system.
@@ -32,9 +45,7 @@ S3 (or S3-compatible storage services) is used for storing uploaded files.
 OpenAI's Embedding service is used to convert text into vector representations.
 
 <Callout type={'info'}>
-
-LobeChat currently uses OpenAI's `text-embedding-3-small` model by default. Ensure your API Key has access to this model.
-
+  LobeChat currently uses OpenAI's `text-embedding-3-small` model by default. Ensure your API Key has access to this model.
 </Callout>
 
 - **Purpose**: Generate vector representations for semantic search
@@ -51,3 +62,12 @@ Unstructured.io is a powerful document processing tool.
 - **Note**: Evaluate processing needs based on document complexity
 
 By correctly configuring and integrating these core components, you can build a powerful and efficient knowledge base system for LobeChat. Each component plays a crucial role in the overall architecture, supporting advanced document management and intelligent retrieval functions.
+
+### 5. Custom Embedding
+
+- **Purpose**: Use different Embedding generate vector representations for semantic search
+- **Options**: support model provider list: zhipu/github/openai/bedrock/ollama
+- **Deployment Tip**: Used to configure the default Embedding model
+```
+environment: DEFAULT_FILES_CONFIG=embedding_model=openai/embedding-text-3-small
+```

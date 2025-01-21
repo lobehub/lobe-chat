@@ -119,9 +119,6 @@
   "OpenGVLab/InternVL2-26B": {
     "description": "InternVL2 demonstrates exceptional performance across various visual language tasks, including document and chart understanding, scene text understanding, OCR, and solving scientific and mathematical problems."
   },
-  "OpenGVLab/InternVL2-Llama3-76B": {
-    "description": "InternVL2 demonstrates exceptional performance across various visual language tasks, including document and chart understanding, scene text understanding, OCR, and solving scientific and mathematical problems."
-  },
   "Phi-3-medium-128k-instruct": {
     "description": "The same Phi-3-medium model, but with a larger context size for RAG or few-shot prompting."
   },
@@ -215,9 +212,6 @@
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder-7B-Instruct is the latest version in Alibaba Cloud's series of code-specific large language models. This model significantly enhances code generation, reasoning, and repair capabilities based on Qwen2.5, trained on 55 trillion tokens. It not only improves coding abilities but also maintains advantages in mathematics and general capabilities, providing a more comprehensive foundation for practical applications such as code agents."
   },
-  "Qwen/Qwen2.5-Math-72B-Instruct": {
-    "description": "Qwen2.5-Math focuses on problem-solving in the field of mathematics, providing expert solutions for challenging problems."
-  },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 is the latest series of the Qwen model, supporting 128k context. Compared to the current best open-source models, Qwen2-72B significantly surpasses leading models in natural language understanding, knowledge, coding, mathematics, and multilingual capabilities."
   },
@@ -289,12 +283,6 @@
   },
   "TeleAI/TeleMM": {
     "description": "The TeleMM multimodal large model is a multimodal understanding model independently developed by China Telecom, capable of processing various modal inputs such as text and images, supporting functions like image understanding and chart analysis, providing users with cross-modal understanding services. The model can interact with users in a multimodal manner, accurately understand input content, answer questions, assist in creation, and efficiently provide multimodal information and inspiration support. It excels in fine-grained perception, logical reasoning, and other multimodal tasks."
-  },
-  "Tencent/Hunyuan-A52B-Instruct": {
-    "description": "Hunyuan-Large is the industry's largest open-source Transformer architecture MoE model, with a total of 389 billion parameters and 52 billion active parameters."
-  },
-  "Vendor-A/Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2-72B-Instruct is an instruction-tuned large language model in the Qwen2 series, with a parameter size of 72B. This model is based on the Transformer architecture and employs techniques such as the SwiGLU activation function, attention QKV bias, and group query attention. It can handle large-scale inputs. The model excels in language understanding, generation, multilingual capabilities, coding, mathematics, and reasoning across multiple benchmark tests, surpassing most open-source models and demonstrating competitive performance comparable to proprietary models in certain tasks."
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct is one of the latest large language models released by Alibaba Cloud. This 72B model shows significant improvements in coding and mathematics. It also provides multilingual support, covering over 29 languages, including Chinese and English. The model has made notable advancements in instruction following, understanding structured data, and generating structured outputs, especially JSON."
@@ -521,11 +509,14 @@
   "command-r-plus": {
     "description": "Command R+ is a high-performance large language model designed for real enterprise scenarios and complex applications."
   },
+  "dall-e-2": {
+    "description": "The second generation DALL·E model, supporting more realistic and accurate image generation, with a resolution four times that of the first generation."
+  },
+  "dall-e-3": {
+    "description": "The latest DALL·E model, released in November 2023. It supports more realistic and accurate image generation with enhanced detail representation."
+  },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct provides highly reliable instruction processing capabilities, supporting applications across multiple industries."
-  },
-  "deepseek-ai/DeepSeek-V2-Chat": {
-    "description": "DeepSeek-V2 is a powerful and cost-effective mixture of experts (MoE) language model. It has been pre-trained on a high-quality corpus of 81 trillion tokens and further enhanced through supervised fine-tuning (SFT) and reinforcement learning (RL). Compared to DeepSeek 67B, DeepSeek-V2 offers stronger performance while saving 42.5% in training costs, reducing KV cache by 93.3%, and increasing maximum generation throughput by 5.76 times. The model supports a context length of 128k and performs excellently in standard benchmark tests and open-ended generation evaluations."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 combines the excellent features of previous versions, enhancing general and coding capabilities."
@@ -601,6 +592,9 @@
   },
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool integration, and multimodal generation."
+  },
+  "gemini-2.0-flash-thinking-exp-1219": {
+    "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
   },
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 is Google's latest experimental multimodal AI model, featuring rapid processing capabilities and supporting text, image, and video inputs, making it suitable for efficient scaling across various tasks."
@@ -701,6 +695,9 @@
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo is suitable for various text generation and understanding tasks. Currently points to gpt-3.5-turbo-0125."
   },
+  "gpt-3.5-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k, a high-capacity text generation model suitable for complex tasks."
+  },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo is suitable for various text generation and understanding tasks. Currently points to gpt-3.5-turbo-0125."
   },
@@ -752,8 +749,23 @@
   "gpt-4o-2024-11-20": {
     "description": "ChatGPT-4o is a dynamic model that updates in real-time to maintain the latest version. It combines powerful language understanding and generation capabilities, making it suitable for large-scale applications including customer service, education, and technical support."
   },
+  "gpt-4o-audio-preview": {
+    "description": "GPT-4o Audio model, supporting audio input and output."
+  },
   "gpt-4o-mini": {
     "description": "GPT-4o mini is the latest model released by OpenAI after GPT-4 Omni, supporting both image and text input while outputting text. As their most advanced small model, it is significantly cheaper than other recent cutting-edge models, costing over 60% less than GPT-3.5 Turbo. It maintains state-of-the-art intelligence while offering remarkable cost-effectiveness. GPT-4o mini scored 82% on the MMLU test and currently ranks higher than GPT-4 in chat preferences."
+  },
+  "gpt-4o-mini-realtime-preview": {
+    "description": "GPT-4o-mini real-time version, supporting real-time audio and text input and output."
+  },
+  "gpt-4o-realtime-preview": {
+    "description": "GPT-4o real-time version, supporting real-time audio and text input and output."
+  },
+  "gpt-4o-realtime-preview-2024-10-01": {
+    "description": "GPT-4o real-time version, supporting real-time audio and text input and output."
+  },
+  "gpt-4o-realtime-preview-2024-12-17": {
+    "description": "GPT-4o real-time version, supporting real-time audio and text input and output."
   },
   "grok-2-1212": {
     "description": "This model has improved in accuracy, instruction adherence, and multilingual capabilities."
@@ -932,6 +944,9 @@
   "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
     "description": "LLaMA 3.2 is designed for tasks involving both visual and textual data. It excels in tasks like image description and visual question answering, bridging the gap between language generation and visual reasoning."
   },
+  "meta-llama/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 is the most advanced multilingual open-source large language model in the Llama series, offering performance comparable to 405B models at a very low cost. Based on the Transformer architecture, it enhances usability and safety through supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF). Its instruction-tuned version is optimized for multilingual dialogue and outperforms many open-source and closed chat models on multiple industry benchmarks. Knowledge cutoff date is December 2023."
+  },
   "meta-llama/Llama-Vision-Free": {
     "description": "LLaMA 3.2 is designed for tasks involving both visual and textual data. It excels in tasks like image description and visual question answering, bridging the gap between language generation and visual reasoning."
   },
@@ -1088,11 +1103,11 @@
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B is an upgraded version of Nous Hermes 2, featuring the latest internally developed datasets."
   },
-  "nvidia/Llama-3.1-Nemotron-70B-Instruct": {
-    "description": "Llama 3.1 Nemotron 70B is a large language model customized by NVIDIA, designed to enhance the help provided by LLM-generated responses to user queries."
-  },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B is a large language model customized by NVIDIA, designed to enhance the helpfulness of LLM-generated responses to user queries. The model has excelled in benchmark tests such as Arena Hard, AlpacaEval 2 LC, and GPT-4-Turbo MT-Bench, ranking first in all three automatic alignment benchmarks as of October 1, 2024. The model is trained using RLHF (specifically REINFORCE), Llama-3.1-Nemotron-70B-Reward, and HelpSteer2-Preference prompts based on the Llama-3.1-70B-Instruct model."
+  },
+  "o1": {
+    "description": "Focused on advanced reasoning and solving complex problems, including mathematical and scientific tasks. It is particularly well-suited for applications that require deep contextual understanding and agent workflow."
   },
   "o1-mini": {
     "description": "o1-mini is a fast and cost-effective reasoning model designed for programming, mathematics, and scientific applications. This model features a 128K context and has a knowledge cutoff date of October 2023."
@@ -1295,14 +1310,29 @@
   "taichu_llm": {
     "description": "The ZD Taichu language model possesses strong language understanding capabilities and excels in text creation, knowledge Q&A, code programming, mathematical calculations, logical reasoning, sentiment analysis, and text summarization. It innovatively combines large-scale pre-training with rich knowledge from multiple sources, continuously refining algorithmic techniques and absorbing new knowledge in vocabulary, structure, grammar, and semantics from vast text data, resulting in an evolving model performance. It provides users with more convenient information and services, as well as a more intelligent experience."
   },
+  "text-embedding-3-large": {
+    "description": "The most powerful vectorization model, suitable for both English and non-English tasks."
+  },
+  "text-embedding-3-small": {
+    "description": "An efficient and cost-effective next-generation embedding model, suitable for knowledge retrieval, RAG applications, and more."
+  },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) provides enhanced computational capabilities through efficient strategies and model architecture."
+  },
+  "tts-1": {
+    "description": "The latest text-to-speech model, optimized for speed in real-time scenarios."
+  },
+  "tts-1-hd": {
+    "description": "The latest text-to-speech model, optimized for quality."
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) is suitable for refined instruction tasks, offering excellent language processing capabilities."
   },
   "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet raises the industry standard, outperforming competitor models and Claude 3 Opus, excelling in a wide range of evaluations while maintaining the speed and cost of our mid-tier models."
+  },
+  "whisper-1": {
+    "description": "A universal speech recognition model that supports multilingual speech recognition, speech translation, and language identification."
   },
   "wizardlm2": {
     "description": "WizardLM 2 is a language model provided by Microsoft AI, excelling in complex dialogues, multilingual capabilities, reasoning, and intelligent assistant applications."

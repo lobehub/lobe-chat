@@ -84,8 +84,7 @@
         },
         "modalTitle": "Cấu hình mô hình tùy chỉnh",
         "tokens": {
-          "title": "Số lượng token tối đa",
-          "unlimited": "vô hạn"
+          "title": "Số lượng token tối đa"
         },
         "vision": {
           "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong ứng dụng, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra khả năng nhận diện hình ảnh của mô hình đó.",
@@ -412,6 +411,7 @@
     "common": "Cài đặt chung",
     "experiment": "Thử nghiệm",
     "llm": "Mô hình ngôn ngữ",
+    "provider": "Nhà cung cấp AI",
     "sync": "Đồng bộ trên đám mây",
     "system-agent": "Trợ lý hệ thống",
     "tts": "Dịch vụ giọng nói"

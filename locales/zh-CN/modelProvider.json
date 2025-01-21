@@ -63,6 +63,46 @@
       "title": "Cloudflare 账户 ID / API 地址"
     }
   },
+  "createNewAiProvider": {
+    "apiKey": {
+      "placeholder": "请填写你的 API Key",
+      "required": "请填写你的 API Key",
+      "title": "API Key"
+    },
+    "basicTitle": "基本信息",
+    "configTitle": "配置信息",
+    "confirm": "新建",
+    "createSuccess": "新建成功",
+    "description": {
+      "placeholder": "服务商简介（选填）",
+      "title": "服务商简介"
+    },
+    "id": {
+      "desc": "作为服务商唯一标识，创建后将不可修改",
+      "format": "只能包含数字、小写字母、连字符（-）和下划线（_）",
+      "placeholder": "例如 openai、gemini 等",
+      "required": "请填写服务商 ID",
+      "title": "服务商 ID"
+    },
+    "logo": {
+      "required": "请上传正确的服务商 Logo",
+      "title": "服务商 Logo"
+    },
+    "name": {
+      "placeholder": "请输入服务商的展示名称",
+      "required": "请填写服务商名称",
+      "title": "服务商名称"
+    },
+    "proxyUrl": {
+      "placeholder": "请填写你的请求地址，如果不填则会使用 SDK 对应的请求地址",
+      "title": "代理地址"
+    },
+    "sdkType": {
+      "required": "请选择 SDK 类型",
+      "title": "请求格式"
+    },
+    "title": "创建自定义 AI 服务商"
+  },
   "github": {
     "personalAccessToken": {
       "desc": "填入你的 Github PAT，点击 [这里](https://github.com/settings/tokens) 创建",
@@ -76,6 +116,23 @@
       "placeholder": "hf_xxxxxxxxx",
       "title": "HuggingFace Token"
     }
+  },
+  "list": {
+    "title": {
+      "disabled": "未启用服务商",
+      "enabled": "已启用服务商"
+    }
+  },
+  "menu": {
+    "addCustomProvider": "添加自定义服务商",
+    "all": "全部",
+    "list": {
+      "disabled": "未启用",
+      "enabled": "已启用"
+    },
+    "notFound": "未找到搜索结果",
+    "searchProviders": "搜索服务商...",
+    "sort": "自定义排序"
   },
   "ollama": {
     "checker": {
@@ -94,7 +151,7 @@
       "title": "正在下载模型 {{model}} "
     },
     "endpoint": {
-      "desc": "填入 Ollama 接口代理地址，本地未额外指定可留空",
+      "desc": "必须包含http(s)://，本地未额外指定可留空",
       "title": "Ollama 服务地址"
     },
     "setup": {
@@ -131,21 +188,130 @@
       "title": "下载指定的 Ollama 模型"
     }
   },
-  "sensenova": {
-    "sensenovaAccessKeyID": {
-      "desc": "填入 SenseNova Access Key ID",
-      "placeholder": "SenseNova Access Key ID",
-      "title": "Access Key ID"
+  "providerModels": {
+    "config": {
+      "aesGcm": "您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密",
+      "apiKey": {
+        "desc": "请填写你的 {{name}} API Key",
+        "placeholder": "{{name}} API Key",
+        "title": "API Key"
+      },
+      "baseURL": {
+        "desc": "必须包含 http(s)://",
+        "placeholder": "https://your-proxy-url.com/v1",
+        "title": "API 代理地址"
+      },
+      "checker": {
+        "button": "检查",
+        "desc": "测试 Api Key 与代理地址是否正确填写",
+        "pass": "检查通过",
+        "title": "连通性检查"
+      },
+      "fetchOnClient": {
+        "desc": "客户端请求模式将从浏览器直接发起会话请求，可提升响应速度",
+        "title": "使用客户端请求模式"
+      },
+      "helpDoc": "配置教程",
+      "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待"
     },
-    "sensenovaAccessKeySecret": {
-      "desc": "填入 SenseNova Access Key Secret",
-      "placeholder": "SenseNova Access Key Secret",
-      "title": "Access Key Secret"
+    "createNew": {
+      "title": "创建自定义 AI 模型"
     },
-    "unlock": {
-      "description": "输入你的 Access Key ID / Access Key Secret 即可开始会话。应用不会记录你的鉴权配置",
-      "title": "使用自定义 SenseNova 鉴权信息"
-    }
+    "item": {
+      "config": "配置模型",
+      "customModelCards": {
+        "addNew": "创建并添加 {{id}} 模型",
+        "confirmDelete": "即将删除该自定义模型，删除后将不可恢复，请谨慎操作。"
+      },
+      "delete": {
+        "confirm": "确认删除模型 {{displayName}}？",
+        "success": "删除成功",
+        "title": "删除模型"
+      },
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "在 Azure OpenAI 中实际请求的字段",
+          "placeholder": "请输入 Azure 中的模型部署名称",
+          "title": "模型部署名称"
+        },
+        "displayName": {
+          "placeholder": "请输入模型的展示名称，例如 ChatGPT、GPT-4 等",
+          "title": "模型展示名称"
+        },
+        "files": {
+          "extra": "当前文件上传实现仅为一种 Hack 方案，仅限自行尝试。完整文件上传能力请等待后续实现",
+          "title": "支持文件上传"
+        },
+        "functionCall": {
+          "extra": "此配置将仅开启模型使用工具的能力，进而可以为模型添加工具类的插件。但是否支持真正使用工具完全取决于模型本身，请自行测试的可用性",
+          "title": "支持工具使用"
+        },
+        "id": {
+          "extra": "创建后不可修改，调用 AI 时将作为模型 id 使用",
+          "placeholder": "请输入模型 id，例如 gpt-4o 或 claude-3.5-sonnet",
+          "title": "模型 ID"
+        },
+        "modalTitle": "自定义模型配置",
+        "tokens": {
+          "extra": "设置模型支持的最大 Token 数",
+          "title": "最大上下文窗口",
+          "unlimited": "无限制"
+        },
+        "vision": {
+          "extra": "此配置将仅开启应用中的图片上传配置，是否支持识别完全取决于模型本身，请自行测试该模型的视觉识别能力可用性",
+          "title": "支持视觉识别"
+        }
+      },
+      "pricing": {
+        "image": "${{amount}}/图片",
+        "inputCharts": "${{amount}}/M 字符",
+        "inputMinutes": "${{amount}}/分钟",
+        "inputTokens": "输入 ${{amount}}/M",
+        "outputTokens": "输出 ${{amount}}/M"
+      },
+      "releasedAt": "发布于{{releasedAt}}"
+    },
+    "list": {
+      "addNew": "添加模型",
+      "disabled": "未启用",
+      "disabledActions": {
+        "showMore": "显示全部"
+      },
+      "empty": {
+        "desc": "请创建自定义模型或拉取模型后开始使用吧",
+        "title": "暂无可用模型"
+      },
+      "enabled": "已启用",
+      "enabledActions": {
+        "disableAll": "全部禁用",
+        "enableAll": "全部启用",
+        "sort": "自定义模型排序"
+      },
+      "enabledEmpty": "暂无启用模型，请从下方列表中启用心仪的模型吧~",
+      "fetcher": {
+        "clear": "清除获取的模型",
+        "fetch": "获取模型列表",
+        "fetching": "正在获取模型列表...",
+        "latestTime": "上次更新时间：{{time}}",
+        "noLatestTime": "暂未获取列表"
+      },
+      "search": "搜索模型...",
+      "searchResult": "搜索到 {{count}} 个模型",
+      "title": "模型列表",
+      "total": "共 {{count}} 个模型可用"
+    },
+    "searchNotFound": "未找到搜索结果"
+  },
+  "sortModal": {
+    "success": "排序更新成功",
+    "title": "自定义排序",
+    "update": "更新"
+  },
+  "updateAiProvider": {
+    "confirmDelete": "即将删除该 AI 服务商，删除后将无法找回，确认是否删除？",
+    "deleteSuccess": "删除成功",
+    "tooltip": "更新服务商基础配置",
+    "updateSuccess": "更新成功"
   },
   "wenxin": {
     "accessKey": {

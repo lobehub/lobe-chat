@@ -59,6 +59,10 @@ const Azure: ModelProviderCard = {
   id: 'azure',
   modelsUrl: 'https://learn.microsoft.com/azure/ai-services/openai/concepts/models',
   name: 'Azure',
+  settings: {
+    defaultShowBrowserRequest: true,
+    sdkType: 'azure',
+  },
   url: 'https://azure.microsoft.com',
 };
 
