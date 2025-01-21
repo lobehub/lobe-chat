@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add ModelFetcher for supported providers."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.13"
+  },
+  {
+    "children": {
       "improvements": ["Refactor [@nav](https://github.com/nav) layout and improve pin list style."]
     },
     "date": "2025-01-21",
