@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Refactor [@nav](https://github.com/nav) layout and improve pin list style."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.12"
+  },
+  {
+    "children": {
+      "improvements": ["Improve code for ai provider."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.11"
+  },
+  {
+    "children": {
       "improvements": ["Support assistant blacklist."]
     },
     "date": "2025-01-21",
