@@ -15,9 +15,19 @@ export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
     handlePayload: ({ messages, frequency_penalty, model, presence_penalty, temperature, top_p, ...payload }: ChatStreamPayload) => {
       // github.com/lobehub/lobe-chat/pull/5548
       let filteredMessages = messages.filter(message => message.role !== 'system');
+
       while (filteredMessages.length > 0 && filteredMessages[0].role === 'assistant') {
         filteredMessages.shift();
       }
+
+      let lastRole = '';
+      filteredMessages = filteredMessages.filter(message => {
+        if (message.role === lastRole) {
+          return false;
+        }
+        lastRole = message.role;
+        return true;
+      });
 
       return {
         ...payload,
