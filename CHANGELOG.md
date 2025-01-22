@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.47.13](https://github.com/lobehub/lobe-chat/compare/v1.47.12...v1.47.13)
+
+<sup>Released on **2025-01-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `ModelFetcher` for supported providers.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `ModelFetcher` for supported providers, closes [#5316](https://github.com/lobehub/lobe-chat/issues/5316) [#252](https://github.com/lobehub/lobe-chat/issues/252) ([a189c81](https://github.com/lobehub/lobe-chat/commit/a189c81))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.47.12](https://github.com/lobehub/lobe-chat/compare/v1.47.11...v1.47.12)
 
 <sup>Released on **2025-01-21**</sup>
