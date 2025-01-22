@@ -305,6 +305,9 @@
   "abab6.5t-chat": {
     "description": "중국어 캐릭터 대화 시나리오에 최적화되어 있으며, 유창하고 중국어 표현 습관에 맞는 대화 생성 능력을 제공합니다."
   },
+  "abab7-chat-preview": {
+    "description": "abab6.5 시리즈 모델에 비해 긴 글, 수학, 작문 등에서 능력이 크게 향상되었습니다."
+  },
   "accounts/fireworks/models/firefunction-v1": {
     "description": "Fireworks 오픈 소스 함수 호출 모델로, 뛰어난 지시 실행 능력과 개방형 커스터마이징 기능을 제공합니다."
   },
@@ -535,6 +538,9 @@
   },
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2는 오픈 소스 혼합 전문가 코드 모델로, 코드 작업에서 뛰어난 성능을 발휘하며, GPT4-Turbo와 경쟁할 수 있습니다."
+  },
+  "deepseek-reasoner": {
+    "description": "DeepSeek에서 제공하는 추론 모델입니다. 최종 답변을 출력하기 전에 모델은 먼저 사고 과정을 출력하여 최종 답변의 정확성을 높입니다."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2는 경제적이고 효율적인 처리 요구에 적합한 Mixture-of-Experts 언어 모델입니다."

@@ -305,6 +305,9 @@
   "abab6.5t-chat": {
     "description": "針對中文人設對話場景優化，提供流暢且符合中文表達習慣的對話生成能力。"
   },
+  "abab7-chat-preview": {
+    "description": "相對於abab6.5系列模型在長文、數學、寫作等能力有大幅度提升。"
+  },
   "accounts/fireworks/models/firefunction-v1": {
     "description": "Fireworks 開源函數調用模型，提供卓越的指令執行能力和開放可定制的特性。"
   },
@@ -535,6 +538,9 @@
   },
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 是開源的混合專家代碼模型，在代碼任務方面表現優異，與 GPT4-Turbo 相媲美。"
+  },
+  "deepseek-reasoner": {
+    "description": "DeepSeek 推出的推理模型。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 是高效的 Mixture-of-Experts 語言模型，適用於經濟高效的處理需求。"

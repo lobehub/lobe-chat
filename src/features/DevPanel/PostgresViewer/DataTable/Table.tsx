@@ -2,13 +2,8 @@ import { createStyles } from 'antd-style';
 import React from 'react';
 import { Center } from 'react-layout-kit';
 import { TableVirtuoso } from 'react-virtuoso';
-import useSWR from 'swr';
 
-import { tableViewerService } from '@/services/tableViewer';
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
-
-import { useTableColumns } from '../useTableColumns';
+import { usePgTable, useTableColumns } from '../usePgTable';
 import TableCell from './TableCell';
 
 const useStyles = createStyles(({ token, css }) => ({
@@ -100,12 +95,8 @@ const Table = ({ tableName }: TableProps) => {
   const { styles } = useStyles();
 
   const tableColumns = useTableColumns(tableName);
-  const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
 
-  const tableData = useSWR(
-    isDBInited && tableName ? ['fetch-table-data', tableName] : null,
-    ([, table]) => tableViewerService.getTableData(table),
-  );
+  const tableData = usePgTable(tableName);
 
   const columns = tableColumns.data?.map((t) => t.name) || [];
   const isLoading = tableColumns.isLoading || tableData.isLoading;

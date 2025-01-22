@@ -29,6 +29,9 @@ export const getServerGlobalConfig = () => {
         enabledKey: 'ENABLED_GITEE_AI',
         modelListKey: 'GITEE_AI_MODEL_LIST',
       },
+      /* ↓ cloud slot ↓ */
+
+      /* ↑ cloud slot ↑ */
       ollama: {
         fetchOnClient: !process.env.OLLAMA_PROXY_URL,
       },
