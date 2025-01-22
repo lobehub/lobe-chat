@@ -21,7 +21,7 @@ const Upstage: ModelProviderCard = {
       id: 'solar-1-mini-chat-ja',
     },
     {
-      contextWindowTokens: 4096,
+      contextWindowTokens: 32_768,
       description:
         'Solar Pro 是 Upstage 推出的一款高智能LLM，专注于单GPU的指令跟随能力，IFEval得分80以上。目前支持英语，正式版本计划于2024年11月推出，将扩展语言支持和上下文长度。',
       displayName: 'Solar Pro',
@@ -34,12 +34,10 @@ const Upstage: ModelProviderCard = {
   description:
     'Upstage 专注于为各种商业需求开发AI模型，包括 Solar LLM 和文档 AI，旨在实现工作的人造通用智能（AGI）。通过 Chat API 创建简单的对话代理，并支持功能调用、翻译、嵌入以及特定领域应用。',
   id: 'upstage',
-  modelList: { showModelFetcher: true },
   modelsUrl: 'https://developers.upstage.ai/docs/getting-started/models',
   name: 'Upstage',
   settings: {
     sdkType: 'openai',
-    showModelFetcher: true,
   },
   url: 'https://upstage.ai',
 };
