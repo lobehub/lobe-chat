@@ -12,24 +12,33 @@ export interface DeepSeekModelCard {
 export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.deepseek.com/v1',
   chatCompletion: {
-    handlePayload: ({ frequency_penalty, model, presence_penalty, temperature, top_p, ...payload }: ChatStreamPayload) =>
-      ({
+    handlePayload: ({ messages, frequency_penalty, model, presence_penalty, temperature, top_p, ...payload }: ChatStreamPayload) => {
+      // Filter out system messages and remove assistant messages from the beginning until the first user message
+      let filteredMessages = messages.filter(message => message.role !== 'system');
+      while (filteredMessages.length > 0 && filteredMessages[0].role === 'assistant') {
+        filteredMessages.shift();
+      }
+
+      return {
         ...payload,
         model,
         ...(model === 'deepseek-reasoner'
           ? {
+              messages: filteredMessages,
               frequency_penalty: undefined,
               presence_penalty: undefined,
               temperature: undefined,
               top_p: undefined,
             }
           : {
+              messages,
               frequency_penalty,
               presence_penalty,
               temperature,
               top_p,
             }),
-      }) as OpenAI.ChatCompletionCreateParamsStreaming,
+      } as OpenAI.ChatCompletionCreateParamsStreaming;
+    },
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_DEEPSEEK_CHAT_COMPLETION === '1',
