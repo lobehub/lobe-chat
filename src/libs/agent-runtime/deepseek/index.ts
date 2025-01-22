@@ -34,15 +34,15 @@ export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
         model,
         ...(model === 'deepseek-reasoner'
           ? {
-              messages: filteredMessages,
               frequency_penalty: undefined,
+              messages: filteredMessages,
               presence_penalty: undefined,
               temperature: undefined,
               top_p: undefined,
             }
           : {
-              messages,
               frequency_penalty,
+              messages,
               presence_penalty,
               temperature,
               top_p,
