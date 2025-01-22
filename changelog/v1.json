@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add gemini new model."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.16"
+  },
+  {
+    "children": {
       "improvements": ["Improve discover model page."]
     },
     "date": "2025-01-22",
