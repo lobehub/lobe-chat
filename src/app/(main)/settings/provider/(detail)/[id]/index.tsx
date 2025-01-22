@@ -16,7 +16,7 @@ const ProviderDetail = memo<ProviderDetailProps>(({ showConfig = true, ...card }
 
       {/* ↑ cloud slot ↑ */}
       {showConfig && <ProviderConfig {...card} />}
-      <ModelList id={card.id} />
+      <ModelList id={card.id} {...card.settings} />
     </Flexbox>
   );
 });

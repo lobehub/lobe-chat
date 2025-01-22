@@ -1,12 +1,25 @@
 import OpenAI from 'openai';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+
+export interface DeepSeekModelCard {
+  id: string;
+}
 
 export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.deepseek.com/v1',
   chatCompletion: {
-    handlePayload: ({ frequency_penalty, model, presence_penalty, temperature, top_p, ...payload }: ChatStreamPayload) =>
+    handlePayload: ({
+      frequency_penalty,
+      model,
+      presence_penalty,
+      temperature,
+      top_p,
+      ...payload
+    }: ChatStreamPayload) =>
       ({
         ...payload,
         model,
@@ -27,6 +40,17 @@ export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_DEEPSEEK_CHAT_COMPLETION === '1',
+  },
+  models: {
+    transformModel: (m) => {
+      const model = m as unknown as DeepSeekModelCard;
+
+      return {
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        functionCall: true,
+        id: model.id,
+      };
+    },
   },
   provider: ModelProvider.DeepSeek,
 });

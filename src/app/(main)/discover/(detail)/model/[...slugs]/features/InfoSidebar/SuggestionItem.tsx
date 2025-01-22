@@ -44,13 +44,13 @@ export interface SuggestionItemProps
   extends Omit<DiscoverModelItem, 'suggestions' | 'socialData' | 'providers'>,
     FlexboxProps {}
 
-const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier, ...rest }) => {
+const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier }) => {
   const { title, description, contextWindowTokens, vision, functionCall } = meta;
   const { t } = useTranslation('models');
   const { cx, styles } = useStyles();
 
   return (
-    <Flexbox className={cx(styles.container, className)} gap={12} key={identifier} {...rest}>
+    <Flexbox className={cx(styles.container, className)} gap={12} key={identifier}>
       <Flexbox align={'center'} gap={12} horizontal width={'100%'}>
         <ModelIcon model={identifier} size={36} type={'avatar'} />
         <Flexbox style={{ overflow: 'hidden' }}>

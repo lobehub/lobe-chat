@@ -89,6 +89,28 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
     }
   }
 
+  // TODO: 考虑支持
+  // async embeddings(
+  //   payload: EmbeddingsPayload,
+  //   // options?: EmbeddingsOptions,
+  // ) {
+  //   try {
+  //
+  //     const res = await this.client.getEmbeddings(payload.model, payload.input as any)
+  //
+  //     // const res = await this.client.embeddings.create(
+  //     //   { ...payload, user: options?.user },
+  //     //   { headers: options?.headers, signal: options?.signal },
+  //     // );
+  //     //
+  //     console.log('333333333333', res.data)
+  //     return res.data.map((item) => item.embedding);
+  //   } catch (error) {
+  //     console.log('33333333', error, payload.input)
+  //     // throw this.handleError(error);
+  //   }
+  // }
+
   // Convert object keys to camel case, copy from `@azure/openai` in `node_modules/@azure/openai/dist/index.cjs`
   private camelCaseKeys = (obj: any): any => {
     if (typeof obj !== 'object' || !obj) return obj;
