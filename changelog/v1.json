@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support model list with model fetcher settings."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.14"
+  },
+  {
+    "children": {
       "improvements": ["Add ModelFetcher for supported providers."]
     },
     "date": "2025-01-21",
