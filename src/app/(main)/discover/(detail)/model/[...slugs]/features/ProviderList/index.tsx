@@ -4,7 +4,7 @@ import { ModelIcon } from '@lobehub/icons';
 import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import { BrainCircuit } from 'lucide-react';
-import { memo } from 'react';
+import { Fragment, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { DiscoverProviderItem } from '@/types/discover';
@@ -33,10 +33,10 @@ const ProviderList = memo<ProviderListProps>(({ mobile, data, identifier }) => {
       title={t('models.supportedProviders')}
     >
       {data.map((item, index) => (
-        <>
-          <ProviderItem key={item.identifier} mobile={mobile} modelId={identifier} {...item} />
-          {index < data.length - 1 && <Divider key={index} style={{ margin: 0 }} />}
-        </>
+        <Fragment key={item.identifier}>
+          <ProviderItem mobile={mobile} modelId={identifier} {...item} />
+          {index < data.length - 1 && <Divider style={{ margin: 0 }} />}
+        </Fragment>
       ))}
     </HighlightBlock>
   );
