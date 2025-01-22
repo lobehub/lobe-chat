@@ -294,9 +294,13 @@ class ChatService {
       onFinish: options?.onFinish,
       onMessageHandle: options?.onMessageHandle,
       signal,
-      // use smoothing when enable client fetch
-      // https://github.com/lobehub/lobe-chat/issues/3800
-      smoothing: providerConfig?.smoothing || enableFetchOnClient,
+      smoothing:
+        providerConfig?.settings?.smoothing ||
+        // @deprecated in V2
+        providerConfig?.smoothing ||
+        // use smoothing when enable client fetch
+        // https://github.com/lobehub/lobe-chat/issues/3800
+        enableFetchOnClient,
     });
   };
 

@@ -305,6 +305,9 @@
   "abab6.5t-chat": {
     "description": "Optimized for Chinese persona dialogue scenarios, providing smooth dialogue generation that aligns with Chinese expression habits."
   },
+  "abab7-chat-preview": {
+    "description": "Significant improvements in capabilities such as long text, mathematics, and writing compared to the abab6.5 series models."
+  },
   "accounts/fireworks/models/firefunction-v1": {
     "description": "Fireworks open-source function-calling model provides excellent instruction execution capabilities and customizable features."
   },
@@ -535,6 +538,9 @@
   },
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 is an open-source hybrid expert code model that performs excellently in coding tasks, comparable to GPT4-Turbo."
+  },
+  "deepseek-reasoner": {
+    "description": "The reasoning model launched by DeepSeek. Before outputting the final answer, the model first provides a chain of thought to enhance the accuracy of the final response."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 is an efficient Mixture-of-Experts language model, suitable for cost-effective processing needs."

@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, Suspense, memo } from 'react';
+import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -38,17 +38,20 @@ const Content = memo<{ id: string }>(({ id }) => {
 
 interface ModelListProps {
   id: string;
-  notFoundContent?: ReactNode;
-  placeholder?: string;
-  showAzureDeployName?: boolean;
+  showAddNewModel?: boolean;
+  showModelFetcher?: boolean;
 }
 
-const ModelList = memo<ModelListProps>(({ id }) => {
+const ModelList = memo<ModelListProps>(({ id, showModelFetcher, showAddNewModel }) => {
   const mobile = useIsMobile();
 
   return (
     <Flexbox gap={16} paddingInline={mobile ? 12 : 0}>
-      <ModelTitle provider={id} />
+      <ModelTitle
+        provider={id}
+        showAddNewModel={showAddNewModel}
+        showModelFetcher={showModelFetcher}
+      />
       <Suspense fallback={<SkeletonList />}>
         <Content id={id} />
       </Suspense>
