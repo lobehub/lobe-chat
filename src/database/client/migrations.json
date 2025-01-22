@@ -223,7 +223,10 @@
     "hash": "9646161fa041354714f823d726af27247bcd6e60fa3be5698c0d69f337a5700b"
   },
   {
-    "sql": ["DROP TABLE \"user_budgets\";", "\nDROP TABLE \"user_subscriptions\";"],
+    "sql": [
+      "DROP TABLE \"user_budgets\";",
+      "\nDROP TABLE \"user_subscriptions\";"
+    ],
     "bps": true,
     "folderMillis": 1729699958471,
     "hash": "7dad43a2a25d1aec82124a4e53f8d82f8505c3073f23606c1dc5d2a4598eacf9"
@@ -293,5 +296,21 @@
     "bps": true,
     "folderMillis": 1735834653361,
     "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"messages\" ADD COLUMN \"thinking\" text;"
+    ],
+    "bps": true,
+    "folderMillis": 1737564768338,
+    "hash": "129e9a74df343020ed00266805dbefca884aa1d9fbdc6c01cb64ef94c59e84a1"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"messages\" RENAME COLUMN \"thinking\" TO \"thinking_content\";"
+    ],
+    "bps": true,
+    "folderMillis": 1737564927156,
+    "hash": "499726d79fa6ff6bb03c15c0a135e694a2b16c3fd0be430eab9c9e0203f091a2"
   }
 ]

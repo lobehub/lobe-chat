@@ -32,6 +32,7 @@ export const messages = pgTable(
 
     role: text('role', { enum: ['user', 'system', 'assistant', 'tool'] }).notNull(),
     content: text('content'),
+    thinkingContent: text('thinking_content'),
 
     model: text('model'),
     provider: text('provider'),

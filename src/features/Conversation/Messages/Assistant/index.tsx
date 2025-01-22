@@ -10,6 +10,7 @@ import { ChatMessage } from '@/types/message';
 
 import { DefaultMessage } from '../Default';
 import FileChunks from './FileChunks';
+import Thinking from './Thinking';
 import ToolCall from './ToolCallItem';
 
 export const AssistantMessage = memo<
@@ -23,6 +24,7 @@ export const AssistantMessage = memo<
   const inThread = useContext(InPortalThreadContext);
   const isToolCallGenerating = generating && (content === LOADING_FLAT || !content) && !!tools;
 
+  console.log(props.thinkingContent);
   return editing ? (
     <DefaultMessage
       content={content}
@@ -33,6 +35,7 @@ export const AssistantMessage = memo<
   ) : (
     <Flexbox gap={8} id={id}>
       {!!chunksList && chunksList.length > 0 && <FileChunks data={chunksList} />}
+      {!!props.thinkingContent && <Thinking content={props.thinkingContent} />}
       {content && (
         <DefaultMessage
           addIdOnDOM={false}

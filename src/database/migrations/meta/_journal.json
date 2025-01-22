@@ -98,6 +98,20 @@
       "when": 1735834653361,
       "tag": "0013_add_ai_infra",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1737564768338,
+      "tag": "0014_rare_zodiak",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1737564927156,
+      "tag": "0015_unknown_smiling_tiger",
+      "breakpoints": true
     }
   ],
   "version": "6"

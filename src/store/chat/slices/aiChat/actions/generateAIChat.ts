@@ -414,6 +414,7 @@ export const generateAIChat: StateCreator<
     let isFunctionCall = false;
     let msgTraceId: string | undefined;
     let output = '';
+    let thinking = '';
 
     const historySummary = topicSelectors.currentActiveTopicSummary(get());
     await chatService.createAssistantMessageStream({
@@ -437,7 +438,7 @@ export const generateAIChat: StateCreator<
         await messageService.updateMessageError(assistantId, error);
         await refreshMessages();
       },
-      onFinish: async (content, { traceId, observationId, toolCalls }) => {
+      onFinish: async (content, { traceId, observationId, toolCalls, thinking }) => {
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
@@ -452,7 +453,7 @@ export const generateAIChat: StateCreator<
         }
 
         // update the content after fetch result
-        await internal_updateMessageContent(assistantId, content, toolCalls);
+        await internal_updateMessageContent(assistantId, content, toolCalls, thinking);
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {
@@ -462,6 +463,15 @@ export const generateAIChat: StateCreator<
               id: assistantId,
               type: 'updateMessage',
               value: { content: output },
+            });
+            break;
+          }
+          case 'thinking': {
+            thinking += chunk.text;
+            internal_dispatchMessage({
+              id: assistantId,
+              type: 'updateMessage',
+              value: { thinkingContent: thinking },
             });
             break;
           }

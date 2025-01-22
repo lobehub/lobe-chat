@@ -71,6 +71,7 @@ export class MessageModel {
         id: messages.id,
         role: messages.role,
         content: messages.content,
+        thinkingContent: messages.thinkingContent,
         error: messages.error,
 
         model: messages.model,

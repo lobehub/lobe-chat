@@ -69,9 +69,9 @@ export interface ChatMessage extends BaseDataModel {
   chunksList?: ChatFileChunk[];
   content: string;
   error?: ChatMessageError | null;
-
   // 扩展字段
   extra?: ChatMessageExtra;
+
   fileList?: ChatFileItem[];
   /**
    * this is a deprecated field, only use in client db
@@ -85,14 +85,14 @@ export interface ChatMessage extends BaseDataModel {
    * observation id
    */
   observationId?: string;
-
   /**
    * parent message id
    */
   parentId?: string;
-  plugin?: ChatPluginPayload;
 
+  plugin?: ChatPluginPayload;
   pluginState?: any;
+
   /**
    * quoted other message's id
    */
@@ -104,8 +104,9 @@ export interface ChatMessage extends BaseDataModel {
    * message role type
    */
   role: MessageRoleType;
-
   sessionId?: string;
+
+  thinkingContent?: string | null;
   threadId?: string | null;
 
   tool_call_id?: string;
