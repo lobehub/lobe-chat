@@ -3,15 +3,10 @@ import { createStyles } from 'antd-style';
 import { ChevronDown, ChevronRight, Database, Table as TableIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import useSWR from 'swr';
-
-import { tableViewerService } from '@/services/tableViewer';
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 
 import TableColumns from './TableColumns';
+import { useFetchTables } from './usePgTable';
 
-// 样式定义
 const useStyles = createStyles(({ token, css }) => ({
   button: css`
     cursor: pointer;
@@ -138,11 +133,7 @@ const SchemaPanel = ({ onTableSelect, selectedTable }: SchemaPanelProps) => {
   const { styles, cx } = useStyles();
   const [expandedTables, setExpandedTables] = useState(new Set());
 
-  const isDBInited = useGlobalStore(systemStatusSelectors.isDBInited);
-
-  const { data, isLoading } = useSWR(isDBInited ? 'fetch-tables' : null, () =>
-    tableViewerService.getAllTables(),
-  );
+  const { data, isLoading } = useFetchTables();
 
   const toggleTable = (tableName: string) => {
     const newExpanded = new Set(expandedTables);
