@@ -4,11 +4,27 @@ import { ModelProviderCard } from '@/types/llm';
 const Google: ModelProviderCard = {
   chatModels: [
     {
+      contextWindowTokens: 1_048_576 + 65_536,
+      description:
+        'Gemini 2.0 Flash Exp 是 Google 最新的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。',
+      displayName: 'Gemini 2.0 Flash Thinking Experimental 01-21',
+      enabled: true,
+      functionCall: true,
+      id: 'gemini-2.0-flash-thinking-exp-01-21',
+      maxOutput: 65_536,
+      pricing: {
+        cachedInput: 0,
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2025-01-21',
+      vision: true,
+    },
+    {
       contextWindowTokens: 32_767 + 8192,
       description:
         'Gemini 2.0 Flash Exp 是 Google 最新的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。',
       displayName: 'Gemini 2.0 Flash Thinking Experimental 1219',
-      enabled: true,
       functionCall: true,
       id: 'gemini-2.0-flash-thinking-exp-1219',
       maxOutput: 8192,
