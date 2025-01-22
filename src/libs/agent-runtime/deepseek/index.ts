@@ -13,7 +13,7 @@ export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.deepseek.com/v1',
   chatCompletion: {
     handlePayload: ({ messages, frequency_penalty, model, presence_penalty, temperature, top_p, ...payload }: ChatStreamPayload) => {
-      // Filter out system messages and remove assistant messages from the beginning until the first user message
+      // github.com/lobehub/lobe-chat/pull/5548
       let filteredMessages = messages.filter(message => message.role !== 'system');
       while (filteredMessages.length > 0 && filteredMessages[0].role === 'assistant') {
         filteredMessages.shift();
