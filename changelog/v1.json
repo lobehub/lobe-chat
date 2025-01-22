@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve discover model page."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.15"
+  },
+  {
+    "children": {
       "improvements": ["Support model list with model fetcher settings."]
     },
     "date": "2025-01-22",
