@@ -3,7 +3,9 @@ import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { Download, Filter, RefreshCw } from 'lucide-react';
 import React from 'react';
+import { mutate } from 'swr';
 
+import { FETCH_TABLE_DATA_KEY } from '../usePgTable';
 import Table from './Table';
 
 const useStyles = createStyles(({ token, css }) => ({
@@ -54,7 +56,13 @@ const DataTable = ({ tableName }: DataTableProps) => {
             Filter
           </Button>
           <ActionIcon icon={Download} title={'Export'} />
-          <ActionIcon icon={RefreshCw} title={'Refresh'} />
+          <ActionIcon
+            icon={RefreshCw}
+            onClick={async () => {
+              await mutate(FETCH_TABLE_DATA_KEY(tableName));
+            }}
+            title={'Refresh'}
+          />
         </div>
       </div>
 
