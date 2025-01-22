@@ -12,7 +12,7 @@ export interface DeepSeekModelCard {
 export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.deepseek.com/v1',
   chatCompletion: {
-    handlePayload: ({ messages, frequency_penalty, model, presence_penalty, temperature, top_p, ...payload }: ChatStreamPayload) => {
+    handlePayload: ({ frequency_penalty, messages, model, presence_penalty, temperature, top_p, ...payload }: ChatStreamPayload) => {
       // github.com/lobehub/lobe-chat/pull/5548
       let filteredMessages = messages.filter(message => message.role !== 'system');
 
