@@ -28,6 +28,7 @@ import { handleOpenAIError } from '../handleOpenAIError';
 import { convertOpenAIMessages } from '../openaiHelpers';
 import { StreamingResponse } from '../response';
 import { OpenAIStream, OpenAIStreamOptions } from '../streams';
+import { retryWithBackoff } from './retry';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
 export const CHAT_MODELS_BLOCK_LIST = [
@@ -315,16 +316,41 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
       payload: EmbeddingsPayload,
       options?: EmbeddingsOptions,
     ): Promise<Embeddings[]> {
-      try {
+      // 定义调用核心请求的逻辑
+      const executeRequest = async () => {
+        // TODO: 截取超过的输入
         const res = await this.client.embeddings.create(
-          { ...payload, user: options?.user },
+          { ...payload, input: payload.input.slice(0, -1), user: options?.user },
           { headers: options?.headers, signal: options?.signal },
         );
-
         return res.data.map((item) => item.embedding);
+      };
+
+      // 调用 `retryWithBackoff` 并应用重试逻辑
+      try {
+        return await retryWithBackoff(
+          executeRequest, // 核心请求逻辑
+          3, // 最大重试次数
+          1000, // 初始延时（毫秒）
+          8, // 指数退避倍数
+          100 * 1000, // 最大延时（毫秒）
+          // isRetryable     // 判断错误是否应当重试
+        );
       } catch (error) {
+        // 捕获最终失败的错误，并交给 handleError 处理
         throw this.handleError(error);
       }
+
+      // try {
+      //   const res = await this.client.embeddings.create(
+      //     { ...payload, user: options?.user },
+      //     { headers: options?.headers, signal: options?.signal },
+      //   );
+      //
+      //   return res.data.map((item) => item.embedding);
+      // } catch (error) {
+      //   throw this.handleError(error);
+      // }
     }
 
     async textToImage(payload: TextToImagePayload) {
