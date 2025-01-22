@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.47.15](https://github.com/lobehub/lobe-chat/compare/v1.47.14...v1.47.15)
+
+<sup>Released on **2025-01-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve discover model page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve discover model page, closes [#5544](https://github.com/lobehub/lobe-chat/issues/5544) ([979849c](https://github.com/lobehub/lobe-chat/commit/979849c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.47.14](https://github.com/lobehub/lobe-chat/compare/v1.47.13...v1.47.14)
 
 <sup>Released on **2025-01-22**</sup>
