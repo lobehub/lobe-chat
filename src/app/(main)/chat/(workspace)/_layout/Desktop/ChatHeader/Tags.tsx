@@ -4,11 +4,11 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
+import PluginTag from '@/features/PluginTag';
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
-import PluginTag from '../../../features/PluginTag';
 import KnowledgeTag from './KnowledgeTag';
 
 const TitleTags = memo(() => {
