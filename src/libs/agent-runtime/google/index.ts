@@ -27,6 +27,16 @@ import { StreamingResponse } from '../utils/response';
 import { GoogleGenerativeAIStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
+
+export interface GoogleModelCard {
+  displayName: string;
+  inputTokenLimit: number;
+  name: string;
+  outputTokenLimit: number;
+}
+
 enum HarmCategory {
   HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
   HARM_CATEGORY_HARASSMENT = 'HARM_CATEGORY_HARASSMENT',
@@ -46,15 +56,19 @@ function getThreshold(model: string): HarmBlockThreshold {
   return HarmBlockThreshold.BLOCK_NONE;
 }
 
+const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
   baseURL?: string;
+  apiKey?: string;
 
   constructor({ apiKey, baseURL }: { apiKey?: string; baseURL?: string } = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
-    this.baseURL = baseURL;
+    this.baseURL = baseURL || DEFAULT_BASE_URL;
+    this.apiKey = apiKey;
   }
 
   async chat(rawPayload: ChatStreamPayload, options?: ChatCompetitionOptions) {
@@ -121,6 +135,31 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       throw AgentRuntimeError.chat({ error, errorType, provider: ModelProvider.Google });
     }
+  }
+
+  async models() {
+    const url = `${this.baseURL}/v1beta/models?key=${this.apiKey}`;
+    const response = await fetch(url, {
+      method: 'GET',
+    });
+    const json = await response.json();
+  
+    const modelList: GoogleModelCard[] = json['models'];
+
+    return modelList
+      .map((model) => {
+        const modelName = model.name.replace(/^models\//, '');
+
+        return {
+          contextWindowTokens: model.inputTokenLimit + model.outputTokenLimit,
+          displayName: model.displayName,
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => modelName.endsWith(m.id))?.enabled || false,
+          functionCall: modelName.toLowerCase().includes('gemini'),
+          id: modelName,
+          vision: modelName.toLowerCase().includes('vision') || modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('gemini-1.0'),
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   }
 
   private buildPayload(payload: ChatStreamPayload) {
