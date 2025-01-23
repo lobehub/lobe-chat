@@ -99,9 +99,21 @@ const Stepfun: ModelProviderCard = {
       contextWindowTokens: 32_000,
       description: '支持视觉输入，增强多模态交互体验。',
       displayName: 'Step 1V 32K',
-      enabled: true,
       functionCall: true,
       id: 'step-1v-32k',
+      pricing: {
+        currency: 'CNY',
+        input: 15,
+        output: 70,
+      },
+      vision: true,
+    },
+    {
+      contextWindowTokens: 32_000,
+      description: '该模型拥有强大的图像理解能力。相比于 step-1v 系列模型，拥有更强的视觉性能。',
+      displayName: 'Step 1o Vision 32K',
+      enabled: true,
+      id: 'step-1o-vision-32k',
       pricing: {
         currency: 'CNY',
         input: 15,
