@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "必須包含 http(s)://",
+        "invalid": "請輸入合法的 URL",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "API 代理地址"
       },

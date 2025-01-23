@@ -11,7 +11,8 @@ const DeepSeek: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'deepseek-chat',
-      pricing: { // 2025.2.9 之后涨价
+      pricing: {
+        // 2025.2.9 之后涨价
         cachedInput: 0.1,
         currency: 'CNY',
         input: 1,
@@ -43,6 +44,9 @@ const DeepSeek: ModelProviderCard = {
   modelsUrl: 'https://platform.deepseek.com/api-docs/zh-cn/quick_start/pricing',
   name: 'DeepSeek',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.deepseek.com',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

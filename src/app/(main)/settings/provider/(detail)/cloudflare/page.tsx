@@ -1,8 +1,8 @@
 'use client';
 
-import { Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
+import { FormInput, FormPassword } from '@/components/FormInput';
 import { CloudflareProviderCard } from '@/config/modelProviders';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -26,7 +26,7 @@ const useProviderCard = (): ProviderItem => {
         children: isLoading ? (
           <SkeletonInput />
         ) : (
-          <Input.Password
+          <FormPassword
             autoComplete={'new-password'}
             placeholder={t(`${providerKey}.apiKey.placeholder`)}
           />
@@ -39,7 +39,7 @@ const useProviderCard = (): ProviderItem => {
         children: isLoading ? (
           <SkeletonInput />
         ) : (
-          <Input placeholder={t(`${providerKey}.baseURLOrAccountID.placeholder`)} />
+          <FormInput placeholder={t(`${providerKey}.baseURLOrAccountID.placeholder`)} />
         ),
         desc: t(`${providerKey}.baseURLOrAccountID.desc`),
         label: t(`${providerKey}.baseURLOrAccountID.title`),

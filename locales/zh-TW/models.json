@@ -18,7 +18,7 @@
     "description": "360GPT Turbo Responsibility 8K 強調語義安全和責任導向，專為對內容安全有高度要求的應用場景設計，確保用戶體驗的準確性與穩健性。"
   },
   "360gpt2-o1": {
-    "description": "360gpt2-o1 使用樹狀搜尋構建思維鏈，並引入反思機制，使用強化學習訓練，模型具備自我反思與糾錯的能力。"
+    "description": "360gpt2-o1 使用樹搜索構建思維鏈，並引入了反思機制，使用強化學習訓練，模型具備自我反思與糾錯的能力。"
   },
   "360gpt2-pro": {
     "description": "360GPT2 Pro 是 360 公司推出的高級自然語言處理模型，具備卓越的文本生成和理解能力，尤其在生成與創作領域表現出色，能夠處理複雜的語言轉換和角色演繹任務。"
@@ -608,6 +608,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
   },
+  "gemini-2.0-flash-thinking-exp-01-21": {
+    "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
+  },
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
   },
@@ -681,7 +684,7 @@
     "description": "GLM-4V-Plus具備對視頻內容及多圖片的理解能力，適合多模態任務。"
   },
   "glm-zero-preview": {
-    "description": "GLM-Zero-Preview具備強大的複雜推理能力，在邏輯推理、數學、程式等領域表現優異。"
+    "description": "GLM-Zero-Preview具備強大的複雜推理能力，在邏輯推理、數學、程式設計等領域表現優異。"
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash 提供了優化後的多模態處理能力，適用於多種複雜任務場景。"
