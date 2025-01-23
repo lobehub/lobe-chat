@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add HuggingFace Model: DeepSeek R1."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.21"
+  },
+  {
+    "children": {
       "fixes": ["Fix tts in new provider model."]
     },
     "date": "2025-01-23",
