@@ -34,10 +34,11 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 }));
 
 interface ThinkingProps {
-  content?: string | null;
+  content?: string;
+  duration?: number;
 }
 
-const Thinking = memo<ThinkingProps>(({ content }) => {
+const Thinking = memo<ThinkingProps>(({ content = '' }) => {
   const { t } = useTranslation('chat');
   const { styles, theme } = useStyles();
 
@@ -61,7 +62,7 @@ const Thinking = memo<ThinkingProps>(({ content }) => {
 
       {showDetail && (
         <Flexbox>
-          <Markdown>{content}</Markdown>
+          <Markdown variant={'chat'}>{content}</Markdown>
         </Flexbox>
       )}
     </Flexbox>

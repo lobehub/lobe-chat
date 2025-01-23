@@ -15,6 +15,7 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import {
   ChatMessage,
   ChatMessageError,
+  ChatReasoning,
   CreateMessageParams,
   MessageToolCall,
 } from '@/types/message';
@@ -73,7 +74,7 @@ export interface ChatMessageAction {
     id: string,
     content: string,
     toolCalls?: MessageToolCall[],
-    thinkingContent?: string,
+    reasoning?: ChatReasoning,
   ) => Promise<void>;
   /**
    * update the message error with optimistic update
@@ -271,7 +272,7 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, { error });
     await get().refreshMessages();
   },
-  internal_updateMessageContent: async (id, content, toolCalls, thinkingContent) => {
+  internal_updateMessageContent: async (id, content, toolCalls, reasoning) => {
     const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
 
     // Due to the async update method and refresh need about 100ms
@@ -290,7 +291,7 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, {
       content,
       tools: toolCalls ? internal_transformToolCalls(toolCalls) : undefined,
-      thinkingContent,
+      reasoning,
     });
     await refreshMessages();
   },

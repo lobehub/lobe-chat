@@ -1,5 +1,5 @@
 {
-  "id": "945e6155-8323-402b-b327-9786218d4c60",
+  "id": "e5491c42-8e2f-4a2d-8612-25e7052d2055",
   "prevId": "c1005309-ebae-4f0b-b6a3-5786f71961db",
   "version": "7",
   "dialect": "postgresql",
@@ -1541,9 +1541,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "thinking": {
-          "name": "thinking",
-          "type": "text",
+        "reasoning": {
+          "name": "reasoning",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },

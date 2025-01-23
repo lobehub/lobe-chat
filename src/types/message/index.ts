@@ -5,7 +5,7 @@ import { ErrorType } from '@/types/fetch';
 import { UploadFileItem } from '@/types/files';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 
-import { BaseDataModel } from '../meta';
+import { MetaData } from '../meta';
 import { ChatPluginPayload, ChatToolPayload } from './tools';
 import { Translate } from './translate';
 
@@ -65,9 +65,15 @@ export interface ChatMessageExtra {
   tts?: ChatTTS;
 }
 
-export interface ChatMessage extends BaseDataModel {
+export interface ChatReasoning {
+  content?: string;
+  duration?: number;
+}
+
+export interface ChatMessage {
   chunksList?: ChatFileChunk[];
   content: string;
+  createdAt: number;
   error?: ChatMessageError | null;
   // 扩展字段
   extra?: ChatMessageExtra;
@@ -80,7 +86,10 @@ export interface ChatMessage extends BaseDataModel {
    * @deprecated
    */
   files?: string[];
+  id: string;
   imageList?: ChatImageItem[];
+  meta: MetaData;
+
   /**
    * observation id
    */
@@ -92,7 +101,6 @@ export interface ChatMessage extends BaseDataModel {
 
   plugin?: ChatPluginPayload;
   pluginState?: any;
-
   /**
    * quoted other message's id
    */
@@ -100,15 +108,15 @@ export interface ChatMessage extends BaseDataModel {
   ragQuery?: string | null;
   ragQueryId?: string | null;
   ragRawQuery?: string | null;
+
+  reasoning?: ChatReasoning | null;
+
   /**
    * message role type
    */
   role: MessageRoleType;
   sessionId?: string;
-
-  thinkingContent?: string | null;
   threadId?: string | null;
-
   tool_call_id?: string;
   tools?: ChatToolPayload[];
   /**
@@ -119,6 +127,7 @@ export interface ChatMessage extends BaseDataModel {
    * 观测链路 id
    */
   traceId?: string;
+  updatedAt: number;
 }
 
 export type ChatMessageMap = Record<string, ChatMessage>;

@@ -24,7 +24,6 @@ export const AssistantMessage = memo<
   const inThread = useContext(InPortalThreadContext);
   const isToolCallGenerating = generating && (content === LOADING_FLAT || !content) && !!tools;
 
-  console.log(props.thinkingContent);
   return editing ? (
     <DefaultMessage
       content={content}
@@ -35,7 +34,7 @@ export const AssistantMessage = memo<
   ) : (
     <Flexbox gap={8} id={id}>
       {!!chunksList && chunksList.length > 0 && <FileChunks data={chunksList} />}
-      {!!props.thinkingContent && <Thinking content={props.thinkingContent} />}
+      {!!props.reasoning && <Thinking content={props.reasoning.content} duration={props.reasoning.duration} />}
       {content && (
         <DefaultMessage
           addIdOnDOM={false}

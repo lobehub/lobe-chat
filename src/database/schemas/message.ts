@@ -13,6 +13,7 @@ import {
 import { createSelectSchema } from 'drizzle-zod';
 
 import { idGenerator } from '@/database/utils/idGenerator';
+import { ChatReasoning } from '@/types/message';
 
 import { timestamps } from './_helpers';
 import { agents } from './agent';
@@ -32,7 +33,7 @@ export const messages = pgTable(
 
     role: text('role', { enum: ['user', 'system', 'assistant', 'tool'] }).notNull(),
     content: text('content'),
-    thinkingContent: text('thinking_content'),
+    reasoning: jsonb('reasoning').$type<ChatReasoning>(),
 
     model: text('model'),
     provider: text('provider'),

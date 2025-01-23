@@ -471,7 +471,7 @@ export const generateAIChat: StateCreator<
             internal_dispatchMessage({
               id: assistantId,
               type: 'updateMessage',
-              value: { thinkingContent: thinking },
+              value: { reasoning: { content: thinking } },
             });
             break;
           }

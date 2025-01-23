@@ -299,18 +299,10 @@
   },
   {
     "sql": [
-      "ALTER TABLE \"messages\" ADD COLUMN \"thinking\" text;"
+      "ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"
     ],
     "bps": true,
-    "folderMillis": 1737564768338,
-    "hash": "129e9a74df343020ed00266805dbefca884aa1d9fbdc6c01cb64ef94c59e84a1"
-  },
-  {
-    "sql": [
-      "ALTER TABLE \"messages\" RENAME COLUMN \"thinking\" TO \"thinking_content\";"
-    ],
-    "bps": true,
-    "folderMillis": 1737564927156,
-    "hash": "499726d79fa6ff6bb03c15c0a135e694a2b16c3fd0be430eab9c9e0203f091a2"
+    "folderMillis": 1737609172353,
+    "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
   }
 ]
