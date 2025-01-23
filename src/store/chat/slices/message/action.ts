@@ -291,7 +291,7 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, {
       content,
       tools: toolCalls ? internal_transformToolCalls(toolCalls) : undefined,
-      reasoning: reasoning,
+      reasoning: reasoning as any,
     });
     await refreshMessages();
   },
