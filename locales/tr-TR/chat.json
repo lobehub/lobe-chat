@@ -82,6 +82,10 @@
       }
     }
   },
+  "reasoning": {
+    "thinking": "{{duration}} saniye düşündü",
+    "thought": "Derinlemesine düşündü (geçen süre {{duration}} saniye)"
+  },
   "regenerate": "Tekrarla",
   "roleAndArchive": "Rol ve Arşiv",
   "searchAgentPlaceholder": "Arama Asistanı...",

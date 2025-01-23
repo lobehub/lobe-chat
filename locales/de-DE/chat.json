@@ -82,6 +82,10 @@
       }
     }
   },
+  "reasoning": {
+    "thinking": "Denkzeit {{duration}} Sekunden",
+    "thought": "Tiefgründig nachgedacht (Dauer: {{duration}} Sekunden)"
+  },
   "regenerate": "Neu generieren",
   "roleAndArchive": "Rolle und Archiv",
   "searchAgentPlaceholder": "Suchassistent...",

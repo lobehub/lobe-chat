@@ -82,6 +82,10 @@
       }
     }
   },
+  "reasoning": {
+    "thinking": "Al {{duration}} seconden nagedacht",
+    "thought": "Diep nagedacht (tijd: {{duration}} seconden)"
+  },
   "regenerate": "Opnieuw genereren",
   "roleAndArchive": "Rol en archief",
   "searchAgentPlaceholder": "Zoekassistent...",
