@@ -21,7 +21,7 @@ export type OnFinishHandler = (
   text: string,
   context: {
     observationId?: string | null;
-    thinking?: string;
+    reasoning?: string;
     toolCalls?: MessageToolCall[];
     traceId?: string | null;
     type?: SSEFinishType;
@@ -33,9 +33,9 @@ export interface MessageTextChunk {
   type: 'text';
 }
 
-export interface MessageThinkingChunk {
+export interface MessageReasoningChunk {
   text: string;
-  type: 'thinking';
+  type: 'reasoning';
 }
 
 interface MessageToolCallsChunk {
@@ -50,7 +50,7 @@ export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void;
   onFinish?: OnFinishHandler;
   onMessageHandle?: (
-    chunk: MessageTextChunk | MessageToolCallsChunk | MessageThinkingChunk,
+    chunk: MessageTextChunk | MessageToolCallsChunk | MessageReasoningChunk,
   ) => void;
   smoothing?: SmoothingParams | boolean;
 }
@@ -267,7 +267,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   const thinkingController = createSmoothMessage({
     onTextUpdate: (delta, text) => {
       thinking = text;
-      options.onMessageHandle?.({ text: delta, type: 'thinking' });
+      options.onMessageHandle?.({ text: delta, type: 'reasoning' });
     },
     startSpeed: smoothingSpeed,
   });
@@ -350,14 +350,14 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
           break;
         }
-        case 'thinking': {
+        case 'reasoning': {
           if (textSmoothing) {
             thinkingController.pushToQueue(data);
 
             if (!thinkingController.isAnimationActive) thinkingController.startAnimation();
           } else {
             thinking += data;
-            options.onMessageHandle?.({ text: data, type: 'thinking' });
+            options.onMessageHandle?.({ text: data, type: 'reasoning' });
           }
 
           break;
@@ -420,7 +420,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
       await options?.onFinish?.(output, {
         observationId,
-        thinking,
+        reasoning: !!thinking ? thinking : undefined,
         toolCalls,
         traceId,
         type: finishedType,

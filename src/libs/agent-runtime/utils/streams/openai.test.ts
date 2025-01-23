@@ -553,8 +553,8 @@ describe('OpenAIStream', () => {
     });
   });
 
-  describe('Thinking', () => {
-    it('should handle thinking event', async () => {
+  describe('Reasoning', () => {
+    it('should handle reasoning event', async () => {
       const data = [
         {
           id: '1',
@@ -725,13 +725,13 @@ describe('OpenAIStream', () => {
       expect(chunks).toEqual(
         [
           'id: 1',
-          'event: thinking',
+          'event: reasoning',
           `data: ""\n`,
           'id: 1',
-          'event: thinking',
+          'event: reasoning',
           `data: "您好"\n`,
           'id: 1',
-          'event: thinking',
+          'event: reasoning',
           `data: "！"\n`,
           'id: 1',
           'event: text',

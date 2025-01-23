@@ -96,7 +96,7 @@ export const transformOpenAIStream = (
     if (item.delta && item.delta.content === null) {
       // deepseek reasoner 会将 thinking 放在 reasoning_content 字段中
       if ('reasoning_content' in item.delta && typeof item.delta.reasoning_content === 'string') {
-        return { data: item.delta.reasoning_content, id: chunk.id, type: 'thinking' };
+        return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
       }
 
       return { data: item.delta, id: chunk.id, type: 'data' };

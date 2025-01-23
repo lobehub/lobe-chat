@@ -449,7 +449,7 @@ export const generateAIChat: StateCreator<
         await messageService.updateMessageError(messageId, error);
         await refreshMessages();
       },
-      onFinish: async (content, { traceId, observationId, toolCalls, thinking }) => {
+      onFinish: async (content, { traceId, observationId, toolCalls, reasoning }) => {
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
@@ -468,7 +468,7 @@ export const generateAIChat: StateCreator<
           messageId,
           content,
           toolCalls,
-          !!thinking ? { content: thinking, duration } : undefined,
+          !!reasoning ? { content: reasoning, duration } : undefined,
         );
       },
       onMessageHandle: async (chunk) => {
@@ -492,7 +492,7 @@ export const generateAIChat: StateCreator<
             });
             break;
           }
-          case 'thinking': {
+          case 'reasoning': {
             // if there is no thinkingStartAt, it means the start of reasoning
             if (!thinkingStartAt) {
               thinkingStartAt = Date.now();
