@@ -415,6 +415,7 @@ export const generateAIChat: StateCreator<
     let msgTraceId: string | undefined;
     let output = '';
     let thinking = '';
+    let thinkingStartAt: number;
 
     const historySummary = topicSelectors.currentActiveTopicSummary(get());
     await chatService.createAssistantMessageStream({
@@ -453,7 +454,17 @@ export const generateAIChat: StateCreator<
         }
 
         // update the content after fetch result
-        await internal_updateMessageContent(assistantId, content, toolCalls, thinking);
+        await internal_updateMessageContent(
+          assistantId,
+          content,
+          toolCalls,
+          !!thinking
+            ? {
+                content: thinking,
+                duration: Date.now() - thinkingStartAt,
+              }
+            : undefined,
+        );
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {
@@ -467,7 +478,9 @@ export const generateAIChat: StateCreator<
             break;
           }
           case 'thinking': {
+            if (!thinkingStartAt) thinkingStartAt = Date.now();
             thinking += chunk.text;
+
             internal_dispatchMessage({
               id: assistantId,
               type: 'updateMessage',
