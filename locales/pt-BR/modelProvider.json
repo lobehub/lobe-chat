@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "Deve incluir http(s)://",
+        "invalid": "Por favor, insira uma URL válida",
         "placeholder": "https://seu-endereco-proxy.com/v1",
         "title": "Endereço do Proxy API"
       },

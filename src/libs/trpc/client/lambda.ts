@@ -2,8 +2,6 @@ import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import superjson from 'superjson';
 
-import { fetchErrorNotification } from '@/components/Error/fetchErrorNotification';
-import { loginRequired } from '@/components/Error/loginRequiredNotification';
 import { ModelProvider } from '@/libs/agent-runtime';
 import type { LambdaRouter } from '@/server/routers/lambda';
 
@@ -16,6 +14,9 @@ const links = [
       if (response.ok) return response;
 
       const errorRes: ErrorResponse = await response.clone().json();
+
+      const { loginRequired } = await import('@/components/Error/loginRequiredNotification');
+      const { fetchErrorNotification } = await import('@/components/Error/fetchErrorNotification');
 
       errorRes.forEach((item) => {
         const errorData = item.error.json;

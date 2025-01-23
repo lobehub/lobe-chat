@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "http(s):// içermelidir",
+        "invalid": "Lütfen geçerli bir URL girin",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "API Proxy Adresi"
       },

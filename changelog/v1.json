@@ -1,6 +1,175 @@
 [
   {
     "children": {
+      "fixes": ["Fix debounce issue of provider config."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.18"
+  },
+  {
+    "children": {
+      "fixes": ["Upgrade react-i18next to ^15."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.17"
+  },
+  {
+    "children": {
+      "improvements": ["Add gemini new model."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.16"
+  },
+  {
+    "children": {
+      "improvements": ["Improve discover model page."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.15"
+  },
+  {
+    "children": {
+      "improvements": ["Support model list with model fetcher settings."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.14"
+  },
+  {
+    "children": {
+      "improvements": ["Add ModelFetcher for supported providers."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.13"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor [@nav](https://github.com/nav) layout and improve pin list style."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.12"
+  },
+  {
+    "children": {
+      "improvements": ["Improve code for ai provider."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.11"
+  },
+  {
+    "children": {
+      "improvements": ["Support assistant blacklist."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve error code."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.9"
+  },
+  {
+    "children": {
+      "improvements": ["Add deepseek r1 model."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.8"
+  },
+  {
+    "children": {
+      "improvements": ["Remove redundant payload remapping in client-fetch."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor provider code."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.6"
+  },
+  {
+    "children": {
+      "improvements": ["Improve ai provider code."]
+    },
+    "date": "2025-01-20",
+    "version": "1.47.5"
+  },
+  {
+    "children": {},
+    "date": "2025-01-18",
+    "version": "1.47.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix hydration error."]
+    },
+    "date": "2025-01-18",
+    "version": "1.47.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix api key in api key form."]
+    },
+    "date": "2025-01-17",
+    "version": "1.47.2"
+  },
+  {
+    "children": {},
+    "date": "2025-01-17",
+    "version": "1.47.1"
+  },
+  {
+    "children": {
+      "features": ["Support new ai provider in client pglite."]
+    },
+    "date": "2025-01-17",
+    "version": "1.47.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Improve validation for provider and model in parseFilesConfig, temporarily disable S3 client integrity check for Cloudflare R2."
+      ]
+    },
+    "date": "2025-01-17",
+    "version": "1.46.7"
+  },
+  {
+    "children": {
+      "fixes": ["Gemini models HarmBlockThreshold."]
+    },
+    "date": "2025-01-16",
+    "version": "1.46.6"
+  },
+  {
+    "children": {},
+    "date": "2025-01-16",
+    "version": "1.46.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor some implement for the next performance improvement."]
+    },
+    "date": "2025-01-16",
+    "version": "1.46.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix azure in new ai provider."]
+    },
+    "date": "2025-01-15",
+    "version": "1.46.3"
+  },
+  {
+    "children": {},
+    "date": "2025-01-15",
+    "version": "1.46.2"
+  },
+  {
+    "children": {
       "improvements": ["Add auth support for PROXY_URL."]
     },
     "date": "2025-01-15",

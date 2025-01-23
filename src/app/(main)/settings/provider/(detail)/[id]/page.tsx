@@ -8,6 +8,7 @@ import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { PagePropsWithId } from '@/types/next';
 import { getUserAuth } from '@/utils/server/auth';
 
+import ClientMode from './ClientMode';
 import ProviderDetail from './index';
 
 const Page = async (props: PagePropsWithId) => {
@@ -33,7 +34,7 @@ const Page = async (props: PagePropsWithId) => {
     return <ProviderDetail {...userCard} />;
   }
 
-  return <div>not found</div>;
+  return <ClientMode id={params.id} />;
 };
 
 export default Page;

@@ -1,5 +1,5 @@
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
-import { isServerMode } from '@/const/version';
+import { isDeprecatedEdition } from '@/const/version';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useUserStore } from '@/store/user';
@@ -31,11 +31,19 @@ export const getProviderAuthPayload = (
       const apiKey = (awsSecretAccessKey || '') + (awsAccessKeyId || '');
 
       return {
+        accessKeyId,
+        accessKeySecret: awsSecretAccessKey,
         apiKey,
+        /** @deprecated */
         awsAccessKeyId,
+        /** @deprecated */
         awsRegion: region,
+        /** @deprecated */
         awsSecretAccessKey,
+        /** @deprecated */
         awsSessionToken: sessionToken,
+        region,
+        sessionToken,
       };
     }
 
@@ -54,8 +62,11 @@ export const getProviderAuthPayload = (
     case ModelProvider.Azure: {
       return {
         apiKey: keyVaults.apiKey,
-        azureApiVersion: keyVaults.apiVersion,
-        baseURL: keyVaults.endpoint,
+        
+        apiVersion: keyVaults.apiVersion,
+        /** @deprecated */
+azureApiVersion: keyVaults.apiVersion,
+        baseURL: keyVaults.baseURL || keyVaults.endpoint,
       };
     }
 
@@ -66,7 +77,10 @@ export const getProviderAuthPayload = (
     case ModelProvider.Cloudflare: {
       return {
         apiKey: keyVaults?.apiKey,
-        cloudflareBaseURLOrAccountID: keyVaults?.baseURLOrAccountID,
+        
+        baseURLOrAccountID: keyVaults?.baseURLOrAccountID,
+        /** @deprecated */
+cloudflareBaseURLOrAccountID: keyVaults?.baseURLOrAccountID,
       };
     }
 
@@ -94,7 +108,7 @@ export const createPayloadWithKeyVaults = (provider: string) => {
   let keyVaults = {};
 
   // TODO: remove this condition in V2.0
-  if (!isServerMode) {
+  if (isDeprecatedEdition) {
     keyVaults = keyVaultsConfigSelectors.getVaultByProvider(provider as any)(
       useUserStore.getState(),
     );

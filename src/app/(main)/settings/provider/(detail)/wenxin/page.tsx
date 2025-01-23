@@ -1,8 +1,8 @@
 'use client';
 
-import { Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
+import { FormPassword } from '@/components/FormInput';
 import { WenxinProviderCard } from '@/config/modelProviders';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -26,7 +26,7 @@ const useProviderCard = (): ProviderItem => {
         children: isLoading ? (
           <SkeletonInput />
         ) : (
-          <Input.Password
+          <FormPassword
             autoComplete={'new-password'}
             placeholder={t(`${providerKey}.accessKey.placeholder`)}
           />
@@ -39,7 +39,7 @@ const useProviderCard = (): ProviderItem => {
         children: isLoading ? (
           <SkeletonInput />
         ) : (
-          <Input.Password
+          <FormPassword
             autoComplete={'new-password'}
             placeholder={t(`${providerKey}.secretKey.placeholder`)}
           />
