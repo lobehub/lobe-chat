@@ -26,7 +26,7 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
         functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('vision'),
         id: model.id,
-        vision: model.modelCode.toLowerCase().includes('vision'),
+        vision: model.id.toLowerCase().includes('vision'),
       };
     },
   },
