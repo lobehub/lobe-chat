@@ -83,6 +83,32 @@ const Stepfun: ModelProviderCard = {
     },
     {
       contextWindowTokens: 8000,
+      description: 
+        '基于新一代自研Attention架构MFA的极速大模型，用极低成本达到和step1类似的效果，同时保持了更高的吞吐和更快响应时延。能够处理通用任务，在代码能力上具备特长。',
+      displayName: 'Step 2 Mini',
+      enabled: true,
+      functionCall: true,
+      id: 'step-2-mini',
+      pricing: {
+        currency: 'CNY',
+        input: 1,
+        output: 2,
+      },
+    },
+    {
+      contextWindowTokens: 16_000,
+      description: 'step-2模型的实验版本，包含最新的特性，滚动更新中。不推荐在正式生产环境使用。',
+      displayName: 'Step 2 16K Exp',
+      functionCall: true,
+      id: 'step-2-16k-exp',
+      pricing: {
+        currency: 'CNY',
+        input: 38,
+        output: 120,
+      },
+    },
+    {
+      contextWindowTokens: 8000,
       description: '小型视觉模型，适合基本的图文任务。',
       displayName: 'Step 1V 8K',
       enabled: true,
@@ -135,7 +161,7 @@ const Stepfun: ModelProviderCard = {
       vision: true,
     },
   ],
-  checkModel: 'step-1-flash',
+  checkModel: 'step-2-mini',
   description:
     '阶级星辰大模型具备行业领先的多模态及复杂推理能力，支持超长文本理解和强大的自主调度搜索引擎功能。',
   // after test, currently https://api.stepfun.com/v1/chat/completions has the CORS issue
