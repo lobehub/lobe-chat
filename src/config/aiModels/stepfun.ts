@@ -111,6 +111,7 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 1,
       output: 2,
     },
+    releasedAt: '2025-01-14',
     type: 'chat',
   },
   {
@@ -127,6 +128,7 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 38,
       output: 120,
     },
+    releasedAt: '2025-01-15',
     type: 'chat',
   },
   {
@@ -177,6 +179,7 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 15,
       output: 70,
     },
+    releasedAt: '2025-01-22',
     type: 'chat',
   },
   {
