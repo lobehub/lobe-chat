@@ -17,6 +17,9 @@
   "360gpt-turbo-responsibility-8k": {
     "description": "360GPT Turbo Responsibility 8K emphasizes semantic safety and responsibility, designed specifically for applications with high content safety requirements, ensuring accuracy and robustness in user experience."
   },
+  "360gpt2-o1": {
+    "description": "360gpt2-o1 builds a chain of thought using tree search and incorporates a reflection mechanism, trained with reinforcement learning, enabling the model to self-reflect and correct errors."
+  },
   "360gpt2-pro": {
     "description": "360GPT2 Pro is an advanced natural language processing model launched by 360, featuring exceptional text generation and understanding capabilities, particularly excelling in generation and creative tasks, capable of handling complex language transformations and role-playing tasks."
   },
@@ -109,6 +112,9 @@
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct is one of the latest large language models released by Alibaba Cloud. This 7B model shows significant improvements in coding and mathematics. It also provides multilingual support, covering over 29 languages, including Chinese and English. The model has made notable advancements in instruction following, understanding structured data, and generating structured outputs, especially JSON."
+  },
+  "MiniMax-Text-01": {
+    "description": "In the MiniMax-01 series of models, we have made bold innovations: for the first time, we have implemented a linear attention mechanism on a large scale, making the traditional Transformer architecture no longer the only option. This model has a parameter count of up to 456 billion, with a single activation of 45.9 billion. Its overall performance rivals that of top overseas models while efficiently handling the world's longest context of 4 million tokens, which is 32 times that of GPT-4o and 20 times that of Claude-3.5-Sonnet."
   },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO is a highly flexible multi-model fusion designed to provide an exceptional creative experience."
@@ -218,6 +224,9 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 is the latest series of the Qwen model, capable of outperforming optimal open-source models of similar size and even larger models. Qwen2 7B has achieved significant advantages in multiple evaluations, especially in coding and Chinese comprehension."
   },
+  "Qwen2-VL-72B": {
+    "description": "Qwen2-VL-72B is a powerful visual language model that supports multimodal processing of images and text, capable of accurately recognizing image content and generating relevant descriptions or answers."
+  },
   "Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5-14B-Instruct is a large language model with 14 billion parameters, delivering excellent performance, optimized for Chinese and multilingual scenarios, and supporting applications such as intelligent Q&A and content generation."
   },
@@ -229,6 +238,9 @@
   },
   "Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct is a large language model with 7 billion parameters, supporting function calls and seamless interaction with external systems, greatly enhancing flexibility and scalability. It is optimized for Chinese and multilingual scenarios, supporting applications such as intelligent Q&A and content generation."
+  },
+  "Qwen2.5-Coder-14B-Instruct": {
+    "description": "Qwen2.5-Coder-14B-Instruct is a large-scale pre-trained programming instruction model with strong code understanding and generation capabilities, efficiently handling various programming tasks, particularly suited for intelligent code writing, automated script generation, and programming problem-solving."
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct is a large language model specifically designed for code generation, code understanding, and efficient development scenarios, featuring an industry-leading 32 billion parameters to meet diverse programming needs."
@@ -458,9 +470,6 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet provides an ideal balance of intelligence and speed for enterprise workloads. It offers maximum utility at a lower price, reliable and suitable for large-scale deployment."
   },
-  "code-raccoon-v1": {
-    "description": "Code Raccoon is a software intelligent development assistant based on the SenseTime large language model, covering software requirement analysis, architecture design, code writing, software testing, and more, meeting various user needs for code writing and programming learning. Code Raccoon supports over 90 mainstream programming languages, including Python, Java, JavaScript, C++, Go, SQL, and popular IDEs like VS Code and IntelliJ IDEA. In practical applications, Code Raccoon can help developers improve programming efficiency by over 50%."
-  },
   "codegeex-4": {
     "description": "CodeGeeX-4 is a powerful AI programming assistant that supports intelligent Q&A and code completion in various programming languages, enhancing development efficiency."
   },
@@ -599,6 +608,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool integration, and multimodal generation."
   },
+  "gemini-2.0-flash-thinking-exp-01-21": {
+    "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
+  },
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
   },
@@ -670,6 +682,9 @@
   },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus has the ability to understand video content and multiple images, suitable for multimodal tasks."
+  },
+  "glm-zero-preview": {
+    "description": "GLM-Zero-Preview possesses strong complex reasoning abilities, excelling in logical reasoning, mathematics, programming, and other fields."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash offers optimized multimodal processing capabilities, suitable for various complex task scenarios."
@@ -1100,11 +1115,20 @@
   "moonshot-v1-128k": {
     "description": "Moonshot V1 128K is a model with ultra-long context processing capabilities, suitable for generating extremely long texts, meeting the demands of complex generation tasks, capable of handling up to 128,000 tokens, making it ideal for research, academia, and large document generation."
   },
+  "moonshot-v1-128k-vision-preview": {
+    "description": "The Kimi visual model (including moonshot-v1-8k-vision-preview, moonshot-v1-32k-vision-preview, moonshot-v1-128k-vision-preview, etc.) can understand image content, including text in images, colors, and shapes of objects."
+  },
   "moonshot-v1-32k": {
     "description": "Moonshot V1 32K offers medium-length context processing capabilities, able to handle 32,768 tokens, particularly suitable for generating various long documents and complex dialogues, applicable in content creation, report generation, and dialogue systems."
   },
+  "moonshot-v1-32k-vision-preview": {
+    "description": "The Kimi visual model (including moonshot-v1-8k-vision-preview, moonshot-v1-32k-vision-preview, moonshot-v1-128k-vision-preview, etc.) can understand image content, including text in images, colors, and shapes of objects."
+  },
   "moonshot-v1-8k": {
     "description": "Moonshot V1 8K is designed for generating short text tasks, featuring efficient processing performance, capable of handling 8,192 tokens, making it ideal for brief dialogues, note-taking, and rapid content generation."
+  },
+  "moonshot-v1-8k-vision-preview": {
+    "description": "The Kimi visual model (including moonshot-v1-8k-vision-preview, moonshot-v1-32k-vision-preview, moonshot-v1-128k-vision-preview, etc.) can understand image content, including text in images, colors, and shapes of objects."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B is an upgraded version of Nous Hermes 2, featuring the latest internally developed datasets."
@@ -1312,6 +1336,9 @@
   },
   "step-2-16k": {
     "description": "Supports large-scale context interactions, suitable for complex dialogue scenarios."
+  },
+  "taichu2_mm": {
+    "description": "Integrating capabilities in image understanding, knowledge transfer, and logical attribution, it excels in the field of image-text question answering."
   },
   "taichu_llm": {
     "description": "The ZD Taichu language model possesses strong language understanding capabilities and excels in text creation, knowledge Q&A, code programming, mathematical calculations, logical reasoning, sentiment analysis, and text summarization. It innovatively combines large-scale pre-training with rich knowledge from multiple sources, continuously refining algorithmic techniques and absorbing new knowledge in vocabulary, structure, grammar, and semantics from vast text data, resulting in an evolving model performance. It provides users with more convenient information and services, as well as a more intelligent experience."

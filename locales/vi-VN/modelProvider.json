@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "Phải bao gồm http(s)://",
+        "invalid": "Vui lòng nhập một URL hợp lệ",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "Địa chỉ proxy API"
       },
