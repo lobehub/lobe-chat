@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "يجب أن يحتوي على http(s)://",
+        "invalid": "يرجى إدخال عنوان URL صالح",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "عنوان وكيل API"
       },

@@ -17,6 +17,9 @@
   "360gpt-turbo-responsibility-8k": {
     "description": "360GPT Turbo Responsibility 8K는 의미 안전성과 책임 지향성을 강조하며, 콘텐츠 안전에 대한 높은 요구가 있는 응용 시나리오를 위해 설계되어 사용자 경험의 정확성과 안정성을 보장합니다."
   },
+  "360gpt2-o1": {
+    "description": "360gpt2-o1은 트리 탐색을 사용하여 사고 체인을 구축하고 반성 메커니즘을 도입하였으며, 강화 학습을 통해 훈련되어 자기 반성과 오류 수정 능력을 갖추고 있습니다."
+  },
   "360gpt2-pro": {
     "description": "360GPT2 Pro는 360 회사에서 출시한 고급 자연어 처리 모델로, 뛰어난 텍스트 생성 및 이해 능력을 갖추고 있으며, 특히 생성 및 창작 분야에서 뛰어난 성능을 발휘하여 복잡한 언어 변환 및 역할 연기 작업을 처리할 수 있습니다."
   },
@@ -109,6 +112,9 @@
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct는 Alibaba Cloud에서 발표한 최신 대규모 언어 모델 시리즈 중 하나입니다. 이 7B 모델은 코딩 및 수학 분야에서 상당한 개선된 능력을 가지고 있습니다. 이 모델은 또한 29개 이상의 언어를 포함한 다국어 지원을 제공합니다. 모델은 지침 준수, 구조화된 데이터 이해 및 구조화된 출력 생성(특히 JSON)에서 상당한 향상을 보입니다."
+  },
+  "MiniMax-Text-01": {
+    "description": "MiniMax-01 시리즈 모델에서는 대담한 혁신을 이루었습니다: 대규모로 선형 주의 메커니즘을 처음으로 구현하였으며, 전통적인 Transformer 아키텍처가 더 이상 유일한 선택이 아닙니다. 이 모델의 파라미터 수는 4560억에 달하며, 단일 활성화는 45.9억입니다. 모델의 종합 성능은 해외 최고의 모델과 견줄 수 있으며, 전 세계에서 가장 긴 400만 토큰의 문맥을 효율적으로 처리할 수 있습니다. 이는 GPT-4o의 32배, Claude-3.5-Sonnet의 20배에 해당합니다."
   },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO는 뛰어난 창의적 경험을 제공하기 위해 설계된 고도로 유연한 다중 모델 통합입니다."
@@ -218,6 +224,9 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2는 Qwen 모델의 최신 시리즈로, 동등한 규모의 최적 오픈 소스 모델은 물론 더 큰 규모의 모델을 초월할 수 있습니다. Qwen2 7B는 여러 평가에서 현저한 우위를 차지하였으며, 특히 코드 및 중국어 이해에서 두드러진 성과를 보였습니다."
   },
+  "Qwen2-VL-72B": {
+    "description": "Qwen2-VL-72B는 강력한 시각 언어 모델로, 이미지와 텍스트의 다중 모드 처리를 지원하며, 이미지 내용을 정확하게 인식하고 관련 설명이나 답변을 생성할 수 있습니다."
+  },
   "Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5-14B-Instruct는 140억 매개변수를 가진 대형 언어 모델로, 성능이 우수하며 중국어 및 다국어 시나리오를 최적화하여 스마트 Q&A, 콘텐츠 생성 등의 응용을 지원합니다."
   },
@@ -229,6 +238,9 @@
   },
   "Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct는 70억 매개변수를 가진 대형 언어 모델로, 함수 호출 및 외부 시스템과의 원활한 상호작용을 지원하여 유연성과 확장성을 크게 향상시킵니다. 중국어 및 다국어 시나리오를 최적화하여 스마트 Q&A, 콘텐츠 생성 등의 응용을 지원합니다."
+  },
+  "Qwen2.5-Coder-14B-Instruct": {
+    "description": "Qwen2.5-Coder-14B-Instruct는 대규모 사전 훈련된 프로그래밍 지침 모델로, 강력한 코드 이해 및 생성 능력을 갖추고 있으며, 다양한 프로그래밍 작업을 효율적으로 처리할 수 있습니다. 특히 스마트 코드 작성, 자동화 스크립트 생성 및 프로그래밍 문제 해결에 적합합니다."
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct는 코드 생성, 코드 이해 및 효율적인 개발 시나리오를 위해 설계된 대형 언어 모델로, 업계 최고의 32B 매개변수 규모를 채택하여 다양한 프로그래밍 요구를 충족합니다."
@@ -458,9 +470,6 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet은 기업 작업 부하에 이상적인 균형을 제공하며, 더 낮은 가격으로 최대 효용을 제공합니다. 신뢰성이 높고 대규모 배포에 적합합니다."
   },
-  "code-raccoon-v1": {
-    "description": "코드 라쿤은 상상 대형 언어 모델을 기반으로 한 소프트웨어 지능 개발 도우미로, 소프트웨어 요구 분석, 아키텍처 설계, 코드 작성, 소프트웨어 테스트 등 다양한 단계를 포괄하여 사용자 코드 작성 및 프로그래밍 학습 등 다양한 요구를 충족합니다. 코드 라쿤은 Python, Java, JavaScript, C++, Go, SQL 등 90개 이상의 주요 프로그래밍 언어와 VS Code, IntelliJ IDEA 등 주요 IDE를 지원합니다. 실제 응용에서 코드 라쿤은 개발자의 프로그래밍 효율성을 50% 이상 향상시킬 수 있습니다."
-  },
   "codegeex-4": {
     "description": "CodeGeeX-4는 강력한 AI 프로그래밍 도우미로, 다양한 프로그래밍 언어에 대한 스마트 Q&A 및 코드 완성을 지원하여 개발 효율성을 높입니다."
   },
@@ -599,6 +608,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모달 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모달 생성을 갖추고 있습니다."
   },
+  "gemini-2.0-flash-thinking-exp-01-21": {
+    "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모드 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모드 생성을 제공합니다."
+  },
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모드 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모드 생성을 제공합니다."
   },
@@ -670,6 +682,9 @@
   },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus는 비디오 콘텐츠 및 다수의 이미지에 대한 이해 능력을 갖추고 있어 다중 모드 작업에 적합합니다."
+  },
+  "glm-zero-preview": {
+    "description": "GLM-Zero-Preview는 강력한 복잡한 추론 능력을 갖추고 있으며, 논리 추론, 수학, 프로그래밍 등 분야에서 우수한 성능을 발휘합니다."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash는 최적화된 다중 모달 처리 능력을 제공하며, 다양한 복잡한 작업 시나리오에 적합합니다."
@@ -1100,11 +1115,20 @@
   "moonshot-v1-128k": {
     "description": "Moonshot V1 128K는 초장기 컨텍스트 처리 능력을 갖춘 모델로, 초장문 생성을 위해 설계되었으며, 복잡한 생성 작업 요구를 충족하고 최대 128,000개의 토큰을 처리할 수 있어, 연구, 학술 및 대형 문서 생성 등 응용 시나리오에 매우 적합합니다."
   },
+  "moonshot-v1-128k-vision-preview": {
+    "description": "Kimi 시각 모델(예: moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 등)은 이미지 내용을 이해할 수 있으며, 이미지 텍스트, 이미지 색상 및 물체 형태 등을 포함합니다."
+  },
   "moonshot-v1-32k": {
     "description": "Moonshot V1 32K는 중간 길이의 컨텍스트 처리 능력을 제공하며, 32,768개의 토큰을 처리할 수 있어, 다양한 장문 및 복잡한 대화 생성을 위해 특히 적합하며, 콘텐츠 생성, 보고서 작성 및 대화 시스템 등 분야에 활용됩니다."
   },
+  "moonshot-v1-32k-vision-preview": {
+    "description": "Kimi 시각 모델(예: moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 등)은 이미지 내용을 이해할 수 있으며, 이미지 텍스트, 이미지 색상 및 물체 형태 등을 포함합니다."
+  },
   "moonshot-v1-8k": {
     "description": "Moonshot V1 8K는 짧은 텍스트 작업 생성을 위해 설계되었으며, 효율적인 처리 성능을 갖추고 있어 8,192개의 토큰을 처리할 수 있으며, 짧은 대화, 속기 및 빠른 콘텐츠 생성에 매우 적합합니다."
+  },
+  "moonshot-v1-8k-vision-preview": {
+    "description": "Kimi 시각 모델(예: moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 등)은 이미지 내용을 이해할 수 있으며, 이미지 텍스트, 이미지 색상 및 물체 형태 등을 포함합니다."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B는 Nous Hermes 2의 업그레이드 버전으로, 최신 내부 개발 데이터 세트를 포함하고 있습니다."
@@ -1312,6 +1336,9 @@
   },
   "step-2-16k": {
     "description": "대규모 컨텍스트 상호작용을 지원하며, 복잡한 대화 시나리오에 적합합니다."
+  },
+  "taichu2_mm": {
+    "description": "이미지 이해, 지식 이전, 논리 귀속 등의 능력을 통합하여, 이미지-텍스트 질문 응답 분야에서 뛰어난 성능을 보입니다."
   },
   "taichu_llm": {
     "description": "자이동 태초 언어 대모델은 뛰어난 언어 이해 능력과 텍스트 창작, 지식 질문 응답, 코드 프로그래밍, 수학 계산, 논리 추론, 감정 분석, 텍스트 요약 등의 능력을 갖추고 있습니다. 혁신적으로 대규모 데이터 사전 훈련과 다원적 풍부한 지식을 결합하여 알고리즘 기술을 지속적으로 다듬고, 방대한 텍스트 데이터에서 어휘, 구조, 문법, 의미 등의 새로운 지식을 지속적으로 흡수하여 모델 성능을 지속적으로 진화시킵니다. 사용자에게 보다 편리한 정보와 서비스, 그리고 더 지능적인 경험을 제공합니다."

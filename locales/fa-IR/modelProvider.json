@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "باید شامل http(s):// باشد",
+        "invalid": "لطفاً یک URL معتبر وارد کنید",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "آدرس پروکسی API"
       },

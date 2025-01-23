@@ -11,6 +11,7 @@ import { ReactNode, memo, useLayoutEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
+import { z } from 'zod';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
 import { FORM_STYLE } from '@/const/layoutTokens';
@@ -227,6 +228,17 @@ const ProviderConfig = memo<ProviderConfigProps>(
           desc: (!!proxyUrl && proxyUrl?.desc) || t('providerModels.config.baseURL.desc'),
           label: (!!proxyUrl && proxyUrl?.title) || t('providerModels.config.baseURL.title'),
           name: [KeyVaultsConfigKey, LLMProviderBaseUrlKey],
+          rules: [
+            {
+              validator: (_: any, value: string) => {
+                if (!value) return;
+
+                return z.string().url().safeParse(value).error
+                  ? Promise.reject(t('providerModels.config.baseURL.invalid'))
+                  : Promise.resolve();
+              },
+            },
+          ],
         }
       : undefined;
 
