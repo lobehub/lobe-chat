@@ -10,8 +10,8 @@ import {
 
 import { AsyncTaskSelectItem, NewAsyncTaskItem, asyncTasks } from '../../schemas';
 
-// set timeout to about 5 minutes, and give 2s padding time
-export const ASYNC_TASK_TIMEOUT = 298 * 1000;
+// set timeout to about 20 minutes, and give 2s padding time
+export const ASYNC_TASK_TIMEOUT = 4 * 298 * 1000;
 
 export class AsyncTaskModel {
   private userId: string;

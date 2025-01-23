@@ -329,7 +329,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
       try {
         return await retryWithBackoff(
           executeRequest, // 核心请求逻辑
-          3, // 最大重试次数
+          4, // 最大重试次数
           1000, // 初始延时（毫秒）
           8, // 指数退避倍数
           100 * 1000, // 最大延时（毫秒）

@@ -82,7 +82,7 @@ export const fileRouter = router({
           const startAt = Date.now();
 
           const CHUNK_SIZE = 15;
-          const CONCURRENCY = 2;
+          const CONCURRENCY = 3;
 
           const chunks = await ctx.chunkModel.getChunksTextByFileId(input.fileId);
           const requestArray = chunk(chunks, CHUNK_SIZE);
@@ -171,7 +171,6 @@ export const fileRouter = router({
 
       let content: Uint8Array | undefined;
       try {
-        // TODO: si , 考虑走内容
         content = await s3.getFileByteArray(file.url);
       } catch (e) {
         console.error(e);
