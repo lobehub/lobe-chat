@@ -108,7 +108,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               },
             ],
           },
-          { apiVersion: 'v1beta', baseUrl: this.baseURL },
+          { apiVersion: 'v1alpha', baseUrl: this.baseURL },
         )
         .generateContentStream({
           contents,
@@ -138,7 +138,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   }
 
   async models() {
-    const url = `${this.baseURL}/v1beta/models?key=${this.apiKey}`;
+    const url = `${this.baseURL}/v1alpha/models?key=${this.apiKey}`;
     const response = await fetch(url, {
       method: 'GET',
     });
