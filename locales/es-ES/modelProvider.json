@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "Debe incluir http(s)://",
+        "invalid": "Por favor, introduce una URL válida",
         "placeholder": "https://tu-direccion-proxy.com/v1",
         "title": "Dirección del proxy API"
       },

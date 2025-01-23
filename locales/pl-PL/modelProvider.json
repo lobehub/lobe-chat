@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "Musi zawierać http(s)://",
+        "invalid": "Proszę wprowadzić prawidłowy URL",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "Adres proxy API"
       },

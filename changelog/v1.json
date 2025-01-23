@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix debounce issue of provider config."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.18"
+  },
+  {
+    "children": {
       "fixes": ["Upgrade react-i18next to ^15."]
     },
     "date": "2025-01-22",
