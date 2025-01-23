@@ -21,7 +21,7 @@ export type OnFinishHandler = (
   text: string,
   context: {
     observationId?: string | null;
-    thinking: string;
+    thinking?: string;
     toolCalls?: MessageToolCall[];
     traceId?: string | null;
     type?: SSEFinishType;

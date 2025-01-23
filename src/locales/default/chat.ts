@@ -85,8 +85,8 @@ export default {
     },
   },
   reasoning: {
-    thinking: '思考中',
-    thought: '已深度思考（用时 {{}} 秒）',
+    thinking: '已思考 {{duration}} 秒',
+    thought: '已深度思考（用时 {{duration}} 秒）',
   },
   regenerate: '重新生成',
   roleAndArchive: '角色与记录',
