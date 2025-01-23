@@ -155,6 +155,7 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 3.5,
       output: 7,
     },
+    releasedAt: '2024-11-28',
     type: 'chat',
   },
   {
@@ -170,6 +171,7 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 12,
       output: 36,
     },
+    releasedAt: '2024-12-25',
     type: 'chat',
   },
   {
