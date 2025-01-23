@@ -12,8 +12,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import FormInput from '@/components/FormInput';
-import FormPassword from '@/components/FormPassword';
+import { FormInput, FormPassword } from '@/components/FormInput';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { AES_GCM_URL, BASE_PROVIDER_DOC_URL } from '@/const/url';
 import { isServerMode } from '@/const/version';
