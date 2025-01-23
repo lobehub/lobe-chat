@@ -15,6 +15,7 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
   models: {
     transformModel: (m) => {
       const functionCallKeywords = [
+        'hunyuan-functioncall',
         'hunyuan-turbo',
         'hunyuan-pro',
       ];
@@ -23,7 +24,7 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
 
       return {
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
-        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) || model.modelCode.toLowerCase().includes('functioncall'),
+        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('vision'),
         id: model.id,
         vision: model.modelCode.toLowerCase().includes('vision'),
       };
