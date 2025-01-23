@@ -1,6 +1,12 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+
+export interface HunyuanModelCard {
+  id: string;
+}
+
 export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.hunyuan.cloud.tencent.com/v1',
   debug: {
@@ -13,7 +19,7 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
         'hunyuan-pro',
       ];
 
-      const model = m as unknown as QwenModelCard;
+      const model = m as unknown as HunyuanModelCard;
 
       return {
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
