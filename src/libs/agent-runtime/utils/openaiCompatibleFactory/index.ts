@@ -318,7 +318,6 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     ): Promise<Embeddings[]> {
       // 定义调用核心请求的逻辑
       const executeRequest = async () => {
-        // TODO: 截取超过的输入
         const res = await this.client.embeddings.create(
           { ...payload, input: payload.input.slice(0, -1), user: options?.user },
           { headers: options?.headers, signal: options?.signal },

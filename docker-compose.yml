@@ -9,8 +9,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.database
-      args:
-        USE_CN_MIRROR: true
+#      args:
+#        USE_CN_MIRROR: true
     platform: linux/amd64
     ports:
       - '23210:3210'
