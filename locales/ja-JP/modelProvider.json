@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "http(s):// を含める必要があります",
+        "invalid": "有効なURLを入力してください",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "API プロキシアドレス"
       },

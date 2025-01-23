@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "http(s)://를 포함해야 합니다",
+        "invalid": "유효한 URL을 입력하세요",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "API 프록시 주소"
       },

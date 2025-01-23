@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "Должен содержать http(s)://",
+        "invalid": "Пожалуйста, введите действительный URL",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "API адрес прокси"
       },
