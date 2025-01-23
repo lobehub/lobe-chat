@@ -67,7 +67,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ open, setOpen }) => {
     >
       <ModelConfigForm
         onFormInstanceReady={setFormInstance}
-        showAzureDeployName={editingProvider === ModelProvider.Azure || editingProvider === ModelProvider.Doubao}
+        showAzureDeployName={editingProvider === ModelProvider.Azure}
       />
     </Modal>
   );
