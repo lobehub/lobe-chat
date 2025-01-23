@@ -3,12 +3,12 @@ import { ReactNode, Suspense, memo, useContext } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
-import { InPortalThreadContext } from '@/features/Conversation/components/ChatItem/InPortalThreadContext';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { aiChatSelectors } from '@/store/chat/slices/aiChat/selectors';
 import { ChatMessage } from '@/types/message';
 
+import { InPortalThreadContext } from '../../components/ChatItem/InPortalThreadContext';
 import { DefaultMessage } from '../Default';
 import FileChunks from './FileChunks';
 import Thinking from './Reasoning';

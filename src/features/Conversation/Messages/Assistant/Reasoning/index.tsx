@@ -13,12 +13,12 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
     cursor: pointer;
 
-    padding-block: 8px;
+    width: fit-content;
+    padding-block: 4px;
     padding-inline: 8px 12px;
-    border-radius: 8px;
+    border-radius: 6px;
 
     color: ${token.colorTextTertiary};
-    width: fit-content;
 
     &:hover {
       background: ${isDarkMode ? token.colorFillQuaternary : token.colorFillTertiary};
