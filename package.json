@@ -253,6 +253,7 @@
     "@semantic-release/exec": "^6.0.3",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/chroma-js": "^3.1.0",
     "@types/crypto-js": "^4.2.2",
     "@types/debug": "^4.1.12",
