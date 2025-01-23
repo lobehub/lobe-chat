@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add new stepfun model."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.19"
+  },
+  {
+    "children": {
       "fixes": ["Fix debounce issue of provider config."]
     },
     "date": "2025-01-23",
