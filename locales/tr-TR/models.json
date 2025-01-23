@@ -17,6 +17,9 @@
   "360gpt-turbo-responsibility-8k": {
     "description": "360GPT Turbo Responsibility 8K, anlam güvenliği ve sorumluluk odaklılığı vurgular, içerik güvenliği konusunda yüksek gereksinimlere sahip uygulama senaryoları için tasarlanmıştır, kullanıcı deneyiminin doğruluğunu ve sağlamlığını garanti eder."
   },
+  "360gpt2-o1": {
+    "description": "360gpt2-o1, düşünce zincirini ağaç arama ile inşa eder ve yansıtma mekanizmasını entegre eder, pekiştirme öğrenimi ile eğitilir, model kendini yansıtma ve hata düzeltme yeteneğine sahiptir."
+  },
   "360gpt2-pro": {
     "description": "360GPT2 Pro, 360 şirketi tarafından sunulan yüksek düzeyde doğal dil işleme modelidir, mükemmel metin oluşturma ve anlama yeteneğine sahiptir, özellikle oluşturma ve yaratma alanında olağanüstü performans gösterir, karmaşık dil dönüşümleri ve rol canlandırma görevlerini işleyebilir."
   },
@@ -109,6 +112,9 @@
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct, Alibaba Cloud tarafından yayınlanan en son büyük dil modeli serilerinden biridir. Bu 7B modeli, kodlama ve matematik gibi alanlarda önemli ölçüde geliştirilmiş yeteneklere sahiptir. Model ayrıca, Çince, İngilizce gibi 29'dan fazla dili kapsayan çok dilli destek sunmaktadır. Model, talimat takibi, yapılandırılmış verileri anlama ve yapılandırılmış çıktı (özellikle JSON) üretme konularında önemli iyileştirmeler göstermektedir."
+  },
+  "MiniMax-Text-01": {
+    "description": "MiniMax-01 serisi modellerinde cesur yenilikler yaptık: ilk kez büyük ölçekli lineer dikkat mekanizmasını gerçekleştirdik, geleneksel Transformer mimarisi artık tek seçenek değil. Bu modelin parametre sayısı 456 milyara kadar çıkmakta, tek bir aktivasyonda 45.9 milyar. Modelin genel performansı, yurtdışındaki en iyi modellerle karşılaştırılabilirken, dünya genelinde 4 milyon token uzunluğundaki bağlamı verimli bir şekilde işleyebilir, bu da GPT-4o'nun 32 katı, Claude-3.5-Sonnet'in 20 katıdır."
   },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO, olağanüstü yaratıcı deneyimler sunmak için tasarlanmış son derece esnek bir çoklu model birleşimidir."
@@ -218,6 +224,9 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2, Qwen modelinin en yeni serisidir ve eşit ölçekli en iyi açık kaynak modelleri hatta daha büyük ölçekli modelleri aşabilmektedir. Qwen2 7B, birçok değerlendirmede belirgin bir avantaj elde etmiş, özellikle kod ve Çince anlama konusunda."
   },
+  "Qwen2-VL-72B": {
+    "description": "Qwen2-VL-72B, görüntü ve metin için çok modlu işleme desteği sunan güçlü bir görsel dil modelidir, görüntü içeriğini hassas bir şekilde tanıyabilir ve ilgili açıklamalar veya yanıtlar üretebilir."
+  },
   "Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5-14B-Instruct, 14 milyar parametreye sahip büyük bir dil modelidir. Performansı mükemmel olup, Çince ve çok dilli senaryoları optimize eder, akıllı soru-cevap, içerik üretimi gibi uygulamaları destekler."
   },
@@ -229,6 +238,9 @@
   },
   "Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct, 7 milyar parametreye sahip büyük bir dil modelidir. Fonksiyon çağrısı ile dış sistemlerle sorunsuz etkileşim destekler, esneklik ve ölçeklenebilirliği büyük ölçüde artırır. Çince ve çok dilli senaryoları optimize eder, akıllı soru-cevap, içerik üretimi gibi uygulamaları destekler."
+  },
+  "Qwen2.5-Coder-14B-Instruct": {
+    "description": "Qwen2.5-Coder-14B-Instruct, büyük ölçekli önceden eğitilmiş bir programlama talimat modelidir, güçlü kod anlama ve üretme yeteneğine sahiptir, çeşitli programlama görevlerini verimli bir şekilde işleyebilir, özellikle akıllı kod yazma, otomatik betik oluşturma ve programlama sorunlarına yanıt verme için uygundur."
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct, kod üretimi, kod anlama ve verimli geliştirme senaryoları için tasarlanmış büyük bir dil modelidir. Sektördeki en ileri 32B parametre ölçeğini kullanarak çeşitli programlama ihtiyaçlarını karşılayabilir."
@@ -458,9 +470,6 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet, akıllı ve hızlı bir denge sunarak kurumsal iş yükleri için idealdir. Daha düşük bir fiyatla maksimum fayda sağlar, güvenilir ve büyük ölçekli dağıtım için uygundur."
   },
-  "code-raccoon-v1": {
-    "description": "Kod Rakun, SenseTime büyük dil modeline dayanan bir yazılım akıllı geliştirme asistanıdır. Yazılım gereksinim analizi, mimari tasarım, kod yazımı, yazılım testi gibi aşamaları kapsar ve kullanıcıların kod yazma, programlama öğrenme gibi çeşitli ihtiyaçlarını karşılar. Kod Rakun, Python, Java, JavaScript, C++, Go, SQL gibi 90'dan fazla popüler programlama dilini ve VS Code, IntelliJ IDEA gibi popüler IDE'leri destekler. Gerçek uygulamalarda, Kod Rakun geliştiricilerin programlama verimliliğini %50'den fazla artırmasına yardımcı olabilir."
-  },
   "codegeex-4": {
     "description": "CodeGeeX-4, çeşitli programlama dillerinde akıllı soru-cevap ve kod tamamlama desteği sunan güçlü bir AI programlama asistanıdır, geliştirme verimliliğini artırır."
   },
@@ -599,6 +608,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en yeni deneysel çok modlu yapay zeka modelidir. Gelecek nesil özellikleri, olağanüstü hızı, yerel araç çağrısı ve çok modlu üretim ile donatılmıştır."
   },
+  "gemini-2.0-flash-thinking-exp-01-21": {
+    "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
+  },
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, üstün hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
   },
@@ -670,6 +682,9 @@
   },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus, video içeriği ve çoklu görüntüleri anlama yeteneğine sahiptir, çok modlu görevler için uygundur."
+  },
+  "glm-zero-preview": {
+    "description": "GLM-Zero-Preview, karmaşık akıl yürütme yeteneklerine sahip olup, mantıksal akıl yürütme, matematik, programlama gibi alanlarda mükemmel performans sergilemektedir."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash, optimize edilmiş çok modlu işleme yetenekleri sunar ve çeşitli karmaşık görev senaryolarına uygundur."
@@ -1100,11 +1115,20 @@
   "moonshot-v1-128k": {
     "description": "Moonshot V1 128K, ultra uzun bağlam işleme yeteneğine sahip bir modeldir, karmaşık üretim görevlerini karşılamak için ultra uzun metinler üretmekte kullanılabilir, 128,000 token'a kadar içeriği işleyebilir, araştırma, akademik ve büyük belgelerin üretilmesi gibi uygulama senaryoları için son derece uygundur."
   },
+  "moonshot-v1-128k-vision-preview": {
+    "description": "Kimi görsel modeli (moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview gibi) resim içeriğini anlayabilir, resim metni, resim rengi ve nesne şekilleri gibi içerikleri kapsar."
+  },
   "moonshot-v1-32k": {
     "description": "Moonshot V1 32K, orta uzunlukta bağlam işleme yeteneği sunar, 32,768 token'ı işleyebilir, çeşitli uzun belgeler ve karmaşık diyaloglar üretmek için özellikle uygundur, içerik oluşturma, rapor üretimi ve diyalog sistemleri gibi alanlarda kullanılabilir."
   },
+  "moonshot-v1-32k-vision-preview": {
+    "description": "Kimi görsel modeli (moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview gibi) resim içeriğini anlayabilir, resim metni, resim rengi ve nesne şekilleri gibi içerikleri kapsar."
+  },
   "moonshot-v1-8k": {
     "description": "Moonshot V1 8K, kısa metin görevleri için tasarlanmış, yüksek verimlilikte işleme performansı sunar, 8,192 token'ı işleyebilir, kısa diyaloglar, not alma ve hızlı içerik üretimi için son derece uygundur."
+  },
+  "moonshot-v1-8k-vision-preview": {
+    "description": "Kimi görsel modeli (moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview gibi) resim içeriğini anlayabilir, resim metni, resim rengi ve nesne şekilleri gibi içerikleri kapsar."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B, Nous Hermes 2'nin güncellenmiş versiyonudur ve en son iç geliştirme veri setlerini içermektedir."
@@ -1312,6 +1336,9 @@
   },
   "step-2-16k": {
     "description": "Büyük ölçekli bağlam etkileşimlerini destekler, karmaşık diyalog senaryoları için uygundur."
+  },
+  "taichu2_mm": {
+    "description": "Görüntü anlama, bilgi transferi, mantıksal atıf gibi yetenekleri birleştirerek, metin ve görüntü ile soru-cevap alanında öne çıkmaktadır."
   },
   "taichu_llm": {
     "description": "Zidong Taichu dil büyük modeli, güçlü dil anlama yeteneği ile metin oluşturma, bilgi sorgulama, kod programlama, matematik hesaplama, mantıksal akıl yürütme, duygu analizi, metin özeti gibi yeteneklere sahiptir. Yenilikçi bir şekilde büyük veri ön eğitimi ile çok kaynaklı zengin bilgiyi birleştirir, algoritma teknolojisini sürekli olarak geliştirir ve büyük metin verilerinden kelime, yapı, dil bilgisi, anlam gibi yeni bilgileri sürekli olarak edinir, modelin performansını sürekli olarak evrimleştirir. Kullanıcılara daha kolay bilgi ve hizmetler sunar ve daha akıllı bir deneyim sağlar."
