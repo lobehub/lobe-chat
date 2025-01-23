@@ -15,9 +15,9 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import {
   ChatMessage,
   ChatMessageError,
-  ChatReasoning,
   CreateMessageParams,
   MessageToolCall,
+  ModelReasoning,
 } from '@/types/message';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
@@ -74,7 +74,7 @@ export interface ChatMessageAction {
     id: string,
     content: string,
     toolCalls?: MessageToolCall[],
-    reasoning?: ChatReasoning,
+    reasoning?: ModelReasoning,
   ) => Promise<void>;
   /**
    * update the message error with optimistic update
@@ -291,7 +291,7 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, {
       content,
       tools: toolCalls ? internal_transformToolCalls(toolCalls) : undefined,
-      reasoning: reasoning as any,
+      reasoning,
     });
     await refreshMessages();
   },
