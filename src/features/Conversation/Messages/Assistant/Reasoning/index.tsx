@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { aiChatSelectors } from '@/store/chat/slices/aiChat/selectors';
+import { aiChatSelectors } from '@/store/chat/selectors';
 import { dotLoading } from '@/styles/loading';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
