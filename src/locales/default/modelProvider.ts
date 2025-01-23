@@ -201,6 +201,7 @@ export default {
       },
       baseURL: {
         desc: '必须包含 http(s)://',
+        invalid: '请输入合法的 URL',
         placeholder: 'https://your-proxy-url.com/v1',
         title: 'API 代理地址',
       },

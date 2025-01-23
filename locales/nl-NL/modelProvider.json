@@ -198,6 +198,7 @@
       },
       "baseURL": {
         "desc": "Moet http(s):// bevatten",
+        "invalid": "Voer een geldige URL in",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "API-proxy-adres"
       },

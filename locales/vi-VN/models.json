@@ -17,6 +17,9 @@
   "360gpt-turbo-responsibility-8k": {
     "description": "360GPT Turbo Responsibility 8K nhấn mạnh an toàn ngữ nghĩa và định hướng trách nhiệm, được thiết kế đặc biệt cho các tình huống ứng dụng có yêu cầu cao về an toàn nội dung, đảm bảo độ chính xác và độ ổn định trong trải nghiệm người dùng."
   },
+  "360gpt2-o1": {
+    "description": "360gpt2-o1 sử dụng tìm kiếm cây để xây dựng chuỗi tư duy, và đưa vào cơ chế phản hồi, sử dụng học tăng cường để đào tạo, mô hình có khả năng tự phản hồi và sửa lỗi."
+  },
   "360gpt2-pro": {
     "description": "360GPT2 Pro là mô hình xử lý ngôn ngữ tự nhiên cao cấp do công ty 360 phát hành, có khả năng tạo và hiểu văn bản xuất sắc, đặc biệt trong lĩnh vực tạo ra và sáng tạo, có thể xử lý các nhiệm vụ chuyển đổi ngôn ngữ phức tạp và diễn xuất vai trò."
   },
@@ -109,6 +112,9 @@
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct là một trong những mô hình ngôn ngữ lớn mới nhất do Alibaba Cloud phát hành. Mô hình 7B này có khả năng cải thiện đáng kể trong các lĩnh vực mã hóa và toán học. Mô hình cũng cung cấp hỗ trợ đa ngôn ngữ, bao gồm hơn 29 ngôn ngữ, bao gồm tiếng Trung, tiếng Anh, v.v. Mô hình đã có sự cải thiện đáng kể trong việc tuân theo chỉ dẫn, hiểu dữ liệu có cấu trúc và tạo ra đầu ra có cấu trúc (đặc biệt là JSON)."
+  },
+  "MiniMax-Text-01": {
+    "description": "Trong dòng mô hình MiniMax-01, chúng tôi đã thực hiện những đổi mới táo bạo: lần đầu tiên hiện thực hóa quy mô lớn cơ chế chú ý tuyến tính, kiến trúc Transformer truyền thống không còn là lựa chọn duy nhất. Mô hình này có số lượng tham số lên tới 4560 tỷ, trong đó kích hoạt một lần là 45,9 tỷ. Hiệu suất tổng hợp của mô hình tương đương với các mô hình hàng đầu quốc tế, đồng thời có khả năng xử lý hiệu quả ngữ cảnh dài nhất toàn cầu lên tới 4 triệu token, gấp 32 lần GPT-4o và 20 lần Claude-3.5-Sonnet."
   },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO là một mô hình kết hợp đa dạng, nhằm cung cấp trải nghiệm sáng tạo xuất sắc."
@@ -218,6 +224,9 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 là dòng mô hình mới nhất của Qwen, có khả năng vượt qua các mô hình mã nguồn mở cùng quy mô hoặc thậm chí lớn hơn, Qwen2 7B đạt được lợi thế đáng kể trong nhiều bài kiểm tra, đặc biệt là trong việc hiểu mã và tiếng Trung."
   },
+  "Qwen2-VL-72B": {
+    "description": "Qwen2-VL-72B là một mô hình ngôn ngữ hình ảnh mạnh mẽ, hỗ trợ xử lý đa phương thức giữa hình ảnh và văn bản, có khả năng nhận diện chính xác nội dung hình ảnh và sinh ra mô tả hoặc câu trả lời liên quan."
+  },
   "Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5-14B-Instruct là một mô hình ngôn ngữ lớn với 14 tỷ tham số, có hiệu suất xuất sắc, tối ưu cho các tình huống tiếng Trung và đa ngôn ngữ, hỗ trợ các ứng dụng như hỏi đáp thông minh, tạo nội dung."
   },
@@ -229,6 +238,9 @@
   },
   "Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct là một mô hình ngôn ngữ lớn với 7 tỷ tham số, hỗ trợ gọi hàm và tương tác liền mạch với các hệ thống bên ngoài, nâng cao tính linh hoạt và khả năng mở rộng. Tối ưu cho các tình huống tiếng Trung và đa ngôn ngữ, hỗ trợ các ứng dụng như hỏi đáp thông minh, tạo nội dung."
+  },
+  "Qwen2.5-Coder-14B-Instruct": {
+    "description": "Qwen2.5-Coder-14B-Instruct là một mô hình hướng dẫn lập trình dựa trên đào tạo trước quy mô lớn, có khả năng hiểu và sinh mã mạnh mẽ, có thể xử lý hiệu quả các nhiệm vụ lập trình khác nhau, đặc biệt phù hợp cho việc viết mã thông minh, tạo kịch bản tự động và giải đáp các vấn đề lập trình."
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct là một mô hình ngôn ngữ lớn được thiết kế đặc biệt cho việc tạo mã, hiểu mã và các tình huống phát triển hiệu quả, với quy mô 32B tham số hàng đầu trong ngành, có thể đáp ứng nhu cầu lập trình đa dạng."
@@ -458,9 +470,6 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet cung cấp sự cân bằng lý tưởng giữa trí thông minh và tốc độ cho khối lượng công việc doanh nghiệp. Nó cung cấp hiệu suất tối đa với mức giá thấp hơn, đáng tin cậy và phù hợp cho triển khai quy mô lớn."
   },
-  "code-raccoon-v1": {
-    "description": "Code Raccoon là một trợ lý phát triển phần mềm thông minh dựa trên mô hình ngôn ngữ lớn của SenseTime, bao phủ các giai đoạn phân tích yêu cầu phần mềm, thiết kế kiến trúc, viết mã, kiểm thử phần mềm, đáp ứng nhu cầu viết mã và học lập trình của người dùng. Code Raccoon hỗ trợ hơn 90 ngôn ngữ lập trình phổ biến như Python, Java, JavaScript, C++, Go, SQL và các IDE phổ biến như VS Code, IntelliJ IDEA. Trong thực tế, Code Raccoon có thể giúp các nhà phát triển nâng cao hiệu suất lập trình hơn 50%."
-  },
   "codegeex-4": {
     "description": "CodeGeeX-4 là trợ lý lập trình AI mạnh mẽ, hỗ trợ nhiều ngôn ngữ lập trình với câu hỏi thông minh và hoàn thành mã, nâng cao hiệu suất phát triển."
   },
@@ -599,6 +608,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, có các tính năng thế hệ tiếp theo, tốc độ vượt trội, khả năng gọi công cụ nguyên bản và tạo ra đa phương thức."
   },
+  "gemini-2.0-flash-thinking-exp-01-21": {
+    "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, sở hữu các tính năng thế hệ tiếp theo, tốc độ vượt trội, gọi công cụ bản địa và sinh ra đa phương thức."
+  },
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, với các tính năng thế hệ tiếp theo, tốc độ vượt trội, gọi công cụ bản địa và tạo ra đa phương thức."
   },
@@ -670,6 +682,9 @@
   },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus có khả năng hiểu nội dung video và nhiều hình ảnh, phù hợp cho các nhiệm vụ đa phương tiện."
+  },
+  "glm-zero-preview": {
+    "description": "GLM-Zero-Preview có khả năng suy luận phức tạp mạnh mẽ, thể hiện xuất sắc trong các lĩnh vực suy luận logic, toán học, lập trình."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash cung cấp khả năng xử lý đa phương thức được tối ưu hóa, phù hợp cho nhiều tình huống nhiệm vụ phức tạp."
@@ -1100,11 +1115,20 @@
   "moonshot-v1-128k": {
     "description": "Moonshot V1 128K là một mô hình có khả năng xử lý ngữ cảnh siêu dài, phù hợp cho việc sinh văn bản siêu dài, đáp ứng nhu cầu nhiệm vụ sinh phức tạp, có thể xử lý nội dung lên đến 128.000 tokens, rất phù hợp cho nghiên cứu, học thuật và sinh tài liệu lớn."
   },
+  "moonshot-v1-128k-vision-preview": {
+    "description": "Mô hình hình ảnh Kimi (bao gồm moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview, v.v.) có khả năng hiểu nội dung hình ảnh, bao gồm văn bản hình ảnh, màu sắc hình ảnh và hình dạng vật thể."
+  },
   "moonshot-v1-32k": {
     "description": "Moonshot V1 32K cung cấp khả năng xử lý ngữ cảnh độ dài trung bình, có thể xử lý 32.768 tokens, đặc biệt phù hợp cho việc sinh các tài liệu dài và đối thoại phức tạp, ứng dụng trong sáng tạo nội dung, sinh báo cáo và hệ thống đối thoại."
   },
+  "moonshot-v1-32k-vision-preview": {
+    "description": "Mô hình hình ảnh Kimi (bao gồm moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview, v.v.) có khả năng hiểu nội dung hình ảnh, bao gồm văn bản hình ảnh, màu sắc hình ảnh và hình dạng vật thể."
+  },
   "moonshot-v1-8k": {
     "description": "Moonshot V1 8K được thiết kế đặc biệt cho các nhiệm vụ sinh văn bản ngắn, có hiệu suất xử lý cao, có thể xử lý 8.192 tokens, rất phù hợp cho các cuộc đối thoại ngắn, ghi chú nhanh và sinh nội dung nhanh chóng."
+  },
+  "moonshot-v1-8k-vision-preview": {
+    "description": "Mô hình hình ảnh Kimi (bao gồm moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview, v.v.) có khả năng hiểu nội dung hình ảnh, bao gồm văn bản hình ảnh, màu sắc hình ảnh và hình dạng vật thể."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B là phiên bản nâng cấp của Nous Hermes 2, bao gồm bộ dữ liệu phát triển nội bộ mới nhất."
@@ -1312,6 +1336,9 @@
   },
   "step-2-16k": {
     "description": "Hỗ trợ tương tác ngữ cảnh quy mô lớn, phù hợp cho các tình huống đối thoại phức tạp."
+  },
+  "taichu2_mm": {
+    "description": "Kết hợp khả năng hiểu hình ảnh, chuyển giao kiến thức, suy luận logic, nổi bật trong lĩnh vực hỏi đáp hình ảnh và văn bản."
   },
   "taichu_llm": {
     "description": "Mô hình ngôn ngữ lớn Taichu có khả năng hiểu ngôn ngữ mạnh mẽ và các khả năng như sáng tạo văn bản, trả lời câu hỏi kiến thức, lập trình mã, tính toán toán học, suy luận logic, phân tích cảm xúc, tóm tắt văn bản. Đổi mới kết hợp giữa đào tạo trước với dữ liệu phong phú từ nhiều nguồn, thông qua việc liên tục cải tiến công nghệ thuật toán và hấp thụ kiến thức mới từ dữ liệu văn bản khổng lồ, giúp mô hình ngày càng hoàn thiện. Cung cấp thông tin và dịch vụ tiện lợi hơn cho người dùng cùng trải nghiệm thông minh hơn."

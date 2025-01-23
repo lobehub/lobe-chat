@@ -17,6 +17,9 @@
   "360gpt-turbo-responsibility-8k": {
     "description": "360GPT Turbo Responsibility 8K 強調語義安全和責任導向，專為對內容安全有高度要求的應用場景設計，確保用戶體驗的準確性與穩健性。"
   },
+  "360gpt2-o1": {
+    "description": "360gpt2-o1 使用樹搜索構建思維鏈，並引入了反思機制，使用強化學習訓練，模型具備自我反思與糾錯的能力。"
+  },
   "360gpt2-pro": {
     "description": "360GPT2 Pro 是 360 公司推出的高級自然語言處理模型，具備卓越的文本生成和理解能力，尤其在生成與創作領域表現出色，能夠處理複雜的語言轉換和角色演繹任務。"
   },
@@ -109,6 +112,9 @@
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct 是阿里雲發布的最新大語言模型系列之一。該 7B 模型在編碼和數學等領域具有顯著改進的能力。該模型還提供了多語言支持，覆蓋超過 29 種語言，包括中文、英文等。模型在指令跟隨、理解結構化數據以及生成結構化輸出（尤其是 JSON）方面都有顯著提升"
+  },
+  "MiniMax-Text-01": {
+    "description": "在 MiniMax-01系列模型中，我們做了大膽創新：首次大規模實現線性注意力機制，傳統 Transformer架構不再是唯一的選擇。這個模型的參數量高達4560億，其中單次激活459億。模型綜合性能比肩海外頂尖模型，同時能夠高效處理全球最長400萬token的上下文，是GPT-4o的32倍，Claude-3.5-Sonnet的20倍。"
   },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO 是一款高度靈活的多模型合併，旨在提供卓越的創造性體驗。"
@@ -218,6 +224,9 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 是 Qwen 模型的最新系列，能夠超越同等規模的最優開源模型甚至更大規模的模型，Qwen2 7B 在多個評測上取得顯著的優勢，尤其是在代碼及中文理解上。"
   },
+  "Qwen2-VL-72B": {
+    "description": "Qwen2-VL-72B是一款強大的視覺語言模型，支持圖像與文本的多模態處理，能夠精確識別圖像內容並生成相關描述或回答。"
+  },
   "Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5-14B-Instruct 是一款140億參數的大語言模型，性能表現優秀，優化中文和多語言場景，支持智能問答、內容生成等應用。"
   },
@@ -229,6 +238,9 @@
   },
   "Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct 是一款70億參數的大語言模型，支持函數調用與外部系統無縫互動，極大提升了靈活性和擴展性。優化中文和多語言場景，支持智能問答、內容生成等應用。"
+  },
+  "Qwen2.5-Coder-14B-Instruct": {
+    "description": "Qwen2.5-Coder-14B-Instruct 是一款基於大規模預訓練的程式指令模型，具備強大的程式理解和生成能力，能夠高效地處理各種程式任務，特別適合智能程式編寫、自動化腳本生成和程式問題解答。"
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct 是一款專為代碼生成、代碼理解和高效開發場景設計的大型語言模型，採用了業界領先的32B參數規模，能夠滿足多樣化的程式需求。"
@@ -458,9 +470,6 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet 在智能和速度方面為企業工作負載提供了理想的平衡。它以更低的價格提供最大效用，可靠且適合大規模部署。"
   },
-  "code-raccoon-v1": {
-    "description": "代碼小浣熊是基於商湯大語言模型的軟體智能研發助手，覆蓋軟體需求分析、架構設計、代碼編寫、軟體測試等環節，滿足用戶代碼編寫、程式學習等各類需求。代碼小浣熊支持 Python、Java、JavaScript、C++、Go、SQL 等90+主流程式語言和 VS Code、IntelliJ IDEA 等主流 IDE。在實際應用中，代碼小浣熊可幫助開發者提升程式效率超過50%。"
-  },
   "codegeex-4": {
     "description": "CodeGeeX-4是一個強大的AI編程助手，支持多種編程語言的智能問答與代碼補全，提升開發效率。"
   },
@@ -599,6 +608,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
   },
+  "gemini-2.0-flash-thinking-exp-01-21": {
+    "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
+  },
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
   },
@@ -670,6 +682,9 @@
   },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus具備對視頻內容及多圖片的理解能力，適合多模態任務。"
+  },
+  "glm-zero-preview": {
+    "description": "GLM-Zero-Preview具備強大的複雜推理能力，在邏輯推理、數學、程式設計等領域表現優異。"
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash 提供了優化後的多模態處理能力，適用於多種複雜任務場景。"
@@ -1100,11 +1115,20 @@
   "moonshot-v1-128k": {
     "description": "Moonshot V1 128K 是一款擁有超長上下文處理能力的模型，適用於生成超長文本，滿足複雜的生成任務需求，能夠處理多達 128,000 個 tokens 的內容，非常適合科研、學術和大型文檔生成等應用場景。"
   },
+  "moonshot-v1-128k-vision-preview": {
+    "description": "Kimi 視覺模型（包括 moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 等）能夠理解圖片內容，包括圖片文字、圖片顏色和物體形狀等內容。"
+  },
   "moonshot-v1-32k": {
     "description": "Moonshot V1 32K 提供中等長度的上下文處理能力，能夠處理 32,768 個 tokens，特別適合生成各種長文檔和複雜對話，應用於內容創作、報告生成和對話系統等領域。"
   },
+  "moonshot-v1-32k-vision-preview": {
+    "description": "Kimi 視覺模型（包括 moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 等）能夠理解圖片內容，包括圖片文字、圖片顏色和物體形狀等內容。"
+  },
   "moonshot-v1-8k": {
     "description": "Moonshot V1 8K 專為生成短文本任務設計，具有高效的處理性能，能夠處理 8,192 個 tokens，非常適合簡短對話、速記和快速內容生成。"
+  },
+  "moonshot-v1-8k-vision-preview": {
+    "description": "Kimi 視覺模型（包括 moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 等）能夠理解圖片內容，包括圖片文字、圖片顏色和物體形狀等內容。"
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"
@@ -1312,6 +1336,9 @@
   },
   "step-2-16k": {
     "description": "支持大規模上下文交互，適合複雜對話場景。"
+  },
+  "taichu2_mm": {
+    "description": "融合了圖像理解、知識遷移、邏輯歸因等能力，在圖文問答領域表現突出"
   },
   "taichu_llm": {
     "description": "紫東太初語言大模型具備超強語言理解能力以及文本創作、知識問答、代碼編程、數學計算、邏輯推理、情感分析、文本摘要等能力。創新性地將大數據預訓練與多源豐富知識相結合，通過持續打磨算法技術，並不斷吸收海量文本數據中詞彙、結構、語法、語義等方面的新知識，實現模型效果不斷進化。為用戶提供更加便捷的信息和服務以及更為智能化的體驗。"

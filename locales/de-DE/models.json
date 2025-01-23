@@ -17,6 +17,9 @@
   "360gpt-turbo-responsibility-8k": {
     "description": "360GPT Turbo Responsibility 8K betont semantische Sicherheit und verantwortungsbewusste Ausrichtung, speziell für Anwendungen mit hohen Anforderungen an die Inhaltssicherheit konzipiert, um die Genauigkeit und Robustheit der Benutzererfahrung zu gewährleisten."
   },
+  "360gpt2-o1": {
+    "description": "360gpt2-o1 verwendet Baumsuche zur Konstruktion von Denkketten und führt einen Reflexionsmechanismus ein, der durch verstärkendes Lernen trainiert wird. Das Modell verfügt über die Fähigkeit zur Selbstreflexion und Fehlerkorrektur."
+  },
   "360gpt2-pro": {
     "description": "360GPT2 Pro ist ein fortschrittliches Modell zur Verarbeitung natürlicher Sprache, das von der 360 Company entwickelt wurde und über außergewöhnliche Textgenerierungs- und Verständnisfähigkeiten verfügt, insbesondere im Bereich der Generierung und Kreativität, und in der Lage ist, komplexe Sprachumwandlungs- und Rollendarstellungsaufgaben zu bewältigen."
   },
@@ -109,6 +112,9 @@
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct ist eines der neuesten großen Sprachmodelle, die von Alibaba Cloud veröffentlicht wurden. Dieses 7B-Modell hat signifikante Verbesserungen in den Bereichen Codierung und Mathematik. Das Modell bietet auch mehrsprachige Unterstützung und deckt über 29 Sprachen ab, einschließlich Chinesisch und Englisch. Es zeigt signifikante Verbesserungen in der Befolgung von Anweisungen, im Verständnis strukturierter Daten und in der Generierung strukturierter Ausgaben (insbesondere JSON)."
+  },
+  "MiniMax-Text-01": {
+    "description": "In der MiniMax-01-Serie haben wir mutige Innovationen vorgenommen: Erstmals wurde die lineare Aufmerksamkeitsmechanismus in großem Maßstab implementiert, sodass die traditionelle Transformer-Architektur nicht mehr die einzige Wahl ist. Dieses Modell hat eine Parameteranzahl von bis zu 456 Milliarden, wobei eine Aktivierung 45,9 Milliarden beträgt. Die Gesamtleistung des Modells kann mit den besten Modellen im Ausland mithalten und kann gleichzeitig effizient den weltweit längsten Kontext von 4 Millionen Tokens verarbeiten, was 32-mal so viel wie GPT-4o und 20-mal so viel wie Claude-3.5-Sonnet ist."
   },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO ist eine hochflexible Multi-Modell-Kombination, die darauf abzielt, außergewöhnliche kreative Erlebnisse zu bieten."
@@ -218,6 +224,9 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 ist die neueste Reihe des Qwen-Modells, das in der Lage ist, die besten Open-Source-Modelle ähnlicher Größe oder sogar größerer Modelle zu übertreffen. Qwen2 7B hat in mehreren Bewertungen signifikante Vorteile erzielt, insbesondere im Bereich Code und Verständnis der chinesischen Sprache."
   },
+  "Qwen2-VL-72B": {
+    "description": "Qwen2-VL-72B ist ein leistungsstarkes visuelles Sprachmodell, das multimodale Verarbeitung von Bildern und Text unterstützt und in der Lage ist, Bildinhalte präzise zu erkennen und relevante Beschreibungen oder Antworten zu generieren."
+  },
   "Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5-14B-Instruct ist ein großes Sprachmodell mit 14 Milliarden Parametern, das hervorragende Leistungen bietet, für chinesische und mehrsprachige Szenarien optimiert ist und Anwendungen wie intelligente Fragen und Antworten sowie Inhaltserstellung unterstützt."
   },
@@ -229,6 +238,9 @@
   },
   "Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct ist ein großes Sprachmodell mit 7 Milliarden Parametern, das Funktionsaufrufe unterstützt und nahtlos mit externen Systemen interagiert, was die Flexibilität und Skalierbarkeit erheblich erhöht. Es ist für chinesische und mehrsprachige Szenarien optimiert und unterstützt Anwendungen wie intelligente Fragen und Antworten sowie Inhaltserstellung."
+  },
+  "Qwen2.5-Coder-14B-Instruct": {
+    "description": "Qwen2.5-Coder-14B-Instruct ist ein auf großflächigem Pre-Training basierendes Programmiermodell, das über starke Fähigkeiten zur Codeverstehung und -generierung verfügt und effizient verschiedene Programmieraufgaben bearbeiten kann. Es eignet sich besonders gut für intelligente Codeerstellung, automatisierte Skripterstellung und die Beantwortung von Programmierfragen."
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct ist ein großes Sprachmodell, das speziell für die Codegenerierung, das Verständnis von Code und effiziente Entwicklungsszenarien entwickelt wurde. Es verwendet eine branchenführende Parametergröße von 32B und kann vielfältige Programmieranforderungen erfüllen."
@@ -458,9 +470,6 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet bietet eine ideale Balance zwischen Intelligenz und Geschwindigkeit für Unternehmensarbeitslasten. Es bietet maximalen Nutzen zu einem niedrigeren Preis, ist zuverlässig und für großflächige Bereitstellungen geeignet."
   },
-  "code-raccoon-v1": {
-    "description": "Code-Raccoon ist ein intelligenter Softwareentwicklungsassistent, der auf dem großen Sprachmodell von SenseTime basiert und Softwareanforderungsanalyse, Architekturdesign, Codeerstellung, Softwaretests und andere Bereiche abdeckt, um die Bedürfnisse der Benutzer beim Programmieren und Lernen zu erfüllen. Code-Raccoon unterstützt über 90 gängige Programmiersprachen wie Python, Java, JavaScript, C++, Go, SQL sowie gängige IDEs wie VS Code und IntelliJ IDEA. In der praktischen Anwendung kann Code-Raccoon Entwicklern helfen, die Programmierproduktivität um über 50 % zu steigern."
-  },
   "codegeex-4": {
     "description": "CodeGeeX-4 ist ein leistungsstarker AI-Programmierassistent, der intelligente Fragen und Codevervollständigung in verschiedenen Programmiersprachen unterstützt und die Entwicklungseffizienz steigert."
   },
@@ -599,6 +608,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit Next-Gen-Funktionen, herausragender Geschwindigkeit, nativer Werkzeuganwendung und multimodaler Generierung."
   },
+  "gemini-2.0-flash-thinking-exp-01-21": {
+    "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit der nächsten Generation von Funktionen, außergewöhnlicher Geschwindigkeit, nativer Tool-Nutzung und multimodaler Generierung."
+  },
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit der nächsten Generation von Funktionen, außergewöhnlicher Geschwindigkeit, nativen Toolaufrufen und multimodaler Generierung."
   },
@@ -670,6 +682,9 @@
   },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus hat die Fähigkeit, Videoinhalte und mehrere Bilder zu verstehen und eignet sich für multimodale Aufgaben."
+  },
+  "glm-zero-preview": {
+    "description": "GLM-Zero-Preview verfügt über starke Fähigkeiten zur komplexen Schlussfolgerung und zeigt hervorragende Leistungen in den Bereichen logisches Denken, Mathematik und Programmierung."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash bietet optimierte multimodale Verarbeitungsfähigkeiten, die für verschiedene komplexe Aufgabenszenarien geeignet sind."
@@ -1100,11 +1115,20 @@
   "moonshot-v1-128k": {
     "description": "Moonshot V1 128K ist ein Modell mit überragenden Fähigkeiten zur Verarbeitung von langen Kontexten, das für die Generierung von sehr langen Texten geeignet ist und die Anforderungen komplexer Generierungsaufgaben erfüllt. Es kann Inhalte mit bis zu 128.000 Tokens verarbeiten und eignet sich hervorragend für Anwendungen in der Forschung, Wissenschaft und der Erstellung großer Dokumente."
   },
+  "moonshot-v1-128k-vision-preview": {
+    "description": "Das Kimi-Visionsmodell (einschließlich moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview usw.) kann Bildinhalte verstehen, einschließlich Bildtext, Bildfarbe und Objektformen."
+  },
   "moonshot-v1-32k": {
     "description": "Moonshot V1 32K bietet die Fähigkeit zur Verarbeitung von mittellangen Kontexten und kann 32.768 Tokens verarbeiten, was es besonders geeignet für die Generierung verschiedener langer Dokumente und komplexer Dialoge macht, die in den Bereichen Inhaltserstellung, Berichtsgenerierung und Dialogsysteme eingesetzt werden."
   },
+  "moonshot-v1-32k-vision-preview": {
+    "description": "Das Kimi-Visionsmodell (einschließlich moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview usw.) kann Bildinhalte verstehen, einschließlich Bildtext, Bildfarbe und Objektformen."
+  },
   "moonshot-v1-8k": {
     "description": "Moonshot V1 8K ist für die Generierung von Kurztextaufgaben konzipiert und bietet eine effiziente Verarbeitungsleistung, die 8.192 Tokens verarbeiten kann. Es eignet sich hervorragend für kurze Dialoge, Notizen und schnelle Inhaltserstellung."
+  },
+  "moonshot-v1-8k-vision-preview": {
+    "description": "Das Kimi-Visionsmodell (einschließlich moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview usw.) kann Bildinhalte verstehen, einschließlich Bildtext, Bildfarbe und Objektformen."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B ist die aktualisierte Version von Nous Hermes 2 und enthält die neuesten intern entwickelten Datensätze."
@@ -1312,6 +1336,9 @@
   },
   "step-2-16k": {
     "description": "Unterstützt groß angelegte Kontextinteraktionen und eignet sich für komplexe Dialogszenarien."
+  },
+  "taichu2_mm": {
+    "description": "Integriert Fähigkeiten zur Bildverstehung, Wissensübertragung und logischen Attribution und zeigt herausragende Leistungen im Bereich der Bild-Text-Fragen."
   },
   "taichu_llm": {
     "description": "Das Zīdōng Taichu Sprachmodell verfügt über außergewöhnliche Sprachverständnisfähigkeiten sowie Fähigkeiten in Textgenerierung, Wissensabfrage, Programmierung, mathematischen Berechnungen, logischem Denken, Sentimentanalyse und Textzusammenfassung. Es kombiniert innovativ große Datenvortrainings mit reichhaltigem Wissen aus mehreren Quellen, verfeinert kontinuierlich die Algorithmen und absorbiert ständig neues Wissen aus umfangreichen Textdaten in Bezug auf Vokabular, Struktur, Grammatik und Semantik, um die Leistung des Modells kontinuierlich zu verbessern. Es bietet den Nutzern bequemere Informationen und Dienstleistungen sowie ein intelligenteres Erlebnis."
