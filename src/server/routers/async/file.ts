@@ -81,7 +81,7 @@ export const fileRouter = router({
 
           const startAt = Date.now();
 
-          const CHUNK_SIZE = 15;
+          const CHUNK_SIZE = 18;
           const CONCURRENCY = 3;
 
           const chunks = await ctx.chunkModel.getChunksTextByFileId(input.fileId);
