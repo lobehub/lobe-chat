@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.48.0](https://github.com/lobehub/lobe-chat/compare/v1.47.23...v1.48.0)
+
+<sup>Released on **2025-01-24**</sup>
+
+#### ✨ Features
+
+- **misc**: Support display thinking for DeepSeek R1.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support display thinking for DeepSeek R1, closes [#5558](https://github.com/lobehub/lobe-chat/issues/5558) ([f98bb5a](https://github.com/lobehub/lobe-chat/commit/f98bb5a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.47.23](https://github.com/lobehub/lobe-chat/compare/v1.47.22...v1.47.23)
 
 <sup>Released on **2025-01-24**</sup>
