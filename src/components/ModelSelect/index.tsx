@@ -86,7 +86,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
     const { styles, cx } = useStyles();
 
     return (
-      <Flexbox direction={directionReverse ? 'horizontal-reverse' : 'horizontal'} gap={4}>
+      <Flexbox direction={directionReverse ? 'horizontal-reverse' : 'horizontal'} gap={5}>
         {model.hot && (
           <Tooltip
             placement={placement}
