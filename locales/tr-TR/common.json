@@ -205,7 +205,8 @@
       "sessions": "Asistanlar",
       "skips": "Geç",
       "topics": "Konular",
-      "type": "Tip"
+      "type": "Tip",
+      "update": "Kayıt güncellendi"
     },
     "title": "Veri İçe Aktar",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "Kalan Zaman",
       "speed": "Yükleme Hızı"
     }
+  },
+  "importPreview": {
+    "confirmImport": "İçe Aktarmayı Onayla",
+    "tables": {
+      "count": "Kayıt Sayısı",
+      "name": "Tablo Adı"
+    },
+    "title": "Veri İçe Aktarma Önizlemesi",
+    "totalRecords": "Toplam {{count}} kayıt içe aktarılacak",
+    "totalTables": "{{count}} tablo"
   },
   "information": "Topluluk ve Bilgi",
   "installPWA": "Tarayıcı Uygulamasını Yükle",

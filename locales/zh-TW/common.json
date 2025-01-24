@@ -205,7 +205,8 @@
       "sessions": "助手",
       "skips": "重複跳過",
       "topics": "話題",
-      "type": "資料類型"
+      "type": "資料類型",
+      "update": "記錄更新"
     },
     "title": "匯入資料",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "剩餘時間",
       "speed": "上傳速度"
     }
+  },
+  "importPreview": {
+    "confirmImport": "確認導入",
+    "tables": {
+      "count": "記錄數",
+      "name": "表名"
+    },
+    "title": "導入數據預覽",
+    "totalRecords": "總計將導入 {{count}} 條記錄",
+    "totalTables": "{{count}} 個表"
   },
   "information": "社群與資訊",
   "installPWA": "安裝瀏覽器應用 (PWA)",

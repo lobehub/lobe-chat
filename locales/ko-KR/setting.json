@@ -346,6 +346,33 @@
     },
     "title": "테마 설정"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "내보내기",
+        "exportType": {
+          "agent": "도우미 설정 내보내기",
+          "agentWithMessage": "도우미와 메시지 내보내기",
+          "all": "전체 설정 및 모든 도우미 데이터 내보내기",
+          "allAgent": "모든 도우미 설정 내보내기",
+          "allAgentWithMessage": "모든 도우미와 메시지 내보내기",
+          "globalSetting": "전체 설정 내보내기"
+        },
+        "title": "데이터 내보내기"
+      },
+      "import": {
+        "button": "가져오기",
+        "title": "데이터 가져오기"
+      },
+      "title": "고급 작업"
+    },
+    "desc": "현재 브라우저의 저장 용량",
+    "embeddings": {
+      "used": "벡터 저장소"
+    },
+    "title": "데이터 저장소",
+    "used": "저장 용량"
+  },
   "submitAgentModal": {
     "button": "에이전트 제출",
     "identifier": "에이전트 식별자",
@@ -439,6 +466,7 @@
     "hotkey": "단축키",
     "llm": "언어 모델",
     "provider": "AI 서비스 제공자",
+    "storage": "데이터 저장소",
     "sync": "클라우드 동기화",
     "system-agent": "시스템 도우미",
     "tts": "음성 서비스"

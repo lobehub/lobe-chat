@@ -31,7 +31,7 @@ export default defineConfig({
       '**/dist/**',
       '**/build/**',
       'src/database/server/**/**',
-      'src/database/repositories/dataImporter/**/**',
+      'src/database/repositories/dataImporter/deprecated/**/**',
     ],
     globals: true,
     server: {

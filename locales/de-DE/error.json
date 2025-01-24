@@ -16,6 +16,16 @@
     "detail": "Fehlerdetails",
     "title": "Anfrage fehlgeschlagen"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Fehlerursache: {{reason}}",
+      "title": "Import fehlgeschlagen"
+    },
+    "incompatible": {
+      "description": "Diese Datei wurde aus einer höheren Version exportiert. Bitte versuchen Sie, auf die neueste Version zu aktualisieren und dann erneut zu importieren.",
+      "title": "Die aktuelle Anwendung unterstützt den Import dieser Datei nicht"
+    }
+  },
   "loginRequired": {
     "desc": "Sie werden in Kürze zur Anmeldeseite weitergeleitet",
     "title": "Bitte melden Sie sich an, um diese Funktion zu nutzen"

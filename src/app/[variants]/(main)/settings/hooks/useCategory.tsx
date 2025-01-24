@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { Tag } from 'antd';
-import { Bot, Brain, Cloudy, Info, KeyboardIcon, Mic2, Settings2, Sparkles } from 'lucide-react';
+import { Bot, Brain, Cloudy, Info,Database, KeyboardIcon, Mic2, Settings2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -98,6 +98,15 @@ export const useCategory = () => {
           label: (
             <Link href={'/settings/hotkey'} onClick={(e) => e.preventDefault()}>
               {t('tab.hotkey')}
+            </Link>
+          ),
+        },
+        {
+          icon: <Icon icon={Database} />,
+          key: SettingsTabs.Storage,
+          label: (
+            <Link href={'/settings/storage'} onClick={(e) => e.preventDefault()}>
+              {t('tab.storage')}
             </Link>
           ),
         },

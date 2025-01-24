@@ -346,6 +346,33 @@
     },
     "title": "テーマ設定"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "エクスポート",
+        "exportType": {
+          "agent": "エージェント設定をエクスポート",
+          "agentWithMessage": "エージェントとメッセージをエクスポート",
+          "all": "全体設定とすべてのエージェントデータをエクスポート",
+          "allAgent": "すべてのエージェント設定をエクスポート",
+          "allAgentWithMessage": "すべてのエージェントとメッセージをエクスポート",
+          "globalSetting": "全体設定をエクスポート"
+        },
+        "title": "データをエクスポート"
+      },
+      "import": {
+        "button": "インポート",
+        "title": "データをインポート"
+      },
+      "title": "高度な操作"
+    },
+    "desc": "現在のブラウザのストレージ使用量",
+    "embeddings": {
+      "used": "ベクトルストレージ"
+    },
+    "title": "データストレージ",
+    "used": "ストレージ使用量"
+  },
   "submitAgentModal": {
     "button": "エージェントを提出",
     "identifier": "エージェント識別子",
@@ -439,6 +466,7 @@
     "hotkey": "ショートカットキー",
     "llm": "言語モデル",
     "provider": "AIサービスプロバイダー",
+    "storage": "データストレージ",
     "sync": "クラウド同期",
     "system-agent": "システムアシスタント",
     "tts": "音声サービス"

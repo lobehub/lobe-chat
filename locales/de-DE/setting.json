@@ -346,6 +346,33 @@
     },
     "title": "Thema einstellen"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Exportieren",
+        "exportType": {
+          "agent": "Exportiere Assistenteneinstellungen",
+          "agentWithMessage": "Exportiere Assistenten und Nachrichten",
+          "all": "Exportiere globale Einstellungen und alle Assistentendaten",
+          "allAgent": "Exportiere alle Assistenteneinstellungen",
+          "allAgentWithMessage": "Exportiere alle Assistenten und Nachrichten",
+          "globalSetting": "Exportiere globale Einstellungen"
+        },
+        "title": "Daten exportieren"
+      },
+      "import": {
+        "button": "Importieren",
+        "title": "Daten importieren"
+      },
+      "title": "Erweiterte Aktionen"
+    },
+    "desc": "Speicherverbrauch im aktuellen Browser",
+    "embeddings": {
+      "used": "Vektorspeicher"
+    },
+    "title": "Datenspeicher",
+    "used": "Speicherverbrauch"
+  },
   "submitAgentModal": {
     "button": "Assistent einreichen",
     "identifier": "Assistenten-Kennung",
@@ -439,6 +466,7 @@
     "hotkey": "Tastenkombinationen",
     "llm": "Sprachmodell",
     "provider": "KI-Dienstanbieter",
+    "storage": "Datenspeicher",
     "sync": "Cloud-Synchronisierung",
     "system-agent": "Systemassistent",
     "tts": "Sprachdienste"

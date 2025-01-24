@@ -146,3 +146,18 @@ export interface OnImportCallbacks {
    */
   onSuccess?: (results: ImportResults, duration: number) => void;
 }
+
+// ------
+
+export type ImportResultData = ImportSuccessResult | ImportErrorResult;
+
+export interface ImportSuccessResult {
+  results: Record<string, any>;
+  success: true;
+}
+
+export interface ImportErrorResult {
+  error: { details?: string; message: string };
+  results: Record<string, any>;
+  success: false;
+}

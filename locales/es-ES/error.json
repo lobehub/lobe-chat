@@ -16,6 +16,16 @@
     "detail": "Detalles del error",
     "title": "Solicitud fallida"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Razón del error: {{reason}}",
+      "title": "Importación fallida"
+    },
+    "incompatible": {
+      "description": "Este archivo fue exportado desde una versión más alta, por favor intente actualizar a la última versión y luego vuelva a importar",
+      "title": "La aplicación actual no admite la importación de este archivo"
+    }
+  },
   "loginRequired": {
     "desc": "Serás redirigido automáticamente a la página de inicio de sesión",
     "title": "Por favor, inicie sesión para utilizar esta función"

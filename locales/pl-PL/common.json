@@ -205,7 +205,8 @@
       "sessions": "Sesje",
       "skips": "Pominięcia duplikatów",
       "topics": "Tematy",
-      "type": "Typ danych"
+      "type": "Typ danych",
+      "update": "Aktualizacja rekordu"
     },
     "title": "Import danych",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "Pozostały czas",
       "speed": "Prędkość wysyłania"
     }
+  },
+  "importPreview": {
+    "confirmImport": "Potwierdź import",
+    "tables": {
+      "count": "Liczba rekordów",
+      "name": "Nazwa tabeli"
+    },
+    "title": "Podgląd importu danych",
+    "totalRecords": "Łącznie zaimportuje {{count}} rekordów",
+    "totalTables": "{{count}} tabel"
   },
   "information": "Społeczność i informacje",
   "installPWA": "Zainstaluj aplikację przeglądarki",

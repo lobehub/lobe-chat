@@ -205,7 +205,8 @@
       "sessions": "Trợ lý",
       "skips": "Bỏ qua trùng lặp",
       "topics": "Chủ đề",
-      "type": "Loại dữ liệu"
+      "type": "Loại dữ liệu",
+      "update": "Cập nhật hồ sơ"
     },
     "title": "Nhập dữ liệu",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "Thời gian còn lại",
       "speed": "Tốc độ tải lên"
     }
+  },
+  "importPreview": {
+    "confirmImport": "Xác nhận nhập khẩu",
+    "tables": {
+      "count": "Số hồ sơ",
+      "name": "Tên bảng"
+    },
+    "title": "Xem trước dữ liệu nhập khẩu",
+    "totalRecords": "Tổng cộng sẽ nhập {{count}} hồ sơ",
+    "totalTables": "{{count}} bảng"
   },
   "information": "Cộng đồng và Thông tin",
   "installPWA": "Cài đặt ứng dụng trình duyệt",

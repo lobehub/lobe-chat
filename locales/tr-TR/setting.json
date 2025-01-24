@@ -346,6 +346,33 @@
     },
     "title": "Tema Ayarları"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Dışa Aktar",
+        "exportType": {
+          "agent": "Yardımcı Ayarlarını Dışa Aktar",
+          "agentWithMessage": "Yardımcı ve Mesajları Dışa Aktar",
+          "all": "Küresel Ayarları ve Tüm Yardımcı Verilerini Dışa Aktar",
+          "allAgent": "Tüm Yardımcı Ayarlarını Dışa Aktar",
+          "allAgentWithMessage": "Tüm Yardımcıları ve Mesajları Dışa Aktar",
+          "globalSetting": "Küresel Ayarları Dışa Aktar"
+        },
+        "title": "Veri Dışa Aktar"
+      },
+      "import": {
+        "button": "İçe Aktar",
+        "title": "Veri İçe Aktar"
+      },
+      "title": "Gelişmiş İşlemler"
+    },
+    "desc": "Mevcut tarayıcıdaki depolama kullanımı",
+    "embeddings": {
+      "used": "Vektör Depolama"
+    },
+    "title": "Veri Depolama",
+    "used": "Depolama Kullanımı"
+  },
   "submitAgentModal": {
     "button": "Asistan Gönder",
     "identifier": "Asistan Kimliği",
@@ -439,6 +466,7 @@
     "hotkey": "Kısayollar",
     "llm": "Modeller",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
+    "storage": "Veri Depolama",
     "sync": "Bulut Senkronizasyonu",
     "system-agent": "Sistem Asistanı",
     "tts": "Metin Seslendirme"
