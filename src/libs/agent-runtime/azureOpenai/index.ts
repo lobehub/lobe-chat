@@ -7,7 +7,12 @@ import {
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
+import {
+  ChatCompetitionOptions,
+  ChatStreamPayload,
+  ModelProvider,
+  TextToImagePayload,
+} from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
@@ -77,6 +82,23 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         errorType,
         provider: ModelProvider.Azure,
       });
+    }
+  }
+
+  async textToImage(payload: TextToImagePayload) {
+    try {
+      const { n, size, quality, style } = payload;
+      // console.log('--------yjj-----------payload:', payload);
+      const options = {
+        n,
+        quality,
+        size,
+        style,
+      };
+      const res = await this.client.getImages(payload.model, payload.prompt, options);
+      return res.data.map((o) => o.url) as string[];
+    } catch (error) {
+      throw console.log('--------yjj-----------error:', error);
     }
   }
 

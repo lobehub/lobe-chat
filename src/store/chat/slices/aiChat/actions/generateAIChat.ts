@@ -141,6 +141,7 @@ export const generateAIChat: StateCreator<
     const fileIdList = files?.map((f) => f.id);
 
     const hasFile = !!fileIdList && fileIdList.length > 0;
+    // console.log("----yjj-----", hasFile, "--", fileIdList?.length);
 
     // if message is empty or no files, then stop
     if (!message && !hasFile) return;

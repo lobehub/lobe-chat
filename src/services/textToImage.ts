@@ -15,8 +15,8 @@ class ImageGenerationService {
   ) => {
     const payload: OpenAIImagePayload = { ...params, model: 'dall-e-3', n: 1 };
 
-    const provider = ModelProvider.OpenAI;
-
+    const provider = ModelProvider.Azure;
+    console.trace();
     const headers = await createHeaderWithAuth({
       headers: { 'Content-Type': 'application/json' },
       provider,

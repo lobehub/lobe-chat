@@ -60,7 +60,7 @@ export const getServerGlobalConfig = () => {
         modelListKey: 'GITEE_AI_MODEL_LIST',
       },
       ollama: {
-        fetchOnClient: !process.env.OLLAMA_PROXY_URL,
+        fetchOnClient: true,
       },
     }),
     oAuthSSOProviders: authEnv.NEXT_AUTH_SSO_PROVIDERS.trim().split(/[,，]/),

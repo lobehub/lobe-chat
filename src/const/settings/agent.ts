@@ -1,6 +1,6 @@
 import { DEFAULT_AGENT_META } from '@/const/meta';
-import { DEFAULT_MODEL } from '@/const/settings/llm';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from '@/const/settings/llm';
+// import { ModelProvider } from '@/libs/agent-runtime';
 import { LobeAgentChatConfig, LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
 import { UserDefaultAgent } from '@/types/user/settings';
 
@@ -32,7 +32,7 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
     top_p: 1,
   },
   plugins: [],
-  provider: ModelProvider.OpenAI,
+  provider: DEFAULT_PROVIDER,
   systemRole: '',
   tts: DEFAUTT_AGENT_TTS_CONFIG,
 };

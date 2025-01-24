@@ -216,8 +216,10 @@ class ChatService {
   getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
     const { signal } = options ?? {};
 
-    const { provider = ModelProvider.OpenAI, ...res } = params;
-
+    if (params.provider === ModelProvider.OpenAI) {
+      params.provider = ModelProvider.Azure;
+    }
+    let { provider = ModelProvider.Azure, ...res } = params;
     let model = res.model || DEFAULT_AGENT_CONFIG.model;
 
     // if the provider is Azure, get the deployment name as the request model

@@ -26,15 +26,16 @@ export class LobeOllamaAI implements LobeRuntimeAI {
   baseURL?: string;
 
   constructor({ baseURL }: ClientOptions = {}) {
+    const ollamaBaseURL = process.env.NEXT_PUBLIC_OLLAMA_PROXY_URL;
     try {
-      if (baseURL) new URL(baseURL);
+      if (ollamaBaseURL) new URL(ollamaBaseURL);
     } catch (e) {
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs, e);
     }
 
-    this.client = new Ollama(!baseURL ? undefined : { host: baseURL });
+    this.client = new Ollama(!ollamaBaseURL ? undefined : { host: ollamaBaseURL });
 
-    if (baseURL) this.baseURL = baseURL;
+    if (baseURL) this.baseURL = ollamaBaseURL;
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {

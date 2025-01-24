@@ -91,7 +91,7 @@ export const fileRouter = router({
               requestArray,
               async (chunks, index) => {
                 const agentRuntime = await initAgentRuntimeWithUserPayload(
-                  provider,
+                  ModelProvider.Azure,
                   ctx.jwtPayload,
                 );
 
