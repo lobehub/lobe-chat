@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "features": ["Support display thinking for DeepSeek R1."]
+    },
+    "date": "2025-01-24",
+    "version": "1.48.0"
+  },
+  {
+    "children": {
+      "improvements": ["Fix model fetch match tag error & add Hunyuan model fetch support."]
+    },
+    "date": "2025-01-24",
+    "version": "1.47.23"
+  },
+  {
+    "children": {
+      "fixes": ["Fix form input in provider."]
+    },
+    "date": "2025-01-24",
+    "version": "1.47.22"
+  },
+  {
+    "children": {
       "improvements": ["Add HuggingFace Model: DeepSeek R1."]
     },
     "date": "2025-01-23",

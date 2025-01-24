@@ -2,7 +2,7 @@ import { IconAvatarProps, ModelIcon, ProviderIcon } from '@lobehub/icons';
 import { Avatar, Icon, Tooltip } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { Infinity, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
+import { Infinity, AtomIcon, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
 import numeral from 'numeral';
 import { rgba } from 'polished';
 import { FC, memo } from 'react';
@@ -44,6 +44,10 @@ const useStyles = createStyles(({ css, token }) => ({
   tagGreen: css`
     color: ${token.green};
     background: ${token.green1};
+  `,
+  tagPurple: css`
+    color: ${token.purple};
+    background: ${token.purple1};
   `,
   token: css`
     width: 36px;
@@ -104,6 +108,17 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
           >
             <div className={cx(styles.tag, styles.tagBlue)} style={{ cursor: 'pointer' }} title="">
               <Icon icon={ToyBrick} />
+            </div>
+          </Tooltip>
+        )}
+        {model.reasoning && (
+          <Tooltip
+            placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
+            title={t('ModelSelect.featureTag.reasoning')}
+          >
+            <div className={cx(styles.tag, styles.tagPurple)} style={{ cursor: 'pointer' }}>
+              <Icon icon={AtomIcon} />
             </div>
           </Tooltip>
         )}

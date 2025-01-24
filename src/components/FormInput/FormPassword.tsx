@@ -1,6 +1,6 @@
 import { Input } from 'antd';
 import { InputRef, InputProps as Props } from 'antd/es/input/Input';
-import { memo, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 interface FormPasswordProps extends Omit<Props, 'onChange'> {
   onChange?: (value: string) => void;
@@ -11,6 +11,10 @@ const FormPassword = memo<FormPasswordProps>(({ onChange, value: defaultValue, .
   const isChineseInput = useRef(false);
 
   const [value, setValue] = useState(defaultValue as string);
+
+  useEffect(() => {
+    setValue(defaultValue as string);
+  }, [defaultValue]);
 
   return (
     <Input.Password

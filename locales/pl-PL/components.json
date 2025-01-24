@@ -76,6 +76,7 @@
       "custom": "Niestandardowy model, domyślnie obsługujący zarówno wywołania funkcji, jak i rozpoznawanie wizualne. Proszę zweryfikować możliwość użycia tych funkcji w praktyce.",
       "file": "Ten model obsługuje wczytywanie plików i rozpoznawanie",
       "functionCall": "Ten model obsługuje wywołania funkcji (Function Call).",
+      "reasoning": "Ten model wspiera głębokie myślenie",
       "tokens": "Ten model obsługuje maksymalnie {{tokens}} tokenów w pojedynczej sesji.",
       "vision": "Ten model obsługuje rozpoznawanie wizualne."
     },
