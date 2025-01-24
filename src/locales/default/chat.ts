@@ -85,7 +85,7 @@ export default {
     },
   },
   reasoning: {
-    thinking: '已思考 {{duration}} 秒',
+    thinking: '深度思考中',
     thought: '已深度思考（用时 {{duration}} 秒）',
   },
   regenerate: '重新生成',

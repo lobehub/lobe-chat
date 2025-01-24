@@ -83,7 +83,7 @@
     }
   },
   "reasoning": {
-    "thinking": "به مدت {{duration}} ثانیه فکر شده است",
+    "thinking": "در حال تفکر عمیق",
     "thought": "به طور عمیق فکر شده است (زمان صرف شده: {{duration}} ثانیه)"
   },
   "regenerate": "بازتولید",

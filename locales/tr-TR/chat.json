@@ -83,7 +83,7 @@
     }
   },
   "reasoning": {
-    "thinking": "{{duration}} saniye düşündü",
+    "thinking": "Derin düşünme aşamasında",
     "thought": "Derinlemesine düşündü (geçen süre {{duration}} saniye)"
   },
   "regenerate": "Tekrarla",

@@ -83,7 +83,7 @@
     }
   },
   "reasoning": {
-    "thinking": "{{duration}} 秒間考えました",
+    "thinking": "深く考えています",
     "thought": "深く考えました（所要時間 {{duration}} 秒）"
   },
   "regenerate": "再生成",

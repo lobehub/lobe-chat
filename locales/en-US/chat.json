@@ -83,7 +83,7 @@
     }
   },
   "reasoning": {
-    "thinking": "Thought for {{duration}} seconds",
+    "thinking": "Deep in thought",
     "thought": "Deeply thought (took {{duration}} seconds)"
   },
   "regenerate": "Regenerate",

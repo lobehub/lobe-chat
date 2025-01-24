@@ -83,7 +83,7 @@
     }
   },
   "reasoning": {
-    "thinking": "Pensé pendant {{duration}} secondes",
+    "thinking": "En pleine réflexion profonde",
     "thought": "J'ai réfléchi en profondeur (durée : {{duration}} secondes)"
   },
   "regenerate": "Regénérer",

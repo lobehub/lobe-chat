@@ -83,7 +83,7 @@
     }
   },
   "reasoning": {
-    "thinking": "Đã suy nghĩ {{duration}} giây",
+    "thinking": "Đang suy nghĩ sâu sắc",
     "thought": "Đã suy nghĩ sâu sắc (thời gian: {{duration}} giây)"
   },
   "regenerate": "Tạo lại",

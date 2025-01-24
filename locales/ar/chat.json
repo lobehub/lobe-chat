@@ -83,7 +83,7 @@
     }
   },
   "reasoning": {
-    "thinking": "تم التفكير لمدة {{duration}} ثانية",
+    "thinking": "في عمق التفكير",
     "thought": "تم التفكير بعمق (استغرق {{duration}} ثانية)"
   },
   "regenerate": "إعادة الإنشاء",

@@ -83,7 +83,7 @@
     }
   },
   "reasoning": {
-    "thinking": "{{duration}} 초 동안 생각했습니다",
+    "thinking": "심층 사고 중",
     "thought": "심층적으로 생각했습니다 (소요 시간: {{duration}} 초)"
   },
   "regenerate": "재생성",

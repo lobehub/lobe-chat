@@ -83,7 +83,7 @@
     }
   },
   "reasoning": {
-    "thinking": "Myślałem przez {{duration}} sekund",
+    "thinking": "Głęboko myślę",
     "thought": "Głęboko myślałem (czas: {{duration}} sekund)"
   },
   "regenerate": "Wygeneruj ponownie",

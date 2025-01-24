@@ -1,13 +1,13 @@
 import { Icon, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AtomIcon, ChevronDown, ChevronRight } from 'lucide-react';
+import { rgba } from 'polished';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { aiChatSelectors } from '@/store/chat/selectors';
-import { dotLoading } from '@/styles/loading';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
@@ -15,7 +15,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
     width: fit-content;
     padding-block: 4px;
-    padding-inline: 8px 12px;
+    padding-inline: 8px;
     border-radius: 6px;
 
     color: ${token.colorTextTertiary};
@@ -26,6 +26,31 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
   expand: css`
     background: ${isDarkMode ? token.colorFillQuaternary : token.colorFillTertiary} !important;
+  `,
+  shinyText: css`
+    color: ${rgba(token.colorText, 0.45)};
+
+    background: linear-gradient(
+      120deg,
+      ${rgba(token.colorTextBase, 0)} 40%,
+      ${token.colorTextSecondary} 50%,
+      ${rgba(token.colorTextBase, 0)} 60%
+    );
+    background-clip: text;
+    background-clip: text;
+    background-size: 200% 100%;
+
+    animation: shine 1.5s linear infinite;
+
+    @keyframes shine {
+      0% {
+        background-position: 100%;
+      }
+
+      100% {
+        background-position: -100%;
+      }
+    }
   `,
   title: css`
     overflow: hidden;
@@ -49,7 +74,6 @@ const Thinking = memo<ThinkingProps>(({ content = '', duration, id }) => {
   const { styles, cx } = useStyles();
 
   const [showDetail, setShowDetail] = useState(false);
-  const [reasoningDuration, setReasoningDuration] = useState(0);
 
   const isReasoning = useChatStore(aiChatSelectors.isMessageInReasoning(id));
 
@@ -63,25 +87,6 @@ const Thinking = memo<ThinkingProps>(({ content = '', duration, id }) => {
     }
   }, [isReasoning, content]);
 
-  useEffect(() => {
-    // eslint-disable-next-line no-undef
-    let timer: NodeJS.Timeout | undefined;
-
-    if (isReasoning) {
-      const startTime = Date.now();
-
-      timer = setInterval(() => {
-        setReasoningDuration(Date.now() - startTime);
-      }, 100);
-    } else {
-      clearInterval(timer);
-    }
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [isReasoning]);
-
   return (
     <Flexbox
       className={cx(styles.container, showDetail && styles.expand)}
@@ -91,18 +96,17 @@ const Thinking = memo<ThinkingProps>(({ content = '', duration, id }) => {
       }}
     >
       <Flexbox distribution={'space-between'} flex={1} horizontal>
-        {!duration ? (
+        {isReasoning ? (
           <Flexbox gap={8} horizontal>
             <Icon icon={AtomIcon} />
-            <Flexbox horizontal>
-              {t('reasoning.thinking', { duration: (reasoningDuration / 1000).toFixed(1) })}
-              <div className={cx(dotLoading)} style={{ width: 16 }} />
+            <Flexbox className={styles.shinyText} horizontal>
+              {t('reasoning.thinking')}
             </Flexbox>
           </Flexbox>
         ) : (
           <Flexbox gap={8} horizontal>
             <Icon icon={AtomIcon} />
-            {t('reasoning.thought', { duration: (duration / 1000).toFixed(1) })}
+            {t('reasoning.thought', { duration: ((duration || 0) / 1000).toFixed(1) })}
           </Flexbox>
         )}
         <Icon icon={showDetail ? ChevronDown : ChevronRight} />
