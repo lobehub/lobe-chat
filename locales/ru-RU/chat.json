@@ -82,6 +82,10 @@
       }
     }
   },
+  "reasoning": {
+    "thinking": "Глубокое размышление",
+    "thought": "Глубоко размышлял (время: {{duration}} секунд)"
+  },
   "regenerate": "Сгенерировать заново",
   "roleAndArchive": "Роль и архив",
   "searchAgentPlaceholder": "Поиск помощника...",

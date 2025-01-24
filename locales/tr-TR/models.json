@@ -1328,6 +1328,9 @@
   "step-1.5v-mini": {
     "description": "Bu model, güçlü bir video anlama yeteneğine sahiptir."
   },
+  "step-1o-vision-32k": {
+    "description": "Bu model, güçlü bir görüntü anlama yeteneğine sahiptir. Step-1v serisi modellere kıyasla daha güçlü bir görsel performansa sahiptir."
+  },
   "step-1v-32k": {
     "description": "Görsel girdi desteği sunar, çok modlu etkileşim deneyimini artırır."
   },
@@ -1336,6 +1339,9 @@
   },
   "step-2-16k": {
     "description": "Büyük ölçekli bağlam etkileşimlerini destekler, karmaşık diyalog senaryoları için uygundur."
+  },
+  "step-2-mini": {
+    "description": "Yeni nesil kendi geliştirdiğimiz MFA Attention mimarisine dayanan hızlı büyük model, çok düşük maliyetle step1 ile benzer sonuçlar elde ederken, daha yüksek bir throughput ve daha hızlı yanıt süresi sağlıyor. Genel görevleri işleyebilme yeteneğine sahip olup, kodlama yeteneklerinde uzmanlık gösteriyor."
   },
   "taichu2_mm": {
     "description": "Görüntü anlama, bilgi transferi, mantıksal atıf gibi yetenekleri birleştirerek, metin ve görüntü ile soru-cevap alanında öne çıkmaktadır."

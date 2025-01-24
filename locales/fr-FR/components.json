@@ -76,6 +76,7 @@
       "custom": "Modèle personnalisé par défaut prenant en charge à la fois les appels de fonction et la reconnaissance visuelle. Veuillez vérifier la disponibilité de ces capacités en fonction de vos besoins réels.",
       "file": "Ce modèle prend en charge la lecture et la reconnaissance de fichiers téléchargés.",
       "functionCall": "Ce modèle prend en charge les appels de fonction.",
+      "reasoning": "Ce modèle prend en charge une réflexion approfondie",
       "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
       "vision": "Ce modèle prend en charge la reconnaissance visuelle."
     },
