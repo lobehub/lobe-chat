@@ -3,6 +3,7 @@ Dockerfile
 node_modules
 npm-debug.log
 .next
+!.next/cache
 .git
 .github
 *.md
