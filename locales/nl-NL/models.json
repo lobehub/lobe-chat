@@ -1328,6 +1328,9 @@
   "step-1.5v-mini": {
     "description": "Dit model heeft krachtige video begrip capaciteiten."
   },
+  "step-1o-vision-32k": {
+    "description": "Dit model heeft krachtige beeldbegripcapaciteiten. In vergelijking met de step-1v serie modellen heeft het een sterkere visuele prestatie."
+  },
   "step-1v-32k": {
     "description": "Ondersteunt visuele invoer, verbetert de multimodale interactie-ervaring."
   },
@@ -1336,6 +1339,9 @@
   },
   "step-2-16k": {
     "description": "Ondersteunt grootschalige contextinteracties, geschikt voor complexe gespreksscenario's."
+  },
+  "step-2-mini": {
+    "description": "Een razendsnel groot model gebaseerd op de nieuwe generatie zelfontwikkelde Attention-architectuur MFA, dat met zeer lage kosten vergelijkbare resultaten als step1 behaalt, terwijl het een hogere doorvoer en snellere responstijd behoudt. Het kan algemene taken verwerken en heeft speciale vaardigheden op het gebied van codering."
   },
   "taichu2_mm": {
     "description": "Gecombineerd met beeldbegrip, kennisoverdracht en logische toerekening, excelleert het in het domein van vraag-en-antwoord met tekst en afbeeldingen."

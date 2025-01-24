@@ -82,6 +82,10 @@
       }
     }
   },
+  "reasoning": {
+    "thinking": "В дълбочинно размисъл",
+    "thought": "Дълбоко помислих (отне ми {{duration}} секунди)"
+  },
   "regenerate": "Прегенерирай",
   "roleAndArchive": "Роля и архив",
   "searchAgentPlaceholder": "Търсач на помощ...",

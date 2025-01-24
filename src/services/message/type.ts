@@ -1,12 +1,12 @@
 import type { HeatmapsProps } from '@lobehub/charts';
 
-import { MessageItem } from '@/database/schemas';
 import {
   ChatMessage,
   ChatMessageError,
   ChatTTS,
   ChatTranslate,
   CreateMessageParams,
+  MessageItem,
   ModelRankItem,
 } from '@/types/message';
 

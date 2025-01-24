@@ -1328,6 +1328,9 @@
   "step-1.5v-mini": {
     "description": "Questo modello possiede potenti capacità di comprensione video."
   },
+  "step-1o-vision-32k": {
+    "description": "Questo modello possiede una potente capacità di comprensione delle immagini. Rispetto ai modelli della serie step-1v, offre prestazioni visive superiori."
+  },
   "step-1v-32k": {
     "description": "Supporta input visivi, migliorando l'esperienza di interazione multimodale."
   },
@@ -1336,6 +1339,9 @@
   },
   "step-2-16k": {
     "description": "Supporta interazioni di contesto su larga scala, adatto per scenari di dialogo complessi."
+  },
+  "step-2-mini": {
+    "description": "Un modello di grandi dimensioni ad alta velocità basato sulla nuova architettura di attenzione auto-sviluppata MFA, in grado di raggiungere risultati simili a quelli di step1 a un costo molto basso, mantenendo al contempo una maggiore capacità di elaborazione e tempi di risposta più rapidi. È in grado di gestire compiti generali, con competenze particolari nella programmazione."
   },
   "taichu2_mm": {
     "description": "Integra capacità di comprensione delle immagini, trasferimento di conoscenze, attribuzione logica, ecc., e si distingue nel campo delle domande e risposte basate su testo e immagini."
