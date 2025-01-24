@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.47.22](https://github.com/lobehub/lobe-chat/compare/v1.47.21...v1.47.22)
+
+<sup>Released on **2025-01-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix form input in provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix form input in provider, closes [#5571](https://github.com/lobehub/lobe-chat/issues/5571) ([07e2396](https://github.com/lobehub/lobe-chat/commit/07e2396))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.47.21](https://github.com/lobehub/lobe-chat/compare/v1.47.20...v1.47.21)
 
 <sup>Released on **2025-01-23**</sup>
