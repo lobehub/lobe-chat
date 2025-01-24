@@ -2,6 +2,81 @@
 
 # Changelog
 
+## [Version 1.48.0](https://github.com/lobehub/lobe-chat/compare/v1.47.23...v1.48.0)
+
+<sup>Released on **2025-01-24**</sup>
+
+#### ✨ Features
+
+- **misc**: Support display thinking for DeepSeek R1.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support display thinking for DeepSeek R1, closes [#5558](https://github.com/lobehub/lobe-chat/issues/5558) ([f98bb5a](https://github.com/lobehub/lobe-chat/commit/f98bb5a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.47.23](https://github.com/lobehub/lobe-chat/compare/v1.47.22...v1.47.23)
+
+<sup>Released on **2025-01-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix model fetch match tag error & add Hunyuan model fetch support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix model fetch match tag error & add Hunyuan model fetch support, closes [#5566](https://github.com/lobehub/lobe-chat/issues/5566) ([7b075ef](https://github.com/lobehub/lobe-chat/commit/7b075ef))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.47.22](https://github.com/lobehub/lobe-chat/compare/v1.47.21...v1.47.22)
+
+<sup>Released on **2025-01-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix form input in provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix form input in provider, closes [#5571](https://github.com/lobehub/lobe-chat/issues/5571) ([07e2396](https://github.com/lobehub/lobe-chat/commit/07e2396))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.47.21](https://github.com/lobehub/lobe-chat/compare/v1.47.20...v1.47.21)
 
 <sup>Released on **2025-01-23**</sup>

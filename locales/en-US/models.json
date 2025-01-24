@@ -1328,6 +1328,9 @@
   "step-1.5v-mini": {
     "description": "This model has powerful video understanding capabilities."
   },
+  "step-1o-vision-32k": {
+    "description": "This model possesses powerful image understanding capabilities. Compared to the step-1v series models, it offers enhanced visual performance."
+  },
   "step-1v-32k": {
     "description": "Supports visual input, enhancing multimodal interaction experiences."
   },
@@ -1336,6 +1339,9 @@
   },
   "step-2-16k": {
     "description": "Supports large-scale context interactions, suitable for complex dialogue scenarios."
+  },
+  "step-2-mini": {
+    "description": "A high-speed large model based on the next-generation self-developed Attention architecture MFA, achieving results similar to step-1 at a very low cost, while maintaining higher throughput and faster response times. It is capable of handling general tasks and has specialized skills in coding."
   },
   "taichu2_mm": {
     "description": "Integrating capabilities in image understanding, knowledge transfer, and logical attribution, it excels in the field of image-text question answering."

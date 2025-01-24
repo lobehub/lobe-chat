@@ -82,6 +82,10 @@
       }
     }
   },
+  "reasoning": {
+    "thinking": "Głęboko myślę",
+    "thought": "Głęboko myślałem (czas: {{duration}} sekund)"
+  },
   "regenerate": "Wygeneruj ponownie",
   "roleAndArchive": "Rola i archiwum",
   "searchAgentPlaceholder": "Wyszukaj pomocnika...",
