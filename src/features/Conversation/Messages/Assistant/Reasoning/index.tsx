@@ -37,7 +37,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
       ${rgba(token.colorTextBase, 0)} 60%
     );
     background-clip: text;
-    background-clip: text;
     background-size: 200% 100%;
 
     animation: shine 1.5s linear infinite;
