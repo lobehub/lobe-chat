@@ -82,6 +82,10 @@
       }
     }
   },
+  "reasoning": {
+    "thinking": "深く考えています",
+    "thought": "深く考えました（所要時間 {{duration}} 秒）"
+  },
   "regenerate": "再生成",
   "roleAndArchive": "役割とアーカイブ",
   "searchAgentPlaceholder": "検索アシスタント...",

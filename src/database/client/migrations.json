@@ -293,5 +293,11 @@
     "bps": true,
     "folderMillis": 1735834653361,
     "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
+  },
+  {
+    "sql": ["ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"],
+    "bps": true,
+    "folderMillis": 1737609172353,
+    "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
   }
 ]

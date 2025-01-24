@@ -12,6 +12,10 @@ export interface ChatAIChatState {
   messageRAGLoadingIds: string[];
   pluginApiLoadingIds: string[];
   /**
+   * is the AI message is reasoning
+   */
+  reasoningLoadingIds: string[];
+  /**
    * the tool calling stream ids
    */
   toolCallingStreamIds: Record<string, boolean[]>;
@@ -23,5 +27,6 @@ export const initialAiChatState: ChatAIChatState = {
   inputMessage: '',
   messageRAGLoadingIds: [],
   pluginApiLoadingIds: [],
+  reasoningLoadingIds: [],
   toolCallingStreamIds: {},
 };

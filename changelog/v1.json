@@ -1,6 +1,48 @@
 [
   {
     "children": {
+      "features": ["Support display thinking for DeepSeek R1."]
+    },
+    "date": "2025-01-24",
+    "version": "1.48.0"
+  },
+  {
+    "children": {
+      "improvements": ["Fix model fetch match tag error & add Hunyuan model fetch support."]
+    },
+    "date": "2025-01-24",
+    "version": "1.47.23"
+  },
+  {
+    "children": {
+      "fixes": ["Fix form input in provider."]
+    },
+    "date": "2025-01-24",
+    "version": "1.47.22"
+  },
+  {
+    "children": {
+      "improvements": ["Add HuggingFace Model: DeepSeek R1."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.21"
+  },
+  {
+    "children": {
+      "fixes": ["Fix tts in new provider model."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.20"
+  },
+  {
+    "children": {
+      "improvements": ["Add new stepfun model."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.19"
+  },
+  {
+    "children": {
       "fixes": ["Fix debounce issue of provider config."]
     },
     "date": "2025-01-23",
