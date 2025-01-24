@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix form input in provider."]
+    },
+    "date": "2025-01-24",
+    "version": "1.47.22"
+  },
+  {
+    "children": {
       "improvements": ["Add HuggingFace Model: DeepSeek R1."]
     },
     "date": "2025-01-23",
