@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.47.23](https://github.com/lobehub/lobe-chat/compare/v1.47.22...v1.47.23)
+
+<sup>Released on **2025-01-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix model fetch match tag error & add Hunyuan model fetch support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix model fetch match tag error & add Hunyuan model fetch support, closes [#5566](https://github.com/lobehub/lobe-chat/issues/5566) ([7b075ef](https://github.com/lobehub/lobe-chat/commit/7b075ef))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.47.22](https://github.com/lobehub/lobe-chat/compare/v1.47.21...v1.47.22)
 
 <sup>Released on **2025-01-24**</sup>
