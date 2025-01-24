@@ -25,7 +25,13 @@ export const LobeStepfunAI = LobeOpenAICompatibleFactory({
       // ref: https://platform.stepfun.com/docs/llm/modeloverview
       const functionCallKeywords = [
         'step-1-',
+        'step-1o-',
+        'step-1v-',
         'step-2-',
+      ];
+
+      const visionKeywords = [
+        'step-1o-',
         'step-1v-',
       ];
 
@@ -35,7 +41,7 @@ export const LobeStepfunAI = LobeOpenAICompatibleFactory({
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
         functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         id: model.id,
-        vision: model.id.toLowerCase().includes('v'),
+        vision: visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
       };
     },
   },
