@@ -45,6 +45,7 @@ export const transformOpenAIStream = (
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
+    // tools calling
     if (typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
       return {
         data: item.delta.tool_calls.map((value, index): StreamToolCallChunkData => {
@@ -91,7 +92,13 @@ export const transformOpenAIStream = (
       return { data: item.delta.content, id: chunk.id, type: 'text' };
     }
 
-    if (item.delta?.content === null) {
+    // 无内容情况
+    if (item.delta && item.delta.content === null) {
+      // deepseek reasoner 会将 thinking 放在 reasoning_content 字段中
+      if ('reasoning_content' in item.delta && typeof item.delta.reasoning_content === 'string') {
+        return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
+      }
+
       return { data: item.delta, id: chunk.id, type: 'data' };
     }
 

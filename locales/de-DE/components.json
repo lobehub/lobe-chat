@@ -76,6 +76,7 @@
       "custom": "Benutzerdefiniertes Modell, standardmäßig unterstützt es sowohl Funktionsaufrufe als auch visuelle Erkennung. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Gegebenheiten.",
       "file": "Dieses Modell unterstützt das Hochladen von Dateien und deren Erkennung.",
       "functionCall": "Dieses Modell unterstützt Funktionsaufrufe.",
+      "reasoning": "Dieses Modell unterstützt tiefes Denken",
       "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro Sitzung.",
       "vision": "Dieses Modell unterstützt die visuelle Erkennung."
     },

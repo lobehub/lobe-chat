@@ -1328,6 +1328,9 @@
   "step-1.5v-mini": {
     "description": "Mô hình này có khả năng hiểu video mạnh mẽ."
   },
+  "step-1o-vision-32k": {
+    "description": "Mô hình này có khả năng hiểu hình ảnh mạnh mẽ. So với các mô hình trong series step-1v, nó có hiệu suất thị giác vượt trội hơn."
+  },
   "step-1v-32k": {
     "description": "Hỗ trợ đầu vào hình ảnh, tăng cường trải nghiệm tương tác đa mô hình."
   },
@@ -1336,6 +1339,9 @@
   },
   "step-2-16k": {
     "description": "Hỗ trợ tương tác ngữ cảnh quy mô lớn, phù hợp cho các tình huống đối thoại phức tạp."
+  },
+  "step-2-mini": {
+    "description": "Mô hình lớn siêu tốc dựa trên kiến trúc Attention tự nghiên cứu thế hệ mới MFA, đạt được hiệu quả tương tự như step1 với chi phí rất thấp, đồng thời duy trì thông lượng cao hơn và độ trễ phản hồi nhanh hơn. Có khả năng xử lý các nhiệm vụ chung, đặc biệt có năng lực trong lập trình."
   },
   "taichu2_mm": {
     "description": "Kết hợp khả năng hiểu hình ảnh, chuyển giao kiến thức, suy luận logic, nổi bật trong lĩnh vực hỏi đáp hình ảnh và văn bản."

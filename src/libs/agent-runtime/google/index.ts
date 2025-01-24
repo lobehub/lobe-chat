@@ -8,6 +8,8 @@ import {
   SchemaType,
 } from '@google/generative-ai';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
@@ -26,9 +28,6 @@ import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import { GoogleGenerativeAIStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
-
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import type { ChatModelCard } from '@/types/llm';
 
 export interface GoogleModelCard {
   displayName: string;
@@ -143,7 +142,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       method: 'GET',
     });
     const json = await response.json();
-  
+
     const modelList: GoogleModelCard[] = json['models'];
 
     return modelList
@@ -156,7 +155,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => modelName.endsWith(m.id))?.enabled || false,
           functionCall: modelName.toLowerCase().includes('gemini'),
           id: modelName,
-          vision: modelName.toLowerCase().includes('vision') || modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('gemini-1.0'),
+          vision:
+            modelName.toLowerCase().includes('vision') ||
+            (modelName.toLowerCase().includes('gemini') &&
+              !modelName.toLowerCase().includes('gemini-1.0')),
         };
       })
       .filter(Boolean) as ChatModelCard[];

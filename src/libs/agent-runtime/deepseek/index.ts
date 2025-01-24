@@ -40,7 +40,7 @@ export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
 
       return {
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
-        functionCall: true,
+        functionCall: !model.id.toLowerCase().includes('deepseek-reasoner'),
         id: model.id,
       };
     },

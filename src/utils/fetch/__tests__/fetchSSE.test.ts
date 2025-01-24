@@ -154,6 +154,40 @@ describe('fetchSSE', () => {
     });
   });
 
+  it('should handle reasoning event with smoothing correctly', async () => {
+    const mockOnMessageHandle = vi.fn();
+    const mockOnFinish = vi.fn();
+
+    (fetchEventSource as any).mockImplementationOnce(
+      async (url: string, options: FetchEventSourceInit) => {
+        options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
+        options.onmessage!({ event: 'reasoning', data: JSON.stringify('Hello') } as any);
+        await sleep(100);
+        options.onmessage!({ event: 'reasoning', data: JSON.stringify(' World') } as any);
+        await sleep(100);
+        options.onmessage!({ event: 'text', data: JSON.stringify('hi') } as any);
+      },
+    );
+
+    await fetchSSE('/', {
+      onMessageHandle: mockOnMessageHandle,
+      onFinish: mockOnFinish,
+      smoothing: true,
+    });
+
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'reasoning' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'reasoning' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' Wor', type: 'reasoning' });
+    // more assertions for each character...
+    expect(mockOnFinish).toHaveBeenCalledWith('hi', {
+      observationId: null,
+      toolCalls: undefined,
+      reasoning: 'Hello World',
+      traceId: null,
+      type: 'done',
+    });
+  });
+
   it('should handle tool_calls event with smoothing correctly', async () => {
     const mockOnMessageHandle = vi.fn();
     const mockOnFinish = vi.fn();
