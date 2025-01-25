@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix ollama Browser Request failed in PG mode."]
+    },
+    "date": "2025-01-25",
+    "version": "1.48.1"
+  },
+  {
+    "children": {
       "features": ["Support display thinking for DeepSeek R1."]
     },
     "date": "2025-01-24",
