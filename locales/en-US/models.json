@@ -809,8 +809,17 @@
   "hunyuan-functioncall": {
     "description": "The latest MOE architecture FunctionCall model from Hunyuan, trained on high-quality FunctionCall data, with a context window of 32K, leading in multiple dimensions of evaluation metrics."
   },
+  "hunyuan-large": {
+    "description": "The Hunyuan-large model has a total parameter count of approximately 389B, with about 52B active parameters, making it the largest and most effective open-source MoE model in the industry based on the Transformer architecture."
+  },
+  "hunyuan-large-longcontext": {
+    "description": "Specializes in handling long text tasks such as document summarization and question answering, while also capable of general text generation tasks. It excels in analyzing and generating long texts, effectively addressing complex and detailed long-form content processing needs."
+  },
   "hunyuan-lite": {
     "description": "Upgraded to a MOE structure with a context window of 256k, leading many open-source models in various NLP, coding, mathematics, and industry benchmarks."
+  },
+  "hunyuan-lite-vision": {
+    "description": "The latest 7B multimodal model from Hunyuan, with a context window of 32K, supports multimodal dialogue in both Chinese and English scenarios, image object recognition, document table understanding, and multimodal mathematics, outperforming 7B competing models across multiple evaluation dimensions."
   },
   "hunyuan-pro": {
     "description": "A trillion-parameter scale MOE-32K long text model. Achieves absolute leading levels across various benchmarks, capable of handling complex instructions and reasoning, with advanced mathematical abilities, supporting function calls, and optimized for applications in multilingual translation, finance, law, and healthcare."
@@ -824,8 +833,23 @@
   "hunyuan-standard-256K": {
     "description": "Utilizes a superior routing strategy while alleviating issues of load balancing and expert convergence. For long texts, the needle-in-a-haystack metric reaches 99.9%. MOE-256K further breaks through in length and effectiveness, greatly expanding the input length capacity."
   },
+  "hunyuan-standard-vision": {
+    "description": "The latest multimodal model from Hunyuan, supporting multilingual responses with balanced capabilities in both Chinese and English."
+  },
   "hunyuan-turbo": {
     "description": "The preview version of the next-generation Hunyuan large language model, featuring a brand-new mixed expert model (MoE) structure, which offers faster inference efficiency and stronger performance compared to Hunyuan Pro."
+  },
+  "hunyuan-turbo-20241120": {
+    "description": "Hunyuan-turbo fixed version as of November 20, 2024, a version that lies between hunyuan-turbo and hunyuan-turbo-latest."
+  },
+  "hunyuan-turbo-20241223": {
+    "description": "This version optimizes: data instruction scaling, significantly enhancing the model's generalization capabilities; greatly improving mathematical, coding, and logical reasoning abilities; optimizing text understanding and word comprehension capabilities; enhancing the quality of content generation in text creation."
+  },
+  "hunyuan-turbo-latest": {
+    "description": "General experience optimization, including NLP understanding, text creation, casual conversation, knowledge Q&A, translation, and domain-specific tasks; enhanced personification and emotional intelligence of the model; improved the model's ability to clarify when intentions are ambiguous; enhanced handling of word parsing-related questions; improved the quality and interactivity of creative outputs; enhanced multi-turn experience."
+  },
+  "hunyuan-turbo-vision": {
+    "description": "The next-generation flagship visual language model from Hunyuan, utilizing a new mixed expert model (MoE) structure, with comprehensive improvements in basic recognition, content creation, knowledge Q&A, and analytical reasoning capabilities compared to the previous generation model."
   },
   "hunyuan-vision": {
     "description": "The latest multimodal model from Hunyuan, supporting image + text input to generate textual content."
@@ -1192,6 +1216,9 @@
   },
   "pro-128k": {
     "description": "Spark Pro 128K is equipped with an extra-large context processing capability, able to handle up to 128K of contextual information, making it particularly suitable for long-form content that requires comprehensive analysis and long-term logical connections, providing smooth and consistent logic and diverse citation support in complex text communication."
+  },
+  "qvq-72b-preview": {
+    "description": "The QVQ model is an experimental research model developed by the Qwen team, focusing on enhancing visual reasoning capabilities, particularly in the field of mathematical reasoning."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen code model."

@@ -809,8 +809,17 @@
   "hunyuan-functioncall": {
     "description": "Dernier modèle FunctionCall de l'architecture MOE Hunyuan, formé sur des données FunctionCall de haute qualité, avec une fenêtre contextuelle atteignant 32K, se classant parmi les meilleurs sur plusieurs dimensions d'évaluation."
   },
+  "hunyuan-large": {
+    "description": "Le modèle Hunyuan-large a un nombre total de paramètres d'environ 389B, avec environ 52B de paramètres activés, ce qui en fait le modèle MoE open source de l'architecture Transformer avec le plus grand nombre de paramètres et les meilleures performances dans l'industrie."
+  },
+  "hunyuan-large-longcontext": {
+    "description": "Expert dans le traitement des tâches de longs documents telles que le résumé de documents et les questions-réponses sur des documents, tout en ayant également la capacité de traiter des tâches de génération de texte général. Il excelle dans l'analyse et la génération de longs textes, capable de répondre efficacement aux besoins de traitement de contenus longs complexes et détaillés."
+  },
   "hunyuan-lite": {
     "description": "Mise à niveau vers une structure MOE, avec une fenêtre contextuelle de 256k, en tête de nombreux modèles open source dans les évaluations NLP, code, mathématiques, industrie, etc."
+  },
+  "hunyuan-lite-vision": {
+    "description": "Le dernier modèle multimodal 7B de Hunyuan, avec une fenêtre contextuelle de 32K, prend en charge les dialogues multimodaux en chinois et en anglais, la reconnaissance d'objets d'images, la compréhension de documents et de tableaux, ainsi que les mathématiques multimodales, surpassant les modèles concurrents de 7B sur plusieurs dimensions d'évaluation."
   },
   "hunyuan-pro": {
     "description": "Modèle de long texte MOE-32K avec un milliard de paramètres. Atteint un niveau de performance absolument supérieur sur divers benchmarks, capable de traiter des instructions complexes et de raisonner, avec des capacités mathématiques avancées, prenant en charge les appels de fonction, optimisé pour des domaines tels que la traduction multilingue, le droit financier et médical."
@@ -824,8 +833,23 @@
   "hunyuan-standard-256K": {
     "description": "Utilise une stratégie de routage améliorée tout en atténuant les problèmes d'équilibrage de charge et de convergence des experts. Pour les longs textes, l'indice de recherche atteint 99,9 %. MOE-256K franchit de nouvelles étapes en termes de longueur et d'efficacité, élargissant considérablement la longueur d'entrée possible."
   },
+  "hunyuan-standard-vision": {
+    "description": "Le dernier modèle multimodal de Hunyuan, prenant en charge les réponses multilingues, avec des capacités équilibrées en chinois et en anglais."
+  },
   "hunyuan-turbo": {
     "description": "Version préliminaire du nouveau modèle de langage de génération Hunyuan, utilisant une nouvelle structure de modèle d'experts mixtes (MoE), offrant une efficacité d'inférence plus rapide et de meilleures performances par rapport à Hunyuan-Pro."
+  },
+  "hunyuan-turbo-20241120": {
+    "description": "Version fixe de hunyuan-turbo du 20 novembre 2024, une version intermédiaire entre hunyuan-turbo et hunyuan-turbo-latest."
+  },
+  "hunyuan-turbo-20241223": {
+    "description": "Optimisations de cette version : mise à l'échelle des instructions de données, augmentation significative de la capacité de généralisation du modèle ; amélioration significative des capacités en mathématiques, en code et en raisonnement logique ; optimisation des capacités de compréhension des mots dans le texte ; optimisation de la qualité de génération de contenu dans la création de texte."
+  },
+  "hunyuan-turbo-latest": {
+    "description": "Optimisation de l'expérience générale, y compris la compréhension NLP, la création de texte, les conversations informelles, les questions-réponses, la traduction, et les domaines spécifiques ; amélioration de l'humanité simulée, optimisation de l'intelligence émotionnelle du modèle ; amélioration de la capacité du modèle à clarifier activement en cas d'ambiguïté d'intention ; amélioration de la capacité à traiter les questions de décomposition de mots ; amélioration de la qualité et de l'interactivité de la création ; amélioration de l'expérience multi-tours."
+  },
+  "hunyuan-turbo-vision": {
+    "description": "Le nouveau modèle phare de langage visuel de Hunyuan de nouvelle génération, utilisant une toute nouvelle structure de modèle d'experts hybrides (MoE), avec des améliorations complètes par rapport à la génération précédente dans les capacités de reconnaissance de base, de création de contenu, de questions-réponses, et d'analyse et de raisonnement liés à la compréhension d'images et de textes."
   },
   "hunyuan-vision": {
     "description": "Dernier modèle multimodal Hunyuan, prenant en charge l'entrée d'images et de textes pour générer du contenu textuel."
@@ -1192,6 +1216,9 @@
   },
   "pro-128k": {
     "description": "Spark Pro 128K est doté d'une capacité de traitement de contexte très étendue, capable de gérer jusqu'à 128K d'informations contextuelles, particulièrement adapté pour l'analyse complète et le traitement des relations logiques à long terme dans des contenus longs, offrant une logique fluide et cohérente ainsi qu'un soutien varié pour les références dans des communications textuelles complexes."
+  },
+  "qvq-72b-preview": {
+    "description": "Le modèle QVQ est un modèle de recherche expérimental développé par l'équipe Qwen, axé sur l'amélioration des capacités de raisonnement visuel, en particulier dans le domaine du raisonnement mathématique."
   },
   "qwen-coder-plus-latest": {
     "description": "Modèle de code Qwen universel."
