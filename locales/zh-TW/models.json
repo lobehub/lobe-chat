@@ -809,8 +809,17 @@
   "hunyuan-functioncall": {
     "description": "混元最新 MOE 架構 FunctionCall 模型，經過高質量的 FunctionCall 數據訓練，上下文窗口達 32K，在多個維度的評測指標上處於領先。"
   },
+  "hunyuan-large": {
+    "description": "Hunyuan-large 模型總參數量約 389B，激活參數量約 52B，是當前業界參數規模最大、效果最好的 Transformer 架構的開源 MoE 模型。"
+  },
+  "hunyuan-large-longcontext": {
+    "description": "擅長處理長文任務如文檔摘要和文檔問答等，同時也具備處理通用文本生成任務的能力。在長文本的分析和生成上表現優異，能有效應對複雜和詳盡的長文內容處理需求。"
+  },
   "hunyuan-lite": {
     "description": "升級為 MOE 結構，上下文窗口為 256k，在 NLP、代碼、數學、行業等多項評測集上領先眾多開源模型。"
+  },
+  "hunyuan-lite-vision": {
+    "description": "混元最新7B多模態模型，上下文窗口32K，支持中英文場景的多模態對話、圖像物體識別、文檔表格理解、多模態數學等，在多個維度上評測指標優於7B競品模型。"
   },
   "hunyuan-pro": {
     "description": "萬億級參數規模 MOE-32K 長文模型。在各種 benchmark 上達到絕對領先的水平，具備複雜指令和推理能力，支持 functioncall，在多語言翻譯、金融法律醫療等領域應用重點優化。"
@@ -824,8 +833,23 @@
   "hunyuan-standard-256K": {
     "description": "採用更優的路由策略，同時緩解了負載均衡和專家趨同的問題。長文方面，大海撈針指標達到 99.9%。MOE-256K 在長度和效果上進一步突破，極大地擴展了可輸入長度。"
   },
+  "hunyuan-standard-vision": {
+    "description": "混元最新多模態模型，支持多語種作答，中英文能力均衡。"
+  },
   "hunyuan-turbo": {
     "description": "混元全新一代大語言模型的預覽版，採用全新的混合專家模型（MoE）結構，相較於 hunyuan-pro 推理效率更快，效果表現更強。"
+  },
+  "hunyuan-turbo-20241120": {
+    "description": "hunyuan-turbo 2024 年 11 月 20 日固定版本，介於 hunyuan-turbo 和 hunyuan-turbo-latest 之間的一個版本。"
+  },
+  "hunyuan-turbo-20241223": {
+    "description": "本版本優化：數據指令scaling，大幅提升模型通用泛化能力；大幅提升數學、程式碼、邏輯推理能力；優化文本理解字詞理解相關能力；優化文本創作內容生成質量"
+  },
+  "hunyuan-turbo-latest": {
+    "description": "通用體驗優化，包括NLP理解、文本創作、閒聊、知識問答、翻譯、領域等；提升擬人性，優化模型情商；提升意圖模糊時模型主動澄清能力；提升字詞解析類問題的處理能力；提升創作的質量和可互動性；提升多輪體驗。"
+  },
+  "hunyuan-turbo-vision": {
+    "description": "混元新一代視覺語言旗艦大模型，採用全新的混合專家模型（MoE）結構，在圖文理解相關的基礎識別、內容創作、知識問答、分析推理等能力上相比前一代模型全面提升。"
   },
   "hunyuan-vision": {
     "description": "混元最新多模態模型，支持圖片 + 文本輸入生成文本內容。"
@@ -1192,6 +1216,9 @@
   },
   "pro-128k": {
     "description": "Spark Pro 128K 配置了特大上下文處理能力，能夠處理多達128K的上下文信息，特別適合需通篇分析和長期邏輯關聯處理的長文內容，可在複雜文本溝通中提供流暢一致的邏輯與多樣的引用支持。"
+  },
+  "qvq-72b-preview": {
+    "description": "QVQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於提升視覺推理能力，尤其在數學推理領域。"
   },
   "qwen-coder-plus-latest": {
     "description": "通義千問代碼模型。"

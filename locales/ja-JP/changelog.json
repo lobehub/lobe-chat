@@ -8,8 +8,8 @@
   "allChangelog": "すべての更新ログを見る",
   "description": "{{appName}}の新機能と改善を継続的に追跡",
   "pagination": {
-    "older": "履歴の変更を表示",
-    "prev": "前のページ"
+    "next": "次のページ",
+    "older": "履歴の変更を表示"
   },
   "readDetails": "詳細を読む",
   "title": "更新ログ",

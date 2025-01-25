@@ -8,8 +8,8 @@
   "allChangelog": "Alle Änderungsprotokolle anzeigen",
   "description": "Verfolgen Sie die neuen Funktionen und Verbesserungen von {{appName}} kontinuierlich",
   "pagination": {
-    "older": "Ältere Änderungen anzeigen",
-    "prev": "Vorherige Seite"
+    "next": "Nächste Seite",
+    "older": "Ältere Änderungen anzeigen"
   },
   "readDetails": "Details lesen",
   "title": "Änderungsprotokoll",
