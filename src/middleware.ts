@@ -50,6 +50,7 @@ const isProtectedRoute = createRouteMatcher([
   '/settings(.*)',
   '/files(.*)',
   // ↓ cloud ↓
+  '/chat(.*)',
 ]);
 
 export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
