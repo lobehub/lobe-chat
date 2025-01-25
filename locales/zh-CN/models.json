@@ -809,8 +809,17 @@
   "hunyuan-functioncall": {
     "description": "混元最新 MOE 架构 FunctionCall 模型，经过高质量的 FunctionCall 数据训练，上下文窗口达 32K，在多个维度的评测指标上处于领先。"
   },
+  "hunyuan-large": {
+    "description": "Hunyuan-large 模型总参数量约 389B，激活参数量约 52B，是当前业界参数规模最大、效果最好的 Transformer 架构的开源 MoE 模型。"
+  },
+  "hunyuan-large-longcontext": {
+    "description": "擅长处理长文任务如文档摘要和文档问答等，同时也具备处理通用文本生成任务的能力。在长文本的分析和生成上表现优异，能有效应对复杂和详尽的长文内容处理需求。"
+  },
   "hunyuan-lite": {
     "description": "升级为 MOE 结构，上下文窗口为 256k ，在 NLP，代码，数学，行业等多项评测集上领先众多开源模型。"
+  },
+  "hunyuan-lite-vision": {
+    "description": "混元最新7B多模态模型，上下文窗口32K，支持中英文场景的多模态对话、图像物体识别、文档表格理解、多模态数学等，在多个维度上评测指标优于7B竞品模型。"
   },
   "hunyuan-pro": {
     "description": "万亿级参数规模 MOE-32K 长文模型。在各种 benchmark 上达到绝对领先的水平，复杂指令和推理，具备复杂数学能力，支持 functioncall，在多语言翻译、金融法律医疗等领域应用重点优化。"
@@ -824,8 +833,23 @@
   "hunyuan-standard-256K": {
     "description": "采用更优的路由策略，同时缓解了负载均衡和专家趋同的问题。长文方面，大海捞针指标达到99.9%。MOE-256K 在长度和效果上进一步突破，极大的扩展了可输入长度。"
   },
+  "hunyuan-standard-vision": {
+    "description": "混元最新多模态模型，支持多语种作答，中英文能力均衡。"
+  },
   "hunyuan-turbo": {
-    "description": "混元全新一代大语言模型的预览版，采用全新的混合专家模型（MoE）结构，相比hunyuan-pro推理效率更快，效果表现更强。"
+    "description": "本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量"
+  },
+  "hunyuan-turbo-20241120": {
+    "description": "hunyuan-turbo 2024 年 11 月 20 日固定版本，介于 hunyuan-turbo 和 hunyuan-turbo-latest 之间的一个版本。"
+  },
+  "hunyuan-turbo-20241223": {
+    "description": "本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量"
+  },
+  "hunyuan-turbo-latest": {
+    "description": "通用体验优化，包括NLP理解、文本创作、闲聊、知识问答、翻译、领域等；提升拟人性，优化模型情商；提升意图模糊时模型主动澄清能力；提升字词解析类问题的处理能力；提升创作的质量和可互动性；提升多轮体验。"
+  },
+  "hunyuan-turbo-vision": {
+    "description": "混元新一代视觉语言旗舰大模型，采用全新的混合专家模型（MoE）结构，在图文理解相关的基础识别、内容创作、知识问答、分析推理等能力上相比前一代模型全面提升。"
   },
   "hunyuan-vision": {
     "description": "混元最新多模态模型，支持图片+文本输入生成文本内容。"
@@ -1192,6 +1216,9 @@
   },
   "pro-128k": {
     "description": "Spark Pro 128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。"
+  },
+  "qvq-72b-preview": {
+    "description": "QVQ模型是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力，尤其在数学推理领域。"
   },
   "qwen-coder-plus-latest": {
     "description": "通义千问代码模型。"

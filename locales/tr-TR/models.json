@@ -809,8 +809,17 @@
   "hunyuan-functioncall": {
     "description": "Hunyuan'ın en son MOE mimarisi FunctionCall modeli, yüksek kaliteli FunctionCall verisi ile eğitilmiş olup, bağlam penceresi 32K'ya ulaşmıştır ve birçok boyutta değerlendirme göstergelerinde lider konumdadır."
   },
+  "hunyuan-large": {
+    "description": "Hunyuan-large modelinin toplam parametre sayısı yaklaşık 389B, etkin parametre sayısı yaklaşık 52B'dir; bu, mevcut endüstrideki en büyük parametre ölçeğine sahip ve en iyi performansı gösteren Transformer mimarisinin açık kaynaklı MoE modelidir."
+  },
+  "hunyuan-large-longcontext": {
+    "description": "Uzun metin görevlerini, örneğin belge özeti ve belge sorgulama gibi, işleme konusunda uzmandır; aynı zamanda genel metin oluşturma görevlerini de yerine getirme yeteneğine sahiptir. Uzun metinlerin analizi ve oluşturulmasında mükemmel bir performans sergiler, karmaşık ve ayrıntılı uzun metin içerik işleme ihtiyaçlarına etkili bir şekilde yanıt verebilir."
+  },
   "hunyuan-lite": {
     "description": "MOE yapısına yükseltilmiş, bağlam penceresi 256k, NLP, kod, matematik, endüstri gibi birçok değerlendirme setinde birçok açık kaynak modelden önde."
+  },
+  "hunyuan-lite-vision": {
+    "description": "Hunyuan'ın en son 7B çok modlu modeli, bağlam penceresi 32K, Çince ve İngilizce senaryolarında çok modlu diyalog, görüntü nesne tanıma, belge tablo anlama, çok modlu matematik vb. destekler; birçok boyutta değerlendirme kriterleri 7B rakip modellerden üstündür."
   },
   "hunyuan-pro": {
     "description": "Trilyon seviyesinde parametre ölçeğine sahip MOE-32K uzun metin modeli. Çeşitli benchmarklarda kesin bir liderlik seviyesine ulaşarak, karmaşık talimatlar ve akıl yürütme yetenekleri ile karmaşık matematik yetenekleri sunar, functioncall desteği ile çok dilli çeviri, finans, hukuk ve sağlık gibi alanlarda önemli optimizasyonlar sağlar."
@@ -824,8 +833,23 @@
   "hunyuan-standard-256K": {
     "description": "Daha iyi bir yönlendirme stratejisi kullanarak, yük dengeleme ve uzman yakınsaması sorunlarını hafifletir. Uzun metinlerde, iğne arama göstergesi %99.9'a ulaşmaktadır. MOE-256K, uzunluk ve etki açısından daha fazla bir sıçrama yaparak, girdi uzunluğunu büyük ölçüde genişletir."
   },
+  "hunyuan-standard-vision": {
+    "description": "Hunyuan'ın en son çok modlu modeli, çok dilli yanıtları destekler, Çince ve İngilizce yetenekleri dengelidir."
+  },
   "hunyuan-turbo": {
     "description": "Hunyuan'ın yeni nesil büyük dil modelinin önizleme sürümü, tamamen yeni bir karma uzman modeli (MoE) yapısı kullanır ve hunyuan-pro'ya kıyasla daha hızlı çıkarım verimliliği ve daha güçlü performans sunar."
+  },
+  "hunyuan-turbo-20241120": {
+    "description": "Hunyuan-turbo 2024 yılı 11 ay 20 günü sabit sürümü, hunyuan-turbo ve hunyuan-turbo-latest arasında bir versiyon."
+  },
+  "hunyuan-turbo-20241223": {
+    "description": "Bu sürümde yapılan optimizasyonlar: veri talimatı ölçeklendirme, modelin genel genelleme yeteneğini büyük ölçüde artırma; matematik, kodlama, mantıksal akıl yürütme yeteneklerini büyük ölçüde artırma; metin anlama ve kelime anlama ile ilgili yetenekleri optimize etme; metin oluşturma içerik üretim kalitesini optimize etme."
+  },
+  "hunyuan-turbo-latest": {
+    "description": "Genel deneyim optimizasyonu, NLP anlama, metin oluşturma, sohbet, bilgi sorgulama, çeviri, alan vb. dahil; insan benzeri özellikleri artırma, modelin duygusal zekasını optimize etme; niyet belirsiz olduğunda modelin aktif olarak netleştirme yeteneğini artırma; kelime ve terim analizi ile ilgili sorunların işlenme yeteneğini artırma; yaratım kalitesini ve etkileşimliğini artırma; çoklu tur deneyimini geliştirme."
+  },
+  "hunyuan-turbo-vision": {
+    "description": "Hunyuan'ın yeni nesil görsel dil amiral modeli, tamamen yeni bir karışık uzman modeli (MoE) yapısını benimser; metin ve görüntü anlama ile ilgili temel tanıma, içerik oluşturma, bilgi sorgulama, analiz ve akıl yürütme gibi yeteneklerde bir önceki nesil modele göre kapsamlı bir iyileştirme sağlar."
   },
   "hunyuan-vision": {
     "description": "Hunyuan'ın en son çok modlu modeli, resim + metin girişi ile metin içeriği oluşturmayı destekler."
@@ -1192,6 +1216,9 @@
   },
   "pro-128k": {
     "description": "Spark Pro 128K, olağanüstü bağlam işleme yeteneği ile donatılmıştır ve 128K'ya kadar bağlam bilgilerini işleyebilir. Özellikle uzun metinlerin bütünsel analizi ve uzun vadeli mantıksal ilişkilerin işlenmesi gereken durumlar için uygundur ve karmaşık metin iletişiminde akıcı ve tutarlı bir mantık ile çeşitli alıntı desteği sunmaktadır."
+  },
+  "qvq-72b-preview": {
+    "description": "QVQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir; görsel akıl yürütme yeteneğini artırmaya odaklanır, özellikle matematik akıl yürütme alanında."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen kod modeli."
