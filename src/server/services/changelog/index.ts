@@ -166,7 +166,7 @@ export class ChangelogService {
     const minVersion = semver.lt(v1, v2) ? v1 : v2;
     const maxVersion = semver.gt(v1, v2) ? v1 : v2;
 
-    return [maxVersion, minVersion];
+    return [minVersion, maxVersion];
   }
 
   private genUrl(path: string) {
