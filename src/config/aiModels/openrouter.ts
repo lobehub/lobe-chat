@@ -176,17 +176,34 @@ const openrouterChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 64_000,
     description:
-      '融合通用与代码能力的全新开源模型, 不仅保留了原有 Chat 模型的通用对话能力和 Coder 模型的强大代码处理能力，还更好地对齐了人类偏好。此外，DeepSeek-V2.5 在写作任务、指令跟随等多个方面也实现了大幅提升。',
-    displayName: 'DeepSeek V2.5',
+      'DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities of the previous versions.',
+    displayName: 'DeepSeek V3',
     enabled: true,
     id: 'deepseek/deepseek-chat',
     pricing: {
       input: 0.14,
       output: 0.28,
     },
-    releasedAt: '2024-09-05',
+    releasedAt: '2024-12-26',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 64_000,
+    description:
+      'DeepSeek R1 is here: Performance on par with OpenAI o1, but open-sourced and with fully open reasoning tokens. It\'s 671B parameters in size, with 37B active in an inference pass.',
+    displayName: 'DeepSeek R1',
+    enabled: true,
+    id: 'deepseek/deepseek-r1',
+    pricing: {
+      input: 0.55,
+      output: 2.19,
+    },
+    releasedAt: '2025-01-20',
     type: 'chat',
   },
   {
