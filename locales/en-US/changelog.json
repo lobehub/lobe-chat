@@ -8,8 +8,8 @@
   "allChangelog": "View all changelogs",
   "description": "Stay updated on the new features and improvements of {{appName}}",
   "pagination": {
-    "older": "View Historical Changes",
-    "prev": "Previous Page"
+    "next": "Next Page",
+    "older": "View Historical Changes"
   },
   "readDetails": "Read details",
   "title": "Changelog",
