@@ -809,8 +809,17 @@
   "hunyuan-functioncall": {
     "description": "Das neueste MOE-Architektur-FunctionCall-Modell von Hunyuan, das mit hochwertigen FunctionCall-Daten trainiert wurde, hat ein Kontextfenster von 32K und führt in mehreren Bewertungsmetriken."
   },
+  "hunyuan-large": {
+    "description": "Das Hunyuan-large Modell hat insgesamt etwa 389B Parameter, davon etwa 52B aktivierte Parameter, und ist das derzeit größte und leistungsstärkste Open-Source MoE-Modell mit Transformer-Architektur in der Branche."
+  },
+  "hunyuan-large-longcontext": {
+    "description": "Besonders gut geeignet für lange Textaufgaben wie Dokumentenzusammenfassungen und Dokumentenfragen, verfügt es auch über die Fähigkeit, allgemeine Textgenerierungsaufgaben zu bearbeiten. Es zeigt hervorragende Leistungen bei der Analyse und Generierung von langen Texten und kann effektiv mit komplexen und detaillierten Anforderungen an die Verarbeitung von langen Inhalten umgehen."
+  },
   "hunyuan-lite": {
     "description": "Aufgerüstet auf eine MOE-Struktur mit einem Kontextfenster von 256k, führt es in mehreren Bewertungssets in NLP, Code, Mathematik und Industrie zahlreiche Open-Source-Modelle an."
+  },
+  "hunyuan-lite-vision": {
+    "description": "Das neueste 7B multimodale Modell von Hunyuan, mit einem Kontextfenster von 32K, unterstützt multimodale Dialoge in Chinesisch und Englisch, Objekterkennung in Bildern, Dokumenten- und Tabellenverständnis sowie multimodale Mathematik und übertrifft in mehreren Dimensionen die Bewertungskennzahlen von 7B Wettbewerbsmodellen."
   },
   "hunyuan-pro": {
     "description": "Ein MOE-32K-Modell für lange Texte mit einer Billion Parametern. Es erreicht in verschiedenen Benchmarks ein absolut führendes Niveau, hat komplexe Anweisungen und Schlussfolgerungen, verfügt über komplexe mathematische Fähigkeiten und unterstützt Funktionsaufrufe, mit Schwerpunkt auf Optimierung in den Bereichen mehrsprachige Übersetzung, Finanzrecht und Medizin."
@@ -824,8 +833,23 @@
   "hunyuan-standard-256K": {
     "description": "Verwendet eine verbesserte Routing-Strategie und mildert gleichzeitig die Probleme der Lastenverteilung und Expertenkonvergenz. Bei langen Texten erreicht der Needle-in-a-Haystack-Indikator 99,9%. MOE-256K bricht in Länge und Effektivität weiter durch und erweitert die eingabefähige Länge erheblich."
   },
+  "hunyuan-standard-vision": {
+    "description": "Das neueste multimodale Modell von Hunyuan, das mehrsprachige Antworten unterstützt und sowohl in Chinesisch als auch in Englisch ausgewogen ist."
+  },
   "hunyuan-turbo": {
     "description": "Die Vorschauversion des neuen großen Sprachmodells von Hunyuan verwendet eine neuartige hybride Expertenmodellstruktur (MoE) und bietet im Vergleich zu Hunyuan-Pro eine schnellere Inferenz und bessere Leistung."
+  },
+  "hunyuan-turbo-20241120": {
+    "description": "Hunyuan-turbo Version vom 20. November 2024, eine feste Version, die zwischen hunyuan-turbo und hunyuan-turbo-latest liegt."
+  },
+  "hunyuan-turbo-20241223": {
+    "description": "Diese Version optimiert: Datenanweisungs-Skalierung, erhebliche Verbesserung der allgemeinen Generalisierungsfähigkeit des Modells; erhebliche Verbesserung der mathematischen, programmierbaren und logischen Denkfähigkeiten; Optimierung der Fähigkeiten im Textverständnis und der Wortverständnisfähigkeiten; Optimierung der Qualität der Inhaltserzeugung in der Texterstellung."
+  },
+  "hunyuan-turbo-latest": {
+    "description": "Allgemeine Optimierung der Benutzererfahrung, einschließlich NLP-Verständnis, Texterstellung, Smalltalk, Wissensfragen, Übersetzung, Fachgebieten usw.; Verbesserung der Menschlichkeit, Optimierung der emotionalen Intelligenz des Modells; Verbesserung der Fähigkeit des Modells, bei unklaren Absichten aktiv Klarheit zu schaffen; Verbesserung der Bearbeitungsfähigkeit von Fragen zur Wort- und Satzanalyse; Verbesserung der Qualität und Interaktivität der Kreation; Verbesserung der Mehrfachinteraktionserfahrung."
+  },
+  "hunyuan-turbo-vision": {
+    "description": "Das neue Flaggschiff-Modell der visuellen Sprache von Hunyuan, das eine brandneue Struktur des gemischten Expertenmodells (MoE) verwendet, bietet umfassende Verbesserungen in den Fähigkeiten zur grundlegenden Erkennung, Inhaltserstellung, Wissensfragen und Analyse sowie Schlussfolgerungen im Vergleich zum vorherigen Modell."
   },
   "hunyuan-vision": {
     "description": "Das neueste multimodale Modell von Hunyuan unterstützt die Eingabe von Bildern und Text zur Generierung von Textinhalten."
@@ -1192,6 +1216,9 @@
   },
   "pro-128k": {
     "description": "Spark Pro 128K verfügt über eine außergewöhnliche Kontextverarbeitungsfähigkeit und kann bis zu 128K Kontextinformationen verarbeiten, was es besonders geeignet für die Analyse langer Texte und die Verarbeitung langfristiger logischer Zusammenhänge macht. Es bietet in komplexen Textkommunikationen flüssige und konsistente Logik sowie vielfältige Unterstützung für Zitate."
+  },
+  "qvq-72b-preview": {
+    "description": "Das QVQ-Modell ist ein experimentelles Forschungsmodell, das vom Qwen-Team entwickelt wurde und sich auf die Verbesserung der visuellen Schlussfolgerungsfähigkeiten konzentriert, insbesondere im Bereich der mathematischen Schlussfolgerungen."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen Code-Modell."
