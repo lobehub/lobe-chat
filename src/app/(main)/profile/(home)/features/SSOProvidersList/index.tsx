@@ -1,18 +1,27 @@
 import { ActionIcon, CopyButton, List } from '@lobehub/ui';
-import { Popconfirm } from 'antd';
 import { RotateCw, Unlink } from 'lucide-react';
-import { memo, useState } from 'react';
+import { CSSProperties, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { modal, notification } from '@/components/AntdStaticMethods';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 
 import AuthIcons from './AuthIcons';
 
 const { Item } = List;
 
+const providerNameStyle: CSSProperties = {
+  textTransform: 'capitalize',
+};
+
 export const SSOProvidersList = memo(() => {
+  const [userProfile] = useUserStore((s) => [userProfileSelectors.userProfile(s)]);
+  const { t } = useTranslation('auth');
+
   const [allowUnlink, setAllowUnlink] = useState<boolean>(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -23,11 +32,29 @@ export const SSOProvidersList = memo(() => {
   });
 
   const handleUnlinkSSO = async (provider: string, providerAccountId: string) => {
-    await userService.unlinkSSOProvider(provider, providerAccountId);
-    mutate();
+    if (data?.length === 1 || !data) {
+      // At least one SSO provider should be linked
+      notification.error({
+        message: t('profile.sso.unlink.forbidden'),
+      });
+      return;
+    }
+    modal.confirm({
+      content: t('profile.sso.unlink.description', {
+        email: userProfile?.email || 'None',
+        provider,
+        providerAccountId,
+      }),
+      okButtonProps: {
+        danger: true,
+      },
+      onOk: async () => {
+        await userService.unlinkSSOProvider(provider, providerAccountId);
+        mutate();
+      },
+      title: <span style={providerNameStyle}>{t('profile.sso.unlink.title', { provider })}</span>,
+    });
   };
-
-  const { t } = useTranslation('auth');
 
   return isLoading ? (
     <Flexbox align={'center'} gap={4} horizontal>
@@ -41,13 +68,12 @@ export const SSOProvidersList = memo(() => {
           actions={
             <Flexbox gap={4} horizontal>
               <CopyButton content={item.providerAccountId} size={'small'} />
-              <Popconfirm
-                onConfirm={() => handleUnlinkSSO(item.provider, item.providerAccountId)}
-                placement="topRight"
-                title={t('profile.sso.unlink', { provider: item.provider })}
-              >
-                <ActionIcon disable={!allowUnlink} icon={Unlink} size={'small'} />
-              </Popconfirm>
+              <ActionIcon
+                disable={!allowUnlink}
+                icon={Unlink}
+                onClick={() => handleUnlinkSSO(item.provider, item.providerAccountId)}
+                size={'small'}
+              />
             </Flexbox>
           }
           avatar={AuthIcons(item.provider)}
@@ -57,7 +83,7 @@ export const SSOProvidersList = memo(() => {
           onMouseEnter={() => setHoveredIndex(index)}
           onMouseLeave={() => setHoveredIndex(null)}
           showAction={hoveredIndex === index}
-          title={<span style={{ textTransform: 'capitalize' }}>{item.provider}</span>}
+          title={<span style={providerNameStyle}>{item.provider}</span>}
         />
       ))}
     </Flexbox>
