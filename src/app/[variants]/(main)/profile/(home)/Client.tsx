@@ -48,7 +48,6 @@ const Client = memo<{ mobile?: boolean }>(() => {
         children: <SSOProvidersList />,
         hidden: !isLoginWithNextAuth,
         label: t('profile.sso.providers'),
-        labelAlign: 'left',
         layout: 'vertical',
         minWidth: undefined,
       },
