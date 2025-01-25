@@ -37,7 +37,12 @@ export default {
     sso: {
       loading: '正在加载已绑定的第三方账户',
       providers: '第三方账户绑定',
-      unlink: '是否解绑该第三方账户 {{provider}} ？',
+      unlink: {
+        description:
+          '解绑后，您将无法使用 {{provider}} 账户“{{providerAccountId}}”登录。如果您需要重新绑定 {{provider}} 账户到当前账户，请确保 {{provider}} 账户的邮件地址为 {{email}} ，我们会在登陆时为你自动绑定到当前登录账户。',
+        forbidden: '您至少需要保留一个第三方账户绑定。',
+        title: '是否解绑该第三方账户 {{provider}} ？',
+      },
     },
     username: '用户名',
   },
