@@ -8,8 +8,8 @@
   "allChangelog": "Voir tous les journaux de mise à jour",
   "description": "Suivez en continu les nouvelles fonctionnalités et améliorations de {{appName}}",
   "pagination": {
-    "older": "Voir les modifications antérieures",
-    "prev": "Page précédente"
+    "next": "Page suivante",
+    "older": "Voir les modifications antérieures"
   },
   "readDetails": "Lire les détails",
   "title": "Journal des mises à jour",
