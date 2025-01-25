@@ -41,7 +41,7 @@ const Pagination = memo(() => {
       >
         <Flexbox align={'flex-end'} className={styles.button} gap={4} padding={16}>
           <Flexbox align={'center'} className={styles.desc} gap={4} horizontal>
-            {t('pagination.prev')}
+            {t('pagination.next')}
             <Icon icon={ChevronRightIcon} />
           </Flexbox>
           <div className={styles.title}>{t('pagination.older')}</div>

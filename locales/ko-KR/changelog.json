@@ -8,8 +8,8 @@
   "allChangelog": "모든 업데이트 로그 보기",
   "description": "{{appName}}의 새로운 기능과 개선 사항을 지속적으로 추적하세요",
   "pagination": {
-    "older": "이전 변경 사항 보기",
-    "prev": "이전 페이지"
+    "next": "다음 페이지",
+    "older": "이전 변경 사항 보기"
   },
   "readDetails": "자세히 읽기",
   "title": "업데이트 로그",
