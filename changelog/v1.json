@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve model pricing with CNY."]
+    },
+    "date": "2025-01-26",
+    "version": "1.48.3"
+  },
+  {
+    "children": {
       "improvements": [
         "Add parallel_tool_calls support for Qwen, fix tag version and add provider changelog."
       ]
