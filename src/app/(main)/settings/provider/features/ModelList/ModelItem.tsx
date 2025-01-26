@@ -11,11 +11,9 @@ import { ModelInfoTags } from '@/components/ModelSelect';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { AiModelSourceEnum, AiProviderModelListItem, ChatModelPricing } from '@/types/aiModel';
+import { formatPriceByCurrency } from '@/utils/format';
 
 import ModelConfigModal from './ModelConfigModal';
-
-const f = (number: number | undefined, text: string) =>
-  typeof number !== 'undefined' ? text : undefined;
 
 export const useStyles = createStyles(({ css, token, cx }) => {
   const config = css`
@@ -74,7 +72,7 @@ const ModelItem = memo<ModelItemProps>(
     type,
   }) => {
     const { styles } = useStyles();
-    const { t } = useTranslation(['modelProvider', 'components', 'models']);
+    const { t } = useTranslation(['modelProvider', 'components', 'models', 'common']);
     const theme = useTheme();
 
     const [activeAiProvider, isModelLoading, toggleModelEnabled, removeAiModel] = useAiInfraStore(
@@ -90,41 +88,43 @@ const ModelItem = memo<ModelItemProps>(
     const [showConfig, setShowConfig] = useState(false);
 
     const formatPricing = (): string[] => {
+      if (!pricing) return [];
+
       switch (type) {
         case 'chat': {
           return [
-            f(
-              pricing?.input,
-              t('providerModels.item.pricing.inputTokens', { amount: pricing?.input }),
-            ),
-            f(
-              pricing?.output,
-              t('providerModels.item.pricing.outputTokens', { amount: pricing?.output }),
-            ),
+            typeof pricing.input === 'number' &&
+              t('providerModels.item.pricing.inputTokens', {
+                amount: formatPriceByCurrency(pricing.input, pricing?.currency),
+              }),
+            typeof pricing.output === 'number' &&
+              t('providerModels.item.pricing.outputTokens', {
+                amount: formatPriceByCurrency(pricing.output, pricing?.currency),
+              }),
           ].filter(Boolean) as string[];
         }
         case 'embedding': {
           return [
-            f(
-              pricing?.input,
-              t('providerModels.item.pricing.inputTokens', { amount: pricing?.input }),
-            ),
+            typeof pricing.input === 'number' &&
+              t('providerModels.item.pricing.inputTokens', {
+                amount: formatPriceByCurrency(pricing.input, pricing?.currency),
+              }),
           ].filter(Boolean) as string[];
         }
         case 'tts': {
           return [
-            f(
-              pricing?.input,
-              t('providerModels.item.pricing.inputCharts', { amount: pricing?.input }),
-            ),
+            typeof pricing.input === 'number' &&
+              t('providerModels.item.pricing.inputCharts', {
+                amount: formatPriceByCurrency(pricing.input, pricing?.currency),
+              }),
           ].filter(Boolean) as string[];
         }
         case 'stt': {
           return [
-            f(
-              pricing?.input,
-              t('providerModels.item.pricing.inputMinutes', { amount: pricing?.input }),
-            ),
+            typeof pricing.input === 'number' &&
+              t('providerModels.item.pricing.inputMinutes', {
+                amount: formatPriceByCurrency(pricing.input, pricing?.currency),
+              }),
           ].filter(Boolean) as string[];
         }
 
@@ -142,7 +142,12 @@ const ModelItem = memo<ModelItemProps>(
       releasedAt && t('providerModels.item.releasedAt', { releasedAt }),
       ...formatPricing(),
     ].filter(Boolean) as string[];
+
     const { message, modal } = App.useApp();
+    const copyModelId = async () => {
+      await copyToClipboard(id);
+      message.success({ content: t('copySuccess', { ns: 'common' }) });
+    };
 
     const isMobile = useIsMobile();
 
@@ -179,12 +184,7 @@ const ModelItem = memo<ModelItemProps>(
               </Flexbox>
             </Flexbox>
             <div>
-              <Tag
-                onClick={() => {
-                  copyToClipboard(id);
-                }}
-                style={{ cursor: 'pointer', marginRight: 0 }}
-              >
+              <Tag onClick={copyModelId} style={{ cursor: 'pointer', marginRight: 0 }}>
                 {id}
               </Tag>
             </div>
@@ -251,12 +251,7 @@ const ModelItem = memo<ModelItemProps>(
           <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
             <Flexbox align={'center'} gap={8} horizontal>
               {displayName || id}
-              <Tag
-                onClick={() => {
-                  copyToClipboard(id);
-                }}
-                style={{ cursor: 'pointer', marginRight: 0 }}
-              >
+              <Tag onClick={copyModelId} style={{ cursor: 'pointer', marginRight: 0 }}>
                 {id}
               </Tag>
               <Flexbox className={styles.config} horizontal>
