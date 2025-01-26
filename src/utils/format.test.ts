@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 
-import { CNY_TO_USD } from '@/const/discover';
+import { CNY_TO_USD } from '@/const/currency';
 
 import {
   formatDate,

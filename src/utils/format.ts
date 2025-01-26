@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { isNumber } from 'lodash-es';
 import numeral from 'numeral';
 
-import { CNY_TO_USD } from '@/const/discover';
+import { CNY_TO_USD } from '@/const/currency';
 import { ModelPriceCurrency } from '@/types/llm';
 
 export const formatSize = (bytes: number, fractionDigits: number = 1): string => {
