@@ -46,6 +46,7 @@ export interface ChatModelCard {
   legacy?: boolean;
   maxOutput?: number;
   pricing?: ChatModelPricing;
+  reasoning?: boolean;
   releasedAt?: string;
 
   /**

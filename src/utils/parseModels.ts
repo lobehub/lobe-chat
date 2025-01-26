@@ -81,7 +81,7 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
             break;
           }
           case 'reasoning': {
-            model.abilities!.hot = true;
+            model.abilities!.reasoning = true;
             break;
           }
           default: {
