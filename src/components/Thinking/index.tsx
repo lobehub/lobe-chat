@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AtomIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo, useEffect, useState } from 'react';
+import { ReactNode, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -61,12 +61,12 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 }));
 
 interface ThinkingProps {
-  content?: string;
+  content?: ReactNode;
   duration?: number;
   thinking?: boolean;
 }
 
-const Thinking = memo<ThinkingProps>(({ content = '', duration, thinking }) => {
+const Thinking = memo<ThinkingProps>(({ content, duration, thinking }) => {
   const { t } = useTranslation('components');
   const { styles, cx } = useStyles();
 
@@ -101,7 +101,7 @@ const Thinking = memo<ThinkingProps>(({ content = '', duration, thinking }) => {
         ) : (
           <Flexbox gap={8} horizontal>
             <Icon icon={AtomIcon} />
-            {typeof duration === 'undefined'
+            {!duration
               ? t('Thinking.thoughtWithDuration')
               : t('Thinking.thought', { duration: ((duration || 0) / 1000).toFixed(1) })}
           </Flexbox>
@@ -125,10 +125,13 @@ const Thinking = memo<ThinkingProps>(({ content = '', duration, thinking }) => {
               open: { height: 'auto', opacity: 1, width: 'auto' },
             }}
           >
-            <Markdown variant={'chat'}>{content}</Markdown>
+            {typeof content === 'string' ? (
+              <Markdown variant={'chat'}>{content}</Markdown>
+            ) : (
+              content
+            )}
           </motion.div>
         )}
-        {/*<Flexbox></Flexbox>*/}
       </AnimatePresence>
     </Flexbox>
   );
