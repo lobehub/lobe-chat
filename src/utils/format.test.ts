@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 
-import { CNY_TO_USD } from '@/const/currency';
+import { USD_TO_CNY } from '@/const/currency';
 
 import {
   formatDate,
@@ -203,7 +203,7 @@ describe('format', () => {
 
     it('should use the correct CNY_TO_USD conversion rate', () => {
       const price = 1000;
-      const expectedCNY = formatPrice(price / CNY_TO_USD);
+      const expectedCNY = formatPrice(price / USD_TO_CNY);
       expect(formatPriceByCurrency(price, 'CNY')).toBe(expectedCNY);
     });
   });

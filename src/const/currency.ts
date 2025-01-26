@@ -1,2 +1,2 @@
 // in 2025.01.26
-export const CNY_TO_USD = 7.24;
+export const USD_TO_CNY = 7.24;
