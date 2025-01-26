@@ -194,13 +194,6 @@ describe('format', () => {
       expect(formatPriceByCurrency(1234.56, 'USD')).toBe('1,234.56');
     });
 
-    it('should format CNY prices correctly', () => {
-      // Assuming CNY_TO_USD is 6.5
-      const CNY_TO_USD = 6.5;
-      expect(formatPriceByCurrency(1000, 'CNY')).toBe('140.06');
-      expect(formatPriceByCurrency(6500, 'CNY')).toBe('910.36');
-    });
-
     it('should use the correct CNY_TO_USD conversion rate', () => {
       const price = 1000;
       const expectedCNY = formatPrice(price / USD_TO_CNY);
