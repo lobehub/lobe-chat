@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "Nessun modello attivo. Vai alle impostazioni per attivarne uno.",
     "provider": "Provider"
+  },
+  "Thinking": {
+    "thinking": "Pensando profondamente...",
+    "thought": "Pensato profondamente",
+    "thoughtWithDuration": "Pensato profondamente (tempo impiegato {{duration}} secondi)"
   }
 }
