@@ -809,8 +809,17 @@
   "hunyuan-functioncall": {
     "description": "Mô hình FunctionCall với cấu trúc MOE mới nhất của Hunyuan, được huấn luyện trên dữ liệu FunctionCall chất lượng cao, với cửa sổ ngữ cảnh đạt 32K, dẫn đầu trong nhiều chỉ số đánh giá."
   },
+  "hunyuan-large": {
+    "description": "Mô hình Hunyuan-large có tổng số tham số khoảng 389B, số tham số kích hoạt khoảng 52B, là mô hình MoE mã nguồn mở có quy mô tham số lớn nhất và hiệu quả nhất trong ngành hiện nay."
+  },
+  "hunyuan-large-longcontext": {
+    "description": "Chuyên xử lý các nhiệm vụ văn bản dài như tóm tắt tài liệu và hỏi đáp tài liệu, đồng thời cũng có khả năng xử lý các nhiệm vụ tạo văn bản chung. Thể hiện xuất sắc trong phân tích và tạo nội dung văn bản dài, có thể đáp ứng hiệu quả các yêu cầu xử lý nội dung dài phức tạp và chi tiết."
+  },
   "hunyuan-lite": {
     "description": "Nâng cấp lên cấu trúc MOE, với cửa sổ ngữ cảnh 256k, dẫn đầu nhiều mô hình mã nguồn mở trong các bộ đánh giá NLP, mã, toán học, ngành nghề, v.v."
+  },
+  "hunyuan-lite-vision": {
+    "description": "Mô hình đa phương thức mới nhất 7B của Hunyuan, cửa sổ ngữ cảnh 32K, hỗ trợ đối thoại đa phương thức trong các tình huống tiếng Trung và tiếng Anh, nhận diện đối tượng hình ảnh, hiểu biết tài liệu và bảng biểu, toán học đa phương thức, v.v., với các chỉ số đánh giá vượt trội hơn các mô hình cạnh tranh 7B ở nhiều khía cạnh."
   },
   "hunyuan-pro": {
     "description": "Mô hình văn bản dài MOE-32K với quy mô hàng triệu tham số. Đạt được mức độ dẫn đầu tuyệt đối trên nhiều benchmark, có khả năng xử lý các lệnh phức tạp và suy diễn, có khả năng toán học phức tạp, hỗ trợ functioncall, được tối ưu hóa cho các lĩnh vực dịch thuật đa ngôn ngữ, tài chính, pháp lý và y tế."
@@ -824,8 +833,23 @@
   "hunyuan-standard-256K": {
     "description": "Sử dụng chiến lược định tuyến tốt hơn, đồng thời giảm thiểu vấn đề cân bằng tải và đồng nhất chuyên gia. Về mặt văn bản dài, chỉ số tìm kiếm đạt 99.9%. MOE-256K đã có bước đột phá về độ dài và hiệu quả, mở rộng đáng kể độ dài đầu vào có thể."
   },
+  "hunyuan-standard-vision": {
+    "description": "Mô hình đa phương thức mới nhất của Hunyuan, hỗ trợ trả lời đa ngôn ngữ, khả năng tiếng Trung và tiếng Anh cân bằng."
+  },
   "hunyuan-turbo": {
     "description": "Phiên bản xem trước của thế hệ mới mô hình ngôn ngữ lớn Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, so với hunyuan-pro, hiệu suất suy diễn nhanh hơn và hiệu quả mạnh mẽ hơn."
+  },
+  "hunyuan-turbo-20241120": {
+    "description": "Phiên bản cố định hunyuan-turbo ngày 20 tháng 11 năm 2024, là một phiên bản nằm giữa hunyuan-turbo và hunyuan-turbo-latest."
+  },
+  "hunyuan-turbo-20241223": {
+    "description": "Phiên bản này tối ưu hóa: quy mô chỉ thị dữ liệu, nâng cao đáng kể khả năng tổng quát của mô hình; nâng cao đáng kể khả năng toán học, lập trình, và suy luận logic; tối ưu hóa khả năng hiểu biết văn bản và từ ngữ; tối ưu hóa chất lượng tạo nội dung văn bản."
+  },
+  "hunyuan-turbo-latest": {
+    "description": "Tối ưu hóa trải nghiệm chung, bao gồm hiểu biết NLP, sáng tạo văn bản, trò chuyện, hỏi đáp kiến thức, dịch thuật, và các lĩnh vực khác; nâng cao tính nhân văn, tối ưu hóa trí tuệ cảm xúc của mô hình; cải thiện khả năng làm rõ khi ý định không rõ ràng; nâng cao khả năng xử lý các vấn đề phân tích từ ngữ; nâng cao chất lượng và khả năng tương tác trong sáng tạo; cải thiện trải nghiệm đa vòng."
+  },
+  "hunyuan-turbo-vision": {
+    "description": "Mô hình ngôn ngữ hình ảnh thế hệ mới của Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, nâng cao toàn diện khả năng nhận diện cơ bản, sáng tạo nội dung, hỏi đáp kiến thức, và phân tích suy luận so với mô hình thế hệ trước."
   },
   "hunyuan-vision": {
     "description": "Mô hình đa phương thức mới nhất của Hunyuan, hỗ trợ đầu vào hình ảnh + văn bản để tạo ra nội dung văn bản."
@@ -1192,6 +1216,9 @@
   },
   "pro-128k": {
     "description": "Spark Pro 128K được cấu hình với khả năng xử lý ngữ cảnh cực lớn, có thể xử lý tới 128K thông tin ngữ cảnh, đặc biệt phù hợp cho việc phân tích toàn bộ và xử lý mối liên hệ logic lâu dài trong nội dung văn bản dài, có thể cung cấp logic mạch lạc và hỗ trợ trích dẫn đa dạng trong giao tiếp văn bản phức tạp."
+  },
+  "qvq-72b-preview": {
+    "description": "Mô hình QVQ là mô hình nghiên cứu thử nghiệm do đội ngũ Qwen phát triển, tập trung vào việc nâng cao khả năng suy luận hình ảnh, đặc biệt trong lĩnh vực suy luận toán học."
   },
   "qwen-coder-plus-latest": {
     "description": "Mô hình mã Qwen."

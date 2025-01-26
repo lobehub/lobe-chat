@@ -8,8 +8,8 @@
   "allChangelog": "Visualizza tutti i registri delle modifiche",
   "description": "Tieni traccia delle nuove funzionalità e miglioramenti di {{appName}}",
   "pagination": {
-    "older": "Visualizza le modifiche precedenti",
-    "prev": "Pagina precedente"
+    "next": "Pagina successiva",
+    "older": "Visualizza le modifiche precedenti"
   },
   "readDetails": "Leggi i dettagli",
   "title": "Registro delle modifiche",

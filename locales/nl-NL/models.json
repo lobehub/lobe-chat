@@ -809,8 +809,17 @@
   "hunyuan-functioncall": {
     "description": "Het nieuwste MOE-architectuur FunctionCall-model van Hunyuan, getraind op hoogwaardige FunctionCall-gegevens, met een contextvenster van 32K, en staat voorop in meerdere dimensies van evaluatie-indicatoren."
   },
+  "hunyuan-large": {
+    "description": "Het Hunyuan-large model heeft een totaal aantal parameters van ongeveer 389B, met ongeveer 52B actieve parameters, en is het grootste en beste open-source MoE-model met Transformer-architectuur in de industrie."
+  },
+  "hunyuan-large-longcontext": {
+    "description": "Uitstekend in het verwerken van lange teksttaken zoals document samenvattingen en documentvragen, en heeft ook de capaciteit om algemene tekstgeneratietaken uit te voeren. Het presteert uitstekend in de analyse en generatie van lange teksten en kan effectief omgaan met complexe en gedetailleerde lange inhoudsverwerkingsbehoeften."
+  },
   "hunyuan-lite": {
     "description": "Geüpgraded naar een MOE-structuur, met een contextvenster van 256k, en leidt in verschillende evaluatiesets op het gebied van NLP, code, wiskunde en industrie ten opzichte van vele open-source modellen."
+  },
+  "hunyuan-lite-vision": {
+    "description": "De nieuwste 7B multimodale Hunyuan-model, met een contextvenster van 32K, ondersteunt multimodale gesprekken in het Chinees en het Engels, objectherkenning in afbeeldingen, document- en tabelbegrip, multimodale wiskunde, enz., en scoort op meerdere dimensies beter dan 7B concurrentiemodellen."
   },
   "hunyuan-pro": {
     "description": "Een MOE-32K lange tekstmodel met triljoenen parameters. Bereikt een absoluut leidend niveau op verschillende benchmarks, met complexe instructies en redenering, beschikt over complexe wiskundige capaciteiten, ondersteunt function calls, en is geoptimaliseerd voor toepassingen in meertalige vertaling, financiële, juridische en medische gebieden."
@@ -824,8 +833,23 @@
   "hunyuan-standard-256K": {
     "description": "Maakt gebruik van een betere routeringsstrategie en verlicht tegelijkertijd de problemen van load balancing en expert convergentie. Voor lange teksten bereikt de naald in een hooiberg-index 99,9%. MOE-256K doorbreekt verder in lengte en effectiviteit, waardoor de invoerlengte aanzienlijk wordt vergroot."
   },
+  "hunyuan-standard-vision": {
+    "description": "De nieuwste multimodale Hunyuan-model, ondersteunt meertalige antwoorden, met evenwichtige capaciteiten in het Chinees en het Engels."
+  },
   "hunyuan-turbo": {
     "description": "Een previewversie van het nieuwe generatie grote taalmodel van Hunyuan, met een nieuwe hybride expertmodel (MoE) structuur, die sneller inferentie-efficiëntie biedt en betere prestaties levert dan hunyan-pro."
+  },
+  "hunyuan-turbo-20241120": {
+    "description": "Hunyuan-turbo versie van 20 november 2024, een vaste versie die zich tussen hunyuan-turbo en hunyuan-turbo-latest bevindt."
+  },
+  "hunyuan-turbo-20241223": {
+    "description": "Deze versie optimaliseert: gegevensinstructiescaling, wat de algemene generalisatiecapaciteit van het model aanzienlijk verbetert; aanzienlijke verbetering van wiskunde-, code- en logische redeneervaardigheden; optimalisatie van tekstbegrip en woordbegrip gerelateerde capaciteiten; optimalisatie van de kwaliteit van tekstcreatie en inhoudsgeneratie."
+  },
+  "hunyuan-turbo-latest": {
+    "description": "Algemene ervaring optimalisatie, inclusief NLP-begrip, tekstcreatie, casual gesprekken, kennisvragen, vertalingen, en domeinspecifieke toepassingen; verbetering van de menselijkheid, optimalisatie van de emotionele intelligentie van het model; verbetering van het vermogen van het model om actief te verduidelijken bij vage intenties; verbetering van de verwerking van vragen over woord- en zinsanalyse; verbetering van de kwaliteit en interactie van creaties; verbetering van de ervaring in meerdere rondes."
+  },
+  "hunyuan-turbo-vision": {
+    "description": "De nieuwe generatie visuele taal vlaggenschipmodel van Hunyuan, met een geheel nieuwe hybride expertmodel (MoE) structuur, biedt aanzienlijke verbeteringen in basisherkenning, inhoudcreatie, kennisvragen, en analytische redeneervaardigheden in vergelijking met de vorige generatie modellen."
   },
   "hunyuan-vision": {
     "description": "Het nieuwste multimodale model van Hunyuan, ondersteunt het genereren van tekstinhoud op basis van afbeelding + tekstinvoer."
@@ -1192,6 +1216,9 @@
   },
   "pro-128k": {
     "description": "Spark Pro 128K is uitgerust met een zeer grote contextverwerkingscapaciteit, in staat om tot 128K contextinformatie te verwerken. Het is bijzonder geschikt voor lange teksten die een volledige analyse en langdurige logische verbanden vereisen, en biedt een vloeiende en consistente logica met diverse ondersteuningen voor citaten in complexe tekstcommunicatie."
+  },
+  "qvq-72b-preview": {
+    "description": "Het QVQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van visuele redeneervaardigheden, vooral in het domein van wiskundige redenering."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen code model."
