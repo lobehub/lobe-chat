@@ -82,10 +82,6 @@
       }
     }
   },
-  "reasoning": {
-    "thinking": "深度思考中",
-    "thought": "已深度思考（用时 {{duration}} 秒）"
-  },
   "regenerate": "重新生成",
   "roleAndArchive": "角色与记录",
   "searchAgentPlaceholder": "搜索助手...",

@@ -82,10 +82,6 @@
       }
     }
   },
-  "reasoning": {
-    "thinking": "في عمق التفكير",
-    "thought": "تم التفكير بعمق (استغرق {{duration}} ثانية)"
-  },
   "regenerate": "إعادة الإنشاء",
   "roleAndArchive": "الدور والأرشيف",
   "searchAgentPlaceholder": "مساعد البحث...",

@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "No hay modelos habilitados. Vaya a la configuración para habilitarlos.",
     "provider": "Proveedor"
+  },
+  "Thinking": {
+    "thinking": "Pensando profundamente...",
+    "thought": "He pensado profundamente",
+    "thoughtWithDuration": "He pensado profundamente (durante {{duration}} segundos)"
   }
 }
