@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.48.4](https://github.com/lobehub/lobe-chat/compare/v1.48.3...v1.48.4)
+
+<sup>Released on **2025-01-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve thinking style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve thinking style, closes [#5602](https://github.com/lobehub/lobe-chat/issues/5602) ([d4dc3f2](https://github.com/lobehub/lobe-chat/commit/d4dc3f2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.48.3](https://github.com/lobehub/lobe-chat/compare/v1.48.2...v1.48.3)
 
 <sup>Released on **2025-01-26**</sup>
