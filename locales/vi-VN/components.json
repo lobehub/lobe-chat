@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "Không có mô hình nào được kích hoạt, vui lòng điều chỉnh trong cài đặt",
     "provider": "Nhà cung cấp"
+  },
+  "Thinking": {
+    "thinking": "Đang suy nghĩ sâu sắc...",
+    "thought": "Đã suy nghĩ sâu sắc",
+    "thoughtWithDuration": "Đã suy nghĩ sâu sắc (thời gian: {{duration}} giây)"
   }
 }
