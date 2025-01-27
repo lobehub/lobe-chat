@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "لا توجد نماذج ممكن تمكينها، يرجى الانتقال إلى الإعدادات لتمكينها",
     "provider": "مزود"
+  },
+  "Thinking": {
+    "thinking": "في حالة تفكير عميق...",
+    "thought": "تم التفكير بعمق",
+    "thoughtWithDuration": "تم التفكير بعمق (استغرق {{duration}} ثانية)"
   }
 }

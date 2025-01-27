@@ -287,18 +287,27 @@ generate_key() {
 
 echo $(show_message "security_secrect_regenerate")
 
+# check operating system
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    SED_COMMAND="sed -i ''"
+else
+    # not macOS
+    SED_COMMAND="sed -i"
+fi
+
 # Generate CASDOOR_SECRET
 CASDOOR_SECRET=$(generate_key 32)
 if [ $? -ne 0 ]; then
   echo $(show_message "security_secrect_regenerate_failed") "CASDOOR_SECRET"
 else
   # Search and replace the value of CASDOOR_SECRET in .env
-  sed -i "s#^AUTH_CASDOOR_SECRET=.*#AUTH_CASDOOR_SECRET=${CASDOOR_SECRET}#" .env
+  $SED_COMMAND "s#^AUTH_CASDOOR_SECRET=.*#AUTH_CASDOOR_SECRET=${CASDOOR_SECRET}#" .env
   if [ $? -ne 0 ]; then
     echo $(show_message "security_secrect_regenerate_failed") "AUTH_CASDOOR_SECRET in \`.env\`"
   fi
   # replace `clientSecrect` in init_data.json
-  sed -i "s#dbf205949d704de81b0b5b3603174e23fbecc354#${CASDOOR_SECRET}#" init_data.json
+  $SED_COMMAND "s#dbf205949d704de81b0b5b3603174e23fbecc354#${CASDOOR_SECRET}#" init_data.json
   if [ $? -ne 0 ]; then
     echo $(show_message "security_secrect_regenerate_failed") "AUTH_CASDOOR_SECRET in \`init_data.json\`"
   fi
@@ -311,7 +320,7 @@ if [ $? -ne 0 ]; then
   echo $(show_message "security_secrect_regenerate_failed") "CASDOOR_PASSWORD"
 else
   # replace `password` in init_data.json
-  sed -i "s/"123"/${CASDOOR_PASSWORD}/" init_data.json
+  $SED_COMMAND "s/"123"/${CASDOOR_PASSWORD}/" init_data.json
   if [ $? -ne 0 ]; then
     echo $(show_message "security_secrect_regenerate_failed") "CASDOOR_PASSWORD in \`init_data.json\`"
   fi
@@ -325,7 +334,7 @@ fi
 #  echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY"
 #else
 #  # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
-#  sed -i "s#^S3_SECRET_ACCESS_KEY=.*#S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}#" .env
+#  $SED_COMMAND "s#^S3_SECRET_ACCESS_KEY=.*#S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}#" .env
 #  if [ $? -ne 0 ]; then
 #    echo $(show_message "security_secrect_regenerate_failed") "S3_SECRET_ACCESS_KEY in \`.env\`"
 #  fi
@@ -334,12 +343,12 @@ fi
 # Modify the .env file if the host is specified
 if [ -n "$HOST" ]; then
   # Modify env
-  sed -i "s/localhost/$HOST/g" .env
+  $SED_COMMAND "s/localhost/$HOST/g" .env
   if [ $? -ne 0 ]; then
     echo $(show_message "security_secrect_regenerate_failed") "HOST in \`.env\`"
   fi
   # Modify casdoor init data
-  sed -i "s/localhost/$HOST/g" init_data.json
+  $SED_COMMAND "s/localhost/$HOST/g" init_data.json
   if [ $? -ne 0 ]; then
     echo $(show_message "security_secrect_regenerate_failed") "HOST in \`init_data.json\`"
   fi
@@ -363,3 +372,4 @@ print_centered "docker compose up -d" "green"
 printf "\n%s" "$(show_message "tips_show_documentation")"
 printf "%s\n" $(show_message "tips_show_documentation_url")
 printf "\n\e[33m%s\e[0m\n" "$(show_message "tips_warning")"
+
