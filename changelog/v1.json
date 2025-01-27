@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Remove use query."]
+    },
+    "date": "2025-01-27",
+    "version": "1.49.2"
+  },
+  {
+    "children": {
       "improvements": ["UseMobileWorkspace use nqus to replace useQuery."]
     },
     "date": "2025-01-27",
