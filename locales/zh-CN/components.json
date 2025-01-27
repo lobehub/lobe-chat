@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "没有启用的模型，请前往设置开启",
     "provider": "提供商"
+  },
+  "Thinking": {
+    "thinking": "深度思考中...",
+    "thought": "已深度思考",
+    "thoughtWithDuration": "已深度思考（用时 {{duration}} 秒）"
   }
 }

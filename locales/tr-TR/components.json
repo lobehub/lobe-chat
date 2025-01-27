@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "Etkinleştirilmiş model bulunmamaktadır, lütfen ayarlara giderek açın",
     "provider": "Sağlayıcı"
+  },
+  "Thinking": {
+    "thinking": "Derin düşünme aşamasında...",
+    "thought": "Derin düşünme tamamlandı",
+    "thoughtWithDuration": "Derin düşünme tamamlandı (geçen süre {{duration}} saniye)"
   }
 }

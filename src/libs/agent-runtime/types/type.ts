@@ -30,6 +30,7 @@ export enum ModelProvider {
   Bedrock = 'bedrock',
   Cloudflare = 'cloudflare',
   DeepSeek = 'deepseek',
+  Doubao = 'doubao',
   FireworksAI = 'fireworksai',
   GiteeAI = 'giteeai',
   Github = 'github',

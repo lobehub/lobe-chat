@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "No enabled model. Please go to settings to enable.",
     "provider": "Provider"
+  },
+  "Thinking": {
+    "thinking": "Deep in thought...",
+    "thought": "Thought deeply",
+    "thoughtWithDuration": "Thought deeply (took {{duration}} seconds)"
   }
 }
