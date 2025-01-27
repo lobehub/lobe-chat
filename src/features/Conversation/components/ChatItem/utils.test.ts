@@ -147,4 +147,19 @@ describe('processWithArtifact', () => {
 
     expect(output).toEqual(`<lobeThinking>这个词汇涉及了`);
   });
+
+  it('should handle no empty line between lobeThinking and lobeArtifact', () => {
+    const input = `<lobeThinking>这是一个思考过程。</lobeThinking>
+<lobeArtifact identifier="test" type="image/svg+xml" title="测试">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="blue"/>
+</svg>
+</lobeArtifact>`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`<lobeThinking>这是一个思考过程。</lobeThinking>
+
+<lobeArtifact identifier="test" type="image/svg+xml" title="测试"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">  <rect width="100" height="100" fill="blue"/></svg></lobeArtifact>`);
+  });
 });

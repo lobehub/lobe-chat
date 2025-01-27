@@ -13,7 +13,10 @@ export const processWithArtifact = (input: string = '') => {
       match.replaceAll(/\r?\n|\r/g, ''),
     );
 
-  const match = ARTIFACT_TAG_REGEX.exec(input);
+  // Add empty line between lobeThinking and lobeArtifact if they are adjacent
+  output = output.replace(/(<\/lobeThinking>)\r?\n(<lobeArtifact)/, '$1\n\n$2');
+
+  const match = ARTIFACT_TAG_REGEX.exec(output);
   // If the input contains the `lobeArtifact` tag, replace all line breaks with an empty string
   if (match)
     return output.replace(ARTIFACT_TAG_REGEX, (match) => match.replaceAll(/\r?\n|\r/g, ''));
