@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "هیچ مدلی فعال نیست، لطفاً به تنظیمات بروید و آن را فعال کنید",
     "provider": "ارائه‌دهنده"
+  },
+  "Thinking": {
+    "thinking": "در حال تفکر عمیق...",
+    "thought": "تفکر عمیق انجام شد",
+    "thoughtWithDuration": "تفکر عمیق انجام شد (مدت زمان {{duration}} ثانیه)"
   }
 }

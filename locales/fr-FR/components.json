@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "Aucun modèle activé. Veuillez vous rendre dans les paramètres pour l'activer.",
     "provider": "Fournisseur"
+  },
+  "Thinking": {
+    "thinking": "En pleine réflexion...",
+    "thought": "Réflexion terminée",
+    "thoughtWithDuration": "Réflexion terminée (durée : {{duration}} secondes)"
   }
 }

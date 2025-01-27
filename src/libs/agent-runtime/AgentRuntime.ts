@@ -11,6 +11,7 @@ import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeCloudflareAI, LobeCloudflareParams } from './cloudflare';
 import { LobeDeepSeekAI } from './deepseek';
+import { LobeDoubaoAI } from './doubao';
 import { LobeFireworksAI } from './fireworksai';
 import { LobeGiteeAI } from './giteeai';
 import { LobeGithubAI } from './github';
@@ -139,6 +140,7 @@ class AgentRuntime {
       bedrock: Partial<LobeBedrockAIParams>;
       cloudflare: Partial<LobeCloudflareParams>;
       deepseek: Partial<ClientOptions>;
+      doubao: Partial<ClientOptions>;
       fireworksai: Partial<ClientOptions>;
       giteeai: Partial<ClientOptions>;
       github: Partial<ClientOptions>;
@@ -361,6 +363,11 @@ class AgentRuntime {
 
       case ModelProvider.Higress: {
         runtimeModel = new LobeHigressAI(params.higress);
+        break;
+      }
+
+      case ModelProvider.Doubao: {
+        runtimeModel = new LobeDoubaoAI(params.doubao);
         break;
       }
     }
