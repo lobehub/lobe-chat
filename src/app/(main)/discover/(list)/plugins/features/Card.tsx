@@ -25,8 +25,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     opacity: ${isDarkMode ? 0.9 : 0.4};
   `,
   container: css`
-    cursor: pointer;
-
     position: relative;
 
     overflow: hidden;
@@ -66,13 +64,14 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 interface PluginCardProps
   extends Omit<DiscoverPlugintem, 'manifest' | 'suggestions' | 'socialData'> {
   className?: string;
+  href: string;
   showCategory?: boolean;
   style?: CSSProperties;
   variant?: 'default' | 'compact';
 }
 
 const PluginCard = memo<PluginCardProps>(
-  ({ className, showCategory, meta, createdAt, author, variant, style }) => {
+  ({ className, showCategory, meta, createdAt, author, variant, style, href }) => {
     const { avatar, title, description, tags = [], category } = meta;
     const categoryItem = useCategoryItem(category, 12);
     const { cx, styles, theme } = useStyles();
@@ -81,47 +80,57 @@ const PluginCard = memo<PluginCardProps>(
     return (
       <Flexbox className={cx(styles.container, className)} gap={24} style={style}>
         {!isCompact && <CardBanner avatar={avatar} />}
-        <Flexbox className={styles.inner} gap={12}>
-          <Flexbox align={'flex-end'} gap={16} horizontal justify={'space-between'} width={'100%'}>
-            <Title className={styles.title} ellipsis={{ rows: 1, tooltip: title }} level={3}>
-              {title}
-            </Title>
-            {isCompact ? (
-              <Avatar avatar={avatar} size={40} style={{ display: 'block' }} title={title} />
-            ) : (
-              <Center
-                flex={'none'}
-                height={64}
-                style={{
-                  background: theme.colorBgContainer,
-                  borderRadius: '50%',
-                  marginTop: -6,
-                  overflow: 'hidden',
-                  zIndex: 2,
-                }}
-                width={64}
+        <Flexbox gap={12} padding={16}>
+          <Link href={href}>
+            <Flexbox gap={12}>
+              <Flexbox
+                align={'flex-end'}
+                gap={16}
+                horizontal
+                justify={'space-between'}
+                width={'100%'}
               >
-                <Avatar
-                  alt={title}
-                  avatar={avatar}
-                  size={56}
-                  style={{ display: 'block' }}
-                  title={title}
-                />
-              </Center>
-            )}
-          </Flexbox>
-          <Flexbox gap={8} horizontal style={{ fontSize: 12 }}>
-            <div style={{ color: theme.colorTextSecondary }}>@{author}</div>
-            {!isCompact && (
-              <time className={styles.time} dateTime={new Date(createdAt).toISOString()}>
-                {createdAt}
-              </time>
-            )}
-          </Flexbox>
-          <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
-            {description}
-          </Paragraph>
+                <Title className={styles.title} ellipsis={{ rows: 1, tooltip: title }} level={3}>
+                  {title}
+                </Title>
+                {isCompact ? (
+                  <Avatar avatar={avatar} size={40} style={{ display: 'block' }} title={title} />
+                ) : (
+                  <Center
+                    flex={'none'}
+                    height={64}
+                    style={{
+                      background: theme.colorBgContainer,
+                      borderRadius: '50%',
+                      marginTop: -6,
+                      overflow: 'hidden',
+                      zIndex: 2,
+                    }}
+                    width={64}
+                  >
+                    <Avatar
+                      alt={title}
+                      avatar={avatar}
+                      size={56}
+                      style={{ display: 'block' }}
+                      title={title}
+                    />
+                  </Center>
+                )}
+              </Flexbox>
+              <Flexbox gap={8} horizontal style={{ fontSize: 12 }}>
+                <div style={{ color: theme.colorTextSecondary }}>@{author}</div>
+                {!isCompact && (
+                  <time className={styles.time} dateTime={new Date(createdAt).toISOString()}>
+                    {createdAt}
+                  </time>
+                )}
+              </Flexbox>
+              <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
+                {description}
+              </Paragraph>
+            </Flexbox>
+          </Link>
           <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
             {showCategory && categoryItem ? (
               <Link href={urlJoin('/discover/plugins', categoryItem.key)}>
