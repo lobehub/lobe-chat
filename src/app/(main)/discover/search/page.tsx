@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 import urlJoin from 'url-join';
 
@@ -10,20 +9,10 @@ import { translation } from '@/server/translation';
 import { PageProps } from '@/types/next';
 import { isMobileDevice } from '@/utils/server/responsive';
 
-import { ListLoadingWithoutBanner } from '../components/ListLoading';
-
-const AssistantsResult = dynamic(() => import('./features/AssistantsResult'), {
-  loading: () => <ListLoadingWithoutBanner />,
-});
-const PluginsResult = dynamic(() => import('./features/PluginsResult'), {
-  loading: () => <ListLoadingWithoutBanner />,
-});
-const ModelsResult = dynamic(() => import('./features/ModelsResult'), {
-  loading: () => <ListLoadingWithoutBanner />,
-});
-const ProvidersResult = dynamic(() => import('./features/ProvidersResult'), {
-  loading: () => <ListLoadingWithoutBanner />,
-});
+import AssistantsResult from './features/AssistantsResult';
+import ModelsResult from './features/ModelsResult';
+import PluginsResult from './features/PluginsResult';
+import ProvidersResult from './features/ProvidersResult';
 
 type Props = PageProps<
   undefined,

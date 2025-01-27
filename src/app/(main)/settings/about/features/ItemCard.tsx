@@ -11,14 +11,14 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
     padding-block: 12px;
     padding-inline: 16px;
-
-    background: ${isDarkMode ? token.colorFillTertiary : token.colorBgContainer};
     border: 1px solid ${token.colorFillSecondary};
     border-radius: ${token.borderRadiusLG}px;
 
+    background: ${isDarkMode ? token.colorFillTertiary : token.colorBgContainer};
+
     &:hover {
-      background: ${isDarkMode ? token.colorFillSecondary : token.colorBgContainer};
       border: 1px solid ${token.colorFill};
+      background: ${isDarkMode ? token.colorFillSecondary : token.colorBgContainer};
     }
   `,
 }));

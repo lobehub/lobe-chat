@@ -75,11 +75,16 @@ export class ClientService implements ISessionService {
 
   async getAllAgents(): Promise<LobeSessions> {
     // TODO: add a filter to get only agents
-    return await SessionModel.query();
+    return SessionModel.query();
   }
 
   async countSessions() {
     return SessionModel.count();
+  }
+
+  // @ts-ignore
+  async rankSessions() {
+    throw new Error('Method not implemented.');
   }
 
   async hasSessions() {
@@ -162,7 +167,7 @@ export class ClientService implements ISessionService {
   }
 
   async removeSessionGroup(id: string, removeChildren?: boolean) {
-    return await SessionGroupModel.delete(id, removeChildren);
+    return SessionGroupModel.delete(id, removeChildren);
   }
 
   async updateSessionGroup(id: string, data: Partial<SessionGroupItem>) {

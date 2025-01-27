@@ -5,10 +5,9 @@ import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useFetchTopics } from '@/hooks/useFetchTopics';
+import { useWorkspaceModal } from '@/hooks/useWorkspaceModal';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-
-import { useWorkspaceModal } from '../../features/useWorkspaceModal';
 
 const Topics = memo(({ children }: PropsWithChildren) => {
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
@@ -23,6 +22,7 @@ const Topics = memo(({ children }: PropsWithChildren) => {
   return (
     <Modal
       allowFullscreen
+      footer={null}
       onCancel={() => setOpen(false)}
       open={open}
       styles={{

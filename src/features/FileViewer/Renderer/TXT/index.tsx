@@ -10,9 +10,9 @@ const useStyles = createStyles(({ css, token }) => ({
   page: css`
     width: 100%;
     padding: 24px;
+    border-radius: 4px;
 
     background: ${token.colorBgContainer};
-    border-radius: 4px;
     box-shadow: ${token.boxShadowTertiary};
   `,
 }));

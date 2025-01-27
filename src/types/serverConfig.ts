@@ -20,10 +20,17 @@ export interface ServerModelProviderConfig {
 export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerModelProviderConfig>>;
 
 export interface GlobalServerConfig {
+  aiProvider?: ServerLanguageModel;
   defaultAgent?: DeepPartial<UserDefaultAgent>;
   enableUploadFileToServer?: boolean;
   enabledAccessCode?: boolean;
+  /**
+   * @deprecated
+   */
   enabledOAuthSSO?: boolean;
+  /**
+   * @deprecated
+   */
   languageModel?: ServerLanguageModel;
   oAuthSSOProviders?: string[];
   systemAgent?: DeepPartial<UserSystemAgentConfig>;

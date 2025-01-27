@@ -218,6 +218,7 @@
   "pinOff": "Unpin",
   "privacy": "Privacy Policy",
   "regenerate": "Regenerate",
+  "releaseNotes": "Version Details",
   "rename": "Rename",
   "reset": "Reset",
   "retry": "Retry",
@@ -274,6 +275,7 @@
   },
   "temp": "Temporary",
   "terms": "Terms of Service",
+  "update": "Update",
   "updateAgent": "Update Assistant Information",
   "upgradeVersion": {
     "action": "Upgrade",
@@ -294,7 +296,7 @@
     "moveGuide": "The settings button has been moved here",
     "plans": "Subscription Plans",
     "preview": "Preview",
-    "profile": "Account Management",
+    "profile": "Account",
     "setting": "Settings",
     "usages": "Usage Statistics"
   },

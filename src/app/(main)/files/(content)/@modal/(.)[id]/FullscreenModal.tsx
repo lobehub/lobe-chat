@@ -16,8 +16,8 @@ const useStyles = createStyles(({ css, token }, showDetail: boolean) => {
     `,
     content: css`
       height: 100%;
-      background: transparent !important;
       border: none !important;
+      background: transparent !important;
     `,
     extra: css`
       position: fixed;
@@ -26,9 +26,9 @@ const useStyles = createStyles(({ css, token }, showDetail: boolean) => {
       inset-inline-end: 0;
 
       width: ${DETAIL_PANEL_WIDTH}px;
+      border-inline-start: 1px solid ${token.colorSplit};
 
       background: ${token.colorBgLayout};
-      border-inline-start: 1px solid ${token.colorSplit};
     `,
     header: css`
       background: transparent !important;

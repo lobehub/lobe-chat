@@ -26,9 +26,16 @@ export enum SettingsTabs {
   Agent = 'agent',
   Common = 'common',
   LLM = 'llm',
+  Provider = 'provider',
   Sync = 'sync',
   SystemAgent = 'system-agent',
   TTS = 'tts',
+}
+
+export enum ProfileTabs {
+  Profile = 'profile',
+  Security = 'security',
+  Stats = 'stats',
 }
 
 export interface SystemStatus {
@@ -42,6 +49,7 @@ export interface SystemStatus {
    * 应用初始化时不启用 PGLite，只有当用户手动开启时才启用
    */
   isEnablePglite?: boolean;
+  latestChangelogId?: string;
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
   sessionsWidth: number;

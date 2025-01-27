@@ -218,6 +218,7 @@
   "pinOff": "Anheften aufheben",
   "privacy": "Datenschutzrichtlinie",
   "regenerate": "Neu generieren",
+  "releaseNotes": "Versionsdetails",
   "rename": "Umbenennen",
   "reset": "Zurücksetzen",
   "retry": "Erneut versuchen",
@@ -274,6 +275,7 @@
   },
   "temp": "Temporär",
   "terms": "Nutzungsbedingungen",
+  "update": "Aktualisieren",
   "updateAgent": "Assistentenprofil aktualisieren",
   "upgradeVersion": {
     "action": "Aktualisieren",

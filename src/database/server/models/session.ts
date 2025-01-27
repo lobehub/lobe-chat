@@ -1,13 +1,20 @@
 import { Column, count, sql } from 'drizzle-orm';
-import { and, asc, desc, eq, inArray, like, not, or } from 'drizzle-orm/expressions';
+import { and, asc, desc, eq, gt, inArray, isNull, like, not, or } from 'drizzle-orm/expressions';
 
 import { appEnv } from '@/config/app';
+import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { LobeChatDatabase } from '@/database/type';
+import {
+  genEndDateWhere,
+  genRangeWhere,
+  genStartDateWhere,
+  genWhere,
+} from '@/database/utils/genWhere';
 import { idGenerator } from '@/database/utils/idGenerator';
 import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
-import { ChatSessionList, LobeAgentSession } from '@/types/session';
+import { ChatSessionList, LobeAgentSession, SessionRankItem } from '@/types/session';
 import { merge } from '@/utils/merge';
 
 import {
@@ -19,6 +26,7 @@ import {
   agentsToSessions,
   sessionGroups,
   sessions,
+  topics,
 } from '../../schemas';
 
 export class SessionModel {
@@ -84,15 +92,79 @@ export class SessionModel {
     return { ...result, agent: (result?.agentsToSessions?.[0] as any)?.agent } as any;
   };
 
-  count = async (): Promise<number> => {
+  count = async (params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
     const result = await this.db
       .select({
         count: count(sessions.id),
       })
       .from(sessions)
-      .where(eq(sessions.userId, this.userId));
+      .where(
+        genWhere([
+          eq(sessions.userId, this.userId),
+          params?.range
+            ? genRangeWhere(params.range, sessions.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.endDate
+            ? genEndDateWhere(params.endDate, sessions.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.startDate
+            ? genStartDateWhere(params.startDate, sessions.createdAt, (date) => date.toDate())
+            : undefined,
+        ]),
+      );
 
     return result[0].count;
+  };
+
+  _rank = async (limit: number = 10): Promise<SessionRankItem[]> => {
+    return this.db
+      .select({
+        avatar: agents.avatar,
+        backgroundColor: agents.backgroundColor,
+        count: count(topics.id).as('count'),
+        id: sessions.id,
+        title: agents.title,
+      })
+      .from(sessions)
+      .where(and(eq(sessions.userId, this.userId)))
+      .leftJoin(topics, eq(sessions.id, topics.sessionId))
+      .leftJoin(agentsToSessions, eq(sessions.id, agentsToSessions.sessionId))
+      .leftJoin(agents, eq(agentsToSessions.agentId, agents.id))
+      .groupBy(sessions.id, agentsToSessions.agentId, agents.id)
+      .having(({ count }) => gt(count, 0))
+      .orderBy(desc(sql`count`))
+      .limit(limit);
+  };
+
+  // TODO: 未来将 Inbox id 入库后可以直接使用 _rank 方法
+  rank = async (limit: number = 10): Promise<SessionRankItem[]> => {
+    const inboxResult = await this.db
+      .select({
+        count: count(topics.id).as('count'),
+      })
+      .from(topics)
+      .where(and(eq(topics.userId, this.userId), isNull(topics.sessionId)));
+
+    const inboxCount = inboxResult[0].count;
+
+    if (!inboxCount || inboxCount === 0) return this._rank(limit);
+
+    const result = await this._rank(limit ? limit - 1 : undefined);
+
+    return [
+      {
+        avatar: DEFAULT_INBOX_AVATAR,
+        backgroundColor: null,
+        count: inboxCount,
+        id: INBOX_SESSION_ID,
+        title: 'inbox.title',
+      },
+      ...result,
+    ].sort((a, b) => b.count - a.count);
   };
 
   hasMoreThanN = async (n: number): Promise<boolean> => {

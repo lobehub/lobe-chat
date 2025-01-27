@@ -91,7 +91,7 @@ const Page = async (props: DiscoverPageProps) => {
         actions={<Actions data={data} identifier={identifier} />}
         header={<Header data={data} identifier={identifier} mobile={mobile} />}
         mobile={mobile}
-        sidebar={<InfoSidebar data={data} identifier={identifier} mobile={mobile} />}
+        sidebar={<InfoSidebar data={data} identifier={identifier} />}
         /* ↓ cloud slot ↓ */
 
         /* ↑ cloud slot ↑ */

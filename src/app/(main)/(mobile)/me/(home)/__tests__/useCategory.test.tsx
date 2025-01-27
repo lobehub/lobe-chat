@@ -1,9 +1,14 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { ServerConfigStoreProvider } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 
 import { useCategory } from '../features/useCategory';
+
+const wrapper: React.JSXElementConstructor<{ children: React.ReactNode }> = ({ children }) => (
+  <ServerConfigStoreProvider>{children}</ServerConfigStoreProvider>
+);
 
 // Mock dependencies
 vi.mock('next/navigation', () => ({
@@ -24,7 +29,7 @@ vi.mock('../../settings/features/useCategory', () => ({
 
 // 定义一个变量来存储 enableAuth 的值
 let enableAuth = true;
-let enableClerk = false;
+let enableClerk = true;
 // 模拟 @/const/auth 模块
 vi.mock('@/const/auth', () => ({
   get enableAuth() {
@@ -37,7 +42,7 @@ vi.mock('@/const/auth', () => ({
 
 afterEach(() => {
   enableAuth = true;
-  enableClerk = false;
+  enableClerk = true;
 });
 
 // 目前对 enableAuth 的判定是在 useUserStore 中，所以需要 mock useUserStore
@@ -47,27 +52,10 @@ describe('useCategory', () => {
     act(() => {
       useUserStore.setState({ isSignedIn: true, enableAuth: () => true });
     });
+    enableAuth = true;
+    enableClerk = false;
 
-    const { result } = renderHook(() => useCategory());
-
-    act(() => {
-      const items = result.current;
-      expect(items.some((item) => item.key === 'profile')).toBe(false);
-      expect(items.some((item) => item.key === 'setting')).toBe(true);
-      expect(items.some((item) => item.key === 'data')).toBe(true);
-      expect(items.some((item) => item.key === 'docs')).toBe(true);
-      expect(items.some((item) => item.key === 'feedback')).toBe(true);
-      expect(items.some((item) => item.key === 'discord')).toBe(true);
-    });
-  });
-
-  it('should return correct items when the user is logged in with Clerk', () => {
-    act(() => {
-      useUserStore.setState({ isSignedIn: true });
-    });
-    enableClerk = true;
-
-    const { result } = renderHook(() => useCategory());
+    const { result } = renderHook(() => useCategory(), { wrapper });
 
     act(() => {
       const items = result.current;
@@ -76,27 +64,7 @@ describe('useCategory', () => {
       expect(items.some((item) => item.key === 'data')).toBe(true);
       expect(items.some((item) => item.key === 'docs')).toBe(true);
       expect(items.some((item) => item.key === 'feedback')).toBe(true);
-      expect(items.some((item) => item.key === 'discord')).toBe(true);
-    });
-  });
-
-  it('should return correct items when the user is logged in with NextAuth', () => {
-    act(() => {
-      useUserStore.setState({ isSignedIn: true, enableAuth: () => true, enabledNextAuth: true });
-    });
-
-    const { result } = renderHook(() => useCategory());
-
-    act(() => {
-      const items = result.current;
-      // Should not render profile for NextAuth, it's Clerk only
-      expect(items.some((item) => item.key === 'profile')).toBe(false);
-      expect(items.some((item) => item.key === 'setting')).toBe(true);
-      expect(items.some((item) => item.key === 'data')).toBe(true);
-      expect(items.some((item) => item.key === 'docs')).toBe(true);
-      expect(items.some((item) => item.key === 'feedback')).toBe(true);
-      expect(items.some((item) => item.key === 'discord')).toBe(true);
-      expect(items.some((item) => item.key === 'nextauthSignout')).toBe(true);
+      expect(items.some((item) => item.key === 'changelog')).toBe(true);
     });
   });
 
@@ -105,7 +73,7 @@ describe('useCategory', () => {
       useUserStore.setState({ isSignedIn: false, enableAuth: () => true });
     });
 
-    const { result } = renderHook(() => useCategory());
+    const { result } = renderHook(() => useCategory(), { wrapper });
 
     act(() => {
       const items = result.current;
@@ -114,8 +82,7 @@ describe('useCategory', () => {
       expect(items.some((item) => item.key === 'data')).toBe(false);
       expect(items.some((item) => item.key === 'docs')).toBe(true);
       expect(items.some((item) => item.key === 'feedback')).toBe(true);
-      expect(items.some((item) => item.key === 'discord')).toBe(true);
-      expect(items.some((item) => item.key === 'nextauthSignout')).toBe(false);
+      expect(items.some((item) => item.key === 'changelog')).toBe(true);
     });
   });
 
@@ -125,7 +92,7 @@ describe('useCategory', () => {
     });
     enableClerk = false;
 
-    const { result } = renderHook(() => useCategory());
+    const { result } = renderHook(() => useCategory(), { wrapper });
 
     act(() => {
       const items = result.current;

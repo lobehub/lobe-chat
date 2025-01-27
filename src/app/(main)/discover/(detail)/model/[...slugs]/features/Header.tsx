@@ -3,6 +3,7 @@
 import { ModelIcon } from '@lobehub/icons';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
+import dayjs from 'dayjs';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,12 +16,14 @@ import Back from '../../../features/Back';
 
 export const useStyles = createStyles(({ css, token }) => ({
   tag: css`
+    border: none;
     color: ${token.colorTextSecondary};
     background: ${token.colorFillSecondary};
-    border: none;
   `,
   time: css`
+    display: flex;
     font-size: 12px;
+    line-height: 22px;
     color: ${token.colorTextDescription};
   `,
   title: css`
@@ -41,6 +44,7 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
   const { styles, theme } = useStyles();
   const { t } = useTranslation(['discover', 'models']);
 
+  const releasedAt = data.meta.releasedAt;
   return (
     <Flexbox gap={12} width={'100%'}>
       {!mobile && <Back href={'/discover/models'} />}
@@ -56,9 +60,11 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
               style={{ color: theme.colorTextSecondary }}
             >
               <div>{identifier}</div>
-              <time className={styles.time} dateTime={new Date(data.createdAt).toISOString()}>
-                {data.createdAt}
-              </time>
+              {releasedAt && (
+                <time className={styles.time} dateTime={dayjs(releasedAt).toISOString()}>
+                  {releasedAt}
+                </time>
+              )}
             </Flexbox>
           </Flexbox>
         </Flexbox>
@@ -75,7 +81,7 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
       {data.meta.description && <div>{t(`${identifier}.description`, { ns: 'models' })}</div>}
       <ModelFeatureTags
         functionCall={data.meta.functionCall}
-        tokens={data.meta.tokens}
+        tokens={data.meta.contextWindowTokens}
         vision={data.meta.vision}
       />
     </Flexbox>

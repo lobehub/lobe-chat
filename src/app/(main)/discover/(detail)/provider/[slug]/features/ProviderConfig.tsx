@@ -5,12 +5,12 @@ import { Button, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDownIcon, SquareArrowOutUpRight } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlexboxProps } from 'react-layout-kit';
 
-import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
-import { SettingsTabs } from '@/store/global/initialState';
+import { isDeprecatedEdition } from '@/const/version';
 import { DiscoverProviderItem } from '@/types/discover';
 
 const useStyles = createStyles(({ css }) => ({
@@ -26,10 +26,14 @@ interface ProviderConfigProps extends FlexboxProps {
   identifier: string;
 }
 
-const ProviderConfig = memo<ProviderConfigProps>(({ data }) => {
+const ProviderConfig = memo<ProviderConfigProps>(({ data, identifier }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('discover');
-  const openSettings = useOpenSettings(SettingsTabs.LLM);
+
+  const router = useRouter();
+  const openSettings = () => {
+    router.push(isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${identifier}`);
+  };
 
   const icon = <Icon icon={SquareArrowOutUpRight} size={{ fontSize: 16 }} />;
 
@@ -56,7 +60,7 @@ const ProviderConfig = memo<ProviderConfigProps>(({ data }) => {
 
   if (!items || items?.length === 0)
     return (
-      <Button onClick={openSettings} size={'large'} style={{ flex: 1 }} type={'primary'}>
+      <Button size={'large'} style={{ flex: 1 }} type={'primary'}>
         {t('providers.config')}
       </Button>
     );

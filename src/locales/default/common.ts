@@ -220,6 +220,7 @@ export default {
   pinOff: '取消置顶',
   privacy: '隐私政策',
   regenerate: '重新生成',
+  releaseNotes: '版本详情',
   rename: '重命名',
   reset: '重置',
   retry: '重试',
@@ -268,6 +269,7 @@ export default {
   },
   temp: '临时',
   terms: '服务条款',
+  update: '更新',
   updateAgent: '更新助理信息',
   upgradeVersion: {
     action: '升级',

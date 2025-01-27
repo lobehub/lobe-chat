@@ -218,6 +218,7 @@
   "pinOff": "고정 해제",
   "privacy": "개인정보 보호 정책",
   "regenerate": "재생성",
+  "releaseNotes": "버전 세부정보",
   "rename": "이름 바꾸기",
   "reset": "재설정",
   "retry": "재시도",
@@ -274,6 +275,7 @@
   },
   "temp": "임시",
   "terms": "이용 약관",
+  "update": "업데이트",
   "updateAgent": "에이전트 정보 업데이트",
   "upgradeVersion": {
     "action": "업그레이드",

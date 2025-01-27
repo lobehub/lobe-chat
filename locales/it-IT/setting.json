@@ -84,8 +84,7 @@
         },
         "modalTitle": "Configurazione del modello personalizzato",
         "tokens": {
-          "title": "Numero massimo di token",
-          "unlimited": "illimitato"
+          "title": "Numero massimo di token"
         },
         "vision": {
           "extra": "Questa configurazione attiverà solo la capacità di caricamento delle immagini nell'app, se il riconoscimento è supportato dipende interamente dal modello stesso, ti invitiamo a testare l'usabilità del riconoscimento visivo di questo modello.",
@@ -412,6 +411,7 @@
     "common": "Impostazioni comuni",
     "experiment": "实验",
     "llm": "Modello linguistico",
+    "provider": "Fornitore di servizi AI",
     "sync": "云端同步",
     "system-agent": "Assistente di sistema",
     "tts": "Servizio vocale"

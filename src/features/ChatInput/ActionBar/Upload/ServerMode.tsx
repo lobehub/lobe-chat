@@ -5,11 +5,10 @@ import { FileUp, FolderUp, ImageUp, Paperclip } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useModelSupportVision } from '@/hooks/useModelSupportVision';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useFileStore } from '@/store/file';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
 
 const hotArea = css`
   &::before {
@@ -26,8 +25,9 @@ const FileUpload = memo(() => {
   const upload = useFileStore((s) => s.uploadChatFiles);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
+  const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
 
-  const canUploadImage = useUserStore(modelProviderSelectors.isModelEnabledVision(model));
+  const canUploadImage = useModelSupportVision(model, provider);
 
   const items: MenuProps['items'] = [
     {

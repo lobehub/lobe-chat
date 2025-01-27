@@ -84,8 +84,7 @@
         },
         "modalTitle": "Custom Model Configuration",
         "tokens": {
-          "title": "Maximum Token Count",
-          "unlimited": "unlimited"
+          "title": "Maximum Token Count"
         },
         "vision": {
           "extra": "This configuration will only enable image upload capabilities within the application. Whether recognition is supported depends entirely on the model itself; please test the model's visual recognition capabilities on your own.",
@@ -412,6 +411,7 @@
     "common": "Common Settings",
     "experiment": "Experiment",
     "llm": "Language Model",
+    "provider": "AI Service Provider",
     "sync": "Cloud Sync",
     "system-agent": "System Assistant",
     "tts": "Text-to-Speech"

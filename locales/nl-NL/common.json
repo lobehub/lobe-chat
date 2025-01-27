@@ -218,6 +218,7 @@
   "pinOff": "Vastzetten uitschakelen",
   "privacy": "Privacybeleid",
   "regenerate": "Opnieuw genereren",
+  "releaseNotes": "Versie details",
   "rename": "Naam wijzigen",
   "reset": "Resetten",
   "retry": "Opnieuw proberen",
@@ -274,6 +275,7 @@
   },
   "temp": "tijdelijk",
   "terms": "algemene voorwaarden",
+  "update": "Bijwerken",
   "updateAgent": "update assistent",
   "upgradeVersion": {
     "action": "upgraden",

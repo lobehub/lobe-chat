@@ -218,6 +218,7 @@
   "pinOff": "Odepnij",
   "privacy": "Polityka prywatności",
   "regenerate": "Regeneruj",
+  "releaseNotes": "Szczegóły wersji",
   "rename": "Zmień nazwę",
   "reset": "Resetuj",
   "retry": "Ponów",
@@ -274,6 +275,7 @@
   },
   "temp": "Tymczasowy",
   "terms": "Warunki korzystania",
+  "update": "Aktualizuj",
   "updateAgent": "Zaktualizuj informacje o agencie",
   "upgradeVersion": {
     "action": "Aktualizuj",

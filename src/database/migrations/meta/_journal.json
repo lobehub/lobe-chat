@@ -91,6 +91,20 @@
       "when": 1731858381716,
       "tag": "0012_add_thread",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1735834653361,
+      "tag": "0013_add_ai_infra",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1737609172353,
+      "tag": "0014_add_message_reasoning",
+      "breakpoints": true
     }
   ],
   "version": "6"

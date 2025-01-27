@@ -17,11 +17,10 @@ export const useStyles = createStyles(({ css, token }) => ({
     padding-block: 6px;
     padding-inline: 8px;
     padding-inline-end: 12px;
-
-    color: ${token.colorText};
-
     border: 1px solid ${token.colorBorder};
     border-radius: 8px;
+
+    color: ${token.colorText};
 
     &:hover {
       background: ${token.colorFillTertiary};

@@ -3,7 +3,7 @@
 import { createStyles } from 'antd-style';
 import { Flexbox } from 'react-layout-kit';
 
-import CircleLoading from '@/components/Loading/BrandTextLoading';
+import Loading from '@/components/Loading/BrandTextLoading';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
 import DatasetDetail from './DatasetDetail';
@@ -34,7 +34,7 @@ const Dataset = ({ params }: Props) => {
   const isEmpty = data?.length === 0;
 
   return isLoading ? (
-    <CircleLoading />
+    <Loading />
   ) : isEmpty ? (
     <EmptyGuide knowledgeBaseId={knowledgeBaseId} />
   ) : (

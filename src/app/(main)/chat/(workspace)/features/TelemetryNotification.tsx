@@ -53,7 +53,7 @@ const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
           avatar={<TelescopeIcon />}
           background={theme.geekblue1}
           style={{ color: theme.geekblue7 }}
-        ></Avatar>
+        />
       </Flexbox>
       <Flexbox gap={16}>
         <Flexbox gap={12}>

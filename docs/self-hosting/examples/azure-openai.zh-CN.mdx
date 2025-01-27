@@ -19,10 +19,7 @@ LobeChat 支持使用 [Azure OpenAI](https://learn.microsoft.com/zh-cn/azure/ai-
 
 点击左下角「操作」 -「设置」，切到 「语言模型」 Tab 后通过开启「Azure OpenAI」开关，即可开启使用 Azure OpenAI。
 
-<Image
-  alt="在界面中配置"
-  src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267083420-422a3714-627e-4bef-9fbc-141a2a8ca916.png"
-/>
+<Image alt="在界面中配置" src="https://github-production-user-asset-6210df.s3.amazonaws.com/28616219/267083420-422a3714-627e-4bef-9fbc-141a2a8ca916.png" />
 
 你按需填写相应的配置项：
 
@@ -39,10 +36,10 @@ LobeChat 支持使用 [Azure OpenAI](https://learn.microsoft.com/zh-cn/azure/ai-
 
 如果你希望部署的版本直接配置好 Azure OpenAI，让终端用户直接使用，那么你需要在部署时配置以下环境变量：
 
-| 环境变量 | 类型 | 描述 | 默认值 | 示例 |
-| --- | --- | --- | --- | --- |
-| `AZURE_API_KEY` | 必选 | 这是你在 Azure OpenAI 账户页面申请的 API 密钥 | - | `c55168be3874490ef0565d9779ecd5a6` |
-| `AZURE_ENDPOINT` | 必选 | Azure API 地址，从 Azure 门户检查资源时，可在 “密钥和终结点” 部分中找到此值 | - | `https://docs-test-001.openai.azure.com` |
-| `AZURE_API_VERSION` | 必选 | Azure 的 API 版本，遵循 YYYY-MM-DD 格式 | 2023-08-01-preview | `-`，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions) |
-| `AZURE_MODEL_LIST` | 必选 | 用来控制模型列表，使用 `模型名->部署名=展示名` 来自定义模型的展示名，用英文逗号隔开。支持扩展能力，其余语法规则详见 [模型列表](/zh/docs/self-hosting/advanced/model-list) | - | `gpt-35-turbo->my-deploy=GPT 3.5 Turbo` 或 `gpt-4-turbo->my-gpt4=GPT 4 Turbo<128000:vision:fc>` |
-| `ACCESS_CODE` | 可选 | 添加访问 LobeChat 的密码，你可以设置一个长密码以防被爆破，该值用逗号分隔时为密码数组 | - | `awCT74` 或 `e3@09!` or `code1,code2,code3` |
+| 环境变量                | 类型 | 描述                                                                                                              | 默认值                | 示例                                                                                                  |
+| ------------------- | -- | --------------------------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------- |
+| `AZURE_API_KEY`     | 必选 | 这是你在 Azure OpenAI 账户页面申请的 API 密钥                                                                                | -                  | `c55168be3874490ef0565d9779ecd5a6`                                                                  |
+| `AZURE_ENDPOINT`    | 必选 | Azure API 地址，从 Azure 门户检查资源时，可在 “密钥和终结点” 部分中找到此值                                                                | -                  | `https://docs-test-001.openai.azure.com`                                                            |
+| `AZURE_API_VERSION` | 必选 | Azure 的 API 版本，遵循 YYYY-MM-DD 格式                                                                                 | 2023-08-01-preview | `-`，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions) |
+| `AZURE_MODEL_LIST`  | 必选 | 用来控制模型列表，使用 `模型名->部署名=展示名` 来自定义模型的展示名，用英文逗号隔开。支持扩展能力，其余语法规则详见 [模型列表](/zh/docs/self-hosting/advanced/model-list) | -                  | `gpt-35-turbo->my-deploy=GPT 3.5 Turbo` 或 `gpt-4-turbo->my-gpt4=GPT 4 Turbo<128000:vision:fc>`      |
+| `ACCESS_CODE`       | 可选 | 添加访问 LobeChat 的密码，你可以设置一个长密码以防被爆破，该值用逗号分隔时为密码数组                                                                 | -                  | `awCT74` 或 `e3@09!` or `code1,code2,code3`                                                          |

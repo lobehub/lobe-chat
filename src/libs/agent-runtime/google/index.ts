@@ -8,6 +8,8 @@ import {
   SchemaType,
 } from '@google/generative-ai';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
@@ -27,6 +29,13 @@ import { StreamingResponse } from '../utils/response';
 import { GoogleGenerativeAIStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 
+export interface GoogleModelCard {
+  displayName: string;
+  inputTokenLimit: number;
+  name: string;
+  outputTokenLimit: number;
+}
+
 enum HarmCategory {
   HARM_CATEGORY_DANGEROUS_CONTENT = 'HARM_CATEGORY_DANGEROUS_CONTENT',
   HARM_CATEGORY_HARASSMENT = 'HARM_CATEGORY_HARASSMENT',
@@ -38,15 +47,27 @@ enum HarmBlockThreshold {
   BLOCK_NONE = 'BLOCK_NONE',
 }
 
+function getThreshold(model: string): HarmBlockThreshold {
+  const useOFF = ['gemini-2.0-flash-exp'];
+  if (useOFF.includes(model)) {
+    return 'OFF' as HarmBlockThreshold; // https://discuss.ai.google.dev/t/59352
+  }
+  return HarmBlockThreshold.BLOCK_NONE;
+}
+
+const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
   baseURL?: string;
+  apiKey?: string;
 
   constructor({ apiKey, baseURL }: { apiKey?: string; baseURL?: string } = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
-    this.baseURL = baseURL;
+    this.baseURL = baseURL || DEFAULT_BASE_URL;
+    this.apiKey = apiKey;
   }
 
   async chat(rawPayload: ChatStreamPayload, options?: ChatCompetitionOptions) {
@@ -70,19 +91,19 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             safetySettings: [
               {
                 category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: getThreshold(model),
               },
               {
                 category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: getThreshold(model),
               },
               {
                 category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: getThreshold(model),
               },
               {
                 category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: getThreshold(model),
               },
             ],
           },
@@ -113,6 +134,34 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       throw AgentRuntimeError.chat({ error, errorType, provider: ModelProvider.Google });
     }
+  }
+
+  async models() {
+    const url = `${this.baseURL}/v1beta/models?key=${this.apiKey}`;
+    const response = await fetch(url, {
+      method: 'GET',
+    });
+    const json = await response.json();
+
+    const modelList: GoogleModelCard[] = json['models'];
+
+    return modelList
+      .map((model) => {
+        const modelName = model.name.replace(/^models\//, '');
+
+        return {
+          contextWindowTokens: model.inputTokenLimit + model.outputTokenLimit,
+          displayName: model.displayName,
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => modelName.endsWith(m.id))?.enabled || false,
+          functionCall: modelName.toLowerCase().includes('gemini'),
+          id: modelName,
+          vision:
+            modelName.toLowerCase().includes('vision') ||
+            (modelName.toLowerCase().includes('gemini') &&
+              !modelName.toLowerCase().includes('gemini-1.0')),
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   }
 
   private buildPayload(payload: ChatStreamPayload) {
@@ -289,9 +338,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     const functionDeclaration = tool.function;
     const parameters = functionDeclaration.parameters;
     // refs: https://github.com/lobehub/lobe-chat/pull/5002
-    const properties = parameters?.properties && Object.keys(parameters.properties).length > 0
-    ? parameters.properties
-    : { dummy: { type: 'string' } }; // dummy property to avoid empty object
+    const properties =
+      parameters?.properties && Object.keys(parameters.properties).length > 0
+        ? parameters.properties
+        : { dummy: { type: 'string' } }; // dummy property to avoid empty object
 
     return {
       description: functionDeclaration.description,

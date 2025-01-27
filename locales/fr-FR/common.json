@@ -218,6 +218,7 @@
   "pinOff": "Désactiver l'épinglage",
   "privacy": "Politique de confidentialité",
   "regenerate": "Régénérer",
+  "releaseNotes": "Détails de la version",
   "rename": "Renommer",
   "reset": "Réinitialiser",
   "retry": "Réessayer",
@@ -274,6 +275,7 @@
   },
   "temp": "Temporaire",
   "terms": "Conditions de service",
+  "update": "Mise à jour",
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upgradeVersion": {
     "action": "Mettre à jour",

@@ -68,11 +68,15 @@
   "GoBack": {
     "back": "Zurück"
   },
+  "MaxTokenSlider": {
+    "unlimited": "Unbegrenzt"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Benutzerdefiniertes Modell, standardmäßig unterstützt es sowohl Funktionsaufrufe als auch visuelle Erkennung. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Gegebenheiten.",
       "file": "Dieses Modell unterstützt das Hochladen von Dateien und deren Erkennung.",
       "functionCall": "Dieses Modell unterstützt Funktionsaufrufe.",
+      "reasoning": "Dieses Modell unterstützt tiefes Denken",
       "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro Sitzung.",
       "vision": "Dieses Modell unterstützt die visuelle Erkennung."
     },
@@ -81,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "Kein aktiviertes Modell. Bitte gehen Sie zu den Einstellungen, um es zu aktivieren.",
     "provider": "Anbieter"
+  },
+  "Thinking": {
+    "thinking": "Tiefes Nachdenken...",
+    "thought": "Tief nachgedacht",
+    "thoughtWithDuration": "Tief nachgedacht (Dauer: {{duration}} Sekunden)"
   }
 }

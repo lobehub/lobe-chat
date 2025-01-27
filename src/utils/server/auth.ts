@@ -5,7 +5,7 @@ import NextAuthEdge from '@/libs/next-auth/edge';
 
 export const getUserAuth = async () => {
   if (enableClerk) {
-    const clerkAuth = auth();
+    const clerkAuth = await auth();
 
     const userId = clerkAuth.userId;
     return { clerkAuth: auth, userId };

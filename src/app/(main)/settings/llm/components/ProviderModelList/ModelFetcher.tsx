@@ -22,7 +22,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     padding-block: 4px;
     padding-inline: 8px;
-
     border-radius: ${token.borderRadius}px;
 
     transition: all 0.2s ease-in-out;
@@ -76,12 +75,12 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
           )}
         </div>
         <Tooltip
-          overlayStyle={{ pointerEvents: 'none' }}
+          styles={{ root: { pointerEvents: 'none' } }}
           title={
             latestFetchTime
               ? t('llm.fetcher.latestTime', {
-                time: dayjs(latestFetchTime).format('YYYY-MM-DD HH:mm:ss'),
-              })
+                  time: dayjs(latestFetchTime).format('YYYY-MM-DD HH:mm:ss'),
+                })
               : t('llm.fetcher.noLatestTime')
           }
         >

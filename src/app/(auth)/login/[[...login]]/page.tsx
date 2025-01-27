@@ -1,5 +1,7 @@
 import { SignIn } from '@clerk/nextjs';
+import { notFound } from 'next/navigation';
 
+import { enableClerk } from '@/const/auth';
 import { BRANDING_NAME } from '@/const/branding';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
@@ -14,6 +16,8 @@ export const generateMetadata = async () => {
 };
 
 const Page = () => {
+  if (!enableClerk) return notFound();
+
   return <SignIn path="/login" />;
 };
 

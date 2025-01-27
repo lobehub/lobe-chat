@@ -84,8 +84,7 @@
         },
         "modalTitle": "Configuración del modelo personalizado",
         "tokens": {
-          "title": "Número máximo de tokens",
-          "unlimited": "ilimitado"
+          "title": "Número máximo de tokens"
         },
         "vision": {
           "extra": "Esta configuración solo habilitará la configuración de carga de imágenes en la aplicación; si se admite el reconocimiento depende completamente del modelo en sí. Por favor, prueba la disponibilidad de la capacidad de reconocimiento visual de este modelo.",
@@ -412,6 +411,7 @@
     "common": "Configuración común",
     "experiment": "Experimento",
     "llm": "Modelo de lenguaje",
+    "provider": "Proveedor de servicios de IA",
     "sync": "Sincronización en la nube",
     "system-agent": "Asistente del sistema",
     "tts": "Servicio de voz"

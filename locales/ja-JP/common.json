@@ -218,6 +218,7 @@
   "pinOff": "ピン留め解除",
   "privacy": "プライバシーポリシー",
   "regenerate": "再生成",
+  "releaseNotes": "リリースノート",
   "rename": "名前を変更",
   "reset": "リセット",
   "retry": "再試行",
@@ -274,6 +275,7 @@
   },
   "temp": "一時的",
   "terms": "利用規約",
+  "update": "更新",
   "updateAgent": "エージェント情報を更新",
   "upgradeVersion": {
     "action": "アップグレード",

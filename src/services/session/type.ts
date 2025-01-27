@@ -9,12 +9,14 @@ import {
   LobeAgentSession,
   LobeSessionType,
   LobeSessions,
-  SessionGroupId,
   SessionGroupItem,
   SessionGroups,
+  SessionRankItem,
+  UpdateSessionParams,
 } from '@/types/session';
 
 export interface ISessionService {
+  hasSessions(): Promise<boolean>;
   createSession(type: LobeSessionType, defaultValue: Partial<LobeAgentSession>): Promise<string>;
 
   /**
@@ -29,14 +31,16 @@ export interface ISessionService {
   /**
    * @deprecated
    */
-  getSessionsByType(type: 'agent' | 'group' | 'all'): Promise<LobeSessions>;
-  countSessions(): Promise<number>;
+  getSessionsByType(type?: 'agent' | 'group' | 'all'): Promise<LobeSessions>;
+  countSessions(params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number>;
+  rankSessions(limit?: number): Promise<SessionRankItem[]>;
   searchSessions(keyword: string): Promise<LobeSessions>;
 
-  updateSession(
-    id: string,
-    data: Partial<{ group?: SessionGroupId; pinned?: boolean }>,
-  ): Promise<any>;
+  updateSession(id: string, data: Partial<UpdateSessionParams>): Promise<any>;
 
   getSessionConfig(id: string): Promise<LobeAgentConfig>;
   updateSessionConfig(
