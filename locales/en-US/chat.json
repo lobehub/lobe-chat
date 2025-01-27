@@ -82,10 +82,6 @@
       }
     }
   },
-  "reasoning": {
-    "thinking": "Deep in thought",
-    "thought": "Deeply thought (took {{duration}} seconds)"
-  },
   "regenerate": "Regenerate",
   "roleAndArchive": "Role and Archive",
   "searchAgentPlaceholder": "Search assistants...",
