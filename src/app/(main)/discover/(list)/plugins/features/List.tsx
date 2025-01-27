@@ -2,7 +2,6 @@
 
 import { Grid } from '@lobehub/ui';
 import { Empty } from 'antd';
-import Link from 'next/link';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
@@ -41,9 +40,13 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
           data={all}
           initialItemCount={24}
           itemContent={(_, item) => (
-            <Link href={urlJoin('/discover/plugin/', item.identifier)} key={item.identifier}>
-              <Card showCategory variant={'compact'} {...item} />
-            </Link>
+            <Card
+              showCategory
+              variant={'compact'}
+              {...item}
+              href={urlJoin('/discover/plugin/', item.identifier)}
+              key={item.identifier}
+            />
           )}
           style={{
             minHeight: '75vh',
@@ -58,9 +61,12 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
       <Title>{t('plugins.recentSubmits')}</Title>
       <Grid maxItemWidth={280} rows={4}>
         {recent.map((item) => (
-          <Link href={urlJoin('/discover/plugin/', item.identifier)} key={item.identifier}>
-            <Card showCategory={!category} {...item} />
-          </Link>
+          <Card
+            showCategory={!category}
+            {...item}
+            href={urlJoin('/discover/plugin/', item.identifier)}
+            key={item.identifier}
+          />
         ))}
       </Grid>
       {last && last?.length > 0 && (
@@ -70,9 +76,13 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
             data={last}
             initialItemCount={12}
             itemContent={(_, item) => (
-              <Link href={urlJoin('/discover/plugin/', item.identifier)} key={item.identifier}>
-                <Card showCategory={!category} variant={'compact'} {...item} />
-              </Link>
+              <Card
+                showCategory={!category}
+                variant={'compact'}
+                {...item}
+                href={urlJoin('/discover/plugin/', item.identifier)}
+                key={item.identifier}
+              />
             )}
             style={{
               minHeight: '75vh',
