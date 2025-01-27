@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.49.0](https://github.com/lobehub/lobe-chat/compare/v1.48.4...v1.49.0)
+
+<sup>Released on **2025-01-27**</sup>
+
+#### ✨ Features
+
+- **misc**: Support Doubao Models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support Doubao Models, closes [#5481](https://github.com/lobehub/lobe-chat/issues/5481) ([d8afe47](https://github.com/lobehub/lobe-chat/commit/d8afe47))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.48.4](https://github.com/lobehub/lobe-chat/compare/v1.48.3...v1.48.4)
 
 <sup>Released on **2025-01-27**</sup>
