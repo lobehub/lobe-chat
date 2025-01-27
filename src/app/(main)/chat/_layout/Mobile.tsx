@@ -5,7 +5,7 @@ import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import InitClientDB from '@/features/InitClientDB';
-import { useQuery } from '@/hooks/useQuery';
+import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 
 import { LayoutProps } from './type';
 
@@ -18,7 +18,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const Layout = memo<LayoutProps>(({ children, session }) => {
-  const { showMobileWorkspace } = useQuery();
+  const showMobileWorkspace = useShowMobileWorkspace();
   const { styles } = useStyles();
 
   return (

@@ -2,7 +2,6 @@
 
 import { Grid } from '@lobehub/ui';
 import { Empty } from 'antd';
-import Link from 'next/link';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
@@ -42,9 +41,13 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
           data={all}
           initialItemCount={24}
           itemContent={(_, item) => (
-            <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
-              <Card showCategory variant={'compact'} {...item} />
-            </Link>
+            <Card
+              href={urlJoin('/discover/assistant/', item.identifier)}
+              key={item.identifier}
+              showCategory
+              variant={'compact'}
+              {...item}
+            />
           )}
           style={{
             minHeight: '75vh',
@@ -59,9 +62,12 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
       <Title>{t('assistants.recentSubmits')}</Title>
       <Grid maxItemWidth={280} rows={4}>
         {recent.map((item) => (
-          <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
-            <Card showCategory={!category} {...item} />
-          </Link>
+          <Card
+            href={urlJoin('/discover/assistant/', item.identifier)}
+            key={item.identifier}
+            showCategory={!category}
+            {...item}
+          />
         ))}
       </Grid>
       {last && last?.length > 0 && (
@@ -71,9 +77,13 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
             data={last}
             initialItemCount={12}
             itemContent={(_, item) => (
-              <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
-                <Card showCategory={!category} variant={'compact'} {...item} />
-              </Link>
+              <Card
+                href={urlJoin('/discover/assistant/', item.identifier)}
+                key={item.identifier}
+                showCategory={!category}
+                variant={'compact'}
+                {...item}
+              />
             )}
             style={{
               minHeight: '75vh',
