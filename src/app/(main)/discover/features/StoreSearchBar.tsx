@@ -8,7 +8,6 @@ import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
-import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
 
@@ -32,9 +31,8 @@ interface StoreSearchBarProps extends SearchBarProps {
 const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...rest }) => {
   const [active, setActive] = useState(false);
   const pathname = usePathname();
-  const { q } = useQuery();
   const { activeKey } = useNav();
-  const [searchKey, setSearchKey] = useQueryState('q');
+  const [searchKey, setSearchKey] = useQueryState('q', { clearOnDefault: true, defaultValue: '' });
 
   const { t } = useTranslation('discover');
   const { cx, styles } = useStyles();
@@ -45,8 +43,8 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
   useEffect(() => {
     if (!pathname.includes('/discover/search')) return;
     // 使用 useQueryState 时，当 handleSearch 为空时无法回跳
-    if (!q) router.push(urlJoin('/discover', activeType), { query: {}, replace: true });
-  }, [q, pathname, activeType]);
+    if (!searchKey) router.push(urlJoin('/discover', activeType), { query: {}, replace: true });
+  }, [searchKey, pathname, activeType]);
 
   const handleSearch = (value: string) => {
     router.push('/discover/search', { query: { q: value, type: activeType } });

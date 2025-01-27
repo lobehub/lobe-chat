@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "fixes": ["Fix discover ssr hydration error."]
+    },
+    "date": "2025-01-27",
+    "version": "1.49.3"
+  },
+  {
+    "children": {
+      "improvements": ["Remove use query."]
+    },
+    "date": "2025-01-27",
+    "version": "1.49.2"
+  },
+  {
+    "children": {
+      "improvements": ["UseMobileWorkspace use nqus to replace useQuery."]
+    },
+    "date": "2025-01-27",
+    "version": "1.49.1"
+  },
+  {
+    "children": {
       "features": ["Support Doubao Models."]
     },
     "date": "2025-01-27",
