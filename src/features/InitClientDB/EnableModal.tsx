@@ -76,7 +76,7 @@ const EnableClientDBModal = memo<EnableClientDBModalProps>(({ open }) => {
   ];
 
   return (
-    <DataStyleModal icon={CpuIcon} open={open} title={t('clientDB.modal.title')}>
+    <DataStyleModal height={'90vh'} icon={CpuIcon} open={open} title={t('clientDB.modal.title')}>
       <Center gap={48}>
         <Flexbox>
           <Flexbox className={styles.intro} style={{ textAlign: 'center' }} width={460}>
