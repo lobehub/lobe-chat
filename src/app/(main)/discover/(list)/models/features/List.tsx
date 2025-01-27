@@ -1,7 +1,6 @@
 'use client';
 
 import { Empty } from 'antd';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
@@ -32,9 +31,12 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
           data={items}
           initialItemCount={24}
           itemContent={(_, item) => (
-            <Link href={urlJoin('/discover/model/', item.identifier)} key={item.identifier}>
-              <Card showCategory {...item} />
-            </Link>
+            <Card
+              href={urlJoin('/discover/model', item.identifier)}
+              key={item.identifier}
+              showCategory
+              {...item}
+            />
           )}
           style={{
             minHeight: '75vh',
@@ -51,9 +53,12 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
         data={items}
         initialItemCount={24}
         itemContent={(_, item) => (
-          <Link href={urlJoin('/discover/model/', item.identifier)} key={item.identifier}>
-            <Card showCategory={!category} {...item} />
-          </Link>
+          <Card
+            href={urlJoin('/discover/model/', item.identifier)}
+            key={item.identifier}
+            showCategory={!category}
+            {...item}
+          />
         )}
         style={{
           minHeight: '75vh',
