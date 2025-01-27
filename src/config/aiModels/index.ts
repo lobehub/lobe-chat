@@ -8,6 +8,7 @@ import { default as baichuan } from './baichuan';
 import { default as bedrock } from './bedrock';
 import { default as cloudflare } from './cloudflare';
 import { default as deepseek } from './deepseek';
+import { default as doubao } from './doubao';
 import { default as fireworksai } from './fireworksai';
 import { default as giteeai } from './giteeai';
 import { default as github } from './github';
@@ -67,6 +68,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   bedrock,
   cloudflare,
   deepseek,
+  doubao,
   fireworksai,
   giteeai,
   github,
@@ -107,6 +109,7 @@ export { default as baichuan } from './baichuan';
 export { default as bedrock } from './bedrock';
 export { default as cloudflare } from './cloudflare';
 export { default as deepseek } from './deepseek';
+export { default as doubao } from './doubao';
 export { default as fireworksai } from './fireworksai';
 export { default as giteeai } from './giteeai';
 export { default as github } from './github';
