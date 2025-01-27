@@ -101,7 +101,6 @@ export const useProviderList = (): ProviderItem[] => {
       GithubProvider,
       WenxinProvider,
       HuggingFaceProvider,
-      DoubaoProvider,
     ],
   );
 };
