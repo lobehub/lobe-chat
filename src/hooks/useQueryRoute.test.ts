@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useQueryRoute } from './useQueryRoute';
 
@@ -10,12 +10,14 @@ vi.mock('next/navigation', () => ({
     replace: vi.fn((href) => href),
   })),
 }));
-vi.mock('@/hooks/useQuery', () => ({
-  useQuery: vi.fn(() => ({ foo: 'bar' })),
-}));
+
 vi.mock('@/utils/env', () => ({
   isOnServerSide: false,
 }));
+
+beforeEach(() => {
+  location.search = 'foo=bar';
+});
 
 describe('useQueryRoute', () => {
   it('should generate correct href without hash and replace', () => {

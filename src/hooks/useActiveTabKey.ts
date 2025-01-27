@@ -1,6 +1,6 @@
 import { usePathname } from 'next/navigation';
+import { useQueryState } from 'nuqs';
 
-import { useQuery } from '@/hooks/useQuery';
 import { ProfileTabs, SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 
 /**
@@ -17,7 +17,7 @@ export const useActiveTabKey = () => {
  */
 export const useActiveSettingsKey = () => {
   const pathname = usePathname();
-  const { tab } = useQuery();
+  const [tab] = useQueryState('tab');
 
   const tabs = pathname.split('/').at(-1);
 
@@ -33,7 +33,7 @@ export const useActiveSettingsKey = () => {
  */
 export const useActiveProfileKey = () => {
   const pathname = usePathname();
-  const { tab } = useQuery();
+  const [tab] = useQueryState('tab');
 
   const tabs = pathname.split('/').at(-1);
 

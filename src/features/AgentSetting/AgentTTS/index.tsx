@@ -28,8 +28,8 @@ const AgentTTS = memo(() => {
     return (all?: boolean) => new VoiceList(all ? undefined : locale);
   });
   const [showAllLocaleVoice, ttsService, updateConfig] = useStore((s) => [
-    s.config.tts.showAllLocaleVoice,
-    s.config.tts.ttsService,
+    s.config.tts?.showAllLocaleVoice,
+    s.config.tts?.ttsService,
     s.setAgentConfig,
   ]);
 
