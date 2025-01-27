@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import ModalLayout from '@/app/@modal/_layout/ModalLayout';
 import StoreUpdater from '@/features/AgentSetting/StoreUpdater';
 import { Provider, createStore } from '@/features/AgentSetting/store';
-import { useQuery } from '@/hooks/useQuery';
+import { useChatSettingsTab } from '@/hooks/useChatSettingsTab';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { ChatSettingsTabs } from '@/store/global/initialState';
@@ -24,7 +24,7 @@ const CategoryContent = dynamic(() => import('./features/CategoryContent'), {
 });
 
 const Layout = memo<PropsWithChildren>(({ children }) => {
-  const { tab = ChatSettingsTabs.Meta } = useQuery();
+  const tab = useChatSettingsTab();
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);

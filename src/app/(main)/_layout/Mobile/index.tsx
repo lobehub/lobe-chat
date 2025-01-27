@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import qs from 'query-string';
 import { PropsWithChildren, memo } from 'react';
 
-import { useQuery } from '@/hooks/useQuery';
+import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import NavBar from './NavBar';
@@ -22,7 +22,7 @@ const MOBILE_NAV_ROUTES = new Set([
 ]);
 
 const Layout = memo(({ children }: PropsWithChildren) => {
-  const { showMobileWorkspace } = useQuery();
+  const showMobileWorkspace = useShowMobileWorkspace();
   const pathname = usePathname();
   const { url } = qs.parseUrl(pathname);
   const showNav = !showMobileWorkspace && MOBILE_NAV_ROUTES.has(url);

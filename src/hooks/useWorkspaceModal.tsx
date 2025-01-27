@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import useMergeState from 'use-merge-value';
 
-import { useQuery } from '@/hooks/useQuery';
+import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { useServerConfigStore } from '@/store/serverConfig';
 
 export const useWorkspaceModal = (
@@ -9,7 +9,7 @@ export const useWorkspaceModal = (
   onChange?: (v: boolean) => void,
 ): [boolean, (v: boolean) => void] => {
   const mobile = useServerConfigStore((s) => s.isMobile);
-  const { showMobileWorkspace } = useQuery();
+  const showMobileWorkspace = useShowMobileWorkspace();
   const [isModalOpen, setIsModalOpen] = useMergeState(false, {
     defaultValue: false,
     onChange,

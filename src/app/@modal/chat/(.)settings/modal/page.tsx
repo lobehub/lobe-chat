@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 
-import { useQuery } from '@/hooks/useQuery';
+import { useChatSettingsTab } from '@/hooks/useChatSettingsTab';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 
 import Skeleton from './loading';
@@ -37,7 +37,8 @@ const AgentTTS = dynamic(() => import('@/features/AgentSetting/AgentTTS'), { loa
  */
 
 const Page = () => {
-  const { tab = ChatSettingsTabs.Meta } = useQuery();
+  const tab = useChatSettingsTab();
+
   return (
     <>
       {tab === ChatSettingsTabs.Meta && <AgentMeta />}
