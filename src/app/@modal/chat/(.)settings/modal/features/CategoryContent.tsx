@@ -5,15 +5,14 @@ import { Flexbox } from 'react-layout-kit';
 
 import HeaderContent from '@/app/(main)/chat/settings/features/HeaderContent';
 import Menu from '@/components/Menu';
-import { useQuery } from '@/hooks/useQuery';
+import { useChatSettingsTab } from '@/hooks/useChatSettingsTab';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
-import { ChatSettingsTabs } from '@/store/global/initialState';
 
 import { useCategory } from './useCategory';
 
 const CategoryContent = memo(() => {
   const cateItems = useCategory();
-  const { tab = ChatSettingsTabs.Meta } = useQuery();
+  const tab = useChatSettingsTab();
   const router = useQueryRoute();
 
   return (
