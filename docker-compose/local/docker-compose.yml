@@ -69,7 +69,7 @@ services:
       RUNNING_IN_DOCKER: 'true'
       driverName: 'postgres'
       dataSourceName: 'user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor'
-      origin: 'http://localhost:${CASDOOR_PORT}'
+      origin: '*'
       runmode: 'dev'
     volumes:
       - ./init_data.json:/init_data.json
@@ -89,16 +89,11 @@ services:
         condition: service_started
 
     environment:
-      - 'APP_URL=http://localhost:3210'
       - 'NEXT_AUTH_SSO_PROVIDERS=casdoor'
       - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
       - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
-      - 'AUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
-      - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
       - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
-      - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
       - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
-      - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
       - 'S3_ENABLE_PATH_STYLE=1'
       - 'S3_ACCESS_KEY=${MINIO_ROOT_USER}'
       - 'S3_ACCESS_KEY_ID=${MINIO_ROOT_USER}'
