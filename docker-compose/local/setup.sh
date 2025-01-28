@@ -295,17 +295,17 @@ show_message() {
             case $LANGUAGE in
                 zh_CN)
                     echo "请选择部署模式："
-                    echo "0 域名模式（访问时无需指明端口），需要为 LobeChat, MinIO, Casdoor 分别分配一个域名；"
-                    echo "1 端口模式（访问时需要指明端口，如使用IP访问，或域名+端口访问），需要放开指定端口；"
-                    echo "2 本地模式（仅供本地测试使用）"
+                    echo "(0) 域名模式（访问时无需指明端口），需要使用反向代理服务 LobeChat, MinIO, Casdoor ，并分别分配一个域名；"
+                    echo "(1) 端口模式（访问时需要指明端口，如使用IP访问，或域名+端口访问），需要放开指定端口；"
+                    echo "(2) 本地模式（仅供本地测试使用）"
                     echo "如果你对这些内容疑惑，可以先选择使用本地模式进行部署，稍后根据文档指引再进行修改。"
                     echo "https://lobehub.com/docs/self-hosting/server-database/docker-compose"
                 ;;
                 *)
                     echo "Please select the deployment mode:"
-                    echo "0 Domain mode (no need to specify the port when accessing), you need to assign a domain name to LobeChat, MinIO, and Casdoor respectively;"
-                    echo "1 Port mode (need to specify the port when accessing, such as using IP access, or domain name + port access), you need to open the specified port;"
-                    echo "2 Local mode (for local testing only)"
+                    echo "(0) Domain mode (no need to specify the port when accessing), you need to use the reverse proxy service LobeChat, MinIO, Casdoor, and assign a domain name respectively;"
+                    echo "(1) Port mode (need to specify the port when accessing, such as using IP access, or domain name + port access), you need to open the specified port;"
+                    echo "(2) Local mode (for local testing only)"
                     echo "If you are confused about these contents, you can choose to deploy in local mode first, and then modify according to the document guide later."
                     echo "https://lobehub.com/docs/self-hosting/server-database/docker-compose"
                 ;;
@@ -314,10 +314,10 @@ show_message() {
         ask_host)
             case $LANGUAGE in
                 zh_CN)
-                    echo " 服务的域名/IP："
+                    echo " 服务的域名/IP（不含端口及http协议）："
                 ;;
                 *)
-                    echo " server Host:"
+                    echo " Domain/IP of the service (without port and http protocol):"
                 ;;
             esac
         ;;
@@ -406,11 +406,15 @@ ENV_EXAMPLES=(
 CASDOOR_PASSWORD="123"
 CASDOOR_SECRET="CASDOOR_SECRET"
 MINIO_ROOT_PASSWORD="YOUR_MINIO_PASSWORD"
+CASDOOR_HOST="localhost:8000"
+MINIO_HOST="localhost:9000"
 
 section_configurate_host() {
+    DEPLOY_MODE=$ask_result
     show_message "host_regenerate"
     # If run in local mode, skip this step
     if [[ "$DEPLOY_MODE" == "2" ]]; then
+        HOST="localhost:3210"
         return 0
     fi
 
@@ -428,21 +432,23 @@ section_configurate_host() {
     echo "LobeChat" $(show_message "ask_host")
     ask "(<yourip/domain>)" "$HOST"
     LOBE_HOST="$ask_result"
-    echo "Minio" $(show_message "ask_host")
-    ask "(<yourip/domain>)" ""
-    MINIO_HOST="$ask_result"
-    echo "Casdoor" $(show_message "ask_host")
-    ask "(<yourip/domain>)" ""
-    CASDOOR_HOST="$ask_result"
 
-    case $ask_result in
+    case $DEPLOY_MODE in
         0)
             DEPLOY_MODE="domain"
+            # If user use domain mode, ask for the domain of Minio and Casdoor
+            echo "Minio S3 API" $(show_message "ask_host")
+            ask "(<yourip/domain>)" ""
+            MINIO_HOST="$ask_result"
+            echo "Casdoor API" $(show_message "ask_host")
+            ask "(<yourip/domain>)" ""
+            CASDOOR_HOST="$ask_result"
             $SED_COMMAND "s/"example.com"/${CASDOOR_HOST}/" init_data.json
         ;;
         1)
             DEPLOY_MODE="ip"
-            LOBE_HOST="${LOBE_HOST}:3210"
+            # If user use ip mode, append the port to the host
+            LOBE_HOST="${HOST}:3210"
             MINIO_HOST="${MINIO_HOST}:9000"
             $SED_COMMAND "s/"localhost"/${CASDOOR_HOST}/" init_data.json
         ;;
@@ -453,13 +459,13 @@ section_configurate_host() {
     esac
 
     # lobe host
-    $SED_COMMAND "s#^APP_URL=.*#APP_URL=http://${LOBE_HOST}#" .env
+    $SED_COMMAND "s#^APP_URL=.*#APP_URL=http://$LOBE_HOST#" .env
     # auth related 
-    $SED_COMMAND "s#^AUTH_URL=.*#AUTH_URL=http://${CASDOOR_HOST}/api/auth#" .env
-    $SED_COMMAND "s#^AUTH_CASDOOR_ISSUER=.*#AUTH_CASDOOR_ISSUER=http://${CASDOOR_HOST}#" .env
+    $SED_COMMAND "s#^AUTH_URL=.*#AUTH_URL=http://$LOBE_HOST/api/auth#" .env
+    $SED_COMMAND "s#^AUTH_CASDOOR_ISSUER=.*#AUTH_CASDOOR_ISSUER=http://$CASDOOR_HOST#" .env
     # s3 related
-    $SED_COMMAND "s#^S3_PUBLIC_DOMAIN=.*#S3_PUBLIC_DOMAIN=http://${MINIO_HOST}#" .env
-    $SED_COMMAND "s#^S3_ENDPOINT=.*#S3_ENDPOINT=http://${MINIO_HOST}#" .env
+    $SED_COMMAND "s#^S3_PUBLIC_DOMAIN=.*#S3_PUBLIC_DOMAIN=http://$MINIO_HOST#" .env
+    $SED_COMMAND "s#^S3_ENDPOINT=.*#S3_ENDPOINT=http://$MINIO_HOST#" .env
     
     # Check if env modified success
     if [ $? -ne 0 ]; then
@@ -468,7 +474,11 @@ section_configurate_host() {
 }
 show_message "ask_deploy_mode"
 ask "(0,1,2)" "2"
+if [[ "$ask_result" == "0" ]] || [[ "$ask_result" == "1" ]] || [[ "$ask_result" == "2" ]]; then
     section_configurate_host
+else
+    echo "Invalid deploy mode: $ask_result, please select 0, 1 or 2."
+    exit 1
 fi
 
 section_download_files(){
@@ -611,11 +621,9 @@ section_display_configurated_report() {
     # Display configuration reports
     echo $(show_message "security_secrect_regenerate_report")
     
-    if [ -n "$HOST" ]; then
-        echo -e "Server Host: $HOST"
-    fi
-    echo -e "Casdoor: \n - Username: admin\n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
-    echo -e "Minio: \n - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
+    echo -e "LobeChat: \n - URL: http://$HOST"
+    echo -e "Casdoor: \n - URL: http://$CASDOOR_HOST \n - Username: admin\n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
+    echo -e "Minio: \n - URL: http://$MINIO_HOST \n - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
     
     # Display final message
     printf "\n%s\n\n" "$(show_message "tips_run_command")"
