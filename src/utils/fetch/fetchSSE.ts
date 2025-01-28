@@ -2,6 +2,7 @@ import { isObject } from 'lodash-es';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
+import { getAgentChatConfig } from '@/store/chat/slices/aiChat/actions/helpers';
 import { ChatErrorType } from '@/types/fetch';
 import { SmoothingParams } from '@/types/llm';
 import {
@@ -59,17 +60,28 @@ const START_ANIMATION_SPEED = 4;
 
 const END_ANIMATION_SPEED = 15;
 
+const calculateAverage = (ary: number[], count: number) => {
+  const filteredAry = ary.filter((num) => num !== 0);
+  if (filteredAry.length === 0) return 0;
+  const numbers = filteredAry.slice(-count);
+  return numbers.reduce((acc, num) => acc + num, 0) / numbers.length;
+};
+
 const createSmoothMessage = (params: {
   onTextUpdate: (delta: string, text: string) => void;
   startSpeed?: number;
 }) => {
   const { startSpeed = START_ANIMATION_SPEED } = params;
+  const agentChatConfig = getAgentChatConfig();
 
   let buffer = '';
   // why use queue: https://shareg.pt/GLBrjpK
   let outputQueue: string[] = [];
   let isAnimationActive = false;
   let animationFrameId: number | null = null;
+  let lastPushTime = -1;
+  let pushIntervalHistories: number[] = [];
+  let updateIntervalHistories: number[] = [];
 
   // when you need to stop the animation, call this function
   const stopAnimation = () => {
@@ -82,8 +94,9 @@ const createSmoothMessage = (params: {
 
   // define startAnimation function to display the text in buffer smooth
   // when you need to start the animation, call this function
-  const startAnimation = (speed = startSpeed) =>
-    new Promise<void>((resolve) => {
+  const startAnimation = (speed = startSpeed) => {
+    let lastUpdateTextTime = Date.now();
+    return new Promise<void>((resolve) => {
       if (isAnimationActive) {
         resolve();
         return;
@@ -103,8 +116,21 @@ const createSmoothMessage = (params: {
         // 如果还有文本没有显示
         // 检查队列中是否有字符待显示
         if (outputQueue.length > 0) {
+          let dynamicSpeed = speed;
+          if (agentChatConfig.enableFastAnimation) {
+            updateIntervalHistories.push(Date.now() - lastUpdateTextTime);
+            lastUpdateTextTime = Date.now();
+
+            const averageInterval = calculateAverage(pushIntervalHistories, 4);
+            const averageUpdateInterval = calculateAverage(updateIntervalHistories, 4);
+
+            dynamicSpeed = outputQueue.length / (averageInterval / averageUpdateInterval);
+            if (!dynamicSpeed || !isFinite(dynamicSpeed)) dynamicSpeed = speed;
+            dynamicSpeed = Math.max(speed, Math.floor(dynamicSpeed));
+          }
+
           // 从队列中获取前 n 个字符（如果存在）
-          const charsToAdd = outputQueue.splice(0, speed).join('');
+          const charsToAdd = outputQueue.splice(0, dynamicSpeed).join('');
           buffer += charsToAdd;
 
           // 更新消息内容，这里可能需要结合实际情况调整
@@ -122,8 +148,14 @@ const createSmoothMessage = (params: {
 
       animationFrameId = requestAnimationFrame(updateText);
     });
+  };
 
   const pushToQueue = (text: string) => {
+    if (text && lastPushTime !== -1) {
+      const interval = Date.now() - lastPushTime;
+      pushIntervalHistories.push(interval);
+    }
+    lastPushTime = text ? Date.now() : lastPushTime;
     outputQueue.push(...text.split(''));
   };
 

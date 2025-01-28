@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "فعال‌سازی خلاصه‌سازی خودکار تاریخچه پیام‌ها"
     },
+    "enableFastAnimation": {
+      "desc": "اگر سرعت پاسخ مدل سریع باشد، اثر انیمیشن متن تسریع می‌شود",
+      "title": "انیمیشن سریع"
+    },
     "enableHistoryCount": {
       "alias": "بدون محدودیت",
       "limited": "فقط شامل {{number}} پیام مکالمه",

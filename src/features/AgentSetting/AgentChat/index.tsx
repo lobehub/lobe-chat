@@ -65,6 +65,14 @@ const AgentChat = memo(() => {
         minWidth: undefined,
       },
       {
+        children: <Switch />,
+        desc: t('settingChat.enableFastAnimation.desc'),
+        label: t('settingChat.enableFastAnimation.title'),
+        minWidth: undefined,
+        name: 'enableFastAnimation',
+        valuePropName: 'checked',
+      },
+      {
         children: <Input.TextArea placeholder={t('settingChat.inputTemplate.placeholder')} />,
         desc: t('settingChat.inputTemplate.desc'),
         label: t('settingChat.inputTemplate.title'),

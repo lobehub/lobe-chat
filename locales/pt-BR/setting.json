@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "Ativar resumo automático de mensagens históricas"
     },
+    "enableFastAnimation": {
+      "desc": "Quando a velocidade de resposta do modelo for rápida, acelerará o efeito de animação do texto",
+      "title": "Animação Rápida"
+    },
     "enableHistoryCount": {
       "alias": "Sem limite",
       "limited": "Incluir apenas {{number}} mensagens de conversa",

@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "Geçmiş mesajların otomatik özetini aç"
     },
+    "enableFastAnimation": {
+      "desc": "Model yanıt hızı yüksek olduğunda, metin animasyon efektini hızlandıracaktır",
+      "title": "Hızlı Animasyon"
+    },
     "enableHistoryCount": {
       "alias": "Sınırsız",
       "limited": "Yalnızca {{number}} konuşma mesajını içerir",

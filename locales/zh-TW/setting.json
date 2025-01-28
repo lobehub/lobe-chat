@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "開啟歷史消息自動總結"
     },
+    "enableFastAnimation": {
+      "desc": "當模型回應速度較快時，將加速文字動畫效果",
+      "title": "快速動畫"
+    },
     "enableHistoryCount": {
       "alias": "不限制",
       "limited": "只包含 {{number}} 條對話訊息",
