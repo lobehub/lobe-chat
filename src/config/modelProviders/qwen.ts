@@ -162,7 +162,6 @@ const Qwen: ModelProviderCard = {
         output: 36,
       },
       releasedAt: '2024-12-25',
-      type: 'chat',
       vision: true,
     },
     {
@@ -224,7 +223,6 @@ const Qwen: ModelProviderCard = {
         input: 1,
         output: 3,
       },
-      type: 'chat',
     },
     {
       contextWindowTokens: 4096,
@@ -306,7 +304,6 @@ const Qwen: ModelProviderCard = {
         output: 48,
       },
       releasedAt: '2025-01-26',
-      type: 'chat',
       vision: true,
     },
     {
@@ -321,7 +318,6 @@ const Qwen: ModelProviderCard = {
         output: 0,
       },
       releasedAt: '2025-01-27',
-      type: 'chat',
     },
     {
       contextWindowTokens: 65_536,
@@ -335,7 +331,6 @@ const Qwen: ModelProviderCard = {
         output: 0,
       },
       releasedAt: '2025-01-27',
-      type: 'chat',
     },
   ],
   checkModel: 'qwen-turbo-latest',
