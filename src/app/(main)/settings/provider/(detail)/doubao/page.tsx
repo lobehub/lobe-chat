@@ -14,7 +14,7 @@ const useProviderCard = (): ProviderItem => {
   // Get the first model card's deployment name as the check model
   const checkModel = useUserStore((s) => {
     const chatModelCards = modelProviderSelectors.getModelCardsById(providerKey)(s);
-
+    console.log(chatModelCards);
     if (chatModelCards.length > 0) {
       return chatModelCards[0].id.split('->')[1];
     }
