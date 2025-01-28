@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Pin @clerk/nextjs@6.10.2 to avoid build error."]
+    },
+    "date": "2025-01-28",
+    "version": "1.49.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog locale not showing English."]
+    },
+    "date": "2025-01-28",
+    "version": "1.49.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix discover ssr hydration error."]
     },
     "date": "2025-01-27",
