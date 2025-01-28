@@ -162,4 +162,103 @@ describe('processWithArtifact', () => {
 
 <lobeArtifact identifier="test" type="image/svg+xml" title="测试"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">  <rect width="100" height="100" fill="blue"/></svg></lobeArtifact>`);
   });
+
+  it('should remove fenced code block between lobeArtifact and HTML content', () => {
+    const input = `<lobeArtifact identifier="web-calculator" type="text/html" title="简单的 Web 计算器">
+\`\`\`html
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <title>计算器</title>
+</head>
+<body>
+  <div>计算器</div>
+</body>
+</html>
+\`\`\`
+</lobeArtifact>`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(
+      `<lobeArtifact identifier="web-calculator" type="text/html" title="简单的 Web 计算器"><!DOCTYPE html><html lang="zh"><head>  <title>计算器</title></head><body>  <div>计算器</div></body></html></lobeArtifact>`,
+    );
+  });
+
+  it('should remove fenced code block between lobeArtifact and HTML content without doctype', () => {
+    const input = `<lobeArtifact identifier="web-calculator" type="text/html" title="简单的 Web 计算器">
+\`\`\`html
+<html lang="zh">
+<head>
+  <title>计算器</title>
+</head>
+<body>
+  <div>计算器</div>
+</body>
+</html>
+\`\`\`
+</lobeArtifact>`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(
+      `<lobeArtifact identifier="web-calculator" type="text/html" title="简单的 Web 计算器"><html lang="zh"><head>  <title>计算器</title></head><body>  <div>计算器</div></body></html></lobeArtifact>`,
+    );
+  });
+
+  it('should remove outer fenced code block wrapping lobeThinking and lobeArtifact', () => {
+    const input =
+      '```tool_code\n<lobeThinking>这是一个思考过程。</lobeThinking>\n\n<lobeArtifact identifier="test" type="text/html" title="测试">\n<div>测试内容</div>\n</lobeArtifact>\n```';
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(
+      '<lobeThinking>这是一个思考过程。</lobeThinking>\n\n<lobeArtifact identifier="test" type="text/html" title="测试"><div>测试内容</div></lobeArtifact>',
+    );
+  });
+
+  it('should handle both outer code block and inner HTML code block', () => {
+    const input =
+      '```tool_code\n<lobeThinking>这是一个思考过程。</lobeThinking>\n\n<lobeArtifact identifier="test" type="text/html" title="测试">\n```html\n<!DOCTYPE html>\n<html>\n<body>\n<div>测试内容</div>\n</body>\n</html>\n```\n</lobeArtifact>\n```';
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(
+      '<lobeThinking>这是一个思考过程。</lobeThinking>\n\n<lobeArtifact identifier="test" type="text/html" title="测试"><!DOCTYPE html><html><body><div>测试内容</div></body></html></lobeArtifact>',
+    );
+  });
+
+  it('should handle complete conversation with text and tags', () => {
+    const input = `Sure, I can help you with that! Here is a basic calculator built using HTML, CSS, and JavaScript.
+
+<lobeThinking>A web calculator is a substantial piece of code and a good candidate for an artifact. It's self-contained, and it's likely that the user will want to modify it. This is a new request, so I will create a new artifact.</lobeThinking>
+
+<lobeArtifact identifier="web-calculator" type="text/html" title="Web Calculator">
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Calculator</title>
+</head>
+<body>
+    <div>Calculator</div>
+</body>
+</html>
+\`\`\`
+</lobeArtifact>
+
+This code provides a basic calculator that can perform addition, subtraction, multiplication, and division.`;
+
+    const output = processWithArtifact(input);
+
+    expect(output)
+      .toEqual(`Sure, I can help you with that! Here is a basic calculator built using HTML, CSS, and JavaScript.
+
+<lobeThinking>A web calculator is a substantial piece of code and a good candidate for an artifact. It's self-contained, and it's likely that the user will want to modify it. This is a new request, so I will create a new artifact.</lobeThinking>
+
+<lobeArtifact identifier="web-calculator" type="text/html" title="Web Calculator"><!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <title>Simple Calculator</title></head><body>    <div>Calculator</div></body></html></lobeArtifact>
+
+This code provides a basic calculator that can perform addition, subtraction, multiplication, and division.`);
+  });
 });
