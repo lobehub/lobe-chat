@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.49.4](https://github.com/lobehub/lobe-chat/compare/v1.49.3...v1.49.4)
+
+<sup>Released on **2025-01-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix changelog locale not showing English.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix changelog locale not showing English, closes [#5607](https://github.com/lobehub/lobe-chat/issues/5607) ([9104242](https://github.com/lobehub/lobe-chat/commit/9104242))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.49.3](https://github.com/lobehub/lobe-chat/compare/v1.49.2...v1.49.3)
 
 <sup>Released on **2025-01-27**</sup>
