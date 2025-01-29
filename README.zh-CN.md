@@ -308,14 +308,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                         | 描述                                                                                        |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| [伟大的比古斯・迪克斯](https://lobechat.com/discover/assistant/all-knowing)<br/><sup>By **[CGitwater](https://github.com/CGitwater)** on **2025-01-24**</sup>                    | 全能强大的知识之神<br/>`比古斯` `迪克斯`                                                    |
-| [PPT 制作达人](https://lobechat.com/discover/assistant/ppt-production-expert)<br/><sup>By **[patricleehua](https://github.com/patricleehua)** on **2025-01-24**</sup>            | 擅长高质量 PPT 的快速制作和优化<br/>`ppt制作` `设计` `咨询` `内容优化` `用户支持`           |
-| [英语导师](https://lobechat.com/discover/assistant/mean-english-mentor)<br/><sup>By **[GEORGE-Ta](https://github.com/GEORGE-Ta)** on **2025-01-24**</sup>                        | 以高傲轻蔑态度辅导英语口语，擅长嘲讽式纠错。<br/>`英语教学` `口语` `角色扮演` `教育` `嘲讽` |
-| [学术修订专家](https://lobechat.com/discover/assistant/academic-revision-specialist)<br/><sup>By **[sunrisewestern](https://github.com/sunrisewestern)** on **2025-01-24**</sup> | 擅长学术写作和论文修订<br/>                                                                 |
+| 最近新增                                                                                                                                                              | 描述                                                                                  |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| [SUNO 歌曲创作助手](https://lobechat.com/discover/assistant/suno-lyrics-assistant)<br/><sup>By **[sqkkyzx](https://github.com/sqkkyzx)** on **2025-01-26**</sup>      | 能根据用户需求生成 SUNO 歌曲创作参数<br/>`歌词创作` `音乐风格` `编曲` `参数设置`      |
+| [伟大的比古斯・迪克斯](https://lobechat.com/discover/assistant/all-knowing)<br/><sup>By **[CGitwater](https://github.com/CGitwater)** on **2025-01-24**</sup>         | 全能强大的知识之神<br/>`比古斯` `迪克斯`                                              |
+| [PPT 制作达人](https://lobechat.com/discover/assistant/ppt-production-expert)<br/><sup>By **[patricleehua](https://github.com/patricleehua)** on **2025-01-24**</sup> | 擅长高质量 PPT 的快速制作和优化<br/>`ppt制作` `设计` `咨询` `内容优化` `用户支持`     |
+| [OCR 文档转录助手](https://lobechat.com/discover/assistant/ocr-markdown)<br/><sup>By **[Liangpi000](https://github.com/Liangpi000)** on **2025-01-24**</sup>          | 擅长文件内容转录与 markdown 格式<br/>`文档生成` `markdown` `格式化` `转录` `任务指导` |
 
-> 📊 Total agents: [<kbd>**466**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**471**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 

@@ -1,6 +1,7 @@
 import { ModelIcon } from '@lobehub/icons';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
+import Link from 'next/link';
 import { CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -16,8 +17,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     opacity: ${isDarkMode ? 0.9 : 0.4};
   `,
   container: css`
-    cursor: pointer;
-
     position: relative;
 
     overflow: hidden;
@@ -69,53 +68,56 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
 export interface ModelCardProps extends DiscoverModelItem {
   className?: string;
+  href: string;
   showCategory?: boolean;
   style?: CSSProperties;
 }
 
-const ModelCard = memo<ModelCardProps>(({ className, meta, identifier, style }) => {
+const ModelCard = memo<ModelCardProps>(({ className, meta, identifier, style, href }) => {
   const { description, title, functionCall, vision, contextWindowTokens } = meta;
   const { t } = useTranslation('models');
   const { cx, styles } = useStyles();
 
   return (
-    <Flexbox className={cx(styles.container, className)} gap={24} key={identifier} style={style}>
-      <Flexbox
-        gap={12}
-        padding={16}
-        style={{ overflow: 'hidden', position: 'relative' }}
-        width={'100%'}
-      >
+    <Link href={href}>
+      <Flexbox className={cx(styles.container, className)} gap={24} key={identifier} style={style}>
         <Flexbox
-          align={'center'}
           gap={12}
-          horizontal
+          padding={16}
           style={{ overflow: 'hidden', position: 'relative' }}
           width={'100%'}
         >
-          <ModelIcon model={identifier} size={32} type={'avatar'} />
-          <Flexbox style={{ overflow: 'hidden', position: 'relative' }}>
-            <Title className={styles.title} ellipsis={{ rows: 1, tooltip: title }} level={3}>
-              {title}
-            </Title>
-            <Paragraph className={styles.id} ellipsis={{ rows: 1 }}>
-              {identifier}
-            </Paragraph>
+          <Flexbox
+            align={'center'}
+            gap={12}
+            horizontal
+            style={{ overflow: 'hidden', position: 'relative' }}
+            width={'100%'}
+          >
+            <ModelIcon model={identifier} size={32} type={'avatar'} />
+            <Flexbox style={{ overflow: 'hidden', position: 'relative' }}>
+              <Title className={styles.title} ellipsis={{ rows: 1, tooltip: title }} level={3}>
+                {title}
+              </Title>
+              <Paragraph className={styles.id} ellipsis={{ rows: 1 }}>
+                {identifier}
+              </Paragraph>
+            </Flexbox>
           </Flexbox>
-        </Flexbox>
-        {description && (
-          <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
-            {t(`${identifier}.description`)}
-          </Paragraph>
-        )}
+          {description && (
+            <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
+              {t(`${identifier}.description`)}
+            </Paragraph>
+          )}
 
-        <ModelFeatureTags
-          functionCall={functionCall}
-          tokens={contextWindowTokens}
-          vision={vision}
-        />
+          <ModelFeatureTags
+            functionCall={functionCall}
+            tokens={contextWindowTokens}
+            vision={vision}
+          />
+        </Flexbox>
       </Flexbox>
-    </Flexbox>
+    </Link>
   );
 });
 

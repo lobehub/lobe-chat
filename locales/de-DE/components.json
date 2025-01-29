@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "Kein aktiviertes Modell. Bitte gehen Sie zu den Einstellungen, um es zu aktivieren.",
     "provider": "Anbieter"
+  },
+  "Thinking": {
+    "thinking": "Tiefes Nachdenken...",
+    "thought": "Tief nachgedacht",
+    "thoughtWithDuration": "Tief nachgedacht (Dauer: {{duration}} Sekunden)"
   }
 }
