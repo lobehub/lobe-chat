@@ -357,6 +357,23 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 16,
       output: 48,
     },
+    releasedAt: '2025-01-27',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 128_000,
+    description: 
+      '指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。',
+    displayName: 'Qwen2.5 VL 7B',
+    id: 'qwen2.5-vl-7b-instruct',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 5,
+    },
     releasedAt: '2025-01-26',
     type: 'chat',
   },
