@@ -5,6 +5,8 @@ import { Download, Filter, RefreshCw } from 'lucide-react';
 import React from 'react';
 import { mutate } from 'swr';
 
+import { exportService } from '@/services/export';
+
 import { FETCH_TABLE_DATA_KEY } from '../usePgTable';
 import Table from './Table';
 
@@ -55,7 +57,14 @@ const DataTable = ({ tableName }: DataTableProps) => {
           <Button color={'default'} icon={<Icon icon={Filter} />} variant={'filled'}>
             Filter
           </Button>
-          <ActionIcon icon={Download} title={'Export'} />
+          <ActionIcon
+            icon={Download}
+            onClick={async () => {
+              const data = await exportService.exportData();
+              console.log(data);
+            }}
+            title={'Export'}
+          />
           <ActionIcon
             icon={RefreshCw}
             onClick={async () => {
