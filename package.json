@@ -169,7 +169,7 @@
     "js-sha256": "^0.11.0",
     "jsonl-parse-stringify": "^1.0.3",
     "langchain": "^0.3.10",
-    "langfuse": "3.29.1",
+    "langfuse": "3.34.0",
     "langfuse-core": "3.29.1",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.471.0",
