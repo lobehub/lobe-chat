@@ -92,19 +92,19 @@ export const transformOpenAIStream = (
       return { data: item.delta.content, id: chunk.id, type: 'text' };
     }
 
-    // 无内容情况
-    if (item.delta && item.delta.content === null) {
-      // deepseek reasoner 会将 thinking 放在 reasoning_content 字段中
-      if ('reasoning_content' in item.delta && typeof item.delta.reasoning_content === 'string') {
-        return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
-      }
-
-      return { data: item.delta, id: chunk.id, type: 'data' };
+    // DeepSeek reasoner 会将 thinking 放在 reasoning_content 字段中
+    // litellm 处理 reasoning content 时 不会设定 content = null
+    if (
+      item.delta &&
+      'reasoning_content' in item.delta &&
+      typeof item.delta.reasoning_content === 'string'
+    ) {
+      return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
     }
 
-    // litellm 处理 reasoning content 时 不会设定 content = null
-    if ('reasoning_content' in item.delta && typeof item.delta.reasoning_content === 'string') {
-      return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
+    // 无内容情况
+    if (item.delta && item.delta.content === null) {
+      return { data: item.delta, id: chunk.id, type: 'data' };
     }
 
     // 其余情况下，返回 delta 和 index
