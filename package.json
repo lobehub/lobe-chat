@@ -170,7 +170,7 @@
     "jsonl-parse-stringify": "^1.0.3",
     "langchain": "^0.3.10",
     "langfuse": "3.29.1",
-    "langfuse-core": "3.29.1",
+    "langfuse-core": "3.34.0",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.471.0",
     "mammoth": "^1.9.0",
