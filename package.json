@@ -118,7 +118,7 @@
     "@clerk/themes": "^2.2.4",
     "@codesandbox/sandpack-react": "^2.19.10",
     "@cyntler/react-doc-viewer": "^1.17.0",
-    "@electric-sql/pglite": "0.2.13",
+    "@electric-sql/pglite": "0.2.16",
     "@google/generative-ai": "^0.21.0",
     "@huggingface/inference": "^2.8.1",
     "@icons-pack/react-simple-icons": "9.6.0",
