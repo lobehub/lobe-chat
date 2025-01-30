@@ -359,4 +359,33 @@ Some text after`);
       `<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>`,
     );
   });
+
+  it('should handle code block with surrounding text and both lobeThinking and lobeArtifact', () => {
+    const input = `---
+
+\`\`\`tool_code
+<lobeThinking>The user reported a \`SyntaxError\` in the browser console, indicating a problem with the JavaScript code in the calculator artifact. The error message "Identifier 'display' has already been declared" suggests a variable naming conflict. I need to review the JavaScript code and correct the issue. This is an update to the existing "calculator-web-artifact" artifact.</lobeThinking>
+<lobeArtifact identifier="calculator-web-artifact" type="text/html" title="Simple Calculator">
+<!DOCTYPE html>
+<html lang="en">
+...
+</html>
+</lobeArtifact>
+\`\`\`
+I've updated the calculator artifact. The issue was a naming conflict with the \`display\` variable. I've renamed the input element's ID to \`calc-display\` and the JavaScript variable to \`displayElement\` to avoid the conflict. The calculator should now function correctly.
+
+---`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`---
+
+<lobeThinking>The user reported a \`SyntaxError\` in the browser console, indicating a problem with the JavaScript code in the calculator artifact. The error message "Identifier 'display' has already been declared" suggests a variable naming conflict. I need to review the JavaScript code and correct the issue. This is an update to the existing "calculator-web-artifact" artifact.</lobeThinking>
+
+<lobeArtifact identifier="calculator-web-artifact" type="text/html" title="Simple Calculator"><!DOCTYPE html><html lang="en">...</html></lobeArtifact>
+
+I've updated the calculator artifact. The issue was a naming conflict with the \`display\` variable. I've renamed the input element's ID to \`calc-display\` and the JavaScript variable to \`displayElement\` to avoid the conflict. The calculator should now function correctly.
+
+---`);
+  });
 });
