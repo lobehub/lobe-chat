@@ -6,8 +6,10 @@ import { ARTIFACT_TAG_REGEX, ARTIFACT_THINKING_TAG_REGEX } from '@/const/plugin'
 export const processWithArtifact = (input: string = '') => {
   // First remove outer fenced code block if it exists
   let output = input.replace(
-    /^```[^\n]*\n(<lobeThinking>[\S\s]*?<\/lobeThinking>\s*\n\s*<lobeArtifact[\S\s]*?<\/lobeArtifact>\s*)\n```$/,
-    '$1',
+    /(.*\n)?\s*```[^\n]*\n((?:<lobeThinking>[\S\s]*?<\/lobeThinking>\s*\n\s*)?<lobeArtifact[\S\s]*?<\/lobeArtifact>\s*)\n```(\s*\n.*)?$/,
+    (_, before = '', content, after = '') => {
+      return [before.trim(), content.trim(), after.trim()].filter(Boolean).join('\n\n');
+    },
   );
 
   const thinkMatch = ARTIFACT_THINKING_TAG_REGEX.exec(output);

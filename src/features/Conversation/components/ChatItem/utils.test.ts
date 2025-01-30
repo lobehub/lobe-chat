@@ -262,3 +262,101 @@ This code provides a basic calculator that can perform addition, subtraction, mu
 This code provides a basic calculator that can perform addition, subtraction, multiplication, and division.`);
   });
 });
+
+describe('outer code block removal', () => {
+  it('should remove outer html code block', () => {
+    const input = `\`\`\`html
+<lobeThinking>Test thinking</lobeThinking>
+<lobeArtifact identifier="test" type="text/html" title="Test">
+<!DOCTYPE html>
+<html>
+<body>Test</body>
+</html>
+</lobeArtifact>
+\`\`\``;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`<lobeThinking>Test thinking</lobeThinking>
+
+<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>`);
+  });
+
+  it('should remove outer tool_code code block', () => {
+    const input = `\`\`\`tool_code
+<lobeThinking>Test thinking</lobeThinking>
+<lobeArtifact identifier="test" type="text/html" title="Test">
+<!DOCTYPE html>
+<html>
+<body>Test</body>
+</html>
+</lobeArtifact>
+\`\`\``;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`<lobeThinking>Test thinking</lobeThinking>
+
+<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>`);
+  });
+
+  it('should handle input without outer code block', () => {
+    const input = `<lobeThinking>Test thinking</lobeThinking>
+<lobeArtifact identifier="test" type="text/html" title="Test">
+<!DOCTYPE html>
+<html>
+<body>Test</body>
+</html>
+</lobeArtifact>`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`<lobeThinking>Test thinking</lobeThinking>
+
+<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>`);
+  });
+
+  it('should handle code block with content before and after', () => {
+    const input = `Some text before
+
+\`\`\`html
+<lobeThinking>Test thinking</lobeThinking>
+
+<lobeArtifact identifier="test" type="text/html" title="Test">
+<!DOCTYPE html>
+<html>
+<body>Test</body>
+</html>
+</lobeArtifact>
+\`\`\`
+
+Some text after`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`Some text before
+
+<lobeThinking>Test thinking</lobeThinking>
+
+<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>
+
+Some text after`);
+  });
+
+  it('should handle code block with only lobeArtifact tag', () => {
+    const input = `\`\`\`html
+<lobeArtifact identifier="test" type="text/html" title="Test">
+<!DOCTYPE html>
+<html>
+<body>Test</body>
+</html>
+</lobeArtifact>
+\`\`\``;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(
+      `<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>`,
+    );
+  });
+});
