@@ -102,6 +102,11 @@ export const transformOpenAIStream = (
       return { data: item.delta, id: chunk.id, type: 'data' };
     }
 
+    // litellm 处理 reasoning content 时 不会设定 content = null
+    if ('reasoning_content' in item.delta && typeof item.delta.reasoning_content === 'string') {
+      return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
+    }
+
     // 其余情况下，返回 delta 和 index
     return {
       data: { delta: item.delta, id: chunk.id, index: item.index },
