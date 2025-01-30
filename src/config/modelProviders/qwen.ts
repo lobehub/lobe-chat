@@ -4,7 +4,7 @@ import { ModelProviderCard } from '@/types/llm';
 const Qwen: ModelProviderCard = {
   chatModels: [
     {
-      contextWindowTokens: 131_072,
+      contextWindowTokens: 1_000_000,
       description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
       displayName: 'Qwen Turbo',
       enabled: true,
@@ -64,13 +64,13 @@ const Qwen: ModelProviderCard = {
       id: 'qwen-vl-plus-latest',
       pricing: {
         currency: 'CNY',
-        input: 8,
-        output: 8,
+        input: 1.5,
+        output: 4.5,
       },
       vision: true,
     },
     {
-      contextWindowTokens: 32_000,
+      contextWindowTokens: 32_768,
       description:
         '通义千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。',
       displayName: 'Qwen VL Max',
@@ -78,8 +78,21 @@ const Qwen: ModelProviderCard = {
       id: 'qwen-vl-max-latest',
       pricing: {
         currency: 'CNY',
-        input: 20,
-        output: 20,
+        input: 3,
+        output: 9,
+      },
+      vision: true,
+    },
+    {
+      contextWindowTokens: 34_096,
+      description:
+        '通义千问OCR是文字提取专有模型，专注于文档、表格、试题、手写体文字等类型图像的文字提取能力。它能够识别多种文字，目前支持的语言有：汉语、英语、法语、日语、韩语、德语、俄语、意大利语、越南语、阿拉伯语。',
+      displayName: 'Qwen VL OCR',
+      id: 'qwen-vl-ocr-latest',
+      pricing: {
+        currency: 'CNY',
+        input: 5,
+        output: 5,
       },
       vision: true,
     },
@@ -134,9 +147,22 @@ const Qwen: ModelProviderCard = {
       id: 'qwq-32b-preview',
       pricing: {
         currency: 'CNY',
-        input: 0,
-        output: 0,
+        input: 3.5,
+        output: 7,
       },
+    },
+    {
+      contextWindowTokens: 32_768,
+      description: 'QVQ模型是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力，尤其在数学推理领域。',
+      displayName: 'QVQ 72B Preview',
+      id: 'qvq-72b-preview',
+      pricing: {
+        currency: 'CNY',
+        input: 12,
+        output: 36,
+      },
+      releasedAt: '2024-12-25',
+      vision: true,
     },
     {
       contextWindowTokens: 131_072,
@@ -146,8 +172,8 @@ const Qwen: ModelProviderCard = {
       id: 'qwen2.5-7b-instruct',
       pricing: {
         currency: 'CNY',
-        input: 1,
-        output: 2,
+        input: 0.5,
+        output: 1,
       },
     },
     {
@@ -158,8 +184,8 @@ const Qwen: ModelProviderCard = {
       id: 'qwen2.5-14b-instruct',
       pricing: {
         currency: 'CNY',
-        input: 2,
-        output: 6,
+        input: 1,
+        output: 3,
       },
     },
     {
@@ -184,6 +210,18 @@ const Qwen: ModelProviderCard = {
         currency: 'CNY',
         input: 4,
         output: 12,
+      },
+    },
+    {
+      contextWindowTokens: 1_000_000,
+      description: '通义千问2.5对外开源的72B规模的模型。',
+      displayName: 'Qwen2.5 14B 1M',
+      functionCall: true,
+      id: 'qwen2.5-14b-instruct-1m',
+      pricing: {
+        currency: 'CNY',
+        input: 1,
+        output: 3,
       },
     },
     {
@@ -253,6 +291,46 @@ const Qwen: ModelProviderCard = {
         output: 0,
       },
       vision: true,
+    },
+    {
+      contextWindowTokens: 128_000,
+      description: 
+        '指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。',
+      displayName: 'Qwen2.5 VL 72B',
+      id: 'qwen2.5-vl-72b-instruct',
+      pricing: {
+        currency: 'CNY',
+        input: 16,
+        output: 48,
+      },
+      releasedAt: '2025-01-26',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 65_536,
+      description: 
+        'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力，尤其在数学、代码、自然语言推理等任务上。',
+      displayName: 'DeepSeek R1',
+      id: 'deepseek-r1',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2025-01-27',
+    },
+    {
+      contextWindowTokens: 65_536,
+      description: 
+        'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
+      displayName: 'DeepSeek V3',
+      id: 'deepseek-v3',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2025-01-27',
     },
   ],
   checkModel: 'qwen-turbo-latest',
