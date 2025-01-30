@@ -388,4 +388,47 @@ I've updated the calculator artifact. The issue was a naming conflict with the \
 
 ---`);
   });
+
+  it('should handle code block before lobeThinking and lobeArtifact', () => {
+    const input = `
+Okay, I'll create a temperature converter with the logic wrapped in an IIFE and event listeners attached in Javascript.
+
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+...
+</html>
+\`\`\`
+
+<lobeThinking>This is a good candidate for an artifact. It's a self-contained HTML document with embedded JavaScript that provides a functional temperature converter. It's more than a simple code snippet and can be reused or modified. This is a new request, so I'll create a new artifact with the identifier "temperature-converter".</lobeThinking>
+
+<lobeArtifact identifier="temperature-converter" type="text/html" title="Temperature Converter">
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+...
+</html>
+\`\`\`
+</lobeArtifact>
+This HTML document includes the temperature converter with the requested features: the logic is wrapped in an IIFE, and event listeners are attached in JavaScript.
+`;
+
+    const output = processWithArtifact(input);
+
+    expect(output)
+      .toEqual(`Okay, I'll create a temperature converter with the logic wrapped in an IIFE and event listeners attached in Javascript.
+
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+...
+</html>
+\`\`\`
+
+<lobeThinking>This is a good candidate for an artifact. It's a self-contained HTML document with embedded JavaScript that provides a functional temperature converter. It's more than a simple code snippet and can be reused or modified. This is a new request, so I'll create a new artifact with the identifier "temperature-converter".</lobeThinking>
+
+<lobeArtifact identifier="temperature-converter" type="text/html" title="Temperature Converter"><!DOCTYPE html><html lang="en">...</html></lobeArtifact>
+
+This HTML document includes the temperature converter with the requested features: the logic is wrapped in an IIFE, and event listeners are attached in JavaScript.`);
+  });
 });
