@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Support litellm reasoning streaming."]
+    },
+    "date": "2025-01-30",
+    "version": "1.49.6"
+  },
+  {
+    "children": {
       "fixes": ["Pin @clerk/nextjs@6.10.2 to avoid build error."]
     },
     "date": "2025-01-28",
