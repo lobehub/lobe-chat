@@ -166,6 +166,38 @@ describe('chatDockSelectors', () => {
       });
       expect(chatPortalSelectors.artifactCode('test-id')(state)).toBe(artifactContent);
     });
+
+    it('should remove markdown code block wrapping HTML content', () => {
+      const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+</head>
+<body>
+  <div>Test content</div>
+</body>
+</html>`;
+      const state = createState({
+        messagesMap: {
+          'test-id_null': [
+            {
+              id: 'test-id',
+              content: `<lobeArtifact type="text/html">
+\`\`\`html
+${htmlContent}
+\`\`\`
+</lobeArtifact>`,
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+              role: 'user',
+              meta: {},
+              sessionId: 'test-id',
+            } as ChatMessage,
+          ],
+        },
+      });
+      expect(chatPortalSelectors.artifactCode('test-id')(state)).toBe(htmlContent);
+    });
   });
 
   describe('isArtifactTagClosed', () => {
