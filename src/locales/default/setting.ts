@@ -180,6 +180,10 @@ export default {
     enableCompressHistory: {
       title: '开启历史消息自动总结',
     },
+    enableFastAnimation: {
+      desc: '当模型响应速度较快时，将加速文字动画效果',
+      title: '快速动画',
+    },
     enableHistoryCount: {
       alias: '不限制',
       limited: '只包含 {{number}} 条会话消息',

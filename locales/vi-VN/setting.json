@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "Bật tóm tắt tự động lịch sử tin nhắn"
     },
+    "enableFastAnimation": {
+      "desc": "Khi mô hình phản hồi nhanh, hiệu ứng hoạt hình văn bản sẽ được tăng tốc",
+      "title": "Hoạt hình nhanh"
+    },
     "enableHistoryCount": {
       "alias": "Không giới hạn",
       "limited": "Chỉ chứa {{number}} tin nhắn trò chuyện",

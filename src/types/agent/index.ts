@@ -62,6 +62,7 @@ export interface LobeAgentChatConfig {
    * 历史消息长度压缩阈值
    */
   enableCompressHistory?: boolean;
+  enableFastAnimation?: boolean;
   /**
    * 开启历史记录条数
    */
@@ -80,6 +81,7 @@ export const AgentChatConfigSchema = z.object({
   displayMode: z.enum(['chat', 'docs']).optional(),
   enableAutoCreateTopic: z.boolean().optional(),
   enableCompressHistory: z.boolean().optional(),
+  enableFastAnimation: z.boolean().optional(),
   enableHistoryCount: z.boolean().optional(),
   enableMaxTokens: z.boolean().optional(),
   historyCount: z.number().optional(),
