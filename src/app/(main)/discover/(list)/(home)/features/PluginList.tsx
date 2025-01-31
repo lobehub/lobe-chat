@@ -1,5 +1,4 @@
 import { Grid } from '@lobehub/ui';
-import Link from 'next/link';
 import { memo } from 'react';
 import urlJoin from 'url-join';
 
@@ -11,9 +10,13 @@ const PluginList = memo<{ data: DiscoverPlugintem[] }>(({ data }) => {
   return (
     <Grid maxItemWidth={280} rows={4}>
       {data.map((item) => (
-        <Link href={urlJoin('/discover/plugin/', item.identifier)} key={item.identifier}>
-          <Card showCategory variant={'compact'} {...item} />
-        </Link>
+        <Card
+          showCategory
+          variant={'compact'}
+          {...item}
+          href={urlJoin('/discover/plugin/', item.identifier)}
+          key={item.identifier}
+        />
       ))}
     </Grid>
   );

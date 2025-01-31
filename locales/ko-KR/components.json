@@ -85,5 +85,10 @@
   "ModelSwitchPanel": {
     "emptyModel": "활성화된 모델이 없습니다. 설정으로 이동하여 활성화하세요",
     "provider": "제공자"
+  },
+  "Thinking": {
+    "thinking": "심층적으로 생각 중...",
+    "thought": "심층적으로 생각했습니다",
+    "thoughtWithDuration": "심층적으로 생각했습니다 (소요 시간: {{duration}} 초)"
   }
 }

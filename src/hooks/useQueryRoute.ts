@@ -2,7 +2,6 @@ import { useRouter } from 'next/navigation';
 import qs, { type ParsedQuery } from 'query-string';
 import { useMemo } from 'react';
 
-import { useQuery } from '@/hooks/useQuery';
 import { isOnServerSide } from '@/utils/env';
 
 interface QueryRouteOptions {
@@ -30,17 +29,19 @@ const genHref = ({ hash, replace, url, prevQuery = {}, query = {} }: GenHrefOpti
 
 export const useQueryRoute = () => {
   const router = useRouter();
-  const prevQuery = useQuery();
 
   return useMemo(
     () => ({
       push: (url: string, options: QueryRouteOptions = {}) => {
+        const prevQuery = qs.parse(window.location.search);
+
         return router.push(genHref({ prevQuery, url, ...options }));
       },
       replace: (url: string, options: QueryRouteOptions = {}) => {
+        const prevQuery = qs.parse(window.location.search);
         return router.replace(genHref({ prevQuery, url, ...options }));
       },
     }),
-    [prevQuery],
+    [],
   );
 };
