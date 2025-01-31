@@ -47,7 +47,10 @@ export class ChangelogService {
     try {
       const url = this.genUrl(urlJoin(this.config.docsPath, 'index.json'));
 
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        // revalidate every 2 hours
+        next: { revalidate: 7200 },
+      });
 
       const data = await res.json();
 
