@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.49.8](https://github.com/lobehub/lobe-chat/compare/v1.49.7...v1.49.8)
+
+<sup>Released on **2025-02-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support thinking for all non DeepSeek official api R1 models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support thinking for all non DeepSeek official api R1 models, closes [#5654](https://github.com/lobehub/lobe-chat/issues/5654) ([9b32137](https://github.com/lobehub/lobe-chat/commit/9b32137))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.49.7](https://github.com/lobehub/lobe-chat/compare/v1.49.6...v1.49.7)
+
+<sup>Released on **2025-02-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Multiple deepseek-reasoner request errors.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Multiple deepseek-reasoner request errors, closes [#5601](https://github.com/lobehub/lobe-chat/issues/5601) ([71cc32b](https://github.com/lobehub/lobe-chat/commit/71cc32b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.49.6](https://github.com/lobehub/lobe-chat/compare/v1.49.5...v1.49.6)
 
 <sup>Released on **2025-01-30**</sup>

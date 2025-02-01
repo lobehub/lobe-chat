@@ -23,6 +23,9 @@
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
   },
+  "doubao": {
+    "description": "Mô hình lớn tự phát triển do ByteDance phát triển. Được xác thực qua hơn 50 tình huống kinh doanh nội bộ của ByteDance, với việc sử dụng hàng nghìn tỷ token mỗi ngày để liên tục cải tiến, cung cấp nhiều khả năng đa phương thức, tạo ra trải nghiệm kinh doanh phong phú cho doanh nghiệp với hiệu quả mô hình chất lượng cao."
+  },
   "fireworksai": {
     "description": "Fireworks AI là nhà cung cấp dịch vụ mô hình ngôn ngữ cao cấp hàng đầu, tập trung vào gọi chức năng và xử lý đa phương thức. Mô hình mới nhất của họ, Firefunction V2, dựa trên Llama-3, được tối ưu hóa cho gọi chức năng, đối thoại và tuân theo chỉ dẫn. Mô hình ngôn ngữ hình ảnh FireLLaVA-13B hỗ trợ đầu vào hỗn hợp hình ảnh và văn bản. Các mô hình đáng chú ý khác bao gồm dòng Llama và dòng Mixtral, cung cấp hỗ trợ cho việc tuân theo và tạo ra chỉ dẫn đa ngôn ngữ hiệu quả."
   },
