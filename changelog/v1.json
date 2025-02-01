@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Multiple deepseek-reasoner request errors."]
+    },
+    "date": "2025-02-01",
+    "version": "1.49.7"
+  },
+  {
+    "children": {
       "fixes": ["Support litellm reasoning streaming."]
     },
     "date": "2025-01-30",
