@@ -88,7 +88,7 @@
   },
   "Thinking": {
     "thinking": "في حالة تفكير عميق...",
-    "thought": "تم التفكير بعمق",
-    "thoughtWithDuration": "تم التفكير بعمق (استغرق {{duration}} ثانية)"
+    "thought": "لقد فكرت بعمق (استغرق الأمر {{duration}} ثانية)",
+    "thoughtWithDuration": "لقد فكرت بعمق"
   }
 }
