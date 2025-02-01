@@ -88,7 +88,7 @@
   },
   "Thinking": {
     "thinking": "Tiefes Nachdenken...",
-    "thought": "Tief nachgedacht",
-    "thoughtWithDuration": "Tief nachgedacht (Dauer: {{duration}} Sekunden)"
+    "thought": "Tiefgründig nachgedacht (Dauer: {{duration}} Sekunden)",
+    "thoughtWithDuration": "Tiefgründig nachgedacht"
   }
 }

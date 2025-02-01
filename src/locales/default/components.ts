@@ -90,7 +90,7 @@ export default {
   },
   Thinking: {
     thinking: '深度思考中...',
-    thought: '已深度思考',
-    thoughtWithDuration: '已深度思考（用时 {{duration}} 秒）',
+    thought: '已深度思考（用时 {{duration}} 秒）',
+    thoughtWithDuration: '已深度思考',
   },
 };

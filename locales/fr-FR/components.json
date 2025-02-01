@@ -88,7 +88,7 @@
   },
   "Thinking": {
     "thinking": "En pleine réflexion...",
-    "thought": "Réflexion terminée",
-    "thoughtWithDuration": "Réflexion terminée (durée : {{duration}} secondes)"
+    "thought": "Pensée approfondie (durée : {{duration}} secondes)",
+    "thoughtWithDuration": "Pensée approfondie"
   }
 }
