@@ -88,7 +88,7 @@
   },
   "Thinking": {
     "thinking": "Pensando profondamente...",
-    "thought": "Pensato profondamente",
-    "thoughtWithDuration": "Pensato profondamente (tempo impiegato {{duration}} secondi)"
+    "thought": "Ho riflettuto a lungo (tempo impiegato {{duration}} secondi)",
+    "thoughtWithDuration": "Ho riflettuto a lungo"
   }
 }
