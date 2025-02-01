@@ -321,6 +321,18 @@ show_message() {
                 ;;
             esac
         ;;
+        ask_protocol)
+            case $LANGUAGE in
+                zh_CN)
+                    echo "请选择访问服务的协议（http/https）："
+                    echo "注意，当前部署脚本不支持：为单一服务指定不同的协议、自签证书。"
+                ;;
+                *)
+                    echo "Please select the protocol to access the service (http/https):"
+                    echo "Note that the current deployment script does not support: specifying different protocols for a single service, self-signed certificates."
+                ;;
+            esac
+        ;;
     esac
 }
 
@@ -408,6 +420,7 @@ CASDOOR_SECRET="CASDOOR_SECRET"
 MINIO_ROOT_PASSWORD="YOUR_MINIO_PASSWORD"
 CASDOOR_HOST="localhost:8000"
 MINIO_HOST="localhost:9000"
+PROTOCOL="http"
 
 section_download_files(){
     # Download files asynchronously
@@ -440,24 +453,25 @@ section_configurate_host() {
     # If run in local mode, skip this step
     if [[ "$DEPLOY_MODE" == "2" ]]; then
         HOST="localhost:3210"
+        LOBE_HOST="$HOST"
         return 0
     fi
-
+    
     # Check if sed is installed
     if ! command -v $SED_COMMAND &> /dev/null ; then
         echo "sed" $(show_message "tips_no_executable")
         exit 1
     fi
-
+    
     # If user not specify host, try to get the server ip
     if [ -z "$HOST" ]; then
         HOST=$(hostname -I | awk '{print $1}')
     fi
-
+    
     echo "LobeChat" $(show_message "ask_host")
     ask "(<yourip/domain>)" "$HOST"
     LOBE_HOST="$ask_result"
-
+    
     case $DEPLOY_MODE in
         0)
             DEPLOY_MODE="domain"
@@ -468,29 +482,43 @@ section_configurate_host() {
             echo "Casdoor API" $(show_message "ask_host")
             ask "(<yourip/domain>)" ""
             CASDOOR_HOST="$ask_result"
-            $SED_COMMAND "s/"example.com"/${CASDOOR_HOST}/" init_data.json
+            # Setup callback url for Casdoor
+            $SED_COMMAND "s/"example.com"/${LOBE_HOST}/" init_data.json
         ;;
         1)
             DEPLOY_MODE="ip"
             # If user use ip mode, append the port to the host
             LOBE_HOST="${HOST}:3210"
             MINIO_HOST="${MINIO_HOST}:9000"
-            $SED_COMMAND "s/"localhost"/${CASDOOR_HOST}/" init_data.json
+            # Setup callback url for Casdoor
+            $SED_COMMAND "s/"localhost"/${LOBE_HOST}/" init_data.json
         ;;
         *)
             echo "Invalid deploy mode: $ask_result"
             exit 1
         ;;
     esac
-
+    
     # lobe host
     $SED_COMMAND "s#^APP_URL=.*#APP_URL=http://$LOBE_HOST#" .env
-    # auth related 
+    # auth related
     $SED_COMMAND "s#^AUTH_URL=.*#AUTH_URL=http://$LOBE_HOST/api/auth#" .env
     $SED_COMMAND "s#^AUTH_CASDOOR_ISSUER=.*#AUTH_CASDOOR_ISSUER=http://$CASDOOR_HOST#" .env
+    $SED_COMMAND "s#^origin=.*#origin=http://$CASDOOR_HOST#" .env
     # s3 related
     $SED_COMMAND "s#^S3_PUBLIC_DOMAIN=.*#S3_PUBLIC_DOMAIN=http://$MINIO_HOST#" .env
     $SED_COMMAND "s#^S3_ENDPOINT=.*#S3_ENDPOINT=http://$MINIO_HOST#" .env
+
+    # Configurate protocol
+    if [[ "$DEPLOY_MODE" == "domain" ]]; then
+        echo $(show_message "host_regenerate")
+        ask "(http/https)" "http"
+        if [[ "$ask_result" == "https" ]]; then
+            PROTOCOL="https"
+            # Replace all http with https
+            $SED_COMMAND "s#http://#https://#" .env
+        fi
+    fi
     
     # Check if env modified success
     if [ $? -ne 0 ]; then
@@ -505,8 +533,6 @@ else
     echo "Invalid deploy mode: $ask_result, please select 0, 1 or 2."
     exit 1
 fi
-
-
 
 # ==========================
 # === Regenerate Secrets ===
@@ -623,9 +649,9 @@ section_display_configurated_report() {
     # Display configuration reports
     echo $(show_message "security_secrect_regenerate_report")
     
-    echo -e "LobeChat: \n - URL: http://$HOST"
-    echo -e "Casdoor: \n - URL: http://$CASDOOR_HOST \n - Username: admin\n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
-    echo -e "Minio: \n - URL: http://$MINIO_HOST \n - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
+    echo -e "LobeChat: \n - URL: $PROTOCOL://$LOBE_HOST"
+    echo -e "Casdoor: \n - URL: $PROTOCOL://$CASDOOR_HOST \n - Username: admin\n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
+    echo -e "Minio: \n - URL: $PROTOCOL://$MINIO_HOST \n - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
     
     # Display final message
     printf "\n%s\n\n" "$(show_message "tips_run_command")"
