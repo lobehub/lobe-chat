@@ -88,7 +88,7 @@
   },
   "Thinking": {
     "thinking": "Głęboko myślę...",
-    "thought": "Już głęboko myślałem",
-    "thoughtWithDuration": "Już głęboko myślałem (czas: {{duration}} sekund)"
+    "thought": "Głęboko przemyślane (czas: {{duration}} sekund)",
+    "thoughtWithDuration": "Głęboko przemyślane"
   }
 }

@@ -88,7 +88,7 @@
   },
   "Thinking": {
     "thinking": "Diep in gedachten...",
-    "thought": "Diep nagedacht",
-    "thoughtWithDuration": "Diep nagedacht (geduurd {{duration}} seconden)"
+    "thought": "Diep nagedacht (tijd gebruikt {{duration}} seconden)",
+    "thoughtWithDuration": "Diep nagedacht"
   }
 }
