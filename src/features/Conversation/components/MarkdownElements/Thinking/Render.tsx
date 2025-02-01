@@ -19,6 +19,8 @@ const Render = memo<MarkdownElementProps>(({ children, id }) => {
     return [!isThinkingClosed(message?.content)];
   });
 
+  if (!isGenerating && !children) return;
+
   return <Thinking content={children as string} thinking={isGenerating} />;
 });
 
