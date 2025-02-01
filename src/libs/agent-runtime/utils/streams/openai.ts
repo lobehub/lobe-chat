@@ -18,6 +18,8 @@ import {
   generateToolCallId,
 } from './protocol';
 
+let isThinking = false;
+
 export const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
   stack?: StreamStack,
@@ -89,21 +91,28 @@ export const transformOpenAIStream = (
     }
 
     if (typeof item.delta?.content === 'string') {
-      return { data: item.delta.content, id: chunk.id, type: 'text' };
-    }
+      // 检查是否包含 <think> 或 </think> 标签
+      if (item.delta.content.includes('<think>')) {
+        isThinking = true;
+        item.delta.content = item.delta.content.replace('<think>', '');
+      }
+      if (item.delta.content.includes('</think>')) {
+        item.delta.content = item.delta.content.replace('</think>', '');
+        const result: StreamProtocolChunk = { data: item.delta.content, id: chunk.id, type: 'reasoning' };
+        isThinking = false;
+        return result;
+      }
 
-    // DeepSeek reasoner 会将 thinking 放在 reasoning_content 字段中
-    // litellm 处理 reasoning content 时 不会设定 content = null
-    if (
-      item.delta &&
-      'reasoning_content' in item.delta &&
-      typeof item.delta.reasoning_content === 'string'
-    ) {
-      return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
+      return { data: item.delta.content, id: chunk.id, type: isThinking ? 'reasoning' : 'text' };
     }
 
     // 无内容情况
     if (item.delta && item.delta.content === null) {
+      // deepseek reasoner 会将 thinking 放在 reasoning_content 字段中
+      if ('reasoning_content' in item.delta && typeof item.delta.reasoning_content === 'string') {
+        return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
+      }
+
       return { data: item.delta, id: chunk.id, type: 'data' };
     }
 
