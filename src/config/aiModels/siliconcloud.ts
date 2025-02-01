@@ -543,7 +543,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Gemma 是由 Google 开发的轻量级、最先进的开放模型系列，采用与 Gemini 模型相同的研究和技术构建。这些模型是仅解码器的大型语言模型，支持英语，提供预训练和指令微调两种变体的开放权重。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。其相对较小的规模使其能够部署在资源有限的环境中，如笔记本电脑、台式机或个人云基础设施，从而让所有人都能获得最先进的 AI 模型，促进创新',
     displayName: 'Gemma 2 27B',
-    enabled: true,
     id: 'google/gemma-2-27b-it',
     pricing: {
       currency: 'CNY',
