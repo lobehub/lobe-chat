@@ -409,6 +409,31 @@ MINIO_ROOT_PASSWORD="YOUR_MINIO_PASSWORD"
 CASDOOR_HOST="localhost:8000"
 MINIO_HOST="localhost:9000"
 
+section_download_files(){
+    # Download files asynchronously
+    if ! command -v wget &> /dev/null ; then
+        echo "wget" $(show_message "tips_no_executable")
+        exit 1
+    fi
+    
+    download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
+    download_file "$SOURCE_URL/${FILES[1]}" "init_data.json"
+    
+    # Download .env.example with the specified language
+    if [ "$LANGUAGE" = "zh_CN" ]; then
+        download_file "$SOURCE_URL/${ENV_EXAMPLES[0]}" ".env"
+    else
+        download_file "$SOURCE_URL/${ENV_EXAMPLES[1]}" ".env"
+    fi
+}
+# If the folder `data` or `s3_data` exists, warn the user
+if [ -d "data" ] || [ -d "s3_data" ]; then
+    show_message "tips_already_installed"
+    exit 0
+else
+    section_download_files
+fi
+
 section_configurate_host() {
     DEPLOY_MODE=$ask_result
     show_message "host_regenerate"
@@ -481,30 +506,7 @@ else
     exit 1
 fi
 
-section_download_files(){
-    # Download files asynchronously
-    if ! command -v wget &> /dev/null ; then
-        echo "wget" $(show_message "tips_no_executable")
-        exit 1
-    fi
-    
-    download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
-    download_file "$SOURCE_URL/${FILES[1]}" "init_data.json"
-    
-    # Download .env.example with the specified language
-    if [ "$LANGUAGE" = "zh_CN" ]; then
-        download_file "$SOURCE_URL/${ENV_EXAMPLES[0]}" ".env"
-    else
-        download_file "$SOURCE_URL/${ENV_EXAMPLES[1]}" ".env"
-    fi
-}
-# If the folder `data` or `s3_data` exists, warn the user
-if [ -d "data" ] || [ -d "s3_data" ]; then
-    show_message "tips_already_installed"
-    exit 0
-else
-    section_download_files
-fi
+
 
 # ==========================
 # === Regenerate Secrets ===
