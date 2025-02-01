@@ -88,7 +88,7 @@
   },
   "Thinking": {
     "thinking": "در حال تفکر عمیق...",
-    "thought": "تفکر عمیق انجام شد",
-    "thoughtWithDuration": "تفکر عمیق انجام شد (مدت زمان {{duration}} ثانیه)"
+    "thought": "به‌طور عمیق فکر شده است (مدت زمان {{duration}} ثانیه)",
+    "thoughtWithDuration": "به‌طور عمیق فکر شده است"
   }
 }
