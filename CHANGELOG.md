@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.49.7](https://github.com/lobehub/lobe-chat/compare/v1.49.6...v1.49.7)
+
+<sup>Released on **2025-02-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Multiple deepseek-reasoner request errors.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Multiple deepseek-reasoner request errors, closes [#5601](https://github.com/lobehub/lobe-chat/issues/5601) ([71cc32b](https://github.com/lobehub/lobe-chat/commit/71cc32b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.49.6](https://github.com/lobehub/lobe-chat/compare/v1.49.5...v1.49.6)
 
 <sup>Released on **2025-01-30**</sup>
