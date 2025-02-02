@@ -89,7 +89,7 @@
   },
   "Thinking": {
     "thinking": "Глубокое размышление...",
-    "thought": "Глубоко размышлено",
-    "thoughtWithDuration": "Глубоко размышлено (время: {{duration}} секунд)"
+    "thought": "Глубоко обдумано (время: {{duration}} секунд)",
+    "thoughtWithDuration": "Глубоко обдумано"
   }
 }

@@ -89,7 +89,7 @@
   },
   "Thinking": {
     "thinking": "В процес на дълбочинно размисъл...",
-    "thought": "Дълбочинно размислено",
-    "thoughtWithDuration": "Дълбочинно размислено (време: {{duration}} секунди)"
+    "thought": "Дълбоко размислих (отне ми {{duration}} секунди)",
+    "thoughtWithDuration": "Дълбоко размислих"
   }
 }
