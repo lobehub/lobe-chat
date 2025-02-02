@@ -18,36 +18,43 @@ tags:
   [![][docker-pulls-shield]][docker-pulls-link]
 </div>
 
-
-
 <Callout type="warning">
-  由于无法使用 Docker 环境变量暴露 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`，使用 Docker / Docker Compose
-  部署 LobeChat 时，你不能使用 Clerk 作为登录鉴权服务。
+  **Docker 部署限制说明**\
+  Docker 及 Docker Compose 部署方案不支持通过环境变量注入 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`，
+  因此无法启用 Clerk 身份验证服务。建议替代方案：
 
-  如果你确实需要 Clerk 作为登录鉴权服务，你可以考虑使用 Vercel 部署或者自行构建镜像。
+  - 采用 Vercel 托管部署
+
+  - 执行本地镜像构建流程
 </Callout>
 
 ## 快速启动
 
 <Callout type="info">
-当前仅支持 Unix 环境的一键启动，Windows 用户请在 [WSL](http://aka.ms/wsl) 中运行。
-同时，该脚本仅支持首次部署，如果你非首次部署，请参考 [自定义部署](#自定义部署) 章节。
-开始前，应该检查端口`3210`、`8000`、`9000`、`9001`是否被占用，如果被占用，请先关闭占用端口的服务。
+  **系统兼容性说明**
+
+  - 支持 Unix 环境（Linux/macOS）的一键部署
+
+  - Windows 用户需通过 [WSL 2](https://aka.ms/wsl) 运行
+
+  - 一键启动脚本为首次部署专用，非首次部署请参考 [自定义部署](#自定义部署) 章节
+
+  - 端口占用检查：确保 `3210`、`8000`、`9000`、`9001` 端口可用
 </Callout>
 
-新建一个空目录 `lobe-chat-db`，用于存放你的配置文件和后续的数据库文件。
+执行以下命令初始化部署环境，目录 `lobe-chat-db` 将用于存放你的配置文件和后续的数据库文件。
 
 ```sh
 mkdir lobe-chat-db && cd lobe-chat-db
 ```
 
-运行下述命令，将会下载一键启动 `setup.sh` 脚本并执行：
+获取并执行部署脚本：
 
 ```sh
 bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f -l zh_CN
 ```
 
-运行后，脚本将会询问你需要的部署模式，请根据你的需求选择相应的模式，并继续阅读文档的剩余部分。
+脚本支持以下部署模式，请根据你的需求选择相应的模式，并继续阅读文档的剩余部分。
 
 - [本地模式（默认）](#本地模式)：仅能在本地访问，不支持局域网 / 公网访问，适用于初次体验。
 - [端口模式](#端口模式)：支持局域网 / 公网的 `http` 访问，适用于个人使用。
@@ -62,27 +69,33 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
 <Steps>
   ### 在交互式脚本中完成剩余配置
 
-  在本地部署中，你可以不断按回车使用默认选项。
-  
+  持续回车采用默认配置。
+
   ### 查看配置生成报告
 
-  你需要在脚本运行结束后查看配置生成报告，包括 Casdoor 管理员的初始登录密码。
+  你需要在脚本运行结束后查看配置生成报告，包括 Casdoor 管理员的帐号、用户账号和它们的初始登录密码。
+
+  <Callout type="warning">
+    请使用用户账号登录 LobeChat，管理员账号仅用于管理 Casdoor。
+  </Callout>
 
   ```log
   安全密钥生成结果如下：
   LobeChat:
     - URL: http://localhost:3210
+    - Username: user
+    - Password: c66f8c
   Casdoor:
     - URL: http://localhost:8000
     - Username: admin
-    - Password: 837e26
-    - Client Secret: dce63693be24b5d9b9536126692e3ed9
+    - Password: c66f8c
+    - Client Secret: 21dfb303f2f3eb9a6d3c7cdb0d221d1c
   Minio:
     - URL: http://localhost:9000
     - Username: admin
-    - Password: dbac8440
+    - Password: 8c82ea41
   ```
-  
+
   ### 启动 Docker
 
   ```sh
@@ -111,7 +124,8 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
 
   ### 访问应用
 
-  你可以通过 [http://localhost:3210](http://localhost:3210) 访问你的 LobeChat 服务。应用的账号密码在步骤`2`的报告中。
+  通过 [http://localhost:3210](http://localhost:3210) 访问你的 LobeChat 服务。
+  应用的账号密码在步骤`2`的报告中。
 </Steps>
 
 ### 端口模式
@@ -120,17 +134,24 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
   ### 在交互式脚本中完成剩余配置
 
   在端口模式中，你需要根据脚本提示完成：
+
   - 服务器 IP 地址设置：以便局域网 / 公网访问。
   - 安全密钥重新生成：我们强烈建议你重新生成安全密钥，如果你缺少脚本所需的密钥生成库，我们建议你参考 [自定义部署](#自定义部署) 章节对密钥进行修改。
 
   ### 查看配置生成报告
 
-  你需要在脚本运行结束后查看配置生成报告，包括 Casdoor 管理员的初始登录密码。
+  你需要在脚本运行结束后查看配置生成报告，包括 Casdoor 管理员的帐号、用户账号和它们的初始登录密码。
+
+  <Callout type="warning">
+    请使用用户账号登录 LobeChat，管理员账号仅用于管理 Casdoor。
+  </Callout>
 
   ```log
   安全密钥生成结果如下：
   LobeChat:
     - URL: http://your_server_ip:3210
+    - Username: user
+    - Password: 837e26
   Casdoor:
     - URL: http://your_server_ip:8000
     - Username: admin
@@ -172,11 +193,10 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
   你可以通过 `http://your_server_ip:3210` 访问你的 LobeChat 服务。
   应用的账号密码在步骤`2`的报告中。
 </Steps>
-  
+
 ### 域名模式
 
 <Steps>
-
   ### 完成反向代理配置
 
   在域名模式中，你需要完成反向代理配置，并确保局域网 / 公网能访问到以下服务。请使用反向代理将以下服务端口映射到域名：
@@ -205,6 +225,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
   ### 在交互式脚本中完成剩余配置
 
   在域名模式中，你需要根据脚本提示完成：
+
   - LobeChat 服务的域名设置：`lobe.example.com`
   - Minio 服务的域名设置：`s3-api.example.com`
   - Casdoor 服务的域名设置：`auth-ui.example.com`
@@ -212,23 +233,29 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
   - 安全密钥重新生成：我们强烈建议你重新生成安全密钥，如果你缺少脚本所需的密钥生成库，我们建议你参考 [自定义部署](#自定义部署) 章节对密钥进行修改。
 
   <Callout type="warning">
-  以下问题可能导致你的服务无法正常访问：
+    以下问题可能导致你的服务无法正常访问：
 
-  - 此处的域名配置需要与步骤`1`中的反向代理配置保持一致。
+    - 此处的域名配置需要与步骤`1`中的反向代理配置保持一致。
 
-  - 如果你使用 Cloudflare 的域名解析服务并开启了 `全程代理`，请使用 `https` 协议。
+    - 如果你使用 Cloudflare 的域名解析服务并开启了 `全程代理`，请使用 `https` 协议。
 
-  - 如果你使用了 HTTPS 协议，请确保你的域名证书已经正确配置，一键部署默认不支持自签发证书。
+    - 如果你使用了 HTTPS 协议，请确保你的域名证书已经正确配置，一键部署默认不支持自签发证书。
   </Callout>
 
   ### 查看配置生成报告
 
   你需要在脚本运行结束后查看配置生成报告，包括 Casdoor 管理员的初始登录密码。
 
+  <Callout type="warning">
+    请使用用户账号登录 LobeChat，管理员账号仅用于管理 Casdoor。
+  </Callout>
+
   ```log
   安全密钥生成结果如下：
   LobeChat:
     - URL: https://lobe.example.com
+    - Username: user
+    - Password: 837e26
   Casdoor:
     - URL: https://auth-ui.example.com
     - Username: admin
@@ -273,7 +300,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
 ## 自定义部署
 
 该章节主要为你介绍在不同的网络环境下自定义部署 LobeChat 服务必须要修改的配置。
-在开始前，你可以先下载 [Docker Compose 配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml) 以及 [环境变量配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.zh-CN.example)。  
+在开始前，你可以先下载 [Docker Compose 配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml) 以及 [环境变量配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.zh-CN.example)。
 
 ```sh
 curl -O https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml
@@ -373,6 +400,7 @@ lobe-chat      | [auth][error] r3: "response" is not a conform Authorization Ser
 解决方案：
 
 - 请参考 [域名模式](#域名模式) 章节中的反向代理配置注意事项。
+
 - 一个直接的排查方式，你可以直接访问 `https://auth-ui.example.com/.well-known/openid-configuration`，如果
   - 返回了非 JSON 格式的数据，则说明你的反向代理配置错误。
   - 如果返回的 JSON 格式数据中的 `"issuer": "URL"` 字段不是你配置的 `https://auth-ui.example.com`，则说明你的环境变量配置错误。
@@ -438,26 +466,26 @@ lobe-chat      | [auth][error] TypeError: fetch failed
    }
    ```
 
-3. 创建一个新的访问密钥，将生成的 `Access Key` 和 `Secret Key` 存储之
+2. 创建一个新的访问密钥，将生成的 `Access Key` 和 `Secret Key` 存储之
 
-4. 在 Casdoor 的 `身份认证 -> 提供商` 中关联 MinIO S3 服务，以下是一个示例配置：
+3. 在 Casdoor 的 `身份认证 -> 提供商` 中关联 MinIO S3 服务，以下是一个示例配置：
 
    ![casdoor](https://github.com/user-attachments/assets/71035610-0706-434e-9488-ab5819b55330)
 
    其中，客户端 ID、客户端密钥为上一步创建的访问密钥中的 `Access Key` 和 `Secret Key`，`192.168.31.251` 应当被替换为 `your_server_ip`。
 
-5. 在 Casdoor 的 `身份认证 -> 应用` 中，对 `app-built-in` 应用添加提供商，选择 `minio`，保存并退出
+4. 在 Casdoor 的 `身份认证 -> 应用` 中，对 `app-built-in` 应用添加提供商，选择 `minio`，保存并退出
 
-6. 你可以在 Casdoor 的 `身份认证 -> 资源` 中，尝试上传文件以测试配置是否正确
+5. 你可以在 Casdoor 的 `身份认证 -> 资源` 中，尝试上传文件以测试配置是否正确
 
-### 生产部署下从 `logto` 迁移至 `Casdoor` 
+### 生产部署下从 `logto` 迁移至 `Casdoor`
 
 适用于已经在生产环境下使用 `logto` 作为登录鉴权服务的用户
 
 <Callout type="info">
   由于使用[Logto](https://logto.io/)
   作为登录鉴权服务存在比较大的不稳定性。
-  因此，下文基于发布到IP模式的教程，实现了使用 Casdoor 作为鉴权服务提供商的域名发布方案。
+  因此，下文基于发布到 IP 模式的教程，实现了使用 Casdoor 作为鉴权服务提供商的域名发布方案。
   本文剩余部分也将以其为例进行说明。如果你使用其他诸如 Logto
   等其他登录鉴权服务，流程应当相近，但请注意不同的登录鉴权服务的端口配置可能有所差异。
 </Callout>
@@ -472,56 +500,62 @@ lobe-chat      | [auth][error] TypeError: fetch failed
 - `s3-ui.example.com`：可选，为你的 MinIO UI 域名，需要反向代理到 MinIO WebUI 服务端口，默认为 `9001`
 
 #### 配置文件
+
 ```sh
 bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f -l zh_CN
 docker compose up -d
 ```
+
 注意保存此时生成的新密码！
 
 运行后会获得三个文件
-- init_data.json
+
+- init\_data.json
 - docker-compose.yml
 - .env
 
 接下来，修改配置文件以实现域名发布
+
 1. 修改 `docker-compose.yml` 文件
-    1. 修改 `minio`的`MINIO_API_CORS_ALLOW_ORIGIN`字段。
-    ```yaml
-          'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com'
-    ```
-    2. 修改`casdoor`的`origin`字段。
-    ```yaml
-          origin: 'https://auth-ui.example.com'
-    ```
-    3. 修改`lobe`的`environment`字段。
-    ```yaml
-            # - 'APP_URL=http://localhost:3210'
-      - 'APP_URL=https://lobe.example.com'
+   1. 修改 `minio`的`MINIO_API_CORS_ALLOW_ORIGIN`字段。
+   ```yaml
+         'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com'
+   ```
+   2. 修改`casdoor`的`origin`字段。
+   ```yaml
+         origin: 'https://auth-ui.example.com'
+   ```
+   3. 修改`lobe`的`environment`字段。
+   ```yaml
+           # - 'APP_URL=http://localhost:3210'
+     - 'APP_URL=https://lobe.example.com'
 
-      - 'NEXT_AUTH_SSO_PROVIDERS=casdoor'
-      - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
-      - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
-      # - 'AUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
-      - 'AUTH_URL=https://lobe.example.com/api/auth'
+     - 'NEXT_AUTH_SSO_PROVIDERS=casdoor'
+     - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
+     - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
+     # - 'AUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
+     - 'AUTH_URL=https://lobe.example.com/api/auth'
 
-      # - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
-      - 'AUTH_CASDOOR_ISSUER=https://auth-ui.example.com'
+     # - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
+     - 'AUTH_CASDOOR_ISSUER=https://auth-ui.example.com'
 
-      - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
-      # - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
-      - 'S3_ENDPOINT=https://s3-api.example.com'
+     - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
+     # - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
+     - 'S3_ENDPOINT=https://s3-api.example.com'
 
-      - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
-      # - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
-      - 'S3_PUBLIC_DOMAIN=https://s3-api.example.com'
+     - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
+     # - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
+     - 'S3_PUBLIC_DOMAIN=https://s3-api.example.com'
 
-      - 'S3_ENABLE_PATH_STYLE=1'
-      - 'LLM_VISION_IMAGE_USE_BASE64=1'
-    ```
+     - 'S3_ENABLE_PATH_STYLE=1'
+     - 'LLM_VISION_IMAGE_USE_BASE64=1'
+   ```
 2. 修改 `.env` 文件
+
 <Callout type="info">
-  为了安全起见，修改 `.env` 文件中的ROOT USER的字段
+  为了安全起见，修改 `.env` 文件中的 ROOT USER 的字段
 </Callout>
+
 ```sh
 # MinIO S3 configuration
 MINIO_ROOT_USER=XXXX
@@ -551,7 +585,7 @@ sudo rm -rf ./data   # 移除挂载的数据库数据
 docker compose up -d # 重新启动
 ```
 
-####  登录鉴权服务配置
+#### 登录鉴权服务配置
 
 你需要首先访问 WebUI 来进行配置：
 
@@ -564,22 +598,23 @@ docker compose up -d # 重新启动
 - 默认密码为 下载配置文件时生成的随机密码。如忘记可到 `init_data.json` 文件中找回
 
 登入后执行如下操作
+
 1. 在 `用户管理 -> 组织` 中，添加一个新的组织。名称与显示名称为 `Lobe Users`。其余保持默认即可。
 2. 在 `身份认证 -> 应用` 中，添加一个新的应用。
-  - 名称与显示名称为 `LobeChat`。
-  - 组织为 `Lobe Users`。
-  - 重定向 URLS中添加一行 为 `https://lobe.example.com/api/auth/callback/casdoor`。
-  - 关闭除密码外的登录方式 。
-  - 将客户端ID和客户端密钥分别填入 `.env`中的 `AUTH_CASDOOR_ID` 和 `AUTH_CASDOOR_SECRET` 中。
-  - (可选) 仿照`built-in`应用的配置，来设计登录和注册的页面外观。
-  - 保存并退出。
+
+- 名称与显示名称为 `LobeChat`。
+- 组织为 `Lobe Users`。
+- 重定向 URLS 中添加一行 为 `https://lobe.example.com/api/auth/callback/casdoor`。
+- 关闭除密码外的登录方式 。
+- 将客户端 ID 和客户端密钥分别填入 `.env`中的 `AUTH_CASDOOR_ID` 和 `AUTH_CASDOOR_SECRET` 中。
+- (可选) 仿照`built-in`应用的配置，来设计登录和注册的页面外观。
+- 保存并退出。
 
 <Callout type="info">
   通过上述步骤，可以避免默认情况下所有用户均为管理员导致的不安全的情况。
 </Callout>
 
 #### S3 对象存储服务配置
-
 
 本文以 MinIO 为例，解释配置过程，如果你使用的是其他 S3 服务商，请参照其文档进行配置。
 
@@ -612,9 +647,9 @@ docker compose up -d # 重新启动
 
 #### 配置文件
 
-为方便一键复制，在此汇总基于casdoor鉴权方案的域名方式下生产部署配置服务端数据库所需要的示例配置文件。
+为方便一键复制，在此汇总基于 casdoor 鉴权方案的域名方式下生产部署配置服务端数据库所需要的示例配置文件。
 
-- `.env` 
+- `.env`
 
 ```sh
 # Proxy, if you need it
@@ -776,7 +811,6 @@ networks:
   lobe-network:
     driver: bridge
 ```
-
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat-database?color=45cc11&labelColor=black&style=flat-square

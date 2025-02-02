@@ -657,9 +657,9 @@ section_display_configurated_report() {
     # Display configuration reports
     echo $(show_message "security_secrect_regenerate_report")
     
-    echo -e "LobeChat: \n  - URL: $PROTOCOL://$LOBE_HOST"
-    echo -e "Casdoor: \n  - URL: $PROTOCOL://$CASDOOR_HOST \n  - Admin: admin\n  - User: user\n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
-    echo -e "Minio: \n - URL: $PROTOCOL://$MINIO_HOST \n - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
+    echo -e "LobeChat: \n  - URL: $PROTOCOL://$LOBE_HOST \n  - Username: user \n  - Password: ${CASDOOR_PASSWORD} "
+    echo -e "Casdoor: \n  - URL: $PROTOCOL://$CASDOOR_HOST \n  - Username: admin \n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
+    echo -e "Minio: \n  - URL: $PROTOCOL://$MINIO_HOST \n  - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
     
     # Display final message
     printf "\n%s\n\n" "$(show_message "tips_run_command")"
