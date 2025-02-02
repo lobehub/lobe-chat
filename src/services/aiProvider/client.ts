@@ -33,13 +33,7 @@ export class ClientService extends BaseClientService implements IAiProviderServi
   };
 
   getAiProviderRuntimeState: IAiProviderService['getAiProviderRuntimeState'] = async () => {
-    const runtimeConfig = await this.aiProviderModel.getAiProviderRuntimeConfig();
-
-    const enabledAiProviders = await this.aiInfraRepos.getUserEnabledProviderList();
-
-    const enabledAiModels = await this.aiInfraRepos.getEnabledModels();
-
-    return { enabledAiModels, enabledAiProviders, runtimeConfig };
+    return await this.aiInfraRepos.getAiProviderRuntimeState();
   };
 
   toggleProviderEnabled: IAiProviderService['toggleProviderEnabled'] = async (id, enabled) => {

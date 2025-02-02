@@ -58,15 +58,7 @@ export const aiProviderRouter = router({
   getAiProviderRuntimeState: aiProviderProcedure
     .input(z.object({ isLogin: z.boolean().optional() }))
     .query(async ({ ctx }): Promise<AiProviderRuntimeState> => {
-      const runtimeConfig = await ctx.aiProviderModel.getAiProviderRuntimeConfig(
-        KeyVaultsGateKeeper.getUserKeyVaults,
-      );
-
-      const enabledAiProviders = await ctx.aiInfraRepos.getUserEnabledProviderList();
-
-      const enabledAiModels = await ctx.aiInfraRepos.getEnabledModels();
-
-      return { enabledAiModels, enabledAiProviders, runtimeConfig };
+      return ctx.aiInfraRepos.getAiProviderRuntimeState(KeyVaultsGateKeeper.getUserKeyVaults);
     }),
 
   removeAiProvider: aiProviderProcedure

@@ -5,9 +5,15 @@ import { AiModelModel } from '@/database/server/models/aiModel';
 import { AiProviderModel } from '@/database/server/models/aiProvider';
 import { LobeChatDatabase } from '@/database/type';
 import { AIChatModelCard, AiModelSourceEnum, AiProviderModelListItem } from '@/types/aiModel';
-import { AiProviderListItem, EnabledAiModel } from '@/types/aiProvider';
+import {
+  AiProviderListItem,
+  AiProviderRuntimeState,
+  EnabledAiModel,
+} from '@/types/aiProvider';
 import { ProviderConfig } from '@/types/user/settings';
-import { mergeArrayById } from '@/utils/merge';
+import { merge, mergeArrayById } from '@/utils/merge';
+
+type DecryptUserKeyVaults = (encryptKeyVaultsStr: string | null) => Promise<any>;
 
 export class AiInfraRepos {
   private userId: string;
@@ -110,6 +116,20 @@ export class AiInfraRepos {
       (await this.fetchBuiltinModels(providerId)) || [];
 
     return mergeArrayById(defaultModels, aiModels) as AiProviderModelListItem[];
+  };
+
+  getAiProviderRuntimeState = async (
+    decryptor?: DecryptUserKeyVaults,
+  ): Promise<AiProviderRuntimeState> => {
+    const result = await this.aiProviderModel.getAiProviderRuntimeConfig(decryptor);
+
+    const runtimeConfig = merge(this.providerConfigs, result);
+
+    const enabledAiProviders = await this.getUserEnabledProviderList();
+
+    const enabledAiModels = await this.getEnabledModels();
+
+    return { enabledAiModels, enabledAiProviders, runtimeConfig };
   };
 
   /**
