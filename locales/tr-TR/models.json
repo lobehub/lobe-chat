@@ -176,6 +176,9 @@
   "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
     "description": "Meta Llama 3.1, Meta tarafından geliştirilen çok dilli büyük dil modeli ailesidir ve 8B, 70B ve 405B olmak üzere üç parametre ölçeği ile önceden eğitilmiş ve talimat ince ayar varyantları içermektedir. Bu 8B talimat ince ayar modeli, çok dilli diyalog senaryoları için optimize edilmiştir ve birçok endüstri standart testinde mükemmel performans sergilemektedir. Model, 15 trilyon token'dan fazla açık veriler kullanılarak eğitilmiş ve modelin faydasını ve güvenliğini artırmak için denetimli ince ayar ve insan geri bildirimi pekiştirmeli öğrenme gibi teknikler kullanılmıştır. Llama 3.1, metin üretimi ve kod üretimini desteklemekte olup, bilgi kesim tarihi 2023 Aralık'tır."
   },
+  "Qwen/QVQ-72B-Preview": {
+    "description": "QVQ-72B-Preview, Qwen ekibi tarafından geliştirilen ve görsel çıkarım yeteneklerine odaklanan bir araştırma modelidir. Karmaşık sahne anlayışı ve görsel ile ilgili matematiksel sorunları çözme konusundaki benzersiz avantajları ile dikkat çekmektedir."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview, Qwen'in en son deneysel araştırma modelidir ve AI akıl yürütme yeteneklerini artırmaya odaklanmaktadır. Dil karışımı, özyinelemeli akıl yürütme gibi karmaşık mekanizmaları keşfederek, güçlü akıl yürütme analizi, matematik ve programlama yetenekleri gibi ana avantajlar sunmaktadır. Bununla birlikte, dil geçiş sorunları, akıl yürütme döngüleri, güvenlik endişeleri ve diğer yetenek farklılıkları gibi zorluklar da bulunmaktadır."
   },
@@ -530,11 +533,20 @@
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct, yüksek güvenilirlikte talimat işleme yetenekleri sunar ve çok çeşitli endüstri uygulamalarını destekler."
   },
+  "deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1, tekrarlayan öğrenme (RL) destekli bir çıkarım modelidir ve modeldeki tekrarlama ve okunabilirlik sorunlarını çözmektedir. RL'den önce, DeepSeek-R1 soğuk başlangıç verilerini tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer bir performans sergilemekte ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmaktadır."
+  },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5, önceki sürümlerin mükemmel özelliklerini bir araya getirir, genel ve kodlama yeteneklerini artırır."
   },
+  "deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3, 6710 milyar parametreye sahip bir karma uzman (MoE) dil modelidir. Çok başlı potansiyel dikkat (MLA) ve DeepSeekMoE mimarisini kullanarak, yardımcı kayıplar olmadan yük dengeleme stratejisi ile çıkarım ve eğitim verimliliğini optimize etmektedir. 14.8 trilyon yüksek kaliteli token üzerinde önceden eğitilmiş ve denetimli ince ayar ile tekrarlayan öğrenme gerçekleştirilmiştir; DeepSeek-V3, performans açısından diğer açık kaynaklı modelleri geride bırakmakta ve lider kapalı kaynaklı modellere yaklaşmaktadır."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B, yüksek karmaşıklıkta diyaloglar için eğitilmiş gelişmiş bir modeldir."
+  },
+  "deepseek-ai/deepseek-vl2": {
+    "description": "DeepSeek-VL2, DeepSeekMoE-27B tabanlı bir karma uzman (MoE) görsel dil modelidir. Seyrek etkinleştirilen MoE mimarisini kullanarak yalnızca 4.5B parametreyi etkinleştirerek olağanüstü performans sergilemektedir. Bu model, görsel soru yanıtlama, optik karakter tanıma, belge/tablolar/grafikler anlama ve görsel konumlandırma gibi birçok görevde mükemmel sonuçlar elde etmektedir."
   },
   "deepseek-chat": {
     "description": "Genel ve kod yeteneklerini birleştiren yeni bir açık kaynak modeli, yalnızca mevcut Chat modelinin genel diyalog yeteneklerini ve Coder modelinin güçlü kod işleme yeteneklerini korumakla kalmaz, aynı zamanda insan tercihleri ile daha iyi hizalanmıştır. Ayrıca, DeepSeek-V2.5 yazım görevleri, talimat takibi gibi birçok alanda büyük iyileştirmeler sağlamıştır."
@@ -547,6 +559,9 @@
   },
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2, açık kaynaklı bir karışık uzman kod modelidir, kod görevlerinde mükemmel performans sergiler ve GPT4-Turbo ile karşılaştırılabilir."
+  },
+  "deepseek-r1": {
+    "description": "DeepSeek-R1, tekrarlayan öğrenme (RL) destekli bir çıkarım modelidir ve modeldeki tekrarlama ve okunabilirlik sorunlarını çözmektedir. RL'den önce, DeepSeek-R1 soğuk başlangıç verilerini tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer bir performans sergilemekte ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmaktadır."
   },
   "deepseek-reasoner": {
     "description": "DeepSeek tarafından sunulan bir akıl yürütme modeli. Model, nihai yanıtı vermeden önce bir düşünce zinciri içeriği sunarak nihai cevabın doğruluğunu artırır."
