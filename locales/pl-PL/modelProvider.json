@@ -154,30 +154,6 @@
       "desc": "Musi zawierać http(s)://, lokalnie, jeśli nie określono inaczej, można pozostawić puste",
       "title": "Adres proxy API"
     },
-    "setup": {
-      "cors": {
-        "description": "Z powodu ograniczeń bezpieczeństwa przeglądarki, musisz skonfigurować CORS dla Ollama, aby móc go używać.",
-        "linux": {
-          "env": "Dodaj `Environment` w sekcji [Service], dodaj zmienną środowiskową OLLAMA_ORIGINS:",
-          "reboot": "Przeładuj systemd i uruchom ponownie Ollama",
-          "systemd": "Użyj systemd, aby edytować usługę ollama:"
-        },
-        "macos": "Otwórz aplikację „Terminal” i wklej poniższe polecenie, a następnie naciśnij Enter",
-        "reboot": "Proszę ponownie uruchomić usługę Ollama po zakończeniu",
-        "title": "Konfiguracja Ollama do zezwolenia na dostęp CORS",
-        "windows": "Na Windowsie, kliknij „Panel sterowania”, aby edytować zmienne środowiskowe systemu. Utwórz nową zmienną środowiskową o nazwie „OLLAMA_ORIGINS” dla swojego konta użytkownika, ustaw wartość na *, a następnie kliknij „OK/Zastosuj”, aby zapisać"
-      },
-      "install": {
-        "description": "Proszę upewnić się, że Ollama jest uruchomione, jeśli nie pobrałeś Ollama, odwiedź oficjalną stronę <1>pobierz</1>",
-        "docker": "Jeśli wolisz używać Dockera, Ollama również oferuje oficjalny obraz Dockera, który możesz pobrać za pomocą poniższego polecenia:",
-        "linux": {
-          "command": "Zainstaluj za pomocą poniższego polecenia:",
-          "manual": "Alternatywnie, możesz zapoznać się z <1>podręcznikiem instalacji ręcznej dla Linuxa</1>, aby zainstalować samodzielnie"
-        },
-        "title": "Zainstaluj i uruchom aplikację Ollama lokalnie",
-        "windowsTab": "Windows (wersja podglądowa)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "Anuluj pobieranie",
