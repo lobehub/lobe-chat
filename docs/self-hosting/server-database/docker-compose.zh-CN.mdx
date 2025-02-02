@@ -54,7 +54,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
 - [域名模式](#域名模式)：支持局域网 / 公网在使用反向代理下的 `http/https` 访问，适用于团队使用。
 
 <Callout type="info">
-  在脚本的选项提示 `(选项1/选项2)[选项1]` 中：`选项1 / 选项2` 代表合法的输入，方括号中的选项为默认选项，直接回车即可选择默认选项。
+  在脚本的选项提示 `(选项1/选项2)[选项1]` 中：`(选项1 / 选项2)` 代表可以选择的选项，`[选项1]`代表默认选项，直接回车即可选择默认选项。
 </Callout>
 
 ### 本地模式
@@ -78,9 +78,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
     - Password: 837e26
     - Client Secret: dce63693be24b5d9b9536126692e3ed9
   Minio:
-  - URL: http://localhost:9000
-  - Username: admin
-  - Password: dbac8440
+    - URL: http://localhost:9000
+    - Username: admin
+    - Password: dbac8440
   ```
   
   ### 启动 Docker
@@ -137,9 +137,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
     - Password: 837e26
     - Client Secret: dce63693be24b5d9b9536126692e3ed9
   Minio:
-  - URL: http://your_server_ip:9000
-  - Username: admin
-  - Password: dbac8440
+    - URL: http://your_server_ip:9000
+    - Username: admin
+    - Password: dbac8440
   ```
 
   ### 启动 Docker
@@ -171,8 +171,6 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
 
   你可以通过 `http://your_server_ip:3210` 访问你的 LobeChat 服务。
   应用的账号密码在步骤`2`的报告中。
-  同时，如果你的 LobeChat 服务允许多用户访问，我们建议你参照 [登录鉴权服务配置](#登录鉴权服务配置) 章节
-  配置 Casdoor 一个新的 Casdoor 组织及应用提供非管理员用户的登录服务。
 </Steps>
   
 ### 域名模式
@@ -237,9 +235,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
     - Password: 837e26
     - Client Secret: dce63693be24b5d9b9536126692e3ed9
   Minio:
-  - URL: https://s3-api.example.com
-  - Username: admin
-  - Password: dbac8440
+    - URL: https://s3-api.example.com
+    - Username: admin
+    - Password: dbac8440
   ```
 
   ### 启动 Docker
@@ -270,15 +268,12 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
   ### 访问应用
 
   你可以通过 `https://lobe.example.com` 访问你的 LobeChat 服务。应用的账号密码在步骤`3`的报告中。
-  同时，如果你的 LobeChat 服务允许多用户访问，我们建议你参照 [登录鉴权服务配置](#登录鉴权服务配置) 章节
-  配置 Casdoor 一个新的 Casdoor 组织及应用提供非管理员用户的登录服务。
-
 </Steps>
 
 ## 自定义部署
 
 该章节主要为你介绍在不同的网络环境下自定义部署 LobeChat 服务必须要修改的配置。
-在开始前，你可以先下载 [Docker Compose 配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml) 以及 [环境变量配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env)。  
+在开始前，你可以先下载 [Docker Compose 配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml) 以及 [环境变量配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.zh-CN.example)。  
 
 ```sh
 curl -O https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml
@@ -333,7 +328,7 @@ https://auth-ui.example.com/api/auth/callback/casdoor
 
 - Casdoor 需要在环境变量中提供访问的 Origin 信息：
 
-```
+```env
 origin=https://auth-ui.example.com
 ```
 
