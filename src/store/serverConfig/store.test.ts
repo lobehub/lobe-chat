@@ -23,7 +23,7 @@ describe('createServerConfigStore', () => {
 
     expect(store.getState()).toEqual({
       featureFlags: DEFAULT_FEATURE_FLAGS,
-      serverConfig: { telemetry: {} },
+      serverConfig: { telemetry: {}, aiProvider: {} },
     });
   });
 
@@ -38,6 +38,7 @@ describe('createServerConfigStore', () => {
     expect(store.getState().featureFlags.edit_agent).toBeFalsy();
     expect(store.getState().serverConfig).toEqual({
       telemetry: { langfuse: true },
+      aiProvider: {},
     });
   });
 
