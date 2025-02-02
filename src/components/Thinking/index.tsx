@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AtomIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo, useEffect, useState } from 'react';
+import { CSSProperties, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -61,27 +61,22 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 interface ThinkingProps {
   content?: string;
   duration?: number;
+  style?: CSSProperties;
   thinking?: boolean;
 }
 
-const Thinking = memo<ThinkingProps>(({ content, duration, thinking }) => {
+const Thinking = memo<ThinkingProps>(({ content, duration, thinking, style }) => {
   const { t } = useTranslation(['components', 'common']);
   const { styles, cx } = useStyles();
 
   const [showDetail, setShowDetail] = useState(false);
 
   useEffect(() => {
-    if (thinking && !content) {
-      setShowDetail(true);
-    }
-
-    if (!thinking) {
-      setShowDetail(false);
-    }
-  }, [thinking, content]);
+    setShowDetail(!!thinking);
+  }, [thinking]);
 
   return (
-    <Flexbox className={cx(styles.container, showDetail && styles.expand)} gap={16}>
+    <Flexbox className={cx(styles.container, showDetail && styles.expand)} gap={16} style={style}>
       <Flexbox
         distribution={'space-between'}
         flex={1}
