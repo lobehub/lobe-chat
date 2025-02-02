@@ -86,6 +86,30 @@
     "emptyModel": "Brak włączonych modeli, przejdź do ustawień i włącz je",
     "provider": "Dostawca"
   },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "Z powodu ograniczeń bezpieczeństwa przeglądarki, musisz skonfigurować CORS dla Ollama, aby móc go używać.",
+      "linux": {
+        "env": "Dodaj `Environment` w sekcji [Service], dodając zmienną środowiskową OLLAMA_ORIGINS:",
+        "reboot": "Przeładuj systemd i uruchom ponownie Ollama",
+        "systemd": "Wywołaj systemd, aby edytować usługę ollama:"
+      },
+      "macos": "Otwórz aplikację „Terminal” i wklej poniższe polecenie, a następnie naciśnij Enter, aby je uruchomić",
+      "reboot": "Po zakończeniu wykonania, uruchom ponownie usługę Ollama",
+      "title": "Skonfiguruj Ollama, aby zezwolić na dostęp międzydomenowy",
+      "windows": "Na Windowsie, kliknij „Panel sterowania”, aby edytować zmienne środowiskowe systemu. Utwórz nową zmienną środowiskową o nazwie „OLLAMA_ORIGINS” dla swojego konta użytkownika, ustawiając wartość na * i kliknij „OK/Zastosuj”, aby zapisać"
+    },
+    "install": {
+      "description": "Upewnij się, że uruchomiłeś Ollama. Jeśli nie masz Ollama, przejdź na oficjalną stronę <1>pobierz</1>",
+      "docker": "Jeśli wolisz używać Dockera, Ollama również oferuje oficjalny obraz Dockera, który możesz pobrać za pomocą poniższego polecenia:",
+      "linux": {
+        "command": "Zainstaluj za pomocą poniższego polecenia:",
+        "manual": "Alternatywnie, możesz również zapoznać się z <1>podręcznikiem instalacji ręcznej dla Linuxa</1>, aby zainstalować samodzielnie"
+      },
+      "title": "Zainstaluj i uruchom aplikację Ollama lokalnie",
+      "windowsTab": "Windows (wersja podglądowa)"
+    }
+  },
   "Thinking": {
     "thinking": "Głęboko myślę...",
     "thought": "Głęboko przemyślane (czas: {{duration}} sekund)",
