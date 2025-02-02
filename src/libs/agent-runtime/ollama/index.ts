@@ -79,7 +79,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
       throw AgentRuntimeError.chat({
         error: {
-          ...e.error,
+          ...(typeof e.error !== 'string' ? e.error : undefined),
           message: String(e.error?.message || e.message),
           name: e.name,
           status_code: e.status_code,
