@@ -85,6 +85,7 @@ const Thinking = memo<ThinkingProps>(({ content, duration, thinking }) => {
       <Flexbox
         distribution={'space-between'}
         flex={1}
+        gap={8}
         horizontal
         onClick={() => {
           setShowDetail(!showDetail);
