@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update siliconcloud models."]
+    },
+    "date": "2025-02-01",
+    "version": "1.49.9"
+  },
+  {
+    "children": {
       "improvements": ["Support thinking for all non DeepSeek official api R1 models."]
     },
     "date": "2025-02-01",
