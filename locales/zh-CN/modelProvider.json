@@ -154,30 +154,6 @@
       "desc": "必须包含http(s)://，本地未额外指定可留空",
       "title": "Ollama 服务地址"
     },
-    "setup": {
-      "cors": {
-        "description": "因浏览器安全限制，你需要为 Ollama 进行跨域配置后方可正常使用。",
-        "linux": {
-          "env": "在 [Service] 部分下添加 `Environment`，添加 OLLAMA_ORIGINS 环境变量：",
-          "reboot": "重载 systemd 并重启 Ollama",
-          "systemd": "调用 systemd 编辑 ollama 服务："
-        },
-        "macos": "请打开「终端」应用程序，并粘贴以下指令，并按回车运行",
-        "reboot": "请在执行完成后重启 Ollama 服务",
-        "title": "配置 Ollama 允许跨域访问",
-        "windows": "在 Windows 上，点击「控制面板」，进入编辑系统环境变量。为您的用户账户新建名为 「OLLAMA_ORIGINS」 的环境变量，值为 * ，点击 「OK/应用」 保存"
-      },
-      "install": {
-        "description": "请确认你已经开启 Ollama ，如果没有下载 Ollama ，请前往官网<1>下载</1>",
-        "docker": "如果你更倾向于使用 Docker，Ollama 也提供了官方 Docker 镜像，你可以通过以下命令拉取：",
-        "linux": {
-          "command": "通过以下命令安装：",
-          "manual": "或者，你也可以参考 <1>Linux 手动安装指南</1> 自行安装"
-        },
-        "title": "在本地安装并开启 Ollama 应用",
-        "windowsTab": "Windows (预览版)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "取消下载",

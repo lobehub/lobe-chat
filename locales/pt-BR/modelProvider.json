@@ -154,30 +154,6 @@
       "desc": "Deve incluir http(s)://, pode deixar em branco se não houver especificação local adicional",
       "title": "Endereço do Proxy de Interface"
     },
-    "setup": {
-      "cors": {
-        "description": "Devido às restrições de segurança do navegador, você precisa configurar o Ollama para permitir o acesso entre domínios.",
-        "linux": {
-          "env": "Sob a seção [Service], adicione `Environment` e inclua a variável de ambiente OLLAMA_ORIGINS:",
-          "reboot": "Recarregue o systemd e reinicie o Ollama.",
-          "systemd": "Chame o systemd para editar o serviço ollama:"
-        },
-        "macos": "Abra o aplicativo 'Terminal', cole o comando abaixo e pressione Enter para executar:",
-        "reboot": "Após a conclusão, reinicie o serviço Ollama.",
-        "title": "Configurar o Ollama para permitir acesso entre domínios",
-        "windows": "No Windows, acesse o 'Painel de Controle' e edite as variáveis de ambiente do sistema. Crie uma nova variável de ambiente chamada 'OLLAMA_ORIGINS' para sua conta de usuário, com o valor '*', e clique em 'OK/Aplicar' para salvar."
-      },
-      "install": {
-        "description": "Certifique-se de que você ativou o Ollama. Se ainda não o fez, baixe o Ollama no site oficial <1>aqui</1>.",
-        "docker": "Se preferir usar o Docker, o Ollama também oferece uma imagem oficial. Você pode puxá-la com o comando:",
-        "linux": {
-          "command": "Instale com o comando a seguir:",
-          "manual": "Ou, se preferir, consulte o <1>Guia de Instalação Manual do Linux</1> para instalar manualmente."
-        },
-        "title": "Instale e inicie o aplicativo Ollama localmente",
-        "windowsTab": "Windows (Versão de Visualização)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "Cancel Download",

@@ -86,6 +86,30 @@
     "emptyModel": "No enabled model. Please go to settings to enable.",
     "provider": "Provider"
   },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",
+      "linux": {
+        "env": "Add `Environment` under the [Service] section, and set the OLLAMA_ORIGINS environment variable:",
+        "reboot": "Reload systemd and restart Ollama",
+        "systemd": "Edit the ollama service using systemd:"
+      },
+      "macos": "Please open the 'Terminal' application, paste the following command, and press Enter to run it.",
+      "reboot": "Please restart the Ollama service after the execution is complete.",
+      "title": "Configure Ollama for Cross-Origin Access",
+      "windows": "On Windows, click 'Control Panel' and go to edit system environment variables. Create a new environment variable named 'OLLAMA_ORIGINS' for your user account, with the value set to *, and click 'OK/Apply' to save."
+    },
+    "install": {
+      "description": "Please ensure that you have started Ollama. If you haven't downloaded Ollama, please visit the official website to <1>download</1> it.",
+      "docker": "If you prefer to use Docker, Ollama also provides an official Docker image, which you can pull using the following command:",
+      "linux": {
+        "command": "Install using the following command:",
+        "manual": "Alternatively, you can refer to the <1>Linux Manual Installation Guide</1> for a manual installation."
+      },
+      "title": "Install and Start the Ollama Application Locally",
+      "windowsTab": "Windows (Preview)"
+    }
+  },
   "Thinking": {
     "thinking": "Deep in thought...",
     "thought": "Deeply thought (took {{duration}} seconds)",
