@@ -5,6 +5,7 @@ import {
   ChartColumnBig,
   Delete,
   FileMinus,
+  Pickaxe,
   LucideIcon,
   MessageSquareText,
   Thermometer,
@@ -82,6 +83,15 @@ const ParameterList = memo<ParameterListProps>(({ data }) => {
       label: t('models.parameterList.max_tokens.title'),
       range: data?.meta?.maxOutput ? [0, formatTokenNumber(data.meta.maxOutput)] : undefined,
       type: 'int',
+    },
+    {
+      defaultValue: '--',
+      desc: t('models.parameterList.reasoning_effort.desc'),
+      icon: Pickaxe,
+      key: 'reasoning_effort',
+      label: t('models.parameterList.reasoning_effort.title'),
+      range: ['low', 'high'],
+      type: 'string',
     },
   ];
 
