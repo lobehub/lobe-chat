@@ -126,6 +126,10 @@
         "title": "Konu Tazeliği"
       },
       "range": "Aralık",
+      "reasoning_effort": {
+        "desc": "Bu ayar, akıl yürütmenin derinliğini kontrol eder. Daha yüksek değerler, akıl yürütmenin karmaşıklığını artırarak daha ayrıntılı yanıtlar verebilir, ancak yanıt süresini ve Token tüketimini de artırır. Daha düşük değerler, akıl yürütme derinliğini azaltarak yanıt hızını artırır.",
+        "title": "Akıl Yürütme Gücü"
+      },
       "temperature": {
         "desc": "Bu ayar, modelin yanıtlarının çeşitliliğini etkiler. Daha düşük değerler daha öngörülebilir ve tipik yanıtlar verirken, daha yüksek değerler daha çeşitli ve nadir yanıtları teşvik eder. Değer 0 olarak ayarlandığında, model belirli bir girdi için her zaman aynı yanıtı verir.",
         "title": "Rastgelelik"

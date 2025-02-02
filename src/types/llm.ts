@@ -159,6 +159,11 @@ export interface LLMParams {
    * 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 1
    */
+  reasoning_effort?: string;
+  /**
+   * 控制模型推理能力
+   * @default medium
+   */
   temperature?: number;
   /**
    * 控制生成文本中最高概率的单个 token

@@ -126,6 +126,10 @@
         "title": "Độ mới của chủ đề"
       },
       "range": "Phạm vi",
+      "reasoning_effort": {
+        "desc": "Cài đặt này kiểm soát độ sâu của quá trình suy luận. Giá trị cao hơn sẽ làm tăng độ phức tạp của suy luận, có thể dẫn đến câu trả lời chi tiết hơn, nhưng cũng sẽ làm tăng thời gian phản hồi và tiêu thụ Token. Giá trị thấp hơn sẽ giảm độ sâu của suy luận, tăng tốc độ phản hồi.",
+        "title": "Cường độ suy luận"
+      },
       "temperature": {
         "desc": "Cài đặt này ảnh hưởng đến sự đa dạng trong phản hồi của mô hình. Giá trị thấp hơn dẫn đến phản hồi dễ đoán và điển hình hơn, trong khi giá trị cao hơn khuyến khích phản hồi đa dạng và không thường gặp. Khi giá trị được đặt là 0, mô hình sẽ luôn đưa ra cùng một phản hồi cho đầu vào nhất định.",
         "title": "Ngẫu nhiên"

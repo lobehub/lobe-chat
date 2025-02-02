@@ -176,6 +176,9 @@
   "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
     "description": "Meta Llama 3.1 é uma família de modelos de linguagem em larga escala multilíngue desenvolvida pela Meta, incluindo variantes pré-treinadas e de ajuste fino para instruções com tamanhos de parâmetros de 8B, 70B e 405B. Este modelo de 8B foi otimizado para cenários de diálogo multilíngue e se destacou em vários benchmarks da indústria. O treinamento do modelo utilizou mais de 150 trilhões de tokens de dados públicos e empregou técnicas como ajuste fino supervisionado e aprendizado por reforço com feedback humano para melhorar a utilidade e segurança do modelo. Llama 3.1 suporta geração de texto e geração de código, com data de corte de conhecimento em dezembro de 2023."
   },
+  "Qwen/QVQ-72B-Preview": {
+    "description": "QVQ-72B-Preview é um modelo de pesquisa desenvolvido pela equipe Qwen, focado em capacidades de inferência visual, com vantagens únicas na compreensão de cenários complexos e na resolução de problemas matemáticos relacionados à visão."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview é o mais recente modelo de pesquisa experimental da Qwen, focado em melhorar a capacidade de raciocínio da IA. Ao explorar mecanismos complexos como mistura de linguagem e raciocínio recursivo, suas principais vantagens incluem forte capacidade de análise de raciocínio, habilidades matemáticas e de programação. Ao mesmo tempo, existem questões de troca de linguagem, ciclos de raciocínio, considerações de segurança e diferenças em outras capacidades."
   },
@@ -530,11 +533,20 @@
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct oferece capacidade de processamento de instruções altamente confiável, suportando aplicações em diversos setores."
   },
+  "deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1 é um modelo de inferência impulsionado por aprendizado por reforço (RL), que resolve problemas de repetitividade e legibilidade no modelo. Antes do RL, o DeepSeek-R1 introduziu dados de inicialização a frio, otimizando ainda mais o desempenho da inferência. Ele se compara ao OpenAI-o1 em tarefas matemáticas, de codificação e de inferência, e melhora o desempenho geral por meio de métodos de treinamento cuidadosamente projetados."
+  },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 combina as excelentes características das versões anteriores, aprimorando a capacidade geral e de codificação."
   },
+  "deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3 é um modelo de linguagem de especialistas mistos (MoE) com 671 bilhões de parâmetros, utilizando atenção latente multi-cabeça (MLA) e a arquitetura DeepSeekMoE, combinando uma estratégia de balanceamento de carga sem perda auxiliar para otimizar a eficiência de inferência e treinamento. Pré-treinado em 14,8 trilhões de tokens de alta qualidade e ajustado supervisionadamente com aprendizado por reforço, o DeepSeek-V3 supera outros modelos de código aberto em desempenho, aproximando-se de modelos fechados líderes."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B é um modelo avançado treinado para diálogos de alta complexidade."
+  },
+  "deepseek-ai/deepseek-vl2": {
+    "description": "DeepSeek-VL2 é um modelo de linguagem visual baseado no DeepSeekMoE-27B, utilizando uma arquitetura MoE de ativação esparsa, alcançando desempenho excepcional com apenas 4,5 bilhões de parâmetros ativados. Este modelo se destaca em várias tarefas, incluindo perguntas visuais, reconhecimento óptico de caracteres, compreensão de documentos/tabelas/gráficos e localização visual."
   },
   "deepseek-chat": {
     "description": "Um novo modelo de código aberto que combina capacidades gerais e de codificação, não apenas preservando a capacidade de diálogo geral do modelo Chat original e a poderosa capacidade de processamento de código do modelo Coder, mas também alinhando-se melhor às preferências humanas. Além disso, o DeepSeek-V2.5 também alcançou melhorias significativas em várias áreas, como tarefas de escrita e seguimento de instruções."
@@ -1168,6 +1180,9 @@
   },
   "o1-preview": {
     "description": "o1 é o novo modelo de raciocínio da OpenAI, adequado para tarefas complexas que exigem amplo conhecimento geral. Este modelo possui um contexto de 128K e uma data limite de conhecimento em outubro de 2023."
+  },
+  "o3-mini": {
+    "description": "o3-mini é nosso mais recente modelo de inferência em miniatura, oferecendo alta inteligência com os mesmos custos e metas de latência que o o1-mini."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba é um modelo de linguagem Mamba 2 focado em geração de código, oferecendo forte suporte para tarefas avançadas de codificação e raciocínio."

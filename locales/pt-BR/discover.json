@@ -126,6 +126,10 @@
         "title": "Novidade do Tópico"
       },
       "range": "Faixa",
+      "reasoning_effort": {
+        "desc": "Esta configuração controla a profundidade da inferência. Valores mais altos aumentam a complexidade da inferência, o que pode resultar em respostas mais detalhadas, mas também aumenta o tempo de resposta e o consumo de tokens. Valores mais baixos reduzem a profundidade da inferência, melhorando a velocidade de resposta.",
+        "title": "Intensidade da Inferência"
+      },
       "temperature": {
         "desc": "Esta configuração afeta a diversidade das respostas do modelo. Valores mais baixos resultam em respostas mais previsíveis e típicas, enquanto valores mais altos incentivam respostas mais variadas e incomuns. Quando o valor é 0, o modelo sempre dá a mesma resposta para uma entrada dada.",
         "title": "Aleatoriedade"

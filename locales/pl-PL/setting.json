@@ -200,6 +200,9 @@
     "enableMaxTokens": {
       "title": "Włącz limit jednorazowej odpowiedzi"
     },
+    "enableReasoningEffort": {
+      "title": "Dostosuj intensywność rozumowania"
+    },
     "frequencyPenalty": {
       "desc": "Im większa wartość, tym większe prawdopodobieństwo zmniejszenia powtarzających się słów",
       "title": "Kara za częstość"
@@ -215,6 +218,15 @@
     "presencePenalty": {
       "desc": "Im większa wartość, tym większe prawdopodobieństwo rozszerzenia się na nowe tematy",
       "title": "Świeżość tematu"
+    },
+    "reasoningEffort": {
+      "desc": "Im większa wartość, tym silniejsza zdolność wnioskowania, ale może to zwiększyć czas odpowiedzi i zużycie tokenów",
+      "options": {
+        "high": "Wysoki",
+        "low": "Niski",
+        "medium": "Średni"
+      },
+      "title": "Intensywność wnioskowania"
     },
     "temperature": {
       "desc": "Im większa wartość, tym odpowiedzi są bardziej losowe",

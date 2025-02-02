@@ -126,6 +126,10 @@
         "title": "Onderwerp versheid"
       },
       "range": "Bereik",
+      "reasoning_effort": {
+        "desc": "Deze instelling controleert de diepte van de redenering. Hogere waarden verhogen de complexiteit van de redenering, wat kan leiden tot gedetailleerdere antwoorden, maar ook de responstijd en het tokenverbruik verhoogt. Lagere waarden verminderen de diepte van de redenering en verhogen de responssnelheid.",
+        "title": "Redeneringsintensiteit"
+      },
       "temperature": {
         "desc": "Deze instelling beïnvloedt de diversiteit van de reacties van het model. Lagere waarden leiden tot meer voorspelbare en typische reacties, terwijl hogere waarden meer diverse en ongebruikelijke reacties aanmoedigen. Wanneer de waarde op 0 is ingesteld, geeft het model altijd dezelfde reactie op een gegeven invoer.",
         "title": "Willekeurigheid"

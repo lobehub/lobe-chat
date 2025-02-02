@@ -126,6 +126,10 @@
         "title": "Freschezza del tema"
       },
       "range": "Intervallo",
+      "reasoning_effort": {
+        "desc": "Questa impostazione controlla il livello di approfondimento del ragionamento. Valori più elevati aumentano la complessità del ragionamento, il che può portare a risposte più dettagliate, ma aumenta anche il tempo di risposta e il consumo di token. Valori più bassi riducono la profondità del ragionamento, migliorando la velocità di risposta.",
+        "title": "Intensità del ragionamento"
+      },
       "temperature": {
         "desc": "Questa impostazione influisce sulla diversità delle risposte del modello. Valori più bassi portano a risposte più prevedibili e tipiche, mentre valori più alti incoraggiano risposte più varie e insolite. Quando il valore è impostato a 0, il modello fornisce sempre la stessa risposta per un dato input.",
         "title": "Casualità"

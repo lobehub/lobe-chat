@@ -126,6 +126,10 @@
         "title": "Themenfrische"
       },
       "range": "Bereich",
+      "reasoning_effort": {
+        "desc": "Diese Einstellung steuert die Tiefe des Denkprozesses. Höhere Werte erhöhen die Komplexität des Denkens, was zu detaillierteren Antworten führen kann, aber auch die Reaktionszeit und den Token-Verbrauch erhöht. Niedrigere Werte verringern die Tiefe des Denkens und erhöhen die Geschwindigkeit der Antwort.",
+        "title": "Denkintensität"
+      },
       "temperature": {
         "desc": "Diese Einstellung beeinflusst die Vielfalt der Antworten des Modells. Niedrigere Werte führen zu vorhersehbareren und typischen Antworten, während höhere Werte zu vielfältigeren und weniger häufigen Antworten anregen. Wenn der Wert auf 0 gesetzt wird, gibt das Modell für einen bestimmten Input immer die gleiche Antwort.",
         "title": "Zufälligkeit"
