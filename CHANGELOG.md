@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.49.10](https://github.com/lobehub/lobe-chat/compare/v1.49.9...v1.49.10)
+
+<sup>Released on **2025-02-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `<think>` tag crash with special markdown content.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `<think>` tag crash with special markdown content, closes [#5670](https://github.com/lobehub/lobe-chat/issues/5670) ([b719522](https://github.com/lobehub/lobe-chat/commit/b719522))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.49.9](https://github.com/lobehub/lobe-chat/compare/v1.49.8...v1.49.9)
 
 <sup>Released on **2025-02-01**</sup>
