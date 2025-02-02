@@ -176,6 +176,9 @@
   "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
     "description": "Meta Llama 3.1 est une famille de modèles de langage à grande échelle multilingues développée par Meta, comprenant des variantes pré-entraînées et d'ajustement d'instructions de tailles de paramètres de 8B, 70B et 405B. Ce modèle d'ajustement d'instructions 8B est optimisé pour des scénarios de dialogue multilingue, montrant d'excellentes performances dans plusieurs tests de référence de l'industrie. L'entraînement du modèle a utilisé plus de 150 trillions de tokens de données publiques, et des techniques telles que l'ajustement supervisé et l'apprentissage par renforcement basé sur les retours humains ont été appliquées pour améliorer l'utilité et la sécurité du modèle. Llama 3.1 prend en charge la génération de texte et de code, avec une date limite de connaissances fixée à décembre 2023."
   },
+  "Qwen/QVQ-72B-Preview": {
+    "description": "QVQ-72B-Preview est un modèle de recherche développé par l'équipe Qwen, axé sur les capacités de raisonnement visuel, qui possède des avantages uniques dans la compréhension de scènes complexes et la résolution de problèmes mathématiques liés à la vision."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview est le dernier modèle de recherche expérimental de Qwen, axé sur l'amélioration des capacités de raisonnement de l'IA. En explorant des mécanismes complexes tels que le mélange de langues et le raisonnement récursif, ses principaux avantages incluent de puissantes capacités d'analyse de raisonnement, ainsi que des compétences en mathématiques et en programmation. Cependant, il existe également des problèmes de changement de langue, des cycles de raisonnement, des considérations de sécurité et des différences dans d'autres capacités."
   },
@@ -530,11 +533,20 @@
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct offre des capacités de traitement d'instructions hautement fiables, prenant en charge des applications dans divers secteurs."
   },
+  "deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1 est un modèle d'inférence alimenté par l'apprentissage par renforcement (RL), qui résout les problèmes de répétitivité et de lisibilité dans le modèle. Avant le RL, DeepSeek-R1 a introduit des données de démarrage à froid, optimisant ainsi les performances d'inférence. Il se compare à OpenAI-o1 en matière de tâches mathématiques, de code et d'inférence, et améliore l'efficacité globale grâce à des méthodes d'entraînement soigneusement conçues."
+  },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 intègre les excellentes caractéristiques des versions précédentes, renforçant les capacités générales et de codage."
   },
+  "deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3 est un modèle de langage à experts mixtes (MoE) avec 6710 milliards de paramètres, utilisant une attention potentielle multi-tête (MLA) et l'architecture DeepSeekMoE, combinée à une stratégie d'équilibrage de charge sans perte auxiliaire, optimisant ainsi l'efficacité d'inférence et d'entraînement. En pré-entraînant sur 14,8 billions de tokens de haute qualité, suivi d'un ajustement supervisé et d'apprentissage par renforcement, DeepSeek-V3 surpasse les autres modèles open source en termes de performance, se rapprochant des modèles fermés de premier plan."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B est un modèle avancé formé pour des dialogues de haute complexité."
+  },
+  "deepseek-ai/deepseek-vl2": {
+    "description": "DeepSeek-VL2 est un modèle de langage visuel à experts mixtes (MoE) développé sur la base de DeepSeekMoE-27B, utilisant une architecture MoE à activation sparse, réalisant des performances exceptionnelles tout en n'activant que 4,5 milliards de paramètres. Ce modèle excelle dans plusieurs tâches telles que la question-réponse visuelle, la reconnaissance optique de caractères, la compréhension de documents/tableaux/graphes et le positionnement visuel."
   },
   "deepseek-chat": {
     "description": "Un nouveau modèle open source qui fusionne des capacités générales et de code, conservant non seulement la capacité de dialogue général du modèle Chat d'origine et la puissante capacité de traitement de code du modèle Coder, mais s'alignant également mieux sur les préférences humaines. De plus, DeepSeek-V2.5 a réalisé des améliorations significatives dans plusieurs domaines tels que les tâches d'écriture et le suivi des instructions."
@@ -547,6 +559,9 @@
   },
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 est un modèle de code open source de type expert mixte, performant dans les tâches de code, rivalisant avec GPT4-Turbo."
+  },
+  "deepseek-r1": {
+    "description": "DeepSeek-R1 est un modèle d'inférence alimenté par l'apprentissage par renforcement (RL), qui résout les problèmes de répétitivité et de lisibilité dans le modèle. Avant le RL, DeepSeek-R1 a introduit des données de démarrage à froid, optimisant ainsi les performances d'inférence. Il se compare à OpenAI-o1 en matière de tâches mathématiques, de code et d'inférence, et améliore l'efficacité globale grâce à des méthodes d'entraînement soigneusement conçues."
   },
   "deepseek-reasoner": {
     "description": "Modèle d'inférence proposé par DeepSeek. Avant de fournir la réponse finale, le modèle génère d'abord une chaîne de pensée pour améliorer l'exactitude de la réponse finale."
