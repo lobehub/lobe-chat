@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { OllamaProviderCard } from '@/config/modelProviders';
 
 import ProviderDetail from '../[id]';
+import CheckError from './CheckError';
 
 const Page = () => {
   const { t } = useTranslation('modelProvider');
@@ -12,6 +13,7 @@ const Page = () => {
   return (
     <ProviderDetail
       {...OllamaProviderCard}
+      checkErrorRender={CheckError}
       settings={{
         ...OllamaProviderCard.settings,
         proxyUrl: {

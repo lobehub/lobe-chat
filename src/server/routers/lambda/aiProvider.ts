@@ -48,7 +48,7 @@ export const aiProviderRouter = router({
     .input(z.object({ id: z.string() }))
 
     .query(async ({ input, ctx }): Promise<AiProviderDetailItem | undefined> => {
-      return ctx.aiProviderModel.getAiProviderById(input.id, KeyVaultsGateKeeper.getUserKeyVaults);
+      return ctx.aiInfraRepos.getAiProviderDetail(input.id, KeyVaultsGateKeeper.getUserKeyVaults);
     }),
 
   getAiProviderList: aiProviderProcedure.query(async ({ ctx }) => {

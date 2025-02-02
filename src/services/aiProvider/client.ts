@@ -25,7 +25,7 @@ export class ClientService extends BaseClientService implements IAiProviderServi
   };
 
   getAiProviderById: IAiProviderService['getAiProviderById'] = async (id) => {
-    return this.aiProviderModel.getAiProviderById(id);
+    return this.aiInfraRepos.getAiProviderDetail(id);
   };
 
   getAiProviderList: IAiProviderService['getAiProviderList'] = async () => {

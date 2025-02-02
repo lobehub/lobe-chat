@@ -324,7 +324,6 @@ const ollamaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description: 'Command R+ 是一款高性能的大型语言模型，专为真实企业场景和复杂应用而设计。',
     displayName: 'Command R+ 104B',
-    enabled: true,
     id: 'command-r-plus',
     type: 'chat',
   },
