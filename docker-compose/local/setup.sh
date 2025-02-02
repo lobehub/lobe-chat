@@ -19,13 +19,9 @@ fi
 # ======================
 
 # 1. Default values of arguments
-# Arg: -f
-# Determine force download asserts, default is not
-FORCE_DOWNLOAD=false
 
 # Arg: -l or --lang
 # Determine the language to show, default is en
-LANGUAGE="en_US"
 
 # Arg: --url
 # Determine the source URL to download files
@@ -36,11 +32,8 @@ SOURCE_URL="https://raw.githubusercontent.com/lobehub/lobe-chat/main"
 HOST=""
 
 # 2. Parse script arguments
-while getopts "fl:-:" opt; do
+while getopts "l:-:" opt; do
     case $opt in
-        f)
-            FORCE_DOWNLOAD=true
-        ;;
         l)
             LANGUAGE=$OPTARG
         ;;
@@ -59,13 +52,13 @@ while getopts "fl:-:" opt; do
                     OPTIND=$(($OPTIND + 1))
                 ;;
                 *)
-                    echo "Usage: $0 [-f] [-l language|--lang language] [--url source] [--host serverhost]" >&2
+                    echo "Usage: $0 [-l language|--lang language] [--url source] [--host serverhost]" >&2
                     exit 1
                 ;;
             esac
         ;;
         *)
-            echo "Usage: $0 [-f] [-l language|--lang language] [--url source]" >&2
+            echo "Usage: $0 [-l language|--lang language] [--url source]" >&2
             exit 1
         ;;
     esac
@@ -82,6 +75,11 @@ done
 show_message() {
     local key="$1"
     case $key in
+        choose_language)
+            echo "Please choose a language / 请选择语言:"
+            echo "(0) English"
+            echo "(1) 简体中文"
+        ;;
         downloading)
             case $LANGUAGE in
                 zh_CN)
@@ -92,16 +90,16 @@ show_message() {
                 ;;
             esac
         ;;
-        downloaded)
-            case $LANGUAGE in
-                zh_CN)
-                    echo " 已经存在，跳过下载。"
-                ;;
-                *)
-                    echo " already exists, skipping download."
-                ;;
-            esac
-        ;;
+        # downloaded)
+        #     case $LANGUAGE in
+        #         zh_CN)
+        #             echo " 已经存在，跳过下载。"
+        #         ;;
+        #         *)
+        #             echo " already exists, skipping download."
+        #         ;;
+        #     esac
+        # ;;
         extracted_success)
             case $LANGUAGE in
                 zh_CN)
@@ -338,15 +336,7 @@ show_message() {
 
 # Function to download files
 download_file() {
-    local file_url="$1"
-    local local_file="$2"
-    
-    if [ "$FORCE_DOWNLOAD" = false ] && [ -e "$local_file" ]; then
-        echo "$local_file" $(show_message "downloaded")
-        return 0
-    fi
-    
-    wget -q --show-progress "$file_url" -O "$local_file"
+    wget -q --show-progress "$1" -O "$2"
 }
 
 print_centered() {
@@ -421,6 +411,24 @@ MINIO_ROOT_PASSWORD="YOUR_MINIO_PASSWORD"
 CASDOOR_HOST="localhost:8000"
 MINIO_HOST="localhost:9000"
 PROTOCOL="http"
+
+# If no language is specified, ask the user to choose
+if [ -z "$LANGUAGE" ]; then
+    show_message "choose_language"
+    ask "(0,1)" "0"
+    case $ask_result in
+        0)
+            LANGUAGE="en_US"
+        ;;
+        1)
+            LANGUAGE="zh_CN"
+        ;;
+        *)
+            echo "Invalid language: $ask_result"
+            exit 1
+        ;;
+    esac
+fi
 
 section_download_files(){
     # Download files asynchronously
@@ -508,7 +516,7 @@ section_configurate_host() {
     # s3 related
     $SED_COMMAND "s#^S3_PUBLIC_DOMAIN=.*#S3_PUBLIC_DOMAIN=http://$MINIO_HOST#" .env
     $SED_COMMAND "s#^S3_ENDPOINT=.*#S3_ENDPOINT=http://$MINIO_HOST#" .env
-
+    
     # Configurate protocol
     if [[ "$DEPLOY_MODE" == "domain" ]]; then
         echo $(show_message "host_regenerate")
