@@ -11,7 +11,7 @@ const Doubao: ModelProviderCard = {
   settings: {
     disableBrowserRequest: true, // CORS error
     sdkType: 'doubao',
-    showModelFetcher: false,
+    // showModelFetcher: false,
     smoothing: {
       speed: 2,
       text: true,
