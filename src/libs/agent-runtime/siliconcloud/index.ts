@@ -38,14 +38,13 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
         error,
       };
     },
-  },
-  
-  handlePayload: (payload) => {
+    handlePayload: (payload) => {
       return {
         ...payload,
         stream: !payload.tools,
       } as any;
     },
+  },
   debug: {
     chatCompletion: () => process.env.DEBUG_SILICONCLOUD_CHAT_COMPLETION === '1',
   },
