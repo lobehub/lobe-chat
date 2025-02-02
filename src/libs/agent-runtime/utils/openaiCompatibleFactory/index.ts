@@ -214,6 +214,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         if (customClient?.createChatCompletionStream) {
           response = customClient.createChatCompletionStream(this.client, payload, this) as any;
         } else {
+          console.log('openai:', options?.signal);
           response = await this.client.chat.completions.create(
             {
               ...postPayload,

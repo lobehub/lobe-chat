@@ -519,6 +519,7 @@ class ChatService {
       throw AgentRuntimeError.createError(ChatErrorType.InvalidAccessCode);
     }
 
+    console.log(params.signal);
     return agentRuntime.chat(data, { signal: params.signal });
   };
 

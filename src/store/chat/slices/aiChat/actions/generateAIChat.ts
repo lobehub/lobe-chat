@@ -267,10 +267,11 @@ export const generateAIChat: StateCreator<
     await Promise.all([summaryTitle(), addFilesToAgent()]);
   },
   stopGenerateMessage: () => {
-    const { abortController, internal_toggleChatLoading } = get();
-    if (!abortController) return;
+    const { chatLoadingIdsAbortController, internal_toggleChatLoading } = get();
 
-    abortController.abort(MESSAGE_CANCEL_FLAT);
+    if (!chatLoadingIdsAbortController) return;
+
+    chatLoadingIdsAbortController.abort(MESSAGE_CANCEL_FLAT);
 
     internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
   },

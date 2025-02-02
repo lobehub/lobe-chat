@@ -1,9 +1,9 @@
 export interface ChatAIChatState {
-  abortController?: AbortController;
   /**
    * is the AI message is generating
    */
   chatLoadingIds: string[];
+  chatLoadingIdsAbortController?: AbortController;
   inputFiles: File[];
   inputMessage: string;
   /**
