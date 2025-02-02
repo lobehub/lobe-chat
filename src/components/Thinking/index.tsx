@@ -1,4 +1,4 @@
-import { Icon, Markdown } from '@lobehub/ui';
+import { CopyButton, Icon, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AtomIcon, ChevronDown, ChevronRight } from 'lucide-react';
@@ -9,8 +9,6 @@ import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
-    cursor: pointer;
-
     width: fit-content;
     padding-block: 4px;
     padding-inline: 8px;
@@ -66,8 +64,8 @@ interface ThinkingProps {
   thinking?: boolean;
 }
 
-const Thinking = memo<ThinkingProps>(({ content = '', duration, thinking }) => {
-  const { t } = useTranslation('components');
+const Thinking = memo<ThinkingProps>(({ content, duration, thinking }) => {
+  const { t } = useTranslation(['components', 'common']);
   const { styles, cx } = useStyles();
 
   const [showDetail, setShowDetail] = useState(false);
@@ -83,14 +81,16 @@ const Thinking = memo<ThinkingProps>(({ content = '', duration, thinking }) => {
   }, [thinking, content]);
 
   return (
-    <Flexbox
-      className={cx(styles.container, showDetail && styles.expand)}
-      gap={16}
-      onClick={() => {
-        setShowDetail(!showDetail);
-      }}
-    >
-      <Flexbox distribution={'space-between'} flex={1} horizontal>
+    <Flexbox className={cx(styles.container, showDetail && styles.expand)} gap={16}>
+      <Flexbox
+        distribution={'space-between'}
+        flex={1}
+        horizontal
+        onClick={() => {
+          setShowDetail(!showDetail);
+        }}
+        style={{ cursor: 'pointer' }}
+      >
         {thinking ? (
           <Flexbox gap={8} horizontal>
             <Icon icon={AtomIcon} />
@@ -101,12 +101,23 @@ const Thinking = memo<ThinkingProps>(({ content = '', duration, thinking }) => {
         ) : (
           <Flexbox gap={8} horizontal>
             <Icon icon={AtomIcon} />
-            {typeof duration === 'undefined'
+            {!duration
               ? t('Thinking.thoughtWithDuration')
               : t('Thinking.thought', { duration: ((duration || 0) / 1000).toFixed(1) })}
           </Flexbox>
         )}
-        <Icon icon={showDetail ? ChevronDown : ChevronRight} />
+        <Flexbox gap={4} horizontal>
+          {showDetail && content && (
+            <div
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+            >
+              <CopyButton content={content} size={'small'} title={t('copy', { ns: 'common' })} />
+            </div>
+          )}
+          <Icon icon={showDetail ? ChevronDown : ChevronRight} />
+        </Flexbox>
       </Flexbox>
 
       <AnimatePresence initial={false}>
@@ -125,10 +136,13 @@ const Thinking = memo<ThinkingProps>(({ content = '', duration, thinking }) => {
               open: { height: 'auto', opacity: 1, width: 'auto' },
             }}
           >
-            <Markdown variant={'chat'}>{content}</Markdown>
+            {typeof content === 'string' ? (
+              <Markdown variant={'chat'}>{content}</Markdown>
+            ) : (
+              content
+            )}
           </motion.div>
         )}
-        {/*<Flexbox></Flexbox>*/}
       </AnimatePresence>
     </Flexbox>
   );

@@ -26,9 +26,10 @@ import {
 import History from '../History';
 import { markdownElements } from '../MarkdownElements';
 import { InPortalThreadContext } from './InPortalThreadContext';
-import { processWithArtifact } from './utils';
+import { normalizeThinkTags, processWithArtifact } from './utils';
 
-const rehypePlugins = markdownElements.map((element) => element.rehypePlugin);
+const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
+const remarkPlugins = markdownElements.map((element) => element.remarkPlugin).filter(Boolean);
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   loading: css`
@@ -148,7 +149,9 @@ const Item = memo<ChatListItemProps>(
 
     // remove line breaks in artifact tag to make the ast transform easier
     const message =
-      !editing && item?.role === 'assistant' ? processWithArtifact(item?.content) : item?.content;
+      !editing && item?.role === 'assistant'
+        ? normalizeThinkTags(processWithArtifact(item?.content))
+        : item?.content;
 
     // ======================= Performance Optimization ======================= //
     // these useMemo/useCallback are all for the performance optimization
@@ -172,6 +175,7 @@ const Item = memo<ChatListItemProps>(
         components,
         customRender: markdownCustomRender,
         rehypePlugins,
+        remarkPlugins,
       }),
       [components, markdownCustomRender],
     );
