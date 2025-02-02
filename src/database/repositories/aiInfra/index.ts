@@ -5,11 +5,7 @@ import { AiModelModel } from '@/database/server/models/aiModel';
 import { AiProviderModel } from '@/database/server/models/aiProvider';
 import { LobeChatDatabase } from '@/database/type';
 import { AIChatModelCard, AiModelSourceEnum, AiProviderModelListItem } from '@/types/aiModel';
-import {
-  AiProviderListItem,
-  AiProviderRuntimeState,
-  EnabledAiModel,
-} from '@/types/aiProvider';
+import { AiProviderListItem, AiProviderRuntimeState, EnabledAiModel } from '@/types/aiProvider';
 import { ProviderConfig } from '@/types/user/settings';
 import { merge, mergeArrayById } from '@/utils/merge';
 
@@ -123,7 +119,11 @@ export class AiInfraRepos {
   ): Promise<AiProviderRuntimeState> => {
     const result = await this.aiProviderModel.getAiProviderRuntimeConfig(decryptor);
 
-    const runtimeConfig = merge(this.providerConfigs, result);
+    const runtimeConfig = result;
+
+    Object.entries(result).forEach(([key, value]) => {
+      runtimeConfig[key] = merge(this.providerConfigs[key] || {}, value);
+    });
 
     const enabledAiProviders = await this.getUserEnabledProviderList();
 
