@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix <think> tag crash with special markdown content."]
+    },
+    "date": "2025-02-02",
+    "version": "1.49.10"
+  },
+  {
+    "children": {
       "improvements": ["Update siliconcloud models."]
     },
     "date": "2025-02-01",
