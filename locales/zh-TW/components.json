@@ -86,6 +86,30 @@
     "emptyModel": "沒有啟用的模型，請前往設定開啟",
     "provider": "提供商"
   },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "因瀏覽器安全限制，你需要為 Ollama 進行跨域配置後方可正常使用。",
+      "linux": {
+        "env": "在 [Service] 部分下添加 `Environment`，添加 OLLAMA_ORIGINS 環境變數：",
+        "reboot": "重載 systemd 並重啟 Ollama",
+        "systemd": "調用 systemd 編輯 ollama 服務："
+      },
+      "macos": "請打開「終端」應用程式，並粘貼以下指令，然後按回車執行",
+      "reboot": "請在執行完成後重啟 Ollama 服務",
+      "title": "配置 Ollama 允許跨域訪問",
+      "windows": "在 Windows 上，點擊「控制面板」，進入編輯系統環境變數。為您的用戶帳戶新建名為「OLLAMA_ORIGINS」的環境變數，值為 *，點擊「確定/應用」保存"
+    },
+    "install": {
+      "description": "請確認你已經啟動 Ollama，如果沒有下載 Ollama，請前往官網<1>下載</1>",
+      "docker": "如果你更傾向於使用 Docker，Ollama 也提供了官方 Docker 映像，你可以通過以下命令拉取：",
+      "linux": {
+        "command": "通過以下命令安裝：",
+        "manual": "或者，你也可以參考 <1>Linux 手動安裝指南</1> 自行安裝"
+      },
+      "title": "在本地安裝並啟動 Ollama 應用",
+      "windowsTab": "Windows (預覽版)"
+    }
+  },
   "Thinking": {
     "thinking": "深度思考中...",
     "thought": "已深度思考（用時 {{duration}} 秒）",
