@@ -368,13 +368,14 @@ export const chatMessage: StateCreator<
     );
   },
   internal_toggleLoadingArrays: (key, loading, id, action) => {
+    const abortControllerKey = `${key}AbortController`;
     if (loading) {
       window.addEventListener('beforeunload', preventLeavingFn);
 
       const abortController = new AbortController();
       set(
         {
-          abortController,
+          [abortControllerKey]: abortController,
           [key]: toggleBooleanList(get()[key] as string[], id!, loading),
         },
         false,
@@ -384,11 +385,11 @@ export const chatMessage: StateCreator<
       return abortController;
     } else {
       if (!id) {
-        set({ abortController: undefined, [key]: [] }, false, action);
+        set({ [abortControllerKey]: undefined, [key]: [] }, false, action);
       } else
         set(
           {
-            abortController: undefined,
+            [abortControllerKey]: undefined,
             [key]: toggleBooleanList(get()[key] as string[], id, loading),
           },
           false,

@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "fixes": ["Fix can not stop generating."]
+    },
+    "date": "2025-02-02",
+    "version": "1.49.12"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ollama intergration checker and client fetch issue."]
+    },
+    "date": "2025-02-02",
+    "version": "1.49.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix <think> tag crash with special markdown content."]
+    },
+    "date": "2025-02-02",
+    "version": "1.49.10"
+  },
+  {
+    "children": {
       "improvements": ["Update siliconcloud models."]
     },
     "date": "2025-02-01",
