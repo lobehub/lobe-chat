@@ -1,4 +1,5 @@
-import { ModelProvider } from '../types';
+import { AgentRuntimeErrorType } from '../error';
+import { ChatCompletionErrorPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
@@ -16,9 +17,41 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
         stream: !payload.tools,
       } as any;
     },
+    
+    handleError: (error: any, options): Omit<ChatCompletionErrorPayload, 'provider'> | undefined => {
+      let errorResponse: Response | undefined;
+      if (error instanceof Response) {
+        errorResponse = error;
+      } else if ('status' in (error as any)) {
+        errorResponse = error as Response;
+      }
+      if (errorResponse) {
+        if (errorResponse.status === 401) {
+          return {
+            error: errorResponse.status,
+            errorType: AgentRuntimeErrorType.InvalidProviderAPIKey,
+          };
+        }
+
+        if (errorResponse.status === 403) {
+          return {
+            error: errorResponse.status,
+            errorType: AgentRuntimeErrorType.ProviderBizError,
+            message: '请检查 API Key 余额是否充足',
+          };
+        }
+      }
+      return {
+        error,
+      };
+    },
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_SILICONCLOUD_CHAT_COMPLETION === '1',
+  },
+  errorType: {
+    bizError: AgentRuntimeErrorType.ProviderBizError,
+    invalidAPIKey: AgentRuntimeErrorType.InvalidProviderAPIKey,
   },
   models: {
     transformModel: (m) => {
