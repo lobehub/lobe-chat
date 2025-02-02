@@ -53,7 +53,7 @@ mkdir lobe-chat-db && cd lobe-chat-db
 Fetch and execute the deployment script:
 
 ```sh
-bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f -l en_US
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh | bash
 ```
 
 The script supports the following deployment modes; please choose the appropriate mode based on your needs and read the rest of the documentation.
