@@ -86,6 +86,30 @@
     "emptyModel": "Nenhum modelo habilitado. Por favor, vá para as configurações e habilite um.",
     "provider": "Fornecedor"
   },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "Devido a restrições de segurança do navegador, você precisa configurar o CORS para o Ollama antes de usá-lo normalmente.",
+      "linux": {
+        "env": "Adicione `Environment` na seção [Service] e adicione a variável de ambiente OLLAMA_ORIGINS:",
+        "reboot": "Recarregue o systemd e reinicie o Ollama",
+        "systemd": "Chame o systemd para editar o serviço ollama:"
+      },
+      "macos": "Abra o aplicativo 'Terminal', cole o seguinte comando e pressione Enter para executar",
+      "reboot": "Reinicie o serviço Ollama após a conclusão da execução",
+      "title": "Configurar o Ollama para permitir acesso CORS",
+      "windows": "No Windows, clique em 'Painel de Controle' e entre na edição das variáveis de ambiente do sistema. Crie uma nova variável de ambiente chamada 'OLLAMA_ORIGINS' para sua conta de usuário, com o valor * e clique em 'OK/Aplicar' para salvar."
+    },
+    "install": {
+      "description": "Por favor, confirme que você já ativou o Ollama. Se não tiver baixado o Ollama, visite o site oficial <1>para baixar</1>",
+      "docker": "Se você preferir usar o Docker, o Ollama também oferece uma imagem oficial do Docker, que você pode puxar com o seguinte comando:",
+      "linux": {
+        "command": "Instale com o seguinte comando:",
+        "manual": "Ou, você também pode consultar o <1>Guia de Instalação Manual do Linux</1> para instalar por conta própria."
+      },
+      "title": "Instalar e iniciar o aplicativo Ollama localmente",
+      "windowsTab": "Windows (versão de pré-visualização)"
+    }
+  },
   "Thinking": {
     "thinking": "Pensando profundamente...",
     "thought": "Já pensei profundamente (tempo gasto {{duration}} segundos)",

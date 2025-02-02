@@ -55,6 +55,7 @@ describe('createCommonSlice', () => {
       defaultAgent: 'agent1',
       languageModel: 'model1',
       telemetry: {},
+      aiProvider: {},
     } as GlobalServerConfig;
 
     it('should not fetch user state if user is not login', async () => {
