@@ -25,7 +25,7 @@ import {
 } from '@/types/aiProvider';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
-import Checker from './Checker';
+import Checker, { CheckErrorRender } from './Checker';
 import EnableSwitch from './EnableSwitch';
 import { SkeletonInput } from './SkeletonInput';
 import UpdateProviderInfo from './UpdateProviderInfo';
@@ -91,7 +91,7 @@ const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
 export interface ProviderConfigProps extends Omit<AiProviderDetailItem, 'enabled' | 'source'> {
   apiKeyItems?: FormItemProps[];
   canDeactivate?: boolean;
-  checkerItem?: FormItemProps;
+  checkErrorRender?: CheckErrorRender;
   className?: string;
   enabled?: boolean;
   extra?: ReactNode;
@@ -113,9 +113,9 @@ const ProviderConfig = memo<ProviderConfigProps>(
     id,
     settings,
     checkModel,
-    checkerItem,
     logo,
     className,
+    checkErrorRender,
     name,
     showAceGcm = true,
     extra,
@@ -271,16 +271,16 @@ const ProviderConfig = memo<ProviderConfigProps>(
       endpointItem,
       clientFetchItem,
       showChecker
-        ? (checkerItem ?? {
+        ? {
             children: isLoading ? (
               <Skeleton.Button active />
             ) : (
-              <Checker model={checkModel!} provider={id} />
+              <Checker checkErrorRender={checkErrorRender} model={checkModel!} provider={id} />
             ),
             desc: t('providerModels.config.checker.desc'),
             label: t('providerModels.config.checker.title'),
             minWidth: undefined,
-          })
+          }
         : undefined,
       showAceGcm && isServerMode && aceGcmItem,
     ].filter(Boolean) as FormItemProps[];

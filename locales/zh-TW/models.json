@@ -534,13 +534,13 @@
     "description": "DBRX Instruct 提供高可靠性的指令處理能力，支持多行業應用。"
   },
   "deepseek-ai/DeepSeek-R1": {
-    "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、代碼和推理任務中與 OpenAI-o1 表現相當，並且通過精心設計的訓練方法，提升了整體效果。"
+    "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且通過精心設計的訓練方法，提升了整體效果。"
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 集合了先前版本的優秀特徵，增強了通用和編碼能力。"
   },
   "deepseek-ai/DeepSeek-V3": {
-    "description": "DeepSeek-V3 是一款擁有 6710 億參數的混合專家（MoE）語言模型，採用多頭潛在注意力（MLA）和 DeepSeekMoE 架構，結合無輔助損失的負載平衡策略，優化推理和訓練效率。通過在 14.8 萬兆高質量 tokens 上預訓練，並進行監督微調和強化學習，DeepSeek-V3 在性能上超越其他開源模型，接近領先閉源模型。"
+    "description": "DeepSeek-V3 是一款擁有 6710 億參數的混合專家（MoE）語言模型，採用多頭潛在注意力（MLA）和 DeepSeekMoE 架構，結合無輔助損失的負載平衡策略，優化推理和訓練效率。通過在 14.8 萬億高品質 tokens 上預訓練，並進行監督微調和強化學習，DeepSeek-V3 在性能上超越其他開源模型，接近領先閉源模型。"
   },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B 是為高複雜性對話訓練的先進模型。"
@@ -559,6 +559,9 @@
   },
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 是開源的混合專家代碼模型，在代碼任務方面表現優異，與 GPT4-Turbo 相媲美。"
+  },
+  "deepseek-r1": {
+    "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且通過精心設計的訓練方法，提升了整體效果。"
   },
   "deepseek-reasoner": {
     "description": "DeepSeek 推出的推理模型。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
