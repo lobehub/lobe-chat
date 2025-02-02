@@ -11,14 +11,7 @@ export interface SiliconCloudModelCard {
 export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.siliconflow.cn/v1',
   chatCompletion: {
-    handlePayload: (payload) => {
-      return {
-        ...payload,
-        stream: !payload.tools,
-      } as any;
-    },
-    
-    handleError: (error: any, options): Omit<ChatCompletionErrorPayload, 'provider'> | undefined => {
+    handleError: (error: any): Omit<ChatCompletionErrorPayload, 'provider'> | undefined => {
       let errorResponse: Response | undefined;
       if (error instanceof Response) {
         errorResponse = error;
@@ -46,6 +39,13 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
       };
     },
   },
+  
+  handlePayload: (payload) => {
+      return {
+        ...payload,
+        stream: !payload.tools,
+      } as any;
+    },
   debug: {
     chatCompletion: () => process.env.DEBUG_SILICONCLOUD_CHAT_COMPLETION === '1',
   },
