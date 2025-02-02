@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AtomIcon, ChevronDown, ChevronRight } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo, useEffect, useState } from 'react';
+import { CSSProperties, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -61,30 +61,26 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 interface ThinkingProps {
   content?: string;
   duration?: number;
+  style?: CSSProperties;
   thinking?: boolean;
 }
 
-const Thinking = memo<ThinkingProps>(({ content, duration, thinking }) => {
+const Thinking = memo<ThinkingProps>(({ content, duration, thinking, style }) => {
   const { t } = useTranslation(['components', 'common']);
   const { styles, cx } = useStyles();
 
   const [showDetail, setShowDetail] = useState(false);
 
   useEffect(() => {
-    if (thinking && !content) {
-      setShowDetail(true);
-    }
-
-    if (!thinking) {
-      setShowDetail(false);
-    }
-  }, [thinking, content]);
+    setShowDetail(!!thinking);
+  }, [thinking]);
 
   return (
-    <Flexbox className={cx(styles.container, showDetail && styles.expand)} gap={16}>
+    <Flexbox className={cx(styles.container, showDetail && styles.expand)} gap={16} style={style}>
       <Flexbox
         distribution={'space-between'}
         flex={1}
+        gap={8}
         horizontal
         onClick={() => {
           setShowDetail(!showDetail);
@@ -92,18 +88,20 @@ const Thinking = memo<ThinkingProps>(({ content, duration, thinking }) => {
         style={{ cursor: 'pointer' }}
       >
         {thinking ? (
-          <Flexbox gap={8} horizontal>
+          <Flexbox align={'center'} gap={8} horizontal>
             <Icon icon={AtomIcon} />
             <Flexbox className={styles.shinyText} horizontal>
               {t('Thinking.thinking')}
             </Flexbox>
           </Flexbox>
         ) : (
-          <Flexbox gap={8} horizontal>
+          <Flexbox align={'center'} gap={8} horizontal>
             <Icon icon={AtomIcon} />
-            {!duration
-              ? t('Thinking.thoughtWithDuration')
-              : t('Thinking.thought', { duration: ((duration || 0) / 1000).toFixed(1) })}
+            <Flexbox>
+              {!duration
+                ? t('Thinking.thoughtWithDuration')
+                : t('Thinking.thought', { duration: ((duration || 0) / 1000).toFixed(1) })}
+            </Flexbox>
           </Flexbox>
         )}
         <Flexbox gap={4} horizontal>
