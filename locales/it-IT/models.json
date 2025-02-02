@@ -534,7 +534,7 @@
     "description": "DBRX Instruct offre capacità di elaborazione di istruzioni altamente affidabili, supportando applicazioni in vari settori."
   },
   "deepseek-ai/DeepSeek-R1": {
-    "description": "DeepSeek-R1 è un modello di inferenza guidato da apprendimento rinforzato (RL) che affronta i problemi di ripetitività e leggibilità nel modello. Prima dell'RL, DeepSeek-R1 ha introdotto dati di avvio a freddo, ottimizzando ulteriormente le prestazioni di inferenza. Si comporta in modo comparabile a OpenAI-o1 in compiti matematici, di codifica e di inferenza, e migliora l'efficacia complessiva attraverso metodi di addestramento ben progettati."
+    "description": "DeepSeek-R1 è un modello di inferenza guidato da apprendimento rinforzato (RL) che affronta i problemi di ripetitività e leggibilità del modello. Prima dell'RL, DeepSeek-R1 ha introdotto dati di avvio a freddo, ottimizzando ulteriormente le prestazioni di inferenza. Si comporta in modo comparabile a OpenAI-o1 in compiti matematici, di codifica e di inferenza, e migliora l'efficacia complessiva grazie a metodi di addestramento ben progettati."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 combina le eccellenti caratteristiche delle versioni precedenti, migliorando le capacità generali e di codifica."
@@ -546,7 +546,7 @@
     "description": "DeepSeek 67B è un modello avanzato addestrato per dialoghi ad alta complessità."
   },
   "deepseek-ai/deepseek-vl2": {
-    "description": "DeepSeek-VL2 è un modello linguistico visivo a esperti misti (MoE) sviluppato sulla base di DeepSeekMoE-27B, che utilizza un'architettura MoE con attivazione sparsa, raggiungendo prestazioni eccezionali attivando solo 4,5 miliardi di parametri. Questo modello eccelle in vari compiti, tra cui domande visive, riconoscimento ottico dei caratteri, comprensione di documenti/tabelle/grafici e localizzazione visiva."
+    "description": "DeepSeek-VL2 è un modello linguistico visivo a esperti misti (MoE) sviluppato sulla base di DeepSeekMoE-27B, che utilizza un'architettura MoE a attivazione sparsa, raggiungendo prestazioni eccezionali attivando solo 4,5 miliardi di parametri. Questo modello eccelle in vari compiti, tra cui domande visive, riconoscimento ottico dei caratteri, comprensione di documenti/tabelle/grafici e localizzazione visiva."
   },
   "deepseek-chat": {
     "description": "Un nuovo modello open source che integra capacità generali e di codifica, mantenendo non solo le capacità conversazionali generali del modello Chat originale, ma anche la potente capacità di elaborazione del codice del modello Coder, allineandosi meglio alle preferenze umane. Inoltre, DeepSeek-V2.5 ha ottenuto notevoli miglioramenti in vari aspetti, come i compiti di scrittura e il rispetto delle istruzioni."

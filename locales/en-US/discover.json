@@ -127,7 +127,7 @@
       },
       "range": "Range",
       "reasoning_effort": {
-        "desc": "This setting controls the depth of reasoning. Higher values increase the complexity of reasoning, which may lead to more detailed answers, but also increases response time and token consumption. Lower values reduce the depth of reasoning, improving response speed.",
+        "desc": "This setting controls the intensity of reasoning the model applies before generating a response. Low intensity prioritizes response speed and saves tokens, while high intensity provides more comprehensive reasoning but consumes more tokens and slows down response time. The default value is medium, balancing reasoning accuracy with response speed.",
         "title": "Reasoning Intensity"
       },
       "temperature": {

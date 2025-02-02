@@ -534,7 +534,7 @@
     "description": "DBRX Instruct bietet zuverlässige Anweisungsverarbeitungsfähigkeiten und unterstützt Anwendungen in verschiedenen Branchen."
   },
   "deepseek-ai/DeepSeek-R1": {
-    "description": "DeepSeek-R1 ist ein auf verstärkendem Lernen (RL) basierendes Inferenzmodell, das die Probleme der Wiederholbarkeit und Lesbarkeit im Modell angeht. Vor dem RL führte DeepSeek-R1 Kaltstartdaten ein, um die Inferenzleistung weiter zu optimieren. Es zeigt in mathematischen, programmatischen und Inferenzaufgaben eine vergleichbare Leistung zu OpenAI-o1 und verbessert durch sorgfältig gestaltete Trainingsmethoden die Gesamteffizienz."
+    "description": "DeepSeek-R1 ist ein auf verstärkendem Lernen (RL) basierendes Inferenzmodell, das die Probleme der Wiederholbarkeit und Lesbarkeit im Modell angeht. Vor dem RL führte DeepSeek-R1 kalte Startdaten ein, um die Inferenzleistung weiter zu optimieren. Es zeigt in mathematischen, programmatischen und Inferenzaufgaben eine vergleichbare Leistung zu OpenAI-o1 und verbessert durch sorgfältig gestaltete Trainingsmethoden die Gesamteffizienz."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 vereint die hervorragenden Merkmale früherer Versionen und verbessert die allgemeinen und kodierenden Fähigkeiten."
@@ -546,7 +546,7 @@
     "description": "DeepSeek 67B ist ein fortschrittliches Modell, das für komplexe Dialoge trainiert wurde."
   },
   "deepseek-ai/deepseek-vl2": {
-    "description": "DeepSeek-VL2 ist ein hybrides Expertenmodell (MoE) für visuelle Sprache, das auf DeepSeekMoE-27B basiert und eine spärliche Aktivierung der MoE-Architektur verwendet, um außergewöhnliche Leistungen mit nur 4,5 Milliarden aktivierten Parametern zu erzielen. Dieses Modell zeigt hervorragende Leistungen in mehreren Aufgaben, darunter visuelle Fragenbeantwortung, optische Zeichenerkennung, Dokument-/Tabellen-/Diagrammverständnis und visuelle Lokalisierung."
+    "description": "DeepSeek-VL2 ist ein hybrides Expertenmodell (MoE) für visuelle Sprache, das auf DeepSeekMoE-27B basiert und eine spärliche Aktivierung der MoE-Architektur verwendet, um bei der Aktivierung von nur 4,5 Milliarden Parametern hervorragende Leistungen zu erzielen. Dieses Modell zeigt herausragende Ergebnisse in mehreren Aufgaben, darunter visuelle Fragenbeantwortung, optische Zeichenerkennung, Dokument-/Tabellen-/Diagrammverständnis und visuelle Lokalisierung."
   },
   "deepseek-chat": {
     "description": "Ein neues Open-Source-Modell, das allgemeine und Codefähigkeiten kombiniert. Es bewahrt nicht nur die allgemeinen Dialogfähigkeiten des ursprünglichen Chat-Modells und die leistungsstarken Codeverarbeitungsfähigkeiten des Coder-Modells, sondern stimmt auch besser mit menschlichen Präferenzen überein. Darüber hinaus hat DeepSeek-V2.5 in mehreren Bereichen wie Schreibaufgaben und Befolgung von Anweisungen erhebliche Verbesserungen erzielt."
@@ -1182,7 +1182,7 @@
     "description": "o1 ist OpenAIs neues Inferenzmodell, das für komplexe Aufgaben geeignet ist, die umfangreiches Allgemeinwissen erfordern. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
   },
   "o3-mini": {
-    "description": "o3-mini ist unser neuestes kompaktes Inferenzmodell, das bei den gleichen Kosten- und Latenzzielen wie o1-mini hohe Intelligenz bietet."
+    "description": "o3-mini ist unser neuestes kompaktes Inferenzmodell, das bei den gleichen Kosten- und Verzögerungszielen wie o1-mini hohe Intelligenz bietet."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba ist ein auf die Codegenerierung spezialisiertes Mamba 2-Sprachmodell, das starke Unterstützung für fortschrittliche Code- und Schlussfolgerungsaufgaben bietet."

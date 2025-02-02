@@ -540,13 +540,13 @@
     "description": "DeepSeek V2.5 kết hợp các đặc điểm xuất sắc của các phiên bản trước, tăng cường khả năng tổng quát và mã hóa."
   },
   "deepseek-ai/DeepSeek-V3": {
-    "description": "DeepSeek-V3 là một mô hình ngôn ngữ hỗn hợp chuyên gia (MoE) với 6710 tỷ tham số, sử dụng chú ý tiềm ẩn đa đầu (MLA) và kiến trúc DeepSeekMoE, kết hợp với chiến lược cân bằng tải không có tổn thất phụ trợ, tối ưu hóa hiệu suất suy diễn và đào tạo. Thông qua việc được tiền huấn luyện trên 14.8 triệu tỷ token chất lượng cao, và thực hiện tinh chỉnh giám sát và học tăng cường, DeepSeek-V3 vượt trội về hiệu suất so với các mô hình mã nguồn mở khác, gần gũi với các mô hình đóng nguồn hàng đầu."
+    "description": "DeepSeek-V3 là một mô hình ngôn ngữ hỗn hợp chuyên gia (MoE) với 6710 tỷ tham số, sử dụng cơ cấu chú ý tiềm ẩn đa đầu (MLA) và DeepSeekMoE, kết hợp với chiến lược cân bằng tải không có tổn thất phụ trợ, tối ưu hóa hiệu suất suy diễn và đào tạo. Thông qua việc được tiền huấn luyện trên 14.8 triệu tỷ token chất lượng cao, và thực hiện tinh chỉnh giám sát và học tăng cường, DeepSeek-V3 vượt trội về hiệu suất so với các mô hình mã nguồn mở khác, gần gũi với các mô hình đóng nguồn hàng đầu."
   },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B là mô hình tiên tiến được huấn luyện cho các cuộc đối thoại phức tạp."
   },
   "deepseek-ai/deepseek-vl2": {
-    "description": "DeepSeek-VL2 là một mô hình ngôn ngữ hình ảnh hỗn hợp chuyên gia (MoE) được phát triển dựa trên DeepSeekMoE-27B, sử dụng kiến trúc MoE với kích hoạt thưa thớt, đạt được hiệu suất xuất sắc chỉ với 4.5B tham số được kích hoạt. Mô hình này thể hiện xuất sắc trong nhiều nhiệm vụ như hỏi đáp hình ảnh, nhận diện ký tự quang học, hiểu tài liệu/bảng/biểu đồ và định vị hình ảnh."
+    "description": "DeepSeek-VL2 là một mô hình ngôn ngữ hình ảnh hỗn hợp chuyên gia (MoE) phát triển dựa trên DeepSeekMoE-27B, sử dụng cơ cấu MoE với kích hoạt thưa, đạt được hiệu suất xuất sắc chỉ với 4.5B tham số được kích hoạt. Mô hình này thể hiện xuất sắc trong nhiều nhiệm vụ như hỏi đáp hình ảnh, nhận diện ký tự quang học, hiểu tài liệu/bảng/biểu đồ và định vị hình ảnh."
   },
   "deepseek-chat": {
     "description": "Mô hình mã nguồn mở mới kết hợp khả năng tổng quát và mã, không chỉ giữ lại khả năng đối thoại tổng quát của mô hình Chat ban đầu và khả năng xử lý mã mạnh mẽ của mô hình Coder, mà còn tốt hơn trong việc phù hợp với sở thích của con người. Hơn nữa, DeepSeek-V2.5 cũng đã đạt được sự cải thiện lớn trong nhiều khía cạnh như nhiệm vụ viết, theo dõi chỉ dẫn."
@@ -1182,7 +1182,7 @@
     "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
   },
   "o3-mini": {
-    "description": "o3-mini là mô hình suy diễn nhỏ gọn mới nhất của chúng tôi, cung cấp trí thông minh cao với chi phí và mục tiêu độ trễ tương tự như o1-mini."
+    "description": "o3-mini là mô hình suy diễn nhỏ gọn mới nhất của chúng tôi, cung cấp trí thông minh cao với chi phí và độ trễ tương tự như o1-mini."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba là mô hình ngôn ngữ Mamba 2 tập trung vào sinh mã, cung cấp hỗ trợ mạnh mẽ cho các nhiệm vụ mã và suy luận tiên tiến."

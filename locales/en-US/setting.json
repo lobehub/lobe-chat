@@ -201,7 +201,7 @@
       "title": "Enable Max Tokens Limit"
     },
     "enableReasoningEffort": {
-      "title": "Custom Reasoning Intensity"
+      "title": "Enable Reasoning Effort Adjustment"
     },
     "frequencyPenalty": {
       "desc": "The higher the value, the more likely it is to reduce repeated words",
@@ -226,7 +226,7 @@
         "low": "Low",
         "medium": "Medium"
       },
-      "title": "Reasoning Intensity"
+      "title": "Reasoning Effort"
     },
     "temperature": {
       "desc": "The higher the value, the more random the response",

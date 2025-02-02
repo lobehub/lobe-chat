@@ -127,7 +127,7 @@
       },
       "range": "Bereich",
       "reasoning_effort": {
-        "desc": "Diese Einstellung steuert die Tiefe des Denkprozesses. Höhere Werte erhöhen die Komplexität des Denkens, was zu detaillierteren Antworten führen kann, aber auch die Reaktionszeit und den Token-Verbrauch erhöht. Niedrigere Werte verringern die Tiefe des Denkens und erhöhen die Geschwindigkeit der Antwort.",
+        "desc": "Diese Einstellung steuert die Intensität des Denkprozesses des Modells, bevor es eine Antwort generiert. Eine niedrige Intensität priorisiert die Geschwindigkeit der Antwort und spart Token, während eine hohe Intensität eine umfassendere Argumentation bietet, jedoch mehr Token verbraucht und die Antwortgeschwindigkeit verringert. Der Standardwert ist mittel, um eine Balance zwischen Genauigkeit des Denkens und Antwortgeschwindigkeit zu gewährleisten.",
         "title": "Denkintensität"
       },
       "temperature": {

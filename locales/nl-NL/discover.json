@@ -127,8 +127,8 @@
       },
       "range": "Bereik",
       "reasoning_effort": {
-        "desc": "Deze instelling controleert de diepte van de redenering. Hogere waarden verhogen de complexiteit van de redenering, wat kan leiden tot gedetailleerdere antwoorden, maar ook de responstijd en het tokenverbruik verhoogt. Lagere waarden verminderen de diepte van de redenering en verhogen de responssnelheid.",
-        "title": "Redeneringsintensiteit"
+        "desc": "Deze instelling wordt gebruikt om de redeneerkracht van het model te regelen voordat het een antwoord genereert. Lage kracht geeft prioriteit aan de responssnelheid en bespaart tokens, terwijl hoge kracht een completere redenering biedt, maar meer tokens verbruikt en de responssnelheid verlaagt. De standaardwaarde is gemiddeld, wat een balans biedt tussen redeneringsnauwkeurigheid en responssnelheid.",
+        "title": "Redeneerkracht"
       },
       "temperature": {
         "desc": "Deze instelling beïnvloedt de diversiteit van de reacties van het model. Lagere waarden leiden tot meer voorspelbare en typische reacties, terwijl hogere waarden meer diverse en ongebruikelijke reacties aanmoedigen. Wanneer de waarde op 0 is ingesteld, geeft het model altijd dezelfde reactie op een gegeven invoer.",

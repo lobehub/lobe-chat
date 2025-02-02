@@ -534,7 +534,7 @@
     "description": "DBRX Instruct provides highly reliable instruction processing capabilities, supporting applications across multiple industries."
   },
   "deepseek-ai/DeepSeek-R1": {
-    "description": "DeepSeek-R1 is a reinforcement learning (RL) driven inference model that addresses issues of repetitiveness and readability in models. Prior to RL, DeepSeek-R1 introduced cold start data to further optimize inference performance. It performs comparably to OpenAI-o1 in mathematical, coding, and inference tasks, and enhances overall effectiveness through a carefully designed training approach."
+    "description": "DeepSeek-R1 is a reinforcement learning (RL) driven inference model that addresses issues of repetitiveness and readability in models. Prior to RL, DeepSeek-R1 introduced cold start data to further optimize inference performance. It performs comparably to OpenAI-o1 in mathematical, coding, and inference tasks, and enhances overall effectiveness through carefully designed training methods."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 combines the excellent features of previous versions, enhancing general and coding capabilities."
@@ -546,7 +546,7 @@
     "description": "DeepSeek 67B is an advanced model trained for highly complex conversations."
   },
   "deepseek-ai/deepseek-vl2": {
-    "description": "DeepSeek-VL2 is a mixture of experts (MoE) visual language model developed based on DeepSeekMoE-27B, employing a sparsely activated MoE architecture that achieves outstanding performance while activating only 4.5 billion parameters. This model excels in various tasks, including visual question answering, optical character recognition, document/table/chart understanding, and visual localization."
+    "description": "DeepSeek-VL2 is a mixture of experts (MoE) visual language model developed based on DeepSeekMoE-27B, employing a sparsely activated MoE architecture that achieves outstanding performance while activating only 4.5 billion parameters. This model excels in various tasks such as visual question answering, optical character recognition, document/table/chart understanding, and visual localization."
   },
   "deepseek-chat": {
     "description": "A new open-source model that integrates general and coding capabilities, retaining the general conversational abilities of the original Chat model and the powerful code handling capabilities of the Coder model, while better aligning with human preferences. Additionally, DeepSeek-V2.5 has achieved significant improvements in writing tasks, instruction following, and more."
@@ -1182,7 +1182,7 @@
     "description": "o1 is OpenAI's new reasoning model, suitable for complex tasks that require extensive general knowledge. This model features a 128K context and has a knowledge cutoff date of October 2023."
   },
   "o3-mini": {
-    "description": "o3-mini is our latest compact inference model that delivers high intelligence while meeting the same cost and latency targets as o1-mini."
+    "description": "o3-mini is our latest small inference model that delivers high intelligence while maintaining the same cost and latency targets as o1-mini."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba is a language model focused on code generation, providing strong support for advanced coding and reasoning tasks."

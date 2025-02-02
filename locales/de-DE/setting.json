@@ -201,7 +201,7 @@
       "title": "Maximale Token pro Antwort aktivieren"
     },
     "enableReasoningEffort": {
-      "title": "Benutzerdefinierte Schlussfolgerungsintensität"
+      "title": "Aktivieren Sie die Anpassung der Schlussfolgerungsintensität"
     },
     "frequencyPenalty": {
       "desc": "Je höher der Wert, desto wahrscheinlicher ist es, dass sich wiederholende Wörter reduziert werden",
@@ -220,13 +220,13 @@
       "title": "Themenfrische"
     },
     "reasoningEffort": {
-      "desc": "Je höher der Wert, desto stärker die Schlussfolgerungsfähigkeit, aber es kann die Antwortzeit und den Tokenverbrauch erhöhen.",
+      "desc": "Je höher der Wert, desto stärker die Schlussfolgerungsfähigkeit, aber dies kann die Antwortzeit und den Tokenverbrauch erhöhen.",
       "options": {
         "high": "Hoch",
         "low": "Niedrig",
         "medium": "Mittel"
       },
-      "title": "Schlussfolgerungsstärke"
+      "title": "Schlussfolgerungsintensität"
     },
     "temperature": {
       "desc": "Je höher der Wert, desto zufälliger die Antwort",

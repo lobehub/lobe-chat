@@ -540,13 +540,13 @@
     "description": "DeepSeek V2.5 combineert de uitstekende kenmerken van eerdere versies en versterkt de algemene en coderingscapaciteiten."
   },
   "deepseek-ai/DeepSeek-V3": {
-    "description": "DeepSeek-V3 is een hybride expert (MoE) taalmodel met 6710 miljard parameters, dat gebruikmaakt van multi-head latent attention (MLA) en de DeepSeekMoE-architectuur, gecombineerd met een load balancing-strategie zonder extra verlies, om de inferentie- en trainingsefficiëntie te optimaliseren. Door voorgetraind te worden op 14,8 biljoen hoogwaardige tokens en vervolgens te worden fijngetuned met supervisie en versterkend leren, overtreft DeepSeek-V3 andere open-source modellen in prestaties en benadert het toonaangevende gesloten modellen."
+    "description": "DeepSeek-V3 is een hybride expert (MoE) taalmodel met 6710 miljard parameters, dat gebruikmaakt van multi-head latent attention (MLA) en de DeepSeekMoE-architectuur, gecombineerd met een load balancing-strategie zonder extra verlies, om de inferentie- en trainingsefficiëntie te optimaliseren. Door voorgetraind te worden op 14,8 biljoen hoogwaardige tokens en vervolgens te worden fijngetuned met supervisie en versterkend leren, overtreft DeepSeek-V3 de prestaties van andere open-source modellen en komt het dicht in de buurt van toonaangevende gesloten modellen."
   },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B is een geavanceerd model dat is getraind voor complexe gesprekken."
   },
   "deepseek-ai/deepseek-vl2": {
-    "description": "DeepSeek-VL2 is een hybride expert (MoE) visueel taalmodel ontwikkeld op basis van DeepSeekMoE-27B, dat gebruikmaakt van een MoE-architectuur met spaarzame activatie en uitstekende prestaties levert met slechts 4,5 miljard geactiveerde parameters. Dit model presteert uitstekend in verschillende taken, waaronder visuele vraag-antwoord, optische tekenherkenning, document/tabel/grafiekbegrip en visuele positionering."
+    "description": "DeepSeek-VL2 is een hybride expert (MoE) visueel taalmodel ontwikkeld op basis van DeepSeekMoE-27B, dat gebruikmaakt van een MoE-architectuur met spaarzame activatie en uitstekende prestaties levert met slechts 4,5 miljard geactiveerde parameters. Dit model presteert uitstekend in verschillende taken, waaronder visuele vraag- en antwoord, optische tekenherkenning, document/tabel/grafiekbegrip en visuele positionering."
   },
   "deepseek-chat": {
     "description": "Een nieuw open-source model dat algemene en code-capaciteiten combineert, behoudt niet alleen de algemene conversatiecapaciteiten van het oorspronkelijke Chat-model en de krachtige codeverwerkingscapaciteiten van het Coder-model, maar is ook beter afgestemd op menselijke voorkeuren. Bovendien heeft DeepSeek-V2.5 aanzienlijke verbeteringen gerealiseerd in schrijfopdrachten, instructievolging en andere gebieden."

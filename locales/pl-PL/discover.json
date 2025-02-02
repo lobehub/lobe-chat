@@ -127,7 +127,7 @@
       },
       "range": "Zakres",
       "reasoning_effort": {
-        "desc": "To ustawienie kontroluje głębokość rozumowania. Wyższe wartości zwiększają złożoność rozumowania, co może prowadzić do bardziej szczegółowych odpowiedzi, ale także wydłuża czas odpowiedzi i zużycie tokenów. Niższe wartości zmniejszają głębokość rozumowania, zwiększając szybkość odpowiedzi.",
+        "desc": "To ustawienie kontroluje intensywność rozumowania modelu przed wygenerowaniem odpowiedzi. Niska intensywność priorytetowo traktuje szybkość odpowiedzi i oszczędza tokeny, podczas gdy wysoka intensywność zapewnia pełniejsze rozumowanie, ale zużywa więcej tokenów i obniża szybkość odpowiedzi. Wartość domyślna to średnia, co równoważy dokładność rozumowania z szybkością odpowiedzi.",
         "title": "Intensywność rozumowania"
       },
       "temperature": {

@@ -127,7 +127,7 @@
       },
       "range": "Aralık",
       "reasoning_effort": {
-        "desc": "Bu ayar, akıl yürütmenin derinliğini kontrol eder. Daha yüksek değerler, akıl yürütmenin karmaşıklığını artırarak daha ayrıntılı yanıtlar verebilir, ancak yanıt süresini ve Token tüketimini de artırır. Daha düşük değerler, akıl yürütme derinliğini azaltarak yanıt hızını artırır.",
+        "desc": "Bu ayar, modelin yanıt üretmeden önceki akıl yürütme gücünü kontrol etmek için kullanılır. Düşük güç, yanıt hızını önceliklendirir ve Token tasarrufu sağlar; yüksek güç ise daha kapsamlı bir akıl yürütme sunar, ancak daha fazla Token tüketir ve yanıt hızını düşürür. Varsayılan değer orta seviyedir, akıl yürütme doğruluğu ile yanıt hızı arasında bir denge sağlar.",
         "title": "Akıl Yürütme Gücü"
       },
       "temperature": {

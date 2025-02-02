@@ -201,7 +201,7 @@
       "title": "단일 응답 제한 활성화"
     },
     "enableReasoningEffort": {
-      "title": "사용자 정의 추론 강도"
+      "title": "추론 강도 조정 활성화"
     },
     "frequencyPenalty": {
       "desc": "값이 클수록 반복 단어가 줄어듭니다",

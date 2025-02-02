@@ -201,7 +201,7 @@
       "title": "Limiet voor enkele reacties inschakelen"
     },
     "enableReasoningEffort": {
-      "title": "Aangepaste redeneerkracht"
+      "title": "Inschakelen van redeneringsinspanningsaanpassing"
     },
     "frequencyPenalty": {
       "desc": "Hoe hoger de waarde, hoe waarschijnlijker het is dat herhaalde woorden worden verminderd",
@@ -220,13 +220,13 @@
       "title": "Onderwerpnieuwheid"
     },
     "reasoningEffort": {
-      "desc": "Hoe hoger de waarde, hoe sterker het redeneervermogen, maar dit kan de responstijd en het tokenverbruik verhogen.",
+      "desc": "Hoe hoger de waarde, hoe sterker de redeneringscapaciteit, maar dit kan de responstijd en het tokenverbruik verhogen",
       "options": {
         "high": "Hoog",
         "low": "Laag",
         "medium": "Gemiddeld"
       },
-      "title": "Redeneersterkte"
+      "title": "Redeneringsinspanningsniveau"
     },
     "temperature": {
       "desc": "Hoe hoger de waarde, hoe willekeuriger de reactie",

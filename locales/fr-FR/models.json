@@ -546,7 +546,7 @@
     "description": "DeepSeek 67B est un modèle avancé formé pour des dialogues de haute complexité."
   },
   "deepseek-ai/deepseek-vl2": {
-    "description": "DeepSeek-VL2 est un modèle de langage visuel basé sur DeepSeekMoE-27B, utilisant une architecture MoE à activation sparse, réalisant des performances exceptionnelles avec seulement 4,5 milliards de paramètres activés. Ce modèle excelle dans plusieurs tâches telles que la question-réponse visuelle, la reconnaissance optique de caractères, la compréhension de documents/tableaux/graphes et le positionnement visuel."
+    "description": "DeepSeek-VL2 est un modèle de langage visuel basé sur DeepSeekMoE-27B, utilisant une architecture MoE à activation sparse, réalisant des performances exceptionnelles avec seulement 4,5 milliards de paramètres activés. Ce modèle excelle dans plusieurs tâches telles que les questions visuelles, la reconnaissance optique de caractères, la compréhension de documents/tableaux/graphes et le positionnement visuel."
   },
   "deepseek-chat": {
     "description": "Un nouveau modèle open source qui fusionne des capacités générales et de code, conservant non seulement la capacité de dialogue général du modèle Chat d'origine et la puissante capacité de traitement de code du modèle Coder, mais s'alignant également mieux sur les préférences humaines. De plus, DeepSeek-V2.5 a réalisé des améliorations significatives dans plusieurs domaines tels que les tâches d'écriture et le suivi des instructions."

@@ -201,7 +201,7 @@
       "title": "开启单次回复限制"
     },
     "enableReasoningEffort": {
-      "title": "自定义推理强度"
+      "title": "开启推理强度调整"
     },
     "frequencyPenalty": {
       "desc": "值越大，越有可能降低重复字词",

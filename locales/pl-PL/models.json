@@ -534,7 +534,7 @@
     "description": "DBRX Instruct oferuje wysoką niezawodność w przetwarzaniu poleceń, wspierając różne branże."
   },
   "deepseek-ai/DeepSeek-R1": {
-    "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem przez wzmocnienie (RL), który rozwiązuje problemy z powtarzalnością i czytelnością modelu. Przed zastosowaniem RL, DeepSeek-R1 wprowadził dane do zimnego startu, co dodatkowo zoptymalizowało wydajność wnioskowania. W zadaniach matematycznych, kodowania i wnioskowania, osiąga wyniki porównywalne z OpenAI-o1, a dzięki starannie zaprojektowanej metodzie treningowej poprawia ogólne rezultaty."
+    "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem przez wzmocnienie (RL), który rozwiązuje problemy z powtarzalnością i czytelnością modelu. Przed RL, DeepSeek-R1 wprowadził dane z zimnego startu, co dodatkowo zoptymalizowało wydajność wnioskowania. W zadaniach matematycznych, kodowania i wnioskowania, osiąga wyniki porównywalne z OpenAI-o1, a dzięki starannie zaprojektowanej metodzie treningowej poprawia ogólne wyniki."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 łączy doskonałe cechy wcześniejszych wersji, wzmacniając zdolności ogólne i kodowania."

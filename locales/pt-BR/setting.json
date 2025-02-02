@@ -201,7 +201,7 @@
       "title": "Ativar limite de resposta única"
     },
     "enableReasoningEffort": {
-      "title": "Intensidade de Raciocínio Personalizada"
+      "title": "Ativar ajuste de intensidade de raciocínio"
     },
     "frequencyPenalty": {
       "desc": "Quanto maior o valor, maior a probabilidade de reduzir palavras repetidas",
@@ -220,13 +220,13 @@
       "title": "Penalidade de novidade do tópico"
     },
     "reasoningEffort": {
-      "desc": "Quanto maior o valor, mais forte será a capacidade de raciocínio, mas isso pode aumentar o tempo de resposta e o consumo de tokens.",
+      "desc": "Quanto maior o valor, mais forte será a capacidade de raciocínio, mas isso pode aumentar o tempo de resposta e o consumo de tokens",
       "options": {
         "high": "Alto",
         "low": "Baixo",
         "medium": "Médio"
       },
-      "title": "Intensidade de Raciocínio"
+      "title": "Intensidade de raciocínio"
     },
     "temperature": {
       "desc": "Quanto maior o valor, mais aleatória será a resposta",
