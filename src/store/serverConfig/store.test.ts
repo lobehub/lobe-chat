@@ -30,7 +30,7 @@ describe('createServerConfigStore', () => {
   it('should initialize store with custom initial state', () => {
     const initialState: Partial<ServerConfigStore> = {
       featureFlags: { edit_agent: false },
-      serverConfig: { telemetry: { langfuse: true } },
+      serverConfig: { telemetry: { langfuse: true }, aiProvider: {} },
     };
 
     const store = initServerConfigStore(initialState);
