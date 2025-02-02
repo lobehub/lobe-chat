@@ -88,18 +88,20 @@ const Thinking = memo<ThinkingProps>(({ content, duration, thinking, style }) =>
         style={{ cursor: 'pointer' }}
       >
         {thinking ? (
-          <Flexbox gap={8} horizontal>
+          <Flexbox align={'center'} gap={8} horizontal>
             <Icon icon={AtomIcon} />
             <Flexbox className={styles.shinyText} horizontal>
               {t('Thinking.thinking')}
             </Flexbox>
           </Flexbox>
         ) : (
-          <Flexbox gap={8} horizontal>
+          <Flexbox align={'center'} gap={8} horizontal>
             <Icon icon={AtomIcon} />
-            {!duration
-              ? t('Thinking.thoughtWithDuration')
-              : t('Thinking.thought', { duration: ((duration || 0) / 1000).toFixed(1) })}
+            <Flexbox>
+              {!duration
+                ? t('Thinking.thoughtWithDuration')
+                : t('Thinking.thought', { duration: ((duration || 0) / 1000).toFixed(1) })}
+            </Flexbox>
           </Flexbox>
         )}
         <Flexbox gap={4} horizontal>
