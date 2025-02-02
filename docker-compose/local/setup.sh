@@ -497,7 +497,8 @@ section_configurate_host() {
             DEPLOY_MODE="ip"
             # If user use ip mode, append the port to the host
             LOBE_HOST="${HOST}:3210"
-            MINIO_HOST="${MINIO_HOST}:9000"
+            MINIO_HOST="${HOST}:9000"
+            CASDOOR_HOST="${HOST}:8000"
             # Setup callback url for Casdoor
             $SED_COMMAND "s/"localhost"/${LOBE_HOST}/" init_data.json
         ;;
