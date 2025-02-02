@@ -32,7 +32,14 @@ export const createRemarkCustomTagPlugin = (tag: string) => () => {
 
         // 转换为 Markdown 字符串
         const content = contentNodes
-          .map((n: any) => toMarkdown(n))
+          .map((n: any) => {
+            // fix https://github.com/lobehub/lobe-chat/issues/5668
+            if (n.type === 'paragraph') {
+              return n.children.map((child: any) => child.value).join('');
+            }
+
+            return toMarkdown(n);
+          })
           .join('\n\n')
           .trim();
 
