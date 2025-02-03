@@ -76,6 +76,10 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
             model.abilities!.files = true;
             break;
           }
+          case 'reasoning': {
+            model.abilities!.reasoning = true;
+            break;
+          }
           default: {
             console.warn(`Unknown capability: ${capability}`);
           }
