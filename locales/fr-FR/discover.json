@@ -126,6 +126,10 @@
         "title": "Fraîcheur des sujets"
       },
       "range": "Plage",
+      "reasoning_effort": {
+        "desc": "Ce paramètre contrôle l'intensité de raisonnement du modèle avant de générer une réponse. Une faible intensité privilégie la rapidité de réponse et économise des tokens, tandis qu'une forte intensité offre un raisonnement plus complet, mais consomme plus de tokens et ralentit la réponse. La valeur par défaut est moyenne, équilibrant précision du raisonnement et rapidité de réponse.",
+        "title": "Intensité de raisonnement"
+      },
       "temperature": {
         "desc": "Ce paramètre influence la diversité des réponses du modèle. Des valeurs plus basses entraînent des réponses plus prévisibles et typiques, tandis que des valeurs plus élevées encouragent des réponses plus variées et moins courantes. Lorsque la valeur est fixée à 0, le modèle donne toujours la même réponse pour une entrée donnée.",
         "title": "Aléatoire"
