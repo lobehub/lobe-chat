@@ -50,6 +50,9 @@ const huggingfaceChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 16_384,
     displayName: 'DeepSeek R1',
     enabled: true,
