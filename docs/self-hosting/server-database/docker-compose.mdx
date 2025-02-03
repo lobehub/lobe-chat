@@ -53,14 +53,14 @@ mkdir lobe-chat-db && cd lobe-chat-db
 Fetch and execute the deployment script:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/setup.sh | bash
 ```
 
 The script supports the following deployment modes; please choose the appropriate mode based on your needs and read the rest of the documentation.
 
 - [Local Mode (default)](#local-mode): Accessible only locally, not supporting LAN/public access; suitable for initial experiences.
-- [Port Mode](#port-mode): Supports LAN/public `http` access; suitable for personal use.
-- [Domain Mode](#domain-mode): Supports LAN/public `http/https` access with reverse proxy; suitable for team use.
+- [Port Mode](#port-mode): Supports LAN/public `http` access; suitable for no domain or private network use.
+- [Domain Mode](#domain-mode): Supports LAN/public `http/https` access with reverse proxy; suitable for personal or team use.
 
 <Callout type="info">
   In the script's options prompt `(Option1/Option2)[Option1]`: `(Option1 / Option2)` indicates selectable options, while `[Option1]` indicates the default option; simply press enter to choose the default.
@@ -92,7 +92,6 @@ Casdoor:
   - URL: http://localhost:8000
   - Username: admin
   - Password: c66f8c
-  - Client Secret: 21dfb303f2f3eb9a6d3c7cdb0d221d1c
 Minio:
   - URL: http://localhost:9000
   - Username: admin
@@ -159,7 +158,6 @@ Casdoor:
   - URL: http://your_server_ip:8000
   - Username: admin
   - Password: 837e26
-  - Client Secret: dce63693be24b5d9b9536126692e3ed9
 Minio:
   - URL: http://your_server_ip:9000
   - Username: admin
@@ -203,12 +201,14 @@ You can access your LobeChat service at `http://your_server_ip:3210`. The accoun
 
 In domain mode, you need to complete the reverse proxy configuration and ensure that the LAN/public can access the following services. Please use a reverse proxy to map the following service ports to the domain names:
 
-- `lobe.example.com`: `3210`
-- `auth-ui.example.com`: `8000`
-- `s3-api.example.com`: `9000`
-- `s3-ui.example.com`: optional, `9001`
+  | Domain | Proxy Port | Required |
+  | --- | --- | --- |
+  | `lobe.example.com` | `3210` | Yes |
+  | `auth-ui.example.com` | `8000` | Yes |
+  | `s3-api.example.com` | `9000` | Yes |
+  | `s3-ui.example.com` | `9001` | No |
 
-  <Callout type="warning">
+  <Callout type="important">
     If you are using panel software like [APanel](https://www.bt.cn/) for reverse proxy configuration,
     ensure it does not intercept requests to the `.well-known` path to facilitate the proper functioning of Casdoor's OAuth2 configuration.
     Below is a whitelist configuration for the Nginx server block concerning paths:
