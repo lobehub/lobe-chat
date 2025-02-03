@@ -5,6 +5,7 @@ import {
   ChartColumnBig,
   Delete,
   FileMinus,
+  Pickaxe,
   LucideIcon,
   MessageSquareText,
   Thermometer,
@@ -83,16 +84,25 @@ const ParameterList = memo<ParameterListProps>(({ data }) => {
       range: data?.meta?.maxOutput ? [0, formatTokenNumber(data.meta.maxOutput)] : undefined,
       type: 'int',
     },
+    {
+      defaultValue: '--',
+      desc: t('models.parameterList.reasoning_effort.desc'),
+      icon: Pickaxe,
+      key: 'reasoning_effort',
+      label: t('models.parameterList.reasoning_effort.title'),
+      range: ['low', 'high'],
+      type: 'string',
+    },
   ];
 
   return (
     <Block title={t('models.parameterList.title')}>
       <Collapse
         defaultActiveKey={items.map((item) => item.key)}
-        expandIconPosition={'right'}
+        expandIconPosition={'end'}
         gap={16}
         items={items.map((item) => ({
-          children: <ParameterItem {...item} />,
+          children: <ParameterItem {...item} key={item.key} />,
           key: item.key,
           label: (
             <Flexbox align={'center'} gap={8} horizontal>

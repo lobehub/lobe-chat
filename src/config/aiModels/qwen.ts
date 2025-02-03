@@ -152,9 +152,26 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwq-32b-preview',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      input: 3.5,
+      output: 7,
     },
+    releasedAt: '2024-11-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 32_768,
+    description: 'QVQ模型是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力，尤其在数学推理领域。',
+    displayName: 'QVQ 72B Preview',
+    id: 'qvq-72b-preview',
+    pricing: {
+      currency: 'CNY',
+      input: 12,
+      output: 36,
+    },
+    releasedAt: '2024-12-25',
     type: 'chat',
   },
   {

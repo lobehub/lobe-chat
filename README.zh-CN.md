@@ -273,14 +273,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                               | 描述                                                                             |
-| ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| [MintbaseSearch](https://lobechat.com/discover/plugin/mintbasesearch)<br/><sup>By **mintbase** on **2024-12-31**</sup> | 在 NEAR 协议上查找任何 NFT 数据。<br/>`加密货币` `nft`                           |
-| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>  | 分析股票并获取全面的实时投资数据和分析。<br/>`股票`                              |
-| [谷歌自定义搜索引擎](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup> | 通过他们的官方自定义搜索引擎 API 搜索谷歌。<br/>`网络` `搜索`                    |
-| [Speak](https://lobechat.com/discover/plugin/speak)<br/><sup>By **speak** on **2024-12-02**</sup>                      | 使用 Speak，您的 AI 语言导师，学习如何用另一种语言说任何事情。<br/>`教育` `语言` |
+| 最近新增                                                                                                                   | 描述                                                                               |
+| -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [网页](https://lobechat.com/discover/plugin/web)<br/><sup>By **Proghit** on **2025-01-24**</sup>                           | 智能网页搜索，读取和分析页面，以提供来自 Google 结果的全面答案。<br/>`网页` `搜索` |
+| [MintbaseSearch](https://lobechat.com/discover/plugin/mintbasesearch)<br/><sup>By **mintbase** on **2024-12-31**</sup>     | 在 NEAR 协议上查找任何 NFT 数据。<br/>`加密货币` `nft`                             |
+| [必应网页搜索](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | 通过 BingApi 搜索互联网上的信息<br/>`bingsearch`                                   |
+| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>      | 分析股票并获取全面的实时投资数据和分析。<br/>`股票`                                |
 
-> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**49**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -308,14 +308,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                | 描述                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| [系统指令专家](https://lobechat.com/discover/assistant/instructer)<br/><sup>By **[yuyun2000](https://github.com/yuyun2000)** on **2024-12-04**</sup>                    | 擅长精炼与生成高效系统指令<br/>`系统指令` `写作` `细节优化` `用户需求`                    |
-| [日语帮助记忆师](https://lobechat.com/discover/assistant/japan-language-helper)<br/><sup>By **[sharkbear212](https://github.com/sharkbear212)** on **2024-12-04**</sup> | 擅长日语五十音，平假名，片假名，单词和短语解释与记忆技巧<br/>`解释` `记忆技巧` `日语教学` |
-| [诗词卡片设计师](https://lobechat.com/discover/assistant/poetry-card-designer)<br/><sup>By **[lianxin255](https://github.com/lianxin255)** on **2024-12-03**</sup>      | 擅长设计诗词卡片，提升艺术感与吸引力<br/>`诗词卡片设计` `卡片` `创意` `艺术表现`          |
-| [日常医生](https://lobechat.com/discover/assistant/yunchat-docter)<br/><sup>By **[yuyun2000](https://github.com/yuyun2000)** on **2024-11-30**</sup>                    | 擅长外科诊疗与个性化健康管理<br/>`全科医学` `外科` `健康咨询` `个性化治疗` `医学教育`     |
+| 最近新增                                                                                                                                                              | 描述                                                                                  |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| [SUNO 歌曲创作助手](https://lobechat.com/discover/assistant/suno-lyrics-assistant)<br/><sup>By **[sqkkyzx](https://github.com/sqkkyzx)** on **2025-01-26**</sup>      | 能根据用户需求生成 SUNO 歌曲创作参数<br/>`歌词创作` `音乐风格` `编曲` `参数设置`      |
+| [伟大的比古斯・迪克斯](https://lobechat.com/discover/assistant/all-knowing)<br/><sup>By **[CGitwater](https://github.com/CGitwater)** on **2025-01-24**</sup>         | 全能强大的知识之神<br/>`比古斯` `迪克斯`                                              |
+| [PPT 制作达人](https://lobechat.com/discover/assistant/ppt-production-expert)<br/><sup>By **[patricleehua](https://github.com/patricleehua)** on **2025-01-24**</sup> | 擅长高质量 PPT 的快速制作和优化<br/>`ppt制作` `设计` `咨询` `内容优化` `用户支持`     |
+| [OCR 文档转录助手](https://lobechat.com/discover/assistant/ocr-markdown)<br/><sup>By **[Liangpi000](https://github.com/Liangpi000)** on **2025-01-24**</sup>          | 擅长文件内容转录与 markdown 格式<br/>`文档生成` `markdown` `格式化` `转录` `任务指导` |
 
-> 📊 Total agents: [<kbd>**453**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**471**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 

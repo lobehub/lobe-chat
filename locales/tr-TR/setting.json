@@ -200,6 +200,9 @@
     "enableMaxTokens": {
       "title": "Max Token Sınırlamasını Etkinleştir"
     },
+    "enableReasoningEffort": {
+      "title": "Akıl yürütme yoğunluğunu ayarla"
+    },
     "frequencyPenalty": {
       "desc": "Değer ne kadar yüksekse, tekrarlayan kelimeleri azaltma olasılığı o kadar yüksektir",
       "title": "Frequency Penalty"
@@ -215,6 +218,15 @@
     "presencePenalty": {
       "desc": "Değer ne kadar yüksekse, yeni konulara genişleme olasılığı o kadar yüksektir",
       "title": "Presence Penalty"
+    },
+    "reasoningEffort": {
+      "desc": "Değer ne kadar yüksekse, akıl yürütme yeteneği o kadar güçlüdür, ancak yanıt süresi ve Token tüketimini artırabilir",
+      "options": {
+        "high": "Yüksek",
+        "low": "Düşük",
+        "medium": "Orta"
+      },
+      "title": "Akıl yürütme yoğunluğu"
     },
     "temperature": {
       "desc": "Değer ne kadar yüksekse, yanıt o kadar rastgele olur",

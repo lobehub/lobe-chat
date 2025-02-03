@@ -93,7 +93,6 @@ const StoreInitialization = memo(() => {
       router.prefetch('/me');
     } else {
       router.prefetch('/chat/settings/modal');
-      router.prefetch('/settings/modal');
     }
   }, [router, mobile]);
 
