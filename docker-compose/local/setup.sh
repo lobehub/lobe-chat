@@ -293,11 +293,11 @@ show_message() {
         ask_protocol)
             case $LANGUAGE in
                 zh_CN)
-                    echo "请选择访问服务的协议（http/https）："
+                    echo "是否启用 https 协议？"
                     echo "注意，当前部署脚本不支持：为单一服务指定不同的协议、自签证书。"
                 ;;
                 *)
-                    echo "Please select the protocol to access the service (http/https):"
+                    echo "Do you want to enable the https protocol?"
                     echo "Note that the current deployment script does not support: specifying different protocols for a single service, self-signed certificates."
                 ;;
             esac
@@ -435,6 +435,18 @@ section_configurate_host() {
         LOBE_HOST="$HOST"
         return 0
     fi
+
+    # Configurate protocol for domain
+    if [[ "$DEPLOY_MODE" == "0" ]]; then
+        # Ask if enable https
+        echo $(show_message "ask_protocol")
+        ask "(y/n)" "y"
+        if [[ "$ask_result" == "y" ]]; then
+            PROTOCOL="https"
+            # Replace all http with https
+            $SED_COMMAND "s#http://#https://#" .env
+        fi
+    fi
     
     # Check if sed is installed
     if ! command -v $SED_COMMAND &> /dev/null ; then
@@ -473,7 +485,7 @@ section_configurate_host() {
             MINIO_HOST="${HOST}:9000"
             CASDOOR_HOST="${HOST}:8000"
             # Setup callback url for Casdoor
-            $SED_COMMAND "s/"localhost"/${LOBE_HOST}/" init_data.json
+            $SED_COMMAND "s/"localhost:3210"/${LOBE_HOST}/" init_data.json
         ;;
         *)
             echo "Invalid deploy mode: $ask_result"
@@ -482,26 +494,16 @@ section_configurate_host() {
     esac
     
     # lobe host
-    $SED_COMMAND "s#^APP_URL=.*#APP_URL=http://$LOBE_HOST#" .env
+    $SED_COMMAND "s#^APP_URL=.*#APP_URL=$PROTOCOL://$LOBE_HOST#" .env
     # auth related
-    $SED_COMMAND "s#^AUTH_URL=.*#AUTH_URL=http://$LOBE_HOST/api/auth#" .env
-    $SED_COMMAND "s#^AUTH_CASDOOR_ISSUER=.*#AUTH_CASDOOR_ISSUER=http://$CASDOOR_HOST#" .env
-    $SED_COMMAND "s#^origin=.*#origin=http://$CASDOOR_HOST#" .env
+    $SED_COMMAND "s#^AUTH_URL=.*#AUTH_URL=$PROTOCOL://$LOBE_HOST/api/auth#" .env
+    $SED_COMMAND "s#^AUTH_CASDOOR_ISSUER=.*#AUTH_CASDOOR_ISSUER=$PROTOCOL://$CASDOOR_HOST#" .env
+    $SED_COMMAND "s#^origin=.*#origin=$PROTOCOL://$CASDOOR_HOST#" .env
     # s3 related
-    $SED_COMMAND "s#^S3_PUBLIC_DOMAIN=.*#S3_PUBLIC_DOMAIN=http://$MINIO_HOST#" .env
-    $SED_COMMAND "s#^S3_ENDPOINT=.*#S3_ENDPOINT=http://$MINIO_HOST#" .env
+    $SED_COMMAND "s#^S3_PUBLIC_DOMAIN=.*#S3_PUBLIC_DOMAIN=$PROTOCOL://$MINIO_HOST#" .env
+    $SED_COMMAND "s#^S3_ENDPOINT=.*#S3_ENDPOINT=$PROTOCOL://$MINIO_HOST#" .env
     
-    # Configurate protocol
-    if [[ "$DEPLOY_MODE" == "domain" ]]; then
-        echo $(show_message "host_regenerate")
-        ask "(http/https)" "http"
-        if [[ "$ask_result" == "https" ]]; then
-            PROTOCOL="https"
-            # Replace all http with https
-            $SED_COMMAND "s#http://#https://#" .env
-        fi
-    fi
-    
+
     # Check if env modified success
     if [ $? -ne 0 ]; then
         echo $(show_message "host_regenerate_failed") "$HOST in \`.env\`"
