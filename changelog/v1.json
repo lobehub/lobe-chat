@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update perplexity models."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.16"
+  },
+  {
+    "children": {
       "improvements": ["Update Fireworks check model and fix check error."]
     },
     "date": "2025-02-03",
