@@ -1184,6 +1184,9 @@
   "o1-preview": {
     "description": "o1 es el nuevo modelo de inferencia de OpenAI, adecuado para tareas complejas que requieren un amplio conocimiento general. Este modelo tiene un contexto de 128K y una fecha de corte de conocimiento en octubre de 2023."
   },
+  "o3-mini": {
+    "description": "o3-mini es nuestro último modelo de inferencia de tamaño pequeño, que ofrece alta inteligencia con los mismos objetivos de costo y latencia que o1-mini."
+  },
   "open-codestral-mamba": {
     "description": "Codestral Mamba es un modelo de lenguaje Mamba 2 enfocado en la generación de código, que proporciona un fuerte apoyo para tareas avanzadas de codificación y razonamiento."
   },

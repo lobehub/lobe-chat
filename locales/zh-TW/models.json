@@ -1184,6 +1184,9 @@
   "o1-preview": {
     "description": "o1是OpenAI新的推理模型，適用於需要廣泛通用知識的複雜任務。該模型具有128K上下文和2023年10月的知識截止日期。"
   },
+  "o3-mini": {
+    "description": "o3-mini 是我們最新的小型推理模型，在與 o1-mini 相同的成本和延遲目標下提供高智能。"
+  },
   "open-codestral-mamba": {
     "description": "Codestral Mamba 是專注於代碼生成的 Mamba 2 語言模型，為先進的代碼和推理任務提供強力支持。"
   },

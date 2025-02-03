@@ -1184,6 +1184,9 @@
   "o1-preview": {
     "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
   },
+  "o3-mini": {
+    "description": "o3-mini, aynı maliyet ve gecikme hedefleriyle yüksek zeka sunan en yeni küçük ölçekli çıkarım modelimizdir."
+  },
   "open-codestral-mamba": {
     "description": "Codestral Mamba, kod üretimine odaklanan Mamba 2 dil modelidir ve ileri düzey kod ve akıl yürütme görevlerine güçlü destek sunar."
   },

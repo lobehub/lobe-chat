@@ -200,6 +200,9 @@
     "enableMaxTokens": {
       "title": "단일 응답 제한 활성화"
     },
+    "enableReasoningEffort": {
+      "title": "추론 강도 조정 활성화"
+    },
     "frequencyPenalty": {
       "desc": "값이 클수록 반복 단어가 줄어듭니다",
       "title": "빈도 패널티"
@@ -215,6 +218,15 @@
     "presencePenalty": {
       "desc": "값이 클수록 새로운 주제로 확장될 가능성이 높아집니다",
       "title": "주제 신선도"
+    },
+    "reasoningEffort": {
+      "desc": "값이 클수록 추론 능력이 강해지지만, 응답 시간과 토큰 소모가 증가할 수 있습니다.",
+      "options": {
+        "high": "높음",
+        "low": "낮음",
+        "medium": "중간"
+      },
+      "title": "추론 강도"
     },
     "temperature": {
       "desc": "값이 클수록 응답이 더 무작위해집니다",

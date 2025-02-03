@@ -196,7 +196,7 @@ _These are extended-context endpoints for [Hermes 3 405B Instruct](/models/nousr
     "contextWindowTokens": 127072,
     "description": "Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance. The model is built upon the Llama 3.1 405B and has internet access.",
     "displayName": "Perplexity: Llama 3.1 Sonar 405B Online",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-huge-128k-online",
     "maxTokens": undefined,
@@ -304,7 +304,7 @@ Note: This model is experimental and not suited for production use-cases. It may
 
 This is the online version of the [offline chat model](/models/perplexity/llama-3.1-sonar-large-128k-chat). It is focused on delivering helpful, up-to-date, and factual responses. #online",
     "displayName": "Perplexity: Llama 3.1 Sonar 70B Online",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-large-128k-online",
     "maxTokens": undefined,
@@ -316,7 +316,7 @@ This is the online version of the [offline chat model](/models/perplexity/llama-
 
 This is a normal offline LLM, but the [online version](/models/perplexity/llama-3.1-sonar-large-128k-online) of this model has Internet access.",
     "displayName": "Perplexity: Llama 3.1 Sonar 70B",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-large-128k-chat",
     "maxTokens": undefined,
@@ -328,7 +328,7 @@ This is a normal offline LLM, but the [online version](/models/perplexity/llama-
 
 This is the online version of the [offline chat model](/models/perplexity/llama-3.1-sonar-small-128k-chat). It is focused on delivering helpful, up-to-date, and factual responses. #online",
     "displayName": "Perplexity: Llama 3.1 Sonar 8B Online",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-small-128k-online",
     "maxTokens": undefined,
@@ -340,7 +340,7 @@ This is the online version of the [offline chat model](/models/perplexity/llama-
 
 This is a normal offline LLM, but the [online version](/models/perplexity/llama-3.1-sonar-small-128k-online) of this model has Internet access.",
     "displayName": "Perplexity: Llama 3.1 Sonar 8B",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-small-128k-chat",
     "maxTokens": undefined,
@@ -354,7 +354,7 @@ It has demonstrated strong performance compared to leading closed-source models 
 
 To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
     "displayName": "Meta: Llama 3.1 70B Instruct",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-70b-instruct",
     "maxTokens": undefined,
@@ -384,7 +384,7 @@ It has demonstrated strong performance compared to leading closed-source models 
 
 To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
     "displayName": "Meta: Llama 3.1 8B Instruct",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-8b-instruct",
     "maxTokens": undefined,
