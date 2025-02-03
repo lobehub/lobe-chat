@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Optimize requests without historical messages."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.13"
+  },
+  {
+    "children": {
       "fixes": ["Fix can not stop generating."]
     },
     "date": "2025-02-02",
