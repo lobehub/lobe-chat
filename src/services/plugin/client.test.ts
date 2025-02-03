@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
-import { installedPlugins, users } from '@/database/schemas';
+import { userInstalledPlugins, users } from '@/database/schemas';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
@@ -40,8 +40,8 @@ describe('PluginService', () => {
       await pluginService.installPlugin(fakePlugin);
 
       // Assert
-      const result = await clientDB.query.installedPlugins.findFirst({
-        where: eq(installedPlugins.identifier, fakePlugin.identifier),
+      const result = await clientDB.query.userInstalledPlugins.findFirst({
+        where: eq(userInstalledPlugins.identifier, fakePlugin.identifier),
       });
       expect(result).toMatchObject(fakePlugin);
     });
@@ -52,7 +52,7 @@ describe('PluginService', () => {
       // Arrange
       const fakePlugins = [{ identifier: 'test-plugin', type: 'plugin' }] as LobeTool[];
       await clientDB
-        .insert(installedPlugins)
+        .insert(userInstalledPlugins)
         .values([{ identifier: 'test-plugin', type: 'plugin', userId }]);
       // Act
       const data = await pluginService.getInstalledPlugins();
@@ -66,14 +66,14 @@ describe('PluginService', () => {
     it('should uninstall a plugin', async () => {
       // Arrange
       const identifier = 'test-plugin';
-      await clientDB.insert(installedPlugins).values([{ identifier, type: 'plugin', userId }]);
+      await clientDB.insert(userInstalledPlugins).values([{ identifier, type: 'plugin', userId }]);
 
       // Act
       await pluginService.uninstallPlugin(identifier);
 
       // Assert
-      const result = await clientDB.query.installedPlugins.findFirst({
-        where: eq(installedPlugins.identifier, identifier),
+      const result = await clientDB.query.userInstalledPlugins.findFirst({
+        where: eq(userInstalledPlugins.identifier, identifier),
       });
       expect(result).toBe(undefined);
     });
@@ -92,8 +92,8 @@ describe('PluginService', () => {
       await pluginService.createCustomPlugin(customPlugin);
 
       // Assert
-      const result = await clientDB.query.installedPlugins.findFirst({
-        where: eq(installedPlugins.identifier, customPlugin.identifier),
+      const result = await clientDB.query.userInstalledPlugins.findFirst({
+        where: eq(userInstalledPlugins.identifier, customPlugin.identifier),
       });
       expect(result).toMatchObject(customPlugin);
     });
@@ -104,14 +104,14 @@ describe('PluginService', () => {
       // Arrange
       const identifier = 'plugin-id';
       const value = { customParams: { ab: '1' } } as unknown as LobeToolCustomPlugin;
-      await clientDB.insert(installedPlugins).values([{ identifier, type: 'plugin', userId }]);
+      await clientDB.insert(userInstalledPlugins).values([{ identifier, type: 'plugin', userId }]);
 
       // Act
       await pluginService.updatePlugin(identifier, value);
 
       // Assert
-      const result = await clientDB.query.installedPlugins.findFirst({
-        where: eq(installedPlugins.identifier, identifier),
+      const result = await clientDB.query.userInstalledPlugins.findFirst({
+        where: eq(userInstalledPlugins.identifier, identifier),
       });
       expect(result).toMatchObject(value);
     });
@@ -122,14 +122,14 @@ describe('PluginService', () => {
       // Arrange
       const identifier = 'plugin-id';
       const manifest = { name: 'NewPluginManifest' } as unknown as LobeChatPluginManifest;
-      await clientDB.insert(installedPlugins).values([{ identifier, type: 'plugin', userId }]);
+      await clientDB.insert(userInstalledPlugins).values([{ identifier, type: 'plugin', userId }]);
 
       // Act
       await pluginService.updatePluginManifest(identifier, manifest);
 
       // Assert
-      const result = await clientDB.query.installedPlugins.findFirst({
-        where: eq(installedPlugins.identifier, identifier),
+      const result = await clientDB.query.userInstalledPlugins.findFirst({
+        where: eq(userInstalledPlugins.identifier, identifier),
       });
       expect(result).toMatchObject({ manifest });
     });
@@ -138,7 +138,7 @@ describe('PluginService', () => {
   describe('removeAllPlugins', () => {
     it('should remove all plugins', async () => {
       // Arrange
-      await clientDB.insert(installedPlugins).values([
+      await clientDB.insert(userInstalledPlugins).values([
         { identifier: '123', type: 'plugin', userId },
         { identifier: '234', type: 'plugin', userId },
       ]);
@@ -147,8 +147,8 @@ describe('PluginService', () => {
       await pluginService.removeAllPlugins();
 
       // Assert
-      const result = await clientDB.query.installedPlugins.findMany({
-        where: eq(installedPlugins.userId, userId),
+      const result = await clientDB.query.userInstalledPlugins.findMany({
+        where: eq(userInstalledPlugins.userId, userId),
       });
       expect(result.length).toEqual(0);
     });
@@ -159,14 +159,14 @@ describe('PluginService', () => {
       // Arrange
       const id = 'plugin-id';
       const settings = { color: 'blue' };
-      await clientDB.insert(installedPlugins).values([{ identifier: id, type: 'plugin', userId }]);
+      await clientDB.insert(userInstalledPlugins).values([{ identifier: id, type: 'plugin', userId }]);
 
       // Act
       await pluginService.updatePluginSettings(id, settings);
 
       // Assert
-      const result = await clientDB.query.installedPlugins.findFirst({
-        where: eq(installedPlugins.identifier, id),
+      const result = await clientDB.query.userInstalledPlugins.findFirst({
+        where: eq(userInstalledPlugins.identifier, id),
       });
 
       expect(result).toMatchObject({ settings });
