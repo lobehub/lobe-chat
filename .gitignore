@@ -68,3 +68,4 @@ public/swe-worker*
 *.patch
 *.pdf
 vertex-ai-key.json
+.pnpm-store
