@@ -51,7 +51,7 @@ mkdir lobe-chat-db && cd lobe-chat-db
 获取并执行部署脚本：
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/setup.sh | bash
+bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
 ```
 
 脚本支持以下部署模式，请根据你的需求选择相应的模式，并继续阅读文档的剩余部分。
@@ -199,12 +199,12 @@ curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compo
 
   在域名模式中，你需要完成反向代理配置，并确保局域网 / 公网能访问到以下服务。请使用反向代理将以下服务端口映射到域名：
 
-  | 域名|	反代端口|	是否必选|
-  |--|--|--|
-  |`lobe.example.com`|`3210`|必选|
-  |`auth-ui.example.com`|`8000`|必选|
-  |`s3-api.example.com`|`9000`|必选|
-  |`s3-ui.example.com`|`9001`||
+  | 域名                    | 反代端口   | 是否必选 |
+  | --------------------- | ------ | ---- |
+  | `lobe.example.com`    | `3210` | 必选   |
+  | `auth-ui.example.com` | `8000` | 必选   |
+  | `s3-api.example.com`  | `9000` | 必选   |
+  | `s3-ui.example.com`   | `9001` |      |
 
   <Callout type="important">
     如果你使用如 [宝塔面板](https://www.bt.cn/) 等面板软件进行反向代理配置，
@@ -663,7 +663,7 @@ docker compose up -d # 重新启动
 
 
 # ===========================
-# ====== Preset config ====== 
+# ====== Preset config ======
 # ===========================
 # if no special requirements, no need to change
 LOBE_PORT=3210
