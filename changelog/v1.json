@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "improvements": ["Update perplexity models."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.16"
+  },
+  {
+    "children": {
+      "improvements": ["Update Fireworks check model and fix check error."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.15"
+  },
+  {
+    "children": {
+      "fixes": ["Fix provider update issue."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.14"
+  },
+  {
+    "children": {
       "fixes": ["Optimize requests without historical messages."]
     },
     "date": "2025-02-03",
