@@ -2,6 +2,18 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const togetheraiChatModels: AIChatModelCard[] = [
   {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。',
+    displayName: 'Llama 3.3 70B Instruct Turbo',
+    enabled: true,
+    id: 'meta-llama/Llama-3.3-70B-Instruct-Turbo',
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 131_072,
     description:
       'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
@@ -246,14 +258,65 @@ const togetheraiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description: 'DeepSeek-R1 系列通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆，超越 OpenAI-o1-mini 水平。',
+    displayName: 'DeepSeek-R1',
+    enabled: true,
+    id: 'deepseek-ai/DeepSeek-R1',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: 'DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
+    displayName: 'DeepSeek R1 Distill Qwen 1.5B',
+    id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: 'DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
+    displayName: 'DeepSeek R1 Distill Qwen 14B',
+    id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: 'DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
+    displayName: 'DeepSeek R1 Distill Llama 70B',
+    id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 16_384,
+    description: '最新模型 DeepSeek-V3 多项评测成绩超越 Qwen2.5-72B 和 Llama-3.1-405B 等开源模型，性能对齐领军闭源模型 GPT-4o 与 Claude-3.5-Sonnet。',
+    displayName: 'DeepSeek-V3',
+    enabled: true,
+    id: 'deepseek-ai/DeepSeek-V3',
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 4096,
     description: 'DeepSeek LLM Chat (67B) 是创新的 AI 模型 提供深度语言理解和互动能力。',
     displayName: 'DeepSeek LLM Chat (67B)',
-    enabled: true,
     id: 'deepseek-ai/deepseek-llm-67b-chat',
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 32_768,
     description: 'QwQ模型是由 Qwen 团队开发的实验性研究模型，专注于增强 AI 推理能力。',
     displayName: 'QwQ 32B Preview',
