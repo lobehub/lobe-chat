@@ -223,10 +223,20 @@ show_message() {
         tips_allow_ports)
             case $LANGUAGE in
                 zh_CN)
-                    echo "请确保服务器以下端口未被占用且能被访问：3210, 9000, 9001, 7001"
+                    echo "请确保服务器以下端口未被占用且能被访问：3210, 9000, 9001, 8000"
                 ;;
                 *)
-                    echo "Please make sure the following ports on the server are not occupied and can be accessed: 3210, 9000, 9001, 7001"
+                    echo "Please make sure the following ports on the server are not occupied and can be accessed: 3210, 9000, 9001, 8000"
+                ;;
+            esac
+        ;;
+        tips_private_ip_detected)
+            case $LANGUAGE in
+                zh_CN)
+                    echo "注意，当前识别到内网 IP，如果需要外部访问，请替换为公网 IP 地址"
+                ;;
+                *)
+                    echo "Note that the current internal IP is detected. If you need external access, please replace it with the public IP address."
                 ;;
             esac
         ;;
@@ -437,6 +447,10 @@ section_configurate_host() {
     # If user not specify host, try to get the server ip
     if [ -z "$HOST" ]; then
         HOST=$(hostname -I | awk '{print $1}')
+        # If the host is a private ip and the deploy mode is port mode
+        if [[ "$DEPLOY_MODE" == "1" ]] || [[ "$HOST" == "192.168."* ]] || [[ "$HOST" == "172."* ]] || [[ "$HOST" == "10."* ]]; then
+            echo $(show_message "tips_private_ip_detected")
+        fi
     fi
     
     echo "LobeChat" $(show_message "ask_host")
@@ -553,7 +567,7 @@ section_regenerate_secrets() {
     
     # Generate Casdoor User
     CASDOOR_USER="admin"
-    CASDOOR_PASSWORD=$(generate_key 6)
+    CASDOOR_PASSWORD=$(generate_key 10)
     if [ $? -ne 0 ]; then
         echo $(show_message "security_secrect_regenerate_failed") "CASDOOR_PASSWORD"
         CASDOOR_PASSWORD="123"
@@ -588,12 +602,13 @@ section_display_configurated_report() {
     echo $(show_message "security_secrect_regenerate_report")
     
     echo -e "LobeChat: \n  - URL: $PROTOCOL://$LOBE_HOST \n  - Username: user \n  - Password: ${CASDOOR_PASSWORD} "
-    echo -e "Casdoor: \n  - URL: $PROTOCOL://$CASDOOR_HOST \n  - Username: admin \n  - Password: ${CASDOOR_PASSWORD}\n  - Client Secret: ${CASDOOR_SECRET}"
+    echo -e "Casdoor: \n  - URL: $PROTOCOL://$CASDOOR_HOST \n  - Username: admin \n  - Password: ${CASDOOR_PASSWORD}\n"
     echo -e "Minio: \n  - URL: $PROTOCOL://$MINIO_HOST \n  - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
     
     # Display final message
     printf "\n%s\n\n" "$(show_message "tips_run_command")"
     print_centered "docker compose up -d" "green"
+    printf "\n%s\n" "$(show_message "tips_allow_ports")"
     printf "\n%s" "$(show_message "tips_show_documentation")"
     printf "%s\n" $(show_message "tips_show_documentation_url")
 }
