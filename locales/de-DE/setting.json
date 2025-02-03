@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "Automatische Zusammenfassung der Verlaufnachrichten aktivieren"
     },
+    "enableFastAnimation": {
+      "desc": "Wenn die Modellantwortgeschwindigkeit schneller ist, wird der Texteffekt beschleunigt",
+      "title": "Schnelle Animation"
+    },
     "enableHistoryCount": {
       "alias": "Unbegrenzt",
       "limited": "Enthält nur {{number}} Gesprächsnachrichten",
