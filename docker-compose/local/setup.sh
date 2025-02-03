@@ -90,16 +90,6 @@ show_message() {
                 ;;
             esac
         ;;
-        # downloaded)
-        #     case $LANGUAGE in
-        #         zh_CN)
-        #             echo " 已经存在，跳过下载。"
-        #         ;;
-        #         *)
-        #             echo " already exists, skipping download."
-        #         ;;
-        #     esac
-        # ;;
         extracted_success)
             case $LANGUAGE in
                 zh_CN)
@@ -220,16 +210,6 @@ show_message() {
                 ;;
             esac
         ;;
-        tips_warning)
-            case $LANGUAGE in
-                zh_CN)
-                    echo "警告：如果你正在生产环境中使用，请在日志中检查密钥是否已经生成！！！"
-                ;;
-                *)
-                    echo "Warning: If you are using it in a production environment, please check if the keys have been generated in the logs!!!"
-                ;;
-            esac
-        ;;
         tips_no_executable)
             case $LANGUAGE in
                 zh_CN)
@@ -283,10 +263,10 @@ show_message() {
         ask_host)
             case $LANGUAGE in
                 zh_CN)
-                    echo " 服务的域名/IP（不含端口及http协议）："
+                    echo " 部署IP/域名："
                 ;;
                 *)
-                    echo " Domain/IP of the service (without port and http protocol):"
+                    echo " Deploy IP/Domain:"
                 ;;
             esac
         ;;
@@ -616,6 +596,5 @@ section_display_configurated_report() {
     print_centered "docker compose up -d" "green"
     printf "\n%s" "$(show_message "tips_show_documentation")"
     printf "%s\n" $(show_message "tips_show_documentation_url")
-    printf "\n\e[33m%s\e[0m\n" "$(show_message "tips_warning")"
 }
 section_display_configurated_report
