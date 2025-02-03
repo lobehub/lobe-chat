@@ -126,6 +126,10 @@
         "title": "Freschezza del tema"
       },
       "range": "Intervallo",
+      "reasoning_effort": {
+        "desc": "Questa impostazione controlla l'intensità del ragionamento del modello prima di generare una risposta. Un'intensità bassa privilegia la velocità di risposta e risparmia Token, mentre un'intensità alta fornisce un ragionamento più completo, ma consuma più Token e riduce la velocità di risposta. Il valore predefinito è medio, bilanciando l'accuratezza del ragionamento e la velocità di risposta.",
+        "title": "Intensità del ragionamento"
+      },
       "temperature": {
         "desc": "Questa impostazione influisce sulla diversità delle risposte del modello. Valori più bassi portano a risposte più prevedibili e tipiche, mentre valori più alti incoraggiano risposte più varie e insolite. Quando il valore è impostato a 0, il modello fornisce sempre la stessa risposta per un dato input.",
         "title": "Casualità"

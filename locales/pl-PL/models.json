@@ -1184,6 +1184,9 @@
   "o1-preview": {
     "description": "o1 to nowy model wnioskowania OpenAI, odpowiedni do złożonych zadań wymagających szerokiej wiedzy ogólnej. Model ten ma kontekst 128K i datę graniczną wiedzy z października 2023 roku."
   },
+  "o3-mini": {
+    "description": "o3-mini to nasz najnowszy mały model wnioskowania, który oferuje wysoką inteligencję przy tych samych kosztach i celach opóźnienia co o1-mini."
+  },
   "open-codestral-mamba": {
     "description": "Codestral Mamba to model językowy Mamba 2 skoncentrowany na generowaniu kodu, oferujący silne wsparcie dla zaawansowanych zadań kodowania i wnioskowania."
   },

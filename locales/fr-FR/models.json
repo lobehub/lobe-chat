@@ -1184,6 +1184,9 @@
   "o1-preview": {
     "description": "o1 est le nouveau modèle de raisonnement d'OpenAI, adapté aux tâches complexes nécessitant une vaste connaissance générale. Ce modèle dispose d'un contexte de 128K et d'une date limite de connaissance en octobre 2023."
   },
+  "o3-mini": {
+    "description": "o3-mini est notre dernier modèle d'inférence compact, offrant une grande intelligence avec les mêmes objectifs de coût et de latence que o1-mini."
+  },
   "open-codestral-mamba": {
     "description": "Codestral Mamba est un modèle de langage Mamba 2 axé sur la génération de code, offrant un soutien puissant pour des tâches avancées de codage et de raisonnement."
   },

@@ -2,6 +2,114 @@
 
 # Changelog
 
+## [Version 1.50.0](https://github.com/lobehub/lobe-chat/compare/v1.49.16...v1.50.0)
+
+<sup>Released on **2025-02-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Add `o3-mini` support for OpenAI & GitHub Models.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix parse of deepseek r1 in siliconflow provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add `o3-mini` support for OpenAI & GitHub Models, closes [#5657](https://github.com/lobehub/lobe-chat/issues/5657) ([492cfd4](https://github.com/lobehub/lobe-chat/commit/492cfd4))
+
+#### What's fixed
+
+- **misc**: Fix parse of deepseek r1 in siliconflow provider, closes [#5687](https://github.com/lobehub/lobe-chat/issues/5687) ([44e81e2](https://github.com/lobehub/lobe-chat/commit/44e81e2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.49.16](https://github.com/lobehub/lobe-chat/compare/v1.49.15...v1.49.16)
+
+<sup>Released on **2025-02-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update perplexity models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update perplexity models, closes [#5624](https://github.com/lobehub/lobe-chat/issues/5624) ([58a86fc](https://github.com/lobehub/lobe-chat/commit/58a86fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.49.15](https://github.com/lobehub/lobe-chat/compare/v1.49.14...v1.49.15)
+
+<sup>Released on **2025-02-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Fireworks check model and fix check error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Fireworks check model and fix check error, closes [#5680](https://github.com/lobehub/lobe-chat/issues/5680) ([64ea539](https://github.com/lobehub/lobe-chat/commit/64ea539))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.49.14](https://github.com/lobehub/lobe-chat/compare/v1.49.13...v1.49.14)
+
+<sup>Released on **2025-02-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix provider update issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix provider update issue, closes [#5676](https://github.com/lobehub/lobe-chat/issues/5676) ([e5d81ea](https://github.com/lobehub/lobe-chat/commit/e5d81ea))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.49.13](https://github.com/lobehub/lobe-chat/compare/v1.49.12...v1.49.13)
 
 <sup>Released on **2025-02-03**</sup>

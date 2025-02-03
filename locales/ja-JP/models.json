@@ -1184,6 +1184,9 @@
   "o1-preview": {
     "description": "o1はOpenAIの新しい推論モデルで、広範な一般知識を必要とする複雑なタスクに適しています。このモデルは128Kのコンテキストを持ち、2023年10月の知識のカットオフがあります。"
   },
+  "o3-mini": {
+    "description": "o3-miniは、o1-miniと同じコストと遅延目標で高い知能を提供する最新の小型推論モデルです。"
+  },
   "open-codestral-mamba": {
     "description": "Codestral Mambaは、コード生成に特化したMamba 2言語モデルであり、高度なコードおよび推論タスクを強力にサポートします。"
   },

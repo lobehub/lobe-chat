@@ -1184,6 +1184,9 @@
   "o1-preview": {
     "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
   },
+  "o3-mini": {
+    "description": "o3-mini is ons nieuwste kleine inferentiemodel dat hoge intelligentie biedt met dezelfde kosten- en vertragingdoelen als o1-mini."
+  },
   "open-codestral-mamba": {
     "description": "Codestral Mamba is een Mamba 2-taalmodel dat zich richt op codegeneratie en krachtige ondersteuning biedt voor geavanceerde code- en inferentietaken."
   },
