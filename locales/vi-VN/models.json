@@ -1184,6 +1184,9 @@
   "o1-preview": {
     "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
   },
+  "o3-mini": {
+    "description": "o3-mini là mô hình suy diễn nhỏ gọn mới nhất của chúng tôi, cung cấp trí thông minh cao với chi phí và độ trễ tương tự như o1-mini."
+  },
   "open-codestral-mamba": {
     "description": "Codestral Mamba là mô hình ngôn ngữ Mamba 2 tập trung vào sinh mã, cung cấp hỗ trợ mạnh mẽ cho các nhiệm vụ mã và suy luận tiên tiến."
   },

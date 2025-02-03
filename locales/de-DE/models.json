@@ -1184,6 +1184,9 @@
   "o1-preview": {
     "description": "o1 ist OpenAIs neues Inferenzmodell, das für komplexe Aufgaben geeignet ist, die umfangreiches Allgemeinwissen erfordern. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
   },
+  "o3-mini": {
+    "description": "o3-mini ist unser neuestes kompaktes Inferenzmodell, das bei den gleichen Kosten- und Verzögerungszielen wie o1-mini hohe Intelligenz bietet."
+  },
   "open-codestral-mamba": {
     "description": "Codestral Mamba ist ein auf die Codegenerierung spezialisiertes Mamba 2-Sprachmodell, das starke Unterstützung für fortschrittliche Code- und Schlussfolgerungsaufgaben bietet."
   },
