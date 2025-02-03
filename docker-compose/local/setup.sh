@@ -153,10 +153,10 @@ show_message() {
         host_regenerate)
             case $LANGUAGE in
                 zh_CN)
-                    echo "修改服务器域名配置中..."
+                    echo "已更新部署模式配置"
                 ;;
                 *)
-                    echo "Modifying server host configuration..."
+                    echo "Deployment mode configuration updated"
                 ;;
             esac
         ;;
@@ -240,25 +240,6 @@ show_message() {
                 ;;
             esac
         ;;
-        tips_user_not_in_docker_group)
-            current_user=$(whoami)
-            case $LANGUAGE in
-                zh_CN)
-                    echo "用户 $current_user 不具备 Docker 命令的权限。"
-                    echo "请将用户添加到 docker 组中，使用以下命令："
-                    echo "sudo usermod -aG docker $current_user"
-                    echo "如果您没有 sudo 权限，也可以在稍后使用以下指令启动。"
-                    echo "docker compose up -d"
-                ;;
-                *)
-                    echo "User $current_user does not have permission to run Docker commands."
-                    echo "Please add the user to the docker group with the following command:"
-                    echo "sudo usermod -aG docker $current_user"
-                    echo "If you do not have sudo permissions, you can also start later with the following command."
-                    echo "docker compose up -d"
-                ;;
-            esac
-        ;;
         tips_allow_ports)
             case $LANGUAGE in
                 zh_CN)
@@ -266,16 +247,6 @@ show_message() {
                 ;;
                 *)
                     echo "Please make sure the following ports on the server are not occupied and can be accessed: 3210, 9000, 9001, 7001"
-                ;;
-            esac
-        ;;
-        ask_pull_images)
-            case $LANGUAGE in
-                zh_CN)
-                    echo "是否要拉取最新镜像？"
-                ;;
-                *)
-                    echo "Do you want to pull the latest images?"
                 ;;
             esac
         ;;
@@ -626,32 +597,6 @@ show_message "ask_regenerate_secrets"
 ask "(y/n)" "y"
 if [[ "$ask_result" == "y" ]]; then
     section_regenerate_secrets
-fi
-
-# ========================
-# == Pull Docker Images ==
-# ========================
-section_pull_images() {
-    current_user=$(whoami)
-    # If user is not in docker group, show message
-    if ! groups "$current_user" | grep -q "\bdocker\b"; then
-        show_message "tips_user_not_in_docker_group"
-        sleep 3
-    fi
-    if ! command -v docker &> /dev/null ; then
-        echo "docker" $(show_message "tips_no_executable")
-        exit 1
-    fi
-    if ! docker compose &> /dev/null ; then
-        echo "docker-compose" $(show_message "tips_no_executable")
-        exit 1
-    fi
-    docker compose pull
-}
-show_message "ask_pull_images"
-ask "(y/n)" "y"
-if [[ "$ask_result" == "y" ]]; then
-    section_pull_images
 fi
 
 section_display_configurated_report() {
