@@ -15,10 +15,9 @@ tags:
 <div style={{display:"flex", gap: 4}}>
   [![][docker-release-shield]][docker-release-link]
 
-[![][docker-size-shield]][docker-size-link]
+  [![][docker-size-shield]][docker-size-link]
 
-[![][docker-pulls-shield]][docker-pulls-link]
-
+  [![][docker-pulls-shield]][docker-pulls-link]
 </div>
 
 <Callout type="warning">
@@ -35,13 +34,13 @@ tags:
 <Callout type="info">
   **System Compatibility Notes**
 
-- One-click deployment is supported in Unix environments (Linux/macOS).
+  - One-click deployment is supported in Unix environments (Linux/macOS).
 
-- Windows users must run through [WSL 2](https://aka.ms/wsl).
+  - Windows users must run through [WSL 2](https://aka.ms/wsl).
 
-- The one-click startup script is only for initial deployment; for subsequent deployments, please refer to the [Custom Deployment](#custom-deployment) section.
+  - The one-click startup script is only for initial deployment; for subsequent deployments, please refer to the [Custom Deployment](#custom-deployment) section.
 
-- Port occupation check: Ensure that ports `3210`, `8000`, `9000`, and `9001` are available.
+  - Port occupation check: Ensure that ports `3210`, `8000`, `9000`, and `9001` are available.
 </Callout>
 
 Execute the following commands to set up the deployment environment; the directory `lobe-chat-db` will be used to store your configuration files and subsequent database files.
@@ -53,7 +52,7 @@ mkdir lobe-chat-db && cd lobe-chat-db
 Fetch and execute the deployment script:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/setup.sh | bash
+bash <(curl -fsSL https://lobe.li/setup.sh) -l en
 ```
 
 The script supports the following deployment modes; please choose the appropriate mode based on your needs and read the rest of the documentation.
@@ -71,62 +70,61 @@ The script supports the following deployment modes; please choose the appropriat
 <Steps>
   ### Complete Remaining Configuration in Interactive Script
 
-Continue pressing enter to use the default configuration.
+  Continue pressing enter to use the default configuration.
 
-### Check Configuration Generation Report
+  ### Check Configuration Generation Report
 
-After the script finishes running, you need to check the configuration generation report, which includes the accounts and initial login passwords for the Casdoor administrator and user.
+  After the script finishes running, you need to check the configuration generation report, which includes the accounts and initial login passwords for the Casdoor administrator and user.
 
   <Callout type="warning">
     Please log in to LobeChat using the user account; the administrator account is only for managing Casdoor.
- 
-</Callout>
+  </Callout>
 
-```log
-The results of the secure key generation are as follows:
-LobeChat:
-  - URL: http://localhost:3210
-  - Username: user
-  - Password: c66f8c
-Casdoor:
-  - URL: http://localhost:8000
-  - Username: admin
-  - Password: c66f8c
-Minio:
-  - URL: http://localhost:9000
-  - Username: admin
-  - Password: 8c82ea41
-```
+  ```log
+  The results of the secure key generation are as follows:
+  LobeChat:
+    - URL: http://localhost:3210
+    - Username: user
+    - Password: c66f8c
+  Casdoor:
+    - URL: http://localhost:8000
+    - Username: admin
+    - Password: c66f8c
+  Minio:
+    - URL: http://localhost:9000
+    - Username: admin
+    - Password: 8c82ea41
+  ```
 
-### Start Docker
+  ### Start Docker
 
-```sh
-docker compose up -d
-```
+  ```sh
+  docker compose up -d
+  ```
 
-### Check Logs
+  ### Check Logs
 
-```sh
-docker logs -f lobe-chat
-```
+  ```sh
+  docker logs -f lobe-chat
+  ```
 
-If you see the following logs in the container, it means the startup was successful:
+  If you see the following logs in the container, it means the startup was successful:
 
-```log
-[Database] Start to migration...
-✅ database migration pass.
--------------------------------------
-  ▲ Next.js 14.x.x
-  - Local:        http://localhost:3210
-  - Network:      http://0.0.0.0:3210
+  ```log
+  [Database] Start to migration...
+  ✅ database migration pass.
+  -------------------------------------
+    ▲ Next.js 14.x.x
+    - Local:        http://localhost:3210
+    - Network:      http://0.0.0.0:3210
 
- ✓ Starting...
- ✓ Ready in 95ms
-```
+   ✓ Starting...
+   ✓ Ready in 95ms
+  ```
 
-### Access Application
+  ### Access Application
 
-Visit your LobeChat service at [http://localhost:3210](http://localhost:3210). The account credentials for the application can be found in the report from step `2`.
+  Visit your LobeChat service at [http://localhost:3210](http://localhost:3210). The account credentials for the application can be found in the report from step `2`.
 </Steps>
 
 ### Port Mode
@@ -134,64 +132,63 @@ Visit your LobeChat service at [http://localhost:3210](http://localhost:3210). T
 <Steps>
   ### Complete Remaining Configuration in Interactive Script
 
-In port mode, you need to complete the following based on the script prompts:
+  In port mode, you need to complete the following based on the script prompts:
 
-- Server IP address settings: for LAN/public access.
-- Regenerate secure keys: We highly recommend regenerating the secure keys; if you lack the key generation library required by the script, we suggest referring to the [Custom Deployment](#custom-deployment) section for key modifications.
+  - Server IP address settings: for LAN/public access.
+  - Regenerate secure keys: We highly recommend regenerating the secure keys; if you lack the key generation library required by the script, we suggest referring to the [Custom Deployment](#custom-deployment) section for key modifications.
 
-### Check Configuration Generation Report
+  ### Check Configuration Generation Report
 
-After the script finishes running, please check the configuration generation report for the Casdoor administrator account, user account, and their initial login passwords.
+  After the script finishes running, please check the configuration generation report for the Casdoor administrator account, user account, and their initial login passwords.
 
   <Callout type="warning">
     Please log in to LobeChat using the user account; the administrator account is only for managing Casdoor.
- 
-</Callout>
+  </Callout>
 
-```log
-The results of the secure key generation are as follows:
-LobeChat:
-  - URL: http://your_server_ip:3210
-  - Username: user
-  - Password: 837e26
-Casdoor:
-  - URL: http://your_server_ip:8000
-  - Username: admin
-  - Password: 837e26
-Minio:
-  - URL: http://your_server_ip:9000
-  - Username: admin
-  - Password: dbac8440
-```
+  ```log
+  The results of the secure key generation are as follows:
+  LobeChat:
+    - URL: http://your_server_ip:3210
+    - Username: user
+    - Password: 837e26
+  Casdoor:
+    - URL: http://your_server_ip:8000
+    - Username: admin
+    - Password: 837e26
+  Minio:
+    - URL: http://your_server_ip:9000
+    - Username: admin
+    - Password: dbac8440
+  ```
 
-### Start Docker
+  ### Start Docker
 
-```sh
-docker compose up -d
-```
+  ```sh
+  docker compose up -d
+  ```
 
-### Check Logs
+  ### Check Logs
 
-```sh
-docker logs -f lobe-chat
-```
+  ```sh
+  docker logs -f lobe-chat
+  ```
 
-If you see the following logs in the container, it means the startup was successful:
+  If you see the following logs in the container, it means the startup was successful:
 
-```log
-[Database] Start to migration...
-✅ database migration pass.
--------------------------------------
-  ▲ Next.js 14.x.x
-  - Local:        http://your_server_ip:3210
-  - Network:      http://0.0.0.0:3210
- ✓ Starting...
- ✓ Ready in 95ms
-```
+  ```log
+  [Database] Start to migration...
+  ✅ database migration pass.
+  -------------------------------------
+    ▲ Next.js 14.x.x
+    - Local:        http://your_server_ip:3210
+    - Network:      http://0.0.0.0:3210
+   ✓ Starting...
+   ✓ Ready in 95ms
+  ```
 
-### Access Application
+  ### Access Application
 
-You can access your LobeChat service at `http://your_server_ip:3210`. The account credentials for the application can be found in the report from step `2`.
+  You can access your LobeChat service at `http://your_server_ip:3210`. The account credentials for the application can be found in the report from step `2`.
 </Steps>
 
 ### Domain Mode
@@ -199,14 +196,14 @@ You can access your LobeChat service at `http://your_server_ip:3210`. The accoun
 <Steps>
   ### Complete Reverse Proxy Configuration
 
-In domain mode, you need to complete the reverse proxy configuration and ensure that the LAN/public can access the following services. Please use a reverse proxy to map the following service ports to the domain names:
+  In domain mode, you need to complete the reverse proxy configuration and ensure that the LAN/public can access the following services. Please use a reverse proxy to map the following service ports to the domain names:
 
-  | Domain | Proxy Port | Required |
-  | --- | --- | --- |
-  | `lobe.example.com` | `3210` | Yes |
-  | `auth-ui.example.com` | `8000` | Yes |
-  | `s3-api.example.com` | `9000` | Yes |
-  | `s3-ui.example.com` | `9001` | No |
+  | Domain                | Proxy Port | Required |
+  | --------------------- | ---------- | -------- |
+  | `lobe.example.com`    | `3210`     | Yes      |
+  | `auth-ui.example.com` | `8000`     | Yes      |
+  | `s3-api.example.com`  | `9000`     | Yes      |
+  | `s3-ui.example.com`   | `9001`     | No       |
 
   <Callout type="important">
     If you are using panel software like [APanel](https://www.bt.cn/) for reverse proxy configuration,
@@ -224,79 +221,78 @@ In domain mode, you need to complete the reverse proxy configuration and ensure 
     ```
   </Callout>
 
-### Complete Remaining Configuration in Interactive Script
+  ### Complete Remaining Configuration in Interactive Script
 
-In domain mode, you need to complete the following configurations based on script prompts:
+  In domain mode, you need to complete the following configurations based on script prompts:
 
-- Domain setup for the LobeChat service: `lobe.example.com`
-- Domain setup for the Minio service: `s3-api.example.com`
-- Domain setup for the Casdoor service: `auth-ui.example.com`
-- Choose the access protocol: `http` or `https`
-- Regenerate secure keys: We highly recommend regenerating the secure keys; if you lack the key generation library required by the script, we suggest referring to the [Custom Deployment](#custom-deployment) section for key modifications.
+  - Domain setup for the LobeChat service: `lobe.example.com`
+  - Domain setup for the Minio service: `s3-api.example.com`
+  - Domain setup for the Casdoor service: `auth-ui.example.com`
+  - Choose the access protocol: `http` or `https`
+  - Regenerate secure keys: We highly recommend regenerating the secure keys; if you lack the key generation library required by the script, we suggest referring to the [Custom Deployment](#custom-deployment) section for key modifications.
 
-  <Callout type="warning">
-    The following issues may impede access to your service:
+    <Callout type="warning">
+      The following issues may impede access to your service:
 
-    - The domain configuration here must match the reverse proxy configuration in step `1`.
+      - The domain configuration here must match the reverse proxy configuration in step `1`.
 
-    - If you are using Cloudflare for domain resolution and have activated `full proxy`, please use the `https` protocol.
+      - If you are using Cloudflare for domain resolution and have activated `full proxy`, please use the `https` protocol.
 
-    - If you have used the HTTPS protocol, ensure that your domain certificate is correctly configured; one-click deployment does not support self-signed certificates by default.
-  </Callout>
+      - If you have used the HTTPS protocol, ensure that your domain certificate is correctly configured; one-click deployment does not support self-signed certificates by default.
+    </Callout>
 
-### Check Configuration Generation Report
+  ### Check Configuration Generation Report
 
-After the script finishes running, you need to check the configuration generation report, which includes the initial login password for the Casdoor administrator.
+  After the script finishes running, you need to check the configuration generation report, which includes the initial login password for the Casdoor administrator.
 
   <Callout type="warning">
     Please log in to LobeChat using the user account; the administrator account is only for managing Casdoor.
- 
-</Callout>
+  </Callout>
 
-```log
-The results of the secure key generation are as follows:
-LobeChat:
-  - URL: https://lobe.example.com
-  - Username: user
-  - Password: 837e26
-Casdoor:
-  - URL: https://auth-ui.example.com
-  - Username: admin
-  - Password: 837e26
-Minio:
-  - URL: https://s3-api.example.com
-  - Username: admin
-  - Password: dbac8440
-```
+  ```log
+  The results of the secure key generation are as follows:
+  LobeChat:
+    - URL: https://lobe.example.com
+    - Username: user
+    - Password: 837e26
+  Casdoor:
+    - URL: https://auth-ui.example.com
+    - Username: admin
+    - Password: 837e26
+  Minio:
+    - URL: https://s3-api.example.com
+    - Username: admin
+    - Password: dbac8440
+  ```
 
-### Start Docker
+  ### Start Docker
 
-```sh
-docker compose up -d
-```
+  ```sh
+  docker compose up -d
+  ```
 
-### Check Logs
+  ### Check Logs
 
-```sh
-docker logs -f lobe-chat
-```
+  ```sh
+  docker logs -f lobe-chat
+  ```
 
-If you see the following logs in the container, it indicates a successful startup:
+  If you see the following logs in the container, it indicates a successful startup:
 
-```log
-[Database] Start to migration...
-✅ database migration pass.
--------------------------------------
-  ▲ Next.js 14.x.x
-  - Local:        https://localhost:3210
-  - Network:      http://0.0.0.0:3210
-  ✓ Starting...
-  ✓ Ready in 95ms
-```
+  ```log
+  [Database] Start to migration...
+  ✅ database migration pass.
+  -------------------------------------
+    ▲ Next.js 14.x.x
+    - Local:        https://localhost:3210
+    - Network:      http://0.0.0.0:3210
+    ✓ Starting...
+    ✓ Ready in 95ms
+  ```
 
-### Access Application
+  ### Access Application
 
-You can access your LobeChat service via `https://lobe.example.com`. The account credentials for the application can be found in the report from step `3`.
+  You can access your LobeChat service via `https://lobe.example.com`. The account credentials for the application can be found in the report from step `3`.
 </Steps>
 
 ## Custom Deployment
@@ -419,7 +415,7 @@ Solutions:
 
 - A straightforward troubleshooting method is to use the `curl` command in the LobeChat container terminal to access your authentication service at `https://auth-ui.example.com/.well-known/openid-configuration`. If JSON format data is returned, it indicates your authentication service is functioning correctly.
 
-```markdown
+````markdown
 ## Extended Configuration
 
 To enhance your LobeChat service, you can perform the following extended configurations according to your needs.
@@ -465,7 +461,7 @@ Allow users to change their avatars in Casdoor.
      ],
      "Version": "2012-10-17"
    }
-   ```
+````
 
 2. Create a new access key and store the generated `Access Key` and `Secret Key`.
 
@@ -509,7 +505,7 @@ Make sure to save the newly generated password at this time!
 
 After running, you will get three files:
 
-- init_data.json
+- init\_data.json
 - docker-compose.yml
 - .env
 
@@ -618,9 +614,9 @@ This article uses MinIO as an example to explain the configuration process. If y
 <Callout type="warning">
   Please remember to configure the corresponding S3 service provider's CORS settings to ensure that LobeChat can access the S3 service correctly.
 
-In this document, you need to allow cross-origin requests from `https://lobe.example.com`. This can either be configured in MinIO WebUI under `Configuration - API - Cors Allow Origin`, or in the Docker Compose configuration under `minio - environment - MINIO_API_CORS_ALLOW_ORIGIN`.
+  In this document, you need to allow cross-origin requests from `https://lobe.example.com`. This can either be configured in MinIO WebUI under `Configuration - API - Cors Allow Origin`, or in the Docker Compose configuration under `minio - environment - MINIO_API_CORS_ALLOW_ORIGIN`.
 
-If you use the second method (which is also the default), you will no longer be able to configure it in the MinIO WebUI.
+  If you use the second method (which is also the default), you will no longer be able to configure it in the MinIO WebUI.
 </Callout>
 
 You first need to access the WebUI for configuration:
@@ -659,7 +655,7 @@ For convenience, here is a summary of example configuration files required for t
 # OPENAI_MODEL_LIST=...
 
 # ===========================
-# ====== Preset config ====== 
+# ====== Preset config ======
 # ===========================
 # if no special requirements, no need to change
 LOBE_PORT=3210
@@ -804,7 +800,7 @@ volumes:
 networks:
   lobe-network:
     driver: bridge
-``` 
+```
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat-database?color=45cc11&labelColor=black&style=flat-square
