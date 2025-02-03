@@ -118,3 +118,6 @@ export const aiProviderRouter = router({
 });
 
 export type AiProviderRouter = typeof aiProviderRouter;
+
+
+export { aiProviderProcedure };
