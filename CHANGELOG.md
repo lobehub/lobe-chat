@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.49.15](https://github.com/lobehub/lobe-chat/compare/v1.49.14...v1.49.15)
+
+<sup>Released on **2025-02-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Fireworks check model and fix check error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Fireworks check model and fix check error, closes [#5680](https://github.com/lobehub/lobe-chat/issues/5680) ([64ea539](https://github.com/lobehub/lobe-chat/commit/64ea539))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.49.14](https://github.com/lobehub/lobe-chat/compare/v1.49.13...v1.49.14)
 
 <sup>Released on **2025-02-03**</sup>
