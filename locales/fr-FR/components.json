@@ -86,9 +86,33 @@
     "emptyModel": "Aucun modèle activé. Veuillez vous rendre dans les paramètres pour l'activer.",
     "provider": "Fournisseur"
   },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "En raison des restrictions de sécurité des navigateurs, vous devez configurer les paramètres CORS pour utiliser Ollama correctement.",
+      "linux": {
+        "env": "Ajoutez `Environment` sous la section [Service], et ajoutez la variable d'environnement OLLAMA_ORIGINS :",
+        "reboot": "Rechargez systemd et redémarrez Ollama",
+        "systemd": "Appelez systemd pour éditer le service ollama :"
+      },
+      "macos": "Veuillez ouvrir l'application « Terminal », collez la commande suivante et appuyez sur Entrée pour l'exécuter",
+      "reboot": "Veuillez redémarrer le service Ollama après l'exécution",
+      "title": "Configurer Ollama pour autoriser l'accès CORS",
+      "windows": "Sous Windows, cliquez sur « Panneau de configuration », puis accédez à l'édition des variables d'environnement système. Créez une nouvelle variable d'environnement nommée « OLLAMA_ORIGINS » pour votre compte utilisateur, avec la valeur * , puis cliquez sur « OK/Appliquer » pour enregistrer"
+    },
+    "install": {
+      "description": "Veuillez vous assurer que vous avez démarré Ollama. Si vous n'avez pas téléchargé Ollama, veuillez vous rendre sur le site officiel <1>pour le télécharger</1>",
+      "docker": "Si vous préférez utiliser Docker, Ollama propose également une image Docker officielle que vous pouvez tirer avec la commande suivante :",
+      "linux": {
+        "command": "Installez avec la commande suivante :",
+        "manual": "Ou, vous pouvez également consulter le <1>guide d'installation manuelle pour Linux</1> pour l'installer vous-même"
+      },
+      "title": "Installer et démarrer l'application Ollama localement",
+      "windowsTab": "Windows (version préliminaire)"
+    }
+  },
   "Thinking": {
     "thinking": "En pleine réflexion...",
-    "thought": "Réflexion terminée",
-    "thoughtWithDuration": "Réflexion terminée (durée : {{duration}} secondes)"
+    "thought": "Pensée approfondie (durée : {{duration}} secondes)",
+    "thoughtWithDuration": "Pensée approfondie"
   }
 }

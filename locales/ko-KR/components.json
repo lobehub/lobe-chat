@@ -86,9 +86,33 @@
     "emptyModel": "활성화된 모델이 없습니다. 설정으로 이동하여 활성화하세요",
     "provider": "제공자"
   },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "브라우저 보안 제한으로 인해 Ollama를 사용하기 위해서는 교차 출처 구성이 필요합니다.",
+      "linux": {
+        "env": "[Service] 섹션에 `Environment`를 추가하고 OLLAMA_ORIGINS 환경 변수를 추가하세요:",
+        "reboot": "systemd를 재로드하고 Ollama를 재시작하세요",
+        "systemd": "systemd를 호출하여 ollama 서비스를 편집하세요:"
+      },
+      "macos": "터미널 애플리케이션을 열고 아래 명령어를 붙여넣은 후 Enter 키를 눌러 실행하세요",
+      "reboot": "작업이 완료된 후 Ollama 서비스를 재시작하세요",
+      "title": "Ollama의 교차 출처 접근 허용 구성",
+      "windows": "Windows에서 '제어판'을 클릭하고 시스템 환경 변수를 편집하세요. 사용자 계정에 'OLLAMA_ORIGINS'라는 이름의 환경 변수를 새로 만들고 값으로 *를 입력한 후 '확인/적용'을 클릭하여 저장하세요."
+    },
+    "install": {
+      "description": "Ollama가 이미 실행 중인지 확인하세요. Ollama를 다운로드하지 않았다면 공식 웹사이트<1>에서 다운로드</1>하세요.",
+      "docker": "Docker를 사용하는 것을 선호하는 경우, Ollama는 공식 Docker 이미지를 제공합니다. 아래 명령어로 가져올 수 있습니다:",
+      "linux": {
+        "command": "아래 명령어로 설치하세요:",
+        "manual": "또는 <1>Linux 수동 설치 가이드</1>를 참조하여 직접 설치할 수 있습니다."
+      },
+      "title": "로컬에 Ollama 애플리케이션 설치 및 실행",
+      "windowsTab": "Windows (미리보기 버전)"
+    }
+  },
   "Thinking": {
     "thinking": "심층적으로 생각 중...",
-    "thought": "심층적으로 생각했습니다",
-    "thoughtWithDuration": "심층적으로 생각했습니다 (소요 시간: {{duration}} 초)"
+    "thought": "심층적으로 생각했습니다 (소요 시간 {{duration}} 초)",
+    "thoughtWithDuration": "심층적으로 생각했습니다"
   }
 }

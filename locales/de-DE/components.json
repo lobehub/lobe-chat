@@ -86,9 +86,33 @@
     "emptyModel": "Kein aktiviertes Modell. Bitte gehen Sie zu den Einstellungen, um es zu aktivieren.",
     "provider": "Anbieter"
   },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "Aufgrund von Sicherheitsbeschränkungen im Browser müssen Sie CORS für Ollama konfigurieren, um es ordnungsgemäß nutzen zu können.",
+      "linux": {
+        "env": "Fügen Sie im Abschnitt [Service] `Environment` hinzu und setzen Sie die Umgebungsvariable OLLAMA_ORIGINS:",
+        "reboot": "Laden Sie systemd neu und starten Sie Ollama neu",
+        "systemd": "Rufen Sie systemd auf, um den ollama-Dienst zu bearbeiten:"
+      },
+      "macos": "Bitte öffnen Sie die „Terminal“-Anwendung, fügen Sie die folgenden Befehle ein und drücken Sie die Eingabetaste, um sie auszuführen",
+      "reboot": "Bitte starten Sie den Ollama-Dienst nach Abschluss der Ausführung neu",
+      "title": "Konfigurieren Sie Ollama für den CORS-Zugriff",
+      "windows": "Klicken Sie unter Windows auf „Systemsteuerung“ und gehen Sie zu den Systemeigenschaften. Erstellen Sie eine neue Umgebungsvariable mit dem Namen „OLLAMA_ORIGINS“ für Ihr Benutzerkonto, setzen Sie den Wert auf * und klicken Sie auf „OK/Übernehmen“, um zu speichern"
+    },
+    "install": {
+      "description": "Bitte stellen Sie sicher, dass Sie Ollama gestartet haben. Wenn Sie Ollama nicht heruntergeladen haben, besuchen Sie die offizielle Website <1>zum Herunterladen</1>",
+      "docker": "Wenn Sie lieber Docker verwenden möchten, bietet Ollama auch offizielle Docker-Images an, die Sie mit dem folgenden Befehl herunterladen können:",
+      "linux": {
+        "command": "Installieren Sie es mit dem folgenden Befehl:",
+        "manual": "Alternativ können Sie auch die <1>Linux-Handbuchinstallation</1> zur Selbstinstallation konsultieren"
+      },
+      "title": "Ollama-Anwendung lokal installieren und starten",
+      "windowsTab": "Windows (Vorschau)"
+    }
+  },
   "Thinking": {
     "thinking": "Tiefes Nachdenken...",
-    "thought": "Tief nachgedacht",
-    "thoughtWithDuration": "Tief nachgedacht (Dauer: {{duration}} Sekunden)"
+    "thought": "Tiefgründig nachgedacht (Dauer: {{duration}} Sekunden)",
+    "thoughtWithDuration": "Tiefgründig nachgedacht"
   }
 }

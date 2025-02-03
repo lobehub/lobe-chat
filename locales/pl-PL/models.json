@@ -176,6 +176,9 @@
   "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
     "description": "Meta Llama 3.1 to rodzina dużych modeli językowych opracowanych przez Meta, obejmująca pretrenowane i dostosowane do instrukcji warianty o rozmiarach parametrów 8B, 70B i 405B. Model 8B dostosowany do instrukcji został zoptymalizowany do scenariuszy rozmów wielojęzycznych, osiągając doskonałe wyniki w wielu branżowych testach benchmarkowych. Trening modelu wykorzystał ponad 150 bilionów tokenów danych publicznych oraz zastosował techniki takie jak nadzorowane dostrajanie i uczenie przez wzmacnianie z ludzkim feedbackiem, aby zwiększyć użyteczność i bezpieczeństwo modelu. Llama 3.1 wspiera generowanie tekstu i kodu, a data graniczna wiedzy to grudzień 2023 roku."
   },
+  "Qwen/QVQ-72B-Preview": {
+    "description": "QVQ-72B-Preview to model badawczy opracowany przez zespół Qwen, skoncentrowany na zdolnościach wnioskowania wizualnego, który ma unikalne zalety w zrozumieniu złożonych scenariuszy i rozwiązywaniu wizualnie związanych problemów matematycznych."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview to najnowszy eksperymentalny model badawczy Qwen, skoncentrowany na zwiększeniu zdolności wnioskowania AI. Poprzez eksplorację złożonych mechanizmów, takich jak mieszanie języków i wnioskowanie rekurencyjne, główne zalety obejmują silne zdolności analizy wnioskowania, matematyki i programowania. Jednocześnie występują problemy z przełączaniem języków, cyklami wnioskowania, kwestiami bezpieczeństwa oraz różnicami w innych zdolnościach."
   },
@@ -530,11 +533,20 @@
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct oferuje wysoką niezawodność w przetwarzaniu poleceń, wspierając różne branże."
   },
+  "deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem przez wzmacnianie (RL), który rozwiązuje problemy z powtarzalnością i czytelnością modelu. Przed RL, DeepSeek-R1 wprowadził dane z zimnego startu, co dodatkowo zoptymalizowało wydajność wnioskowania. W zadaniach matematycznych, kodowania i wnioskowania osiąga wyniki porównywalne z OpenAI-o1, a dzięki starannie zaprojektowanym metodom treningowym poprawia ogólne efekty."
+  },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 łączy doskonałe cechy wcześniejszych wersji, wzmacniając zdolności ogólne i kodowania."
   },
+  "deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3 to model językowy z 6710 miliardami parametrów, oparty na mieszanych ekspertach (MoE), wykorzystujący wielogłowicową potencjalną uwagę (MLA) oraz architekturę DeepSeekMoE, łączącą strategię równoważenia obciążenia bez dodatkowych strat, co optymalizuje wydajność wnioskowania i treningu. Dzięki wstępnemu treningowi na 14,8 bilionach wysokiej jakości tokenów oraz nadzorowanemu dostrajaniu i uczeniu przez wzmacnianie, DeepSeek-V3 przewyższa inne modele open source, zbliżając się do wiodących modeli zamkniętych."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B to zaawansowany model przeszkolony do złożonych dialogów."
+  },
+  "deepseek-ai/deepseek-vl2": {
+    "description": "DeepSeek-VL2 to model wizualno-językowy oparty na DeepSeekMoE-27B, wykorzystujący architekturę MoE z rzadką aktywacją, osiągający doskonałe wyniki przy aktywacji jedynie 4,5 miliarda parametrów. Model ten wyróżnia się w wielu zadaniach, takich jak wizualne pytania i odpowiedzi, optyczne rozpoznawanie znaków, zrozumienie dokumentów/tabel/wykresów oraz lokalizacja wizualna."
   },
   "deepseek-chat": {
     "description": "Nowy otwarty model łączący zdolności ogólne i kodowe, który nie tylko zachowuje ogólne zdolności dialogowe oryginalnego modelu czatu i potężne zdolności przetwarzania kodu modelu Coder, ale także lepiej dostosowuje się do ludzkich preferencji. Ponadto, DeepSeek-V2.5 osiągnął znaczne poprawy w zadaniach pisarskich, przestrzeganiu instrukcji i innych obszarach."
@@ -547,6 +559,9 @@
   },
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 to otwarty model kodowy Mixture-of-Experts, który doskonale radzi sobie z zadaniami kodowymi, porównywalny z GPT4-Turbo."
+  },
+  "deepseek-r1": {
+    "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem przez wzmacnianie (RL), który rozwiązuje problemy z powtarzalnością i czytelnością modelu. Przed RL, DeepSeek-R1 wprowadził dane z zimnego startu, co dodatkowo zoptymalizowało wydajność wnioskowania. W zadaniach matematycznych, kodowania i wnioskowania osiąga wyniki porównywalne z OpenAI-o1, a dzięki starannie zaprojektowanym metodom treningowym poprawia ogólne efekty."
   },
   "deepseek-reasoner": {
     "description": "Model inferency wprowadzony przez DeepSeek. Przed wygenerowaniem ostatecznej odpowiedzi, model najpierw przedstawia fragment łańcucha myślowego, aby zwiększyć dokładność końcowej odpowiedzi."

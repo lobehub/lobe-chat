@@ -86,9 +86,33 @@
     "emptyModel": "Nessun modello attivo. Vai alle impostazioni per attivarne uno.",
     "provider": "Provider"
   },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "A causa delle restrizioni di sicurezza del browser, è necessario configurare il cross-origin per utilizzare Ollama correttamente.",
+      "linux": {
+        "env": "Aggiungi `Environment` nella sezione [Service] e aggiungi la variabile d'ambiente OLLAMA_ORIGINS:",
+        "reboot": "Ricarica systemd e riavvia Ollama",
+        "systemd": "Usa systemd per modificare il servizio ollama:"
+      },
+      "macos": "Apri l'applicazione 'Terminale', incolla il seguente comando e premi invio per eseguirlo",
+      "reboot": "Riavvia il servizio Ollama dopo il completamento dell'esecuzione",
+      "title": "Configura Ollama per consentire l'accesso cross-origin",
+      "windows": "Su Windows, fai clic su 'Pannello di controllo' e accedi alla modifica delle variabili d'ambiente di sistema. Crea una nuova variabile d'ambiente chiamata 'OLLAMA_ORIGINS' per il tuo account utente, con valore *, quindi fai clic su 'OK/Applica' per salvare"
+    },
+    "install": {
+      "description": "Assicurati di aver avviato Ollama. Se non hai scaricato Ollama, visita il sito ufficiale <1>per scaricare</1>",
+      "docker": "Se preferisci utilizzare Docker, Ollama offre anche un'immagine Docker ufficiale, puoi scaricarla con il seguente comando:",
+      "linux": {
+        "command": "Installa con il seguente comando:",
+        "manual": "In alternativa, puoi fare riferimento alla <1>guida all'installazione manuale di Linux</1> per installare manualmente"
+      },
+      "title": "Installa e avvia l'app Ollama localmente",
+      "windowsTab": "Windows (versione anteprima)"
+    }
+  },
   "Thinking": {
     "thinking": "Pensando profondamente...",
-    "thought": "Pensato profondamente",
-    "thoughtWithDuration": "Pensato profondamente (tempo impiegato {{duration}} secondi)"
+    "thought": "Ho riflettuto a lungo (tempo impiegato {{duration}} secondi)",
+    "thoughtWithDuration": "Ho riflettuto a lungo"
   }
 }

@@ -176,6 +176,9 @@
   "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
     "description": "Meta Llama 3.1 is a family of multilingual large language models developed by Meta, including pre-trained and instruction-tuned variants with parameter sizes of 8B, 70B, and 405B. This 8B instruction-tuned model is optimized for multilingual dialogue scenarios and performs excellently in multiple industry benchmark tests. The model is trained using over 150 trillion tokens of public data and employs techniques such as supervised fine-tuning and human feedback reinforcement learning to enhance the model's usefulness and safety. Llama 3.1 supports text generation and code generation, with a knowledge cutoff date of December 2023."
   },
+  "Qwen/QVQ-72B-Preview": {
+    "description": "QVQ-72B-Preview is a research-oriented model developed by the Qwen team, focusing on visual reasoning capabilities, with unique advantages in understanding complex scenes and solving visually related mathematical problems."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is Qwen's latest experimental research model, focusing on enhancing AI reasoning capabilities. By exploring complex mechanisms such as language mixing and recursive reasoning, its main advantages include strong analytical reasoning, mathematical, and programming abilities. However, it also faces challenges such as language switching issues, reasoning loops, safety considerations, and differences in other capabilities."
   },
@@ -530,11 +533,20 @@
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct provides highly reliable instruction processing capabilities, supporting applications across multiple industries."
   },
+  "deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1 is a reinforcement learning (RL) driven inference model that addresses issues of repetitiveness and readability within the model. Prior to RL, DeepSeek-R1 introduced cold start data to further optimize inference performance. It performs comparably to OpenAI-o1 in mathematical, coding, and reasoning tasks, and enhances overall effectiveness through meticulously designed training methods."
+  },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 combines the excellent features of previous versions, enhancing general and coding capabilities."
   },
+  "deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3 is a mixture of experts (MoE) language model with 671 billion parameters, utilizing multi-head latent attention (MLA) and the DeepSeekMoE architecture, combined with a load balancing strategy that does not rely on auxiliary loss, optimizing inference and training efficiency. Pre-trained on 14.8 trillion high-quality tokens and fine-tuned with supervision and reinforcement learning, DeepSeek-V3 outperforms other open-source models and approaches leading closed-source models in performance."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B is an advanced model trained for highly complex conversations."
+  },
+  "deepseek-ai/deepseek-vl2": {
+    "description": "DeepSeek-VL2 is a mixture of experts (MoE) visual language model developed based on DeepSeekMoE-27B, employing a sparsely activated MoE architecture that achieves outstanding performance while activating only 4.5 billion parameters. This model excels in various tasks, including visual question answering, optical character recognition, document/table/chart understanding, and visual localization."
   },
   "deepseek-chat": {
     "description": "A new open-source model that integrates general and coding capabilities, retaining the general conversational abilities of the original Chat model and the powerful code handling capabilities of the Coder model, while better aligning with human preferences. Additionally, DeepSeek-V2.5 has achieved significant improvements in writing tasks, instruction following, and more."
@@ -547,6 +559,9 @@
   },
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 is an open-source hybrid expert code model that performs excellently in coding tasks, comparable to GPT4-Turbo."
+  },
+  "deepseek-r1": {
+    "description": "DeepSeek-R1 is a reinforcement learning (RL) driven inference model that addresses issues of repetitiveness and readability within the model. Prior to RL, DeepSeek-R1 introduced cold start data to further optimize inference performance. It performs comparably to OpenAI-o1 in mathematical, coding, and reasoning tasks, and enhances overall effectiveness through meticulously designed training methods."
   },
   "deepseek-reasoner": {
     "description": "The reasoning model launched by DeepSeek. Before outputting the final answer, the model first provides a chain of thought to enhance the accuracy of the final response."
