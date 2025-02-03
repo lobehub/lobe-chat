@@ -28,6 +28,7 @@ const Layout = ({ children }: PropsWithChildren) => {
     <Modal
       allowFullscreen
       className={cx(isPortalThread && styles.container)}
+      footer={null}
       height={'95%'}
       onCancel={() => togglePortal(false)}
       open={showMobilePortal}

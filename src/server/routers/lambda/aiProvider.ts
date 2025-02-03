@@ -12,6 +12,7 @@ import {
   AiProviderRuntimeState,
   CreateAiProviderSchema,
   UpdateAiProviderConfigSchema,
+  UpdateAiProviderSchema,
 } from '@/types/aiProvider';
 import { ProviderConfig } from '@/types/user/settings';
 
@@ -82,7 +83,7 @@ export const aiProviderRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: CreateAiProviderSchema.partial(),
+        value: UpdateAiProviderSchema,
       }),
     )
     .mutation(async ({ input, ctx }) => {
