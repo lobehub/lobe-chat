@@ -229,6 +229,10 @@
           "title": "ID do Modelo"
         },
         "modalTitle": "Configuração do Modelo Personalizado",
+        "reasoning": {
+          "extra": "Esta configuração ativará apenas a capacidade de raciocínio profundo do modelo; a capacidade de reconhecimento depende do próprio modelo. Por favor, teste a disponibilidade da capacidade de raciocínio profundo deste modelo.",
+          "title": "Suporte a raciocínio profundo"
+        },
         "tokens": {
           "extra": "Configurar o número máximo de tokens suportados pelo modelo",
           "title": "Janela de contexto máxima",
