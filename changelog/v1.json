@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update Fireworks check model and fix check error."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.15"
+  },
+  {
+    "children": {
       "fixes": ["Fix provider update issue."]
     },
     "date": "2025-02-03",
