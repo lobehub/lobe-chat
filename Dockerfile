@@ -15,7 +15,7 @@ RUN \
     fi \
     # Add required package
     && apt update \
-    && apt install ca-certificates jq proxychains-ng -qy \
+    && apt install ca-certificates proxychains-ng -qy \
     # Prepare required package to distroless
     && mkdir -p /distroless/bin /distroless/etc /distroless/etc/ssl/certs /distroless/lib \
     # Copy proxychains to distroless
@@ -84,7 +84,7 @@ RUN \
     # Enable corepack
     && corepack enable \
     # Use pnpm for corepack
-    && corepack use $(jq -r .packageManager package.json) \
+    && corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json) \
     # Install the dependencies
     && pnpm i \
     # Add sharp dependencies
