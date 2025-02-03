@@ -202,9 +202,9 @@ curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compo
   | 域名|	反代端口|	是否必选|
   |--|--|--|
   |`lobe.example.com`|`3210`|必选|
-  |auth-ui.example.com`|`8000`|必选|
-  |s3-api.example.com|9000|必选|
-  |s3-ui.example.com|9001||
+  |`auth-ui.example.com`|`8000`|必选|
+  |`s3-api.example.com`|`9000`|必选|
+  |`s3-ui.example.com`|`9001`||
 
   <Callout type="important">
     如果你使用如 [宝塔面板](https://www.bt.cn/) 等面板软件进行反向代理配置，
@@ -260,7 +260,6 @@ curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compo
     - URL: https://auth-ui.example.com
     - Username: admin
     - Password: 837e26
-    - Client Secret: dce63693be24b5d9b9536126692e3ed9
   Minio:
     - URL: https://s3-api.example.com
     - Username: admin
