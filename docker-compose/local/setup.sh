@@ -143,10 +143,10 @@ show_message() {
         host_regenerate)
             case $LANGUAGE in
                 zh_CN)
-                    echo "已更新部署模式配置"
+                    echo "✔️ 已更新部署模式配置"
                 ;;
                 *)
-                    echo "Deployment mode configuration updated"
+                    echo "✔️ Updated deployment mode configuration"
                 ;;
             esac
         ;;
@@ -230,6 +230,16 @@ show_message() {
                 ;;
             esac
         ;;
+        tips_auto_detected)
+            case $LANGUAGE in
+                zh_CN)
+                    echo "已自动识别"
+                ;;
+                *)
+                    echo "Auto-detected"
+                ;;
+            esac
+        ;;
         tips_private_ip_detected)
             case $LANGUAGE in
                 zh_CN)
@@ -237,6 +247,16 @@ show_message() {
                 ;;
                 *)
                     echo "Note that the current internal IP is detected. If you need external access, please replace it with the public IP address."
+                ;;
+            esac
+        ;;
+        tips_add_reverse_proxy)
+            case $LANGUAGE in
+                zh_CN)
+                    echo "请在你的反向代理中完成域名到端口的映射："
+                ;;
+                *)
+                    echo "Please complete the mapping of domain to port in your reverse proxy:"
                 ;;
             esac
         ;;
@@ -273,22 +293,30 @@ show_message() {
         ask_host)
             case $LANGUAGE in
                 zh_CN)
-                    echo " 部署IP/域名："
+                    echo " 部署IP/域名"
                 ;;
                 *)
-                    echo " Deploy IP/Domain:"
+                    echo " Deploy IP/Domain"
+                ;;
+            esac
+        ;;
+        ask_domain)
+            case $LANGUAGE in
+                zh_CN)
+                    echo "服务的域名（例如 $2 ，不要包含协议前缀）："
+                ;;
+                *)
+                    echo "The domain of the service (e.g. $2, do not include the protocol prefix):"
                 ;;
             esac
         ;;
         ask_protocol)
             case $LANGUAGE in
                 zh_CN)
-                    echo "是否启用 https 协议？"
-                    echo "注意，当前部署脚本不支持：为单一服务指定不同的协议、自签证书。"
+                    echo "域名是否使用 https 协议？ (所有服务需要使用同一协议)"
                 ;;
                 *)
-                    echo "Do you want to enable the https protocol?"
-                    echo "Note that the current deployment script does not support: specifying different protocols for a single service, self-signed certificates."
+                    echo "Does the domain use the https protocol? (All services need to use the same protocol)"
                 ;;
             esac
         ;;
@@ -330,16 +358,22 @@ print_centered() {
 
 # Usage:
 # ```sh
-#   ask "prompt" "default"
+#   ask "prompt" "default" "description"
 #   echo $ask_result
 # ```
+#   "prompt" ["description" "default"]:
 ask() {
     local prompt="$1"
     local default="$2"
+    local description="$3"
+    # Add a space after the description if it is not empty
+    if [ -n "$description" ]; then
+        description="$description "
+    fi
     local result
     
     if [ -n "$default" ]; then
-        read -p "$prompt [$default]: " result
+        read -p "$prompt [${description}${default}]: " result
         result=${result:-$default}
     else
         read -p "$prompt: " result
@@ -453,25 +487,27 @@ section_configurate_host() {
         fi
     fi
     
-    echo "LobeChat" $(show_message "ask_host")
-    ask "(<yourip/domain>)" "$HOST"
-    LOBE_HOST="$ask_result"
-    
+   
     case $DEPLOY_MODE in
         0)
             DEPLOY_MODE="domain"
+            echo "LobeChat" $(show_message "ask_domain" "example.com")
+            ask "(example.com)"
+            LOBE_HOST="$ask_result"
             # If user use domain mode, ask for the domain of Minio and Casdoor
-            echo "Minio S3 API" $(show_message "ask_host")
-            ask "(<yourip/domain>)" ""
+            echo "Minio S3 API" $(show_message "ask_domain" "minio.example.com")
+            ask "(minio.example.com)"
             MINIO_HOST="$ask_result"
-            echo "Casdoor API" $(show_message "ask_host")
-            ask "(<yourip/domain>)" ""
+            echo "Casdoor API" $(show_message "ask_domain" "auth.example.com")
+            ask "(auth.example.com)"
             CASDOOR_HOST="$ask_result"
             # Setup callback url for Casdoor
             $SED_COMMAND "s/"example.com"/${LOBE_HOST}/" init_data.json
         ;;
         1)
             DEPLOY_MODE="ip"
+            ask $(printf "%s%s" "LobeChat" $(show_message "ask_host")) "$HOST" $(printf "%s" $(show_message "tips_auto_detected"))
+            LOBE_HOST="$ask_result"
             # If user use ip mode, use ask_result as the host
             HOST="$ask_result"
             # If user use ip mode, append the port to the host
@@ -605,7 +641,16 @@ section_display_configurated_report() {
     echo -e "Casdoor: \n  - URL: $PROTOCOL://$CASDOOR_HOST \n  - Username: admin \n  - Password: ${CASDOOR_PASSWORD}\n"
     echo -e "Minio: \n  - URL: $PROTOCOL://$MINIO_HOST \n  - Username: admin\n  - Password: ${MINIO_ROOT_PASSWORD}\n"
     
+    # if user run in domain mode, diplay reverse proxy configuration
+    if [[ "$DEPLOY_MODE" == "domain" ]]; then
+        echo $(show_message "tips_add_reverse_proxy")
+        printf "\n%s\t->\t%s\n" "$LOBE_HOST" "127.0.0.1:3210"
+        printf "%s\t->\t%s\n" "$CASDOOR_HOST" "127.0.0.1:8000"
+        printf "%s\t->\t%s\n" "$MINIO_HOST" "127.0.0.1:9000"
+    fi
+
     # Display final message
+
     printf "\n%s\n\n" "$(show_message "tips_run_command")"
     print_centered "docker compose up -d" "green"
     printf "\n%s\n" "$(show_message "tips_allow_ports")"
