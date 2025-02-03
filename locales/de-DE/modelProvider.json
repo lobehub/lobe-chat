@@ -229,6 +229,10 @@
           "title": "Modell-ID"
         },
         "modalTitle": "Benutzerdefinierte Modellkonfiguration",
+        "reasoning": {
+          "extra": "Diese Konfiguration aktiviert nur die Fähigkeit des Modells zum tiefen Denken. Ob die Erkennung unterstützt wird, hängt vollständig vom Modell selbst ab. Bitte testen Sie die Verfügbarkeit der tiefen Denkfähigkeit dieses Modells selbst.",
+          "title": "Unterstützung für tiefes Denken"
+        },
         "tokens": {
           "extra": "Maximale Token-Anzahl für das Modell festlegen",
           "title": "Maximales Kontextfenster",

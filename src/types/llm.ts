@@ -42,6 +42,15 @@ export interface ChatModelCard {
   legacy?: boolean;
   maxOutput?: number;
   pricing?: ChatModelPricing;
+
+  /**
+   *  whether model supports reasoning
+   */
+  reasoning?: boolean;
+
+  /**
+   * whether model is legacy (deprecated but not removed yet)
+   */
   releasedAt?: string;
 
   /**
