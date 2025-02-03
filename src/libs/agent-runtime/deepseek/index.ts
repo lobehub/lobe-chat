@@ -1,23 +1,33 @@
 import OpenAI from 'openai';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
-
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 
 export interface DeepSeekModelCard {
   id: string;
 }
 
+const baseURL = process.env.DEEPSEEK_PROXY_URL || 'https://api.deepseek.com/v1';
+
 export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
-  baseURL: 'https://api.deepseek.com/v1',
+  baseURL,
   chatCompletion: {
-    handlePayload: ({ frequency_penalty, messages, model, presence_penalty, temperature, top_p, ...payload }: ChatStreamPayload) => {
+    handlePayload: ({
+      frequency_penalty,
+      messages,
+      model,
+      presence_penalty,
+      temperature,
+      top_p,
+      ...payload
+    }: ChatStreamPayload) => {
       // github.com/lobehub/lobe-chat/pull/5548
-      let filteredMessages = messages.filter(message => message.role !== 'system');
+      let filteredMessages = messages.filter((message) => message.role !== 'system');
 
       if (filteredMessages.length > 0 && filteredMessages[0].role === 'assistant') {
-        filteredMessages.unshift({ content: "", role: "user" });
+        filteredMessages.unshift({ content: '', role: 'user' });
       }
 
       let lastRole = '';
@@ -25,7 +35,7 @@ export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
         const message = filteredMessages[i];
         if (message.role === lastRole) {
           const newRole = lastRole === 'assistant' ? 'user' : 'assistant';
-          filteredMessages.splice(i, 0, { content: "", role: newRole });
+          filteredMessages.splice(i, 0, { content: '', role: newRole });
           i++;
         }
         lastRole = message.role;
