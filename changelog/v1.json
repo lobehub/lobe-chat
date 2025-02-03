@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "features": ["Add o3-mini support for OpenAI & GitHub Models."],
+      "fixes": ["Fix parse of deepseek r1 in siliconflow provider."]
+    },
+    "date": "2025-02-03",
+    "version": "1.50.0"
+  },
+  {
+    "children": {
       "improvements": ["Update perplexity models."]
     },
     "date": "2025-02-03",

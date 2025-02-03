@@ -126,6 +126,10 @@
         "title": "Konu Tazeliği"
       },
       "range": "Aralık",
+      "reasoning_effort": {
+        "desc": "Bu ayar, modelin yanıt üretmeden önceki akıl yürütme gücünü kontrol etmek için kullanılır. Düşük güç, yanıt hızını önceliklendirir ve Token tasarrufu sağlar; yüksek güç ise daha kapsamlı bir akıl yürütme sunar, ancak daha fazla Token tüketir ve yanıt hızını düşürür. Varsayılan değer orta seviyedir, akıl yürütme doğruluğu ile yanıt hızı arasında bir denge sağlar.",
+        "title": "Akıl Yürütme Gücü"
+      },
       "temperature": {
         "desc": "Bu ayar, modelin yanıtlarının çeşitliliğini etkiler. Daha düşük değerler daha öngörülebilir ve tipik yanıtlar verirken, daha yüksek değerler daha çeşitli ve nadir yanıtları teşvik eder. Değer 0 olarak ayarlandığında, model belirli bir girdi için her zaman aynı yanıtı verir.",
         "title": "Rastgelelik"

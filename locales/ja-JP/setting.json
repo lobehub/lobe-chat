@@ -200,6 +200,9 @@
     "enableMaxTokens": {
       "title": "単一応答制限を有効にする"
     },
+    "enableReasoningEffort": {
+      "title": "推論強度調整を有効にする"
+    },
     "frequencyPenalty": {
       "desc": "値が大きいほど、単語の繰り返しを減らす可能性が高くなります",
       "title": "頻度ペナルティ"
@@ -215,6 +218,15 @@
     "presencePenalty": {
       "desc": "値が大きいほど、新しいトピックに拡張する可能性が高くなります",
       "title": "トピックの新鮮度"
+    },
+    "reasoningEffort": {
+      "desc": "値が大きいほど推論能力が高まりますが、応答時間とトークン消費が増加する可能性があります",
+      "options": {
+        "high": "高",
+        "low": "低",
+        "medium": "中"
+      },
+      "title": "推論強度"
     },
     "temperature": {
       "desc": "値が大きいほど、応答がよりランダムになります",

@@ -200,6 +200,9 @@
     "enableMaxTokens": {
       "title": "Abilita limite di risposta singola"
     },
+    "enableReasoningEffort": {
+      "title": "Attiva la regolazione dell'intensità del ragionamento"
+    },
     "frequencyPenalty": {
       "desc": "Più alto è il valore, più probabile è la riduzione delle parole ripetute",
       "title": "Penalità di frequenza"
@@ -215,6 +218,15 @@
     "presencePenalty": {
       "desc": "Più alto è il valore, più probabile è l'estensione a nuovi argomenti",
       "title": "Freschezza dell'argomento"
+    },
+    "reasoningEffort": {
+      "desc": "Maggiore è il valore, più forte è la capacità di ragionamento, ma potrebbe aumentare il tempo di risposta e il consumo di Token",
+      "options": {
+        "high": "Alto",
+        "low": "Basso",
+        "medium": "Medio"
+      },
+      "title": "Intensità del ragionamento"
     },
     "temperature": {
       "desc": "Più alto è il valore, più casuale è la risposta",

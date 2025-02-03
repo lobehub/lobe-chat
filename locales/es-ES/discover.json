@@ -126,6 +126,10 @@
         "title": "Novedad del tema"
       },
       "range": "Rango",
+      "reasoning_effort": {
+        "desc": "Esta configuración se utiliza para controlar la intensidad de razonamiento del modelo antes de generar una respuesta. Una baja intensidad prioriza la velocidad de respuesta y ahorra tokens, mientras que una alta intensidad proporciona un razonamiento más completo, pero consume más tokens y reduce la velocidad de respuesta. El valor predeterminado es medio, equilibrando la precisión del razonamiento con la velocidad de respuesta.",
+        "title": "Intensidad de razonamiento"
+      },
       "temperature": {
         "desc": "Esta configuración afecta la diversidad de las respuestas del modelo. Un valor más bajo resultará en respuestas más predecibles y típicas, mientras que un valor más alto alentará respuestas más diversas y menos comunes. Cuando el valor se establece en 0, el modelo siempre dará la misma respuesta para una entrada dada.",
         "title": "Aleatoriedad"

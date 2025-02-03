@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 1.50.0](https://github.com/lobehub/lobe-chat/compare/v1.49.16...v1.50.0)
+
+<sup>Released on **2025-02-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Add `o3-mini` support for OpenAI & GitHub Models.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix parse of deepseek r1 in siliconflow provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add `o3-mini` support for OpenAI & GitHub Models, closes [#5657](https://github.com/lobehub/lobe-chat/issues/5657) ([492cfd4](https://github.com/lobehub/lobe-chat/commit/492cfd4))
+
+#### What's fixed
+
+- **misc**: Fix parse of deepseek r1 in siliconflow provider, closes [#5687](https://github.com/lobehub/lobe-chat/issues/5687) ([44e81e2](https://github.com/lobehub/lobe-chat/commit/44e81e2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.49.16](https://github.com/lobehub/lobe-chat/compare/v1.49.15...v1.49.16)
 
 <sup>Released on **2025-02-03**</sup>
