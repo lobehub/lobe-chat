@@ -200,6 +200,9 @@
     "enableMaxTokens": {
       "title": "Limiet voor enkele reacties inschakelen"
     },
+    "enableReasoningEffort": {
+      "title": "Inschakelen van redeneringsinspanningsaanpassing"
+    },
     "frequencyPenalty": {
       "desc": "Hoe hoger de waarde, hoe waarschijnlijker het is dat herhaalde woorden worden verminderd",
       "title": "Frequentieboete"
@@ -215,6 +218,15 @@
     "presencePenalty": {
       "desc": "Hoe hoger de waarde, hoe waarschijnlijker het is dat het gesprek naar nieuwe onderwerpen wordt uitgebreid",
       "title": "Onderwerpnieuwheid"
+    },
+    "reasoningEffort": {
+      "desc": "Hoe hoger de waarde, hoe sterker de redeneringscapaciteit, maar dit kan de responstijd en het tokenverbruik verhogen",
+      "options": {
+        "high": "Hoog",
+        "low": "Laag",
+        "medium": "Gemiddeld"
+      },
+      "title": "Redeneringsinspanningsniveau"
     },
     "temperature": {
       "desc": "Hoe hoger de waarde, hoe willekeuriger de reactie",

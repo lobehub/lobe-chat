@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, ItemGroup, SliderWithInput } from '@lobehub/ui';
-import { Switch } from 'antd';
+import { Select, Switch } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,9 +17,9 @@ const AgentModal = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
 
-  const [enableMaxTokens, updateConfig] = useStore((s) => {
+  const [enableMaxTokens, enableReasoningEffort, updateConfig] = useStore((s) => {
     const config = selectors.chatConfig(s);
-    return [config.enableMaxTokens, s.setAgentConfig];
+    return [config.enableMaxTokens, config.enableReasoningEffort, s.setAgentConfig];
   });
 
   const providerName = useProviderName(useStore((s) => s.config.provider) as string);
@@ -78,6 +78,30 @@ const AgentModal = memo(() => {
         label: t('settingModel.maxTokens.title'),
         name: ['params', 'max_tokens'],
         tag: 'max_tokens',
+      },
+      {
+        children: <Switch />,
+        label: t('settingModel.enableReasoningEffort.title'),
+        minWidth: undefined,
+        name: ['chatConfig', 'enableReasoningEffort'],
+        valuePropName: 'checked',
+      },
+      {
+        children: (
+          <Select
+            defaultValue='medium'
+            options={[
+              { label: t('settingModel.reasoningEffort.options.low'), value: 'low' },
+              { label: t('settingModel.reasoningEffort.options.medium'), value: 'medium' },
+              { label: t('settingModel.reasoningEffort.options.high'), value: 'high' },
+            ]}
+          />
+        ),
+        desc: t('settingModel.reasoningEffort.desc'),
+        hidden: !enableReasoningEffort,
+        label: t('settingModel.reasoningEffort.title'),
+        name: ['params', 'reasoning_effort'],
+        tag: 'reasoning_effort',
       },
     ],
     title: t('settingModel.title'),
