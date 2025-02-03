@@ -251,7 +251,7 @@
     "@next/bundle-analyzer": "^15.1.4",
     "@next/eslint-plugin-next": "^15.1.4",
     "@peculiar/webcrypto": "^1.5.0",
-    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/exec": "^7.0.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.6.1",
