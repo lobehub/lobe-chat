@@ -323,20 +323,14 @@
   "abab7-chat-preview": {
     "description": "Significant improvements in capabilities such as long text, mathematics, and writing compared to the abab6.5 series models."
   },
-  "accounts/fireworks/models/firefunction-v1": {
-    "description": "Fireworks open-source function-calling model provides excellent instruction execution capabilities and customizable features."
+  "accounts/fireworks/models/deepseek-r1": {
+    "description": "DeepSeek-R1 is a state-of-the-art large language model optimized through reinforcement learning and cold-start data, excelling in reasoning, mathematics, and programming performance."
   },
-  "accounts/fireworks/models/firefunction-v2": {
-    "description": "Fireworks' latest Firefunction-v2 is a high-performance function-calling model developed based on Llama-3, optimized for function calls, dialogues, and instruction following."
-  },
-  "accounts/fireworks/models/firellava-13b": {
-    "description": "fireworks-ai/FireLLaVA-13b is a visual language model that can accept both image and text inputs, trained on high-quality data, suitable for multimodal tasks."
+  "accounts/fireworks/models/deepseek-v3": {
+    "description": "A powerful Mixture-of-Experts (MoE) language model provided by Deepseek, with a total parameter count of 671B, activating 37B parameters per token."
   },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Llama 3 70B instruction model, optimized for multilingual dialogues and natural language understanding, outperforming most competitive models."
-  },
-  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
-    "description": "Llama 3 70B instruction model (HF version), aligned with official implementation results, suitable for high-quality instruction following tasks."
   },
   "accounts/fireworks/models/llama-v3-8b-instruct": {
     "description": "Llama 3 8B instruction model, optimized for dialogues and multilingual tasks, delivering outstanding and efficient performance."
@@ -356,23 +350,23 @@
   "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
     "description": "Meta's 11B parameter instruction-tuned image reasoning model. This model is optimized for visual recognition, image reasoning, image description, and answering general questions about images. It understands visual data like charts and graphs, generating text descriptions of image details to bridge the gap between vision and language."
   },
-  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
-    "description": "The Llama 3.2 1B instruction model is a lightweight multilingual model introduced by Meta. This model aims to enhance efficiency, providing significant improvements in latency and cost compared to larger models. Sample use cases include retrieval and summarization."
-  },
   "accounts/fireworks/models/llama-v3p2-3b-instruct": {
     "description": "The Llama 3.2 3B instruction model is a lightweight multilingual model introduced by Meta. This model aims to enhance efficiency, providing significant improvements in latency and cost compared to larger models. Sample use cases include querying, prompt rewriting, and writing assistance."
   },
   "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
     "description": "Meta's 90B parameter instruction-tuned image reasoning model. This model is optimized for visual recognition, image reasoning, image description, and answering general questions about images. It understands visual data like charts and graphs, generating text descriptions of image details to bridge the gap between vision and language."
   },
+  "accounts/fireworks/models/llama-v3p3-70b-instruct": {
+    "description": "Llama 3.3 70B Instruct is the December update of Llama 3.1 70B. This model builds upon Llama 3.1 70B (released in July 2024) with enhancements in tool invocation, multilingual text support, mathematics, and programming capabilities. It achieves industry-leading performance in reasoning, mathematics, and instruction following, providing similar performance to 3.1 405B while offering significant advantages in speed and cost."
+  },
+  "accounts/fireworks/models/mistral-small-24b-instruct-2501": {
+    "description": "A 24B parameter model that possesses state-of-the-art capabilities comparable to larger models."
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Mixtral MoE 8x22B instruction model, featuring large-scale parameters and a multi-expert architecture, fully supporting efficient processing of complex tasks."
   },
   "accounts/fireworks/models/mixtral-8x7b-instruct": {
     "description": "Mixtral MoE 8x7B instruction model, with a multi-expert architecture providing efficient instruction following and execution."
-  },
-  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
-    "description": "Mixtral MoE 8x7B instruction model (HF version), performance consistent with official implementation, suitable for various efficient task scenarios."
   },
   "accounts/fireworks/models/mythomax-l2-13b": {
     "description": "MythoMax L2 13B model, combining novel merging techniques, excels in narrative and role-playing."
@@ -383,17 +377,14 @@
   "accounts/fireworks/models/qwen-qwq-32b-preview": {
     "description": "The QwQ model is an experimental research model developed by the Qwen team, focusing on enhancing AI reasoning capabilities."
   },
+  "accounts/fireworks/models/qwen2-vl-72b-instruct": {
+    "description": "The 72B version of the Qwen-VL model is the latest iteration from Alibaba, representing nearly a year of innovation."
+  },
   "accounts/fireworks/models/qwen2p5-72b-instruct": {
     "description": "Qwen2.5 is a series of decoder-only language models developed by the Alibaba Cloud Qwen team. These models come in different sizes including 0.5B, 1.5B, 3B, 7B, 14B, 32B, and 72B, available in both base and instruct variants."
   },
   "accounts/fireworks/models/qwen2p5-coder-32b-instruct": {
     "description": "Qwen2.5 Coder 32B Instruct is the latest version in Alibaba Cloud's series of code-specific large language models. This model significantly enhances code generation, reasoning, and repair capabilities based on Qwen2.5, trained on 55 trillion tokens. It not only improves coding abilities but also maintains advantages in mathematics and general capabilities, providing a more comprehensive foundation for practical applications such as code agents."
-  },
-  "accounts/fireworks/models/starcoder-16b": {
-    "description": "StarCoder 15.5B model supports advanced programming tasks, enhanced multilingual capabilities, suitable for complex code generation and understanding."
-  },
-  "accounts/fireworks/models/starcoder-7b": {
-    "description": "StarCoder 7B model, trained on over 80 programming languages, boasts excellent code completion capabilities and contextual understanding."
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Yi-Large model, featuring exceptional multilingual processing capabilities, suitable for various language generation and understanding tasks."
@@ -887,29 +878,17 @@
   "lite": {
     "description": "Spark Lite is a lightweight large language model with extremely low latency and efficient processing capabilities, completely free and open, supporting real-time online search functionality. Its quick response feature makes it excel in inference applications and model fine-tuning on low-power devices, providing users with excellent cost-effectiveness and intelligent experiences, particularly in knowledge Q&A, content generation, and search scenarios."
   },
-  "llama-3.1-70b-instruct": {
-    "description": "Llama 3.1 70B Instruct model, featuring 70B parameters, delivers outstanding performance in large text generation and instruction tasks."
-  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B provides enhanced AI reasoning capabilities, suitable for complex applications, supporting extensive computational processing while ensuring efficiency and accuracy."
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B is a high-performance model that offers rapid text generation capabilities, making it ideal for applications requiring large-scale efficiency and cost-effectiveness."
   },
-  "llama-3.1-8b-instruct": {
-    "description": "Llama 3.1 8B Instruct model, featuring 8B parameters, supports efficient execution of visual instruction tasks, providing high-quality text generation capabilities."
-  },
   "llama-3.1-sonar-huge-128k-online": {
     "description": "Llama 3.1 Sonar Huge Online model, featuring 405B parameters, supports a context length of approximately 127,000 tokens, designed for complex online chat applications."
   },
-  "llama-3.1-sonar-large-128k-chat": {
-    "description": "Llama 3.1 Sonar Large Chat model, featuring 70B parameters, supports a context length of approximately 127,000 tokens, suitable for complex offline chat tasks."
-  },
   "llama-3.1-sonar-large-128k-online": {
     "description": "Llama 3.1 Sonar Large Online model, featuring 70B parameters, supports a context length of approximately 127,000 tokens, suitable for high-capacity and diverse chat tasks."
-  },
-  "llama-3.1-sonar-small-128k-chat": {
-    "description": "Llama 3.1 Sonar Small Chat model, featuring 8B parameters, designed for offline chat, supports a context length of approximately 127,000 tokens."
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online model, featuring 8B parameters, supports a context length of approximately 127,000 tokens, designed for online chat, efficiently handling various text interactions."
@@ -1354,6 +1333,15 @@
   },
   "solar-pro": {
     "description": "Solar Pro is a highly intelligent LLM launched by Upstage, focusing on single-GPU instruction-following capabilities, with an IFEval score above 80. Currently supports English, with a formal version planned for release in November 2024, which will expand language support and context length."
+  },
+  "sonar": {
+    "description": "A lightweight search product based on contextual search, faster and cheaper than Sonar Pro."
+  },
+  "sonar-pro": {
+    "description": "An advanced search product that supports contextual search, advanced queries, and follow-ups."
+  },
+  "sonar-reasoning": {
+    "description": "A new API product powered by the DeepSeek reasoning model."
   },
   "step-1-128k": {
     "description": "Balances performance and cost, suitable for general scenarios."

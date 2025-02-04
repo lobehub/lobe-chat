@@ -1,5 +1,4 @@
 {
-  "0": "{",
   "01-ai/Yi-1.5-34B-Chat-16K": {
     "description": "Yi-1.5 34B는 풍부한 훈련 샘플을 통해 산업 응용에서 우수한 성능을 제공합니다."
   },
@@ -9,9 +8,6 @@
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9B는 16K 토큰을 지원하며, 효율적이고 매끄러운 언어 생성 능력을 제공합니다."
   },
-  "1": "\n",
-  "2": " ",
-  "3": " ",
   "360gpt-pro": {
     "description": "360GPT Pro는 360 AI 모델 시리즈의 중요한 구성원으로, 다양한 자연어 응용 시나리오에 맞춘 효율적인 텍스트 처리 능력을 갖추고 있으며, 긴 텍스트 이해 및 다중 회화 기능을 지원합니다."
   },
@@ -327,20 +323,14 @@
   "abab7-chat-preview": {
     "description": "abab6.5 시리즈 모델에 비해 긴 글, 수학, 작문 등에서 능력이 크게 향상되었습니다."
   },
-  "accounts/fireworks/models/firefunction-v1": {
-    "description": "Fireworks 오픈 소스 함수 호출 모델로, 뛰어난 지시 실행 능력과 개방형 커스터마이징 기능을 제공합니다."
+  "accounts/fireworks/models/deepseek-r1": {
+    "description": "DeepSeek-R1은 최첨단 대형 언어 모델로, 강화 학습과 콜드 스타트 데이터를 최적화하여 뛰어난 추론, 수학 및 프로그래밍 성능을 제공합니다."
   },
-  "accounts/fireworks/models/firefunction-v2": {
-    "description": "Fireworks 회사의 최신 Firefunction-v2는 Llama-3를 기반으로 개발된 뛰어난 함수 호출 모델로, 많은 최적화를 통해 함수 호출, 대화 및 지시 따르기 등의 시나리오에 특히 적합합니다."
-  },
-  "accounts/fireworks/models/firellava-13b": {
-    "description": "fireworks-ai/FireLLaVA-13b는 이미지와 텍스트 입력을 동시에 수용할 수 있는 비주얼 언어 모델로, 고품질 데이터로 훈련되어 다중 모달 작업에 적합합니다."
+  "accounts/fireworks/models/deepseek-v3": {
+    "description": "Deepseek에서 제공하는 강력한 Mixture-of-Experts (MoE) 언어 모델로, 총 매개변수 수는 671B이며, 각 토큰은 37B 매개변수를 활성화합니다."
   },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Llama 3 70B 지시 모델은 다국어 대화 및 자연어 이해를 위해 최적화되어 있으며, 대부분의 경쟁 모델보다 성능이 우수합니다."
-  },
-  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
-    "description": "Llama 3 70B 지시 모델(HF 버전)은 공식 구현 결과와 일치하며, 고품질의 지시 따르기 작업에 적합합니다."
   },
   "accounts/fireworks/models/llama-v3-8b-instruct": {
     "description": "Llama 3 8B 지시 모델은 대화 및 다국어 작업을 위해 최적화되어 있으며, 뛰어난 성능과 효율성을 제공합니다."
@@ -360,23 +350,23 @@
   "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
     "description": "Meta의 11B 파라미터 지시 조정 이미지 추론 모델입니다. 이 모델은 시각 인식, 이미지 추론, 이미지 설명 및 이미지에 대한 일반적인 질문에 답변하기 위해 최적화되었습니다. 이 모델은 차트 및 그래프와 같은 시각 데이터를 이해할 수 있으며, 이미지 세부 사항을 설명하는 텍스트를 생성하여 시각과 언어 간의 격차를 메웁니다."
   },
-  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
-    "description": "Llama 3.2 1B 지시 모델은 Meta가 출시한 경량 다국어 모델입니다. 이 모델은 효율성을 높이기 위해 설계되었으며, 더 큰 모델에 비해 지연 시간과 비용에서 상당한 개선을 제공합니다. 이 모델의 예시 사용 사례에는 검색 및 요약이 포함됩니다."
-  },
   "accounts/fireworks/models/llama-v3p2-3b-instruct": {
     "description": "Llama 3.2 3B 지시 모델은 Meta가 출시한 경량 다국어 모델입니다. 이 모델은 효율성을 높이기 위해 설계되었으며, 더 큰 모델에 비해 지연 시간과 비용에서 상당한 개선을 제공합니다. 이 모델의 예시 사용 사례에는 쿼리 및 프롬프트 재작성, 작문 지원이 포함됩니다."
   },
   "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
     "description": "Meta의 90B 파라미터 지시 조정 이미지 추론 모델입니다. 이 모델은 시각 인식, 이미지 추론, 이미지 설명 및 이미지에 대한 일반적인 질문에 답변하기 위해 최적화되었습니다. 이 모델은 차트 및 그래프와 같은 시각 데이터를 이해할 수 있으며, 이미지 세부 사항을 설명하는 텍스트를 생성하여 시각과 언어 간의 격차를 메웁니다."
   },
+  "accounts/fireworks/models/llama-v3p3-70b-instruct": {
+    "description": "Llama 3.3 70B Instruct는 Llama 3.1 70B의 12월 업데이트 버전입니다. 이 모델은 Llama 3.1 70B(2024년 7월 출시)를 기반으로 개선되어 도구 호출, 다국어 텍스트 지원, 수학 및 프로그래밍 능력을 강화했습니다. 이 모델은 추론, 수학 및 지시 준수에서 업계 최고 수준에 도달했으며, 3.1 405B와 유사한 성능을 제공하면서 속도와 비용에서 상당한 이점을 가지고 있습니다."
+  },
+  "accounts/fireworks/models/mistral-small-24b-instruct-2501": {
+    "description": "24B 매개변수 모델로, 더 큰 모델과 동등한 최첨단 능력을 갖추고 있습니다."
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Mixtral MoE 8x22B 지시 모델은 대규모 매개변수와 다수의 전문가 아키텍처를 통해 복잡한 작업의 효율적인 처리를 전방위적으로 지원합니다."
   },
   "accounts/fireworks/models/mixtral-8x7b-instruct": {
     "description": "Mixtral MoE 8x7B 지시 모델은 다수의 전문가 아키텍처를 통해 효율적인 지시 따르기 및 실행을 제공합니다."
-  },
-  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
-    "description": "Mixtral MoE 8x7B 지시 모델(HF 버전)은 성능이 공식 구현과 일치하며, 다양한 효율적인 작업 시나리오에 적합합니다."
   },
   "accounts/fireworks/models/mythomax-l2-13b": {
     "description": "MythoMax L2 13B 모델은 혁신적인 통합 기술을 결합하여 서사 및 역할 수행에 강점을 보입니다."
@@ -387,17 +377,14 @@
   "accounts/fireworks/models/qwen-qwq-32b-preview": {
     "description": "QwQ 모델은 Qwen 팀이 개발한 실험적 연구 모델로, AI 추론 능력을 향상시키는 데 중점을 두고 있습니다."
   },
+  "accounts/fireworks/models/qwen2-vl-72b-instruct": {
+    "description": "Qwen-VL 모델의 72B 버전은 알리바바의 최신 반복 결과로, 거의 1년간의 혁신을 대표합니다."
+  },
   "accounts/fireworks/models/qwen2p5-72b-instruct": {
     "description": "Qwen2.5는 Alibaba Cloud Qwen 팀이 개발한 일련의 디코더 전용 언어 모델입니다. 이러한 모델은 0.5B, 1.5B, 3B, 7B, 14B, 32B 및 72B와 같은 다양한 크기를 제공하며, 기본 버전과 지시 버전 두 가지 변형이 있습니다."
   },
   "accounts/fireworks/models/qwen2p5-coder-32b-instruct": {
     "description": "Qwen2.5 Coder 32B Instruct는 Alibaba Cloud에서 발표한 코드 특화 대규모 언어 모델 시리즈의 최신 버전입니다. 이 모델은 Qwen2.5를 기반으로 하여 55조 개의 토큰으로 훈련되어 코드 생성, 추론 및 수정 능력을 크게 향상시켰습니다. 이 모델은 코딩 능력을 강화할 뿐만 아니라 수학 및 일반 능력의 장점도 유지합니다. 모델은 코드 에이전트와 같은 실제 응용 프로그램에 더 포괄적인 기반을 제공합니다."
-  },
-  "accounts/fireworks/models/starcoder-16b": {
-    "description": "StarCoder 15.5B 모델은 고급 프로그래밍 작업을 지원하며, 다국어 능력이 강화되어 복잡한 코드 생성 및 이해에 적합합니다."
-  },
-  "accounts/fireworks/models/starcoder-7b": {
-    "description": "StarCoder 7B 모델은 80개 이상의 프로그래밍 언어를 대상으로 훈련되어 뛰어난 프로그래밍 완성 능력과 문맥 이해를 제공합니다."
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Yi-Large 모델은 뛰어난 다국어 처리 능력을 갖추고 있으며, 다양한 언어 생성 및 이해 작업에 사용될 수 있습니다."
@@ -563,6 +550,9 @@
   },
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2는 오픈 소스 혼합 전문가 코드 모델로, 코드 작업에서 뛰어난 성능을 발휘하며, GPT4-Turbo와 경쟁할 수 있습니다."
+  },
+  "deepseek-r1": {
+    "description": "DeepSeek-R1은 강화 학습(RL) 기반의 추론 모델로, 모델 내의 반복성과 가독성 문제를 해결합니다. RL 이전에 DeepSeek-R1은 콜드 스타트 데이터를 도입하여 추론 성능을 더욱 최적화했습니다. 수학, 코드 및 추론 작업에서 OpenAI-o1과 유사한 성능을 보이며, 정교하게 설계된 훈련 방법을 통해 전체적인 효과를 향상시켰습니다."
   },
   "deepseek-reasoner": {
     "description": "DeepSeek에서 제공하는 추론 모델입니다. 최종 답변을 출력하기 전에 모델은 먼저 사고 과정을 출력하여 최종 답변의 정확성을 높입니다."
@@ -888,29 +878,17 @@
   "lite": {
     "description": "Spark Lite는 경량 대형 언어 모델로, 매우 낮은 지연 시간과 효율적인 처리 능력을 갖추고 있으며, 완전히 무료로 제공되고 실시간 온라인 검색 기능을 지원합니다. 빠른 응답 특성 덕분에 저전력 장치에서의 추론 응용 및 모델 미세 조정에서 뛰어난 성능을 발휘하며, 사용자에게 뛰어난 비용 효율성과 스마트한 경험을 제공합니다. 특히 지식 질문 응답, 콘텐츠 생성 및 검색 시나리오에서 두각을 나타냅니다."
   },
-  "llama-3.1-70b-instruct": {
-    "description": "Llama 3.1 70B Instruct 모델은 70B 매개변수를 갖추고 있으며, 대규모 텍스트 생성 및 지시 작업에서 뛰어난 성능을 제공합니다."
-  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B는 더 강력한 AI 추론 능력을 제공하며, 복잡한 응용 프로그램에 적합하고, 많은 계산 처리를 지원하며 효율성과 정확성을 보장합니다."
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B는 효율적인 모델로, 빠른 텍스트 생성 능력을 제공하며, 대규모 효율성과 비용 효과성이 필요한 응용 프로그램에 매우 적합합니다."
   },
-  "llama-3.1-8b-instruct": {
-    "description": "Llama 3.1 8B Instruct 모델은 8B 매개변수를 갖추고 있으며, 화면 지시 작업의 효율적인 실행을 지원하고 우수한 텍스트 생성 능력을 제공합니다."
-  },
   "llama-3.1-sonar-huge-128k-online": {
     "description": "Llama 3.1 Sonar Huge Online 모델은 405B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 복잡한 온라인 채팅 애플리케이션을 위해 설계되었습니다."
   },
-  "llama-3.1-sonar-large-128k-chat": {
-    "description": "Llama 3.1 Sonar Large Chat 모델은 70B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 복잡한 오프라인 채팅 작업에 적합합니다."
-  },
   "llama-3.1-sonar-large-128k-online": {
     "description": "Llama 3.1 Sonar Large Online 모델은 70B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 대용량 및 다양한 채팅 작업에 적합합니다."
-  },
-  "llama-3.1-sonar-small-128k-chat": {
-    "description": "Llama 3.1 Sonar Small Chat 모델은 8B 매개변수를 갖추고 있으며, 오프라인 채팅을 위해 설계되어 약 127,000개의 토큰의 컨텍스트 길이를 지원합니다."
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online 모델은 8B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 온라인 채팅을 위해 설계되었습니다."
@@ -1355,6 +1333,15 @@
   },
   "solar-pro": {
     "description": "Solar Pro는 Upstage에서 출시한 고지능 LLM으로, 단일 GPU의 지시 추적 능력에 중점을 두고 있으며, IFEval 점수가 80 이상입니다. 현재 영어를 지원하며, 정식 버전은 2024년 11월에 출시될 예정이며, 언어 지원 및 컨텍스트 길이를 확장할 계획입니다."
+  },
+  "sonar": {
+    "description": "검색 맥락 기반의 경량 검색 제품으로, Sonar Pro보다 더 빠르고 저렴합니다."
+  },
+  "sonar-pro": {
+    "description": "고급 쿼리 및 후속 작업을 지원하는 검색 맥락 기반의 고급 검색 제품입니다."
+  },
+  "sonar-reasoning": {
+    "description": "DeepSeek 추론 모델이 지원하는 새로운 API 제품입니다."
   },
   "step-1-128k": {
     "description": "성능과 비용의 균형을 맞추어 일반적인 시나리오에 적합합니다."
