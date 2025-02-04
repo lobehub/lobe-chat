@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.50.3](https://github.com/lobehub/lobe-chat/compare/v1.50.2...v1.50.3)
+
+<sup>Released on **2025-02-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update model locale.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update model locale, closes [#5731](https://github.com/lobehub/lobe-chat/issues/5731) ([d3d26d7](https://github.com/lobehub/lobe-chat/commit/d3d26d7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.50.2](https://github.com/lobehub/lobe-chat/compare/v1.50.1...v1.50.2)
 
 <sup>Released on **2025-02-04**</sup>
