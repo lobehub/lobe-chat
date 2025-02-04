@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.50.4](https://github.com/lobehub/lobe-chat/compare/v1.50.3...v1.50.4)
+
+<sup>Released on **2025-02-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix invalid utf8 character.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix invalid utf8 character, closes [#5732](https://github.com/lobehub/lobe-chat/issues/5732) ([2905cb5](https://github.com/lobehub/lobe-chat/commit/2905cb5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.50.3](https://github.com/lobehub/lobe-chat/compare/v1.50.2...v1.50.3)
 
 <sup>Released on **2025-02-04**</sup>
