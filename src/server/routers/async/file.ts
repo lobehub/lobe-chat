@@ -273,3 +273,6 @@ export const fileRouter = router({
       }
     }),
 });
+
+
+export { fileProcedure };
