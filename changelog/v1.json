@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add/Update Aliyun Cloud Models, update GitHub Models."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix invalid utf8 character."]
     },
     "date": "2025-02-04",
