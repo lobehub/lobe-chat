@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix o1 series calling issue."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.2"
+  },
+  {
+    "children": {
       "fixes": ["Bind the selected group name in the rename modal.."]
     },
     "date": "2025-02-03",
