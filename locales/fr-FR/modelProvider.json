@@ -230,7 +230,7 @@
         },
         "modalTitle": "Configuration du modèle personnalisé",
         "reasoning": {
-          "extra": "Cette configuration activera uniquement la capacité de réflexion approfondie du modèle. La prise en charge de la reconnaissance dépend entièrement du modèle lui-même. Veuillez tester vous-même la disponibilité de la capacité de réflexion approfondie de ce modèle.",
+          "extra": "Cette configuration activera uniquement la capacité de réflexion approfondie du modèle. Les résultats dépendent entièrement du modèle lui-même, veuillez tester si ce modèle possède une capacité de réflexion approfondie utilisable.",
           "title": "Support de la réflexion approfondie"
         },
         "tokens": {

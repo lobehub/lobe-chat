@@ -230,7 +230,7 @@
         },
         "modalTitle": "Cấu hình mô hình tùy chỉnh",
         "reasoning": {
-          "extra": "Cấu hình này chỉ kích hoạt khả năng suy nghĩ sâu của mô hình, việc có hỗ trợ nhận diện hay không hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra khả năng suy nghĩ sâu của mô hình này",
+          "extra": "Cấu hình này sẽ chỉ kích hoạt khả năng suy nghĩ sâu của mô hình, hiệu quả cụ thể hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra xem mô hình này có khả năng suy nghĩ sâu có thể sử dụng hay không",
           "title": "Hỗ trợ suy nghĩ sâu"
         },
         "tokens": {

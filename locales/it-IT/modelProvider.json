@@ -230,8 +230,8 @@
         },
         "modalTitle": "Configurazione modello personalizzato",
         "reasoning": {
-          "extra": "Questa configurazione attiverà solo la capacità di pensiero profondo del modello; se supporta il riconoscimento dipende interamente dal modello stesso. Si prega di testare autonomamente la disponibilità della capacità di pensiero profondo di questo modello.",
-          "title": "Supporta il pensiero profondo"
+          "extra": "Questa configurazione attiverà solo la capacità di pensiero profondo del modello; l'effetto specifico dipende interamente dal modello stesso. Si prega di testare autonomamente se il modello possiede una capacità di pensiero profondo utilizzabile.",
+          "title": "Supporto per il pensiero profondo"
         },
         "tokens": {
           "extra": "Imposta il numero massimo di token supportati dal modello",

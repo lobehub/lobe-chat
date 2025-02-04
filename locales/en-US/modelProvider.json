@@ -230,7 +230,7 @@
         },
         "modalTitle": "Custom Model Configuration",
         "reasoning": {
-          "extra": "This configuration will only enable the model's deep thinking capabilities. Whether it supports recognition depends entirely on the model itself. Please test the availability of the model's deep thinking capabilities on your own.",
+          "extra": "This configuration will enable the model's deep thinking capabilities, and the specific effects depend entirely on the model itself. Please test whether this model has usable deep thinking abilities.",
           "title": "Support Deep Thinking"
         },
         "tokens": {

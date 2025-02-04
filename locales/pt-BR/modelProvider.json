@@ -230,8 +230,8 @@
         },
         "modalTitle": "Configuração do Modelo Personalizado",
         "reasoning": {
-          "extra": "Esta configuração ativará apenas a capacidade de raciocínio profundo do modelo; a capacidade de reconhecimento depende do próprio modelo. Por favor, teste a disponibilidade da capacidade de raciocínio profundo deste modelo.",
-          "title": "Suporte a raciocínio profundo"
+          "extra": "Esta configuração ativará apenas a capacidade de pensamento profundo do modelo, e o efeito específico depende totalmente do próprio modelo. Por favor, teste se este modelo possui a capacidade de pensamento profundo utilizável.",
+          "title": "Suporte a Pensamento Profundo"
         },
         "tokens": {
           "extra": "Configurar o número máximo de tokens suportados pelo modelo",

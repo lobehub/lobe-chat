@@ -230,7 +230,7 @@
         },
         "modalTitle": "Configuración del modelo personalizado",
         "reasoning": {
-          "extra": "Esta configuración solo activará la capacidad de pensamiento profundo del modelo; si admite el reconocimiento depende completamente del modelo en sí. Por favor, pruebe la disponibilidad de la capacidad de pensamiento profundo de este modelo.",
+          "extra": "Esta configuración solo activará la capacidad de pensamiento profundo del modelo, el efecto específico depende completamente del modelo en sí, por favor, pruebe si este modelo tiene la capacidad de pensamiento profundo utilizable",
           "title": "Soporte para pensamiento profundo"
         },
         "tokens": {

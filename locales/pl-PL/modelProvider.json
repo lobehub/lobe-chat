@@ -230,7 +230,7 @@
         },
         "modalTitle": "Konfiguracja niestandardowego modelu",
         "reasoning": {
-          "extra": "Ta konfiguracja włączy jedynie zdolność modelu do głębokiego myślenia, a to, czy rozpoznawanie jest wspierane, zależy od samego modelu. Proszę samodzielnie przetestować dostępność zdolności głębokiego myślenia tego modelu.",
+          "extra": "Ta konfiguracja włączy jedynie zdolność modelu do głębokiego myślenia, a konkretne efekty w pełni zależą od samego modelu. Proszę samodzielnie przetestować, czy model ma zdolność do głębokiego myślenia.",
           "title": "Wsparcie dla głębokiego myślenia"
         },
         "tokens": {

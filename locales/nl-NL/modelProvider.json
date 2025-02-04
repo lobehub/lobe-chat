@@ -230,7 +230,7 @@
         },
         "modalTitle": "Configuratie van aangepast model",
         "reasoning": {
-          "extra": "Deze configuratie zal alleen de mogelijkheid van diepgaand denken van het model inschakelen. Of het model in staat is om te herkennen, hangt volledig af van het model zelf. Test zelf de beschikbaarheid van het diepgaand denken van dit model.",
+          "extra": "Deze configuratie schakelt alleen de mogelijkheid voor diepgaand denken van het model in. Het specifieke effect hangt volledig af van het model zelf, test zelf of dit model in staat is tot bruikbaar diepgaand denken.",
           "title": "Ondersteuning voor diepgaand denken"
         },
         "tokens": {

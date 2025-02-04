@@ -230,7 +230,7 @@
         },
         "modalTitle": "Benutzerdefinierte Modellkonfiguration",
         "reasoning": {
-          "extra": "Diese Konfiguration aktiviert nur die Fähigkeit des Modells zum tiefen Denken. Ob die Erkennung unterstützt wird, hängt vollständig vom Modell selbst ab. Bitte testen Sie die Verfügbarkeit der tiefen Denkfähigkeit dieses Modells selbst.",
+          "extra": "Diese Konfiguration aktiviert nur die Fähigkeit des Modells zu tiefem Denken. Die tatsächlichen Ergebnisse hängen vollständig vom Modell selbst ab. Bitte testen Sie selbst, ob das Modell über die Fähigkeit zum tiefen Denken verfügt.",
           "title": "Unterstützung für tiefes Denken"
         },
         "tokens": {
