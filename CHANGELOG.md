@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.50.2](https://github.com/lobehub/lobe-chat/compare/v1.50.1...v1.50.2)
+
+<sup>Released on **2025-02-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `o1` series calling issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `o1` series calling issue, closes [#5714](https://github.com/lobehub/lobe-chat/issues/5714) ([d74653e](https://github.com/lobehub/lobe-chat/commit/d74653e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.50.1](https://github.com/lobehub/lobe-chat/compare/v1.50.0...v1.50.1)
 
 <sup>Released on **2025-02-03**</sup>
