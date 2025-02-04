@@ -39,9 +39,6 @@ export interface JWTPayload {
 
   cloudflareBaseURLOrAccountID?: string;
 
-  wenxinAccessKey?: string;
-  wenxinSecretKey?: string;
-
   /**
    * user id
    * in client db mode it's a uuid
