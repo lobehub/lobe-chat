@@ -323,20 +323,14 @@
   "abab7-chat-preview": {
     "description": "Par rapport à la série de modèles abab6.5, il y a eu une amélioration significative des capacités en matière de textes longs, de mathématiques et d'écriture."
   },
-  "accounts/fireworks/models/firefunction-v1": {
-    "description": "Le modèle d'appel de fonction open source de Fireworks offre d'excellentes capacités d'exécution d'instructions et des caractéristiques personnalisables."
+  "accounts/fireworks/models/deepseek-r1": {
+    "description": "DeepSeek-R1 est un modèle de langage de grande taille à la pointe de la technologie, optimisé par apprentissage renforcé et données de démarrage à froid, offrant d'excellentes performances en raisonnement, mathématiques et programmation."
   },
-  "accounts/fireworks/models/firefunction-v2": {
-    "description": "Firefunction-v2, récemment lancé par Fireworks, est un modèle d'appel de fonction performant, développé sur la base de Llama-3 et optimisé pour des scénarios tels que les appels de fonction, les dialogues et le suivi d'instructions."
-  },
-  "accounts/fireworks/models/firellava-13b": {
-    "description": "fireworks-ai/FireLLaVA-13b est un modèle de langage visuel capable de recevoir simultanément des entrées d'images et de texte, entraîné sur des données de haute qualité, adapté aux tâches multimodales."
+  "accounts/fireworks/models/deepseek-v3": {
+    "description": "Modèle de langage puissant de Deepseek basé sur un mélange d'experts (MoE), avec un total de 671B de paramètres, activant 37B de paramètres par jeton."
   },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Le modèle d'instructions Llama 3 70B est optimisé pour les dialogues multilingues et la compréhension du langage naturel, surpassant la plupart des modèles concurrents."
-  },
-  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
-    "description": "Le modèle d'instructions Llama 3 70B (version HF) est conforme aux résultats de l'implémentation officielle, adapté aux tâches de suivi d'instructions de haute qualité."
   },
   "accounts/fireworks/models/llama-v3-8b-instruct": {
     "description": "Le modèle d'instructions Llama 3 8B est optimisé pour les dialogues et les tâches multilingues, offrant des performances exceptionnelles et efficaces."
@@ -356,23 +350,23 @@
   "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
     "description": "Modèle d'inférence d'image ajusté par instructions de Meta avec 11B paramètres. Ce modèle est optimisé pour la reconnaissance visuelle, l'inférence d'image, la description d'image et pour répondre à des questions générales sur l'image. Il est capable de comprendre des données visuelles, comme des graphiques et des diagrammes, et de combler le fossé entre la vision et le langage en générant des descriptions textuelles des détails de l'image."
   },
-  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
-    "description": "Le modèle d'instructions Llama 3.2 1B est un modèle multilingue léger lancé par Meta. Ce modèle vise à améliorer l'efficacité, offrant des améliorations significatives en matière de latence et de coût par rapport aux modèles plus grands. Les cas d'utilisation incluent la recherche et le résumé."
-  },
   "accounts/fireworks/models/llama-v3p2-3b-instruct": {
     "description": "Le modèle d'instructions Llama 3.2 3B est un modèle multilingue léger lancé par Meta. Ce modèle vise à améliorer l'efficacité, offrant des améliorations significatives en matière de latence et de coût par rapport aux modèles plus grands. Les cas d'utilisation incluent les requêtes, la réécriture de prompts et l'assistance à l'écriture."
   },
   "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
     "description": "Modèle d'inférence d'image ajusté par instructions de Meta avec 90B paramètres. Ce modèle est optimisé pour la reconnaissance visuelle, l'inférence d'image, la description d'image et pour répondre à des questions générales sur l'image. Il est capable de comprendre des données visuelles, comme des graphiques et des diagrammes, et de combler le fossé entre la vision et le langage en générant des descriptions textuelles des détails de l'image."
   },
+  "accounts/fireworks/models/llama-v3p3-70b-instruct": {
+    "description": "Llama 3.3 70B Instruct est la version mise à jour de Llama 3.1 70B de décembre. Ce modèle a été amélioré par rapport à Llama 3.1 70B (publié en juillet 2024), renforçant les appels d'outils, le support multilingue, ainsi que les capacités en mathématiques et en programmation. Ce modèle atteint des niveaux de performance de pointe dans le raisonnement, les mathématiques et le respect des instructions, tout en offrant des performances similaires à celles du 3.1 405B, avec des avantages significatifs en termes de vitesse et de coût."
+  },
+  "accounts/fireworks/models/mistral-small-24b-instruct-2501": {
+    "description": "Modèle de 24B paramètres, doté de capacités de pointe comparables à celles de modèles plus grands."
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Le modèle d'instructions Mixtral MoE 8x22B, avec des paramètres à grande échelle et une architecture multi-experts, prend en charge efficacement le traitement de tâches complexes."
   },
   "accounts/fireworks/models/mixtral-8x7b-instruct": {
     "description": "Le modèle d'instructions Mixtral MoE 8x7B, avec une architecture multi-experts, offre un suivi et une exécution d'instructions efficaces."
-  },
-  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
-    "description": "Le modèle d'instructions Mixtral MoE 8x7B (version HF) offre des performances conformes à l'implémentation officielle, adapté à divers scénarios de tâches efficaces."
   },
   "accounts/fireworks/models/mythomax-l2-13b": {
     "description": "Le modèle MythoMax L2 13B, combinant des techniques de fusion novatrices, excelle dans la narration et le jeu de rôle."
@@ -383,17 +377,14 @@
   "accounts/fireworks/models/qwen-qwq-32b-preview": {
     "description": "Le modèle QwQ est un modèle de recherche expérimental développé par l'équipe Qwen, axé sur l'amélioration des capacités de raisonnement de l'IA."
   },
+  "accounts/fireworks/models/qwen2-vl-72b-instruct": {
+    "description": "La version 72B du modèle Qwen-VL est le fruit de la dernière itération d'Alibaba, représentant près d'un an d'innovation."
+  },
   "accounts/fireworks/models/qwen2p5-72b-instruct": {
     "description": "Qwen2.5 est une série de modèles de langage à décodage uniquement développée par l'équipe Qwen d'Alibaba Cloud. Ces modèles sont offerts en différentes tailles, y compris 0.5B, 1.5B, 3B, 7B, 14B, 32B et 72B, avec des variantes de base (base) et d'instruction (instruct)."
   },
   "accounts/fireworks/models/qwen2p5-coder-32b-instruct": {
     "description": "Qwen2.5 Coder 32B Instruct est la dernière version de la série de modèles de langage à grande échelle spécifique au code publiée par Alibaba Cloud. Ce modèle, basé sur Qwen2.5, a été formé avec 55 trillions de tokens, améliorant considérablement les capacités de génération, de raisonnement et de correction de code. Il renforce non seulement les capacités de codage, mais maintient également des avantages en mathématiques et en compétences générales. Le modèle fournit une base plus complète pour des applications pratiques telles que les agents de code."
-  },
-  "accounts/fireworks/models/starcoder-16b": {
-    "description": "Le modèle StarCoder 15.5B prend en charge des tâches de programmation avancées, avec des capacités multilingues améliorées, adapté à la génération et à la compréhension de code complexes."
-  },
-  "accounts/fireworks/models/starcoder-7b": {
-    "description": "Le modèle StarCoder 7B est entraîné sur plus de 80 langages de programmation, offrant d'excellentes capacités de complétion de code et de compréhension contextuelle."
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Le modèle Yi-Large offre d'excellentes capacités de traitement multilingue, adapté à diverses tâches de génération et de compréhension de langage."
@@ -887,29 +878,17 @@
   "lite": {
     "description": "Spark Lite est un modèle de langage léger, offrant une latence extrêmement faible et une capacité de traitement efficace, entièrement gratuit et ouvert, prenant en charge la recherche en temps réel. Sa capacité de réponse rapide le rend exceptionnel pour les applications d'inférence sur des appareils à faible puissance de calcul et pour le réglage des modèles, offrant aux utilisateurs un excellent rapport coût-efficacité et une expérience intelligente, en particulier dans les scénarios de questions-réponses, de génération de contenu et de recherche."
   },
-  "llama-3.1-70b-instruct": {
-    "description": "Le modèle Llama 3.1 70B Instruct, avec 70B de paramètres, offre des performances exceptionnelles dans la génération de texte et les tâches d'instructions."
-  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B offre une capacité de raisonnement AI plus puissante, adaptée aux applications complexes, prenant en charge un traitement de calcul intensif tout en garantissant efficacité et précision."
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B est un modèle à haute performance, offrant une capacité de génération de texte rapide, particulièrement adapté aux scénarios d'application nécessitant une efficacité à grande échelle et un rapport coût-efficacité."
   },
-  "llama-3.1-8b-instruct": {
-    "description": "Le modèle Llama 3.1 8B Instruct, avec 8B de paramètres, prend en charge l'exécution efficace des tâches d'instructions visuelles, offrant d'excellentes capacités de génération de texte."
-  },
   "llama-3.1-sonar-huge-128k-online": {
     "description": "Le modèle Llama 3.1 Sonar Huge Online, avec 405B de paramètres, prend en charge une longueur de contexte d'environ 127 000 jetons, conçu pour des applications de chat en ligne complexes."
   },
-  "llama-3.1-sonar-large-128k-chat": {
-    "description": "Le modèle Llama 3.1 Sonar Large Chat, avec 70B de paramètres, prend en charge une longueur de contexte d'environ 127 000 jetons, adapté aux tâches de chat hors ligne complexes."
-  },
   "llama-3.1-sonar-large-128k-online": {
     "description": "Le modèle Llama 3.1 Sonar Large Online, avec 70B de paramètres, prend en charge une longueur de contexte d'environ 127 000 jetons, adapté aux tâches de chat à haute capacité et diversifiées."
-  },
-  "llama-3.1-sonar-small-128k-chat": {
-    "description": "Le modèle Llama 3.1 Sonar Small Chat, avec 8B de paramètres, est conçu pour le chat hors ligne, prenant en charge une longueur de contexte d'environ 127 000 jetons."
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Le modèle Llama 3.1 Sonar Small Online, avec 8B de paramètres, prend en charge une longueur de contexte d'environ 127 000 jetons, conçu pour le chat en ligne, capable de traiter efficacement diverses interactions textuelles."
@@ -1354,6 +1333,15 @@
   },
   "solar-pro": {
     "description": "Solar Pro est un LLM hautement intelligent lancé par Upstage, axé sur la capacité de suivi des instructions sur un seul GPU, avec un score IFEval supérieur à 80. Actuellement, il supporte l'anglais, et la version officielle est prévue pour novembre 2024, avec une extension du support linguistique et de la longueur du contexte."
+  },
+  "sonar": {
+    "description": "Produit de recherche léger basé sur le contexte de recherche, plus rapide et moins cher que Sonar Pro."
+  },
+  "sonar-pro": {
+    "description": "Produit de recherche avancé prenant en charge le contexte de recherche, avec des requêtes avancées et un suivi."
+  },
+  "sonar-reasoning": {
+    "description": "Nouveau produit API soutenu par le modèle de raisonnement DeepSeek."
   },
   "step-1-128k": {
     "description": "Équilibre entre performance et coût, adapté à des scénarios généraux."
