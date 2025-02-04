@@ -323,20 +323,14 @@
   "abab7-chat-preview": {
     "description": "相對於abab6.5系列模型在長文、數學、寫作等能力有大幅度提升。"
   },
-  "accounts/fireworks/models/firefunction-v1": {
-    "description": "Fireworks 開源函數調用模型，提供卓越的指令執行能力和開放可定制的特性。"
+  "accounts/fireworks/models/deepseek-r1": {
+    "description": "DeepSeek-R1 是一款最先進的大型語言模型，經過強化學習和冷啟動數據的優化，具有出色的推理、數學和編程性能。"
   },
-  "accounts/fireworks/models/firefunction-v2": {
-    "description": "Fireworks 公司最新推出的 Firefunction-v2 是一款性能卓越的函數調用模型，基於 Llama-3 開發，並通過大量優化，特別適用於函數調用、對話及指令跟隨等場景。"
-  },
-  "accounts/fireworks/models/firellava-13b": {
-    "description": "fireworks-ai/FireLLaVA-13b 是一款視覺語言模型，可以同時接收圖像和文本輸入，經過高質量數據訓練，適合多模態任務。"
+  "accounts/fireworks/models/deepseek-v3": {
+    "description": "Deepseek 提供的強大 Mixture-of-Experts (MoE) 語言模型，總參數量為 671B，每個標記激活 37B 參數。"
   },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Llama 3 70B 指令模型，專為多語言對話和自然語言理解優化，性能優於多數競爭模型。"
-  },
-  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
-    "description": "Llama 3 70B 指令模型（HF 版本），與官方實現結果保持一致，適合高質量的指令跟隨任務。"
   },
   "accounts/fireworks/models/llama-v3-8b-instruct": {
     "description": "Llama 3 8B 指令模型，優化用於對話及多語言任務，表現卓越且高效。"
@@ -356,23 +350,23 @@
   "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
     "description": "Meta的11B參數指令調整圖像推理模型。該模型針對視覺識別、圖像推理、圖像描述和回答關於圖像的一般性問題進行了優化。該模型能夠理解視覺數據，如圖表和圖形，並通過生成文本描述圖像細節來弥合視覺與語言之間的差距。"
   },
-  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
-    "description": "Llama 3.2 1B 指令模型是Meta推出的一款輕量級多語言模型。該模型旨在提高效率，與更大型的模型相比，在延遲和成本方面提供了顯著的改進。該模型的示例用例包括檢索和摘要。"
-  },
   "accounts/fireworks/models/llama-v3p2-3b-instruct": {
     "description": "Llama 3.2 3B 指令模型是Meta推出的一款輕量級多語言模型。該模型旨在提高效率，與更大型的模型相比，在延遲和成本方面提供了顯著的改進。該模型的示例用例包括查詢和提示重寫以及寫作輔助。"
   },
   "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
     "description": "Meta的90B參數指令調整圖像推理模型。該模型針對視覺識別、圖像推理、圖像描述和回答關於圖像的一般性問題進行了優化。該模型能夠理解視覺數據，如圖表和圖形，並通過生成文本描述圖像細節來弥合視覺與語言之間的差距。"
   },
+  "accounts/fireworks/models/llama-v3p3-70b-instruct": {
+    "description": "Llama 3.3 70B Instruct 是 Llama 3.1 70B 的 12 月更新版本。該模型在 Llama 3.1 70B（於 2024 年 7 月發布）的基礎上進行了改進，增強了工具調用、多語言文本支持、數學和編程能力。該模型在推理、數學和指令遵循方面達到了行業領先水平，並且能夠提供與 3.1 405B 相似的性能，同時在速度和成本上具有顯著優勢。"
+  },
+  "accounts/fireworks/models/mistral-small-24b-instruct-2501": {
+    "description": "24B 參數模型，具備與更大型模型相當的最先進能力。"
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Mixtral MoE 8x22B 指令模型，大規模參數和多專家架構，全方位支持複雜任務的高效處理。"
   },
   "accounts/fireworks/models/mixtral-8x7b-instruct": {
     "description": "Mixtral MoE 8x7B 指令模型，多專家架構提供高效的指令跟隨及執行。"
-  },
-  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
-    "description": "Mixtral MoE 8x7B 指令模型（HF 版本），性能與官方實現一致，適合多種高效任務場景。"
   },
   "accounts/fireworks/models/mythomax-l2-13b": {
     "description": "MythoMax L2 13B 模型，結合新穎的合併技術，擅長敘事和角色扮演。"
@@ -383,17 +377,14 @@
   "accounts/fireworks/models/qwen-qwq-32b-preview": {
     "description": "QwQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於增強 AI 推理能力。"
   },
+  "accounts/fireworks/models/qwen2-vl-72b-instruct": {
+    "description": "Qwen-VL 模型的 72B 版本是阿里巴巴最新迭代的成果，代表了近一年的創新。"
+  },
   "accounts/fireworks/models/qwen2p5-72b-instruct": {
     "description": "Qwen2.5 是由阿里雲 Qwen 團隊開發的一系列僅包含解碼器的語言模型。這些模型提供不同的大小，包括 0.5B、1.5B、3B、7B、14B、32B 和 72B，並且有基礎版（base）和指令版（instruct）兩種變體。"
   },
   "accounts/fireworks/models/qwen2p5-coder-32b-instruct": {
     "description": "Qwen2.5 Coder 32B Instruct 是阿里雲發布的代碼特定大語言模型系列的最新版本。該模型在 Qwen2.5 的基礎上，通過 5.5 萬億個 tokens 的訓練，顯著提升了代碼生成、推理和修復能力。它不僅增強了編碼能力，還保持了數學和通用能力的優勢。模型為代碼智能體等實際應用提供了更全面的基礎"
-  },
-  "accounts/fireworks/models/starcoder-16b": {
-    "description": "StarCoder 15.5B 模型，支持高級編程任務，多語言能力增強，適合複雜代碼生成和理解。"
-  },
-  "accounts/fireworks/models/starcoder-7b": {
-    "description": "StarCoder 7B 模型，針對 80 多種編程語言訓練，擁有出色的編程填充能力和語境理解。"
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Yi-Large 模型，具備卓越的多語言處理能力，可用於各類語言生成和理解任務。"
@@ -887,29 +878,17 @@
   "lite": {
     "description": "Spark Lite 是一款輕量級大語言模型，具備極低的延遲與高效的處理能力，完全免費開放，支持即時在線搜索功能。其快速響應的特性使其在低算力設備上的推理應用和模型微調中表現出色，為用戶帶來出色的成本效益和智能體驗，尤其在知識問答、內容生成及搜索場景下表現不俗。"
   },
-  "llama-3.1-70b-instruct": {
-    "description": "Llama 3.1 70B Instruct 模型，具備 70B 參數，能在大型文本生成和指示任務中提供卓越性能。"
-  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B 提供更強大的 AI 推理能力，適合複雜應用，支持超多的計算處理並保證高效和準確率。"
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B 是一款高效能模型，提供了快速的文本生成能力，非常適合需要大規模效率和成本效益的應用場景。"
   },
-  "llama-3.1-8b-instruct": {
-    "description": "Llama 3.1 8B Instruct 模型，具備 8B 參數，支持畫面指示任務的高效執行，提供優質的文本生成能力。"
-  },
   "llama-3.1-sonar-huge-128k-online": {
     "description": "Llama 3.1 Sonar Huge Online 模型，具備 405B 參數，支持約 127,000 個標記的上下文長度，設計用於複雜的在線聊天應用。"
   },
-  "llama-3.1-sonar-large-128k-chat": {
-    "description": "Llama 3.1 Sonar Large Chat 模型，具備 70B 參數，支持約 127,000 個標記的上下文長度，適合於複雜的離線聊天任務。"
-  },
   "llama-3.1-sonar-large-128k-online": {
     "description": "Llama 3.1 Sonar Large Online 模型，具備 70B 參數，支持約 127,000 個標記的上下文長度，適用於高容量和多樣化聊天任務。"
-  },
-  "llama-3.1-sonar-small-128k-chat": {
-    "description": "Llama 3.1 Sonar Small Chat 模型，具備 8B 參數，專為離線聊天設計，支持約 127,000 個標記的上下文長度。"
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online 模型，具備 8B 參數，支持約 127,000 個標記的上下文長度，專為在線聊天設計，能高效處理各種文本交互。"
@@ -1354,6 +1333,15 @@
   },
   "solar-pro": {
     "description": "Solar Pro 是 Upstage 推出的一款高智能LLM，專注於單GPU的指令跟隨能力，IFEval得分80以上。目前支持英語，正式版本計劃於2024年11月推出，將擴展語言支持和上下文長度。"
+  },
+  "sonar": {
+    "description": "基於搜索上下文的輕量級搜索產品，比 Sonar Pro 更快、更便宜。"
+  },
+  "sonar-pro": {
+    "description": "支持搜索上下文的高級搜索產品，支持高級查詢和跟進。"
+  },
+  "sonar-reasoning": {
+    "description": "由 DeepSeek 推理模型提供支持的新 API 產品。"
   },
   "step-1-128k": {
     "description": "平衡性能與成本，適合一般場景。"
