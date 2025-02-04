@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Fix o1 series calling issue."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.2"
+  },
+  {
+    "children": {
+      "fixes": ["Bind the selected group name in the rename modal.."]
+    },
+    "date": "2025-02-03",
+    "version": "1.50.1"
+  },
+  {
+    "children": {
       "features": ["Add o3-mini support for OpenAI & GitHub Models."],
       "fixes": ["Fix parse of deepseek r1 in siliconflow provider."]
     },
