@@ -319,14 +319,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                   | Description                                                                                                                                             |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [SUNO Song Creation Assistant](https://lobechat.com/discover/assistant/suno-lyrics-assistant)<br/><sup>By **[sqkkyzx](https://github.com/sqkkyzx)** on **2025-01-26**</sup>      | Can generate SUNO song creation parameters based on user needs<br/>`lyric-creation` `music-style` `arrangement` `parameter-settings`                    |
-| [The Great Biggus Dickus](https://lobechat.com/discover/assistant/all-knowing)<br/><sup>By **[CGitwater](https://github.com/CGitwater)** on **2025-01-24**</sup>                 | The almighty powerful god of klnowledge<br/>`biggus` `diccus`                                                                                           |
-| [PPT Production Expert](https://lobechat.com/discover/assistant/ppt-production-expert)<br/><sup>By **[patricleehua](https://github.com/patricleehua)** on **2025-01-24**</sup>   | Skilled in the rapid production and optimization of high-quality PPTs<br/>`ppt-production` `design` `consulting` `content-optimization` `user-support`  |
-| [OCR Document Transcription Assistant](https://lobechat.com/discover/assistant/ocr-markdown)<br/><sup>By **[Liangpi000](https://github.com/Liangpi000)** on **2025-01-24**</sup> | Specializes in document content transcription and markdown formatting<br/>`document-generation` `markdown` `formatting` `transcription` `task-guidance` |
+| Recent Submits                                                                                                                                               | Description                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Sharp Commentator](https://lobechat.com/discover/assistant/ruipingshi)<br/><sup>By **[Zippland](https://github.com/Zippland)** on **2025-02-04**</sup>      | Specializes in sharp commentary and in-depth analysis of issues<br/>`commentary` `social-perspectives` `sharp-analysis`                               |
+| [Python Genius](https://lobechat.com/discover/assistant/python-genius)<br/><sup>By **[novaspivack](https://github.com/novaspivack)** on **2025-02-04**</sup> | An advanced python coder<br/>`code` `python`                                                                                                          |
+| [SAT master](https://lobechat.com/discover/assistant/sat-teaching)<br/><sup>By **[iBz-04](https://github.com/iBz-04)** on **2025-02-04**</sup>               | Expert in Digital SAT coaching for 1300+ scores<br/>`sat` `aptitude-test`                                                                             |
+| [Cosmic Oracle](https://lobechat.com/discover/assistant/universal-god)<br/><sup>By **[GowayLee](https://github.com/GowayLee)** on **2025-02-04**</sup>       | Wisdom from across time and space, insight into the essence of life<br/>`character-design` `ai-characters` `metaverse` `role-playing` `wisdom-system` |
 
-> 📊 Total agents: [<kbd>**471**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**478**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 

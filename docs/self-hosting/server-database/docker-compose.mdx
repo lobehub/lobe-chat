@@ -198,12 +198,12 @@ The script supports the following deployment modes; please choose the appropriat
 
   In domain mode, you need to complete the reverse proxy configuration and ensure that the LAN/public can access the following services. Please use a reverse proxy to map the following service ports to the domain names:
 
-  | Domain                | Proxy Port | Required |
-  | --------------------- | ---------- | -------- |
-  | `lobe.example.com`    | `3210`     | Yes      |
-  | `auth-ui.example.com` | `8000`     | Yes      |
-  | `s3-api.example.com`  | `9000`     | Yes      |
-  | `s3-ui.example.com`   | `9001`     | No       |
+  | Domain                 | Proxy Port | Required |
+  | ---------------------- | ---------- | -------- |
+  | `lobe.example.com`     | `3210`     | Yes      |
+  | `auth.example.com`     | `8000`     | Yes      |
+  | `minio.example.com`    | `9000`     | Yes      |
+  | `minio-ui.example.com` | `9001`     |          |
 
   <Callout type="important">
     If you are using panel software like [APanel](https://www.bt.cn/) for reverse proxy configuration,
@@ -226,8 +226,8 @@ The script supports the following deployment modes; please choose the appropriat
   In domain mode, you need to complete the following configurations based on script prompts:
 
   - Domain setup for the LobeChat service: `lobe.example.com`
-  - Domain setup for the Minio service: `s3-api.example.com`
-  - Domain setup for the Casdoor service: `auth-ui.example.com`
+  - Domain setup for the Minio service: `minio.example.com`
+  - Domain setup for the Casdoor service: `auth.example.com`
   - Choose the access protocol: `http` or `https`
   - Regenerate secure keys: We highly recommend regenerating the secure keys; if you lack the key generation library required by the script, we suggest referring to the [Custom Deployment](#custom-deployment) section for key modifications.
 
@@ -256,11 +256,11 @@ The script supports the following deployment modes; please choose the appropriat
     - Username: user
     - Password: 837e26
   Casdoor:
-    - URL: https://auth-ui.example.com
+    - URL: https://auth.example.com
     - Username: admin
     - Password: 837e26
   Minio:
-    - URL: https://s3-api.example.com
+    - URL: https://minio.example.com
     - Username: admin
     - Password: dbac8440
   ```
@@ -336,7 +336,7 @@ Now, we will introduce the necessary configurations for running these services:
 - LobeChat requires communication with Casdoor, so you need to configure Casdoor's Issuer.
 
 ```env
-AUTH_CASDOOR_ISSUER=https://auth-ui.example.com
+AUTH_CASDOOR_ISSUER=https://auth.example.com
 ```
 
 This configuration will affect LobeChat's login authentication service, and you need to ensure that the URL of the Casdoor service is correct. You can find common manifestations and solutions for errors in this configuration in the [FAQ](#faq).
@@ -346,13 +346,13 @@ This configuration will affect LobeChat's login authentication service, and you 
 Please add a line in the `Authentication -> Application` -> `<Application ID, default is app-built-in>` -> `Redirect URI` in Casdoor's web panel:
 
 ```
-https://auth-ui.example.com/api/auth/callback/casdoor
+https://auth.example.com/api/auth/callback/casdoor
 ```
 
 - Casdoor needs to provide the Origin information for access in the environment variables:
 
 ```env
-origin=https://auth-ui.example.com
+origin=https://auth.example.com
 ```
 
 2. MinIO
@@ -360,8 +360,8 @@ origin=https://auth-ui.example.com
 - LobeChat needs to provide a public access URL for object files for the LLM service provider, hence you need to configure MinIO's Endpoint.
 
 ```env
-S3_PUBLIC_DOMAIN=https://s3-api.example.com
-S3_ENDPOINT=https://s3-api.example.com
+S3_PUBLIC_DOMAIN=https://minio.example.com
+S3_ENDPOINT=https://minio.example.com
 ```
 
 3. PostgreSQL
@@ -397,9 +397,9 @@ Solutions:
 
 - Please refer to the reverse proxy configuration notes in the [Domain Mode](#domain-mode) section.
 
-- A direct troubleshooting method is to access `https://auth-ui.example.com/.well-known/openid-configuration` directly; if:
+- A direct troubleshooting method is to access `https://auth.example.com/.well-known/openid-configuration` directly; if:
   - Non-JSON format data is returned, it indicates your reverse proxy configuration is incorrect.
-  - If the returned JSON format data contains an `"issuer": "URL"` field that does not match your configured `https://auth-ui.example.com`, it indicates your environment variable configuration is incorrect.
+  - If the returned JSON format data contains an `"issuer": "URL"` field that does not match your configured `https://auth.example.com`, it indicates your environment variable configuration is incorrect.
 
 - TypeError: fetch failed
 
@@ -413,7 +413,7 @@ Solutions:
 
 - Check whether your authentication service is running properly and whether LobeChat's network can reach the authentication service.
 
-- A straightforward troubleshooting method is to use the `curl` command in the LobeChat container terminal to access your authentication service at `https://auth-ui.example.com/.well-known/openid-configuration`. If JSON format data is returned, it indicates your authentication service is functioning correctly.
+- A straightforward troubleshooting method is to use the `curl` command in the LobeChat container terminal to access your authentication service at `https://auth.example.com/.well-known/openid-configuration`. If JSON format data is returned, it indicates your authentication service is functioning correctly.
 
 ````markdown
 ## Extended Configuration
@@ -490,9 +490,9 @@ In the following, it is assumed that in addition to the above services, you are 
 The domain and corresponding service port descriptions are as follows:
 
 - `lobe.example.com`: This is your LobeChat service domain, which needs to reverse proxy to the LobeChat service port, default is `3210`.
-- `auth-ui.example.com`: This is your Logto UI domain, which needs to reverse proxy to the Logto WebUI service port, default is `8000`.
-- `s3-api.example.com`: This is your MinIO API domain, which needs to reverse proxy to the MinIO API service port, default is `9000`.
-- `s3-ui.example.com`: Optional, this is your MinIO UI domain, which needs to reverse proxy to the MinIO WebUI service port, default is `9001`.
+- `auth.example.com`: This is your Logto UI domain, which needs to reverse proxy to the Logto WebUI service port, default is `8000`.
+- `minio.example.com`: This is your MinIO API domain, which needs to reverse proxy to the MinIO API service port, default is `9000`.
+- `minio-ui.example.com`: Optional, this is your MinIO UI domain, which needs to reverse proxy to the MinIO WebUI service port, default is `9001`.
 
 #### Configuration File
 
@@ -518,7 +518,7 @@ Next, modify the configuration files to achieve domain release.
    ```
    2. Modify the `origin` field of `casdoor`.
    ```yaml
-         origin: 'https://auth-ui.example.com'
+         origin: 'https://auth.example.com'
    ```
    3. Modify the `environment` field of `lobe`.
    ```yaml
@@ -532,15 +532,15 @@ Next, modify the configuration files to achieve domain release.
      - 'AUTH_URL=https://lobe.example.com/api/auth'
 
      # - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
-     - 'AUTH_CASDOOR_ISSUER=https://auth-ui.example.com'
+     - 'AUTH_CASDOOR_ISSUER=https://auth.example.com'
 
      - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
      # - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
-     - 'S3_ENDPOINT=https://s3-api.example.com'
+     - 'S3_ENDPOINT=https://minio.example.com'
 
      - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
      # - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
-     - 'S3_PUBLIC_DOMAIN=https://s3-api.example.com'
+     - 'S3_PUBLIC_DOMAIN=https://minio.example.com'
 
      - 'S3_ENABLE_PATH_STYLE=1'
      - 'LLM_VISION_IMAGE_USE_BASE64=1'
@@ -582,7 +582,7 @@ docker compose up -d # Restart
 
 You first need to access the WebUI for configuration:
 
-- If you have set up the reverse proxy as mentioned before, open `https://auth-ui.example.com`
+- If you have set up the reverse proxy as mentioned before, open `https://auth.example.com`
 - Otherwise, after port mapping, open `http://localhost:8000`
 
 Log in to the admin account:
@@ -621,7 +621,7 @@ This article uses MinIO as an example to explain the configuration process. If y
 
 You first need to access the WebUI for configuration:
 
-- If you have set up the reverse proxy as mentioned before, open `https://s3-ui.example.com`
+- If you have set up the reverse proxy as mentioned before, open `https://minio-ui.example.com`
 - Otherwise, after port mapping, open `http://localhost:9001`
 
 1. Enter the `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD` you set in the login interface, then click login.
@@ -745,7 +745,7 @@ services:
       driverName: 'postgres'
       dataSourceName: 'user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor'
       # origin: 'http://localhost:${CASDOOR_PORT}'
-      origin: 'https://auth-ui.example.com'
+      origin: 'https://auth.example.com'
       runmode: 'dev'
     volumes:
       - ./init_data.json:/init_data.json
@@ -775,15 +775,15 @@ services:
       - 'AUTH_URL=https://lobe.example.com/api/auth'
 
       # - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
-      - 'AUTH_CASDOOR_ISSUER=https://auth-ui.example.com'
+      - 'AUTH_CASDOOR_ISSUER=https://auth.example.com'
 
       - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
       # - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
-      - 'S3_ENDPOINT=https://s3-api.example.com'
+      - 'S3_ENDPOINT=https://minio.example.com'
 
       - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
       # - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
-      - 'S3_PUBLIC_DOMAIN=https://s3-api.example.com'
+      - 'S3_PUBLIC_DOMAIN=https://minio.example.com'
 
       - 'S3_ENABLE_PATH_STYLE=1'
       - 'LLM_VISION_IMAGE_USE_BASE64=1'
