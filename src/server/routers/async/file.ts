@@ -96,16 +96,13 @@ export const fileRouter = router({
                   ctx.jwtPayload,
                 );
 
-                const number = index + 1;
-                console.log(`执行第 ${number} 个任务`);
+                console.log(`run embedding task ${index + 1}`);
 
-                console.time(`任务[${number}]: embeddings`);
                 const embeddings = await agentRuntime.embeddings({
                   dimensions: 1024,
                   input: chunks.map((c) => c.text),
                   model,
                 });
-                console.timeEnd(`任务[${number}]: embeddings`);
 
                 const items: NewEmbeddingsItem[] =
                   embeddings?.map((e, idx) => ({
@@ -115,9 +112,7 @@ export const fileRouter = router({
                     model,
                   })) || [];
 
-                console.time(`任务[${number}]: insert db`);
                 await ctx.embeddingModel.bulkCreate(items);
-                console.timeEnd(`任务[${number}]: insert db`);
               },
               { concurrency: CONCURRENCY },
             );
