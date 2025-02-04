@@ -1,8 +1,28 @@
-import { expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { AIChatModelCard } from '@/types/aiModel';
+import { merge, mergeArrayById } from './merge';
 
-import { mergeArrayById } from './merge';
+describe('merge', () => {
+  it('should merge objects and replace arrays', () => {
+    const target = {
+      a: 1,
+      b: [1, 2, 3],
+      c: { d: 4 },
+    };
+    const source = {
+      b: [4, 5],
+      c: { e: 5 },
+    };
+
+    const result = merge(target, source);
+
+    expect(result).toEqual({
+      a: 1,
+      b: [4, 5],
+      c: { d: 4, e: 5 },
+    });
+  });
+});
 
 describe('mergeArrayById', () => {
   it('should merge data', () => {
@@ -99,6 +119,21 @@ describe('mergeArrayById', () => {
         releasedAt: '2024-09-12',
         type: 'chat',
       },
+    ]);
+  });
+
+  it('should handle items only in default configuration', () => {
+    const data = mergeArrayById(
+      [
+        { id: '1', value: 'default1' },
+        { id: '2', value: 'default2' },
+      ],
+      [{ id: '1', value: 'user1' }],
+    );
+
+    expect(data).toEqual([
+      { id: '1', value: 'user1' },
+      { id: '2', value: 'default2' },
     ]);
   });
 });
