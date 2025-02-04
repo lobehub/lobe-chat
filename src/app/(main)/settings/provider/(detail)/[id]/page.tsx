@@ -2,10 +2,12 @@ import { redirect } from 'next/navigation';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { isServerMode } from '@/const/version';
+import { AiInfraRepos } from '@/database/repositories/aiInfra';
 import { serverDB } from '@/database/server';
-import { AiProviderModel } from '@/database/server/models/aiProvider';
+import { getServerGlobalConfig } from '@/server/globalConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { PagePropsWithId } from '@/types/next';
+import { ProviderConfig } from '@/types/user/settings';
 import { getUserAuth } from '@/utils/server/auth';
 
 import ClientMode from './ClientMode';
@@ -22,9 +24,14 @@ const Page = async (props: PagePropsWithId) => {
   if (isServerMode) {
     const { userId } = await getUserAuth();
 
-    const aiProviderModel = new AiProviderModel(serverDB, userId!);
+    const { aiProvider } = getServerGlobalConfig();
+    const aiInfraRepos = new AiInfraRepos(
+      serverDB,
+      userId!,
+      aiProvider as Record<string, ProviderConfig>,
+    );
 
-    const userCard = await aiProviderModel.getAiProviderById(
+    const userCard = await aiInfraRepos.getAiProviderDetail(
       params.id,
       KeyVaultsGateKeeper.getUserKeyVaults,
     );
