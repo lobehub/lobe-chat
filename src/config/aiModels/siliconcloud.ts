@@ -69,6 +69,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 32_768,
