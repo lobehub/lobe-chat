@@ -1,4 +1,4 @@
-import { merge as _merge, mergeWith } from 'lodash-es';
+import { merge as _merge, isEmpty, mergeWith } from 'lodash-es';
 
 /**
  * 用于合并对象，如果是数组则直接替换
@@ -33,7 +33,8 @@ export const mergeArrayById = <T extends MergeableItem>(defaultItems: T[], userI
     const mergedItem: T = { ...defaultItem };
     Object.entries(userItem).forEach(([key, value]) => {
       // Only use user value if it's not null and not undefined
-      if (value !== null && value !== undefined) {
+      // and not empty object
+      if (value !== null && value !== undefined && !(typeof value === 'object' && isEmpty(value))) {
         // @ts-expect-error
         mergedItem[key] = value;
       }
