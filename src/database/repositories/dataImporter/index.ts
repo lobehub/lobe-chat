@@ -14,6 +14,7 @@ import {
 import { LobeChatDatabase } from '@/database/type';
 import { ImportResult } from '@/services/config';
 import { ImporterEntryData } from '@/types/importer';
+import { sanitizeUTF8 } from '@/utils/sanitizeUTF8';
 
 export class DataImporterRepos {
   private userId: string;
@@ -204,9 +205,10 @@ export class DataImporterRepos {
         // 2. insert messages
         if (shouldInsertMessages.length > 0) {
           const inertValues = shouldInsertMessages.map(
-            ({ id, extra, createdAt, updatedAt, sessionId, topicId, ...res }) => ({
+            ({ id, extra, createdAt, updatedAt, sessionId, topicId, content, ...res }) => ({
               ...res,
               clientId: id,
+              content: sanitizeUTF8(content),
               createdAt: new Date(createdAt),
               model: extra?.fromModel,
               parentId: null,

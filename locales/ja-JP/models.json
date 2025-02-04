@@ -323,20 +323,14 @@
   "abab7-chat-preview": {
     "description": "abab6.5シリーズモデルに比べて、長文、数学、執筆などの能力が大幅に向上しています。"
   },
-  "accounts/fireworks/models/firefunction-v1": {
-    "description": "Fireworksのオープンソース関数呼び出しモデルは、卓越した指示実行能力とオープンでカスタマイズ可能な特性を提供します。"
+  "accounts/fireworks/models/deepseek-r1": {
+    "description": "DeepSeek-R1は、強化学習とコールドスタートデータの最適化を経た最先端の大規模言語モデルで、優れた推論、数学、プログラミング性能を持っています。"
   },
-  "accounts/fireworks/models/firefunction-v2": {
-    "description": "Fireworks社の最新のFirefunction-v2は、Llama-3を基に開発された高性能な関数呼び出しモデルであり、多くの最適化を経て、特に関数呼び出し、対話、指示のフォローなどのシナリオに適しています。"
-  },
-  "accounts/fireworks/models/firellava-13b": {
-    "description": "fireworks-ai/FireLLaVA-13bは、画像とテキストの入力を同時に受け取ることができる視覚言語モデルであり、高品質なデータで訓練されており、多モーダルタスクに適しています。"
+  "accounts/fireworks/models/deepseek-v3": {
+    "description": "Deepseekが提供する強力なMixture-of-Experts (MoE)言語モデルで、総パラメータ数は671Bであり、各トークンは37Bのパラメータを活性化します。"
   },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Llama 3 70B指示モデルは、多言語対話と自然言語理解に最適化されており、ほとんどの競合モデルを上回る性能を持っています。"
-  },
-  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
-    "description": "Llama 3 70B指示モデル（HFバージョン）は、公式実装結果と一致し、高品質な指示フォロータスクに適しています。"
   },
   "accounts/fireworks/models/llama-v3-8b-instruct": {
     "description": "Llama 3 8B指示モデルは、対話や多言語タスクに最適化されており、卓越した効率を発揮します。"
@@ -356,23 +350,23 @@
   "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
     "description": "Metaの11Bパラメータ指示調整画像推論モデルです。このモデルは視覚認識、画像推論、画像説明、および画像に関する一般的な質問への回答に最適化されています。このモデルは、グラフや図表などの視覚データを理解し、画像の詳細をテキストで記述することで、視覚と言語の間のギャップを埋めることができます。"
   },
-  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
-    "description": "Llama 3.2 1B指示モデルはMetaが発表した軽量な多言語モデルです。このモデルは効率を向上させることを目的としており、より大規模なモデルと比較して遅延とコストの面で大きな改善を提供します。このモデルの使用例には、情報検索や要約が含まれます。"
-  },
   "accounts/fireworks/models/llama-v3p2-3b-instruct": {
     "description": "Llama 3.2 3B指示モデルはMetaが発表した軽量な多言語モデルです。このモデルは効率を向上させることを目的としており、より大規模なモデルと比較して遅延とコストの面で大きな改善を提供します。このモデルの使用例には、問い合わせやプロンプトのリライト、執筆支援が含まれます。"
   },
   "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
     "description": "Metaの90Bパラメータ指示調整画像推論モデルです。このモデルは視覚認識、画像推論、画像説明、および画像に関する一般的な質問への回答に最適化されています。このモデルは、グラフや図表などの視覚データを理解し、画像の詳細をテキストで記述することで、視覚と言語の間のギャップを埋めることができます。"
   },
+  "accounts/fireworks/models/llama-v3p3-70b-instruct": {
+    "description": "Llama 3.3 70B Instructは、Llama 3.1 70Bの12月の更新版です。このモデルは、2024年7月にリリースされたLlama 3.1 70Bを基に改良され、ツール呼び出し、多言語テキストサポート、数学およびプログラミング能力が強化されています。このモデルは、推論、数学、指示遵守の面で業界の最前線に達しており、3.1 405Bと同等の性能を提供しつつ、速度とコストにおいて顕著な利点を持っています。"
+  },
+  "accounts/fireworks/models/mistral-small-24b-instruct-2501": {
+    "description": "24Bパラメータモデルで、より大規模なモデルと同等の最先端の能力を備えています。"
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Mixtral MoE 8x22B指示モデルは、大規模なパラメータと多専門家アーキテクチャを持ち、複雑なタスクの高効率処理を全方位でサポートします。"
   },
   "accounts/fireworks/models/mixtral-8x7b-instruct": {
     "description": "Mixtral MoE 8x7B指示モデルは、多専門家アーキテクチャを提供し、高効率の指示フォローと実行をサポートします。"
-  },
-  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
-    "description": "Mixtral MoE 8x7B指示モデル（HFバージョン）は、公式実装と一致し、さまざまな高効率タスクシナリオに適しています。"
   },
   "accounts/fireworks/models/mythomax-l2-13b": {
     "description": "MythoMax L2 13Bモデルは、新しい統合技術を組み合わせており、物語やキャラクターの役割に優れています。"
@@ -383,17 +377,14 @@
   "accounts/fireworks/models/qwen-qwq-32b-preview": {
     "description": "QwQモデルはQwenチームによって開発された実験的な研究モデルで、AIの推論能力を強化することに焦点を当てています。"
   },
+  "accounts/fireworks/models/qwen2-vl-72b-instruct": {
+    "description": "Qwen-VLモデルの72Bバージョンは、アリババの最新のイテレーションの成果であり、近年の革新を代表しています。"
+  },
   "accounts/fireworks/models/qwen2p5-72b-instruct": {
     "description": "Qwen2.5はAlibaba Cloud Qwenチームによって開発された一連のデコーダーのみを含む言語モデルです。これらのモデルは、0.5B、1.5B、3B、7B、14B、32B、72Bなど、さまざまなサイズを提供し、ベース版と指示版の2種類のバリエーションがあります。"
   },
   "accounts/fireworks/models/qwen2p5-coder-32b-instruct": {
     "description": "Qwen2.5 Coder 32B InstructはAlibaba Cloudが発表したコード特化型大規模言語モデルシリーズの最新バージョンです。このモデルはQwen2.5を基に、55兆トークンの訓練を通じて、コード生成、推論、修正能力を大幅に向上させました。コーディング能力を強化するだけでなく、数学および一般的な能力の利点も維持しています。このモデルはコードエージェントなどの実際のアプリケーションに対して、より包括的な基盤を提供します。"
-  },
-  "accounts/fireworks/models/starcoder-16b": {
-    "description": "StarCoder 15.5Bモデルは、高度なプログラミングタスクをサポートし、多言語能力を強化し、複雑なコード生成と理解に適しています。"
-  },
-  "accounts/fireworks/models/starcoder-7b": {
-    "description": "StarCoder 7Bモデルは、80以上のプログラミング言語に特化して訓練されており、優れたプログラミング補完能力と文脈理解を持っています。"
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Yi-Largeモデルは、卓越した多言語処理能力を持ち、さまざまな言語生成と理解タスクに使用できます。"
@@ -887,29 +878,17 @@
   "lite": {
     "description": "Spark Liteは軽量な大規模言語モデルで、非常に低い遅延と高い処理能力を備えています。完全に無料でオープンであり、リアルタイムのオンライン検索機能をサポートしています。その迅速な応答特性により、低算力デバイスでの推論アプリケーションやモデルの微調整において優れたパフォーマンスを発揮し、特に知識問答、コンテンツ生成、検索シーンにおいて優れたコストパフォーマンスとインテリジェントな体験を提供します。"
   },
-  "llama-3.1-70b-instruct": {
-    "description": "Llama 3.1 70B Instructモデルは、70Bパラメータを持ち、大規模なテキスト生成と指示タスクで卓越した性能を提供します。"
-  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70Bは、より強力なAI推論能力を提供し、複雑なアプリケーションに適しており、非常に多くの計算処理をサポートし、高効率と精度を保証します。"
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8Bは、高効率モデルであり、迅速なテキスト生成能力を提供し、大規模な効率とコスト効果が求められるアプリケーションシナリオに非常に適しています。"
   },
-  "llama-3.1-8b-instruct": {
-    "description": "Llama 3.1 8B Instructモデルは、8Bパラメータを持ち、画面指示タスクの高効率な実行をサポートし、優れたテキスト生成能力を提供します。"
-  },
   "llama-3.1-sonar-huge-128k-online": {
     "description": "Llama 3.1 Sonar Huge Onlineモデルは、405Bパラメータを持ち、約127,000トークンのコンテキスト長をサポートし、複雑なオンラインチャットアプリケーション用に設計されています。"
   },
-  "llama-3.1-sonar-large-128k-chat": {
-    "description": "Llama 3.1 Sonar Large Chatモデルは、70Bパラメータを持ち、約127,000トークンのコンテキスト長をサポートし、複雑なオフラインチャットタスクに適しています。"
-  },
   "llama-3.1-sonar-large-128k-online": {
     "description": "Llama 3.1 Sonar Large Onlineモデルは、70Bパラメータを持ち、約127,000トークンのコンテキスト長をサポートし、高容量で多様なチャットタスクに適しています。"
-  },
-  "llama-3.1-sonar-small-128k-chat": {
-    "description": "Llama 3.1 Sonar Small Chatモデルは、8Bパラメータを持ち、オフラインチャット用に設計されており、約127,000トークンのコンテキスト長をサポートします。"
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Onlineモデルは、8Bパラメータを持ち、約127,000トークンのコンテキスト長をサポートし、オンラインチャット用に設計されており、さまざまなテキストインタラクションを効率的に処理できます。"
@@ -1354,6 +1333,15 @@
   },
   "solar-pro": {
     "description": "Solar ProはUpstageが発表した高インテリジェンスLLMで、単一GPUの指示追従能力に特化しており、IFEvalスコアは80以上です。現在は英語をサポートしており、正式版は2024年11月にリリース予定で、言語サポートとコンテキスト長を拡張します。"
+  },
+  "sonar": {
+    "description": "検索コンテキストに基づく軽量検索製品で、Sonar Proよりも速く、安価です。"
+  },
+  "sonar-pro": {
+    "description": "検索コンテキストをサポートする高度な検索製品で、高度なクエリとフォローアップをサポートします。"
+  },
+  "sonar-reasoning": {
+    "description": "DeepSeek推論モデルによってサポートされる新しいAPI製品です。"
   },
   "step-1-128k": {
     "description": "性能とコストのバランスを取り、一般的なシナリオに適しています。"
