@@ -24,6 +24,7 @@ import {
   IAsyncTaskError,
 } from '@/types/asyncTask';
 import { safeParseJSON } from '@/utils/safeParseJSON';
+import { sanitizeUTF8 } from '@/utils/sanitizeUTF8';
 
 const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
   const { ctx } = opts;
@@ -215,7 +216,11 @@ export const fileRouter = router({
 
           // after finish partition, we need to filter out some elements
           const chunks = chunkResult.chunks.map(
-            (item): NewChunkItem => ({ ...item, userId: ctx.userId }),
+            ({ text, ...item }): NewChunkItem => ({
+              ...item,
+              text: text ? sanitizeUTF8(text) : '',
+              userId: ctx.userId,
+            }),
           );
 
           const duration = Date.now() - startAt;
