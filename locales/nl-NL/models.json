@@ -323,20 +323,14 @@
   "abab7-chat-preview": {
     "description": "In vergelijking met de abab6.5-serie modellen zijn er aanzienlijke verbeteringen in de capaciteiten op het gebied van lange teksten, wiskunde, schrijven, enzovoort."
   },
-  "accounts/fireworks/models/firefunction-v1": {
-    "description": "Fireworks open-source functie-aanroepmodel biedt uitstekende instructie-uitvoeringscapaciteiten en aanpasbare functies."
+  "accounts/fireworks/models/deepseek-r1": {
+    "description": "DeepSeek-R1 is een geavanceerd groot taalmodel, geoptimaliseerd met versterkend leren en koude startdata, met uitstekende prestaties in redeneren, wiskunde en programmeren."
   },
-  "accounts/fireworks/models/firefunction-v2": {
-    "description": "Firefunction-v2, ontwikkeld door Fireworks, is een hoogpresterend functie-aanroepmodel, gebaseerd op Llama-3 en geoptimaliseerd voor functie-aanroepen, gesprekken en instructies."
-  },
-  "accounts/fireworks/models/firellava-13b": {
-    "description": "fireworks-ai/FireLLaVA-13b is een visueel taalmodel dat zowel afbeeldingen als tekstinvoer kan verwerken, getraind op hoogwaardige gegevens, geschikt voor multimodale taken."
+  "accounts/fireworks/models/deepseek-v3": {
+    "description": "Een krachtige Mixture-of-Experts (MoE) taalmodel van Deepseek, met een totaal aantal parameters van 671B, waarbij 37B parameters per token worden geactiveerd."
   },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Llama 3 70B instructiemodel, speciaal geoptimaliseerd voor meertalige gesprekken en natuurlijke taalbegrip, presteert beter dan de meeste concurrerende modellen."
-  },
-  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
-    "description": "Llama 3 70B instructiemodel (HF-versie), consistent met de officiële implementatieresultaten, geschikt voor hoogwaardige instructietaken."
   },
   "accounts/fireworks/models/llama-v3-8b-instruct": {
     "description": "Llama 3 8B instructiemodel, geoptimaliseerd voor gesprekken en meertalige taken, presteert uitstekend en efficiënt."
@@ -356,23 +350,23 @@
   "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
     "description": "Meta's 11B-parameter instructie-geoptimaliseerde beeldredeneringsmodel. Dit model is geoptimaliseerd voor visuele herkenning, beeldredenering, afbeeldingsbeschrijving en het beantwoorden van algemene vragen over afbeeldingen. Dit model kan visuele gegevens begrijpen, zoals diagrammen en grafieken, en overbrugt de kloof tussen visuele informatie en tekst door het genereren van tekstbeschrijvingen van afbeeldingsdetails."
   },
-  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
-    "description": "Llama 3.2 1B instructiemodel is een lichtgewicht meertalig model geïntroduceerd door Meta. Dit model is ontworpen om de efficiëntie te verhogen, met aanzienlijke verbeteringen in latentie en kosten in vergelijking met grotere modellen. Voorbeelden van gebruikssituaties van dit model zijn ophalen en samenvatten."
-  },
   "accounts/fireworks/models/llama-v3p2-3b-instruct": {
     "description": "Llama 3.2 3B instructiemodel is een lichtgewicht meertalig model geïntroduceerd door Meta. Dit model is ontworpen om de efficiëntie te verhogen, met aanzienlijke verbeteringen in latentie en kosten in vergelijking met grotere modellen. Voorbeelden van gebruikssituaties van dit model zijn het herformuleren van vragen en prompts, evenals schrijfondersteuning."
   },
   "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
     "description": "Meta's 90B-parameter instructie-geoptimaliseerde beeldredeneringsmodel. Dit model is geoptimaliseerd voor visuele herkenning, beeldredenering, afbeeldingsbeschrijving en het beantwoorden van algemene vragen over afbeeldingen. Dit model kan visuele gegevens begrijpen, zoals diagrammen en grafieken, en overbrugt de kloof tussen visuele informatie en tekst door het genereren van tekstbeschrijvingen van afbeeldingsdetails."
   },
+  "accounts/fireworks/models/llama-v3p3-70b-instruct": {
+    "description": "Llama 3.3 70B Instruct is de update van december voor Llama 3.1 70B. Dit model is verbeterd op basis van Llama 3.1 70B (uitgebracht in juli 2024) en biedt verbeterde toolaanroepen, ondersteuning voor meertalige teksten, wiskunde en programmeervaardigheden. Het model heeft een toonaangevende prestatie bereikt op het gebied van redeneren, wiskunde en het volgen van instructies, en kan prestaties bieden die vergelijkbaar zijn met die van 3.1 405B, met aanzienlijke voordelen op het gebied van snelheid en kosten."
+  },
+  "accounts/fireworks/models/mistral-small-24b-instruct-2501": {
+    "description": "Een model met 24B parameters, dat geavanceerde mogelijkheden biedt die vergelijkbaar zijn met grotere modellen."
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Mixtral MoE 8x22B instructiemodel, met een groot aantal parameters en een multi-expertarchitectuur, biedt uitgebreide ondersteuning voor de efficiënte verwerking van complexe taken."
   },
   "accounts/fireworks/models/mixtral-8x7b-instruct": {
     "description": "Mixtral MoE 8x7B instructiemodel, met een multi-expertarchitectuur die efficiënte instructievolging en uitvoering biedt."
-  },
-  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
-    "description": "Mixtral MoE 8x7B instructiemodel (HF-versie), met prestaties die overeenkomen met de officiële implementatie, geschikt voor verschillende efficiënte taakscenario's."
   },
   "accounts/fireworks/models/mythomax-l2-13b": {
     "description": "MythoMax L2 13B model, dat gebruik maakt van innovatieve samenvoegtechnologie, is goed in verhalen vertellen en rollenspellen."
@@ -383,17 +377,14 @@
   "accounts/fireworks/models/qwen-qwq-32b-preview": {
     "description": "Het QwQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van de AI-redeneringscapaciteiten."
   },
+  "accounts/fireworks/models/qwen2-vl-72b-instruct": {
+    "description": "De 72B versie van het Qwen-VL model is het nieuwste resultaat van Alibaba's iteraties, dat bijna een jaar aan innovaties vertegenwoordigt."
+  },
   "accounts/fireworks/models/qwen2p5-72b-instruct": {
     "description": "Qwen2.5 is een serie decoder-only taalmodellen ontwikkeld door het Alibaba Qwen-team. Deze modellen zijn beschikbaar in verschillende groottes, waaronder 0.5B, 1.5B, 3B, 7B, 14B, 32B en 72B, met zowel een basisversie als een instructieversie."
   },
   "accounts/fireworks/models/qwen2p5-coder-32b-instruct": {
     "description": "Qwen2.5 Coder 32B Instruct is de nieuwste versie van de code-specifieke grote taalmodelreeks die door Alibaba Cloud is uitgebracht. Dit model is aanzienlijk verbeterd in codegeneratie, redenering en herstelcapaciteiten door training met 55 biljoen tokens, gebaseerd op Qwen2.5. Het versterkt niet alleen de coderingscapaciteiten, maar behoudt ook de voordelen van wiskundige en algemene vaardigheden. Het model biedt een meer uitgebreide basis voor praktische toepassingen zoals code-agenten."
-  },
-  "accounts/fireworks/models/starcoder-16b": {
-    "description": "StarCoder 15.5B model, ondersteunt geavanceerde programmeertaken, met verbeterde meertalige capaciteiten, geschikt voor complexe codegeneratie en -begrip."
-  },
-  "accounts/fireworks/models/starcoder-7b": {
-    "description": "StarCoder 7B model, getraind op meer dan 80 programmeertalen, met uitstekende programmeervulcapaciteiten en contextbegrip."
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Yi-Large model, met uitstekende meertalige verwerkingscapaciteiten, geschikt voor verschillende taalgeneratie- en begripstaken."
@@ -887,29 +878,17 @@
   "lite": {
     "description": "Spark Lite is een lichtgewicht groot taalmodel met extreem lage latentie en efficiënte verwerkingscapaciteit. Het is volledig gratis en open, en ondersteunt realtime online zoekfunctionaliteit. De snelle respons maakt het uitermate geschikt voor inferentie op apparaten met lage rekenkracht en modelafstemming, wat gebruikers uitstekende kosteneffectiviteit en een slimme ervaring biedt, vooral in kennisvragen, contentgeneratie en zoekscenario's."
   },
-  "llama-3.1-70b-instruct": {
-    "description": "Llama 3.1 70B Instruct model, met 70B parameters, biedt uitstekende prestaties in grote tekstgeneratie- en instructietaken."
-  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B biedt krachtigere AI-inferentiecapaciteiten, geschikt voor complexe toepassingen, ondersteunt een enorme rekenverwerking en garandeert efficiëntie en nauwkeurigheid."
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B is een hoogpresterend model dat snelle tekstgeneratiecapaciteiten biedt, zeer geschikt voor toepassingen die grootschalige efficiëntie en kosteneffectiviteit vereisen."
   },
-  "llama-3.1-8b-instruct": {
-    "description": "Llama 3.1 8B Instruct model, met 8B parameters, ondersteunt de efficiënte uitvoering van visuele instructietaken en biedt hoogwaardige tekstgeneratiecapaciteiten."
-  },
   "llama-3.1-sonar-huge-128k-online": {
     "description": "Llama 3.1 Sonar Huge Online model, met 405B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, ontworpen voor complexe online chattoepassingen."
   },
-  "llama-3.1-sonar-large-128k-chat": {
-    "description": "Llama 3.1 Sonar Large Chat model, met 70B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, geschikt voor complexe offline chattaken."
-  },
   "llama-3.1-sonar-large-128k-online": {
     "description": "Llama 3.1 Sonar Large Online model, met 70B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, geschikt voor hoge capaciteit en diverse chattaken."
-  },
-  "llama-3.1-sonar-small-128k-chat": {
-    "description": "Llama 3.1 Sonar Small Chat model, met 8B parameters, speciaal ontworpen voor offline chat, ondersteunt een contextlengte van ongeveer 127.000 tokens."
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online model, met 8B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, speciaal ontworpen voor online chat en kan efficiënt verschillende tekstinteracties verwerken."
@@ -1354,6 +1333,15 @@
   },
   "solar-pro": {
     "description": "Solar Pro is een zeer intelligent LLM dat is uitgebracht door Upstage, gericht op instructievolging met één GPU, met een IFEval-score van boven de 80. Momenteel ondersteunt het Engels, met een officiële versie die gepland staat voor november 2024, die de taalondersteuning en contextlengte zal uitbreiden."
+  },
+  "sonar": {
+    "description": "Een lichtgewicht zoekproduct op basis van contextuele zoekopdrachten, sneller en goedkoper dan Sonar Pro."
+  },
+  "sonar-pro": {
+    "description": "Een geavanceerd zoekproduct dat contextuele zoekopdrachten ondersteunt, met geavanceerde query's en vervolgacties."
+  },
+  "sonar-reasoning": {
+    "description": "Een nieuw API-product ondersteund door het DeepSeek redeneringsmodel."
   },
   "step-1-128k": {
     "description": "Biedt een balans tussen prestaties en kosten, geschikt voor algemene scenario's."
