@@ -482,7 +482,7 @@ section_configurate_host() {
     if [ -z "$HOST" ]; then
         HOST=$(hostname -I | awk '{print $1}')
         # If the host is a private ip and the deploy mode is port mode
-        if [[ "$DEPLOY_MODE" == "1" ]] || [[ "$HOST" == "192.168."* ]] || [[ "$HOST" == "172."* ]] || [[ "$HOST" == "10."* ]]; then
+        if [[ "$DEPLOY_MODE" == "1" ]] && ([[ "$HOST" == "192.168."* ]] || [[ "$HOST" == "172."* ]] || [[ "$HOST" == "10."* ]]); then
             echo $(show_message "tips_private_ip_detected")
         fi
     fi
