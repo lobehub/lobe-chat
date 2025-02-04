@@ -174,8 +174,8 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
       functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 32_768,
     description: 'QwQ模型是由 Qwen 团队开发的实验性研究模型，专注于增强 AI 推理能力。',
