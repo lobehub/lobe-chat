@@ -75,6 +75,7 @@ const ollamaChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 128_000,
     description: 'QwQ 是一个实验研究模型，专注于提高 AI 推理能力。',
