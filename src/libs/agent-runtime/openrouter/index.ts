@@ -49,7 +49,7 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
         vision:
           model.description.includes('vision') ||
           model.description.includes('multimodal') ||
-          visionKeywords.some(keyword => model.description.toLowerCase().includes(keyword)),
+          visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
       };
     },
   },
