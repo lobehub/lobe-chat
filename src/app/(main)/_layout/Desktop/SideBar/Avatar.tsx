@@ -1,7 +1,7 @@
 import { ActionIcon } from '@lobehub/ui';
 import { Tooltip } from 'antd';
 import { LucideX } from 'lucide-react';
-import { memo } from 'react';
+import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -14,10 +14,13 @@ const Avatar = memo(() => {
   const { t } = useTranslation('common');
   const hideSettingsMoveGuide = useUserStore(preferenceSelectors.hideSettingsMoveGuide);
   const updateGuideState = useUserStore((s) => s.updateGuideState);
+
   const content = (
-    <UserPanel>
-      <UserAvatar clickable />
-    </UserPanel>
+    <Suspense fallback={<UserAvatar />}>
+      <UserPanel>
+        <UserAvatar clickable />
+      </UserPanel>
+    </Suspense>
   );
 
   return hideSettingsMoveGuide ? (

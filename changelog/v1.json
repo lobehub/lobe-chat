@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-02-05",
+    "version": "1.51.1"
+  },
+  {
     "children": {
       "features": ["Add reasoning tag support for custom models via UI or ENV."],
       "fixes": [
