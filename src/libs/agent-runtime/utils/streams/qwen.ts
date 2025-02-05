@@ -14,6 +14,8 @@ import {
   generateToolCallId,
 } from './protocol';
 
+let previousContent = '';
+
 export const transformQwenStream = (chunk: OpenAI.ChatCompletionChunk): StreamProtocolChunk => {
   const item = chunk.choices[0];
 
@@ -63,6 +65,14 @@ export const transformQwenStream = (chunk: OpenAI.ChatCompletionChunk): StreamPr
 
   if (typeof item.delta?.content === 'string') {
     return { data: item.delta.content, id: chunk.id, type: 'text' };
+  }
+
+  // 适配 deepseek-r1/v3 返回流
+  if (typeof item.message?.content === 'string') {
+    const currentContent = item.message.content;
+    const incrementalContent = currentContent.slice(previousContent.length);
+    previousContent = currentContent;
+    return { data: incrementalContent, id: chunk.id, type: 'text' };
   }
 
   if (item.finish_reason) {
