@@ -14,10 +14,17 @@ import {
   generateToolCallId,
 } from './protocol';
 
+interface ExtendedChoice extends OpenAI.ChatCompletionChunk.Choice {
+  message?: {
+    role: string;
+    content: string;
+  };
+}
+
 let previousContent = '';
 
 export const transformQwenStream = (chunk: OpenAI.ChatCompletionChunk): StreamProtocolChunk => {
-  const item = chunk.choices[0];
+  const item = chunk.choices[0] as ExtendedChoice;
 
   if (!item) {
     return { data: chunk, id: chunk.id, type: 'data' };
