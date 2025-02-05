@@ -62,6 +62,12 @@ export const LobeHuggingFaceAI = LobeOpenAICompatibleFactory({
       'vision',
     ];
 
+    const reasoningKeywords = [
+      'deepseek-r1',
+      'qvq',
+      'qwq',
+    ];
+
     // ref: https://huggingface.co/docs/hub/api
     const url = 'https://huggingface.co/api/models';
     const response = await fetch(url, {
@@ -79,7 +85,7 @@ export const LobeHuggingFaceAI = LobeOpenAICompatibleFactory({
           enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
           functionCall: model.tags.some(tag => tag.toLowerCase().includes('function-calling')),
           id: model.id,
-          reasoning: model.tags.some(tag => tag.toLowerCase().includes('reasoning')),
+          reasoning: model.tags.some(tag => tag.toLowerCase().includes('reasoning')) || reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
           vision: model.tags.some(tag =>
             visionKeywords.some(keyword => tag.toLowerCase().includes(keyword))
           ),
