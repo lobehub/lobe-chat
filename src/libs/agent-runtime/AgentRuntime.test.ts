@@ -26,7 +26,6 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { LobeStepfunAI } from '@/libs/agent-runtime/stepfun';
-import LobeWenxinAI from '@/libs/agent-runtime/wenxin';
 import { createTraceOptions } from '@/server/modules/AgentRuntime';
 
 import { AgentChatOptions } from './AgentRuntime';
