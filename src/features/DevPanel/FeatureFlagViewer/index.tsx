@@ -1,10 +1,11 @@
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
-import FeatureFlagForm from '@/features/DevPanel/FeatureFlag/Form';
 
-const FeatureFlag = () => {
+import FeatureFlagForm from './Form';
+
+const FeatureFlagViewer = () => {
   const serverFeatureFlags = getServerFeatureFlagsValue();
 
   return <FeatureFlagForm flags={serverFeatureFlags} />;
 };
 
-export default FeatureFlag;
+export default FeatureFlagViewer;

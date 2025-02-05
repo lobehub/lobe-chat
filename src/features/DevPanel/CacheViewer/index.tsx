@@ -1,12 +1,11 @@
 import { Empty } from 'antd';
 import { Center } from 'react-layout-kit';
 
-import { CachePanelContextProvider } from '@/features/DevPanel/CacheToolbar/cacheProvider';
-
 import DataTable from './DataTable';
+import { CachePanelContextProvider } from './cacheProvider';
 import { getCacheFiles } from './getCacheEntries';
 
-const CacheToolbar = async () => {
+const CacheViewer = async () => {
   const files = await getCacheFiles();
 
   if (!files || files.length === 0)
@@ -23,4 +22,4 @@ const CacheToolbar = async () => {
   );
 };
 
-export default CacheToolbar;
+export default CacheViewer;

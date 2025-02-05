@@ -3,8 +3,7 @@
 import { RefreshCw } from 'lucide-react';
 import { memo } from 'react';
 
-import Header from '@/features/DevPanel/features/Header';
-
+import Header from '../../features/Header';
 import Table from '../../features/Table';
 import { useCachePanelContext } from '../cacheProvider';
 

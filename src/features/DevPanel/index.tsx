@@ -1,7 +1,7 @@
 import { BookText, DatabaseIcon, FlagIcon, GlobeLockIcon } from 'lucide-react';
 
-import CacheToolbar from './CacheToolbar';
-import FeatureFlag from './FeatureFlag';
+import CacheViewer from './CacheViewer';
+import FeatureFlagViewer from './FeatureFlagViewer';
 import MetadataViewer from './MetadataViewer';
 import PostgresViewer from './PostgresViewer';
 import FloatPanel from './features/FloatPanel';
@@ -20,12 +20,12 @@ const DevPanel = () => (
         key: 'SEO Metadata',
       },
       {
-        children: <CacheToolbar />,
+        children: <CacheViewer />,
         icon: <GlobeLockIcon size={16} />,
         key: 'NextJS Caches',
       },
       {
-        children: <FeatureFlag />,
+        children: <FeatureFlagViewer />,
         icon: <FlagIcon size={16} />,
         key: 'Feature Flags',
       },
