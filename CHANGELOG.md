@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.51.2](https://github.com/lobehub/lobe-chat/compare/v1.51.1...v1.51.2)
+
+<sup>Released on **2025-02-05**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update model list, add reasoning tag.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update model list, add reasoning tag, closes [#5696](https://github.com/lobehub/lobe-chat/issues/5696) ([dedd784](https://github.com/lobehub/lobe-chat/commit/dedd784))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.51.1](https://github.com/lobehub/lobe-chat/compare/v1.51.0...v1.51.1)
 
 <sup>Released on **2025-02-05**</sup>
