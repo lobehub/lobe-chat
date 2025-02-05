@@ -43,10 +43,10 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
       .filter((m) => m.display_type === 'chat')
       .map((model) => {
         return {
-          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.contextWindowTokens ?? undefined,
+          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.contextWindowTokens ?? undefined,
           description: model.description,
           displayName: model.display_name,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.enabled || false,
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.enabled || false,
           functionCall: model.description?.toLowerCase().includes('function calling'),
           id: model.name,
           maxOutput: model.context_length,

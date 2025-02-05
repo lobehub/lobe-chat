@@ -26,8 +26,8 @@ export const LobeFireworksAI = LobeOpenAICompatibleFactory({
 
       return {
         contextWindowTokens: model.context_length,
-        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.displayName ?? undefined,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
         functionCall: model.supports_tools || model.id.toLowerCase().includes('function'),
         id: model.id,
         reasoning: reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),

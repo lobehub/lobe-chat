@@ -222,7 +222,7 @@ _These are extended-context endpoints for [Hermes 3 405B Instruct](/models/nousr
 
 Note: This model is experimental and not suited for production use-cases. It may be removed or redirected to another model in the future.",
     "displayName": "OpenAI: ChatGPT-4o",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "openai/chatgpt-4o-latest",
     "maxTokens": 16384,
@@ -475,7 +475,7 @@ The model is multilingual, supporting English, French, German, Spanish, Italian,
 
 It supports function calling and is released under the Apache 2.0 license.",
     "displayName": "Mistral: Mistral Nemo",
-    "enabled": false,
+    "enabled": true,
     "functionCall": true,
     "id": "mistralai/mistral-nemo",
     "maxTokens": undefined,
@@ -1363,7 +1363,7 @@ It offers multilingual support for ten key languages to facilitate global busine
 
 Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
     "displayName": "Cohere: Command R+",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "cohere/command-r-plus",
     "maxTokens": 4000,
@@ -1408,7 +1408,7 @@ Read the launch post [here](https://txt.cohere.com/command-r/).
 
 Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
     "displayName": "Cohere: Command R",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "cohere/command-r",
     "maxTokens": 4000,

@@ -32,7 +32,7 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
         contextWindowTokens: model.context_length,
         description: model.description,
         displayName: model.name,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
         functionCall:
           model.description.includes('function calling') || model.description.includes('tools'),
         id: model.id,

@@ -152,7 +152,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         return {
           contextWindowTokens: model.inputTokenLimit + model.outputTokenLimit,
           displayName: model.displayName,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => modelName.endsWith(m.id))?.enabled || false,
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => modelName === m.id)?.enabled || false,
           functionCall: modelName.toLowerCase().includes('gemini'),
           id: modelName,
           reasoning: modelName.toLowerCase().includes('thinking'),

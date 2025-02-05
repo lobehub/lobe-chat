@@ -50,8 +50,8 @@ export const LobeGroq = LobeOpenAICompatibleFactory({
 
       return {
         contextWindowTokens: model.context_window,
-        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.displayName ?? undefined,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
         functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         id: model.id,
         reasoning: reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),

@@ -33,8 +33,8 @@ export const LobeAi360AI = LobeOpenAICompatibleFactory({
 
       return {
         contextWindowTokens: model.total_tokens,
-        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.displayName ?? undefined,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
         functionCall: model.id === '360gpt-pro',
         id: model.id,
         maxTokens:

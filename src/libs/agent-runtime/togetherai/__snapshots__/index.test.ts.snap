@@ -399,7 +399,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
     "vision": false,
   },
   {
-    "contextWindowTokens": 8192,
+    "contextWindowTokens": undefined,
     "description": "Gemma is a family of lightweight, state-of-the-art open models from Google, built from the same research and technology used to create the Gemini models.",
     "displayName": "Gemma Instruct (7B)",
     "enabled": false,
@@ -675,10 +675,10 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
     "vision": false,
   },
   {
-    "contextWindowTokens": 4000,
+    "contextWindowTokens": undefined,
     "description": "The Yi series models are large language models trained from scratch by developers at 01.AI",
     "displayName": "01-ai Yi Chat (34B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "zero-one-ai/Yi-34B-Chat",
     "maxOutput": 4096,

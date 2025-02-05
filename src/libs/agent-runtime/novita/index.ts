@@ -26,7 +26,7 @@ export const LobeNovitaAI = LobeOpenAICompatibleFactory({
         contextWindowTokens: model.context_size,
         description: model.description,
         displayName: model.title,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
         functionCall: model.description.toLowerCase().includes('function calling'),
         id: model.id,
         reasoning: model.description.toLowerCase().includes('reasoning task') || reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
