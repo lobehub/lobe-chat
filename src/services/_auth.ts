@@ -9,7 +9,6 @@ import {
   AzureOpenAIKeyVault,
   CloudflareKeyVault,
   OpenAICompatibleKeyVault,
-  WenxinKeyVault,
 } from '@/types/user/settings';
 import { createJWT } from '@/utils/jwt';
 
@@ -18,7 +17,6 @@ export const getProviderAuthPayload = (
   keyVaults: OpenAICompatibleKeyVault &
     AzureOpenAIKeyVault &
     AWSBedrockKeyVault &
-    WenxinKeyVault &
     CloudflareKeyVault,
 ) => {
   switch (provider) {
@@ -44,18 +42,6 @@ export const getProviderAuthPayload = (
         awsSessionToken: sessionToken,
         region,
         sessionToken,
-      };
-    }
-
-    case ModelProvider.Wenxin: {
-      const { secretKey, accessKey } = keyVaults;
-
-      const apiKey = (accessKey || '') + (secretKey || '');
-
-      return {
-        apiKey,
-        wenxinAccessKey: accessKey,
-        wenxinSecretKey: secretKey,
       };
     }
 

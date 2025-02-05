@@ -23,7 +23,6 @@ export const AiProviderSDKEnum = {
   Huggingface: 'huggingface',
   Ollama: 'ollama',
   Openai: 'openai',
-  Wenxin: 'wenxin',
 } as const;
 
 export type AiProviderSDKType = (typeof AiProviderSDKEnum)[keyof typeof AiProviderSDKEnum];

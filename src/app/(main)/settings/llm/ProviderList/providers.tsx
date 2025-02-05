@@ -27,6 +27,7 @@ import {
   TaichuProviderCard,
   TogetherAIProviderCard,
   UpstageProviderCard,
+  WenxinProviderCard,
   XAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
@@ -40,7 +41,6 @@ import { useGithubProvider } from './Github';
 import { useHuggingFaceProvider } from './HuggingFace';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
-import { useWenxinProvider } from './Wenxin';
 
 export const useProviderList = (): ProviderItem[] => {
   const AzureProvider = useAzureProvider();
@@ -50,7 +50,6 @@ export const useProviderList = (): ProviderItem[] => {
   const CloudflareProvider = useCloudflareProvider();
   const GithubProvider = useGithubProvider();
   const HuggingFaceProvider = useHuggingFaceProvider();
-  const WenxinProvider = useWenxinProvider();
 
   return useMemo(
     () => [
@@ -75,7 +74,7 @@ export const useProviderList = (): ProviderItem[] => {
       UpstageProviderCard,
       XAIProviderCard,
       QwenProviderCard,
-      WenxinProvider,
+      WenxinProviderCard,
       HunyuanProviderCard,
       SparkProviderCard,
       ZhiPuProviderCard,
@@ -99,7 +98,6 @@ export const useProviderList = (): ProviderItem[] => {
       BedrockProvider,
       CloudflareProvider,
       GithubProvider,
-      WenxinProvider,
       HuggingFaceProvider,
     ],
   );

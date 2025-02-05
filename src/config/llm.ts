@@ -64,8 +64,7 @@ export const getLLMConfig = () => {
       AWS_SESSION_TOKEN: z.string().optional(),
 
       ENABLED_WENXIN: z.boolean(),
-      WENXIN_ACCESS_KEY: z.string().optional(),
-      WENXIN_SECRET_KEY: z.string().optional(),
+      WENXIN_API_KEY: z.string().optional(),
 
       ENABLED_OLLAMA: z.boolean(),
 
@@ -186,9 +185,8 @@ export const getLLMConfig = () => {
       AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
       AWS_SESSION_TOKEN: process.env.AWS_SESSION_TOKEN,
 
-      ENABLED_WENXIN: !!process.env.WENXIN_ACCESS_KEY && !!process.env.WENXIN_SECRET_KEY,
-      WENXIN_ACCESS_KEY: process.env.WENXIN_ACCESS_KEY,
-      WENXIN_SECRET_KEY: process.env.WENXIN_SECRET_KEY,
+      ENABLED_WENXIN: !!process.env.WENXIN_API_KEY,
+      WENXIN_API_KEY: process.env.WENXIN_API_KEY,
 
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
 

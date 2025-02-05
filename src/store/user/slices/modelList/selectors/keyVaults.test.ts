@@ -69,7 +69,6 @@ describe('keyVaultsConfigSelectors', () => {
       });
     });
 
-    // Always return false for AWSBedrockKeyVault
     describe('AWSBedrockKeyVault', () => {
       it('should return false if provider region is not empty for AWSBedrockKeyVault', () => {
         const s = merge(initialSettingsState, {
@@ -196,6 +195,53 @@ describe('keyVaultsConfigSelectors', () => {
         }) as unknown as UserStore;
         expect(keyVaultsConfigSelectors.isProviderApiKeyNotEmpty('bedrock')(s)).toBe(false);
       });
+    });
+  });
+
+  describe('keyVaultsSettings', () => {
+    it('should return empty object if no settings', () => {
+      const s = merge(initialSettingsState, {}) as unknown as UserStore;
+      expect(keyVaultsConfigSelectors.getVaultByProvider('openai')(s)).toEqual({});
+    });
+  });
+
+  describe('providerConfigs', () => {
+    it('should return configs for all providers', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          keyVaults: {
+            openai: { apiKey: 'key1' },
+            azure: { apiKey: 'key2' },
+            bedrock: { accessKeyId: 'key3' },
+            ollama: { apiKey: 'key4' },
+            cloudflare: { apiKey: 'key5' },
+          },
+        },
+      }) as unknown as UserStore;
+
+      expect(keyVaultsConfigSelectors.openAIConfig(s)).toEqual({ apiKey: 'key1' });
+      expect(keyVaultsConfigSelectors.azureConfig(s)).toEqual({ apiKey: 'key2' });
+      expect(keyVaultsConfigSelectors.bedrockConfig(s)).toEqual({ accessKeyId: 'key3' });
+      expect(keyVaultsConfigSelectors.ollamaConfig(s)).toEqual({ apiKey: 'key4' });
+      expect(keyVaultsConfigSelectors.cloudflareConfig(s)).toEqual({ apiKey: 'key5' });
+    });
+  });
+
+  describe('password', () => {
+    it('should return password from settings', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          keyVaults: {
+            password: 'secret',
+          },
+        },
+      }) as unknown as UserStore;
+      expect(keyVaultsConfigSelectors.password(s)).toBe('secret');
+    });
+
+    it('should return empty string if no password set', () => {
+      const s = merge(initialSettingsState, {}) as unknown as UserStore;
+      expect(keyVaultsConfigSelectors.password(s)).toBe('');
     });
   });
 });
