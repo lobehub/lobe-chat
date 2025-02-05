@@ -1,12 +1,9 @@
-import { ChatModelCard } from '@/types/llm';
-
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import {
   CloudflareStreamTransformer,
   DEFAULT_BASE_URL_PREFIX,
-  convertModelManifest,
   desensitizeCloudflareUrl,
   fillUrl,
 } from '../utils/cloudflareHelpers';
@@ -16,14 +13,16 @@ import { StreamingResponse } from '../utils/response';
 import { createCallbacksTransformer } from '../utils/streams';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { ChatModelCard } from '@/types/llm';
 
 export interface CloudflareModelCard {
   description: string;
   name: string;
-  task: {
-    description: string;
+  properties?: Record<string, string>;
+  task?: {
+    description?: string;
     name: string;
-  }
+  };
 }
 
 export interface LobeCloudflareParams {
@@ -129,13 +128,15 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
     return modelList
       .map((model) => {
         return {
-          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.contextWindowTokens ?? undefined,
+          contextWindowTokens: model.properties?.max_total_tokens
+            ? Number(model.properties.max_total_tokens)
+            : LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.contextWindowTokens ?? undefined,
           displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.displayName ?? undefined,
           enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.enabled || false,
-          functionCall: model.description.toLowerCase().includes('function call'),
+          functionCall: model.description.toLowerCase().includes('function call') || model.properties?.["function_calling"] === "true",
           id: model.name,
           reasoning: model.name.toLowerCase().includes('deepseek-r1'),
-          vision: model.name.toLowerCase().includes('vision') || model.task.name.toLowerCase().includes('Image-to-Text') || model.description.toLowerCase().includes('vision'),
+          vision: model.name.toLowerCase().includes('vision') || model.task?.name.toLowerCase().includes('image-to-text') || model.description.toLowerCase().includes('vision'),
         };
       })
       .filter(Boolean) as ChatModelCard[];

@@ -17,6 +17,15 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
   },
   models: {
     transformModel: (m) => {
+      const reasoningKeywords = [
+        'deepseek/deepseek-r1',
+        'openai/o1',
+        'openai/o3',
+        'qwen/qvq',
+        'qwen/qwq',
+        'thinking'
+      ];
+
       const model = m as unknown as OpenRouterModelCard;
 
       return {
@@ -31,7 +40,7 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
           typeof model.top_provider.max_completion_tokens === 'number'
             ? model.top_provider.max_completion_tokens
             : undefined,
-        reasoning: model.description.includes('reasoning'),
+        reasoning: reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         vision:
           model.description.includes('vision') ||
           model.description.includes('multimodal') ||

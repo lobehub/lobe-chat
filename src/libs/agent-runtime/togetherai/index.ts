@@ -38,15 +38,16 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
       .filter((m) => m.display_type === 'chat')
       .map((model) => {
         return {
+          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.contextWindowTokens ?? undefined,
           description: model.description,
           displayName: model.display_name,
           enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.enabled || false,
-          functionCall: model.description?.includes('function calling'),
+          functionCall: model.description?.toLowerCase().includes('function calling'),
           id: model.name,
           maxOutput: model.context_length,
-          reasoning: model.description?.includes('reasoning') || reasoningKeywords.some(keyword => model.name.toLowerCase().includes(keyword)),
+          reasoning: reasoningKeywords.some(keyword => model.name.toLowerCase().includes(keyword)),
           tokens: model.context_length,
-          vision: model.description?.includes('vision') || model.name?.includes('vision'),
+          vision: model.description?.toLowerCase().includes('vision') || model.name?.toLowerCase().includes('vision'),
         };
       });
   },
