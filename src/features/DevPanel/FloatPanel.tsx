@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon, FluentEmoji, Icon, SideNav } from '@lobehub/ui';
-import { FloatButton } from 'antd';
+import { Dropdown, FloatButton } from 'antd';
 import { createStyles } from 'antd-style';
 import { BugIcon, BugOff, XIcon } from 'lucide-react';
 import { ReactNode, memo, useEffect, useState } from 'react';
@@ -11,26 +11,36 @@ import { Rnd } from 'react-rnd';
 import { BRANDING_NAME } from '@/const/branding';
 
 // 定义样式
-const useStyles = createStyles(({ token, css }) => {
+const useStyles = createStyles(({ token, css, prefixCls }) => {
   return {
     collapsed: css`
       pointer-events: none;
       transform: scale(0.8);
       opacity: 0;
     `,
-    content: css`
-      overflow: auto;
-      flex: 1;
-      height: 100%;
-      color: ${token.colorText};
-    `,
-
     expanded: css`
       pointer-events: auto;
       transform: scale(1);
       opacity: 1;
     `,
+    floatButton: css`
+      inset-block-end: 16px;
+      inset-inline-end: 16px;
 
+      width: 36px;
+      height: 36px;
+      border: 1px solid ${token.colorBorderSecondary};
+
+      font-size: 20px;
+      .${prefixCls}-float-btn-body {
+        background: ${token.colorBgLayout};
+
+        &:hover {
+          width: auto;
+          background: ${token.colorBgElevated};
+        }
+      }
+    `,
     header: css`
       cursor: move;
       user-select: none;
@@ -38,8 +48,6 @@ const useStyles = createStyles(({ token, css }) => {
       padding-block: 8px;
       padding-inline: 16px;
       border-block-end: 1px solid ${token.colorBorderSecondary};
-      border-start-start-radius: 12px;
-      border-start-end-radius: 12px;
 
       font-weight: ${token.fontWeightStrong};
       color: ${token.colorText};
@@ -72,8 +80,9 @@ interface CollapsibleFloatPanelProps {
 }
 
 const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   const [tab, setTab] = useState<string>(items[0].key);
+  const [isHide, setIsHide] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [size, setSize] = useState({ height: minHeight, width: minWidth });
@@ -100,11 +109,29 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
 
   return (
     <>
-      <FloatButton
-        icon={<Icon icon={isExpanded ? BugOff : BugIcon} />}
-        onClick={() => setIsExpanded(!isExpanded)}
-        style={{ bottom: 24, right: 24 }}
-      />
+      {!isHide && (
+        <Dropdown
+          menu={{
+            items: [
+              {
+                icon: (
+                  <Icon color={theme.colorTextSecondary} icon={BugOff} size={{ fontSize: 16 }} />
+                ),
+                key: 'hide',
+                label: 'Hide Toolbar',
+                onClick: () => setIsHide(true),
+              },
+            ],
+          }}
+          trigger={['hover']}
+        >
+          <FloatButton
+            className={styles.floatButton}
+            icon={<Icon icon={isExpanded ? BugOff : BugIcon} />}
+            onClick={() => setIsExpanded(!isExpanded)}
+          />
+        </Dropdown>
+      )}
       {isExpanded && (
         <Rnd
           bounds="window"
@@ -166,10 +193,12 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
               </Flexbox>
               {items.map((item) => (
                 <Flexbox
-                  className={styles.content}
+                  flex={1}
+                  height={'100%'}
                   key={item.key}
                   style={{
                     display: tab === item.key ? 'flex' : 'none',
+                    overflow: 'hidden',
                   }}
                 >
                   {item.children}

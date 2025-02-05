@@ -51,24 +51,7 @@ const useStyles = createStyles(({ token, css }) => ({
     color: ${token.colorTextTertiary};
   `,
   schemaHeader: css`
-    display: flex;
-    gap: 8px;
-    align-items: center;
-
-    padding-block: 12px;
-    padding-inline: 16px;
-
     font-weight: ${token.fontWeightStrong};
-    color: ${token.colorText};
-  `,
-  schemaPanel: css`
-    overflow: scroll;
-
-    width: 280px;
-    height: 100%;
-    border-inline-end: 1px solid ${token.colorBorderSecondary};
-
-    background: ${token.colorBgContainer};
   `,
   selected: css`
     background: ${token.colorFillSecondary};
@@ -148,13 +131,20 @@ const SchemaPanel = ({ onTableSelect, selectedTable }: SchemaPanelProps) => {
   return (
     <DraggablePanel placement={'left'}>
       <Flexbox height={'100%'} style={{ overflow: 'hidden', position: 'relative' }}>
-        <div className={styles.schemaHeader}>
+        <Flexbox
+          align={'center'}
+          className={styles.schemaHeader}
+          gap={8}
+          horizontal
+          paddingBlock={12}
+          paddingInline={16}
+        >
           <Database size={16} />
           <Flexbox align={'center'} horizontal justify={'space-between'}>
             <span>Tables {data?.length}</span>
             <span className={styles.schema}>public</span>
           </Flexbox>
-        </div>
+        </Flexbox>
         <DraggablePanelBody style={{ padding: 0 }}>
           {isLoading ? (
             <Center height={'100%'} width={'100%'}>
