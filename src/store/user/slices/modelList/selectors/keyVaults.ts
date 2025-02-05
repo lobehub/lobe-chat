@@ -14,7 +14,6 @@ export const keyVaultsSettings = (s: UserStore): UserKeyVaults =>
 
 const openAIConfig = (s: UserStore) => keyVaultsSettings(s).openai || {};
 const bedrockConfig = (s: UserStore) => keyVaultsSettings(s).bedrock || {};
-const wenxinConfig = (s: UserStore) => keyVaultsSettings(s).wenxin || {};
 const ollamaConfig = (s: UserStore) => keyVaultsSettings(s).ollama || {};
 const azureConfig = (s: UserStore) => keyVaultsSettings(s).azure || {};
 const cloudflareConfig = (s: UserStore) => keyVaultsSettings(s).cloudflare || {};
@@ -45,5 +44,4 @@ export const keyVaultsConfigSelectors = {
   ollamaConfig,
   openAIConfig,
   password,
-  wenxinConfig,
 };
