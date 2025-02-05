@@ -199,12 +199,12 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
 
   在域名模式中，你需要完成反向代理配置，并确保局域网 / 公网能访问到以下服务。请使用反向代理将以下服务端口映射到域名：
 
-  | 域名                    | 反代端口   | 是否必选 |
-  | --------------------- | ------ | ---- |
-  | `lobe.example.com`    | `3210` | 必选   |
-  | `auth-ui.example.com` | `8000` | 必选   |
-  | `s3-api.example.com`  | `9000` | 必选   |
-  | `s3-ui.example.com`   | `9001` |      |
+  | 域名                     | 反代端口   | 是否必选 |
+  | ---------------------- | ------ | ---- |
+  | `lobe.example.com`     | `3210` | 必选   |
+  | `auth.example.com`     | `8000` | 必选   |
+  | `minio.example.com`    | `9000` | 必选   |
+  | `minio-ui.example.com` | `9001` |      |
 
   <Callout type="important">
     如果你使用如 [宝塔面板](https://www.bt.cn/) 等面板软件进行反向代理配置，
@@ -227,8 +227,8 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
   在域名模式中，你需要根据脚本提示完成：
 
   - LobeChat 服务的域名设置：`lobe.example.com`
-  - Minio 服务的域名设置：`s3-api.example.com`
-  - Casdoor 服务的域名设置：`auth-ui.example.com`
+  - Minio 服务的域名设置：`minio.example.com`
+  - Casdoor 服务的域名设置：`auth.example.com`
   - 选择访问协议：`http` 或 `https`
   - 安全密钥重新生成：我们强烈建议你重新生成安全密钥，如果你缺少脚本所需的密钥生成库，我们建议你参考 [自定义部署](#自定义部署) 章节对密钥进行修改。
 
@@ -257,11 +257,11 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
     - Username: user
     - Password: 837e26
   Casdoor:
-    - URL: https://auth-ui.example.com
+    - URL: https://auth.example.com
     - Username: admin
     - Password: 837e26
   Minio:
-    - URL: https://s3-api.example.com
+    - URL: https://minio.example.com
     - Username: admin
     - Password: dbac8440
   ```
@@ -338,7 +338,7 @@ mv .env.zh-CN.example .env
 - LobeChat 需要与 Casdoor 通讯，因此你需要配置 Casdoor 的 Issuer 。
 
 ```env
-AUTH_CASDOOR_ISSUER=https://auth-ui.example.com
+AUTH_CASDOOR_ISSUER=https://auth.example.com
 ```
 
 该配置会影响 LobeChat 的登录鉴权服务，你需要确保 Casdoor 服务的地址正确。
@@ -349,13 +349,13 @@ AUTH_CASDOOR_ISSUER=https://auth-ui.example.com
 请在 Casdoor 的 Web 面板的 `身份认证 -> 应用` -> `<应用ID，默认为 app-built-in>` -> `重定向URL` 中添加一行：
 
 ```
-https://auth-ui.example.com/api/auth/callback/casdoor
+https://auth.example.com/api/auth/callback/casdoor
 ```
 
 - Casdoor 需要在环境变量中提供访问的 Origin 信息：
 
 ```env
-origin=https://auth-ui.example.com
+origin=https://auth.example.com
 ```
 
 2. MinIO
@@ -363,8 +363,8 @@ origin=https://auth-ui.example.com
 - LobeChat 需要为 LLM 服务提供商提供文件对象的公网访问地址，因此你需要配置 MinIO 的 Endpoint 。
 
 ```env
-S3_PUBLIC_DOMAIN=https://s3-api.example.com
-S3_ENDPOINT=https://s3-api.example.com
+S3_PUBLIC_DOMAIN=https://minio.example.com
+S3_ENDPOINT=https://minio.example.com
 ```
 
 3. PostgreSQL
@@ -400,9 +400,9 @@ lobe-chat      | [auth][error] r3: "response" is not a conform Authorization Ser
 
 - 请参考 [域名模式](#域名模式) 章节中的反向代理配置注意事项。
 
-- 一个直接的排查方式，你可以直接访问 `https://auth-ui.example.com/.well-known/openid-configuration`，如果
+- 一个直接的排查方式，你可以直接访问 `https://auth.example.com/.well-known/openid-configuration`，如果
   - 返回了非 JSON 格式的数据，则说明你的反向代理配置错误。
-  - 如果返回的 JSON 格式数据中的 `"issuer": "URL"` 字段不是你配置的 `https://auth-ui.example.com`，则说明你的环境变量配置错误。
+  - 如果返回的 JSON 格式数据中的 `"issuer": "URL"` 字段不是你配置的 `https://auth.example.com`，则说明你的环境变量配置错误。
 
 - TypeError: fetch failed
 
@@ -416,7 +416,7 @@ lobe-chat      | [auth][error] TypeError: fetch failed
 
 - 请检查你的鉴权服务是否正常运行，以及 LobeChat 所在的网络是否能够访问到鉴权服务。
 
-- 一个直接的排查方式，你可以在 LobeChat 容器的终端中，使用 `curl` 命令访问你的鉴权服务 `https://auth-ui.example.com/.well-known/openid-configuration`，如果返回了 JSON 格式的数据，则说明你的鉴权服务正常运行。
+- 一个直接的排查方式，你可以在 LobeChat 容器的终端中，使用 `curl` 命令访问你的鉴权服务 `https://auth.example.com/.well-known/openid-configuration`，如果返回了 JSON 格式的数据，则说明你的鉴权服务正常运行。
 
 ## 拓展配置
 
@@ -494,14 +494,14 @@ lobe-chat      | [auth][error] TypeError: fetch failed
 域名和配套服务端口说明如下：
 
 - `lobe.example.com`：为你的 LobeChat 服务端域名，需要反向代理到 LobeChat 服务端口，默认为 `3210`
-- `auth-ui.example.com`：为你的 Logto UI 域名，需要反向代理到 Logto WebUI 服务端口，默认为 `8000`
-- `s3-api.example.com`：为你的 MinIO API 域名，需要反向代理到 MinIO API 服务端口，默认为 `9000`
-- `s3-ui.example.com`：可选，为你的 MinIO UI 域名，需要反向代理到 MinIO WebUI 服务端口，默认为 `9001`
+- `auth.example.com`：为你的 Logto UI 域名，需要反向代理到 Logto WebUI 服务端口，默认为 `8000`
+- `minio.example.com`：为你的 MinIO API 域名，需要反向代理到 MinIO API 服务端口，默认为 `9000`
+- `minio-ui.example.com`：可选，为你的 MinIO UI 域名，需要反向代理到 MinIO WebUI 服务端口，默认为 `9001`
 
 #### 配置文件
 
 ```sh
-bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f -l zh_CN
+bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
 docker compose up -d
 ```
 
@@ -522,7 +522,7 @@ docker compose up -d
    ```
    2. 修改`casdoor`的`origin`字段。
    ```yaml
-         origin: 'https://auth-ui.example.com'
+         origin: 'https://auth.example.com'
    ```
    3. 修改`lobe`的`environment`字段。
    ```yaml
@@ -536,15 +536,15 @@ docker compose up -d
      - 'AUTH_URL=https://lobe.example.com/api/auth'
 
      # - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
-     - 'AUTH_CASDOOR_ISSUER=https://auth-ui.example.com'
+     - 'AUTH_CASDOOR_ISSUER=https://auth.example.com'
 
      - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
      # - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
-     - 'S3_ENDPOINT=https://s3-api.example.com'
+     - 'S3_ENDPOINT=https://minio.example.com'
 
      - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
      # - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
-     - 'S3_PUBLIC_DOMAIN=https://s3-api.example.com'
+     - 'S3_PUBLIC_DOMAIN=https://minio.example.com'
 
      - 'S3_ENABLE_PATH_STYLE=1'
      - 'LLM_VISION_IMAGE_USE_BASE64=1'
@@ -588,7 +588,7 @@ docker compose up -d # 重新启动
 
 你需要首先访问 WebUI 来进行配置：
 
-- 如果你按照前文配置了反向代理，打开 `https://auth-ui.example.com`
+- 如果你按照前文配置了反向代理，打开 `https://auth.example.com`
 - 否则，请在进行端口映射后，打开 `http://localhost:8000`
 
 登录管理员账户
@@ -627,7 +627,7 @@ docker compose up -d # 重新启动
 
 你需要首先访问 WebUI 来进行配置：
 
-- 如果你按照前文配置了反向代理，打开 `https://s3-ui.example.com`
+- 如果你按照前文配置了反向代理，打开 `https://minio-ui.example.com`
 - 否则，请在进行端口映射后，打开 `http://localhost:9001`
 
 1. 在登录界面输入你设置的 `MINIO_ROOT_USER` 和 `MINIO_ROOT_PASSWORD`，然后点击登录
@@ -754,7 +754,7 @@ services:
       driverName: 'postgres'
       dataSourceName: 'user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor'
       # origin: 'http://localhost:${CASDOOR_PORT}'
-      origin: 'https://auth-ui.example.com'
+      origin: 'https://auth.example.com'
       runmode: 'dev'
     volumes:
       - ./init_data.json:/init_data.json
@@ -784,15 +784,15 @@ services:
       - 'AUTH_URL=https://lobe.example.com/api/auth'
 
       # - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
-      - 'AUTH_CASDOOR_ISSUER=https://auth-ui.example.com'
+      - 'AUTH_CASDOOR_ISSUER=https://auth.example.com'
 
       - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
       # - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
-      - 'S3_ENDPOINT=https://s3-api.example.com'
+      - 'S3_ENDPOINT=https://minio.example.com'
 
       - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
       # - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
-      - 'S3_PUBLIC_DOMAIN=https://s3-api.example.com'
+      - 'S3_PUBLIC_DOMAIN=https://minio.example.com'
 
       - 'S3_ENABLE_PATH_STYLE=1'
       - 'LLM_VISION_IMAGE_USE_BASE64=1'

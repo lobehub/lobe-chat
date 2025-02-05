@@ -47,6 +47,7 @@ export interface ModelAbilities {
 const AiModelAbilitiesSchema = z.object({
   // files: z.boolean().optional(),
   functionCall: z.boolean().optional(),
+  reasoning: z.boolean().optional(),
   vision: z.boolean().optional(),
 });
 
@@ -209,6 +210,10 @@ export interface AIRealtimeModelCard extends AIBaseModelCard {
      * whether model supports function call
      */
     functionCall?: boolean;
+    /**
+     *  whether model supports reasoning
+     */
+    reasoning?: boolean;
     /**
      *  whether model supports vision
      */

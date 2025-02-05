@@ -60,6 +60,10 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
 
       for (const capability of capabilityList) {
         switch (capability) {
+          case 'reasoning': {
+            model.reasoning = true;
+            break;
+          }
           case 'vision': {
             model.vision = true;
             break;
@@ -74,10 +78,6 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
           }
           case 'hot': {
             model.hot = true;
-            break;
-          }
-          case 'reasoning': {
-            model.reasoning = true;
             break;
           }
           default: {

@@ -229,6 +229,10 @@
           "title": "ID mô hình"
         },
         "modalTitle": "Cấu hình mô hình tùy chỉnh",
+        "reasoning": {
+          "extra": "Cấu hình này sẽ chỉ kích hoạt khả năng suy nghĩ sâu của mô hình, hiệu quả cụ thể hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra xem mô hình này có khả năng suy nghĩ sâu có thể sử dụng hay không",
+          "title": "Hỗ trợ suy nghĩ sâu"
+        },
         "tokens": {
           "extra": "Cài đặt số Token tối đa mà mô hình hỗ trợ",
           "title": "Cửa sổ ngữ cảnh tối đa",

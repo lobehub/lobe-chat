@@ -1,5 +1,41 @@
 [
   {
+    "children": {},
+    "date": "2025-02-05",
+    "version": "1.51.1"
+  },
+  {
+    "children": {
+      "features": ["Add reasoning tag support for custom models via UI or ENV."],
+      "fixes": [
+        "Fix deepseek-v3 & qvq model tag fetch error from SiliconCloud, fix model ability missing."
+      ]
+    },
+    "date": "2025-02-05",
+    "version": "1.51.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add/Update Aliyun Cloud Models, update GitHub Models."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix invalid utf8 character."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.4"
+  },
+  {
+    "children": {
+      "improvements": ["Update model locale."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.3"
+  },
+  {
     "children": {
       "fixes": ["Fix o1 series calling issue."]
     },
