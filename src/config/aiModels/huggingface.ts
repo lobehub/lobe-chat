@@ -30,6 +30,9 @@ const huggingfaceChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 32_768,
     description: 'Qwen QwQ 是由 Qwen 团队开发的实验研究模型，专注于提升AI推理能力。',
     displayName: 'QwQ 32B Preview',
@@ -50,6 +53,9 @@ const huggingfaceChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 16_384,
     displayName: 'DeepSeek R1',
     enabled: true,

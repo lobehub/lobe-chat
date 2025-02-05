@@ -235,6 +235,9 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 32_768,
     description:
       'Qwen QwQ 模型专注于推动 AI 推理，并展示了开放模型在推理能力上与闭源前沿模型匹敌的力量。QwQ-32B-Preview 是一个实验性发布版本，在 GPQA、AIME、MATH-500 和 LiveCodeBench 基准测试中，在分析和推理能力上可与 o1 相媲美，并超越 GPT-4o 和 Claude 3.5 Sonnet。注意：该模型目前作为无服务器模型进行实验性提供。如果用于生产环境，请注意 Fireworks 可能会在短时间内取消部署该模型。',
