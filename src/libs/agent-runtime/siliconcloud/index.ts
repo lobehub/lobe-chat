@@ -57,7 +57,7 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
       const functionCallKeywords = [
         'qwen/qwen2.5',
         'thudm/glm-4',
-        'deepseek-ai/deepSeek',
+        'deepseek-ai/deepseek',
         'internlm/internlm2_5',
         'meta-llama/meta-llama-3.1',
         'meta-llama/meta-llama-3.3',
@@ -65,6 +65,7 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
 
       const visionKeywords = [
         'opengvlab/internvl',
+        'qwen/qvq',
         'qwen/qwen2-vl',
         'teleai/telemm',
         'deepseek-ai/deepseek-vl',
@@ -74,7 +75,7 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
 
       return {
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
-        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
+        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('deepseek-r1'),
         id: model.id,
         vision: visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
       };
