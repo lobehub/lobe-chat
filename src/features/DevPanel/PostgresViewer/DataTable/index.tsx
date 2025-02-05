@@ -1,4 +1,5 @@
 import { ActionIcon } from '@lobehub/ui';
+import { Empty } from 'antd';
 import { createStyles } from 'antd-style';
 import { Download, Filter, RefreshCw } from 'lucide-react';
 import React from 'react';
@@ -66,7 +67,9 @@ const DataTable = ({ tableName }: DataTableProps) => {
       {tableName ? (
         <Table columns={columns} dataSource={dataSource} loading={isLoading} />
       ) : (
-        <Center height={'80%'}>Select a table to view data</Center>
+        <Center height={'80%'}>
+          <Empty description={'Select a table to view data'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        </Center>
       )}
     </Flexbox>
   );
