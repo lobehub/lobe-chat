@@ -3,6 +3,66 @@ import { AIChatModelCard } from '@/types/aiModel';
 const giteeaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      '基于 Qwen2.5-Math-1.5B 的 DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
+    displayName: 'DeepSeek R1 Distill Qwen 1.5B',
+    enabled: true,
+    id: 'DeepSeek-R1-Distill-Qwen-1.5B',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      '基于 Qwen2.5-Math-7B 的 DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
+    displayName: 'DeepSeek R1 Distill Qwen 7B',
+    enabled: true,
+    id: 'DeepSeek-R1-Distill-Qwen-7B',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      '基于 Qwen2.5-14B 的 DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
+    displayName: 'DeepSeek R1 Distill Qwen 14B',
+    enabled: true,
+    id: 'DeepSeek-R1-Distill-Qwen-14B',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      'DeepSeek-R1 系列通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆，超越 OpenAI-o1-mini 水平。',
+    displayName: 'DeepSeek R1 Distill Qwen 32B',
+    enabled: true,
+    id: 'DeepSeek-R1-Distill-Qwen-32B',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      'QwQ-32B-Preview 是一款独具创新的自然语言处理模型，能够高效处理复杂的对话生成与上下文理解任务。',
+    displayName: 'QwQ 32B Preview',
+    enabled: true,
+    id: 'QwQ-32B-Preview',
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
     },
     contextWindowTokens: 16_000,

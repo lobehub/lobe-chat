@@ -2,6 +2,9 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const perplexityChatModels: AIChatModelCard[] = [
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 127_072,
     description:
       '由 DeepSeek 推理模型提供支持的新 API 产品。',
