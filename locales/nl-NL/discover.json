@@ -126,6 +126,10 @@
         "title": "Onderwerp versheid"
       },
       "range": "Bereik",
+      "reasoning_effort": {
+        "desc": "Deze instelling wordt gebruikt om de redeneerkracht van het model te regelen voordat het een antwoord genereert. Lage kracht geeft prioriteit aan de responssnelheid en bespaart tokens, terwijl hoge kracht een completere redenering biedt, maar meer tokens verbruikt en de responssnelheid verlaagt. De standaardwaarde is gemiddeld, wat een balans biedt tussen redeneringsnauwkeurigheid en responssnelheid.",
+        "title": "Redeneerkracht"
+      },
       "temperature": {
         "desc": "Deze instelling beïnvloedt de diversiteit van de reacties van het model. Lagere waarden leiden tot meer voorspelbare en typische reacties, terwijl hogere waarden meer diverse en ongebruikelijke reacties aanmoedigen. Wanneer de waarde op 0 is ingesteld, geeft het model altijd dezelfde reactie op een gegeven invoer.",
         "title": "Willekeurigheid"

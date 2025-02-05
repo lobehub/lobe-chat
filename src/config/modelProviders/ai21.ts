@@ -29,12 +29,10 @@ const Ai21: ModelProviderCard = {
   checkModel: 'jamba-1.5-mini',
   description: 'AI21 Labs 为企业构建基础模型和人工智能系统，加速生成性人工智能在生产中的应用。',
   id: 'ai21',
-  modelList: { showModelFetcher: true },
   modelsUrl: 'https://docs.ai21.com/reference',
   name: 'Ai21Labs',
   settings: {
     sdkType: 'openai',
-    showModelFetcher: true,
   },
   url: 'https://studio.ai21.com',
 };

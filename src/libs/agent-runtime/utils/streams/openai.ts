@@ -37,14 +37,14 @@ export const transformOpenAIStream = (
     return { data: errorData, id: 'first_chunk_error', type: 'error' };
   }
 
-  // maybe need another structure to add support for multiple choices
-
   try {
+    // maybe need another structure to add support for multiple choices
     const item = chunk.choices[0];
     if (!item) {
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
+    // tools calling
     if (typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
       return {
         data: item.delta.tool_calls.map((value, index): StreamToolCallChunkData => {
@@ -87,11 +87,24 @@ export const transformOpenAIStream = (
       return { data: item.finish_reason, id: chunk.id, type: 'stop' };
     }
 
+    // DeepSeek reasoner will put thinking in the reasoning_content field
+    // litellm will not set content = null when processing reasoning content
+    // en: siliconflow has encountered a situation where both content and reasoning_content are present, so the parsing order go ahead
+    // refs: https://github.com/lobehub/lobe-chat/issues/5681
+    if (
+      item.delta &&
+      'reasoning_content' in item.delta &&
+      typeof item.delta.reasoning_content === 'string'
+    ) {
+      return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
+    }
+
     if (typeof item.delta?.content === 'string') {
       return { data: item.delta.content, id: chunk.id, type: 'text' };
     }
 
-    if (item.delta?.content === null) {
+    // 无内容情况
+    if (item.delta && item.delta.content === null) {
       return { data: item.delta, id: chunk.id, type: 'data' };
     }
 

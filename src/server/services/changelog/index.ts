@@ -76,7 +76,7 @@ export class ChangelogService {
     try {
       const post = await this.getIndexItemById(id);
 
-      const filename = options?.locale === 'en-US' ? `${id}.mdx` : `${id}.zh-CN.mdx`;
+      const filename = options?.locale?.startsWith('zh') ? `${id}.zh-CN.mdx` : `${id}.mdx`;
       const url = this.genUrl(urlJoin(this.config.docsPath, filename));
 
       const response = await fetch(url);
@@ -166,7 +166,7 @@ export class ChangelogService {
     const minVersion = semver.lt(v1, v2) ? v1 : v2;
     const maxVersion = semver.gt(v1, v2) ? v1 : v2;
 
-    return [maxVersion, minVersion];
+    return [minVersion, maxVersion];
   }
 
   private genUrl(path: string) {

@@ -17,6 +17,9 @@
   "360gpt-turbo-responsibility-8k": {
     "description": "360GPT Turbo Responsibility 8K betont semantische Sicherheit und verantwortungsbewusste Ausrichtung, speziell für Anwendungen mit hohen Anforderungen an die Inhaltssicherheit konzipiert, um die Genauigkeit und Robustheit der Benutzererfahrung zu gewährleisten."
   },
+  "360gpt2-o1": {
+    "description": "360gpt2-o1 verwendet Baumsuche zur Konstruktion von Denkketten und führt einen Reflexionsmechanismus ein, der durch verstärkendes Lernen trainiert wird. Das Modell verfügt über die Fähigkeit zur Selbstreflexion und Fehlerkorrektur."
+  },
   "360gpt2-pro": {
     "description": "360GPT2 Pro ist ein fortschrittliches Modell zur Verarbeitung natürlicher Sprache, das von der 360 Company entwickelt wurde und über außergewöhnliche Textgenerierungs- und Verständnisfähigkeiten verfügt, insbesondere im Bereich der Generierung und Kreativität, und in der Lage ist, komplexe Sprachumwandlungs- und Rollendarstellungsaufgaben zu bewältigen."
   },
@@ -110,6 +113,9 @@
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct ist eines der neuesten großen Sprachmodelle, die von Alibaba Cloud veröffentlicht wurden. Dieses 7B-Modell hat signifikante Verbesserungen in den Bereichen Codierung und Mathematik. Das Modell bietet auch mehrsprachige Unterstützung und deckt über 29 Sprachen ab, einschließlich Chinesisch und Englisch. Es zeigt signifikante Verbesserungen in der Befolgung von Anweisungen, im Verständnis strukturierter Daten und in der Generierung strukturierter Ausgaben (insbesondere JSON)."
   },
+  "MiniMax-Text-01": {
+    "description": "In der MiniMax-01-Serie haben wir mutige Innovationen vorgenommen: Erstmals wurde die lineare Aufmerksamkeitsmechanismus in großem Maßstab implementiert, sodass die traditionelle Transformer-Architektur nicht mehr die einzige Wahl ist. Dieses Modell hat eine Parameteranzahl von bis zu 456 Milliarden, wobei eine Aktivierung 45,9 Milliarden beträgt. Die Gesamtleistung des Modells kann mit den besten Modellen im Ausland mithalten und kann gleichzeitig effizient den weltweit längsten Kontext von 4 Millionen Tokens verarbeiten, was 32-mal so viel wie GPT-4o und 20-mal so viel wie Claude-3.5-Sonnet ist."
+  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO ist eine hochflexible Multi-Modell-Kombination, die darauf abzielt, außergewöhnliche kreative Erlebnisse zu bieten."
   },
@@ -170,6 +176,9 @@
   "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
     "description": "Meta Llama 3.1 ist eine Familie von mehrsprachigen großen Sprachmodellen, die von Meta entwickelt wurden und vortrainierte sowie anweisungsfeinabgestimmte Varianten mit 8B, 70B und 405B Parametern umfasst. Dieses 8B-Anweisungsfeinabgestimmte Modell wurde für mehrsprachige Dialogszenarien optimiert und zeigt in mehreren Branchen-Benchmark-Tests hervorragende Leistungen. Das Modelltraining verwendete über 150 Billionen Tokens aus öffentlichen Daten und nutzte Techniken wie überwachte Feinabstimmung und verstärkendes Lernen mit menschlichem Feedback, um die Nützlichkeit und Sicherheit des Modells zu verbessern. Llama 3.1 unterstützt Text- und Codegenerierung, mit einem Wissensstichtag von Dezember 2023."
   },
+  "Qwen/QVQ-72B-Preview": {
+    "description": "QVQ-72B-Preview ist ein forschungsorientiertes Modell, das vom Qwen-Team entwickelt wurde und sich auf visuelle Inferenzfähigkeiten konzentriert. Es hat einzigartige Vorteile beim Verständnis komplexer Szenen und der Lösung visuell verwandter mathematischer Probleme."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview ist das neueste experimentelle Forschungsmodell von Qwen, das sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert. Durch die Erforschung komplexer Mechanismen wie Sprachmischung und rekursive Inferenz bietet es Hauptvorteile wie starke Analysefähigkeiten, mathematische und Programmierfähigkeiten. Gleichzeitig gibt es Herausforderungen wie Sprachwechsel, Inferenzzyklen, Sicherheitsüberlegungen und Unterschiede in anderen Fähigkeiten."
   },
@@ -218,6 +227,9 @@
   "Qwen2-7B-Instruct": {
     "description": "Qwen2 ist die neueste Reihe des Qwen-Modells, das in der Lage ist, die besten Open-Source-Modelle ähnlicher Größe oder sogar größerer Modelle zu übertreffen. Qwen2 7B hat in mehreren Bewertungen signifikante Vorteile erzielt, insbesondere im Bereich Code und Verständnis der chinesischen Sprache."
   },
+  "Qwen2-VL-72B": {
+    "description": "Qwen2-VL-72B ist ein leistungsstarkes visuelles Sprachmodell, das multimodale Verarbeitung von Bildern und Text unterstützt und in der Lage ist, Bildinhalte präzise zu erkennen und relevante Beschreibungen oder Antworten zu generieren."
+  },
   "Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5-14B-Instruct ist ein großes Sprachmodell mit 14 Milliarden Parametern, das hervorragende Leistungen bietet, für chinesische und mehrsprachige Szenarien optimiert ist und Anwendungen wie intelligente Fragen und Antworten sowie Inhaltserstellung unterstützt."
   },
@@ -229,6 +241,9 @@
   },
   "Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct ist ein großes Sprachmodell mit 7 Milliarden Parametern, das Funktionsaufrufe unterstützt und nahtlos mit externen Systemen interagiert, was die Flexibilität und Skalierbarkeit erheblich erhöht. Es ist für chinesische und mehrsprachige Szenarien optimiert und unterstützt Anwendungen wie intelligente Fragen und Antworten sowie Inhaltserstellung."
+  },
+  "Qwen2.5-Coder-14B-Instruct": {
+    "description": "Qwen2.5-Coder-14B-Instruct ist ein auf großflächigem Pre-Training basierendes Programmiermodell, das über starke Fähigkeiten zur Codeverstehung und -generierung verfügt und effizient verschiedene Programmieraufgaben bearbeiten kann. Es eignet sich besonders gut für intelligente Codeerstellung, automatisierte Skripterstellung und die Beantwortung von Programmierfragen."
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct ist ein großes Sprachmodell, das speziell für die Codegenerierung, das Verständnis von Code und effiziente Entwicklungsszenarien entwickelt wurde. Es verwendet eine branchenführende Parametergröße von 32B und kann vielfältige Programmieranforderungen erfüllen."
@@ -305,20 +320,17 @@
   "abab6.5t-chat": {
     "description": "Für chinesische Charakterdialoge optimiert, bietet es flüssige und den chinesischen Ausdrucksgewohnheiten entsprechende Dialoggenerierung."
   },
-  "accounts/fireworks/models/firefunction-v1": {
-    "description": "Das Open-Source-Funktionsaufrufmodell von Fireworks bietet hervorragende Anweisungsdurchführungsfähigkeiten und anpassbare Funktionen."
+  "abab7-chat-preview": {
+    "description": "Im Vergleich zur abab6.5-Modellreihe gibt es erhebliche Verbesserungen in den Fähigkeiten bei langen Texten, Mathematik und Schreiben."
   },
-  "accounts/fireworks/models/firefunction-v2": {
-    "description": "Das neueste Firefunction-v2 von Fireworks ist ein leistungsstarkes Funktionsaufrufmodell, das auf Llama-3 basiert und durch zahlreiche Optimierungen besonders für Funktionsaufrufe, Dialoge und Anweisungsverfolgung geeignet ist."
+  "accounts/fireworks/models/deepseek-r1": {
+    "description": "DeepSeek-R1 ist ein hochmodernes großes Sprachmodell, das durch verstärktes Lernen und Optimierung mit Kaltstartdaten hervorragende Leistungen in Inferenz, Mathematik und Programmierung bietet."
   },
-  "accounts/fireworks/models/firellava-13b": {
-    "description": "fireworks-ai/FireLLaVA-13b ist ein visuelles Sprachmodell, das sowohl Bild- als auch Texteingaben verarbeiten kann und für multimodale Aufgaben geeignet ist, nachdem es mit hochwertigen Daten trainiert wurde."
+  "accounts/fireworks/models/deepseek-v3": {
+    "description": "Ein leistungsstarkes Mixture-of-Experts (MoE) Sprachmodell von Deepseek mit insgesamt 671B Parametern, wobei 37B Parameter pro Token aktiviert werden."
   },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Das Llama 3 70B Instruct-Modell ist speziell für mehrsprachige Dialoge und natürliche Sprachverständnis optimiert und übertrifft die meisten Wettbewerbsmodelle."
-  },
-  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
-    "description": "Das Llama 3 70B Instruct-Modell (HF-Version) entspricht den offiziellen Ergebnissen und eignet sich für hochwertige Anweisungsverfolgungsaufgaben."
   },
   "accounts/fireworks/models/llama-v3-8b-instruct": {
     "description": "Das Llama 3 8B Instruct-Modell ist für Dialoge und mehrsprachige Aufgaben optimiert und bietet hervorragende und effiziente Leistungen."
@@ -338,23 +350,23 @@
   "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
     "description": "Meta's 11B Parameter instruct-Modell für Bildverarbeitung. Dieses Modell ist optimiert für visuelle Erkennung, Bildverarbeitung, Bildbeschreibung und die Beantwortung allgemeiner Fragen zu Bildern. Es kann visuelle Daten wie Diagramme und Grafiken verstehen und schließt die Lücke zwischen visuellen und sprachlichen Informationen, indem es textuelle Beschreibungen der Bilddetails generiert."
   },
-  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
-    "description": "Llama 3.2 1B instruct-Modell ist ein leichtgewichtiges mehrsprachiges Modell, das von Meta veröffentlicht wurde. Dieses Modell zielt darauf ab, die Effizienz zu steigern und bietet im Vergleich zu größeren Modellen signifikante Verbesserungen in Bezug auf Latenz und Kosten. Anwendungsbeispiele für dieses Modell sind Retrieval und Zusammenfassung."
-  },
   "accounts/fireworks/models/llama-v3p2-3b-instruct": {
     "description": "Llama 3.2 3B instruct-Modell ist ein leichtgewichtiges mehrsprachiges Modell, das von Meta veröffentlicht wurde. Dieses Modell zielt darauf ab, die Effizienz zu steigern und bietet im Vergleich zu größeren Modellen signifikante Verbesserungen in Bezug auf Latenz und Kosten. Anwendungsbeispiele für dieses Modell sind Abfragen und Aufforderungsneuschreibungen sowie Schreibassistenz."
   },
   "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
     "description": "Meta's 90B Parameter instruct-Modell für Bildverarbeitung. Dieses Modell ist optimiert für visuelle Erkennung, Bildverarbeitung, Bildbeschreibung und die Beantwortung allgemeiner Fragen zu Bildern. Es kann visuelle Daten wie Diagramme und Grafiken verstehen und schließt die Lücke zwischen visuellen und sprachlichen Informationen, indem es textuelle Beschreibungen der Bilddetails generiert."
   },
+  "accounts/fireworks/models/llama-v3p3-70b-instruct": {
+    "description": "Llama 3.3 70B Instruct ist die aktualisierte Version von Llama 3.1 70B aus dem Dezember. Dieses Modell wurde auf der Grundlage von Llama 3.1 70B (veröffentlicht im Juli 2024) verbessert und bietet erweiterte Funktionen für Toolaufrufe, mehrsprachige Textunterstützung sowie mathematische und Programmierfähigkeiten. Das Modell erreicht branchenführende Leistungen in den Bereichen Inferenz, Mathematik und Befehlsbefolgung und bietet eine ähnliche Leistung wie 3.1 405B, während es gleichzeitig signifikante Vorteile in Bezug auf Geschwindigkeit und Kosten bietet."
+  },
+  "accounts/fireworks/models/mistral-small-24b-instruct-2501": {
+    "description": "Ein 24B-Parameter-Modell mit fortschrittlichen Fähigkeiten, die mit größeren Modellen vergleichbar sind."
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Das Mixtral MoE 8x22B Instruct-Modell unterstützt durch seine große Anzahl an Parametern und Multi-Expert-Architektur die effiziente Verarbeitung komplexer Aufgaben."
   },
   "accounts/fireworks/models/mixtral-8x7b-instruct": {
     "description": "Das Mixtral MoE 8x7B Instruct-Modell bietet durch seine Multi-Expert-Architektur effiziente Anweisungsverfolgung und -ausführung."
-  },
-  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
-    "description": "Das Mixtral MoE 8x7B Instruct-Modell (HF-Version) bietet die gleiche Leistung wie die offizielle Implementierung und eignet sich für verschiedene effiziente Anwendungsszenarien."
   },
   "accounts/fireworks/models/mythomax-l2-13b": {
     "description": "Das MythoMax L2 13B-Modell kombiniert neuartige Kombinations-Technologien und ist besonders gut in Erzählungen und Rollenspielen."
@@ -365,17 +377,14 @@
   "accounts/fireworks/models/qwen-qwq-32b-preview": {
     "description": "Das QwQ-Modell ist ein experimentelles Forschungsmodell, das vom Qwen-Team entwickelt wurde und sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert."
   },
+  "accounts/fireworks/models/qwen2-vl-72b-instruct": {
+    "description": "Die 72B-Version des Qwen-VL-Modells ist das neueste Ergebnis von Alibabas Iteration und repräsentiert fast ein Jahr an Innovation."
+  },
   "accounts/fireworks/models/qwen2p5-72b-instruct": {
     "description": "Qwen2.5 ist eine Reihe von Sprachmodellen mit ausschließlich Decodern, die vom Alibaba Cloud Qwen-Team entwickelt wurde. Diese Modelle sind in verschiedenen Größen erhältlich, darunter 0.5B, 1.5B, 3B, 7B, 14B, 32B und 72B, mit Basis- und instruct-Varianten."
   },
   "accounts/fireworks/models/qwen2p5-coder-32b-instruct": {
     "description": "Qwen2.5 Coder 32B Instruct ist die neueste Version der von Alibaba Cloud veröffentlichten Reihe von code-spezifischen großen Sprachmodellen. Dieses Modell basiert auf Qwen2.5 und wurde mit 55 Billionen Tokens trainiert, um die Fähigkeiten zur Codegenerierung, Inferenz und Fehlerbehebung erheblich zu verbessern. Es verbessert nicht nur die Codierungsfähigkeiten, sondern bewahrt auch die Vorteile in Mathematik und allgemeinen Fähigkeiten. Das Modell bietet eine umfassendere Grundlage für praktische Anwendungen wie Code-Agenten."
-  },
-  "accounts/fireworks/models/starcoder-16b": {
-    "description": "Das StarCoder 15.5B-Modell unterstützt fortgeschrittene Programmieraufgaben und hat verbesserte mehrsprachige Fähigkeiten, die sich für komplexe Codegenerierung und -verständnis eignen."
-  },
-  "accounts/fireworks/models/starcoder-7b": {
-    "description": "Das StarCoder 7B-Modell wurde für über 80 Programmiersprachen trainiert und bietet hervorragende Programmierausfüllfähigkeiten und Kontextverständnis."
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Das Yi-Large-Modell bietet hervorragende mehrsprachige Verarbeitungsfähigkeiten und kann für verschiedene Sprachgenerierungs- und Verständnisaufgaben eingesetzt werden."
@@ -455,9 +464,6 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet bietet eine ideale Balance zwischen Intelligenz und Geschwindigkeit für Unternehmensarbeitslasten. Es bietet maximalen Nutzen zu einem niedrigeren Preis, ist zuverlässig und für großflächige Bereitstellungen geeignet."
   },
-  "code-raccoon-v1": {
-    "description": "Code-Raccoon ist ein intelligenter Softwareentwicklungsassistent, der auf dem großen Sprachmodell von SenseTime basiert und Softwareanforderungsanalyse, Architekturdesign, Codeerstellung, Softwaretests und andere Bereiche abdeckt, um die Bedürfnisse der Benutzer beim Programmieren und Lernen zu erfüllen. Code-Raccoon unterstützt über 90 gängige Programmiersprachen wie Python, Java, JavaScript, C++, Go, SQL sowie gängige IDEs wie VS Code und IntelliJ IDEA. In der praktischen Anwendung kann Code-Raccoon Entwicklern helfen, die Programmierproduktivität um über 50 % zu steigern."
-  },
   "codegeex-4": {
     "description": "CodeGeeX-4 ist ein leistungsstarker AI-Programmierassistent, der intelligente Fragen und Codevervollständigung in verschiedenen Programmiersprachen unterstützt und die Entwicklungseffizienz steigert."
   },
@@ -518,11 +524,20 @@
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct bietet zuverlässige Anweisungsverarbeitungsfähigkeiten und unterstützt Anwendungen in verschiedenen Branchen."
   },
+  "deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1 ist ein durch verstärkendes Lernen (RL) gesteuertes Inferenzmodell, das die Probleme der Wiederholbarkeit und Lesbarkeit im Modell löst. Vor dem RL führte DeepSeek-R1 Kaltstartdaten ein, um die Inferenzleistung weiter zu optimieren. Es zeigt in mathematischen, programmierbezogenen und Inferenzaufgaben eine vergleichbare Leistung zu OpenAI-o1 und verbessert durch sorgfältig gestaltete Trainingsmethoden die Gesamteffizienz."
+  },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 vereint die hervorragenden Merkmale früherer Versionen und verbessert die allgemeinen und kodierenden Fähigkeiten."
   },
+  "deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3 ist ein hybrides Expertenmodell (MoE) mit 6710 Milliarden Parametern, das eine Multi-Head-Latent-Attention (MLA) und die DeepSeekMoE-Architektur verwendet, kombiniert mit einer Lastenausgleichsstrategie ohne Hilfskosten, um die Inferenz- und Trainingseffizienz zu optimieren. Durch das Pre-Training auf 14,8 Billionen hochwertigen Tokens und anschließendes überwachten Feintuning und verstärkendes Lernen übertrifft DeepSeek-V3 in der Leistung andere Open-Source-Modelle und nähert sich führenden Closed-Source-Modellen."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B ist ein fortschrittliches Modell, das für komplexe Dialoge trainiert wurde."
+  },
+  "deepseek-ai/deepseek-vl2": {
+    "description": "DeepSeek-VL2 ist ein hybrides Expertenmodell (MoE) für visuelle Sprache, das auf DeepSeekMoE-27B basiert und eine spärliche Aktivierung der MoE-Architektur verwendet, um außergewöhnliche Leistungen bei der Aktivierung von nur 4,5 Milliarden Parametern zu erzielen. Dieses Modell zeigt hervorragende Leistungen in mehreren Aufgaben, darunter visuelle Fragenbeantwortung, optische Zeichenerkennung, Dokument-/Tabellen-/Diagrammverständnis und visuelle Lokalisierung."
   },
   "deepseek-chat": {
     "description": "Ein neues Open-Source-Modell, das allgemeine und Codefähigkeiten kombiniert. Es bewahrt nicht nur die allgemeinen Dialogfähigkeiten des ursprünglichen Chat-Modells und die leistungsstarken Codeverarbeitungsfähigkeiten des Coder-Modells, sondern stimmt auch besser mit menschlichen Präferenzen überein. Darüber hinaus hat DeepSeek-V2.5 in mehreren Bereichen wie Schreibaufgaben und Befolgung von Anweisungen erhebliche Verbesserungen erzielt."
@@ -535,6 +550,12 @@
   },
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 ist ein Open-Source-Mischexperten-Code-Modell, das in Codeaufgaben hervorragende Leistungen erbringt und mit GPT4-Turbo vergleichbar ist."
+  },
+  "deepseek-r1": {
+    "description": "DeepSeek-R1 ist ein durch verstärkendes Lernen (RL) gesteuertes Inferenzmodell, das die Probleme der Wiederholbarkeit und Lesbarkeit im Modell löst. Vor dem RL führte DeepSeek-R1 Kaltstartdaten ein, um die Inferenzleistung weiter zu optimieren. Es zeigt in mathematischen, programmierbezogenen und Inferenzaufgaben eine vergleichbare Leistung zu OpenAI-o1 und verbessert durch sorgfältig gestaltete Trainingsmethoden die Gesamteffizienz."
+  },
+  "deepseek-reasoner": {
+    "description": "Das von DeepSeek entwickelte Inferenzmodell. Bevor das Modell die endgültige Antwort ausgibt, gibt es zunächst eine Denkprozesskette aus, um die Genauigkeit der endgültigen Antwort zu erhöhen."
   },
   "deepseek-v2": {
     "description": "DeepSeek V2 ist ein effizientes Mixture-of-Experts-Sprachmodell, das für wirtschaftliche Verarbeitungsanforderungen geeignet ist."
@@ -592,6 +613,9 @@
   },
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit Next-Gen-Funktionen, herausragender Geschwindigkeit, nativer Werkzeuganwendung und multimodaler Generierung."
+  },
+  "gemini-2.0-flash-thinking-exp-01-21": {
+    "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit der nächsten Generation von Funktionen, außergewöhnlicher Geschwindigkeit, nativer Tool-Nutzung und multimodaler Generierung."
   },
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit der nächsten Generation von Funktionen, außergewöhnlicher Geschwindigkeit, nativen Toolaufrufen und multimodaler Generierung."
@@ -664,6 +688,9 @@
   },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus hat die Fähigkeit, Videoinhalte und mehrere Bilder zu verstehen und eignet sich für multimodale Aufgaben."
+  },
+  "glm-zero-preview": {
+    "description": "GLM-Zero-Preview verfügt über starke Fähigkeiten zur komplexen Schlussfolgerung und zeigt hervorragende Leistungen in den Bereichen logisches Denken, Mathematik und Programmierung."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash bietet optimierte multimodale Verarbeitungsfähigkeiten, die für verschiedene komplexe Aufgabenszenarien geeignet sind."
@@ -788,8 +815,17 @@
   "hunyuan-functioncall": {
     "description": "Das neueste MOE-Architektur-FunctionCall-Modell von Hunyuan, das mit hochwertigen FunctionCall-Daten trainiert wurde, hat ein Kontextfenster von 32K und führt in mehreren Bewertungsmetriken."
   },
+  "hunyuan-large": {
+    "description": "Das Hunyuan-large Modell hat insgesamt etwa 389B Parameter, davon etwa 52B aktivierte Parameter, und ist das derzeit größte und leistungsstärkste Open-Source MoE-Modell mit Transformer-Architektur in der Branche."
+  },
+  "hunyuan-large-longcontext": {
+    "description": "Besonders gut geeignet für lange Textaufgaben wie Dokumentenzusammenfassungen und Dokumentenfragen, verfügt es auch über die Fähigkeit, allgemeine Textgenerierungsaufgaben zu bearbeiten. Es zeigt hervorragende Leistungen bei der Analyse und Generierung von langen Texten und kann effektiv mit komplexen und detaillierten Anforderungen an die Verarbeitung von langen Inhalten umgehen."
+  },
   "hunyuan-lite": {
     "description": "Aufgerüstet auf eine MOE-Struktur mit einem Kontextfenster von 256k, führt es in mehreren Bewertungssets in NLP, Code, Mathematik und Industrie zahlreiche Open-Source-Modelle an."
+  },
+  "hunyuan-lite-vision": {
+    "description": "Das neueste 7B multimodale Modell von Hunyuan, mit einem Kontextfenster von 32K, unterstützt multimodale Dialoge in Chinesisch und Englisch, Objekterkennung in Bildern, Dokumenten- und Tabellenverständnis sowie multimodale Mathematik und übertrifft in mehreren Dimensionen die Bewertungskennzahlen von 7B Wettbewerbsmodellen."
   },
   "hunyuan-pro": {
     "description": "Ein MOE-32K-Modell für lange Texte mit einer Billion Parametern. Es erreicht in verschiedenen Benchmarks ein absolut führendes Niveau, hat komplexe Anweisungen und Schlussfolgerungen, verfügt über komplexe mathematische Fähigkeiten und unterstützt Funktionsaufrufe, mit Schwerpunkt auf Optimierung in den Bereichen mehrsprachige Übersetzung, Finanzrecht und Medizin."
@@ -803,8 +839,23 @@
   "hunyuan-standard-256K": {
     "description": "Verwendet eine verbesserte Routing-Strategie und mildert gleichzeitig die Probleme der Lastenverteilung und Expertenkonvergenz. Bei langen Texten erreicht der Needle-in-a-Haystack-Indikator 99,9%. MOE-256K bricht in Länge und Effektivität weiter durch und erweitert die eingabefähige Länge erheblich."
   },
+  "hunyuan-standard-vision": {
+    "description": "Das neueste multimodale Modell von Hunyuan, das mehrsprachige Antworten unterstützt und sowohl in Chinesisch als auch in Englisch ausgewogen ist."
+  },
   "hunyuan-turbo": {
     "description": "Die Vorschauversion des neuen großen Sprachmodells von Hunyuan verwendet eine neuartige hybride Expertenmodellstruktur (MoE) und bietet im Vergleich zu Hunyuan-Pro eine schnellere Inferenz und bessere Leistung."
+  },
+  "hunyuan-turbo-20241120": {
+    "description": "Hunyuan-turbo Version vom 20. November 2024, eine feste Version, die zwischen hunyuan-turbo und hunyuan-turbo-latest liegt."
+  },
+  "hunyuan-turbo-20241223": {
+    "description": "Diese Version optimiert: Datenanweisungs-Skalierung, erhebliche Verbesserung der allgemeinen Generalisierungsfähigkeit des Modells; erhebliche Verbesserung der mathematischen, programmierbaren und logischen Denkfähigkeiten; Optimierung der Fähigkeiten im Textverständnis und der Wortverständnisfähigkeiten; Optimierung der Qualität der Inhaltserzeugung in der Texterstellung."
+  },
+  "hunyuan-turbo-latest": {
+    "description": "Allgemeine Optimierung der Benutzererfahrung, einschließlich NLP-Verständnis, Texterstellung, Smalltalk, Wissensfragen, Übersetzung, Fachgebieten usw.; Verbesserung der Menschlichkeit, Optimierung der emotionalen Intelligenz des Modells; Verbesserung der Fähigkeit des Modells, bei unklaren Absichten aktiv Klarheit zu schaffen; Verbesserung der Bearbeitungsfähigkeit von Fragen zur Wort- und Satzanalyse; Verbesserung der Qualität und Interaktivität der Kreation; Verbesserung der Mehrfachinteraktionserfahrung."
+  },
+  "hunyuan-turbo-vision": {
+    "description": "Das neue Flaggschiff-Modell der visuellen Sprache von Hunyuan, das eine brandneue Struktur des gemischten Expertenmodells (MoE) verwendet, bietet umfassende Verbesserungen in den Fähigkeiten zur grundlegenden Erkennung, Inhaltserstellung, Wissensfragen und Analyse sowie Schlussfolgerungen im Vergleich zum vorherigen Modell."
   },
   "hunyuan-vision": {
     "description": "Das neueste multimodale Modell von Hunyuan unterstützt die Eingabe von Bildern und Text zur Generierung von Textinhalten."
@@ -827,29 +878,17 @@
   "lite": {
     "description": "Spark Lite ist ein leichtgewichtiges großes Sprachmodell mit extrem niedriger Latenz und effizienter Verarbeitung, das vollständig kostenlos und offen ist und Echtzeitsuchfunktionen unterstützt. Seine schnelle Reaktionsfähigkeit macht es besonders geeignet für Inferenzanwendungen und Modellanpassungen auf Geräten mit geringer Rechenleistung und bietet den Nutzern ein hervorragendes Kosten-Nutzen-Verhältnis sowie ein intelligentes Erlebnis, insbesondere in den Bereichen Wissensabfragen, Inhaltserstellung und Suchszenarien."
   },
-  "llama-3.1-70b-instruct": {
-    "description": "Das Llama 3.1 70B Instruct-Modell hat 70B Parameter und bietet herausragende Leistungen bei der Generierung großer Texte und Anweisungsaufgaben."
-  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B bietet leistungsstarke KI-Schlussfolgerungsfähigkeiten, die für komplexe Anwendungen geeignet sind und eine hohe Rechenverarbeitung bei gleichzeitiger Effizienz und Genauigkeit unterstützen."
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B ist ein leistungsstarkes Modell, das schnelle Textgenerierungsfähigkeiten bietet und sich hervorragend für Anwendungen eignet, die große Effizienz und Kosteneffektivität erfordern."
   },
-  "llama-3.1-8b-instruct": {
-    "description": "Das Llama 3.1 8B Instruct-Modell hat 8B Parameter und unterstützt die effiziente Ausführung von bildbasierten Anweisungsaufgaben und bietet hochwertige Textgenerierungsfähigkeiten."
-  },
   "llama-3.1-sonar-huge-128k-online": {
     "description": "Das Llama 3.1 Sonar Huge Online-Modell hat 405B Parameter und unterstützt eine Kontextlänge von etwa 127.000 Markierungen, es wurde für komplexe Online-Chat-Anwendungen entwickelt."
   },
-  "llama-3.1-sonar-large-128k-chat": {
-    "description": "Das Llama 3.1 Sonar Large Chat-Modell hat 70B Parameter und unterstützt eine Kontextlänge von etwa 127.000 Markierungen, es eignet sich für komplexe Offline-Chat-Aufgaben."
-  },
   "llama-3.1-sonar-large-128k-online": {
     "description": "Das Llama 3.1 Sonar Large Online-Modell hat 70B Parameter und unterstützt eine Kontextlänge von etwa 127.000 Markierungen, es eignet sich für hochvolumige und vielfältige Chat-Aufgaben."
-  },
-  "llama-3.1-sonar-small-128k-chat": {
-    "description": "Das Llama 3.1 Sonar Small Chat-Modell hat 8B Parameter und wurde speziell für Offline-Chat entwickelt, es unterstützt eine Kontextlänge von etwa 127.000 Markierungen."
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Das Llama 3.1 Sonar Small Online-Modell hat 8B Parameter und unterstützt eine Kontextlänge von etwa 127.000 Markierungen, es wurde speziell für Online-Chat entwickelt und kann verschiedene Textinteraktionen effizient verarbeiten."
@@ -1094,11 +1133,20 @@
   "moonshot-v1-128k": {
     "description": "Moonshot V1 128K ist ein Modell mit überragenden Fähigkeiten zur Verarbeitung von langen Kontexten, das für die Generierung von sehr langen Texten geeignet ist und die Anforderungen komplexer Generierungsaufgaben erfüllt. Es kann Inhalte mit bis zu 128.000 Tokens verarbeiten und eignet sich hervorragend für Anwendungen in der Forschung, Wissenschaft und der Erstellung großer Dokumente."
   },
+  "moonshot-v1-128k-vision-preview": {
+    "description": "Das Kimi-Visionsmodell (einschließlich moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview usw.) kann Bildinhalte verstehen, einschließlich Bildtext, Bildfarbe und Objektformen."
+  },
   "moonshot-v1-32k": {
     "description": "Moonshot V1 32K bietet die Fähigkeit zur Verarbeitung von mittellangen Kontexten und kann 32.768 Tokens verarbeiten, was es besonders geeignet für die Generierung verschiedener langer Dokumente und komplexer Dialoge macht, die in den Bereichen Inhaltserstellung, Berichtsgenerierung und Dialogsysteme eingesetzt werden."
   },
+  "moonshot-v1-32k-vision-preview": {
+    "description": "Das Kimi-Visionsmodell (einschließlich moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview usw.) kann Bildinhalte verstehen, einschließlich Bildtext, Bildfarbe und Objektformen."
+  },
   "moonshot-v1-8k": {
     "description": "Moonshot V1 8K ist für die Generierung von Kurztextaufgaben konzipiert und bietet eine effiziente Verarbeitungsleistung, die 8.192 Tokens verarbeiten kann. Es eignet sich hervorragend für kurze Dialoge, Notizen und schnelle Inhaltserstellung."
+  },
+  "moonshot-v1-8k-vision-preview": {
+    "description": "Das Kimi-Visionsmodell (einschließlich moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview usw.) kann Bildinhalte verstehen, einschließlich Bildtext, Bildfarbe und Objektformen."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B ist die aktualisierte Version von Nous Hermes 2 und enthält die neuesten intern entwickelten Datensätze."
@@ -1114,6 +1162,9 @@
   },
   "o1-preview": {
     "description": "o1 ist OpenAIs neues Inferenzmodell, das für komplexe Aufgaben geeignet ist, die umfangreiches Allgemeinwissen erfordern. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
+  },
+  "o3-mini": {
+    "description": "o3-mini ist unser neuestes kompaktes Inferenzmodell, das bei den gleichen Kosten- und Verzögerungszielen wie o1-mini hohe Intelligenz bietet."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba ist ein auf die Codegenerierung spezialisiertes Mamba 2-Sprachmodell, das starke Unterstützung für fortschrittliche Code- und Schlussfolgerungsaufgaben bietet."
@@ -1162,6 +1213,9 @@
   },
   "pro-128k": {
     "description": "Spark Pro 128K verfügt über eine außergewöhnliche Kontextverarbeitungsfähigkeit und kann bis zu 128K Kontextinformationen verarbeiten, was es besonders geeignet für die Analyse langer Texte und die Verarbeitung langfristiger logischer Zusammenhänge macht. Es bietet in komplexen Textkommunikationen flüssige und konsistente Logik sowie vielfältige Unterstützung für Zitate."
+  },
+  "qvq-72b-preview": {
+    "description": "Das QVQ-Modell ist ein experimentelles Forschungsmodell, das vom Qwen-Team entwickelt wurde und sich auf die Verbesserung der visuellen Schlussfolgerungsfähigkeiten konzentriert, insbesondere im Bereich der mathematischen Schlussfolgerungen."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen Code-Modell."
@@ -1280,6 +1334,15 @@
   "solar-pro": {
     "description": "Solar Pro ist ein hochintelligentes LLM, das von Upstage entwickelt wurde und sich auf die Befolgung von Anweisungen mit einer einzigen GPU konzentriert, mit einem IFEval-Score von über 80. Derzeit unterstützt es Englisch, die offizielle Version ist für November 2024 geplant und wird die Sprachunterstützung und Kontextlänge erweitern."
   },
+  "sonar": {
+    "description": "Ein leichtgewichtiges Suchprodukt, das auf kontextbezogener Suche basiert und schneller und günstiger ist als Sonar Pro."
+  },
+  "sonar-pro": {
+    "description": "Ein fortschrittliches Suchprodukt, das kontextbezogene Suche unterstützt und erweiterte Abfragen sowie Nachverfolgung ermöglicht."
+  },
+  "sonar-reasoning": {
+    "description": "Ein neues API-Produkt, das von DeepSeek-Inferenzmodellen unterstützt wird."
+  },
   "step-1-128k": {
     "description": "Bietet ein ausgewogenes Verhältnis zwischen Leistung und Kosten, geeignet für allgemeine Szenarien."
   },
@@ -1298,6 +1361,9 @@
   "step-1.5v-mini": {
     "description": "Dieses Modell verfügt über starke Fähigkeiten zur Videoanalyse."
   },
+  "step-1o-vision-32k": {
+    "description": "Dieses Modell verfügt über starke Fähigkeiten zur Bildverständnis. Im Vergleich zu den Modellen der Schritt-1v-Serie bietet es eine verbesserte visuelle Leistung."
+  },
   "step-1v-32k": {
     "description": "Unterstützt visuelle Eingaben und verbessert die multimodale Interaktionserfahrung."
   },
@@ -1306,6 +1372,12 @@
   },
   "step-2-16k": {
     "description": "Unterstützt groß angelegte Kontextinteraktionen und eignet sich für komplexe Dialogszenarien."
+  },
+  "step-2-mini": {
+    "description": "Ein ultraschnelles Großmodell, das auf der neuen, selbstentwickelten Attention-Architektur MFA basiert. Es erreicht mit extrem niedrigen Kosten ähnliche Ergebnisse wie Schritt 1 und bietet gleichzeitig eine höhere Durchsatzrate und schnellere Reaktionszeiten. Es kann allgemeine Aufgaben bearbeiten und hat besondere Fähigkeiten im Bereich der Codierung."
+  },
+  "taichu2_mm": {
+    "description": "Integriert Fähigkeiten zur Bildverstehung, Wissensübertragung und logischen Attribution und zeigt herausragende Leistungen im Bereich der Bild-Text-Fragen."
   },
   "taichu_llm": {
     "description": "Das Zīdōng Taichu Sprachmodell verfügt über außergewöhnliche Sprachverständnisfähigkeiten sowie Fähigkeiten in Textgenerierung, Wissensabfrage, Programmierung, mathematischen Berechnungen, logischem Denken, Sentimentanalyse und Textzusammenfassung. Es kombiniert innovativ große Datenvortrainings mit reichhaltigem Wissen aus mehreren Quellen, verfeinert kontinuierlich die Algorithmen und absorbiert ständig neues Wissen aus umfangreichen Textdaten in Bezug auf Vokabular, Struktur, Grammatik und Semantik, um die Leistung des Modells kontinuierlich zu verbessern. Es bietet den Nutzern bequemere Informationen und Dienstleistungen sowie ein intelligenteres Erlebnis."

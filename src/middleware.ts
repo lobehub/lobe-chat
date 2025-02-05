@@ -12,8 +12,12 @@ export const config = {
     '/(api|trpc|webapi)(.*)',
     // include the /
     '/',
+    '/discover',
+    '/discover(.*)',
+    '/chat',
     '/chat(.*)',
     '/settings(.*)',
+    '/files',
     '/files(.*)',
     '/repos(.*)',
     // ↓ cloud ↓

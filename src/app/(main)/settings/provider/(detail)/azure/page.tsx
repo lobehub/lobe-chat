@@ -1,10 +1,11 @@
 'use client';
 
 import { Markdown } from '@lobehub/ui';
-import { AutoComplete, Input } from 'antd';
+import { AutoComplete } from 'antd';
 import { createStyles } from 'antd-style';
 import { useTranslation } from 'react-i18next';
 
+import { FormInput, FormPassword } from '@/components/FormInput';
 import { AzureProviderCard } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
@@ -54,10 +55,7 @@ const useProviderCard = (): ProviderItem => {
         children: isLoading ? (
           <SkeletonInput />
         ) : (
-          <Input.Password
-            autoComplete={'new-password'}
-            placeholder={t('azure.token.placeholder')}
-          />
+          <FormPassword autoComplete={'new-password'} placeholder={t('azure.token.placeholder')} />
         ),
         desc: t('azure.token.desc'),
         label: t('azure.token.title'),
@@ -67,7 +65,7 @@ const useProviderCard = (): ProviderItem => {
         children: isLoading ? (
           <SkeletonInput />
         ) : (
-          <Input allowClear placeholder={t('azure.endpoint.placeholder')} />
+          <FormInput allowClear placeholder={t('azure.endpoint.placeholder')} />
         ),
         desc: t('azure.endpoint.desc'),
         label: t('azure.endpoint.title'),

@@ -200,6 +200,9 @@
     "enableMaxTokens": {
       "title": "Activer la limite de tokens par réponse"
     },
+    "enableReasoningEffort": {
+      "title": "Activer l'ajustement de l'intensité de raisonnement"
+    },
     "frequencyPenalty": {
       "desc": "Plus la valeur est élevée, plus il est probable de réduire les mots répétés",
       "title": "Pénalité de fréquence"
@@ -215,6 +218,15 @@
     "presencePenalty": {
       "desc": "Plus la valeur est élevée, plus il est probable d'explorer de nouveaux sujets",
       "title": "Pénalité de présence"
+    },
+    "reasoningEffort": {
+      "desc": "Plus la valeur est élevée, plus la capacité de raisonnement est forte, mais cela peut augmenter le temps de réponse et la consommation de jetons",
+      "options": {
+        "high": "Élevé",
+        "low": "Bas",
+        "medium": "Moyen"
+      },
+      "title": "Intensité de raisonnement"
     },
     "temperature": {
       "desc": "Plus la valeur est élevée, plus la réponse est aléatoire",

@@ -5,14 +5,14 @@ import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import urlJoin from 'url-join';
 
-import { useQuery } from '@/hooks/useQuery';
+import { useDiscoverTab } from '@/hooks/useDiscoverTab';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 import StoreSearchBar from '../../../features/StoreSearchBar';
 
 const Header = memo(() => {
   const router = useRouter();
-  const { type = 'assistants' } = useQuery();
+  const type = useDiscoverTab();
 
   return (
     <MobileNavBar

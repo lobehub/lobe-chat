@@ -42,6 +42,15 @@ export interface ChatModelCard {
   legacy?: boolean;
   maxOutput?: number;
   pricing?: ChatModelPricing;
+
+  /**
+   *  whether model supports reasoning
+   */
+  reasoning?: boolean;
+
+  /**
+   * whether model is legacy (deprecated but not removed yet)
+   */
   releasedAt?: string;
 
   /**
@@ -158,6 +167,11 @@ export interface LLMParams {
   /**
    * 生成文本的随机度量，用于控制文本的创造性和多样性
    * @default 1
+   */
+  reasoning_effort?: string;
+  /**
+   * 控制模型推理能力
+   * @default medium
    */
   temperature?: number;
   /**

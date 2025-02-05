@@ -1,6 +1,313 @@
 [
   {
     "children": {
+      "features": ["Add reasoning tag support for custom models via UI or ENV."],
+      "fixes": [
+        "Fix deepseek-v3 & qvq model tag fetch error from SiliconCloud, fix model ability missing."
+      ]
+    },
+    "date": "2025-02-05",
+    "version": "1.51.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add/Update Aliyun Cloud Models, update GitHub Models."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix invalid utf8 character."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.4"
+  },
+  {
+    "children": {
+      "improvements": ["Update model locale."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix o1 series calling issue."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.2"
+  },
+  {
+    "children": {
+      "fixes": ["Bind the selected group name in the rename modal.."]
+    },
+    "date": "2025-02-03",
+    "version": "1.50.1"
+  },
+  {
+    "children": {
+      "features": ["Add o3-mini support for OpenAI & GitHub Models."],
+      "fixes": ["Fix parse of deepseek r1 in siliconflow provider."]
+    },
+    "date": "2025-02-03",
+    "version": "1.50.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update perplexity models."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.16"
+  },
+  {
+    "children": {
+      "improvements": ["Update Fireworks check model and fix check error."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.15"
+  },
+  {
+    "children": {
+      "fixes": ["Fix provider update issue."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.14"
+  },
+  {
+    "children": {
+      "fixes": ["Optimize requests without historical messages."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix can not stop generating."]
+    },
+    "date": "2025-02-02",
+    "version": "1.49.12"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ollama intergration checker and client fetch issue."]
+    },
+    "date": "2025-02-02",
+    "version": "1.49.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix <think> tag crash with special markdown content."]
+    },
+    "date": "2025-02-02",
+    "version": "1.49.10"
+  },
+  {
+    "children": {
+      "improvements": ["Update siliconcloud models."]
+    },
+    "date": "2025-02-01",
+    "version": "1.49.9"
+  },
+  {
+    "children": {
+      "improvements": ["Support thinking for all non DeepSeek official api R1 models."]
+    },
+    "date": "2025-02-01",
+    "version": "1.49.8"
+  },
+  {
+    "children": {
+      "fixes": ["Multiple deepseek-reasoner request errors."]
+    },
+    "date": "2025-02-01",
+    "version": "1.49.7"
+  },
+  {
+    "children": {
+      "fixes": ["Support litellm reasoning streaming."]
+    },
+    "date": "2025-01-30",
+    "version": "1.49.6"
+  },
+  {
+    "children": {
+      "fixes": ["Pin @clerk/nextjs@6.10.2 to avoid build error."]
+    },
+    "date": "2025-01-28",
+    "version": "1.49.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog locale not showing English."]
+    },
+    "date": "2025-01-28",
+    "version": "1.49.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix discover ssr hydration error."]
+    },
+    "date": "2025-01-27",
+    "version": "1.49.3"
+  },
+  {
+    "children": {
+      "improvements": ["Remove use query."]
+    },
+    "date": "2025-01-27",
+    "version": "1.49.2"
+  },
+  {
+    "children": {
+      "improvements": ["UseMobileWorkspace use nqus to replace useQuery."]
+    },
+    "date": "2025-01-27",
+    "version": "1.49.1"
+  },
+  {
+    "children": {
+      "features": ["Support Doubao Models."]
+    },
+    "date": "2025-01-27",
+    "version": "1.49.0"
+  },
+  {
+    "children": {
+      "improvements": ["Improve thinking style."]
+    },
+    "date": "2025-01-27",
+    "version": "1.48.4"
+  },
+  {
+    "children": {
+      "improvements": ["Improve model pricing with CNY."]
+    },
+    "date": "2025-01-26",
+    "version": "1.48.3"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add parallel_tool_calls support for Qwen, fix tag version and add provider changelog."
+      ]
+    },
+    "date": "2025-01-25",
+    "version": "1.48.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ollama Browser Request failed in PG mode."]
+    },
+    "date": "2025-01-25",
+    "version": "1.48.1"
+  },
+  {
+    "children": {
+      "features": ["Support display thinking for DeepSeek R1."]
+    },
+    "date": "2025-01-24",
+    "version": "1.48.0"
+  },
+  {
+    "children": {
+      "improvements": ["Fix model fetch match tag error & add Hunyuan model fetch support."]
+    },
+    "date": "2025-01-24",
+    "version": "1.47.23"
+  },
+  {
+    "children": {
+      "fixes": ["Fix form input in provider."]
+    },
+    "date": "2025-01-24",
+    "version": "1.47.22"
+  },
+  {
+    "children": {
+      "improvements": ["Add HuggingFace Model: DeepSeek R1."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.21"
+  },
+  {
+    "children": {
+      "fixes": ["Fix tts in new provider model."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.20"
+  },
+  {
+    "children": {
+      "improvements": ["Add new stepfun model."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.19"
+  },
+  {
+    "children": {
+      "fixes": ["Fix debounce issue of provider config."]
+    },
+    "date": "2025-01-23",
+    "version": "1.47.18"
+  },
+  {
+    "children": {
+      "fixes": ["Upgrade react-i18next to ^15."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.17"
+  },
+  {
+    "children": {
+      "improvements": ["Add gemini new model."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.16"
+  },
+  {
+    "children": {
+      "improvements": ["Improve discover model page."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.15"
+  },
+  {
+    "children": {
+      "improvements": ["Support model list with model fetcher settings."]
+    },
+    "date": "2025-01-22",
+    "version": "1.47.14"
+  },
+  {
+    "children": {
+      "improvements": ["Add ModelFetcher for supported providers."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.13"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor [@nav](https://github.com/nav) layout and improve pin list style."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.12"
+  },
+  {
+    "children": {
+      "improvements": ["Improve code for ai provider."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.11"
+  },
+  {
+    "children": {
+      "improvements": ["Support assistant blacklist."]
+    },
+    "date": "2025-01-21",
+    "version": "1.47.10"
+  },
+  {
+    "children": {
       "improvements": ["Improve error code."]
     },
     "date": "2025-01-20",

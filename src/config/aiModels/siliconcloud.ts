@@ -3,18 +3,84 @@ import { AIChatModelCard } from '@/types/aiModel';
 const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。',
+    displayName: 'DeepSeek R1',
+    enabled: true,
+    id: 'deepseek-ai/DeepSeek-R1',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
+    displayName: 'DeepSeek V3',
+    enabled: true,
+    id: 'deepseek-ai/DeepSeek-V3',
+    pricing: { // 2.9 涨价
+      currency: 'CNY',
+      input: 1,
+      output: 2,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
     },
     contextWindowTokens: 32_768,
     description:
-      'DeepSeek-V2.5 是 DeepSeek-V2-Chat 和 DeepSeek-Coder-V2-Instruct 的升级版本，集成了两个先前版本的通用和编码能力。该模型在多个方面进行了优化，包括写作和指令跟随能力，更好地与人类偏好保持一致。DeepSeek-V2.5 在各种评估基准上都取得了显著的提升，如 AlpacaEval 2.0、ArenaHard、AlignBench 和 MT-Bench 等',
+      'DeepSeek-V2.5 是 DeepSeek-V2-Chat 和 DeepSeek-Coder-V2-Instruct 的升级版本，集成了两个先前版本的通用和编码能力。该模型在多个方面进行了优化，包括写作和指令跟随能力，更好地与人类偏好保持一致。DeepSeek-V2.5 在各种评估基准上都取得了显著的提升，如 AlpacaEval 2.0、ArenaHard、AlignBench 和 MT-Bench 等。',
     displayName: 'DeepSeek V2.5',
-    enabled: true,
     id: 'deepseek-ai/DeepSeek-V2.5',
     pricing: {
       currency: 'CNY',
-      input: 1.33,
-      output: 1.33,
+      input: 5,
+      output: 5,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 4096,
+    description:
+      'DeepSeek-VL2 是一个基于 DeepSeekMoE-27B 开发的混合专家（MoE）视觉语言模型，采用稀疏激活的 MoE 架构，在仅激活 4.5B 参数的情况下实现了卓越性能。该模型在视觉问答、光学字符识别、文档/表格/图表理解和视觉定位等多个任务中表现优异。',
+    displayName: 'DeepSeek VL2',
+    id: 'deepseek-ai/deepseek-vl2',
+    pricing: {
+      currency: 'CNY',
+      input: 0.99,
+      output: 0.99,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'QVQ-72B-Preview 是由 Qwen 团队开发的专注于视觉推理能力的研究型模型，其在复杂场景理解和解决视觉相关的数学问题方面具有独特优势。',
+    displayName: 'QVQ 72B Preview',
+    enabled: true,
+    id: 'Qwen/QVQ-72B-Preview',
+    pricing: {
+      currency: 'CNY',
+      input: 9.9,
+      output: 9.9,
     },
     type: 'chat',
   },
@@ -477,7 +543,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Gemma 是由 Google 开发的轻量级、最先进的开放模型系列，采用与 Gemini 模型相同的研究和技术构建。这些模型是仅解码器的大型语言模型，支持英语，提供预训练和指令微调两种变体的开放权重。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。其相对较小的规模使其能够部署在资源有限的环境中，如笔记本电脑、台式机或个人云基础设施，从而让所有人都能获得最先进的 AI 模型，促进创新',
     displayName: 'Gemma 2 27B',
-    enabled: true,
     id: 'google/gemma-2-27b-it',
     pricing: {
       currency: 'CNY',
@@ -524,7 +589,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 70B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
     displayName: 'Llama 3.1 70B Instruct',
-    enabled: true,
     id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
     pricing: {
       currency: 'CNY',

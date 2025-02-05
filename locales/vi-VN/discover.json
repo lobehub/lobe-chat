@@ -126,6 +126,10 @@
         "title": "Độ mới của chủ đề"
       },
       "range": "Phạm vi",
+      "reasoning_effort": {
+        "desc": "Cài đặt này được sử dụng để kiểm soát mức độ suy luận của mô hình trước khi tạo câu trả lời. Mức độ thấp ưu tiên tốc độ phản hồi và tiết kiệm Token, trong khi mức độ cao cung cấp suy luận đầy đủ hơn nhưng tiêu tốn nhiều Token hơn và làm giảm tốc độ phản hồi. Giá trị mặc định là trung bình, cân bằng giữa độ chính xác của suy luận và tốc độ phản hồi.",
+        "title": "Mức độ suy luận"
+      },
       "temperature": {
         "desc": "Cài đặt này ảnh hưởng đến sự đa dạng trong phản hồi của mô hình. Giá trị thấp hơn dẫn đến phản hồi dễ đoán và điển hình hơn, trong khi giá trị cao hơn khuyến khích phản hồi đa dạng và không thường gặp. Khi giá trị được đặt là 0, mô hình sẽ luôn đưa ra cùng một phản hồi cho đầu vào nhất định.",
         "title": "Ngẫu nhiên"

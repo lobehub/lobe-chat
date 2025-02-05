@@ -20,6 +20,7 @@ const hidePWAInstaller = (s: GlobalStore) => s.status.hidePWAInstaller;
 const showChatHeader = (s: GlobalStore) => !s.status.zenMode;
 const inZenMode = (s: GlobalStore) => s.status.zenMode;
 const sessionWidth = (s: GlobalStore) => s.status.sessionsWidth;
+const portalWidth = (s: GlobalStore) => s.status.portalWidth || 400;
 const filePanelWidth = (s: GlobalStore) => s.status.filePanelWidth;
 const inputHeight = (s: GlobalStore) => s.status.inputHeight;
 const threadInputHeight = (s: GlobalStore) => s.status.threadInputHeight;
@@ -59,6 +60,7 @@ export const systemStatusSelectors = {
   isPgliteNotInited,
   mobileShowPortal,
   mobileShowTopic,
+  portalWidth,
   sessionGroupKeys,
   sessionWidth,
   showChatHeader,

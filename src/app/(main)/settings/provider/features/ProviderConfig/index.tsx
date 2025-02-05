@@ -3,7 +3,7 @@
 import { ProviderCombine } from '@lobehub/icons';
 import { Avatar, Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
-import { Input, Skeleton, Switch } from 'antd';
+import { Skeleton, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { Loader2Icon, LockIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -11,7 +11,9 @@ import { ReactNode, memo, useLayoutEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
+import { z } from 'zod';
 
+import { FormInput, FormPassword } from '@/components/FormInput';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { AES_GCM_URL, BASE_PROVIDER_DOC_URL } from '@/const/url';
 import { isServerMode } from '@/const/version';
@@ -23,9 +25,9 @@ import {
 } from '@/types/aiProvider';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';
-import Checker from './Checker';
-import { SkeletonInput } from './SkeletonInput';
+import Checker, { CheckErrorRender } from './Checker';
 import EnableSwitch from './EnableSwitch';
+import { SkeletonInput } from './SkeletonInput';
 import UpdateProviderInfo from './UpdateProviderInfo';
 
 const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
@@ -89,7 +91,7 @@ const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
 export interface ProviderConfigProps extends Omit<AiProviderDetailItem, 'enabled' | 'source'> {
   apiKeyItems?: FormItemProps[];
   canDeactivate?: boolean;
-  checkerItem?: FormItemProps;
+  checkErrorRender?: CheckErrorRender;
   className?: string;
   enabled?: boolean;
   extra?: ReactNode;
@@ -111,9 +113,9 @@ const ProviderConfig = memo<ProviderConfigProps>(
     id,
     settings,
     checkModel,
-    checkerItem,
     logo,
     className,
+    checkErrorRender,
     name,
     showAceGcm = true,
     extra,
@@ -170,7 +172,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
             children: isLoading ? (
               <SkeletonInput />
             ) : (
-              <Input.Password
+              <FormPassword
                 autoComplete={'new-password'}
                 placeholder={t(`providerModels.config.apiKey.placeholder`, { name })}
                 suffix={
@@ -210,7 +212,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
           children: isLoading ? (
             <SkeletonInput />
           ) : (
-            <Input
+            <FormInput
               allowClear
               placeholder={
                 (!!proxyUrl && proxyUrl?.placeholder) ||
@@ -226,6 +228,17 @@ const ProviderConfig = memo<ProviderConfigProps>(
           desc: (!!proxyUrl && proxyUrl?.desc) || t('providerModels.config.baseURL.desc'),
           label: (!!proxyUrl && proxyUrl?.title) || t('providerModels.config.baseURL.title'),
           name: [KeyVaultsConfigKey, LLMProviderBaseUrlKey],
+          rules: [
+            {
+              validator: (_: any, value: string) => {
+                if (!value) return;
+
+                return z.string().url().safeParse(value).error
+                  ? Promise.reject(t('providerModels.config.baseURL.invalid'))
+                  : Promise.resolve();
+              },
+            },
+          ],
         }
       : undefined;
 
@@ -258,16 +271,16 @@ const ProviderConfig = memo<ProviderConfigProps>(
       endpointItem,
       clientFetchItem,
       showChecker
-        ? (checkerItem ?? {
+        ? {
             children: isLoading ? (
               <Skeleton.Button active />
             ) : (
-              <Checker model={checkModel!} provider={id} />
+              <Checker checkErrorRender={checkErrorRender} model={checkModel!} provider={id} />
             ),
             desc: t('providerModels.config.checker.desc'),
             label: t('providerModels.config.checker.title'),
             minWidth: undefined,
-          })
+          }
         : undefined,
       showAceGcm && isServerMode && aceGcmItem,
     ].filter(Boolean) as FormItemProps[];
