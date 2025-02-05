@@ -1,14 +1,15 @@
 name: Issue Auto Comment
 on:
-  issues:
-    types:
-      - opened
-      - closed
-      - assigned
-  pull_request_target:
-    types:
-      - opened
-      - closed
+  workflow_dispatch:
+#  issues:
+#    types:
+#      - opened
+#      - closed
+#      - assigned
+#  pull_request_target:
+#    types:
+#      - opened
+#      - closed
 
 permissions:
   contents: read

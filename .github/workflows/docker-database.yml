@@ -1,8 +1,9 @@
 name: Publish Database Docker Image
 
 on:
-  pull_request:
-    types: [ closed ]
+  push:
+    branches:
+      - main
   workflow_dispatch:
   release:
     types: [published]
