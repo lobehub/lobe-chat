@@ -1,5 +1,20 @@
 [
   {
+    "children": {},
+    "date": "2025-02-05",
+    "version": "1.51.1"
+  },
+  {
+    "children": {
+      "features": ["Add reasoning tag support for custom models via UI or ENV."],
+      "fixes": [
+        "Fix deepseek-v3 & qvq model tag fetch error from SiliconCloud, fix model ability missing."
+      ]
+    },
+    "date": "2025-02-05",
+    "version": "1.51.0"
+  },
+  {
     "children": {
       "improvements": ["Add/Update Aliyun Cloud Models, update GitHub Models."]
     },

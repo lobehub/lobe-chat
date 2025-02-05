@@ -229,6 +229,10 @@
           "title": "ID modelu"
         },
         "modalTitle": "Konfiguracja niestandardowego modelu",
+        "reasoning": {
+          "extra": "Ta konfiguracja włączy jedynie zdolność modelu do głębokiego myślenia, a konkretne efekty w pełni zależą od samego modelu. Proszę samodzielnie przetestować, czy model ma zdolność do głębokiego myślenia.",
+          "title": "Wsparcie dla głębokiego myślenia"
+        },
         "tokens": {
           "extra": "Ustaw maksymalną liczbę tokenów wspieranych przez model",
           "title": "Maksymalne okno kontekstu",
