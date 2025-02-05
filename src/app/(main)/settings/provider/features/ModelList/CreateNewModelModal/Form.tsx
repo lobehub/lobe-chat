@@ -95,6 +95,14 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
           >
             <Checkbox />
           </Form.Item>
+          <Form.Item
+            extra={t('providerModels.item.modelConfig.reasoning.extra')}
+            label={t('providerModels.item.modelConfig.reasoning.title')}
+            name={['abilities', 'reasoning']}
+            valuePropName={'checked'}
+          >
+            <Checkbox />
+          </Form.Item>
           {/*<Form.Item*/}
           {/*  extra={t('providerModels.item.modelConfig.files.extra')}*/}
           {/*  label={t('providerModels.item.modelConfig.files.title')}*/}
