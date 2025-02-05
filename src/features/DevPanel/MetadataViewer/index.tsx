@@ -9,10 +9,13 @@ import Ld from './Ld';
 import MetaData from './MetaData';
 import Og from './Og';
 
-const useStyles = createStyles(({ css }) => ({
+const useStyles = createStyles(({ css, prefixCls }) => ({
   container: css`
     * {
       font-size: 12px;
+    }
+    .${prefixCls}-form-item {
+      padding-block: 8px;
     }
   `,
 }));

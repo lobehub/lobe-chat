@@ -49,7 +49,6 @@ const useStyles = createStyles(({ token, css, prefixCls }) => {
       padding-inline: 16px;
       border-block-end: 1px solid ${token.colorBorderSecondary};
 
-      font-weight: ${token.fontWeightStrong};
       color: ${token.colorText};
 
       background: ${token.colorFillAlter};
@@ -76,7 +75,7 @@ const minWidth = 800;
 const minHeight = 600;
 
 interface CollapsibleFloatPanelProps {
-  items: { children: ReactNode; icon: ReactNode; key: string; label: string }[];
+  items: { children: ReactNode; icon: ReactNode; key: string }[];
 }
 
 const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
@@ -171,7 +170,7 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
                   key={item.key}
                   onClick={() => setTab(item.key)}
                   placement={'right'}
-                  title={item.label}
+                  title={item.key}
                 >
                   {item.icon}
                 </ActionIcon>
@@ -188,7 +187,11 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
                 horizontal
                 justify={'space-between'}
               >
-                {BRANDING_NAME} Dev Tools
+                <Flexbox align={'baseline'} gap={6} horizontal>
+                  <b>{BRANDING_NAME} Dev Tools</b>
+                  <span style={{ color: theme.colorTextDescription }}>/</span>
+                  <span style={{ color: theme.colorTextDescription }}>{tab}</span>
+                </Flexbox>
                 <ActionIcon icon={XIcon} onClick={() => setIsExpanded(false)} />
               </Flexbox>
               {items.map((item) => (
