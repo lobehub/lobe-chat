@@ -16,8 +16,8 @@ import {
 
 interface ExtendedChoice extends OpenAI.ChatCompletionChunk.Choice {
   message?: {
-    role: string;
     content: string;
+    role: string;
   };
 }
 
