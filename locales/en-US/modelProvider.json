@@ -229,6 +229,10 @@
           "title": "Model ID"
         },
         "modalTitle": "Custom Model Configuration",
+        "reasoning": {
+          "extra": "This configuration will enable the model's deep thinking capabilities, and the specific effects depend entirely on the model itself. Please test whether this model has usable deep thinking abilities.",
+          "title": "Support Deep Thinking"
+        },
         "tokens": {
           "extra": "Set the maximum number of tokens supported by the model",
           "title": "Maximum Context Window",

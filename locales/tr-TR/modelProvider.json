@@ -229,6 +229,10 @@
           "title": "Model ID"
         },
         "modalTitle": "Özel Model Yapılandırması",
+        "reasoning": {
+          "extra": "Bu yapılandırma yalnızca modelin derin düşünme yeteneğini açacaktır, belirli etkiler tamamen modelin kendisine bağlıdır, lütfen bu modelin kullanılabilir derin düşünme yeteneğine sahip olup olmadığını kendiniz test edin",
+          "title": "Derin düşünmeyi destekler"
+        },
         "tokens": {
           "extra": "Modelin desteklediği maksimum Token sayısını ayarlayın",
           "title": "Maksimum bağlam penceresi",
