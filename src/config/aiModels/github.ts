@@ -4,6 +4,7 @@ const githubChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 200_000,
     description:
@@ -17,6 +18,7 @@ const githubChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -29,6 +31,7 @@ const githubChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -42,6 +45,7 @@ const githubChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -80,6 +84,9 @@ const githubChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 128_000,
     displayName: 'DeepSeek R1',
     id: 'DeepSeek-R1',
