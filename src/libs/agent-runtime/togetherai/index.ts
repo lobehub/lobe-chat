@@ -27,6 +27,11 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
       throw new Error(`Together Fetch Error: ${data.statusText || data.status}`);
     }
 
+    const visionKeywords = [
+      'qvq',
+      'vision',
+    ];
+
     const reasoningKeywords = [
       'deepseek-r1',
       'qwq',
@@ -47,7 +52,7 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
           maxOutput: model.context_length,
           reasoning: reasoningKeywords.some(keyword => model.name.toLowerCase().includes(keyword)),
           tokens: model.context_length,
-          vision: model.description?.toLowerCase().includes('vision') || model.name?.toLowerCase().includes('vision'),
+          vision: model.description?.toLowerCase().includes('vision') || visionKeywords.some(keyword => model.description.toLowerCase().includes(keyword)),
         };
       });
   },
