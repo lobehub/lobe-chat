@@ -1,4 +1,3 @@
-import { ActionIcon } from '@lobehub/ui';
 import { Empty } from 'antd';
 import { createStyles } from 'antd-style';
 import { Download, Filter, RefreshCw } from 'lucide-react';
@@ -6,23 +5,14 @@ import React from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import { mutate } from 'swr';
 
-import Table from '../../Table';
+import Header from '../../features/Header';
+import Table from '../../features/Table';
 import { FETCH_TABLE_DATA_KEY, usePgTable, useTableColumns } from '../usePgTable';
 
 const useStyles = createStyles(({ token, css }) => ({
   dataPanel: css`
     overflow: hidden;
     background: ${token.colorBgContainer};
-  `,
-  header: css`
-    border-block-end: 1px solid ${token.colorBorderSecondary};
-  `,
-  title: css`
-    font-weight: 500;
-  `,
-  toolbarButtons: css`
-    display: flex;
-    gap: 4px;
   `,
 }));
 
@@ -41,29 +31,26 @@ const DataTable = ({ tableName }: DataTableProps) => {
 
   return (
     <Flexbox className={styles.dataPanel} flex={1} height={'100%'}>
-      {/* Toolbar */}
-      <Flexbox
-        align={'center'}
-        className={styles.header}
-        height={46}
-        horizontal
-        justify={'space-between'}
-        paddingInline={16}
-      >
-        <div className={styles.title}>{tableName || 'Select a table'}</div>
-        <div className={styles.toolbarButtons}>
-          <ActionIcon icon={Filter} size={{ blockSize: 28, fontSize: 16 }} title={'Filter'} />
-          <ActionIcon icon={Download} size={{ blockSize: 28, fontSize: 16 }} title={'Export'} />
-          <ActionIcon
-            icon={RefreshCw}
-            onClick={async () => {
+      <Header
+        actions={[
+          {
+            icon: Filter,
+            title: 'Filter',
+          },
+          {
+            icon: Download,
+            title: 'Export',
+          },
+          {
+            icon: RefreshCw,
+            onClick: async () => {
               await mutate(FETCH_TABLE_DATA_KEY(tableName));
-            }}
-            size={{ blockSize: 28, fontSize: 16 }}
-            title={'Refresh'}
-          />
-        </div>
-      </Flexbox>
+            },
+            title: 'Refresh',
+          },
+        ]}
+        title={tableName || 'Select a table'}
+      />
       {tableName ? (
         <Table columns={columns} dataSource={dataSource} loading={isLoading} />
       ) : (

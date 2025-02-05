@@ -1,6 +1,8 @@
 import { Empty } from 'antd';
 import { Center } from 'react-layout-kit';
 
+import { CachePanelContextProvider } from '@/features/DevPanel/CacheToolbar/cacheProvider';
+
 import DataTable from './DataTable';
 import { getCacheFiles } from './getCacheEntries';
 
@@ -14,7 +16,11 @@ const CacheToolbar = async () => {
       </Center>
     );
 
-  return <DataTable data={files} />;
+  return (
+    <CachePanelContextProvider entries={files}>
+      <DataTable />
+    </CachePanelContextProvider>
+  );
 };
 
 export default CacheToolbar;

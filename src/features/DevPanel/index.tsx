@@ -2,9 +2,9 @@ import { BookText, DatabaseIcon, FlagIcon, GlobeLockIcon } from 'lucide-react';
 
 import CacheToolbar from './CacheToolbar';
 import FeatureFlag from './FeatureFlag';
-import FloatPanel from './FloatPanel';
 import MetadataViewer from './MetadataViewer';
 import PostgresViewer from './PostgresViewer';
+import FloatPanel from './features/FloatPanel';
 
 const DevPanel = () => (
   <FloatPanel

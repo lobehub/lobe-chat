@@ -1,4 +1,6 @@
+import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { Loader2Icon } from 'lucide-react';
 import React from 'react';
 import { Center } from 'react-layout-kit';
 import { TableVirtuoso } from 'react-virtuoso';
@@ -95,7 +97,12 @@ interface TableProps {
 const Table = ({ columns, dataSource, loading }: TableProps) => {
   const { styles } = useStyles();
 
-  if (loading) return <Center height={'80%'}>Loading...</Center>;
+  if (loading)
+    return (
+      <Center height={'100%'}>
+        <Icon icon={Loader2Icon} spin />
+      </Center>
+    );
 
   const header = (
     <tr>

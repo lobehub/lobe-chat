@@ -1,9 +1,7 @@
-import { Icon } from '@lobehub/ui';
 import { Tag } from 'antd';
 import { createStyles } from 'antd-style';
-import { Loader2Icon } from 'lucide-react';
 import React from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import { useTableColumns } from '../usePgTable';
 
@@ -36,9 +34,9 @@ const Columns = ({ tableName }: TableColumnsProps) => {
   return (
     <div className={styles.container}>
       {isLoading ? (
-        <Center width={'100%'}>
+        ` <Center width={'100%'}>
           <Icon icon={Loader2Icon} spin />
-        </Center>
+        </Center>`
       ) : (
         <Flexbox>
           {data?.map((column) => (

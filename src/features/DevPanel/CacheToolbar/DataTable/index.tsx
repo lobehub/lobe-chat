@@ -1,16 +1,33 @@
 'use client';
 
+import { RefreshCw } from 'lucide-react';
 import { memo } from 'react';
 
-import Table from '../../Table';
-import { NextCacheFileData } from '../schema';
+import Header from '@/features/DevPanel/features/Header';
 
-const DataTable = memo<{ data: NextCacheFileData[] }>(({ data }) => {
+import Table from '../../features/Table';
+import { useCachePanelContext } from '../cacheProvider';
+
+const DataTable = memo(() => {
+  const { entries, isLoading, refreshData } = useCachePanelContext();
   return (
-    <Table
-      columns={['url', 'headers.content-type', 'body', 'kind', 'tags', 'revalidate', 'timestamp']}
-      dataSource={data}
-    />
+    <>
+      <Header
+        actions={[
+          {
+            icon: RefreshCw,
+            onClick: () => refreshData(),
+            title: 'Refresh',
+          },
+        ]}
+        title="Cache Entries"
+      />
+      <Table
+        columns={['url', 'headers.content-type', 'body', 'kind', 'tags', 'revalidate', 'timestamp']}
+        dataSource={entries}
+        loading={isLoading}
+      />
+    </>
   );
 });
 
