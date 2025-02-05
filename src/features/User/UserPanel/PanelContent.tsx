@@ -44,9 +44,7 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
     <Flexbox gap={2} style={{ minWidth: 300 }}>
       {!enableAuth || (enableAuth && isLoginWithAuth) ? (
         <>
-          <Link href={'/profile'} style={{ color: 'inherit' }}>
-            <UserInfo />
-          </Link>
+          <UserInfo avatarProps={{ clickable: false }} />
           {!isDeprecatedEdition && (
             <Link href={'/profile/stats'} style={{ color: 'inherit' }}>
               <DataStatistics />
