@@ -52,7 +52,7 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
           maxOutput: model.context_length,
           reasoning: reasoningKeywords.some(keyword => model.name.toLowerCase().includes(keyword)),
           tokens: model.context_length,
-          vision: model.description?.toLowerCase().includes('vision') || visionKeywords.some(keyword => model.description.toLowerCase().includes(keyword)),
+          vision: model.description?.toLowerCase().includes('vision') || visionKeywords.some(keyword => model.name?.toLowerCase().includes(keyword)),
         };
       });
   },
