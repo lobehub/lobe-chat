@@ -229,6 +229,10 @@
           "title": "ID do Modelo"
         },
         "modalTitle": "Configuração do Modelo Personalizado",
+        "reasoning": {
+          "extra": "Esta configuração ativará apenas a capacidade de pensamento profundo do modelo, e o efeito específico depende totalmente do próprio modelo. Por favor, teste se este modelo possui a capacidade de pensamento profundo utilizável.",
+          "title": "Suporte a Pensamento Profundo"
+        },
         "tokens": {
           "extra": "Configurar o número máximo de tokens suportados pelo modelo",
           "title": "Janela de contexto máxima",
