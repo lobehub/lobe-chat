@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Update model list, add reasoning tag."]
+    },
+    "date": "2025-02-05",
+    "version": "1.51.2"
+  },
+  {
     "children": {},
     "date": "2025-02-05",
     "version": "1.51.1"
