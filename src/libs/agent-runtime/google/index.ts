@@ -155,6 +155,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => modelName.endsWith(m.id))?.enabled || false,
           functionCall: modelName.toLowerCase().includes('gemini'),
           id: modelName,
+          reasoning: modelName.toLowerCase().includes('thinking'),
           vision:
             modelName.toLowerCase().includes('vision') ||
             (modelName.toLowerCase().includes('gemini') &&

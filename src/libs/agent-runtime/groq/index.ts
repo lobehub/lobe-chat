@@ -42,13 +42,19 @@ export const LobeGroq = LobeOpenAICompatibleFactory({
         'gemma2-9b-it',
       ];
 
+      const reasoningKeywords = [
+        'deepseek-r1',
+      ];
+
       const model = m as unknown as GroqModelCard;
 
       return {
         contextWindowTokens: model.context_window,
+        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.displayName ?? undefined,
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
         functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         id: model.id,
+        reasoning: reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         vision: model.id.toLowerCase().includes('vision'),
       };
     },

@@ -27,6 +27,11 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
       throw new Error(`Together Fetch Error: ${data.statusText || data.status}`);
     }
 
+    const reasoningKeywords = [
+      'deepseek-r1',
+      'qwq',
+    ];
+
     const models: TogetherAIModel[] = await data.json();
 
     return models
@@ -39,6 +44,7 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
           functionCall: model.description?.includes('function calling'),
           id: model.name,
           maxOutput: model.context_length,
+          reasoning: model.description?.includes('reasoning') || reasoningKeywords.some(keyword => model.name.toLowerCase().includes(keyword)),
           tokens: model.context_length,
           vision: model.description?.includes('vision') || model.name?.includes('vision'),
         };

@@ -15,6 +15,17 @@ import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import { createCallbacksTransformer } from '../utils/streams';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+
+export interface CloudflareModelCard {
+  description: string;
+  name: string;
+  task: {
+    description: string;
+    name: string;
+  }
+}
+
 export interface LobeCloudflareParams {
   apiKey?: string;
   baseURLOrAccountID?: string;
@@ -111,13 +122,22 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
       },
       method: 'GET',
     });
-    const j = await response.json();
-    const models: any[] = j['result'].filter(
-      (model: any) => model['task']['name'] === 'Text Generation',
-    );
-    const chatModels: ChatModelCard[] = models
-      .map((model) => convertModelManifest(model))
-      .sort((a, b) => a.displayName.localeCompare(b.displayName));
-    return chatModels;
+    const json = await response.json();
+
+    const modelList: CloudflareModelCard[] = json.result;
+
+    return modelList
+      .map((model) => {
+        return {
+          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.contextWindowTokens ?? undefined,
+          displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.displayName ?? undefined,
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.enabled || false,
+          functionCall: model.description.toLowerCase().includes('function call'),
+          id: model.name,
+          reasoning: model.name.toLowerCase().includes('deepseek-r1'),
+          vision: model.name.toLowerCase().includes('vision') || model.task.name.toLowerCase().includes('Image-to-Text') || model.description.toLowerCase().includes('vision'),
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   }
 }

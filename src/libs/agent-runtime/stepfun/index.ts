@@ -38,6 +38,8 @@ export const LobeStepfunAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as StepfunModelCard;
 
       return {
+        contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.contextWindowTokens ?? undefined,
+        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.displayName ?? undefined,
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
         functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         id: model.id,

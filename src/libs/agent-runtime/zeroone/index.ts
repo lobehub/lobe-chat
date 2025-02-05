@@ -17,6 +17,8 @@ export const LobeZeroOneAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as ZeroOneModelCard;
 
       return {
+        contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.contextWindowTokens ?? undefined,
+        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.displayName ?? undefined,
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
         functionCall: model.id.toLowerCase().includes('fc'),
         id: model.id,

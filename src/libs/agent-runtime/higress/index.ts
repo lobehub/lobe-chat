@@ -34,6 +34,7 @@ export const LobeHigressAI = LobeOpenAICompatibleFactory({
           typeof model.top_provider.max_completion_tokens === 'number'
             ? model.top_provider.max_completion_tokens
             : undefined,
+        reasoning: model.description.includes('reasoning'),
         vision:
           model.description.includes('vision') ||
           model.description.includes('multimodal') ||
