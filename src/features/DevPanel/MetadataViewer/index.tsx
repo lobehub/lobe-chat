@@ -1,10 +1,11 @@
 'use client';
 
-import { Segmented } from 'antd';
+import { TabsNav } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Header from '../features/Header';
 import Ld from './Ld';
 import MetaData from './MetaData';
 import Og from './Og';
@@ -36,25 +37,30 @@ const MetadataViewer = memo(() => {
       style={{ overflow: 'hidden', position: 'relative' }}
       width={'100%'}
     >
-      <Segmented
-        block
-        onChange={setActive}
-        options={[
-          {
-            label: 'OG',
-            value: Tab.Og,
-          },
-          {
-            label: 'MetaData',
-            value: Tab.Meta,
-          },
-          {
-            label: 'StructuredData',
-            value: Tab.Ld,
-          },
-        ]}
-        style={{ margin: 16 }}
-        value={active}
+      <Header
+        style={{ paddingInlineStart: 0 }}
+        title={
+          <TabsNav
+            activeKey={active}
+            items={[
+              {
+                key: Tab.Og,
+                label: 'OG',
+              },
+              {
+                key: Tab.Meta,
+                label: 'MetaData',
+              },
+              {
+                key: Tab.Ld,
+                label: 'StructuredData',
+              },
+            ]}
+            onChange={(v) => setActive(v as Tab)}
+            style={{ margin: 16 }}
+            variant={'compact'}
+          />
+        }
       />
       <Flexbox
         flex={1}
@@ -63,9 +69,9 @@ const MetadataViewer = memo(() => {
         style={{ overflow: 'auto', paddingBottom: 16, position: 'relative' }}
         width={'100%'}
       >
-        {active === 'og' && <Og />}
-        {active === 'meta' && <MetaData />}
-        {active === 'ld' && <Ld />}
+        {active === Tab.Og && <Og />}
+        {active === Tab.Meta && <MetaData />}
+        {active === Tab.Ld && <Ld />}
       </Flexbox>
     </Flexbox>
   );

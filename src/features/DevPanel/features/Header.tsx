@@ -1,7 +1,7 @@
 import { ActionIcon, type ActionIconProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import React from 'react';
-import { Flexbox } from 'react-layout-kit';
+import React, { ReactNode } from 'react';
+import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 const useStyles = createStyles(({ token, css }) => ({
   header: css`
@@ -12,12 +12,13 @@ const useStyles = createStyles(({ token, css }) => ({
   `,
 }));
 
-interface HeaderProps {
+interface HeaderProps extends Omit<FlexboxProps, 'title' | 'children'> {
   actions?: ActionIconProps[];
-  title?: string;
+  extra?: ReactNode;
+  title?: ReactNode;
 }
 
-const Header = ({ title, actions = [] }: HeaderProps) => {
+const Header = ({ title, actions = [], extra, ...rest }: HeaderProps) => {
   const { styles } = useStyles();
 
   return (
@@ -29,9 +30,11 @@ const Header = ({ title, actions = [] }: HeaderProps) => {
       horizontal
       justify={'space-between'}
       paddingInline={16}
+      {...rest}
     >
       <div className={styles.title}>{title}</div>
       <Flexbox align={'center'} gap={4} horizontal>
+        {extra}
         {actions.map((action, index) => (
           <ActionIcon
             {...action}
