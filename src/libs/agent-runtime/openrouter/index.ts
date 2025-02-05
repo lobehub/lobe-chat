@@ -17,6 +17,11 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
   },
   models: {
     transformModel: (m) => {
+      const visionKeywords = [
+        'qwen/qvq',
+        'vision',
+      ];
+
       const reasoningKeywords = [
         'deepseek/deepseek-r1',
         'openai/o1',
@@ -44,7 +49,7 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
         vision:
           model.description.includes('vision') ||
           model.description.includes('multimodal') ||
-          model.id.includes('vision'),
+          visionKeywords.some(keyword => model.description.toLowerCase().includes(keyword)),
       };
     },
   },
