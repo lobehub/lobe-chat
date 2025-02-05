@@ -229,6 +229,10 @@
           "title": "Model ID"
         },
         "modalTitle": "Configuratie van aangepast model",
+        "reasoning": {
+          "extra": "Deze configuratie schakelt alleen de mogelijkheid voor diepgaand denken van het model in. Het specifieke effect hangt volledig af van het model zelf, test zelf of dit model in staat is tot bruikbaar diepgaand denken.",
+          "title": "Ondersteuning voor diepgaand denken"
+        },
         "tokens": {
           "extra": "Stel het maximale aantal tokens in dat door het model wordt ondersteund",
           "title": "Maximale contextvenster",
