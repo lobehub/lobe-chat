@@ -40,7 +40,6 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
     const models: TogetherAIModel[] = await data.json();
 
     return models
-      .filter((m) => m.display_type === 'chat')
       .map((model) => {
         return {
           contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.contextWindowTokens ?? undefined,

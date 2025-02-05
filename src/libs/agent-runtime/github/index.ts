@@ -1,35 +1,20 @@
-import type { ChatModelCard } from '@/types/llm';
-
 import { AgentRuntimeErrorType } from '../error';
 import { pruneReasoningPayload } from '../openai';
 import { ModelProvider } from '../types';
-import {
-  CHAT_MODELS_BLOCK_LIST,
-  LobeOpenAICompatibleFactory,
-} from '../utils/openaiCompatibleFactory';
+import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
 
-enum Task {
-  'chat-completion',
-  'embeddings',
-}
-
-/* eslint-disable typescript-sort-keys/interface */
-type Model = {
+export interface GithubModelCard {
+  description: string;
+  friendly_name: string;
   id: string;
   name: string;
-  friendly_name: string;
-  model_version: number;
-  publisher: string;
-  model_family: string;
-  model_registry: string;
-  license: string;
-  task: Task;
-  description: string;
-  summary: string;
   tags: string[];
+  task: string;
 };
+
 /* eslint-enable typescript-sort-keys/interface */
 
 export const LobeGithubAI = LobeOpenAICompatibleFactory({
@@ -69,13 +54,9 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
     ];
 
     const modelsPage = (await client.models.list()) as any;
-    const modelList: Model[] = modelsPage.body;
+    const modelList: GithubModelCard[] = modelsPage.body;
+
     return modelList
-      .filter((model) => {
-        return CHAT_MODELS_BLOCK_LIST.every(
-          (keyword) => !model.name.toLowerCase().includes(keyword),
-        );
-      })
       .map((model) => {
         return {
           contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.contextWindowTokens ?? undefined,
