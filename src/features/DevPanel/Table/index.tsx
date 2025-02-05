@@ -3,7 +3,6 @@ import React from 'react';
 import { Center } from 'react-layout-kit';
 import { TableVirtuoso } from 'react-virtuoso';
 
-import { usePgTable, useTableColumns } from '../usePgTable';
 import TableCell from './TableCell';
 
 const useStyles = createStyles(({ token, css }) => ({
@@ -88,24 +87,16 @@ const useStyles = createStyles(({ token, css }) => ({
 }));
 
 interface TableProps {
-  tableName?: string;
+  columns: string[];
+  dataSource: any[];
+  loading?: boolean;
 }
 
-const Table = ({ tableName }: TableProps) => {
+const Table = ({ columns, dataSource, loading }: TableProps) => {
   const { styles } = useStyles();
 
-  const tableColumns = useTableColumns(tableName);
+  if (loading) return <Center height={'80%'}>Loading...</Center>;
 
-  const tableData = usePgTable(tableName);
-
-  const columns = tableColumns.data?.map((t) => t.name) || [];
-  const isLoading = tableColumns.isLoading || tableData.isLoading;
-
-  if (!tableName) return <Center height={'80%'}>Select a table to view data</Center>;
-
-  if (isLoading) return <Center height={'80%'}>Loading...</Center>;
-
-  const dataSource = tableData.data?.data || [];
   const header = (
     <tr>
       {columns.map((column) => (

@@ -1,10 +1,14 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
+'use client';
+
+import { ActionIcon, FluentEmoji, Icon, SideNav } from '@lobehub/ui';
 import { FloatButton } from 'antd';
 import { createStyles } from 'antd-style';
 import { BugIcon, BugOff, XIcon } from 'lucide-react';
-import React, { PropsWithChildren, useEffect, useState } from 'react';
+import { ReactNode, memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Rnd } from 'react-rnd';
+
+import { BRANDING_NAME } from '@/const/branding';
 
 // 定义样式
 const useStyles = createStyles(({ token, css }) => {
@@ -49,6 +53,7 @@ const useStyles = createStyles(({ token, css }) => {
       overflow: hidden;
       display: flex;
 
+      border: 1px solid ${token.colorBorderSecondary};
       border-radius: 12px;
 
       background: ${token.colorBgContainer};
@@ -62,8 +67,13 @@ const useStyles = createStyles(({ token, css }) => {
 const minWidth = 800;
 const minHeight = 600;
 
-const CollapsibleFloatPanel = ({ children }: PropsWithChildren) => {
+interface CollapsibleFloatPanelProps {
+  items: { children: ReactNode; icon: ReactNode; key: string; label: string }[];
+}
+
+const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
   const { styles } = useStyles();
+  const [tab, setTab] = useState<string>(items[0].key);
   const [isExpanded, setIsExpanded] = useState(false);
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [size, setSize] = useState({ height: minHeight, width: minWidth });
@@ -115,22 +125,62 @@ const CollapsibleFloatPanel = ({ children }: PropsWithChildren) => {
           position={position}
           size={size}
         >
-          <Flexbox height={'100%'}>
+          <Flexbox
+            height={'100%'}
+            horizontal
+            style={{ overflow: 'hidden', position: 'relative' }}
+            width={'100%'}
+          >
+            <SideNav
+              avatar={<FluentEmoji emoji={'🧰'} size={24} />}
+              bottomActions={[]}
+              style={{
+                paddingBlock: 12,
+                width: 48,
+              }}
+              topActions={items.map((item) => (
+                <ActionIcon
+                  active={tab === item.key}
+                  key={item.key}
+                  onClick={() => setTab(item.key)}
+                  placement={'right'}
+                  title={item.label}
+                >
+                  {item.icon}
+                </ActionIcon>
+              ))}
+            />
             <Flexbox
-              align={'center'}
-              className={`panel-drag-handle ${styles.header}`}
-              horizontal
-              justify={'space-between'}
+              height={'100%'}
+              style={{ overflow: 'hidden', position: 'relative' }}
+              width={'100%'}
             >
-              开发者面板
-              <ActionIcon icon={XIcon} onClick={() => setIsExpanded(false)} />
+              <Flexbox
+                align={'center'}
+                className={`panel-drag-handle ${styles.header}`}
+                horizontal
+                justify={'space-between'}
+              >
+                {BRANDING_NAME} Dev Tools
+                <ActionIcon icon={XIcon} onClick={() => setIsExpanded(false)} />
+              </Flexbox>
+              {items.map((item) => (
+                <Flexbox
+                  className={styles.content}
+                  key={item.key}
+                  style={{
+                    display: tab === item.key ? 'flex' : 'none',
+                  }}
+                >
+                  {item.children}
+                </Flexbox>
+              ))}
             </Flexbox>
-            <Flexbox className={styles.content}>{children}</Flexbox>
           </Flexbox>
         </Rnd>
       )}
     </>
   );
-};
+});
 
 export default CollapsibleFloatPanel;

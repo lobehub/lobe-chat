@@ -1,11 +1,11 @@
-import { Icon } from '@lobehub/ui';
+import { DraggablePanel, DraggablePanelBody, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ChevronDown, ChevronRight, Database, Table as TableIcon } from 'lucide-react';
+import { ChevronDown, ChevronRight, Database, Loader2Icon, Table as TableIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
-import TableColumns from './TableColumns';
-import { useFetchTables } from './usePgTable';
+import { useFetchTables } from '../usePgTable';
+import Columns from './Columns';
 
 const useStyles = createStyles(({ token, css }) => ({
   button: css`
@@ -146,41 +146,45 @@ const SchemaPanel = ({ onTableSelect, selectedTable }: SchemaPanelProps) => {
   };
 
   return (
-    <div className={styles.schemaPanel}>
-      <div className={styles.schemaHeader}>
-        <Database size={16} />
-        <Flexbox align={'center'} horizontal justify={'space-between'}>
-          <span>Tables {data?.length}</span>
-          <span className={styles.schema}>public</span>
-        </Flexbox>
-      </div>
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <Flexbox>
-          {data?.map((table) => (
-            <div key={table.name}>
-              <Flexbox
-                className={cx(styles.tableItem, selectedTable === table.name && styles.selected)}
-                horizontal
-                onClick={() => {
-                  toggleTable(table.name);
-                  onTableSelect(table.name);
-                }}
-              >
-                <Icon icon={expandedTables.has(table.name) ? ChevronDown : ChevronRight} />
-                <TableIcon size={16} />
-                <Flexbox align={'center'} horizontal justify={'space-between'}>
-                  <span>{table.name}</span>
-                  <span className={styles.count}>{table.count}</span>
+    <DraggablePanel placement={'left'}>
+      <Flexbox height={'100%'} style={{ overflow: 'hidden', position: 'relative' }}>
+        <div className={styles.schemaHeader}>
+          <Database size={16} />
+          <Flexbox align={'center'} horizontal justify={'space-between'}>
+            <span>Tables {data?.length}</span>
+            <span className={styles.schema}>public</span>
+          </Flexbox>
+        </div>
+        <DraggablePanelBody style={{ padding: 0 }}>
+          {isLoading ? (
+            <Center height={'100%'} width={'100%'}>
+              <Icon icon={Loader2Icon} spin />
+            </Center>
+          ) : (
+            data?.map((table) => (
+              <div key={table.name}>
+                <Flexbox
+                  className={cx(styles.tableItem, selectedTable === table.name && styles.selected)}
+                  horizontal
+                  onClick={() => {
+                    toggleTable(table.name);
+                    onTableSelect(table.name);
+                  }}
+                >
+                  <Icon icon={expandedTables.has(table.name) ? ChevronDown : ChevronRight} />
+                  <TableIcon size={16} />
+                  <Flexbox align={'center'} horizontal justify={'space-between'}>
+                    <span>{table.name}</span>
+                    <span className={styles.count}>{table.count}</span>
+                  </Flexbox>
                 </Flexbox>
-              </Flexbox>
-              {expandedTables.has(table.name) && <TableColumns tableName={table.name} />}
-            </div>
-          ))}
-        </Flexbox>
-      )}
-    </div>
+                {expandedTables.has(table.name) && <Columns tableName={table.name} />}
+              </div>
+            ))
+          )}
+        </DraggablePanelBody>
+      </Flexbox>
+    </DraggablePanel>
   );
 };
 
