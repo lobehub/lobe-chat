@@ -120,7 +120,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             }
 
             if (
-              process.env.GEMINI_SEARCH_ENABLED === '0' || 
+              process.env.GEMINI_SEARCH_ENABLED !== '1' || 
               !(
                 model.startsWith('gemini-2.0') && 
                 !model.includes('thinking') && 
