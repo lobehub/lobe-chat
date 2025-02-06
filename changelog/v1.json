@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix provider 500 issue."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.10"
+  },
+  {
+    "children": {
       "improvements": ["Update edtion tag display and improve prerender."]
     },
     "date": "2025-02-06",
