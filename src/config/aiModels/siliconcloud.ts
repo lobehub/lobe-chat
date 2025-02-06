@@ -37,6 +37,106 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true
+    },
+    contextWindowTokens: 32_768,
+    description: 
+      "DeepSeek-R1-Distill-Llama-70B 是基于 Llama-3.3-70B-Instruct 经过蒸馏训练得到的模型。该模型是 DeepSeek-R1 系列的一部分，通过使用 DeepSeek-R1 生成的样本进行微调，在数学、编程和推理等多个领域展现出优秀的性能。模型在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异的成绩，显示出强大的推理能力。",
+    displayName: "DeepSeek R1 Distill Llama 70B",
+    enabled: true,
+    id: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+    pricing: {
+      currency: "CNY",
+      input: 4.13,
+      output: 4.13  
+    },
+    type: "chat"
+  },
+  {
+    abilities: {
+      reasoning: true
+    },
+    contextWindowTokens: 32_768,
+    description: 
+      "DeepSeek-R1-Distill-Qwen-32B 是基于 Qwen2.5-32B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在数学、编程和推理等多个领域展现出卓越的性能。在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异成绩，其中在 MATH-500 上达到了 94.3% 的准确率，展现出强大的数学推理能力。",
+    displayName: "DeepSeek R1 Distill Qwen 32B",
+    enabled: true,
+    id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+    pricing: {
+      currency: "CNY",
+      input: 1.26,
+      output: 1.26
+    },
+    type: "chat"
+  },
+  {
+    abilities: {
+      reasoning: true
+    },
+    contextWindowTokens: 32_768,
+    description: 
+      "DeepSeek-R1-Distill-Qwen-14B 是基于 Qwen2.5-14B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 93.9% 的准确率，在 AIME 2024 上达到了 69.7% 的通过率，在 CodeForces 上获得了 1481 的评分，显示出在数学和编程领域的强大实力。",
+    displayName: "DeepSeek R1 Distill Qwen 14B",
+    id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+    pricing: {
+      currency: "CNY",
+      input: 0.7,
+      output: 0.7
+    },
+    type: "chat"
+  },
+  {
+    abilities: {
+      reasoning: true
+    },
+    contextWindowTokens: 32_768,
+    description: 
+      "DeepSeek-R1-Distill-Llama-8B 是基于 Llama-3.1-8B 开发的蒸馏模型。该模型使用 DeepSeek-R1 生成的样本进行微调，展现出优秀的推理能力。在多个基准测试中表现不俗，其中在 MATH-500 上达到了 89.1% 的准确率，在 AIME 2024 上达到了 50.4% 的通过率，在 CodeForces 上获得了 1205 的评分，作为 8B 规模的模型展示了较强的数学和编程能力。",
+    displayName: "DeepSeek R1 Distill Llama 8B (Free)",
+    enabled: true,
+    id: "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+    pricing: {
+      currency: "CNY",
+      input: 0,
+      output: 0
+    },
+    type: "chat"
+  },
+  {
+    abilities: {
+      reasoning: true
+    },
+    contextWindowTokens: 32_768,
+    description: 
+      "DeepSeek-R1-Distill-Qwen-7B 是基于 Qwen2.5-Math-7B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 92.8% 的准确率，在 AIME 2024 上达到了 55.5% 的通过率，在 CodeForces 上获得了 1189 的评分，作为 7B 规模的模型展示了较强的数学和编程能力。",
+    displayName: "DeepSeek R1 Distill Qwen 7B (Free)",
+    enabled: true,
+    id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    pricing: {
+      currency: "CNY",
+      input: 0,
+      output: 0
+    },
+    type: "chat",
+  },
+  {
+    abilities: {
+      reasoning: true
+    },
+    contextWindowTokens: 32_768,
+    description: 
+      "DeepSeek-R1-Distill-Qwen-1.5B 是基于 Qwen2.5-Math-1.5B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在多个基准测试中展现出不错的性能。作为一个轻量级模型，在 MATH-500 上达到了 83.9% 的准确率，在 AIME 2024 上达到了 28.9% 的通过率，在 CodeForces 上获得了 954 的评分，显示出超出其参数规模的推理能力。",
+    displayName: "DeepSeek-R1-Distill-Qwen-1.5B (Free)",
+    id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    pricing: {
+      currency: "CNY",
+      input: 0,
+      output: 0
+    },
+    type: "chat"
+  },
+  {
+    abilities: {
       functionCall: true,
     },
     contextWindowTokens: 32_768,
@@ -46,8 +146,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-ai/DeepSeek-V2.5',
     pricing: {
       currency: 'CNY',
-      input: 5,
-      output: 5,
+      input: 1.33,
+      output: 1.33,
     },
     type: 'chat',
   },
@@ -341,7 +441,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Qwen2-VL-7B-Instruct 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能，包括 MathVista、DocVQA、RealWorldQA 和 MTVQA 等。Qwen2-VL 能够用于高质量的基于视频的问答、对话和内容创作，还具备复杂推理和决策能力，可以与移动设备、机器人等集成，基于视觉环境和文本指令进行自动操作。除了英语和中文，Qwen2-VL 现在还支持理解图像中不同语言的文本，包括大多数欧洲语言、日语、韩语、阿拉伯语和越南语等',
     displayName: 'Qwen2 VL 7B Instruct (Pro)',
-    enabled: true,
     id: 'Pro/Qwen/Qwen2-VL-7B-Instruct',
     pricing: {
       currency: 'CNY',
@@ -520,7 +619,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Gemma 是 Google 开发的轻量级、最先进的开放模型系列之一。它是一个仅解码器的大型语言模型，支持英语，提供开放权重、预训练变体和指令微调变体。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。该 9B 模型是通过 8 万亿个 tokens 训练而成。其相对较小的规模使其可以在资源有限的环境中部署，如笔记本电脑、台式机或您自己的云基础设施，从而使更多人能够访问最先进的 AI 模型并促进创新',
     displayName: 'Gemma 2 9B (Free)',
-    enabled: true,
     id: 'google/gemma-2-9b-it',
     pricing: {
       currency: 'CNY',
@@ -563,7 +661,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 8B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
     displayName: 'Llama 3.1 8B Instruct (Free)',
-    enabled: true,
     id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
     pricing: {
       currency: 'CNY',
