@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import React from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useTableColumns } from './usePgTable';
+import { useTableColumns } from '../usePgTable';
 
 const useStyles = createStyles(({ token, css }) => ({
   container: css`
@@ -26,7 +26,7 @@ interface TableColumnsProps {
   tableName: string;
 }
 
-const TableColumns = ({ tableName }: TableColumnsProps) => {
+const Columns = ({ tableName }: TableColumnsProps) => {
   const { styles } = useStyles();
 
   const { data, isLoading } = useTableColumns(tableName);
@@ -34,7 +34,9 @@ const TableColumns = ({ tableName }: TableColumnsProps) => {
   return (
     <div className={styles.container}>
       {isLoading ? (
-        <div>Loading...</div>
+        ` <Center width={'100%'}>
+          <Icon icon={Loader2Icon} spin />
+        </Center>`
       ) : (
         <Flexbox>
           {data?.map((column) => (
@@ -64,4 +66,4 @@ const TableColumns = ({ tableName }: TableColumnsProps) => {
   );
 };
 
-export default TableColumns;
+export default Columns;

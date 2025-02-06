@@ -10,7 +10,6 @@ import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import BedrockForm from './Bedrock';
 import ProviderApiKeyForm from './ProviderApiKeyForm';
-import WenxinForm from './Wenxin';
 
 interface APIKeyFormProps {
   id: string;
@@ -66,8 +65,6 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
     <Center gap={16} style={{ maxWidth: 300 }}>
       {provider === ModelProvider.Bedrock ? (
         <BedrockForm />
-      ) : provider === ModelProvider.Wenxin ? (
-        <WenxinForm />
       ) : (
         <ProviderApiKeyForm
           apiKeyPlaceholder={apiKeyPlaceholder}
