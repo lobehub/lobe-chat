@@ -1,5 +1,6 @@
 import {
   Content,
+  DynamicRetrievalMode,
   FunctionCallPart,
   FunctionDeclaration,
   Tool as GoogleFunctionCallTool,
@@ -114,6 +115,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           systemInstruction: payload.system as string,
           tools: (() => {
             const tools = this.buildGoogleTools(payload.tools);
+
+            if (tools) {
+              return tools; // 目前 Tools (例如 googleSearch) 无法与 FunctionCall 同时使用
+            }
 
             if (
               process.env.GEMINI_SEARCH_ENABLED === '0' || 
