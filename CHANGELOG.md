@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.51.9](https://github.com/lobehub/lobe-chat/compare/v1.51.8...v1.51.9)
+
+<sup>Released on **2025-02-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update edtion tag display and improve prerender.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update edtion tag display and improve prerender, closes [#5800](https://github.com/lobehub/lobe-chat/issues/5800) ([673109b](https://github.com/lobehub/lobe-chat/commit/673109b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.51.8](https://github.com/lobehub/lobe-chat/compare/v1.51.7...v1.51.8)
 
 <sup>Released on **2025-02-06**</sup>
