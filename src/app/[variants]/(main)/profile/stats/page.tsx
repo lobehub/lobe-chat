@@ -1,6 +1,7 @@
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { DynamicLayoutProps } from '@/types/next';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import Client from './Client';
 
@@ -13,8 +14,8 @@ export const generateMetadata = async () => {
   });
 };
 
-const Page = async () => {
-  const mobile = await isMobileDevice();
+const Page = async (props: DynamicLayoutProps) => {
+  const mobile = await RouteVariants.getIsMobile(props);
   return <Client mobile={mobile} />;
 };
 

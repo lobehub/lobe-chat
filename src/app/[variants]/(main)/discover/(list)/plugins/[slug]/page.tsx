@@ -6,7 +6,7 @@ import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { DiscoverPageProps, PluginCategory } from '@/types/discover';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import List from '../features/List';
 
@@ -32,7 +32,7 @@ const Page = async (props: DiscoverPageProps<PluginCategory>) => {
 
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const { t: td } = await translation('discover', searchParams?.hl);
-  const mobile = await isMobileDevice();
+  const mobile = await RouteVariants.getIsMobile(props);
 
   const discoverService = new DiscoverService();
   const items = await discoverService.getPluginCategory(locale, params.slug);

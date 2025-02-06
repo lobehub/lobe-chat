@@ -7,7 +7,7 @@ import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { PageProps } from '@/types/next';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import AssistantsResult from './features/AssistantsResult';
 import ModelsResult from './features/ModelsResult';
@@ -15,7 +15,7 @@ import PluginsResult from './features/PluginsResult';
 import ProvidersResult from './features/ProvidersResult';
 
 type Props = PageProps<
-  undefined,
+  { variants: string },
   {
     hl?: Locales;
     q?: string;
@@ -45,7 +45,7 @@ const Page = async (props: Props) => {
   const keywords = decodeURIComponent(q);
 
   const { t, locale } = await translation('metadata', searchParams?.hl);
-  const mobile = await isMobileDevice();
+  const mobile = await RouteVariants.getIsMobile(props);
 
   const ld = ldModule.generate({
     description: t('discover.description'),

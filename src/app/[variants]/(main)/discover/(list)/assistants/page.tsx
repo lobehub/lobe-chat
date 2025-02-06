@@ -4,11 +4,15 @@ import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { DynamicLayoutProps } from '@/types/next';
+import { parsePageLocale } from '@/utils/locale';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import List from './features/List';
 
-type Props = { searchParams: Promise<{ hl?: Locales }> };
+interface Props extends DynamicLayoutProps {
+  searchParams: Promise<{ hl?: Locales }>;
+}
 
 export const generateMetadata = async (props: Props) => {
   const searchParams = await props.searchParams;
@@ -24,8 +28,10 @@ export const generateMetadata = async (props: Props) => {
 
 const Page = async (props: Props) => {
   const searchParams = await props.searchParams;
-  const { t, locale } = await translation('metadata', searchParams?.hl);
-  const mobile = await isMobileDevice();
+  const { t } = await translation('metadata', searchParams?.hl);
+  const mobile = await RouteVariants.getIsMobile(props);
+
+  const locale = await parsePageLocale(props);
 
   const discoverService = new DiscoverService();
   const items = await discoverService.getAssistantList(locale);

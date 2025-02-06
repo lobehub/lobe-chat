@@ -9,7 +9,7 @@ import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { DiscoverProviderItem } from '@/types/discover';
 import { PageProps } from '@/types/next';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import DetailLayout from '../../features/DetailLayout';
 import Actions from './features/Actions';
@@ -18,7 +18,7 @@ import InfoSidebar from './features/InfoSidebar';
 import ParameterList from './features/ParameterList';
 import ProviderList from './features/ProviderList';
 
-type Props = PageProps<{ slugs: string[] }, { hl?: Locales }>;
+type Props = PageProps<{ slugs: string[]; variants: string }, { hl?: Locales }>;
 
 export const generateMetadata = async (props: Props) => {
   const params = await props.params;
@@ -72,7 +72,7 @@ const Page = async (props: Props) => {
   const identifier = decodeURIComponent(slugs.join('/'));
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const { t: td } = await translation('models', searchParams?.hl);
-  const mobile = await isMobileDevice();
+  const mobile = await RouteVariants.getIsMobile(props);
 
   const discoverService = new DiscoverService();
   const data = await discoverService.getModelById(locale, identifier);

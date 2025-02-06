@@ -9,11 +9,11 @@ import Mobile from './_layout/Mobile';
 
 const SessionSettingsLayout = ServerLayout({ Desktop, Mobile });
 
-const Layout = ({ children }: PropsWithChildren) => {
+const Layout = ({ children, ...res }: PropsWithChildren) => {
   const isAgentEditable = serverFeatureFlags().isAgentEditable;
   if (!isAgentEditable) return notFound();
 
-  return <SessionSettingsLayout>{children}</SessionSettingsLayout>;
+  return <SessionSettingsLayout {...res}>{children}</SessionSettingsLayout>;
 };
 
 Layout.displayName = 'SessionSettingsLayout';

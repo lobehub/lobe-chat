@@ -6,4 +6,6 @@ export const metadata: Metadata = {
   alternates: { canonical: getCanonicalUrl('/') },
 };
 
-export { default } from '@/app/[variants]/loading';
+export { default } from './loading';
+
+export const dynamic = 'force-static';

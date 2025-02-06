@@ -9,11 +9,11 @@ import Mobile from './_layout/Mobile';
 
 const Layout = ServerLayout({ Desktop, Mobile });
 
-const ProviderSettingsLayout = ({ children }: PropsWithChildren) => {
+const ProviderSettingsLayout = ({ children, ...res }: PropsWithChildren) => {
   const showLLM = serverFeatureFlags().showProvider;
   if (!showLLM) return notFound();
 
-  return <Layout>{children}</Layout>;
+  return <Layout {...res}>{children}</Layout>;
 };
 
 ProviderSettingsLayout.displayName = 'ProviderSettingsLayout';

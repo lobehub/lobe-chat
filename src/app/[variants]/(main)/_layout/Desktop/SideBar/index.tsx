@@ -1,8 +1,7 @@
 'use client';
 
 import { SideNav } from '@lobehub/ui';
-import { parseAsBoolean, useQueryState } from 'nuqs';
-import { memo } from 'react';
+import { Suspense, memo } from 'react';
 
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 import { useGlobalStore } from '@/store/global';
@@ -18,7 +17,6 @@ const Nav = memo(() => {
   const sidebarKey = useActiveTabKey();
   const inZenMode = useGlobalStore(systemStatusSelectors.inZenMode);
   const { showPinList } = useServerConfigStore(featureFlagsSelectors);
-  const [isPinned] = useQueryState('pinned', parseAsBoolean);
 
   return (
     !inZenMode && (
@@ -27,10 +25,10 @@ const Nav = memo(() => {
         bottomActions={<BottomActions />}
         style={{ height: '100%', zIndex: 100 }}
         topActions={
-          <>
-            <TopActions isPinned={isPinned} tab={sidebarKey} />
+          <Suspense>
+            <TopActions tab={sidebarKey} />
             {showPinList && <PinList />}
-          </>
+          </Suspense>
         }
       />
     )

@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import { enableClerk } from '@/const/auth';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { DynamicLayoutProps } from '@/types/next';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import ClerkProfile from '../features/ClerkProfile';
 
@@ -16,9 +17,9 @@ export const generateMetadata = async () => {
   });
 };
 
-const Page = async () => {
+const Page = async (props: DynamicLayoutProps) => {
   if (!enableClerk) return notFound();
-  const mobile = await isMobileDevice();
+  const mobile = await RouteVariants.getIsMobile(props);
 
   return <ClerkProfile mobile={mobile} />;
 };

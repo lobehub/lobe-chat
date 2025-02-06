@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 
 import CircleLoading from '@/components/Loading/CircleLoading';
 import ServerLayout from '@/components/server/ServerLayout';
+import { DynamicLayoutProps } from '@/types/next';
 
 import Desktop from './_layout/Desktop';
 import Mobile from './_layout/Mobile';
@@ -12,10 +13,10 @@ const SessionListContent = lazy(() => import('./features/SessionListContent'));
 
 const Layout = ServerLayout({ Desktop, Mobile });
 
-const Session = () => {
+const Session = (props: DynamicLayoutProps) => {
   return (
     <Suspense fallback={<CircleLoading />}>
-      <Layout>
+      <Layout {...props}>
         <Suspense fallback={<SkeletonList />}>
           <SessionListContent />
         </Suspense>

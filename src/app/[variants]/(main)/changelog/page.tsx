@@ -13,7 +13,8 @@ import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { ChangelogService } from '@/server/services/changelog';
 import { translation } from '@/server/translation';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { DynamicLayoutProps } from '@/types/next';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import GridLayout from './features/GridLayout';
 import Post from './features/Post';
@@ -28,12 +29,12 @@ export const generateMetadata = async () => {
   });
 };
 
-const Page = async () => {
+const Page = async (props: DynamicLayoutProps) => {
   const hideDocs = serverFeatureFlags().hideDocs;
 
   if (hideDocs) return notFound();
 
-  const mobile = await isMobileDevice();
+  const isMobile = await RouteVariants.getIsMobile(props);
   const { t, locale } = await translation('metadata');
   const changelogService = new ChangelogService();
   const data = await changelogService.getChangelogIndex();
@@ -49,7 +50,7 @@ const Page = async () => {
   return (
     <>
       <StructuredData ld={ld} />
-      <Flexbox gap={mobile ? 16 : 48}>
+      <Flexbox gap={isMobile ? 16 : 48}>
         {data?.map((item) => (
           <Fragment key={item.id}>
             <Suspense
@@ -60,7 +61,7 @@ const Page = async () => {
                 </GridLayout>
               }
             >
-              <Post locale={locale} mobile={mobile} {...item} />
+              <Post locale={locale} mobile={isMobile} {...item} />
             </Suspense>
           </Fragment>
         ))}

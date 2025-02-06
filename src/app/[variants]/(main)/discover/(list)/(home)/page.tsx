@@ -4,14 +4,19 @@ import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
+import { DynamicLayoutProps } from '@/types/next';
+import { parsePageLocale } from '@/utils/locale';
 
 import Client from './Client';
 
-type Props = { searchParams: Promise<{ hl?: Locales }> };
+interface Props extends DynamicLayoutProps {
+  searchParams: Promise<{ hl?: Locales }>;
+}
 
 export const generateMetadata = async (props: Props) => {
   const searchParams = await props.searchParams;
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t } = await translation('metadata', searchParams?.hl);
+  const locale = await parsePageLocale(props);
   return metadataModule.generate({
     alternate: true,
     description: t('discover.description'),
@@ -23,7 +28,9 @@ export const generateMetadata = async (props: Props) => {
 
 const Page = async (props: Props) => {
   const searchParams = await props.searchParams;
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t } = await translation('metadata', searchParams?.hl);
+  const locale = await parsePageLocale(props);
+
   const ld = ldModule.generate({
     description: t('discover.description'),
     title: t('discover.title'),

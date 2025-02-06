@@ -7,7 +7,7 @@ import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { DiscoverPageProps, DiscoverPlugintem } from '@/types/discover';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import DetailLayout from '../../features/DetailLayout';
 import Actions from './features/Actions';
@@ -62,7 +62,7 @@ const Page = async (props: DiscoverPageProps) => {
 
   const { slug: identifier } = params;
   const { t, locale } = await translation('metadata', searchParams?.hl);
-  const mobile = await isMobileDevice();
+  const mobile = await RouteVariants.getIsMobile(props);
 
   const discoverService = new DiscoverService();
   const data = await discoverService.getAssistantById(locale, identifier);

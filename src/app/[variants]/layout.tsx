@@ -1,39 +1,45 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { ThemeAppearance } from 'antd-style';
 import { ResolvingViewport } from 'next';
-import { cookies } from 'next/headers';
 import { ReactNode } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
-import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
+import { DEFAULT_LANG } from '@/const/locale';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { DynamicLayoutProps } from '@/types/next';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 const inVercel = process.env.VERCEL === '1';
 
-type RootLayoutProps = {
+interface RootLayoutProps extends DynamicLayoutProps {
   children: ReactNode;
   modal: ReactNode;
-};
+}
 
-const RootLayout = async ({ children, modal }: RootLayoutProps) => {
-  const cookieStore = await cookies();
+const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
+  const { variants } = await params;
 
-  const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
-  const locale = lang?.value || DEFAULT_LANG;
+  const { locale, isMobile, theme, primaryColor, neutralColor } =
+    RouteVariants.deserializeVariants(variants);
 
   const direction = isRtlLang(locale) ? 'rtl' : 'ltr';
-  const mobile = await isMobileDevice();
 
   return (
     <html dir={direction} lang={locale} suppressHydrationWarning>
       <body>
-        <GlobalProvider>
+        <GlobalProvider
+          appearance={theme}
+          isMobile={isMobile}
+          locale={locale}
+          neutralColor={neutralColor}
+          primaryColor={primaryColor}
+        >
           <AuthProvider>
             {children}
-            {!mobile && modal}
+            {!isMobile && modal}
           </AuthProvider>
           <PWAInstall />
         </GlobalProvider>
@@ -48,8 +54,8 @@ export default RootLayout;
 
 export { generateMetadata } from './metadata';
 
-export const generateViewport = async (): ResolvingViewport => {
-  const isMobile = await isMobileDevice();
+export const generateViewport = async (props: DynamicLayoutProps): ResolvingViewport => {
+  const isMobile = await RouteVariants.getIsMobile(props);
 
   const dynamicScale = isMobile ? { maximumScale: 1, userScalable: false } : {};
 
@@ -64,4 +70,25 @@ export const generateViewport = async (): ResolvingViewport => {
     viewportFit: 'cover',
     width: 'device-width',
   };
+};
+
+export const generateStaticParams = () => {
+  const themes: ThemeAppearance[] = ['dark', 'light'];
+  const mobileOptions = [true, false];
+  // only static for serveral page, other go to dynamtic
+  const staticLocales = [DEFAULT_LANG, 'zh-CN'];
+
+  const variants: { variants: string }[] = [];
+
+  for (const locale of staticLocales) {
+    for (const theme of themes) {
+      for (const isMobile of mobileOptions) {
+        variants.push({
+          variants: RouteVariants.serializeVariants({ isMobile, locale, theme }),
+        });
+      }
+    }
+  }
+
+  return variants;
 };

@@ -5,6 +5,8 @@ import { ElementsConfig } from '@clerk/types';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
+import { withSuspense } from '@/components/withSuspense';
+
 export const useStyles = createStyles(
   ({ css, responsive, token }) =>
     ({
@@ -69,4 +71,4 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
 });
 
-export default Client;
+export default withSuspense(Client);

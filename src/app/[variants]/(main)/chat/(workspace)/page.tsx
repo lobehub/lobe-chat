@@ -6,7 +6,8 @@ import { BRANDING_NAME } from '@/const/branding';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { DynamicLayoutProps } from '@/types/next';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import PageTitle from '../features/PageTitle';
 import Changelog from './features/ChangelogModal';
@@ -21,9 +22,9 @@ export const generateMetadata = async () => {
   });
 };
 
-const Page = async () => {
+const Page = async (props: DynamicLayoutProps) => {
   const { hideDocs, showChangelog } = serverFeatureFlags();
-  const mobile = await isMobileDevice();
+  const mobile = await RouteVariants.getIsMobile(props);
   const { t } = await translation('metadata');
   const ld = ldModule.generate({
     description: t('chat.description', { appName: BRANDING_NAME }),

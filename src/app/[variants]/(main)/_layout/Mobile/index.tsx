@@ -2,9 +2,9 @@
 
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
-import qs from 'query-string';
 import { PropsWithChildren, memo } from 'react';
 
+import { withSuspense } from '@/components/withSuspense';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -24,8 +24,7 @@ const MOBILE_NAV_ROUTES = new Set([
 const Layout = memo(({ children }: PropsWithChildren) => {
   const showMobileWorkspace = useShowMobileWorkspace();
   const pathname = usePathname();
-  const { url } = qs.parseUrl(pathname);
-  const showNav = !showMobileWorkspace && MOBILE_NAV_ROUTES.has(url);
+  const showNav = !showMobileWorkspace && MOBILE_NAV_ROUTES.has(pathname);
 
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 
@@ -40,4 +39,4 @@ const Layout = memo(({ children }: PropsWithChildren) => {
 
 Layout.displayName = 'MobileMainLayout';
 
-export default Layout;
+export default withSuspense(Layout);

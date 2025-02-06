@@ -9,7 +9,7 @@ import Cell, { CellProps } from '@/components/Cell';
 import { isDeprecatedEdition } from '@/const/version';
 import { ProfileTabs } from '@/store/global/initialState';
 import { useUserStore } from '@/store/user';
-import { authSelectors } from '@/store/user/slices/auth/selectors';
+import { authSelectors } from '@/store/user/selectors';
 
 const Category = memo(() => {
   const [isLogin, enableAuth, isLoginWithClerk, signOut] = useUserStore((s) => [

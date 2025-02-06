@@ -2,6 +2,7 @@
 
 import { useLayoutEffect } from 'react';
 
+import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 
 /**
@@ -10,7 +11,7 @@ import { useQueryRoute } from '@/hooks/useQueryRoute';
  * @refs: https://github.com/lobehub/lobe-chat/discussions/2295#discussioncomment-9290942
  */
 
-const ChangelogModalFallback = () => {
+const ChangelogModal = () => {
   const router = useQueryRoute();
 
   useLayoutEffect(() => {
@@ -20,4 +21,4 @@ const ChangelogModalFallback = () => {
   return null;
 };
 
-export default ChangelogModalFallback;
+export default withSuspense(ChangelogModal);

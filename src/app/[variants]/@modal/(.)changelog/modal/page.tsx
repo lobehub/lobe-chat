@@ -3,20 +3,19 @@ import { Suspense } from 'react';
 
 import { serverFeatureFlags } from '@/config/featureFlags';
 import { ChangelogService } from '@/server/services/changelog';
-import { getLocale } from '@/server/translation';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { DynamicLayoutProps } from '@/types/next';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import Post from './features/Post';
 import UpdateChangelogStatus from './features/UpdateChangelogStatus';
 import Loading from './loading';
 
-const Page = async () => {
+const Page = async (props: DynamicLayoutProps) => {
   const hideDocs = serverFeatureFlags().hideDocs;
 
   if (hideDocs) return notFound();
+  const { locale, isMobile } = await RouteVariants.getVariantsFromProps(props);
 
-  const locale = await getLocale();
-  const mobile = await isMobileDevice();
   const changelogService = new ChangelogService();
   const data = await changelogService.getChangelogIndex();
 
@@ -26,7 +25,7 @@ const Page = async () => {
     <>
       {data?.map((item) => (
         <Suspense fallback={<Loading />} key={item.id}>
-          <Post locale={locale} mobile={mobile} {...item} />
+          <Post locale={locale as any} mobile={isMobile} {...item} />
         </Suspense>
       ))}
       <UpdateChangelogStatus currentId={data[0]?.id} />

@@ -1,17 +1,18 @@
 import React, { Suspense, lazy } from 'react';
 
 import Loading from '@/components/Loading/BrandTextLoading';
-import { isMobileDevice } from '@/utils/server/responsive';
+import { DynamicLayoutProps } from '@/types/next';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 import Desktop from './_layout/Desktop';
 import Mobile from './_layout/Mobile';
 
 const PortalBody = lazy(() => import('@/features/Portal/router'));
 
-const Inspector = async () => {
-  const mobile = await isMobileDevice();
+const Inspector = async (props: DynamicLayoutProps) => {
+  const isMobile = await RouteVariants.getIsMobile(props);
 
-  const Layout = mobile ? Mobile : Desktop;
+  const Layout = isMobile ? Mobile : Desktop;
 
   return (
     <Suspense fallback={<Loading />}>

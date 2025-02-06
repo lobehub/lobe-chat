@@ -33,13 +33,13 @@ export interface SuggestionItemProps
   extends Omit<DiscoverAssistantItem, 'suggestions' | 'socialData' | 'category' | 'config'>,
     FlexboxProps {}
 
-const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier, ...rest }) => {
+const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier }) => {
   const { avatar, title, description, backgroundColor } = meta;
 
   const { cx, styles, theme } = useStyles();
 
   return (
-    <Flexbox className={cx(styles.container, className)} gap={12} key={identifier} {...rest}>
+    <Flexbox className={cx(styles.container, className)} gap={12} key={identifier}>
       <Flexbox align={'center'} gap={12} horizontal width={'100%'}>
         <Avatar
           alt={title}
