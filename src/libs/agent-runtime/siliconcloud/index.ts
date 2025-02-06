@@ -71,12 +71,21 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
         'deepseek-ai/deepseek-vl',
       ];
 
+      const reasoningKeywords = [
+        'deepseek-ai/deepseek-r1',
+        'qwen/qvq',
+        'qwen/qwq',
+      ];
+
       const model = m as unknown as SiliconCloudModelCard;
 
       return {
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.contextWindowTokens ?? undefined,
+        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
         functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('deepseek-r1'),
         id: model.id,
+        reasoning: reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
         vision: visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
       };
     },

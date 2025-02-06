@@ -17,7 +17,9 @@ export const LobeXAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as XAIModelCard;
 
       return {
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.contextWindowTokens ?? undefined,
+        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
         functionCall: true,
         id: model.id,
         vision: model.id.toLowerCase().includes('vision'),
