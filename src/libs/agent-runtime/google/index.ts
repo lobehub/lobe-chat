@@ -1,5 +1,6 @@
 import {
   Content,
+  DynamicRetrievalMode,
   FunctionCallPart,
   FunctionDeclaration,
   Tool as GoogleFunctionCallTool,
@@ -114,17 +115,27 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           systemInstruction: payload.system as string,
           tools: (() => {
             const tools = this.buildGoogleTools(payload.tools);
+            const grounding = {
+              googleSearchRetrieval: {
+                dynamicRetrievalConfig: {
+                  mode: DynamicRetrievalMode.MODE_DYNAMIC,
+                  dynamicThreshold: 0.7,
+                },
+              },
+            } as GoogleFunctionCallTool;
+            
             if (
               model.startsWith('gemini-2.0') &&
               !model.includes('thinking') &&
               !model.includes('lite')
             ) {
               if (!tools) {
-                return [{ googleSearch: {} } as GoogleFunctionCallTool];
+                return [grounding];
               } else {
-                return [...tools, { googleSearch: {} } as GoogleFunctionCallTool];
+                return [...tools, grounding];
               }
             }
+            return tools;
           })(),        
         });
 
