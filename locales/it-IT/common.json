@@ -286,6 +286,7 @@
     "anonymousNickName": "Utente Anonimo",
     "billing": "Gestione fatturazione",
     "cloud": "Prova {{name}}",
+    "community": "Versione comunitaria",
     "data": "Archiviazione dati",
     "defaultNickname": "Utente Community",
     "discord": "Supporto della community",
@@ -295,7 +296,6 @@
     "help": "Centro assistenza",
     "moveGuide": "Il pulsante delle impostazioni è stato spostato qui",
     "plans": "Piani di abbonamento",
-    "preview": "Anteprima",
     "profile": "Gestione account",
     "setting": "Impostazioni app",
     "usages": "Statistiche di utilizzo"
