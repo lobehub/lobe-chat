@@ -9,7 +9,7 @@ import { createErrorResponse } from '@/utils/errorResponse';
 export const runtime = 'edge';
 
 const noNeedAPIKey = (provider: string) =>
-  [ModelProvider.OpenRouter, ModelProvider.TogetherAI].includes(provider as any);
+  [ModelProvider.OpenRouter].includes(provider as any);
 
 export const GET = checkAuth(async (req, { params, jwtPayload }) => {
   const { provider } = await params;
