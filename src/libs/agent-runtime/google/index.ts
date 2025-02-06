@@ -1,6 +1,5 @@
 import {
   Content,
-  DynamicRetrievalMode,
   FunctionCallPart,
   FunctionDeclaration,
   Tool as GoogleFunctionCallTool,
