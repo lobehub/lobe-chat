@@ -9,5 +9,3 @@ const Layout = ServerLayout<LayoutProps>({ Desktop, Mobile });
 Layout.displayName = 'ChatLayout';
 
 export default Layout;
-
-export const dynamic = 'force-static';

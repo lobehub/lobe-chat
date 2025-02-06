@@ -23,6 +23,9 @@
   "360gpt2-pro": {
     "description": "360GPT2 Pro 是 360 公司推出的高級自然語言處理模型，具備卓越的文本生成和理解能力，尤其在生成與創作領域表現出色，能夠處理複雜的語言轉換和角色演繹任務。"
   },
+  "360zhinao2-o1": {
+    "description": "360zhinao2-o1 使用樹搜索構建思維鏈，並引入了反思機制，使用強化學習訓練，模型具備自我反思與糾錯的能力。"
+  },
   "4.0Ultra": {
     "description": "Spark4.0 Ultra 是星火大模型系列中最為強大的版本，在升級聯網搜索鏈路同時，提升對文本內容的理解和總結能力。它是用於提升辦公生產力和準確響應需求的全方位解決方案，是引領行業的智能產品。"
   },
@@ -43,6 +46,18 @@
   },
   "Baichuan4-Turbo": {
     "description": "模型能力國內第一，在知識百科、長文本、生成創作等中文任務上超越國外主流模型。還具備行業領先的多模態能力，多項權威評測基準表現優異。"
+  },
+  "DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "基於 Qwen2.5-Math-1.5B 的 DeepSeek-R1 蒸餾模型，通過強化學習與冷啟動數據優化推理性能，開源模型刷新多任務標杆。"
+  },
+  "DeepSeek-R1-Distill-Qwen-14B": {
+    "description": "基於 Qwen2.5-14B 的 DeepSeek-R1 蒸餾模型，通過強化學習與冷啟動數據優化推理性能，開源模型刷新多任務標杆。"
+  },
+  "DeepSeek-R1-Distill-Qwen-32B": {
+    "description": "DeepSeek-R1 系列通過強化學習與冷啟動數據優化推理性能，開源模型刷新多任務標杆，超越 OpenAI-o1-mini 水平。"
+  },
+  "DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "基於 Qwen2.5-Math-7B 的 DeepSeek-R1 蒸餾模型，通過強化學習與冷啟動數據優化推理性能，開源模型刷新多任務標杆。"
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 擁有極致的回應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持 128k 上下文窗口的推理和精調。"
@@ -76,9 +91,6 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "百度自研的旗艦級超大規模語言模型，相較ERNIE 3.5實現了模型能力全面升級，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。"
-  },
-  "ERNIE-4.0-Turbo-128K": {
-    "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現優異，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於 ERNIE 4.0 在性能表現上更為優秀。"
@@ -175,6 +187,9 @@
   },
   "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
     "description": "Meta Llama 3.1 是由 Meta 開發的多語言大型語言模型家族，包括 8B、70B 和 405B 三種參數規模的預訓練和指令微調變體。該 8B 指令微調模型針對多語言對話場景進行了優化，在多項行業基準測試中表現優異。模型訓練使用了超過 15 萬億個 tokens 的公開數據，並採用了監督微調和人類反饋強化學習等技術來提升模型的有用性和安全性。Llama 3.1 支持文本生成和代碼生成，知識截止日期為 2023 年 12 月"
+  },
+  "QwQ-32B-Preview": {
+    "description": "QwQ-32B-Preview 是一款獨具創新的自然語言處理模型，能夠高效處理複雜的對話生成與上下文理解任務。"
   },
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview 是由 Qwen 團隊開發的專注於視覺推理能力的研究型模型，其在複雜場景理解和解決視覺相關的數學問題方面具有獨特優勢。"
@@ -527,6 +542,24 @@
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且通過精心設計的訓練方法，提升了整體效果。"
   },
+  "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
+    "description": "DeepSeek-R1 蒸餾模型，通過強化學習與冷啟動數據優化推理性能，開源模型刷新多任務標杆。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B": {
+    "description": "DeepSeek-R1-Distill-Llama-8B 是基於 Llama-3.1-8B 開發的蒸餾模型。該模型使用 DeepSeek-R1 生成的樣本進行微調，展現出優秀的推理能力。在多個基準測試中表現不俗，其中在 MATH-500 上達到了 89.1% 的準確率，在 AIME 2024 上達到了 50.4% 的通過率，在 CodeForces 上獲得了 1205 的評分，作為 8B 規模的模型展示了較強的數學和編程能力。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "DeepSeek-R1 蒸餾模型，通過強化學習與冷啟動數據優化推理性能，開源模型刷新多任務標杆。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B": {
+    "description": "DeepSeek-R1 蒸餾模型，通過強化學習與冷啟動數據優化推理性能，開源模型刷新多任務標杆。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B": {
+    "description": "DeepSeek-R1-Distill-Qwen-32B 是基於 Qwen2.5-32B 通過知識蒸餾得到的模型。該模型使用 DeepSeek-R1 生成的 80 萬個精選樣本進行微調，在數學、編程和推理等多個領域展現出卓越的性能。在 AIME 2024、MATH-500、GPQA Diamond 等多個基準測試中都取得了優異成績，其中在 MATH-500 上達到了 94.3% 的準確率，展現出強大的數學推理能力。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "DeepSeek-R1-Distill-Qwen-7B 是基於 Qwen2.5-Math-7B 通過知識蒸餾得到的模型。該模型使用 DeepSeek-R1 生成的 80 萬個精選樣本進行微調，展現出優秀的推理能力。在多個基準測試中表現出色，其中在 MATH-500 上達到了 92.8% 的準確率，在 AIME 2024 上達到了 55.5% 的通過率，在 CodeForces 上獲得了 1189 的評分，作為 7B 規模的模型展示了較強的數學和編程能力。"
+  },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 集合了先前版本的優秀特徵，增強了通用和編碼能力。"
   },
@@ -554,6 +587,9 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且通過精心設計的訓練方法，提升了整體效果。"
   },
+  "deepseek-r1-distill-llama-70b": {
+    "description": "DeepSeek R1——DeepSeek 套件中更大更智能的模型——被蒸餾到 Llama 70B 架構中。基於基準測試和人工評估，該模型比原始 Llama 70B 更智能，尤其在需要數學和事實精確性的任務上表現出色。"
+  },
   "deepseek-reasoner": {
     "description": "DeepSeek 推出的推理模型。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
   },
@@ -563,11 +599,62 @@
   "deepseek-v2:236b": {
     "description": "DeepSeek V2 236B 是 DeepSeek 的設計代碼模型，提供強大的代碼生成能力。"
   },
+  "deepseek-v3": {
+    "description": "DeepSeek-V3 為杭州深度求索人工智能基礎技術研究有限公司自研的 MoE 模型，其多項評測成績突出，在主流榜單中位列開源模型榜首。V3 相較 V2.5 模型生成速度實現 3 倍提升，為用戶帶來更加迅速流暢的使用體驗。"
+  },
   "deepseek/deepseek-chat": {
     "description": "融合通用與代碼能力的全新開源模型，不僅保留了原有 Chat 模型的通用對話能力和 Coder 模型的強大代碼處理能力，還更好地對齊了人類偏好。此外，DeepSeek-V2.5 在寫作任務、指令跟隨等多個方面也實現了大幅提升。"
   },
   "emohaa": {
     "description": "Emohaa是一個心理模型，具備專業諮詢能力，幫助用戶理解情感問題。"
+  },
+  "ernie-3.5-128k": {
+    "description": "百度自研的旗艦級大規模大語言模型，覆蓋海量中英文語料，具有強大的通用能力，可滿足絕大部分對話問答、創作生成、插件應用場景要求；支持自動對接百度搜索插件，保障問答信息時效。"
+  },
+  "ernie-3.5-8k": {
+    "description": "百度自研的旗艦級大規模大語言模型，覆蓋海量中英文語料，具有強大的通用能力，可滿足絕大部分對話問答、創作生成、插件應用場景要求；支持自動對接百度搜索插件，保障問答信息時效。"
+  },
+  "ernie-3.5-8k-preview": {
+    "description": "百度自研的旗艦級大規模大語言模型，覆蓋海量中英文語料，具有強大的通用能力，可滿足絕大部分對話問答、創作生成、插件應用場景要求；支持自動對接百度搜索插件，保障問答信息時效。"
+  },
+  "ernie-4.0-8k-latest": {
+    "description": "百度自研的旗艦級超大規模大語言模型，相較ERNIE 3.5實現了模型能力全面升級，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。"
+  },
+  "ernie-4.0-8k-preview": {
+    "description": "百度自研的旗艦級超大規模大語言模型，相較ERNIE 3.5實現了模型能力全面升級，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。"
+  },
+  "ernie-4.0-turbo-128k": {
+    "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
+  },
+  "ernie-4.0-turbo-8k-latest": {
+    "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
+  },
+  "ernie-4.0-turbo-8k-preview": {
+    "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
+  },
+  "ernie-char-8k": {
+    "description": "百度自研的垂直場景大語言模型，適合遊戲NPC、客服對話、對話角色扮演等應用場景，人設風格更為鮮明、一致，指令遵循能力更強，推理性能更優。"
+  },
+  "ernie-char-fiction-8k": {
+    "description": "百度自研的垂直場景大語言模型，適合遊戲NPC、客服對話、對話角色扮演等應用場景，人設風格更為鮮明、一致，指令遵循能力更強，推理性能更優。"
+  },
+  "ernie-lite-8k": {
+    "description": "ERNIE Lite是百度自研的輕量級大語言模型，兼顧優異的模型效果與推理性能，適合低算力AI加速卡推理使用。"
+  },
+  "ernie-lite-pro-128k": {
+    "description": "百度自研的輕量級大語言模型，兼顧優異的模型效果與推理性能，效果比ERNIE Lite更優，適合低算力AI加速卡推理使用。"
+  },
+  "ernie-novel-8k": {
+    "description": "百度自研通用大語言模型，在小說續寫能力上有明顯優勢，也可用在短劇、電影等場景。"
+  },
+  "ernie-speed-128k": {
+    "description": "百度2024年最新發布的自研高性能大語言模型，通用能力優異，適合作為基座模型進行精調，更好地處理特定場景問題，同時具備極佳的推理性能。"
+  },
+  "ernie-speed-pro-128k": {
+    "description": "百度2024年最新發布的自研高性能大語言模型，通用能力優異，效果比ERNIE Speed更優，適合作為基座模型進行精調，更好地處理特定場景問題，同時具備極佳的推理性能。"
+  },
+  "ernie-tiny-8k": {
+    "description": "ERNIE Tiny是百度自研的超高性能大語言模型，部署與精調成本在文心系列模型中最低。"
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供穩定並可調優的性能，是複雜任務解決方案的理想選擇。"
@@ -872,6 +959,9 @@
   "internlm2.5-latest": {
     "description": "我們最新的模型系列，有著卓越的推理性能，支持 1M 的上下文長度以及更強的指令跟隨和工具調用能力。"
   },
+  "internlm3-latest": {
+    "description": "我們最新的模型系列，有著卓越的推理性能，領跑同量級開源模型。默認指向我們最新發布的 InternLM3 系列模型"
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM 是一個實驗性的、特定於任務的語言模型，經過訓練以符合學習科學原則，可在教學和學習場景中遵循系統指令，充當專家導師等。"
   },
@@ -985,6 +1075,9 @@
   },
   "meta-llama/Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 是 Llama 系列最先進的多語言開源大型語言模型，以極低成本體驗媲美 405B 模型的性能。基於 Transformer 結構，並通過監督微調（SFT）和人類反饋強化學習（RLHF）提升有用性和安全性。其指令調優版本專為多語言對話優化，在多項行業基準上表現優於眾多開源和封閉聊天模型。知識截止日期為 2023 年 12 月"
+  },
+  "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
+    "description": "Meta Llama 3.3 多語言大語言模型 ( LLM ) 是 70B（文本輸入/文本輸出）中的預訓練和指令調整生成模型。 Llama 3.3 指令調整的純文本模型針對多語言對話用例進行了優化，並且在常見行業基準上優於許多可用的開源和封閉式聊天模型。"
   },
   "meta-llama/Llama-Vision-Free": {
     "description": "LLaMA 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
@@ -1256,6 +1349,9 @@
   "qwen-vl-max-latest": {
     "description": "通義千問超大規模視覺語言模型。相比增強版，再次提升視覺推理能力和指令遵循能力，提供更高的視覺感知和認知水平。"
   },
+  "qwen-vl-ocr-latest": {
+    "description": "通義千問OCR是文字提取專有模型，專注於文檔、表格、試題、手寫體文字等類型圖像的文字提取能力。它能夠識別多種文字，目前支持的語言有：漢語、英語、法語、日語、韓語、德語、俄語、意大利語、越南語、阿拉伯語。"
+  },
   "qwen-vl-plus-latest": {
     "description": "通義千問大規模視覺語言模型增強版。大幅提升細節識別能力和文字識別能力，支持超百萬像素解析度和任意長寬比規格的圖像。"
   },
@@ -1273,6 +1369,9 @@
   },
   "qwen2.5-14b-instruct": {
     "description": "通義千問2.5對外開源的14B規模的模型。"
+  },
+  "qwen2.5-14b-instruct-1m": {
+    "description": "通義千問2.5對外開源的72B規模的模型。"
   },
   "qwen2.5-32b-instruct": {
     "description": "通義千問2.5對外開源的32B規模的模型。"
@@ -1300,6 +1399,12 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Qwen-Math模型具有強大的數學解題能力。"
+  },
+  "qwen2.5-vl-72b-instruct": {
+    "description": "指令跟隨、數學、解題、代碼整體提升，萬物識別能力提升，支持多樣格式直接精準定位視覺元素，支持對長視頻文件（最長10分鐘）進行理解和秒級別的事件時刻定位，能理解時間先後和快慢，基於解析和定位能力支持操控OS或Mobile的Agent，關鍵信息抽取能力和Json格式輸出能力強，此版本為72B版本，本系列能力最強的版本。"
+  },
+  "qwen2.5-vl-7b-instruct": {
+    "description": "指令跟隨、數學、解題、代碼整體提升，萬物識別能力提升，支持多樣格式直接精準定位視覺元素，支持對長視頻文件（最長10分鐘）進行理解和秒級別的事件時刻定位，能理解時間先後和快慢，基於解析和定位能力支持操控OS或Mobile的Agent，關鍵信息抽取能力和Json格式輸出能力強，此版本為72B版本，本系列能力最強的版本。"
   },
   "qwen2.5:0.5b": {
     "description": "Qwen2.5 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"

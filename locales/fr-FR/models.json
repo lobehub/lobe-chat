@@ -23,6 +23,9 @@
   "360gpt2-pro": {
     "description": "360GPT2 Pro est un modèle avancé de traitement du langage naturel lancé par la société 360, offrant d'excellentes capacités de génération et de compréhension de texte, en particulier dans le domaine de la création et de la génération."
   },
+  "360zhinao2-o1": {
+    "description": "Le modèle 360zhinao2-o1 utilise une recherche arborescente pour construire une chaîne de pensée et introduit un mécanisme de réflexion, formé par apprentissage par renforcement, permettant au modèle d'avoir la capacité de réflexion et de correction autonome."
+  },
   "4.0Ultra": {
     "description": "Spark4.0 Ultra est la version la plus puissante de la série de grands modèles Xinghuo, améliorant la compréhension et la capacité de résumé du contenu textuel tout en mettant à jour le lien de recherche en ligne. C'est une solution complète pour améliorer la productivité au bureau et répondre avec précision aux besoins, représentant un produit intelligent de premier plan dans l'industrie."
   },
@@ -43,6 +46,18 @@
   },
   "Baichuan4-Turbo": {
     "description": "Le modèle le plus performant en Chine, surpassant les modèles dominants étrangers dans les tâches en chinois telles que les encyclopédies, les longs textes et la création. Il possède également des capacités multimodales de pointe, avec d'excellentes performances dans plusieurs évaluations de référence."
+  },
+  "DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "Le modèle distillé DeepSeek-R1 basé sur Qwen2.5-Math-1.5B optimise les performances d'inférence grâce à l'apprentissage par renforcement et aux données de démarrage à froid, rafraîchissant les références multi-tâches des modèles open source."
+  },
+  "DeepSeek-R1-Distill-Qwen-14B": {
+    "description": "Le modèle distillé DeepSeek-R1 basé sur Qwen2.5-14B optimise les performances d'inférence grâce à l'apprentissage par renforcement et aux données de démarrage à froid, rafraîchissant les références multi-tâches des modèles open source."
+  },
+  "DeepSeek-R1-Distill-Qwen-32B": {
+    "description": "La série DeepSeek-R1 optimise les performances d'inférence grâce à l'apprentissage par renforcement et aux données de démarrage à froid, rafraîchissant les références multi-tâches des modèles open source, dépassant le niveau d'OpenAI-o1-mini."
+  },
+  "DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "Le modèle distillé DeepSeek-R1 basé sur Qwen2.5-Math-7B optimise les performances d'inférence grâce à l'apprentissage par renforcement et aux données de démarrage à froid, rafraîchissant les références multi-tâches des modèles open source."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite présente une rapidité de réponse exceptionnelle et un excellent rapport qualité-prix, offrant des choix plus flexibles pour différents scénarios clients. Prend en charge le raisonnement et le réglage fin avec une fenêtre de contexte de 128k."
@@ -76,9 +91,6 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "Modèle de langage ultra-large de premier plan développé par Baidu, ayant réalisé une mise à niveau complète des capacités par rapport à ERNIE 3.5, largement applicable à des scénarios de tâches complexes dans divers domaines ; prend en charge l'intégration automatique avec le plugin de recherche Baidu, garantissant l'actualité des informations de réponse."
-  },
-  "ERNIE-4.0-Turbo-128K": {
-    "description": "Modèle de langage ultra-large de premier plan développé par Baidu, offrant d'excellentes performances globales, largement applicable à des scénarios de tâches complexes dans divers domaines ; prend en charge l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse. Par rapport à ERNIE 4.0, il offre de meilleures performances."
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "Modèle linguistique ultramoderne et de grande taille auto-développé par Baidu, avec d'excellentes performances générales, largement applicable à divers scénarios de tâches complexes ; prend en charge la connexion automatique aux plugins de recherche Baidu pour assurer la pertinence des informations de réponse. Par rapport à ERNIE 4.0, il affiche de meilleures performances."
@@ -175,6 +187,9 @@
   },
   "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
     "description": "Meta Llama 3.1 est une famille de modèles de langage à grande échelle multilingues développée par Meta, comprenant des variantes pré-entraînées et d'ajustement d'instructions de tailles de paramètres de 8B, 70B et 405B. Ce modèle d'ajustement d'instructions 8B est optimisé pour des scénarios de dialogue multilingue, montrant d'excellentes performances dans plusieurs tests de référence de l'industrie. L'entraînement du modèle a utilisé plus de 150 trillions de tokens de données publiques, et des techniques telles que l'ajustement supervisé et l'apprentissage par renforcement basé sur les retours humains ont été appliquées pour améliorer l'utilité et la sécurité du modèle. Llama 3.1 prend en charge la génération de texte et de code, avec une date limite de connaissances fixée à décembre 2023."
+  },
+  "QwQ-32B-Preview": {
+    "description": "QwQ-32B-Preview est un modèle de traitement du langage naturel innovant, capable de gérer efficacement des tâches complexes de génération de dialogues et de compréhension contextuelle."
   },
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview est un modèle de recherche développé par l'équipe Qwen, axé sur les capacités de raisonnement visuel, qui possède des avantages uniques dans la compréhension de scènes complexes et la résolution de problèmes mathématiques liés à la vision."
@@ -527,6 +542,24 @@
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 est un modèle d'inférence alimenté par l'apprentissage par renforcement (RL), qui résout les problèmes de répétitivité et de lisibilité dans le modèle. Avant le RL, DeepSeek-R1 a introduit des données de démarrage à froid, optimisant ainsi les performances d'inférence. Il se compare à OpenAI-o1 en matière de tâches mathématiques, de code et d'inférence, et améliore l'efficacité globale grâce à des méthodes d'entraînement soigneusement conçues."
   },
+  "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
+    "description": "Le modèle distillé DeepSeek-R1 optimise les performances d'inférence grâce à l'apprentissage par renforcement et aux données de démarrage à froid, rafraîchissant les références multi-tâches des modèles open source."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B": {
+    "description": "DeepSeek-R1-Distill-Llama-8B est un modèle distillé basé sur Llama-3.1-8B. Ce modèle a été affiné avec des échantillons générés par DeepSeek-R1, montrant d'excellentes capacités d'inférence. Il a bien performé dans plusieurs tests de référence, atteignant 89,1 % de précision dans MATH-500, 50,4 % de taux de réussite dans AIME 2024, et un score de 1205 sur CodeForces, démontrant de fortes capacités en mathématiques et en programmation pour un modèle de 8B."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "Le modèle distillé DeepSeek-R1 optimise les performances d'inférence grâce à l'apprentissage par renforcement et aux données de démarrage à froid, rafraîchissant les références multi-tâches des modèles open source."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B": {
+    "description": "Le modèle distillé DeepSeek-R1 optimise les performances d'inférence grâce à l'apprentissage par renforcement et aux données de démarrage à froid, rafraîchissant les références multi-tâches des modèles open source."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B": {
+    "description": "DeepSeek-R1-Distill-Qwen-32B est un modèle obtenu par distillation de Qwen2.5-32B. Ce modèle a été affiné avec 800 000 échantillons sélectionnés générés par DeepSeek-R1, montrant des performances exceptionnelles dans plusieurs domaines tels que les mathématiques, la programmation et le raisonnement. Il a obtenu d'excellents résultats dans plusieurs tests de référence, atteignant 94,3 % de précision dans MATH-500, démontrant une forte capacité de raisonnement mathématique."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "DeepSeek-R1-Distill-Qwen-7B est un modèle obtenu par distillation de Qwen2.5-Math-7B. Ce modèle a été affiné avec 800 000 échantillons sélectionnés générés par DeepSeek-R1, montrant d'excellentes capacités d'inférence. Il a obtenu d'excellents résultats dans plusieurs tests de référence, atteignant 92,8 % de précision dans MATH-500, 55,5 % de taux de réussite dans AIME 2024, et un score de 1189 sur CodeForces, démontrant de fortes capacités en mathématiques et en programmation pour un modèle de 7B."
+  },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 intègre les excellentes caractéristiques des versions précédentes, renforçant les capacités générales et de codage."
   },
@@ -554,6 +587,9 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1 est un modèle d'inférence alimenté par l'apprentissage par renforcement (RL), qui résout les problèmes de répétitivité et de lisibilité dans le modèle. Avant le RL, DeepSeek-R1 a introduit des données de démarrage à froid, optimisant ainsi les performances d'inférence. Il se compare à OpenAI-o1 en matière de tâches mathématiques, de code et d'inférence, et améliore l'efficacité globale grâce à des méthodes d'entraînement soigneusement conçues."
   },
+  "deepseek-r1-distill-llama-70b": {
+    "description": "DeepSeek R1 — le modèle plus grand et plus intelligent de la suite DeepSeek — a été distillé dans l'architecture Llama 70B. Basé sur des tests de référence et des évaluations humaines, ce modèle est plus intelligent que le Llama 70B d'origine, en particulier dans les tâches nécessitant précision mathématique et factuelle."
+  },
   "deepseek-reasoner": {
     "description": "Modèle d'inférence proposé par DeepSeek. Avant de fournir la réponse finale, le modèle génère d'abord une chaîne de pensée pour améliorer l'exactitude de la réponse finale."
   },
@@ -563,11 +599,62 @@
   "deepseek-v2:236b": {
     "description": "DeepSeek V2 236B est le modèle de code de conception de DeepSeek, offrant de puissantes capacités de génération de code."
   },
+  "deepseek-v3": {
+    "description": "DeepSeek-V3 est un modèle MoE développé par la société Hangzhou DeepSeek AI Technology Research Co., Ltd., avec des performances exceptionnelles dans plusieurs évaluations, se classant au premier rang des modèles open source dans les classements principaux. Par rapport au modèle V2.5, la vitesse de génération a été multipliée par 3, offrant aux utilisateurs une expérience d'utilisation plus rapide et fluide."
+  },
   "deepseek/deepseek-chat": {
     "description": "Un nouveau modèle open source fusionnant des capacités générales et de codage, qui non seulement conserve les capacités de dialogue général du modèle Chat d'origine et la puissante capacité de traitement de code du modèle Coder, mais s'aligne également mieux sur les préférences humaines. De plus, DeepSeek-V2.5 a également réalisé des améliorations significatives dans plusieurs domaines tels que les tâches d'écriture et le suivi d'instructions."
   },
   "emohaa": {
     "description": "Emohaa est un modèle psychologique, doté de compétences de conseil professionnel, aidant les utilisateurs à comprendre les problèmes émotionnels."
+  },
+  "ernie-3.5-128k": {
+    "description": "Le modèle de langage de grande taille phare développé par Baidu, couvrant une vaste quantité de corpus en chinois et en anglais, avec de puissantes capacités générales, capable de répondre à la plupart des exigences en matière de questions-réponses, de génération créative et d'applications de plugins ; supporte l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse."
+  },
+  "ernie-3.5-8k": {
+    "description": "Le modèle de langage de grande taille phare développé par Baidu, couvrant une vaste quantité de corpus en chinois et en anglais, avec de puissantes capacités générales, capable de répondre à la plupart des exigences en matière de questions-réponses, de génération créative et d'applications de plugins ; supporte l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse."
+  },
+  "ernie-3.5-8k-preview": {
+    "description": "Le modèle de langage de grande taille phare développé par Baidu, couvrant une vaste quantité de corpus en chinois et en anglais, avec de puissantes capacités générales, capable de répondre à la plupart des exigences en matière de questions-réponses, de génération créative et d'applications de plugins ; supporte l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse."
+  },
+  "ernie-4.0-8k-latest": {
+    "description": "Le modèle de langage de très grande taille phare développé par Baidu, par rapport à ERNIE 3.5, a réalisé une mise à niveau complète des capacités du modèle, largement applicable à des scénarios de tâches complexes dans divers domaines ; supporte l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse."
+  },
+  "ernie-4.0-8k-preview": {
+    "description": "Le modèle de langage de très grande taille phare développé par Baidu, par rapport à ERNIE 3.5, a réalisé une mise à niveau complète des capacités du modèle, largement applicable à des scénarios de tâches complexes dans divers domaines ; supporte l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse."
+  },
+  "ernie-4.0-turbo-128k": {
+    "description": "Le modèle de langage de très grande taille phare développé par Baidu, avec d'excellentes performances globales, largement applicable à des scénarios de tâches complexes dans divers domaines ; supporte l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse. Par rapport à ERNIE 4.0, il offre de meilleures performances."
+  },
+  "ernie-4.0-turbo-8k-latest": {
+    "description": "Le modèle de langage de très grande taille phare développé par Baidu, avec d'excellentes performances globales, largement applicable à des scénarios de tâches complexes dans divers domaines ; supporte l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse. Par rapport à ERNIE 4.0, il offre de meilleures performances."
+  },
+  "ernie-4.0-turbo-8k-preview": {
+    "description": "Le modèle de langage de très grande taille phare développé par Baidu, avec d'excellentes performances globales, largement applicable à des scénarios de tâches complexes dans divers domaines ; supporte l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse. Par rapport à ERNIE 4.0, il offre de meilleures performances."
+  },
+  "ernie-char-8k": {
+    "description": "Le modèle de langage pour des scénarios verticaux développé par Baidu, adapté aux dialogues de NPC de jeux, aux dialogues de service client, aux jeux de rôle, avec un style de personnage plus distinct et cohérent, une meilleure capacité de suivi des instructions et des performances d'inférence supérieures."
+  },
+  "ernie-char-fiction-8k": {
+    "description": "Le modèle de langage pour des scénarios verticaux développé par Baidu, adapté aux dialogues de NPC de jeux, aux dialogues de service client, aux jeux de rôle, avec un style de personnage plus distinct et cohérent, une meilleure capacité de suivi des instructions et des performances d'inférence supérieures."
+  },
+  "ernie-lite-8k": {
+    "description": "ERNIE Lite est un modèle de langage léger développé par Baidu, alliant d'excellentes performances du modèle et performances d'inférence, adapté à une utilisation sur des cartes d'accélération AI à faible puissance."
+  },
+  "ernie-lite-pro-128k": {
+    "description": "Un modèle de langage léger développé par Baidu, alliant d'excellentes performances du modèle et performances d'inférence, avec des résultats supérieurs à ceux d'ERNIE Lite, adapté à une utilisation sur des cartes d'accélération AI à faible puissance."
+  },
+  "ernie-novel-8k": {
+    "description": "Le modèle de langage général développé par Baidu, avec un avantage évident dans la capacité de continuation de romans, également applicable à des scénarios de courtes pièces, de films, etc."
+  },
+  "ernie-speed-128k": {
+    "description": "Le modèle de langage haute performance développé par Baidu, publié en 2024, avec d'excellentes capacités générales, adapté comme modèle de base pour un affinage, permettant de mieux traiter des problèmes spécifiques, tout en offrant d'excellentes performances d'inférence."
+  },
+  "ernie-speed-pro-128k": {
+    "description": "Le modèle de langage haute performance développé par Baidu, publié en 2024, avec d'excellentes capacités générales, offrant de meilleures performances que l'ERNIE Speed, adapté comme modèle de base pour un affinage, permettant de mieux traiter des problèmes spécifiques, tout en offrant d'excellentes performances d'inférence."
+  },
+  "ernie-tiny-8k": {
+    "description": "ERNIE Tiny est un modèle de langage à très haute performance développé par Baidu, avec les coûts de déploiement et d'affinage les plus bas parmi les modèles de la série Wenxin."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Ajustement) offre des performances stables et ajustables, ce qui en fait un choix idéal pour des solutions de tâches complexes."
@@ -872,6 +959,9 @@
   "internlm2.5-latest": {
     "description": "Notre dernière série de modèles, offrant des performances d'inférence exceptionnelles, prenant en charge une longueur de contexte de 1M et des capacités améliorées de suivi des instructions et d'appel d'outils."
   },
+  "internlm3-latest": {
+    "description": "Notre dernière série de modèles, avec des performances d'inférence exceptionnelles, en tête des modèles open source de même niveau. Par défaut, elle pointe vers notre dernière version du modèle InternLM3."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM est un modèle de langage expérimental, spécifique à des tâches, formé pour respecter les principes des sciences de l'apprentissage, capable de suivre des instructions systématiques dans des contextes d'enseignement et d'apprentissage, agissant comme un mentor expert, entre autres."
   },
@@ -985,6 +1075,9 @@
   },
   "meta-llama/Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 est le modèle de langage open source multilingue le plus avancé de la série Llama, offrant une expérience comparable aux performances du modèle 405B à un coût très bas. Basé sur une architecture Transformer, il améliore l'utilité et la sécurité grâce à un ajustement supervisé (SFT) et un apprentissage par renforcement avec retour humain (RLHF). Sa version optimisée pour les instructions est spécialement conçue pour les dialogues multilingues, surpassant de nombreux modèles de chat open source et fermés sur plusieurs benchmarks industriels. Date limite de connaissance : décembre 2023."
+  },
+  "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
+    "description": "Le modèle de langage multilingue Meta Llama 3.3 (LLM) est un modèle génératif pré-entraîné et ajusté par instruction de 70B (entrée/sortie de texte). Le modèle de texte pur ajusté par instruction Llama 3.3 est optimisé pour les cas d'utilisation de dialogue multilingue et surpasse de nombreux modèles de chat open source et fermés sur des benchmarks industriels courants."
   },
   "meta-llama/Llama-Vision-Free": {
     "description": "LLaMA 3.2 est conçu pour traiter des tâches qui combinent des données visuelles et textuelles. Il excelle dans des tâches comme la description d'image et le questionnement visuel, comblant le fossé entre génération de langage et raisonnement visuel."
@@ -1256,6 +1349,9 @@
   "qwen-vl-max-latest": {
     "description": "Modèle de langage visuel à très grande échelle Tongyi Qianwen. Par rapport à la version améliorée, il améliore encore les capacités de raisonnement visuel et de suivi des instructions, offrant un niveau de perception visuelle et de cognition plus élevé."
   },
+  "qwen-vl-ocr-latest": {
+    "description": "Le modèle OCR Qwen est un modèle spécialisé dans l'extraction de texte, se concentrant sur la capacité d'extraction de texte à partir d'images de documents, tableaux, questions d'examen, écriture manuscrite, etc. Il peut reconnaître plusieurs langues, actuellement supportées : chinois, anglais, français, japonais, coréen, allemand, russe, italien, vietnamien, arabe."
+  },
   "qwen-vl-plus-latest": {
     "description": "Version améliorée du modèle de langage visuel à grande échelle Tongyi Qianwen. Amélioration significative des capacités de reconnaissance des détails et de reconnaissance de texte, prenant en charge des résolutions d'image de plus d'un million de pixels et des rapports d'aspect de n'importe quelle taille."
   },
@@ -1273,6 +1369,9 @@
   },
   "qwen2.5-14b-instruct": {
     "description": "Le modèle de 14B de Tongyi Qwen 2.5, open source."
+  },
+  "qwen2.5-14b-instruct-1m": {
+    "description": "Le modèle de 72B de Qwen2.5 est ouvert au public."
   },
   "qwen2.5-32b-instruct": {
     "description": "Le modèle de 32B de Tongyi Qwen 2.5, open source."
@@ -1300,6 +1399,12 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Le modèle Qwen-Math possède de puissantes capacités de résolution de problèmes mathématiques."
+  },
+  "qwen2.5-vl-72b-instruct": {
+    "description": "Amélioration globale des capacités de suivi des instructions, mathématiques, résolution de problèmes et code, amélioration des capacités de reconnaissance, support de divers formats pour un positionnement précis des éléments visuels, compréhension de fichiers vidéo longs (jusqu'à 10 minutes) et localisation d'événements en temps réel, capable de comprendre l'ordre temporel et la vitesse, supportant le contrôle d'agents OS ou Mobile basé sur des capacités d'analyse et de localisation, avec une forte capacité d'extraction d'informations clés et de sortie au format Json. Cette version est la version 72B, la plus puissante de cette série."
+  },
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Amélioration globale des capacités de suivi des instructions, mathématiques, résolution de problèmes et code, amélioration des capacités de reconnaissance, support de divers formats pour un positionnement précis des éléments visuels, compréhension de fichiers vidéo longs (jusqu'à 10 minutes) et localisation d'événements en temps réel, capable de comprendre l'ordre temporel et la vitesse, supportant le contrôle d'agents OS ou Mobile basé sur des capacités d'analyse et de localisation, avec une forte capacité d'extraction d'informations clés et de sortie au format Json. Cette version est la version 72B, la plus puissante de cette série."
   },
   "qwen2.5:0.5b": {
     "description": "Qwen2.5 est le nouveau modèle de langage à grande échelle de Alibaba, offrant d'excellentes performances pour répondre à des besoins d'application diversifiés."

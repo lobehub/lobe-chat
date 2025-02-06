@@ -294,26 +294,6 @@
     "tooltip": "更新服务商基础配置",
     "updateSuccess": "更新成功"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "填入百度千帆平台的 Access Key",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "测试 AccessKey / SecretAccess 是否填写正确"
-    },
-    "secretKey": {
-      "desc": "填入百度千帆平台 Secret Key",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "自定义服务区域",
-      "description": "输入你的 AccessKey / SecretKey 即可开始会话。应用不会记录你的鉴权配置",
-      "title": "使用自定义文心一言鉴权信息"
-    }
-  },
   "zeroone": {
     "title": "01.AI 零一万物"
   },
