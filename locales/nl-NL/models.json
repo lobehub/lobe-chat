@@ -23,6 +23,9 @@
   "360gpt2-pro": {
     "description": "360GPT2 Pro is een geavanceerd natuurlijk taalverwerkingsmodel dat is ontwikkeld door 360, met uitstekende tekstgeneratie- en begripcapaciteiten, vooral in de generatieve en creatieve domeinen, en kan complexe taaltransformaties en rolinterpretatietaken aan."
   },
+  "360zhinao2-o1": {
+    "description": "360zhinao2-o1 bouwt een denkketen op met behulp van boomzoekmethoden en introduceert een reflectiemechanisme, waarbij het gebruik maakt van versterkend leren om het model in staat te stellen tot zelfreflectie en foutcorrectie."
+  },
   "4.0Ultra": {
     "description": "Spark4.0 Ultra is de krachtigste versie in de Spark-grootmodelserie, die de netwerkintegratie heeft geüpgraded en de tekstbegrip- en samenvattingscapaciteiten heeft verbeterd. Het is een allesomvattende oplossing voor het verbeteren van de kantoorproductiviteit en het nauwkeurig reageren op behoeften, en is een toonaangevend intelligent product in de industrie."
   },
@@ -43,6 +46,18 @@
   },
   "Baichuan4-Turbo": {
     "description": "Modelcapaciteiten zijn nationaal de beste, overtreft buitenlandse mainstream modellen in kennisencyclopedie, lange teksten en creatieve generatie in Chinese taken. Beschikt ook over toonaangevende multimodale capaciteiten en presteert uitstekend op verschillende autoritatieve evaluatiebenchmarks."
+  },
+  "DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "DeepSeek-R1 distillatiemodel gebaseerd op Qwen2.5-Math-1.5B, geoptimaliseerd voor inferentieprestaties door versterkend leren en koude startdata, open-source model dat de multi-taak benchmark vernieuwt."
+  },
+  "DeepSeek-R1-Distill-Qwen-14B": {
+    "description": "DeepSeek-R1 distillatiemodel gebaseerd op Qwen2.5-14B, geoptimaliseerd voor inferentieprestaties door versterkend leren en koude startdata, open-source model dat de multi-taak benchmark vernieuwt."
+  },
+  "DeepSeek-R1-Distill-Qwen-32B": {
+    "description": "De DeepSeek-R1 serie optimaliseert inferentieprestaties door versterkend leren en koude startdata, open-source model dat de multi-taak benchmark vernieuwt en de OpenAI-o1-mini niveaus overtreft."
+  },
+  "DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "DeepSeek-R1 distillatiemodel gebaseerd op Qwen2.5-Math-7B, geoptimaliseerd voor inferentieprestaties door versterkend leren en koude startdata, open-source model dat de multi-taak benchmark vernieuwt."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite beschikt over een uitstekende responssnelheid en een goede prijs-kwaliteitverhouding, en biedt klanten flexibele keuzes voor verschillende scenario's. Ondersteunt inferentie en fine-tuning met een contextvenster van 128k."
@@ -76,9 +91,6 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat in vergelijking met ERNIE 3.5 een algehele upgrade van de modelcapaciteiten heeft gerealiseerd, en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen."
-  },
-  "ERNIE-4.0-Turbo-128K": {
-    "description": "Het vlaggenschip supergrote taalmodel van Baidu, met uitstekende algehele prestaties, breed toepasbaar in complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met Baidu zoekplug-ins, wat de actualiteit van vraag- en antwoordinformatie waarborgt. In vergelijking met ERNIE 4.0 presteert het beter."
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "De zelfontwikkelde vlaggenschip super-grote taalmodel van Baidu, dat uitmuntend presteert in diverse complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in, waarborgt de actualiteit van vraag-antwoordinformatie. Overtreft in performance ten opzichte van ERNIE 4.0."
@@ -175,6 +187,9 @@
   },
   "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
     "description": "Meta Llama 3.1 is een familie van meertalige grote taalmodellen ontwikkeld door Meta, inclusief voorgetrainde en instructie-fijn afgestelde varianten met parameter groottes van 8B, 70B en 405B. Dit 8B instructie-fijn afgestelde model is geoptimaliseerd voor meertalige gespreksscenario's en presteert uitstekend in verschillende industriële benchmarktests. Het model is getraind met meer dan 150 biljoen tokens van openbare gegevens en maakt gebruik van technieken zoals supervisie-fijn afstemming en versterkend leren met menselijke feedback om de bruikbaarheid en veiligheid van het model te verbeteren. Llama 3.1 ondersteunt tekstgeneratie en codegeneratie, met een kennisafkapdatum van december 2023."
+  },
+  "QwQ-32B-Preview": {
+    "description": "QwQ-32B-Preview is een innovatief natuurlijk taalverwerkingsmodel dat efficiënt complexe dialooggeneratie en contextbegripstaken kan verwerken."
   },
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview is een onderzoeksmodel ontwikkeld door het Qwen-team, dat zich richt op visuele redeneervaardigheden en unieke voordelen heeft in het begrijpen van complexe scènes en het oplossen van visueel gerelateerde wiskundige problemen."
@@ -527,6 +542,24 @@
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 is een op versterkend leren (RL) aangedreven inferentiemodel dat de problemen van herhaling en leesbaarheid in het model oplost. Voor RL introduceerde DeepSeek-R1 koude startdata om de inferentieprestaties verder te optimaliseren. Het presteert vergelijkbaar met OpenAI-o1 in wiskunde, code en inferentietaken, en verbetert de algehele effectiviteit door zorgvuldig ontworpen trainingsmethoden."
   },
+  "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
+    "description": "DeepSeek-R1 distillatiemodel, geoptimaliseerd voor inferentieprestaties door versterkend leren en koude startdata, open-source model dat de multi-taak benchmark vernieuwt."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B": {
+    "description": "DeepSeek-R1-Distill-Llama-8B is een distillatiemodel ontwikkeld op basis van Llama-3.1-8B. Dit model is fijn afgestemd met voorbeelden gegenereerd door DeepSeek-R1 en toont uitstekende inferentiecapaciteiten. Het heeft goed gepresteerd in verschillende benchmarktests, met een nauwkeurigheid van 89,1% op MATH-500, een slaagpercentage van 50,4% op AIME 2024, en een score van 1205 op CodeForces, wat sterke wiskundige en programmeercapaciteiten aantoont voor een model van 8B schaal."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "DeepSeek-R1 distillatiemodel, geoptimaliseerd voor inferentieprestaties door versterkend leren en koude startdata, open-source model dat de multi-taak benchmark vernieuwt."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B": {
+    "description": "DeepSeek-R1 distillatiemodel, geoptimaliseerd voor inferentieprestaties door versterkend leren en koude startdata, open-source model dat de multi-taak benchmark vernieuwt."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B": {
+    "description": "DeepSeek-R1-Distill-Qwen-32B is een model dat is verkregen door kennisdistillatie van Qwen2.5-32B. Dit model is fijn afgestemd met 800.000 zorgvuldig geselecteerde voorbeelden gegenereerd door DeepSeek-R1 en toont uitstekende prestaties in verschillende domeinen zoals wiskunde, programmeren en redeneren. Het heeft uitstekende resultaten behaald in meerdere benchmarktests, waaronder een nauwkeurigheid van 94,3% op MATH-500, wat sterke wiskundige redeneringscapaciteiten aantoont."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "DeepSeek-R1-Distill-Qwen-7B is een model dat is verkregen door kennisdistillatie van Qwen2.5-Math-7B. Dit model is fijn afgestemd met 800.000 zorgvuldig geselecteerde voorbeelden gegenereerd door DeepSeek-R1 en toont uitstekende inferentiecapaciteiten. Het heeft uitstekende resultaten behaald in verschillende benchmarktests, met een nauwkeurigheid van 92,8% op MATH-500, een slaagpercentage van 55,5% op AIME 2024, en een score van 1189 op CodeForces, wat sterke wiskundige en programmeercapaciteiten aantoont voor een model van 7B schaal."
+  },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 combineert de uitstekende kenmerken van eerdere versies en versterkt de algemene en coderingscapaciteiten."
   },
@@ -554,6 +587,9 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1 is een op versterkend leren (RL) aangedreven inferentiemodel dat de problemen van herhaling en leesbaarheid in het model oplost. Voor RL introduceerde DeepSeek-R1 koude startdata om de inferentieprestaties verder te optimaliseren. Het presteert vergelijkbaar met OpenAI-o1 in wiskunde, code en inferentietaken, en verbetert de algehele effectiviteit door zorgvuldig ontworpen trainingsmethoden."
   },
+  "deepseek-r1-distill-llama-70b": {
+    "description": "DeepSeek R1 - een groter en slimmer model binnen de DeepSeek suite - is gedistilleerd naar de Llama 70B architectuur. Op basis van benchmarktests en menselijke evaluaties is dit model slimmer dan de originele Llama 70B, vooral in taken die wiskundige en feitelijke nauwkeurigheid vereisen."
+  },
   "deepseek-reasoner": {
     "description": "Het redeneer model van DeepSeek. Voordat het model het uiteindelijke antwoord geeft, genereert het eerst een stuk denkproces om de nauwkeurigheid van het uiteindelijke antwoord te verbeteren."
   },
@@ -563,11 +599,62 @@
   "deepseek-v2:236b": {
     "description": "DeepSeek V2 236B is het ontwerpcode-model van DeepSeek, biedt krachtige codegeneratiecapaciteiten."
   },
+  "deepseek-v3": {
+    "description": "DeepSeek-V3 is een MoE-model dat is ontwikkeld door Hangzhou DeepSeek Artificial Intelligence Technology Research Co., Ltd. Het heeft uitstekende scores in verschillende evaluaties en staat bovenaan de open-source modellen in de mainstream ranglijsten. V3 heeft de generatiesnelheid met 3 keer verbeterd in vergelijking met het V2.5 model, wat zorgt voor een snellere en soepelere gebruikerservaring."
+  },
   "deepseek/deepseek-chat": {
     "description": "Een nieuw open-source model dat algemene en codeercapaciteiten combineert, niet alleen de algemene gespreksvaardigheden van het oorspronkelijke Chat-model en de krachtige codeverwerkingscapaciteiten van het Coder-model behoudt, maar ook beter is afgestemd op menselijke voorkeuren. Bovendien heeft DeepSeek-V2.5 aanzienlijke verbeteringen gerealiseerd in schrijfopdrachten, instructievolging en meer."
   },
   "emohaa": {
     "description": "Emohaa is een psychologisch model met professionele adviescapaciteiten, dat gebruikers helpt emotionele problemen te begrijpen."
+  },
+  "ernie-3.5-128k": {
+    "description": "Het vlaggenschip grote taalmodel van Baidu, zelf ontwikkeld, dekt een enorme hoeveelheid Chinese en Engelse corpora, met sterke algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met Baidu zoekplug-ins om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ernie-3.5-8k": {
+    "description": "Het vlaggenschip grote taalmodel van Baidu, zelf ontwikkeld, dekt een enorme hoeveelheid Chinese en Engelse corpora, met sterke algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met Baidu zoekplug-ins om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ernie-3.5-8k-preview": {
+    "description": "Het vlaggenschip grote taalmodel van Baidu, zelf ontwikkeld, dekt een enorme hoeveelheid Chinese en Engelse corpora, met sterke algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met Baidu zoekplug-ins om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ernie-4.0-8k-latest": {
+    "description": "Het vlaggenschip ultra-grote taalmodel van Baidu, zelf ontwikkeld, heeft een algehele upgrade van modelcapaciteiten in vergelijking met ERNIE 3.5, en is breed toepasbaar in complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met Baidu zoekplug-ins om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ernie-4.0-8k-preview": {
+    "description": "Het vlaggenschip ultra-grote taalmodel van Baidu, zelf ontwikkeld, heeft een algehele upgrade van modelcapaciteiten in vergelijking met ERNIE 3.5, en is breed toepasbaar in complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met Baidu zoekplug-ins om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ernie-4.0-turbo-128k": {
+    "description": "Het vlaggenschip ultra-grote taalmodel van Baidu, zelf ontwikkeld, presteert uitstekend in algehele effectiviteit en is breed toepasbaar in complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met Baidu zoekplug-ins om de actualiteit van vraag- en antwoordinformatie te waarborgen. Het presteert beter dan ERNIE 4.0."
+  },
+  "ernie-4.0-turbo-8k-latest": {
+    "description": "Het vlaggenschip ultra-grote taalmodel van Baidu, zelf ontwikkeld, presteert uitstekend in algehele effectiviteit en is breed toepasbaar in complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met Baidu zoekplug-ins om de actualiteit van vraag- en antwoordinformatie te waarborgen. Het presteert beter dan ERNIE 4.0."
+  },
+  "ernie-4.0-turbo-8k-preview": {
+    "description": "Het vlaggenschip ultra-grote taalmodel van Baidu, zelf ontwikkeld, presteert uitstekend in algehele effectiviteit en is breed toepasbaar in complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met Baidu zoekplug-ins om de actualiteit van vraag- en antwoordinformatie te waarborgen. Het presteert beter dan ERNIE 4.0."
+  },
+  "ernie-char-8k": {
+    "description": "Een door Baidu ontwikkeld groot taalmodel voor verticale scenario's, geschikt voor toepassingen zoals game NPC's, klantenservice dialoog, en rollenspellen, met een duidelijkere en consistentere karakterstijl, sterkere instructievolgcapaciteiten en betere inferentieprestaties."
+  },
+  "ernie-char-fiction-8k": {
+    "description": "Een door Baidu ontwikkeld groot taalmodel voor verticale scenario's, geschikt voor toepassingen zoals game NPC's, klantenservice dialoog, en rollenspellen, met een duidelijkere en consistentere karakterstijl, sterkere instructievolgcapaciteiten en betere inferentieprestaties."
+  },
+  "ernie-lite-8k": {
+    "description": "ERNIE Lite is een lichtgewicht groot taalmodel dat door Baidu is ontwikkeld, dat uitstekende modelprestaties en inferentiecapaciteiten combineert, geschikt voor gebruik met AI-versnelling kaarten met lage rekencapaciteit."
+  },
+  "ernie-lite-pro-128k": {
+    "description": "Een lichtgewicht groot taalmodel dat door Baidu is ontwikkeld, dat uitstekende modelprestaties en inferentiecapaciteiten combineert, met betere prestaties dan ERNIE Lite, geschikt voor gebruik met AI-versnelling kaarten met lage rekencapaciteit."
+  },
+  "ernie-novel-8k": {
+    "description": "Een algemeen groot taalmodel dat door Baidu is ontwikkeld, met duidelijke voordelen in het vervolgschrijven van romans, en ook toepasbaar in korte toneelstukken, films en andere scenario's."
+  },
+  "ernie-speed-128k": {
+    "description": "Het nieuwste zelfontwikkelde hoge-prestatie grote taalmodel van Baidu, dat uitstekende algemene capaciteiten heeft en geschikt is als basis model voor afstemming, om beter specifieke scenario's aan te pakken, met uitstekende inferentieprestaties."
+  },
+  "ernie-speed-pro-128k": {
+    "description": "Het nieuwste zelfontwikkelde hoge-prestatie grote taalmodel van Baidu, dat uitstekende algemene capaciteiten heeft en betere prestaties levert dan ERNIE Speed, geschikt als basis model voor afstemming, om beter specifieke scenario's aan te pakken, met uitstekende inferentieprestaties."
+  },
+  "ernie-tiny-8k": {
+    "description": "ERNIE Tiny is een ultra-presterend groot taalmodel dat de laagste implementatie- en afstemmingskosten heeft binnen de Wenxin modelreeks."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) biedt stabiele en afstelbare prestaties, ideaal voor oplossingen voor complexe taken."
@@ -872,6 +959,9 @@
   "internlm2.5-latest": {
     "description": "Onze nieuwste modelreeks met uitstekende redeneervaardigheden, ondersteunt een contextlengte van 1M en heeft verbeterde instructievolging en toolaanroepmogelijkheden."
   },
+  "internlm3-latest": {
+    "description": "Onze nieuwste modelreeks heeft uitstekende inferentieprestaties en leidt de open-source modellen in dezelfde klasse. Standaard gericht op ons recentste InternLM3 model."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM is een experimenteel, taak-specifiek taalmodel dat is getraind volgens de principes van de leerwetenschap, en kan systeeminstructies volgen in onderwijs- en leeromgevingen, en fungeert als een expertmentor."
   },
@@ -985,6 +1075,9 @@
   },
   "meta-llama/Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 is het meest geavanceerde meertalige open-source grote taalmodel uit de Llama-serie, dat een vergelijkbare prestatie biedt als het 405B model tegen zeer lage kosten. Gebaseerd op de Transformer-structuur en verbeterd in bruikbaarheid en veiligheid door middel van supervisie-fijnstelling (SFT) en versterkend leren met menselijke feedback (RLHF). De instructie-geoptimaliseerde versie is speciaal ontworpen voor meertalige gesprekken en presteert beter dan veel open-source en gesloten chatmodellen op verschillende industriële benchmarks. Kennisafkapdatum is december 2023."
+  },
+  "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
+    "description": "Meta Llama 3.3 meertalige grote taalmodel (LLM) is een voorgetraind en instructie-aangepast generatief model van 70B (tekstinvoer/tekstuitvoer). Het Llama 3.3 instructie-aangepaste pure tekstmodel is geoptimaliseerd voor meertalige dialoogtoepassingen en presteert beter dan veel beschikbare open-source en gesloten chatmodellen op gangbare industriële benchmarks."
   },
   "meta-llama/Llama-Vision-Free": {
     "description": "LLaMA 3.2 is ontworpen voor taken die zowel visuele als tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraagstukken, en overbrugt de kloof tussen taalgeneratie en visuele redenering."
@@ -1256,6 +1349,9 @@
   "qwen-vl-max-latest": {
     "description": "Het Tongyi Qianwen ultra-grootschalige visuele taalmodel. In vergelijking met de verbeterde versie, verhoogt het opnieuw de visuele redeneervaardigheden en de naleving van instructies, en biedt het een hoger niveau van visuele waarneming en cognitie."
   },
+  "qwen-vl-ocr-latest": {
+    "description": "Qwen OCR is een speciaal model voor tekstextractie, gericht op het extraheren van tekst uit documenten, tabellen, examenvragen, handgeschreven teksten en andere soorten afbeeldingen. Het kan verschillende talen herkennen, waaronder: Chinees, Engels, Frans, Japans, Koreaans, Duits, Russisch, Italiaans, Vietnamees en Arabisch."
+  },
   "qwen-vl-plus-latest": {
     "description": "De verbeterde versie van het Tongyi Qianwen grootschalige visuele taalmodel. Het verbetert aanzienlijk de detailherkenning en tekstherkenning, ondersteunt resoluties van meer dan een miljoen pixels en afbeeldingen met elke verhouding."
   },
@@ -1273,6 +1369,9 @@
   },
   "qwen2.5-14b-instruct": {
     "description": "Het 14B model van Tongyi Qianwen 2.5 is open source beschikbaar."
+  },
+  "qwen2.5-14b-instruct-1m": {
+    "description": "Qwen2.5 is een open-source model van 72B schaal."
   },
   "qwen2.5-32b-instruct": {
     "description": "Het 32B model van Tongyi Qianwen 2.5 is open source beschikbaar."
@@ -1300,6 +1399,12 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
+  },
+  "qwen2.5-vl-72b-instruct": {
+    "description": "Verbeterde instructievolging, wiskunde, probleemoplossing en code, met verbeterde herkenningscapaciteiten voor verschillende formaten, directe en nauwkeurige lokalisatie van visuele elementen, ondersteuning voor lange videobestanden (maximaal 10 minuten) en seconde-niveau gebeurtenislocatie, kan tijdsvolgorde en snelheid begrijpen, en ondersteunt het bedienen van OS of mobiele agenten op basis van analyse- en lokalisatiecapaciteiten, sterke capaciteiten voor het extraheren van belangrijke informatie en JSON-formaat uitvoer, deze versie is de 72B versie, de krachtigste versie in deze serie."
+  },
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Verbeterde instructievolging, wiskunde, probleemoplossing en code, met verbeterde herkenningscapaciteiten voor verschillende formaten, directe en nauwkeurige lokalisatie van visuele elementen, ondersteuning voor lange videobestanden (maximaal 10 minuten) en seconde-niveau gebeurtenislocatie, kan tijdsvolgorde en snelheid begrijpen, en ondersteunt het bedienen van OS of mobiele agenten op basis van analyse- en lokalisatiecapaciteiten, sterke capaciteiten voor het extraheren van belangrijke informatie en JSON-formaat uitvoer, deze versie is de 72B versie, de krachtigste versie in deze serie."
   },
   "qwen2.5:0.5b": {
     "description": "Qwen2.5 is de nieuwe generatie grootschalig taalmodel van Alibaba, dat uitstekende prestaties levert ter ondersteuning van diverse toepassingsbehoeften."
