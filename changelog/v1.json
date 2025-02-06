@@ -1,6 +1,18 @@
 [
   {
     "children": {
+      "improvements": ["Add siliconcloud models."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.5"
+  },
+  {
+    "children": {},
+    "date": "2025-02-06",
+    "version": "1.51.4"
+  },
+  {
+    "children": {
       "improvements": ["Add Cache, Metadata, FeatureFlag Viewer to DevPanel."],
       "fixes": ["Artifact Parsing and Rendering Bug Fix for Gemini 2.0 Flash."]
     },

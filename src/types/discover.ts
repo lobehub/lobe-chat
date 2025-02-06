@@ -7,7 +7,10 @@ import { MetaData } from '@/types/meta';
 import { PageProps } from '@/types/next';
 import { LobeAgentSettings } from '@/types/session';
 
-export type DiscoverPageProps<T = string> = PageProps<{ slug: T }, { hl?: Locales }>;
+export type DiscoverPageProps<T = string> = PageProps<
+  { slug: T; variants: string },
+  { hl?: Locales }
+>;
 
 export enum AssistantCategory {
   Academic = 'academic',
