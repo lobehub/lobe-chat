@@ -7,6 +7,7 @@ import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { DiscoverPageProps } from '@/types/discover';
+import { parsePageLocale } from '@/utils/locale';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 import List from '../features/List';
@@ -15,7 +16,8 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
   const params = await props.params;
   const searchParams = await props.searchParams;
 
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t } = await translation('metadata', searchParams?.hl);
+  const locale = await parsePageLocale(props);
 
   const discoverService = new DiscoverService();
   const list = await discoverService.getProviderList(locale);
@@ -34,8 +36,9 @@ const Page = async (props: DiscoverPageProps) => {
   const params = await props.params;
   const searchParams = await props.searchParams;
 
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t } = await translation('metadata', searchParams?.hl);
   const mobile = await RouteVariants.getIsMobile(props);
+  const locale = await parsePageLocale(props);
 
   const discoverService = new DiscoverService();
   const list = await discoverService.getProviderList(locale);
@@ -62,10 +65,8 @@ const Page = async (props: DiscoverPageProps) => {
 
 export const generateStaticParams = async () => {
   const discoverService = new DiscoverService();
-  const cates = await discoverService.getProviderList(DEFAULT_LANG);
-  return cates.map((cate) => ({
-    slug: cate.identifier,
-  }));
+  const categories = await discoverService.getProviderList(DEFAULT_LANG);
+  return categories.map((cate) => ({ slug: cate.identifier }));
 };
 
 Page.DisplayName = 'DiscoverModelsCategory';

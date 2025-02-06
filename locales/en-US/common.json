@@ -286,6 +286,7 @@
     "anonymousNickName": "Anonymous User",
     "billing": "Billing Management",
     "cloud": "Launch {{name}}",
+    "community": "Community Edition",
     "data": "Data Storage",
     "defaultNickname": "Community User",
     "discord": "Community Support",
@@ -295,7 +296,6 @@
     "help": "Help Center",
     "moveGuide": "The settings button has been moved here",
     "plans": "Subscription Plans",
-    "preview": "Preview",
     "profile": "Account",
     "setting": "Settings",
     "usages": "Usage Statistics"

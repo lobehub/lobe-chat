@@ -286,6 +286,7 @@
     "anonymousNickName": "익명 사용자",
     "billing": "결제 관리",
     "cloud": "체험 {{name}}",
+    "community": "커뮤니티 버전",
     "data": "데이터 저장",
     "defaultNickname": "커뮤니티 사용자",
     "discord": "커뮤니티 지원",
@@ -295,7 +296,6 @@
     "help": "도움말 센터",
     "moveGuide": "설정 버튼을 여기로 이동했습니다",
     "plans": "요금제",
-    "preview": "미리보기",
     "profile": "계정 관리",
     "setting": "앱 설정",
     "usages": "사용량 통계"

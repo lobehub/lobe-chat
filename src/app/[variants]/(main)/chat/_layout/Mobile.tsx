@@ -4,6 +4,7 @@ import { createStyles } from 'antd-style';
 import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { withSuspense } from '@/components/withSuspense';
 import InitClientDB from '@/features/InitClientDB';
 import { useShowMobileWorkspace } from '@/hooks/useShowMobileWorkspace';
 
@@ -48,4 +49,4 @@ const Layout = memo<LayoutProps>(({ children, session }) => {
 
 Layout.displayName = 'MobileChatLayout';
 
-export default Layout;
+export default withSuspense(Layout);
