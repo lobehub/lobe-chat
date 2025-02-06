@@ -99,7 +99,6 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
       reasoning: true,
       vision: true,
     },
@@ -120,7 +119,6 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
       reasoning: true,
       vision: true,
     },
