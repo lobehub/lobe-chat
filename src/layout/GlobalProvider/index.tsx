@@ -9,6 +9,7 @@ import { getAntdLocale } from '@/utils/locale';
 
 import AntdV5MonkeyPatch from './AntdV5MonkeyPatch';
 import AppTheme from './AppTheme';
+import ImportSettings from './ImportSettings';
 import Locale from './Locale';
 import QueryProvider from './Query';
 import ReactScan from './ReactScan';
@@ -54,8 +55,9 @@ const GlobalLayout = async ({
             serverConfig={serverConfig}
           >
             <QueryProvider>{children}</QueryProvider>
+            <StoreInitialization />
             <Suspense>
-              <StoreInitialization />
+              <ImportSettings />
               <ReactScan />
               {process.env.NODE_ENV === 'development' && <DevPanel />}
             </Suspense>
