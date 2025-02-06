@@ -294,26 +294,6 @@
     "tooltip": "Update provider basic configuration",
     "updateSuccess": "Update successful"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Enter the Access Key from the Baidu Qianfan platform",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Test if the Access Key / Secret Access is filled in correctly"
-    },
-    "secretKey": {
-      "desc": "Enter the Secret Key from the Baidu Qianfan platform",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Custom Service Region",
-      "description": "Input your Access Key / Secret Key to start the session. The application will not record your authentication configuration.",
-      "title": "Use Custom Wenxin Yiyan Authentication Information"
-    }
-  },
   "zeroone": {
     "title": "01.AI Zero One Everything"
   },

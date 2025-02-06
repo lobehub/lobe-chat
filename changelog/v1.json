@@ -1,6 +1,48 @@
 [
   {
     "children": {
+      "fixes": ["Fix /file/[id] 500 issue."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix provider 500 issue."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.10"
+  },
+  {
+    "children": {
+      "improvements": ["Update edtion tag display and improve prerender."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.9"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor model fetch method."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add Aliyun deepseek-r1 distill models."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.7"
+  },
+  {
+    "children": {
+      "fixes": ["Try to fix discover error."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.6"
+  },
+  {
+    "children": {
       "improvements": ["Add siliconcloud models."]
     },
     "date": "2025-02-06",

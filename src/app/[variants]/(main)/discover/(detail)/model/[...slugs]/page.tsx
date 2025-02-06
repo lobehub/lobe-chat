@@ -9,6 +9,7 @@ import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { DiscoverProviderItem } from '@/types/discover';
 import { PageProps } from '@/types/next';
+import { parsePageLocale } from '@/utils/locale';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 import DetailLayout from '../../features/DetailLayout';
@@ -26,9 +27,10 @@ export const generateMetadata = async (props: Props) => {
 
   const { slugs } = params;
   const identifier = decodeURIComponent(slugs.join('/'));
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t } = await translation('metadata', searchParams?.hl);
   const { t: td } = await translation('models', searchParams?.hl);
 
+  const locale = await parsePageLocale(props);
   const discoverService = new DiscoverService();
   const data = await discoverService.getModelById(locale, identifier);
   if (!data) return;
@@ -70,9 +72,11 @@ const Page = async (props: Props) => {
   const { slugs } = params;
 
   const identifier = decodeURIComponent(slugs.join('/'));
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t } = await translation('metadata', searchParams?.hl);
   const { t: td } = await translation('models', searchParams?.hl);
+
   const mobile = await RouteVariants.getIsMobile(props);
+  const locale = await parsePageLocale(props);
 
   const discoverService = new DiscoverService();
   const data = await discoverService.getModelById(locale, identifier);

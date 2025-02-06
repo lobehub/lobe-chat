@@ -19,3 +19,5 @@ const ProviderSettingsLayout = ({ children, ...res }: PropsWithChildren) => {
 ProviderSettingsLayout.displayName = 'ProviderSettingsLayout';
 
 export default ProviderSettingsLayout;
+
+export const dynamic = 'auto';
