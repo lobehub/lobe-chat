@@ -2,6 +2,9 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const zhipuChatModels: AIChatModelCard[] = [
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 16_384,
     description: 'GLM-Zero-Preview具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
     displayName: 'GLM-Zero-Preview',
