@@ -6,6 +6,7 @@ import isEqual from 'fast-deep-equal';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 
+import { withSuspense } from '@/components/withSuspense';
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -77,4 +78,4 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default SessionPanel;
+export default withSuspense(SessionPanel);
