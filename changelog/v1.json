@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Try to fix discover error."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.6"
+  },
+  {
+    "children": {
       "improvements": ["Add siliconcloud models."]
     },
     "date": "2025-02-06",
