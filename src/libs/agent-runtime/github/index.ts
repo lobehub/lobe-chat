@@ -13,7 +13,7 @@ export interface GithubModelCard {
   name: string;
   tags: string[];
   task: string;
-};
+}
 
 /* eslint-enable typescript-sort-keys/interface */
 

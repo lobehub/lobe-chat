@@ -1,12 +1,12 @@
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
-
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { TogetherAIModel } from './type';
 
-const baseURL = 'https://api.together.xyz';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
+
 export const LobeTogetherAI = LobeOpenAICompatibleFactory({
-  baseURL: `${baseURL}/v1`,
+  baseURL: 'https://api.together.xyz/v1',
   constructorOptions: {
     defaultHeaders: {
       'HTTP-Referer': 'https://chat-preview.lobehub.com',
@@ -17,16 +17,6 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_TOGETHERAI_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const apiKey = client.apiKey;
-    const data = await fetch(`${baseURL}/api/models`, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-      },
-    });
-    if (!data.ok) {
-      throw new Error(`Together Fetch Error: ${data.statusText || data.status}`);
-    }
-
     const visionKeywords = [
       'qvq',
       'vision',
@@ -37,9 +27,12 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
       'qwq',
     ];
 
-    const models: TogetherAIModel[] = await data.json();
+    client.baseURL = 'https://api.together.xyz/api';
 
-    return models
+    const modelsPage = await client.models.list() as any;
+    const modelList: TogetherAIModel[] = modelsPage.body;
+
+    return modelList
       .map((model) => {
         return {
           contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.contextWindowTokens ?? undefined,
@@ -53,7 +46,8 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
           tokens: model.context_length,
           vision: model.description?.toLowerCase().includes('vision') || visionKeywords.some(keyword => model.name?.toLowerCase().includes(keyword)),
         };
-      });
+      })
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.TogetherAI,
 });
