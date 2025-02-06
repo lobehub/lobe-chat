@@ -5,8 +5,7 @@ import { initReactI18next } from 'react-i18next';
 import { isRtlLang } from 'rtl-detect';
 
 import { getDebugConfig } from '@/config/debug';
-import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
-import { COOKIE_CACHE_DAYS } from '@/const/settings';
+import { DEFAULT_LANG } from '@/const/locale';
 import { normalizeLocale } from '@/locales/resources';
 import { isDev, isOnServerSide } from '@/utils/env';
 
@@ -36,20 +35,20 @@ export const createI18nNext = (lang?: string) => {
       instance.init({
         debug: debugMode,
         defaultNS: ['error', 'common', 'chat'],
-        detection: {
-          caches: ['cookie'],
-          cookieMinutes: 60 * 24 * COOKIE_CACHE_DAYS,
-          /**
-             Set `sameSite` to `lax` so that the i18n cookie can be passed to the
-             server side when returning from the OAuth authorization website.
-             ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value
-             discussion: https://github.com/lobehub/lobe-chat/pull/1474
-          */
-          cookieOptions: {
-            sameSite: 'lax',
-          },
-          lookupCookie: LOBE_LOCALE_COOKIE,
-        },
+        // detection: {
+        //   caches: ['cookie'],
+        //   cookieMinutes: 60 * 24 * COOKIE_CACHE_DAYS,
+        //   /**
+        //      Set `sameSite` to `lax` so that the i18n cookie can be passed to the
+        //      server side when returning from the OAuth authorization website.
+        //      ref: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value
+        //      discussion: https://github.com/lobehub/lobe-chat/pull/1474
+        //   */
+        //   cookieOptions: {
+        //     sameSite: 'lax',
+        //   },
+        //   lookupCookie: LOBE_LOCALE_COOKIE,
+        // },
         fallbackLng: DEFAULT_LANG,
         interpolation: {
           escapeValue: false,
