@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.51.8](https://github.com/lobehub/lobe-chat/compare/v1.51.7...v1.51.8)
+
+<sup>Released on **2025-02-06**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor model fetch method.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor model fetch method, closes [#5768](https://github.com/lobehub/lobe-chat/issues/5768) ([e406908](https://github.com/lobehub/lobe-chat/commit/e406908))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.51.7](https://github.com/lobehub/lobe-chat/compare/v1.51.6...v1.51.7)
 
 <sup>Released on **2025-02-06**</sup>
