@@ -8,6 +8,7 @@ import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
+import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
 
@@ -79,4 +80,4 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
   );
 });
 
-export default StoreSearchBar;
+export default withSuspense(StoreSearchBar);
