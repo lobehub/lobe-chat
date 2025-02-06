@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.51.7](https://github.com/lobehub/lobe-chat/compare/v1.51.6...v1.51.7)
+
+<sup>Released on **2025-02-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Aliyun deepseek-r1 distill models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Aliyun deepseek-r1 distill models, closes [#5769](https://github.com/lobehub/lobe-chat/issues/5769) ([8b68190](https://github.com/lobehub/lobe-chat/commit/8b68190))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.51.6](https://github.com/lobehub/lobe-chat/compare/v1.51.5...v1.51.6)
 
 <sup>Released on **2025-02-06**</sup>
