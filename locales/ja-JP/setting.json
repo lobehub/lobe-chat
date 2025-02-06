@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "履歴メッセージの自動要約を有効にする"
     },
+    "enableFastAnimation": {
+      "desc": "モデルの応答速度が速い場合、テキストアニメーション効果が加速されます",
+      "title": "高速アニメーション"
+    },
     "enableHistoryCount": {
       "alias": "制限なし",
       "limited": "{{number}}件の会話メッセージのみ含む",
