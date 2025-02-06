@@ -130,8 +130,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             const grounding = {
               googleSearchRetrieval: {
                 dynamicRetrievalConfig: {
-                  mode: DynamicRetrievalMode.MODE_DYNAMIC,
                   dynamicThreshold: 0.7,
+                  mode: DynamicRetrievalMode.MODE_DYNAMIC,
                 },
               },
             } as GoogleFunctionCallTool;
