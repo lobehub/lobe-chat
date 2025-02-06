@@ -115,6 +115,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           systemInstruction: payload.system as string,
           tools: (() => {
             const tools = this.buildGoogleTools(payload.tools);
+
+            if (
+              process.env.GEMINI_SEARCH_ENABLED === '0' || 
+              !(
+                model.startsWith('gemini-2.0') && 
+                !model.includes('thinking') && 
+                !model.includes('lite')
+              )
+            ) {
+              return tools;
+            }
+
             const grounding = {
               googleSearchRetrieval: {
                 dynamicRetrievalConfig: {
@@ -124,18 +136,11 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               },
             } as GoogleFunctionCallTool;
             
-            if (
-              model.startsWith('gemini-2.0') &&
-              !model.includes('thinking') &&
-              !model.includes('lite')
-            ) {
-              if (!tools) {
-                return [grounding];
-              } else {
-                return [...tools, grounding];
-              }
+            if (!tools) {
+              return [grounding];
+            } else {
+              return [...tools, grounding];
             }
-            return tools;
           })(),        
         });
 
