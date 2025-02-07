@@ -66,12 +66,14 @@ const createSmoothMessage = (params: {
   const { startSpeed = START_ANIMATION_SPEED } = params;
 
   let buffer = '';
+  // why use queue: https://shareg.pt/GLBrjpK
   let outputQueue: string[] = [];
   let isAnimationActive = false;
   let animationFrameId: number | null = null;
   let lastFrameTime = 0;
   let charAccumulator = 0;
 
+  // when you need to stop the animation, call this function
   const stopAnimation = () => {
     isAnimationActive = false;
     if (animationFrameId !== null) {
@@ -80,7 +82,10 @@ const createSmoothMessage = (params: {
     }
   };
 
+  // define startAnimation function to display the text in buffer smooth
+  // when you need to start the animation, call this function
   const startAnimation = (charsPerFrame = startSpeed / 4) => {
+    // 如果动画已经不再激活，则停止更新文本
     return new Promise<void>((resolve) => {
       if (isAnimationActive) {
         resolve();
@@ -121,6 +126,7 @@ const createSmoothMessage = (params: {
         if (outputQueue.length > 0) {
           animationFrameId = requestAnimationFrame(updateText);
         } else {
+          // 当所有字符都显示完毕时，清除动画状态
           isAnimationActive = false;
           animationFrameId = null;
           resolve();
