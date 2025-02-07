@@ -3,10 +3,6 @@ import { MessageToolCall } from '@/types/message';
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
 interface UserMessageContentPartText {
-  /**
-   * @TODO when we implement the citations, make any to real type
-   */
-  citations: any[] | null;
   text: string;
   type: 'text';
 }
