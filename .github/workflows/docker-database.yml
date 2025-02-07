@@ -24,12 +24,15 @@ jobs:
       - name: ready to env
         run: |
           echo "${{ secrets.DOCKER_ENV }}" > .env
+      - name: Get current date
+        run: echo "DATE_TAG=$(date +'%Y%m%d')" >> $GITHUB_ENV
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: registry.si.icu/sijinhui/lobe-chat-database
           tags: |
+            type=raw,value=${{ env.DATE_TAG }}
             type=raw,value=latest
             type=ref,event=tag
 
