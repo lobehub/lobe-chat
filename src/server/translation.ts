@@ -1,19 +1,16 @@
 'use server';
 
 import { get } from 'lodash-es';
-import { cookies } from 'next/headers';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
+import { DEFAULT_LANG } from '@/const/locale';
 import { Locales, NS, normalizeLocale } from '@/locales/resources';
 import { isDev } from '@/utils/env';
 
 export const getLocale = async (hl?: string): Promise<Locales> => {
   if (hl) return normalizeLocale(hl) as Locales;
-  const cookieStore = await cookies();
-  const defaultLang = cookieStore.get(LOBE_LOCALE_COOKIE);
-  return (defaultLang?.value || DEFAULT_LANG) as Locales;
+  return DEFAULT_LANG as Locales;
 };
 
 export const translation = async (ns: NS = 'common', hl?: string) => {

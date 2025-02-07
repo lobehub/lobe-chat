@@ -24,17 +24,24 @@ export const LobeAi360AI = LobeOpenAICompatibleFactory({
   },
   models: {
     transformModel: (m) => {
+      const reasoningKeywords = [
+        '360gpt2-o1',
+        '360zhinao2-o1',
+      ];
+
       const model = m as unknown as Ai360ModelCard;
 
       return {
         contextWindowTokens: model.total_tokens,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
         functionCall: model.id === '360gpt-pro',
         id: model.id,
         maxTokens:
           typeof model.max_tokens === 'number'
             ? model.max_tokens
             : undefined,
+        reasoning: reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
       };
     },
   },

@@ -294,26 +294,6 @@
     "tooltip": "Актуализиране на основната конфигурация на доставчика",
     "updateSuccess": "Актуализацията е успешна"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Въведете Access Key от платформата Baidu Qianfan",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Тествайте дали AccessKey / SecretAccess е попълнен правилно"
-    },
-    "secretKey": {
-      "desc": "Въведете Secret Key от платформата Baidu Qianfan",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Персонализиран регион на услугата",
-      "description": "Въведете вашия AccessKey / SecretKey, за да започнете сесия. Приложението няма да запомня вашите конфигурации за удостоверяване",
-      "title": "Използвайте персонализирана информация за удостоверяване на Wenxin Yiyan"
-    }
-  },
   "zeroone": {
     "title": "01.AI Зероуан Всичко"
   },

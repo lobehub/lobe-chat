@@ -319,14 +319,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                               | Description                                                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Sharp Commentator](https://lobechat.com/discover/assistant/ruipingshi)<br/><sup>By **[Zippland](https://github.com/Zippland)** on **2025-02-04**</sup>      | Specializes in sharp commentary and in-depth analysis of issues<br/>`commentary` `social-perspectives` `sharp-analysis`                               |
-| [Python Genius](https://lobechat.com/discover/assistant/python-genius)<br/><sup>By **[novaspivack](https://github.com/novaspivack)** on **2025-02-04**</sup> | An advanced python coder<br/>`code` `python`                                                                                                          |
-| [SAT master](https://lobechat.com/discover/assistant/sat-teaching)<br/><sup>By **[iBz-04](https://github.com/iBz-04)** on **2025-02-04**</sup>               | Expert in Digital SAT coaching for 1300+ scores<br/>`sat` `aptitude-test`                                                                             |
-| [Cosmic Oracle](https://lobechat.com/discover/assistant/universal-god)<br/><sup>By **[GowayLee](https://github.com/GowayLee)** on **2025-02-04**</sup>       | Wisdom from across time and space, insight into the essence of life<br/>`character-design` `ai-characters` `metaverse` `role-playing` `wisdom-system` |
+| Recent Submits                                                                                                                                                              | Description                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [Astrology Researcher](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>         | Expert in BaZi astrology<br/>`astrology` `ba-zi` `traditional-culture`                                        |
+| [Language Charm Learning Mentor](https://lobechat.com/discover/assistant/bad-language-helper)<br/><sup>By **[Guducat](https://github.com/Guducat)** on **2025-02-06**</sup> | Specializes in teaching the charm of language and witty responses<br/>`language-learning` `dialogue-examples` |
+| [Allinone](https://lobechat.com/discover/assistant/allinone-v-1)<br/><sup>By **[AXuanCreator](https://github.com/AXuanCreator)** on **2025-02-06**</sup>                    | Innovation · Future · Excellence<br/>`programming` `low-cost` `concise-answers`                               |
+| [Deep Thinker](https://lobechat.com/discover/assistant/deep-thinker)<br/><sup>By **[prolapser](https://github.com/prolapser)** on **2025-02-06**</sup>                      | Deep, human-like thinking and analysis.<br/>`thinking` `reasoning` `reflection` `thought` `musings`           |
 
-> 📊 Total agents: [<kbd>**478**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**485**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 

@@ -294,26 +294,6 @@
     "tooltip": "서비스 제공자 기본 설정 업데이트",
     "updateSuccess": "업데이트 성공"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "바이두 천범 플랫폼의 Access Key를 입력하세요",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "AccessKey / SecretAccess가 올바르게 입력되었는지 테스트합니다"
-    },
-    "secretKey": {
-      "desc": "바이두 천범 플랫폼의 Secret Key를 입력하세요",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "사용자 정의 서비스 지역",
-      "description": "당신의 AccessKey / SecretKey를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 당신의 인증 구성을 기록하지 않습니다",
-      "title": "사용자 정의 문신 일언 인증 정보 사용"
-    }
-  },
   "zeroone": {
     "title": "01.AI Zero One All Things"
   },
