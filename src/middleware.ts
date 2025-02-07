@@ -84,10 +84,10 @@ const defaultMiddleware = (request: NextRequest) => {
     return NextResponse.next();
 
   // refs: https://github.com/lobehub/lobe-chat/pull/5866
-  // 处理 URL 重写
-  // / /discover -> /discover/${route}
-  // new path: /${route}${originalPathname}
-  const nextPathname = `/${route}` + url.pathname;
+  // new handle segment rewrite: /${route}${originalPathname}
+  // / -> /zh-CN__0__dark
+  // /discover -> /zh-CN__0__dark/discover
+  const nextPathname = `/${route}` + (url.pathname === '/' ? '' : url.pathname);
   console.log(`[rewrite] ${url.pathname} -> ${nextPathname}`);
 
   url.pathname = nextPathname;
