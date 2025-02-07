@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Fix next auth error."]
+    },
+    "date": "2025-02-07",
+    "version": "1.51.13"
+  },
+  {
+    "children": {
+      "fixes": ["Try to fix next-auth issue."]
+    },
+    "date": "2025-02-07",
+    "version": "1.51.12"
+  },
+  {
+    "children": {
       "fixes": ["Fix /file/[id] 500 issue."]
     },
     "date": "2025-02-06",

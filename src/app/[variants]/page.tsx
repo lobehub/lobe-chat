@@ -7,3 +7,4 @@ export const metadata: Metadata = {
 };
 
 export { default } from './loading';
+
