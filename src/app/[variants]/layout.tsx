@@ -92,3 +92,5 @@ export const generateStaticParams = () => {
 
   return variants;
 };
+
+export const dynamic = 'force-dynamic';
