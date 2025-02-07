@@ -85,7 +85,6 @@ const createSmoothMessage = (params: {
   // define startAnimation function to display the text in buffer smooth
   // when you need to start the animation, call this function
   const startAnimation = (charsPerFrame = startSpeed / 4) => {
-    // 如果动画已经不再激活，则停止更新文本
     return new Promise<void>((resolve) => {
       if (isAnimationActive) {
         resolve();
@@ -97,6 +96,7 @@ const createSmoothMessage = (params: {
       charAccumulator = 0;
 
       const updateText = (timestamp: number) => {
+        // 如果动画已经不再激活，则停止更新文本
         if (!isAnimationActive) {
           cancelAnimationFrame(animationFrameId!);
           animationFrameId = null;
@@ -115,11 +115,14 @@ const createSmoothMessage = (params: {
         charAccumulator += (frameDuration / targetFrameDuration) * charsPerFrame;
         const charsToProcess = Math.floor(charAccumulator);
 
+        // 如果还有文本没有显示
+        // 检查队列中是否有字符待显示
         if (charsToProcess > 0) {
           charAccumulator -= charsToProcess;
           const actualChars = Math.min(charsToProcess, outputQueue.length);
           const charsToAdd = outputQueue.splice(0, actualChars).join('');
           buffer += charsToAdd;
+          // 更新消息内容，这里可能需要结合实际情况调整
           params.onTextUpdate(charsToAdd, buffer);
         }
 
