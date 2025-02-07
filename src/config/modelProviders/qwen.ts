@@ -294,7 +294,7 @@ const Qwen: ModelProviderCard = {
     },
     {
       contextWindowTokens: 128_000,
-      description: 
+      description:
         '指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。',
       displayName: 'Qwen2.5 VL 72B',
       id: 'qwen2.5-vl-72b-instruct',
@@ -308,7 +308,7 @@ const Qwen: ModelProviderCard = {
     },
     {
       contextWindowTokens: 65_536,
-      description: 
+      description:
         'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力，尤其在数学、代码、自然语言推理等任务上。',
       displayName: 'DeepSeek R1',
       id: 'deepseek-r1',
@@ -321,7 +321,7 @@ const Qwen: ModelProviderCard = {
     },
     {
       contextWindowTokens: 65_536,
-      description: 
+      description:
         'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
       displayName: 'DeepSeek V3',
       id: 'deepseek-v3',
@@ -332,7 +332,85 @@ const Qwen: ModelProviderCard = {
       },
       releasedAt: '2025-01-27',
     },
-  ],
+    {
+      contextWindowTokens: 65_536,
+      description:
+        'DeepSeek-R1-Distill-Qwen-1.5B是一个基于Qwen2.5-Math-1.5B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek-R1-Distill-Qwen-1.5B',
+      id: 'deepseek-r1-distill-qwen-1.5b',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2025-02-05',
+    },
+    {
+      contextWindowTokens: 65_536,
+      description:
+        'DeepSeek-R1-Distill-Qwen-7B是一个基于Qwen2.5-Math-7B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek-R1-Distill-Qwen-7B',
+      id: 'deepseek-r1-distill-qwen-7b',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2025-02-05',
+    },
+    {
+      contextWindowTokens: 65_536,
+      description:
+        'DeepSeek-R1-Distill-Qwen-14B是一个基于Qwen2.5-14B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek-R1-Distill-Qwen-14B',
+      id: 'deepseek-r1-distill-qwen-14b',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2025-02-05',
+    },
+    {
+      contextWindowTokens: 65_536,
+      description:
+        'DeepSeek-R1-Distill-Qwen-32B是一个基于Qwen2.5-32B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek-R1-Distill-Qwen-32B',
+      id: 'deepseek-r1-distill-qwen-32b',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2025-02-05',
+    },
+    {
+      contextWindowTokens: 65_536,
+      description:
+        'DeepSeek-R1-Distill-Llama-8B是一个基于Llama-3.1-8B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek-R1-Distill-Llama-8B',
+      id: 'deepseek-r1-distill-llama-8b',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2025-02-05',
+    },
+    {
+      contextWindowTokens: 65_536,
+      description:
+        'DeepSeek-R1-Distill-Llama-70B是一个基于Llama-3.1-70B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek-R1-Distill-Llama-70B',
+      id: 'deepseek-r1-distill-llama-70b',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      releasedAt: '2025-02-05',
+    },
+],
   checkModel: 'qwen-turbo-latest',
   description:
     '通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。',
