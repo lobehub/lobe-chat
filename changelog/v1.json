@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-02-07",
+    "version": "1.51.16"
+  },
+  {
     "children": {
       "fixes": ["Fix home next auth error and update pnpm."]
     },
