@@ -4,6 +4,7 @@ import { markdownToTxt } from 'markdown-to-txt';
 import semver from 'semver';
 import urlJoin from 'url-join';
 
+import { FetchCacheTag } from '@/const/cacheControl';
 import { Locales } from '@/locales/resources';
 import { ChangelogIndexItem } from '@/types/changelog';
 
@@ -47,7 +48,9 @@ export class ChangelogService {
     try {
       const url = this.genUrl(urlJoin(this.config.docsPath, 'index.json'));
 
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        next: { revalidate: 3600, tags: [FetchCacheTag.Changelog] },
+      });
 
       const data = await res.json();
 
@@ -79,7 +82,10 @@ export class ChangelogService {
       const filename = options?.locale?.startsWith('zh') ? `${id}.zh-CN.mdx` : `${id}.mdx`;
       const url = this.genUrl(urlJoin(this.config.docsPath, filename));
 
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        next: { revalidate: 3600, tags: [FetchCacheTag.Changelog] },
+      });
+
       const text = await response.text();
       const { data, content } = matter(text);
 
@@ -122,8 +128,10 @@ export class ChangelogService {
         content: description,
         rawTitle: match ? match[1] : '',
       };
-    } catch {
-      console.error('Error getting changlog post by id', id);
+    } catch (e) {
+      console.error('[ChangelogFetchError]failed to fetch changlog post', id);
+      console.error(e);
+
       return false as any;
     }
   }
