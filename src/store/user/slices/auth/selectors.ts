@@ -36,7 +36,7 @@ export const userProfileSelectors = {
  */
 const isLogin = (s: UserStore) => {
   // 如果没有开启鉴权，说明不需要登录，默认是登录态
-  if (enableAuth) return true;
+  if (!enableAuth) return true;
 
   return s.isSignedIn;
 };
