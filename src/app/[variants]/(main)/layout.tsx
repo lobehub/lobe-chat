@@ -8,3 +8,5 @@ const MainLayout = ServerLayout({ Desktop, Mobile });
 MainLayout.displayName = 'MainLayout';
 
 export default MainLayout;
+
+export const dynamic = 'force-dynamic';
