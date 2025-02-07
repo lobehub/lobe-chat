@@ -92,3 +92,4 @@ export const generateStaticParams = () => {
 
   return variants;
 };
+
