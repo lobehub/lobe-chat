@@ -94,13 +94,9 @@ const defaultMiddleware = (request: NextRequest) => {
   return NextResponse.rewrite(url);
 };
 
-const publicRoute = ['/', '/discover'];
-
 // Initialize an Edge compatible NextAuth middleware
 const nextAuthMiddleware = NextAuthEdge.auth((req) => {
   const response = defaultMiddleware(req);
-  // skip the '/' route
-  if (publicRoute.some((url) => req.nextUrl.pathname.startsWith(url))) return response;
 
   // Just check if session exists
   const session = req.auth;
