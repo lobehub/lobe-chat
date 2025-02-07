@@ -180,8 +180,6 @@ const nextConfig: NextConfig = {
   // when external packages in dev mode with turbopack, this config will lead to bundle error
   serverExternalPackages: isProd ? ['@electric-sql/pglite'] : undefined,
 
-  // refs: https://github.com/lobehub/lobe-chat/pull/5866
-  trailingSlash: false,
   transpilePackages: ['pdfjs-dist', 'mermaid'],
 
   webpack(config) {
