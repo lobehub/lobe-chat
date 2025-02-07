@@ -6,15 +6,15 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Cell, { CellProps } from '@/components/Cell';
+import { enableAuth } from '@/const/auth';
 import { isDeprecatedEdition } from '@/const/version';
 import { ProfileTabs } from '@/store/global/initialState';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
 const Category = memo(() => {
-  const [isLogin, enableAuth, isLoginWithClerk, signOut] = useUserStore((s) => [
+  const [isLogin, isLoginWithClerk, signOut] = useUserStore((s) => [
     authSelectors.isLogin(s),
-    authSelectors.enabledAuth(s),
     authSelectors.isLoginWithClerk(s),
     s.logout,
   ]);
