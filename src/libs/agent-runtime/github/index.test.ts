@@ -218,22 +218,6 @@ describe('LobeGithubAI', () => {
       // Arrange
       const arr = [
         {
-          id: 'azureml://registries/azureml-ai21/models/AI21-Jamba-Instruct/versions/2',
-          name: 'AI21-Jamba-Instruct',
-          friendly_name: 'AI21-Jamba-Instruct',
-          model_version: 2,
-          publisher: 'AI21 Labs',
-          model_family: 'AI21 Labs',
-          model_registry: 'azureml-ai21',
-          license: 'custom',
-          task: 'chat-completion',
-          description:
-            "Jamba-Instruct is the world's first production-grade Mamba-based LLM model and leverages its hybrid Mamba-Transformer architecture to achieve best-in-class performance, quality, and cost efficiency.\n\n**Model Developer Name**: _AI21 Labs_\n\n## Model Architecture\n\nJamba-Instruct leverages a hybrid Mamba-Transformer architecture to achieve best-in-class performance, quality, and cost efficiency.\nAI21's Jamba architecture features a blocks-and-layers approach that allows Jamba to successfully integrate the two architectures. Each Jamba block contains either an attention or a Mamba layer, followed by a multi-layer perceptron (MLP), producing an overall ratio of one Transformer layer out of every eight total layers.\n",
-          summary:
-            "Jamba-Instruct is the world's first production-grade Mamba-based LLM model and leverages its hybrid Mamba-Transformer architecture to achieve best-in-class performance, quality, and cost efficiency.",
-          tags: ['chat', 'rag'],
-        },
-        {
           id: 'azureml://registries/azureml-cohere/models/Cohere-command-r/versions/3',
           name: 'Cohere-command-r',
           friendly_name: 'Cohere Command R',
@@ -263,9 +247,14 @@ describe('LobeGithubAI', () => {
       for (let i = 0; i < arr.length; i++) {
         const model = models[i];
         expect(model).toEqual({
+          contextWindowTokens: undefined,
           description: arr[i].description,
           displayName: arr[i].friendly_name,
+          enabled: false,
+          functionCall: true,
           id: arr[i].name,
+          reasoning: false,
+          vision: false,
         });
       }
     });

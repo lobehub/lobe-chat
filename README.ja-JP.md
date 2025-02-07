@@ -302,14 +302,14 @@ LobeChat エージェントマーケットプレイスでは、クリエイタ�
 
 <!-- AGENT LIST -->
 
-| 最近追加                                                                                                                                                     | 説明                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| [鋭い評論家](https://lobechat.com/discover/assistant/ruipingshi)<br/><sup>By **[Zippland](https://github.com/Zippland)** on **2025-02-04**</sup>             | 鋭い評論と深い問題分析が得意<br/>`評論` `社会的見解` `鋭い分析`                                                                         |
-| [Python の天才](https://lobechat.com/discover/assistant/python-genius)<br/><sup>By **[novaspivack](https://github.com/novaspivack)** on **2025-02-04**</sup> | 高度な Python コーダー<br/>`コード` `python`                                                                                            |
-| [SAT マスター](https://lobechat.com/discover/assistant/sat-teaching)<br/><sup>By **[iBz-04](https://github.com/iBz-04)** on **2025-02-04**</sup>             | 1300 点以上のスコアを目指すデジタル SAT コーチングの専門家<br/>`sat` `適性試験`                                                         |
-| [宇宙の啓示者](https://lobechat.com/discover/assistant/universal-god)<br/><sup>By **[GowayLee](https://github.com/GowayLee)** on **2025-02-04**</sup>        | 時空を超えた知恵の神託、生命の本質を洞察する<br/>`キャラクターデザイン` `aiキャラクター` `メタバース` `ロールプレイング` `知恵システム` |
+| 最近追加                                                                                                                                                            | 説明                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [命理研究者](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>           | 八字命に精通<br/>`命理学` `八字` `伝統文化`                         |
+| [言語の魅力学習メンター](https://lobechat.com/discover/assistant/bad-language-helper)<br/><sup>By **[Guducat](https://github.com/Guducat)** on **2025-02-06**</sup> | 言語の魅力と多様な応答を教えるのが得意<br/>`言語学習` `対話例`      |
+| [Allinone](https://lobechat.com/discover/assistant/allinone-v-1)<br/><sup>By **[AXuanCreator](https://github.com/AXuanCreator)** on **2025-02-06**</sup>            | 革新・未来・卓越<br/>`プログラミング` `低コスト` `簡潔な回答`       |
+| [ディープシンカー](https://lobechat.com/discover/assistant/deep-thinker)<br/><sup>By **[prolapser](https://github.com/prolapser)** on **2025-02-06**</sup>          | 深い人間のような思考と分析。<br/>`思考` `推論` `反省` `考え` `思索` |
 
-> 📊 Total agents: [<kbd>**478**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**485**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 

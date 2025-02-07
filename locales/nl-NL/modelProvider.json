@@ -294,26 +294,6 @@
     "tooltip": "Werk basisconfiguratie van provider bij",
     "updateSuccess": "Bijwerking geslaagd"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Vul de Access Key van het Baidu Qianfan-platform in",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Test of de AccessKey / SecretAccess correct is ingevuld"
-    },
-    "secretKey": {
-      "desc": "Vul de Secret Key van het Baidu Qianfan-platform in",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Aangepaste servicegebied",
-      "description": "Voer je AccessKey / SecretKey in om de sessie te starten. De applicatie zal je authenticatie-instellingen niet opslaan",
-      "title": "Gebruik aangepaste Wenxin Yiyan-authenticatie-informatie"
-    }
-  },
   "zeroone": {
     "title": "01.AI Nul Een Alles"
   },

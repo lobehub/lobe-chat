@@ -294,26 +294,6 @@
     "tooltip": "Aggiorna la configurazione di base del fornitore",
     "updateSuccess": "Aggiornamento avvenuto con successo"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Inserisci l'Access Key della piattaforma Qianfan di Baidu",
-      "placeholder": "Access Key Qianfan",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Verifica se l'AccessKey / SecretAccess è stato inserito correttamente"
-    },
-    "secretKey": {
-      "desc": "Inserisci il Secret Key della piattaforma Qianfan di Baidu",
-      "placeholder": "Secret Key Qianfan",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Regione di servizio personalizzata",
-      "description": "Inserisci il tuo AccessKey / SecretKey per iniziare la sessione. L'app non registrerà la tua configurazione di autenticazione",
-      "title": "Utilizza le informazioni di autenticazione personalizzate di Wenxin Yiyan"
-    }
-  },
   "zeroone": {
     "title": "01.AI ZeroOne"
   },
