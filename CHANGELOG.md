@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.51.13](https://github.com/lobehub/lobe-chat/compare/v1.51.12...v1.51.13)
+
+<sup>Released on **2025-02-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix next auth error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix next auth error, closes [#5825](https://github.com/lobehub/lobe-chat/issues/5825) ([4509b7a](https://github.com/lobehub/lobe-chat/commit/4509b7a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.51.12](https://github.com/lobehub/lobe-chat/compare/v1.51.11...v1.51.12)
+
+<sup>Released on **2025-02-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Try to fix next-auth issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Try to fix next-auth issue, closes [#5813](https://github.com/lobehub/lobe-chat/issues/5813) ([8e316bd](https://github.com/lobehub/lobe-chat/commit/8e316bd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.51.11](https://github.com/lobehub/lobe-chat/compare/v1.51.10...v1.51.11)
 
 <sup>Released on **2025-02-06**</sup>

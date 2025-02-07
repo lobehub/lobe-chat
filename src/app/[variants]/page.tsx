@@ -8,4 +8,3 @@ export const metadata: Metadata = {
 
 export { default } from './loading';
 
-export const dynamic = 'force-static';
