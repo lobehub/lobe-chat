@@ -13,6 +13,7 @@ import { useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -40,6 +41,11 @@ const StoreInitialization = memo(() => {
   // fetch server config
   const useFetchServerConfig = useServerConfigStore((s) => s.useInitServerConfig);
   useFetchServerConfig();
+
+  // Update NextAuth status
+  const useUserStoreUpdater = createStoreUpdater(useUserStore);
+  const oAuthSSOProviders = useServerConfigStore(serverConfigSelectors.oAuthSSOProviders);
+  useUserStoreUpdater('oAuthSSOProviders', oAuthSSOProviders);
 
   /**
    * The store function of `isLogin` will both consider the values of `enableAuth` and `isSignedIn`.
