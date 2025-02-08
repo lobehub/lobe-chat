@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix static relative issues."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.1"
+  },
+  {
+    "children": {
       "features": ["Refactor the auth condition in Next Auth."]
     },
     "date": "2025-02-08",
