@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "features": ["Refactor the auth condition in Next Auth."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.0"
+  },
+  {
     "children": {},
     "date": "2025-02-07",
     "version": "1.51.16"
