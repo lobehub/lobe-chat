@@ -9,7 +9,7 @@ import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import NextAuthEdge from '@/libs/next-auth/edge';
 import { Locales } from '@/locales/resources';
 import { parseBrowserLanguage } from '@/utils/locale';
-import { parseDefaultThemeFromLongitude } from '@/utils/server/geo';
+import { parseDefaultThemeFromCountry } from '@/utils/server/geo';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 import { OAUTH_AUTHORIZED } from './const/auth';
@@ -43,7 +43,7 @@ export const config = {
 const defaultMiddleware = (request: NextRequest) => {
   // 1. 从 cookie 中读取用户偏好
   const theme =
-    request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromLongitude(request);
+    request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
 
   // if it's a new user, there's no cookie
   // So we need to use the fallback language parsed by accept-language
