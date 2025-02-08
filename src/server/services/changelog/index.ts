@@ -184,9 +184,7 @@ export class ChangelogService {
     // 自定义分隔符为 {{}}
     const compiledTemplate = template(this.config.urlTemplate, { interpolate: /{{([\S\s]+?)}}/g });
 
-    const url = compiledTemplate({ ...this.config, path });
-    console.log(url);
-    return url;
+    return compiledTemplate({ ...this.config, path });
   }
 
   private extractHttpsLinks(text: string) {
