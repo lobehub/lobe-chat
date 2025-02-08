@@ -89,7 +89,7 @@ describe('createAuthSlice', () => {
     });
 
     it('should call next-auth signOut when NextAuth is enabled', async () => {
-      useUserStore.setState({ enabledNextAuth: true });
+      enableNextAuth = true;
 
       const { result } = renderHook(() => useUserStore());
 
@@ -100,6 +100,7 @@ describe('createAuthSlice', () => {
       const { signOut } = await import('next-auth/react');
 
       expect(signOut).toHaveBeenCalled();
+      enableNextAuth = false;
     });
 
     it('should not call next-auth signOut when NextAuth is disabled', async () => {
@@ -143,7 +144,7 @@ describe('createAuthSlice', () => {
     });
 
     it('should call next-auth signIn when NextAuth is enabled', async () => {
-      useUserStore.setState({ enabledNextAuth: true });
+      enableNextAuth = true;
 
       const { result } = renderHook(() => useUserStore());
 
@@ -154,6 +155,7 @@ describe('createAuthSlice', () => {
       const { signIn } = await import('next-auth/react');
 
       expect(signIn).toHaveBeenCalled();
+      enableNextAuth = false;
     });
     it('should not call next-auth signIn when NextAuth is disabled', async () => {
       const { result } = renderHook(() => useUserStore());
