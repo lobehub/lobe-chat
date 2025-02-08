@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
 
+import { enableNextAuth } from '@/const/auth';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useAgentStore } from '@/store/agent';
@@ -39,8 +40,6 @@ const StoreInitialization = memo(() => {
 
   // Update NextAuth status
   const useUserStoreUpdater = createStoreUpdater(useUserStore);
-  const enableNextAuth = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
-  useUserStoreUpdater('enabledNextAuth', enableNextAuth);
   const oAuthSSOProviders = useServerConfigStore(serverConfigSelectors.oAuthSSOProviders);
   useUserStoreUpdater('oAuthSSOProviders', oAuthSSOProviders);
 

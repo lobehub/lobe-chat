@@ -49,8 +49,9 @@ afterEach(() => {
 describe('UserBanner', () => {
   it('should render UserInfo and DataStatistics when auth is disabled', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: false, enableAuth: () => false });
+      useUserStore.setState({ isSignedIn: false });
     });
+    enableAuth = false;
 
     render(<UserBanner />);
 
@@ -75,7 +76,7 @@ describe('UserBanner', () => {
 
   it('should render UserLoginOrSignup when user is not logged in with auth enabled', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: false, enableAuth: () => true });
+      useUserStore.setState({ isSignedIn: false });
     });
     enableClerk = true;
 
