@@ -12,8 +12,8 @@ import Loading from './loading';
 
 const Page = async (props: DynamicLayoutProps) => {
   const hideDocs = serverFeatureFlags().hideDocs;
-
   if (hideDocs) return notFound();
+
   const { locale, isMobile } = await RouteVariants.getVariantsFromProps(props);
 
   const changelogService = new ChangelogService();
