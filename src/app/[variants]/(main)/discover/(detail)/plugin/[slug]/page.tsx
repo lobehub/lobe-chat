@@ -16,15 +16,27 @@ import InfoSidebar from './features/InfoSidebar';
 import ParameterList from './features/ParameterList';
 import Schema from './features/Schema';
 
-export const generateMetadata = async (props: DiscoverPageProps) => {
+const getSharedProps = async (props: DiscoverPageProps) => {
   const params = await props.params;
   const searchParams = await props.searchParams;
+  const { isMobile, locale: hl } = await RouteVariants.getVariantsFromProps(props);
 
   const { slug: identifier } = params;
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t, locale } = await translation('metadata', searchParams?.hl || hl);
 
   const discoverService = new DiscoverService();
   const data = await discoverService.getPluginById(locale, identifier);
+  return {
+    data,
+    identifier,
+    isMobile,
+    locale,
+    t,
+  };
+};
+
+export const generateMetadata = async (props: DiscoverPageProps) => {
+  const { data, t, locale, identifier } = await getSharedProps(props);
   if (!data) return;
 
   const { meta, createdAt, homepage, author } = data;
@@ -59,15 +71,7 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
 };
 
 const Page = async (props: DiscoverPageProps) => {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
-
-  const { slug: identifier } = params;
-  const { t, locale } = await translation('metadata', searchParams?.hl);
-  const mobile = await RouteVariants.getIsMobile(props);
-
-  const discoverService = new DiscoverService();
-  const data = await discoverService.getPluginById(locale, identifier, true);
+  const { data, t, identifier, isMobile, locale } = await getSharedProps(props);
   if (!data) return notFound();
 
   const { meta, createdAt, author } = data;
@@ -80,6 +84,7 @@ const Page = async (props: DiscoverPageProps) => {
     },
     date: createdAt ? new Date(createdAt).toISOString() : new Date().toISOString(),
     description: meta.description || t('discover.plugins.description'),
+    locale,
     title: [meta.title, t('discover.plugins.title')].join(' · '),
     url: urlJoin('/discover/plugin', identifier),
   });
@@ -89,8 +94,8 @@ const Page = async (props: DiscoverPageProps) => {
       <StructuredData ld={ld} />
       <DetailLayout
         actions={<Actions data={data} identifier={identifier} />}
-        header={<Header data={data} identifier={identifier} mobile={mobile} />}
-        mobile={mobile}
+        header={<Header data={data} identifier={identifier} mobile={isMobile} />}
+        mobile={isMobile}
         sidebar={<InfoSidebar data={data} identifier={identifier} />}
         /* ↓ cloud slot ↓ */
 
