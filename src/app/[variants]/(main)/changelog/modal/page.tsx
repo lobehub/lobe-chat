@@ -2,7 +2,6 @@
 
 import { useLayoutEffect } from 'react';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 
 /**
@@ -21,4 +20,4 @@ const ChangelogModal = () => {
   return null;
 };
 
-export default withSuspense(ChangelogModal);
+export default ChangelogModal;
