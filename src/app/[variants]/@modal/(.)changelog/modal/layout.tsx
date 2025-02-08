@@ -37,3 +37,5 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
 });
 
 export default Layout;
+
+export const dynamic = 'force-dynamic';
