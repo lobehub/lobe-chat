@@ -9,6 +9,7 @@ import { DEFAULT_LANG } from '@/const/locale';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
+import { Locales } from '@/locales/resources';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
@@ -76,7 +77,7 @@ export const generateStaticParams = () => {
   const themes: ThemeAppearance[] = ['dark', 'light'];
   const mobileOptions = [true, false];
   // only static for serveral page, other go to dynamtic
-  const staticLocales = [DEFAULT_LANG, 'zh-CN'];
+  const staticLocales: Locales[] = [DEFAULT_LANG, 'zh-CN'];
 
   const variants: { variants: string }[] = [];
 
@@ -92,4 +93,3 @@ export const generateStaticParams = () => {
 
   return variants;
 };
-
