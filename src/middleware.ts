@@ -145,3 +145,6 @@ export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
   : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
     ? nextAuthMiddleware
     : defaultMiddleware;
+
+
+export { isProtectedRoute,parseDefaultThemeFromTime };
