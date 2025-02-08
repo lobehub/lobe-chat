@@ -5,10 +5,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { ProductLogo } from '@/components/Branding';
 import { BRANDING_NAME } from '@/const/branding';
 import { CHANGELOG_URL, MANUAL_UPGRADE_URL, OFFICIAL_SITE } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
+import UserAvatar from '@/features/User/UserAvatar';
 import { useNewVersion } from '@/features/User/UserPanel/useNewVersion';
 import { useGlobalStore } from '@/store/global';
 
@@ -38,7 +38,7 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Flexbox align={'center'} flex={'none'} gap={16} horizontal>
         <Link href={OFFICIAL_SITE} target={'_blank'}>
           <Center className={styles.logo} height={64} width={64}>
-            <ProductLogo size={52} />
+            <UserAvatar size={52} />
           </Center>
         </Link>
         <Flexbox>
