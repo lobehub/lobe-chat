@@ -26,7 +26,7 @@ const iconComponents: { [key: string]: React.ElementType } = {
   'default': NextAuth.Color,
   'github': Github,
   'logto': Logto.Color,
-  'microsoft-entra': MicrosoftEntra.Color,
+  'microsoft-entra-id': MicrosoftEntra.Color,
   'zitadel': Zitadel.Color,
 };
 
