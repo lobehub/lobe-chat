@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix changelog modal."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.4"
+  },
+  {
+    "children": {
       "fixes": ["Add Zhipu param limit, Fix translation in variants mode."],
       "improvements": ["Update Gemini 2.0 models."]
     },
