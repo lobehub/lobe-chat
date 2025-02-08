@@ -2,13 +2,13 @@
 import { ThemeAppearance } from 'antd-style/lib/types/appearance';
 
 import { DEFAULT_LANG } from '@/const/locale';
-import { locales } from '@/locales/resources';
+import { Locales, locales } from '@/locales/resources';
 import { DynamicLayoutProps } from '@/types/next';
 
 // 定义变体接口
 export interface IRouteVariants {
   isMobile: boolean;
-  locale: string;
+  locale: Locales;
   neutralColor?: string;
   primaryColor?: string;
   theme: ThemeAppearance;
@@ -40,7 +40,7 @@ export class RouteVariants {
       // 验证并返回变体
       return {
         isMobile: isMobile === '1',
-        locale: this.isValidLocale(locale) ? locale : DEFAULT_VARIANTS.locale,
+        locale: this.isValidLocale(locale) ? (locale as Locales) : DEFAULT_VARIANTS.locale,
         theme: this.isValidTheme(theme) ? theme : DEFAULT_VARIANTS.theme,
       };
     } catch {

@@ -5,8 +5,9 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 
 import Client from './Client';
 
-export const generateMetadata = async () => {
-  const { t } = await translation('auth');
+export const generateMetadata = async (props: DynamicLayoutProps) => {
+  const locale = await RouteVariants.getLocale(props);
+  const { t } = await translation('auth', locale);
   return metadataModule.generate({
     description: t('header.desc'),
     title: t('tab.stats'),
