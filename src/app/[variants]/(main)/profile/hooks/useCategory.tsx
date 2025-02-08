@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 import type { MenuProps } from '@/components/Menu';
+import { enableAuth } from '@/const/auth';
 import { isDeprecatedEdition } from '@/const/version';
 import { ProfileTabs } from '@/store/global/initialState';
 import { useUserStore } from '@/store/user';
@@ -11,10 +12,7 @@ import { authSelectors } from '@/store/user/slices/auth/selectors';
 
 export const useCategory = () => {
   const { t } = useTranslation('auth');
-  const [enableAuth, isLoginWithClerk] = useUserStore((s) => [
-    authSelectors.enabledAuth(s),
-    authSelectors.isLoginWithClerk(s),
-  ]);
+  const [isLoginWithClerk] = useUserStore((s) => [authSelectors.isLoginWithClerk(s)]);
 
   const cateItems: MenuProps['items'] = [
     {
