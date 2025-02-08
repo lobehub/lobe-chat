@@ -36,3 +36,5 @@ const Page = async (props: DynamicLayoutProps) => {
 Page.displayName = 'ChangelogModal';
 
 export default Page;
+
+export const dynamic = 'force-dynamic';
