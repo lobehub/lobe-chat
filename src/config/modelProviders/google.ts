@@ -57,7 +57,7 @@ const Google: ModelProviderCard = {
       id: "gemini-2.0-flash-lite-preview-02-05",
       maxOutput: 8192,
       pricing: {
-        cachedInput: 0.01875,
+        cachedInput: 0.018_75,
         input: 0.075,
         output: 0.3
       },
@@ -146,7 +146,7 @@ const Google: ModelProviderCard = {
       id: "gemini-1.5-flash-002",
       maxOutput: 8192,
       pricing: {
-        cachedInput: 0.01875,
+        cachedInput: 0.018_75,
         input: 0.075,
         output: 0.3
       },
@@ -161,7 +161,7 @@ const Google: ModelProviderCard = {
       id: "gemini-1.5-flash-001",
       maxOutput: 8192,
       pricing: {
-        cachedInput: 0.01875,
+        cachedInput: 0.018_75,
         input: 0.075,
         output: 0.3
       },
@@ -220,7 +220,7 @@ const Google: ModelProviderCard = {
       id: "gemini-1.5-flash-8b-exp-0924",
       maxOutput: 8192,
       pricing: {
-        cachedInput: 0.01875,
+        cachedInput: 0.018_75,
         input: 0.075,
         output: 0.3
       },
