@@ -87,7 +87,7 @@ describe('GlobalService', () => {
       const config = await globalService.getGlobalConfig();
 
       // Assert
-      expect(config).toEqual({ enabledOAuthSSO: true });
+      expect(config).toEqual(mockConfig);
     });
 
     it('should return the defaultAgentConfig when fetch is successful', async () => {
