@@ -4,6 +4,7 @@ import { Form, type ItemGroup } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { enableAuth } from '@/const/auth';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import UserAvatar from '@/features/User/UserAvatar';
@@ -14,8 +15,7 @@ type SettingItemGroup = ItemGroup;
 
 const Client = memo<{ mobile?: boolean }>(() => {
   const [isLoginWithNextAuth] = useUserStore((s) => [authSelectors.isLoginWithNextAuth(s)]);
-  const [enableAuth, nickname, username, userProfile] = useUserStore((s) => [
-    s.enableAuth(),
+  const [nickname, username, userProfile] = useUserStore((s) => [
     userProfileSelectors.nickName(s),
     userProfileSelectors.username(s),
     userProfileSelectors.userProfile(s),
