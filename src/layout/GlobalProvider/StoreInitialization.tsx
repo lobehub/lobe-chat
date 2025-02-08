@@ -38,6 +38,10 @@ const StoreInitialization = memo(() => {
   // init the system preference
   useInitSystemStatus();
 
+  // fetch server config
+  const useFetchServerConfig = useServerConfigStore((s) => s.useInitServerConfig);
+  useFetchServerConfig();
+
   // Update NextAuth status
   const useUserStoreUpdater = createStoreUpdater(useUserStore);
   const oAuthSSOProviders = useServerConfigStore(serverConfigSelectors.oAuthSSOProviders);

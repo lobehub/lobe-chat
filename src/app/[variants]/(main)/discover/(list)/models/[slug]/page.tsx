@@ -7,48 +7,52 @@ import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { DiscoverPageProps } from '@/types/discover';
-import { parsePageLocale } from '@/utils/locale';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 import List from '../features/List';
 
-export const generateMetadata = async (props: DiscoverPageProps) => {
+const getSharedProps = async (props: DiscoverPageProps) => {
   const params = await props.params;
+  const { slug: identifier, variants } = params;
+  const { isMobile, locale: hl } = await RouteVariants.deserializeVariants(variants);
   const searchParams = await props.searchParams;
-
-  const { t } = await translation('metadata', searchParams?.hl);
-  const locale = await parsePageLocale(props);
+  const { t, locale } = await translation('metadata', searchParams?.hl || hl);
 
   const discoverService = new DiscoverService();
   const list = await discoverService.getProviderList(locale);
-  const cate = list.find((cate) => cate.identifier === params.slug);
+  const cate = list.find((cate) => cate.identifier === identifier);
 
+  return {
+    cate,
+    discoverService,
+    identifier,
+    isMobile,
+    list,
+    locale,
+    t,
+  };
+};
+
+export const generateMetadata = async (props: DiscoverPageProps) => {
+  const { t, cate, locale, identifier } = await getSharedProps(props);
   return metadataModule.generate({
     alternate: true,
     description: t('discover.models.description'),
     locale,
     title: [cate?.meta.title, t('discover.models.title')].join(' · '),
-    url: urlJoin('/discover/models', params.slug),
+    url: urlJoin('/discover/models', identifier),
   });
 };
 
 const Page = async (props: DiscoverPageProps) => {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
-
-  const { t } = await translation('metadata', searchParams?.hl);
-  const mobile = await RouteVariants.getIsMobile(props);
-  const locale = await parsePageLocale(props);
-
-  const discoverService = new DiscoverService();
-  const list = await discoverService.getProviderList(locale);
-  const cate = list.find((cate) => cate.identifier === params.slug);
-  const items = await discoverService.getModelCategory(locale, params.slug);
+  const { t, cate, locale, identifier, discoverService, isMobile } = await getSharedProps(props);
+  const items = await discoverService.getModelCategory(locale, identifier);
 
   const ld = ldModule.generate({
     description: t('discover.models.description'),
+    locale,
     title: [cate?.meta.title, t('discover.models.title')].join(' · '),
-    url: urlJoin('/discover/models', params.slug),
+    url: urlJoin('/discover/models', identifier),
     webpage: {
       enable: true,
       search: '/discover/search',
@@ -58,7 +62,7 @@ const Page = async (props: DiscoverPageProps) => {
   return (
     <>
       <StructuredData ld={ld} />
-      <List category={params.slug} items={items} mobile={mobile} />
+      <List category={identifier} items={items} mobile={isMobile} />
     </>
   );
 };

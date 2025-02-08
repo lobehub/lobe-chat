@@ -1,6 +1,35 @@
 [
   {
     "children": {
+      "fixes": ["Fix changelog modal."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.4"
+  },
+  {
+    "children": {
+      "fixes": ["Add Zhipu param limit, Fix translation in variants mode."],
+      "improvements": ["Update Gemini 2.0 models."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add siliconcloud pro models."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix static relative issues."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.1"
+  },
+  {
+    "children": {
       "features": ["Refactor the auth condition in Next Auth."]
     },
     "date": "2025-02-08",
