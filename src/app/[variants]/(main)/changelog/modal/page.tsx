@@ -21,4 +21,4 @@ const ChangelogModal = () => {
   return null;
 };
 
-export default withSuspense(ChangelogModal);
+export default ChangelogModal;
