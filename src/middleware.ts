@@ -1,7 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { UAParser } from 'ua-parser-js';
+import urlJoin from 'url-join';
 
+import { appEnv } from '@/config/app';
 import { authEnv } from '@/config/auth';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import NextAuthEdge from '@/libs/next-auth/edge';
@@ -82,6 +84,13 @@ const defaultMiddleware = (request: NextRequest) => {
 
   const url = new URL(request.url);
 
+  // https://github.com/lobehub/lobe-chat/issues/5876
+  if (appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL) {
+    url.protocol = 'http';
+    url.host = '127.0.0.1';
+    url.port = process.env.PORT || '3210';
+  }
+
   // skip all api requests
   if (['/api', '/trpc', '/webapi'].some((path) => url.pathname.startsWith(path))) {
     return NextResponse.next();
@@ -92,7 +101,11 @@ const defaultMiddleware = (request: NextRequest) => {
   // / -> /zh-CN__0__dark
   // /discover -> /zh-CN__0__dark/discover
   const nextPathname = `/${route}` + (url.pathname === '/' ? '' : url.pathname);
-  console.log(`[rewrite] ${url.pathname} -> ${nextPathname}`);
+  const nextURL = appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL
+    ? urlJoin(url.origin, nextPathname)
+    : nextPathname;
+
+  console.log(`[rewrite] ${url.pathname} -> ${nextURL}`);
 
   url.pathname = nextPathname;
 
