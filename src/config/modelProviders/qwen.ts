@@ -307,9 +307,9 @@ const Qwen: ModelProviderCard = {
       vision: true,
     },
     {
-      contextWindowTokens: 65_536,
+      contextWindowTokens: 131_072,
       description:
-        'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力，尤其在数学、代码、自然语言推理等任务上。',
+        'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
       displayName: 'DeepSeek R1',
       id: 'deepseek-r1',
       pricing: {
@@ -320,7 +320,7 @@ const Qwen: ModelProviderCard = {
       releasedAt: '2025-01-27',
     },
     {
-      contextWindowTokens: 65_536,
+      contextWindowTokens: 131_072,
       description:
         'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
       displayName: 'DeepSeek V3',
@@ -333,10 +333,10 @@ const Qwen: ModelProviderCard = {
       releasedAt: '2025-01-27',
     },
     {
-      contextWindowTokens: 65_536,
+      contextWindowTokens: 131_072,
       description:
-        'DeepSeek-R1-Distill-Qwen-1.5B是一个基于Qwen2.5-Math-1.5B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
-      displayName: 'DeepSeek-R1-Distill-Qwen-1.5B',
+        'DeepSeek-R1-Distill-Qwen-1.5B 是一个基于 Qwen2.5-Math-1.5B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek R1 Distill Qwen 1.5B',
       id: 'deepseek-r1-distill-qwen-1.5b',
       pricing: {
         currency: 'CNY',
@@ -346,10 +346,10 @@ const Qwen: ModelProviderCard = {
       releasedAt: '2025-02-05',
     },
     {
-      contextWindowTokens: 65_536,
+      contextWindowTokens: 131_072,
       description:
-        'DeepSeek-R1-Distill-Qwen-7B是一个基于Qwen2.5-Math-7B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
-      displayName: 'DeepSeek-R1-Distill-Qwen-7B',
+        'DeepSeek-R1-Distill-Qwen-7B 是一个基于 Qwen2.5-Math-7B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek R1 Distill Qwen 7B',
       id: 'deepseek-r1-distill-qwen-7b',
       pricing: {
         currency: 'CNY',
@@ -359,10 +359,10 @@ const Qwen: ModelProviderCard = {
       releasedAt: '2025-02-05',
     },
     {
-      contextWindowTokens: 65_536,
+      contextWindowTokens: 131_072,
       description:
-        'DeepSeek-R1-Distill-Qwen-14B是一个基于Qwen2.5-14B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
-      displayName: 'DeepSeek-R1-Distill-Qwen-14B',
+        'DeepSeek-R1-Distill-Qwen-14B 是一个基于 Qwen2.5-14B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek R1 Distill Qwen 14B',
       id: 'deepseek-r1-distill-qwen-14b',
       pricing: {
         currency: 'CNY',
@@ -372,10 +372,10 @@ const Qwen: ModelProviderCard = {
       releasedAt: '2025-02-05',
     },
     {
-      contextWindowTokens: 65_536,
+      contextWindowTokens: 131_072,
       description:
-        'DeepSeek-R1-Distill-Qwen-32B是一个基于Qwen2.5-32B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
-      displayName: 'DeepSeek-R1-Distill-Qwen-32B',
+        'DeepSeek-R1-Distill-Qwen-32B 是一个基于 Qwen2.5-32B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek R1 Distill Qwen 32B',
       id: 'deepseek-r1-distill-qwen-32b',
       pricing: {
         currency: 'CNY',
@@ -385,10 +385,10 @@ const Qwen: ModelProviderCard = {
       releasedAt: '2025-02-05',
     },
     {
-      contextWindowTokens: 65_536,
+      contextWindowTokens: 131_072,
       description:
-        'DeepSeek-R1-Distill-Llama-8B是一个基于Llama-3.1-8B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
-      displayName: 'DeepSeek-R1-Distill-Llama-8B',
+        'DeepSeek-R1-Distill-Llama-8B 是一个基于 Llama-3.1-8B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek R1 Distill Llama 8B',
       id: 'deepseek-r1-distill-llama-8b',
       pricing: {
         currency: 'CNY',
@@ -398,10 +398,10 @@ const Qwen: ModelProviderCard = {
       releasedAt: '2025-02-05',
     },
     {
-      contextWindowTokens: 65_536,
+      contextWindowTokens: 131_072,
       description:
-        'DeepSeek-R1-Distill-Llama-70B是一个基于Llama-3.1-70B的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
-      displayName: 'DeepSeek-R1-Distill-Llama-70B',
+        'DeepSeek-R1-Distill-Llama-70B 是一个基于 Llama-3.3-70B-Instruct 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+      displayName: 'DeepSeek R1 Distill Llama 70B',
       id: 'deepseek-r1-distill-llama-70b',
       pricing: {
         currency: 'CNY',
