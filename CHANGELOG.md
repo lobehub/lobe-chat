@@ -2,6 +2,40 @@
 
 # Changelog
 
+### [Version 1.52.3](https://github.com/lobehub/lobe-chat/compare/v1.52.2...v1.52.3)
+
+<sup>Released on **2025-02-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add Zhipu param limit, Fix translation in variants mode.
+
+#### 💄 Styles
+
+- **misc**: Update Gemini 2.0 models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add Zhipu param limit, closes [#5858](https://github.com/lobehub/lobe-chat/issues/5858) ([c299d78](https://github.com/lobehub/lobe-chat/commit/c299d78))
+- **misc**: Fix translation in variants mode, closes [#5878](https://github.com/lobehub/lobe-chat/issues/5878) ([fcbc7b9](https://github.com/lobehub/lobe-chat/commit/fcbc7b9))
+
+#### Styles
+
+- **misc**: Update Gemini 2.0 models, closes [#5777](https://github.com/lobehub/lobe-chat/issues/5777) ([89803a5](https://github.com/lobehub/lobe-chat/commit/89803a5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.52.2](https://github.com/lobehub/lobe-chat/compare/v1.52.1...v1.52.2)
 
 <sup>Released on **2025-02-08**</sup>
