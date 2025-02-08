@@ -142,6 +142,7 @@
     "@trpc/server": "next",
     "@vercel/analytics": "^1.4.1",
     "@vercel/edge-config": "^1.4.0",
+    "@vercel/functions": "^2",
     "@vercel/speed-insights": "^1.1.0",
     "ahooks": "^3.8.4",
     "ai": "^3.4.33",
