@@ -37,7 +37,7 @@ const GlobalLayout = async ({
 
   // get default feature flags to use with ssr
   const serverFeatureFlags = getServerFeatureFlagsValue();
-  const serverConfig = getServerGlobalConfig();
+  const serverConfig = await getServerGlobalConfig();
   return (
     <StyleRegistry>
       <Locale antdLocale={antdLocale} defaultLang={userLocale}>
