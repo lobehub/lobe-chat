@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ServerConfigStoreProvider } from '@/store/serverConfig';
+import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';
 import { useUserStore } from '@/store/user';
 
 import { useCategory } from '../features/useCategory';

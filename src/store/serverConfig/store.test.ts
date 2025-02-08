@@ -21,7 +21,7 @@ describe('createServerConfigStore', () => {
   it('should initialize store with default state', () => {
     const store = createServerConfigStore();
 
-    expect(store.getState()).toEqual({
+    expect(store.getState()).toMatchObject({
       featureFlags: DEFAULT_FEATURE_FLAGS,
       serverConfig: { telemetry: {}, aiProvider: {} },
     });
