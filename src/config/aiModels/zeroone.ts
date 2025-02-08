@@ -19,7 +19,7 @@ const zerooneChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 16_384,
-    description: '复杂视觉任务模型，提供高性能图片理解、分析能力。',
+    description: '复杂视觉任务模型，提供基于多张图片的高性能理解、分析能力。',
     displayName: 'Yi Vision V2',
     enabled: true,
     id: 'yi-vision-v2',
