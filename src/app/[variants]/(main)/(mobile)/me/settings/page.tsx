@@ -27,5 +27,3 @@ const Page = async (props: DynamicLayoutProps) => {
 Page.displayName = 'MeSettings';
 
 export default Page;
-
-export const dynamic = 'force-static';
