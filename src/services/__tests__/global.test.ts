@@ -1,7 +1,7 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { edgeClient } from '@/libs/trpc/client';
-import { GlobalServerConfig } from '@/types/serverConfig';
+import { GlobalRuntimeConfig } from '@/types/serverConfig';
 
 import { globalService } from '../global';
 
@@ -77,7 +77,10 @@ describe('GlobalService', () => {
   describe('ServerConfig', () => {
     it('should return the serverConfig when fetch is successful', async () => {
       // Arrange
-      const mockConfig = { enabledOAuthSSO: true } as GlobalServerConfig;
+      const mockConfig = {
+        serverConfig: { enabledOAuthSSO: true },
+        serverFeatureFlags: {},
+      } as GlobalRuntimeConfig;
       vi.spyOn(edgeClient.config.getGlobalConfig, 'query').mockResolvedValue(mockConfig);
 
       // Act
