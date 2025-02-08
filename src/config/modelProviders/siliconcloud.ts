@@ -31,6 +31,31 @@ const SiliconCloud: ModelProviderCard = {
       },
     },
     {
+      contextWindowTokens: 65_536,
+      description:
+        'DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。',
+      displayName: 'DeepSeek R1 (Pro)',
+      id: 'Pro/deepseek-ai/DeepSeek-R1',
+      pricing: {
+        currency: 'CNY',
+        input: 4,
+        output: 16,
+      },
+    },
+    {
+      contextWindowTokens: 65_536,
+      description:
+        'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
+      displayName: 'DeepSeek V3 (Pro)',
+      functionCall: true,
+      id: 'Pro/deepseek-ai/DeepSeek-V3',
+      pricing: {
+        currency: 'CNY',
+        input: 2,
+        output: 8,
+      },
+    },
+    {
       contextWindowTokens: 32_768,
       description: 
         "DeepSeek-R1-Distill-Llama-70B 是基于 Llama-3.3-70B-Instruct 经过蒸馏训练得到的模型。该模型是 DeepSeek-R1 系列的一部分，通过使用 DeepSeek-R1 生成的样本进行微调，在数学、编程和推理等多个领域展现出优秀的性能。模型在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异的成绩，显示出强大的推理能力。",
