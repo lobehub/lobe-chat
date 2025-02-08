@@ -23,10 +23,22 @@ type Props = PageProps<
   }
 >;
 
-export const generateMetadata = async (props: Props) => {
+const getSharedProps = async (props: Props) => {
   const searchParams = await props.searchParams;
+  const { q, type = 'assistants' } = searchParams;
+  const { isMobile, locale: hl } = await RouteVariants.getVariantsFromProps(props);
+  const { t, locale } = await translation('metadata', searchParams?.hl || hl);
+  return {
+    isMobile,
+    locale,
+    q,
+    t,
+    type,
+  };
+};
 
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+export const generateMetadata = async (props: Props) => {
+  const { locale, t } = await getSharedProps(props);
 
   return metadataModule.generate({
     alternate: true,
@@ -38,17 +50,14 @@ export const generateMetadata = async (props: Props) => {
 };
 
 const Page = async (props: Props) => {
-  const searchParams = await props.searchParams;
+  const { locale, t, q, type, isMobile } = await getSharedProps(props);
 
-  const { q, type = 'assistants' } = searchParams;
   if (!q) redirect(urlJoin(`/discover`, type));
   const keywords = decodeURIComponent(q);
 
-  const { t, locale } = await translation('metadata', searchParams?.hl);
-  const mobile = await RouteVariants.getIsMobile(props);
-
   const ld = ldModule.generate({
     description: t('discover.description'),
+    locale,
     title: t('discover.search'),
     url: '/discover/search',
     webpage: {
@@ -60,10 +69,10 @@ const Page = async (props: Props) => {
   return (
     <>
       <StructuredData ld={ld} />
-      {type === 'assistants' && <AssistantsResult locale={locale} mobile={mobile} q={keywords} />}
-      {type === 'plugins' && <PluginsResult locale={locale} mobile={mobile} q={keywords} />}
-      {type === 'models' && <ModelsResult locale={locale} mobile={mobile} q={keywords} />}
-      {type === 'providers' && <ProvidersResult locale={locale} mobile={mobile} q={keywords} />}
+      {type === 'assistants' && <AssistantsResult locale={locale} mobile={isMobile} q={keywords} />}
+      {type === 'plugins' && <PluginsResult locale={locale} mobile={isMobile} q={keywords} />}
+      {type === 'models' && <ModelsResult locale={locale} mobile={isMobile} q={keywords} />}
+      {type === 'providers' && <ProvidersResult locale={locale} mobile={isMobile} q={keywords} />}
     </>
   );
 };
@@ -71,5 +80,3 @@ const Page = async (props: Props) => {
 Page.DisplayName = 'DiscoverSearch';
 
 export default Page;
-
-export const dynamic = 'force-static';
