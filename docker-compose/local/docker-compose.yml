@@ -13,7 +13,7 @@ services:
       - lobe-network
 
   postgresql:
-    image: pgvector/pgvector:pg16
+    image: pgvector/pgvector:pg17
     container_name: lobe-postgres
     ports:
       - '5432:5432'
@@ -76,7 +76,7 @@ services:
       - .env
 
   lobe:
-    image: lobehub/lobe-chat-database:1.51.3
+    image: lobehub/lobe-chat-database
     container_name: lobe-chat
     network_mode: 'service:network-service'
     depends_on:
