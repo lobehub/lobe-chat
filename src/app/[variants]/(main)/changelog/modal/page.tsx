@@ -2,7 +2,6 @@
 
 import { useLayoutEffect } from 'react';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 
 /**
