@@ -40,6 +40,17 @@ tags:
 
   创建成功后， 将 `Client ID` 和 `Client Secret` 保存下来。
 
+  ### 配置 Webhook （可选）
+
+  配置 Logto 的 Webhook，以便在用户信息更新时 LobeChat 可以接收到通知。
+
+  前往 `Webhooks` ，创建一个 Webhook，填写以下字段：
+
+  - 端点 URL： `https://lobe.example.com/api/auth/webhooks/logto`
+  - 事件： `User.Data.Updated`
+
+  创建成功后，复制 Webhook 的 `签名密钥`。填写到环境变量中的 `LOGTO_WEBHOOK_SIGNING_KEY`。
+
   ### 配置环境变量
 
   <Image alt="配置环境变量" inStep src="https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837" />
@@ -61,6 +72,7 @@ tags:
   | `AUTH_LOGTO_SECRET`       | 必选 | Logto App 详情页的 Client Secret                                                                     |
   | `AUTH_LOGTO_ISSUER`       | 必选 | Logto 提供程序的 OpenID Connect 颁发者                                                                   |
   | `NEXTAUTH_URL`            | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://lobe.example.com/api/auth` |
+  | `LOGTO_WEBHOOK_SIGNING_KEY` | 可选 | 用于验证 Logto 发送的 Webhook 请求是否合法的密钥。 |
 
   <Callout type={'tip'}>
     前往 [📘 环境变量](/zh/docs/self-hosting/environment-variables/auth#logto) 可查阅相关变量详情。

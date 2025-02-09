@@ -106,6 +106,23 @@ const OpenRouter: ModelProviderCard = {
     {
       contextWindowTokens: 200_000,
       description:
+        'Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
+      displayName: 'Claude 3.5 Haiku',
+      enabled: true,
+      functionCall: true,
+      id: 'anthropic/claude-3.5-haiku',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.1,
+        input: 1,
+        output: 5,
+        writeCacheInput: 1.25,
+      },
+      releasedAt: '2024-11-05',
+    },
+    {
+      contextWindowTokens: 200_000,
+      description:
         'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
       displayName: 'Claude 3.5 Sonnet',
       enabled: true,
@@ -152,6 +169,22 @@ const OpenRouter: ModelProviderCard = {
         output: 0.3,
       },
       vision: true,
+    },
+    {
+      contextWindowTokens: 1_048_576 + 8192,
+      description: "Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。",
+      displayName: "Gemini 2.0 Flash",
+      enabled: true,
+      functionCall: true,
+      id: "google/gemini-2.0-flash-001",
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.025,
+        input: 0.1,
+        output: 0.4
+      },
+      releasedAt: "2025-02-05",
+      vision: true
     },
     {
       contextWindowTokens: 2_000_000 + 8192,
@@ -209,6 +242,28 @@ const OpenRouter: ModelProviderCard = {
     },
     {
       contextWindowTokens: 32_768,
+      description:
+        'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
+      displayName: 'Llama 3.3 70B Instruct',
+      enabled: true,
+      functionCall: true,
+      id: 'meta-llama/llama-3.3-70b-instruct',
+      pricing: {
+        input: 0.12,
+        output: 0.3,
+      },
+    },
+    {
+      contextWindowTokens: 32_768,
+      description:
+        'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
+      displayName: 'Llama 3.3 70B Instruct (Free)',
+      enabled: true,
+      functionCall: true,
+      id: 'meta-llama/llama-3.3-70b-instruct:free',
+    },
+    {
+      contextWindowTokens: 32_768,
       description: 'Qwen2 是全新的大型语言模型系列，具有更强的理解和生成能力。',
       displayName: 'Qwen2 7B (Free)',
       enabled: true,
@@ -227,6 +282,17 @@ const OpenRouter: ModelProviderCard = {
       displayName: 'Gemma 2 9B (Free)',
       enabled: true,
       id: 'google/gemma-2-9b-it:free',
+    },
+    {
+      contextWindowTokens: 2_097_152 + 8192,
+      description: "Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。",
+      displayName: "Gemini 2.0 Pro Experimental 02-05 (Free)",
+      enabled: true,
+      functionCall: true,
+      id: "google/gemini-2.0-pro-exp-02-05:free",
+      maxOutput: 8192,
+      releasedAt: "2025-02-05",
+      vision: true
     },
   ],
   checkModel: 'google/gemma-2-9b-it:free',

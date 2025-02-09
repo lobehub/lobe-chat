@@ -2,6 +2,65 @@
 
 # Changelog
 
+### [Version 1.52.8](https://github.com/lobehub/lobe-chat/compare/v1.52.7...v1.52.8)
+
+<sup>Released on **2025-02-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update github model list, Update openrouter model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update github model list, closes [#5920](https://github.com/lobehub/lobe-chat/issues/5920) ([0676d0a](https://github.com/lobehub/lobe-chat/commit/0676d0a))
+- **misc**: Update openrouter model list, closes [#5919](https://github.com/lobehub/lobe-chat/issues/5919) ([8a185d3](https://github.com/lobehub/lobe-chat/commit/8a185d3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.52.7](https://github.com/lobehub/lobe-chat/compare/v1.52.6...v1.52.7)
+
+<sup>Released on **2025-02-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Rewrite to local container in docker deployment mode.
+
+#### 💄 Styles
+
+- **misc**: Update Cloudflare models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Rewrite to local container in docker deployment mode, closes [#5910](https://github.com/lobehub/lobe-chat/issues/5910) ([f399197](https://github.com/lobehub/lobe-chat/commit/f399197))
+
+#### Styles
+
+- **misc**: Update Cloudflare models, closes [#5899](https://github.com/lobehub/lobe-chat/issues/5899) ([b71206d](https://github.com/lobehub/lobe-chat/commit/b71206d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.52.6](https://github.com/lobehub/lobe-chat/compare/v1.52.5...v1.52.6)
 
 <sup>Released on **2025-02-08**</sup>

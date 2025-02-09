@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
-import { isMobileDevice } from '@/utils/server/responsive';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 import Category from './features/Category';
@@ -17,8 +16,8 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
   });
 };
 
-const Page = async () => {
-  const mobile = await isMobileDevice();
+const Page = async (props: DynamicLayoutProps) => {
+  const mobile = await RouteVariants.getIsMobile(props);
 
   if (!mobile) return redirect('/chat');
 
