@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import matter from 'gray-matter';
+import { template } from 'lodash-es';
 import { markdownToTxt } from 'markdown-to-txt';
 import semver from 'semver';
 import urlJoin from 'url-join';
@@ -8,7 +9,7 @@ import { FetchCacheTag } from '@/const/cacheControl';
 import { Locales } from '@/locales/resources';
 import { ChangelogIndexItem } from '@/types/changelog';
 
-const BASE_URL = 'https://raw.githubusercontent.com';
+const URL_TEMPLATE = 'https://raw.githubusercontent.com/{{user}}/{{repo}}/{{branch}}/{{path}}';
 const LAST_MODIFIED = new Date().toISOString();
 
 const docCdnPrefix = process.env.DOC_S3_PUBLIC_DOMAIN || '';
@@ -21,6 +22,7 @@ export interface ChangelogConfig {
   majorVersion: number;
   repo: string;
   type: 'cloud' | 'community';
+  urlTemplate: string;
   user: string;
 }
 
@@ -36,6 +38,7 @@ export class ChangelogService {
     majorVersion: 1,
     repo: 'lobe-chat',
     type: 'cloud',
+    urlTemplate: process.env.CHANGELOG_URL_TEMPLATE || URL_TEMPLATE,
     user: 'lobehub',
   };
 
@@ -178,7 +181,10 @@ export class ChangelogService {
   }
 
   private genUrl(path: string) {
-    return urlJoin(BASE_URL, this.config.user, this.config.repo, this.config.branch, path);
+    // 自定义分隔符为 {{}}
+    const compiledTemplate = template(this.config.urlTemplate, { interpolate: /{{([\S\s]+?)}}/g });
+
+    return compiledTemplate({ ...this.config, path });
   }
 
   private extractHttpsLinks(text: string) {
