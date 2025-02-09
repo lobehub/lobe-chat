@@ -113,7 +113,7 @@ services:
           echo 'Request URL: ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration'
           echo 'Read more at: https://lobehub.com/docs/self-hosting/server-database/docker-compose#necessary-configuration'
         else
-          if ! $(wget -O - --timeout=5 ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep -E 'issuer.*\${AUTH_CASDOOR_ISSUER}'); then
+          if ! wget -O - --timeout=5 ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep 'issuer' | grep ${AUTH_CASDOOR_ISSUER}; then
             printf 'Error: The Auth issuer is not matched, Issuer in OIDC configuration is: %s' \$(wget -O - --timeout=5 ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep -E 'issuer.*' | awk -F '\"' '{print \$4}')
             echo ' But the issuer in .env file: ${AUTH_CASDOOR_ISSUER}'
             echo 'Request URL: ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration'
