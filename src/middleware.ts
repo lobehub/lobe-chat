@@ -81,8 +81,11 @@ const defaultMiddleware = (request: NextRequest) => {
   });
 
   const url = new URL(request.url);
-  if (['/api', '/trpc', '/webapi'].some((path) => url.pathname.startsWith(path)))
+
+  // skip all api requests
+  if (['/api', '/trpc', '/webapi'].some((path) => url.pathname.startsWith(path))) {
     return NextResponse.next();
+  }
 
   // refs: https://github.com/lobehub/lobe-chat/pull/5866
   // new handle segment rewrite: /${route}${originalPathname}
