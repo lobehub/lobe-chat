@@ -1,10 +1,14 @@
+import { geolocation } from '@vercel/functions';
 import { getCountry } from 'countries-and-timezones';
 import { NextRequest } from 'next/server';
 
 export const parseDefaultThemeFromCountry = (request: NextRequest) => {
   // 1. 从请求头中获取国家代码
+  const geo = geolocation(request);
+  console.log('vercel geo', geo);
+
   const countryCode =
-    ('geo' in request && (request.geo as any)?.country) ||
+    geo?.country ||
     request.headers.get('x-vercel-ip-country') || // Vercel
     request.headers.get('cf-ipcountry') || // Cloudflare
     request.headers.get('x-zeabur-ip-country') || // Zeabur
