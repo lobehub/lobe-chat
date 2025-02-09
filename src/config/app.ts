@@ -94,3 +94,6 @@ export const getAppConfig = () => {
 };
 
 export const appEnv = getAppConfig();
+
+
+export { APP_URL, ASSISTANT_INDEX_URL, isInVercel, PLUGINS_INDEX_URL,vercelUrl };
