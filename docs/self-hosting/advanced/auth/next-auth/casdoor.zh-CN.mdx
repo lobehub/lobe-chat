@@ -109,6 +109,16 @@ tags:
 
   保存，并退出。 将该密钥填写到环境变量中的 `CASDOOR_WEBHOOK_SECRET`。
 
+  ### 关闭注册
+
+  为了保证你的应用安全，建议关闭 Casdoor 的注册功能，改为由管理员手动添加用户。
+  
+  前往 `身份认证` -> `应用`，将 `启用注册` 设置为 `否`。
+
+  <Callout type={'warning'}>
+    Casdoor 的注册功能默认是开启的，若你不关闭注册功能，任何人都可以注册并登录你的应用。
+  </Callout>
+
   ### 配置环境变量
 
   将获取到的 `客户端 ID` 和 `客户端`，设为 LobeChat 环境变量中的 `AUTH_CASDOOR_ID` 和 `AUTH_CASDOOR_SECRET`。
