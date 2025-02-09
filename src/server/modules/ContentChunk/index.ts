@@ -3,6 +3,11 @@ import { Strategy } from 'unstructured-client/sdk/models/shared';
 
 import { NewChunkItem, NewUnstructuredChunkItem } from '@/database/schemas';
 import { ChunkingStrategy, Unstructured } from '@/libs/unstructured';
+import { getEnvironment } from '@/utils/env';
+import { knowledgeEnv } from '@/config/knowledge';
+
+// Get environment variable to control PDF processing method
+const USE_UNSTRUCTURED_FOR_PDF = getEnvironment('USE_UNSTRUCTURED_FOR_PDF') === 'true';
 
 export interface ChunkContentParams {
   content: Uint8Array;
@@ -26,7 +31,10 @@ export class ContentChunk {
   }
 
   isUsingUnstructured(params: ChunkContentParams) {
-    return params.fileType === 'application/pdf' && params.mode === 'hi-res';
+    return params.fileType === 'application/pdf' &&
+           USE_UNSTRUCTURED_FOR_PDF &&
+           !!knowledgeEnv.UNSTRUCTURED_API_KEY &&
+           !!knowledgeEnv.UNSTRUCTURED_SERVER_URL;
   }
 
   async chunkContent(params: ChunkContentParams): Promise<ChunkResult> {
