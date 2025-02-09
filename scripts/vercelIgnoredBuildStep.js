@@ -4,6 +4,7 @@ const { execSync } = require('node:child_process');
 const branchName = process.env.VERCEL_GIT_COMMIT_REF || '';
 
 function shouldProceedBuild() {
+  console.log('branch:', branchName === 'lighthouse' || branchName.startsWith('testgru'));
   // 如果是 lighthouse 分支或以 testgru 开头的分支，取消构建
   if (branchName === 'lighthouse' || branchName.startsWith('testgru')) {
     return false;
