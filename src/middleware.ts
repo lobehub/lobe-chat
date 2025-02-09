@@ -91,7 +91,7 @@ const defaultMiddleware = (request: NextRequest) => {
 
   url.pathname = nextPathname;
 
-  return NextResponse.rewrite(url);
+  return NextResponse.rewrite(url, { status: 200 });
 };
 
 // Initialize an Edge compatible NextAuth middleware
