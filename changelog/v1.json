@@ -1,5 +1,17 @@
 [
   {
+    "children": {},
+    "date": "2025-02-09",
+    "version": "1.52.10"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog issue."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.9"
+  },
+  {
     "children": {
       "improvements": ["Update github model list, Update openrouter model list."]
     },
