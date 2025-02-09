@@ -22,7 +22,8 @@ function shouldProceedBuild() {
     execSync(diffCommand);
     // 如果 execSync 没有抛出错误，说明没有变更
     return false;
-  } catch {
+  } catch (e) {
+    console.log(e);
     // 如果 execSync 抛出错误，说明有变更
     return true;
   }
