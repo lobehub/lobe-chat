@@ -31,6 +31,7 @@ function shouldProceedBuild() {
 
 const shouldBuild = shouldProceedBuild();
 
+console.log('shouldBuild:', shouldBuild);
 if (shouldBuild) {
   console.log('✅ - Build can proceed');
   // eslint-disable-next-line unicorn/no-process-exit
