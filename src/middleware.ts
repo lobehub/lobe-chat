@@ -41,13 +41,6 @@ export const config = {
 };
 
 const defaultMiddleware = (request: NextRequest) => {
-  const url = new URL(request.url);
-
-  // skip all api requests
-  if (['/api', '/trpc', '/webapi'].some((path) => url.pathname.startsWith(path))) {
-    return NextResponse.next();
-  }
-
   // 1. 从 cookie 中读取用户偏好
   const theme =
     request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
@@ -70,12 +63,18 @@ const defaultMiddleware = (request: NextRequest) => {
     theme,
   });
 
-  // if app is in docker, rewrite to self container
+  const url = new URL(request.url);
+
   // https://github.com/lobehub/lobe-chat/issues/5876
   if (appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL) {
     url.protocol = 'http';
     url.host = '127.0.0.1';
     url.port = process.env.PORT || '3210';
+  }
+
+  // skip all api requests
+  if (['/api', '/trpc', '/webapi'].some((path) => url.pathname.startsWith(path))) {
+    return NextResponse.next();
   }
 
   // refs: https://github.com/lobehub/lobe-chat/pull/5866
@@ -140,3 +139,6 @@ export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
   : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
     ? nextAuthMiddleware
     : defaultMiddleware;
+
+
+export { isProtectedRoute };
