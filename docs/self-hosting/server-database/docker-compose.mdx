@@ -189,6 +189,13 @@ The script supports the following deployment modes; please choose the appropriat
   ### Access Application
 
   You can access your LobeChat service at `http://your_server_ip:3210`. The account credentials for the application can be found in the report from step `2`.
+
+  <Callout type="warning">
+    If your service can accessed via the public network, 
+    we strongly recommend disabling the registration, 
+    refer to the [documentation](https://lobehub.com/docs/self-hosting/advanced/auth/next-auth/casdoor)
+    for more information.
+  </Callout>
 </Steps>
 
 ### Domain Mode
@@ -206,9 +213,9 @@ The script supports the following deployment modes; please choose the appropriat
   | `minio-ui.example.com` | `9001`     |          |
 
   <Callout type="important">
-    If you are using panel software like [APanel](https://www.bt.cn/) for reverse proxy configuration,
+    If you are using panel software like [aaPanel](https://www.bt.cn/) for reverse proxy configuration,
     ensure it does not intercept requests to the `.well-known` path to facilitate the proper functioning of Casdoor's OAuth2 configuration.
-    Below is a whitelist configuration for the Nginx server block concerning paths:
+    Below is a whitelist configuration for the Nginx server block concerning paths for Casdoor reverse proxy:
 
     ```nginx
     location /.well-known/openid-configuration {
@@ -293,6 +300,13 @@ The script supports the following deployment modes; please choose the appropriat
   ### Access Application
 
   You can access your LobeChat service via `https://lobe.example.com`. The account credentials for the application can be found in the report from step `3`.
+  
+  <Callout type="warning">
+    If your service can accessed via the public network, 
+    we strongly recommend disabling the registration, 
+    refer to the [documentation](https://lobehub.com/docs/self-hosting/advanced/auth/next-auth/casdoor)
+    for more information.
+  </Callout>
 </Steps>
 
 ## Custom Deployment
