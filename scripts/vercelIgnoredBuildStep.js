@@ -21,9 +21,9 @@ function shouldProceedBuild() {
 
     execSync(diffCommand);
 
-    return true;
-  } catch {
     return false;
+  } catch {
+    return true;
   }
 }
 
