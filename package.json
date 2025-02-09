@@ -289,7 +289,7 @@
     "fs-extra": "^11.2.0",
     "glob": "^11.0.0",
     "gray-matter": "^4.0.3",
-    "happy-dom": "^16.5.2",
+    "happy-dom": "^17.0.0",
     "husky": "^9.1.7",
     "just-diff": "^6.0.2",
     "lint-staged": "^15.3.0",
