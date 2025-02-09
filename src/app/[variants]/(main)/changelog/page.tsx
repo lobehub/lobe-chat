@@ -5,6 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import Pagination from '@/app/[variants]/@modal/(.)changelog/modal/features/Pagination';
+import UpdateChangelogStatus from '@/app/[variants]/@modal/(.)changelog/modal/features/UpdateChangelogStatus';
 import StructuredData from '@/components/StructuredData';
 import { serverFeatureFlags } from '@/config/featureFlags';
 import { BRANDING_NAME } from '@/const/branding';
@@ -69,6 +70,7 @@ const Page = async (props: DynamicLayoutProps) => {
       <GridLayout>
         <Pagination />
       </GridLayout>
+      <UpdateChangelogStatus currentId={data[0]?.id} />
     </>
   );
 };
