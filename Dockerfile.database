@@ -49,6 +49,10 @@ ARG NEXT_PUBLIC_UMAMI_WEBSITE_ID
 
 ENV NEXT_PUBLIC_BASE_PATH="${NEXT_PUBLIC_BASE_PATH}"
 
+# Make the middleware rewrite through local as default
+# refs: https://github.com/lobehub/lobe-chat/issues/5876
+ENV MIDDLEWARE_REWRITE_THROUGH_LOCAL="1"
+
 ENV NEXT_PUBLIC_SERVICE_MODE="${NEXT_PUBLIC_SERVICE_MODE:-server}" \
     NEXT_PUBLIC_ENABLE_NEXT_AUTH="${NEXT_PUBLIC_ENABLE_NEXT_AUTH:-1}" \
     APP_URL="http://app.com" \
