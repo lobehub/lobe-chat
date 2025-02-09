@@ -4,7 +4,7 @@ import { serverFeatureFlags } from '@/config/featureFlags';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
-import { gerServerDeviceInfo, isMobileDevice } from '@/utils/server/responsive';
+import { gerServerDeviceInfo } from '@/utils/server/responsive';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 import Page from './index';
@@ -18,11 +18,11 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
     url: '/settings/sync',
   });
 };
-export default async () => {
+export default async (props: DynamicLayoutProps) => {
   const enableWebrtc = serverFeatureFlags().enableWebrtc;
   if (!enableWebrtc) return notFound();
 
-  const isMobile = await isMobileDevice();
+  const isMobile = await RouteVariants.getIsMobile(props);
   const { os, browser } = await gerServerDeviceInfo();
 
   return <Page browser={browser} mobile={isMobile} os={os} />;

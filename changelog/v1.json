@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Rewrite to local container in docker deployment mode."],
+      "improvements": ["Update Cloudflare models."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.7"
+  },
+  {
+    "children": {
       "improvements": ["Update ZeroOne models."]
     },
     "date": "2025-02-08",

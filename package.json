@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.52.6",
+  "version": "1.52.7",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -142,6 +142,7 @@
     "@trpc/server": "next",
     "@vercel/analytics": "^1.4.1",
     "@vercel/edge-config": "^1.4.0",
+    "@vercel/functions": "^2",
     "@vercel/speed-insights": "^1.1.0",
     "ahooks": "^3.8.4",
     "ai": "^3.4.33",
@@ -149,6 +150,7 @@
     "antd-style": "^3.7.1",
     "brotli-wasm": "^3.0.1",
     "chroma-js": "^3.1.2",
+    "countries-and-timezones": "^3.7.2",
     "dayjs": "^1.11.13",
     "debug": "^4.4.0",
     "dexie": "^3.2.7",
@@ -289,7 +291,7 @@
     "fs-extra": "^11.2.0",
     "glob": "^11.0.0",
     "gray-matter": "^4.0.3",
-    "happy-dom": "^16.5.2",
+    "happy-dom": "^17.0.0",
     "husky": "^9.1.7",
     "just-diff": "^6.0.2",
     "lint-staged": "^15.3.0",
@@ -317,7 +319,7 @@
     "vitest": "~1.2.2",
     "vitest-canvas-mock": "^0.3.3"
   },
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@9.15.5",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
