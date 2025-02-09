@@ -3,7 +3,7 @@ import { Strategy } from 'unstructured-client/sdk/models/shared';
 
 import { NewChunkItem, NewUnstructuredChunkItem } from '@/database/schemas';
 import { ChunkingStrategy, Unstructured } from '@/libs/unstructured';
-import { getEnvironment } from '@/utils/env';
+import { getEnvironment } from '../../utils/env';
 import { knowledgeEnv } from '@/config/knowledge';
 
 // Get environment variable to control PDF processing method
