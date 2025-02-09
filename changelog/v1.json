@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Update ZeroOne models."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog modal."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix changelog modal."]
     },
     "date": "2025-02-08",
