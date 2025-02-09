@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-02-09",
+    "version": "1.52.10"
+  },
+  {
     "children": {
       "fixes": ["Fix changelog issue."]
     },
