@@ -1,11 +1,9 @@
 import { renderHook } from '@testing-library/react';
-import urlJoin from 'url-join';
 import { describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useGlobalStore } from '@/store/global';
-import { ChatSettingsTabs, SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
+import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
 import { useOpenChatSettings } from './useInterceptingRoutes';

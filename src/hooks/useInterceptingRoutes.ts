@@ -2,16 +2,16 @@ import { useMemo } from 'react';
 import urlJoin from 'url-join';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useAgentStore } from '@/store/agent';
 import { ChatSettingsTabs, SettingsTabs } from '@/store/global/initialState';
-import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Meta) => {
   const activeId = useSessionStore((s) => s.activeId);
 
-  const isMobile = useServerConfigStore((s) => s.isMobile);
+  const isMobile = useIsMobile();
   const router = useQueryRoute();
 
   return useMemo(() => {
