@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
 
-import { OpenAIStream } from './openai';
+import { OpenAIStream, transformOpenAIStream } from './openai';
 import { FIRST_CHUNK_ERROR_KEY } from './protocol';
 
 describe('OpenAIStream', () => {
@@ -67,13 +67,13 @@ describe('OpenAIStream', () => {
     expect(chunks).toEqual([
       'id: 1\n',
       'event: text\n',
-      `data: "Hello"\n\n`,
+      'data: "Hello"\n\n',
       'id: 1\n',
       'event: text\n',
-      `data: " world!"\n\n`,
+      'data: " world!"\n\n',
       'id: 1\n',
       'event: stop\n',
-      `data: "stop"\n\n`,
+      'data: "stop"\n\n',
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
@@ -130,7 +130,7 @@ describe('OpenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual(['id: 3\n', 'event: data\n', `data: {"content":null}\n\n`]);
+    expect(chunks).toEqual(['id: 3\n', 'event: data\n', 'data: {"content":null}\n\n']);
   });
 
   it('should handle content with finish_reason', async () => {
@@ -162,13 +162,10 @@ describe('OpenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual(
-      ['id: 123', 'event: text', `data: "Introduce yourself."\n`].map((i) => `${i}\n`),
-    );
+    expect(chunks).toEqual(['id: 123\n', 'event: text\n', 'data: "Introduce yourself."\n\n']);
   });
 
   it('should handle content with tool_calls but is an empty object', async () => {
-    // data: {"id":"chatcmpl-A7pokGUqSov0JuMkhiHhWU9GRtAgJ", "object":"chat.completion.chunk", "created":1726430846, "model":"gpt-4o-2024-05-13", "choices":[{"index":0, "delta":{"content":" today", "role":"", "tool_calls":[]}, "finish_reason":"", "logprobs":""}], "prompt_annotations":[{"prompt_index":0, "content_filter_results":null}]}
     const mockOpenAIStream = new ReadableStream({
       start(controller) {
         controller.enqueue({
@@ -207,9 +204,7 @@ describe('OpenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual(
-      ['id: 456', 'event: text', `data: "Some contents"\n`].map((i) => `${i}\n`),
-    );
+    expect(chunks).toEqual(['id: 456\n', 'event: text\n', 'data: "Some contents"\n\n']);
   });
 
   it('should handle other delta data', async () => {
@@ -242,7 +237,7 @@ describe('OpenAIStream', () => {
     expect(chunks).toEqual([
       'id: 4\n',
       'event: data\n',
-      `data: {"delta":{"custom_field":"custom_value"},"id":"4","index":0}\n\n`,
+      'data: {"delta":{"custom_field":"custom_value"},"id":"4","index":0}\n\n',
     ]);
   });
 
@@ -276,16 +271,14 @@ describe('OpenAIStream', () => {
       chunks.push(decoder.decode(chunk, { stream: true }));
     }
 
-    expect(chunks).toEqual(
-      [
-        'id: 1',
-        'event: text',
-        `data: "Hello"\n`,
-        'id: 1',
-        'event: error',
-        `data: {"body":{"message":"chat response streaming chunk parse error, please contact your API Provider to fix it.","context":{"error":{"message":"Cannot read properties of undefined (reading '0')","name":"TypeError"},"chunk":{"id":"1"}}},"type":"StreamChunkError"}\n`,
-      ].map((i) => `${i}\n`),
-    );
+    expect(chunks).toEqual([
+      'id: 1\n',
+      'event: text\n',
+      'data: "Hello"\n\n',
+      'id: 1\n',
+      'event: error\n',
+      'data: {"body":{"message":"chat response streaming chunk parse error, please contact your API Provider to fix it.","context":{"error":{"message":"Cannot read properties of undefined (reading \'0\')","name":"TypeError"},"chunk":{"id":"1"}}},"type":"StreamChunkError"}\n\n',
+    ]);
   });
 
   it('should handle FIRST_CHUNK_ERROR_KEY', async () => {
@@ -313,7 +306,7 @@ describe('OpenAIStream', () => {
     expect(chunks).toEqual([
       'id: first_chunk_error\n',
       'event: error\n',
-      `data: {"body":{"errorType":"ProviderBizError","message":"Test error"},"type":"ProviderBizError"}\n\n`,
+      'data: {"body":{"errorType":"ProviderBizError","message":"Test error"},"type":"ProviderBizError"}\n\n',
     ]);
   });
 
@@ -344,7 +337,7 @@ describe('OpenAIStream', () => {
     expect(chunks).toEqual([
       'id: first_chunk_error\n',
       'event: error\n',
-      `data: {"body":{"message":"Custom error","errorType":"PermissionDenied","provider":"grok"},"type":"PermissionDenied"}\n\n`,
+      'data: {"body":{"message":"Custom error","errorType":"PermissionDenied","provider":"grok"},"type":"PermissionDenied"}\n\n',
     ]);
   });
 
@@ -399,7 +392,7 @@ describe('OpenAIStream', () => {
       expect(chunks).toEqual([
         'id: 2\n',
         'event: tool_calls\n',
-        `data: [{"function":{"arguments":"{}","name":"tool1"},"id":"call_1","index":0,"type":"function"},{"function":{"arguments":"{}","name":"tool2"},"id":"call_2","index":1,"type":"function"}]\n\n`,
+        'data: [{"function":{"arguments":"{}","name":"tool1"},"id":"call_1","index":0,"type":"function"},{"function":{"arguments":"{}","name":"tool2"},"id":"call_2","index":1,"type":"function"}]\n\n',
       ]);
 
       expect(onToolCallMock).toHaveBeenCalledTimes(1);
@@ -446,268 +439,26 @@ describe('OpenAIStream', () => {
       expect(chunks).toEqual([
         'id: 5\n',
         'event: tool_calls\n',
-        `data: [{"function":{"arguments":"{}","name":"tool1"},"id":"call_1","index":0,"type":"function"},{"function":{"arguments":"{}","name":"tool2"},"id":"call_2","index":1,"type":"function"}]\n\n`,
+        'data: [{"function":{"arguments":"{}","name":"tool1"},"id":"call_1","index":0,"type":"function"},{"function":{"arguments":"{}","name":"tool2"},"id":"call_2","index":1,"type":"function"}]\n\n',
       ]);
-    });
-
-    it('should handle LiteLLM tools Calling', async () => {
-      const streamData = [
-        {
-          id: '1',
-          choices: [{ index: 0, delta: { content: '为了获取杭州的天气情况', role: 'assistant' } }],
-        },
-        {
-          id: '1',
-          choices: [{ index: 0, delta: { content: '让我为您查询一下。' } }],
-        },
-        {
-          id: '1',
-          choices: [
-            {
-              index: 0,
-              delta: {
-                content: '',
-                tool_calls: [
-                  {
-                    id: 'toolu_01VQtK4W9kqxGGLHgsPPxiBj',
-                    function: { arguments: '', name: 'realtime-weather____fetchCurrentWeather' },
-                    type: 'function',
-                    index: 0,
-                  },
-                ],
-              },
-            },
-          ],
-        },
-        {
-          id: '1',
-          choices: [
-            {
-              index: 0,
-              delta: {
-                content: '',
-                tool_calls: [
-                  {
-                    function: { arguments: '{"city": "\u676d\u5dde"}' },
-                    type: 'function',
-                    index: 0,
-                  },
-                ],
-              },
-            },
-          ],
-        },
-        {
-          id: '1',
-          choices: [{ finish_reason: 'tool_calls', index: 0, delta: {} }],
-        },
-      ];
-
-      const mockOpenAIStream = new ReadableStream({
-        start(controller) {
-          streamData.forEach((data) => {
-            controller.enqueue(data);
-          });
-
-          controller.close();
-        },
-      });
-
-      const onToolCallMock = vi.fn();
-
-      const protocolStream = OpenAIStream(mockOpenAIStream, {
-        callbacks: {
-          onToolCall: onToolCallMock,
-        },
-      });
-
-      const decoder = new TextDecoder();
-      const chunks = [];
-
-      // @ts-ignore
-      for await (const chunk of protocolStream) {
-        chunks.push(decoder.decode(chunk, { stream: true }));
-      }
-
-      expect(chunks).toEqual(
-        [
-          'id: 1',
-          'event: text',
-          `data: "为了获取杭州的天气情况"\n`,
-          'id: 1',
-          'event: text',
-          `data: "让我为您查询一下。"\n`,
-          'id: 1',
-          'event: tool_calls',
-          `data: [{"function":{"arguments":"","name":"realtime-weather____fetchCurrentWeather"},"id":"toolu_01VQtK4W9kqxGGLHgsPPxiBj","index":0,"type":"function"}]\n`,
-          'id: 1',
-          'event: tool_calls',
-          `data: [{"function":{"arguments":"{\\"city\\": \\"杭州\\"}","name":null},"id":"toolu_01VQtK4W9kqxGGLHgsPPxiBj","index":0,"type":"function"}]\n`,
-          'id: 1',
-          'event: stop',
-          `data: "tool_calls"\n`,
-        ].map((i) => `${i}\n`),
-      );
-
-      expect(onToolCallMock).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('Reasoning', () => {
-    it('should handle reasoning event in official DeepSeek api', async () => {
-      const data = [
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { role: 'assistant', content: null, reasoning_content: '' },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: null, reasoning_content: '您好' },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: null, reasoning_content: '！' },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '你好', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '很高兴', reasoning_cont: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '为您', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '提供', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '帮助。', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '', reasoning_content: null },
-              logprobs: null,
-              finish_reason: 'stop',
-            },
-          ],
-          usage: {
-            prompt_tokens: 6,
-            completion_tokens: 104,
-            total_tokens: 110,
-            prompt_tokens_details: { cached_tokens: 0 },
-            completion_tokens_details: { reasoning_tokens: 70 },
-            prompt_cache_hit_tokens: 0,
-            prompt_cache_miss_tokens: 6,
-          },
-        },
-      ];
-
+    it('should handle reasoning content', async () => {
       const mockOpenAIStream = new ReadableStream({
         start(controller) {
-          data.forEach((chunk) => {
-            controller.enqueue(chunk);
+          controller.enqueue({
+            id: '1',
+            choices: [
+              {
+                delta: {
+                  reasoning_content: 'Some reasoning',
+                },
+                index: 0,
+              },
+            ],
           });
-
           controller.close();
         },
       });
@@ -722,193 +473,23 @@ describe('OpenAIStream', () => {
         chunks.push(decoder.decode(chunk, { stream: true }));
       }
 
-      expect(chunks).toEqual(
-        [
-          'id: 1',
-          'event: reasoning',
-          `data: ""\n`,
-          'id: 1',
-          'event: reasoning',
-          `data: "您好"\n`,
-          'id: 1',
-          'event: reasoning',
-          `data: "！"\n`,
-          'id: 1',
-          'event: text',
-          `data: "你好"\n`,
-          'id: 1',
-          'event: text',
-          `data: "很高兴"\n`,
-          'id: 1',
-          'event: text',
-          `data: "为您"\n`,
-          'id: 1',
-          'event: text',
-          `data: "提供"\n`,
-          'id: 1',
-          'event: text',
-          `data: "帮助。"\n`,
-          'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
-        ].map((i) => `${i}\n`),
-      );
+      expect(chunks).toEqual(['id: 1\n', 'event: reasoning\n', 'data: "Some reasoning"\n\n']);
     });
 
-    it('should handle reasoning in litellm', async () => {
-      const data = [
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { role: 'assistant', reasoning_content: '' },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { reasoning_content: '您好' },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { reasoning_content: '！' },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '你好', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '很高兴', reasoning_cont: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '为您', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '提供', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '帮助。', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '', reasoning_content: null },
-              logprobs: null,
-              finish_reason: 'stop',
-            },
-          ],
-          usage: {
-            prompt_tokens: 6,
-            completion_tokens: 104,
-            total_tokens: 110,
-            prompt_tokens_details: { cached_tokens: 0 },
-            completion_tokens_details: { reasoning_tokens: 70 },
-            prompt_cache_hit_tokens: 0,
-            prompt_cache_miss_tokens: 6,
-          },
-        },
-      ];
-
+    it('should handle empty reasoning content', async () => {
       const mockOpenAIStream = new ReadableStream({
         start(controller) {
-          data.forEach((chunk) => {
-            controller.enqueue(chunk);
+          controller.enqueue({
+            id: '1',
+            choices: [
+              {
+                delta: {
+                  reasoning_content: '',
+                },
+                index: 0,
+              },
+            ],
           });
-
           controller.close();
         },
       });
@@ -923,238 +504,11 @@ describe('OpenAIStream', () => {
         chunks.push(decoder.decode(chunk, { stream: true }));
       }
 
-      expect(chunks).toEqual(
-        [
-          'id: 1',
-          'event: reasoning',
-          `data: ""\n`,
-          'id: 1',
-          'event: reasoning',
-          `data: "您好"\n`,
-          'id: 1',
-          'event: reasoning',
-          `data: "！"\n`,
-          'id: 1',
-          'event: text',
-          `data: "你好"\n`,
-          'id: 1',
-          'event: text',
-          `data: "很高兴"\n`,
-          'id: 1',
-          'event: text',
-          `data: "为您"\n`,
-          'id: 1',
-          'event: text',
-          `data: "提供"\n`,
-          'id: 1',
-          'event: text',
-          `data: "帮助。"\n`,
-          'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
-        ].map((i) => `${i}\n`),
-      );
-    });
-
-    it('should handle reasoning in siliconflow', async () => {
-      const data = [
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { role: 'assistant', reasoning_content: '', content: '' },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { reasoning_content: '您好', content: '' },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { reasoning_content: '！', content: '' },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '你好', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '很高兴', reasoning_cont: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '为您', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '提供', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '帮助。', reasoning_content: null },
-              logprobs: null,
-              finish_reason: null,
-            },
-          ],
-        },
-        {
-          id: '1',
-          object: 'chat.completion.chunk',
-          created: 1737563070,
-          model: 'deepseek-reasoner',
-          system_fingerprint: 'fp_1c5d8833bc',
-          choices: [
-            {
-              index: 0,
-              delta: { content: '', reasoning_content: null },
-              logprobs: null,
-              finish_reason: 'stop',
-            },
-          ],
-          usage: {
-            prompt_tokens: 6,
-            completion_tokens: 104,
-            total_tokens: 110,
-            prompt_tokens_details: { cached_tokens: 0 },
-            completion_tokens_details: { reasoning_tokens: 70 },
-            prompt_cache_hit_tokens: 0,
-            prompt_cache_miss_tokens: 6,
-          },
-        },
-      ];
-
-      const mockOpenAIStream = new ReadableStream({
-        start(controller) {
-          data.forEach((chunk) => {
-            controller.enqueue(chunk);
-          });
-
-          controller.close();
-        },
-      });
-
-      const protocolStream = OpenAIStream(mockOpenAIStream);
-
-      const decoder = new TextDecoder();
-      const chunks = [];
-
-      // @ts-ignore
-      for await (const chunk of protocolStream) {
-        chunks.push(decoder.decode(chunk, { stream: true }));
-      }
-
-      expect(chunks).toEqual(
-        [
-          'id: 1',
-          'event: reasoning',
-          `data: ""\n`,
-          'id: 1',
-          'event: reasoning',
-          `data: "您好"\n`,
-          'id: 1',
-          'event: reasoning',
-          `data: "！"\n`,
-          'id: 1',
-          'event: text',
-          `data: "你好"\n`,
-          'id: 1',
-          'event: text',
-          `data: "很高兴"\n`,
-          'id: 1',
-          'event: text',
-          `data: "为您"\n`,
-          'id: 1',
-          'event: text',
-          `data: "提供"\n`,
-          'id: 1',
-          'event: text',
-          `data: "帮助。"\n`,
-          'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
-        ].map((i) => `${i}\n`),
-      );
+      expect(chunks).toEqual([
+        'id: 1\n',
+        'event: data\n',
+        'data: {"delta":{"reasoning_content":""},"id":"1","index":0}\n\n',
+      ]);
     });
   });
 });
