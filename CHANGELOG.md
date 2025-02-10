@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.52.15](https://github.com/lobehub/lobe-chat/compare/v1.52.14...v1.52.15)
+
+<sup>Released on **2025-02-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix lmstudio baseURL.
+
+#### 💄 Styles
+
+- **misc**: Optimized MaxToken Slider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix lmstudio baseURL, closes [#5988](https://github.com/lobehub/lobe-chat/issues/5988) ([1d19aa6](https://github.com/lobehub/lobe-chat/commit/1d19aa6))
+
+#### Styles
+
+- **misc**: Optimized MaxToken Slider, closes [#5952](https://github.com/lobehub/lobe-chat/issues/5952) ([3cdcb95](https://github.com/lobehub/lobe-chat/commit/3cdcb95))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.52.14](https://github.com/lobehub/lobe-chat/compare/v1.52.13...v1.52.14)
 
 <sup>Released on **2025-02-10**</sup>
