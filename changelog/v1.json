@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Support Mermaid in Artifacts."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.11"
+  },
+  {
     "children": {},
     "date": "2025-02-09",
     "version": "1.52.10"
