@@ -1,4 +1,4 @@
-import { Markdown } from '@lobehub/ui';
+import { Markdown, Mermaid } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 
@@ -15,6 +15,10 @@ const Renderer = memo<{ content: string; type?: string }>(({ content, type }) =>
 
     case 'image/svg+xml': {
       return <SVGRender content={content} />;
+    }
+
+    case 'application/lobe.artifacts.mermaid': {
+      return <Mermaid type={'pure'}>{content}</Mermaid>;
     }
 
     case 'text/markdown': {
