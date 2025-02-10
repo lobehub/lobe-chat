@@ -1,8 +1,9 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useAgentStore } from '@/store/agent';
 import { ChatSettingsTabs } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
@@ -48,7 +49,13 @@ describe('useOpenChatSettings', () => {
   it('should handle desktop route for chat settings with session and tab', () => {
     vi.mocked(useSessionStore).mockReturnValue('456');
     vi.mocked(useIsMobile).mockReturnValue(false);
+
     const { result } = renderHook(() => useOpenChatSettings(ChatSettingsTabs.Meta));
-    expect(result.current()).toBe('/chat/settings/modal?session=456&tab=meta');
+
+    act(() => {
+      result.current();
+    });
+
+    expect(useAgentStore.getState().showAgentSetting).toBeTruthy();
   });
 });
