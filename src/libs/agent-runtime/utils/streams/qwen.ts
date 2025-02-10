@@ -65,7 +65,8 @@ export const transformQwenStream = (chunk: OpenAI.ChatCompletionChunk): StreamPr
   if (
     item.delta &&
     'reasoning_content' in item.delta &&
-    typeof item.delta.reasoning_content === 'string'
+    typeof item.delta.reasoning_content === 'string' &&
+    item.delta.reasoning_content !== ''
   ) {
     return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
   }
