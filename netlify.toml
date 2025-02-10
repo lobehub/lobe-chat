@@ -1,5 +1,5 @@
 [build]
-command = "rm -rf .next node_modules/.cache && pnpm run build"
+command = "bun install && NODE_OPTIONS=--max-old-space-size=6144 bun run build"
 publish = ".next"
 
 [build.environment]
