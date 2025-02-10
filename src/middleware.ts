@@ -5,6 +5,7 @@ import urlJoin from 'url-join';
 
 import { appEnv } from '@/config/app';
 import { authEnv } from '@/config/auth';
+import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import NextAuthEdge from '@/libs/next-auth/edge';
 import { Locales } from '@/locales/resources';
@@ -54,10 +55,8 @@ const defaultMiddleware = (request: NextRequest) => {
 
   // if it's a new user, there's no cookie
   // So we need to use the fallback language parsed by accept-language
-  const locale = parseBrowserLanguage(request.headers) as Locales;
-  // const locale =
-  // request.cookies.get(LOBE_LOCALE_COOKIE)?.value ||
-  // browserLanguage;
+  const browserLanguage = parseBrowserLanguage(request.headers);
+  const locale = (request.cookies.get(LOBE_LOCALE_COOKIE)?.value || browserLanguage) as Locales;
 
   const ua = request.headers.get('user-agent');
 
