@@ -94,7 +94,8 @@ export const transformOpenAIStream = (
     if (
       item.delta &&
       'reasoning_content' in item.delta &&
-      typeof item.delta.reasoning_content === 'string'
+      typeof item.delta.reasoning_content === 'string' &&
+      item.delta.reasoning_content.length > 0
     ) {
       return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
     }
