@@ -2,9 +2,9 @@ import { isServerMode, isUsePgliteDB } from '@/const/version';
 import { GlobalStore } from '@/store/global';
 import { DatabaseLoadingState } from '@/types/clientDB';
 
-import { INITIAL_STATUS } from './initialState';
+import { GlobalState, INITIAL_STATUS } from '../initialState';
 
-const systemStatus = (s: GlobalStore) => s.status;
+export const systemStatus = (s: GlobalState) => s.status;
 
 const sessionGroupKeys = (s: GlobalStore): string[] =>
   s.status.expandSessionGroupKeys || INITIAL_STATUS.expandSessionGroupKeys;
