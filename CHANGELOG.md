@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.52.14](https://github.com/lobehub/lobe-chat/compare/v1.52.13...v1.52.14)
+
+<sup>Released on **2025-02-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Refactor agent settings modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Refactor agent settings modal, closes [#5987](https://github.com/lobehub/lobe-chat/issues/5987) ([6482f8a](https://github.com/lobehub/lobe-chat/commit/6482f8a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.52.13](https://github.com/lobehub/lobe-chat/compare/v1.52.12...v1.52.13)
 
 <sup>Released on **2025-02-10**</sup>
