@@ -21,6 +21,7 @@ export default {
   callbacks: {
     // Note: Data processing order of callback: authorize --> jwt --> session
     async jwt({ token, user }) {
+      console.log('jwt',token,user)
       // ref: https://authjs.dev/guides/extending-the-session#with-jwt
       if (user?.id) {
         token.userId = user?.id;
@@ -28,6 +29,7 @@ export default {
       return token;
     },
     async session({ session, token, user }) {
+      console.log('sessionjwt',session,token,user)
       if (session.user) {
         // ref: https://authjs.dev/guides/extending-the-session#with-database
         if (user) {

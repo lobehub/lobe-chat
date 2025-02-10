@@ -18,10 +18,10 @@ const provider = {
     profile: (profile) => {
       return {
         email: profile.email,
-        id: profile.email,
+        id: profile.unionid,
         image: profile.image,
         name: profile.name,
-        providerAccountId: profile.email.toString(),
+        providerAccountId: profile.unionid.toString(),
       };
     },
   }),
@@ -54,6 +54,7 @@ class customError extends AuthError {
 }
 
 function Wechat(config: OAuthUserConfig<WeChatProfile>): OAuthConfig<WeChatProfile> {
+  console.log('config',config)
   const { clientId, clientSecret } = config;
 
   return {
