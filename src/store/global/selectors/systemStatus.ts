@@ -2,9 +2,9 @@ import { isServerMode, isUsePgliteDB } from '@/const/version';
 import { GlobalStore } from '@/store/global';
 import { DatabaseLoadingState } from '@/types/clientDB';
 
-import { GlobalState, INITIAL_STATUS } from '../initialState';
+import { INITIAL_STATUS } from '../initialState';
 
-export const systemStatus = (s: GlobalState) => s.status;
+export const systemStatus = (s: GlobalStore) => s.status;
 
 const sessionGroupKeys = (s: GlobalStore): string[] =>
   s.status.expandSessionGroupKeys || INITIAL_STATUS.expandSessionGroupKeys;
@@ -71,3 +71,6 @@ export const systemStatusSelectors = {
   systemStatus,
   threadInputHeight,
 };
+
+
+export { filePanelWidth, hidePWAInstaller, inputHeight, inZenMode, isDBInited,isPgliteInited, isPgliteNotEnabled, isPgliteNotInited, mobileShowPortal, mobileShowTopic, portalWidth, sessionGroupKeys, sessionWidth, showChatHeader, showChatSideBar, showFilePanel, showSessionPanel, showSystemRole, threadInputHeight };
