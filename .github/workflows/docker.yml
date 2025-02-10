@@ -4,16 +4,20 @@ on:
   workflow_dispatch:
   release:
     types: [published]
-
-concurrency: 
-  group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true
+  pull_request:
+    types: [synchronize, labeled, unlabeled]
 
 env:
   REGISTRY_IMAGE: lobehub/lobe-chat
+  PR_TAG_PREFIX: pr-
 
 jobs:
   build:
+    if: |
+      (github.event_name == 'pull_request' &&
+       contains(github.event.pull_request.labels.*.name, 'Build Docker')) ||
+      github.event_name != 'pull_request'
+
     strategy:
       matrix:
         include:
@@ -21,21 +25,22 @@ jobs:
             os: ubuntu-latest
           - platform: linux/arm64
             os: ubuntu-24.04-arm
-    runs-on: ${{ matrix.os }}
-    name: Build ${{ matrix.platform }} Image
-    steps:
-      - name: Prepare
-        run: |
-          platform=${{ matrix.platform }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV    
-               
-      - name: Checkout base
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Set up Docker Buildx
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Generate PR metadata
+        if: github.event_name == 'pull_request'
+        id: pr_meta
+        run: |
+          branch_name="${{ github.head_ref }}"
+          sanitized_branch=$(echo "${branch_name}" | sed -E 's/[^a-zA-Z0-9_.-]+/-/g')
+          echo "pr_tag=${sanitized_branch}-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Docker meta
         id: meta
@@ -43,49 +48,33 @@ jobs:
         with:
           images: ${{ env.REGISTRY_IMAGE }}
           tags: |
-            type=semver,pattern={{version}}
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ env.PR_TAG_PREFIX }}${{ steps.pr_meta.outputs.pr_tag }},enable=${{ github.event_name == 'pull_request' }}
+            type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request' }}
+            type=raw,value=latest,enable=${{ github.event_name != 'pull_request' }}
 
-      - name: Docker login
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_REGISTRY_USER }}
-          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-
-      - name: Get commit SHA
-        if: github.ref == 'refs/heads/master'
-        id: vars
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Build and export
-        id: build
+      - name: Build and push
         uses: docker/build-push-action@v5
         with:
           platforms: ${{ matrix.platform }}
           context: .
           file: ./Dockerfile
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            SHA=${{ steps.vars.outputs.sha_short }}
-          outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+          tags: ${{ steps.meta.outputs.tags }}
+          push: true
 
-      - name: Export digest
+      - name: Export manifest digest
         run: |
-          rm -rf /tmp/digests
           mkdir -p /tmp/digests
           digest="${{ steps.build.outputs.digest }}"
-          touch "/tmp/digests/${digest#sha256:}"
+          echo "${digest#sha256:}" >> /tmp/digests/manifest.txt
 
-      - name: Upload artifact
+      - name: Upload manifest digest
         uses: actions/upload-artifact@v4
         with:
-          name: digest-${{ env.PLATFORM_PAIR }}
-          path: /tmp/digests/*
-          if-no-files-found: error
-          retention-days: 1
+          name: platform-digests
+          path: /tmp/digests/manifest.txt
 
   merge:
-    name: Merge
+    if: always()  # 确保 PR 构建也执行合并
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -93,33 +82,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: /tmp/digests
-          pattern: digest-*
-          merge-multiple: true
+          pattern: platform-digests
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY_IMAGE }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Docker login
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_REGISTRY_USER }}
-          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-
-      - name: Create manifest list and push
-        working-directory: /tmp/digests
+      - name: Merge manifests
         run: |
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)      
-    
-      - name: Inspect image
-        run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
+          DIGESTS=$(cat /tmp/digests/**/manifest.txt | tr '\n' ' ')
+          docker buildx imagetools create \
+            -t ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.tags }} \
+            $(echo "$DIGESTS" | sed "s| | ${{ env.REGISTRY_IMAGE }}@sha256:|g")
