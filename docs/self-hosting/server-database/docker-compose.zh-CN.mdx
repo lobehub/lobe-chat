@@ -224,6 +224,9 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
       proxy_set_header X-Forwarded-Proto $scheme;  # 保留请求协议
     }
     ```
+
+    ⚠️ 请不要在此类面板软件的反向代理设置中开启任何形式的缓存，以免影响服务的正常运行。
+    详情请见 https://github.com/lobehub/lobe-chat/discussions/5986
   </Callout>
 
   ### 在交互式脚本中完成剩余配置

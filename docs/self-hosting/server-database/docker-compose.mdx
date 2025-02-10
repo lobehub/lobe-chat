@@ -226,6 +226,10 @@ The script supports the following deployment modes; please choose the appropriat
     proxy_set_header X-Forwarded-Proto $scheme;  # Keep the request protocol
     }
     ```
+
+    ⚠️ If you are using such panel software, 
+    please do not enable any form of caching in the reverse proxy settings of such panel software to avoid affecting the normal operation of the service. 
+    Read more at https://github.com/lobehub/lobe-chat/discussions/5986
   </Callout>
 
   ### Complete Remaining Configuration in Interactive Script
