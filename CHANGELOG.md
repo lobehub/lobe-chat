@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.52.12](https://github.com/lobehub/lobe-chat/compare/v1.52.11...v1.52.12)
+
+<sup>Released on **2025-02-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix language incorrect on page hydration.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix language incorrect on page hydration, closes [#5970](https://github.com/lobehub/lobe-chat/issues/5970) ([91912cf](https://github.com/lobehub/lobe-chat/commit/91912cf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.52.11](https://github.com/lobehub/lobe-chat/compare/v1.52.10...v1.52.11)
 
 <sup>Released on **2025-02-10**</sup>
