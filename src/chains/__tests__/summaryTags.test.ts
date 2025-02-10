@@ -5,7 +5,7 @@ import { globalHelpers } from '@/store/global/helpers';
 import { chainSummaryTags } from '../summaryTags';
 
 // Mock the getCurrentLanguage function
-vi.mock('@/store/user/helpers', () => ({
+vi.mock('@/store/global/helpers', () => ({
   globalHelpers: {
     getCurrentLanguage: vi.fn(),
   },
