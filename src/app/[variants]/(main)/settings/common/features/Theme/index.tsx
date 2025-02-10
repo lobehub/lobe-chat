@@ -12,9 +12,9 @@ import { useSyncSettings } from '@/app/[variants]/(main)/settings/hooks/useSyncS
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
 import { Locales, localeOptions } from '@/locales/resources';
+import { useGlobalStore } from '@/store/global';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors, userGeneralSettingsSelectors } from '@/store/user/selectors';
-import { switchLang } from '@/utils/client/switchLang';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from './ThemeSwatches';
 
@@ -29,9 +29,10 @@ const Theme = memo(() => {
   const [setThemeMode, setSettings] = useUserStore((s) => [s.switchThemeMode, s.setSettings]);
 
   useSyncSettings(form);
+  const [switchLocale] = useGlobalStore((s) => [s.switchLocale]);
 
   const handleLangChange = (value: Locales) => {
-    switchLang(value);
+    switchLocale(value);
     router.refresh();
   };
 
