@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.52.13](https://github.com/lobehub/lobe-chat/compare/v1.52.12...v1.52.13)
+
+<sup>Released on **2025-02-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Aliyun deepseek-r1 reasoning parsing with oneapi, Support Aliyun deepseek-r1 reasoning.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Aliyun deepseek-r1 reasoning parsing with oneapi, closes [#5964](https://github.com/lobehub/lobe-chat/issues/5964) ([0d7e665](https://github.com/lobehub/lobe-chat/commit/0d7e665))
+- **misc**: Support Aliyun deepseek-r1 reasoning, closes [#5954](https://github.com/lobehub/lobe-chat/issues/5954) ([cf7a2d6](https://github.com/lobehub/lobe-chat/commit/cf7a2d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.52.12](https://github.com/lobehub/lobe-chat/compare/v1.52.11...v1.52.12)
 
 <sup>Released on **2025-02-10**</sup>
