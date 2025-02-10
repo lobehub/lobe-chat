@@ -7,3 +7,6 @@ const language = (s: GlobalStore) => systemStatus(s).language || 'auto';
 export const globalGeneralSelectors = {
   language,
 };
+
+
+export { language };
