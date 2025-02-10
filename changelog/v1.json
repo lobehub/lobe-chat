@@ -1,6 +1,37 @@
 [
   {
     "children": {
+      "fixes": ["Fix lmstudio baseURL."],
+      "improvements": ["Optimized MaxToken Slider."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.15"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor agent settings modal."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.14"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix Aliyun deepseek-r1 reasoning parsing with oneapi, Support Aliyun deepseek-r1 reasoning."
+      ]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix language incorrect on page hydration."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.12"
+  },
+  {
+    "children": {
       "improvements": ["Support Mermaid in Artifacts."]
     },
     "date": "2025-02-10",
