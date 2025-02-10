@@ -9,12 +9,10 @@ import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
 import { UserInitializationState } from '@/types/user';
 import type { UserSettings } from '@/types/user/settings';
-import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { preferenceSelectors } from '../preference/selectors';
-import { userGeneralSettingsSelectors } from '../settings/selectors';
 
 const n = setNamespace('common');
 
@@ -114,12 +112,6 @@ export const createCommonSlice: StateCreator<
             );
 
             get().refreshDefaultModelProviderList({ trigger: 'fetchUserState' });
-
-            // auto switch language
-            const language = userGeneralSettingsSelectors.config(get()).language;
-            if (language === 'auto') {
-              switchLang('auto');
-            }
           }
         },
       },

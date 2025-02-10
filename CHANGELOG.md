@@ -2,6 +2,115 @@
 
 # Changelog
 
+### [Version 1.52.15](https://github.com/lobehub/lobe-chat/compare/v1.52.14...v1.52.15)
+
+<sup>Released on **2025-02-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix lmstudio baseURL.
+
+#### 💄 Styles
+
+- **misc**: Optimized MaxToken Slider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix lmstudio baseURL, closes [#5988](https://github.com/lobehub/lobe-chat/issues/5988) ([1d19aa6](https://github.com/lobehub/lobe-chat/commit/1d19aa6))
+
+#### Styles
+
+- **misc**: Optimized MaxToken Slider, closes [#5952](https://github.com/lobehub/lobe-chat/issues/5952) ([3cdcb95](https://github.com/lobehub/lobe-chat/commit/3cdcb95))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.52.14](https://github.com/lobehub/lobe-chat/compare/v1.52.13...v1.52.14)
+
+<sup>Released on **2025-02-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Refactor agent settings modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Refactor agent settings modal, closes [#5987](https://github.com/lobehub/lobe-chat/issues/5987) ([6482f8a](https://github.com/lobehub/lobe-chat/commit/6482f8a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.52.13](https://github.com/lobehub/lobe-chat/compare/v1.52.12...v1.52.13)
+
+<sup>Released on **2025-02-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Aliyun deepseek-r1 reasoning parsing with oneapi, Support Aliyun deepseek-r1 reasoning.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Aliyun deepseek-r1 reasoning parsing with oneapi, closes [#5964](https://github.com/lobehub/lobe-chat/issues/5964) ([0d7e665](https://github.com/lobehub/lobe-chat/commit/0d7e665))
+- **misc**: Support Aliyun deepseek-r1 reasoning, closes [#5954](https://github.com/lobehub/lobe-chat/issues/5954) ([cf7a2d6](https://github.com/lobehub/lobe-chat/commit/cf7a2d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.52.12](https://github.com/lobehub/lobe-chat/compare/v1.52.11...v1.52.12)
+
+<sup>Released on **2025-02-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix language incorrect on page hydration.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix language incorrect on page hydration, closes [#5970](https://github.com/lobehub/lobe-chat/issues/5970) ([91912cf](https://github.com/lobehub/lobe-chat/commit/91912cf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.52.11](https://github.com/lobehub/lobe-chat/compare/v1.52.10...v1.52.11)
 
 <sup>Released on **2025-02-10**</sup>

@@ -5,22 +5,23 @@ import { Flexbox } from 'react-layout-kit';
 
 import HeaderContent from '@/app/[variants]/(main)/chat/settings/features/HeaderContent';
 import Menu from '@/components/Menu';
-import { useChatSettingsTab } from '@/hooks/useChatSettingsTab';
-import { useQueryRoute } from '@/hooks/useQueryRoute';
+import { ChatSettingsTabs } from '@/store/global/initialState';
 
 import { useCategory } from './useCategory';
 
-const CategoryContent = memo(() => {
+interface CategoryContentProps {
+  setTab: (tab: ChatSettingsTabs) => void;
+  tab: string;
+}
+const CategoryContent = memo<CategoryContentProps>(({ setTab, tab }) => {
   const cateItems = useCategory();
-  const tab = useChatSettingsTab();
-  const router = useQueryRoute();
 
   return (
     <>
       <Menu
         items={cateItems}
         onClick={({ key }) => {
-          router.replace('/chat/settings/modal', { query: { tab: key } });
+          setTab(key as ChatSettingsTabs);
         }}
         selectable
         selectedKeys={[tab as any]}

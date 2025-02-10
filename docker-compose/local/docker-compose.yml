@@ -103,6 +103,30 @@ services:
     env_file:
       - .env
     restart: always
+    entrypoint: >
+      /bin/sh -c "
+        /bin/node /app/startServer.js &
+        LOBE_PID=\$!
+        sleep 3
+        if [ $(wget --timeout=5 --spider --server-response ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep -c 'HTTP/1.1 200 OK') -eq 0 ]; then
+          echo '⚠️Warining: Unable to fetch OIDC configuration from Casdoor'
+          echo 'Request URL: ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration'
+          echo 'Read more at: https://lobehub.com/docs/self-hosting/server-database/docker-compose#necessary-configuration'
+        else
+          if ! wget -O - --timeout=5 ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep 'issuer' | grep ${AUTH_CASDOOR_ISSUER}; then
+            printf '❌Error: The Auth issuer is conflict, Issuer in OIDC configuration is: %s' \$(wget -O - --timeout=5 ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep -E 'issuer.*' | awk -F '\"' '{print \$4}')
+            echo ' , but the issuer in .env file is: ${AUTH_CASDOOR_ISSUER} '
+            echo 'Request URL: ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration'
+            echo 'Read more at: https://lobehub.com/docs/self-hosting/server-database/docker-compose#necessary-configuration'
+          fi
+        fi
+        if [ $(wget --timeout=5 --spider --server-response ${S3_ENDPOINT}/minio/health/live 2>&1 | grep -c 'HTTP/1.1 200 OK') -eq 0 ]; then
+          echo '⚠️Warining: Unable to fetch MinIO health status'
+          echo 'Request URL: ${S3_ENDPOINT}/minio/health/live'
+          echo 'Read more at: https://lobehub.com/docs/self-hosting/server-database/docker-compose#necessary-configuration'
+        fi
+        wait \$LOBE_PID
+      "
 
 volumes:
   data:
