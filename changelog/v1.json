@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix language incorrect on page hydration."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.12"
+  },
+  {
+    "children": {
       "improvements": ["Support Mermaid in Artifacts."]
     },
     "date": "2025-02-10",
