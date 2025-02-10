@@ -22,7 +22,7 @@ import {
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { GlobalStyle } from '@/styles';
-import { setCookie } from '@/utils/cookie';
+import { setCookie } from '@/utils/client/cookie';
 
 const useStyles = createStyles(({ css, token }) => ({
   app: css`
