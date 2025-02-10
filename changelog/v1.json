@@ -1,5 +1,46 @@
 [
   {
+    "children": {},
+    "date": "2025-02-09",
+    "version": "1.52.10"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog issue."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.9"
+  },
+  {
+    "children": {
+      "improvements": ["Update github model list, Update openrouter model list."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.8"
+  },
+  {
+    "children": {
+      "fixes": ["Rewrite to local container in docker deployment mode."],
+      "improvements": ["Update Cloudflare models."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update ZeroOne models."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog modal."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.5"
+  },
+  {
     "children": {
       "fixes": ["Fix changelog modal."]
     },
