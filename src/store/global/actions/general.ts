@@ -87,3 +87,6 @@ export const generalActionSlice: StateCreator<
       },
     ),
 });
+
+
+export { n };
