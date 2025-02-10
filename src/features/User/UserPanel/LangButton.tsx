@@ -2,7 +2,6 @@ import { ActionIcon } from '@lobehub/ui';
 import { Popover, type PopoverProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { Languages } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +13,6 @@ import { LocaleMode } from '@/types/locale';
 
 const LangButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement = 'right' }) => {
   const theme = useTheme();
-  const router = useRouter();
 
   const [language, switchLocale] = useGlobalStore((s) => [
     globalGeneralSelectors.language(s),
@@ -23,7 +21,6 @@ const LangButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement 
 
   const handleLangChange = (value: LocaleMode) => {
     switchLocale(value);
-    router.refresh();
   };
 
   const { t } = useTranslation('setting');

@@ -1,6 +1,6 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { globalHelpers } from '@/store/user/helpers';
+import { globalHelpers } from '@/store/global/helpers';
 
 import { assistantService } from '../assistant';
 
