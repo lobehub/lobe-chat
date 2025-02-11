@@ -2,6 +2,40 @@
 
 # Changelog
 
+## [Version 1.53.0](https://github.com/lobehub/lobe-chat/compare/v1.52.19...v1.53.0)
+
+<sup>Released on **2025-02-11**</sup>
+
+#### ✨ Features
+
+- **misc**: Support tencent cloud provider.
+
+#### 💄 Styles
+
+- **misc**: Update i18n, update provider i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support tencent cloud provider, closes [#6029](https://github.com/lobehub/lobe-chat/issues/6029) ([6ec6b08](https://github.com/lobehub/lobe-chat/commit/6ec6b08))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#6030](https://github.com/lobehub/lobe-chat/issues/6030) ([ee48e30](https://github.com/lobehub/lobe-chat/commit/ee48e30))
+- **misc**: Update provider i18n, closes [#6031](https://github.com/lobehub/lobe-chat/issues/6031) ([e0e231c](https://github.com/lobehub/lobe-chat/commit/e0e231c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.52.19](https://github.com/lobehub/lobe-chat/compare/v1.52.18...v1.52.19)
 
 <sup>Released on **2025-02-11**</sup>
