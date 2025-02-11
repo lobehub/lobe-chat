@@ -58,4 +58,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_WORKFLOW }}
         run: |
-          gh workflow run docker-database.yml --ref main
+          gh workflow run docker-database.yml --repo sijinhui/lobe-chat --ref main
