@@ -33,6 +33,7 @@ import { default as siliconcloud } from './siliconcloud';
 import { default as spark } from './spark';
 import { default as stepfun } from './stepfun';
 import { default as taichu } from './taichu';
+import { default as tencentcloud } from './tencentcloud';
 import { default as togetherai } from './togetherai';
 import { default as upstage } from './upstage';
 import { default as wenxin } from './wenxin';
@@ -93,6 +94,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   spark,
   stepfun,
   taichu,
+  tencentcloud,
   togetherai,
   upstage,
   wenxin,
@@ -134,6 +136,7 @@ export { default as siliconcloud } from './siliconcloud';
 export { default as spark } from './spark';
 export { default as stepfun } from './stepfun';
 export { default as taichu } from './taichu';
+export { default as tencentcloud } from './tencentcloud';
 export { default as togetherai } from './togetherai';
 export { default as upstage } from './upstage';
 export { default as wenxin } from './wenxin';
