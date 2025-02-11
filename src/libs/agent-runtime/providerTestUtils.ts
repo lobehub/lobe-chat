@@ -9,6 +9,7 @@ interface TesstProviderParams {
   Runtime: any;
   bizErrorType?: string;
   chatDebugEnv: string;
+  chatModel: string;
   defaultBaseURL: string;
   invalidErrorType?: string;
   provider: string;
@@ -21,6 +22,7 @@ export const testProvider = ({
   defaultBaseURL,
   Runtime,
   chatDebugEnv,
+  chatModel,
 }: TesstProviderParams) => {
   // Mock the console.error to avoid polluting test output
   vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -71,7 +73,7 @@ export const testProvider = ({
           try {
             await instance.chat({
               messages: [{ content: 'Hello', role: 'user' }],
-              model: 'hunyuan-lite',
+              model: chatModel,
               temperature: 0,
             });
           } catch (e) {
@@ -111,7 +113,7 @@ export const testProvider = ({
           try {
             await instance.chat({
               messages: [{ content: 'Hello', role: 'user' }],
-              model: 'hunyuan-lite',
+              model: chatModel,
               temperature: 0,
             });
           } catch (e) {
@@ -147,7 +149,7 @@ export const testProvider = ({
           try {
             await instance.chat({
               messages: [{ content: 'Hello', role: 'user' }],
-              model: 'hunyuan-lite',
+              model: chatModel,
               temperature: 0,
             });
           } catch (e) {
@@ -172,7 +174,7 @@ export const testProvider = ({
           try {
             await instance.chat({
               messages: [{ content: 'Hello', role: 'user' }],
-              model: 'hunyuan-lite',
+              model: chatModel,
               temperature: 0,
             });
           } catch (e) {
@@ -196,7 +198,7 @@ export const testProvider = ({
           try {
             await instance.chat({
               messages: [{ content: 'Hello', role: 'user' }],
-              model: 'hunyuan-lite',
+              model: chatModel,
               temperature: 0,
             });
           } catch (e) {
@@ -244,7 +246,7 @@ export const testProvider = ({
           // 假设的测试函数调用，你可能需要根据实际情况调整
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'hunyuan-lite',
+            model: chatModel,
             stream: true,
             temperature: 0,
           });

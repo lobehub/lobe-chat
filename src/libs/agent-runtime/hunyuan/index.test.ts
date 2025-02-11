@@ -9,4 +9,5 @@ testProvider({
   provider: ModelProvider.Hunyuan,
   defaultBaseURL: 'https://api.hunyuan.cloud.tencent.com/v1',
   chatDebugEnv: 'DEBUG_HUNYUAN_CHAT_COMPLETION',
+  chatModel: 'hunyuan-lite',
 });
