@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - '.github'
   workflow_dispatch:
   release:
     types: [published]

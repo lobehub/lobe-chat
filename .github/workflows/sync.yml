@@ -54,7 +54,7 @@ jobs:
             [tutorial-en-US]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync
 
       - name: Trigger Another Workflow on Success
-        if: success()
+        if: steps.sync.outputs.has_new_commits == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
