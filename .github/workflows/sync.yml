@@ -56,6 +56,6 @@ jobs:
       - name: Trigger Another Workflow on Success
         if: success()
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_WORKFLOW }}
         run: |
-          gh workflow run docker-database.yml --ref ${{ github.ref }}
+          gh workflow run docker-database.yml --ref main
