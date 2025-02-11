@@ -33,6 +33,7 @@ import SiliconCloudProvider from './siliconcloud';
 import SparkProvider from './spark';
 import StepfunProvider from './stepfun';
 import TaichuProvider from './taichu';
+import TencentcloudProvider from './tencentcloud';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
 import WenxinProvider from './wenxin';
@@ -105,6 +106,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   XAIProvider,
   QwenProvider,
   WenxinProvider,
+  TencentcloudProvider,
   HunyuanProvider,
   ZhiPuProvider,
   SiliconCloudProvider,
@@ -166,6 +168,7 @@ export { default as SiliconCloudProviderCard } from './siliconcloud';
 export { default as SparkProviderCard } from './spark';
 export { default as StepfunProviderCard } from './stepfun';
 export { default as TaichuProviderCard } from './taichu';
+export { default as TencentCloudProviderCard } from './tencentcloud';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
 export { default as WenxinProviderCard } from './wenxin';
