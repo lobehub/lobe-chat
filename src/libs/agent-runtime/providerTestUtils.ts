@@ -8,6 +8,7 @@ import * as debugStreamModule from './utils/debugStream';
 interface TesstProviderParams {
   Runtime: any;
   bizErrorType?: string;
+  chatDebugEnv: string;
   defaultBaseURL: string;
   invalidErrorType?: string;
   provider: string;
@@ -19,6 +20,7 @@ export const testProvider = ({
   bizErrorType = 'ProviderBizError',
   defaultBaseURL,
   Runtime,
+  chatDebugEnv,
 }: TesstProviderParams) => {
   // Mock the console.error to avoid polluting test output
   vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -214,7 +216,7 @@ export const testProvider = ({
       });
 
       describe('DEBUG', () => {
-        it('should call debugStream and return StreamingTextResponse when DEBUG_HUNYUAN_CHAT_COMPLETION is 1', async () => {
+        it(`should call debugStream and return StreamingTextResponse when ${chatDebugEnv} is 1`, async () => {
           // Arrange
           const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
           const mockDebugStream = new ReadableStream({
@@ -231,10 +233,10 @@ export const testProvider = ({
           });
 
           // 保存原始环境变量值
-          const originalDebugValue = process.env.DEBUG_HUNYUAN_CHAT_COMPLETION;
+          const originalDebugValue = process.env[chatDebugEnv];
 
           // 模拟环境变量
-          process.env.DEBUG_HUNYUAN_CHAT_COMPLETION = '1';
+          process.env[chatDebugEnv] = '1';
           vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
 
           // 执行测试
@@ -251,7 +253,7 @@ export const testProvider = ({
           expect(debugStreamModule.debugStream).toHaveBeenCalled();
 
           // 恢复原始环境变量值
-          process.env.DEBUG_HUNYUAN_CHAT_COMPLETION = originalDebugValue;
+          process.env[chatDebugEnv] = originalDebugValue;
         });
       });
     });
