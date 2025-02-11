@@ -707,12 +707,6 @@
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp est le dernier modèle d'IA multimodal expérimental de Google, doté de caractéristiques de nouvelle génération, d'une vitesse exceptionnelle, d'appels d'outils natifs et de génération multimodale."
   },
-  "gemini-exp-1114": {
-    "description": "Gemini Exp 1114 est le dernier modèle d'IA multimodale expérimental de Google, offrant une capacité de traitement rapide, prenant en charge les entrées de texte, d'image et de vidéo, et permettant une extension efficace pour une variété de tâches."
-  },
-  "gemini-exp-1121": {
-    "description": "Gemini Exp 1121 est le dernier modèle d'IA multimodal expérimental de Google, capable de traiter rapidement des entrées textuelles, d'images et de vidéos, et adapté à une large gamme de tâches avec une efficacité accrue."
-  },
   "gemini-exp-1206": {
     "description": "Gemini Exp 1206 est le dernier modèle d'IA multimodal expérimental de Google, offrant une qualité améliorée par rapport aux versions précédentes."
   },

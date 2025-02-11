@@ -707,12 +707,6 @@
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Expは、Googleの最新の実験的なマルチモーダルAIモデルで、次世代の機能、卓越した速度、ネイティブツールの呼び出し、そしてマルチモーダル生成を備えています。"
   },
-  "gemini-exp-1114": {
-    "description": "Gemini Exp 1114は、Googleの最新の実験的なマルチモーダルAIモデルで、迅速な処理能力を備え、テキスト、画像、動画の入力をサポートし、様々なタスクに効率的に対応できます。"
-  },
-  "gemini-exp-1121": {
-    "description": "Gemini Exp 1121は、Googleの最新の実験的なマルチモーダルAIモデルで、高速処理能力を備え、テキスト、画像、動画の入力をサポートし、さまざまなタスクに対して効率的に拡張できます。"
-  },
   "gemini-exp-1206": {
     "description": "Gemini Exp 1206は、Googleの最新の実験的なマルチモーダルAIモデルで、過去のバージョンと比較して品質が向上しています。"
   },

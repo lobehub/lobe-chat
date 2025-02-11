@@ -707,12 +707,6 @@
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
   },
-  "gemini-exp-1114": {
-    "description": "Gemini Exp 1114 是 Google 最新的實驗性多模態 AI 模型，具備快速處理能力，支持文本、影像和影片輸入，適用於多種任務的高效擴展。"
-  },
-  "gemini-exp-1121": {
-    "description": "Gemini Exp 1121 是 Google 最新的實驗性多模態 AI 模型，具備快速處理能力，支持文本、圖像和視頻輸入，適用於多種任務的高效擴展。"
-  },
   "gemini-exp-1206": {
     "description": "Gemini Exp 1206 是 Google 最新的實驗性多模態 AI 模型，與歷史版本相比有一定的質量提升。"
   },

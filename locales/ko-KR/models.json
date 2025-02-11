@@ -707,12 +707,6 @@
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모드 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모드 생성을 제공합니다."
   },
-  "gemini-exp-1114": {
-    "description": "Gemini Exp 1114는 Google의 최신 실험적 다중 모달 AI 모델로, 빠른 처리 능력을 갖추고 있으며, 텍스트, 이미지 및 비디오 입력을 지원하여 다양한 작업에 효율적으로 확장할 수 있습니다."
-  },
-  "gemini-exp-1121": {
-    "description": "Gemini Exp 1121은 Google의 최신 실험적 다중 모달 AI 모델로, 빠른 처리 능력을 갖추고 있으며 텍스트, 이미지 및 비디오 입력을 지원하여 다양한 작업에 효율적으로 확장할 수 있습니다."
-  },
   "gemini-exp-1206": {
     "description": "Gemini Exp 1206은 Google의 최신 실험적 다중 모달 AI 모델로, 이전 버전에 비해 품질이 개선되었습니다."
   },

@@ -707,12 +707,6 @@
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, üstün hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
   },
-  "gemini-exp-1114": {
-    "description": "Gemini Exp 1114, Google'ın en son deneysel çok modlu AI modeli olup, hızlı işleme yeteneğine sahip, metin, görüntü ve video girişlerini desteklemekte ve çeşitli görevlerde verimli bir şekilde ölçeklenmektedir."
-  },
-  "gemini-exp-1121": {
-    "description": "Gemini Exp 1121, Google'un en yeni deneysel çok modlu AI modelidir. Hızlı işlem yeteneğine sahip olup, metin, görüntü ve video girişi destekler ve çeşitli görevler için verimli bir şekilde ölçeklenebilir."
-  },
   "gemini-exp-1206": {
     "description": "Gemini Exp 1206, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere kıyasla belirli bir kalite artırımı sağlar."
   },
