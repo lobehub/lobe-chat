@@ -31,16 +31,12 @@ import { createTraceOptions } from '@/server/modules/AgentRuntime';
 import { AgentChatOptions } from './AgentRuntime';
 import { LobeBedrockAIParams } from './bedrock';
 
-// 模拟依赖项
 vi.mock('@/config/server', () => ({
   getServerConfig: vi.fn(() => ({
-    // 确保为每个provider提供必要的配置信息
     OPENAI_API_KEY: 'test-openai-key',
     GOOGLE_API_KEY: 'test-google-key',
-
     AZURE_API_KEY: 'test-azure-key',
     AZURE_ENDPOINT: 'endpoint',
-
     ZHIPU_API_KEY: 'test.zhipu-key',
     MOONSHOT_API_KEY: 'test-moonshot-key',
     AWS_SECRET_ACCESS_KEY: 'test-aws-secret',
@@ -87,6 +83,7 @@ describe('AgentRuntime', () => {
         expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
         expect(runtime['_runtime'].baseURL).toBe('user-azure-endpoint');
       });
+
       it('should initialize with azureOpenAIParams correctly', async () => {
         const jwtPayload = {
           apiKey: 'user-openai-key',
@@ -123,7 +120,6 @@ describe('AgentRuntime', () => {
           zhipu: jwtPayload,
         });
 
-        // 假设 LobeZhipuAI 是 ZhiPu 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeZhipuAI);
       });
     });
@@ -135,7 +131,6 @@ describe('AgentRuntime', () => {
           google: jwtPayload,
         });
 
-        // 假设 LobeGoogleAI 是 Google 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeGoogleAI);
       });
     });
@@ -147,7 +142,6 @@ describe('AgentRuntime', () => {
           moonshot: jwtPayload,
         });
 
-        // 假设 LobeMoonshotAI 是 Moonshot 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeMoonshotAI);
       });
     });
@@ -163,7 +157,6 @@ describe('AgentRuntime', () => {
           bedrock: jwtPayload,
         });
 
-        // 假设 LobeBedrockAI 是 Bedrock 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
       });
     });
@@ -175,7 +168,6 @@ describe('AgentRuntime', () => {
           ollama: jwtPayload,
         });
 
-        // 假设 LobeOllamaAI 是 Ollama 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeOllamaAI);
       });
     });
@@ -187,7 +179,6 @@ describe('AgentRuntime', () => {
           perplexity: jwtPayload,
         });
 
-        // 假设 LobePerplexityAI 是 Perplexity 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobePerplexityAI);
       });
     });
@@ -199,7 +190,6 @@ describe('AgentRuntime', () => {
           anthropic: jwtPayload,
         });
 
-        // 假设 LobeAnthropicAI 是 Anthropic 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
       });
     });
@@ -211,7 +201,6 @@ describe('AgentRuntime', () => {
           mistral: jwtPayload,
         });
 
-        // 假设 LobeMistralAI 是 Mistral 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeMistralAI);
       });
     });
@@ -223,7 +212,6 @@ describe('AgentRuntime', () => {
           openrouter: jwtPayload,
         });
 
-        // 假设 LobeOpenRouterAI 是 OpenRouter 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
       });
     });
@@ -246,7 +234,6 @@ describe('AgentRuntime', () => {
           togetherai: jwtPayload,
         });
 
-        // 假设 LobeTogetherAI 是 TogetherAI 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
       });
     });
@@ -269,6 +256,7 @@ describe('AgentRuntime', () => {
 
       await runtime.chat(payload);
     });
+
     it('should handle options correctly', async () => {
       const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
       const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.OpenAI, {
@@ -332,10 +320,8 @@ describe('AgentRuntime', () => {
           LANGFUSE_SECRET_KEY: 'DDD',
         } as any);
 
-        // 使用 spyOn 模拟 chat 方法
         vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
           async (payload, { callback }: any) => {
-            // 模拟 experimental_onToolCall 回调的触发
             if (callback?.experimental_onToolCall) {
               await callback.experimental_onToolCall();
             }
@@ -348,6 +334,7 @@ describe('AgentRuntime', () => {
 
         expect(updateMock).toHaveBeenCalledWith({ tags: ['Tools Call'] });
       });
+
       it('should call onStart correctly', async () => {
         vi.spyOn(langfuseCfg, 'getLangfuseConfig').mockReturnValue({
           ENABLE_LANGFUSE: true,
@@ -367,7 +354,6 @@ describe('AgentRuntime', () => {
 
         await runtime.chat(payload, createTraceOptions(payload, options));
 
-        // Verify onStart was called
         expect(updateMock).toHaveBeenCalledWith({ completionStartTime: expect.any(Date) });
       });
 
@@ -377,7 +363,7 @@ describe('AgentRuntime', () => {
           LANGFUSE_PUBLIC_KEY: 'abc',
           LANGFUSE_SECRET_KEY: 'DDD',
         } as any);
-        // Spy on the chat method and trigger onCompletion callback
+
         vi.spyOn(LangfuseGenerationClient.prototype, 'update').mockImplementation(updateMock);
         vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
           async (payload, { callback }: any) => {
@@ -390,7 +376,6 @@ describe('AgentRuntime', () => {
 
         await runtime.chat(payload, createTraceOptions(payload, options));
 
-        // Verify onCompletion was called with expected output
         expect(updateMock).toHaveBeenCalledWith({
           endTime: expect.any(Date),
           metadata: {
@@ -400,6 +385,7 @@ describe('AgentRuntime', () => {
           output: 'Test completion',
         });
       });
+
       it('should call onFinal correctly', async () => {
         vi.spyOn(langfuseCfg, 'getLangfuseConfig').mockReturnValue({
           ENABLE_LANGFUSE: true,
@@ -420,7 +406,6 @@ describe('AgentRuntime', () => {
 
         await runtime.chat(payload, createTraceOptions(payload, options));
 
-        // Verify onCompletion was called with expected output
         expect(shutdownAsyncMock).toHaveBeenCalled();
       });
     });
