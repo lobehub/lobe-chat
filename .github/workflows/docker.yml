@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup buildx
         uses: docker/setup-buildx-action@v3
@@ -51,6 +53,12 @@ jobs:
             type=raw,value=${{ env.PR_TAG_PREFIX }}${{ steps.pr_meta.outputs.pr_tag }},enable=${{ github.event_name == 'pull_request' }}
             type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request' }}
             type=raw,value=latest,enable=${{ github.event_name != 'pull_request' }}
+
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_REGISTRY_USER }}
+          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -74,7 +82,6 @@ jobs:
           path: /tmp/digests/manifest.txt
 
   merge:
-    if: always()  # 确保 PR 构建也执行合并
     needs: build
     runs-on: ubuntu-latest
     steps:
