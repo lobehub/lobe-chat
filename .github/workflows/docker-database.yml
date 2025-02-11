@@ -74,7 +74,7 @@ jobs:
           password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
 
       - name: Get commit SHA
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         id: vars
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
