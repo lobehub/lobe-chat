@@ -56,6 +56,6 @@ jobs:
       - name: Trigger Another Workflow on Success
         if: success()
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_WORKFLOW }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh workflow run docker-database.yml --repo sijinhui/lobe-chat --ref main
