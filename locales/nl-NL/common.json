@@ -286,6 +286,7 @@
     "anonymousNickName": "anonieme gebruiker",
     "billing": "facturatie",
     "cloud": "Ervaar {{name}}",
+    "community": "Gemeenschapsversie",
     "data": "gegevensopslag",
     "defaultNickname": "communitygebruiker",
     "discord": "communityondersteuning",
@@ -295,7 +296,6 @@
     "help": "helpcentrum",
     "moveGuide": "instellingen verplaatst naar hier",
     "plans": "abonnementen",
-    "preview": "voorbeeldversie",
     "profile": "accountbeheer",
     "setting": "app-instellingen",
     "usages": "gebruiksstatistieken"

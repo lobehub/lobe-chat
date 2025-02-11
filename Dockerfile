@@ -79,10 +79,12 @@ RUN \
     fi \
     # Set the registry for corepack
     && export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
+    # Update corepack to latest (nodejs/corepack#612)
+    && npm i -g corepack@latest \
     # Enable corepack
     && corepack enable \
     # Use pnpm for corepack
-    && corepack use pnpm@9 \
+    && corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json) \
     # Install the dependencies
     && pnpm i \
     # Add sharp dependencies
@@ -128,6 +130,10 @@ ENV NODE_ENV="production" \
     NODE_EXTRA_CA_CERTS="" \
     NODE_TLS_REJECT_UNAUTHORIZED="" \
     SSL_CERT_DIR="/etc/ssl/certs/ca-certificates.crt"
+
+# Make the middleware rewrite through local as default
+# refs: https://github.com/lobehub/lobe-chat/issues/5876
+ENV MIDDLEWARE_REWRITE_THROUGH_LOCAL="1"
 
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0" \
@@ -210,7 +216,7 @@ ENV \
     # Upstage
     UPSTAGE_API_KEY="" UPSTAGE_MODEL_LIST="" \
     # Wenxin
-    WENXIN_ACCESS_KEY="" WENXIN_SECRET_KEY="" WENXIN_MODEL_LIST="" \
+    WENXIN_API_KEY="" WENXIN_MODEL_LIST="" \
     # xAI
     XAI_API_KEY="" XAI_MODEL_LIST="" XAI_PROXY_URL="" \
     # 01.AI

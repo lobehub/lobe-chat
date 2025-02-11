@@ -104,6 +104,12 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  logging: {
+    fetches: {
+      fullUrl: true,
+      hmrRefreshes: true,
+    },
+  },
   output: buildWithDocker ? 'standalone' : undefined,
   reactStrictMode: true,
   redirects: async () => [
@@ -164,9 +170,16 @@ const nextConfig: NextConfig = {
       permanent: true,
       source: '/welcome',
     },
+    // we need back /repos url in the further
+    {
+      destination: '/files',
+      permanent: false,
+      source: '/repos',
+    },
   ],
   // when external packages in dev mode with turbopack, this config will lead to bundle error
   serverExternalPackages: isProd ? ['@electric-sql/pglite'] : undefined,
+
   transpilePackages: ['pdfjs-dist', 'mermaid'],
 
   webpack(config) {

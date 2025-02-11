@@ -154,30 +154,6 @@
       "desc": "http(s)://를 포함해야 하며, 로컬에서 추가로 지정하지 않은 경우 비워둘 수 있습니다.",
       "title": "인터페이스 프록시 주소"
     },
-    "setup": {
-      "cors": {
-        "description": "브라우저 보안 제한으로 인해 Ollama를 사용하려면 CORS 구성이 필요합니다.",
-        "linux": {
-          "env": "[Service] 섹션에 `Environment`를 추가하고 OLLAMA_ORIGINS 환경 변수를 추가하십시오:",
-          "reboot": "systemd를 다시로드하고 Ollama를 다시 시작하십시오.",
-          "systemd": "systemd를 호출하여 ollama 서비스를 편집하십시오: "
-        },
-        "macos": "「터미널」앱을 열고 다음 명령을 붙여넣고 Enter를 눌러 실행하십시오.",
-        "reboot": "작업을 완료한 후 Ollama 서비스를 다시 시작하십시오.",
-        "title": "CORS 액세스를 허용하도록 Ollama 구성",
-        "windows": "Windows에서는 '제어판'을 클릭하여 시스템 환경 변수를 편집하십시오. 사용자 계정에 'OLLAMA_ORIGINS'이라는 환경 변수를 만들고 값으로 *을 입력한 후 '확인/적용'을 클릭하여 저장하십시오."
-      },
-      "install": {
-        "description": "Ollama가 활성화되어 있는지 확인하고, Ollama를 다운로드하지 않았다면 공식 웹사이트<1>에서 다운로드</1>하십시오.",
-        "docker": "Docker를 사용하는 것을 선호하는 경우 Ollama는 공식 Docker 이미지도 제공하며 다음 명령을 사용하여 가져올 수 있습니다:",
-        "linux": {
-          "command": "다음 명령을 사용하여 설치하십시오:",
-          "manual": "또는 <1>Linux 수동 설치 안내</1>를 참조하여 직접 설치할 수도 있습니다."
-        },
-        "title": "로컬에서 Ollama 애플리케이션을 설치하고 시작하십시오",
-        "windowsTab": "Windows (미리보기판)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "다운로드 취소",
@@ -253,6 +229,10 @@
           "title": "모델 ID"
         },
         "modalTitle": "사용자 정의 모델 구성",
+        "reasoning": {
+          "extra": "이 설정은 모델의 심층 사고 능력만을 활성화합니다. 구체적인 효과는 모델 자체에 따라 다르므로, 해당 모델이 사용 가능한 심층 사고 능력을 갖추고 있는지 직접 테스트해 보시기 바랍니다.",
+          "title": "심층 사고 지원"
+        },
         "tokens": {
           "extra": "모델이 지원하는 최대 토큰 수 설정",
           "title": "최대 컨텍스트 창",
@@ -313,26 +293,6 @@
     "deleteSuccess": "삭제 성공",
     "tooltip": "서비스 제공자 기본 설정 업데이트",
     "updateSuccess": "업데이트 성공"
-  },
-  "wenxin": {
-    "accessKey": {
-      "desc": "바이두 천범 플랫폼의 Access Key를 입력하세요",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "AccessKey / SecretAccess가 올바르게 입력되었는지 테스트합니다"
-    },
-    "secretKey": {
-      "desc": "바이두 천범 플랫폼의 Secret Key를 입력하세요",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "사용자 정의 서비스 지역",
-      "description": "당신의 AccessKey / SecretKey를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 당신의 인증 구성을 기록하지 않습니다",
-      "title": "사용자 정의 문신 일언 인증 정보 사용"
-    }
   },
   "zeroone": {
     "title": "01.AI Zero One All Things"

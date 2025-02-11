@@ -58,6 +58,20 @@ describe('parseModelString', () => {
       });
     });
 
+    it('token and reasoning', () => {
+      const result = parseModelString('deepseek-r1=Deepseek R1<65536:reasoning>');
+
+      expect(result.add[0]).toEqual({
+        displayName: 'Deepseek R1',
+        abilities: {
+          reasoning: true,
+        },
+        id: 'deepseek-r1',
+        contextWindowTokens: 65_536,
+        type: 'chat',
+      });
+    });
+
     it('multi models', () => {
       const result = parseModelString(
         'gemini-1.5-flash-latest=Gemini 1.5 Flash<16000:vision>,gpt-4-all=ChatGPT Plus<128000:fc:vision:file>',

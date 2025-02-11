@@ -200,6 +200,9 @@
     "enableMaxTokens": {
       "title": "Enable Max Tokens Limit"
     },
+    "enableReasoningEffort": {
+      "title": "Enable Reasoning Effort Adjustment"
+    },
     "frequencyPenalty": {
       "desc": "The higher the value, the more likely it is to reduce repeated words",
       "title": "Frequency Penalty"
@@ -215,6 +218,15 @@
     "presencePenalty": {
       "desc": "The higher the value, the more likely it is to expand to new topics",
       "title": "Topic Freshness"
+    },
+    "reasoningEffort": {
+      "desc": "The higher the value, the stronger the reasoning ability, but it may increase response time and token consumption.",
+      "options": {
+        "high": "High",
+        "low": "Low",
+        "medium": "Medium"
+      },
+      "title": "Reasoning Effort"
     },
     "temperature": {
       "desc": "The higher the value, the more random the response",

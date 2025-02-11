@@ -1,5 +1,341 @@
 [
   {
+    "children": {},
+    "date": "2025-02-11",
+    "version": "1.52.17"
+  },
+  {
+    "children": {
+      "improvements": ["Support mistral proxy url."]
+    },
+    "date": "2025-02-11",
+    "version": "1.52.16"
+  },
+  {
+    "children": {
+      "fixes": ["Fix lmstudio baseURL."],
+      "improvements": ["Optimized MaxToken Slider."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.15"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor agent settings modal."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.14"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix Aliyun deepseek-r1 reasoning parsing with oneapi, Support Aliyun deepseek-r1 reasoning."
+      ]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix language incorrect on page hydration."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.12"
+  },
+  {
+    "children": {
+      "improvements": ["Support Mermaid in Artifacts."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.11"
+  },
+  {
+    "children": {},
+    "date": "2025-02-09",
+    "version": "1.52.10"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog issue."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.9"
+  },
+  {
+    "children": {
+      "improvements": ["Update github model list, Update openrouter model list."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.8"
+  },
+  {
+    "children": {
+      "fixes": ["Rewrite to local container in docker deployment mode."],
+      "improvements": ["Update Cloudflare models."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update ZeroOne models."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog modal."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog modal."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.4"
+  },
+  {
+    "children": {
+      "fixes": ["Add Zhipu param limit, Fix translation in variants mode."],
+      "improvements": ["Update Gemini 2.0 models."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add siliconcloud pro models."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix static relative issues."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.1"
+  },
+  {
+    "children": {
+      "features": ["Refactor the auth condition in Next Auth."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.0"
+  },
+  {
+    "children": {},
+    "date": "2025-02-07",
+    "version": "1.51.16"
+  },
+  {
+    "children": {
+      "fixes": ["Fix home next auth error and update pnpm."]
+    },
+    "date": "2025-02-07",
+    "version": "1.51.15"
+  },
+  {
+    "children": {
+      "improvements": ["Update changelog cache and upgrade anthropic sdk."]
+    },
+    "date": "2025-02-07",
+    "version": "1.51.14"
+  },
+  {
+    "children": {
+      "fixes": ["Fix next auth error."]
+    },
+    "date": "2025-02-07",
+    "version": "1.51.13"
+  },
+  {
+    "children": {
+      "fixes": ["Try to fix next-auth issue."]
+    },
+    "date": "2025-02-07",
+    "version": "1.51.12"
+  },
+  {
+    "children": {
+      "fixes": ["Fix /file/[id] 500 issue."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix provider 500 issue."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.10"
+  },
+  {
+    "children": {
+      "improvements": ["Update edtion tag display and improve prerender."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.9"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor model fetch method."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add Aliyun deepseek-r1 distill models."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.7"
+  },
+  {
+    "children": {
+      "fixes": ["Try to fix discover error."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.6"
+  },
+  {
+    "children": {
+      "improvements": ["Add siliconcloud models."]
+    },
+    "date": "2025-02-06",
+    "version": "1.51.5"
+  },
+  {
+    "children": {},
+    "date": "2025-02-06",
+    "version": "1.51.4"
+  },
+  {
+    "children": {
+      "improvements": ["Add Cache, Metadata, FeatureFlag Viewer to DevPanel."],
+      "fixes": ["Artifact Parsing and Rendering Bug Fix for Gemini 2.0 Flash."]
+    },
+    "date": "2025-02-05",
+    "version": "1.51.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update model list, add reasoning tag."]
+    },
+    "date": "2025-02-05",
+    "version": "1.51.2"
+  },
+  {
+    "children": {},
+    "date": "2025-02-05",
+    "version": "1.51.1"
+  },
+  {
+    "children": {
+      "features": ["Add reasoning tag support for custom models via UI or ENV."],
+      "fixes": [
+        "Fix deepseek-v3 & qvq model tag fetch error from SiliconCloud, fix model ability missing."
+      ]
+    },
+    "date": "2025-02-05",
+    "version": "1.51.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add/Update Aliyun Cloud Models, update GitHub Models."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix invalid utf8 character."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.4"
+  },
+  {
+    "children": {
+      "improvements": ["Update model locale."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix o1 series calling issue."]
+    },
+    "date": "2025-02-04",
+    "version": "1.50.2"
+  },
+  {
+    "children": {
+      "fixes": ["Bind the selected group name in the rename modal.."]
+    },
+    "date": "2025-02-03",
+    "version": "1.50.1"
+  },
+  {
+    "children": {
+      "features": ["Add o3-mini support for OpenAI & GitHub Models."],
+      "fixes": ["Fix parse of deepseek r1 in siliconflow provider."]
+    },
+    "date": "2025-02-03",
+    "version": "1.50.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update perplexity models."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.16"
+  },
+  {
+    "children": {
+      "improvements": ["Update Fireworks check model and fix check error."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.15"
+  },
+  {
+    "children": {
+      "fixes": ["Fix provider update issue."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.14"
+  },
+  {
+    "children": {
+      "fixes": ["Optimize requests without historical messages."]
+    },
+    "date": "2025-02-03",
+    "version": "1.49.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix can not stop generating."]
+    },
+    "date": "2025-02-02",
+    "version": "1.49.12"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ollama intergration checker and client fetch issue."]
+    },
+    "date": "2025-02-02",
+    "version": "1.49.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix <think> tag crash with special markdown content."]
+    },
+    "date": "2025-02-02",
+    "version": "1.49.10"
+  },
+  {
     "children": {
       "improvements": ["Update siliconcloud models."]
     },

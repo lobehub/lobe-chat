@@ -12,6 +12,7 @@ import {
   AiProviderRuntimeState,
   CreateAiProviderSchema,
   UpdateAiProviderConfigSchema,
+  UpdateAiProviderSchema,
 } from '@/types/aiProvider';
 import { ProviderConfig } from '@/types/user/settings';
 
@@ -48,7 +49,7 @@ export const aiProviderRouter = router({
     .input(z.object({ id: z.string() }))
 
     .query(async ({ input, ctx }): Promise<AiProviderDetailItem | undefined> => {
-      return ctx.aiProviderModel.getAiProviderById(input.id, KeyVaultsGateKeeper.getUserKeyVaults);
+      return ctx.aiInfraRepos.getAiProviderDetail(input.id, KeyVaultsGateKeeper.getUserKeyVaults);
     }),
 
   getAiProviderList: aiProviderProcedure.query(async ({ ctx }) => {
@@ -58,15 +59,7 @@ export const aiProviderRouter = router({
   getAiProviderRuntimeState: aiProviderProcedure
     .input(z.object({ isLogin: z.boolean().optional() }))
     .query(async ({ ctx }): Promise<AiProviderRuntimeState> => {
-      const runtimeConfig = await ctx.aiProviderModel.getAiProviderRuntimeConfig(
-        KeyVaultsGateKeeper.getUserKeyVaults,
-      );
-
-      const enabledAiProviders = await ctx.aiInfraRepos.getUserEnabledProviderList();
-
-      const enabledAiModels = await ctx.aiInfraRepos.getEnabledModels();
-
-      return { enabledAiModels, enabledAiProviders, runtimeConfig };
+      return ctx.aiInfraRepos.getAiProviderRuntimeState(KeyVaultsGateKeeper.getUserKeyVaults);
     }),
 
   removeAiProvider: aiProviderProcedure
@@ -90,7 +83,7 @@ export const aiProviderRouter = router({
     .input(
       z.object({
         id: z.string(),
-        value: CreateAiProviderSchema.partial(),
+        value: UpdateAiProviderSchema,
       }),
     )
     .mutation(async ({ input, ctx }) => {

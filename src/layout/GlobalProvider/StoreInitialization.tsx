@@ -1,11 +1,11 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
 
-import { LOBE_URL_IMPORT_NAME } from '@/const/url';
+import { enableNextAuth } from '@/const/auth';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useAgentStore } from '@/store/agent';
@@ -22,14 +22,11 @@ const StoreInitialization = memo(() => {
   useTranslation('error');
 
   const router = useRouter();
-  const [isLogin, isSignedIn, useInitUserState, importUrlShareSettings, isUserStateInit] =
-    useUserStore((s) => [
-      authSelectors.isLogin(s),
-      s.isSignedIn,
-      s.useInitUserState,
-      s.importUrlShareSettings,
-      s.isUserStateInit,
-    ]);
+  const [isLogin, isSignedIn, useInitUserState] = useUserStore((s) => [
+    authSelectors.isLogin(s),
+    s.isSignedIn,
+    s.useInitUserState,
+  ]);
 
   const { serverConfig } = useServerConfigStore();
 
@@ -41,10 +38,12 @@ const StoreInitialization = memo(() => {
   // init the system preference
   useInitSystemStatus();
 
+  // fetch server config
+  const useFetchServerConfig = useServerConfigStore((s) => s.useInitServerConfig);
+  useFetchServerConfig();
+
   // Update NextAuth status
   const useUserStoreUpdater = createStoreUpdater(useUserStore);
-  const enableNextAuth = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
-  useUserStoreUpdater('enabledNextAuth', enableNextAuth);
   const oAuthSSOProviders = useServerConfigStore(serverConfigSelectors.oAuthSSOProviders);
   useUserStoreUpdater('oAuthSSOProviders', oAuthSSOProviders);
 
@@ -79,22 +78,6 @@ const StoreInitialization = memo(() => {
 
   useStoreUpdater('isMobile', mobile);
   useStoreUpdater('router', router);
-
-  // Import settings from the url
-  const searchParam = useSearchParams().get(LOBE_URL_IMPORT_NAME);
-  useEffect(() => {
-    // Why use `usUserStateInit`,
-    // see: https://github.com/lobehub/lobe-chat/pull/4072
-    if (searchParam && isUserStateInit) importUrlShareSettings(searchParam);
-  }, [searchParam, isUserStateInit]);
-
-  useEffect(() => {
-    if (mobile) {
-      router.prefetch('/me');
-    } else {
-      router.prefetch('/chat/settings/modal');
-    }
-  }, [router, mobile]);
 
   return null;
 });

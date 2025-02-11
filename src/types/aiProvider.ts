@@ -23,7 +23,6 @@ export const AiProviderSDKEnum = {
   Huggingface: 'huggingface',
   Ollama: 'ollama',
   Openai: 'openai',
-  Wenxin: 'wenxin',
 } as const;
 
 export type AiProviderSDKType = (typeof AiProviderSDKEnum)[keyof typeof AiProviderSDKEnum];
@@ -159,8 +158,8 @@ export interface AiProviderDetailItem {
 // Update
 export const UpdateAiProviderSchema = z.object({
   config: z.object({}).passthrough().optional(),
-  description: z.string().optional(),
-  logo: z.string().optional(),
+  description: z.string().nullable().optional(),
+  logo: z.string().nullable().optional(),
   name: z.string(),
   sdkType: z.enum(['openai', 'anthropic']).optional(),
 });

@@ -23,6 +23,9 @@
   "360gpt2-pro": {
     "description": "360GPT2 Pro, 360 şirketi tarafından sunulan yüksek düzeyde doğal dil işleme modelidir, mükemmel metin oluşturma ve anlama yeteneğine sahiptir, özellikle oluşturma ve yaratma alanında olağanüstü performans gösterir, karmaşık dil dönüşümleri ve rol canlandırma görevlerini işleyebilir."
   },
+  "360zhinao2-o1": {
+    "description": "360zhinao2-o1, düşünce zincirini oluşturmak için ağaç araması kullanır ve yansıtma mekanizmasını entegre eder, pekiştirme öğrenimi ile eğitilir, model kendini yansıtma ve hata düzeltme yeteneğine sahiptir."
+  },
   "4.0Ultra": {
     "description": "Spark4.0 Ultra, Xinghuo büyük model serisinin en güçlü versiyonudur, çevrimiçi arama bağlantısını yükseltirken, metin içeriğini anlama ve özetleme yeteneğini artırır. Ofis verimliliğini artırmak ve taleplere doğru yanıt vermek için kapsamlı bir çözüm sunar, sektördeki akıllı ürünlerin öncüsüdür."
   },
@@ -43,6 +46,18 @@
   },
   "Baichuan4-Turbo": {
     "description": "Model yetenekleri ülke içinde birinci, bilgi ansiklopedisi, uzun metinler, yaratıcı üretim gibi Çince görevlerde uluslararası ana akım modelleri aşmaktadır. Ayrıca, sektörde lider çok modlu yeteneklere sahip olup, birçok yetkili değerlendirme ölçütünde mükemmel performans sergilemektedir."
+  },
+  "DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "Qwen2.5-Math-1.5B temel alınarak oluşturulmuş DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
+  },
+  "DeepSeek-R1-Distill-Qwen-14B": {
+    "description": "Qwen2.5-14B temel alınarak oluşturulmuş DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
+  },
+  "DeepSeek-R1-Distill-Qwen-32B": {
+    "description": "DeepSeek-R1 serisi, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler, OpenAI-o1-mini seviyesini aşar."
+  },
+  "DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "Qwen2.5-Math-7B temel alınarak oluşturulmuş DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
   },
   "Doubao-lite-128k": {
     "description": "Doubao-lite, mükemmel yanıt hızı ve daha iyi maliyet Performansı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 128k bağlam penceresi çıkarım ve ince ayar destekler."
@@ -76,9 +91,6 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e kıyasla model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
-  },
-  "ERNIE-4.0-Turbo-128K": {
-    "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel olup, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a kıyasla performans açısından daha üstündür."
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "Baidu tarafından geliştirilen, geniş ölçekli büyük dil modeli, genel performansı mükemmeldir ve her alanda karmaşık görev sahneleri için geniş bir şekilde kullanılabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgi güncellemelerinin zamanlamasını güvence altına alır. ERNIE 4.0'a kıyasla, performans olarak daha üstündür."
@@ -175,6 +187,12 @@
   },
   "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
     "description": "Meta Llama 3.1, Meta tarafından geliştirilen çok dilli büyük dil modeli ailesidir ve 8B, 70B ve 405B olmak üzere üç parametre ölçeği ile önceden eğitilmiş ve talimat ince ayar varyantları içermektedir. Bu 8B talimat ince ayar modeli, çok dilli diyalog senaryoları için optimize edilmiştir ve birçok endüstri standart testinde mükemmel performans sergilemektedir. Model, 15 trilyon token'dan fazla açık veriler kullanılarak eğitilmiş ve modelin faydasını ve güvenliğini artırmak için denetimli ince ayar ve insan geri bildirimi pekiştirmeli öğrenme gibi teknikler kullanılmıştır. Llama 3.1, metin üretimi ve kod üretimini desteklemekte olup, bilgi kesim tarihi 2023 Aralık'tır."
+  },
+  "QwQ-32B-Preview": {
+    "description": "QwQ-32B-Preview, karmaşık diyalog oluşturma ve bağlam anlama görevlerini etkili bir şekilde işleyebilen yenilikçi bir doğal dil işleme modelidir."
+  },
+  "Qwen/QVQ-72B-Preview": {
+    "description": "QVQ-72B-Preview, Qwen ekibi tarafından geliştirilen ve görsel çıkarım yeteneklerine odaklanan bir araştırma modelidir. Karmaşık sahne anlayışı ve görsel ile ilgili matematiksel sorunları çözme konusundaki benzersiz avantajları ile dikkat çekmektedir."
   },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview, Qwen'in en son deneysel araştırma modelidir ve AI akıl yürütme yeteneklerini artırmaya odaklanmaktadır. Dil karışımı, özyinelemeli akıl yürütme gibi karmaşık mekanizmaları keşfederek, güçlü akıl yürütme analizi, matematik ve programlama yetenekleri gibi ana avantajlar sunmaktadır. Bununla birlikte, dil geçiş sorunları, akıl yürütme döngüleri, güvenlik endişeleri ve diğer yetenek farklılıkları gibi zorluklar da bulunmaktadır."
@@ -320,20 +338,14 @@
   "abab7-chat-preview": {
     "description": "abab6.5 serisi modellere kıyasla uzun metin, matematik, yazım gibi yeteneklerde büyük bir gelişim göstermektedir."
   },
-  "accounts/fireworks/models/firefunction-v1": {
-    "description": "Fireworks açık kaynak fonksiyon çağrı modeli, mükemmel talimat yürütme yetenekleri ve özelleştirilebilir özellikler sunar."
+  "accounts/fireworks/models/deepseek-r1": {
+    "description": "DeepSeek-R1, güçlendirilmiş öğrenme ve soğuk başlangıç verileri ile optimize edilmiş, mükemmel akıl yürütme, matematik ve programlama performansına sahip en son teknoloji büyük bir dil modelidir."
   },
-  "accounts/fireworks/models/firefunction-v2": {
-    "description": "Fireworks şirketinin en son ürünü Firefunction-v2, Llama-3 tabanlı, fonksiyon çağrıları, diyalog ve talimat takibi gibi senaryolar için özel olarak optimize edilmiş yüksek performanslı bir modeldir."
-  },
-  "accounts/fireworks/models/firellava-13b": {
-    "description": "fireworks-ai/FireLLaVA-13b, hem görüntü hem de metin girdilerini alabilen, yüksek kaliteli verilerle eğitilmiş bir görsel dil modelidir ve çok modlu görevler için uygundur."
+  "accounts/fireworks/models/deepseek-v3": {
+    "description": "Deepseek tarafından sunulan güçlü Mixture-of-Experts (MoE) dil modeli, toplamda 671B parametreye sahiptir ve her bir etiket için 37B parametre etkinleştirilmektedir."
   },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Llama 3 70B talimat modeli, çok dilli diyalog ve doğal dil anlama için optimize edilmiştir, çoğu rakip modelden daha iyi performans gösterir."
-  },
-  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
-    "description": "Llama 3 70B talimat modeli (HF versiyonu), resmi uygulama sonuçlarıyla uyumlu olup yüksek kaliteli talimat takibi görevleri için uygundur."
   },
   "accounts/fireworks/models/llama-v3-8b-instruct": {
     "description": "Llama 3 8B talimat modeli, diyalog ve çok dilli görevler için optimize edilmiştir, mükemmel ve etkili performans sunar."
@@ -353,23 +365,23 @@
   "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
     "description": "Meta'nın 11B parametreli komut ayarlı görüntü akıl yürütme modelidir. Bu model, görsel tanıma, görüntü akıl yürütme, görüntü betimleme ve görüntü hakkında genel sorulara yanıt verme üzerine optimize edilmiştir. Bu model, grafikler ve resimler gibi görsel verileri anlayabilir ve görüntü detaylarını metin olarak betimleyerek görsel ile dil arasındaki boşluğu kapatır."
   },
-  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
-    "description": "Llama 3.2 1B komut modeli, Meta tarafından sunulan hafif çok dilli bir modeldir. Bu model, verimliliği artırmak amacıyla daha büyük modellere göre gecikme ve maliyet açısından önemli iyileştirmeler sunar. Bu modelin örnek kullanım alanları arasında bilgi alma ve özetleme bulunmaktadır."
-  },
   "accounts/fireworks/models/llama-v3p2-3b-instruct": {
     "description": "Llama 3.2 3B komut modeli, Meta tarafından sunulan hafif çok dilli bir modeldir. Bu model, verimliliği artırmak amacıyla daha büyük modellere göre gecikme ve maliyet açısından önemli iyileştirmeler sunar. Bu modelin örnek kullanım alanları arasında sorgulama, öneri yeniden yazma ve yazma desteği bulunmaktadır."
   },
   "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
     "description": "Meta'nın 90B parametreli komut ayarlı görüntü akıl yürütme modelidir. Bu model, görsel tanıma, görüntü akıl yürütme, görüntü betimleme ve görüntü hakkında genel sorulara yanıt verme üzerine optimize edilmiştir. Bu model, grafikler ve resimler gibi görsel verileri anlayabilir ve görüntü detaylarını metin olarak betimleyerek görsel ile dil arasındaki boşluğu kapatır."
   },
+  "accounts/fireworks/models/llama-v3p3-70b-instruct": {
+    "description": "Llama 3.3 70B Instruct, Llama 3.1 70B'nin Aralık güncellemesi olan bir modeldir. Bu model, Llama 3.1 70B (2024 Temmuz'da piyasaya sürüldü) temel alınarak geliştirilmiş olup, araç çağrıları, çok dilli metin desteği, matematik ve programlama yeteneklerini artırmıştır. Model, akıl yürütme, matematik ve talimat takibi alanlarında sektördeki en yüksek standartlara ulaşmış olup, 3.1 405B ile benzer performans sunarken hız ve maliyet açısından önemli avantajlar sağlamaktadır."
+  },
+  "accounts/fireworks/models/mistral-small-24b-instruct-2501": {
+    "description": "24B parametreli model, daha büyük modellerle karşılaştırılabilir en son teknoloji yeteneklerine sahiptir."
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Mixtral MoE 8x22B talimat modeli, büyük ölçekli parametreler ve çok uzmanlı mimarisi ile karmaşık görevlerin etkili işlenmesini destekler."
   },
   "accounts/fireworks/models/mixtral-8x7b-instruct": {
     "description": "Mixtral MoE 8x7B talimat modeli, çok uzmanlı mimarisi ile etkili talimat takibi ve yürütme sunar."
-  },
-  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
-    "description": "Mixtral MoE 8x7B talimat modeli (HF versiyonu), resmi uygulama ile uyumlu olup çeşitli yüksek verimli görev senaryoları için uygundur."
   },
   "accounts/fireworks/models/mythomax-l2-13b": {
     "description": "MythoMax L2 13B modeli, yenilikçi birleşim teknolojileri ile hikaye anlatımı ve rol yapma konularında uzmandır."
@@ -380,17 +392,14 @@
   "accounts/fireworks/models/qwen-qwq-32b-preview": {
     "description": "QwQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir ve AI akıl yürütme yeteneklerini artırmaya odaklanmaktadır."
   },
+  "accounts/fireworks/models/qwen2-vl-72b-instruct": {
+    "description": "Qwen-VL modelinin 72B versiyonu, Alibaba'nın en son iterasyonunun bir ürünüdür ve son bir yılın yeniliklerini temsil etmektedir."
+  },
   "accounts/fireworks/models/qwen2p5-72b-instruct": {
     "description": "Qwen2.5, Alibaba Cloud Qwen ekibi tarafından geliştirilen yalnızca kodlayıcı içeren bir dizi dil modelidir. Bu modeller, 0.5B, 1.5B, 3B, 7B, 14B, 32B ve 72B gibi farklı boyutları sunar ve temel (base) ve komut (instruct) versiyonlarına sahiptir."
   },
   "accounts/fireworks/models/qwen2p5-coder-32b-instruct": {
     "description": "Qwen2.5 Coder 32B Instruct, Alibaba Cloud tarafından yayınlanan kod odaklı büyük dil modeli serisinin en son versiyonudur. Bu model, Qwen2.5 temelinde, 5.5 trilyon token ile eğitilerek kod üretimi, akıl yürütme ve düzeltme yeteneklerini önemli ölçüde artırmıştır. Hem kodlama yeteneklerini geliştirmiş hem de matematik ve genel yetenek avantajlarını korumuştur. Model, kod akıllı ajanları gibi pratik uygulamalar için daha kapsamlı bir temel sunmaktadır."
-  },
-  "accounts/fireworks/models/starcoder-16b": {
-    "description": "StarCoder 15.5B modeli, ileri düzey programlama görevlerini destekler, çok dilli yetenekleri artırır ve karmaşık kod üretimi ve anlama için uygundur."
-  },
-  "accounts/fireworks/models/starcoder-7b": {
-    "description": "StarCoder 7B modeli, 80'den fazla programlama dili için eğitilmiş olup, mükemmel programlama tamamlama yetenekleri ve bağlam anlama sunar."
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Yi-Large modeli, mükemmel çok dilli işleme yetenekleri sunar ve her türlü dil üretimi ve anlama görevleri için uygundur."
@@ -530,11 +539,38 @@
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct, yüksek güvenilirlikte talimat işleme yetenekleri sunar ve çok çeşitli endüstri uygulamalarını destekler."
   },
+  "deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1, tekrarlayan öğrenme (RL) destekli bir çıkarım modelidir ve modeldeki tekrarlama ve okunabilirlik sorunlarını çözmektedir. RL'den önce, DeepSeek-R1 soğuk başlangıç verilerini tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer bir performans sergilemekte ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmaktadır."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
+    "description": "DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B": {
+    "description": "DeepSeek-R1-Distill-Llama-8B, Llama-3.1-8B temel alınarak geliştirilmiş bir damıtma modelidir. Bu model, DeepSeek-R1 tarafından üretilen örneklerle ince ayar yapılmış, mükemmel çıkarım yeteneği sergilemektedir. Birçok referans testinde iyi performans göstermiş, MATH-500'de %89.1 doğruluk oranına, AIME 2024'te %50.4 geçiş oranına ulaşmış, CodeForces'ta 1205 puan alarak 8B ölçeğindeki model olarak güçlü matematik ve programlama yeteneğini göstermiştir."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B": {
+    "description": "DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B": {
+    "description": "DeepSeek-R1-Distill-Qwen-32B, Qwen2.5-32B temel alınarak bilgi damıtma ile elde edilen bir modeldir. Bu model, DeepSeek-R1 tarafından üretilen 800.000 seçkin örnek ile ince ayar yapılmış, matematik, programlama ve çıkarım gibi birçok alanda olağanüstü performans sergilemektedir. AIME 2024, MATH-500, GPQA Diamond gibi birçok referans testinde mükemmel sonuçlar elde etmiş, MATH-500'de %94.3 doğruluk oranına ulaşarak güçlü matematik çıkarım yeteneğini göstermiştir."
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "DeepSeek-R1-Distill-Qwen-7B, Qwen2.5-Math-7B temel alınarak bilgi damıtma ile elde edilen bir modeldir. Bu model, DeepSeek-R1 tarafından üretilen 800.000 seçkin örnek ile ince ayar yapılmış, mükemmel çıkarım yeteneği sergilemektedir. Birçok referans testinde öne çıkmış, MATH-500'de %92.8 doğruluk oranına, AIME 2024'te %55.5 geçiş oranına ulaşmış, CodeForces'ta 1189 puan alarak 7B ölçeğindeki model olarak güçlü matematik ve programlama yeteneğini göstermiştir."
+  },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5, önceki sürümlerin mükemmel özelliklerini bir araya getirir, genel ve kodlama yeteneklerini artırır."
   },
+  "deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3, 6710 milyar parametreye sahip bir karma uzman (MoE) dil modelidir. Çok başlı potansiyel dikkat (MLA) ve DeepSeekMoE mimarisini kullanarak, yardımcı kayıplar olmadan yük dengeleme stratejisi ile çıkarım ve eğitim verimliliğini optimize etmektedir. 14.8 trilyon yüksek kaliteli token üzerinde önceden eğitilmiş ve denetimli ince ayar ile tekrarlayan öğrenme gerçekleştirilmiştir; DeepSeek-V3, performans açısından diğer açık kaynaklı modelleri geride bırakmakta ve lider kapalı kaynaklı modellere yaklaşmaktadır."
+  },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B, yüksek karmaşıklıkta diyaloglar için eğitilmiş gelişmiş bir modeldir."
+  },
+  "deepseek-ai/deepseek-vl2": {
+    "description": "DeepSeek-VL2, DeepSeekMoE-27B tabanlı bir karma uzman (MoE) görsel dil modelidir. Seyrek etkinleştirilen MoE mimarisini kullanarak yalnızca 4.5B parametreyi etkinleştirerek olağanüstü performans sergilemektedir. Bu model, görsel soru yanıtlama, optik karakter tanıma, belge/tablolar/grafikler anlama ve görsel konumlandırma gibi birçok görevde mükemmel sonuçlar elde etmektedir."
   },
   "deepseek-chat": {
     "description": "Genel ve kod yeteneklerini birleştiren yeni bir açık kaynak modeli, yalnızca mevcut Chat modelinin genel diyalog yeteneklerini ve Coder modelinin güçlü kod işleme yeteneklerini korumakla kalmaz, aynı zamanda insan tercihleri ile daha iyi hizalanmıştır. Ayrıca, DeepSeek-V2.5 yazım görevleri, talimat takibi gibi birçok alanda büyük iyileştirmeler sağlamıştır."
@@ -548,6 +584,12 @@
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2, açık kaynaklı bir karışık uzman kod modelidir, kod görevlerinde mükemmel performans sergiler ve GPT4-Turbo ile karşılaştırılabilir."
   },
+  "deepseek-r1": {
+    "description": "DeepSeek-R1, tekrarlayan öğrenme (RL) destekli bir çıkarım modelidir ve modeldeki tekrarlama ve okunabilirlik sorunlarını çözmektedir. RL'den önce, DeepSeek-R1 soğuk başlangıç verilerini tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer bir performans sergilemekte ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmaktadır."
+  },
+  "deepseek-r1-distill-llama-70b": {
+    "description": "DeepSeek R1 - DeepSeek paketindeki daha büyük ve daha akıllı model - Llama 70B mimarisine damıtılmıştır. Referans testleri ve insan değerlendirmelerine dayanarak, bu model orijinal Llama 70B'den daha akıllıdır, özellikle matematik ve gerçeklik doğruluğu gerektiren görevlerde mükemmel performans sergilemektedir."
+  },
   "deepseek-reasoner": {
     "description": "DeepSeek tarafından sunulan bir akıl yürütme modeli. Model, nihai yanıtı vermeden önce bir düşünce zinciri içeriği sunarak nihai cevabın doğruluğunu artırır."
   },
@@ -557,11 +599,62 @@
   "deepseek-v2:236b": {
     "description": "DeepSeek V2 236B, DeepSeek'in tasarım kodu modelidir, güçlü kod üretim yetenekleri sunar."
   },
+  "deepseek-v3": {
+    "description": "DeepSeek-V3, Hangzhou DeepSeek Yapay Zeka Temel Teknoloji Araştırma Şirketi tarafından geliştirilen MoE modelidir, birçok değerlendirme sonucunda öne çıkmakta ve ana akım listelerde açık kaynak modeller arasında birinci sırada yer almaktadır. V3, V2.5 modeline göre üretim hızında 3 kat artış sağlamış, kullanıcılara daha hızlı ve akıcı bir deneyim sunmuştur."
+  },
   "deepseek/deepseek-chat": {
     "description": "Genel ve kod yeteneklerini birleştiren yeni açık kaynak model, yalnızca mevcut Chat modelinin genel diyalog yeteneklerini ve Coder modelinin güçlü kod işleme yeteneklerini korumakla kalmaz, aynı zamanda insan tercihleriyle daha iyi hizalanmıştır. Ayrıca, DeepSeek-V2.5 yazma görevleri, talimat takibi gibi birçok alanda da büyük iyileştirmeler sağlamıştır."
   },
   "emohaa": {
     "description": "Emohaa, duygusal sorunları anlamalarına yardımcı olmak için profesyonel danışmanlık yeteneklerine sahip bir psikolojik modeldir."
+  },
+  "ernie-3.5-128k": {
+    "description": "Baidu tarafından geliştirilen amiral gemisi büyük ölçekli dil modeli, geniş bir Çince ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog soru-cevap, yaratım, eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar."
+  },
+  "ernie-3.5-8k": {
+    "description": "Baidu tarafından geliştirilen amiral gemisi büyük ölçekli dil modeli, geniş bir Çince ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog soru-cevap, yaratım, eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar."
+  },
+  "ernie-3.5-8k-preview": {
+    "description": "Baidu tarafından geliştirilen amiral gemisi büyük ölçekli dil modeli, geniş bir Çince ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog soru-cevap, yaratım, eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar."
+  },
+  "ernie-4.0-8k-latest": {
+    "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e göre model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar."
+  },
+  "ernie-4.0-8k-preview": {
+    "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e göre model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar."
+  },
+  "ernie-4.0-turbo-128k": {
+    "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a göre performans açısından daha üstündür."
+  },
+  "ernie-4.0-turbo-8k-latest": {
+    "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a göre performans açısından daha üstündür."
+  },
+  "ernie-4.0-turbo-8k-preview": {
+    "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a göre performans açısından daha üstündür."
+  },
+  "ernie-char-8k": {
+    "description": "Baidu tarafından geliştirilen dikey senaryo büyük dil modeli, oyun NPC'leri, müşteri hizmetleri diyalogları, diyalog karakter rolü gibi uygulama senaryolarına uygundur, karakter tarzı daha belirgin ve tutarlıdır, talimat takibi yeteneği daha güçlü, çıkarım performansı daha iyidir."
+  },
+  "ernie-char-fiction-8k": {
+    "description": "Baidu tarafından geliştirilen dikey senaryo büyük dil modeli, oyun NPC'leri, müşteri hizmetleri diyalogları, diyalog karakter rolü gibi uygulama senaryolarına uygundur, karakter tarzı daha belirgin ve tutarlıdır, talimat takibi yeteneği daha güçlü, çıkarım performansı daha iyidir."
+  },
+  "ernie-lite-8k": {
+    "description": "ERNIE Lite, Baidu tarafından geliştirilen hafif büyük dil modelidir, mükemmel model performansı ve çıkarım yeteneği ile düşük hesaplama gücüne sahip AI hızlandırıcı kartları için uygundur."
+  },
+  "ernie-lite-pro-128k": {
+    "description": "Baidu tarafından geliştirilen hafif büyük dil modeli, mükemmel model performansı ve çıkarım yeteneği ile ERNIE Lite'dan daha iyi sonuçlar verir, düşük hesaplama gücüne sahip AI hızlandırıcı kartları için uygundur."
+  },
+  "ernie-novel-8k": {
+    "description": "Baidu tarafından geliştirilen genel büyük dil modeli, roman devam ettirme yeteneğinde belirgin bir avantaja sahiptir, aynı zamanda kısa oyun, film gibi senaryolarda da kullanılabilir."
+  },
+  "ernie-speed-128k": {
+    "description": "Baidu'nun 2024 yılında yayımladığı en son yüksek performanslı büyük dil modeli, genel yetenekleri mükemmel, belirli senaryo sorunlarını daha iyi ele almak için temel model olarak ince ayar yapılabilir, aynı zamanda mükemmel çıkarım performansına sahiptir."
+  },
+  "ernie-speed-pro-128k": {
+    "description": "Baidu'nun 2024 yılında yayımladığı en son yüksek performanslı büyük dil modeli, genel yetenekleri mükemmel, ERNIE Speed'den daha iyi sonuçlar verir, belirli senaryo sorunlarını daha iyi ele almak için temel model olarak ince ayar yapılabilir, aynı zamanda mükemmel çıkarım performansına sahiptir."
+  },
+  "ernie-tiny-8k": {
+    "description": "ERNIE Tiny, Baidu tarafından geliştirilen ultra yüksek performanslı büyük dil modelidir, dağıtım ve ince ayar maliyetleri Wenxin serisi modelleri arasında en düşüktür."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning), kararlı ve ayarlanabilir bir performans sunar, karmaşık görev çözümleri için ideal bir seçimdir."
@@ -866,14 +959,14 @@
   "internlm2.5-latest": {
     "description": "En son model serimiz, olağanüstü çıkarım performansına sahiptir, 1M bağlam uzunluğunu destekler ve daha güçlü talimat takibi ve araç çağırma yetenekleri sunar."
   },
+  "internlm3-latest": {
+    "description": "En son model serimiz, olağanüstü çıkarım performansına sahiptir ve aynı ölçekli açık kaynak modeller arasında liderdir. Varsayılan olarak en son yayımlanan InternLM3 serisi modellerine işaret eder."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM, öğrenme bilimleri ilkelerine uygun olarak eğitilmiş, görev odaklı deneysel bir dil modelidir. Eğitim ve öğrenim senaryolarında sistem talimatlarını takip edebilir ve uzman bir mentor olarak görev alabilir."
   },
   "lite": {
     "description": "Spark Lite, son derece düşük gecikme süresi ve yüksek verimlilikle çalışan hafif bir büyük dil modelidir. Tamamen ücretsiz ve açık olup, gerçek zamanlı çevrimiçi arama işlevini desteklemektedir. Hızlı yanıt verme özelliği, düşük hesaplama gücüne sahip cihazlarda çıkarım uygulamaları ve model ince ayarlarında mükemmel performans sergileyerek, kullanıcılara maliyet etkinliği ve akıllı deneyim sunmakta, özellikle bilgi sorgulama, içerik oluşturma ve arama senaryolarında başarılı olmaktadır."
-  },
-  "llama-3.1-70b-instruct": {
-    "description": "Llama 3.1 70B Instruct modeli, 70B parametreye sahiptir ve büyük metin üretimi ve talimat görevlerinde mükemmel performans sunar."
   },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B, daha güçlü AI akıl yürütme yeteneği sunar, karmaşık uygulamalar için uygundur ve yüksek verimlilik ve doğruluk sağlamak için çok sayıda hesaplama işlemini destekler."
@@ -881,20 +974,11 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B, hızlı metin üretim yeteneği sunan yüksek performanslı bir modeldir ve büyük ölçekli verimlilik ve maliyet etkinliği gerektiren uygulama senaryoları için son derece uygundur."
   },
-  "llama-3.1-8b-instruct": {
-    "description": "Llama 3.1 8B Instruct modeli, 8B parametreye sahiptir ve görsel talimat görevlerinin etkili bir şekilde yürütülmesini sağlar, kaliteli metin üretim yetenekleri sunar."
-  },
   "llama-3.1-sonar-huge-128k-online": {
     "description": "Llama 3.1 Sonar Huge Online modeli, 405B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, karmaşık çevrimiçi sohbet uygulamaları için tasarlanmıştır."
   },
-  "llama-3.1-sonar-large-128k-chat": {
-    "description": "Llama 3.1 Sonar Large Chat modeli, 70B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, karmaşık çevrimdışı sohbet görevleri için uygundur."
-  },
   "llama-3.1-sonar-large-128k-online": {
     "description": "Llama 3.1 Sonar Large Online modeli, 70B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, yüksek kapasiteli ve çeşitli sohbet görevleri için uygundur."
-  },
-  "llama-3.1-sonar-small-128k-chat": {
-    "description": "Llama 3.1 Sonar Small Chat modeli, 8B parametreye sahiptir ve çevrimdışı sohbet için tasarlanmıştır, yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler."
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online modeli, 8B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, çevrimiçi sohbet için tasarlanmıştır ve çeşitli metin etkileşimlerini etkili bir şekilde işler."
@@ -991,6 +1075,9 @@
   },
   "meta-llama/Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3, Llama serisinin en gelişmiş çok dilli açık kaynak büyük dil modelidir, 405B modelinin performansını çok düşük maliyetle deneyimleme imkanı sunar. Transformer yapısına dayanır ve denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) ile kullanılabilirlik ve güvenliği artırılmıştır. Talimat ayarlı versiyonu çok dilli diyaloglar için optimize edilmiştir ve birçok endüstri standardında birçok açık kaynak ve kapalı sohbet modelinden daha iyi performans göstermektedir. Bilgi kesim tarihi 2023 Aralık'tır."
+  },
+  "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
+    "description": "Meta Llama 3.3 çok dilli büyük dil modeli (LLM), 70B (metin girişi/metin çıkışı) içinde önceden eğitilmiş ve talimat ayarlı bir üretim modelidir. Llama 3.3 talimat ayarlı saf metin modeli, çok dilli diyalog kullanım durumları için optimize edilmiştir ve yaygın endüstri standartlarında birçok mevcut açık kaynak ve kapalı sohbet modelinden daha iyi performans göstermektedir."
   },
   "meta-llama/Llama-Vision-Free": {
     "description": "LLaMA 3.2, görsel ve metin verilerini bir arada işleme amacıyla tasarlanmıştır. Görüntü betimleme ve görsel soru yanıtlama gibi görevlerde mükemmel performans sergiler, dil üretimi ve görsel akıl yürütme arasındaki boşluğu kapar."
@@ -1169,6 +1256,9 @@
   "o1-preview": {
     "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
   },
+  "o3-mini": {
+    "description": "o3-mini, aynı maliyet ve gecikme hedefleriyle yüksek zeka sunan en yeni küçük ölçekli çıkarım modelimizdir."
+  },
   "open-codestral-mamba": {
     "description": "Codestral Mamba, kod üretimine odaklanan Mamba 2 dil modelidir ve ileri düzey kod ve akıl yürütme görevlerine güçlü destek sunar."
   },
@@ -1259,6 +1349,9 @@
   "qwen-vl-max-latest": {
     "description": "Tongyi Qianwen ultra büyük ölçekli görsel dil modeli. Geliştirilmiş versiyona kıyasla, görsel akıl yürütme yeteneğini ve talimatlara uyum yeteneğini bir kez daha artırır, daha yüksek görsel algı ve bilişsel seviyeler sunar."
   },
+  "qwen-vl-ocr-latest": {
+    "description": "Tongyi Qianwen OCR, belge, tablo, sınav soruları, el yazısı gibi çeşitli görüntü türlerinden metin çıkarma yeteneğine odaklanan özel bir modeldir. Birçok yazıyı tanıyabilir, şu anda desteklenen diller: Çince, İngilizce, Fransızca, Japonca, Korece, Almanca, Rusça, İtalyanca, Vietnamca, Arapça."
+  },
   "qwen-vl-plus-latest": {
     "description": "Tongyi Qianwen büyük ölçekli görsel dil modelinin geliştirilmiş versiyonu. Detay tanıma ve metin tanıma yeteneklerini büyük ölçüde artırır, bir milyondan fazla piksel çözünürlüğü ve herhangi bir en-boy oranındaki görüntüleri destekler."
   },
@@ -1276,6 +1369,9 @@
   },
   "qwen2.5-14b-instruct": {
     "description": "Tongyi Qianwen 2.5, halka açık 14B ölçeğinde bir modeldir."
+  },
+  "qwen2.5-14b-instruct-1m": {
+    "description": "Tongyi Qianwen 2.5, 72B ölçeğinde açık kaynak olarak sunulmuştur."
   },
   "qwen2.5-32b-instruct": {
     "description": "Tongyi Qianwen 2.5, halka açık 32B ölçeğinde bir modeldir."
@@ -1303,6 +1399,12 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Qwen-Math modeli, güçlü matematik problem çözme yeteneklerine sahiptir."
+  },
+  "qwen2.5-vl-72b-instruct": {
+    "description": "Talimat takibi, matematik, problem çözme, kodlama genelinde iyileştirme, her türlü nesneyi tanıma yeteneği artışı, çeşitli formatları doğrudan hassas bir şekilde görsel unsurları konumlandırma desteği, uzun video dosyalarını (en fazla 10 dakika) anlama ve saniye düzeyinde olay anlarını konumlandırma yeteneği, zaman sıralamasını ve hızını anlama, analiz ve konumlandırma yeteneğine dayanarak OS veya Mobil ajanları kontrol etme desteği, anahtar bilgileri çıkarma yeteneği ve Json formatında çıktı verme yeteneği güçlüdür, bu sürüm 72B versiyonudur, bu serinin en güçlü versiyonudur."
+  },
+  "qwen2.5-vl-7b-instruct": {
+    "description": "Talimat takibi, matematik, problem çözme, kodlama genelinde iyileştirme, her türlü nesneyi tanıma yeteneği artışı, çeşitli formatları doğrudan hassas bir şekilde görsel unsurları konumlandırma desteği, uzun video dosyalarını (en fazla 10 dakika) anlama ve saniye düzeyinde olay anlarını konumlandırma yeteneği, zaman sıralamasını ve hızını anlama, analiz ve konumlandırma yeteneğine dayanarak OS veya Mobil ajanları kontrol etme desteği, anahtar bilgileri çıkarma yeteneği ve Json formatında çıktı verme yeteneği güçlüdür, bu sürüm 72B versiyonudur, bu serinin en güçlü versiyonudur."
   },
   "qwen2.5:0.5b": {
     "description": "Qwen2.5, Alibaba'nın yeni nesil büyük ölçekli dil modelidir ve mükemmel performansıyla çeşitli uygulama ihtiyaçlarını desteklemektedir."
@@ -1336,6 +1438,15 @@
   },
   "solar-pro": {
     "description": "Solar Pro, Upstage tarafından sunulan yüksek akıllı LLM'dir, tek GPU talimat takibi yeteneğine odaklanır, IFEval puanı 80'in üzerindedir. Şu anda İngilizceyi desteklemekte olup, resmi versiyonu 2024 Kasım'da piyasaya sürülmesi planlanmaktadır ve dil desteği ile bağlam uzunluğunu genişletecektir."
+  },
+  "sonar": {
+    "description": "Arama bağlamına dayalı hafif bir arama ürünüdür, Sonar Pro'dan daha hızlı ve daha ucuzdur."
+  },
+  "sonar-pro": {
+    "description": "Gelişmiş sorgular ve takip desteği sunan, arama bağlamını destekleyen bir üst düzey arama ürünüdür."
+  },
+  "sonar-reasoning": {
+    "description": "DeepSeek akıl yürütme modeli tarafından desteklenen yeni API ürünü."
   },
   "step-1-128k": {
     "description": "Performans ve maliyet arasında denge sağlar, genel senaryolar için uygundur."

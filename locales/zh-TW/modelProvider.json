@@ -154,30 +154,6 @@
       "desc": "必須包含http(s)://，本地未額外指定可留空",
       "title": "接口代理地址"
     },
-    "setup": {
-      "cors": {
-        "description": "因瀏覽器安全限制，您需要為 Ollama 進行跨域配置後才能正常使用。",
-        "linux": {
-          "env": "在 [Service] 部分下添加 `Environment`，新增 OLLAMA_ORIGINS 環境變數：",
-          "reboot": "重新載入 systemd 並重新啟動 Ollama",
-          "systemd": "呼叫 systemd 編輯 ollama 服務："
-        },
-        "macos": "請開啟「終端」應用程式，貼上以下指令，然後按 Enter 執行",
-        "reboot": "執行完成後請重新啟動 Ollama 服務",
-        "title": "配置 Ollama 允許跨域訪問",
-        "windows": "在 Windows 上，點擊「控制面板」，進入編輯系統環境變數。為您的使用者帳戶新增名為「OLLAMA_ORIGINS」的環境變數，值為 *，點擊「確定/應用」保存"
-      },
-      "install": {
-        "description": "請確認您已經啟用 Ollama，如果尚未下載 Ollama，請前往官網<1>下載</1>",
-        "docker": "如果您更傾向於使用 Docker，Ollama 也提供了官方 Docker 映像，您可以透過以下命令拉取：",
-        "linux": {
-          "command": "透過以下命令安裝：",
-          "manual": "或者，您也可以參考 <1>Linux 手動安裝指南</1> 自行安裝"
-        },
-        "title": "在本地安裝並啟動 Ollama 應用",
-        "windowsTab": "Windows (預覽版)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "取消下載",
@@ -253,6 +229,10 @@
           "title": "模型 ID"
         },
         "modalTitle": "自定義模型配置",
+        "reasoning": {
+          "extra": "此配置將僅開啟模型深度思考的能力，具體效果完全取決於模型本身，請自行測試該模型是否具備可用的深度思考能力",
+          "title": "支持深度思考"
+        },
         "tokens": {
           "extra": "設定模型支持的最大 Token 數",
           "title": "最大上下文窗口",
@@ -313,26 +293,6 @@
     "deleteSuccess": "刪除成功",
     "tooltip": "更新服務商基礎配置",
     "updateSuccess": "更新成功"
-  },
-  "wenxin": {
-    "accessKey": {
-      "desc": "填入百度千帆平台的 Access Key",
-      "placeholder": "千帆 Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "測試 AccessKey / SecretAccess 是否填寫正確"
-    },
-    "secretKey": {
-      "desc": "填入百度千帆平台 Secret Key",
-      "placeholder": "千帆 Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "自訂服務區域",
-      "description": "輸入你的 AccessKey / SecretKey 即可開始會話。應用不會記錄你的鑑權配置",
-      "title": "使用自訂文心一言鑑權資訊"
-    }
   },
   "zeroone": {
     "title": "01.AI 零一萬物"

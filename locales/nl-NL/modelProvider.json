@@ -154,30 +154,6 @@
       "desc": "Moet http(s):// bevatten, kan leeg gelaten worden als lokaal niet specifiek opgegeven",
       "title": "Interface Proxyadres"
     },
-    "setup": {
-      "cors": {
-        "description": "Vanwege beveiligingsbeperkingen in de browser moet je CORS-configuratie voor Ollama instellen om het correct te kunnen gebruiken.",
-        "linux": {
-          "env": "Voeg `Environment` toe onder de [Service] sectie en voeg de OLLAMA_ORIGINS omgevingsvariabele toe:",
-          "reboot": "Herlaad systemd en herstart Ollama",
-          "systemd": "Roep systemd aan om de ollama service te bewerken:"
-        },
-        "macos": "Open de 'Terminal' applicatie, plak de volgende opdracht en druk op enter om uit te voeren",
-        "reboot": "Herstart de Ollama service na voltooiing",
-        "title": "Configureer Ollama voor cross-origin toegang",
-        "windows": "Op Windows, klik op 'Configuratiescherm', ga naar systeemomgevingsvariabelen bewerken. Maak een nieuwe omgevingsvariabele met de naam 'OLLAMA_ORIGINS' voor je gebruikersaccount, met de waarde *, en klik op 'OK/Toepassen' om op te slaan"
-      },
-      "install": {
-        "description": "Zorg ervoor dat je Ollama hebt ingeschakeld. Als je Ollama nog niet hebt gedownload, ga dan naar de officiële website <1>om te downloaden</1>",
-        "docker": "Als je de voorkeur geeft aan Docker, biedt Ollama ook een officiële Docker-image aan, die je kunt ophalen met de volgende opdracht:",
-        "linux": {
-          "command": "Installeer met de volgende opdracht:",
-          "manual": "Of je kunt de <1>Linux handmatige installatiehandleiding</1> raadplegen voor een handmatige installatie"
-        },
-        "title": "Installeer en start de Ollama applicatie lokaal",
-        "windowsTab": "Windows (previewversie)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "Annuleer download",
@@ -253,6 +229,10 @@
           "title": "Model ID"
         },
         "modalTitle": "Configuratie van aangepast model",
+        "reasoning": {
+          "extra": "Deze configuratie schakelt alleen de mogelijkheid voor diepgaand denken van het model in. Het specifieke effect hangt volledig af van het model zelf, test zelf of dit model in staat is tot bruikbaar diepgaand denken.",
+          "title": "Ondersteuning voor diepgaand denken"
+        },
         "tokens": {
           "extra": "Stel het maximale aantal tokens in dat door het model wordt ondersteund",
           "title": "Maximale contextvenster",
@@ -313,26 +293,6 @@
     "deleteSuccess": "Verwijdering geslaagd",
     "tooltip": "Werk basisconfiguratie van provider bij",
     "updateSuccess": "Bijwerking geslaagd"
-  },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Vul de Access Key van het Baidu Qianfan-platform in",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Test of de AccessKey / SecretAccess correct is ingevuld"
-    },
-    "secretKey": {
-      "desc": "Vul de Secret Key van het Baidu Qianfan-platform in",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Aangepaste servicegebied",
-      "description": "Voer je AccessKey / SecretKey in om de sessie te starten. De applicatie zal je authenticatie-instellingen niet opslaan",
-      "title": "Gebruik aangepaste Wenxin Yiyan-authenticatie-informatie"
-    }
   },
   "zeroone": {
     "title": "01.AI Nul Een Alles"

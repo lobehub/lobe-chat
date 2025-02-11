@@ -270,7 +270,7 @@ LobeChat のプラグインエコシステムは、そのコア機能の重要�
 | [Bing_websearch](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | BingApi を基にインターネットから情報を検索<br/>`bingsearch`                                               |
 | [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>        | 株を分析し、包括的なリアルタイムの投資データと分析を取得します。<br/>`stock`                              |
 
-> 📊 Total plugins: [<kbd>**49**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -302,14 +302,14 @@ LobeChat エージェントマーケットプレイスでは、クリエイタ�
 
 <!-- AGENT LIST -->
 
-| 最近追加                                                                                                                                                                     | 説明                                                                                                                              |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| [SUNO 曲作支援ツール](https://lobechat.com/discover/assistant/suno-lyrics-assistant)<br/><sup>By **[sqkkyzx](https://github.com/sqkkyzx)** on **2025-01-26**</sup>           | ユーザーのニーズに基づいて SUNO の曲作成パラメータを生成します<br/>`歌詞作成` `音楽スタイル` `編曲` `パラメータ設定`              |
-| [偉大なるビッグス・ディッカス](https://lobechat.com/discover/assistant/all-knowing)<br/><sup>By **[CGitwater](https://github.com/CGitwater)** on **2025-01-24**</sup>        | 全能の知識の神<br/>`ビッグス` `ディッカス`                                                                                        |
-| [PPT 制作達人](https://lobechat.com/discover/assistant/ppt-production-expert)<br/><sup>By **[patricleehua](https://github.com/patricleehua)** on **2025-01-24**</sup>        | 高品質な PPT の迅速な制作と最適化に優れています<br/>`ppt制作` `デザイン` `コンサルティング` `コンテンツ最適化` `ユーザーサポート` |
-| [OCR ドキュメント転写アシスタント](https://lobechat.com/discover/assistant/ocr-markdown)<br/><sup>By **[Liangpi000](https://github.com/Liangpi000)** on **2025-01-24**</sup> | 文書内容の転写と markdown フォーマットに優れています<br/>`文書生成` `markdown` `フォーマット` `転写` `タスクガイド`               |
+| 最近追加                                                                                                                                                                                       | 説明                                                                                                                           |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [小智フランス語翻訳アシスタント](https://lobechat.com/discover/assistant/xiao-zhi-french-translation-asst-v-1)<br/><sup>By **[WeR-Best](https://github.com/WeR-Best)** on **2025-02-10**</sup> | 親しみやすく、専門的で、共感力のあるフランス語翻訳 AI アシスタント<br/>`aiアシスタント` `フランス語翻訳` `異文化交流` `創造性` |
+| [命理研究者](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>                                      | 八字命に精通<br/>`命理学` `八字` `伝統文化`                                                                                    |
+| [言語の魅力学習メンター](https://lobechat.com/discover/assistant/bad-language-helper)<br/><sup>By **[Guducat](https://github.com/Guducat)** on **2025-02-06**</sup>                            | 言語の魅力と多様な応答を教えるのが得意<br/>`言語学習` `対話例`                                                                 |
+| [Allinone](https://lobechat.com/discover/assistant/allinone-v-1)<br/><sup>By **[AXuanCreator](https://github.com/AXuanCreator)** on **2025-02-06**</sup>                                       | 革新・未来・卓越<br/>`プログラミング` `低コスト` `簡潔な回答`                                                                  |
 
-> 📊 Total agents: [<kbd>**471**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**486**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 

@@ -1,34 +1,20 @@
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
+import { AgentRuntimeErrorType } from '../error';
+import { pruneReasoningPayload } from '../openai';
+import { ModelProvider } from '../types';
+import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
-import { AgentRuntimeErrorType } from '../error';
-import { o1Models, pruneO1Payload } from '../openai';
-import { ModelProvider } from '../types';
-import {
-  CHAT_MODELS_BLOCK_LIST,
-  LobeOpenAICompatibleFactory,
-} from '../utils/openaiCompatibleFactory';
-
-enum Task {
-  'chat-completion',
-  'embeddings',
-}
-
-/* eslint-disable typescript-sort-keys/interface */
-type Model = {
+export interface GithubModelCard {
+  description: string;
+  friendly_name: string;
   id: string;
   name: string;
-  friendly_name: string;
-  model_version: number;
-  publisher: string;
-  model_family: string;
-  model_registry: string;
-  license: string;
-  task: Task;
-  description: string;
-  summary: string;
   tags: string[];
-};
+  task: string;
+}
+
 /* eslint-enable typescript-sort-keys/interface */
 
 export const LobeGithubAI = LobeOpenAICompatibleFactory({
@@ -37,8 +23,8 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
     handlePayload: (payload) => {
       const { model } = payload;
 
-      if (o1Models.has(model)) {
-        return { ...pruneO1Payload(payload), stream: false } as any;
+      if (model.startsWith('o1') || model.startsWith('o3')) {
+        return { ...pruneReasoningPayload(payload), stream: false } as any;
       }
 
       return { ...payload, stream: payload.stream ?? true };
@@ -52,23 +38,35 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
     invalidAPIKey: AgentRuntimeErrorType.InvalidGithubToken,
   },
   models: async ({ client }) => {
+    const functionCallKeywords = [
+      'function',
+      'tool',
+    ];
+
+    const visionKeywords = [
+      'vision',
+    ];
+
+    const reasoningKeywords = [
+      'deepseek-r1',
+      'o1',
+      'o3',
+    ];
+
     const modelsPage = (await client.models.list()) as any;
-    const modelList: Model[] = modelsPage.body;
+    const modelList: GithubModelCard[] = modelsPage.body;
+
     return modelList
-      .filter((model) => {
-        return CHAT_MODELS_BLOCK_LIST.every(
-          (keyword) => !model.name.toLowerCase().includes(keyword),
-        );
-      })
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === model.name);
-
-        if (knownModel) return knownModel;
-
         return {
+          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.contextWindowTokens ?? undefined,
           description: model.description,
           displayName: model.friendly_name,
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.enabled || false,
+          functionCall: functionCallKeywords.some(keyword => model.description.toLowerCase().includes(keyword)),
           id: model.name,
+          reasoning: reasoningKeywords.some(keyword => model.name.toLowerCase().includes(keyword)),
+          vision: visionKeywords.some(keyword => model.description.toLowerCase().includes(keyword)),
         };
       })
       .filter(Boolean) as ChatModelCard[];

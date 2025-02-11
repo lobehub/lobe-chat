@@ -154,30 +154,6 @@
       "desc": "Phải bao gồm http(s)://, có thể để trống nếu không chỉ định thêm cho địa phương",
       "title": "Địa chỉ proxy API"
     },
-    "setup": {
-      "cors": {
-        "description": "Do vấn đề về an ninh trình duyệt, bạn cần cấu hình CORS cho Ollama trước khi có thể sử dụng bình thường.",
-        "linux": {
-          "env": "Trong phần [Service], thêm `Environment`, thêm biến môi trường OLLAMA_ORIGINS:",
-          "reboot": "Tải lại systemd và khởi động lại Ollama",
-          "systemd": "Gọi systemd để chỉnh sửa dịch vụ ollama:"
-        },
-        "macos": "Vui lòng mở ứng dụng «Terminal», dán lệnh sau và nhấn Enter để chạy",
-        "reboot": "Vui lòng khởi động lại dịch vụ Ollama sau khi hoàn thành",
-        "title": "Cấu hình Ollama cho phép truy cập từ xa",
-        "windows": "Trên Windows, nhấp vào «Control Panel», vào chỉnh sửa biến môi trường hệ thống. Tạo biến môi trường tên là «OLLAMA_ORIGINS» cho tài khoản người dùng của bạn, giá trị là * , nhấp vào «OK/Áp dụng» để lưu lại"
-      },
-      "install": {
-        "description": "Vui lòng xác nhận rằng bạn đã bật Ollama. Nếu chưa tải Ollama, vui lòng truy cập trang web chính thức để <1>tải xuống</1>",
-        "docker": "Nếu bạn muốn sử dụng Docker, Ollama cũng cung cấp hình ảnh Docker chính thức, bạn có thể kéo theo lệnh sau:",
-        "linux": {
-          "command": "Cài đặt bằng lệnh sau:",
-          "manual": "Hoặc bạn cũng có thể tham khảo <1>Hướng dẫn cài đặt thủ công trên Linux</1> để tự cài đặt"
-        },
-        "title": "Cài đặt và mở Ollama ứng dụng trên máy cục bộ",
-        "windowsTab": "Windows (Bản xem trước)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "Hủy tải xuống",
@@ -253,6 +229,10 @@
           "title": "ID mô hình"
         },
         "modalTitle": "Cấu hình mô hình tùy chỉnh",
+        "reasoning": {
+          "extra": "Cấu hình này sẽ chỉ kích hoạt khả năng suy nghĩ sâu của mô hình, hiệu quả cụ thể hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra xem mô hình này có khả năng suy nghĩ sâu có thể sử dụng hay không",
+          "title": "Hỗ trợ suy nghĩ sâu"
+        },
         "tokens": {
           "extra": "Cài đặt số Token tối đa mà mô hình hỗ trợ",
           "title": "Cửa sổ ngữ cảnh tối đa",
@@ -313,26 +293,6 @@
     "deleteSuccess": "Xóa thành công",
     "tooltip": "Cập nhật cấu hình cơ bản của nhà cung cấp",
     "updateSuccess": "Cập nhật thành công"
-  },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Nhập Access Key từ nền tảng Qianfan của Baidu",
-      "placeholder": "Access Key Qianfan",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Kiểm tra xem AccessKey / SecretAccess có được nhập đúng không"
-    },
-    "secretKey": {
-      "desc": "Nhập Secret Key từ nền tảng Qianfan của Baidu",
-      "placeholder": "Secret Key Qianfan",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Khu vực dịch vụ tùy chỉnh",
-      "description": "Nhập AccessKey / SecretKey của bạn để bắt đầu phiên trò chuyện. Ứng dụng sẽ không ghi lại cấu hình xác thực của bạn",
-      "title": "Sử dụng thông tin xác thực của Wenxin Yiyan tùy chỉnh"
-    }
   },
   "zeroone": {
     "title": "01.AI Zero One"

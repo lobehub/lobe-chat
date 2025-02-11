@@ -6,9 +6,105 @@ const googleChatModels: AIChatModelCard[] = [
       functionCall: true,
       vision: true,
     },
+    contextWindowTokens: 2_097_152 + 8192,
+    description:
+      'Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。',
+    displayName: 'Gemini 2.0 Pro Experimental 02-05',
+    enabled: true,
+    id: 'gemini-2.0-pro-exp-02-05',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-02-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 8192,
+    description:
+      'Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。',
+    displayName: 'Gemini 2.0 Flash',
+    enabled: true,
+    id: 'gemini-2.0-flash',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0.025,
+      input: 0.1,
+      output: 0.4,
+    },
+    releasedAt: '2025-02-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 8192,
+    description:
+      'Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。',
+    displayName: 'Gemini 2.0 Flash 001',
+    id: 'gemini-2.0-flash-001',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0.025,
+      input: 0.1,
+      output: 0.4,
+    },
+    releasedAt: '2025-02-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 8192,
+    description:
+      '一个 Gemini 2.0 Flash 模型，针对成本效益和低延迟等目标进行了优化。',
+    displayName: 'Gemini 2.0 Flash-Lite Preview 02-05',
+    id: 'gemini-2.0-flash-lite-preview-02-05',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0.018_75,
+      input: 0.075,
+      output: 0.3,
+    },
+    releasedAt: '2025-02-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 2_097_152 + 8192,
+    description:
+      'Gemini Exp 1206 是 Google 的实验性多模态AI模型，与历史版本相比有一定的质量提升。',
+    displayName: 'Gemini Experimental 1206',
+    id: 'gemini-exp-1206',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2024-12-06',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
     contextWindowTokens: 1_048_576 + 65_536,
     description:
-      'Gemini 2.0 Flash Exp 是 Google 最新的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。',
+      'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
     displayName: 'Gemini 2.0 Flash Thinking Experimental 01-21',
     enabled: true,
     id: 'gemini-2.0-flash-thinking-exp-01-21',
@@ -23,14 +119,14 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 40_959,
     description:
-      'Gemini 2.0 Flash Exp 是 Google 最新的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。',
-    displayName: 'Gemini 2.0 Flash Thinking Experimental 1219',
-    id: 'gemini-2.0-flash-thinking-exp-1219',
+      'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
+    displayName: 'Gemini 2.0 Flash Thinking Experimental 12-19',
+    id: 'gemini-2.0-flash-thinking-exp-1219', // be replaced
     maxOutput: 8192,
     pricing: {
       cachedInput: 0,
@@ -47,9 +143,8 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_056_768,
     description:
-      'Gemini 2.0 Flash Exp 是 Google 最新的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。',
+      'Gemini 2.0 Flash Exp 是 Google 的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。',
     displayName: 'Gemini 2.0 Flash Experimental',
-    enabled: true,
     id: 'gemini-2.0-flash-exp',
     maxOutput: 8192,
     pricing: {
@@ -58,62 +153,6 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0,
     },
     releasedAt: '2024-12-11',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 2_105_344,
-    description:
-      'Gemini Exp 1206 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升。',
-    displayName: 'Gemini Experimental 1206',
-    enabled: true,
-    id: 'gemini-exp-1206',
-    maxOutput: 8192,
-    pricing: {
-      cachedInput: 0,
-      input: 0,
-      output: 0,
-    },
-    releasedAt: '2024-12-06',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 40_959,
-    description: 'Gemini Exp 1121 是 Google 的实验性多模态AI模型，拥有改进的编码、推理和视觉能力。',
-    displayName: 'Gemini Experimental 1121',
-    id: 'gemini-exp-1121',
-    maxOutput: 8192,
-    pricing: {
-      cachedInput: 0,
-      input: 0,
-      output: 0,
-    },
-    releasedAt: '2024-11-21',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 40_959,
-    description: 'Gemini Exp 1114 是 Google 的实验性多模态AI模型，对输出质量有一定改进。',
-    displayName: 'Gemini Experimental 1114',
-    id: 'gemini-exp-1114',
-    maxOutput: 8192,
-    pricing: {
-      cachedInput: 0,
-      input: 0,
-      output: 0,
-    },
-    releasedAt: '2024-11-14',
     type: 'chat',
   },
   {
@@ -141,28 +180,8 @@ const googleChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_008_192,
-    description:
-      'Gemini 1.5 Flash 是 Google 最新的多模态AI模型，具备快速处理能力，支持文本、图像和视频输入，适用于多种任务的高效扩展。',
-    displayName: 'Gemini 1.5 Flash',
-    enabled: true,
-    id: 'gemini-1.5-flash-latest',
-    maxOutput: 8192,
-    pricing: {
-      cachedInput: 0.018_75,
-      input: 0.075,
-      output: 0.3,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_008_192,
     description: 'Gemini 1.5 Flash 002 是一款高效的多模态模型，支持广泛应用的扩展。',
     displayName: 'Gemini 1.5 Flash 002',
-    enabled: true,
     id: 'gemini-1.5-flash-002',
     maxOutput: 8192,
     pricing: {
@@ -197,29 +216,8 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 2_008_192,
     description:
-      'Gemini 1.5 Pro 支持高达200万个tokens，是中型多模态模型的理想选择，适用于复杂任务的多方面支持。',
-    displayName: 'Gemini 1.5 Pro',
-    enabled: true,
-    id: 'gemini-1.5-pro-latest',
-    maxOutput: 8192,
-    pricing: {
-      cachedInput: 0.875,
-      input: 3.5,
-      output: 10.5,
-    },
-    releasedAt: '2024-02-15',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 2_008_192,
-    description:
       'Gemini 1.5 Pro 002 是最新的生产就绪模型，提供更高质量的输出，特别在数学、长上下文和视觉任务方面有显著提升。',
     displayName: 'Gemini 1.5 Pro 002',
-    enabled: true,
     id: 'gemini-1.5-pro-002',
     maxOutput: 8192,
     pricing: {
@@ -256,7 +254,6 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 1_008_192,
     description: 'Gemini 1.5 Flash 8B 是一款高效的多模态模型，支持广泛应用的扩展。',
     displayName: 'Gemini 1.5 Flash 8B',
-    enabled: true,
     id: 'gemini-1.5-flash-8b',
     maxOutput: 8192,
     pricing: {
@@ -287,19 +284,6 @@ const googleChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 32_768,
-    description: 'Gemini 1.0 Pro 是Google的高性能AI模型，专为广泛任务扩展而设计。',
-    displayName: 'Gemini 1.0 Pro',
-    id: 'gemini-1.0-pro-latest',
-    maxOutput: 2048,
-    pricing: {
-      input: 0.5,
-      output: 1.5,
-    },
-    releasedAt: '2023-12-06',
-    type: 'chat',
-  },
-  {
     abilities: {
       functionCall: true,
     },
@@ -307,7 +291,7 @@ const googleChatModels: AIChatModelCard[] = [
     description:
       'Gemini 1.0 Pro 001 (Tuning) 提供稳定并可调优的性能，是复杂任务解决方案的理想选择。',
     displayName: 'Gemini 1.0 Pro 001 (Tuning)',
-    id: 'gemini-1.0-pro-001',
+    id: 'gemini-1.0-pro-001', // Deprecated on 2/15/2025
     maxOutput: 2048,
     pricing: {
       input: 0.5,
@@ -320,7 +304,7 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description: 'Gemini 1.0 Pro 002 (Tuning) 提供出色的多模态支持，专注于复杂任务的有效解决。',
     displayName: 'Gemini 1.0 Pro 002 (Tuning)',
-    id: 'gemini-1.0-pro-002',
+    id: 'gemini-1.0-pro-002', // Deprecated on 2/15/2025
     maxOutput: 2048,
     pricing: {
       input: 0.5,
