@@ -1,4 +1,4 @@
-name: Publish Database Docker Image
+name: Publish Docker Image
 
 on:
   workflow_dispatch:
