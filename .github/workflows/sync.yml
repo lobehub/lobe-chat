@@ -35,7 +35,7 @@ jobs:
           target_repo_token: ${{ secrets.GITHUB_TOKEN }} # automatically generated, no need to set
           test_mode: false
 
-      - name: Sync check
+      - name: Sync Check
         if: failure()
         uses: actions-cool/issues-helper@v3
         with:
@@ -52,3 +52,10 @@ jobs:
             [lobechat]: https://github.com/lobehub/lobe-chat
             [tutorial-zh-CN]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN
             [tutorial-en-US]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync
+
+      - name: Trigger Another Workflow on Success
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run docker-database.yml --ref ${{ github.ref }}
