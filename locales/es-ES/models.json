@@ -182,6 +182,12 @@
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat es la versión de código abierto de la serie de modelos preentrenados GLM-4 lanzada por Zhipu AI. Este modelo destaca en semántica, matemáticas, razonamiento, código y conocimiento. Además de soportar diálogos de múltiples turnos, GLM-4-9B-Chat también cuenta con funciones avanzadas como navegación web, ejecución de código, llamadas a herramientas personalizadas (Function Call) y razonamiento de textos largos. El modelo admite 26 idiomas, incluidos chino, inglés, japonés, coreano y alemán. En múltiples pruebas de referencia, GLM-4-9B-Chat ha demostrado un rendimiento excepcional, como AlignBench-v2, MT-Bench, MMLU y C-Eval. Este modelo admite una longitud de contexto máxima de 128K, adecuado para investigación académica y aplicaciones comerciales."
   },
+  "Pro/deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1 es un modelo de inferencia impulsado por aprendizaje por refuerzo (RL) que aborda problemas de repetitividad y legibilidad en el modelo. Antes del RL, DeepSeek-R1 introdujo datos de arranque en frío, optimizando aún más el rendimiento de inferencia. Se desempeña de manera comparable a OpenAI-o1 en tareas matemáticas, de código e inferencia, y mejora el rendimiento general a través de métodos de entrenamiento cuidadosamente diseñados."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3 es un modelo de lenguaje de expertos mixtos (MoE) con 671 mil millones de parámetros, que utiliza atención potencial de múltiples cabezas (MLA) y la arquitectura DeepSeekMoE, combinando estrategias de balanceo de carga sin pérdidas auxiliares para optimizar la eficiencia de inferencia y entrenamiento. Preentrenado en 14.8 billones de tokens de alta calidad, y ajustado mediante supervisión y aprendizaje por refuerzo, DeepSeek-V3 supera a otros modelos de código abierto y se acerca a los modelos cerrados líderes."
+  },
   "Pro/google/gemma-2-9b-it": {
     "description": "Gemma es una de las series de modelos abiertos más avanzados y ligeros desarrollados por Google. Es un modelo de lenguaje a gran escala solo de decodificación, que admite inglés y proporciona pesos abiertos, variantes preentrenadas y variantes de ajuste fino por instrucciones. El modelo Gemma es adecuado para diversas tareas de generación de texto, incluyendo preguntas y respuestas, resúmenes y razonamiento. Este modelo de 9B se ha entrenado con 80 billones de tokens. Su tamaño relativamente pequeño permite su implementación en entornos con recursos limitados, como computadoras portátiles, de escritorio o su propia infraestructura en la nube, lo que permite a más personas acceder a modelos de IA de vanguardia y fomentar la innovación."
   },
@@ -440,6 +446,9 @@
   "anthropic/claude-3-opus": {
     "description": "Claude 3 Opus es el modelo más potente de Anthropic para manejar tareas altamente complejas. Destaca en rendimiento, inteligencia, fluidez y comprensión."
   },
+  "anthropic/claude-3.5-haiku": {
+    "description": "Claude 3.5 Haiku es el modelo de próxima generación más rápido de Anthropic. En comparación con Claude 3 Haiku, Claude 3.5 Haiku ha mejorado en todas las habilidades y ha superado al modelo más grande de la generación anterior, Claude 3 Opus, en muchas pruebas de inteligencia."
+  },
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet ofrece capacidades que superan a Opus y una velocidad más rápida que Sonnet, manteniendo el mismo precio que Sonnet. Sonnet es especialmente hábil en programación, ciencia de datos, procesamiento visual y tareas de agente."
   },
@@ -590,6 +599,21 @@
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1, el modelo más grande e inteligente del conjunto DeepSeek, ha sido destilado en la arquitectura Llama 70B. Basado en pruebas de referencia y evaluaciones humanas, este modelo es más inteligente que el Llama 70B original, destacándose especialmente en tareas que requieren precisión matemática y factual."
   },
+  "deepseek-r1-distill-llama-8b": {
+    "description": "El modelo de la serie DeepSeek-R1-Distill se obtiene mediante la técnica de destilación de conocimiento, ajustando muestras generadas por DeepSeek-R1 a modelos de código abierto como Qwen y Llama."
+  },
+  "deepseek-r1-distill-qwen-1.5b": {
+    "description": "El modelo de la serie DeepSeek-R1-Distill se obtiene mediante la técnica de destilación de conocimiento, ajustando muestras generadas por DeepSeek-R1 a modelos de código abierto como Qwen y Llama."
+  },
+  "deepseek-r1-distill-qwen-14b": {
+    "description": "El modelo de la serie DeepSeek-R1-Distill se obtiene mediante la técnica de destilación de conocimiento, ajustando muestras generadas por DeepSeek-R1 a modelos de código abierto como Qwen y Llama."
+  },
+  "deepseek-r1-distill-qwen-32b": {
+    "description": "El modelo de la serie DeepSeek-R1-Distill se obtiene mediante la técnica de destilación de conocimiento, ajustando muestras generadas por DeepSeek-R1 a modelos de código abierto como Qwen y Llama."
+  },
+  "deepseek-r1-distill-qwen-7b": {
+    "description": "El modelo de la serie DeepSeek-R1-Distill se obtiene mediante la técnica de destilación de conocimiento, ajustando muestras generadas por DeepSeek-R1 a modelos de código abierto como Qwen y Llama."
+  },
   "deepseek-reasoner": {
     "description": "Modelo de inferencia lanzado por DeepSeek. Antes de proporcionar la respuesta final, el modelo genera primero una cadena de pensamiento para mejorar la precisión de la respuesta final."
   },
@@ -698,8 +722,17 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro admite hasta 2 millones de tokens, siendo una opción ideal para modelos multimodales de tamaño medio, adecuados para un soporte multifacético en tareas complejas."
   },
+  "gemini-2.0-flash": {
+    "description": "Gemini 2.0 Flash ofrece funciones y mejoras de próxima generación, incluyendo velocidad excepcional, uso de herramientas nativas, generación multimodal y una ventana de contexto de 1M tokens."
+  },
+  "gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash ofrece funciones y mejoras de próxima generación, incluyendo velocidad excepcional, uso de herramientas nativas, generación multimodal y una ventana de contexto de 1M tokens."
+  },
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp es el último modelo experimental de inteligencia artificial multimodal de Google, que cuenta con características de próxima generación, velocidad superior, llamadas nativas a herramientas y generación multimodal."
+  },
+  "gemini-2.0-flash-lite-preview-02-05": {
+    "description": "Un modelo Gemini 2.0 Flash optimizado para objetivos de costo-efectividad y baja latencia."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp es el último modelo experimental de IA multimodal de Google, con características de próxima generación, velocidad excepcional, llamadas nativas a herramientas y generación multimodal."
@@ -707,11 +740,8 @@
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp es el último modelo de IA multimodal experimental de Google, que cuenta con características de próxima generación, velocidad excepcional, llamadas a herramientas nativas y generación multimodal."
   },
-  "gemini-exp-1114": {
-    "description": "Gemini Exp 1114 es el modelo de IA multimodal experimental más reciente de Google, que cuenta con una capacidad de procesamiento rápido y admite entradas de texto, imagen y video, adecuado para una amplia gama de tareas de manera eficiente."
-  },
-  "gemini-exp-1121": {
-    "description": "Gemini Exp 1121 es el último modelo experimental de IA multimodal de Google, que cuenta con una capacidad de procesamiento rápido y admite entradas de texto, imágenes y videos, adecuado para una amplia gama de tareas de manera eficiente."
+  "gemini-2.0-pro-exp-02-05": {
+    "description": "Gemini 2.0 Pro Experimental es el último modelo de IA multimodal experimental de Google, con mejoras de calidad en comparación con versiones anteriores, especialmente en conocimiento del mundo, código y contextos largos."
   },
   "gemini-exp-1206": {
     "description": "Gemini Exp 1206 es el último modelo de IA multimodal experimental de Google, con mejoras de calidad en comparación con versiones anteriores."
@@ -778,6 +808,12 @@
   },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview posee una poderosa capacidad de razonamiento complejo, destacándose en áreas como razonamiento lógico, matemáticas y programación."
+  },
+  "google/gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash ofrece funciones y mejoras de próxima generación, incluyendo velocidad excepcional, uso de herramientas nativas, generación multimodal y una ventana de contexto de 1M tokens."
+  },
+  "google/gemini-2.0-pro-exp-02-05:free": {
+    "description": "Gemini 2.0 Pro Experimental es el último modelo de IA multimodal experimental de Google, con mejoras de calidad en comparación con versiones anteriores, especialmente en conocimiento del mundo, código y contextos largos."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash ofrece capacidades de procesamiento multimodal optimizadas, adecuadas para una variedad de escenarios de tareas complejas."
@@ -995,6 +1031,9 @@
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 está diseñado para manejar tareas que combinan datos visuales y textuales. Destaca en tareas como la descripción de imágenes y preguntas visuales, cruzando la brecha entre la generación de lenguaje y el razonamiento visual."
   },
+  "llama-3.3-70b-instruct": {
+    "description": "Llama 3.3 es el modelo de lenguaje de código abierto multilingüe más avanzado de la serie Llama, que ofrece un rendimiento comparable al modelo de 405B a un costo extremadamente bajo. Basado en la estructura Transformer, y mejorado en utilidad y seguridad a través de ajuste fino supervisado (SFT) y aprendizaje por refuerzo con retroalimentación humana (RLHF). Su versión ajustada para instrucciones está optimizada para diálogos multilingües, superando a muchos modelos de chat de código abierto y cerrado en múltiples benchmarks de la industria. La fecha límite de conocimiento es diciembre de 2023."
+  },
   "llama-3.3-70b-versatile": {
     "description": "El modelo de lenguaje multilingüe Meta Llama 3.3 (LLM) es un modelo generativo preentrenado y ajustado para instrucciones de 70B (entrada/salida de texto). El modelo de texto puro ajustado para instrucciones de Llama 3.3 está optimizado para casos de uso de conversación multilingüe y supera a muchos modelos de chat de código abierto y cerrado en benchmarks industriales comunes."
   },
@@ -1135,6 +1174,12 @@
   },
   "meta-llama/llama-3.2-90b-vision-instruct": {
     "description": "LLaMA 3.2 está diseñado para manejar tareas que combinan datos visuales y textuales. Destaca en tareas como la descripción de imágenes y preguntas visuales, superando la brecha entre la generación de lenguaje y el razonamiento visual."
+  },
+  "meta-llama/llama-3.3-70b-instruct": {
+    "description": "Llama 3.3 es el modelo de lenguaje de código abierto multilingüe más avanzado de la serie Llama, que ofrece un rendimiento comparable al modelo de 405B a un costo extremadamente bajo. Basado en la estructura Transformer, y mejorado en utilidad y seguridad a través de ajuste fino supervisado (SFT) y aprendizaje por refuerzo con retroalimentación humana (RLHF). Su versión ajustada para instrucciones está optimizada para diálogos multilingües, superando a muchos modelos de chat de código abierto y cerrado en múltiples benchmarks de la industria. La fecha límite de conocimiento es diciembre de 2023."
+  },
+  "meta-llama/llama-3.3-70b-instruct:free": {
+    "description": "Llama 3.3 es el modelo de lenguaje de código abierto multilingüe más avanzado de la serie Llama, que ofrece un rendimiento comparable al modelo de 405B a un costo extremadamente bajo. Basado en la estructura Transformer, y mejorado en utilidad y seguridad a través de ajuste fino supervisado (SFT) y aprendizaje por refuerzo con retroalimentación humana (RLHF). Su versión ajustada para instrucciones está optimizada para diálogos multilingües, superando a muchos modelos de chat de código abierto y cerrado en múltiples benchmarks de la industria. La fecha límite de conocimiento es diciembre de 2023."
   },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct es el modelo más grande y potente de la serie Llama 3.1 Instruct, un modelo de generación de datos de diálogo y razonamiento altamente avanzado, que también puede servir como base para un preentrenamiento o ajuste fino especializado en dominios específicos. Los modelos de lenguaje de gran tamaño (LLMs) multilingües que ofrece Llama 3.1 son un conjunto de modelos generativos preentrenados y ajustados por instrucciones, que incluyen tamaños de 8B, 70B y 405B (entrada/salida de texto). Los modelos de texto ajustados por instrucciones de Llama 3.1 (8B, 70B, 405B) están optimizados para casos de uso de diálogo multilingüe y superan a muchos modelos de chat de código abierto disponibles en pruebas de referencia de la industria. Llama 3.1 está diseñado para usos comerciales y de investigación en múltiples idiomas. Los modelos de texto ajustados por instrucciones son adecuados para chats similares a asistentes, mientras que los modelos preentrenados pueden adaptarse a diversas tareas de generación de lenguaje natural. El modelo Llama 3.1 también admite el uso de su salida para mejorar otros modelos, incluida la generación de datos sintéticos y el refinamiento. Llama 3.1 es un modelo de lenguaje autorregresivo que utiliza una arquitectura de transformador optimizada. Las versiones ajustadas utilizan ajuste fino supervisado (SFT) y aprendizaje por refuerzo con retroalimentación humana (RLHF) para alinearse con las preferencias humanas de ayuda y seguridad."
@@ -1549,5 +1594,8 @@
   },
   "yi-vision": {
     "description": "Modelo para tareas visuales complejas, que ofrece un alto rendimiento en comprensión y análisis de imágenes."
+  },
+  "yi-vision-v2": {
+    "description": "Modelo para tareas visuales complejas, que ofrece capacidades de comprensión y análisis de alto rendimiento basadas en múltiples imágenes."
   }
 }
