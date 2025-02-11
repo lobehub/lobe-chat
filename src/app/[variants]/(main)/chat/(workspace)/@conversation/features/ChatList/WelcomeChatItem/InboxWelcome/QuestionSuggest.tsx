@@ -3,7 +3,7 @@
 import { ActionIcon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { shuffle } from 'lodash-es';
-import { ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,7 @@ import { Flexbox } from 'react-layout-kit';
 import { BRANDING_NAME } from '@/const/branding';
 import { USAGE_DOCUMENTS } from '@/const/url';
 import { useSendMessage } from '@/features/ChatInput/useSend';
+import { useDirection } from '@/hooks/useDirection';
 import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
@@ -67,6 +68,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
   const { send: sendMessage } = useSendMessage();
+  const direction = useDirection();
 
   return (
     <Flexbox gap={8} width={'100%'}>
@@ -74,7 +76,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
         <div className={styles.title}>{t('guide.questions.title')}</div>
         <Link href={USAGE_DOCUMENTS} target={'_blank'}>
           <ActionIcon
-            icon={ArrowRight}
+            icon={direction === 'rtl' ? ArrowLeft : ArrowRight}
             size={{ blockSize: 24, fontSize: 16 }}
             title={t('guide.questions.moreBtn')}
           />

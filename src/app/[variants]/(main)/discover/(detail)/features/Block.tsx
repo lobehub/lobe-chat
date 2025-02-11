@@ -1,10 +1,12 @@
 import { Icon } from '@lobehub/ui';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
+
+import { useDirection } from '@/hooks/useDirection';
 
 const useStyles = createStyles(({ css, token }) => ({
   more: css`
@@ -28,6 +30,7 @@ interface BlockProps extends FlexboxProps {
 
 const Block = memo<BlockProps>(({ title, more, moreLink, children, ...rest }) => {
   const { styles } = useStyles();
+  const direction = useDirection();
 
   return (
     <Flexbox gap={16} style={{ position: 'relative' }} width={'100%'}>
@@ -37,7 +40,7 @@ const Block = memo<BlockProps>(({ title, more, moreLink, children, ...rest }) =>
           <Link href={moreLink} target={moreLink.startsWith('http') ? '_blank' : undefined}>
             <Button className={styles.more} type={'text'}>
               <span>{more}</span>
-              <Icon icon={ChevronRight} />
+              <Icon icon={direction === 'rtl' ? ChevronLeft : ChevronRight} />
             </Button>
           </Link>
         )}

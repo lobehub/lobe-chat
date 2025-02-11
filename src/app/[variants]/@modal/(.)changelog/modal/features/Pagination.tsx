@@ -2,7 +2,7 @@
 
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ChevronRightIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { OFFICIAL_SITE } from '@/const/url';
+import { useDirection } from '@/hooks/useDirection';
 
 const useStyles = createStyles(({ css, token }) => ({
   button: css`
@@ -32,6 +33,7 @@ const useStyles = createStyles(({ css, token }) => ({
 const Pagination = memo(() => {
   const { t } = useTranslation('changelog');
   const { styles } = useStyles();
+  const direction = useDirection();
   return (
     <Flexbox gap={16} horizontal style={{ marginTop: 24 }} width={'100%'}>
       <Link
@@ -42,7 +44,7 @@ const Pagination = memo(() => {
         <Flexbox align={'flex-end'} className={styles.button} gap={4} padding={16}>
           <Flexbox align={'center'} className={styles.desc} gap={4} horizontal>
             {t('pagination.next')}
-            <Icon icon={ChevronRightIcon} />
+            <Icon icon={direction === 'rtl' ? ChevronLeftIcon : ChevronRightIcon} />
           </Flexbox>
           <div className={styles.title}>{t('pagination.older')}</div>
         </Flexbox>

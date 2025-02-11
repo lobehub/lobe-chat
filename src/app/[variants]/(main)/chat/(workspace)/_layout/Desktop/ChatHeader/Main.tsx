@@ -3,13 +3,14 @@
 import { ActionIcon, Avatar } from '@lobehub/ui';
 import { ChatHeaderTitle } from '@lobehub/ui/chat';
 import { Skeleton } from 'antd';
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { useDirection } from '@/hooks/useDirection';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -21,6 +22,7 @@ import Tags from './Tags';
 
 const Main = memo(() => {
   const { t } = useTranslation('chat');
+  const direction = useDirection();
 
   useInitAgentConfig();
   const [isPinned] = useQueryState('pinned', parseAsBoolean);
@@ -55,7 +57,15 @@ const Main = memo(() => {
       {!isPinned && (
         <ActionIcon
           aria-label={t('agents')}
-          icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
+          icon={
+            showSessionPanel
+              ? direction === 'rtl'
+                ? PanelRightClose
+                : PanelLeftClose
+              : direction === 'rtl'
+                ? PanelRightOpen
+                : PanelLeftOpen
+          }
           onClick={() => {
             updateSystemStatus({
               sessionsWidth: showSessionPanel ? 0 : 320,

@@ -1,10 +1,11 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { BookOpenTextIcon, ChevronDown, ChevronRight } from 'lucide-react';
+import { BookOpenTextIcon, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useDirection } from '@/hooks/useDirection';
 import { ChatFileChunk } from '@/types/message';
 
 import ChunkItem from './Item';
@@ -44,7 +45,7 @@ interface FileChunksProps {
 const FileChunks = memo<FileChunksProps>(({ data }) => {
   const { t } = useTranslation('chat');
   const { styles, theme } = useStyles();
-
+  const direction = useDirection();
   const [showDetail, setShowDetail] = useState(false);
 
   return (
@@ -60,7 +61,7 @@ const FileChunks = memo<FileChunksProps>(({ data }) => {
         <Flexbox gap={8} horizontal>
           <Icon color={theme.geekblue} icon={BookOpenTextIcon} /> {t('rag.referenceChunks')}
         </Flexbox>
-        <Icon icon={showDetail ? ChevronDown : ChevronRight} />
+        <Icon icon={showDetail ? ChevronDown : direction === 'rtl' ? ChevronLeft : ChevronRight} />
       </Flexbox>
       {showDetail && (
         <Flexbox gap={8} horizontal wrap={'wrap'}>

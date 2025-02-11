@@ -1,8 +1,17 @@
 import { DraggablePanel, DraggablePanelBody, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ChevronDown, ChevronRight, Database, Loader2Icon, Table as TableIcon } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Database,
+  Loader2Icon,
+  Table as TableIcon,
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
+
+import { useDirection } from '@/hooks/useDirection';
 
 import { useFetchTables } from '../usePgTable';
 import Columns from './Columns';
@@ -117,6 +126,7 @@ const SchemaPanel = ({ onTableSelect, selectedTable }: SchemaPanelProps) => {
   const [expandedTables, setExpandedTables] = useState(new Set());
 
   const { data, isLoading } = useFetchTables();
+  const direction = useDirection();
 
   const toggleTable = (tableName: string) => {
     const newExpanded = new Set(expandedTables);
@@ -161,7 +171,15 @@ const SchemaPanel = ({ onTableSelect, selectedTable }: SchemaPanelProps) => {
                     onTableSelect(table.name);
                   }}
                 >
-                  <Icon icon={expandedTables.has(table.name) ? ChevronDown : ChevronRight} />
+                  <Icon
+                    icon={
+                      expandedTables.has(table.name)
+                        ? ChevronDown
+                        : direction === 'rtl'
+                          ? ChevronLeft
+                          : ChevronRight
+                    }
+                  />
                   <TableIcon size={16} />
                   <Flexbox align={'center'} horizontal justify={'space-between'}>
                     <span>{table.name}</span>

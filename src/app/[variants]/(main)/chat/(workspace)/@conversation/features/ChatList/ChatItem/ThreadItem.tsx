@@ -1,11 +1,12 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useDirection } from '@/hooks/useDirection';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -41,6 +42,7 @@ const Item = memo<ThreadItem>(({ id, title, lastActiveAt, sourceMessageId }) => 
     s.activeThreadId === id,
     chatSelectors.countMessagesByThreadId(id)(s),
   ]);
+  const direction = useDirection();
   const mobile = useIsMobile();
   return (
     <Flexbox
@@ -58,7 +60,7 @@ const Item = memo<ThreadItem>(({ id, title, lastActiveAt, sourceMessageId }) => 
       <Flexbox className={styles.extra} horizontal>
         {!!messageCount && t('thread.threadMessageCount', { messageCount })}
         {!mobile && ` · ${dayjs(lastActiveAt).format('YYYY-MM-DD')}`}
-        <Icon icon={ChevronRight} />
+        <Icon icon={direction === 'rtl' ? ChevronLeft : ChevronRight} />
       </Flexbox>
     </Flexbox>
   );

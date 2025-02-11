@@ -2,7 +2,7 @@ import { Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
-import { LucideArrowRight } from 'lucide-react';
+import { LucideArrowLeft, LucideArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { isDeprecatedEdition } from '@/const/version';
+import { useDirection } from '@/hooks/useDirection';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
@@ -54,6 +55,8 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
 
   const enabledList = useEnabledChatModels();
 
+  const direction = useDirection();
+
   const items = useMemo<ItemType[]>(() => {
     const getModelItems = (provider: EnabledProviderWithModels) => {
       const items = provider.children.map((model) => ({
@@ -72,7 +75,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
             label: (
               <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
                 {t('ModelSwitchPanel.emptyModel')}
-                <Icon icon={LucideArrowRight} />
+                <Icon icon={direction === 'rtl' ? LucideArrowLeft : LucideArrowRight} />
               </Flexbox>
             ),
             onClick: () => {

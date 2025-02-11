@@ -2,13 +2,14 @@ import { ModelIcon } from '@lobehub/icons';
 import { ActionIcon, Grid } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
-import { ChevronRightIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import { useDirection } from '@/hooks/useDirection';
 import { DiscoverModelItem } from '@/types/discover';
 import { formatPriceByCurrency, formatTokenNumber } from '@/utils/format';
 
@@ -51,6 +52,7 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
   const { xl = true } = useResponsive();
   const { t } = useTranslation('discover');
   const { styles, theme } = useStyles();
+  const direction = useDirection();
 
   const isMobile = mobile || !xl;
 
@@ -104,7 +106,10 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
 
   const button = (
     <Link href={urlJoin('/discover/model', identifier)} style={{ color: 'inherit' }}>
-      <ActionIcon color={theme.colorTextDescription} icon={ChevronRightIcon} />
+      <ActionIcon
+        color={theme.colorTextDescription}
+        icon={direction === 'rtl' ? ChevronLeftIcon : ChevronRightIcon}
+      />
     </Link>
   );
 

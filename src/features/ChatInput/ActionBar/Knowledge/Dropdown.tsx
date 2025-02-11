@@ -3,7 +3,7 @@ import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
-import { ArrowRight, LibraryBig } from 'lucide-react';
+import { ArrowLeft, ArrowRight, LibraryBig } from 'lucide-react';
 import { PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -11,6 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import FileIcon from '@/components/FileIcon';
 import RepoIcon from '@/components/RepoIcon';
 import { AssignKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
+import { useDirection } from '@/hooks/useDirection';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
@@ -38,6 +39,7 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
   const [open, setOpen] = useState(false);
   const files = useAgentStore(agentSelectors.currentAgentFiles, isEqual);
   const knowledgeBases = useAgentStore(agentSelectors.currentAgentKnowledgeBases, isEqual);
+  const direction = useDirection();
 
   const [toggleFile, toggleKnowledgeBase] = useAgentStore((s) => [
     s.toggleFile,
@@ -111,7 +113,8 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
           key: 'knowledge-base-store',
           label: (
             <Flexbox gap={40} horizontal justify={'space-between'} padding={'8px 12px'}>
-              {t('knowledgeBase.viewMore')} <Icon icon={ArrowRight} />
+              {t('knowledgeBase.viewMore')}{' '}
+              <Icon icon={direction === 'rtl' ? ArrowLeft : ArrowRight} />
             </Flexbox>
           ),
           onClick: (e) => {

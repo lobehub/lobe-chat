@@ -3,7 +3,7 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
-import { ChevronRightIcon } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { OFFICIAL_SITE } from '@/const/url';
+import { useDirection } from '@/hooks/useDirection';
 import { useShare } from '@/hooks/useShare';
 
 const useStyles = createStyles(
@@ -31,6 +32,7 @@ const ReadDetail = memo<{ desc: string; postId: string; title: string }>(
     const { styles, theme } = useStyles();
     const url = urlJoin(OFFICIAL_SITE, `/changelog/${postId}`);
     const { x, telegram, reddit, mastodon, whatsapp } = useShare({ desc, title, url });
+    const direction = useDirection();
 
     return (
       <Flexbox align={'center'} className={styles} gap={4} horizontal>
@@ -81,7 +83,7 @@ const ReadDetail = memo<{ desc: string; postId: string; title: string }>(
             {t('readDetails')}
             <Icon
               color={theme.colorTextSecondary}
-              icon={ChevronRightIcon}
+              icon={direction === 'rtl' ? ChevronLeftIcon : ChevronRightIcon}
               size={{ fontSize: 20 }}
             />
           </Flexbox>

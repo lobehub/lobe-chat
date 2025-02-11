@@ -3,10 +3,12 @@
 import { Icon } from '@lobehub/ui';
 import { Button, Tag } from 'antd';
 import { createStyles } from 'antd-style';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode, memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
+
+import { useDirection } from '@/hooks/useDirection';
 
 const useStyles = createStyles(({ css, responsive, token }) => ({
   more: css`
@@ -48,6 +50,7 @@ interface TitleProps extends FlexboxProps {
 
 const Title = memo<TitleProps>(({ tag, children, moreLink, more }) => {
   const { styles } = useStyles();
+  const direction = useDirection();
   const title = <h2 className={styles.title}>{children}</h2>;
   return (
     <Flexbox align={'center'} gap={16} horizontal justify={'space-between'} width={'100%'}>
@@ -65,7 +68,7 @@ const Title = memo<TitleProps>(({ tag, children, moreLink, more }) => {
         <Link href={moreLink} target={moreLink.startsWith('http') ? '_blank' : undefined}>
           <Button className={styles.more} style={{ paddingInline: 6 }} type={'text'}>
             <span>{more}</span>
-            <Icon icon={ChevronRight} />
+            <Icon icon={direction === 'rtl' ? ChevronLeft : ChevronRight} />
           </Button>
         </Link>
       )}

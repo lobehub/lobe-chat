@@ -1,11 +1,13 @@
 import { CopyButton, Icon, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AtomIcon, ChevronDown, ChevronRight } from 'lucide-react';
+import { AtomIcon, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { rgba } from 'polished';
 import { CSSProperties, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+
+import { useDirection } from '@/hooks/useDirection';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
@@ -68,7 +70,7 @@ interface ThinkingProps {
 const Thinking = memo<ThinkingProps>(({ content, duration, thinking, style }) => {
   const { t } = useTranslation(['components', 'common']);
   const { styles, cx } = useStyles();
-
+  const direction = useDirection();
   const [showDetail, setShowDetail] = useState(false);
 
   useEffect(() => {
@@ -114,7 +116,9 @@ const Thinking = memo<ThinkingProps>(({ content, duration, thinking, style }) =>
               <CopyButton content={content} size={'small'} title={t('copy', { ns: 'common' })} />
             </div>
           )}
-          <Icon icon={showDetail ? ChevronDown : ChevronRight} />
+          <Icon
+            icon={showDetail ? ChevronDown : direction === 'rtl' ? ChevronLeft : ChevronRight}
+          />
         </Flexbox>
       </Flexbox>
 

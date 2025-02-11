@@ -3,13 +3,14 @@ import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
-import { ArrowRight, Store, ToyBrick } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Store, ToyBrick } from 'lucide-react';
 import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PluginStore from '@/features/PluginStore';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
+import { useDirection } from '@/hooks/useDirection';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useWorkspaceModal } from '@/hooks/useWorkspaceModal';
 import { useAgentStore } from '@/store/agent';
@@ -48,6 +49,7 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
 
   const [open, setOpen] = useWorkspaceModal();
   const { styles } = useStyles();
+  const direction = useDirection();
 
   const items: ItemType[] = [
     (builtinList.length !== 0 && {
@@ -85,7 +87,8 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
           key: 'plugin-store',
           label: (
             <Flexbox gap={40} horizontal justify={'space-between'} padding={'8px 12px'}>
-              {t('tools.plugins.store')} <Icon icon={ArrowRight} />
+              {t('tools.plugins.store')}{' '}
+              <Icon icon={direction === 'rtl' ? ArrowLeft : ArrowRight} />
             </Flexbox>
           ),
           onClick: (e) => {
