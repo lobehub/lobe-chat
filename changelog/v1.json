@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support mistral proxy url."]
+    },
+    "date": "2025-02-11",
+    "version": "1.52.16"
+  },
+  {
+    "children": {
       "fixes": ["Fix lmstudio baseURL."],
       "improvements": ["Optimized MaxToken Slider."]
     },
