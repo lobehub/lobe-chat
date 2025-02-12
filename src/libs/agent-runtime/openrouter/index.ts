@@ -2,7 +2,6 @@ import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
-import { OpenRouterReasoningStream } from '../utils/streams';
 import { OpenRouterModelCard } from './type';
 
 export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
@@ -15,7 +14,6 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
         stream: payload.stream ?? true,
       } as any;
     },
-    handleStream: OpenRouterReasoningStream,
   },
   constructorOptions: {
     defaultHeaders: {
