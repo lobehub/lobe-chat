@@ -6,6 +6,15 @@ import { OpenRouterModelCard } from './type';
 
 export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://openrouter.ai/api/v1',
+  chatCompletion: {
+    handlePayload: (payload) => {
+      return {
+        ...payload,
+        include_reasoning: true,
+        stream: payload.stream ?? true,
+      } as any;
+    },
+  },
   constructorOptions: {
     defaultHeaders: {
       'HTTP-Referer': 'https://chat-preview.lobehub.com',
