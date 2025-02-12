@@ -88,8 +88,12 @@ export const transformOpenAIStream = (
     }
 
     if (item.delta) {
-      let reasoning_content =
-        'reasoning_content' in item.delta ? item.delta.reasoning_content : null;
+      let reasoning_content = (() => {
+        if ('reasoning_content' in item.delta) return item.delta.reasoning_content;
+        if ('reasoning' in item.delta) return item.delta.reasoning;
+        return null;
+      })();
+
       let content = 'content' in item.delta ? item.delta.content : null;
 
       // DeepSeek reasoner will put thinking in the reasoning_content field

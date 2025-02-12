@@ -215,6 +215,19 @@ const OpenRouter: ModelProviderCard = {
       releasedAt: '2024-09-05',
     },
     {
+      contextWindowTokens: 163_840,
+      description: 'DeepSeek-R1',
+      displayName: 'DeepSeek R1',
+      enabled: true,
+      functionCall: false,
+      id: 'deepseek/deepseek-r1',
+      pricing: {
+        input: 3,
+        output: 8,
+      },
+      releasedAt: '2025-01-20',
+    },
+    {
       contextWindowTokens: 131_072,
       description:
         'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
