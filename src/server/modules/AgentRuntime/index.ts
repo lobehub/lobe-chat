@@ -100,6 +100,14 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    
+    case ModelProvider.TencentCloud: {
+      const { TENCENT_CLOUD_API_KEY } = llmConfig;
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || TENCENT_CLOUD_API_KEY);
+
+      return { apiKey };
+    }
   }
 };
 
