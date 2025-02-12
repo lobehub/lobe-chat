@@ -156,7 +156,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           displayName: model.displayName,
           enabled: knownModel?.enabled || false,
           functionCall:
-            modelName.toLowerCase().includes('gemini')
+            modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('thinking')
             || knownModel?.abilities?.functionCall
             || false,
           id: modelName,
