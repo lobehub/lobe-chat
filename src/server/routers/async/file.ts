@@ -26,6 +26,11 @@ import {
 import { safeParseJSON } from '@/utils/safeParseJSON';
 import { sanitizeUTF8 } from '@/utils/sanitizeUTF8';
 
+const delay = (ms: number): Promise<void> =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
 const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
   const { ctx } = opts;
 
@@ -82,7 +87,7 @@ export const fileRouter = router({
 
           const startAt = Date.now();
 
-          const CHUNK_SIZE = 50;
+          const CHUNK_SIZE = 48;
           const CONCURRENCY = 1;
 
           const chunks = await ctx.chunkModel.getChunksTextByFileId(input.fileId);
@@ -113,10 +118,13 @@ export const fileRouter = router({
                   })) || [];
 
                 await ctx.embeddingModel.bulkCreate(items);
+                // 增加延迟，防止频繁请求导致服务器压力过大
+                await delay(300);
               },
               { concurrency: CONCURRENCY },
             );
           } catch (e) {
+            console.error('EmbeddingChunks Error:', e);
             throw {
               message: JSON.stringify(e),
               name: AsyncTaskErrorType.EmbeddingError,
