@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.53.4](https://github.com/lobehub/lobe-chat/compare/v1.53.3...v1.53.4)
+
+<sup>Released on **2025-02-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix ai model abilities issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix ai model abilities issue, closes [#6060](https://github.com/lobehub/lobe-chat/issues/6060) ([718f477](https://github.com/lobehub/lobe-chat/commit/718f477))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.53.3](https://github.com/lobehub/lobe-chat/compare/v1.53.2...v1.53.3)
 
 <sup>Released on **2025-02-12**</sup>
