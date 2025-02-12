@@ -428,7 +428,7 @@ It has demonstrated strong performance compared to leading closed-source models 
 
 To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
     "displayName": "Meta: Llama 3.1 405B Instruct",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-405b-instruct",
     "maxTokens": undefined,
@@ -545,7 +545,7 @@ For more details, see this [blog post](https://qwenlm.github.io/blog/qwen2/) and
 
 Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://huggingface.co/Qwen/Qwen1.5-110B-Chat/blob/main/LICENSE).",
     "displayName": "Qwen 2 7B Instruct",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "qwen/qwen-2-7b-instruct",
     "maxTokens": undefined,
@@ -739,7 +739,7 @@ The model is uncensored and is stripped of alignment and bias. It requires an ex
 
 #moe #uncensored",
     "displayName": "Dolphin 2.9.2 Mixtral 8x22B 🐬",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "cognitivecomputations/dolphin-mixtral-8x22b",
     "maxTokens": undefined,
@@ -756,7 +756,7 @@ For more details, see this [blog post](https://qwenlm.github.io/blog/qwen2/) and
 
 Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://huggingface.co/Qwen/Qwen1.5-110B-Chat/blob/main/LICENSE).",
     "displayName": "Qwen 2 72B Instruct",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "qwen/qwen-2-72b-instruct",
     "maxTokens": undefined,
@@ -785,7 +785,7 @@ It outperforms many similarly sized models including [Llama 3 8B Instruct](/mode
     "contextWindowTokens": 8192,
     "description": "Hermes 2 Pro is an upgraded, retrained version of Nous Hermes 2, consisting of an updated and cleaned version of the OpenHermes 2.5 Dataset, as well as a newly introduced Function Calling and JSON Mode dataset developed in-house.",
     "displayName": "NousResearch: Hermes 2 Pro - Llama-3 8B",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "nousresearch/hermes-2-pro-llama-3-8b",
     "maxTokens": undefined,
@@ -1175,7 +1175,7 @@ It has demonstrated strong performance compared to leading closed-source models 
 
 To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
     "displayName": "Meta: Llama 3 70B Instruct",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "meta-llama/llama-3-70b-instruct",
     "maxTokens": undefined,
@@ -1224,7 +1224,7 @@ It has demonstrated strong performance compared to leading closed-source models 
 
 To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
     "displayName": "Meta: Llama 3 8B Instruct",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "meta-llama/llama-3-8b-instruct",
     "maxTokens": undefined,
@@ -1815,7 +1815,7 @@ _These are free, rate-limited endpoints for [OpenChat 3.5 7B](/models/openchat/o
 
 #open-source",
     "displayName": "OpenChat 3.5 7B",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "openchat/openchat-7b",
     "maxTokens": undefined,
@@ -2328,7 +2328,7 @@ _These are extended-context endpoints for [ReMM SLERP 13B](/models/undi95/remm-s
     "contextWindowTokens": 4096,
     "description": "One of the highest performing and most popular fine-tunes of Llama 2 13B, with rich descriptions and roleplay. #merge",
     "displayName": "MythoMax 13B",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "gryphe/mythomax-l2-13b",
     "maxTokens": undefined,
