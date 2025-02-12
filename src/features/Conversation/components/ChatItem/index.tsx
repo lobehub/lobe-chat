@@ -160,26 +160,24 @@ const Item = memo<ChatListItemProps>(
 
     const components = useMemo(
       () =>
-        item?.role === 'user'
-          ? {}
-          : Object.fromEntries(
-              markdownElements.map((element) => {
-                const Component = element.Component;
+        Object.fromEntries(
+          markdownElements.map((element) => {
+            const Component = element.Component;
 
-                return [element.tag, (props: any) => <Component {...props} id={id} />];
-              }),
-            ),
-      [id, item?.role],
+            return [element.tag, (props: any) => <Component {...props} id={id} />];
+          }),
+        ),
+      [id],
     );
 
     const markdownProps = useMemo(
       () => ({
         components,
         customRender: markdownCustomRender,
-        rehypePlugins,
-        remarkPlugins,
+        rehypePlugins: item?.role === 'user' ? undefined : rehypePlugins,
+        remarkPlugins: item?.role === 'user' ? undefined : remarkPlugins,
       }),
-      [components, markdownCustomRender],
+      [components, markdownCustomRender, item?.role],
     );
 
     const onChange = useCallback((value: string) => updateMessageContent(id, value), [id]);
