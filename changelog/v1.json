@@ -1,6 +1,31 @@
 [
   {
     "children": {
+      "features": ["Support tencent cloud provider."],
+      "improvements": ["Update i18n, update provider i18n."]
+    },
+    "date": "2025-02-11",
+    "version": "1.53.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the agent runtime test case."]
+    },
+    "date": "2025-02-11",
+    "version": "1.52.19"
+  },
+  {
+    "children": {},
+    "date": "2025-02-11",
+    "version": "1.52.18"
+  },
+  {
+    "children": {},
+    "date": "2025-02-11",
+    "version": "1.52.17"
+  },
+  {
+    "children": {
       "improvements": ["Support mistral proxy url."]
     },
     "date": "2025-02-11",

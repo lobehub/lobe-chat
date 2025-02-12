@@ -98,6 +98,9 @@
   "taichu": {
     "description": "O Instituto de Automação da Academia Chinesa de Ciências e o Instituto de Pesquisa em Inteligência Artificial de Wuhan lançaram uma nova geração de grandes modelos multimodais, suportando tarefas abrangentes de perguntas e respostas, criação de texto, geração de imagens, compreensão 3D, análise de sinais, entre outras, com capacidades cognitivas, de compreensão e criação mais fortes, proporcionando uma nova experiência interativa."
   },
+  "tencentcloud": {
+    "description": "A capacidade atômica do mecanismo de conhecimento (LLM Knowledge Engine Atomic Power) é uma capacidade completa de perguntas e respostas baseada no desenvolvimento do mecanismo de conhecimento, voltada para empresas e desenvolvedores, oferecendo a capacidade de montar e desenvolver aplicações de modelo de forma flexível. Você pode montar seu serviço de modelo exclusivo usando várias capacidades atômicas, chamando serviços de análise de documentos, divisão, embedding, reescrita em várias rodadas, entre outros, para personalizar negócios de IA exclusivos para sua empresa."
+  },
   "togetherai": {
     "description": "A Together AI se dedica a alcançar desempenho de ponta por meio de modelos de IA inovadores, oferecendo amplas capacidades de personalização, incluindo suporte para escalabilidade rápida e processos de implantação intuitivos, atendendo a diversas necessidades empresariais."
   },
