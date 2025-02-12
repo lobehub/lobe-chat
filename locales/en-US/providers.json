@@ -98,6 +98,9 @@
   "taichu": {
     "description": "The Institute of Automation, Chinese Academy of Sciences, and Wuhan Artificial Intelligence Research Institute have launched a new generation of multimodal large models, supporting comprehensive question-answering tasks such as multi-turn Q&A, text creation, image generation, 3D understanding, and signal analysis, with stronger cognitive, understanding, and creative abilities, providing a new interactive experience."
   },
+  "tencentcloud": {
+    "description": "The Knowledge Engine Atomic Power, based on the Knowledge Engine, provides a comprehensive knowledge Q&A capability for enterprises and developers. It offers the ability to flexibly assemble and develop model applications. You can create your own model services using various atomic capabilities, integrating services such as document parsing, splitting, embedding, and multi-turn rewriting to customize AI solutions tailored to your business."
+  },
   "togetherai": {
     "description": "Together AI is dedicated to achieving leading performance through innovative AI models, offering extensive customization capabilities, including rapid scaling support and intuitive deployment processes to meet various enterprise needs."
   },
