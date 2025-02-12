@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix ai model abilities issue."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix tencent cloud api issue."]
     },
     "date": "2025-02-12",
