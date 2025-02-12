@@ -128,13 +128,21 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   
     return modelList
       .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
         return {
-          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.contextWindowTokens ?? undefined,
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
           displayName: model.display_name,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
-          functionCall: model.id.toLowerCase().includes('claude-3'),
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            model.id.toLowerCase().includes('claude-3')
+            || knownModel?.abilities?.functionCall
+            || false,
           id: model.id,
-          vision: model.id.toLowerCase().includes('claude-3') && !model.id.toLowerCase().includes('claude-3-5-haiku'),
+          vision:
+            model.id.toLowerCase().includes('claude-3') && !model.id.toLowerCase().includes('claude-3-5-haiku')
+            || knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

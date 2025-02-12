@@ -34,11 +34,13 @@ export const LobeMistralAI = LobeOpenAICompatibleFactory({
     transformModel: (m) => {
       const model = m as unknown as MistralModelCard;
 
+      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
       return {
         contextWindowTokens: model.max_context_length,
         description: model.description,
-        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
+        displayName: knownModel?.displayName ?? undefined,
+        enabled: knownModel?.enabled || false,
         functionCall: model.capabilities.function_calling,
         id: model.id,
         vision: model.capabilities.vision,

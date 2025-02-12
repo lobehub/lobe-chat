@@ -22,13 +22,21 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
 
       const model = m as unknown as HunyuanModelCard;
 
+      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
       return {
-        contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.contextWindowTokens ?? undefined,
-        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
-        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('vision'),
+        contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+        displayName: knownModel?.displayName ?? undefined,
+        enabled: knownModel?.enabled || false,
+        functionCall:
+          functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('vision')
+          || knownModel?.abilities?.functionCall
+          || false,
         id: model.id,
-        vision: model.id.toLowerCase().includes('vision'),
+        vision:
+          model.id.toLowerCase().includes('vision')
+          || knownModel?.abilities?.vision
+          || false,
       };
     },
   },

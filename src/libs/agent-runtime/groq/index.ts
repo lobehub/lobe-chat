@@ -48,14 +48,25 @@ export const LobeGroq = LobeOpenAICompatibleFactory({
 
       const model = m as unknown as GroqModelCard;
 
+      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
       return {
         contextWindowTokens: model.context_window,
-        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
-        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
+        displayName: knownModel?.displayName ?? undefined,
+        enabled: knownModel?.enabled || false,
+        functionCall:
+          functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+          || knownModel?.abilities?.functionCall
+          || false,
         id: model.id,
-        reasoning: reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
-        vision: model.id.toLowerCase().includes('vision'),
+        reasoning:
+          reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+          || knownModel?.abilities?.reasoning
+          || false,
+        vision:
+          model.id.toLowerCase().includes('vision')
+          || knownModel?.abilities?.vision
+          || false,
       };
     },
   },

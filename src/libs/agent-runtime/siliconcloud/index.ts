@@ -79,14 +79,25 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
 
       const model = m as unknown as SiliconCloudModelCard;
 
+      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
       return {
-        contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.contextWindowTokens ?? undefined,
-        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
-        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('deepseek-r1'),
+        contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+        displayName: knownModel?.displayName ?? undefined,
+        enabled: knownModel?.enabled || false,
+        functionCall:
+          functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('deepseek-r1')
+          || knownModel?.abilities?.functionCall
+          || false,
         id: model.id,
-        reasoning: reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
-        vision: visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
+        reasoning:
+          reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+          || knownModel?.abilities?.reasoning
+          || false,
+        vision:
+          visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+          || knownModel?.abilities?.vision
+          || false,
       };
     },
   },

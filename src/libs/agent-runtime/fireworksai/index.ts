@@ -24,13 +24,20 @@ export const LobeFireworksAI = LobeOpenAICompatibleFactory({
 
       const model = m as unknown as FireworksAIModelCard;
 
+      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
       return {
         contextWindowTokens: model.context_length,
-        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
-        functionCall: model.supports_tools || model.id.toLowerCase().includes('function'),
+        displayName: knownModel?.displayName ?? undefined,
+        enabled: knownModel?.enabled || false,
+        functionCall:
+          model.supports_tools
+          || model.id.toLowerCase().includes('function'),
         id: model.id,
-        reasoning: reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
+        reasoning:
+          reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+          || knownModel?.abilities?.reasoning
+          || false,
         vision: model.supports_image_input,
       };
     },

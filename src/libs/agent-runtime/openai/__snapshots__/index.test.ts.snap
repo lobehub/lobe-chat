@@ -126,7 +126,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "functionCall": true,
     "id": "gpt-4",
     "reasoning": false,
-    "vision": false,
+    "vision": true,
   },
   {
     "contextWindowTokens": 16385,

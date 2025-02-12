@@ -127,16 +127,30 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
 
     return modelList
       .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id);
+
         return {
           contextWindowTokens: model.properties?.max_total_tokens
             ? Number(model.properties.max_total_tokens)
-            : LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.contextWindowTokens ?? undefined,
-          displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.displayName ?? (model.properties?.["beta"] === "true" ? `${model.name} (Beta)` : undefined),
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.enabled || false,
-          functionCall: model.description.toLowerCase().includes('function call') || model.properties?.["function_calling"] === "true",
+            : knownModel?.contextWindowTokens ?? undefined,
+          displayName: knownModel?.displayName ?? (model.properties?.["beta"] === "true" ? `${model.name} (Beta)` : undefined),
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            model.description.toLowerCase().includes('function call')
+            || model.properties?.["function_calling"] === "true"
+            || knownModel?.abilities?.functionCall
+            || false,
           id: model.name,
-          reasoning: model.name.toLowerCase().includes('deepseek-r1'),
-          vision: model.name.toLowerCase().includes('vision') || model.task?.name.toLowerCase().includes('image-to-text') || model.description.toLowerCase().includes('vision'),
+          reasoning:
+            model.name.toLowerCase().includes('deepseek-r1')
+            || knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            model.name.toLowerCase().includes('vision')
+            || model.task?.name.toLowerCase().includes('image-to-text')
+            || model.description.toLowerCase().includes('vision')
+            || knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

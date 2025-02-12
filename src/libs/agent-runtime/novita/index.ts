@@ -22,15 +22,27 @@ export const LobeNovitaAI = LobeOpenAICompatibleFactory({
 
       const model = m as unknown as NovitaModelCard;
 
+      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
       return {
         contextWindowTokens: model.context_size,
         description: model.description,
         displayName: model.title,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
-        functionCall: model.description.toLowerCase().includes('function calling'),
+        enabled: knownModel?.enabled || false,
+        functionCall:
+          model.description.toLowerCase().includes('function calling')
+          || knownModel?.abilities?.functionCall
+          || false,
         id: model.id,
-        reasoning: model.description.toLowerCase().includes('reasoning task') || reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
-        vision: model.description.toLowerCase().includes('vision'),
+        reasoning:
+          model.description.toLowerCase().includes('reasoning task')
+          || reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+          || knownModel?.abilities?.reasoning
+          || false,
+        vision:
+          model.description.toLowerCase().includes('vision')
+          || knownModel?.abilities?.vision
+          || false,
       };
     },
   },

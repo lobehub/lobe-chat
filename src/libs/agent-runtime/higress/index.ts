@@ -1,11 +1,9 @@
 import { uniqueId } from 'lodash-es';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
-
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-// import { OpenRouterModelCard } from './type';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 
 export const LobeHigressAI = LobeOpenAICompatibleFactory({
   constructorOptions: {
@@ -22,23 +20,33 @@ export const LobeHigressAI = LobeOpenAICompatibleFactory({
     transformModel: (m) => {
       const model = m as any;
 
+      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
       return {
         contextWindowTokens: model.context_length,
         description: model.description,
         displayName: model.name,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
+        enabled: knownModel?.enabled || false,
         functionCall:
-          model.description.includes('function calling') || model.description.includes('tools'),
+          model.description.includes('function calling')
+          || model.description.includes('tools')
+          || knownModel?.abilities?.functionCall
+          || false,
         id: model.id,
         maxTokens:
           typeof model.top_provider.max_completion_tokens === 'number'
             ? model.top_provider.max_completion_tokens
             : undefined,
-        reasoning: model.description.includes('reasoning'),
+        reasoning:
+          model.description.includes('reasoning')
+          || knownModel?.abilities?.reasoning
+          || false,
         vision:
-          model.description.includes('vision') ||
-          model.description.includes('multimodal') ||
-          model.id.includes('vision'),
+          model.description.includes('vision')
+          || model.description.includes('multimodal')
+          || model.id.includes('vision')
+          || knownModel?.abilities?.vision
+          || false,
       };
     },
   },
