@@ -160,14 +160,16 @@ const Item = memo<ChatListItemProps>(
 
     const components = useMemo(
       () =>
-        Object.fromEntries(
-          markdownElements.map((element) => {
-            const Component = element.Component;
+        item?.role === 'user'
+          ? {}
+          : Object.fromEntries(
+              markdownElements.map((element) => {
+                const Component = element.Component;
 
-            return [element.tag, (props: any) => <Component {...props} id={id} />];
-          }),
-        ),
-      [id],
+                return [element.tag, (props: any) => <Component {...props} id={id} />];
+              }),
+            ),
+      [id, item?.role],
     );
 
     const markdownProps = useMemo(
