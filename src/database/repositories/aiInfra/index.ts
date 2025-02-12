@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash-es';
 import pMap from 'p-map';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
@@ -88,15 +89,25 @@ export class AiInfraRepos {
           .map<EnabledAiModel & { enabled?: boolean | null }>((item) => {
             const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
 
+            if (!user)
+              return {
+                ...item,
+                abilities: item.abilities || {},
+                providerId: provider.id,
+              };
+
             return {
-              abilities: !!user ? user.abilities : item.abilities || {},
-              config: !!user ? user.config : item.config,
-              contextWindowTokens: !!user ? user.contextWindowTokens : item.contextWindowTokens,
+              abilities: !isEmpty(user.abilities) ? user.abilities : item.abilities || {},
+              config: !isEmpty(user.config) ? user.config : item.config,
+              contextWindowTokens:
+                typeof user.contextWindowTokens === 'number'
+                  ? user.contextWindowTokens
+                  : item.contextWindowTokens,
               displayName: user?.displayName || item.displayName,
-              enabled: !!user ? user.enabled : item.enabled,
+              enabled: user.enabled || item.enabled,
               id: item.id,
               providerId: provider.id,
-              sort: !!user ? user.sort : undefined,
+              sort: user.sort || undefined,
               type: item.type,
             };
           })
