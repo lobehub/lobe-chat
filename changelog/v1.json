@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix reasoning output for OpenRouter reasoning models like deepseek-r1."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.1"
+  },
+  {
+    "children": {
       "features": ["Support tencent cloud provider."],
       "improvements": ["Update i18n, update provider i18n."]
     },
