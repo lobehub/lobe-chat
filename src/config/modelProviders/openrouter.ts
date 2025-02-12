@@ -219,7 +219,7 @@ const OpenRouter: ModelProviderCard = {
       description: 'DeepSeek-R1',
       displayName: 'DeepSeek R1',
       enabled: true,
-      functionCall: true,
+      functionCall: false,
       id: 'deepseek/deepseek-r1',
       pricing: {
         input: 3,
