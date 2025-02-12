@@ -2,10 +2,8 @@
 
 #### TOC
 
-- [Welcome 欢迎页面](#welcome-欢迎页面)
 - [Chat 聊天页面](#chat-聊天页面)
-- [Market 市场页面](#discover-市场页面)
-- [Settings 设置页面](#settings-设置页面)
+- [Discover 市场页面](#discover-市场页面)
 
 ## Chat 聊天页面
 
