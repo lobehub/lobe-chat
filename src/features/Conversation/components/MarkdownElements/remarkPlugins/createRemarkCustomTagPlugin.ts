@@ -32,7 +32,6 @@ export const createRemarkCustomTagPlugin = (tag: string) => () => {
         );
 
         // 转换为 Markdown 字符串
-        console.log(contentNodes);
         const content = treeNodeToString(contentNodes);
 
         // 创建自定义节点
