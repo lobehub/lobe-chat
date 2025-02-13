@@ -74,6 +74,7 @@ exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.set
       "displayMode": "chat",
       "enableAutoCreateTopic": true,
       "enableCompressHistory": true,
+      "enableFastAnimation": false,
       "enableHistoryCount": true,
       "historyCount": 8,
     },

@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "역사 메시지 자동 요약 활성화"
     },
+    "enableFastAnimation": {
+      "desc": "모델 응답 속도가 빠를 때 텍스트 애니메이션 효과를 가속화합니다",
+      "title": "빠른 애니메이션"
+    },
     "enableHistoryCount": {
       "alias": "제한 없음",
       "limited": "{{number}}개의 대화 메시지만 포함",
