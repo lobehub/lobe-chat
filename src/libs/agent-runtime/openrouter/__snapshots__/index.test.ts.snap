@@ -2129,7 +2129,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "description": "A 7.3B parameter model that outperforms Llama 2 13B on all benchmarks, with optimizations for speed and context length.",
     "displayName": "Mistral: Mistral 7B Instruct v0.1",
     "enabled": false,
-    "functionCall": false,
+    "functionCall": true,
     "id": "mistralai/mistral-7b-instruct-v0.1",
     "maxTokens": undefined,
     "reasoning": false,
