@@ -2,7 +2,7 @@
 
 import { ConfigProvider } from 'antd';
 import dayjs from 'dayjs';
-import { PropsWithChildren, memo, useEffect, useState } from 'react';
+import { PropsWithChildren, memo, useEffect, useMemo, useState } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import { createI18nNext } from '@/locales/create';
@@ -32,30 +32,28 @@ interface LocaleLayoutProps extends PropsWithChildren {
 }
 
 const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) => {
-  const [i18n] = useState(createI18nNext(defaultLang));
   const [lang, setLang] = useState(defaultLang);
   const [locale, setLocale] = useState(antdLocale);
 
-  // if run on server side, init i18n instance everytime
-  if (isOnServerSide) {
-    i18n.init();
+  const i18n = useMemo(() => {
+    const instance = createI18nNext(defaultLang);
 
-    // load the dayjs locale
-    // if (lang) {
-    //   const dayJSLocale = require(`dayjs/locale/${lang!.toLowerCase()}.js`);
-    //
-    //   dayjs.locale(dayJSLocale);
-    // }
-  } else {
-    // if on browser side, init i18n instance only once
-    if (!i18n.instance.isInitialized)
-      // console.debug('locale', lang);
-      i18n.init().then(async () => {
-        if (!lang) return;
+    // if run on server side, init i18n instance everytime
+    if (isOnServerSide) {
+      instance.init();
+    } else {
+      // if on browser side, init i18n instance only once
+      if (!instance.instance.isInitialized) {
+        instance.init().then(async () => {
+          if (!lang) return;
 
-        await updateDayjs(lang);
-      });
-  }
+          await updateDayjs(lang);
+        });
+      }
+    }
+
+    return instance;
+  }, [defaultLang]);
 
   // handle i18n instance language change
   useEffect(() => {
