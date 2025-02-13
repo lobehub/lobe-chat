@@ -11,7 +11,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { TraceNameMap } from '@/const/trace';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
@@ -22,9 +21,8 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
   const providerName = useProviderName(error.body?.provider);
 
   return (
-    <Flexbox gap={8} style={{ maxWidth: '600px', width: '100%' }}>
+    <Flexbox gap={8} style={{ width: '100%' }}>
       <Alert
-        banner
         extra={
           <Flexbox>
             <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
@@ -78,6 +76,7 @@ const Checker = memo<ConnectionCheckerProps>(
           setPass(false);
           isError = true;
         },
+
         onFinish: async (value) => {
           if (!isError && value) {
             setError(undefined);
@@ -111,7 +110,6 @@ const Checker = memo<ConnectionCheckerProps>(
         },
       });
     };
-    const isMobile = useIsMobile();
 
     const defaultError = error ? <Error error={error as ChatMessageError} /> : null;
 
@@ -122,7 +120,7 @@ const Checker = memo<ConnectionCheckerProps>(
     );
 
     return (
-      <Flexbox align={isMobile ? 'flex-start' : 'flex-end'} gap={8}>
+      <Flexbox gap={8}>
         <Space.Compact block>
           <Select
             listItemHeight={36}
