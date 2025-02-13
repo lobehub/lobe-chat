@@ -245,7 +245,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
     "@edge-runtime/vm": "^5.0.0",
-    "@huggingface/tasks": "^0.13.13",
+    "@huggingface/tasks": "^0.15.0",
     "@lobehub/i18n-cli": "^1.20.3",
     "@lobehub/lint": "^1.25.5",
     "@lobehub/seo-cli": "^1.4.3",
