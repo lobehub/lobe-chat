@@ -276,6 +276,11 @@
         "latestTime": "Last updated: {{time}}",
         "noLatestTime": "Model list not yet fetched"
       },
+      "resetAll": {
+        "conform": "Are you sure you want to reset all modifications to the current model? After resetting, the current model list will return to its default state.",
+        "success": "Reset successful",
+        "title": "Reset All Modifications"
+      },
       "search": "Search Models...",
       "searchResult": "{{count}} models found",
       "title": "Model List",

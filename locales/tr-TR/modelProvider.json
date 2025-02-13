@@ -276,6 +276,11 @@
         "latestTime": "Son güncelleme zamanı: {{time}}",
         "noLatestTime": "Henüz liste alınmadı"
       },
+      "resetAll": {
+        "conform": "Mevcut modelin tüm değişikliklerini sıfırlamak istediğinize emin misiniz? Sıfırladıktan sonra mevcut model listesi varsayılan duruma dönecektir.",
+        "success": "Sıfırlama başarılı",
+        "title": "Tüm değişiklikleri sıfırla"
+      },
       "search": "Model ara...",
       "searchResult": "{{count}} model bulundu",
       "title": "Model Listesi",

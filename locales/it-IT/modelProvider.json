@@ -276,6 +276,11 @@
         "latestTime": "Ultimo aggiornamento: {{time}}",
         "noLatestTime": "Nessun elenco recuperato finora"
       },
+      "resetAll": {
+        "conform": "Sei sicuro di voler ripristinare tutte le modifiche al modello corrente? Dopo il ripristino, l'elenco dei modelli correnti tornerà allo stato predefinito",
+        "success": "Ripristino avvenuto con successo",
+        "title": "Ripristina tutte le modifiche"
+      },
       "search": "Cerca modelli...",
       "searchResult": "Trovati {{count}} modelli",
       "title": "Elenco dei modelli",

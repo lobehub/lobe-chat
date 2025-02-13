@@ -276,6 +276,11 @@
         "latestTime": "上次更新時間：{{time}}",
         "noLatestTime": "尚未取得列表"
       },
+      "resetAll": {
+        "conform": "確認重置當前模型的所有修改？重置後當前模型列表將會回到預設狀態",
+        "success": "重置成功",
+        "title": "重置所有修改"
+      },
       "search": "搜尋模型...",
       "searchResult": "搜尋到 {{count}} 個模型",
       "title": "模型列表",
