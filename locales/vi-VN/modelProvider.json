@@ -66,7 +66,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Vui lòng nhập API Key của bạn",
-      "required": "Vui lòng nhập API Key của bạn",
       "title": "API Key"
     },
     "basicTitle": "Thông tin cơ bản",
@@ -94,7 +93,8 @@
       "title": "Tên nhà cung cấp"
     },
     "proxyUrl": {
-      "placeholder": "Vui lòng nhập địa chỉ yêu cầu của bạn, nếu không sẽ sử dụng địa chỉ yêu cầu tương ứng của SDK",
+      "placeholder": "Vui lòng nhập địa chỉ yêu cầu của bạn",
+      "required": "Vui lòng nhập địa chỉ proxy",
       "title": "Địa chỉ proxy"
     },
     "sdkType": {
