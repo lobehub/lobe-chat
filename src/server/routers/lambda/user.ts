@@ -7,21 +7,34 @@ import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
 import { SessionModel } from '@/database/server/models/session';
 import { UserModel, UserNotFoundError } from '@/database/server/models/user';
+import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 import { authedProcedure, router } from '@/libs/trpc';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserService } from '@/server/services/user';
-import { UserGuideSchema, UserInitializationState, UserPreference } from '@/types/user';
+import {
+  NextAuthAccountSchame,
+  UserGuideSchema,
+  UserInitializationState,
+  UserPreference,
+} from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 
 const userProcedure = authedProcedure.use(async (opts) => {
   return opts.next({
-    ctx: { userModel: new UserModel(serverDB, opts.ctx.userId) },
+    ctx: {
+      nextAuthDbAdapter: LobeNextAuthDbAdapter(serverDB),
+      userModel: new UserModel(serverDB, opts.ctx.userId),
+    },
   });
 });
 
 export const userRouter = router({
   getUserRegistrationDuration: userProcedure.query(async ({ ctx }) => {
     return ctx.userModel.getUserRegistrationDuration();
+  }),
+
+  getUserSSOProviders: userProcedure.query(async ({ ctx }) => {
+    return ctx.userModel.getUserSSOProviders();
   }),
 
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
@@ -90,6 +103,23 @@ export const userRouter = router({
 
   resetSettings: userProcedure.mutation(async ({ ctx }) => {
     return ctx.userModel.deleteSetting();
+  }),
+
+  unlinkSSOProvider: userProcedure.input(NextAuthAccountSchame).mutation(async ({ ctx, input }) => {
+    const { provider, providerAccountId } = input;
+    if (
+      ctx.nextAuthDbAdapter?.unlinkAccount &&
+      typeof ctx.nextAuthDbAdapter.unlinkAccount === 'function' &&
+      ctx.nextAuthDbAdapter?.getAccount &&
+      typeof ctx.nextAuthDbAdapter.getAccount === 'function'
+    ) {
+      const account = await ctx.nextAuthDbAdapter.getAccount(providerAccountId, provider);
+      // The userId can either get from ctx.nextAuth?.id or ctx.userId
+      if (!account || account.userId !== ctx.userId) throw new Error('The account does not exist');
+      await ctx.nextAuthDbAdapter.unlinkAccount({ provider, providerAccountId });
+    } else {
+      throw new Error('The method in LobeNextAuthDbAdapter `unlinkAccount` is not implemented');
+    }
   }),
 
   updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {
