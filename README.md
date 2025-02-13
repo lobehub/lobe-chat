@@ -287,7 +287,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [Bing_websearch](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | Search for information from the internet base BingApi<br/>`bingsearch`                                                  |
 | [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>        | Analyze stocks and get comprehensive real-time investment data and analytics.<br/>`stock`                               |
 
-> 📊 Total plugins: [<kbd>**49**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -319,14 +319,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                               | Description                                                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Sharp Commentator](https://lobechat.com/discover/assistant/ruipingshi)<br/><sup>By **[Zippland](https://github.com/Zippland)** on **2025-02-04**</sup>      | Specializes in sharp commentary and in-depth analysis of issues<br/>`commentary` `social-perspectives` `sharp-analysis`                               |
-| [Python Genius](https://lobechat.com/discover/assistant/python-genius)<br/><sup>By **[novaspivack](https://github.com/novaspivack)** on **2025-02-04**</sup> | An advanced python coder<br/>`code` `python`                                                                                                          |
-| [SAT master](https://lobechat.com/discover/assistant/sat-teaching)<br/><sup>By **[iBz-04](https://github.com/iBz-04)** on **2025-02-04**</sup>               | Expert in Digital SAT coaching for 1300+ scores<br/>`sat` `aptitude-test`                                                                             |
-| [Cosmic Oracle](https://lobechat.com/discover/assistant/universal-god)<br/><sup>By **[GowayLee](https://github.com/GowayLee)** on **2025-02-04**</sup>       | Wisdom from across time and space, insight into the essence of life<br/>`character-design` `ai-characters` `metaverse` `role-playing` `wisdom-system` |
+| Recent Submits                                                                                                                                                                                        | Description                                                                                                                                                      |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Xiao Zhi French Translation Assistant](https://lobechat.com/discover/assistant/xiao-zhi-french-translation-asst-v-1)<br/><sup>By **[WeR-Best](https://github.com/WeR-Best)** on **2025-02-10**</sup> | A friendly, professional, and empathetic AI assistant for French translation<br/>`ai-assistant` `french-translation` `cross-cultural-communication` `creativity` |
+| [Astrology Researcher](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>                                   | Expert in BaZi astrology<br/>`astrology` `ba-zi` `traditional-culture`                                                                                           |
+| [Language Charm Learning Mentor](https://lobechat.com/discover/assistant/bad-language-helper)<br/><sup>By **[Guducat](https://github.com/Guducat)** on **2025-02-06**</sup>                           | Specializes in teaching the charm of language and witty responses<br/>`language-learning` `dialogue-examples`                                                    |
+| [Allinone](https://lobechat.com/discover/assistant/allinone-v-1)<br/><sup>By **[AXuanCreator](https://github.com/AXuanCreator)** on **2025-02-06**</sup>                                              | Innovation · Future · Excellence<br/>`programming` `low-cost` `concise-answers`                                                                                  |
 
-> 📊 Total agents: [<kbd>**478**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**486**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 
@@ -728,9 +728,9 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [blog]: https://lobehub.com/blog
 [changelog]: https://lobehub.com/changelog
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
-[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
+[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/lobechat_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
-[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_preview_lobehub_com_chat.html
+[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/lobechat_com_chat.html
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway

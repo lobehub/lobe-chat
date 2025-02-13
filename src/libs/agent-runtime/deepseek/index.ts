@@ -64,9 +64,12 @@ export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
       const model = m as unknown as DeepSeekModelCard;
 
       return {
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.contextWindowTokens ?? undefined,
+        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
         functionCall: !model.id.toLowerCase().includes('deepseek-reasoner'),
         id: model.id,
+        reasoning: model.id.toLowerCase().includes('deepseek-reasoner'),
       };
     },
   },

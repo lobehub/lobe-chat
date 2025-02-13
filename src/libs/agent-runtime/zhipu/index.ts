@@ -15,9 +15,14 @@ export interface ZhipuModelCard {
 export const LobeZhipuAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   chatCompletion: {
-    handlePayload: ({ model, temperature, top_p, ...payload }: ChatStreamPayload) =>
+    handlePayload: ({ max_tokens, model, temperature, top_p, ...payload }: ChatStreamPayload) =>
       ({
         ...payload,
+        max_tokens: 
+          max_tokens === undefined ? undefined :
+          (model.includes('glm-4v') && Math.min(max_tokens, 1024)) ||
+          (model === 'glm-zero-preview' && Math.min(max_tokens, 15_300)) ||
+          max_tokens,
         model,
         stream: true,
         ...(model === 'glm-4-alltools'
@@ -53,11 +58,13 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
     return modelList
       .map((model) => {
         return {
+          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.modelCode === m.id)?.contextWindowTokens ?? undefined,
           description: model.description,
           displayName: model.modelName,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.modelCode.endsWith(m.id))?.enabled || false,
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.modelCode === m.id)?.enabled || false,
           functionCall: model.modelCode.toLowerCase().includes('glm-4') && !model.modelCode.toLowerCase().includes('glm-4v'),
           id: model.modelCode,
+          reasoning: model.modelCode.toLowerCase().includes('glm-zero-preview'),
           vision: model.modelCode.toLowerCase().includes('glm-4v'),
         };
       })

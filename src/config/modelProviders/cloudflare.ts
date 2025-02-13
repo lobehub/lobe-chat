@@ -6,28 +6,25 @@ const Cloudflare: ModelProviderCard = {
   chatModels: [
     {
       contextWindowTokens: 16_384,
-      displayName: 'deepseek-coder-6.7b-instruct-awq',
+      displayName: 'DeepSeek R1 Distill Qwen 32B',
       enabled: true,
-      id: '@hf/thebloke/deepseek-coder-6.7b-instruct-awq',
+      id: '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
     },
     {
       contextWindowTokens: 2048,
       displayName: 'gemma-7b-it',
-      enabled: true,
       id: '@hf/google/gemma-7b-it',
     },
     {
       contextWindowTokens: 4096,
       displayName: 'hermes-2-pro-mistral-7b',
-
-      enabled: true,
       // functionCall: true,
       id: '@hf/nousresearch/hermes-2-pro-mistral-7b',
     },
     {
-      contextWindowTokens: 8192,
-      displayName: 'llama-3-8b-instruct-awq',
-      id: '@cf/meta/llama-3-8b-instruct-awq',
+      contextWindowTokens: 131_072,
+      displayName: 'llama 3.3 70b',
+      id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
     },
     {
       contextWindowTokens: 4096,
@@ -37,7 +34,6 @@ const Cloudflare: ModelProviderCard = {
     {
       contextWindowTokens: 32_768,
       displayName: 'neural-chat-7b-v3-1-awq',
-      enabled: true,
       id: '@hf/thebloke/neural-chat-7b-v3-1-awq',
     },
     {
@@ -48,7 +44,6 @@ const Cloudflare: ModelProviderCard = {
     {
       contextWindowTokens: 32_768,
       displayName: 'openhermes-2.5-mistral-7b-awq',
-      enabled: true,
       id: '@hf/thebloke/openhermes-2.5-mistral-7b-awq',
     },
     {
@@ -60,19 +55,15 @@ const Cloudflare: ModelProviderCard = {
     {
       contextWindowTokens: 4096,
       displayName: 'starling-lm-7b-beta',
-      enabled: true,
       id: '@hf/nexusflow/starling-lm-7b-beta',
     },
     {
       contextWindowTokens: 32_768,
       displayName: 'zephyr-7b-beta-awq',
-      enabled: true,
       id: '@hf/thebloke/zephyr-7b-beta-awq',
     },
     {
       displayName: 'meta-llama-3-8b-instruct',
-      enabled: true,
-      functionCall: false,
       id: '@hf/meta-llama/meta-llama-3-8b-instruct',
     },
   ],

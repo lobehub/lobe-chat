@@ -270,7 +270,7 @@ LobeChat のプラグインエコシステムは、そのコア機能の重要�
 | [Bing_websearch](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | BingApi を基にインターネットから情報を検索<br/>`bingsearch`                                               |
 | [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>        | 株を分析し、包括的なリアルタイムの投資データと分析を取得します。<br/>`stock`                              |
 
-> 📊 Total plugins: [<kbd>**49**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -302,14 +302,14 @@ LobeChat エージェントマーケットプレイスでは、クリエイタ�
 
 <!-- AGENT LIST -->
 
-| 最近追加                                                                                                                                                     | 説明                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| [鋭い評論家](https://lobechat.com/discover/assistant/ruipingshi)<br/><sup>By **[Zippland](https://github.com/Zippland)** on **2025-02-04**</sup>             | 鋭い評論と深い問題分析が得意<br/>`評論` `社会的見解` `鋭い分析`                                                                         |
-| [Python の天才](https://lobechat.com/discover/assistant/python-genius)<br/><sup>By **[novaspivack](https://github.com/novaspivack)** on **2025-02-04**</sup> | 高度な Python コーダー<br/>`コード` `python`                                                                                            |
-| [SAT マスター](https://lobechat.com/discover/assistant/sat-teaching)<br/><sup>By **[iBz-04](https://github.com/iBz-04)** on **2025-02-04**</sup>             | 1300 点以上のスコアを目指すデジタル SAT コーチングの専門家<br/>`sat` `適性試験`                                                         |
-| [宇宙の啓示者](https://lobechat.com/discover/assistant/universal-god)<br/><sup>By **[GowayLee](https://github.com/GowayLee)** on **2025-02-04**</sup>        | 時空を超えた知恵の神託、生命の本質を洞察する<br/>`キャラクターデザイン` `aiキャラクター` `メタバース` `ロールプレイング` `知恵システム` |
+| 最近追加                                                                                                                                                                                       | 説明                                                                                                                           |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [小智フランス語翻訳アシスタント](https://lobechat.com/discover/assistant/xiao-zhi-french-translation-asst-v-1)<br/><sup>By **[WeR-Best](https://github.com/WeR-Best)** on **2025-02-10**</sup> | 親しみやすく、専門的で、共感力のあるフランス語翻訳 AI アシスタント<br/>`aiアシスタント` `フランス語翻訳` `異文化交流` `創造性` |
+| [命理研究者](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>                                      | 八字命に精通<br/>`命理学` `八字` `伝統文化`                                                                                    |
+| [言語の魅力学習メンター](https://lobechat.com/discover/assistant/bad-language-helper)<br/><sup>By **[Guducat](https://github.com/Guducat)** on **2025-02-06**</sup>                            | 言語の魅力と多様な応答を教えるのが得意<br/>`言語学習` `対話例`                                                                 |
+| [Allinone](https://lobechat.com/discover/assistant/allinone-v-1)<br/><sup>By **[AXuanCreator](https://github.com/AXuanCreator)** on **2025-02-06**</sup>                                       | 革新・未来・卓越<br/>`プログラミング` `低コスト` `簡潔な回答`                                                                  |
 
-> 📊 Total agents: [<kbd>**478**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**486**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 
@@ -711,9 +711,9 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [blog]: https://lobehub.com/blog
 [changelog]: https://lobehub.com/changelog
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
-[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
+[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/lobechat_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
-[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_preview_lobehub_com_chat.html
+[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/lobechat_com_chat.html
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway

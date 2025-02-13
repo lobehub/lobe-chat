@@ -129,8 +129,9 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     return modelList
       .map((model) => {
         return {
+          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.contextWindowTokens ?? undefined,
           displayName: model.display_name,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
           functionCall: model.id.toLowerCase().includes('claude-3'),
           id: model.id,
           vision: model.id.toLowerCase().includes('claude-3') && !model.id.toLowerCase().includes('claude-3-5-haiku'),

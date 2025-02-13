@@ -280,7 +280,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [必应网页搜索](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | 通过 BingApi 搜索互联网上的信息<br/>`bingsearch`                                   |
 | [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>      | 分析股票并获取全面的实时投资数据和分析。<br/>`股票`                                |
 
-> 📊 Total plugins: [<kbd>**49**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -308,14 +308,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                   | 描述                                                                                  |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| [锐评师](https://lobechat.com/discover/assistant/ruipingshi)<br/><sup>By **[Zippland](https://github.com/Zippland)** on **2025-02-04**</sup>               | 擅长犀利点评与深度剖析问题<br/>`评论` `社会观点` `尖锐分析`                           |
-| [Python 天才](https://lobechat.com/discover/assistant/python-genius)<br/><sup>By **[novaspivack](https://github.com/novaspivack)** on **2025-02-04**</sup> | 一名高级 Python 编程者<br/>`代码` `python`                                            |
-| [SAT 大师](https://lobechat.com/discover/assistant/sat-teaching)<br/><sup>By **[iBz-04](https://github.com/iBz-04)** on **2025-02-04**</sup>               | 数字 SAT 辅导专家，帮助学生取得 1300 + 分数<br/>`sat` `能力测试`                      |
-| [宇宙启示者](https://lobechat.com/discover/assistant/universal-god)<br/><sup>By **[GowayLee](https://github.com/GowayLee)** on **2025-02-04**</sup>        | 跨时空的智慧神谕，洞悉生命本质<br/>`角色设计` `ai角色` `元宇宙` `角色扮演` `智慧系统` |
+| 最近新增                                                                                                                                                                         | 描述                                                                                   |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [小智法语翻译助手](https://lobechat.com/discover/assistant/xiao-zhi-french-translation-asst-v-1)<br/><sup>By **[WeR-Best](https://github.com/WeR-Best)** on **2025-02-10**</sup> | 友好、专业、富有同理心的法语翻译 AI 助手<br/>`ai助手` `法语翻译` `跨文化交流` `创造力` |
+| [命理研究员](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>                        | 精通八字命<br/>`命理学` `八字` `传统文化`                                              |
+| [语言魅力学习导师](https://lobechat.com/discover/assistant/bad-language-helper)<br/><sup>By **[Guducat](https://github.com/Guducat)** on **2025-02-06**</sup>                    | 擅长教学语言的魅力与花样回复<br/>`语言学习` `对话示例`                                 |
+| [Allinone](https://lobechat.com/discover/assistant/allinone-v-1)<br/><sup>By **[AXuanCreator](https://github.com/AXuanCreator)** on **2025-02-06**</sup>                         | 创新・未来・卓越<br/>`编程` `低成本` `简洁回答`                                        |
 
-> 📊 Total agents: [<kbd>**478**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**486**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 
@@ -750,9 +750,9 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [blog]: https://lobehub.com/zh/blog
 [changelog]: https://lobehub.com/changelog
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
-[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
+[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/lobechat_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
-[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_preview_lobehub_com_chat.html
+[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/lobechat_com_chat.html
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway

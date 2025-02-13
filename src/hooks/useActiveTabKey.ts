@@ -1,5 +1,4 @@
 import { usePathname } from 'next/navigation';
-import { useQueryState } from 'nuqs';
 
 import { ProfileTabs, SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 
@@ -17,13 +16,10 @@ export const useActiveTabKey = () => {
  */
 export const useActiveSettingsKey = () => {
   const pathname = usePathname();
-  const [tab] = useQueryState('tab');
 
   const tabs = pathname.split('/').at(-1);
 
   if (tabs === 'settings') return SettingsTabs.Common;
-
-  if (tabs === 'modal') return tab as SettingsTabs;
 
   return tabs as SettingsTabs;
 };
@@ -33,13 +29,10 @@ export const useActiveSettingsKey = () => {
  */
 export const useActiveProfileKey = () => {
   const pathname = usePathname();
-  const [tab] = useQueryState('tab');
 
   const tabs = pathname.split('/').at(-1);
 
   if (tabs === 'profile') return ProfileTabs.Profile;
-
-  if (tabs === 'modal') return tab as ProfileTabs;
 
   return tabs as ProfileTabs;
 };

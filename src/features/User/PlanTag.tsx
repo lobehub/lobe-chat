@@ -23,11 +23,11 @@ const PlanTag = memo<PlanTagProps>(({ type = PlanType.Preview }) => {
     switch (type) {
       case PlanType.Preview: {
         return {
-          desc: t('userPanel.preview'),
+          desc: t('userPanel.community'),
           style: {
             background: theme.colorFill,
           },
-          title: 'Preview',
+          title: 'Community',
         };
       }
     }
