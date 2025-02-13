@@ -197,6 +197,12 @@ export class AiModelModel {
       );
   }
 
+  clearModelsByProvider(providerId: string) {
+    return this.db
+      .delete(aiModels)
+      .where(and(eq(aiModels.providerId, providerId), eq(aiModels.userId, this.userId)));
+  }
+
   updateModelsOrder = async (providerId: string, sortMap: AiModelSortMap[]) => {
     await this.db.transaction(async (tx) => {
       const updates = sortMap.map(({ id, sort }) => {
