@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
 
 export interface HunyuanModelCard {
   id: string;
@@ -12,33 +12,38 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
   debug: {
     chatCompletion: () => process.env.DEBUG_HUNYUAN_CHAT_COMPLETION === '1',
   },
-  models: {
-    transformModel: (m) => {
-      const functionCallKeywords = [
-        'hunyuan-functioncall',
-        'hunyuan-turbo',
-        'hunyuan-pro',
-      ];
+  models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-      const model = m as unknown as HunyuanModelCard;
+    const functionCallKeywords = [
+      'hunyuan-functioncall',
+      'hunyuan-turbo',
+      'hunyuan-pro',
+    ];
 
-      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+    const modelsPage = await client.models.list() as any;
+    const modelList: HunyuanModelCard[] = modelsPage.data;
 
-      return {
-        contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-        displayName: knownModel?.displayName ?? undefined,
-        enabled: knownModel?.enabled || false,
-        functionCall:
-          functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('vision')
-          || knownModel?.abilities?.functionCall
-          || false,
-        id: model.id,
-        vision:
-          model.id.toLowerCase().includes('vision')
-          || knownModel?.abilities?.vision
-          || false,
-      };
-    },
+    return modelList
+      .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
+        return {
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) && !model.id.toLowerCase().includes('vision')
+            || knownModel?.abilities?.functionCall
+            || false,
+          id: model.id,
+          vision:
+            model.id.toLowerCase().includes('vision')
+            || knownModel?.abilities?.vision
+            || false,
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Hunyuan,
 });

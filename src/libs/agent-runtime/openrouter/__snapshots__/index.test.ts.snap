@@ -3,6 +3,34 @@
 exports[`LobeOpenRouterAI > models > should get models 1`] = `
 [
   {
+    "contextWindowTokens": 131072,
+    "description": "Reflection Llama-3.1 70B is trained with a new technique called Reflection-Tuning that teaches a LLM to detect mistakes in its reasoning and correct course.
+
+The model was trained on synthetic data.
+
+_These are free, rate-limited endpoints for [Reflection 70B](/models/mattshumer/reflection-70b). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Reflection 70B (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mattshumer/reflection-70b:free",
+    "maxTokens": 4096,
+    "reasoning": false,
+    "vision": false,
+  },
+  {
+    "contextWindowTokens": 131072,
+    "description": "Reflection Llama-3.1 70B is trained with a new technique called Reflection-Tuning that teaches a LLM to detect mistakes in its reasoning and correct course.
+
+The model was trained on synthetic data.",
+    "displayName": "Reflection 70B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mattshumer/reflection-70b",
+    "maxTokens": undefined,
+    "reasoning": false,
+    "vision": false,
+  },
+  {
     "contextWindowTokens": 128000,
     "description": "Command-R is a 35B parameter model that performs conversational language tasks at a higher quality, more reliably, and with a longer context than previous models. It can be used for complex workflows like code generation, retrieval augmented generation (RAG), tool use, and agents.
 

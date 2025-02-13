@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
 
 export interface MistralModelCard {
   capabilities: {
@@ -30,22 +30,27 @@ export const LobeMistralAI = LobeOpenAICompatibleFactory({
   debug: {
     chatCompletion: () => process.env.DEBUG_MISTRAL_CHAT_COMPLETION === '1',
   },
-  models: {
-    transformModel: (m) => {
-      const model = m as unknown as MistralModelCard;
+  models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+    const modelsPage = await client.models.list() as any;
+    const modelList: MistralModelCard[] = modelsPage.data;
 
-      return {
-        contextWindowTokens: model.max_context_length,
-        description: model.description,
-        displayName: knownModel?.displayName ?? undefined,
-        enabled: knownModel?.enabled || false,
-        functionCall: model.capabilities.function_calling,
-        id: model.id,
-        vision: model.capabilities.vision,
-      };
-    },
+    return modelList
+      .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
+        return {
+          contextWindowTokens: model.max_context_length,
+          description: model.description,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall: model.capabilities.function_calling,
+          id: model.id,
+          vision: model.capabilities.vision,
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Mistral,
 });

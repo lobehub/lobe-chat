@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
 
 export interface Ai360ModelCard {
   id: string;
@@ -22,36 +22,41 @@ export const LobeAi360AI = LobeOpenAICompatibleFactory({
   debug: {
     chatCompletion: () => process.env.DEBUG_AI360_CHAT_COMPLETION === '1',
   },
-  models: {
-    transformModel: (m) => {
-      const reasoningKeywords = [
-        '360gpt2-o1',
-        '360zhinao2-o1',
-      ];
+  models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-      const model = m as unknown as Ai360ModelCard;
+    const reasoningKeywords = [
+      '360gpt2-o1',
+      '360zhinao2-o1',
+    ];
 
-      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+    const modelsPage = await client.models.list() as any;
+    const modelList: Ai360ModelCard[] = modelsPage.data;
 
-      return {
-        contextWindowTokens: model.total_tokens,
-        displayName: knownModel?.displayName ?? undefined,
-        enabled: knownModel?.enabled || false,
-        functionCall:
-          model.id === '360gpt-pro'
-          || knownModel?.abilities?.functionCall
-          || false,
-        id: model.id,
-        maxTokens:
-          typeof model.max_tokens === 'number'
-            ? model.max_tokens
-            : undefined,
-        reasoning:
-          reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
-          || knownModel?.abilities?.reasoning
-          || false,
-      };
-    },
+    return modelList
+      .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
+        return {
+          contextWindowTokens: model.total_tokens,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            model.id === '360gpt-pro'
+            || knownModel?.abilities?.functionCall
+            || false,
+          id: model.id,
+          maxTokens:
+            typeof model.max_tokens === 'number'
+              ? model.max_tokens
+              : undefined,
+          reasoning:
+            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.reasoning
+            || false,
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Ai360,
 });

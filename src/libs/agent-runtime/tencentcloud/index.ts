@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
 
 export interface TencentCloudModelCard {
   id: string;
@@ -12,35 +12,40 @@ export const LobeTencentCloudAI = LobeOpenAICompatibleFactory({
   debug: {
     chatCompletion: () => process.env.DEBUG_TENCENT_CLOUD_CHAT_COMPLETION === '1',
   },
-  models: {
-    transformModel: (m) => {
-      const functionCallKeywords = [
-        'deepseek-v3',
-      ];
+  models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-      const reasoningKeywords = [
-        'deepseek-r1',
-      ];
+    const functionCallKeywords = [
+      'deepseek-v3',
+    ];
 
-      const model = m as unknown as TencentCloudModelCard;
+    const reasoningKeywords = [
+      'deepseek-r1',
+    ];
 
-      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+    const modelsPage = await client.models.list() as any;
+    const modelList: TencentCloudModelCard[] = modelsPage.data;
 
-      return {
-        contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-        displayName: knownModel?.displayName ?? undefined,
-        enabled: knownModel?.enabled || false,
-        functionCall:
-          functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
-          || knownModel?.abilities?.functionCall
-          || false,
-        id: model.id,
-        reasoning:
-          reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
-          || knownModel?.abilities?.reasoning
-          || false,
-      };
-    },
+    return modelList
+      .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
+        return {
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.functionCall
+            || false,
+          id: model.id,
+          reasoning:
+            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.reasoning
+            || false,
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.TencentCloud,
 });

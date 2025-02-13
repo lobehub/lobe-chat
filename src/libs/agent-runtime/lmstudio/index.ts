@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
 
 export interface LMStudioModelCard {
   id: string;
@@ -13,28 +13,33 @@ export const LobeLMStudioAI = LobeOpenAICompatibleFactory({
   debug: {
     chatCompletion: () => process.env.DEBUG_LMSTUDIO_CHAT_COMPLETION === '1',
   },
-  models: {
-    transformModel: (m) => {
-      const model = m as unknown as LMStudioModelCard;
+  models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-      const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+    const modelsPage = await client.models.list() as any;
+    const modelList: LMStudioModelCard[] = modelsPage.data;
 
-      return {
-        contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-        displayName: knownModel?.displayName ?? undefined,
-        enabled: knownModel?.enabled || false,
-        functionCall:
-          knownModel?.abilities?.functionCall
-          || false,
-        id: model.id,
-        reasoning:
-          knownModel?.abilities?.reasoning
-          || false,
-        vision:
-          knownModel?.abilities?.vision
-          || false,
-      };
-    },
+    return modelList
+      .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+
+        return {
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            knownModel?.abilities?.functionCall
+            || false,
+          id: model.id,
+          reasoning:
+            knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            knownModel?.abilities?.vision
+            || false,
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.LMStudio,
 });
