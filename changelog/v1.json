@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix model fetch for spark and fix the support of model reset."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.8"
+  },
+  {
+    "children": {
       "improvements": ["Update model list."]
     },
     "date": "2025-02-13",
