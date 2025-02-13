@@ -4,7 +4,6 @@ import { initReactI18next } from 'react-i18next';
 import { isRtlLang } from 'rtl-detect';
 
 import { getDebugConfig } from '@/config/debug';
-import { DEFAULT_LANG } from '@/const/locale';
 import { normalizeLocale } from '@/locales/resources';
 import { isDev, isOnServerSide } from '@/utils/env';
 
@@ -30,12 +29,14 @@ export const createI18nNext = (lang?: string) => {
     init: () =>
       instance.init({
         debug: debugMode,
-        defaultNS: ['error', 'common', 'chat'],
-        fallbackLng: DEFAULT_LANG,
+        fallbackLng: lang,
         interpolation: {
           escapeValue: false,
         },
         lng: lang,
+        // only load current lang
+        load: 'currentOnly',
+        ns: ['error', 'common', 'chat'],
       }),
     instance,
   };
