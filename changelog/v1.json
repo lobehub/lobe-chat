@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix not enable models correctly."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.6"
+  },
+  {
+    "children": {
       "fixes": ["Fix latex in thinking tag render."]
     },
     "date": "2025-02-13",
