@@ -118,3 +118,6 @@ export const createHeaderWithAuth = async (params?: AuthParams): Promise<Headers
   // eslint-disable-next-line no-undef
   return { ...params?.headers, [LOBE_CHAT_AUTH_HEADER]: token };
 };
+
+
+export { createAuthTokenWithPayload };
