@@ -1,6 +1,48 @@
 [
   {
     "children": {
+      "fixes": ["Fix model fetch for spark and fix the support of model reset."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.8"
+  },
+  {
+    "children": {
+      "improvements": ["Update model list."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.7"
+  },
+  {
+    "children": {
+      "fixes": ["Fix not enable models correctly."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix latex in thinking tag render."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ai model abilities issue."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix tencent cloud api issue."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.3"
+  },
+  {
+    "children": {
       "fixes": ["Disable openrouter client fetch."]
     },
     "date": "2025-02-12",

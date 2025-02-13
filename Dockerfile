@@ -222,7 +222,9 @@ ENV \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
-    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST=""
+    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST="" \
+    # Tencent Cloud
+    TENCENT_CLOUD_API_KEY="" TENCENT_CLOUD_MODEL_LIST=""
 
 USER nextjs
 

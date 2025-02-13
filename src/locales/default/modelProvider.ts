@@ -278,6 +278,11 @@ export default {
         latestTime: '上次更新时间：{{time}}',
         noLatestTime: '暂未获取列表',
       },
+      resetAll: {
+        conform: '确认重置当前模型的所有修改？重置后当前模型列表将会回到默认状态',
+        success: '重置成功',
+        title: '重置所有修改',
+      },
       search: '搜索模型...',
       searchResult: '搜索到 {{count}} 个模型',
       title: '模型列表',
