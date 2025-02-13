@@ -43,6 +43,8 @@ const parseDefaultThemeFromTime = (request: NextRequest) => {
   // 获取经度信息，Next.js 会自动解析 geo 信息到请求对象中
   const longitude = 'geo' in request && (request.geo as any)?.longitude;
 
+  console.log('[theme] longitude:', longitude);
+
   if (typeof longitude === 'number') {
     // 计算时区偏移（每15度经度对应1小时）
     // 东经为正，西经为负
