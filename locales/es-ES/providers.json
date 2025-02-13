@@ -107,6 +107,9 @@
   "upstage": {
     "description": "Upstage se centra en desarrollar modelos de IA para diversas necesidades comerciales, incluidos Solar LLM y Document AI, con el objetivo de lograr una inteligencia general artificial (AGI) que trabaje para las personas. Crea agentes de diálogo simples a través de la API de Chat y admite llamadas de funciones, traducción, incrustaciones y aplicaciones de dominio específico."
   },
+  "vertexai": {
+    "description": "La serie Gemini de Google es su modelo de IA más avanzado y versátil, desarrollado por Google DeepMind, diseñado específicamente para ser multimodal, soportando la comprensión y el procesamiento sin interrupciones de texto, código, imágenes, audio y video. Es adecuado para una variedad de entornos, desde centros de datos hasta dispositivos móviles, mejorando enormemente la eficiencia y la aplicabilidad de los modelos de IA."
+  },
   "wenxin": {
     "description": "Plataforma de desarrollo y servicios de modelos grandes y aplicaciones nativas de IA de nivel empresarial, que ofrece la cadena de herramientas más completa y fácil de usar para el desarrollo de modelos de inteligencia artificial generativa y el desarrollo de aplicaciones en todo el proceso."
   },

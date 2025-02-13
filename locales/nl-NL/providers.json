@@ -107,6 +107,9 @@
   "upstage": {
     "description": "Upstage richt zich op het ontwikkelen van AI-modellen voor verschillende zakelijke behoeften, waaronder Solar LLM en document AI, met als doel het realiseren van kunstmatige algemene intelligentie (AGI). Het creëert eenvoudige dialoogagenten via de Chat API en ondersteunt functionele aanroepen, vertalingen, insluitingen en specifieke domeintoepassingen."
   },
+  "vertexai": {
+    "description": "De Gemini-serie van Google is zijn meest geavanceerde, algemene AI-model, ontwikkeld door Google DeepMind, speciaal ontworpen voor multimodale toepassingen, die naadloze begrip en verwerking van tekst, code, afbeeldingen, audio en video ondersteunt. Geschikt voor verschillende omgevingen, van datacenters tot mobiele apparaten, verhoogt het de efficiëntie en toepasbaarheid van AI-modellen aanzienlijk."
+  },
   "wenxin": {
     "description": "Een enterprise-grade, alles-in-één platform voor de ontwikkeling en service van grote modellen en AI-native applicaties, dat de meest uitgebreide en gebruiksvriendelijke toolchain biedt voor de ontwikkeling van generatieve kunstmatige intelligentiemodellen en applicaties."
   },

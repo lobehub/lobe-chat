@@ -76,6 +76,7 @@
     "InvalidGithubToken": "Github Kişisel Erişim Token'ı hatalı veya boş. Lütfen Github Kişisel Erişim Token'ınızı kontrol edin ve tekrar deneyin.",
     "InvalidOllamaArgs": "Ollama yapılandırması yanlış, lütfen Ollama yapılandırmasını kontrol edip tekrar deneyin",
     "InvalidProviderAPIKey": "{{provider}} API Anahtarı geçersiz veya boş, lütfen {{provider}} API Anahtarını kontrol edip tekrar deneyin",
+    "InvalidVertexCredentials": "Vertex kimlik doğrulaması başarısız oldu, lütfen kimlik bilgilerinizi kontrol edip tekrar deneyin",
     "LocationNotSupportError": "Üzgünüz, bulunduğunuz konum bu model hizmetini desteklemiyor, muhtemelen bölge kısıtlamaları veya hizmetin henüz açılmamış olması nedeniyle. Lütfen mevcut konumun bu hizmeti kullanmaya uygun olup olmadığını doğrulayın veya başka bir konum bilgisi kullanmayı deneyin.",
     "NoOpenAIAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",
     "OllamaBizError": "Ollama servisine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",

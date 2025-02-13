@@ -76,6 +76,7 @@
     "InvalidGithubToken": "Le jeton d'accès personnel GitHub est incorrect ou vide. Veuillez vérifier le jeton d'accès personnel GitHub et réessayer.",
     "InvalidOllamaArgs": "La configuration d'Ollama n'est pas valide, veuillez vérifier la configuration d'Ollama et réessayer",
     "InvalidProviderAPIKey": "{{provider}} API Key incorrect or missing, please check {{provider}} API Key and try again",
+    "InvalidVertexCredentials": "L'authentification Vertex a échoué, veuillez vérifier vos informations d'authentification et réessayer",
     "LocationNotSupportError": "Désolé, votre emplacement actuel ne prend pas en charge ce service de modèle, peut-être en raison de restrictions géographiques ou de services non disponibles. Veuillez vérifier si votre emplacement actuel prend en charge ce service ou essayer avec une autre localisation.",
     "NoOpenAIAPIKey": "La clé API OpenAI est vide. Veuillez ajouter une clé API OpenAI personnalisée",
     "OllamaBizError": "Erreur commerciale lors de la demande de service Ollama, veuillez vérifier les informations ci-dessous ou réessayer",

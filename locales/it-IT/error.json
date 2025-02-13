@@ -76,6 +76,7 @@
     "InvalidGithubToken": "Il token di accesso personale di Github non è corretto o è vuoto. Controlla il token di accesso personale di Github e riprova.",
     "InvalidOllamaArgs": "Configurazione Ollama non valida, controllare la configurazione di Ollama e riprovare",
     "InvalidProviderAPIKey": "{{provider}} Chiave API non valida o vuota, controlla la Chiave API di {{provider}} e riprova",
+    "InvalidVertexCredentials": "Autenticazione Vertex non riuscita, controlla le credenziali di autenticazione e riprova",
     "LocationNotSupportError": "Spiacenti, la tua posizione attuale non supporta questo servizio modello, potrebbe essere a causa di restrizioni geografiche o servizi non attivati. Verifica se la posizione attuale supporta l'uso di questo servizio o prova a utilizzare un'altra posizione.",
     "NoOpenAIAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
     "OllamaBizError": "Errore di servizio Ollama, controllare le informazioni seguenti o riprovare",

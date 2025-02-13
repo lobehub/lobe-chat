@@ -64,7 +64,7 @@ export interface UserKeyVaults {
   tencentcloud?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   upstage?: OpenAICompatibleKeyVault;
-  wenxin?: OpenAICompatibleKeyVault;
+  vertexai?: undefined;
   xai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;

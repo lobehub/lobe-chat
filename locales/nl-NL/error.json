@@ -76,6 +76,7 @@
     "InvalidGithubToken": "Github Persoonlijke Toegangstoken is ongeldig of leeg, controleer de Github Persoonlijke Toegangstoken en probeer het opnieuw.",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
     "InvalidProviderAPIKey": "{{provider}} API-sleutel is onjuist of leeg. Controleer de {{provider}} API-sleutel en probeer het opnieuw.",
+    "InvalidVertexCredentials": "Vertex-authenticatie is mislukt, controleer de authenticatiegegevens en probeer het opnieuw",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",

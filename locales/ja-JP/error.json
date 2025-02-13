@@ -76,6 +76,7 @@
     "InvalidGithubToken": "Githubのパーソナルアクセストークンが無効または空です。Githubのパーソナルアクセストークンを確認してから、再試行してください。",
     "InvalidOllamaArgs": "Ollamaの設定が正しくありません。Ollamaの設定を確認してからもう一度お試しください",
     "InvalidProviderAPIKey": "{{provider}} APIキーが正しくないか空です。{{provider}} APIキーを確認して再試行してください。",
+    "InvalidVertexCredentials": "Vertexの認証に失敗しました。認証情報を確認して再試行してください",
     "LocationNotSupportError": "申し訳ありませんが、お住まいの地域ではこのモデルサービスをサポートしていません。地域制限またはサービスが利用できない可能性があります。現在の位置がこのサービスをサポートしているかどうかを確認するか、他の位置情報を使用してみてください。",
     "NoOpenAIAPIKey": "OpenAI APIキーが空です。カスタムOpenAI APIキーを追加してください。",
     "OllamaBizError": "Ollamaサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再度お試しください",

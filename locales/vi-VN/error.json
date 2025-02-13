@@ -76,6 +76,7 @@
     "InvalidGithubToken": "Mã truy cập cá nhân Github không chính xác hoặc để trống, vui lòng kiểm tra lại Mã truy cập cá nhân Github và thử lại",
     "InvalidOllamaArgs": "Cấu hình Ollama không hợp lệ, vui lòng kiểm tra lại cấu hình Ollama và thử lại",
     "InvalidProviderAPIKey": "{{provider}} API Key không hợp lệ hoặc trống, vui lòng kiểm tra và thử lại",
+    "InvalidVertexCredentials": "Xác thực Vertex không thành công, vui lòng kiểm tra lại thông tin xác thực và thử lại",
     "LocationNotSupportError": "Xin lỗi, vị trí của bạn không hỗ trợ dịch vụ mô hình này, có thể do hạn chế vùng miền hoặc dịch vụ chưa được mở. Vui lòng xác nhận xem vị trí hiện tại có hỗ trợ sử dụng dịch vụ này không, hoặc thử sử dụng thông tin vị trí khác.",
     "NoOpenAIAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
     "OllamaBizError": "Yêu cầu dịch vụ Ollama gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
