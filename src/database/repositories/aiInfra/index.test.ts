@@ -246,7 +246,7 @@ describe('AiInfraRepos', () => {
       const mockCustomModels = [
         {
           displayName: 'Custom GPT-4',
-          enabled: true,
+          enabled: false,
           id: 'gpt-4',
           type: 'chat' as const,
         },
@@ -255,7 +255,7 @@ describe('AiInfraRepos', () => {
       const mockDefaultModels = [
         {
           displayName: 'GPT-4',
-          enabled: false,
+          enabled: true,
           id: 'gpt-4',
           type: 'chat' as const,
         },
@@ -269,7 +269,7 @@ describe('AiInfraRepos', () => {
       expect(result).toContainEqual(
         expect.objectContaining({
           displayName: 'Custom GPT-4',
-          enabled: true,
+          enabled: false,
           id: 'gpt-4',
         }),
       );
