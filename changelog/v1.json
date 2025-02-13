@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix latex in thinking tag render."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix ai model abilities issue."]
     },
     "date": "2025-02-12",
