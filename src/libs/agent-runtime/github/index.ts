@@ -3,7 +3,6 @@ import { pruneReasoningPayload } from '../openai';
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 export interface GithubModelCard {
@@ -38,6 +37,8 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
     invalidAPIKey: AgentRuntimeErrorType.InvalidGithubToken,
   },
   models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const functionCallKeywords = [
       'function',
       'tool',
@@ -58,15 +59,26 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
 
     return modelList
       .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.toLowerCase() === m.id.toLowerCase());
+
         return {
-          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.contextWindowTokens ?? undefined,
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
           description: model.description,
           displayName: model.friendly_name,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.enabled || false,
-          functionCall: functionCallKeywords.some(keyword => model.description.toLowerCase().includes(keyword)),
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            functionCallKeywords.some(keyword => model.description.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.functionCall
+            || false,
           id: model.name,
-          reasoning: reasoningKeywords.some(keyword => model.name.toLowerCase().includes(keyword)),
-          vision: visionKeywords.some(keyword => model.description.toLowerCase().includes(keyword)),
+          reasoning:
+            reasoningKeywords.some(keyword => model.name.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            visionKeywords.some(keyword => model.description.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

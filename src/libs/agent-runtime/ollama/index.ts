@@ -2,7 +2,6 @@ import { Ollama, Tool } from 'ollama/browser';
 import { ClientOptions } from 'openai';
 
 import { OpenAIChatMessage } from '@/libs/agent-runtime';
-import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -19,6 +18,12 @@ import { StreamingResponse } from '../utils/response';
 import { OllamaStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { OllamaMessage } from './type';
+
+import { ChatModelCard } from '@/types/llm';
+
+export interface OllamaModelCard {
+  name: string;
+}
 
 export class LobeOllamaAI implements LobeRuntimeAI {
   private client: Ollama;
@@ -102,11 +107,34 @@ export class LobeOllamaAI implements LobeRuntimeAI {
     return await Promise.all(promises);
   }
 
-  async models(): Promise<ChatModelCard[]> {
+  async models() {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const list = await this.client.list();
-    return list.models.map((model) => ({
-      id: model.name,
-    }));
+
+    const modelList: OllamaModelCard[] = list.models;
+
+    return modelList
+      .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.toLowerCase() === m.id.toLowerCase());
+
+        return {
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            knownModel?.abilities?.functionCall
+            || false,
+          id: model.name,
+          reasoning:
+            knownModel?.abilities?.functionCall
+            || false,
+          vision:
+            knownModel?.abilities?.functionCall
+            || false,
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   }
 
   private invokeEmbeddingModel = async (payload: EmbeddingsPayload): Promise<Embeddings> => {
