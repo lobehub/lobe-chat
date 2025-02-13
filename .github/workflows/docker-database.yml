@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  REGISTRY_IMAGE: lobehub/lobe-chat-database
+  REGISTRY_IMAGE: asuka08/lobe-chat-database
   PR_TAG_PREFIX: pr-
 
 jobs:
