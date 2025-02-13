@@ -1,23 +1,35 @@
-import { geolocation } from '@vercel/functions';
+import { getCountry } from 'countries-and-timezones';
 import { NextRequest } from 'next/server';
 
-export const parseDefaultThemeFromLongitude = (request: NextRequest) => {
-  // 获取经度信息，Next.js 会自动解析 geo 信息到请求对象中
-  const geo = geolocation(request);
-  const longitude = geo?.longitude;
+export const parseDefaultThemeFromCountry = (request: NextRequest) => {
+  // 1. 从请求头中获取国家代码
+  const countryCode =
+    request.headers.get('x-vercel-ip-country') || // Vercel
+    request.headers.get('cf-ipcountry') || // Cloudflare
+    request.headers.get('x-zeabur-ip-country') || // Zeabur
+    request.headers.get('x-country-code'); // Netlify
 
-  if (!!longitude) {
-    // 计算时区偏移（每15度经度对应1小时）
-    // 东经为正，西经为负
-    const offsetHours = Math.round(parseInt(longitude) / 15);
+  // 如果没有获取到国家代码，直接返回 light 主题
+  if (!countryCode) return 'light';
 
-    // 计算当地时间
-    const localHour = (new Date().getUTCHours() + offsetHours + 24) % 24;
-    console.log(`[theme] localHour: ${localHour}`);
+  // 2. 获取国家的时区信息
+  const country = getCountry(countryCode);
 
-    // 6点到18点之间返回 light 主题
-    return localHour >= 6 && localHour < 18 ? 'light' : 'dark';
-  }
+  // 如果找不到国家信息或该国家没有时区信息，返回 light 主题
+  if (!country?.timezones?.length) return 'light';
 
-  return 'light';
+  // 3. 获取该国家的第一个时区下的当前时间
+  const localTime = new Date().toLocaleString('en-US', {
+    hour: 'numeric',
+    hour12: false,
+    timeZone: country.timezones[0],
+  });
+
+  // 4. 解析小时数并确定主题
+  const localHour = parseInt(localTime);
+  console.log(
+    `[theme] Country: ${countryCode}, Timezone: ${country.timezones[0]}, LocalHour: ${localHour}`,
+  );
+
+  return localHour >= 6 && localHour < 18 ? 'light' : 'dark';
 };
