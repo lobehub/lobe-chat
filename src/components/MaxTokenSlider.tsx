@@ -101,3 +101,6 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
   );
 });
 export default MaxTokenSlider;
+
+
+export { exponent, getRealValue, Kibi, MaxTokenSlider,powerKibi };
