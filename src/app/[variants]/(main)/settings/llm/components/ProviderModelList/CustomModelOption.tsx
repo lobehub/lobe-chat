@@ -2,12 +2,13 @@ import { ModelIcon } from '@lobehub/icons';
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { App, Typography } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { LucideArrowRight, LucideSettings, LucideTrash2 } from 'lucide-react';
+import { LucideArrowLeft, LucideArrowRight, LucideSettings, LucideTrash2 } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ModelInfoTags } from '@/components/ModelSelect';
+import { useDirection } from '@/hooks/useDirection';
 import { useUserStore } from '@/store/user';
 import { modelConfigSelectors, modelProviderSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -21,6 +22,7 @@ const CustomModelOption = memo<CustomModelOptionProps>(({ id, provider }) => {
   const { t } = useTranslation('common');
   const { t: s } = useTranslation('setting');
   const { modal } = App.useApp();
+  const direction = useDirection();
 
   const [dispatchCustomModelCards, toggleEditingCustomModelCard, removeEnabledModels] =
     useUserStore((s) => [
@@ -52,7 +54,7 @@ const CustomModelOption = memo<CustomModelOptionProps>(({ id, provider }) => {
             {id}
             {!!modelCard?.deploymentName && (
               <>
-                <Icon icon={LucideArrowRight} />
+                <Icon icon={direction === 'rtl' ? LucideArrowLeft : LucideArrowRight} />
                 {modelCard?.deploymentName}
               </>
             )}

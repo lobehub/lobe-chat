@@ -4,7 +4,7 @@ import { Avatar, Icon, Tag } from '@lobehub/ui';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import qs from 'query-string';
 import { memo } from 'react';
@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import { useDirection } from '@/hooks/useDirection';
 import { DiscoverAssistantItem } from '@/types/discover';
 
 import GitHubAvatar from '../../../../components/GitHubAvatar';
@@ -44,6 +45,7 @@ interface HeaderProps {
 const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
   const { styles, theme } = useStyles();
   const { t } = useTranslation('discover');
+  const direction = useDirection();
 
   return (
     <Flexbox gap={12} width={'100%'}>
@@ -82,7 +84,10 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
             </Link>
             {data.meta?.category && (
               <>
-                <Icon color={theme.colorTextSecondary} icon={ChevronRight} />
+                <Icon
+                  color={theme.colorTextSecondary}
+                  icon={direction === 'rtl' ? ChevronLeft : ChevronRight}
+                />
                 <Link href={urlJoin('/discover/assistants', data.meta.category)}>
                   <Button className={styles.tag} shape={'round'} size={'small'}>
                     {t(`category.assistant.${data.meta.category}`)}
