@@ -1,5 +1,6 @@
-import { toMarkdown } from 'mdast-util-to-markdown';
 import { SKIP, visit } from 'unist-util-visit';
+
+import { treeNodeToString } from './getNodeContent';
 
 export const createRemarkCustomTagPlugin = (tag: string) => () => {
   return (tree: any) => {
@@ -31,17 +32,7 @@ export const createRemarkCustomTagPlugin = (tag: string) => () => {
         );
 
         // 转换为 Markdown 字符串
-        const content = contentNodes
-          .map((n: any) => {
-            // fix https://github.com/lobehub/lobe-chat/issues/5668
-            if (n.type === 'paragraph') {
-              return n.children.map((child: any) => child.value).join('');
-            }
-
-            return toMarkdown(n);
-          })
-          .join('\n\n')
-          .trim();
+        const content = treeNodeToString(contentNodes);
 
         // 创建自定义节点
         const customNode = {

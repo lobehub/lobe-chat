@@ -172,19 +172,20 @@ const OpenRouter: ModelProviderCard = {
     },
     {
       contextWindowTokens: 1_048_576 + 8192,
-      description: "Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。",
-      displayName: "Gemini 2.0 Flash",
+      description:
+        'Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。',
+      displayName: 'Gemini 2.0 Flash',
       enabled: true,
       functionCall: true,
-      id: "google/gemini-2.0-flash-001",
+      id: 'google/gemini-2.0-flash-001',
       maxOutput: 8192,
       pricing: {
         cachedInput: 0.025,
         input: 0.1,
-        output: 0.4
+        output: 0.4,
       },
-      releasedAt: "2025-02-05",
-      vision: true
+      releasedAt: '2025-02-05',
+      vision: true,
     },
     {
       contextWindowTokens: 2_000_000 + 8192,
@@ -213,6 +214,19 @@ const OpenRouter: ModelProviderCard = {
         output: 0.28,
       },
       releasedAt: '2024-09-05',
+    },
+    {
+      contextWindowTokens: 163_840,
+      description: 'DeepSeek-R1',
+      displayName: 'DeepSeek R1',
+      enabled: true,
+      functionCall: false,
+      id: 'deepseek/deepseek-r1',
+      pricing: {
+        input: 3,
+        output: 8,
+      },
+      releasedAt: '2025-01-20',
     },
     {
       contextWindowTokens: 131_072,
@@ -285,14 +299,15 @@ const OpenRouter: ModelProviderCard = {
     },
     {
       contextWindowTokens: 2_097_152 + 8192,
-      description: "Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。",
-      displayName: "Gemini 2.0 Pro Experimental 02-05 (Free)",
+      description:
+        'Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。',
+      displayName: 'Gemini 2.0 Pro Experimental 02-05 (Free)',
       enabled: true,
       functionCall: true,
-      id: "google/gemini-2.0-pro-exp-02-05:free",
+      id: 'google/gemini-2.0-pro-exp-02-05:free',
       maxOutput: 8192,
-      releasedAt: "2025-02-05",
-      vision: true
+      releasedAt: '2025-02-05',
+      vision: true,
     },
   ],
   checkModel: 'google/gemma-2-9b-it:free',
@@ -303,6 +318,9 @@ const OpenRouter: ModelProviderCard = {
   modelsUrl: 'https://openrouter.ai/models',
   name: 'OpenRouter',
   settings: {
+    // OpenRouter don't support browser request
+    // https://github.com/lobehub/lobe-chat/issues/5900
+    disableBrowserRequest: true,
     sdkType: 'openai',
     showModelFetcher: true,
   },
