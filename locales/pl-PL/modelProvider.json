@@ -276,6 +276,11 @@
         "latestTime": "Ostatnia aktualizacja: {{time}}",
         "noLatestTime": "Lista nie została jeszcze pobrana"
       },
+      "resetAll": {
+        "conform": "Czy na pewno chcesz zresetować wszystkie zmiany w bieżącym modelu? Po zresetowaniu lista modeli wróci do stanu domyślnego",
+        "success": "Resetowanie zakończone sukcesem",
+        "title": "Zresetuj wszystkie zmiany"
+      },
       "search": "Szukaj modeli...",
       "searchResult": "Znaleziono {{count}} modeli",
       "title": "Lista modeli",

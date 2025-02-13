@@ -3,6 +3,7 @@
 import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { ProviderSettingsContext } from '@/app/[variants]/(main)/settings/provider/features/ModelList/ProviderSettingsContext';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
@@ -13,7 +14,11 @@ import ModelTitle from './ModelTitle';
 import SearchResult from './SearchResult';
 import SkeletonList from './SkeletonList';
 
-const Content = memo<{ id: string }>(({ id }) => {
+interface ContentProps {
+  id: string;
+}
+
+const Content = memo<ContentProps>(({ id }) => {
   const [isSearching, isEmpty, useFetchAiProviderModels] = useAiInfraStore((s) => [
     !!s.modelSearchKeyword,
     aiModelSelectors.isEmptyAiProviderModelList(s),
@@ -38,25 +43,30 @@ const Content = memo<{ id: string }>(({ id }) => {
 
 interface ModelListProps {
   id: string;
+  modelEditable?: boolean;
   showAddNewModel?: boolean;
   showModelFetcher?: boolean;
 }
 
-const ModelList = memo<ModelListProps>(({ id, showModelFetcher, showAddNewModel }) => {
-  const mobile = useIsMobile();
+const ModelList = memo<ModelListProps>(
+  ({ id, showModelFetcher, showAddNewModel, modelEditable = true }) => {
+    const mobile = useIsMobile();
 
-  return (
-    <Flexbox gap={16} paddingInline={mobile ? 12 : 0}>
-      <ModelTitle
-        provider={id}
-        showAddNewModel={showAddNewModel}
-        showModelFetcher={showModelFetcher}
-      />
-      <Suspense fallback={<SkeletonList />}>
-        <Content id={id} />
-      </Suspense>
-    </Flexbox>
-  );
-});
+    return (
+      <ProviderSettingsContext value={{ modelEditable, showAddNewModel, showModelFetcher }}>
+        <Flexbox gap={16} paddingInline={mobile ? 12 : 0}>
+          <ModelTitle
+            provider={id}
+            showAddNewModel={showAddNewModel}
+            showModelFetcher={showModelFetcher}
+          />
+          <Suspense fallback={<SkeletonList />}>
+            <Content id={id} />
+          </Suspense>
+        </Flexbox>
+      </ProviderSettingsContext>
+    );
+  },
+);
 
 export default ModelList;

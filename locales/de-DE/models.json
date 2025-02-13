@@ -182,6 +182,12 @@
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat ist die Open-Source-Version des GLM-4-Modells, das von Zhizhu AI eingeführt wurde. Dieses Modell zeigt hervorragende Leistungen in den Bereichen Semantik, Mathematik, Inferenz, Code und Wissen. Neben der Unterstützung für mehrstufige Dialoge bietet GLM-4-9B-Chat auch fortgeschrittene Funktionen wie Web-Browsing, Code-Ausführung, benutzerdefinierte Tool-Aufrufe (Function Call) und langes Textverständnis. Das Modell unterstützt 26 Sprachen, darunter Chinesisch, Englisch, Japanisch, Koreanisch und Deutsch. In mehreren Benchmark-Tests zeigt GLM-4-9B-Chat hervorragende Leistungen, wie AlignBench-v2, MT-Bench, MMLU und C-Eval. Das Modell unterstützt eine maximale Kontextlänge von 128K und ist für akademische Forschung und kommerzielle Anwendungen geeignet."
   },
+  "Pro/deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1 ist ein durch verstärkendes Lernen (RL) gesteuertes Inferenzmodell, das Probleme mit Wiederholungen und Lesbarkeit im Modell löst. Vor dem RL führte DeepSeek-R1 Kaltstartdaten ein, um die Inferenzleistung weiter zu optimieren. Es zeigt in mathematischen, programmierbezogenen und Inferenzaufgaben eine vergleichbare Leistung zu OpenAI-o1 und verbessert die Gesamtleistung durch sorgfältig gestaltete Trainingsmethoden."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3 ist ein hybrides Experten (MoE) Sprachmodell mit 6710 Milliarden Parametern, das eine Multi-Head-Latente-Attention (MLA) und DeepSeekMoE-Architektur verwendet, kombiniert mit einer Lastenausgleichsstrategie ohne Hilfskosten, um die Inferenz- und Trainingseffizienz zu optimieren. Durch das Pre-Training auf 14,8 Billionen hochwertigen Tokens und anschließende überwachte Feinabstimmung und verstärktes Lernen übertrifft DeepSeek-V3 in der Leistung andere Open-Source-Modelle und nähert sich führenden geschlossenen Modellen."
+  },
   "Pro/google/gemma-2-9b-it": {
     "description": "Gemma ist eines der leichtgewichtigen, hochmodernen offenen Modellserien, die von Google entwickelt wurden. Es handelt sich um ein großes Sprachmodell mit nur Decoder, das Englisch unterstützt und offene Gewichte, vortrainierte Varianten und anweisungsfeinabgestimmte Varianten bietet. Das Gemma-Modell eignet sich für verschiedene Textgenerierungsaufgaben, einschließlich Fragen und Antworten, Zusammenfassungen und Inferenz. Dieses 9B-Modell wurde mit 80 Billionen Tokens trainiert. Seine relativ kleine Größe ermöglicht es, in ressourcenbeschränkten Umgebungen wie Laptops, Desktop-Computern oder Ihrer eigenen Cloud-Infrastruktur bereitgestellt zu werden, wodurch mehr Menschen Zugang zu modernsten KI-Modellen erhalten und Innovationen gefördert werden."
   },
@@ -440,6 +446,9 @@
   "anthropic/claude-3-opus": {
     "description": "Claude 3 Opus ist das leistungsstärkste Modell von Anthropic zur Bearbeitung hochkomplexer Aufgaben. Es zeichnet sich durch hervorragende Leistung, Intelligenz, Flüssigkeit und Verständnis aus."
   },
+  "anthropic/claude-3.5-haiku": {
+    "description": "Claude 3.5 Haiku ist das schnellste nächste Generation Modell von Anthropic. Im Vergleich zu Claude 3 Haiku hat Claude 3.5 Haiku in allen Fähigkeiten Fortschritte gemacht und übertrifft in vielen intellektuellen Benchmark-Tests das größte Modell der vorherigen Generation, Claude 3 Opus."
+  },
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet bietet Fähigkeiten, die über Opus hinausgehen, und eine schnellere Geschwindigkeit als Sonnet, während es den gleichen Preis wie Sonnet beibehält. Sonnet ist besonders gut in Programmierung, Datenwissenschaft, visueller Verarbeitung und Agentenaufgaben."
   },
@@ -590,6 +599,21 @@
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 – das größere und intelligentere Modell im DeepSeek-Paket – wurde in die Llama 70B-Architektur destilliert. Basierend auf Benchmark-Tests und menschlicher Bewertung ist dieses Modell intelligenter als das ursprüngliche Llama 70B, insbesondere bei Aufgaben, die mathematische und faktische Genauigkeit erfordern."
   },
+  "deepseek-r1-distill-llama-8b": {
+    "description": "Das DeepSeek-R1-Distill Modell wurde durch Wissensdistillationstechniken entwickelt, indem Proben, die von DeepSeek-R1 generiert wurden, auf Qwen, Llama und andere Open-Source-Modelle feinabgestimmt wurden."
+  },
+  "deepseek-r1-distill-qwen-1.5b": {
+    "description": "Das DeepSeek-R1-Distill Modell wurde durch Wissensdistillationstechniken entwickelt, indem Proben, die von DeepSeek-R1 generiert wurden, auf Qwen, Llama und andere Open-Source-Modelle feinabgestimmt wurden."
+  },
+  "deepseek-r1-distill-qwen-14b": {
+    "description": "Das DeepSeek-R1-Distill Modell wurde durch Wissensdistillationstechniken entwickelt, indem Proben, die von DeepSeek-R1 generiert wurden, auf Qwen, Llama und andere Open-Source-Modelle feinabgestimmt wurden."
+  },
+  "deepseek-r1-distill-qwen-32b": {
+    "description": "Das DeepSeek-R1-Distill Modell wurde durch Wissensdistillationstechniken entwickelt, indem Proben, die von DeepSeek-R1 generiert wurden, auf Qwen, Llama und andere Open-Source-Modelle feinabgestimmt wurden."
+  },
+  "deepseek-r1-distill-qwen-7b": {
+    "description": "Das DeepSeek-R1-Distill Modell wurde durch Wissensdistillationstechniken entwickelt, indem Proben, die von DeepSeek-R1 generiert wurden, auf Qwen, Llama und andere Open-Source-Modelle feinabgestimmt wurden."
+  },
   "deepseek-reasoner": {
     "description": "Das von DeepSeek entwickelte Inferenzmodell. Bevor das Modell die endgültige Antwort ausgibt, gibt es zunächst eine Denkprozesskette aus, um die Genauigkeit der endgültigen Antwort zu erhöhen."
   },
@@ -698,8 +722,17 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro unterstützt bis zu 2 Millionen Tokens und ist die ideale Wahl für mittelgroße multimodale Modelle, die umfassende Unterstützung für komplexe Aufgaben bieten."
   },
+  "gemini-2.0-flash": {
+    "description": "Gemini 2.0 Flash bietet nächste Generation Funktionen und Verbesserungen, einschließlich außergewöhnlicher Geschwindigkeit, nativer Werkzeugnutzung, multimodaler Generierung und einem Kontextfenster von 1M Tokens."
+  },
+  "gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash bietet nächste Generation Funktionen und Verbesserungen, einschließlich außergewöhnlicher Geschwindigkeit, nativer Werkzeugnutzung, multimodaler Generierung und einem Kontextfenster von 1M Tokens."
+  },
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit Next-Gen-Funktionen, herausragender Geschwindigkeit, nativer Werkzeuganwendung und multimodaler Generierung."
+  },
+  "gemini-2.0-flash-lite-preview-02-05": {
+    "description": "Ein Gemini 2.0 Flash Modell, das auf Kosteneffizienz und niedrige Latenz optimiert wurde."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit der nächsten Generation von Funktionen, außergewöhnlicher Geschwindigkeit, nativer Tool-Nutzung und multimodaler Generierung."
@@ -707,11 +740,8 @@
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit der nächsten Generation von Funktionen, außergewöhnlicher Geschwindigkeit, nativen Toolaufrufen und multimodaler Generierung."
   },
-  "gemini-exp-1114": {
-    "description": "Gemini Exp 1114 ist Googles neuestes experimentelles multimodales KI-Modell, das über eine schnelle Verarbeitungskapazität verfügt und Texte, Bilder und Videoeingaben unterstützt, um eine effiziente Skalierung für verschiedene Aufgaben zu ermöglichen."
-  },
-  "gemini-exp-1121": {
-    "description": "Gemini Exp 1121 ist Googles neuestes experimentelles multimodales KI-Modell, das über eine schnelle Verarbeitungskapazität verfügt und Texte, Bilder und Videoeingaben unterstützt, um eine effiziente Skalierung für verschiedene Aufgaben zu ermöglichen."
+  "gemini-2.0-pro-exp-02-05": {
+    "description": "Gemini 2.0 Pro Experimental ist Googles neuestes experimentelles multimodales KI-Modell, das im Vergleich zu früheren Versionen eine gewisse Qualitätsverbesserung aufweist, insbesondere in Bezug auf Weltwissen, Code und lange Kontexte."
   },
   "gemini-exp-1206": {
     "description": "Gemini Exp 1206 ist Googles neuestes experimentelles multimodales KI-Modell, das im Vergleich zu historischen Versionen eine gewisse Qualitätssteigerung aufweist."
@@ -778,6 +808,12 @@
   },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview verfügt über starke Fähigkeiten zur komplexen Schlussfolgerung und zeigt hervorragende Leistungen in den Bereichen logisches Denken, Mathematik und Programmierung."
+  },
+  "google/gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash bietet nächste Generation Funktionen und Verbesserungen, einschließlich außergewöhnlicher Geschwindigkeit, nativer Werkzeugnutzung, multimodaler Generierung und einem Kontextfenster von 1M Tokens."
+  },
+  "google/gemini-2.0-pro-exp-02-05:free": {
+    "description": "Gemini 2.0 Pro Experimental ist Googles neuestes experimentelles multimodales KI-Modell, das im Vergleich zu früheren Versionen eine gewisse Qualitätsverbesserung aufweist, insbesondere in Bezug auf Weltwissen, Code und lange Kontexte."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash bietet optimierte multimodale Verarbeitungsfähigkeiten, die für verschiedene komplexe Aufgabenszenarien geeignet sind."
@@ -995,6 +1031,9 @@
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 ist darauf ausgelegt, Aufgaben zu bearbeiten, die visuelle und textuelle Daten kombinieren. Es zeigt hervorragende Leistungen bei Aufgaben wie Bildbeschreibung und visuellen Fragen und Antworten und überbrückt die Kluft zwischen Sprachgenerierung und visueller Schlussfolgerung."
   },
+  "llama-3.3-70b-instruct": {
+    "description": "Llama 3.3 ist das fortschrittlichste mehrsprachige Open-Source-Sprachmodell der Llama-Serie, das eine Leistung bietet, die mit einem 405B-Modell vergleichbar ist, und das zu extrem niedrigen Kosten. Es basiert auf der Transformer-Architektur und verbessert die Nützlichkeit und Sicherheit durch überwachte Feinabstimmung (SFT) und verstärkendes Lernen mit menschlichem Feedback (RLHF). Die auf Anweisungen optimierte Version ist speziell für mehrsprachige Dialoge optimiert und übertrifft in mehreren Branchenbenchmarks viele Open-Source- und geschlossene Chat-Modelle. Das Wissensdatum endet im Dezember 2023."
+  },
   "llama-3.3-70b-versatile": {
     "description": "Das Meta Llama 3.3 ist ein mehrsprachiges, großes Sprachmodell (LLM), das aus einem vortrainierten und anweisungsorientierten generativen Modell mit 70B (Text-Eingabe/Text-Ausgabe) besteht. Das anweisungsorientierte Modell von Llama 3.3 ist für mehrsprachige Dialoganwendungen optimiert und übertrifft viele verfügbare Open-Source- und Closed-Source-Chat-Modelle bei gängigen Branchenbenchmarks."
   },
@@ -1135,6 +1174,12 @@
   },
   "meta-llama/llama-3.2-90b-vision-instruct": {
     "description": "LLaMA 3.2 ist darauf ausgelegt, Aufgaben zu bearbeiten, die visuelle und textuelle Daten kombinieren. Es zeigt hervorragende Leistungen bei Aufgaben wie Bildbeschreibung und visuellem Fragen und Antworten und überbrückt die Kluft zwischen Sprachgenerierung und visueller Schlussfolgerung."
+  },
+  "meta-llama/llama-3.3-70b-instruct": {
+    "description": "Llama 3.3 ist das fortschrittlichste mehrsprachige Open-Source-Sprachmodell der Llama-Serie, das eine Leistung bietet, die mit einem 405B-Modell vergleichbar ist, und das zu extrem niedrigen Kosten. Es basiert auf der Transformer-Architektur und verbessert die Nützlichkeit und Sicherheit durch überwachte Feinabstimmung (SFT) und verstärkendes Lernen mit menschlichem Feedback (RLHF). Die auf Anweisungen optimierte Version ist speziell für mehrsprachige Dialoge optimiert und übertrifft in mehreren Branchenbenchmarks viele Open-Source- und geschlossene Chat-Modelle. Das Wissensdatum endet im Dezember 2023."
+  },
+  "meta-llama/llama-3.3-70b-instruct:free": {
+    "description": "Llama 3.3 ist das fortschrittlichste mehrsprachige Open-Source-Sprachmodell der Llama-Serie, das eine Leistung bietet, die mit einem 405B-Modell vergleichbar ist, und das zu extrem niedrigen Kosten. Es basiert auf der Transformer-Architektur und verbessert die Nützlichkeit und Sicherheit durch überwachte Feinabstimmung (SFT) und verstärkendes Lernen mit menschlichem Feedback (RLHF). Die auf Anweisungen optimierte Version ist speziell für mehrsprachige Dialoge optimiert und übertrifft in mehreren Branchenbenchmarks viele Open-Source- und geschlossene Chat-Modelle. Das Wissensdatum endet im Dezember 2023."
   },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct ist das größte und leistungsstärkste Modell innerhalb des Llama 3.1 Instruct Modells. Es handelt sich um ein hochentwickeltes Modell für dialogbasierte Schlussfolgerungen und die Generierung synthetischer Daten, das auch als Grundlage für die professionelle kontinuierliche Vorab- und Feinabstimmung in bestimmten Bereichen verwendet werden kann. Die mehrsprachigen großen Sprachmodelle (LLMs) von Llama 3.1 sind eine Gruppe von vortrainierten, anweisungsoptimierten Generierungsmodellen, die in den Größen 8B, 70B und 405B (Text-Eingabe/Ausgabe) verfügbar sind. Die anweisungsoptimierten Textmodelle (8B, 70B, 405B) sind speziell für mehrsprachige Dialoganwendungen optimiert und haben in gängigen Branchenbenchmarks viele verfügbare Open-Source-Chat-Modelle übertroffen. Llama 3.1 ist für kommerzielle und Forschungszwecke in mehreren Sprachen konzipiert. Die anweisungsoptimierten Textmodelle eignen sich für assistentengleiche Chats, während die vortrainierten Modelle für verschiedene Aufgaben der natürlichen Sprachgenerierung angepasst werden können. Das Llama 3.1 Modell unterstützt auch die Nutzung seiner Ausgaben zur Verbesserung anderer Modelle, einschließlich der Generierung synthetischer Daten und der Verfeinerung. Llama 3.1 ist ein autoregressives Sprachmodell, das auf einer optimierten Transformer-Architektur basiert. Die angepasste Version verwendet überwachte Feinabstimmung (SFT) und verstärkendes Lernen mit menschlichem Feedback (RLHF), um den menschlichen Präferenzen für Hilfsbereitschaft und Sicherheit zu entsprechen."
@@ -1549,5 +1594,8 @@
   },
   "yi-vision": {
     "description": "Modell für komplexe visuelle Aufgaben, das hohe Leistungsfähigkeit bei der Bildverarbeitung und -analyse bietet."
+  },
+  "yi-vision-v2": {
+    "description": "Ein Modell für komplexe visuelle Aufgaben, das leistungsstarke Verständnis- und Analysefähigkeiten auf der Grundlage mehrerer Bilder bietet."
   }
 }
