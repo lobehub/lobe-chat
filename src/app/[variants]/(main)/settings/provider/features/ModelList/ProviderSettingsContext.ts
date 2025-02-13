@@ -6,4 +6,4 @@ export interface ProviderSettingsContextValue {
   showModelFetcher?: boolean;
 }
 
-export const ProviderSettingsContext = createContext<ProviderSettingsContextValue | null>(null);
+export const ProviderSettingsContext = createContext<ProviderSettingsContextValue>({});

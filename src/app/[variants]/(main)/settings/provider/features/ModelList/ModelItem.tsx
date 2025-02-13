@@ -7,7 +7,6 @@ import { memo, use, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ProviderSettingsContext } from '@/app/[variants]/(main)/settings/provider/features/ModelList/ProviderSettingsContext';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
@@ -15,6 +14,7 @@ import { AiModelSourceEnum, AiProviderModelListItem, ChatModelPricing } from '@/
 import { formatPriceByCurrency } from '@/utils/format';
 
 import ModelConfigModal from './ModelConfigModal';
+import { ProviderSettingsContext } from './ProviderSettingsContext';
 
 export const useStyles = createStyles(({ css, token, cx }) => {
   const config = css`
