@@ -78,7 +78,12 @@ const findDoubaoModelEndpoint = (model: string) => {
   const keyVaults: any = keyVaultsConfigSelectors.getVaultByProvider(ModelProvider.Doubao)(
     useUserStore.getState(),
   );
-  return keyVaults['model2EndpointMap']?.[model] || '';
+  const endpoint = keyVaults['model2EndpointMap']?.[model] || '';
+  if (endpoint) {
+    return endpoint;
+  }
+  // TODO: remove this fallback old version in feature
+  return findAzureDeploymentName(model);
 };
 
 const isEnableFetchOnClient = (provider: string) => {
