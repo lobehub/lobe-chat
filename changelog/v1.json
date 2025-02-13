@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix provider form api key."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.11"
+  },
+  {
+    "children": {
       "fixes": ["Fix api key input issue."]
     },
     "date": "2025-02-13",
