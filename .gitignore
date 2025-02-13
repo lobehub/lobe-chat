@@ -65,7 +65,7 @@ robots.txt
 public/sw*
 public/swe-worker*
 
-*.patch
+# *.patch
 *.pdf
 vertex-ai-key.json
 .pnpm-store

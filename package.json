@@ -43,6 +43,7 @@
     "docs:i18n": "lobe-i18n md && npm run lint:md && npm run lint:mdx",
     "docs:seo": "lobe-seo && npm run lint:mdx",
     "i18n": "npm run workflow:i18n && lobe-i18n",
+    "postinstall": "patch-package",
     "lint": "npm run lint:ts && npm run lint:style && npm run type-check && npm run lint:circular",
     "lint:circular": "dpdm src/**/*.ts  --no-warning --no-tree --exit-code circular:1 --no-progress -T true --skip-dynamic-imports circular",
     "lint:md": "remark . --silent --output",
