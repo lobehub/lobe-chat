@@ -3,7 +3,6 @@ import OpenAI from 'openai';
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 export interface BaichuanModelCard {
@@ -32,6 +31,8 @@ export const LobeBaichuanAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_BAICHUAN_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const modelsPage = await client.models.list() as any;
     const modelList: BaichuanModelCard[] = modelsPage.data;
 

@@ -1,7 +1,6 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 export interface SenseNovaModelCard {
@@ -33,6 +32,8 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_SENSENOVA_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const functionCallKeywords = [
       'sensechat-5',
     ];

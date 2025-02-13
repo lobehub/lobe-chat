@@ -12,7 +12,6 @@ import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import { createCallbacksTransformer } from '../utils/streams';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { ChatModelCard } from '@/types/llm';
 
 export interface CloudflareModelCard {
@@ -113,6 +112,8 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
   }
 
   async models(): Promise<ChatModelCard[]> {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const url = `${DEFAULT_BASE_URL_PREFIX}/client/v4/accounts/${this.accountID}/ai/models/search`;
     const response = await fetch(url, {
       headers: {

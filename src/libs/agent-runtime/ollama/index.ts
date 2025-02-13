@@ -19,7 +19,6 @@ import { OllamaStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { OllamaMessage } from './type';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { ChatModelCard } from '@/types/llm';
 
 export interface OllamaModelCard {
@@ -109,6 +108,8 @@ export class LobeOllamaAI implements LobeRuntimeAI {
   }
 
   async models() {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const list = await this.client.list();
 
     const modelList: OllamaModelCard[] = list.models;

@@ -3,7 +3,6 @@ import OpenAI from 'openai';
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 export interface ZhipuModelCard {
@@ -49,6 +48,8 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_ZHIPU_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     // ref: https://open.bigmodel.cn/console/modelcenter/square
     client.baseURL = 'https://open.bigmodel.cn/api/fine-tuning/model_center/list?pageSize=100&pageNum=1';
 

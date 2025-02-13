@@ -6,7 +6,6 @@ import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { convertIterableToStream } from '../utils/streams';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 export interface HuggingFaceModelCard {
@@ -56,6 +55,8 @@ export const LobeHuggingFaceAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_HUGGINGFACE_CHAT_COMPLETION === '1',
   },
   models: async () => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const visionKeywords = [
       'image-text-to-text',
       'multimodal',

@@ -8,7 +8,6 @@ import {
   SchemaType,
 } from '@google/generative-ai';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { safeParseJSON } from '@/utils/safeParseJSON';
@@ -137,6 +136,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   }
 
   async models() {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const url = `${this.baseURL}/v1beta/models?key=${this.apiKey}`;
     const response = await fetch(url, {
       method: 'GET',

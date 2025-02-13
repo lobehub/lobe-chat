@@ -2,7 +2,6 @@ import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { TogetherAIModel } from './type';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 export const LobeTogetherAI = LobeOpenAICompatibleFactory({
@@ -17,6 +16,8 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_TOGETHERAI_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const visionKeywords = [
       'qvq',
       'vision',

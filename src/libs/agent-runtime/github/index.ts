@@ -3,7 +3,6 @@ import { pruneReasoningPayload } from '../openai';
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 export interface GithubModelCard {
@@ -38,6 +37,8 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
     invalidAPIKey: AgentRuntimeErrorType.InvalidGithubToken,
   },
   models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const functionCallKeywords = [
       'function',
       'tool',
