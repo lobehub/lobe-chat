@@ -276,6 +276,11 @@
         "latestTime": "Laatste update tijd: {{time}}",
         "noLatestTime": "Lijst nog niet opgehaald"
       },
+      "resetAll": {
+        "conform": "Weet je zeker dat je alle wijzigingen van het huidige model wilt resetten? Na de reset zal de huidige modellenlijst terugkeren naar de standaardstatus",
+        "success": "Resetten geslaagd",
+        "title": "Reset alle wijzigingen"
+      },
       "search": "Zoek modellen...",
       "searchResult": "Gevonden {{count}} modellen",
       "title": "Modellenlijst",

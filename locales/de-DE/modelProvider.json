@@ -276,6 +276,11 @@
         "latestTime": "Letzte Aktualisierung: {{time}}",
         "noLatestTime": "Liste wurde noch nicht abgerufen"
       },
+      "resetAll": {
+        "conform": "Möchten Sie alle Änderungen am aktuellen Modell wirklich zurücksetzen? Nach dem Zurücksetzen wird die aktuelle Modellliste auf den Standardzustand zurückgesetzt.",
+        "success": "Zurücksetzen erfolgreich",
+        "title": "Alle Änderungen zurücksetzen"
+      },
       "search": "Modelle suchen...",
       "searchResult": "{{count}} Modelle gefunden",
       "title": "Modellliste",
