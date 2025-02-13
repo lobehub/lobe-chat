@@ -3,7 +3,7 @@
 import { CheckCircleFilled } from '@ant-design/icons';
 import { ModelIcon } from '@lobehub/icons';
 import { Alert, Highlighter, Icon } from '@lobehub/ui';
-import { AutoComplete, Button, Space } from 'antd';
+import { Button, Select, Space } from 'antd';
 import { useTheme } from 'antd-style';
 import { Loader2Icon } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
@@ -124,7 +124,7 @@ const Checker = memo<ConnectionCheckerProps>(
     return (
       <Flexbox align={isMobile ? 'flex-start' : 'flex-end'} gap={8}>
         <Space.Compact block>
-          <AutoComplete
+          <Select
             listItemHeight={36}
             onSelect={async (value) => {
               setCheckModel(value);
