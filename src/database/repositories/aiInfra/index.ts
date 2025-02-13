@@ -11,6 +11,7 @@ import {
   AiProviderListItem,
   AiProviderRuntimeState,
   EnabledAiModel,
+  EnabledProvider,
 } from '@/types/aiProvider';
 import { ProviderConfig } from '@/types/user/settings';
 import { merge, mergeArrayById } from '@/utils/merge';
@@ -22,7 +23,7 @@ export class AiInfraRepos {
   private db: LobeChatDatabase;
   aiProviderModel: AiProviderModel;
   private providerConfigs: Record<string, ProviderConfig>;
-  private aiModelModel: AiModelModel;
+  aiModelModel: AiModelModel;
 
   constructor(
     db: LobeChatDatabase,
@@ -70,7 +71,14 @@ export class AiInfraRepos {
     return list
       .filter((item) => item.enabled)
       .sort((a, b) => a.sort! - b.sort!)
-      .map((item) => ({ id: item.id, logo: item.logo, name: item.name, source: item.source }));
+      .map(
+        (item): EnabledProvider => ({
+          id: item.id,
+          logo: item.logo,
+          name: item.name,
+          source: item.source,
+        }),
+      );
   };
 
   getEnabledModels = async () => {
@@ -104,7 +112,7 @@ export class AiInfraRepos {
                   ? user.contextWindowTokens
                   : item.contextWindowTokens,
               displayName: user?.displayName || item.displayName,
-              enabled: user.enabled || item.enabled,
+              enabled: typeof user.enabled === 'boolean' ? user.enabled : item.enabled,
               id: item.id,
               providerId: provider.id,
               sort: user.sort || undefined,
