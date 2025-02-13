@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash-es';
 import pMap from 'p-map';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
@@ -10,6 +11,7 @@ import {
   AiProviderListItem,
   AiProviderRuntimeState,
   EnabledAiModel,
+  EnabledProvider,
 } from '@/types/aiProvider';
 import { ProviderConfig } from '@/types/user/settings';
 import { merge, mergeArrayById } from '@/utils/merge';
@@ -21,7 +23,7 @@ export class AiInfraRepos {
   private db: LobeChatDatabase;
   aiProviderModel: AiProviderModel;
   private providerConfigs: Record<string, ProviderConfig>;
-  private aiModelModel: AiModelModel;
+  aiModelModel: AiModelModel;
 
   constructor(
     db: LobeChatDatabase,
@@ -69,7 +71,14 @@ export class AiInfraRepos {
     return list
       .filter((item) => item.enabled)
       .sort((a, b) => a.sort! - b.sort!)
-      .map((item) => ({ id: item.id, logo: item.logo, name: item.name, source: item.source }));
+      .map(
+        (item): EnabledProvider => ({
+          id: item.id,
+          logo: item.logo,
+          name: item.name,
+          source: item.source,
+        }),
+      );
   };
 
   getEnabledModels = async () => {
@@ -88,15 +97,25 @@ export class AiInfraRepos {
           .map<EnabledAiModel & { enabled?: boolean | null }>((item) => {
             const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
 
+            if (!user)
+              return {
+                ...item,
+                abilities: item.abilities || {},
+                providerId: provider.id,
+              };
+
             return {
-              abilities: !!user ? user.abilities : item.abilities || {},
-              config: !!user ? user.config : item.config,
-              contextWindowTokens: !!user ? user.contextWindowTokens : item.contextWindowTokens,
+              abilities: !isEmpty(user.abilities) ? user.abilities : item.abilities || {},
+              config: !isEmpty(user.config) ? user.config : item.config,
+              contextWindowTokens:
+                typeof user.contextWindowTokens === 'number'
+                  ? user.contextWindowTokens
+                  : item.contextWindowTokens,
               displayName: user?.displayName || item.displayName,
-              enabled: !!user ? user.enabled : item.enabled,
+              enabled: typeof user.enabled === 'boolean' ? user.enabled : item.enabled,
               id: item.id,
               providerId: provider.id,
-              sort: !!user ? user.sort : undefined,
+              sort: user.sort || undefined,
               type: item.type,
             };
           })
