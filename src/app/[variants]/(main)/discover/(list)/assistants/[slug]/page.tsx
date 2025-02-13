@@ -10,37 +10,45 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 
 import List from '../features/List';
 
-export const generateMetadata = async (props: DiscoverPageProps) => {
+const getSharedProps = async (props: DiscoverPageProps) => {
   const params = await props.params;
+  const { slug: category, variants } = params;
+  const { isMobile, locale: hl } = await RouteVariants.deserializeVariants(variants);
   const searchParams = await props.searchParams;
 
-  const { t, locale } = await translation('metadata', searchParams?.hl);
-  const { t: td } = await translation('discover', searchParams?.hl);
+  const { t, locale } = await translation('metadata', searchParams?.hl || hl);
+  const { t: td } = await translation('discover', searchParams?.hl || hl);
+  return {
+    category,
+    isMobile,
+    locale,
+    t,
+    td,
+  };
+};
 
+export const generateMetadata = async (props: DiscoverPageProps) => {
+  const { locale, t, td, category } = await getSharedProps(props);
   return metadataModule.generate({
     alternate: true,
     description: t('discover.assistants.description'),
     locale,
-    title: [td(`category.assistant.${params.slug}`), t('discover.assistants.title')].join(' · '),
-    url: urlJoin('/discover/assistants', params.slug),
+    title: [td(`category.assistant.${category}`), t('discover.assistants.title')].join(' · '),
+    url: urlJoin('/discover/assistants', category),
   });
 };
 
 const Page = async (props: DiscoverPageProps<AssistantCategory>) => {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
-
-  const { t, locale } = await translation('metadata', searchParams?.hl);
-  const { t: td } = await translation('discover', searchParams?.hl);
-  const mobile = await RouteVariants.getIsMobile(props);
+  const { locale, t, td, category, isMobile } = await getSharedProps(props);
 
   const discoverService = new DiscoverService();
-  const items = await discoverService.getAssistantCategory(locale, params.slug);
+  const items = await discoverService.getAssistantCategory(locale, category as AssistantCategory);
 
   const ld = ldModule.generate({
     description: t('discover.assistants.description'),
-    title: [td(`category.assistant.${params.slug}`), t('discover.assistants.title')].join(' · '),
-    url: urlJoin('/discover/assistants', params.slug),
+    locale,
+    title: [td(`category.assistant.${category}`), t('discover.assistants.title')].join(' · '),
+    url: urlJoin('/discover/assistants', category),
     webpage: {
       enable: true,
       search: '/discover/search',
@@ -50,7 +58,7 @@ const Page = async (props: DiscoverPageProps<AssistantCategory>) => {
   return (
     <>
       <StructuredData ld={ld} />
-      <List category={params.slug} items={items} mobile={mobile} />
+      <List category={category} items={items} mobile={isMobile} />
     </>
   );
 };

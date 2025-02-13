@@ -13,8 +13,9 @@ import PageTitle from '../features/PageTitle';
 import Changelog from './features/ChangelogModal';
 import TelemetryNotification from './features/TelemetryNotification';
 
-export const generateMetadata = async () => {
-  const { t } = await translation('metadata');
+export const generateMetadata = async (props: DynamicLayoutProps) => {
+  const locale = await RouteVariants.getLocale(props);
+  const { t } = await translation('metadata', locale);
   return metadataModule.generate({
     description: t('chat.description', { appName: BRANDING_NAME }),
     title: t('chat.title', { appName: BRANDING_NAME }),
@@ -24,8 +25,8 @@ export const generateMetadata = async () => {
 
 const Page = async (props: DynamicLayoutProps) => {
   const { hideDocs, showChangelog } = serverFeatureFlags();
-  const mobile = await RouteVariants.getIsMobile(props);
-  const { t } = await translation('metadata');
+  const { isMobile, locale } = await RouteVariants.getVariantsFromProps(props);
+  const { t } = await translation('metadata', locale);
   const ld = ldModule.generate({
     description: t('chat.description', { appName: BRANDING_NAME }),
     title: t('chat.title', { appName: BRANDING_NAME }),
@@ -36,8 +37,8 @@ const Page = async (props: DynamicLayoutProps) => {
     <>
       <StructuredData ld={ld} />
       <PageTitle />
-      <TelemetryNotification mobile={mobile} />
-      {showChangelog && !hideDocs && !mobile && (
+      <TelemetryNotification mobile={isMobile} />
+      {showChangelog && !hideDocs && !isMobile && (
         <Suspense>
           <Changelog />
         </Suspense>

@@ -98,6 +98,9 @@
   "taichu": {
     "description": "Nowa generacja multimodalnych dużych modeli opracowana przez Instytut Automatyki Chińskiej Akademii Nauk i Wuhan Institute of Artificial Intelligence wspiera wielorundowe pytania i odpowiedzi, tworzenie tekstów, generowanie obrazów, zrozumienie 3D, analizę sygnałów i inne kompleksowe zadania pytaniowe, posiadając silniejsze zdolności poznawcze, rozumienia i tworzenia, oferując nową interaktywną doświadczenie."
   },
+  "tencentcloud": {
+    "description": "Atomowe możliwości silnika wiedzy (LLM Knowledge Engine Atomic Power) oparte na silniku wiedzy, oferujące pełne możliwości zadawania pytań i odpowiedzi, skierowane do przedsiębiorstw i deweloperów, zapewniające elastyczność w budowaniu i rozwijaniu aplikacji modelowych. Możesz tworzyć własne usługi modelowe za pomocą różnych atomowych możliwości, korzystając z usług takich jak analiza dokumentów, podział, embedding, wielokrotne przeredagowywanie i inne, aby dostosować AI do specyficznych potrzeb Twojej firmy."
+  },
   "togetherai": {
     "description": "Together AI dąży do osiągnięcia wiodącej wydajności poprzez innowacyjne modele AI, oferując szerokie możliwości dostosowywania, w tym wsparcie dla szybkiej ekspansji i intuicyjnych procesów wdrożeniowych, aby zaspokoić różnorodne potrzeby przedsiębiorstw."
   },

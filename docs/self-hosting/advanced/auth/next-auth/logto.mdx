@@ -43,6 +43,17 @@ If you are using Logto Cloud, assume its endpoint domain is `https://example.log
 
   After successful creation, save the `Client ID` and `Client Secret`.
 
+  ### Configure Webhook (Optional)
+
+  Configure the Logto Webhook so that LobeChat can receive notifications when user information is updated.
+
+  Go to `Webhooks`, create a Webhook, and fill in the following fields:
+
+  - Endpoint URL: `https://lobe.example.com/api/auth/webhooks/logto`
+  - Events: `User.Data.Updated`
+
+  After successful creation, copy the Webhook's `Signing Key` and fill it in the `LOGTO_WEBHOOK_SIGNING_KEY` environment variable.
+
   ### Configure Environment Variables
 
   <Image alt="Configure Environment Variables" inStep src="https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837" />
@@ -64,6 +75,7 @@ If you are using Logto Cloud, assume its endpoint domain is `https://example.log
   | `AUTH_LOGTO_SECRET`       | Required | The Client Secret from the Logto App details page                                                                                                                                      |
   | `AUTH_LOGTO_ISSUER`       | Required | OpenID Connect issuer of the Logto provider                                                                                                                                            |
   | `NEXTAUTH_URL`            | Required | This URL specifies the callback address for Auth.js during OAuth verification, needed only if the default generated redirect address is incorrect. `https://lobe.example.com/api/auth` |
+  | `LOGTO_WEBHOOK_SIGNING_KEY` | Optional | The key used to verify the legality of Webhook requests sent by Logto.                                                                                                               |
 
   <Callout type={'tip'}>
     Visit [📘 Environment Variables](/docs/self-hosting/environment-variables/auth#logto) for details on related variables.

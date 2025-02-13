@@ -98,6 +98,9 @@
   "taichu": {
     "description": "Das Institut für Automatisierung der Chinesischen Akademie der Wissenschaften und das Wuhan Institute of Artificial Intelligence haben ein neues Generation multimodales großes Modell eingeführt, das umfassende Frage-Antwort-Aufgaben unterstützt, darunter mehrstufige Fragen, Textgenerierung, Bildgenerierung, 3D-Verständnis und Signalverarbeitung, mit stärkeren kognitiven, verstehenden und kreativen Fähigkeiten, die ein neues interaktives Erlebnis bieten."
   },
+  "tencentcloud": {
+    "description": "Die atomare Fähigkeit der Wissensmaschine (LLM Knowledge Engine Atomic Power) basiert auf der Entwicklung der Wissensmaschine und bietet eine umfassende Fähigkeit zur Wissensabfrage für Unternehmen und Entwickler. Sie können mit verschiedenen atomaren Fähigkeiten Ihren eigenen Modellservice erstellen und Dokumentenanalysen, -aufteilungen, Embeddings, mehrfache Umformulierungen und andere Dienste kombinieren, um maßgeschneiderte KI-Lösungen für Ihr Unternehmen zu entwickeln."
+  },
   "togetherai": {
     "description": "Together AI strebt an, durch innovative KI-Modelle führende Leistungen zu erzielen und bietet umfangreiche Anpassungsmöglichkeiten, einschließlich schneller Skalierungsunterstützung und intuitiver Bereitstellungsprozesse, um den unterschiedlichen Anforderungen von Unternehmen gerecht zu werden."
   },

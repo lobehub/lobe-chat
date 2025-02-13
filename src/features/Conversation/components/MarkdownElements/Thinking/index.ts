@@ -1,6 +1,6 @@
+import { createRemarkCustomTagPlugin } from '../remarkPlugins/createRemarkCustomTagPlugin';
 import { MarkdownElement } from '../type';
 import Component from './Render';
-import { createRemarkCustomTagPlugin } from './remarkPlugin';
 
 const ThinkingElement: MarkdownElement = {
   Component,

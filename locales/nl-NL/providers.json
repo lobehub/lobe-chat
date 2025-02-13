@@ -98,6 +98,9 @@
   "taichu": {
     "description": "Het Instituut voor Automatisering van de Chinese Academie van Wetenschappen en het Wuhan Instituut voor Kunstmatige Intelligentie hebben een nieuwe generatie multimodale grote modellen gelanceerd, die ondersteuning bieden voor meerdaagse vraag-en-antwoord, tekstcreatie, beeldgeneratie, 3D-begrip, signaalanalyse en andere uitgebreide vraag-en-antwoordtaken, met sterkere cognitieve, begrip en creatiecapaciteiten, wat zorgt voor een geheel nieuwe interactie-ervaring."
   },
+  "tencentcloud": {
+    "description": "De atomische capaciteiten van de kennisengine (LLM Knowledge Engine Atomic Power) zijn gebaseerd op de ontwikkeling van de kennisengine en bieden een volledige keten van kennisvraag- en antwoordmogelijkheden, gericht op bedrijven en ontwikkelaars. U kunt verschillende atomische capaciteiten gebruiken om uw eigen modelservice samen te stellen, door gebruik te maken van diensten zoals documentanalyse, splitsing, embedding en meervoudige herschrijving, om een op maat gemaakte AI-oplossing voor uw bedrijf te creëren."
+  },
   "togetherai": {
     "description": "Together AI streeft ernaar toonaangevende prestaties te bereiken door middel van innovatieve AI-modellen, en biedt uitgebreide aanpassingsmogelijkheden, waaronder ondersteuning voor snelle schaling en intuïtieve implementatieprocessen, om aan de verschillende behoeften van bedrijven te voldoen."
   },

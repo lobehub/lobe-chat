@@ -174,10 +174,10 @@ const Item = memo<ChatListItemProps>(
       () => ({
         components,
         customRender: markdownCustomRender,
-        rehypePlugins,
-        remarkPlugins,
+        rehypePlugins: item?.role === 'user' ? undefined : rehypePlugins,
+        remarkPlugins: item?.role === 'user' ? undefined : remarkPlugins,
       }),
-      [components, markdownCustomRender],
+      [components, markdownCustomRender, item?.role],
     );
 
     const onChange = useCallback((value: string) => updateMessageContent(id, value), [id]);

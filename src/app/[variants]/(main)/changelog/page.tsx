@@ -5,6 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import Pagination from '@/app/[variants]/@modal/(.)changelog/modal/features/Pagination';
+import UpdateChangelogStatus from '@/app/[variants]/@modal/(.)changelog/modal/features/UpdateChangelogStatus';
 import StructuredData from '@/components/StructuredData';
 import { serverFeatureFlags } from '@/config/featureFlags';
 import { BRANDING_NAME } from '@/const/branding';
@@ -19,8 +20,9 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 import GridLayout from './features/GridLayout';
 import Post from './features/Post';
 
-export const generateMetadata = async () => {
-  const { t } = await translation('metadata');
+export const generateMetadata = async (props: DynamicLayoutProps) => {
+  const locale = await RouteVariants.getLocale(props);
+  const { t } = await translation('metadata', locale);
   return metadataModule.generate({
     canonical: urlJoin(OFFICIAL_SITE, 'changelog'),
     description: t('changelog.description', { appName: BRANDING_NAME }),
@@ -31,11 +33,10 @@ export const generateMetadata = async () => {
 
 const Page = async (props: DynamicLayoutProps) => {
   const hideDocs = serverFeatureFlags().hideDocs;
-
   if (hideDocs) return notFound();
 
-  const isMobile = await RouteVariants.getIsMobile(props);
-  const { t, locale } = await translation('metadata');
+  const { isMobile, locale } = await RouteVariants.getVariantsFromProps(props);
+  const { t } = await translation('metadata', locale);
   const changelogService = new ChangelogService();
   const data = await changelogService.getChangelogIndex();
 
@@ -69,6 +70,7 @@ const Page = async (props: DynamicLayoutProps) => {
       <GridLayout>
         <Pagination />
       </GridLayout>
+      <UpdateChangelogStatus currentId={data[0]?.id} />
     </>
   );
 };

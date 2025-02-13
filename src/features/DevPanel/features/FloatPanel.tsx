@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon, FluentEmoji, Icon, SideNav } from '@lobehub/ui';
-import { Dropdown, FloatButton } from 'antd';
+import { FloatButton } from 'antd';
 import { createStyles } from 'antd-style';
 import { BugIcon, BugOff, XIcon } from 'lucide-react';
 import { ReactNode, memo, useEffect, useState } from 'react';
@@ -81,7 +81,7 @@ interface CollapsibleFloatPanelProps {
 const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
   const { styles, theme } = useStyles();
   const [tab, setTab] = useState<string>(items[0].key);
-  const [isHide, setIsHide] = useState(false);
+
   const [isExpanded, setIsExpanded] = useState(false);
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [size, setSize] = useState({ height: minHeight, width: minWidth });
@@ -108,29 +108,11 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
 
   return (
     <>
-      {!isHide && (
-        <Dropdown
-          menu={{
-            items: [
-              {
-                icon: (
-                  <Icon color={theme.colorTextSecondary} icon={BugOff} size={{ fontSize: 16 }} />
-                ),
-                key: 'hide',
-                label: 'Hide Toolbar',
-                onClick: () => setIsHide(true),
-              },
-            ],
-          }}
-          trigger={['hover']}
-        >
-          <FloatButton
-            className={styles.floatButton}
-            icon={<Icon icon={isExpanded ? BugOff : BugIcon} />}
-            onClick={() => setIsExpanded(!isExpanded)}
-          />
-        </Dropdown>
-      )}
+      <FloatButton
+        className={styles.floatButton}
+        icon={<Icon icon={isExpanded ? BugOff : BugIcon} />}
+        onClick={() => setIsExpanded(!isExpanded)}
+      />
       {isExpanded && (
         <Rnd
           bounds="window"

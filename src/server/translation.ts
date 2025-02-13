@@ -13,7 +13,7 @@ export const getLocale = async (hl?: string): Promise<Locales> => {
   return DEFAULT_LANG as Locales;
 };
 
-export const translation = async (ns: NS = 'common', hl?: string) => {
+export const translation = async (ns: NS = 'common', hl: string) => {
   let i18ns = {};
   const lng = await getLocale(hl);
   try {

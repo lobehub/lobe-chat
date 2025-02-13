@@ -17,16 +17,29 @@ import Header from './features/Header';
 import InfoSidebar from './features/InfoSidebar';
 import ModelList from './features/ModelList';
 
-export const generateMetadata = async (props: DiscoverPageProps) => {
+const getSharedProps = async (props: DiscoverPageProps) => {
   const params = await props.params;
   const searchParams = await props.searchParams;
+  const { isMobile, locale: hl } = await RouteVariants.getVariantsFromProps(props);
 
   const { slug: identifier } = params;
-  const { t, locale } = await translation('metadata', searchParams?.hl);
-  const { t: td } = await translation('models', searchParams?.hl);
-
+  const { t, locale } = await translation('metadata', searchParams?.hl || hl);
+  const { t: td } = await translation('models', searchParams?.hl || hl);
   const discoverService = new DiscoverService();
   const data = await discoverService.getProviderById(locale, identifier);
+  return {
+    data,
+    discoverService,
+    identifier,
+    isMobile,
+    locale,
+    t,
+    td,
+  };
+};
+
+export const generateMetadata = async (props: DiscoverPageProps) => {
+  const { data, t, td, locale, identifier } = await getSharedProps(props);
   if (!data) return;
 
   const { meta, createdAt, models } = data;
@@ -56,16 +69,8 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
 };
 
 const Page = async (props: DiscoverPageProps) => {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
-
-  const { slug: identifier } = params;
-  const { t, locale } = await translation('metadata', searchParams?.hl);
-  const { t: td } = await translation('models', searchParams?.hl);
-  const mobile = await RouteVariants.getIsMobile(props);
-
-  const discoverService = new DiscoverService();
-  const data = await discoverService.getProviderById(locale, identifier);
+  const { data, t, td, locale, identifier, discoverService, isMobile } =
+    await getSharedProps(props);
   if (!data) return notFound();
 
   const docService = new DocService();
@@ -88,6 +93,7 @@ const Page = async (props: DiscoverPageProps) => {
     },
     date: createdAt ? new Date(createdAt).toISOString() : new Date().toISOString(),
     description: td(`${identifier}.description`) || t('discover.providers.description'),
+    locale,
     title: [meta.title, t('discover.providers.title')].join(' · '),
     url: urlJoin('/discover/provider', identifier),
     webpage: {
@@ -101,15 +107,15 @@ const Page = async (props: DiscoverPageProps) => {
       <StructuredData ld={ld} />
       <DetailLayout
         actions={<Actions data={data} identifier={identifier} />}
-        header={<Header data={data} identifier={identifier} mobile={mobile} />}
-        mobile={mobile}
+        header={<Header data={data} identifier={identifier} mobile={isMobile} />}
+        mobile={isMobile}
         sidebar={<InfoSidebar data={data} identifier={identifier} />}
         /* ↓ cloud slot ↓ */
 
         /* ↑ cloud slot ↑ */
       >
-        <ModelList identifier={identifier} mobile={mobile} modelData={modelData} />
-        {doc && <CustomMDX mobile={mobile} source={doc.content} />}
+        <ModelList identifier={identifier} mobile={isMobile} modelData={modelData} />
+        {doc && <CustomMDX mobile={isMobile} source={doc.content} />}
       </DetailLayout>
     </>
   );

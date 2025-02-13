@@ -1,8 +1,7 @@
 'use client';
 
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 
-import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 
 /**
@@ -14,11 +13,11 @@ import { useQueryRoute } from '@/hooks/useQueryRoute';
 const ChangelogModal = () => {
   const router = useQueryRoute();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     router.replace('/changelog');
   }, []);
 
   return null;
 };
 
-export default withSuspense(ChangelogModal);
+export default ChangelogModal;

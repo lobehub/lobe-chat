@@ -68,7 +68,7 @@ const DefaultMode = memo(() => {
           label: t('defaultList'),
         },
       ].filter(Boolean) as CollapseProps['items'],
-    [customSessionGroups, pinnedSessions, defaultSessions],
+    [t, customSessionGroups, pinnedSessions, defaultSessions],
   );
 
   return (

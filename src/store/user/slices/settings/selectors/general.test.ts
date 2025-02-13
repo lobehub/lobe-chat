@@ -5,20 +5,6 @@ import { merge } from '@/utils/merge';
 import { userGeneralSettingsSelectors } from './general';
 
 describe('settingsSelectors', () => {
-  describe('currentLanguage', () => {
-    it('should return the correct language setting', () => {
-      const s: UserState = merge(initialState, {
-        settings: {
-          general: { language: 'fr' },
-        },
-      });
-
-      const result = userGeneralSettingsSelectors.currentLanguage(s as UserStore);
-
-      expect(result).toBe('fr');
-    });
-  });
-
   describe('currentThemeMode', () => {
     it('should return the correct theme', () => {
       const s: UserState = merge(initialState, {

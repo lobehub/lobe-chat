@@ -36,6 +36,7 @@ import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeSparkAI } from './spark';
 import { LobeStepfunAI } from './stepfun';
 import { LobeTaichuAI } from './taichu';
+import { LobeTencentCloudAI } from './tencentcloud';
 import { LobeTogetherAI } from './togetherai';
 import {
   ChatCompetitionOptions,
@@ -166,6 +167,7 @@ class AgentRuntime {
       spark: Partial<ClientOptions>;
       stepfun: Partial<ClientOptions>;
       taichu: Partial<ClientOptions>;
+      tencentcloud: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
       upstage: Partial<ClientOptions>;
       wenxin: Partial<ClientOptions>;
@@ -365,6 +367,11 @@ class AgentRuntime {
 
       case ModelProvider.Higress: {
         runtimeModel = new LobeHigressAI(params.higress);
+        break;
+      }
+
+      case ModelProvider.TencentCloud: {
+        runtimeModel = new LobeTencentCloudAI(params[provider]);
         break;
       }
 

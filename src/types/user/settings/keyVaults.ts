@@ -61,6 +61,7 @@ export interface UserKeyVaults {
   spark?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
   taichu?: OpenAICompatibleKeyVault;
+  tencentcloud?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   upstage?: OpenAICompatibleKeyVault;
   wenxin?: OpenAICompatibleKeyVault;

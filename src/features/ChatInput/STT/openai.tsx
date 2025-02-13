@@ -11,8 +11,10 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/slices/message/selectors';
+import { useGlobalStore } from '@/store/global';
+import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors, userGeneralSettingsSelectors } from '@/store/user/selectors';
+import { settingsSelectors } from '@/store/user/selectors';
 import { ChatMessageError } from '@/types/message';
 import { getMessageError } from '@/utils/fetch';
 
@@ -25,7 +27,7 @@ interface STTConfig extends SWRConfiguration {
 const useOpenaiSTT = (config: STTConfig) => {
   const ttsSettings = useUserStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useAgentStore(agentSelectors.currentAgentTTS, isEqual);
-  const locale = useUserStore(userGeneralSettingsSelectors.currentLanguage);
+  const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
   const autoStop = ttsSettings.sttAutoStop;
   const sttLocale =

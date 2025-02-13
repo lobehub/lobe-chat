@@ -18,15 +18,28 @@ import Temp from './features/Temp';
 // import ConversationExample from './features/ConversationExample';
 // import SystemRole from './features/SystemRole';
 
-export const generateMetadata = async (props: DiscoverPageProps) => {
+const getSharedProps = async (props: DiscoverPageProps) => {
   const params = await props.params;
   const searchParams = await props.searchParams;
+  const { isMobile, locale: hl } = await RouteVariants.getVariantsFromProps(props);
 
   const { slug: identifier } = params;
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t, locale } = await translation('metadata', searchParams?.hl || hl);
 
   const discoverService = new DiscoverService();
   const data = await discoverService.getAssistantById(locale, identifier);
+  return {
+    data,
+    discoverService,
+    identifier,
+    isMobile,
+    locale,
+    t,
+  };
+};
+
+export const generateMetadata = async (props: DiscoverPageProps) => {
+  const { data, t, locale, identifier } = await getSharedProps(props);
   if (!data) return;
 
   const { meta, createdAt, homepage, author } = data;
@@ -57,15 +70,7 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
 };
 
 const Page = async (props: DiscoverPageProps) => {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
-
-  const { slug: identifier } = params;
-  const { t, locale } = await translation('metadata', searchParams?.hl);
-  const mobile = await RouteVariants.getIsMobile(props);
-
-  const discoverService = new DiscoverService();
-  const data = await discoverService.getAssistantById(locale, identifier);
+  const { data, t, locale, discoverService, identifier, isMobile } = await getSharedProps(props);
   if (!data) return notFound();
 
   const { meta, createdAt, author, config } = data;
@@ -84,6 +89,7 @@ const Page = async (props: DiscoverPageProps) => {
     },
     date: createdAt ? new Date(createdAt).toISOString() : new Date().toISOString(),
     description: meta.description || t('discover.assistants.description'),
+    locale,
     title: [meta.title, t('discover.assistants.title')].join(' · '),
     url: urlJoin('/discover/assistant', identifier),
     webpage: {
@@ -97,8 +103,8 @@ const Page = async (props: DiscoverPageProps) => {
       <StructuredData ld={ld} />
       <DetailLayout
         actions={<Actions data={data} identifier={identifier} />}
-        header={<Header data={data} identifier={identifier} mobile={mobile} />}
-        mobile={mobile}
+        header={<Header data={data} identifier={identifier} mobile={isMobile} />}
+        mobile={isMobile}
         sidebar={<InfoSidebar data={data} identifier={identifier} pluginData={pluginData} />}
         /* ↓ cloud slot ↓ */
 

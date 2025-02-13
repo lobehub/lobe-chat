@@ -1,4 +1,5 @@
 import { Highlighter } from '@lobehub/ui';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -7,7 +8,14 @@ const TooltipContent = memo<{ children: ReactNode }>(({ children }) => {
   if (typeof children !== 'string') return children;
 
   if (children.startsWith('data:image')) {
-    return <img src={children} style={{ height: 'auto', maxWidth: '100%' }} />;
+    return (
+      <Image
+        alt={'tooltip-image'}
+        src={children}
+        style={{ height: 'auto', maxWidth: '100%' }}
+        unoptimized
+      />
+    );
   }
 
   if (children.startsWith('http'))

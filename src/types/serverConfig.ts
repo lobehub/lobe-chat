@@ -1,5 +1,6 @@
 import { DeepPartial } from 'utility-types';
 
+import { IFeatureFlags } from '@/config/featureFlags';
 import { ChatModelCard } from '@/types/llm';
 import {
   GlobalLLMProviderKey,
@@ -37,4 +38,9 @@ export interface GlobalServerConfig {
   telemetry: {
     langfuse?: boolean;
   };
+}
+
+export interface GlobalRuntimeConfig {
+  serverConfig: GlobalServerConfig;
+  serverFeatureFlags: IFeatureFlags;
 }

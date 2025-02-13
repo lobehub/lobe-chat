@@ -1,12 +1,18 @@
 import { changeLanguage } from 'i18next';
 import { describe, expect, it, vi } from 'vitest';
 
+import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LocaleMode } from '@/types/locale';
+import { setCookie } from '@/utils/client/cookie';
 
 import { switchLang } from './switchLang';
 
 vi.mock('i18next', () => ({
   changeLanguage: vi.fn(),
+}));
+
+vi.mock('./cookie', () => ({
+  setCookie: vi.fn(),
 }));
 
 describe('switchLang', () => {
@@ -20,6 +26,7 @@ describe('switchLang', () => {
 
     expect(changeLanguage).toHaveBeenCalledWith(locale);
     expect(document.documentElement.lang).toBe(locale);
+    expect(setCookie).toHaveBeenCalledWith(LOBE_LOCALE_COOKIE, locale, 365);
   });
 
   it('should change language based on navigator.language when locale is "auto"', () => {
@@ -30,5 +37,6 @@ describe('switchLang', () => {
 
     expect(changeLanguage).toHaveBeenCalledWith(navigatorLanguage);
     expect(document.documentElement.lang).toBe(navigatorLanguage);
+    expect(setCookie).toHaveBeenCalledWith(LOBE_LOCALE_COOKIE, undefined, 365);
   });
 });

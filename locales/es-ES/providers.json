@@ -98,6 +98,9 @@
   "taichu": {
     "description": "El Instituto de Automatización de la Academia de Ciencias de China y el Instituto de Investigación de Inteligencia Artificial de Wuhan han lanzado una nueva generación de modelos de gran tamaño multimodal, que apoyan tareas de preguntas y respuestas de múltiples rondas, creación de texto, generación de imágenes, comprensión 3D, análisis de señales y más, con capacidades de cognición, comprensión y creación más fuertes, ofreciendo una nueva experiencia de interacción."
   },
+  "tencentcloud": {
+    "description": "La capacidad atómica del motor de conocimiento (LLM Knowledge Engine Atomic Power) se basa en el desarrollo del motor de conocimiento y ofrece una capacidad completa de preguntas y respuestas, dirigida a empresas y desarrolladores, proporcionando la capacidad de construir y desarrollar aplicaciones de modelos de manera flexible. Puede ensamblar su propio servicio de modelo utilizando varias capacidades atómicas, invocando servicios de análisis de documentos, división, embedding, reescritura en múltiples turnos, entre otros, para personalizar un negocio de IA exclusivo para su empresa."
+  },
   "togetherai": {
     "description": "Together AI se dedica a lograr un rendimiento líder a través de modelos de IA innovadores, ofreciendo amplias capacidades de personalización, incluyendo soporte para escalado rápido y procesos de implementación intuitivos, satisfaciendo diversas necesidades empresariales."
   },

@@ -1,9 +1,10 @@
-import { BookText, DatabaseIcon, FlagIcon, GlobeLockIcon } from 'lucide-react';
+import { BookText, Cog, DatabaseIcon, FlagIcon, GlobeLockIcon } from 'lucide-react';
 
 import CacheViewer from './CacheViewer';
 import FeatureFlagViewer from './FeatureFlagViewer';
 import MetadataViewer from './MetadataViewer';
 import PostgresViewer from './PostgresViewer';
+import SystemInspector from './SystemInspector';
 import FloatPanel from './features/FloatPanel';
 
 const DevPanel = () => (
@@ -28,6 +29,11 @@ const DevPanel = () => (
         children: <FeatureFlagViewer />,
         icon: <FlagIcon size={16} />,
         key: 'Feature Flags',
+      },
+      {
+        children: <SystemInspector />,
+        icon: <Cog size={16} />,
+        key: 'System Status',
       },
     ]}
   />

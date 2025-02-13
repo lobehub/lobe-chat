@@ -12,8 +12,8 @@ import useSWR from 'swr';
 import urlJoin from 'url-join';
 
 import { assistantService } from '@/services/assistant';
-import { useUserStore } from '@/store/user';
-import { userGeneralSettingsSelectors } from '@/store/user/selectors';
+import { useGlobalStore } from '@/store/global';
+import { globalGeneralSelectors } from '@/store/global/selectors';
 import { DiscoverAssistantItem } from '@/types/discover';
 
 const { Paragraph } = Typography;
@@ -60,7 +60,7 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
 
 const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('welcome');
-  const locale = useUserStore(userGeneralSettingsSelectors.currentLanguage);
+  const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
   const [sliceStart, setSliceStart] = useState(0);
 
   const { data: assistantList, isLoading } = useSWR(

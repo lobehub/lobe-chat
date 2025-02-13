@@ -182,6 +182,12 @@
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat, Zhipu AI tarafından sunulan GLM-4 serisi önceden eğitilmiş modellerin açık kaynak versiyonudur. Bu model, anlam, matematik, akıl yürütme, kod ve bilgi gibi birçok alanda mükemmel performans sergilemektedir. Çoklu diyalogları desteklemenin yanı sıra, GLM-4-9B-Chat, web tarayıcı, kod yürütme, özelleştirilmiş araç çağrısı (Function Call) ve uzun metin akıl yürütme gibi gelişmiş özelliklere de sahiptir. Model, Çince, İngilizce, Japonca, Korece ve Almanca gibi 26 dili desteklemektedir. GLM-4-9B-Chat, AlignBench-v2, MT-Bench, MMLU ve C-Eval gibi birçok standart testte mükemmel performans sergilemiştir. Bu model, maksimum 128K bağlam uzunluğunu desteklemekte olup, akademik araştırmalar ve ticari uygulamalar için uygundur."
   },
+  "Pro/deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1, modeldeki tekrarlılık ve okunabilirlik sorunlarını çözen bir güçlendirilmiş öğrenme (RL) destekli çıkarım modelidir. RL'den önce, DeepSeek-R1 soğuk başlangıç verileri tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer performans göstermektedir ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmıştır."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3, 6710 milyar parametreye sahip bir karma uzman (MoE) dil modelidir ve çok başlı potansiyel dikkat (MLA) ve DeepSeekMoE mimarisini kullanarak, yardımcı kayıplar olmadan yük dengeleme stratejileri ile çıkarım ve eğitim verimliliğini optimize etmektedir. 14.8 trilyon yüksek kaliteli token üzerinde önceden eğitilmiş ve denetimli ince ayar ve güçlendirilmiş öğrenme ile, DeepSeek-V3 performans açısından diğer açık kaynak modelleri geride bırakmakta ve lider kapalı kaynak modellere yaklaşmaktadır."
+  },
   "Pro/google/gemma-2-9b-it": {
     "description": "Gemma, Google tarafından geliştirilen hafif, en son açık model serilerinden biridir. Bu, yalnızca kodlayıcıdan oluşan büyük bir dil modelidir ve İngilizceyi desteklemekte, açık ağırlıklar, önceden eğitilmiş varyantlar ve talimat ince ayar varyantları sunmaktadır. Gemma modeli, soru yanıtlama, özetleme ve akıl yürütme gibi çeşitli metin üretim görevleri için uygundur. Bu 9B modeli, 8 trilyon token ile eğitilmiştir. Göreceli olarak küçük boyutu, onu dizüstü bilgisayarlar, masaüstü bilgisayarlar veya kendi bulut altyapınız gibi kaynak sınırlı ortamlarda dağıtılabilir hale getirir ve daha fazla kişinin en son AI modellerine erişimini sağlar ve yeniliği teşvik eder."
   },
@@ -440,6 +446,9 @@
   "anthropic/claude-3-opus": {
     "description": "Claude 3 Opus, Anthropic'in son derece karmaşık görevleri işlemek için en güçlü modelidir. Performans, zeka, akıcılık ve anlama açısından olağanüstü bir performans sergiler."
   },
+  "anthropic/claude-3.5-haiku": {
+    "description": "Claude 3.5 Haiku, Anthropic'in en hızlı bir sonraki nesil modelidir. Claude 3 Haiku ile karşılaştırıldığında, Claude 3.5 Haiku, birçok beceride iyileşme göstermiştir ve birçok zeka kıyaslamasında bir önceki neslin en büyük modeli Claude 3 Opus'u geride bırakmıştır."
+  },
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet, Opus'tan daha fazla yetenek ve Sonnet'ten daha hızlı bir hız sunar; aynı zamanda Sonnet ile aynı fiyatı korur. Sonnet, programlama, veri bilimi, görsel işleme ve ajan görevlerinde özellikle başarılıdır."
   },
@@ -590,6 +599,21 @@
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 - DeepSeek paketindeki daha büyük ve daha akıllı model - Llama 70B mimarisine damıtılmıştır. Referans testleri ve insan değerlendirmelerine dayanarak, bu model orijinal Llama 70B'den daha akıllıdır, özellikle matematik ve gerçeklik doğruluğu gerektiren görevlerde mükemmel performans sergilemektedir."
   },
+  "deepseek-r1-distill-llama-8b": {
+    "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+  },
+  "deepseek-r1-distill-qwen-1.5b": {
+    "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+  },
+  "deepseek-r1-distill-qwen-14b": {
+    "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+  },
+  "deepseek-r1-distill-qwen-32b": {
+    "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+  },
+  "deepseek-r1-distill-qwen-7b": {
+    "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+  },
   "deepseek-reasoner": {
     "description": "DeepSeek tarafından sunulan bir akıl yürütme modeli. Model, nihai yanıtı vermeden önce bir düşünce zinciri içeriği sunarak nihai cevabın doğruluğunu artırır."
   },
@@ -698,8 +722,17 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro, 2 milyon token'a kadar destekler, orta ölçekli çok modlu modeller için ideal bir seçimdir ve karmaşık görevler için çok yönlü destek sunar."
   },
+  "gemini-2.0-flash": {
+    "description": "Gemini 2.0 Flash, mükemmel hız, yerel araç kullanımı, çok modlu üretim ve 1M token bağlam penceresi dahil olmak üzere bir sonraki nesil özellikler ve iyileştirmeler sunar."
+  },
+  "gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash, mükemmel hız, yerel araç kullanımı, çok modlu üretim ve 1M token bağlam penceresi dahil olmak üzere bir sonraki nesil özellikler ve iyileştirmeler sunar."
+  },
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en yeni deneysel çok modlu yapay zeka modelidir. Gelecek nesil özellikleri, olağanüstü hızı, yerel araç çağrısı ve çok modlu üretim ile donatılmıştır."
+  },
+  "gemini-2.0-flash-lite-preview-02-05": {
+    "description": "Maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiş bir Gemini 2.0 Flash modelidir."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
@@ -707,11 +740,8 @@
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, üstün hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
   },
-  "gemini-exp-1114": {
-    "description": "Gemini Exp 1114, Google'ın en son deneysel çok modlu AI modeli olup, hızlı işleme yeteneğine sahip, metin, görüntü ve video girişlerini desteklemekte ve çeşitli görevlerde verimli bir şekilde ölçeklenmektedir."
-  },
-  "gemini-exp-1121": {
-    "description": "Gemini Exp 1121, Google'un en yeni deneysel çok modlu AI modelidir. Hızlı işlem yeteneğine sahip olup, metin, görüntü ve video girişi destekler ve çeşitli görevler için verimli bir şekilde ölçeklenebilir."
+  "gemini-2.0-pro-exp-02-05": {
+    "description": "Gemini 2.0 Pro Deneysel, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere göre belirli bir kalite artışı sağlamaktadır, özellikle dünya bilgisi, kod ve uzun bağlam için."
   },
   "gemini-exp-1206": {
     "description": "Gemini Exp 1206, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere kıyasla belirli bir kalite artırımı sağlar."
@@ -778,6 +808,12 @@
   },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview, karmaşık akıl yürütme yeteneklerine sahip olup, mantıksal akıl yürütme, matematik, programlama gibi alanlarda mükemmel performans sergilemektedir."
+  },
+  "google/gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash, mükemmel hız, yerel araç kullanımı, çok modlu üretim ve 1M token bağlam penceresi dahil olmak üzere bir sonraki nesil özellikler ve iyileştirmeler sunar."
+  },
+  "google/gemini-2.0-pro-exp-02-05:free": {
+    "description": "Gemini 2.0 Pro Deneysel, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere göre belirli bir kalite artışı sağlamaktadır, özellikle dünya bilgisi, kod ve uzun bağlam için."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash, optimize edilmiş çok modlu işleme yetenekleri sunar ve çeşitli karmaşık görev senaryolarına uygundur."
@@ -995,6 +1031,9 @@
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2, görsel ve metin verilerini birleştiren görevleri işlemek için tasarlanmıştır. Görüntü tanımlama ve görsel soru-cevap gibi görevlerde mükemmel performans sergiler, dil üretimi ile görsel akıl yürütme arasındaki uçurumu aşar."
   },
+  "llama-3.3-70b-instruct": {
+    "description": "Llama 3.3, Llama serisinin en gelişmiş çok dilli açık kaynak büyük dil modelidir ve 405B modelinin performansını çok düşük maliyetle deneyimlemenizi sağlar. Transformer yapısına dayanmaktadır ve denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) ile faydalılığını ve güvenliğini artırmıştır. Talimat ayarlı versiyonu, çok dilli diyaloglar için optimize edilmiştir ve birçok endüstri kıyaslamasında birçok açık kaynak ve kapalı sohbet modelinden daha iyi performans göstermektedir. Bilgi kesim tarihi 2023 Aralık'tır."
+  },
   "llama-3.3-70b-versatile": {
     "description": "Meta Llama 3.3 çok dilli büyük dil modeli (LLM), 70B (metin girişi/metin çıkışı) içindeki önceden eğitilmiş ve talimat ayarlanmış bir üretim modelidir. Llama 3.3 talimat ayarlı saf metin modeli, çok dilli konuşma kullanım durumları için optimize edilmiştir ve yaygın endüstri kıyaslamalarında mevcut birçok açık kaynak ve kapalı sohbet modelinden daha üstündür."
   },
@@ -1135,6 +1174,12 @@
   },
   "meta-llama/llama-3.2-90b-vision-instruct": {
     "description": "LLaMA 3.2, görsel ve metin verilerini birleştiren görevleri işlemek için tasarlanmıştır. Görüntü tanımlama ve görsel soru yanıtlama gibi görevlerde mükemmel performans sergileyerek dil üretimi ve görsel akıl yürütme arasındaki boşluğu kapatmaktadır."
+  },
+  "meta-llama/llama-3.3-70b-instruct": {
+    "description": "Llama 3.3, Llama serisinin en gelişmiş çok dilli açık kaynak büyük dil modelidir ve 405B modelinin performansını çok düşük maliyetle deneyimlemenizi sağlar. Transformer yapısına dayanmaktadır ve denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) ile faydalılığını ve güvenliğini artırmıştır. Talimat ayarlı versiyonu, çok dilli diyaloglar için optimize edilmiştir ve birçok endüstri kıyaslamasında birçok açık kaynak ve kapalı sohbet modelinden daha iyi performans göstermektedir. Bilgi kesim tarihi 2023 Aralık'tır."
+  },
+  "meta-llama/llama-3.3-70b-instruct:free": {
+    "description": "Llama 3.3, Llama serisinin en gelişmiş çok dilli açık kaynak büyük dil modelidir ve 405B modelinin performansını çok düşük maliyetle deneyimlemenizi sağlar. Transformer yapısına dayanmaktadır ve denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) ile faydalılığını ve güvenliğini artırmıştır. Talimat ayarlı versiyonu, çok dilli diyaloglar için optimize edilmiştir ve birçok endüstri kıyaslamasında birçok açık kaynak ve kapalı sohbet modelinden daha iyi performans göstermektedir. Bilgi kesim tarihi 2023 Aralık'tır."
   },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct, Llama 3.1 Instruct modelinin en büyük ve en güçlü versiyonudur. Bu, son derece gelişmiş bir diyalog akıl yürütme ve veri sentezleme modelidir ve belirli alanlarda uzmanlaşmış sürekli ön eğitim veya ince ayar için bir temel olarak da kullanılabilir. Llama 3.1, çok dilli büyük dil modelleri (LLM'ler) sunar ve 8B, 70B ve 405B boyutlarında önceden eğitilmiş, talimat ayarlı üretim modellerinden oluşur (metin girişi/çıkışı). Llama 3.1'in talimat ayarlı metin modelleri (8B, 70B, 405B), çok dilli diyalog kullanım durumları için optimize edilmiştir ve yaygın endüstri benchmark testlerinde birçok mevcut açık kaynaklı sohbet modelini geride bırakmıştır. Llama 3.1, çok dilli ticari ve araştırma amaçları için tasarlanmıştır. Talimat ayarlı metin modelleri, asistan benzeri sohbetler için uygundur, önceden eğitilmiş modeller ise çeşitli doğal dil üretim görevlerine uyum sağlayabilir. Llama 3.1 modeli, diğer modellerin çıktısını iyileştirmek için de kullanılabilir, bu da veri sentezleme ve rafine etme işlemlerini içerir. Llama 3.1, optimize edilmiş bir transformer mimarisi kullanarak oluşturulmuş bir otoregresif dil modelidir. Ayarlanmış versiyon, insan yardımseverliği ve güvenlik tercihleri ile uyumlu hale getirmek için denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) kullanır."
@@ -1549,5 +1594,8 @@
   },
   "yi-vision": {
     "description": "Karmaşık görsel görevler için model, yüksek performanslı resim anlama ve analiz yetenekleri sunar."
+  },
+  "yi-vision-v2": {
+    "description": "Karmaşık görsel görevler için model, birden fazla resme dayalı yüksek performanslı anlama ve analiz yetenekleri sunar."
   }
 }

@@ -6,8 +6,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useUserStore } from '@/store/user';
-import { userGeneralSettingsSelectors } from '@/store/user/selectors';
+import { useGlobalStore } from '@/store/global';
+import { globalGeneralSelectors } from '@/store/global/selectors';
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
@@ -24,7 +24,7 @@ const AutoGenerateAvatar = memo<AutoGenerateAvatarProps>(
   ({ loading, background, value, onChange, onGenerate, canAutoGenerate }) => {
     const { t } = useTranslation('common');
     const theme = useTheme();
-    const locale = useUserStore(userGeneralSettingsSelectors.currentLanguage);
+    const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
     return (
       <Flexbox>
