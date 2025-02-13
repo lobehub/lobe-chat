@@ -276,6 +276,11 @@
         "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
         "noLatestTime": "Chưa lấy danh sách"
       },
+      "resetAll": {
+        "conform": "Xác nhận việc đặt lại tất cả các thay đổi của mô hình hiện tại? Sau khi đặt lại, danh sách mô hình hiện tại sẽ trở về trạng thái mặc định",
+        "success": "Đặt lại thành công",
+        "title": "Đặt lại tất cả các thay đổi"
+      },
       "search": "Tìm kiếm mô hình...",
       "searchResult": "Tìm thấy {{count}} mô hình",
       "title": "Danh sách mô hình",

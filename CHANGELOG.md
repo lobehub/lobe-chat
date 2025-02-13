@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.53.8](https://github.com/lobehub/lobe-chat/compare/v1.53.7...v1.53.8)
+
+<sup>Released on **2025-02-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix model fetch for spark and fix the support of model reset.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix model fetch for spark and fix the support of model reset, closes [#6080](https://github.com/lobehub/lobe-chat/issues/6080) ([257fda1](https://github.com/lobehub/lobe-chat/commit/257fda1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.53.7](https://github.com/lobehub/lobe-chat/compare/v1.53.6...v1.53.7)
 
 <sup>Released on **2025-02-13**</sup>
