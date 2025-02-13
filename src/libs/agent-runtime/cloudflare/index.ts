@@ -128,7 +128,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id);
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.toLowerCase() === m.id.toLowerCase());
 
         return {
           contextWindowTokens: model.properties?.max_total_tokens

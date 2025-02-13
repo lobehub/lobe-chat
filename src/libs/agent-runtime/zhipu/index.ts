@@ -58,7 +58,7 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.modelCode === m.id);
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.modelCode.toLowerCase() === m.id.toLowerCase());
 
         return {
           contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,

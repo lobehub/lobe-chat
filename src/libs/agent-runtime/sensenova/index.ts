@@ -35,6 +35,7 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
     const functionCallKeywords = [
+      'deepseek-v3',
       'sensechat-5',
     ];
 
@@ -49,7 +50,7 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id);
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
 
         return {
           contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
