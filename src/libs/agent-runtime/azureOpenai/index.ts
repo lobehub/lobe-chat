@@ -4,14 +4,16 @@ import {
   GetChatCompletionsOptions,
   OpenAIClient,
 } from '@azure/openai';
+import OpenAI from 'openai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
+import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
 import { StreamingResponse } from '../utils/response';
-import { AzureOpenAIStream } from '../utils/streams';
+import { AzureOpenAIStream, OpenAIStream } from '../utils/streams';
 
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   client: OpenAIClient;
@@ -31,25 +33,44 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
     // ============  1. preprocess messages   ============ //
     const camelCasePayload = this.camelCaseKeys(payload);
     const { messages, model, maxTokens = 2048, ...params } = camelCasePayload;
-
+    // o1 series models on Azure OpenAI does not support streaming currently
+    const isO1Model = model.includes('o1');
+    const enableStreaming = isO1Model ? false : (params.stream ?? true);
     // ============  2. send api   ============ //
-
     try {
-      const response = await this.client.streamChatCompletions(
-        model,
-        messages as ChatRequestMessage[],
-        { ...params, abortSignal: options?.signal, maxTokens } as GetChatCompletionsOptions,
-      );
-
-      const [debug, prod] = response.tee();
-
-      if (process.env.DEBUG_AZURE_CHAT_COMPLETION === '1') {
-        debugStream(debug).catch(console.error);
+      if (enableStreaming) {
+        const response = await this.client.streamChatCompletions(
+          model,
+          messages as ChatRequestMessage[],
+          isO1Model
+            ? ({
+                ...params,
+                abortSignal: options?.signal,
+                stream: false,
+              } as GetChatCompletionsOptions)
+            : ({ ...params, abortSignal: options?.signal, maxTokens } as GetChatCompletionsOptions),
+        );
+        const [debug, prod] = response.tee();
+        if (process.env.DEBUG_AZURE_CHAT_COMPLETION === '1') {
+          debugStream(debug).catch(console.error);
+        }
+        return StreamingResponse(AzureOpenAIStream(prod, options?.callback), {
+          headers: options?.headers,
+        });
+      } else {
+        // 非流式响应处理
+        // console.log("OPN48/cuba3 new client")
+        const response = await this.client.getChatCompletions(
+          model,
+          messages as ChatRequestMessage[],
+          { ...params, abortSignal: options?.signal, stream: false } as GetChatCompletionsOptions,
+        );
+        // 直接返回格式化的响应
+        const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
+        return StreamingResponse(OpenAIStream(stream, { callbacks: options?.callback }), {
+          headers: options?.headers,
+        });
       }
-
-      return StreamingResponse(AzureOpenAIStream(prod, options?.callback), {
-        headers: options?.headers,
-      });
     } catch (e) {
       let error = e as { [key: string]: any; code: string; message: string };
 
