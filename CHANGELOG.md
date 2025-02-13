@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.53.11](https://github.com/lobehub/lobe-chat/compare/v1.53.10...v1.53.11)
+
+<sup>Released on **2025-02-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix provider form api key.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix provider form api key, closes [#6115](https://github.com/lobehub/lobe-chat/issues/6115) ([d074238](https://github.com/lobehub/lobe-chat/commit/d074238))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.53.10](https://github.com/lobehub/lobe-chat/compare/v1.53.9...v1.53.10)
 
 <sup>Released on **2025-02-13**</sup>
