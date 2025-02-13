@@ -25,6 +25,10 @@ export interface CloudflareKeyVault {
   baseURLOrAccountID?: string;
 }
 
+export type DoubaoKeyVault = OpenAICompatibleKeyVault & {
+  model2Endpoint?: [string, string];
+};
+
 export interface UserKeyVaults {
   ai21?: OpenAICompatibleKeyVault;
   ai360?: OpenAICompatibleKeyVault;
@@ -34,7 +38,7 @@ export interface UserKeyVaults {
   bedrock?: AWSBedrockKeyVault;
   cloudflare?: CloudflareKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
-  doubao?: OpenAICompatibleKeyVault;
+  doubao?: DoubaoKeyVault;
   fireworksai?: OpenAICompatibleKeyVault;
   giteeai?: OpenAICompatibleKeyVault;
   github?: OpenAICompatibleKeyVault;
