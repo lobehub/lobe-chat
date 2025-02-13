@@ -38,6 +38,8 @@ const GlobalLayout = async ({
   // get default feature flags to use with ssr
   const serverFeatureFlags = getServerFeatureFlagsValue();
   const serverConfig = await getServerGlobalConfig();
+  console.log('defaultLang:', userLocale);
+
   return (
     <StyleRegistry>
       <Locale antdLocale={antdLocale} defaultLang={userLocale}>

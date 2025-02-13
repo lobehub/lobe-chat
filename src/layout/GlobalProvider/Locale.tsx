@@ -38,6 +38,7 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
 
   // if run on server side, init i18n instance everytime
   if (isOnServerSide) {
+    console.log('server side i18n init:', defaultLang);
     i18n.init();
 
     // load the dayjs locale
