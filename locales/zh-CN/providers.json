@@ -23,6 +23,9 @@
   "deepseek": {
     "description": "DeepSeek 是一家专注于人工智能技术研究和应用的公司，其最新模型 DeepSeek-V3 多项评测成绩超越 Qwen2.5-72B 和 Llama-3.1-405B 等开源模型，性能对齐领军闭源模型 GPT-4o 与 Claude-3.5-Sonnet。"
   },
+  "doubao": {
+    "description": "字节跳动推出的自研大模型。通过字节跳动内部50+业务场景实践验证，每日万亿级tokens大使用量持续打磨，提供多种模态能力，以优质模型效果为企业打造丰富的业务体验。"
+  },
   "fireworksai": {
     "description": "Fireworks AI 是一家领先的高级语言模型服务商，专注于功能调用和多模态处理。其最新模型 Firefunction V2 基于 Llama-3，优化用于函数调用、对话及指令跟随。视觉语言模型 FireLLaVA-13B 支持图像和文本混合输入。其他 notable 模型包括 Llama 系列和 Mixtral 系列，提供高效的多语言指令跟随与生成支持。"
   },
@@ -94,6 +97,9 @@
   },
   "taichu": {
     "description": "中科院自动化研究所和武汉人工智能研究院推出新一代多模态大模型，支持多轮问答、文本创作、图像生成、3D理解、信号分析等全面问答任务，拥有更强的认知、理解、创作能力，带来全新互动体验。"
+  },
+  "tencentcloud": {
+    "description": "知识引擎原子能力（LLM Knowledge Engine Atomic Power）基于知识引擎研发的知识问答全链路能力，面向企业及开发者，提供灵活组建及开发模型应用的能力。您可通过多款原子能力组建您专属的模型服务，调用文档解析、拆分、embedding、多轮改写等服务进行组装，定制企业专属 AI 业务。"
   },
   "togetherai": {
     "description": "Together AI 致力于通过创新的 AI 模型实现领先的性能，提供广泛的自定义能力，包括快速扩展支持和直观的部署流程，满足企业的各种需求。"

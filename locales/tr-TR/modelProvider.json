@@ -154,30 +154,6 @@
       "desc": "http(s):// içermelidir, yerel olarak belirtilmemişse boş bırakılabilir",
       "title": "Arayüz Proxy Adresi"
     },
-    "setup": {
-      "cors": {
-        "description": "Ollama'nın normal şekilde çalışabilmesi için, tarayıcı güvenlik kısıtlamaları nedeniyle Ollama'nın çapraz kaynak isteklerine izin verilmesi gerekmektedir.",
-        "linux": {
-          "env": "[Service] bölümüne `Environment` ekleyerek OLLAMA_ORIGINS ortam değişkenini ekleyin:",
-          "reboot": "systemd'yi yeniden yükleyin ve Ollama'yı yeniden başlatın",
-          "systemd": "systemd'yi çağırarak ollama servisini düzenleyin:"
-        },
-        "macos": "Lütfen 'Terminal' uygulamasını açın ve aşağıdaki komutu yapıştırıp Enter tuşuna basın",
-        "reboot": "Komut tamamlandıktan sonra Ollama servisini yeniden başlatın",
-        "title": "Ollama'nın çapraz kaynak erişimine izin vermek için yapılandırma",
-        "windows": "Windows'ta, 'Control Panel'ı tıklayarak sistem ortam değişkenlerini düzenleyin. Kullanıcı hesabınıza * değerinde 'OLLAMA_ORIGINS' adında bir ortam değişkeni oluşturun ve 'OK/Apply' düğmesine tıklayarak kaydedin"
-      },
-      "install": {
-        "description": "Ollama'nın açık olduğundan emin olun. Ollama'yı indirmediyseniz, lütfen resmi web sitesine giderek <1>indirin</1>.",
-        "docker": "Docker kullanmayı tercih ediyorsanız, Ollama resmi Docker görüntüsünü aşağıdaki komutla çekebilirsiniz:",
-        "linux": {
-          "command": "Aşağıdaki komutları kullanarak yükleyin:",
-          "manual": "Ya da, <1>Linux için el ile kurulum kılavuzuna</1> bakarak kendiniz kurabilirsiniz"
-        },
-        "title": "Yerel olarak Ollama uygulamasını kurun ve başlatın",
-        "windowsTab": "Windows (Önizleme)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "取消下载",
@@ -253,6 +229,10 @@
           "title": "Model ID"
         },
         "modalTitle": "Özel Model Yapılandırması",
+        "reasoning": {
+          "extra": "Bu yapılandırma yalnızca modelin derin düşünme yeteneğini açacaktır, belirli etkiler tamamen modelin kendisine bağlıdır, lütfen bu modelin kullanılabilir derin düşünme yeteneğine sahip olup olmadığını kendiniz test edin",
+          "title": "Derin düşünmeyi destekler"
+        },
         "tokens": {
           "extra": "Modelin desteklediği maksimum Token sayısını ayarlayın",
           "title": "Maksimum bağlam penceresi",
@@ -313,26 +293,6 @@
     "deleteSuccess": "Silme işlemi başarılı",
     "tooltip": "Hizmet sağlayıcının temel yapılandırmasını güncelle",
     "updateSuccess": "Güncelleme başarılı"
-  },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Baidu Qianfan platform için Access Key girin",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "AccessKey / SecretAccess'ın doğru girilip girilmediğini test et"
-    },
-    "secretKey": {
-      "desc": "Baidu Qianfan platform için Secret Key girin",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Özel hizmet bölgesi",
-      "description": "Oturuma başlamak için AccessKey / SecretKey'nizi girin. Uygulama kimlik doğrulama yapılandırmanızı kaydetmeyecek",
-      "title": "Özel Wenxin Yiyan kimlik doğrulama bilgilerini kullan"
-    }
   },
   "zeroone": {
     "title": "01.AI Sıfır Bir"

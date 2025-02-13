@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash-es';
 import pMap from 'p-map';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
@@ -5,16 +6,24 @@ import { AiModelModel } from '@/database/server/models/aiModel';
 import { AiProviderModel } from '@/database/server/models/aiProvider';
 import { LobeChatDatabase } from '@/database/type';
 import { AIChatModelCard, AiModelSourceEnum, AiProviderModelListItem } from '@/types/aiModel';
-import { AiProviderListItem, EnabledAiModel } from '@/types/aiProvider';
+import {
+  AiProviderDetailItem,
+  AiProviderListItem,
+  AiProviderRuntimeState,
+  EnabledAiModel,
+  EnabledProvider,
+} from '@/types/aiProvider';
 import { ProviderConfig } from '@/types/user/settings';
-import { mergeArrayById } from '@/utils/merge';
+import { merge, mergeArrayById } from '@/utils/merge';
+
+type DecryptUserKeyVaults = (encryptKeyVaultsStr: string | null) => Promise<any>;
 
 export class AiInfraRepos {
   private userId: string;
   private db: LobeChatDatabase;
   aiProviderModel: AiProviderModel;
   private providerConfigs: Record<string, ProviderConfig>;
-  private aiModelModel: AiModelModel;
+  aiModelModel: AiModelModel;
 
   constructor(
     db: LobeChatDatabase,
@@ -62,7 +71,14 @@ export class AiInfraRepos {
     return list
       .filter((item) => item.enabled)
       .sort((a, b) => a.sort! - b.sort!)
-      .map((item) => ({ id: item.id, logo: item.logo, name: item.name, source: item.source }));
+      .map(
+        (item): EnabledProvider => ({
+          id: item.id,
+          logo: item.logo,
+          name: item.name,
+          source: item.source,
+        }),
+      );
   };
 
   getEnabledModels = async () => {
@@ -81,15 +97,25 @@ export class AiInfraRepos {
           .map<EnabledAiModel & { enabled?: boolean | null }>((item) => {
             const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
 
+            if (!user)
+              return {
+                ...item,
+                abilities: item.abilities || {},
+                providerId: provider.id,
+              };
+
             return {
-              abilities: !!user ? user.abilities : item.abilities || {},
-              config: !!user ? user.config : item.config,
-              contextWindowTokens: !!user ? user.contextWindowTokens : item.contextWindowTokens,
+              abilities: !isEmpty(user.abilities) ? user.abilities : item.abilities || {},
+              config: !isEmpty(user.config) ? user.config : item.config,
+              contextWindowTokens:
+                typeof user.contextWindowTokens === 'number'
+                  ? user.contextWindowTokens
+                  : item.contextWindowTokens,
               displayName: user?.displayName || item.displayName,
-              enabled: !!user ? user.enabled : item.enabled,
+              enabled: typeof user.enabled === 'boolean' ? user.enabled : item.enabled,
               id: item.id,
               providerId: provider.id,
-              sort: !!user ? user.sort : undefined,
+              sort: user.sort || undefined,
               type: item.type,
             };
           })
@@ -110,6 +136,30 @@ export class AiInfraRepos {
       (await this.fetchBuiltinModels(providerId)) || [];
 
     return mergeArrayById(defaultModels, aiModels) as AiProviderModelListItem[];
+  };
+
+  getAiProviderRuntimeState = async (
+    decryptor?: DecryptUserKeyVaults,
+  ): Promise<AiProviderRuntimeState> => {
+    const result = await this.aiProviderModel.getAiProviderRuntimeConfig(decryptor);
+
+    const runtimeConfig = result;
+
+    Object.entries(result).forEach(([key, value]) => {
+      runtimeConfig[key] = merge(this.providerConfigs[key] || {}, value);
+    });
+
+    const enabledAiProviders = await this.getUserEnabledProviderList();
+
+    const enabledAiModels = await this.getEnabledModels();
+
+    return { enabledAiModels, enabledAiProviders, runtimeConfig };
+  };
+
+  getAiProviderDetail = async (id: string, decryptor?: DecryptUserKeyVaults) => {
+    const config = await this.aiProviderModel.getAiProviderById(id, decryptor);
+
+    return merge(this.providerConfigs[id] || {}, config) as AiProviderDetailItem;
   };
 
   /**

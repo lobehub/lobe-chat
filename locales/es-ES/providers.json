@@ -23,6 +23,9 @@
   "deepseek": {
     "description": "DeepSeek es una empresa centrada en la investigación y aplicación de tecnologías de inteligencia artificial, cuyo modelo más reciente, DeepSeek-V2.5, combina capacidades de diálogo general y procesamiento de código, logrando mejoras significativas en alineación con preferencias humanas, tareas de escritura y seguimiento de instrucciones."
   },
+  "doubao": {
+    "description": "Un modelo grande desarrollado internamente por ByteDance. Validado a través de más de 50 escenarios de negocio internos, con un uso diario de tokens en billones que se perfecciona continuamente, ofrece múltiples capacidades modales y crea experiencias comerciales ricas para las empresas con un rendimiento de modelo de alta calidad."
+  },
   "fireworksai": {
     "description": "Fireworks AI es un proveedor líder de servicios de modelos de lenguaje avanzados, enfocado en la llamada de funciones y el procesamiento multimodal. Su modelo más reciente, Firefunction V2, basado en Llama-3, está optimizado para llamadas de funciones, diálogos y seguimiento de instrucciones. El modelo de lenguaje visual FireLLaVA-13B admite entradas mixtas de imágenes y texto. Otros modelos notables incluyen la serie Llama y la serie Mixtral, que ofrecen un soporte eficiente para el seguimiento y generación de instrucciones multilingües."
   },
@@ -94,6 +97,9 @@
   },
   "taichu": {
     "description": "El Instituto de Automatización de la Academia de Ciencias de China y el Instituto de Investigación de Inteligencia Artificial de Wuhan han lanzado una nueva generación de modelos de gran tamaño multimodal, que apoyan tareas de preguntas y respuestas de múltiples rondas, creación de texto, generación de imágenes, comprensión 3D, análisis de señales y más, con capacidades de cognición, comprensión y creación más fuertes, ofreciendo una nueva experiencia de interacción."
+  },
+  "tencentcloud": {
+    "description": "La capacidad atómica del motor de conocimiento (LLM Knowledge Engine Atomic Power) se basa en el desarrollo del motor de conocimiento y ofrece una capacidad completa de preguntas y respuestas, dirigida a empresas y desarrolladores, proporcionando la capacidad de construir y desarrollar aplicaciones de modelos de manera flexible. Puede ensamblar su propio servicio de modelo utilizando varias capacidades atómicas, invocando servicios de análisis de documentos, división, embedding, reescritura en múltiples turnos, entre otros, para personalizar un negocio de IA exclusivo para su empresa."
   },
   "togetherai": {
     "description": "Together AI se dedica a lograr un rendimiento líder a través de modelos de IA innovadores, ofreciendo amplias capacidades de personalización, incluyendo soporte para escalado rápido y procesos de implementación intuitivos, satisfaciendo diversas necesidades empresariales."

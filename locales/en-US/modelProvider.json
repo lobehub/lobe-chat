@@ -154,30 +154,6 @@
       "desc": "Must include http(s)://; can be left blank if not specified locally.",
       "title": "Interface proxy address"
     },
-    "setup": {
-      "cors": {
-        "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",
-        "linux": {
-          "env": "Add `Environment` under [Service] section, and set the OLLAMA_ORIGINS environment variable:",
-          "reboot": "Reload systemd and restart Ollama.",
-          "systemd": "Invoke systemd to edit the ollama service:"
-        },
-        "macos": "Open the 'Terminal' application, paste the following command, and press Enter to run it.",
-        "reboot": "Please restart the Ollama service after completion.",
-        "title": "Configure Ollama for Cross-Origin Access",
-        "windows": "On Windows, go to 'Control Panel' and edit system environment variables. Create a new environment variable named 'OLLAMA_ORIGINS' for your user account, set the value to '*', and click 'OK/Apply' to save."
-      },
-      "install": {
-        "description": "Please make sure you have enabled Ollama. If you haven't downloaded Ollama yet, please visit the official website <1>to download</1>.",
-        "docker": "If you prefer using Docker, Ollama also provides an official Docker image. You can pull it using the following command:",
-        "linux": {
-          "command": "Install using the following command:",
-          "manual": "Alternatively, you can refer to the <1>Linux Manual Installation Guide</1> for manual installation."
-        },
-        "title": "Install and Start Ollama Locally",
-        "windowsTab": "Windows (Preview)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "Cancel Download",
@@ -253,6 +229,10 @@
           "title": "Model ID"
         },
         "modalTitle": "Custom Model Configuration",
+        "reasoning": {
+          "extra": "This configuration will enable the model's deep thinking capabilities, and the specific effects depend entirely on the model itself. Please test whether this model has usable deep thinking abilities.",
+          "title": "Support Deep Thinking"
+        },
         "tokens": {
           "extra": "Set the maximum number of tokens supported by the model",
           "title": "Maximum Context Window",
@@ -313,26 +293,6 @@
     "deleteSuccess": "Deletion successful",
     "tooltip": "Update provider basic configuration",
     "updateSuccess": "Update successful"
-  },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Enter the Access Key from the Baidu Qianfan platform",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Test if the Access Key / Secret Access is filled in correctly"
-    },
-    "secretKey": {
-      "desc": "Enter the Secret Key from the Baidu Qianfan platform",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Custom Service Region",
-      "description": "Input your Access Key / Secret Key to start the session. The application will not record your authentication configuration.",
-      "title": "Use Custom Wenxin Yiyan Authentication Information"
-    }
   },
   "zeroone": {
     "title": "01.AI Zero One Everything"

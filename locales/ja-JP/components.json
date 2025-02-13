@@ -85,5 +85,34 @@
   "ModelSwitchPanel": {
     "emptyModel": "有効なモデルがありません。設定に移動して有効にしてください。",
     "provider": "プロバイダー"
+  },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "ブラウザのセキュリティ制限により、Ollamaを正常に使用するにはクロスオリジン設定が必要です。",
+      "linux": {
+        "env": "[Service] セクションに `Environment` を追加し、OLLAMA_ORIGINS 環境変数を設定します：",
+        "reboot": "systemdをリロードし、Ollamaを再起動します",
+        "systemd": "systemdを呼び出してollamaサービスを編集します："
+      },
+      "macos": "「ターミナル」アプリを開き、以下のコマンドを貼り付けてEnterを押して実行します",
+      "reboot": "実行が完了したらOllamaサービスを再起動してください",
+      "title": "Ollamaのクロスオリジンアクセスを許可する設定",
+      "windows": "Windowsでは、「コントロールパネル」をクリックし、システム環境変数を編集します。ユーザーアカウント用に「OLLAMA_ORIGINS」という名前の環境変数を新規作成し、値を * に設定して「OK/適用」をクリックして保存します"
+    },
+    "install": {
+      "description": "Ollamaが起動していることを確認してください。まだOllamaをダウンロードしていない場合は、公式サイト<1>からダウンロード</1>してください。",
+      "docker": "Dockerを使用することを好む場合、Ollamaは公式のDockerイメージも提供しています。以下のコマンドでプルできます：",
+      "linux": {
+        "command": "以下のコマンドでインストールします：",
+        "manual": "または、<1>Linux手動インストールガイド</1>を参照して自分でインストールすることもできます。"
+      },
+      "title": "ローカルにOllamaアプリをインストールして起動する",
+      "windowsTab": "Windows（プレビュー版)"
+    }
+  },
+  "Thinking": {
+    "thinking": "深く考えています...",
+    "thought": "深く考えました（所要時間 {{duration}} 秒）",
+    "thoughtWithDuration": "深く考えました"
   }
 }

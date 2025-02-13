@@ -82,10 +82,6 @@
       }
     }
   },
-  "reasoning": {
-    "thinking": "심층 사고 중",
-    "thought": "심층적으로 생각했습니다 (소요 시간: {{duration}} 초)"
-  },
   "regenerate": "재생성",
   "roleAndArchive": "역할 및 아카이브",
   "searchAgentPlaceholder": "검색 도우미...",

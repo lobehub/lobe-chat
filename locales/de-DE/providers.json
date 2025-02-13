@@ -23,6 +23,9 @@
   "deepseek": {
     "description": "DeepSeek ist ein Unternehmen, das sich auf die Forschung und Anwendung von KI-Technologien spezialisiert hat. Ihr neuestes Modell, DeepSeek-V2.5, kombiniert allgemeine Dialog- und Codeverarbeitungsfähigkeiten und hat signifikante Fortschritte in den Bereichen menschliche Präferenzanpassung, Schreibaufgaben und Befehlsbefolgung erzielt."
   },
+  "doubao": {
+    "description": "Ein von ByteDance entwickeltes großes Modell. Durch die praktische Validierung in über 50 internen Geschäftsszenarien und die kontinuierliche Verfeinerung mit täglich Billionen von Tokens bietet es vielfältige Modalitäten und schafft mit hochwertigen Modellergebnissen ein reichhaltiges Geschäftserlebnis für Unternehmen."
+  },
   "fireworksai": {
     "description": "Fireworks AI ist ein führender Anbieter von fortschrittlichen Sprachmodellen, der sich auf Funktionsaufrufe und multimodale Verarbeitung spezialisiert hat. Ihr neuestes Modell, Firefunction V2, basiert auf Llama-3 und ist für Funktionsaufrufe, Dialoge und Befehlsbefolgung optimiert. Das visuelle Sprachmodell FireLLaVA-13B unterstützt gemischte Eingaben von Bildern und Text. Weitere bemerkenswerte Modelle sind die Llama-Serie und die Mixtral-Serie, die effiziente mehrsprachige Befehlsbefolgung und Generierungsunterstützung bieten."
   },
@@ -94,6 +97,9 @@
   },
   "taichu": {
     "description": "Das Institut für Automatisierung der Chinesischen Akademie der Wissenschaften und das Wuhan Institute of Artificial Intelligence haben ein neues Generation multimodales großes Modell eingeführt, das umfassende Frage-Antwort-Aufgaben unterstützt, darunter mehrstufige Fragen, Textgenerierung, Bildgenerierung, 3D-Verständnis und Signalverarbeitung, mit stärkeren kognitiven, verstehenden und kreativen Fähigkeiten, die ein neues interaktives Erlebnis bieten."
+  },
+  "tencentcloud": {
+    "description": "Die atomare Fähigkeit der Wissensmaschine (LLM Knowledge Engine Atomic Power) basiert auf der Entwicklung der Wissensmaschine und bietet eine umfassende Fähigkeit zur Wissensabfrage für Unternehmen und Entwickler. Sie können mit verschiedenen atomaren Fähigkeiten Ihren eigenen Modellservice erstellen und Dokumentenanalysen, -aufteilungen, Embeddings, mehrfache Umformulierungen und andere Dienste kombinieren, um maßgeschneiderte KI-Lösungen für Ihr Unternehmen zu entwickeln."
   },
   "togetherai": {
     "description": "Together AI strebt an, durch innovative KI-Modelle führende Leistungen zu erzielen und bietet umfangreiche Anpassungsmöglichkeiten, einschließlich schneller Skalierungsunterstützung und intuitiver Bereitstellungsprozesse, um den unterschiedlichen Anforderungen von Unternehmen gerecht zu werden."

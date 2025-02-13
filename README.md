@@ -287,7 +287,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [Bing_websearch](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | Search for information from the internet base BingApi<br/>`bingsearch`                                                  |
 | [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>        | Analyze stocks and get comprehensive real-time investment data and analytics.<br/>`stock`                               |
 
-> 📊 Total plugins: [<kbd>**49**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -319,14 +319,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                                   | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [The Great Biggus Dickus](https://lobechat.com/discover/assistant/all-knowing)<br/><sup>By **[CGitwater](https://github.com/CGitwater)** on **2025-01-24**</sup>                                 | The almighty powerful god of klnowledge<br/>`biggus` `diccus`                                                                                                                  |
-| [PPT Production Expert](https://lobechat.com/discover/assistant/ppt-production-expert)<br/><sup>By **[patricleehua](https://github.com/patricleehua)** on **2025-01-24**</sup>                   | Skilled in the rapid production and optimization of high-quality PPTs<br/>`ppt-production` `design` `consulting` `content-optimization` `user-support`                         |
-| [English Tutor](https://lobechat.com/discover/assistant/mean-english-mentor)<br/><sup>By **[GEORGE-Ta](https://github.com/GEORGE-Ta)** on **2025-01-24**</sup>                                   | An English tutor with a proud and disdainful attitude, skilled in sarcastic corrections of spoken English.<br/>`english-teaching` `speaking` `role-play` `education` `sarcasm` |
-| [Academic Revision Specialist](https://lobechat.com/discover/assistant/academic-revision-specialist)<br/><sup>By **[sunrisewestern](https://github.com/sunrisewestern)** on **2025-01-24**</sup> | Skilled in academic writing and paper revision<br/>                                                                                                                            |
+| Recent Submits                                                                                                                                                                                        | Description                                                                                                                                                      |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Xiao Zhi French Translation Assistant](https://lobechat.com/discover/assistant/xiao-zhi-french-translation-asst-v-1)<br/><sup>By **[WeR-Best](https://github.com/WeR-Best)** on **2025-02-10**</sup> | A friendly, professional, and empathetic AI assistant for French translation<br/>`ai-assistant` `french-translation` `cross-cultural-communication` `creativity` |
+| [Astrology Researcher](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>                                   | Expert in BaZi astrology<br/>`astrology` `ba-zi` `traditional-culture`                                                                                           |
+| [Language Charm Learning Mentor](https://lobechat.com/discover/assistant/bad-language-helper)<br/><sup>By **[Guducat](https://github.com/Guducat)** on **2025-02-06**</sup>                           | Specializes in teaching the charm of language and witty responses<br/>`language-learning` `dialogue-examples`                                                    |
+| [Allinone](https://lobechat.com/discover/assistant/allinone-v-1)<br/><sup>By **[AXuanCreator](https://github.com/AXuanCreator)** on **2025-02-06**</sup>                                              | Innovation · Future · Excellence<br/>`programming` `low-cost` `concise-answers`                                                                                  |
 
-> 📊 Total agents: [<kbd>**466**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**486**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 
@@ -728,9 +728,9 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [blog]: https://lobehub.com/blog
 [changelog]: https://lobehub.com/changelog
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
-[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
+[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/lobechat_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
-[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_preview_lobehub_com_chat.html
+[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/lobechat_com_chat.html
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway

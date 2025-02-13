@@ -45,4 +45,60 @@ describe('mergeArrayById', () => {
       },
     ]);
   });
+
+  it('should merge data with objects', () => {
+    const data = mergeArrayById(
+      [
+        {
+          contextWindowTokens: 128_000,
+          description:
+            'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
+          displayName: 'OpenAI o1-mini',
+          enabled: true,
+          id: 'o3-mini',
+          abilities: {
+            functionCall: true,
+          },
+          maxOutput: 65_536,
+          pricing: {
+            input: 3,
+            output: 12,
+          },
+          releasedAt: '2024-09-12',
+          type: 'chat',
+        },
+      ],
+      [
+        {
+          id: 'o3-mini',
+          contextWindowTokens: null,
+          displayName: 'OpenAI o1-mini ABC',
+          type: 'chat',
+          abilities: {},
+          enabled: false,
+        },
+      ],
+    );
+
+    expect(data).toEqual([
+      {
+        contextWindowTokens: 128_000,
+        description:
+          'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
+        displayName: 'OpenAI o1-mini ABC',
+        enabled: false,
+        id: 'o3-mini',
+        maxOutput: 65_536,
+        pricing: {
+          input: 3,
+          output: 12,
+        },
+        abilities: {
+          functionCall: true,
+        },
+        releasedAt: '2024-09-12',
+        type: 'chat',
+      },
+    ]);
+  });
 });

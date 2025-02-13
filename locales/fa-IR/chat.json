@@ -82,10 +82,6 @@
       }
     }
   },
-  "reasoning": {
-    "thinking": "در حال تفکر عمیق",
-    "thought": "به طور عمیق فکر شده است (زمان صرف شده: {{duration}} ثانیه)"
-  },
   "regenerate": "بازتولید",
   "roleAndArchive": "نقش‌ها و بایگانی",
   "searchAgentPlaceholder": "جستجوی دستیار...",

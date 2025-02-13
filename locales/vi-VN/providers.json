@@ -23,6 +23,9 @@
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
   },
+  "doubao": {
+    "description": "Mô hình lớn tự phát triển do ByteDance phát triển. Được xác thực qua hơn 50 tình huống kinh doanh nội bộ của ByteDance, với việc sử dụng hàng nghìn tỷ token mỗi ngày để liên tục cải tiến, cung cấp nhiều khả năng đa phương thức, tạo ra trải nghiệm kinh doanh phong phú cho doanh nghiệp với hiệu quả mô hình chất lượng cao."
+  },
   "fireworksai": {
     "description": "Fireworks AI là nhà cung cấp dịch vụ mô hình ngôn ngữ cao cấp hàng đầu, tập trung vào gọi chức năng và xử lý đa phương thức. Mô hình mới nhất của họ, Firefunction V2, dựa trên Llama-3, được tối ưu hóa cho gọi chức năng, đối thoại và tuân theo chỉ dẫn. Mô hình ngôn ngữ hình ảnh FireLLaVA-13B hỗ trợ đầu vào hỗn hợp hình ảnh và văn bản. Các mô hình đáng chú ý khác bao gồm dòng Llama và dòng Mixtral, cung cấp hỗ trợ cho việc tuân theo và tạo ra chỉ dẫn đa ngôn ngữ hiệu quả."
   },
@@ -94,6 +97,9 @@
   },
   "taichu": {
     "description": "Viện Nghiên cứu Tự động hóa Trung Quốc và Viện Nghiên cứu Trí tuệ Nhân tạo Vũ Hán đã phát hành mô hình lớn đa phương thức thế hệ mới, hỗ trợ các nhiệm vụ hỏi đáp toàn diện như hỏi đáp nhiều vòng, sáng tác văn bản, tạo hình ảnh, hiểu 3D, phân tích tín hiệu, v.v., với khả năng nhận thức, hiểu biết và sáng tác mạnh mẽ hơn, mang đến trải nghiệm tương tác hoàn toàn mới."
+  },
+  "tencentcloud": {
+    "description": "Năng lực nguyên tử của động cơ tri thức (LLM Knowledge Engine Atomic Power) được phát triển dựa trên động cơ tri thức, cung cấp khả năng hỏi đáp toàn diện cho doanh nghiệp và nhà phát triển, cho phép xây dựng và phát triển ứng dụng mô hình một cách linh hoạt. Bạn có thể sử dụng nhiều năng lực nguyên tử để tạo ra dịch vụ mô hình riêng của mình, kết hợp các dịch vụ như phân tích tài liệu, tách rời, embedding, và viết lại nhiều vòng để tùy chỉnh các dịch vụ AI đặc thù cho doanh nghiệp."
   },
   "togetherai": {
     "description": "Together AI cam kết đạt được hiệu suất hàng đầu thông qua các mô hình AI sáng tạo, cung cấp khả năng tùy chỉnh rộng rãi, bao gồm hỗ trợ mở rộng nhanh chóng và quy trình triển khai trực quan, đáp ứng nhiều nhu cầu của doanh nghiệp."

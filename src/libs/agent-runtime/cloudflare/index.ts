@@ -1,12 +1,9 @@
-import { ChatModelCard } from '@/types/llm';
-
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import {
   CloudflareStreamTransformer,
   DEFAULT_BASE_URL_PREFIX,
-  convertModelManifest,
   desensitizeCloudflareUrl,
   fillUrl,
 } from '../utils/cloudflareHelpers';
@@ -14,6 +11,19 @@ import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import { createCallbacksTransformer } from '../utils/streams';
+
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { ChatModelCard } from '@/types/llm';
+
+export interface CloudflareModelCard {
+  description: string;
+  name: string;
+  properties?: Record<string, string>;
+  task?: {
+    description?: string;
+    name: string;
+  };
+}
 
 export interface LobeCloudflareParams {
   apiKey?: string;
@@ -111,13 +121,24 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
       },
       method: 'GET',
     });
-    const j = await response.json();
-    const models: any[] = j['result'].filter(
-      (model: any) => model['task']['name'] === 'Text Generation',
-    );
-    const chatModels: ChatModelCard[] = models
-      .map((model) => convertModelManifest(model))
-      .sort((a, b) => a.displayName.localeCompare(b.displayName));
-    return chatModels;
+    const json = await response.json();
+
+    const modelList: CloudflareModelCard[] = json.result;
+
+    return modelList
+      .map((model) => {
+        return {
+          contextWindowTokens: model.properties?.max_total_tokens
+            ? Number(model.properties.max_total_tokens)
+            : LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.contextWindowTokens ?? undefined,
+          displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.displayName ?? (model.properties?.["beta"] === "true" ? `${model.name} (Beta)` : undefined),
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.enabled || false,
+          functionCall: model.description.toLowerCase().includes('function call') || model.properties?.["function_calling"] === "true",
+          id: model.name,
+          reasoning: model.name.toLowerCase().includes('deepseek-r1'),
+          vision: model.name.toLowerCase().includes('vision') || model.task?.name.toLowerCase().includes('image-to-text') || model.description.toLowerCase().includes('vision'),
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   }
 }

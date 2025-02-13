@@ -2,8 +2,7 @@ import { authEnv } from '@/config/auth';
 
 export const enableClerk = authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH;
 export const enableNextAuth = authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH;
-export const enableAuth =
-  authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH || authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH;
+export const enableAuth = enableClerk || enableNextAuth || false;
 
 export const LOBE_CHAT_AUTH_HEADER = 'X-lobe-chat-auth';
 
@@ -38,9 +37,6 @@ export interface JWTPayload {
   awsSessionToken?: string;
 
   cloudflareBaseURLOrAccountID?: string;
-
-  wenxinAccessKey?: string;
-  wenxinSecretKey?: string;
 
   /**
    * user id

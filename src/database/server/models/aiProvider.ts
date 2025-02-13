@@ -202,7 +202,11 @@ export class AiProviderModel {
 
     const keyVaults = !!result.keyVaults ? await decrypt(result.keyVaults) : {};
 
-    return { ...result, keyVaults } as AiProviderDetailItem;
+    return {
+      ...result,
+      fetchOnClient: typeof result.fetchOnClient === 'boolean' ? result.fetchOnClient : undefined,
+      keyVaults,
+    } as AiProviderDetailItem;
   };
 
   getAiProviderRuntimeConfig = async (decryptor?: DecryptUserKeyVaults) => {

@@ -85,5 +85,34 @@
   "ModelSwitchPanel": {
     "emptyModel": "Không có mô hình nào được kích hoạt, vui lòng điều chỉnh trong cài đặt",
     "provider": "Nhà cung cấp"
+  },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "Do hạn chế bảo mật của trình duyệt, bạn cần cấu hình CORS cho Ollama để có thể sử dụng bình thường.",
+      "linux": {
+        "env": "Thêm `Environment` trong phần [Service], thêm biến môi trường OLLAMA_ORIGINS:",
+        "reboot": "Tải lại systemd và khởi động lại Ollama",
+        "systemd": "Gọi systemd để chỉnh sửa dịch vụ ollama:"
+      },
+      "macos": "Vui lòng mở ứng dụng «Terminal» và dán lệnh sau, sau đó nhấn Enter để chạy",
+      "reboot": "Vui lòng khởi động lại dịch vụ Ollama sau khi hoàn thành",
+      "title": "Cấu hình Ollama cho phép truy cập CORS",
+      "windows": "Trên Windows, nhấp vào «Control Panel», vào chỉnh sửa biến môi trường hệ thống. Tạo một biến môi trường mới có tên là «OLLAMA_ORIGINS» cho tài khoản người dùng của bạn, giá trị là *, nhấp «OK/Apply» để lưu"
+    },
+    "install": {
+      "description": "Vui lòng xác nhận rằng bạn đã mở Ollama, nếu chưa tải Ollama, hãy truy cập trang web chính thức <1>tải xuống</1>",
+      "docker": "Nếu bạn thích sử dụng Docker, Ollama cũng cung cấp hình ảnh Docker chính thức, bạn có thể kéo xuống bằng lệnh sau:",
+      "linux": {
+        "command": "Cài đặt bằng lệnh sau:",
+        "manual": "Hoặc, bạn cũng có thể tham khảo <1>Hướng dẫn cài đặt thủ công trên Linux</1> để tự cài đặt"
+      },
+      "title": "Cài đặt và khởi động ứng dụng Ollama trên máy tính",
+      "windowsTab": "Windows (phiên bản xem trước)"
+    }
+  },
+  "Thinking": {
+    "thinking": "Đang suy nghĩ sâu sắc...",
+    "thought": "Đã suy nghĩ sâu sắc (mất {{duration}} giây)",
+    "thoughtWithDuration": "Đã suy nghĩ sâu sắc"
   }
 }

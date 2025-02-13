@@ -25,11 +25,6 @@ export interface CloudflareKeyVault {
   baseURLOrAccountID?: string;
 }
 
-export interface WenxinKeyVault {
-  accessKey?: string;
-  secretKey?: string;
-}
-
 export interface UserKeyVaults {
   ai21?: OpenAICompatibleKeyVault;
   ai360?: OpenAICompatibleKeyVault;
@@ -39,6 +34,7 @@ export interface UserKeyVaults {
   bedrock?: AWSBedrockKeyVault;
   cloudflare?: CloudflareKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
+  doubao?: OpenAICompatibleKeyVault;
   fireworksai?: OpenAICompatibleKeyVault;
   giteeai?: OpenAICompatibleKeyVault;
   github?: OpenAICompatibleKeyVault;
@@ -65,9 +61,10 @@ export interface UserKeyVaults {
   spark?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
   taichu?: OpenAICompatibleKeyVault;
+  tencentcloud?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   upstage?: OpenAICompatibleKeyVault;
-  wenxin?: WenxinKeyVault;
+  wenxin?: OpenAICompatibleKeyVault;
   xai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;

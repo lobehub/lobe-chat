@@ -11,6 +11,7 @@ import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeCloudflareAI, LobeCloudflareParams } from './cloudflare';
 import { LobeDeepSeekAI } from './deepseek';
+import { LobeDoubaoAI } from './doubao';
 import { LobeFireworksAI } from './fireworksai';
 import { LobeGiteeAI } from './giteeai';
 import { LobeGithubAI } from './github';
@@ -35,6 +36,7 @@ import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeSparkAI } from './spark';
 import { LobeStepfunAI } from './stepfun';
 import { LobeTaichuAI } from './taichu';
+import { LobeTencentCloudAI } from './tencentcloud';
 import { LobeTogetherAI } from './togetherai';
 import {
   ChatCompetitionOptions,
@@ -46,6 +48,7 @@ import {
   TextToSpeechPayload,
 } from './types';
 import { LobeUpstageAI } from './upstage';
+import { LobeWenxinAI } from './wenxin';
 import { LobeXAI } from './xai';
 import { LobeZeroOneAI } from './zeroone';
 import { LobeZhipuAI } from './zhipu';
@@ -139,6 +142,7 @@ class AgentRuntime {
       bedrock: Partial<LobeBedrockAIParams>;
       cloudflare: Partial<LobeCloudflareParams>;
       deepseek: Partial<ClientOptions>;
+      doubao: Partial<ClientOptions>;
       fireworksai: Partial<ClientOptions>;
       giteeai: Partial<ClientOptions>;
       github: Partial<ClientOptions>;
@@ -163,8 +167,10 @@ class AgentRuntime {
       spark: Partial<ClientOptions>;
       stepfun: Partial<ClientOptions>;
       taichu: Partial<ClientOptions>;
+      tencentcloud: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
       upstage: Partial<ClientOptions>;
+      wenxin: Partial<ClientOptions>;
       xai: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
       zhipu: Partial<ClientOptions>;
@@ -361,6 +367,21 @@ class AgentRuntime {
 
       case ModelProvider.Higress: {
         runtimeModel = new LobeHigressAI(params.higress);
+        break;
+      }
+
+      case ModelProvider.TencentCloud: {
+        runtimeModel = new LobeTencentCloudAI(params[provider]);
+        break;
+      }
+
+      case ModelProvider.Doubao: {
+        runtimeModel = new LobeDoubaoAI(params.doubao);
+        break;
+      }
+
+      case ModelProvider.Wenxin: {
+        runtimeModel = new LobeWenxinAI(params.wenxin);
         break;
       }
     }

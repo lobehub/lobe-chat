@@ -82,10 +82,6 @@
       }
     }
   },
-  "reasoning": {
-    "thinking": "Đang suy nghĩ sâu sắc",
-    "thought": "Đã suy nghĩ sâu sắc (thời gian: {{duration}} giây)"
-  },
   "regenerate": "Tạo lại",
   "roleAndArchive": "Vai trò và lưu trữ",
   "searchAgentPlaceholder": "Trợ lý tìm kiếm...",

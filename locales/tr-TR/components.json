@@ -85,5 +85,34 @@
   "ModelSwitchPanel": {
     "emptyModel": "Etkinleştirilmiş model bulunmamaktadır, lütfen ayarlara giderek açın",
     "provider": "Sağlayıcı"
+  },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "Tarayıcı güvenlik kısıtlamaları nedeniyle, Ollama'yı düzgün bir şekilde kullanabilmek için çapraz alan yapılandırması yapmanız gerekmektedir.",
+      "linux": {
+        "env": "[Service] bölümüne `Environment` ekleyin ve OLLAMA_ORIGINS ortam değişkenini ekleyin:",
+        "reboot": "systemd'yi yeniden yükleyin ve Ollama'yı yeniden başlatın",
+        "systemd": "ollama hizmetini düzenlemek için systemd'yi çağırın:"
+      },
+      "macos": "Lütfen 'Terminal' uygulamasını açın, aşağıdaki komutu yapıştırın ve çalıştırmak için Enter tuşuna basın",
+      "reboot": "İşlem tamamlandıktan sonra Ollama hizmetini yeniden başlatın",
+      "title": "Ollama'nın çapraz alan erişimine izin vermek için yapılandırma",
+      "windows": "Windows'ta, 'Denetim Masası'na tıklayın ve sistem ortam değişkenlerini düzenleyin. Kullanıcı hesabınız için 'OLLAMA_ORIGINS' adında bir ortam değişkeni oluşturun, değeri * olarak ayarlayın ve 'Tamam/Uygula'ya tıklayarak kaydedin."
+    },
+    "install": {
+      "description": "Lütfen Ollama'nın açık olduğundan emin olun, eğer Ollama'yı indirmediyseniz, lütfen resmi web sitesinden <1>indirin</1>",
+      "docker": "Eğer Docker kullanmayı tercih ediyorsanız, Ollama'nın resmi Docker imajı da mevcuttur, aşağıdaki komutla çekebilirsiniz:",
+      "linux": {
+        "command": "Aşağıdaki komutla kurulum yapın:",
+        "manual": "Alternatif olarak, <1>Linux Manuel Kurulum Kılavuzu</1>'na başvurarak kendiniz de kurulum yapabilirsiniz."
+      },
+      "title": "Ollama uygulamasını yerel olarak kurun ve başlatın",
+      "windowsTab": "Windows (önizleme sürümü)"
+    }
+  },
+  "Thinking": {
+    "thinking": "Derin düşünme aşamasında...",
+    "thought": "Derinlemesine düşündüm (geçen süre {{duration}} saniye)",
+    "thoughtWithDuration": "Derinlemesine düşündüm"
   }
 }

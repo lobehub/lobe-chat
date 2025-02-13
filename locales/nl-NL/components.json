@@ -85,5 +85,34 @@
   "ModelSwitchPanel": {
     "emptyModel": "No enabled model, please go to settings to enable.",
     "provider": "Provider"
+  },
+  "OllamaSetupGuide": {
+    "cors": {
+      "description": "Vanwege beveiligingsbeperkingen in de browser moet je cross-origin configuratie voor Ollama instellen om het correct te kunnen gebruiken.",
+      "linux": {
+        "env": "Voeg `Environment` toe onder de [Service] sectie en voeg de OLLAMA_ORIGINS omgevingsvariabele toe:",
+        "reboot": "Herlaad systemd en herstart Ollama",
+        "systemd": "Roep systemd aan om de ollama service te bewerken:"
+      },
+      "macos": "Open de 'Terminal' applicatie, plak de volgende opdracht en druk op enter om uit te voeren",
+      "reboot": "Herstart de Ollama service na het voltooien van de uitvoering",
+      "title": "Configureer Ollama voor cross-origin toegang",
+      "windows": "Op Windows, klik op 'Configuratiescherm', ga naar systeemomgevingsvariabelen bewerken. Maak een nieuwe omgevingsvariabele aan met de naam 'OLLAMA_ORIGINS' voor je gebruikersaccount, met de waarde * en klik op 'OK/Toepassen' om op te slaan"
+    },
+    "install": {
+      "description": "Zorg ervoor dat je Ollama hebt ingeschakeld. Als je Ollama nog niet hebt gedownload, ga dan naar de officiële website <1>om te downloaden</1>",
+      "docker": "Als je de voorkeur geeft aan het gebruik van Docker, biedt Ollama ook een officiële Docker-image aan die je kunt ophalen met de volgende opdracht:",
+      "linux": {
+        "command": "Installeer met de volgende opdracht:",
+        "manual": "Of je kunt de <1>Linux handmatige installatiehandleiding</1> raadplegen voor een handmatige installatie"
+      },
+      "title": "Installeer en start de Ollama applicatie lokaal",
+      "windowsTab": "Windows (previewversie)"
+    }
+  },
+  "Thinking": {
+    "thinking": "Diep in gedachten...",
+    "thought": "Diep nagedacht (tijd gebruikt {{duration}} seconden)",
+    "thoughtWithDuration": "Diep nagedacht"
   }
 }

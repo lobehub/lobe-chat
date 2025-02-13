@@ -1,6 +1,7 @@
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import { DatabaseLoadingState } from '@/types/clientDB';
+import { LocaleMode } from '@/types/locale';
 import { SessionDefaultGroup } from '@/types/session';
 import { AsyncLocalStorage } from '@/utils/localStorage';
 
@@ -49,9 +50,11 @@ export interface SystemStatus {
    * 应用初始化时不启用 PGLite，只有当用户手动开启时才启用
    */
   isEnablePglite?: boolean;
+  language?: LocaleMode;
   latestChangelogId?: string;
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
+  portalWidth: number;
   sessionsWidth: number;
   showChatSideBar?: boolean;
   showFilePanel?: boolean;
@@ -86,6 +89,7 @@ export const INITIAL_STATUS = {
   hideThreadLimitAlert: false,
   inputHeight: 200,
   mobileShowTopic: false,
+  portalWidth: 400,
   sessionsWidth: 320,
   showChatSideBar: true,
   showFilePanel: true,

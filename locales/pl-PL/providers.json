@@ -23,6 +23,9 @@
   "deepseek": {
     "description": "DeepSeek to firma skoncentrowana na badaniach i zastosowaniach technologii sztucznej inteligencji, której najnowszy model DeepSeek-V2.5 łączy zdolności do prowadzenia ogólnych rozmów i przetwarzania kodu, osiągając znaczące postępy w zakresie dostosowywania do preferencji ludzkich, zadań pisarskich i przestrzegania instrukcji."
   },
+  "doubao": {
+    "description": "Model dużych rozmiarów opracowany przez ByteDance. Potwierdzony w ponad 50 scenariuszach biznesowych wewnątrz firmy, z codziennym użyciem bilionów tokenów, co pozwala na ciągłe doskonalenie. Oferuje różnorodne możliwości modalne, tworząc bogate doświadczenia biznesowe dla przedsiębiorstw dzięki wysokiej jakości modelom."
+  },
   "fireworksai": {
     "description": "Fireworks AI to wiodący dostawca zaawansowanych modeli językowych, skoncentrowany na wywołaniach funkcji i przetwarzaniu multimodalnym. Jego najnowszy model Firefunction V2 oparty na Llama-3, zoptymalizowany do wywołań funkcji, dialogów i przestrzegania instrukcji. Model wizualny FireLLaVA-13B wspiera mieszane wejścia obrazów i tekstu. Inne znaczące modele to seria Llama i seria Mixtral, oferujące efektywne wsparcie dla wielojęzycznego przestrzegania instrukcji i generacji."
   },
@@ -94,6 +97,9 @@
   },
   "taichu": {
     "description": "Nowa generacja multimodalnych dużych modeli opracowana przez Instytut Automatyki Chińskiej Akademii Nauk i Wuhan Institute of Artificial Intelligence wspiera wielorundowe pytania i odpowiedzi, tworzenie tekstów, generowanie obrazów, zrozumienie 3D, analizę sygnałów i inne kompleksowe zadania pytaniowe, posiadając silniejsze zdolności poznawcze, rozumienia i tworzenia, oferując nową interaktywną doświadczenie."
+  },
+  "tencentcloud": {
+    "description": "Atomowe możliwości silnika wiedzy (LLM Knowledge Engine Atomic Power) oparte na silniku wiedzy, oferujące pełne możliwości zadawania pytań i odpowiedzi, skierowane do przedsiębiorstw i deweloperów, zapewniające elastyczność w budowaniu i rozwijaniu aplikacji modelowych. Możesz tworzyć własne usługi modelowe za pomocą różnych atomowych możliwości, korzystając z usług takich jak analiza dokumentów, podział, embedding, wielokrotne przeredagowywanie i inne, aby dostosować AI do specyficznych potrzeb Twojej firmy."
   },
   "togetherai": {
     "description": "Together AI dąży do osiągnięcia wiodącej wydajności poprzez innowacyjne modele AI, oferując szerokie możliwości dostosowywania, w tym wsparcie dla szybkiej ekspansji i intuicyjnych procesów wdrożeniowych, aby zaspokoić różnorodne potrzeby przedsiębiorstw."
