@@ -73,6 +73,29 @@ const findAzureDeploymentName = (model: string) => {
   return deploymentId;
 };
 
+const findDoubaoDeploymentName = (model: string) => {
+  let deploymentId = model;
+
+  // TODO: remove isDeprecatedEdition condition in V2.0
+  if (isDeprecatedEdition) {
+    const chatModelCards = modelProviderSelectors.getModelCardsById(ModelProvider.Doubao)(
+      useUserStore.getState(),
+    );
+
+    const deploymentName = chatModelCards.find((i) => i.id === model)?.deploymentName;
+    if (deploymentName) deploymentId = deploymentName;
+  } else {
+    // find the model by id
+    const modelItem = useAiInfraStore.getState().enabledAiModels?.find((i) => i.id === model);
+
+    if (modelItem && modelItem.config?.deploymentName) {
+      deploymentId = modelItem.config?.deploymentName;
+    }
+  }
+
+  return deploymentId;
+};
+
 const isEnableFetchOnClient = (provider: string) => {
   // TODO: remove this condition in V2.0
   if (isDeprecatedEdition) {
@@ -222,8 +245,12 @@ class ChatService {
     let model = res.model || DEFAULT_AGENT_CONFIG.model;
 
     // if the provider is Azure, get the deployment name as the request model
-    if (provider === ModelProvider.Azure || provider === ModelProvider.Doubao) {
+    if (provider === ModelProvider.Azure) {
       model = findAzureDeploymentName(model);
+    }
+
+    if (provider === ModelProvider.Doubao) {
+      model = findDoubaoDeploymentName(model);
     }
 
     const payload = merge(
