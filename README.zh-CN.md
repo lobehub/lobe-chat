@@ -492,7 +492,18 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 
 <br/>
 
-### `B` 使用 Docker 部署
+### `B` 使用 腾讯轻量云 部署
+腾讯轻量云提供了一键部署 LobeChat 服务的解决方案，只需点击按钮，即可在轻量云上快速搭建一个 LobeChat 服务。
+- 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
+- 点击下方按钮注册/登录腾讯云账号后开始部署： 
+
+|            使用 腾讯轻量云 部署             |    
+| :-------------------------------------: |
+| [![][deploy-on-tecnent-cloud-button-image]][deploy-on-tecnent-cloud-link] |
+
+- 部署完毕后，即可开始使用；
+
+### `C` 使用 Docker 部署
 
 [![][docker-release-shield]][docker-release-link]
 [![][docker-size-shield]][docker-size-link]
@@ -768,6 +779,8 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [deploy-on-sealos-link]: https://cloud.sealos.io/?openapp=system-template%3FtemplateName%3Dlobe-chat
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
 [deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
+[deploy-on-tecnent-cloud-button-image]: https://cloudcache.tencent-cloud.com/qcloud/ui/static/static_source_business/d65fb782-4fb0-4348-ad85-f2943d6bee8f.svg
+[deploy-on-tecnent-cloud-link]: https://buy.cloud.tencent.com/lighthouse?blueprintType=APP_OS&blueprintOfficialId=lhbp-6u0ti132&regionId=8&zone=ap-beijing-3&bundleId=bundle_starter_mc_med2_01&loginSet=AUTO&rule=true&from=lobechat
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
