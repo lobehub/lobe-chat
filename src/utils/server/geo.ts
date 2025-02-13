@@ -4,7 +4,7 @@ import { NextRequest } from 'next/server';
 export const parseDefaultThemeFromCountry = (request: NextRequest) => {
   // 1. 从请求头中获取国家代码
   const countryCode =
-    request.headers.get('x-vercel-ip-country') || // Vercel
+    ('geo' in request && (request.geo as any)?.country) ||
     request.headers.get('cf-ipcountry') || // Cloudflare
     request.headers.get('x-zeabur-ip-country') || // Zeabur
     request.headers.get('x-country-code'); // Netlify
