@@ -38,6 +38,10 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
       'sensechat-5',
     ];
 
+    const reasoningKeywords = [
+      'deepseek-r1'
+    ];
+
     client.baseURL = 'https://api.sensenova.cn/v1/llm';
 
     const modelsPage = await client.models.list() as any;
@@ -56,6 +60,10 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
             || knownModel?.abilities?.functionCall
             || false,
           id: model.id,
+          reasoning:
+            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.reasoning
+            || false,
           vision:
             model.id.toLowerCase().includes('vision')
             || knownModel?.abilities?.vision

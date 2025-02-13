@@ -43,6 +43,9 @@ export const LobeTencentCloudAI = LobeOpenAICompatibleFactory({
             reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
             || knownModel?.abilities?.reasoning
             || false,
+          vision:
+            knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

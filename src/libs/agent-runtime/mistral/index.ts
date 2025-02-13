@@ -47,6 +47,9 @@ export const LobeMistralAI = LobeOpenAICompatibleFactory({
           enabled: knownModel?.enabled || false,
           functionCall: model.capabilities.function_calling,
           id: model.id,
+          reasoning:
+            knownModel?.abilities?.reasoning
+            || false,
           vision: model.capabilities.vision,
         };
       })

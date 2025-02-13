@@ -37,6 +37,9 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
             || knownModel?.abilities?.functionCall
             || false,
           id: model.id,
+          reasoning:
+            knownModel?.abilities?.reasoning
+            || false,
           vision:
             model.id.toLowerCase().includes('vision')
             || knownModel?.abilities?.vision

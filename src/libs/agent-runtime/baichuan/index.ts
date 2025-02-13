@@ -47,6 +47,12 @@ export const LobeBaichuanAI = LobeOpenAICompatibleFactory({
           functionCall: model.function_call,
           id: model.model,
           maxTokens: model.max_tokens,
+          reasoning:
+            knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

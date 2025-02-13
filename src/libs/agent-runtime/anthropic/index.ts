@@ -140,6 +140,9 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
             || knownModel?.abilities?.functionCall
             || false,
           id: model.id,
+          reasoning:
+            knownModel?.abilities?.reasoning
+            || false,
           vision:
             model.id.toLowerCase().includes('claude-3') && !model.id.toLowerCase().includes('claude-3-5-haiku')
             || knownModel?.abilities?.vision

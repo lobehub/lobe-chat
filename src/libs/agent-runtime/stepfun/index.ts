@@ -52,6 +52,9 @@ export const LobeStepfunAI = LobeOpenAICompatibleFactory({
             || knownModel?.abilities?.functionCall
             || false,
           id: model.id,
+          reasoning:
+            knownModel?.abilities?.reasoning
+            || false,
           vision:
             visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
             || knownModel?.abilities?.vision

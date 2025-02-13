@@ -82,6 +82,9 @@ export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
             model.id.toLowerCase().includes('reasoner')
             || knownModel?.abilities?.reasoning
             || false,
+          vision:
+            knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

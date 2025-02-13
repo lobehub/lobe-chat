@@ -38,6 +38,12 @@ export const LobeInternLMAI = LobeOpenAICompatibleFactory({
             knownModel?.abilities?.functionCall
             || false,
           id: model.id,
+          reasoning:
+            knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];
