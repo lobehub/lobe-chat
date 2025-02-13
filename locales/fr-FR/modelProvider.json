@@ -276,6 +276,11 @@
         "latestTime": "Dernière mise à jour : {{time}}",
         "noLatestTime": "Aucune liste récupérée pour le moment"
       },
+      "resetAll": {
+        "conform": "Êtes-vous sûr de vouloir réinitialiser toutes les modifications du modèle actuel ? Après la réinitialisation, la liste des modèles actuels reviendra à l'état par défaut",
+        "success": "Réinitialisation réussie",
+        "title": "Réinitialiser toutes les modifications"
+      },
       "search": "Rechercher des modèles...",
       "searchResult": "Trouvé {{count}} modèle(s)",
       "title": "Liste des modèles",

@@ -276,6 +276,11 @@
         "latestTime": "Última actualización: {{time}}",
         "noLatestTime": "Lista aún no obtenida"
       },
+      "resetAll": {
+        "conform": "¿Confirmar el restablecimiento de todas las modificaciones del modelo actual? Después del restablecimiento, la lista de modelos actuales volverá al estado predeterminado",
+        "success": "Restablecimiento exitoso",
+        "title": "Restablecer todas las modificaciones"
+      },
       "search": "Buscar modelos...",
       "searchResult": "Se encontraron {{count}} modelos",
       "title": "Lista de modelos",
