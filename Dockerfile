@@ -47,6 +47,10 @@ ARG NEXT_PUBLIC_UMAMI_WEBSITE_ID
 
 ENV NEXT_PUBLIC_BASE_PATH="${NEXT_PUBLIC_BASE_PATH}"
 
+# Make the middleware rewrite through local as default
+# refs: https://github.com/lobehub/lobe-chat/issues/5876
+ENV MIDDLEWARE_REWRITE_THROUGH_LOCAL="1"
+
 # Sentry
 ENV NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \
     SENTRY_ORG="" \
@@ -130,10 +134,6 @@ ENV NODE_ENV="production" \
     NODE_EXTRA_CA_CERTS="" \
     NODE_TLS_REJECT_UNAUTHORIZED="" \
     SSL_CERT_DIR="/etc/ssl/certs/ca-certificates.crt"
-
-# Make the middleware rewrite through local as default
-# refs: https://github.com/lobehub/lobe-chat/issues/5876
-ENV MIDDLEWARE_REWRITE_THROUGH_LOCAL="1"
 
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0" \
@@ -222,9 +222,7 @@ ENV \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
-    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST="" \
-    # Tencent Cloud
-    TENCENT_CLOUD_API_KEY="" TENCENT_CLOUD_MODEL_LIST=""
+    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST=""
 
 USER nextjs
 
