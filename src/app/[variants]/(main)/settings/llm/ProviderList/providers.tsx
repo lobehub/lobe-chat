@@ -35,6 +35,7 @@ import {
 } from '@/config/modelProviders';
 
 import { ProviderItem } from '../type';
+import { useVolcengineArkProvider } from './Ark';
 import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
 import { useCloudflareProvider } from './Cloudflare';
@@ -51,6 +52,7 @@ export const useProviderList = (): ProviderItem[] => {
   const CloudflareProvider = useCloudflareProvider();
   const GithubProvider = useGithubProvider();
   const HuggingFaceProvider = useHuggingFaceProvider();
+  const VolcengineArkProvider = useVolcengineArkProvider();
 
   return useMemo(
     () => [
@@ -92,6 +94,7 @@ export const useProviderList = (): ProviderItem[] => {
       SiliconCloudProviderCard,
       HigressProviderCard,
       GiteeAIProviderCard,
+      VolcengineArkProvider,
     ],
     [
       AzureProvider,
@@ -101,6 +104,7 @@ export const useProviderList = (): ProviderItem[] => {
       CloudflareProvider,
       GithubProvider,
       HuggingFaceProvider,
+      VolcengineArkProvider,
     ],
   );
 };
