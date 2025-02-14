@@ -37,6 +37,7 @@ import TaichuProvider from './taichu';
 import TencentcloudProvider from './tencentcloud';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
+import VLLMProvider from './vllm';
 import WenxinProvider from './wenxin';
 import XAIProvider from './xai';
 import ZeroOneProvider from './zeroone';
@@ -58,6 +59,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   MistralProvider.chatModels,
   MoonshotProvider.chatModels,
   OllamaProvider.chatModels,
+  VLLMProvider.chatModels,
   OpenRouterProvider.chatModels,
   TogetherAIProvider.chatModels,
   FireworksAIProvider.chatModels,
@@ -89,6 +91,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   OpenAIProvider,
   { ...AzureProvider, chatModels: [] },
   OllamaProvider,
+  VLLMProvider,
   AnthropicProvider,
   BedrockProvider,
   GoogleProvider,
@@ -175,6 +178,7 @@ export { default as TaichuProviderCard } from './taichu';
 export { default as TencentCloudProviderCard } from './tencentcloud';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
+export { default as VLLMProviderCard } from './vllm';
 export { default as WenxinProviderCard } from './wenxin';
 export { default as XAIProviderCard } from './xai';
 export { default as ZeroOneProviderCard } from './zeroone';

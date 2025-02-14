@@ -37,6 +37,7 @@ import { default as taichu } from './taichu';
 import { default as tencentcloud } from './tencentcloud';
 import { default as togetherai } from './togetherai';
 import { default as upstage } from './upstage';
+import { default as vllm } from './vllm';
 import { default as wenxin } from './wenxin';
 import { default as xai } from './xai';
 import { default as zeroone } from './zeroone';
@@ -99,6 +100,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   tencentcloud,
   togetherai,
   upstage,
+  vllm,
   wenxin,
   xai,
   zeroone,
@@ -142,6 +144,7 @@ export { default as taichu } from './taichu';
 export { default as tencentcloud } from './tencentcloud';
 export { default as togetherai } from './togetherai';
 export { default as upstage } from './upstage';
+export { default as vllm } from './vllm';
 export { default as wenxin } from './wenxin';
 export { default as xai } from './xai';
 export { default as zeroone } from './zeroone';
