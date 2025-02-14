@@ -93,7 +93,6 @@
       "title": "サービスプロバイダー名"
     },
     "proxyUrl": {
-      "placeholder": "リクエストURLを入力してください",
       "required": "プロキシURLを入力してください",
       "title": "プロキシアドレス"
     },
