@@ -93,7 +93,6 @@
       "title": "Hizmet Sağlayıcı Adı"
     },
     "proxyUrl": {
-      "placeholder": "Lütfen istek adresinizi girin",
       "required": "Lütfen proxy adresini girin",
       "title": "Proxy Adresi"
     },
