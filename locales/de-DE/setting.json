@@ -204,8 +204,8 @@
       "title": "Aktivieren Sie die Anpassung der Schlussfolgerungsintensität"
     },
     "frequencyPenalty": {
-      "desc": "Je höher der Wert, desto wahrscheinlicher ist es, dass sich wiederholende Wörter reduziert werden",
-      "title": "Frequenzstrafe"
+      "desc": "Je höher der Wert, desto vielfältiger und abwechslungsreicher die Wortwahl; je niedriger der Wert, desto einfacher und schlichter die Wortwahl",
+      "title": "Wortvielfalt"
     },
     "maxTokens": {
       "desc": "Maximale Anzahl von Tokens, die pro Interaktion verwendet werden",
@@ -215,9 +215,12 @@
       "desc": "{{provider}} Modell",
       "title": "Modell"
     },
+    "params": {
+      "title": "Erweiterte Parameter"
+    },
     "presencePenalty": {
-      "desc": "Je höher der Wert, desto wahrscheinlicher ist es, dass sich das Gespräch auf neue Themen ausweitet",
-      "title": "Themenfrische"
+      "desc": "Je höher der Wert, desto eher werden unterschiedliche Ausdrucksweisen bevorzugt, um Wiederholungen zu vermeiden; je niedriger der Wert, desto eher werden wiederholte Konzepte oder Erzählungen verwendet, was zu einer konsistenteren Ausdrucksweise führt",
+      "title": "Ausdrucksvielfalt"
     },
     "reasoningEffort": {
       "desc": "Je höher der Wert, desto stärker die Schlussfolgerungsfähigkeit, aber dies kann die Antwortzeit und den Tokenverbrauch erhöhen.",
@@ -229,14 +232,14 @@
       "title": "Schlussfolgerungsintensität"
     },
     "temperature": {
-      "desc": "Je höher der Wert, desto zufälliger die Antwort",
-      "title": "Zufälligkeit",
-      "titleWithValue": "Zufälligkeit {{value}}"
+      "desc": "Je höher der Wert, desto kreativer und einfallsreicher die Antworten; je niedriger der Wert, desto strenger die Antworten",
+      "title": "Kreativitätsgrad",
+      "warning": "Ein zu hoher Kreativitätsgrad kann zu unverständlichen Ausgaben führen"
     },
-    "title": "Modelleinstellungen",
+    "title": "Modell Einstellungen",
     "topP": {
-      "desc": "Ähnlich wie Zufälligkeit, aber nicht zusammen mit Zufälligkeit ändern",
-      "title": "Top-P-Sampling"
+      "desc": "Wie viele Möglichkeiten in Betracht gezogen werden, je höher der Wert, desto mehr mögliche Antworten werden akzeptiert; je niedriger der Wert, desto eher wird die wahrscheinlichste Antwort gewählt. Es wird nicht empfohlen, dies zusammen mit dem Kreativitätsgrad zu ändern",
+      "title": "Offenheit des Denkens"
     }
   },
   "settingPlugin": {

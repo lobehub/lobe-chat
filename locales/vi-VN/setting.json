@@ -204,8 +204,8 @@
       "title": "Bật điều chỉnh cường độ suy luận"
     },
     "frequencyPenalty": {
-      "desc": "Giá trị càng cao, càng có khả năng giảm sự lặp lại của từ/cụm từ",
-      "title": "Hình phạt tần suất"
+      "desc": "Giá trị càng lớn, từ ngữ càng phong phú đa dạng; giá trị càng thấp, từ ngữ càng đơn giản mộc mạc",
+      "title": "Độ phong phú từ vựng"
     },
     "maxTokens": {
       "desc": "Số lượng Token tối đa được sử dụng trong mỗi tương tác",
@@ -215,9 +215,12 @@
       "desc": "Mô hình {{provider}}",
       "title": "Mô hình"
     },
+    "params": {
+      "title": "Tham số nâng cao"
+    },
     "presencePenalty": {
-      "desc": "Giá trị càng cao, càng có khả năng mở rộng đến chủ đề mới",
-      "title": "Độ mới của chủ đề"
+      "desc": "Giá trị càng lớn, càng có xu hướng sử dụng các cách diễn đạt khác nhau, tránh lặp lại khái niệm; giá trị càng nhỏ, càng có xu hướng sử dụng các khái niệm hoặc mô tả lặp lại, thể hiện tính nhất quán cao hơn",
+      "title": "Độ phân tán trong diễn đạt"
     },
     "reasoningEffort": {
       "desc": "Giá trị càng lớn, khả năng suy luận càng mạnh, nhưng có thể làm tăng thời gian phản hồi và tiêu tốn Token",
@@ -229,14 +232,14 @@
       "title": "Cường độ suy luận"
     },
     "temperature": {
-      "desc": "Giá trị càng cao, phản hồi càng ngẫu nhiên",
-      "title": "Độ ngẫu nhiên",
-      "titleWithValue": "Độ ngẫu nhiên {{value}}"
+      "desc": "Giá trị càng lớn, câu trả lời càng sáng tạo và giàu trí tưởng tượng; giá trị càng nhỏ, câu trả lời càng nghiêm ngặt",
+      "title": "Mức độ sáng tạo",
+      "warning": "Giá trị mức độ sáng tạo quá lớn có thể dẫn đến đầu ra bị lỗi"
     },
     "title": "Cài đặt mô hình",
     "topP": {
-      "desc": "Tương tự như độ ngẫu nhiên, nhưng không nên thay đổi cùng lúc với độ ngẫu nhiên",
-      "title": "Lấy mẫu cốt lõi"
+      "desc": "Xem xét bao nhiêu khả năng, giá trị càng lớn, chấp nhận nhiều câu trả lời khả thi hơn; giá trị càng nhỏ, có xu hướng chọn câu trả lời khả thi nhất. Không khuyến nghị thay đổi cùng với mức độ sáng tạo",
+      "title": "Mức độ mở trong tư duy"
     }
   },
   "settingPlugin": {

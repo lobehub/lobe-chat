@@ -93,7 +93,6 @@
       "title": "Naam van de provider"
     },
     "proxyUrl": {
-      "placeholder": "Vul je verzoekadres in",
       "required": "Vul het proxyadres in",
       "title": "Proxy-adres"
     },

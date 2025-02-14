@@ -46,6 +46,7 @@ export enum ModelProvider {
   Mistral = 'mistral',
   Moonshot = 'moonshot',
   Novita = 'novita',
+  Nvidia = 'nvidia',
   Ollama = 'ollama',
   OpenAI = 'openai',
   OpenRouter = 'openrouter',
