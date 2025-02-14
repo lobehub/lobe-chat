@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve model fetch behavior."]
+    },
+    "date": "2025-02-14",
+    "version": "1.53.12"
+  },
+  {
+    "children": {
       "fixes": ["Fix provider form api key."]
     },
     "date": "2025-02-13",
