@@ -9,6 +9,9 @@ const Jina: ModelProviderCard = {
   modelsUrl: 'https://jina.ai/models',
   name: 'Jina',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://deepsearch.jina.ai/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },
