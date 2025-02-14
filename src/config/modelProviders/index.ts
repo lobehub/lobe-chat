@@ -30,6 +30,7 @@ import OllamaProvider from './ollama';
 import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
+import PPIOProvider from './ppio';
 import QwenProvider from './qwen';
 import SambaNovaProvider from './sambanova';
 import SenseNovaProvider from './sensenova';
@@ -142,7 +143,8 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   TaichuProvider,
   Ai360Provider,
   DoubaoProvider,
-];
+  PPIOProvider,
+] as const;
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
   return provider.chatModels.filter((v) => v.enabled).map((m) => m.id);
@@ -183,6 +185,7 @@ export { default as OllamaProviderCard } from './ollama';
 export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
+export { default as PPIOProviderCard } from './ppio';
 export { default as QwenProviderCard } from './qwen';
 export { default as SambaNovaProviderCard } from './sambanova';
 export { default as SenseNovaProviderCard } from './sensenova';
