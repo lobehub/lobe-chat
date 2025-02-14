@@ -189,7 +189,7 @@ LobeChat 支持文件上傳與知識庫功能，你可以上傳文件、圖片�
 
  <!-- PROVIDER LIST -->
 
-同時，我們也在計劃支持更多的模型服務商，以進一步豐富我們的服務商庫。如果你希望讓 LobeChat 支持你喜愛的服務商，歡迎加入我們的 [💬 社區討論](https://github.com/lobehub/lobe-chat/discussions/1284)。
+同時，我們也在計劃支持更多的模型服務商，以進一步豐富我們的服務商庫。如果你希望讓 LobeChat 支持你喜愛的服務商，歡迎加入我們的 [💬 社區討論](https://github.com/lobehub/lobe-chat/discussions/6157)。
 
 <div align="right">
 
