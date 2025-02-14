@@ -23,6 +23,7 @@ import { default as minimax } from './minimax';
 import { default as mistral } from './mistral';
 import { default as moonshot } from './moonshot';
 import { default as novita } from './novita';
+import { default as nvidia } from './nvidia';
 import { default as ollama } from './ollama';
 import { default as openai } from './openai';
 import { default as openrouter } from './openrouter';
@@ -84,6 +85,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   mistral,
   moonshot,
   novita,
+  nvidia,
   ollama,
   openai,
   openrouter,
@@ -126,6 +128,7 @@ export { default as minimax } from './minimax';
 export { default as mistral } from './mistral';
 export { default as moonshot } from './moonshot';
 export { default as novita } from './novita';
+export { default as nvidia } from './nvidia';
 export { default as ollama } from './ollama';
 export { default as openai } from './openai';
 export { default as openrouter } from './openrouter';

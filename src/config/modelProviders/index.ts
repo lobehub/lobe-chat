@@ -23,6 +23,7 @@ import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
 import MoonshotProvider from './moonshot';
 import NovitaProvider from './novita';
+import NvidiaProvider from './nvidia';
 import OllamaProvider from './ollama';
 import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
@@ -67,6 +68,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   NovitaProvider.chatModels,
+  NvidiaProvider.chatModels,
   BaichuanProvider.chatModels,
   TaichuProvider.chatModels,
   CloudflareProvider.chatModels,
@@ -96,6 +98,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   CloudflareProvider,
   GithubProvider,
   NovitaProvider,
+  NvidiaProvider,
   TogetherAIProvider,
   FireworksAIProvider,
   GroqProvider,
@@ -158,6 +161,7 @@ export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
 export { default as MoonshotProviderCard } from './moonshot';
 export { default as NovitaProviderCard } from './novita';
+export { default as NvidiaProviderCard } from './nvidia';
 export { default as OllamaProviderCard } from './ollama';
 export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
