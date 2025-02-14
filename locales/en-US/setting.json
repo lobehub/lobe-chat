@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "Enable Automatic Summary of Chat History"
     },
+    "enableFastAnimation": {
+      "desc": "Accelerate text animation when the model response speed is fast",
+      "title": "Fast Animation"
+    },
     "enableHistoryCount": {
       "alias": "Unlimited",
       "limited": "Include only {{number}} conversation messages",
