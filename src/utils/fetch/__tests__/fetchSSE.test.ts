@@ -142,9 +142,24 @@ describe('fetchSSE', () => {
       smoothing: true,
     });
 
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' World', type: 'text' });
+    const expectedMessages = [
+      { text: 'H', type: 'text' },
+      { text: 'e', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'o', type: 'text' },
+      { text: ' ', type: 'text' },
+      { text: 'W', type: 'text' },
+      { text: 'o', type: 'text' },
+      { text: 'r', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'd', type: 'text' },
+    ];
+
+    expectedMessages.forEach((message, index) => {
+      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
+    });
+    
     // more assertions for each character...
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       observationId: null,
@@ -175,9 +190,24 @@ describe('fetchSSE', () => {
       smoothing: true,
     });
 
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'reasoning' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'reasoning' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' Wor', type: 'reasoning' });
+    const expectedMessages = [
+      { text: 'H', type: 'reasoning' },
+      { text: 'e', type: 'reasoning' },
+      { text: 'l', type: 'reasoning' },
+      { text: 'l', type: 'reasoning' },
+      { text: 'o', type: 'reasoning' },
+      { text: ' ', type: 'reasoning' },
+      { text: 'W', type: 'reasoning' },
+      { text: 'o', type: 'reasoning' },
+      { text: 'r', type: 'reasoning' },
+      { text: 'l', type: 'reasoning' },
+      { text: 'd', type: 'reasoning' },
+    ];
+
+    expectedMessages.forEach((message, index) => {
+      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
+    });
+
     // more assertions for each character...
     expect(mockOnFinish).toHaveBeenCalledWith('hi', {
       observationId: null,
@@ -273,9 +303,23 @@ describe('fetchSSE', () => {
       smoothing: true,
     });
 
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' World', type: 'text' });
+    const expectedMessages = [
+      { text: 'H', type: 'text' },
+      { text: 'e', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'o', type: 'text' },
+      { text: ' ', type: 'text' },
+      { text: 'W', type: 'text' },
+      { text: 'o', type: 'text' },
+      { text: 'r', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'd', type: 'text' },
+    ];
+
+    expectedMessages.forEach((message, index) => {
+      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
+    });
 
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       type: 'done',
