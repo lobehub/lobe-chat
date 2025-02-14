@@ -69,7 +69,6 @@ export class ContentChunk {
 
   private canUseUnstructured(): boolean {
     return !!(
-      knowledgeEnv.USE_UNSTRUCTURED_FOR_PDF &&
       knowledgeEnv.UNSTRUCTURED_API_KEY &&
       knowledgeEnv.UNSTRUCTURED_SERVER_URL
     );
@@ -77,9 +76,7 @@ export class ContentChunk {
 
   isUsingUnstructured(params: ChunkContentParams) {
     return params.fileType === 'application/pdf' &&
-           !!knowledgeEnv.USE_UNSTRUCTURED_FOR_PDF &&
-           !!knowledgeEnv.UNSTRUCTURED_API_KEY &&
-           !!knowledgeEnv.UNSTRUCTURED_SERVER_URL;
+           this.canUseUnstructured();
   }
 
   private chunkByUnstructured = async (
