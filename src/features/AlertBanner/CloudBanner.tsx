@@ -4,7 +4,7 @@ import { Icon } from '@lobehub/ui';
 import { useSize } from 'ahooks';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
-import { ArrowRightIcon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo, useEffect, useRef, useState } from 'react';
 import Marquee from 'react-fast-marquee';
@@ -13,6 +13,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
+import { useDirection } from '@/hooks/useDirection';
 import { isOnServerSide } from '@/utils/env';
 
 export const BANNER_HEIGHT = 40;
@@ -50,6 +51,7 @@ const CloudBanner = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('common');
   const [isTruncated, setIsTruncated] = useState(mobile);
+  const direction = useDirection();
 
   useEffect(() => {
     if (mobile || isOnServerSide || !size || !contentSize) return;
@@ -81,7 +83,8 @@ const CloudBanner = memo<{ mobile?: boolean }>(({ mobile }) => {
         {isTruncated ? <Marquee pauseOnHover>{content}</Marquee> : content}
         <Link href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}&utm_medium=banner`} target={'_blank'}>
           <Button size={'small'} type="primary">
-            {t('alert.cloud.action')} <Icon icon={ArrowRightIcon} />
+            {t('alert.cloud.action')}{' '}
+            <Icon icon={direction === 'rtl' ? ArrowLeftIcon : ArrowRightIcon} />
           </Button>
         </Link>
       </Center>

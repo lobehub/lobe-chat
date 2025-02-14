@@ -1,8 +1,10 @@
 import { Icon, IconProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
+
+import { useDirection } from '@/hooks/useDirection';
 
 import Divider from './Divider';
 
@@ -28,6 +30,7 @@ export interface CellProps {
 
 const Cell = memo<CellProps>(({ label, icon, onClick, type }) => {
   const { cx, styles, theme } = useStyles();
+  const direction = useDirection();
 
   if (type === 'divider') return <Divider />;
 
@@ -45,7 +48,11 @@ const Cell = memo<CellProps>(({ label, icon, onClick, type }) => {
         {icon && <Icon color={theme.colorPrimaryBorder} icon={icon} size={{ fontSize: 20 }} />}
         {label}
       </Flexbox>
-      <Icon color={theme.colorBorder} icon={ChevronRight} size={{ fontSize: 16 }} />
+      <Icon
+        color={theme.colorBorder}
+        icon={direction === 'rtl' ? ChevronLeft : ChevronRight}
+        size={{ fontSize: 16 }}
+      />
     </Flexbox>
   );
 });
