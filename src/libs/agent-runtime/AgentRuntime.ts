@@ -21,6 +21,7 @@ import { LobeHigressAI } from './higress';
 import { LobeHuggingFaceAI } from './huggingface';
 import { LobeHunyuanAI } from './hunyuan';
 import { LobeInternLMAI } from './internlm';
+import { LobeJinaAI } from './jina';
 import { LobeLMStudioAI } from './lmstudio';
 import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
@@ -152,6 +153,7 @@ class AgentRuntime {
       huggingface: { apiKey?: string; baseURL?: string };
       hunyuan: Partial<ClientOptions>;
       internlm: Partial<ClientOptions>;
+      jina: Partial<ClientOptions>;
       lmstudio: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
       mistral: Partial<ClientOptions>;
@@ -352,6 +354,11 @@ class AgentRuntime {
 
       case ModelProvider.XAI: {
         runtimeModel = new LobeXAI(params.xai);
+        break;
+      }
+
+      case ModelProvider.Jina: {
+        runtimeModel = new LobeJinaAI(params.jina ?? {});
         break;
       }
 
