@@ -38,7 +38,7 @@ const Params = memo(() => {
       <ActionIcon
         icon={Settings2Icon}
         placement={'bottom'}
-        title={popoverOpen ? undefined : t('settingModel.temperature.title')}
+        title={popoverOpen ? undefined : t('settingModel.params.title')}
       />
     </Popover>
   );
