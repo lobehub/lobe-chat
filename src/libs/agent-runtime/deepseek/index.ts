@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
 
 export interface DeepSeekModelCard {
   id: string;
@@ -59,19 +59,35 @@ export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
   debug: {
     chatCompletion: () => process.env.DEBUG_DEEPSEEK_CHAT_COMPLETION === '1',
   },
-  models: {
-    transformModel: (m) => {
-      const model = m as unknown as DeepSeekModelCard;
+  models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-      return {
-        contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.contextWindowTokens ?? undefined,
-        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
-        functionCall: !model.id.toLowerCase().includes('deepseek-reasoner'),
-        id: model.id,
-        reasoning: model.id.toLowerCase().includes('deepseek-reasoner'),
-      };
-    },
+    const modelsPage = await client.models.list() as any;
+    const modelList: DeepSeekModelCard[] = modelsPage.data;
+
+    return modelList
+      .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+
+        return {
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            !model.id.toLowerCase().includes('reasoner')
+            || knownModel?.abilities?.functionCall
+            || false,
+          id: model.id,
+          reasoning:
+            model.id.toLowerCase().includes('reasoner')
+            || knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            knownModel?.abilities?.vision
+            || false,
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.DeepSeek,
 });

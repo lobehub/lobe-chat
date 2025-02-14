@@ -1,7 +1,6 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 export interface SenseNovaModelCard {
@@ -33,8 +32,15 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_SENSENOVA_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const functionCallKeywords = [
+      'deepseek-v3',
       'sensechat-5',
+    ];
+
+    const reasoningKeywords = [
+      'deepseek-r1'
     ];
 
     client.baseURL = 'https://api.sensenova.cn/v1/llm';
@@ -44,13 +50,25 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
 
     return modelList
       .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+
         return {
-          contextWindowTokens: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.contextWindowTokens ?? undefined,
-          displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
-          functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.functionCall
+            || false,
           id: model.id,
-          vision: model.id.toLowerCase().includes('vision'),
+          reasoning:
+            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            model.id.toLowerCase().includes('vision')
+            || knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];
