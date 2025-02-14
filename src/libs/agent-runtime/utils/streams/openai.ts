@@ -104,9 +104,11 @@ export const transformOpenAIStream = (
       if (typeof content === 'string' && typeof reasoning_content === 'string') {
         if (content === '' && reasoning_content === '') {
           content = null;
-        } else if (reasoning_content === '') {
-          reasoning_content = null;
         }
+      }
+
+      if (typeof reasoning_content === 'string' && reasoning_content === '') {
+        reasoning_content = null;
       }
 
       if (typeof reasoning_content === 'string') {
