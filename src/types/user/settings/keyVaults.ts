@@ -55,6 +55,7 @@ export interface UserKeyVaults {
   openrouter?: OpenAICompatibleKeyVault;
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
+  ppio?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
   sensenova?: OpenAICompatibleKeyVault;
   siliconcloud?: OpenAICompatibleKeyVault;

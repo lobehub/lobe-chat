@@ -30,6 +30,7 @@ import { LobeOllamaAI } from './ollama';
 import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
+import { LobePPIOAI } from './ppio';
 import { LobeQwenAI } from './qwen';
 import { LobeSenseNovaAI } from './sensenova';
 import { LobeSiliconCloudAI } from './siliconcloud';
@@ -161,6 +162,7 @@ class AgentRuntime {
       openai: Partial<ClientOptions>;
       openrouter: Partial<ClientOptions>;
       perplexity: Partial<ClientOptions>;
+      ppio: Partial<ClientOptions>;
       qwen: Partial<ClientOptions>;
       sensenova: Partial<ClientOptions>;
       siliconcloud: Partial<ClientOptions>;
@@ -382,6 +384,11 @@ class AgentRuntime {
 
       case ModelProvider.Wenxin: {
         runtimeModel = new LobeWenxinAI(params.wenxin);
+        break;
+      }
+
+      case ModelProvider.PPIO: {
+        runtimeModel = new LobePPIOAI(params.ppio ?? {});
         break;
       }
     }

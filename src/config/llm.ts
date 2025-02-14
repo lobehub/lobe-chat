@@ -128,6 +128,9 @@ export const getLLMConfig = () => {
 
       ENABLED_TENCENT_CLOUD: z.boolean(),
       TENCENT_CLOUD_API_KEY: z.string().optional(),
+
+      ENABLED_PPIO: z.boolean(),
+      PPIO_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -254,6 +257,9 @@ export const getLLMConfig = () => {
 
       ENABLED_TENCENT_CLOUD: !!process.env.TENCENT_CLOUD_API_KEY,
       TENCENT_CLOUD_API_KEY: process.env.TENCENT_CLOUD_API_KEY,
+
+      ENABLED_PPIO: !!process.env.PPIO_API_KEY,
+      PPIO_API_KEY: process.env.PPIO_API_KEY,
     },
   });
 };

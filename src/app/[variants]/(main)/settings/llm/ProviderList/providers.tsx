@@ -19,6 +19,7 @@ import {
   NovitaProviderCard,
   OpenRouterProviderCard,
   PerplexityProviderCard,
+  PPIOProviderCard,
   QwenProviderCard,
   SenseNovaProviderCard,
   SiliconCloudProviderCard,
@@ -90,6 +91,7 @@ export const useProviderList = (): ProviderItem[] => {
       SiliconCloudProviderCard,
       HigressProviderCard,
       GiteeAIProviderCard,
+      PPIOProviderCard,
     ],
     [
       AzureProvider,
