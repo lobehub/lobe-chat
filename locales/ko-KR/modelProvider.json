@@ -66,7 +66,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "API 키를 입력하세요",
-      "required": "API 키를 입력하세요",
       "title": "API 키"
     },
     "basicTitle": "기본 정보",
@@ -94,7 +93,8 @@
       "title": "서비스 제공자 이름"
     },
     "proxyUrl": {
-      "placeholder": "요청 주소를 입력하세요, 입력하지 않으면 SDK의 요청 주소가 사용됩니다",
+      "placeholder": "요청 주소를 입력하세요",
+      "required": "프록시 주소를 입력하세요",
       "title": "프록시 주소"
     },
     "sdkType": {

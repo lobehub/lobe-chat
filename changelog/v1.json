@@ -1,6 +1,34 @@
 [
   {
     "children": {
+      "improvements": ["Improve model fetch behavior."]
+    },
+    "date": "2025-02-14",
+    "version": "1.53.12"
+  },
+  {
+    "children": {
+      "fixes": ["Fix provider form api key."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix api key input issue."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.10"
+  },
+  {
+    "children": {
+      "improvements": ["Support select check models."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.9"
+  },
+  {
+    "children": {
       "fixes": ["Fix model fetch for spark and fix the support of model reset."]
     },
     "date": "2025-02-13",
