@@ -66,7 +66,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Vui lòng nhập API Key của bạn",
-      "required": "Vui lòng nhập API Key của bạn",
       "title": "API Key"
     },
     "basicTitle": "Thông tin cơ bản",
@@ -94,7 +93,8 @@
       "title": "Tên nhà cung cấp"
     },
     "proxyUrl": {
-      "placeholder": "Vui lòng nhập địa chỉ yêu cầu của bạn, nếu không sẽ sử dụng địa chỉ yêu cầu tương ứng của SDK",
+      "placeholder": "Vui lòng nhập địa chỉ yêu cầu của bạn",
+      "required": "Vui lòng nhập địa chỉ proxy",
       "title": "Địa chỉ proxy"
     },
     "sdkType": {
@@ -275,6 +275,11 @@
         "fetching": "Đang lấy danh sách mô hình...",
         "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
         "noLatestTime": "Chưa lấy danh sách"
+      },
+      "resetAll": {
+        "conform": "Xác nhận việc đặt lại tất cả các thay đổi của mô hình hiện tại? Sau khi đặt lại, danh sách mô hình hiện tại sẽ trở về trạng thái mặc định",
+        "success": "Đặt lại thành công",
+        "title": "Đặt lại tất cả các thay đổi"
       },
       "search": "Tìm kiếm mô hình...",
       "searchResult": "Tìm thấy {{count}} mô hình",

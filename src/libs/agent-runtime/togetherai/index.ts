@@ -1,4 +1,3 @@
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
@@ -17,6 +16,8 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_TOGETHERAI_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const visionKeywords = ['qvq', 'vision'];
 
     const reasoningKeywords = ['deepseek-r1', 'qwq'];
@@ -28,23 +29,31 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
 
     return modelList
       .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.name.toLowerCase() === m.id.toLowerCase(),
+        );
+
         return {
-          contextWindowTokens:
-            LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.contextWindowTokens ??
-            undefined,
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
           description: model.description,
           displayName: model.display_name,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.enabled || false,
-          functionCall: model.description?.toLowerCase().includes('function calling'),
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            model.description?.toLowerCase().includes('function calling') ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: model.name,
           maxOutput: model.context_length,
-          reasoning: reasoningKeywords.some((keyword) =>
-            model.name.toLowerCase().includes(keyword),
-          ),
+          reasoning:
+            reasoningKeywords.some((keyword) => model.name.toLowerCase().includes(keyword)) ||
+            knownModel?.abilities?.functionCall ||
+            false,
           tokens: model.context_length,
           vision:
             model.description?.toLowerCase().includes('vision') ||
-            visionKeywords.some((keyword) => model.name?.toLowerCase().includes(keyword)),
+            visionKeywords.some((keyword) => model.name?.toLowerCase().includes(keyword)) ||
+            knownModel?.abilities?.functionCall ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

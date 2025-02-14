@@ -66,7 +66,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "請填寫你的 API Key",
-      "required": "請填寫你的 API Key",
       "title": "API Key"
     },
     "basicTitle": "基本資訊",
@@ -94,7 +93,8 @@
       "title": "服務商名稱"
     },
     "proxyUrl": {
-      "placeholder": "請填寫你的請求地址，如果不填則會使用 SDK 對應的請求地址",
+      "placeholder": "請填寫你的請求地址",
+      "required": "請填寫代理地址",
       "title": "代理地址"
     },
     "sdkType": {
@@ -275,6 +275,11 @@
         "fetching": "正在取得模型列表...",
         "latestTime": "上次更新時間：{{time}}",
         "noLatestTime": "尚未取得列表"
+      },
+      "resetAll": {
+        "conform": "確認重置當前模型的所有修改？重置後當前模型列表將會回到預設狀態",
+        "success": "重置成功",
+        "title": "重置所有修改"
       },
       "search": "搜尋模型...",
       "searchResult": "搜尋到 {{count}} 個模型",

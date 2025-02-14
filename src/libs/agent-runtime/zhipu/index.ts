@@ -1,6 +1,5 @@
 import OpenAI from 'openai';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
@@ -18,11 +17,12 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
     handlePayload: ({ max_tokens, model, temperature, top_p, ...payload }: ChatStreamPayload) =>
       ({
         ...payload,
-        max_tokens: 
-          max_tokens === undefined ? undefined :
-          (model.includes('glm-4v') && Math.min(max_tokens, 1024)) ||
-          (model === 'glm-zero-preview' && Math.min(max_tokens, 15_300)) ||
-          max_tokens,
+        max_tokens:
+          max_tokens === undefined
+            ? undefined
+            : (model.includes('glm-4v') && Math.min(max_tokens, 1024)) ||
+              (model === 'glm-zero-preview' && Math.min(max_tokens, 15_300)) ||
+              max_tokens,
         model,
         stream: true,
         ...(model === 'glm-4-alltools'
@@ -49,6 +49,8 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_ZHIPU_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     // ref: https://open.bigmodel.cn/console/modelcenter/square
     client.baseURL =
       'https://open.bigmodel.cn/api/fine-tuning/model_center/list?pageSize=100&pageNum=1';
@@ -58,19 +60,29 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
 
     return modelList
       .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.modelCode.toLowerCase() === m.id.toLowerCase(),
+        );
+
         return {
-          contextWindowTokens:
-            LOBE_DEFAULT_MODEL_LIST.find((m) => model.modelCode === m.id)?.contextWindowTokens ??
-            undefined,
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
           description: model.description,
           displayName: model.modelName,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.modelCode === m.id)?.enabled || false,
+          enabled: knownModel?.enabled || false,
           functionCall:
-            model.modelCode.toLowerCase().includes('glm-4') &&
-            !model.modelCode.toLowerCase().includes('glm-4v'),
+            (model.modelCode.toLowerCase().includes('glm-4') &&
+              !model.modelCode.toLowerCase().includes('glm-4v')) ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: model.modelCode,
-          reasoning: model.modelCode.toLowerCase().includes('glm-zero-preview'),
-          vision: model.modelCode.toLowerCase().includes('glm-4v'),
+          reasoning:
+            model.modelCode.toLowerCase().includes('glm-zero-preview') ||
+            knownModel?.abilities?.reasoning ||
+            false,
+          vision:
+            model.modelCode.toLowerCase().includes('glm-4v') ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

@@ -66,7 +66,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "API 키를 입력하세요",
-      "required": "API 키를 입력하세요",
       "title": "API 키"
     },
     "basicTitle": "기본 정보",
@@ -94,7 +93,8 @@
       "title": "서비스 제공자 이름"
     },
     "proxyUrl": {
-      "placeholder": "요청 주소를 입력하세요, 입력하지 않으면 SDK의 요청 주소가 사용됩니다",
+      "placeholder": "요청 주소를 입력하세요",
+      "required": "프록시 주소를 입력하세요",
       "title": "프록시 주소"
     },
     "sdkType": {
@@ -275,6 +275,11 @@
         "fetching": "모델 목록을 가져오는 중...",
         "latestTime": "마지막 업데이트 시간: {{time}}",
         "noLatestTime": "아직 목록을 가져오지 않았습니다."
+      },
+      "resetAll": {
+        "conform": "현재 모델의 모든 수정을 초기화하시겠습니까? 초기화 후 현재 모델 목록은 기본 상태로 돌아갑니다.",
+        "success": "초기화 성공",
+        "title": "모든 수정 초기화"
       },
       "search": "모델 검색...",
       "searchResult": "{{count}} 개의 모델이 검색되었습니다",
