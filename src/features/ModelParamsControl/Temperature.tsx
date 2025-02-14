@@ -10,9 +10,10 @@ import { agentSelectors } from '@/store/agent/selectors';
 
 const alertCls = css`
   .ant-alert-message {
-    line-height: 18px !important;
     font-size: 12px;
+    line-height: 18px !important;
   }
+
   .ant-alert-icon {
     height: 18px !important;
   }
@@ -26,7 +27,7 @@ const Warning = memo(() => {
   });
 
   return (
-    temperature &&
+    typeof temperature === 'number' &&
     temperature >= 1.5 && (
       <Alert
         classNames={{ alert: cx(alertCls) }}
