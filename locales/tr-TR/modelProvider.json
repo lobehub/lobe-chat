@@ -66,7 +66,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Lütfen API Anahtarınızı girin",
-      "required": "Lütfen API Anahtarınızı girin",
       "title": "API Anahtarı"
     },
     "basicTitle": "Temel Bilgiler",
@@ -94,7 +93,8 @@
       "title": "Hizmet Sağlayıcı Adı"
     },
     "proxyUrl": {
-      "placeholder": "Lütfen istek adresinizi girin, boş bırakılırsa SDK'nın ilgili istek adresi kullanılacaktır",
+      "placeholder": "Lütfen istek adresinizi girin",
+      "required": "Lütfen proxy adresini girin",
       "title": "Proxy Adresi"
     },
     "sdkType": {
@@ -275,6 +275,11 @@
         "fetching": "Model listesi alınıyor...",
         "latestTime": "Son güncelleme zamanı: {{time}}",
         "noLatestTime": "Henüz liste alınmadı"
+      },
+      "resetAll": {
+        "conform": "Mevcut modelin tüm değişikliklerini sıfırlamak istediğinize emin misiniz? Sıfırladıktan sonra mevcut model listesi varsayılan duruma dönecektir.",
+        "success": "Sıfırlama başarılı",
+        "title": "Tüm değişiklikleri sıfırla"
       },
       "search": "Model ara...",
       "searchResult": "{{count}} model bulundu",

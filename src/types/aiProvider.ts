@@ -72,6 +72,13 @@ export interface AiProviderSettings {
    * @default false
    */
   disableBrowserRequest?: boolean;
+  /**
+   * whether provider support edit model
+   *
+   * @default true
+   */
+  modelEditable?: boolean;
+
   proxyUrl?:
     | {
         desc?: string;
@@ -84,7 +91,6 @@ export interface AiProviderSettings {
    * default openai
    */
   sdkType?: AiProviderSDKType;
-
   showAddNewModel?: boolean;
   /**
    * whether show api key in the provider config

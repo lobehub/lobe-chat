@@ -66,7 +66,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Veuillez entrer votre clé API",
-      "required": "Veuillez entrer votre clé API",
       "title": "Clé API"
     },
     "basicTitle": "Informations de base",
@@ -94,7 +93,8 @@
       "title": "Nom du fournisseur"
     },
     "proxyUrl": {
-      "placeholder": "Veuillez entrer votre adresse de requête, sinon l'adresse de requête correspondante au SDK sera utilisée",
+      "placeholder": "Veuillez saisir votre adresse de requête",
+      "required": "Veuillez remplir l'adresse du proxy",
       "title": "Adresse du proxy"
     },
     "sdkType": {
@@ -275,6 +275,11 @@
         "fetching": "Récupération de la liste des modèles en cours...",
         "latestTime": "Dernière mise à jour : {{time}}",
         "noLatestTime": "Aucune liste récupérée pour le moment"
+      },
+      "resetAll": {
+        "conform": "Êtes-vous sûr de vouloir réinitialiser toutes les modifications du modèle actuel ? Après la réinitialisation, la liste des modèles actuels reviendra à l'état par défaut",
+        "success": "Réinitialisation réussie",
+        "title": "Réinitialiser toutes les modifications"
       },
       "search": "Rechercher des modèles...",
       "searchResult": "Trouvé {{count}} modèle(s)",

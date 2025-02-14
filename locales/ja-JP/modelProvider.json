@@ -66,7 +66,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "あなたの API キーを入力してください",
-      "required": "あなたの API キーを入力してください",
       "title": "API キー"
     },
     "basicTitle": "基本情報",
@@ -94,7 +93,8 @@
       "title": "サービスプロバイダー名"
     },
     "proxyUrl": {
-      "placeholder": "リクエストアドレスを入力してください。未入力の場合は SDK に対応するリクエストアドレスが使用されます",
+      "placeholder": "リクエストURLを入力してください",
+      "required": "プロキシURLを入力してください",
       "title": "プロキシアドレス"
     },
     "sdkType": {
@@ -275,6 +275,11 @@
         "fetching": "モデルリストを取得中...",
         "latestTime": "最終更新日時：{{time}}",
         "noLatestTime": "まだリストを取得していません"
+      },
+      "resetAll": {
+        "conform": "現在のモデルのすべての変更をリセットしてもよろしいですか？リセット後、現在のモデルリストはデフォルトの状態に戻ります",
+        "success": "リセットに成功しました",
+        "title": "すべての変更をリセット"
       },
       "search": "モデルを検索...",
       "searchResult": "{{count}} 個のモデルが見つかりました",

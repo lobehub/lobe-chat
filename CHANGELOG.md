@@ -2,6 +2,156 @@
 
 # Changelog
 
+### [Version 1.53.11](https://github.com/lobehub/lobe-chat/compare/v1.53.10...v1.53.11)
+
+<sup>Released on **2025-02-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix provider form api key.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix provider form api key, closes [#6115](https://github.com/lobehub/lobe-chat/issues/6115) ([d074238](https://github.com/lobehub/lobe-chat/commit/d074238))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.53.10](https://github.com/lobehub/lobe-chat/compare/v1.53.9...v1.53.10)
+
+<sup>Released on **2025-02-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix api key input issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix api key input issue, closes [#6112](https://github.com/lobehub/lobe-chat/issues/6112) ([48e3b85](https://github.com/lobehub/lobe-chat/commit/48e3b85))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.53.9](https://github.com/lobehub/lobe-chat/compare/v1.53.8...v1.53.9)
+
+<sup>Released on **2025-02-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support select check models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support select check models, closes [#6106](https://github.com/lobehub/lobe-chat/issues/6106) ([2243bbb](https://github.com/lobehub/lobe-chat/commit/2243bbb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.53.8](https://github.com/lobehub/lobe-chat/compare/v1.53.7...v1.53.8)
+
+<sup>Released on **2025-02-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix model fetch for spark and fix the support of model reset.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix model fetch for spark and fix the support of model reset, closes [#6080](https://github.com/lobehub/lobe-chat/issues/6080) ([257fda1](https://github.com/lobehub/lobe-chat/commit/257fda1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.53.7](https://github.com/lobehub/lobe-chat/compare/v1.53.6...v1.53.7)
+
+<sup>Released on **2025-02-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update model list, closes [#6056](https://github.com/lobehub/lobe-chat/issues/6056) ([be0d7f6](https://github.com/lobehub/lobe-chat/commit/be0d7f6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.53.6](https://github.com/lobehub/lobe-chat/compare/v1.53.5...v1.53.6)
+
+<sup>Released on **2025-02-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix not enable models correctly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix not enable models correctly, closes [#6071](https://github.com/lobehub/lobe-chat/issues/6071) ([b78328e](https://github.com/lobehub/lobe-chat/commit/b78328e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.53.5](https://github.com/lobehub/lobe-chat/compare/v1.53.4...v1.53.5)
 
 <sup>Released on **2025-02-13**</sup>

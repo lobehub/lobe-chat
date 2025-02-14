@@ -66,7 +66,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Vul je API-sleutel in",
-      "required": "Vul je API-sleutel in",
       "title": "API-sleutel"
     },
     "basicTitle": "Basisinformatie",
@@ -94,7 +93,8 @@
       "title": "Naam van de provider"
     },
     "proxyUrl": {
-      "placeholder": "Vul je aanvraagadres in, als je dit niet invult, wordt het overeenkomstige aanvraagadres van de SDK gebruikt",
+      "placeholder": "Vul je verzoekadres in",
+      "required": "Vul het proxyadres in",
       "title": "Proxy-adres"
     },
     "sdkType": {
@@ -275,6 +275,11 @@
         "fetching": "Bezig met het ophalen van de modellenlijst...",
         "latestTime": "Laatste update tijd: {{time}}",
         "noLatestTime": "Lijst nog niet opgehaald"
+      },
+      "resetAll": {
+        "conform": "Weet je zeker dat je alle wijzigingen van het huidige model wilt resetten? Na de reset zal de huidige modellenlijst terugkeren naar de standaardstatus",
+        "success": "Resetten geslaagd",
+        "title": "Reset alle wijzigingen"
       },
       "search": "Zoek modellen...",
       "searchResult": "Gevonden {{count}} modellen",
