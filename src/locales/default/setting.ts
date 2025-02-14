@@ -206,8 +206,8 @@ export default {
       title: '开启推理强度调整',
     },
     frequencyPenalty: {
-      desc: '值越大，越有可能降低重复字词',
-      title: '频率惩罚度',
+      desc: '值越大，用词越丰富多样；值越低，用词更朴实简单',
+      title: '词汇丰富度',
     },
     maxTokens: {
       desc: '单次交互所用的最大 Token 数',
@@ -217,9 +217,12 @@ export default {
       desc: '{{provider}} 模型',
       title: '模型',
     },
+    params: {
+      title: '高级参数',
+    },
     presencePenalty: {
-      desc: '值越大，越有可能扩展到新话题',
-      title: '话题新鲜度',
+      desc: '值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性',
+      title: '表述发散度',
     },
     reasoningEffort: {
       desc: '值越大，推理能力越强，但可能会增加响应时间和 Token 消耗',
@@ -231,14 +234,14 @@ export default {
       title: '推理强度',
     },
     temperature: {
-      desc: '值越大，回复越随机',
-      title: '随机性',
-      titleWithValue: '随机性 {{value}}',
+      desc: '数值越大，回答越有创意和想象力；数值越小，回答越严谨',
+      title: '创意活跃度',
+      warning: '创意活跃度数值过大，输出可能会产生乱码',
     },
     title: '模型设置',
     topP: {
-      desc: '与随机性类似，但不要和随机性一起更改',
-      title: '核采样',
+      desc: '考虑多少种可能性，值越大，接受更多可能的回答；值越小，倾向选择最可能的回答。不推荐和创意活跃度一起更改',
+      title: '思维开放度',
     },
   },
   settingPlugin: {
