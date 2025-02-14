@@ -233,13 +233,13 @@
     },
     "temperature": {
       "desc": "The higher the value, the more creative and imaginative the responses; the lower the value, the more rigorous the responses.",
-      "title": "Creativity Intensity",
-      "warning": "If the creativity intensity value is too high, the output may become garbled."
+      "title": "Creativity Level",
+      "warning": "If the creativity level is set too high, the output may become garbled."
     },
     "title": "Model Settings",
     "topP": {
-      "desc": "How many possibilities to consider; the higher the value, the more potential answers accepted; the lower the value, the more likely to choose the most probable answer. It is not recommended to change this together with creativity intensity.",
-      "title": "Openness of Thought"
+      "desc": "How many possibilities to consider; a higher value accepts more potential answers, while a lower value tends to choose the most likely answer. It is not recommended to change this alongside the creativity level.",
+      "title": "Openness to Ideas"
     }
   },
   "settingPlugin": {

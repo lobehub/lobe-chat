@@ -232,14 +232,14 @@
       "title": "Intensidade de raciocínio"
     },
     "temperature": {
-      "desc": "Quanto maior o valor, mais criativa e imaginativa será a resposta; quanto menor o valor, mais rigorosa será a resposta.",
-      "title": "Intensidade Criativa",
-      "warning": "Valores de intensidade criativa muito altos podem resultar em saídas confusas."
+      "desc": "Quanto maior o valor, mais criativas e imaginativas serão as respostas; quanto menor o valor, mais rigorosas serão as respostas",
+      "title": "Atividade Criativa",
+      "warning": "Valor de atividade criativa muito alto pode resultar em saídas confusas"
     },
-    "title": "Configurações do modelo",
+    "title": "Configurações do Modelo",
     "topP": {
-      "desc": "Quantas possibilidades são consideradas; quanto maior o valor, mais respostas possíveis são aceitas; quanto menor o valor, mais se tende a escolher a resposta mais provável. Não é recomendado alterar junto com a intensidade criativa.",
-      "title": "Abertura de Pensamento"
+      "desc": "Quantas possibilidades considerar; quanto maior o valor, mais respostas possíveis serão aceitas; quanto menor o valor, mais se tende a escolher a resposta mais provável. Não é recomendado alterar junto com a atividade criativa",
+      "title": "Abertura Mental"
     }
   },
   "settingPlugin": {

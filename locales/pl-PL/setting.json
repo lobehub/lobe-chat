@@ -232,13 +232,13 @@
       "title": "Intensywność rozumowania"
     },
     "temperature": {
-      "desc": "Im większa wartość, tym bardziej kreatywne i wyobrażeniowe odpowiedzi; im mniejsza wartość, tym bardziej rygorystyczne odpowiedzi",
-      "title": "Intensywność kreatywności",
-      "warning": "Zbyt wysoka wartość intensywności kreatywności może prowadzić do nieczytelnych wyników"
+      "desc": "Im większa wartość, tym bardziej kreatywne i wyobrażeniowe będą odpowiedzi; im mniejsza wartość, tym bardziej rygorystyczne odpowiedzi",
+      "title": "Aktywność kreatywna",
+      "warning": "Zbyt wysoka wartość aktywności kreatywnej może prowadzić do nieczytelnych wyników"
     },
     "title": "Ustawienia modelu",
     "topP": {
-      "desc": "Ile możliwości jest branych pod uwagę, im większa wartość, tym więcej możliwych odpowiedzi; im mniejsza wartość, tym większa tendencja do wyboru najbardziej prawdopodobnej odpowiedzi. Nie zaleca się zmiany razem z intensywnością kreatywności",
+      "desc": "Ile możliwości należy rozważyć, im większa wartość, tym więcej możliwych odpowiedzi; im mniejsza wartość, tym większa tendencja do wyboru najbardziej prawdopodobnej odpowiedzi. Nie zaleca się jednoczesnej zmiany z aktywnością kreatywną",
       "title": "Otwartość myślenia"
     }
   },

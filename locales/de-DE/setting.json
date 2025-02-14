@@ -232,13 +232,13 @@
       "title": "Schlussfolgerungsintensität"
     },
     "temperature": {
-      "desc": "Je höher der Wert, desto kreativer und einfallsreicher die Antworten; je niedriger der Wert, desto präziser die Antworten",
-      "title": "Kreativitätsintensität",
-      "warning": "Ein zu hoher Wert für die Kreativitätsintensität kann zu unleserlichen Ausgaben führen"
+      "desc": "Je höher der Wert, desto kreativer und einfallsreicher die Antworten; je niedriger der Wert, desto strenger die Antworten",
+      "title": "Kreativitätsgrad",
+      "warning": "Ein zu hoher Kreativitätsgrad kann zu unverständlichen Ausgaben führen"
     },
-    "title": "Modelleinstellungen",
+    "title": "Modell Einstellungen",
     "topP": {
-      "desc": "Wie viele Möglichkeiten berücksichtigt werden, je höher der Wert, desto mehr mögliche Antworten werden akzeptiert; je niedriger der Wert, desto eher wird die wahrscheinlichste Antwort gewählt. Es wird nicht empfohlen, dies zusammen mit der Kreativitätsintensität zu ändern",
+      "desc": "Wie viele Möglichkeiten in Betracht gezogen werden, je höher der Wert, desto mehr mögliche Antworten werden akzeptiert; je niedriger der Wert, desto eher wird die wahrscheinlichste Antwort gewählt. Es wird nicht empfohlen, dies zusammen mit dem Kreativitätsgrad zu ändern",
       "title": "Offenheit des Denkens"
     }
   },

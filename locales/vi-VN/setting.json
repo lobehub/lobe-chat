@@ -233,13 +233,13 @@
     },
     "temperature": {
       "desc": "Giá trị càng lớn, câu trả lời càng sáng tạo và giàu trí tưởng tượng; giá trị càng nhỏ, câu trả lời càng nghiêm ngặt",
-      "title": "Cường độ sáng tạo",
-      "warning": "Giá trị cường độ sáng tạo quá lớn có thể dẫn đến đầu ra bị lỗi"
+      "title": "Mức độ sáng tạo",
+      "warning": "Giá trị mức độ sáng tạo quá lớn có thể dẫn đến đầu ra bị lỗi"
     },
     "title": "Cài đặt mô hình",
     "topP": {
-      "desc": "Xem xét bao nhiêu khả năng, giá trị càng lớn, chấp nhận nhiều khả năng trả lời hơn; giá trị càng nhỏ, có xu hướng chọn câu trả lời có khả năng cao nhất. Không khuyến nghị thay đổi cùng với cường độ sáng tạo",
-      "title": "Độ mở trong tư duy"
+      "desc": "Xem xét bao nhiêu khả năng, giá trị càng lớn, chấp nhận nhiều câu trả lời khả thi hơn; giá trị càng nhỏ, có xu hướng chọn câu trả lời khả thi nhất. Không khuyến nghị thay đổi cùng với mức độ sáng tạo",
+      "title": "Mức độ mở trong tư duy"
     }
   },
   "settingPlugin": {

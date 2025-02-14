@@ -233,12 +233,12 @@
     },
     "temperature": {
       "desc": "Plus la valeur est élevée, plus les réponses sont créatives et imaginatives ; plus la valeur est basse, plus les réponses sont rigoureuses",
-      "title": "Intensité de la créativité",
-      "warning": "Une valeur d'intensité de créativité trop élevée peut entraîner des sorties illisibles"
+      "title": "Niveau de créativité",
+      "warning": "Une valeur de créativité trop élevée peut entraîner des sorties illisibles"
     },
     "title": "Paramètres du modèle",
     "topP": {
-      "desc": "Considère combien de possibilités, plus la valeur est élevée, plus elle accepte de réponses possibles ; plus la valeur est basse, plus elle a tendance à choisir la réponse la plus probable. Il n'est pas recommandé de modifier cela en même temps que l'intensité de la créativité",
+      "desc": "Considère combien de possibilités, plus la valeur est élevée, plus il accepte de réponses possibles ; plus la valeur est basse, plus il a tendance à choisir la réponse la plus probable. Il n'est pas recommandé de modifier cela en même temps que le niveau de créativité",
       "title": "Ouverture d'esprit"
     }
   },

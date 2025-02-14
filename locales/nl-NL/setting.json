@@ -232,14 +232,14 @@
       "title": "Redeneringsinspanningsniveau"
     },
     "temperature": {
-      "desc": "Hoe hoger de waarde, hoe creatiever en fantasierijker het antwoord; hoe lager de waarde, hoe strikter het antwoord",
-      "title": "Creativiteit intensiteit",
-      "warning": "Een te hoge waarde voor creativiteit kan leiden tot onleesbare output"
+      "desc": "Hoe hoger de waarde, hoe creatiever en fantasierijker het antwoord; hoe lager de waarde, hoe strikter het antwoord.",
+      "title": "Creativiteit Activiteit",
+      "warning": "Een te hoge waarde voor creativiteit activiteit kan leiden tot onleesbare output."
     },
     "title": "Modelinstellingen",
     "topP": {
-      "desc": "Hoeveel mogelijkheden worden overwogen, hoe hoger de waarde, hoe meer mogelijke antwoorden worden geaccepteerd; hoe lager de waarde, hoe meer de neiging om het meest waarschijnlijke antwoord te kiezen. Niet aanbevolen om samen met creativiteit intensiteit te wijzigen",
-      "title": "Openheid van denken"
+      "desc": "Hoeveel mogelijkheden er in overweging worden genomen; hoe hoger de waarde, hoe meer mogelijke antwoorden worden geaccepteerd; hoe lager de waarde, hoe meer de voorkeur uitgaat naar het meest waarschijnlijke antwoord. Het wordt niet aanbevolen om dit samen met creativiteit activiteit te wijzigen.",
+      "title": "Openheid van Denken"
     }
   },
   "settingPlugin": {

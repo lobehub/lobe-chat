@@ -232,13 +232,13 @@
       "title": "Akıl yürütme yoğunluğu"
     },
     "temperature": {
-      "desc": "Değer ne kadar büyükse, cevap o kadar yaratıcı ve hayal gücü dolu olur; değer ne kadar küçükse, cevap o kadar titiz olur.",
-      "title": "Yaratıcılık Yoğunluğu",
-      "warning": "Yaratıcılık yoğunluğu değeri çok büyükse, çıktı bozulabilir."
+      "desc": "Değer ne kadar büyükse, cevap o kadar yaratıcı ve hayal gücü dolu olur; değer ne kadar küçükse, cevap o kadar titizdir.",
+      "title": "Yaratıcılık Aktifliği",
+      "warning": "Yaratıcılık aktifliği değeri çok büyükse, çıktı bozulabilir."
     },
     "title": "Model Ayarları",
     "topP": {
-      "desc": "Ne kadar olasılığı dikkate alır, değer ne kadar büyükse, daha fazla olası cevabı kabul eder; değer ne kadar küçükse, en olası cevabı seçme eğilimi artar. Yaratıcılık yoğunluğu ile birlikte değiştirilmesi önerilmez.",
+      "desc": "Ne kadar olasılığı dikkate alır, değer ne kadar büyükse, daha fazla olası cevabı kabul eder; değer ne kadar küçükse, en olası cevabı seçme eğilimindedir. Yaratıcılık aktifliği ile birlikte değiştirilmesi önerilmez.",
       "title": "Düşünce Açıklığı"
     }
   },
