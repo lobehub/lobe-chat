@@ -92,6 +92,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   BedrockProvider,
   GoogleProvider,
   DeepSeekProvider,
+  PPIOProvider,
   HuggingFaceProvider,
   OpenRouterProvider,
   CloudflareProvider,
@@ -125,7 +126,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   TaichuProvider,
   Ai360Provider,
   DoubaoProvider,
-  PPIOProvider,
 ] as const;
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {

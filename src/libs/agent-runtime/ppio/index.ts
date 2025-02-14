@@ -25,7 +25,7 @@ export const LobePPIOAI = LobeOpenAICompatibleFactory({
       return {
         contextWindowTokens: model.context_size,
         description: model.description,
-        displayName: model.display_name || model.title || model.id,
+        displayName: model.display_name?.replace("（", " (").replace("）", ")").replace("\t", "") || model.title || model.id,
         enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
         functionCall: model.description.toLowerCase().includes('function calling'),
         id: model.id,
