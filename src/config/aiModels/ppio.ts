@@ -2,9 +2,12 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const ppioChatModels: AIChatModelCard[] = [
   {
+    abilities: {
+      reasoning: true,
+    },
     "contextWindowTokens": 64_000,
     "description": "DeepSeek R1是DeepSeek团队发布的最新开源模型，具备非常强悍的推理性能，尤其在数学、编程和推理任务上达到了与OpenAI的o1模型相当的水平。",
-    "displayName": "DeepSeek: DeepSeek R1（Community）",
+    "displayName": "DeepSeek: DeepSeek R1 (Community)",
     "enabled": true,
     "id": "deepseek/deepseek-r1/community",
     "pricing": {
@@ -15,9 +18,12 @@ const ppioChatModels: AIChatModelCard[] = [
     "type": "chat"
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     "contextWindowTokens": 64_000,
     "description": "DeepSeek-V3在推理速度方面实现了比之前模型的重大突破。在开源模型中排名第一，并可与全球最先进的闭源模型相媲美。DeepSeek-V3 采用了多头潜在注意力 （MLA） 和 DeepSeekMoE 架构，这些架构在 DeepSeek-V2 中得到了全面验证。此外，DeepSeek-V3 开创了一种用于负载均衡的辅助无损策略，并设定了多标记预测训练目标以获得更强的性能。",
-    "displayName": "DeepSeek: DeepSeek V3（Community）\t",
+    "displayName": "DeepSeek: DeepSeek V3 (Community)",
     "enabled": true,
     "id": "deepseek/deepseek-v3/community",
     "pricing": {
@@ -28,6 +34,9 @@ const ppioChatModels: AIChatModelCard[] = [
     "type": "chat"
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     "contextWindowTokens": 64_000,
     "description": "DeepSeek R1是DeepSeek团队发布的最新开源模型，具备非常强悍的推理性能，尤其在数学、编程和推理任务上达到了与OpenAI的o1模型相当的水平。",
     "displayName": "DeepSeek R1",
@@ -41,6 +50,9 @@ const ppioChatModels: AIChatModelCard[] = [
     "type": "chat"
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     "contextWindowTokens": 64_000,
     "description": "DeepSeek-V3在推理速度方面实现了比之前模型的重大突破。在开源模型中排名第一，并可与全球最先进的闭源模型相媲美。DeepSeek-V3 采用了多头潜在注意力 （MLA） 和 DeepSeekMoE 架构，这些架构在 DeepSeek-V2 中得到了全面验证。此外，DeepSeek-V3 开创了一种用于负载均衡的辅助无损策略，并设定了多标记预测训练目标以获得更强的性能。",
     "displayName": "DeepSeek V3",
@@ -54,6 +66,9 @@ const ppioChatModels: AIChatModelCard[] = [
     "type": "chat"
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     "contextWindowTokens": 32_000,
     "description": "DeepSeek R1 Distill Llama 70B是基于Llama3.3  70B的大型语言模型，该模型利用DeepSeek R1输出的微调，实现了与大型前沿模型相当的竞争性能。",
     "displayName": "DeepSeek R1 Distill Llama 70B",
@@ -67,6 +82,9 @@ const ppioChatModels: AIChatModelCard[] = [
     "type": "chat"
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     "contextWindowTokens": 64_000,
     "description": "DeepSeek R1 Distill Qwen 32B 是一种基于 Qwen 2.5 32B 的蒸馏大语言模型，通过使用 DeepSeek R1 的输出进行训练而得。该模型在多个基准测试中超越了 OpenAI 的 o1-mini，取得了密集模型（dense models）的最新技术领先成果（state-of-the-art）。以下是一些基准测试的结果：\nAIME 2024 pass@1: 72.6\nMATH-500 pass@1: 94.3\nCodeForces Rating: 1691\n该模型通过从 DeepSeek R1 的输出中进行微调，展现了与更大规模的前沿模型相当的竞争性能。",
     "displayName": "DeepSeek: DeepSeek R1 Distill Qwen 32B",
@@ -80,6 +98,9 @@ const ppioChatModels: AIChatModelCard[] = [
     "type": "chat"
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     "contextWindowTokens": 64_000,
     "description": "DeepSeek R1 Distill Qwen 14B 是一种基于 Qwen 2.5 14B 的蒸馏大语言模型，通过使用 DeepSeek R1 的输出进行训练而得。该模型在多个基准测试中超越了 OpenAI 的 o1-mini，取得了密集模型（dense models）的最新技术领先成果（state-of-the-art）。以下是一些基准测试的结果：\nAIME 2024 pass@1: 69.7\nMATH-500 pass@1: 93.9\nCodeForces Rating: 1481\n该模型通过从 DeepSeek R1 的输出中进行微调，展现了与更大规模的前沿模型相当的竞争性能。",
     "displayName": "DeepSeek: DeepSeek R1 Distill Qwen 14B",
@@ -93,6 +114,9 @@ const ppioChatModels: AIChatModelCard[] = [
     "type": "chat"
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     "contextWindowTokens": 32_000,
     "description": "DeepSeek R1 Distill Llama 8B 是一种基于 Llama-3.1-8B-Instruct 的蒸馏大语言模型，通过使用 DeepSeek R1 的输出进行训练而得。",
     "displayName": "DeepSeek: DeepSeek R1 Distill Llama 8B",
@@ -119,6 +143,9 @@ const ppioChatModels: AIChatModelCard[] = [
     "type": "chat"
   },
   {
+    abilities: {
+      vision: true,
+    },
     "contextWindowTokens": 32_768,
     "description": "Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能，包括 MathVista、DocVQA、RealWorldQA 和 MTVQA 等。Qwen2-VL 能够理解超过 20 分钟的视频，用于高质量的基于视频的问答、对话和内容创作。它还具备复杂推理和决策能力，可以与移动设备、机器人等集成，基于视觉环境和文本指令进行自动操作。除了英语和中文，Qwen2-VL 现在还支持理解图像中不同语言的文本，包括大多数欧洲语言、日语、韩语、阿拉伯语和越南语等",
     "displayName": "qwen/qwen-2-vl-72b-instruct",
