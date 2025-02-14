@@ -93,7 +93,6 @@
       "title": "Tên nhà cung cấp"
     },
     "proxyUrl": {
-      "placeholder": "Vui lòng nhập địa chỉ yêu cầu của bạn",
       "required": "Vui lòng nhập địa chỉ proxy",
       "title": "Địa chỉ proxy"
     },

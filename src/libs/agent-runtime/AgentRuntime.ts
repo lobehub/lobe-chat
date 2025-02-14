@@ -26,6 +26,7 @@ import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
 import { LobeMoonshotAI } from './moonshot';
 import { LobeNovitaAI } from './novita';
+import { LobeNvidiaAI } from './nvidia';
 import { LobeOllamaAI } from './ollama';
 import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
@@ -158,6 +159,7 @@ class AgentRuntime {
       mistral: Partial<ClientOptions>;
       moonshot: Partial<ClientOptions>;
       novita: Partial<ClientOptions>;
+      nvidia: Partial<ClientOptions>;
       ollama: Partial<ClientOptions>;
       openai: Partial<ClientOptions>;
       openrouter: Partial<ClientOptions>;
@@ -304,6 +306,11 @@ class AgentRuntime {
 
       case ModelProvider.Novita: {
         runtimeModel = new LobeNovitaAI(params.novita ?? {});
+        break;
+      }
+
+      case ModelProvider.Nvidia: {
+        runtimeModel = new LobeNvidiaAI(params.nvidia);
         break;
       }
 

@@ -93,7 +93,6 @@
       "title": "서비스 제공자 이름"
     },
     "proxyUrl": {
-      "placeholder": "요청 주소를 입력하세요",
       "required": "프록시 주소를 입력하세요",
       "title": "프록시 주소"
     },
