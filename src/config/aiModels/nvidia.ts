@@ -109,7 +109,6 @@ const nvidiaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 8192,
     description: '尖端文本生成模型，擅长文本理解、转换和代码生成。',
     displayName: 'Gemma 2 27B Instruct',
-    enabled: true,
     id: 'google/gemma-2-27b-it',
     type: 'chat'
   },
