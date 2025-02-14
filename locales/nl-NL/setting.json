@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "Automatisch samenvatten van historische berichten inschakelen"
     },
+    "enableFastAnimation": {
+      "desc": "Wanneer de modelsnelheid hoog is, wordt de tekstanimatie versneld",
+      "title": "Snelle animatie"
+    },
     "enableHistoryCount": {
       "alias": "Onbeperkt",
       "limited": "Bevat alleen {{number}} berichten",

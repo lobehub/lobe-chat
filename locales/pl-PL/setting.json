@@ -178,6 +178,10 @@
     "enableCompressHistory": {
       "title": "Włącz automatyczne podsumowywanie historii wiadomości"
     },
+    "enableFastAnimation": {
+      "desc": "Przy szybkiej odpowiedzi modelu, efekt animacji tekstu zostanie przyspieszony",
+      "title": "Szybka animacja"
+    },
     "enableHistoryCount": {
       "alias": "Bez limitu",
       "limited": "Zawiera tylko {{number}} wiadomości",
