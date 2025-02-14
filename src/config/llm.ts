@@ -68,6 +68,9 @@ export const getLLMConfig = () => {
 
       ENABLED_OLLAMA: z.boolean(),
 
+      ENABLED_VLLM: z.boolean(),
+      VLLM_API_KEY: z.string().optional(),
+
       ENABLED_QWEN: z.boolean(),
       QWEN_API_KEY: z.string().optional(),
 
@@ -195,6 +198,9 @@ export const getLLMConfig = () => {
       WENXIN_API_KEY: process.env.WENXIN_API_KEY,
 
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
+
+      ENABLED_VLLM: !!process.env.VLLM_API_KEY,
+      VLLM_API_KEY: process.env.VLLM_API_KEY,
 
       ENABLED_QWEN: !!process.env.QWEN_API_KEY,
       QWEN_API_KEY: process.env.QWEN_API_KEY,
