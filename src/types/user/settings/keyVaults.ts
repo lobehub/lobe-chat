@@ -50,6 +50,7 @@ export interface UserKeyVaults {
   mistral?: OpenAICompatibleKeyVault;
   moonshot?: OpenAICompatibleKeyVault;
   novita?: OpenAICompatibleKeyVault;
+  nvidia?: OpenAICompatibleKeyVault;
   ollama?: OpenAICompatibleKeyVault;
   openai?: OpenAICompatibleKeyVault;
   openrouter?: OpenAICompatibleKeyVault;
