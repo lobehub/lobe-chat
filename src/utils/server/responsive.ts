@@ -37,3 +37,6 @@ export const gerServerDeviceInfo = async () => {
     os: parser.getOS().name,
   };
 };
+
+
+export { isMobileDevice };
