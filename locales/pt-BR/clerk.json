@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "Registrar",
+      "actionLink__join_waitlist": "Junte-se à lista de espera👍",
       "actionLink__use_email": "Usar e-mail",
       "actionLink__use_email_username": "Usar e-mail ou nome de usuário",
       "actionLink__use_passkey": "Usar chave de acesso",
       "actionLink__use_phone": "Usar telefone",
       "actionLink__use_username": "Usar nome de usuário",
       "actionText": "Não tem uma conta?",
+      "actionText__join_waitlist": "Não tem uma conta?",
       "subtitle": "Bem-vindo de volta! Por favor, faça login para continuar",
       "title": "Faça login em {{applicationName}}"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "Não há carteiras web3 disponíveis.",
       "successMessage": "A carteira foi adicionada à sua conta.",
       "title": "Adicionar carteira web3"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "Entrar",
+      "actionText": "Já tem uma conta?",
+      "subtitle": "Digite seu endereço de e-mail e aguarde o processamento do administrador para entrar",
+      "title": "Solicitar para entrar na lista de espera"
     }
   }
 }

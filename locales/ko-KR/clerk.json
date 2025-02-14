@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "가입하기",
+      "actionLink__join_waitlist": "대기자 명단에 가입하기👍",
       "actionLink__use_email": "이메일 사용",
       "actionLink__use_email_username": "이메일 또는 사용자 이름 사용",
       "actionLink__use_passkey": "패스키 사용",
       "actionLink__use_phone": "전화 사용",
       "actionLink__use_username": "사용자 이름 사용",
       "actionText": "계정이 없으신가요?",
+      "actionText__join_waitlist": "계정이 없으신가요?",
       "subtitle": "다시 오신 것을 환영합니다! 계속하려면 로그인하세요.",
       "title": "{{applicationName}}에 로그인"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "사용 가능한 Web3 지갑이 없습니다.",
       "successMessage": "지갑이 계정에 추가되었습니다.",
       "title": "Web3 지갑 추가"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "로그인",
+      "actionText": "계정이 있으신가요?",
+      "subtitle": "이메일 주소를 입력하시면 관리자 처리 후 로그인할 수 있습니다",
+      "title": "대기자 명단에 신청하기"
     }
   }
 }

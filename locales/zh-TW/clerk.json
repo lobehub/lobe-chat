@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "註冊",
+      "actionLink__join_waitlist": "加入候補👍",
       "actionLink__use_email": "使用電子郵件",
       "actionLink__use_email_username": "使用電子郵件或使用者名稱",
       "actionLink__use_passkey": "改用通行證",
       "actionLink__use_phone": "使用手機",
       "actionLink__use_username": "使用使用者名稱",
       "actionText": "還沒有帳戶？",
+      "actionText__join_waitlist": "沒有帳戶？",
       "subtitle": "歡迎回來！請登入以繼續",
       "title": "登入 {{applicationName}}"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "目前沒有可用的 Web3 錢包。",
       "successMessage": "錢包已新增至您的帳戶。",
       "title": "新增 Web3 錢包"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "登入",
+      "actionText": "已有帳戶？",
+      "subtitle": "輸入您的電子郵件地址，等待管理員處理後即可登入",
+      "title": "申請 加入候補"
     }
   }
 }

@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "Zarejestruj się",
+      "actionLink__join_waitlist": "Dołącz do listy oczekujących 👍",
       "actionLink__use_email": "Użyj e-maila",
       "actionLink__use_email_username": "Użyj e-maila lub nazwy użytkownika",
       "actionLink__use_passkey": "Użyj klucza",
       "actionLink__use_phone": "Użyj telefonu",
       "actionLink__use_username": "Użyj nazwy użytkownika",
       "actionText": "Nie masz konta?",
+      "actionText__join_waitlist": "Nie masz konta?",
       "subtitle": "Witaj ponownie! Proszę zaloguj się, aby kontynuować",
       "title": "Zaloguj się do {{applicationName}}"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "Brak dostępnych portfeli web3.",
       "successMessage": "Portfel został dodany do twojego konta.",
       "title": "Dodaj portfel web3"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "Zaloguj się",
+      "actionText": "Masz już konto?",
+      "subtitle": "Wprowadź swój adres e-mail, a po przetworzeniu przez administratora będziesz mógł się zalogować",
+      "title": "Aplikuj o dołączenie do listy oczekujących"
     }
   }
 }

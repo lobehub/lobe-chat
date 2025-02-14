@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "サインアップ",
+      "actionLink__join_waitlist": "待機リストに参加する👍",
       "actionLink__use_email": "メールを使用",
       "actionLink__use_email_username": "メールまたはユーザー名を使用",
       "actionLink__use_passkey": "代わりにパスキーを使用",
       "actionLink__use_phone": "電話を使用",
       "actionLink__use_username": "ユーザー名を使用",
       "actionText": "アカウントを持っていませんか？",
+      "actionText__join_waitlist": "アカウントをお持ちでないですか？",
       "subtitle": "お帰りなさい！続行するにはサインインしてください",
       "title": "{{applicationName}} にサインイン"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "利用可能なWeb3ウォレットはありません。",
       "successMessage": "ウォレットがアカウントに追加されました。",
       "title": "Web3ウォレットを追加"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "ログイン",
+      "actionText": "すでにアカウントをお持ちですか？",
+      "subtitle": "メールアドレスを入力し、管理者の処理を待ってログインしてください",
+      "title": "待機リストに参加を申請"
     }
   }
 }

@@ -36,6 +36,7 @@ export const config = {
 
     '/login(.*)',
     '/signup(.*)',
+    '/waitlist(.*)',
     '/next-auth/error',
     // ↓ cloud ↓
   ],
@@ -130,8 +131,8 @@ const clerkAuthMiddleware = clerkMiddleware(
   {
     // https://github.com/lobehub/lobe-chat/pull/3084
     clockSkewInMs: 60 * 60 * 1000,
-    // signInUrl: '/login',
-    // signUpUrl: '/signup',
+    signInUrl: '/login',
+    signUpUrl: '/signup',
   },
 );
 

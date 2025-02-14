@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "Đăng ký",
+      "actionLink__join_waitlist": "Tham gia danh sách chờ👍",
       "actionLink__use_email": "Sử dụng email",
       "actionLink__use_email_username": "Sử dụng email hoặc tên người dùng",
       "actionLink__use_passkey": "Sử dụng passkey thay thế",
       "actionLink__use_phone": "Sử dụng điện thoại",
       "actionLink__use_username": "Sử dụng tên người dùng",
       "actionText": "Chưa có tài khoản?",
+      "actionText__join_waitlist": "Chưa có tài khoản?",
       "subtitle": "Chào mừng trở lại! Vui lòng đăng nhập để tiếp tục",
       "title": "Đăng nhập vào {{applicationName}}"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "Không có ví web3 nào khả dụng.",
       "successMessage": "Ví đã được thêm vào tài khoản của bạn.",
       "title": "Thêm ví web3"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "Đăng nhập",
+      "actionText": "Đã có tài khoản?",
+      "subtitle": "Nhập địa chỉ email của bạn, chờ quản trị viên xử lý để đăng nhập",
+      "title": "Yêu cầu tham gia danh sách chờ"
     }
   }
 }

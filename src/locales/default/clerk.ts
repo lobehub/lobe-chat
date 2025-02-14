@@ -371,12 +371,14 @@ export default {
     },
     start: {
       actionLink: '注册',
+      actionLink__join_waitlist: '加入候补👍',
       actionLink__use_email: '使用电子邮件',
       actionLink__use_email_username: '使用电子邮件或用户名',
       actionLink__use_passkey: '改用密钥',
       actionLink__use_phone: '使用手机',
       actionLink__use_username: '使用用户名',
       actionText: '没有帐户？',
+      actionText__join_waitlist: '没有帐户？',
       subtitle: '欢迎回来！请登录以继续',
       title: '登录到 {{applicationName}}',
     },
@@ -777,6 +779,14 @@ export default {
       subtitle__unavailableWallets: '没有可用的 Web3 钱包。',
       successMessage: '钱包已添加到您的帐户。',
       title: '添加 Web3 钱包',
+    },
+  },
+  waitlist: {
+    start: {
+      actionLink: '登录',
+      actionText: '已有账户？',
+      subtitle: '输入您的邮箱地址，等待管理员处理后即可登录',
+      title: '申请 加入候补',
     },
   },
 };

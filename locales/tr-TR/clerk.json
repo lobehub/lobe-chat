@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "Üye ol",
+      "actionLink__join_waitlist": "Bekleme listesine katıl 👍",
       "actionLink__use_email": "E-posta kullan",
       "actionLink__use_email_username": "E-posta veya kullanıcı adı kullan",
       "actionLink__use_passkey": "Yerine parolayı kullan",
       "actionLink__use_phone": "Telefon kullan",
       "actionLink__use_username": "Kullanıcı adı kullan",
       "actionText": "Hesabınız yok mu?",
+      "actionText__join_waitlist": "Hesabınız yok mu?",
       "subtitle": "Tekrar hoş geldiniz! Devam etmek için lütfen oturum açın",
       "title": "{{applicationName}}'e oturum açın"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "Uygun web3 cüzdanı bulunmamaktadır.",
       "successMessage": "Cüzdan hesabınıza eklendi.",
       "title": "Web3 Cüzdanı Ekle"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "Giriş yap",
+      "actionText": "Zaten bir hesabınız mı var?",
+      "subtitle": "E-posta adresinizi girin, yöneticinin işlemesini bekleyin ve giriş yapın",
+      "title": "Bekleme listesine katılmak için başvur"
     }
   }
 }

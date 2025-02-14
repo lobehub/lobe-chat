@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "Registrarse",
+      "actionLink__join_waitlist": "Unirse a la lista de espera 👍",
       "actionLink__use_email": "Usar correo electrónico",
       "actionLink__use_email_username": "Usar correo electrónico o nombre de usuario",
       "actionLink__use_passkey": "Usar clave de acceso en su lugar",
       "actionLink__use_phone": "Usar teléfono",
       "actionLink__use_username": "Usar nombre de usuario",
       "actionText": "¿No tienes una cuenta?",
+      "actionText__join_waitlist": "¿No tienes cuenta?",
       "subtitle": "¡Bienvenido de nuevo! Por favor inicia sesión para continuar",
       "title": "Inicia sesión en {{applicationName}}"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "No hay billeteras web3 disponibles.",
       "successMessage": "La billetera ha sido añadida a tu cuenta.",
       "title": "Añadir billetera web3"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "Iniciar sesión",
+      "actionText": "¿Ya tienes cuenta?",
+      "subtitle": "Introduce tu dirección de correo electrónico y espera a que el administrador la procese para poder iniciar sesión",
+      "title": "Solicitar unirse a la lista de espera"
     }
   }
 }

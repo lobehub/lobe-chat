@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "S'inscrire",
+      "actionLink__join_waitlist": "Rejoindre la liste d'attente 👍",
       "actionLink__use_email": "Utiliser un e-mail",
       "actionLink__use_email_username": "Utiliser un e-mail ou un nom d'utilisateur",
       "actionLink__use_passkey": "Utiliser le passkey à la place",
       "actionLink__use_phone": "Utiliser le téléphone",
       "actionLink__use_username": "Utiliser un nom d'utilisateur",
       "actionText": "Vous n'avez pas de compte ?",
+      "actionText__join_waitlist": "Pas de compte ?",
       "subtitle": "Bienvenue ! Veuillez vous connecter pour continuer",
       "title": "Se connecter à {{applicationName}}"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "Il n'y a pas de portefeuilles web3 disponibles.",
       "successMessage": "Le portefeuille a été ajouté à votre compte.",
       "title": "Ajouter un portefeuille web3"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "Se connecter",
+      "actionText": "Déjà un compte ?",
+      "subtitle": "Entrez votre adresse e-mail et attendez que l'administrateur traite votre demande pour vous connecter",
+      "title": "Demande d'adhésion à la liste d'attente"
     }
   }
 }

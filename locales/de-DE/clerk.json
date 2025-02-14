@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "Registrieren",
+      "actionLink__join_waitlist": "Auf Warteliste beitreten 👍",
       "actionLink__use_email": "E-Mail verwenden",
       "actionLink__use_email_username": "E-Mail oder Benutzernamen verwenden",
       "actionLink__use_passkey": "Stattdessen Passkey verwenden",
       "actionLink__use_phone": "Telefon verwenden",
       "actionLink__use_username": "Benutzernamen verwenden",
       "actionText": "Sie haben noch kein Konto?",
+      "actionText__join_waitlist": "Kein Konto?",
       "subtitle": "Willkommen zurück! Bitte melden Sie sich an, um fortzufahren",
       "title": "Anmelden bei {{applicationName}}"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "Es sind keine verfügbaren Web3-Wallets vorhanden.",
       "successMessage": "Das Wallet wurde Ihrem Konto hinzugefügt.",
       "title": "Web3-Wallet hinzufügen"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "Anmelden",
+      "actionText": "Bereits ein Konto?",
+      "subtitle": "Geben Sie Ihre E-Mail-Adresse ein, um auf die Genehmigung des Administrators zu warten und sich anzumelden",
+      "title": "Antrag auf Beitritt zur Warteliste"
     }
   }
 }

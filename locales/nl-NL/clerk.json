@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "Aanmelden",
+      "actionLink__join_waitlist": "Word lid van de wachtlijst👍",
       "actionLink__use_email": "Gebruik e-mail",
       "actionLink__use_email_username": "Gebruik e-mail of gebruikersnaam",
       "actionLink__use_passkey": "Gebruik pascode in plaats daarvan",
       "actionLink__use_phone": "Gebruik telefoon",
       "actionLink__use_username": "Gebruik gebruikersnaam",
       "actionText": "Heb je nog geen account?",
+      "actionText__join_waitlist": "Geen account?",
       "subtitle": "Welkom terug! Meld je aan om door te gaan",
       "title": "Meld je aan bij {{applicationName}}"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "Er zijn geen beschikbare web3-portemonnees.",
       "successMessage": "De portemonnee is toegevoegd aan uw account.",
       "title": "Web3-portemonnee toevoegen"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "Inloggen",
+      "actionText": "Heb je al een account?",
+      "subtitle": "Voer je e-mailadres in en wacht tot de beheerder je toegang verleent",
+      "title": "Aanvraag om lid te worden van de wachtlijst"
     }
   }
 }

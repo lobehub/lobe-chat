@@ -366,12 +366,14 @@
     },
     "start": {
       "actionLink": "Sign up",
+      "actionLink__join_waitlist": "Join Waitlist 👍",
       "actionLink__use_email": "Use email",
       "actionLink__use_email_username": "Use email or username",
       "actionLink__use_passkey": "Use passkey instead",
       "actionLink__use_phone": "Use phone",
       "actionLink__use_username": "Use username",
       "actionText": "Don’t have an account?",
+      "actionText__join_waitlist": "Don't have an account?",
       "subtitle": "Welcome back! Please sign in to continue",
       "title": "Sign in to {{applicationName}}"
     },
@@ -764,6 +766,14 @@
       "subtitle__unavailableWallets": "There are no available web3 wallets.",
       "successMessage": "The wallet has been added to your account.",
       "title": "Add web3 wallet"
+    }
+  },
+  "waitlist": {
+    "start": {
+      "actionLink": "Log In",
+      "actionText": "Already have an account?",
+      "subtitle": "Enter your email address and wait for the admin to process your request to log in",
+      "title": "Apply to Join Waitlist"
     }
   }
 }
