@@ -7,6 +7,7 @@ import {
   LucideBug,
   LucideBugOff,
   LucideChevronDown,
+  LucideChevronLeft,
   LucideChevronRight,
 } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -15,6 +16,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import PluginAvatar from '@/features/PluginAvatar';
+import { useDirection } from '@/hooks/useDirection';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
@@ -61,6 +63,7 @@ const Inspector = memo<InspectorProps>(
 
     const isMobile = useIsMobile();
     const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
+    const direction = useDirection();
 
     const showRightAction = useToolStore(toolSelectors.isToolHasUI(identifier));
 
@@ -109,7 +112,17 @@ const Inspector = memo<InspectorProps>(
                 </>
               )}
             </Flexbox>
-            {showRightAction && <Icon icon={showRender ? LucideChevronDown : LucideChevronRight} />}
+            {showRightAction && (
+              <Icon
+                icon={
+                  showRender
+                    ? LucideChevronDown
+                    : direction === 'rtl'
+                      ? LucideChevronLeft
+                      : LucideChevronRight
+                }
+              />
+            )}
           </Flexbox>
 
           <Flexbox horizontal>
