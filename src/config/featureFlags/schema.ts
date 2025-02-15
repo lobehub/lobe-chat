@@ -7,9 +7,11 @@ export const FeatureFlagsSchema = z.object({
    */
   webrtc_sync: z.boolean().optional(),
   check_updates: z.boolean().optional(),
+  pin_list: z.boolean().optional(),
 
   // settings
   language_model_settings: z.boolean().optional(),
+  provider_settings: z.boolean().optional(),
 
   openai_api_key: z.boolean().optional(),
   openai_proxy_url: z.boolean().optional(),
@@ -17,11 +19,13 @@ export const FeatureFlagsSchema = z.object({
   create_session: z.boolean().optional(),
   edit_agent: z.boolean().optional(),
 
+  plugins: z.boolean().optional(),
   dalle: z.boolean().optional(),
   speech_to_text: z.boolean().optional(),
   token_counter: z.boolean().optional(),
 
   welcome_suggest: z.boolean().optional(),
+  changelog: z.boolean().optional(),
 
   clerk_sign_up: z.boolean().optional(),
 
@@ -44,8 +48,10 @@ export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   webrtc_sync: false,
+  pin_list: false,
 
   language_model_settings: true,
+  provider_settings: true,
 
   openai_api_key: true,
   openai_proxy_url: true,
@@ -53,10 +59,12 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   create_session: true,
   edit_agent: true,
 
+  plugins: true,
   dalle: true,
 
   check_updates: true,
   welcome_suggest: true,
+  token_counter: true,
 
   knowledge_base: true,
   rag_eval: false,
@@ -67,6 +75,7 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   market: true,
   speech_to_text: true,
+  changelog: true,
 
   // the flags below can only be used with commercial license
   // if you want to use it in the commercial usage
@@ -82,11 +91,15 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
 
     showCreateSession: config.create_session,
     showLLM: config.language_model_settings,
+    showProvider: config.provider_settings,
+    showPinList: config.pin_list,
 
     showOpenAIApiKey: config.openai_api_key,
     showOpenAIProxyUrl: config.openai_proxy_url,
 
+    enablePlugins: config.plugins,
     showDalle: config.dalle,
+    showChangelog: config.changelog,
 
     enableCheckUpdates: config.check_updates,
     showWelcomeSuggest: config.welcome_suggest,

@@ -50,9 +50,6 @@ export class Manifest {
       icons: icons.map((item) => this._getIcon(item)),
       id: id,
       immutable: 'true',
-      launch_handler: {
-        client_mode: ['navigate-existing', 'auto'],
-      },
       max_age: MAX_AGE,
       name: name,
       orientation: 'portrait',
@@ -66,10 +63,10 @@ export class Manifest {
       screenshots: screenshots.map((item) => this._getScreenshot(item)),
       short_name: name,
       splash_pages: null,
-      start_url: '.',
+      start_url: '/chat',
       tab_strip: {
         new_tab_button: {
-          url: '/',
+          url: '/chat',
         },
       },
       theme_color: color,

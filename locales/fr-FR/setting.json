@@ -84,8 +84,7 @@
         },
         "modalTitle": "Configuration du modèle personnalisé",
         "tokens": {
-          "title": "Nombre maximal de jetons",
-          "unlimited": "illimité"
+          "title": "Nombre maximal de jetons"
         },
         "vision": {
           "extra": "Cette configuration n'activera que la configuration de téléchargement d'images dans l'application. La prise en charge de la reconnaissance dépend entièrement du modèle lui-même, veuillez tester la disponibilité des capacités de reconnaissance visuelle de ce modèle.",
@@ -98,6 +97,7 @@
       "title": "Utiliser le mode de requête client"
     },
     "fetcher": {
+      "clear": "Effacer le modèle récupéré",
       "fetch": "Obtenir la liste des modèles",
       "fetching": "Récupération de la liste des modèles en cours...",
       "latestTime": "Dernière mise à jour : {{time}}",
@@ -175,8 +175,8 @@
       "desc": "Activer la création automatique de sujets pendant la conversation, uniquement valable pour les sujets temporaires",
       "title": "Activer la création automatique de sujets"
     },
-    "enableCompressThreshold": {
-      "title": "Activer le seuil de compression de la longueur des messages"
+    "enableCompressHistory": {
+      "title": "Activer le résumé automatique des messages historiques"
     },
     "enableHistoryCount": {
       "alias": "Illimité",
@@ -200,9 +200,12 @@
     "enableMaxTokens": {
       "title": "Activer la limite de tokens par réponse"
     },
+    "enableReasoningEffort": {
+      "title": "Activer l'ajustement de l'intensité de raisonnement"
+    },
     "frequencyPenalty": {
-      "desc": "Plus la valeur est élevée, plus il est probable de réduire les mots répétés",
-      "title": "Pénalité de fréquence"
+      "desc": "Plus la valeur est élevée, plus le vocabulaire est riche et varié ; plus la valeur est basse, plus le vocabulaire est simple et direct",
+      "title": "Richesse du vocabulaire"
     },
     "maxTokens": {
       "desc": "Nombre maximal de tokens utilisés par interaction",
@@ -212,19 +215,31 @@
       "desc": "Modèle {{provider}}",
       "title": "Modèle"
     },
+    "params": {
+      "title": "Paramètres avancés"
+    },
     "presencePenalty": {
-      "desc": "Plus la valeur est élevée, plus il est probable d'explorer de nouveaux sujets",
-      "title": "Pénalité de présence"
+      "desc": "Plus la valeur est élevée, plus il y a tendance à utiliser des expressions différentes, évitant la répétition des concepts ; plus la valeur est basse, plus il y a tendance à utiliser des concepts ou des narrations répétitifs, rendant l'expression plus cohérente",
+      "title": "Diversité de l'expression"
+    },
+    "reasoningEffort": {
+      "desc": "Plus la valeur est élevée, plus la capacité de raisonnement est forte, mais cela peut augmenter le temps de réponse et la consommation de jetons",
+      "options": {
+        "high": "Élevé",
+        "low": "Bas",
+        "medium": "Moyen"
+      },
+      "title": "Intensité de raisonnement"
     },
     "temperature": {
-      "desc": "Plus la valeur est élevée, plus la réponse est aléatoire",
-      "title": "Aléatoire",
-      "titleWithValue": "Aléatoire {{value}}"
+      "desc": "Plus la valeur est élevée, plus les réponses sont créatives et imaginatives ; plus la valeur est basse, plus les réponses sont rigoureuses",
+      "title": "Niveau de créativité",
+      "warning": "Une valeur de créativité trop élevée peut entraîner des sorties illisibles"
     },
     "title": "Paramètres du modèle",
     "topP": {
-      "desc": "Similaire à l'aléatoire, mais ne doit pas être modifié en même temps que l'aléatoire",
-      "title": "Échantillonnage topP"
+      "desc": "Considère combien de possibilités, plus la valeur est élevée, plus il accepte de réponses possibles ; plus la valeur est basse, plus il a tendance à choisir la réponse la plus probable. Il n'est pas recommandé de modifier cela en même temps que le niveau de créativité",
+      "title": "Ouverture d'esprit"
     }
   },
   "settingPlugin": {
@@ -372,10 +387,26 @@
       "modelDesc": "Modèle spécifié pour générer le nom, la description, l'avatar et les balises de l'assistant",
       "title": "Génération automatique des informations de l'assistant"
     },
+    "customPrompt": {
+      "addPrompt": "Ajouter un prompt personnalisé",
+      "desc": "Une fois rempli, l'assistant système utilisera le prompt personnalisé lors de la génération de contenu",
+      "placeholder": "Veuillez entrer le mot-clé personnalisé",
+      "title": "Mot-clé personnalisé"
+    },
+    "historyCompress": {
+      "label": "Modèle d'historique de conversation",
+      "modelDesc": "Modèle utilisé pour compresser l'historique des conversations",
+      "title": "Résumé automatique de l'historique des conversations"
+    },
     "queryRewrite": {
       "label": "Modèle de reformulation des questions",
       "modelDesc": "Modèle utilisé pour optimiser les questions des utilisateurs",
-      "title": "Base de connaissances"
+      "title": "Réécriture de la question de la base de connaissances"
+    },
+    "thread": {
+      "label": "Modèle de nomination de sous-thème",
+      "modelDesc": "Modèle utilisé pour le renommage automatique des sous-thèmes",
+      "title": "Nommer automatiquement les sous-thèmes"
     },
     "title": "Agent système",
     "topic": {
@@ -395,6 +426,7 @@
     "common": "Paramètres généraux",
     "experiment": "Expérience",
     "llm": "Modèle de langue",
+    "provider": "Fournisseur de services d'IA",
     "sync": "Synchronisation cloud",
     "system-agent": "Agent système",
     "tts": "Service vocal"

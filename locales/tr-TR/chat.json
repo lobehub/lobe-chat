@@ -8,6 +8,7 @@
   "agents": "Asistan",
   "artifact": {
     "generating": "Üretiliyor",
+    "inThread": "Alt konu içinde görüntülenemiyor, lütfen ana konuşma alanına geçin",
     "thinking": "Düşünülüyor",
     "thought": "Düşünce Süreci",
     "unknownTitle": "İsimsiz Eser"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
   "historyRange": "Geçmiş Aralığı",
+  "historySummary": "Tarihsel haber özeti",
   "inbox": {
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
     "title": "Sohbet Et"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Sil ve Yeniden Oluştur",
+    "deleteDisabledByThreads": "Alt konular mevcut, silinemez",
     "regenerate": "Yeniden Oluştur"
   },
   "newAgent": "Yeni Asistan",
@@ -100,14 +103,20 @@
     "tooLong": "Grup adı 1-20 karakter arasında olmalıdır"
   },
   "shareModal": {
+    "copy": "Kopyala",
     "download": "Ekran Görüntüsünü İndir",
+    "downloadFile": "Dosyayı İndir",
+    "exportTitle": "Varsayılan Başlık",
     "imageType": "Format",
+    "includeTool": "Eklenti mesajını dahil et",
+    "includeUser": "Kullanıcı mesajını dahil et",
     "screenshot": "Ekran Görüntüsü",
     "settings": "Ayarlar",
-    "shareToShareGPT": "ShareGPT Link Oluştur",
+    "text": "Metin",
     "withBackground": "Arka Plan",
     "withFooter": "Footer",
     "withPluginInfo": "Plugin Bilgileri",
+    "withRole": "Mesaj rolünü dahil et",
     "withSystemRole": "Asistan Rol"
   },
   "stt": {
@@ -115,9 +124,14 @@
     "loading": "Tanımlanıyor...",
     "prettifying": "İyileştiriliyor..."
   },
-  "temp": "Geçici",
+  "thread": {
+    "divider": "Alt konu",
+    "threadMessageCount": "{{messageCount}} mesaj",
+    "title": "Alt konu"
+  },
   "tokenDetails": {
     "chats": "Sohbetler",
+    "historySummary": "Tarih Özeti",
     "rest": "Kalan",
     "systemRole": "Sistem Rolü",
     "title": "Bağlam Detayları",
@@ -131,29 +145,10 @@
     "used": "Kullanılan"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Akıllı Yeniden Adlandırma",
-      "duplicate": "Kopya Oluştur",
-      "export": "Konuyu Dışa Aktar"
-    },
     "checkOpenNewTopic": "Yeni bir konu açılsın mı?",
     "checkSaveCurrentMessages": "Mevcut sohbeti konu olarak kaydetmek istiyor musunuz?",
-    "confirmRemoveAll": "Tüm konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
-    "confirmRemoveTopic": "Bu konuyu silmek üzeresiniz. Bir kere silindiğinde, geri alınamaz. Lütfen dikkatli bir şekilde devam edin.",
-    "confirmRemoveUnstarred": "Yıldızlanmamış konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
-    "defaultTitle": "Konu",
-    "duplicateLoading": "Konu kopyalanıyor...",
-    "duplicateSuccess": "Konu başarıyla kopyalandı",
-    "guide": {
-      "desc": "Mevcut oturumu geçmiş konu olarak kaydetmek ve yeni bir oturum başlatmak için sol taraftaki düğmeye tıklayın",
-      "title": "Konu Listesi"
-    },
     "openNewTopic": "Yeni Konu",
-    "removeAll": "Tüm Konuları Sil",
-    "removeUnstarred": "Tüm Yıldızlanmamış Konuları Sil",
-    "saveCurrentMessages": "Mevcut oturumu konu olarak kaydet",
-    "searchPlaceholder": "Konuları ara...",
-    "title": "Konular"
+    "saveCurrentMessages": "Mevcut oturumu konu olarak kaydet"
   },
   "translate": {
     "action": "Çeviri",
@@ -184,5 +179,6 @@
         "processing": "Dosya İşleniyor..."
       }
     }
-  }
+  },
+  "zenMode": "Odak Modu"
 }

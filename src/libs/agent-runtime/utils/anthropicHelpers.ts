@@ -11,7 +11,8 @@ export const buildAnthropicBlock = async (
 ): Promise<Anthropic.ContentBlock | Anthropic.ImageBlockParam> => {
   switch (content.type) {
     case 'text': {
-      return content;
+      // just pass-through the content
+      return content as any;
     }
 
     case 'image_url': {
@@ -114,11 +115,11 @@ export const buildAnthropicMessages = async (
   oaiMessages: OpenAIChatMessage[],
 ): Promise<Anthropic.Messages.MessageParam[]> => {
   const messages: Anthropic.Messages.MessageParam[] = [];
-  let lastRole = 'assistant';
   let pendingToolResults: Anthropic.ToolResultBlockParam[] = [];
 
   for (const message of oaiMessages) {
     const index = oaiMessages.indexOf(message);
+
     // refs: https://docs.anthropic.com/claude/docs/tool-use#tool-use-and-tool-result-content-blocks
     if (message.role === 'tool') {
       pendingToolResults.push({
@@ -135,17 +136,14 @@ export const buildAnthropicMessages = async (
           role: 'user',
         });
         pendingToolResults = [];
-        lastRole = 'user';
       }
     } else {
       const anthropicMessage = await buildAnthropicMessage(message);
 
-      if (lastRole === anthropicMessage.role) {
-        messages.push({ content: '_', role: lastRole === 'user' ? 'assistant' : 'user' });
-      }
-
-      lastRole = anthropicMessage.role;
-      messages.push(anthropicMessage);
+      messages.push({
+        ...anthropicMessage,
+        role: index === 0 && anthropicMessage.role === 'assistant' ? 'user' : anthropicMessage.role,
+      });
     }
   }
 

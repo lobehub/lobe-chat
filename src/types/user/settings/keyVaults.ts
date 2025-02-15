@@ -6,6 +6,10 @@ export interface OpenAICompatibleKeyVault {
 export interface AzureOpenAIKeyVault {
   apiKey?: string;
   apiVersion?: string;
+  baseURL?: string;
+  /**
+   * @deprecated
+   */
   endpoint?: string;
 }
 
@@ -16,9 +20,9 @@ export interface AWSBedrockKeyVault {
   sessionToken?: string;
 }
 
-export interface WenxinKeyVault {
-  accessKey?: string;
-  secretKey?: string;
+export interface CloudflareKeyVault {
+  apiKey?: string;
+  baseURLOrAccountID?: string;
 }
 
 export interface UserKeyVaults {
@@ -28,30 +32,42 @@ export interface UserKeyVaults {
   azure?: AzureOpenAIKeyVault;
   baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
+  cloudflare?: CloudflareKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
+  doubao?: OpenAICompatibleKeyVault;
   fireworksai?: OpenAICompatibleKeyVault;
+  giteeai?: OpenAICompatibleKeyVault;
   github?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;
+  higress?: OpenAICompatibleKeyVault;
+  huggingface?: OpenAICompatibleKeyVault;
   hunyuan?: OpenAICompatibleKeyVault;
+  internlm?: OpenAICompatibleKeyVault;
+  lmstudio?: OpenAICompatibleKeyVault;
   lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
   mistral?: OpenAICompatibleKeyVault;
   moonshot?: OpenAICompatibleKeyVault;
   novita?: OpenAICompatibleKeyVault;
+  nvidia?: OpenAICompatibleKeyVault;
   ollama?: OpenAICompatibleKeyVault;
   openai?: OpenAICompatibleKeyVault;
   openrouter?: OpenAICompatibleKeyVault;
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
+  sensenova?: OpenAICompatibleKeyVault;
   siliconcloud?: OpenAICompatibleKeyVault;
   spark?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
   taichu?: OpenAICompatibleKeyVault;
+  tencentcloud?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   upstage?: OpenAICompatibleKeyVault;
-  wenxin?: WenxinKeyVault;
+  vllm?: OpenAICompatibleKeyVault;
+  wenxin?: OpenAICompatibleKeyVault;
+  xai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;
 }

@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
+
 import { OpenAIStream } from './openai';
+import { FIRST_CHUNK_ERROR_KEY } from './protocol';
 
 describe('OpenAIStream', () => {
   it('should transform OpenAI stream to protocol stream', async () => {
@@ -45,10 +48,12 @@ describe('OpenAIStream', () => {
     const onCompletionMock = vi.fn();
 
     const protocolStream = OpenAIStream(mockOpenAIStream, {
-      onStart: onStartMock,
-      onText: onTextMock,
-      onToken: onTokenMock,
-      onCompletion: onCompletionMock,
+      callbacks: {
+        onStart: onStartMock,
+        onText: onTextMock,
+        onToken: onTokenMock,
+        onCompletion: onCompletionMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -189,7 +194,9 @@ describe('OpenAIStream', () => {
     const onToolCallMock = vi.fn();
 
     const protocolStream = OpenAIStream(mockOpenAIStream, {
-      onToolCall: onToolCallMock,
+      callbacks: {
+        onToolCall: onToolCallMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -281,6 +288,66 @@ describe('OpenAIStream', () => {
     );
   });
 
+  it('should handle FIRST_CHUNK_ERROR_KEY', async () => {
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          [FIRST_CHUNK_ERROR_KEY]: true,
+          errorType: AgentRuntimeErrorType.ProviderBizError,
+          message: 'Test error',
+        });
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: first_chunk_error\n',
+      'event: error\n',
+      `data: {"body":{"errorType":"ProviderBizError","message":"Test error"},"type":"ProviderBizError"}\n\n`,
+    ]);
+  });
+
+  it('should use bizErrorTypeTransformer', async () => {
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(
+          '%FIRST_CHUNK_ERROR%: ' +
+            JSON.stringify({ message: 'Custom error', name: 'CustomError' }),
+        );
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream, {
+      bizErrorTypeTransformer: () => AgentRuntimeErrorType.PermissionDenied,
+      provider: 'grok',
+    });
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: first_chunk_error\n',
+      'event: error\n',
+      `data: {"body":{"message":"Custom error","errorType":"PermissionDenied","provider":"grok"},"type":"PermissionDenied"}\n\n`,
+    ]);
+  });
+
   describe('Tools Calling', () => {
     it('should handle OpenAI official tool calls', async () => {
       const mockOpenAIStream = new ReadableStream({
@@ -316,7 +383,9 @@ describe('OpenAIStream', () => {
       const onToolCallMock = vi.fn();
 
       const protocolStream = OpenAIStream(mockOpenAIStream, {
-        onToolCall: onToolCallMock,
+        callbacks: {
+          onToolCall: onToolCallMock,
+        },
       });
 
       const decoder = new TextDecoder();
@@ -447,7 +516,9 @@ describe('OpenAIStream', () => {
       const onToolCallMock = vi.fn();
 
       const protocolStream = OpenAIStream(mockOpenAIStream, {
-        onToolCall: onToolCallMock,
+        callbacks: {
+          onToolCall: onToolCallMock,
+        },
       });
 
       const decoder = new TextDecoder();
@@ -479,6 +550,1031 @@ describe('OpenAIStream', () => {
       );
 
       expect(onToolCallMock).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('Reasoning', () => {
+    it('should handle reasoning event in official DeepSeek api', async () => {
+      const data = [
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { role: 'assistant', content: null, reasoning_content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: null, reasoning_content: '您好' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: null, reasoning_content: '！' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '你好', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '很高兴', reasoning_cont: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '为您', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '提供', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '帮助。', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '', reasoning_content: null },
+              logprobs: null,
+              finish_reason: 'stop',
+            },
+          ],
+          usage: {
+            prompt_tokens: 6,
+            completion_tokens: 104,
+            total_tokens: 110,
+            prompt_tokens_details: { cached_tokens: 0 },
+            completion_tokens_details: { reasoning_tokens: 70 },
+            prompt_cache_hit_tokens: 0,
+            prompt_cache_miss_tokens: 6,
+          },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 1',
+          'event: reasoning',
+          `data: ""\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "您好"\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "！"\n`,
+          'id: 1',
+          'event: text',
+          `data: "你好"\n`,
+          'id: 1',
+          'event: text',
+          `data: "很高兴"\n`,
+          'id: 1',
+          'event: text',
+          `data: "为您"\n`,
+          'id: 1',
+          'event: text',
+          `data: "提供"\n`,
+          'id: 1',
+          'event: text',
+          `data: "帮助。"\n`,
+          'id: 1',
+          'event: stop',
+          `data: "stop"\n`,
+        ].map((i) => `${i}\n`),
+      );
+    });
+
+    it('should handle reasoning event in aliyun bailian api', async () => {
+      const data = [
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { role: 'assistant', content: '', reasoning_content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '', reasoning_content: '您好' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '', reasoning_content: '！' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '', reasoning_content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '你好', reasoning_content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '很高兴', reasoning_cont: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '为您', reasoning_content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '提供', reasoning_content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '帮助。', reasoning_content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '', reasoning_content: '' },
+              logprobs: null,
+              finish_reason: 'stop',
+            },
+          ],
+          usage: {
+            prompt_tokens: 6,
+            completion_tokens: 104,
+            total_tokens: 110,
+            prompt_tokens_details: { cached_tokens: 0 },
+            completion_tokens_details: { reasoning_tokens: 70 },
+            prompt_cache_hit_tokens: 0,
+            prompt_cache_miss_tokens: 6,
+          },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 1',
+          'event: reasoning',
+          `data: ""\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "您好"\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "！"\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: ""\n`,
+          'id: 1',
+          'event: text',
+          `data: "你好"\n`,
+          'id: 1',
+          'event: text',
+          `data: "很高兴"\n`,
+          'id: 1',
+          'event: text',
+          `data: "为您"\n`,
+          'id: 1',
+          'event: text',
+          `data: "提供"\n`,
+          'id: 1',
+          'event: text',
+          `data: "帮助。"\n`,
+          'id: 1',
+          'event: stop',
+          `data: "stop"\n`,
+        ].map((i) => `${i}\n`),
+      );
+    });
+
+    it('should handle reasoning in litellm', async () => {
+      const data = [
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { role: 'assistant', reasoning_content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { reasoning_content: '您好' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { reasoning_content: '！' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '你好', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '很高兴', reasoning_cont: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '为您', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '提供', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '帮助。', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '', reasoning_content: null },
+              logprobs: null,
+              finish_reason: 'stop',
+            },
+          ],
+          usage: {
+            prompt_tokens: 6,
+            completion_tokens: 104,
+            total_tokens: 110,
+            prompt_tokens_details: { cached_tokens: 0 },
+            completion_tokens_details: { reasoning_tokens: 70 },
+            prompt_cache_hit_tokens: 0,
+            prompt_cache_miss_tokens: 6,
+          },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 1',
+          'event: reasoning',
+          `data: ""\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "您好"\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "！"\n`,
+          'id: 1',
+          'event: text',
+          `data: "你好"\n`,
+          'id: 1',
+          'event: text',
+          `data: "很高兴"\n`,
+          'id: 1',
+          'event: text',
+          `data: "为您"\n`,
+          'id: 1',
+          'event: text',
+          `data: "提供"\n`,
+          'id: 1',
+          'event: text',
+          `data: "帮助。"\n`,
+          'id: 1',
+          'event: stop',
+          `data: "stop"\n`,
+        ].map((i) => `${i}\n`),
+      );
+    });
+
+    it('should handle reasoning in siliconflow', async () => {
+      const data = [
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { role: 'assistant', reasoning_content: '', content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { reasoning_content: '您好', content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { reasoning_content: '！', content: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '你好', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '很高兴', reasoning_cont: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '为您', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '提供', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '帮助。', reasoning_content: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '', reasoning_content: null },
+              logprobs: null,
+              finish_reason: 'stop',
+            },
+          ],
+          usage: {
+            prompt_tokens: 6,
+            completion_tokens: 104,
+            total_tokens: 110,
+            prompt_tokens_details: { cached_tokens: 0 },
+            completion_tokens_details: { reasoning_tokens: 70 },
+            prompt_cache_hit_tokens: 0,
+            prompt_cache_miss_tokens: 6,
+          },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 1',
+          'event: reasoning',
+          `data: ""\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "您好"\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "！"\n`,
+          'id: 1',
+          'event: text',
+          `data: "你好"\n`,
+          'id: 1',
+          'event: text',
+          `data: "很高兴"\n`,
+          'id: 1',
+          'event: text',
+          `data: "为您"\n`,
+          'id: 1',
+          'event: text',
+          `data: "提供"\n`,
+          'id: 1',
+          'event: text',
+          `data: "帮助。"\n`,
+          'id: 1',
+          'event: stop',
+          `data: "stop"\n`,
+        ].map((i) => `${i}\n`),
+      );
+    });
+
+    it('should handle reasoning key from OpenRouter response', async () => {
+      const data = [
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { role: 'assistant', reasoning: '' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { reasoning: '您好' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { reasoning: '！' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '你好', reasoning: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '很高兴', reasoning: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '为您', reasoning: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '提供', reasoning: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '帮助。', reasoning: null },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '', reasoning: null },
+              logprobs: null,
+              finish_reason: 'stop',
+            },
+          ],
+          usage: {
+            prompt_tokens: 6,
+            completion_tokens: 104,
+            total_tokens: 110,
+            prompt_tokens_details: { cached_tokens: 0 },
+            completion_tokens_details: { reasoning_tokens: 70 },
+            prompt_cache_hit_tokens: 0,
+            prompt_cache_miss_tokens: 6,
+          },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 1',
+          'event: reasoning',
+          `data: ""\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "您好"\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "！"\n`,
+          'id: 1',
+          'event: text',
+          `data: "你好"\n`,
+          'id: 1',
+          'event: text',
+          `data: "很高兴"\n`,
+          'id: 1',
+          'event: text',
+          `data: "为您"\n`,
+          'id: 1',
+          'event: text',
+          `data: "提供"\n`,
+          'id: 1',
+          'event: text',
+          `data: "帮助。"\n`,
+          'id: 1',
+          'event: stop',
+          `data: "stop"\n`,
+        ].map((i) => `${i}\n`),
+      );
     });
   });
 });

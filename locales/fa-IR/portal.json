@@ -1,0 +1,35 @@
+{
+  "Artifacts": "مصنوعات",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "بخش",
+      "file": "فایل"
+    }
+  },
+  "Plugins": "افزونه‌ها",
+  "actions": {
+    "genAiMessage": "ایجاد پیام دستیار",
+    "summary": "خلاصه",
+    "summaryTooltip": "خلاصه محتوای فعلی"
+  },
+  "artifacts": {
+    "display": {
+      "code": "کد",
+      "preview": "پیش‌نمایش"
+    },
+    "svg": {
+      "copyAsImage": "کپی به عنوان تصویر",
+      "copyFail": "کپی ناموفق بود، دلیل خطا: {{error}}",
+      "copySuccess": "تصویر با موفقیت کپی شد",
+      "download": {
+        "png": "دانلود به صورت PNG",
+        "svg": "دانلود به صورت SVG"
+      }
+    }
+  },
+  "emptyArtifactList": "لیست Artifacts در حال حاضر خالی است، لطفاً پس از استفاده از افزونه‌ها در جلسه، دوباره بررسی کنید.",
+  "emptyKnowledgeList": "فهرست دانش فعلی خالی است",
+  "files": "فایل‌ها",
+  "messageDetail": "جزئیات پیام",
+  "title": "فضای کاری"
+}

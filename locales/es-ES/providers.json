@@ -1,5 +1,7 @@
 {
-  "ai21": {},
+  "ai21": {
+    "description": "AI21 Labs construye modelos fundamentales y sistemas de inteligencia artificial para empresas, acelerando la aplicación de la inteligencia artificial generativa en producción."
+  },
   "ai360": {
     "description": "360 AI es una plataforma de modelos y servicios de IA lanzada por la empresa 360, que ofrece una variedad de modelos avanzados de procesamiento del lenguaje natural, incluidos 360GPT2 Pro, 360GPT Pro, 360GPT Turbo y 360GPT Turbo Responsibility 8K. Estos modelos combinan parámetros a gran escala y capacidades multimodales, siendo ampliamente utilizados en generación de texto, comprensión semántica, sistemas de diálogo y generación de código. A través de una estrategia de precios flexible, 360 AI satisface diversas necesidades de los usuarios, apoyando la integración de desarrolladores y promoviendo la innovación y desarrollo de aplicaciones inteligentes."
   },
@@ -15,11 +17,20 @@
   "bedrock": {
     "description": "Bedrock es un servicio proporcionado por Amazon AWS, enfocado en ofrecer modelos de lenguaje y visuales avanzados para empresas. Su familia de modelos incluye la serie Claude de Anthropic, la serie Llama 3.1 de Meta, entre otros, abarcando una variedad de opciones desde ligeras hasta de alto rendimiento, apoyando tareas como generación de texto, diálogos y procesamiento de imágenes, adecuadas para aplicaciones empresariales de diferentes escalas y necesidades."
   },
+  "cloudflare": {
+    "description": "Ejecuta modelos de aprendizaje automático impulsados por GPU sin servidor en la red global de Cloudflare."
+  },
   "deepseek": {
     "description": "DeepSeek es una empresa centrada en la investigación y aplicación de tecnologías de inteligencia artificial, cuyo modelo más reciente, DeepSeek-V2.5, combina capacidades de diálogo general y procesamiento de código, logrando mejoras significativas en alineación con preferencias humanas, tareas de escritura y seguimiento de instrucciones."
   },
+  "doubao": {
+    "description": "Un modelo grande desarrollado internamente por ByteDance. Validado a través de más de 50 escenarios de negocio internos, con un uso diario de tokens en billones que se perfecciona continuamente, ofrece múltiples capacidades modales y crea experiencias comerciales ricas para las empresas con un rendimiento de modelo de alta calidad."
+  },
   "fireworksai": {
     "description": "Fireworks AI es un proveedor líder de servicios de modelos de lenguaje avanzados, enfocado en la llamada de funciones y el procesamiento multimodal. Su modelo más reciente, Firefunction V2, basado en Llama-3, está optimizado para llamadas de funciones, diálogos y seguimiento de instrucciones. El modelo de lenguaje visual FireLLaVA-13B admite entradas mixtas de imágenes y texto. Otros modelos notables incluyen la serie Llama y la serie Mixtral, que ofrecen un soporte eficiente para el seguimiento y generación de instrucciones multilingües."
+  },
+  "giteeai": {
+    "description": "La API serverless de gitee ai proporciona a los desarrolladores de Ia un servicio API de razonamiento de modelos grandes listo para abrir la Caja."
   },
   "github": {
     "description": "Con los Modelos de GitHub, los desarrolladores pueden convertirse en ingenieros de IA y construir con los modelos de IA líderes en la industria."
@@ -30,8 +41,20 @@
   "groq": {
     "description": "El motor de inferencia LPU de Groq ha demostrado un rendimiento excepcional en las pruebas de referencia de modelos de lenguaje de gran tamaño (LLM), redefiniendo los estándares de soluciones de IA con su asombrosa velocidad y eficiencia. Groq es un referente en velocidad de inferencia instantánea, mostrando un buen rendimiento en implementaciones basadas en la nube."
   },
+  "higress": {
+    "description": "Higress es una puerta de enlace API nativa de la nube, que nació en Alibaba para resolver los problemas que el recargado de Tengine causa en los negocios de conexiones largas, así como la insuficiencia de la capacidad de balanceo de carga de gRPC/Dubbo."
+  },
+  "huggingface": {
+    "description": "La API de Inferencia de HuggingFace ofrece una forma rápida y gratuita de explorar miles de modelos para diversas tareas. Ya sea que esté prototipando una nueva aplicación o probando las capacidades del aprendizaje automático, esta API le brinda acceso instantáneo a modelos de alto rendimiento en múltiples dominios."
+  },
   "hunyuan": {
     "description": "Un modelo de lenguaje desarrollado por Tencent, que posee una poderosa capacidad de creación en chino, habilidades de razonamiento lógico en contextos complejos y una capacidad confiable para ejecutar tareas."
+  },
+  "internlm": {
+    "description": "Organización de código abierto dedicada a la investigación y desarrollo de herramientas para modelos grandes. Proporciona a todos los desarrolladores de IA una plataforma de código abierto eficiente y fácil de usar, permitiendo el acceso a las tecnologías y algoritmos más avanzados."
+  },
+  "lmstudio": {
+    "description": "LM Studio es una aplicación de escritorio para desarrollar y experimentar con LLMs en su computadora."
   },
   "minimax": {
     "description": "MiniMax es una empresa de tecnología de inteligencia artificial general fundada en 2021, dedicada a co-crear inteligencia con los usuarios. MiniMax ha desarrollado de forma independiente modelos de gran tamaño de diferentes modalidades, que incluyen un modelo de texto MoE de un billón de parámetros, un modelo de voz y un modelo de imagen. También ha lanzado aplicaciones como Conch AI."
@@ -60,6 +83,9 @@
   "qwen": {
     "description": "Tongyi Qianwen es un modelo de lenguaje de gran escala desarrollado de forma independiente por Alibaba Cloud, con potentes capacidades de comprensión y generación de lenguaje natural. Puede responder a diversas preguntas, crear contenido escrito, expresar opiniones y redactar código, desempeñando un papel en múltiples campos."
   },
+  "sensenova": {
+    "description": "SenseTime ofrece servicios de modelos grandes de pila completa, aprovechando el sólido soporte de la gran infraestructura de SenseTime."
+  },
   "siliconcloud": {
     "description": "SiliconFlow se dedica a acelerar la AGI para beneficiar a la humanidad, mejorando la eficiencia de la IA a gran escala a través de un stack GenAI fácil de usar y de bajo costo."
   },
@@ -72,6 +98,9 @@
   "taichu": {
     "description": "El Instituto de Automatización de la Academia de Ciencias de China y el Instituto de Investigación de Inteligencia Artificial de Wuhan han lanzado una nueva generación de modelos de gran tamaño multimodal, que apoyan tareas de preguntas y respuestas de múltiples rondas, creación de texto, generación de imágenes, comprensión 3D, análisis de señales y más, con capacidades de cognición, comprensión y creación más fuertes, ofreciendo una nueva experiencia de interacción."
   },
+  "tencentcloud": {
+    "description": "La capacidad atómica del motor de conocimiento (LLM Knowledge Engine Atomic Power) se basa en el desarrollo del motor de conocimiento y ofrece una capacidad completa de preguntas y respuestas, dirigida a empresas y desarrolladores, proporcionando la capacidad de construir y desarrollar aplicaciones de modelos de manera flexible. Puede ensamblar su propio servicio de modelo utilizando varias capacidades atómicas, invocando servicios de análisis de documentos, división, embedding, reescritura en múltiples turnos, entre otros, para personalizar un negocio de IA exclusivo para su empresa."
+  },
   "togetherai": {
     "description": "Together AI se dedica a lograr un rendimiento líder a través de modelos de IA innovadores, ofreciendo amplias capacidades de personalización, incluyendo soporte para escalado rápido y procesos de implementación intuitivos, satisfaciendo diversas necesidades empresariales."
   },
@@ -80,6 +109,9 @@
   },
   "wenxin": {
     "description": "Plataforma de desarrollo y servicios de modelos grandes y aplicaciones nativas de IA de nivel empresarial, que ofrece la cadena de herramientas más completa y fácil de usar para el desarrollo de modelos de inteligencia artificial generativa y el desarrollo de aplicaciones en todo el proceso."
+  },
+  "xai": {
+    "description": "xAI es una empresa dedicada a construir inteligencia artificial para acelerar los descubrimientos científicos humanos. Nuestra misión es promover nuestra comprensión compartida del universo."
   },
   "zeroone": {
     "description": "01.AI se centra en la tecnología de inteligencia artificial de la era 2.0, promoviendo enérgicamente la innovación y aplicación de 'humano + inteligencia artificial', utilizando modelos extremadamente potentes y tecnologías de IA avanzadas para mejorar la productividad humana y lograr el empoderamiento tecnológico."

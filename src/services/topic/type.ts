@@ -1,6 +1,6 @@
 /* eslint-disable typescript-sort-keys/interface */
 import { BatchTaskResult } from '@/types/service';
-import { ChatTopic } from '@/types/topic';
+import { ChatTopic, TopicRankItem } from '@/types/topic';
 
 export interface CreateTopicParams {
   favorite?: boolean;
@@ -22,7 +22,12 @@ export interface ITopicService {
 
   getTopics(params: QueryTopicParams): Promise<ChatTopic[]>;
   getAllTopics(): Promise<ChatTopic[]>;
-  countTopics(): Promise<number>;
+  countTopics(params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number>;
+  rankTopics(limit?: number): Promise<TopicRankItem[]>;
   searchTopics(keyword: string, sessionId?: string): Promise<ChatTopic[]>;
 
   updateTopic(id: string, data: Partial<ChatTopic>): Promise<any>;

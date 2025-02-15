@@ -48,7 +48,7 @@ export interface ChatTopicAction {
   summaryTopicTitle: (topicId: string, messages: ChatMessage[]) => Promise<void>;
   switchTopic: (id?: string, skipRefreshMessage?: boolean) => Promise<void>;
   updateTopicTitle: (id: string, title: string) => Promise<void>;
-  useFetchTopics: (sessionId: string) => SWRResponse<ChatTopic[]>;
+  useFetchTopics: (enable: boolean, sessionId: string) => SWRResponse<ChatTopic[]>;
   useSearchTopics: (keywords?: string, sessionId?: string) => SWRResponse<ChatTopic[]>;
 
   internal_updateTopicTitleInSummary: (id: string, title: string) => void;
@@ -79,12 +79,12 @@ export const chatTopic: StateCreator<
   createTopic: async () => {
     const { activeId, internal_createTopic } = get();
 
-    const messages = chatSelectors.currentChats(get());
+    const messages = chatSelectors.activeBaseChats(get());
 
     set({ creatingTopic: true }, false, n('creatingTopic/start'));
     const topicId = await internal_createTopic({
       sessionId: activeId,
-      title: t('topic.defaultTitle', { ns: 'chat' }),
+      title: t('defaultTitle', { ns: 'topic' }),
       messages: messages.map((m) => m.id),
     });
     set({ creatingTopic: false }, false, n('creatingTopic/end'));
@@ -94,7 +94,7 @@ export const chatTopic: StateCreator<
 
   saveToTopic: async () => {
     // if there is no message, stop
-    const messages = chatSelectors.currentChats(get());
+    const messages = chatSelectors.activeBaseChats(get());
     if (messages.length === 0) return;
 
     const { activeId, summaryTopicTitle, internal_createTopic } = get();
@@ -102,7 +102,7 @@ export const chatTopic: StateCreator<
     // 1. create topic and bind these messages
     const topicId = await internal_createTopic({
       sessionId: activeId,
-      title: t('topic.defaultTitle', { ns: 'chat' }),
+      title: t('defaultTitle', { ns: 'topic' }),
       messages: messages.map((m) => m.id),
     });
 
@@ -122,7 +122,7 @@ export const chatTopic: StateCreator<
     const newTitle = t('duplicateTitle', { ns: 'chat', title: topic?.title });
 
     message.loading({
-      content: t('topic.duplicateLoading', { ns: 'chat' }),
+      content: t('duplicateLoading', { ns: 'topic' }),
       key: 'duplicateTopic',
       duration: 0,
     });
@@ -130,7 +130,7 @@ export const chatTopic: StateCreator<
     const newTopicId = await topicService.cloneTopic(id, newTitle);
     await refreshTopic();
     message.destroy('duplicateTopic');
-    message.success(t('topic.duplicateSuccess', { ns: 'chat' }));
+    message.success(t('duplicateSuccess', { ns: 'topic' }));
 
     await switchTopic(newTopicId);
   },
@@ -190,9 +190,9 @@ export const chatTopic: StateCreator<
   },
 
   // query
-  useFetchTopics: (sessionId) =>
+  useFetchTopics: (enable, sessionId) =>
     useClientDataSWR<ChatTopic[]>(
-      [SWR_USE_FETCH_TOPIC, sessionId],
+      enable ? [SWR_USE_FETCH_TOPIC, sessionId] : null,
       async ([, sessionId]: [string, string]) => topicService.getTopics({ sessionId }),
       {
         suspense: true,
@@ -223,7 +223,11 @@ export const chatTopic: StateCreator<
       },
     ),
   switchTopic: async (id, skipRefreshMessage) => {
-    set({ activeTopicId: !id ? (null as any) : id }, false, n('toggleTopic'));
+    set(
+      { activeTopicId: !id ? (null as any) : id, activeThreadId: undefined },
+      false,
+      n('toggleTopic'),
+    );
 
     if (skipRefreshMessage) return;
     await get().refreshMessages();

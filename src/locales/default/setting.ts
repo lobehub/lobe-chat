@@ -86,7 +86,6 @@ export default {
         modalTitle: '自定义模型配置',
         tokens: {
           title: '最大 token 数',
-          unlimited: '无限制',
         },
         vision: {
           extra:
@@ -100,6 +99,7 @@ export default {
       title: '使用客户端请求模式',
     },
     fetcher: {
+      clear: '清除获取的模型',
       fetch: '获取模型列表',
       fetching: '正在获取模型列表...',
       latestTime: '上次更新时间：{{time}}',
@@ -177,8 +177,8 @@ export default {
       desc: '会话过程中是否自动创建话题，仅在临时话题中生效',
       title: '自动创建话题',
     },
-    enableCompressThreshold: {
-      title: '是否开启历史消息长度压缩阈值',
+    enableCompressHistory: {
+      title: '开启历史消息自动总结',
     },
     enableHistoryCount: {
       alias: '不限制',
@@ -202,9 +202,12 @@ export default {
     enableMaxTokens: {
       title: '开启单次回复限制',
     },
+    enableReasoningEffort: {
+      title: '开启推理强度调整',
+    },
     frequencyPenalty: {
-      desc: '值越大，越有可能降低重复字词',
-      title: '频率惩罚度',
+      desc: '值越大，用词越丰富多样；值越低，用词更朴实简单',
+      title: '词汇丰富度',
     },
     maxTokens: {
       desc: '单次交互所用的最大 Token 数',
@@ -214,19 +217,31 @@ export default {
       desc: '{{provider}} 模型',
       title: '模型',
     },
+    params: {
+      title: '高级参数',
+    },
     presencePenalty: {
-      desc: '值越大，越有可能扩展到新话题',
-      title: '话题新鲜度',
+      desc: '值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性',
+      title: '表述发散度',
+    },
+    reasoningEffort: {
+      desc: '值越大，推理能力越强，但可能会增加响应时间和 Token 消耗',
+      options: {
+        high: '高',
+        low: '低',
+        medium: '中',
+      },
+      title: '推理强度',
     },
     temperature: {
-      desc: '值越大，回复越随机',
-      title: '随机性',
-      titleWithValue: '随机性 {{value}}',
+      desc: '数值越大，回答越有创意和想象力；数值越小，回答越严谨',
+      title: '创意活跃度',
+      warning: '创意活跃度数值过大，输出可能会产生乱码',
     },
     title: '模型设置',
     topP: {
-      desc: '与随机性类似，但不要和随机性一起更改',
-      title: '核采样',
+      desc: '考虑多少种可能性，值越大，接受更多可能的回答；值越小，倾向选择最可能的回答。不推荐和创意活跃度一起更改',
+      title: '思维开放度',
     },
   },
   settingPlugin: {
@@ -374,10 +389,26 @@ export default {
       modelDesc: '指定用于生成助理名称、描述、头像、标签的模型',
       title: '自动生成助理信息',
     },
+    customPrompt: {
+      addPrompt: '添加自定义提示',
+      desc: '填写后，系统助理将在生成内容时使用自定义提示',
+      placeholder: '请输入自定义提示词',
+      title: '自定义提示词',
+    },
+    historyCompress: {
+      label: '会话历史模型',
+      modelDesc: '指定用于压缩会话历史的模型',
+      title: '自动总结会话历史',
+    },
     queryRewrite: {
       label: '提问重写模型',
       modelDesc: '指定用于优化用户提问的模型',
-      title: '知识库',
+      title: '知识库提问重写',
+    },
+    thread: {
+      label: '子话题命名模型',
+      modelDesc: '指定用于子话题自动重命名的模型',
+      title: '子话题自动命名',
     },
     title: '系统助手',
     topic: {
@@ -397,6 +428,7 @@ export default {
     'common': '通用设置',
     'experiment': '实验',
     'llm': '语言模型',
+    'provider': 'AI 服务商',
     'sync': '云端同步',
     'system-agent': '系统助手',
     'tts': '语音服务',

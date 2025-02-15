@@ -51,12 +51,87 @@
       "title": "Usar informações de autenticação Bedrock personalizadas"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Insira o Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Insira o ID da conta do Cloudflare ou o endereço da API personalizado",
+      "placeholder": "ID da conta do Cloudflare / URL da API personalizada",
+      "title": "ID da conta do Cloudflare / Endereço da API"
+    }
+  },
+  "createNewAiProvider": {
+    "apiKey": {
+      "placeholder": "Por favor, insira sua API Key",
+      "title": "API Key"
+    },
+    "basicTitle": "Informações Básicas",
+    "configTitle": "Informações de Configuração",
+    "confirm": "Criar Novo",
+    "createSuccess": "Criação bem-sucedida",
+    "description": {
+      "placeholder": "Descrição do provedor (opcional)",
+      "title": "Descrição do Provedor"
+    },
+    "id": {
+      "desc": "Identificador único do provedor de serviços, não pode ser modificado após a criação",
+      "format": "Só pode conter números, letras minúsculas, hífens (-) e sublinhados (_) ",
+      "placeholder": "Sugestão: tudo em minúsculas, por exemplo, openai, não poderá ser modificado após a criação",
+      "required": "Por favor, insira o ID do provedor",
+      "title": "ID do Provedor"
+    },
+    "logo": {
+      "required": "Por favor, envie um logo correto do provedor",
+      "title": "Logo do Provedor"
+    },
+    "name": {
+      "placeholder": "Por favor, insira o nome de exibição do provedor",
+      "required": "Por favor, insira o nome do provedor",
+      "title": "Nome do Provedor"
+    },
+    "proxyUrl": {
+      "required": "Por favor, insira o endereço do proxy",
+      "title": "Endereço do Proxy"
+    },
+    "sdkType": {
+      "required": "Por favor, selecione o tipo de SDK",
+      "title": "Formato da Requisição"
+    },
+    "title": "Criar Provedor de AI Personalizado"
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Insira seu PAT do Github, clique [aqui](https://github.com/settings/tokens) para criar",
       "placeholder": "ghp_xxxxxx",
       "title": "GitHub PAT"
     }
+  },
+  "huggingface": {
+    "accessToken": {
+      "desc": "Insira seu Token do HuggingFace, clique [aqui](https://huggingface.co/settings/tokens) para criar",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "Token do HuggingFace"
+    }
+  },
+  "list": {
+    "title": {
+      "disabled": "Fornecedor não habilitado",
+      "enabled": "Fornecedor habilitado"
+    }
+  },
+  "menu": {
+    "addCustomProvider": "Adicionar Provedor Personalizado",
+    "all": "Todos",
+    "list": {
+      "disabled": "Desativado",
+      "enabled": "Ativado"
+    },
+    "notFound": "Nenhum resultado encontrado",
+    "searchProviders": "Pesquisar Provedores...",
+    "sort": "Ordenação Personalizada"
   },
   "ollama": {
     "checker": {
@@ -69,38 +144,14 @@
       "title": "Nomes dos Modelos Personalizados"
     },
     "download": {
-      "desc": "Ollama is downloading the model. Please do not close this page. It will resume from where it left off if you restart the download.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "Ollama está baixando este modelo, por favor, evite fechar esta página. O download será retomado do ponto em que parou.",
+      "remainingTime": "Tempo restante",
+      "speed": "Velocidade de download",
+      "title": "Baixando o modelo {{model}} "
     },
     "endpoint": {
-      "desc": "Insira o endereço do proxy de interface da Ollama, se não foi especificado localmente, pode deixar em branco",
+      "desc": "Deve incluir http(s)://, pode deixar em branco se não houver especificação local adicional",
       "title": "Endereço do Proxy de Interface"
-    },
-    "setup": {
-      "cors": {
-        "description": "Devido às restrições de segurança do navegador, você precisa configurar o Ollama para permitir o acesso entre domínios.",
-        "linux": {
-          "env": "Sob a seção [Service], adicione `Environment` e inclua a variável de ambiente OLLAMA_ORIGINS:",
-          "reboot": "Recarregue o systemd e reinicie o Ollama.",
-          "systemd": "Chame o systemd para editar o serviço ollama:"
-        },
-        "macos": "Abra o aplicativo 'Terminal', cole o comando abaixo e pressione Enter para executar:",
-        "reboot": "Após a conclusão, reinicie o serviço Ollama.",
-        "title": "Configurar o Ollama para permitir acesso entre domínios",
-        "windows": "No Windows, acesse o 'Painel de Controle' e edite as variáveis de ambiente do sistema. Crie uma nova variável de ambiente chamada 'OLLAMA_ORIGINS' para sua conta de usuário, com o valor '*', e clique em 'OK/Aplicar' para salvar."
-      },
-      "install": {
-        "description": "Certifique-se de que você ativou o Ollama. Se ainda não o fez, baixe o Ollama no site oficial <1>aqui</1>.",
-        "docker": "Se preferir usar o Docker, o Ollama também oferece uma imagem oficial. Você pode puxá-la com o comando:",
-        "linux": {
-          "command": "Instale com o comando a seguir:",
-          "manual": "Ou, se preferir, consulte o <1>Guia de Instalação Manual do Linux</1> para instalar manualmente."
-        },
-        "title": "Instale e inicie o aplicativo Ollama localmente",
-        "windowsTab": "Windows (Versão de Visualização)"
-      }
     },
     "title": "Ollama",
     "unlock": {
@@ -112,25 +163,140 @@
       "title": "Download specified Ollama model"
     }
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Insira a Access Key da plataforma Qianfan do Baidu",
-      "placeholder": "Access Key Qianfan",
-      "title": "Access Key"
+  "providerModels": {
+    "config": {
+      "aesGcm": "Sua chave e o endereço do proxy serão criptografados usando o algoritmo de criptografia <1>AES-GCM</1>",
+      "apiKey": {
+        "desc": "Por favor, insira sua {{name}} API Key",
+        "placeholder": "{{name}} API Key",
+        "title": "API Key"
+      },
+      "baseURL": {
+        "desc": "Deve incluir http(s)://",
+        "invalid": "Por favor, insira uma URL válida",
+        "placeholder": "https://seu-endereco-proxy.com/v1",
+        "title": "Endereço do Proxy API"
+      },
+      "checker": {
+        "button": "Verificar",
+        "desc": "Teste se a API Key e o endereço do proxy estão preenchidos corretamente",
+        "pass": "Verificação bem-sucedida",
+        "title": "Verificação de Conectividade"
+      },
+      "fetchOnClient": {
+        "desc": "O modo de requisição do cliente iniciará a requisição de sessão diretamente do navegador, podendo aumentar a velocidade de resposta",
+        "title": "Usar Modo de Requisição do Cliente"
+      },
+      "helpDoc": "Tutorial de Configuração",
+      "waitingForMore": "Mais modelos estão <1>planejados para integração</1>, fique atento"
     },
-    "checker": {
-      "desc": "Teste se a AccessKey / SecretAccess está preenchida corretamente"
+    "createNew": {
+      "title": "Criar Modelo de AI Personalizado"
     },
-    "secretKey": {
-      "desc": "Insira a Secret Key da plataforma Qianfan do Baidu",
-      "placeholder": "Secret Key Qianfan",
-      "title": "Secret Key"
+    "item": {
+      "config": "Configurar Modelo",
+      "customModelCards": {
+        "addNew": "Criar e adicionar modelo {{id}}",
+        "confirmDelete": "Você está prestes a excluir este modelo personalizado, após a exclusão não poderá ser recuperado, por favor, proceda com cautela."
+      },
+      "delete": {
+        "confirm": "Confirmar exclusão do modelo {{displayName}}?",
+        "success": "Exclusão bem-sucedida",
+        "title": "Excluir Modelo"
+      },
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Campo solicitado na Azure OpenAI",
+          "placeholder": "Por favor, insira o nome de implantação do modelo na Azure",
+          "title": "Nome de Implantação do Modelo"
+        },
+        "displayName": {
+          "placeholder": "Por favor, insira o nome de exibição do modelo, por exemplo, ChatGPT, GPT-4, etc.",
+          "title": "Nome de Exibição do Modelo"
+        },
+        "files": {
+          "extra": "A implementação atual de upload de arquivos é apenas uma solução temporária, limitada a tentativas pessoais. A capacidade completa de upload de arquivos será implementada posteriormente.",
+          "title": "Suporte a Upload de Arquivos"
+        },
+        "functionCall": {
+          "extra": "Esta configuração ativará apenas a capacidade do modelo de usar ferramentas, permitindo assim a adição de plugins do tipo ferramenta. No entanto, se o uso real das ferramentas é suportado depende inteiramente do modelo em si, teste a usabilidade por conta própria.",
+          "title": "Suporte ao uso de ferramentas"
+        },
+        "id": {
+          "extra": "Não pode ser modificado após a criação, será usado como ID do modelo ao chamar a IA",
+          "placeholder": "Insira o ID do modelo, por exemplo, gpt-4o ou claude-3.5-sonnet",
+          "title": "ID do Modelo"
+        },
+        "modalTitle": "Configuração do Modelo Personalizado",
+        "reasoning": {
+          "extra": "Esta configuração ativará apenas a capacidade de pensamento profundo do modelo, e o efeito específico depende totalmente do próprio modelo. Por favor, teste se este modelo possui a capacidade de pensamento profundo utilizável.",
+          "title": "Suporte a Pensamento Profundo"
+        },
+        "tokens": {
+          "extra": "Configurar o número máximo de tokens suportados pelo modelo",
+          "title": "Janela de contexto máxima",
+          "unlimited": "Ilimitado"
+        },
+        "vision": {
+          "extra": "Esta configuração apenas habilitará a configuração de upload de imagens no aplicativo, se o reconhecimento for suportado depende do modelo em si, teste a capacidade de reconhecimento visual desse modelo.",
+          "title": "Suporte a Reconhecimento Visual"
+        }
+      },
+      "pricing": {
+        "image": "${{amount}}/imagem",
+        "inputCharts": "${{amount}}/M caracteres",
+        "inputMinutes": "${{amount}}/minuto",
+        "inputTokens": "Entrada ${{amount}}/M",
+        "outputTokens": "Saída ${{amount}}/M"
+      },
+      "releasedAt": "Lançado em {{releasedAt}}"
     },
-    "unlock": {
-      "customRegion": "Região de serviço personalizada",
-      "description": "Insira sua AccessKey / SecretKey para iniciar a sessão. O aplicativo não registrará suas configurações de autenticação",
-      "title": "Usar informações de autenticação personalizadas do Wenxin Yiyan"
-    }
+    "list": {
+      "addNew": "Adicionar Modelo",
+      "disabled": "Não habilitado",
+      "disabledActions": {
+        "showMore": "Mostrar tudo"
+      },
+      "empty": {
+        "desc": "Por favor, crie um modelo personalizado ou importe um modelo para começar a usar.",
+        "title": "Nenhum modelo disponível"
+      },
+      "enabled": "Habilitado",
+      "enabledActions": {
+        "disableAll": "Desabilitar todos",
+        "enableAll": "Habilitar todos",
+        "sort": "Ordenar modelos personalizados"
+      },
+      "enabledEmpty": "Nenhum modelo habilitado no momento, por favor habilite os modelos desejados na lista abaixo~",
+      "fetcher": {
+        "clear": "Limpar modelos obtidos",
+        "fetch": "Obter lista de modelos",
+        "fetching": "Obtendo lista de modelos...",
+        "latestTime": "Última atualização: {{time}}",
+        "noLatestTime": "Lista ainda não obtida"
+      },
+      "resetAll": {
+        "conform": "Você tem certeza de que deseja redefinir todas as modificações do modelo atual? Após a redefinição, a lista de modelos atuais voltará ao estado padrão",
+        "success": "Redefinição bem-sucedida",
+        "title": "Redefinir todas as modificações"
+      },
+      "search": "Pesquisar modelos...",
+      "searchResult": "Encontrados {{count}} modelos",
+      "title": "Lista de Modelos",
+      "total": "Um total de {{count}} modelos disponíveis"
+    },
+    "searchNotFound": "Nenhum resultado encontrado"
+  },
+  "sortModal": {
+    "success": "Ordenação atualizada com sucesso",
+    "title": "Ordenação Personalizada",
+    "update": "Atualizar"
+  },
+  "updateAiProvider": {
+    "confirmDelete": "Você está prestes a excluir este provedor de AI, após a exclusão não poderá ser recuperado, deseja confirmar a exclusão?",
+    "deleteSuccess": "Exclusão bem-sucedida",
+    "tooltip": "Atualizar configurações básicas do provedor",
+    "updateSuccess": "Atualização bem-sucedida"
   },
   "zeroone": {
     "title": "01.AI Zero e Um"

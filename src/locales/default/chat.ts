@@ -9,6 +9,7 @@ export default {
   agents: '助手',
   artifact: {
     generating: '生成中',
+    inThread: '子话题中无法查看，请切换到主对话区打开',
     thinking: '思考中',
     thought: '思考过程',
     unknownTitle: '未命名作品',
@@ -32,6 +33,7 @@ export default {
   duplicateTitle: '{{title}} 副本',
   emptyAgent: '暂无助手',
   historyRange: '历史范围',
+  historySummary: '历史消息总结',
   inbox: {
     desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
     title: '随便聊聊',
@@ -67,6 +69,7 @@ export default {
   },
   messageAction: {
     delAndRegenerate: '删除并重新生成',
+    deleteDisabledByThreads: '存在子话题，不能删除',
     regenerate: '重新生成',
   },
   newAgent: '新建助手',
@@ -102,14 +105,20 @@ export default {
     tooLong: '分组名称长度需在 1-20 之内',
   },
   shareModal: {
+    copy: '复制',
     download: '下载截图',
+    downloadFile: '下载文件',
+    exportTitle: '默认标题',
     imageType: '图片格式',
+    includeTool: '包含插件消息',
+    includeUser: '包含用户消息',
     screenshot: '截图',
     settings: '导出设置',
-    shareToShareGPT: '生成 ShareGPT 分享链接',
+    text: '文本',
     withBackground: '包含背景图片',
     withFooter: '包含页脚',
     withPluginInfo: '包含插件信息',
+    withRole: '包含消息角色',
     withSystemRole: '包含助手角色设定',
   },
   stt: {
@@ -117,9 +126,14 @@ export default {
     loading: '识别中...',
     prettifying: '润色中...',
   },
-  temp: '临时',
+  thread: {
+    divider: '子话题',
+    threadMessageCount: '{{messageCount}} 条消息',
+    title: '子话题',
+  },
   tokenDetails: {
     chats: '会话消息',
+    historySummary: '历史总结',
     rest: '剩余可用',
     systemRole: '角色设定',
     title: '上下文明细',
@@ -133,29 +147,10 @@ export default {
     used: '使用',
   },
   topic: {
-    actions: {
-      autoRename: '智能重命名',
-      duplicate: '创建副本',
-      export: '导出话题',
-    },
     checkOpenNewTopic: '是否开启新话题?',
     checkSaveCurrentMessages: '是否保存当前会话为话题?',
-    confirmRemoveAll: '即将删除全部话题，删除后将不可恢复，请谨慎操作。',
-    confirmRemoveTopic: '即将删除该话题，删除后将不可恢复，请谨慎操作。',
-    confirmRemoveUnstarred: '即将删除未收藏话题，删除后将不可恢复，请谨慎操作。',
-    defaultTitle: '默认话题',
-    duplicateLoading: '话题复制中...',
-    duplicateSuccess: '话题复制成功',
-    guide: {
-      desc: '点击发送左侧按钮可将当前会话保存为历史话题，并开启新一轮会话',
-      title: '话题列表',
-    },
     openNewTopic: '开启新话题',
-    removeAll: '删除全部话题',
-    removeUnstarred: '删除未收藏话题',
     saveCurrentMessages: '将当前会话保存为话题',
-    searchPlaceholder: '搜索话题...',
-    title: '话题',
   },
   translate: {
     action: '翻译',
@@ -165,8 +160,8 @@ export default {
     action: '语音朗读',
     clear: '删除语音',
   },
-  updateAgent: '更新助理信息',
 
+  updateAgent: '更新助理信息',
   upload: {
     action: {
       fileUpload: '上传文件',
@@ -188,4 +183,5 @@ export default {
       },
     },
   },
+  zenMode: '专注模式',
 };

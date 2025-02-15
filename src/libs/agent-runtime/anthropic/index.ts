@@ -13,18 +13,27 @@ import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicH
 import { StreamingResponse } from '../utils/response';
 import { AnthropicStream } from '../utils/streams';
 
+import type { ChatModelCard } from '@/types/llm';
+
+export interface AnthropicModelCard {
+  display_name: string;
+  id: string;
+}
+
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
 
 export class LobeAnthropicAI implements LobeRuntimeAI {
   private client: Anthropic;
 
   baseURL: string;
+  apiKey?: string;
 
   constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new Anthropic({ apiKey, baseURL, ...res });
     this.baseURL = this.client.baseURL;
+    this.apiKey = apiKey;
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
@@ -101,6 +110,46 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       tools: buildAnthropicTools(tools),
       top_p,
     } satisfies Anthropic.MessageCreateParams;
+  }
+
+  async models() {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
+    const url = `${this.baseURL}/v1/models`;
+    const response = await fetch(url, {
+      headers: {
+        'anthropic-version': '2023-06-01',
+        'x-api-key': `${this.apiKey}`,
+      },
+      method: 'GET',
+    });
+    const json = await response.json();
+  
+    const modelList: AnthropicModelCard[] = json['data'];
+  
+    return modelList
+      .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+
+        return {
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+          displayName: model.display_name,
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            model.id.toLowerCase().includes('claude-3')
+            || knownModel?.abilities?.functionCall
+            || false,
+          id: model.id,
+          reasoning:
+            knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            model.id.toLowerCase().includes('claude-3') && !model.id.toLowerCase().includes('claude-3-5-haiku')
+            || knownModel?.abilities?.vision
+            || false,
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   }
 }
 

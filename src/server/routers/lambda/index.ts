@@ -4,6 +4,8 @@
 import { publicProcedure, router } from '@/libs/trpc';
 
 import { agentRouter } from './agent';
+import { aiModelRouter } from './aiModel';
+import { aiProviderRouter } from './aiProvider';
 import { chunkRouter } from './chunk';
 import { fileRouter } from './file';
 import { importerRouter } from './importer';
@@ -13,11 +15,14 @@ import { pluginRouter } from './plugin';
 import { ragEvalRouter } from './ragEval';
 import { sessionRouter } from './session';
 import { sessionGroupRouter } from './sessionGroup';
+import { threadRouter } from './thread';
 import { topicRouter } from './topic';
 import { userRouter } from './user';
 
 export const lambdaRouter = router({
   agent: agentRouter,
+  aiModel: aiModelRouter,
+  aiProvider: aiProviderRouter,
   chunk: chunkRouter,
   file: fileRouter,
   healthcheck: publicProcedure.query(() => "i'm live!"),
@@ -28,6 +33,7 @@ export const lambdaRouter = router({
   ragEval: ragEvalRouter,
   session: sessionRouter,
   sessionGroup: sessionGroupRouter,
+  thread: threadRouter,
   topic: topicRouter,
   user: userRouter,
 });

@@ -1,0 +1,18 @@
+{
+  "actions": {
+    "followOnX": "Theo dõi chúng tôi trên X",
+    "subscribeToUpdates": "Đăng ký nhận cập nhật",
+    "versions": "Chi tiết phiên bản"
+  },
+  "addedWhileAway": "Chúng tôi đã mang đến những tính năng mới trong thời gian bạn vắng mặt.",
+  "allChangelog": "Xem tất cả nhật ký cập nhật",
+  "description": "Theo dõi các tính năng và cải tiến mới của {{appName}}",
+  "pagination": {
+    "next": "Trang tiếp theo",
+    "older": "Xem thay đổi lịch sử"
+  },
+  "readDetails": "Đọc chi tiết",
+  "title": "Nhật ký cập nhật",
+  "versionDetails": "Chi tiết phiên bản",
+  "welcomeBack": "Chào mừng bạn trở lại!"
+}

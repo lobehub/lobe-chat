@@ -1,27 +1,21 @@
-import { eq } from 'drizzle-orm';
+import dayjs from 'dayjs';
+import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserGuide, UserPreference } from '@/types/user';
-import { UserSettings } from '@/types/user/settings';
 
-import { userSettings, users } from '../../schemas/lobechat';
+import { UserSettingsItem, userSettings, users } from '../../../schemas';
 import { SessionModel } from '../session';
 import { UserModel } from '../user';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'user-db';
 const userEmail = 'user@example.com';
-const userModel = new UserModel();
+const userModel = new UserModel(serverDB, userId);
 
 beforeEach(async () => {
   await serverDB.delete(users);
@@ -44,14 +38,14 @@ describe('UserModel', () => {
         email: 'test@example.com',
       };
 
-      await UserModel.createUser(params);
+      await UserModel.createUser(serverDB, params);
 
       const user = await serverDB.query.users.findFirst({ where: eq(users.id, userId) });
       expect(user).not.toBeNull();
       expect(user?.username).toBe('testuser');
       expect(user?.email).toBe('test@example.com');
 
-      const sessionModel = new SessionModel(userId);
+      const sessionModel = new SessionModel(serverDB, userId);
       const inbox = await sessionModel.findByIdOrSlug(INBOX_SESSION_ID);
       expect(inbox).not.toBeNull();
     });
@@ -61,7 +55,7 @@ describe('UserModel', () => {
     it('should delete a user', async () => {
       await serverDB.insert(users).values({ id: userId });
 
-      await UserModel.deleteUser(userId);
+      await UserModel.deleteUser(serverDB, userId);
 
       const user = await serverDB.query.users.findFirst({ where: eq(users.id, userId) });
       expect(user).toBeUndefined();
@@ -72,7 +66,7 @@ describe('UserModel', () => {
     it('should find a user by ID', async () => {
       await serverDB.insert(users).values({ id: userId, username: 'testuser' });
 
-      const user = await UserModel.findById(userId);
+      const user = await UserModel.findById(serverDB, userId);
 
       expect(user).not.toBeNull();
       expect(user?.id).toBe(userId);
@@ -84,7 +78,7 @@ describe('UserModel', () => {
     it('should find a user by email', async () => {
       await serverDB.insert(users).values({ id: userId, email: userEmail });
 
-      const user = await UserModel.findByEmail(userEmail);
+      const user = await UserModel.findByEmail(serverDB, userEmail);
 
       expect(user).not.toBeNull();
       expect(user?.id).toBe(userId);
@@ -107,7 +101,7 @@ describe('UserModel', () => {
         keyVaults: encryptedKeyVaults,
       });
 
-      const state = await userModel.getUserState(userId);
+      const state = await userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
 
       expect(state.userId).toBe(userId);
       expect(state.preference).toEqual(preference);
@@ -115,7 +109,11 @@ describe('UserModel', () => {
     });
 
     it('should throw an error if user not found', async () => {
-      await expect(userModel.getUserState('invalid-user-id')).rejects.toThrow('user not found');
+      const userModel = new UserModel(serverDB, 'invalid-user-id');
+
+      await expect(userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults)).rejects.toThrow(
+        'user not found',
+      );
     });
   });
 
@@ -123,7 +121,7 @@ describe('UserModel', () => {
     it('should update user fields', async () => {
       await serverDB.insert(users).values({ id: userId, username: 'oldname' });
 
-      await userModel.updateUser(userId, { username: 'newname' });
+      await userModel.updateUser({ username: 'newname' });
 
       const updatedUser = await serverDB.query.users.findFirst({
         where: eq(users.id, userId),
@@ -132,12 +130,23 @@ describe('UserModel', () => {
     });
   });
 
+  describe('getUserSettings', () => {
+    it('should get user settings', async () => {
+      await serverDB.insert(users).values({ id: userId });
+      await serverDB.insert(userSettings).values({ id: userId, general: { language: 'en-US' } });
+
+      const data = await userModel.getUserSettings();
+
+      expect(data).toMatchObject({ id: userId, general: { language: 'en-US' } });
+    });
+  });
+
   describe('deleteSetting', () => {
     it('should delete user settings', async () => {
       await serverDB.insert(users).values({ id: userId });
       await serverDB.insert(userSettings).values({ id: userId });
 
-      await userModel.deleteSetting(userId);
+      await userModel.deleteSetting();
 
       const settings = await serverDB.query.userSettings.findFirst({
         where: eq(users.id, userId),
@@ -148,37 +157,31 @@ describe('UserModel', () => {
   });
 
   describe('updateSetting', () => {
-    it('should update user settings with encrypted keyVaults', async () => {
+    it('should update user settings with new item', async () => {
       const settings = {
         general: { language: 'en-US' },
-        keyVaults: { openai: { apiKey: 'secret' } },
-      } as UserSettings;
+      } as UserSettingsItem;
       await serverDB.insert(users).values({ id: userId });
 
-      await userModel.updateSetting(userId, settings);
+      await userModel.updateSetting(settings);
 
       const updatedSettings = await serverDB.query.userSettings.findFirst({
         where: eq(users.id, userId),
       });
       expect(updatedSettings?.general).toEqual(settings.general);
-      expect(updatedSettings?.keyVaults).not.toBe(JSON.stringify(settings.keyVaults));
-
-      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
-      const { plaintext } = await gateKeeper.decrypt(updatedSettings!.keyVaults!);
-      expect(JSON.parse(plaintext)).toEqual(settings.keyVaults);
     });
 
-    it('should update user settings with encrypted keyVaults', async () => {
+    it('should update user settings with exist item', async () => {
       const settings = {
         general: { language: 'en-US' },
-      } as UserSettings;
+      } as UserSettingsItem;
       await serverDB.insert(users).values({ id: userId });
       await serverDB.insert(userSettings).values({ ...settings, keyVaults: '', id: userId });
 
       const newSettings = {
         general: { fontSize: 16, language: 'zh-CN', themeMode: 'dark' },
-      } as UserSettings;
-      await userModel.updateSetting(userId, newSettings);
+      } as UserSettingsItem;
+      await userModel.updateSetting(newSettings);
 
       const updatedSettings = await serverDB.query.userSettings.findFirst({
         where: eq(users.id, userId),
@@ -195,7 +198,7 @@ describe('UserModel', () => {
       const newPreference: Partial<UserPreference> = {
         guide: { topic: true, moveSettingsToAvatar: true },
       };
-      await userModel.updatePreference(userId, newPreference);
+      await userModel.updatePreference(newPreference);
 
       const updatedUser = await serverDB.query.users.findFirst({ where: eq(users.id, userId) });
       expect(updatedUser?.preference).toEqual({ ...preference, ...newPreference });
@@ -212,10 +215,196 @@ describe('UserModel', () => {
         moveSettingsToAvatar: true,
         uploadFileInKnowledgeBase: true,
       };
-      await userModel.updateGuide(userId, newGuide);
+      await userModel.updateGuide(newGuide);
 
       const updatedUser = await serverDB.query.users.findFirst({ where: eq(users.id, userId) });
       expect(updatedUser?.preference).toEqual({ ...preference, guide: newGuide });
+    });
+  });
+
+  describe('getUserApiKeys', () => {
+    it('should get and decrypt user API keys', async () => {
+      const keyVaults = { openai: { apiKey: 'test-key' } };
+      const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+      const encryptedKeyVaults = await gateKeeper.encrypt(JSON.stringify(keyVaults));
+
+      const userId = 'user-api-id';
+
+      await serverDB.insert(users).values({ id: userId });
+      await serverDB.insert(userSettings).values({
+        id: userId,
+        keyVaults: encryptedKeyVaults,
+      });
+
+      const result = await UserModel.getUserApiKeys(
+        serverDB,
+        userId,
+        KeyVaultsGateKeeper.getUserKeyVaults,
+      );
+      expect(result).toEqual(keyVaults);
+    });
+
+    it('should throw error when user not found', async () => {
+      await expect(
+        UserModel.getUserApiKeys(serverDB, 'non-existent-id', KeyVaultsGateKeeper.getUserKeyVaults),
+      ).rejects.toThrow('user not found');
+    });
+
+    it('should handle decrypt failure and return empty object', async () => {
+      const userId = 'user-api-test-id';
+      // 模拟解密失败的情况
+      const invalidEncryptedData = 'invalid:-encrypted-:data';
+      await serverDB.insert(users).values({ id: userId });
+      await serverDB.insert(userSettings).values({
+        id: userId,
+        keyVaults: invalidEncryptedData,
+      });
+
+      const result = await UserModel.getUserApiKeys(
+        serverDB,
+        userId,
+        KeyVaultsGateKeeper.getUserKeyVaults,
+      );
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('getUserRegistrationDuration', () => {
+    it('should return default values when user not found', async () => {
+      const duration = await userModel.getUserRegistrationDuration();
+      const today = dayjs().format('YYYY-MM-DD');
+
+      expect(duration).toEqual({
+        createdAt: today,
+        duration: 1,
+        updatedAt: today,
+      });
+    });
+
+    it('should calculate correct duration for existing user', async () => {
+      // Mock the current date
+      const now = new Date('2024-01-15');
+      vi.setSystemTime(now);
+
+      const createdAt = new Date('2024-01-10'); // 5 days ago
+      await serverDB.insert(users).values({
+        id: userId,
+        createdAt,
+      });
+
+      const duration = await userModel.getUserRegistrationDuration();
+
+      expect(duration).toEqual({
+        createdAt: '2024-01-10',
+        duration: 6, // 5 days difference + 1
+        updatedAt: '2024-01-15',
+      });
+
+      vi.useRealTimers();
+    });
+  });
+
+  // 补充一些边界情况的测试
+  describe('edge cases', () => {
+    describe('updatePreference', () => {
+      it('should handle undefined preference', async () => {
+        await serverDB.insert(users).values({ id: userId });
+
+        const newPreference: Partial<UserPreference> = {
+          guide: { topic: true },
+        };
+
+        await userModel.updatePreference(newPreference);
+
+        const updatedUser = await serverDB.query.users.findFirst({
+          where: eq(users.id, userId),
+        });
+
+        expect(updatedUser?.preference).toMatchObject(newPreference);
+      });
+
+      it('should do nothing if user not found', async () => {
+        const nonExistentUserModel = new UserModel(serverDB, 'non-existent-id');
+        const result = await nonExistentUserModel.updatePreference({ guide: { topic: true } });
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('updateGuide', () => {
+      it('should handle undefined guide', async () => {
+        await serverDB.insert(users).values({
+          id: userId,
+          preference: {} as UserPreference,
+        });
+
+        const newGuide: Partial<UserGuide> = {
+          topic: true,
+        };
+
+        await userModel.updateGuide(newGuide);
+
+        const updatedUser = await serverDB.query.users.findFirst({
+          where: eq(users.id, userId),
+        });
+        expect(updatedUser?.preference).toEqual({ guide: newGuide });
+      });
+
+      it('should do nothing if user not found', async () => {
+        const nonExistentUserModel = new UserModel(serverDB, 'non-existent-id');
+        const result = await nonExistentUserModel.updateGuide({ topic: true });
+        expect(result).toBeUndefined();
+      });
+    });
+
+    describe('createUser', () => {
+      it('should not create duplicate user with same id', async () => {
+        const params = {
+          id: userId,
+          username: 'existinguser',
+          email: 'existing@example.com',
+        };
+
+        // First creation
+        await UserModel.createUser(serverDB, params);
+
+        // Attempt to create with same ID but different details
+        await UserModel.createUser(serverDB, {
+          ...params,
+          username: 'newuser',
+          email: 'new@example.com',
+        });
+
+        const user = await UserModel.findById(serverDB, userId);
+        expect(user?.username).toBe('existinguser');
+        expect(user?.email).toBe('existing@example.com');
+      });
+    });
+
+    describe('getUserState', () => {
+      it('should handle empty settings', async () => {
+        await serverDB.insert(users).values({
+          id: userId,
+          preference: {} as UserPreference,
+          isOnboarded: true,
+        });
+
+        const state = await userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
+
+        expect(state).toMatchObject({
+          userId,
+          isOnboarded: true,
+          preference: {},
+          settings: {
+            defaultAgent: {},
+            general: {},
+            keyVaults: {},
+            languageModel: {},
+            systemAgent: {},
+            tool: {},
+            tts: {},
+          },
+        });
+      });
     });
   });
 });

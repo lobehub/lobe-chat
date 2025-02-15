@@ -5,17 +5,14 @@ import type { StateCreator } from 'zustand/vanilla';
 import { DEFAULT_PREFERENCE } from '@/const/user';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
-import { ClientService } from '@/services/user/client';
 import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
 import { UserInitializationState } from '@/types/user';
 import type { UserSettings } from '@/types/user/settings';
-import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { preferenceSelectors } from '../preference/selectors';
-import { userGeneralSettingsSelectors } from '../settings/selectors';
 
 const n = setNamespace('common');
 
@@ -47,9 +44,9 @@ export const createCommonSlice: StateCreator<
     await mutate(GET_USER_STATE_KEY);
   },
   updateAvatar: async (avatar) => {
-    const clientService = new ClientService();
+    const { userClientService } = await import('@/services/user');
 
-    await clientService.updateAvatar(avatar);
+    await userClientService.updateAvatar(avatar);
     await get().refreshUserState();
   },
 
@@ -100,7 +97,6 @@ export const createCommonSlice: StateCreator<
             set(
               {
                 defaultSettings,
-                enabledNextAuth: serverConfig.enabledOAuthSSO,
                 isOnboard: data.isOnboard,
                 isShowPWAGuide: data.canEnablePWAGuide,
                 isUserCanEnableTrace: data.canEnableTrace,
@@ -116,12 +112,6 @@ export const createCommonSlice: StateCreator<
             );
 
             get().refreshDefaultModelProviderList({ trigger: 'fetchUserState' });
-
-            // auto switch language
-            const language = userGeneralSettingsSelectors.config(get()).language;
-            if (language === 'auto') {
-              switchLang('auto');
-            }
           }
         },
       },

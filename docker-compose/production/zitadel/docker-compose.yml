@@ -1,3 +1,4 @@
+name: lobe-chat-database
 services:
   postgresql:
     image: pgvector/pgvector:pg16
@@ -32,14 +33,13 @@ services:
     restart: always
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"
-      
+
+
   zitadel:
     restart: always
     image: ghcr.io/zitadel/zitadel:latest
     container_name: lobe-zitadel
-    command: start-from-init --config /zitadel-config.yaml --steps
-      /zitadel-init-steps.yaml --masterkey "cft3Tekr/rQBOqwoQSCPoncA9BHbn7QJ"
-      --tlsMode external  #MasterkeyNeedsToHave32Characters
+    command: start-from-init --config /zitadel-config.yaml --steps /zitadel-init-steps.yaml --masterkey "cft3Tekr/rQBOqwoQSCPoncA9BHbn7QJ" --tlsMode external #MasterkeyNeedsToHave32Characters
     ports:
       - 8080:8080
     volumes:
@@ -51,7 +51,7 @@ services:
 
   lobe:
     image: lobehub/lobe-chat-database
-    container_name: lobe-database
+    container_name: lobe-chat
     ports:
       - '3210:3210'
     depends_on:

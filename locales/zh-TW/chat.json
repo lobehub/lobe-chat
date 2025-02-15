@@ -8,6 +8,7 @@
   "agents": "助手",
   "artifact": {
     "generating": "生成中",
+    "inThread": "子話題中無法查看，請切換到主對話區打開",
     "thinking": "思考中",
     "thought": "思考過程",
     "unknownTitle": "未命名作品"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暫無助手",
   "historyRange": "歷史範圍",
+  "historySummary": "歷史消息總結",
   "inbox": {
     "desc": "開啟大腦集群，激發思維火花。你的智能助理，在這裡與你交流一切",
     "title": "隨便聊聊"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "刪除並重新生成",
+    "deleteDisabledByThreads": "存在子話題，無法刪除",
     "regenerate": "重新生成"
   },
   "newAgent": "新建助手",
@@ -100,14 +103,20 @@
     "tooLong": "分組名稱長度需在 1-20 之內"
   },
   "shareModal": {
+    "copy": "複製",
     "download": "下載截圖",
+    "downloadFile": "下載檔案",
+    "exportTitle": "預設標題",
     "imageType": "圖片格式",
+    "includeTool": "包含插件訊息",
+    "includeUser": "包含使用者訊息",
     "screenshot": "截圖",
     "settings": "導出設置",
-    "shareToShareGPT": "生成 ShareGPT 分享鏈接",
+    "text": "文本",
     "withBackground": "包含背景圖片",
     "withFooter": "包含頁腳",
     "withPluginInfo": "包含插件信息",
+    "withRole": "包含訊息角色",
     "withSystemRole": "包含助手角色設定"
   },
   "stt": {
@@ -115,9 +124,14 @@
     "loading": "識別中...",
     "prettifying": "潤色中..."
   },
-  "temp": "臨時",
+  "thread": {
+    "divider": "子話題",
+    "threadMessageCount": "{{messageCount}} 條消息",
+    "title": "子話題"
+  },
   "tokenDetails": {
     "chats": "聊天訊息",
+    "historySummary": "歷史總結",
     "rest": "剩餘可用",
     "systemRole": "角色設定",
     "title": "上下文詳細資訊",
@@ -131,29 +145,10 @@
     "used": "使用"
   },
   "topic": {
-    "actions": {
-      "autoRename": "智能重新命名",
-      "duplicate": "建立副本",
-      "export": "匯出主題"
-    },
     "checkOpenNewTopic": "是否開啟新主題?",
     "checkSaveCurrentMessages": "是否將當前對話保存為話題？",
-    "confirmRemoveAll": "即將刪除全部話題，刪除後將不可恢復，請謹慎操作。",
-    "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",
-    "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",
-    "defaultTitle": "默認話題",
-    "duplicateLoading": "話題複製中...",
-    "duplicateSuccess": "話題複製成功",
-    "guide": {
-      "desc": "點擊發送左側按鈕可將當前對話保存為歷史話題，並開啟新一輪對話",
-      "title": "話題列表"
-    },
     "openNewTopic": "開啟新話題",
-    "removeAll": "刪除全部話題",
-    "removeUnstarred": "刪除未收藏話題",
-    "saveCurrentMessages": "將當前對話保存為話題",
-    "searchPlaceholder": "搜索話題...",
-    "title": "話題列表"
+    "saveCurrentMessages": "將當前對話保存為話題"
   },
   "translate": {
     "action": "翻譯",
@@ -184,5 +179,6 @@
         "processing": "檔案處理中..."
       }
     }
-  }
+  },
+  "zenMode": "專注模式"
 }

@@ -8,6 +8,7 @@
   "agents": "Asystent",
   "artifact": {
     "generating": "Generowanie",
+    "inThread": "Nie można przeglądać w wątku, przełącz się na główny obszar rozmowy, aby otworzyć",
     "thinking": "Myślenie",
     "thought": "Proces myślenia",
     "unknownTitle": "Nienazwane dzieło"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} kopia",
   "emptyAgent": "Brak asystenta",
   "historyRange": "Zakres historii",
+  "historySummary": "Podsumowanie wiadomości historycznych",
   "inbox": {
     "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
     "title": "Pogadajmy sobie"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Usuń i wygeneruj ponownie",
+    "deleteDisabledByThreads": "Istnieją podwątki, nie można usunąć",
     "regenerate": "Wygeneruj ponownie"
   },
   "newAgent": "Nowy asystent",
@@ -100,14 +103,20 @@
     "tooLong": "Nazwa grupy musi mieć od 1 do 20 znaków"
   },
   "shareModal": {
+    "copy": "Kopiuj",
     "download": "Pobierz zrzut ekranu",
+    "downloadFile": "Pobierz plik",
+    "exportTitle": "Domyślny tytuł",
     "imageType": "Typ obrazu",
+    "includeTool": "Uwzględnij wiadomości z narzędzi",
+    "includeUser": "Uwzględnij wiadomości od użytkowników",
     "screenshot": "Zrzut ekranu",
     "settings": "Ustawienia eksportu",
-    "shareToShareGPT": "Generuj link udostępniania ShareGPT",
+    "text": "Tekst",
     "withBackground": "Z tłem",
     "withFooter": "Z stopką",
     "withPluginInfo": "Z informacjami o wtyczce",
+    "withRole": "Uwzględnij rolę wiadomości",
     "withSystemRole": "Z rolą asystenta"
   },
   "stt": {
@@ -115,9 +124,14 @@
     "loading": "Rozpoznawanie...",
     "prettifying": "Upiększanie..."
   },
-  "temp": "Tymczasowy",
+  "thread": {
+    "divider": "Podwątek",
+    "threadMessageCount": "{{messageCount}} wiadomości",
+    "title": "Podwątek"
+  },
   "tokenDetails": {
     "chats": "Rozmowy",
+    "historySummary": "Podsumowanie historii",
     "rest": "Pozostałe",
     "systemRole": "Rola systemowa",
     "title": "Szczegóły tokena",
@@ -131,29 +145,10 @@
     "used": "Użyte"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Automatyczna zmiana nazwy",
-      "duplicate": "Utwórz kopię",
-      "export": "Eksportuj temat"
-    },
     "checkOpenNewTopic": "Czy otworzyć nowy temat?",
     "checkSaveCurrentMessages": "Czy zapisać bieżącą rozmowę jako temat?",
-    "confirmRemoveAll": "Czy na pewno chcesz usunąć wszystkie tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
-    "confirmRemoveTopic": "Czy na pewno chcesz usunąć ten temat? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
-    "confirmRemoveUnstarred": "Czy na pewno chcesz usunąć nieoznaczone tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
-    "defaultTitle": "Domyślne tematy",
-    "duplicateLoading": "Kopiowanie tematu...",
-    "duplicateSuccess": "Temat został skopiowany pomyślnie",
-    "guide": {
-      "desc": "Kliknij przycisk po lewej stronie, aby zapisać bieżącą rozmowę jako historię tematu i rozpocząć nową rundę rozmowy",
-      "title": "Lista tematów"
-    },
     "openNewTopic": "Otwórz nowy temat",
-    "removeAll": "Usuń wszystkie tematy",
-    "removeUnstarred": "Usuń nieoznaczone tematy",
-    "saveCurrentMessages": "Zapisz bieżącą rozmowę jako temat",
-    "searchPlaceholder": "Szukaj tematów...",
-    "title": "Lista tematów"
+    "saveCurrentMessages": "Zapisz bieżącą rozmowę jako temat"
   },
   "translate": {
     "action": "Tłumaczenie",
@@ -184,5 +179,6 @@
         "processing": "Przetwarzanie pliku..."
       }
     }
-  }
+  },
+  "zenMode": "Tryb skupienia"
 }

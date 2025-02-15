@@ -1,6 +1,6 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { globalHelpers } from '@/store/user/helpers';
+import { globalHelpers } from '@/store/global/helpers';
 
 import { toolService } from '../tool';
 import openAPIV3 from './openai/OpenAPI_V3.json';
@@ -8,7 +8,7 @@ import OpenAIPlugin from './openai/plugin.json';
 
 // Mocking modules and functions
 
-vi.mock('@/store/user/helpers', () => ({
+vi.mock('@/store/global/helpers', () => ({
   globalHelpers: {
     getCurrentLanguage: vi.fn(),
   },
@@ -35,7 +35,7 @@ describe('ToolService', () => {
 
       // Assert
       expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
-      expect(fetch).toHaveBeenCalledWith('/api/plugin/store?locale=tt');
+      expect(fetch).toHaveBeenCalledWith('/webapi/plugin/store?locale=tt');
       expect(pluginList).toEqual(fakeResponse.plugins);
     });
 

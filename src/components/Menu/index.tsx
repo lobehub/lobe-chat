@@ -10,8 +10,8 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
   `,
   menu: css`
     flex: 1;
-    background: transparent;
     border: none !important;
+    background: transparent;
 
     .${prefixCls}-menu-item-divider {
       margin-block: 0.125rem;

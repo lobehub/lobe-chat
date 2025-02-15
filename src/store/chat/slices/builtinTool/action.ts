@@ -72,7 +72,6 @@ export const chatToolSlice: StateCreator<
 
       const data = await useFileStore.getState().uploadWithProgress({
         file: imageFile,
-        onStatusUpdate: () => {},
       });
 
       if (!data) return;

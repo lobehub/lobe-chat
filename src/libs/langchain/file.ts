@@ -1,15 +1,16 @@
 export const LANGCHAIN_SUPPORT_TEXT_LIST = [
   'txt',
-  'md',
   'markdown',
   'md',
   'mdx',
   'toml',
   'yaml',
+  'yml',
   'json',
 
   'sh',
   'patch',
+  'log',
   // js
   'js',
   'jsx',

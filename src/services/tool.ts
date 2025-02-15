@@ -1,4 +1,4 @@
-import { globalHelpers } from '@/store/user/helpers';
+import { globalHelpers } from '@/store/global/helpers';
 import { DiscoverPlugintem } from '@/types/discover';
 import { convertOpenAIManifestToLobeManifest, getToolManifest } from '@/utils/toolManifest';
 

@@ -1,5 +1,7 @@
 {
-  "ai21": {},
+  "ai21": {
+    "description": "AI21 Labs xây dựng các mô hình cơ bản và hệ thống trí tuệ nhân tạo cho doanh nghiệp, tăng tốc ứng dụng trí tuệ nhân tạo sinh sinh trong sản xuất."
+  },
   "ai360": {
     "description": "360 AI là nền tảng mô hình và dịch vụ AI do công ty 360 phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên tiên tiến, bao gồm 360GPT2 Pro, 360GPT Pro, 360GPT Turbo và 360GPT Turbo Responsibility 8K. Những mô hình này kết hợp giữa tham số quy mô lớn và khả năng đa phương thức, được ứng dụng rộng rãi trong tạo văn bản, hiểu ngữ nghĩa, hệ thống đối thoại và tạo mã. Thông qua chiến lược giá linh hoạt, 360 AI đáp ứng nhu cầu đa dạng của người dùng, hỗ trợ nhà phát triển tích hợp, thúc đẩy sự đổi mới và phát triển ứng dụng thông minh."
   },
@@ -15,11 +17,20 @@
   "bedrock": {
     "description": "Bedrock là dịch vụ do Amazon AWS cung cấp, tập trung vào việc cung cấp các mô hình ngôn ngữ AI và mô hình hình ảnh tiên tiến cho doanh nghiệp. Gia đình mô hình của nó bao gồm dòng Claude của Anthropic, dòng Llama 3.1 của Meta, v.v., bao quát nhiều lựa chọn từ nhẹ đến hiệu suất cao, hỗ trợ nhiều nhiệm vụ như tạo văn bản, đối thoại, xử lý hình ảnh, phù hợp cho các ứng dụng doanh nghiệp với quy mô và nhu cầu khác nhau."
   },
+  "cloudflare": {
+    "description": "Chạy các mô hình học máy được hỗ trợ bởi GPU không máy chủ trên mạng lưới toàn cầu của Cloudflare."
+  },
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
   },
+  "doubao": {
+    "description": "Mô hình lớn tự phát triển do ByteDance phát triển. Được xác thực qua hơn 50 tình huống kinh doanh nội bộ của ByteDance, với việc sử dụng hàng nghìn tỷ token mỗi ngày để liên tục cải tiến, cung cấp nhiều khả năng đa phương thức, tạo ra trải nghiệm kinh doanh phong phú cho doanh nghiệp với hiệu quả mô hình chất lượng cao."
+  },
   "fireworksai": {
     "description": "Fireworks AI là nhà cung cấp dịch vụ mô hình ngôn ngữ cao cấp hàng đầu, tập trung vào gọi chức năng và xử lý đa phương thức. Mô hình mới nhất của họ, Firefunction V2, dựa trên Llama-3, được tối ưu hóa cho gọi chức năng, đối thoại và tuân theo chỉ dẫn. Mô hình ngôn ngữ hình ảnh FireLLaVA-13B hỗ trợ đầu vào hỗn hợp hình ảnh và văn bản. Các mô hình đáng chú ý khác bao gồm dòng Llama và dòng Mixtral, cung cấp hỗ trợ cho việc tuân theo và tạo ra chỉ dẫn đa ngôn ngữ hiệu quả."
+  },
+  "giteeai": {
+    "description": "Serverless API của Gitee AI cung cấp các dịch vụ API lý luận mô hình lớn cho các nhà phát triển AI."
   },
   "github": {
     "description": "Với GitHub Models, các nhà phát triển có thể trở thành kỹ sư AI và xây dựng với các mô hình AI hàng đầu trong ngành."
@@ -30,8 +41,20 @@
   "groq": {
     "description": "Bộ máy suy diễn LPU của Groq thể hiện xuất sắc trong các bài kiểm tra chuẩn mô hình ngôn ngữ lớn (LLM) độc lập mới nhất, định nghĩa lại tiêu chuẩn cho các giải pháp AI với tốc độ và hiệu quả đáng kinh ngạc. Groq là đại diện cho tốc độ suy diễn tức thì, thể hiện hiệu suất tốt trong triển khai dựa trên đám mây."
   },
+  "higress": {
+    "description": "Higress là một cổng API gốc đám mây, được phát triển trong nội bộ của Alibaba để giải quyết vấn đề Tengine reload ảnh hưởng đến các dịch vụ kết nối dài hạn, cũng như khả năng cân bằng tải gRPC/Dubbo chưa đủ."
+  },
+  "huggingface": {
+    "description": "HuggingFace Inference API cung cấp một cách nhanh chóng và miễn phí để bạn khám phá hàng ngàn mô hình cho nhiều nhiệm vụ khác nhau. Dù bạn đang thiết kế nguyên mẫu cho một ứng dụng mới hay đang thử nghiệm khả năng của học máy, API này cho phép bạn truy cập ngay lập tức vào các mô hình hiệu suất cao trong nhiều lĩnh vực."
+  },
   "hunyuan": {
     "description": "Mô hình ngôn ngữ lớn được phát triển bởi Tencent, có khả năng sáng tạo tiếng Trung mạnh mẽ, khả năng suy luận logic trong các ngữ cảnh phức tạp, và khả năng thực hiện nhiệm vụ đáng tin cậy."
+  },
+  "internlm": {
+    "description": "Tổ chức mã nguồn mở chuyên nghiên cứu và phát triển công cụ cho mô hình lớn. Cung cấp nền tảng mã nguồn mở hiệu quả, dễ sử dụng cho tất cả các nhà phát triển AI, giúp tiếp cận công nghệ mô hình lớn và thuật toán tiên tiến nhất."
+  },
+  "lmstudio": {
+    "description": "LM Studio là một ứng dụng máy tính để phát triển và thử nghiệm các LLM trên máy tính của bạn."
   },
   "minimax": {
     "description": "MiniMax là công ty công nghệ trí tuệ nhân tạo tổng quát được thành lập vào năm 2021, cam kết cùng người dùng sáng tạo trí thông minh. MiniMax đã tự phát triển nhiều mô hình lớn đa phương thức, bao gồm mô hình văn bản MoE với một triệu tham số, mô hình giọng nói và mô hình hình ảnh. Họ cũng đã phát hành các ứng dụng như AI Hải Lý."
@@ -60,6 +83,9 @@
   "qwen": {
     "description": "Qwen là mô hình ngôn ngữ quy mô lớn tự phát triển của Alibaba Cloud, có khả năng hiểu và tạo ngôn ngữ tự nhiên mạnh mẽ. Nó có thể trả lời nhiều câu hỏi, sáng tác nội dung văn bản, bày tỏ quan điểm, viết mã, v.v., hoạt động trong nhiều lĩnh vực."
   },
+  "sensenova": {
+    "description": "SenseTime luôn đổi mới, dựa vào nền tảng mạnh mẽ của SenseTime để cung cấp dịch vụ mô hình lớn toàn diện, hiệu quả và dễ sử dụng."
+  },
   "siliconcloud": {
     "description": "SiliconFlow cam kết tăng tốc AGI để mang lại lợi ích cho nhân loại, nâng cao hiệu quả AI quy mô lớn thông qua một ngăn xếp GenAI dễ sử dụng và chi phí thấp."
   },
@@ -72,6 +98,9 @@
   "taichu": {
     "description": "Viện Nghiên cứu Tự động hóa Trung Quốc và Viện Nghiên cứu Trí tuệ Nhân tạo Vũ Hán đã phát hành mô hình lớn đa phương thức thế hệ mới, hỗ trợ các nhiệm vụ hỏi đáp toàn diện như hỏi đáp nhiều vòng, sáng tác văn bản, tạo hình ảnh, hiểu 3D, phân tích tín hiệu, v.v., với khả năng nhận thức, hiểu biết và sáng tác mạnh mẽ hơn, mang đến trải nghiệm tương tác hoàn toàn mới."
   },
+  "tencentcloud": {
+    "description": "Năng lực nguyên tử của động cơ tri thức (LLM Knowledge Engine Atomic Power) được phát triển dựa trên động cơ tri thức, cung cấp khả năng hỏi đáp toàn diện cho doanh nghiệp và nhà phát triển, cho phép xây dựng và phát triển ứng dụng mô hình một cách linh hoạt. Bạn có thể sử dụng nhiều năng lực nguyên tử để tạo ra dịch vụ mô hình riêng của mình, kết hợp các dịch vụ như phân tích tài liệu, tách rời, embedding, và viết lại nhiều vòng để tùy chỉnh các dịch vụ AI đặc thù cho doanh nghiệp."
+  },
   "togetherai": {
     "description": "Together AI cam kết đạt được hiệu suất hàng đầu thông qua các mô hình AI sáng tạo, cung cấp khả năng tùy chỉnh rộng rãi, bao gồm hỗ trợ mở rộng nhanh chóng và quy trình triển khai trực quan, đáp ứng nhiều nhu cầu của doanh nghiệp."
   },
@@ -80,6 +109,9 @@
   },
   "wenxin": {
     "description": "Nền tảng phát triển và dịch vụ ứng dụng AI gốc với mô hình lớn một cửa dành cho doanh nghiệp, cung cấp chuỗi công cụ toàn diện và dễ sử dụng cho phát triển mô hình trí tuệ nhân tạo sinh sinh và phát triển ứng dụng."
+  },
+  "xai": {
+    "description": "xAI là một công ty cam kết xây dựng trí tuệ nhân tạo để tăng tốc khám phá khoa học của nhân loại. Sứ mệnh của chúng tôi là thúc đẩy sự hiểu biết chung của chúng ta về vũ trụ."
   },
   "zeroone": {
     "description": "01.AI tập trung vào công nghệ trí tuệ nhân tạo trong kỷ nguyên AI 2.0, thúc đẩy mạnh mẽ sự đổi mới và ứng dụng của \"người + trí tuệ nhân tạo\", sử dụng các mô hình mạnh mẽ và công nghệ AI tiên tiến để nâng cao năng suất của con người và thực hiện sự trao quyền công nghệ."

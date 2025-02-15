@@ -1,12 +1,13 @@
-import { SQL, and, count, desc, eq, inArray } from 'drizzle-orm';
+import { SQL, count } from 'drizzle-orm';
+import { and, desc, eq, inArray } from 'drizzle-orm/expressions';
 
-import { serverDB } from '@/database/server';
 import {
   NewEvalEvaluationItem,
   evalDatasets,
   evalEvaluation,
   evaluationRecords,
-} from '@/database/server/schemas/lobechat';
+} from '@/database/schemas';
+import { serverDB } from '@/database/server';
 import { EvalEvaluationStatus, RAGEvalEvaluationItem } from '@/types/eval';
 
 export class EvalEvaluationModel {

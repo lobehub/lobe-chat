@@ -1,10 +1,11 @@
+name: lobe-chat-database
 services:
   network-service:
     image: alpine
     container_name: lobe-network
     ports:
-      - '9000:9000'  # MinIO API
-      - '9001:9001'  # MinIO Console
+      - '9000:9000' # MinIO API
+      - '9001:9001' # MinIO Console
       - '8080:8080' # Zitadel Console
       - '3210:3210' # LobeChat
     command: tail -f /dev/null
@@ -15,7 +16,7 @@ services:
     image: pgvector/pgvector:pg16
     container_name: lobe-postgres
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - './data:/var/lib/postgresql/data'
     environment:
@@ -44,24 +45,23 @@ services:
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"
 
+
   zitadel:
     restart: 'always'
     image: 'ghcr.io/zitadel/zitadel:latest'
     container_name: lobe-zitadel
     network_mode: 'service:network-service'
-    command: start-from-init --config /zitadel-config.yaml --steps
-      /zitadel-init-steps.yaml --masterkey "cft3Tekr/rQBOqwoQSCPoncA9BHbn7QJ"
-      --tlsMode disabled  #MasterkeyNeedsToHave32Characters
+    command: start-from-init --config /zitadel-config.yaml --steps /zitadel-init-steps.yaml --masterkey "cft3Tekr/rQBOqwoQSCPoncA9BHbn7QJ" --tlsMode disabled #MasterkeyNeedsToHave32Characters
     volumes:
       - ./zitadel-config.yaml:/zitadel-config.yaml:ro
-      - ./zitadel-init-steps.yaml:/zitadel-init-steps.yaml:ro     
+      - ./zitadel-init-steps.yaml:/zitadel-init-steps.yaml:ro
     depends_on:
       postgresql:
         condition: service_healthy
 
   lobe:
     image: lobehub/lobe-chat-database
-    container_name: lobe-database
+    container_name: lobe-chat
     network_mode: 'service:network-service'
     depends_on:
       postgresql:

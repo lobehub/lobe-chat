@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
+import { updateMessagePluginSchema } from '@/database/schemas';
+import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
-import { updateMessagePluginSchema } from '@/database/server/schemas/lobechat';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
+import { getFullFileUrl } from '@/server/utils/files';
 import { ChatMessage } from '@/types/message';
 import { BatchTaskResult } from '@/types/service';
 
@@ -12,7 +14,7 @@ const messageProcedure = authedProcedure.use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
-    ctx: { messageModel: new MessageModel(ctx.userId) },
+    ctx: { messageModel: new MessageModel(serverDB, ctx.userId) },
   });
 });
 
@@ -25,12 +27,33 @@ export const messageRouter = router({
       return { added: data.rowCount as number, ids: [], skips: [], success: true };
     }),
 
-  count: messageProcedure.query(async ({ ctx }) => {
-    return ctx.messageModel.count();
-  }),
-  countToday: messageProcedure.query(async ({ ctx }) => {
-    return ctx.messageModel.countToday();
-  }),
+  count: messageProcedure
+    .input(
+      z
+        .object({
+          endDate: z.string().optional(),
+          range: z.tuple([z.string(), z.string()]).optional(),
+          startDate: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.messageModel.count(input);
+    }),
+
+  countWords: messageProcedure
+    .input(
+      z
+        .object({
+          endDate: z.string().optional(),
+          range: z.tuple([z.string(), z.string()]).optional(),
+          startDate: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.messageModel.countWords(input);
+    }),
 
   createMessage: messageProcedure
     .input(z.object({}).passthrough().partial())
@@ -40,10 +63,12 @@ export const messageRouter = router({
       return data.id;
     }),
 
+  // TODO: it will be removed in V2
   getAllMessages: messageProcedure.query(async ({ ctx }): Promise<ChatMessageList> => {
-    return ctx.messageModel.queryAll();
+    return ctx.messageModel.queryAll() as any;
   }),
 
+  // TODO: it will be removed in V2
   getAllMessagesInSession: messageProcedure
     .input(
       z.object({
@@ -51,9 +76,14 @@ export const messageRouter = router({
       }),
     )
     .query(async ({ ctx, input }): Promise<ChatMessageList> => {
-      return ctx.messageModel.queryBySessionId(input.sessionId);
+      return ctx.messageModel.queryBySessionId(input.sessionId) as any;
     }),
 
+  getHeatmaps: messageProcedure.query(async ({ ctx }) => {
+    return ctx.messageModel.getHeatmaps();
+  }),
+
+  // TODO: 未来这部分方法也需要使用 authedProcedure
   getMessages: publicProcedure
     .input(
       z.object({
@@ -66,10 +96,14 @@ export const messageRouter = router({
     .query(async ({ input, ctx }) => {
       if (!ctx.userId) return [];
 
-      const messageModel = new MessageModel(ctx.userId);
+      const messageModel = new MessageModel(serverDB, ctx.userId);
 
-      return messageModel.query(input);
+      return messageModel.query(input, { postProcessUrl: (path) => getFullFileUrl(path) });
     }),
+
+  rankModels: messageProcedure.query(async ({ ctx }) => {
+    return ctx.messageModel.rankModels();
+  }),
 
   removeAllMessages: messageProcedure.mutation(async ({ ctx }) => {
     return ctx.messageModel.deleteAllMessages();

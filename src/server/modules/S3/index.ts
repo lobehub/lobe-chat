@@ -44,6 +44,9 @@ export class S3 {
       endpoint: fileEnv.S3_ENDPOINT,
       forcePathStyle: fileEnv.S3_ENABLE_PATH_STYLE,
       region: fileEnv.S3_REGION || DEFAULT_S3_REGION,
+      // refs: https://github.com/lobehub/lobe-chat/pull/5479
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     });
   }
 
@@ -103,6 +106,17 @@ export class S3 {
     });
 
     return getSignedUrl(this.client, command, { expiresIn: 3600 });
+  }
+
+  public async createPreSignedUrlForPreview(key: string, expiresIn?: number): Promise<string> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    });
+
+    return getSignedUrl(this.client, command, {
+      expiresIn: expiresIn ?? fileEnv.S3_PREVIEW_URL_EXPIRE_IN,
+    });
   }
 
   public async uploadContent(path: string, content: string) {

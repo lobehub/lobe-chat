@@ -2,51 +2,34 @@
 
 import { Icon } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { Loader2Icon } from 'lucide-react';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
-import { WELCOME_GUIDE_CHAT_ID } from '@/const/session';
 import { isServerMode } from '@/const/version';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { useSessionStore } from '@/store/session';
 
 import AutoScroll from '../AutoScroll';
-import Item from '../ChatItem';
-import InboxWelcome from '../InboxWelcome';
 import SkeletonList from '../SkeletonList';
 
 interface VirtualizedListProps {
+  dataSource: string[];
+  itemContent: (index: number, data: any, context: any) => ReactNode;
   mobile?: boolean;
 }
-const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
+
+const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemContent }) => {
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
 
-  const [id] = useChatStore((s) => [chatSelectors.currentChatKey(s)]);
-
-  const [activeTopicId, useFetchMessages, isFirstLoading, isCurrentChatLoaded] = useChatStore(
-    (s) => [
-      s.activeTopicId,
-      s.useFetchMessages,
-      chatSelectors.currentChatLoadingState(s),
-      chatSelectors.isCurrentChatLoaded(s),
-    ],
-  );
-
-  const [sessionId] = useSessionStore((s) => [s.activeId]);
-  useFetchMessages(sessionId, activeTopicId);
-
-  const data = useChatStore((s) => {
-    const showInboxWelcome = chatSelectors.showInboxWelcome(s);
-    return showInboxWelcome
-      ? [WELCOME_GUIDE_CHAT_ID]
-      : chatSelectors.currentChatIDsWithGuideMessage(s);
-  }, isEqual);
+  const [id, isFirstLoading, isCurrentChatLoaded] = useChatStore((s) => [
+    chatSelectors.currentChatKey(s),
+    chatSelectors.currentChatLoadingState(s),
+    chatSelectors.isCurrentChatLoaded(s),
+  ]);
 
   useEffect(() => {
     if (virtuosoRef.current) {
@@ -54,26 +37,17 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     }
   }, [id]);
 
-  const prevDataLengthRef = useRef(data.length);
+  const prevDataLengthRef = useRef(dataSource.length);
 
   const getFollowOutput = useCallback(() => {
-    const newFollowOutput = data.length > prevDataLengthRef.current ? 'auto' : false;
-    prevDataLengthRef.current = data.length;
+    const newFollowOutput = dataSource.length > prevDataLengthRef.current ? 'auto' : false;
+    prevDataLengthRef.current = dataSource.length;
     return newFollowOutput;
-  }, [data.length]);
+  }, [dataSource.length]);
 
   const theme = useTheme();
   // overscan should be 3 times the height of the window
   const overscan = typeof window !== 'undefined' ? window.innerHeight * 3 : 0;
-
-  const itemContent = useCallback(
-    (index: number, id: string) => {
-      if (id === WELCOME_GUIDE_CHAT_ID) return <InboxWelcome />;
-
-      return <Item id={id} index={index} />;
-    },
-    [mobile],
-  );
 
   // first time loading or not loaded
   if (isFirstLoading) return <SkeletonList mobile={mobile} />;
@@ -100,10 +74,10 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
         atBottomStateChange={setAtBottom}
         atBottomThreshold={50 * (mobile ? 2 : 1)}
         computeItemKey={(_, item) => item}
-        data={data}
+        data={dataSource}
         followOutput={getFollowOutput}
         increaseViewportBy={overscan}
-        initialTopMostItemIndex={data?.length - 1}
+        initialTopMostItemIndex={dataSource?.length - 1}
         isScrolling={setIsScrolling}
         itemContent={itemContent}
         overscan={overscan}

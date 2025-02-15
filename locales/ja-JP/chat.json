@@ -8,6 +8,7 @@
   "agents": "エージェント",
   "artifact": {
     "generating": "生成中",
+    "inThread": "サブトピックでは表示できません。メインの対話エリアに切り替えてください。",
     "thinking": "思考中",
     "thought": "思考過程",
     "unknownTitle": "未命名の作品"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} のコピー",
   "emptyAgent": "エージェントがいません",
   "historyRange": "履歴範囲",
+  "historySummary": "履歴メッセージの要約",
   "inbox": {
     "desc": "脳のクラスターを起動し、創造性を引き出しましょう。あなたのスマートアシスタントは、あなたとすべてのことについてここでコミュニケーションします。",
     "title": "気軽におしゃべり"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "削除して再生成",
+    "deleteDisabledByThreads": "サブトピックが存在するため、削除できません。",
     "regenerate": "再生成"
   },
   "newAgent": "新しいエージェント",
@@ -100,14 +103,20 @@
     "tooLong": "グループ名は1〜20文字で入力してください"
   },
   "shareModal": {
+    "copy": "コピー",
     "download": "スクリーンショットをダウンロード",
+    "downloadFile": "ファイルをダウンロード",
+    "exportTitle": "デフォルトタイトル",
     "imageType": "画像形式",
+    "includeTool": "ツールメッセージを含める",
+    "includeUser": "ユーザーメッセージを含める",
     "screenshot": "スクリーンショット",
     "settings": "エクスポート設定",
-    "shareToShareGPT": "ShareGPT 共有リンクを生成",
+    "text": "テキスト",
     "withBackground": "背景画像を含む",
     "withFooter": "フッターを含む",
     "withPluginInfo": "プラグイン情報を含む",
+    "withRole": "メッセージの役割を含める",
     "withSystemRole": "エージェントの役割を含む"
   },
   "stt": {
@@ -115,9 +124,14 @@
     "loading": "認識中...",
     "prettifying": "整形中..."
   },
-  "temp": "一時的",
+  "thread": {
+    "divider": "サブトピック",
+    "threadMessageCount": "{{messageCount}} 件のメッセージ",
+    "title": "サブトピック"
+  },
   "tokenDetails": {
     "chats": "チャットメッセージ",
+    "historySummary": "履歴の要約",
     "rest": "残り利用可能",
     "systemRole": "システムロール設定",
     "title": "コンテキストの詳細",
@@ -131,29 +145,10 @@
     "used": "使用済み"
   },
   "topic": {
-    "actions": {
-      "autoRename": "自動リネーム",
-      "duplicate": "コピーを作成",
-      "export": "トピックをエクスポート"
-    },
     "checkOpenNewTopic": "新しいトピックを開始しますか？",
     "checkSaveCurrentMessages": "現在の会話をトピックとして保存しますか？",
-    "confirmRemoveAll": "すべてのトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
-    "confirmRemoveTopic": "このトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
-    "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
-    "defaultTitle": "デフォルトトピック",
-    "duplicateLoading": "トピックを複製中...",
-    "duplicateSuccess": "トピックの複製に成功しました",
-    "guide": {
-      "desc": "左側のボタンをクリックして、現在の会話を保存し、新しい会話を開始できます",
-      "title": "トピックリスト"
-    },
     "openNewTopic": "新しいトピックを開く",
-    "removeAll": "すべてのトピックを削除",
-    "removeUnstarred": "スターをつけていないトピックを削除",
-    "saveCurrentMessages": "現在の会話をトピックとして保存",
-    "searchPlaceholder": "トピックを検索...",
-    "title": "トピックリスト"
+    "saveCurrentMessages": "現在の会話をトピックとして保存"
   },
   "translate": {
     "action": "翻訳",
@@ -184,5 +179,6 @@
         "processing": "ファイル処理中..."
       }
     }
-  }
+  },
+  "zenMode": "集中モード"
 }

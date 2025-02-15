@@ -1,0 +1,184 @@
+{
+  "ModelSwitch": {
+    "title": "مدل"
+  },
+  "agentDefaultMessage": "سلام، من **{{name}}** هستم. می‌توانید همین حالا با من گفتگو را شروع کنید یا به [تنظیمات دستیار]({{url}}) بروید و اطلاعات من را تکمیل کنید.",
+  "agentDefaultMessageWithSystemRole": "سلام، من **{{name}}** هستم، {{systemRole}}، بیایید گفتگو را شروع کنیم!",
+  "agentDefaultMessageWithoutEdit": "سلام، من **{{name}}** هستم، بیایید گفتگو را شروع کنیم!",
+  "agents": "دستیار",
+  "artifact": {
+    "generating": "در حال تولید",
+    "inThread": "در زیرموضوع نمی‌توانید مشاهده کنید، لطفاً به ناحیه اصلی گفتگو بروید",
+    "thinking": "در حال تفکر",
+    "thought": "فرآیند تفکر",
+    "unknownTitle": "اثر بدون نام"
+  },
+  "backToBottom": "بازگشت به پایین",
+  "chatList": {
+    "longMessageDetail": "مشاهده جزئیات"
+  },
+  "clearCurrentMessages": "پاک کردن پیام‌های جلسه فعلی",
+  "confirmClearCurrentMessages": "پیام‌های جلسه فعلی به زودی پاک خواهند شد و پس از پاک شدن قابل بازیابی نخواهند بود. لطفاً عملیات خود را تأیید کنید.",
+  "confirmRemoveSessionItemAlert": "این دستیار به زودی حذف خواهد شد و پس از حذف قابل بازیابی نخواهد بود، لطفاً عملیات خود را تأیید کنید.",
+  "confirmRemoveSessionSuccess": "حذف دستیار با موفقیت انجام شد",
+  "defaultAgent": "دستیار سفارشی",
+  "defaultList": "فهرست پیش‌فرض",
+  "defaultSession": "دستیار سفارشی",
+  "duplicateSession": {
+    "loading": "در حال کپی کردن...",
+    "success": "کپی با موفقیت انجام شد",
+    "title": "نسخه کپی {{title}}"
+  },
+  "duplicateTitle": "نسخه‌ای از {{title}}",
+  "emptyAgent": "دستیار موجود نیست",
+  "historyRange": "محدوده تاریخی",
+  "historySummary": "خلاصه پیام‌های تاریخی",
+  "inbox": {
+    "desc": "خوشه‌های مغزی را فعال کنید و جرقه‌های تفکر را برانگیزید. دستیار هوشمند شما اینجاست تا با شما در مورد هر چیزی صحبت کند.",
+    "title": "گپ دوستانه"
+  },
+  "input": {
+    "addAi": "افزودن یک پیام AI",
+    "addUser": "افزودن یک پیام کاربر",
+    "more": "بیشتر",
+    "send": "ارسال",
+    "sendWithCmdEnter": "فشار دهید {{meta}} + Enter برای ارسال",
+    "sendWithEnter": "فشار دهید Enter برای ارسال",
+    "stop": "توقف",
+    "warp": "خط جدید"
+  },
+  "knowledgeBase": {
+    "all": "همه محتوا",
+    "allFiles": "همه فایل‌ها",
+    "allKnowledgeBases": "همه پایگاه‌های دانش",
+    "disabled": "حالت فعلی استقرار از مکالمات پایگاه دانش پشتیبانی نمی‌کند. برای استفاده، به استقرار پایگاه داده سرور تغییر دهید یا از خدمات {{cloud}} استفاده کنید.",
+    "library": {
+      "action": {
+        "add": "افزودن",
+        "detail": "جزئیات",
+        "remove": "حذف"
+      },
+      "title": "فایل/پایگاه دانش"
+    },
+    "relativeFilesOrKnowledgeBases": "فایل‌ها/پایگاه‌های دانش مرتبط",
+    "title": "پایگاه دانش",
+    "uploadGuide": "فایل‌های آپلود شده را می‌توانید در «پایگاه دانش» مشاهده کنید.",
+    "viewMore": "مشاهده بیشتر"
+  },
+  "messageAction": {
+    "delAndRegenerate": "حذف و بازتولید",
+    "deleteDisabledByThreads": "زیرموضوع وجود دارد، نمی‌توان حذف کرد",
+    "regenerate": "بازتولید"
+  },
+  "newAgent": "دستیار جدید",
+  "pin": "سنجاق کردن",
+  "pinOff": "لغو سنجاق",
+  "rag": {
+    "referenceChunks": "منابع ارجاعی",
+    "userQuery": {
+      "actions": {
+        "delete": "حذف بازنویسی پرسش",
+        "regenerate": "بازتولید پرسش"
+      }
+    }
+  },
+  "regenerate": "بازتولید",
+  "roleAndArchive": "نقش‌ها و بایگانی",
+  "searchAgentPlaceholder": "جستجوی دستیار...",
+  "sendPlaceholder": "نوشتن پیام...",
+  "sessionGroup": {
+    "config": "مدیریت گروه",
+    "confirmRemoveGroupAlert": "این گروه در حال حذف شدن است. پس از حذف، دستیارهای این گروه به لیست پیش‌فرض منتقل خواهند شد. لطفاً عملیات خود را تأیید کنید.",
+    "createAgentSuccess": "دستیار با موفقیت ایجاد شد",
+    "createGroup": "افزودن گروه جدید",
+    "createSuccess": "گروه با موفقیت ایجاد شد",
+    "creatingAgent": "در حال ایجاد دستیار...",
+    "inputPlaceholder": "لطفاً نام گروه را وارد کنید...",
+    "moveGroup": "انتقال به گروه",
+    "newGroup": "گروه جدید",
+    "rename": "تغییر نام گروه",
+    "renameSuccess": "تغییر نام با موفقیت انجام شد",
+    "sortSuccess": "مرتب‌سازی با موفقیت انجام شد",
+    "sorting": "در حال به‌روزرسانی مرتب‌سازی گروه...",
+    "tooLong": "طول نام گروه باید بین 1 تا 20 کاراکتر باشد"
+  },
+  "shareModal": {
+    "copy": "کپی",
+    "download": "دانلود اسکرین‌شات",
+    "downloadFile": "دانلود فایل",
+    "exportTitle": "عنوان پیش‌فرض",
+    "imageType": "فرمت تصویر",
+    "includeTool": "شامل پیام‌های ابزار",
+    "includeUser": "شامل پیام‌های کاربر",
+    "screenshot": "اسکرین‌شات",
+    "settings": "تنظیمات خروجی",
+    "text": "متن",
+    "withBackground": "شامل تصویر پس‌زمینه",
+    "withFooter": "شامل پاورقی",
+    "withPluginInfo": "شامل اطلاعات افزونه",
+    "withRole": "شامل نقش پیام",
+    "withSystemRole": "شامل تنظیمات نقش دستیار"
+  },
+  "stt": {
+    "action": "ورودی صوتی",
+    "loading": "در حال شناسایی...",
+    "prettifying": "در حال ویرایش..."
+  },
+  "thread": {
+    "divider": "زیرموضوع",
+    "threadMessageCount": "{{messageCount}} پیام",
+    "title": "زیرموضوع"
+  },
+  "tokenDetails": {
+    "chats": "پیام‌های گفتگو",
+    "historySummary": "خلاصه تاریخ",
+    "rest": "باقی‌مانده قابل استفاده",
+    "systemRole": "تنظیم نقش",
+    "title": "جزئیات پیام‌ها",
+    "tools": "تنظیمات افزونه",
+    "total": "کل قابل استفاده",
+    "used": "مجموع استفاده شده"
+  },
+  "tokenTag": {
+    "overload": "بیش از حد",
+    "remained": "باقی‌مانده",
+    "used": "استفاده شده"
+  },
+  "topic": {
+    "checkOpenNewTopic": "آیا مایل به باز کردن موضوع جدید هستید؟",
+    "checkSaveCurrentMessages": "آیا مایل به ذخیره مکالمه فعلی به عنوان موضوع هستید؟",
+    "openNewTopic": "باز کردن موضوع جدید",
+    "saveCurrentMessages": "ذخیره مکالمه فعلی به عنوان موضوع"
+  },
+  "translate": {
+    "action": "ترجمه",
+    "clear": "حذف ترجمه"
+  },
+  "tts": {
+    "action": "خواندن با صدا",
+    "clear": "حذف صدا"
+  },
+  "updateAgent": "به‌روزرسانی اطلاعات دستیار",
+  "upload": {
+    "action": {
+      "fileUpload": "بارگذاری فایل",
+      "folderUpload": "بارگذاری پوشه",
+      "imageDisabled": "مدل فعلی از تشخیص بصری پشتیبانی نمی‌کند، لطفاً مدل را تغییر دهید و دوباره امتحان کنید",
+      "imageUpload": "بارگذاری تصویر",
+      "tooltip": "بارگذاری"
+    },
+    "clientMode": {
+      "actionFiletip": "بارگذاری فایل",
+      "actionTooltip": "بارگذاری",
+      "disabled": "مدل فعلی از تشخیص بصری و تحلیل فایل پشتیبانی نمی‌کند، لطفاً مدل را تغییر دهید و دوباره امتحان کنید"
+    },
+    "preview": {
+      "prepareTasks": "آماده‌سازی بخش‌ها...",
+      "status": {
+        "pending": "آماده برای بارگذاری...",
+        "processing": "در حال پردازش فایل..."
+      }
+    }
+  },
+  "zenMode": "حالت تمرکز"
+}

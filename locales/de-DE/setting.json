@@ -84,8 +84,7 @@
         },
         "modalTitle": "Benutzerdefinierte Modellkonfiguration",
         "tokens": {
-          "title": "Maximale Token-Anzahl",
-          "unlimited": "unbegrenzt"
+          "title": "Maximale Token-Anzahl"
         },
         "vision": {
           "extra": "Diese Konfiguration aktiviert nur die Bild-Upload-Einstellungen innerhalb der Anwendung. Ob die Erkennung unterstützt wird, hängt vollständig vom Modell selbst ab. Bitte teste die Verwendbarkeit der visuellen Erkennungsfähigkeit des Modells selbst.",
@@ -98,6 +97,7 @@
       "title": "Client Fetch-Modus verwenden"
     },
     "fetcher": {
+      "clear": "Abgerufenes Modell löschen",
       "fetch": "Modelle abrufen",
       "fetching": "Modelle werden abgerufen...",
       "latestTime": "Letzte Aktualisierung: {{time}}",
@@ -175,8 +175,8 @@
       "desc": "Automatische Erstellung eines Themas während des Gesprächs, nur in temporären Themen aktiv",
       "title": "Automatische Themen-Erstellung aktivieren"
     },
-    "enableCompressThreshold": {
-      "title": "Aktivieren der Komprimierungsschwelle für Historienlänge"
+    "enableCompressHistory": {
+      "title": "Automatische Zusammenfassung der Verlaufnachrichten aktivieren"
     },
     "enableHistoryCount": {
       "alias": "Unbegrenzt",
@@ -200,9 +200,12 @@
     "enableMaxTokens": {
       "title": "Maximale Token pro Antwort aktivieren"
     },
+    "enableReasoningEffort": {
+      "title": "Aktivieren Sie die Anpassung der Schlussfolgerungsintensität"
+    },
     "frequencyPenalty": {
-      "desc": "Je höher der Wert, desto wahrscheinlicher ist es, dass sich wiederholende Wörter reduziert werden",
-      "title": "Frequenzstrafe"
+      "desc": "Je höher der Wert, desto vielfältiger und abwechslungsreicher die Wortwahl; je niedriger der Wert, desto einfacher und schlichter die Wortwahl",
+      "title": "Wortvielfalt"
     },
     "maxTokens": {
       "desc": "Maximale Anzahl von Tokens, die pro Interaktion verwendet werden",
@@ -212,19 +215,31 @@
       "desc": "{{provider}} Modell",
       "title": "Modell"
     },
+    "params": {
+      "title": "Erweiterte Parameter"
+    },
     "presencePenalty": {
-      "desc": "Je höher der Wert, desto wahrscheinlicher ist es, dass sich das Gespräch auf neue Themen ausweitet",
-      "title": "Themenfrische"
+      "desc": "Je höher der Wert, desto eher werden unterschiedliche Ausdrucksweisen bevorzugt, um Wiederholungen zu vermeiden; je niedriger der Wert, desto eher werden wiederholte Konzepte oder Erzählungen verwendet, was zu einer konsistenteren Ausdrucksweise führt",
+      "title": "Ausdrucksvielfalt"
+    },
+    "reasoningEffort": {
+      "desc": "Je höher der Wert, desto stärker die Schlussfolgerungsfähigkeit, aber dies kann die Antwortzeit und den Tokenverbrauch erhöhen.",
+      "options": {
+        "high": "Hoch",
+        "low": "Niedrig",
+        "medium": "Mittel"
+      },
+      "title": "Schlussfolgerungsintensität"
     },
     "temperature": {
-      "desc": "Je höher der Wert, desto zufälliger die Antwort",
-      "title": "Zufälligkeit",
-      "titleWithValue": "Zufälligkeit {{value}}"
+      "desc": "Je höher der Wert, desto kreativer und einfallsreicher die Antworten; je niedriger der Wert, desto strenger die Antworten",
+      "title": "Kreativitätsgrad",
+      "warning": "Ein zu hoher Kreativitätsgrad kann zu unverständlichen Ausgaben führen"
     },
-    "title": "Modelleinstellungen",
+    "title": "Modell Einstellungen",
     "topP": {
-      "desc": "Ähnlich wie Zufälligkeit, aber nicht zusammen mit Zufälligkeit ändern",
-      "title": "Top-P-Sampling"
+      "desc": "Wie viele Möglichkeiten in Betracht gezogen werden, je höher der Wert, desto mehr mögliche Antworten werden akzeptiert; je niedriger der Wert, desto eher wird die wahrscheinlichste Antwort gewählt. Es wird nicht empfohlen, dies zusammen mit dem Kreativitätsgrad zu ändern",
+      "title": "Offenheit des Denkens"
     }
   },
   "settingPlugin": {
@@ -372,10 +387,26 @@
       "modelDesc": "Das Modell, das zur Generierung von Assistentennamen, -beschreibungen, -avatars und -tags verwendet wird",
       "title": "Automatische Generierung von Assistenteninformationen"
     },
+    "customPrompt": {
+      "addPrompt": "Benutzerdefinierte Eingabe hinzufügen",
+      "desc": "Nachdem Sie dies ausgefüllt haben, verwendet der Systemassistent die benutzerdefinierte Eingabe zur Generierung von Inhalten",
+      "placeholder": "Bitte benutzerdefinierte Eingabe eingeben",
+      "title": "Benutzerdefinierte Eingabe"
+    },
+    "historyCompress": {
+      "label": "Gesprächshistorienmodell",
+      "modelDesc": "Das Modell, das zur Komprimierung der Gesprächshistorie verwendet wird",
+      "title": "Automatische Zusammenfassung der Gesprächshistorie"
+    },
     "queryRewrite": {
       "label": "Fragenumformulierung Modell",
       "modelDesc": "Modell zur Optimierung der Benutzeranfragen",
-      "title": "Wissensdatenbank"
+      "title": "Wiederformulierung von Fragen aus der Wissensdatenbank"
+    },
+    "thread": {
+      "label": "Unterthema-Namensmodell",
+      "modelDesc": "Modell zur automatischen Umbenennung von Unterthemen",
+      "title": "Automatische Benennung von Unterthemen"
     },
     "title": "Systemassistent",
     "topic": {
@@ -395,6 +426,7 @@
     "common": "Allgemeine Einstellungen",
     "experiment": "Experiment",
     "llm": "Sprachmodell",
+    "provider": "KI-Dienstanbieter",
     "sync": "Cloud-Synchronisierung",
     "system-agent": "Systemassistent",
     "tts": "Sprachdienste"

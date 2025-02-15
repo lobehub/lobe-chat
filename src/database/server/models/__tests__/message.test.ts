@@ -1,11 +1,19 @@
-import { eq } from 'drizzle-orm';
+import dayjs from 'dayjs';
+import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { MessageItem } from '@/types/message';
+import { uuid } from '@/utils/uuid';
 
 import {
+  chunks,
+  embeddings,
+  fileChunks,
   files,
   messagePlugins,
+  messageQueries,
+  messageQueryChunks,
   messageTTS,
   messageTranslates,
   messages,
@@ -13,19 +21,14 @@ import {
   sessions,
   topics,
   users,
-} from '../../schemas/lobechat';
+} from '../../../schemas';
 import { MessageModel } from '../message';
+import { codeEmbedding } from './fixtures/embedding';
 
 let serverDB = await getTestDBInstance();
 
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
 const userId = 'message-db';
-const messageModel = new MessageModel(userId);
+const messageModel = new MessageModel(serverDB, userId);
 
 beforeEach(async () => {
   // 在每个测试用例之前，清空表
@@ -208,15 +211,19 @@ describe('MessageModel', () => {
         ]);
       });
 
+      const domain = 'http://abc.com';
       // 调用 query 方法
-      const result = await messageModel.query();
+      const result = await messageModel.query(
+        {},
+        { postProcessUrl: async (path) => `${domain}/${path}` },
+      );
 
       // 断言结果
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
       expect(result[0].imageList).toEqual([
-        { alt: 'file-1', id: 'f-0', url: expect.stringContaining('/abc') },
-        { alt: 'file-3', id: 'f-3', url: expect.stringContaining('/abc') },
+        { alt: 'file-1', id: 'f-0', url: `${domain}/abc` },
+        { alt: 'file-3', id: 'f-3', url: `${domain}/abc` },
       ]);
 
       expect(result[1].id).toBe('2');
@@ -247,8 +254,8 @@ describe('MessageModel', () => {
       const result = await messageModel.query();
 
       // 断言结果
-      expect(result[0].extra.translate).toEqual({ content: 'translated', from: 'en', to: 'zh' });
-      expect(result[0].extra.tts).toEqual({
+      expect(result[0].extra!.translate).toEqual({ content: 'translated', from: 'en', to: 'zh' });
+      expect(result[0].extra!.tts).toEqual({
         contentMd5: 'md5',
         file: 'f1',
         voice: 'voice1',
@@ -272,6 +279,93 @@ describe('MessageModel', () => {
 
       const result3 = await messageModel.query({ current: 2, pageSize: 2 });
       expect(result3).toHaveLength(0);
+    });
+
+    // 补充测试复杂查询场景
+    it('should handle complex query with multiple joins and file chunks', async () => {
+      await serverDB.transaction(async (trx) => {
+        const chunk1Id = uuid();
+        const query1Id = uuid();
+        // 创建基础消息
+        await trx.insert(messages).values({
+          id: 'msg1',
+          userId,
+          role: 'user',
+          content: 'test message',
+          createdAt: new Date('2023-01-01'),
+        });
+
+        // 创建文件
+        await trx.insert(files).values([
+          {
+            id: 'file1',
+            userId,
+            name: 'test.txt',
+            url: 'test-url',
+            fileType: 'text/plain',
+            size: 100,
+          },
+        ]);
+
+        // 创建文件块
+        await trx.insert(chunks).values({
+          id: chunk1Id,
+          text: 'chunk content',
+        });
+
+        // 关联消息和文件
+        await trx.insert(messagesFiles).values({
+          messageId: 'msg1',
+          fileId: 'file1',
+        });
+
+        // 创建文件块关联
+        await trx.insert(fileChunks).values({
+          fileId: 'file1',
+          chunkId: chunk1Id,
+        });
+
+        // 创建消息查询
+        await trx.insert(messageQueries).values({
+          id: query1Id,
+          messageId: 'msg1',
+          userQuery: 'original query',
+          rewriteQuery: 'rewritten query',
+        });
+
+        // 创建消息查询块关联
+        await trx.insert(messageQueryChunks).values({
+          messageId: 'msg1',
+          queryId: query1Id,
+          chunkId: chunk1Id,
+          similarity: '0.95',
+        });
+      });
+
+      const result = await messageModel.query();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].chunksList).toHaveLength(1);
+      expect(result[0].chunksList![0]).toMatchObject({
+        text: 'chunk content',
+        similarity: 0.95,
+      });
+    });
+
+    it('should return empty arrays for files and chunks if none exist', async () => {
+      await serverDB.insert(messages).values({
+        id: 'msg1',
+        userId,
+        role: 'user',
+        content: 'test message',
+      });
+
+      const result = await messageModel.query();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].fileList).toEqual([]);
+      expect(result[0].imageList).toEqual([]);
+      expect(result[0].chunksList).toEqual([]);
     });
   });
 
@@ -422,11 +516,7 @@ describe('MessageModel', () => {
       await messageModel.create({ role: 'user', content: 'new message', sessionId: '1' });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.userId, userId))
-        .execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
       expect(result).toHaveLength(1);
       expect(result[0].content).toBe('new message');
     });
@@ -457,11 +547,7 @@ describe('MessageModel', () => {
       });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.userId, userId))
-        .execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
       expect(result[0].id).toBeDefined();
       expect(result[0].id).toHaveLength(18);
     });
@@ -490,8 +576,7 @@ describe('MessageModel', () => {
       const pluginResult = await serverDB
         .select()
         .from(messagePlugins)
-        .where(eq(messagePlugins.id, result.id))
-        .execute();
+        .where(eq(messagePlugins.id, result.id));
       expect(pluginResult).toHaveLength(1);
       expect(pluginResult[0].identifier).toBe('plugin1');
     });
@@ -558,8 +643,7 @@ describe('MessageModel', () => {
       const pluginResult = await serverDB
         .select()
         .from(messagePlugins)
-        .where(eq(messagePlugins.id, result.id))
-        .execute();
+        .where(eq(messagePlugins.id, result.id));
       expect(pluginResult).toHaveLength(1);
       expect(pluginResult[0].identifier).toBe('lobe-web-browsing');
       expect(pluginResult[0].state!).toMatchObject(state);
@@ -572,17 +656,13 @@ describe('MessageModel', () => {
       const newMessages = [
         { id: '1', role: 'user', content: 'message 1' },
         { id: '2', role: 'assistant', content: 'message 2' },
-      ];
+      ] as MessageItem[];
 
       // 调用 batchCreateMessages 方法
       await messageModel.batchCreate(newMessages);
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.userId, userId))
-        .execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
       expect(result).toHaveLength(2);
       expect(result[0].content).toBe('message 1');
       expect(result[1].content).toBe('message 2');
@@ -600,7 +680,7 @@ describe('MessageModel', () => {
       await messageModel.update('1', { content: 'updated message' });
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result[0].content).toBe('updated message');
     });
 
@@ -614,7 +694,7 @@ describe('MessageModel', () => {
       await messageModel.update('1', { content: 'updated message' });
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result[0].content).toBe('message 1');
     });
 
@@ -653,7 +733,7 @@ describe('MessageModel', () => {
       });
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result[0].tools[0].arguments).toBe(
         '{"query":"2024 杭州暴雨","searchEngines":["duckduckgo","google","brave"]}',
       );
@@ -671,7 +751,7 @@ describe('MessageModel', () => {
       await messageModel.deleteMessage('1');
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(0);
     });
 
@@ -691,14 +771,13 @@ describe('MessageModel', () => {
       await messageModel.deleteMessage('1');
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(0);
 
       const result2 = await serverDB
         .select()
         .from(messagePlugins)
-        .where(eq(messagePlugins.id, '2'))
-        .execute();
+        .where(eq(messagePlugins.id, '2'));
 
       expect(result2).toHaveLength(0);
     });
@@ -713,7 +792,7 @@ describe('MessageModel', () => {
       await messageModel.deleteMessage('1');
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(1);
     });
   });
@@ -730,9 +809,9 @@ describe('MessageModel', () => {
       await messageModel.deleteMessages(['1', '2']);
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(0);
-      const result2 = await serverDB.select().from(messages).where(eq(messages.id, '2')).execute();
+      const result2 = await serverDB.select().from(messages).where(eq(messages.id, '2'));
       expect(result2).toHaveLength(0);
     });
 
@@ -747,7 +826,7 @@ describe('MessageModel', () => {
       await messageModel.deleteMessages(['1', '2']);
 
       // 断言结果
-      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1'));
       expect(result).toHaveLength(1);
     });
   });
@@ -765,18 +844,12 @@ describe('MessageModel', () => {
       await messageModel.deleteAllMessages();
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.userId, userId))
-        .execute();
+      const result = await serverDB.select().from(messages).where(eq(messages.userId, userId));
+
       expect(result).toHaveLength(0);
 
-      const otherResult = await serverDB
-        .select()
-        .from(messages)
-        .where(eq(messages.userId, '456'))
-        .execute();
+      const otherResult = await serverDB.select().from(messages).where(eq(messages.userId, '456'));
+
       expect(otherResult).toHaveLength(1);
     });
   });
@@ -795,11 +868,8 @@ describe('MessageModel', () => {
       await messageModel.updatePluginState('1', { key2: 'value2' });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messagePlugins)
-        .where(eq(messagePlugins.id, '1'))
-        .execute();
+      const result = await serverDB.select().from(messagePlugins).where(eq(messagePlugins.id, '1'));
+
       expect(result[0].state).toEqual({ key1: 'value1', key2: 'value2' });
     });
 
@@ -824,11 +894,8 @@ describe('MessageModel', () => {
       await messageModel.updateMessagePlugin('1', { identifier: 'plugin2' });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messagePlugins)
-        .where(eq(messagePlugins.id, '1'))
-        .execute();
+      const result = await serverDB.select().from(messagePlugins).where(eq(messagePlugins.id, '1'));
+
       expect(result[0].identifier).toEqual('plugin2');
     });
 
@@ -858,8 +925,8 @@ describe('MessageModel', () => {
       const result = await serverDB
         .select()
         .from(messageTranslates)
-        .where(eq(messageTranslates.id, '1'))
-        .execute();
+        .where(eq(messageTranslates.id, '1'));
+
       expect(result).toHaveLength(1);
       expect(result[0].content).toBe('translated message 1');
     });
@@ -882,8 +949,8 @@ describe('MessageModel', () => {
       const result = await serverDB
         .select()
         .from(messageTranslates)
-        .where(eq(messageTranslates.id, '1'))
-        .execute();
+        .where(eq(messageTranslates.id, '1'));
+
       expect(result[0].content).toBe('updated translated message 1');
     });
   });
@@ -899,11 +966,8 @@ describe('MessageModel', () => {
       await messageModel.updateTTS('1', { contentMd5: 'md5', file: 'f1', voice: 'voice1' });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messageTTS)
-        .where(eq(messageTTS.id, '1'))
-        .execute();
+      const result = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, '1'));
+
       expect(result).toHaveLength(1);
       expect(result[0].voice).toBe('voice1');
     });
@@ -923,11 +987,8 @@ describe('MessageModel', () => {
       await messageModel.updateTTS('1', { voice: 'updated voice1' });
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messageTTS)
-        .where(eq(messageTTS.id, '1'))
-        .execute();
+      const result = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, '1'));
+
       expect(result[0].voice).toBe('updated voice1');
     });
   });
@@ -945,8 +1006,8 @@ describe('MessageModel', () => {
       const result = await serverDB
         .select()
         .from(messageTranslates)
-        .where(eq(messageTranslates.id, '1'))
-        .execute();
+        .where(eq(messageTranslates.id, '1'));
+
       expect(result).toHaveLength(0);
     });
   });
@@ -961,11 +1022,7 @@ describe('MessageModel', () => {
       await messageModel.deleteMessageTTS('1');
 
       // 断言结果
-      const result = await serverDB
-        .select()
-        .from(messageTTS)
-        .where(eq(messageTTS.id, '1'))
-        .execute();
+      const result = await serverDB.select().from(messageTTS).where(eq(messageTTS.id, '1'));
       expect(result).toHaveLength(0);
     });
   });
@@ -987,8 +1044,204 @@ describe('MessageModel', () => {
     });
   });
 
-  describe('countToday', () => {
-    it('should return the count of messages created today', async () => {
+  describe('findMessageQueriesById', () => {
+    it('should return undefined for non-existent message query', async () => {
+      const result = await messageModel.findMessageQueriesById('non-existent-id');
+      expect(result).toBeUndefined();
+    });
+
+    it('should return message query with embeddings', async () => {
+      const query1Id = uuid();
+      const embeddings1Id = uuid();
+
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(messages).values({ id: 'msg1', userId, role: 'user', content: 'abc' });
+
+        await trx.insert(embeddings).values({
+          id: embeddings1Id,
+          embeddings: codeEmbedding,
+        });
+
+        await trx.insert(messageQueries).values({
+          id: query1Id,
+          messageId: 'msg1',
+          userQuery: 'test query',
+          rewriteQuery: 'rewritten query',
+          embeddingsId: embeddings1Id,
+        });
+      });
+
+      const result = await messageModel.findMessageQueriesById('msg1');
+
+      expect(result).toBeDefined();
+      expect(result).toMatchObject({
+        id: query1Id,
+        userQuery: 'test query',
+        rewriteQuery: 'rewritten query',
+        embeddings: codeEmbedding,
+      });
+    });
+  });
+
+  describe('deleteMessagesBySession', () => {
+    it('should delete messages by session ID', async () => {
+      await serverDB.insert(sessions).values([
+        { id: 'session1', userId },
+        { id: 'session2', userId },
+      ]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: '1',
+          userId,
+          sessionId: 'session1',
+          role: 'user',
+          content: 'message 1',
+        },
+        {
+          id: '2',
+          userId,
+          sessionId: 'session1',
+          role: 'assistant',
+          content: 'message 2',
+        },
+        {
+          id: '3',
+          userId,
+          sessionId: 'session2',
+          role: 'user',
+          content: 'message 3',
+        },
+      ]);
+
+      await messageModel.deleteMessagesBySession('session1');
+
+      const remainingMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.userId, userId));
+
+      expect(remainingMessages).toHaveLength(1);
+      expect(remainingMessages[0].id).toBe('3');
+    });
+
+    it('should delete messages by session ID and topic ID', async () => {
+      await serverDB.insert(sessions).values([{ id: 'session1', userId }]);
+      await serverDB.insert(topics).values([
+        { id: 'topic1', sessionId: 'session1', userId },
+        { id: 'topic2', sessionId: 'session1', userId },
+      ]);
+
+      await serverDB.insert(messages).values([
+        {
+          id: '1',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic1',
+          role: 'user',
+          content: 'message 1',
+        },
+        {
+          id: '2',
+          userId,
+          sessionId: 'session1',
+          topicId: 'topic2',
+          role: 'assistant',
+          content: 'message 2',
+        },
+      ]);
+
+      await messageModel.deleteMessagesBySession('session1', 'topic1');
+
+      const remainingMessages = await serverDB
+        .select()
+        .from(messages)
+        .where(eq(messages.userId, userId));
+
+      expect(remainingMessages).toHaveLength(1);
+      expect(remainingMessages[0].id).toBe('2');
+    });
+  });
+
+  describe('genId', () => {
+    it('should generate unique message IDs', () => {
+      const model = new MessageModel(serverDB, userId);
+      // @ts-ignore - accessing private method for testing
+      const id1 = model.genId();
+      // @ts-ignore - accessing private method for testing
+      const id2 = model.genId();
+
+      expect(id1).toHaveLength(18);
+      expect(id2).toHaveLength(18);
+      expect(id1).not.toBe(id2);
+      expect(id1).toMatch(/^msg_/);
+      expect(id2).toMatch(/^msg_/);
+    });
+  });
+
+  describe('countWords', () => {
+    it('should count total words of messages belonging to the user', async () => {
+      // 创建测试数据
+      await serverDB.insert(messages).values([
+        { id: '1', userId, role: 'user', content: 'hello world' },
+        { id: '2', userId, role: 'user', content: 'test message' },
+        { id: '3', userId: '456', role: 'user', content: 'other user message' },
+      ]);
+
+      // 调用 countWords 方法
+      const result = await messageModel.countWords();
+
+      // 断言结果 - 'hello world' + 'test message' = 23 characters
+      expect(result).toEqual(23);
+    });
+
+    it('should count words within date range', async () => {
+      // 创建测试数据
+      await serverDB.insert(messages).values([
+        {
+          id: '1',
+          userId,
+          role: 'user',
+          content: 'old message',
+          createdAt: new Date('2023-01-01'),
+        },
+        {
+          id: '2',
+          userId,
+          role: 'user',
+          content: 'new message',
+          createdAt: new Date('2023-06-01'),
+        },
+      ]);
+
+      // 调用 countWords 方法，设置日期范围
+      const result = await messageModel.countWords({
+        range: ['2023-05-01', '2023-07-01'],
+      });
+
+      // 断言结果 - 只计算 'new message' = 11 characters
+      expect(result).toEqual(11);
+    });
+
+    it('should handle empty content', async () => {
+      // 创建测试数据
+      await serverDB.insert(messages).values([
+        { id: '1', userId, role: 'user', content: '' },
+        { id: '2', userId, role: 'user', content: null },
+      ]);
+
+      // 调用 countWords 方法
+      const result = await messageModel.countWords();
+
+      // 断言结果
+      expect(result).toEqual(0);
+    });
+  });
+
+  describe('getHeatmaps', () => {
+    it('should return heatmap data for the last year', async () => {
+      const today = dayjs();
+
       // 创建测试数据
       await serverDB.insert(messages).values([
         {
@@ -996,29 +1249,278 @@ describe('MessageModel', () => {
           userId,
           role: 'user',
           content: 'message 1',
-          createdAt: new Date(),
+          createdAt: today.subtract(2, 'day').toDate(),
         },
         {
           id: '2',
           userId,
           role: 'user',
           content: 'message 2',
-          createdAt: new Date(),
+          createdAt: today.subtract(2, 'day').toDate(),
         },
         {
           id: '3',
           userId,
           role: 'user',
           content: 'message 3',
-          createdAt: new Date('2023-01-01'),
+          createdAt: today.subtract(1, 'day').toDate(),
         },
       ]);
 
-      // 调用 countToday 方法
-      const result = await messageModel.countToday();
+      // 调用 getHeatmaps 方法
+      const result = await messageModel.getHeatmaps();
 
       // 断言结果
-      expect(result).toBe(2);
+      expect(result.length).toBeGreaterThan(366);
+      expect(result.length).toBeLessThan(368);
+
+      // 检查两天前的数据
+      const twoDaysAgo = result.find(
+        (item) => item.date === today.subtract(2, 'day').format('YYYY-MM-DD'),
+      );
+      expect(twoDaysAgo?.count).toBe(2);
+      expect(twoDaysAgo?.level).toBe(1);
+
+      // 检查一天前的数据
+      const oneDayAgo = result.find(
+        (item) => item.date === today.subtract(1, 'day').format('YYYY-MM-DD'),
+      );
+      expect(oneDayAgo?.count).toBe(1);
+      expect(oneDayAgo?.level).toBe(1);
+
+      // 检查今天的数据
+      const todayData = result.find((item) => item.date === today.format('YYYY-MM-DD'));
+      expect(todayData?.count).toBe(0);
+      expect(todayData?.level).toBe(0);
+    });
+
+    it('should calculate correct levels based on message count', async () => {
+      const today = dayjs();
+
+      // 创建测试数据 - 不同数量的消息以测试不同的等级
+      await serverDB.insert(messages).values([
+        // 1 message - level 0
+        {
+          id: '1',
+          userId,
+          role: 'user',
+          content: 'message 1',
+          createdAt: today.subtract(4, 'day').toDate(),
+        },
+        // 6 messages - level 1
+        ...Array(6)
+          .fill(0)
+          .map((_, i) => ({
+            id: `2-${i}`,
+            userId,
+            role: 'user',
+            content: `message 2-${i}`,
+            createdAt: today.subtract(3, 'day').toDate(),
+          })),
+        // 11 messages - level 2
+        ...Array(11)
+          .fill(0)
+          .map((_, i) => ({
+            id: `3-${i}`,
+            userId,
+            role: 'user',
+            content: `message 3-${i}`,
+            createdAt: today.subtract(2, 'day').toDate(),
+          })),
+        // 16 messages - level 3
+        ...Array(16)
+          .fill(0)
+          .map((_, i) => ({
+            id: `4-${i}`,
+            userId,
+            role: 'user',
+            content: `message 4-${i}`,
+            createdAt: today.subtract(1, 'day').toDate(),
+          })),
+        // 21 messages - level 4
+        ...Array(21)
+          .fill(0)
+          .map((_, i) => ({
+            id: `5-${i}`,
+            userId,
+            role: 'user',
+            content: `message 5-${i}`,
+            createdAt: today.toDate(),
+          })),
+      ]);
+
+      // 调用 getHeatmaps 方法
+      const result = await messageModel.getHeatmaps();
+
+      // 检查不同天数的等级
+      const fourDaysAgo = result.find(
+        (item) => item.date === today.subtract(4, 'day').format('YYYY-MM-DD'),
+      );
+      expect(fourDaysAgo?.count).toBe(1);
+      expect(fourDaysAgo?.level).toBe(1);
+
+      const threeDaysAgo = result.find(
+        (item) => item.date === today.subtract(3, 'day').format('YYYY-MM-DD'),
+      );
+      expect(threeDaysAgo?.count).toBe(6);
+      expect(threeDaysAgo?.level).toBe(2);
+
+      const twoDaysAgo = result.find(
+        (item) => item.date === today.subtract(2, 'day').format('YYYY-MM-DD'),
+      );
+      expect(twoDaysAgo?.count).toBe(11);
+      expect(twoDaysAgo?.level).toBe(3);
+
+      const oneDayAgo = result.find(
+        (item) => item.date === today.subtract(1, 'day').format('YYYY-MM-DD'),
+      );
+      expect(oneDayAgo?.count).toBe(16);
+      expect(oneDayAgo?.level).toBe(4);
+
+      const todayData = result.find((item) => item.date === today.format('YYYY-MM-DD'));
+      expect(todayData?.count).toBe(21);
+      expect(todayData?.level).toBe(4);
+    });
+
+    it('should handle empty data', async () => {
+      // 不创建任何消息数据
+
+      // 调用 getHeatmaps 方法
+      const result = await messageModel.getHeatmaps();
+
+      // 断言结果
+      expect(result.length).toBeGreaterThan(366);
+      expect(result.length).toBeLessThan(368);
+
+      // 检查所有数据的 count 和 level 是否为 0
+      result.forEach((item) => {
+        expect(item.count).toBe(0);
+        expect(item.level).toBe(0);
+      });
+    });
+  });
+
+  describe('rankModels', () => {
+    it('should rank models by usage count', async () => {
+      // 创建测试数据
+      await serverDB.insert(messages).values([
+        { id: '1', userId, role: 'assistant', content: 'message 1', model: 'gpt-3.5' },
+        { id: '2', userId, role: 'assistant', content: 'message 2', model: 'gpt-3.5' },
+        { id: '3', userId, role: 'assistant', content: 'message 3', model: 'gpt-4' },
+        { id: '4', userId: '456', role: 'assistant', content: 'message 4', model: 'gpt-3.5' }, // 其他用户的消息
+      ]);
+
+      // 调用 rankModels 方法
+      const result = await messageModel.rankModels();
+
+      // 断言结果
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual({ id: 'gpt-3.5', count: 2 }); // 当前用户使用 gpt-3.5 两次
+      expect(result[1]).toEqual({ id: 'gpt-4', count: 1 }); // 当前用户使用 gpt-4 一次
+    });
+
+    it('should only count messages with model field', async () => {
+      // 创建测试数据，包括没有 model 字段的消息
+      await serverDB.insert(messages).values([
+        { id: '1', userId, role: 'assistant', content: 'message 1', model: 'gpt-3.5' },
+        { id: '2', userId, role: 'assistant', content: 'message 2', model: null },
+        { id: '3', userId, role: 'user', content: 'message 3' }, // 用户消息通常没有 model
+      ]);
+
+      // 调用 rankModels 方法
+      const result = await messageModel.rankModels();
+
+      // 断言结果
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({ id: 'gpt-3.5', count: 1 });
+    });
+
+    it('should return empty array when no models are used', async () => {
+      // 创建测试数据，所有消息都没有 model
+      await serverDB.insert(messages).values([
+        { id: '1', userId, role: 'user', content: 'message 1' },
+        { id: '2', userId, role: 'assistant', content: 'message 2' },
+      ]);
+
+      // 调用 rankModels 方法
+      const result = await messageModel.rankModels();
+
+      // 断言结果
+      expect(result).toHaveLength(0);
+    });
+
+    it('should order models by count in descending order', async () => {
+      // 创建测试数据，使用不同次数的模型
+      await serverDB.insert(messages).values([
+        { id: '1', userId, role: 'assistant', content: 'message 1', model: 'gpt-4' },
+        { id: '2', userId, role: 'assistant', content: 'message 2', model: 'gpt-3.5' },
+        { id: '3', userId, role: 'assistant', content: 'message 3', model: 'gpt-3.5' },
+        { id: '4', userId, role: 'assistant', content: 'message 4', model: 'claude' },
+        { id: '5', userId, role: 'assistant', content: 'message 5', model: 'gpt-3.5' },
+      ]);
+
+      // 调用 rankModels 方法
+      const result = await messageModel.rankModels();
+
+      // 断言结果
+      expect(result).toHaveLength(3);
+      expect(result[0]).toEqual({ id: 'gpt-3.5', count: 3 }); // 最多使用
+      expect(result[1]).toEqual({ id: 'claude', count: 1 });
+      expect(result[2]).toEqual({ id: 'gpt-4', count: 1 });
+    });
+  });
+
+  describe('hasMoreThanN', () => {
+    it('should return true when message count is greater than N', async () => {
+      // 创建测试数据
+      await serverDB.insert(messages).values([
+        { id: '1', userId, role: 'user', content: 'message 1' },
+        { id: '2', userId, role: 'user', content: 'message 2' },
+        { id: '3', userId, role: 'user', content: 'message 3' },
+      ]);
+
+      // 测试不同的 N 值
+      const result1 = await messageModel.hasMoreThanN(2); // 3 > 2
+      const result2 = await messageModel.hasMoreThanN(3); // 3 ≯ 3
+      const result3 = await messageModel.hasMoreThanN(4); // 3 ≯ 4
+
+      expect(result1).toBe(true);
+      expect(result2).toBe(false);
+      expect(result3).toBe(false);
+    });
+
+    it('should only count messages belonging to the user', async () => {
+      // 创建测试数据，包括其他用户的消息
+      await serverDB.insert(messages).values([
+        { id: '1', userId, role: 'user', content: 'message 1' },
+        { id: '2', userId, role: 'user', content: 'message 2' },
+        { id: '3', userId: '456', role: 'user', content: 'message 3' }, // 其他用户的消息
+      ]);
+
+      const result = await messageModel.hasMoreThanN(2);
+
+      expect(result).toBe(false); // 当前用户只有 2 条消息，不大于 2
+    });
+
+    it('should return false when no messages exist', async () => {
+      const result = await messageModel.hasMoreThanN(0);
+      expect(result).toBe(false);
+    });
+
+    it('should handle edge cases', async () => {
+      // 创建一条消息
+      await serverDB
+        .insert(messages)
+        .values([{ id: '1', userId, role: 'user', content: 'message 1' }]);
+
+      // 测试边界情况
+      const result1 = await messageModel.hasMoreThanN(0); // 1 > 0
+      const result2 = await messageModel.hasMoreThanN(1); // 1 ≯ 1
+      const result3 = await messageModel.hasMoreThanN(-1); // 1 > -1
+
+      expect(result1).toBe(true);
+      expect(result2).toBe(false);
+      expect(result3).toBe(true);
     });
   });
 });

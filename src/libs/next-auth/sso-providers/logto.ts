@@ -25,7 +25,7 @@ function LobeLogtoProvider(config: OIDCUserConfig<LogtoProfile>): OIDCConfig<Log
         email: profile.email,
         id: profile.sub,
         image: profile.picture,
-        name: profile.name ?? profile.username,
+        name: profile.name ?? profile.username ?? profile.email,
         providerAccountId: profile.sub,
       };
     },

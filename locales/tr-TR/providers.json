@@ -1,5 +1,7 @@
 {
-  "ai21": {},
+  "ai21": {
+    "description": "AI21 Labs, işletmeler için temel modeller ve yapay zeka sistemleri geliştirerek, üretimde jeneratif yapay zekanın uygulanmasını hızlandırır."
+  },
   "ai360": {
     "description": "360 AI, 360 şirketi tarafından sunulan yapay zeka modeli ve hizmet platformudur. 360GPT2 Pro, 360GPT Pro, 360GPT Turbo ve 360GPT Turbo Responsibility 8K gibi çeşitli gelişmiş doğal dil işleme modelleri sunmaktadır. Bu modeller, büyük ölçekli parametreler ve çok modlu yetenekleri birleştirerek metin üretimi, anlamsal anlama, diyalog sistemleri ve kod üretimi gibi alanlarda geniş bir uygulama yelpazesine sahiptir. Esnek fiyatlandırma stratejileri ile 360 AI, çeşitli kullanıcı ihtiyaçlarını karşılamakta ve geliştiricilerin entegrasyonunu destekleyerek akıllı uygulamaların yenilik ve gelişimini teşvik etmektedir."
   },
@@ -15,11 +17,20 @@
   "bedrock": {
     "description": "Bedrock, Amazon AWS tarafından sunulan bir hizmettir ve işletmelere gelişmiş yapay zeka dil modelleri ve görsel modeller sağlamaya odaklanmaktadır. Model ailesi, Anthropic'in Claude serisi, Meta'nın Llama 3.1 serisi gibi seçenekleri içermekte olup, metin üretimi, diyalog, görüntü işleme gibi çeşitli görevleri desteklemektedir. Farklı ölçek ve ihtiyaçlara uygun kurumsal uygulamalar için geniş bir yelpaze sunmaktadır."
   },
+  "cloudflare": {
+    "description": "Cloudflare'ın küresel ağı üzerinde sunucusuz GPU destekli makine öğrenimi modelleri çalıştırın."
+  },
   "deepseek": {
     "description": "DeepSeek, yapay zeka teknolojisi araştırma ve uygulamalarına odaklanan bir şirkettir. En son modeli DeepSeek-V2.5, genel diyalog ve kod işleme yeteneklerini birleştirerek, insan tercihleriyle uyum, yazma görevleri ve talimat takibi gibi alanlarda önemli iyileştirmeler sağlamaktadır."
   },
+  "doubao": {
+    "description": "ByteDance tarafından geliştirilen kendi büyük modeli. ByteDance içindeki 50'den fazla iş senaryosunda uygulama doğrulaması ile, günlük trilyon seviyesinde token kullanımı ile sürekli olarak geliştirilmekte, çeşitli modalite yetenekleri sunmakta ve kaliteli model performansı ile işletmelere zengin iş deneyimleri yaratmaktadır."
+  },
   "fireworksai": {
     "description": "Fireworks AI, işlev çağrısı ve çok modlu işleme üzerine odaklanan önde gelen bir gelişmiş dil modeli hizmet sağlayıcısıdır. En son modeli Firefunction V2, Llama-3 tabanlıdır ve işlev çağrısı, diyalog ve talimat takibi için optimize edilmiştir. Görsel dil modeli FireLLaVA-13B, görüntü ve metin karışık girişi desteklemektedir. Diğer dikkat çekici modeller arasında Llama serisi ve Mixtral serisi bulunmaktadır ve etkili çok dilli talimat takibi ve üretim desteği sunmaktadır."
+  },
+  "giteeai": {
+    "description": "Gitee AI'nin Sunucusuz API, AI geliştiricileri kutusun dışında büyük modeller infeksiyon API hizmetini sağlar."
   },
   "github": {
     "description": "GitHub Modelleri ile geliştiriciler, AI mühendisleri olabilir ve sektörün önde gelen AI modelleri ile inşa edebilirler."
@@ -30,8 +41,20 @@
   "groq": {
     "description": "Groq'un LPU çıkarım motoru, en son bağımsız büyük dil modeli (LLM) benchmark testlerinde mükemmel performans sergilemekte ve olağanüstü hız ve verimliliği ile yapay zeka çözümlerinin standartlarını yeniden tanımlamaktadır. Groq, bulut tabanlı dağıtımlarda iyi bir performans sergileyen anlık çıkarım hızının temsilcisidir."
   },
+  "higress": {
+    "description": "Higress, uzun süreli bağlantı işlerine zarar veren Tengine yeniden yükleme sorununu ve gRPC/Dubbo yük dengeleme yeteneklerinin yetersizliğini çözmek için Alibaba içinde geliştirilmiş bir bulut yerel API geçididir."
+  },
+  "huggingface": {
+    "description": "HuggingFace Inference API, binlerce modeli keşfetmenin hızlı ve ücretsiz bir yolunu sunar, çeşitli görevler için uygundur. Yeni uygulamalar için prototip oluşturuyor ya da makine öğreniminin yeteneklerini deniyorsanız, bu API size birçok alanda yüksek performanslı modellere anında erişim sağlar."
+  },
   "hunyuan": {
     "description": "Tencent tarafından geliştirilen büyük bir dil modeli, güçlü Çince yaratım yeteneklerine, karmaşık bağlamlarda mantıksal akıl yürütme yeteneğine ve güvenilir görev yerine getirme yeteneğine sahiptir."
+  },
+  "internlm": {
+    "description": "Büyük model araştırma ve geliştirme araç zincirine adanmış bir açık kaynak organizasyonu. Tüm AI geliştiricilerine verimli ve kullanımı kolay bir açık kaynak platformu sunarak en son büyük model ve algoritma teknolojilerine erişimi kolaylaştırır."
+  },
+  "lmstudio": {
+    "description": "LM Studio, bilgisayarınızda LLM'ler geliştirmek ve denemeler yapmak için bir masaüstü uygulamasıdır."
   },
   "minimax": {
     "description": "MiniMax, 2021 yılında kurulan genel yapay zeka teknolojisi şirketidir ve kullanıcılarla birlikte akıllı çözümler yaratmayı hedeflemektedir. MiniMax, farklı modlarda genel büyük modeller geliştirmiştir. Bunlar arasında trilyon parametreli MoE metin büyük modeli, ses büyük modeli ve görüntü büyük modeli bulunmaktadır. Ayrıca, Conch AI gibi uygulamalar da sunmaktadır."
@@ -60,6 +83,9 @@
   "qwen": {
     "description": "Tongyi Qianwen, Alibaba Cloud tarafından geliştirilen büyük ölçekli bir dil modelidir ve güçlü doğal dil anlama ve üretme yeteneklerine sahiptir. Çeşitli soruları yanıtlayabilir, metin içeriği oluşturabilir, görüşlerini ifade edebilir ve kod yazabilir. Birçok alanda etkili bir şekilde kullanılmaktadır."
   },
+  "sensenova": {
+    "description": "SenseTime, güçlü altyapısına dayanarak, verimli ve kullanımı kolay tam yığın büyük model hizmetleri sunar."
+  },
   "siliconcloud": {
     "description": "SiliconFlow, insanlığa fayda sağlamak amacıyla AGI'yi hızlandırmaya odaklanmakta ve kullanıcı dostu ve maliyet etkin GenAI yığınları ile büyük ölçekli yapay zeka verimliliğini artırmayı hedeflemektedir."
   },
@@ -72,6 +98,9 @@
   "taichu": {
     "description": "Çin Bilimler Akademisi Otomasyon Araştırma Enstitüsü ve Wuhan Yapay Zeka Araştırma Enstitüsü, çok modlu büyük modelin yeni neslini sunmaktadır. Çoklu soru-cevap, metin oluşturma, görüntü üretimi, 3D anlama, sinyal analizi gibi kapsamlı soru-cevap görevlerini desteklemekte ve daha güçlü bilişsel, anlama ve yaratma yetenekleri sunarak yeni bir etkileşim deneyimi sağlamaktadır."
   },
+  "tencentcloud": {
+    "description": "Bilgi motoru atomik yetenekleri (LLM Knowledge Engine Atomic Power), bilgi motoru üzerine geliştirilmiş bilgi sorgulama tam zincir yetenekleri sunar. Bu yetenekler, işletmeler ve geliştiriciler için esnek model uygulamaları oluşturma ve geliştirme imkanı sağlar. Birden fazla atomik yeteneği kullanarak özel model hizmetlerinizi oluşturabilir, belge analizi, parçalama, embedding, çoklu yeniden yazım gibi hizmetleri bir araya getirerek işletmenize özel AI çözümleri tasarlayabilirsiniz."
+  },
   "togetherai": {
     "description": "Together AI, yenilikçi yapay zeka modelleri aracılığıyla lider performans elde etmeye odaklanmaktadır. Hızlı ölçeklenme desteği ve sezgisel dağıtım süreçleri dahil olmak üzere geniş özelleştirme yetenekleri sunarak işletmelerin çeşitli ihtiyaçlarını karşılamaktadır."
   },
@@ -80,6 +109,9 @@
   },
   "wenxin": {
     "description": "Kurumsal düzeyde tek duraklı büyük model ve AI yerel uygulama geliştirme ve hizmet platformu, en kapsamlı ve kullanımı kolay üretken yapay zeka modeli geliştirme, uygulama geliştirme için tam süreç araç zinciri sunar."
+  },
+  "xai": {
+    "description": "xAI, insan bilimsel keşiflerini hızlandırmak için yapay zeka geliştirmeye adanmış bir şirkettir. Misyonumuz, evrene dair ortak anlayışımızı ilerletmektir."
   },
   "zeroone": {
     "description": "01.AI, yapay zeka 2.0 çağının yapay zeka teknolojisine odaklanmakta ve 'insan + yapay zeka' yenilik ve uygulamalarını teşvik etmektedir. Son derece güçlü modeller ve gelişmiş yapay zeka teknolojileri kullanarak insan üretkenliğini artırmayı ve teknolojik güçlendirmeyi hedeflemektedir."

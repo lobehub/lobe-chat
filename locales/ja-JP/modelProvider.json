@@ -51,12 +51,87 @@
       "title": "使用カスタム Bedrock 認証情報"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Cloudflare API Key を入力してください",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Cloudflare アカウント ID またはカスタム API アドレスを入力してください。",
+      "placeholder": "Cloudflare アカウント ID / カスタム API URL",
+      "title": "Cloudflare アカウント ID / API アドレス"
+    }
+  },
+  "createNewAiProvider": {
+    "apiKey": {
+      "placeholder": "あなたの API キーを入力してください",
+      "title": "API キー"
+    },
+    "basicTitle": "基本情報",
+    "configTitle": "設定情報",
+    "confirm": "新規作成",
+    "createSuccess": "新規作成に成功しました",
+    "description": {
+      "placeholder": "サービスプロバイダーの紹介（任意）",
+      "title": "サービスプロバイダーの紹介"
+    },
+    "id": {
+      "desc": "サービスプロバイダーの一意の識別子であり、作成後は変更できません",
+      "format": "数字、小文字のアルファベット、ハイフン（-）、およびアンダースコア（_）のみを含むことができます",
+      "placeholder": "小文字で入力してください（例: openai）。作成後は変更できません",
+      "required": "サービスプロバイダー ID を入力してください",
+      "title": "サービスプロバイダー ID"
+    },
+    "logo": {
+      "required": "正しいサービスプロバイダーのロゴをアップロードしてください",
+      "title": "サービスプロバイダーのロゴ"
+    },
+    "name": {
+      "placeholder": "サービスプロバイダーの表示名を入力してください",
+      "required": "サービスプロバイダー名を入力してください",
+      "title": "サービスプロバイダー名"
+    },
+    "proxyUrl": {
+      "required": "プロキシURLを入力してください",
+      "title": "プロキシアドレス"
+    },
+    "sdkType": {
+      "required": "SDK タイプを選択してください",
+      "title": "リクエスト形式"
+    },
+    "title": "カスタム AI サービスプロバイダーの作成"
+  },
   "github": {
     "personalAccessToken": {
       "desc": "あなたのGithub PATを入力してください。[こちら](https://github.com/settings/tokens)をクリックして作成します",
       "placeholder": "ghp_xxxxxx",
       "title": "GitHub PAT"
     }
+  },
+  "huggingface": {
+    "accessToken": {
+      "desc": "あなたの HuggingFace トークンを入力してください。 [こちら](https://huggingface.co/settings/tokens) をクリックして作成します。",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace トークン"
+    }
+  },
+  "list": {
+    "title": {
+      "disabled": "サービスプロバイダーは無効です",
+      "enabled": "サービスプロバイダーは有効です"
+    }
+  },
+  "menu": {
+    "addCustomProvider": "カスタムサービスプロバイダーを追加",
+    "all": "すべて",
+    "list": {
+      "disabled": "未使用",
+      "enabled": "使用中"
+    },
+    "notFound": "検索結果が見つかりません",
+    "searchProviders": "サービスプロバイダーを検索...",
+    "sort": "カスタムソート"
   },
   "ollama": {
     "checker": {
@@ -69,68 +144,159 @@
       "title": "カスタムモデル名"
     },
     "download": {
-      "desc": "Ollama is currently downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
+      "desc": "Ollamaはこのモデルをダウンロードしています。このページを閉じないでください。再ダウンロードすると中断したところから再開されます。",
+      "remainingTime": "残り時間",
+      "speed": "ダウンロード速度",
+      "title": "モデル{{model}}をダウンロード中"
     },
     "endpoint": {
-      "desc": "Ollamaプロキシインターフェースアドレスを入力してください。ローカルで追加の指定がない場合は空白のままにしてください",
+      "desc": "http(s)://を含める必要があります。ローカルで特に指定がない場合は空白のままで構いません",
       "title": "プロキシインターフェースアドレス"
-    },
-    "setup": {
-      "cors": {
-        "description": "ブラウザのセキュリティ制限により、Ollama を正常に使用するにはクロスオリジンリクエストを許可する必要があります。",
-        "linux": {
-          "env": "[Service] セクションに `Environment` を追加し、OLLAMA_ORIGINS 環境変数を設定してください：",
-          "reboot": "systemd を再読み込みして Ollama を再起動します。",
-          "systemd": "systemd を呼び出して ollama サービスを編集します："
-        },
-        "macos": "「ターミナル」アプリを開き、以下のコマンドを貼り付けて実行し、Enter キーを押してください",
-        "reboot": "Ollama サービスを再起動するには、実行後に再起動してください",
-        "title": "Ollama の CORS アクセスを許可する設定",
-        "windows": "Windows 上では、「コントロールパネル」をクリックしてシステム環境変数を編集します。ユーザーアカウントに「OLLAMA_ORIGINS」という名前の環境変数を作成し、値を * に設定し、「OK/適用」をクリックして保存します"
-      },
-      "install": {
-        "description": "Ollamaを有効にしていることを確認してください。Ollamaをまだダウンロードしていない場合は、公式サイト<1>からダウンロード</1>してください。",
-        "docker": "もしDockerを使用することを好む場合、Ollamaは公式Dockerイメージも提供しています。以下のコマンドを使用して取得できます：",
-        "linux": {
-          "command": "以下のコマンドを使用してインストール：",
-          "manual": "または、<1>Linuxマニュアルインストールガイド</1>を参照して手動でインストールすることもできます"
-        },
-        "title": "ローカルでOllamaアプリをインストールして起動する",
-        "windowsTab": "Windows（プレビュー版）"
-      }
     },
     "title": "Ollama",
     "unlock": {
-      "cancel": "Cancel Download",
-      "confirm": "Download",
-      "description": "Enter your Ollama model tag to continue the session",
+      "cancel": "ダウンロードをキャンセル",
+      "confirm": "ダウンロード",
+      "description": "Ollamaモデルのラベルを入力して、セッションを続行してください。",
       "downloaded": "{{completed}} / {{total}}",
-      "starting": "Starting download...",
-      "title": "Download specified Ollama model"
+      "starting": "ダウンロードを開始しています...",
+      "title": "指定されたOllamaモデルをダウンロード"
     }
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "百度千帆プラットフォームのAccess Keyを入力してください",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
+  "providerModels": {
+    "config": {
+      "aesGcm": "あなたのキーとプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムを使用して暗号化されます",
+      "apiKey": {
+        "desc": "あなたの {{name}} API キーを入力してください",
+        "placeholder": "{{name}} API キー",
+        "title": "API キー"
+      },
+      "baseURL": {
+        "desc": "http(s):// を含める必要があります",
+        "invalid": "有効なURLを入力してください",
+        "placeholder": "https://your-proxy-url.com/v1",
+        "title": "API プロキシアドレス"
+      },
+      "checker": {
+        "button": "チェック",
+        "desc": "API キーとプロキシアドレスが正しく入力されているかテストします",
+        "pass": "チェックに合格しました",
+        "title": "接続性チェック"
+      },
+      "fetchOnClient": {
+        "desc": "クライアントリクエストモードはブラウザから直接セッションリクエストを発起し、応答速度を向上させます",
+        "title": "クライアントリクエストモードを使用"
+      },
+      "helpDoc": "設定ガイド",
+      "waitingForMore": "さらに多くのモデルが <1>接続予定</1> です。お楽しみに"
     },
-    "checker": {
-      "desc": "AccessKey / SecretAccessが正しく入力されているかテストします"
+    "createNew": {
+      "title": "カスタム AI モデルの作成"
     },
-    "secretKey": {
-      "desc": "百度千帆プラットフォームのSecret Keyを入力してください",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
+    "item": {
+      "config": "モデルを設定",
+      "customModelCards": {
+        "addNew": "{{id}} モデルを作成して追加",
+        "confirmDelete": "このカスタムモデルを削除しようとしています。削除後は復元できませんので、慎重に操作してください。"
+      },
+      "delete": {
+        "confirm": "モデル {{displayName}} を削除してもよろしいですか？",
+        "success": "削除に成功しました",
+        "title": "モデルを削除"
+      },
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Azure OpenAI で実際にリクエストされるフィールド",
+          "placeholder": "Azure でのモデルデプロイ名を入力してください",
+          "title": "モデルデプロイ名"
+        },
+        "displayName": {
+          "placeholder": "モデルの表示名を入力してください（例: ChatGPT、GPT-4 など）",
+          "title": "モデル表示名"
+        },
+        "files": {
+          "extra": "現在のファイルアップロード実装は一つのハック手法に過ぎず、自己責任での試行に限られます。完全なファイルアップロード機能は今後の実装をお待ちください",
+          "title": "ファイルアップロードをサポート"
+        },
+        "functionCall": {
+          "extra": "この設定は、モデルがツールを使用する機能を有効にし、モデルにツールタイプのプラグインを追加できるようにします。ただし、実際にツールを使用できるかどうかはモデル自体に依存するため、使用可能性を自分でテストしてください",
+          "title": "ツール使用のサポート"
+        },
+        "id": {
+          "extra": "作成後は変更できません。AIを呼び出す際にモデルIDとして使用されます。",
+          "placeholder": "モデルIDを入力してください。例：gpt-4o または claude-3.5-sonnet",
+          "title": "モデル ID"
+        },
+        "modalTitle": "カスタムモデル設定",
+        "reasoning": {
+          "extra": "この設定は、モデルの深い思考能力を有効にするだけです。具体的な効果はモデル自体に依存しますので、このモデルが利用可能な深い思考能力を持っているかどうかはご自身でテストしてください。",
+          "title": "深い思考をサポート"
+        },
+        "tokens": {
+          "extra": "モデルがサポートする最大トークン数を設定する",
+          "title": "最大コンテキストウィンドウ",
+          "unlimited": "無制限"
+        },
+        "vision": {
+          "extra": "この設定はアプリ内の画像アップロード設定のみを有効にします。認識のサポートはモデル自体に依存しますので、そのモデルの視覚認識機能の可用性を自分でテストしてください",
+          "title": "視覚認識をサポート"
+        }
+      },
+      "pricing": {
+        "image": "${{amount}}/画像",
+        "inputCharts": "${{amount}}/M 文字",
+        "inputMinutes": "${{amount}}/分",
+        "inputTokens": "入力 ${{amount}}/M",
+        "outputTokens": "出力 ${{amount}}/M"
+      },
+      "releasedAt": "リリース日: {{releasedAt}}"
     },
-    "unlock": {
-      "customRegion": "カスタムサービス地域",
-      "description": "AccessKey / SecretKeyを入力することでセッションを開始できます。アプリはあなたの認証設定を記録しません",
-      "title": "カスタム文心一言認証情報を使用"
-    }
+    "list": {
+      "addNew": "モデルを追加",
+      "disabled": "無効",
+      "disabledActions": {
+        "showMore": "すべて表示"
+      },
+      "empty": {
+        "desc": "カスタムモデルを作成するか、モデルを取得してから使用を開始してください",
+        "title": "利用可能なモデルはありません"
+      },
+      "enabled": "有効",
+      "enabledActions": {
+        "disableAll": "すべて無効にする",
+        "enableAll": "すべて有効にする",
+        "sort": "カスタムモデルの並べ替え"
+      },
+      "enabledEmpty": "有効なモデルはありません。下のリストからお気に入りのモデルを有効にしてください〜",
+      "fetcher": {
+        "clear": "取得したモデルをクリア",
+        "fetch": "モデルリストを取得",
+        "fetching": "モデルリストを取得中...",
+        "latestTime": "最終更新日時：{{time}}",
+        "noLatestTime": "まだリストを取得していません"
+      },
+      "resetAll": {
+        "conform": "現在のモデルのすべての変更をリセットしてもよろしいですか？リセット後、現在のモデルリストはデフォルトの状態に戻ります",
+        "success": "リセットに成功しました",
+        "title": "すべての変更をリセット"
+      },
+      "search": "モデルを検索...",
+      "searchResult": "{{count}} 個のモデルが見つかりました",
+      "title": "モデルリスト",
+      "total": "利用可能なモデルは合計 {{count}} 件です"
+    },
+    "searchNotFound": "検索結果が見つかりませんでした"
+  },
+  "sortModal": {
+    "success": "ソートが更新されました",
+    "title": "カスタムソート",
+    "update": "更新"
+  },
+  "updateAiProvider": {
+    "confirmDelete": "この AI サービスプロバイダーを削除しようとしています。削除後は復元できません。削除してもよろしいですか？",
+    "deleteSuccess": "削除に成功しました",
+    "tooltip": "サービスプロバイダーの基本設定を更新",
+    "updateSuccess": "更新に成功しました"
   },
   "zeroone": {
     "title": "01.AI 零一万物"

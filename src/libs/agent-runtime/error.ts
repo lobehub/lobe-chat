@@ -4,6 +4,7 @@ export const AgentRuntimeErrorType = {
   AgentRuntimeError: 'AgentRuntimeError', // Agent Runtime 模块运行时错误
   LocationNotSupportError: 'LocationNotSupportError',
   QuotaLimitReached: 'QuotaLimitReached',
+  PermissionDenied: 'PermissionDenied',
 
   InvalidProviderAPIKey: 'InvalidProviderAPIKey',
   ProviderBizError: 'ProviderBizError',
@@ -16,6 +17,8 @@ export const AgentRuntimeErrorType = {
 
   InvalidGithubToken: 'InvalidGithubToken',
 
+  ConnectionCheckFailed: 'ConnectionCheckFailed',
+
   /**
    * @deprecated
    */
@@ -25,6 +28,8 @@ export const AgentRuntimeErrorType = {
    */
   OpenAIBizError: 'OpenAIBizError',
 } as const;
+
+export const AGENT_RUNTIME_ERROR_SET = new Set<string>(Object.values(AgentRuntimeErrorType));
 
 export type ILobeAgentRuntimeErrorType =
   (typeof AgentRuntimeErrorType)[keyof typeof AgentRuntimeErrorType];

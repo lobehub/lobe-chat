@@ -1,16 +1,19 @@
-import { readableFromAsyncIterable } from 'ai';
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
 import { ChatMessageError } from '@/types/message';
 
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
 import { ChatStreamCallbacks } from '../../types';
 import {
+  FIRST_CHUNK_ERROR_KEY,
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
   StreamStack,
   StreamToolCallChunkData,
+  convertIterableToStream,
   createCallbacksTransformer,
+  createFirstErrorHandleTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
 } from './protocol';
@@ -19,14 +22,29 @@ export const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
   stack?: StreamStack,
 ): StreamProtocolChunk => {
-  // maybe need another structure to add support for multiple choices
+  // handle the first chunk error
+  if (FIRST_CHUNK_ERROR_KEY in chunk) {
+    delete chunk[FIRST_CHUNK_ERROR_KEY];
+    // @ts-ignore
+    delete chunk['name'];
+    // @ts-ignore
+    delete chunk['stack'];
+
+    const errorData = {
+      body: chunk,
+      type: 'errorType' in chunk ? chunk.errorType : AgentRuntimeErrorType.ProviderBizError,
+    } as ChatMessageError;
+    return { data: errorData, id: 'first_chunk_error', type: 'error' };
+  }
 
   try {
+    // maybe need another structure to add support for multiple choices
     const item = chunk.choices[0];
     if (!item) {
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
+    // tools calling
     if (typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
       return {
         data: item.delta.tool_calls.map((value, index): StreamToolCallChunkData => {
@@ -69,11 +87,39 @@ export const transformOpenAIStream = (
       return { data: item.finish_reason, id: chunk.id, type: 'stop' };
     }
 
-    if (typeof item.delta?.content === 'string') {
-      return { data: item.delta.content, id: chunk.id, type: 'text' };
+    if (item.delta) {
+      let reasoning_content = (() => {
+        if ('reasoning_content' in item.delta) return item.delta.reasoning_content;
+        if ('reasoning' in item.delta) return item.delta.reasoning;
+        return null;
+      })();
+
+      let content = 'content' in item.delta ? item.delta.content : null;
+
+      // DeepSeek reasoner will put thinking in the reasoning_content field
+      // litellm and not set content = null when processing reasoning content
+      // en: siliconflow and aliyun bailian has encountered a situation where both content and reasoning_content are present, so need to handle it
+      // refs: https://github.com/lobehub/lobe-chat/issues/5681 (siliconflow)
+      // refs: https://github.com/lobehub/lobe-chat/issues/5956 (aliyun bailian)
+      if (typeof content === 'string' && typeof reasoning_content === 'string') {
+        if (content === '' && reasoning_content === '') {
+          content = null;
+        } else if (reasoning_content === '') {
+          reasoning_content = null;
+        }
+      }
+
+      if (typeof reasoning_content === 'string') {
+        return { data: reasoning_content, id: chunk.id, type: 'reasoning' };
+      }
+
+      if (typeof content === 'string') {
+        return { data: content, id: chunk.id, type: 'text' };
+      }
     }
 
-    if (item.delta?.content === null) {
+    // 无内容情况
+    if (item.delta && item.delta.content === null) {
       return { data: item.delta, id: chunk.id, type: 'data' };
     }
 
@@ -97,7 +143,7 @@ export const transformOpenAIStream = (
           'chat response streaming chunk parse error, please contact your API Provider to fix it.',
         context: { error: { message: err.message, name: err.name }, chunk },
       },
-      type: 'StreamChunkError',
+      type: errorName,
     } as ChatMessageError;
     /* eslint-enable */
 
@@ -105,22 +151,31 @@ export const transformOpenAIStream = (
   }
 };
 
-const chatStreamable = async function* (stream: AsyncIterable<OpenAI.ChatCompletionChunk>) {
-  for await (const response of stream) {
-    yield response;
-  }
-};
+export interface OpenAIStreamOptions {
+  bizErrorTypeTransformer?: (error: {
+    message: string;
+    name: string;
+  }) => ILobeAgentRuntimeErrorType | undefined;
+  callbacks?: ChatStreamCallbacks;
+  provider?: string;
+}
 
 export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
-  callbacks?: ChatStreamCallbacks,
+  { callbacks, provider, bizErrorTypeTransformer }: OpenAIStreamOptions = {},
 ) => {
   const streamStack: StreamStack = { id: '' };
 
   const readableStream =
-    stream instanceof ReadableStream ? stream : readableFromAsyncIterable(chatStreamable(stream));
+    stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
-  return readableStream
-    .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream, streamStack))
-    .pipeThrough(createCallbacksTransformer(callbacks));
+  return (
+    readableStream
+      // 1. handle the first error if exist
+      // provider like huggingface or minimax will return error in the stream,
+      // so in the first Transformer, we need to handle the error
+      .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, provider))
+      .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream, streamStack))
+      .pipeThrough(createCallbacksTransformer(callbacks))
+  );
 };

@@ -4,6 +4,8 @@ import { dark } from '@clerk/themes';
 import { ElementsConfig, Theme } from '@clerk/types';
 import { createStyles, useThemeMode } from 'antd-style';
 
+import { BRANDING_URL } from '@/const/branding';
+
 const prefixCls = 'cl';
 
 export const useStyles = createStyles(
@@ -14,8 +16,8 @@ export const useStyles = createStyles(
         height: 40px;
       `,
       cardBox: css`
-        background: ${token.colorBgContainer};
         border-radius: ${token.borderRadiusLG}px;
+        background: ${token.colorBgContainer};
         box-shadow: 0 0 0 1px ${token.colorBorderSecondary};
       `,
       header: css`
@@ -64,17 +66,17 @@ export const useStyles = createStyles(
           .${prefixCls}-cardBox {
             width: 100%;
             height: 100%;
-
             border: unset;
             border-radius: unset;
+
             box-shadow: unset;
           }
         }
       `,
       scrollBox: css`
-        background: ${isDarkMode ? token.colorFillQuaternary : token.colorBgElevated};
         border: unset;
         border-radius: unset;
+        background: ${isDarkMode ? token.colorFillQuaternary : token.colorBgElevated};
         box-shadow: 0 1px 0 1px ${token.colorFillTertiary};
       `,
       socialButtons: css`
@@ -101,10 +103,10 @@ export const useAppearance = () => {
     baseTheme: isDarkMode ? dark : undefined,
     elements: styles,
     layout: {
-      helpPageUrl: 'https://lobehub.com/docs',
-      privacyPageUrl: 'https://lobehub.com/privacy',
+      helpPageUrl: BRANDING_URL.help ?? 'https://lobehub.com/docs',
+      privacyPageUrl: BRANDING_URL.privacy ?? 'https://lobehub.com/privacy',
       socialButtonsVariant: 'blockButton',
-      termsPageUrl: 'https://lobehub.com/terms',
+      termsPageUrl: BRANDING_URL.terms ?? 'https://lobehub.com/terms',
     },
     variables: {
       borderRadius: `${theme.borderRadius}px`,

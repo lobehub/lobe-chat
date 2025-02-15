@@ -8,6 +8,7 @@
   "agents": "Assistant",
   "artifact": {
     "generating": "Génération en cours",
+    "inThread": "Impossible de voir dans le sous-sujet, veuillez passer à la zone de discussion principale.",
     "thinking": "En réflexion",
     "thought": "Processus de pensée",
     "unknownTitle": "Œuvre sans nom"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} Copie",
   "emptyAgent": "Aucun assistant disponible",
   "historyRange": "Plage d'historique",
+  "historySummary": "Résumé des messages historiques",
   "inbox": {
     "desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
     "title": "Discutons un peu"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Supprimer et régénérer",
+    "deleteDisabledByThreads": "Il existe des sous-sujets, la suppression n'est pas possible.",
     "regenerate": "Régénérer"
   },
   "newAgent": "Nouvel agent",
@@ -100,14 +103,20 @@
     "tooLong": "Le nom du groupe doit comporter entre 1 et 20 caractères"
   },
   "shareModal": {
+    "copy": "Copier",
     "download": "Télécharger la capture d'écran",
+    "downloadFile": "Télécharger le fichier",
+    "exportTitle": "Titre par défaut",
     "imageType": "Type d'image",
+    "includeTool": "Inclure les messages de l'outil",
+    "includeUser": "Inclure les messages de l'utilisateur",
     "screenshot": "Capture d'écran",
     "settings": "Paramètres d'exportation",
-    "shareToShareGPT": "Générer un lien de partage ShareGPT",
+    "text": "Texte",
     "withBackground": "Avec image de fond",
     "withFooter": "Avec pied de page",
     "withPluginInfo": "Avec informations sur le plugin",
+    "withRole": "Inclure le rôle du message",
     "withSystemRole": "Avec rôle de l'agent"
   },
   "stt": {
@@ -115,9 +124,14 @@
     "loading": "En cours de reconnaissance...",
     "prettifying": "En cours d'embellissement..."
   },
-  "temp": "Temporaire",
+  "thread": {
+    "divider": "Sous-sujet",
+    "threadMessageCount": "{{messageCount}} messages",
+    "title": "Sous-sujet"
+  },
   "tokenDetails": {
     "chats": "Messages de discussion",
+    "historySummary": "Résumé historique",
     "rest": "Restant disponible",
     "systemRole": "Rôle système",
     "title": "Détails du jeton",
@@ -131,29 +145,10 @@
     "used": "Utilisé"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Renommer automatiquement",
-      "duplicate": "Créer une copie",
-      "export": "Exporter le sujet"
-    },
     "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
     "checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
-    "confirmRemoveAll": "Vous êtes sur le point de supprimer tous les sujets. Cette action est irréversible. Veuillez confirmer.",
-    "confirmRemoveTopic": "Vous êtes sur le point de supprimer ce sujet. Cette action est irréversible. Veuillez confirmer.",
-    "confirmRemoveUnstarred": "Vous êtes sur le point de supprimer les sujets non favoris. Cette action est irréversible. Veuillez confirmer.",
-    "defaultTitle": "Sujet par défaut",
-    "duplicateLoading": "Duplication du sujet en cours...",
-    "duplicateSuccess": "Sujet dupliqué avec succès",
-    "guide": {
-      "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle comme un sujet historique et démarrer une nouvelle session.",
-      "title": "Liste des sujets"
-    },
     "openNewTopic": "Ouvrir un nouveau sujet",
-    "removeAll": "Supprimer tous les sujets",
-    "removeUnstarred": "Supprimer les sujets non favoris",
-    "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet",
-    "searchPlaceholder": "Rechercher un sujet...",
-    "title": "Liste des sujets"
+    "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet"
   },
   "translate": {
     "action": "Traduire",
@@ -184,5 +179,6 @@
         "processing": "Traitement du fichier..."
       }
     }
-  }
+  },
+  "zenMode": "Mode de concentration"
 }

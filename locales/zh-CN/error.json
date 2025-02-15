@@ -12,8 +12,14 @@
     "retry": "重新加载",
     "title": "页面遇到一点问题.."
   },
-  "fetchError": "请求失败",
-  "fetchErrorDetail": "错误详情",
+  "fetchError": {
+    "detail": "错误详情",
+    "title": "请求失败"
+  },
+  "loginRequired": {
+    "desc": "即将自动跳转到登录页面",
+    "title": "请登录后使用该功能"
+  },
   "notFound": {
     "backHome": "返回首页",
     "check": "请检查你的 URL 是否正确",
@@ -51,9 +57,16 @@
     "431": "很抱歉，您的请求头字段太大，服务器无法处理",
     "451": "很抱歉，由于法律原因，服务器拒绝提供此资源",
     "500": "很抱歉，服务器似乎遇到了一些困难，暂时无法完成您的请求，请稍后再试",
+    "501": "很抱歉，服务器还不知道如何处理这个请求，请确认您的操作是否正确",
     "502": "很抱歉，服务器似乎迷失了方向，暂时无法提供服务，请稍后再试",
     "503": "很抱歉，服务器当前无法处理您的请求，可能是由于过载或正在进行维护，请稍后再试",
     "504": "很抱歉，服务器没有等到上游服务器的回应，请稍后再试",
+    "505": "很抱歉，服务器不支持您使用的HTTP版本，请更新后再试",
+    "506": "很抱歉，服务器配置出现问题，请联系管理员解决",
+    "507": "很抱歉，服务器存储空间不足，无法处理您的请求，请稍后再试",
+    "509": "很抱歉，服务器的带宽已用尽，请稍后再试",
+    "510": "很抱歉，服务器不支持请求的扩展功能，请联系管理员",
+    "524": "很抱歉，服务器在等回复时超时了，可能是因为响应太慢，请稍后再试",
     "PluginMarketIndexNotFound": "很抱歉，服务器没有找到插件索引，请检查索引地址是否正确",
     "PluginMarketIndexInvalid": "很抱歉，插件索引校验未通过，请检查索引文件格式是否规范",
     "PluginMetaNotFound": "很抱歉，没有在索引中发现该插件，请插件在索引中的配置信息",
@@ -70,7 +83,8 @@
     "InvalidAccessCode": "密码不正确或为空，请输入正确的访问密码，或者添加自定义 API Key",
     "InvalidClerkUser": "很抱歉，你当前尚未登录，请先登录或注册账号后继续操作",
     "LocationNotSupportError": "很抱歉，你的所在地区不支持此模型服务，可能是由于区域限制或服务未开通。请确认当前地区是否支持使用此服务，或尝试使用切换到其他地区后重试。",
-    "QuotaLimitReached": "很抱歉，当前 Token 用量或请求次数已达该秘钥的配额(quota)上限，请增加该秘钥的配额或稍后再试",
+    "QuotaLimitReached": "很抱歉，当前 Token 用量或请求次数已达该密钥的配额(quota)上限，请增加该密钥的配额或稍后再试",
+    "PermissionDenied": "很抱歉，你没有权限访问该服务，请检查你的密钥是否有访问权限",
     "InvalidProviderAPIKey": "{{provider}} API Key 不正确或为空，请检查 {{provider}} API Key 后重试",
     "ProviderBizError": "请求 {{provider}} 服务出错，请根据以下信息排查或重试",
     "NoOpenAIAPIKey": "OpenAI API Key 不正确或为空，请添加自定义 OpenAI API Key",
@@ -84,7 +98,8 @@
     "AgentRuntimeError": "Lobe AI Runtime 执行出错，请根据以下信息排查或重试",
     "FreePlanLimit": "当前为免费用户，无法使用该功能，请升级到付费计划后继续使用",
     "SubscriptionPlanLimit": "您的订阅额度已用尽，无法使用该功能，请升级到更高计划，或购买资源包后继续使用",
-    "InvalidGithubToken": "Github PAT 不正确或为空，请检查 Github PAT 后重试"
+    "InvalidGithubToken": "Github PAT 不正确或为空，请检查 Github PAT 后重试",
+    "ConnectionCheckFailed": "请求返回为空，请检查 API 代理地址末尾是否未包含 `/v1`"
   },
   "stt": {
     "responseError": "服务请求失败，请检查配置或重试"

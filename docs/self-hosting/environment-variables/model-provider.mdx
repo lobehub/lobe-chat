@@ -169,6 +169,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 
 ## DeepSeek AI
 
+### `DEEPSEEK_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the DeepSeek API proxy, you can use this configuration item to override the default DeepSeek API request base URL
+- Default: -
+- Example: `https://xxxx.models.ai.azure.com/v1`
+
 ### `DEEPSEEK_API_KEY`
 
 - Type: Required
@@ -287,6 +294,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Description: If you manually configure the Perplexity API proxy, you can use this configuration item to override the default Perplexity API request base URL
 - Default: `https://api.Perplexity.ai`
 - Example: `https://my-Perplexity-proxy.com`
+
+### `PERPLEXITY_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- Default: `-`
+- Example: `-all,+llama-3.1-sonar-small-128k-online,+llama-3.1-sonar-small-128k-chat`
 
 ## Minimax AI
 
@@ -475,7 +489,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `AI21_API_KEY`
 
 - Type: Required
-- Description: This is the API key you applied from AI21_API_KEY service
+- Description: This is the API key you applied from `AI21_API_KEY` service
 - Default: -
 - Example: `xxxxxx...xxxxxx`
 

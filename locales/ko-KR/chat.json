@@ -8,6 +8,7 @@
   "agents": "도우미",
   "artifact": {
     "generating": "생성 중",
+    "inThread": "하위 주제에서는 볼 수 없습니다. 주 대화 영역으로 전환하여 열어주세요.",
     "thinking": "생각 중",
     "thought": "사고 과정",
     "unknownTitle": "제목 없음"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} 복사본",
   "emptyAgent": "도우미가 없습니다",
   "historyRange": "대화 기록 범위",
+  "historySummary": "역사 메시지 요약",
   "inbox": {
     "desc": "뇌 클러스터를 활성화하여 창의적인 아이디어를 끌어내는 인공지능 비서입니다. 여기서 모든 것에 대해 대화합니다.",
     "title": "무작위 대화"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "삭제하고 다시 생성",
+    "deleteDisabledByThreads": "하위 주제가 존재하여 삭제할 수 없습니다.",
     "regenerate": "다시 생성"
   },
   "newAgent": "새 도우미",
@@ -100,14 +103,20 @@
     "tooLong": "그룹 이름은 1-20자여야 합니다"
   },
   "shareModal": {
+    "copy": "복사",
     "download": "스크린샷 다운로드",
+    "downloadFile": "파일 다운로드",
+    "exportTitle": "기본 제목",
     "imageType": "이미지 형식",
+    "includeTool": "플러그인 메시지 포함",
+    "includeUser": "사용자 메시지 포함",
     "screenshot": "스크린샷",
     "settings": "내보내기 설정",
-    "shareToShareGPT": "ShareGPT 공유 링크 생성",
+    "text": "텍스트",
     "withBackground": "배경 이미지 포함",
     "withFooter": "푸터 포함",
     "withPluginInfo": "플러그인 정보 포함",
+    "withRole": "메시지 역할 포함",
     "withSystemRole": "도우미 역할 포함"
   },
   "stt": {
@@ -115,9 +124,14 @@
     "loading": "인식 중...",
     "prettifying": "정제 중..."
   },
-  "temp": "임시",
+  "thread": {
+    "divider": "하위 주제",
+    "threadMessageCount": "{{messageCount}}개의 메시지",
+    "title": "하위 주제"
+  },
   "tokenDetails": {
     "chats": "채팅 메시지",
+    "historySummary": "역사 요약",
     "rest": "남은 사용량",
     "systemRole": "시스템 역할",
     "title": "컨텍스트 세부 정보",
@@ -131,29 +145,10 @@
     "used": "사용됨"
   },
   "topic": {
-    "actions": {
-      "autoRename": "자동으로 이름 바꾸기",
-      "duplicate": "복사본 만들기",
-      "export": "주제 내보내기"
-    },
     "checkOpenNewTopic": "새 주제를 열까요?",
     "checkSaveCurrentMessages": "현재 대화를 주제로 저장하시겠습니까?",
-    "confirmRemoveAll": "모든 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
-    "confirmRemoveTopic": "이 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
-    "confirmRemoveUnstarred": "별표가 없는 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
-    "defaultTitle": "기본 주제",
-    "duplicateLoading": "주제 복사 중...",
-    "duplicateSuccess": "주제 복사 성공",
-    "guide": {
-      "desc": "현재 대화를 히스토리 토픽으로 저장하고 새 대화를 시작하려면 왼쪽 버튼을 클릭하세요.",
-      "title": "토픽 목록"
-    },
     "openNewTopic": "새 주제 열기",
-    "removeAll": "모든 주제 삭제",
-    "removeUnstarred": "별표가 없는 주제 삭제",
-    "saveCurrentMessages": "현재 대화를 주제로 저장",
-    "searchPlaceholder": "주제 검색...",
-    "title": "주제 목록"
+    "saveCurrentMessages": "현재 대화를 주제로 저장"
   },
   "translate": {
     "action": "번역",
@@ -184,5 +179,6 @@
         "processing": "파일 처리 중..."
       }
     }
-  }
+  },
+  "zenMode": "집중 모드"
 }

@@ -2,13 +2,22 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
-import { createErrorResponse } from '@/app/api/errorResponse';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
+import { enableAuth } from '@/const/auth';
 import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
-import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
+import { isDeprecatedEdition, isServerMode } from '@/const/version';
+import {
+  AgentRuntime,
+  AgentRuntimeError,
+  ChatCompletionErrorPayload,
+  ModelProvider,
+} from '@/libs/agent-runtime';
+import { filesPrompts } from '@/prompts/files';
+import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
+import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -24,14 +33,57 @@ import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
+import { createErrorResponse } from '@/utils/errorResponse';
 import { FetchSSEOptions, fetchSSE, getMessageError } from '@/utils/fetch';
 import { genToolCallingName } from '@/utils/toolCall';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
-import { createHeaderWithAuth, getProviderAuthPayload } from './_auth';
+import { createHeaderWithAuth, createPayloadWithKeyVaults } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
+const isCanUseFC = (model: string, provider: string) => {
+  // TODO: remove isDeprecatedEdition condition in V2.0
+  if (isDeprecatedEdition) {
+    return modelProviderSelectors.isModelEnabledFunctionCall(model)(useUserStore.getState());
+  }
+
+  return aiModelSelectors.isModelSupportToolUse(model, provider)(useAiInfraStore.getState());
+};
+
+const findAzureDeploymentName = (model: string) => {
+  let deploymentId = model;
+
+  // TODO: remove isDeprecatedEdition condition in V2.0
+  if (isDeprecatedEdition) {
+    const chatModelCards = modelProviderSelectors.getModelCardsById(ModelProvider.Azure)(
+      useUserStore.getState(),
+    );
+
+    const deploymentName = chatModelCards.find((i) => i.id === model)?.deploymentName;
+    if (deploymentName) deploymentId = deploymentName;
+  } else {
+    // find the model by id
+    const modelItem = useAiInfraStore.getState().enabledAiModels?.find((i) => i.id === model);
+
+    if (modelItem && modelItem.config?.deploymentName) {
+      deploymentId = modelItem.config?.deploymentName;
+    }
+  }
+
+  return deploymentId;
+};
+
+const isEnableFetchOnClient = (provider: string) => {
+  // TODO: remove this condition in V2.0
+  if (isDeprecatedEdition) {
+    return modelConfigSelectors.isProviderFetchOnClient(provider)(useUserStore.getState());
+  } else {
+    return aiProviderSelectors.isProviderFetchOnClient(provider)(useAiInfraStore.getState());
+  }
+};
+
 interface FetchOptions extends FetchSSEOptions {
+  historySummary?: string;
   isWelcomeQuestion?: boolean;
   signal?: AbortSignal | undefined;
   trace?: TracePayload;
@@ -58,6 +110,7 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
 
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
+  historySummary?: string;
   isWelcomeQuestion?: boolean;
   params: GetChatCompletionPayload;
   trace?: TracePayload;
@@ -72,110 +125,25 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
  * **Note**: if you try to fetch directly, use `fetchOnClient` instead.
  */
 export function initializeWithClientStore(provider: string, payload: any) {
-  // add auth payload
-  const providerAuthPayload = getProviderAuthPayload(provider);
+  /**
+   * Since #5267, we map parameters for client-fetch in function `getProviderAuthPayload`
+   * which called by `createPayloadWithKeyVaults` below.
+   * @see https://github.com/lobehub/lobe-chat/pull/5267
+   * @file src/services/_auth.ts
+   */
+  const providerAuthPayload = { ...payload, ...createPayloadWithKeyVaults(provider) };
   const commonOptions = {
-    // Some provider base openai sdk, so enable it run on browser
+    // Allow OpenAI SDK and Anthropic SDK run on browser
     dangerouslyAllowBrowser: true,
   };
-  let providerOptions = {};
-
-  switch (provider) {
-    default:
-    case ModelProvider.OpenAI: {
-      providerOptions = {
-        baseURL: providerAuthPayload?.endpoint,
-      };
-      break;
-    }
-    case ModelProvider.Azure: {
-      providerOptions = {
-        apiVersion: providerAuthPayload?.azureApiVersion,
-        // That's a wired properity, but just remapped it
-        apikey: providerAuthPayload?.apiKey,
-      };
-      break;
-    }
-    case ModelProvider.ZhiPu: {
-      break;
-    }
-    case ModelProvider.Google: {
-      providerOptions = {
-        baseURL: providerAuthPayload?.endpoint,
-      };
-      break;
-    }
-    case ModelProvider.Moonshot: {
-      break;
-    }
-    case ModelProvider.Bedrock: {
-      if (providerAuthPayload?.apiKey) {
-        providerOptions = {
-          accessKeyId: providerAuthPayload?.awsAccessKeyId,
-          accessKeySecret: providerAuthPayload?.awsSecretAccessKey,
-          region: providerAuthPayload?.awsRegion,
-          sessionToken: providerAuthPayload?.awsSessionToken,
-        };
-      }
-      break;
-    }
-    case ModelProvider.Ollama: {
-      providerOptions = {
-        baseURL: providerAuthPayload?.endpoint,
-      };
-      break;
-    }
-    case ModelProvider.Perplexity: {
-      providerOptions = {
-        apikey: providerAuthPayload?.apiKey,
-        baseURL: providerAuthPayload?.endpoint,
-      };
-      break;
-    }
-    case ModelProvider.Qwen: {
-      break;
-    }
-
-    case ModelProvider.Anthropic: {
-      providerOptions = {
-        baseURL: providerAuthPayload?.endpoint,
-      };
-      break;
-    }
-
-    case ModelProvider.Mistral: {
-      break;
-    }
-    case ModelProvider.Groq: {
-      providerOptions = {
-        apikey: providerAuthPayload?.apiKey,
-        baseURL: providerAuthPayload?.endpoint,
-      };
-      break;
-    }
-    case ModelProvider.DeepSeek: {
-      break;
-    }
-    case ModelProvider.OpenRouter: {
-      break;
-    }
-    case ModelProvider.TogetherAI: {
-      break;
-    }
-    case ModelProvider.ZeroOne: {
-      break;
-    }
-  }
-
   /**
    * Configuration override order:
-   * payload -> providerOptions -> providerAuthPayload -> commonOptions
+   * payload -> providerAuthPayload -> commonOptions
    */
   return AgentRuntime.initializeWithProviderOptions(provider, {
     [provider]: {
       ...commonOptions,
       ...providerAuthPayload,
-      ...providerOptions,
       ...payload,
     },
   });
@@ -200,6 +168,7 @@ class ChatService {
       {
         messages,
         model: payload.model,
+        provider: payload.provider!,
         tools: enabledPlugins,
       },
       options,
@@ -210,9 +179,8 @@ class ChatService {
     const filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
 
     // check this model can use function call
-    const canUseFC = modelProviderSelectors.isModelEnabledFunctionCall(payload.model)(
-      useUserStore.getState(),
-    );
+    const canUseFC = isCanUseFC(payload.model, payload.provider!);
+
     // the rule that model can use tools:
     // 1. tools is not empty
     // 2. model can use function call
@@ -232,8 +200,10 @@ class ChatService {
     onFinish,
     trace,
     isWelcomeQuestion,
+    historySummary,
   }: CreateAssistantMessageStream) => {
     await this.createAssistantMessage(params, {
+      historySummary,
       isWelcomeQuestion,
       onAbort,
       onErrorHandle,
@@ -252,13 +222,8 @@ class ChatService {
     let model = res.model || DEFAULT_AGENT_CONFIG.model;
 
     // if the provider is Azure, get the deployment name as the request model
-    if (provider === ModelProvider.Azure) {
-      const chatModelCards = modelProviderSelectors.getModelCardsById(provider)(
-        useUserStore.getState(),
-      );
-
-      const deploymentName = chatModelCards.find((i) => i.id === model)?.deploymentName;
-      if (deploymentName) model = deploymentName;
+    if (provider === ModelProvider.Azure || provider === ModelProvider.Doubao) {
+      model = findAzureDeploymentName(model);
     }
 
     const payload = merge(
@@ -269,9 +234,7 @@ class ChatService {
     /**
      * Use browser agent runtime
      */
-    const enableFetchOnClient = modelConfigSelectors.isProviderFetchOnClient(provider)(
-      useUserStore.getState(),
-    );
+    let enableFetchOnClient = isEnableFetchOnClient(provider);
 
     let fetcher: typeof fetch | undefined = undefined;
 
@@ -310,7 +273,19 @@ class ChatService {
 
     const providerConfig = DEFAULT_MODEL_PROVIDER_LIST.find((item) => item.id === provider);
 
-    return fetchSSE(API_ENDPOINTS.chat(provider), {
+    let sdkType = provider;
+    const isBuiltin = Object.values(ModelProvider).includes(provider as any);
+
+    // TODO: remove `!isDeprecatedEdition` condition in V2.0
+    if (!isDeprecatedEdition && !isBuiltin) {
+      const providerConfig = aiProviderSelectors.providerConfigById(provider)(
+        useAiInfraStore.getState(),
+      );
+
+      sdkType = providerConfig?.settings.sdkType || 'openai';
+    }
+
+    return fetchSSE(API_ENDPOINTS.chat(sdkType), {
       body: JSON.stringify(payload),
       fetcher: fetcher,
       headers,
@@ -320,9 +295,13 @@ class ChatService {
       onFinish: options?.onFinish,
       onMessageHandle: options?.onMessageHandle,
       signal,
-      // use smoothing when enable client fetch
-      // https://github.com/lobehub/lobe-chat/issues/3800
-      smoothing: providerConfig?.smoothing || enableFetchOnClient,
+      smoothing:
+        providerConfig?.settings?.smoothing ||
+        // @deprecated in V2
+        providerConfig?.smoothing ||
+        // use smoothing when enable client fetch
+        // https://github.com/lobehub/lobe-chat/issues/3800
+        enableFetchOnClient,
     });
   };
 
@@ -402,9 +381,11 @@ class ChatService {
       messages,
       tools,
       model,
+      provider,
     }: {
       messages: ChatMessage[];
       model: string;
+      provider: string;
       tools?: string[];
     },
     options?: FetchOptions,
@@ -413,22 +394,15 @@ class ChatService {
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
     const getContent = (m: ChatMessage) => {
-      if (!m.imageList) return m.content;
-
-      const imageList = m.imageList;
-
-      if (imageList.length === 0) return m.content;
-
-      const canUploadFile = modelProviderSelectors.isModelEnabledUpload(model)(
-        useUserStore.getState(),
-      );
-
-      if (!canUploadFile) {
+      // only if message doesn't have images and files, then return the plain content
+      if ((!m.imageList || m.imageList.length === 0) && (!m.fileList || m.fileList.length === 0))
         return m.content;
-      }
 
+      const imageList = m.imageList || [];
+
+      const filesContext = isServerMode ? filesPrompts({ fileList: m.fileList, imageList }) : '';
       return [
-        { text: m.content, type: 'text' },
+        { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
         ...imageList.map(
           (i) => ({ image_url: { detail: 'auto', url: i.url }, type: 'image_url' }) as const,
         ),
@@ -468,7 +442,7 @@ class ChatService {
         }
 
         default: {
-          return { content: m.content, role: m.role };
+          return { content: m.content, role: m.role as any };
         }
       }
     });
@@ -482,15 +456,15 @@ class ChatService {
 
       // Inject Tool SystemRole
       const hasTools = tools && tools?.length > 0;
-      const hasFC =
-        hasTools &&
-        modelProviderSelectors.isModelEnabledFunctionCall(model)(useUserStore.getState());
+      const hasFC = hasTools && isCanUseFC(model, provider);
       const toolsSystemRoles =
         hasFC && toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
 
-      const injectSystemRoles = [inboxGuideSystemRole, toolsSystemRoles]
-        .filter(Boolean)
-        .join('\n\n');
+      const injectSystemRoles = BuiltinSystemRolePrompts({
+        historySummary: options?.historySummary,
+        plugins: toolsSystemRoles as string,
+        welcome: inboxGuideSystemRole as string,
+      });
 
       if (!injectSystemRoles) return;
 
@@ -511,7 +485,7 @@ class ChatService {
     return this.reorderToolMessages(postMessages);
   };
 
-  private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
+  private mapTrace = (trace?: TracePayload, tag?: TraceTagMap): TracePayload => {
     const tags = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
 
     const enabled = preferenceSelectors.userAllowTrace(useUserStore.getState());
@@ -524,7 +498,7 @@ class ChatService {
       tags: [tag, ...(trace?.tags || []), ...tags].filter(Boolean) as string[],
       userId: userProfileSelectors.userId(useUserStore.getState()),
     };
-  }
+  };
 
   /**
    * Fetch chat completion on the client side.
@@ -538,6 +512,14 @@ class ChatService {
     const agentRuntime = await initializeWithClientStore(params.provider, params.payload);
     const data = params.payload as ChatStreamPayload;
 
+    /**
+     * if enable login and not signed in, return unauthorized error
+     */
+    const userStore = useUserStore.getState();
+    if (enableAuth && !userStore.isSignedIn) {
+      throw AgentRuntimeError.createError(ChatErrorType.InvalidAccessCode);
+    }
+
     return agentRuntime.chat(data, { signal: params.signal });
   };
 
@@ -546,18 +528,40 @@ class ChatService {
    * see https://github.com/lobehub/lobe-chat/pull/3155
    */
   private reorderToolMessages = (messages: OpenAIChatMessage[]): OpenAIChatMessage[] => {
-    const reorderedMessages: OpenAIChatMessage[] = [];
-    const toolMessages: Record<string, OpenAIChatMessage> = {};
-
-    // 1. collect all tool messages
+    // 1. 先收集所有 assistant 消息中的有效 tool_call_id
+    const validToolCallIds = new Set<string>();
     messages.forEach((message) => {
-      if (message.role === 'tool' && message.tool_call_id) {
+      if (message.role === 'assistant' && message.tool_calls) {
+        message.tool_calls.forEach((toolCall) => {
+          validToolCallIds.add(toolCall.id);
+        });
+      }
+    });
+
+    // 2. 收集所有有效的 tool 消息
+    const toolMessages: Record<string, OpenAIChatMessage> = {};
+    messages.forEach((message) => {
+      if (
+        message.role === 'tool' &&
+        message.tool_call_id &&
+        validToolCallIds.has(message.tool_call_id)
+      ) {
         toolMessages[message.tool_call_id] = message;
       }
     });
 
-    // 2. reorder messages
+    // 3. 重新排序消息
+    const reorderedMessages: OpenAIChatMessage[] = [];
     messages.forEach((message) => {
+      // 跳过无效的 tool 消息
+      if (
+        message.role === 'tool' &&
+        (!message.tool_call_id || !validToolCallIds.has(message.tool_call_id))
+      ) {
+        return;
+      }
+
+      // 检查是否已经添加过该 tool 消息
       const hasPushed = reorderedMessages.some(
         (m) => !!message.tool_call_id && m.tool_call_id === message.tool_call_id,
       );
@@ -566,12 +570,12 @@ class ChatService {
 
       reorderedMessages.push(message);
 
+      // 如果是 assistant 消息且有 tool_calls，添加对应的 tool 消息
       if (message.role === 'assistant' && message.tool_calls) {
         message.tool_calls.forEach((toolCall) => {
           const correspondingToolMessage = toolMessages[toolCall.id];
           if (correspondingToolMessage) {
             reorderedMessages.push(correspondingToolMessage);
-            // 从 toolMessages 中删除已处理的消息，避免重复
             delete toolMessages[toolCall.id];
           }
         });

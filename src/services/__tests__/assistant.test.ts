@@ -1,12 +1,12 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { globalHelpers } from '@/store/user/helpers';
+import { globalHelpers } from '@/store/global/helpers';
 
 import { assistantService } from '../assistant';
 
 // Mocking modules and functions
 
-vi.mock('@/store/user/helpers', () => ({
+vi.mock('@/store/global/helpers', () => ({
   globalHelpers: {
     getCurrentLanguage: vi.fn(),
   },
@@ -33,7 +33,7 @@ describe('AssistantService', () => {
 
       // Assert
       expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
-      expect(fetch).toHaveBeenCalledWith('/api/assistant/store?locale=tt');
+      expect(fetch).toHaveBeenCalledWith('/webapi/assistant/store?locale=tt');
       expect(assistantList).toEqual(fakeResponse.agents);
     });
 
@@ -63,7 +63,7 @@ describe('AssistantService', () => {
 
       // Assert
       expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
-      expect(fetch).toHaveBeenCalledWith('/api/assistant/test-assisstant?locale=tt');
+      expect(fetch).toHaveBeenCalledWith('/webapi/assistant/test-assisstant?locale=tt');
       expect(assistant.identifier).toEqual(fakeResponse.identifier);
     });
 

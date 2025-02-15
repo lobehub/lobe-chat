@@ -8,6 +8,7 @@
   "agents": "Assistente",
   "artifact": {
     "generating": "Gerando",
+    "inThread": "Não é possível visualizar no subtópico, por favor, mude para a área de conversa principal.",
     "thinking": "Pensando",
     "thought": "Processo de pensamento",
     "unknownTitle": "Obra sem título"
@@ -31,6 +32,7 @@
   "duplicateTitle": "{{title}} Cópia",
   "emptyAgent": "Sem assistente disponível",
   "historyRange": "Intervalo de Histórico",
+  "historySummary": "Resumo das mensagens históricas",
   "inbox": {
     "desc": "Ative o cluster cerebral, inspire faíscas de pensamento. Seu assistente inteligente, aqui para conversar sobre tudo.",
     "title": "Conversa Aleatória"
@@ -65,6 +67,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Excluir e Regenerar",
+    "deleteDisabledByThreads": "Existem subtópicos, não é possível deletar.",
     "regenerate": "Regenerar"
   },
   "newAgent": "Novo Assistente",
@@ -100,14 +103,20 @@
     "tooLong": "O nome do grupo deve ter entre 1 e 20 caracteres"
   },
   "shareModal": {
+    "copy": "Copiar",
     "download": "Baixar Captura de Tela",
+    "downloadFile": "Baixar arquivo",
+    "exportTitle": "Título padrão",
     "imageType": "Tipo de Imagem",
+    "includeTool": "Incluir mensagens de ferramentas",
+    "includeUser": "Incluir mensagens de usuários",
     "screenshot": "Captura de Tela",
     "settings": "Configurações de Exportação",
-    "shareToShareGPT": "Gerar Link de Compartilhamento ShareGPT",
+    "text": "Texto",
     "withBackground": "Com Imagem de Fundo",
     "withFooter": "Com Rodapé",
     "withPluginInfo": "Com Informações do Plugin",
+    "withRole": "Incluir papel da mensagem",
     "withSystemRole": "Com Função do Assistente"
   },
   "stt": {
@@ -115,9 +124,14 @@
     "loading": "Reconhecendo...",
     "prettifying": "Embelezando..."
   },
-  "temp": "Temporário",
+  "thread": {
+    "divider": "Subtópico",
+    "threadMessageCount": "{{messageCount}} mensagens",
+    "title": "Subtópico"
+  },
   "tokenDetails": {
     "chats": "Mensagens de bate-papo",
+    "historySummary": "Resumo Histórico",
     "rest": "Restante disponível",
     "systemRole": "Configuração de papel do sistema",
     "title": "Detalhes do Token",
@@ -131,29 +145,10 @@
     "used": "Usado"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Renomeação Automática",
-      "duplicate": "Criar Cópia",
-      "export": "Exportar Tópico"
-    },
     "checkOpenNewTopic": "Deseja abrir um novo tópico?",
     "checkSaveCurrentMessages": "Salvar a conversa atual como tópico?",
-    "confirmRemoveAll": "Você está prestes a remover todos os tópicos. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
-    "confirmRemoveTopic": "Você está prestes a remover este tópico. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
-    "confirmRemoveUnstarred": "Você está prestes a remover os tópicos não favoritados. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
-    "defaultTitle": "Tópico Padrão",
-    "duplicateLoading": "Tópico sendo duplicado...",
-    "duplicateSuccess": "Tópico duplicado com sucesso",
-    "guide": {
-      "desc": "Clique em enviar no botão esquerdo para salvar a conversa atual como um tópico histórico e iniciar uma nova rodada de conversa",
-      "title": "Lista de Tópicos"
-    },
     "openNewTopic": "Abrir Novo Tópico",
-    "removeAll": "Remover Todos os Tópicos",
-    "removeUnstarred": "Remover Tópicos Não Favoritados",
-    "saveCurrentMessages": "Salvar Mensagens Atuais como Tópico",
-    "searchPlaceholder": "Pesquisar tópicos...",
-    "title": "Lista de Tópicos"
+    "saveCurrentMessages": "Salvar Mensagens Atuais como Tópico"
   },
   "translate": {
     "action": "Traduzir",
@@ -184,5 +179,6 @@
         "processing": "Processando arquivo..."
       }
     }
-  }
+  },
+  "zenMode": "Modo de Foco"
 }

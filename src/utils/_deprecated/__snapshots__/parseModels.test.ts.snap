@@ -1,0 +1,112 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parseModelString > custom deletion, addition, and renaming of models 1`] = `
+{
+  "add": [
+    {
+      "displayName": undefined,
+      "id": "llama",
+    },
+    {
+      "displayName": undefined,
+      "id": "claude-2",
+    },
+    {
+      "displayName": "gpt-4-32k",
+      "id": "gpt-4-1106-preview",
+    },
+  ],
+  "removeAll": true,
+  "removed": [
+    "all",
+    "gpt-3.5-turbo",
+  ],
+}
+`;
+
+exports[`parseModelString > duplicate naming model 1`] = `
+{
+  "add": [
+    {
+      "displayName": "gpt-4-32k",
+      "id": "gpt-4-1106-preview",
+    },
+  ],
+  "removeAll": false,
+  "removed": [],
+}
+`;
+
+exports[`parseModelString > empty string model 1`] = `
+{
+  "add": [
+    {
+      "displayName": "gpt-4-turbo",
+      "id": "gpt-4-1106-preview",
+    },
+    {
+      "displayName": undefined,
+      "id": "claude-2",
+    },
+  ],
+  "removeAll": false,
+  "removed": [],
+}
+`;
+
+exports[`parseModelString > only add the model 1`] = `
+{
+  "add": [
+    {
+      "displayName": undefined,
+      "id": "model1",
+    },
+    {
+      "displayName": undefined,
+      "id": "model2",
+    },
+    {
+      "displayName": undefined,
+      "id": "model3",
+    },
+    {
+      "displayName": undefined,
+      "id": "model4",
+    },
+  ],
+  "removeAll": false,
+  "removed": [],
+}
+`;
+
+exports[`transformToChatModelCards > should have file with builtin models like gpt-4-0125-preview 1`] = `
+[
+  {
+    "contextWindowTokens": 128000,
+    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
+    "displayName": "ChatGPT-4",
+    "enabled": true,
+    "files": true,
+    "functionCall": true,
+    "id": "gpt-4-0125-preview",
+    "pricing": {
+      "input": 10,
+      "output": 30,
+    },
+  },
+  {
+    "contextWindowTokens": 128000,
+    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
+    "displayName": "ChatGPT-4 Vision",
+    "enabled": true,
+    "files": true,
+    "functionCall": true,
+    "id": "gpt-4-turbo-2024-04-09",
+    "pricing": {
+      "input": 10,
+      "output": 30,
+    },
+    "vision": true,
+  },
+]
+`;

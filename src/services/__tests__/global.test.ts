@@ -1,7 +1,7 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { edgeClient } from '@/libs/trpc/client';
-import { GlobalServerConfig } from '@/types/serverConfig';
+import { GlobalRuntimeConfig } from '@/types/serverConfig';
 
 import { globalService } from '../global';
 
@@ -18,6 +18,9 @@ vi.mock('@/libs/trpc/client', () => {
         getGlobalConfig: { query: vi.fn() },
         getDefaultAgentConfig: { query: vi.fn() },
       },
+      appStatus: {
+        getLatestChangelogId: { query: vi.fn() },
+      },
     },
   };
 });
@@ -28,14 +31,14 @@ describe('GlobalService', () => {
       // Arrange
       const mockVersion = '1.0.0';
       (fetch as Mock).mockResolvedValue({
-        json: () => Promise.resolve({ 'dist-tags': { latest: mockVersion } }),
+        json: () => Promise.resolve({ version: mockVersion }),
       });
 
       // Act
       const version = await globalService.getLatestVersion();
 
       // Assert
-      expect(fetch).toHaveBeenCalledWith('https://registry.npmmirror.com/@lobehub/chat');
+      expect(fetch).toHaveBeenCalledWith('https://registry.npmmirror.com/@lobehub/chat/latest');
       expect(version).toBe(mockVersion);
     });
 
@@ -74,14 +77,17 @@ describe('GlobalService', () => {
   describe('ServerConfig', () => {
     it('should return the serverConfig when fetch is successful', async () => {
       // Arrange
-      const mockConfig = { enabledOAuthSSO: true } as GlobalServerConfig;
+      const mockConfig = {
+        serverConfig: { enabledOAuthSSO: true },
+        serverFeatureFlags: {},
+      } as GlobalRuntimeConfig;
       vi.spyOn(edgeClient.config.getGlobalConfig, 'query').mockResolvedValue(mockConfig);
 
       // Act
       const config = await globalService.getGlobalConfig();
 
       // Assert
-      expect(config).toEqual({ enabledOAuthSSO: true });
+      expect(config).toEqual(mockConfig);
     });
 
     it('should return the defaultAgentConfig when fetch is successful', async () => {

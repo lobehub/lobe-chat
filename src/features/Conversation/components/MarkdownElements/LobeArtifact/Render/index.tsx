@@ -1,7 +1,8 @@
 import { Icon } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import { Loader2 } from 'lucide-react';
-import { memo, useEffect } from 'react';
+import { memo, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -9,23 +10,24 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { dotLoading } from '@/styles/loading';
 
+import { InPortalThreadContext } from '../../../ChatItem/InPortalThreadContext';
 import { MarkdownElementProps } from '../../type';
 import ArtifactIcon from './Icon';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   avatar: css`
-    background: ${token.colorFillQuaternary};
     border-inline-end: 1px solid ${token.colorSplit};
+    background: ${token.colorFillQuaternary};
   `,
   container: css`
     cursor: pointer;
 
     margin-block-start: 12px;
+    border: 1px solid ${token.colorBorder};
+    border-radius: 8px;
 
     color: ${token.colorText};
 
-    border: 1px solid ${token.colorBorder};
-    border-radius: 8px;
     box-shadow: ${isDarkMode ? token.boxShadowSecondary : token.boxShadowTertiary};
 
     &:hover {
@@ -60,6 +62,8 @@ const Render = memo<ArtifactProps>(({ identifier, title, type, language, childre
   const hasChildren = !!children;
   const str = ((children as string) || '').toString?.();
 
+  const inThread = useContext(InPortalThreadContext);
+  const { message } = App.useApp();
   const [isGenerating, isArtifactTagClosed, currentArtifactMessageId, openArtifact, closeArtifact] =
     useChatStore((s) => {
       return [
@@ -90,6 +94,10 @@ const Render = memo<ArtifactProps>(({ identifier, title, type, language, childre
           if (currentArtifactMessageId === id) {
             closeArtifact();
           } else {
+            if (inThread) {
+              message.info(t('artifact.inThread'));
+              return;
+            }
             openArtifactUI();
           }
         }}

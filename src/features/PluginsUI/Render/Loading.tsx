@@ -12,7 +12,6 @@ const useStyles = createStyles(
 
     width: 300px;
     height: 12px;
-
     border: 1px solid ${token.colorBorder};
     border-radius: 10px;
 

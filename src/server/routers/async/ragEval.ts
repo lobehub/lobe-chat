@@ -2,9 +2,9 @@ import { TRPCError } from '@trpc/server';
 import OpenAI from 'openai';
 import { z } from 'zod';
 
-import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
 import { chainAnswerWithContext } from '@/chains/answerWithContext';
 import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
+import { serverDB } from '@/database/server';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
@@ -15,6 +15,7 @@ import {
 } from '@/database/server/models/ragEval';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
+import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { AsyncTaskError } from '@/types/asyncTask';
 import { EvalEvaluationStatus } from '@/types/eval';
@@ -24,13 +25,13 @@ const ragEvalProcedure = asyncAuthedProcedure.use(async (opts) => {
 
   return opts.next({
     ctx: {
-      chunkModel: new ChunkModel(ctx.userId),
+      chunkModel: new ChunkModel(serverDB, ctx.userId),
       chunkService: new ChunkService(ctx.userId),
       datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
-      embeddingModel: new EmbeddingModel(ctx.userId),
+      embeddingModel: new EmbeddingModel(serverDB, ctx.userId),
       evalRecordModel: new EvaluationRecordModel(ctx.userId),
       evaluationModel: new EvalEvaluationModel(ctx.userId),
-      fileModel: new FileModel(ctx.userId),
+      fileModel: new FileModel(serverDB, ctx.userId),
     },
   });
 });
@@ -70,7 +71,7 @@ export const ragEvalRouter = router({
           });
 
           const embeddingId = await ctx.embeddingModel.create({
-            embeddings: embeddings?.[0].embedding,
+            embeddings: embeddings?.[0],
             model: embeddingModel,
           });
 

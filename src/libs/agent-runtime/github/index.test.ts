@@ -21,15 +21,10 @@ let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
   instance = new LobeGithubAI({ apiKey: 'test' });
-
-  // Use vi.spyOn to mock the chat.completions.create method
-  vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
-    new ReadableStream() as any,
-  );
 });
 
 afterEach(() => {
-  vi.clearAllMocks();
+  vi.restoreAllMocks();
 });
 
 describe('LobeGithubAI', () => {
@@ -42,6 +37,13 @@ describe('LobeGithubAI', () => {
   });
 
   describe('chat', () => {
+    beforeEach(() => {
+      // Use vi.spyOn to mock the chat.completions.create method
+      vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+        new ReadableStream() as any,
+      );
+    });
+
     describe('Error', () => {
       it('should return GithubBizError with an openai error response when OpenAI.APIError is thrown', async () => {
         // Arrange
@@ -109,41 +111,6 @@ describe('LobeGithubAI', () => {
         } catch (e) {
           expect(e).toEqual({
             endpoint: defaultBaseURL,
-            error: {
-              cause: { message: 'api is undefined' },
-              stack: 'abc',
-            },
-            errorType: bizErrorType,
-            provider,
-          });
-        }
-      });
-
-      it('should return GithubBizError with an cause response with desensitize Url', async () => {
-        // Arrange
-        const errorInfo = {
-          stack: 'abc',
-          cause: { message: 'api is undefined' },
-        };
-        const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
-
-        instance = new LobeGithubAI({
-          apiKey: 'test',
-          baseURL: 'https://api.abc.com/v1',
-        });
-
-        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
-
-        // Act
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'meta-llama-3-70b-instruct',
-            temperature: 0.7,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            endpoint: 'https://api.***.com/v1',
             error: {
               cause: { message: 'api is undefined' },
               stack: 'abc',
