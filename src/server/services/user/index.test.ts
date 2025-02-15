@@ -8,6 +8,7 @@ import { pino } from '@/libs/logger';
 import { UserService } from './index';
 
 // Mock dependencies
+vi.mock('@/server/services/agent');
 vi.mock('@/database/server/models/user', () => {
   const MockUserModel = vi.fn();
   // @ts-ignore
