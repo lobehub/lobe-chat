@@ -6,7 +6,7 @@ const Cloudflare: ModelProviderCard = {
   chatModels: [
     {
       contextWindowTokens: 16_384,
-      displayName: 'DeepSeek R1 Distill Qwen 32B',
+      displayName: 'DeepSeek R1 (Distill Qwen 32B)',
       enabled: true,
       id: '@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
     },

@@ -275,7 +275,11 @@ const ProviderConfig = memo<ProviderConfigProps>(
             children: isLoading ? (
               <Skeleton.Button active />
             ) : (
-              <Checker checkErrorRender={checkErrorRender} model={checkModel!} provider={id} />
+              <Checker
+                checkErrorRender={checkErrorRender}
+                model={data?.checkModel || checkModel!}
+                provider={id}
+              />
             ),
             desc: t('providerModels.config.checker.desc'),
             label: t('providerModels.config.checker.title'),

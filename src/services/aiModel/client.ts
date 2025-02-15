@@ -47,6 +47,10 @@ export class ClientService extends BaseClientService implements IAiModelService 
     return this.aiModel.clearRemoteModels(providerId);
   };
 
+  clearModelsByProvider: IAiModelService['clearModelsByProvider'] = async (providerId) => {
+    return this.aiModel.clearModelsByProvider(providerId);
+  };
+
   updateAiModelOrder: IAiModelService['updateAiModelOrder'] = async (providerId, items) => {
     return this.aiModel.updateModelsOrder(providerId, items);
   };

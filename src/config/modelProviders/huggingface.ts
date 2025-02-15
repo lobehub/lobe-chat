@@ -45,9 +45,14 @@ const HuggingFace: ModelProviderCard = {
     },
     {
       contextWindowTokens: 16_384,
+      displayName: 'DeepSeek R1 (Distill Qwen 32B)',
+      id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
+    },
+    {
+      contextWindowTokens: 128_000,
       displayName: 'DeepSeek R1',
       enabled: true,
-      id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
+      id: 'deepseek-ai/DeepSeek-R1',
     },
   ],
   checkModel: 'mistralai/Mistral-7B-Instruct-v0.2',

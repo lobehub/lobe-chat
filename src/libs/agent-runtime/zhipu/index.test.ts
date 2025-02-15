@@ -5,21 +5,12 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ChatStreamCallbacks, LobeOpenAI, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 import * as debugStreamModule from '@/libs/agent-runtime/utils/debugStream';
 
-import * as authTokenModule from './authToken';
 import { LobeZhipuAI } from './index';
 
 const bizErrorType = 'ProviderBizError';
 const invalidErrorType = 'InvalidProviderAPIKey';
 
-// Mock相关依赖
-vi.mock('./authToken');
-
 describe('LobeZhipuAI', () => {
-  beforeEach(() => {
-    // Mock generateApiToken
-    vi.spyOn(authTokenModule, 'generateApiToken').mockResolvedValue('mocked_token');
-  });
-
   afterEach(() => {
     vi.restoreAllMocks();
   });

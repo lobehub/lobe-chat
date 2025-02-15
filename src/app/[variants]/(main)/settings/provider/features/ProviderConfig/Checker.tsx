@@ -1,18 +1,19 @@
 'use client';
 
 import { CheckCircleFilled } from '@ant-design/icons';
-import { Alert, Highlighter } from '@lobehub/ui';
-import { Button } from 'antd';
+import { ModelIcon } from '@lobehub/icons';
+import { Alert, Highlighter, Icon } from '@lobehub/ui';
+import { Button, Select, Space } from 'antd';
 import { useTheme } from 'antd-style';
+import { Loader2Icon } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { TraceNameMap } from '@/const/trace';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useProviderName } from '@/hooks/useProviderName';
 import { chatService } from '@/services/chat';
-import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { ChatMessageError } from '@/types/message';
 
 const Error = memo<{ error: ChatMessageError }>(({ error }) => {
@@ -20,9 +21,8 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
   const providerName = useProviderName(error.body?.provider);
 
   return (
-    <Flexbox gap={8} style={{ maxWidth: '600px', width: '100%' }}>
+    <Flexbox gap={8} style={{ width: '100%' }}>
       <Alert
-        banner
         extra={
           <Flexbox>
             <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
@@ -54,10 +54,15 @@ const Checker = memo<ConnectionCheckerProps>(
   ({ model, provider, checkErrorRender: CheckErrorRender }) => {
     const { t } = useTranslation('setting');
 
-    const disabled = useAiInfraStore(aiProviderSelectors.isProviderConfigUpdating(provider));
+    const isProviderConfigUpdating = useAiInfraStore(
+      aiProviderSelectors.isProviderConfigUpdating(provider),
+    );
+    const totalModels = useAiInfraStore(aiModelSelectors.aiProviderChatModelListIds);
+    const updateAiProviderConfig = useAiInfraStore((s) => s.updateAiProviderConfig);
 
     const [loading, setLoading] = useState(false);
     const [pass, setPass] = useState(false);
+    const [checkModel, setCheckModel] = useState(model);
 
     const theme = useTheme();
     const [error, setError] = useState<ChatMessageError | undefined>();
@@ -71,6 +76,7 @@ const Checker = memo<ConnectionCheckerProps>(
           setPass(false);
           isError = true;
         },
+
         onFinish: async (value) => {
           if (!isError && value) {
             setError(undefined);
@@ -104,7 +110,6 @@ const Checker = memo<ConnectionCheckerProps>(
         },
       });
     };
-    const isMobile = useIsMobile();
 
     const defaultError = error ? <Error error={error as ChatMessageError} /> : null;
 
@@ -115,26 +120,42 @@ const Checker = memo<ConnectionCheckerProps>(
     );
 
     return (
-      <Flexbox align={isMobile ? 'flex-start' : 'flex-end'} gap={8}>
-        <Flexbox
-          align={'center'}
-          direction={isMobile ? 'horizontal-reverse' : 'horizontal'}
-          gap={12}
-        >
-          {pass && (
-            <Flexbox gap={4} horizontal>
-              <CheckCircleFilled
-                style={{
-                  color: theme.colorSuccess,
-                }}
-              />
-              {t('llm.checker.pass')}
-            </Flexbox>
-          )}
-          <Button disabled={disabled} loading={loading} onClick={checkConnection}>
+      <Flexbox gap={8}>
+        <Space.Compact block>
+          <Select
+            listItemHeight={36}
+            onSelect={async (value) => {
+              setCheckModel(value);
+              await updateAiProviderConfig(provider, { checkModel: value });
+            }}
+            optionRender={({ value }) => {
+              return (
+                <Flexbox align={'center'} gap={6} horizontal>
+                  <ModelIcon model={value as string} size={20} />
+                  {value}
+                </Flexbox>
+              );
+            }}
+            options={totalModels.map((id) => ({ label: id, value: id }))}
+            suffixIcon={isProviderConfigUpdating && <Icon icon={Loader2Icon} spin />}
+            value={checkModel}
+            virtual
+          />
+          <Button disabled={isProviderConfigUpdating} loading={loading} onClick={checkConnection}>
             {t('llm.checker.button')}
           </Button>
-        </Flexbox>
+        </Space.Compact>
+
+        {pass && (
+          <Flexbox gap={4} horizontal>
+            <CheckCircleFilled
+              style={{
+                color: theme.colorSuccess,
+              }}
+            />
+            {t('llm.checker.pass')}
+          </Flexbox>
+        )}
         {error && errorContent}
       </Flexbox>
     );

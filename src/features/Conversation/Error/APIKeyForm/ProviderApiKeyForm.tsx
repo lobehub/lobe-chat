@@ -1,9 +1,11 @@
 import { Icon } from '@lobehub/ui';
-import { Button, Input } from 'antd';
-import { Network } from 'lucide-react';
-import { ReactNode, memo, useState } from 'react';
+import { Button } from 'antd';
+import { Loader2Icon, Network } from 'lucide-react';
+import { ReactNode, memo, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { FormInput, FormPassword } from '@/components/FormInput';
+import { LoadingContext } from '@/features/Conversation/Error/APIKeyForm/LoadingContext';
 import { useProviderName } from '@/hooks/useProviderName';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -27,6 +29,7 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
     const { apiKey, baseURL, setConfig } = useApiKey(provider);
     const { showOpenAIProxyUrl } = useServerConfigStore(featureFlagsSelectors);
     const providerName = useProviderName(provider);
+    const { loading } = useContext(LoadingContext);
 
     return (
       <FormAction
@@ -34,25 +37,25 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
         description={t(`unlock.apiKey.description`, { name: providerName, ns: 'error' })}
         title={t(`unlock.apiKey.title`, { name: providerName, ns: 'error' })}
       >
-        <Input.Password
+        <FormPassword
           autoComplete={'new-password'}
-          onChange={(e) => {
-            setConfig(provider, { apiKey: e.target.value });
+          onChange={(value) => {
+            setConfig(provider, { apiKey: value });
           }}
           placeholder={apiKeyPlaceholder || 'sk-***********************'}
-          type={'block'}
+          suffix={<div>{loading && <Icon icon={Loader2Icon} spin />}</div>}
           value={apiKey}
         />
 
         {showEndpoint &&
           showOpenAIProxyUrl &&
           (showProxy ? (
-            <Input
-              onChange={(e) => {
-                setConfig(provider, { baseURL: e.target.value });
+            <FormInput
+              onChange={(value) => {
+                setConfig(provider, { baseURL: value });
               }}
               placeholder={'https://api.openai.com/v1'}
-              type={'block'}
+              suffix={<div>{loading && <Icon icon={Loader2Icon} spin />}</div>}
               value={baseURL}
             />
           ) : (

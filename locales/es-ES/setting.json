@@ -204,8 +204,8 @@
       "title": "Activar ajuste de intensidad de razonamiento"
     },
     "frequencyPenalty": {
-      "desc": "Cuanto mayor sea el valor, más probable es que se reduzcan las repeticiones de palabras",
-      "title": "Penalización de frecuencia"
+      "desc": "Cuanto mayor sea el valor, más rica y variada será la elección de palabras; cuanto menor sea el valor, más simples y directas serán las palabras.",
+      "title": "Riqueza del vocabulario"
     },
     "maxTokens": {
       "desc": "Número máximo de tokens utilizados en una interacción",
@@ -215,9 +215,12 @@
       "desc": "{{provider}} modelo",
       "title": "Modelo"
     },
+    "params": {
+      "title": "Parámetros avanzados"
+    },
     "presencePenalty": {
-      "desc": "Cuanto mayor sea el valor, más probable es que se amplíe a nuevos temas",
-      "title": "Penalización de novedad del tema"
+      "desc": "Cuanto mayor sea el valor, más se inclinará hacia diferentes formas de expresión, evitando la repetición de conceptos; cuanto menor sea el valor, más se inclinará hacia el uso de conceptos o narrativas repetidas, expresando mayor consistencia.",
+      "title": "Diversidad de expresión"
     },
     "reasoningEffort": {
       "desc": "Cuanto mayor sea el valor, más fuerte será la capacidad de razonamiento, pero puede aumentar el tiempo de respuesta y el consumo de tokens.",
@@ -229,14 +232,14 @@
       "title": "Intensidad de razonamiento"
     },
     "temperature": {
-      "desc": "Cuanto mayor sea el valor, más aleatoria será la respuesta",
-      "title": "Temperatura",
-      "titleWithValue": "Temperatura {{value}}"
+      "desc": "Cuanto mayor sea el valor, más creativas e imaginativas serán las respuestas; cuanto menor sea el valor, más rigurosas serán las respuestas",
+      "title": "Nivel de creatividad",
+      "warning": "Un valor de creatividad demasiado alto puede generar salidas confusas"
     },
     "title": "Configuración del modelo",
     "topP": {
-      "desc": "Similar a la temperatura, pero no se debe cambiar junto con la temperatura",
-      "title": "Muestreo de núcleo"
+      "desc": "Cuántas posibilidades se consideran, cuanto mayor sea el valor, más respuestas posibles se aceptan; cuanto menor sea el valor, se tiende a elegir la respuesta más probable. No se recomienda cambiarlo junto con el nivel de creatividad",
+      "title": "Apertura mental"
     }
   },
   "settingPlugin": {

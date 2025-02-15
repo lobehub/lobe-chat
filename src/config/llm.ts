@@ -68,6 +68,9 @@ export const getLLMConfig = () => {
 
       ENABLED_OLLAMA: z.boolean(),
 
+      ENABLED_VLLM: z.boolean(),
+      VLLM_API_KEY: z.string().optional(),
+
       ENABLED_QWEN: z.boolean(),
       QWEN_API_KEY: z.string().optional(),
 
@@ -76,6 +79,9 @@ export const getLLMConfig = () => {
 
       ENABLED_NOVITA: z.boolean(),
       NOVITA_API_KEY: z.string().optional(),
+
+      ENABLED_NVIDIA: z.boolean(),
+      NVIDIA_API_KEY: z.string().optional(),
 
       ENABLED_BAICHUAN: z.boolean(),
       BAICHUAN_API_KEY: z.string().optional(),
@@ -193,6 +199,9 @@ export const getLLMConfig = () => {
 
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
 
+      ENABLED_VLLM: !!process.env.VLLM_API_KEY,
+      VLLM_API_KEY: process.env.VLLM_API_KEY,
+
       ENABLED_QWEN: !!process.env.QWEN_API_KEY,
       QWEN_API_KEY: process.env.QWEN_API_KEY,
 
@@ -201,6 +210,9 @@ export const getLLMConfig = () => {
 
       ENABLED_NOVITA: !!process.env.NOVITA_API_KEY,
       NOVITA_API_KEY: process.env.NOVITA_API_KEY,
+
+      ENABLED_NVIDIA: !!process.env.NVIDIA_API_KEY,
+      NVIDIA_API_KEY: process.env.NVIDIA_API_KEY,
 
       ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
       BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,

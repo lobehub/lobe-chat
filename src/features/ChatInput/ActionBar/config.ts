@@ -3,7 +3,7 @@ import Clear from './Clear';
 import History from './History';
 import Knowledge from './Knowledge';
 import ModelSwitch from './ModelSwitch';
-import Temperature from './Temperature';
+import Params from './Params';
 import { MainToken, PortalToken } from './Token';
 import Tools from './Tools';
 import Upload from './Upload';
@@ -15,9 +15,10 @@ export const actionMap = {
   knowledgeBase: Knowledge,
   mainToken: MainToken,
   model: ModelSwitch,
+  params: Params,
   portalToken: PortalToken,
   stt: STT,
-  temperature: Temperature,
+  temperature: Params,
   tools: Tools,
 } as const;
 
