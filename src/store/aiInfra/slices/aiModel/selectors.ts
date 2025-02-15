@@ -1,6 +1,8 @@
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
 import { AiModelSourceEnum } from '@/types/aiModel';
 
+const aiProviderChatModelListIds = (s: AIProviderStoreState) =>
+  s.aiProviderModelList.filter((item) => item.type === 'chat').map((item) => item.id);
 // List
 const enabledAiProviderModelList = (s: AIProviderStoreState) =>
   s.aiProviderModelList.filter((item) => item.enabled);
@@ -68,6 +70,7 @@ const modelContextWindowTokens = (id: string, provider: string) => (s: AIProvide
 };
 
 export const aiModelSelectors = {
+  aiProviderChatModelListIds,
   disabledAiProviderModelList,
   enabledAiProviderModelList,
   filteredAiProviderModelList,

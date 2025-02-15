@@ -67,7 +67,6 @@ export default {
   createNewAiProvider: {
     apiKey: {
       placeholder: '请填写你的 API Key',
-      required: '请填写你的 API Key',
       title: 'API Key',
     },
     basicTitle: '基本信息',
@@ -95,7 +94,7 @@ export default {
       title: '服务商名称',
     },
     proxyUrl: {
-      placeholder: '请填写你的请求地址，如果不填则会使用 SDK 对应的请求地址',
+      required: '请填写代理地址',
       title: '代理地址',
     },
     sdkType: {
@@ -277,6 +276,11 @@ export default {
         fetching: '正在获取模型列表...',
         latestTime: '上次更新时间：{{time}}',
         noLatestTime: '暂未获取列表',
+      },
+      resetAll: {
+        conform: '确认重置当前模型的所有修改？重置后当前模型列表将会回到默认状态',
+        success: '重置成功',
+        title: '重置所有修改',
       },
       search: '搜索模型...',
       searchResult: '搜索到 {{count}} 个模型',
