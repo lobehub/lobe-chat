@@ -47,5 +47,4 @@ const runProviderTable = async (lang?: string) => {
 export default async () => {
   await runProviderTable();
   await runProviderTable('zh-CN');
-  await runProviderTable('ja-JP');
 };
