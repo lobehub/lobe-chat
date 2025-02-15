@@ -3,6 +3,34 @@
 exports[`LobeOpenRouterAI > models > should get models 1`] = `
 [
   {
+    "contextWindowTokens": 131072,
+    "description": "Reflection Llama-3.1 70B is trained with a new technique called Reflection-Tuning that teaches a LLM to detect mistakes in its reasoning and correct course.
+
+The model was trained on synthetic data.
+
+_These are free, rate-limited endpoints for [Reflection 70B](/models/mattshumer/reflection-70b). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Reflection 70B (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mattshumer/reflection-70b:free",
+    "maxTokens": 4096,
+    "reasoning": false,
+    "vision": false,
+  },
+  {
+    "contextWindowTokens": 131072,
+    "description": "Reflection Llama-3.1 70B is trained with a new technique called Reflection-Tuning that teaches a LLM to detect mistakes in its reasoning and correct course.
+
+The model was trained on synthetic data.",
+    "displayName": "Reflection 70B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mattshumer/reflection-70b",
+    "maxTokens": undefined,
+    "reasoning": false,
+    "vision": false,
+  },
+  {
     "contextWindowTokens": 128000,
     "description": "Command-R is a 35B parameter model that performs conversational language tasks at a higher quality, more reliably, and with a longer context than previous models. It can be used for complex workflows like code generation, retrieval augmented generation (RAG), tool use, and agents.
 
@@ -510,11 +538,11 @@ GPT-4o mini achieves an 82% score on MMLU and presently ranks higher than GPT-4 
 Check out the [launch announcement](https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/) to learn more.",
     "displayName": "OpenAI: GPT-4o-mini",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "openai/gpt-4o-mini",
     "maxTokens": 16384,
     "reasoning": false,
-    "vision": false,
+    "vision": true,
   },
   {
     "contextWindowTokens": 32768,
@@ -560,7 +588,7 @@ Gemma models are well-suited for a variety of text generation tasks, including q
 
 See the [launch announcement](https://blog.google/technology/developers/google-gemma-2/) for more details. Usage of Gemma is subject to Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms).",
     "displayName": "Google: Gemma 2 27B",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "google/gemma-2-27b-it",
     "maxTokens": undefined,
@@ -940,7 +968,7 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
 #multimodal",
     "displayName": "Google: Gemini Flash 1.5",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "google/gemini-flash-1.5",
     "maxTokens": 32768,
     "reasoning": false,
@@ -968,7 +996,7 @@ Compared with DeepSeek 67B, DeepSeek-V2 achieves stronger performance, and meanw
 DeepSeek-V2 achieves remarkable performance on both standard benchmarks and open-ended generation evaluations.",
     "displayName": "DeepSeek-V2 Chat",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "deepseek/deepseek-chat",
     "maxTokens": 4096,
     "reasoning": false,
@@ -1065,11 +1093,11 @@ For benchmarking against other models, it was briefly called ["im-also-a-good-gp
 For benchmarking against other models, it was briefly called ["im-also-a-good-gpt2-chatbot"](https://twitter.com/LiamFedus/status/1790064963966370209)",
     "displayName": "OpenAI: GPT-4o",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "openai/gpt-4o",
     "maxTokens": 4096,
     "reasoning": false,
-    "vision": false,
+    "vision": true,
   },
   {
     "contextWindowTokens": 128000,
@@ -1336,7 +1364,7 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
 #multimodal",
     "displayName": "Google: Gemini Pro 1.5",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "google/gemini-pro-1.5",
     "maxTokens": 32768,
     "reasoning": false,
@@ -1438,7 +1466,7 @@ See the launch announcement and benchmark results [here](https://www.anthropic.c
 #multimodal",
     "displayName": "Anthropic: Claude 3 Haiku",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "anthropic/claude-3-haiku",
     "maxTokens": 4096,
     "reasoning": false,
@@ -1503,7 +1531,7 @@ See the launch announcement and benchmark results [here](https://www.anthropic.c
 #multimodal",
     "displayName": "Anthropic: Claude 3 Opus",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "anthropic/claude-3-opus",
     "maxTokens": 4096,
     "reasoning": false,
@@ -2101,7 +2129,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "description": "A 7.3B parameter model that outperforms Llama 2 13B on all benchmarks, with optimizations for speed and context length.",
     "displayName": "Mistral: Mistral 7B Instruct v0.1",
     "enabled": false,
-    "functionCall": false,
+    "functionCall": true,
     "id": "mistralai/mistral-7b-instruct-v0.1",
     "maxTokens": undefined,
     "reasoning": false,

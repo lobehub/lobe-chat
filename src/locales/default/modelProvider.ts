@@ -67,7 +67,6 @@ export default {
   createNewAiProvider: {
     apiKey: {
       placeholder: '请填写你的 API Key',
-      required: '请填写你的 API Key',
       title: 'API Key',
     },
     basicTitle: '基本信息',
@@ -95,7 +94,7 @@ export default {
       title: '服务商名称',
     },
     proxyUrl: {
-      placeholder: '请填写你的请求地址，如果不填则会使用 SDK 对应的请求地址',
+      required: '请填写代理地址',
       title: '代理地址',
     },
     sdkType: {
