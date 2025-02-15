@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.55.3](https://github.com/lobehub/lobe-chat/compare/v1.55.2...v1.55.3)
+
+<sup>Released on **2025-02-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add deepseek r1 distill models for qwen series.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add deepseek r1 distill models for qwen series, closes [#5850](https://github.com/lobehub/lobe-chat/issues/5850) ([4a96a05](https://github.com/lobehub/lobe-chat/commit/4a96a05))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.55.2](https://github.com/lobehub/lobe-chat/compare/v1.55.1...v1.55.2)
 
 <sup>Released on **2025-02-15**</sup>
