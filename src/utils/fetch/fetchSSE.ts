@@ -438,3 +438,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   return response;
 };
+
+
+export { createSmoothMessage, createSmoothToolCalls,END_ANIMATION_SPEED, START_ANIMATION_SPEED };
