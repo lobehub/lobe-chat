@@ -19,7 +19,7 @@ const agentProcedure = authedProcedure.use(async (opts) => {
   return opts.next({
     ctx: {
       agentModel: new AgentModel(serverDB, ctx.userId),
-      agentService: new AgentService(ctx.userId),
+      agentService: new AgentService(serverDB, ctx.userId),
       fileModel: new FileModel(serverDB, ctx.userId),
       knowledgeBaseModel: new KnowledgeBaseModel(serverDB, ctx.userId),
       sessionModel: new SessionModel(serverDB, ctx.userId),

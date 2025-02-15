@@ -43,7 +43,7 @@ export class UserService {
     });
 
     // 3. Create an inbox session for the user
-    const agentService = new AgentService(id);
+    const agentService = new AgentService(serverDB, id);
     await agentService.createInbox();
 
     /* ↓ cloud slot ↓ */
