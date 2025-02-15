@@ -376,7 +376,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 131_072,
-    description: 
+    description:
       '指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。',
     displayName: 'Qwen2.5 VL 72B',
     id: 'qwen2.5-vl-72b-instruct',
@@ -394,7 +394,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 131_072,
-    description: 
+    description:
       '指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。',
     displayName: 'Qwen2.5 VL 7B',
     id: 'qwen2.5-vl-7b-instruct',
@@ -412,8 +412,8 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description: 
-      'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力，尤其在数学、代码、自然语言推理等任务上。',
+    description:
+      'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
     displayName: 'DeepSeek R1',
     enabled: true,
     id: 'deepseek-r1',
@@ -431,7 +431,7 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 131_072,
-    description: 
+    description:
       'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
     displayName: 'DeepSeek V3',
     enabled: true,
@@ -450,8 +450,8 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description: 
-      'DeepSeek-R1-Distill 系列模型通过知识蒸馏技术，将 DeepSeek-R1 生成的样本对 Qwen、Llama 等开源模型进行微调后得到。',
+    description:
+      'DeepSeek-R1-Distill-Qwen-1.5B 是一个基于 Qwen2.5-Math-1.5B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
     displayName: 'DeepSeek R1 Distill Qwen 1.5B',
     id: 'deepseek-r1-distill-qwen-1.5b',
     maxOutput: 8192,
@@ -467,7 +467,7 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true
     },
     contextWindowTokens: 131_072,
-    description: "DeepSeek-R1-Distill 系列模型通过知识蒸馏技术，将 DeepSeek-R1 生成的样本对 Qwen、Llama 等开源模型进行微调后得到。",
+    description: "DeepSeek-R1-Distill-Qwen-7B 是一个基于 Qwen2.5-Math-7B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
     displayName: "DeepSeek R1 Distill Qwen 7B",
     id: "deepseek-r1-distill-qwen-7b",
     maxOutput: 8192,
@@ -483,23 +483,7 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true
     },
     contextWindowTokens: 131_072,
-    description: "DeepSeek-R1-Distill 系列模型通过知识蒸馏技术，将 DeepSeek-R1 生成的样本对 Qwen、Llama 等开源模型进行微调后得到。",
-    displayName: "DeepSeek R1 Distill Llama 8B",
-    id: "deepseek-r1-distill-llama-8b",
-    maxOutput: 8192,
-    pricing: {
-      currency: "CNY",
-      input: 0,
-      output: 0
-    },
-    type: "chat"
-  },
-  {
-    abilities: {
-      reasoning: true
-    },
-    contextWindowTokens: 131_072,
-    description: "DeepSeek-R1-Distill 系列模型通过知识蒸馏技术，将 DeepSeek-R1 生成的样本对 Qwen、Llama 等开源模型进行微调后得到。",
+    description: "DeepSeek-R1-Distill-Qwen-14B 是一个基于 Qwen2.5-14B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
     displayName: "DeepSeek R1 Distill Qwen 14B",
     id: "deepseek-r1-distill-qwen-14b",
     maxOutput: 8192,
@@ -515,7 +499,7 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true
     },
     contextWindowTokens: 131_072,
-    description: "DeepSeek-R1-Distill 系列模型通过知识蒸馏技术，将 DeepSeek-R1 生成的样本对 Qwen、Llama 等开源模型进行微调后得到。",
+    description: "DeepSeek-R1-Distill-Qwen-32B 是一个基于 Qwen2.5-32B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
     displayName: "DeepSeek R1 Distill Qwen 32B",
     id: "deepseek-r1-distill-qwen-32b",
     maxOutput: 8192,
@@ -531,7 +515,23 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true
     },
     contextWindowTokens: 131_072,
-    description: "DeepSeek-R1-Distill 系列模型通过知识蒸馏技术，将 DeepSeek-R1 生成的样本对 Qwen、Llama 等开源模型进行微调后得到。",
+    description: "DeepSeek-R1-Distill-Llama-8B 是一个基于 Llama-3.1-8B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
+    displayName: "DeepSeek R1 Distill Llama 8B",
+    id: "deepseek-r1-distill-llama-8b",
+    maxOutput: 8192,
+    pricing: {
+      currency: "CNY",
+      input: 0,
+      output: 0
+    },
+    type: "chat"
+  },
+  {
+    abilities: {
+      reasoning: true
+    },
+    contextWindowTokens: 131_072,
+    description: "DeepSeek-R1-Distill-Llama-70B 是一个基于 Llama-3.3-70B-Instruct 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
     displayName: "DeepSeek R1 Distill Llama 70B",
     id: "deepseek-r1-distill-llama-70b",
     maxOutput: 8192,
