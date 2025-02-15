@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve mobile params style."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.4"
+  },
+  {
+    "children": {
       "improvements": ["Add deepseek r1 distill models for qwen series."]
     },
     "date": "2025-02-15",
