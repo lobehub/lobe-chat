@@ -204,8 +204,8 @@
       "title": "Inschakelen van redeneringsinspanningsaanpassing"
     },
     "frequencyPenalty": {
-      "desc": "Hoe hoger de waarde, hoe waarschijnlijker het is dat herhaalde woorden worden verminderd",
-      "title": "Frequentieboete"
+      "desc": "Hoe hoger de waarde, hoe rijker en gevarieerder de woordkeuze; hoe lager de waarde, hoe eenvoudiger en directer de woordkeuze",
+      "title": "Woordenschat diversiteit"
     },
     "maxTokens": {
       "desc": "Het maximale aantal tokens dat wordt gebruikt voor een enkele interactie",
@@ -215,9 +215,12 @@
       "desc": "{{provider}} model",
       "title": "Model"
     },
+    "params": {
+      "title": "Geavanceerde parameters"
+    },
     "presencePenalty": {
-      "desc": "Hoe hoger de waarde, hoe waarschijnlijker het is dat het gesprek naar nieuwe onderwerpen wordt uitgebreid",
-      "title": "Onderwerpnieuwheid"
+      "desc": "Hoe hoger de waarde, hoe meer de neiging om verschillende uitdrukkingen te gebruiken en herhaling van concepten te vermijden; hoe lager de waarde, hoe meer de neiging om herhalende concepten of verhalen te gebruiken, wat zorgt voor meer consistentie in de uitdrukking",
+      "title": "Uitdrukkingsdiversiteit"
     },
     "reasoningEffort": {
       "desc": "Hoe hoger de waarde, hoe sterker de redeneringscapaciteit, maar dit kan de responstijd en het tokenverbruik verhogen",
@@ -229,14 +232,14 @@
       "title": "Redeneringsinspanningsniveau"
     },
     "temperature": {
-      "desc": "Hoe hoger de waarde, hoe willekeuriger de reactie",
-      "title": "Willekeurigheid",
-      "titleWithValue": "Willekeurigheid {{value}}"
+      "desc": "Hoe hoger de waarde, hoe creatiever en fantasierijker het antwoord; hoe lager de waarde, hoe strikter het antwoord.",
+      "title": "Creativiteit Activiteit",
+      "warning": "Een te hoge waarde voor creativiteit activiteit kan leiden tot onleesbare output."
     },
     "title": "Modelinstellingen",
     "topP": {
-      "desc": "Vergelijkbaar met willekeurigheid, maar verander dit niet samen met willekeurigheid",
-      "title": "Top-P-monstername"
+      "desc": "Hoeveel mogelijkheden er in overweging worden genomen; hoe hoger de waarde, hoe meer mogelijke antwoorden worden geaccepteerd; hoe lager de waarde, hoe meer de voorkeur uitgaat naar het meest waarschijnlijke antwoord. Het wordt niet aanbevolen om dit samen met creativiteit activiteit te wijzigen.",
+      "title": "Openheid van Denken"
     }
   },
   "settingPlugin": {

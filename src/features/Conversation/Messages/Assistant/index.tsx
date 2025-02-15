@@ -27,7 +27,11 @@ export const AssistantMessage = memo<
 
   const isReasoning = useChatStore(aiChatSelectors.isMessageInReasoning(id));
 
-  const showReasoning = !!props.reasoning || (!props.reasoning && isReasoning);
+  // remove \n to avoid empty content
+  // refs: https://github.com/lobehub/lobe-chat/pull/6153
+  const showReasoning =
+    (!!props.reasoning && props.reasoning.content?.trim() !== '') ||
+    (!props.reasoning && isReasoning);
 
   return editing ? (
     <DefaultMessage

@@ -204,8 +204,8 @@
       "title": "Activer l'ajustement de l'intensité de raisonnement"
     },
     "frequencyPenalty": {
-      "desc": "Plus la valeur est élevée, plus il est probable de réduire les mots répétés",
-      "title": "Pénalité de fréquence"
+      "desc": "Plus la valeur est élevée, plus le vocabulaire est riche et varié ; plus la valeur est basse, plus le vocabulaire est simple et direct",
+      "title": "Richesse du vocabulaire"
     },
     "maxTokens": {
       "desc": "Nombre maximal de tokens utilisés par interaction",
@@ -215,9 +215,12 @@
       "desc": "Modèle {{provider}}",
       "title": "Modèle"
     },
+    "params": {
+      "title": "Paramètres avancés"
+    },
     "presencePenalty": {
-      "desc": "Plus la valeur est élevée, plus il est probable d'explorer de nouveaux sujets",
-      "title": "Pénalité de présence"
+      "desc": "Plus la valeur est élevée, plus il y a tendance à utiliser des expressions différentes, évitant la répétition des concepts ; plus la valeur est basse, plus il y a tendance à utiliser des concepts ou des narrations répétitifs, rendant l'expression plus cohérente",
+      "title": "Diversité de l'expression"
     },
     "reasoningEffort": {
       "desc": "Plus la valeur est élevée, plus la capacité de raisonnement est forte, mais cela peut augmenter le temps de réponse et la consommation de jetons",
@@ -229,14 +232,14 @@
       "title": "Intensité de raisonnement"
     },
     "temperature": {
-      "desc": "Plus la valeur est élevée, plus la réponse est aléatoire",
-      "title": "Aléatoire",
-      "titleWithValue": "Aléatoire {{value}}"
+      "desc": "Plus la valeur est élevée, plus les réponses sont créatives et imaginatives ; plus la valeur est basse, plus les réponses sont rigoureuses",
+      "title": "Niveau de créativité",
+      "warning": "Une valeur de créativité trop élevée peut entraîner des sorties illisibles"
     },
     "title": "Paramètres du modèle",
     "topP": {
-      "desc": "Similaire à l'aléatoire, mais ne doit pas être modifié en même temps que l'aléatoire",
-      "title": "Échantillonnage topP"
+      "desc": "Considère combien de possibilités, plus la valeur est élevée, plus il accepte de réponses possibles ; plus la valeur est basse, plus il a tendance à choisir la réponse la plus probable. Il n'est pas recommandé de modifier cela en même temps que le niveau de créativité",
+      "title": "Ouverture d'esprit"
     }
   },
   "settingPlugin": {

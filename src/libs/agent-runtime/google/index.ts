@@ -8,7 +8,6 @@ import {
   SchemaType,
 } from '@google/generative-ai';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { safeParseJSON } from '@/utils/safeParseJSON';
@@ -137,6 +136,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   }
 
   async models() {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const url = `${this.baseURL}/v1beta/models?key=${this.apiKey}`;
     const response = await fetch(url, {
       method: 'GET',
@@ -149,17 +150,26 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       .map((model) => {
         const modelName = model.name.replace(/^models\//, '');
 
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => modelName.toLowerCase() === m.id.toLowerCase());
+
         return {
           contextWindowTokens: model.inputTokenLimit + model.outputTokenLimit,
           displayName: model.displayName,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => modelName === m.id)?.enabled || false,
-          functionCall: modelName.toLowerCase().includes('gemini'),
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('thinking')
+            || knownModel?.abilities?.functionCall
+            || false,
           id: modelName,
-          reasoning: modelName.toLowerCase().includes('thinking'),
+          reasoning:
+            modelName.toLowerCase().includes('thinking')
+            || knownModel?.abilities?.reasoning
+            || false,
           vision:
-            modelName.toLowerCase().includes('vision') ||
-            (modelName.toLowerCase().includes('gemini') &&
-              !modelName.toLowerCase().includes('gemini-1.0')),
+            modelName.toLowerCase().includes('vision')
+            || (modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('gemini-1.0'))
+            || knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];
