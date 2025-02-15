@@ -93,7 +93,6 @@
       "title": "Nom du fournisseur"
     },
     "proxyUrl": {
-      "placeholder": "Veuillez saisir votre adresse de requête",
       "required": "Veuillez remplir l'adresse du proxy",
       "title": "Adresse du proxy"
     },

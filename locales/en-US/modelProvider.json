@@ -93,7 +93,6 @@
       "title": "Provider Name"
     },
     "proxyUrl": {
-      "placeholder": "Please enter your request URL",
       "required": "Please enter the proxy address",
       "title": "Proxy URL"
     },

@@ -93,7 +93,6 @@
       "title": "服務商名稱"
     },
     "proxyUrl": {
-      "placeholder": "請填寫你的請求地址",
       "required": "請填寫代理地址",
       "title": "代理地址"
     },
