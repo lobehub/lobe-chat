@@ -1,6 +1,168 @@
 [
   {
     "children": {
+      "features": ["Add vLLM provider support."]
+    },
+    "date": "2025-02-14",
+    "version": "1.55.0"
+  },
+  {
+    "children": {
+      "features": ["Add Nvidia NIM provider support."],
+      "improvements": ["Improve advanced params settings."]
+    },
+    "date": "2025-02-14",
+    "version": "1.54.0"
+  },
+  {
+    "children": {
+      "improvements": ["Improve model fetch behavior."]
+    },
+    "date": "2025-02-14",
+    "version": "1.53.12"
+  },
+  {
+    "children": {
+      "fixes": ["Fix provider form api key."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix api key input issue."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.10"
+  },
+  {
+    "children": {
+      "improvements": ["Support select check models."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix model fetch for spark and fix the support of model reset."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.8"
+  },
+  {
+    "children": {
+      "improvements": ["Update model list."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.7"
+  },
+  {
+    "children": {
+      "fixes": ["Fix not enable models correctly."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix latex in thinking tag render."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ai model abilities issue."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix tencent cloud api issue."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.3"
+  },
+  {
+    "children": {
+      "fixes": ["Disable openrouter client fetch."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix reasoning output for OpenRouter reasoning models like deepseek-r1."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.1"
+  },
+  {
+    "children": {
+      "features": ["Support tencent cloud provider."],
+      "improvements": ["Update i18n, update provider i18n."]
+    },
+    "date": "2025-02-11",
+    "version": "1.53.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the agent runtime test case."]
+    },
+    "date": "2025-02-11",
+    "version": "1.52.19"
+  },
+  {
+    "children": {},
+    "date": "2025-02-11",
+    "version": "1.52.18"
+  },
+  {
+    "children": {},
+    "date": "2025-02-11",
+    "version": "1.52.17"
+  },
+  {
+    "children": {
+      "improvements": ["Support mistral proxy url."]
+    },
+    "date": "2025-02-11",
+    "version": "1.52.16"
+  },
+  {
+    "children": {
+      "fixes": ["Fix lmstudio baseURL."],
+      "improvements": ["Optimized MaxToken Slider."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.15"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor agent settings modal."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.14"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix Aliyun deepseek-r1 reasoning parsing with oneapi, Support Aliyun deepseek-r1 reasoning."
+      ]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix language incorrect on page hydration."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.12"
+  },
+  {
+    "children": {
       "improvements": ["Support Mermaid in Artifacts."]
     },
     "date": "2025-02-10",

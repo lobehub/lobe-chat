@@ -61,6 +61,16 @@ export const transformQwenStream = (chunk: OpenAI.ChatCompletionChunk): StreamPr
     } as StreamProtocolToolCallChunk;
   }
 
+  // DeepSeek reasoner will put thinking in the reasoning_content field
+  if (
+    item.delta &&
+    'reasoning_content' in item.delta &&
+    typeof item.delta.reasoning_content === 'string' &&
+    item.delta.reasoning_content !== ''
+  ) {
+    return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
+  }
+
   if (typeof item.delta?.content === 'string') {
     return { data: item.delta.content, id: chunk.id, type: 'text' };
   }

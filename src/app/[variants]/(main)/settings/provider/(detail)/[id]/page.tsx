@@ -45,5 +45,3 @@ const Page = async (props: PagePropsWithId) => {
 };
 
 export default Page;
-
-export const dynamic = 'auto';

@@ -14,10 +14,10 @@ import { AGENTS_INDEX_GITHUB_ISSUE } from '@/const/url';
 import AgentInfo from '@/features/AgentInfo';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { useGlobalStore } from '@/store/global';
+import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
-import { useUserStore } from '@/store/user';
-import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
   const { t } = useTranslation('setting');
@@ -25,7 +25,7 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
   const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
   const theme = useTheme();
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
-  const language = useUserStore((s) => userGeneralSettingsSelectors.currentLanguage(s));
+  const language = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
   const isMetaPass = Boolean(
     meta && meta.title && meta.description && (meta.tags as string[])?.length > 0 && meta.avatar,
