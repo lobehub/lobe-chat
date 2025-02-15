@@ -101,15 +101,12 @@ export const transformOpenAIStream = (
       // en: siliconflow and aliyun bailian has encountered a situation where both content and reasoning_content are present, so need to handle it
       // refs: https://github.com/lobehub/lobe-chat/issues/5681 (siliconflow)
       // refs: https://github.com/lobehub/lobe-chat/issues/5956 (aliyun bailian)
-      if (
-        typeof content === 'string' && typeof reasoning_content === 'string' &&
-        content === '' && reasoning_content === ''
-      ) {
+      if (typeof content === 'string' && typeof reasoning_content === 'string') {
+        if (content === '' && reasoning_content === '') {
           content = null;
-      }
-
-      if (typeof reasoning_content === 'string' && reasoning_content === '') {
-        reasoning_content = null;
+        } else if (reasoning_content === '') {
+          reasoning_content = null;
+        }
       }
 
       if (typeof reasoning_content === 'string') {

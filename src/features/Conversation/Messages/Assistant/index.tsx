@@ -27,7 +27,9 @@ export const AssistantMessage = memo<
 
   const isReasoning = useChatStore(aiChatSelectors.isMessageInReasoning(id));
 
-  const showReasoning = !!props.reasoning || (!props.reasoning && isReasoning);
+  const showReasoning =
+    (!!props.reasoning && props.reasoning.content?.trim() !== '') ||
+    (!props.reasoning && isReasoning);
 
   return editing ? (
     <DefaultMessage
