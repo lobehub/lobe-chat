@@ -1,5 +1,5 @@
 import OpenAI, { AzureOpenAI } from 'openai';
-import { Stream } from 'openai/streaming';
+import type { Stream } from 'openai/streaming';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
