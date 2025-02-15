@@ -66,12 +66,12 @@ const createSmoothMessage = (params: {
   const { startSpeed = START_ANIMATION_SPEED } = params;
 
   let buffer = '';
-  // why use queue: https://shareg.pt/GLBrjpK
   let outputQueue: string[] = [];
   let isAnimationActive = false;
   let animationFrameId: number | null = null;
+  let lastFrameTime = 0;
+  let charAccumulator = 0;
 
-  // when you need to stop the animation, call this function
   const stopAnimation = () => {
     isAnimationActive = false;
     if (animationFrameId !== null) {
@@ -80,48 +80,56 @@ const createSmoothMessage = (params: {
     }
   };
 
-  // define startAnimation function to display the text in buffer smooth
-  // when you need to start the animation, call this function
-  const startAnimation = (speed = startSpeed) =>
-    new Promise<void>((resolve) => {
+  const startAnimation = (charsPerFrame = startSpeed / 4) => {
+    return new Promise<void>((resolve) => {
       if (isAnimationActive) {
         resolve();
         return;
       }
 
       isAnimationActive = true;
+      lastFrameTime = 0;
+      charAccumulator = 0;
 
-      const updateText = () => {
-        // 如果动画已经不再激活，则停止更新文本
+      const updateText = (timestamp: number) => {
         if (!isAnimationActive) {
           cancelAnimationFrame(animationFrameId!);
           animationFrameId = null;
           resolve();
           return;
         }
+        if (!lastFrameTime) {
+          lastFrameTime = timestamp;
+        }
+        
+        // Calculate how many characters to process based on a fixed update interval
+        const frameDuration = timestamp - lastFrameTime;
+        lastFrameTime = timestamp;
+        
+        const targetFrameDuration = Math.floor(1000 / 60); // 60 FPS, 16.7 ms
+        charAccumulator += (frameDuration / targetFrameDuration) * charsPerFrame;
+        const charsToProcess = Math.floor(charAccumulator);
 
-        // 如果还有文本没有显示
-        // 检查队列中是否有字符待显示
-        if (outputQueue.length > 0) {
-          // 从队列中获取前 n 个字符（如果存在）
-          const charsToAdd = outputQueue.splice(0, speed).join('');
+        if (charsToProcess > 0) {
+          charAccumulator -= charsToProcess;
+          const actualChars = Math.min(charsToProcess, outputQueue.length);
+          const charsToAdd = outputQueue.splice(0, actualChars).join('');
           buffer += charsToAdd;
-
-          // 更新消息内容，这里可能需要结合实际情况调整
           params.onTextUpdate(charsToAdd, buffer);
+        }
+
+        if (outputQueue.length > 0) {
+          animationFrameId = requestAnimationFrame(updateText);
         } else {
-          // 当所有字符都显示完毕时，清除动画状态
           isAnimationActive = false;
           animationFrameId = null;
           resolve();
-          return;
         }
-
-        animationFrameId = requestAnimationFrame(updateText);
       };
 
       animationFrameId = requestAnimationFrame(updateText);
     });
+  };
 
   const pushToQueue = (text: string) => {
     outputQueue.push(...text.split(''));
@@ -411,7 +419,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
 
       if (textController.isTokenRemain()) {
-        await textController.startAnimation(END_ANIMATION_SPEED);
+        await textController.startAnimation(smoothingSpeed);
       }
 
       if (toolCallsController.isTokenRemain()) {
