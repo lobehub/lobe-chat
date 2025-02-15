@@ -1,6 +1,5 @@
-import { ChatCompletionUserMessageParam } from 'ai/prompts';
 import OpenAI, { AzureOpenAI } from 'openai';
-import { Stream } from 'openai/streaming.mjs';
+import { Stream } from 'openai/streaming';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -36,7 +35,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
     const enableStreaming = model.startsWith('o1') ? false : (params.stream ?? true);
     try {
       const response = await this.client.chat.completions.create({
-        messages: messages as ChatCompletionUserMessageParam[],
+        messages: messages as OpenAI.ChatCompletionMessageParam[],
         model,
         ...params,
         max_completion_tokens: 2048,
