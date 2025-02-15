@@ -1,9 +1,4 @@
-type ChunkingService = 'unstructured' | 'doc2x' | 'default';
-
-interface FileTypeRule {
-  fileType: string;
-  services: ChunkingService[];
-}
+export type ChunkingService = 'unstructured' | 'doc2x' | 'default';
 
 export class ChunkingRuleParser {
   static parse(rulesStr: string): Record<string, ChunkingService[]> {

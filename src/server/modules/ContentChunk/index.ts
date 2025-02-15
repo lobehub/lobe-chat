@@ -1,6 +1,6 @@
 import { ChunkingLoader } from 'src/libs/langchain';
 import { Strategy } from 'unstructured-client/sdk/models/shared';
-import { ChunkingRuleParser } from './rules';
+import { ChunkingRuleParser, ChunkingService } from './rules';
 
 import { NewChunkItem, NewUnstructuredChunkItem } from '@/database/schemas';
 import { ChunkingStrategy, Unstructured } from '@/libs/unstructured';
@@ -26,7 +26,7 @@ export class ContentChunk {
   constructor() {
     this.unstructuredClient = new Unstructured();
     this.langchainClient = new ChunkingLoader();
-    this.chunkingRules = ChunkingRuleParser.parse(knowledgeEnv.FILE_TYPE_CHUNKING_RULES);
+    this.chunkingRules = ChunkingRuleParser.parse(knowledgeEnv.FILE_TYPE_CHUNKING_RULES || '');
   }
 
   private getChunkingServices(fileType: string): ChunkingService[] {
@@ -50,7 +50,6 @@ export class ContentChunk {
             // Future implementation
             break;
 
-          case 'default':
           default:
             return await this.chunkByLangChain(params.filename, params.content);
         }
