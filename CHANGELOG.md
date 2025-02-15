@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.55.2](https://github.com/lobehub/lobe-chat/compare/v1.55.1...v1.55.2)
+
+<sup>Released on **2025-02-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Avoid blank reasoning with OpenRouter.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Avoid blank reasoning with OpenRouter, closes [#6153](https://github.com/lobehub/lobe-chat/issues/6153) ([c2278d1](https://github.com/lobehub/lobe-chat/commit/c2278d1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.55.1](https://github.com/lobehub/lobe-chat/compare/v1.55.0...v1.55.1)
 
 <sup>Released on **2025-02-15**</sup>
