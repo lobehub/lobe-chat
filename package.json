@@ -132,7 +132,7 @@
     "@react-spring/web": "^9.7.5",
     "@sentry/nextjs": "^7.120.2",
     "@serwist/next": "^9.0.11",
-    "@t3-oss/env-nextjs": "^0.11.1",
+    "@t3-oss/env-nextjs": "^0.12.0",
     "@tanstack/react-query": "^5.62.16",
     "@trpc/client": "next",
     "@trpc/next": "next",
