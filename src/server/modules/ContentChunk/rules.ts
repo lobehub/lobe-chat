@@ -1,7 +1,7 @@
 export type ChunkingService = 'unstructured' | 'doc2x' | 'default';
 
-export class ChunkingRuleParser {
-  static parse(rulesStr: string): Record<string, ChunkingService[]> {
+export const ChunkingRuleParser = {
+  parse(rulesStr: string): Record<string, ChunkingService[]> {
     const rules: Record<string, ChunkingService[]> = {};
 
     // Split by semicolon for different file types
@@ -14,11 +14,10 @@ export class ChunkingRuleParser {
       // Split services by comma and validate each service
       rules[fileType.toLowerCase()] = services
         .split(',')
-        .map(s => s.trim().toLowerCase())
-        .filter((s): s is ChunkingService =>
-          ['unstructured', 'doc2x', 'default'].includes(s));
+        .map((s) => s.trim().toLowerCase())
+        .filter((s): s is ChunkingService => ['unstructured', 'doc2x', 'default'].includes(s));
     }
 
     return rules;
-  }
-}
+  },
+} as const;

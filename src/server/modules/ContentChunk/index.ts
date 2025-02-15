@@ -1,10 +1,11 @@
 import { ChunkingLoader } from 'src/libs/langchain';
 import { Strategy } from 'unstructured-client/sdk/models/shared';
-import { ChunkingRuleParser, ChunkingService } from './rules';
 
-import { NewChunkItem, NewUnstructuredChunkItem } from '@/database/schemas';
-import { ChunkingStrategy, Unstructured } from '@/libs/unstructured';
 import { knowledgeEnv } from '@/config/knowledge';
+import type { NewChunkItem, NewUnstructuredChunkItem } from '@/database/schemas';
+import { ChunkingStrategy, Unstructured } from '@/libs/unstructured';
+
+import { ChunkingRuleParser, ChunkingService } from './rules';
 
 export interface ChunkContentParams {
   content: Uint8Array;
@@ -40,25 +41,27 @@ export class ContentChunk {
     for (const service of services) {
       try {
         switch (service) {
-          case 'unstructured':
+          case 'unstructured': {
             if (this.canUseUnstructured()) {
               return await this.chunkByUnstructured(params.filename, params.content);
             }
             break;
+          }
 
-          case 'doc2x':
+          case 'doc2x': {
             // Future implementation
             break;
+          }
 
-          default:
+          default: {
             return await this.chunkByLangChain(params.filename, params.content);
+          }
         }
       } catch (error) {
         // If this is the last service, throw the error
-        if (service === services[services.length - 1]) throw error;
+        if (service === services.at(-1)) throw error;
         // Otherwise continue to next service
         console.error(`Chunking failed with service ${service}:`, error);
-        continue;
       }
     }
 
@@ -67,10 +70,7 @@ export class ContentChunk {
   }
 
   private canUseUnstructured(): boolean {
-    return !!(
-      knowledgeEnv.UNSTRUCTURED_API_KEY &&
-      knowledgeEnv.UNSTRUCTURED_SERVER_URL
-    );
+    return !!(knowledgeEnv.UNSTRUCTURED_API_KEY && knowledgeEnv.UNSTRUCTURED_SERVER_URL);
   }
 
   private chunkByUnstructured = async (
