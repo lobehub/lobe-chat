@@ -223,7 +223,9 @@ describe('initAgentRuntimeWithUserPayload method', () => {
     });
 
     it('Azure AI Provider: without apikey', async () => {
-      const jwtPayload: JWTPayload = {};
+      const jwtPayload: JWTPayload = {
+        azureApiVersion: 'test-azure-api-version',
+      };
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Azure, jwtPayload);
 
       expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
