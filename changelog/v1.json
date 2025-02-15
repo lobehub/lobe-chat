@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add deepseek r1 distill models for qwen series."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.3"
+  },
+  {
+    "children": {
       "fixes": ["Avoid blank reasoning with OpenRouter."]
     },
     "date": "2025-02-15",
