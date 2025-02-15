@@ -18,9 +18,6 @@ const ppioChatModels: AIChatModelCard[] = [
     "type": "chat"
   },
   {
-    abilities: {
-      reasoning: true,
-    },
     "contextWindowTokens": 64_000,
     "description": "DeepSeek-V3在推理速度方面实现了比之前模型的重大突破。在开源模型中排名第一，并可与全球最先进的闭源模型相媲美。DeepSeek-V3 采用了多头潜在注意力 （MLA） 和 DeepSeekMoE 架构，这些架构在 DeepSeek-V2 中得到了全面验证。此外，DeepSeek-V3 开创了一种用于负载均衡的辅助无损策略，并设定了多标记预测训练目标以获得更强的性能。",
     "displayName": "DeepSeek: DeepSeek V3 (Community)",
@@ -50,9 +47,6 @@ const ppioChatModels: AIChatModelCard[] = [
     "type": "chat"
   },
   {
-    abilities: {
-      reasoning: true,
-    },
     "contextWindowTokens": 64_000,
     "description": "DeepSeek-V3在推理速度方面实现了比之前模型的重大突破。在开源模型中排名第一，并可与全球最先进的闭源模型相媲美。DeepSeek-V3 采用了多头潜在注意力 （MLA） 和 DeepSeekMoE 架构，这些架构在 DeepSeek-V2 中得到了全面验证。此外，DeepSeek-V3 开创了一种用于负载均衡的辅助无损策略，并设定了多标记预测训练目标以获得更强的性能。",
     "displayName": "DeepSeek V3",
