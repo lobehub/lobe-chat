@@ -5,7 +5,8 @@ import { knowledgeEnv } from '@/config/knowledge';
 import type { NewChunkItem, NewUnstructuredChunkItem } from '@/database/schemas';
 import { ChunkingStrategy, Unstructured } from '@/libs/unstructured';
 
-import { ChunkingRuleParser, ChunkingService } from './rules';
+import { ChunkingRuleParser } from './rules';
+import type { ChunkingService } from './rules';
 
 export interface ChunkContentParams {
   content: Uint8Array;
