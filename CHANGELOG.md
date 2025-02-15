@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.55.4](https://github.com/lobehub/lobe-chat/compare/v1.55.3...v1.55.4)
+
+<sup>Released on **2025-02-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve mobile params style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve mobile params style, closes [#6176](https://github.com/lobehub/lobe-chat/issues/6176) ([b5276de](https://github.com/lobehub/lobe-chat/commit/b5276de))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.55.3](https://github.com/lobehub/lobe-chat/compare/v1.55.2...v1.55.3)
 
 <sup>Released on **2025-02-15**</sup>
