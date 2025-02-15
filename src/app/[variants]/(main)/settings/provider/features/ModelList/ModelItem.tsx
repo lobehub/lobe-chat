@@ -3,7 +3,7 @@ import { ActionIcon, Tag, copyToClipboard } from '@lobehub/ui';
 import { App, Switch, Typography } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { LucidePencil, TrashIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo, use, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -14,6 +14,7 @@ import { AiModelSourceEnum, AiProviderModelListItem, ChatModelPricing } from '@/
 import { formatPriceByCurrency } from '@/utils/format';
 
 import ModelConfigModal from './ModelConfigModal';
+import { ProviderSettingsContext } from './ProviderSettingsContext';
 
 export const useStyles = createStyles(({ css, token, cx }) => {
   const config = css`
@@ -74,6 +75,7 @@ const ModelItem = memo<ModelItemProps>(
     const { styles } = useStyles();
     const { t } = useTranslation(['modelProvider', 'components', 'models', 'common']);
     const theme = useTheme();
+    const { modelEditable } = use(ProviderSettingsContext);
 
     const [activeAiProvider, isModelLoading, toggleModelEnabled, removeAiModel] = useAiInfraStore(
       (s) => [
@@ -191,40 +193,42 @@ const ModelItem = memo<ModelItemProps>(
           </Flexbox>
         </Flexbox>
         <Flexbox align={'center'} gap={4} horizontal>
-          <Flexbox className={styles.config} horizontal style={{ opacity: 1 }}>
-            <ActionIcon
-              icon={LucidePencil}
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowConfig(true);
-              }}
-              size={'small'}
-              title={t('providerModels.item.config')}
-            />
-            {source !== AiModelSourceEnum.Builtin && (
+          {modelEditable && (
+            <Flexbox className={styles.config} horizontal style={{ opacity: 1 }}>
               <ActionIcon
-                icon={TrashIcon}
-                onClick={() => {
-                  modal.confirm({
-                    centered: true,
-                    okButtonProps: {
-                      danger: true,
-                      type: 'primary',
-                    },
-                    onOk: async () => {
-                      await removeAiModel(id, activeAiProvider!);
-                      message.success(t('providerModels.item.delete.success'));
-                    },
-                    title: t('providerModels.item.delete.confirm', {
-                      displayName: displayName || id,
-                    }),
-                  });
+                icon={LucidePencil}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowConfig(true);
                 }}
                 size={'small'}
-                title={t('providerModels.item.delete.title')}
+                title={t('providerModels.item.config')}
               />
-            )}
-          </Flexbox>
+              {source !== AiModelSourceEnum.Builtin && (
+                <ActionIcon
+                  icon={TrashIcon}
+                  onClick={() => {
+                    modal.confirm({
+                      centered: true,
+                      okButtonProps: {
+                        danger: true,
+                        type: 'primary',
+                      },
+                      onOk: async () => {
+                        await removeAiModel(id, activeAiProvider!);
+                        message.success(t('providerModels.item.delete.success'));
+                      },
+                      title: t('providerModels.item.delete.confirm', {
+                        displayName: displayName || id,
+                      }),
+                    });
+                  }}
+                  size={'small'}
+                  title={t('providerModels.item.delete.title')}
+                />
+              )}
+            </Flexbox>
+          )}
           <Switch
             checked={checked}
             loading={isModelLoading}
@@ -254,40 +258,42 @@ const ModelItem = memo<ModelItemProps>(
               <Tag onClick={copyModelId} style={{ cursor: 'pointer', marginRight: 0 }}>
                 {id}
               </Tag>
-              <Flexbox className={styles.config} horizontal>
-                <ActionIcon
-                  icon={LucidePencil}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowConfig(true);
-                  }}
-                  size={'small'}
-                  title={t('providerModels.item.config')}
-                />
-                {source !== AiModelSourceEnum.Builtin && (
+              {modelEditable && (
+                <Flexbox className={styles.config} horizontal>
                   <ActionIcon
-                    icon={TrashIcon}
-                    onClick={() => {
-                      modal.confirm({
-                        centered: true,
-                        okButtonProps: {
-                          danger: true,
-                          type: 'primary',
-                        },
-                        onOk: async () => {
-                          await removeAiModel(id, activeAiProvider!);
-                          message.success(t('providerModels.item.delete.success'));
-                        },
-                        title: t('providerModels.item.delete.confirm', {
-                          displayName: displayName || id,
-                        }),
-                      });
+                    icon={LucidePencil}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowConfig(true);
                     }}
                     size={'small'}
-                    title={t('providerModels.item.delete.title')}
+                    title={t('providerModels.item.config')}
                   />
-                )}
-              </Flexbox>
+                  {source !== AiModelSourceEnum.Builtin && (
+                    <ActionIcon
+                      icon={TrashIcon}
+                      onClick={() => {
+                        modal.confirm({
+                          centered: true,
+                          okButtonProps: {
+                            danger: true,
+                            type: 'primary',
+                          },
+                          onOk: async () => {
+                            await removeAiModel(id, activeAiProvider!);
+                            message.success(t('providerModels.item.delete.success'));
+                          },
+                          title: t('providerModels.item.delete.confirm', {
+                            displayName: displayName || id,
+                          }),
+                        });
+                      }}
+                      size={'small'}
+                      title={t('providerModels.item.delete.title')}
+                    />
+                  )}
+                </Flexbox>
+              )}
             </Flexbox>
             <Flexbox align={'baseline'} gap={8} horizontal>
               {content.length > 0 && (
