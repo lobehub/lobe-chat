@@ -98,6 +98,9 @@
   "taichu": {
     "description": "Çin Bilimler Akademisi Otomasyon Araştırma Enstitüsü ve Wuhan Yapay Zeka Araştırma Enstitüsü, çok modlu büyük modelin yeni neslini sunmaktadır. Çoklu soru-cevap, metin oluşturma, görüntü üretimi, 3D anlama, sinyal analizi gibi kapsamlı soru-cevap görevlerini desteklemekte ve daha güçlü bilişsel, anlama ve yaratma yetenekleri sunarak yeni bir etkileşim deneyimi sağlamaktadır."
   },
+  "tencentcloud": {
+    "description": "Bilgi motoru atomik yetenekleri (LLM Knowledge Engine Atomic Power), bilgi motoru üzerine geliştirilmiş bilgi sorgulama tam zincir yetenekleri sunar. Bu yetenekler, işletmeler ve geliştiriciler için esnek model uygulamaları oluşturma ve geliştirme imkanı sağlar. Birden fazla atomik yeteneği kullanarak özel model hizmetlerinizi oluşturabilir, belge analizi, parçalama, embedding, çoklu yeniden yazım gibi hizmetleri bir araya getirerek işletmenize özel AI çözümleri tasarlayabilirsiniz."
+  },
   "togetherai": {
     "description": "Together AI, yenilikçi yapay zeka modelleri aracılığıyla lider performans elde etmeye odaklanmaktadır. Hızlı ölçeklenme desteği ve sezgisel dağıtım süreçleri dahil olmak üzere geniş özelleştirme yetenekleri sunarak işletmelerin çeşitli ihtiyaçlarını karşılamaktadır."
   },

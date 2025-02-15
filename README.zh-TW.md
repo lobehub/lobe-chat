@@ -4,8 +4,8 @@
 
 <h1>Lobe Chat</h1>
 
-現代風格的開源 ChatGPT/LLMs 使用介面/框架  
-支持語音合成、多模態、可擴展的（[function call][docs-functionc-call]）插件系統  
+現代風格的開源 ChatGPT/LLMs 使用介面 / 框架\
+支持語音合成、多模態、可擴展的（[function call][docs-functionc-call]）插件系統\
 一鍵**免費**部署私人的 OpenAI ChatGPT/Claude/Gemini/Groq/Ollama 聊天應用
 
 [English](./README.md) · **繁體中文** · [簡體中文](./README.zh-CN.md) · [日本語](./README.ja-JP.md) · [官網][official-site] · [更新日誌][changelog] · [文檔][docs] · [部落格][blog] · [反饋問題][github-issues-link]
@@ -50,14 +50,13 @@
 
 #### TOC
 
-- [👋🏻 開始使用 \& 交流](#-開始使用--交流)
+- [👋🏻 開始使用 & 交流](#-開始使用--交流)
 - [✨ 特性一覽](#-特性一覽)
   - [`1` 文件上傳 / 知識庫](#1-文件上傳--知識庫)
   - [`2` 多模型服務商支持](#2-多模型服務商支持)
-    - [已支持的模型服務商](#已支持的模型服務商)
   - [`3` 支持本地大型語言模型 (LLM)](#3-支持本地大型語言模型-llm)
   - [`4` 模型視覺識別 (Model Visual)](#4-模型視覺識別-model-visual)
-  - [`5` TTS \& STT 語音轉化](#5-tts--stt-語音轉化)
+  - [`5` TTS & STT 語音轉化](#5-tts--stt-語音轉化)
   - [`6` Text to Image 文生圖](#6-text-to-image-文生圖)
   - [`7` 插件系統 (Tools Calling)](#7-插件系統-tools-calling)
   - [`8` 助手市集 (GPTs)](#8-助手市集-gpts)
@@ -70,13 +69,9 @@
 - [⚡️ 性能測試](#️-性能測試)
 - [🛳 開箱即用](#-開箱即用)
   - [`A` 使用 Vercel、Zeabur 、Sealos 或 Alibaba Cloud 部署](#a-使用-vercelzeabur-sealos-或-alibaba-cloud-部署)
-    - [Fork 之後](#fork-之後)
-    - [保持更新](#保持更新)
   - [`B` 使用 Docker 部署](#b-使用-docker-部署)
   - [環境變量](#環境變量)
   - [獲取 OpenAI API Key](#獲取-openai-api-key)
-    - [`A` 通過 OpenAI 官方渠道](#a-通過-openai-官方渠道)
-    - [`B` 通過 OpenAI 第三方代理商](#b-通過-openai-第三方代理商)
 - [📦 生態系統](#-生態系統)
 - [🧩 插件體系](#-插件體系)
 - [⌨️ 本地開發](#️-本地開發)
@@ -93,12 +88,12 @@
 ## 👋🏻 開始使用 & 交流
 
 我們是一群充滿熱情的設計工程師，希望為 AIGC 提供現代化的設計組件和工具，並以開源的方式分享。
-透過採用Bootstrapping 的方式，我們的目標是為開發人員和使用者提供一個更加開放、透明和使用者友好的產品生態系統。
+透過採用 Bootstrapping 的方式，我們的目標是為開發人員和使用者提供一個更加開放、透明和使用者友好的產品生態系統。
 
 LobeHub 旨在成為普通用戶與專業開發者測試 AI 助手的場所。LobeChat 目前正在積極開發中，有任何需求或者問題，歡迎提交 [issues][issues-link]
 
-| [![][vercel-shield-badge]][vercel-link]   | 無需安裝或註冊！訪問我們的網站立刻體驗                                     |
-| :---------------------------------------- | :--------------------------------------------------------------------------- |
+| [![][vercel-shield-badge]][vercel-link]   | 無需安裝或註冊！訪問我們的網站立刻體驗                  |
+| :---------------------------------------- | :------------------------------------------------------ |
 | [![][discord-shield-badge]][discord-link] | 加入我們的 Discord 和開發者交流，和其他用戶們分享心得！ |
 
 > \[!IMPORTANT]
@@ -194,7 +189,7 @@ LobeChat 支持文件上傳與知識庫功能，你可以上傳文件、圖片�
 
  <!-- PROVIDER LIST -->
 
-同時，我們也在計劃支持更多的模型服務商，以進一步豐富我們的服務商庫。如果你希望讓 LobeChat 支持你喜愛的服務商，歡迎加入我們的 [💬 社區討論](https://github.com/lobehub/lobe-chat/discussions/1284)。
+同時，我們也在計劃支持更多的模型服務商，以進一步豐富我們的服務商庫。如果你希望讓 LobeChat 支持你喜愛的服務商，歡迎加入我們的 [💬 社區討論](https://github.com/lobehub/lobe-chat/discussions/6157)。
 
 <div align="right">
 
@@ -477,7 +472,7 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 鏡像][docker-release
 
 <div align="center">
 
-|            使用 Vercel 部署             |                      使用 Zeabur 部署                       |                      使用 Sealos 部署                       |                           使用 Alibaba Cloud 部署                            |
+|            使用 Vercel 部署             |                      使用 Zeabur 部署                       |                      使用 Sealos 部署                       |                          使用 Alibaba Cloud 部署                          |
 | :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: | :-----------------------------------------------------------------------: |
 | [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] | [![][deploy-on-alibaba-cloud-button-image]][deploy-on-alibaba-cloud-link] |
 
@@ -755,9 +750,9 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [blog]: https://lobehub.com/zh/blog
 [changelog]: https://lobehub.com/changelog
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
-[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
+[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/lobechat_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
-[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_preview_lobehub_com_chat.html
+[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/lobechat_com_chat.html
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway

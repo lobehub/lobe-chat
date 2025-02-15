@@ -135,6 +135,10 @@ ENV NODE_ENV="production" \
     NODE_TLS_REJECT_UNAUTHORIZED="" \
     SSL_CERT_DIR="/etc/ssl/certs/ca-certificates.crt"
 
+# Make the middleware rewrite through local as default
+# refs: https://github.com/lobehub/lobe-chat/issues/5876
+ENV MIDDLEWARE_REWRITE_THROUGH_LOCAL="1"
+
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0" \
     PORT="3210"
@@ -191,6 +195,8 @@ ENV \
     MOONSHOT_API_KEY="" MOONSHOT_MODEL_LIST="" MOONSHOT_PROXY_URL="" \
     # Novita
     NOVITA_API_KEY="" NOVITA_MODEL_LIST="" \
+    # Nvidia NIM
+    NVIDIA_API_KEY="" NVIDIA_MODEL_LIST="" NVIDIA_PROXY_URL="" \
     # Ollama
     ENABLED_OLLAMA="" OLLAMA_MODEL_LIST="" OLLAMA_PROXY_URL="" \
     # OpenAI
@@ -215,6 +221,8 @@ ENV \
     TOGETHERAI_API_KEY="" TOGETHERAI_MODEL_LIST="" \
     # Upstage
     UPSTAGE_API_KEY="" UPSTAGE_MODEL_LIST="" \
+    # vLLM
+    VLLM_API_KEY="" VLLM_MODEL_LIST="" VLLM_PROXY_URL="" \
     # Wenxin
     WENXIN_API_KEY="" WENXIN_MODEL_LIST="" \
     # xAI
@@ -222,7 +230,9 @@ ENV \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
-    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST=""
+    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST="" \
+    # Tencent Cloud
+    TENCENT_CLOUD_API_KEY="" TENCENT_CLOUD_MODEL_LIST=""
 
 USER nextjs
 

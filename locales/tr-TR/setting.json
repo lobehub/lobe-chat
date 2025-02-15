@@ -204,8 +204,8 @@
       "title": "Akıl yürütme yoğunluğunu ayarla"
     },
     "frequencyPenalty": {
-      "desc": "Değer ne kadar yüksekse, tekrarlayan kelimeleri azaltma olasılığı o kadar yüksektir",
-      "title": "Frequency Penalty"
+      "desc": "Değer ne kadar büyükse, kelime dağarcığı o kadar zengin ve çeşitli olur; değer ne kadar düşükse, kelimeler o kadar sade ve basit olur.",
+      "title": "Kelime Zenginliği"
     },
     "maxTokens": {
       "desc": "Her etkileşim için kullanılan maksimum token sayısı",
@@ -215,9 +215,12 @@
       "desc": "{{provider}} Model",
       "title": "Model"
     },
+    "params": {
+      "title": "Gelişmiş Parametreler"
+    },
     "presencePenalty": {
-      "desc": "Değer ne kadar yüksekse, yeni konulara genişleme olasılığı o kadar yüksektir",
-      "title": "Presence Penalty"
+      "desc": "Değer ne kadar büyükse, farklı ifade biçimlerine yönelme eğilimi artar, kavram tekrarından kaçınılır; değer ne kadar küçükse, tekrar eden kavramlar veya anlatımlar kullanma eğilimi artar, ifade daha tutarlı olur.",
+      "title": "İfade Çeşitliliği"
     },
     "reasoningEffort": {
       "desc": "Değer ne kadar yüksekse, akıl yürütme yeteneği o kadar güçlüdür, ancak yanıt süresi ve Token tüketimini artırabilir",
@@ -229,14 +232,14 @@
       "title": "Akıl yürütme yoğunluğu"
     },
     "temperature": {
-      "desc": "Değer ne kadar yüksekse, yanıt o kadar rastgele olur",
-      "title": "Randomness",
-      "titleWithValue": "temperature {{value}}"
+      "desc": "Değer ne kadar büyükse, cevap o kadar yaratıcı ve hayal gücü dolu olur; değer ne kadar küçükse, cevap o kadar titizdir.",
+      "title": "Yaratıcılık Aktifliği",
+      "warning": "Yaratıcılık aktifliği değeri çok büyükse, çıktı bozulabilir."
     },
     "title": "Model Ayarları",
     "topP": {
-      "desc": "temperature gibi, ancak temperature ile birlikte değişmez",
-      "title": "Top P"
+      "desc": "Ne kadar olasılığı dikkate alır, değer ne kadar büyükse, daha fazla olası cevabı kabul eder; değer ne kadar küçükse, en olası cevabı seçme eğilimindedir. Yaratıcılık aktifliği ile birlikte değiştirilmesi önerilmez.",
+      "title": "Düşünce Açıklığı"
     }
   },
   "settingPlugin": {

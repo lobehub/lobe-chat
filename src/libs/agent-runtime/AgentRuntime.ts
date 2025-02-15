@@ -26,6 +26,7 @@ import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
 import { LobeMoonshotAI } from './moonshot';
 import { LobeNovitaAI } from './novita';
+import { LobeNvidiaAI } from './nvidia';
 import { LobeOllamaAI } from './ollama';
 import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
@@ -36,6 +37,7 @@ import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeSparkAI } from './spark';
 import { LobeStepfunAI } from './stepfun';
 import { LobeTaichuAI } from './taichu';
+import { LobeTencentCloudAI } from './tencentcloud';
 import { LobeTogetherAI } from './togetherai';
 import {
   ChatCompetitionOptions,
@@ -47,6 +49,7 @@ import {
   TextToSpeechPayload,
 } from './types';
 import { LobeUpstageAI } from './upstage';
+import { LobeVLLMAI } from './vllm';
 import { LobeWenxinAI } from './wenxin';
 import { LobeXAI } from './xai';
 import { LobeZeroOneAI } from './zeroone';
@@ -156,6 +159,7 @@ class AgentRuntime {
       mistral: Partial<ClientOptions>;
       moonshot: Partial<ClientOptions>;
       novita: Partial<ClientOptions>;
+      nvidia: Partial<ClientOptions>;
       ollama: Partial<ClientOptions>;
       openai: Partial<ClientOptions>;
       openrouter: Partial<ClientOptions>;
@@ -166,8 +170,10 @@ class AgentRuntime {
       spark: Partial<ClientOptions>;
       stepfun: Partial<ClientOptions>;
       taichu: Partial<ClientOptions>;
+      tencentcloud: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
       upstage: Partial<ClientOptions>;
+      vllm: Partial<ClientOptions>;
       wenxin: Partial<ClientOptions>;
       xai: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
@@ -220,6 +226,11 @@ class AgentRuntime {
 
       case ModelProvider.Ollama: {
         runtimeModel = new LobeOllamaAI(params.ollama);
+        break;
+      }
+
+      case ModelProvider.VLLM: {
+        runtimeModel = new LobeVLLMAI(params.vllm);
         break;
       }
 
@@ -298,6 +309,11 @@ class AgentRuntime {
         break;
       }
 
+      case ModelProvider.Nvidia: {
+        runtimeModel = new LobeNvidiaAI(params.nvidia);
+        break;
+      }
+
       case ModelProvider.Baichuan: {
         runtimeModel = new LobeBaichuanAI(params.baichuan ?? {});
         break;
@@ -365,6 +381,11 @@ class AgentRuntime {
 
       case ModelProvider.Higress: {
         runtimeModel = new LobeHigressAI(params.higress);
+        break;
+      }
+
+      case ModelProvider.TencentCloud: {
+        runtimeModel = new LobeTencentCloudAI(params[provider]);
         break;
       }
 
