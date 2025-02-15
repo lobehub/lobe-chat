@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Avoid blank reasoning with OpenRouter."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix Azure OpenAI O1 models and refactor the Azure OpenAI implement."],
       "improvements": ["Update openrouter model list and descriptions."]
     },
