@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.55.1](https://github.com/lobehub/lobe-chat/compare/v1.55.0...v1.55.1)
+
+<sup>Released on **2025-02-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Azure OpenAI O1 models and refactor the Azure OpenAI implement.
+
+#### 💄 Styles
+
+- **misc**: Update openrouter model list and descriptions.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Azure OpenAI O1 models and refactor the Azure OpenAI implement, closes [#6079](https://github.com/lobehub/lobe-chat/issues/6079) ([6a89a8c](https://github.com/lobehub/lobe-chat/commit/6a89a8c))
+
+#### Styles
+
+- **misc**: Update openrouter model list and descriptions, closes [#6160](https://github.com/lobehub/lobe-chat/issues/6160) ([3ce0485](https://github.com/lobehub/lobe-chat/commit/3ce0485))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.55.0](https://github.com/lobehub/lobe-chat/compare/v1.54.0...v1.55.0)
 
 <sup>Released on **2025-02-14**</sup>
