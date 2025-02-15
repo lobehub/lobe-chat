@@ -4,11 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UserItem } from '@/database/schemas';
 import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
+import { AgentService } from '@/server/services/agent';
 
 import { UserService } from './index';
 
 // Mock dependencies
-vi.mock('@/server/services/agent');
 vi.mock('@/database/server/models/user', () => {
   const MockUserModel = vi.fn();
   // @ts-ignore
@@ -28,6 +28,12 @@ vi.mock('@/libs/logger', () => ({
   pino: {
     info: vi.fn(),
   },
+}));
+
+vi.mock('@/server/services/agent', () => ({
+  AgentService: vi.fn().mockImplementation(() => ({
+    createInbox: vi.fn().mockResolvedValue(undefined),
+  })),
 }));
 
 let service: UserService;
@@ -58,7 +64,7 @@ describe('UserService', () => {
       // Mock user not found
       vi.mocked(UserModel.findById).mockResolvedValue(null as any);
 
-      await service.createUser(mockUserId, mockUserJSON);
+      const result = await service.createUser(mockUserId, mockUserJSON);
 
       expect(UserModel.findById).toHaveBeenCalledWith(expect.anything(), mockUserId);
       expect(UserModel.createUser).toHaveBeenCalledWith(
@@ -74,6 +80,12 @@ describe('UserService', () => {
           clerkCreatedAt: new Date('2023-01-01T00:00:00Z'),
         }),
       );
+      expect(AgentService).toHaveBeenCalledWith(expect.anything(), mockUserId);
+      expect(vi.mocked(AgentService).mock.results[0].value.createInbox).toHaveBeenCalled();
+      expect(result).toEqual({
+        message: 'user created',
+        success: true,
+      });
     });
 
     it('should not create user if already exists', async () => {
@@ -84,6 +96,7 @@ describe('UserService', () => {
 
       expect(UserModel.findById).toHaveBeenCalledWith(expect.anything(), mockUserId);
       expect(UserModel.createUser).not.toHaveBeenCalled();
+      expect(AgentService).not.toHaveBeenCalled();
       expect(result).toEqual({
         message: 'user not created due to user already existing in the database',
         success: false,
@@ -107,6 +120,8 @@ describe('UserService', () => {
           phone: '+1234567890', // Should use first phone number
         }),
       );
+      expect(AgentService).toHaveBeenCalledWith(expect.anything(), mockUserId);
+      expect(vi.mocked(AgentService).mock.results[0].value.createInbox).toHaveBeenCalled();
     });
   });
 
