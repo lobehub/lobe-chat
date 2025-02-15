@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "Giriş yap",
       "actionText": "Zaten bir hesabınız mı var?",
+      "formButton": "Katılmak için başvur",
       "subtitle": "E-posta adresinizi girin, yöneticinin işlemesini bekleyin ve giriş yapın",
       "title": "Bekleme listesine katılmak için başvur"
     }

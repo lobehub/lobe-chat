@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "Accedi",
       "actionText": "Hai già un account?",
+      "formButton": "Richiedi di unirti",
       "subtitle": "Inserisci il tuo indirizzo email e attendi che l'amministratore elabori la tua richiesta per accedere",
       "title": "Richiesta di unione alla lista d'attesa"
     }

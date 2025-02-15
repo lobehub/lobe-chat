@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "로그인",
       "actionText": "계정이 있으신가요?",
+      "formButton": "대기자 명단 신청",
       "subtitle": "이메일 주소를 입력하시면 관리자 처리 후 로그인할 수 있습니다",
       "title": "대기자 명단에 신청하기"
     }

@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "Anmelden",
       "actionText": "Bereits ein Konto?",
+      "formButton": "Beantragen Sie den Beitritt",
       "subtitle": "Geben Sie Ihre E-Mail-Adresse ein, um auf die Genehmigung des Administrators zu warten und sich anzumelden",
       "title": "Antrag auf Beitritt zur Warteliste"
     }

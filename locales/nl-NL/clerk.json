@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "Inloggen",
       "actionText": "Heb je al een account?",
+      "formButton": "Aanvraag indienen",
       "subtitle": "Voer je e-mailadres in en wacht tot de beheerder je toegang verleent",
       "title": "Aanvraag om lid te worden van de wachtlijst"
     }

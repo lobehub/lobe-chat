@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "Zaloguj się",
       "actionText": "Masz już konto?",
+      "formButton": "Aplikuj do listy oczekujących",
       "subtitle": "Wprowadź swój adres e-mail, a po przetworzeniu przez administratora będziesz mógł się zalogować",
       "title": "Aplikuj o dołączenie do listy oczekujących"
     }

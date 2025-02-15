@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "登入",
       "actionText": "已有帳戶？",
+      "formButton": "申請加入",
       "subtitle": "輸入您的電子郵件地址，等待管理員處理後即可登入",
       "title": "申請 加入候補"
     }

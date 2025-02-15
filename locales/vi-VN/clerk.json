@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "Đăng nhập",
       "actionText": "Đã có tài khoản?",
+      "formButton": "Đăng ký tham gia",
       "subtitle": "Nhập địa chỉ email của bạn, chờ quản trị viên xử lý để đăng nhập",
       "title": "Yêu cầu tham gia danh sách chờ"
     }

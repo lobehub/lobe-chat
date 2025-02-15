@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "登录",
       "actionText": "已有账户？",
+      "formButton": "申请加入",
       "subtitle": "输入您的邮箱地址，等待管理员处理后即可登录",
       "title": "申请 加入候补"
     }

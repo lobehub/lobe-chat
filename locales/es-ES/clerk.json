@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "Iniciar sesión",
       "actionText": "¿Ya tienes cuenta?",
+      "formButton": "Solicitar unirse",
       "subtitle": "Introduce tu dirección de correo electrónico y espera a que el administrador la procese para poder iniciar sesión",
       "title": "Solicitar unirse a la lista de espera"
     }

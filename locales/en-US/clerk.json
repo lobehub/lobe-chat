@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "Log In",
       "actionText": "Already have an account?",
+      "formButton": "Apply to Join",
       "subtitle": "Enter your email address and wait for the admin to process your request to log in",
       "title": "Apply to Join Waitlist"
     }

@@ -772,6 +772,7 @@
     "start": {
       "actionLink": "Entrar",
       "actionText": "Já tem uma conta?",
+      "formButton": "Solicitar adesão",
       "subtitle": "Digite seu endereço de e-mail e aguarde o processamento do administrador para entrar",
       "title": "Solicitar para entrar na lista de espera"
     }
