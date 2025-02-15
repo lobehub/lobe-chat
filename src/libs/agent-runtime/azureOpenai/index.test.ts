@@ -1,9 +1,9 @@
 // @vitest-environment node
-import { AzureKeyCredential, OpenAIClient } from '@azure/openai';
-import OpenAI from 'openai';
+import { AzureOpenAI } from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as debugStreamModule from '../utils/debugStream';
+import * as openaiCompatibleFactoryModule from '../utils/openaiCompatibleFactory';
 import { LobeAzureOpenAI } from './index';
 
 const bizErrorType = 'ProviderBizError';
@@ -23,7 +23,7 @@ describe('LobeAzureOpenAI', () => {
     );
 
     // 使用 vi.spyOn 来模拟 streamChatCompletions 方法
-    vi.spyOn(instance['client'], 'streamChatCompletions').mockResolvedValue(
+    vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
       new ReadableStream() as any,
     );
   });
@@ -48,7 +48,7 @@ describe('LobeAzureOpenAI', () => {
 
       const instance = new LobeAzureOpenAI(endpoint, apikey, apiVersion);
 
-      expect(instance.client).toBeInstanceOf(OpenAIClient);
+      expect(instance.client).toBeInstanceOf(AzureOpenAI);
       expect(instance.baseURL).toBe(endpoint);
     });
   });
@@ -59,7 +59,7 @@ describe('LobeAzureOpenAI', () => {
       const mockStream = new ReadableStream();
       const mockResponse = Promise.resolve(mockStream);
 
-      (instance['client'].streamChatCompletions as Mock).mockResolvedValue(mockResponse);
+      (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
 
       // Act
       const result = await instance.chat({
@@ -164,7 +164,9 @@ describe('LobeAzureOpenAI', () => {
             controller.close();
           },
         });
-        vi.spyOn(instance['client'], 'streamChatCompletions').mockResolvedValue(mockStream as any);
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockStream as any,
+        );
 
         const result = await instance.chat({
           stream: true,
@@ -204,6 +206,42 @@ describe('LobeAzureOpenAI', () => {
           ].map((item) => `${item}\n`),
         );
       });
+
+      it('should handle non-streaming response', async () => {
+        vi.spyOn(openaiCompatibleFactoryModule, 'transformResponseToStream').mockImplementation(
+          () => {
+            return new ReadableStream();
+          },
+        );
+        // Act
+        await instance.chat({
+          stream: false,
+          temperature: 0.6,
+          model: 'gpt-35-turbo-16k',
+          messages: [{ role: 'user', content: '你好' }],
+        });
+
+        // Assert
+        expect(openaiCompatibleFactoryModule.transformResponseToStream).toHaveBeenCalled();
+      });
+    });
+
+    it('should handle o1 series models without streaming', async () => {
+      vi.spyOn(openaiCompatibleFactoryModule, 'transformResponseToStream').mockImplementation(
+        () => {
+          return new ReadableStream();
+        },
+      );
+
+      // Act
+      await instance.chat({
+        temperature: 0.6,
+        model: 'o1-preview',
+        messages: [{ role: 'user', content: '你好' }],
+      });
+
+      // Assert
+      expect(openaiCompatibleFactoryModule.transformResponseToStream).toHaveBeenCalled();
     });
 
     describe('Error', () => {
@@ -214,7 +252,7 @@ describe('LobeAzureOpenAI', () => {
           message: 'Deployment not found',
         };
 
-        (instance['client'].streamChatCompletions as Mock).mockRejectedValue(error);
+        (instance['client'].chat.completions.create as Mock).mockRejectedValue(error);
 
         // Act
         try {
@@ -242,7 +280,7 @@ describe('LobeAzureOpenAI', () => {
         // Arrange
         const genericError = new Error('Generic Error');
 
-        (instance['client'].streamChatCompletions as Mock).mockRejectedValue(genericError);
+        (instance['client'].chat.completions.create as Mock).mockRejectedValue(genericError);
 
         // Act
         try {
@@ -279,7 +317,7 @@ describe('LobeAzureOpenAI', () => {
         }) as any;
         mockDebugStream.toReadableStream = () => mockDebugStream;
 
-        (instance['client'].streamChatCompletions as Mock).mockResolvedValue({
+        (instance['client'].chat.completions.create as Mock).mockResolvedValue({
           tee: () => [mockProdStream, { toReadableStream: () => mockDebugStream }],
         });
 

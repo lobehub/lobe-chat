@@ -170,7 +170,7 @@ LobeChat の継続的な開発において、AI 会話サービスを提供す�
 
  <!-- PROVIDER LIST -->
 
-同時に、私たちはさらに多くのモデルサービスプロバイダーをサポートする計画を立てており、サービスプロバイダーのライブラリをさらに充実させる予定です。 LobeChat があなたのお気に入りのサービスプロバイダーをサポートすることを希望する場合は、[💬 コミュニティディスカッション](https://github.com/lobehub/lobe-chat/discussions/1284)に参加してください。
+同時に、私たちはさらに多くのモデルサービスプロバイダーをサポートする計画を立てており、サービスプロバイダーのライブラリをさらに充実させる予定です。 LobeChat があなたのお気に入りのサービスプロバイダーをサポートすることを希望する場合は、[💬 コミュニティディスカッション](https://github.com/lobehub/lobe-chat/discussions/6157)に参加してください。
 
 <div align="right">
 
@@ -711,9 +711,9 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [blog]: https://lobehub.com/blog
 [changelog]: https://lobehub.com/changelog
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
-[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
+[chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/lobechat_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
-[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/chat_preview_lobehub_com_chat.html
+[chat-mobile-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/mobile/lobechat_com_chat.html
 [chat-plugin-sdk]: https://github.com/lobehub/chat-plugin-sdk
 [chat-plugin-template]: https://github.com/lobehub/chat-plugin-template
 [chat-plugins-gateway]: https://github.com/lobehub/chat-plugins-gateway
