@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import UpdateLoading from '@/components/Loading/UpdateLoading';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 import ParamsControls from './ParamsControls';
 
@@ -16,6 +17,7 @@ const Params = memo(() => {
   const [isUpdating, setUpdating] = useState(false);
 
   const theme = useTheme();
+  const isMobile = useIsMobile();
   return (
     <Popover
       arrow={false}
@@ -24,7 +26,10 @@ const Params = memo(() => {
       open={popoverOpen}
       placement={'top'}
       styles={{
-        body: { minWidth: 400 },
+        body: {
+          minWidth: isMobile ? undefined : 400,
+          width: isMobile ? '100vw' : undefined,
+        },
       }}
       title={
         <Flexbox horizontal justify={'space-between'}>
