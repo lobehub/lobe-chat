@@ -126,7 +126,7 @@
     "@lobehub/chat-plugins-gateway": "^1.9.0",
     "@lobehub/icons": "^1.69.0",
     "@lobehub/tts": "^1.28.0",
-    "@lobehub/ui": "^1.164.10",
+    "@lobehub/ui": "^1.164.15",
     "@neondatabase/serverless": "^0.10.4",
     "@next/third-parties": "^15.1.4",
     "@react-spring/web": "^9.7.5",
