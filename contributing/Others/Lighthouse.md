@@ -15,18 +15,15 @@
 |              ![][chat-desktop]               |              ![][chat-mobile]               |
 | [⚡️ Lighthouse Report][chat-desktop-report] | [⚡️ Lighthouse Report][chat-mobile-report] |
 
-
 ## Discover Page
 
 > **Info**\
 > <https://lobechat.com/discover>
 
-|                    Desktop                     |                    Mobile                     |
-| :--------------------------------------------: | :-------------------------------------------: |
+|                     Desktop                      |                     Mobile                      |
+| :----------------------------------------------: | :---------------------------------------------: |
 |              ![][discover-desktop]               |              ![][discover-mobile]               |
 | [⚡️ Lighthouse Report][discover-desktop-report] | [⚡️ Lighthouse Report][discover-mobile-report] |
-
-
 
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
 [chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/lobechat_com_chat.html
