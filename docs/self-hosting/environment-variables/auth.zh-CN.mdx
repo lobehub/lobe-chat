@@ -18,9 +18,10 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 ### 通用设置
 
 #### `NEXT_PUBLIC_ENABLE_NEXT_AUTH`
+
 - v1.52.0 之后有变更
-- 针对使用 Vercel 部署中使用 next-auth 的用户，需要额外添加 NEXT_PUBLIC_ENABLE_NEXT_AUTH=1 环境变量来确保开启 Next Auth
-- 针对使用自构建镜像中使用 clerk 的用户，需要额外配置 NEXT_PUBLIC_ENABLE_NEXT_AUTH=0 环境变量来关闭 Next Auth
+- 针对使用 Vercel 部署中使用 next-auth 的用户，需要额外添加 NEXT\_PUBLIC\_ENABLE\_NEXT\_AUTH=1 环境变量来确保开启 Next Auth
+- 针对使用自构建镜像中使用 clerk 的用户，需要额外配置 NEXT\_PUBLIC\_ENABLE\_NEXT\_AUTH=0 环境变量来关闭 Next Auth
 - 其他标准部署场景（Vercel 中使用 Clerk 与 Docker 中使用 next-auth ）不受影响
 
 #### `NEXT_AUTH_SECRET`
