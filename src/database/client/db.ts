@@ -201,7 +201,7 @@ export class DatabaseManager {
         const dbName = 'lobechat';
 
         // make db as web worker if worker is available
-        if (typeof Worker !== 'undefined') {
+        if (typeof Worker !== 'undefined' && typeof navigator.locks !== 'undefined') {
           db = await initPgliteWorker({
             dbName,
             fsBundle: fsBundle as Blob,
