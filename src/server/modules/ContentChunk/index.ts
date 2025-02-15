@@ -74,11 +74,6 @@ export class ContentChunk {
     );
   }
 
-  isUsingUnstructured(params: ChunkContentParams) {
-    return params.fileType === 'application/pdf' &&
-           this.canUseUnstructured();
-  }
-
   private chunkByUnstructured = async (
     filename: string,
     content: Uint8Array,
