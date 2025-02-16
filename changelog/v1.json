@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix ai provider description not show correctly."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.4"
+  },
+  {
+    "children": {
       "improvements": ["Improve inbox agent settings."]
     },
     "date": "2025-02-16",
