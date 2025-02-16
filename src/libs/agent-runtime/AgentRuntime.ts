@@ -12,7 +12,6 @@ import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeCloudflareAI, LobeCloudflareParams } from './cloudflare';
 import { LobeDeepSeekAI } from './deepseek';
-import { LobeDoubaoAI } from './doubao';
 import { LobeFireworksAI } from './fireworksai';
 import { LobeGiteeAI } from './giteeai';
 import { LobeGithubAI } from './github';
@@ -52,6 +51,7 @@ import {
 } from './types';
 import { LobeUpstageAI } from './upstage';
 import { LobeVLLMAI } from './vllm';
+import { LobeVolcengineAI } from './volcengine';
 import { LobeWenxinAI } from './wenxin';
 import { LobeXAI } from './xai';
 import { LobeZeroOneAI } from './zeroone';
@@ -178,6 +178,7 @@ class AgentRuntime {
       togetherai: Partial<ClientOptions>;
       upstage: Partial<ClientOptions>;
       vllm: Partial<ClientOptions>;
+      volcengine: Partial<ClientOptions>;
       wenxin: Partial<ClientOptions>;
       xai: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
@@ -403,8 +404,9 @@ class AgentRuntime {
         break;
       }
 
+      case ModelProvider.Volcengine:
       case ModelProvider.Doubao: {
-        runtimeModel = new LobeDoubaoAI(params.doubao);
+        runtimeModel = new LobeVolcengineAI(params.volcengine || params.doubao);
         break;
       }
 
