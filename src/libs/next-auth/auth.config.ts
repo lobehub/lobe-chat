@@ -35,7 +35,8 @@ export default {
           return {
             ...token,
             access_token: account.access_token,
-            expires_at: account.expires_at,
+            // Refresh token every 30 seconds
+            expires_at: Date.now() / 1000 + authEnv.NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL,
             iss: profile?.iss,
             provider: account.provider,
             refresh_token: account.refresh_token,
@@ -67,7 +68,9 @@ export default {
             return {
               ...token,
               access_token: newTokens.access_token,
-              expires_at: Math.floor(Date.now() / 1000 + newTokens.expires_in),
+              expires_at: Math.floor(
+                Date.now() / 1000 + authEnv.NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL,
+              ),
               // Preserve the refresh token for two reasons:
               // - Some providers (e.g. logto) only issue refresh tokens once,
               //   so preserve if we did not get a new one

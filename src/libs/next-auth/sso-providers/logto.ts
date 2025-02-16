@@ -1,4 +1,5 @@
 import { OIDCConfig, OIDCUserConfig } from '@auth/core/providers';
+import UrlJoin from 'url-join';
 
 import { authEnv } from '@/config/auth';
 
@@ -26,10 +27,10 @@ function LobeLogtoProvider(config: OIDCUserConfig<LogtoProfile>): OIDCConfig<Log
         id: profile.sub,
         image: profile.picture,
         iss: profile.iss,
-        
+
         name: profile.name ?? profile.username ?? profile.email,
         // Save issuer endpoint to the user profile
-providerAccountId: profile.sub,
+        providerAccountId: profile.sub,
       };
     },
     type: 'oidc',
@@ -37,7 +38,7 @@ providerAccountId: profile.sub,
 }
 
 async function refreshToken(iss: string, refresh_token: string) {
-  const response = await fetch(`${iss}/token`, {
+  const response = await fetch(UrlJoin(iss, '/token'), {
     body: new URLSearchParams({
       client_id: process.env.AUTH_LOGTO_ID!,
       client_secret: process.env.AUTH_LOGTO_SECRET!,

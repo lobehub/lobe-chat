@@ -58,7 +58,6 @@ export const createEdgeContext = async (request: NextRequest): Promise<EdgeConte
       const session = await NextAuthEdge.auth();
 
       if (session?.error === 'RefreshTokenError') {
-        // await NextAuthEdge.signIn()
         throw new Error('RefreshTokenError');
       }
 
