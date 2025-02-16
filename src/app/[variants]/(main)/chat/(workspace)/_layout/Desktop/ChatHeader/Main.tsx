@@ -42,7 +42,21 @@ const Main = memo(() => {
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
   return !init ? (
-    <Flexbox horizontal>
+    <Flexbox gap={4} horizontal>
+      {!isPinned && (
+        <ActionIcon
+          aria-label={t('agents')}
+          icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
+          onClick={() => {
+            updateSystemStatus({
+              sessionsWidth: showSessionPanel ? 0 : 320,
+              showSessionPanel: !showSessionPanel,
+            });
+          }}
+          size={DESKTOP_HEADER_ICON_SIZE}
+          title={t('agents')}
+        />
+      )}
       <Skeleton
         active
         avatar={{ shape: 'circle', size: 'default' }}
