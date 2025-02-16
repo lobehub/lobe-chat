@@ -635,8 +635,7 @@ describe('SessionModel', () => {
 
       // verify agent config
       const session = await sessionModel.findByIdOrSlug('inbox');
-      expect(session?.agent).toBeDefined();
-      expect(session?.agent.model).toBe(DEFAULT_AGENT_CONFIG.model);
+      expect(session).toBeUndefined();
     });
 
     it('should not create duplicate inbox session', async () => {
@@ -653,7 +652,7 @@ describe('SessionModel', () => {
       const sessions = await serverDB.query.sessions.findMany();
 
       const inboxSessions = sessions.filter((s) => s.slug === 'inbox');
-      expect(inboxSessions).toHaveLength(1);
+      expect(inboxSessions).toHaveLength(0);
     });
   });
 

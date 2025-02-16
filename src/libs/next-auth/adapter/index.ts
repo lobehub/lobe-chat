@@ -81,7 +81,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       );
 
       // 3. Create an inbox session for the user
-      const agentService = new AgentService(serverDB, id);
+      const agentService = new AgentService(id);
       await agentService.createInbox();
 
       return { ...user, id: providerAccountId ?? id };
