@@ -628,7 +628,7 @@ describe('SessionModel', () => {
 
   describe('createInbox', () => {
     it('should create inbox session if not exists', async () => {
-      const inbox = await sessionModel.createInbox();
+      const inbox = await sessionModel.createInbox({});
 
       expect(inbox).toBeDefined();
       expect(inbox?.slug).toBe('inbox');
@@ -641,10 +641,10 @@ describe('SessionModel', () => {
 
     it('should not create duplicate inbox session', async () => {
       // Create first inbox
-      await sessionModel.createInbox();
+      await sessionModel.createInbox({});
 
       // Try to create another inbox
-      const duplicateInbox = await sessionModel.createInbox();
+      const duplicateInbox = await sessionModel.createInbox({});
 
       // Should return undefined as inbox already exists
       expect(duplicateInbox).toBeUndefined();
