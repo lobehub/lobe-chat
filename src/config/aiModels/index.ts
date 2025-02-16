@@ -30,6 +30,7 @@ import { default as openai } from './openai';
 import { default as openrouter } from './openrouter';
 import { default as perplexity } from './perplexity';
 import { default as qwen } from './qwen';
+import { default as sambanova } from './sambanova';
 import { default as sensenova } from './sensenova';
 import { default as siliconcloud } from './siliconcloud';
 import { default as spark } from './spark';
@@ -94,6 +95,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   openrouter,
   perplexity,
   qwen,
+  sambanova,
   sensenova,
   siliconcloud,
   spark,
@@ -139,6 +141,7 @@ export { default as openai } from './openai';
 export { default as openrouter } from './openrouter';
 export { default as perplexity } from './perplexity';
 export { default as qwen } from './qwen';
+export { default as sambanova } from './sambanova';
 export { default as sensenova } from './sensenova';
 export { default as siliconcloud } from './siliconcloud';
 export { default as spark } from './spark';
