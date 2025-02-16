@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`createSSEDataExtractor > real world data > should azure ai 1`] = `
+exports[`createSSEDataExtractor > real world data > should convert azure ai data 1`] = `
 [
   {
     "choices": [
