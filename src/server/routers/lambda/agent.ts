@@ -10,6 +10,7 @@ import { SessionModel } from '@/database/server/models/session';
 import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
 import { authedProcedure, router } from '@/libs/trpc';
+import { AgentService } from '@/server/services/agent';
 import { KnowledgeItem, KnowledgeType } from '@/types/knowledgeBase';
 
 const agentProcedure = authedProcedure.use(async (opts) => {
@@ -18,6 +19,7 @@ const agentProcedure = authedProcedure.use(async (opts) => {
   return opts.next({
     ctx: {
       agentModel: new AgentModel(serverDB, ctx.userId),
+      agentService: new AgentService(serverDB, ctx.userId),
       fileModel: new FileModel(serverDB, ctx.userId),
       knowledgeBaseModel: new KnowledgeBaseModel(serverDB, ctx.userId),
       sessionModel: new SessionModel(serverDB, ctx.userId),
@@ -91,7 +93,7 @@ export const agentRouter = router({
           const user = await UserModel.findById(serverDB, ctx.userId);
           if (!user) return DEFAULT_AGENT_CONFIG;
 
-          const res = await ctx.sessionModel.createInbox();
+          const res = await ctx.agentService.createInbox();
           pino.info('create inbox session', res);
         }
       }
