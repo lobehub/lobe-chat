@@ -22,23 +22,23 @@ import { sessionMetaSelectors } from '@/store/session/selectors';
 
 const EditPage = memo(() => {
   const { t } = useTranslation('setting');
-  const id = useSessionStore((s) => s.activeId);
-  const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
-  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+  const [tab, setTab] = useState(ChatSettingsTabs.Prompt);
+
+  const [id, updateAgentMeta, title] = useSessionStore((s) => [
+    s.activeId,
+    s.updateSessionMeta,
+    sessionMetaSelectors.currentAgentTitle(s),
+  ]);
   const [useFetchAgentConfig, updateAgentConfig] = useAgentStore((s) => [
     s.useFetchAgentConfig,
     s.updateAgentConfig,
   ]);
-  const [tab, setTab] = useState(ChatSettingsTabs.Prompt);
 
-  const [updateAgentMeta, title] = useSessionStore((s) => [
-    s.updateSessionMeta,
-    sessionMetaSelectors.currentAgentTitle(s),
-  ]);
-
-  const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
+  const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
+  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
 
   const { isLoading } = useFetchAgentConfig(id);
+  const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <>
