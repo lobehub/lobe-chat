@@ -27,11 +27,11 @@ export const useCategory = ({ mobile }: UseCategoryOptions = {}) => {
           key: ChatSettingsTabs.Meta,
           label: t('agentTab.meta'),
         }) as MenuItemType,
-        (!isInbox && {
+        {
           icon: <Icon icon={Bot} size={iconSize} />,
           key: ChatSettingsTabs.Prompt,
           label: t('agentTab.prompt'),
-        }) as MenuItemType,
+        },
         {
           icon: <Icon icon={MessagesSquare} size={iconSize} />,
           key: ChatSettingsTabs.Chat,
