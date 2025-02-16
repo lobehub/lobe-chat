@@ -127,7 +127,6 @@ const sambanovaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 4000,
     description: '最先进的高效 LLM，擅长推理、数学和编程。',
     displayName: 'DeepSeek R1',
-    enabled: true,
     id: 'DeepSeek-R1',
     pricing: {
       input: 5,
