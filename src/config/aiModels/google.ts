@@ -283,36 +283,6 @@ const googleChatModels: AIChatModelCard[] = [
     releasedAt: '2024-09-24',
     type: 'chat',
   },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'Gemini 1.0 Pro 001 (Tuning) 提供稳定并可调优的性能，是复杂任务解决方案的理想选择。',
-    displayName: 'Gemini 1.0 Pro 001 (Tuning)',
-    id: 'gemini-1.0-pro-001', // Deprecated on 2/15/2025
-    maxOutput: 2048,
-    pricing: {
-      input: 0.5,
-      output: 1.5,
-    },
-    releasedAt: '2023-12-06',
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description: 'Gemini 1.0 Pro 002 (Tuning) 提供出色的多模态支持，专注于复杂任务的有效解决。',
-    displayName: 'Gemini 1.0 Pro 002 (Tuning)',
-    id: 'gemini-1.0-pro-002', // Deprecated on 2/15/2025
-    maxOutput: 2048,
-    pricing: {
-      input: 0.5,
-      output: 1.5,
-    },
-    releasedAt: '2023-12-06',
-    type: 'chat',
-  },
 ];
 
 export const allModels = [...googleChatModels];
