@@ -6,6 +6,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageTitle from '@/components/PageTitle';
+import { INBOX_SESSION_ID } from '@/const/session';
 import { AgentSettingsProvider } from '@/features/AgentSetting';
 import AgentChat from '@/features/AgentSetting/AgentChat';
 import AgentMeta from '@/features/AgentSetting/AgentMeta';
@@ -50,10 +51,10 @@ const EditPage = memo(() => {
             key: ChatSettingsTabs.Prompt,
             label: t('settingAgent.prompt.title'),
           },
-          {
+          (id !== INBOX_SESSION_ID && {
             key: ChatSettingsTabs.Meta,
             label: t('settingAgent.title'),
-          },
+          }) as any,
           {
             key: ChatSettingsTabs.Chat,
             label: t('settingChat.title'),
