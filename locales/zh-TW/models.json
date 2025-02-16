@@ -578,6 +578,9 @@
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B 是為高複雜性對話訓練的先進模型。"
   },
+  "deepseek-ai/deepseek-r1": {
+    "description": "最先進的高效 LLM，擅長推理、數學和編程。"
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 是一個基於 DeepSeekMoE-27B 開發的混合專家（MoE）視覺語言模型，採用稀疏激活的 MoE 架構，在僅激活 4.5B 參數的情況下實現了卓越性能。該模型在視覺問答、光學字符識別、文檔/表格/圖表理解和視覺定位等多個任務中表現優異。"
   },
@@ -628,6 +631,12 @@
   },
   "deepseek/deepseek-chat": {
     "description": "融合通用與代碼能力的全新開源模型，不僅保留了原有 Chat 模型的通用對話能力和 Coder 模型的強大代碼處理能力，還更好地對齊了人類偏好。此外，DeepSeek-V2.5 在寫作任務、指令跟隨等多個方面也實現了大幅提升。"
+  },
+  "deepseek/deepseek-r1": {
+    "description": "DeepSeek-R1 在僅有極少標註數據的情況下，極大提升了模型推理能力。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
+  },
+  "deepseek/deepseek-r1:free": {
+    "description": "DeepSeek-R1 在僅有極少標註數據的情況下，極大提升了模型推理能力。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
   },
   "emohaa": {
     "description": "Emohaa是一個心理模型，具備專業諮詢能力，幫助用戶理解情感問題。"
@@ -821,11 +830,17 @@
   "google/gemini-pro-1.5": {
     "description": "Gemini 1.5 Pro 結合最新的優化技術，帶來更高效的多模態數據處理能力。"
   },
+  "google/gemma-2-27b": {
+    "description": "Gemma 2 是 Google 推出的高效模型，涵蓋從小型應用到複雜數據處理的多種應用場景。"
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 延續了輕量化與高效的設計理念。"
   },
   "google/gemma-2-2b-it": {
     "description": "Google的輕量級指令調優模型"
+  },
+  "google/gemma-2-9b": {
+    "description": "Gemma 2 是 Google 推出的高效模型，涵蓋從小型應用到複雜數據處理的多種應用場景。"
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 是 Google 輕量化的開源文本模型系列。"
@@ -998,6 +1013,9 @@
   "internlm3-latest": {
     "description": "我們最新的模型系列，有著卓越的推理性能，領跑同量級開源模型。默認指向我們最新發布的 InternLM3 系列模型"
   },
+  "jina-deepsearch-v1": {
+    "description": "深度搜索結合了網路搜索、閱讀和推理，可進行全面調查。您可以將其視為一個代理，接受您的研究任務 - 它會進行廣泛搜索並經過多次迭代，然後才能給出答案。這個過程涉及持續的研究、推理和從各個角度解決問題。這與直接從預訓練數據生成答案的標準大模型以及依賴一次性表面搜索的傳統 RAG 系統有著根本的不同。"
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM 是一個實驗性的、特定於任務的語言模型，經過訓練以符合學習科學原則，可在教學和學習場景中遵循系統指令，充當專家導師等。"
   },
@@ -1139,6 +1157,9 @@
   "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
     "description": "405B 的 Llama 3.1 Turbo 模型，為大數據處理提供超大容量的上下文支持，在超大規模的人工智慧應用中表現突出。"
   },
+  "meta-llama/Meta-Llama-3.1-70B": {
+    "description": "Llama 3.1 是 Meta 推出的領先模型，支持高達 405B 參數，可應用於複雜對話、多語言翻譯和數據分析領域。"
+  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct": {
     "description": "LLaMA 3.1 70B 提供多語言的高效對話支持。"
   },
@@ -1195,6 +1216,30 @@
   },
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 是一款面向開發者、研究人員和企業的開放大型語言模型 (LLM)，旨在幫助他們構建、實驗並負責任地擴展他們的生成 AI 想法。作為全球社區創新的基礎系統的一部分，它非常適合計算能力和資源有限、邊緣設備和更快的訓練時間。"
+  },
+  "meta/llama-3.1-405b-instruct": {
+    "description": "高級 LLM，支持合成數據生成、知識蒸餾和推理，適用於聊天機器人、編程和特定領域任務。"
+  },
+  "meta/llama-3.1-70b-instruct": {
+    "description": "賦能複雜對話，具備卓越的上下文理解、推理能力和文本生成能力。"
+  },
+  "meta/llama-3.1-8b-instruct": {
+    "description": "先進的最尖端模型，具備語言理解、卓越的推理能力和文本生成能力。"
+  },
+  "meta/llama-3.2-11b-vision-instruct": {
+    "description": "尖端的視覺-語言模型，擅長從圖像中進行高品質推理。"
+  },
+  "meta/llama-3.2-1b-instruct": {
+    "description": "先進的最尖端小型語言模型，具備語言理解、卓越的推理能力和文本生成能力。"
+  },
+  "meta/llama-3.2-3b-instruct": {
+    "description": "先進的最尖端小型語言模型，具備語言理解、卓越的推理能力和文本生成能力。"
+  },
+  "meta/llama-3.2-90b-vision-instruct": {
+    "description": "尖端的視覺-語言模型，擅長從圖像中進行高品質推理。"
+  },
+  "meta/llama-3.3-70b-instruct": {
+    "description": "先進的 LLM，擅長推理、數學、常識和函數調用。"
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 是微軟AI提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"
@@ -1291,6 +1336,12 @@
   },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B 是由 NVIDIA 定制的大型語言模型，旨在提高 LLM 生成的回應對用戶查詢的幫助程度。該模型在 Arena Hard、AlpacaEval 2 LC 和 GPT-4-Turbo MT-Bench 等基準測試中表現出色，截至 2024 年 10 月 1 日，在所有三個自動對齊基準測試中排名第一。該模型使用 RLHF（特別是 REINFORCE）、Llama-3.1-Nemotron-70B-Reward 和 HelpSteer2-Preference 提示在 Llama-3.1-70B-Instruct 模型基礎上進行訓練"
+  },
+  "nvidia/llama-3.1-nemotron-51b-instruct": {
+    "description": "獨特的語言模型，提供無與倫比的準確性和效率表現。"
+  },
+  "nvidia/llama-3.1-nemotron-70b-instruct": {
+    "description": "Llama-3.1-Nemotron-70B-Instruct 是 NVIDIA 定制的大型語言模型，旨在提高 LLM 生成的響應的幫助性。"
   },
   "o1": {
     "description": "專注於高級推理和解決複雜問題，包括數學和科學任務。非常適合需要深入上下文理解和代理工作流程的應用程序。"
@@ -1405,6 +1456,15 @@
   },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2 是全新的大型語言模型系列，具有更強的理解和生成能力。"
+  },
+  "qwen/qwen2.5-7b-instruct": {
+    "description": "面向中文和英文的 LLM，針對語言、編程、數學、推理等領域。"
+  },
+  "qwen/qwen2.5-coder-32b-instruct": {
+    "description": "高級 LLM，支持代碼生成、推理和修復，涵蓋主流編程語言。"
+  },
+  "qwen/qwen2.5-coder-7b-instruct": {
+    "description": "強大的中型代碼模型，支持 32K 上下文長度，擅長多語言編程。"
   },
   "qwen2": {
     "description": "Qwen2 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"

@@ -127,7 +127,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       defaultShowBrowserRequest,
       disableBrowserRequest,
       showChecker = true,
-    } = settings;
+    } = settings || {};
     const { t } = useTranslation('modelProvider');
     const [form] = Form.useForm();
     const { cx, styles, theme } = useStyles();

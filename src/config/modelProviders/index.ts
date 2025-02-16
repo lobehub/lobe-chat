@@ -4,6 +4,7 @@ import Ai21Provider from './ai21';
 import Ai360Provider from './ai360';
 import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
+import AzureAIProvider from './azureai';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import CloudflareProvider from './cloudflare';
@@ -92,6 +93,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
 export const DEFAULT_MODEL_PROVIDER_LIST = [
   OpenAIProvider,
   { ...AzureProvider, chatModels: [] },
+  AzureAIProvider,
   OllamaProvider,
   VLLMProvider,
   AnthropicProvider,
@@ -148,6 +150,7 @@ export { default as Ai21ProviderCard } from './ai21';
 export { default as Ai360ProviderCard } from './ai360';
 export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
+export { default as AzureAIProviderCard } from './azureai';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as CloudflareProviderCard } from './cloudflare';

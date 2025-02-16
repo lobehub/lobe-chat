@@ -1,5 +1,6 @@
 export { default as AgentRuntime } from './AgentRuntime';
 export { LobeAnthropicAI } from './anthropic';
+export { LobeAzureAI } from './azureai';
 export { LobeAzureOpenAI } from './azureOpenai';
 export * from './BaseAI';
 export { LobeBedrockAI } from './bedrock';

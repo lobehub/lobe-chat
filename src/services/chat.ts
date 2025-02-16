@@ -50,7 +50,10 @@ const isCanUseFC = (model: string, provider: string) => {
   return aiModelSelectors.isModelSupportToolUse(model, provider)(useAiInfraStore.getState());
 };
 
-const findAzureDeploymentName = (model: string) => {
+/**
+ * TODO: we need to update this function to auto find deploymentName
+ */
+const findDeploymentName = (model: string) => {
   let deploymentId = model;
 
   // TODO: remove isDeprecatedEdition condition in V2.0
@@ -222,8 +225,14 @@ class ChatService {
     let model = res.model || DEFAULT_AGENT_CONFIG.model;
 
     // if the provider is Azure, get the deployment name as the request model
-    if (provider === ModelProvider.Azure || provider === ModelProvider.Doubao) {
-      model = findAzureDeploymentName(model);
+    const providersWithDeploymentName = [
+      ModelProvider.Azure,
+      ModelProvider.Doubao,
+      ModelProvider.AzureAI,
+    ] as string[];
+
+    if (providersWithDeploymentName.includes(provider)) {
+      model = findDeploymentName(model);
     }
 
     const payload = merge(

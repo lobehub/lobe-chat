@@ -4,6 +4,7 @@ import { default as ai21 } from './ai21';
 import { default as ai360 } from './ai360';
 import { default as anthropic } from './anthropic';
 import { default as azure } from './azure';
+import { default as azureai } from './azureai';
 import { default as baichuan } from './baichuan';
 import { default as bedrock } from './bedrock';
 import { default as cloudflare } from './cloudflare';
@@ -68,6 +69,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   ai360,
   anthropic,
   azure,
+  azureai,
   baichuan,
   bedrock,
   cloudflare,
@@ -113,6 +115,7 @@ export { default as ai21 } from './ai21';
 export { default as ai360 } from './ai360';
 export { default as anthropic } from './anthropic';
 export { default as azure } from './azure';
+export { default as azureai } from './azureai';
 export { default as baichuan } from './baichuan';
 export { default as bedrock } from './bedrock';
 export { default as cloudflare } from './cloudflare';
