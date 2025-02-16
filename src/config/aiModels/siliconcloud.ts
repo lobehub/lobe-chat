@@ -28,10 +28,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek V3',
     enabled: true,
     id: 'deepseek-ai/DeepSeek-V3',
-    pricing: { // 2.9 涨价
+    pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 2,
+      input: 2,
+      output: 8,
     },
     type: 'chat',
   },
