@@ -93,7 +93,9 @@ const createSmoothMessage = (params: {
 
       const updateText = (timestamp: number) => {
         if (!isAnimationActive) {
-          cancelAnimationFrame(animationFrameId!);
+          if (animationFrameId !== null) {
+            cancelAnimationFrame(animationFrameId);
+          }
           animationFrameId = null;
           resolve();
           return;
@@ -116,9 +118,10 @@ const createSmoothMessage = (params: {
           params.onTextUpdate(charsToAdd, buffer);
         }
 
-        if (outputQueue.length > 0) {
+        if (outputQueue.length > 0 && isAnimationActive) {
           animationFrameId = requestAnimationFrame(updateText);
         } else {
+          // 当所有字符都显示完毕时，清除动画状态
           isAnimationActive = false;
           animationFrameId = null;
           resolve();
@@ -130,6 +133,7 @@ const createSmoothMessage = (params: {
   };
 
   const pushToQueue = (text: string) => {
+    // 将传入的文本分割成字符数组，并添加到输出队列中
     outputQueue.push(...text.split(''));
   };
 
@@ -417,7 +421,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
 
       if (textController.isTokenRemain()) {
-        await textController.startAnimation(smoothingSpeed);
+        await textController.startAnimation(9_999_999);
       }
 
       if (toolCallsController.isTokenRemain()) {
