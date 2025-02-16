@@ -62,6 +62,7 @@ const Azure: ModelProviderCard = {
   settings: {
     defaultShowBrowserRequest: true,
     sdkType: 'azure',
+    showDeployName: true,
   },
   url: 'https://azure.microsoft.com',
 };
