@@ -1,26 +1,28 @@
-import {
-  AzureKeyCredential,
-  ChatRequestMessage,
-  GetChatCompletionsOptions,
-  OpenAIClient,
-} from '@azure/openai';
+import OpenAI, { AzureOpenAI } from 'openai';
+import type { Stream } from 'openai/streaming';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
+import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
 import { StreamingResponse } from '../utils/response';
-import { AzureOpenAIStream } from '../utils/streams';
+import { OpenAIStream } from '../utils/streams';
 
 export class LobeAzureOpenAI implements LobeRuntimeAI {
-  client: OpenAIClient;
+  client: AzureOpenAI;
 
   constructor(endpoint?: string, apikey?: string, apiVersion?: string) {
     if (!apikey || !endpoint)
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    this.client = new OpenAIClient(endpoint, new AzureKeyCredential(apikey), { apiVersion });
+    this.client = new AzureOpenAI({
+      apiKey: apikey,
+      apiVersion,
+      dangerouslyAllowBrowser: true,
+      endpoint,
+    });
 
     this.baseURL = endpoint;
   }
@@ -28,37 +30,45 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
   baseURL: string;
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
-    // ============  1. preprocess messages   ============ //
-    const camelCasePayload = this.camelCaseKeys(payload);
-    const { messages, model, maxTokens = 2048, ...params } = camelCasePayload;
+    const { messages, model, ...params } = payload;
+    // o1 series models on Azure OpenAI does not support streaming currently
+    const enableStreaming = model.startsWith('o1') ? false : (params.stream ?? true);
 
-    // ============  2. send api   ============ //
-    // si
-    // 适配o1接口的参数
-    let requestPayload: GetChatCompletionsOptions = { ...params, abortSignal: options?.signal };
-    if (model.startsWith('o1')) {
-      // @ts-ignore
-      requestPayload['max_completion_tokens'] = maxTokens;
-    } else {
-      requestPayload['maxTokens'] = maxTokens;
-    }
+    // // ============  2. send api   ============ //
+    // // si
+    // // 适配o1接口的参数
+    // let requestPayload: GetChatCompletionsOptions = { ...params, abortSignal: options?.signal };
+    // if (model.startsWith('o1')) {
+    //   // @ts-ignore
+    //   requestPayload['max_completion_tokens'] = maxTokens;
+    // } else {
+    //   requestPayload['maxTokens'] = maxTokens;
+    // }
 
     try {
-      const response = await this.client.streamChatCompletions(
+      const response = await this.client.chat.completions.create({
+        messages: messages as OpenAI.ChatCompletionMessageParam[],
         model,
-        messages as ChatRequestMessage[],
-        requestPayload,
-      );
-
-      const [debug, prod] = response.tee();
-
-      if (process.env.DEBUG_AZURE_CHAT_COMPLETION === '1') {
-        debugStream(debug).catch(console.error);
-      }
-
-      return StreamingResponse(AzureOpenAIStream(prod, options?.callback), {
-        headers: options?.headers,
+        ...params,
+        max_completion_tokens: 2048,
+        stream: enableStreaming,
+        tool_choice: params.tools ? 'auto' : undefined,
       });
+      if (enableStreaming) {
+        const stream = response as Stream<OpenAI.ChatCompletionChunk>;
+        const [prod, debug] = stream.tee();
+        if (process.env.DEBUG_AZURE_CHAT_COMPLETION === '1') {
+          debugStream(debug.toReadableStream()).catch(console.error);
+        }
+        return StreamingResponse(OpenAIStream(prod, { callbacks: options?.callback }), {
+          headers: options?.headers,
+        });
+      } else {
+        const stream = transformResponseToStream(response as OpenAI.ChatCompletion);
+        return StreamingResponse(OpenAIStream(stream, { callbacks: options?.callback }), {
+          headers: options?.headers,
+        });
+      }
     } catch (e) {
       let error = e as { [key: string]: any; code: string; message: string };
 

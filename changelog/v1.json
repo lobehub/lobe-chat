@@ -1,6 +1,56 @@
 [
   {
     "children": {
+      "fixes": ["Fix inbox agent can not save config."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix inbox agent edit way in the new mode."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.1"
+  },
+  {
+    "children": {
+      "features": ["Add configurable PDF processing method with Unstructured."]
+    },
+    "date": "2025-02-15",
+    "version": "1.56.0"
+  },
+  {
+    "children": {
+      "improvements": ["Improve mobile params style."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.4"
+  },
+  {
+    "children": {
+      "improvements": ["Add deepseek r1 distill models for qwen series."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.3"
+  },
+  {
+    "children": {
+      "fixes": ["Avoid blank reasoning with OpenRouter."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix Azure OpenAI O1 models and refactor the Azure OpenAI implement."],
+      "improvements": ["Update openrouter model list and descriptions."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.1"
+  },
+  {
+    "children": {
       "features": ["Add vLLM provider support."]
     },
     "date": "2025-02-14",

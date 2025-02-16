@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { DESKTOP_HEADER_ICON_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
+import { useSessionStore } from '@/store/session';
 
 const AgentSettings = dynamic(() => import('./AgentSettings'), {
   ssr: false,
@@ -16,6 +17,7 @@ const AgentSettings = dynamic(() => import('./AgentSettings'), {
 const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('common');
   const openChatSettings = useOpenChatSettings();
+  const id = useSessionStore((s) => s.activeId);
 
   return (
     <>
@@ -25,7 +27,7 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
         size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}
         title={t('header.session', { ns: 'setting' })}
       />
-      <AgentSettings />
+      <AgentSettings key={id} />
     </>
   );
 });

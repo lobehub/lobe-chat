@@ -46,7 +46,7 @@ tags:
 
   前往 `Webhooks` ，创建一个 Webhook，填写以下字段：
 
-  - 端点 URL： `https://lobe.example.com/api/auth/webhooks/logto`
+  - 端点 URL： `https://lobe.example.com/api/webhooks/logto`
   - 事件： `User.Data.Updated`
 
   创建成功后，复制 Webhook 的 `签名密钥`。填写到环境变量中的 `LOGTO_WEBHOOK_SIGNING_KEY`。
@@ -64,15 +64,15 @@ tags:
 
   在部署 LobeChat 时，你需要配置以下环境变量：
 
-  | 环境变量                      | 类型 | 描述                                                                                               |
-  | ------------------------- | -- | ------------------------------------------------------------------------------------------------ |
-  | `NEXT_AUTH_SECRET`        | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`                                    |
-  | `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Logto 请填写 `logto`。                                                       |
-  | `AUTH_LOGTO_ID`           | 必选 | Logto App 详情页的 Client ID                                                                         |
-  | `AUTH_LOGTO_SECRET`       | 必选 | Logto App 详情页的 Client Secret                                                                     |
-  | `AUTH_LOGTO_ISSUER`       | 必选 | Logto 提供程序的 OpenID Connect 颁发者                                                                   |
-  | `NEXTAUTH_URL`            | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://lobe.example.com/api/auth` |
-  | `LOGTO_WEBHOOK_SIGNING_KEY` | 可选 | 用于验证 Logto 发送的 Webhook 请求是否合法的密钥。 |
+  | 环境变量                        | 类型 | 描述                                                                                               |
+  | --------------------------- | -- | ------------------------------------------------------------------------------------------------ |
+  | `NEXT_AUTH_SECRET`          | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`                                    |
+  | `NEXT_AUTH_SSO_PROVIDERS`   | 必选 | 选择 LoboChat 的单点登录提供商。使用 Logto 请填写 `logto`。                                                       |
+  | `AUTH_LOGTO_ID`             | 必选 | Logto App 详情页的 Client ID                                                                         |
+  | `AUTH_LOGTO_SECRET`         | 必选 | Logto App 详情页的 Client Secret                                                                     |
+  | `AUTH_LOGTO_ISSUER`         | 必选 | Logto 提供程序的 OpenID Connect 颁发者                                                                   |
+  | `NEXTAUTH_URL`              | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://lobe.example.com/api/auth` |
+  | `LOGTO_WEBHOOK_SIGNING_KEY` | 可选 | 用于验证 Logto 发送的 Webhook 请求是否合法的密钥。                                                                |
 
   <Callout type={'tip'}>
     前往 [📘 环境变量](/zh/docs/self-hosting/environment-variables/auth#logto) 可查阅相关变量详情。
