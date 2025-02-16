@@ -24,6 +24,7 @@ import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { useUserStore } from '@/store/user';
 import {
+  keyVaultsConfigSelectors,
   modelConfigSelectors,
   modelProviderSelectors,
   preferenceSelectors,
@@ -71,6 +72,18 @@ const findAzureDeploymentName = (model: string) => {
   }
 
   return deploymentId;
+};
+
+const findDoubaoModelEndpoint = (model: string) => {
+  const keyVaults: any = keyVaultsConfigSelectors.getVaultByProvider(ModelProvider.Doubao)(
+    useUserStore.getState(),
+  );
+  const endpoint = keyVaults['model2EndpointMap']?.[model] || '';
+  if (endpoint) {
+    return endpoint;
+  }
+  // TODO: remove this fallback old version in feature
+  return findAzureDeploymentName(model);
 };
 
 const isEnableFetchOnClient = (provider: string) => {
@@ -222,8 +235,12 @@ class ChatService {
     let model = res.model || DEFAULT_AGENT_CONFIG.model;
 
     // if the provider is Azure, get the deployment name as the request model
-    if (provider === ModelProvider.Azure || provider === ModelProvider.Doubao) {
+    if (provider === ModelProvider.Azure) {
       model = findAzureDeploymentName(model);
+    }
+    // if the provider is Doubao, get the endpoint as the request model
+    if (provider === ModelProvider.Doubao) {
+      model = findDoubaoModelEndpoint(model);
     }
 
     const payload = merge(
