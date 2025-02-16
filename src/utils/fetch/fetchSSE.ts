@@ -114,7 +114,16 @@ const createSmoothMessage = (params: {
           // 从累积时间中减去已处理的时间
           accumulatedTime -= (charsToProcess * 1000) / speed;
 
-          const actualChars = Math.min(charsToProcess, outputQueue.length);
+          let actualChars = Math.min(charsToProcess, outputQueue.length);
+
+          // 检查下一个字符是否为英文或数字字符
+          if (
+            actualChars * 2 < outputQueue.length &&
+            /[\dA-Za-z]/.test(outputQueue[actualChars])
+          ) {
+            actualChars *= 2;
+          }
+
           const charsToAdd = outputQueue.splice(0, actualChars).join('');
           buffer += charsToAdd;
           params.onTextUpdate(charsToAdd, buffer);

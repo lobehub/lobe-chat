@@ -283,7 +283,7 @@ const Google: ModelProviderCard = {
     sdkType: 'google',
     showModelFetcher: true,
     smoothing: {
-      speed: 40,
+      speed: 50,
       text: true,
     },
   },
