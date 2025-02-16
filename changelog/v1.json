@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add Azure AI as new Provider."]
+    },
+    "date": "2025-02-16",
+    "version": "1.58.0"
+  },
+  {
+    "children": {
       "improvements": ["Fix mobile agent settings not show correctly."]
     },
     "date": "2025-02-16",
