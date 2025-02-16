@@ -178,7 +178,7 @@ export const createSSEDataExtractor = () =>
   new TransformStream({
     transform(chunk: Uint8Array, controller) {
       // 将 Uint8Array 转换为字符串
-      const text = new TextDecoder().decode(chunk);
+      const text = new TextDecoder().decode(chunk, { stream: true });
 
       // 处理多行数据的情况
       const lines = text.split('\n');
