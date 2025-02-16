@@ -4,6 +4,7 @@ import { serverDB } from '@/database/server';
 import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+import { AgentService } from '@/server/services/agent';
 
 export class UserService {
   createUser = async (id: string, params: UserJSON) => {
@@ -40,6 +41,10 @@ export class UserService {
       phone: phone?.phone_number,
       username: params.username,
     });
+
+    // 3. Create an inbox session for the user
+    const agentService = new AgentService(serverDB, id);
+    await agentService.createInbox();
 
     /* ↓ cloud slot ↓ */
 
