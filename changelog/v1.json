@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "fixes": [
+        "Match o1 series models more robust in Azure OpenAI provider, set max_completion_tokens to null for Azure OpenAI."
+      ]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix ai provider description not show correctly."]
     },
     "date": "2025-02-16",
