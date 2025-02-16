@@ -55,9 +55,9 @@ export interface FetchSSEOptions {
   smoothing?: SmoothingParams | boolean;
 }
 
-const START_ANIMATION_SPEED = 4;
+const START_ANIMATION_SPEED = 50; // 默认每秒输出 50 个字符
 
-const END_ANIMATION_SPEED = 15;
+const END_ANIMATION_SPEED = 9_999_999;
 
 const createSmoothMessage = (params: {
   onTextUpdate: (delta: string, text: string) => void;
@@ -66,6 +66,7 @@ const createSmoothMessage = (params: {
   const { startSpeed = START_ANIMATION_SPEED } = params;
 
   let buffer = '';
+  // why use queue: https://shareg.pt/GLBrjpK
   let outputQueue: string[] = [];
   let isAnimationActive = false;
   let animationFrameId: number | null = null;
@@ -80,6 +81,7 @@ const createSmoothMessage = (params: {
     }
   };
 
+  // define startAnimation function to display the text in buffer smoothly
   const startAnimation = (speed = startSpeed) => {
     return new Promise<void>((resolve) => {
       if (isAnimationActive) {
@@ -421,7 +423,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
 
       if (textController.isTokenRemain()) {
-        await textController.startAnimation(9_999_999);
+        await textController.startAnimation(END_ANIMATION_SPEED);
       }
 
       if (toolCallsController.isTokenRemain()) {
