@@ -1,8 +1,8 @@
 import { OIDCConfig, OIDCUserConfig } from '@auth/core/providers';
-import UrlJoin from 'url-join';
 
 import { authEnv } from '@/config/auth';
 
+import { oAuth2RefreshToken } from '../utils';
 import { CommonProviderConfig } from './sso.config';
 
 interface LogtoProfile extends Record<string, any> {
@@ -37,30 +37,6 @@ function LobeLogtoProvider(config: OIDCUserConfig<LogtoProfile>): OIDCConfig<Log
   };
 }
 
-async function refreshToken(iss: string, refresh_token: string) {
-  const response = await fetch(UrlJoin(iss, '/token'), {
-    body: new URLSearchParams({
-      client_id: process.env.AUTH_LOGTO_ID!,
-      client_secret: process.env.AUTH_LOGTO_SECRET!,
-      grant_type: 'refresh_token',
-      refresh_token,
-    }).toString(),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    method: 'POST',
-  });
-  const tokensOrError = await response.json();
-
-  if (!response.ok) throw tokensOrError;
-
-  return tokensOrError as {
-    access_token: string;
-    expires_in: number;
-    refresh_token?: string;
-  };
-}
-
 // ref: https://docs.logto.io/quick-starts/next-auth#get-refresh-token
 const provider = {
   id: 'logto',
@@ -77,7 +53,15 @@ const provider = {
     clientSecret: authEnv.LOGTO_CLIENT_SECRET ?? process.env.AUTH_LOGTO_SECRET,
     issuer: authEnv.LOGTO_ISSUER ?? process.env.AUTH_LOGTO_ISSUER,
   }),
-  refreshToken,
+  // ref: https://docs.logto.io/quick-starts/next-auth#get-refresh-token
+  refreshToken: (iss: string, refreshToken: string) =>
+    oAuth2RefreshToken(
+      iss,
+      '/token',
+      process.env.AUTH_LOGTO_ID!,
+      process.env.AUTH_LOGTO_SECRET!,
+      refreshToken,
+    ),
 };
 
 export default provider;
