@@ -66,14 +66,12 @@ const createSmoothMessage = (params: {
   const { startSpeed = START_ANIMATION_SPEED } = params;
 
   let buffer = '';
-  // why use queue: https://shareg.pt/GLBrjpK
   let outputQueue: string[] = [];
   let isAnimationActive = false;
   let animationFrameId: number | null = null;
   let lastFrameTime = 0;
-  let charAccumulator = 0;
+  let accumulatedTime = 0; // 用于累积时间
 
-  // when you need to stop the animation, call this function
   const stopAnimation = () => {
     isAnimationActive = false;
     if (animationFrameId !== null) {
@@ -82,9 +80,7 @@ const createSmoothMessage = (params: {
     }
   };
 
-  // define startAnimation function to display the text in buffer smooth
-  // when you need to start the animation, call this function
-  const startAnimation = (charsPerFrame = startSpeed / 4) => {
+  const startAnimation = (speed = startSpeed) => {
     return new Promise<void>((resolve) => {
       if (isAnimationActive) {
         resolve();
@@ -92,44 +88,37 @@ const createSmoothMessage = (params: {
       }
 
       isAnimationActive = true;
-      lastFrameTime = 0;
-      charAccumulator = 0;
+      lastFrameTime = performance.now();
+      accumulatedTime = 0;
 
       const updateText = (timestamp: number) => {
-        // 如果动画已经不再激活，则停止更新文本
         if (!isAnimationActive) {
           cancelAnimationFrame(animationFrameId!);
           animationFrameId = null;
           resolve();
           return;
         }
-        if (!lastFrameTime) {
-          lastFrameTime = timestamp;
-        }
-        
-        // Calculate how many characters to process based on a fixed update interval
+
         const frameDuration = timestamp - lastFrameTime;
         lastFrameTime = timestamp;
-        
-        const targetFrameDuration = Math.floor(1000 / 60); // 60 FPS, 16.7 ms
-        charAccumulator += (frameDuration / targetFrameDuration) * charsPerFrame;
-        const charsToProcess = Math.floor(charAccumulator);
+        accumulatedTime += frameDuration; // 累积时间
 
-        // 如果还有文本没有显示
-        // 检查队列中是否有字符待显示
+        // 计算应处理的字符数，每秒输出 speed 个字符
+        let charsToProcess = Math.floor((accumulatedTime * speed) / 1000);
+
         if (charsToProcess > 0) {
-          charAccumulator -= charsToProcess;
+          // 从累积时间中减去已处理的时间
+          accumulatedTime -= (charsToProcess * 1000) / speed;
+
           const actualChars = Math.min(charsToProcess, outputQueue.length);
           const charsToAdd = outputQueue.splice(0, actualChars).join('');
           buffer += charsToAdd;
-          // 更新消息内容，这里可能需要结合实际情况调整
           params.onTextUpdate(charsToAdd, buffer);
         }
 
         if (outputQueue.length > 0) {
           animationFrameId = requestAnimationFrame(updateText);
         } else {
-          // 当所有字符都显示完毕时，清除动画状态
           isAnimationActive = false;
           animationFrameId = null;
           resolve();
