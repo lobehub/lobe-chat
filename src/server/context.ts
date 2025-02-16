@@ -57,6 +57,12 @@ export const createContext = async (request: NextRequest): Promise<Context> => {
       const { default: NextAuthEdge } = await import('@/libs/next-auth/edge');
 
       const session = await NextAuthEdge.auth();
+
+      if (session?.error === 'RefreshTokenError') {
+        // await NextAuthEdge.signIn()
+        throw new Error('RefreshTokenError');
+      }
+
       if (session && session?.user?.id) {
         auth = session.user;
         userId = session.user.id;
