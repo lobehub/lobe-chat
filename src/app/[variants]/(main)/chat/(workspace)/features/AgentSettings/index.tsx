@@ -101,7 +101,7 @@ const AgentSettings = memo(() => {
             width={'100%'}
           >
             {tab === ChatSettingsTabs.Meta && <AgentMeta />}
-            {tab === ChatSettingsTabs.Prompt && <AgentPrompt modal />}
+            {tab === ChatSettingsTabs.Prompt && <AgentPrompt />}
             {tab === ChatSettingsTabs.Chat && <AgentChat />}
             {tab === ChatSettingsTabs.Modal && <AgentModal />}
             {tab === ChatSettingsTabs.TTS && <AgentTTS />}
