@@ -30,6 +30,7 @@ export interface UserKeyVaults {
   ai360?: OpenAICompatibleKeyVault;
   anthropic?: OpenAICompatibleKeyVault;
   azure?: AzureOpenAIKeyVault;
+  azureai?: AzureOpenAIKeyVault;
   baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
   cloudflare?: CloudflareKeyVault;

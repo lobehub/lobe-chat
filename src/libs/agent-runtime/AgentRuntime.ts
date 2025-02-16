@@ -7,6 +7,7 @@ import { LobeAi21AI } from './ai21';
 import { LobeAi360AI } from './ai360';
 import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
+import { LobeAzureAI } from './azureai';
 import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeCloudflareAI, LobeCloudflareParams } from './cloudflare';
@@ -141,6 +142,7 @@ class AgentRuntime {
       ai360: Partial<ClientOptions>;
       anthropic: Partial<ClientOptions>;
       azure: { apiKey?: string; apiVersion?: string; baseURL?: string };
+      azureai: { apiKey?: string; apiVersion?: string; baseURL?: string };
       baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
       cloudflare: Partial<LobeCloudflareParams>;
@@ -198,6 +200,11 @@ class AgentRuntime {
           params.azure?.apiKey,
           params.azure?.apiVersion,
         );
+        break;
+      }
+
+      case ModelProvider.AzureAI: {
+        runtimeModel = new LobeAzureAI(params.azureai);
         break;
       }
 
@@ -307,7 +314,7 @@ class AgentRuntime {
       }
 
       case ModelProvider.Novita: {
-        runtimeModel = new LobeNovitaAI(params.novita ?? {});
+        runtimeModel = new LobeNovitaAI(params.novita);
         break;
       }
 
@@ -317,7 +324,7 @@ class AgentRuntime {
       }
 
       case ModelProvider.Baichuan: {
-        runtimeModel = new LobeBaichuanAI(params.baichuan ?? {});
+        runtimeModel = new LobeBaichuanAI(params.baichuan);
         break;
       }
 
@@ -327,12 +334,12 @@ class AgentRuntime {
       }
 
       case ModelProvider.Ai360: {
-        runtimeModel = new LobeAi360AI(params.ai360 ?? {});
+        runtimeModel = new LobeAi360AI(params.ai360);
         break;
       }
 
       case ModelProvider.SiliconCloud: {
-        runtimeModel = new LobeSiliconCloudAI(params.siliconcloud ?? {});
+        runtimeModel = new LobeSiliconCloudAI(params.siliconcloud);
         break;
       }
 
@@ -372,12 +379,12 @@ class AgentRuntime {
       }
 
       case ModelProvider.Jina: {
-        runtimeModel = new LobeJinaAI(params.jina ?? {});
+        runtimeModel = new LobeJinaAI(params.jina);
         break;
       }
 
       case ModelProvider.Cloudflare: {
-        runtimeModel = new LobeCloudflareAI(params.cloudflare ?? {});
+        runtimeModel = new LobeCloudflareAI(params.cloudflare);
         break;
       }
 

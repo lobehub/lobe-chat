@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "De API-versie van Azure, volgens het formaat YYYY-MM-DD. Raadpleeg de [laatste versie](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Lijst ophalen",
+      "title": "Azure API-versie"
+    },
+    "endpoint": {
+      "desc": "Vind het Azure AI-model inferentie-eindpunt in het overzicht van het Azure AI-project",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI-eindpunt"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Vind de API-sleutel in het overzicht van het Azure AI-project",
+      "placeholder": "Azure-sleutel",
+      "title": "Sleutel"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Voer AWS Access Key Id in",
@@ -97,6 +115,7 @@
       "title": "Proxy-adres"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Selecteer het SDK-type",
       "title": "Aanvraagformaat"
     },
@@ -209,6 +228,11 @@
           "extra": "Het veld dat daadwerkelijk wordt aangevraagd in Azure OpenAI",
           "placeholder": "Voer de modelimplementatienaam in Azure in",
           "title": "Modelimplementatienaam"
+        },
+        "deployName": {
+          "extra": "Dit veld wordt als model-ID verzonden bij het indienen van een verzoek",
+          "placeholder": "Voer de naam of ID van het daadwerkelijk gedeployde model in",
+          "title": "Modeldeploynaam"
         },
         "displayName": {
           "placeholder": "Voer de weergavenaam van het model in, bijvoorbeeld ChatGPT, GPT-4, enz.",
