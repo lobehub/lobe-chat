@@ -10,7 +10,7 @@ const Doubao: ModelProviderCard = {
   name: '火山引擎',
   settings: {
     disableBrowserRequest: true, // CORS error
-    sdkType: 'volcengine',
+    sdkType: 'openai',
     showDeployName: true,
     smoothing: {
       speed: 2,
