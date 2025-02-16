@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.56.2](https://github.com/lobehub/lobe-chat/compare/v1.56.1...v1.56.2)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix inbox agent can not save config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix inbox agent can not save config, closes [#6186](https://github.com/lobehub/lobe-chat/issues/6186) ([588cba7](https://github.com/lobehub/lobe-chat/commit/588cba7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.56.1](https://github.com/lobehub/lobe-chat/compare/v1.56.0...v1.56.1)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix inbox agent edit way in the new mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix inbox agent edit way in the new mode, closes [#6190](https://github.com/lobehub/lobe-chat/issues/6190) ([6398362](https://github.com/lobehub/lobe-chat/commit/6398362))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.56.0](https://github.com/lobehub/lobe-chat/compare/v1.55.4...v1.56.0)
 
 <sup>Released on **2025-02-15**</sup>
