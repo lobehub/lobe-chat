@@ -1,34 +1,9 @@
 import Auth0 from 'next-auth/providers/auth0';
-import UrlJoin from 'url-join';
 
 import { authEnv } from '@/config/auth';
 
+import { oAuth2RefreshToken } from '../utils';
 import { CommonProviderConfig } from './sso.config';
-
-// ref: https://auth0.com/docs/secure/tokens/refresh-tokens/use-refresh-tokens#use-post-authentication
-async function refreshToken(iss: string, refresh_token: string) {
-  const response = await fetch(UrlJoin(iss, '/oauth/token'), {
-    body: new URLSearchParams({
-      client_id: process.env.AUTH_AUTH0_ID!,
-      client_secret: process.env.AUTH_AUTH0_SECRET!,
-      grant_type: 'refresh_token',
-      refresh_token,
-    }).toString(),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    method: 'POST',
-  });
-  const tokensOrError = await response.json();
-
-  if (!response.ok) throw tokensOrError;
-
-  return tokensOrError as {
-    access_token: string;
-    expires_in: number;
-    refresh_token?: string;
-  };
-}
 
 const provider = {
   id: 'auth0',
@@ -52,7 +27,15 @@ const provider = {
       };
     },
   }),
-  refreshToken,
+  // ref: https://auth0.com/docs/secure/tokens/refresh-tokens/use-refresh-tokens#use-post-authentication
+  refreshToken: (iss: string, refreshToken: string) =>
+    oAuth2RefreshToken(
+      iss,
+      '/oauth/token',
+      process.env.AUTH_AUTH0_ID!,
+      process.env.AUTH_AUTH0_SECRET!,
+      refreshToken,
+    ),
 };
 
 export default provider;
