@@ -11,6 +11,7 @@ const Azure: ModelProviderCard = {
   settings: {
     defaultShowBrowserRequest: true,
     sdkType: 'azureai',
+    showDeployName: true,
   },
   url: 'https://ai.azure.com',
 };
