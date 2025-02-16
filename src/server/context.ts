@@ -59,7 +59,6 @@ export const createContext = async (request: NextRequest): Promise<Context> => {
       const session = await NextAuthEdge.auth();
 
       if (session?.error === 'RefreshTokenError') {
-        // await NextAuthEdge.signIn()
         throw new Error('RefreshTokenError');
       }
 
