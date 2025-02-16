@@ -51,9 +51,9 @@ const isCanUseFC = (model: string, provider: string) => {
 };
 
 /**
- * TODO: we need to update this function to auto find deploymentName
+ * TODO: we need to update this function to auto find deploymentName with provider setting config
  */
-const findDeploymentName = (model: string) => {
+const findDeploymentName = (model: string, provider: string) => {
   let deploymentId = model;
 
   // TODO: remove isDeprecatedEdition condition in V2.0
@@ -66,7 +66,9 @@ const findDeploymentName = (model: string) => {
     if (deploymentName) deploymentId = deploymentName;
   } else {
     // find the model by id
-    const modelItem = useAiInfraStore.getState().enabledAiModels?.find((i) => i.id === model);
+    const modelItem = useAiInfraStore
+      .getState()
+      .enabledAiModels?.find((i) => i.id === model && i.providerId === provider);
 
     if (modelItem && modelItem.config?.deploymentName) {
       deploymentId = modelItem.config?.deploymentName;
@@ -227,12 +229,13 @@ class ChatService {
     // if the provider is Azure, get the deployment name as the request model
     const providersWithDeploymentName = [
       ModelProvider.Azure,
+      ModelProvider.Volcengine,
       ModelProvider.Doubao,
       ModelProvider.AzureAI,
     ] as string[];
 
     if (providersWithDeploymentName.includes(provider)) {
-      model = findDeploymentName(model);
+      model = findDeploymentName(model, provider);
     }
 
     const payload = merge(

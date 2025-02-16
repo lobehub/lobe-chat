@@ -119,6 +119,9 @@
   "vllm": {
     "description": "vLLM là một thư viện nhanh chóng và dễ sử dụng cho suy diễn và dịch vụ LLM."
   },
+  "volcengine": {
+    "description": "Nền tảng phát triển dịch vụ mô hình lớn do ByteDance phát triển, cung cấp dịch vụ gọi mô hình phong phú, an toàn và có giá cả cạnh tranh, đồng thời cung cấp dữ liệu mô hình, tinh chỉnh, suy diễn, đánh giá và các chức năng đầu cuối khác, đảm bảo toàn diện cho việc phát triển ứng dụng AI của bạn."
+  },
   "wenxin": {
     "description": "Nền tảng phát triển và dịch vụ ứng dụng AI gốc với mô hình lớn một cửa dành cho doanh nghiệp, cung cấp chuỗi công cụ toàn diện và dễ sử dụng cho phát triển mô hình trí tuệ nhân tạo sinh sinh và phát triển ứng dụng."
   },
