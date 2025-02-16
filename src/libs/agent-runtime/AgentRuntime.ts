@@ -1,13 +1,13 @@
 import { ClientOptions } from 'openai';
 
 import type { TracePayload } from '@/const/trace';
-import { LobeAzureAI } from '@/libs/agent-runtime/azureai';
 
 import { LobeRuntimeAI } from './BaseAI';
 import { LobeAi21AI } from './ai21';
 import { LobeAi360AI } from './ai360';
 import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
+import { LobeAzureAI } from './azureai';
 import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeCloudflareAI, LobeCloudflareParams } from './cloudflare';
