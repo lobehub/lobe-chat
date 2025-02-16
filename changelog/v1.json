@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add volcengine as a new provider."]
+    },
+    "date": "2025-02-16",
+    "version": "1.59.0"
+  },
+  {
+    "children": {
       "features": ["Add Azure AI as new Provider."]
     },
     "date": "2025-02-16",
