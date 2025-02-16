@@ -55,9 +55,9 @@ export interface FetchSSEOptions {
   smoothing?: SmoothingParams | boolean;
 }
 
-const START_ANIMATION_SPEED = 4;
+const START_ANIMATION_SPEED = 50; // 默认每秒输出 50 个字符
 
-const END_ANIMATION_SPEED = 15;
+const END_ANIMATION_SPEED = 9_999_999;
 
 const createSmoothMessage = (params: {
   onTextUpdate: (delta: string, text: string) => void;
@@ -70,8 +70,9 @@ const createSmoothMessage = (params: {
   let outputQueue: string[] = [];
   let isAnimationActive = false;
   let animationFrameId: number | null = null;
+  let lastFrameTime = 0;
+  let accumulatedTime = 0; // 用于累积时间
 
-  // when you need to stop the animation, call this function
   const stopAnimation = () => {
     isAnimationActive = false;
     if (animationFrameId !== null) {
@@ -80,50 +81,70 @@ const createSmoothMessage = (params: {
     }
   };
 
-  // define startAnimation function to display the text in buffer smooth
-  // when you need to start the animation, call this function
-  const startAnimation = (speed = startSpeed) =>
-    new Promise<void>((resolve) => {
+  // define startAnimation function to display the text in buffer smoothly
+  const startAnimation = (speed = startSpeed) => {
+    return new Promise<void>((resolve) => {
       if (isAnimationActive) {
         resolve();
         return;
       }
 
       isAnimationActive = true;
+      lastFrameTime = performance.now();
+      accumulatedTime = 0;
 
-      const updateText = () => {
-        // 如果动画已经不再激活，则停止更新文本
+      const updateText = (timestamp: number) => {
         if (!isAnimationActive) {
-          cancelAnimationFrame(animationFrameId!);
+          if (animationFrameId !== null) {
+            cancelAnimationFrame(animationFrameId);
+          }
           animationFrameId = null;
           resolve();
           return;
         }
 
-        // 如果还有文本没有显示
-        // 检查队列中是否有字符待显示
-        if (outputQueue.length > 0) {
-          // 从队列中获取前 n 个字符（如果存在）
-          const charsToAdd = outputQueue.splice(0, speed).join('');
-          buffer += charsToAdd;
+        const frameDuration = timestamp - lastFrameTime;
+        lastFrameTime = timestamp;
+        accumulatedTime += frameDuration; // 累积时间
 
-          // 更新消息内容，这里可能需要结合实际情况调整
+        // 计算应处理的字符数，每秒输出 speed 个字符
+        let charsToProcess = Math.floor((accumulatedTime * speed) / 1000);
+
+        if (charsToProcess > 0) {
+          // 从累积时间中减去已处理的时间
+          accumulatedTime -= (charsToProcess * 1000) / speed;
+
+          let actualChars = Math.min(charsToProcess, outputQueue.length);
+
+          // 检查下一个字符是否为英文或数字字符
+          if (
+            actualChars * 2 < outputQueue.length &&
+            /[\dA-Za-z]/.test(outputQueue[actualChars])
+          ) {
+            actualChars *= 2;
+          }
+
+          const charsToAdd = outputQueue.splice(0, actualChars).join('');
+          buffer += charsToAdd;
           params.onTextUpdate(charsToAdd, buffer);
+        }
+
+        if (outputQueue.length > 0 && isAnimationActive) {
+          animationFrameId = requestAnimationFrame(updateText);
         } else {
           // 当所有字符都显示完毕时，清除动画状态
           isAnimationActive = false;
           animationFrameId = null;
           resolve();
-          return;
         }
-
-        animationFrameId = requestAnimationFrame(updateText);
       };
 
       animationFrameId = requestAnimationFrame(updateText);
     });
+  };
 
   const pushToQueue = (text: string) => {
+    // 将传入的文本分割成字符数组，并添加到输出队列中
     outputQueue.push(...text.split(''));
   };
 
