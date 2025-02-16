@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve inbox agent settings."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix inbox agent can not save config."]
     },
     "date": "2025-02-16",
