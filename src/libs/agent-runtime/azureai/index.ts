@@ -43,11 +43,12 @@ export class LobeAzureAI implements LobeRuntimeAI {
       if (enableStreaming) {
         const stream = await response.asBrowserStream();
 
-        console.log(stream);
         const [prod, debug] = stream.body!.tee();
+
         if (process.env.DEBUG_AZURE_AI_CHAT_COMPLETION === '1') {
           debugStream(debug).catch(console.error);
         }
+
         return StreamingResponse(
           OpenAIStream(prod.pipeThrough(createSSEDataExtractor()), {
             callbacks: options?.callback,
