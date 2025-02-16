@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix inbox agent edit way in the new mode."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.1"
+  },
+  {
+    "children": {
       "features": ["Add configurable PDF processing method with Unstructured."]
     },
     "date": "2025-02-15",
