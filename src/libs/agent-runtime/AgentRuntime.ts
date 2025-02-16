@@ -1,6 +1,7 @@
 import { ClientOptions } from 'openai';
 
 import type { TracePayload } from '@/const/trace';
+import { LobeAzureAI } from '@/libs/agent-runtime/azureai';
 
 import { LobeRuntimeAI } from './BaseAI';
 import { LobeAi21AI } from './ai21';
@@ -141,6 +142,7 @@ class AgentRuntime {
       ai360: Partial<ClientOptions>;
       anthropic: Partial<ClientOptions>;
       azure: { apiKey?: string; apiVersion?: string; baseURL?: string };
+      azureai: { apiKey?: string; apiVersion?: string; baseURL?: string };
       baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
       cloudflare: Partial<LobeCloudflareParams>;
@@ -198,6 +200,11 @@ class AgentRuntime {
           params.azure?.apiKey,
           params.azure?.apiVersion,
         );
+        break;
+      }
+
+      case ModelProvider.AzureAI: {
+        runtimeModel = new LobeAzureAI(params.azureai);
         break;
       }
 
