@@ -1,4 +1,5 @@
 import { and, asc, desc, eq } from 'drizzle-orm/expressions';
+import { isEmpty } from 'lodash-es';
 
 import { LobeChatDatabase } from '@/database/type';
 import { ModelProvider } from '@/libs/agent-runtime';
@@ -207,6 +208,7 @@ export class AiProviderModel {
       ...result,
       fetchOnClient: typeof result.fetchOnClient === 'boolean' ? result.fetchOnClient : undefined,
       keyVaults,
+      settings: isEmpty(result.settings) ? undefined : result.settings,
     } as AiProviderDetailItem;
   };
 

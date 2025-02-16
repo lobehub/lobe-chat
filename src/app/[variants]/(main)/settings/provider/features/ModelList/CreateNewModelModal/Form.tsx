@@ -11,12 +11,12 @@ interface ModelConfigFormProps {
   idEditable?: boolean;
   initialValues?: ChatModelCard;
   onFormInstanceReady: (instance: FormInstance) => void;
-  showAzureDeployName?: boolean;
+  showDeployName?: boolean;
   type?: AiModelType;
 }
 
 const ModelConfigForm = memo<ModelConfigFormProps>(
-  ({ showAzureDeployName, idEditable = true, onFormInstanceReady, initialValues }) => {
+  ({ showDeployName, idEditable = true, onFormInstanceReady, initialValues }) => {
     const { t } = useTranslation('modelProvider');
 
     const [formInstance] = Form.useForm();
@@ -55,15 +55,13 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
               placeholder={t('providerModels.item.modelConfig.id.placeholder')}
             />
           </Form.Item>
-          {showAzureDeployName && (
+          {showDeployName && (
             <Form.Item
-              extra={t('providerModels.item.modelConfig.azureDeployName.extra')}
-              label={t('providerModels.item.modelConfig.azureDeployName.title')}
+              extra={t('providerModels.item.modelConfig.deployName.extra')}
+              label={t('providerModels.item.modelConfig.deployName.title')}
               name={['config', 'deploymentName']}
             >
-              <Input
-                placeholder={t('providerModels.item.modelConfig.azureDeployName.placeholder')}
-              />
+              <Input placeholder={t('providerModels.item.modelConfig.deployName.placeholder')} />
             </Form.Item>
           )}
           <Form.Item

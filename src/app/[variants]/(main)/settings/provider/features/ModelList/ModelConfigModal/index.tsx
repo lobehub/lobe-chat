@@ -1,13 +1,13 @@
 import { Modal } from '@lobehub/ui';
 import { Button, FormInstance } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { memo, useState } from 'react';
+import { memo, use, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ModelProvider } from '@/libs/agent-runtime';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import ModelConfigForm from '../CreateNewModelModal/Form';
+import { ProviderSettingsContext } from '../ProviderSettingsContext';
 
 interface ModelConfigModalProps {
   id: string;
@@ -28,6 +28,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ id, open, setOpen }) => 
   const closeModal = () => {
     setOpen(false);
   };
+  const { showDeployName } = use(ProviderSettingsContext);
 
   return (
     <Modal
@@ -66,7 +67,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ id, open, setOpen }) => 
         idEditable={false}
         initialValues={model}
         onFormInstanceReady={setFormInstance}
-        showAzureDeployName={editingProvider === ModelProvider.Azure || editingProvider === ModelProvider.Doubao}
+        showDeployName={showDeployName}
         type={model?.type}
       />
     </Modal>
