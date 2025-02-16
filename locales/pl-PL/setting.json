@@ -204,8 +204,8 @@
       "title": "Włącz dostosowanie intensywności rozumowania"
     },
     "frequencyPenalty": {
-      "desc": "Im większa wartość, tym większe prawdopodobieństwo zmniejszenia powtarzających się słów",
-      "title": "Kara za częstość"
+      "desc": "Im większa wartość, tym bardziej zróżnicowane i bogate słownictwo; im mniejsza wartość, tym prostsze i bardziej bezpośrednie słownictwo",
+      "title": "Różnorodność słownictwa"
     },
     "maxTokens": {
       "desc": "Maksymalna liczba tokenów używanych w pojedynczej interakcji",
@@ -215,9 +215,12 @@
       "desc": "{{provider}} model",
       "title": "Model"
     },
+    "params": {
+      "title": "Zaawansowane parametry"
+    },
     "presencePenalty": {
-      "desc": "Im większa wartość, tym większe prawdopodobieństwo rozszerzenia się na nowe tematy",
-      "title": "Świeżość tematu"
+      "desc": "Im większa wartość, tym większa tendencja do różnorodnych wyrażeń, unikanie powtórzeń; im mniejsza wartość, tym większa tendencja do używania powtarzających się koncepcji lub narracji, co prowadzi do większej spójności",
+      "title": "Różnorodność wyrażeń"
     },
     "reasoningEffort": {
       "desc": "Im wyższa wartość, tym silniejsza zdolność rozumowania, ale może to zwiększyć czas odpowiedzi i zużycie tokenów",
@@ -229,14 +232,14 @@
       "title": "Intensywność rozumowania"
     },
     "temperature": {
-      "desc": "Im większa wartość, tym odpowiedzi są bardziej losowe",
-      "title": "Losowość",
-      "titleWithValue": "Losowość {{value}}"
+      "desc": "Im większa wartość, tym bardziej kreatywne i wyobrażeniowe będą odpowiedzi; im mniejsza wartość, tym bardziej rygorystyczne odpowiedzi",
+      "title": "Aktywność kreatywna",
+      "warning": "Zbyt wysoka wartość aktywności kreatywnej może prowadzić do nieczytelnych wyników"
     },
     "title": "Ustawienia modelu",
     "topP": {
-      "desc": "Podobne do losowości, ale nie należy zmieniać razem z losowością",
-      "title": "Najlepsze P"
+      "desc": "Ile możliwości należy rozważyć, im większa wartość, tym więcej możliwych odpowiedzi; im mniejsza wartość, tym większa tendencja do wyboru najbardziej prawdopodobnej odpowiedzi. Nie zaleca się jednoczesnej zmiany z aktywnością kreatywną",
+      "title": "Otwartość myślenia"
     }
   },
   "settingPlugin": {

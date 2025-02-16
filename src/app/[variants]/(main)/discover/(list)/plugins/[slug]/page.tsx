@@ -10,37 +10,45 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 
 import List from '../features/List';
 
-export const generateMetadata = async (props: DiscoverPageProps) => {
+const getSharedProps = async (props: DiscoverPageProps) => {
   const params = await props.params;
+  const { slug: category, variants } = params;
+  const { isMobile, locale: hl } = await RouteVariants.deserializeVariants(variants);
   const searchParams = await props.searchParams;
 
-  const { t, locale } = await translation('metadata', searchParams?.hl);
-  const { t: td } = await translation('discover', searchParams?.hl);
+  const { t, locale } = await translation('metadata', searchParams?.hl || hl);
+  const { t: td } = await translation('discover', searchParams?.hl || hl);
+  return {
+    category,
+    isMobile,
+    locale,
+    t,
+    td,
+  };
+};
 
+export const generateMetadata = async (props: DiscoverPageProps) => {
+  const { locale, t, td, category } = await getSharedProps(props);
   return metadataModule.generate({
     alternate: true,
     description: t('discover.plugins.description'),
     locale,
-    title: [td(`category.plugin.${params.slug}`), t('discover.plugins.title')].join(' · '),
-    url: urlJoin('/discover/plugins', params.slug),
+    title: [td(`category.plugin.${category}`), t('discover.plugins.title')].join(' · '),
+    url: urlJoin('/discover/plugins', category),
   });
 };
 
 const Page = async (props: DiscoverPageProps<PluginCategory>) => {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
-
-  const { t, locale } = await translation('metadata', searchParams?.hl);
-  const { t: td } = await translation('discover', searchParams?.hl);
-  const mobile = await RouteVariants.getIsMobile(props);
+  const { locale, t, td, category, isMobile } = await getSharedProps(props);
 
   const discoverService = new DiscoverService();
-  const items = await discoverService.getPluginCategory(locale, params.slug);
+  const items = await discoverService.getPluginCategory(locale, category as PluginCategory);
 
   const ld = ldModule.generate({
     description: t('discover.plugins.description'),
-    title: [td(`category.plugin.${params.slug}`), t('discover.plugins.title')].join(' · '),
-    url: urlJoin('/discover/plugins', params.slug),
+    locale,
+    title: [td(`category.plugin.${category}`), t('discover.plugins.title')].join(' · '),
+    url: urlJoin('/discover/plugins', category),
     webpage: {
       enable: true,
       search: '/discover/search',
@@ -50,7 +58,7 @@ const Page = async (props: DiscoverPageProps<PluginCategory>) => {
   return (
     <>
       <StructuredData ld={ld} />
-      <List category={params.slug} items={items} mobile={mobile} />
+      <List category={category} items={items} mobile={isMobile} />
     </>
   );
 };

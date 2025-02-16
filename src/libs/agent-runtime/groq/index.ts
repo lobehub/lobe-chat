@@ -2,7 +2,7 @@ import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import type { ChatModelCard } from '@/types/llm';
 
 export interface GroqModelCard {
   context_window: number;
@@ -31,33 +31,49 @@ export const LobeGroq = LobeOpenAICompatibleFactory({
   debug: {
     chatCompletion: () => process.env.DEBUG_GROQ_CHAT_COMPLETION === '1',
   },
-  models: {
-    transformModel: (m) => {
-      const functionCallKeywords = [
-        'tool',
-        'llama-3.3',
-        'llama-3.1',
-        'llama3-',
-        'mixtral-8x7b-32768',
-        'gemma2-9b-it',
-      ];
+  models: async ({ client }) => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-      const reasoningKeywords = [
-        'deepseek-r1',
-      ];
+    const functionCallKeywords = [
+      'tool',
+      'llama-3.3',
+      'llama-3.1',
+      'llama3-',
+      'mixtral-8x7b-32768',
+      'gemma2-9b-it',
+    ];
 
-      const model = m as unknown as GroqModelCard;
+    const reasoningKeywords = [
+      'deepseek-r1',
+    ];
 
-      return {
-        contextWindowTokens: model.context_window,
-        displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.displayName ?? undefined,
-        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id === m.id)?.enabled || false,
-        functionCall: functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
-        id: model.id,
-        reasoning: reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword)),
-        vision: model.id.toLowerCase().includes('vision'),
-      };
-    },
+    const modelsPage = await client.models.list() as any;
+    const modelList: GroqModelCard[] = modelsPage.data;
+
+    return modelList
+      .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+
+        return {
+          contextWindowTokens: model.context_window,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.functionCall
+            || false,
+          id: model.id,
+          reasoning:
+            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            model.id.toLowerCase().includes('vision')
+            || knownModel?.abilities?.vision
+            || false,
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Groq,
 });

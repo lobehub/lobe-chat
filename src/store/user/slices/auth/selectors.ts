@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 
-import { enableClerk } from '@/const/auth';
+import { enableAuth, enableClerk, enableNextAuth } from '@/const/auth';
 import { BRANDING_NAME } from '@/const/branding';
 import { UserStore } from '@/store/user';
 import { LobeUser } from '@/types/user';
@@ -8,7 +8,7 @@ import { LobeUser } from '@/types/user';
 const DEFAULT_USERNAME = BRANDING_NAME;
 
 const nickName = (s: UserStore) => {
-  if (!s.enableAuth()) return t('userPanel.defaultNickname', { ns: 'common' });
+  if (!enableAuth) return t('userPanel.defaultNickname', { ns: 'common' });
 
   if (s.isSignedIn) return s.user?.fullName || s.user?.username;
 
@@ -16,7 +16,7 @@ const nickName = (s: UserStore) => {
 };
 
 const username = (s: UserStore) => {
-  if (!s.enableAuth()) return DEFAULT_USERNAME;
+  if (!enableAuth) return DEFAULT_USERNAME;
 
   if (s.isSignedIn) return s.user?.username;
 
@@ -36,17 +36,15 @@ export const userProfileSelectors = {
  */
 const isLogin = (s: UserStore) => {
   // 如果没有开启鉴权，说明不需要登录，默认是登录态
-  if (!s.enableAuth()) return true;
+  if (!enableAuth) return true;
 
   return s.isSignedIn;
 };
 
 export const authSelectors = {
-  enabledAuth: (s: UserStore): boolean => s.enableAuth(),
-  enabledNextAuth: (s: UserStore): boolean => !!s.enabledNextAuth,
   isLoaded: (s: UserStore) => s.isLoaded,
   isLogin,
   isLoginWithAuth: (s: UserStore) => s.isSignedIn,
   isLoginWithClerk: (s: UserStore): boolean => (s.isSignedIn && enableClerk) || false,
-  isLoginWithNextAuth: (s: UserStore): boolean => (s.isSignedIn && !!s.enabledNextAuth) || false,
+  isLoginWithNextAuth: (s: UserStore): boolean => (s.isSignedIn && !!enableNextAuth) || false,
 };

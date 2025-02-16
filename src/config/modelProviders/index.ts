@@ -18,11 +18,13 @@ import HigressProvider from './higress';
 import HuggingFaceProvider from './huggingface';
 import HunyuanProvider from './hunyuan';
 import InternLMProvider from './internlm';
+import JinaProvider from './jina';
 import LMStudioProvider from './lmstudio';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
 import MoonshotProvider from './moonshot';
 import NovitaProvider from './novita';
+import NvidiaProvider from './nvidia';
 import OllamaProvider from './ollama';
 import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
@@ -33,8 +35,10 @@ import SiliconCloudProvider from './siliconcloud';
 import SparkProvider from './spark';
 import StepfunProvider from './stepfun';
 import TaichuProvider from './taichu';
+import TencentcloudProvider from './tencentcloud';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
+import VLLMProvider from './vllm';
 import WenxinProvider from './wenxin';
 import XAIProvider from './xai';
 import ZeroOneProvider from './zeroone';
@@ -56,6 +60,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   MistralProvider.chatModels,
   MoonshotProvider.chatModels,
   OllamaProvider.chatModels,
+  VLLMProvider.chatModels,
   OpenRouterProvider.chatModels,
   TogetherAIProvider.chatModels,
   FireworksAIProvider.chatModels,
@@ -63,9 +68,11 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   AnthropicProvider.chatModels,
   HuggingFaceProvider.chatModels,
   XAIProvider.chatModels,
+  JinaProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   NovitaProvider.chatModels,
+  NvidiaProvider.chatModels,
   BaichuanProvider.chatModels,
   TaichuProvider.chatModels,
   CloudflareProvider.chatModels,
@@ -86,6 +93,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   OpenAIProvider,
   { ...AzureProvider, chatModels: [] },
   OllamaProvider,
+  VLLMProvider,
   AnthropicProvider,
   BedrockProvider,
   GoogleProvider,
@@ -95,6 +103,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   CloudflareProvider,
   GithubProvider,
   NovitaProvider,
+  NvidiaProvider,
   TogetherAIProvider,
   FireworksAIProvider,
   GroqProvider,
@@ -103,8 +112,10 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai21Provider,
   UpstageProvider,
   XAIProvider,
+  JinaProvider,
   QwenProvider,
   WenxinProvider,
+  TencentcloudProvider,
   HunyuanProvider,
   ZhiPuProvider,
   SiliconCloudProvider,
@@ -151,11 +162,13 @@ export { default as HigressProviderCard } from './higress';
 export { default as HuggingFaceProviderCard } from './huggingface';
 export { default as HunyuanProviderCard } from './hunyuan';
 export { default as InternLMProviderCard } from './internlm';
+export { default as JinaProviderCard } from './jina';
 export { default as LMStudioProviderCard } from './lmstudio';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
 export { default as MoonshotProviderCard } from './moonshot';
 export { default as NovitaProviderCard } from './novita';
+export { default as NvidiaProviderCard } from './nvidia';
 export { default as OllamaProviderCard } from './ollama';
 export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
@@ -166,8 +179,10 @@ export { default as SiliconCloudProviderCard } from './siliconcloud';
 export { default as SparkProviderCard } from './spark';
 export { default as StepfunProviderCard } from './stepfun';
 export { default as TaichuProviderCard } from './taichu';
+export { default as TencentCloudProviderCard } from './tencentcloud';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
+export { default as VLLMProviderCard } from './vllm';
 export { default as WenxinProviderCard } from './wenxin';
 export { default as XAIProviderCard } from './xai';
 export { default as ZeroOneProviderCard } from './zeroone';

@@ -1,6 +1,358 @@
 [
   {
     "children": {
+      "features": ["Add Jina AI model provider support."]
+    },
+    "date": "2025-02-16",
+    "version": "1.57.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Match o1 series models more robust in Azure OpenAI provider, set max_completion_tokens to null for Azure OpenAI."
+      ]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ai provider description not show correctly."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.4"
+  },
+  {
+    "children": {
+      "improvements": ["Improve inbox agent settings."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix inbox agent can not save config."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix inbox agent edit way in the new mode."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.1"
+  },
+  {
+    "children": {
+      "features": ["Add configurable PDF processing method with Unstructured."]
+    },
+    "date": "2025-02-15",
+    "version": "1.56.0"
+  },
+  {
+    "children": {
+      "improvements": ["Improve mobile params style."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.4"
+  },
+  {
+    "children": {
+      "improvements": ["Add deepseek r1 distill models for qwen series."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.3"
+  },
+  {
+    "children": {
+      "fixes": ["Avoid blank reasoning with OpenRouter."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix Azure OpenAI O1 models and refactor the Azure OpenAI implement."],
+      "improvements": ["Update openrouter model list and descriptions."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.1"
+  },
+  {
+    "children": {
+      "features": ["Add vLLM provider support."]
+    },
+    "date": "2025-02-14",
+    "version": "1.55.0"
+  },
+  {
+    "children": {
+      "features": ["Add Nvidia NIM provider support."],
+      "improvements": ["Improve advanced params settings."]
+    },
+    "date": "2025-02-14",
+    "version": "1.54.0"
+  },
+  {
+    "children": {
+      "improvements": ["Improve model fetch behavior."]
+    },
+    "date": "2025-02-14",
+    "version": "1.53.12"
+  },
+  {
+    "children": {
+      "fixes": ["Fix provider form api key."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix api key input issue."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.10"
+  },
+  {
+    "children": {
+      "improvements": ["Support select check models."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix model fetch for spark and fix the support of model reset."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.8"
+  },
+  {
+    "children": {
+      "improvements": ["Update model list."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.7"
+  },
+  {
+    "children": {
+      "fixes": ["Fix not enable models correctly."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix latex in thinking tag render."]
+    },
+    "date": "2025-02-13",
+    "version": "1.53.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ai model abilities issue."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix tencent cloud api issue."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.3"
+  },
+  {
+    "children": {
+      "fixes": ["Disable openrouter client fetch."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix reasoning output for OpenRouter reasoning models like deepseek-r1."]
+    },
+    "date": "2025-02-12",
+    "version": "1.53.1"
+  },
+  {
+    "children": {
+      "features": ["Support tencent cloud provider."],
+      "improvements": ["Update i18n, update provider i18n."]
+    },
+    "date": "2025-02-11",
+    "version": "1.53.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the agent runtime test case."]
+    },
+    "date": "2025-02-11",
+    "version": "1.52.19"
+  },
+  {
+    "children": {},
+    "date": "2025-02-11",
+    "version": "1.52.18"
+  },
+  {
+    "children": {},
+    "date": "2025-02-11",
+    "version": "1.52.17"
+  },
+  {
+    "children": {
+      "improvements": ["Support mistral proxy url."]
+    },
+    "date": "2025-02-11",
+    "version": "1.52.16"
+  },
+  {
+    "children": {
+      "fixes": ["Fix lmstudio baseURL."],
+      "improvements": ["Optimized MaxToken Slider."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.15"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor agent settings modal."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.14"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Fix Aliyun deepseek-r1 reasoning parsing with oneapi, Support Aliyun deepseek-r1 reasoning."
+      ]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.13"
+  },
+  {
+    "children": {
+      "fixes": ["Fix language incorrect on page hydration."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.12"
+  },
+  {
+    "children": {
+      "improvements": ["Support Mermaid in Artifacts."]
+    },
+    "date": "2025-02-10",
+    "version": "1.52.11"
+  },
+  {
+    "children": {},
+    "date": "2025-02-09",
+    "version": "1.52.10"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog issue."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.9"
+  },
+  {
+    "children": {
+      "improvements": ["Update github model list, Update openrouter model list."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.8"
+  },
+  {
+    "children": {
+      "fixes": ["Rewrite to local container in docker deployment mode."],
+      "improvements": ["Update Cloudflare models."]
+    },
+    "date": "2025-02-09",
+    "version": "1.52.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update ZeroOne models."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog modal."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog modal."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.4"
+  },
+  {
+    "children": {
+      "fixes": ["Add Zhipu param limit, Fix translation in variants mode."],
+      "improvements": ["Update Gemini 2.0 models."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add siliconcloud pro models."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix static relative issues."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.1"
+  },
+  {
+    "children": {
+      "features": ["Refactor the auth condition in Next Auth."]
+    },
+    "date": "2025-02-08",
+    "version": "1.52.0"
+  },
+  {
+    "children": {},
+    "date": "2025-02-07",
+    "version": "1.51.16"
+  },
+  {
+    "children": {
+      "fixes": ["Fix home next auth error and update pnpm."]
+    },
+    "date": "2025-02-07",
+    "version": "1.51.15"
+  },
+  {
+    "children": {
+      "improvements": ["Update changelog cache and upgrade anthropic sdk."]
+    },
+    "date": "2025-02-07",
+    "version": "1.51.14"
+  },
+  {
+    "children": {
+      "fixes": ["Fix next auth error."]
+    },
+    "date": "2025-02-07",
+    "version": "1.51.13"
+  },
+  {
+    "children": {
       "fixes": ["Try to fix next-auth issue."]
     },
     "date": "2025-02-07",

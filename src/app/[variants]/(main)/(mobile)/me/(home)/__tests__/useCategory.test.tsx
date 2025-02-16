@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ServerConfigStoreProvider } from '@/store/serverConfig';
+import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';
 import { useUserStore } from '@/store/user';
 
 import { useCategory } from '../features/useCategory';
@@ -45,12 +45,10 @@ afterEach(() => {
   enableClerk = true;
 });
 
-// 目前对 enableAuth 的判定是在 useUserStore 中，所以需要 mock useUserStore
-// 类型定义： enableAuth: () => boolean
 describe('useCategory', () => {
   it('should return correct items when the user is logged in with authentication', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: true, enableAuth: () => true });
+      useUserStore.setState({ isSignedIn: true });
     });
     enableAuth = true;
     enableClerk = false;
@@ -70,8 +68,9 @@ describe('useCategory', () => {
 
   it('should return correct items when the user is not logged in', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: false, enableAuth: () => true });
+      useUserStore.setState({ isSignedIn: false });
     });
+    enableAuth = true;
 
     const { result } = renderHook(() => useCategory(), { wrapper });
 
@@ -88,9 +87,10 @@ describe('useCategory', () => {
 
   it('should handle settings for non-authenticated users', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: false, enableAuth: () => false });
+      useUserStore.setState({ isSignedIn: false });
     });
     enableClerk = false;
+    enableAuth = false;
 
     const { result } = renderHook(() => useCategory(), { wrapper });
 

@@ -20,9 +20,9 @@ const defaultLeftActions: ActionKeys[] = [
   'model',
   'fileUpload',
   'knowledgeBase',
-  'temperature',
   'history',
   'tools',
+  'params',
   'mainToken',
 ];
 

@@ -170,6 +170,7 @@ export class AiProviderModel {
     const query = this.db
       .select({
         checkModel: aiProviders.checkModel,
+        description: aiProviders.description,
         enabled: aiProviders.enabled,
         fetchOnClient: aiProviders.fetchOnClient,
         id: aiProviders.id,

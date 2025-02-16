@@ -4,7 +4,7 @@ import { appEnv } from '@/config/app';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
 import DevPanel from '@/features/DevPanel';
 import { getServerGlobalConfig } from '@/server/globalConfig';
-import { ServerConfigStoreProvider } from '@/store/serverConfig';
+import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';
 import { getAntdLocale } from '@/utils/locale';
 
 import AntdV5MonkeyPatch from './AntdV5MonkeyPatch';
@@ -37,7 +37,7 @@ const GlobalLayout = async ({
 
   // get default feature flags to use with ssr
   const serverFeatureFlags = getServerFeatureFlagsValue();
-  const serverConfig = getServerGlobalConfig();
+  const serverConfig = await getServerGlobalConfig();
   return (
     <StyleRegistry>
       <Locale antdLocale={antdLocale} defaultLang={userLocale}>

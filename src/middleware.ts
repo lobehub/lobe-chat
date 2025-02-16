@@ -3,10 +3,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { UAParser } from 'ua-parser-js';
 import urlJoin from 'url-join';
 
+import { appEnv } from '@/config/app';
 import { authEnv } from '@/config/auth';
+import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import NextAuthEdge from '@/libs/next-auth/edge';
+import { Locales } from '@/locales/resources';
 import { parseBrowserLanguage } from '@/utils/locale';
+import { parseDefaultThemeFromCountry } from '@/utils/server/geo';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 import { OAUTH_AUTHORIZED } from './const/auth';
@@ -37,37 +41,22 @@ export const config = {
   ],
 };
 
-const parseDefaultThemeFromTime = (request: NextRequest) => {
-  // 获取经度信息，Next.js 会自动解析 geo 信息到请求对象中
-  const longitude = 'geo' in request && (request.geo as any)?.longitude;
+const defaultMiddleware = (request: NextRequest) => {
+  const url = new URL(request.url);
 
-  if (typeof longitude === 'number') {
-    // 计算时区偏移（每15度经度对应1小时）
-    // 东经为正，西经为负
-    const offsetHours = Math.round(longitude / 15);
-
-    // 计算当地时间
-    const localHour = (new Date().getUTCHours() + offsetHours + 24) % 24;
-    console.log(`[theme] localHour: ${localHour}`);
-
-    // 6点到18点之间返回 light 主题
-    return localHour >= 6 && localHour < 18 ? 'light' : 'dark';
+  // skip all api requests
+  if (['/api', '/trpc', '/webapi'].some((path) => url.pathname.startsWith(path))) {
+    return NextResponse.next();
   }
 
-  return 'light';
-};
-
-const defaultMiddleware = (request: NextRequest) => {
   // 1. 从 cookie 中读取用户偏好
   const theme =
-    request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromTime(request);
+    request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
 
   // if it's a new user, there's no cookie
   // So we need to use the fallback language parsed by accept-language
-  const locale = parseBrowserLanguage(request.headers);
-  // const locale =
-  // request.cookies.get(LOBE_LOCALE_COOKIE)?.value ||
-  // browserLanguage;
+  const browserLanguage = parseBrowserLanguage(request.headers);
+  const locale = (request.cookies.get(LOBE_LOCALE_COOKIE)?.value || browserLanguage) as Locales;
 
   const ua = request.headers.get('user-agent');
 
@@ -80,27 +69,33 @@ const defaultMiddleware = (request: NextRequest) => {
     theme,
   });
 
-  const url = new URL(request.url);
-  if (['/api', '/trpc', '/webapi'].some((path) => url.pathname.startsWith(path)))
-    return NextResponse.next();
+  // if app is in docker, rewrite to self container
+  // https://github.com/lobehub/lobe-chat/issues/5876
+  if (appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL) {
+    url.protocol = 'http';
+    url.host = '127.0.0.1';
+    url.port = process.env.PORT || '3210';
+  }
 
-  // 处理 URL 重写
-  // 构建新路径: /${route}${originalPathname}
-  // 只对 GET 请求进行 URL 重写，确保其他类型的请求（包括 OPTIONS）不受影响
-  const nextPathname = `/${urlJoin(route, url.pathname)}`;
-  console.log(`[rewrite] ${url.pathname} -> ${nextPathname}`);
+  // refs: https://github.com/lobehub/lobe-chat/pull/5866
+  // new handle segment rewrite: /${route}${originalPathname}
+  // / -> /zh-CN__0__dark
+  // /discover -> /zh-CN__0__dark/discover
+  const nextPathname = `/${route}` + (url.pathname === '/' ? '' : url.pathname);
+  const nextURL = appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL
+    ? urlJoin(url.origin, nextPathname)
+    : nextPathname;
+
+  console.log(`[rewrite] ${url.pathname} -> ${nextURL}`);
+
   url.pathname = nextPathname;
 
-  return NextResponse.rewrite(url);
+  return NextResponse.rewrite(url, { status: 200 });
 };
-
-const publicRoute = ['/', '/discover'];
 
 // Initialize an Edge compatible NextAuth middleware
 const nextAuthMiddleware = NextAuthEdge.auth((req) => {
   const response = defaultMiddleware(req);
-  // skip the '/' route
-  if (publicRoute.some((url) => req.nextUrl.pathname.startsWith(url))) return response;
 
   // Just check if session exists
   const session = req.auth;

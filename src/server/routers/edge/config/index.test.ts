@@ -37,7 +37,7 @@ describe('configRouter', () => {
           const response = await router.getGlobalConfig();
 
           // Assert
-          const result = response.languageModel?.openai;
+          const result = response.serverConfig.languageModel?.openai;
 
           expect(result).toMatchSnapshot();
           process.env.OPENAI_MODEL_LIST = '';
@@ -49,7 +49,7 @@ describe('configRouter', () => {
 
           const response = await router.getGlobalConfig();
 
-          const result = response.languageModel?.openai?.serverModelCards;
+          const result = response.serverConfig.languageModel?.openai?.serverModelCards;
 
           expect(result).toMatchSnapshot();
 
@@ -62,7 +62,7 @@ describe('configRouter', () => {
 
           const response = await router.getGlobalConfig();
 
-          const result = response.languageModel?.openai?.serverModelCards;
+          const result = response.serverConfig.languageModel?.openai?.serverModelCards;
 
           expect(result?.find((s) => s.id === 'gpt-4-0125-preview')?.displayName).toEqual(
             'gpt-4-32k',
@@ -76,7 +76,7 @@ describe('configRouter', () => {
 
           const response = await router.getGlobalConfig();
 
-          const result = response.languageModel?.openai?.serverModelCards;
+          const result = response.serverConfig.languageModel?.openai?.serverModelCards;
 
           expect(result?.find((r) => r.id === 'gpt-4')).toBeUndefined();
 
@@ -88,7 +88,7 @@ describe('configRouter', () => {
 
           const response = await router.getGlobalConfig();
 
-          const result = response.languageModel?.openai?.serverModelCards;
+          const result = response.serverConfig.languageModel?.openai?.serverModelCards;
 
           const model = result?.find((o) => o.id === 'gpt-4-1106-preview');
 
@@ -102,7 +102,7 @@ describe('configRouter', () => {
 
           const response = await router.getGlobalConfig();
 
-          const result = response.languageModel?.openai?.serverModelCards;
+          const result = response.serverConfig.languageModel?.openai?.serverModelCards;
 
           expect(result).toContainEqual({
             displayName: 'model1',
@@ -137,7 +137,7 @@ describe('configRouter', () => {
           const response = await router.getGlobalConfig();
 
           // Assert
-          const result = response.languageModel?.openrouter;
+          const result = response.serverConfig.languageModel?.openrouter;
 
           expect(result).toMatchSnapshot();
 
