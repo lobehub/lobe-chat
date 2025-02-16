@@ -49,7 +49,7 @@ const sambanovaChatModels: AIChatModelCard[] = [
     id: 'Llama-3.2-11B-Vision-Instruct',
     pricing: {
       input: 0.15,
-      output: 0.30
+      output: 0.3
     },
     type: 'chat'
   },
