@@ -117,6 +117,7 @@ export default {
       title: '代理地址',
     },
     sdkType: {
+      placeholder: 'openai/anthropic/azureai/ollama/...',
       required: '请选择 SDK 类型',
       title: '请求格式',
     },

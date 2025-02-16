@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, tham khảo [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Lấy danh sách",
+      "title": "Phiên bản API Azure"
+    },
+    "endpoint": {
+      "desc": "Tìm điểm kết thúc suy diễn mô hình Azure AI từ tổng quan dự án Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Điểm kết thúc Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Tìm khóa API từ tổng quan dự án Azure AI",
+      "placeholder": "Khóa Azure",
+      "title": "Khóa"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Nhập AWS Access Key Id",
@@ -97,6 +115,7 @@
       "title": "Địa chỉ proxy"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Vui lòng chọn loại SDK",
       "title": "Định dạng yêu cầu"
     },
@@ -208,6 +227,11 @@
         "azureDeployName": {
           "extra": "Trường thực tế được yêu cầu trong Azure OpenAI",
           "placeholder": "Vui lòng nhập tên triển khai mô hình trong Azure",
+          "title": "Tên triển khai mô hình"
+        },
+        "deployName": {
+          "extra": "Trường này sẽ được sử dụng làm ID mô hình khi gửi yêu cầu",
+          "placeholder": "Vui lòng nhập tên hoặc ID thực tế của mô hình đã triển khai",
           "title": "Tên triển khai mô hình"
         },
         "displayName": {
