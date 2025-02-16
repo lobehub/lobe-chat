@@ -9,7 +9,7 @@ import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
 import { StreamingResponse } from '../utils/response';
-import { OpenAIStream } from '../utils/streams';
+import { OpenAIStream, createSSEDataExtractor } from '../utils/streams';
 
 export class LobeAzureAI implements LobeRuntimeAI {
   client: ModelClient;
@@ -39,18 +39,28 @@ export class LobeAzureAI implements LobeRuntimeAI {
           tool_choice: params.tools ? 'auto' : undefined,
         },
       });
+
       if (enableStreaming) {
         const stream = await response.asBrowserStream();
 
+        console.log(stream);
         const [prod, debug] = stream.body!.tee();
-        if (process.env.DEBUG_AZURE_CHAT_COMPLETION === '1') {
+        if (process.env.DEBUG_AZURE_AI_CHAT_COMPLETION === '1') {
           debugStream(debug).catch(console.error);
         }
-        return StreamingResponse(OpenAIStream(prod, { callbacks: options?.callback }), {
-          headers: options?.headers,
-        });
+        return StreamingResponse(
+          OpenAIStream(prod.pipeThrough(createSSEDataExtractor()), {
+            callbacks: options?.callback,
+          }),
+          {
+            headers: options?.headers,
+          },
+        );
       } else {
-        const stream = transformResponseToStream((await response).body);
+        const res = await response;
+
+        // the azure AI inference response is openai compatible
+        const stream = transformResponseToStream(res.body as OpenAI.ChatCompletion);
         return StreamingResponse(OpenAIStream(stream, { callbacks: options?.callback }), {
           headers: options?.headers,
         });
@@ -86,8 +96,8 @@ export class LobeAzureAI implements LobeRuntimeAI {
   }
 
   private maskSensitiveUrl = (url: string) => {
-    // 使用正则表达式匹配 'https://' 后面和 '.openai.azure.com/' 前面的内容
-    const regex = /^(https:\/\/)([^.]+)(\.openai\.azure\.com\/.*)$/;
+    // 使用正则表达式匹配 'https://' 后面和 '.azure.com/' 前面的内容
+    const regex = /^(https:\/\/)([^.]+)(\.azure\.com\/.*)$/;
 
     // 使用替换函数
     return url.replace(regex, (match, protocol, subdomain, rest) => {
