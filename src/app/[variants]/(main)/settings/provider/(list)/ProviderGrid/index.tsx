@@ -79,9 +79,12 @@ const List = memo(() => {
         </Grid>
       </Flexbox>
       <Flexbox gap={12}>
-        <Typography.Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-          {t('list.title.disabled')}
-        </Typography.Text>
+        <Flexbox align={'center'} gap={4} horizontal>
+          <Typography.Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+            {t('list.title.disabled')}
+          </Typography.Text>
+          <Center className={styles.count}>{disabledList.length}</Center>
+        </Flexbox>
         <Grid className={styles.grid}>
           {disabledList.map((item) => (
             <Card {...item} key={item.id} />

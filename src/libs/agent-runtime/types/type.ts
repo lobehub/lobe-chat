@@ -26,10 +26,14 @@ export enum ModelProvider {
   Ai360 = 'ai360',
   Anthropic = 'anthropic',
   Azure = 'azure',
+  AzureAI = 'azureai',
   Baichuan = 'baichuan',
   Bedrock = 'bedrock',
   Cloudflare = 'cloudflare',
   DeepSeek = 'deepseek',
+  /**
+   * @deprecated
+   */
   Doubao = 'doubao',
   FireworksAI = 'fireworksai',
   GiteeAI = 'giteeai',
@@ -61,6 +65,7 @@ export enum ModelProvider {
   TogetherAI = 'togetherai',
   Upstage = 'upstage',
   VLLM = 'vllm',
+  Volcengine = 'volcengine',
   Wenxin = 'wenxin',
   XAI = 'xai',
   ZeroOne = 'zeroone',

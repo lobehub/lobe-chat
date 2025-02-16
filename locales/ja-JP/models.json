@@ -578,6 +578,9 @@
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67Bは、高い複雑性の対話のために訓練された先進的なモデルです。"
   },
+  "deepseek-ai/deepseek-r1": {
+    "description": "最先端の効率的なLLMで、推論、数学、プログラミングに優れています。"
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2は、DeepSeekMoE-27Bに基づいて開発された混合専門家（MoE）視覚言語モデルであり、スパースアクティベーションのMoEアーキテクチャを採用し、わずか4.5Bパラメータを活性化することで卓越した性能を実現しています。このモデルは、視覚的質問応答、光学文字認識、文書/表/グラフ理解、視覚的定位などの複数のタスクで優れたパフォーマンスを発揮します。"
   },
@@ -628,6 +631,12 @@
   },
   "deepseek/deepseek-chat": {
     "description": "汎用性とコード能力を融合させた新しいオープンソースモデルで、元のChatモデルの汎用対話能力とCoderモデルの強力なコード処理能力を保持しつつ、人間の好みにより良く整合しています。さらに、DeepSeek-V2.5は執筆タスク、指示の遵守などの多くの面で大幅な向上を実現しました。"
+  },
+  "deepseek/deepseek-r1": {
+    "description": "DeepSeek-R1は、わずかなラベル付きデータしかない状況で、モデルの推論能力を大幅に向上させました。最終的な回答を出力する前に、モデルは思考の連鎖を出力し、最終的な答えの正確性を向上させます。"
+  },
+  "deepseek/deepseek-r1:free": {
+    "description": "DeepSeek-R1は、わずかなラベル付きデータしかない状況で、モデルの推論能力を大幅に向上させました。最終的な回答を出力する前に、モデルは思考の連鎖を出力し、最終的な答えの正確性を向上させます。"
   },
   "emohaa": {
     "description": "Emohaaは心理モデルで、専門的な相談能力を持ち、ユーザーが感情問題を理解するのを助けます。"
@@ -821,11 +830,17 @@
   "google/gemini-pro-1.5": {
     "description": "Gemini 1.5 Proは、最新の最適化技術を組み合わせて、より効率的なマルチモーダルデータ処理能力を実現します。"
   },
+  "google/gemma-2-27b": {
+    "description": "Gemma 2はGoogleが提供する効率的なモデルで、小型アプリケーションから複雑なデータ処理まで、さまざまなアプリケーションシナリオをカバーしています。"
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2は、軽量化と高効率のデザイン理念を継承しています。"
   },
   "google/gemma-2-2b-it": {
     "description": "Googleの軽量指示調整モデル"
+  },
+  "google/gemma-2-9b": {
+    "description": "Gemma 2はGoogleが提供する効率的なモデルで、小型アプリケーションから複雑なデータ処理まで、さまざまなアプリケーションシナリオをカバーしています。"
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2は、Googleの軽量オープンソーステキストモデルシリーズです。"
@@ -998,6 +1013,9 @@
   "internlm3-latest": {
     "description": "私たちの最新のモデルシリーズは、卓越した推論性能を持ち、同等のオープンソースモデルの中でリーダーシップを発揮しています。デフォルトで最新のInternLM3シリーズモデルを指します。"
   },
+  "jina-deepsearch-v1": {
+    "description": "深層検索は、ウェブ検索、読解、推論を組み合わせて、包括的な調査を行います。これは、あなたの研究タスクを受け入れる代理人として考えることができ、広範な検索を行い、何度も反復してから答えを提供します。このプロセスには、継続的な研究、推論、さまざまな視点からの問題解決が含まれます。これは、事前に訓練されたデータから直接答えを生成する標準的な大規模モデルや、一度きりの表面的な検索に依存する従来のRAGシステムとは根本的に異なります。"
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLMは、学習科学の原則に従って訓練された実験的なタスク特化型言語モデルで、教育や学習のシーンでシステムの指示に従い、専門的なメンターとして機能します。"
   },
@@ -1139,6 +1157,9 @@
   "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
     "description": "405BのLlama 3.1 Turboモデルは、大規模データ処理のために超大容量のコンテキストサポートを提供し、超大規模な人工知能アプリケーションで優れたパフォーマンスを発揮します。"
   },
+  "meta-llama/Meta-Llama-3.1-70B": {
+    "description": "Llama 3.1はMetaが提供する先進的なモデルで、最大405Bのパラメータをサポートし、複雑な対話、多言語翻訳、データ分析の分野で利用できます。"
+  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct": {
     "description": "LLaMA 3.1 70Bは多言語の高効率な対話サポートを提供します。"
   },
@@ -1195,6 +1216,30 @@
   },
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3は、開発者、研究者、企業向けのオープンな大規模言語モデル（LLM）であり、生成AIのアイデアを構築、実験、責任を持って拡張するのを支援することを目的としています。世界的なコミュニティの革新の基盤システムの一部として、計算能力とリソースが限られたエッジデバイスや、より迅速なトレーニング時間に非常に適しています。"
+  },
+  "meta/llama-3.1-405b-instruct": {
+    "description": "高度なLLMで、合成データ生成、知識蒸留、推論をサポートし、チャットボット、プログラミング、特定の分野のタスクに適しています。"
+  },
+  "meta/llama-3.1-70b-instruct": {
+    "description": "複雑な対話を可能にし、卓越した文脈理解、推論能力、テキスト生成能力を備えています。"
+  },
+  "meta/llama-3.1-8b-instruct": {
+    "description": "高度な最先端モデルで、言語理解、卓越した推論能力、テキスト生成能力を備えています。"
+  },
+  "meta/llama-3.2-11b-vision-instruct": {
+    "description": "最先端の視覚-言語モデルで、画像から高品質な推論を行うのが得意です。"
+  },
+  "meta/llama-3.2-1b-instruct": {
+    "description": "最先端の小型言語モデルで、言語理解、卓越した推論能力、テキスト生成能力を備えています。"
+  },
+  "meta/llama-3.2-3b-instruct": {
+    "description": "最先端の小型言語モデルで、言語理解、卓越した推論能力、テキスト生成能力を備えています。"
+  },
+  "meta/llama-3.2-90b-vision-instruct": {
+    "description": "最先端の視覚-言語モデルで、画像から高品質な推論を行うのが得意です。"
+  },
+  "meta/llama-3.3-70b-instruct": {
+    "description": "高度なLLMで、推論、数学、常識、関数呼び出しに優れています。"
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2はMicrosoft AIが提供する言語モデルで、複雑な対話、多言語、推論、インテリジェントアシスタントの分野で特に優れた性能を発揮します。"
@@ -1291,6 +1336,12 @@
   },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70BはNVIDIAによってカスタマイズされた大規模言語モデルで、LLMが生成する応答がユーザーのクエリにどれだけ役立つかを向上させることを目的としています。このモデルはArena Hard、AlpacaEval 2 LC、GPT-4-Turbo MT-Benchなどのベンチマークテストで優れたパフォーマンスを示し、2024年10月1日現在、すべての自動整合ベンチマークテストで1位にランクされています。このモデルはRLHF（特にREINFORCE）、Llama-3.1-Nemotron-70B-Reward、HelpSteer2-Preferenceプロンプトを使用してLlama-3.1-70B-Instructモデルの基盤の上で訓練されています。"
+  },
+  "nvidia/llama-3.1-nemotron-51b-instruct": {
+    "description": "独自の言語モデルで、比類のない精度と効率を提供します。"
+  },
+  "nvidia/llama-3.1-nemotron-70b-instruct": {
+    "description": "Llama-3.1-Nemotron-70B-Instructは、NVIDIAがカスタマイズした大規模言語モデルで、LLMが生成する応答の有用性を向上させることを目的としています。"
   },
   "o1": {
     "description": "高度な推論と複雑な問題の解決に焦点を当てており、数学や科学のタスクを含みます。深いコンテキスト理解とエージェントワークフローを必要とするアプリケーションに非常に適しています。"
@@ -1405,6 +1456,15 @@
   },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2は全く新しい大型言語モデルシリーズで、より強力な理解と生成能力を備えています。"
+  },
+  "qwen/qwen2.5-7b-instruct": {
+    "description": "中国語と英語に対応したLLMで、言語、プログラミング、数学、推論などの分野に特化しています。"
+  },
+  "qwen/qwen2.5-coder-32b-instruct": {
+    "description": "高度なLLMで、コード生成、推論、修正をサポートし、主流のプログラミング言語をカバーしています。"
+  },
+  "qwen/qwen2.5-coder-7b-instruct": {
+    "description": "強力な中型コードモデルで、32Kのコンテキスト長をサポートし、多言語プログラミングに優れています。"
   },
   "qwen2": {
     "description": "Qwen2は、Alibabaの新世代大規模言語モデルであり、優れた性能で多様なアプリケーションニーズをサポートします。"
