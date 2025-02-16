@@ -100,6 +100,7 @@ services:
       - 'S3_ACCESS_KEY_ID=${MINIO_ROOT_USER}'
       - 'S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}'
       - 'LLM_VISION_IMAGE_USE_BASE64=1'
+      - 'S3_SET_ACL=0'
     env_file:
       - .env
     restart: always
