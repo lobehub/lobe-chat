@@ -110,17 +110,6 @@
       "required": "Lütfen hizmet sağlayıcı adını girin",
       "title": "Hizmet Sağlayıcı Adı"
     },
-    "providerModels": {
-      "item": {
-        "modelConfig": {
-          "deployName": {
-            "extra": "İstek gönderildiğinde bu alan model ID'si olarak kullanılacaktır",
-            "placeholder": "Lütfen modelin gerçek dağıtım adını veya kimliğini girin",
-            "title": "Model Dağıtım Adı"
-          }
-        }
-      }
-    },
     "proxyUrl": {
       "required": "Lütfen proxy adresini girin",
       "title": "Proxy Adresi"
@@ -238,6 +227,11 @@
         "azureDeployName": {
           "extra": "Azure OpenAI'de gerçek istek için alan",
           "placeholder": "Lütfen Azure'daki model dağıtım adını girin",
+          "title": "Model Dağıtım Adı"
+        },
+        "deployName": {
+          "extra": "Bu alan, isteği gönderirken model kimliği olarak kullanılacaktır",
+          "placeholder": "Modelin gerçek dağıtım adını veya kimliğini girin",
           "title": "Model Dağıtım Adı"
         },
         "displayName": {

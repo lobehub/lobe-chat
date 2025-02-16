@@ -119,6 +119,9 @@
   "vllm": {
     "description": "vLLM é uma biblioteca rápida e fácil de usar para inferência e serviços de LLM."
   },
+  "volcengine": {
+    "description": "A plataforma de desenvolvimento de serviços de grandes modelos lançada pela ByteDance, que oferece serviços de chamada de modelos ricos em funcionalidades, seguros e com preços competitivos, além de fornecer dados de modelos, ajuste fino, inferência, avaliação e outras funcionalidades de ponta a ponta, garantindo de forma abrangente a implementação do seu desenvolvimento de aplicações de IA."
+  },
   "wenxin": {
     "description": "Plataforma de desenvolvimento e serviços de aplicativos nativos de IA e modelos de grande escala, voltada para empresas, que oferece a mais completa e fácil ferramenta de cadeia de ferramentas para o desenvolvimento de modelos de inteligência artificial generativa e aplicativos."
   },

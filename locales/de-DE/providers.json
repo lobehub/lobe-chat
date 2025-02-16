@@ -119,6 +119,9 @@
   "vllm": {
     "description": "vLLM ist eine schnelle und benutzerfreundliche Bibliothek für LLM-Inferenz und -Dienste."
   },
+  "volcengine": {
+    "description": "Die von ByteDance eingeführte Entwicklungsplattform für große Modellservices bietet funktionsreiche, sichere und preislich wettbewerbsfähige Modellaufrufdienste. Sie bietet zudem End-to-End-Funktionen wie Moduldaten, Feinabstimmung, Inferenz und Bewertung, um die Entwicklung Ihrer KI-Anwendungen umfassend zu unterstützen."
+  },
   "wenxin": {
     "description": "Eine unternehmensweite, umfassende Plattform für die Entwicklung und den Service von großen Modellen und KI-nativen Anwendungen, die die vollständigsten und benutzerfreundlichsten Werkzeuge für die Entwicklung generativer KI-Modelle und den gesamten Anwendungsentwicklungsprozess bietet."
   },
