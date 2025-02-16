@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.59.0](https://github.com/lobehub/lobe-chat/compare/v1.58.0...v1.59.0)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### ✨ Features
+
+- **misc**: Add volcengine as a new provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add volcengine as a new provider, closes [#6221](https://github.com/lobehub/lobe-chat/issues/6221) ([09bf8f0](https://github.com/lobehub/lobe-chat/commit/09bf8f0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.58.0](https://github.com/lobehub/lobe-chat/compare/v1.57.1...v1.58.0)
 
 <sup>Released on **2025-02-16**</sup>
