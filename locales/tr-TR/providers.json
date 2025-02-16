@@ -119,6 +119,9 @@
   "vllm": {
     "description": "vLLM, LLM çıkarımı ve hizmetleri için hızlı ve kullanımı kolay bir kütüphanedir."
   },
+  "volcengine": {
+    "description": "ByteDance tarafından sunulan büyük model hizmetleri geliştirme platformu, zengin özellikler, güvenlik ve rekabetçi fiyatlarla model çağırma hizmetleri sunar. Ayrıca model verileri, ince ayar, çıkarım, değerlendirme gibi uçtan uca işlevler sağlar ve AI uygulama geliştirme sürecinizi her yönüyle güvence altına alır."
+  },
   "wenxin": {
     "description": "Kurumsal düzeyde tek duraklı büyük model ve AI yerel uygulama geliştirme ve hizmet platformu, en kapsamlı ve kullanımı kolay üretken yapay zeka modeli geliştirme, uygulama geliştirme için tam süreç araç zinciri sunar."
   },

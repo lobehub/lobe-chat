@@ -119,6 +119,9 @@
   "vllm": {
     "description": "vLLM is een snelle en gebruiksvriendelijke bibliotheek voor LLM-inferentie en -diensten."
   },
+  "volcengine": {
+    "description": "Het ontwikkelingsplatform voor de grote modellenservice van ByteDance, dat een breed scala aan functies biedt, veilig is en concurrerende prijzen heeft voor modelaanroepdiensten. Het biedt ook end-to-end functionaliteiten zoals modelgegevens, fine-tuning, inferentie en evaluatie, om de ontwikkeling van uw AI-toepassingen volledig te ondersteunen."
+  },
   "wenxin": {
     "description": "Een enterprise-grade, alles-in-één platform voor de ontwikkeling en service van grote modellen en AI-native applicaties, dat de meest uitgebreide en gebruiksvriendelijke toolchain biedt voor de ontwikkeling van generatieve kunstmatige intelligentiemodellen en applicaties."
   },
