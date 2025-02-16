@@ -9,6 +9,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { INBOX_SESSION_ID } from '@/const/session';
 
 import { useStore } from '../store';
 import { SessionLoadingState } from '../store/initialState';
@@ -26,8 +27,10 @@ const AgentMeta = memo(() => {
     s.autocompleteMeta,
     s.autocompleteAllMeta,
   ]);
-  const loading = useStore((s) => s.autocompleteLoading);
+  const [isInbox, loading] = useStore((s) => [s.id === INBOX_SESSION_ID, s.autocompleteLoading]);
   const meta = useStore((s) => s.meta, isEqual);
+
+  if (isInbox) return;
 
   const basic = [
     {
