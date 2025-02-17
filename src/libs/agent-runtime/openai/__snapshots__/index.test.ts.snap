@@ -22,8 +22,8 @@ exports[`LobeOpenAI > models > should get models 1`] = `
   },
   {
     "contextWindowTokens": 16385,
-    "displayName": "GPT 3.5 Turbo",
-    "enabled": true,
+    "displayName": "GPT-3.5 Turbo",
+    "enabled": false,
     "functionCall": true,
     "id": "gpt-3.5-turbo",
     "reasoning": false,
@@ -39,8 +39,8 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "vision": false,
   },
   {
-    "contextWindowTokens": 16384,
-    "displayName": "GPT 3.5 Turbo",
+    "contextWindowTokens": undefined,
+    "displayName": undefined,
     "enabled": false,
     "functionCall": true,
     "id": "gpt-3.5-turbo-16k",
@@ -221,7 +221,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
   {
     "contextWindowTokens": 128000,
     "displayName": "GPT 4 Turbo",
-    "enabled": true,
+    "enabled": false,
     "functionCall": true,
     "id": "gpt-4",
     "reasoning": false,
