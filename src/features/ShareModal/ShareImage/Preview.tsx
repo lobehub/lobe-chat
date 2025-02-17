@@ -4,21 +4,19 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ProductLogo } from '@/components/Branding';
 import PluginTag from '@/features/PluginTag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
-import pkg from '../../../../package.json';
 import { useContainerStyles } from '../style';
 import ChatList from './ChatList';
 import { useStyles } from './style';
 import { FieldType } from './type';
 
 const Preview = memo<FieldType & { title?: string }>(
-  ({ title, withSystemRole, withBackground, withFooter }) => {
+  ({ title, withSystemRole, withBackground }) => {
     const [model, plugins, systemRole] = useAgentStore((s) => [
       agentSelectors.currentAgentModel(s),
       agentSelectors.currentAgentPlugins(s),
@@ -63,14 +61,6 @@ const Preview = memo<FieldType & { title?: string }>(
               )}
             </div>
             <ChatList />
-            {withFooter ? (
-              <Flexbox align={'center'} className={styles.footer} gap={4}>
-                <ProductLogo type={'combine'} />
-                <div className={styles.url}>{pkg.homepage}</div>
-              </Flexbox>
-            ) : (
-              <div />
-            )}
           </Flexbox>
         </div>
       </div>
