@@ -108,9 +108,9 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   tencentcloud,
   togetherai,
   upstage,
+  vertexai,
   vllm,
   volcengine,
-  vertexai,
   wenxin,
   xai,
   zeroone,
@@ -157,9 +157,9 @@ export { default as taichu } from './taichu';
 export { default as tencentcloud } from './tencentcloud';
 export { default as togetherai } from './togetherai';
 export { default as upstage } from './upstage';
+export { default as vertexai } from './vertexai';
 export { default as vllm } from './vllm';
 export { default as volcengine } from './volcengine';
-export { default as vertexai } from './vertexai';
 export { default as wenxin } from './wenxin';
 export { default as xai } from './xai';
 export { default as zeroone } from './zeroone';
