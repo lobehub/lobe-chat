@@ -31,6 +31,7 @@ import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
 import QwenProvider from './qwen';
+import SambaNovaProvider from './sambanova';
 import SenseNovaProvider from './sensenova';
 import SiliconCloudProvider from './siliconcloud';
 import SparkProvider from './spark';
@@ -71,6 +72,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   HuggingFaceProvider.chatModels,
   XAIProvider.chatModels,
   JinaProvider.chatModels,
+  SambaNovaProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   NovitaProvider.chatModels,
@@ -116,6 +118,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   UpstageProvider,
   XAIProvider,
   JinaProvider,
+  SambaNovaProvider,
   QwenProvider,
   WenxinProvider,
   TencentcloudProvider,
@@ -179,6 +182,7 @@ export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
 export { default as QwenProviderCard } from './qwen';
+export { default as SambaNovaProviderCard } from './sambanova';
 export { default as SenseNovaProviderCard } from './sensenova';
 export { default as SiliconCloudProviderCard } from './siliconcloud';
 export { default as SparkProviderCard } from './spark';

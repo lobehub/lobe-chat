@@ -140,6 +140,9 @@ export const getLLMConfig = () => {
 
       ENABLED_JINA: z.boolean(),
       JINA_API_KEY: z.string().optional(),
+
+      ENABLED_SAMBANOVA: z.boolean(),
+      SAMBANOVA_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -278,6 +281,9 @@ export const getLLMConfig = () => {
 
       ENABLED_JINA: !!process.env.JINA_API_KEY,
       JINA_API_KEY: process.env.JINA_API_KEY,
+
+      ENABLED_SAMBANOVA: !!process.env.SAMBANOVA_API_KEY,
+      SAMBANOVA_API_KEY: process.env.SAMBANOVA_API_KEY,
     },
   });
 };
