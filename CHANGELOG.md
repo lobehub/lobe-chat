@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.60.2](https://github.com/lobehub/lobe-chat/compare/v1.60.1...v1.60.2)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix model list issue in client mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix model list issue in client mode, closes [#6240](https://github.com/lobehub/lobe-chat/issues/6240) ([d6c6cda](https://github.com/lobehub/lobe-chat/commit/d6c6cda))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.60.1](https://github.com/lobehub/lobe-chat/compare/v1.60.0...v1.60.1)
 
 <sup>Released on **2025-02-17**</sup>
