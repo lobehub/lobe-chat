@@ -31,7 +31,8 @@ const SystemRole = memo(() => {
     sessionMetaSelectors.currentAgentMeta(s),
   ]);
 
-  const [systemRole, updateAgentConfig] = useAgentStore((s) => [
+  const [isAgentConfigLoading, systemRole, updateAgentConfig] = useAgentStore((s) => [
+    agentSelectors.isAgentConfigLoading(s),
     agentSelectors.currentAgentSystemRole(s),
     s.updateAgentConfig,
   ]);
@@ -49,14 +50,16 @@ const SystemRole = memo(() => {
 
   const { t } = useTranslation('common');
 
+  const isLoading = !init || isAgentConfigLoading;
+
   const handleOpenWithEdit = () => {
-    if (!init) return;
+    if (isLoading) return;
     setEditing(true);
     setOpen(true);
   };
 
   const handleOpen = () => {
-    if (!init) return;
+    if (isLoading) return;
 
     setOpen(true);
   };
@@ -77,7 +80,7 @@ const SystemRole = memo(() => {
           if (e.altKey) handleOpenWithEdit();
         }}
       >
-        {!init ? (
+        {isLoading ? (
           <Skeleton
             active
             avatar={false}

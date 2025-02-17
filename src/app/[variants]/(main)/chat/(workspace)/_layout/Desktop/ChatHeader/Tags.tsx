@@ -1,4 +1,5 @@
 import { ModelTag } from '@lobehub/icons';
+import { Skeleton } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -21,8 +22,11 @@ const TitleTags = memo(() => {
   const enabledKnowledge = useAgentStore(agentSelectors.currentEnabledKnowledge, isEqual);
 
   const showPlugin = useModelSupportToolUse(model, provider);
+  const isLoading = useAgentStore(agentSelectors.isAgentConfigLoading);
 
-  return (
+  return isLoading ? (
+    <Skeleton.Button active size={'small'} style={{ height: 20 }} />
+  ) : (
     <Flexbox align={'center'} horizontal>
       <ModelSwitchPanel>
         <ModelTag model={model} />
