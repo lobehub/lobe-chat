@@ -22,7 +22,7 @@ export class AiInfraRepos {
   private userId: string;
   private db: LobeChatDatabase;
   aiProviderModel: AiProviderModel;
-  private providerConfigs: Record<string, ProviderConfig>;
+  private readonly providerConfigs: Record<string, ProviderConfig>;
   aiModelModel: AiModelModel;
 
   constructor(
@@ -66,6 +66,9 @@ export class AiInfraRepos {
     });
   };
 
+  /**
+   * used in the chat page. to show the enabled providers
+   */
   getUserEnabledProviderList = async () => {
     const list = await this.getAiProviderList();
     return list
@@ -81,6 +84,9 @@ export class AiInfraRepos {
       );
   };
 
+  /**
+   * used in the chat page. to show the enabled models
+   */
   getEnabledModels = async () => {
     const providers = await this.getAiProviderList();
     const enabledProviders = providers.filter((item) => item.enabled);
@@ -129,15 +135,6 @@ export class AiInfraRepos {
     ) as EnabledAiModel[];
   };
 
-  getAiProviderModelList = async (providerId: string) => {
-    const aiModels = await this.aiModelModel.getModelListByProviderId(providerId);
-
-    const defaultModels: AiProviderModelListItem[] =
-      (await this.fetchBuiltinModels(providerId)) || [];
-
-    return mergeArrayById(defaultModels, aiModels) as AiProviderModelListItem[];
-  };
-
   getAiProviderRuntimeState = async (
     decryptor?: DecryptUserKeyVaults,
   ): Promise<AiProviderRuntimeState> => {
@@ -156,6 +153,18 @@ export class AiInfraRepos {
     return { enabledAiModels, enabledAiProviders, runtimeConfig };
   };
 
+  getAiProviderModelList = async (providerId: string) => {
+    const aiModels = await this.aiModelModel.getModelListByProviderId(providerId);
+
+    const defaultModels: AiProviderModelListItem[] =
+      (await this.fetchBuiltinModels(providerId)) || [];
+
+    return mergeArrayById(defaultModels, aiModels) as AiProviderModelListItem[];
+  };
+
+  /**
+   * use in the `/settings/provider/[id]` page
+   */
   getAiProviderDetail = async (id: string, decryptor?: DecryptUserKeyVaults) => {
     const config = await this.aiProviderModel.getAiProviderById(id, decryptor);
 
@@ -171,6 +180,7 @@ export class AiInfraRepos {
     try {
       const { default: providerModels } = await import(`@/config/aiModels/${providerId}`);
 
+      // use the serverModelLists as the defined server model list
       const presetList = this.providerConfigs[providerId]?.serverModelLists || providerModels;
       return (presetList as AIChatModelCard[]).map<AiProviderModelListItem>((m) => ({
         ...m,

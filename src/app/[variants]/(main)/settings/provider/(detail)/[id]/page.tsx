@@ -24,7 +24,7 @@ const Page = async (props: PagePropsWithId) => {
   if (isServerMode) {
     const { userId } = await getUserAuth();
 
-    const { aiProvider } = getServerGlobalConfig();
+    const { aiProvider } = await getServerGlobalConfig();
     const aiInfraRepos = new AiInfraRepos(
       serverDB,
       userId!,

@@ -24,28 +24,39 @@ export const mergeArrayById = <T extends MergeableItem>(defaultItems: T[], userI
   // Create a map of default items for faster lookup
   const defaultItemsMap = new Map(defaultItems.map((item) => [item.id, item]));
 
-  // Process user items with default metadata
-  const mergedItems = userItems.map((userItem) => {
-    const defaultItem = defaultItemsMap.get(userItem.id);
-    if (!defaultItem) return userItem;
+  // 使用 Map 存储合并结果，这样重复 ID 的后项会自然覆盖前项
+  const mergedItemsMap = new Map<string, T>();
 
-    // Merge strategy: use default value when user value is null or undefined
+  // Process user items with default metadata
+  userItems.forEach((userItem) => {
+    const defaultItem = defaultItemsMap.get(userItem.id);
+    if (!defaultItem) {
+      mergedItemsMap.set(userItem.id, userItem);
+      return;
+    }
+
     const mergedItem: T = { ...defaultItem };
     Object.entries(userItem).forEach(([key, value]) => {
-      // Only use user value if it's not null and not undefined
-      // and not empty object
       if (value !== null && value !== undefined && !(typeof value === 'object' && isEmpty(value))) {
         // @ts-expect-error
         mergedItem[key] = value;
       }
+
+      if (typeof value === 'object' && !isEmpty(value)) {
+        // @ts-expect-error
+        mergedItem[key] = merge(defaultItem[key], value);
+      }
     });
 
-    return mergedItem;
+    mergedItemsMap.set(userItem.id, mergedItem);
   });
 
-  // Add items that only exist in default configuration
-  const userItemIds = new Set(userItems.map((item) => item.id));
-  const onlyInDefaultItems = defaultItems.filter((item) => !userItemIds.has(item.id));
+  // 添加只在默认配置中存在的项
+  defaultItems.forEach((item) => {
+    if (!mergedItemsMap.has(item.id)) {
+      mergedItemsMap.set(item.id, item);
+    }
+  });
 
-  return [...mergedItems, ...onlyInDefaultItems];
+  return Array.from(mergedItemsMap.values());
 };
