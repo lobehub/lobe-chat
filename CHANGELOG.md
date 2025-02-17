@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.60.6](https://github.com/lobehub/lobe-chat/compare/v1.60.5...v1.60.6)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add o1 vision metadata.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add o1 vision metadata, closes [#6263](https://github.com/lobehub/lobe-chat/issues/6263) ([261d068](https://github.com/lobehub/lobe-chat/commit/261d068))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.60.5](https://github.com/lobehub/lobe-chat/compare/v1.60.4...v1.60.5)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix loading on not login for db.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix loading on not login for db, closes [#6258](https://github.com/lobehub/lobe-chat/issues/6258) ([61692b9](https://github.com/lobehub/lobe-chat/commit/61692b9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.60.4](https://github.com/lobehub/lobe-chat/compare/v1.60.3...v1.60.4)
 
 <sup>Released on **2025-02-17**</sup>

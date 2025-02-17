@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Add o1 vision metadata."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix loading on not login for db."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix agent config not load correctly."]
     },
     "date": "2025-02-17",
