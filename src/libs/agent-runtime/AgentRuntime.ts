@@ -33,6 +33,7 @@ import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobeQwenAI } from './qwen';
+import { LobeSambaNovaAI } from './sambanova';
 import { LobeSenseNovaAI } from './sensenova';
 import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeSparkAI } from './spark';
@@ -169,6 +170,7 @@ class AgentRuntime {
       openrouter: Partial<ClientOptions>;
       perplexity: Partial<ClientOptions>;
       qwen: Partial<ClientOptions>;
+      sambanova: Partial<ClientOptions>;
       sensenova: Partial<ClientOptions>;
       siliconcloud: Partial<ClientOptions>;
       spark: Partial<ClientOptions>;
@@ -381,6 +383,11 @@ class AgentRuntime {
 
       case ModelProvider.Jina: {
         runtimeModel = new LobeJinaAI(params.jina);
+        break;
+      }
+
+      case ModelProvider.SambaNova: {
+        runtimeModel = new LobeSambaNovaAI(params.sambanova);
         break;
       }
 

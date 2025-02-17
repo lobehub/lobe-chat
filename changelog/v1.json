@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "fixes": ["Fix model list issue in client mode."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update Jina AI Provider name & model info."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.1"
+  },
+  {
+    "children": {
+      "features": ["Add SambaNova provider support."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.0"
+  },
+  {
+    "children": {
       "features": ["Add volcengine as a new provider."]
     },
     "date": "2025-02-16",
