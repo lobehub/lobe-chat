@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["User feedback for empty/long group names in create/edit group modals."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix model list issue in client mode."]
     },
     "date": "2025-02-17",
