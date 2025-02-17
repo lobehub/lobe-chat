@@ -4,16 +4,8 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { SOCK_FILE, SOCK_INFO_FILE, WINDOW_PIPE_FILE } from './const';
-import { IElectronIPCMethods } from './types';
-
-export type IPCEventMethod = (
-  params: any,
-  context: { id: string; method: string; socket: net.Socket },
-) => Promise<any>;
-
-export type ElectronIPCEventHandler = {
-  [key in IElectronIPCMethods]: IPCEventMethod;
-};
+import { ServerDispatchEventKey } from './events';
+import { ElectronIPCEventHandler } from './types';
 
 export class ElectronIPCServer {
   private server: net.Server;
@@ -45,7 +37,7 @@ export class ElectronIPCServer {
       });
 
       this.server.listen(this.socketPath, () => {
-        console.log(`Electron IPC server listening on ${this.socketPath}`);
+        console.log(`[ElectronIPCServer] Electron IPC server listening on ${this.socketPath}`);
 
         // 将套接字路径写入临时文件，供 Next.js 服务端读取
         const tempDir = os.tmpdir();
@@ -86,7 +78,7 @@ export class ElectronIPCServer {
     const { id, method, params } = request;
 
     // 根据请求方法执行相应的操作
-    const eventHandler = this.eventHandler[method as IElectronIPCMethods];
+    const eventHandler = this.eventHandler[method as ServerDispatchEventKey];
     if (!eventHandler) return;
 
     try {

@@ -1,3 +1,4 @@
+import { dispatch } from '@lobechat/electron-client-ipc';
 import { ThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { gt, parse, valid } from 'semver';
@@ -5,7 +6,7 @@ import { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
-import { CURRENT_VERSION } from '@/const/version';
+import { CURRENT_VERSION, isDesktop } from '@/const/version';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { globalService } from '@/services/global';
 import type { SystemStatus } from '@/store/global/initialState';
@@ -37,6 +38,16 @@ export const generalActionSlice: StateCreator<
     get().updateSystemStatus({ language: locale });
 
     switchLang(locale);
+
+    if (isDesktop) {
+      (async () => {
+        try {
+          await dispatch('updateLocale', locale);
+        } catch (error) {
+          console.error('Failed to update locale in main process:', error);
+        }
+      })();
+    }
   },
   switchThemeMode: (themeMode) => {
     get().updateSystemStatus({ themeMode });
@@ -44,7 +55,6 @@ export const generalActionSlice: StateCreator<
     setCookie(LOBE_THEME_APPEARANCE, themeMode === 'auto' ? undefined : themeMode);
   },
   updateSystemStatus: (status, action) => {
-    // Status cannot be modified when it is not initialized
     if (!get().isStatusInit) return;
 
     const nextStatus = merge(get().status, status);
@@ -60,19 +70,15 @@ export const generalActionSlice: StateCreator<
       enabledCheck ? 'checkLatestVersion' : null,
       async () => globalService.getLatestVersion(),
       {
-        // check latest version every 30 minutes
         focusThrottleInterval: 1000 * 60 * 30,
         onSuccess: (data: string) => {
           if (!valid(CURRENT_VERSION) || !valid(data)) return;
 
-          // Parse versions to ensure we're working with valid SemVer objects
           const currentVersion = parse(CURRENT_VERSION);
           const latestVersion = parse(data);
 
           if (!currentVersion || !latestVersion) return;
 
-          // only compare major and minor versions
-          // solve the problem of frequent patch updates
           const currentMajorMinor = `${currentVersion.major}.${currentVersion.minor}.0`;
           const latestMajorMinor = `${latestVersion.major}.${latestVersion.minor}.0`;
 

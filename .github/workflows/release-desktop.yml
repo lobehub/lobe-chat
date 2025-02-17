@@ -1,9 +1,8 @@
 name: Release Desktop
 
 on:
-#  uncomment when official desktop version released
-#  release:
-#    types: [published] # 发布 release 时触发构建
+  release:
+    types: [published] # 发布 release 时触发构建
   pull_request:
     types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
 
@@ -87,8 +86,8 @@ jobs:
             branch_name="${{ github.head_ref }}"
             # 清理分支名，移除非法字符
             sanitized_branch=$(echo "${branch_name}" | sed -E 's/[^a-zA-Z0-9_.-]+/-/g')
-            # 创建特殊的 PR 版本号：基础版本号-PR前缀-分支名-提交哈希
-            version="${base_version}-${{ env.PR_TAG_PREFIX }}${sanitized_branch}-$(git rev-parse --short HEAD)"
+            # 创建特殊的 PR 版本号：基础版本号-nightly-PR前缀-分支名-提交哈希
+            version="${base_version}-nightly-${{ env.PR_TAG_PREFIX }}${sanitized_branch}-$(git rev-parse --short HEAD)"
             echo "version=${version}" >> $GITHUB_OUTPUT
             echo "is_pr_build=true" >> $GITHUB_OUTPUT
             echo "📦 Release Version: ${version} (based on base version ${base_version})"
@@ -139,37 +138,41 @@ jobs:
         with:
           version: 8
 
+      # node-linker=hoisted 模式将可以确保 asar 压缩可用
       - name: Install deps
-        run: pnpm install
+        run: pnpm install --node-linker=hoisted
 
       - name: Install deps on Desktop
         run: npm run install-isolated --prefix=./apps/desktop
 
       # 设置 package.json 的版本号
       - name: Set package version
-        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }}
+        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} ${{ needs.version.outputs.is_pr_build }}
 
       # macOS 构建处理
       - name: Build artifact on macOS
         if: runner.os == 'macOS'
         run: npm run desktop:build
         env:
-          APP_URL: http://localhost:3010
+          APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           # 默认添加一个加密 SECRET
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
-        # 公证部分将来再加回
-        #   CSC_LINK: ./build/developer-id-app-certs.p12
-        #   CSC_KEY_PASSWORD: ${{ secrets.APPLE_APP_CERTS_PASSWORD }}
-        #   APPLE_ID: ${{ secrets.APPLE_ID }}
-        #   APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          # macOS 签名和公证配置
+          CSC_LINK: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          CSC_KEY_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          # allow provisionally
+          CSC_FOR_PULL_REQUEST: true
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       # 非 macOS 平台构建处理
       - name: Build artifact on other platforms
         if: runner.os != 'macOS'
         run: npm run desktop:build
         env:
-          APP_URL: http://localhost:3010
+          APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
 
@@ -315,7 +318,7 @@ jobs:
             const releaseUrl = "${{ steps.create_release.outputs.url }}";
             const prCommentGenerator = require('${{ github.workspace }}/.github/scripts/pr-comment.js');
 
-            const body = await prCommentGenerator({
+            const result = await prCommentGenerator({
               github,
               context,
               releaseUrl,
@@ -323,9 +326,4 @@ jobs:
               tag: "pr-build-${{ github.event.pull_request.number }}-${{ github.sha }}"
             });
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body
-            });
+            console.log(`评论状态: ${result.updated ? '已更新' : '已创建'}, ID: ${result.id}`);

@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { SOCK_FILE, SOCK_INFO_FILE, WINDOW_PIPE_FILE } from './const';
-import { IElectronIPCMethods } from './types';
+import { ServerDispatchEventKey } from './events';
 
 export class ElectronIpcClient {
   private socketPath: string | null = null;
@@ -124,7 +124,7 @@ export class ElectronIpcClient {
   }
 
   // 发送请求到 Electron IPC 服务器
-  public async sendRequest<T>(method: IElectronIPCMethods, params: any = {}): Promise<T> {
+  public async sendRequest<T>(method: ServerDispatchEventKey, params: any = {}): Promise<T> {
     if (!this.socketPath) {
       throw new Error('Electron IPC connection not available');
     }
