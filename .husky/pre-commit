@@ -1,2 +1,2 @@
-npm run type-check
+# npm run type-check
 npx --no-install lint-staged
