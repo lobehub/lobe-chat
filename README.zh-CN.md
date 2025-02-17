@@ -352,12 +352,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                         | 描述                                                                                   |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [Cron 表达式助手](https://lobechat.com/discover/assistant/crontab-generate)<br/><sup>By **[edgesider](https://github.com/edgesider)** on **2025-02-17**</sup>                    | Crontab 表达式生成<br/>`crontab` `时间表达` `触发时间` `生成器` `技术辅助`             |
 | [小智法语翻译助手](https://lobechat.com/discover/assistant/xiao-zhi-french-translation-asst-v-1)<br/><sup>By **[WeR-Best](https://github.com/WeR-Best)** on **2025-02-10**</sup> | 友好、专业、富有同理心的法语翻译 AI 助手<br/>`ai助手` `法语翻译` `跨文化交流` `创造力` |
-| [命理研究员](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>                        | 精通八字命<br/>`命理学` `八字` `传统文化`                                              |
 | [语言魅力学习导师](https://lobechat.com/discover/assistant/bad-language-helper)<br/><sup>By **[Guducat](https://github.com/Guducat)** on **2025-02-06**</sup>                    | 擅长教学语言的魅力与花样回复<br/>`语言学习` `对话示例`                                 |
-| [Allinone](https://lobechat.com/discover/assistant/allinone-v-1)<br/><sup>By **[AXuanCreator](https://github.com/AXuanCreator)** on **2025-02-06**</sup>                         | 创新・未来・卓越<br/>`编程` `低成本` `简洁回答`                                        |
+| [命理研究员](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>                        | 精通八字命<br/>`命理学` `八字` `传统文化`                                              |
 
-> 📊 Total agents: [<kbd>**486**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**487**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 
