@@ -517,7 +517,8 @@ describe('transformToChatModelCards', () => {
       },
     ] as AiFullModelCard[];
 
-    const modelString = '-all,gpt-4o->id1=gpt-4o,gpt-4o-mini->id2=gpt-4o-mini,o1-mini->id3=o1-mini';
+    const modelString =
+      '-all,gpt-4o->id1=GPT-4o,gpt-4o-mini->id2=GPT 4o Mini,o1-mini->id3=OpenAI o1-mini';
 
     const data = transformToAiChatModelList({
       modelString,
@@ -529,7 +530,7 @@ describe('transformToChatModelCards', () => {
     expect(data).toEqual([
       {
         abilities: { functionCall: true, vision: true },
-        config: { deploymentName: 'gpt-4o' },
+        config: { deploymentName: 'id1' },
         contextWindowTokens: 128000,
         description:
           'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
@@ -537,15 +538,19 @@ describe('transformToChatModelCards', () => {
         enabled: true,
         id: 'gpt-4o',
         pricing: { input: 2.5, output: 10 },
+        providerId: 'azure',
         releasedAt: '2024-05-13',
+        source: 'builtin',
         type: 'chat',
       },
       {
         abilities: { functionCall: true, vision: true },
-        config: { deploymentName: 'gpt-4o-mini' },
+        config: { deploymentName: 'id2' },
         contextWindowTokens: 128000,
         description: 'GPT-4o Mini，小型高效模型，具备与GPT-4o相似的卓越性能。',
         displayName: 'GPT 4o Mini',
+        providerId: 'azure',
+        source: 'builtin',
         enabled: true,
         id: 'gpt-4o-mini',
         maxOutput: 4096,
@@ -553,12 +558,14 @@ describe('transformToChatModelCards', () => {
       },
       {
         abilities: { reasoning: true },
-        config: { deploymentName: 'o1-mini' },
+        config: { deploymentName: 'id3' },
         contextWindowTokens: 128000,
         description:
           'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
         displayName: 'OpenAI o1-mini',
         enabled: true,
+        providerId: 'azure',
+        source: 'builtin',
         id: 'o1-mini',
         maxOutput: 65536,
         pricing: { input: 1.1, output: 4.4 },
