@@ -1,4 +1,3 @@
-import { Avatar } from '@lobehub/ui';
 import {
   Auth0,
   Authelia,
@@ -32,7 +31,7 @@ const iconComponents: { [key: string]: React.ElementType } = {
 
 const AuthIcons = (id: string) => {
   const IconComponent = iconComponents[id] || iconComponents.default;
-  return <Avatar avatar={<IconComponent {...iconProps} />} />;
+  return <IconComponent {...iconProps} />;
 };
 
 export default AuthIcons;
