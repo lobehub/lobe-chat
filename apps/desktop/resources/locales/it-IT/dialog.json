@@ -1,0 +1,31 @@
+{
+  "about": {
+    "button": "Conferma",
+    "detail": "Un'app di chat basata su un grande modello linguistico",
+    "message": "{{appName}} {{appVersion}}",
+    "title": "Informazioni"
+  },
+  "confirm": {
+    "cancel": "Annulla",
+    "no": "No",
+    "title": "Conferma",
+    "yes": "Sì"
+  },
+  "error": {
+    "button": "Conferma",
+    "detail": "Si è verificato un errore durante l'operazione, riprovare più tardi",
+    "message": "Si è verificato un errore",
+    "title": "Errore"
+  },
+  "update": {
+    "downloadAndInstall": "Scarica e installa",
+    "downloadComplete": "Download completato",
+    "downloadCompleteMessage": "Il pacchetto di aggiornamento è stato scaricato, vuoi installarlo subito?",
+    "installLater": "Installa più tardi",
+    "installNow": "Installa ora",
+    "later": "Promemoria più tardi",
+    "newVersion": "Nuova versione disponibile",
+    "newVersionAvailable": "Nuova versione trovata: {{version}}",
+    "skipThisVersion": "Salta questa versione"
+  }
+}
