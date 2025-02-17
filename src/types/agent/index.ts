@@ -28,7 +28,7 @@ export interface LobeAgentConfig {
   knowledgeBases?: KnowledgeBaseItem[];
   /**
    * 角色所使用的语言模型
-   * @default gpt-4o-mini
+   * @default chatgpt-4o-latest
    */
   model: string;
   /**

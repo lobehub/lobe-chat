@@ -2,7 +2,7 @@ const { defineConfig } = require('@lobehub/seo-cli');
 
 module.exports = defineConfig({
   entry: ['./docs/**/*.mdx'],
-  modelName: 'gpt-4o-mini',
+  modelName: 'chatgpt-4o-latest',
   experimental: {
     jsonMode: true,
   },
