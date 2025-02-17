@@ -1,4 +1,18 @@
 {
   "buildCommand": "NODE_OPTIONS=--max-old-space-size=6144 bun run build", 
-  "installCommand": "bun install"
+  "installCommand": "bun install",
+  "functions": {
+    "api/test.js": {
+      "maxDuration": 600 // This function can run for a maximum of 30 seconds
+    },
+    "api/*.js": {
+      "maxDuration": 600 // This function can run for a maximum of 15 seconds
+    },
+    "src/api/*.js": {
+      "maxDuration": 600 // You must prefix functions in the src directory with /src/
+    },
+    "app/api/**/*": {
+      "maxDuration": 600 // All functions can run for a maximum of 5 seconds
+    }
+  }
 }
