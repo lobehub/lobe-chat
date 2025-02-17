@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix agent config not load correctly."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.4"
+  },
+  {
+    "children": {
       "fixes": ["User feedback for empty/long group names in create/edit group modals."]
     },
     "date": "2025-02-17",
