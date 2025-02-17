@@ -19,6 +19,24 @@
       "title": "API ключ"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Версия на API на Azure, следваща формата YYYY-MM-DD, вижте [най-новата версия](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Вземи списък",
+      "title": "Версия на API на Azure"
+    },
+    "endpoint": {
+      "desc": "Намерете крайна точка за инференция на моделите на Azure AI в прегледа на проекта на Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Крайна точка на Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Намерете API ключа в прегледа на проекта на Azure AI",
+      "placeholder": "Ключ на Azure",
+      "title": "Ключ"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Въведете AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Моля, въведете вашия API ключ",
-      "required": "Моля, въведете вашия API ключ",
       "title": "API ключ"
     },
     "basicTitle": "Основна информация",
@@ -94,10 +111,11 @@
       "title": "Име на доставчика"
     },
     "proxyUrl": {
-      "placeholder": "Моля, въведете адреса на вашето запитване, ако не е попълнен, ще се използва съответния адрес на SDK",
+      "required": "Моля, въведете адреса на проксито",
       "title": "Адрес на прокси"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Моля, изберете тип SDK",
       "title": "Формат на запитването"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Моля, въведете името на модела за разполагане в Azure",
           "title": "Име на разполагане на модела"
         },
+        "deployName": {
+          "extra": "Това поле ще бъде използвано като ID на модела при изпращане на заявката",
+          "placeholder": "Моля, въведете действителното име или ID на разположението на модела",
+          "title": "Име на разположение на модела"
+        },
         "displayName": {
           "placeholder": "Моля, въведете показваното име на модела, например ChatGPT, GPT-4 и др.",
           "title": "Показвано име на модела"
@@ -275,6 +298,11 @@
         "fetching": "Получаване на списък с модели...",
         "latestTime": "Последно обновление: {{time}}",
         "noLatestTime": "Все още не е получен списък"
+      },
+      "resetAll": {
+        "conform": "Потвърдете ли, че искате да нулирате всички промени в текущия модел? След нулирането списъкът с текущи модели ще се върне в първоначалното си състояние",
+        "success": "Успешно нулирано",
+        "title": "Нулиране на всички промени"
       },
       "search": "Търсене на модели...",
       "searchResult": "Намерени са {{count}} модела",

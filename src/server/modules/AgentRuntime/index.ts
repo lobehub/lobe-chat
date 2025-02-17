@@ -57,6 +57,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       return { apiKey, apiVersion, baseURL };
     }
 
+    case ModelProvider.AzureAI: {
+      const { AZUREAI_ENDPOINT, AZUREAI_ENDPOINT_KEY } = llmConfig;
+      const apiKey = payload?.apiKey || AZUREAI_ENDPOINT_KEY;
+      const baseURL = payload?.baseURL || AZUREAI_ENDPOINT;
+      return { apiKey, baseURL };
+    }
+
     case ModelProvider.Bedrock: {
       const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SESSION_TOKEN } = llmConfig;
       let accessKeyId: string | undefined = AWS_ACCESS_KEY_ID;
@@ -97,6 +104,14 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const { GITHUB_TOKEN } = llmConfig;
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || GITHUB_TOKEN);
+
+      return { apiKey };
+    }
+
+    case ModelProvider.TencentCloud: {
+      const { TENCENT_CLOUD_API_KEY } = llmConfig;
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || TENCENT_CLOUD_API_KEY);
 
       return { apiKey };
     }

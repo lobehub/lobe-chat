@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "The API version for Azure, following the YYYY-MM-DD format. Refer to the [latest version](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Fetch List",
+      "title": "Azure API Version"
+    },
+    "endpoint": {
+      "desc": "Find the Azure AI model inference endpoint from the Azure AI project overview",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI Endpoint"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Find the API key from the Azure AI project overview",
+      "placeholder": "Azure Key",
+      "title": "Key"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Enter AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Please enter your API Key",
-      "required": "Please enter your API Key",
       "title": "API Key"
     },
     "basicTitle": "Basic Information",
@@ -94,10 +111,11 @@
       "title": "Provider Name"
     },
     "proxyUrl": {
-      "placeholder": "Please enter your request URL, if left blank, the corresponding SDK request URL will be used",
+      "required": "Please enter the proxy address",
       "title": "Proxy URL"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Please select SDK type",
       "title": "Request Format"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Please enter the model deployment name in Azure",
           "title": "Model Deployment Name"
         },
+        "deployName": {
+          "extra": "This field will be used as the model ID when sending requests",
+          "placeholder": "Please enter the actual deployment name or ID of the model",
+          "title": "Model Deployment Name"
+        },
         "displayName": {
           "placeholder": "Please enter the display name of the model, e.g., ChatGPT, GPT-4, etc.",
           "title": "Model Display Name"
@@ -275,6 +298,11 @@
         "fetching": "Fetching model list...",
         "latestTime": "Last updated: {{time}}",
         "noLatestTime": "Model list not yet fetched"
+      },
+      "resetAll": {
+        "conform": "Are you sure you want to reset all modifications to the current model? After resetting, the current model list will return to its default state.",
+        "success": "Reset successful",
+        "title": "Reset All Modifications"
       },
       "search": "Search Models...",
       "searchResult": "{{count}} models found",

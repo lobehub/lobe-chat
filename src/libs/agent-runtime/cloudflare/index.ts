@@ -1,3 +1,5 @@
+import { ChatModelCard } from '@/types/llm';
+
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
@@ -11,9 +13,6 @@ import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import { createCallbacksTransformer } from '../utils/streams';
-
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import { ChatModelCard } from '@/types/llm';
 
 export interface CloudflareModelCard {
   description: string;
@@ -35,7 +34,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
   accountID: string;
   apiKey?: string;
 
-  constructor({ apiKey, baseURLOrAccountID }: LobeCloudflareParams) {
+  constructor({ apiKey, baseURLOrAccountID }: LobeCloudflareParams = {}) {
     if (!baseURLOrAccountID) {
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
     }
@@ -113,6 +112,8 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
   }
 
   async models(): Promise<ChatModelCard[]> {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const url = `${DEFAULT_BASE_URL_PREFIX}/client/v4/accounts/${this.accountID}/ai/models/search`;
     const response = await fetch(url, {
       headers: {
@@ -127,16 +128,34 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
 
     return modelList
       .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.name.toLowerCase() === m.id.toLowerCase(),
+        );
+
         return {
           contextWindowTokens: model.properties?.max_total_tokens
             ? Number(model.properties.max_total_tokens)
-            : LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.contextWindowTokens ?? undefined,
-          displayName: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.displayName ?? (model.properties?.["beta"] === "true" ? `${model.name} (Beta)` : undefined),
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name === m.id)?.enabled || false,
-          functionCall: model.description.toLowerCase().includes('function call') || model.properties?.["function_calling"] === "true",
+            : (knownModel?.contextWindowTokens ?? undefined),
+          displayName:
+            knownModel?.displayName ??
+            (model.properties?.['beta'] === 'true' ? `${model.name} (Beta)` : undefined),
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            model.description.toLowerCase().includes('function call') ||
+            model.properties?.['function_calling'] === 'true' ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: model.name,
-          reasoning: model.name.toLowerCase().includes('deepseek-r1'),
-          vision: model.name.toLowerCase().includes('vision') || model.task?.name.toLowerCase().includes('image-to-text') || model.description.toLowerCase().includes('vision'),
+          reasoning:
+            model.name.toLowerCase().includes('deepseek-r1') ||
+            knownModel?.abilities?.reasoning ||
+            false,
+          vision:
+            model.name.toLowerCase().includes('vision') ||
+            model.task?.name.toLowerCase().includes('image-to-text') ||
+            model.description.toLowerCase().includes('vision') ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

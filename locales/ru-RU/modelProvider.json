@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Версия API Azure, формат YYYY-MM-DD, смотрите [последнюю версию](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Получить список",
+      "title": "Версия API Azure"
+    },
+    "endpoint": {
+      "desc": "Найдите конечную точку вывода модели Azure AI в обзоре проекта Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Конечная точка Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Найдите API-ключ в обзоре проекта Azure AI",
+      "placeholder": "Ключ Azure",
+      "title": "Ключ"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Введите ваш AWS Access Key ID",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Пожалуйста, введите ваш API Key",
-      "required": "Пожалуйста, введите ваш API Key",
       "title": "API Key"
     },
     "basicTitle": "Основная информация",
@@ -94,10 +111,11 @@
       "title": "Имя провайдера"
     },
     "proxyUrl": {
-      "placeholder": "Пожалуйста, введите ваш адрес запроса, если не заполните, будет использован соответствующий адрес SDK",
+      "required": "Пожалуйста, введите адрес прокси",
       "title": "Адрес прокси"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Пожалуйста, выберите тип SDK",
       "title": "Формат запроса"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Пожалуйста, введите имя развертывания модели в Azure",
           "title": "Имя развертывания модели"
         },
+        "deployName": {
+          "extra": "Это поле будет использоваться как идентификатор модели при отправке запроса",
+          "placeholder": "Введите фактическое имя или id развертывания модели",
+          "title": "Имя развертывания модели"
+        },
         "displayName": {
           "placeholder": "Пожалуйста, введите отображаемое имя модели, например, ChatGPT, GPT-4 и т.д.",
           "title": "Отображаемое имя модели"
@@ -275,6 +298,11 @@
         "fetching": "Получение списка моделей...",
         "latestTime": "Последнее обновление: {{time}}",
         "noLatestTime": "Список еще не получен"
+      },
+      "resetAll": {
+        "conform": "Вы уверены, что хотите сбросить все изменения текущей модели? После сброса список текущих моделей вернется к состоянию по умолчанию",
+        "success": "Сброс выполнен успешно",
+        "title": "Сбросить все изменения"
       },
       "search": "Поиск моделей...",
       "searchResult": "Найдено {{count}} моделей",

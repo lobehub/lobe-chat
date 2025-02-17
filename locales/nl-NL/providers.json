@@ -11,6 +11,9 @@
   "azure": {
     "description": "Azure biedt een scala aan geavanceerde AI-modellen, waaronder GPT-3.5 en de nieuwste GPT-4-serie, die verschillende datatypes en complexe taken ondersteunen, met een focus op veilige, betrouwbare en duurzame AI-oplossingen."
   },
+  "azureai": {
+    "description": "Azure biedt een verscheidenheid aan geavanceerde AI-modellen, waaronder GPT-3.5 en de nieuwste GPT-4-serie, die verschillende datatypes en complexe taken ondersteunt, met een focus op veilige, betrouwbare en duurzame AI-oplossingen."
+  },
   "baichuan": {
     "description": "Baichuan Intelligent is een bedrijf dat zich richt op de ontwikkeling van grote modellen voor kunstmatige intelligentie, wiens modellen uitblinken in Chinese taken zoals kennisencyclopedieën, lange tekstverwerking en generatieve creatie, en de mainstream modellen uit het buitenland overtreffen. Baichuan Intelligent heeft ook toonaangevende multimodale capaciteiten en presteert uitstekend in verschillende autoritatieve evaluaties. Hun modellen omvatten Baichuan 4, Baichuan 3 Turbo en Baichuan 3 Turbo 128k, die zijn geoptimaliseerd voor verschillende toepassingsscenario's en kosteneffectieve oplossingen bieden."
   },
@@ -53,6 +56,9 @@
   "internlm": {
     "description": "Een open-source organisatie die zich richt op onderzoek en ontwikkeling van tools voor grote modellen. Biedt een efficiënt en gebruiksvriendelijk open-source platform voor alle AI-ontwikkelaars, zodat de meest geavanceerde modellen en algoritmische technologieën binnen handbereik zijn."
   },
+  "jina": {
+    "description": "Jina AI, opgericht in 2020, is een toonaangevend zoek-AI-bedrijf. Ons zoekplatform bevat vectormodellen, herschikkers en kleine taalmodellen, die bedrijven helpen betrouwbare en hoogwaardige generatieve AI- en multimodale zoektoepassingen te bouwen."
+  },
   "lmstudio": {
     "description": "LM Studio is een desktopapplicatie voor het ontwikkelen en experimenteren met LLM's op uw computer."
   },
@@ -67,6 +73,9 @@
   },
   "novita": {
     "description": "Novita AI is een platform dat API-diensten biedt voor verschillende grote taalmodellen en AI-beeldgeneratie, flexibel, betrouwbaar en kosteneffectief. Het ondersteunt de nieuwste open-source modellen zoals Llama3 en Mistral, en biedt een uitgebreide, gebruiksvriendelijke en automatisch schaalbare API-oplossing voor de ontwikkeling van generatieve AI-toepassingen, geschikt voor de snelle groei van AI-startups."
+  },
+  "nvidia": {
+    "description": "NVIDIA NIM™ biedt containers voor zelf-gehoste GPU-versnelde inferentie-microservices, die de implementatie van voorgetrainde en aangepaste AI-modellen in de cloud, datacenters, RTX™ AI-pc's en werkstations ondersteunen."
   },
   "ollama": {
     "description": "De modellen van Ollama bestrijken een breed scala aan gebieden, waaronder codegeneratie, wiskundige berekeningen, meertalige verwerking en interactieve dialogen, en voldoen aan de diverse behoeften van bedrijfs- en lokale implementaties."
@@ -98,11 +107,20 @@
   "taichu": {
     "description": "Het Instituut voor Automatisering van de Chinese Academie van Wetenschappen en het Wuhan Instituut voor Kunstmatige Intelligentie hebben een nieuwe generatie multimodale grote modellen gelanceerd, die ondersteuning bieden voor meerdaagse vraag-en-antwoord, tekstcreatie, beeldgeneratie, 3D-begrip, signaalanalyse en andere uitgebreide vraag-en-antwoordtaken, met sterkere cognitieve, begrip en creatiecapaciteiten, wat zorgt voor een geheel nieuwe interactie-ervaring."
   },
+  "tencentcloud": {
+    "description": "De atomische capaciteiten van de kennisengine (LLM Knowledge Engine Atomic Power) zijn gebaseerd op de ontwikkeling van de kennisengine en bieden een volledige keten van kennisvraag- en antwoordmogelijkheden, gericht op bedrijven en ontwikkelaars. U kunt verschillende atomische capaciteiten gebruiken om uw eigen modelservice samen te stellen, door gebruik te maken van diensten zoals documentanalyse, splitsing, embedding en meervoudige herschrijving, om een op maat gemaakte AI-oplossing voor uw bedrijf te creëren."
+  },
   "togetherai": {
     "description": "Together AI streeft ernaar toonaangevende prestaties te bereiken door middel van innovatieve AI-modellen, en biedt uitgebreide aanpassingsmogelijkheden, waaronder ondersteuning voor snelle schaling en intuïtieve implementatieprocessen, om aan de verschillende behoeften van bedrijven te voldoen."
   },
   "upstage": {
     "description": "Upstage richt zich op het ontwikkelen van AI-modellen voor verschillende zakelijke behoeften, waaronder Solar LLM en document AI, met als doel het realiseren van kunstmatige algemene intelligentie (AGI). Het creëert eenvoudige dialoogagenten via de Chat API en ondersteunt functionele aanroepen, vertalingen, insluitingen en specifieke domeintoepassingen."
+  },
+  "vllm": {
+    "description": "vLLM is een snelle en gebruiksvriendelijke bibliotheek voor LLM-inferentie en -diensten."
+  },
+  "volcengine": {
+    "description": "Het ontwikkelingsplatform voor de grote modellenservice van ByteDance, dat een breed scala aan functies biedt, veilig is en concurrerende prijzen heeft voor modelaanroepdiensten. Het biedt ook end-to-end functionaliteiten zoals modelgegevens, fine-tuning, inferentie en evaluatie, om de ontwikkeling van uw AI-toepassingen volledig te ondersteunen."
   },
   "wenxin": {
     "description": "Een enterprise-grade, alles-in-één platform voor de ontwikkeling en service van grote modellen en AI-native applicaties, dat de meest uitgebreide en gebruiksvriendelijke toolchain biedt voor de ontwikkeling van generatieve kunstmatige intelligentiemodellen en applicaties."

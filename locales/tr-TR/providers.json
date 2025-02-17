@@ -11,6 +11,9 @@
   "azure": {
     "description": "Azure, GPT-3.5 ve en son GPT-4 serisi gibi çeşitli gelişmiş yapay zeka modelleri sunar. Farklı veri türlerini ve karmaşık görevleri destekleyerek güvenli, güvenilir ve sürdürülebilir yapay zeka çözümleri sağlamaya odaklanmaktadır."
   },
+  "azureai": {
+    "description": "Azure, GPT-3.5 ve en son GPT-4 serisi dahil olmak üzere çeşitli gelişmiş AI modelleri sunar, çeşitli veri türlerini ve karmaşık görevleri destekler, güvenli, güvenilir ve sürdürülebilir AI çözümlerine odaklanır."
+  },
   "baichuan": {
     "description": "Baichuan Intelligent, yapay zeka büyük modellerinin geliştirilmesine odaklanan bir şirkettir. Modelleri, yerel bilgi ansiklopedisi, uzun metin işleme ve üretim gibi Çince görevlerde mükemmel performans sergilemekte ve uluslararası ana akım modelleri aşmaktadır. Baichuan Intelligent ayrıca sektördeki lider çok modlu yeteneklere sahiptir ve birçok otoriter değerlendirmede mükemmel sonuçlar elde etmiştir. Modelleri, Baichuan 4, Baichuan 3 Turbo ve Baichuan 3 Turbo 128k gibi farklı uygulama senaryolarına yönelik optimize edilmiş yüksek maliyet etkinliği çözümleri sunmaktadır."
   },
@@ -53,6 +56,9 @@
   "internlm": {
     "description": "Büyük model araştırma ve geliştirme araç zincirine adanmış bir açık kaynak organizasyonu. Tüm AI geliştiricilerine verimli ve kullanımı kolay bir açık kaynak platformu sunarak en son büyük model ve algoritma teknolojilerine erişimi kolaylaştırır."
   },
+  "jina": {
+    "description": "Jina AI, 2020 yılında kurulmuş, önde gelen bir arama AI şirketidir. Arama tabanlı platformumuz, işletmelerin güvenilir ve yüksek kaliteli üretken AI ve çok modlu arama uygulamaları geliştirmelerine yardımcı olan vektör modelleri, yeniden sıralayıcılar ve küçük dil modelleri içerir."
+  },
   "lmstudio": {
     "description": "LM Studio, bilgisayarınızda LLM'ler geliştirmek ve denemeler yapmak için bir masaüstü uygulamasıdır."
   },
@@ -67,6 +73,9 @@
   },
   "novita": {
     "description": "Novita AI, çeşitli büyük dil modelleri ve yapay zeka görüntü üretimi API hizmetleri sunan bir platformdur. Esnek, güvenilir ve maliyet etkin bir yapıya sahiptir. Llama3, Mistral gibi en son açık kaynak modelleri desteklemekte ve üretken yapay zeka uygulama geliştirme için kapsamlı, kullanıcı dostu ve otomatik ölçeklenebilir API çözümleri sunmaktadır. Bu, yapay zeka girişimlerinin hızlı gelişimi için uygundur."
+  },
+  "nvidia": {
+    "description": "NVIDIA NIM™, bulut, veri merkezi, RTX™ AI kişisel bilgisayarlar ve iş istasyonlarında önceden eğitilmiş ve özelleştirilmiş AI modellerinin dağıtımını destekleyen, kendi kendine barındırılan GPU hızlandırmalı çıkarım mikro hizmetleri için konteynerler sunar."
   },
   "ollama": {
     "description": "Ollama'nın sunduğu modeller, kod üretimi, matematiksel işlemler, çok dilli işleme ve diyalog etkileşimi gibi alanları kapsamaktadır. Kurumsal düzeyde ve yerelleştirilmiş dağıtım için çeşitli ihtiyaçları desteklemektedir."
@@ -98,11 +107,20 @@
   "taichu": {
     "description": "Çin Bilimler Akademisi Otomasyon Araştırma Enstitüsü ve Wuhan Yapay Zeka Araştırma Enstitüsü, çok modlu büyük modelin yeni neslini sunmaktadır. Çoklu soru-cevap, metin oluşturma, görüntü üretimi, 3D anlama, sinyal analizi gibi kapsamlı soru-cevap görevlerini desteklemekte ve daha güçlü bilişsel, anlama ve yaratma yetenekleri sunarak yeni bir etkileşim deneyimi sağlamaktadır."
   },
+  "tencentcloud": {
+    "description": "Bilgi motoru atomik yetenekleri (LLM Knowledge Engine Atomic Power), bilgi motoru üzerine geliştirilmiş bilgi sorgulama tam zincir yetenekleri sunar. Bu yetenekler, işletmeler ve geliştiriciler için esnek model uygulamaları oluşturma ve geliştirme imkanı sağlar. Birden fazla atomik yeteneği kullanarak özel model hizmetlerinizi oluşturabilir, belge analizi, parçalama, embedding, çoklu yeniden yazım gibi hizmetleri bir araya getirerek işletmenize özel AI çözümleri tasarlayabilirsiniz."
+  },
   "togetherai": {
     "description": "Together AI, yenilikçi yapay zeka modelleri aracılığıyla lider performans elde etmeye odaklanmaktadır. Hızlı ölçeklenme desteği ve sezgisel dağıtım süreçleri dahil olmak üzere geniş özelleştirme yetenekleri sunarak işletmelerin çeşitli ihtiyaçlarını karşılamaktadır."
   },
   "upstage": {
     "description": "Upstage, çeşitli ticari ihtiyaçlar için yapay zeka modelleri geliştirmeye odaklanmaktadır. Solar LLM ve belge AI gibi modeller, insan yapımı genel zeka (AGI) hedeflemektedir. Chat API aracılığıyla basit diyalog ajanları oluşturmakta ve işlev çağrısı, çeviri, gömme ve belirli alan uygulamalarını desteklemektedir."
+  },
+  "vllm": {
+    "description": "vLLM, LLM çıkarımı ve hizmetleri için hızlı ve kullanımı kolay bir kütüphanedir."
+  },
+  "volcengine": {
+    "description": "ByteDance tarafından sunulan büyük model hizmetleri geliştirme platformu, zengin özellikler, güvenlik ve rekabetçi fiyatlarla model çağırma hizmetleri sunar. Ayrıca model verileri, ince ayar, çıkarım, değerlendirme gibi uçtan uca işlevler sağlar ve AI uygulama geliştirme sürecinizi her yönüyle güvence altına alır."
   },
   "wenxin": {
     "description": "Kurumsal düzeyde tek duraklı büyük model ve AI yerel uygulama geliştirme ve hizmet platformu, en kapsamlı ve kullanımı kolay üretken yapay zeka modeli geliştirme, uygulama geliştirme için tam süreç araç zinciri sunar."

@@ -1,5 +1,4 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { mutate } from 'swr';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { withSWR } from '~test-utils';
 
@@ -10,13 +9,8 @@ import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { UserInitializationState, UserPreference } from '@/types/user';
-import { switchLang } from '@/utils/client/switchLang';
 
 vi.mock('zustand/traditional');
-
-vi.mock('@/utils/client/switchLang', () => ({
-  switchLang: vi.fn(),
-}));
 
 vi.mock('swr', async (importOriginal) => {
   const modules = await importOriginal();
@@ -87,7 +81,7 @@ describe('createCommonSlice', () => {
           telemetry: true,
         },
         settings: {
-          general: { language: 'en-US' },
+          general: { fontSize: 14 },
         },
       };
 
@@ -111,9 +105,6 @@ describe('createCommonSlice', () => {
       expect(useUserStore.getState().user?.avatar).toBe(mockUserState.avatar);
       expect(useUserStore.getState().settings).toEqual(mockUserState.settings);
       expect(successCallback).toHaveBeenCalledWith(mockUserState);
-
-      // 验证是否正确处理了语言设置
-      expect(switchLang).not.toHaveBeenCalledWith('auto');
     });
 
     it('should call switch language when language is auto', async () => {
@@ -134,9 +125,6 @@ describe('createCommonSlice', () => {
 
       // 等待 SWR 完成数据获取
       await waitFor(() => expect(result.current.data).toEqual(mockUserState));
-
-      // 验证是否正确处理了语言设置
-      expect(switchLang).toHaveBeenCalledWith('auto');
     });
 
     it('should fetch use server config correctly', async () => {
@@ -169,7 +157,7 @@ describe('createCommonSlice', () => {
         isOnboard: true,
         preference: savedPreference,
         settings: {
-          general: { language: 'en-US' },
+          general: { fontSize: 14 },
         },
       };
       vi.spyOn(userService, 'getUserState').mockResolvedValueOnce(mockUserState);
@@ -219,7 +207,7 @@ describe('createCommonSlice', () => {
         isOnboard: true,
         preference: {} as any,
         settings: {
-          general: { language: 'en-US' },
+          general: { fontSize: 12 },
         },
       };
 

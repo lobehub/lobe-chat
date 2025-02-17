@@ -204,8 +204,8 @@
       "title": "Enable Reasoning Effort Adjustment"
     },
     "frequencyPenalty": {
-      "desc": "The higher the value, the more likely it is to reduce repeated words",
-      "title": "Frequency Penalty"
+      "desc": "The higher the value, the more diverse and rich the vocabulary; the lower the value, the simpler and more straightforward the language.",
+      "title": "Vocabulary Richness"
     },
     "maxTokens": {
       "desc": "The maximum number of tokens used for each interaction",
@@ -215,9 +215,12 @@
       "desc": "{{provider}} model",
       "title": "Model"
     },
+    "params": {
+      "title": "Advanced Parameters"
+    },
     "presencePenalty": {
-      "desc": "The higher the value, the more likely it is to expand to new topics",
-      "title": "Topic Freshness"
+      "desc": "The higher the value, the more inclined to use different expressions and avoid concept repetition; the lower the value, the more inclined to use repeated concepts or narratives, resulting in more consistent expression.",
+      "title": "Expression Divergence"
     },
     "reasoningEffort": {
       "desc": "The higher the value, the stronger the reasoning ability, but it may increase response time and token consumption.",
@@ -229,14 +232,14 @@
       "title": "Reasoning Effort"
     },
     "temperature": {
-      "desc": "The higher the value, the more random the response",
-      "title": "Randomness",
-      "titleWithValue": "Randomness {{value}}"
+      "desc": "The higher the value, the more creative and imaginative the responses; the lower the value, the more rigorous the responses.",
+      "title": "Creativity Level",
+      "warning": "If the creativity level is set too high, the output may become garbled."
     },
     "title": "Model Settings",
     "topP": {
-      "desc": "Similar to randomness, but do not change together with randomness",
-      "title": "Top P Sampling"
+      "desc": "How many possibilities to consider; a higher value accepts more potential answers, while a lower value tends to choose the most likely answer. It is not recommended to change this alongside the creativity level.",
+      "title": "Openness to Ideas"
     }
   },
   "settingPlugin": {

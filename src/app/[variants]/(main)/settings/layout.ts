@@ -9,5 +9,3 @@ const SettingsLayout = ServerLayout<LayoutProps>({ Desktop, Mobile });
 SettingsLayout.displayName = 'SettingsLayout';
 
 export default SettingsLayout;
-
-export const dynamic = 'force-static';

@@ -32,11 +32,15 @@ const StoreInitialization = memo(() => {
 
   const useInitSystemStatus = useGlobalStore((s) => s.useInitSystemStatus);
 
-  const useInitAgentStore = useAgentStore((s) => s.useInitAgentStore);
+  const useInitAgentStore = useAgentStore((s) => s.useInitInboxAgentStore);
   const useInitAiProviderKeyVaults = useAiInfraStore((s) => s.useFetchAiProviderRuntimeState);
 
   // init the system preference
   useInitSystemStatus();
+
+  // fetch server config
+  const useFetchServerConfig = useServerConfigStore((s) => s.useInitServerConfig);
+  useFetchServerConfig();
 
   // Update NextAuth status
   const useUserStoreUpdater = createStoreUpdater(useUserStore);

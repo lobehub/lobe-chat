@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, tham khảo [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Lấy danh sách",
+      "title": "Phiên bản API Azure"
+    },
+    "endpoint": {
+      "desc": "Tìm điểm kết thúc suy diễn mô hình Azure AI từ tổng quan dự án Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Điểm kết thúc Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Tìm khóa API từ tổng quan dự án Azure AI",
+      "placeholder": "Khóa Azure",
+      "title": "Khóa"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Nhập AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Vui lòng nhập API Key của bạn",
-      "required": "Vui lòng nhập API Key của bạn",
       "title": "API Key"
     },
     "basicTitle": "Thông tin cơ bản",
@@ -94,10 +111,11 @@
       "title": "Tên nhà cung cấp"
     },
     "proxyUrl": {
-      "placeholder": "Vui lòng nhập địa chỉ yêu cầu của bạn, nếu không sẽ sử dụng địa chỉ yêu cầu tương ứng của SDK",
+      "required": "Vui lòng nhập địa chỉ proxy",
       "title": "Địa chỉ proxy"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Vui lòng chọn loại SDK",
       "title": "Định dạng yêu cầu"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Vui lòng nhập tên triển khai mô hình trong Azure",
           "title": "Tên triển khai mô hình"
         },
+        "deployName": {
+          "extra": "Trường này sẽ được sử dụng làm ID mô hình khi gửi yêu cầu",
+          "placeholder": "Vui lòng nhập tên hoặc ID thực tế của mô hình đã triển khai",
+          "title": "Tên triển khai mô hình"
+        },
         "displayName": {
           "placeholder": "Vui lòng nhập tên hiển thị của mô hình, ví dụ ChatGPT, GPT-4, v.v.",
           "title": "Tên hiển thị mô hình"
@@ -275,6 +298,11 @@
         "fetching": "Đang lấy danh sách mô hình...",
         "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
         "noLatestTime": "Chưa lấy danh sách"
+      },
+      "resetAll": {
+        "conform": "Xác nhận việc đặt lại tất cả các thay đổi của mô hình hiện tại? Sau khi đặt lại, danh sách mô hình hiện tại sẽ trở về trạng thái mặc định",
+        "success": "Đặt lại thành công",
+        "title": "Đặt lại tất cả các thay đổi"
       },
       "search": "Tìm kiếm mô hình...",
       "searchResult": "Tìm thấy {{count}} mô hình",

@@ -3,7 +3,6 @@
 import { MobileNavBar } from '@lobehub/ui/mobile';
 import { memo, useState } from 'react';
 
-import { useInitAgentConfig } from '@/app/[variants]/(main)/chat/(workspace)/_layout/useInitAgentConfig';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -17,7 +16,6 @@ const MobileHeader = memo(() => {
   const [open, setOpen] = useState(false);
 
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
-  useInitAgentConfig();
 
   return (
     <MobileNavBar

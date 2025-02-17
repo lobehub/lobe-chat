@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "AzureのAPIバージョン。YYYY-MM-DD形式に従い、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照してください。",
+      "fetch": "リストを取得",
+      "title": "Azure APIバージョン"
+    },
+    "endpoint": {
+      "desc": "Azure AIプロジェクトの概要からAzure AIモデル推論エンドポイントを見つけます。",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AIエンドポイント"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Azure AIプロジェクトの概要からAPIキーを見つけます。",
+      "placeholder": "Azureキー",
+      "title": "キー"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "AWS Access Key Id を入力してください",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "あなたの API キーを入力してください",
-      "required": "あなたの API キーを入力してください",
       "title": "API キー"
     },
     "basicTitle": "基本情報",
@@ -94,10 +111,11 @@
       "title": "サービスプロバイダー名"
     },
     "proxyUrl": {
-      "placeholder": "リクエストアドレスを入力してください。未入力の場合は SDK に対応するリクエストアドレスが使用されます",
+      "required": "プロキシURLを入力してください",
       "title": "プロキシアドレス"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "SDK タイプを選択してください",
       "title": "リクエスト形式"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Azure でのモデルデプロイ名を入力してください",
           "title": "モデルデプロイ名"
         },
+        "deployName": {
+          "extra": "リクエストを送信する際に、このフィールドがモデルIDとして使用されます。",
+          "placeholder": "モデルの実際のデプロイ名またはIDを入力してください。",
+          "title": "モデルデプロイ名"
+        },
         "displayName": {
           "placeholder": "モデルの表示名を入力してください（例: ChatGPT、GPT-4 など）",
           "title": "モデル表示名"
@@ -275,6 +298,11 @@
         "fetching": "モデルリストを取得中...",
         "latestTime": "最終更新日時：{{time}}",
         "noLatestTime": "まだリストを取得していません"
+      },
+      "resetAll": {
+        "conform": "現在のモデルのすべての変更をリセットしてもよろしいですか？リセット後、現在のモデルリストはデフォルトの状態に戻ります",
+        "success": "リセットに成功しました",
+        "title": "すべての変更をリセット"
       },
       "search": "モデルを検索...",
       "searchResult": "{{count}} 個のモデルが見つかりました",
