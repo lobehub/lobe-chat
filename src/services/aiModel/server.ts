@@ -30,6 +30,10 @@ export class ServerService implements IAiModelService {
     return lambdaClient.aiModel.batchToggleAiModels.mutate({ enabled, id, models });
   };
 
+  clearModelsByProvider: IAiModelService['clearModelsByProvider'] = async (providerId) => {
+    return lambdaClient.aiModel.clearModelsByProvider.mutate({ providerId });
+  };
+
   clearRemoteModels: IAiModelService['clearRemoteModels'] = async (providerId) => {
     return lambdaClient.aiModel.clearRemoteModels.mutate({ providerId });
   };

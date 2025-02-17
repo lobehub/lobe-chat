@@ -11,6 +11,9 @@
   "azure": {
     "description": "Azure cung cấp nhiều mô hình AI tiên tiến, bao gồm GPT-3.5 và dòng GPT-4 mới nhất, hỗ trợ nhiều loại dữ liệu và nhiệm vụ phức tạp, cam kết cung cấp các giải pháp AI an toàn, đáng tin cậy và bền vững."
   },
+  "azureai": {
+    "description": "Azure cung cấp nhiều mô hình AI tiên tiến, bao gồm GPT-3.5 và dòng GPT-4 mới nhất, hỗ trợ nhiều loại dữ liệu và nhiệm vụ phức tạp, cam kết cung cấp các giải pháp AI an toàn, đáng tin cậy và bền vững."
+  },
   "baichuan": {
     "description": "Baichuan Intelligent là công ty tập trung vào nghiên cứu phát triển mô hình ngôn ngữ lớn AI, mô hình của họ thể hiện xuất sắc trong các nhiệm vụ tiếng Trung như bách khoa toàn thư, xử lý văn bản dài và sáng tác, vượt trội hơn so với các mô hình chính thống quốc tế. Baichuan Intelligent còn có khả năng đa phương thức hàng đầu trong ngành, thể hiện xuất sắc trong nhiều bài kiểm tra uy tín. Các mô hình của họ bao gồm Baichuan 4, Baichuan 3 Turbo và Baichuan 3 Turbo 128k, được tối ưu hóa cho các tình huống ứng dụng khác nhau, cung cấp giải pháp hiệu quả về chi phí."
   },
@@ -53,6 +56,9 @@
   "internlm": {
     "description": "Tổ chức mã nguồn mở chuyên nghiên cứu và phát triển công cụ cho mô hình lớn. Cung cấp nền tảng mã nguồn mở hiệu quả, dễ sử dụng cho tất cả các nhà phát triển AI, giúp tiếp cận công nghệ mô hình lớn và thuật toán tiên tiến nhất."
   },
+  "jina": {
+    "description": "Jina AI được thành lập vào năm 2020, là một công ty hàng đầu trong lĩnh vực AI tìm kiếm. Nền tảng tìm kiếm của chúng tôi bao gồm các mô hình vector, bộ tái sắp xếp và các mô hình ngôn ngữ nhỏ, giúp các doanh nghiệp xây dựng các ứng dụng tìm kiếm sinh tạo và đa phương tiện đáng tin cậy và chất lượng cao."
+  },
   "lmstudio": {
     "description": "LM Studio là một ứng dụng máy tính để phát triển và thử nghiệm các LLM trên máy tính của bạn."
   },
@@ -67,6 +73,9 @@
   },
   "novita": {
     "description": "Novita AI là một nền tảng cung cấp dịch vụ API cho nhiều mô hình ngôn ngữ lớn và tạo hình ảnh AI, linh hoạt, đáng tin cậy và hiệu quả về chi phí. Nó hỗ trợ các mô hình mã nguồn mở mới nhất như Llama3, Mistral, và cung cấp giải pháp API toàn diện, thân thiện với người dùng và tự động mở rộng cho phát triển ứng dụng AI, phù hợp cho sự phát triển nhanh chóng của các công ty khởi nghiệp AI."
+  },
+  "nvidia": {
+    "description": "NVIDIA NIM™ cung cấp các container có thể được sử dụng để tự lưu trữ các dịch vụ vi mô suy diễn GPU tăng tốc, hỗ trợ triển khai các mô hình AI đã được huấn luyện trước và tùy chỉnh trên đám mây, trung tâm dữ liệu, máy tính cá nhân RTX™ AI và trạm làm việc."
   },
   "ollama": {
     "description": "Mô hình do Ollama cung cấp bao quát rộng rãi các lĩnh vực như tạo mã, tính toán toán học, xử lý đa ngôn ngữ và tương tác đối thoại, hỗ trợ nhu cầu đa dạng cho triển khai doanh nghiệp và địa phương."
@@ -98,11 +107,20 @@
   "taichu": {
     "description": "Viện Nghiên cứu Tự động hóa Trung Quốc và Viện Nghiên cứu Trí tuệ Nhân tạo Vũ Hán đã phát hành mô hình lớn đa phương thức thế hệ mới, hỗ trợ các nhiệm vụ hỏi đáp toàn diện như hỏi đáp nhiều vòng, sáng tác văn bản, tạo hình ảnh, hiểu 3D, phân tích tín hiệu, v.v., với khả năng nhận thức, hiểu biết và sáng tác mạnh mẽ hơn, mang đến trải nghiệm tương tác hoàn toàn mới."
   },
+  "tencentcloud": {
+    "description": "Năng lực nguyên tử của động cơ tri thức (LLM Knowledge Engine Atomic Power) được phát triển dựa trên động cơ tri thức, cung cấp khả năng hỏi đáp toàn diện cho doanh nghiệp và nhà phát triển, cho phép xây dựng và phát triển ứng dụng mô hình một cách linh hoạt. Bạn có thể sử dụng nhiều năng lực nguyên tử để tạo ra dịch vụ mô hình riêng của mình, kết hợp các dịch vụ như phân tích tài liệu, tách rời, embedding, và viết lại nhiều vòng để tùy chỉnh các dịch vụ AI đặc thù cho doanh nghiệp."
+  },
   "togetherai": {
     "description": "Together AI cam kết đạt được hiệu suất hàng đầu thông qua các mô hình AI sáng tạo, cung cấp khả năng tùy chỉnh rộng rãi, bao gồm hỗ trợ mở rộng nhanh chóng và quy trình triển khai trực quan, đáp ứng nhiều nhu cầu của doanh nghiệp."
   },
   "upstage": {
     "description": "Upstage tập trung vào việc phát triển các mô hình AI cho nhiều nhu cầu thương mại khác nhau, bao gồm Solar LLM và AI tài liệu, nhằm đạt được trí thông minh nhân tạo tổng quát (AGI) cho công việc. Tạo ra các đại lý đối thoại đơn giản thông qua Chat API, và hỗ trợ gọi chức năng, dịch thuật, nhúng và ứng dụng trong các lĩnh vực cụ thể."
+  },
+  "vllm": {
+    "description": "vLLM là một thư viện nhanh chóng và dễ sử dụng cho suy diễn và dịch vụ LLM."
+  },
+  "volcengine": {
+    "description": "Nền tảng phát triển dịch vụ mô hình lớn do ByteDance phát triển, cung cấp dịch vụ gọi mô hình phong phú, an toàn và có giá cả cạnh tranh, đồng thời cung cấp dữ liệu mô hình, tinh chỉnh, suy diễn, đánh giá và các chức năng đầu cuối khác, đảm bảo toàn diện cho việc phát triển ứng dụng AI của bạn."
   },
   "wenxin": {
     "description": "Nền tảng phát triển và dịch vụ ứng dụng AI gốc với mô hình lớn một cửa dành cho doanh nghiệp, cung cấp chuỗi công cụ toàn diện và dễ sử dụng cho phát triển mô hình trí tuệ nhân tạo sinh sinh và phát triển ứng dụng."

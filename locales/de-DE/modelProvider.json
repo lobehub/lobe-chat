@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "API-Version von Azure, im Format YYYY-MM-DD, siehe [aktuelle Version](https://learn.microsoft.com/de-de/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Liste abrufen",
+      "title": "Azure API-Version"
+    },
+    "endpoint": {
+      "desc": "Finden Sie den Endpunkt für die Modellinferenz von Azure AI im Überblick über das Azure AI-Projekt",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI-Endpunkt"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Finden Sie den API-Schlüssel im Überblick über das Azure AI-Projekt",
+      "placeholder": "Azure-Schlüssel",
+      "title": "Schlüssel"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Geben Sie Ihre AWS Access Key Id ein",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Bitte geben Sie Ihren API-Schlüssel ein",
-      "required": "Bitte geben Sie Ihren API-Schlüssel ein",
       "title": "API-Schlüssel"
     },
     "basicTitle": "Grundinformationen",
@@ -94,10 +111,11 @@
       "title": "Name des Anbieters"
     },
     "proxyUrl": {
-      "placeholder": "Bitte geben Sie Ihre Anforderungsadresse ein, wenn nicht angegeben, wird die entsprechende Anforderungsadresse des SDK verwendet",
+      "required": "Bitte geben Sie die Proxy-Adresse ein",
       "title": "Proxy-Adresse"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Bitte wählen Sie den SDK-Typ aus",
       "title": "Anforderungsformat"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Bitte geben Sie den Modellbereitstellungsnamen in Azure ein",
           "title": "Modellbereitstellungsname"
         },
+        "deployName": {
+          "extra": "Dieses Feld wird als Modell-ID gesendet, wenn die Anfrage gesendet wird",
+          "placeholder": "Bitte geben Sie den tatsächlichen Namen oder die ID des bereitgestellten Modells ein",
+          "title": "Modellbereitstellungsname"
+        },
         "displayName": {
           "placeholder": "Bitte geben Sie den angezeigten Namen des Modells ein, z.B. ChatGPT, GPT-4 usw.",
           "title": "Anzeigename des Modells"
@@ -275,6 +298,11 @@
         "fetching": "Modellliste wird abgerufen...",
         "latestTime": "Letzte Aktualisierung: {{time}}",
         "noLatestTime": "Liste wurde noch nicht abgerufen"
+      },
+      "resetAll": {
+        "conform": "Möchten Sie alle Änderungen am aktuellen Modell wirklich zurücksetzen? Nach dem Zurücksetzen wird die aktuelle Modellliste auf den Standardzustand zurückgesetzt.",
+        "success": "Zurücksetzen erfolgreich",
+        "title": "Alle Änderungen zurücksetzen"
       },
       "search": "Modelle suchen...",
       "searchResult": "{{count}} Modelle gefunden",

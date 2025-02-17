@@ -19,6 +19,24 @@
       "title": "Chiave API"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Versione API di Azure, seguendo il formato YYYY-MM-DD, consulta [l'ultima versione](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Ottieni elenco",
+      "title": "Versione API di Azure"
+    },
+    "endpoint": {
+      "desc": "Trova l'endpoint di inferenza del modello Azure AI nella panoramica del progetto Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Endpoint di Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Trova la chiave API nella panoramica del progetto Azure AI",
+      "placeholder": "Chiave Azure",
+      "title": "Chiave"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Inserisci l'ID chiave di accesso AWS",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Inserisci la tua API Key",
-      "required": "Inserisci la tua API Key",
       "title": "API Key"
     },
     "basicTitle": "Informazioni di base",
@@ -94,10 +111,11 @@
       "title": "Nome del fornitore"
     },
     "proxyUrl": {
-      "placeholder": "Inserisci il tuo indirizzo di richiesta, se non specificato verrà utilizzato l'indirizzo di richiesta corrispondente all'SDK",
+      "required": "Inserisci l'indirizzo del proxy",
       "title": "Indirizzo proxy"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Seleziona il tipo di SDK",
       "title": "Formato della richiesta"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Inserisci il nome di distribuzione del modello in Azure",
           "title": "Nome di distribuzione del modello"
         },
+        "deployName": {
+          "extra": "Questo campo verrà utilizzato come ID del modello quando si invia la richiesta",
+          "placeholder": "Inserisci il nome o l'ID effettivo del modello distribuito",
+          "title": "Nome di distribuzione del modello"
+        },
         "displayName": {
           "placeholder": "Inserisci il nome visualizzato del modello, ad esempio ChatGPT, GPT-4, ecc.",
           "title": "Nome visualizzato del modello"
@@ -275,6 +298,11 @@
         "fetching": "Recupero dell'elenco dei modelli in corso...",
         "latestTime": "Ultimo aggiornamento: {{time}}",
         "noLatestTime": "Nessun elenco recuperato finora"
+      },
+      "resetAll": {
+        "conform": "Sei sicuro di voler ripristinare tutte le modifiche al modello corrente? Dopo il ripristino, l'elenco dei modelli correnti tornerà allo stato predefinito",
+        "success": "Ripristino avvenuto con successo",
+        "title": "Ripristina tutte le modifiche"
       },
       "search": "Cerca modelli...",
       "searchResult": "Trovati {{count}} modelli",

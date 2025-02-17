@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "De API-versie van Azure, volgens het formaat YYYY-MM-DD. Raadpleeg de [laatste versie](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Lijst ophalen",
+      "title": "Azure API-versie"
+    },
+    "endpoint": {
+      "desc": "Vind het Azure AI-model inferentie-eindpunt in het overzicht van het Azure AI-project",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI-eindpunt"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Vind de API-sleutel in het overzicht van het Azure AI-project",
+      "placeholder": "Azure-sleutel",
+      "title": "Sleutel"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Voer AWS Access Key Id in",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Vul je API-sleutel in",
-      "required": "Vul je API-sleutel in",
       "title": "API-sleutel"
     },
     "basicTitle": "Basisinformatie",
@@ -94,10 +111,11 @@
       "title": "Naam van de provider"
     },
     "proxyUrl": {
-      "placeholder": "Vul je aanvraagadres in, als je dit niet invult, wordt het overeenkomstige aanvraagadres van de SDK gebruikt",
+      "required": "Vul het proxyadres in",
       "title": "Proxy-adres"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Selecteer het SDK-type",
       "title": "Aanvraagformaat"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Voer de modelimplementatienaam in Azure in",
           "title": "Modelimplementatienaam"
         },
+        "deployName": {
+          "extra": "Dit veld wordt als model-ID verzonden bij het indienen van een verzoek",
+          "placeholder": "Voer de naam of ID van het daadwerkelijk gedeployde model in",
+          "title": "Modeldeploynaam"
+        },
         "displayName": {
           "placeholder": "Voer de weergavenaam van het model in, bijvoorbeeld ChatGPT, GPT-4, enz.",
           "title": "Weergavenaam van het model"
@@ -275,6 +298,11 @@
         "fetching": "Bezig met het ophalen van de modellenlijst...",
         "latestTime": "Laatste update tijd: {{time}}",
         "noLatestTime": "Lijst nog niet opgehaald"
+      },
+      "resetAll": {
+        "conform": "Weet je zeker dat je alle wijzigingen van het huidige model wilt resetten? Na de reset zal de huidige modellenlijst terugkeren naar de standaardstatus",
+        "success": "Resetten geslaagd",
+        "title": "Reset alle wijzigingen"
       },
       "search": "Zoek modellen...",
       "searchResult": "Gevonden {{count}} modellen",

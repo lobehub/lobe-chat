@@ -19,6 +19,24 @@
       "title": "API 키"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Azure API 버전, YYYY-MM-DD 형식을 따릅니다. [최신 버전](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)을 참조하세요.",
+      "fetch": "목록 가져오기",
+      "title": "Azure API 버전"
+    },
+    "endpoint": {
+      "desc": "Azure AI 프로젝트 개요에서 Azure AI 모델 추론 엔드포인트를 찾습니다.",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI 엔드포인트"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Azure AI 프로젝트 개요에서 API 키를 찾습니다.",
+      "placeholder": "Azure 키",
+      "title": "키"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "AWS 액세스 키 ID를 입력하세요.",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "API 키를 입력하세요",
-      "required": "API 키를 입력하세요",
       "title": "API 키"
     },
     "basicTitle": "기본 정보",
@@ -94,10 +111,11 @@
       "title": "서비스 제공자 이름"
     },
     "proxyUrl": {
-      "placeholder": "요청 주소를 입력하세요, 입력하지 않으면 SDK의 요청 주소가 사용됩니다",
+      "required": "프록시 주소를 입력하세요",
       "title": "프록시 주소"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "SDK 유형을 선택하세요",
       "title": "요청 형식"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Azure에서 모델 배포 이름을 입력하세요",
           "title": "모델 배포 이름"
         },
+        "deployName": {
+          "extra": "요청을 보낼 때 이 필드가 모델 ID로 사용됩니다.",
+          "placeholder": "모델 실제 배포 이름 또는 ID를 입력하세요.",
+          "title": "모델 배포 이름"
+        },
         "displayName": {
           "placeholder": "모델의 표시 이름을 입력하세요, 예: ChatGPT, GPT-4 등",
           "title": "모델 표시 이름"
@@ -275,6 +298,11 @@
         "fetching": "모델 목록을 가져오는 중...",
         "latestTime": "마지막 업데이트 시간: {{time}}",
         "noLatestTime": "아직 목록을 가져오지 않았습니다."
+      },
+      "resetAll": {
+        "conform": "현재 모델의 모든 수정을 초기화하시겠습니까? 초기화 후 현재 모델 목록은 기본 상태로 돌아갑니다.",
+        "success": "초기화 성공",
+        "title": "모든 수정 초기화"
       },
       "search": "모델 검색...",
       "searchResult": "{{count}} 개의 모델이 검색되었습니다",

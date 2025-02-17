@@ -19,6 +19,24 @@
       "title": "API 金鑰"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-tw/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "獲取列表",
+      "title": "Azure API 版本"
+    },
+    "endpoint": {
+      "desc": "從 Azure AI 專案概述找到 Azure AI 模型推理終結點",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI 終結點"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "從 Azure AI 專案概述找到 API 密鑰",
+      "placeholder": "Azure 密鑰",
+      "title": "密鑰"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "填入AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "請填寫你的 API Key",
-      "required": "請填寫你的 API Key",
       "title": "API Key"
     },
     "basicTitle": "基本資訊",
@@ -94,10 +111,11 @@
       "title": "服務商名稱"
     },
     "proxyUrl": {
-      "placeholder": "請填寫你的請求地址，如果不填則會使用 SDK 對應的請求地址",
+      "required": "請填寫代理地址",
       "title": "代理地址"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "請選擇 SDK 類型",
       "title": "請求格式"
     },
@@ -211,6 +229,11 @@
           "placeholder": "請輸入 Azure 中的模型部署名稱",
           "title": "模型部署名稱"
         },
+        "deployName": {
+          "extra": "發送請求時會將該字段作為模型 ID",
+          "placeholder": "請輸入模型實際部署的名稱或 id",
+          "title": "模型部署名稱"
+        },
         "displayName": {
           "placeholder": "請輸入模型的展示名稱，例如 ChatGPT、GPT-4 等",
           "title": "模型展示名稱"
@@ -275,6 +298,11 @@
         "fetching": "正在取得模型列表...",
         "latestTime": "上次更新時間：{{time}}",
         "noLatestTime": "尚未取得列表"
+      },
+      "resetAll": {
+        "conform": "確認重置當前模型的所有修改？重置後當前模型列表將會回到預設狀態",
+        "success": "重置成功",
+        "title": "重置所有修改"
       },
       "search": "搜尋模型...",
       "searchResult": "搜尋到 {{count}} 個模型",

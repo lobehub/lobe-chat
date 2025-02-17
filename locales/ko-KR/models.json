@@ -182,6 +182,12 @@
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat은 Zhizhu AI가 출시한 GLM-4 시리즈의 사전 훈련 모델 중 오픈 소스 버전입니다. 이 모델은 의미, 수학, 추론, 코드 및 지식 등 여러 측면에서 뛰어난 성능을 보입니다. GLM-4-9B-Chat은 다중 회전 대화를 지원할 뿐만 아니라 웹 브라우징, 코드 실행, 사용자 정의 도구 호출(Function Call) 및 긴 텍스트 추론과 같은 고급 기능도 갖추고 있습니다. 이 모델은 중국어, 영어, 일본어, 한국어 및 독일어를 포함한 26개 언어를 지원합니다. 여러 벤치마크 테스트에서 GLM-4-9B-Chat은 AlignBench-v2, MT-Bench, MMLU 및 C-Eval 등에서 뛰어난 성능을 보였습니다. 이 모델은 최대 128K의 컨텍스트 길이를 지원하며, 학술 연구 및 상업적 응용에 적합합니다."
   },
+  "Pro/deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1은 강화 학습(RL) 기반의 추론 모델로, 모델 내의 반복성과 가독성 문제를 해결합니다. RL 이전에 DeepSeek-R1은 콜드 스타트 데이터를 도입하여 추론 성능을 더욱 최적화했습니다. 수학, 코드 및 추론 작업에서 OpenAI-o1과 유사한 성능을 보이며, 정교하게 설계된 훈련 방법을 통해 전체적인 효과를 향상시켰습니다."
+  },
+  "Pro/deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3는 6710억 개의 매개변수를 가진 혼합 전문가(MoE) 언어 모델로, 다중 헤드 잠재 주의(MLA) 및 DeepSeekMoE 아키텍처를 사용하여 보조 손실 없는 부하 균형 전략을 결합하여 추론 및 훈련 효율성을 최적화합니다. 14.8조 개의 고품질 토큰에서 사전 훈련을 수행하고 감독 미세 조정 및 강화 학습을 통해 DeepSeek-V3는 성능 면에서 다른 오픈 소스 모델을 초월하며, 선도적인 폐쇄형 모델에 근접합니다."
+  },
   "Pro/google/gemma-2-9b-it": {
     "description": "Gemma는 Google이 개발한 경량화된 최첨단 오픈 모델 시리즈 중 하나입니다. 이는 단일 디코더 대규모 언어 모델로, 영어를 지원하며 오픈 가중치, 사전 훈련 변형 및 지침 미세 조정 변형을 제공합니다. Gemma 모델은 질문 응답, 요약 및 추론을 포함한 다양한 텍스트 생성 작업에 적합합니다. 이 9B 모델은 80조 개의 토큰으로 훈련되었습니다. 상대적으로 작은 규모로 인해 노트북, 데스크탑 또는 개인 클라우드 인프라와 같은 자원이 제한된 환경에서 배포할 수 있어 더 많은 사람들이 최첨단 AI 모델에 접근하고 혁신을 촉진할 수 있습니다."
   },
@@ -440,6 +446,9 @@
   "anthropic/claude-3-opus": {
     "description": "Claude 3 Opus는 Anthropic이 복잡한 작업을 처리하기 위해 개발한 가장 강력한 모델입니다. 성능, 지능, 유창성 및 이해력에서 뛰어난 성과를 보입니다."
   },
+  "anthropic/claude-3.5-haiku": {
+    "description": "Claude 3.5 Haiku는 Anthropic의 가장 빠른 차세대 모델입니다. Claude 3 Haiku와 비교하여 Claude 3.5 Haiku는 모든 기술에서 향상되었으며, 많은 지능 벤치마크 테스트에서 이전 세대의 가장 큰 모델인 Claude 3 Opus를 초월했습니다."
+  },
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet은 Opus를 초월하는 능력과 Sonnet보다 더 빠른 속도를 제공하며, Sonnet과 동일한 가격을 유지합니다. Sonnet은 프로그래밍, 데이터 과학, 비주얼 처리 및 에이전트 작업에 특히 강합니다."
   },
@@ -569,6 +578,9 @@
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B는 고복잡성 대화를 위해 훈련된 고급 모델입니다."
   },
+  "deepseek-ai/deepseek-r1": {
+    "description": "추론, 수학 및 프로그래밍에 능숙한 최첨단 효율 LLM입니다."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2는 DeepSeekMoE-27B를 기반으로 개발된 혼합 전문가(MoE) 비주얼 언어 모델로, 희소 활성화 MoE 아키텍처를 사용하여 4.5B 매개변수만 활성화된 상태에서 뛰어난 성능을 발휘합니다. 이 모델은 비주얼 질문 응답, 광학 문자 인식, 문서/표/차트 이해 및 비주얼 위치 지정 등 여러 작업에서 우수한 성과를 보입니다."
   },
@@ -590,6 +602,21 @@
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 - DeepSeek 패키지에서 더 크고 더 스마트한 모델이 Llama 70B 아키텍처로 증류되었습니다. 기준 테스트와 인공지능 평가에 따르면, 이 모델은 원래 Llama 70B보다 더 스마트하며, 특히 수학 및 사실 정확성이 필요한 작업에서 뛰어난 성능을 보입니다."
   },
+  "deepseek-r1-distill-llama-8b": {
+    "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+  },
+  "deepseek-r1-distill-qwen-1.5b": {
+    "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+  },
+  "deepseek-r1-distill-qwen-14b": {
+    "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+  },
+  "deepseek-r1-distill-qwen-32b": {
+    "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+  },
+  "deepseek-r1-distill-qwen-7b": {
+    "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+  },
   "deepseek-reasoner": {
     "description": "DeepSeek에서 제공하는 추론 모델입니다. 최종 답변을 출력하기 전에 모델은 먼저 사고 과정을 출력하여 최종 답변의 정확성을 높입니다."
   },
@@ -604,6 +631,12 @@
   },
   "deepseek/deepseek-chat": {
     "description": "일반 및 코드 능력을 통합한 새로운 오픈 소스 모델로, 기존 Chat 모델의 일반 대화 능력과 Coder 모델의 강력한 코드 처리 능력을 유지하면서 인간의 선호에 더 잘 맞춰졌습니다. 또한, DeepSeek-V2.5는 작문 작업, 지시 따르기 등 여러 분야에서 큰 향상을 이루었습니다."
+  },
+  "deepseek/deepseek-r1": {
+    "description": "DeepSeek-R1은 극히 적은 주석 데이터로 모델의 추론 능력을 크게 향상시킵니다. 최종 답변을 출력하기 전에 모델은 먼저 사고의 연쇄 내용을 출력하여 최종 답변의 정확성을 높입니다."
+  },
+  "deepseek/deepseek-r1:free": {
+    "description": "DeepSeek-R1은 극히 적은 주석 데이터로 모델의 추론 능력을 크게 향상시킵니다. 최종 답변을 출력하기 전에 모델은 먼저 사고의 연쇄 내용을 출력하여 최종 답변의 정확성을 높입니다."
   },
   "emohaa": {
     "description": "Emohaa는 심리 모델로, 전문 상담 능력을 갖추고 있어 사용자가 감정 문제를 이해하는 데 도움을 줍니다."
@@ -698,8 +731,17 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro는 최대 200만 개의 토큰을 지원하며, 중형 다중 모달 모델의 이상적인 선택으로 복잡한 작업에 대한 다각적인 지원을 제공합니다."
   },
+  "gemini-2.0-flash": {
+    "description": "Gemini 2.0 Flash는 뛰어난 속도, 원주율 도구 사용, 다중 모달 생성 및 1M 토큰 문맥 창을 포함한 차세대 기능과 개선 사항을 제공합니다."
+  },
+  "gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash는 뛰어난 속도, 원주율 도구 사용, 다중 모달 생성 및 1M 토큰 문맥 창을 포함한 차세대 기능과 개선 사항을 제공합니다."
+  },
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모달 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모달 생성을 갖추고 있습니다."
+  },
+  "gemini-2.0-flash-lite-preview-02-05": {
+    "description": "비용 효율성과 낮은 지연 시간 등을 목표로 최적화된 Gemini 2.0 Flash 모델입니다."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모드 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모드 생성을 제공합니다."
@@ -707,11 +749,8 @@
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모드 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모드 생성을 제공합니다."
   },
-  "gemini-exp-1114": {
-    "description": "Gemini Exp 1114는 Google의 최신 실험적 다중 모달 AI 모델로, 빠른 처리 능력을 갖추고 있으며, 텍스트, 이미지 및 비디오 입력을 지원하여 다양한 작업에 효율적으로 확장할 수 있습니다."
-  },
-  "gemini-exp-1121": {
-    "description": "Gemini Exp 1121은 Google의 최신 실험적 다중 모달 AI 모델로, 빠른 처리 능력을 갖추고 있으며 텍스트, 이미지 및 비디오 입력을 지원하여 다양한 작업에 효율적으로 확장할 수 있습니다."
+  "gemini-2.0-pro-exp-02-05": {
+    "description": "Gemini 2.0 Pro Experimental은 Google의 최신 실험적 다중 모달 AI 모델로, 이전 버전과 비교하여 품질이 향상되었습니다. 특히 세계 지식, 코드 및 긴 문맥에 대해 개선되었습니다."
   },
   "gemini-exp-1206": {
     "description": "Gemini Exp 1206은 Google의 최신 실험적 다중 모달 AI 모델로, 이전 버전에 비해 품질이 개선되었습니다."
@@ -779,17 +818,29 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview는 강력한 복잡한 추론 능력을 갖추고 있으며, 논리 추론, 수학, 프로그래밍 등 분야에서 우수한 성능을 발휘합니다."
   },
+  "google/gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash는 뛰어난 속도, 원주율 도구 사용, 다중 모달 생성 및 1M 토큰 문맥 창을 포함한 차세대 기능과 개선 사항을 제공합니다."
+  },
+  "google/gemini-2.0-pro-exp-02-05:free": {
+    "description": "Gemini 2.0 Pro Experimental은 Google의 최신 실험적 다중 모달 AI 모델로, 이전 버전과 비교하여 품질이 향상되었습니다. 특히 세계 지식, 코드 및 긴 문맥에 대해 개선되었습니다."
+  },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash는 최적화된 다중 모달 처리 능력을 제공하며, 다양한 복잡한 작업 시나리오에 적합합니다."
   },
   "google/gemini-pro-1.5": {
     "description": "Gemini 1.5 Pro는 최신 최적화 기술을 결합하여 더 효율적인 다중 모달 데이터 처리 능력을 제공합니다."
   },
+  "google/gemma-2-27b": {
+    "description": "Gemma 2는 Google에서 출시한 효율적인 모델로, 소형 애플리케이션부터 복잡한 데이터 처리까지 다양한 응용 시나리오를 포함합니다."
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2는 경량화와 효율적인 설계를 이어갑니다."
   },
   "google/gemma-2-2b-it": {
     "description": "Google의 경량 지시 조정 모델"
+  },
+  "google/gemma-2-9b": {
+    "description": "Gemma 2는 Google에서 출시한 효율적인 모델로, 소형 애플리케이션부터 복잡한 데이터 처리까지 다양한 응용 시나리오를 포함합니다."
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2는 Google의 경량화된 오픈 소스 텍스트 모델 시리즈입니다."
@@ -962,6 +1013,9 @@
   "internlm3-latest": {
     "description": "우리의 최신 모델 시리즈는 뛰어난 추론 성능을 가지고 있으며, 동급 오픈 소스 모델 중에서 선두를 달리고 있습니다. 기본적으로 최신 출시된 InternLM3 시리즈 모델을 가리킵니다."
   },
+  "jina-deepsearch-v1": {
+    "description": "딥 서치는 웹 검색, 독서 및 추론을 결합하여 포괄적인 조사를 수행합니다. 연구 작업을 수용하는 에이전트로 생각할 수 있으며, 광범위한 검색을 수행하고 여러 번 반복한 후에야 답변을 제공합니다. 이 과정은 지속적인 연구, 추론 및 다양한 각도에서 문제를 해결하는 것을 포함합니다. 이는 사전 훈련된 데이터에서 직접 답변을 생성하는 표준 대형 모델 및 일회성 표면 검색에 의존하는 전통적인 RAG 시스템과 근본적으로 다릅니다."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM은 학습 과학 원칙에 맞춰 훈련된 실험적이고 특정 작업에 특화된 언어 모델로, 교육 및 학습 환경에서 시스템 지침을 따르며 전문가 멘토 역할을 수행합니다."
   },
@@ -994,6 +1048,9 @@
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2는 시각 및 텍스트 데이터를 결합한 작업을 처리하기 위해 설계되었습니다. 이미지 설명 및 시각적 질문 응답과 같은 작업에서 뛰어난 성능을 보이며, 언어 생성과 시각적 추론 간의 간극을 넘습니다."
+  },
+  "llama-3.3-70b-instruct": {
+    "description": "Llama 3.3은 Llama 시리즈에서 가장 진보된 다국어 오픈 소스 대형 언어 모델로, 매우 낮은 비용으로 405B 모델의 성능을 경험할 수 있습니다. Transformer 구조를 기반으로 하며, 감독 미세 조정(SFT)과 인간 피드백 강화 학습(RLHF)을 통해 유용성과 안전성을 향상시켰습니다. 이 지시 조정 버전은 다국어 대화를 위해 최적화되어 있으며, 여러 산업 벤치마크에서 많은 오픈 소스 및 폐쇄형 채팅 모델보다 우수한 성능을 보입니다. 지식 마감일은 2023년 12월입니다."
   },
   "llama-3.3-70b-versatile": {
     "description": "Meta Llama 3.3 다국어 대형 언어 모델(LLM)은 70B(텍스트 입력/텍스트 출력)에서 사전 학습 및 지침 조정 생성 모델입니다. Llama 3.3의 지침 조정 순수 텍스트 모델은 다국어 대화 사용 사례에 최적화되어 있으며, 많은 오픈 소스 및 폐쇄형 채팅 모델보다 일반 산업 기준에서 우수한 성능을 보입니다."
@@ -1100,6 +1157,9 @@
   "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
     "description": "405B Llama 3.1 Turbo 모델은 대규모 데이터 처리를 위한 초대용량의 컨텍스트 지원을 제공하며, 초대규모 인공지능 애플리케이션에서 뛰어난 성능을 발휘합니다."
   },
+  "meta-llama/Meta-Llama-3.1-70B": {
+    "description": "Llama 3.1은 Meta에서 출시한 선도적인 모델로, 최대 405B 매개변수를 지원하며 복잡한 대화, 다국어 번역 및 데이터 분석 분야에 적용됩니다."
+  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct": {
     "description": "LLaMA 3.1 70B는 다국어의 효율적인 대화 지원을 제공합니다."
   },
@@ -1136,6 +1196,12 @@
   "meta-llama/llama-3.2-90b-vision-instruct": {
     "description": "LLaMA 3.2는 시각 및 텍스트 데이터를 결합한 작업을 처리하기 위해 설계되었습니다. 이미지 설명 및 시각적 질문 응답과 같은 작업에서 뛰어난 성능을 보이며, 언어 생성과 시각적 추론 간의 간극을 넘습니다."
   },
+  "meta-llama/llama-3.3-70b-instruct": {
+    "description": "Llama 3.3은 Llama 시리즈에서 가장 진보된 다국어 오픈 소스 대형 언어 모델로, 매우 낮은 비용으로 405B 모델의 성능을 경험할 수 있습니다. Transformer 구조를 기반으로 하며, 감독 미세 조정(SFT)과 인간 피드백 강화 학습(RLHF)을 통해 유용성과 안전성을 향상시켰습니다. 이 지시 조정 버전은 다국어 대화를 위해 최적화되어 있으며, 여러 산업 벤치마크에서 많은 오픈 소스 및 폐쇄형 채팅 모델보다 우수한 성능을 보입니다. 지식 마감일은 2023년 12월입니다."
+  },
+  "meta-llama/llama-3.3-70b-instruct:free": {
+    "description": "Llama 3.3은 Llama 시리즈에서 가장 진보된 다국어 오픈 소스 대형 언어 모델로, 매우 낮은 비용으로 405B 모델의 성능을 경험할 수 있습니다. Transformer 구조를 기반으로 하며, 감독 미세 조정(SFT)과 인간 피드백 강화 학습(RLHF)을 통해 유용성과 안전성을 향상시켰습니다. 이 지시 조정 버전은 다국어 대화를 위해 최적화되어 있으며, 여러 산업 벤치마크에서 많은 오픈 소스 및 폐쇄형 채팅 모델보다 우수한 성능을 보입니다. 지식 마감일은 2023년 12월입니다."
+  },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct는 Llama 3.1 Instruct 모델 중 가장 크고 강력한 모델로, 고도로 발전된 대화 추론 및 합성 데이터 생성 모델입니다. 특정 분야에서 전문적인 지속적 사전 훈련 또는 미세 조정의 기초로도 사용될 수 있습니다. Llama 3.1이 제공하는 다국어 대형 언어 모델(LLMs)은 8B, 70B 및 405B 크기의 사전 훈련된 지시 조정 생성 모델로 구성되어 있습니다(텍스트 입력/출력). Llama 3.1 지시 조정 텍스트 모델(8B, 70B, 405B)은 다국어 대화 사용 사례에 최적화되어 있으며, 일반 산업 벤치마크 테스트에서 많은 오픈 소스 채팅 모델을 초과했습니다. Llama 3.1은 다양한 언어의 상업적 및 연구 용도로 설계되었습니다. 지시 조정 텍스트 모델은 비서와 유사한 채팅에 적합하며, 사전 훈련 모델은 다양한 자연어 생성 작업에 적응할 수 있습니다. Llama 3.1 모델은 또한 모델의 출력을 활용하여 다른 모델을 개선하는 것을 지원하며, 합성 데이터 생성 및 정제에 사용될 수 있습니다. Llama 3.1은 최적화된 변압기 아키텍처를 사용한 자기 회귀 언어 모델입니다. 조정된 버전은 감독 미세 조정(SFT) 및 인간 피드백이 포함된 강화 학습(RLHF)을 사용하여 인간의 도움 및 안전성 선호에 부합하도록 설계되었습니다."
   },
@@ -1150,6 +1216,30 @@
   },
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3은 개발자, 연구자 및 기업을 위한 오픈 대형 언어 모델(LLM)로, 생성 AI 아이디어를 구축하고 실험하며 책임감 있게 확장하는 데 도움을 주기 위해 설계되었습니다. 전 세계 커뮤니티 혁신의 기초 시스템의 일환으로, 계산 능력과 자원이 제한된 환경, 엣지 장치 및 더 빠른 훈련 시간에 매우 적합합니다."
+  },
+  "meta/llama-3.1-405b-instruct": {
+    "description": "합성 데이터 생성, 지식 증류 및 추론을 지원하는 고급 LLM으로, 챗봇, 프로그래밍 및 특정 분야 작업에 적합합니다."
+  },
+  "meta/llama-3.1-70b-instruct": {
+    "description": "복잡한 대화를 가능하게 하며, 뛰어난 맥락 이해, 추론 능력 및 텍스트 생성 능력을 갖추고 있습니다."
+  },
+  "meta/llama-3.1-8b-instruct": {
+    "description": "언어 이해, 뛰어난 추론 능력 및 텍스트 생성 능력을 갖춘 고급 최첨단 모델입니다."
+  },
+  "meta/llama-3.2-11b-vision-instruct": {
+    "description": "이미지에서 고품질 추론을 수행하는 최첨단 비주얼-언어 모델입니다."
+  },
+  "meta/llama-3.2-1b-instruct": {
+    "description": "언어 이해, 뛰어난 추론 능력 및 텍스트 생성 능력을 갖춘 최첨단 소형 언어 모델입니다."
+  },
+  "meta/llama-3.2-3b-instruct": {
+    "description": "언어 이해, 뛰어난 추론 능력 및 텍스트 생성 능력을 갖춘 최첨단 소형 언어 모델입니다."
+  },
+  "meta/llama-3.2-90b-vision-instruct": {
+    "description": "이미지에서 고품질 추론을 수행하는 최첨단 비주얼-언어 모델입니다."
+  },
+  "meta/llama-3.3-70b-instruct": {
+    "description": "추론, 수학, 상식 및 함수 호출에 능숙한 고급 LLM입니다."
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2는 Microsoft AI가 제공하는 언어 모델로, 복잡한 대화, 다국어, 추론 및 스마트 어시스턴트 분야에서 특히 뛰어난 성능을 보입니다."
@@ -1246,6 +1336,12 @@
   },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B는 NVIDIA가 맞춤 제작한 대규모 언어 모델로, LLM이 생성한 응답이 사용자 쿼리에 얼마나 도움이 되는지를 향상시키기 위해 설계되었습니다. 이 모델은 Arena Hard, AlpacaEval 2 LC 및 GPT-4-Turbo MT-Bench와 같은 벤치마크 테스트에서 뛰어난 성능을 보였으며, 2024년 10월 1일 기준으로 모든 자동 정렬 벤치마크 테스트에서 1위를 차지했습니다. 이 모델은 RLHF(특히 REINFORCE), Llama-3.1-Nemotron-70B-Reward 및 HelpSteer2-Preference 프롬프트를 사용하여 Llama-3.1-70B-Instruct 모델을 기반으로 훈련되었습니다."
+  },
+  "nvidia/llama-3.1-nemotron-51b-instruct": {
+    "description": "비교할 수 없는 정확성과 효율성을 제공하는 독특한 언어 모델입니다."
+  },
+  "nvidia/llama-3.1-nemotron-70b-instruct": {
+    "description": "Llama-3.1-Nemotron-70B-Instruct는 NVIDIA가 맞춤 제작한 대형 언어 모델로, LLM이 생성한 응답의 유용성을 향상시키기 위해 설계되었습니다."
   },
   "o1": {
     "description": "고급 추론 및 복잡한 문제 해결에 중점을 두며, 수학 및 과학 작업을 포함합니다. 깊이 있는 컨텍스트 이해와 에이전트 작업 흐름이 필요한 애플리케이션에 매우 적합합니다."
@@ -1360,6 +1456,15 @@
   },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2는 더 강력한 이해 및 생성 능력을 갖춘 새로운 대형 언어 모델 시리즈입니다."
+  },
+  "qwen/qwen2.5-7b-instruct": {
+    "description": "중국어와 영어를 위한 LLM으로, 언어, 프로그래밍, 수학, 추론 등 다양한 분야를 다룹니다."
+  },
+  "qwen/qwen2.5-coder-32b-instruct": {
+    "description": "코드 생성, 추론 및 수정 지원을 위한 고급 LLM으로, 주요 프로그래밍 언어를 포함합니다."
+  },
+  "qwen/qwen2.5-coder-7b-instruct": {
+    "description": "32K 컨텍스트 길이를 지원하는 강력한 중형 코드 모델로, 다국어 프로그래밍에 능숙합니다."
   },
   "qwen2": {
     "description": "Qwen2는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
@@ -1549,5 +1654,8 @@
   },
   "yi-vision": {
     "description": "복잡한 시각 작업 모델로, 고성능 이미지 이해 및 분석 능력을 제공합니다."
+  },
+  "yi-vision-v2": {
+    "description": "복잡한 시각적 작업 모델로, 여러 이미지를 기반으로 한 고성능 이해 및 분석 능력을 제공합니다."
   }
 }

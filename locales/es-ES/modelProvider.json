@@ -19,6 +19,24 @@
       "title": "Clave API"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Versión de la API de Azure, siguiendo el formato AAAA-MM-DD, consulta la [última versión](https://learn.microsoft.com/es-es/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Obtener lista",
+      "title": "Versión de la API de Azure"
+    },
+    "endpoint": {
+      "desc": "Encuentra el punto final de inferencia del modelo de Azure AI en la descripción general del proyecto de Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Punto final de Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Encuentra la clave API en la descripción general del proyecto de Azure AI",
+      "placeholder": "Clave de Azure",
+      "title": "Clave"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Introduce tu AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Por favor, introduce tu API Key",
-      "required": "Por favor, introduce tu API Key",
       "title": "API Key"
     },
     "basicTitle": "Información básica",
@@ -94,10 +111,11 @@
       "title": "Nombre del proveedor"
     },
     "proxyUrl": {
-      "placeholder": "Por favor, introduce tu dirección de solicitud, si no se completa, se usará la dirección de solicitud correspondiente del SDK",
+      "required": "Por favor, introduce la dirección del proxy",
       "title": "Dirección del proxy"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Por favor, selecciona el tipo de SDK",
       "title": "Formato de solicitud"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Por favor, introduce el nombre de despliegue del modelo en Azure",
           "title": "Nombre de despliegue del modelo"
         },
+        "deployName": {
+          "extra": "Este campo se enviará como ID del modelo al hacer la solicitud",
+          "placeholder": "Introduce el nombre o ID real del modelo desplegado",
+          "title": "Nombre de despliegue del modelo"
+        },
         "displayName": {
           "placeholder": "Por favor, introduce el nombre de visualización del modelo, por ejemplo, ChatGPT, GPT-4, etc.",
           "title": "Nombre de visualización del modelo"
@@ -275,6 +298,11 @@
         "fetching": "Obteniendo lista de modelos...",
         "latestTime": "Última actualización: {{time}}",
         "noLatestTime": "Lista aún no obtenida"
+      },
+      "resetAll": {
+        "conform": "¿Confirmar el restablecimiento de todas las modificaciones del modelo actual? Después del restablecimiento, la lista de modelos actuales volverá al estado predeterminado",
+        "success": "Restablecimiento exitoso",
+        "title": "Restablecer todas las modificaciones"
       },
       "search": "Buscar modelos...",
       "searchResult": "Se encontraron {{count}} modelos",

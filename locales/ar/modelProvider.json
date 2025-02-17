@@ -19,6 +19,24 @@
       "title": "مفتاح API"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "إصدار واجهة برمجة التطبيقات Azure، يتبع تنسيق YYYY-MM-DD، راجع [الإصدار الأحدث](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "الحصول على القائمة",
+      "title": "إصدار واجهة برمجة التطبيقات Azure"
+    },
+    "endpoint": {
+      "desc": "ابحث عن نقطة نهاية استدلال نموذج Azure AI من نظرة عامة على مشروع Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "نقطة نهاية Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "ابحث عن مفتاح واجهة برمجة التطبيقات من نظرة عامة على مشروع Azure AI",
+      "placeholder": "مفتاح Azure",
+      "title": "المفتاح"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "أدخل AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "يرجى إدخال مفتاح API الخاص بك",
-      "required": "يرجى إدخال مفتاح API الخاص بك",
       "title": "مفتاح API"
     },
     "basicTitle": "المعلومات الأساسية",
@@ -94,10 +111,11 @@
       "title": "اسم المزود"
     },
     "proxyUrl": {
-      "placeholder": "يرجى إدخال عنوان الطلب الخاص بك، إذا لم يتم إدخاله سيتم استخدام عنوان الطلب المقابل لـ SDK",
+      "required": "يرجى إدخال عنوان الوكيل",
       "title": "عنوان الوكيل"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "يرجى اختيار نوع SDK",
       "title": "تنسيق الطلب"
     },
@@ -211,6 +229,11 @@
           "placeholder": "يرجى إدخال اسم نشر النموذج في Azure",
           "title": "اسم نشر النموذج"
         },
+        "deployName": {
+          "extra": "سيتم استخدام هذا الحقل كمعرف نموذج عند إرسال الطلب",
+          "placeholder": "يرجى إدخال اسم أو معرف النشر الفعلي للنموذج",
+          "title": "اسم نشر النموذج"
+        },
         "displayName": {
           "placeholder": "يرجى إدخال اسم العرض للنموذج، مثل ChatGPT، GPT-4، إلخ",
           "title": "اسم عرض النموذج"
@@ -275,6 +298,11 @@
         "fetching": "جارٍ الحصول على قائمة النماذج...",
         "latestTime": "آخر تحديث: {{time}}",
         "noLatestTime": "لم يتم الحصول على القائمة بعد"
+      },
+      "resetAll": {
+        "conform": "هل أنت متأكد من إعادة تعيين جميع التعديلات على النموذج الحالي؟ بعد إعادة التعيين، ستعود قائمة النماذج الحالية إلى الحالة الافتراضية",
+        "success": "تمت إعادة التعيين بنجاح",
+        "title": "إعادة تعيين جميع التعديلات"
       },
       "search": "ابحث عن نموذج...",
       "searchResult": "تم العثور على {{count}} نموذج",

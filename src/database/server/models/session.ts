@@ -1,7 +1,7 @@
 import { Column, count, sql } from 'drizzle-orm';
 import { and, asc, desc, eq, gt, inArray, isNull, like, not, or } from 'drizzle-orm/expressions';
+import { DeepPartial } from 'utility-types';
 
-import { appEnv } from '@/config/app';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
@@ -13,7 +13,7 @@ import {
   genWhere,
 } from '@/database/utils/genWhere';
 import { idGenerator } from '@/database/utils/idGenerator';
-import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
+import { LobeAgentConfig } from '@/types/agent';
 import { ChatSessionList, LobeAgentSession, SessionRankItem } from '@/types/session';
 import { merge } from '@/utils/merge';
 
@@ -226,16 +226,15 @@ export class SessionModel {
     });
   };
 
-  createInbox = async () => {
+  createInbox = async (defaultAgentConfig: DeepPartial<LobeAgentConfig>) => {
     const item = await this.db.query.sessions.findFirst({
       where: and(eq(sessions.userId, this.userId), eq(sessions.slug, INBOX_SESSION_ID)),
     });
+
     if (item) return;
 
-    const serverAgentConfig = parseAgentConfig(appEnv.DEFAULT_AGENT_CONFIG) || {};
-
     return await this.create({
-      config: merge(DEFAULT_AGENT_CONFIG, serverAgentConfig),
+      config: merge(DEFAULT_AGENT_CONFIG, defaultAgentConfig),
       slug: INBOX_SESSION_ID,
       type: 'agent',
     });

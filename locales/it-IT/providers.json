@@ -11,6 +11,9 @@
   "azure": {
     "description": "Azure offre una varietà di modelli AI avanzati, tra cui GPT-3.5 e l'ultima serie GPT-4, supportando diversi tipi di dati e compiti complessi, con un impegno per soluzioni AI sicure, affidabili e sostenibili."
   },
+  "azureai": {
+    "description": "Azure offre una varietà di modelli AI avanzati, tra cui GPT-3.5 e l'ultima serie GPT-4, supportando diversi tipi di dati e compiti complessi, impegnandosi per soluzioni AI sicure, affidabili e sostenibili."
+  },
   "baichuan": {
     "description": "Baichuan Intelligence è un'azienda focalizzata sulla ricerca e sviluppo di modelli di intelligenza artificiale di grandi dimensioni, i cui modelli eccellono in compiti in cinese come enciclopedie di conoscenza, elaborazione di testi lunghi e creazione di contenuti, superando i modelli mainstream esteri. Baichuan Intelligence ha anche capacità multimodali leader nel settore, mostrando prestazioni eccezionali in diverse valutazioni autorevoli. I suoi modelli includono Baichuan 4, Baichuan 3 Turbo e Baichuan 3 Turbo 128k, ottimizzati per diversi scenari applicativi, offrendo soluzioni ad alto rapporto qualità-prezzo."
   },
@@ -53,6 +56,9 @@
   "internlm": {
     "description": "Un'organizzazione open source dedicata alla ricerca e allo sviluppo di strumenti per modelli di grandi dimensioni. Fornisce a tutti gli sviluppatori di AI una piattaforma open source efficiente e facile da usare, rendendo le tecnologie e gli algoritmi all'avanguardia accessibili a tutti."
   },
+  "jina": {
+    "description": "Jina AI, fondata nel 2020, è una delle principali aziende di ricerca AI. La nostra piattaforma di base per la ricerca include modelli vettoriali, riordinatori e piccoli modelli linguistici, per aiutare le aziende a costruire applicazioni di ricerca generativa e multimodale affidabili e di alta qualità."
+  },
   "lmstudio": {
     "description": "LM Studio è un'applicazione desktop per sviluppare e sperimentare LLM sul tuo computer."
   },
@@ -67,6 +73,9 @@
   },
   "novita": {
     "description": "Novita AI è una piattaforma che offre API per vari modelli di linguaggio di grandi dimensioni e generazione di immagini AI, flessibile, affidabile e conveniente. Supporta i più recenti modelli open source come Llama3 e Mistral, fornendo soluzioni API complete, user-friendly e scalabili per lo sviluppo di applicazioni AI, adatte alla rapida crescita delle startup AI."
+  },
+  "nvidia": {
+    "description": "NVIDIA NIM™ fornisce contenitori per l'inferenza di microservizi accelerati da GPU self-hosted, supportando il deployment di modelli AI pre-addestrati e personalizzati su cloud, data center, PC RTX™ AI e workstation."
   },
   "ollama": {
     "description": "I modelli forniti da Ollama coprono ampiamente aree come generazione di codice, operazioni matematiche, elaborazione multilingue e interazioni conversazionali, supportando esigenze diversificate per implementazioni aziendali e localizzate."
@@ -98,11 +107,20 @@
   "taichu": {
     "description": "L'Istituto di Automazione dell'Accademia Cinese delle Scienze e l'Istituto di Ricerca sull'Intelligenza Artificiale di Wuhan hanno lanciato una nuova generazione di modelli di grandi dimensioni multimodali, supportando domande e risposte a più turni, creazione di testi, generazione di immagini, comprensione 3D, analisi dei segnali e altre attività di domanda e risposta complete, con capacità cognitive, di comprensione e di creazione più forti, offrendo un'esperienza interattiva completamente nuova."
   },
+  "tencentcloud": {
+    "description": "La potenza atomica del motore di conoscenza (LLM Knowledge Engine Atomic Power) è una capacità completa di domande e risposte sviluppata sulla base del motore di conoscenza, rivolta a imprese e sviluppatori, che offre la possibilità di costruire e sviluppare applicazioni modello in modo flessibile. Puoi assemblare il tuo servizio modello esclusivo utilizzando diverse capacità atomiche, richiamando servizi di analisi documentale, suddivisione, embedding, riscrittura multipla e altro, per personalizzare il tuo business AI esclusivo."
+  },
   "togetherai": {
     "description": "Together AI si impegna a raggiungere prestazioni leader attraverso modelli AI innovativi, offrendo ampie capacità di personalizzazione, inclusi supporto per scalabilità rapida e processi di distribuzione intuitivi, per soddisfare le varie esigenze aziendali."
   },
   "upstage": {
     "description": "Upstage si concentra sullo sviluppo di modelli AI per varie esigenze commerciali, inclusi Solar LLM e document AI, con l'obiettivo di realizzare un'intelligenza artificiale generale artificiale (AGI) per il lavoro. Crea semplici agenti di dialogo tramite Chat API e supporta chiamate funzionali, traduzioni, embedding e applicazioni specifiche del settore."
+  },
+  "vllm": {
+    "description": "vLLM è una libreria veloce e facile da usare per l'inferenza e i servizi LLM."
+  },
+  "volcengine": {
+    "description": "La piattaforma di sviluppo dei servizi di modelli di grandi dimensioni lanciata da ByteDance, offre servizi di invocazione di modelli ricchi di funzionalità, sicuri e competitivi in termini di prezzo, fornendo anche dati sui modelli, messa a punto, inferenza, valutazione e altre funzionalità end-to-end, garantendo in modo completo lo sviluppo e l'implementazione delle vostre applicazioni AI."
   },
   "wenxin": {
     "description": "Piattaforma di sviluppo e servizi per modelli di grandi dimensioni e applicazioni AI native, a livello aziendale, che offre la catena di strumenti completa e facile da usare per lo sviluppo di modelli di intelligenza artificiale generativa e per l'intero processo di sviluppo delle applicazioni."
