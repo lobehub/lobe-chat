@@ -19,6 +19,25 @@ export default {
       title: 'API Key',
     },
   },
+  azureai: {
+    azureApiVersion: {
+      desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
+      fetch: '获取列表',
+      title: 'Azure API Version',
+    },
+    endpoint: {
+      desc: '从 Azure AI 项目概述找到 Azure AI 模型推理终结点',
+      placeholder: 'https://ai-userxxxxxxxxxx.services.ai.azure.com/models',
+      title: 'Azure AI 终结点',
+    },
+    title: 'Azure OpenAI',
+    token: {
+      desc: '从 Azure AI 项目概述找到 API 密钥',
+      placeholder: 'Azure 密钥',
+      title: '密钥',
+    },
+  },
+
   bedrock: {
     accessKeyId: {
       desc: '填入 AWS Access Key Id',
@@ -67,7 +86,6 @@ export default {
   createNewAiProvider: {
     apiKey: {
       placeholder: '请填写你的 API Key',
-      required: '请填写你的 API Key',
       title: 'API Key',
     },
     basicTitle: '基本信息',
@@ -95,10 +113,11 @@ export default {
       title: '服务商名称',
     },
     proxyUrl: {
-      placeholder: '请填写你的请求地址，如果不填则会使用 SDK 对应的请求地址',
+      required: '请填写代理地址',
       title: '代理地址',
     },
     sdkType: {
+      placeholder: 'openai/anthropic/azureai/ollama/...',
       required: '请选择 SDK 类型',
       title: '请求格式',
     },
@@ -212,6 +231,11 @@ export default {
           placeholder: '请输入 Azure 中的模型部署名称',
           title: '模型部署名称',
         },
+        deployName: {
+          extra: '发送请求时会将该字段作为模型 ID',
+          placeholder: '请输入模型实际部署的名称或 id',
+          title: '模型部署名称',
+        },
         displayName: {
           placeholder: '请输入模型的展示名称，例如 ChatGPT、GPT-4 等',
           title: '模型展示名称',
@@ -277,6 +301,11 @@ export default {
         fetching: '正在获取模型列表...',
         latestTime: '上次更新时间：{{time}}',
         noLatestTime: '暂未获取列表',
+      },
+      resetAll: {
+        conform: '确认重置当前模型的所有修改？重置后当前模型列表将会回到默认状态',
+        success: '重置成功',
+        title: '重置所有修改',
       },
       search: '搜索模型...',
       searchResult: '搜索到 {{count}} 个模型',

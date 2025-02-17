@@ -19,6 +19,24 @@
       "title": "کلید API"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "نسخه API آژور، با فرمت YYYY-MM-DD، برای مشاهده [آخرین نسخه](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "دریافت لیست",
+      "title": "نسخه API آژور"
+    },
+    "endpoint": {
+      "desc": "نقطه پایانی استنتاج مدل آژور AI را از نمای کلی پروژه آژور AI پیدا کنید",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "نقطه پایانی آژور AI"
+    },
+    "title": "آژور OpenAI",
+    "token": {
+      "desc": "کلید API را از نمای کلی پروژه آژور AI پیدا کنید",
+      "placeholder": "کلید آژور",
+      "title": "کلید"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "AWS Access Key Id را وارد کنید",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "لطفاً کلید API خود را وارد کنید",
-      "required": "لطفاً کلید API خود را وارد کنید",
       "title": "کلید API"
     },
     "basicTitle": "اطلاعات پایه",
@@ -94,10 +111,11 @@
       "title": "نام ارائه‌دهنده"
     },
     "proxyUrl": {
-      "placeholder": "لطفاً آدرس درخواست خود را وارد کنید، در صورت عدم وارد کردن از آدرس درخواست مربوط به SDK استفاده خواهد شد",
+      "required": "لطفاً آدرس پروکسی را وارد کنید",
       "title": "آدرس پروکسی"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "لطفاً نوع SDK را انتخاب کنید",
       "title": "فرمت درخواست"
     },
@@ -211,6 +229,11 @@
           "placeholder": "لطفاً نام استقرار مدل در Azure را وارد کنید",
           "title": "نام استقرار مدل"
         },
+        "deployName": {
+          "extra": "این فیلد به عنوان شناسه مدل هنگام ارسال درخواست استفاده می‌شود",
+          "placeholder": "لطفاً نام یا شناسه واقعی مدل را وارد کنید",
+          "title": "نام مدل برای استقرار"
+        },
         "displayName": {
           "placeholder": "لطفاً نام نمایشی مدل را وارد کنید، مانند ChatGPT، GPT-4 و غیره",
           "title": "نام نمایشی مدل"
@@ -275,6 +298,11 @@
         "fetching": "در حال دریافت لیست مدل‌ها...",
         "latestTime": "آخرین زمان به‌روزرسانی: {{time}}",
         "noLatestTime": "لیست هنوز دریافت نشده است"
+      },
+      "resetAll": {
+        "conform": "آیا مطمئن هستید که می‌خواهید تمام تغییرات مدل فعلی را بازنشانی کنید؟ پس از بازنشانی، لیست مدل‌های فعلی به حالت پیش‌فرض باز خواهد گشت",
+        "success": "بازنشانی با موفقیت انجام شد",
+        "title": "بازنشانی تمام تغییرات"
       },
       "search": "جستجوی مدل...",
       "searchResult": "{{count}} مدل پیدا شد",

@@ -182,6 +182,12 @@
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat 是智譜 AI 推出的 GLM-4 系列預訓練模型中的開源版本。該模型在語義、數學、推理、代碼和知識等多個方面表現出色。除了支持多輪對話外，GLM-4-9B-Chat 還具備網頁瀏覽、代碼執行、自定義工具調用（Function Call）和長文本推理等高級功能。模型支持 26 種語言，包括中文、英文、日文、韓文和德文等。在多項基準測試中，GLM-4-9B-Chat 展現了優秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。該模型支持最大 128K 的上下文長度，適用於學術研究和商業應用"
   },
+  "Pro/deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、代碼和推理任務中與 OpenAI-o1 表現相當，並且透過精心設計的訓練方法，提升了整體效果。"
+  },
+  "Pro/deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3 是一款擁有 6710 億參數的混合專家（MoE）語言模型，採用多頭潛在注意力（MLA）和 DeepSeekMoE 架構，結合無輔助損失的負載平衡策略，優化推理和訓練效率。透過在 14.8 萬億高質量tokens上預訓練，並進行監督微調和強化學習，DeepSeek-V3 在性能上超越其他開源模型，接近領先閉源模型。"
+  },
   "Pro/google/gemma-2-9b-it": {
     "description": "Gemma 是 Google 開發的輕量級、最先進的開放模型系列之一。它是一個僅解碼器的大型語言模型，支持英語，提供開放權重、預訓練變體和指令微調變體。Gemma 模型適用於各種文本生成任務，包括問答、摘要和推理。該 9B 模型是通過 8 萬億個 tokens 訓練而成。其相對較小的規模使其可以在資源有限的環境中部署，如筆記本電腦、桌面電腦或您自己的雲基礎設施，從而使更多人能夠訪問最先進的 AI 模型並促進創新"
   },
@@ -440,6 +446,9 @@
   "anthropic/claude-3-opus": {
     "description": "Claude 3 Opus 是 Anthropic 用於處理高度複雜任務的最強大模型。它在性能、智能、流暢性和理解力方面表現卓越。"
   },
+  "anthropic/claude-3.5-haiku": {
+    "description": "Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。與 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各項技能上都有所提升，並在許多智力基準測試中超越了上一代最大的模型 Claude 3 Opus。"
+  },
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同時保持與 Sonnet 相同的價格。Sonnet 特別擅長程式設計、數據科學、視覺處理、代理任務。"
   },
@@ -569,6 +578,9 @@
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B 是為高複雜性對話訓練的先進模型。"
   },
+  "deepseek-ai/deepseek-r1": {
+    "description": "最先進的高效 LLM，擅長推理、數學和編程。"
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 是一個基於 DeepSeekMoE-27B 開發的混合專家（MoE）視覺語言模型，採用稀疏激活的 MoE 架構，在僅激活 4.5B 參數的情況下實現了卓越性能。該模型在視覺問答、光學字符識別、文檔/表格/圖表理解和視覺定位等多個任務中表現優異。"
   },
@@ -590,6 +602,21 @@
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1——DeepSeek 套件中更大更智能的模型——被蒸餾到 Llama 70B 架構中。基於基準測試和人工評估，該模型比原始 Llama 70B 更智能，尤其在需要數學和事實精確性的任務上表現出色。"
   },
+  "deepseek-r1-distill-llama-8b": {
+    "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+  },
+  "deepseek-r1-distill-qwen-1.5b": {
+    "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+  },
+  "deepseek-r1-distill-qwen-14b": {
+    "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+  },
+  "deepseek-r1-distill-qwen-32b": {
+    "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+  },
+  "deepseek-r1-distill-qwen-7b": {
+    "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+  },
   "deepseek-reasoner": {
     "description": "DeepSeek 推出的推理模型。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
   },
@@ -604,6 +631,12 @@
   },
   "deepseek/deepseek-chat": {
     "description": "融合通用與代碼能力的全新開源模型，不僅保留了原有 Chat 模型的通用對話能力和 Coder 模型的強大代碼處理能力，還更好地對齊了人類偏好。此外，DeepSeek-V2.5 在寫作任務、指令跟隨等多個方面也實現了大幅提升。"
+  },
+  "deepseek/deepseek-r1": {
+    "description": "DeepSeek-R1 在僅有極少標註數據的情況下，極大提升了模型推理能力。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
+  },
+  "deepseek/deepseek-r1:free": {
+    "description": "DeepSeek-R1 在僅有極少標註數據的情況下，極大提升了模型推理能力。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
   },
   "emohaa": {
     "description": "Emohaa是一個心理模型，具備專業諮詢能力，幫助用戶理解情感問題。"
@@ -698,8 +731,17 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro 支持高達 200 萬個 tokens，是中型多模態模型的理想選擇，適用於複雜任務的多方面支持。"
   },
+  "gemini-2.0-flash": {
+    "description": "Gemini 2.0 Flash 提供下一代功能和改進，包括卓越的速度、原生工具使用、多模態生成和1M令牌上下文窗口。"
+  },
+  "gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash 提供下一代功能和改進，包括卓越的速度、原生工具使用、多模態生成和1M令牌上下文窗口。"
+  },
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
+  },
+  "gemini-2.0-flash-lite-preview-02-05": {
+    "description": "一個 Gemini 2.0 Flash 模型，針對成本效益和低延遲等目標進行了優化。"
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
@@ -707,11 +749,8 @@
   "gemini-2.0-flash-thinking-exp-1219": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
   },
-  "gemini-exp-1114": {
-    "description": "Gemini Exp 1114 是 Google 最新的實驗性多模態 AI 模型，具備快速處理能力，支持文本、影像和影片輸入，適用於多種任務的高效擴展。"
-  },
-  "gemini-exp-1121": {
-    "description": "Gemini Exp 1121 是 Google 最新的實驗性多模態 AI 模型，具備快速處理能力，支持文本、圖像和視頻輸入，適用於多種任務的高效擴展。"
+  "gemini-2.0-pro-exp-02-05": {
+    "description": "Gemini 2.0 Pro Experimental 是 Google 最新的實驗性多模態AI模型，與歷史版本相比有一定的質量提升，特別是對於世界知識、代碼和長上下文。"
   },
   "gemini-exp-1206": {
     "description": "Gemini Exp 1206 是 Google 最新的實驗性多模態 AI 模型，與歷史版本相比有一定的質量提升。"
@@ -779,17 +818,29 @@
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview具備強大的複雜推理能力，在邏輯推理、數學、程式設計等領域表現優異。"
   },
+  "google/gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash 提供下一代功能和改進，包括卓越的速度、原生工具使用、多模態生成和1M令牌上下文窗口。"
+  },
+  "google/gemini-2.0-pro-exp-02-05:free": {
+    "description": "Gemini 2.0 Pro Experimental 是 Google 最新的實驗性多模態AI模型，與歷史版本相比有一定的質量提升，特別是對於世界知識、代碼和長上下文。"
+  },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash 提供了優化後的多模態處理能力，適用於多種複雜任務場景。"
   },
   "google/gemini-pro-1.5": {
     "description": "Gemini 1.5 Pro 結合最新的優化技術，帶來更高效的多模態數據處理能力。"
   },
+  "google/gemma-2-27b": {
+    "description": "Gemma 2 是 Google 推出的高效模型，涵蓋從小型應用到複雜數據處理的多種應用場景。"
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 延續了輕量化與高效的設計理念。"
   },
   "google/gemma-2-2b-it": {
     "description": "Google的輕量級指令調優模型"
+  },
+  "google/gemma-2-9b": {
+    "description": "Gemma 2 是 Google 推出的高效模型，涵蓋從小型應用到複雜數據處理的多種應用場景。"
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 是 Google 輕量化的開源文本模型系列。"
@@ -962,6 +1013,9 @@
   "internlm3-latest": {
     "description": "我們最新的模型系列，有著卓越的推理性能，領跑同量級開源模型。默認指向我們最新發布的 InternLM3 系列模型"
   },
+  "jina-deepsearch-v1": {
+    "description": "深度搜索結合了網路搜索、閱讀和推理，可進行全面調查。您可以將其視為一個代理，接受您的研究任務 - 它會進行廣泛搜索並經過多次迭代，然後才能給出答案。這個過程涉及持續的研究、推理和從各個角度解決問題。這與直接從預訓練數據生成答案的標準大模型以及依賴一次性表面搜索的傳統 RAG 系統有著根本的不同。"
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM 是一個實驗性的、特定於任務的語言模型，經過訓練以符合學習科學原則，可在教學和學習場景中遵循系統指令，充當專家導師等。"
   },
@@ -994,6 +1048,9 @@
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
+  },
+  "llama-3.3-70b-instruct": {
+    "description": "Llama 3.3 是 Llama 系列最先進的多語言開源大型語言模型，以極低成本體驗媲美 405B 模型的性能。基於 Transformer 結構，並透過監督微調（SFT）和人類反饋強化學習（RLHF）提升有用性和安全性。其指令調優版本專為多語言對話優化，在多項行業基準上表現優於眾多開源和封閉聊天模型。知識截止日期為 2023 年 12 月"
   },
   "llama-3.3-70b-versatile": {
     "description": "Meta Llama 3.3 多語言大語言模型 (LLM) 是 70B（文本輸入/文本輸出）中的預訓練和指令調整生成模型。Llama 3.3 指令調整的純文本模型針對多語言對話用例進行了優化，並且在常見行業基準上優於許多可用的開源和封閉式聊天模型。"
@@ -1100,6 +1157,9 @@
   "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
     "description": "405B 的 Llama 3.1 Turbo 模型，為大數據處理提供超大容量的上下文支持，在超大規模的人工智慧應用中表現突出。"
   },
+  "meta-llama/Meta-Llama-3.1-70B": {
+    "description": "Llama 3.1 是 Meta 推出的領先模型，支持高達 405B 參數，可應用於複雜對話、多語言翻譯和數據分析領域。"
+  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct": {
     "description": "LLaMA 3.1 70B 提供多語言的高效對話支持。"
   },
@@ -1136,6 +1196,12 @@
   "meta-llama/llama-3.2-90b-vision-instruct": {
     "description": "LLaMA 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
   },
+  "meta-llama/llama-3.3-70b-instruct": {
+    "description": "Llama 3.3 是 Llama 系列最先進的多語言開源大型語言模型，以極低成本體驗媲美 405B 模型的性能。基於 Transformer 結構，並透過監督微調（SFT）和人類反饋強化學習（RLHF）提升有用性和安全性。其指令調優版本專為多語言對話優化，在多項行業基準上表現優於眾多開源和封閉聊天模型。知識截止日期為 2023 年 12 月"
+  },
+  "meta-llama/llama-3.3-70b-instruct:free": {
+    "description": "Llama 3.3 是 Llama 系列最先進的多語言開源大型語言模型，以極低成本體驗媲美 405B 模型的性能。基於 Transformer 結構，並透過監督微調（SFT）和人類反饋強化學習（RLHF）提升有用性和安全性。其指令調優版本專為多語言對話優化，在多項行業基準上表現優於眾多開源和封閉聊天模型。知識截止日期為 2023 年 12 月"
+  },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct 是 Llama 3.1 Instruct 模型中最大、最強大的模型，是一款高度先進的對話推理和合成數據生成模型，也可以用作在特定領域進行專業持續預訓練或微調的基礎。Llama 3.1 提供的多語言大型語言模型 (LLMs) 是一組預訓練的、指令調整的生成模型，包括 8B、70B 和 405B 大小 (文本輸入/輸出)。Llama 3.1 指令調整的文本模型 (8B、70B、405B) 專為多語言對話用例進行了優化，並在常見的行業基準測試中超過了許多可用的開源聊天模型。Llama 3.1 旨在用於多種語言的商業和研究用途。指令調整的文本模型適用於類似助手的聊天，而預訓練模型可以適應各種自然語言生成任務。Llama 3.1 模型還支持利用其模型的輸出來改進其他模型，包括合成數據生成和精煉。Llama 3.1 是使用優化的變壓器架構的自回歸語言模型。調整版本使用監督微調 (SFT) 和帶有人類反饋的強化學習 (RLHF) 來符合人類對幫助性和安全性的偏好。"
   },
@@ -1150,6 +1216,30 @@
   },
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 是一款面向開發者、研究人員和企業的開放大型語言模型 (LLM)，旨在幫助他們構建、實驗並負責任地擴展他們的生成 AI 想法。作為全球社區創新的基礎系統的一部分，它非常適合計算能力和資源有限、邊緣設備和更快的訓練時間。"
+  },
+  "meta/llama-3.1-405b-instruct": {
+    "description": "高級 LLM，支持合成數據生成、知識蒸餾和推理，適用於聊天機器人、編程和特定領域任務。"
+  },
+  "meta/llama-3.1-70b-instruct": {
+    "description": "賦能複雜對話，具備卓越的上下文理解、推理能力和文本生成能力。"
+  },
+  "meta/llama-3.1-8b-instruct": {
+    "description": "先進的最尖端模型，具備語言理解、卓越的推理能力和文本生成能力。"
+  },
+  "meta/llama-3.2-11b-vision-instruct": {
+    "description": "尖端的視覺-語言模型，擅長從圖像中進行高品質推理。"
+  },
+  "meta/llama-3.2-1b-instruct": {
+    "description": "先進的最尖端小型語言模型，具備語言理解、卓越的推理能力和文本生成能力。"
+  },
+  "meta/llama-3.2-3b-instruct": {
+    "description": "先進的最尖端小型語言模型，具備語言理解、卓越的推理能力和文本生成能力。"
+  },
+  "meta/llama-3.2-90b-vision-instruct": {
+    "description": "尖端的視覺-語言模型，擅長從圖像中進行高品質推理。"
+  },
+  "meta/llama-3.3-70b-instruct": {
+    "description": "先進的 LLM，擅長推理、數學、常識和函數調用。"
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 是微軟AI提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"
@@ -1246,6 +1336,12 @@
   },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B 是由 NVIDIA 定制的大型語言模型，旨在提高 LLM 生成的回應對用戶查詢的幫助程度。該模型在 Arena Hard、AlpacaEval 2 LC 和 GPT-4-Turbo MT-Bench 等基準測試中表現出色，截至 2024 年 10 月 1 日，在所有三個自動對齊基準測試中排名第一。該模型使用 RLHF（特別是 REINFORCE）、Llama-3.1-Nemotron-70B-Reward 和 HelpSteer2-Preference 提示在 Llama-3.1-70B-Instruct 模型基礎上進行訓練"
+  },
+  "nvidia/llama-3.1-nemotron-51b-instruct": {
+    "description": "獨特的語言模型，提供無與倫比的準確性和效率表現。"
+  },
+  "nvidia/llama-3.1-nemotron-70b-instruct": {
+    "description": "Llama-3.1-Nemotron-70B-Instruct 是 NVIDIA 定制的大型語言模型，旨在提高 LLM 生成的響應的幫助性。"
   },
   "o1": {
     "description": "專注於高級推理和解決複雜問題，包括數學和科學任務。非常適合需要深入上下文理解和代理工作流程的應用程序。"
@@ -1360,6 +1456,15 @@
   },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2 是全新的大型語言模型系列，具有更強的理解和生成能力。"
+  },
+  "qwen/qwen2.5-7b-instruct": {
+    "description": "面向中文和英文的 LLM，針對語言、編程、數學、推理等領域。"
+  },
+  "qwen/qwen2.5-coder-32b-instruct": {
+    "description": "高級 LLM，支持代碼生成、推理和修復，涵蓋主流編程語言。"
+  },
+  "qwen/qwen2.5-coder-7b-instruct": {
+    "description": "強大的中型代碼模型，支持 32K 上下文長度，擅長多語言編程。"
   },
   "qwen2": {
     "description": "Qwen2 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
@@ -1549,5 +1654,8 @@
   },
   "yi-vision": {
     "description": "複雜視覺任務模型，提供高性能圖片理解、分析能力。"
+  },
+  "yi-vision-v2": {
+    "description": "複雜視覺任務模型，提供基於多張圖片的高性能理解、分析能力。"
   }
 }

@@ -7,7 +7,6 @@ import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { shareService } from '@/services/share';
 import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
-import { LocaleMode } from '@/types/locale';
 import { LobeAgentSettings } from '@/types/session';
 import {
   SystemAgentItem,
@@ -16,7 +15,6 @@ import {
   UserSettings,
   UserSystemAgentConfigKey,
 } from '@/types/user/settings';
-import { switchLang } from '@/utils/client/switchLang';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
@@ -26,7 +24,6 @@ export interface UserSettingsAction {
   internal_createSignal: () => AbortController;
   resetSettings: () => Promise<void>;
   setSettings: (settings: DeepPartial<UserSettings>) => Promise<void>;
-  switchLocale: (locale: LocaleMode) => Promise<void>;
   switchThemeMode: (themeMode: ThemeMode) => Promise<void>;
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
   updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
@@ -94,11 +91,6 @@ export const createSettingsSlice: StateCreator<
     const abortController = get().internal_createSignal();
     await userService.updateUserSettings(diffs, abortController.signal);
     await get().refreshUserState();
-  },
-  switchLocale: async (locale) => {
-    await get().updateGeneralConfig({ language: locale });
-
-    switchLang(locale);
   },
   switchThemeMode: async (themeMode) => {
     await get().updateGeneralConfig({ themeMode });

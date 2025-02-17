@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Azure API sürümü, YYYY-AA-GG formatına uymaktadır, [en son sürümü](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions) kontrol edin",
+      "fetch": "Listeyi al",
+      "title": "Azure API Sürümü"
+    },
+    "endpoint": {
+      "desc": "Azure AI proje özetinden Azure AI model çıkarım uç noktasını bulun",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI Uç Noktası"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Azure AI proje özetinden API anahtarını bulun",
+      "placeholder": "Azure Anahtarı",
+      "title": "Anahtar"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "AWS Access Key Id girin",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Lütfen API Anahtarınızı girin",
-      "required": "Lütfen API Anahtarınızı girin",
       "title": "API Anahtarı"
     },
     "basicTitle": "Temel Bilgiler",
@@ -94,10 +111,11 @@
       "title": "Hizmet Sağlayıcı Adı"
     },
     "proxyUrl": {
-      "placeholder": "Lütfen istek adresinizi girin, boş bırakılırsa SDK'nın ilgili istek adresi kullanılacaktır",
+      "required": "Lütfen proxy adresini girin",
       "title": "Proxy Adresi"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Lütfen SDK türünü seçin",
       "title": "İstek Formatı"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Lütfen Azure'daki model dağıtım adını girin",
           "title": "Model Dağıtım Adı"
         },
+        "deployName": {
+          "extra": "Bu alan, isteği gönderirken model kimliği olarak kullanılacaktır",
+          "placeholder": "Modelin gerçek dağıtım adını veya kimliğini girin",
+          "title": "Model Dağıtım Adı"
+        },
         "displayName": {
           "placeholder": "Lütfen modelin gösterim adını girin, örneğin ChatGPT, GPT-4 vb.",
           "title": "Model Gösterim Adı"
@@ -275,6 +298,11 @@
         "fetching": "Model listesi alınıyor...",
         "latestTime": "Son güncelleme zamanı: {{time}}",
         "noLatestTime": "Henüz liste alınmadı"
+      },
+      "resetAll": {
+        "conform": "Mevcut modelin tüm değişikliklerini sıfırlamak istediğinize emin misiniz? Sıfırladıktan sonra mevcut model listesi varsayılan duruma dönecektir.",
+        "success": "Sıfırlama başarılı",
+        "title": "Tüm değişiklikleri sıfırla"
       },
       "search": "Model ara...",
       "searchResult": "{{count}} model bulundu",

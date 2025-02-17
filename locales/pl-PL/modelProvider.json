@@ -19,6 +19,24 @@
       "title": "Klucz API"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Wersja API Azure, w formacie YYYY-MM-DD, sprawdź [najnowszą wersję](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Pobierz listę",
+      "title": "Wersja API Azure"
+    },
+    "endpoint": {
+      "desc": "Znajdź punkt końcowy wnioskowania modelu Azure AI w przeglądzie projektu Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Punkt końcowy Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Znajdź klucz API w przeglądzie projektu Azure AI",
+      "placeholder": "Klucz Azure",
+      "title": "Klucz"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Wprowadź AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Proszę wpisać swój klucz API",
-      "required": "Proszę wpisać swój klucz API",
       "title": "Klucz API"
     },
     "basicTitle": "Podstawowe informacje",
@@ -94,10 +111,11 @@
       "title": "Nazwa dostawcy"
     },
     "proxyUrl": {
-      "placeholder": "Proszę wpisać adres żądania, jeśli nie zostanie podany, użyty zostanie odpowiedni adres żądania SDK",
+      "required": "Proszę wpisać adres proxy",
       "title": "Adres proxy"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Proszę wybrać typ SDK",
       "title": "Format żądania"
     },
@@ -211,6 +229,11 @@
           "placeholder": "Proszę wpisać nazwę wdrożenia modelu w Azure",
           "title": "Nazwa wdrożenia modelu"
         },
+        "deployName": {
+          "extra": "To pole będzie używane jako identyfikator modelu podczas wysyłania żądania",
+          "placeholder": "Wprowadź rzeczywistą nazwę lub identyfikator wdrożenia modelu",
+          "title": "Nazwa wdrożenia modelu"
+        },
         "displayName": {
           "placeholder": "Proszę wpisać nazwę wyświetlaną modelu, np. ChatGPT, GPT-4 itp.",
           "title": "Nazwa wyświetlana modelu"
@@ -275,6 +298,11 @@
         "fetching": "Pobieranie listy modeli...",
         "latestTime": "Ostatnia aktualizacja: {{time}}",
         "noLatestTime": "Lista nie została jeszcze pobrana"
+      },
+      "resetAll": {
+        "conform": "Czy na pewno chcesz zresetować wszystkie zmiany w bieżącym modelu? Po zresetowaniu lista modeli wróci do stanu domyślnego",
+        "success": "Resetowanie zakończone sukcesem",
+        "title": "Zresetuj wszystkie zmiany"
       },
       "search": "Szukaj modeli...",
       "searchResult": "Znaleziono {{count}} modeli",

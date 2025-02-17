@@ -16,13 +16,18 @@ export type AiProviderSourceType = (typeof AiProviderSourceEnum)[keyof typeof Ai
 export const AiProviderSDKEnum = {
   Anthropic: 'anthropic',
   Azure: 'azure',
+  AzureAI: 'azureai',
   Bedrock: 'bedrock',
   Cloudflare: 'cloudflare',
+  /**
+   * @deprecated
+   */
   Doubao: 'doubao',
   Google: 'google',
   Huggingface: 'huggingface',
   Ollama: 'ollama',
   Openai: 'openai',
+  Volcengine: 'volcengine',
 } as const;
 
 export type AiProviderSDKType = (typeof AiProviderSDKEnum)[keyof typeof AiProviderSDKEnum];
@@ -72,6 +77,13 @@ export interface AiProviderSettings {
    * @default false
    */
   disableBrowserRequest?: boolean;
+  /**
+   * whether provider support edit model
+   *
+   * @default true
+   */
+  modelEditable?: boolean;
+
   proxyUrl?:
     | {
         desc?: string;
@@ -84,7 +96,6 @@ export interface AiProviderSettings {
    * default openai
    */
   sdkType?: AiProviderSDKType;
-
   showAddNewModel?: boolean;
   /**
    * whether show api key in the provider config

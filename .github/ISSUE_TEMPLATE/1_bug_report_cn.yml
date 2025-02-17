@@ -17,6 +17,15 @@ body:
         - 'Other'
     validations:
       required: true
+  - type: dropdown
+    attributes:
+      label: '📦 部署模式'
+      multiple: true
+      options:
+        - '客户端模式(lobe-chat 镜像)'
+        - '服务端模式(lobe-chat-database 镜像)'
+    validations:
+      required: true
   - type: input
     attributes:
       label: '📌 软件版本'

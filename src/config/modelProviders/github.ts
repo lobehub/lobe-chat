@@ -141,6 +141,15 @@ const Github: ModelProviderCard = {
       vision: true,
     },
     {
+      contextWindowTokens: 32_768,
+      description:
+        'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
+      displayName: 'Llama 3.3 70B Instruct',
+      enabled: true,
+      functionCall: true,
+      id: 'llama-3.3-70b-instruct',
+    },
+    {
       contextWindowTokens: 131_072,
       description:
         'Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。',

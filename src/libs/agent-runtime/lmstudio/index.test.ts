@@ -12,7 +12,7 @@ import * as debugStreamModule from '../utils/debugStream';
 import { LobeLMStudioAI } from './index';
 
 const provider = ModelProvider.LMStudio;
-const defaultBaseURL = 'http://localhost:1234/v1';
+const defaultBaseURL = 'http://127.0.0.1:1234/v1';
 
 const bizErrorType = 'ProviderBizError';
 const invalidErrorType = 'InvalidProviderAPIKey';
