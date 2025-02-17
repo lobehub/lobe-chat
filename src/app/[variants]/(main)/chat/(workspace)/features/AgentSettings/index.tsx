@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import Header from '@/app/[variants]/(main)/settings/_layout/Desktop/Header';
+import { INBOX_SESSION_ID } from '@/const/session';
 import AgentChat from '@/features/AgentSetting/AgentChat';
 import AgentMeta from '@/features/AgentSetting/AgentMeta';
 import AgentModal from '@/features/AgentSetting/AgentModal';
@@ -38,8 +39,9 @@ const AgentSettings = memo(() => {
     s.updateSessionMeta,
     sessionMetaSelectors.currentAgentTitle(s),
   ]);
+  const isInbox = id === INBOX_SESSION_ID;
 
-  const [tab, setTab] = useState(ChatSettingsTabs.Meta);
+  const [tab, setTab] = useState(isInbox ? ChatSettingsTabs.Prompt : ChatSettingsTabs.Meta);
 
   const ref = useRef<any>(null);
   const theme = useTheme();
@@ -99,7 +101,7 @@ const AgentSettings = memo(() => {
             width={'100%'}
           >
             {tab === ChatSettingsTabs.Meta && <AgentMeta />}
-            {tab === ChatSettingsTabs.Prompt && <AgentPrompt modal />}
+            {tab === ChatSettingsTabs.Prompt && <AgentPrompt />}
             {tab === ChatSettingsTabs.Chat && <AgentChat />}
             {tab === ChatSettingsTabs.Modal && <AgentModal />}
             {tab === ChatSettingsTabs.TTS && <AgentTTS />}

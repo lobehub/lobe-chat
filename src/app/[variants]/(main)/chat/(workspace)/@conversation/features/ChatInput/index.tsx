@@ -1,6 +1,5 @@
-import MobileChatInput from '@/features/ChatInput/Mobile';
-
 import DesktopChatInput from './Desktop';
+import MobileChatInput from './Mobile';
 
 const ChatInput = ({ mobile }: { mobile: boolean }) => {
   const Input = mobile ? MobileChatInput : DesktopChatInput;

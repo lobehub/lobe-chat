@@ -10,7 +10,6 @@ import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
 
 import { NewUser, UserItem, UserSettingsItem, userSettings, users } from '../../schemas';
-import { SessionModel } from './session';
 
 type DecryptUserKeyVaults = (
   encryptKeyVaultsStr: string | null,
@@ -160,10 +159,7 @@ export class UserModel {
       .values({ ...params })
       .returning();
 
-    // Create an inbox session for the user
-    const model = new SessionModel(db, user.id);
-
-    await model.createInbox();
+    return user;
   };
 
   static deleteUser = async (db: LobeChatDatabase, id: string) => {

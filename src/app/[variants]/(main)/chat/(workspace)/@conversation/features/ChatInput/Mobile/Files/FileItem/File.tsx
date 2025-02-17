@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 import FileIcon from '@/components/FileIcon';
 import { UploadFileItem } from '@/types/files';
 
-import UploadDetail from '../../../components/UploadDetail';
+import UploadDetail from '../../../../../../../../../../../features/ChatInput/components/UploadDetail';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

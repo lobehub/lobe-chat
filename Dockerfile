@@ -183,6 +183,8 @@ ENV \
     HUNYUAN_API_KEY="" HUNYUAN_MODEL_LIST="" \
     # InternLM
     INTERNLM_API_KEY="" INTERNLM_MODEL_LIST="" \
+    # Jina
+    JINA_API_KEY="" JINA_MODEL_LIST="" JINA_PROXY_URL="" \
     # Minimax
     MINIMAX_API_KEY="" MINIMAX_MODEL_LIST="" \
     # Mistral

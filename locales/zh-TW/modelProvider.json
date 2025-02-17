@@ -19,6 +19,24 @@
       "title": "API 金鑰"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-tw/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "獲取列表",
+      "title": "Azure API 版本"
+    },
+    "endpoint": {
+      "desc": "從 Azure AI 專案概述找到 Azure AI 模型推理終結點",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI 終結點"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "從 Azure AI 專案概述找到 API 密鑰",
+      "placeholder": "Azure 密鑰",
+      "title": "密鑰"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "填入AWS Access Key Id",
@@ -97,6 +115,7 @@
       "title": "代理地址"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "請選擇 SDK 類型",
       "title": "請求格式"
     },
@@ -208,6 +227,11 @@
         "azureDeployName": {
           "extra": "在 Azure OpenAI 中實際請求的字段",
           "placeholder": "請輸入 Azure 中的模型部署名稱",
+          "title": "模型部署名稱"
+        },
+        "deployName": {
+          "extra": "發送請求時會將該字段作為模型 ID",
+          "placeholder": "請輸入模型實際部署的名稱或 id",
           "title": "模型部署名稱"
         },
         "displayName": {

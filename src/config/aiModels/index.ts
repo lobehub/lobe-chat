@@ -4,6 +4,7 @@ import { default as ai21 } from './ai21';
 import { default as ai360 } from './ai360';
 import { default as anthropic } from './anthropic';
 import { default as azure } from './azure';
+import { default as azureai } from './azureai';
 import { default as baichuan } from './baichuan';
 import { default as bedrock } from './bedrock';
 import { default as cloudflare } from './cloudflare';
@@ -18,6 +19,7 @@ import { default as higress } from './higress';
 import { default as huggingface } from './huggingface';
 import { default as hunyuan } from './hunyuan';
 import { default as internlm } from './internlm';
+import { default as jina } from './jina';
 import { default as lmstudio } from './lmstudio';
 import { default as minimax } from './minimax';
 import { default as mistral } from './mistral';
@@ -39,6 +41,7 @@ import { default as tencentcloud } from './tencentcloud';
 import { default as togetherai } from './togetherai';
 import { default as upstage } from './upstage';
 import { default as vllm } from './vllm';
+import { default as volcengine } from './volcengine';
 import { default as wenxin } from './wenxin';
 import { default as xai } from './xai';
 import { default as zeroone } from './zeroone';
@@ -68,6 +71,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   ai360,
   anthropic,
   azure,
+  azureai,
   baichuan,
   bedrock,
   cloudflare,
@@ -82,6 +86,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   huggingface,
   hunyuan,
   internlm,
+  jina,
   lmstudio,
   minimax,
   mistral,
@@ -103,6 +108,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   togetherai,
   upstage,
   vllm,
+  volcengine,
   wenxin,
   xai,
   zeroone,
@@ -113,6 +119,7 @@ export { default as ai21 } from './ai21';
 export { default as ai360 } from './ai360';
 export { default as anthropic } from './anthropic';
 export { default as azure } from './azure';
+export { default as azureai } from './azureai';
 export { default as baichuan } from './baichuan';
 export { default as bedrock } from './bedrock';
 export { default as cloudflare } from './cloudflare';
@@ -127,6 +134,7 @@ export { default as higress } from './higress';
 export { default as huggingface } from './huggingface';
 export { default as hunyuan } from './hunyuan';
 export { default as internlm } from './internlm';
+export { default as jina } from './jina';
 export { default as lmstudio } from './lmstudio';
 export { default as minimax } from './minimax';
 export { default as mistral } from './mistral';
@@ -148,6 +156,7 @@ export { default as tencentcloud } from './tencentcloud';
 export { default as togetherai } from './togetherai';
 export { default as upstage } from './upstage';
 export { default as vllm } from './vllm';
+export { default as volcengine } from './volcengine';
 export { default as wenxin } from './wenxin';
 export { default as xai } from './xai';
 export { default as zeroone } from './zeroone';

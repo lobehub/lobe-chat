@@ -578,6 +578,9 @@
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B là mô hình tiên tiến được huấn luyện cho các cuộc đối thoại phức tạp."
   },
+  "deepseek-ai/deepseek-r1": {
+    "description": "LLM hiệu quả tiên tiến, xuất sắc trong suy luận, toán học và lập trình."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 là một mô hình ngôn ngữ hình ảnh hỗn hợp chuyên gia (MoE) được phát triển dựa trên DeepSeekMoE-27B, sử dụng kiến trúc MoE với kích hoạt thưa, đạt được hiệu suất xuất sắc chỉ với 4.5B tham số được kích hoạt. Mô hình này thể hiện xuất sắc trong nhiều nhiệm vụ như hỏi đáp hình ảnh, nhận diện ký tự quang học, hiểu tài liệu/bảng/biểu đồ và định vị hình ảnh."
   },
@@ -628,6 +631,12 @@
   },
   "deepseek/deepseek-chat": {
     "description": "Mô hình mã nguồn mở mới kết hợp khả năng tổng quát và mã, không chỉ giữ lại khả năng đối thoại tổng quát của mô hình Chat ban đầu và khả năng xử lý mã mạnh mẽ của mô hình Coder, mà còn tốt hơn trong việc phù hợp với sở thích của con người. Hơn nữa, DeepSeek-V2.5 cũng đã đạt được sự cải thiện lớn trong nhiều lĩnh vực như nhiệm vụ viết, theo dõi chỉ dẫn."
+  },
+  "deepseek/deepseek-r1": {
+    "description": "DeepSeek-R1 đã nâng cao khả năng suy luận của mô hình một cách đáng kể với rất ít dữ liệu được gán nhãn. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ để nâng cao độ chính xác của câu trả lời cuối cùng."
+  },
+  "deepseek/deepseek-r1:free": {
+    "description": "DeepSeek-R1 đã nâng cao khả năng suy luận của mô hình một cách đáng kể với rất ít dữ liệu được gán nhãn. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ để nâng cao độ chính xác của câu trả lời cuối cùng."
   },
   "emohaa": {
     "description": "Emohaa là mô hình tâm lý, có khả năng tư vấn chuyên nghiệp, giúp người dùng hiểu các vấn đề cảm xúc."
@@ -821,11 +830,17 @@
   "google/gemini-pro-1.5": {
     "description": "Gemini 1.5 Pro kết hợp công nghệ tối ưu hóa mới nhất, mang lại khả năng xử lý dữ liệu đa phương thức hiệu quả hơn."
   },
+  "google/gemma-2-27b": {
+    "description": "Gemma 2 là mô hình hiệu quả do Google phát hành, bao gồm nhiều ứng dụng từ ứng dụng nhỏ đến xử lý dữ liệu phức tạp."
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 tiếp tục triết lý thiết kế nhẹ và hiệu quả."
   },
   "google/gemma-2-2b-it": {
     "description": "Mô hình tinh chỉnh hướng dẫn nhẹ của Google"
+  },
+  "google/gemma-2-9b": {
+    "description": "Gemma 2 là mô hình hiệu quả do Google phát hành, bao gồm nhiều ứng dụng từ ứng dụng nhỏ đến xử lý dữ liệu phức tạp."
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 là một loạt mô hình văn bản mã nguồn mở nhẹ của Google."
@@ -998,6 +1013,9 @@
   "internlm3-latest": {
     "description": "Dòng mô hình mới nhất của chúng tôi, có hiệu suất suy luận xuất sắc, dẫn đầu trong số các mô hình mã nguồn mở cùng cấp. Mặc định chỉ đến mô hình InternLM3 mới nhất mà chúng tôi đã phát hành."
   },
+  "jina-deepsearch-v1": {
+    "description": "Tìm kiếm sâu kết hợp tìm kiếm trên mạng, đọc và suy luận, có thể thực hiện điều tra toàn diện. Bạn có thể coi nó như một đại lý, nhận nhiệm vụ nghiên cứu của bạn - nó sẽ thực hiện tìm kiếm rộng rãi và qua nhiều lần lặp lại trước khi đưa ra câu trả lời. Quá trình này liên quan đến nghiên cứu liên tục, suy luận và giải quyết vấn đề từ nhiều góc độ. Điều này khác biệt hoàn toàn với việc tạo ra câu trả lời trực tiếp từ dữ liệu đã được huấn luyện trước của các mô hình lớn tiêu chuẩn và các hệ thống RAG truyền thống dựa vào tìm kiếm bề mặt một lần."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM là một mô hình ngôn ngữ thử nghiệm, chuyên biệt cho các nhiệm vụ, được đào tạo để tuân theo các nguyên tắc khoa học học tập, có thể tuân theo các chỉ dẫn hệ thống trong các tình huống giảng dạy và học tập, đóng vai trò như một người hướng dẫn chuyên gia."
   },
@@ -1139,6 +1157,9 @@
   "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
     "description": "Mô hình Llama 3.1 Turbo 405B cung cấp hỗ trợ ngữ cảnh dung lượng lớn cho xử lý dữ liệu lớn, thể hiện xuất sắc trong các ứng dụng trí tuệ nhân tạo quy mô lớn."
   },
+  "meta-llama/Meta-Llama-3.1-70B": {
+    "description": "Llama 3.1 là mô hình hàng đầu do Meta phát hành, hỗ trợ lên đến 405B tham số, có thể áp dụng cho cuộc đối thoại phức tạp, dịch đa ngôn ngữ và phân tích dữ liệu."
+  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct": {
     "description": "LLaMA 3.1 70B cung cấp hỗ trợ đối thoại hiệu quả đa ngôn ngữ."
   },
@@ -1195,6 +1216,30 @@
   },
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 là một mô hình ngôn ngữ lớn (LLM) mở dành cho các nhà phát triển, nhà nghiên cứu và doanh nghiệp, nhằm giúp họ xây dựng, thử nghiệm và mở rộng ý tưởng AI sinh một cách có trách nhiệm. Là một phần của hệ thống cơ sở hạ tầng đổi mới toàn cầu, nó rất phù hợp cho các thiết bị biên và thời gian huấn luyện nhanh hơn với khả năng tính toán và tài nguyên hạn chế."
+  },
+  "meta/llama-3.1-405b-instruct": {
+    "description": "LLM cao cấp, hỗ trợ tạo dữ liệu tổng hợp, chưng cất kiến thức và suy luận, phù hợp cho chatbot, lập trình và các nhiệm vụ chuyên biệt."
+  },
+  "meta/llama-3.1-70b-instruct": {
+    "description": "Tăng cường cuộc đối thoại phức tạp, có khả năng hiểu ngữ cảnh xuất sắc, suy luận và sinh văn bản."
+  },
+  "meta/llama-3.1-8b-instruct": {
+    "description": "Mô hình tiên tiến hàng đầu, có khả năng hiểu ngôn ngữ, suy luận xuất sắc và khả năng sinh văn bản."
+  },
+  "meta/llama-3.2-11b-vision-instruct": {
+    "description": "Mô hình thị giác-ngôn ngữ tiên tiến, xuất sắc trong việc suy luận chất lượng cao từ hình ảnh."
+  },
+  "meta/llama-3.2-1b-instruct": {
+    "description": "Mô hình ngôn ngữ nhỏ tiên tiến hàng đầu, có khả năng hiểu ngôn ngữ, suy luận xuất sắc và khả năng sinh văn bản."
+  },
+  "meta/llama-3.2-3b-instruct": {
+    "description": "Mô hình ngôn ngữ nhỏ tiên tiến hàng đầu, có khả năng hiểu ngôn ngữ, suy luận xuất sắc và khả năng sinh văn bản."
+  },
+  "meta/llama-3.2-90b-vision-instruct": {
+    "description": "Mô hình thị giác-ngôn ngữ tiên tiến, xuất sắc trong việc suy luận chất lượng cao từ hình ảnh."
+  },
+  "meta/llama-3.3-70b-instruct": {
+    "description": "Mô hình LLM tiên tiến, xuất sắc trong suy luận, toán học, kiến thức chung và gọi hàm."
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 là mô hình ngôn ngữ do AI của Microsoft cung cấp, thể hiện xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
@@ -1291,6 +1336,12 @@
   },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B là một mô hình ngôn ngữ quy mô lớn tùy chỉnh bởi NVIDIA, nhằm nâng cao mức độ hỗ trợ của phản hồi do LLM tạo ra đối với các truy vấn của người dùng. Mô hình này đã thể hiện xuất sắc trong các bài kiểm tra chuẩn như Arena Hard, AlpacaEval 2 LC và GPT-4-Turbo MT-Bench, đứng đầu trong cả ba bài kiểm tra tự động cho đến ngày 1 tháng 10 năm 2024. Mô hình sử dụng RLHF (đặc biệt là REINFORCE), Llama-3.1-Nemotron-70B-Reward và HelpSteer2-Preference để đào tạo trên cơ sở mô hình Llama-3.1-70B-Instruct."
+  },
+  "nvidia/llama-3.1-nemotron-51b-instruct": {
+    "description": "Mô hình ngôn ngữ độc đáo, cung cấp độ chính xác và hiệu suất không thể sánh kịp."
+  },
+  "nvidia/llama-3.1-nemotron-70b-instruct": {
+    "description": "Llama-3.1-Nemotron-70B là mô hình ngôn ngữ lớn tùy chỉnh của NVIDIA, nhằm nâng cao tính hữu ích của các phản hồi do LLM tạo ra."
   },
   "o1": {
     "description": "Tập trung vào suy diễn nâng cao và giải quyết các vấn đề phức tạp, bao gồm các nhiệm vụ toán học và khoa học. Rất phù hợp cho các ứng dụng cần hiểu biết sâu sắc về ngữ cảnh và quy trình làm việc đại diện."
@@ -1405,6 +1456,15 @@
   },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2 là một loạt mô hình ngôn ngữ lớn hoàn toàn mới, có khả năng hiểu và sinh mạnh mẽ hơn."
+  },
+  "qwen/qwen2.5-7b-instruct": {
+    "description": "LLM hướng đến tiếng Trung và tiếng Anh, tập trung vào ngôn ngữ, lập trình, toán học, suy luận và các lĩnh vực khác."
+  },
+  "qwen/qwen2.5-coder-32b-instruct": {
+    "description": "LLM cao cấp, hỗ trợ tạo mã, suy luận và sửa chữa, bao gồm các ngôn ngữ lập trình phổ biến."
+  },
+  "qwen/qwen2.5-coder-7b-instruct": {
+    "description": "Mô hình mã mạnh mẽ cỡ trung, hỗ trợ độ dài ngữ cảnh 32K, xuất sắc trong lập trình đa ngôn ngữ."
   },
   "qwen2": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."

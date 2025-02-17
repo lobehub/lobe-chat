@@ -1,3 +1,3 @@
 export { AgentSettings } from './AgentSettings';
-export { AgentSettingsStore } from './AgentSettingsStore';
+export { AgentSettingsProvider } from './AgentSettingsProvider';
 export type { AgentSettingsInstance } from './hooks/useAgentSettings';

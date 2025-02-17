@@ -6,7 +6,6 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { INBOX_SESSION_ID } from '@/const/session';
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { useClientDataSWR, useOnlyFetchOnceSWR } from '@/libs/swr';
 import { agentService } from '@/services/agent';
 import { sessionService } from '@/services/session';
@@ -51,7 +50,7 @@ export interface AgentChatAction {
   updateAgentConfig: (config: DeepPartial<LobeAgentConfig>) => Promise<void>;
   useFetchAgentConfig: (id: string) => SWRResponse<LobeAgentConfig>;
   useFetchFilesAndKnowledgeBases: () => SWRResponse<KnowledgeItem[]>;
-  useInitAgentStore: (
+  useInitInboxAgentStore: (
     isLogin: boolean | undefined,
     defaultAgentConfig?: DeepPartial<LobeAgentConfig>,
   ) => SWRResponse<DeepPartial<LobeAgentConfig>>;
@@ -164,12 +163,10 @@ export const createChatSlice: StateCreator<
       [FETCH_AGENT_CONFIG_KEY, sessionId],
       ([, id]: string[]) => sessionService.getSessionConfig(id),
       {
-        fallbackData: DEFAULT_AGENT_CONFIG,
         onSuccess: (data) => {
           get().internal_dispatchAgentMap(sessionId, data, 'fetch');
           set({ activeAgentId: data.id }, false, 'updateActiveAgentId');
         },
-        suspense: true,
       },
     ),
   useFetchFilesAndKnowledgeBases: () => {
@@ -183,7 +180,7 @@ export const createChatSlice: StateCreator<
     );
   },
 
-  useInitAgentStore: (isLogin, defaultAgentConfig) =>
+  useInitInboxAgentStore: (isLogin, defaultAgentConfig) =>
     useOnlyFetchOnceSWR<DeepPartial<LobeAgentConfig>>(
       !!isLogin ? 'fetchInboxAgentConfig' : null,
       () => sessionService.getSessionConfig(INBOX_SESSION_ID),

@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Versão da API do Azure, seguindo o formato AAAA-MM-DD. Consulte a [versão mais recente](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Obter lista",
+      "title": "Versão da API do Azure"
+    },
+    "endpoint": {
+      "desc": "Encontre o ponto de extremidade de inferência do modelo do Azure AI na visão geral do projeto Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Ponto de extremidade do Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Encontre a chave da API na visão geral do projeto Azure AI",
+      "placeholder": "Chave do Azure",
+      "title": "Chave"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Insira o AWS Access Key Id",
@@ -97,6 +115,7 @@
       "title": "Endereço do Proxy"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Por favor, selecione o tipo de SDK",
       "title": "Formato da Requisição"
     },
@@ -209,6 +228,11 @@
           "extra": "Campo solicitado na Azure OpenAI",
           "placeholder": "Por favor, insira o nome de implantação do modelo na Azure",
           "title": "Nome de Implantação do Modelo"
+        },
+        "deployName": {
+          "extra": "Este campo será usado como ID do modelo ao enviar a solicitação",
+          "placeholder": "Insira o nome ou ID real do modelo implantado",
+          "title": "Nome da implantação do modelo"
         },
         "displayName": {
           "placeholder": "Por favor, insira o nome de exibição do modelo, por exemplo, ChatGPT, GPT-4, etc.",

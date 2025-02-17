@@ -1,11 +1,11 @@
 import { Modal } from '@lobehub/ui';
 import { Button, FormInstance } from 'antd';
-import { memo, useState } from 'react';
+import { memo, use, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ModelProvider } from '@/libs/agent-runtime';
 import { useAiInfraStore } from '@/store/aiInfra';
 
+import { ProviderSettingsContext } from '../ProviderSettingsContext';
 import ModelConfigForm from './Form';
 
 interface ModelConfigModalProps {
@@ -25,6 +25,8 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ open, setOpen }) => {
   const closeModal = () => {
     setOpen(false);
   };
+
+  const { showDeployName } = use(ProviderSettingsContext);
 
   return (
     <Modal
@@ -65,10 +67,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ open, setOpen }) => {
       title={t('providerModels.createNew.title')}
       zIndex={1251} // Select is 1150
     >
-      <ModelConfigForm
-        onFormInstanceReady={setFormInstance}
-        showAzureDeployName={editingProvider === ModelProvider.Azure}
-      />
+      <ModelConfigForm onFormInstanceReady={setFormInstance} showDeployName={showDeployName} />
     </Modal>
   );
 });

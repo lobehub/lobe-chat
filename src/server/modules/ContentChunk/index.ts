@@ -1,8 +1,12 @@
 import { ChunkingLoader } from 'src/libs/langchain';
 import { Strategy } from 'unstructured-client/sdk/models/shared';
 
-import { NewChunkItem, NewUnstructuredChunkItem } from '@/database/schemas';
+import { knowledgeEnv } from '@/config/knowledge';
+import type { NewChunkItem, NewUnstructuredChunkItem } from '@/database/schemas';
 import { ChunkingStrategy, Unstructured } from '@/libs/unstructured';
+
+import { ChunkingRuleParser } from './rules';
+import type { ChunkingService } from './rules';
 
 export interface ChunkContentParams {
   content: Uint8Array;
@@ -19,21 +23,55 @@ interface ChunkResult {
 export class ContentChunk {
   private unstructuredClient: Unstructured;
   private langchainClient: ChunkingLoader;
+  private chunkingRules: Record<string, ChunkingService[]>;
 
   constructor() {
     this.unstructuredClient = new Unstructured();
     this.langchainClient = new ChunkingLoader();
+    this.chunkingRules = ChunkingRuleParser.parse(knowledgeEnv.FILE_TYPE_CHUNKING_RULES || '');
   }
 
-  isUsingUnstructured(params: ChunkContentParams) {
-    return params.fileType === 'application/pdf' && params.mode === 'hi-res';
+  private getChunkingServices(fileType: string): ChunkingService[] {
+    const ext = fileType.split('/').pop()?.toLowerCase() || '';
+    return this.chunkingRules[ext] || ['default'];
   }
 
   async chunkContent(params: ChunkContentParams): Promise<ChunkResult> {
-    if (this.isUsingUnstructured(params))
-      return await this.chunkByUnstructured(params.filename, params.content);
+    const services = this.getChunkingServices(params.fileType);
 
+    for (const service of services) {
+      try {
+        switch (service) {
+          case 'unstructured': {
+            if (this.canUseUnstructured()) {
+              return await this.chunkByUnstructured(params.filename, params.content);
+            }
+            break;
+          }
+
+          case 'doc2x': {
+            // Future implementation
+            break;
+          }
+
+          default: {
+            return await this.chunkByLangChain(params.filename, params.content);
+          }
+        }
+      } catch (error) {
+        // If this is the last service, throw the error
+        if (service === services.at(-1)) throw error;
+        // Otherwise continue to next service
+        console.error(`Chunking failed with service ${service}:`, error);
+      }
+    }
+
+    // Fallback to langchain if no service succeeded
     return await this.chunkByLangChain(params.filename, params.content);
+  }
+
+  private canUseUnstructured(): boolean {
+    return !!(knowledgeEnv.UNSTRUCTURED_API_KEY && knowledgeEnv.UNSTRUCTURED_SERVER_URL);
   }
 
   private chunkByUnstructured = async (

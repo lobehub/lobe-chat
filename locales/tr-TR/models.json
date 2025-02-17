@@ -578,6 +578,9 @@
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B, yüksek karmaşıklıkta diyaloglar için eğitilmiş gelişmiş bir modeldir."
   },
+  "deepseek-ai/deepseek-r1": {
+    "description": "En son teknolojiye sahip verimli LLM, akıl yürütme, matematik ve programlama konularında uzmandır."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2, DeepSeekMoE-27B tabanlı bir karma uzman (MoE) görsel dil modelidir. Seyrek etkinleştirilen MoE mimarisini kullanarak yalnızca 4.5B parametreyi etkinleştirerek olağanüstü performans sergilemektedir. Bu model, görsel soru yanıtlama, optik karakter tanıma, belge/tablolar/grafikler anlama ve görsel konumlandırma gibi birçok görevde mükemmel sonuçlar elde etmektedir."
   },
@@ -628,6 +631,12 @@
   },
   "deepseek/deepseek-chat": {
     "description": "Genel ve kod yeteneklerini birleştiren yeni açık kaynak model, yalnızca mevcut Chat modelinin genel diyalog yeteneklerini ve Coder modelinin güçlü kod işleme yeteneklerini korumakla kalmaz, aynı zamanda insan tercihleriyle daha iyi hizalanmıştır. Ayrıca, DeepSeek-V2.5 yazma görevleri, talimat takibi gibi birçok alanda da büyük iyileştirmeler sağlamıştır."
+  },
+  "deepseek/deepseek-r1": {
+    "description": "DeepSeek-R1, yalnızca çok az etiketli veri ile modelin akıl yürütme yeteneğini büyük ölçüde artırır. Model, nihai yanıtı vermeden önce bir düşünce zinciri içeriği sunarak nihai yanıtın doğruluğunu artırır."
+  },
+  "deepseek/deepseek-r1:free": {
+    "description": "DeepSeek-R1, yalnızca çok az etiketli veri ile modelin akıl yürütme yeteneğini büyük ölçüde artırır. Model, nihai yanıtı vermeden önce bir düşünce zinciri içeriği sunarak nihai yanıtın doğruluğunu artırır."
   },
   "emohaa": {
     "description": "Emohaa, duygusal sorunları anlamalarına yardımcı olmak için profesyonel danışmanlık yeteneklerine sahip bir psikolojik modeldir."
@@ -821,11 +830,17 @@
   "google/gemini-pro-1.5": {
     "description": "Gemini 1.5 Pro, en son optimize edilmiş teknolojileri birleştirerek daha verimli çok modlu veri işleme yetenekleri sunar."
   },
+  "google/gemma-2-27b": {
+    "description": "Gemma 2, Google tarafından sunulan verimli bir modeldir, küçük uygulamalardan karmaşık veri işleme senaryolarına kadar çeşitli uygulama alanlarını kapsar."
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2, hafiflik ve verimlilik tasarım felsefesini sürdürmektedir."
   },
   "google/gemma-2-2b-it": {
     "description": "Google'ın hafif talimat ayarlama modeli"
+  },
+  "google/gemma-2-9b": {
+    "description": "Gemma 2, Google tarafından sunulan verimli bir modeldir, küçük uygulamalardan karmaşık veri işleme senaryolarına kadar çeşitli uygulama alanlarını kapsar."
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2, Google'ın hafif açık kaynak metin modeli serisidir."
@@ -998,6 +1013,9 @@
   "internlm3-latest": {
     "description": "En son model serimiz, olağanüstü çıkarım performansına sahiptir ve aynı ölçekli açık kaynak modeller arasında liderdir. Varsayılan olarak en son yayımlanan InternLM3 serisi modellerine işaret eder."
   },
+  "jina-deepsearch-v1": {
+    "description": "Derin arama, web araması, okuma ve akıl yürütmeyi birleştirerek kapsamlı bir araştırma yapar. Bunu, araştırma görevlerinizi kabul eden bir ajan olarak düşünebilirsiniz - geniş bir arama yapar ve birden fazla yineleme ile cevap verir. Bu süreç, sürekli araştırma, akıl yürütme ve sorunları çeşitli açılardan çözmeyi içerir. Bu, doğrudan önceden eğitilmiş verilerden cevaplar üreten standart büyük modellerle ve tek seferlik yüzey aramasına dayanan geleneksel RAG sistemleriyle temelde farklıdır."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM, öğrenme bilimleri ilkelerine uygun olarak eğitilmiş, görev odaklı deneysel bir dil modelidir. Eğitim ve öğrenim senaryolarında sistem talimatlarını takip edebilir ve uzman bir mentor olarak görev alabilir."
   },
@@ -1139,6 +1157,9 @@
   "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
     "description": "405B Llama 3.1 Turbo modeli, büyük veri işleme için devasa bağlam desteği sunar ve büyük ölçekli AI uygulamalarında öne çıkar."
   },
+  "meta-llama/Meta-Llama-3.1-70B": {
+    "description": "Llama 3.1, Meta tarafından sunulan öncü bir modeldir, 405B parametreye kadar destekler ve karmaşık diyaloglar, çok dilli çeviri ve veri analizi alanlarında uygulanabilir."
+  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct": {
     "description": "LLaMA 3.1 70B, çok dilli yüksek verimli diyalog desteği sunmaktadır."
   },
@@ -1195,6 +1216,30 @@
   },
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3, geliştiriciler, araştırmacılar ve işletmeler için açık bir büyük dil modelidir (LLM) ve onların üretken AI fikirlerini inşa etmelerine, denemelerine ve sorumlu bir şekilde genişletmelerine yardımcı olmak için tasarlanmıştır. Küresel topluluk yeniliğinin temel sistemlerinden biri olarak, sınırlı hesaplama gücü ve kaynaklara sahip, kenar cihazları ve daha hızlı eğitim süreleri için son derece uygundur."
+  },
+  "meta/llama-3.1-405b-instruct": {
+    "description": "Gelişmiş LLM, sentetik veri üretimi, bilgi damıtma ve akıl yürütmeyi destekler, sohbet botları, programlama ve belirli alan görevleri için uygundur."
+  },
+  "meta/llama-3.1-70b-instruct": {
+    "description": "Karmaşık diyalogları güçlendiren, mükemmel bağlam anlama, akıl yürütme yeteneği ve metin üretimi yeteneğine sahip."
+  },
+  "meta/llama-3.1-8b-instruct": {
+    "description": "En son teknolojiye sahip model, dil anlama, mükemmel akıl yürütme yeteneği ve metin üretimi yeteneğine sahiptir."
+  },
+  "meta/llama-3.2-11b-vision-instruct": {
+    "description": "Gelişmiş görsel-dil modeli, görüntülerden yüksek kaliteli akıl yürütme yapma konusunda uzmandır."
+  },
+  "meta/llama-3.2-1b-instruct": {
+    "description": "En son teknolojiye sahip küçük dil modeli, dil anlama, mükemmel akıl yürütme yeteneği ve metin üretimi yeteneğine sahiptir."
+  },
+  "meta/llama-3.2-3b-instruct": {
+    "description": "En son teknolojiye sahip küçük dil modeli, dil anlama, mükemmel akıl yürütme yeteneği ve metin üretimi yeteneğine sahiptir."
+  },
+  "meta/llama-3.2-90b-vision-instruct": {
+    "description": "Gelişmiş görsel-dil modeli, görüntülerden yüksek kaliteli akıl yürütme yapma konusunda uzmandır."
+  },
+  "meta/llama-3.3-70b-instruct": {
+    "description": "Akıllı LLM, akıl yürütme, matematik, genel bilgi ve fonksiyon çağrılarında uzmandır."
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2, Microsoft AI tarafından sağlanan bir dil modelidir ve karmaşık diyaloglar, çok dilli destek, akıl yürütme ve akıllı asistan alanlarında özellikle başarılıdır."
@@ -1291,6 +1336,12 @@
   },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B, NVIDIA tarafından özelleştirilmiş büyük bir dil modelidir ve LLM tarafından üretilen yanıtların kullanıcı sorgularına yardımcı olma düzeyini artırmayı amaçlamaktadır. Bu model, Arena Hard, AlpacaEval 2 LC ve GPT-4-Turbo MT-Bench gibi standart testlerde mükemmel performans sergilemiştir ve 1 Ekim 2024 itibarıyla tüm üç otomatik hizalama testinde birinci sıradadır. Model, Llama-3.1-70B-Instruct modelinin temelinde RLHF (özellikle REINFORCE), Llama-3.1-Nemotron-70B-Reward ve HelpSteer2-Preference ipuçları kullanılarak eğitilmiştir."
+  },
+  "nvidia/llama-3.1-nemotron-51b-instruct": {
+    "description": "Eşsiz bir dil modeli, benzersiz doğruluk ve verimlilik sunar."
+  },
+  "nvidia/llama-3.1-nemotron-70b-instruct": {
+    "description": "Llama-3.1-Nemotron-70B-Instruct, NVIDIA'nın özel olarak geliştirdiği büyük dil modelidir ve LLM tarafından üretilen yanıtların yardımcı olmasını artırmayı amaçlar."
   },
   "o1": {
     "description": "Gelişmiş çıkarım ve karmaşık sorunları çözmeye odaklanır, matematik ve bilim görevlerini içerir. Derin bağlam anlayışı ve aracılık iş akışları gerektiren uygulamalar için son derece uygundur."
@@ -1405,6 +1456,15 @@
   },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2, daha güçlü anlama ve üretme yeteneklerine sahip yeni bir büyük dil modeli serisidir."
+  },
+  "qwen/qwen2.5-7b-instruct": {
+    "description": "Çince ve İngilizce'ye yönelik LLM, dil, programlama, matematik, akıl yürütme gibi alanlara odaklanır."
+  },
+  "qwen/qwen2.5-coder-32b-instruct": {
+    "description": "Gelişmiş LLM, kod üretimi, akıl yürütme ve düzeltme desteği sunar, ana akım programlama dillerini kapsar."
+  },
+  "qwen/qwen2.5-coder-7b-instruct": {
+    "description": "Güçlü orta ölçekli kod modeli, 32K bağlam uzunluğunu destekler, çok dilli programlama konusunda uzmandır."
   },
   "qwen2": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."

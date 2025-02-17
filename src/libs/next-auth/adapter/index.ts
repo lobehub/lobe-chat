@@ -10,6 +10,7 @@ import { Adapter, AdapterAccount } from 'next-auth/adapters';
 
 import * as schema from '@/database/schemas';
 import { UserModel } from '@/database/server/models/user';
+import { AgentService } from '@/server/services/agent';
 import { merge } from '@/utils/merge';
 
 import {
@@ -65,6 +66,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
         const adapterUser = mapLobeUserToAdapterUser(existingUser);
         return adapterUser;
       }
+
       // create a new user if it does not exist
       await UserModel.createUser(
         serverDB,
@@ -77,6 +79,11 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
           name,
         }),
       );
+
+      // 3. Create an inbox session for the user
+      const agentService = new AgentService(serverDB, id);
+      await agentService.createInbox();
+
       return { ...user, id: providerAccountId ?? id };
     },
     async createVerificationToken(data): Promise<VerificationToken | null | undefined> {

@@ -30,6 +30,7 @@ export interface UserKeyVaults {
   ai360?: OpenAICompatibleKeyVault;
   anthropic?: OpenAICompatibleKeyVault;
   azure?: AzureOpenAIKeyVault;
+  azureai?: AzureOpenAIKeyVault;
   baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
   cloudflare?: CloudflareKeyVault;
@@ -44,6 +45,7 @@ export interface UserKeyVaults {
   huggingface?: OpenAICompatibleKeyVault;
   hunyuan?: OpenAICompatibleKeyVault;
   internlm?: OpenAICompatibleKeyVault;
+  jina?: OpenAICompatibleKeyVault;
   lmstudio?: OpenAICompatibleKeyVault;
   lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
@@ -67,6 +69,7 @@ export interface UserKeyVaults {
   togetherai?: OpenAICompatibleKeyVault;
   upstage?: OpenAICompatibleKeyVault;
   vllm?: OpenAICompatibleKeyVault;
+  volcengine?: OpenAICompatibleKeyVault;
   wenxin?: OpenAICompatibleKeyVault;
   xai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;

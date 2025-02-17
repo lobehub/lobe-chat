@@ -170,3 +170,37 @@ export const createFirstErrorHandleTransformer = (
     },
   });
 };
+
+/**
+ * create a transformer to remove SSE format data
+ */
+export const createSSEDataExtractor = () =>
+  new TransformStream({
+    transform(chunk: Uint8Array, controller) {
+      // 将 Uint8Array 转换为字符串
+      const text = new TextDecoder().decode(chunk, { stream: true });
+
+      // 处理多行数据的情况
+      const lines = text.split('\n');
+
+      for (const line of lines) {
+        // 只处理以 "data: " 开头的行
+        if (line.startsWith('data: ')) {
+          // 提取 "data: " 后面的实际数据
+          const jsonText = line.slice(6);
+
+          // 跳过心跳消息
+          if (jsonText === '[DONE]') continue;
+
+          try {
+            // 解析 JSON 数据
+            const data = JSON.parse(jsonText);
+            // 将解析后的数据传递给下一个处理器
+            controller.enqueue(data);
+          } catch {
+            console.warn('Failed to parse SSE data:', jsonText);
+          }
+        }
+      }
+    },
+  });

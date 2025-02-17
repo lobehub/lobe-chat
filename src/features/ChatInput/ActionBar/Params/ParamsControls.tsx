@@ -1,5 +1,6 @@
 import { Form, Tag } from '@lobehub/ui';
 import type { FormItemProps } from '@lobehub/ui/es/Form/components/FormItem';
+import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { memo } from 'react';
@@ -16,10 +17,20 @@ import {
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
+const useStyles = createStyles(({ css }) => ({
+  container: css`
+    .ant-form-group {
+      padding-inline: 0;
+      background: transparent;
+    }
+  `,
+}));
+
 interface ParamsControlsProps {
   setUpdating: (updating: boolean) => void;
 }
 const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
+  const { styles } = useStyles();
   const { t } = useTranslation('setting');
 
   const updateAgentConfig = useAgentStore((s) => s.updateAgentConfig);
@@ -75,13 +86,13 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
 
   return (
     <Form
+      className={styles.container}
       initialValues={config}
       itemMinWidth={200}
       items={items}
       itemsType={'flat'}
       onValuesChange={debounce(async (values) => {
         setUpdating(true);
-        console.log(values);
         await updateAgentConfig(values);
         setUpdating(false);
       }, 500)}

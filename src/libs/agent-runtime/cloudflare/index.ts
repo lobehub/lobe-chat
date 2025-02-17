@@ -1,3 +1,5 @@
+import { ChatModelCard } from '@/types/llm';
+
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
@@ -11,8 +13,6 @@ import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import { createCallbacksTransformer } from '../utils/streams';
-
-import { ChatModelCard } from '@/types/llm';
 
 export interface CloudflareModelCard {
   description: string;
@@ -34,7 +34,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
   accountID: string;
   apiKey?: string;
 
-  constructor({ apiKey, baseURLOrAccountID }: LobeCloudflareParams) {
+  constructor({ apiKey, baseURLOrAccountID }: LobeCloudflareParams = {}) {
     if (!baseURLOrAccountID) {
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
     }
@@ -128,30 +128,34 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.name.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: model.properties?.max_total_tokens
             ? Number(model.properties.max_total_tokens)
-            : knownModel?.contextWindowTokens ?? undefined,
-          displayName: knownModel?.displayName ?? (model.properties?.["beta"] === "true" ? `${model.name} (Beta)` : undefined),
+            : (knownModel?.contextWindowTokens ?? undefined),
+          displayName:
+            knownModel?.displayName ??
+            (model.properties?.['beta'] === 'true' ? `${model.name} (Beta)` : undefined),
           enabled: knownModel?.enabled || false,
           functionCall:
-            model.description.toLowerCase().includes('function call')
-            || model.properties?.["function_calling"] === "true"
-            || knownModel?.abilities?.functionCall
-            || false,
+            model.description.toLowerCase().includes('function call') ||
+            model.properties?.['function_calling'] === 'true' ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: model.name,
           reasoning:
-            model.name.toLowerCase().includes('deepseek-r1')
-            || knownModel?.abilities?.reasoning
-            || false,
+            model.name.toLowerCase().includes('deepseek-r1') ||
+            knownModel?.abilities?.reasoning ||
+            false,
           vision:
-            model.name.toLowerCase().includes('vision')
-            || model.task?.name.toLowerCase().includes('image-to-text')
-            || model.description.toLowerCase().includes('vision')
-            || knownModel?.abilities?.vision
-            || false,
+            model.name.toLowerCase().includes('vision') ||
+            model.task?.name.toLowerCase().includes('image-to-text') ||
+            model.description.toLowerCase().includes('vision') ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

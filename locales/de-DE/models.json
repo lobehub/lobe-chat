@@ -578,6 +578,9 @@
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B ist ein fortschrittliches Modell, das für komplexe Dialoge trainiert wurde."
   },
+  "deepseek-ai/deepseek-r1": {
+    "description": "Hochmodernes, effizientes LLM, das auf Schlussfolgern, Mathematik und Programmierung spezialisiert ist."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 ist ein hybrides Expertenmodell (MoE) für visuelle Sprache, das auf DeepSeekMoE-27B basiert und eine spärliche Aktivierung der MoE-Architektur verwendet, um außergewöhnliche Leistungen bei der Aktivierung von nur 4,5 Milliarden Parametern zu erzielen. Dieses Modell zeigt hervorragende Leistungen in mehreren Aufgaben, darunter visuelle Fragenbeantwortung, optische Zeichenerkennung, Dokument-/Tabellen-/Diagrammverständnis und visuelle Lokalisierung."
   },
@@ -628,6 +631,12 @@
   },
   "deepseek/deepseek-chat": {
     "description": "Ein neues Open-Source-Modell, das allgemeine und Codefähigkeiten vereint. Es behält nicht nur die allgemeinen Dialogfähigkeiten des ursprünglichen Chat-Modells und die leistungsstarken Codeverarbeitungsfähigkeiten des Coder-Modells bei, sondern stimmt auch besser mit menschlichen Vorlieben überein. Darüber hinaus hat DeepSeek-V2.5 in vielen Bereichen wie Schreibaufgaben und Befehlsbefolgung erhebliche Verbesserungen erzielt."
+  },
+  "deepseek/deepseek-r1": {
+    "description": "DeepSeek-R1 hat die Schlussfolgerungsfähigkeiten des Modells erheblich verbessert, selbst bei nur wenigen gekennzeichneten Daten. Bevor das Modell die endgültige Antwort ausgibt, gibt es zunächst eine Denkprozesskette aus, um die Genauigkeit der endgültigen Antwort zu erhöhen."
+  },
+  "deepseek/deepseek-r1:free": {
+    "description": "DeepSeek-R1 hat die Schlussfolgerungsfähigkeiten des Modells erheblich verbessert, selbst bei nur wenigen gekennzeichneten Daten. Bevor das Modell die endgültige Antwort ausgibt, gibt es zunächst eine Denkprozesskette aus, um die Genauigkeit der endgültigen Antwort zu erhöhen."
   },
   "emohaa": {
     "description": "Emohaa ist ein psychologisches Modell mit professionellen Beratungsfähigkeiten, das den Nutzern hilft, emotionale Probleme zu verstehen."
@@ -821,11 +830,17 @@
   "google/gemini-pro-1.5": {
     "description": "Gemini 1.5 Pro kombiniert die neuesten Optimierungstechnologien und bietet eine effizientere Verarbeitung multimodaler Daten."
   },
+  "google/gemma-2-27b": {
+    "description": "Gemma 2 ist ein effizientes Modell von Google, das eine Vielzahl von Anwendungsszenarien von kleinen Anwendungen bis hin zu komplexer Datenverarbeitung abdeckt."
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 setzt das Designkonzept von Leichtbau und Effizienz fort."
   },
   "google/gemma-2-2b-it": {
     "description": "Das leichtgewichtige Anweisungsoptimierungsmodell von Google."
+  },
+  "google/gemma-2-9b": {
+    "description": "Gemma 2 ist ein effizientes Modell von Google, das eine Vielzahl von Anwendungsszenarien von kleinen Anwendungen bis hin zu komplexer Datenverarbeitung abdeckt."
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 ist eine leichtgewichtige Open-Source-Textmodellreihe von Google."
@@ -998,6 +1013,9 @@
   "internlm3-latest": {
     "description": "Unsere neueste Modellreihe bietet herausragende Inferenzleistungen und führt die Open-Source-Modelle in ihrer Gewichtsklasse an. Standardmäßig verweist sie auf unser neuestes veröffentlichtes InternLM3-Modell."
   },
+  "jina-deepsearch-v1": {
+    "description": "Die Tiefensuche kombiniert Websuche, Lesen und Schlussfolgern und ermöglicht umfassende Untersuchungen. Sie können es als einen Agenten betrachten, der Ihre Forschungsaufgaben übernimmt – er führt eine umfassende Suche durch und iteriert mehrfach, bevor er eine Antwort gibt. Dieser Prozess umfasst kontinuierliche Forschung, Schlussfolgerungen und die Lösung von Problemen aus verschiedenen Perspektiven. Dies unterscheidet sich grundlegend von den Standard-Großmodellen, die Antworten direkt aus vortrainierten Daten generieren, sowie von traditionellen RAG-Systemen, die auf einmaligen Oberflächensuchen basieren."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM ist ein experimentelles, aufgabenorientiertes Sprachmodell, das darauf trainiert wurde, den Prinzipien der Lernwissenschaft zu entsprechen und in Lehr- und Lernszenarien systematische Anweisungen zu befolgen, als Expertenmentor zu fungieren usw."
   },
@@ -1139,6 +1157,9 @@
   "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
     "description": "Das 405B Llama 3.1 Turbo-Modell bietet eine enorme Kapazität zur Unterstützung von Kontexten für die Verarbeitung großer Datenmengen und zeigt herausragende Leistungen in groß angelegten KI-Anwendungen."
   },
+  "meta-llama/Meta-Llama-3.1-70B": {
+    "description": "Llama 3.1 ist das führende Modell von Meta, das bis zu 405B Parameter unterstützt und in komplexen Gesprächen, mehrsprachiger Übersetzung und Datenanalyse eingesetzt werden kann."
+  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct": {
     "description": "LLaMA 3.1 70B bietet effiziente Dialogunterstützung in mehreren Sprachen."
   },
@@ -1195,6 +1216,30 @@
   },
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 ist ein offenes großes Sprachmodell (LLM), das sich an Entwickler, Forscher und Unternehmen richtet und ihnen hilft, ihre Ideen für generative KI zu entwickeln, zu experimentieren und verantwortungsbewusst zu skalieren. Als Teil eines globalen Innovationssystems ist es besonders geeignet für Umgebungen mit begrenzter Rechenleistung und Ressourcen, für Edge-Geräte und schnellere Trainingszeiten."
+  },
+  "meta/llama-3.1-405b-instruct": {
+    "description": "Fortgeschrittenes LLM, das die Generierung synthetischer Daten, Wissensverdichtung und Schlussfolgerungen unterstützt, geeignet für Chatbots, Programmierung und spezifische Aufgaben."
+  },
+  "meta/llama-3.1-70b-instruct": {
+    "description": "Ermöglicht komplexe Gespräche mit hervorragendem Kontextverständnis, Schlussfolgerungsfähigkeiten und Textgenerierungsfähigkeiten."
+  },
+  "meta/llama-3.1-8b-instruct": {
+    "description": "Fortschrittliches, hochmodernes Modell mit Sprachverständnis, hervorragenden Schlussfolgerungsfähigkeiten und Textgenerierungsfähigkeiten."
+  },
+  "meta/llama-3.2-11b-vision-instruct": {
+    "description": "Spitzenmäßiges visuelles Sprachmodell, das in der Lage ist, qualitativ hochwertige Schlussfolgerungen aus Bildern zu ziehen."
+  },
+  "meta/llama-3.2-1b-instruct": {
+    "description": "Fortschrittliches, hochmodernes kleines Sprachmodell mit Sprachverständnis, hervorragenden Schlussfolgerungsfähigkeiten und Textgenerierungsfähigkeiten."
+  },
+  "meta/llama-3.2-3b-instruct": {
+    "description": "Fortschrittliches, hochmodernes kleines Sprachmodell mit Sprachverständnis, hervorragenden Schlussfolgerungsfähigkeiten und Textgenerierungsfähigkeiten."
+  },
+  "meta/llama-3.2-90b-vision-instruct": {
+    "description": "Spitzenmäßiges visuelles Sprachmodell, das in der Lage ist, qualitativ hochwertige Schlussfolgerungen aus Bildern zu ziehen."
+  },
+  "meta/llama-3.3-70b-instruct": {
+    "description": "Fortschrittliches LLM, das auf Schlussfolgern, Mathematik, Allgemeinwissen und Funktionsaufrufen spezialisiert ist."
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 ist ein Sprachmodell von Microsoft AI, das in komplexen Dialogen, Mehrsprachigkeit, Inferenz und intelligenten Assistenten besonders gut abschneidet."
@@ -1291,6 +1336,12 @@
   },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B ist ein von NVIDIA maßgeschneidertes großes Sprachmodell, das darauf abzielt, die Hilfsfähigkeit der von LLM generierten Antworten auf Benutzeranfragen zu verbessern. Dieses Modell hat in Benchmark-Tests wie Arena Hard, AlpacaEval 2 LC und GPT-4-Turbo MT-Bench hervorragende Leistungen gezeigt und belegt bis zum 1. Oktober 2024 den ersten Platz in allen drei automatischen Ausrichtungsbenchmarks. Das Modell wurde mit RLHF (insbesondere REINFORCE), Llama-3.1-Nemotron-70B-Reward und HelpSteer2-Preference-Prompts auf dem Llama-3.1-70B-Instruct-Modell trainiert."
+  },
+  "nvidia/llama-3.1-nemotron-51b-instruct": {
+    "description": "Einzigartiges Sprachmodell, das unvergleichliche Genauigkeit und Effizienz bietet."
+  },
+  "nvidia/llama-3.1-nemotron-70b-instruct": {
+    "description": "Llama-3.1-Nemotron-70B-Instruct ist ein von NVIDIA maßgeschneidertes großes Sprachmodell, das darauf abzielt, die Hilfsbereitschaft der von LLM generierten Antworten zu verbessern."
   },
   "o1": {
     "description": "Konzentriert sich auf fortgeschrittene Inferenz und die Lösung komplexer Probleme, einschließlich mathematischer und wissenschaftlicher Aufgaben. Besonders geeignet für Anwendungen, die ein tiefes Verständnis des Kontexts und die Abwicklung von Arbeitsabläufen erfordern."
@@ -1405,6 +1456,15 @@
   },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2 ist eine neue Serie großer Sprachmodelle mit stärkeren Verständnis- und Generierungsfähigkeiten."
+  },
+  "qwen/qwen2.5-7b-instruct": {
+    "description": "LLM, das auf Chinesisch und Englisch ausgerichtet ist und sich auf Sprache, Programmierung, Mathematik, Schlussfolgern und andere Bereiche konzentriert."
+  },
+  "qwen/qwen2.5-coder-32b-instruct": {
+    "description": "Fortgeschrittenes LLM, das die Codegenerierung, Schlussfolgerungen und Korrekturen unterstützt und gängige Programmiersprachen abdeckt."
+  },
+  "qwen/qwen2.5-coder-7b-instruct": {
+    "description": "Leistungsstarkes, mittelgroßes Codierungsmodell, das 32K Kontextlängen unterstützt und in der mehrsprachigen Programmierung versiert ist."
   },
   "qwen2": {
     "description": "Qwen2 ist das neue große Sprachmodell von Alibaba, das mit hervorragender Leistung eine Vielzahl von Anwendungsanforderungen unterstützt."

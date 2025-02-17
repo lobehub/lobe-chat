@@ -7,8 +7,9 @@ export interface State {
   autocompleteLoading: SessionLoadingState;
   config: LobeAgentConfig;
   id?: string;
-  meta: MetaData;
+  loading?: boolean;
 
+  meta: MetaData;
   onConfigChange?: (config: LobeAgentConfig) => void;
   onMetaChange?: (meta: MetaData) => void;
 }
