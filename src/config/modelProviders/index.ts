@@ -93,6 +93,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   SenseNovaProvider.chatModels,
   InternLMProvider.chatModels,
   HigressProvider.chatModels,
+  PPIOProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
