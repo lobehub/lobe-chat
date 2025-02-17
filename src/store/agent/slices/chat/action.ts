@@ -48,7 +48,7 @@ export interface AgentChatAction {
   togglePlugin: (id: string, open?: boolean) => Promise<void>;
   updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
   updateAgentConfig: (config: DeepPartial<LobeAgentConfig>) => Promise<void>;
-  useFetchAgentConfig: (id: string) => SWRResponse<LobeAgentConfig>;
+  useFetchAgentConfig: (isLogin: boolean | undefined, id: string) => SWRResponse<LobeAgentConfig>;
   useFetchFilesAndKnowledgeBases: () => SWRResponse<KnowledgeItem[]>;
   useInitInboxAgentStore: (
     isLogin: boolean | undefined,
@@ -158,14 +158,22 @@ export const createChatSlice: StateCreator<
 
     await get().internal_updateAgentConfig(activeId, config, controller.signal);
   },
-  useFetchAgentConfig: (sessionId) =>
+  useFetchAgentConfig: (isLogin, sessionId) =>
     useClientDataSWR<LobeAgentConfig>(
-      [FETCH_AGENT_CONFIG_KEY, sessionId],
+      isLogin ? [FETCH_AGENT_CONFIG_KEY, sessionId] : null,
       ([, id]: string[]) => sessionService.getSessionConfig(id),
       {
         onSuccess: (data) => {
           get().internal_dispatchAgentMap(sessionId, data, 'fetch');
-          set({ activeAgentId: data.id }, false, 'updateActiveAgentId');
+
+          set(
+            {
+              activeAgentId: data.id,
+              agentConfigInitMap: { ...get().agentConfigInitMap, [sessionId]: true },
+            },
+            false,
+            'fetchAgentConfig',
+          );
         },
       },
     ),

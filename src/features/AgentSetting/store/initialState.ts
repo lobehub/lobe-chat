@@ -25,5 +25,6 @@ export const initialState: State = {
     title: false,
   },
   config: DEFAULT_AGENT_CONFIG,
+  loading: true,
   meta: DEFAULT_AGENT_META,
 };

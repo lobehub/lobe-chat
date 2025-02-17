@@ -7,6 +7,7 @@ import { LobeAgentConfig } from '@/types/agent';
 export interface AgentState {
   activeAgentId?: string;
   activeId: string;
+  agentConfigInitMap: Record<string, boolean>;
   agentMap: Record<string, DeepPartial<LobeAgentConfig>>;
   agentSettingInstance?: AgentSettingsInstance | null;
   defaultAgentConfig: LobeAgentConfig;
@@ -18,6 +19,7 @@ export interface AgentState {
 
 export const initialAgentChatState: AgentState = {
   activeId: 'inbox',
+  agentConfigInitMap: {},
   agentMap: {},
   defaultAgentConfig: DEFAULT_AGENT_CONFIG,
   isInboxAgentConfigInit: false,
