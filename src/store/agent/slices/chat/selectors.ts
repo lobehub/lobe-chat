@@ -138,6 +138,8 @@ const currentKnowledgeIds = (s: AgentStore) => {
   };
 };
 
+const isAgentConfigLoading = (s: AgentStore) => !s.agentConfigInitMap[s.activeId];
+
 export const agentSelectors = {
   currentAgentChatConfig,
   currentAgentConfig,
@@ -157,5 +159,6 @@ export const agentSelectors = {
   hasSystemRole,
   inboxAgentConfig,
   inboxAgentModel,
+  isAgentConfigLoading,
   isInboxSession,
 };
