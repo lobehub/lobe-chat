@@ -34,7 +34,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
   accountID: string;
   apiKey?: string;
 
-  constructor({ apiKey, baseURLOrAccountID }: LobeCloudflareParams) {
+  constructor({ apiKey, baseURLOrAccountID }: LobeCloudflareParams = {}) {
     if (!baseURLOrAccountID) {
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
     }
