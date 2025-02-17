@@ -165,7 +165,15 @@ export const createChatSlice: StateCreator<
       {
         onSuccess: (data) => {
           get().internal_dispatchAgentMap(sessionId, data, 'fetch');
-          set({ activeAgentId: data.id }, false, 'updateActiveAgentId');
+
+          set(
+            {
+              activeAgentId: data.id,
+              agentConfigInitMap: { ...get().agentConfigInitMap, [sessionId]: true },
+            },
+            false,
+            'fetchAgentConfig',
+          );
         },
       },
     ),
