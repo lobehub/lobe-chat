@@ -12,7 +12,7 @@ import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
 import { parseFilesConfig } from './parseFilesConfig';
 
-export const getServerGlobalConfig = () => {
+export const getServerGlobalConfig = async () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
 
   const config: GlobalServerConfig = {
@@ -37,6 +37,9 @@ export const getServerGlobalConfig = () => {
       /* ↑ cloud slot ↑ */
       ollama: {
         fetchOnClient: !process.env.OLLAMA_PROXY_URL,
+      },
+      volcengine: {
+        withDeploymentName: true,
       },
     }),
     defaultAgent: {
