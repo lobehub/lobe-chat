@@ -92,6 +92,9 @@
   "qwen": {
     "description": "Qwen è un modello di linguaggio di grande scala sviluppato autonomamente da Alibaba Cloud, con potenti capacità di comprensione e generazione del linguaggio naturale. Può rispondere a varie domande, creare contenuti testuali, esprimere opinioni e scrivere codice, svolgendo un ruolo in vari settori."
   },
+  "sambanova": {
+    "description": "SambaNova Cloud consente agli sviluppatori di utilizzare facilmente i migliori modelli open source e di godere della velocità di inferenza più rapida."
+  },
   "sensenova": {
     "description": "SenseTime offre servizi di modelli di grandi dimensioni full-stack, supportati dalla potente infrastruttura di SenseTime."
   },

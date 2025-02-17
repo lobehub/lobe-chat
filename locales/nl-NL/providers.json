@@ -92,6 +92,9 @@
   "qwen": {
     "description": "Tongyi Qianwen is een door Alibaba Cloud zelf ontwikkeld grootschalig taalmodel met krachtige mogelijkheden voor natuurlijke taalbegrip en -generatie. Het kan verschillende vragen beantwoorden, tekstinhoud creëren, meningen uiten, code schrijven, en speelt een rol in verschillende domeinen."
   },
+  "sambanova": {
+    "description": "SambaNova Cloud stelt ontwikkelaars in staat om eenvoudig gebruik te maken van de beste open-source modellen en te profiteren van de snelste inferentiesnelheden."
+  },
   "sensenova": {
     "description": "SenseNova, ondersteund door de krachtige infrastructuur van SenseTime, biedt efficiënte en gebruiksvriendelijke full-stack modelservices."
   },
