@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.60.0](https://github.com/lobehub/lobe-chat/compare/v1.59.0...v1.60.0)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Add SambaNova provider support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add SambaNova provider support, closes [#6218](https://github.com/lobehub/lobe-chat/issues/6218) ([a46eadf](https://github.com/lobehub/lobe-chat/commit/a46eadf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.59.0](https://github.com/lobehub/lobe-chat/compare/v1.58.0...v1.59.0)
 
 <sup>Released on **2025-02-16**</sup>
