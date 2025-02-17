@@ -175,7 +175,7 @@ describe('AgentSlice', () => {
 
       vi.spyOn(sessionService, 'getSessionConfig').mockResolvedValueOnce({ model: 'gpt-4' } as any);
 
-      renderHook(() => result.current.useFetchAgentConfig('test-session-id'));
+      renderHook(() => result.current.useFetchAgentConfig(true, 'test-session-id'));
 
       await waitFor(() => {
         expect(result.current.agentMap['test-session-id']).toEqual({ model: 'gpt-4' });
@@ -199,7 +199,7 @@ describe('AgentSlice', () => {
         model: 'gpt-3.5-turbo',
       } as any);
 
-      renderHook(() => result.current.useFetchAgentConfig('test-session-id'));
+      renderHook(() => result.current.useFetchAgentConfig(true, 'test-session-id'));
 
       await waitFor(() => {
         expect(result.current.agentMap['test-session-id']).toEqual({ model: 'gpt-3.5-turbo' });

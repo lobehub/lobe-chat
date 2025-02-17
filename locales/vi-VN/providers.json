@@ -92,6 +92,9 @@
   "qwen": {
     "description": "Qwen là mô hình ngôn ngữ quy mô lớn tự phát triển của Alibaba Cloud, có khả năng hiểu và tạo ngôn ngữ tự nhiên mạnh mẽ. Nó có thể trả lời nhiều câu hỏi, sáng tác nội dung văn bản, bày tỏ quan điểm, viết mã, v.v., hoạt động trong nhiều lĩnh vực."
   },
+  "sambanova": {
+    "description": "SambaNova Cloud cho phép các nhà phát triển dễ dàng sử dụng các mô hình mã nguồn mở tốt nhất và tận hưởng tốc độ suy diễn nhanh nhất."
+  },
   "sensenova": {
     "description": "SenseTime luôn đổi mới, dựa vào nền tảng mạnh mẽ của SenseTime để cung cấp dịch vụ mô hình lớn toàn diện, hiệu quả và dễ sử dụng."
   },
