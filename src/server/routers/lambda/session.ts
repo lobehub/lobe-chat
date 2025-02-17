@@ -90,14 +90,10 @@ export const sessionRouter = router({
     }),
 
   getGroupedSessions: publicProcedure.query(async ({ ctx }): Promise<ChatSessionList> => {
-    if (!ctx.userId)
-      return {
-        sessionGroups: [],
-        sessions: [],
-      };
+    if (!ctx.userId) return { sessionGroups: [], sessions: [] };
 
     const serverDB = await getServerDB();
-    const sessionModel = new SessionModel(serverDB, ctx.userId);
+    const sessionModel = new SessionModel(serverDB, ctx.userId!);
 
     return sessionModel.queryWithGroups();
   }),

@@ -1,7 +1,8 @@
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Center } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
+import { isDesktop } from '@/const/version';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
@@ -20,6 +21,7 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
 };
 
 const Page = async (props: DynamicLayoutProps) => {
+  if (isDesktop) return notFound();
   const isMobile = await RouteVariants.getIsMobile(props);
 
   if (!isMobile) return redirect('/chat');

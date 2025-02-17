@@ -1,0 +1,51 @@
+{
+  "name": "lobehub-desktop",
+  "version": "0.0.2-nightly",
+  "description": "A minimal Electron application with TypeScript",
+  "homepage": "https://lobehub.com",
+  "author": "arvinxx",
+  "main": "./dist/main/index.js",
+  "scripts": {
+    "build": "npm run typecheck && electron-vite build",
+    "build:linux": "npm run build && electron-builder --linux --config electron-builder.js",
+    "build:mac": "npm run build && electron-builder --mac --config electron-builder.js",
+    "build:unpack": "npm run build && electron-builder --dir --config electron-builder.js",
+    "build:win": "npm run build && electron-builder --win --config electron-builder.js",
+    "electron:dev": "electron-vite dev",
+    "electron:run-unpack": "electron .",
+    "format": "prettier --write ",
+    "postinstall": "electron-builder install-app-deps",
+    "install-isolated": "pnpm install",
+    "lint": "eslint --cache ",
+    "pg-server": "bun run scripts/pglite-server.ts",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json --composite false"
+  },
+  "dependencies": {
+    "@electron-toolkit/utils": "^4.0.0",
+    "electron-updater": "^6.3.9",
+    "function-bind": "^1.1.2",
+    "get-port-please": "^3.1.2",
+    "next-electron-rsc": "^0.2.3"
+  },
+  "devDependencies": {
+    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
+    "@electron-toolkit/eslint-config-ts": "^3.0.0",
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@lobechat/electron-client-ipc": "workspace:*",
+    "@lobechat/electron-server-ipc": "workspace:*",
+    "electron": "35.1.1",
+    "electron-builder": "^26.0.12",
+    "electron-is": "^3.0.0",
+    "electron-vite": "^3.0.0",
+    "pglite-server": "^0.1.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.2.4"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
+  }
+}

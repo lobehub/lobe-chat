@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { serverFeatureFlags } from '@/config/featureFlags';
+import { isDesktop } from '@/const/version';
 import { ChangelogService } from '@/server/services/changelog';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
@@ -11,6 +12,8 @@ import UpdateChangelogStatus from './features/UpdateChangelogStatus';
 import Loading from './loading';
 
 const Page = async (props: DynamicLayoutProps) => {
+  if (isDesktop) return notFound();
+
   const hideDocs = serverFeatureFlags().hideDocs;
   if (hideDocs) return notFound();
 

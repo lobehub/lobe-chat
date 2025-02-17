@@ -15,6 +15,32 @@ const isUsePglite = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
 const isStandaloneMode = buildWithDocker || isDesktop;
 
+// 创建需要排除的特性映射
+/* eslint-disable sort-keys-fix/sort-keys-fix */
+// const partialBuildPages = [
+//   // {
+//   //   name: 'changelog',
+//   //   disabled: isDesktop,
+//   //   paths: ['src/app/[variants]/@modal/(.)changelog', 'src/app/[variants]/(main)/changelog'],
+//   // },
+//   {
+//     name: 'desktop-devtools',
+//     disabled: isDesktop,
+//     paths: ['src/app/desktop'],
+//   },
+//   // {
+//   //   name: 'auth',
+//   //   disabled: isDesktop,
+//   //   paths: ['src/app/[variants]/(auth)'],
+//   // },
+//   {
+//     name: 'desktop-trpc',
+//     disabled: isDesktop,
+//     paths: ['src/app/(backend)/trpc/desktop'],
+//   },
+// ];
+/* eslint-enable */
+
 const standaloneConfig: NextConfig = {
   output: 'standalone',
   outputFileTracingIncludes: { '*': ['public/**/*', '.next/static/**/*'] },
