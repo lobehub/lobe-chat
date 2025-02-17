@@ -1,7 +1,6 @@
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { AgentRuntime, ModelProvider } from '@/libs/agent-runtime';
 import { LobeVertexAI } from '@/libs/agent-runtime/vertexai';
-import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { POST as UniverseRoute } from '../[provider]/route';
 
@@ -17,13 +16,10 @@ import { POST as UniverseRoute } from '../[provider]/route';
 export const POST = checkAuth(async (req: Request, { jwtPayload }) =>
   UniverseRoute(req, {
     createRuntime: () => {
-      const credentialsContent = process.env.VERTEXAI_CREDENTIALS ?? undefined;
-
-      const googleAuthOptions =
-        jwtPayload.apiKey ?? (credentialsContent ? safeParseJSON(credentialsContent) : {});
+      const googleAuthOptions = jwtPayload.apiKey ?? process.env.VERTEXAI_CREDENTIALS ?? undefined;
 
       const instance = LobeVertexAI.initFromVertexAI({
-        googleAuthOptions: googleAuthOptions,
+        googleAuthOptions: googleAuthOptions as any,
         location: process.env.VERTEXAI_LOCATION,
         project: process.env.VERTEXAI_PROJECT,
       });
