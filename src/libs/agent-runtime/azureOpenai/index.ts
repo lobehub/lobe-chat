@@ -45,7 +45,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
     const updatedMessages = messages.map((message) => ({
       ...message,
       role:
-        message.role === 'system'
+        (model.includes('o1') || model.includes('o3')) && message.role === 'system'
           ? [...systemToUserModels].some((sub) => model.includes(sub))
             ? 'user'
             : 'developer'
