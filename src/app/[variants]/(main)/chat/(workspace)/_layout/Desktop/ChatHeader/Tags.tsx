@@ -9,6 +9,8 @@ import PluginTag from '@/features/PluginTag';
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { useUserStore } from '@/store/user';
+import { authSelectors } from '@/store/user/selectors';
 
 import KnowledgeTag from './KnowledgeTag';
 
@@ -23,8 +25,9 @@ const TitleTags = memo(() => {
 
   const showPlugin = useModelSupportToolUse(model, provider);
   const isLoading = useAgentStore(agentSelectors.isAgentConfigLoading);
+  const isLogin = useUserStore(authSelectors.isLogin);
 
-  return isLoading ? (
+  return isLoading && isLogin ? (
     <Skeleton.Button active size={'small'} style={{ height: 20 }} />
   ) : (
     <Flexbox align={'center'} horizontal>
