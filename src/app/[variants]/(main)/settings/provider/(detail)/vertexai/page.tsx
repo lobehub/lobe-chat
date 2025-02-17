@@ -5,7 +5,7 @@ import { createStyles } from 'antd-style';
 import { useTranslation } from 'react-i18next';
 
 import { FormPassword } from '@/components/FormInput';
-import { HuggingFaceProviderCard } from '@/config/modelProviders';
+import { VertexAIProviderCard } from '@/config/modelProviders';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
@@ -26,7 +26,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const providerKey: GlobalLLMProviderKey = 'huggingface';
+const providerKey: GlobalLLMProviderKey = 'vertexai';
 
 // Same as OpenAIProvider, but replace API Key with HuggingFace Access Token
 const useProviderCard = (): ProviderItem => {
@@ -35,7 +35,7 @@ const useProviderCard = (): ProviderItem => {
   const isLoading = useAiInfraStore(aiProviderSelectors.isAiProviderConfigLoading(providerKey));
 
   return {
-    ...HuggingFaceProviderCard,
+    ...VertexAIProviderCard,
     apiKeyItems: [
       {
         children: isLoading ? (
@@ -43,15 +43,15 @@ const useProviderCard = (): ProviderItem => {
         ) : (
           <FormPassword
             autoComplete={'new-password'}
-            placeholder={t('huggingface.accessToken.placeholder')}
+            placeholder={t('vertexai.apiKey.placeholder')}
           />
         ),
         desc: (
           <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
-            {t('huggingface.accessToken.desc')}
+            {t('vertexai.apiKey.desc')}
           </Markdown>
         ),
-        label: t('huggingface.accessToken.title'),
+        label: t('vertexai.apiKey.title'),
         name: [KeyVaultsConfigKey, LLMProviderApiTokenKey],
       },
     ],

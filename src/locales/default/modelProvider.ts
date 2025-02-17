@@ -325,6 +325,13 @@ export default {
     tooltip: '更新服务商基础配置',
     updateSuccess: '更新成功',
   },
+  vertexai: {
+    apiKey: {
+      desc: '填入你的 Vertex Ai Keys',
+      placeholder: `{ "type": "service_account", "project_id": "xxx", "private_key_id": ... }`,
+      title: 'Vertex AI Keys',
+    },
+  },
   zeroone: {
     title: '01.AI 零一万物',
   },
