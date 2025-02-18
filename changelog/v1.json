@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-02-18",
+    "version": "1.60.9"
+  },
+  {
     "children": {
       "improvements": ["Sync chat limit."]
     },
