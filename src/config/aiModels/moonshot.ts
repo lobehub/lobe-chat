@@ -8,10 +8,11 @@ const moonshotChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
-      'Kimi 智能助手产品使用最新的 Kimi 大模型，可能包含尚未稳定的特性',
+      'Kimi 智能助手产品使用最新的 Kimi 大模型，可能包含尚未稳定的特性。支持图片理解，同时会自动根据请求的上下文长度选择 8k/32k/128k 模型作为计费模型',
     displayName: 'Kimi Latest',
     id: 'kimi-latest',
     pricing: {
+      cachedInput: 1,
       currency: 'CNY',
       input: 60,
       output: 60,
