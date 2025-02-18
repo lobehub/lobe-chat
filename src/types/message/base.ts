@@ -1,3 +1,13 @@
+interface SearchCitation {
+  id?: string;
+  title: string;
+  url: string;
+}
+export interface GroundingSearch {
+  citations?: string[] | SearchCitation[];
+  searchQueries?: string[];
+}
+
 export interface ModelReasoning {
   content?: string;
   duration?: number;
