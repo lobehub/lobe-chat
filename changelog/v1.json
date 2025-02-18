@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve error content and console error."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.3"
+  },
+  {
+    "children": {
       "improvements": ["Add kimi-latest for Moonshot."]
     },
     "date": "2025-02-18",
