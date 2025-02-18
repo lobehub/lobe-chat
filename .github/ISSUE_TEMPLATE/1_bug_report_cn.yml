@@ -23,6 +23,7 @@ body:
       multiple: true
       options:
         - '客户端模式(lobe-chat 镜像)'
+        - '客户端 Pglite 模式(lobe-chat-pglite 镜像)'
         - '服务端模式(lobe-chat-database 镜像)'
     validations:
       required: true
