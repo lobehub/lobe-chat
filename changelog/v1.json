@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Add kimi-latest for Moonshot."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve serveral error code."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.1"
+  },
+  {
+    "children": {
       "features": ["Support google vertex ai as a new provider."],
       "fixes": ["Try to fix pglite worker."]
     },
