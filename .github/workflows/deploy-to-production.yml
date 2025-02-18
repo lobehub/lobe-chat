@@ -23,7 +23,7 @@ jobs:
       - name: Deploy to Server 1
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ env.SERVER1_HOST }}
+          host: ${{ secrets.SERVER1_HOST }}
           username: ${{ env.SSH_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
           port: ${{ env.SSH_PORT }}
