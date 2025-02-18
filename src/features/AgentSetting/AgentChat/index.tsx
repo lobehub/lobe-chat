@@ -94,7 +94,7 @@ const AgentChat = memo(() => {
         valuePropName: 'checked',
       },
       {
-        children: <SliderWithInput max={32} min={1} />,
+        children: <SliderWithInput max={20} min={0} />,
         desc: t('settingChat.historyCount.desc'),
         divider: false,
         hidden: !enableHistoryCount,
