@@ -9,15 +9,79 @@
       "title": "Chào mừng bạn trải nghiệm {{name}}"
     }
   },
-  "appInitializing": "Đang khởi động ứng dụng...",
+  "appLoading": {
+    "appIdle": "Sẵn sàng khởi động",
+    "appInitializing": "Đang khởi động ứng dụng...",
+    "failed": "Rất tiếc, ứng dụng không khởi tạo được, vui lòng xem chi tiết để kiểm tra.",
+    "finished": "Khởi tạo cơ sở dữ liệu hoàn tất",
+    "goToChat": "Đang tải trang trò chuyện...",
+    "initAuth": "Đang khởi tạo dịch vụ xác thực...",
+    "initUser": "Đang khởi tạo trạng thái người dùng...",
+    "initializing": "Đang khởi tạo cơ sở dữ liệu PGlite...",
+    "loadingDependencies": "Đang khởi tạo phụ thuộc...",
+    "loadingWasm": "Đang tải mô-đun WASM...",
+    "migrating": "Đang thực hiện di chuyển bảng dữ liệu...",
+    "ready": "Cơ sở dữ liệu đã sẵn sàng",
+    "showDetail": "Xem chi tiết"
+  },
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
   "autoGenerateTooltipDisabled": "Vui lòng nhập từ gợi ý trước khi sử dụng tính năng tự động hoàn thành",
   "back": "Quay lại",
   "batchDelete": "Xóa hàng loạt",
   "blog": "Blog sản phẩm",
+  "branching": "Tạo chủ đề con",
+  "branchingDisable": "Chức năng «Chủ đề con» chỉ có sẵn trong phiên bản máy chủ. Nếu bạn cần chức năng này, hãy chuyển sang chế độ triển khai máy chủ hoặc sử dụng LobeChat Cloud.",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
+  "clientDB": {
+    "autoInit": {
+      "title": "Khởi tạo cơ sở dữ liệu PGlite"
+    },
+    "error": {
+      "desc": "Xin lỗi, đã xảy ra sự cố trong quá trình khởi tạo cơ sở dữ liệu Pglite. Vui lòng nhấn nút để thử lại. Nếu vẫn gặp lỗi sau nhiều lần thử, vui lòng <1>gửi vấn đề</1>, chúng tôi sẽ hỗ trợ bạn kiểm tra ngay lập tức.",
+      "detail": "Lý do lỗi: [{{type}}] {{message}}，Chi tiết như sau：",
+      "retry": "Thử lại",
+      "title": "Khởi tạo cơ sở dữ liệu thất bại"
+    },
+    "initing": {
+      "error": "Đã xảy ra lỗi, vui lòng thử lại",
+      "idle": "Đang chờ khởi tạo...",
+      "initializing": "Đang khởi tạo...",
+      "loadingDependencies": "Đang tải phụ thuộc...",
+      "loadingWasmModule": "Đang tải mô-đun WASM...",
+      "migrating": "Đang thực hiện di chuyển bảng dữ liệu...",
+      "ready": "Cơ sở dữ liệu đã sẵn sàng"
+    },
+    "modal": {
+      "desc": "Kích hoạt cơ sở dữ liệu khách hàng PGlite, lưu trữ dữ liệu trò chuyện của bạn trong trình duyệt và sử dụng các tính năng nâng cao như kho kiến thức",
+      "enable": "Kích hoạt ngay",
+      "features": {
+        "knowledgeBase": {
+          "desc": "Xây dựng kho kiến thức cá nhân của bạn và dễ dàng bắt đầu cuộc trò chuyện với trợ lý của bạn (sắp ra mắt)",
+          "title": "Hỗ trợ trò chuyện kho kiến thức, mở ra bộ não thứ hai"
+        },
+        "localFirst": {
+          "desc": "Dữ liệu trò chuyện hoàn toàn được lưu trữ trên trình duyệt, dữ liệu của bạn luôn nằm trong tầm kiểm soát của bạn.",
+          "title": "Ưu tiên địa phương, bảo mật hàng đầu"
+        },
+        "pglite": {
+          "desc": "Xây dựng trên nền tảng PGlite, hỗ trợ nguyên bản các tính năng cao cấp AI Native (tìm kiếm vector)",
+          "title": "Kiến trúc lưu trữ khách hàng thế hệ mới"
+        }
+      },
+      "init": {
+        "desc": "Đang khởi tạo cơ sở dữ liệu, thời gian có thể từ 5~30 giây tùy thuộc vào mạng",
+        "title": "Đang khởi tạo cơ sở dữ liệu PGlite"
+      },
+      "title": "Bật cơ sở dữ liệu khách hàng"
+    },
+    "ready": {
+      "button": "Sử dụng ngay",
+      "desc": "Sử dụng ngay",
+      "title": "Cơ sở dữ liệu PGlite đã sẵn sàng"
+    }
+  },
   "close": "Đóng",
   "contact": "Liên hệ chúng tôi",
   "copy": "Sao chép",
@@ -154,6 +218,7 @@
   "pinOff": "Bỏ ghim",
   "privacy": "Chính sách bảo mật",
   "regenerate": "Tạo lại",
+  "releaseNotes": "Chi tiết phiên bản",
   "rename": "Đổi tên",
   "reset": "Đặt lại",
   "retry": "Thử lại",
@@ -210,6 +275,7 @@
   },
   "temp": "Tạm thời",
   "terms": "Điều khoản dịch vụ",
+  "update": "Cập nhật",
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upgradeVersion": {
     "action": "Nâng cấp",
@@ -220,6 +286,7 @@
     "anonymousNickName": "Người dùng ẩn danh",
     "billing": "Quản lý hóa đơn",
     "cloud": "Trải nghiệm {{name}}",
+    "community": "Phiên bản cộng đồng",
     "data": "Lưu trữ dữ liệu",
     "defaultNickname": "Người dùng phiên bản cộng đồng",
     "discord": "Hỗ trợ cộng đồng",
@@ -229,7 +296,6 @@
     "help": "Trung tâm trợ giúp",
     "moveGuide": "Đã di chuyển nút cài đặt đến đây",
     "plans": "Kế hoạch đăng ký",
-    "preview": "Phiên bản xem trước",
     "profile": "Quản lý tài khoản",
     "setting": "Cài đặt ứng dụng",
     "usages": "Thống kê sử dụng"

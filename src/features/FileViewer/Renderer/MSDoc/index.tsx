@@ -15,7 +15,6 @@ const content = css`
 
   width: calc(100% + 2px);
   height: calc(100% + 2px);
-
   border: 0;
 `;
 

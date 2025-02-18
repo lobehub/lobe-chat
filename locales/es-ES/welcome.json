@@ -1,9 +1,4 @@
 {
-  "button": {
-    "import": "Importar configuración",
-    "market": "Explorar el mercado",
-    "start": "Comenzar ahora"
-  },
   "guide": {
     "agents": {
       "replaceBtn": "Cambiar grupo",

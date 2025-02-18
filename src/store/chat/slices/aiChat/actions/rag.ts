@@ -146,7 +146,7 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
     // delete the current ragQuery
     await get().deleteUserMessageRagQuery(id);
 
-    const chats = chatSelectors.currentChatsWithHistoryConfig(get());
+    const chats = chatSelectors.mainAIChatsWithHistoryConfig(get());
 
     await get().internal_rewriteQuery(
       id,

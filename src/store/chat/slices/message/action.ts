@@ -17,6 +17,7 @@ import {
   ChatMessageError,
   CreateMessageParams,
   MessageToolCall,
+  ModelReasoning,
 } from '@/types/message';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
@@ -47,7 +48,11 @@ export interface ChatMessageAction {
   modifyMessageContent: (id: string, content: string) => Promise<void>;
   toggleMessageEditing: (id: string, editing: boolean) => void;
   // query
-  useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
+  useFetchMessages: (
+    enable: boolean,
+    sessionId: string,
+    topicId?: string,
+  ) => SWRResponse<ChatMessage[]>;
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
 
@@ -69,6 +74,7 @@ export interface ChatMessageAction {
     id: string,
     content: string,
     toolCalls?: MessageToolCall[],
+    reasoning?: ModelReasoning,
   ) => Promise<void>;
   /**
    * update the message error with optimistic update
@@ -128,7 +134,7 @@ export const chatMessage: StateCreator<
     if (message.tools) {
       const toolMessageIds = message.tools.flatMap((tool) => {
         const messages = chatSelectors
-          .currentChats(get())
+          .activeBaseChats(get())
           .filter((m) => m.tool_call_id === tool.id);
 
         return messages.map((m) => m.id);
@@ -220,9 +226,9 @@ export const chatMessage: StateCreator<
 
     await get().internal_updateMessageContent(id, content);
   },
-  useFetchMessages: (sessionId, activeTopicId) =>
+  useFetchMessages: (enable, sessionId, activeTopicId) =>
     useClientDataSWR<ChatMessage[]>(
-      [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId],
+      enable ? [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId] : null,
       async ([, sessionId, topicId]: [string, string, string | undefined]) =>
         messageService.getMessages(sessionId, topicId),
       {
@@ -252,7 +258,7 @@ export const chatMessage: StateCreator<
 
     if (!activeId) return;
 
-    const messages = messagesReducer(chatSelectors.currentChats(get()), payload);
+    const messages = messagesReducer(chatSelectors.activeBaseChats(get()), payload);
 
     const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
 
@@ -266,7 +272,7 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, { error });
     await get().refreshMessages();
   },
-  internal_updateMessageContent: async (id, content, toolCalls) => {
+  internal_updateMessageContent: async (id, content, toolCalls, reasoning) => {
     const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
 
     // Due to the async update method and refresh need about 100ms
@@ -285,6 +291,7 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, {
       content,
       tools: toolCalls ? internal_transformToolCalls(toolCalls) : undefined,
+      reasoning,
     });
     await refreshMessages();
   },
@@ -361,13 +368,14 @@ export const chatMessage: StateCreator<
     );
   },
   internal_toggleLoadingArrays: (key, loading, id, action) => {
+    const abortControllerKey = `${key}AbortController`;
     if (loading) {
       window.addEventListener('beforeunload', preventLeavingFn);
 
       const abortController = new AbortController();
       set(
         {
-          abortController,
+          [abortControllerKey]: abortController,
           [key]: toggleBooleanList(get()[key] as string[], id!, loading),
         },
         false,
@@ -377,11 +385,11 @@ export const chatMessage: StateCreator<
       return abortController;
     } else {
       if (!id) {
-        set({ abortController: undefined, [key]: [] }, false, action);
+        set({ [abortControllerKey]: undefined, [key]: [] }, false, action);
       } else
         set(
           {
-            abortController: undefined,
+            [abortControllerKey]: undefined,
             [key]: toggleBooleanList(get()[key] as string[], id, loading),
           },
           false,

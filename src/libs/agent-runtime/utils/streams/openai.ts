@@ -37,14 +37,14 @@ export const transformOpenAIStream = (
     return { data: errorData, id: 'first_chunk_error', type: 'error' };
   }
 
-  // maybe need another structure to add support for multiple choices
-
   try {
+    // maybe need another structure to add support for multiple choices
     const item = chunk.choices[0];
     if (!item) {
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
+    // tools calling
     if (typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
       return {
         data: item.delta.tool_calls.map((value, index): StreamToolCallChunkData => {
@@ -87,11 +87,39 @@ export const transformOpenAIStream = (
       return { data: item.finish_reason, id: chunk.id, type: 'stop' };
     }
 
-    if (typeof item.delta?.content === 'string') {
-      return { data: item.delta.content, id: chunk.id, type: 'text' };
+    if (item.delta) {
+      let reasoning_content = (() => {
+        if ('reasoning_content' in item.delta) return item.delta.reasoning_content;
+        if ('reasoning' in item.delta) return item.delta.reasoning;
+        return null;
+      })();
+
+      let content = 'content' in item.delta ? item.delta.content : null;
+
+      // DeepSeek reasoner will put thinking in the reasoning_content field
+      // litellm and not set content = null when processing reasoning content
+      // en: siliconflow and aliyun bailian has encountered a situation where both content and reasoning_content are present, so need to handle it
+      // refs: https://github.com/lobehub/lobe-chat/issues/5681 (siliconflow)
+      // refs: https://github.com/lobehub/lobe-chat/issues/5956 (aliyun bailian)
+      if (typeof content === 'string' && typeof reasoning_content === 'string') {
+        if (content === '' && reasoning_content === '') {
+          content = null;
+        } else if (reasoning_content === '') {
+          reasoning_content = null;
+        }
+      }
+
+      if (typeof reasoning_content === 'string') {
+        return { data: reasoning_content, id: chunk.id, type: 'reasoning' };
+      }
+
+      if (typeof content === 'string') {
+        return { data: content, id: chunk.id, type: 'text' };
+      }
     }
 
-    if (item.delta?.content === null) {
+    // 无内容情况
+    if (item.delta && item.delta.content === null) {
       return { data: item.delta, id: chunk.id, type: 'data' };
     }
 

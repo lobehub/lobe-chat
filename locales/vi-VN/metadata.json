@@ -1,4 +1,8 @@
 {
+  "changelog": {
+    "description": "Theo dõi các tính năng và cải tiến mới của {{appName}}",
+    "title": "Nhật ký cập nhật"
+  },
   "chat": {
     "description": "{{appName}} mang đến cho bạn trải nghiệm tốt nhất với ChatGPT, Claude, Gemini, OLLaMA WebUI",
     "title": "{{appName}}: Công cụ AI cá nhân, giúp bạn có một bộ não thông minh hơn"

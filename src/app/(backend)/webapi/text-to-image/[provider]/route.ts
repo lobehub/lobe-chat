@@ -48,7 +48,7 @@ export const preferredRegion = [
 // );
 
 export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
-  const { provider } = params;
+  const { provider } = await params;
 
   try {
     // ============  1. init chat model   ============ //

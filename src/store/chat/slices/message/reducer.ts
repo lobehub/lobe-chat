@@ -3,6 +3,7 @@ import { produce } from 'immer';
 
 import {
   ChatMessage,
+  ChatMessageExtra,
   ChatPluginPayload,
   ChatToolPayload,
   CreateMessageParams,
@@ -100,9 +101,9 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
         if (!message) return;
 
         if (!message.extra) {
-          message.extra = { [key]: value } as any;
+          message.extra = { [key]: value } as ChatMessageExtra;
         } else {
-          message.extra[key] = value;
+          message.extra[key as keyof ChatMessageExtra] = value;
         }
 
         message.updatedAt = Date.now();

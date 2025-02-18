@@ -9,8 +9,8 @@ import Divider from './Divider';
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     position: relative;
-    font-size: 15px;
     border-radius: 0;
+    font-size: 15px;
 
     &:active {
       background: ${token.colorFillTertiary};

@@ -126,6 +126,10 @@
         "title": "Themenfrische"
       },
       "range": "Bereich",
+      "reasoning_effort": {
+        "desc": "Diese Einstellung steuert die Intensität des Denkprozesses des Modells, bevor es eine Antwort generiert. Eine niedrige Intensität priorisiert die Geschwindigkeit der Antwort und spart Token, während eine hohe Intensität eine umfassendere Argumentation bietet, jedoch mehr Token verbraucht und die Antwortgeschwindigkeit verringert. Der Standardwert ist mittel, um eine Balance zwischen Genauigkeit des Denkens und Antwortgeschwindigkeit zu gewährleisten.",
+        "title": "Denkintensität"
+      },
       "temperature": {
         "desc": "Diese Einstellung beeinflusst die Vielfalt der Antworten des Modells. Niedrigere Werte führen zu vorhersehbareren und typischen Antworten, während höhere Werte zu vielfältigeren und weniger häufigen Antworten anregen. Wenn der Wert auf 0 gesetzt wird, gibt das Modell für einen bestimmten Input immer die gleiche Antwort.",
         "title": "Zufälligkeit"

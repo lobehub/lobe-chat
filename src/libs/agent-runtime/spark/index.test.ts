@@ -2,20 +2,17 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  ChatStreamCallbacks,
-  LobeOpenAICompatibleRuntime,
-  ModelProvider,
-} from '@/libs/agent-runtime';
+import { LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/agent-runtime';
+import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeSparkAI } from './index';
 
 const provider = ModelProvider.Spark;
 const defaultBaseURL = 'https://spark-api-open.xf-yun.com/v1';
-
-const bizErrorType = 'ProviderBizError';
-const invalidErrorType = 'InvalidProviderAPIKey';
+const bizErrorType = AgentRuntimeErrorType.ProviderBizError;
+const invalidErrorType = AgentRuntimeErrorType.InvalidProviderAPIKey;
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -46,7 +43,7 @@ describe('LobeSparkAI', () => {
 
   describe('chat', () => {
     describe('Error', () => {
-      it('should return OpenAIBizError with an openai error response when OpenAI.APIError is thrown', async () => {
+      it('should return QwenBizError with an openai error response when OpenAI.APIError is thrown', async () => {
         // Arrange
         const apiError = new OpenAI.APIError(
           400,
@@ -66,8 +63,8 @@ describe('LobeSparkAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'general',
-            temperature: 0,
+            model: 'max-32k',
+            temperature: 0.999,
           });
         } catch (e) {
           expect(e).toEqual({
@@ -82,7 +79,7 @@ describe('LobeSparkAI', () => {
         }
       });
 
-      it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
+      it('should throw AgentRuntimeError with InvalidQwenAPIKey if no apiKey is provided', async () => {
         try {
           new LobeSparkAI({});
         } catch (e) {
@@ -90,7 +87,7 @@ describe('LobeSparkAI', () => {
         }
       });
 
-      it('should return OpenAIBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
+      it('should return QwenBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
         // Arrange
         const errorInfo = {
           stack: 'abc',
@@ -106,8 +103,8 @@ describe('LobeSparkAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'general',
-            temperature: 0,
+            model: 'max-32k',
+            temperature: 0.999,
           });
         } catch (e) {
           expect(e).toEqual({
@@ -122,7 +119,7 @@ describe('LobeSparkAI', () => {
         }
       });
 
-      it('should return OpenAIBizError with an cause response with desensitize Url', async () => {
+      it('should return QwenBizError with an cause response with desensitize Url', async () => {
         // Arrange
         const errorInfo = {
           stack: 'abc',
@@ -142,8 +139,8 @@ describe('LobeSparkAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'general',
-            temperature: 0,
+            model: 'max-32k',
+            temperature: 0.999,
           });
         } catch (e) {
           expect(e).toEqual({
@@ -158,23 +155,22 @@ describe('LobeSparkAI', () => {
         }
       });
 
-      it('should throw an InvalidSparkAPIKey error type on 401 status code', async () => {
+      it('should throw an InvalidQwenAPIKey error type on 401 status code', async () => {
         // Mock the API call to simulate a 401 error
-        const error = new Error('Unauthorized') as any;
+        const error = new Error('InvalidApiKey') as any;
         error.status = 401;
         vi.mocked(instance['client'].chat.completions.create).mockRejectedValue(error);
 
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'general',
-            temperature: 0,
+            model: 'max-32k',
+            temperature: 0.999,
           });
         } catch (e) {
-          // Expect the chat method to throw an error with InvalidSparkAPIKey
           expect(e).toEqual({
             endpoint: defaultBaseURL,
-            error: new Error('Unauthorized'),
+            error: new Error('InvalidApiKey'),
             errorType: invalidErrorType,
             provider,
           });
@@ -191,8 +187,8 @@ describe('LobeSparkAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'general',
-            temperature: 0,
+            model: 'max-32k',
+            temperature: 0.999,
           });
         } catch (e) {
           expect(e).toEqual({
@@ -239,9 +235,9 @@ describe('LobeSparkAI', () => {
         // 假设的测试函数调用，你可能需要根据实际情况调整
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
-          model: 'general',
+          model: 'max-32k',
           stream: true,
-          temperature: 0,
+          temperature: 0.999,
         });
 
         // 验证 debugStream 被调用

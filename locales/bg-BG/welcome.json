@@ -1,9 +1,4 @@
 {
-  "button": {
-    "import": "Импортирай конфигурация",
-    "market": "Пазар",
-    "start": "Започни сега"
-  },
   "guide": {
     "agents": {
       "replaceBtn": "Смени",

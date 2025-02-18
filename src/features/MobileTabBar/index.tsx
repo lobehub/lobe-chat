@@ -6,7 +6,6 @@ import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -26,8 +25,10 @@ interface Props {
 export default memo<Props>(({ className, tabBarKey }) => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
-  const openSettings = useOpenSettings();
   const router = useRouter();
+  const openSettings = () => {
+    router.push('/settings/llm');
+  };
   const { showMarket } = useServerConfigStore(featureFlagsSelectors);
 
   const items: MobileTabBarProps['items'] = useMemo(

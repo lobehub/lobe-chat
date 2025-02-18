@@ -56,7 +56,7 @@ const ImageItem = memo<DallEImageItem & { index: number; messageId: string }>(
       );
 
     if (imageId || previewUrl)
-      return <ImagePreview imageId={imageId} previewUrl={previewUrl}  prompt={prompt} />;
+      return <ImagePreview imageId={imageId} previewUrl={previewUrl} prompt={prompt} />;
 
     return (
       <Flexbox className={styles.container} padding={8}>

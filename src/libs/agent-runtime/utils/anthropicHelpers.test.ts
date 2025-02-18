@@ -228,6 +228,21 @@ describe('anthropicHelpers', () => {
       ]);
     });
 
+    it('messages should start with user', async () => {
+      const messages: OpenAIChatMessage[] = [
+        { content: 'Hi', role: 'assistant' },
+        { content: 'Hello', role: 'user' },
+      ];
+
+      const contents = await buildAnthropicMessages(messages);
+
+      expect(contents).toHaveLength(2);
+      expect(contents).toEqual([
+        { content: 'Hi', role: 'user' },
+        { content: 'Hello', role: 'user' },
+      ]);
+    });
+
     it('messages should end with user', async () => {
       const messages: OpenAIChatMessage[] = [
         { content: 'Hello', role: 'user' },
@@ -237,10 +252,9 @@ describe('anthropicHelpers', () => {
 
       const contents = await buildAnthropicMessages(messages);
 
-      expect(contents).toHaveLength(4);
+      expect(contents).toHaveLength(3);
       expect(contents).toEqual([
         { content: 'Hello', role: 'user' },
-        { content: '_', role: 'assistant' },
         { content: 'Hello', role: 'user' },
         { content: 'Hi', role: 'assistant' },
       ]);
@@ -257,15 +271,11 @@ describe('anthropicHelpers', () => {
 
       const contents = await buildAnthropicMessages(messages);
 
-      expect(contents).toHaveLength(9);
+      expect(contents).toHaveLength(5);
       expect(contents).toEqual([
-        { content: '_', role: 'user' },
-        { content: 'a', role: 'assistant' },
-        { content: '_', role: 'user' },
+        { content: 'a', role: 'user' },
         { content: 'b', role: 'assistant' },
-        { content: '_', role: 'user' },
         { content: 'c', role: 'assistant' },
-        { content: '_', role: 'user' },
         { content: 'd', role: 'assistant' },
         { content: '你好', role: 'user' },
       ]);
@@ -370,7 +380,6 @@ describe('anthropicHelpers', () => {
           ],
           role: 'user',
         },
-        { content: '_', role: 'assistant' },
         { content: '继续', role: 'user' },
       ]);
     });

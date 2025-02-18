@@ -13,8 +13,10 @@ import { createHeaderWithOpenAI } from '@/services/_header';
 import { API_ENDPOINTS } from '@/services/_url';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
+import { useGlobalStore } from '@/store/global';
+import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors, userGeneralSettingsSelectors } from '@/store/user/selectors';
+import { settingsSelectors } from '@/store/user/selectors';
 import { TTSServer } from '@/types/agent';
 
 interface TTSConfig extends TTSOptions {
@@ -26,7 +28,7 @@ interface TTSConfig extends TTSOptions {
 export const useTTS = (content: string, config?: TTSConfig) => {
   const ttsSettings = useUserStore(settingsSelectors.currentTTS, isEqual);
   const ttsAgentSettings = useAgentStore(agentSelectors.currentAgentTTS, isEqual);
-  const lang = useUserStore(userGeneralSettingsSelectors.currentLanguage);
+  const lang = useGlobalStore(globalGeneralSelectors.currentLanguage);
   const voice = useAgentStore(agentSelectors.currentAgentTTSVoice(lang));
   let useSelectedTTS;
   let options: any = {};

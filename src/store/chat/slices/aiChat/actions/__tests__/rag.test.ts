@@ -243,7 +243,7 @@ describe('chatRAG actions', () => {
           }) as ChatMessage,
       );
 
-      vi.spyOn(chatSelectors, 'currentChatsWithHistoryConfig').mockReturnValue([
+      vi.spyOn(chatSelectors, 'mainAIChatsWithHistoryConfig').mockReturnValue([
         { content: 'history' },
       ] as ChatMessage[]);
 

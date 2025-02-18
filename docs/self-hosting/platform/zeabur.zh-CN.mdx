@@ -18,22 +18,18 @@ tags:
 <Steps>
   ### 准备好你的 OpenAI API Key
 
-前往 [OpenAI API Key](https://platform.openai.com/account/api-keys) 获取你的 OpenAI API Key
+  前往 [OpenAI API Key](https://platform.openai.com/account/api-keys) 获取你的 OpenAI API Key
 
-### 点击下方按钮进行部署
+  ### 点击下方按钮进行部署
 
-[![][deploy-button-image]][deploy-link]
+  [![][deploy-button-image]][deploy-link]
 
-### 部署完毕后，即可开始使用
+  ### 部署完毕后，即可开始使用
 
-### 绑定自定义域名（可选）
+  ### 绑定自定义域名（可选）
 
-你可以使用 Zeabur 提供的子域名，也可以选择绑定自定义域名。目前 Zeabur 提供的域名还未被污染，大多数地区都可以直连。
-
+  你可以使用 Zeabur 提供的子域名，也可以选择绑定自定义域名。目前 Zeabur 提供的域名还未被污染，大多数地区都可以直连。
 </Steps>
-
-[deploy-button-image]: https://zeabur.com/button.svg
-[deploy-link]: https://zeabur.com/templates/VZGGTI
 
 # 使用 Zeabur 将 LobeChat 部署为无服务器函数
 
@@ -44,40 +40,41 @@ tags:
 ## Zeabur 部署流程
 
 <Steps>
+  ### Fork LobeChat
 
-### Fork LobeChat
+  ### 添加 Zeabur 打包配置文件
 
-### 添加 Zeabur 打包配置文件
+  在您的分支的根目录下添加一个 `zbpack.json` 配置文件，内容如下：
 
-在您的分支的根目录下添加一个 `zbpack.json` 配置文件，内容如下：
+  ```json
+  {
+    "ignore_dockerfile": true,
+    "serverless": true
+  }
+  ```
 
-```json
-{
-  "ignore_dockerfile": true,
-  "serverless": true
-}
-```
+  ### 准备您的 OpenAI API 密钥
 
-### 准备您的 OpenAI API 密钥
+  前往 [OpenAI API 密钥](https://platform.openai.com/account/api-keys) 获取您的 OpenAI API 密钥。
 
-前往 [OpenAI API 密钥](https://platform.openai.com/account/api-keys) 获取您的 OpenAI API 密钥。
+  ### 登录到您的 [Zeabur 仪表板](https://dash.zeabur.com)
 
-### 登录到您的 [Zeabur 仪表板](https://dash.zeabur.com)
+  如果您尚未拥有一个账号，您需要注册一个。
 
-如果您尚未拥有一个账号，您需要注册一个。
+  ### 创建项目与服务。
 
-### 创建项目与服务。
+  创建一个项目，并再这个项目下新建一个服务。
 
-创建一个项目，并再这个项目下新建一个服务。
+  ### 将您的 LobeChat 分支链接到刚创建的 Zeabur 服务。
 
-### 将您的 LobeChat 分支链接到刚创建的 Zeabur 服务。
+  在添加服务时，选择 github。这可能会触发一个 oAuth，取决于诸如您如何登录到 Zeabur 以及您是否已经授权 Zeabur 访问所有您的存储库等各种因素。
 
-在添加服务时，选择 github。这可能会触发一个 oAuth，取决于诸如您如何登录到 Zeabur以及您是否已经授权 Zeabur 访问所有您的存储库等各种因素。
+  ### 绑定自定义域名（可选）
 
-### 绑定自定义域名（可选）
+  您可以创建 Zeabur 提供的子域名，或选择绑定自定义域名。目前，Zeabur 提供的域名尚未受到污染，大多数地区可以直接连接。
 
-您可以创建 Zeabur 提供的子域名，或选择绑定自定义域名。目前，Zeabur 提供的域名尚未受到污染，大多数地区可以直接连接。
-
-### Zeabur 将开始自动构建，您应该可以在一段时间后通过您选择的域名访问它。
-
+  ### Zeabur 将开始自动构建，您应该可以在一段时间后通过您选择的域名访问它。
 </Steps>
+
+[deploy-button-image]: https://zeabur.com/button.svg
+[deploy-link]: https://zeabur.com/templates/VZGGTI

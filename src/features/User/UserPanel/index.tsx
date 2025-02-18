@@ -27,9 +27,11 @@ const UserPanel = memo<PropsWithChildren>(({ children }) => {
         content={<PanelContent closePopover={() => setOpen(false)} />}
         onOpenChange={setOpen}
         open={open}
-        overlayInnerStyle={{ padding: 0 }}
         placement={'topRight'}
         rootClassName={styles.popover}
+        styles={{
+          body: { padding: 0 },
+        }}
         trigger={['click']}
       >
         {children}

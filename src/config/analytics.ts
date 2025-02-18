@@ -26,6 +26,8 @@ export const getAnalyticsConfig = () => {
 
       ENABLE_GOOGLE_ANALYTICS: z.boolean(),
       GOOGLE_ANALYTICS_MEASUREMENT_ID: z.string().optional(),
+
+      REACT_SCAN_MONITOR_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       // Plausible Analytics
@@ -55,6 +57,10 @@ export const getAnalyticsConfig = () => {
       // Google Analytics
       ENABLE_GOOGLE_ANALYTICS: !!process.env.GOOGLE_ANALYTICS_MEASUREMENT_ID,
       GOOGLE_ANALYTICS_MEASUREMENT_ID: process.env.GOOGLE_ANALYTICS_MEASUREMENT_ID,
+
+      // React Scan Monitor
+      // https://dashboard.react-scan.com
+      REACT_SCAN_MONITOR_API_KEY: process.env.REACT_SCAN_MONITOR_API_KEY,
     },
   });
 };

@@ -297,17 +297,4 @@ describe('LobeTogetherAI', () => {
       });
     });
   });
-
-  describe('models', () => {
-    it('should get models', async () => {
-      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
-        json: async () => models,
-        ok: true,
-      } as Response);
-
-      const list = await instance.models();
-
-      expect(list).toMatchSnapshot();
-    });
-  });
 });

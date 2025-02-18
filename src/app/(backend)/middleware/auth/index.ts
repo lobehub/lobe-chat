@@ -11,7 +11,7 @@ import { getJWTPayload } from '@/utils/server/jwt';
 import { checkAuthMethod } from './utils';
 
 type CreateRuntime = (jwtPayload: JWTPayload) => AgentRuntime;
-type RequestOptions = { createRuntime?: CreateRuntime; params: { provider: string } };
+type RequestOptions = { createRuntime?: CreateRuntime; params: Promise<{ provider: string }> };
 
 export type RequestHandler = (
   req: Request,
@@ -56,7 +56,8 @@ export const checkAuth =
 
       const error = errorContent || e;
 
-      return createErrorResponse(errorType, { error, ...res, provider: options.params?.provider });
+      const params = await options.params;
+      return createErrorResponse(errorType, { error, ...res, provider: params?.provider });
     }
 
     return handler(req, { ...options, jwtPayload });

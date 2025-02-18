@@ -4,12 +4,13 @@ import type {
   AdapterUser,
   VerificationToken,
 } from '@auth/core/adapters';
-import { and, eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm/expressions';
 import type { NeonDatabase } from 'drizzle-orm/neon-serverless';
 import { Adapter, AdapterAccount } from 'next-auth/adapters';
 
+import * as schema from '@/database/schemas';
 import { UserModel } from '@/database/server/models/user';
-import * as schema from '@/database/server/schemas/lobechat';
+import { AgentService } from '@/server/services/agent';
 import { merge } from '@/utils/merge';
 
 import {
@@ -33,8 +34,6 @@ const {
  * @returns {Adapter}
  */
 export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Adapter {
-  const userModel = new UserModel();
-
   return {
     async createAuthenticator(authenticator): Promise<AdapterAuthenticator> {
       const result = await serverDB
@@ -55,17 +54,22 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     async createUser(user): Promise<AdapterUser> {
       const { id, name, email, emailVerified, image, providerAccountId } = user;
       // return the user if it already exists
-      let existingUser = await UserModel.findByEmail(email);
+      let existingUser =
+        email && typeof email === 'string' && email.trim()
+          ? await UserModel.findByEmail(serverDB, email)
+          : undefined;
       // If the user is not found by email, try to find by providerAccountId
       if (!existingUser && providerAccountId) {
-        existingUser = await UserModel.findById(providerAccountId);
+        existingUser = await UserModel.findById(serverDB, providerAccountId);
       }
       if (existingUser) {
         const adapterUser = mapLobeUserToAdapterUser(existingUser);
         return adapterUser;
       }
+
       // create a new user if it does not exist
       await UserModel.createUser(
+        serverDB,
         mapAdapterUserToLobeUser({
           email,
           emailVerified,
@@ -75,6 +79,11 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
           name,
         }),
       );
+
+      // 3. Create an inbox session for the user
+      const agentService = new AgentService(serverDB, id);
+      await agentService.createInbox();
+
       return { ...user, id: providerAccountId ?? id };
     },
     async createVerificationToken(data): Promise<VerificationToken | null | undefined> {
@@ -91,10 +100,10 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       return;
     },
     async deleteUser(id): Promise<AdapterUser | null | undefined> {
-      const user = await UserModel.findById(id);
+      const user = await UserModel.findById(serverDB, id);
       if (!user) throw new Error('NextAuth: Delete User not found');
 
-      await UserModel.deleteUser(id);
+      await UserModel.deleteUser(serverDB, id);
       return;
     },
 
@@ -145,7 +154,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     async getUser(id): Promise<AdapterUser | null> {
-      const lobeUser = await UserModel.findById(id);
+      const lobeUser = await UserModel.findById(serverDB, id);
       if (!lobeUser) return null;
       return mapLobeUserToAdapterUser(lobeUser);
     },
@@ -170,7 +179,10 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     async getUserByEmail(email): Promise<AdapterUser | null> {
-      const lobeUser = await UserModel.findByEmail(email);
+      const lobeUser =
+        email && typeof email === 'string' && email.trim()
+          ? await UserModel.findByEmail(serverDB, email)
+          : undefined;
       return lobeUser ? mapLobeUserToAdapterUser(lobeUser) : null;
     },
 
@@ -228,10 +240,11 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     async updateUser(user): Promise<AdapterUser> {
-      const lobeUser = await UserModel.findById(user?.id);
+      const lobeUser = await UserModel.findById(serverDB, user?.id);
       if (!lobeUser) throw new Error('NextAuth: User not found');
+      const userModel = new UserModel(serverDB, user.id);
 
-      const updatedUser = await userModel.updateUser(user.id, {
+      const updatedUser = await userModel.updateUser({
         ...partialMapAdapterUserToLobeUser(user),
       });
       if (!updatedUser) throw new Error('NextAuth: Failed to update user');

@@ -7,6 +7,7 @@ const locales: {
 } = {};
 
 DEFAULT_MODEL_PROVIDER_LIST.forEach((provider) => {
+  if (!provider.description) return;
   locales[provider.id] = {
     description: provider.description,
   };

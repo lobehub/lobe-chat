@@ -7,6 +7,7 @@ import { LANGCHAIN_SUPPORT_TEXT_LIST } from '@/libs/langchain/file';
 import { LangChainLoaderType } from '@/libs/langchain/types';
 
 import { CodeLoader } from './code';
+import { CsVLoader } from './csv';
 import { DocxLoader } from './docx';
 import { LatexLoader } from './latex';
 import { MarkdownLoader } from './markdown';
@@ -59,6 +60,10 @@ export class ChunkingLoader {
           return await TextLoader(txt);
         }
 
+        case 'csv': {
+          return await CsVLoader(fileBlob);
+        }
+
         default: {
           throw new Error(
             `Unsupported file type [${type}], please check your file is supported, or create report issue here: https://github.com/lobehub/lobe-chat/discussions/3550`,
@@ -89,6 +94,10 @@ export class ChunkingLoader {
 
     if (filename.endsWith('md') || filename.endsWith('mdx')) {
       return 'markdown';
+    }
+
+    if (filename.endsWith('csv')) {
+      return 'csv';
     }
 
     const ext = filename.split('.').pop();

@@ -1,5 +1,7 @@
 {
-  "ai21": {},
+  "ai21": {
+    "description": "AI21 Labs buduje podstawowe modele i systemy sztucznej inteligencji dla przedsiębiorstw, przyspieszając zastosowanie generatywnej sztucznej inteligencji w produkcji."
+  },
   "ai360": {
     "description": "360 AI to platforma modeli i usług AI wprowadzona przez firmę 360, oferująca różnorodne zaawansowane modele przetwarzania języka naturalnego, w tym 360GPT2 Pro, 360GPT Pro, 360GPT Turbo i 360GPT Turbo Responsibility 8K. Modele te łączą dużą liczbę parametrów z multimodalnymi zdolnościami, szeroko stosowanymi w generowaniu tekstu, rozumieniu semantycznym, systemach dialogowych i generowaniu kodu. Dzięki elastycznej strategii cenowej, 360 AI zaspokaja zróżnicowane potrzeby użytkowników, wspierając integrację przez deweloperów, co przyczynia się do innowacji i rozwoju aplikacji inteligentnych."
   },
@@ -9,17 +11,29 @@
   "azure": {
     "description": "Azure oferuje różnorodne zaawansowane modele AI, w tym GPT-3.5 i najnowszą serię GPT-4, wspierające różne typy danych i złożone zadania, koncentrując się na bezpiecznych, niezawodnych i zrównoważonych rozwiązaniach AI."
   },
+  "azureai": {
+    "description": "Azure oferuje wiele zaawansowanych modeli AI, w tym GPT-3.5 i najnowszą serię GPT-4, wspierając różne typy danych i złożone zadania, dążąc do bezpiecznych, niezawodnych i zrównoważonych rozwiązań AI."
+  },
   "baichuan": {
     "description": "Baichuan Intelligent to firma skoncentrowana na badaniach nad dużymi modelami sztucznej inteligencji, której modele osiągają doskonałe wyniki w krajowych zadaniach związanych z encyklopedią wiedzy, przetwarzaniem długich tekstów i generowaniem treści w języku chińskim, przewyższając zagraniczne modele mainstreamowe. Baichuan Intelligent dysponuje również wiodącymi w branży zdolnościami multimodalnymi, osiągając doskonałe wyniki w wielu autorytatywnych ocenach. Jej modele obejmują Baichuan 4, Baichuan 3 Turbo i Baichuan 3 Turbo 128k, zoptymalizowane pod kątem różnych scenariuszy zastosowań, oferując opłacalne rozwiązania."
   },
   "bedrock": {
     "description": "Bedrock to usługa oferowana przez Amazon AWS, skoncentrowana na dostarczaniu zaawansowanych modeli językowych i wizualnych dla przedsiębiorstw. Jej rodzina modeli obejmuje serię Claude od Anthropic, serię Llama 3.1 od Meta i inne, oferując różnorodne opcje od lekkich do wysokowydajnych, wspierając generowanie tekstu, dialogi, przetwarzanie obrazów i inne zadania, odpowiednie dla różnych skal i potrzeb aplikacji biznesowych."
   },
+  "cloudflare": {
+    "description": "Uruchamiaj modele uczenia maszynowego napędzane przez GPU w globalnej sieci Cloudflare."
+  },
   "deepseek": {
     "description": "DeepSeek to firma skoncentrowana na badaniach i zastosowaniach technologii sztucznej inteligencji, której najnowszy model DeepSeek-V2.5 łączy zdolności do prowadzenia ogólnych rozmów i przetwarzania kodu, osiągając znaczące postępy w zakresie dostosowywania do preferencji ludzkich, zadań pisarskich i przestrzegania instrukcji."
   },
+  "doubao": {
+    "description": "Model dużych rozmiarów opracowany przez ByteDance. Potwierdzony w ponad 50 scenariuszach biznesowych wewnątrz firmy, z codziennym użyciem bilionów tokenów, co pozwala na ciągłe doskonalenie. Oferuje różnorodne możliwości modalne, tworząc bogate doświadczenia biznesowe dla przedsiębiorstw dzięki wysokiej jakości modelom."
+  },
   "fireworksai": {
     "description": "Fireworks AI to wiodący dostawca zaawansowanych modeli językowych, skoncentrowany na wywołaniach funkcji i przetwarzaniu multimodalnym. Jego najnowszy model Firefunction V2 oparty na Llama-3, zoptymalizowany do wywołań funkcji, dialogów i przestrzegania instrukcji. Model wizualny FireLLaVA-13B wspiera mieszane wejścia obrazów i tekstu. Inne znaczące modele to seria Llama i seria Mixtral, oferujące efektywne wsparcie dla wielojęzycznego przestrzegania instrukcji i generacji."
+  },
+  "giteeai": {
+    "description": "Serverless API Gitee AI zapewnia deweloperom sztucznej inteligencji gotową usługę interfejsu interfejsu interfejsu dużych modeli."
   },
   "github": {
     "description": "Dzięki modelom GitHub, deweloperzy mogą stać się inżynierami AI i budować z wykorzystaniem wiodących modeli AI w branży."
@@ -30,11 +44,23 @@
   "groq": {
     "description": "Silnik inferencyjny LPU firmy Groq wyróżnia się w najnowszych niezależnych testach benchmarkowych dużych modeli językowych (LLM), redefiniując standardy rozwiązań AI dzięki niesamowitej szybkości i wydajności. Groq jest reprezentantem natychmiastowej szybkości inferencji, wykazując dobrą wydajność w wdrożeniach opartych na chmurze."
   },
+  "higress": {
+    "description": "Higress to chmurowa brama API, która powstała w firmie Alibaba, aby rozwiązać problemy związane z ponownym ładowaniem Tengine, które negatywnie wpływa na długoterminowe połączenia, oraz niewystarczającą zdolnością do równoważenia obciążenia gRPC/Dubbo."
+  },
   "huggingface": {
     "description": "HuggingFace Inference API oferuje szybki i bezpłatny sposób na eksplorację tysięcy modeli, które nadają się do różnych zadań. Niezależnie od tego, czy prototypujesz nową aplikację, czy próbujesz funkcji uczenia maszynowego, to API zapewnia natychmiastowy dostęp do wysokowydajnych modeli z wielu dziedzin."
   },
   "hunyuan": {
     "description": "Model językowy opracowany przez Tencent, który posiada potężne zdolności twórcze w języku chińskim, umiejętność logicznego wnioskowania w złożonych kontekstach oraz niezawodne zdolności wykonawcze w zadaniach."
+  },
+  "internlm": {
+    "description": "Organizacja open source poświęcona badaniom i rozwojowi narzędzi dla dużych modeli. Oferuje wszystkim deweloperom AI wydajną i łatwą w użyciu platformę open source, umożliwiającą dostęp do najnowocześniejszych technologii modeli i algorytmów."
+  },
+  "jina": {
+    "description": "Jina AI została założona w 2020 roku i jest wiodącą firmą zajmującą się AI w zakresie wyszukiwania. Nasza platforma bazowa do wyszukiwania zawiera modele wektorowe, przetasowujące i małe modele językowe, które pomagają firmom budować niezawodne i wysokiej jakości aplikacje wyszukiwania generatywnego i multimodalnego."
+  },
+  "lmstudio": {
+    "description": "LM Studio to aplikacja desktopowa do rozwijania i eksperymentowania z LLM-ami na Twoim komputerze."
   },
   "minimax": {
     "description": "MiniMax to firma technologiczna zajmująca się ogólną sztuczną inteligencją, założona w 2021 roku, dążąca do współtworzenia inteligencji z użytkownikami. MiniMax opracowało różne modele dużych modeli o różnych modalnościach, w tym model tekstowy MoE z bilionem parametrów, model głosowy oraz model obrazowy. Wprowadziło również aplikacje takie jak Conch AI."
@@ -47,6 +73,9 @@
   },
   "novita": {
     "description": "Novita AI to platforma oferująca API do różnych dużych modeli językowych i generacji obrazów AI, elastyczna, niezawodna i opłacalna. Wspiera najnowsze modele open-source, takie jak Llama3, Mistral, i oferuje kompleksowe, przyjazne dla użytkownika oraz automatycznie skalowalne rozwiązania API dla rozwoju aplikacji generatywnej AI, odpowiednie dla szybkiego rozwoju startupów AI."
+  },
+  "nvidia": {
+    "description": "NVIDIA NIM™ oferuje kontenery do samodzielnego hostowania przyspieszonych przez GPU mikroserwisów wnioskowania, wspierając wdrażanie w chmurze, centrach danych, komputerach osobistych RTX™ AI i stacjach roboczych wstępnie wytrenowanych i dostosowanych modeli AI."
   },
   "ollama": {
     "description": "Modele oferowane przez Ollama obejmują szeroki zakres zastosowań, w tym generowanie kodu, obliczenia matematyczne, przetwarzanie wielojęzyczne i interakcje konwersacyjne, wspierając różnorodne potrzeby wdrożeń na poziomie przedsiębiorstw i lokalnych."
@@ -63,7 +92,12 @@
   "qwen": {
     "description": "Tongyi Qianwen to samodzielnie opracowany przez Alibaba Cloud model językowy o dużej skali, charakteryzujący się silnymi zdolnościami rozumienia i generowania języka naturalnego. Może odpowiadać na różnorodne pytania, tworzyć treści pisemne, wyrażać opinie, pisać kod i działać w wielu dziedzinach."
   },
-  "sensenova": {},
+  "sambanova": {
+    "description": "SambaNova Cloud umożliwia deweloperom łatwe korzystanie z najlepszych modeli open source oraz cieszenie się najszybszą prędkością wnioskowania."
+  },
+  "sensenova": {
+    "description": "SenseTime codziennie się rozwija, opierając się na potężnym wsparciu infrastrukturalnym SenseTime, oferując wydajne i łatwe w użyciu usługi dużych modeli w pełnym zakresie."
+  },
   "siliconcloud": {
     "description": "SiliconFlow dąży do przyspieszenia AGI, aby przynieść korzyści ludzkości, poprawiając wydajność dużych modeli AI dzięki łatwemu w użyciu i niskokosztowemu stosowi GenAI."
   },
@@ -76,14 +110,29 @@
   "taichu": {
     "description": "Nowa generacja multimodalnych dużych modeli opracowana przez Instytut Automatyki Chińskiej Akademii Nauk i Wuhan Institute of Artificial Intelligence wspiera wielorundowe pytania i odpowiedzi, tworzenie tekstów, generowanie obrazów, zrozumienie 3D, analizę sygnałów i inne kompleksowe zadania pytaniowe, posiadając silniejsze zdolności poznawcze, rozumienia i tworzenia, oferując nową interaktywną doświadczenie."
   },
+  "tencentcloud": {
+    "description": "Atomowe możliwości silnika wiedzy (LLM Knowledge Engine Atomic Power) oparte na silniku wiedzy, oferujące pełne możliwości zadawania pytań i odpowiedzi, skierowane do przedsiębiorstw i deweloperów, zapewniające elastyczność w budowaniu i rozwijaniu aplikacji modelowych. Możesz tworzyć własne usługi modelowe za pomocą różnych atomowych możliwości, korzystając z usług takich jak analiza dokumentów, podział, embedding, wielokrotne przeredagowywanie i inne, aby dostosować AI do specyficznych potrzeb Twojej firmy."
+  },
   "togetherai": {
     "description": "Together AI dąży do osiągnięcia wiodącej wydajności poprzez innowacyjne modele AI, oferując szerokie możliwości dostosowywania, w tym wsparcie dla szybkiej ekspansji i intuicyjnych procesów wdrożeniowych, aby zaspokoić różnorodne potrzeby przedsiębiorstw."
   },
   "upstage": {
     "description": "Upstage koncentruje się na opracowywaniu modeli AI dla różnych potrzeb biznesowych, w tym Solar LLM i dokumentów AI, mając na celu osiągnięcie sztucznej ogólnej inteligencji (AGI). Umożliwia tworzenie prostych agentów konwersacyjnych za pomocą Chat API oraz wspiera wywołania funkcji, tłumaczenia, osadzenia i zastosowania w określonych dziedzinach."
   },
+  "vertexai": {
+    "description": "Seria Gemini od Google to najnowocześniejsze, uniwersalne modele AI stworzone przez Google DeepMind, zaprojektowane z myślą o multimodalności, wspierające bezproblemowe rozumienie i przetwarzanie tekstu, kodu, obrazów, dźwięku i wideo. Odpowiednie do różnych środowisk, od centrów danych po urządzenia mobilne, znacznie zwiększa efektywność i wszechstronność modeli AI."
+  },
+  "vllm": {
+    "description": "vLLM to szybka i łatwa w użyciu biblioteka do wnioskowania i usług LLM."
+  },
+  "volcengine": {
+    "description": "Platforma deweloperska usług dużych modeli wprowadzona przez ByteDance, oferująca bogate w funkcje, bezpieczne i konkurencyjne cenowo usługi wywoływania modeli. Oferuje również dane modelowe, dostosowywanie, wnioskowanie, ocenę i inne funkcje end-to-end, zapewniając kompleksowe wsparcie dla rozwoju aplikacji AI."
+  },
   "wenxin": {
     "description": "Platforma do rozwoju i usług aplikacji AI oraz dużych modeli w skali przedsiębiorstwa, oferująca najbardziej kompleksowy i łatwy w użyciu zestaw narzędzi do rozwoju modeli sztucznej inteligencji generatywnej oraz całego procesu tworzenia aplikacji."
+  },
+  "xai": {
+    "description": "xAI to firma, która dąży do budowy sztucznej inteligencji w celu przyspieszenia ludzkich odkryć naukowych. Naszą misją jest wspieranie wspólnego zrozumienia wszechświata."
   },
   "zeroone": {
     "description": "01.AI koncentruje się na technologiach sztucznej inteligencji w erze AI 2.0, intensywnie promując innowacje i zastosowania „człowiek + sztuczna inteligencja”, wykorzystując potężne modele i zaawansowane technologie AI w celu zwiększenia wydajności ludzkiej produkcji i realizacji technologicznego wsparcia."

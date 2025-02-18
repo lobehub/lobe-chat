@@ -1,8 +1,8 @@
-import type { DivProps, SvgProps } from '@lobehub/ui';
+import type { IconType } from '@lobehub/icons';
 import type { LobeChatProps } from '@lobehub/ui/brand';
 import { createStyles, useTheme } from 'antd-style';
 import Image, { ImageProps } from 'next/image';
-import { ReactNode, memo } from 'react';
+import { ReactNode, forwardRef, memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import { BRANDING_LOGO_URL, BRANDING_NAME } from '@/const/branding';
@@ -48,24 +48,23 @@ const CustomImageLogo = memo<Omit<ImageProps, 'alt' | 'src'> & { size: number }>
   },
 );
 
-const Divider = memo<SvgProps & DivProps & { size?: number }>(
-  ({ size = '1em', style, ...rest }) => (
-    <svg
-      fill="none"
-      height={size}
-      shapeRendering="geometricPrecision"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ flex: 'none', lineHeight: 1, ...style }}
-      viewBox="0 0 24 24"
-      width={size}
-      {...rest}
-    >
-      <path d="M16.88 3.549L7.12 20.451" />
-    </svg>
-  ),
-);
+const Divider: IconType = forwardRef(({ size = '1em', style, ...rest }, ref) => (
+  <svg
+    fill="none"
+    height={size}
+    ref={ref}
+    shapeRendering="geometricPrecision"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ flex: 'none', lineHeight: 1, ...style }}
+    viewBox="0 0 24 24"
+    width={size}
+    {...rest}
+  >
+    <path d="M16.88 3.549L7.12 20.451" />
+  </svg>
+));
 
 const CustomLogo = memo<LobeChatProps>(({ extra, size = 32, className, style, type, ...rest }) => {
   const theme = useTheme();

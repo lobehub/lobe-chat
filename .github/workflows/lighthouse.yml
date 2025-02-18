@@ -18,28 +18,20 @@ on:
 jobs:
   lighthouse-badger-advanced:
     name: ${{ matrix.NAME }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 8
     strategy:
       fail-fast: false
       matrix:
         include:
-          - NAME: 'LobeChat | Welcome'
-            URLS: 'https://chat-preview.lobehub.com/welcome'
-            BADGES_ARGS: '-b pagespeed -o lighthouse/welcome -r'
-            COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Welcome'
           - NAME: 'LobeChat | Chat'
-            URLS: 'https://chat-preview.lobehub.com/chat'
+            URLS: 'https://lobechat.com/chat'
             BADGES_ARGS: '-b pagespeed -o lighthouse/chat -r'
             COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Chat'
           - NAME: 'LobeChat | Market'
-            URLS: 'https://chat-preview.lobehub.com/market'
-            BADGES_ARGS: '-b pagespeed -o lighthouse/market -r'
-            COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Market'
-          - NAME: 'LobeChat | Settings'
-            URLS: 'https://chat-preview.lobehub.com/settings'
-            BADGES_ARGS: '-b pagespeed -o lighthouse/settings -r'
-            COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Settings'
+            URLS: 'https://lobechat.com/discover'
+            BADGES_ARGS: '-b pagespeed -o lighthouse/discover -r'
+            COMMIT_MESSAGE: '🤖 chore: Lighthouse Results | Discover'
 
     steps:
       - name: Preparatory Tasks

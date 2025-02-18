@@ -126,6 +126,10 @@
         "title": "Świeżość tematu"
       },
       "range": "Zakres",
+      "reasoning_effort": {
+        "desc": "To ustawienie kontroluje intensywność rozumowania modelu przed wygenerowaniem odpowiedzi. Niska intensywność priorytetowo traktuje szybkość odpowiedzi i oszczędza tokeny, podczas gdy wysoka intensywność zapewnia pełniejsze rozumowanie, ale zużywa więcej tokenów i obniża szybkość odpowiedzi. Wartość domyślna to średnia, co równoważy dokładność rozumowania z szybkością odpowiedzi.",
+        "title": "Intensywność rozumowania"
+      },
       "temperature": {
         "desc": "To ustawienie wpływa na różnorodność odpowiedzi modelu. Niższe wartości prowadzą do bardziej przewidywalnych i typowych odpowiedzi, podczas gdy wyższe wartości zachęcają do bardziej zróżnicowanych i rzadziej spotykanych odpowiedzi. Gdy wartość wynosi 0, model zawsze daje tę samą odpowiedź na dane wejście.",
         "title": "Losowość"

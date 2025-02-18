@@ -23,6 +23,9 @@ export interface ImportResults {
   type?: string;
 }
 
+/**
+ * @deprecated
+ */
 class ConfigService {
   importConfigState = async (config: ConfigFile, callbacks?: OnImportCallbacks): Promise<void> => {
     if (config.exportType === 'settings') {

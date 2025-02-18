@@ -1,3 +1,5 @@
+import { isObject } from 'lodash-es';
+
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
 import { ChatErrorType } from '@/types/fetch';
@@ -19,6 +21,7 @@ export type OnFinishHandler = (
   text: string,
   context: {
     observationId?: string | null;
+    reasoning?: string;
     toolCalls?: MessageToolCall[];
     traceId?: string | null;
     type?: SSEFinishType;
@@ -28,6 +31,11 @@ export type OnFinishHandler = (
 export interface MessageTextChunk {
   text: string;
   type: 'text';
+}
+
+export interface MessageReasoningChunk {
+  text: string;
+  type: 'reasoning';
 }
 
 interface MessageToolCallsChunk {
@@ -41,7 +49,9 @@ export interface FetchSSEOptions {
   onAbort?: (text: string) => Promise<void>;
   onErrorHandle?: (error: ChatMessageError) => void;
   onFinish?: OnFinishHandler;
-  onMessageHandle?: (chunk: MessageTextChunk | MessageToolCallsChunk) => void;
+  onMessageHandle?: (
+    chunk: MessageTextChunk | MessageToolCallsChunk | MessageReasoningChunk,
+  ) => void;
   smoothing?: SmoothingParams | boolean;
 }
 
@@ -231,7 +241,6 @@ const createSmoothToolCalls = (params: {
  */
 // eslint-disable-next-line no-undef
 export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptions = {}) => {
-  let output = '';
   let toolCalls: undefined | MessageToolCall[];
   let triggerOnMessageHandler = false;
 
@@ -243,12 +252,22 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   const textSmoothing = typeof smoothing === 'boolean' ? smoothing : smoothing?.text;
   const toolsCallingSmoothing =
     typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? true);
-  const smoothingSpeed = typeof smoothing === 'object' ? smoothing.speed : undefined;
+  const smoothingSpeed = isObject(smoothing) ? smoothing.speed : undefined;
 
+  let output = '';
   const textController = createSmoothMessage({
     onTextUpdate: (delta, text) => {
       output = text;
       options.onMessageHandle?.({ text: delta, type: 'text' });
+    },
+    startSpeed: smoothingSpeed,
+  });
+
+  let thinking = '';
+  const thinkingController = createSmoothMessage({
+    onTextUpdate: (delta, text) => {
+      thinking = text;
+      options.onMessageHandle?.({ text: delta, type: 'reasoning' });
     },
     startSpeed: smoothingSpeed,
   });
@@ -331,6 +350,18 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
           break;
         }
+        case 'reasoning': {
+          if (textSmoothing) {
+            thinkingController.pushToQueue(data);
+
+            if (!thinkingController.isAnimationActive) thinkingController.startAnimation();
+          } else {
+            thinking += data;
+            options.onMessageHandle?.({ text: data, type: 'reasoning' });
+          }
+
+          break;
+        }
 
         case 'tool_calls': {
           // get finial
@@ -387,7 +418,13 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         await toolCallsController.startAnimations(END_ANIMATION_SPEED);
       }
 
-      await options?.onFinish?.(output, { observationId, toolCalls, traceId, type: finishedType });
+      await options?.onFinish?.(output, {
+        observationId,
+        reasoning: !!thinking ? thinking : undefined,
+        toolCalls,
+        traceId,
+        type: finishedType,
+      });
     }
   }
 

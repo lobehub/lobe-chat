@@ -22,7 +22,7 @@ import {
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { GlobalStyle } from '@/styles';
-import { setCookie } from '@/utils/cookie';
+import { setCookie } from '@/utils/client/cookie';
 
 const useStyles = createStyles(({ css, token }) => ({
   app: css`
@@ -69,9 +69,9 @@ const useStyles = createStyles(({ css, token }) => ({
     }
 
     :hover::-webkit-scrollbar-thumb {
+      border: 3px solid transparent;
       background-color: ${token.colorText};
       background-clip: content-box;
-      border: 3px solid transparent;
     }
 
     ::-webkit-scrollbar-track {

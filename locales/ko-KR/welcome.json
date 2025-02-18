@@ -1,9 +1,4 @@
 {
-  "button": {
-    "import": "구성 가져오기",
-    "market": "시장 구경하기",
-    "start": "지금 시작"
-  },
   "guide": {
     "agents": {
       "replaceBtn": "다른 것으로 바꾸기",

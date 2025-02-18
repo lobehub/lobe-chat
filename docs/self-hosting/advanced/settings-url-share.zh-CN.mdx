@@ -30,7 +30,7 @@ https://lobehub.com/?settings=<JSON格式的设置对象>
 https://lobehub.com/?settings={"keyVaults":{"openai":{"apiKey":"user-key","baseURL":"https://your-proxy.com/v1"}}}
 ```
 
-JSON格式的设置示例：
+JSON 格式的设置示例：
 
 ```json
 {
@@ -70,7 +70,7 @@ console.log(url);
 
 - 参数及其类型
 
-| 参数名称   | 类型                       |
+| 参数名称       | 类型                         |
 | ---------- | -------------------------- |
 | anthropic  | `OpenAICompatibleKeyVault` |
 | azure      | `AzureOpenAIKeyVault`      |
@@ -90,25 +90,25 @@ console.log(url);
 
 - Type `OpenAICompatibleKeyVault`
 
-| 参数    | 类型   | 描述              |
-| ------- | ------ | ----------------- |
+| 参数      | 类型     | 描述          |
+| ------- | ------ | ----------- |
 | apiKey  | string | 模型的 API 密钥。 |
-| baseURL | string | 模型API端点。     |
+| baseURL | string | 模型 API 端点。  |
 
 - Type `AzureOpenAIKeyVault`
 
-| 参数       | 类型   | 描述                       |
-| ---------- | ------ | -------------------------- |
+| 参数         | 类型     | 描述                     |
+| ---------- | ------ | ---------------------- |
 | apiVersion | string | Azure OpenAI 的 API 版本。 |
-| apiKey     | string | 模型的 API 密钥。          |
-| baseURL    | string | 模型API端点。              |
+| apiKey     | string | 模型的 API 密钥。            |
+| baseURL    | string | 模型 API 端点。             |
 
 - Type `AWSBedrockKeyVault`
 
-| 参数            | 类型   | 描述                        |
-| --------------- | ------ | --------------------------- |
+| 参数              | 类型     | 描述                    |
+| --------------- | ------ | --------------------- |
 | accessKeyId     | string | AWS Bedrock 的访问密钥 ID。 |
-| region          | string | AWS Bedrock 的区域。        |
+| region          | string | AWS Bedrock 的区域。      |
 | secretAccessKey | string | AWS Bedrock 的访问密钥。    |
 
 ### languageModel
@@ -117,7 +117,7 @@ console.log(url);
 export type UserModelProviderConfig = Record<string, ProviderConfig>;
 ```
 
-| 参数名称   | 类型             |
+| 参数名称       | 类型               |
 | ---------- | ---------------- |
 | anthropic  | `ProviderConfig` |
 | azure      | `ProviderConfig` |
@@ -137,9 +137,9 @@ export type UserModelProviderConfig = Record<string, ProviderConfig>;
 
 - 类型 `ProviderConfig`
 
-| 参数                | TS 类型  | 描述                                         |
-| ------------------- | -------- | -------------------------------------------- |
-| autoFetchModelLists | boolean  | 是否自动获取模型列表。                       |
-| enabled             | boolean  | 是否启用该模型。                             |
-| enabledModels       | string[] | 启用的模型的 ID。                            |
-| fetchOnClient       | boolean  | 是否在客户端发起请求，默认在服务端发起请求。 |
+| 参数                  | TS 类型     | 描述                     |
+| ------------------- | --------- | ---------------------- |
+| autoFetchModelLists | boolean   | 是否自动获取模型列表。            |
+| enabled             | boolean   | 是否启用该模型。               |
+| enabledModels       | string\[] | 启用的模型的 ID。             |
+| fetchOnClient       | boolean   | 是否在客户端发起请求，默认在服务端发起请求。 |

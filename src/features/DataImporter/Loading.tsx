@@ -13,10 +13,10 @@ const useStyles = createStyles(({ css, token }) => {
 
       aspect-ratio: 1;
       width: 6px;
+      border-radius: 50%;
 
       color: ${token.colorPrimary};
 
-      border-radius: 50%;
       box-shadow:
         ${size}px -${size}px 0 0,
         ${size * 2}px -${size}px 0 0,

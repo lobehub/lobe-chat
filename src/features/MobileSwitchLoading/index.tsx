@@ -1,13 +1,26 @@
-'use client';
-
+import { Icon } from '@lobehub/ui';
+import { Loader2 } from 'lucide-react';
+import { DynamicOptions } from 'next/dist/shared/lib/dynamic';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Center, Flexbox } from 'react-layout-kit';
 
-import FullscreenLoading from '@/components/FullscreenLoading';
+import { ProductLogo } from '@/components/Branding';
 
-const MobileSwitchLoading = () => {
+// @ts-expect-error
+const MobileSwitchLoading: DynamicOptions['loading'] = memo(() => {
   const { t } = useTranslation('common');
-
-  return <FullscreenLoading title={t('layoutInitializing')} />;
-};
+  return (
+    <Flexbox height={'100%'} style={{ position: 'relative', userSelect: 'none' }} width={'100%'}>
+      <Center flex={1} gap={16} width={'100%'}>
+        <ProductLogo size={48} type={'combine'} />
+        <Center gap={12} horizontal style={{ fontSize: 15, lineHeight: 1.5, opacity: 0.66 }}>
+          <Icon icon={Loader2} size={{ fontSize: 16 }} spin />
+          {t('layoutInitializing')}
+        </Center>
+      </Center>
+    </Flexbox>
+  );
+});
 
 export default MobileSwitchLoading;

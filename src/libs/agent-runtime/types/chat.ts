@@ -96,7 +96,14 @@ export interface ChatStreamPayload {
 
 export interface ChatCompetitionOptions {
   callback?: ChatStreamCallbacks;
+  /**
+   * response headers
+   */
   headers?: Record<string, any>;
+  /**
+   * send the request to the ai api endpoint
+   */
+  requestHeaders?: Record<string, any>;
   signal?: AbortSignal;
   /**
    * userId for the chat completion

@@ -6,36 +6,47 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { useModelContextWindowTokens } from '@/hooks/useModelContextWindowTokens';
+import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
 
 import TokenProgress from './TokenProgress';
 
-const Token = memo(() => {
+interface TokenTagProps {
+  total: string;
+}
+const Token = memo<TokenTagProps>(({ total: messageString }) => {
   const { t } = useTranslation(['chat', 'components']);
   const theme = useTheme();
 
-  const [input, messageString] = useChatStore((s) => [
+  const [input, historySummary] = useChatStore((s) => [
     s.inputMessage,
-    chatSelectors.chatsMessageString(s),
+    topicSelectors.currentActiveTopicSummary(s)?.content || '',
   ]);
 
-  const [systemRole, model] = useAgentStore((s) => [
-    agentSelectors.currentAgentSystemRole(s),
-    agentSelectors.currentAgentModel(s) as string,
-  ]);
+  const [systemRole, model, provider] = useAgentStore((s) => {
+    const config = agentSelectors.currentAgentChatConfig(s);
 
-  const maxTokens = useUserStore(modelProviderSelectors.modelMaxToken(model));
+    return [
+      agentSelectors.currentAgentSystemRole(s),
+      agentSelectors.currentAgentModel(s) as string,
+      agentSelectors.currentAgentModelProvider(s) as string,
+      // add these two params to enable the component to re-render
+      config.historyCount,
+      config.enableHistoryCount,
+    ];
+  });
+
+  const maxTokens = useModelContextWindowTokens(model, provider);
 
   // Tool usage token
-  const canUseTool = useUserStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
+  const canUseTool = useModelSupportToolUse(model, provider);
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins);
   const toolsString = useToolStore((s) => {
     const pluginSystemRoles = toolSelectors.enabledSystemRoles(plugins)(s);
@@ -55,16 +66,17 @@ const Token = memo(() => {
 
   // SystemRole token
   const systemRoleToken = useTokenCount(systemRole);
+  const historySummaryToken = useTokenCount(historySummary);
 
   // Total token
-  const totalToken = systemRoleToken + toolsToken + chatsToken;
+  const totalToken = systemRoleToken + historySummaryToken + toolsToken + chatsToken;
 
   const content = (
     <Flexbox gap={12} style={{ minWidth: 200 }}>
       <Flexbox align={'center'} gap={4} horizontal justify={'space-between'} width={'100%'}>
         <div style={{ color: theme.colorTextDescription }}>{t('tokenDetails.title')}</div>
         <Tooltip
-          overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
+          styles={{ root: { maxWidth: 'unset', pointerEvents: 'none' } }}
           title={t('ModelSelect.featureTag.tokens', {
             ns: 'components',
             tokens: numeral(maxTokens).format('0,0'),
@@ -98,6 +110,12 @@ const Token = memo(() => {
             id: 'tools',
             title: t('tokenDetails.tools'),
             value: toolsToken,
+          },
+          {
+            color: theme.orange,
+            id: 'historySummary',
+            title: t('tokenDetails.historySummary'),
+            value: historySummaryToken,
           },
           {
             color: theme.gold,

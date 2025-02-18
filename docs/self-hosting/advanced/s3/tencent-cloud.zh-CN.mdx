@@ -15,65 +15,50 @@ tags:
 ## 配置步骤
 
 <Steps>
+  ### 配置并获取 S3 存储桶
 
-### 配置并获取 S3 存储桶
+  你需要首先前往 [腾讯云 COS](https://console.cloud.tencent.com/cos/bucket) 并创建一个新的存储桶（Bucket）：
 
-你需要首先前往 [腾讯云 COS](https://console.cloud.tencent.com/cos/bucket) 并创建一个新的存储桶（Bucket）：
+  <Image alt={'腾讯云 COS 存储界面'} src={'https://github.com/user-attachments/assets/d3626294-74ba-4944-9a63-052e6cf719ab'} />
 
-<Image
-  alt={'腾讯云 COS 存储界面'}
-  src={'https://github.com/user-attachments/assets/d3626294-74ba-4944-9a63-052e6cf719ab'}
-/>
+  创建存储桶时将指定其名称，下文以 `lobe` 为例。选择 `公有读私有写`，地域随意，其余配置一概默认即可，然后点击创建。
 
-创建存储桶时将指定其名称，下文以 `lobe` 为例。选择 `公有读私有写`，地域随意，其余配置一概默认即可，然后点击创建。
+  <Image alt={'COS 创建存储桶'} src={'https://github.com/user-attachments/assets/7257eb0e-4e2c-4db2-981d-354598e2c60f'} />
 
-<Image
-  alt={'COS 创建存储桶'}
-  src={'https://github.com/user-attachments/assets/7257eb0e-4e2c-4db2-981d-354598e2c60f'}
-/>
+  ### 获取存储桶相关环境变量
 
-### 获取存储桶相关环境变量
+  在 COS 存储桶的概览设置中，可以看到桶配置的信息：
 
-在 COS 存储桶的概览设置中，可以看到桶配置的信息：
+  <Image alt={'查看存储桶的相关信息'} src={'https://github.com/user-attachments/assets/d7d65e32-679d-4e50-a933-28cf5dde1330'} />
 
-<Image
-  alt={'查看存储桶的相关信息'}
-  src={'https://github.com/user-attachments/assets/d7d65e32-679d-4e50-a933-28cf5dde1330'}
-/>
+  其对应的环境变量为：
 
-其对应的环境变量为：
+  ```shell
+  # 存储桶的名称
+  S3_BUCKET=lobe-130xxxxxx2
+  # 存储桶的请求端点，注意没有前面的桶名
+  S3_ENDPOINT=https://cos.ap-chengdu.myqcloud.com
+  # 桶的区域
+  S3_REGION=ap-chengdu
+  # 存储桶对外的访问域名
+  S3_PUBLIC_DOMAIN=https://lobe-1251234567.cos.ap-chengdu.myqcloud.com
+  ```
 
-```shell
-# 存储桶的名称
-S3_BUCKET=lobe-130xxxxxx2
-# 存储桶的请求端点，注意没有前面的桶名
-S3_ENDPOINT=https://cos.ap-chengdu.myqcloud.com
-# 桶的区域
-S3_REGION=ap-chengdu
-# 存储桶对外的访问域名
-S3_PUBLIC_DOMAIN=https://lobe-1251234567.cos.ap-chengdu.myqcloud.com
-```
+  <Callout type={'warning'}>
+    请注意，`S3_ENDPOINT` 的值为 `https://cos.ap-chengdu.myqcloud.com`，而不是 `https://lobe-130xxxxxx2.cos.ap-chengdu.myqcloud.com`
 
-<Callout type={'warning'}>
-请注意，`S3_ENDPOINT` 的值为 `https://cos.ap-chengdu.myqcloud.com`，而不是 `https://lobe-130xxxxxx2.cos.ap-chengdu.myqcloud.com`
+    且此处 URL 的 `https://` 不可缺失，须保持 URL 的完整性
+  </Callout>
 
-且此处 URL 的 `https://` 不可缺失，须保持 URL 的完整性
+  ### 配置跨域
 
-</Callout>
+  在左侧 `安全管理 - 跨域访问 CORS 设置` 中，添加以下配置并保存：
 
-### 配置跨域
+  <Image alt={'配置跨域'} src={'https://github.com/user-attachments/assets/35164b25-c964-42ce-9cb0-32f6ebe1d07c'} />
 
-在左侧 `安全管理 - 跨域访问 CORS 设置` 中，添加以下配置并保存：
+  ### 获取 S3 秘钥
 
-<Image
-  alt={'配置跨域'}
-  src={'https://github.com/user-attachments/assets/35164b25-c964-42ce-9cb0-32f6ebe1d07c'}
-/>
-
-### 获取 S3 秘钥
-
-前往 [腾讯云 API 密钥管理](https://console.cloud.tencent.com/cam/capi) 创建一个新的 SecretId 和 SecretKey，填写为 `S3_ACCESS_KEY_ID` 和 `S3_SECRET_ACCESS_KEY` 即可。
-
+  前往 [腾讯云 API 密钥管理](https://console.cloud.tencent.com/cam/capi) 创建一个新的 SecretId 和 SecretKey，填写为 `S3_ACCESS_KEY_ID` 和 `S3_SECRET_ACCESS_KEY` 即可。
 </Steps>
 
 ### 附加说明

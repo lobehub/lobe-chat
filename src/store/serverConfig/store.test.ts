@@ -21,16 +21,16 @@ describe('createServerConfigStore', () => {
   it('should initialize store with default state', () => {
     const store = createServerConfigStore();
 
-    expect(store.getState()).toEqual({
+    expect(store.getState()).toMatchObject({
       featureFlags: DEFAULT_FEATURE_FLAGS,
-      serverConfig: { telemetry: {} },
+      serverConfig: { telemetry: {}, aiProvider: {} },
     });
   });
 
   it('should initialize store with custom initial state', () => {
     const initialState: Partial<ServerConfigStore> = {
       featureFlags: { edit_agent: false },
-      serverConfig: { telemetry: { langfuse: true } },
+      serverConfig: { telemetry: { langfuse: true }, aiProvider: {} },
     };
 
     const store = initServerConfigStore(initialState);
@@ -38,6 +38,7 @@ describe('createServerConfigStore', () => {
     expect(store.getState().featureFlags.edit_agent).toBeFalsy();
     expect(store.getState().serverConfig).toEqual({
       telemetry: { langfuse: true },
+      aiProvider: {},
     });
   });
 

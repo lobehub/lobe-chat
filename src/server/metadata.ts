@@ -18,8 +18,10 @@ export class Meta {
     tags,
     alternate,
     locale = DEFAULT_LANG,
+    canonical,
   }: {
     alternate?: boolean;
+    canonical?: string;
     description?: string;
     image?: string;
     locale?: Locales;
@@ -35,9 +37,9 @@ export class Meta {
     const siteTitle = title.includes(BRANDING_NAME) ? title : title + ` · ${BRANDING_NAME}`;
     return {
       alternates: {
-        canonical: getCanonicalUrl(
-          alternate ? qs.stringifyUrl({ query: { hl: locale }, url }) : url,
-        ),
+        canonical:
+          canonical ||
+          getCanonicalUrl(alternate ? qs.stringifyUrl({ query: { hl: locale }, url }) : url),
         languages: alternate ? this.genAlternateLocales(locale, url) : undefined,
       },
       description: formatedDescription,

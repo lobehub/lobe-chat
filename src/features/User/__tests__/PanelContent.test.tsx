@@ -61,16 +61,19 @@ vi.mock('../DataStatistics', () => ({
   default: vi.fn(() => <div>Mocked DataStatistics</div>),
 }));
 
+vi.mock('@/const/version', () => ({
+  isDeprecatedEdition: false,
+}));
+
 // 定义一个变量来存储 enableAuth 的值
 let enableAuth = true;
 
-beforeEach(() => {
-  useUserStore.setState({ enableAuth: () => true });
-});
-
-afterEach(() => {
-  enableAuth = true;
-});
+// 模拟 @/const/auth 模块
+vi.mock('@/const/auth', () => ({
+  get enableAuth() {
+    return enableAuth;
+  },
+}));
 
 describe('PanelContent', () => {
   const closePopover = vi.fn();

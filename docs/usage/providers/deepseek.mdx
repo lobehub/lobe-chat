@@ -13,78 +13,52 @@ tags:
 
 # Using DeepSeek in LobeChat
 
-<Image
-  alt={'Using DeepSeek in LobeChat'}
-  cover
-  src={'https://github.com/lobehub/lobe-chat/assets/34400653/b4d12904-9d5d-46de-bd66-901eeb9c8e52'}
-/>
+<Image alt={'Using DeepSeek in LobeChat'} cover src={'https://github.com/lobehub/lobe-chat/assets/34400653/b4d12904-9d5d-46de-bd66-901eeb9c8e52'} />
 
 [DeepSeek](https://www.deepseek.com/) is an advanced open-source Large Language Model (LLM). The latest version, DeepSeek-V2, has made significant optimizations in architecture and performance, reducing training costs by 42.5% and inference costs by 93.3%.
 
 This document will guide you on how to use DeepSeek in LobeChat:
 
 <Steps>
+  ### Step 1: Obtain DeepSeek API Key
 
-### Step 1: Obtain DeepSeek API Key
+  - First, you need to register and log in to the [DeepSeek](https://platform.deepseek.com/) open platform.
 
-- First, you need to register and log in to the [DeepSeek](https://platform.deepseek.com/) open platform.
+  <Callout type={'info'}>New users will receive a free quota of 500M Tokens</Callout>
 
-<Callout type={'info'}>New users will receive a free quota of 500M Tokens</Callout>
+  - Go to the `API keys` menu and click on `Create API Key`.
 
-- Go to the `API keys` menu and click on `Create API Key`.
+  <Image alt={'Create Deepseek API Key'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/5707b392-1ee6-4db6-95cb-9d6c902747d2'} />
 
-<Image
-  alt={'Create Deepseek API Key'}
-  inStep
-  src={'https://github.com/lobehub/lobe-chat/assets/34400653/5707b392-1ee6-4db6-95cb-9d6c902747d2'}
-/>
+  - Enter the API key name in the pop-up dialog box.
 
-- Enter the API key name in the pop-up dialog box.
+  <Image alt={'Enter Deepseek API Name'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/c1d1d816-6339-41a6-9bc9-e2c3b2762291'} />
 
-<Image
-  alt={'Enter Deepseek API Name'}
-  inStep
-  src={'https://github.com/lobehub/lobe-chat/assets/34400653/c1d1d816-6339-41a6-9bc9-e2c3b2762291'}
-/>
+  - Copy the generated API key and save it securely.
 
-- Copy the generated API key and save it securely.
+  <Image alt={'Save Deepseek API Key'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/198217a6-84fa-441c-bcbe-8cded1106d6c'} />
 
-<Image
-  alt={'Save Deepseek API Key'}
-  inStep
-  src={'https://github.com/lobehub/lobe-chat/assets/34400653/198217a6-84fa-441c-bcbe-8cded1106d6c'}
-/>
+  <Callout type={'warning'}>
+    Please store the key securely as it will only appear once. If you accidentally lose it, you will
+    need to create a new key.
+  </Callout>
 
-<Callout type={'warning'}>
-  Please store the key securely as it will only appear once. If you accidentally lose it, you will
-  need to create a new key.
-</Callout>
+  ### Step 2: Configure DeepSeek in LobeChat
 
-### Step 2: Configure DeepSeek in LobeChat
+  - Access the `App Settings` interface in LobeChat.
+  - Find the setting for `DeepSeek` under `Language Models`.
 
-- Access the `App Settings` interface in LobeChat.
-- Find the setting for `DeepSeek` under `Language Models`.
+  <Image alt={'Enter Deepseek API Key'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/bae262d6-0d49-47f3-bc9c-356cf6f3f34e'} />
 
-<Image
-  alt={'Enter Deepseek API Key'}
-  inStep
-  src={'https://github.com/lobehub/lobe-chat/assets/34400653/bae262d6-0d49-47f3-bc9c-356cf6f3f34e'}
-/>
+  - Open DeepSeek and enter the obtained API key.
+  - Choose a DeepSeek model for your assistant to start the conversation.
 
-- Open DeepSeek and enter the obtained API key.
-- Choose a DeepSeek model for your assistant to start the conversation.
+  <Image alt={'Select Deepseek Model'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/84568505-6efe-4518-8888-682ccdd92197'} />
 
-<Image
-  alt={'Select Deepseek Model'}
-  inStep
-  src={'https://github.com/lobehub/lobe-chat/assets/34400653/84568505-6efe-4518-8888-682ccdd92197'}
-/>
-
-<Callout type={'warning'}>
-  You may need to pay the API service provider during usage, please refer to DeepSeek's relevant
-  pricing policies.
-</Callout>
-
+  <Callout type={'warning'}>
+    You may need to pay the API service provider during usage, please refer to DeepSeek's relevant
+    pricing policies.
+  </Callout>
 </Steps>
 
 You can now engage in conversations using the models provided by Deepseek in LobeChat.

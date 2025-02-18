@@ -1,44 +1,17 @@
 // @vitest-environment node
-import { eq, inArray } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getServerDBConfig, serverDBEnv } from '@/config/db';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { FilesTabs, SortType } from '@/types/files';
 
-import {
-  files,
-  globalFiles,
-  knowledgeBaseFiles,
-  knowledgeBases,
-  users,
-} from '../../schemas/lobechat';
+import { files, globalFiles, knowledgeBaseFiles, knowledgeBases, users } from '../../../schemas';
 import { FileModel } from '../file';
 
-let serverDB = await getTestDBInstance();
-
-vi.mock('@/database/server/core/db', async () => ({
-  get serverDB() {
-    return serverDB;
-  },
-}));
-
-let DISABLE_REMOVE_GLOBAL_FILE = false;
-
-vi.mock('@/config/db', async () => ({
-  get serverDBEnv() {
-    return {
-      get DISABLE_REMOVE_GLOBAL_FILE() {
-        return DISABLE_REMOVE_GLOBAL_FILE;
-      },
-      DATABASE_TEST_URL: process.env.DATABASE_TEST_URL,
-      DATABASE_DRIVER: 'node',
-    };
-  },
-}));
+const serverDB = await getTestDBInstance();
 
 const userId = 'file-model-test-user-id';
-const fileModel = new FileModel(userId);
+const fileModel = new FileModel(serverDB, userId);
 
 const knowledgeBase = { id: 'kb1', userId, name: 'knowledgeBase' };
 beforeEach(async () => {
@@ -85,6 +58,32 @@ describe('FileModel', () => {
         where: eq(knowledgeBaseFiles.fileId, id),
       });
       expect(kbFile).toMatchObject({ fileId: id, knowledgeBaseId: 'kb1' });
+    });
+
+    it('should create a new file with hash', async () => {
+      const params = {
+        name: 'test-file.txt',
+        url: 'https://example.com/test-file.txt',
+        size: 100,
+        fileHash: 'abc',
+        fileType: 'text/plain',
+      };
+
+      const { id } = await fileModel.create(params, true);
+      expect(id).toBeDefined();
+
+      const file = await serverDB.query.files.findFirst({ where: eq(files.id, id) });
+      expect(file).toMatchObject({ ...params, userId });
+
+      const globalFile = await serverDB.query.globalFiles.findFirst({
+        where: eq(globalFiles.hashId, params.fileHash),
+      });
+      expect(globalFile).toMatchObject({
+        url: 'https://example.com/test-file.txt',
+        size: 100,
+        hashId: 'abc',
+        fileType: 'text/plain',
+      });
     });
   });
 
@@ -159,7 +158,6 @@ describe('FileModel', () => {
       expect(globalFile).toBeUndefined();
     });
     it('should delete a file by id but global file not removed ', async () => {
-      DISABLE_REMOVE_GLOBAL_FILE = true;
       await fileModel.createGlobalFile({
         hashId: '1',
         url: 'https://example.com/file1.txt',
@@ -175,7 +173,7 @@ describe('FileModel', () => {
         fileHash: '1',
       });
 
-      await fileModel.delete(id);
+      await fileModel.delete(id, false);
 
       const file = await serverDB.query.files.findFirst({ where: eq(files.id, id) });
       const globalFile = await serverDB.query.globalFiles.findFirst({
@@ -184,7 +182,6 @@ describe('FileModel', () => {
 
       expect(file).toBeUndefined();
       expect(globalFile).toBeDefined();
-      DISABLE_REMOVE_GLOBAL_FILE = false;
     });
   });
 
@@ -238,7 +235,6 @@ describe('FileModel', () => {
       expect(globalFilesResult2).toHaveLength(0);
     });
     it('should delete multiple files but not remove global files if DISABLE_REMOVE_GLOBAL_FILE=true', async () => {
-      DISABLE_REMOVE_GLOBAL_FILE = true;
       await fileModel.createGlobalFile({
         hashId: '1',
         url: 'https://example.com/file1.txt',
@@ -273,7 +269,7 @@ describe('FileModel', () => {
 
       expect(globalFilesResult).toHaveLength(2);
 
-      await fileModel.deleteMany([file1.id, file2.id]);
+      await fileModel.deleteMany([file1.id, file2.id], false);
 
       const remainingFiles = await serverDB.query.files.findMany({
         where: eq(files.userId, userId),
@@ -284,7 +280,6 @@ describe('FileModel', () => {
 
       expect(remainingFiles).toHaveLength(0);
       expect(globalFilesResult2).toHaveLength(2);
-      DISABLE_REMOVE_GLOBAL_FILE = false;
     });
   });
 
@@ -601,6 +596,127 @@ describe('FileModel', () => {
       const size = await fileModel.countUsage();
 
       expect(size).toBe(3500);
+    });
+  });
+
+  describe('findByNames', () => {
+    it('should find files by names', async () => {
+      // 准备测试数据
+      const fileList = [
+        {
+          name: 'test1.txt',
+          url: 'https://example.com/test1.txt',
+          size: 100,
+          fileType: 'text/plain',
+          userId,
+        },
+        {
+          name: 'test2.txt',
+          url: 'https://example.com/test2.txt',
+          size: 200,
+          fileType: 'text/plain',
+          userId,
+        },
+        {
+          name: 'other.txt',
+          url: 'https://example.com/other.txt',
+          size: 300,
+          fileType: 'text/plain',
+          userId,
+        },
+      ];
+
+      await serverDB.insert(files).values(fileList);
+
+      // 测试查找文件
+      const result = await fileModel.findByNames(['test1', 'test2']);
+      expect(result).toHaveLength(2);
+      expect(result.map((f) => f.name)).toContain('test1.txt');
+      expect(result.map((f) => f.name)).toContain('test2.txt');
+    });
+
+    it('should return empty array when no files match names', async () => {
+      const result = await fileModel.findByNames(['nonexistent']);
+      expect(result).toHaveLength(0);
+    });
+
+    it('should only find files belonging to current user', async () => {
+      // 准备测试数据
+      await serverDB.insert(files).values([
+        {
+          name: 'test1.txt',
+          url: 'https://example.com/test1.txt',
+          size: 100,
+          fileType: 'text/plain',
+          userId,
+        },
+        {
+          name: 'test2.txt',
+          url: 'https://example.com/test2.txt',
+          size: 200,
+          fileType: 'text/plain',
+          userId: 'user2', // 不同用户的文件
+        },
+      ]);
+
+      const result = await fileModel.findByNames(['test']);
+      expect(result).toHaveLength(1);
+      expect(result[0].name).toBe('test1.txt');
+    });
+  });
+
+  describe('deleteGlobalFile', () => {
+    it('should delete global file by hashId', async () => {
+      // 准备测试数据
+      const globalFile = {
+        hashId: 'test-hash',
+        fileType: 'text/plain',
+        size: 100,
+        url: 'https://example.com/global-file.txt',
+        metadata: { key: 'value' },
+      };
+
+      await serverDB.insert(globalFiles).values(globalFile);
+
+      // 执行删除操作
+      await fileModel.deleteGlobalFile('test-hash');
+
+      // 验证文件已被删除
+      const result = await serverDB.query.globalFiles.findFirst({
+        where: eq(globalFiles.hashId, 'test-hash'),
+      });
+      expect(result).toBeUndefined();
+    });
+
+    it('should not throw error when deleting non-existent global file', async () => {
+      // 删除不存在的文件不应抛出错误
+      await expect(fileModel.deleteGlobalFile('non-existent-hash')).resolves.not.toThrow();
+    });
+
+    it('should only delete specified global file', async () => {
+      // 准备测试数据
+      const globalFiles1 = {
+        hashId: 'hash1',
+        fileType: 'text/plain',
+        size: 100,
+        url: 'https://example.com/file1.txt',
+      };
+      const globalFiles2 = {
+        hashId: 'hash2',
+        fileType: 'text/plain',
+        size: 200,
+        url: 'https://example.com/file2.txt',
+      };
+
+      await serverDB.insert(globalFiles).values([globalFiles1, globalFiles2]);
+
+      // 删除一个文件
+      await fileModel.deleteGlobalFile('hash1');
+
+      // 验证只有指定文件被删除
+      const remainingFiles = await serverDB.query.globalFiles.findMany();
+      expect(remainingFiles).toHaveLength(1);
+      expect(remainingFiles[0].hashId).toBe('hash2');
     });
   });
 });

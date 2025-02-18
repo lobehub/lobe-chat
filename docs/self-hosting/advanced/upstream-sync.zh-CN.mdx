@@ -25,27 +25,15 @@ tags:
 
 当你 Fork 了项目后，由于 Github 的限制，你需要手动在你 Fork 的项目的 Actions 页面启用 Workflows，并启动 Upstream Sync Action。启用后，你可以设置每小时进行一次自动更新。
 
-<Image
-  alt="启动自动更新 S1"
-  src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png"
-/>
+<Image alt="启动自动更新 S1" src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985117-4d48fe7b-0412-4667-8129-b25ebcf2c9de.png" />
 
-<Image
-  alt="启动自动更新 S2"
-  src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png"
-/>
+<Image alt="启动自动更新 S2" src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png" />
 
 如果你遇到了同步失败的情况，你需要手动重新点一次 「Update Branch」。
 
-<Image
-  alt="GitHub Action 同步失败"
-  src="https://github.com/user-attachments/assets/9baacac6-5af4-460b-862d-682b76c18459"
-/>
+<Image alt="GitHub Action 同步失败" src="https://github.com/user-attachments/assets/9baacac6-5af4-460b-862d-682b76c18459" />
 
-<Image
-  alt="手动同步 「Update Branch」"
-  src="https://github.com/user-attachments/assets/d524c20d-306a-45bc-971b-96920b87fab4"
-/>
+<Image alt="手动同步 「Update Branch」" src="https://github.com/user-attachments/assets/d524c20d-306a-45bc-971b-96920b87fab4" />
 
 ## `B` Docker 部署
 
@@ -54,34 +42,33 @@ Docker 部署版本的升级非常简单，只需要重新部署 LobeChat 的最
 <Steps>
   ### 停止并删除当前运行的 LobeChat 容器
 
-假设 LobeChat 容器的名称是 `lobe-chat`，使用以下指令停止并删除当前运行的 LobeChat 容器：
+  假设 LobeChat 容器的名称是 `lobe-chat`，使用以下指令停止并删除当前运行的 LobeChat 容器：
 
-```fish
-docker stop lobe-chat
-docker rm lobe-chat
-```
+  ```fish
+  docker stop lobe-chat
+  docker rm lobe-chat
+  ```
 
-### 拉取最新的 LobeChat 镜像
+  ### 拉取最新的 LobeChat 镜像
 
-使用以下命令拉取 LobeChat 的最新 Docker 镜像：
+  使用以下命令拉取 LobeChat 的最新 Docker 镜像：
 
-```fish
-docker pull lobehub/lobe-chat
-```
+  ```fish
+  docker pull lobehub/lobe-chat
+  ```
 
-### 重新启动 Docker 容器
+  ### 重新启动 Docker 容器
 
-使用新拉取的镜像重新部署 LobeChat 容器：
+  使用新拉取的镜像重新部署 LobeChat 容器：
 
-```fish
-docker run -d -p 3210:3210 \
-  -e OPENAI_API_KEY=sk-xxxx \
-  -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
-  -e ACCESS_CODE=lobe66 \
-  --name lobe-chat \
-  lobehub/lobe-chat
-```
-
+  ```fish
+  docker run -d -p 3210:3210 \
+    -e OPENAI_API_KEY=sk-xxxx \
+    -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
+    -e ACCESS_CODE=lobe66 \
+    --name lobe-chat \
+    lobehub/lobe-chat
+  ```
 </Steps>
 
 确保在执行这些命令之前，您有足够的权限来停止和删除容器，并且 Docker 有足够的权限来拉取新的镜像。
@@ -89,77 +76,74 @@ docker run -d -p 3210:3210 \
 <Callout type={'tip'}>
   **重新部署的话，我本地的聊天记录会丢失吗？**
 
-放心，不会的。LobeChat 的聊天记录全部都存储在你的本地浏览器中。因此使用 Docker 重新部署 LobeChat 时，你的聊天记录并不会丢失。
-
+  放心，不会的。LobeChat 的聊天记录全部都存储在你的本地浏览器中。因此使用 Docker 重新部署 LobeChat 时，你的聊天记录并不会丢失。
 </Callout>
 
 如果你希望自动化执行以上步骤，你可以参照下面的方法，利用 Crontab 定时来完成。具体步骤如下。
 
 <Steps>
+  ### 撰写自动更新脚本、配置文件
 
-### 撰写自动更新脚本、配置文件
+  首先，新建一个 `lobe.env` 配置文件，内容为各种环境变量，例如：
 
-首先，新建一个 `lobe.env` 配置文件，内容为各种环境变量，例如：
+  ```env
+  OPENAI_API_KEY=sk-xxxx
+  OPENAI_PROXY_URL=https://api-proxy.com/v1
+  ACCESS_CODE=arthals2333
+  OPENAI_MODEL_LIST=-gpt-4,-gpt-4-32k,-gpt-3.5-turbo-16k,gpt-3.5-turbo-1106=gpt-3.5-turbo-16k,gpt-4-0125-preview=gpt-4-turbo,gpt-4-vision-preview=gpt-4-vision
+  ```
 
-```env
-OPENAI_API_KEY=sk-xxxx
-OPENAI_PROXY_URL=https://api-proxy.com/v1
-ACCESS_CODE=arthals2333
-OPENAI_MODEL_LIST=-gpt-4,-gpt-4-32k,-gpt-3.5-turbo-16k,gpt-3.5-turbo-1106=gpt-3.5-turbo-16k,gpt-4-0125-preview=gpt-4-turbo,gpt-4-vision-preview=gpt-4-vision
-```
+  然后，你可以使用以下脚本来自动更新：
 
-然后，你可以使用以下脚本来自动更新：
+  ```bash
+  #!/bin/bash
+  # auto-update-lobe-chat.sh
 
-```bash
-#!/bin/bash
-# auto-update-lobe-chat.sh
+  # 设置代理（可选）
+  # export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
 
-# 设置代理（可选）
-# export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+  # 拉取最新的镜像并将输出存储在变量中
+  output=$(docker pull lobehub/lobe-chat:latest 2>&1)
 
-# 拉取最新的镜像并将输出存储在变量中
-output=$(docker pull lobehub/lobe-chat:latest 2>&1)
+  # 检查拉取命令是否成功执行
+  if [ $? -ne 0 ]; then
+    exit 1
+  fi
 
-# 检查拉取命令是否成功执行
-if [ $? -ne 0 ]; then
-  exit 1
-fi
+  # 检查输出中是否包含特定的字符串
+  echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
 
-# 检查输出中是否包含特定的字符串
-echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
+  # 如果镜像已经是最新的，则不执行任何操作
+  if [ $? -eq 0 ]; then
+    exit 0
+  fi
 
-# 如果镜像已经是最新的，则不执行任何操作
-if [ $? -eq 0 ]; then
-  exit 0
-fi
+  echo "Detected lobe-chat update"
 
-echo "Detected lobe-chat update"
+  # 删除旧的容器
+  echo "Removed: $(docker rm -f lobe-chat)"
 
-# 删除旧的容器
-echo "Removed: $(docker rm -f lobe-chat)"
+  # 运行新的容器(请将env配置文件地址改为你的实际地址)
+  echo "Started: $(docker run -d --network=host --env-file path/to/lobe.env --name=lobe-chat --restart=always lobehub/lobe-chat)"
 
-# 运行新的容器(请将env配置文件地址改为你的实际地址)
-echo "Started: $(docker run -d --network=host --env-file path/to/lobe.env --name=lobe-chat --restart=always lobehub/lobe-chat)"
+  # 打印更新的时间和版本
+  echo "Update time: $(date)"
+  echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
 
-# 打印更新的时间和版本
-echo "Update time: $(date)"
-echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
+  # 清理不再使用的镜像
+  docker images | grep 'lobehub/lobe-chat' | grep -v 'lobehub/lobe-chat-database' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+  echo "Removed old images."
+  ```
 
-# 清理不再使用的镜像
-docker images | grep 'lobehub/lobe-chat' | grep -v 'lobehub/lobe-chat-database' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
-echo "Removed old images."
-```
+  <Callout type={'warning'}>
+    此脚本可以在 Crontab 中使用，但请确认你的 Crontab 可以找到正确的 Docker 命令。建议使用绝对路径。
+  </Callout>
 
-<Callout type={'warning'}>
-  此脚本可以在 Crontab 中使用，但请确认你的 Crontab 可以找到正确的 Docker 命令。建议使用绝对路径。
-</Callout>
+  ### 配置 Crontab 自动执行脚本
 
-### 配置 Crontab 自动执行脚本
+  以下命令可以配置 Crontab 每 5 分钟执行一次脚本，你也可以根据需要调整执行频率：
 
-以下命令可以配置 Crontab 每 5 分钟执行一次脚本，你也可以根据需要调整执行频率：
-
-```bash
-*/5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
-```
-
+  ```bash
+  */5 * * * * /path/to/auto-update-lobe-chat.sh >> /path/to/auto-update-lobe-chat.log 2>&1
+  ```
 </Steps>

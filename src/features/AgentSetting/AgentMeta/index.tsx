@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Skeleton } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { isString } from 'lodash-es';
 import { Wand2 } from 'lucide-react';
@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { INBOX_SESSION_ID } from '@/const/session';
 
 import { useStore } from '../store';
 import { SessionLoadingState } from '../store/initialState';
@@ -27,8 +28,14 @@ const AgentMeta = memo(() => {
     s.autocompleteMeta,
     s.autocompleteAllMeta,
   ]);
-  const loading = useStore((s) => s.autocompleteLoading);
+  const [isInbox, isIniting, autocompleteLoading] = useStore((s) => [
+    s.id === INBOX_SESSION_ID,
+    s.loading,
+    s.autocompleteLoading,
+  ]);
   const meta = useStore((s) => s.meta, isEqual);
+
+  if (isInbox) return;
 
   const basic = [
     {
@@ -57,10 +64,12 @@ const AgentMeta = memo(() => {
   const autocompleteItems: FormItemProps[] = basic.map((item) => {
     const AutoGenerate = item.Render;
     return {
-      children: (
+      children: isIniting ? (
+        <Skeleton.Button active block size={'small'} />
+      ) : (
         <AutoGenerate
           canAutoGenerate={hasSystemRole}
-          loading={loading[item.key as keyof SessionLoadingState]}
+          loading={autocompleteLoading[item.key as keyof SessionLoadingState]}
           onChange={item.onChange}
           onGenerate={() => {
             autocompleteMeta(item.key as keyof typeof meta);
@@ -76,11 +85,13 @@ const AgentMeta = memo(() => {
   const metaData: ItemGroup = {
     children: [
       {
-        children: (
+        children: isIniting ? (
+          <Skeleton.Button active block size={'small'} />
+        ) : (
           <AutoGenerateAvatar
             background={meta.backgroundColor}
             canAutoGenerate={hasSystemRole}
-            loading={loading['avatar']}
+            loading={autocompleteLoading['avatar']}
             onChange={(avatar) => updateMeta({ avatar })}
             onGenerate={() => autocompleteMeta('avatar')}
             value={meta.avatar}
@@ -90,7 +101,9 @@ const AgentMeta = memo(() => {
         minWidth: undefined,
       },
       {
-        children: (
+        children: isIniting ? (
+          <Skeleton.Button active block size={'small'} />
+        ) : (
           <BackgroundSwatches
             backgroundColor={meta.backgroundColor}
             onChange={(backgroundColor) => updateMeta({ backgroundColor })}
@@ -101,7 +114,7 @@ const AgentMeta = memo(() => {
       },
       ...autocompleteItems,
     ],
-    extra: (
+    extra: !isIniting && (
       <Tooltip
         title={
           !hasSystemRole
@@ -112,7 +125,7 @@ const AgentMeta = memo(() => {
         <Button
           disabled={!hasSystemRole}
           icon={<Icon icon={Wand2} />}
-          loading={Object.values(loading).some((i) => !!i)}
+          loading={Object.values(autocompleteLoading).some((i) => !!i)}
           onClick={(e: any) => {
             e.stopPropagation();
 

@@ -14,11 +14,11 @@ export const useStyles = createStyles(({ token, css, stylish, cx, responsive }) 
       transform: translateY(16px);
 
       padding-inline: 12px !important;
+      border-color: ${token.colorFillTertiary} !important;
+      border-radius: 16px !important;
 
       opacity: 0;
       background: ${rgba(token.colorBgContainer, 0.5)};
-      border-color: ${token.colorFillTertiary} !important;
-      border-radius: 16px !important;
 
       ${responsive.mobile} {
         inset-inline-end: 0;

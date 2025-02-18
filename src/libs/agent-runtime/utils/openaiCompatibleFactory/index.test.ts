@@ -1,13 +1,16 @@
 // @vitest-environment node
 import OpenAI from 'openai';
+import type { Stream } from 'openai/streaming';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   AgentRuntimeErrorType,
   ChatStreamCallbacks,
+  ChatStreamPayload,
   LobeOpenAICompatibleRuntime,
   ModelProvider,
 } from '@/libs/agent-runtime';
+import officalOpenAIModels from '@/libs/agent-runtime/openai/fixtures/openai-models.json';
 import { sleep } from '@/utils/sleep';
 
 import * as debugStreamModule from '../debugStream';
@@ -797,6 +800,137 @@ describe('LobeOpenAICompatibleFactory', () => {
       });
     });
 
+    it('should use custom stream handler when provided', async () => {
+      // Create a custom stream handler that handles both ReadableStream and OpenAI Stream
+      const customStreamHandler = vi.fn(
+        (stream: ReadableStream | Stream<OpenAI.ChatCompletionChunk>) => {
+          const readableStream =
+            stream instanceof ReadableStream ? stream : stream.toReadableStream();
+          return new ReadableStream({
+            start(controller) {
+              const reader = readableStream.getReader();
+              const process = async () => {
+                try {
+                  while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    controller.enqueue(value);
+                  }
+                } finally {
+                  controller.close();
+                }
+              };
+              process();
+            },
+          });
+        },
+      );
+
+      const LobeMockProvider = LobeOpenAICompatibleFactory({
+        baseURL: 'https://api.test.com/v1',
+        chatCompletion: {
+          handleStream: customStreamHandler,
+        },
+        provider: ModelProvider.OpenAI,
+      });
+
+      const instance = new LobeMockProvider({ apiKey: 'test' });
+
+      // Create a mock stream
+      const mockStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue({
+            id: 'test-id',
+            choices: [{ delta: { content: 'Hello' }, index: 0 }],
+            created: Date.now(),
+            model: 'test-model',
+            object: 'chat.completion.chunk',
+          });
+          controller.close();
+        },
+      });
+
+      vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue({
+        tee: () => [mockStream, mockStream],
+      } as any);
+
+      const payload: ChatStreamPayload = {
+        messages: [{ content: 'Test', role: 'user' }],
+        model: 'test-model',
+        temperature: 0.7,
+      };
+
+      await instance.chat(payload);
+
+      expect(customStreamHandler).toHaveBeenCalled();
+    });
+
+    it('should use custom transform handler for non-streaming response', async () => {
+      const customTransformHandler = vi.fn((data: OpenAI.ChatCompletion): ReadableStream => {
+        return new ReadableStream({
+          start(controller) {
+            // Transform the completion to chunk format
+            controller.enqueue({
+              id: data.id,
+              choices: data.choices.map((choice) => ({
+                delta: { content: choice.message.content },
+                index: choice.index,
+              })),
+              created: data.created,
+              model: data.model,
+              object: 'chat.completion.chunk',
+            });
+            controller.close();
+          },
+        });
+      });
+
+      const LobeMockProvider = LobeOpenAICompatibleFactory({
+        baseURL: 'https://api.test.com/v1',
+        chatCompletion: {
+          handleTransformResponseToStream: customTransformHandler,
+        },
+        provider: ModelProvider.OpenAI,
+      });
+
+      const instance = new LobeMockProvider({ apiKey: 'test' });
+
+      const mockResponse: OpenAI.ChatCompletion = {
+        id: 'test-id',
+        choices: [
+          {
+            index: 0,
+            message: {
+              role: 'assistant',
+              content: 'Test response',
+              refusal: null,
+            },
+            logprobs: null,
+            finish_reason: 'stop',
+          },
+        ],
+        created: Date.now(),
+        model: 'test-model',
+        object: 'chat.completion',
+        usage: { completion_tokens: 2, prompt_tokens: 1, total_tokens: 3 },
+      };
+
+      vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+        mockResponse as any,
+      );
+
+      const payload: ChatStreamPayload = {
+        messages: [{ content: 'Test', role: 'user' }],
+        model: 'test-model',
+        temperature: 0.7,
+        stream: false,
+      };
+
+      await instance.chat(payload);
+
+      expect(customTransformHandler).toHaveBeenCalledWith(mockResponse);
+    });
+
     describe('DEBUG', () => {
       it('should call debugStream and return StreamingTextResponse when DEBUG_OPENROUTER_CHAT_COMPLETION is 1', async () => {
         // Arrange
@@ -836,6 +970,74 @@ describe('LobeOpenAICompatibleFactory', () => {
         // 恢复原始环境变量值
         process.env.DEBUG_MOCKPROVIDER_CHAT_COMPLETION = originalDebugValue;
       });
+    });
+  });
+
+  describe('models', () => {
+    it('should get models with third party model list', async () => {
+      vi.spyOn(instance['client'].models, 'list').mockResolvedValue({
+        data: [
+          { id: 'gpt-4o', object: 'model', created: 1698218177 },
+          { id: 'claude-3-haiku-20240307', object: 'model' },
+          { id: 'gpt-4o-mini', object: 'model', created: 1698318177 * 1000 },
+          { id: 'gemini', object: 'model', created: 1736499509125 },
+        ],
+      } as any);
+
+      const list = await instance.models();
+
+      expect(list).toEqual([
+        {
+          contextWindowTokens: 128000,
+          releasedAt: '2023-10-25',
+          description:
+            'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
+          displayName: 'GPT-4o',
+          enabled: true,
+          functionCall: true,
+          id: 'gpt-4o',
+          pricing: {
+            input: 2.5,
+            output: 10,
+          },
+          vision: true,
+        },
+        {
+          contextWindowTokens: 200000,
+          description:
+            'Claude 3 Haiku 是 Anthropic 的最快且最紧凑的模型，旨在实现近乎即时的响应。它具有快速且准确的定向性能。',
+          displayName: 'Claude 3 Haiku',
+          functionCall: true,
+          id: 'claude-3-haiku-20240307',
+          maxOutput: 4096,
+          pricing: {
+            input: 0.25,
+            output: 1.25,
+          },
+          releasedAt: '2024-03-07',
+          vision: true,
+        },
+        {
+          contextWindowTokens: 128000,
+          description:
+            'GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。',
+          displayName: 'GPT-4o mini',
+          enabled: true,
+          functionCall: true,
+          id: 'gpt-4o-mini',
+          maxOutput: 16385,
+          pricing: {
+            input: 0.15,
+            output: 0.6,
+          },
+          releasedAt: '2023-10-26',
+          vision: true,
+        },
+        {
+          id: 'gemini',
+          releasedAt: '2025-01-10',
+        },
+      ]);
     });
   });
 });

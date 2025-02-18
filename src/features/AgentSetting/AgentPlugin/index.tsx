@@ -11,6 +11,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import PluginStore from '@/features/PluginStore';
 import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
+import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
@@ -33,7 +34,6 @@ const AgentPlugin = memo(() => {
 
   const { showDalle } = useServerConfigStore(featureFlagsSelectors);
   const installedPlugins = useToolStore(toolSelectors.metaList(showDalle), isEqual);
-  const useFetchInstalledPlugins = useToolStore((s) => s.useFetchInstalledPlugins);
 
   const { isLoading } = useFetchInstalledPlugins();
 

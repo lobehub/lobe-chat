@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { isNumber } from 'lodash-es';
 import numeral from 'numeral';
 
-import { CNY_TO_USD } from '@/const/discover';
+import { USD_TO_CNY } from '@/const/currency';
 import { ModelPriceCurrency } from '@/types/llm';
 
 export const formatSize = (bytes: number, fractionDigits: number = 1): string => {
@@ -69,7 +69,7 @@ export const formatShortenNumber = (num: any) => {
   const formattedWithComma = new Intl.NumberFormat('en-US').format(num);
 
   // 格式化为 K 或 M
-  if (num >= 10_000_000) {
+  if (num >= 1_000_000) {
     return (num / 1_000_000).toFixed(1) + 'M';
   } else if (num >= 10_000) {
     return (num / 1000).toFixed(1) + 'K';
@@ -88,7 +88,7 @@ export const formatNumber = (num: any, fractionDigits?: number) => {
   return `${numeral(a).format('0,0')}.${b}`;
 };
 
-export const formatIntergerNumber = (num: any) => {
+export const formatIntergerNumber = (num?: any) => {
   if (!num && num !== 0) return '--';
 
   return numeral(num).format('0,0');
@@ -110,13 +110,15 @@ export const formatTokenNumber = (num: number): string => {
 export const formatPrice = (price: number, fractionDigits: number = 2) => {
   if (!price && price !== 0) return '--';
 
+  if (fractionDigits === 0) return numeral(price).format('0,0');
+
   const [a, b] = price.toFixed(fractionDigits).split('.');
   return `${numeral(a).format('0,0')}.${b}`;
 };
 
 export const formatPriceByCurrency = (price: number, currency?: ModelPriceCurrency) => {
   if (currency === 'CNY') {
-    return formatPrice(price / CNY_TO_USD);
+    return formatPrice(price / USD_TO_CNY);
   }
   return formatPrice(price);
 };

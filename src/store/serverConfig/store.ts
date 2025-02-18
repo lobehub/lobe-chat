@@ -10,26 +10,33 @@ import { GlobalServerConfig } from '@/types/serverConfig';
 import { merge } from '@/utils/merge';
 import { StoreApiWithSelector } from '@/utils/zustand';
 
-const initialState: ServerConfigStore = {
-  featureFlags: DEFAULT_FEATURE_FLAGS,
-  serverConfig: { telemetry: {} },
-};
+import { ServerConfigAction, createServerConfigSlice } from './action';
 
-//  ===============  聚合 createStoreFn ============ //
-
-export interface ServerConfigStore {
+interface ServerConfigState {
   featureFlags: IFeatureFlags;
   isMobile?: boolean;
   serverConfig: GlobalServerConfig;
 }
 
+const initialState: ServerConfigState = {
+  featureFlags: DEFAULT_FEATURE_FLAGS,
+  serverConfig: { aiProvider: {}, telemetry: {} },
+};
+
+//  ===============  聚合 createStoreFn ============ //
+
+export interface ServerConfigStore extends ServerConfigState, ServerConfigAction {}
+
 type CreateStore = (
   initState: Partial<ServerConfigStore>,
 ) => StateCreator<ServerConfigStore, [['zustand/devtools', never]]>;
 
-const createStore: CreateStore = (runtimeState) => () => ({
-  ...merge(initialState, runtimeState),
-});
+const createStore: CreateStore =
+  (runtimeState) =>
+  (...params) => ({
+    ...merge(initialState, runtimeState),
+    ...createServerConfigSlice(...params),
+  });
 
 //  ===============  实装 useStore ============ //
 

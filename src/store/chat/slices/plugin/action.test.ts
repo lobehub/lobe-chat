@@ -149,7 +149,7 @@ describe('ChatPluginAction', () => {
     it('should update message content and trigger the ai message', async () => {
       // 设置模拟函数的返回值
       const mockCurrentChats: any[] = [];
-      vi.spyOn(chatSelectors, 'currentChats').mockReturnValue(mockCurrentChats);
+      vi.spyOn(chatSelectors, 'activeBaseChats').mockReturnValue(mockCurrentChats);
 
       // 设置初始状态
       const initialState = {
@@ -184,7 +184,7 @@ describe('ChatPluginAction', () => {
     it('should update message content and not trigger ai message', async () => {
       // 设置模拟函数的返回值
       const mockCurrentChats: any[] = [];
-      vi.spyOn(chatSelectors, 'currentChats').mockReturnValue(mockCurrentChats);
+      vi.spyOn(chatSelectors, 'activeBaseChats').mockReturnValue(mockCurrentChats);
 
       // 设置初始状态
       const initialState = {
