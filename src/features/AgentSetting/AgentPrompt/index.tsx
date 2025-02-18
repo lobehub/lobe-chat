@@ -47,6 +47,26 @@ const AgentPrompt = memo<{ modal?: boolean }>(({ modal }) => {
   ]);
 
   if (loading) {
+    if (modal)
+      return (
+        <Form
+          items={[
+            {
+              children: (
+                <>
+                  <div style={{ height: 24 }} />
+                  <Skeleton active title={false} />
+                </>
+              ),
+              title: t('settingAgent.prompt.title'),
+            },
+          ]}
+          itemsType={'group'}
+          variant={'pure'}
+          {...FORM_STYLE}
+        />
+      );
+
     return (
       <div className={styles.wrapper}>
         <Flexbox className={styles.container} padding={4}>

@@ -110,17 +110,6 @@
       "required": "Lütfen hizmet sağlayıcı adını girin",
       "title": "Hizmet Sağlayıcı Adı"
     },
-    "providerModels": {
-      "item": {
-        "modelConfig": {
-          "deployName": {
-            "extra": "İstek gönderildiğinde bu alan model ID'si olarak kullanılacaktır",
-            "placeholder": "Lütfen modelin gerçek dağıtım adını veya kimliğini girin",
-            "title": "Model Dağıtım Adı"
-          }
-        }
-      }
-    },
     "proxyUrl": {
       "required": "Lütfen proxy adresini girin",
       "title": "Proxy Adresi"
@@ -240,6 +229,11 @@
           "placeholder": "Lütfen Azure'daki model dağıtım adını girin",
           "title": "Model Dağıtım Adı"
         },
+        "deployName": {
+          "extra": "Bu alan, isteği gönderirken model kimliği olarak kullanılacaktır",
+          "placeholder": "Modelin gerçek dağıtım adını veya kimliğini girin",
+          "title": "Model Dağıtım Adı"
+        },
         "displayName": {
           "placeholder": "Lütfen modelin gösterim adını girin, örneğin ChatGPT, GPT-4 vb.",
           "title": "Model Gösterim Adı"
@@ -327,6 +321,13 @@
     "deleteSuccess": "Silme işlemi başarılı",
     "tooltip": "Hizmet sağlayıcının temel yapılandırmasını güncelle",
     "updateSuccess": "Güncelleme başarılı"
+  },
+  "vertexai": {
+    "apiKey": {
+      "desc": "Vertex AI Anahtarlarınızı buraya girin",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI Anahtarları"
+    }
   },
   "zeroone": {
     "title": "01.AI Sıfır Bir"

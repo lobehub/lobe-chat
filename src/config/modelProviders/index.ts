@@ -31,6 +31,7 @@ import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
 import QwenProvider from './qwen';
+import SambaNovaProvider from './sambanova';
 import SenseNovaProvider from './sensenova';
 import SiliconCloudProvider from './siliconcloud';
 import SparkProvider from './spark';
@@ -39,7 +40,9 @@ import TaichuProvider from './taichu';
 import TencentcloudProvider from './tencentcloud';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
+import VertexAIProvider from './vertexai';
 import VLLMProvider from './vllm';
+import VolcengineProvider from './volcengine';
 import WenxinProvider from './wenxin';
 import XAIProvider from './xai';
 import ZeroOneProvider from './zeroone';
@@ -70,6 +73,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   HuggingFaceProvider.chatModels,
   XAIProvider.chatModels,
   JinaProvider.chatModels,
+  SambaNovaProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   NovitaProvider.chatModels,
@@ -99,6 +103,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   AnthropicProvider,
   BedrockProvider,
   GoogleProvider,
+  VertexAIProvider,
   DeepSeekProvider,
   HuggingFaceProvider,
   OpenRouterProvider,
@@ -115,6 +120,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   UpstageProvider,
   XAIProvider,
   JinaProvider,
+  SambaNovaProvider,
   QwenProvider,
   WenxinProvider,
   TencentcloudProvider,
@@ -127,6 +133,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   StepfunProvider,
   MoonshotProvider,
   BaichuanProvider,
+  VolcengineProvider,
   MinimaxProvider,
   LMStudioProvider,
   InternLMProvider,
@@ -177,6 +184,7 @@ export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
 export { default as QwenProviderCard } from './qwen';
+export { default as SambaNovaProviderCard } from './sambanova';
 export { default as SenseNovaProviderCard } from './sensenova';
 export { default as SiliconCloudProviderCard } from './siliconcloud';
 export { default as SparkProviderCard } from './spark';
@@ -185,7 +193,9 @@ export { default as TaichuProviderCard } from './taichu';
 export { default as TencentCloudProviderCard } from './tencentcloud';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
+export { default as VertexAIProviderCard } from './vertexai';
 export { default as VLLMProviderCard } from './vllm';
+export { default as VolcengineProviderCard } from './volcengine';
 export { default as WenxinProviderCard } from './wenxin';
 export { default as XAIProviderCard } from './xai';
 export { default as ZeroOneProviderCard } from './zeroone';

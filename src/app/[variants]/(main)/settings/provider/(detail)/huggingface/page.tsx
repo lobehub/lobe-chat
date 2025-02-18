@@ -43,15 +43,15 @@ const useProviderCard = (): ProviderItem => {
         ) : (
           <FormPassword
             autoComplete={'new-password'}
-            placeholder={t(`huggingface.accessToken.placeholder`)}
+            placeholder={t('huggingface.accessToken.placeholder')}
           />
         ),
         desc: (
           <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
-            {t(`huggingface.accessToken.desc`)}
+            {t('huggingface.accessToken.desc')}
           </Markdown>
         ),
-        label: t(`huggingface.accessToken.title`),
+        label: t('huggingface.accessToken.title'),
         name: [KeyVaultsConfigKey, LLMProviderApiTokenKey],
       },
     ],

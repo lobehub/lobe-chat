@@ -14,6 +14,7 @@ import AgentModal from '@/features/AgentSetting/AgentModal';
 import AgentPlugin from '@/features/AgentSetting/AgentPlugin';
 import AgentPrompt from '@/features/AgentSetting/AgentPrompt';
 import AgentTTS from '@/features/AgentSetting/AgentTTS';
+import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { ChatSettingsTabs } from '@/store/global/initialState';
@@ -30,15 +31,14 @@ const EditPage = memo(() => {
     s.updateSessionMeta,
     sessionMetaSelectors.currentAgentTitle(s),
   ]);
-  const [useFetchAgentConfig, updateAgentConfig] = useAgentStore((s) => [
-    s.useFetchAgentConfig,
-    s.updateAgentConfig,
-  ]);
+
+  const [updateAgentConfig] = useAgentStore((s) => [s.updateAgentConfig]);
 
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
 
-  const { isLoading } = useFetchAgentConfig(id);
+  const { isLoading } = useInitAgentConfig();
+
   const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
 
   return (

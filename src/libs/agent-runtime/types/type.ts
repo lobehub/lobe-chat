@@ -31,6 +31,9 @@ export enum ModelProvider {
   Bedrock = 'bedrock',
   Cloudflare = 'cloudflare',
   DeepSeek = 'deepseek',
+  /**
+   * @deprecated
+   */
   Doubao = 'doubao',
   FireworksAI = 'fireworksai',
   GiteeAI = 'giteeai',
@@ -53,6 +56,7 @@ export enum ModelProvider {
   OpenRouter = 'openrouter',
   Perplexity = 'perplexity',
   Qwen = 'qwen',
+  SambaNova = 'sambanova',
   SenseNova = 'sensenova',
   SiliconCloud = 'siliconcloud',
   Spark = 'spark',
@@ -62,6 +66,8 @@ export enum ModelProvider {
   TogetherAI = 'togetherai',
   Upstage = 'upstage',
   VLLM = 'vllm',
+  VertexAI = 'vertexai',
+  Volcengine = 'volcengine',
   Wenxin = 'wenxin',
   XAI = 'xai',
   ZeroOne = 'zeroone',

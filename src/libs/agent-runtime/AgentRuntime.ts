@@ -12,7 +12,6 @@ import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeCloudflareAI, LobeCloudflareParams } from './cloudflare';
 import { LobeDeepSeekAI } from './deepseek';
-import { LobeDoubaoAI } from './doubao';
 import { LobeFireworksAI } from './fireworksai';
 import { LobeGiteeAI } from './giteeai';
 import { LobeGithubAI } from './github';
@@ -34,6 +33,7 @@ import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobeQwenAI } from './qwen';
+import { LobeSambaNovaAI } from './sambanova';
 import { LobeSenseNovaAI } from './sensenova';
 import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeSparkAI } from './spark';
@@ -52,6 +52,7 @@ import {
 } from './types';
 import { LobeUpstageAI } from './upstage';
 import { LobeVLLMAI } from './vllm';
+import { LobeVolcengineAI } from './volcengine';
 import { LobeWenxinAI } from './wenxin';
 import { LobeXAI } from './xai';
 import { LobeZeroOneAI } from './zeroone';
@@ -169,6 +170,7 @@ class AgentRuntime {
       openrouter: Partial<ClientOptions>;
       perplexity: Partial<ClientOptions>;
       qwen: Partial<ClientOptions>;
+      sambanova: Partial<ClientOptions>;
       sensenova: Partial<ClientOptions>;
       siliconcloud: Partial<ClientOptions>;
       spark: Partial<ClientOptions>;
@@ -178,6 +180,7 @@ class AgentRuntime {
       togetherai: Partial<ClientOptions>;
       upstage: Partial<ClientOptions>;
       vllm: Partial<ClientOptions>;
+      volcengine: Partial<ClientOptions>;
       wenxin: Partial<ClientOptions>;
       xai: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
@@ -383,6 +386,11 @@ class AgentRuntime {
         break;
       }
 
+      case ModelProvider.SambaNova: {
+        runtimeModel = new LobeSambaNovaAI(params.sambanova);
+        break;
+      }
+
       case ModelProvider.Cloudflare: {
         runtimeModel = new LobeCloudflareAI(params.cloudflare);
         break;
@@ -403,8 +411,9 @@ class AgentRuntime {
         break;
       }
 
+      case ModelProvider.Volcengine:
       case ModelProvider.Doubao: {
-        runtimeModel = new LobeDoubaoAI(params.doubao);
+        runtimeModel = new LobeVolcengineAI(params.volcengine || params.doubao);
         break;
       }
 

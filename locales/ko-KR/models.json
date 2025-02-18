@@ -47,6 +47,12 @@
   "Baichuan4-Turbo": {
     "description": "모델 능력이 국내 1위이며, 지식 백과, 긴 텍스트, 생성 창작 등 중국어 작업에서 해외 주류 모델을 초월합니다. 또한 업계 선도적인 다중 모달 능력을 갖추고 있으며, 여러 권위 있는 평가 기준에서 우수한 성과를 보입니다."
   },
+  "DeepSeek-R1": {
+    "description": "최첨단 효율적인 LLM으로, 추론, 수학 및 프로그래밍에 능숙합니다."
+  },
+  "DeepSeek-R1-Distill-Llama-70B": {
+    "description": "DeepSeek R1——DeepSeek 패키지에서 더 크고 더 스마트한 모델——이 Llama 70B 아키텍처로 증류되었습니다. 기준 테스트와 인공지능 평가에 따르면, 이 모델은 원래 Llama 70B보다 더 스마트하며, 특히 수학 및 사실 정확성이 필요한 작업에서 뛰어난 성능을 보입니다."
+  },
   "DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "Qwen2.5-Math-1.5B를 기반으로 한 DeepSeek-R1 증류 모델로, 강화 학습과 콜드 스타트 데이터를 통해 추론 성능을 최적화하며, 오픈 소스 모델로 다중 작업 기준을 갱신합니다."
   },
@@ -119,11 +125,35 @@
   "InternVL2.5-26B": {
     "description": "InternVL2.5-26B는 강력한 비주얼 언어 모델로, 이미지와 텍스트의 다중 모달 처리를 지원하며, 이미지 내용을 정확하게 인식하고 관련 설명이나 답변을 생성할 수 있습니다."
   },
+  "Llama-3.2-11B-Vision-Instruct": {
+    "description": "고해상도 이미지에서 뛰어난 이미지 추론 능력을 보여주며, 시각적 이해 응용 프로그램에 적합합니다."
+  },
+  "Llama-3.2-90B-Vision-Instruct\t": {
+    "description": "시각적 이해 에이전트 응용 프로그램에 적합한 고급 이미지 추론 능력입니다."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct는 Alibaba Cloud에서 발표한 최신 대규모 언어 모델 시리즈 중 하나입니다. 이 72B 모델은 코딩 및 수학 분야에서 상당한 개선된 능력을 가지고 있습니다. 이 모델은 또한 29개 이상의 언어를 포함한 다국어 지원을 제공합니다. 모델은 지침 준수, 구조화된 데이터 이해 및 구조화된 출력 생성(특히 JSON)에서 상당한 향상을 보입니다."
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct는 Alibaba Cloud에서 발표한 최신 대규모 언어 모델 시리즈 중 하나입니다. 이 7B 모델은 코딩 및 수학 분야에서 상당한 개선된 능력을 가지고 있습니다. 이 모델은 또한 29개 이상의 언어를 포함한 다국어 지원을 제공합니다. 모델은 지침 준수, 구조화된 데이터 이해 및 구조화된 출력 생성(특히 JSON)에서 상당한 향상을 보입니다."
+  },
+  "Meta-Llama-3.1-405B-Instruct": {
+    "description": "Llama 3.1 지시 조정 텍스트 모델로, 다국어 대화 사용 사례에 최적화되어 있으며, 많은 오픈 소스 및 폐쇄형 채팅 모델 중에서 일반 산업 기준에서 우수한 성능을 보입니다."
+  },
+  "Meta-Llama-3.1-70B-Instruct": {
+    "description": "Llama 3.1 지시 조정 텍스트 모델로, 다국어 대화 사용 사례에 최적화되어 있으며, 많은 오픈 소스 및 폐쇄형 채팅 모델 중에서 일반 산업 기준에서 우수한 성능을 보입니다."
+  },
+  "Meta-Llama-3.1-8B-Instruct": {
+    "description": "Llama 3.1 지시 조정 텍스트 모델로, 다국어 대화 사용 사례에 최적화되어 있으며, 많은 오픈 소스 및 폐쇄형 채팅 모델 중에서 일반 산업 기준에서 우수한 성능을 보입니다."
+  },
+  "Meta-Llama-3.2-1B-Instruct": {
+    "description": "언어 이해, 뛰어난 추론 능력 및 텍스트 생성 능력을 갖춘 최첨단 소형 언어 모델입니다."
+  },
+  "Meta-Llama-3.2-3B-Instruct": {
+    "description": "언어 이해, 뛰어난 추론 능력 및 텍스트 생성 능력을 갖춘 최첨단 소형 언어 모델입니다."
+  },
+  "Meta-Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3은 Llama 시리즈에서 가장 진보된 다국어 오픈 소스 대형 언어 모델로, 매우 낮은 비용으로 405B 모델의 성능을 경험할 수 있습니다. Transformer 구조를 기반으로 하며, 감독 미세 조정(SFT)과 인간 피드백 강화 학습(RLHF)을 통해 유용성과 안전성을 향상시켰습니다. 그 지시 조정 버전은 다국어 대화를 위해 최적화되어 있으며, 여러 산업 기준에서 많은 오픈 소스 및 폐쇄형 채팅 모델보다 우수한 성능을 보입니다. 지식 마감일은 2023년 12월입니다."
   },
   "MiniMax-Text-01": {
     "description": "MiniMax-01 시리즈 모델에서는 대담한 혁신을 이루었습니다: 대규모로 선형 주의 메커니즘을 처음으로 구현하였으며, 전통적인 Transformer 아키텍처가 더 이상 유일한 선택이 아닙니다. 이 모델의 파라미터 수는 4560억에 달하며, 단일 활성화는 45.9억입니다. 모델의 종합 성능은 해외 최고의 모델과 견줄 수 있으며, 전 세계에서 가장 긴 400만 토큰의 문맥을 효율적으로 처리할 수 있습니다. 이는 GPT-4o의 32배, Claude-3.5-Sonnet의 20배에 해당합니다."
@@ -340,9 +370,6 @@
   },
   "abab6.5t-chat": {
     "description": "중국어 캐릭터 대화 시나리오에 최적화되어 있으며, 유창하고 중국어 표현 습관에 맞는 대화 생성 능력을 제공합니다."
-  },
-  "abab7-chat-preview": {
-    "description": "abab6.5 시리즈 모델에 비해 긴 글, 수학, 작문 등에서 능력이 크게 향상되었습니다."
   },
   "accounts/fireworks/models/deepseek-r1": {
     "description": "DeepSeek-R1은 최첨단 대형 언어 모델로, 강화 학습과 콜드 스타트 데이터를 최적화하여 뛰어난 추론, 수학 및 프로그래밍 성능을 제공합니다."
@@ -698,6 +725,9 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro는 Google의 고성능 AI 모델로, 광범위한 작업 확장을 위해 설계되었습니다."
   },
+  "gemini-1.5-flash": {
+    "description": "Gemini 1.5 Flash는 Google의 최신 다중 모달 AI 모델로, 빠른 처리 능력을 갖추고 있으며 텍스트, 이미지 및 비디오 입력을 지원하여 다양한 작업에 효율적으로 확장할 수 있습니다."
+  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001은 효율적인 다중 모달 모델로, 광범위한 응용 프로그램 확장을 지원합니다."
   },
@@ -737,23 +767,14 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash는 뛰어난 속도, 원주율 도구 사용, 다중 모달 생성 및 1M 토큰 문맥 창을 포함한 차세대 기능과 개선 사항을 제공합니다."
   },
-  "gemini-2.0-flash-exp": {
-    "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모달 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모달 생성을 갖추고 있습니다."
-  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "비용 효율성과 낮은 지연 시간 등을 목표로 최적화된 Gemini 2.0 Flash 모델입니다."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모드 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모드 생성을 제공합니다."
   },
-  "gemini-2.0-flash-thinking-exp-1219": {
-    "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모드 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모드 생성을 제공합니다."
-  },
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental은 Google의 최신 실험적 다중 모달 AI 모델로, 이전 버전과 비교하여 품질이 향상되었습니다. 특히 세계 지식, 코드 및 긴 문맥에 대해 개선되었습니다."
-  },
-  "gemini-exp-1206": {
-    "description": "Gemini Exp 1206은 Google의 최신 실험적 다중 모달 AI 모델로, 이전 버전에 비해 품질이 개선되었습니다."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B는 중소 규모 작업 처리에 적합하며, 비용 효과성을 갖추고 있습니다."
@@ -859,9 +880,6 @@
   },
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo는 다양한 텍스트 생성 및 이해 작업에 적합하며, 현재 gpt-3.5-turbo-0125를 가리킵니다."
-  },
-  "gpt-3.5-turbo-16k": {
-    "description": "GPT 3.5 Turbo 16k, 고용량 텍스트 생성 모델로 복잡한 작업에 적합합니다."
   },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo는 다양한 텍스트 생성 및 이해 작업에 적합하며, 현재 gpt-3.5-turbo-0125를 가리킵니다."

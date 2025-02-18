@@ -19,7 +19,7 @@ const aiModelProcedure = authedProcedure.use(async (opts) => {
   const { ctx } = opts;
 
   const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
-  const { aiProvider } = getServerGlobalConfig();
+  const { aiProvider } = await getServerGlobalConfig();
 
   return opts.next({
     ctx: {
