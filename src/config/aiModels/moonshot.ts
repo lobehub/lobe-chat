@@ -4,6 +4,41 @@ const moonshotChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Kimi 智能助手产品使用最新的 Kimi 大模型，可能包含尚未稳定的特性',
+    displayName: 'Kimi Latest',
+    id: 'kimi-latest',
+    pricing: {
+      currency: 'CNY',
+      input: 60,
+      output: 60,
+    },
+    releasedAt: '2025-02-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Moonshot V1 Auto 可以根据当前上下文占用的 Tokens 数量来选择合适的模型',
+    displayName: 'Moonshot V1 Auto',
+    enabled: true,
+    id: 'moonshot-v1-auto',
+    pricing: {
+      currency: 'CNY',
+      input: 60,
+      output: 60,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
     },
     contextWindowTokens: 8192,
     description:
