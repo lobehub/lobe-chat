@@ -1577,6 +1577,9 @@
   "sonar-reasoning": {
     "description": "Een nieuw API-product ondersteund door het DeepSeek redeneringsmodel."
   },
+  "sonar-reasoning-pro": {
+    "description": "Een nieuw API-product ondersteund door het DeepSeek redeneringsmodel."
+  },
   "step-1-128k": {
     "description": "Biedt een balans tussen prestaties en kosten, geschikt voor algemene scenario's."
   },

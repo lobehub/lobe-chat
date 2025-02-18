@@ -1577,6 +1577,9 @@
   "sonar-reasoning": {
     "description": "DeepSeek akıl yürütme modeli tarafından desteklenen yeni API ürünü."
   },
+  "sonar-reasoning-pro": {
+    "description": "DeepSeek'in akıl yürütme modeli tarafından desteklenen yeni API ürünü."
+  },
   "step-1-128k": {
     "description": "Performans ve maliyet arasında denge sağlar, genel senaryolar için uygundur."
   },

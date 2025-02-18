@@ -1577,6 +1577,9 @@
   "sonar-reasoning": {
     "description": "Нови API продукти, поддържани от модела за разсъждение на DeepSeek."
   },
+  "sonar-reasoning-pro": {
+    "description": "Нов API продукт, поддържан от модела за разсъждение DeepSeek."
+  },
   "step-1-128k": {
     "description": "Баланс между производителност и разходи, подходящ за общи сценарии."
   },
