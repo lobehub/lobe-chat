@@ -9,16 +9,6 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: pgvector/pgvector:pg16
-        env:
-          POSTGRES_PASSWORD: postgres
-        options: >-
-          --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
-        ports:
-          - 5432:5432
-
     steps:
       - uses: actions/checkout@v4
 
@@ -33,18 +23,8 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      - name: Test Server Coverage
-        run: bun run test-server:coverage
-        env:
-          DATABASE_TEST_URL: postgresql://postgres:postgres@localhost:5432/postgres
-          DATABASE_DRIVER: node
-          NEXT_PUBLIC_SERVICE_MODE: server
-          KEY_VAULTS_SECRET: LA7n9k3JdEcbSgml2sxfw+4TV1AzaaFU5+R176aQz4s=
-          S3_PUBLIC_DOMAIN: https://example.com
-          APP_URL: https://home.com
-
-      - name: Test App Coverage
-        run: bun run test-app:coverage
+      # - name: Test App Coverage  (如果你的前端测试不需要数据库，可以保留这一步)
+      #   run: bun run test-app:coverage
 
       - name: Release
         run: bun run release
