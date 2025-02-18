@@ -371,9 +371,6 @@
   "abab6.5t-chat": {
     "description": "Optymalizowany do scenariuszy dialogowych w języku chińskim, oferujący płynne i zgodne z chińskimi zwyczajami generowanie dialogów."
   },
-  "abab7-chat-preview": {
-    "description": "W porównaniu do modeli z serii abab6.5, zdolności w zakresie długich tekstów, matematyki i pisania uległy znacznej poprawie."
-  },
   "accounts/fireworks/models/deepseek-r1": {
     "description": "DeepSeek-R1 to zaawansowany model językowy, który został zoptymalizowany dzięki uczeniu przez wzmocnienie i danym z zimnego startu, oferując doskonałe możliwości wnioskowania, matematyki i programowania."
   },
@@ -728,6 +725,9 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro to model AI o wysokiej wydajności od Google, zaprojektowany do szerokiego rozszerzania zadań."
   },
+  "gemini-1.5-flash": {
+    "description": "Gemini 1.5 Flash to najnowszy model AI wielomodalnego od Google, charakteryzujący się szybkim przetwarzaniem, obsługujący wejścia tekstowe, obrazowe i wideo, idealny do efektywnego rozszerzania w różnych zadaniach."
+  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 to wydajny model multimodalny, wspierający szerokie zastosowania."
   },
@@ -767,23 +767,14 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash oferuje funkcje i ulepszenia nowej generacji, w tym doskonałą prędkość, natywne korzystanie z narzędzi, generowanie multimodalne oraz okno kontekstowe o długości 1M tokenów."
   },
-  "gemini-2.0-flash-exp": {
-    "description": "Gemini 2.0 Flash Exp to najnowszy eksperymentalny model AI o wielu modalnościach od Google, który oferuje cechy nowej generacji, doskonałą prędkość, natywne wywołania narzędzi oraz generowanie multimodalne."
-  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Model Gemini 2.0 Flash, zoptymalizowany pod kątem efektywności kosztowej i niskiej latencji."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp to najnowszy eksperymentalny model AI multimodalnego Google, posiadający cechy nowej generacji, doskonałą prędkość, natywne wywołania narzędzi oraz generację multimodalną."
   },
-  "gemini-2.0-flash-thinking-exp-1219": {
-    "description": "Gemini 2.0 Flash Exp to najnowszy eksperymentalny model AI multimodalnego Google, oferujący funkcje nowej generacji, doskonałą prędkość, natywne wywołania narzędzi oraz generację multimodalną."
-  },
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental to najnowszy eksperymentalny model AI o wielu modalnościach od Google, który w porównaniu do wcześniejszych wersji oferuje pewne poprawy jakości, szczególnie w zakresie wiedzy o świecie, kodu i długiego kontekstu."
-  },
-  "gemini-exp-1206": {
-    "description": "Gemini Exp 1206 to najnowszy eksperymentalny model AI Google w multimodalności, z zauważalnym poprawieniem jakości w porównaniu do wcześniejszych wersji."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B nadaje się do przetwarzania zadań średniej i małej skali, łącząc efektywność kosztową."

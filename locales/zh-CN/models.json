@@ -371,9 +371,6 @@
   "abab6.5t-chat": {
     "description": "针对中文人设对话场景优化，提供流畅且符合中文表达习惯的对话生成能力。"
   },
-  "abab7-chat-preview": {
-    "description": "相对于abab6.5系列模型在长文、数学、写作等能力有大幅度提升。"
-  },
   "accounts/fireworks/models/deepseek-r1": {
     "description": "DeepSeek-R1 是一款最先进的大型语言模型，经过强化学习和冷启动数据的优化，具有出色的推理、数学和编程性能。"
   },
@@ -728,6 +725,9 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro 是Google的高性能AI模型，专为广泛任务扩展而设计。"
   },
+  "gemini-1.5-flash": {
+    "description": "Gemini 1.5 Flash 是Google最新的多模态AI模型，具备快速处理能力，支持文本、图像和视频输入，适用于多种任务的高效扩展。"
+  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 是一款高效的多模态模型，支持广泛应用的扩展。"
   },
@@ -767,23 +767,14 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。"
   },
-  "gemini-2.0-flash-exp": {
-    "description": "Gemini 2.0 Flash Exp 是 Google 的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。"
-  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "一个 Gemini 2.0 Flash 模型，针对成本效益和低延迟等目标进行了优化。"
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。"
   },
-  "gemini-2.0-flash-thinking-exp-1219": {
-    "description": "Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。"
-  },
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。"
-  },
-  "gemini-exp-1206": {
-    "description": "Gemini Exp 1206 是 Google 的实验性多模态AI模型，与历史版本相比有一定的质量提升。"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 适合中小规模任务处理，兼具成本效益。"

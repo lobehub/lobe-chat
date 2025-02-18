@@ -371,9 +371,6 @@
   "abab6.5t-chat": {
     "description": "Çin karakter diyalog senaryoları için optimize edilmiş, akıcı ve Çin ifade alışkanlıklarına uygun diyalog üretim yeteneği sunar."
   },
-  "abab7-chat-preview": {
-    "description": "abab6.5 serisi modellere kıyasla uzun metin, matematik, yazım gibi yeteneklerde büyük bir gelişim göstermektedir."
-  },
   "accounts/fireworks/models/deepseek-r1": {
     "description": "DeepSeek-R1, güçlendirilmiş öğrenme ve soğuk başlangıç verileri ile optimize edilmiş, mükemmel akıl yürütme, matematik ve programlama performansına sahip en son teknoloji büyük bir dil modelidir."
   },
@@ -728,6 +725,9 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro, Google'ın yüksek performanslı AI modelidir ve geniş görev genişletmeleri için tasarlanmıştır."
   },
+  "gemini-1.5-flash": {
+    "description": "Gemini 1.5 Flash, Google'ın en son çok modlu AI modelidir, hızlı işleme yeteneğine sahiptir, metin, görüntü ve video girişi destekler, çeşitli görevler için verimli bir şekilde ölçeklenebilir."
+  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001, geniş uygulama alanları için destekleyen verimli bir çok modlu modeldir."
   },
@@ -767,23 +767,14 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash, mükemmel hız, yerel araç kullanımı, çok modlu üretim ve 1M token bağlam penceresi dahil olmak üzere bir sonraki nesil özellikler ve iyileştirmeler sunar."
   },
-  "gemini-2.0-flash-exp": {
-    "description": "Gemini 2.0 Flash Exp, Google'ın en yeni deneysel çok modlu yapay zeka modelidir. Gelecek nesil özellikleri, olağanüstü hızı, yerel araç çağrısı ve çok modlu üretim ile donatılmıştır."
-  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiş bir Gemini 2.0 Flash modelidir."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
   },
-  "gemini-2.0-flash-thinking-exp-1219": {
-    "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, üstün hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
-  },
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Deneysel, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere göre belirli bir kalite artışı sağlamaktadır, özellikle dünya bilgisi, kod ve uzun bağlam için."
-  },
-  "gemini-exp-1206": {
-    "description": "Gemini Exp 1206, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere kıyasla belirli bir kalite artırımı sağlar."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B, orta ölçekli görev işleme için uygundur ve maliyet etkinliği sunar."
