@@ -5,7 +5,7 @@ on:
 
 env:
   DOCKER_COMPOSE_FILE: docker-compose.yml
-  SSH_USER: ${{ secrets.PRODUCTION_USER || root }}
+  SSH_USER: ${{ secrets.PRODUCTION_USER || 'root' }}
   SSH_PORT: ${{ secrets.PRODUCTION_PORT || 58320 }}
 
 
