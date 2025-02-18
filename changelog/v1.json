@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add kimi-latest for Moonshot."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.2"
+  },
+  {
+    "children": {
       "improvements": ["Improve serveral error code."]
     },
     "date": "2025-02-18",
