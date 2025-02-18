@@ -322,6 +322,13 @@
     "tooltip": "Aktualisieren Sie die grundlegenden Anbieterinformationen",
     "updateSuccess": "Aktualisierung erfolgreich"
   },
+  "vertexai": {
+    "apiKey": {
+      "desc": "Geben Sie Ihre Vertex AI-Schlüssel ein",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI-Schlüssel"
+    }
+  },
   "zeroone": {
     "title": "01.AI Alles und Nichts"
   },

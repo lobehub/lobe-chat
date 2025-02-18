@@ -68,6 +68,7 @@ export interface UserKeyVaults {
   tencentcloud?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   upstage?: OpenAICompatibleKeyVault;
+  vertexai?: OpenAICompatibleKeyVault;
   vllm?: OpenAICompatibleKeyVault;
   volcengine?: OpenAICompatibleKeyVault;
   wenxin?: OpenAICompatibleKeyVault;

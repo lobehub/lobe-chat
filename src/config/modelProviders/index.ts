@@ -40,6 +40,7 @@ import TaichuProvider from './taichu';
 import TencentcloudProvider from './tencentcloud';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
+import VertexAIProvider from './vertexai';
 import VLLMProvider from './vllm';
 import VolcengineProvider from './volcengine';
 import WenxinProvider from './wenxin';
@@ -102,6 +103,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   AnthropicProvider,
   BedrockProvider,
   GoogleProvider,
+  VertexAIProvider,
   DeepSeekProvider,
   HuggingFaceProvider,
   OpenRouterProvider,
@@ -191,6 +193,7 @@ export { default as TaichuProviderCard } from './taichu';
 export { default as TencentCloudProviderCard } from './tencentcloud';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
+export { default as VertexAIProviderCard } from './vertexai';
 export { default as VLLMProviderCard } from './vllm';
 export { default as VolcengineProviderCard } from './volcengine';
 export { default as WenxinProviderCard } from './wenxin';

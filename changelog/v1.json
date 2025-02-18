@@ -1,5 +1,13 @@
 [
   {
+    "children": {
+      "features": ["Support google vertex ai as a new provider."],
+      "fixes": ["Try to fix pglite worker."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.0"
+  },
+  {
     "children": {},
     "date": "2025-02-18",
     "version": "1.60.9"
