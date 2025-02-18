@@ -15,9 +15,13 @@ const useStyles = createStyles(({ css, token, isDarkMode }, displayMode: 'chat' 
 
   return {
     mask: css`
+      pointer-events: none;
+
       position: absolute;
       inset-block: 0 0;
+
       width: 100%;
+
       background: linear-gradient(0deg, ${maskBgColor} 0%, transparent 50%);
     `,
   };
