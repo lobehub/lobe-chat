@@ -69,7 +69,9 @@
     "524": "Es tut uns leid, der Server hat beim Warten auf eine Antwort die Zeit überschritten, möglicherweise aufgrund einer zu langsamen Antwort. Bitte versuchen Sie es später erneut.",
     "AgentRuntimeError": "Es ist ein Fehler bei der Ausführung des Lobe-Sprachmodells aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "ConnectionCheckFailed": "Die Anfrage brachte eine leere Antwort zurück. Bitte überprüfen Sie, ob die API-Proxy-Adresse am Ende nicht mit `/v1` endet.",
+    "ExceededContextWindow": "Der aktuelle Anfrageinhalt überschreitet die von dem Modell verarbeitbare Länge. Bitte reduzieren Sie die Menge des Inhalts und versuchen Sie es erneut.",
     "FreePlanLimit": "Sie sind derzeit ein kostenloser Benutzer und können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein kostenpflichtiges Abonnement, um fortzufahren.",
+    "InsufficientQuota": "Es tut uns leid, das Kontingent (Quota) für diesen Schlüssel ist erreicht. Bitte überprüfen Sie Ihr Kontoguthaben oder erhöhen Sie das Kontingent des Schlüssels und versuchen Sie es erneut.",
     "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
     "InvalidClerkUser": "Entschuldigung, du bist derzeit nicht angemeldet. Bitte melde dich an oder registriere ein Konto, um fortzufahren.",
@@ -81,7 +83,6 @@
     "NoOpenAIAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
     "OllamaBizError": "Fehler bei der Anforderung des Ollama-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "OllamaServiceUnavailable": "Der Ollama-Dienst ist nicht verfügbar. Bitte überprüfen Sie, ob Ollama ordnungsgemäß ausgeführt wird und ob die CORS-Konfiguration von Ollama korrekt ist.",
-    "OpenAIBizError": "Fehler bei der Anforderung des OpenAI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PermissionDenied": "Es tut uns leid, Sie haben keine Berechtigung, auf diesen Dienst zuzugreifen. Bitte überprüfen Sie, ob Ihr Schlüssel die erforderlichen Zugriffsrechte hat.",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
     "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",
@@ -99,7 +100,8 @@
     "ProviderBizError": "Fehler bei der Anforderung des {{provider}}-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "QuotaLimitReached": "Es tut uns leid, die aktuelle Token-Nutzung oder die Anzahl der Anfragen hat das Kontingent (Quota) für diesen Schlüssel erreicht. Bitte erhöhen Sie das Kontingent für diesen Schlüssel oder versuchen Sie es später erneut.",
     "StreamChunkError": "Fehler beim Parsen des Nachrichtenchunks der Streaming-Anfrage. Bitte überprüfen Sie, ob die aktuelle API-Schnittstelle den Standards entspricht, oder wenden Sie sich an Ihren API-Anbieter.",
-    "SubscriptionPlanLimit": "Ihr Abonnementkontingent wurde aufgebraucht und Sie können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein höheres Abonnement oder kaufen Sie ein Ressourcenpaket, um fortzufahren.",
+    "SubscriptionPlanLimit": "Ihr Abonnementspunktestand ist erschöpft, Sie können diese Funktion nicht nutzen. Bitte upgraden Sie auf einen höheren Plan oder konfigurieren Sie die benutzerdefinierte Modell-API, um weiterhin zu verwenden.",
+    "SystemTimeNotMatchError": "Es tut uns leid, Ihre Systemzeit stimmt nicht mit dem Server überein. Bitte überprüfen Sie Ihre Systemzeit und versuchen Sie es erneut.",
     "UnknownChatFetchError": "Es tut uns leid, es ist ein unbekannter Anforderungsfehler aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut."
   },
   "stt": {

@@ -90,8 +90,12 @@ export default {
 
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 API Key',
     InvalidClerkUser: '很抱歉，你当前尚未登录，请先登录或注册账号后继续操作',
+    SystemTimeNotMatchError: '很抱歉，您的系统时间和服务器不匹配，请检查您的系统时间后重试',
     LocationNotSupportError:
       '很抱歉，你的所在地区不支持此模型服务，可能是由于区域限制或服务未开通。请确认当前地区是否支持使用此服务，或尝试使用切换到其他地区后重试。',
+    InsufficientQuota:
+      '很抱歉，该密钥的配额(quota)已达上限，请检查账户余额是否充足，或增大密钥配额后再试',
+    ExceededContextWindow: '当前请求内容超出模型可处理的长度，请减少内容量后重试',
     QuotaLimitReached:
       '很抱歉，当前 Token 用量或请求次数已达该密钥的配额(quota)上限，请增加该密钥的配额或稍后再试',
     PermissionDenied: '很抱歉，你没有权限访问该服务，请检查你的密钥是否有访问权限',
@@ -101,10 +105,6 @@ export default {
      * @deprecated
      */
     NoOpenAIAPIKey: 'OpenAI API Key 不正确或为空，请添加自定义 OpenAI API Key',
-    /**
-     * @deprecated
-     */
-    OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
 
     InvalidVertexCredentials: 'Vertex 鉴权未通过，请检查鉴权凭证后重试',
     InvalidBedrockCredentials: 'Bedrock 鉴权未通过，请检查 AccessKeyId/SecretAccessKey 后重试',
@@ -121,7 +121,7 @@ export default {
     // cloud
     FreePlanLimit: '当前为免费用户，无法使用该功能，请升级到付费计划后继续使用',
     SubscriptionPlanLimit:
-      '您的订阅额度已用尽，无法使用该功能，请升级到更高计划，或购买资源包后继续使用',
+      '您的订阅积分已用尽，无法使用该功能，请升级到更高计划，或配置自定义模型 API 后继续使用',
 
     // Github Token
     InvalidGithubToken: 'Github PAT 不正确或为空，请检查 Github PAT 后重试',

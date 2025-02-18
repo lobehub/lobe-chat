@@ -3,8 +3,12 @@
 export const AgentRuntimeErrorType = {
   AgentRuntimeError: 'AgentRuntimeError', // Agent Runtime 模块运行时错误
   LocationNotSupportError: 'LocationNotSupportError',
+
   QuotaLimitReached: 'QuotaLimitReached',
+  InsufficientQuota: 'InsufficientQuota',
+
   PermissionDenied: 'PermissionDenied',
+  ExceededContextWindow: 'ExceededContextWindow',
 
   InvalidProviderAPIKey: 'InvalidProviderAPIKey',
   ProviderBizError: 'ProviderBizError',
@@ -24,10 +28,6 @@ export const AgentRuntimeErrorType = {
    * @deprecated
    */
   NoOpenAIAPIKey: 'NoOpenAIAPIKey',
-  /**
-   * @deprecated
-   */
-  OpenAIBizError: 'OpenAIBizError',
 } as const;
 
 export const AGENT_RUNTIME_ERROR_SET = new Set<string>(Object.values(AgentRuntimeErrorType));

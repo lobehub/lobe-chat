@@ -48,6 +48,21 @@ export const checkAuth =
         nextAuthAuthorized: oauthAuthorized,
       });
     } catch (e) {
+      const params = await options.params;
+
+      // if the error is not a ChatCompletionErrorPayload, it means the application error
+      if (!(e as ChatCompletionErrorPayload).errorType) {
+        if ((e as any).code === 'ERR_JWT_EXPIRED')
+          return createErrorResponse(ChatErrorType.SystemTimeNotMatchError, e);
+
+        // other issue will be internal server error
+        console.error(e);
+        return createErrorResponse(ChatErrorType.InternalServerError, {
+          error: e,
+          provider: params?.provider,
+        });
+      }
+
       const {
         errorType = ChatErrorType.InternalServerError,
         error: errorContent,
@@ -56,7 +71,6 @@ export const checkAuth =
 
       const error = errorContent || e;
 
-      const params = await options.params;
       return createErrorResponse(errorType, { error, ...res, provider: params?.provider });
     }
 

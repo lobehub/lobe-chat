@@ -69,7 +69,9 @@
     "524": "Üzgünüm, sunucu yanıt beklerken zaman aşımına uğradı, bu muhtemelen yanıtın çok yavaş olmasından kaynaklanıyor, lütfen daha sonra tekrar deneyin",
     "AgentRuntimeError": "Lobe dil modeli çalışma zamanı hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "ConnectionCheckFailed": "İstek boş döndü, lütfen API代理地址ının sonuna `/v1` ekleyip eklemediğinizi kontrol edin.",
+    "ExceededContextWindow": "Mevcut istek içeriği modelin işleyebileceği uzunluğu aşıyor, lütfen içerik miktarını azaltıp tekrar deneyin",
     "FreePlanLimit": "Şu anda ücretsiz bir kullanıcısınız, bu özelliği kullanamazsınız. Lütfen devam etmek için bir ücretli plana yükseltin.",
+    "InsufficientQuota": "Üzgünüm, bu anahtarın kotası (quota) dolmuş durumda, lütfen hesap bakiyenizi kontrol edin veya anahtar kotasını artırdıktan sonra tekrar deneyin",
     "InvalidAccessCode": "Geçersiz Erişim Kodu: Geçersiz veya boş bir şifre girdiniz. Lütfen doğru erişim şifresini girin veya özel API Anahtarı ekleyin.",
     "InvalidBedrockCredentials": "Bedrock kimlik doğrulaması geçersiz, lütfen AccessKeyId/SecretAccessKey bilgilerinizi kontrol edip tekrar deneyin",
     "InvalidClerkUser": "Üzgünüz, şu anda giriş yapmadınız. Lütfen işlemlere devam etmeden önce giriş yapın veya hesap oluşturun",
@@ -81,7 +83,6 @@
     "NoOpenAIAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",
     "OllamaBizError": "Ollama servisine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "OllamaServiceUnavailable": "Ollama servisi kullanılamıyor, lütfen Ollama'nın düzgün çalışıp çalışmadığını kontrol edin veya Ollama'nın çapraz kaynak yapılandırmasının doğru olup olmadığını kontrol edin",
-    "OpenAIBizError": "OpenAI hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "PermissionDenied": "Üzgünüm, bu hizmete erişim izniniz yok. Lütfen anahtarınızın erişim iznine sahip olup olmadığını kontrol edin.",
     "PluginApiNotFound": "Üzgünüm, eklentinin bildiriminde API mevcut değil. Lütfen istek yönteminizin eklenti bildirim API'sı ile eşleşip eşleşmediğini kontrol edin",
     "PluginApiParamsError": "Üzgünüm, eklenti isteği için giriş parametre doğrulaması başarısız oldu. Lütfen giriş parametrelerinin API açıklamasıyla eşleşip eşleşmediğini kontrol edin",
@@ -99,7 +100,8 @@
     "ProviderBizError": "Talep {{provider}} hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "QuotaLimitReached": "Üzgünüz, mevcut Token kullanımı veya istek sayısı bu anahtarın kota (quota) sınırına ulaştı. Lütfen bu anahtarın kotasını artırın veya daha sonra tekrar deneyin.",
     "StreamChunkError": "Akış isteği mesaj parçası çözümleme hatası, lütfen mevcut API arayüzünün standartlara uygun olup olmadığını kontrol edin veya API sağlayıcınızla iletişime geçin.",
-    "SubscriptionPlanLimit": "Abonelik kotası tükenmiş, bu özelliği kullanamazsınız. Lütfen daha yüksek bir plana yükseltin veya kaynak paketi satın alarak devam edin.",
+    "SubscriptionPlanLimit": "Abonelik puanlarınız tükenmiştir, bu özelliği kullanamazsınız. Lütfen daha yüksek bir plana geçin veya özel model API'sini yapılandırarak devam edin.",
+    "SystemTimeNotMatchError": "Üzgünüm, sistem saatiniz ile sunucu arasında bir uyumsuzluk var, lütfen sistem saatinizi kontrol edip tekrar deneyin",
     "UnknownChatFetchError": "Üzgünüm, bilinmeyen bir istek hatasıyla karşılaştık. Lütfen aşağıdaki bilgileri kontrol edin veya tekrar deneyin."
   },
   "stt": {
