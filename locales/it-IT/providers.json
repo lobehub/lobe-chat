@@ -92,6 +92,9 @@
   "qwen": {
     "description": "Qwen è un modello di linguaggio di grande scala sviluppato autonomamente da Alibaba Cloud, con potenti capacità di comprensione e generazione del linguaggio naturale. Può rispondere a varie domande, creare contenuti testuali, esprimere opinioni e scrivere codice, svolgendo un ruolo in vari settori."
   },
+  "sambanova": {
+    "description": "SambaNova Cloud consente agli sviluppatori di utilizzare facilmente i migliori modelli open source e di godere della velocità di inferenza più rapida."
+  },
   "sensenova": {
     "description": "SenseTime offre servizi di modelli di grandi dimensioni full-stack, supportati dalla potente infrastruttura di SenseTime."
   },
@@ -115,6 +118,9 @@
   },
   "upstage": {
     "description": "Upstage si concentra sullo sviluppo di modelli AI per varie esigenze commerciali, inclusi Solar LLM e document AI, con l'obiettivo di realizzare un'intelligenza artificiale generale artificiale (AGI) per il lavoro. Crea semplici agenti di dialogo tramite Chat API e supporta chiamate funzionali, traduzioni, embedding e applicazioni specifiche del settore."
+  },
+  "vertexai": {
+    "description": "La serie Gemini di Google è il suo modello AI più avanzato e versatile, sviluppato da Google DeepMind, progettato per essere multimodale e supportare la comprensione e l'elaborazione senza soluzione di continuità di testo, codice, immagini, audio e video. Adatta a una varietà di ambienti, dai data center ai dispositivi mobili, migliora notevolmente l'efficienza e l'ampia applicabilità dei modelli AI."
   },
   "vllm": {
     "description": "vLLM è una libreria veloce e facile da usare per l'inferenza e i servizi LLM."

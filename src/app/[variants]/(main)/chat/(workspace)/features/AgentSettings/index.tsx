@@ -14,10 +14,10 @@ import AgentMeta from '@/features/AgentSetting/AgentMeta';
 import AgentModal from '@/features/AgentSetting/AgentModal';
 import AgentPlugin from '@/features/AgentSetting/AgentPlugin';
 import AgentPrompt from '@/features/AgentSetting/AgentPrompt';
+import { AgentSettingsProvider } from '@/features/AgentSetting/AgentSettingsProvider';
 import AgentTTS from '@/features/AgentSetting/AgentTTS';
-import StoreUpdater from '@/features/AgentSetting/StoreUpdater';
-import { Provider, createStore } from '@/features/AgentSetting/store';
 import Footer from '@/features/Setting/Footer';
+import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { ChatSettingsTabs } from '@/store/global/initialState';
@@ -31,6 +31,8 @@ const AgentSettings = memo(() => {
   const id = useSessionStore((s) => s.activeId);
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+
+  const { isLoading } = useInitAgentConfig();
   const [showAgentSetting, updateAgentConfig] = useAgentStore((s) => [
     s.showAgentSetting,
     s.updateAgentConfig,
@@ -49,14 +51,14 @@ const AgentSettings = memo(() => {
 
   const category = <CategoryContent setTab={setTab} tab={tab} />;
   return (
-    <Provider createStore={createStore}>
-      <StoreUpdater
-        config={config}
-        id={id}
-        meta={meta}
-        onConfigChange={updateAgentConfig}
-        onMetaChange={updateAgentMeta}
-      />
+    <AgentSettingsProvider
+      config={config}
+      id={id}
+      loading={isLoading}
+      meta={meta}
+      onConfigChange={updateAgentConfig}
+      onMetaChange={updateAgentMeta}
+    >
       <Drawer
         height={'100vh'}
         onClose={() => {
@@ -109,7 +111,7 @@ const AgentSettings = memo(() => {
           </Flexbox>
         </Flexbox>
       </Drawer>
-    </Provider>
+    </AgentSettingsProvider>
   );
 });
 

@@ -322,6 +322,13 @@
     "tooltip": "Aggiorna la configurazione di base del fornitore",
     "updateSuccess": "Aggiornamento avvenuto con successo"
   },
+  "vertexai": {
+    "apiKey": {
+      "desc": "Inserisci le tue chiavi Vertex AI",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Chiavi Vertex AI"
+    }
+  },
   "zeroone": {
     "title": "01.AI ZeroOne"
   },

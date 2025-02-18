@@ -47,6 +47,12 @@
   "Baichuan4-Turbo": {
     "description": "Il modello con le migliori capacità in patria, supera i modelli principali esteri in compiti cinesi come enciclopedie, testi lunghi e creazione di contenuti. Possiede anche capacità multimodali leader del settore, con prestazioni eccellenti in vari benchmark di valutazione."
   },
+  "DeepSeek-R1": {
+    "description": "LLM avanzato ed efficiente, specializzato in ragionamento, matematica e programmazione."
+  },
+  "DeepSeek-R1-Distill-Llama-70B": {
+    "description": "DeepSeek R1—il modello più grande e intelligente del pacchetto DeepSeek—è stato distillato nell'architettura Llama 70B. Basato su benchmark e valutazioni umane, questo modello è più intelligente del Llama 70B originale, eccellendo in particolare in compiti che richiedono precisione matematica e fattuale."
+  },
   "DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "Il modello di distillazione DeepSeek-R1 basato su Qwen2.5-Math-1.5B ottimizza le prestazioni di inferenza attraverso l'apprendimento rinforzato e dati di avvio a freddo, aggiornando il benchmark multi-task del modello open source."
   },
@@ -119,11 +125,35 @@
   "InternVL2.5-26B": {
     "description": "InternVL2.5-26B è un potente modello linguistico visivo, supporta l'elaborazione multimodale di immagini e testo, in grado di riconoscere con precisione il contenuto delle immagini e generare descrizioni o risposte correlate."
   },
+  "Llama-3.2-11B-Vision-Instruct": {
+    "description": "Eccellenti capacità di ragionamento visivo su immagini ad alta risoluzione, adatte per applicazioni di comprensione visiva."
+  },
+  "Llama-3.2-90B-Vision-Instruct\t": {
+    "description": "Capacità avanzate di ragionamento visivo per applicazioni di agenti di comprensione visiva."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct è uno dei più recenti modelli linguistici di grandi dimensioni rilasciati da Alibaba Cloud. Questo modello da 72B ha capacità notevolmente migliorate in codifica e matematica. Il modello offre anche supporto multilingue, coprendo oltre 29 lingue, tra cui cinese e inglese. Ha mostrato miglioramenti significativi nel seguire istruzioni, comprendere dati strutturati e generare output strutturati (soprattutto JSON)."
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct è uno dei più recenti modelli linguistici di grandi dimensioni rilasciati da Alibaba Cloud. Questo modello da 7B ha capacità notevolmente migliorate in codifica e matematica. Il modello offre anche supporto multilingue, coprendo oltre 29 lingue, tra cui cinese e inglese. Ha mostrato miglioramenti significativi nel seguire istruzioni, comprendere dati strutturati e generare output strutturati (soprattutto JSON)."
+  },
+  "Meta-Llama-3.1-405B-Instruct": {
+    "description": "Modello di testo ottimizzato per le istruzioni di Llama 3.1, progettato per casi d'uso di dialogo multilingue, che si distingue in molti modelli di chat open source e chiusi in benchmark di settore comuni."
+  },
+  "Meta-Llama-3.1-70B-Instruct": {
+    "description": "Modello di testo ottimizzato per le istruzioni di Llama 3.1, progettato per casi d'uso di dialogo multilingue, che si distingue in molti modelli di chat open source e chiusi in benchmark di settore comuni."
+  },
+  "Meta-Llama-3.1-8B-Instruct": {
+    "description": "Modello di testo ottimizzato per le istruzioni di Llama 3.1, progettato per casi d'uso di dialogo multilingue, che si distingue in molti modelli di chat open source e chiusi in benchmark di settore comuni."
+  },
+  "Meta-Llama-3.2-1B-Instruct": {
+    "description": "Modello di linguaggio di piccole dimensioni all'avanguardia, dotato di comprensione linguistica, eccellenti capacità di ragionamento e generazione di testo."
+  },
+  "Meta-Llama-3.2-3B-Instruct": {
+    "description": "Modello di linguaggio di piccole dimensioni all'avanguardia, dotato di comprensione linguistica, eccellenti capacità di ragionamento e generazione di testo."
+  },
+  "Meta-Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 è il modello di linguaggio open source multilingue più avanzato della serie Llama, che offre prestazioni paragonabili a un modello da 405B a un costo estremamente ridotto. Basato su una struttura Transformer e migliorato tramite fine-tuning supervisionato (SFT) e apprendimento rinforzato con feedback umano (RLHF) per aumentarne l'utilità e la sicurezza. La sua versione ottimizzata per le istruzioni è progettata per dialoghi multilingue, superando molti modelli di chat open source e chiusi in vari benchmark di settore. La data di conoscenza è dicembre 2023."
   },
   "MiniMax-Text-01": {
     "description": "Nella serie di modelli MiniMax-01, abbiamo fatto un'innovazione audace: per la prima volta abbiamo implementato su larga scala un meccanismo di attenzione lineare, rendendo l'architettura Transformer tradizionale non più l'unica opzione. Questo modello ha un numero di parametri che raggiunge i 456 miliardi, con un'attivazione singola di 45,9 miliardi. Le prestazioni complessive del modello sono paragonabili a quelle dei migliori modelli internazionali, mentre è in grado di gestire in modo efficiente contesti globali lunghi fino a 4 milioni di token, 32 volte rispetto a GPT-4o e 20 volte rispetto a Claude-3.5-Sonnet."
@@ -340,9 +370,6 @@
   },
   "abab6.5t-chat": {
     "description": "Ottimizzato per scenari di dialogo con personaggi cinesi, offre capacità di generazione di dialoghi fluida e conforme alle espressioni cinesi."
-  },
-  "abab7-chat-preview": {
-    "description": "Rispetto alla serie di modelli abab6.5, ci sono stati notevoli miglioramenti nelle capacità di elaborazione di testi lunghi, matematica e scrittura."
   },
   "accounts/fireworks/models/deepseek-r1": {
     "description": "DeepSeek-R1 è un modello linguistico di grandi dimensioni all'avanguardia, ottimizzato tramite apprendimento rinforzato e dati di cold start, con prestazioni eccezionali nel ragionamento, nella matematica e nella programmazione."
@@ -698,6 +725,9 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro è il modello AI ad alte prestazioni di Google, progettato per l'espansione su una vasta gamma di compiti."
   },
+  "gemini-1.5-flash": {
+    "description": "Gemini 1.5 Flash è il più recente modello AI multimodale di Google, dotato di capacità di elaborazione rapida, supporta input di testo, immagini e video, ed è adatto per un'efficiente scalabilità in vari compiti."
+  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 è un modello multimodale efficiente, supporta l'espansione per applicazioni ampie."
   },
@@ -737,23 +767,14 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash offre funzionalità e miglioramenti di nuova generazione, tra cui velocità eccezionale, utilizzo di strumenti nativi, generazione multimodale e una finestra di contesto di 1M token."
   },
-  "gemini-2.0-flash-exp": {
-    "description": "Gemini 2.0 Flash Exp è il nuovo modello AI multimodale sperimentale di Google, dotato di funzionalità di nuova generazione, velocità straordinaria, chiamate di strumenti native e generazione multimodale."
-  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Un modello Gemini 2.0 Flash ottimizzato per obiettivi di costo-efficacia e bassa latenza."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp è il più recente modello AI multimodale sperimentale di Google, dotato di caratteristiche di nuova generazione, velocità eccezionale, chiamate a strumenti nativi e generazione multimodale."
   },
-  "gemini-2.0-flash-thinking-exp-1219": {
-    "description": "Gemini 2.0 Flash Exp è il più recente modello AI multimodale sperimentale di Google, dotato di funzionalità di nuova generazione, velocità eccezionale, chiamate a strumenti nativi e generazione multimodale."
-  },
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental è il più recente modello AI multimodale sperimentale di Google, con un miglioramento della qualità rispetto alle versioni precedenti, in particolare per quanto riguarda la conoscenza del mondo, il codice e i contesti lunghi."
-  },
-  "gemini-exp-1206": {
-    "description": "Gemini Exp 1206 è il modello AI multimodale sperimentale più recente di Google, con miglioramenti significativi della qualità rispetto alle versioni precedenti."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B è adatto per l'elaborazione di compiti di piccole e medie dimensioni, combinando efficienza dei costi."
@@ -859,9 +880,6 @@
   },
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo, adatto a una varietà di compiti di generazione e comprensione del testo, attualmente punta a gpt-3.5-turbo-0125."
-  },
-  "gpt-3.5-turbo-16k": {
-    "description": "GPT 3.5 Turbo 16k, modello di generazione di testo ad alta capacità, adatto per compiti complessi."
   },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo, adatto a una varietà di compiti di generazione e comprensione del testo, attualmente punta a gpt-3.5-turbo-0125."

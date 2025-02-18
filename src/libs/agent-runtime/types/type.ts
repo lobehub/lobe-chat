@@ -66,6 +66,7 @@ export enum ModelProvider {
   TogetherAI = 'togetherai',
   Upstage = 'upstage',
   VLLM = 'vllm',
+  VertexAI = 'vertexai',
   Volcengine = 'volcengine',
   Wenxin = 'wenxin',
   XAI = 'xai',
