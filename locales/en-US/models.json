@@ -1577,6 +1577,9 @@
   "sonar-reasoning": {
     "description": "A new API product powered by the DeepSeek reasoning model."
   },
+  "sonar-reasoning-pro": {
+    "description": "A new API product powered by the DeepSeek reasoning model."
+  },
   "step-1-128k": {
     "description": "Balances performance and cost, suitable for general scenarios."
   },

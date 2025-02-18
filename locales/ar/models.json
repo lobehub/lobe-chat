@@ -1577,6 +1577,9 @@
   "sonar-reasoning": {
     "description": "منتج API الجديد المدعوم من نموذج الاستدلال من DeepSeek."
   },
+  "sonar-reasoning-pro": {
+    "description": "منتج API جديد مدعوم من نموذج الاستدلال DeepSeek."
+  },
   "step-1-128k": {
     "description": "يوفر توازنًا بين الأداء والتكلفة، مناسب لمجموعة متنوعة من السيناريوهات."
   },

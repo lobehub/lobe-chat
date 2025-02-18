@@ -1577,6 +1577,9 @@
   "sonar-reasoning": {
     "description": "DeepSeek 추론 모델이 지원하는 새로운 API 제품입니다."
   },
+  "sonar-reasoning-pro": {
+    "description": "DeepSeek 추론 모델이 지원하는 새로운 API 제품입니다."
+  },
   "step-1-128k": {
     "description": "성능과 비용의 균형을 맞추어 일반적인 시나리오에 적합합니다."
   },
