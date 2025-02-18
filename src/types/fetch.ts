@@ -13,6 +13,7 @@ export const ChatErrorType = {
   OllamaServiceUnavailable: 'OllamaServiceUnavailable', // 未启动/检测到 Ollama 服务
   PluginFailToTransformArguments: 'PluginFailToTransformArguments',
   UnknownChatFetchError: 'UnknownChatFetchError',
+  SystemTimeNotMatchError: 'SystemTimeNotMatchError',
 
   // ******* 客户端错误 ******* //
   BadRequest: 400,
