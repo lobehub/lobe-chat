@@ -11,7 +11,8 @@ export type CasdoorUserEntity = {
 
 interface CasdoorWebhookPayload {
   action: string;
-  // Only support user event currently
+  // The object is the user entity that is updated.
+  // ref: https://github.com/casdoor/casdoor/issues/1918#issuecomment-1572218847
   object: CasdoorUserEntity;
 }
 
