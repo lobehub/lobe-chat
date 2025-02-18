@@ -300,7 +300,6 @@ const OpenAI: ModelProviderCard = {
   modelsUrl: 'https://platform.openai.com/docs/models',
   name: 'OpenAI',
   settings: {
-    defaultShowBrowserRequest: true,
     showModelFetcher: true,
   },
   url: 'https://openai.com',
