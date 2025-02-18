@@ -48,10 +48,12 @@ const ContentPreview = ({ content, id, displayMode }: ContentPreviewProps) => {
       <Flexbox padding={4}>
         <Button
           block
+          color={'default'}
           onClick={() => {
             openMessageDetail(id);
           }}
           size={'small'}
+          variant={'filled'}
         >
           {t('chatList.longMessageDetail')}
         </Button>
