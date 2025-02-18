@@ -92,6 +92,9 @@
   "qwen": {
     "description": "通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。"
   },
+  "sambanova": {
+    "description": "SambaNova Cloud 可让开发者轻松使用最佳的开源模型，并享受最快的推理速度。"
+  },
   "sensenova": {
     "description": "商汤日日新，依托商汤大装置的强大的基础支撑，提供高效易用的全栈大模型服务。"
   },
@@ -115,6 +118,9 @@
   },
   "upstage": {
     "description": "Upstage 专注于为各种商业需求开发AI模型，包括 Solar LLM 和文档 AI，旨在实现工作的人造通用智能（AGI）。通过 Chat API 创建简单的对话代理，并支持功能调用、翻译、嵌入以及特定领域应用。"
+  },
+  "vertexai": {
+    "description": "Google 的 Gemini 系列是其最先进、通用的 AI模型，由 Google DeepMind 打造，专为多模态设计，支持文本、代码、图像、音频和视频的无缝理解与处理。适用于从数据中心到移动设备的多种环境，极大提升了AI模型的效率与应用广泛性。"
   },
   "vllm": {
     "description": "vLLM 是一个快速且易于使用的库，用于 LLM 推理和服务。"

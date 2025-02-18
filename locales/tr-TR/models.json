@@ -47,6 +47,12 @@
   "Baichuan4-Turbo": {
     "description": "Model yetenekleri ülke içinde birinci, bilgi ansiklopedisi, uzun metinler, yaratıcı üretim gibi Çince görevlerde uluslararası ana akım modelleri aşmaktadır. Ayrıca, sektörde lider çok modlu yeteneklere sahip olup, birçok yetkili değerlendirme ölçütünde mükemmel performans sergilemektedir."
   },
+  "DeepSeek-R1": {
+    "description": "En gelişmiş verimli LLM, akıl yürütme, matematik ve programlama konularında uzmandır."
+  },
+  "DeepSeek-R1-Distill-Llama-70B": {
+    "description": "DeepSeek R1 - DeepSeek setindeki daha büyük ve daha akıllı model - Llama 70B mimarisine damıtılmıştır. Kıyaslamalar ve insan değerlendirmelerine dayanarak, bu model orijinal Llama 70B'den daha akıllıdır, özellikle matematik ve gerçeklik doğruluğu gerektiren görevlerde mükemmel performans göstermektedir."
+  },
   "DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "Qwen2.5-Math-1.5B temel alınarak oluşturulmuş DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
   },
@@ -119,11 +125,35 @@
   "InternVL2.5-26B": {
     "description": "InternVL2.5-26B, güçlü bir görsel dil modelidir. Görüntü ve metinlerin çok modlu işlenmesini destekler, görüntü içeriğini hassas bir şekilde tanıyabilir ve ilgili açıklamalar veya yanıtlar üretebilir."
   },
+  "Llama-3.2-11B-Vision-Instruct": {
+    "description": "Yüksek çözünürlüklü görüntülerde mükemmel görüntü akıl yürütme yeteneği, görsel anlama uygulamaları için uygundur."
+  },
+  "Llama-3.2-90B-Vision-Instruct\t": {
+    "description": "Görsel anlama ajan uygulamaları için gelişmiş görüntü akıl yürütme yeteneği."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct, Alibaba Cloud tarafından yayınlanan en son büyük dil modeli serilerinden biridir. Bu 72B modeli, kodlama ve matematik gibi alanlarda önemli ölçüde geliştirilmiş yeteneklere sahiptir. Model ayrıca, Çince, İngilizce gibi 29'dan fazla dili kapsayan çok dilli destek sunmaktadır. Model, talimat takibi, yapılandırılmış verileri anlama ve yapılandırılmış çıktı (özellikle JSON) üretme konularında önemli iyileştirmeler göstermektedir."
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct, Alibaba Cloud tarafından yayınlanan en son büyük dil modeli serilerinden biridir. Bu 7B modeli, kodlama ve matematik gibi alanlarda önemli ölçüde geliştirilmiş yeteneklere sahiptir. Model ayrıca, Çince, İngilizce gibi 29'dan fazla dili kapsayan çok dilli destek sunmaktadır. Model, talimat takibi, yapılandırılmış verileri anlama ve yapılandırılmış çıktı (özellikle JSON) üretme konularında önemli iyileştirmeler göstermektedir."
+  },
+  "Meta-Llama-3.1-405B-Instruct": {
+    "description": "Llama 3.1 talimat ayarlı metin modeli, çok dilli diyalog kullanım durumları için optimize edilmiştir ve birçok mevcut açık kaynak ve kapalı sohbet modelinde yaygın endüstri kıyaslamalarında mükemmel performans göstermektedir."
+  },
+  "Meta-Llama-3.1-70B-Instruct": {
+    "description": "Llama 3.1 talimat ayarlı metin modeli, çok dilli diyalog kullanım durumları için optimize edilmiştir ve birçok mevcut açık kaynak ve kapalı sohbet modelinde yaygın endüstri kıyaslamalarında mükemmel performans göstermektedir."
+  },
+  "Meta-Llama-3.1-8B-Instruct": {
+    "description": "Llama 3.1 talimat ayarlı metin modeli, çok dilli diyalog kullanım durumları için optimize edilmiştir ve birçok mevcut açık kaynak ve kapalı sohbet modelinde yaygın endüstri kıyaslamalarında mükemmel performans göstermektedir."
+  },
+  "Meta-Llama-3.2-1B-Instruct": {
+    "description": "Gelişmiş, en son teknolojiye sahip küçük dil modeli, dil anlama, mükemmel akıl yürütme yeteneği ve metin oluşturma yeteneğine sahiptir."
+  },
+  "Meta-Llama-3.2-3B-Instruct": {
+    "description": "Gelişmiş, en son teknolojiye sahip küçük dil modeli, dil anlama, mükemmel akıl yürütme yeteneği ve metin oluşturma yeteneğine sahiptir."
+  },
+  "Meta-Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3, Llama serisinin en gelişmiş çok dilli açık kaynak büyük dil modelidir ve 405B modelinin performansını çok düşük maliyetle deneyimlemenizi sağlar. Transformer yapısına dayanmaktadır ve yararlılığını ve güvenliğini artırmak için denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) kullanılmıştır. Talimat ayarlı versiyonu çok dilli diyaloglar için optimize edilmiştir ve birçok endüstri kıyaslamasında birçok açık kaynak ve kapalı sohbet modelinden daha iyi performans göstermektedir. Bilgi kesim tarihi 2023 yılı Aralık ayıdır."
   },
   "MiniMax-Text-01": {
     "description": "MiniMax-01 serisi modellerinde cesur yenilikler yaptık: ilk kez büyük ölçekli lineer dikkat mekanizmasını gerçekleştirdik, geleneksel Transformer mimarisi artık tek seçenek değil. Bu modelin parametre sayısı 456 milyara kadar çıkmakta, tek bir aktivasyonda 45.9 milyar. Modelin genel performansı, yurtdışındaki en iyi modellerle karşılaştırılabilirken, dünya genelinde 4 milyon token uzunluğundaki bağlamı verimli bir şekilde işleyebilir, bu da GPT-4o'nun 32 katı, Claude-3.5-Sonnet'in 20 katıdır."
@@ -340,9 +370,6 @@
   },
   "abab6.5t-chat": {
     "description": "Çin karakter diyalog senaryoları için optimize edilmiş, akıcı ve Çin ifade alışkanlıklarına uygun diyalog üretim yeteneği sunar."
-  },
-  "abab7-chat-preview": {
-    "description": "abab6.5 serisi modellere kıyasla uzun metin, matematik, yazım gibi yeteneklerde büyük bir gelişim göstermektedir."
   },
   "accounts/fireworks/models/deepseek-r1": {
     "description": "DeepSeek-R1, güçlendirilmiş öğrenme ve soğuk başlangıç verileri ile optimize edilmiş, mükemmel akıl yürütme, matematik ve programlama performansına sahip en son teknoloji büyük bir dil modelidir."
@@ -698,6 +725,9 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro, Google'ın yüksek performanslı AI modelidir ve geniş görev genişletmeleri için tasarlanmıştır."
   },
+  "gemini-1.5-flash": {
+    "description": "Gemini 1.5 Flash, Google'ın en son çok modlu AI modelidir, hızlı işleme yeteneğine sahiptir, metin, görüntü ve video girişi destekler, çeşitli görevler için verimli bir şekilde ölçeklenebilir."
+  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001, geniş uygulama alanları için destekleyen verimli bir çok modlu modeldir."
   },
@@ -737,23 +767,14 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash, mükemmel hız, yerel araç kullanımı, çok modlu üretim ve 1M token bağlam penceresi dahil olmak üzere bir sonraki nesil özellikler ve iyileştirmeler sunar."
   },
-  "gemini-2.0-flash-exp": {
-    "description": "Gemini 2.0 Flash Exp, Google'ın en yeni deneysel çok modlu yapay zeka modelidir. Gelecek nesil özellikleri, olağanüstü hızı, yerel araç çağrısı ve çok modlu üretim ile donatılmıştır."
-  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiş bir Gemini 2.0 Flash modelidir."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
   },
-  "gemini-2.0-flash-thinking-exp-1219": {
-    "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, üstün hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
-  },
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Deneysel, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere göre belirli bir kalite artışı sağlamaktadır, özellikle dünya bilgisi, kod ve uzun bağlam için."
-  },
-  "gemini-exp-1206": {
-    "description": "Gemini Exp 1206, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere kıyasla belirli bir kalite artırımı sağlar."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B, orta ölçekli görev işleme için uygundur ve maliyet etkinliği sunar."
@@ -859,9 +880,6 @@
   },
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo, çeşitli metin üretimi ve anlama görevleri için uygundur, şu anda gpt-3.5-turbo-0125'e işaret ediyor."
-  },
-  "gpt-3.5-turbo-16k": {
-    "description": "GPT 3.5 Turbo 16k, yüksek kapasiteli metin üretim modeli, karmaşık görevler için uygundur."
   },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo, çeşitli metin üretimi ve anlama görevleri için uygundur, şu anda gpt-3.5-turbo-0125'e işaret ediyor."

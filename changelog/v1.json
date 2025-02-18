@@ -1,6 +1,68 @@
 [
   {
     "children": {
+      "features": ["Support google vertex ai as a new provider."],
+      "fixes": ["Try to fix pglite worker."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.0"
+  },
+  {
+    "children": {},
+    "date": "2025-02-18",
+    "version": "1.60.9"
+  },
+  {
+    "children": {
+      "improvements": ["Sync chat limit."]
+    },
+    "date": "2025-02-18",
+    "version": "1.60.8"
+  },
+  {
+    "children": {
+      "improvements": ["Remove deprecated gemini models, update MiniMax models."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.7"
+  },
+  {
+    "children": {
+      "improvements": ["Add o1 vision metadata."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix loading on not login for db."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix agent config not load correctly."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.4"
+  },
+  {
+    "children": {
+      "fixes": ["User feedback for empty/long group names in create/edit group modals."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix model list issue in client mode."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.2"
+  },
+  {
+    "children": {
       "improvements": ["Update Jina AI Provider name & model info."]
     },
     "date": "2025-02-17",

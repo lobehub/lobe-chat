@@ -47,6 +47,12 @@
   "Baichuan4-Turbo": {
     "description": "The leading model in the country, surpassing mainstream foreign models in Chinese tasks such as knowledge encyclopedias, long texts, and creative generation. It also possesses industry-leading multimodal capabilities, excelling in multiple authoritative evaluation benchmarks."
   },
+  "DeepSeek-R1": {
+    "description": "A state-of-the-art efficient LLM, skilled in reasoning, mathematics, and programming."
+  },
+  "DeepSeek-R1-Distill-Llama-70B": {
+    "description": "DeepSeek R1— the larger and smarter model in the DeepSeek suite— distilled into the Llama 70B architecture. Based on benchmark testing and human evaluation, this model is smarter than the original Llama 70B, particularly excelling in tasks requiring mathematical and factual accuracy."
+  },
   "DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "The DeepSeek-R1 distillation model based on Qwen2.5-Math-1.5B optimizes inference performance through reinforcement learning and cold-start data, refreshing the benchmark for open-source models across multiple tasks."
   },
@@ -119,11 +125,35 @@
   "InternVL2.5-26B": {
     "description": "InternVL2.5-26B is a powerful visual language model that supports multimodal processing of images and text, capable of accurately recognizing image content and generating relevant descriptions or answers."
   },
+  "Llama-3.2-11B-Vision-Instruct": {
+    "description": "Exhibits outstanding image reasoning capabilities on high-resolution images, suitable for visual understanding applications."
+  },
+  "Llama-3.2-90B-Vision-Instruct\t": {
+    "description": "Advanced image reasoning capabilities suitable for visual understanding agent applications."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct is one of the latest large language models released by Alibaba Cloud. This 72B model shows significant improvements in coding and mathematics. It also provides multilingual support, covering over 29 languages, including Chinese and English. The model has made notable advancements in instruction following, understanding structured data, and generating structured outputs, especially JSON."
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct is one of the latest large language models released by Alibaba Cloud. This 7B model shows significant improvements in coding and mathematics. It also provides multilingual support, covering over 29 languages, including Chinese and English. The model has made notable advancements in instruction following, understanding structured data, and generating structured outputs, especially JSON."
+  },
+  "Meta-Llama-3.1-405B-Instruct": {
+    "description": "Llama 3.1 instruction-tuned text model optimized for multilingual dialogue use cases, performing excellently on common industry benchmarks among many available open-source and closed chat models."
+  },
+  "Meta-Llama-3.1-70B-Instruct": {
+    "description": "Llama 3.1 instruction-tuned text model optimized for multilingual dialogue use cases, performing excellently on common industry benchmarks among many available open-source and closed chat models."
+  },
+  "Meta-Llama-3.1-8B-Instruct": {
+    "description": "Llama 3.1 instruction-tuned text model optimized for multilingual dialogue use cases, performing excellently on common industry benchmarks among many available open-source and closed chat models."
+  },
+  "Meta-Llama-3.2-1B-Instruct": {
+    "description": "An advanced cutting-edge small language model with language understanding, excellent reasoning capabilities, and text generation abilities."
+  },
+  "Meta-Llama-3.2-3B-Instruct": {
+    "description": "An advanced cutting-edge small language model with language understanding, excellent reasoning capabilities, and text generation abilities."
+  },
+  "Meta-Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 is the most advanced multilingual open-source large language model in the Llama series, offering performance comparable to a 405B model at a very low cost. Based on the Transformer architecture, it enhances usability and safety through supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF). Its instruction-tuned version is optimized for multilingual dialogue and outperforms many open-source and closed chat models on various industry benchmarks. Knowledge cutoff date is December 2023."
   },
   "MiniMax-Text-01": {
     "description": "In the MiniMax-01 series of models, we have made bold innovations: for the first time, we have implemented a linear attention mechanism on a large scale, making the traditional Transformer architecture no longer the only option. This model has a parameter count of up to 456 billion, with a single activation of 45.9 billion. Its overall performance rivals that of top overseas models while efficiently handling the world's longest context of 4 million tokens, which is 32 times that of GPT-4o and 20 times that of Claude-3.5-Sonnet."
@@ -340,9 +370,6 @@
   },
   "abab6.5t-chat": {
     "description": "Optimized for Chinese persona dialogue scenarios, providing smooth dialogue generation that aligns with Chinese expression habits."
-  },
-  "abab7-chat-preview": {
-    "description": "Significant improvements in capabilities such as long text, mathematics, and writing compared to the abab6.5 series models."
   },
   "accounts/fireworks/models/deepseek-r1": {
     "description": "DeepSeek-R1 is a state-of-the-art large language model optimized through reinforcement learning and cold-start data, excelling in reasoning, mathematics, and programming performance."
@@ -698,6 +725,9 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro is Google's high-performance AI model, designed for extensive task scaling."
   },
+  "gemini-1.5-flash": {
+    "description": "Gemini 1.5 Flash is Google's latest multimodal AI model, featuring rapid processing capabilities and supporting text, image, and video inputs, making it efficient for scaling across various tasks."
+  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 is an efficient multimodal model that supports extensive application scaling."
   },
@@ -737,23 +767,14 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash offers next-generation features and improvements, including exceptional speed, native tool usage, multimodal generation, and a 1M token context window."
   },
-  "gemini-2.0-flash-exp": {
-    "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool integration, and multimodal generation."
-  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "A Gemini 2.0 Flash model optimized for cost-effectiveness and low latency."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
   },
-  "gemini-2.0-flash-thinking-exp-1219": {
-    "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
-  },
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental is Google's latest experimental multimodal AI model, showing a quality improvement compared to previous versions, especially in world knowledge, coding, and long context."
-  },
-  "gemini-exp-1206": {
-    "description": "Gemini Exp 1206 is Google's latest experimental multimodal AI model, offering significant quality improvements compared to previous versions."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is suitable for medium to small-scale task processing, offering cost-effectiveness."
@@ -859,9 +880,6 @@
   },
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo is suitable for various text generation and understanding tasks. Currently points to gpt-3.5-turbo-0125."
-  },
-  "gpt-3.5-turbo-16k": {
-    "description": "GPT 3.5 Turbo 16k, a high-capacity text generation model suitable for complex tasks."
   },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo is suitable for various text generation and understanding tasks. Currently points to gpt-3.5-turbo-0125."

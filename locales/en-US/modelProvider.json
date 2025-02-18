@@ -322,6 +322,13 @@
     "tooltip": "Update provider basic configuration",
     "updateSuccess": "Update successful"
   },
+  "vertexai": {
+    "apiKey": {
+      "desc": "Enter your Vertex AI Keys",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI Keys"
+    }
+  },
   "zeroone": {
     "title": "01.AI Zero One Everything"
   },
