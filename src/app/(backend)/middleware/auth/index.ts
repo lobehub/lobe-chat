@@ -56,6 +56,7 @@ export const checkAuth =
           return createErrorResponse(ChatErrorType.SystemTimeNotMatchError, e);
 
         // other issue will be internal server error
+        console.error(e);
         return createErrorResponse(ChatErrorType.InternalServerError, {
           error: e,
           provider: params?.provider,

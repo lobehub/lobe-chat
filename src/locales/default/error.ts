@@ -121,7 +121,7 @@ export default {
     // cloud
     FreePlanLimit: '当前为免费用户，无法使用该功能，请升级到付费计划后继续使用',
     SubscriptionPlanLimit:
-      '您的订阅额度已用尽，无法使用该功能，请升级到更高计划，或购买资源包后继续使用',
+      '您的订阅积分已用尽，无法使用该功能，请升级到更高计划，或配置自定义模型 API 后继续使用',
 
     // Github Token
     InvalidGithubToken: 'Github PAT 不正确或为空，请检查 Github PAT 后重试',
