@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import urlJoin from 'url-join';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import { isDeprecatedEdition } from '@/const/version';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useAgentStore } from '@/store/agent';
@@ -15,11 +16,11 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Met
   const router = useQueryRoute();
 
   return useMemo(() => {
-    if (activeId === INBOX_SESSION_ID) {
+    if (isDeprecatedEdition && activeId === INBOX_SESSION_ID) {
       return () => router.push(urlJoin('/settings', SettingsTabs.Agent));
     }
 
-    if (isMobile) return () => router.push('/chat/settings');
+    if (isMobile) return () => router.push('/chat/settings', { query: { session: activeId } });
 
     return () => {
       useAgentStore.setState({ showAgentSetting: true });

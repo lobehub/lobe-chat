@@ -175,7 +175,7 @@ describe('AgentSlice', () => {
 
       vi.spyOn(sessionService, 'getSessionConfig').mockResolvedValueOnce({ model: 'gpt-4' } as any);
 
-      renderHook(() => result.current.useFetchAgentConfig('test-session-id'));
+      renderHook(() => result.current.useFetchAgentConfig(true, 'test-session-id'));
 
       await waitFor(() => {
         expect(result.current.agentMap['test-session-id']).toEqual({ model: 'gpt-4' });
@@ -199,7 +199,7 @@ describe('AgentSlice', () => {
         model: 'gpt-3.5-turbo',
       } as any);
 
-      renderHook(() => result.current.useFetchAgentConfig('test-session-id'));
+      renderHook(() => result.current.useFetchAgentConfig(true, 'test-session-id'));
 
       await waitFor(() => {
         expect(result.current.agentMap['test-session-id']).toEqual({ model: 'gpt-3.5-turbo' });
@@ -216,7 +216,7 @@ describe('AgentSlice', () => {
         model: 'gemini-pro',
       } as any);
 
-      renderHook(() => result.current.useInitAgentStore(true));
+      renderHook(() => result.current.useInitInboxAgentStore(true));
 
       await waitFor(async () => {
         expect(result.current.agentMap[INBOX_SESSION_ID]).toEqual({ model: 'gemini-pro' });
@@ -230,7 +230,7 @@ describe('AgentSlice', () => {
         model: 'gemini-pro',
       } as any);
 
-      renderHook(() => result.current.useInitAgentStore(false));
+      renderHook(() => result.current.useInitInboxAgentStore(false));
 
       await waitFor(async () => {
         expect(result.current.agentMap[INBOX_SESSION_ID]).toBeUndefined();
@@ -243,7 +243,7 @@ describe('AgentSlice', () => {
 
       vi.spyOn(globalService, 'getDefaultAgentConfig').mockRejectedValueOnce(new Error());
 
-      renderHook(() => result.current.useInitAgentStore(true));
+      renderHook(() => result.current.useInitInboxAgentStore(true));
 
       await waitFor(async () => {
         expect(result.current.agentMap[INBOX_SESSION_ID]).toBeUndefined();

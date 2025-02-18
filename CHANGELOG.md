@@ -2,6 +2,508 @@
 
 # Changelog
 
+### [Version 1.60.8](https://github.com/lobehub/lobe-chat/compare/v1.60.7...v1.60.8)
+
+<sup>Released on **2025-02-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Sync chat limit.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Sync chat limit, closes [#6207](https://github.com/lobehub/lobe-chat/issues/6207) ([cc2f536](https://github.com/lobehub/lobe-chat/commit/cc2f536))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.60.7](https://github.com/lobehub/lobe-chat/compare/v1.60.6...v1.60.7)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Remove deprecated gemini models, update MiniMax models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Remove deprecated gemini models, closes [#6269](https://github.com/lobehub/lobe-chat/issues/6269) ([45977c3](https://github.com/lobehub/lobe-chat/commit/45977c3))
+- **misc**: Update MiniMax models, closes [#6270](https://github.com/lobehub/lobe-chat/issues/6270) ([2d7803a](https://github.com/lobehub/lobe-chat/commit/2d7803a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.60.6](https://github.com/lobehub/lobe-chat/compare/v1.60.5...v1.60.6)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add o1 vision metadata.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add o1 vision metadata, closes [#6263](https://github.com/lobehub/lobe-chat/issues/6263) ([261d068](https://github.com/lobehub/lobe-chat/commit/261d068))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.60.5](https://github.com/lobehub/lobe-chat/compare/v1.60.4...v1.60.5)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix loading on not login for db.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix loading on not login for db, closes [#6258](https://github.com/lobehub/lobe-chat/issues/6258) ([61692b9](https://github.com/lobehub/lobe-chat/commit/61692b9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.60.4](https://github.com/lobehub/lobe-chat/compare/v1.60.3...v1.60.4)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix agent config not load correctly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix agent config not load correctly, closes [#6252](https://github.com/lobehub/lobe-chat/issues/6252) ([fe9bc16](https://github.com/lobehub/lobe-chat/commit/fe9bc16))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.60.3](https://github.com/lobehub/lobe-chat/compare/v1.60.2...v1.60.3)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: User feedback for empty/long group names in create/edit group modals.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: User feedback for empty/long group names in create/edit group modals, closes [#6247](https://github.com/lobehub/lobe-chat/issues/6247) ([25c80d1](https://github.com/lobehub/lobe-chat/commit/25c80d1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.60.2](https://github.com/lobehub/lobe-chat/compare/v1.60.1...v1.60.2)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix model list issue in client mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix model list issue in client mode, closes [#6240](https://github.com/lobehub/lobe-chat/issues/6240) ([d6c6cda](https://github.com/lobehub/lobe-chat/commit/d6c6cda))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.60.1](https://github.com/lobehub/lobe-chat/compare/v1.60.0...v1.60.1)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Jina AI Provider name & model info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Jina AI Provider name & model info, closes [#6243](https://github.com/lobehub/lobe-chat/issues/6243) ([ddbe482](https://github.com/lobehub/lobe-chat/commit/ddbe482))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.60.0](https://github.com/lobehub/lobe-chat/compare/v1.59.0...v1.60.0)
+
+<sup>Released on **2025-02-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Add SambaNova provider support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add SambaNova provider support, closes [#6218](https://github.com/lobehub/lobe-chat/issues/6218) ([a46eadf](https://github.com/lobehub/lobe-chat/commit/a46eadf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.59.0](https://github.com/lobehub/lobe-chat/compare/v1.58.0...v1.59.0)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### ✨ Features
+
+- **misc**: Add volcengine as a new provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add volcengine as a new provider, closes [#6221](https://github.com/lobehub/lobe-chat/issues/6221) ([09bf8f0](https://github.com/lobehub/lobe-chat/commit/09bf8f0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.58.0](https://github.com/lobehub/lobe-chat/compare/v1.57.1...v1.58.0)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Azure AI as new Provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Azure AI as new Provider, closes [#6214](https://github.com/lobehub/lobe-chat/issues/6214) ([30e010f](https://github.com/lobehub/lobe-chat/commit/30e010f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.57.1](https://github.com/lobehub/lobe-chat/compare/v1.57.0...v1.57.1)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix mobile agent settings not show correctly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix mobile agent settings not show correctly, closes [#6203](https://github.com/lobehub/lobe-chat/issues/6203) ([0285d95](https://github.com/lobehub/lobe-chat/commit/0285d95))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.57.0](https://github.com/lobehub/lobe-chat/compare/v1.56.5...v1.57.0)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Jina AI model provider support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Jina AI model provider support, closes [#6140](https://github.com/lobehub/lobe-chat/issues/6140) ([6b4c15b](https://github.com/lobehub/lobe-chat/commit/6b4c15b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.56.5](https://github.com/lobehub/lobe-chat/compare/v1.56.4...v1.56.5)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Match o1 series models more robust in Azure OpenAI provider, set max_completion_tokens to null for Azure OpenAI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Match o1 series models more robust in Azure OpenAI provider, closes [#6193](https://github.com/lobehub/lobe-chat/issues/6193) ([f444e66](https://github.com/lobehub/lobe-chat/commit/f444e66))
+- **misc**: Set max_completion_tokens to null for Azure OpenAI, closes [#6198](https://github.com/lobehub/lobe-chat/issues/6198) ([e9e8da4](https://github.com/lobehub/lobe-chat/commit/e9e8da4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.56.4](https://github.com/lobehub/lobe-chat/compare/v1.56.3...v1.56.4)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix ai provider description not show correctly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix ai provider description not show correctly, closes [#6199](https://github.com/lobehub/lobe-chat/issues/6199) ([3e8d9c5](https://github.com/lobehub/lobe-chat/commit/3e8d9c5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.56.3](https://github.com/lobehub/lobe-chat/compare/v1.56.2...v1.56.3)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve inbox agent settings.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve inbox agent settings, closes [#6197](https://github.com/lobehub/lobe-chat/issues/6197) ([37b70f0](https://github.com/lobehub/lobe-chat/commit/37b70f0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.56.2](https://github.com/lobehub/lobe-chat/compare/v1.56.1...v1.56.2)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix inbox agent can not save config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix inbox agent can not save config, closes [#6186](https://github.com/lobehub/lobe-chat/issues/6186) ([588cba7](https://github.com/lobehub/lobe-chat/commit/588cba7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.56.1](https://github.com/lobehub/lobe-chat/compare/v1.56.0...v1.56.1)
+
+<sup>Released on **2025-02-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix inbox agent edit way in the new mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix inbox agent edit way in the new mode, closes [#6190](https://github.com/lobehub/lobe-chat/issues/6190) ([6398362](https://github.com/lobehub/lobe-chat/commit/6398362))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.56.0](https://github.com/lobehub/lobe-chat/compare/v1.55.4...v1.56.0)
+
+<sup>Released on **2025-02-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Add configurable PDF processing method with Unstructured.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add configurable PDF processing method with Unstructured, closes [#5927](https://github.com/lobehub/lobe-chat/issues/5927) ([35fa3ee](https://github.com/lobehub/lobe-chat/commit/35fa3ee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.55.4](https://github.com/lobehub/lobe-chat/compare/v1.55.3...v1.55.4)
+
+<sup>Released on **2025-02-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve mobile params style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve mobile params style, closes [#6176](https://github.com/lobehub/lobe-chat/issues/6176) ([b5276de](https://github.com/lobehub/lobe-chat/commit/b5276de))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.55.3](https://github.com/lobehub/lobe-chat/compare/v1.55.2...v1.55.3)
 
 <sup>Released on **2025-02-15**</sup>

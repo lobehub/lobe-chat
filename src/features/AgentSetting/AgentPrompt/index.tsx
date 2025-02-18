@@ -1,7 +1,7 @@
 'use client';
 
 import { EditableMessage, Form } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +40,57 @@ const AgentPrompt = memo<{ modal?: boolean }>(({ modal }) => {
   const { t } = useTranslation('setting');
   const { styles } = useStyles();
   const [editing, setEditing] = useState(false);
-  const [systemRole, updateConfig] = useStore((s) => [s.config.systemRole, s.setAgentConfig]);
+  const [loading, systemRole, updateConfig] = useStore((s) => [
+    s.loading,
+    s.config.systemRole,
+    s.setAgentConfig,
+  ]);
+
+  if (loading) {
+    if (modal)
+      return (
+        <Form
+          items={[
+            {
+              children: (
+                <>
+                  <div style={{ height: 24 }} />
+                  <Skeleton active title={false} />
+                </>
+              ),
+              title: t('settingAgent.prompt.title'),
+            },
+          ]}
+          itemsType={'group'}
+          variant={'pure'}
+          {...FORM_STYLE}
+        />
+      );
+
+    return (
+      <div className={styles.wrapper}>
+        <Flexbox className={styles.container} padding={4}>
+          <Flexbox horizontal justify={'space-between'} paddingBlock={8} paddingInline={12}>
+            <h1 style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 4 }}>
+              {t('settingAgent.prompt.title')}
+            </h1>
+          </Flexbox>
+          <Flexbox
+            align={'center'}
+            className={styles.content}
+            flex={1}
+            gap={16}
+            horizontal
+            justify={'space-between'}
+            padding={12}
+            wrap={'wrap'}
+          >
+            <Skeleton active style={{ paddingTop: 12 }} title={false} />
+          </Flexbox>
+        </Flexbox>
+      </div>
+    );
+  }
 
   const content = (
     <EditableMessage

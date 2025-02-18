@@ -3,7 +3,7 @@
 #### TOC
 
 - [Chat 聊天页面](#chat-聊天页面)
-- [Discover 市场页面](#discover-市场页面)
+- [Discover 发现页面](#discover-发现页面)
 
 ## Chat 聊天页面
 
@@ -20,11 +20,10 @@
 > **Info**\
 > <https://lobechat.com/discover>
 
-|                    Desktop                     |                    Mobile                     |
-| :--------------------------------------------: | :-------------------------------------------: |
+|                     Desktop                      |                     Mobile                      |
+| :----------------------------------------------: | :---------------------------------------------: |
 |              ![][discover-desktop]               |              ![][discover-mobile]               |
 | [⚡️ Lighthouse Report][discover-desktop-report] | [⚡️ Lighthouse Report][discover-mobile-report] |
-
 
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
 [chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/lobechat_com_chat.html

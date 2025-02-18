@@ -1,6 +1,148 @@
 [
   {
     "children": {
+      "improvements": ["Sync chat limit."]
+    },
+    "date": "2025-02-18",
+    "version": "1.60.8"
+  },
+  {
+    "children": {
+      "improvements": ["Remove deprecated gemini models, update MiniMax models."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.7"
+  },
+  {
+    "children": {
+      "improvements": ["Add o1 vision metadata."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix loading on not login for db."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix agent config not load correctly."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.4"
+  },
+  {
+    "children": {
+      "fixes": ["User feedback for empty/long group names in create/edit group modals."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix model list issue in client mode."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update Jina AI Provider name & model info."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.1"
+  },
+  {
+    "children": {
+      "features": ["Add SambaNova provider support."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.0"
+  },
+  {
+    "children": {
+      "features": ["Add volcengine as a new provider."]
+    },
+    "date": "2025-02-16",
+    "version": "1.59.0"
+  },
+  {
+    "children": {
+      "features": ["Add Azure AI as new Provider."]
+    },
+    "date": "2025-02-16",
+    "version": "1.58.0"
+  },
+  {
+    "children": {
+      "improvements": ["Fix mobile agent settings not show correctly."]
+    },
+    "date": "2025-02-16",
+    "version": "1.57.1"
+  },
+  {
+    "children": {
+      "features": ["Add Jina AI model provider support."]
+    },
+    "date": "2025-02-16",
+    "version": "1.57.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Match o1 series models more robust in Azure OpenAI provider, set max_completion_tokens to null for Azure OpenAI."
+      ]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix ai provider description not show correctly."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.4"
+  },
+  {
+    "children": {
+      "improvements": ["Improve inbox agent settings."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix inbox agent can not save config."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix inbox agent edit way in the new mode."]
+    },
+    "date": "2025-02-16",
+    "version": "1.56.1"
+  },
+  {
+    "children": {
+      "features": ["Add configurable PDF processing method with Unstructured."]
+    },
+    "date": "2025-02-15",
+    "version": "1.56.0"
+  },
+  {
+    "children": {
+      "improvements": ["Improve mobile params style."]
+    },
+    "date": "2025-02-15",
+    "version": "1.55.4"
+  },
+  {
+    "children": {
       "improvements": ["Add deepseek r1 distill models for qwen series."]
     },
     "date": "2025-02-15",
