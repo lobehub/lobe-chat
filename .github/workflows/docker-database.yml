@@ -56,3 +56,15 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+
+  trigger_to_deploy:
+    name: Trigger Another Workflow
+    runs-on: ubuntu-latest
+    needs: push_to_registry
+    steps:
+      - name: Trigger Another Workflow on Success
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run deploy-to-production.yml --repo sijinhui/lobe-chat --ref main
