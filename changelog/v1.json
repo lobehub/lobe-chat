@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve perplexity models."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.4"
+  },
+  {
+    "children": {
       "improvements": ["Improve error content and console error."]
     },
     "date": "2025-02-18",

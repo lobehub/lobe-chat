@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.61.4](https://github.com/lobehub/lobe-chat/compare/v1.61.3...v1.61.4)
+
+<sup>Released on **2025-02-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve perplexity models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve perplexity models, closes [#6307](https://github.com/lobehub/lobe-chat/issues/6307) ([c99908d](https://github.com/lobehub/lobe-chat/commit/c99908d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.61.3](https://github.com/lobehub/lobe-chat/compare/v1.61.2...v1.61.3)
 
 <sup>Released on **2025-02-18**</sup>
