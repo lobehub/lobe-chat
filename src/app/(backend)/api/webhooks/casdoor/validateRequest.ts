@@ -12,7 +12,7 @@ export type CasdoorUserEntity = {
 interface CasdoorWebhookPayload {
   action: string;
   // Only support user event currently
-  extendedUser: CasdoorUserEntity;
+  object: CasdoorUserEntity;
 }
 
 export const validateRequest = async (request: Request, secret?: string) => {
@@ -21,7 +21,9 @@ export const validateRequest = async (request: Request, secret?: string) => {
   const casdoorSecret = headerPayload.get('casdoor-secret')!;
   try {
     if (casdoorSecret === secret) {
-      return JSON.parse(payloadString) as CasdoorWebhookPayload;
+      return JSON.parse(payloadString, (k, v) =>
+        k === 'object' && typeof v === 'string' ? JSON.parse(v) : v,
+      ) as CasdoorWebhookPayload;
     } else {
       console.warn(
         '[Casdoor]: secret verify failed, please check your secret in `CASDOOR_WEBHOOK_SECRET`',
@@ -32,7 +34,7 @@ export const validateRequest = async (request: Request, secret?: string) => {
     if (!authEnv.CASDOOR_WEBHOOK_SECRET) {
       throw new Error('`CASDOOR_WEBHOOK_SECRET` environment variable is missing.');
     }
-    console.error('[Casdoor]: incoming webhook failed in verification.\n', e);
+    console.error('[Casdoor]: incoming webhook failed in verification.\n', e, payloadString);
     return;
   }
 };
