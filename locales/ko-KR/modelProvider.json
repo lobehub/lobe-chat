@@ -322,6 +322,13 @@
     "tooltip": "서비스 제공자 기본 설정 업데이트",
     "updateSuccess": "업데이트 성공"
   },
+  "vertexai": {
+    "apiKey": {
+      "desc": "당신의 Vertex AI 키를 입력하세요",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI 키"
+    }
+  },
   "zeroone": {
     "title": "01.AI Zero One All Things"
   },

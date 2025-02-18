@@ -322,6 +322,13 @@
     "tooltip": "サービスプロバイダーの基本設定を更新",
     "updateSuccess": "更新に成功しました"
   },
+  "vertexai": {
+    "apiKey": {
+      "desc": "あなたの Vertex AI キーを入力してください",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI キー"
+    }
+  },
   "zeroone": {
     "title": "01.AI 零一万物"
   },

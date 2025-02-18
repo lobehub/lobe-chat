@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 1.61.0](https://github.com/lobehub/lobe-chat/compare/v1.60.9...v1.61.0)
+
+<sup>Released on **2025-02-18**</sup>
+
+#### ✨ Features
+
+- **misc**: Support google vertex ai as a new provider.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Try to fix pglite worker.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support google vertex ai as a new provider, closes [#4487](https://github.com/lobehub/lobe-chat/issues/4487) ([a0a9592](https://github.com/lobehub/lobe-chat/commit/a0a9592))
+
+#### What's fixed
+
+- **misc**: Try to fix pglite worker, closes [#6169](https://github.com/lobehub/lobe-chat/issues/6169) ([b3f4f13](https://github.com/lobehub/lobe-chat/commit/b3f4f13))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.60.9](https://github.com/lobehub/lobe-chat/compare/v1.60.8...v1.60.9)
 
 <sup>Released on **2025-02-18**</sup>
