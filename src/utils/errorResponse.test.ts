@@ -33,12 +33,6 @@ describe('createErrorResponse', () => {
   });
 
   describe('Provider Biz Error', () => {
-    it('returns a 471 status for OpenAIBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.OpenAIBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(471);
-    });
-
     it('returns a 471 status for ProviderBizError error type', () => {
       const errorType = AgentRuntimeErrorType.ProviderBizError;
       const response = createErrorResponse(errorType);
@@ -49,12 +43,6 @@ describe('createErrorResponse', () => {
       const errorType = AgentRuntimeErrorType.AgentRuntimeError;
       const response = createErrorResponse(errorType);
       expect(response.status).toBe(470);
-    });
-
-    it('returns a 471 status for OpenAIBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.OpenAIBizError;
-      const response = createErrorResponse(errorType as any);
-      expect(response.status).toBe(471);
     });
   });
 

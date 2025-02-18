@@ -386,6 +386,28 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
       const { errorResult, RuntimeError } = handleOpenAIError(error);
 
+      switch (errorResult.code) {
+        case 'insufficient_quota': {
+          return AgentRuntimeError.chat({
+            endpoint: desensitizedEndpoint,
+            error: errorResult,
+            errorType: AgentRuntimeErrorType.InsufficientQuota,
+            provider: provider as ModelProvider,
+          });
+        }
+
+        // content too long
+        case 'context_length_exceeded':
+        case 'string_above_max_length': {
+          return AgentRuntimeError.chat({
+            endpoint: desensitizedEndpoint,
+            error: errorResult,
+            errorType: AgentRuntimeErrorType.ExceededContextWindow,
+            provider: provider as ModelProvider,
+          });
+        }
+      }
+
       return AgentRuntimeError.chat({
         endpoint: desensitizedEndpoint,
         error: errorResult,

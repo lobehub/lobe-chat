@@ -14,7 +14,6 @@ import ClerkLogin from './ClerkLogin';
 import ErrorJsonViewer from './ErrorJsonViewer';
 import InvalidAPIKey from './InvalidAPIKey';
 import InvalidAccessCode from './InvalidAccessCode';
-import OpenAiBizError from './OpenAiBizError';
 
 const loading = () => <Skeleton active />;
 
@@ -34,8 +33,11 @@ const getErrorAlertConfig = (
     };
 
   switch (errorType) {
+    case ChatErrorType.SystemTimeNotMatchError:
     case AgentRuntimeErrorType.PermissionDenied:
+    case AgentRuntimeErrorType.InsufficientQuota:
     case AgentRuntimeErrorType.QuotaLimitReached:
+    case AgentRuntimeErrorType.ExceededContextWindow:
     case AgentRuntimeErrorType.LocationNotSupportError: {
       return {
         type: 'warning',
@@ -80,10 +82,6 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
   switch (error.type) {
     case PluginErrorType.PluginSettingsInvalid: {
       return <PluginSettings id={data.id} plugin={data.plugin} />;
-    }
-
-    case AgentRuntimeErrorType.OpenAIBizError: {
-      return <OpenAiBizError {...data} />;
     }
 
     case AgentRuntimeErrorType.OllamaBizError: {
