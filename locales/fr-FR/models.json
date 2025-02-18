@@ -1034,6 +1034,9 @@
   "jina-deepsearch-v1": {
     "description": "La recherche approfondie combine la recherche sur le web, la lecture et le raisonnement pour mener des enquêtes complètes. Vous pouvez la considérer comme un agent qui prend en charge vos tâches de recherche - elle effectuera une recherche approfondie et itérative avant de fournir une réponse. Ce processus implique une recherche continue, un raisonnement et une résolution de problèmes sous différents angles. Cela diffère fondamentalement des grands modèles standard qui génèrent des réponses directement à partir de données pré-entraînées et des systèmes RAG traditionnels qui dépendent d'une recherche superficielle unique."
   },
+  "kimi-latest": {
+    "description": "Le produit d'assistant intelligent Kimi utilise le dernier modèle Kimi, qui peut inclure des fonctionnalités encore instables. Il prend en charge la compréhension des images et choisit automatiquement le modèle de facturation 8k/32k/128k en fonction de la longueur du contexte de la demande."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM est un modèle de langage expérimental, spécifique à des tâches, formé pour respecter les principes des sciences de l'apprentissage, capable de suivre des instructions systématiques dans des contextes d'enseignement et d'apprentissage, agissant comme un mentor expert, entre autres."
   },
@@ -1349,6 +1352,9 @@
   "moonshot-v1-8k-vision-preview": {
     "description": "Le modèle visuel Kimi (y compris moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview, etc.) est capable de comprendre le contenu des images, y compris le texte des images, les couleurs des images et les formes des objets."
   },
+  "moonshot-v1-auto": {
+    "description": "Moonshot V1 Auto peut choisir le modèle approprié en fonction du nombre de tokens utilisés dans le contexte actuel."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B est une version améliorée de Nous Hermes 2, intégrant les derniers ensembles de données développés en interne."
   },
@@ -1569,6 +1575,9 @@
     "description": "Produit de recherche avancé prenant en charge le contexte de recherche, avec des requêtes avancées et un suivi."
   },
   "sonar-reasoning": {
+    "description": "Nouveau produit API soutenu par le modèle de raisonnement DeepSeek."
+  },
+  "sonar-reasoning-pro": {
     "description": "Nouveau produit API soutenu par le modèle de raisonnement DeepSeek."
   },
   "step-1-128k": {

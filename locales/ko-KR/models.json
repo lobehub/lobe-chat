@@ -1034,6 +1034,9 @@
   "jina-deepsearch-v1": {
     "description": "딥 서치는 웹 검색, 독서 및 추론을 결합하여 포괄적인 조사를 수행합니다. 연구 작업을 수용하는 에이전트로 생각할 수 있으며, 광범위한 검색을 수행하고 여러 번 반복한 후에야 답변을 제공합니다. 이 과정은 지속적인 연구, 추론 및 다양한 각도에서 문제를 해결하는 것을 포함합니다. 이는 사전 훈련된 데이터에서 직접 답변을 생성하는 표준 대형 모델 및 일회성 표면 검색에 의존하는 전통적인 RAG 시스템과 근본적으로 다릅니다."
   },
+  "kimi-latest": {
+    "description": "Kimi 스마트 어시스턴트 제품은 최신 Kimi 대형 모델을 사용하며, 아직 안정되지 않은 기능이 포함될 수 있습니다. 이미지 이해를 지원하며, 요청의 맥락 길이에 따라 8k/32k/128k 모델을 청구 모델로 자동 선택합니다."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM은 학습 과학 원칙에 맞춰 훈련된 실험적이고 특정 작업에 특화된 언어 모델로, 교육 및 학습 환경에서 시스템 지침을 따르며 전문가 멘토 역할을 수행합니다."
   },
@@ -1349,6 +1352,9 @@
   "moonshot-v1-8k-vision-preview": {
     "description": "Kimi 시각 모델(예: moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 등)은 이미지 내용을 이해할 수 있으며, 이미지 텍스트, 이미지 색상 및 물체 형태 등을 포함합니다."
   },
+  "moonshot-v1-auto": {
+    "description": "Moonshot V1 Auto는 현재 맥락에서 사용되는 토큰 수에 따라 적합한 모델을 선택할 수 있습니다."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B는 Nous Hermes 2의 업그레이드 버전으로, 최신 내부 개발 데이터 세트를 포함하고 있습니다."
   },
@@ -1569,6 +1575,9 @@
     "description": "고급 쿼리 및 후속 작업을 지원하는 검색 맥락 기반의 고급 검색 제품입니다."
   },
   "sonar-reasoning": {
+    "description": "DeepSeek 추론 모델이 지원하는 새로운 API 제품입니다."
+  },
+  "sonar-reasoning-pro": {
     "description": "DeepSeek 추론 모델이 지원하는 새로운 API 제품입니다."
   },
   "step-1-128k": {

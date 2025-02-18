@@ -1034,6 +1034,9 @@
   "jina-deepsearch-v1": {
     "description": "La ricerca approfondita combina la ricerca online, la lettura e il ragionamento, consentendo indagini complete. Puoi considerarlo come un agente che accetta il tuo compito di ricerca - eseguirà una ricerca approfondita e iterativa prima di fornire una risposta. Questo processo implica una continua ricerca, ragionamento e risoluzione dei problemi da diverse angolazioni. Questo è fondamentalmente diverso dai modelli di grandi dimensioni standard che generano risposte direttamente dai dati pre-addestrati e dai tradizionali sistemi RAG che si basano su ricerche superficiali una tantum."
   },
+  "kimi-latest": {
+    "description": "Il prodotto Kimi Smart Assistant utilizza il più recente modello Kimi, che potrebbe includere funzionalità non ancora stabili. Supporta la comprensione delle immagini e selezionerà automaticamente il modello di fatturazione 8k/32k/128k in base alla lunghezza del contesto della richiesta."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM è un modello linguistico sperimentale, specifico per compiti, addestrato per rispettare i principi della scienza dell'apprendimento, in grado di seguire istruzioni sistematiche in contesti di insegnamento e apprendimento, fungendo da tutor esperto."
   },
@@ -1349,6 +1352,9 @@
   "moonshot-v1-8k-vision-preview": {
     "description": "Il modello visivo Kimi (inclusi moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview, ecc.) è in grado di comprendere il contenuto delle immagini, inclusi testo, colori e forme degli oggetti."
   },
+  "moonshot-v1-auto": {
+    "description": "Moonshot V1 Auto può selezionare il modello appropriato in base al numero di token utilizzati nel contesto attuale."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B è una versione aggiornata di Nous Hermes 2, contenente i più recenti dataset sviluppati internamente."
   },
@@ -1569,6 +1575,9 @@
     "description": "Prodotto di ricerca avanzata che supporta il contesto di ricerca, query avanzate e follow-up."
   },
   "sonar-reasoning": {
+    "description": "Nuovo prodotto API supportato dal modello di ragionamento DeepSeek."
+  },
+  "sonar-reasoning-pro": {
     "description": "Nuovo prodotto API supportato dal modello di ragionamento DeepSeek."
   },
   "step-1-128k": {

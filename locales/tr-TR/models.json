@@ -1034,6 +1034,9 @@
   "jina-deepsearch-v1": {
     "description": "Derin arama, web araması, okuma ve akıl yürütmeyi birleştirerek kapsamlı bir araştırma yapar. Bunu, araştırma görevlerinizi kabul eden bir ajan olarak düşünebilirsiniz - geniş bir arama yapar ve birden fazla yineleme ile cevap verir. Bu süreç, sürekli araştırma, akıl yürütme ve sorunları çeşitli açılardan çözmeyi içerir. Bu, doğrudan önceden eğitilmiş verilerden cevaplar üreten standart büyük modellerle ve tek seferlik yüzey aramasına dayanan geleneksel RAG sistemleriyle temelde farklıdır."
   },
+  "kimi-latest": {
+    "description": "Kimi akıllı asistan ürünü, en son Kimi büyük modelini kullanır ve henüz kararlı olmayan özellikler içerebilir. Görüntü anlayışını desteklerken, isteğin bağlam uzunluğuna göre 8k/32k/128k modelini faturalama modeli olarak otomatik olarak seçecektir."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM, öğrenme bilimleri ilkelerine uygun olarak eğitilmiş, görev odaklı deneysel bir dil modelidir. Eğitim ve öğrenim senaryolarında sistem talimatlarını takip edebilir ve uzman bir mentor olarak görev alabilir."
   },
@@ -1349,6 +1352,9 @@
   "moonshot-v1-8k-vision-preview": {
     "description": "Kimi görsel modeli (moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview gibi) resim içeriğini anlayabilir, resim metni, resim rengi ve nesne şekilleri gibi içerikleri kapsar."
   },
+  "moonshot-v1-auto": {
+    "description": "Moonshot V1 Auto, mevcut bağlamın kullandığı Token sayısına göre uygun modeli seçebilir."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B, Nous Hermes 2'nin güncellenmiş versiyonudur ve en son iç geliştirme veri setlerini içermektedir."
   },
@@ -1570,6 +1576,9 @@
   },
   "sonar-reasoning": {
     "description": "DeepSeek akıl yürütme modeli tarafından desteklenen yeni API ürünü."
+  },
+  "sonar-reasoning-pro": {
+    "description": "DeepSeek'in akıl yürütme modeli tarafından desteklenen yeni API ürünü."
   },
   "step-1-128k": {
     "description": "Performans ve maliyet arasında denge sağlar, genel senaryolar için uygundur."

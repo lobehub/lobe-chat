@@ -1034,6 +1034,9 @@
   "jina-deepsearch-v1": {
     "description": "深層検索は、ウェブ検索、読解、推論を組み合わせて、包括的な調査を行います。これは、あなたの研究タスクを受け入れる代理人として考えることができ、広範な検索を行い、何度も反復してから答えを提供します。このプロセスには、継続的な研究、推論、さまざまな視点からの問題解決が含まれます。これは、事前に訓練されたデータから直接答えを生成する標準的な大規模モデルや、一度きりの表面的な検索に依存する従来のRAGシステムとは根本的に異なります。"
   },
+  "kimi-latest": {
+    "description": "Kimi スマートアシスタント製品は最新の Kimi 大モデルを使用しており、まだ安定していない機能が含まれている可能性があります。画像理解をサポートし、リクエストのコンテキストの長さに応じて 8k/32k/128k モデルを請求モデルとして自動的に選択します。"
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLMは、学習科学の原則に従って訓練された実験的なタスク特化型言語モデルで、教育や学習のシーンでシステムの指示に従い、専門的なメンターとして機能します。"
   },
@@ -1349,6 +1352,9 @@
   "moonshot-v1-8k-vision-preview": {
     "description": "Kimi視覚モデル（moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-previewなどを含む）は、画像の内容を理解でき、画像の文字、色、物体の形状などを含みます。"
   },
+  "moonshot-v1-auto": {
+    "description": "Moonshot V1 Auto は、現在のコンテキストで使用されているトークンの数に基づいて適切なモデルを選択できます。"
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8BはNous Hermes 2のアップグレード版で、最新の内部開発データセットを含んでいます。"
   },
@@ -1570,6 +1576,9 @@
   },
   "sonar-reasoning": {
     "description": "DeepSeek推論モデルによってサポートされる新しいAPI製品です。"
+  },
+  "sonar-reasoning-pro": {
+    "description": "DeepSeek推論モデルによってサポートされる新しいAPI製品。"
   },
   "step-1-128k": {
     "description": "性能とコストのバランスを取り、一般的なシナリオに適しています。"

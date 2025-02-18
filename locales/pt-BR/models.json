@@ -1034,6 +1034,9 @@
   "jina-deepsearch-v1": {
     "description": "A busca profunda combina pesquisa na web, leitura e raciocínio para realizar investigações abrangentes. Você pode vê-la como um agente que aceita suas tarefas de pesquisa - ela realizará uma busca extensa e passará por várias iterações antes de fornecer uma resposta. Esse processo envolve pesquisa contínua, raciocínio e resolução de problemas sob diferentes ângulos. Isso é fundamentalmente diferente de gerar respostas diretamente a partir de dados pré-treinados de grandes modelos padrão e de sistemas RAG tradicionais que dependem de buscas superficiais únicas."
   },
+  "kimi-latest": {
+    "description": "O produto assistente inteligente Kimi utiliza o mais recente modelo Kimi, que pode conter recursos ainda não estáveis. Suporta compreensão de imagens e seleciona automaticamente o modelo de cobrança de 8k/32k/128k com base no comprimento do contexto da solicitação."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM é um modelo de linguagem experimental e específico para tarefas, treinado para atender aos princípios da ciência da aprendizagem, podendo seguir instruções sistemáticas em cenários de ensino e aprendizagem, atuando como um mentor especialista, entre outros."
   },
@@ -1349,6 +1352,9 @@
   "moonshot-v1-8k-vision-preview": {
     "description": "O modelo visual Kimi (incluindo moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview, etc.) é capaz de entender o conteúdo das imagens, incluindo texto, cores e formas dos objetos."
   },
+  "moonshot-v1-auto": {
+    "description": "O Moonshot V1 Auto pode escolher o modelo adequado com base na quantidade de Tokens ocupados pelo contexto atual."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B é uma versão aprimorada do Nous Hermes 2, contendo os conjuntos de dados mais recentes desenvolvidos internamente."
   },
@@ -1570,6 +1576,9 @@
   },
   "sonar-reasoning": {
     "description": "Novo produto API suportado pelo modelo de raciocínio da DeepSeek."
+  },
+  "sonar-reasoning-pro": {
+    "description": "Um novo produto de API suportado pelo modelo de raciocínio DeepSeek."
   },
   "step-1-128k": {
     "description": "Equilibra desempenho e custo, adequado para cenários gerais."

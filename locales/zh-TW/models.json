@@ -1034,6 +1034,9 @@
   "jina-deepsearch-v1": {
     "description": "深度搜索結合了網路搜索、閱讀和推理，可進行全面調查。您可以將其視為一個代理，接受您的研究任務 - 它會進行廣泛搜索並經過多次迭代，然後才能給出答案。這個過程涉及持續的研究、推理和從各個角度解決問題。這與直接從預訓練數據生成答案的標準大模型以及依賴一次性表面搜索的傳統 RAG 系統有著根本的不同。"
   },
+  "kimi-latest": {
+    "description": "Kimi 智能助手產品使用最新的 Kimi 大模型，可能包含尚未穩定的特性。支持圖片理解，同時會自動根據請求的上下文長度選擇 8k/32k/128k 模型作為計費模型"
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM 是一個實驗性的、特定於任務的語言模型，經過訓練以符合學習科學原則，可在教學和學習場景中遵循系統指令，充當專家導師等。"
   },
@@ -1349,6 +1352,9 @@
   "moonshot-v1-8k-vision-preview": {
     "description": "Kimi 視覺模型（包括 moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 等）能夠理解圖片內容，包括圖片文字、圖片顏色和物體形狀等內容。"
   },
+  "moonshot-v1-auto": {
+    "description": "Moonshot V1 Auto 可以根據當前上下文佔用的 Tokens 數量來選擇合適的模型"
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"
   },
@@ -1570,6 +1576,9 @@
   },
   "sonar-reasoning": {
     "description": "由 DeepSeek 推理模型提供支持的新 API 產品。"
+  },
+  "sonar-reasoning-pro": {
+    "description": "由 DeepSeek 推理模型提供支援的新 API 產品。"
   },
   "step-1-128k": {
     "description": "平衡性能與成本，適合一般場景。"
