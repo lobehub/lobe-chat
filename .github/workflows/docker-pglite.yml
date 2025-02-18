@@ -1,4 +1,4 @@
-name: Publish Docker Image
+name: Publish Docker Pglite Image
 
 on:
   workflow_dispatch:
