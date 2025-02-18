@@ -131,7 +131,8 @@ export const initAgentRuntimeWithUserPayload = (
   params: any = {},
 ) => {
   return AgentRuntime.initializeWithProviderOptions(provider, {
-    [provider]: { ...getLlmOptionsFromPayload(provider, payload), ...params },
+    ...getLlmOptionsFromPayload(provider, payload),
+    ...params,
   });
 };
 
