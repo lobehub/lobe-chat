@@ -22,6 +22,8 @@ import BackgroundSwatches from './BackgroundSwatches';
 const AgentMeta = memo(() => {
   const { t } = useTranslation('setting');
 
+  const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
+
   const [hasSystemRole, updateMeta, autocompleteMeta, autocompleteAllMeta] = useStore((s) => [
     !!s.config.systemRole,
     s.setAgentMeta,
@@ -139,8 +141,6 @@ const AgentMeta = memo(() => {
     ),
     title: t('settingAgent.title'),
   };
-
-  const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <Form
