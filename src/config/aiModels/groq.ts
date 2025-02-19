@@ -50,13 +50,13 @@ const groqChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 8_192,
+    contextWindowTokens: 8192,
     description: 'Gemma 2 9B 是一款优化用于特定任务和工具整合的模型。',
     displayName: 'Gemma 2 9B',
     id: 'gemma2-9b-it',
     pricing: {
-      input: 0.20,
-      output: 0.20,
+      input: 0.2,
+      output: 0.2,
     },
     type: 'chat',
   },
@@ -68,7 +68,7 @@ const groqChatModels: AIChatModelCard[] = [
     description: 'Llama 3.1 8B 是一款高效能模型，提供了快速的文本生成能力，非常适合需要大规模效率和成本效益的应用场景。',
     displayName: 'Llama 3.1 8B Instant',
     id: 'llama-3.1-8b-instant',
-    maxOutput: 8_192,
+    maxOutput: 8192,
     pricing: {
       input: 0.05,
       output: 0.08,
@@ -83,7 +83,7 @@ const groqChatModels: AIChatModelCard[] = [
     description: 'Llama 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
     displayName: 'Llama 3.2 11B Vision (Preview)',
     id: 'llama-3.2-11b-vision-preview',
-    maxOutput: 8_192,
+    maxOutput: 8192,
     pricing: {
       input: 0.18,
       output: 0.18,
@@ -99,10 +99,10 @@ const groqChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.2 90B Vision (Preview)',
     enabled: true,
     id: 'llama-3.2-90b-vision-preview',
-    maxOutput: 8_192,
+    maxOutput: 8192,
     pricing: {
-      input: 0.90,
-      output: 0.90,
+      input: 0.9,
+      output: 0.9,
     },
     type: 'chat',
   },
@@ -110,7 +110,7 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'Llama 3.2 1B (Preview)',
     id: 'llama-3.2-1b-preview',
-    maxOutput: 8_192,
+    maxOutput: 8192,
     pricing: {
       input: 0.04,
       output: 0.04,
@@ -121,7 +121,7 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'Llama 3.2 3B (Preview)',
     id: 'llama-3.2-3b-preview',
-    maxOutput: 8_192,
+    maxOutput: 8192,
     pricing: {
       input: 0.06,
       output: 0.06,
@@ -129,7 +129,7 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 8_192,
+    contextWindowTokens: 8192,
     displayName: 'Llama 3.3 70B SpecDec',
     id: 'llama-3.3-70b-specdec',
     pricing: {
@@ -155,7 +155,7 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 8_192,
+    contextWindowTokens: 8192,
     description: 'Meta Llama 3 70B 提供无与伦比的复杂性处理能力，为高要求项目量身定制。',
     displayName: 'Llama 3 70B',
     id: 'llama3-70b-8192',
@@ -166,7 +166,7 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 8_192,
+    contextWindowTokens: 8192,
     description: 'Meta Llama 3 8B 带来优质的推理效能，适合多场景应用需求。',
     displayName: 'Llama 3 8B',
     id: 'llama3-8b-8192',
@@ -197,7 +197,7 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'Qwen 2.5 32B',
     id: 'qwen-2.5-32b',
-    maxOutput: 8_192,
+    maxOutput: 8192,
     pricing: {
       input: 0.79,
       output: 0.79,
@@ -205,12 +205,12 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 8_192,
+    contextWindowTokens: 8192,
     displayName: 'Llama Guard 3 8B',
     id: 'llama-guard-3-8b',
     pricing: {
-      input: 0.20,
-      output: 0.20,
+      input: 0.2,
+      output: 0.2,
     },
     type: 'chat',
   },
