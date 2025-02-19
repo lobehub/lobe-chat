@@ -1,10 +1,12 @@
-interface SearchCitation {
+export interface CitationItem {
   id?: string;
-  title: string;
+  onlyUrl?: boolean;
+  title?: string;
   url: string;
 }
+
 export interface GroundingSearch {
-  citations?: string[] | SearchCitation[];
+  citations?: CitationItem[];
   searchQueries?: string[];
 }
 
@@ -30,6 +32,7 @@ export interface MessageItem {
   quotaId: string | null;
   reasoning: ModelReasoning | null;
   role: string;
+  search: GroundingSearch | null;
   sessionId: string | null;
   threadId: string | null;
   // jsonb type
