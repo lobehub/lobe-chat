@@ -6,4 +6,5 @@ export type LangChainLoaderType =
   | 'doc'
   | 'text'
   | 'latex'
-  | 'csv';
+  | 'csv'
+  | 'epub';
