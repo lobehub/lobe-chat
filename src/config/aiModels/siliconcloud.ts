@@ -1,5 +1,7 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
+// https://siliconflow.cn/zh-cn/models
+
 const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
