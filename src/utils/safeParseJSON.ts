@@ -1,4 +1,4 @@
-export const safeParseJSON = <T = Record<string, any>>(text: string) => {
+export const safeParseJSON = <T = Record<string, any>>(text?: string) => {
   if (typeof text !== 'string') return undefined;
 
   let json: T;

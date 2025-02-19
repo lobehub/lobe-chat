@@ -7,11 +7,11 @@ import { LobeAi21AI } from './ai21';
 import { LobeAi360AI } from './ai360';
 import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
+import { LobeAzureAI } from './azureai';
 import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeCloudflareAI, LobeCloudflareParams } from './cloudflare';
 import { LobeDeepSeekAI } from './deepseek';
-import { LobeDoubaoAI } from './doubao';
 import { LobeFireworksAI } from './fireworksai';
 import { LobeGiteeAI } from './giteeai';
 import { LobeGithubAI } from './github';
@@ -33,6 +33,7 @@ import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobeQwenAI } from './qwen';
+import { LobeSambaNovaAI } from './sambanova';
 import { LobeSenseNovaAI } from './sensenova';
 import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeSparkAI } from './spark';
@@ -51,6 +52,7 @@ import {
 } from './types';
 import { LobeUpstageAI } from './upstage';
 import { LobeVLLMAI } from './vllm';
+import { LobeVolcengineAI } from './volcengine';
 import { LobeWenxinAI } from './wenxin';
 import { LobeXAI } from './xai';
 import { LobeZeroOneAI } from './zeroone';
@@ -141,6 +143,7 @@ class AgentRuntime {
       ai360: Partial<ClientOptions>;
       anthropic: Partial<ClientOptions>;
       azure: { apiKey?: string; apiVersion?: string; baseURL?: string };
+      azureai: { apiKey?: string; apiVersion?: string; baseURL?: string };
       baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
       cloudflare: Partial<LobeCloudflareParams>;
@@ -167,6 +170,7 @@ class AgentRuntime {
       openrouter: Partial<ClientOptions>;
       perplexity: Partial<ClientOptions>;
       qwen: Partial<ClientOptions>;
+      sambanova: Partial<ClientOptions>;
       sensenova: Partial<ClientOptions>;
       siliconcloud: Partial<ClientOptions>;
       spark: Partial<ClientOptions>;
@@ -176,6 +180,7 @@ class AgentRuntime {
       togetherai: Partial<ClientOptions>;
       upstage: Partial<ClientOptions>;
       vllm: Partial<ClientOptions>;
+      volcengine: Partial<ClientOptions>;
       wenxin: Partial<ClientOptions>;
       xai: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
@@ -198,6 +203,11 @@ class AgentRuntime {
           params.azure?.apiKey,
           params.azure?.apiVersion,
         );
+        break;
+      }
+
+      case ModelProvider.AzureAI: {
+        runtimeModel = new LobeAzureAI(params.azureai);
         break;
       }
 
@@ -307,7 +317,7 @@ class AgentRuntime {
       }
 
       case ModelProvider.Novita: {
-        runtimeModel = new LobeNovitaAI(params.novita ?? {});
+        runtimeModel = new LobeNovitaAI(params.novita);
         break;
       }
 
@@ -317,7 +327,7 @@ class AgentRuntime {
       }
 
       case ModelProvider.Baichuan: {
-        runtimeModel = new LobeBaichuanAI(params.baichuan ?? {});
+        runtimeModel = new LobeBaichuanAI(params.baichuan);
         break;
       }
 
@@ -327,12 +337,12 @@ class AgentRuntime {
       }
 
       case ModelProvider.Ai360: {
-        runtimeModel = new LobeAi360AI(params.ai360 ?? {});
+        runtimeModel = new LobeAi360AI(params.ai360);
         break;
       }
 
       case ModelProvider.SiliconCloud: {
-        runtimeModel = new LobeSiliconCloudAI(params.siliconcloud ?? {});
+        runtimeModel = new LobeSiliconCloudAI(params.siliconcloud);
         break;
       }
 
@@ -372,12 +382,17 @@ class AgentRuntime {
       }
 
       case ModelProvider.Jina: {
-        runtimeModel = new LobeJinaAI(params.jina ?? {});
+        runtimeModel = new LobeJinaAI(params.jina);
+        break;
+      }
+
+      case ModelProvider.SambaNova: {
+        runtimeModel = new LobeSambaNovaAI(params.sambanova);
         break;
       }
 
       case ModelProvider.Cloudflare: {
-        runtimeModel = new LobeCloudflareAI(params.cloudflare ?? {});
+        runtimeModel = new LobeCloudflareAI(params.cloudflare);
         break;
       }
 
@@ -396,8 +411,9 @@ class AgentRuntime {
         break;
       }
 
+      case ModelProvider.Volcengine:
       case ModelProvider.Doubao: {
-        runtimeModel = new LobeDoubaoAI(params.doubao);
+        runtimeModel = new LobeVolcengineAI(params.volcengine || params.doubao);
         break;
       }
 

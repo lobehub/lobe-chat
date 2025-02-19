@@ -19,6 +19,24 @@
       "title": "API ключ"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Версия на API на Azure, следваща формата YYYY-MM-DD, вижте [най-новата версия](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Вземи списък",
+      "title": "Версия на API на Azure"
+    },
+    "endpoint": {
+      "desc": "Намерете крайна точка за инференция на моделите на Azure AI в прегледа на проекта на Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Крайна точка на Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Намерете API ключа в прегледа на проекта на Azure AI",
+      "placeholder": "Ключ на Azure",
+      "title": "Ключ"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Въведете AWS Access Key Id",
@@ -97,6 +115,7 @@
       "title": "Адрес на прокси"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Моля, изберете тип SDK",
       "title": "Формат на запитването"
     },
@@ -210,6 +229,11 @@
           "placeholder": "Моля, въведете името на модела за разполагане в Azure",
           "title": "Име на разполагане на модела"
         },
+        "deployName": {
+          "extra": "Това поле ще бъде използвано като ID на модела при изпращане на заявката",
+          "placeholder": "Моля, въведете действителното име или ID на разположението на модела",
+          "title": "Име на разположение на модела"
+        },
         "displayName": {
           "placeholder": "Моля, въведете показваното име на модела, например ChatGPT, GPT-4 и др.",
           "title": "Показвано име на модела"
@@ -297,6 +321,13 @@
     "deleteSuccess": "Изтриването е успешно",
     "tooltip": "Актуализиране на основната конфигурация на доставчика",
     "updateSuccess": "Актуализацията е успешна"
+  },
+  "vertexai": {
+    "apiKey": {
+      "desc": "Въведете вашите ключове за Vertex AI",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Ключове за Vertex AI"
+    }
   },
   "zeroone": {
     "title": "01.AI Зероуан Всичко"

@@ -132,11 +132,17 @@ export const getLLMConfig = () => {
       ENABLED_DOUBAO: z.boolean(),
       DOUBAO_API_KEY: z.string().optional(),
 
+      ENABLED_VOLCENGINE: z.boolean(),
+      VOLCENGINE_API_KEY: z.string().optional(),
+
       ENABLED_TENCENT_CLOUD: z.boolean(),
       TENCENT_CLOUD_API_KEY: z.string().optional(),
 
       ENABLED_JINA: z.boolean(),
       JINA_API_KEY: z.string().optional(),
+
+      ENABLED_SAMBANOVA: z.boolean(),
+      SAMBANOVA_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -157,6 +163,9 @@ export const getLLMConfig = () => {
 
       ENABLED_GOOGLE: !!process.env.GOOGLE_API_KEY,
       GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+
+      ENABLED_VOLCENGINE: !!process.env.VOLCENGINE_API_KEY,
+      VOLCENGINE_API_KEY: process.env.VOLCENGINE_API_KEY,
 
       ENABLED_PERPLEXITY: !!process.env.PERPLEXITY_API_KEY,
       PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY,
@@ -272,6 +281,9 @@ export const getLLMConfig = () => {
 
       ENABLED_JINA: !!process.env.JINA_API_KEY,
       JINA_API_KEY: process.env.JINA_API_KEY,
+
+      ENABLED_SAMBANOVA: !!process.env.SAMBANOVA_API_KEY,
+      SAMBANOVA_API_KEY: process.env.SAMBANOVA_API_KEY,
     },
   });
 };

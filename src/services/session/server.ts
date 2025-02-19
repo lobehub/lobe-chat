@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { lambdaClient } from '@/libs/trpc/client';
-import { useUserStore } from '@/store/user';
-import { authSelectors } from '@/store/user/selectors';
 
 import { ISessionService } from './type';
 
@@ -55,9 +52,6 @@ export class ServerService implements ISessionService {
   // TODO: Need to be fixed
   // @ts-ignore
   getSessionConfig: ISessionService['getSessionConfig'] = async (id) => {
-    const isLogin = authSelectors.isLogin(useUserStore.getState());
-    if (!isLogin) return DEFAULT_AGENT_CONFIG;
-
     return lambdaClient.agent.getAgentConfig.query({ sessionId: id });
   };
 

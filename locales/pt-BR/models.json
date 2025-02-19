@@ -47,6 +47,12 @@
   "Baichuan4-Turbo": {
     "description": "Modelo com a melhor capacidade do país, superando modelos estrangeiros em tarefas em chinês como enciclopédia, textos longos e criação de conteúdo. Também possui capacidades multimodais líderes da indústria, com excelente desempenho em várias avaliações de referência."
   },
+  "DeepSeek-R1": {
+    "description": "LLM eficiente de ponta, especializado em raciocínio, matemática e programação."
+  },
+  "DeepSeek-R1-Distill-Llama-70B": {
+    "description": "DeepSeek R1 — o modelo maior e mais inteligente do conjunto DeepSeek — foi destilado para a arquitetura Llama 70B. Com base em testes de benchmark e avaliações humanas, este modelo é mais inteligente do que o Llama 70B original, destacando-se especialmente em tarefas que exigem precisão matemática e factual."
+  },
   "DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "Modelo de destilação DeepSeek-R1 baseado no Qwen2.5-Math-1.5B, otimizado para desempenho de inferência através de aprendizado por reforço e dados de inicialização fria, modelo de código aberto que redefine os padrões de múltiplas tarefas."
   },
@@ -119,11 +125,35 @@
   "InternVL2.5-26B": {
     "description": "InternVL2.5-26B é um poderoso modelo de linguagem visual, que suporta processamento multimodal de imagens e textos, capaz de identificar com precisão o conteúdo da imagem e gerar descrições ou respostas relevantes."
   },
+  "Llama-3.2-11B-Vision-Instruct": {
+    "description": "Capacidade de raciocínio de imagem excepcional em imagens de alta resolução, adequada para aplicações de compreensão visual."
+  },
+  "Llama-3.2-90B-Vision-Instruct\t": {
+    "description": "Capacidade avançada de raciocínio de imagem para aplicações de agentes de compreensão visual."
+  },
   "LoRA/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct é um dos mais recentes modelos de linguagem de grande escala lançados pela Alibaba Cloud. Este modelo de 72B apresenta melhorias significativas em áreas como codificação e matemática. O modelo também oferece suporte multilíngue, abrangendo mais de 29 idiomas, incluindo chinês e inglês. O modelo teve melhorias significativas em seguir instruções, entender dados estruturados e gerar saídas estruturadas (especialmente JSON)."
   },
   "LoRA/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct é um dos mais recentes modelos de linguagem de grande escala lançados pela Alibaba Cloud. Este modelo de 7B apresenta melhorias significativas em áreas como codificação e matemática. O modelo também oferece suporte multilíngue, abrangendo mais de 29 idiomas, incluindo chinês e inglês. O modelo teve melhorias significativas em seguir instruções, entender dados estruturados e gerar saídas estruturadas (especialmente JSON)."
+  },
+  "Meta-Llama-3.1-405B-Instruct": {
+    "description": "Modelo de texto ajustado para instruções Llama 3.1, otimizado para casos de uso de diálogos multilíngues, apresentando desempenho superior em muitos modelos de chat de código aberto e fechados em benchmarks da indústria."
+  },
+  "Meta-Llama-3.1-70B-Instruct": {
+    "description": "Modelo de texto ajustado para instruções Llama 3.1, otimizado para casos de uso de diálogos multilíngues, apresentando desempenho superior em muitos modelos de chat de código aberto e fechados em benchmarks da indústria."
+  },
+  "Meta-Llama-3.1-8B-Instruct": {
+    "description": "Modelo de texto ajustado para instruções Llama 3.1, otimizado para casos de uso de diálogos multilíngues, apresentando desempenho superior em muitos modelos de chat de código aberto e fechados em benchmarks da indústria."
+  },
+  "Meta-Llama-3.2-1B-Instruct": {
+    "description": "Modelo de linguagem pequeno de ponta, com compreensão de linguagem, excelente capacidade de raciocínio e geração de texto."
+  },
+  "Meta-Llama-3.2-3B-Instruct": {
+    "description": "Modelo de linguagem pequeno de ponta, com compreensão de linguagem, excelente capacidade de raciocínio e geração de texto."
+  },
+  "Meta-Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 é o modelo de linguagem de código aberto multilíngue mais avançado da série Llama, oferecendo desempenho comparável ao modelo de 405B a um custo extremamente baixo. Baseado na estrutura Transformer, e aprimorado por meio de ajuste fino supervisionado (SFT) e aprendizado por reforço com feedback humano (RLHF) para aumentar a utilidade e a segurança. Sua versão ajustada para instruções é otimizada para diálogos multilíngues, superando muitos modelos de chat de código aberto e fechados em vários benchmarks da indústria. A data limite de conhecimento é dezembro de 2023."
   },
   "MiniMax-Text-01": {
     "description": "Na série de modelos MiniMax-01, fizemos inovações ousadas: pela primeira vez, implementamos em larga escala um mecanismo de atenção linear, tornando a arquitetura Transformer tradicional não mais a única opção. Este modelo possui um total de 456 bilhões de parâmetros, com 45,9 bilhões ativados em uma única vez. O desempenho geral do modelo é comparável aos melhores modelos internacionais, enquanto lida eficientemente com contextos de até 4 milhões de tokens, 32 vezes mais que o GPT-4o e 20 vezes mais que o Claude-3.5-Sonnet."
@@ -340,9 +370,6 @@
   },
   "abab6.5t-chat": {
     "description": "Otimizado para cenários de diálogo de personagens em chinês, oferecendo capacidade de geração de diálogos fluentes e que respeitam os hábitos de expressão em chinês."
-  },
-  "abab7-chat-preview": {
-    "description": "Em comparação com a série de modelos abab6.5, houve uma melhoria significativa nas habilidades em textos longos, matemática, escrita, entre outros."
   },
   "accounts/fireworks/models/deepseek-r1": {
     "description": "DeepSeek-R1 é um modelo de linguagem grande de última geração, otimizado com aprendizado por reforço e dados de inicialização a frio, apresentando desempenho excepcional em raciocínio, matemática e programação."
@@ -578,6 +605,9 @@
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek 67B é um modelo avançado treinado para diálogos de alta complexidade."
   },
+  "deepseek-ai/deepseek-r1": {
+    "description": "LLM avançado e eficiente, especializado em raciocínio, matemática e programação."
+  },
   "deepseek-ai/deepseek-vl2": {
     "description": "DeepSeek-VL2 é um modelo de linguagem visual baseado no DeepSeekMoE-27B, desenvolvido como um especialista misto (MoE), utilizando uma arquitetura de MoE com ativação esparsa, alcançando desempenho excepcional com apenas 4,5 bilhões de parâmetros ativados. Este modelo se destaca em várias tarefas, incluindo perguntas visuais, reconhecimento óptico de caracteres, compreensão de documentos/tabelas/gráficos e localização visual."
   },
@@ -628,6 +658,12 @@
   },
   "deepseek/deepseek-chat": {
     "description": "Um novo modelo de código aberto que integra capacidades gerais e de codificação, não apenas preservando a capacidade de diálogo geral do modelo Chat original e a poderosa capacidade de processamento de código do modelo Coder, mas também alinhando-se melhor às preferências humanas. Além disso, o DeepSeek-V2.5 também alcançou melhorias significativas em várias áreas, como tarefas de escrita e seguimento de instruções."
+  },
+  "deepseek/deepseek-r1": {
+    "description": "DeepSeek-R1 melhorou significativamente a capacidade de raciocínio do modelo com muito poucos dados rotulados. Antes de fornecer a resposta final, o modelo gera uma cadeia de pensamento para aumentar a precisão da resposta final."
+  },
+  "deepseek/deepseek-r1:free": {
+    "description": "DeepSeek-R1 melhorou significativamente a capacidade de raciocínio do modelo com muito poucos dados rotulados. Antes de fornecer a resposta final, o modelo gera uma cadeia de pensamento para aumentar a precisão da resposta final."
   },
   "emohaa": {
     "description": "O Emohaa é um modelo psicológico com capacidade de consultoria profissional, ajudando os usuários a entender questões emocionais."
@@ -689,6 +725,9 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro é o modelo de IA de alto desempenho do Google, projetado para expansão em uma ampla gama de tarefas."
   },
+  "gemini-1.5-flash": {
+    "description": "Gemini 1.5 Flash é o mais recente modelo de IA multimodal do Google, com capacidade de processamento rápido, suportando entradas de texto, imagem e vídeo, adequado para a escalabilidade eficiente de diversas tarefas."
+  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 é um modelo multimodal eficiente, suportando a expansão de aplicações amplas."
   },
@@ -728,23 +767,14 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash oferece funcionalidades e melhorias de próxima geração, incluindo velocidade excepcional, uso nativo de ferramentas, geração multimodal e uma janela de contexto de 1M tokens."
   },
-  "gemini-2.0-flash-exp": {
-    "description": "O Gemini 2.0 Flash Exp é o mais recente modelo de IA multiodal experimental do Google, com recursos de próxima geração, velocidade extraordinária, chamadas nativas de ferramentas e geração multimodal."
-  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Um modelo Gemini 2.0 Flash otimizado para custo-benefício e baixa latência."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "O Gemini 2.0 Flash Exp é o mais recente modelo experimental de IA multimodal do Google, com características de próxima geração, velocidade excepcional, chamadas nativas de ferramentas e geração multimodal."
   },
-  "gemini-2.0-flash-thinking-exp-1219": {
-    "description": "Gemini 2.0 Flash Exp é o mais recente modelo de IA multimodal experimental do Google, com recursos de próxima geração, velocidade excepcional, chamadas nativas de ferramentas e geração multimodal."
-  },
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental é o mais recente modelo de IA multimodal experimental do Google, apresentando melhorias de qualidade em comparação com versões anteriores, especialmente em conhecimento mundial, código e contextos longos."
-  },
-  "gemini-exp-1206": {
-    "description": "Gemini Exp 1206 é o mais recente modelo experimental multimodal da Google, apresentando uma melhoria na qualidade em comparação com versões anteriores."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B é adequado para o processamento de tarefas de pequeno a médio porte, combinando custo e eficiência."
@@ -821,11 +851,17 @@
   "google/gemini-pro-1.5": {
     "description": "Gemini 1.5 Pro combina as mais recentes tecnologias de otimização, proporcionando uma capacidade de processamento de dados multimodais mais eficiente."
   },
+  "google/gemma-2-27b": {
+    "description": "Gemma 2 é um modelo eficiente lançado pelo Google, abrangendo uma variedade de cenários de aplicação, desde pequenos aplicativos até processamento de dados complexos."
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 continua a filosofia de design leve e eficiente."
   },
   "google/gemma-2-2b-it": {
     "description": "Modelo leve de ajuste de instruções do Google."
+  },
+  "google/gemma-2-9b": {
+    "description": "Gemma 2 é um modelo eficiente lançado pelo Google, abrangendo uma variedade de cenários de aplicação, desde pequenos aplicativos até processamento de dados complexos."
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 é uma série de modelos de texto de código aberto leve da Google."
@@ -844,9 +880,6 @@
   },
   "gpt-3.5-turbo-1106": {
     "description": "O GPT 3.5 Turbo é adequado para uma variedade de tarefas de geração e compreensão de texto, atualmente apontando para gpt-3.5-turbo-0125."
-  },
-  "gpt-3.5-turbo-16k": {
-    "description": "GPT 3.5 Turbo 16k, um modelo de geração de texto de alta capacidade, adequado para tarefas complexas."
   },
   "gpt-3.5-turbo-instruct": {
     "description": "O GPT 3.5 Turbo é adequado para uma variedade de tarefas de geração e compreensão de texto, atualmente apontando para gpt-3.5-turbo-0125."
@@ -998,6 +1031,12 @@
   "internlm3-latest": {
     "description": "Nossa mais recente série de modelos, com desempenho de inferência excepcional, liderando entre modelos de código aberto de mesma escala. Aponta por padrão para nossa mais recente série de modelos InternLM3."
   },
+  "jina-deepsearch-v1": {
+    "description": "A busca profunda combina pesquisa na web, leitura e raciocínio para realizar investigações abrangentes. Você pode vê-la como um agente que aceita suas tarefas de pesquisa - ela realizará uma busca extensa e passará por várias iterações antes de fornecer uma resposta. Esse processo envolve pesquisa contínua, raciocínio e resolução de problemas sob diferentes ângulos. Isso é fundamentalmente diferente de gerar respostas diretamente a partir de dados pré-treinados de grandes modelos padrão e de sistemas RAG tradicionais que dependem de buscas superficiais únicas."
+  },
+  "kimi-latest": {
+    "description": "O produto assistente inteligente Kimi utiliza o mais recente modelo Kimi, que pode conter recursos ainda não estáveis. Suporta compreensão de imagens e seleciona automaticamente o modelo de cobrança de 8k/32k/128k com base no comprimento do contexto da solicitação."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM é um modelo de linguagem experimental e específico para tarefas, treinado para atender aos princípios da ciência da aprendizagem, podendo seguir instruções sistemáticas em cenários de ensino e aprendizagem, atuando como um mentor especialista, entre outros."
   },
@@ -1139,6 +1178,9 @@
   "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
     "description": "O modelo Llama 3.1 Turbo 405B oferece suporte a um contexto de capacidade extremamente grande para processamento de grandes volumes de dados, destacando-se em aplicações de inteligência artificial em larga escala."
   },
+  "meta-llama/Meta-Llama-3.1-70B": {
+    "description": "Llama 3.1 é o modelo líder lançado pela Meta, suportando até 405B de parâmetros, aplicável em diálogos complexos, tradução multilíngue e análise de dados."
+  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct": {
     "description": "LLaMA 3.1 70B oferece suporte a diálogos multilíngues de forma eficiente."
   },
@@ -1195,6 +1237,30 @@
   },
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 é um modelo de linguagem de grande escala (LLM) aberto voltado para desenvolvedores, pesquisadores e empresas, projetado para ajudá-los a construir, experimentar e expandir suas ideias de IA geradora de forma responsável. Como parte de um sistema de base para inovação da comunidade global, é ideal para dispositivos de borda com capacidade de computação e recursos limitados, além de tempos de treinamento mais rápidos."
+  },
+  "meta/llama-3.1-405b-instruct": {
+    "description": "LLM avançado, suporta geração de dados sintéticos, destilação de conhecimento e raciocínio, adequado para chatbots, programação e tarefas de domínio específico."
+  },
+  "meta/llama-3.1-70b-instruct": {
+    "description": "Capacita diálogos complexos, com excelente compreensão de contexto, capacidade de raciocínio e geração de texto."
+  },
+  "meta/llama-3.1-8b-instruct": {
+    "description": "Modelo de ponta avançado, com compreensão de linguagem, excelente capacidade de raciocínio e geração de texto."
+  },
+  "meta/llama-3.2-11b-vision-instruct": {
+    "description": "Modelo de visão-linguagem de ponta, especializado em raciocínio de alta qualidade a partir de imagens."
+  },
+  "meta/llama-3.2-1b-instruct": {
+    "description": "Modelo de linguagem de ponta avançado e compacto, com compreensão de linguagem, excelente capacidade de raciocínio e geração de texto."
+  },
+  "meta/llama-3.2-3b-instruct": {
+    "description": "Modelo de linguagem de ponta avançado e compacto, com compreensão de linguagem, excelente capacidade de raciocínio e geração de texto."
+  },
+  "meta/llama-3.2-90b-vision-instruct": {
+    "description": "Modelo de visão-linguagem de ponta, especializado em raciocínio de alta qualidade a partir de imagens."
+  },
+  "meta/llama-3.3-70b-instruct": {
+    "description": "Modelo LLM avançado, especializado em raciocínio, matemática, conhecimento geral e chamadas de função."
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 é um modelo de linguagem fornecido pela Microsoft AI, que se destaca em diálogos complexos, multilíngue, raciocínio e assistentes inteligentes."
@@ -1286,11 +1352,20 @@
   "moonshot-v1-8k-vision-preview": {
     "description": "O modelo visual Kimi (incluindo moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview, etc.) é capaz de entender o conteúdo das imagens, incluindo texto, cores e formas dos objetos."
   },
+  "moonshot-v1-auto": {
+    "description": "O Moonshot V1 Auto pode escolher o modelo adequado com base na quantidade de Tokens ocupados pelo contexto atual."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B é uma versão aprimorada do Nous Hermes 2, contendo os conjuntos de dados mais recentes desenvolvidos internamente."
   },
   "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
     "description": "Llama 3.1 Nemotron 70B é um modelo de linguagem em larga escala personalizado pela NVIDIA, projetado para aumentar a utilidade das respostas geradas pelo LLM em relação às consultas dos usuários. Este modelo se destacou em benchmarks como Arena Hard, AlpacaEval 2 LC e GPT-4-Turbo MT-Bench, ocupando o primeiro lugar em todos os três benchmarks de alinhamento automático até 1º de outubro de 2024. O modelo foi treinado usando RLHF (especialmente REINFORCE), Llama-3.1-Nemotron-70B-Reward e HelpSteer2-Preference prompts, com base no modelo Llama-3.1-70B-Instruct."
+  },
+  "nvidia/llama-3.1-nemotron-51b-instruct": {
+    "description": "Modelo de linguagem único, oferecendo precisão e eficiência incomparáveis."
+  },
+  "nvidia/llama-3.1-nemotron-70b-instruct": {
+    "description": "Llama-3.1-Nemotron-70B-Instruct é um modelo de linguagem de grande porte personalizado pela NVIDIA, projetado para melhorar a utilidade das respostas geradas pelo LLM."
   },
   "o1": {
     "description": "Focado em raciocínio avançado e resolução de problemas complexos, incluindo tarefas matemáticas e científicas. Muito adequado para aplicativos que exigem compreensão profunda do contexto e gerenciamento de fluxos de trabalho."
@@ -1406,6 +1481,15 @@
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2 é uma nova série de grandes modelos de linguagem, com capacidades de compreensão e geração mais robustas."
   },
+  "qwen/qwen2.5-7b-instruct": {
+    "description": "LLM voltado para chinês e inglês, focado em linguagem, programação, matemática, raciocínio e outras áreas."
+  },
+  "qwen/qwen2.5-coder-32b-instruct": {
+    "description": "LLM avançado, suporta geração de código, raciocínio e correção, abrangendo linguagens de programação populares."
+  },
+  "qwen/qwen2.5-coder-7b-instruct": {
+    "description": "Modelo de código de médio porte poderoso, suporta comprimento de contexto de 32K, especializado em programação multilíngue."
+  },
   "qwen2": {
     "description": "Qwen2 é a nova geração de modelo de linguagem em larga escala da Alibaba, oferecendo desempenho excepcional para atender a diversas necessidades de aplicação."
   },
@@ -1492,6 +1576,9 @@
   },
   "sonar-reasoning": {
     "description": "Novo produto API suportado pelo modelo de raciocínio da DeepSeek."
+  },
+  "sonar-reasoning-pro": {
+    "description": "Um novo produto de API suportado pelo modelo de raciocínio DeepSeek."
   },
   "step-1-128k": {
     "description": "Equilibra desempenho e custo, adequado para cenários gerais."

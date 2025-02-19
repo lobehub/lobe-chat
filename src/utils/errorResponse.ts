@@ -12,10 +12,16 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
       return 401;
     }
 
+    case AgentRuntimeErrorType.ExceededContextWindow:
+    case ChatErrorType.SystemTimeNotMatchError: {
+      return 400;
+    }
+
     case AgentRuntimeErrorType.LocationNotSupportError: {
       return 403;
     }
 
+    case AgentRuntimeErrorType.InsufficientQuota:
     case AgentRuntimeErrorType.QuotaLimitReached: {
       return 429;
     }
@@ -25,8 +31,7 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
       return 470;
     }
 
-    case AgentRuntimeErrorType.ProviderBizError:
-    case AgentRuntimeErrorType.OpenAIBizError: {
+    case AgentRuntimeErrorType.ProviderBizError: {
       return 471;
     }
 
