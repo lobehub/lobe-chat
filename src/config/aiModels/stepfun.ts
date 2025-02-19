@@ -1,5 +1,7 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
+// https://platform.stepfun.com/docs/pricing/details
+
 const stepfunChatModels: AIChatModelCard[] = [
   {
     abilities: {
