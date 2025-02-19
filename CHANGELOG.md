@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.61.5](https://github.com/lobehub/lobe-chat/compare/v1.61.4...v1.61.5)
+
+<sup>Released on **2025-02-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Show sso providers for next-auth in profile page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Show sso providers for next-auth in profile page, closes [#5303](https://github.com/lobehub/lobe-chat/issues/5303) ([dd61bce](https://github.com/lobehub/lobe-chat/commit/dd61bce))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.61.4](https://github.com/lobehub/lobe-chat/compare/v1.61.3...v1.61.4)
 
 <sup>Released on **2025-02-18**</sup>

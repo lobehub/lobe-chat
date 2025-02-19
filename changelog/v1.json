@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Show sso providers for next-auth in profile page."]
+    },
+    "date": "2025-02-19",
+    "version": "1.61.5"
+  },
+  {
+    "children": {
       "improvements": ["Improve perplexity models."]
     },
     "date": "2025-02-18",
