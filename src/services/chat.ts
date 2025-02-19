@@ -146,11 +146,9 @@ export function initializeWithClientStore(provider: string, payload: any) {
    * payload -> providerAuthPayload -> commonOptions
    */
   return AgentRuntime.initializeWithProviderOptions(provider, {
-    [provider]: {
-      ...commonOptions,
-      ...providerAuthPayload,
-      ...payload,
-    },
+    ...commonOptions,
+    ...providerAuthPayload,
+    ...payload,
   });
 }
 
