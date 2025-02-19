@@ -57,10 +57,16 @@ const Perplexity: ModelProviderCard = {
     placeholder: 'https://api.perplexity.ai',
   },
   settings: {
+    // perplexity doesn't support CORS
+    disableBrowserRequest: true,
     proxyUrl: {
       placeholder: 'https://api.perplexity.ai',
     },
     sdkType: 'openai',
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
   },
   url: 'https://www.perplexity.ai',
 };

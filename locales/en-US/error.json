@@ -69,7 +69,9 @@
     "524": "Sorry, the server timed out while waiting for a response, possibly due to a slow reply. Please try again later.",
     "AgentRuntimeError": "Lobe language model runtime execution error. Please troubleshoot or retry based on the following information.",
     "ConnectionCheckFailed": "The request returned empty. Please check if the API proxy address does not end with `/v1`.",
+    "ExceededContextWindow": "The current request content exceeds the length that the model can handle. Please reduce the amount of content and try again.",
     "FreePlanLimit": "You are currently a free user and cannot use this feature. Please upgrade to a paid plan to continue using it.",
+    "InsufficientQuota": "Sorry, the quota for this key has been reached. Please check your account balance or increase the key quota and try again.",
     "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
     "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
@@ -81,7 +83,6 @@
     "NoOpenAIAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
     "OllamaBizError": "Error requesting Ollama service, please troubleshoot or retry based on the following information",
     "OllamaServiceUnavailable": "Ollama service is unavailable. Please check if Ollama is running properly or if the cross-origin configuration of Ollama is set correctly.",
-    "OpenAIBizError": "Error requesting OpenAI service, please troubleshoot or retry based on the following information",
     "PermissionDenied": "Sorry, you do not have permission to access this service. Please check if your key has the necessary access rights.",
     "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
     "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
@@ -99,7 +100,8 @@
     "ProviderBizError": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information",
     "QuotaLimitReached": "We apologize, but the current token usage or number of requests has reached the quota limit for this key. Please increase the quota for this key or try again later.",
     "StreamChunkError": "Error parsing the message chunk of the streaming request. Please check if the current API interface complies with the standard specifications, or contact your API provider for assistance.",
-    "SubscriptionPlanLimit": "Your subscription limit has been reached, and you cannot use this feature. Please upgrade to a higher plan or purchase a resource pack to continue using it.",
+    "SubscriptionPlanLimit": "Your subscription points have been exhausted, and you cannot use this feature. Please upgrade to a higher plan or configure a custom model API to continue using it.",
+    "SystemTimeNotMatchError": "Sorry, your system time does not match the server. Please check your system time and try again.",
     "UnknownChatFetchError": "Sorry, an unknown request error occurred. Please check the information below or try again."
   },
   "stt": {

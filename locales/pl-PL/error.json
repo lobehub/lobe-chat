@@ -69,7 +69,9 @@
     "524": "Przykro nam, serwer przekroczył czas oczekiwania na odpowiedź, może to być spowodowane zbyt wolną odpowiedzią, proszę spróbować ponownie później",
     "AgentRuntimeError": "Wystąpił błąd wykonania modelu językowego Lobe, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
     "ConnectionCheckFailed": "Odpowiedź jest pusta. Sprawdź, czy na końcu adresu proxy API nie brakuje `/v1`",
+    "ExceededContextWindow": "Aktualna zawartość żądania przekracza długość, którą model może przetworzyć. Proszę zmniejszyć ilość treści i spróbować ponownie.",
     "FreePlanLimit": "Jesteś obecnie użytkownikiem darmowej wersji, nie możesz korzystać z tej funkcji. Proszę uaktualnić do planu płatnego, aby kontynuować korzystanie.",
+    "InsufficientQuota": "Przykro nam, limit dla tego klucza został osiągnięty. Proszę sprawdzić saldo konta lub zwiększyć limit klucza i spróbować ponownie.",
     "InvalidAccessCode": "Nieprawidłowy kod dostępu: Hasło jest nieprawidłowe lub puste. Proszę wprowadzić poprawne hasło dostępu lub dodać niestandardowy klucz API.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
     "InvalidClerkUser": "Przepraszamy, nie jesteś obecnie zalogowany. Proszę najpierw zalogować się lub zarejestrować, aby kontynuować.",
@@ -81,7 +83,6 @@
     "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
     "OllamaServiceUnavailable": "Usługa Ollama jest niedostępna. Sprawdź, czy Ollama działa poprawnie, lub czy poprawnie skonfigurowano ustawienia przekraczania domeny Ollama",
-    "OpenAIBizError": "Wystąpił błąd usługi OpenAI, proszę sprawdzić poniższe informacje lub spróbować ponownie",
     "PermissionDenied": "Przykro nam, nie masz uprawnień do dostępu do tej usługi. Proszę sprawdzić, czy Twój klucz ma odpowiednie uprawnienia dostępu.",
     "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
     "PluginApiParamsError": "Przepraszamy, walidacja parametrów wejściowych żądanej wtyczki nie powiodła się. Proszę sprawdź, czy parametry wejściowe są zgodne z informacjami opisującymi API",
@@ -99,7 +100,8 @@
     "ProviderBizError": "Wystąpił błąd usługi {{provider}}, proszę sprawdzić poniższe informacje lub spróbować ponownie",
     "QuotaLimitReached": "Przykro nam, bieżące zużycie tokenów lub liczba żądań osiągnęła limit kwoty dla tego klucza. Proszę zwiększyć limit kwoty dla tego klucza lub spróbować ponownie później.",
     "StreamChunkError": "Błąd analizy bloku wiadomości w żądaniu strumieniowym. Proszę sprawdzić, czy aktualny interfejs API jest zgodny z normami, lub skontaktować się z dostawcą API w celu uzyskania informacji.",
-    "SubscriptionPlanLimit": "Wykorzystałeś limit swojego abonamentu i nie możesz korzystać z tej funkcji. Proszę uaktualnić do wyższego planu lub zakupić dodatkowy pakiet zasobów, aby kontynuować korzystanie.",
+    "SubscriptionPlanLimit": "Twoje punkty subskrypcyjne zostały wyczerpane, nie możesz korzystać z tej funkcji. Proszę zaktualizować do wyższego planu lub skonfigurować API modelu niestandardowego, aby kontynuować korzystanie.",
+    "SystemTimeNotMatchError": "Przykro nam, czas systemowy nie zgadza się z czasem serwera. Proszę sprawdzić czas systemowy i spróbować ponownie.",
     "UnknownChatFetchError": "Przykro nam, wystąpił nieznany błąd żądania. Proszę sprawdzić poniższe informacje lub spróbować ponownie."
   },
   "stt": {

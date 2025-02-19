@@ -27,6 +27,10 @@ export const LobeMoonshotAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
+    const functionCallKeywords = ['moonshot-v1', 'kimi-latest'];
+
+    const visionKeywords = ['kimi-latest', 'vision'];
+
     const modelsPage = (await client.models.list()) as any;
     const modelList: MoonshotModelCard[] = modelsPage.data;
 
@@ -40,11 +44,16 @@ export const LobeMoonshotAI = LobeOpenAICompatibleFactory({
           contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
           displayName: knownModel?.displayName ?? undefined,
           enabled: knownModel?.enabled || false,
-          functionCall: knownModel?.abilities?.functionCall || false,
+          functionCall:
+            functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: model.id,
           reasoning: knownModel?.abilities?.reasoning || false,
           vision:
-            model.id.toLowerCase().includes('vision') || knownModel?.abilities?.vision || false,
+            visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

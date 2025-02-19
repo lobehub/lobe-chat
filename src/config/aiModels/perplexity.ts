@@ -7,9 +7,22 @@ const perplexityChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 127_072,
     description: '由 DeepSeek 推理模型提供支持的新 API 产品。',
+    displayName: 'Sonar Reasoning Pro',
+    enabled: true,
+    id: 'sonar-reasoning-pro',
+    maxOutput: 8192,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 127_072,
+    description: '由 DeepSeek 推理模型提供支持的新 API 产品。',
     displayName: 'Sonar Reasoning',
     enabled: true,
     id: 'sonar-reasoning',
+    maxOutput: 8192,
     type: 'chat',
   },
   {
