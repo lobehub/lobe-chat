@@ -111,8 +111,8 @@
     }
   },
   "Thinking": {
-    "thinking": "Deep in thought...",
-    "thought": "Deeply thought (took {{duration}} seconds)",
-    "thoughtWithDuration": "Deeply thought"
+    "thinking": "Deep Thinking...",
+    "thought": "Deeply Thought (in {{duration}} seconds)",
+    "thoughtWithDuration": "Deeply Thought"
   }
 }
