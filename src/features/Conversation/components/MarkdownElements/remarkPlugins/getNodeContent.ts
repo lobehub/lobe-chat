@@ -8,7 +8,9 @@ const processNode = (node: any): string => {
   }
 
   if (node.type === 'link') {
-    return `[${processNode(node.children[0])}](${node.url})`;
+    const text = node.children?.[0] ? processNode(node.children?.[0]) : '';
+
+    return `[${text}](${node.url})`;
   }
 
   // 处理带有子节点的容器

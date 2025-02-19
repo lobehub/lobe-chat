@@ -394,64 +394,110 @@ describe('treeNodeToString', () => {
 2. 用数学归纳法证明你的猜想。`);
   });
 
-  it('with url', () => {
-    const nodes = [
-      {
-        type: 'paragraph',
-        children: [
-          {
-            type: 'link',
-            title: null,
-            url: 'citation-1',
-            children: [
-              {
-                type: 'text',
-                value: '#citation-1',
-                position: {
-                  start: {
-                    line: 5,
-                    column: 26,
-                    offset: 78,
-                  },
-                  end: {
-                    line: 5,
-                    column: 37,
-                    offset: 89,
+  describe('link node', () => {
+    it('with url', () => {
+      const nodes = [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'link',
+              title: null,
+              url: 'citation-1',
+              children: [
+                {
+                  type: 'text',
+                  value: '#citation-1',
+                  position: {
+                    start: {
+                      line: 5,
+                      column: 26,
+                      offset: 78,
+                    },
+                    end: {
+                      line: 5,
+                      column: 37,
+                      offset: 89,
+                    },
                   },
                 },
-              },
-            ],
-            position: {
-              start: {
-                line: 5,
-                column: 25,
-                offset: 77,
-              },
-              end: {
-                line: 5,
-                column: 50,
-                offset: 102,
+              ],
+              position: {
+                start: {
+                  line: 5,
+                  column: 25,
+                  offset: 77,
+                },
+                end: {
+                  line: 5,
+                  column: 50,
+                  offset: 102,
+                },
               },
             },
-          },
-        ],
-        position: {
-          start: {
-            line: 5,
-            column: 1,
-            offset: 53,
-          },
-          end: {
-            line: 5,
-            column: 220,
-            offset: 272,
+          ],
+          position: {
+            start: {
+              line: 5,
+              column: 1,
+              offset: 53,
+            },
+            end: {
+              line: 5,
+              column: 220,
+              offset: 272,
+            },
           },
         },
-      },
-    ];
+      ];
 
-    const result = treeNodeToString(nodes as Parent[]);
+      const result = treeNodeToString(nodes as Parent[]);
 
-    expect(result).toEqual(`[#citation-1](citation-1)`);
+      expect(result).toEqual(`[#citation-1](citation-1)`);
+    });
+
+    it('handle error case', () => {
+      const nodes = [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'link',
+              title: null,
+              url: 'citation-1',
+              children: [],
+              position: {
+                start: {
+                  line: 5,
+                  column: 25,
+                  offset: 77,
+                },
+                end: {
+                  line: 5,
+                  column: 50,
+                  offset: 102,
+                },
+              },
+            },
+          ],
+          position: {
+            start: {
+              line: 5,
+              column: 1,
+              offset: 53,
+            },
+            end: {
+              line: 5,
+              column: 220,
+              offset: 272,
+            },
+          },
+        },
+      ];
+
+      const result = treeNodeToString(nodes as Parent[]);
+
+      expect(result).toEqual(`[](citation-1)`);
+    });
   });
 });
