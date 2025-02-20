@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix a feature flag."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix message roles for specific Azure OpenAI models."]
     },
     "date": "2025-02-20",
