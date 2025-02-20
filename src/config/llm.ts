@@ -15,6 +15,10 @@ export const getLLMConfig = () => {
       AZURE_API_VERSION: z.string().optional(),
       AZURE_ENDPOINT: z.string().optional(),
 
+      ENABLED_AZUREAI: z.boolean(),
+      AZUREAI_ENDPOINT: z.string().optional(),
+      AZUREAI_ENDPOINT_KEY: z.string().optional(),
+
       ENABLED_ZHIPU: z.boolean(),
       ZHIPU_API_KEY: z.string().optional(),
 
@@ -154,6 +158,10 @@ export const getLLMConfig = () => {
       AZURE_API_KEY: process.env.AZURE_API_KEY,
       AZURE_API_VERSION: process.env.AZURE_API_VERSION,
       AZURE_ENDPOINT: process.env.AZURE_ENDPOINT,
+
+      ENABLED_AZUREAI: !!process.env.AZUREAI_ENDPOINT_KEY,
+      AZUREAI_ENDPOINT_KEY: process.env.AZUREAI_ENDPOINT_KEY,
+      AZUREAI_ENDPOINT: process.env.AZUREAI_ENDPOINT,
 
       ENABLED_ZHIPU: !!process.env.ZHIPU_API_KEY,
       ZHIPU_API_KEY: process.env.ZHIPU_API_KEY,
