@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "De API-versie van Azure, volgens het formaat YYYY-MM-DD. Raadpleeg de [laatste versie](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Lijst ophalen",
+      "title": "Azure API-versie"
+    },
+    "endpoint": {
+      "desc": "Vind het Azure AI-model inferentie-eindpunt in het overzicht van het Azure AI-project",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI-eindpunt"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Vind de API-sleutel in het overzicht van het Azure AI-project",
+      "placeholder": "Azure-sleutel",
+      "title": "Sleutel"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Voer AWS Access Key Id in",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Vul je API-sleutel in",
-      "required": "Vul je API-sleutel in",
       "title": "API-sleutel"
     },
     "basicTitle": "Basisinformatie",
@@ -94,10 +111,11 @@
       "title": "Naam van de provider"
     },
     "proxyUrl": {
-      "placeholder": "Vul je aanvraagadres in, als je dit niet invult, wordt het overeenkomstige aanvraagadres van de SDK gebruikt",
+      "required": "Vul het proxyadres in",
       "title": "Proxy-adres"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Selecteer het SDK-type",
       "title": "Aanvraagformaat"
     },
@@ -154,30 +172,6 @@
       "desc": "Moet http(s):// bevatten, kan leeg gelaten worden als lokaal niet specifiek opgegeven",
       "title": "Interface Proxyadres"
     },
-    "setup": {
-      "cors": {
-        "description": "Vanwege beveiligingsbeperkingen in de browser moet je CORS-configuratie voor Ollama instellen om het correct te kunnen gebruiken.",
-        "linux": {
-          "env": "Voeg `Environment` toe onder de [Service] sectie en voeg de OLLAMA_ORIGINS omgevingsvariabele toe:",
-          "reboot": "Herlaad systemd en herstart Ollama",
-          "systemd": "Roep systemd aan om de ollama service te bewerken:"
-        },
-        "macos": "Open de 'Terminal' applicatie, plak de volgende opdracht en druk op enter om uit te voeren",
-        "reboot": "Herstart de Ollama service na voltooiing",
-        "title": "Configureer Ollama voor cross-origin toegang",
-        "windows": "Op Windows, klik op 'Configuratiescherm', ga naar systeemomgevingsvariabelen bewerken. Maak een nieuwe omgevingsvariabele met de naam 'OLLAMA_ORIGINS' voor je gebruikersaccount, met de waarde *, en klik op 'OK/Toepassen' om op te slaan"
-      },
-      "install": {
-        "description": "Zorg ervoor dat je Ollama hebt ingeschakeld. Als je Ollama nog niet hebt gedownload, ga dan naar de officiële website <1>om te downloaden</1>",
-        "docker": "Als je de voorkeur geeft aan Docker, biedt Ollama ook een officiële Docker-image aan, die je kunt ophalen met de volgende opdracht:",
-        "linux": {
-          "command": "Installeer met de volgende opdracht:",
-          "manual": "Of je kunt de <1>Linux handmatige installatiehandleiding</1> raadplegen voor een handmatige installatie"
-        },
-        "title": "Installeer en start de Ollama applicatie lokaal",
-        "windowsTab": "Windows (previewversie)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "Annuleer download",
@@ -198,6 +192,7 @@
       },
       "baseURL": {
         "desc": "Moet http(s):// bevatten",
+        "invalid": "Voer een geldige URL in",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "API-proxy-adres"
       },
@@ -234,6 +229,11 @@
           "placeholder": "Voer de modelimplementatienaam in Azure in",
           "title": "Modelimplementatienaam"
         },
+        "deployName": {
+          "extra": "Dit veld wordt als model-ID verzonden bij het indienen van een verzoek",
+          "placeholder": "Voer de naam of ID van het daadwerkelijk gedeployde model in",
+          "title": "Modeldeploynaam"
+        },
         "displayName": {
           "placeholder": "Voer de weergavenaam van het model in, bijvoorbeeld ChatGPT, GPT-4, enz.",
           "title": "Weergavenaam van het model"
@@ -252,6 +252,10 @@
           "title": "Model ID"
         },
         "modalTitle": "Configuratie van aangepast model",
+        "reasoning": {
+          "extra": "Deze configuratie schakelt alleen de mogelijkheid voor diepgaand denken van het model in. Het specifieke effect hangt volledig af van het model zelf, test zelf of dit model in staat is tot bruikbaar diepgaand denken.",
+          "title": "Ondersteuning voor diepgaand denken"
+        },
         "tokens": {
           "extra": "Stel het maximale aantal tokens in dat door het model wordt ondersteund",
           "title": "Maximale contextvenster",
@@ -295,6 +299,11 @@
         "latestTime": "Laatste update tijd: {{time}}",
         "noLatestTime": "Lijst nog niet opgehaald"
       },
+      "resetAll": {
+        "conform": "Weet je zeker dat je alle wijzigingen van het huidige model wilt resetten? Na de reset zal de huidige modellenlijst terugkeren naar de standaardstatus",
+        "success": "Resetten geslaagd",
+        "title": "Reset alle wijzigingen"
+      },
       "search": "Zoek modellen...",
       "searchResult": "Gevonden {{count}} modellen",
       "title": "Modellenlijst",
@@ -313,24 +322,11 @@
     "tooltip": "Werk basisconfiguratie van provider bij",
     "updateSuccess": "Bijwerking geslaagd"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Vul de Access Key van het Baidu Qianfan-platform in",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Test of de AccessKey / SecretAccess correct is ingevuld"
-    },
-    "secretKey": {
-      "desc": "Vul de Secret Key van het Baidu Qianfan-platform in",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Aangepaste servicegebied",
-      "description": "Voer je AccessKey / SecretKey in om de sessie te starten. De applicatie zal je authenticatie-instellingen niet opslaan",
-      "title": "Gebruik aangepaste Wenxin Yiyan-authenticatie-informatie"
+  "vertexai": {
+    "apiKey": {
+      "desc": "Vul je Vertex AI-sleutels in",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI-sleutels"
     }
   },
   "zeroone": {

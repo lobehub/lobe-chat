@@ -69,6 +69,11 @@ export interface LobeAgentChatConfig {
   enableMaxTokens?: boolean;
 
   /**
+   * 自定义推理强度
+   */
+  enableReasoningEffort?: boolean;
+
+  /**
    * 历史消息条数
    */
   historyCount?: number;
@@ -82,6 +87,7 @@ export const AgentChatConfigSchema = z.object({
   enableCompressHistory: z.boolean().optional(),
   enableHistoryCount: z.boolean().optional(),
   enableMaxTokens: z.boolean().optional(),
+  enableReasoningEffort: z.boolean().optional(),
   historyCount: z.number().optional(),
 });
 

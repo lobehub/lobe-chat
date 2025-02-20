@@ -24,6 +24,8 @@ export interface IAiModelService {
 
   clearRemoteModels: (providerId: string) => Promise<any>;
 
+  clearModelsByProvider: (providerId: string) => Promise<any>;
+
   updateAiModelOrder: (providerId: string, items: AiModelSortMap[]) => Promise<any>;
 
   deleteAiModel: (params: { id: string; providerId: string }) => Promise<any>;

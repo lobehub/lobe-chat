@@ -19,6 +19,24 @@
       "title": "Clave API"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Versión de la API de Azure, siguiendo el formato AAAA-MM-DD, consulta la [última versión](https://learn.microsoft.com/es-es/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Obtener lista",
+      "title": "Versión de la API de Azure"
+    },
+    "endpoint": {
+      "desc": "Encuentra el punto final de inferencia del modelo de Azure AI en la descripción general del proyecto de Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Punto final de Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Encuentra la clave API en la descripción general del proyecto de Azure AI",
+      "placeholder": "Clave de Azure",
+      "title": "Clave"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Introduce tu AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Por favor, introduce tu API Key",
-      "required": "Por favor, introduce tu API Key",
       "title": "API Key"
     },
     "basicTitle": "Información básica",
@@ -94,10 +111,11 @@
       "title": "Nombre del proveedor"
     },
     "proxyUrl": {
-      "placeholder": "Por favor, introduce tu dirección de solicitud, si no se completa, se usará la dirección de solicitud correspondiente del SDK",
+      "required": "Por favor, introduce la dirección del proxy",
       "title": "Dirección del proxy"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Por favor, selecciona el tipo de SDK",
       "title": "Formato de solicitud"
     },
@@ -154,30 +172,6 @@
       "desc": "Debe incluir http(s)://, se puede dejar vacío si no se especifica localmente",
       "title": "Dirección del proxy de la interfaz"
     },
-    "setup": {
-      "cors": {
-        "description": "Debido a restricciones de seguridad del navegador, es necesario configurar Ollama para permitir el acceso entre dominios.",
-        "linux": {
-          "env": "En la sección [Service], agrega `Environment` y añade la variable de entorno OLLAMA_ORIGINS:",
-          "reboot": "Recarga systemd y reinicia Ollama.",
-          "systemd": "Edita el servicio ollama llamando a systemd:"
-        },
-        "macos": "Abre la aplicación 'Terminal', pega y ejecuta el siguiente comando, luego presiona Enter.",
-        "reboot": "Reinicia el servicio de Ollama una vez completada la ejecución.",
-        "title": "Configuración para permitir el acceso entre dominios en Ollama",
-        "windows": "En Windows, ve a 'Panel de control', edita las variables de entorno del sistema. Crea una nueva variable de entorno llamada 'OLLAMA_ORIGINS' para tu cuenta de usuario, con el valor '*', y haz clic en 'OK/Aplicar' para guardar los cambios."
-      },
-      "install": {
-        "description": "Por favor, asegúrate de que has activado Ollama. Si no has descargado Ollama, por favor visita el sitio web oficial para <1>descargarlo</1>.",
-        "docker": "Si prefieres usar Docker, Ollama también ofrece una imagen oficial en Docker. Puedes obtenerla con el siguiente comando:",
-        "linux": {
-          "command": "Instala con el siguiente comando:",
-          "manual": "O también puedes consultar la <1>Guía de instalación manual en Linux</1> para instalarlo por tu cuenta."
-        },
-        "title": "Instalación local y activación de la aplicación Ollama",
-        "windowsTab": "Windows (Versión de vista previa)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "Cancel Download",
@@ -198,6 +192,7 @@
       },
       "baseURL": {
         "desc": "Debe incluir http(s)://",
+        "invalid": "Por favor, introduce una URL válida",
         "placeholder": "https://tu-direccion-proxy.com/v1",
         "title": "Dirección del proxy API"
       },
@@ -234,6 +229,11 @@
           "placeholder": "Por favor, introduce el nombre de despliegue del modelo en Azure",
           "title": "Nombre de despliegue del modelo"
         },
+        "deployName": {
+          "extra": "Este campo se enviará como ID del modelo al hacer la solicitud",
+          "placeholder": "Introduce el nombre o ID real del modelo desplegado",
+          "title": "Nombre de despliegue del modelo"
+        },
         "displayName": {
           "placeholder": "Por favor, introduce el nombre de visualización del modelo, por ejemplo, ChatGPT, GPT-4, etc.",
           "title": "Nombre de visualización del modelo"
@@ -252,6 +252,10 @@
           "title": "ID del modelo"
         },
         "modalTitle": "Configuración del modelo personalizado",
+        "reasoning": {
+          "extra": "Esta configuración solo activará la capacidad de pensamiento profundo del modelo, el efecto específico depende completamente del modelo en sí, por favor, pruebe si este modelo tiene la capacidad de pensamiento profundo utilizable",
+          "title": "Soporte para pensamiento profundo"
+        },
         "tokens": {
           "extra": "Establecer el número máximo de tokens que el modelo puede soportar",
           "title": "Máximo de ventana de contexto",
@@ -295,6 +299,11 @@
         "latestTime": "Última actualización: {{time}}",
         "noLatestTime": "Lista aún no obtenida"
       },
+      "resetAll": {
+        "conform": "¿Confirmar el restablecimiento de todas las modificaciones del modelo actual? Después del restablecimiento, la lista de modelos actuales volverá al estado predeterminado",
+        "success": "Restablecimiento exitoso",
+        "title": "Restablecer todas las modificaciones"
+      },
       "search": "Buscar modelos...",
       "searchResult": "Se encontraron {{count}} modelos",
       "title": "Lista de modelos",
@@ -313,24 +322,11 @@
     "tooltip": "Actualizar configuración básica del proveedor",
     "updateSuccess": "Actualización exitosa"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Introduce la Access Key de la plataforma Qianfan de Baidu",
-      "placeholder": "Access Key de Qianfan",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Verifica si la AccessKey / SecretAccess está correctamente ingresada"
-    },
-    "secretKey": {
-      "desc": "Introduce la Secret Key de la plataforma Qianfan de Baidu",
-      "placeholder": "Secret Key de Qianfan",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Región de servicio personalizada",
-      "description": "Introduce tu AccessKey / SecretKey para comenzar la sesión. La aplicación no registrará tu configuración de autenticación",
-      "title": "Usar información de autenticación personalizada de Wenxin Yiyan"
+  "vertexai": {
+    "apiKey": {
+      "desc": "Introduce tus claves de Vertex AI",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Claves de Vertex AI"
     }
   },
   "zeroone": {

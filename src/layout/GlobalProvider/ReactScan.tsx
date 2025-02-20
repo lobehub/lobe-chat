@@ -1,15 +1,15 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
 import Script from 'next/script';
+import { useQueryState } from 'nuqs';
 import React, { memo } from 'react';
 
-const ReactScan = memo(() => {
-  const searchParams = useSearchParams();
+import { withSuspense } from '@/components/withSuspense';
 
-  const debug = searchParams.get('debug');
+const ReactScan = memo(() => {
+  const [debug] = useQueryState('debug', { clearOnDefault: true, defaultValue: '' });
 
   return !!debug && <Script src="https://unpkg.com/react-scan/dist/auto.global.js" />;
 });
 
-export default ReactScan;
+export default withSuspense(ReactScan);

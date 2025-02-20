@@ -2,7 +2,7 @@ import { DeepPartial } from 'utility-types';
 
 import { edgeClient } from '@/libs/trpc/client';
 import { LobeAgentConfig } from '@/types/agent';
-import { GlobalServerConfig } from '@/types/serverConfig';
+import { GlobalRuntimeConfig } from '@/types/serverConfig';
 
 const VERSION_URL = 'https://registry.npmmirror.com/@lobehub/chat/latest';
 
@@ -17,7 +17,7 @@ class GlobalService {
     return data['version'];
   };
 
-  getGlobalConfig = async (): Promise<GlobalServerConfig> => {
+  getGlobalConfig = async (): Promise<GlobalRuntimeConfig> => {
     return edgeClient.config.getGlobalConfig.query();
   };
 

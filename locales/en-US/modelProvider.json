@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "The API version for Azure, following the YYYY-MM-DD format. Refer to the [latest version](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Fetch List",
+      "title": "Azure API Version"
+    },
+    "endpoint": {
+      "desc": "Find the Azure AI model inference endpoint from the Azure AI project overview",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI Endpoint"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Find the API key from the Azure AI project overview",
+      "placeholder": "Azure Key",
+      "title": "Key"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Enter AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Please enter your API Key",
-      "required": "Please enter your API Key",
       "title": "API Key"
     },
     "basicTitle": "Basic Information",
@@ -94,10 +111,11 @@
       "title": "Provider Name"
     },
     "proxyUrl": {
-      "placeholder": "Please enter your request URL, if left blank, the corresponding SDK request URL will be used",
+      "required": "Please enter the proxy address",
       "title": "Proxy URL"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Please select SDK type",
       "title": "Request Format"
     },
@@ -154,30 +172,6 @@
       "desc": "Must include http(s)://; can be left blank if not specified locally.",
       "title": "Interface proxy address"
     },
-    "setup": {
-      "cors": {
-        "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",
-        "linux": {
-          "env": "Add `Environment` under [Service] section, and set the OLLAMA_ORIGINS environment variable:",
-          "reboot": "Reload systemd and restart Ollama.",
-          "systemd": "Invoke systemd to edit the ollama service:"
-        },
-        "macos": "Open the 'Terminal' application, paste the following command, and press Enter to run it.",
-        "reboot": "Please restart the Ollama service after completion.",
-        "title": "Configure Ollama for Cross-Origin Access",
-        "windows": "On Windows, go to 'Control Panel' and edit system environment variables. Create a new environment variable named 'OLLAMA_ORIGINS' for your user account, set the value to '*', and click 'OK/Apply' to save."
-      },
-      "install": {
-        "description": "Please make sure you have enabled Ollama. If you haven't downloaded Ollama yet, please visit the official website <1>to download</1>.",
-        "docker": "If you prefer using Docker, Ollama also provides an official Docker image. You can pull it using the following command:",
-        "linux": {
-          "command": "Install using the following command:",
-          "manual": "Alternatively, you can refer to the <1>Linux Manual Installation Guide</1> for manual installation."
-        },
-        "title": "Install and Start Ollama Locally",
-        "windowsTab": "Windows (Preview)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "Cancel Download",
@@ -198,6 +192,7 @@
       },
       "baseURL": {
         "desc": "Must include http(s)://",
+        "invalid": "Please enter a valid URL",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "API Proxy URL"
       },
@@ -234,6 +229,11 @@
           "placeholder": "Please enter the model deployment name in Azure",
           "title": "Model Deployment Name"
         },
+        "deployName": {
+          "extra": "This field will be used as the model ID when sending requests",
+          "placeholder": "Please enter the actual deployment name or ID of the model",
+          "title": "Model Deployment Name"
+        },
         "displayName": {
           "placeholder": "Please enter the display name of the model, e.g., ChatGPT, GPT-4, etc.",
           "title": "Model Display Name"
@@ -252,6 +252,10 @@
           "title": "Model ID"
         },
         "modalTitle": "Custom Model Configuration",
+        "reasoning": {
+          "extra": "This configuration will enable the model's deep thinking capabilities, and the specific effects depend entirely on the model itself. Please test whether this model has usable deep thinking abilities.",
+          "title": "Support Deep Thinking"
+        },
         "tokens": {
           "extra": "Set the maximum number of tokens supported by the model",
           "title": "Maximum Context Window",
@@ -295,6 +299,11 @@
         "latestTime": "Last updated: {{time}}",
         "noLatestTime": "Model list not yet fetched"
       },
+      "resetAll": {
+        "conform": "Are you sure you want to reset all modifications to the current model? After resetting, the current model list will return to its default state.",
+        "success": "Reset successful",
+        "title": "Reset All Modifications"
+      },
       "search": "Search Models...",
       "searchResult": "{{count}} models found",
       "title": "Model List",
@@ -313,24 +322,11 @@
     "tooltip": "Update provider basic configuration",
     "updateSuccess": "Update successful"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Enter the Access Key from the Baidu Qianfan platform",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Test if the Access Key / Secret Access is filled in correctly"
-    },
-    "secretKey": {
-      "desc": "Enter the Secret Key from the Baidu Qianfan platform",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Custom Service Region",
-      "description": "Input your Access Key / Secret Key to start the session. The application will not record your authentication configuration.",
-      "title": "Use Custom Wenxin Yiyan Authentication Information"
+  "vertexai": {
+    "apiKey": {
+      "desc": "Enter your Vertex AI Keys",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI Keys"
     }
   },
   "zeroone": {

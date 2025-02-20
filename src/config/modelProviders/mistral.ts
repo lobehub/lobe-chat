@@ -154,6 +154,9 @@ const Mistral: ModelProviderCard = {
   modelsUrl: 'https://docs.mistral.ai/getting-started/models',
   name: 'Mistral',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.mistral.ai',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

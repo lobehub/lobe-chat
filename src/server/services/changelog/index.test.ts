@@ -229,7 +229,7 @@ describe('ChangelogService', () => {
       it('should format version range correctly', () => {
         // @ts-ignore - accessing private method for testing
         const result = service.formatVersionRange(['1.0.0', '1.1.0']);
-        expect(result).toEqual(['1.1.0', '1.0.0']);
+        expect(result).toEqual(['1.0.0', '1.1.0']);
       });
 
       it('should return single version as is', () => {

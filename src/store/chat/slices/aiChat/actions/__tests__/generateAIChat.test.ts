@@ -576,7 +576,7 @@ describe('chatMessage actions', () => {
       const abortController = new AbortController();
 
       act(() => {
-        useChatStore.setState({ abortController });
+        useChatStore.setState({ chatLoadingIdsAbortController: abortController });
       });
 
       await act(async () => {
@@ -596,18 +596,18 @@ describe('chatMessage actions', () => {
 
       await act(async () => {
         // 确保没有设置 abortController
-        useChatStore.setState({ abortController: undefined });
+        useChatStore.setState({ chatLoadingIdsAbortController: undefined });
 
         result.current.stopGenerateMessage();
       });
 
       // 由于没有 abortController，不应调用任何方法
-      expect(result.current.abortController).toBeUndefined();
+      expect(result.current.chatLoadingIdsAbortController).toBeUndefined();
     });
 
     it('should return early if abortController is undefined', () => {
       act(() => {
-        useChatStore.setState({ abortController: undefined });
+        useChatStore.setState({ chatLoadingIdsAbortController: undefined });
       });
 
       const { result } = renderHook(() => useChatStore());
@@ -625,7 +625,7 @@ describe('chatMessage actions', () => {
       const abortMock = vi.fn();
       const abortController = { abort: abortMock } as unknown as AbortController;
       act(() => {
-        useChatStore.setState({ abortController });
+        useChatStore.setState({ chatLoadingIdsAbortController: abortController });
       });
       const { result } = renderHook(() => useChatStore());
 
@@ -639,7 +639,7 @@ describe('chatMessage actions', () => {
     it('should call internal_toggleChatLoading with correct parameters', () => {
       const abortController = new AbortController();
       act(() => {
-        useChatStore.setState({ abortController });
+        useChatStore.setState({ chatLoadingIdsAbortController: abortController });
       });
       const { result } = renderHook(() => useChatStore());
       const spy = vi.spyOn(result.current, 'internal_toggleChatLoading');
@@ -868,7 +868,7 @@ describe('chatMessage actions', () => {
       });
 
       const state = useChatStore.getState();
-      expect(state.abortController).toBeInstanceOf(AbortController);
+      expect(state.chatLoadingIdsAbortController).toBeInstanceOf(AbortController);
       expect(state.chatLoadingIds).toEqual(['message-id']);
     });
 
@@ -887,7 +887,7 @@ describe('chatMessage actions', () => {
       });
 
       const state = useChatStore.getState();
-      expect(state.abortController).toBeUndefined();
+      expect(state.chatLoadingIdsAbortController).toBeUndefined();
       expect(state.chatLoadingIds).toEqual([]);
     });
 
@@ -920,12 +920,12 @@ describe('chatMessage actions', () => {
       const abortController = new AbortController();
 
       act(() => {
-        useChatStore.setState({ abortController });
+        useChatStore.setState({ chatLoadingIdsAbortController: abortController });
         result.current.internal_toggleChatLoading(true, 'message-id', 'loading-action');
       });
 
       const state = useChatStore.getState();
-      expect(state.abortController).toEqual(abortController);
+      expect(state.chatLoadingIdsAbortController).toEqual(abortController);
     });
   });
 

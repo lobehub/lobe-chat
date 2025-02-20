@@ -99,6 +99,41 @@ const stepfunChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 8000,
+    description: 
+      '基于新一代自研Attention架构MFA的极速大模型，用极低成本达到和step1类似的效果，同时保持了更高的吞吐和更快响应时延。能够处理通用任务，在代码能力上具备特长。',
+    displayName: 'Step 2 Mini',
+    enabled: true,
+    id: 'step-2-mini',
+      pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 2,
+    },
+    releasedAt: '2025-01-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 16_000,
+    description: 'step-2模型的实验版本，包含最新的特性，滚动更新中。不推荐在正式生产环境使用。',
+    displayName: 'Step 2 16K Exp',
+    enabled: true,
+    id: 'step-2-16k',
+    pricing: {
+      currency: 'CNY',
+      input: 38,
+      output: 120,
+    },
+    releasedAt: '2025-01-15',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       vision: true,
     },
     contextWindowTokens: 8000,
@@ -121,13 +156,30 @@ const stepfunChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_000,
     description: '支持视觉输入，增强多模态交互体验。',
     displayName: 'Step 1V 32K',
-    enabled: true,
     id: 'step-1v-32k',
     pricing: {
       currency: 'CNY',
       input: 15,
       output: 70,
     },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 32_000,
+    description: '该模型拥有强大的图像理解能力。相比于 step-1v 系列模型，拥有更强的视觉性能。',
+    displayName: 'Step 1o Vision 32K',
+    enabled: true,
+    id: 'step-1o-vision-32k',
+    pricing: {
+      currency: 'CNY',
+      input: 15,
+      output: 70,
+    },
+    releasedAt: '2025-01-22',
     type: 'chat',
   },
   {

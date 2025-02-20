@@ -1,11 +1,8 @@
-import dayjs from 'dayjs';
 import { and, eq } from 'drizzle-orm';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { MessageModel } from '@/database/_deprecated/models/message';
 import { clientDB, initializeDB } from '@/database/client/db';
 import {
-  MessageItem,
   files,
   messagePlugins,
   messageTTS,
@@ -21,6 +18,7 @@ import {
   ChatTTS,
   ChatTranslate,
   CreateMessageParams,
+  MessageItem,
 } from '@/types/message';
 
 import { ClientService } from './client';

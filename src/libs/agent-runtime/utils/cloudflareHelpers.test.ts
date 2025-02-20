@@ -6,24 +6,7 @@ import {
   CloudflareStreamTransformer,
   desensitizeCloudflareUrl,
   fillUrl,
-  getModelBeta,
-  getModelDisplayName,
-  getModelFunctionCalling,
-  getModelTokens,
 } from './cloudflareHelpers';
-
-//const {
-//  getModelBeta,
-//  getModelDisplayName,
-//  getModelFunctionCalling,
-//  getModelTokens,
-//} = require('./cloudflareHelpers');
-
-//const cloudflareHelpers = require('./cloudflareHelpers');
-//const getModelBeta = cloudflareHelpers.__get__('getModelBeta');
-//const getModelDisplayName = cloudflareHelpers.__get__('getModelDisplayName');
-//const getModelFunctionCalling = cloudflareHelpers.__get__('getModelFunctionCalling');
-//const getModelTokens = cloudflareHelpers.__get__('getModelTokens');
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -251,88 +234,6 @@ describe('cloudflareHelpers', () => {
           'https://custom.url:8080/custom/prefix/80009000a000b000c000d000e000f000/custom/suffix/';
         const maskedUrl = desensitizeCloudflareUrl(url);
         expect(maskedUrl).toBe('https://cu****om.url:****/custom/prefix/****/custom/suffix/');
-      });
-    });
-  });
-
-  describe('modelManifest', () => {
-    describe('getModelBeta', () => {
-      it('should get beta property', () => {
-        const model = { properties: [{ property_id: 'beta', value: 'true' }] };
-        const beta = getModelBeta(model);
-        expect(beta).toBe(true);
-      });
-
-      it('should return false if beta property is false', () => {
-        const model = { properties: [{ property_id: 'beta', value: 'false' }] };
-        const beta = getModelBeta(model);
-        expect(beta).toBe(false);
-      });
-
-      it('should return false if beta property is not present', () => {
-        const model = { properties: [] };
-        const beta = getModelBeta(model);
-        expect(beta).toBe(false);
-      });
-    });
-
-    describe('getModelDisplayName', () => {
-      it('should return display name with beta suffix', () => {
-        const model = { name: 'model', properties: [{ property_id: 'beta', value: 'true' }] };
-        const name = getModelDisplayName(model, true);
-        expect(name).toBe('model (Beta)');
-      });
-
-      it('should return display name without beta suffix', () => {
-        const model = { name: 'model', properties: [] };
-        const name = getModelDisplayName(model, false);
-        expect(name).toBe('model');
-      });
-
-      it('should return model["name"]', () => {
-        const model = { id: 'modelID', name: 'modelName' };
-        const name = getModelDisplayName(model, false);
-        expect(name).toBe('modelName');
-      });
-
-      it('should return last part of model["name"]', () => {
-        const model = { name: '@provider/modelFamily/modelName' };
-        const name = getModelDisplayName(model, false);
-        expect(name).toBe('modelName');
-      });
-    });
-
-    describe('getModelFunctionCalling', () => {
-      it('should return true if function_calling property is true', () => {
-        const model = { properties: [{ property_id: 'function_calling', value: 'true' }] };
-        const functionCalling = getModelFunctionCalling(model);
-        expect(functionCalling).toBe(true);
-      });
-
-      it('should return false if function_calling property is false', () => {
-        const model = { properties: [{ property_id: 'function_calling', value: 'false' }] };
-        const functionCalling = getModelFunctionCalling(model);
-        expect(functionCalling).toBe(false);
-      });
-
-      it('should return false if function_calling property is not set', () => {
-        const model = { properties: [] };
-        const functionCalling = getModelFunctionCalling(model);
-        expect(functionCalling).toBe(false);
-      });
-    });
-
-    describe('getModelTokens', () => {
-      it('should return tokens property value', () => {
-        const model = { properties: [{ property_id: 'max_total_tokens', value: '100' }] };
-        const tokens = getModelTokens(model);
-        expect(tokens).toBe(100);
-      });
-
-      it('should return undefined if tokens property is not present', () => {
-        const model = { properties: [] };
-        const tokens = getModelTokens(model);
-        expect(tokens).toBeUndefined();
       });
     });
   });

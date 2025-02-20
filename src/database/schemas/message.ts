@@ -13,6 +13,7 @@ import {
 import { createSelectSchema } from 'drizzle-zod';
 
 import { idGenerator } from '@/database/utils/idGenerator';
+import { ModelReasoning } from '@/types/message';
 
 import { timestamps } from './_helpers';
 import { agents } from './agent';
@@ -32,6 +33,7 @@ export const messages = pgTable(
 
     role: text('role', { enum: ['user', 'system', 'assistant', 'tool'] }).notNull(),
     content: text('content'),
+    reasoning: jsonb('reasoning').$type<ModelReasoning>(),
 
     model: text('model'),
     provider: text('provider'),
@@ -70,9 +72,6 @@ export const messages = pgTable(
     ),
   }),
 );
-
-export type NewMessage = typeof messages.$inferInsert;
-export type MessageItem = typeof messages.$inferSelect;
 
 // if the message container a plugin
 export const messagePlugins = pgTable('message_plugins', {

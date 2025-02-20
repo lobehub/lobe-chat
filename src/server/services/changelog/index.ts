@@ -1,13 +1,15 @@
 import dayjs from 'dayjs';
 import matter from 'gray-matter';
+import { template } from 'lodash-es';
 import { markdownToTxt } from 'markdown-to-txt';
 import semver from 'semver';
 import urlJoin from 'url-join';
 
+import { FetchCacheTag } from '@/const/cacheControl';
 import { Locales } from '@/locales/resources';
 import { ChangelogIndexItem } from '@/types/changelog';
 
-const BASE_URL = 'https://raw.githubusercontent.com';
+const URL_TEMPLATE = 'https://raw.githubusercontent.com/{{user}}/{{repo}}/{{branch}}/{{path}}';
 const LAST_MODIFIED = new Date().toISOString();
 
 const docCdnPrefix = process.env.DOC_S3_PUBLIC_DOMAIN || '';
@@ -20,6 +22,7 @@ export interface ChangelogConfig {
   majorVersion: number;
   repo: string;
   type: 'cloud' | 'community';
+  urlTemplate: string;
   user: string;
 }
 
@@ -35,6 +38,7 @@ export class ChangelogService {
     majorVersion: 1,
     repo: 'lobe-chat',
     type: 'cloud',
+    urlTemplate: process.env.CHANGELOG_URL_TEMPLATE || URL_TEMPLATE,
     user: 'lobehub',
   };
 
@@ -47,7 +51,9 @@ export class ChangelogService {
     try {
       const url = this.genUrl(urlJoin(this.config.docsPath, 'index.json'));
 
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        next: { revalidate: 3600, tags: [FetchCacheTag.Changelog] },
+      });
 
       const data = await res.json();
 
@@ -76,10 +82,13 @@ export class ChangelogService {
     try {
       const post = await this.getIndexItemById(id);
 
-      const filename = options?.locale === 'en-US' ? `${id}.mdx` : `${id}.zh-CN.mdx`;
+      const filename = options?.locale?.startsWith('zh') ? `${id}.zh-CN.mdx` : `${id}.mdx`;
       const url = this.genUrl(urlJoin(this.config.docsPath, filename));
 
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        next: { revalidate: 3600, tags: [FetchCacheTag.Changelog] },
+      });
+
       const text = await response.text();
       const { data, content } = matter(text);
 
@@ -122,8 +131,10 @@ export class ChangelogService {
         content: description,
         rawTitle: match ? match[1] : '',
       };
-    } catch {
-      console.error('Error getting changlog post by id', id);
+    } catch (e) {
+      console.error('[ChangelogFetchError]failed to fetch changlog post', id);
+      console.error(e);
+
       return false as any;
     }
   }
@@ -166,11 +177,14 @@ export class ChangelogService {
     const minVersion = semver.lt(v1, v2) ? v1 : v2;
     const maxVersion = semver.gt(v1, v2) ? v1 : v2;
 
-    return [maxVersion, minVersion];
+    return [minVersion, maxVersion];
   }
 
   private genUrl(path: string) {
-    return urlJoin(BASE_URL, this.config.user, this.config.repo, this.config.branch, path);
+    // 自定义分隔符为 {{}}
+    const compiledTemplate = template(this.config.urlTemplate, { interpolate: /{{([\S\s]+?)}}/g });
+
+    return compiledTemplate({ ...this.config, path });
   }
 
   private extractHttpsLinks(text: string) {

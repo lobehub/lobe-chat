@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "获取列表",
+      "title": "Azure API Version"
+    },
+    "endpoint": {
+      "desc": "从 Azure AI 项目概述找到 Azure AI 模型推理终结点",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Azure AI 终结点"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "从 Azure AI 项目概述找到 API 密钥",
+      "placeholder": "Azure 密钥",
+      "title": "密钥"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "填入 AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "请填写你的 API Key",
-      "required": "请填写你的 API Key",
       "title": "API Key"
     },
     "basicTitle": "基本信息",
@@ -94,10 +111,11 @@
       "title": "服务商名称"
     },
     "proxyUrl": {
-      "placeholder": "请填写你的请求地址，如果不填则会使用 SDK 对应的请求地址",
+      "required": "请填写代理地址",
       "title": "代理地址"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "请选择 SDK 类型",
       "title": "请求格式"
     },
@@ -154,30 +172,6 @@
       "desc": "必须包含http(s)://，本地未额外指定可留空",
       "title": "Ollama 服务地址"
     },
-    "setup": {
-      "cors": {
-        "description": "因浏览器安全限制，你需要为 Ollama 进行跨域配置后方可正常使用。",
-        "linux": {
-          "env": "在 [Service] 部分下添加 `Environment`，添加 OLLAMA_ORIGINS 环境变量：",
-          "reboot": "重载 systemd 并重启 Ollama",
-          "systemd": "调用 systemd 编辑 ollama 服务："
-        },
-        "macos": "请打开「终端」应用程序，并粘贴以下指令，并按回车运行",
-        "reboot": "请在执行完成后重启 Ollama 服务",
-        "title": "配置 Ollama 允许跨域访问",
-        "windows": "在 Windows 上，点击「控制面板」，进入编辑系统环境变量。为您的用户账户新建名为 「OLLAMA_ORIGINS」 的环境变量，值为 * ，点击 「OK/应用」 保存"
-      },
-      "install": {
-        "description": "请确认你已经开启 Ollama ，如果没有下载 Ollama ，请前往官网<1>下载</1>",
-        "docker": "如果你更倾向于使用 Docker，Ollama 也提供了官方 Docker 镜像，你可以通过以下命令拉取：",
-        "linux": {
-          "command": "通过以下命令安装：",
-          "manual": "或者，你也可以参考 <1>Linux 手动安装指南</1> 自行安装"
-        },
-        "title": "在本地安装并开启 Ollama 应用",
-        "windowsTab": "Windows (预览版)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "取消下载",
@@ -198,6 +192,7 @@
       },
       "baseURL": {
         "desc": "必须包含 http(s)://",
+        "invalid": "请输入合法的 URL",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "API 代理地址"
       },
@@ -234,6 +229,11 @@
           "placeholder": "请输入 Azure 中的模型部署名称",
           "title": "模型部署名称"
         },
+        "deployName": {
+          "extra": "发送请求时会将该字段作为模型 ID",
+          "placeholder": "请输入模型实际部署的名称或 id",
+          "title": "模型部署名称"
+        },
         "displayName": {
           "placeholder": "请输入模型的展示名称，例如 ChatGPT、GPT-4 等",
           "title": "模型展示名称"
@@ -252,6 +252,10 @@
           "title": "模型 ID"
         },
         "modalTitle": "自定义模型配置",
+        "reasoning": {
+          "extra": "此配置将仅开启模型深度思考的能力，具体效果完全取决于模型本身，请自行测试该模型是否具备可用的深度思考能力",
+          "title": "支持深度思考"
+        },
         "tokens": {
           "extra": "设置模型支持的最大 Token 数",
           "title": "最大上下文窗口",
@@ -295,6 +299,11 @@
         "latestTime": "上次更新时间：{{time}}",
         "noLatestTime": "暂未获取列表"
       },
+      "resetAll": {
+        "conform": "确认重置当前模型的所有修改？重置后当前模型列表将会回到默认状态",
+        "success": "重置成功",
+        "title": "重置所有修改"
+      },
       "search": "搜索模型...",
       "searchResult": "搜索到 {{count}} 个模型",
       "title": "模型列表",
@@ -313,24 +322,11 @@
     "tooltip": "更新服务商基础配置",
     "updateSuccess": "更新成功"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "填入百度千帆平台的 Access Key",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "测试 AccessKey / SecretAccess 是否填写正确"
-    },
-    "secretKey": {
-      "desc": "填入百度千帆平台 Secret Key",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "自定义服务区域",
-      "description": "输入你的 AccessKey / SecretKey 即可开始会话。应用不会记录你的鉴权配置",
-      "title": "使用自定义文心一言鉴权信息"
+  "vertexai": {
+    "apiKey": {
+      "desc": "填入你的 Vertex Ai Keys",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI Keys"
     }
   },
   "zeroone": {

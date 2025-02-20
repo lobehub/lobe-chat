@@ -8,8 +8,8 @@
   "allChangelog": "Zobacz wszystkie dzienniki zmian",
   "description": "Na bieżąco śledź nowe funkcje i ulepszenia {{appName}}",
   "pagination": {
-    "older": "Zobacz wcześniejsze zmiany",
-    "prev": "Poprzednia strona"
+    "next": "Następna strona",
+    "older": "Zobacz wcześniejsze zmiany"
   },
   "readDetails": "Przeczytaj szczegóły",
   "title": "Dziennik zmian",

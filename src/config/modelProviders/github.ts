@@ -37,7 +37,7 @@ const Github: ModelProviderCard = {
       vision: true,
     },
     {
-      contextWindowTokens: 128_000,
+      contextWindowTokens: 134_144,
       description: '一种经济高效的AI解决方案，适用于多种文本和图像任务。',
       displayName: 'OpenAI GPT-4o mini',
       enabled: true,
@@ -47,14 +47,20 @@ const Github: ModelProviderCard = {
       vision: true,
     },
     {
-      contextWindowTokens: 128_000,
+      contextWindowTokens: 134_144,
       description: 'OpenAI GPT-4系列中最先进的多模态模型，可以处理文本和图像输入。',
       displayName: 'OpenAI GPT-4o',
       enabled: true,
       functionCall: true,
       id: 'gpt-4o',
-      maxOutput: 4096,
+      maxOutput: 16_384,
       vision: true,
+    },
+    {
+      contextWindowTokens: 128_000,
+      displayName: 'DeepSeek R1',
+      id: 'DeepSeek-R1',
+      maxOutput: 4096,
     },
     {
       contextWindowTokens: 262_144,
@@ -113,6 +119,12 @@ const Github: ModelProviderCard = {
       maxOutput: 4096,
     },
     {
+      contextWindowTokens: 262_144,
+      displayName: 'Codestral',
+      id: 'Codestral-2501',
+      maxOutput: 4096,
+    },
+    {
       contextWindowTokens: 131_072,
       description: '在高分辨率图像上表现出色的图像推理能力，适用于视觉理解应用。',
       displayName: 'Llama 3.2 11B Vision',
@@ -127,6 +139,15 @@ const Github: ModelProviderCard = {
       id: 'llama-3.2-90b-vision-instruct',
       maxOutput: 4096,
       vision: true,
+    },
+    {
+      contextWindowTokens: 32_768,
+      description:
+        'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
+      displayName: 'Llama 3.3 70B Instruct',
+      enabled: true,
+      functionCall: true,
+      id: 'llama-3.3-70b-instruct',
     },
     {
       contextWindowTokens: 131_072,
@@ -164,6 +185,18 @@ const Github: ModelProviderCard = {
       description: '一个强大的700亿参数模型，在推理、编码和广泛的语言应用方面表现出色。',
       displayName: 'Meta Llama 3 70B',
       id: 'meta-llama-3-70b-instruct',
+      maxOutput: 4096,
+    },
+    {
+      contextWindowTokens: 16_384,
+      displayName: 'Phi 4',
+      id: 'Phi-4',
+      maxOutput: 16_384,
+    },
+    {
+      contextWindowTokens: 131_072,
+      displayName: 'Phi 3.5 MoE',
+      id: 'Phi-3.5-MoE-instruct',
       maxOutput: 4096,
     },
     {

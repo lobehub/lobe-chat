@@ -1,7 +1,7 @@
 import { cloneDeep, merge } from 'lodash-es';
 
 import { DEFAULT_DISCOVER_ASSISTANT_ITEM } from '@/const/discover';
-import { globalHelpers } from '@/store/user/helpers';
+import { globalHelpers } from '@/store/global/helpers';
 import { DiscoverAssistantItem } from '@/types/discover';
 
 import { API_ENDPOINTS } from './_url';

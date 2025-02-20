@@ -286,6 +286,7 @@
     "anonymousNickName": "匿名ユーザー",
     "billing": "請求管理",
     "cloud": "{{name}} を体験",
+    "community": "コミュニティ版",
     "data": "データストレージ",
     "defaultNickname": "コミュニティユーザー",
     "discord": "コミュニティサポート",
@@ -295,7 +296,6 @@
     "help": "ヘルプセンター",
     "moveGuide": "設定ボタンがこちらに移動しました",
     "plans": "サブスクリプションプラン",
-    "preview": "プレビュー",
     "profile": "アカウント管理",
     "setting": "アプリ設定",
     "usages": "利用量統計"

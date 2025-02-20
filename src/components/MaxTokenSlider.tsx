@@ -35,7 +35,7 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
   const updateWithPowValue = (value: number) => {
     setPowValue(value);
 
-    setTokens(getRealValue(value) === 1 ? 0 : powerKibi(value));
+    setTokens(getRealValue(value) <= 2 ? 0 : powerKibi(value));
   };
 
   const updateWithRealValue = (value: number) => {
@@ -48,16 +48,16 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
 
   const marks = useMemo(() => {
     return {
-      [exponent(1)]: '0',
-      [exponent(2)]: isMobile ? '2' : '2K', // 2 Kibi = 2048
-      [exponent(4)]: isMobile ? '4' : '4K',
+      [exponent(2)]: '0',
+      [exponent(4)]: isMobile ? '4' : '4K', // 4 Kibi = 4096
       [exponent(8)]: isMobile ? '8' : '8K',
       [exponent(16)]: isMobile ? '16' : '16K',
       [exponent(32)]: isMobile ? '32' : '32K',
       [exponent(64)]: isMobile ? '64' : '64K',
       [exponent((128 / Kibi) * 1000)]: ' ', // hide tick mark
       [exponent((200 / Kibi) * 1000)]: isMobile ? '200' : '200k', // 200,000
-      [exponent(Kibi)]: isMobile ? '1024' : '1M',
+      [exponent(Kibi)]: '1M',
+      [exponent(2 * Kibi)]: '2M',
     };
   }, [isMobile]);
 
@@ -66,14 +66,14 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
       <Flexbox flex={1}>
         <Slider
           marks={marks}
-          max={exponent(Kibi)}
-          min={0}
+          max={exponent(2 * Kibi)}
+          min={exponent(2)}
           onChange={updateWithPowValue}
           step={null}
           tooltip={{
             formatter: (x) => {
               if (typeof x === 'undefined') return;
-              if (x === 0) return t('MaxTokenSlider.unlimited');
+              if (x <= exponent(2)) return t('MaxTokenSlider.unlimited');
 
               let value = getRealValue(x);
               if (value < 125) return value.toFixed(0) + 'K';
@@ -86,13 +86,14 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
       </Flexbox>
       <div>
         <InputNumber
+          changeOnWheel
           min={0}
           onChange={(e) => {
             if (!e && e !== 0) return;
 
             updateWithRealValue(e);
           }}
-          step={2 * Kibi}
+          step={4 * Kibi}
           value={token}
         />
       </div>

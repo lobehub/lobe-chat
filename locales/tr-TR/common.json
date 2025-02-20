@@ -286,6 +286,7 @@
     "anonymousNickName": "Anonim Kullanıcı",
     "billing": "Fatura Yönetimi",
     "cloud": "{{name}}'i Deneyin",
+    "community": "Topluluk Sürümü",
     "data": "Veri Depolama",
     "defaultNickname": "Topluluk Kullanıcısı",
     "discord": "Topluluk Destek",
@@ -295,7 +296,6 @@
     "help": "Yardım Merkezi",
     "moveGuide": "Ayarlar düğmesini buraya taşıyın",
     "plans": "Planlar",
-    "preview": "Önizleme",
     "profile": "Hesap Yönetimi",
     "setting": "Uygulama Ayarları",
     "usages": "Kullanım İstatistikleri"

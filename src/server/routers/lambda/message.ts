@@ -63,10 +63,12 @@ export const messageRouter = router({
       return data.id;
     }),
 
+  // TODO: it will be removed in V2
   getAllMessages: messageProcedure.query(async ({ ctx }): Promise<ChatMessageList> => {
-    return ctx.messageModel.queryAll();
+    return ctx.messageModel.queryAll() as any;
   }),
 
+  // TODO: it will be removed in V2
   getAllMessagesInSession: messageProcedure
     .input(
       z.object({
@@ -74,7 +76,7 @@ export const messageRouter = router({
       }),
     )
     .query(async ({ ctx, input }): Promise<ChatMessageList> => {
-      return ctx.messageModel.queryBySessionId(input.sessionId);
+      return ctx.messageModel.queryBySessionId(input.sessionId) as any;
     }),
 
   getHeatmaps: messageProcedure.query(async ({ ctx }) => {

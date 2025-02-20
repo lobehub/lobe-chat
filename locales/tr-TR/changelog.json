@@ -8,8 +8,8 @@
   "allChangelog": "Tüm güncelleme günlüklerini görüntüle",
   "description": "{{appName}}'in yeni özelliklerini ve iyileştirmelerini sürekli takip edin",
   "pagination": {
-    "older": "Geçmiş değişiklikleri görüntüle",
-    "prev": "Önceki sayfa"
+    "next": "Sonraki Sayfa",
+    "older": "Geçmiş değişiklikleri görüntüle"
   },
   "readDetails": "Detayları okuyun",
   "title": "Güncelleme Günlüğü",

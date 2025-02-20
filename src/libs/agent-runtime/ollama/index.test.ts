@@ -145,7 +145,26 @@ describe('LobeOllamaAI', () => {
       const models = await ollamaAI.models();
 
       expect(listMock).toHaveBeenCalled();
-      expect(models).toEqual([{ id: 'model-1' }, { id: 'model-2' }]);
+      expect(models).toEqual([
+        {
+          contextWindowTokens: undefined,
+          displayName: undefined,
+          enabled: false,
+          functionCall: false,
+          id: 'model-1',
+          reasoning: false,
+          vision: false
+        },
+        {
+          contextWindowTokens: undefined,
+          displayName: undefined,
+          enabled: false,
+          functionCall: false,
+          id: 'model-2',
+          reasoning: false,
+          vision: false
+        }
+      ]);
     });
   });
 

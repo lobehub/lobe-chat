@@ -3,6 +3,34 @@
 exports[`LobeOpenRouterAI > models > should get models 1`] = `
 [
   {
+    "contextWindowTokens": 131072,
+    "description": "Reflection Llama-3.1 70B is trained with a new technique called Reflection-Tuning that teaches a LLM to detect mistakes in its reasoning and correct course.
+
+The model was trained on synthetic data.
+
+_These are free, rate-limited endpoints for [Reflection 70B](/models/mattshumer/reflection-70b). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Reflection 70B (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mattshumer/reflection-70b:free",
+    "maxTokens": 4096,
+    "reasoning": false,
+    "vision": false,
+  },
+  {
+    "contextWindowTokens": 131072,
+    "description": "Reflection Llama-3.1 70B is trained with a new technique called Reflection-Tuning that teaches a LLM to detect mistakes in its reasoning and correct course.
+
+The model was trained on synthetic data.",
+    "displayName": "Reflection 70B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mattshumer/reflection-70b",
+    "maxTokens": undefined,
+    "reasoning": false,
+    "vision": false,
+  },
+  {
     "contextWindowTokens": 128000,
     "description": "Command-R is a 35B parameter model that performs conversational language tasks at a higher quality, more reliably, and with a longer context than previous models. It can be used for complex workflows like code generation, retrieval augmented generation (RAG), tool use, and agents.
 
@@ -14,6 +42,7 @@ Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.co
     "functionCall": false,
     "id": "cohere/command-r-03-2024",
     "maxTokens": 4000,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -28,6 +57,7 @@ Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.co
     "functionCall": false,
     "id": "cohere/command-r-plus-04-2024",
     "maxTokens": 4000,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -42,6 +72,7 @@ Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.co
     "functionCall": false,
     "id": "cohere/command-r-plus-08-2024",
     "maxTokens": 4000,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -56,6 +87,7 @@ Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.co
     "functionCall": false,
     "id": "cohere/command-r-08-2024",
     "maxTokens": 4000,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -72,6 +104,7 @@ Note: This model is experimental and not suited for production use-cases. It may
     "functionCall": false,
     "id": "google/gemini-flash-8b-1.5-exp",
     "maxTokens": 32768,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -88,6 +121,7 @@ Note: This model is experimental and not suited for production use-cases. It may
     "functionCall": false,
     "id": "google/gemini-flash-1.5-exp",
     "maxTokens": 32768,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -98,6 +132,7 @@ Note: This model is experimental and not suited for production use-cases. It may
     "functionCall": false,
     "id": "sao10k/l3.1-euryale-70b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -114,6 +149,7 @@ Read their [announcement](https://www.ai21.com/blog/announcing-jamba-model-famil
     "functionCall": false,
     "id": "ai21/jamba-1-5-large",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -130,6 +166,7 @@ Read their [announcement](https://www.ai21.com/blog/announcing-jamba-model-famil
     "functionCall": false,
     "id": "ai21/jamba-1-5-mini",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -142,6 +179,7 @@ The models underwent a rigorous enhancement process, incorporating both supervis
     "functionCall": false,
     "id": "microsoft/phi-3.5-mini-128k-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -156,6 +194,7 @@ The Hermes 3 series builds and expands on the Hermes 2 set of capabilities, incl
     "functionCall": true,
     "id": "nousresearch/hermes-3-llama-3.1-70b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -172,6 +211,7 @@ Hermes 3 is competitive, if not superior, to Llama-3.1 Instruct models at genera
     "functionCall": true,
     "id": "nousresearch/hermes-3-llama-3.1-405b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -190,16 +230,18 @@ _These are extended-context endpoints for [Hermes 3 405B Instruct](/models/nousr
     "functionCall": true,
     "id": "nousresearch/hermes-3-llama-3.1-405b:extended",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
     "contextWindowTokens": 127072,
     "description": "Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance. The model is built upon the Llama 3.1 405B and has internet access.",
     "displayName": "Perplexity: Llama 3.1 Sonar 405B Online",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-huge-128k-online",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -208,10 +250,11 @@ _These are extended-context endpoints for [Hermes 3 405B Instruct](/models/nousr
 
 Note: This model is experimental and not suited for production use-cases. It may be removed or redirected to another model in the future.",
     "displayName": "OpenAI: ChatGPT-4o",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "openai/chatgpt-4o-latest",
     "maxTokens": 16384,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -226,6 +269,7 @@ For best results, use with Llama 3 Instruct context template, temperature 1.4, a
     "functionCall": false,
     "id": "sao10k/l3-lunaris-8b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -238,6 +282,7 @@ Although more similar to Magnum overall, the model remains very creative, with a
     "functionCall": false,
     "id": "aetherwiing/mn-starcannon-12b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -252,6 +297,7 @@ For benchmarking against other models, it was briefly called ["im-also-a-good-gp
     "functionCall": false,
     "id": "openai/gpt-4o-2024-08-06",
     "maxTokens": 16384,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -266,6 +312,7 @@ To read more about the model release, [click here](https://ai.meta.com/blog/meta
     "functionCall": false,
     "id": "meta-llama/llama-3.1-405b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -280,6 +327,7 @@ Check out the model's [HuggingFace page](https://huggingface.co/nothingiisreal/M
     "functionCall": false,
     "id": "nothingiisreal/mn-celeste-12b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -296,6 +344,7 @@ Note: This model is experimental and not suited for production use-cases. It may
     "functionCall": false,
     "id": "google/gemini-pro-1.5-exp",
     "maxTokens": 32768,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -304,10 +353,11 @@ Note: This model is experimental and not suited for production use-cases. It may
 
 This is the online version of the [offline chat model](/models/perplexity/llama-3.1-sonar-large-128k-chat). It is focused on delivering helpful, up-to-date, and factual responses. #online",
     "displayName": "Perplexity: Llama 3.1 Sonar 70B Online",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-large-128k-online",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -316,10 +366,11 @@ This is the online version of the [offline chat model](/models/perplexity/llama-
 
 This is a normal offline LLM, but the [online version](/models/perplexity/llama-3.1-sonar-large-128k-online) of this model has Internet access.",
     "displayName": "Perplexity: Llama 3.1 Sonar 70B",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-large-128k-chat",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -328,10 +379,11 @@ This is a normal offline LLM, but the [online version](/models/perplexity/llama-
 
 This is the online version of the [offline chat model](/models/perplexity/llama-3.1-sonar-small-128k-chat). It is focused on delivering helpful, up-to-date, and factual responses. #online",
     "displayName": "Perplexity: Llama 3.1 Sonar 8B Online",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-small-128k-online",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -340,10 +392,11 @@ This is the online version of the [offline chat model](/models/perplexity/llama-
 
 This is a normal offline LLM, but the [online version](/models/perplexity/llama-3.1-sonar-small-128k-online) of this model has Internet access.",
     "displayName": "Perplexity: Llama 3.1 Sonar 8B",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-small-128k-chat",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -354,10 +407,11 @@ It has demonstrated strong performance compared to leading closed-source models 
 
 To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
     "displayName": "Meta: Llama 3.1 70B Instruct",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-70b-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -374,6 +428,7 @@ _These are free, rate-limited endpoints for [Llama 3.1 8B Instruct](/models/meta
     "functionCall": false,
     "id": "meta-llama/llama-3.1-8b-instruct:free",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -384,10 +439,11 @@ It has demonstrated strong performance compared to leading closed-source models 
 
 To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
     "displayName": "Meta: Llama 3.1 8B Instruct",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-8b-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -404,6 +460,7 @@ To read more about the model release, [click here](https://ai.meta.com/blog/meta
     "functionCall": false,
     "id": "meta-llama/llama-3.1-405b-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -418,6 +475,7 @@ Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.m
     "functionCall": true,
     "id": "cognitivecomputations/dolphin-llama-3-70b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -434,6 +492,7 @@ Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.m
     "functionCall": false,
     "id": "mistralai/codestral-mamba",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -444,10 +503,11 @@ The model is multilingual, supporting English, French, German, Spanish, Italian,
 
 It supports function calling and is released under the Apache 2.0 license.",
     "displayName": "Mistral: Mistral Nemo",
-    "enabled": false,
+    "enabled": true,
     "functionCall": true,
     "id": "mistralai/mistral-nemo",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -464,6 +524,7 @@ Check out the [launch announcement](https://openai.com/index/gpt-4o-mini-advanci
     "functionCall": false,
     "id": "openai/gpt-4o-mini-2024-07-18",
     "maxTokens": 16384,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -477,10 +538,11 @@ GPT-4o mini achieves an 82% score on MMLU and presently ranks higher than GPT-4 
 Check out the [launch announcement](https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/) to learn more.",
     "displayName": "OpenAI: GPT-4o-mini",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "openai/gpt-4o-mini",
     "maxTokens": 16384,
-    "vision": false,
+    "reasoning": false,
+    "vision": true,
   },
   {
     "contextWindowTokens": 32768,
@@ -498,6 +560,7 @@ _These are free, rate-limited endpoints for [Qwen 2 7B Instruct](/models/qwen/qw
     "functionCall": false,
     "id": "qwen/qwen-2-7b-instruct:free",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -514,6 +577,7 @@ Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://hug
     "functionCall": false,
     "id": "qwen/qwen-2-7b-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -524,10 +588,11 @@ Gemma models are well-suited for a variety of text generation tasks, including q
 
 See the [launch announcement](https://blog.google/technology/developers/google-gemma-2/) for more details. Usage of Gemma is subject to Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms).",
     "displayName": "Google: Gemma 2 27B",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "google/gemma-2-27b-it",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -540,6 +605,7 @@ The model is based on [Qwen2 72B](https://openrouter.ai/models/qwen/qwen-2-72b-i
     "functionCall": false,
     "id": "alpindale/magnum-72b",
     "maxTokens": 1024,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -552,6 +618,7 @@ Hermes-2 Θ (theta) was specifically designed with a few capabilities in mind: e
     "functionCall": false,
     "id": "nousresearch/hermes-2-theta-llama-3-8b",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -568,6 +635,7 @@ _These are free, rate-limited endpoints for [Gemma 2 9B](/models/google/gemma-2-
     "functionCall": false,
     "id": "google/gemma-2-9b-it:free",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -582,6 +650,7 @@ See the [launch announcement](https://blog.google/technology/developers/google-g
     "functionCall": false,
     "id": "google/gemma-2-9b-it",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -597,6 +666,7 @@ Compared to older Stheno version, this model is trained on:
     "functionCall": false,
     "id": "sao10k/l3-stheno-8b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -614,6 +684,7 @@ Jamba has a knowledge cutoff of February 2024.",
     "functionCall": false,
     "id": "ai21/jamba-instruct",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -631,6 +702,7 @@ Jamba has a knowledge cutoff of February 2024.",
     "functionCall": true,
     "id": "anthropic/claude-3.5-sonnet",
     "maxTokens": 8192,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -650,6 +722,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": true,
     "id": "anthropic/claude-3.5-sonnet:beta",
     "maxTokens": 8192,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -666,6 +739,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "sao10k/l3-euryale-70b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -680,6 +754,7 @@ For 128k context length, try [Phi-3 Medium 128K](/models/microsoft/phi-3-medium-
     "functionCall": false,
     "id": "microsoft/phi-3-medium-4k-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -696,6 +771,7 @@ The model is uncensored and is stripped of alignment and bias. It requires an ex
     "functionCall": false,
     "id": "cognitivecomputations/dolphin-mixtral-8x22b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -712,6 +788,7 @@ Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://hug
     "functionCall": false,
     "id": "qwen/qwen-2-72b-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -729,6 +806,7 @@ It outperforms many similarly sized models including [Llama 3 8B Instruct](/mode
     "functionCall": false,
     "id": "openchat/openchat-8b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -739,6 +817,7 @@ It outperforms many similarly sized models including [Llama 3 8B Instruct](/mode
     "functionCall": false,
     "id": "nousresearch/hermes-2-pro-llama-3-8b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -757,6 +836,7 @@ NOTE: Support for function calling depends on the provider.",
     "functionCall": true,
     "id": "mistralai/mistral-7b-instruct-v0.3",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -771,6 +851,7 @@ _These are free, rate-limited endpoints for [Mistral 7B Instruct](/models/mistra
     "functionCall": false,
     "id": "mistralai/mistral-7b-instruct:free",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -783,6 +864,7 @@ _These are free, rate-limited endpoints for [Mistral 7B Instruct](/models/mistra
     "functionCall": false,
     "id": "mistralai/mistral-7b-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -797,6 +879,7 @@ _These are higher-throughput endpoints for [Mistral 7B Instruct](/models/mistral
     "functionCall": false,
     "id": "mistralai/mistral-7b-instruct:nitro",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -811,6 +894,7 @@ _These are free, rate-limited endpoints for [Phi-3 Mini 128K Instruct](/models/m
     "functionCall": false,
     "id": "microsoft/phi-3-mini-128k-instruct:free",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -823,6 +907,7 @@ At time of release, Phi-3 Medium demonstrated state-of-the-art performance among
     "functionCall": false,
     "id": "microsoft/phi-3-mini-128k-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -839,6 +924,7 @@ _These are free, rate-limited endpoints for [Phi-3 Medium 128K Instruct](/models
     "functionCall": false,
     "id": "microsoft/phi-3-medium-128k-instruct:free",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -853,6 +939,7 @@ For 4k context length, try [Phi-3 Medium 4K](/models/microsoft/phi-3-medium-4k-i
     "functionCall": false,
     "id": "microsoft/phi-3-medium-128k-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -867,6 +954,7 @@ Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.m
     "functionCall": false,
     "id": "neversleep/llama-3-lumimaid-70b",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -880,9 +968,10 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
 #multimodal",
     "displayName": "Google: Gemini Flash 1.5",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "google/gemini-flash-1.5",
     "maxTokens": 32768,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -895,6 +984,7 @@ The original V1 model was trained from scratch on 2T tokens, with a composition 
     "functionCall": false,
     "id": "deepseek/deepseek-coder",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -906,9 +996,10 @@ Compared with DeepSeek 67B, DeepSeek-V2 achieves stronger performance, and meanw
 DeepSeek-V2 achieves remarkable performance on both standard benchmarks and open-ended generation evaluations.",
     "displayName": "DeepSeek-V2 Chat",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "deepseek/deepseek-chat",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -921,6 +1012,7 @@ This is the online version of the [offline chat model](/models/perplexity/llama-
     "functionCall": false,
     "id": "perplexity/llama-3-sonar-large-32k-online",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -933,6 +1025,7 @@ This is a normal offline LLM, but the [online version](/models/perplexity/llama-
     "functionCall": false,
     "id": "perplexity/llama-3-sonar-large-32k-chat",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -945,6 +1038,7 @@ This is the online version of the [offline chat model](/models/perplexity/llama-
     "functionCall": false,
     "id": "perplexity/llama-3-sonar-small-32k-online",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -957,6 +1051,7 @@ This is a normal offline LLM, but the [online version](/models/perplexity/llama-
     "functionCall": false,
     "id": "perplexity/llama-3-sonar-small-32k-chat",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -975,6 +1070,7 @@ To read more about the model release, [click here](https://ai.meta.com/blog/meta
     "functionCall": false,
     "id": "meta-llama/llama-guard-2-8b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -987,6 +1083,7 @@ For benchmarking against other models, it was briefly called ["im-also-a-good-gp
     "functionCall": false,
     "id": "openai/gpt-4o-2024-05-13",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -996,10 +1093,11 @@ For benchmarking against other models, it was briefly called ["im-also-a-good-gp
 For benchmarking against other models, it was briefly called ["im-also-a-good-gpt2-chatbot"](https://twitter.com/LiamFedus/status/1790064963966370209)",
     "displayName": "OpenAI: GPT-4o",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "openai/gpt-4o",
     "maxTokens": 4096,
-    "vision": false,
+    "reasoning": false,
+    "vision": true,
   },
   {
     "contextWindowTokens": 128000,
@@ -1011,6 +1109,7 @@ _These are extended-context endpoints for [GPT-4o](/models/openai/gpt-4o). They 
     "functionCall": false,
     "id": "openai/gpt-4o:extended",
     "maxTokens": 64000,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1029,6 +1128,7 @@ Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://hug
     "functionCall": false,
     "id": "qwen/qwen-72b-chat",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1047,6 +1147,7 @@ Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://hug
     "functionCall": false,
     "id": "qwen/qwen-110b-chat",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1061,6 +1162,7 @@ Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.m
     "functionCall": false,
     "id": "neversleep/llama-3-lumimaid-8b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1077,6 +1179,7 @@ _These are extended-context endpoints for [Llama 3 Lumimaid 8B](/models/neversle
     "functionCall": false,
     "id": "neversleep/llama-3-lumimaid-8b:extended",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1089,6 +1192,7 @@ If you submit a raw prompt, you can use Alpaca or Vicuna formats.",
     "functionCall": false,
     "id": "sao10k/fimbulvetr-11b-v2",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1103,6 +1207,7 @@ To read more about the model release, [click here](https://ai.meta.com/blog/meta
     "functionCall": false,
     "id": "meta-llama/llama-3-70b-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1119,6 +1224,7 @@ _These are higher-throughput endpoints for [Llama 3 70B Instruct](/models/meta-l
     "functionCall": false,
     "id": "meta-llama/llama-3-70b-instruct:nitro",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1135,6 +1241,7 @@ _These are free, rate-limited endpoints for [Llama 3 8B Instruct](/models/meta-l
     "functionCall": false,
     "id": "meta-llama/llama-3-8b-instruct:free",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1149,6 +1256,7 @@ To read more about the model release, [click here](https://ai.meta.com/blog/meta
     "functionCall": false,
     "id": "meta-llama/llama-3-8b-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1165,6 +1273,7 @@ _These are higher-throughput endpoints for [Llama 3 8B Instruct](/models/meta-ll
     "functionCall": false,
     "id": "meta-llama/llama-3-8b-instruct:nitro",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1181,6 +1290,7 @@ _These are extended-context endpoints for [Llama 3 8B Instruct](/models/meta-lla
     "functionCall": false,
     "id": "meta-llama/llama-3-8b-instruct:extended",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1197,6 +1307,7 @@ See benchmarks on the launch announcement [here](https://mistral.ai/news/mixtral
     "functionCall": false,
     "id": "mistralai/mixtral-8x22b-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1213,6 +1324,7 @@ To read more about the model release, [click here](https://wizardlm.github.io/Wi
     "functionCall": false,
     "id": "microsoft/wizardlm-2-7b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1229,6 +1341,7 @@ To read more about the model release, [click here](https://wizardlm.github.io/Wi
     "functionCall": false,
     "id": "microsoft/wizardlm-2-8x22b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1251,9 +1364,10 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
 #multimodal",
     "displayName": "Google: Gemini Pro 1.5",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "google/gemini-pro-1.5",
     "maxTokens": 32768,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1266,6 +1380,7 @@ Training data: up to December 2023.",
     "functionCall": true,
     "id": "openai/gpt-4-turbo",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1276,10 +1391,11 @@ It offers multilingual support for ten key languages to facilitate global busine
 
 Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
     "displayName": "Cohere: Command R+",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "cohere/command-r-plus",
     "maxTokens": 4000,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1296,6 +1412,7 @@ See the launch announcement and benchmark results [here](https://www.databricks.
     "functionCall": false,
     "id": "databricks/dbrx-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1308,6 +1425,7 @@ Descending from earlier versions of Midnight Rose and [Wizard Tulu Dolphin 70B](
     "functionCall": false,
     "id": "sophosympatheia/midnight-rose-70b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1318,10 +1436,11 @@ Read the launch post [here](https://txt.cohere.com/command-r/).
 
 Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
     "displayName": "Cohere: Command R",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "cohere/command-r",
     "maxTokens": 4000,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1334,6 +1453,7 @@ Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.co
     "functionCall": false,
     "id": "cohere/command",
     "maxTokens": 4000,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1346,9 +1466,10 @@ See the launch announcement and benchmark results [here](https://www.anthropic.c
 #multimodal",
     "displayName": "Anthropic: Claude 3 Haiku",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "anthropic/claude-3-haiku",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1366,6 +1487,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "anthropic/claude-3-haiku:beta",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1380,6 +1502,7 @@ See the launch announcement and benchmark results [here](https://www.anthropic.c
     "functionCall": false,
     "id": "anthropic/claude-3-sonnet",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1396,6 +1519,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "anthropic/claude-3-sonnet:beta",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1407,9 +1531,10 @@ See the launch announcement and benchmark results [here](https://www.anthropic.c
 #multimodal",
     "displayName": "Anthropic: Claude 3 Opus",
     "enabled": true,
-    "functionCall": false,
+    "functionCall": true,
     "id": "anthropic/claude-3-opus",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1426,6 +1551,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "anthropic/claude-3-opus:beta",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1438,6 +1564,7 @@ It is fluent in English, French, Spanish, German, and Italian, with high grammat
     "functionCall": false,
     "id": "mistralai/mistral-large",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1450,6 +1577,7 @@ It is fluent in English, French, Spanish, German, and Italian, with high grammat
     "functionCall": true,
     "id": "openai/gpt-4-turbo-preview",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1462,6 +1590,7 @@ Training data up to Sep 2021.",
     "functionCall": false,
     "id": "openai/gpt-3.5-turbo-0613",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1476,6 +1605,7 @@ The model was trained on over 1,000,000 entries of primarily [GPT-4](/models/ope
     "functionCall": false,
     "id": "nousresearch/nous-hermes-2-mixtral-8x7b-dpo",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1486,6 +1616,7 @@ The model was trained on over 1,000,000 entries of primarily [GPT-4](/models/ope
     "functionCall": false,
     "id": "mistralai/mistral-medium",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1497,6 +1628,7 @@ The model was trained on over 1,000,000 entries of primarily [GPT-4](/models/ope
     "functionCall": false,
     "id": "mistralai/mistral-small",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1507,6 +1639,7 @@ The model was trained on over 1,000,000 entries of primarily [GPT-4](/models/ope
     "functionCall": false,
     "id": "mistralai/mistral-tiny",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1517,6 +1650,7 @@ The model was trained on over 1,000,000 entries of primarily [GPT-4](/models/ope
     "functionCall": false,
     "id": "austism/chronos-hermes-13b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1529,6 +1663,7 @@ Nous-Hermes 2 on Yi 34B outperforms all Nous-Hermes & Open-Hermes models of the 
     "functionCall": false,
     "id": "nousresearch/nous-hermes-yi-34b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1545,6 +1680,7 @@ An improved version of [Mistral 7B Instruct](/modelsmistralai/mistral-7b-instruc
     "functionCall": false,
     "id": "mistralai/mistral-7b-instruct-v0.2",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1559,6 +1695,7 @@ The model is uncensored and is stripped of alignment and bias. It requires an ex
     "functionCall": false,
     "id": "cognitivecomputations/dolphin-mixtral-8x7b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1575,6 +1712,7 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
     "functionCall": false,
     "id": "google/gemini-pro-vision",
     "maxTokens": 8192,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1589,6 +1727,7 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
     "functionCall": false,
     "id": "google/gemini-pro",
     "maxTokens": 32768,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1601,6 +1740,7 @@ Instruct model fine-tuned by Mistral. #moe",
     "functionCall": false,
     "id": "mistralai/mixtral-8x7b-instruct",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1615,6 +1755,7 @@ _These are higher-throughput endpoints for [Mixtral 8x7B Instruct](/models/mistr
     "functionCall": false,
     "id": "mistralai/mixtral-8x7b-instruct:nitro",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1627,6 +1768,7 @@ _These are higher-throughput endpoints for [Mixtral 8x7B Instruct](/models/mistr
     "functionCall": false,
     "id": "mistralai/mixtral-8x7b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1639,6 +1781,7 @@ StripedHyena uses a new architecture that competes with traditional Transformers
     "functionCall": false,
     "id": "togethercomputer/stripedhyena-nous-7b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1655,6 +1798,7 @@ _These are free, rate-limited endpoints for [MythoMist 7B](/models/gryphe/mythom
     "functionCall": false,
     "id": "gryphe/mythomist-7b:free",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1669,6 +1813,7 @@ It combines [Neural Chat 7B](/models/intel/neural-chat-7b), Airoboros 7b, [Toppy
     "functionCall": false,
     "id": "gryphe/mythomist-7b",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1686,6 +1831,7 @@ _These are free, rate-limited endpoints for [OpenChat 3.5 7B](/models/openchat/o
     "functionCall": false,
     "id": "openchat/openchat-7b:free",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1701,6 +1847,7 @@ _These are free, rate-limited endpoints for [OpenChat 3.5 7B](/models/openchat/o
     "functionCall": false,
     "id": "openchat/openchat-7b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1713,6 +1860,7 @@ _These are free, rate-limited endpoints for [OpenChat 3.5 7B](/models/openchat/o
     "functionCall": false,
     "id": "neversleep/noromaid-20b",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1723,6 +1871,7 @@ _These are free, rate-limited endpoints for [OpenChat 3.5 7B](/models/openchat/o
     "functionCall": false,
     "id": "anthropic/claude-instant-1.1",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1733,6 +1882,7 @@ _These are free, rate-limited endpoints for [OpenChat 3.5 7B](/models/openchat/o
     "functionCall": false,
     "id": "anthropic/claude-2.1",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1745,6 +1895,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "anthropic/claude-2.1:beta",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1755,6 +1906,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "anthropic/claude-2",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1767,6 +1919,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "anthropic/claude-2:beta",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1778,6 +1931,7 @@ Potentially the most interesting finding from training on a good ratio (est. of 
     "functionCall": false,
     "id": "teknium/openhermes-2.5-mistral-7b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1792,6 +1946,7 @@ Potentially the most interesting finding from training on a good ratio (est. of 
     "functionCall": false,
     "id": "openai/gpt-4-vision-preview",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1805,6 +1960,7 @@ A multi-model merge of several LLaMA2 70B finetunes for roleplaying and creative
     "functionCall": false,
     "id": "lizpreciatior/lzlv-70b-fp16-hf",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1821,6 +1977,7 @@ Credits to
     "functionCall": false,
     "id": "alpindale/goliath-120b",
     "maxTokens": 400,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1841,6 +1998,7 @@ _These are free, rate-limited endpoints for [Toppy M 7B](/models/undi95/toppy-m-
     "functionCall": false,
     "id": "undi95/toppy-m-7b:free",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1859,6 +2017,7 @@ List of merged models:
     "functionCall": false,
     "id": "undi95/toppy-m-7b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1879,6 +2038,7 @@ _These are higher-throughput endpoints for [Toppy M 7B](/models/undi95/toppy-m-7
     "functionCall": false,
     "id": "undi95/toppy-m-7b:nitro",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1891,6 +2051,7 @@ A major redesign of this router is coming soon. Stay tuned on [Discord](https://
     "functionCall": false,
     "id": "openrouter/auto",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1903,6 +2064,7 @@ Training data: up to April 2023.",
     "functionCall": true,
     "id": "openai/gpt-4-1106-preview",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -1913,6 +2075,7 @@ Training data: up to April 2023.",
     "functionCall": true,
     "id": "openai/gpt-3.5-turbo-1106",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1923,6 +2086,7 @@ Training data: up to April 2023.",
     "functionCall": false,
     "id": "google/palm-2-codechat-bison-32k",
     "maxTokens": 32768,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1933,6 +2097,7 @@ Training data: up to April 2023.",
     "functionCall": false,
     "id": "google/palm-2-chat-bison-32k",
     "maxTokens": 32768,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1945,6 +2110,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "functionCall": false,
     "id": "jondurbin/airoboros-l2-70b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1955,6 +2121,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "functionCall": false,
     "id": "xwin-lm/xwin-lm-70b",
     "maxTokens": 400,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1962,9 +2129,10 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "description": "A 7.3B parameter model that outperforms Llama 2 13B on all benchmarks, with optimizations for speed and context length.",
     "displayName": "Mistral: Mistral 7B Instruct v0.1",
     "enabled": false,
-    "functionCall": false,
+    "functionCall": true,
     "id": "mistralai/mistral-7b-instruct-v0.1",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1975,6 +2143,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "functionCall": false,
     "id": "openai/gpt-3.5-turbo-instruct",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1985,6 +2154,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "functionCall": false,
     "id": "pygmalionai/mythalion-13b",
     "maxTokens": 400,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -1995,6 +2165,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "functionCall": false,
     "id": "openai/gpt-4-32k-0314",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2005,6 +2176,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "functionCall": false,
     "id": "openai/gpt-4-32k",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2015,6 +2187,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "functionCall": false,
     "id": "openai/gpt-3.5-turbo-16k",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2025,6 +2198,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
     "functionCall": false,
     "id": "nousresearch/nous-hermes-llama2-13b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2037,6 +2211,7 @@ _These are free, rate-limited endpoints for [Zephyr 7B](/models/huggingfaceh4/ze
     "functionCall": false,
     "id": "huggingfaceh4/zephyr-7b-beta:free",
     "maxTokens": 2048,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2047,6 +2222,7 @@ _These are free, rate-limited endpoints for [Zephyr 7B](/models/huggingfaceh4/ze
     "functionCall": false,
     "id": "mancer/weaver",
     "maxTokens": 1000,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2057,6 +2233,7 @@ _These are free, rate-limited endpoints for [Zephyr 7B](/models/huggingfaceh4/ze
     "functionCall": false,
     "id": "anthropic/claude-instant-1.0",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2067,6 +2244,7 @@ _These are free, rate-limited endpoints for [Zephyr 7B](/models/huggingfaceh4/ze
     "functionCall": false,
     "id": "anthropic/claude-1.2",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2077,6 +2255,7 @@ _These are free, rate-limited endpoints for [Zephyr 7B](/models/huggingfaceh4/ze
     "functionCall": false,
     "id": "anthropic/claude-1",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2087,6 +2266,7 @@ _These are free, rate-limited endpoints for [Zephyr 7B](/models/huggingfaceh4/ze
     "functionCall": false,
     "id": "anthropic/claude-instant-1",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2099,6 +2279,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "anthropic/claude-instant-1:beta",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2109,6 +2290,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "anthropic/claude-2.0",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2121,6 +2303,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "anthropic/claude-2.0:beta",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2131,6 +2314,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
     "functionCall": false,
     "id": "undi95/remm-slerp-l2-13b",
     "maxTokens": 400,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2143,6 +2327,7 @@ _These are extended-context endpoints for [ReMM SLERP 13B](/models/undi95/remm-s
     "functionCall": false,
     "id": "undi95/remm-slerp-l2-13b:extended",
     "maxTokens": 400,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2153,6 +2338,7 @@ _These are extended-context endpoints for [ReMM SLERP 13B](/models/undi95/remm-s
     "functionCall": false,
     "id": "google/palm-2-codechat-bison",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2163,6 +2349,7 @@ _These are extended-context endpoints for [ReMM SLERP 13B](/models/undi95/remm-s
     "functionCall": false,
     "id": "google/palm-2-chat-bison",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2173,6 +2360,7 @@ _These are extended-context endpoints for [ReMM SLERP 13B](/models/undi95/remm-s
     "functionCall": false,
     "id": "gryphe/mythomax-l2-13b",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2185,6 +2373,7 @@ _These are higher-throughput endpoints for [MythoMax 13B](/models/gryphe/mythoma
     "functionCall": false,
     "id": "gryphe/mythomax-l2-13b:nitro",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2197,6 +2386,7 @@ _These are extended-context endpoints for [MythoMax 13B](/models/gryphe/mythomax
     "functionCall": false,
     "id": "gryphe/mythomax-l2-13b:extended",
     "maxTokens": 400,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2207,6 +2397,7 @@ _These are extended-context endpoints for [MythoMax 13B](/models/gryphe/mythomax
     "functionCall": false,
     "id": "meta-llama/llama-2-13b-chat",
     "maxTokens": undefined,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2217,6 +2408,7 @@ _These are extended-context endpoints for [MythoMax 13B](/models/gryphe/mythomax
     "functionCall": false,
     "id": "openai/gpt-4-0314",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2227,6 +2419,7 @@ _These are extended-context endpoints for [MythoMax 13B](/models/gryphe/mythomax
     "functionCall": false,
     "id": "openai/gpt-4",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": true,
   },
   {
@@ -2239,6 +2432,7 @@ Training data up to Sep 2021.",
     "functionCall": false,
     "id": "openai/gpt-3.5-turbo-0301",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2251,6 +2445,7 @@ This version has a higher accuracy at responding in requested formats and a fix 
     "functionCall": true,
     "id": "openai/gpt-3.5-turbo-0125",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
   {
@@ -2263,6 +2458,7 @@ Training data up to Sep 2021.",
     "functionCall": false,
     "id": "openai/gpt-3.5-turbo",
     "maxTokens": 4096,
+    "reasoning": false,
     "vision": false,
   },
 ]

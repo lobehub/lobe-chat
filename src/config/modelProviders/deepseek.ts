@@ -43,6 +43,9 @@ const DeepSeek: ModelProviderCard = {
   modelsUrl: 'https://platform.deepseek.com/api-docs/zh-cn/quick_start/pricing',
   name: 'DeepSeek',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.deepseek.com',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

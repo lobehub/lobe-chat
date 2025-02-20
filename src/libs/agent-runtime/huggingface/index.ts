@@ -6,7 +6,6 @@ import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { convertIterableToStream } from '../utils/streams';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 export interface HuggingFaceModelCard {
@@ -56,10 +55,18 @@ export const LobeHuggingFaceAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_HUGGINGFACE_CHAT_COMPLETION === '1',
   },
   models: async () => {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const visionKeywords = [
       'image-text-to-text',
       'multimodal',
       'vision',
+    ];
+
+    const reasoningKeywords = [
+      'deepseek-r1',
+      'qvq',
+      'qwq',
     ];
 
     // ref: https://huggingface.co/docs/hub/api
@@ -73,13 +80,26 @@ export const LobeHuggingFaceAI = LobeOpenAICompatibleFactory({
 
     return modelList
       .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+
         return {
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
-          functionCall: model.tags.some(tag => tag.toLowerCase().includes('function-calling')),
+          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+          displayName: knownModel?.displayName ?? undefined,
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            model.tags.some(tag => tag.toLowerCase().includes('function-calling'))
+            || knownModel?.abilities?.functionCall
+            || false,
           id: model.id,
-          vision: model.tags.some(tag =>
-            visionKeywords.some(keyword => tag.toLowerCase().includes(keyword))
-          ),
+          reasoning:
+            model.tags.some(tag => tag.toLowerCase().includes('reasoning'))
+            || reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            model.tags.some(tag => visionKeywords.some(keyword => tag.toLowerCase().includes(keyword)))
+            || knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

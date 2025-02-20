@@ -79,10 +79,12 @@ RUN \
     fi \
     # Set the registry for corepack
     && export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
+    # Update corepack to latest (nodejs/corepack#612)
+    && npm i -g corepack@latest \
     # Enable corepack
     && corepack enable \
     # Use pnpm for corepack
-    && corepack use pnpm@9 \
+    && corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json) \
     # Install the dependencies
     && pnpm i \
     # Add sharp dependencies
@@ -128,6 +130,10 @@ ENV NODE_ENV="production" \
     NODE_EXTRA_CA_CERTS="" \
     NODE_TLS_REJECT_UNAUTHORIZED="" \
     SSL_CERT_DIR="/etc/ssl/certs/ca-certificates.crt"
+
+# Make the middleware rewrite through local as default
+# refs: https://github.com/lobehub/lobe-chat/issues/5876
+ENV MIDDLEWARE_REWRITE_THROUGH_LOCAL="1"
 
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0" \
@@ -177,6 +183,8 @@ ENV \
     HUNYUAN_API_KEY="" HUNYUAN_MODEL_LIST="" \
     # InternLM
     INTERNLM_API_KEY="" INTERNLM_MODEL_LIST="" \
+    # Jina
+    JINA_API_KEY="" JINA_MODEL_LIST="" JINA_PROXY_URL="" \
     # Minimax
     MINIMAX_API_KEY="" MINIMAX_MODEL_LIST="" \
     # Mistral
@@ -185,6 +193,8 @@ ENV \
     MOONSHOT_API_KEY="" MOONSHOT_MODEL_LIST="" MOONSHOT_PROXY_URL="" \
     # Novita
     NOVITA_API_KEY="" NOVITA_MODEL_LIST="" \
+    # Nvidia NIM
+    NVIDIA_API_KEY="" NVIDIA_MODEL_LIST="" NVIDIA_PROXY_URL="" \
     # Ollama
     ENABLED_OLLAMA="" OLLAMA_MODEL_LIST="" OLLAMA_PROXY_URL="" \
     # OpenAI
@@ -195,6 +205,8 @@ ENV \
     PERPLEXITY_API_KEY="" PERPLEXITY_MODEL_LIST="" PERPLEXITY_PROXY_URL="" \
     # Qwen
     QWEN_API_KEY="" QWEN_MODEL_LIST="" QWEN_PROXY_URL="" \
+    # SambaNova
+    SAMBANOVA_API_KEY="" SAMBANOVA_MODEL_LIST="" \
     # SenseNova
     SENSENOVA_API_KEY="" SENSENOVA_MODEL_LIST="" \
     # SiliconCloud
@@ -209,14 +221,18 @@ ENV \
     TOGETHERAI_API_KEY="" TOGETHERAI_MODEL_LIST="" \
     # Upstage
     UPSTAGE_API_KEY="" UPSTAGE_MODEL_LIST="" \
+    # vLLM
+    VLLM_API_KEY="" VLLM_MODEL_LIST="" VLLM_PROXY_URL="" \
     # Wenxin
-    WENXIN_ACCESS_KEY="" WENXIN_SECRET_KEY="" WENXIN_MODEL_LIST="" \
+    WENXIN_API_KEY="" WENXIN_MODEL_LIST="" \
     # xAI
     XAI_API_KEY="" XAI_MODEL_LIST="" XAI_PROXY_URL="" \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
-    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST=""
+    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST="" \
+    # Tencent Cloud
+    TENCENT_CLOUD_API_KEY="" TENCENT_CLOUD_MODEL_LIST=""
 
 USER nextjs
 

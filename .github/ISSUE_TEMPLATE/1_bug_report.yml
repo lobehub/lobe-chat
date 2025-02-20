@@ -5,7 +5,7 @@ labels: ['🐛 Bug']
 body:
   - type: dropdown
     attributes:
-      label: '📦 Environment'
+      label: '📦 Platform'
       multiple: true
       options:
         - 'Official Preview'
@@ -13,8 +13,18 @@ body:
         - 'Zeabur'
         - 'Sealos'
         - 'Netlify'
-        - 'Docker'
+        - 'Self hosting Docker'
         - 'Other'
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: '📦 Deploymenet mode'
+      multiple: true
+      options:
+        - 'client db (lobe-chat image)'
+        - 'client pgelite db (lobe-chat-pglite image)'
+        - 'server db(lobe-chat-database image)'
     validations:
       required: true
   - type: input
@@ -22,7 +32,7 @@ body:
       label: '📌 Version'
     validations:
       required: true
-  
+
   - type: dropdown
     attributes:
       label: '💻 Operating System'

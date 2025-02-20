@@ -69,7 +69,9 @@ const Spark: ModelProviderCard = {
   modelsUrl: 'https://xinghuo.xfyun.cn/spark',
   name: 'Spark',
   settings: {
+    modelEditable: false,
     sdkType: 'openai',
+    showModelFetcher: false,
     smoothing: {
       speed: 2,
       text: true,

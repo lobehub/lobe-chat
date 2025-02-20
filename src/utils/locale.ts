@@ -1,7 +1,8 @@
 import { resolveAcceptLanguage } from 'resolve-accept-language';
 
 import { DEFAULT_LANG } from '@/const/locale';
-import { locales, normalizeLocale } from '@/locales/resources';
+import { Locales, locales, normalizeLocale } from '@/locales/resources';
+import { RouteVariants } from '@/utils/server/routeVariants';
 
 export const getAntdLocale = async (lang?: string) => {
   let normalLang = normalizeLocale(lang);
@@ -32,14 +33,29 @@ export const parseBrowserLanguage = (headers: Headers, defaultLang: string = DEF
    * 2) The available locales (they must contain the default locale).
    * 3) The default locale.
    */
-  let fallbackLang: string = resolveAcceptLanguage(
+  let browserLang: string = resolveAcceptLanguage(
     headers.get('accept-language') || '',
     //  Invalid locale identifier 'ar'. A valid locale should follow the BCP 47 'language-country' format.
     locales.map((locale) => (locale === 'ar' ? 'ar-EG' : locale)),
     defaultLang,
   );
-  // if match the ar-EG then fallback to ar
-  if (fallbackLang === 'ar-EG') fallbackLang = 'ar';
 
-  return fallbackLang;
+  // if match the ar-EG then fallback to ar
+  if (browserLang === 'ar-EG') browserLang = 'ar';
+
+  return browserLang;
+};
+
+/**
+ * Parse the page locale from the URL and search params
+ * @param props
+ */
+export const parsePageLocale = async (props: {
+  params: Promise<{ variants: string }>;
+  searchParams: Promise<any>;
+}) => {
+  const searchParams = await props.searchParams;
+
+  const browserLocale = await RouteVariants.getLocale(props);
+  return normalizeLocale(searchParams?.hl || browserLocale) as Locales;
 };

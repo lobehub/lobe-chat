@@ -49,6 +49,7 @@ describe('serverConfigSelectors', () => {
         serverConfig: {
           enabledOAuthSSO: true,
           telemetry: {},
+          aiProvider: {},
         },
       });
 
@@ -63,6 +64,7 @@ describe('serverConfigSelectors', () => {
       const store = initServerConfigStore({
         serverConfig: {
           telemetry: { langfuse: true },
+          aiProvider: {},
         },
       });
 
@@ -75,6 +77,7 @@ describe('serverConfigSelectors', () => {
       const store = initServerConfigStore({
         serverConfig: {
           telemetry: {},
+          aiProvider: {},
         },
       });
 

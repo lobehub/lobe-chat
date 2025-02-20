@@ -286,6 +286,7 @@
     "anonymousNickName": "Utilisateur anonyme",
     "billing": "Gestion de la facturation",
     "cloud": "Découvrir {{name}}",
+    "community": "Version communautaire",
     "data": "Stockage des données",
     "defaultNickname": "Utilisateur de la version communautaire",
     "discord": "Support de la communauté",
@@ -295,7 +296,6 @@
     "help": "Centre d'aide",
     "moveGuide": "Le bouton de configuration a été déplacé ici",
     "plans": "Forfaits d'abonnement",
-    "preview": "Aperçu",
     "profile": "Gestion du compte",
     "setting": "Paramètres de l'application",
     "usages": "Statistiques d'utilisation"

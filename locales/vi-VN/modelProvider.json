@@ -19,6 +19,24 @@
       "title": "API Key"
     }
   },
+  "azureai": {
+    "azureApiVersion": {
+      "desc": "Phiên bản API của Azure, theo định dạng YYYY-MM-DD, tham khảo [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Lấy danh sách",
+      "title": "Phiên bản API Azure"
+    },
+    "endpoint": {
+      "desc": "Tìm điểm kết thúc suy diễn mô hình Azure AI từ tổng quan dự án Azure AI",
+      "placeholder": "https://ai-userxxxxxxxxxx.services.ai.azure.com/models",
+      "title": "Điểm kết thúc Azure AI"
+    },
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Tìm khóa API từ tổng quan dự án Azure AI",
+      "placeholder": "Khóa Azure",
+      "title": "Khóa"
+    }
+  },
   "bedrock": {
     "accessKeyId": {
       "desc": "Nhập AWS Access Key Id",
@@ -66,7 +84,6 @@
   "createNewAiProvider": {
     "apiKey": {
       "placeholder": "Vui lòng nhập API Key của bạn",
-      "required": "Vui lòng nhập API Key của bạn",
       "title": "API Key"
     },
     "basicTitle": "Thông tin cơ bản",
@@ -94,10 +111,11 @@
       "title": "Tên nhà cung cấp"
     },
     "proxyUrl": {
-      "placeholder": "Vui lòng nhập địa chỉ yêu cầu của bạn, nếu không sẽ sử dụng địa chỉ yêu cầu tương ứng của SDK",
+      "required": "Vui lòng nhập địa chỉ proxy",
       "title": "Địa chỉ proxy"
     },
     "sdkType": {
+      "placeholder": "openai/anthropic/azureai/ollama/...",
       "required": "Vui lòng chọn loại SDK",
       "title": "Định dạng yêu cầu"
     },
@@ -154,30 +172,6 @@
       "desc": "Phải bao gồm http(s)://, có thể để trống nếu không chỉ định thêm cho địa phương",
       "title": "Địa chỉ proxy API"
     },
-    "setup": {
-      "cors": {
-        "description": "Do vấn đề về an ninh trình duyệt, bạn cần cấu hình CORS cho Ollama trước khi có thể sử dụng bình thường.",
-        "linux": {
-          "env": "Trong phần [Service], thêm `Environment`, thêm biến môi trường OLLAMA_ORIGINS:",
-          "reboot": "Tải lại systemd và khởi động lại Ollama",
-          "systemd": "Gọi systemd để chỉnh sửa dịch vụ ollama:"
-        },
-        "macos": "Vui lòng mở ứng dụng «Terminal», dán lệnh sau và nhấn Enter để chạy",
-        "reboot": "Vui lòng khởi động lại dịch vụ Ollama sau khi hoàn thành",
-        "title": "Cấu hình Ollama cho phép truy cập từ xa",
-        "windows": "Trên Windows, nhấp vào «Control Panel», vào chỉnh sửa biến môi trường hệ thống. Tạo biến môi trường tên là «OLLAMA_ORIGINS» cho tài khoản người dùng của bạn, giá trị là * , nhấp vào «OK/Áp dụng» để lưu lại"
-      },
-      "install": {
-        "description": "Vui lòng xác nhận rằng bạn đã bật Ollama. Nếu chưa tải Ollama, vui lòng truy cập trang web chính thức để <1>tải xuống</1>",
-        "docker": "Nếu bạn muốn sử dụng Docker, Ollama cũng cung cấp hình ảnh Docker chính thức, bạn có thể kéo theo lệnh sau:",
-        "linux": {
-          "command": "Cài đặt bằng lệnh sau:",
-          "manual": "Hoặc bạn cũng có thể tham khảo <1>Hướng dẫn cài đặt thủ công trên Linux</1> để tự cài đặt"
-        },
-        "title": "Cài đặt và mở Ollama ứng dụng trên máy cục bộ",
-        "windowsTab": "Windows (Bản xem trước)"
-      }
-    },
     "title": "Ollama",
     "unlock": {
       "cancel": "Hủy tải xuống",
@@ -198,6 +192,7 @@
       },
       "baseURL": {
         "desc": "Phải bao gồm http(s)://",
+        "invalid": "Vui lòng nhập một URL hợp lệ",
         "placeholder": "https://your-proxy-url.com/v1",
         "title": "Địa chỉ proxy API"
       },
@@ -234,6 +229,11 @@
           "placeholder": "Vui lòng nhập tên triển khai mô hình trong Azure",
           "title": "Tên triển khai mô hình"
         },
+        "deployName": {
+          "extra": "Trường này sẽ được sử dụng làm ID mô hình khi gửi yêu cầu",
+          "placeholder": "Vui lòng nhập tên hoặc ID thực tế của mô hình đã triển khai",
+          "title": "Tên triển khai mô hình"
+        },
         "displayName": {
           "placeholder": "Vui lòng nhập tên hiển thị của mô hình, ví dụ ChatGPT, GPT-4, v.v.",
           "title": "Tên hiển thị mô hình"
@@ -252,6 +252,10 @@
           "title": "ID mô hình"
         },
         "modalTitle": "Cấu hình mô hình tùy chỉnh",
+        "reasoning": {
+          "extra": "Cấu hình này sẽ chỉ kích hoạt khả năng suy nghĩ sâu của mô hình, hiệu quả cụ thể hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra xem mô hình này có khả năng suy nghĩ sâu có thể sử dụng hay không",
+          "title": "Hỗ trợ suy nghĩ sâu"
+        },
         "tokens": {
           "extra": "Cài đặt số Token tối đa mà mô hình hỗ trợ",
           "title": "Cửa sổ ngữ cảnh tối đa",
@@ -295,6 +299,11 @@
         "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
         "noLatestTime": "Chưa lấy danh sách"
       },
+      "resetAll": {
+        "conform": "Xác nhận việc đặt lại tất cả các thay đổi của mô hình hiện tại? Sau khi đặt lại, danh sách mô hình hiện tại sẽ trở về trạng thái mặc định",
+        "success": "Đặt lại thành công",
+        "title": "Đặt lại tất cả các thay đổi"
+      },
       "search": "Tìm kiếm mô hình...",
       "searchResult": "Tìm thấy {{count}} mô hình",
       "title": "Danh sách mô hình",
@@ -313,24 +322,11 @@
     "tooltip": "Cập nhật cấu hình cơ bản của nhà cung cấp",
     "updateSuccess": "Cập nhật thành công"
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Nhập Access Key từ nền tảng Qianfan của Baidu",
-      "placeholder": "Access Key Qianfan",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Kiểm tra xem AccessKey / SecretAccess có được nhập đúng không"
-    },
-    "secretKey": {
-      "desc": "Nhập Secret Key từ nền tảng Qianfan của Baidu",
-      "placeholder": "Secret Key Qianfan",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Khu vực dịch vụ tùy chỉnh",
-      "description": "Nhập AccessKey / SecretKey của bạn để bắt đầu phiên trò chuyện. Ứng dụng sẽ không ghi lại cấu hình xác thực của bạn",
-      "title": "Sử dụng thông tin xác thực của Wenxin Yiyan tùy chỉnh"
+  "vertexai": {
+    "apiKey": {
+      "desc": "Nhập khóa Vertex AI của bạn",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Khóa Vertex AI"
     }
   },
   "zeroone": {

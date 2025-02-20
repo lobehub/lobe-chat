@@ -3,21 +3,22 @@ import { AIChatModelCard } from '@/types/aiModel';
 const githubChatModels: AIChatModelCard[] = [
   {
     abilities: {
-      functionCall: false,
-      vision: true,
+      functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 200_000,
     description:
-      '专注于高级推理和解决复杂问题，包括数学和科学任务。非常适合需要深入上下文理解和代理工作流程的应用程序。',
-    displayName: 'OpenAI o1',
+      'o3-mini 是我们最新的小型推理模型，在与 o1-mini 相同的成本和延迟目标下提供高智能。',
+    displayName: 'OpenAI o3-mini',
     enabled: true,
-    id: 'o1',
+    id: 'o3-mini',
     maxOutput: 100_000,
+    releasedAt: '2025-01-31',
     type: 'chat',
   },
   {
     abilities: {
-      functionCall: false,
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -30,7 +31,21 @@ const githubChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: false,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。',
+    displayName: 'OpenAI o1',
+    enabled: true,
+    id: 'o1',
+    maxOutput: 100_000,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -47,7 +62,7 @@ const githubChatModels: AIChatModelCard[] = [
       functionCall: true,
       vision: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 134_144,
     description: '一种经济高效的AI解决方案，适用于多种文本和图像任务。',
     displayName: 'OpenAI GPT-4o mini',
     enabled: true,
@@ -60,11 +75,21 @@ const githubChatModels: AIChatModelCard[] = [
       functionCall: true,
       vision: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 134_144,
     description: 'OpenAI GPT-4系列中最先进的多模态模型，可以处理文本和图像输入。',
     displayName: 'OpenAI GPT-4o',
     enabled: true,
     id: 'gpt-4o',
+    maxOutput: 16_384,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    displayName: 'DeepSeek R1',
+    id: 'DeepSeek-R1',
     maxOutput: 4096,
     type: 'chat',
   },
@@ -135,6 +160,13 @@ const githubChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    contextWindowTokens: 262_144,
+    displayName: 'Codestral',
+    id: 'Codestral-2501',
+    maxOutput: 4096,
+    type: 'chat',
+  },
+  {
     abilities: {
       vision: true,
     },
@@ -154,6 +186,18 @@ const githubChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.2 90B Vision',
     id: 'llama-3.2-90b-vision-instruct',
     maxOutput: 4096,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
+    displayName: 'Llama 3.3 70B Instruct',
+    enabled: true,
+    id: 'llama-3.3-70b-instruct',
     type: 'chat',
   },
   {
@@ -196,6 +240,20 @@ const githubChatModels: AIChatModelCard[] = [
     description: '一个强大的700亿参数模型，在推理、编码和广泛的语言应用方面表现出色。',
     displayName: 'Meta Llama 3 70B',
     id: 'meta-llama-3-70b-instruct',
+    maxOutput: 4096,
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 16_384,
+    displayName: 'Phi 4',
+    id: 'Phi-4',
+    maxOutput: 16_384,
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    displayName: 'Phi 3.5 MoE',
+    id: 'Phi-3.5-MoE-instruct',
     maxOutput: 4096,
     type: 'chat',
   },

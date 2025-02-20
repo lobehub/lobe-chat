@@ -1,3 +1,4 @@
+import type { VertexAI } from '@google-cloud/vertexai';
 import {
   Content,
   FunctionCallPart,
@@ -8,6 +9,8 @@ import {
   SchemaType,
 } from '@google/generative-ai';
 
+import type { ChatModelCard } from '@/types/llm';
+import { VertexAIStream } from '@/libs/agent-runtime/utils/streams/vertex-ai';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
@@ -26,9 +29,6 @@ import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import { GoogleGenerativeAIStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
-
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import type { ChatModelCard } from '@/types/llm';
 
 export interface GoogleModelCard {
   displayName: string;
@@ -58,17 +58,27 @@ function getThreshold(model: string): HarmBlockThreshold {
 
 const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
 
+interface LobeGoogleAIParams {
+  apiKey?: string;
+  baseURL?: string;
+  client?: GoogleGenerativeAI | VertexAI;
+  isVertexAi?: boolean;
+}
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
+  private isVertexAi: boolean;
   baseURL?: string;
   apiKey?: string;
 
-  constructor({ apiKey, baseURL }: { apiKey?: string; baseURL?: string } = {}) {
+  constructor({ apiKey, baseURL, client, isVertexAi }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
-    this.baseURL = baseURL || DEFAULT_BASE_URL;
     this.apiKey = apiKey;
+    this.client = client ? (client as GoogleGenerativeAI) : new GoogleGenerativeAI(apiKey);
+    this.baseURL = client ? undefined : baseURL || DEFAULT_BASE_URL;
+    this.isVertexAi = isVertexAi || false;
   }
 
   async chat(rawPayload: ChatStreamPayload, options?: ChatCompetitionOptions) {
@@ -119,18 +129,24 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const googleStream = convertIterableToStream(geminiStreamResult.stream);
       const [prod, useForDebug] = googleStream.tee();
 
-      if (process.env.DEBUG_GOOGLE_CHAT_COMPLETION === '1') {
+      const key = this.isVertexAi
+        ? 'DEBUG_VERTEX_AI_CHAT_COMPLETION'
+        : 'DEBUG_GOOGLE_CHAT_COMPLETION';
+
+      if (process.env[key] === '1') {
         debugStream(useForDebug).catch();
       }
 
       // Convert the response into a friendly text-stream
-      const stream = GoogleGenerativeAIStream(prod, options?.callback);
+      const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
+      const stream = Stream(prod, options?.callback);
 
       // Respond with the stream
       return StreamingResponse(stream, { headers: options?.headers });
     } catch (e) {
       const err = e as Error;
 
+      console.log(err);
       const { errorType, error } = this.parseErrorMessage(err.message);
 
       throw AgentRuntimeError.chat({ error, errorType, provider: ModelProvider.Google });
@@ -138,25 +154,40 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   }
 
   async models() {
+    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
     const url = `${this.baseURL}/v1beta/models?key=${this.apiKey}`;
     const response = await fetch(url, {
       method: 'GET',
     });
     const json = await response.json();
-  
+
     const modelList: GoogleModelCard[] = json['models'];
 
     return modelList
       .map((model) => {
         const modelName = model.name.replace(/^models\//, '');
 
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => modelName.toLowerCase() === m.id.toLowerCase());
+
         return {
           contextWindowTokens: model.inputTokenLimit + model.outputTokenLimit,
           displayName: model.displayName,
-          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => modelName.endsWith(m.id))?.enabled || false,
-          functionCall: modelName.toLowerCase().includes('gemini'),
+          enabled: knownModel?.enabled || false,
+          functionCall:
+            modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('thinking')
+            || knownModel?.abilities?.functionCall
+            || false,
           id: modelName,
-          vision: modelName.toLowerCase().includes('vision') || modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('gemini-1.0'),
+          reasoning:
+            modelName.toLowerCase().includes('thinking')
+            || knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            modelName.toLowerCase().includes('vision')
+            || (modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('gemini-1.0'))
+            || knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

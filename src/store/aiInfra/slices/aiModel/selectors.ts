@@ -1,6 +1,8 @@
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
 import { AiModelSourceEnum } from '@/types/aiModel';
 
+const aiProviderChatModelListIds = (s: AIProviderStoreState) =>
+  s.aiProviderModelList.filter((item) => item.type === 'chat').map((item) => item.id);
 // List
 const enabledAiProviderModelList = (s: AIProviderStoreState) =>
   s.aiProviderModelList.filter((item) => item.enabled);
@@ -48,6 +50,12 @@ const isModelSupportVision = (id: string, provider: string) => (s: AIProviderSto
   return model?.abilities?.vision;
 };
 
+const isModelSupportReasoning = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return model?.abilities?.reasoning;
+};
+
 const isModelHasContextWindowToken =
   (id: string, provider: string) => (s: AIProviderStoreState) => {
     const model = getEnabledModelById(id, provider)(s);
@@ -62,6 +70,7 @@ const modelContextWindowTokens = (id: string, provider: string) => (s: AIProvide
 };
 
 export const aiModelSelectors = {
+  aiProviderChatModelListIds,
   disabledAiProviderModelList,
   enabledAiProviderModelList,
   filteredAiProviderModelList,
@@ -71,6 +80,7 @@ export const aiModelSelectors = {
   isModelEnabled,
   isModelHasContextWindowToken,
   isModelLoading,
+  isModelSupportReasoning,
   isModelSupportToolUse,
   isModelSupportVision,
   modelContextWindowTokens,

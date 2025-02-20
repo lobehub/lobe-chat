@@ -11,7 +11,8 @@ export const buildAnthropicBlock = async (
 ): Promise<Anthropic.ContentBlock | Anthropic.ImageBlockParam> => {
   switch (content.type) {
     case 'text': {
-      return content;
+      // just pass-through the content
+      return content as any;
     }
 
     case 'image_url': {

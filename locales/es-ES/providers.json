@@ -11,6 +11,9 @@
   "azure": {
     "description": "Azure ofrece una variedad de modelos de IA avanzados, incluidos GPT-3.5 y la última serie GPT-4, que admiten múltiples tipos de datos y tareas complejas, comprometidos con soluciones de IA seguras, confiables y sostenibles."
   },
+  "azureai": {
+    "description": "Azure ofrece una variedad de modelos de IA avanzados, incluidos GPT-3.5 y la última serie GPT-4, que admiten múltiples tipos de datos y tareas complejas, comprometidos con soluciones de IA seguras, confiables y sostenibles."
+  },
   "baichuan": {
     "description": "Baichuan Intelligent es una empresa centrada en el desarrollo de modelos de gran tamaño de inteligencia artificial, cuyos modelos han demostrado un rendimiento excepcional en tareas en chino como enciclopedias de conocimiento, procesamiento de textos largos y creación de contenido, superando a los modelos principales extranjeros. Baichuan Intelligent también posee capacidades multimodales líderes en la industria, destacándose en múltiples evaluaciones de autoridad. Sus modelos incluyen Baichuan 4, Baichuan 3 Turbo y Baichuan 3 Turbo 128k, optimizados para diferentes escenarios de aplicación, ofreciendo soluciones de alta relación calidad-precio."
   },
@@ -22,6 +25,9 @@
   },
   "deepseek": {
     "description": "DeepSeek es una empresa centrada en la investigación y aplicación de tecnologías de inteligencia artificial, cuyo modelo más reciente, DeepSeek-V2.5, combina capacidades de diálogo general y procesamiento de código, logrando mejoras significativas en alineación con preferencias humanas, tareas de escritura y seguimiento de instrucciones."
+  },
+  "doubao": {
+    "description": "Un modelo grande desarrollado internamente por ByteDance. Validado a través de más de 50 escenarios de negocio internos, con un uso diario de tokens en billones que se perfecciona continuamente, ofrece múltiples capacidades modales y crea experiencias comerciales ricas para las empresas con un rendimiento de modelo de alta calidad."
   },
   "fireworksai": {
     "description": "Fireworks AI es un proveedor líder de servicios de modelos de lenguaje avanzados, enfocado en la llamada de funciones y el procesamiento multimodal. Su modelo más reciente, Firefunction V2, basado en Llama-3, está optimizado para llamadas de funciones, diálogos y seguimiento de instrucciones. El modelo de lenguaje visual FireLLaVA-13B admite entradas mixtas de imágenes y texto. Otros modelos notables incluyen la serie Llama y la serie Mixtral, que ofrecen un soporte eficiente para el seguimiento y generación de instrucciones multilingües."
@@ -50,6 +56,9 @@
   "internlm": {
     "description": "Organización de código abierto dedicada a la investigación y desarrollo de herramientas para modelos grandes. Proporciona a todos los desarrolladores de IA una plataforma de código abierto eficiente y fácil de usar, permitiendo el acceso a las tecnologías y algoritmos más avanzados."
   },
+  "jina": {
+    "description": "Jina AI, fundada en 2020, es una empresa líder en búsqueda de IA. Nuestra plataforma de búsqueda base incluye modelos vectoriales, reordenadores y pequeños modelos de lenguaje, que ayudan a las empresas a construir aplicaciones de búsqueda generativa y multimodal confiables y de alta calidad."
+  },
   "lmstudio": {
     "description": "LM Studio es una aplicación de escritorio para desarrollar y experimentar con LLMs en su computadora."
   },
@@ -64,6 +73,9 @@
   },
   "novita": {
     "description": "Novita AI es una plataforma que ofrece servicios API para múltiples modelos de lenguaje de gran tamaño y generación de imágenes de IA, siendo flexible, confiable y rentable. Soporta los últimos modelos de código abierto como Llama3 y Mistral, proporcionando soluciones API completas, amigables para el usuario y autoescalables para el desarrollo de aplicaciones de IA, adecuadas para el rápido crecimiento de startups de IA."
+  },
+  "nvidia": {
+    "description": "NVIDIA NIM™ proporciona contenedores que se pueden utilizar para microservicios de inferencia acelerados por GPU autohospedados, admitiendo el despliegue de modelos de IA preentrenados y personalizados en la nube, centros de datos, PC RTX™ AI y estaciones de trabajo."
   },
   "ollama": {
     "description": "Los modelos ofrecidos por Ollama abarcan ampliamente áreas como la generación de código, cálculos matemáticos, procesamiento multilingüe e interacciones conversacionales, apoyando diversas necesidades de implementación empresarial y local."
@@ -80,6 +92,9 @@
   "qwen": {
     "description": "Tongyi Qianwen es un modelo de lenguaje de gran escala desarrollado de forma independiente por Alibaba Cloud, con potentes capacidades de comprensión y generación de lenguaje natural. Puede responder a diversas preguntas, crear contenido escrito, expresar opiniones y redactar código, desempeñando un papel en múltiples campos."
   },
+  "sambanova": {
+    "description": "SambaNova Cloud permite a los desarrolladores utilizar fácilmente los mejores modelos de código abierto y disfrutar de la velocidad de inferencia más rápida."
+  },
   "sensenova": {
     "description": "SenseTime ofrece servicios de modelos grandes de pila completa, aprovechando el sólido soporte de la gran infraestructura de SenseTime."
   },
@@ -95,11 +110,23 @@
   "taichu": {
     "description": "El Instituto de Automatización de la Academia de Ciencias de China y el Instituto de Investigación de Inteligencia Artificial de Wuhan han lanzado una nueva generación de modelos de gran tamaño multimodal, que apoyan tareas de preguntas y respuestas de múltiples rondas, creación de texto, generación de imágenes, comprensión 3D, análisis de señales y más, con capacidades de cognición, comprensión y creación más fuertes, ofreciendo una nueva experiencia de interacción."
   },
+  "tencentcloud": {
+    "description": "La capacidad atómica del motor de conocimiento (LLM Knowledge Engine Atomic Power) se basa en el desarrollo del motor de conocimiento y ofrece una capacidad completa de preguntas y respuestas, dirigida a empresas y desarrolladores, proporcionando la capacidad de construir y desarrollar aplicaciones de modelos de manera flexible. Puede ensamblar su propio servicio de modelo utilizando varias capacidades atómicas, invocando servicios de análisis de documentos, división, embedding, reescritura en múltiples turnos, entre otros, para personalizar un negocio de IA exclusivo para su empresa."
+  },
   "togetherai": {
     "description": "Together AI se dedica a lograr un rendimiento líder a través de modelos de IA innovadores, ofreciendo amplias capacidades de personalización, incluyendo soporte para escalado rápido y procesos de implementación intuitivos, satisfaciendo diversas necesidades empresariales."
   },
   "upstage": {
     "description": "Upstage se centra en desarrollar modelos de IA para diversas necesidades comerciales, incluidos Solar LLM y Document AI, con el objetivo de lograr una inteligencia general artificial (AGI) que trabaje para las personas. Crea agentes de diálogo simples a través de la API de Chat y admite llamadas de funciones, traducción, incrustaciones y aplicaciones de dominio específico."
+  },
+  "vertexai": {
+    "description": "La serie Gemini de Google es su modelo de IA más avanzado y versátil, desarrollado por Google DeepMind, diseñado específicamente para ser multimodal, soportando la comprensión y procesamiento sin interrupciones de texto, código, imágenes, audio y video. Es adecuado para una variedad de entornos, desde centros de datos hasta dispositivos móviles, mejorando enormemente la eficiencia y la aplicabilidad de los modelos de IA."
+  },
+  "vllm": {
+    "description": "vLLM es una biblioteca rápida y fácil de usar para la inferencia y el servicio de LLM."
+  },
+  "volcengine": {
+    "description": "Plataforma de desarrollo de servicios de modelos grandes lanzada por ByteDance, que ofrece servicios de invocación de modelos ricos en funciones, seguros y competitivos en precio, al tiempo que proporciona datos de modelos, ajuste fino, inferencia, evaluación y otras funciones de extremo a extremo, garantizando de manera integral el desarrollo y la implementación de sus aplicaciones de IA."
   },
   "wenxin": {
     "description": "Plataforma de desarrollo y servicios de modelos grandes y aplicaciones nativas de IA de nivel empresarial, que ofrece la cadena de herramientas más completa y fácil de usar para el desarrollo de modelos de inteligencia artificial generativa y el desarrollo de aplicaciones en todo el proceso."

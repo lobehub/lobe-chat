@@ -147,4 +147,288 @@ describe('processWithArtifact', () => {
 
     expect(output).toEqual(`<lobeThinking>这个词汇涉及了`);
   });
+
+  it('should handle no empty line between lobeThinking and lobeArtifact', () => {
+    const input = `<lobeThinking>这是一个思考过程。</lobeThinking>
+<lobeArtifact identifier="test" type="image/svg+xml" title="测试">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="blue"/>
+</svg>
+</lobeArtifact>`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`<lobeThinking>这是一个思考过程。</lobeThinking>
+
+<lobeArtifact identifier="test" type="image/svg+xml" title="测试"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">  <rect width="100" height="100" fill="blue"/></svg></lobeArtifact>`);
+  });
+
+  it('should remove fenced code block between lobeArtifact and HTML content', () => {
+    const input = `<lobeArtifact identifier="web-calculator" type="text/html" title="简单的 Web 计算器">
+\`\`\`html
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <title>计算器</title>
+</head>
+<body>
+  <div>计算器</div>
+</body>
+</html>
+\`\`\`
+</lobeArtifact>`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(
+      `<lobeArtifact identifier="web-calculator" type="text/html" title="简单的 Web 计算器"><!DOCTYPE html><html lang="zh"><head>  <title>计算器</title></head><body>  <div>计算器</div></body></html></lobeArtifact>`,
+    );
+  });
+
+  it('should remove fenced code block between lobeArtifact and HTML content without doctype', () => {
+    const input = `<lobeArtifact identifier="web-calculator" type="text/html" title="简单的 Web 计算器">
+\`\`\`html
+<html lang="zh">
+<head>
+  <title>计算器</title>
+</head>
+<body>
+  <div>计算器</div>
+</body>
+</html>
+\`\`\`
+</lobeArtifact>`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(
+      `<lobeArtifact identifier="web-calculator" type="text/html" title="简单的 Web 计算器"><html lang="zh"><head>  <title>计算器</title></head><body>  <div>计算器</div></body></html></lobeArtifact>`,
+    );
+  });
+
+  it('should remove outer fenced code block wrapping lobeThinking and lobeArtifact', () => {
+    const input =
+      '```tool_code\n<lobeThinking>这是一个思考过程。</lobeThinking>\n\n<lobeArtifact identifier="test" type="text/html" title="测试">\n<div>测试内容</div>\n</lobeArtifact>\n```';
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(
+      '<lobeThinking>这是一个思考过程。</lobeThinking>\n\n<lobeArtifact identifier="test" type="text/html" title="测试"><div>测试内容</div></lobeArtifact>',
+    );
+  });
+
+  it('should handle both outer code block and inner HTML code block', () => {
+    const input =
+      '```tool_code\n<lobeThinking>这是一个思考过程。</lobeThinking>\n\n<lobeArtifact identifier="test" type="text/html" title="测试">\n```html\n<!DOCTYPE html>\n<html>\n<body>\n<div>测试内容</div>\n</body>\n</html>\n```\n</lobeArtifact>\n```';
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(
+      '<lobeThinking>这是一个思考过程。</lobeThinking>\n\n<lobeArtifact identifier="test" type="text/html" title="测试"><!DOCTYPE html><html><body><div>测试内容</div></body></html></lobeArtifact>',
+    );
+  });
+
+  it('should handle complete conversation with text and tags', () => {
+    const input = `Sure, I can help you with that! Here is a basic calculator built using HTML, CSS, and JavaScript.
+
+<lobeThinking>A web calculator is a substantial piece of code and a good candidate for an artifact. It's self-contained, and it's likely that the user will want to modify it. This is a new request, so I will create a new artifact.</lobeThinking>
+
+<lobeArtifact identifier="web-calculator" type="text/html" title="Web Calculator">
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Calculator</title>
+</head>
+<body>
+    <div>Calculator</div>
+</body>
+</html>
+\`\`\`
+</lobeArtifact>
+
+This code provides a basic calculator that can perform addition, subtraction, multiplication, and division.`;
+
+    const output = processWithArtifact(input);
+
+    expect(output)
+      .toEqual(`Sure, I can help you with that! Here is a basic calculator built using HTML, CSS, and JavaScript.
+
+<lobeThinking>A web calculator is a substantial piece of code and a good candidate for an artifact. It's self-contained, and it's likely that the user will want to modify it. This is a new request, so I will create a new artifact.</lobeThinking>
+
+<lobeArtifact identifier="web-calculator" type="text/html" title="Web Calculator"><!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <title>Simple Calculator</title></head><body>    <div>Calculator</div></body></html></lobeArtifact>
+
+This code provides a basic calculator that can perform addition, subtraction, multiplication, and division.`);
+  });
+});
+
+describe('outer code block removal', () => {
+  it('should remove outer html code block', () => {
+    const input = `\`\`\`html
+<lobeThinking>Test thinking</lobeThinking>
+<lobeArtifact identifier="test" type="text/html" title="Test">
+<!DOCTYPE html>
+<html>
+<body>Test</body>
+</html>
+</lobeArtifact>
+\`\`\``;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`<lobeThinking>Test thinking</lobeThinking>
+
+<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>`);
+  });
+
+  it('should remove outer tool_code code block', () => {
+    const input = `\`\`\`tool_code
+<lobeThinking>Test thinking</lobeThinking>
+<lobeArtifact identifier="test" type="text/html" title="Test">
+<!DOCTYPE html>
+<html>
+<body>Test</body>
+</html>
+</lobeArtifact>
+\`\`\``;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`<lobeThinking>Test thinking</lobeThinking>
+
+<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>`);
+  });
+
+  it('should handle input without outer code block', () => {
+    const input = `<lobeThinking>Test thinking</lobeThinking>
+<lobeArtifact identifier="test" type="text/html" title="Test">
+<!DOCTYPE html>
+<html>
+<body>Test</body>
+</html>
+</lobeArtifact>`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`<lobeThinking>Test thinking</lobeThinking>
+
+<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>`);
+  });
+
+  it('should handle code block with content before and after', () => {
+    const input = `Some text before
+
+\`\`\`html
+<lobeThinking>Test thinking</lobeThinking>
+
+<lobeArtifact identifier="test" type="text/html" title="Test">
+<!DOCTYPE html>
+<html>
+<body>Test</body>
+</html>
+</lobeArtifact>
+\`\`\`
+
+Some text after`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`Some text before
+
+<lobeThinking>Test thinking</lobeThinking>
+
+<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>
+
+Some text after`);
+  });
+
+  it('should handle code block with only lobeArtifact tag', () => {
+    const input = `\`\`\`html
+<lobeArtifact identifier="test" type="text/html" title="Test">
+<!DOCTYPE html>
+<html>
+<body>Test</body>
+</html>
+</lobeArtifact>
+\`\`\``;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(
+      `<lobeArtifact identifier="test" type="text/html" title="Test"><!DOCTYPE html><html><body>Test</body></html></lobeArtifact>`,
+    );
+  });
+
+  it('should handle code block with surrounding text and both lobeThinking and lobeArtifact', () => {
+    const input = `---
+
+\`\`\`tool_code
+<lobeThinking>The user reported a \`SyntaxError\` in the browser console, indicating a problem with the JavaScript code in the calculator artifact. The error message "Identifier 'display' has already been declared" suggests a variable naming conflict. I need to review the JavaScript code and correct the issue. This is an update to the existing "calculator-web-artifact" artifact.</lobeThinking>
+<lobeArtifact identifier="calculator-web-artifact" type="text/html" title="Simple Calculator">
+<!DOCTYPE html>
+<html lang="en">
+...
+</html>
+</lobeArtifact>
+\`\`\`
+I've updated the calculator artifact. The issue was a naming conflict with the \`display\` variable. I've renamed the input element's ID to \`calc-display\` and the JavaScript variable to \`displayElement\` to avoid the conflict. The calculator should now function correctly.
+
+---`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`---
+
+<lobeThinking>The user reported a \`SyntaxError\` in the browser console, indicating a problem with the JavaScript code in the calculator artifact. The error message "Identifier 'display' has already been declared" suggests a variable naming conflict. I need to review the JavaScript code and correct the issue. This is an update to the existing "calculator-web-artifact" artifact.</lobeThinking>
+
+<lobeArtifact identifier="calculator-web-artifact" type="text/html" title="Simple Calculator"><!DOCTYPE html><html lang="en">...</html></lobeArtifact>
+
+I've updated the calculator artifact. The issue was a naming conflict with the \`display\` variable. I've renamed the input element's ID to \`calc-display\` and the JavaScript variable to \`displayElement\` to avoid the conflict. The calculator should now function correctly.
+
+---`);
+  });
+
+  it('should handle code block before lobeThinking and lobeArtifact', () => {
+    const input = `
+Okay, I'll create a temperature converter with the logic wrapped in an IIFE and event listeners attached in Javascript.
+
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+...
+</html>
+\`\`\`
+
+<lobeThinking>This is a good candidate for an artifact. It's a self-contained HTML document with embedded JavaScript that provides a functional temperature converter. It's more than a simple code snippet and can be reused or modified. This is a new request, so I'll create a new artifact with the identifier "temperature-converter".</lobeThinking>
+
+<lobeArtifact identifier="temperature-converter" type="text/html" title="Temperature Converter">
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+...
+</html>
+\`\`\`
+</lobeArtifact>
+This HTML document includes the temperature converter with the requested features: the logic is wrapped in an IIFE, and event listeners are attached in JavaScript.
+`;
+
+    const output = processWithArtifact(input);
+
+    expect(output)
+      .toEqual(`Okay, I'll create a temperature converter with the logic wrapped in an IIFE and event listeners attached in Javascript.
+
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+...
+</html>
+\`\`\`
+
+<lobeThinking>This is a good candidate for an artifact. It's a self-contained HTML document with embedded JavaScript that provides a functional temperature converter. It's more than a simple code snippet and can be reused or modified. This is a new request, so I'll create a new artifact with the identifier "temperature-converter".</lobeThinking>
+
+<lobeArtifact identifier="temperature-converter" type="text/html" title="Temperature Converter"><!DOCTYPE html><html lang="en">...</html></lobeArtifact>
+
+This HTML document includes the temperature converter with the requested features: the logic is wrapped in an IIFE, and event listeners are attached in JavaScript.`);
+  });
 });

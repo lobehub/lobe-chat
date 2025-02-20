@@ -10,7 +10,13 @@ export class ClientService extends BaseClientService implements IAiModelService 
     return new AiModelModel(clientDB as any, this.userId);
   }
   private get aiInfraRepos(): AiInfraRepos {
-    return new AiInfraRepos(clientDB as any, this.userId, {});
+    let config = {};
+
+    if (typeof window !== 'undefined') {
+      config = window.global_serverConfigStore.getState().serverConfig.aiProvider || {};
+    }
+
+    return new AiInfraRepos(clientDB as any, this.userId, config);
   }
 
   createAiModel: IAiModelService['createAiModel'] = async (params) => {
@@ -45,6 +51,10 @@ export class ClientService extends BaseClientService implements IAiModelService 
 
   clearRemoteModels: IAiModelService['clearRemoteModels'] = async (providerId) => {
     return this.aiModel.clearRemoteModels(providerId);
+  };
+
+  clearModelsByProvider: IAiModelService['clearModelsByProvider'] = async (providerId) => {
+    return this.aiModel.clearModelsByProvider(providerId);
   };
 
   updateAiModelOrder: IAiModelService['updateAiModelOrder'] = async (providerId, items) => {

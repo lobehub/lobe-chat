@@ -12,7 +12,7 @@ import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 import { parseAgentConfig } from './parseDefaultAgent';
 import { parseFilesConfig } from './parseFilesConfig';
 
-export const getServerGlobalConfig = () => {
+export const getServerGlobalConfig = async () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
 
   const config: GlobalServerConfig = {
@@ -25,6 +25,9 @@ export const getServerGlobalConfig = () => {
         enabledKey: 'ENABLED_AWS_BEDROCK',
         modelListKey: 'AWS_BEDROCK_MODEL_LIST',
       },
+      doubao: {
+        withDeploymentName: true,
+      },
       giteeai: {
         enabledKey: 'ENABLED_GITEE_AI',
         modelListKey: 'GITEE_AI_MODEL_LIST',
@@ -34,6 +37,9 @@ export const getServerGlobalConfig = () => {
       /* ↑ cloud slot ↑ */
       ollama: {
         fetchOnClient: !process.env.OLLAMA_PROXY_URL,
+      },
+      volcengine: {
+        withDeploymentName: true,
       },
     }),
     defaultAgent: {

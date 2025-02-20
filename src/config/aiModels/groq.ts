@@ -3,6 +3,18 @@ import { AIChatModelCard } from '@/types/aiModel';
 const groqChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'DeepSeek R1——DeepSeek 套件中更大更智能的模型——被蒸馏到 Llama 70B 架构中。基于基准测试和人工评估，该模型比原始 Llama 70B 更智能，尤其在需要数学和事实精确性的任务上表现出色。',
+    displayName: 'DeepSeek R1 (Distil-Llama 70B)',
+    enabled: true,
+    id: 'deepseek-r1-distill-llama-70b',
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
     },
     contextWindowTokens: 131_072,

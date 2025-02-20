@@ -286,6 +286,7 @@
     "anonymousNickName": "Anonymer Benutzer",
     "billing": "Abrechnung verwalten",
     "cloud": "Erleben Sie {{name}}",
+    "community": "Gemeinschaftsversion",
     "data": "Daten speichern",
     "defaultNickname": "Community User",
     "discord": "Community-Support",
@@ -295,7 +296,6 @@
     "help": "Hilfezentrum",
     "moveGuide": "Die Einstellungen wurden hierher verschoben.",
     "plans": "Abonnementpläne",
-    "preview": "Vorschau",
     "profile": "Kontoverwaltung",
     "setting": "App-Einstellungen",
     "usages": "Nutzungsstatistiken"

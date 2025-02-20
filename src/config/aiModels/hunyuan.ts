@@ -14,6 +14,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
       input: 0,
       output: 0,
     },
+    releasedAt: '2024-10-30',
     type: 'chat',
   },
   {
@@ -26,9 +27,10 @@ const hunyuanChatModels: AIChatModelCard[] = [
     maxOutput: 2000,
     pricing: {
       currency: 'CNY',
-      input: 4.5,
-      output: 5,
+      input: 0.8,
+      output: 2,
     },
+    releasedAt: '2024-10-28',
     type: 'chat',
   },
   {
@@ -41,9 +43,10 @@ const hunyuanChatModels: AIChatModelCard[] = [
     maxOutput: 6000,
     pricing: {
       currency: 'CNY',
-      input: 15,
-      output: 60,
+      input: 0.5,
+      output: 2,
     },
+    releasedAt: '2024-10-28',
     type: 'chat',
   },
   {
@@ -52,9 +55,27 @@ const hunyuanChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_000,
     description:
-      '混元全新一代大语言模型的预览版，采用全新的混合专家模型（MoE）结构，相比hunyuan-pro推理效率更快，效果表现更强。',
+      '通用体验优化，包括NLP理解、文本创作、闲聊、知识问答、翻译、领域等；提升拟人性，优化模型情商；提升意图模糊时模型主动澄清能力；提升字词解析类问题的处理能力；提升创作的质量和可互动性；提升多轮体验。',
     displayName: 'Hunyuan Turbo',
     enabled: true,
+    id: 'hunyuan-turbo-latest',
+    maxOutput: 4000,
+    pricing: {
+      currency: 'CNY',
+      input: 15,
+      output: 50,
+    },
+    releasedAt: '2025-01-10',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      '本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量',
+    displayName: 'Hunyuan Turbo',
     id: 'hunyuan-turbo',
     maxOutput: 4000,
     pricing: {
@@ -62,6 +83,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
       input: 15,
       output: 50,
     },
+    releasedAt: '2025-01-10',
     type: 'chat',
   },
   {
@@ -70,16 +92,79 @@ const hunyuanChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_000,
     description:
-      '万亿级参数规模 MOE-32K 长文模型。在各种 benchmark 上达到绝对领先的水平，复杂指令和推理，具备复杂数学能力，支持 functioncall，在多语言翻译、金融法律医疗等领域应用重点优化。',
-    displayName: 'Hunyuan Pro',
-    enabled: true,
-    id: 'hunyuan-pro',
+      '本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量',
+    displayName: 'Hunyuan Turbo 20241223',
+    id: 'hunyuan-turbo-20241223',
     maxOutput: 4000,
     pricing: {
       currency: 'CNY',
-      input: 30,
-      output: 100,
+      input: 15,
+      output: 50,
     },
+    releasedAt: '2025-01-10',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      'hunyuan-turbo 2024 年 11 月 20 日固定版本，介于 hunyuan-turbo 和 hunyuan-turbo-latest 之间的一个版本。',
+    displayName: 'Hunyuan Turbo 20241120',
+    id: 'hunyuan-turbo-20241120',
+    maxOutput: 4000,
+    pricing: {
+      currency: 'CNY',
+      input: 15,
+      output: 50,
+    },
+    releasedAt: '2024-11-20',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    description:
+      'Hunyuan-large 模型总参数量约 389B，激活参数量约 52B，是当前业界参数规模最大、效果最好的 Transformer 架构的开源 MoE 模型。',
+    displayName: 'Hunyuan Large',
+    enabled: true,
+    id: 'hunyuan-large',
+    maxOutput: 4000,
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 12,
+    },
+    releasedAt: '2024-11-20',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 134_000,
+    description:
+      '擅长处理长文任务如文档摘要和文档问答等，同时也具备处理通用文本生成任务的能力。在长文本的分析和生成上表现优异，能有效应对复杂和详尽的长文内容处理需求。',
+    displayName: 'Hunyuan Large Longcontext',
+    enabled: true,
+    id: 'hunyuan-large-longcontext',
+    maxOutput: 6000,
+    pricing: {
+      currency: 'CNY',
+      input: 6,
+      output: 18,
+    },
+    releasedAt: '2024-12-18',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 36_000,
+    description: '混元最新7B多模态模型，上下文窗口32K，支持中英文场景的多模态对话、图像物体识别、文档表格理解、多模态数学等，在多个维度上评测指标优于7B竞品模型。',
+    displayName: 'Hunyuan Lite Vision',
+    enabled: true,
+    id: 'hunyuan-lite-vision',
+    maxOutput: 4000,
+    releasedAt: '2024-12-12',
     type: 'chat',
   },
   {
@@ -87,16 +172,48 @@ const hunyuanChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 8000,
+    description: '混元最新多模态模型，支持多语种作答，中英文能力均衡。',
+    displayName: 'Hunyuan Standard Vision',
+    enabled: true,
+    id: 'hunyuan-standard-vision',
+    maxOutput: 2000,
+    releasedAt: '2024-12-31',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 8000,
+    description: '混元新一代视觉语言旗舰大模型，采用全新的混合专家模型（MoE）结构，在图文理解相关的基础识别、内容创作、知识问答、分析推理等能力上相比前一代模型全面提升。',
+    displayName: 'Hunyuan Turbo Vision',
+    enabled: true,
+    id: 'hunyuan-turbo-vision',
+    maxOutput: 2000,
+    pricing: {
+      currency: 'CNY',
+      input: 80,
+      output: 80,
+    },
+    releasedAt: '2024-11-26',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 12_000,
     description: '混元最新多模态模型，支持图片+文本输入生成文本内容。',
     displayName: 'Hunyuan Vision',
     enabled: true,
     id: 'hunyuan-vision',
-    maxOutput: 4000,
+    maxOutput: 6000,
     pricing: {
       currency: 'CNY',
       input: 18,
       output: 18,
     },
+    releasedAt: '2025-01-03',
     type: 'chat',
   },
   {
@@ -111,6 +228,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
       input: 4,
       output: 8,
     },
+    releasedAt: '2024-11-12',
     type: 'chat',
   },
   {
@@ -128,10 +246,11 @@ const hunyuanChatModels: AIChatModelCard[] = [
       input: 4,
       output: 8,
     },
+    releasedAt: '2024-11-15',
     type: 'chat',
   },
   {
-    contextWindowTokens: 8000,
+    contextWindowTokens: 32_000,
     description:
       '混元最新版角色扮演模型，混元官方精调训练推出的角色扮演模型，基于混元模型结合角色扮演场景数据集进行增训，在角色扮演场景具有更好的基础效果。',
     displayName: 'Hunyuan Role',
@@ -142,6 +261,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
       input: 4,
       output: 8,
     },
+    releasedAt: '2024-07-04',
     type: 'chat',
   },
 ];

@@ -17,6 +17,7 @@ import {
   ChatMessageError,
   CreateMessageParams,
   MessageToolCall,
+  ModelReasoning,
 } from '@/types/message';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
@@ -73,6 +74,7 @@ export interface ChatMessageAction {
     id: string,
     content: string,
     toolCalls?: MessageToolCall[],
+    reasoning?: ModelReasoning,
   ) => Promise<void>;
   /**
    * update the message error with optimistic update
@@ -270,7 +272,7 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, { error });
     await get().refreshMessages();
   },
-  internal_updateMessageContent: async (id, content, toolCalls) => {
+  internal_updateMessageContent: async (id, content, toolCalls, reasoning) => {
     const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
 
     // Due to the async update method and refresh need about 100ms
@@ -289,6 +291,7 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, {
       content,
       tools: toolCalls ? internal_transformToolCalls(toolCalls) : undefined,
+      reasoning,
     });
     await refreshMessages();
   },
@@ -365,13 +368,14 @@ export const chatMessage: StateCreator<
     );
   },
   internal_toggleLoadingArrays: (key, loading, id, action) => {
+    const abortControllerKey = `${key}AbortController`;
     if (loading) {
       window.addEventListener('beforeunload', preventLeavingFn);
 
       const abortController = new AbortController();
       set(
         {
-          abortController,
+          [abortControllerKey]: abortController,
           [key]: toggleBooleanList(get()[key] as string[], id!, loading),
         },
         false,
@@ -381,11 +385,11 @@ export const chatMessage: StateCreator<
       return abortController;
     } else {
       if (!id) {
-        set({ abortController: undefined, [key]: [] }, false, action);
+        set({ [abortControllerKey]: undefined, [key]: [] }, false, action);
       } else
         set(
           {
-            abortController: undefined,
+            [abortControllerKey]: undefined,
             [key]: toggleBooleanList(get()[key] as string[], id, loading),
           },
           false,

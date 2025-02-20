@@ -286,6 +286,7 @@
     "anonymousNickName": "Usuario Anónimo",
     "billing": "Gestión de facturación",
     "cloud": "Prueba {{name}}",
+    "community": "Versión comunitaria",
     "data": "Almacenamiento de datos",
     "defaultNickname": "Usuario de la comunidad",
     "discord": "Soporte de la comunidad",
@@ -295,7 +296,6 @@
     "help": "Centro de ayuda",
     "moveGuide": "El botón de configuración se ha movido aquí",
     "plans": "Planes de suscripción",
-    "preview": "Vista previa",
     "profile": "Gestión de cuenta",
     "setting": "Configuración de la aplicación",
     "usages": "Estadísticas de uso"

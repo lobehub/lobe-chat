@@ -53,13 +53,6 @@ describe('getLocale', () => {
     expect(normalizeLocale).toHaveBeenCalledWith('fr-FR');
   });
 
-  it('should return the locale from cookie if available', async () => {
-    mockCookieStore.get.mockReturnValue({ value: 'de-DE' });
-    const result = await getLocale();
-    expect(result).toBe('de-DE');
-    expect(mockCookieStore.get).toHaveBeenCalledWith(LOBE_LOCALE_COOKIE);
-  });
-
   it('should return DEFAULT_LANG if no cookie is set', async () => {
     mockCookieStore.get.mockReturnValue(undefined);
     const result = await getLocale();

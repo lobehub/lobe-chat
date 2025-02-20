@@ -1,8 +1,10 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import DataTable from './DataTable';
-import SchemaPanel from './Schema';
+import SchemaSidebar from './SchemaSidebar';
 
 // Main Database Panel Component
 const DatabasePanel = () => {
@@ -10,7 +12,7 @@ const DatabasePanel = () => {
 
   return (
     <Flexbox height={'100%'} horizontal>
-      <SchemaPanel onTableSelect={setSelectedTable} selectedTable={selectedTable} />
+      <SchemaSidebar onTableSelect={setSelectedTable} selectedTable={selectedTable} />
       <DataTable tableName={selectedTable} />
     </Flexbox>
   );

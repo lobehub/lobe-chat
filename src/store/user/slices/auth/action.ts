@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { enableClerk } from '@/const/auth';
+import { enableAuth, enableClerk, enableNextAuth } from '@/const/auth';
 
 import { UserStore } from '../../store';
 
@@ -23,7 +23,7 @@ export const createAuthSlice: StateCreator<
   UserAuthAction
 > = (set, get) => ({
   enableAuth: () => {
-    return enableClerk || get()?.enabledNextAuth || false;
+    return enableAuth;
   },
   logout: async () => {
     if (enableClerk) {
@@ -32,7 +32,6 @@ export const createAuthSlice: StateCreator<
       return;
     }
 
-    const enableNextAuth = get().enabledNextAuth;
     if (enableNextAuth) {
       const { signOut } = await import('next-auth/react');
       signOut();
@@ -50,7 +49,6 @@ export const createAuthSlice: StateCreator<
       return;
     }
 
-    const enableNextAuth = get().enabledNextAuth;
     if (enableNextAuth) {
       const { signIn } = await import('next-auth/react');
       // Check if only one provider is available

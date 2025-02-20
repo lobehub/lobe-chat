@@ -3,6 +3,7 @@ import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
+import { enableAuth } from '@/const/auth';
 import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
@@ -49,7 +50,10 @@ const isCanUseFC = (model: string, provider: string) => {
   return aiModelSelectors.isModelSupportToolUse(model, provider)(useAiInfraStore.getState());
 };
 
-const findAzureDeploymentName = (model: string) => {
+/**
+ * TODO: we need to update this function to auto find deploymentName with provider setting config
+ */
+const findDeploymentName = (model: string, provider: string) => {
   let deploymentId = model;
 
   // TODO: remove isDeprecatedEdition condition in V2.0
@@ -62,7 +66,9 @@ const findAzureDeploymentName = (model: string) => {
     if (deploymentName) deploymentId = deploymentName;
   } else {
     // find the model by id
-    const modelItem = useAiInfraStore.getState().enabledAiModels?.find((i) => i.id === model);
+    const modelItem = useAiInfraStore
+      .getState()
+      .enabledAiModels?.find((i) => i.id === model && i.providerId === provider);
 
     if (modelItem && modelItem.config?.deploymentName) {
       deploymentId = modelItem.config?.deploymentName;
@@ -221,8 +227,15 @@ class ChatService {
     let model = res.model || DEFAULT_AGENT_CONFIG.model;
 
     // if the provider is Azure, get the deployment name as the request model
-    if (provider === ModelProvider.Azure) {
-      model = findAzureDeploymentName(model);
+    const providersWithDeploymentName = [
+      ModelProvider.Azure,
+      ModelProvider.Volcengine,
+      ModelProvider.Doubao,
+      ModelProvider.AzureAI,
+    ] as string[];
+
+    if (providersWithDeploymentName.includes(provider)) {
+      model = findDeploymentName(model, provider);
     }
 
     const payload = merge(
@@ -515,7 +528,7 @@ class ChatService {
      * if enable login and not signed in, return unauthorized error
      */
     const userStore = useUserStore.getState();
-    if (userStore.enableAuth() && !userStore.isSignedIn) {
+    if (enableAuth && !userStore.isSignedIn) {
       throw AgentRuntimeError.createError(ChatErrorType.InvalidAccessCode);
     }
 

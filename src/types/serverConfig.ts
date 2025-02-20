@@ -1,5 +1,6 @@
 import { DeepPartial } from 'utility-types';
 
+import { IFeatureFlags } from '@/config/featureFlags';
 import { ChatModelCard } from '@/types/llm';
 import {
   GlobalLLMProviderKey,
@@ -20,7 +21,7 @@ export interface ServerModelProviderConfig {
 export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerModelProviderConfig>>;
 
 export interface GlobalServerConfig {
-  aiProvider?: ServerLanguageModel;
+  aiProvider: ServerLanguageModel;
   defaultAgent?: DeepPartial<UserDefaultAgent>;
   enableUploadFileToServer?: boolean;
   enabledAccessCode?: boolean;
@@ -37,4 +38,9 @@ export interface GlobalServerConfig {
   telemetry: {
     langfuse?: boolean;
   };
+}
+
+export interface GlobalRuntimeConfig {
+  serverConfig: GlobalServerConfig;
+  serverFeatureFlags: IFeatureFlags;
 }

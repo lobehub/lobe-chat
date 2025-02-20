@@ -1,4 +1,4 @@
-import { globalHelpers } from '@/store/user/helpers';
+import { globalHelpers } from '@/store/global/helpers';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 export const chainSummaryDescription = (content: string): Partial<ChatStreamPayload> => ({

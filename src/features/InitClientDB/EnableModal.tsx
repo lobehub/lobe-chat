@@ -8,6 +8,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import DataStyleModal from '@/components/DataStyleModal';
 import { useGlobalStore } from '@/store/global';
+import { useServerConfigStore } from '@/store/serverConfig';
 
 import PGliteIcon from './PGliteIcon';
 
@@ -56,6 +57,8 @@ interface EnableClientDBModalProps {
 const EnableClientDBModal = memo<EnableClientDBModalProps>(({ open }) => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
+  const isMobile = useServerConfigStore((s) => s.isMobile);
+
   const markPgliteEnabled = useGlobalStore((s) => s.markPgliteEnabled);
   const features = [
     {
@@ -76,7 +79,12 @@ const EnableClientDBModal = memo<EnableClientDBModalProps>(({ open }) => {
   ];
 
   return (
-    <DataStyleModal icon={CpuIcon} open={open} title={t('clientDB.modal.title')}>
+    <DataStyleModal
+      height={isMobile ? '80vh' : undefined}
+      icon={CpuIcon}
+      open={open}
+      title={t('clientDB.modal.title')}
+    >
       <Center gap={48}>
         <Flexbox>
           <Flexbox className={styles.intro} style={{ textAlign: 'center' }} width={460}>

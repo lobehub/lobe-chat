@@ -3,13 +3,15 @@ import { ReactNode, Suspense, memo, useContext } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
-import { InPortalThreadContext } from '@/features/Conversation/components/ChatItem/InPortalThreadContext';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { aiChatSelectors } from '@/store/chat/slices/aiChat/selectors';
 import { ChatMessage } from '@/types/message';
 
+import { InPortalThreadContext } from '../../components/ChatItem/InPortalThreadContext';
 import { DefaultMessage } from '../Default';
 import FileChunks from './FileChunks';
+import Thinking from './Reasoning';
 import ToolCall from './ToolCallItem';
 
 export const AssistantMessage = memo<
@@ -23,6 +25,14 @@ export const AssistantMessage = memo<
   const inThread = useContext(InPortalThreadContext);
   const isToolCallGenerating = generating && (content === LOADING_FLAT || !content) && !!tools;
 
+  const isReasoning = useChatStore(aiChatSelectors.isMessageInReasoning(id));
+
+  // remove \n to avoid empty content
+  // refs: https://github.com/lobehub/lobe-chat/pull/6153
+  const showReasoning =
+    (!!props.reasoning && props.reasoning.content?.trim() !== '') ||
+    (!props.reasoning && isReasoning);
+
   return editing ? (
     <DefaultMessage
       content={content}
@@ -33,6 +43,7 @@ export const AssistantMessage = memo<
   ) : (
     <Flexbox gap={8} id={id}>
       {!!chunksList && chunksList.length > 0 && <FileChunks data={chunksList} />}
+      {showReasoning && <Thinking {...props.reasoning} id={id} />}
       {content && (
         <DefaultMessage
           addIdOnDOM={false}

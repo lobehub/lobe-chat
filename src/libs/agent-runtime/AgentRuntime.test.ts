@@ -26,7 +26,6 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { LobeStepfunAI } from '@/libs/agent-runtime/stepfun';
-import LobeWenxinAI from '@/libs/agent-runtime/wenxin';
 import { createTraceOptions } from '@/server/modules/AgentRuntime';
 
 import { AgentChatOptions } from './AgentRuntime';
@@ -108,6 +107,7 @@ describe('AgentRuntime', () => {
         const jwtPayload = {
           apiKey: 'user-azure-key',
           baseURL: 'user-azure-endpoint',
+          apiVersion: '2024-06-01',
         };
         const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Azure, {
           azure: jwtPayload,

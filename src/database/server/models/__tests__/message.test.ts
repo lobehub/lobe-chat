@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { MessageItem } from '@/types/message';
 import { uuid } from '@/utils/uuid';
 
 import {
@@ -253,8 +254,8 @@ describe('MessageModel', () => {
       const result = await messageModel.query();
 
       // 断言结果
-      expect(result[0].extra.translate).toEqual({ content: 'translated', from: 'en', to: 'zh' });
-      expect(result[0].extra.tts).toEqual({
+      expect(result[0].extra!.translate).toEqual({ content: 'translated', from: 'en', to: 'zh' });
+      expect(result[0].extra!.tts).toEqual({
         contentMd5: 'md5',
         file: 'f1',
         voice: 'voice1',
@@ -345,7 +346,7 @@ describe('MessageModel', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0].chunksList).toHaveLength(1);
-      expect(result[0].chunksList[0]).toMatchObject({
+      expect(result[0].chunksList![0]).toMatchObject({
         text: 'chunk content',
         similarity: 0.95,
       });
@@ -655,7 +656,7 @@ describe('MessageModel', () => {
       const newMessages = [
         { id: '1', role: 'user', content: 'message 1' },
         { id: '2', role: 'assistant', content: 'message 2' },
-      ];
+      ] as MessageItem[];
 
       // 调用 batchCreateMessages 方法
       await messageModel.batchCreate(newMessages);

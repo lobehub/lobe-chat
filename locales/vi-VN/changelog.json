@@ -8,8 +8,8 @@
   "allChangelog": "Xem tất cả nhật ký cập nhật",
   "description": "Theo dõi các tính năng và cải tiến mới của {{appName}}",
   "pagination": {
-    "older": "Xem thay đổi lịch sử",
-    "prev": "Trang trước"
+    "next": "Trang tiếp theo",
+    "older": "Xem thay đổi lịch sử"
   },
   "readDetails": "Đọc chi tiết",
   "title": "Nhật ký cập nhật",

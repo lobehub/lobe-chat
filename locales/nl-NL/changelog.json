@@ -8,8 +8,8 @@
   "allChangelog": "Bekijk alle changelogs",
   "description": "Blijf op de hoogte van nieuwe functies en verbeteringen van {{appName}}",
   "pagination": {
-    "older": "Bekijk eerdere wijzigingen",
-    "prev": "Vorige pagina"
+    "next": "Volgende pagina",
+    "older": "Bekijk eerdere wijzigingen"
   },
   "readDetails": "Lees meer",
   "title": "Changelog",
