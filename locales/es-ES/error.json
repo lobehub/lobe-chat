@@ -101,6 +101,7 @@
     "ProviderBizError": "Se produjo un error al solicitar el servicio de {{provider}}, por favor, revise la siguiente información o inténtelo de nuevo",
     "QuotaLimitReached": "Lo sentimos, el uso actual de tokens o el número de solicitudes ha alcanzado el límite de cuota de esta clave. Por favor, aumenta la cuota de esta clave o intenta de nuevo más tarde.",
     "StreamChunkError": "Error de análisis del bloque de mensajes de la solicitud en streaming. Por favor, verifica si la API actual cumple con las normas estándar o contacta a tu proveedor de API para más información.",
+    "SubscriptionKeyMismatch": "Lo sentimos, debido a un fallo ocasional del sistema, el uso de la suscripción actual ha dejado de ser válido temporalmente. Por favor, haga clic en el botón de abajo para restaurar la suscripción o contáctenos por correo electrónico para obtener soporte.",
     "SubscriptionPlanLimit": "Se han agotado sus puntos de suscripción, no puede utilizar esta función. Por favor, actualice a un plan superior o configure la API del modelo personalizado para continuar.",
     "SystemTimeNotMatchError": "Lo sentimos, la hora de su sistema no coincide con la del servidor. Por favor, verifique la hora de su sistema y vuelva a intentarlo.",
     "UnknownChatFetchError": "Lo sentimos, se ha producido un error desconocido en la solicitud. Por favor, verifica la información a continuación o intenta de nuevo."
