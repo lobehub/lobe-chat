@@ -13,7 +13,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 65_536,
     description:
-      '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 4k 上下文窗口的推理和精调。',
+      'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能比肩 OpenAI o1 正式版。',
     displayName: 'DeepSeek R1',
     enabled: true,
     id: 'deepseek-r1',
@@ -22,6 +22,48 @@ const doubaoChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 2, // 2.24 恢复原价 4, 16
       output: 8,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    config: {
+      deploymentName: 'deepseek-r1-distill-qwen-32b-250120',
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。',
+    displayName: 'DeepSeek R1 Distill Qwen 32B',
+    enabled: true,
+    id: 'deepseek-r1-distill-qwen-32b',
+    maxOutput: 8000,
+    pricing: {
+      currency: 'CNY',
+      input: 1.5,
+      output: 6,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    config: {
+      deploymentName: 'deepseek-r1-distill-qwen-7b-250120',
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。',
+    displayName: 'DeepSeek R1 Distill Qwen 7B',
+    enabled: true,
+    id: 'deepseek-r1-distill-qwen-7b',
+    maxOutput: 8000,
+    pricing: {
+      currency: 'CNY',
+      input: 0.6,
+      output: 2.4,
     },
     type: 'chat',
   },
@@ -55,7 +97,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。',
+      'Doubao-1.5-pro 全新一代主力模型，性能全面升级，在知识、代码、推理、等方面表现卓越。',
     displayName: 'Doubao 1.5 Pro 32k',
     id: 'doubao-1.5-pro-32k',
     maxOutput: 12_000,
@@ -75,7 +117,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。',
+      'Doubao-1.5-pro-256k 基于 Doubao-1.5-Pro 全面升级版，整体效果大幅提升 10%。支持 256k 上下文窗口的推理，输出长度支持最大 12k tokens。更高性能、更大窗口、超高性价比，适用于更广泛的应用场景。',
     displayName: 'Doubao 1.5 Pro 256k',
     id: 'doubao-1.5-pro-256k',
     maxOutput: 12_000,
@@ -95,7 +137,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。',
+      'Doubao-1.5-lite 全新一代轻量版模型，极致响应速度，效果与时延均达到全球一流水平。',
     displayName: 'Doubao 1.5 Lite 32k',
     id: 'doubao-1.5-lite-32k',
     maxOutput: 12_000,
@@ -115,7 +157,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。',
+      'Doubao-1.5-vision-pro 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。',
     displayName: 'Doubao 1.5 Vision Pro 32k',
     id: 'Doubao-1.5-vision-pro-32k',
     maxOutput: 12_000,
@@ -136,7 +178,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。',
+      'Doubao-vision 模型是豆包推出的多模态大模型，具备强大的图片理解与推理能力，以及精准的指令理解能力。模型在图像文本信息抽取、基于图像的推理任务上有展现出了强大的性能，能够应用于更复杂、更广泛的视觉问答任务。',
     displayName: 'Doubao Vision Pro 32k',
     id: 'Doubao-vision-pro-32k',
     maxOutput: 4096,
@@ -157,7 +199,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。',
+      'Doubao-vision 模型是豆包推出的多模态大模型，具备强大的图片理解与推理能力，以及精准的指令理解能力。模型在图像文本信息抽取、基于图像的推理任务上有展现出了强大的性能，能够应用于更复杂、更广泛的视觉问答任务。',
     displayName: 'Doubao Vision Lite 32k',
     id: 'Doubao-vision-lite-32k',
     maxOutput: 4096,
@@ -268,7 +310,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 256_000,
     description:
-      '效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 128k 上下文窗口的推理和精调。',
+      '效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 256k 上下文窗口的推理和精调。',
     displayName: 'Doubao Pro 256k',
     id: 'Doubao-pro-256k',
     maxOutput: 4096,
