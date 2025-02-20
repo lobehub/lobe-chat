@@ -32,6 +32,12 @@ describe('createErrorResponse', () => {
     expect(response.status).toBe(403);
   });
 
+  it('returns a 404 status for ModelNotFound error type', () => {
+    const errorType = AgentRuntimeErrorType.ModelNotFound;
+    const response = createErrorResponse(errorType);
+    expect(response.status).toBe(404);
+  });
+
   it('returns a 429 status for InsufficientQuota error type', () => {
     const errorType = AgentRuntimeErrorType.InsufficientQuota;
     const response = createErrorResponse(errorType);

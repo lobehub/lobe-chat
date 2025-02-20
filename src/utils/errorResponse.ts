@@ -21,6 +21,10 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
       return 403;
     }
 
+    case AgentRuntimeErrorType.ModelNotFound: {
+      return 404;
+    }
+
     case AgentRuntimeErrorType.InsufficientQuota:
     case AgentRuntimeErrorType.QuotaLimitReached: {
       return 429;
