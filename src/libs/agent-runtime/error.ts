@@ -7,6 +7,8 @@ export const AgentRuntimeErrorType = {
   QuotaLimitReached: 'QuotaLimitReached',
   InsufficientQuota: 'InsufficientQuota',
 
+  ModelNotFound: 'ModelNotFound',
+
   PermissionDenied: 'PermissionDenied',
   ExceededContextWindow: 'ExceededContextWindow',
 
