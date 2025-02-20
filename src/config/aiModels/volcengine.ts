@@ -1,7 +1,7 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
 // modelInfo https://www.volcengine.com/docs/82379/1330310
-// pricing https://www.volcengine.com/docs/82379/1099320
+// pricing https://console.volcengine.com/ark/region:ark+cn-beijing/openManagement
 
 const doubaoChatModels: AIChatModelCard[] = [
   {
