@@ -78,6 +78,7 @@
       "functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
       "hot": "Mô hình này đang rất được ưa chuộng gần đây",
       "reasoning": "Mô hình này hỗ trợ tư duy sâu sắc",
+      "search": "Mô hình này hỗ trợ tìm kiếm trực tuyến",
       "tokens": "Mỗi phiên của mô hình này hỗ trợ tối đa {{tokens}} Tokens",
       "vision": "Mô hình này hỗ trợ nhận diện hình ảnh"
     },

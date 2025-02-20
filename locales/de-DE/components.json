@@ -78,6 +78,7 @@
       "functionCall": "Dieses Modell unterstützt Funktionsaufrufe.",
       "hot": "Dieses Modell ist derzeit das angesagteste.",
       "reasoning": "Dieses Modell unterstützt tiefes Denken",
+      "search": "Dieses Modell unterstützt die Online-Suche",
       "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro Sitzung.",
       "vision": "Dieses Modell unterstützt die visuelle Erkennung."
     },

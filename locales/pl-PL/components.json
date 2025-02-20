@@ -78,6 +78,7 @@
       "functionCall": "Ten model obsługuje wywołania funkcji (Function Call).",
       "hot": "Ten model jest ostatnio najpopularniejszy",
       "reasoning": "Ten model wspiera głębokie myślenie",
+      "search": "Ten model wspiera wyszukiwanie w sieci",
       "tokens": "Ten model obsługuje maksymalnie {{tokens}} tokenów w pojedynczej sesji.",
       "vision": "Ten model obsługuje rozpoznawanie wizualne."
     },

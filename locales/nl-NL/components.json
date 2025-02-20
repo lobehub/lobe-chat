@@ -78,6 +78,7 @@
       "functionCall": "This model supports function call.",
       "hot": "Dit model is recent het populairst",
       "reasoning": "Dit model ondersteunt diepgaand denken",
+      "search": "Dit model ondersteunt online zoeken",
       "tokens": "This model supports up to {{tokens}} tokens in a single session.",
       "vision": "This model supports visual recognition."
     },

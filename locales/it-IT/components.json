@@ -78,6 +78,7 @@
       "functionCall": "Questo modello supporta la chiamata di funzioni.",
       "hot": "Questo modello è recentemente il più popolare",
       "reasoning": "Questo modello supporta un pensiero profondo",
+      "search": "Questo modello supporta la ricerca online",
       "tokens": "Questo modello supporta un massimo di {{tokens}} token per sessione.",
       "vision": "Questo modello supporta il riconoscimento visivo."
     },

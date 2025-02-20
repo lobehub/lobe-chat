@@ -78,6 +78,7 @@
       "functionCall": "Bu model fonksiyon çağrısını destekler",
       "hot": "Bu model son zamanların en popüler modeli.",
       "reasoning": "Bu model derin düşünmeyi destekler",
+      "search": "Bu model çevrimiçi aramayı destekler",
       "tokens": "Bu model tek bir oturumda en fazla {{tokens}} Token destekler",
       "vision": "Bu model görüntü tanımıyı destekler"
     },

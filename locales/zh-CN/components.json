@@ -78,6 +78,7 @@
       "functionCall": "该模型支持函数调用（Function Call）",
       "hot": "该模型是最近最火热的",
       "reasoning": "该模型支持深度思考",
+      "search": "该模型支持联网搜索",
       "tokens": "该模型单个会话最多支持 {{tokens}} Tokens",
       "vision": "该模型支持视觉识别"
     },

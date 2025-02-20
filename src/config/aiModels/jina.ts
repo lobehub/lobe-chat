@@ -4,6 +4,7 @@ const jinaChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 1_000_000,
     description:
