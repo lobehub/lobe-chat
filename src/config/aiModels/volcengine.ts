@@ -20,7 +20,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     max_tokens: 8000,
     pricing: {
       currency: 'CNY',
-      input: 2,
+      input: 2, // 2.24 恢复原价 4, 16
       output: 8,
     },
     type: 'chat',
@@ -43,6 +43,66 @@ const doubaoChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 2,
       output: 8,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    config: {
+      deploymentName: 'doubao-1-5-pro-32k-250115',
+    },
+    contextWindowTokens: 32_768,
+    description:
+      '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。',
+    displayName: 'Doubao 1.5 Pro 32k',
+    id: 'doubao-1.5-pro-32k',
+    max_tokens: 12_000,
+    pricing: {
+      currency: 'CNY',
+      input: 0.8,
+      output: 2,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    config: {
+      deploymentName: 'doubao-1-5-pro-256k-250115',
+    },
+    contextWindowTokens: 32_768,
+    description:
+      '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。',
+    displayName: 'Doubao 1.5 Pro 256k',
+    id: 'doubao-1.5-pro-256k',
+    max_tokens: 12_000,
+    pricing: {
+      currency: 'CNY',
+      input: 5,
+      output: 9,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    config: {
+      deploymentName: 'doubao-1-5-lite-32k-250115',
+    },
+    contextWindowTokens: 32_768,
+    description:
+      '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。',
+    displayName: 'Doubao 1.5 Lite 32k',
+    id: 'doubao-1.5-lite-32k',
+    max_tokens: 12_000,
+    pricing: {
+      currency: 'CNY',
+      input: 0.3,
+      output: 0.6,
     },
     type: 'chat',
   },
@@ -172,6 +232,9 @@ const doubaoChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'doubao-pro-32k-241215',
+    },
     contextWindowTokens: 32_768,
     description:
       '效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 32k 上下文窗口的推理和精调。',
@@ -200,6 +263,9 @@ const doubaoChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'doubao-pro-256k-241115',
+    },
     contextWindowTokens: 256_000,
     description:
       '效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 128k 上下文窗口的推理和精调。',
