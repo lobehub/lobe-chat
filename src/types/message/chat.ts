@@ -2,7 +2,7 @@ import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 
 import { ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ErrorType } from '@/types/fetch';
-import { MessageRoleType, ModelReasoning } from '@/types/message/base';
+import { GroundingSearch, MessageRoleType, ModelReasoning } from '@/types/message/base';
 import { ChatPluginPayload, ChatToolPayload } from '@/types/message/tools';
 import { Translate } from '@/types/message/translate';
 import { MetaData } from '@/types/meta';
@@ -100,11 +100,12 @@ export interface ChatMessage {
   ragRawQuery?: string | null;
 
   reasoning?: ModelReasoning | null;
-
   /**
    * message role type
    */
   role: MessageRoleType;
+
+  search?: GroundingSearch | null;
   sessionId?: string;
   threadId?: string | null;
   tool_call_id?: string;

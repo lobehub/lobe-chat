@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} API-sleutel is onjuist of leeg. Controleer de {{provider}} API-sleutel en probeer het opnieuw.",
     "InvalidVertexCredentials": "Vertex-authenticatie is mislukt, controleer de authenticatiegegevens en probeer het opnieuw",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
+    "ModelNotFound": "Het spijt ons, het is niet mogelijk om het bijbehorende model op te vragen. Dit kan komen doordat het model niet bestaat of dat er geen toegang is. Probeer het opnieuw na het wijzigen van de API-sleutel of het aanpassen van de toegangsrechten.",
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
     "OllamaServiceUnavailable": "Ollama-service niet beschikbaar. Controleer of Ollama correct werkt en of de cross-origin configuratie van Ollama juist is ingesteld.",

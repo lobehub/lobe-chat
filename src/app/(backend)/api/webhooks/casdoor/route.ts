@@ -16,9 +16,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
     );
   }
 
-  const { action, extendedUser } = payload;
-
-  pino.trace(`casdoor webhook payload: ${{ action, extendedUser }}`);
+  const { action, object } = payload;
 
   const nextAuthUserService = new NextAuthUserService();
   switch (action) {
@@ -26,12 +24,12 @@ export const POST = async (req: Request): Promise<NextResponse> => {
       return nextAuthUserService.safeUpdateUser(
         {
           provider: 'casdoor',
-          providerAccountId: extendedUser.id,
+          providerAccountId: object.id,
         },
         {
-          avatar: extendedUser?.avatar,
-          email: extendedUser?.email,
-          fullName: extendedUser.displayName,
+          avatar: object?.avatar,
+          email: object?.email,
+          fullName: object.displayName,
         },
       );
     }

@@ -95,4 +95,14 @@ describe('ClientService', () => {
     expect(spyOn).toHaveBeenCalledWith(newPreference);
     expect(spyOn).toHaveBeenCalledTimes(1);
   });
+
+  it('should return empty array for getUserSSOProviders', async () => {
+    const providers = await clientService.getUserSSOProviders();
+    expect(providers).toEqual([]);
+  });
+
+  it('should do nothing when unlinkSSOProvider is called', async () => {
+    const result = await clientService.unlinkSSOProvider('google', '123');
+    expect(result).toBeUndefined();
+  });
 });

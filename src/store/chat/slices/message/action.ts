@@ -16,6 +16,7 @@ import {
   ChatMessage,
   ChatMessageError,
   CreateMessageParams,
+  GroundingSearch,
   MessageToolCall,
   ModelReasoning,
 } from '@/types/message';
@@ -73,8 +74,11 @@ export interface ChatMessageAction {
   internal_updateMessageContent: (
     id: string,
     content: string,
-    toolCalls?: MessageToolCall[],
-    reasoning?: ModelReasoning,
+    extra?: {
+      toolCalls?: MessageToolCall[];
+      reasoning?: ModelReasoning;
+      search?: GroundingSearch;
+    },
   ) => Promise<void>;
   /**
    * update the message error with optimistic update
@@ -272,17 +276,17 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, { error });
     await get().refreshMessages();
   },
-  internal_updateMessageContent: async (id, content, toolCalls, reasoning) => {
+  internal_updateMessageContent: async (id, content, extra) => {
     const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
 
     // Due to the async update method and refresh need about 100ms
     // we need to update the message content at the frontend to avoid the update flick
     // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
-    if (toolCalls) {
+    if (extra?.toolCalls) {
       internal_dispatchMessage({
         id,
         type: 'updateMessage',
-        value: { tools: internal_transformToolCalls(toolCalls) },
+        value: { tools: internal_transformToolCalls(extra?.toolCalls) },
       });
     } else {
       internal_dispatchMessage({ id, type: 'updateMessage', value: { content } });
@@ -290,8 +294,9 @@ export const chatMessage: StateCreator<
 
     await messageService.updateMessage(id, {
       content,
-      tools: toolCalls ? internal_transformToolCalls(toolCalls) : undefined,
-      reasoning,
+      tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
+      reasoning: extra?.reasoning,
+      search: extra?.search,
     });
     await refreshMessages();
   },

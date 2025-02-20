@@ -6,6 +6,7 @@ import { ChatErrorType } from '@/types/fetch';
 import { SmoothingParams } from '@/types/llm';
 import {
   ChatMessageError,
+  CitationItem,
   MessageToolCall,
   MessageToolCallChunk,
   MessageToolCallSchema,
@@ -20,6 +21,7 @@ type SSEFinishType = 'done' | 'error' | 'abort';
 export type OnFinishHandler = (
   text: string,
   context: {
+    citations?: CitationItem[];
     observationId?: string | null;
     reasoning?: string;
     toolCalls?: MessageToolCall[];
@@ -38,6 +40,11 @@ export interface MessageReasoningChunk {
   type: 'reasoning';
 }
 
+export interface MessageCitationsChunk {
+  citations: CitationItem[];
+  type: 'citations';
+}
+
 interface MessageToolCallsChunk {
   isAnimationActives?: boolean[];
   tool_calls: MessageToolCall[];
@@ -50,7 +57,7 @@ export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void;
   onFinish?: OnFinishHandler;
   onMessageHandle?: (
-    chunk: MessageTextChunk | MessageToolCallsChunk | MessageReasoningChunk,
+    chunk: MessageTextChunk | MessageToolCallsChunk | MessageReasoningChunk | MessageCitationsChunk,
   ) => void;
   smoothing?: SmoothingParams | boolean;
 }
@@ -279,6 +286,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     startSpeed: smoothingSpeed,
   });
 
+  let citations: CitationItem[] | undefined = undefined;
   await fetchEventSource(url, {
     body: options.body,
     fetch: options?.fetcher,
@@ -350,6 +358,13 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
           break;
         }
+
+        case 'citations': {
+          citations = data;
+          options.onMessageHandle?.({ citations: data, type: 'citations' });
+          break;
+        }
+
         case 'reasoning': {
           if (textSmoothing) {
             thinkingController.pushToQueue(data);
@@ -419,6 +434,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       }
 
       await options?.onFinish?.(output, {
+        citations,
         observationId,
         reasoning: !!thinking ? thinking : undefined,
         toolCalls,

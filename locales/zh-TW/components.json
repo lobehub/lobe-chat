@@ -77,6 +77,7 @@
       "file": "該模型支援上傳檔案讀取與辨識",
       "functionCall": "該模型支援函式呼叫（Function Call）",
       "reasoning": "該模型支持深度思考",
+      "search": "該模型支援聯網搜尋",
       "tokens": "該模型單一會話最多支援 {{tokens}} Tokens",
       "vision": "該模型支援視覺辨識"
     },

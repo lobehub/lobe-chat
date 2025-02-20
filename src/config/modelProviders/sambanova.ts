@@ -10,9 +10,12 @@ const SambaNova: ModelProviderCard = {
   name: 'SambaNova',
   settings: {
     disableBrowserRequest: true,
+    proxyUrl: {
+      placeholder: 'https://api.sambanova.ai/v1',
+    },
     sdkType: 'openai',
   },
   url: 'https://cloud.sambanova.ai',
 };
 
-export default SambaNova; 
+export default SambaNova;

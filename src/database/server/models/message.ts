@@ -74,6 +74,8 @@ export class MessageModel {
         role: messages.role,
         content: messages.content,
         reasoning: messages.reasoning,
+        search: messages.search,
+        metadata: messages.metadata,
         error: messages.error,
 
         model: messages.model,

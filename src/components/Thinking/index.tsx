@@ -7,6 +7,8 @@ import { CSSProperties, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { CitationItem } from '@/types/message';
+
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
     width: fit-content;
@@ -59,13 +61,14 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 }));
 
 interface ThinkingProps {
+  citations?: CitationItem[];
   content?: string;
   duration?: number;
   style?: CSSProperties;
   thinking?: boolean;
 }
 
-const Thinking = memo<ThinkingProps>(({ content, duration, thinking, style }) => {
+const Thinking = memo<ThinkingProps>(({ content, duration, thinking, style, citations }) => {
   const { t } = useTranslation(['components', 'common']);
   const { styles, cx } = useStyles();
 
@@ -135,7 +138,9 @@ const Thinking = memo<ThinkingProps>(({ content, duration, thinking, style }) =>
             }}
           >
             {typeof content === 'string' ? (
-              <Markdown variant={'chat'}>{content}</Markdown>
+              <Markdown citations={citations} variant={'chat'}>
+                {content}
+              </Markdown>
             ) : (
               content
             )}

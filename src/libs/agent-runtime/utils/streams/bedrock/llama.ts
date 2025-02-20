@@ -4,8 +4,8 @@ import { nanoid } from '@/utils/uuid';
 
 import { ChatStreamCallbacks } from '../../../types';
 import {
+  StreamContext,
   StreamProtocolChunk,
-  StreamStack,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
 } from '../protocol';
@@ -27,7 +27,7 @@ interface BedrockLlamaStreamChunk {
 
 export const transformLlamaStream = (
   chunk: BedrockLlamaStreamChunk,
-  stack: StreamStack,
+  stack: StreamContext,
 ): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
   if (chunk.stop_reason) {
@@ -41,7 +41,7 @@ export const AWSBedrockLlamaStream = (
   res: InvokeModelWithResponseStreamResponse | ReadableStream,
   cb?: ChatStreamCallbacks,
 ): ReadableStream<string> => {
-  const streamStack: StreamStack = { id: 'chat_' + nanoid() };
+  const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   const stream = res instanceof ReadableStream ? res : createBedrockStream(res);
 

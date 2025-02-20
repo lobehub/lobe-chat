@@ -2,7 +2,15 @@ name: '🐛 反馈缺陷'
 description: '反馈一个问题缺陷'
 title: '[Bug] '
 labels: ['🐛 Bug']
+type: Bug
 body:
+  - type: markdown
+    attributes:
+      value: |
+        在创建新的 Issue 之前，请先[搜索已有问题](https://github.com/lobehub/lobe-chat/issues)，如果发现已有类似的问题，请给它 **👍 点赞**，这样可以帮助我们更快地解决问题。  
+        如果你在使用过程中遇到问题，可以尝试以下方式获取帮助：  
+        - 在 [GitHub Discussions](https://github.com/lobehub/lobe-chat/discussions) 的版块发起讨论。  
+        - 在 [LobeChat 社区](https://discord.gg/AYFPHvv2jT) 提问，与其他用户交流。 
   - type: dropdown
     attributes:
       label: '📦 部署环境'

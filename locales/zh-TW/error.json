@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} API 金鑰不正確或為空，請檢查 {{provider}} API 金鑰後重試",
     "InvalidVertexCredentials": "Vertex 認證未通過，請檢查認證憑證後重試",
     "LocationNotSupportError": "很抱歉，你的所在位置不支持此模型服務，可能是由於地區限制或服務未開通。請確認當前位置是否支持使用此服務，或嘗試使用其他位置信息。",
+    "ModelNotFound": "很抱歉，無法請求到相應的模型，可能是模型不存在或沒有訪問權限導致，請更換 API Key 或調整訪問權限後重試",
     "NoOpenAIAPIKey": "OpenAI API 金鑰為空，請添加自訂 OpenAI API 金鑰",
     "OllamaBizError": "請求 Ollama 服務出錯，請根據以下資訊排查或重試",
     "OllamaServiceUnavailable": "Ollama 服務暫時無法使用，請檢查 Ollama 是否運作正常，或是否正確設定 Ollama 的跨域配置",

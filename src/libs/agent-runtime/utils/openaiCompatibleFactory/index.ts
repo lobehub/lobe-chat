@@ -396,6 +396,15 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
           });
         }
 
+        case 'model_not_found': {
+          return AgentRuntimeError.chat({
+            endpoint: desensitizedEndpoint,
+            error: errorResult,
+            errorType: AgentRuntimeErrorType.ModelNotFound,
+            provider: provider as ModelProvider,
+          });
+        }
+
         // content too long
         case 'context_length_exceeded':
         case 'string_above_max_length': {

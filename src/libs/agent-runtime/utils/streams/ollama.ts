@@ -4,14 +4,14 @@ import { ChatStreamCallbacks } from '@/libs/agent-runtime';
 import { nanoid } from '@/utils/uuid';
 
 import {
+  StreamContext,
   StreamProtocolChunk,
-  StreamStack,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
 } from './protocol';
 
-const transformOllamaStream = (chunk: ChatResponse, stack: StreamStack): StreamProtocolChunk => {
+const transformOllamaStream = (chunk: ChatResponse, stack: StreamContext): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
   if (chunk.done && !chunk.message.content) {
     return { data: 'finished', id: stack.id, type: 'stop' };
@@ -39,7 +39,7 @@ export const OllamaStream = (
   res: ReadableStream<ChatResponse>,
   cb?: ChatStreamCallbacks,
 ): ReadableStream<string> => {
-  const streamStack: StreamStack = { id: 'chat_' + nanoid() };
+  const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   return res
     .pipeThrough(createSSEProtocolTransformer(transformOllamaStream, streamStack))

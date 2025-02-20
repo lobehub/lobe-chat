@@ -77,6 +77,7 @@
       "file": "Mô hình này hỗ trợ tải lên và nhận diện tệp",
       "functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
       "reasoning": "Mô hình này hỗ trợ tư duy sâu sắc",
+      "search": "Mô hình này hỗ trợ tìm kiếm trực tuyến",
       "tokens": "Mỗi phiên của mô hình này hỗ trợ tối đa {{tokens}} Tokens",
       "vision": "Mô hình này hỗ trợ nhận diện hình ảnh"
     },

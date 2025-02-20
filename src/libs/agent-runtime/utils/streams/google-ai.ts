@@ -4,8 +4,8 @@ import { nanoid } from '@/utils/uuid';
 
 import { ChatStreamCallbacks } from '../../types';
 import {
+  StreamContext,
   StreamProtocolChunk,
-  StreamStack,
   StreamToolCallChunkData,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
@@ -14,7 +14,7 @@ import {
 
 const transformGoogleGenerativeAIStream = (
   chunk: EnhancedGenerateContentResponse,
-  stack: StreamStack,
+  stack: StreamContext,
 ): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
   const functionCalls = chunk.functionCalls();
@@ -49,7 +49,7 @@ export const GoogleGenerativeAIStream = (
   rawStream: ReadableStream<EnhancedGenerateContentResponse>,
   callbacks?: ChatStreamCallbacks,
 ) => {
-  const streamStack: StreamStack = { id: 'chat_' + nanoid() };
+  const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   return rawStream
     .pipeThrough(createSSEProtocolTransformer(transformGoogleGenerativeAIStream, streamStack))

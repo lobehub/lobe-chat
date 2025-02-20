@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} API Key incorrecta o vacía, por favor revisa tu {{provider}} API Key e intenta de nuevo",
     "InvalidVertexCredentials": "La autenticación de Vertex no se ha completado, por favor verifica las credenciales de autenticación y vuelve a intentarlo",
     "LocationNotSupportError": "Lo sentimos, tu ubicación actual no es compatible con este servicio de modelo, puede ser debido a restricciones geográficas o a que el servicio no está disponible. Por favor, verifica si tu ubicación actual es compatible con este servicio o intenta usar otra información de ubicación.",
+    "ModelNotFound": "Lo sentimos, no se pudo solicitar el modelo correspondiente, puede que el modelo no exista o que no tenga permisos de acceso. Por favor, cambie la clave API o ajuste los permisos de acceso y vuelva a intentarlo.",
     "NoOpenAIAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
     "OllamaBizError": "Error al solicitar el servicio de Ollama, por favor verifica la siguiente información o inténtalo de nuevo",
     "OllamaServiceUnavailable": "El servicio Ollama no está disponible. Por favor, verifica si Ollama está funcionando correctamente o si la configuración de Ollama para el acceso entre dominios está configurada correctamente.",

@@ -1,3 +1,15 @@
+export interface CitationItem {
+  id?: string;
+  onlyUrl?: boolean;
+  title?: string;
+  url: string;
+}
+
+export interface GroundingSearch {
+  citations?: CitationItem[];
+  searchQueries?: string[];
+}
+
 export interface ModelReasoning {
   content?: string;
   duration?: number;
@@ -20,6 +32,7 @@ export interface MessageItem {
   quotaId: string | null;
   reasoning: ModelReasoning | null;
   role: string;
+  search: GroundingSearch | null;
   sessionId: string | null;
   threadId: string | null;
   // jsonb type

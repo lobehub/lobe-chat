@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} API 키가 잘못되었거나 비어 있습니다. {{provider}} API 키를 확인하고 다시 시도하십시오.",
     "InvalidVertexCredentials": "Vertex 인증에 실패했습니다. 인증 정보를 확인한 후 다시 시도해 주세요.",
     "LocationNotSupportError": "죄송합니다. 귀하의 현재 위치는 해당 모델 서비스를 지원하지 않습니다. 지역 제한 또는 서비스 미개통으로 인한 것일 수 있습니다. 현재 위치가 해당 서비스를 지원하는지 확인하거나 다른 위치 정보를 사용해 보십시오.",
+    "ModelNotFound": "죄송합니다. 요청한 모델을 찾을 수 없습니다. 모델이 존재하지 않거나 접근 권한이 없을 수 있습니다. API 키를 변경하거나 접근 권한을 조정한 후 다시 시도해 주십시오.",
     "NoOpenAIAPIKey": "OpenAI API 키가 비어 있습니다. 사용자 정의 OpenAI API 키를 추가해주세요.",
     "OllamaBizError": "Ollama 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "OllamaServiceUnavailable": "Ollama 서비스를 사용할 수 없습니다. Ollama가 올바르게 작동하는지 또는 Ollama의 교차 도메인 구성이 올바르게 설정되었는지 확인하십시오.",

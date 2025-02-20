@@ -17,7 +17,7 @@ export class NextAuthUserService {
     { providerAccountId, provider }: { provider: string; providerAccountId: string },
     data: Partial<UserItem>,
   ) => {
-    pino.info('updating user due to webhook');
+    pino.info(`updating user "${JSON.stringify({ provider, providerAccountId })}" due to webhook`);
     // 1. Find User by account
     // @ts-expect-error: Already impl in `LobeNextauthDbAdapter`
     const user = await this.adapter.getUserByAccount({
@@ -37,7 +37,7 @@ export class NextAuthUserService {
       });
     } else {
       pino.warn(
-        `[${provider}]: Webhooks handler user update for "${JSON.stringify(data)}", but no user was found by the providerAccountId.`,
+        `[${provider}]: Webhooks handler user "${JSON.stringify({ provider, providerAccountId })}" update for "${JSON.stringify(data)}", but no user was found by the providerAccountId.`,
       );
     }
     return NextResponse.json({ message: 'user updated', success: true }, { status: 200 });

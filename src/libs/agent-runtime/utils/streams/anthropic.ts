@@ -3,9 +3,9 @@ import type { Stream } from '@anthropic-ai/sdk/streaming';
 
 import { ChatStreamCallbacks } from '../../types';
 import {
+  StreamContext,
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
-  StreamStack,
   StreamToolCallChunkData,
   convertIterableToStream,
   createCallbacksTransformer,
@@ -14,7 +14,7 @@ import {
 
 export const transformAnthropicStream = (
   chunk: Anthropic.MessageStreamEvent,
-  stack: StreamStack,
+  stack: StreamContext,
 ): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
   switch (chunk.type) {
@@ -100,7 +100,7 @@ export const AnthropicStream = (
   stream: Stream<Anthropic.MessageStreamEvent> | ReadableStream,
   callbacks?: ChatStreamCallbacks,
 ) => {
-  const streamStack: StreamStack = { id: '' };
+  const streamStack: StreamContext = { id: '' };
 
   const readableStream =
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);

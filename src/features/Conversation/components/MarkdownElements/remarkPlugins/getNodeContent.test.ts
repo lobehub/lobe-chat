@@ -393,4 +393,111 @@ describe('treeNodeToString', () => {
 1. 求 $a_2$ 和 $a_3$，根据前三项的规律猜想该数列的通项公式
 2. 用数学归纳法证明你的猜想。`);
   });
+
+  describe('link node', () => {
+    it('with url', () => {
+      const nodes = [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'link',
+              title: null,
+              url: 'citation-1',
+              children: [
+                {
+                  type: 'text',
+                  value: '#citation-1',
+                  position: {
+                    start: {
+                      line: 5,
+                      column: 26,
+                      offset: 78,
+                    },
+                    end: {
+                      line: 5,
+                      column: 37,
+                      offset: 89,
+                    },
+                  },
+                },
+              ],
+              position: {
+                start: {
+                  line: 5,
+                  column: 25,
+                  offset: 77,
+                },
+                end: {
+                  line: 5,
+                  column: 50,
+                  offset: 102,
+                },
+              },
+            },
+          ],
+          position: {
+            start: {
+              line: 5,
+              column: 1,
+              offset: 53,
+            },
+            end: {
+              line: 5,
+              column: 220,
+              offset: 272,
+            },
+          },
+        },
+      ];
+
+      const result = treeNodeToString(nodes as Parent[]);
+
+      expect(result).toEqual(`[#citation-1](citation-1)`);
+    });
+
+    it('handle error case', () => {
+      const nodes = [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'link',
+              title: null,
+              url: 'citation-1',
+              children: [],
+              position: {
+                start: {
+                  line: 5,
+                  column: 25,
+                  offset: 77,
+                },
+                end: {
+                  line: 5,
+                  column: 50,
+                  offset: 102,
+                },
+              },
+            },
+          ],
+          position: {
+            start: {
+              line: 5,
+              column: 1,
+              offset: 53,
+            },
+            end: {
+              line: 5,
+              column: 220,
+              offset: 272,
+            },
+          },
+        },
+      ];
+
+      const result = treeNodeToString(nodes as Parent[]);
+
+      expect(result).toEqual(`[](citation-1)`);
+    });
+  });
 });

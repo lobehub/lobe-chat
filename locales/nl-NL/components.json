@@ -77,6 +77,7 @@
       "file": "This model supports file upload for reading and recognition.",
       "functionCall": "This model supports function call.",
       "reasoning": "Dit model ondersteunt diepgaand denken",
+      "search": "Dit model ondersteunt online zoeken",
       "tokens": "This model supports up to {{tokens}} tokens in a single session.",
       "vision": "This model supports visual recognition."
     },

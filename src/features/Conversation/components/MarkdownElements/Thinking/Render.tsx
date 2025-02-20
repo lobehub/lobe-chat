@@ -18,10 +18,14 @@ const Render = memo<MarkdownElementProps>(({ children, id }) => {
     const message = chatSelectors.getMessageById(id)(s);
     return [!isThinkingClosed(message?.content)];
   });
+  const citations = useChatStore((s) => {
+    const message = chatSelectors.getMessageById(id)(s);
+    return message?.search?.citations;
+  });
 
   if (!isGenerating && !children) return;
 
-  return <Thinking content={children as string} thinking={isGenerating} />;
+  return <Thinking citations={citations} content={children as string} thinking={isGenerating} />;
 });
 
 export default Render;

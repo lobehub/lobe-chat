@@ -77,6 +77,7 @@
       "file": "Ce modèle prend en charge la lecture et la reconnaissance de fichiers téléchargés.",
       "functionCall": "Ce modèle prend en charge les appels de fonction.",
       "reasoning": "Ce modèle prend en charge une réflexion approfondie",
+      "search": "Ce modèle prend en charge la recherche en ligne",
       "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
       "vision": "Ce modèle prend en charge la reconnaissance visuelle."
     },
