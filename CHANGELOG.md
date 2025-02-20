@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.61.6](https://github.com/lobehub/lobe-chat/compare/v1.61.5...v1.61.6)
+
+<sup>Released on **2025-02-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Casdoor webhooks error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Casdoor webhooks error, closes [#6304](https://github.com/lobehub/lobe-chat/issues/6304) ([7a458b9](https://github.com/lobehub/lobe-chat/commit/7a458b9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.61.5](https://github.com/lobehub/lobe-chat/compare/v1.61.4...v1.61.5)
 
 <sup>Released on **2025-02-19**</sup>

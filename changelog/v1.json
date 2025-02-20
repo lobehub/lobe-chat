@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Casdoor webhooks error."]
+    },
+    "date": "2025-02-20",
+    "version": "1.61.6"
+  },
+  {
+    "children": {
       "improvements": ["Show sso providers for next-auth in profile page."]
     },
     "date": "2025-02-19",
