@@ -11,8 +11,8 @@ import { ChatMessage } from '@/types/message';
 import { InPortalThreadContext } from '../../components/ChatItem/InPortalThreadContext';
 import { DefaultMessage } from '../Default';
 import FileChunks from './FileChunks';
-import Thinking from './Reasoning';
-import ToolCall from './ToolCallItem';
+import Reasoning from './Reasoning';
+import Tool from './Tool';
 
 export const AssistantMessage = memo<
   ChatMessage & {
@@ -43,7 +43,7 @@ export const AssistantMessage = memo<
   ) : (
     <Flexbox gap={8} id={id}>
       {!!chunksList && chunksList.length > 0 && <FileChunks data={chunksList} />}
-      {showReasoning && <Thinking {...props.reasoning} id={id} />}
+      {showReasoning && <Reasoning {...props.reasoning} id={id} />}
       {content && (
         <DefaultMessage
           addIdOnDOM={false}
@@ -59,7 +59,7 @@ export const AssistantMessage = memo<
         >
           <Flexbox gap={8}>
             {tools.map((toolCall, index) => (
-              <ToolCall
+              <Tool
                 apiName={toolCall.apiName}
                 arguments={toolCall.arguments}
                 id={toolCall.id}
@@ -67,6 +67,7 @@ export const AssistantMessage = memo<
                 index={index}
                 key={toolCall.id}
                 messageId={id}
+                payload={toolCall}
                 showPortal={!inThread}
               />
             ))}

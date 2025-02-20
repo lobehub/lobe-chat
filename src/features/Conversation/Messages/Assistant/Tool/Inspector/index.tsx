@@ -22,8 +22,8 @@ import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { ChatPluginPayload } from '@/types/message';
 
-import PluginResult from './PluginResultJSON';
-import Settings from './Settings';
+import PluginResult from '../Inspectors/PluginResultJSON';
+import Settings from '../Inspectors/Settings';
 import { useStyles } from './style';
 
 export interface InspectorProps {

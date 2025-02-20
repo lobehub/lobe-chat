@@ -12,7 +12,6 @@ import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
 import Arguments from '../../components/Arguments';
-import Inspector from './Inspector';
 
 const Tool = memo<
   ChatMessage & {
@@ -31,17 +30,6 @@ const Tool = memo<
 
   return (
     <Flexbox gap={12} id={id} width={'100%'}>
-      <Inspector
-        arguments={plugin?.arguments}
-        content={content}
-        id={id}
-        identifier={plugin?.identifier}
-        loading={loading}
-        payload={plugin}
-        setShow={setShow}
-        showPortal={showPortal}
-        showRender={showRender}
-      />
       {isMessageToolUIOpen ? (
         <Center paddingBlock={8} style={{ background: theme.colorFillQuaternary, borderRadius: 4 }}>
           <Empty
