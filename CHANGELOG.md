@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.62.4](https://github.com/lobehub/lobe-chat/compare/v1.62.3...v1.62.4)
+
+<sup>Released on **2025-02-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix hotkeys of open agent settings.
+
+#### 💄 Styles
+
+- **misc**: Add some error types.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix hotkeys of open agent settings, closes [#6363](https://github.com/lobehub/lobe-chat/issues/6363) ([3219c54](https://github.com/lobehub/lobe-chat/commit/3219c54))
+
+#### Styles
+
+- **misc**: Add some error types, closes [#6377](https://github.com/lobehub/lobe-chat/issues/6377) ([f7a7138](https://github.com/lobehub/lobe-chat/commit/f7a7138))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.62.3](https://github.com/lobehub/lobe-chat/compare/v1.62.2...v1.62.3)
 
 <sup>Released on **2025-02-20**</sup>
