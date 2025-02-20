@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "features": ["Support pplx search grounding."],
+      "fixes": ["Azure AI env var configuration issue.."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.0"
+  },
+  {
+    "children": {
       "fixes": ["Casdoor webhooks error."]
     },
     "date": "2025-02-20",
