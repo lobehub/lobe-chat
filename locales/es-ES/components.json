@@ -77,6 +77,7 @@
       "file": "Este modelo admite la carga y reconocimiento de archivos.",
       "functionCall": "Este modelo admite llamadas de función.",
       "reasoning": "Este modelo admite un pensamiento profundo",
+      "search": "Este modelo admite búsqueda en línea",
       "tokens": "Este modelo admite un máximo de {{tokens}} tokens por sesión.",
       "vision": "Este modelo admite el reconocimiento visual."
     },

@@ -105,6 +105,13 @@
       "when": 1737609172353,
       "tag": "0014_add_message_reasoning",
       "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1739901891891,
+      "tag": "0015_add_message_search_metadata",
+      "breakpoints": true
     }
   ],
   "version": "6"
