@@ -150,6 +150,9 @@ export const getLLMConfig = () => {
 
       ENABLED_PPIO: z.boolean(),
       PPIO_API_KEY: z.string().optional(),
+
+      ENABLED_SEARCH1API: z.boolean(),
+      SEARCH1API_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -298,6 +301,9 @@ export const getLLMConfig = () => {
 
       ENABLED_PPIO: !!process.env.PPIO_API_KEY,
       PPIO_API_KEY: process.env.PPIO_API_KEY,
+
+      ENABLED_SEARCH1API: !!process.env.SEARCH1API_API_KEY,
+      SEARCH1API_API_KEY: process.env.SEARCH1API_API_KEY,
     },
   });
 };
