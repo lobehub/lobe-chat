@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Fix message roles for specific Azure OpenAI models."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.2"
+  },
+  {
+    "children": {
+      "fixes": ["Add sambanova proxy url."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.1"
+  },
+  {
+    "children": {
       "features": ["Support pplx search grounding."],
       "fixes": ["Azure AI env var configuration issue.."]
     },
