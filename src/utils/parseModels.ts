@@ -84,6 +84,10 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
             model.abilities!.hot = true;
             break;
           }
+          case 'search': {
+            model.abilities!.search = true;
+            break;
+          }
           default: {
             console.warn(`Unknown capability: ${capability}`);
           }

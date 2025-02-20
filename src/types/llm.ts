@@ -56,7 +56,10 @@ export interface ChatModelCard {
    * whether model is legacy (deprecated but not removed yet)
    */
   releasedAt?: string;
-
+  /**
+   * whether model supports search web
+   */
+  search?: boolean;
   /**
    *  whether model supports vision
    */
