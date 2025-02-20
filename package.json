@@ -280,6 +280,7 @@
     "@types/ws": "^8.5.13",
     "@vitest/coverage-v8": "~1.2.2",
     "ajv-keywords": "^5.1.0",
+    "babel-plugin-react-compiler": "19.0.0-beta-21e868a-20250216",
     "commitlint": "^19.6.1",
     "consola": "^3.3.3",
     "crypto-js": "^4.2.0",
