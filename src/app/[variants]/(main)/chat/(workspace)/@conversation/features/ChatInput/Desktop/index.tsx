@@ -14,10 +14,10 @@ const leftActions = [
   'model',
   'fileUpload',
   'knowledgeBase',
+  'params',
   'history',
   'stt',
   'tools',
-  'params',
   'mainToken',
 ] as ActionKeys[];
 

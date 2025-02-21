@@ -787,7 +787,7 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [deploy-on-repocloud-button-image]: https://d16t0pc4846x52.cloudfront.net/deploylobe.svg
 [deploy-on-repocloud-link]: https://repocloud.io/details/?app_id=248
 [deploy-on-sealos-button-image]: https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg
-[deploy-on-sealos-link]: https://cloud.sealos.io/?openapp=system-template%3FtemplateName%3Dlobe-chat
+[deploy-on-sealos-link]: https://template.usw.sealos.io/deploy?templateName=lobe-chat-db
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
 [deploy-on-zeabur-link]: https://zeabur.com/templates/VZGGTI
 [discord-link]: https://discord.gg/AYFPHvv2jT
