@@ -115,19 +115,23 @@ export class AiProviderModel {
     const encrypt = encryptor ?? defaultSerialize;
     const keyVaults = await encrypt(JSON.stringify(value.keyVaults));
 
+    const commonFields = {
+      checkModel: value.checkModel,
+      fetchOnClient: value.fetchOnClient,
+      keyVaults,
+    };
+
     return this.db
       .insert(aiProviders)
       .values({
-        checkModel: value.checkModel,
-        fetchOnClient: value.fetchOnClient,
+        ...commonFields,
         id,
-        keyVaults,
         source: this.getProviderSource(id),
         updatedAt: new Date(),
         userId: this.userId,
       })
       .onConflictDoUpdate({
-        set: { checkModel: value.checkModel, fetchOnClient: value.fetchOnClient, keyVaults },
+        set: { ...commonFields, updatedAt: new Date() },
         target: [aiProviders.id, aiProviders.userId],
       });
   };
