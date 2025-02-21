@@ -36,7 +36,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。',
     displayName: 'DeepSeek R1 Distill Qwen 32B',
-    enabled: true,
     id: 'deepseek-r1-distill-qwen-32b',
     maxOutput: 8000,
     pricing: {
@@ -57,7 +56,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。',
     displayName: 'DeepSeek R1 Distill Qwen 7B',
-    enabled: true,
     id: 'deepseek-r1-distill-qwen-7b',
     maxOutput: 8000,
     pricing: {
@@ -99,6 +97,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5-pro 全新一代主力模型，性能全面升级，在知识、代码、推理、等方面表现卓越。',
     displayName: 'Doubao 1.5 Pro 32k',
+    enabled: true,
     id: 'doubao-1.5-pro-32k',
     maxOutput: 12_000,
     pricing: {
@@ -119,6 +118,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5-pro-256k 基于 Doubao-1.5-Pro 全面升级版，整体效果大幅提升 10%。支持 256k 上下文窗口的推理，输出长度支持最大 12k tokens。更高性能、更大窗口、超高性价比，适用于更广泛的应用场景。',
     displayName: 'Doubao 1.5 Pro 256k',
+    enabled: true,
     id: 'doubao-1.5-pro-256k',
     maxOutput: 12_000,
     pricing: {
@@ -139,6 +139,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5-lite 全新一代轻量版模型，极致响应速度，效果与时延均达到全球一流水平。',
     displayName: 'Doubao 1.5 Lite 32k',
+    enabled: true,
     id: 'doubao-1.5-lite-32k',
     maxOutput: 12_000,
     pricing: {
@@ -159,6 +160,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5-vision-pro 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。',
     displayName: 'Doubao 1.5 Vision Pro 32k',
+    enabled: true,
     id: 'Doubao-1.5-vision-pro-32k',
     maxOutput: 12_000,
     pricing: {
