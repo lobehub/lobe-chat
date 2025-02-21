@@ -118,6 +118,10 @@
     "reinstallError": "플러그인 {{name}} 다시 설치 중 오류가 발생했습니다.",
     "urlError": "이 링크는 JSON 형식의 내용을 반환하지 않습니다. 유효한 링크인지 확인하세요."
   },
+  "inspector": {
+    "args": "매개변수 목록 보기",
+    "pluginRender": "플러그인 인터페이스 보기"
+  },
   "list": {
     "item": {
       "deprecated.title": "삭제됨",

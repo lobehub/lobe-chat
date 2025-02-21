@@ -118,6 +118,10 @@
     "reinstallError": "Error al volver a instalar el complemento {{name}}.",
     "urlError": "El enlace no devuelve contenido en formato JSON. Asegúrese de que sea un enlace válido."
   },
+  "inspector": {
+    "args": "Ver lista de parámetros",
+    "pluginRender": "Ver interfaz del plugin"
+  },
   "list": {
     "item": {
       "deprecated.title": "Obsoleto",
