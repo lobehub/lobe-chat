@@ -116,20 +116,29 @@ export class AiProviderModel {
     const keyVaults = await encrypt(JSON.stringify(value.keyVaults));
 
     return this.db
-      .update(aiProviders)
-      .set({ ...value, keyVaults, updatedAt: new Date() })
-      .where(and(eq(aiProviders.id, id), eq(aiProviders.userId, this.userId)));
+      .insert(aiProviders)
+      .values({
+        checkModel: value.checkModel,
+        fetchOnClient: value.fetchOnClient,
+        id,
+        keyVaults,
+        source: this.getProviderSource(id),
+        updatedAt: new Date(),
+        userId: this.userId,
+      })
+      .onConflictDoUpdate({
+        set: { checkModel: value.checkModel, fetchOnClient: value.fetchOnClient, keyVaults },
+        target: [aiProviders.id, aiProviders.userId],
+      });
   };
 
   toggleProviderEnabled = async (id: string, enabled: boolean) => {
-    const isBuiltin = Object.values(ModelProvider).includes(id as any);
-
     return this.db
       .insert(aiProviders)
       .values({
         enabled,
         id,
-        source: isBuiltin ? 'builtin' : 'custom',
+        source: this.getProviderSource(id),
         updatedAt: new Date(),
         userId: this.userId,
       })
@@ -142,15 +151,13 @@ export class AiProviderModel {
   updateOrder = async (sortMap: { id: string; sort: number }[]) => {
     await this.db.transaction(async (tx) => {
       const updates = sortMap.map(({ id, sort }) => {
-        const isBuiltin = Object.values(ModelProvider).includes(id as any);
-
         return tx
           .insert(aiProviders)
           .values({
             enabled: true,
             id,
             sort,
-            source: isBuiltin ? 'builtin' : 'custom',
+            source: this.getProviderSource(id),
             updatedAt: new Date(),
             userId: this.userId,
           })
@@ -238,4 +245,6 @@ export class AiProviderModel {
   };
 
   private isBuiltInProvider = (id: string) => Object.values(ModelProvider).includes(id as any);
+
+  private getProviderSource = (id: string) => (this.isBuiltInProvider(id) ? 'builtin' : 'custom');
 }
