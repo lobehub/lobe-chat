@@ -1,166 +1,139 @@
-import { Loading3QuartersOutlined } from '@ant-design/icons';
-import { ActionIcon, Highlighter, Icon, Tag } from '@lobehub/ui';
-import { Tabs, Typography } from 'antd';
+import { ActionIcon, Icon } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import {
-  BetweenVerticalStart,
-  LucideBug,
-  LucideBugOff,
-  LucideChevronDown,
-  LucideChevronRight,
-} from 'lucide-react';
-import { memo, useState } from 'react';
+import { ChevronDown, ChevronRight, LucideBug, LucideBugOff } from 'lucide-react';
+import { CSSProperties, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import PluginAvatar from '@/features/PluginAvatar';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors } from '@/store/chat/selectors';
+import { chatSelectors } from '@/store/chat/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
-import { ChatPluginPayload } from '@/types/message';
+import { shinyTextStylish } from '@/styles/loading';
 
-import PluginResult from '../Inspectors/PluginResultJSON';
-import Settings from '../Inspectors/Settings';
-import { useStyles } from './style';
+import Arguments from './Arguments';
+import Debug from './Debug';
+import Loader from './Loader';
+import Settings from './Settings';
 
-export interface InspectorProps {
+export const useStyles = createStyles(({ css, token }) => ({
+  apiName: css`
+    overflow: hidden;
+    display: -webkit-box;
+    font-family: ${token.fontFamilyCode};
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+
+    font-size: 12px;
+    text-overflow: ellipsis;
+  `,
+  container: css`
+    cursor: pointer;
+
+    width: fit-content;
+    padding-block: 2px;
+    border-radius: 6px;
+
+    color: ${token.colorTextTertiary};
+
+    &:hover {
+      background: ${token.colorFillTertiary};
+    }
+  `,
+  plugin: css`
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    width: fit-content;
+  `,
+  shinyText: shinyTextStylish(token),
+}));
+
+interface InspectorProps {
+  apiName: string;
   arguments?: string;
-  content: string;
   id: string;
-  identifier?: string;
-  loading?: boolean;
-  payload?: ChatPluginPayload;
-  setShow?: (showRender: boolean) => void;
+  identifier: string;
+  index: number;
+  messageId: string;
+  payload: object;
   showPortal?: boolean;
-  showRender?: boolean;
+  style?: CSSProperties;
 }
 
-const Inspector = memo<InspectorProps>(
-  ({
-    arguments: requestArgs = '{}',
-    payload,
-    showRender,
-    loading,
-    setShow,
-    content,
-    identifier = 'unknown',
-    id,
-    showPortal = true,
-  }) => {
-    const { t } = useTranslation(['plugin', 'portal']);
+const Inspectors = memo<InspectorProps>(
+  ({ messageId, index, identifier, apiName, arguments: requestArgs, payload }) => {
+    const { t } = useTranslation('plugin');
     const { styles } = useStyles();
-    const [open, setOpen] = useState(false);
-    const [isMessageToolUIOpen, openToolUI, togglePortal] = useChatStore((s) => [
-      chatPortalSelectors.isPluginUIOpen(id)(s),
-      s.openToolUI,
-      s.togglePortal,
-    ]);
 
+    const [showArgs, setShowArgs] = useState(false);
+    const [showDebug, setShowDebug] = useState(false);
+
+    const loading = useChatStore(chatSelectors.isToolCallStreaming(messageId, index));
     const isMobile = useIsMobile();
+
     const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
-
-    const showRightAction = useToolStore(toolSelectors.isToolHasUI(identifier));
-
     const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
 
-    let args, params;
-    try {
-      args = JSON.stringify(payload, null, 2);
-      params = JSON.stringify(JSON.parse(requestArgs), null, 2);
-    } catch {
-      args = '';
-      params = '';
-    }
-
     return (
-      <Flexbox gap={8}>
-        <Flexbox align={'center'} distribution={'space-between'} gap={24} horizontal>
+      <Flexbox gap={4}>
+        <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
           <Flexbox
             align={'center'}
             className={styles.container}
-            gap={isMobile ? 16 : 8}
+            gap={8}
             horizontal
             onClick={() => {
-              setShow?.(!showRender);
+              setShowArgs(!showArgs);
             }}
+            paddingInline={4}
           >
-            <Flexbox align={'center'} gap={8} horizontal>
+            <Flexbox
+              align={'center'}
+              className={loading ? styles.shinyText : ''}
+              gap={4}
+              horizontal
+            >
               {loading ? (
-                <div>
-                  <Loading3QuartersOutlined spin />
-                </div>
+                <Loader />
               ) : (
-                <PluginAvatar identifier={identifier} size={isMobile ? 36 : undefined} />
+                <PluginAvatar identifier={identifier} size={isMobile ? 36 : 24} />
               )}
+
               {isMobile ? (
                 <Flexbox>
                   <div>{pluginTitle}</div>
-                  <Typography.Text className={styles.apiName} type={'secondary'}>
-                    {payload?.apiName}
-                  </Typography.Text>
+                  <span className={styles.apiName}>{apiName}</span>
                 </Flexbox>
               ) : (
                 <>
-                  <div>{pluginTitle}</div>
-                  <Tag>{payload?.apiName}</Tag>
+                  <div>{pluginTitle}</div>/<span className={styles.apiName}>{apiName}</span>
                 </>
               )}
             </Flexbox>
-            {showRightAction && <Icon icon={showRender ? LucideChevronDown : LucideChevronRight} />}
+            <Icon icon={showArgs ? ChevronDown : ChevronRight} />
           </Flexbox>
 
           <Flexbox horizontal>
-            {!isMobile && showRightAction && showPortal && (
-              <ActionIcon
-                icon={BetweenVerticalStart}
-                onClick={() => {
-                  if (!isMessageToolUIOpen) openToolUI(id, identifier);
-                  else {
-                    togglePortal(false);
-                  }
-                }}
-                size={DESKTOP_HEADER_ICON_SIZE}
-                title={t('title', { ns: 'portal' })}
-              />
-            )}
             <ActionIcon
-              icon={open ? LucideBugOff : LucideBug}
+              icon={showDebug ? LucideBugOff : LucideBug}
               onClick={() => {
-                setOpen(!open);
+                setShowDebug(!showDebug);
               }}
-              title={t(open ? 'debug.off' : 'debug.on')}
+              size={'small'}
+              title={t(showDebug ? 'debug.off' : 'debug.on')}
             />
             <Settings id={identifier} />
           </Flexbox>
         </Flexbox>
-        {open && (
-          <Tabs
-            items={[
-              {
-                children: <Highlighter language={'json'}>{args}</Highlighter>,
-                key: 'function_call',
-                label: t('debug.function_call'),
-              },
-              {
-                children: <Highlighter language={'json'}>{params}</Highlighter>,
-                key: 'arguments',
-                label: t('debug.arguments'),
-              },
-              {
-                children: <PluginResult content={content} />,
-                key: 'response',
-                label: t('debug.response'),
-              },
-            ]}
-            style={{ display: 'grid', maxWidth: 800, minWidth: 400 }}
-          />
-        )}
+        {showDebug && <Debug payload={payload} requestArgs={requestArgs} />}
+        {(loading || showArgs) && !showDebug && <Arguments arguments={requestArgs} />}
       </Flexbox>
     );
   },
 );
 
-export default Inspector;
+export default Inspectors;

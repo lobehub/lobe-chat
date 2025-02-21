@@ -4,8 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
-import { aiChatSelectors } from '@/store/chat/slices/aiChat/selectors';
+import { chatSelectors , aiChatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
 import { InPortalThreadContext } from '../../components/ChatItem/InPortalThreadContext';

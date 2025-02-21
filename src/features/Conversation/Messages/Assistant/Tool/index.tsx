@@ -1,11 +1,11 @@
 import { CSSProperties, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import Inspectors from '@/features/Conversation/Messages/Assistant/Tool/Inspectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
-import ToolMessage from './Tool';
+import Inspectors from './Inspector';
+import Tool from './Tool';
 
 export interface InspectorProps {
   apiName: string;
@@ -45,7 +45,7 @@ const CallItem = memo<InspectorProps>(
           messageId={messageId}
           payload={payload}
         />
-        {!loading && toolMessage && <ToolMessage {...toolMessage} showPortal={showPortal} />}
+        {!loading && toolMessage && <Tool {...toolMessage} showPortal={showPortal} />}
       </Flexbox>
     );
   },

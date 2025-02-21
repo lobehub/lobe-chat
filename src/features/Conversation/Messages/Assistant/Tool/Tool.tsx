@@ -11,7 +11,7 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
-import Arguments from '../../components/Arguments';
+import Arguments from './Inspector/Arguments';
 
 const Tool = memo<
   ChatMessage & {
