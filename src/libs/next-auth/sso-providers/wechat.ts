@@ -9,6 +9,17 @@ const provider = {
     clientId: process.env.AUTH_WECHAT_ID,
     clientSecret: process.env.AUTH_WECHAT_SECRET,
     platformType: 'WebsiteApp',
+    token: {
+      url: "https://api.weixin.qq.com/sns/oauth2/access_token",
+      params: { appid: clientId, secret: clientSecret },
+      async conform(response) {
+        const data = await response.json()
+        console.log('wechat data:',data)
+        return new Response( JSON.stringify({ ...data, token_type: "bearer" }), {
+          headers: { 'Content-Type': 'application/json' }
+        })
+      },
+    },
     profile: (profile) => {
       return {
         email: null,
