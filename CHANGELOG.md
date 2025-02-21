@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 1.62.7](https://github.com/lobehub/lobe-chat/compare/v1.62.6...v1.62.7)
+
+<sup>Released on **2025-02-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Volcano Ark models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Volcano Ark models, closes [#6368](https://github.com/lobehub/lobe-chat/issues/6368) ([02136f5](https://github.com/lobehub/lobe-chat/commit/02136f5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.6](https://github.com/lobehub/lobe-chat/compare/v1.62.5...v1.62.6)
+
+<sup>Released on **2025-02-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Refactor the plugin render style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Refactor the plugin render style, closes [#6390](https://github.com/lobehub/lobe-chat/issues/6390) ([3ecdba1](https://github.com/lobehub/lobe-chat/commit/3ecdba1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.5](https://github.com/lobehub/lobe-chat/compare/v1.62.4...v1.62.5)
+
+<sup>Released on **2025-02-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix default agent loading.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix default agent loading, closes [#6393](https://github.com/lobehub/lobe-chat/issues/6393) ([7841122](https://github.com/lobehub/lobe-chat/commit/7841122))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.62.4](https://github.com/lobehub/lobe-chat/compare/v1.62.3...v1.62.4)
 
 <sup>Released on **2025-02-20**</sup>

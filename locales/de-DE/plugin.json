@@ -118,6 +118,10 @@
     "reinstallError": "Fehler beim Aktualisieren des Plugins {{name}}.",
     "urlError": "Der Link hat keine JSON-Format-Inhalte zurückgegeben. Stellen Sie sicher, dass der Link gültig ist."
   },
+  "inspector": {
+    "args": "Parameterliste anzeigen",
+    "pluginRender": "Plugin-Oberfläche anzeigen"
+  },
   "list": {
     "item": {
       "deprecated.title": "Veraltet",
