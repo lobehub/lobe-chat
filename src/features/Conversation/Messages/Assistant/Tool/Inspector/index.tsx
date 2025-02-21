@@ -121,14 +121,16 @@ const Inspectors = memo<InspectorProps>(
             <Icon icon={showRender ? ChevronDown : ChevronRight} />
           </Flexbox>
           <Flexbox horizontal>
-            <ActionIcon
-              icon={showPluginRender ? LogsIcon : LayoutPanelTop}
-              onClick={() => {
-                setShowPluginRender(!showPluginRender);
-              }}
-              size={'small'}
-              title={showPluginRender ? t('inspector.args') : t('inspector.pluginRender')}
-            />
+            {showRender && (
+              <ActionIcon
+                icon={showPluginRender ? LogsIcon : LayoutPanelTop}
+                onClick={() => {
+                  setShowPluginRender(!showPluginRender);
+                }}
+                size={'small'}
+                title={showPluginRender ? t('inspector.args') : t('inspector.pluginRender')}
+              />
+            )}
             <ActionIcon
               icon={showDebug ? LucideBugOff : LucideBug}
               onClick={() => {
