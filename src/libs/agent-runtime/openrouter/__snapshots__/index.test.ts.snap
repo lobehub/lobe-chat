@@ -407,7 +407,7 @@ It has demonstrated strong performance compared to leading closed-source models 
 
 To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
     "displayName": "Meta: Llama 3.1 70B Instruct",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-70b-instruct",
     "maxTokens": undefined,
@@ -439,7 +439,7 @@ It has demonstrated strong performance compared to leading closed-source models 
 
 To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
     "displayName": "Meta: Llama 3.1 8B Instruct",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-8b-instruct",
     "maxTokens": undefined,
@@ -456,7 +456,7 @@ It has demonstrated strong performance compared to leading closed-source models 
 
 To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
     "displayName": "Meta: Llama 3.1 405B Instruct",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-405b-instruct",
     "maxTokens": undefined,
