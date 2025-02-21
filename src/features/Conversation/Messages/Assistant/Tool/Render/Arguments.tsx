@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useYamlArguments } from '@/hooks/useYamlArguments';
+import { shinyTextStylish } from '@/styles/loading';
 
 const useStyles = createStyles(({ css, token }) => ({
   arrayRow: css`
@@ -50,18 +51,19 @@ const useStyles = createStyles(({ css, token }) => ({
       border-block-start: 1px dotted ${token.colorBorderSecondary};
     }
   `,
+  shineText: shinyTextStylish(token),
   value: css`
-    width: 100%;
     color: ${token.colorTextSecondary};
   `,
 }));
 
 interface ObjectDisplayProps {
   data: Record<string, any>;
+  shine?: boolean;
 }
 
-const ObjectDisplay = memo(({ data }: ObjectDisplayProps) => {
-  const { styles } = useStyles();
+const ObjectDisplay = memo(({ data, shine }: ObjectDisplayProps) => {
+  const { styles, cx } = useStyles();
   const { t } = useTranslation('common');
 
   const { message } = App.useApp();
@@ -96,7 +98,7 @@ const ObjectDisplay = memo(({ data }: ObjectDisplayProps) => {
               {key}
             </span>
             <span className={styles.colon}>:</span>
-            <div className={styles.value}>
+            <div className={cx(shine ? styles.shineText : styles.value)} style={{ width: '100%' }}>
               {typeof formatedValue === 'string' ? (
                 <div
                   className={styles.copyable}
@@ -131,9 +133,10 @@ const ObjectDisplay = memo(({ data }: ObjectDisplayProps) => {
 
 export interface ArgumentsProps {
   arguments?: string;
+  shine?: boolean;
 }
 
-const Arguments = memo<ArgumentsProps>(({ arguments: args = '' }) => {
+const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine }) => {
   const requestArgs = useMemo(() => {
     try {
       const obj = parse(args);
@@ -155,7 +158,7 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '' }) => {
       </Highlighter>
     )
   ) : (
-    <ObjectDisplay data={requestArgs} />
+    <ObjectDisplay data={requestArgs} shine={shine} />
   );
 });
 

@@ -1,6 +1,5 @@
-import { Skeleton } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
-import { CSSProperties, Suspense, memo, useState } from 'react';
+import { CSSProperties, memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Inspectors from './Inspector';
@@ -52,20 +51,14 @@ const Tool = memo<InspectorProps>(
                 open: { height: 'auto', opacity: 1, width: 'auto' },
               }}
             >
-              <Suspense
-                fallback={
-                  <Skeleton.Button active style={{ height: 46, minWidth: 200, width: '100%' }} />
-                }
-              >
-                <Render
-                  messageId={messageId}
-                  requestArgs={requestArgs}
-                  setShowPluginRender={setShowPluginRender}
-                  showPluginRender={showPluginRender}
-                  toolCallId={id}
-                  toolIndex={index}
-                />
-              </Suspense>
+              <Render
+                messageId={messageId}
+                requestArgs={requestArgs}
+                setShowPluginRender={setShowPluginRender}
+                showPluginRender={showPluginRender}
+                toolCallId={id}
+                toolIndex={index}
+              />
             </motion.div>
           )}
         </AnimatePresence>

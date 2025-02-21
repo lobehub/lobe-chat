@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { Suspense, memo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -24,12 +24,14 @@ const Render = memo<RenderProps>(
 
     if (!!toolMessage)
       return (
-        <CustomRender
-          {...toolMessage}
-          requestArgs={requestArgs}
-          setShowPluginRender={setShowPluginRender}
-          showPluginRender={showPluginRender}
-        />
+        <Suspense fallback={<Arguments arguments={requestArgs} shine />}>
+          <CustomRender
+            {...toolMessage}
+            requestArgs={requestArgs}
+            setShowPluginRender={setShowPluginRender}
+            showPluginRender={showPluginRender}
+          />
+        </Suspense>
       );
   },
 );
