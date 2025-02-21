@@ -11,13 +11,11 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
-import Arguments from './Inspector/Arguments';
-
-const Tool = memo<
+const CustomRender = memo<
   ChatMessage & {
-    showPortal?: boolean;
+    requestArgs?: string;
   }
->(({ id, content, pluginState, plugin, showPortal }) => {
+>(({ id, content, pluginState, plugin, requestArgs }) => {
   const [loading, isMessageToolUIOpen] = useChatStore((s) => [
     chatSelectors.isPluginApiInvoking(id)(s),
     chatPortalSelectors.isPluginUIOpen(id)(s),
@@ -26,25 +24,30 @@ const Tool = memo<
   const { t } = useTranslation('plugin');
 
   const theme = useTheme();
-  const [showRender, setShow] = useState(plugin?.type !== 'default');
+  const [showPluginRender, setShowPluginRender] = useState(plugin?.type !== 'default');
+
+  if (isMessageToolUIOpen)
+    return (
+      <Center paddingBlock={8} style={{ background: theme.colorFillQuaternary, borderRadius: 4 }}>
+        <Empty
+          description={t('showInPortal')}
+          image={
+            <Icon
+              color={theme.colorTextQuaternary}
+              icon={direction === 'rtl' ? LucideSquareArrowLeft : LucideSquareArrowRight}
+              size={'large'}
+            />
+          }
+          styles={{
+            image: { height: 24 },
+          }}
+        />
+      </Center>
+    );
 
   return (
     <Flexbox gap={12} id={id} width={'100%'}>
-      {isMessageToolUIOpen ? (
-        <Center paddingBlock={8} style={{ background: theme.colorFillQuaternary, borderRadius: 4 }}>
-          <Empty
-            description={t('showInPortal')}
-            image={
-              <Icon
-                color={theme.colorTextQuaternary}
-                icon={direction === 'rtl' ? LucideSquareArrowLeft : LucideSquareArrowRight}
-                size={'large'}
-              />
-            }
-            imageStyle={{ height: 24 }}
-          />
-        </Center>
-      ) : showRender || loading ? (
+      {showPluginRender && (
         <PluginRender
           arguments={plugin?.arguments}
           content={content}
@@ -55,11 +58,9 @@ const Tool = memo<
           pluginState={pluginState}
           type={plugin?.type}
         />
-      ) : (
-        <Arguments arguments={plugin?.arguments} />
       )}
     </Flexbox>
   );
 });
 
-export default Tool;
+export default CustomRender;

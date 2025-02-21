@@ -14,7 +14,6 @@ import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { shinyTextStylish } from '@/styles/loading';
 
-import Arguments from './Arguments';
 import Debug from './Debug';
 import Loader from './Loader';
 import Settings from './Settings';
@@ -60,16 +59,26 @@ interface InspectorProps {
   index: number;
   messageId: string;
   payload: object;
+  setShowRender: (show: boolean) => void;
   showPortal?: boolean;
+  showRender: boolean;
   style?: CSSProperties;
 }
 
 const Inspectors = memo<InspectorProps>(
-  ({ messageId, index, identifier, apiName, arguments: requestArgs, payload }) => {
+  ({
+    messageId,
+    index,
+    identifier,
+    apiName,
+    arguments: requestArgs,
+    showRender,
+    payload,
+    setShowRender,
+  }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
 
-    const [showArgs, setShowArgs] = useState(false);
     const [showDebug, setShowDebug] = useState(false);
 
     const loading = useChatStore(chatSelectors.isToolCallStreaming(messageId, index));
@@ -87,7 +96,7 @@ const Inspectors = memo<InspectorProps>(
             gap={8}
             horizontal
             onClick={() => {
-              setShowArgs(!showArgs);
+              setShowRender(!showRender);
             }}
             paddingInline={4}
           >
@@ -114,9 +123,8 @@ const Inspectors = memo<InspectorProps>(
                 </>
               )}
             </Flexbox>
-            <Icon icon={showArgs ? ChevronDown : ChevronRight} />
+            <Icon icon={showRender ? ChevronDown : ChevronRight} />
           </Flexbox>
-
           <Flexbox horizontal>
             <ActionIcon
               icon={showDebug ? LucideBugOff : LucideBug}
@@ -130,7 +138,6 @@ const Inspectors = memo<InspectorProps>(
           </Flexbox>
         </Flexbox>
         {showDebug && <Debug payload={payload} requestArgs={requestArgs} />}
-        {(loading || showArgs) && !showDebug && <Arguments arguments={requestArgs} />}
       </Flexbox>
     );
   },
