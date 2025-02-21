@@ -175,6 +175,7 @@ const Item = memo<ChatListItemProps>(
         citations: item?.role === 'user' ? undefined : item?.search?.citations,
         components,
         customRender: markdownCustomRender,
+        enableCustomFootnotes: item?.role === 'assistant',
         rehypePlugins: item?.role === 'user' ? undefined : rehypePlugins,
         remarkPlugins: item?.role === 'user' ? undefined : remarkPlugins,
         showCitations:

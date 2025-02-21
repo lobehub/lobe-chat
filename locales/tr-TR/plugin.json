@@ -118,6 +118,10 @@
     "reinstallError": "{{name}} eklentisi yenilenemedi",
     "urlError": "Bağlantı JSON formatında içerik döndürmedi. Lütfen geçerli bir bağlantı olduğundan emin olun"
   },
+  "inspector": {
+    "args": "Parametre listesini görüntüle",
+    "pluginRender": "Eklenti arayüzünü görüntüle"
+  },
   "list": {
     "item": {
       "deprecated.title": "Eski",
