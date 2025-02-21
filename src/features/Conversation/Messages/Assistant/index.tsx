@@ -1,5 +1,4 @@
-import { Skeleton } from 'antd';
-import { ReactNode, Suspense, memo } from 'react';
+import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -51,24 +50,20 @@ export const AssistantMessage = memo<
         />
       )}
       {tools && (
-        <Suspense
-          fallback={<Skeleton.Button active style={{ height: 46, minWidth: 200, width: '100%' }} />}
-        >
-          <Flexbox gap={8}>
-            {tools.map((toolCall, index) => (
-              <Tool
-                apiName={toolCall.apiName}
-                arguments={toolCall.arguments}
-                id={toolCall.id}
-                identifier={toolCall.identifier}
-                index={index}
-                key={toolCall.id}
-                messageId={id}
-                payload={toolCall}
-              />
-            ))}
-          </Flexbox>
-        </Suspense>
+        <Flexbox gap={8}>
+          {tools.map((toolCall, index) => (
+            <Tool
+              apiName={toolCall.apiName}
+              arguments={toolCall.arguments}
+              id={toolCall.id}
+              identifier={toolCall.identifier}
+              index={index}
+              key={toolCall.id}
+              messageId={id}
+              payload={toolCall}
+            />
+          ))}
+        </Flexbox>
       )}
     </Flexbox>
   );
