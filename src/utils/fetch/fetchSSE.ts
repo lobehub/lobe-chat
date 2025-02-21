@@ -120,7 +120,7 @@ const createSmoothMessage = (params: {
           // 更平滑的速度调整
           const targetSpeed = Math.max(speed, outputQueue.length);
           // 根据队列长度变化调整速度变化率
-          const speedChangeRate = Math.abs(outputQueue.length - lastQueueLength) * 0.001 + 0.005;
+          const speedChangeRate = Math.abs(outputQueue.length - lastQueueLength) * 0.0008 + 0.005;
           currentSpeed += (targetSpeed - currentSpeed) * speedChangeRate;
 
           charsToProcess = Math.floor((accumulatedTime * currentSpeed) / 1000);
@@ -130,10 +130,11 @@ const createSmoothMessage = (params: {
           accumulatedTime -= (charsToProcess * 1000) / currentSpeed;
 
           let actualChars = Math.min(charsToProcess, outputQueue.length);
+          // actualChars = Math.min(speed, actualChars);
 
-          if (actualChars * 2 < outputQueue.length && /[\dA-Za-z]/.test(outputQueue[actualChars])) {
-            actualChars *= 2;
-          }
+          // if (actualChars * 2 < outputQueue.length && /[\dA-Za-z]/.test(outputQueue[actualChars])) {
+          //   actualChars *= 2;
+          // }
 
           const charsToAdd = outputQueue.splice(0, actualChars).join('');
           buffer += charsToAdd;
