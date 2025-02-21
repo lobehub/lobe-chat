@@ -8,32 +8,35 @@ import { useTranslation } from 'react-i18next';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useYamlArguments } from '@/hooks/useYamlArguments';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+const useStyles = createStyles(({ css, token }) => ({
   arrayRow: css`
     &:not(:first-child) {
-      border-top: 1px dotted ${token.colorBorderSecondary};
+      border-block-start: 1px dotted ${token.colorBorderSecondary};
     }
   `,
   colon: css`
     color: ${token.colorTextTertiary};
   `,
   container: css`
+    padding-block: 4px;
+    padding-inline: 12px;
+    border-radius: ${token.borderRadiusLG}px;
+
     font-family: ${token.fontFamilyCode};
     font-size: 13px;
     line-height: 1.5;
-    background: ${isDarkMode ? token.colorFillTertiary : token.colorFillQuaternary};
-    border-radius: ${token.borderRadiusLG}px;
-    padding: 4px 12px;
+
+    background: ${token.colorFillQuaternary};
   `,
   copyable: css`
     cursor: pointer;
-    padding: 4px;
-    margin-block: 2px;
     width: 100%;
+    margin-block: 2px;
+    padding: 4px;
 
     &:hover {
-      background: ${token.colorFillTertiary};
       border-radius: 6px;
+      background: ${token.colorFillTertiary};
     }
   `,
   key: css`
@@ -44,12 +47,12 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     align-items: baseline;
 
     &:not(:first-child) {
-      border-top: 1px dotted ${token.colorBorderSecondary};
+      border-block-start: 1px dotted ${token.colorBorderSecondary};
     }
   `,
   value: css`
-    color: ${token.colorTextSecondary};
     width: 100%;
+    color: ${token.colorTextSecondary};
   `,
 }));
 
@@ -77,14 +80,19 @@ const ObjectDisplay = memo(({ data }: ObjectDisplayProps) => {
     return String(value);
   };
 
-  const hasMinWidth = Object.keys(data).length > 1 && !isMobile;
+  const hasMinWidth = Object.keys(data).length > 1;
+  if (Object.keys(data).length === 0) return null;
+
   return (
     <div className={styles.container}>
       {Object.entries(data).map(([key, value]) => {
         const formatedValue = formatValue(value);
         return (
           <div className={styles.row} key={key}>
-            <span className={styles.key} style={{ minWidth: hasMinWidth ? 80 : undefined }}>
+            <span
+              className={styles.key}
+              style={{ minWidth: hasMinWidth ? (isMobile ? 60 : 80) : undefined }}
+            >
               {key}
             </span>
             <span className={styles.colon}>:</span>

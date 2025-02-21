@@ -1,13 +1,19 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { ChevronDown, ChevronRight, LucideBug, LucideBugOff } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronRight,
+  LayoutPanelTop,
+  LogsIcon,
+  LucideBug,
+  LucideBugOff,
+} from 'lucide-react';
 import { CSSProperties, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PluginAvatar from '@/features/PluginAvatar';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
@@ -22,10 +28,10 @@ export const useStyles = createStyles(({ css, token }) => ({
   apiName: css`
     overflow: hidden;
     display: -webkit-box;
-    font-family: ${token.fontFamilyCode};
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
 
+    font-family: ${token.fontFamilyCode};
     font-size: 12px;
     text-overflow: ellipsis;
   `,
@@ -59,7 +65,9 @@ interface InspectorProps {
   index: number;
   messageId: string;
   payload: object;
+  setShowPluginRender: (show: boolean) => void;
   setShowRender: (show: boolean) => void;
+  showPluginRender: boolean;
   showPortal?: boolean;
   showRender: boolean;
   style?: CSSProperties;
@@ -75,6 +83,8 @@ const Inspectors = memo<InspectorProps>(
     showRender,
     payload,
     setShowRender,
+    showPluginRender,
+    setShowPluginRender,
   }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
@@ -82,7 +92,6 @@ const Inspectors = memo<InspectorProps>(
     const [showDebug, setShowDebug] = useState(false);
 
     const loading = useChatStore(chatSelectors.isToolCallStreaming(messageId, index));
-    const isMobile = useIsMobile();
 
     const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
     const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
@@ -106,26 +115,20 @@ const Inspectors = memo<InspectorProps>(
               gap={4}
               horizontal
             >
-              {loading ? (
-                <Loader />
-              ) : (
-                <PluginAvatar identifier={identifier} size={isMobile ? 36 : 24} />
-              )}
-
-              {isMobile ? (
-                <Flexbox>
-                  <div>{pluginTitle}</div>
-                  <span className={styles.apiName}>{apiName}</span>
-                </Flexbox>
-              ) : (
-                <>
-                  <div>{pluginTitle}</div>/<span className={styles.apiName}>{apiName}</span>
-                </>
-              )}
+              {loading ? <Loader /> : <PluginAvatar identifier={identifier} size={20} />}
+              <div>{pluginTitle}</div>/<span className={styles.apiName}>{apiName}</span>
             </Flexbox>
             <Icon icon={showRender ? ChevronDown : ChevronRight} />
           </Flexbox>
           <Flexbox horizontal>
+            <ActionIcon
+              icon={showPluginRender ? LogsIcon : LayoutPanelTop}
+              onClick={() => {
+                setShowPluginRender(!showPluginRender);
+              }}
+              size={'small'}
+              title={showPluginRender ? t('inspector.args') : t('inspector.pluginRender')}
+            />
             <ActionIcon
               icon={showDebug ? LucideBugOff : LucideBug}
               onClick={() => {

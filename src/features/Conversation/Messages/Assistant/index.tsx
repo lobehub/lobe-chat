@@ -1,13 +1,12 @@
 import { Skeleton } from 'antd';
-import { ReactNode, Suspense, memo, useContext } from 'react';
+import { ReactNode, Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors , aiChatSelectors } from '@/store/chat/selectors';
+import { aiChatSelectors, chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
-import { InPortalThreadContext } from '../../components/ChatItem/InPortalThreadContext';
 import { DefaultMessage } from '../Default';
 import FileChunks from './FileChunks';
 import Reasoning from './Reasoning';
@@ -21,7 +20,6 @@ export const AssistantMessage = memo<
   const editing = useChatStore(chatSelectors.isMessageEditing(id));
   const generating = useChatStore(chatSelectors.isMessageGenerating(id));
 
-  const inThread = useContext(InPortalThreadContext);
   const isToolCallGenerating = generating && (content === LOADING_FLAT || !content) && !!tools;
 
   const isReasoning = useChatStore(aiChatSelectors.isMessageInReasoning(id));
@@ -67,7 +65,6 @@ export const AssistantMessage = memo<
                 key={toolCall.id}
                 messageId={id}
                 payload={toolCall}
-                showPortal={!inThread}
               />
             ))}
           </Flexbox>
