@@ -73,12 +73,13 @@ const createSmoothMessage = (params: {
   const { startSpeed = START_ANIMATION_SPEED } = params;
 
   let buffer = '';
-  // why use queue: https://shareg.pt/GLBrjpK
   let outputQueue: string[] = [];
   let isAnimationActive = false;
   let animationFrameId: number | null = null;
   let lastFrameTime = 0;
-  let accumulatedTime = 0; // 用于累积时间
+  let accumulatedTime = 0;
+  let currentSpeed = startSpeed;
+  let lastQueueLength = 0; // 记录上一帧的队列长度
 
   const stopAnimation = () => {
     isAnimationActive = false;
@@ -88,7 +89,6 @@ const createSmoothMessage = (params: {
     }
   };
 
-  // define startAnimation function to display the text in buffer smoothly
   const startAnimation = (speed = startSpeed) => {
     return new Promise<void>((resolve) => {
       if (isAnimationActive) {
@@ -99,35 +99,39 @@ const createSmoothMessage = (params: {
       isAnimationActive = true;
       lastFrameTime = performance.now();
       accumulatedTime = 0;
+      currentSpeed = speed;
+      lastQueueLength = 0; // 重置上一帧队列长度
 
       const updateText = (timestamp: number) => {
         if (!isAnimationActive) {
           if (animationFrameId !== null) {
             cancelAnimationFrame(animationFrameId);
           }
-          animationFrameId = null;
           resolve();
           return;
         }
 
         const frameDuration = timestamp - lastFrameTime;
         lastFrameTime = timestamp;
-        accumulatedTime += frameDuration; // 累积时间
+        accumulatedTime += frameDuration;
 
-        // 计算应处理的字符数，每秒输出 speed 个字符
-        let charsToProcess = Math.floor((accumulatedTime * speed) / 1000);
+        let charsToProcess = 0;
+        if (outputQueue.length > 0) {
+          // 更平滑的速度调整
+          const targetSpeed = Math.max(speed, outputQueue.length);
+          // 根据队列长度变化调整速度变化率
+          const speedChangeRate = Math.abs(outputQueue.length - lastQueueLength) * 0.001 + 0.005;
+          currentSpeed += (targetSpeed - currentSpeed) * speedChangeRate;
+
+          charsToProcess = Math.floor((accumulatedTime * currentSpeed) / 1000);
+        }
 
         if (charsToProcess > 0) {
-          // 从累积时间中减去已处理的时间
-          accumulatedTime -= (charsToProcess * 1000) / speed;
+          accumulatedTime -= (charsToProcess * 1000) / currentSpeed;
 
           let actualChars = Math.min(charsToProcess, outputQueue.length);
 
-          // 检查下一个字符是否为英文或数字字符
-          if (
-            actualChars * 2 < outputQueue.length &&
-            /[\dA-Za-z]/.test(outputQueue[actualChars])
-          ) {
+          if (actualChars * 2 < outputQueue.length && /[\dA-Za-z]/.test(outputQueue[actualChars])) {
             actualChars *= 2;
           }
 
@@ -136,10 +140,11 @@ const createSmoothMessage = (params: {
           params.onTextUpdate(charsToAdd, buffer);
         }
 
+        lastQueueLength = outputQueue.length; // 更新上一帧的队列长度
+
         if (outputQueue.length > 0 && isAnimationActive) {
           animationFrameId = requestAnimationFrame(updateText);
         } else {
-          // 当所有字符都显示完毕时，清除动画状态
           isAnimationActive = false;
           animationFrameId = null;
           resolve();
@@ -151,7 +156,6 @@ const createSmoothMessage = (params: {
   };
 
   const pushToQueue = (text: string) => {
-    // 将传入的文本分割成字符数组，并添加到输出队列中
     outputQueue.push(...text.split(''));
   };
 
@@ -447,7 +451,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
 
       if (textController.isTokenRemain()) {
-        await textController.startAnimation(END_ANIMATION_SPEED);
+        await textController.startAnimation(smoothingSpeed);
       }
 
       if (toolCallsController.isTokenRemain()) {
