@@ -118,6 +118,10 @@
     "reinstallError": "Ricaricamento del plugin {{name}} fallito",
     "urlError": "Il collegamento non restituisce contenuti nel formato JSON. Assicurati che il collegamento sia valido"
   },
+  "inspector": {
+    "args": "Visualizza l'elenco dei parametri",
+    "pluginRender": "Visualizza l'interfaccia del plugin"
+  },
   "list": {
     "item": {
       "deprecated.title": "Deprecato",

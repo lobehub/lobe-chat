@@ -118,6 +118,10 @@
     "reinstallError": "プラグイン{{name}}の再インストールに失敗しました",
     "urlError": "このリンクはJSON形式のコンテンツを返していません。有効なリンクであることを確認してください"
   },
+  "inspector": {
+    "args": "パラメーターリストを表示",
+    "pluginRender": "プラグインインターフェースを表示"
+  },
   "list": {
     "item": {
       "deprecated.title": "削除済み",
