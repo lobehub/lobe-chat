@@ -118,6 +118,10 @@
     "reinstallError": "插件 {{name}} 刷新失败",
     "urlError": "该链接没有返回 JSON 格式的内容, 请确保是有效的链接"
   },
+  "inspector": {
+    "args": "查看参数列表",
+    "pluginRender": "查看插件界面"
+  },
   "list": {
     "item": {
       "deprecated.title": "已删除",
