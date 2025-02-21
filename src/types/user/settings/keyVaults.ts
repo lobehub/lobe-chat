@@ -60,6 +60,7 @@ export interface UserKeyVaults {
   perplexity?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
   sambanova?: OpenAICompatibleKeyVault;
+  search1api?: OpenAICompatibleKeyVault;
   sensenova?: OpenAICompatibleKeyVault;
   siliconcloud?: OpenAICompatibleKeyVault;
   spark?: OpenAICompatibleKeyVault;
