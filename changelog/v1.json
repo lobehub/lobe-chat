@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "improvements": ["Add Volcano Ark models."]
+    },
+    "date": "2025-02-21",
+    "version": "1.62.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the plugin render style."]
+    },
+    "date": "2025-02-21",
+    "version": "1.62.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix default agent loading."]
+    },
+    "date": "2025-02-21",
+    "version": "1.62.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix hotkeys of open agent settings."],
       "improvements": ["Add some error types."]
     },

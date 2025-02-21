@@ -118,6 +118,10 @@
     "reinstallError": "Làm mới plugin {{name}} thất bại",
     "urlError": "Liên kết này không trả về nội dung dạng JSON, vui lòng đảm bảo rằng đó là một liên kết hợp lệ"
   },
+  "inspector": {
+    "args": "Xem danh sách tham số",
+    "pluginRender": "Xem giao diện plugin"
+  },
   "list": {
     "item": {
       "deprecated.title": "Đã loại bỏ",

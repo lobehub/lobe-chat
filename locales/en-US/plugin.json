@@ -118,6 +118,10 @@
     "reinstallError": "Failed to refresh plugin {{name}}",
     "urlError": "The link did not return content in JSON format. Please ensure it is a valid link."
   },
+  "inspector": {
+    "args": "View parameter list",
+    "pluginRender": "View plugin interface"
+  },
   "list": {
     "item": {
       "deprecated.title": "Deleted",

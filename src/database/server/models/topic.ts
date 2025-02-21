@@ -224,6 +224,7 @@ export class TopicModel {
         .insert(topics)
         .values({
           ...originalTopic,
+          clientId: null,
           id: this.genId(),
           title: newTitle || originalTopic?.title,
         })
@@ -242,6 +243,7 @@ export class TopicModel {
             .insert(messages)
             .values({
               ...message,
+              clientId: null,
               id: idGenerator('messages'),
               topicId: duplicatedTopic.id,
             })
