@@ -11,6 +11,9 @@
   "azure": {
     "description": "Azure offers a variety of advanced AI models, including GPT-3.5 and the latest GPT-4 series, supporting various data types and complex tasks, dedicated to secure, reliable, and sustainable AI solutions."
   },
+  "azureai": {
+    "description": "Azure offers a variety of advanced AI models, including GPT-3.5 and the latest GPT-4 series, supporting multiple data types and complex tasks, dedicated to secure, reliable, and sustainable AI solutions."
+  },
   "baichuan": {
     "description": "Baichuan Intelligence is a company focused on the research and development of large AI models, with its models excelling in domestic knowledge encyclopedias, long text processing, and generative creation tasks in Chinese, surpassing mainstream foreign models. Baichuan Intelligence also possesses industry-leading multimodal capabilities, performing excellently in multiple authoritative evaluations. Its models include Baichuan 4, Baichuan 3 Turbo, and Baichuan 3 Turbo 128k, each optimized for different application scenarios, providing cost-effective solutions."
   },
@@ -53,6 +56,9 @@
   "internlm": {
     "description": "An open-source organization dedicated to the research and development of large model toolchains. It provides an efficient and user-friendly open-source platform for all AI developers, making cutting-edge large models and algorithm technologies easily accessible."
   },
+  "jina": {
+    "description": "Founded in 2020, Jina AI is a leading search AI company. Our search base platform includes vector models, rerankers, and small language models to help businesses build reliable and high-quality generative AI and multimodal search applications."
+  },
   "lmstudio": {
     "description": "LM Studio is a desktop application for developing and experimenting with LLMs on your computer."
   },
@@ -68,6 +74,9 @@
   "novita": {
     "description": "Novita AI is a platform providing a variety of large language models and AI image generation API services, flexible, reliable, and cost-effective. It supports the latest open-source models like Llama3 and Mistral, offering a comprehensive, user-friendly, and auto-scaling API solution for generative AI application development, suitable for the rapid growth of AI startups."
   },
+  "nvidia": {
+    "description": "NVIDIA NIM™ provides containers for self-hosted GPU-accelerated inference microservices, supporting the deployment of pre-trained and custom AI models in the cloud, data centers, RTX™ AI personal computers, and workstations."
+  },
   "ollama": {
     "description": "Ollama provides models that cover a wide range of fields, including code generation, mathematical operations, multilingual processing, and conversational interaction, catering to diverse enterprise-level and localized deployment needs."
   },
@@ -82,6 +91,9 @@
   },
   "qwen": {
     "description": "Tongyi Qianwen is a large-scale language model independently developed by Alibaba Cloud, featuring strong natural language understanding and generation capabilities. It can answer various questions, create written content, express opinions, and write code, playing a role in multiple fields."
+  },
+  "sambanova": {
+    "description": "SambaNova Cloud allows developers to easily utilize the best open-source models and enjoy the fastest inference speeds."
   },
   "sensenova": {
     "description": "SenseNova, backed by SenseTime's robust infrastructure, offers efficient and user-friendly full-stack large model services."
@@ -106,6 +118,15 @@
   },
   "upstage": {
     "description": "Upstage focuses on developing AI models for various business needs, including Solar LLM and document AI, aiming to achieve artificial general intelligence (AGI) for work. It allows for the creation of simple conversational agents through Chat API and supports functional calling, translation, embedding, and domain-specific applications."
+  },
+  "vertexai": {
+    "description": "Google's Gemini series is its most advanced and versatile AI model, developed by Google DeepMind. It is designed for multimodal use, supporting seamless understanding and processing of text, code, images, audio, and video. Suitable for a variety of environments, from data centers to mobile devices, it significantly enhances the efficiency and applicability of AI models."
+  },
+  "vllm": {
+    "description": "vLLM is a fast and easy-to-use library for LLM inference and serving."
+  },
+  "volcengine": {
+    "description": "A development platform for large model services launched by ByteDance, offering feature-rich, secure, and competitively priced model invocation services. It also provides end-to-end functionalities such as model data, fine-tuning, inference, and evaluation, ensuring comprehensive support for the development and implementation of your AI applications."
   },
   "wenxin": {
     "description": "An enterprise-level one-stop platform for large model and AI-native application development and services, providing the most comprehensive and user-friendly toolchain for the entire process of generative artificial intelligence model development and application development."

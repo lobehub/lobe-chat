@@ -43,7 +43,7 @@ describe('useOpenChatSettings', () => {
     vi.mocked(useSessionStore).mockReturnValue('123');
     vi.mocked(useIsMobile).mockReturnValue(true);
     const { result } = renderHook(() => useOpenChatSettings(ChatSettingsTabs.Meta));
-    expect(result.current()).toBe('/chat/settings');
+    expect(result.current()).toBe('/chat/settings?session=123');
   });
 
   it('should handle desktop route for chat settings with session and tab', () => {

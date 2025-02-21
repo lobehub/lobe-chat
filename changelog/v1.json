@@ -1,6 +1,182 @@
 [
   {
     "children": {
+      "fixes": ["Fix hotkeys of open agent settings."],
+      "improvements": ["Add some error types."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix a feature flag."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix message roles for specific Azure OpenAI models."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.2"
+  },
+  {
+    "children": {
+      "fixes": ["Add sambanova proxy url."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.1"
+  },
+  {
+    "children": {
+      "features": ["Support pplx search grounding."],
+      "fixes": ["Azure AI env var configuration issue.."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.0"
+  },
+  {
+    "children": {
+      "fixes": ["Casdoor webhooks error."]
+    },
+    "date": "2025-02-20",
+    "version": "1.61.6"
+  },
+  {
+    "children": {
+      "improvements": ["Show sso providers for next-auth in profile page."]
+    },
+    "date": "2025-02-19",
+    "version": "1.61.5"
+  },
+  {
+    "children": {
+      "improvements": ["Improve perplexity models."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.4"
+  },
+  {
+    "children": {
+      "improvements": ["Improve error content and console error."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add kimi-latest for Moonshot."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve serveral error code."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.1"
+  },
+  {
+    "children": {
+      "features": ["Support google vertex ai as a new provider."],
+      "fixes": ["Try to fix pglite worker."]
+    },
+    "date": "2025-02-18",
+    "version": "1.61.0"
+  },
+  {
+    "children": {},
+    "date": "2025-02-18",
+    "version": "1.60.9"
+  },
+  {
+    "children": {
+      "improvements": ["Sync chat limit."]
+    },
+    "date": "2025-02-18",
+    "version": "1.60.8"
+  },
+  {
+    "children": {
+      "improvements": ["Remove deprecated gemini models, update MiniMax models."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.7"
+  },
+  {
+    "children": {
+      "improvements": ["Add o1 vision metadata."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix loading on not login for db."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix agent config not load correctly."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.4"
+  },
+  {
+    "children": {
+      "fixes": ["User feedback for empty/long group names in create/edit group modals."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix model list issue in client mode."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update Jina AI Provider name & model info."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.1"
+  },
+  {
+    "children": {
+      "features": ["Add SambaNova provider support."]
+    },
+    "date": "2025-02-17",
+    "version": "1.60.0"
+  },
+  {
+    "children": {
+      "features": ["Add volcengine as a new provider."]
+    },
+    "date": "2025-02-16",
+    "version": "1.59.0"
+  },
+  {
+    "children": {
+      "features": ["Add Azure AI as new Provider."]
+    },
+    "date": "2025-02-16",
+    "version": "1.58.0"
+  },
+  {
+    "children": {
+      "improvements": ["Fix mobile agent settings not show correctly."]
+    },
+    "date": "2025-02-16",
+    "version": "1.57.1"
+  },
+  {
+    "children": {
       "features": ["Add Jina AI model provider support."]
     },
     "date": "2025-02-16",

@@ -77,6 +77,7 @@
       "file": "Bu model dosya yükleme ve tanımayı destekler",
       "functionCall": "Bu model fonksiyon çağrısını destekler",
       "reasoning": "Bu model derin düşünmeyi destekler",
+      "search": "Bu model çevrimiçi aramayı destekler",
       "tokens": "Bu model tek bir oturumda en fazla {{tokens}} Token destekler",
       "vision": "Bu model görüntü tanımıyı destekler"
     },

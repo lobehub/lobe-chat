@@ -1,8 +1,6 @@
-import dayjs from 'dayjs';
 import { and, eq } from 'drizzle-orm';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { MessageModel } from '@/database/_deprecated/models/message';
 import { clientDB, initializeDB } from '@/database/client/db';
 import {
   files,

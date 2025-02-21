@@ -68,22 +68,6 @@ const Google: ModelProviderCard = {
       vision: true,
     },
     {
-      contextWindowTokens: 2_097_152 + 8192,
-      description:
-        'Gemini Exp 1206 是 Google 的实验性多模态AI模型，与历史版本相比有一定的质量提升。',
-      displayName: 'Gemini Experimental 1206',
-      functionCall: true,
-      id: 'gemini-exp-1206',
-      maxOutput: 8192,
-      pricing: {
-        cachedInput: 0,
-        input: 0,
-        output: 0,
-      },
-      releasedAt: '2024-12-06',
-      vision: true,
-    },
-    {
       contextWindowTokens: 1_048_576 + 65_536,
       description:
         'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
@@ -97,37 +81,6 @@ const Google: ModelProviderCard = {
         output: 0,
       },
       releasedAt: '2025-01-21',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 40_959,
-      description:
-        'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
-      displayName: 'Gemini 2.0 Flash Thinking Experimental 12-19',
-      id: 'gemini-2.0-flash-thinking-exp-1219',
-      maxOutput: 8192,
-      pricing: {
-        cachedInput: 0,
-        input: 0,
-        output: 0,
-      },
-      releasedAt: '2024-12-19',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 1_056_768,
-      description:
-        'Gemini 2.0 Flash Exp 是 Google 的实验性多模态AI模型，拥有下一代特性，卓越的速度，原生工具调用以及多模态生成。',
-      displayName: 'Gemini 2.0 Flash Experimental',
-      functionCall: true,
-      id: 'gemini-2.0-flash-exp',
-      maxOutput: 8192,
-      pricing: {
-        cachedInput: 0,
-        input: 0,
-        output: 0,
-      },
-      releasedAt: '2024-12-11',
       vision: true,
     },
     {
@@ -221,51 +174,8 @@ const Google: ModelProviderCard = {
       releasedAt: '2024-10-03',
       vision: true,
     },
-    {
-      contextWindowTokens: 1_008_192,
-      description:
-        'Gemini 1.5 Flash 8B 0924 是最新的实验性模型，在文本和多模态用例中都有显著的性能提升。',
-      displayName: 'Gemini 1.5 Flash 8B 0924',
-      functionCall: true,
-      id: 'gemini-1.5-flash-8b-exp-0924',
-      maxOutput: 8192,
-      pricing: {
-        cachedInput: 0.018_75,
-        input: 0.075,
-        output: 0.3,
-      },
-      releasedAt: '2024-09-24',
-      vision: true,
-    },
-    {
-      contextWindowTokens: 32_768,
-      description:
-        'Gemini 1.0 Pro 001 (Tuning) 提供稳定并可调优的性能，是复杂任务解决方案的理想选择。',
-      displayName: 'Gemini 1.0 Pro 001 (Tuning)',
-      functionCall: true,
-      id: 'gemini-1.0-pro-001',
-      maxOutput: 2048,
-      pricing: {
-        input: 0.5,
-        output: 1.5,
-      },
-      releasedAt: '2023-12-06',
-    },
-    {
-      contextWindowTokens: 32_768,
-      description: 'Gemini 1.0 Pro 002 (Tuning) 提供出色的多模态支持，专注于复杂任务的有效解决。',
-      displayName: 'Gemini 1.0 Pro 002 (Tuning)',
-      functionCall: true,
-      id: 'gemini-1.0-pro-002',
-      maxOutput: 2048,
-      pricing: {
-        input: 0.5,
-        output: 1.5,
-      },
-      releasedAt: '2023-12-06',
-    },
   ],
-  checkModel: 'gemini-1.5-flash-latest',
+  checkModel: 'gemini-2.0-flash',
   description:
     'Google 的 Gemini 系列是其最先进、通用的 AI模型，由 Google DeepMind 打造，专为多模态设计，支持文本、代码、图像、音频和视频的无缝理解与处理。适用于从数据中心到移动设备的多种环境，极大提升了AI模型的效率与应用广泛性。',
   enabled: true,

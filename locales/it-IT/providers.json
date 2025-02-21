@@ -11,6 +11,9 @@
   "azure": {
     "description": "Azure offre una varietà di modelli AI avanzati, tra cui GPT-3.5 e l'ultima serie GPT-4, supportando diversi tipi di dati e compiti complessi, con un impegno per soluzioni AI sicure, affidabili e sostenibili."
   },
+  "azureai": {
+    "description": "Azure offre una varietà di modelli AI avanzati, tra cui GPT-3.5 e l'ultima serie GPT-4, supportando diversi tipi di dati e compiti complessi, impegnandosi per soluzioni AI sicure, affidabili e sostenibili."
+  },
   "baichuan": {
     "description": "Baichuan Intelligence è un'azienda focalizzata sulla ricerca e sviluppo di modelli di intelligenza artificiale di grandi dimensioni, i cui modelli eccellono in compiti in cinese come enciclopedie di conoscenza, elaborazione di testi lunghi e creazione di contenuti, superando i modelli mainstream esteri. Baichuan Intelligence ha anche capacità multimodali leader nel settore, mostrando prestazioni eccezionali in diverse valutazioni autorevoli. I suoi modelli includono Baichuan 4, Baichuan 3 Turbo e Baichuan 3 Turbo 128k, ottimizzati per diversi scenari applicativi, offrendo soluzioni ad alto rapporto qualità-prezzo."
   },
@@ -53,6 +56,9 @@
   "internlm": {
     "description": "Un'organizzazione open source dedicata alla ricerca e allo sviluppo di strumenti per modelli di grandi dimensioni. Fornisce a tutti gli sviluppatori di AI una piattaforma open source efficiente e facile da usare, rendendo le tecnologie e gli algoritmi all'avanguardia accessibili a tutti."
   },
+  "jina": {
+    "description": "Jina AI, fondata nel 2020, è una delle principali aziende di ricerca AI. La nostra piattaforma di base per la ricerca include modelli vettoriali, riordinatori e piccoli modelli linguistici, per aiutare le aziende a costruire applicazioni di ricerca generativa e multimodale affidabili e di alta qualità."
+  },
   "lmstudio": {
     "description": "LM Studio è un'applicazione desktop per sviluppare e sperimentare LLM sul tuo computer."
   },
@@ -68,6 +74,9 @@
   "novita": {
     "description": "Novita AI è una piattaforma che offre API per vari modelli di linguaggio di grandi dimensioni e generazione di immagini AI, flessibile, affidabile e conveniente. Supporta i più recenti modelli open source come Llama3 e Mistral, fornendo soluzioni API complete, user-friendly e scalabili per lo sviluppo di applicazioni AI, adatte alla rapida crescita delle startup AI."
   },
+  "nvidia": {
+    "description": "NVIDIA NIM™ fornisce contenitori per l'inferenza di microservizi accelerati da GPU self-hosted, supportando il deployment di modelli AI pre-addestrati e personalizzati su cloud, data center, PC RTX™ AI e workstation."
+  },
   "ollama": {
     "description": "I modelli forniti da Ollama coprono ampiamente aree come generazione di codice, operazioni matematiche, elaborazione multilingue e interazioni conversazionali, supportando esigenze diversificate per implementazioni aziendali e localizzate."
   },
@@ -82,6 +91,9 @@
   },
   "qwen": {
     "description": "Qwen è un modello di linguaggio di grande scala sviluppato autonomamente da Alibaba Cloud, con potenti capacità di comprensione e generazione del linguaggio naturale. Può rispondere a varie domande, creare contenuti testuali, esprimere opinioni e scrivere codice, svolgendo un ruolo in vari settori."
+  },
+  "sambanova": {
+    "description": "SambaNova Cloud consente agli sviluppatori di utilizzare facilmente i migliori modelli open source e di godere della velocità di inferenza più rapida."
   },
   "sensenova": {
     "description": "SenseTime offre servizi di modelli di grandi dimensioni full-stack, supportati dalla potente infrastruttura di SenseTime."
@@ -106,6 +118,15 @@
   },
   "upstage": {
     "description": "Upstage si concentra sullo sviluppo di modelli AI per varie esigenze commerciali, inclusi Solar LLM e document AI, con l'obiettivo di realizzare un'intelligenza artificiale generale artificiale (AGI) per il lavoro. Crea semplici agenti di dialogo tramite Chat API e supporta chiamate funzionali, traduzioni, embedding e applicazioni specifiche del settore."
+  },
+  "vertexai": {
+    "description": "La serie Gemini di Google è il suo modello AI più avanzato e versatile, sviluppato da Google DeepMind, progettato per essere multimodale e supportare la comprensione e l'elaborazione senza soluzione di continuità di testo, codice, immagini, audio e video. Adatta a una varietà di ambienti, dai data center ai dispositivi mobili, migliora notevolmente l'efficienza e l'ampia applicabilità dei modelli AI."
+  },
+  "vllm": {
+    "description": "vLLM è una libreria veloce e facile da usare per l'inferenza e i servizi LLM."
+  },
+  "volcengine": {
+    "description": "La piattaforma di sviluppo dei servizi di modelli di grandi dimensioni lanciata da ByteDance, offre servizi di invocazione di modelli ricchi di funzionalità, sicuri e competitivi in termini di prezzo, fornendo anche dati sui modelli, messa a punto, inferenza, valutazione e altre funzionalità end-to-end, garantendo in modo completo lo sviluppo e l'implementazione delle vostre applicazioni AI."
   },
   "wenxin": {
     "description": "Piattaforma di sviluppo e servizi per modelli di grandi dimensioni e applicazioni AI native, a livello aziendale, che offre la catena di strumenti completa e facile da usare per lo sviluppo di modelli di intelligenza artificiale generativa e per l'intero processo di sviluppo delle applicazioni."

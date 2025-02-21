@@ -95,6 +95,8 @@ tags:
 
   ### 配置 Webhook （可选）
 
+  > 在 Casdoor `>=1.843.0` 上可用。
+
   配置 Casdoor 的 Webhook 以便在用户信息更新时同步到 LobeChat 。
 
   前往 `管理工具` -> `Webhooks`，创建一个 Webhook，添加一个 Webhook，填写以下字段：
@@ -107,7 +109,6 @@ tags:
   > 密钥由你自己生成，用于验证 Casdoor 发送的请求是否合法。 可以前往 [https://generate-secret.vercel.app/10](https://generate-secret.vercel.app/10) 生成一个 10 位的密钥。
 
   - 事件：`update-user`
-  - 拓展用户字段：`true`
 
   保存，并退出。 将该密钥填写到环境变量中的 `CASDOOR_WEBHOOK_SECRET`。
 

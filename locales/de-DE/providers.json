@@ -11,6 +11,9 @@
   "azure": {
     "description": "Azure bietet eine Vielzahl fortschrittlicher KI-Modelle, darunter GPT-3.5 und die neueste GPT-4-Serie, die verschiedene Datentypen und komplexe Aufgaben unterstützen und sich auf sichere, zuverlässige und nachhaltige KI-Lösungen konzentrieren."
   },
+  "azureai": {
+    "description": "Azure bietet eine Vielzahl fortschrittlicher KI-Modelle, darunter GPT-3.5 und die neueste GPT-4-Serie, die verschiedene Datentypen und komplexe Aufgaben unterstützen und sich auf sichere, zuverlässige und nachhaltige KI-Lösungen konzentrieren."
+  },
   "baichuan": {
     "description": "Baichuan Intelligent ist ein Unternehmen, das sich auf die Forschung und Entwicklung großer KI-Modelle spezialisiert hat. Ihre Modelle zeigen hervorragende Leistungen in chinesischen Aufgaben wie Wissensdatenbanken, Verarbeitung langer Texte und kreative Generierung und übertreffen die gängigen Modelle im Ausland. Baichuan Intelligent verfügt auch über branchenführende multimodale Fähigkeiten und hat in mehreren renommierten Bewertungen hervorragend abgeschnitten. Ihre Modelle umfassen Baichuan 4, Baichuan 3 Turbo und Baichuan 3 Turbo 128k, die jeweils für unterschiedliche Anwendungsszenarien optimiert sind und kosteneffiziente Lösungen bieten."
   },
@@ -53,6 +56,9 @@
   "internlm": {
     "description": "Eine Open-Source-Organisation, die sich der Forschung und Entwicklung von großen Modellen und Werkzeugketten widmet. Sie bietet allen KI-Entwicklern eine effiziente und benutzerfreundliche Open-Source-Plattform, die den Zugang zu den neuesten Technologien und Algorithmen für große Modelle ermöglicht."
   },
+  "jina": {
+    "description": "Jina AI wurde 2020 gegründet und ist ein führendes Unternehmen im Bereich Such-KI. Unsere Suchplattform umfasst Vektormodelle, Re-Ranker und kleine Sprachmodelle, die Unternehmen dabei helfen, zuverlässige und qualitativ hochwertige generative KI- und multimodale Suchanwendungen zu entwickeln."
+  },
   "lmstudio": {
     "description": "LM Studio ist eine Desktop-Anwendung zum Entwickeln und Experimentieren mit LLMs auf Ihrem Computer."
   },
@@ -68,6 +74,9 @@
   "novita": {
     "description": "Novita AI ist eine Plattform, die eine Vielzahl von großen Sprachmodellen und API-Diensten für die KI-Bilderzeugung anbietet, die flexibel, zuverlässig und kosteneffektiv ist. Sie unterstützt die neuesten Open-Source-Modelle wie Llama3 und Mistral und bietet umfassende, benutzerfreundliche und automatisch skalierbare API-Lösungen für die Entwicklung generativer KI-Anwendungen, die für das schnelle Wachstum von KI-Startups geeignet sind."
   },
+  "nvidia": {
+    "description": "NVIDIA NIM™ bietet Container für selbstgehostete, GPU-beschleunigte Inferenz-Mikrodienste, die die Bereitstellung von vortrainierten und benutzerdefinierten KI-Modellen in der Cloud, in Rechenzentren, auf RTX™ AI-PCs und Workstations unterstützen."
+  },
   "ollama": {
     "description": "Die von Ollama angebotenen Modelle decken ein breites Spektrum ab, darunter Code-Generierung, mathematische Berechnungen, mehrsprachige Verarbeitung und dialogbasierte Interaktionen, und unterstützen die vielfältigen Anforderungen an unternehmensgerechte und lokal angepasste Bereitstellungen."
   },
@@ -82,6 +91,9 @@
   },
   "qwen": {
     "description": "Tongyi Qianwen ist ein von Alibaba Cloud selbst entwickeltes, groß angelegtes Sprachmodell mit starken Fähigkeiten zur Verarbeitung und Generierung natürlicher Sprache. Es kann eine Vielzahl von Fragen beantworten, Texte erstellen, Meinungen äußern und Code schreiben und spielt in mehreren Bereichen eine Rolle."
+  },
+  "sambanova": {
+    "description": "SambaNova Cloud ermöglicht es Entwicklern, die besten Open-Source-Modelle einfach zu nutzen und von der schnellsten Inferenzgeschwindigkeit zu profitieren."
   },
   "sensenova": {
     "description": "SenseTime bietet mit der starken Basisunterstützung von SenseTimes großem Gerät effiziente und benutzerfreundliche Full-Stack-Modelldienste."
@@ -106,6 +118,15 @@
   },
   "upstage": {
     "description": "Upstage konzentriert sich auf die Entwicklung von KI-Modellen für verschiedene geschäftliche Anforderungen, einschließlich Solar LLM und Dokumenten-KI, mit dem Ziel, künstliche allgemeine Intelligenz (AGI) zu erreichen. Es ermöglicht die Erstellung einfacher Dialogagenten über die Chat-API und unterstützt Funktionsaufrufe, Übersetzungen, Einbettungen und spezifische Anwendungsbereiche."
+  },
+  "vertexai": {
+    "description": "Die Gemini-Serie von Google ist das fortschrittlichste, universelle KI-Modell, das von Google DeepMind entwickelt wurde. Es ist speziell für multimodale Anwendungen konzipiert und unterstützt das nahtlose Verständnis und die Verarbeitung von Text, Code, Bildern, Audio und Video. Es eignet sich für eine Vielzahl von Umgebungen, von Rechenzentren bis hin zu mobilen Geräten, und verbessert erheblich die Effizienz und Anwendbarkeit von KI-Modellen."
+  },
+  "vllm": {
+    "description": "vLLM ist eine schnelle und benutzerfreundliche Bibliothek für LLM-Inferenz und -Dienste."
+  },
+  "volcengine": {
+    "description": "Die von ByteDance eingeführte Entwicklungsplattform für große Modellservices bietet funktionsreiche, sichere und preislich wettbewerbsfähige Modellaufrufdienste. Sie bietet zudem End-to-End-Funktionen wie Moduldaten, Feinabstimmung, Inferenz und Bewertung, um die Entwicklung Ihrer KI-Anwendungen umfassend zu unterstützen."
   },
   "wenxin": {
     "description": "Eine unternehmensweite, umfassende Plattform für die Entwicklung und den Service von großen Modellen und KI-nativen Anwendungen, die die vollständigsten und benutzerfreundlichsten Werkzeuge für die Entwicklung generativer KI-Modelle und den gesamten Anwendungsentwicklungsprozess bietet."

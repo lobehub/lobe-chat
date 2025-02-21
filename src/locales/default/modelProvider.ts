@@ -19,6 +19,25 @@ export default {
       title: 'API Key',
     },
   },
+  azureai: {
+    azureApiVersion: {
+      desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
+      fetch: '获取列表',
+      title: 'Azure API Version',
+    },
+    endpoint: {
+      desc: '从 Azure AI 项目概述找到 Azure AI 模型推理终结点',
+      placeholder: 'https://ai-userxxxxxxxxxx.services.ai.azure.com/models',
+      title: 'Azure AI 终结点',
+    },
+    title: 'Azure OpenAI',
+    token: {
+      desc: '从 Azure AI 项目概述找到 API 密钥',
+      placeholder: 'Azure 密钥',
+      title: '密钥',
+    },
+  },
+
   bedrock: {
     accessKeyId: {
       desc: '填入 AWS Access Key Id',
@@ -98,6 +117,7 @@ export default {
       title: '代理地址',
     },
     sdkType: {
+      placeholder: 'openai/anthropic/azureai/ollama/...',
       required: '请选择 SDK 类型',
       title: '请求格式',
     },
@@ -211,6 +231,11 @@ export default {
           placeholder: '请输入 Azure 中的模型部署名称',
           title: '模型部署名称',
         },
+        deployName: {
+          extra: '发送请求时会将该字段作为模型 ID',
+          placeholder: '请输入模型实际部署的名称或 id',
+          title: '模型部署名称',
+        },
         displayName: {
           placeholder: '请输入模型的展示名称，例如 ChatGPT、GPT-4 等',
           title: '模型展示名称',
@@ -299,6 +324,13 @@ export default {
     deleteSuccess: '删除成功',
     tooltip: '更新服务商基础配置',
     updateSuccess: '更新成功',
+  },
+  vertexai: {
+    apiKey: {
+      desc: '填入你的 Vertex Ai Keys',
+      placeholder: `{ "type": "service_account", "project_id": "xxx", "private_key_id": ... }`,
+      title: 'Vertex AI Keys',
+    },
   },
   zeroone: {
     title: '01.AI 零一万物',

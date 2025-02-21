@@ -20,7 +20,7 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Met
       return () => router.push(urlJoin('/settings', SettingsTabs.Agent));
     }
 
-    if (isMobile) return () => router.push('/chat/settings');
+    if (isMobile) return () => router.push('/chat/settings', { query: { session: activeId } });
 
     return () => {
       useAgentStore.setState({ showAgentSetting: true });
