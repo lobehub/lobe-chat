@@ -32,6 +32,10 @@ const getErrorAlertConfig = (
       type: 'warning',
     };
 
+  /* ↓ cloud slot ↓ */
+
+  /* ↑ cloud slot ↑ */
+
   switch (errorType) {
     case ChatErrorType.SystemTimeNotMatchError:
     case AgentRuntimeErrorType.PermissionDenied:
@@ -88,6 +92,10 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
     case AgentRuntimeErrorType.OllamaBizError: {
       return <OllamaBizError {...data} />;
     }
+
+    /* ↓ cloud slot ↓ */
+
+    /* ↑ cloud slot ↑ */
 
     case ChatErrorType.InvalidClerkUser: {
       return <ClerkLogin id={data.id} />;

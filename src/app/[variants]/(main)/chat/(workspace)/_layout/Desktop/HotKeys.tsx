@@ -22,7 +22,7 @@ const HotKeys = () => {
   });
 
   useHotkeys(HOTKEYS.chatSettings, () => openChatSettings(), {
-    enableOnFormTags: true,
+    enableOnFormTags: false,
     preventDefault: true,
   });
 
