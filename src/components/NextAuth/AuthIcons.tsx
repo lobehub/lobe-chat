@@ -12,10 +12,6 @@ import {
 } from '@lobehub/ui/icons';
 import React from 'react';
 
-const iconProps = {
-  size: 32,
-};
-
 const iconComponents: { [key: string]: React.ElementType } = {
   'auth0': Auth0,
   'authelia': Authelia.Color,
@@ -29,9 +25,15 @@ const iconComponents: { [key: string]: React.ElementType } = {
   'zitadel': Zitadel.Color,
 };
 
-const AuthIcons = (id: string) => {
+/**
+ * Get the auth icons component for the given id
+ * @param id 
+ * @param size default is 36
+ * @returns 
+ */
+const AuthIcons = (id: string, size = 36) => {
   const IconComponent = iconComponents[id] || iconComponents.default;
-  return <IconComponent {...iconProps} />;
+  return <IconComponent size={size}/>;
 };
 
 export default AuthIcons;
