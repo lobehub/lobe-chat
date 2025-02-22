@@ -800,6 +800,12 @@ describe('ChatService', () => {
               {
                 text: `Hello
 
+<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
 <files_info>
 <images>
 <images_docstring>here are user upload images you can refer to</images_docstring>
@@ -810,7 +816,8 @@ describe('ChatService', () => {
 <file id="file1" name="abc.png" type="plain/txt" size="100000" url="http://abc.com/abc.txt"></file>
 <file id="file_oKMve9qySLMI" name="2402.16667v1.pdf" type="undefined" size="11256078" url="https://xxx.com/ppp/480497/5826c2b8-fde0-4de1-a54b-a224d5e3d898.pdf"></file>
 </files>
-</files_info>`,
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
                 type: 'text',
               },
               {
@@ -867,13 +874,20 @@ describe('ChatService', () => {
                 {
                   text: `Hello
 
+<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
 <files_info>
 <images>
 <images_docstring>here are user upload images you can refer to</images_docstring>
 <image name="abc.png" url="http://example.com/image.jpg"></image>
 </images>
 
-</files_info>`,
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
                   type: 'text',
                 },
                 {
