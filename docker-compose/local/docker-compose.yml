@@ -66,6 +66,7 @@ services:
       postgresql:
         condition: service_healthy
     environment:
+      httpport: ${CASDOOR_PORT}
       RUNNING_IN_DOCKER: 'true'
       driverName: 'postgres'
       dataSourceName: 'user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor'
