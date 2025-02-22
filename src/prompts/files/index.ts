@@ -12,10 +12,17 @@ export const filesPrompts = ({
 }) => {
   if (imageList.length === 0 && (fileList || []).length === 0) return '';
 
-  const prompt = `<files_info>
+  const prompt = `<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
+<files_info>
 ${imagesPrompts(imageList)}
 ${fileList ? filePrompts(fileList) : ''}
-</files_info>`;
+</files_info>
+<!-- END SYSTEM CONTEXT -->`;
 
   return prompt.trim();
 };

@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} API Key is incorrect or empty, please check your {{provider}} API Key and try again",
     "InvalidVertexCredentials": "Vertex authentication failed. Please check your credentials and try again.",
     "LocationNotSupportError": "We're sorry, your current location does not support this model service. This may be due to regional restrictions or the service not being available. Please confirm if the current location supports using this service, or try using a different location.",
+    "ModelNotFound": "Sorry, the requested model could not be found. It may not exist or you may not have the necessary access permissions. Please try again after changing the API Key or adjusting your access permissions.",
     "NoOpenAIAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
     "OllamaBizError": "Error requesting Ollama service, please troubleshoot or retry based on the following information",
     "OllamaServiceUnavailable": "Ollama service is unavailable. Please check if Ollama is running properly or if the cross-origin configuration of Ollama is set correctly.",
@@ -100,6 +101,7 @@
     "ProviderBizError": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information",
     "QuotaLimitReached": "We apologize, but the current token usage or number of requests has reached the quota limit for this key. Please increase the quota for this key or try again later.",
     "StreamChunkError": "Error parsing the message chunk of the streaming request. Please check if the current API interface complies with the standard specifications, or contact your API provider for assistance.",
+    "SubscriptionKeyMismatch": "We apologize for the inconvenience. Due to a temporary system malfunction, your current subscription usage is inactive. Please click the button below to restore your subscription, or contact us via email for support.",
     "SubscriptionPlanLimit": "Your subscription points have been exhausted, and you cannot use this feature. Please upgrade to a higher plan or configure a custom model API to continue using it.",
     "SystemTimeNotMatchError": "Sorry, your system time does not match the server. Please check your system time and try again.",
     "UnknownChatFetchError": "Sorry, an unknown request error occurred. Please check the information below or try again."

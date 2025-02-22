@@ -1,6 +1,42 @@
 [
   {
     "children": {
+      "improvements": ["Add Volcano Ark models."]
+    },
+    "date": "2025-02-21",
+    "version": "1.62.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the plugin render style."]
+    },
+    "date": "2025-02-21",
+    "version": "1.62.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix default agent loading."]
+    },
+    "date": "2025-02-21",
+    "version": "1.62.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix hotkeys of open agent settings."],
+      "improvements": ["Add some error types."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix a feature flag."]
+    },
+    "date": "2025-02-20",
+    "version": "1.62.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix message roles for specific Azure OpenAI models."]
     },
     "date": "2025-02-20",

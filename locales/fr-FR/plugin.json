@@ -118,6 +118,10 @@
     "reinstallError": "Échec de la mise à jour du plugin {{name}}",
     "urlError": "Ce lien ne renvoie pas de contenu au format JSON. Veuillez vous assurer qu'il s'agit d'un lien valide."
   },
+  "inspector": {
+    "args": "Voir la liste des paramètres",
+    "pluginRender": "Voir l'interface du plugin"
+  },
   "list": {
     "item": {
       "deprecated.title": "Obsolète",

@@ -118,6 +118,10 @@
     "reinstallError": "Vernieuwen van de plugin {{name}} is mislukt.",
     "urlError": "De link retourneert geen JSON-indeling. Zorg ervoor dat het een geldige link is."
   },
+  "inspector": {
+    "args": "Bekijk parameterlijst",
+    "pluginRender": "Bekijk plugininterface"
+  },
   "list": {
     "item": {
       "deprecated.title": "Verouderd",

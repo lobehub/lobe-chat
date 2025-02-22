@@ -12,11 +12,12 @@ const Page = memo(() => {
   const config = useUserStore(settingsSelectors.defaultAgentConfig, isEqual);
   const meta = useUserStore(settingsSelectors.defaultAgentMeta, isEqual);
   const [updateAgent] = useUserStore((s) => [s.updateDefaultAgent]);
-
+  const isUserStateInit = useUserStore((s) => s.isUserStateInit);
   return (
     <AgentSettings
       config={config}
       id={INBOX_SESSION_ID}
+      loading={!isUserStateInit}
       meta={meta}
       onConfigChange={(config) => {
         updateAgent({ config });
