@@ -118,6 +118,10 @@
     "reinstallError": "فشل تحديث الإضافة {{name}}",
     "urlError": "الرابط لا يعيد محتوى بتنسيق JSON، يرجى التأكد من صحة الرابط"
   },
+  "inspector": {
+    "args": "عرض قائمة المعلمات",
+    "pluginRender": "عرض واجهة المكون الإضافي"
+  },
   "list": {
     "item": {
       "deprecated.title": "مهجور",

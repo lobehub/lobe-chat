@@ -13,12 +13,17 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     }
 
     case AgentRuntimeErrorType.ExceededContextWindow:
+    case ChatErrorType.SubscriptionKeyMismatch:
     case ChatErrorType.SystemTimeNotMatchError: {
       return 400;
     }
 
     case AgentRuntimeErrorType.LocationNotSupportError: {
       return 403;
+    }
+
+    case AgentRuntimeErrorType.ModelNotFound: {
+      return 404;
     }
 
     case AgentRuntimeErrorType.InsufficientQuota:

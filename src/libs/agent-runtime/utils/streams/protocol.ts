@@ -2,8 +2,16 @@ import { ChatStreamCallbacks } from '@/libs/agent-runtime';
 
 import { AgentRuntimeErrorType } from '../../error';
 
-export interface StreamStack {
+/**
+ * context in the stream to save temporarily data
+ */
+export interface StreamContext {
   id: string;
+  /**
+   * As pplx citations is in every chunk, but we only need to return it once
+   * this flag is used to check if the pplx citation is returned,and then not return it again
+   */
+  returnedPplxCitation?: boolean;
   tool?: {
     id: string;
     index: number;
@@ -15,7 +23,20 @@ export interface StreamStack {
 export interface StreamProtocolChunk {
   data: any;
   id?: string;
-  type: 'text' | 'tool_calls' | 'data' | 'stop' | 'error' | 'reasoning';
+  type: // pure text
+  | 'text'
+    // Tools use
+    | 'tool_calls'
+    // Model Thinking
+    | 'reasoning'
+    // Search or Grounding
+    | 'citations'
+    // stop signal
+    | 'stop'
+    // Error
+    | 'error'
+    // unknown data result
+    | 'data';
 }
 
 export interface StreamToolCallChunkData {
@@ -85,16 +106,20 @@ export const convertIterableToStream = <T>(stream: AsyncIterable<T>) => {
  * Create a transformer to convert the response into an SSE format
  */
 export const createSSEProtocolTransformer = (
-  transformer: (chunk: any, stack: StreamStack) => StreamProtocolChunk,
-  streamStack?: StreamStack,
+  transformer: (chunk: any, stack: StreamContext) => StreamProtocolChunk | StreamProtocolChunk[],
+  streamStack?: StreamContext,
 ) =>
   new TransformStream({
     transform: (chunk, controller) => {
-      const { type, id, data } = transformer(chunk, streamStack || { id: '' });
+      const result = transformer(chunk, streamStack || { id: '' });
 
-      controller.enqueue(`id: ${id}\n`);
-      controller.enqueue(`event: ${type}\n`);
-      controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
+      const buffers = Array.isArray(result) ? result : [result];
+
+      buffers.forEach(({ type, id, data }) => {
+        controller.enqueue(`id: ${id}\n`);
+        controller.enqueue(`event: ${type}\n`);
+        controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
+      });
     },
   });
 

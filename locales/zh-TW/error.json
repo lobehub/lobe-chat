@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} API 金鑰不正確或為空，請檢查 {{provider}} API 金鑰後重試",
     "InvalidVertexCredentials": "Vertex 認證未通過，請檢查認證憑證後重試",
     "LocationNotSupportError": "很抱歉，你的所在位置不支持此模型服務，可能是由於地區限制或服務未開通。請確認當前位置是否支持使用此服務，或嘗試使用其他位置信息。",
+    "ModelNotFound": "很抱歉，無法請求到相應的模型，可能是模型不存在或沒有訪問權限導致，請更換 API Key 或調整訪問權限後重試",
     "NoOpenAIAPIKey": "OpenAI API 金鑰為空，請添加自訂 OpenAI API 金鑰",
     "OllamaBizError": "請求 Ollama 服務出錯，請根據以下資訊排查或重試",
     "OllamaServiceUnavailable": "Ollama 服務暫時無法使用，請檢查 Ollama 是否運作正常，或是否正確設定 Ollama 的跨域配置",
@@ -100,6 +101,7 @@
     "ProviderBizError": "請求 {{provider}} 服務出錯，請根據以下資訊排查或重試",
     "QuotaLimitReached": "很抱歉，當前 Token 用量或請求次數已達該金鑰的配額上限，請增加該金鑰的配額或稍後再試",
     "StreamChunkError": "流式請求的消息塊解析錯誤，請檢查當前 API 介面是否符合標準規範，或聯繫你的 API 供應商諮詢",
+    "SubscriptionKeyMismatch": "很抱歉，由於系統偶發故障，當前訂閱用量暫時失效，請點擊下方按鈕恢復訂閱，或郵件聯繫我們獲取支持",
     "SubscriptionPlanLimit": "您的訂閱積分已用盡，無法使用該功能，請升級到更高計劃，或配置自訂模型 API 後繼續使用",
     "SystemTimeNotMatchError": "很抱歉，您的系統時間與伺服器不匹配，請檢查您的系統時間後重試",
     "UnknownChatFetchError": "很抱歉，遇到未知請求錯誤，請根據以下資訊排查或重試"

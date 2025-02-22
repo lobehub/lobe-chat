@@ -2,6 +2,347 @@
 
 # Changelog
 
+### [Version 1.62.10](https://github.com/lobehub/lobe-chat/compare/v1.62.9...v1.62.10)
+
+<sup>Released on **2025-02-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fetch on client check status display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fetch on client check status display, closes [#6405](https://github.com/lobehub/lobe-chat/issues/6405) ([9579e41](https://github.com/lobehub/lobe-chat/commit/9579e41))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.9](https://github.com/lobehub/lobe-chat/compare/v1.62.8...v1.62.9)
+
+<sup>Released on **2025-02-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Next-auth user id not found in create agent index.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Next-auth user id not found in create agent index, closes [#6410](https://github.com/lobehub/lobe-chat/issues/6410) ([704c7c8](https://github.com/lobehub/lobe-chat/commit/704c7c8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.8](https://github.com/lobehub/lobe-chat/compare/v1.62.7...v1.62.8)
+
+<sup>Released on **2025-02-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix image prompts with some user cases.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix image prompts with some user cases, closes [#6406](https://github.com/lobehub/lobe-chat/issues/6406) ([e9df49d](https://github.com/lobehub/lobe-chat/commit/e9df49d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.7](https://github.com/lobehub/lobe-chat/compare/v1.62.6...v1.62.7)
+
+<sup>Released on **2025-02-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Volcano Ark models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Volcano Ark models, closes [#6368](https://github.com/lobehub/lobe-chat/issues/6368) ([02136f5](https://github.com/lobehub/lobe-chat/commit/02136f5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.6](https://github.com/lobehub/lobe-chat/compare/v1.62.5...v1.62.6)
+
+<sup>Released on **2025-02-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Refactor the plugin render style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Refactor the plugin render style, closes [#6390](https://github.com/lobehub/lobe-chat/issues/6390) ([3ecdba1](https://github.com/lobehub/lobe-chat/commit/3ecdba1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.5](https://github.com/lobehub/lobe-chat/compare/v1.62.4...v1.62.5)
+
+<sup>Released on **2025-02-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix default agent loading.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix default agent loading, closes [#6393](https://github.com/lobehub/lobe-chat/issues/6393) ([7841122](https://github.com/lobehub/lobe-chat/commit/7841122))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.4](https://github.com/lobehub/lobe-chat/compare/v1.62.3...v1.62.4)
+
+<sup>Released on **2025-02-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix hotkeys of open agent settings.
+
+#### 💄 Styles
+
+- **misc**: Add some error types.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix hotkeys of open agent settings, closes [#6363](https://github.com/lobehub/lobe-chat/issues/6363) ([3219c54](https://github.com/lobehub/lobe-chat/commit/3219c54))
+
+#### Styles
+
+- **misc**: Add some error types, closes [#6377](https://github.com/lobehub/lobe-chat/issues/6377) ([f7a7138](https://github.com/lobehub/lobe-chat/commit/f7a7138))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.3](https://github.com/lobehub/lobe-chat/compare/v1.62.2...v1.62.3)
+
+<sup>Released on **2025-02-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix a feature flag.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix a feature flag, closes [#6354](https://github.com/lobehub/lobe-chat/issues/6354) ([6667334](https://github.com/lobehub/lobe-chat/commit/6667334))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.2](https://github.com/lobehub/lobe-chat/compare/v1.62.1...v1.62.2)
+
+<sup>Released on **2025-02-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix message roles for specific Azure OpenAI models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix message roles for specific Azure OpenAI models, closes [#6222](https://github.com/lobehub/lobe-chat/issues/6222) ([d49329a](https://github.com/lobehub/lobe-chat/commit/d49329a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.1](https://github.com/lobehub/lobe-chat/compare/v1.62.0...v1.62.1)
+
+<sup>Released on **2025-02-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add sambanova proxy url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add sambanova proxy url, closes [#6348](https://github.com/lobehub/lobe-chat/issues/6348) ([c9cb7d9](https://github.com/lobehub/lobe-chat/commit/c9cb7d9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.62.0](https://github.com/lobehub/lobe-chat/compare/v1.61.6...v1.62.0)
+
+<sup>Released on **2025-02-20**</sup>
+
+#### ✨ Features
+
+- **misc**: Support pplx search grounding.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Azure AI env var configuration issue..
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support pplx search grounding, closes [#6331](https://github.com/lobehub/lobe-chat/issues/6331) ([ccb0003](https://github.com/lobehub/lobe-chat/commit/ccb0003))
+
+#### What's fixed
+
+- **misc**: Azure AI env var configuration issue., closes [#6346](https://github.com/lobehub/lobe-chat/issues/6346) ([3fc61bb](https://github.com/lobehub/lobe-chat/commit/3fc61bb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.61.6](https://github.com/lobehub/lobe-chat/compare/v1.61.5...v1.61.6)
+
+<sup>Released on **2025-02-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Casdoor webhooks error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Casdoor webhooks error, closes [#6304](https://github.com/lobehub/lobe-chat/issues/6304) ([7a458b9](https://github.com/lobehub/lobe-chat/commit/7a458b9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.61.5](https://github.com/lobehub/lobe-chat/compare/v1.61.4...v1.61.5)
+
+<sup>Released on **2025-02-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Show sso providers for next-auth in profile page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Show sso providers for next-auth in profile page, closes [#5303](https://github.com/lobehub/lobe-chat/issues/5303) ([dd61bce](https://github.com/lobehub/lobe-chat/commit/dd61bce))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.61.4](https://github.com/lobehub/lobe-chat/compare/v1.61.3...v1.61.4)
 
 <sup>Released on **2025-02-18**</sup>

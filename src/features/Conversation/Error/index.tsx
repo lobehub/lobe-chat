@@ -14,6 +14,7 @@ import ClerkLogin from './ClerkLogin';
 import ErrorJsonViewer from './ErrorJsonViewer';
 import InvalidAPIKey from './InvalidAPIKey';
 import InvalidAccessCode from './InvalidAccessCode';
+import { ErrorActionContainer } from './style';
 
 const loading = () => <Skeleton active />;
 
@@ -32,10 +33,15 @@ const getErrorAlertConfig = (
       type: 'warning',
     };
 
+  /* ↓ cloud slot ↓ */
+
+  /* ↑ cloud slot ↑ */
+
   switch (errorType) {
     case ChatErrorType.SystemTimeNotMatchError:
     case AgentRuntimeErrorType.PermissionDenied:
     case AgentRuntimeErrorType.InsufficientQuota:
+    case AgentRuntimeErrorType.ModelNotFound:
     case AgentRuntimeErrorType.QuotaLimitReached:
     case AgentRuntimeErrorType.ExceededContextWindow:
     case AgentRuntimeErrorType.LocationNotSupportError: {
@@ -88,6 +94,10 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
       return <OllamaBizError {...data} />;
     }
 
+    /* ↓ cloud slot ↓ */
+
+    /* ↑ cloud slot ↑ */
+
     case ChatErrorType.InvalidClerkUser: {
       return <ClerkLogin id={data.id} />;
     }
@@ -111,7 +121,13 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
 });
 
 export default memo<{ data: ChatMessage }>(({ data }) => (
-  <Suspense fallback={<Skeleton active style={{ width: '100%' }} />}>
+  <Suspense
+    fallback={
+      <ErrorActionContainer>
+        <Skeleton active style={{ width: '100%' }} />
+      </ErrorActionContainer>
+    }
+  >
     <ErrorMessageExtra data={data} />
   </Suspense>
 ));

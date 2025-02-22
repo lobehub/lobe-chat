@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} Klucz API jest nieprawidłowy lub pusty. Sprawdź Klucz API {{provider}} i spróbuj ponownie.",
     "InvalidVertexCredentials": "Weryfikacja poświadczeń Vertex nie powiodła się, proszę sprawdzić poświadczenia i spróbować ponownie",
     "LocationNotSupportError": "Przepraszamy, Twoja lokalizacja nie obsługuje tego usługi modelu, być może ze względu na ograniczenia regionalne lub brak dostępności usługi. Proszę sprawdź, czy bieżąca lokalizacja obsługuje tę usługę, lub spróbuj użyć innych informacji o lokalizacji.",
+    "ModelNotFound": "Przykro nam, nie można zażądać odpowiedniego modelu, może on nie istnieć lub brakować dostępu. Proszę zmienić klucz API lub dostosować uprawnienia dostępu, a następnie spróbować ponownie.",
     "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
     "OllamaServiceUnavailable": "Usługa Ollama jest niedostępna. Sprawdź, czy Ollama działa poprawnie, lub czy poprawnie skonfigurowano ustawienia przekraczania domeny Ollama",
@@ -100,6 +101,7 @@
     "ProviderBizError": "Wystąpił błąd usługi {{provider}}, proszę sprawdzić poniższe informacje lub spróbować ponownie",
     "QuotaLimitReached": "Przykro nam, bieżące zużycie tokenów lub liczba żądań osiągnęła limit kwoty dla tego klucza. Proszę zwiększyć limit kwoty dla tego klucza lub spróbować ponownie później.",
     "StreamChunkError": "Błąd analizy bloku wiadomości w żądaniu strumieniowym. Proszę sprawdzić, czy aktualny interfejs API jest zgodny z normami, lub skontaktować się z dostawcą API w celu uzyskania informacji.",
+    "SubscriptionKeyMismatch": "Przepraszamy, z powodu sporadycznych awarii systemu, bieżące zużycie subskrypcji jest tymczasowo nieaktywne. Proszę kliknąć przycisk poniżej, aby przywrócić subskrypcję lub skontaktować się z nami drogą mailową w celu uzyskania wsparcia.",
     "SubscriptionPlanLimit": "Twoje punkty subskrypcyjne zostały wyczerpane, nie możesz korzystać z tej funkcji. Proszę zaktualizować do wyższego planu lub skonfigurować API modelu niestandardowego, aby kontynuować korzystanie.",
     "SystemTimeNotMatchError": "Przykro nam, czas systemowy nie zgadza się z czasem serwera. Proszę sprawdzić czas systemowy i spróbować ponownie.",
     "UnknownChatFetchError": "Przykro nam, wystąpił nieznany błąd żądania. Proszę sprawdzić poniższe informacje lub spróbować ponownie."

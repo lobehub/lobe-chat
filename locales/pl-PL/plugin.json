@@ -118,6 +118,10 @@
     "reinstallError": "Nie udało się odświeżyć wtyczki {{name}}",
     "urlError": "Link nie zwrócił treści w formacie JSON. Upewnij się, że jest to poprawny link."
   },
+  "inspector": {
+    "args": "Zobacz listę parametrów",
+    "pluginRender": "Zobacz interfejs wtyczki"
+  },
   "list": {
     "item": {
       "deprecated.title": "Usunięte",

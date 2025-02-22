@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} API-sleutel is onjuist of leeg. Controleer de {{provider}} API-sleutel en probeer het opnieuw.",
     "InvalidVertexCredentials": "Vertex-authenticatie is mislukt, controleer de authenticatiegegevens en probeer het opnieuw",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
+    "ModelNotFound": "Het spijt ons, het is niet mogelijk om het bijbehorende model op te vragen. Dit kan komen doordat het model niet bestaat of dat er geen toegang is. Probeer het opnieuw na het wijzigen van de API-sleutel of het aanpassen van de toegangsrechten.",
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
     "OllamaServiceUnavailable": "Ollama-service niet beschikbaar. Controleer of Ollama correct werkt en of de cross-origin configuratie van Ollama juist is ingesteld.",
@@ -100,6 +101,7 @@
     "ProviderBizError": "Er is een fout opgetreden bij het aanvragen van de {{provider}}-service. Controleer de volgende informatie of probeer het opnieuw.",
     "QuotaLimitReached": "Het spijt ons, het huidige tokenverbruik of het aantal verzoeken heeft de quota-limiet van deze sleutel bereikt. Verhoog de quota van deze sleutel of probeer het later opnieuw.",
     "StreamChunkError": "Fout bij het parseren van het berichtblok van de streamingaanroep. Controleer of de huidige API-interface voldoet aan de standaardnormen, of neem contact op met uw API-leverancier voor advies.",
+    "SubscriptionKeyMismatch": "Het spijt ons, maar door een tijdelijke systeemfout is het huidige abonnement tijdelijk ongeldig. Klik op de onderstaande knop om het abonnement te herstellen, of neem contact met ons op via e-mail voor ondersteuning.",
     "SubscriptionPlanLimit": "Uw abonnementscredits zijn op, u kunt deze functie niet gebruiken. Upgrade naar een hoger plan of configureer de aangepaste model-API om door te gaan.",
     "SystemTimeNotMatchError": "Het spijt ons, uw systeemtijd komt niet overeen met de server. Controleer uw systeemtijd en probeer het opnieuw.",
     "UnknownChatFetchError": "Het spijt me, er is een onbekende verzoekfout opgetreden. Controleer de onderstaande informatie of probeer het opnieuw."

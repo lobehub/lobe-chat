@@ -54,3 +54,8 @@ export interface UserInitializationState {
   settings: DeepPartial<UserSettings>;
   userId?: string;
 }
+
+export const NextAuthAccountSchame = z.object({
+  provider: z.string(),
+  providerAccountId: z.string(),
+});

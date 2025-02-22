@@ -925,7 +925,7 @@ describe('chatMessage actions', () => {
       });
 
       const state = useChatStore.getState();
-      expect(state.chatLoadingIdsAbortController).toEqual(abortController);
+      expect(state.chatLoadingIdsAbortController).toStrictEqual(abortController);
     });
   });
 
