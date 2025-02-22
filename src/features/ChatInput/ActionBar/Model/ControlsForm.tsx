@@ -18,13 +18,16 @@ const ControlsForm = memo(() => {
   return (
     <Form
       itemMinWidth={200}
-      items={modelExtendControls!.map((item) => ({
+      items={modelExtendControls!.map((item: any) => ({
         children: <Switch />,
-        label: item.requestParams,
+        label: item.key,
         minWidth: undefined,
         name: item.key,
       }))}
       itemsType={'flat'}
+      onValuesChange={(_, values) => {
+        console.log(values);
+      }}
       size={'small'}
       style={{ fontSize: 12 }}
       variant={'pure'}

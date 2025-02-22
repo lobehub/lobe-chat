@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { AgentSearchConfig } from '@/types/agent/search';
 import { FileItem } from '@/types/files';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 import { FewShots, LLMParams } from '@/types/llm';
@@ -78,6 +79,7 @@ export interface LobeAgentChatConfig {
    */
   historyCount?: number;
   inputTemplate?: string;
+  search?: AgentSearchConfig;
 }
 
 export const AgentChatConfigSchema = z.object({

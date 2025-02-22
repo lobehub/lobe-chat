@@ -19,11 +19,13 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0,
     },
     releasedAt: '2025-02-05',
+
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 8192,
@@ -39,6 +41,9 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0.4,
     },
     releasedAt: '2025-02-05',
+    settings: {
+      searchMode: 'tool',
+    },
     type: 'chat',
   },
   {
@@ -58,6 +63,9 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0.4,
     },
     releasedAt: '2025-02-05',
+    settings: {
+      searchMode: 'tool',
+    },
     type: 'chat',
   },
   {

@@ -145,13 +145,23 @@ export interface ExtendedControl {
   valueType: 'boolean';
 }
 
-export interface AiModelSettings {
-  extendControls: ExtendedControl[];
-
+export type ModelSearchImplement =
   /**
-   * use json schema to control the payload
+   * 类似 Jina 、PPLX 等模型的搜索模式，让调用方无感知
    */
-  requestPayload?: Record<string, any>;
+  | 'builtin'
+  /**
+   * 通过 Function Calling 的形式调用
+   */
+  | 'tool'
+  /**
+   * 通过参数开关的形式调用
+   */
+  | 'params';
+
+export interface AiModelSettings {
+  extendControls?: ExtendedControl[];
+  searchMode?: ModelSearchImplement;
 }
 
 export interface AIChatModelCard extends AIBaseModelCard {

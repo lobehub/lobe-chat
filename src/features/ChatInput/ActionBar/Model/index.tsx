@@ -95,7 +95,7 @@ const ModelSwitch = memo(() => {
         >
           <Tooltip placement={'bottom'} title={[provider, model].join(' / ')}>
             <div className={styles.icon}>
-              <ModelIcon model={model} size={24} />
+              <ModelIcon model={model} size={22} />
             </div>
           </Tooltip>
         </Center>
@@ -109,7 +109,7 @@ const ModelSwitch = memo(() => {
             open
             styles={{
               body: {
-                minWidth: isMobile ? undefined : 250,
+                minWidth: isMobile ? undefined : 200,
                 width: isMobile ? '100vw' : undefined,
               },
             }}

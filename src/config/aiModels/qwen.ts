@@ -1,21 +1,12 @@
-import { AIChatModelCard, ExtendedControl } from '@/types/aiModel';
+import { AIChatModelCard } from '@/types/aiModel';
 
 // https://help.aliyun.com/zh/model-studio/developer-reference/use-qwen-by-calling-api#e1fada1a719u7
-const searchControl: ExtendedControl = {
-  key: 'enabledSearch',
-  requestParams: ['enabled_search'],
-  type: 'params',
-  valueType: 'boolean',
-};
 
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
       search: true,
-    },
-    config: {
-      enabledSearch: true,
     },
     contextWindowTokens: 1_000_000,
     description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
@@ -30,7 +21,7 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 0.6,
     },
     settings: {
-      extendControls: [searchControl],
+      searchMode: 'params',
     },
     type: 'chat',
   },
@@ -52,7 +43,7 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 2,
     },
     settings: {
-      extendControls: [searchControl],
+      searchMode: 'params',
     },
     type: 'chat',
   },
@@ -75,7 +66,7 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 60,
     },
     settings: {
-      extendControls: [searchControl],
+      searchMode: 'params',
     },
     type: 'chat',
   },

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { AiModelForSelect, EnabledAiModel } from '@/types/aiModel';
+import { AiModelForSelect, EnabledAiModel, ModelSearchImplement } from '@/types/aiModel';
 import { SmoothingParams } from '@/types/llm';
 
 export const AiProviderSourceEnum = {
@@ -96,6 +96,7 @@ export interface AiProviderSettings {
    * default openai
    */
   sdkType?: AiProviderSDKType;
+  searchMode?: ModelSearchImplement;
   showAddNewModel?: boolean;
   /**
    * whether show api key in the provider config
