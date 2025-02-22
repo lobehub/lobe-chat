@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix image prompts with some user cases."]
+    },
+    "date": "2025-02-22",
+    "version": "1.62.8"
+  },
+  {
+    "children": {
       "improvements": ["Add Volcano Ark models."]
     },
     "date": "2025-02-21",
