@@ -2,7 +2,7 @@ import STT from '../STT';
 import Clear from './Clear';
 import History from './History';
 import Knowledge from './Knowledge';
-import ModelSwitch from './ModelSwitch';
+import Model from './Model';
 import Params from './Params';
 import { MainToken, PortalToken } from './Token';
 import Tools from './Tools';
@@ -14,7 +14,7 @@ export const actionMap = {
   history: History,
   knowledgeBase: Knowledge,
   mainToken: MainToken,
-  model: ModelSwitch,
+  model: Model,
   params: Params,
   portalToken: PortalToken,
   stt: STT,

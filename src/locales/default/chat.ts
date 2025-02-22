@@ -32,6 +32,9 @@ export default {
   },
   duplicateTitle: '{{title}} 副本',
   emptyAgent: '暂无助手',
+  extendControls: {
+    title: '模型扩展功能',
+  },
   historyRange: '历史范围',
   historySummary: '历史消息总结',
   inbox: {

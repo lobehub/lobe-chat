@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { AiModelConfig, AiModelType, ModelAbilities } from '@/types/aiModel';
+import { AiModelForSelect, EnabledAiModel } from '@/types/aiModel';
 import { SmoothingParams } from '@/types/llm';
 
 export const AiProviderSourceEnum = {
@@ -199,16 +199,12 @@ export interface EnabledProvider {
   source: AiProviderSourceType;
 }
 
-export interface EnabledAiModel {
-  abilities: ModelAbilities;
-  config?: AiModelConfig;
-  contextWindowTokens?: number;
-  displayName?: string;
-  enabled?: boolean;
+export interface EnabledProviderWithModels {
+  children: AiModelForSelect[];
   id: string;
-  providerId: string;
-  sort?: number;
-  type: AiModelType;
+  logo?: string;
+  name: string;
+  source: AiProviderSourceType;
 }
 
 export interface AiProviderRuntimeConfig {
