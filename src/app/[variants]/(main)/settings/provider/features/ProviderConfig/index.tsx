@@ -258,7 +258,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       children: isLoading ? (
         <Skeleton.Button active className={styles.switchLoading} />
       ) : (
-        <Switch disabled={configUpdating} value={isFetchOnClient} />
+        <Switch disabled={configUpdating} checked={isFetchOnClient} />
       ),
       desc: t('providerModels.config.fetchOnClient.desc'),
       label: t('providerModels.config.fetchOnClient.title'),
