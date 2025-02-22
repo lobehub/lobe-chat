@@ -1,8 +1,7 @@
 import { type DefaultSession } from 'next-auth';
+// The ts compiler need to import this to get the type inference
 // eslint-disable-next-line unused-imports/no-unused-imports , @typescript-eslint/no-unused-vars
 import { JWT } from 'next-auth/jwt';
-
-// The IDE need to import this to get the type inference
 
 declare module 'next-auth' {
   /**
