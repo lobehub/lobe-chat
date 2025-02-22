@@ -27,13 +27,19 @@ describe('filesPrompts', () => {
     });
 
     expect(result).toEqual(
-      `<files_info>
+      `<!-- SYSTEM CONTEXT (NOT PART OF USER QUESTION) -->
+<instruction>this is injected by the system.
+1. Always prioritize handling user-visible content.
+2. these context is only required when user's questions need to rely on it.
+</instruction>
+<files_info>
 <images>
 <images_docstring>here are user upload images you can refer to</images_docstring>
 <image name="test image" url="https://example.com/image.jpg"></image>
 </images>
 
-</files_info>`,
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
     );
   });
 
@@ -44,13 +50,19 @@ describe('filesPrompts', () => {
     });
 
     expect(result).toEqual(
-      `<files_info>
+      `<!-- SYSTEM CONTEXT (NOT PART OF USER QUESTION) -->
+<instruction>this is injected by the system.
+1. Always prioritize handling user-visible content.
+2. these context is only required when user's questions need to rely on it.
+</instruction>
+<files_info>
 
 <files>
 <files_docstring>here are user upload files you can refer to</files_docstring>
 <file id="file-1" name="test.pdf" type="application/pdf" size="1024" url="https://example.com/test.pdf"></file>
 </files>
-</files_info>`,
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
     );
   });
 
@@ -61,7 +73,12 @@ describe('filesPrompts', () => {
     });
 
     expect(result).toEqual(
-      `<files_info>
+      `<!-- SYSTEM CONTEXT (NOT PART OF USER QUESTION) -->
+<instruction>this is injected by the system.
+1. Always prioritize handling user-visible content.
+2. these context is only required when user's questions need to rely on it.
+</instruction>
+<files_info>
 <images>
 <images_docstring>here are user upload images you can refer to</images_docstring>
 <image name="test image" url="https://example.com/image.jpg"></image>
@@ -70,7 +87,8 @@ describe('filesPrompts', () => {
 <files_docstring>here are user upload files you can refer to</files_docstring>
 <file id="file-1" name="test.pdf" type="application/pdf" size="1024" url="https://example.com/test.pdf"></file>
 </files>
-</files_info>`,
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
     );
   });
 
