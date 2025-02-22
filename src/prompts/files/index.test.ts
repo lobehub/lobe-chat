@@ -27,11 +27,12 @@ describe('filesPrompts', () => {
     });
 
     expect(result).toEqual(
-      `<!-- SYSTEM CONTEXT (NOT PART OF USER QUESTION) -->
-<instruction>this is injected by the system.
+      `<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
 1. Always prioritize handling user-visible content.
-2. these context is only required when user's questions need to rely on it.
-</instruction>
+2. the context is only required when user's queries rely on it.
+</context.instruction>
 <files_info>
 <images>
 <images_docstring>here are user upload images you can refer to</images_docstring>
@@ -50,11 +51,12 @@ describe('filesPrompts', () => {
     });
 
     expect(result).toEqual(
-      `<!-- SYSTEM CONTEXT (NOT PART OF USER QUESTION) -->
-<instruction>this is injected by the system.
+      `<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
 1. Always prioritize handling user-visible content.
-2. these context is only required when user's questions need to rely on it.
-</instruction>
+2. the context is only required when user's queries rely on it.
+</context.instruction>
 <files_info>
 
 <files>
@@ -73,11 +75,12 @@ describe('filesPrompts', () => {
     });
 
     expect(result).toEqual(
-      `<!-- SYSTEM CONTEXT (NOT PART OF USER QUESTION) -->
-<instruction>this is injected by the system.
+      `<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
 1. Always prioritize handling user-visible content.
-2. these context is only required when user's questions need to rely on it.
-</instruction>
+2. the context is only required when user's queries rely on it.
+</context.instruction>
 <files_info>
 <images>
 <images_docstring>here are user upload images you can refer to</images_docstring>
