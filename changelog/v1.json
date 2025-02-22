@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix fetch on client check status display."]
+    },
+    "date": "2025-02-22",
+    "version": "1.62.10"
+  },
+  {
+    "children": {
       "fixes": ["Next-auth user id not found in create agent index."]
     },
     "date": "2025-02-22",

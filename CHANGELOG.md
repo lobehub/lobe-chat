@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.62.10](https://github.com/lobehub/lobe-chat/compare/v1.62.9...v1.62.10)
+
+<sup>Released on **2025-02-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fetch on client check status display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fetch on client check status display, closes [#6405](https://github.com/lobehub/lobe-chat/issues/6405) ([9579e41](https://github.com/lobehub/lobe-chat/commit/9579e41))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.62.9](https://github.com/lobehub/lobe-chat/compare/v1.62.8...v1.62.9)
 
 <sup>Released on **2025-02-22**</sup>
