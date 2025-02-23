@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fix groq location request."],
+      "improvements": ["Improve plugin calling style."]
+    },
+    "date": "2025-02-23",
+    "version": "1.63.1"
+  },
+  {
+    "children": {
       "features": ["Support model-level search for Google/Qwen."],
       "improvements": ["Update many models info."]
     },

@@ -1,4 +1,4 @@
-import { IPluginErrorType, PluginErrorType } from '@lobehub/chat-plugin-sdk';
+import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { AlertProps } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
@@ -19,7 +19,6 @@ import { ErrorActionContainer } from './style';
 const loading = () => <Skeleton active />;
 
 const OllamaBizError = dynamic(() => import('./OllamaBizError'), { loading, ssr: false });
-const PluginSettings = dynamic(() => import('./PluginSettings'), { loading, ssr: false });
 
 // Config for the errorMessage display
 const getErrorAlertConfig = (
@@ -86,10 +85,6 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
   if (!error?.type) return;
 
   switch (error.type) {
-    case PluginErrorType.PluginSettingsInvalid: {
-      return <PluginSettings id={data.id} plugin={data.plugin} />;
-    }
-
     case AgentRuntimeErrorType.OllamaBizError: {
       return <OllamaBizError {...data} />;
     }
