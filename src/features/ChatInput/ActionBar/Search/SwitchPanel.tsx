@@ -110,7 +110,10 @@ const Item = memo<NetworkOption>(({ value, description, icon, label, disable }) 
   );
 });
 
-const AINetworkSettings = memo(() => {
+interface AINetworkSettingsProps {
+  providerSearch?: boolean;
+}
+const AINetworkSettings = memo<AINetworkSettingsProps>(() => {
   const { t } = useTranslation('chat');
   const [model, provider] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),

@@ -10,13 +10,20 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
+import ExaIcon from './ExaIcon';
+
 interface SearchEngineIconProps {
   icon?: string;
 }
+
 const SearchEngineIcon = ({ icon }: SearchEngineIconProps) => {
   switch (icon) {
     case 'google': {
       return <Google.Color />;
+    }
+
+    case 'exa': {
+      return <ExaIcon />;
     }
 
     default: {
