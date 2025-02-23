@@ -283,7 +283,7 @@ describe('AiInfraRepos', () => {
       expect(result).toEqual(
         expect.arrayContaining([
           expect.objectContaining({ id: 'taichu_llm' }),
-          expect.objectContaining({ id: 'taichu2_mm' }),
+          expect.objectContaining({ id: 'taichu_vl' }),
         ]),
       );
     });
