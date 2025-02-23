@@ -9,19 +9,22 @@ import { ChatMessage } from '@/types/message';
 import { DefaultMessage } from '../Default';
 import FileChunks from './FileChunks';
 import Reasoning from './Reasoning';
+import SearchGrounding from './SearchGrounding';
 import Tool from './Tool';
 
 export const AssistantMessage = memo<
   ChatMessage & {
     editableContent: ReactNode;
   }
->(({ id, tools, content, chunksList, ...props }) => {
+>(({ id, tools, content, chunksList, search, ...props }) => {
   const editing = useChatStore(chatSelectors.isMessageEditing(id));
   const generating = useChatStore(chatSelectors.isMessageGenerating(id));
 
   const isToolCallGenerating = generating && (content === LOADING_FLAT || !content) && !!tools;
 
   const isReasoning = useChatStore(aiChatSelectors.isMessageInReasoning(id));
+
+  const showSearch = !!search && !!search.citations?.length;
 
   // remove \n to avoid empty content
   // refs: https://github.com/lobehub/lobe-chat/pull/6153
@@ -38,6 +41,9 @@ export const AssistantMessage = memo<
     />
   ) : (
     <Flexbox gap={8} id={id}>
+      {showSearch && (
+        <SearchGrounding citations={search?.citations} searchQueries={search?.searchQueries} />
+      )}
       {!!chunksList && chunksList.length > 0 && <FileChunks data={chunksList} />}
       {showReasoning && <Reasoning {...props.reasoning} id={id} />}
       {content && (

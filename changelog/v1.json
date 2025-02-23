@@ -1,6 +1,30 @@
 [
   {
     "children": {
+      "fixes": ["Fix groq location request."],
+      "improvements": ["Improve plugin calling style."]
+    },
+    "date": "2025-02-23",
+    "version": "1.63.1"
+  },
+  {
+    "children": {
+      "features": ["Support model-level search for Google/Qwen."],
+      "improvements": ["Update many models info."]
+    },
+    "date": "2025-02-23",
+    "version": "1.63.0"
+  },
+  {
+    "children": {
+      "fixes": ["Refine role assignment logic for specific Azure OpenAI models & Sensitive URL."],
+      "improvements": ["Add custom proxyUrl support for Volcengine."]
+    },
+    "date": "2025-02-23",
+    "version": "1.62.11"
+  },
+  {
+    "children": {
       "fixes": ["Fix fetch on client check status display."]
     },
     "date": "2025-02-22",

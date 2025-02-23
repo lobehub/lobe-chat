@@ -1,8 +1,8 @@
+import type { ChatModelCard } from '@/types/llm';
+
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { OpenRouterModelCard } from './type';
-
-import type { ChatModelCard } from '@/types/llm';
 
 export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://openrouter.ai/api/v1',
@@ -11,6 +11,7 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
       return {
         ...payload,
         include_reasoning: true,
+        model: payload.enabledSearch ? `${payload.model}:online` : payload.model,
         stream: payload.stream ?? true,
       } as any;
     },
@@ -27,10 +28,7 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const visionKeywords = [
-      'qwen/qvq',
-      'vision'
-    ];
+    const visionKeywords = ['qwen/qvq', 'vision'];
 
     const reasoningKeywords = [
       'deepseek/deepseek-r1',
@@ -41,12 +39,14 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
       'thinking',
     ];
 
-    const modelsPage = await client.models.list() as any;
+    const modelsPage = (await client.models.list()) as any;
     const modelList: OpenRouterModelCard[] = modelsPage.data;
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: model.context_length,
@@ -54,25 +54,25 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
           displayName: model.name,
           enabled: knownModel?.enabled || false,
           functionCall:
-            model.description.includes('function calling')
-            || model.description.includes('tools')
-            || knownModel?.abilities?.functionCall
-            || false,
+            model.description.includes('function calling') ||
+            model.description.includes('tools') ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: model.id,
           maxTokens:
             typeof model.top_provider.max_completion_tokens === 'number'
               ? model.top_provider.max_completion_tokens
               : undefined,
           reasoning:
-            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
-            || knownModel?.abilities?.reasoning
-            || false,
+            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
+            knownModel?.abilities?.reasoning ||
+            false,
           vision:
-            model.description.includes('vision')
-            || model.description.includes('multimodal')
-            || visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
-            || knownModel?.abilities?.vision
-            || false,
+            model.description.includes('vision') ||
+            model.description.includes('multimodal') ||
+            visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

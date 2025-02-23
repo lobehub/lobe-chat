@@ -65,6 +65,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Le modèle distillé DeepSeek-R1 basé sur Qwen2.5-Math-7B optimise les performances d'inférence grâce à l'apprentissage par renforcement et aux données de démarrage à froid, rafraîchissant les références multi-tâches des modèles open source."
   },
+  "Doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro est un modèle multimodal de grande taille récemment mis à jour, prenant en charge la reconnaissance d'images à toute résolution et avec des rapports d'aspect extrêmes, améliorant les capacités de raisonnement visuel, de reconnaissance de documents, de compréhension des informations détaillées et de suivi des instructions."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite présente une rapidité de réponse exceptionnelle et un excellent rapport qualité-prix, offrant des choix plus flexibles pour différents scénarios clients. Prend en charge le raisonnement et le réglage fin avec une fenêtre de contexte de 128k."
   },
@@ -77,11 +80,20 @@
   "Doubao-pro-128k": {
     "description": "Le modèle principal offrant les meilleures performances, adapté aux tâches complexes, avec de bons résultats dans des scénarios tels que le question-réponse, le résumé, la création, la classification de texte et le jeu de rôle. Prend en charge le raisonnement et le réglage fin avec une fenêtre de contexte de 128k."
   },
+  "Doubao-pro-256k": {
+    "description": "Le modèle phare avec les meilleures performances, adapté au traitement de tâches complexes, offrant de bons résultats dans des scénarios tels que les questions-réponses de référence, les résumés, la création, la classification de texte et le jeu de rôle. Prend en charge le raisonnement et le réglage fin avec une fenêtre contextuelle de 256k."
+  },
   "Doubao-pro-32k": {
     "description": "Le modèle principal offrant les meilleures performances, adapté aux tâches complexes, avec de bons résultats dans des scénarios tels que le question-réponse, le résumé, la création, la classification de texte et le jeu de rôle. Prend en charge le raisonnement et le réglage fin avec une fenêtre de contexte de 32k."
   },
   "Doubao-pro-4k": {
     "description": "Le modèle principal offrant les meilleures performances, adapté aux tâches complexes, avec de bons résultats dans des scénarios tels que le question-réponse, le résumé, la création, la classification de texte et le jeu de rôle. Prend en charge le raisonnement et le réglage fin avec une fenêtre de contexte de 4k."
+  },
+  "Doubao-vision-lite-32k": {
+    "description": "Le modèle Doubao-vision est un modèle multimodal lancé par Doubao, doté de puissantes capacités de compréhension et de raisonnement d'images, ainsi que d'une compréhension précise des instructions. Le modèle a démontré de solides performances dans l'extraction d'informations textuelles à partir d'images et dans des tâches de raisonnement basées sur des images, pouvant être appliqué à des tâches de questions-réponses visuelles plus complexes et variées."
+  },
+  "Doubao-vision-pro-32k": {
+    "description": "Le modèle Doubao-vision est un modèle multimodal lancé par Doubao, doté de puissantes capacités de compréhension et de raisonnement d'images, ainsi que d'une compréhension précise des instructions. Le modèle a démontré de solides performances dans l'extraction d'informations textuelles à partir d'images et dans des tâches de raisonnement basées sur des images, pouvant être appliqué à des tâches de questions-réponses visuelles plus complexes et variées."
   },
   "ERNIE-3.5-128K": {
     "description": "Modèle de langage à grande échelle de pointe développé par Baidu, couvrant une vaste quantité de corpus en chinois et en anglais, avec de puissantes capacités générales, capable de répondre à la plupart des exigences en matière de dialogue, de questions-réponses, de création de contenu et d'applications de plugins ; prend en charge l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse."
@@ -664,6 +676,15 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 améliore considérablement les capacités de raisonnement du modèle avec très peu de données annotées. Avant de fournir la réponse finale, le modèle génère d'abord une chaîne de pensée pour améliorer l'exactitude de la réponse finale."
+  },
+  "doubao-1.5-lite-32k": {
+    "description": "Doubao-1.5-lite est un modèle léger de nouvelle génération, offrant une vitesse de réponse extrême, avec des performances et des délais atteignant des niveaux de classe mondiale."
+  },
+  "doubao-1.5-pro-256k": {
+    "description": "Doubao-1.5-pro-256k est une version améliorée de Doubao-1.5-Pro, offrant une amélioration globale de 10%. Il prend en charge le raisonnement avec une fenêtre contextuelle de 256k et une longueur de sortie maximale de 12k tokens. Performances supérieures, plus grande fenêtre, rapport qualité-prix exceptionnel, adapté à un large éventail de scénarios d'application."
+  },
+  "doubao-1.5-pro-32k": {
+    "description": "Doubao-1.5-pro est un modèle phare de nouvelle génération, avec des performances entièrement améliorées, se distinguant dans les domaines de la connaissance, du code, du raisonnement, etc."
   },
   "emohaa": {
     "description": "Emohaa est un modèle psychologique, doté de compétences de conseil professionnel, aidant les utilisateurs à comprendre les problèmes émotionnels."
