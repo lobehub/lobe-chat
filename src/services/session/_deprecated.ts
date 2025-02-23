@@ -1,6 +1,7 @@
 import { DeepPartial } from 'utility-types';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { SessionModel } from '@/database/_deprecated/models/session';
 import { SessionGroupModel } from '@/database/_deprecated/models/sessionGroup';
 import { UserModel } from '@/database/_deprecated/models/user';
@@ -47,7 +48,7 @@ export class ClientService implements ISessionService {
 
   async getSessionConfig(id: string): Promise<LobeAgentConfig> {
     if (!id || id === INBOX_SESSION_ID) {
-      return UserModel.getAgentConfig();
+      return (await UserModel.getAgentConfig()) || DEFAULT_AGENT_CONFIG;
     }
 
     const res = await SessionModel.findById(id);
