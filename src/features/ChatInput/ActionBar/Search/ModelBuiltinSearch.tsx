@@ -3,6 +3,7 @@ import { Icon } from '@lobehub/ui';
 import { Switch } from 'antd';
 import { Search } from 'lucide-react';
 import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
@@ -25,6 +26,7 @@ const SearchEngineIcon = ({ icon }: SearchEngineIconProps) => {
 };
 
 const ModelBuiltinSearch = memo(() => {
+  const { t } = useTranslation('chat');
   const [model, provider, checked, updateAgentChatConfig] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
     agentSelectors.currentAgentModelProvider(s),
@@ -34,7 +36,6 @@ const ModelBuiltinSearch = memo(() => {
 
   const [isLoading, setLoading] = useState(false);
   const modelCard = useAiInfraStore(aiModelSelectors.getEnabledModelById(model, provider));
-  console.log(modelCard?.settings?.searchProvider);
 
   return (
     <Flexbox
@@ -51,7 +52,7 @@ const ModelBuiltinSearch = memo(() => {
     >
       <Flexbox align={'center'} gap={4} horizontal>
         <SearchEngineIcon icon={modelCard?.settings?.searchProvider} />
-        使用模型内置搜索引擎
+        {t('search.mode.useModelBuiltin')}
       </Flexbox>
       <Switch checked={checked} loading={isLoading} size={'small'} />
     </Flexbox>

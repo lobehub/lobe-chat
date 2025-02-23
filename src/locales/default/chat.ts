@@ -94,6 +94,7 @@ export default {
       searchQueries: '搜索关键词',
       title: '已搜索到 {{count}} 条记录',
     },
+
     mode: {
       auto: {
         desc: '根据对话内容智能判断是否需要搜索',
@@ -108,6 +109,7 @@ export default {
         desc: '持续进行网络搜索，获取最新信息',
         title: '始终联网',
       },
+      useModelBuiltin: '使用模型内置搜索引擎',
     },
 
     title: '联网搜索',
