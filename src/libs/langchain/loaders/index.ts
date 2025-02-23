@@ -32,7 +32,8 @@ export class ChunkingLoader {
 
       switch (type) {
         case 'code': {
-          const ext = filename.split('.').pop();
+          let ext = filename.split('.').pop();
+          if (ext === 'qll' || ext === 'ql') ext = 'java';
           return await CodeLoader(txt, ext!);
         }
 
@@ -102,7 +103,12 @@ export class ChunkingLoader {
 
     const ext = filename.split('.').pop();
 
-    if (ext && SupportedTextSplitterLanguages.includes(ext as SupportedTextSplitterLanguage)) {
+    if (
+      ext &&
+      (SupportedTextSplitterLanguages.includes(ext as SupportedTextSplitterLanguage) ||
+        ext === 'qll' ||
+        ext === 'ql')
+    ) {
       return 'code';
     }
 
