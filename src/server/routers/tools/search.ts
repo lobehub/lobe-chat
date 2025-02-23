@@ -5,6 +5,7 @@ import { toolsEnv } from '@/config/tools';
 import { isServerMode } from '@/const/version';
 import { authedProcedure, passwordProcedure, router } from '@/libs/trpc';
 import { SearXNGClient } from '@/server/modules/SearXNG';
+import { SEARCH_SEARXNG_NOT_CONFIG } from '@/types/tool/search';
 
 const searchProcedure = isServerMode ? authedProcedure : passwordProcedure;
 
@@ -18,7 +19,7 @@ export const searchRouter = router({
     )
     .query(async ({ input }) => {
       if (!toolsEnv.SEARXNG_URL) {
-        throw new TRPCError({ code: 'SERVICE_UNAVAILABLE', message: 'SearXNG is not configured' });
+        throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: SEARCH_SEARXNG_NOT_CONFIG });
       }
 
       const client = new SearXNGClient(toolsEnv.SEARXNG_URL);
