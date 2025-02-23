@@ -38,29 +38,29 @@ jobs:
             echo "✅ 部署成功！"
             docker-compose ps
 
-  deploy-server2:
-    name: "Deploy - Server 2"
-    runs-on: ubuntu-latest
-    needs: deploy-server1  # 明确依赖关系
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Deploy to Server 2
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SERVER2_HOST }}
-          username: ${{ env.SSH_USER }}
-          key: ${{ secrets.PRODUCTION_SSH_KEY }}
-          port: ${{ env.SSH_PORT }}
-          script: |
-            echo "🔄 正在拉取最新代码..."
-            cd /mnt/nfs/lobe-chat  # 更改为你的服务器项目路径
-            git pull
-
-            echo "🔧 更新 Docker 容器..."
-            docker-compose pull && docker-compose up -d && docker image prune -f  # 如果使用远程镜像仓库
-
-            echo "✅ 部署成功！"
-            docker-compose ps
+#  deploy-server2:
+#    name: "Deploy - Server 2"
+#    runs-on: ubuntu-latest
+#    needs: deploy-server1  # 明确依赖关系
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Deploy to Server 2
+#        uses: appleboy/ssh-action@v1.0.0
+#        with:
+#          host: ${{ secrets.SERVER2_HOST }}
+#          username: ${{ env.SSH_USER }}
+#          key: ${{ secrets.PRODUCTION_SSH_KEY }}
+#          port: ${{ env.SSH_PORT }}
+#          script: |
+#            echo "🔄 正在拉取最新代码..."
+#            cd /mnt/nfs/lobe-chat  # 更改为你的服务器项目路径
+#            git pull
+#
+#            echo "🔧 更新 Docker 容器..."
+#            docker-compose pull && docker-compose up -d && docker image prune -f  # 如果使用远程镜像仓库
+#
+#            echo "✅ 部署成功！"
+#            docker-compose ps
