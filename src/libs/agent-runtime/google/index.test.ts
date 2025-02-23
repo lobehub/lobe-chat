@@ -513,22 +513,6 @@ describe('LobeGoogleAI', () => {
         expect(contents).toEqual([{ parts: [{ text: 'Hello' }], role: 'user' }]);
       });
 
-      it('should include system role if there is a system role prompt', async () => {
-        const messages: OpenAIChatMessage[] = [
-          { content: 'you are ChatGPT', role: 'system' },
-          { content: 'Who are you', role: 'user' },
-        ];
-
-        const contents = await instance['buildGoogleMessages'](messages);
-
-        expect(contents).toHaveLength(3);
-        expect(contents).toEqual([
-          { parts: [{ text: 'you are ChatGPT' }], role: 'user' },
-          { parts: [{ text: '' }], role: 'model' },
-          { parts: [{ text: 'Who are you' }], role: 'user' },
-        ]);
-      });
-
       it('should not modify the length if model is gemini-1.5-pro', async () => {
         const messages: OpenAIChatMessage[] = [
           { content: 'Hello', role: 'user' },

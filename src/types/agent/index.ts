@@ -92,6 +92,7 @@ export const AgentChatConfigSchema = z.object({
   enableMaxTokens: z.boolean().optional(),
   enableReasoningEffort: z.boolean().optional(),
   historyCount: z.number().optional(),
+  searchMode: z.enum(['off', 'on', 'auto']).optional(),
 });
 
 export type LobeAgentConfigKeys =
