@@ -2,7 +2,7 @@ import { ModelIcon } from '@lobehub/icons';
 import { ActionIcon, Tooltip } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
-import { Brain, Settings2Icon } from 'lucide-react';
+import { Settings2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -57,10 +57,10 @@ const useStyles = createStyles(({ css, token, isDarkMode, cx }) => ({
 const ModelSwitch = memo(() => {
   const { t } = useTranslation('chat');
   const { styles, cx } = useStyles();
-  const [model, provider, isLoading] = useAgentStore((s) => [
+
+  const [model, provider] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
     agentSelectors.currentAgentModelProvider(s),
-    agentSelectors.isAgentConfigLoading(s),
   ]);
 
   const isModelHasExtendControls = useAiInfraStore(
@@ -69,17 +69,17 @@ const ModelSwitch = memo(() => {
 
   const isMobile = useIsMobile();
 
-  if (isLoading)
-    return (
-      <ActionIcon
-        icon={Brain}
-        placement={'bottom'}
-        style={{
-          cursor: 'not-allowed',
-        }}
-        title={t('ModelSwitch.title')}
-      />
-    );
+  // if (isLoading && isLoginWithAuth)
+  //   return (
+  //     <ActionIcon
+  //       icon={Brain}
+  //       placement={'bottom'}
+  //       style={{
+  //         cursor: 'not-allowed',
+  //       }}
+  //       title={t('ModelSwitch.title')}
+  //     />
+  //   );
 
   return (
     <Flexbox
