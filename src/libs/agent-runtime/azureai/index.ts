@@ -51,7 +51,7 @@ export class LobeAzureAI implements LobeRuntimeAI {
     try {
       const response = this.client.path('/chat/completions').post({
         body: {
-          messages: messages as OpenAI.ChatCompletionMessageParam[],
+          messages: updatedMessages as OpenAI.ChatCompletionMessageParam[],
           model,
           ...params,
           stream: enableStreaming,
