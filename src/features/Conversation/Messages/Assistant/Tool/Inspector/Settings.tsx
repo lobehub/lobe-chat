@@ -21,6 +21,7 @@ const Settings = memo<{ id: string }>(({ id }) => {
           onClick={() => {
             setOpen(true);
           }}
+          size={'small'}
           title={t('setting')}
         />
         <PluginDetailModal

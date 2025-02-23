@@ -64,6 +64,7 @@ interface InspectorProps {
   identifier: string;
   index: number;
   messageId: string;
+
   payload: object;
   setShowPluginRender: (show: boolean) => void;
   setShowRender: (show: boolean) => void;
@@ -79,6 +80,7 @@ const Inspectors = memo<InspectorProps>(
     index,
     identifier,
     apiName,
+    id,
     arguments: requestArgs,
     showRender,
     payload,
@@ -142,7 +144,7 @@ const Inspectors = memo<InspectorProps>(
             <Settings id={identifier} />
           </Flexbox>
         </Flexbox>
-        {showDebug && <Debug payload={payload} requestArgs={requestArgs} />}
+        {showDebug && <Debug payload={payload} requestArgs={requestArgs} toolCallId={id} />}
       </Flexbox>
     );
   },
