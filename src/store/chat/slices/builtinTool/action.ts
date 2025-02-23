@@ -13,7 +13,12 @@ import { ChatStore } from '@/store/chat/store';
 import { useFileStore } from '@/store/file';
 import { CreateMessageParams } from '@/types/message';
 import { DallEImageItem } from '@/types/tool/dalle';
-import { SearchContent, SearchQuery } from '@/types/tool/search';
+import {
+  SEARCH_SEARXNG_NOT_CONFIG,
+  SearchContent,
+  SearchQuery,
+  SearchResponse,
+} from '@/types/tool/search';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
@@ -150,10 +155,23 @@ export const chatToolSlice: StateCreator<
   },
   searchWithSearXNG: async (id, params, aiSummary = true) => {
     get().toggleSearchLoading(id, true);
-    const data = await searchService.search(params.query, params.searchEngines);
-    await get().updatePluginState(id, data);
+    let data: SearchResponse | undefined;
+    try {
+      data = await searchService.search(params.query, params.searchEngines);
+      await get().updatePluginState(id, data);
+    } catch (e) {
+      if ((e as Error).message === SEARCH_SEARXNG_NOT_CONFIG) {
+        console.log('SearXNG is not configured');
+        await get().internal_updateMessagePluginError(id, {
+          message: 'SearXNG is not configured',
+          type: 'PluginSettingsInvalid',
+        });
+      }
+    }
 
     get().toggleSearchLoading(id, false);
+
+    if (!data) return;
 
     // 只取前 5 个结果作为上下文
     const searchContent: SearchContent[] = data.results.slice(0, 5).map((item) => ({
