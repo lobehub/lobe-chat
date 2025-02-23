@@ -201,7 +201,7 @@ describe('fetchSSE', () => {
       { text: 'o', type: 'reasoning' },
       { text: 'r', type: 'reasoning' },
       { text: 'l', type: 'reasoning' },
-      { text: 'd', type: 'reasoning' },
+      { text: 'h', type: 'text' },
     ];
 
     expectedMessages.forEach((message, index) => {
