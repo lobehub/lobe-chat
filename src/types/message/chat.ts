@@ -2,11 +2,13 @@ import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 
 import { ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ErrorType } from '@/types/fetch';
-import { GroundingSearch, MessageRoleType, ModelReasoning } from '@/types/message/base';
-import { ChatPluginPayload, ChatToolPayload } from '@/types/message/tools';
-import { Translate } from '@/types/message/translate';
 import { MetaData } from '@/types/meta';
 import { MessageSemanticSearchChunk } from '@/types/rag';
+import { GroundingSearch } from '@/types/search';
+
+import { MessageRoleType, ModelReasoning } from './base';
+import { ChatPluginPayload, ChatToolPayload } from './tools';
+import { Translate } from './translate';
 
 /**
  * 聊天消息错误对象

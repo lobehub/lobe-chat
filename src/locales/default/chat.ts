@@ -90,6 +90,10 @@ export default {
   regenerate: '重新生成',
   roleAndArchive: '角色与记录',
   search: {
+    grounding: {
+      searchQueries: '搜索关键词',
+      title: '已搜索到 {{count}} 条记录',
+    },
     mode: {
       auto: {
         desc: '根据对话内容智能判断是否需要搜索',
@@ -105,6 +109,7 @@ export default {
         title: '始终联网',
       },
     },
+
     title: '联网搜索',
   },
   searchAgentPlaceholder: '搜索助手...',

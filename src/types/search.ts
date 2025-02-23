@@ -15,3 +15,15 @@ export enum ModelSearchImplement {
    */
   Tool = 'tool',
 }
+
+export interface CitationItem {
+  favicon?: string;
+  id?: string;
+  title?: string;
+  url: string;
+}
+
+export interface GroundingSearch {
+  citations?: CitationItem[];
+  searchQueries?: string[];
+}

@@ -39,6 +39,10 @@ export interface OpenAIChatMessage {
  */
 export interface ChatStreamPayload {
   /**
+   * 是否开启搜索
+   */
+  enabledSearch?: boolean;
+  /**
    * @title 控制生成文本中的惩罚系数，用于减少重复性
    * @default 0
    */
@@ -68,11 +72,11 @@ export interface ChatStreamPayload {
    * @default 0
    */
   presence_penalty?: number;
+
   /**
    * @default openai
    */
   provider?: string;
-
   responseMode?: 'streamText' | 'json';
   /**
    * @title 是否开启流式请求
@@ -85,8 +89,8 @@ export interface ChatStreamPayload {
    */
   temperature: number;
   tool_choice?: string;
-  tools?: ChatCompletionTool[];
 
+  tools?: ChatCompletionTool[];
   /**
    * @title 控制生成文本中最高概率的单个令牌
    * @default 1

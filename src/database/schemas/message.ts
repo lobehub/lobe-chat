@@ -13,7 +13,8 @@ import {
 import { createSelectSchema } from 'drizzle-zod';
 
 import { idGenerator } from '@/database/utils/idGenerator';
-import { GroundingSearch, ModelReasoning } from '@/types/message';
+import { ModelReasoning } from '@/types/message';
+import { GroundingSearch } from '@/types/search';
 
 import { timestamps } from './_helpers';
 import { agents } from './agent';
