@@ -65,6 +65,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Das DeepSeek-R1-Distill-Modell basiert auf Qwen2.5-Math-7B und optimiert die Inferenzleistung durch verstärkendes Lernen und Kaltstartdaten. Das Open-Source-Modell setzt neue Maßstäbe für Multitasking."
   },
+  "Doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro ist das neueste Upgrade des multimodalen Großmodells, das die Erkennung von Bildern mit beliebiger Auflösung und extremen Seitenverhältnissen unterstützt und die Fähigkeiten zur visuellen Schlussfolgerung, Dokumentenerkennung, Detailverständnis und Befehlsbefolgung verbessert."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite bietet eine extrem hohe Reaktionsgeschwindigkeit und ein hervorragendes Preis-Leistungs-Verhältnis und bietet den Kunden flexiblere Optionen für verschiedene Szenarien. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem 128k-Kontextfenster."
   },
@@ -77,11 +80,20 @@
   "Doubao-pro-128k": {
     "description": "Das leistungsstärkste Hauptmodell, das sich zur Verarbeitung komplexer Aufgaben eignet und in Szenarien wie Referenzfragen, Zusammenfassungen, Kreativität, Textklassifizierung und Rollenspiel sehr gute Ergebnisse erzielt. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem 128k-Kontextfenster."
   },
+  "Doubao-pro-256k": {
+    "description": "Das leistungsstärkste Hauptmodell, das sich gut für komplexe Aufgaben eignet und in Szenarien wie Referenzfragen, Zusammenfassungen, kreatives Schreiben, Textklassifizierung und Rollenspiel hervorragende Ergebnisse erzielt. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem Kontextfenster von 256k."
+  },
   "Doubao-pro-32k": {
     "description": "Das leistungsstärkste Hauptmodell, das sich zur Verarbeitung komplexer Aufgaben eignet und in Szenarien wie Referenzfragen, Zusammenfassungen, Kreativität, Textklassifizierung und Rollenspiel sehr gute Ergebnisse erzielt. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem 32k-Kontextfenster."
   },
   "Doubao-pro-4k": {
     "description": "Das leistungsstärkste Hauptmodell, das sich zur Verarbeitung komplexer Aufgaben eignet und in Szenarien wie Referenzfragen, Zusammenfassungen, Kreativität, Textklassifizierung und Rollenspiel sehr gute Ergebnisse erzielt. Es unterstützt Schlussfolgerungen und Feinabstimmungen mit einem 4k-Kontextfenster."
+  },
+  "Doubao-vision-lite-32k": {
+    "description": "Das Doubao-vision-Modell ist ein multimodales Großmodell, das von Doubao eingeführt wurde und über starke Fähigkeiten zur Bildverständnis und Schlussfolgerung sowie präzise Befehlsverständnisfähigkeiten verfügt. Das Modell zeigt starke Leistungen bei der Extraktion von Bildtextinformationen und bildbasierten Schlussfolgerungsaufgaben und kann in komplexeren und breiteren visuellen Frage-Antwort-Aufgaben eingesetzt werden."
+  },
+  "Doubao-vision-pro-32k": {
+    "description": "Das Doubao-vision-Modell ist ein multimodales Großmodell, das von Doubao eingeführt wurde und über starke Fähigkeiten zur Bildverständnis und Schlussfolgerung sowie präzise Befehlsverständnisfähigkeiten verfügt. Das Modell zeigt starke Leistungen bei der Extraktion von Bildtextinformationen und bildbasierten Schlussfolgerungsaufgaben und kann in komplexeren und breiteren visuellen Frage-Antwort-Aufgaben eingesetzt werden."
   },
   "ERNIE-3.5-128K": {
     "description": "Das von Baidu entwickelte Flaggschiff-Modell für großangelegte Sprachverarbeitung, das eine riesige Menge an chinesischen und englischen Texten abdeckt. Es verfügt über starke allgemeine Fähigkeiten und kann die meisten Anforderungen an Dialogfragen, kreative Generierung und Anwendungsfälle von Plugins erfüllen. Es unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
@@ -664,6 +676,15 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 hat die Schlussfolgerungsfähigkeiten des Modells erheblich verbessert, selbst bei nur wenigen gekennzeichneten Daten. Bevor das Modell die endgültige Antwort ausgibt, gibt es zunächst eine Denkprozesskette aus, um die Genauigkeit der endgültigen Antwort zu erhöhen."
+  },
+  "doubao-1.5-lite-32k": {
+    "description": "Doubao-1.5-lite ist das neueste leichte Modell der nächsten Generation, das eine extrem schnelle Reaktionszeit bietet und sowohl in der Leistung als auch in der Latenz weltweit erstklassig ist."
+  },
+  "doubao-1.5-pro-256k": {
+    "description": "Doubao-1.5-pro-256k ist die umfassend verbesserte Version von Doubao-1.5-Pro, die die Gesamtleistung um 10 % steigert. Es unterstützt Schlussfolgerungen mit einem Kontextfenster von 256k und eine maximale Ausgabelänge von 12k Tokens. Höhere Leistung, größeres Fenster und ein hervorragendes Preis-Leistungs-Verhältnis machen es für eine breitere Palette von Anwendungsszenarien geeignet."
+  },
+  "doubao-1.5-pro-32k": {
+    "description": "Doubao-1.5-pro ist das neueste Hauptmodell der nächsten Generation, dessen Leistung umfassend verbessert wurde und das in den Bereichen Wissen, Code, Schlussfolgerungen usw. herausragende Leistungen zeigt."
   },
   "emohaa": {
     "description": "Emohaa ist ein psychologisches Modell mit professionellen Beratungsfähigkeiten, das den Nutzern hilft, emotionale Probleme zu verstehen."

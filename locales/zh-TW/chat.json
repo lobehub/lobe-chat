@@ -31,6 +31,9 @@
   },
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暫無助手",
+  "extendControls": {
+    "title": "模型擴展功能"
+  },
   "historyRange": "歷史範圍",
   "historySummary": "歷史消息總結",
   "inbox": {
@@ -84,6 +87,29 @@
   },
   "regenerate": "重新生成",
   "roleAndArchive": "角色與記錄",
+  "search": {
+    "grounding": {
+      "searchQueries": "搜尋關鍵字",
+      "title": "已搜尋到 {{count}} 個結果"
+    },
+    "mode": {
+      "auto": {
+        "desc": "根據對話內容智能判斷是否需要搜尋",
+        "title": "智能連網"
+      },
+      "disable": "當前模型不支持函數調用，因此無法使用智能連網功能",
+      "off": {
+        "desc": "僅使用模型的基礎知識，不進行網路搜尋",
+        "title": "關閉連網"
+      },
+      "on": {
+        "desc": "持續進行網路搜尋，獲取最新資訊",
+        "title": "始終連網"
+      },
+      "useModelBuiltin": "使用模型內建搜尋引擎"
+    },
+    "title": "連網搜尋"
+  },
   "searchAgentPlaceholder": "搜尋助手...",
   "sendPlaceholder": "輸入聊天內容...",
   "sessionGroup": {

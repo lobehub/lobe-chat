@@ -65,6 +65,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "The DeepSeek-R1 distillation model based on Qwen2.5-Math-7B optimizes inference performance through reinforcement learning and cold-start data, refreshing the benchmark for open-source models across multiple tasks."
   },
+  "Doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro is a newly upgraded multimodal large model that supports image recognition at any resolution and extreme aspect ratios, enhancing visual reasoning, document recognition, detail understanding, and instruction-following capabilities."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite provides extreme response speed and better cost-effectiveness, offering flexible options for various customer scenarios. It supports inference and fine-tuning with a 128k context window."
   },
@@ -77,11 +80,20 @@
   "Doubao-pro-128k": {
     "description": "The best-performing primary model designed to handle complex tasks, achieving strong performance in scenarios such as reference Q&A, summarization, creative writing, text classification, and role-playing. It supports inference and fine-tuning with a 128k context window."
   },
+  "Doubao-pro-256k": {
+    "description": "The best-performing flagship model, suitable for handling complex tasks, with excellent results in reference Q&A, summarization, creative writing, text classification, role-playing, and more. It supports reasoning and fine-tuning with a 256k context window."
+  },
   "Doubao-pro-32k": {
     "description": "The best-performing primary model suited for complex tasks, showing great results in reference Q&A, summarization, creative writing, text classification, and role-playing. It supports inference and fine-tuning with a 32k context window."
   },
   "Doubao-pro-4k": {
     "description": "The best-performing primary model suitable for handling complex tasks, demonstrating excellent performance in scenarios such as reference Q&A, summarization, creative writing, text classification, and role-playing. It supports inference and fine-tuning with a 4k context window."
+  },
+  "Doubao-vision-lite-32k": {
+    "description": "The Doubao-vision model is a multimodal large model launched by Doubao, featuring powerful image understanding and reasoning capabilities, as well as precise instruction comprehension. The model has demonstrated strong performance in image-text information extraction and image-based reasoning tasks, making it applicable to more complex and broader visual question-answering tasks."
+  },
+  "Doubao-vision-pro-32k": {
+    "description": "The Doubao-vision model is a multimodal large model launched by Doubao, featuring powerful image understanding and reasoning capabilities, as well as precise instruction comprehension. The model has demonstrated strong performance in image-text information extraction and image-based reasoning tasks, making it applicable to more complex and broader visual question-answering tasks."
   },
   "ERNIE-3.5-128K": {
     "description": "Baidu's self-developed flagship large-scale language model, covering a vast amount of Chinese and English corpus. It possesses strong general capabilities, meeting the requirements for most dialogue Q&A, creative generation, and plugin application scenarios; it supports automatic integration with Baidu's search plugin to ensure the timeliness of Q&A information."
@@ -664,6 +676,15 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 significantly enhances model reasoning capabilities with minimal labeled data. Before outputting the final answer, the model first provides a chain of thought to improve the accuracy of the final response."
+  },
+  "doubao-1.5-lite-32k": {
+    "description": "Doubao-1.5-lite is a new generation lightweight model, offering extreme response speed with performance and latency at a world-class level."
+  },
+  "doubao-1.5-pro-256k": {
+    "description": "Doubao-1.5-pro-256k is an upgraded version of Doubao-1.5-Pro, significantly enhancing overall performance by 10%. It supports reasoning with a 256k context window and an output length of up to 12k tokens. With higher performance, a larger window, and exceptional cost-effectiveness, it is suitable for a wider range of applications."
+  },
+  "doubao-1.5-pro-32k": {
+    "description": "Doubao-1.5-pro is a new generation flagship model with comprehensive performance upgrades, excelling in knowledge, coding, reasoning, and more."
   },
   "emohaa": {
     "description": "Emohaa is a psychological model with professional counseling capabilities, helping users understand emotional issues."
