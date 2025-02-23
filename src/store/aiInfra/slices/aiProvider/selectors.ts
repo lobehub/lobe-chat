@@ -96,7 +96,6 @@ const isProviderHasBuiltinSearch = (provider: string) => (s: AIProviderStoreStat
 const isProviderHasBuiltinSearchConfig = (id: string) => (s: AIProviderStoreState) => {
   const providerCfg = providerConfigById(id)(s);
 
-  console.log(providerCfg);
   return !!providerCfg?.settings.searchMode && providerCfg?.settings.searchMode !== 'internal';
 };
 
