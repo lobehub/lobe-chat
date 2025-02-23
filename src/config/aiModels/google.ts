@@ -19,7 +19,6 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0,
     },
     releasedAt: '2025-02-05',
-
     type: 'chat',
   },
   {
@@ -42,7 +41,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-02-05',
     settings: {
-      searchImpl: 'tool',
+      searchImpl: 'params',
       searchProvider: 'google',
     },
     type: 'chat',
@@ -65,7 +64,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-02-05',
     settings: {
-      searchImpl: 'tool',
+      searchImpl: 'params',
     },
     type: 'chat',
   },

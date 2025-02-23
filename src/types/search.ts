@@ -7,7 +7,7 @@ export enum ModelSearchImplement {
    */
   Internal = 'internal',
   /**
-   * 使用参数开关的方式
+   * 使用参数开关的方式，例如 Qwen、Google、OpenRouter，搜索结果在
    */
   Params = 'params',
   /**
