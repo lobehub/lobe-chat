@@ -12,6 +12,7 @@ import TextArea from './TextArea';
 
 const leftActions = [
   'model',
+  'search',
   'fileUpload',
   'knowledgeBase',
   'params',

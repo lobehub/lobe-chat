@@ -1,10 +1,10 @@
-import { EnabledProviderWithModels } from '@/types/aiModel';
+import { EnabledAiModel } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
   AiProviderRuntimeConfig,
-  EnabledAiModel,
   EnabledProvider,
+  EnabledProviderWithModels,
 } from '@/types/aiProvider';
 
 export interface AIProviderState {

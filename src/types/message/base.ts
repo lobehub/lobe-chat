@@ -1,13 +1,10 @@
+import { GroundingSearch } from '@/types/search';
+
 export interface CitationItem {
   id?: string;
   onlyUrl?: boolean;
   title?: string;
   url: string;
-}
-
-export interface GroundingSearch {
-  citations?: CitationItem[];
-  searchQueries?: string[];
 }
 
 export interface ModelReasoning {

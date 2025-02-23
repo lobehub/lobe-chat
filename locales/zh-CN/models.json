@@ -65,6 +65,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "基于 Qwen2.5-Math-7B 的 DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。"
   },
+  "Doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。"
+  },
   "Doubao-lite-128k": {
     "description": "拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 128k 上下文窗口的推理和精调。"
   },
@@ -77,11 +80,20 @@
   "Doubao-pro-128k": {
     "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 128k 上下文窗口的推理和精调。"
   },
+  "Doubao-pro-256k": {
+    "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 256k 上下文窗口的推理和精调。"
+  },
   "Doubao-pro-32k": {
     "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 32k 上下文窗口的推理和精调。"
   },
   "Doubao-pro-4k": {
     "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 4k 上下文窗口的推理和精调。"
+  },
+  "Doubao-vision-lite-32k": {
+    "description": "Doubao-vision 模型是豆包推出的多模态大模型，具备强大的图片理解与推理能力，以及精准的指令理解能力。模型在图像文本信息抽取、基于图像的推理任务上有展现出了强大的性能，能够应用于更复杂、更广泛的视觉问答任务。"
+  },
+  "Doubao-vision-pro-32k": {
+    "description": "Doubao-vision 模型是豆包推出的多模态大模型，具备强大的图片理解与推理能力，以及精准的指令理解能力。模型在图像文本信息抽取、基于图像的推理任务上有展现出了强大的性能，能够应用于更复杂、更广泛的视觉问答任务。"
   },
   "ERNIE-3.5-128K": {
     "description": "百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。"
@@ -639,10 +651,10 @@
     "description": "DeepSeek-R1-Distill-Qwen-14B 是一个基于 Qwen2.5-14B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
   },
   "deepseek-r1-distill-qwen-32b": {
-    "description": "DeepSeek-R1-Distill-Qwen-32B 是一个基于 Qwen2.5-32B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
+    "description": "DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。"
   },
   "deepseek-r1-distill-qwen-7b": {
-    "description": "DeepSeek-R1-Distill-Qwen-7B 是一个基于 Qwen2.5-Math-7B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
+    "description": "DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。"
   },
   "deepseek-reasoner": {
     "description": "DeepSeek 推出的推理模型。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
@@ -664,6 +676,15 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 在仅有极少标注数据的情况下，极大提升了模型推理能力。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
+  },
+  "doubao-1.5-lite-32k": {
+    "description": "Doubao-1.5-lite 全新一代轻量版模型，极致响应速度，效果与时延均达到全球一流水平。"
+  },
+  "doubao-1.5-pro-256k": {
+    "description": "Doubao-1.5-pro-256k 基于 Doubao-1.5-Pro 全面升级版，整体效果大幅提升 10%。支持 256k 上下文窗口的推理，输出长度支持最大 12k tokens。更高性能、更大窗口、超高性价比，适用于更广泛的应用场景。"
+  },
+  "doubao-1.5-pro-32k": {
+    "description": "Doubao-1.5-pro 全新一代主力模型，性能全面升级，在知识、代码、推理、等方面表现卓越。"
   },
   "emohaa": {
     "description": "Emohaa 是心理模型，具备专业咨询能力，帮助用户理解情感问题。"
@@ -1575,10 +1596,10 @@
     "description": "支持搜索上下文的高级搜索产品，支持高级查询和跟进。"
   },
   "sonar-reasoning": {
-    "description": "由 DeepSeek 推理模型提供支持的新 API 产品。"
+    "description": "支持搜索上下文的高级搜索产品，支持高级查询和跟进。"
   },
   "sonar-reasoning-pro": {
-    "description": "由 DeepSeek 推理模型提供支持的新 API 产品。"
+    "description": "支持搜索上下文的高级搜索产品，支持高级查询和跟进。"
   },
   "step-1-128k": {
     "description": "平衡性能与成本，适合一般场景。"
