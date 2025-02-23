@@ -21,7 +21,7 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 0.6,
     },
     settings: {
-      searchMode: 'params',
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -43,7 +43,7 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 2,
     },
     settings: {
-      searchMode: 'params',
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -66,7 +66,7 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 60,
     },
     settings: {
-      searchMode: 'params',
+      searchImpl: 'params',
     },
     type: 'chat',
   },

@@ -145,23 +145,15 @@ export interface ExtendedControl {
   valueType: 'boolean';
 }
 
-export type ModelSearchImplement =
-  /**
-   * 类似 Jina 、PPLX 等模型的搜索模式，让调用方无感知
-   */
-  | 'builtin'
-  /**
-   * 通过 Function Calling 的形式调用
-   */
-  | 'tool'
-  /**
-   * 通过参数开关的形式调用
-   */
-  | 'params';
+export type ModelSearchImplementType = 'tool' | 'params' | 'internal';
 
 export interface AiModelSettings {
   extendControls?: ExtendedControl[];
-  searchMode?: ModelSearchImplement;
+  /**
+   * 模型层实现搜索的方式
+   */
+  searchImpl?: ModelSearchImplementType;
+  searchProvider?: string;
 }
 
 export interface AIChatModelCard extends AIBaseModelCard {

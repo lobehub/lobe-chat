@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-import { AgentSearchConfig } from '@/types/agent/search';
 import { FileItem } from '@/types/files';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 import { FewShots, LLMParams } from '@/types/llm';
+import { SearchMode } from '@/types/search';
 
 export type TTSServer = 'openai' | 'edge' | 'microsoft';
 
@@ -79,7 +79,8 @@ export interface LobeAgentChatConfig {
    */
   historyCount?: number;
   inputTemplate?: string;
-  search?: AgentSearchConfig;
+  searchMode?: SearchMode;
+  useModelBuiltinSearch?: boolean;
 }
 
 export const AgentChatConfigSchema = z.object({

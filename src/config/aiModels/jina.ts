@@ -17,7 +17,7 @@ const jinaChatModels: AIChatModelCard[] = [
       output: 0.02,
     },
     settings: {
-      searchMode: 'builtin',
+      searchImpl: 'internal',
     },
     type: 'chat',
   },

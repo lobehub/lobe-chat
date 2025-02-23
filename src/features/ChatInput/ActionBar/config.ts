@@ -4,6 +4,7 @@ import History from './History';
 import Knowledge from './Knowledge';
 import Model from './Model';
 import Params from './Params';
+import Search from './Search';
 import { MainToken, PortalToken } from './Token';
 import Tools from './Tools';
 import Upload from './Upload';
@@ -17,6 +18,7 @@ export const actionMap = {
   model: Model,
   params: Params,
   portalToken: PortalToken,
+  search: Search,
   stt: STT,
   temperature: Params,
   tools: Tools,

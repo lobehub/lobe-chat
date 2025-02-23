@@ -114,7 +114,6 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
         },
       }}
       placement={isMobile ? 'top' : 'topLeft'}
-      trigger={['click']}
     >
       <div className={styles.tag}>{children}</div>
     </Dropdown>

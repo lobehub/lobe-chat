@@ -13,7 +13,7 @@ const perplexityChatModels: AIChatModelCard[] = [
     id: 'sonar-reasoning-pro',
     maxOutput: 8192,
     settings: {
-      searchMode: 'builtin',
+      searchImpl: 'internal',
     },
     type: 'chat',
   },
@@ -29,7 +29,7 @@ const perplexityChatModels: AIChatModelCard[] = [
     id: 'sonar-reasoning',
     maxOutput: 8192,
     settings: {
-      searchMode: 'builtin',
+      searchImpl: 'internal',
     },
     type: 'chat',
   },
@@ -43,7 +43,7 @@ const perplexityChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'sonar-pro',
     settings: {
-      searchMode: 'builtin',
+      searchImpl: 'internal',
     },
     type: 'chat',
   },
@@ -57,7 +57,7 @@ const perplexityChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'sonar',
     settings: {
-      searchMode: 'builtin',
+      searchImpl: 'internal',
     },
     type: 'chat',
   },
