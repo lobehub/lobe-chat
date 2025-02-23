@@ -31,6 +31,9 @@
   },
   "duplicateTitle": "{{title}} Copy",
   "emptyAgent": "No assistant available",
+  "extendControls": {
+    "title": "Model Extension Features"
+  },
   "historyRange": "History Range",
   "historySummary": "Historical Message Summary",
   "inbox": {
@@ -84,6 +87,29 @@
   },
   "regenerate": "Regenerate",
   "roleAndArchive": "Role and Archive",
+  "search": {
+    "grounding": {
+      "searchQueries": "Search Keywords",
+      "title": "Found {{count}} results"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Intelligently determine whether a search is needed based on the conversation content",
+        "title": "Smart Online Search"
+      },
+      "disable": "The current model does not support function calls, so the smart online search feature is unavailable",
+      "off": {
+        "desc": "Use only the model's basic knowledge without performing a web search",
+        "title": "Disable Online Search"
+      },
+      "on": {
+        "desc": "Continuously perform web searches to obtain the latest information",
+        "title": "Always Online"
+      },
+      "useModelBuiltin": "Use the model's built-in search engine"
+    },
+    "title": "Online Search"
+  },
   "searchAgentPlaceholder": "Search assistants...",
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {

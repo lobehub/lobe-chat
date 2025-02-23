@@ -6,11 +6,11 @@ import { ChatErrorType } from '@/types/fetch';
 import { SmoothingParams } from '@/types/llm';
 import {
   ChatMessageError,
-  CitationItem,
   MessageToolCall,
   MessageToolCallChunk,
   MessageToolCallSchema,
 } from '@/types/message';
+import { GroundingSearch } from '@/types/search';
 
 import { fetchEventSource } from './fetchEventSource';
 import { getMessageError } from './parseError';
@@ -21,7 +21,7 @@ type SSEFinishType = 'done' | 'error' | 'abort';
 export type OnFinishHandler = (
   text: string,
   context: {
-    citations?: CitationItem[];
+    grounding?: GroundingSearch;
     observationId?: string | null;
     reasoning?: string;
     toolCalls?: MessageToolCall[];
@@ -40,9 +40,9 @@ export interface MessageReasoningChunk {
   type: 'reasoning';
 }
 
-export interface MessageCitationsChunk {
-  citations: CitationItem[];
-  type: 'citations';
+export interface MessageGroundingChunk {
+  grounding: GroundingSearch;
+  type: 'grounding';
 }
 
 interface MessageToolCallsChunk {
@@ -57,7 +57,7 @@ export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void;
   onFinish?: OnFinishHandler;
   onMessageHandle?: (
-    chunk: MessageTextChunk | MessageToolCallsChunk | MessageReasoningChunk | MessageCitationsChunk,
+    chunk: MessageTextChunk | MessageToolCallsChunk | MessageReasoningChunk | MessageGroundingChunk,
   ) => void;
   smoothing?: SmoothingParams | boolean;
 }
@@ -286,7 +286,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     startSpeed: smoothingSpeed,
   });
 
-  let citations: CitationItem[] | undefined = undefined;
+  let grounding: GroundingSearch | undefined = undefined;
   await fetchEventSource(url, {
     body: options.body,
     fetch: options?.fetcher,
@@ -359,9 +359,9 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           break;
         }
 
-        case 'citations': {
-          citations = data;
-          options.onMessageHandle?.({ citations: data, type: 'citations' });
+        case 'grounding': {
+          grounding = data;
+          options.onMessageHandle?.({ grounding: data, type: 'grounding' });
           break;
         }
 
@@ -434,7 +434,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       }
 
       await options?.onFinish?.(output, {
-        citations,
+        grounding,
         observationId,
         reasoning: !!thinking ? thinking : undefined,
         toolCalls,

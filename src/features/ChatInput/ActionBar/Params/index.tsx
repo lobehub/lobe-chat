@@ -1,7 +1,7 @@
 import { ActionIcon } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { useTheme } from 'antd-style';
-import { Settings2Icon } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -41,7 +41,7 @@ const Params = memo(() => {
       trigger={'click'}
     >
       <ActionIcon
-        icon={Settings2Icon}
+        icon={SlidersHorizontal}
         placement={'bottom'}
         title={popoverOpen ? undefined : t('settingModel.params.title')}
       />

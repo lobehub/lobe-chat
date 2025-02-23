@@ -65,6 +65,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Model destylacyjny DeepSeek-R1 oparty na Qwen2.5-Math-7B, optymalizujący wydajność wnioskowania dzięki uczeniu przez wzmocnienie i danym z zimnego startu, otwarty model ustanawiający nowe standardy w wielu zadaniach."
   },
+  "Doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro to nowa wersja ulepszonego modelu multimodalnego, który obsługuje rozpoznawanie obrazów o dowolnej rozdzielczości i ekstremalnych proporcjach, wzmacniając zdolności wnioskowania wizualnego, rozpoznawania dokumentów, rozumienia szczegółowych informacji oraz przestrzegania instrukcji."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite cechuje się ekstremalną szybkością reakcji i lepszym stosunkiem jakości do ceny, oferując klientom elastyczność w różnych scenariuszach. Obsługuje wnioskowanie i dostosowywanie z kontekstem 128k."
   },
@@ -77,11 +80,20 @@
   "Doubao-pro-128k": {
     "description": "Model o najlepszych wynikach, odpowiedni do złożonych zadań, z doskonałymi wynikami w scenariuszach takich jak odpowiedzi referencyjne, podsumowania, twórczość, klasyfikacja tekstu i odgrywanie ról. Obsługuje wnioskowanie i dostosowywanie z kontekstem 128k."
   },
+  "Doubao-pro-256k": {
+    "description": "Najlepszy model główny, odpowiedni do obsługi złożonych zadań, osiągający dobre wyniki w scenariuszach takich jak pytania i odpowiedzi, podsumowania, twórczość, klasyfikacja tekstu, odgrywanie ról itp. Obsługuje wnioskowanie i dostrajanie w kontekście 256k."
+  },
   "Doubao-pro-32k": {
     "description": "Model o najlepszych wynikach, odpowiedni do złożonych zadań, z doskonałymi wynikami w scenariuszach takich jak odpowiedzi referencyjne, podsumowania, twórczość, klasyfikacja tekstu i odgrywanie ról. Obsługuje wnioskowanie i dostosowywanie z kontekstem 32k."
   },
   "Doubao-pro-4k": {
     "description": "Model o najlepszych wynikach, odpowiedni do złożonych zadań, z doskonałymi wynikami w scenariuszach takich jak odpowiedzi referencyjne, podsumowania, twórczość, klasyfikacja tekstu i odgrywanie ról. Obsługuje wnioskowanie i dostosowywanie z kontekstem 4k."
+  },
+  "Doubao-vision-lite-32k": {
+    "description": "Model Doubao-vision to multimodalny model stworzony przez Doubao, który dysponuje potężnymi zdolnościami rozumienia i wnioskowania obrazów oraz precyzyjnym rozumieniem instrukcji. Model wykazuje silną wydajność w zakresie ekstrakcji informacji tekstowych z obrazów oraz zadań wnioskowania opartych na obrazach, co pozwala na zastosowanie w bardziej złożonych i szerszych zadaniach wizualnych."
+  },
+  "Doubao-vision-pro-32k": {
+    "description": "Model Doubao-vision to multimodalny model stworzony przez Doubao, który dysponuje potężnymi zdolnościami rozumienia i wnioskowania obrazów oraz precyzyjnym rozumieniem instrukcji. Model wykazuje silną wydajność w zakresie ekstrakcji informacji tekstowych z obrazów oraz zadań wnioskowania opartych na obrazach, co pozwala na zastosowanie w bardziej złożonych i szerszych zadaniach wizualnych."
   },
   "ERNIE-3.5-128K": {
     "description": "Flagowy model dużego języka opracowany przez Baidu, obejmujący ogromne zbiory danych w języku chińskim i angielskim, charakteryzujący się silnymi zdolnościami ogólnymi, zdolny do spełnienia wymagań w większości scenariuszy związanych z pytaniami i odpowiedziami, generowaniem treści oraz aplikacjami wtyczek; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji w odpowiedziach."
@@ -664,6 +676,15 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 znacznie poprawił zdolności wnioskowania modelu przy minimalnej ilości oznaczonych danych. Przed wygenerowaniem ostatecznej odpowiedzi, model najpierw wygeneruje fragment myślenia, aby zwiększyć dokładność końcowej odpowiedzi."
+  },
+  "doubao-1.5-lite-32k": {
+    "description": "Doubao-1.5-lite to nowa generacja modelu o lekkiej konstrukcji, charakteryzująca się ekstremalną szybkością reakcji, osiągając światowy poziom zarówno w zakresie wydajności, jak i opóźnienia."
+  },
+  "doubao-1.5-pro-256k": {
+    "description": "Doubao-1.5-pro-256k to kompleksowa wersja ulepszona na bazie Doubao-1.5-Pro, która oferuje znaczny wzrost wydajności o 10%. Obsługuje wnioskowanie w kontekście 256k, a maksymalna długość wyjścia wynosi 12k tokenów. Wyższa wydajność, większe okno, doskonały stosunek jakości do ceny, odpowiedni do szerszego zakresu zastosowań."
+  },
+  "doubao-1.5-pro-32k": {
+    "description": "Doubao-1.5-pro to nowa generacja głównego modelu, który oferuje kompleksowe ulepszenia wydajności, wykazując doskonałe wyniki w zakresie wiedzy, kodowania, wnioskowania i innych obszarów."
   },
   "emohaa": {
     "description": "Emohaa to model psychologiczny, posiadający profesjonalne umiejętności doradcze, pomagający użytkownikom zrozumieć problemy emocjonalne."

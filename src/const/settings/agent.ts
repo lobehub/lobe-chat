@@ -20,6 +20,7 @@ export const DEFAULT_AGENT_CHAT_CONFIG: LobeAgentChatConfig = {
   enableCompressHistory: true,
   enableHistoryCount: true,
   historyCount: 8,
+  searchMode: 'off',
 };
 
 export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {

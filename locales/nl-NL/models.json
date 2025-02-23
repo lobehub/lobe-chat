@@ -65,6 +65,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1 distillatiemodel gebaseerd op Qwen2.5-Math-7B, geoptimaliseerd voor inferentieprestaties door versterkend leren en koude startdata, open-source model dat de multi-taak benchmark vernieuwt."
   },
+  "Doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro is een nieuw geüpgraded multimodaal groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite beschikt over een uitstekende responssnelheid en een goede prijs-kwaliteitverhouding, en biedt klanten flexibele keuzes voor verschillende scenario's. Ondersteunt inferentie en fine-tuning met een contextvenster van 128k."
   },
@@ -77,11 +80,20 @@
   "Doubao-pro-128k": {
     "description": "Het meest effectieve hoofmodel, geschikt voor het verwerken van complexe taken, met goede resultaten in referentievraag, samenvattingen, creatie, tekstclassificatie, rollenspellen en meer. Ondersteunt inferentie en fine-tuning met een contextvenster van 128k."
   },
+  "Doubao-pro-256k": {
+    "description": "Het beste hoofdmachine model, geschikt voor het verwerken van complexe taken, met goede prestaties in referentievraag- en antwoordsituaties, samenvattingen, creatie, tekstclassificatie, rollenspellen, enz. Ondersteunt redenering en fine-tuning met een contextvenster van 256k."
+  },
   "Doubao-pro-32k": {
     "description": "Het meest effectieve hoofmodel, geschikt voor het verwerken van complexe taken, met goede resultaten in referentievraag, samenvattingen, creatie, tekstclassificatie, rollenspellen en meer. Ondersteunt inferentie en fine-tuning met een contextvenster van 32k."
   },
   "Doubao-pro-4k": {
     "description": "Het meest effectieve hoofmodel, geschikt voor het verwerken van complexe taken, met goede resultaten in referentievraag, samenvattingen, creatie, tekstclassificatie, rollenspellen en meer. Ondersteunt inferentie en fine-tuning met een contextvenster van 4k."
+  },
+  "Doubao-vision-lite-32k": {
+    "description": "Het Doubao-vision model is een multimodaal groot model dat door Doubao is geïntroduceerd, met krachtige mogelijkheden voor beeldbegrip en redenering, evenals nauwkeurige instructiebegrip. Het model heeft sterke prestaties getoond in het extraheren van tekstinformatie uit afbeeldingen en op afbeeldingen gebaseerde redeneringstaken, en kan worden toegepast op complexere en bredere visuele vraag- en antwoordsituaties."
+  },
+  "Doubao-vision-pro-32k": {
+    "description": "Het Doubao-vision model is een multimodaal groot model dat door Doubao is geïntroduceerd, met krachtige mogelijkheden voor beeldbegrip en redenering, evenals nauwkeurige instructiebegrip. Het model heeft sterke prestaties getoond in het extraheren van tekstinformatie uit afbeeldingen en op afbeeldingen gebaseerde redeneringstaken, en kan worden toegepast op complexere en bredere visuele vraag- en antwoordsituaties."
   },
   "ERNIE-3.5-128K": {
     "description": "De door Baidu ontwikkelde vlaggenschip grote taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met de Baidu zoekplug-in, wat de actualiteit van vraag- en antwoordinformatie waarborgt."
@@ -664,6 +676,15 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 heeft de redeneringscapaciteiten van het model aanzienlijk verbeterd, zelfs met zeer weinig gelabelde gegevens. Voordat het model het uiteindelijke antwoord geeft, genereert het eerst een denkproces om de nauwkeurigheid van het uiteindelijke antwoord te verbeteren."
+  },
+  "doubao-1.5-lite-32k": {
+    "description": "Doubao-1.5-lite is de nieuwste generatie lichtgewicht model, met extreme responssnelheid en prestaties die wereldwijd tot de top behoren."
+  },
+  "doubao-1.5-pro-256k": {
+    "description": "Doubao-1.5-pro-256k is een uitgebreide upgrade van Doubao-1.5-Pro, met een algehele prestatieverbetering van 10%. Ondersteunt redenering met een contextvenster van 256k en een maximale uitvoerlengte van 12k tokens. Hogere prestaties, groter venster, uitstekende prijs-kwaliteitverhouding, geschikt voor een breder scala aan toepassingsscenario's."
+  },
+  "doubao-1.5-pro-32k": {
+    "description": "Doubao-1.5-pro is de nieuwste generatie hoofdmachine, met algehele prestatie-upgrades en uitstekende prestaties op het gebied van kennis, code, redenering, enz."
   },
   "emohaa": {
     "description": "Emohaa is een psychologisch model met professionele adviescapaciteiten, dat gebruikers helpt emotionele problemen te begrijpen."

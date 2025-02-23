@@ -65,6 +65,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Mô hình chưng cất DeepSeek-R1 dựa trên Qwen2.5-Math-7B, tối ưu hóa hiệu suất suy luận thông qua học tăng cường và dữ liệu khởi động lạnh, mô hình mã nguồn mở làm mới tiêu chuẩn đa nhiệm."
   },
+  "Doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro là mô hình lớn đa phương thức được nâng cấp hoàn toàn, hỗ trợ nhận diện hình ảnh với bất kỳ độ phân giải nào và tỷ lệ dài rộng cực đoan, tăng cường khả năng suy luận thị giác, nhận diện tài liệu, hiểu thông tin chi tiết và tuân thủ chỉ dẫn."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite có tốc độ phản hồi cực nhanh, giá trị tốt hơn, cung cấp sự lựa chọn linh hoạt cho khách hàng trong nhiều tình huống khác nhau. Hỗ trợ suy diễn và tinh chỉnh trong ngữ cảnh 128k."
   },
@@ -77,11 +80,20 @@
   "Doubao-pro-128k": {
     "description": "Mô hình chính có hiệu quả tốt nhất, phù hợp để xử lý các nhiệm vụ phức tạp, có hiệu quả tốt trong các tình huống như hỏi đáp tham khảo, tóm tắt, sáng tác, phân loại văn bản, và nhập vai. Hỗ trợ suy diễn và tinh chỉnh trong ngữ cảnh 128k."
   },
+  "Doubao-pro-256k": {
+    "description": "Mô hình chủ lực có hiệu quả tốt nhất, phù hợp để xử lý các nhiệm vụ phức tạp, có hiệu quả tốt trong các tình huống như hỏi đáp tham khảo, tóm tắt, sáng tác, phân loại văn bản, và nhập vai. Hỗ trợ suy luận và tinh chỉnh với cửa sổ ngữ cảnh 256k."
+  },
   "Doubao-pro-32k": {
     "description": "Mô hình chính có hiệu quả tốt nhất, phù hợp để xử lý các nhiệm vụ phức tạp, có hiệu quả tốt trong các tình huống như hỏi đáp tham khảo, tóm tắt, sáng tác, phân loại văn bản, và nhập vai. Hỗ trợ suy diễn và tinh chỉnh trong ngữ cảnh 32k."
   },
   "Doubao-pro-4k": {
     "description": "Mô hình chính có hiệu quả tốt nhất, phù hợp để xử lý các nhiệm vụ phức tạp, có hiệu quả tốt trong các tình huống như hỏi đáp tham khảo, tóm tắt, sáng tác, phân loại văn bản, và nhập vai. Hỗ trợ suy diễn và tinh chỉnh trong ngữ cảnh 4k."
+  },
+  "Doubao-vision-lite-32k": {
+    "description": "Mô hình Doubao-vision là mô hình lớn đa phương thức do Doubao phát triển, có khả năng hiểu và suy luận hình ảnh mạnh mẽ, cũng như khả năng hiểu chỉ dẫn chính xác. Mô hình thể hiện hiệu suất mạnh mẽ trong việc trích xuất thông tin văn bản từ hình ảnh và các nhiệm vụ suy luận dựa trên hình ảnh, có thể áp dụng cho các nhiệm vụ hỏi đáp thị giác phức tạp và đa dạng hơn."
+  },
+  "Doubao-vision-pro-32k": {
+    "description": "Mô hình Doubao-vision là mô hình lớn đa phương thức do Doubao phát triển, có khả năng hiểu và suy luận hình ảnh mạnh mẽ, cũng như khả năng hiểu chỉ dẫn chính xác. Mô hình thể hiện hiệu suất mạnh mẽ trong việc trích xuất thông tin văn bản từ hình ảnh và các nhiệm vụ suy luận dựa trên hình ảnh, có thể áp dụng cho các nhiệm vụ hỏi đáp thị giác phức tạp và đa dạng hơn."
   },
   "ERNIE-3.5-128K": {
     "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, có thể đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và các tình huống ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm của Baidu, đảm bảo thông tin hỏi đáp luôn được cập nhật kịp thời."
@@ -664,6 +676,15 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 đã nâng cao khả năng suy luận của mô hình một cách đáng kể với rất ít dữ liệu được gán nhãn. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ để nâng cao độ chính xác của câu trả lời cuối cùng."
+  },
+  "doubao-1.5-lite-32k": {
+    "description": "Doubao-1.5-lite là mô hình phiên bản nhẹ thế hệ mới, tốc độ phản hồi cực nhanh, hiệu quả và độ trễ đạt tiêu chuẩn hàng đầu thế giới."
+  },
+  "doubao-1.5-pro-256k": {
+    "description": "Doubao-1.5-pro-256k là phiên bản nâng cấp toàn diện dựa trên Doubao-1.5-Pro, hiệu quả tổng thể tăng 10%. Hỗ trợ suy luận với cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa lên đến 12k tokens. Hiệu suất cao hơn, cửa sổ lớn hơn, giá trị vượt trội, phù hợp với nhiều ứng dụng khác nhau."
+  },
+  "doubao-1.5-pro-32k": {
+    "description": "Doubao-1.5-pro là mô hình chủ lực thế hệ mới, hiệu suất được nâng cấp toàn diện, thể hiện xuất sắc trong các lĩnh vực kiến thức, mã nguồn, suy luận, và nhiều hơn nữa."
   },
   "emohaa": {
     "description": "Emohaa là mô hình tâm lý, có khả năng tư vấn chuyên nghiệp, giúp người dùng hiểu các vấn đề cảm xúc."

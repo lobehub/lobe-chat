@@ -31,6 +31,9 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Kein Assistent verfügbar",
+  "extendControls": {
+    "title": "Modell Erweiterungsfunktionen"
+  },
   "historyRange": "Verlaufsbereich",
   "historySummary": "Zusammenfassung historischer Nachrichten",
   "inbox": {
@@ -84,6 +87,29 @@
   },
   "regenerate": "Neu generieren",
   "roleAndArchive": "Rolle und Archiv",
+  "search": {
+    "grounding": {
+      "searchQueries": "Suchbegriffe",
+      "title": "Es wurden {{count}} Ergebnisse gefunden"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Intelligente Beurteilung, ob eine Suche basierend auf dem Gesprächsinhalt erforderlich ist",
+        "title": "Intelligente Vernetzung"
+      },
+      "disable": "Das aktuelle Modell unterstützt keine Funktionsaufrufe, daher kann die intelligente Vernetzungsfunktion nicht verwendet werden",
+      "off": {
+        "desc": "Verwendet nur das Grundwissen des Modells, ohne Netzsuche",
+        "title": "Vernetzung deaktivieren"
+      },
+      "on": {
+        "desc": "Führt kontinuierlich Netzsuchen durch, um die neuesten Informationen zu erhalten",
+        "title": "Immer vernetzt"
+      },
+      "useModelBuiltin": "Verwenden Sie die integrierte Suchmaschine des Modells"
+    },
+    "title": "Netzwerksuche"
+  },
   "searchAgentPlaceholder": "Suchassistent...",
   "sendPlaceholder": "Chat-Nachricht eingeben...",
   "sessionGroup": {

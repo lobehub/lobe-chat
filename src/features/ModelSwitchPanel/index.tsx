@@ -14,7 +14,7 @@ import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
-import { EnabledProviderWithModels } from '@/types/aiModel';
+import { EnabledProviderWithModels } from '@/types/aiProvider';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   menu: css`
@@ -68,7 +68,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
       if (items.length === 0)
         return [
           {
-            key: 'empty',
+            key: `${provider.id}-empty`,
             label: (
               <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
                 {t('ModelSwitchPanel.emptyModel')}
@@ -114,7 +114,6 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
         },
       }}
       placement={isMobile ? 'top' : 'topLeft'}
-      trigger={['click']}
     >
       <div className={styles.tag}>{children}</div>
     </Dropdown>
