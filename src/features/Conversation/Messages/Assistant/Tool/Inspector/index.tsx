@@ -64,7 +64,6 @@ interface InspectorProps {
   identifier: string;
   index: number;
   messageId: string;
-
   payload: object;
   setShowPluginRender: (show: boolean) => void;
   setShowRender: (show: boolean) => void;
