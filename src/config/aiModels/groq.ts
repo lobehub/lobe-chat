@@ -197,7 +197,16 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'Qwen 2.5 32B',
     id: 'qwen-2.5-32b',
-    maxOutput: 8192,
+    pricing: {
+      input: 0.79,
+      output: 0.79,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    displayName: 'Qwen 2.5 Coder 32B',
+    id: 'qwen-2.5-coder-32b',
     pricing: {
       input: 0.79,
       output: 0.79,
