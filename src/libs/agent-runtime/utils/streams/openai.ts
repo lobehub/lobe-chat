@@ -127,7 +127,7 @@ export const transformOpenAIStream = (
           );
 
           return [
-            { data: citations, id: chunk.id, type: 'citations' },
+            { data: { citations }, id: chunk.id, type: 'grounding' },
             { data: content, id: chunk.id, type: 'text' },
           ];
         }

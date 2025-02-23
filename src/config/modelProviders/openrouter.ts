@@ -331,6 +331,7 @@ const OpenRouter: ModelProviderCard = {
     // https://github.com/lobehub/lobe-chat/issues/5900
     disableBrowserRequest: true,
     sdkType: 'openai',
+    searchMode: 'params',
     showModelFetcher: true,
   },
   url: 'https://openrouter.ai',

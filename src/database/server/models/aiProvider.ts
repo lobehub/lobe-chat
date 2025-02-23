@@ -1,6 +1,7 @@
 import { and, asc, desc, eq } from 'drizzle-orm/expressions';
 import { isEmpty } from 'lodash-es';
 
+import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { LobeChatDatabase } from '@/database/type';
 import { ModelProvider } from '@/libs/agent-runtime';
 import {
@@ -10,6 +11,7 @@ import {
   CreateAiProviderParams,
   UpdateAiProviderConfigParams,
 } from '@/types/aiProvider';
+import { merge } from '@/utils/merge';
 
 import { AiProviderSelectItem, aiModels, aiProviders } from '../../schemas';
 
@@ -238,10 +240,13 @@ export class AiProviderModel {
     let runtimeConfig: Record<string, AiProviderRuntimeConfig> = {};
 
     for (const item of result) {
+      const builtin = DEFAULT_MODEL_PROVIDER_LIST.find((provider) => provider.id === item.id);
+
+      const userSettings = item.settings || {};
       runtimeConfig[item.id] = {
         fetchOnClient: typeof item.fetchOnClient === 'boolean' ? item.fetchOnClient : undefined,
         keyVaults: !!item.keyVaults ? await decrypt(item.keyVaults) : {},
-        settings: item.settings || {},
+        settings: !!builtin ? merge(builtin.settings, userSettings) : userSettings,
       };
     }
 

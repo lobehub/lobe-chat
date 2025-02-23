@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-import { AiProviderSourceType } from '@/types/aiProvider';
-
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
 export const AiModelSourceEnum = {
@@ -133,6 +131,29 @@ export interface AiModelConfig {
    * used in azure and doubao
    */
   deploymentName?: string;
+
+  /**
+   * qwen series model enabled search
+   */
+  enabledSearch?: boolean;
+}
+
+export interface ExtendedControl {
+  key: string;
+  requestParams: string | string[];
+  type: 'params' | 'tool';
+  valueType: 'boolean';
+}
+
+export type ModelSearchImplementType = 'tool' | 'params' | 'internal';
+
+export interface AiModelSettings {
+  extendControls?: ExtendedControl[];
+  /**
+   * 模型层实现搜索的方式
+   */
+  searchImpl?: ModelSearchImplementType;
+  searchProvider?: string;
 }
 
 export interface AIChatModelCard extends AIBaseModelCard {
@@ -140,6 +161,7 @@ export interface AIChatModelCard extends AIBaseModelCard {
   config?: AiModelConfig;
   maxOutput?: number;
   pricing?: ChatModelPricing;
+  settings?: AiModelSettings;
   type: 'chat';
 }
 
@@ -306,17 +328,22 @@ export type ToggleAiModelEnableParams = z.infer<typeof ToggleAiModelEnableSchema
 
 //
 
-interface AiModelForSelect {
+export interface AiModelForSelect {
   abilities: ModelAbilities;
   contextWindowTokens?: number;
   displayName?: string;
   id: string;
 }
 
-export interface EnabledProviderWithModels {
-  children: AiModelForSelect[];
+export interface EnabledAiModel {
+  abilities: ModelAbilities;
+  config?: AiModelConfig;
+  contextWindowTokens?: number;
+  displayName?: string;
+  enabled?: boolean;
   id: string;
-  logo?: string;
-  name: string;
-  source: AiProviderSourceType;
+  providerId: string;
+  settings?: AiModelSettings;
+  sort?: number;
+  type: AiModelType;
 }

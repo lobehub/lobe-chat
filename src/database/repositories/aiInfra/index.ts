@@ -5,12 +5,16 @@ import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { AiModelModel } from '@/database/server/models/aiModel';
 import { AiProviderModel } from '@/database/server/models/aiProvider';
 import { LobeChatDatabase } from '@/database/type';
-import { AIChatModelCard, AiModelSourceEnum, AiProviderModelListItem } from '@/types/aiModel';
+import {
+  AIChatModelCard,
+  AiModelSourceEnum,
+  AiProviderModelListItem,
+  EnabledAiModel,
+} from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
   AiProviderRuntimeState,
-  EnabledAiModel,
   EnabledProvider,
 } from '@/types/aiProvider';
 import { ProviderConfig } from '@/types/user/settings';

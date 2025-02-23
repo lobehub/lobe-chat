@@ -30,7 +30,7 @@ export interface StreamProtocolChunk {
     // Model Thinking
     | 'reasoning'
     // Search or Grounding
-    | 'citations'
+    | 'grounding'
     // stop signal
     | 'stop'
     // Error

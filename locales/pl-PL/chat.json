@@ -31,6 +31,9 @@
   },
   "duplicateTitle": "{{title}} kopia",
   "emptyAgent": "Brak asystenta",
+  "extendControls": {
+    "title": "Funkcje rozszerzenia modelu"
+  },
   "historyRange": "Zakres historii",
   "historySummary": "Podsumowanie wiadomości historycznych",
   "inbox": {
@@ -84,6 +87,29 @@
   },
   "regenerate": "Wygeneruj ponownie",
   "roleAndArchive": "Rola i archiwum",
+  "search": {
+    "grounding": {
+      "searchQueries": "Szukaj słów kluczowych",
+      "title": "Znaleziono {{count}} wyników"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Inteligentne określenie, czy potrzebne jest wyszukiwanie na podstawie treści rozmowy",
+        "title": "Inteligentne połączenie"
+      },
+      "disable": "Aktualny model nie obsługuje wywołań funkcji, więc nie można korzystać z inteligentnego połączenia",
+      "off": {
+        "desc": "Używaj tylko podstawowej wiedzy modelu, bez wyszukiwania w sieci",
+        "title": "Wyłącz połączenie"
+      },
+      "on": {
+        "desc": "Ciągłe wyszukiwanie w sieci, aby uzyskać najnowsze informacje",
+        "title": "Zawsze połączony"
+      },
+      "useModelBuiltin": "Użyj wbudowanej wyszukiwarki modelu"
+    },
+    "title": "Wyszukiwanie w sieci"
+  },
   "searchAgentPlaceholder": "Wyszukaj pomocnika...",
   "sendPlaceholder": "Wpisz treść rozmowy...",
   "sessionGroup": {

@@ -5,12 +5,13 @@ import {
   FunctionDeclaration,
   Tool as GoogleFunctionCallTool,
   GoogleGenerativeAI,
+  GoogleSearchRetrievalTool,
   Part,
   SchemaType,
 } from '@google/generative-ai';
 
-import type { ChatModelCard } from '@/types/llm';
 import { VertexAIStream } from '@/libs/agent-runtime/utils/streams/vertex-ai';
+import type { ChatModelCard } from '@/types/llm';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
@@ -86,7 +87,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const payload = this.buildPayload(rawPayload);
       const model = payload.model;
 
-      const contents = await this.buildGoogleMessages(payload.messages, model);
+      const contents = await this.buildGoogleMessages(payload.messages);
 
       const geminiStreamResult = await this.client
         .getGenerativeModel(
@@ -123,7 +124,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         .generateContentStream({
           contents,
           systemInstruction: payload.system as string,
-          tools: this.buildGoogleTools(payload.tools),
+          tools: this.buildGoogleTools(payload.tools, payload),
         });
 
       const googleStream = convertIterableToStream(geminiStreamResult.stream);
@@ -168,26 +169,30 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       .map((model) => {
         const modelName = model.name.replace(/^models\//, '');
 
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => modelName.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => modelName.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: model.inputTokenLimit + model.outputTokenLimit,
           displayName: model.displayName,
           enabled: knownModel?.enabled || false,
           functionCall:
-            modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('thinking')
-            || knownModel?.abilities?.functionCall
-            || false,
+            (modelName.toLowerCase().includes('gemini') &&
+              !modelName.toLowerCase().includes('thinking')) ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: modelName,
           reasoning:
-            modelName.toLowerCase().includes('thinking')
-            || knownModel?.abilities?.reasoning
-            || false,
+            modelName.toLowerCase().includes('thinking') ||
+            knownModel?.abilities?.reasoning ||
+            false,
           vision:
-            modelName.toLowerCase().includes('vision')
-            || (modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('gemini-1.0'))
-            || knownModel?.abilities?.vision
-            || false,
+            modelName.toLowerCase().includes('vision') ||
+            (modelName.toLowerCase().includes('gemini') &&
+              !modelName.toLowerCase().includes('gemini-1.0')) ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];
@@ -266,43 +271,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   };
 
   // convert messages from the OpenAI format to Google GenAI SDK
-  private buildGoogleMessages = async (
-    messages: OpenAIChatMessage[],
-    model: string,
-  ): Promise<Content[]> => {
-    // if the model is gemini-1.0 we need to pair messages
-    if (model.startsWith('gemini-1.0')) {
-      const contents: Content[] = [];
-      let lastRole = 'model';
-
-      for (const message of messages) {
-        // current to filter function message
-        if (message.role === 'function') {
-          continue;
-        }
-        const googleMessage = await this.convertOAIMessagesToGoogleMessage(message);
-
-        // if the last message is a model message and the current message is a model message
-        // then we need to add a user message to separate them
-        if (lastRole === googleMessage.role) {
-          contents.push({ parts: [{ text: '' }], role: lastRole === 'user' ? 'model' : 'user' });
-        }
-
-        // add the current message to the contents
-        contents.push(googleMessage);
-
-        // update the last role
-        lastRole = googleMessage.role;
-      }
-
-      // if the last message is a user message, then we need to add a model message to separate them
-      if (lastRole === 'model') {
-        contents.push({ parts: [{ text: '' }], role: 'user' });
-      }
-
-      return contents;
-    }
-
+  private buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promise<Content[]> => {
     const pools = messages
       .filter((message) => message.role !== 'function')
       .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg));
@@ -353,7 +322,13 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
   private buildGoogleTools(
     tools: ChatCompletionTool[] | undefined,
+    payload?: ChatStreamPayload,
   ): GoogleFunctionCallTool[] | undefined {
+    // 目前 Tools (例如 googleSearch) 无法与其他 FunctionCall 同时使用
+    if (payload?.enabledSearch) {
+      return [{ googleSearch: {} } as GoogleSearchRetrievalTool];
+    }
+
     if (!tools || tools.length === 0) return;
 
     return [

@@ -2,14 +2,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { clientDB, initializeDB } from '@/database/client/db';
-import { AiProviderModel } from '@/database/server/models/aiProvider';
-import { LobeChatDatabase } from '@/database/type';
-import { AiProviderModelListItem } from '@/types/aiModel';
+import { AiProviderModelListItem, EnabledAiModel } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
   AiProviderRuntimeConfig,
-  EnabledAiModel,
   EnabledProvider,
 } from '@/types/aiProvider';
 
@@ -286,7 +283,7 @@ describe('AiInfraRepos', () => {
       expect(result).toEqual(
         expect.arrayContaining([
           expect.objectContaining({ id: 'taichu_llm' }),
-          expect.objectContaining({ id: 'taichu2_mm' }),
+          expect.objectContaining({ id: 'taichu_vl' }),
         ]),
       );
     });
