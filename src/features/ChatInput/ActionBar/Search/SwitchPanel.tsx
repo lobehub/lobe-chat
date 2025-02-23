@@ -1,4 +1,4 @@
-import { DisconnectOutlined, WifiOutlined } from '@ant-design/icons';
+import { DisconnectOutlined } from '@ant-design/icons';
 import { Icon } from '@lobehub/ui';
 import { Divider, Typography } from 'antd';
 import { createStyles } from 'antd-style';
@@ -7,11 +7,12 @@ import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import ModelBuiltinSearch from '@/features/ChatInput/ActionBar/Search/ModelBuiltinSearch';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { SearchMode } from '@/types/search';
+
+import ModelBuiltinSearch from './ModelBuiltinSearch';
 
 const { Text } = Typography;
 
@@ -128,12 +129,13 @@ const AINetworkSettings = memo(() => {
       label: t('search.mode.off.title'),
       value: 'off',
     },
-    {
-      description: t('search.mode.on.desc'),
-      icon: <WifiOutlined />,
-      label: t('search.mode.on.title'),
-      value: 'on',
-    },
+    // 等应用层联网功能做好以后再开启
+    // {
+    //   description: t('search.mode.on.desc'),
+    //   icon: <WifiOutlined />,
+    //   label: t('search.mode.on.title'),
+    //   value: 'on',
+    // },
     {
       description: t('search.mode.auto.desc'),
       disable: !supportFC,

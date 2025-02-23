@@ -92,7 +92,7 @@ export default {
   search: {
     grounding: {
       searchQueries: '搜索关键词',
-      title: '已搜索到 {{count}} 条记录',
+      title: '已搜索到 {{count}} 个结果',
     },
 
     mode: {
