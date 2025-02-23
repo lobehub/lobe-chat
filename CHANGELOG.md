@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.62.11](https://github.com/lobehub/lobe-chat/compare/v1.62.10...v1.62.11)
+
+<sup>Released on **2025-02-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Refine role assignment logic for specific Azure OpenAI models & Sensitive URL.
+
+#### 💄 Styles
+
+- **misc**: Add custom `proxyUrl` support for Volcengine.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Refine role assignment logic for specific Azure OpenAI models & Sensitive URL, closes [#6366](https://github.com/lobehub/lobe-chat/issues/6366) ([d47c2c6](https://github.com/lobehub/lobe-chat/commit/d47c2c6))
+
+#### Styles
+
+- **misc**: Add custom `proxyUrl` support for Volcengine, closes [#6433](https://github.com/lobehub/lobe-chat/issues/6433) ([2b1aca9](https://github.com/lobehub/lobe-chat/commit/2b1aca9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.62.10](https://github.com/lobehub/lobe-chat/compare/v1.62.9...v1.62.10)
 
 <sup>Released on **2025-02-22**</sup>
