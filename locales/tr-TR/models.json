@@ -65,6 +65,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Qwen2.5-Math-7B temel alınarak oluşturulmuş DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
   },
+  "Doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro, tamamen yenilenen çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranına sahip görüntü tanıma desteği sunar, görsel akıl yürütme, belge tanıma, detay bilgisi anlama ve talimatları takip etme yeteneklerini artırır."
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite, mükemmel yanıt hızı ve daha iyi maliyet Performansı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 128k bağlam penceresi çıkarım ve ince ayar destekler."
   },
@@ -77,11 +80,20 @@
   "Doubao-pro-128k": {
     "description": "En iyi performans gösteren ana model, karmaşık görevleri işlemek için uygundur; referanslı soru-cevap, özetleme, yaratım, metin sınıflandırma, rol yapma gibi senaryolar için iyi sonuçlar verir. 128k bağlam penceresi çıkarım ve ince ayar destekler."
   },
+  "Doubao-pro-256k": {
+    "description": "En iyi performansa sahip ana modeldir, karmaşık görevleri işlemek için uygundur, referans cevaplama, özetleme, yaratım, metin sınıflandırma, rol oynama gibi senaryolarda oldukça iyi sonuçlar vermektedir. 256k bağlam penceresi ile akıl yürütme ve ince ayar desteği sunmaktadır."
+  },
   "Doubao-pro-32k": {
     "description": "En iyi performans gösteren ana model, karmaşık görevleri işlemek için uygundur; referanslı soru-cevap, özetleme, yaratım, metin sınıflandırma, rol yapma gibi senaryolar için iyi sonuçlar verir. 32k bağlam penceresi çıkarım ve ince ayar destekler."
   },
   "Doubao-pro-4k": {
     "description": "En iyi performans gösteren ana model, karmaşık görevleri işlemek için uygundur; referanslı soru-cevap, özetleme, yaratım, metin sınıflandırma, rol yapma gibi senaryolar için iyi sonuçlar verir. 4k bağlam penceresi çıkarım ve ince ayar destekler."
+  },
+  "Doubao-vision-lite-32k": {
+    "description": "Doubao-vision modeli, Doubao tarafından sunulan çok modlu büyük modeldir, güçlü görüntü anlama ve akıl yürütme yeteneklerine sahip olup, kesin talimat anlama yeteneği sunmaktadır. Model, görüntü metin bilgisi çıkarımı ve görüntü tabanlı akıl yürütme görevlerinde güçlü bir performans sergilemekte, daha karmaşık ve daha geniş görsel soru-cevap görevlerine uygulanabilmektedir."
+  },
+  "Doubao-vision-pro-32k": {
+    "description": "Doubao-vision modeli, Doubao tarafından sunulan çok modlu büyük modeldir, güçlü görüntü anlama ve akıl yürütme yeteneklerine sahip olup, kesin talimat anlama yeteneği sunmaktadır. Model, görüntü metin bilgisi çıkarımı ve görüntü tabanlı akıl yürütme görevlerinde güçlü bir performans sergilemekte, daha karmaşık ve daha geniş görsel soru-cevap görevlerine uygulanabilmektedir."
   },
   "ERNIE-3.5-128K": {
     "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
@@ -664,6 +676,15 @@
   },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1, yalnızca çok az etiketli veri ile modelin akıl yürütme yeteneğini büyük ölçüde artırır. Model, nihai yanıtı vermeden önce bir düşünce zinciri içeriği sunarak nihai yanıtın doğruluğunu artırır."
+  },
+  "doubao-1.5-lite-32k": {
+    "description": "Doubao-1.5-lite, tamamen yeni nesil hafif modeldir, olağanüstü yanıt hızı ile etkisi ve gecikmesi dünya standartlarında bir seviyeye ulaşmıştır."
+  },
+  "doubao-1.5-pro-256k": {
+    "description": "Doubao-1.5-pro-256k, Doubao-1.5-Pro'nun kapsamlı bir yükseltmesi olup, genel performans %10 oranında büyük bir artış göstermektedir. 256k bağlam penceresi ile akıl yürütmeyi destekler, çıktı uzunluğu maksimum 12k token'a kadar desteklenmektedir. Daha yüksek performans, daha büyük pencere, yüksek maliyet etkinliği ile daha geniş uygulama alanlarına uygundur."
+  },
+  "doubao-1.5-pro-32k": {
+    "description": "Doubao-1.5-pro, tamamen yeni nesil ana model, performansı tamamen yükseltilmiş olup, bilgi, kod, akıl yürütme gibi alanlarda mükemmel bir performans sergilemektedir."
   },
   "emohaa": {
     "description": "Emohaa, duygusal sorunları anlamalarına yardımcı olmak için profesyonel danışmanlık yeteneklerine sahip bir psikolojik modeldir."

@@ -1,5 +1,7 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
+// https://docs.wair.ac.cn/maas/jiage.html
+
 const taichuChatModels: AIChatModelCard[] = [
   {
     abilities: {
@@ -23,9 +25,9 @@ const taichuChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 4096,
     description: '融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出',
-    displayName: 'Taichu 2.0V',
+    displayName: 'Taichu 2.0 VL',
     enabled: true,
-    id: 'taichu2_mm',
+    id: 'taichu_vl',
     pricing: {
       currency: 'CNY',
       input: 5,

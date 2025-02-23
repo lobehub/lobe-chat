@@ -9,6 +9,7 @@ exports[`agentSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CONFIG
     "enableCompressHistory": true,
     "enableHistoryCount": true,
     "historyCount": 8,
+    "searchMode": "off",
   },
   "model": "gpt-3.5-turbo",
   "params": {

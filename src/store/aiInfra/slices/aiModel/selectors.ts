@@ -1,5 +1,6 @@
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
 import { AiModelSourceEnum } from '@/types/aiModel';
+import { ModelSearchImplement } from '@/types/search';
 
 const aiProviderChatModelListIds = (s: AIProviderStoreState) =>
   s.aiProviderModelList.filter((item) => item.type === 'chat').map((item) => item.id);
@@ -69,20 +70,55 @@ const modelContextWindowTokens = (id: string, provider: string) => (s: AIProvide
   return model?.contextWindowTokens;
 };
 
+const modelExtendControls = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return model?.settings?.extendControls;
+};
+
+const isModelHasExtendControls = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const controls = modelExtendControls(id, provider)(s);
+
+  return !!controls && controls.length > 0;
+};
+
+const isModelHasBuiltinSearch = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return !!model?.settings?.searchImpl;
+};
+
+const isModelHasBuiltinSearchConfig =
+  (id: string, provider: string) => (s: AIProviderStoreState) => {
+    const model = getEnabledModelById(id, provider)(s);
+
+    return (
+      !!model?.settings?.searchImpl &&
+      [ModelSearchImplement.Tool, ModelSearchImplement.Params].includes(
+        model?.settings?.searchImpl as ModelSearchImplement,
+      )
+    );
+  };
+
 export const aiModelSelectors = {
   aiProviderChatModelListIds,
   disabledAiProviderModelList,
   enabledAiProviderModelList,
   filteredAiProviderModelList,
   getAiModelById,
+  getEnabledModelById,
   hasRemoteModels,
   isEmptyAiProviderModelList,
   isModelEnabled,
+  isModelHasBuiltinSearch,
+  isModelHasBuiltinSearchConfig,
   isModelHasContextWindowToken,
+  isModelHasExtendControls,
   isModelLoading,
   isModelSupportReasoning,
   isModelSupportToolUse,
   isModelSupportVision,
   modelContextWindowTokens,
+  modelExtendControls,
   totalAiProviderModelList,
 };
