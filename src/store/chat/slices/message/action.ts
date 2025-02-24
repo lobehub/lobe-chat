@@ -16,10 +16,10 @@ import {
   ChatMessage,
   ChatMessageError,
   CreateMessageParams,
-  GroundingSearch,
   MessageToolCall,
   ModelReasoning,
 } from '@/types/message';
+import { GroundingSearch } from '@/types/search';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';

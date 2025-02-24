@@ -31,6 +31,9 @@
   },
   "duplicateTitle": "{{title}} Copie",
   "emptyAgent": "Aucun assistant disponible",
+  "extendControls": {
+    "title": "Fonctionnalités d'extension du modèle"
+  },
   "historyRange": "Plage d'historique",
   "historySummary": "Résumé des messages historiques",
   "inbox": {
@@ -84,6 +87,29 @@
   },
   "regenerate": "Regénérer",
   "roleAndArchive": "Rôle et archivage",
+  "search": {
+    "grounding": {
+      "searchQueries": "Mots-clés de recherche",
+      "title": "{{count}} résultats trouvés"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Détermine intelligemment si une recherche est nécessaire en fonction du contenu de la conversation",
+        "title": "Connexion intelligente"
+      },
+      "disable": "Le modèle actuel ne prend pas en charge l'appel de fonctions, donc la fonctionnalité de connexion intelligente est indisponible",
+      "off": {
+        "desc": "Utilise uniquement les connaissances de base du modèle, sans recherche en ligne",
+        "title": "Déconnexion"
+      },
+      "on": {
+        "desc": "Effectue en continu des recherches en ligne pour obtenir les informations les plus récentes",
+        "title": "Toujours connecté"
+      },
+      "useModelBuiltin": "Utiliser le moteur de recherche intégré du modèle"
+    },
+    "title": "Recherche en ligne"
+  },
   "searchAgentPlaceholder": "Assistant de recherche...",
   "sendPlaceholder": "Saisissez votre message...",
   "sessionGroup": {

@@ -11,6 +11,7 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
       return {
         ...payload,
         include_reasoning: true,
+        model: payload.enabledSearch ? `${payload.model}:online` : payload.model,
         stream: payload.stream ?? true,
       } as any;
     },

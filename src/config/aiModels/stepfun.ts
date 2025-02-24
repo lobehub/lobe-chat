@@ -1,5 +1,7 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
+// https://platform.stepfun.com/docs/pricing/details
+
 const stepfunChatModels: AIChatModelCard[] = [
   {
     abilities: {
@@ -196,6 +198,23 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 8,
       output: 35,
     },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 32_000,
+    description: '该模型拥有强大的图像理解能力，在数理、代码领域强于1o。模型比1o更小，输出速度更快。',
+    displayName: 'Step 1o Turbo Vision',
+    enabled: true,
+    id: 'step-1o-turbo-vision',
+    pricing: {
+      currency: 'CNY',
+      input: 8,
+      output: 35,
+    },
+    releasedAt: '2025-02-14',
     type: 'chat',
   },
 ];

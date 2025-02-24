@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { FileItem } from '@/types/files';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 import { FewShots, LLMParams } from '@/types/llm';
+import { SearchMode } from '@/types/search';
 
 export type TTSServer = 'openai' | 'edge' | 'microsoft';
 
@@ -78,6 +79,8 @@ export interface LobeAgentChatConfig {
    */
   historyCount?: number;
   inputTemplate?: string;
+  searchMode?: SearchMode;
+  useModelBuiltinSearch?: boolean;
 }
 
 export const AgentChatConfigSchema = z.object({
@@ -89,6 +92,7 @@ export const AgentChatConfigSchema = z.object({
   enableMaxTokens: z.boolean().optional(),
   enableReasoningEffort: z.boolean().optional(),
   historyCount: z.number().optional(),
+  searchMode: z.enum(['off', 'on', 'auto']).optional(),
 });
 
 export type LobeAgentConfigKeys =

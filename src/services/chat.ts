@@ -18,6 +18,7 @@ import {
 import { filesPrompts } from '@/prompts/files';
 import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { getAgentChatConfig } from '@/store/chat/slices/aiChat/actions/helpers';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -224,6 +225,8 @@ class ChatService {
 
     const { provider = ModelProvider.OpenAI, ...res } = params;
 
+    // =================== process model =================== //
+    // ===================================================== //
     let model = res.model || DEFAULT_AGENT_CONFIG.model;
 
     // if the provider is Azure, get the deployment name as the request model
@@ -236,6 +239,13 @@ class ChatService {
 
     if (providersWithDeploymentName.includes(provider)) {
       model = findDeploymentName(model, provider);
+    }
+
+    // =================== process search =================== //
+    // ===================================================== //
+    const chatConfig = getAgentChatConfig();
+    if (chatConfig.searchMode !== 'off') {
+      res.enabledSearch = true;
     }
 
     const payload = merge(

@@ -1,5 +1,6 @@
 import { EnhancedGenerateContentResponse } from '@google/generative-ai';
 
+import { GroundingSearch } from '@/types/search';
 import { nanoid } from '@/utils/uuid';
 
 import { ChatStreamCallbacks } from '../../types';
@@ -14,8 +15,8 @@ import {
 
 const transformGoogleGenerativeAIStream = (
   chunk: EnhancedGenerateContentResponse,
-  stack: StreamContext,
-): StreamProtocolChunk => {
+  context: StreamContext,
+): StreamProtocolChunk | StreamProtocolChunk[] => {
   // maybe need another structure to add support for multiple choices
   const functionCalls = chunk.functionCalls();
 
@@ -32,15 +33,39 @@ const transformGoogleGenerativeAIStream = (
           type: 'function',
         }),
       ),
-      id: stack.id,
+      id: context.id,
       type: 'tool_calls',
     };
   }
   const text = chunk.text();
 
+  if (chunk.candidates && chunk.candidates[0].groundingMetadata) {
+    const { webSearchQueries, groundingSupports, groundingChunks } =
+      chunk.candidates[0].groundingMetadata;
+    console.log({ groundingChunks, groundingSupports, webSearchQueries });
+
+    return [
+      { data: text, id: context.id, type: 'text' },
+      {
+        data: {
+          citations: groundingChunks?.map((chunk) => ({
+            // google 返回的 uri 是经过 google 自己处理过的 url，因此无法展现真实的 favicon
+            // 需要使用 title 作为替换
+            favicon: chunk.web?.title,
+            title: chunk.web?.title,
+            url: chunk.web?.uri,
+          })),
+          searchQueries: webSearchQueries,
+        } as GroundingSearch,
+        id: context.id,
+        type: 'grounding',
+      },
+    ];
+  }
+
   return {
     data: text,
-    id: stack?.id,
+    id: context?.id,
     type: 'text',
   };
 };

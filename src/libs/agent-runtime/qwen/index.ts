@@ -9,12 +9,6 @@ export interface QwenModelCard {
 }
 
 /*
-  QwenEnableSearchModelSeries: An array of Qwen model series that support the enable_search parameter.
-  Currently, enable_search is only supported on Qwen commercial series, excluding Qwen-VL and Qwen-Long series.
-*/
-export const QwenEnableSearchModelSeries = ['qwen-max', 'qwen-plus', 'qwen-turbo'];
-
-/*
   QwenLegacyModels: A set of legacy Qwen models that do not support presence_penalty.
   Currently, presence_penalty is only supported on Qwen commercial models and open-source models starting from Qwen 1.5 and later.
 */
@@ -30,7 +24,7 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { model, presence_penalty, temperature, top_p, ...rest } = payload;
+      const { model, presence_penalty, temperature, top_p, enabledSearch, ...rest } = payload;
 
       return {
         ...rest,
@@ -53,13 +47,12 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
           : {
               top_p: top_p !== undefined && top_p > 0 && top_p < 1 ? top_p : undefined,
             }),
-        ...(process.env.QWEN_ENABLE_SEARCH === '1' &&
-          QwenEnableSearchModelSeries.some((prefix) => model.startsWith(prefix)) && {
-            enable_search: true,
-            search_options: {
-              search_strategy: process.env.QWEN_SEARCH_STRATEGY || 'standard', // standard or pro
-            },
-          }),
+        ...(enabledSearch && {
+          enable_search: enabledSearch,
+          search_options: {
+            search_strategy: process.env.QWEN_SEARCH_STRATEGY || 'standard', // standard or pro
+          },
+        }),
         ...(payload.tools && {
           parallel_tool_calls: true,
         }),
