@@ -1,10 +1,12 @@
-import { Form, type FormItemProps } from '@lobehub/ui';
+import { Form, type FormItemProps, Icon } from '@lobehub/ui';
 import { Button, Segmented, Switch } from 'antd';
+import { CopyIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { useImgToClipboard } from '@/hooks/useImgToClipboard';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { ImageType, imageTypeOptions, useScreenshot } from '@/hooks/useScreenshot';
 import { useSessionStore } from '@/store/session';
@@ -32,7 +34,9 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     title: currentAgentTitle,
     width: mobile ? 720 : undefined,
   });
-
+  const { loading: copyLoading, onCopy } = useImgToClipboard({
+    width: mobile ? 720 : undefined,
+  });
   const settings: FormItemProps[] = [
     {
       children: <Switch />,
@@ -66,15 +70,27 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
   const isMobile = useIsMobile();
 
   const button = (
-    <Button
-      block
-      loading={loading}
-      onClick={onDownload}
-      size={isMobile ? undefined : 'large'}
-      type={'primary'}
-    >
-      {t('shareModal.download')}
-    </Button>
+    <>
+      <Button
+        block
+        icon={<Icon icon={CopyIcon} />}
+        loading={copyLoading}
+        onClick={() => onCopy()}
+        size={isMobile ? undefined : 'large'}
+        type={'primary'}
+      >
+        {t('copy', { ns: 'common' })}
+      </Button>
+      <Button
+        block
+        loading={loading}
+        onClick={onDownload}
+        size={isMobile ? undefined : 'large'}
+        variant={'filled'}
+      >
+        {t('shareModal.download')}
+      </Button>
+    </>
   );
 
   return (
