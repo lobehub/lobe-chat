@@ -70,6 +70,29 @@ describe('LobePerplexityAI', () => {
           id: '506d64fb-e7f2-4d94-b80f-158369e9446d',
           model: 'sonar-pro',
           created: 1739896615,
+          object: 'chat.completion.chunk',
+          choices: [
+            {
+              finish_reason: null,
+              index: 0,
+              delta: {
+                refusal: null,
+                content: '<think>',
+                role: 'assistant',
+                function_call: null,
+                tool_calls: null,
+                audio: null,
+              },
+              logprobs: null,
+            },
+          ],
+          stream_options: null,
+          citations: null,
+        },
+        {
+          id: '506d64fb-e7f2-4d94-b80f-158369e9446d',
+          model: 'sonar-pro',
+          created: 1739896615,
           usage: {
             prompt_tokens: 4,
             completion_tokens: 3,
@@ -202,6 +225,9 @@ describe('LobePerplexityAI', () => {
 
       expect(stream).toEqual(
         [
+          'id: 506d64fb-e7f2-4d94-b80f-158369e9446d',
+          'event: text',
+          'data: "<think>"\n',
           'id: 506d64fb-e7f2-4d94-b80f-158369e9446d',
           'event: grounding',
           'data: {"citations":[{"title":"https://www.weather.com.cn/weather/101210101.shtml","url":"https://www.weather.com.cn/weather/101210101.shtml"},{"title":"https://tianqi.moji.com/weather/china/zhejiang/hangzhou","url":"https://tianqi.moji.com/weather/china/zhejiang/hangzhou"},{"title":"https://weather.cma.cn/web/weather/58457.html","url":"https://weather.cma.cn/web/weather/58457.html"},{"title":"https://tianqi.so.com/weather/101210101","url":"https://tianqi.so.com/weather/101210101"},{"title":"https://www.accuweather.com/zh/cn/hangzhou/106832/weather-forecast/106832","url":"https://www.accuweather.com/zh/cn/hangzhou/106832/weather-forecast/106832"},{"title":"https://www.hzqx.com","url":"https://www.hzqx.com"},{"title":"https://www.hzqx.com/pc/hztq/","url":"https://www.hzqx.com/pc/hztq/"}]}\n',
