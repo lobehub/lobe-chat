@@ -90,11 +90,11 @@ This article will detail how to deploy the server database version of LobeChat o
 
   After adding the `DATABASE_URL` environment variable for the database, you need to add a `KEY_VAULTS_SECRET` environment variable. This variable is used to encrypt sensitive information such as apikeys stored by users. You can generate a random 32-character string as the key using `openssl rand -base64 32`.
 
-  ```shell
+  ```shel
   KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
   ```
 
-  Make sure to add this to the Vercel environment variables as well.
+  Make sure to add this to the Vercel environment variables as well, and the length of the secret was correct, you can refer to this [issues](https://github.com/lobehub/lobe-chat/issues/5547)
 
   ### Add the `APP_URL` Environment Variable
 
@@ -143,7 +143,7 @@ The server-side database needs to be paired with a user authentication service t
   Fill in the endpoint with the URL of your Vercel project, such as `https://your-project.vercel.app/api/webhooks/clerk`. Then, subscribe to events by checking the three user events (`user.created`, `user.deleted`, `user.updated`), and click create.
 
   <Callout type={'warning'}>
-    The `https://` in the URL is essential to maintain the integrity of the URL.
+    The `https://` in the URL is essential to maintain the integrity of the URL. You will not know the URL of your Vercel project if it's your first time deploying it. Therefore, you can fill in a temporary domain for webhook creation and change it after deployment.
   </Callout>
 
   <Image alt={'Configure URL and user events when adding Clerk Webhooks'} src={'https://github.com/lobehub/lobe-chat/assets/28616219/0249ea56-ab17-4aa9-a56c-9ebd556c2645'} />
