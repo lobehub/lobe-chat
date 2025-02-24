@@ -6,5 +6,20 @@
     "generating": "Đang tạo...",
     "images": "Hình ảnh:",
     "prompt": "Từ khóa"
+  },
+  "search": {
+    "createNewSearch": "Tạo mới tìm kiếm",
+    "emptyResult": "Không tìm thấy kết quả, vui lòng sửa đổi từ khóa và thử lại",
+    "includedTooltip": "Kết quả tìm kiếm hiện tại sẽ được đưa vào ngữ cảnh của cuộc hội thoại",
+    "keywords": "Từ khóa:",
+    "scoreTooltip": "Điểm liên quan, điểm số càng cao thì càng liên quan đến từ khóa tìm kiếm",
+    "searchBar": {
+      "button": "Tìm kiếm",
+      "placeholder": "Từ khóa",
+      "tooltip": "Sẽ lấy lại kết quả tìm kiếm và tạo một tin nhắn tóm tắt mới"
+    },
+    "searchEngine": "Công cụ tìm kiếm:",
+    "searchResult": "Số lượng tìm kiếm:",
+    "viewMoreResults": "Xem thêm {{results}} kết quả"
   }
 }
