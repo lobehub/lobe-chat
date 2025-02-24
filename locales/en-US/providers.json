@@ -139,5 +139,8 @@
   },
   "zhipu": {
     "description": "Zhipu AI offers an open platform for multimodal and language models, supporting a wide range of AI application scenarios, including text processing, image understanding, and programming assistance."
+  },
+  "ppio": {
+    "description": "PPIO supports stable and cost-efficient open-source LLM APIs, such as DeepSeek, Llama, Qwen etc."
   }
 }

@@ -54,6 +54,7 @@ export enum ModelProvider {
   Ollama = 'ollama',
   OpenAI = 'openai',
   OpenRouter = 'openrouter',
+  PPIO = 'ppio',
   Perplexity = 'perplexity',
   Qwen = 'qwen',
   SambaNova = 'sambanova',
