@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix citation=null issue in stream."]
+    },
+    "date": "2025-02-24",
+    "version": "1.63.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix model settings config."]
     },
     "date": "2025-02-24",
