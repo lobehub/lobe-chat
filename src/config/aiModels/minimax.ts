@@ -4,6 +4,7 @@ const minimaxChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 1_000_192,
@@ -18,11 +19,15 @@ const minimaxChatModels: AIChatModelCard[] = [
       output: 8,
     },
     releasedAt: '2025-01-15',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 245_760,
@@ -35,6 +40,9 @@ const minimaxChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 1,
       output: 1,
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
