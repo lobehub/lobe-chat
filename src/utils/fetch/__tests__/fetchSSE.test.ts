@@ -194,7 +194,7 @@ describe('fetchSSE', () => {
       { text: 'H', type: 'reasoning' },
       { text: 'e', type: 'reasoning' },
       { text: 'l', type: 'reasoning' },
-      { text: 'l', type: 'reasoning' },
+      { text: 'h', type: 'text' },
       { text: 'o', type: 'reasoning' },
       { text: ' ', type: 'reasoning' },
       { text: 'W', type: 'reasoning' },
