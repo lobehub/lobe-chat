@@ -119,7 +119,7 @@ export const transformOpenAIStream = (
       if (typeof content === 'string') {
         // in Perplexity api, the citation is in every chunk, but we only need to return it once
 
-        if ('citations' in chunk && !streamContext?.returnedPplxCitation) {
+        if ('citations' in chunk && !!chunk.citations && !streamContext?.returnedPplxCitation) {
           streamContext.returnedPplxCitation = true;
 
           const citations = (chunk.citations as any[]).map((item) =>
