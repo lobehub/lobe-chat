@@ -2,6 +2,105 @@
 
 # Changelog
 
+### [Version 1.63.1](https://github.com/lobehub/lobe-chat/compare/v1.63.0...v1.63.1)
+
+<sup>Released on **2025-02-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix groq location request.
+
+#### 💄 Styles
+
+- **misc**: Improve plugin calling style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix groq location request, closes [#6449](https://github.com/lobehub/lobe-chat/issues/6449) ([8c8af6b](https://github.com/lobehub/lobe-chat/commit/8c8af6b))
+
+#### Styles
+
+- **misc**: Improve plugin calling style, closes [#6446](https://github.com/lobehub/lobe-chat/issues/6446) ([406cd46](https://github.com/lobehub/lobe-chat/commit/406cd46))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.63.0](https://github.com/lobehub/lobe-chat/compare/v1.62.11...v1.63.0)
+
+<sup>Released on **2025-02-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Support model-level search for Google/Qwen.
+
+#### 💄 Styles
+
+- **misc**: Update many models info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support model-level search for Google/Qwen, closes [#6420](https://github.com/lobehub/lobe-chat/issues/6420) ([f1b97cd](https://github.com/lobehub/lobe-chat/commit/f1b97cd))
+
+#### Styles
+
+- **misc**: Update many models info, closes [#6205](https://github.com/lobehub/lobe-chat/issues/6205) ([c477588](https://github.com/lobehub/lobe-chat/commit/c477588))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.11](https://github.com/lobehub/lobe-chat/compare/v1.62.10...v1.62.11)
+
+<sup>Released on **2025-02-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Refine role assignment logic for specific Azure OpenAI models & Sensitive URL.
+
+#### 💄 Styles
+
+- **misc**: Add custom `proxyUrl` support for Volcengine.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Refine role assignment logic for specific Azure OpenAI models & Sensitive URL, closes [#6366](https://github.com/lobehub/lobe-chat/issues/6366) ([d47c2c6](https://github.com/lobehub/lobe-chat/commit/d47c2c6))
+
+#### Styles
+
+- **misc**: Add custom `proxyUrl` support for Volcengine, closes [#6433](https://github.com/lobehub/lobe-chat/issues/6433) ([2b1aca9](https://github.com/lobehub/lobe-chat/commit/2b1aca9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.62.10](https://github.com/lobehub/lobe-chat/compare/v1.62.9...v1.62.10)
 
 <sup>Released on **2025-02-22**</sup>

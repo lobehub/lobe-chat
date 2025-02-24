@@ -31,6 +31,9 @@
   },
   "duplicateTitle": "{{title}} のコピー",
   "emptyAgent": "エージェントがいません",
+  "extendControls": {
+    "title": "モデル拡張機能"
+  },
   "historyRange": "履歴範囲",
   "historySummary": "履歴メッセージの要約",
   "inbox": {
@@ -84,6 +87,29 @@
   },
   "regenerate": "再生成",
   "roleAndArchive": "役割とアーカイブ",
+  "search": {
+    "grounding": {
+      "searchQueries": "検索キーワード",
+      "title": "検索結果が {{count}} 件見つかりました"
+    },
+    "mode": {
+      "auto": {
+        "desc": "会話の内容に基づいて、検索が必要かどうかを自動的に判断します",
+        "title": "インテリジェント接続"
+      },
+      "disable": "現在のモデルは関数呼び出しをサポートしていないため、インテリジェント接続機能は使用できません",
+      "off": {
+        "desc": "モデルの基本知識のみを使用し、ネット検索は行いません",
+        "title": "接続をオフ"
+      },
+      "on": {
+        "desc": "最新情報を取得するために継続的にネット検索を行います",
+        "title": "常に接続"
+      },
+      "useModelBuiltin": "モデル内蔵の検索エンジンを使用"
+    },
+    "title": "ネット接続検索"
+  },
   "searchAgentPlaceholder": "検索アシスタント...",
   "sendPlaceholder": "チャット内容を入力してください...",
   "sessionGroup": {
