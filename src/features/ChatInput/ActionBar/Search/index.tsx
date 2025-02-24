@@ -24,16 +24,14 @@ const Search = memo(() => {
 
   const theme = useTheme();
 
-  if (isLoading)
-    return (
-      <ActionIcon
-        icon={Globe}
-        placement={'bottom'}
-        style={{
-          cursor: 'not-allowed',
-        }}
-      />
-    );
+  if (isLoading) return null;
+  // <ActionIcon
+  //   icon={Globe}
+  //   placement={'bottom'}
+  //   style={{
+  //     cursor: 'not-allowed',
+  //   }}
+  // />
 
   return (
     !isDeprecatedEdition && (
