@@ -6,5 +6,23 @@
     "generating": "Generiert",
     "images": "Bilder:",
     "prompt": "Hinweiswort"
+  },
+  "search": {
+    "createNewSearch": "Neue Suchanfrage erstellen",
+    "emptyResult": "Keine Ergebnisse gefunden, bitte ändern Sie die Schlüsselwörter und versuchen Sie es erneut",
+    "genAiMessage": "Assistentnachricht erstellen",
+    "includedTooltip": "Die aktuellen Suchergebnisse werden in den Kontext der Sitzung aufgenommen",
+    "keywords": "Schlüsselwörter:",
+    "scoreTooltip": "Relevanzpunktzahl, je höher die Punktzahl, desto relevanter ist sie für die Suchanfrage",
+    "searchBar": {
+      "button": "Suchen",
+      "placeholder": "Schlüsselwörter",
+      "tooltip": "Die Suchergebnisse werden erneut abgerufen und eine neue Zusammenfassungsnachricht wird erstellt"
+    },
+    "searchEngine": "Suchmaschine:",
+    "searchResult": "Anzahl der Suchergebnisse:",
+    "summary": "Zusammenfassung",
+    "summaryTooltip": "Aktuellen Inhalt zusammenfassen",
+    "viewMoreResults": "Weitere {{results}} Ergebnisse anzeigen"
   }
 }

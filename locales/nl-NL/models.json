@@ -170,9 +170,6 @@
   "MiniMax-Text-01": {
     "description": "In de MiniMax-01-serie modellen hebben we gedurfde innovaties doorgevoerd: voor het eerst op grote schaal een lineaire aandachtmechanisme geïmplementeerd, waardoor de traditionele Transformer-architectuur niet langer de enige keuze is. Dit model heeft een parameterhoeveelheid van maar liefst 456 miljard, met een enkele activatie van 45,9 miljard. De algehele prestaties van het model zijn vergelijkbaar met die van de beste modellen in het buitenland, terwijl het efficiënt de wereldwijd langste context van 4 miljoen tokens kan verwerken, wat 32 keer de capaciteit van GPT-4o en 20 keer die van Claude-3.5-Sonnet is."
   },
-  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
-    "description": "Hermes 2 Mixtral 8x7B DPO is een zeer flexibele multi-model combinatie, ontworpen om een uitstekende creatieve ervaring te bieden."
-  },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) is een hoogprecisie instructiemodel, geschikt voor complexe berekeningen."
   },
@@ -323,6 +320,9 @@
   "SenseChat-5": {
     "description": "De nieuwste versie van het model (V5.5), met een contextlengte van 128K, heeft aanzienlijke verbeteringen in wiskundig redeneren, Engelse conversatie, instructievolging en begrip van lange teksten, en kan zich meten met GPT-4o."
   },
+  "SenseChat-5-1202": {
+    "description": "Dit is de nieuwste versie gebaseerd op V5.5, met significante verbeteringen in basisvaardigheden in het Chinees en Engels, chatten, exacte wetenschappen, geesteswetenschappen, schrijven, wiskundige logica en woordtelling in vergelijking met de vorige versie."
+  },
   "SenseChat-5-Cantonese": {
     "description": "Met een contextlengte van 32K overtreft het de conversatiebegrip in het Kantonees van GPT-4 en kan het zich in verschillende domeinen zoals kennis, redeneren, wiskunde en coderen meten met GPT-4 Turbo."
   },
@@ -334,6 +334,12 @@
   },
   "SenseChat-Turbo": {
     "description": "Geschikt voor snelle vraag-en-antwoord en modelafstemming."
+  },
+  "SenseChat-Turbo-1202": {
+    "description": "Dit is de nieuwste lichte versie van het model, die meer dan 90% van de capaciteiten van het volledige model bereikt en de kosten voor inferentie aanzienlijk verlaagt."
+  },
+  "SenseChat-Vision": {
+    "description": "De nieuwste versie van het model (V5.5) ondersteunt meerdere afbeeldingen als invoer en heeft aanzienlijke optimalisaties doorgevoerd in de basiscapaciteiten van het model, met verbeteringen in objecteigenschappenherkenning, ruimtelijke relaties, actie-evenementherkenning, scènebegrip, emotieherkenning, logische kennisredenering en tekstbegrip en -generatie."
   },
   "Skylark2-lite-8k": {
     "description": "De tweede generatie Skylark (Skylark2) model, Skylark2-lite model heeft een hoge responssnelheid, geschikt voor scenario's met hoge realtimevereisten, kostenbewustzijn en lagere modelnauwkeurigheidsvereisten, met een contextvenster lengte van 8k."
@@ -1019,6 +1025,12 @@
   "hunyuan-standard-vision": {
     "description": "De nieuwste multimodale Hunyuan-model, ondersteunt meertalige antwoorden, met evenwichtige capaciteiten in het Chinees en het Engels."
   },
+  "hunyuan-translation": {
+    "description": "Ondersteunt vertalingen tussen het Chinees en 15 andere talen, waaronder Engels, Japans, Frans, Portugees, Spaans, Turks, Russisch, Arabisch, Koreaans, Italiaans, Duits, Vietnamees, Maleis en Indonesisch. Gebaseerd op een geautomatiseerde evaluatie van de COMET-score met een meervoudige scenario-vertalingstestset, overtreft het in het algemeen de vertaalcapaciteiten van vergelijkbare modellen op de markt."
+  },
+  "hunyuan-translation-lite": {
+    "description": "Het Hunyuan vertaalmodel ondersteunt natuurlijke taal conversatievertalingen; het ondersteunt vertalingen tussen het Chinees en 15 andere talen, waaronder Engels, Japans, Frans, Portugees, Spaans, Turks, Russisch, Arabisch, Koreaans, Italiaans, Duits, Vietnamees, Maleis en Indonesisch."
+  },
   "hunyuan-turbo": {
     "description": "Een previewversie van het nieuwe generatie grote taalmodel van Hunyuan, met een nieuwe hybride expertmodel (MoE) structuur, die sneller inferentie-efficiëntie biedt en betere prestaties levert dan hunyan-pro."
   },
@@ -1220,9 +1232,6 @@
   "meta-llama/llama-3-8b-instruct": {
     "description": "Llama 3 8B Instruct is geoptimaliseerd voor hoogwaardige gespreksscenario's en presteert beter dan veel gesloten modellen."
   },
-  "meta-llama/llama-3.1-405b-instruct": {
-    "description": "Llama 3.1 405B Instruct is de nieuwste versie van Meta, geoptimaliseerd voor het genereren van hoogwaardige gesprekken en overtreft veel toonaangevende gesloten modellen."
-  },
   "meta-llama/llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct is ontworpen voor hoogwaardige gesprekken en presteert uitstekend in menselijke evaluaties, vooral in interactieve scenario's."
   },
@@ -1285,9 +1294,6 @@
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 is een taalmodel van Microsoft AI dat uitblinkt in complexe gesprekken, meertaligheid, redenering en intelligente assistenttoepassingen."
-  },
-  "microsoft/wizardlm 2-7b": {
-    "description": "WizardLM 2 7B is het nieuwste snelle en lichte model van Microsoft AI, met prestaties die bijna 10 keer beter zijn dan de huidige toonaangevende open-source modellen."
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B is het meest geavanceerde Wizard-model van Microsoft AI, met een uiterst competitieve prestatie."
@@ -1580,11 +1586,11 @@
   "qwq-32b-preview": {
     "description": "Het QwQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van de AI-redeneringscapaciteiten."
   },
-  "solar-1-mini-chat": {
-    "description": "Solar Mini is een compact LLM dat beter presteert dan GPT-3.5, met sterke meertalige capaciteiten, ondersteunt Engels en Koreaans, en biedt een efficiënte en compacte oplossing."
+  "solar-mini": {
+    "description": "Solar Mini is een compacte LLM die beter presteert dan GPT-3.5, met sterke meertalige capaciteiten, ondersteunt Engels en Koreaans, en biedt een efficiënte en compacte oplossing."
   },
-  "solar-1-mini-chat-ja": {
-    "description": "Solar Mini (Ja) breidt de mogelijkheden van Solar Mini uit, met een focus op de Japanse taal, terwijl het ook efficiënt en uitstekend presteert in het gebruik van Engels en Koreaans."
+  "solar-mini-ja": {
+    "description": "Solar Mini (Ja) breidt de capaciteiten van Solar Mini uit, met een focus op het Japans, terwijl het efficiënt en uitstekend presteert in het gebruik van Engels en Koreaans."
   },
   "solar-pro": {
     "description": "Solar Pro is een zeer intelligent LLM dat is uitgebracht door Upstage, gericht op instructievolging met één GPU, met een IFEval-score van boven de 80. Momenteel ondersteunt het Engels, met een officiële versie die gepland staat voor november 2024, die de taalondersteuning en contextlengte zal uitbreiden."
@@ -1619,6 +1625,9 @@
   "step-1.5v-mini": {
     "description": "Dit model heeft krachtige video begrip capaciteiten."
   },
+  "step-1o-turbo-vision": {
+    "description": "Dit model heeft krachtige beeldbegripcapaciteiten en presteert beter dan 1o in wiskunde en codering. Het model is kleiner dan 1o en heeft een snellere uitvoersnelheid."
+  },
   "step-1o-vision-32k": {
     "description": "Dit model heeft krachtige beeldbegripcapaciteiten. In vergelijking met de step-1v serie modellen heeft het een sterkere visuele prestatie."
   },
@@ -1634,11 +1643,11 @@
   "step-2-mini": {
     "description": "Een razendsnel groot model gebaseerd op de nieuwe generatie zelfontwikkelde Attention-architectuur MFA, dat met zeer lage kosten vergelijkbare resultaten als step1 behaalt, terwijl het een hogere doorvoer en snellere responstijd behoudt. Het kan algemene taken verwerken en heeft speciale vaardigheden op het gebied van codering."
   },
-  "taichu2_mm": {
-    "description": "Gecombineerd met beeldbegrip, kennisoverdracht en logische toerekening, excelleert het in het domein van vraag-en-antwoord met tekst en afbeeldingen."
-  },
   "taichu_llm": {
     "description": "Het Zido Tai Chu-taalmodel heeft een sterke taalbegripcapaciteit en kan tekstcreatie, kennisvragen, codeprogrammering, wiskundige berekeningen, logische redenering, sentimentanalyse, tekstsamenvattingen en meer aan. Het combineert innovatief grote data voortraining met rijke kennis uit meerdere bronnen, door algoritmische technologie continu te verfijnen en voortdurend nieuwe kennis op te nemen uit enorme tekstdata op het gebied van vocabulaire, structuur, grammatica en semantiek, waardoor de modelprestaties voortdurend evolueren. Het biedt gebruikers gemakkelijkere informatie en diensten en een meer intelligente ervaring."
+  },
+  "taichu_vl": {
+    "description": "Integreert beeldbegrip, kennisoverdracht en logische toerekening, en presteert uitstekend in het domein van vraag-en-antwoord met tekst en afbeeldingen."
   },
   "text-embedding-3-large": {
     "description": "Het krachtigste vectorisatie model, geschikt voor Engelse en niet-Engelse taken."

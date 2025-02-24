@@ -48,10 +48,10 @@ export const getProviderAuthPayload = (
     case ModelProvider.Azure: {
       return {
         apiKey: keyVaults.apiKey,
-        
+
         apiVersion: keyVaults.apiVersion,
         /** @deprecated */
-azureApiVersion: keyVaults.apiVersion,
+        azureApiVersion: keyVaults.apiVersion,
         baseURL: keyVaults.baseURL || keyVaults.endpoint,
       };
     }
@@ -63,10 +63,10 @@ azureApiVersion: keyVaults.apiVersion,
     case ModelProvider.Cloudflare: {
       return {
         apiKey: keyVaults?.apiKey,
-        
+
         baseURLOrAccountID: keyVaults?.baseURLOrAccountID,
         /** @deprecated */
-cloudflareBaseURLOrAccountID: keyVaults?.baseURLOrAccountID,
+        cloudflareBaseURLOrAccountID: keyVaults?.baseURLOrAccountID,
       };
     }
 

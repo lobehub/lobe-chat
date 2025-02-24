@@ -82,20 +82,26 @@ const isModelHasExtendControls = (id: string, provider: string) => (s: AIProvide
   return !!controls && controls.length > 0;
 };
 
-const isModelHasBuiltinSearch = (id: string, provider: string) => (s: AIProviderStoreState) => {
+const modelBuiltinSearchImpl = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
 
-  return !!model?.settings?.searchImpl;
+  return model?.settings?.searchImpl;
+};
+
+const isModelHasBuiltinSearch = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const searchImpl = modelBuiltinSearchImpl(id, provider)(s);
+
+  return !!searchImpl;
 };
 
 const isModelHasBuiltinSearchConfig =
   (id: string, provider: string) => (s: AIProviderStoreState) => {
-    const model = getEnabledModelById(id, provider)(s);
+    const searchImpl = modelBuiltinSearchImpl(id, provider)(s);
 
     return (
-      !!model?.settings?.searchImpl &&
+      !!searchImpl &&
       [ModelSearchImplement.Tool, ModelSearchImplement.Params].includes(
-        model?.settings?.searchImpl as ModelSearchImplement,
+        searchImpl as ModelSearchImplement,
       )
     );
   };
@@ -118,6 +124,7 @@ export const aiModelSelectors = {
   isModelSupportReasoning,
   isModelSupportToolUse,
   isModelSupportVision,
+  modelBuiltinSearchImpl,
   modelContextWindowTokens,
   modelExtendControls,
   totalAiProviderModelList,

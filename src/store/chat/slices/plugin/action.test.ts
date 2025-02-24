@@ -855,7 +855,7 @@ describe('ChatPluginAction', () => {
           arguments: '{}',
         },
         tool_call_id: 'tool-id',
-        error: { message: 'Previous error', type: 'ProviderBizError' },
+        pluginError: { message: 'Previous error', type: 'ProviderBizError' },
       } as ChatMessage;
 
       const internal_updateMessageErrorMock = vi.fn();
@@ -865,7 +865,7 @@ describe('ChatPluginAction', () => {
           activeId: 'session-id',
           messagesMap: { [messageMapKey('session-id')]: [message] },
           internal_invokeDifferentTypePlugin: vi.fn(),
-          internal_updateMessageError: internal_updateMessageErrorMock,
+          internal_updateMessagePluginError: internal_updateMessageErrorMock,
         });
       });
 

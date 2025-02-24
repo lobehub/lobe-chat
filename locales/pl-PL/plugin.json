@@ -134,6 +134,22 @@
     "plugin": "Wtyczka jest uruchomiona..."
   },
   "pluginList": "Lista wtyczek",
+  "search": {
+    "config": {
+      "addKey": "Dodaj klucz",
+      "close": "Usuń",
+      "confirm": "Konfiguracja zakończona, spróbuj ponownie"
+    },
+    "searchxng": {
+      "baseURL": "Wprowadź",
+      "description": "Wprowadź adres URL SearchXNG, aby rozpocząć wyszukiwanie w sieci",
+      "keyPlaceholder": "Wprowadź klucz",
+      "title": "Konfiguracja silnika wyszukiwania SearchXNG",
+      "unconfiguredDesc": "Skontaktuj się z administratorem, aby zakończyć konfigurację silnika wyszukiwania SearchXNG i rozpocząć wyszukiwanie w sieci",
+      "unconfiguredTitle": "Silnik wyszukiwania SearchXNG nie jest jeszcze skonfigurowany"
+    },
+    "title": "Wyszukiwanie w sieci"
+  },
   "setting": "Ustawienia wtyczki",
   "settings": {
     "indexUrl": {

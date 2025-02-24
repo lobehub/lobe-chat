@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "افزونه‌ها",
-  "actions": {
-    "genAiMessage": "ایجاد پیام دستیار",
-    "summary": "خلاصه",
-    "summaryTooltip": "خلاصه محتوای فعلی"
-  },
   "artifacts": {
     "display": {
       "code": "کد",

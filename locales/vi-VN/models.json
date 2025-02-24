@@ -170,9 +170,6 @@
   "MiniMax-Text-01": {
     "description": "Trong dòng mô hình MiniMax-01, chúng tôi đã thực hiện những đổi mới táo bạo: lần đầu tiên hiện thực hóa quy mô lớn cơ chế chú ý tuyến tính, kiến trúc Transformer truyền thống không còn là lựa chọn duy nhất. Mô hình này có số lượng tham số lên tới 4560 tỷ, trong đó kích hoạt một lần là 45,9 tỷ. Hiệu suất tổng hợp của mô hình tương đương với các mô hình hàng đầu quốc tế, đồng thời có khả năng xử lý hiệu quả ngữ cảnh dài nhất toàn cầu lên tới 4 triệu token, gấp 32 lần GPT-4o và 20 lần Claude-3.5-Sonnet."
   },
-  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
-    "description": "Hermes 2 Mixtral 8x7B DPO là một mô hình kết hợp đa dạng, nhằm cung cấp trải nghiệm sáng tạo xuất sắc."
-  },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) là mô hình chỉ dẫn chính xác cao, phù hợp cho tính toán phức tạp."
   },
@@ -323,6 +320,9 @@
   "SenseChat-5": {
     "description": "Phiên bản mô hình mới nhất (V5.5), độ dài ngữ cảnh 128K, khả năng cải thiện đáng kể trong suy luận toán học, đối thoại tiếng Anh, theo dõi chỉ dẫn và hiểu biết văn bản dài, ngang tầm với GPT-4o."
   },
+  "SenseChat-5-1202": {
+    "description": "Là phiên bản mới nhất dựa trên V5.5, có sự cải thiện đáng kể về khả năng cơ bản giữa tiếng Trung và tiếng Anh, trò chuyện, kiến thức khoa học, kiến thức nhân văn, viết lách, logic toán học, kiểm soát số lượng từ và một số khía cạnh khác so với phiên bản trước."
+  },
   "SenseChat-5-Cantonese": {
     "description": "Độ dài ngữ cảnh 32K, vượt qua GPT-4 trong hiểu biết đối thoại tiếng Quảng Đông, có thể so sánh với GPT-4 Turbo trong nhiều lĩnh vực như kiến thức, suy luận, toán học và lập trình mã."
   },
@@ -334,6 +334,12 @@
   },
   "SenseChat-Turbo": {
     "description": "Phù hợp cho các tình huống hỏi đáp nhanh và tinh chỉnh mô hình."
+  },
+  "SenseChat-Turbo-1202": {
+    "description": "Là phiên bản nhẹ mới nhất của mô hình, đạt được hơn 90% khả năng của mô hình đầy đủ, giảm đáng kể chi phí suy diễn."
+  },
+  "SenseChat-Vision": {
+    "description": "Mô hình phiên bản mới nhất (V5.5), hỗ trợ đầu vào nhiều hình ảnh, hoàn thiện khả năng cơ bản của mô hình, đạt được sự cải thiện lớn trong nhận diện thuộc tính đối tượng, mối quan hệ không gian, nhận diện sự kiện hành động, hiểu cảnh, nhận diện cảm xúc, suy luận kiến thức logic và hiểu sinh ra văn bản."
   },
   "Skylark2-lite-8k": {
     "description": "Mô hình thế hệ thứ hai Skylark, mô hình Skylark2-lite có tốc độ phản hồi cao, phù hợp cho các tình huống yêu cầu tính thời gian thực cao, nhạy cảm với chi phí, không yêu cầu độ chính xác mô hình cao, chiều dài cửa sổ ngữ cảnh là 8k."
@@ -1019,6 +1025,12 @@
   "hunyuan-standard-vision": {
     "description": "Mô hình đa phương thức mới nhất của Hunyuan, hỗ trợ trả lời đa ngôn ngữ, khả năng tiếng Trung và tiếng Anh cân bằng."
   },
+  "hunyuan-translation": {
+    "description": "Hỗ trợ dịch giữa 15 ngôn ngữ bao gồm tiếng Trung, tiếng Anh, tiếng Nhật, tiếng Pháp, tiếng Bồ Đào Nha, tiếng Tây Ban Nha, tiếng Thổ Nhĩ Kỳ, tiếng Nga, tiếng Ả Rập, tiếng Hàn, tiếng Ý, tiếng Đức, tiếng Việt, tiếng Mã Lai và tiếng Indonesia, dựa trên bộ đánh giá dịch tự động hóa COMET, có khả năng dịch giữa các ngôn ngữ phổ biến tốt hơn so với các mô hình cùng quy mô trên thị trường."
+  },
+  "hunyuan-translation-lite": {
+    "description": "Mô hình dịch Hỗn Nguyên hỗ trợ dịch theo kiểu đối thoại ngôn ngữ tự nhiên; hỗ trợ dịch giữa 15 ngôn ngữ bao gồm tiếng Trung, tiếng Anh, tiếng Nhật, tiếng Pháp, tiếng Bồ Đào Nha, tiếng Tây Ban Nha, tiếng Thổ Nhĩ Kỳ, tiếng Nga, tiếng Ả Rập, tiếng Hàn, tiếng Ý, tiếng Đức, tiếng Việt, tiếng Mã Lai và tiếng Indonesia."
+  },
   "hunyuan-turbo": {
     "description": "Phiên bản xem trước của thế hệ mới mô hình ngôn ngữ lớn Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, so với hunyuan-pro, hiệu suất suy diễn nhanh hơn và hiệu quả mạnh mẽ hơn."
   },
@@ -1220,9 +1232,6 @@
   "meta-llama/llama-3-8b-instruct": {
     "description": "Llama 3 8B Instruct tối ưu hóa cho các tình huống đối thoại chất lượng cao, hiệu suất vượt trội hơn nhiều mô hình đóng nguồn."
   },
-  "meta-llama/llama-3.1-405b-instruct": {
-    "description": "Llama 3.1 405B Instruct là phiên bản mới nhất do Meta phát hành, tối ưu hóa cho việc tạo ra các cuộc đối thoại chất lượng cao, vượt qua nhiều mô hình đóng nguồn hàng đầu."
-  },
   "meta-llama/llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct được thiết kế đặc biệt cho các cuộc đối thoại chất lượng cao, thể hiện xuất sắc trong các đánh giá của con người, đặc biệt phù hợp cho các tình huống tương tác cao."
   },
@@ -1285,9 +1294,6 @@
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 là mô hình ngôn ngữ do AI của Microsoft cung cấp, thể hiện xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
-  },
-  "microsoft/wizardlm 2-7b": {
-    "description": "WizardLM 2 7B là mô hình nhẹ và nhanh mới nhất của Microsoft AI, hiệu suất gần gấp 10 lần so với các mô hình mở nguồn hiện có."
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B là mô hình Wizard tiên tiến nhất của Microsoft AI, thể hiện hiệu suất cực kỳ cạnh tranh."
@@ -1580,11 +1586,11 @@
   "qwq-32b-preview": {
     "description": "Mô hình QwQ là một mô hình nghiên cứu thử nghiệm được phát triển bởi đội ngũ Qwen, tập trung vào việc nâng cao khả năng suy luận của AI."
   },
-  "solar-1-mini-chat": {
+  "solar-mini": {
     "description": "Solar Mini là một LLM dạng nhỏ gọn, hiệu suất vượt trội hơn GPT-3.5, có khả năng đa ngôn ngữ mạnh mẽ, hỗ trợ tiếng Anh và tiếng Hàn, cung cấp giải pháp hiệu quả và nhỏ gọn."
   },
-  "solar-1-mini-chat-ja": {
-    "description": "Solar Mini (Ja) mở rộng khả năng của Solar Mini, tập trung vào tiếng Nhật, đồng thời duy trì hiệu suất cao và xuất sắc trong việc sử dụng tiếng Anh và tiếng Hàn."
+  "solar-mini-ja": {
+    "description": "Solar Mini (Ja) mở rộng khả năng của Solar Mini, tập trung vào tiếng Nhật, đồng thời duy trì hiệu quả và hiệu suất xuất sắc trong việc sử dụng tiếng Anh và tiếng Hàn."
   },
   "solar-pro": {
     "description": "Solar Pro là một LLM thông minh cao do Upstage phát hành, tập trung vào khả năng tuân theo hướng dẫn trên một GPU, đạt điểm IFEval trên 80. Hiện tại hỗ trợ tiếng Anh, phiên bản chính thức dự kiến ra mắt vào tháng 11 năm 2024, sẽ mở rộng hỗ trợ ngôn ngữ và độ dài ngữ cảnh."
@@ -1619,6 +1625,9 @@
   "step-1.5v-mini": {
     "description": "Mô hình này có khả năng hiểu video mạnh mẽ."
   },
+  "step-1o-turbo-vision": {
+    "description": "Mô hình này có khả năng hiểu hình ảnh mạnh mẽ, vượt trội hơn 1o trong lĩnh vực toán học và mã. Mô hình nhỏ hơn 1o và có tốc độ xuất ra nhanh hơn."
+  },
   "step-1o-vision-32k": {
     "description": "Mô hình này có khả năng hiểu hình ảnh mạnh mẽ. So với các mô hình trong series step-1v, nó có hiệu suất thị giác vượt trội hơn."
   },
@@ -1634,11 +1643,11 @@
   "step-2-mini": {
     "description": "Mô hình lớn siêu tốc dựa trên kiến trúc Attention tự nghiên cứu thế hệ mới MFA, đạt được hiệu quả tương tự như step1 với chi phí rất thấp, đồng thời duy trì thông lượng cao hơn và độ trễ phản hồi nhanh hơn. Có khả năng xử lý các nhiệm vụ chung, đặc biệt có năng lực trong lập trình."
   },
-  "taichu2_mm": {
-    "description": "Kết hợp khả năng hiểu hình ảnh, chuyển giao kiến thức, suy luận logic, nổi bật trong lĩnh vực hỏi đáp hình ảnh và văn bản."
-  },
   "taichu_llm": {
     "description": "Mô hình ngôn ngữ lớn Taichu có khả năng hiểu ngôn ngữ mạnh mẽ và các khả năng như sáng tạo văn bản, trả lời câu hỏi kiến thức, lập trình mã, tính toán toán học, suy luận logic, phân tích cảm xúc, tóm tắt văn bản. Đổi mới kết hợp giữa đào tạo trước với dữ liệu phong phú từ nhiều nguồn, thông qua việc liên tục cải tiến công nghệ thuật toán và hấp thụ kiến thức mới từ dữ liệu văn bản khổng lồ, giúp mô hình ngày càng hoàn thiện. Cung cấp thông tin và dịch vụ tiện lợi hơn cho người dùng cùng trải nghiệm thông minh hơn."
+  },
+  "taichu_vl": {
+    "description": "Kết hợp khả năng hiểu hình ảnh, chuyển giao kiến thức, suy luận logic, thể hiện xuất sắc trong lĩnh vực hỏi đáp hình ảnh và văn bản."
   },
   "text-embedding-3-large": {
     "description": "Mô hình vector hóa mạnh mẽ nhất, phù hợp cho các nhiệm vụ tiếng Anh và không phải tiếng Anh."

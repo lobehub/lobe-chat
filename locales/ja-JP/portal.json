@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "プラグイン",
-  "actions": {
-    "genAiMessage": "AIメッセージを生成",
-    "summary": "サマリー",
-    "summaryTooltip": "現在の内容を要約"
-  },
   "artifacts": {
     "display": {
       "code": "コード",

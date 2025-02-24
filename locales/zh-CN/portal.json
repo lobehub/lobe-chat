@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "插件",
-  "actions": {
-    "genAiMessage": "创建助手消息",
-    "summary": "总结",
-    "summaryTooltip": "总结当前内容"
-  },
   "artifacts": {
     "display": {
       "code": "代码",

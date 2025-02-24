@@ -22,6 +22,7 @@ export interface BuiltinToolManifest {
 }
 
 export interface LobeBuiltinTool {
+  hidden?: boolean;
   identifier: string;
   manifest: BuiltinToolManifest;
   type: 'builtin';
@@ -32,6 +33,7 @@ export interface BuiltinRenderProps<Content = any, Arguments = any, State = any>
   content: Content;
   identifier?: string;
   messageId: string;
+  pluginError?: any;
   pluginState?: State;
 }
 

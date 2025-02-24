@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "Eklentiler",
-  "actions": {
-    "genAiMessage": "Yapay Zeka Mesajı Oluştur",
-    "summary": "Özet",
-    "summaryTooltip": "Mevcut içeriği özetle"
-  },
   "artifacts": {
     "display": {
       "code": "Kod",

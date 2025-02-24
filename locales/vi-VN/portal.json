@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "Tiện ích",
-  "actions": {
-    "genAiMessage": "Tạo tin nhắn trợ giúp",
-    "summary": "Tóm tắt",
-    "summaryTooltip": "Tóm tắt nội dung hiện tại"
-  },
   "artifacts": {
     "display": {
       "code": "Mã",

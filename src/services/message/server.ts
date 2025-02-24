@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
-import { ChatMessage, ChatMessageError, ChatTranslate } from '@/types/message';
+import { ChatMessage, ChatTranslate } from '@/types/message';
 
 import { IMessageService } from './type';
 
@@ -56,10 +56,6 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.update.mutate({ id, value: { error } });
   };
 
-  updateMessagePluginError = async (id: string, error: ChatMessageError): Promise<any> => {
-    return lambdaClient.message.update.mutate({ id, value: { pluginError: error } });
-  };
-
   updateMessagePluginArguments: IMessageService['updateMessagePluginArguments'] = async (
     id,
     value,
@@ -82,6 +78,10 @@ export class ServerService implements IMessageService {
 
   updateMessagePluginState: IMessageService['updateMessagePluginState'] = async (id, value) => {
     return lambdaClient.message.updatePluginState.mutate({ id, value });
+  };
+
+  updateMessagePluginError: IMessageService['updateMessagePluginError'] = async (id, error) => {
+    return lambdaClient.message.updatePluginError.mutate({ id, value: error as any });
   };
 
   removeMessage: IMessageService['removeMessage'] = async (id) => {

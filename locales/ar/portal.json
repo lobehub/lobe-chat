@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "ملحقات",
-  "actions": {
-    "genAiMessage": "إنشاء رسالة مساعد ذكاء اصطناعي",
-    "summary": "ملخص",
-    "summaryTooltip": "ملخص للمحتوى الحالي"
-  },
   "artifacts": {
     "display": {
       "code": "رمز",

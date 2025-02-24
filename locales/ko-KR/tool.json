@@ -6,5 +6,23 @@
     "generating": "생성 중...",
     "images": "이미지:",
     "prompt": "알림 단어"
+  },
+  "search": {
+    "createNewSearch": "새 검색 기록 만들기",
+    "emptyResult": "결과를 찾을 수 없습니다. 키워드를 수정한 후 다시 시도해 주세요.",
+    "genAiMessage": "도움말 메시지 생성",
+    "includedTooltip": "현재 검색 결과는 대화의 맥락에 포함됩니다.",
+    "keywords": "키워드：",
+    "scoreTooltip": "관련성 점수, 이 점수가 높을수록 쿼리 키워드와 더 관련이 있습니다.",
+    "searchBar": {
+      "button": "검색",
+      "placeholder": "키워드",
+      "tooltip": "검색 결과를 다시 가져오고 새로운 요약 메시지를 생성합니다."
+    },
+    "searchEngine": "검색 엔진：",
+    "searchResult": "검색 수：",
+    "summary": "요약",
+    "summaryTooltip": "현재 내용 요약",
+    "viewMoreResults": "{{results}}개의 결과 더 보기"
   }
 }

@@ -6,5 +6,23 @@
     "generating": "En cours de génération...",
     "images": "Images :",
     "prompt": "Mot de rappel"
+  },
+  "search": {
+    "createNewSearch": "Créer un nouvel enregistrement de recherche",
+    "emptyResult": "Aucun résultat trouvé, veuillez modifier les mots-clés et réessayer",
+    "genAiMessage": "Créer un message d'assistant",
+    "includedTooltip": "Les résultats de recherche actuels seront intégrés dans le contexte de la conversation",
+    "keywords": "Mots-clés :",
+    "scoreTooltip": "Score de pertinence, plus ce score est élevé, plus il est pertinent par rapport aux mots-clés de la requête",
+    "searchBar": {
+      "button": "Rechercher",
+      "placeholder": "Mots-clés",
+      "tooltip": "Cela va récupérer à nouveau les résultats de recherche et créer un nouveau message de résumé"
+    },
+    "searchEngine": "Moteur de recherche :",
+    "searchResult": "Nombre de recherches :",
+    "summary": "Résumé",
+    "summaryTooltip": "Résumer le contenu actuel",
+    "viewMoreResults": "Voir {{results}} résultats supplémentaires"
   }
 }

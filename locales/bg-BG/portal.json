@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "Плъгини",
-  "actions": {
-    "genAiMessage": "Създаване на съобщение на помощника",
-    "summary": "Обобщение",
-    "summaryTooltip": "Обобщение на текущото съдържание"
-  },
   "artifacts": {
     "display": {
       "code": "Код",

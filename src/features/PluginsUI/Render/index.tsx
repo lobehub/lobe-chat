@@ -15,6 +15,7 @@ export interface PluginRenderProps {
   identifier?: string;
   loading?: boolean;
   payload?: PluginRequestPayload;
+  pluginError?: any;
   pluginState?: any;
   type?: LobeToolRenderType;
 }
@@ -29,6 +30,7 @@ const PluginRender = memo<PluginRenderProps>(
     identifier,
     type,
     loading,
+    pluginError,
   }) => {
     switch (type) {
       case 'standalone': {
@@ -43,6 +45,7 @@ const PluginRender = memo<PluginRenderProps>(
             id={id}
             identifier={identifier}
             loading={loading}
+            pluginError={pluginError}
             pluginState={pluginState}
           />
         );

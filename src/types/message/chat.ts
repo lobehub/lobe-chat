@@ -92,6 +92,7 @@ export interface ChatMessage {
   parentId?: string;
 
   plugin?: ChatPluginPayload;
+  pluginError?: any;
   pluginState?: any;
   /**
    * quoted other message's id

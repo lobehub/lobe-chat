@@ -139,4 +139,8 @@ export class ClientService implements IMessageService {
     const number = await this.countMessages();
     return number >= 4;
   }
+
+  async updateMessagePluginError() {
+    throw new Error('Method not implemented.');
+  }
 }

@@ -25,7 +25,14 @@ export interface CloudflareKeyVault {
   baseURLOrAccountID?: string;
 }
 
-export interface UserKeyVaults {
+export interface SearchEngineKeyVaults {
+  searchxng?: {
+    apiKey?: string;
+    baseURL?: string;
+  };
+}
+
+export interface UserKeyVaults extends SearchEngineKeyVaults {
   ai21?: OpenAICompatibleKeyVault;
   ai360?: OpenAICompatibleKeyVault;
   anthropic?: OpenAICompatibleKeyVault;
