@@ -102,7 +102,6 @@ export class AiInfraRepos {
       enabledProviders,
       async (provider) => {
         const aiModels = await this.fetchBuiltinModels(provider.id);
-
         return (aiModels || [])
           .map<EnabledAiModel & { enabled?: boolean | null }>((item) => {
             const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
@@ -125,6 +124,7 @@ export class AiInfraRepos {
               enabled: typeof user.enabled === 'boolean' ? user.enabled : item.enabled,
               id: item.id,
               providerId: provider.id,
+              settings: item.settings,
               sort: user.sort || undefined,
               type: item.type,
             };
