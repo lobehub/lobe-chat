@@ -193,13 +193,9 @@ const Google: ModelProviderCard = {
     sdkType: 'google',
     showModelFetcher: true,
     smoothing: {
-      speed: 2,
+      speed: 50,
       text: true,
     },
-  },
-  smoothing: {
-    speed: 2,
-    text: true,
   },
   url: 'https://ai.google.dev',
 };
