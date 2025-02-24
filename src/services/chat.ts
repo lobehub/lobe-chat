@@ -1,8 +1,4 @@
-import {
-  LobeChatPluginManifest,
-  PluginRequestPayload,
-  createHeadersWithPluginSettings,
-} from '@lobehub/chat-plugin-sdk';
+import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
@@ -34,7 +30,7 @@ import {
   preferenceSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
-import { builtinSearchTools } from '@/tools';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
@@ -42,7 +38,6 @@ import { UserMessageContentPart } from '@/types/openai/chat';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { FetchSSEOptions, fetchSSE, getMessageError } from '@/utils/fetch';
 import { genToolCallingName } from '@/utils/toolCall';
-import { convertPluginManifestToToolsCalling } from '@/utils/toolManifest';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth, createPayloadWithKeyVaults } from './_auth';
@@ -182,6 +177,13 @@ class ChatService {
     const useBuiltinSearchTool = enabledSearch && !chatConfig.useModelBuiltinSearch;
     console.log('useBuiltinSearchTool:', useBuiltinSearchTool);
 
+    const pluginIds = [...(enabledPlugins || [])];
+
+    if (useBuiltinSearchTool) {
+      pluginIds.push(WebBrowsingManifest.identifier);
+    }
+    console.log(pluginIds);
+
     // ============  1. preprocess messages   ============ //
 
     const oaiMessages = this.processMessages(
@@ -189,23 +191,14 @@ class ChatService {
         messages,
         model: payload.model,
         provider: payload.provider!,
-        tools: enabledPlugins,
-        useBuiltinSearchTool,
+        tools: pluginIds,
       },
       options,
     );
 
     // ============  2. preprocess tools   ============ //
 
-    let filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
-
-    if (useBuiltinSearchTool) {
-      filterTools = filterTools.concat(
-        convertPluginManifestToToolsCalling([
-          builtinSearchTools.manifest as LobeChatPluginManifest,
-        ]),
-      );
-    }
+    let filterTools = toolSelectors.enabledSchema(pluginIds)(useToolStore.getState());
 
     // check this model can use function call
     const canUseFC = isCanUseFC(payload.model, payload.provider!);
@@ -428,7 +421,6 @@ class ChatService {
       model: string;
       provider: string;
       tools?: string[];
-      useBuiltinSearchTool?: boolean;
     },
     options?: FetchOptions,
   ): OpenAIChatMessage[] => {

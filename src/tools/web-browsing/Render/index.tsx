@@ -4,12 +4,17 @@ import { Flexbox } from 'react-layout-kit';
 import { BuiltinRenderProps } from '@/types/tool';
 import { SearchContent, SearchQuery, SearchResponse } from '@/types/tool/search';
 
+import ConfigForm from './ConfigForm';
 import SearchQueryView from './SearchQuery';
 import SearchResult from './SearchResult';
 
 const WebBrowsing = memo<BuiltinRenderProps<SearchContent[], SearchQuery, SearchResponse>>(
-  ({ messageId, args, pluginState }) => {
+  ({ messageId, args, pluginState, pluginError }) => {
     const [editing, setEditing] = useState(false);
+
+    if (pluginError?.type === 'PluginSettingsInvalid') {
+      return <ConfigForm id={messageId} provider={pluginError.body?.provider} />;
+    }
 
     return (
       <Flexbox gap={16}>

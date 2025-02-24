@@ -166,6 +166,17 @@ export const messageRouter = router({
       return ctx.messageModel.updateMessagePlugin(input.id, input.value);
     }),
 
+  updatePluginError: messageProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        value: z.object({}).passthrough().nullable(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.updateMessagePlugin(input.id, { error: input.value });
+    }),
+
   updatePluginState: messageProcedure
     .input(
       z.object({

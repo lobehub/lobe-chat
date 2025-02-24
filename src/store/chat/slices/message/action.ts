@@ -15,6 +15,7 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import {
   ChatMessage,
   ChatMessageError,
+  ChatMessagePluginError,
   CreateMessageParams,
   MessageToolCall,
   ModelReasoning,
@@ -84,7 +85,10 @@ export interface ChatMessageAction {
    * update the message error with optimistic update
    */
   internal_updateMessageError: (id: string, error: ChatMessageError | null) => Promise<void>;
-  internal_updateMessagePluginError: (id: string, error: ChatMessageError | null) => Promise<void>;
+  internal_updateMessagePluginError: (
+    id: string,
+    error: ChatMessagePluginError | null,
+  ) => Promise<void>;
   /**
    * create a message with optimistic update
    */
@@ -277,10 +281,12 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, { error });
     await get().refreshMessages();
   },
+
   internal_updateMessagePluginError: async (id, error) => {
     await messageService.updateMessagePluginError(id, error);
     await get().refreshMessages();
   },
+
   internal_updateMessageContent: async (id, content, extra) => {
     const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
 

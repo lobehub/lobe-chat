@@ -161,8 +161,10 @@ export const chatToolSlice: StateCreator<
       await get().updatePluginState(id, data);
     } catch (e) {
       if ((e as Error).message === SEARCH_SEARXNG_NOT_CONFIG) {
-        console.log('SearXNG is not configured');
         await get().internal_updateMessagePluginError(id, {
+          body: {
+            provider: 'searxng',
+          },
           message: 'SearXNG is not configured',
           type: 'PluginSettingsInvalid',
         });
