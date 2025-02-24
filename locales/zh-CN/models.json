@@ -170,9 +170,6 @@
   "MiniMax-Text-01": {
     "description": "在 MiniMax-01系列模型中，我们做了大胆创新：首次大规模实现线性注意力机制，传统 Transformer架构不再是唯一的选择。这个模型的参数量高达4560亿，其中单次激活459亿。模型综合性能比肩海外顶尖模型，同时能够高效处理全球最长400万token的上下文，是GPT-4o的32倍，Claude-3.5-Sonnet的20倍。"
   },
-  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
-    "description": "Hermes 2 Mixtral 8x7B DPO 是一款高度灵活的多模型合并，旨在提供卓越的创造性体验。"
-  },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) 是高精度的指令模型，适用于复杂计算。"
   },
@@ -321,19 +318,28 @@
     "description": "基础版本模型 (V4)，32K上下文长度，灵活应用于各类场景"
   },
   "SenseChat-5": {
-    "description": "最新版本模型 (V5.5)，128K上下文长度，在数学推理、英文对话、指令跟随以及长文本理解等领域能力显著提升，比肩GPT-4o"
+    "description": "最新版本模型 (V5.5)，128K上下文长度，在数学推理、英文对话、指令跟随以及长文本理解等领域能力显著提升，比肩GPT-4o。"
+  },
+  "SenseChat-5-1202": {
+    "description": "是基于V5.5的最新版本，较上版本在中英文基础能力，聊天，理科知识， 文科知识，写作，数理逻辑，字数控制 等几个维度的表现有显著提升。"
   },
   "SenseChat-5-Cantonese": {
-    "description": "32K上下文长度，在粤语的对话理解上超越了GPT-4，在知识、推理、数学及代码编写等多个领域均能与GPT-4 Turbo相媲美"
+    "description": "专门为适应香港地区的对话习惯、俚语及本地知识而设计，在粤语的对话理解上超越了GPT-4，在知识、推理、数学及代码编写等多个领域均能与GPT-4 Turbo相媲美。"
   },
   "SenseChat-Character": {
-    "description": "标准版模型，8K上下文长度，高响应速度"
+    "description": "拟人对话标准版模型，8K上下文长度，高响应速度"
   },
   "SenseChat-Character-Pro": {
-    "description": "高级版模型，32K上下文长度，能力全面提升，支持中/英文对话"
+    "description": "拟人对话高级版模型，32K上下文长度，能力全面提升，支持中/英文对话"
   },
   "SenseChat-Turbo": {
     "description": "适用于快速问答、模型微调场景"
+  },
+  "SenseChat-Turbo-1202": {
+    "description": "是最新的轻量版本模型，达到全量模型90%以上能力，显著降低推理成本。"
+  },
+  "SenseChat-Vision": {
+    "description": "最新版本模型 (V5.5)，支持多图的输入，全面实现模型基础能力优化，在对象属性识别、空间关系、动作事件识别、场景理解、情感识别、逻辑常识推理和文本理解生成上都实现了较大提升。"
   },
   "Skylark2-lite-8k": {
     "description": "云雀（Skylark）第二代模型，Skylark2-lite模型有较高的响应速度，适用于实时性要求高、成本敏感、对模型精度要求不高的场景，上下文窗口长度为8k。"
@@ -561,7 +567,7 @@
     "description": "Codestral 是 Mistral AI 的首款代码模型，为代码生成任务提供优异支持。"
   },
   "codestral-latest": {
-    "description": "Codestral是专注于代码生成的尖端生成模型，优化了中间填充和代码补全任务。"
+    "description": "Codestral 是我们最先进的编码语言模型，第二个版本于2025年1月发布，专门从事低延迟、高频任务如中间填充（RST）、代码纠正和测试生成。"
   },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B 是一款为指令遵循、对话和编程设计的模型。"
@@ -1019,6 +1025,12 @@
   "hunyuan-standard-vision": {
     "description": "混元最新多模态模型，支持多语种作答，中英文能力均衡。"
   },
+  "hunyuan-translation": {
+    "description": "支持中文和英语、日语、法语、葡萄牙语、西班牙语、土耳其语、俄语、阿拉伯语、韩语、意大利语、德语、越南语、马来语、印尼语15种语言互译，基于多场景翻译评测集自动化评估COMET评分，在十余种常用语种中外互译能力上整体优于市场同规模模型。"
+  },
+  "hunyuan-translation-lite": {
+    "description": "混元翻译模型支持自然语言对话式翻译；支持中文和英语、日语、法语、葡萄牙语、西班牙语、土耳其语、俄语、阿拉伯语、韩语、意大利语、德语、越南语、马来语、印尼语15种语言互译。"
+  },
   "hunyuan-turbo": {
     "description": "本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量"
   },
@@ -1047,10 +1059,10 @@
     "description": "InternLM2 版本最大的模型，专注于高度复杂的任务"
   },
   "internlm2.5-latest": {
-    "description": "我们仍在维护的老版本模型，经过多轮迭代有着极其优异且稳定的性能，包含 7B、20B 多种模型参数量可选，支持 1M 的上下文长度以及更强的指令跟随和工具调用能力。默认指向我们最新发布的 InternLM2.5 系列模型"
+    "description": "我们仍在维护的老版本模型，经过多轮迭代有着极其优异且稳定的性能，包含 7B、20B 多种模型参数量可选，支持 1M 的上下文长度以及更强的指令跟随和工具调用能力。默认指向我们最新发布的 InternLM2.5 系列模型，当前指向 internlm2.5-20b-chat。"
   },
   "internlm3-latest": {
-    "description": "我们最新的模型系列，有着卓越的推理性能，领跑同量级开源模型。默认指向我们最新发布的 InternLM3 系列模型"
+    "description": "我们最新的模型系列，有着卓越的推理性能，领跑同量级开源模型。默认指向我们最新发布的 InternLM3 系列模型，当前指向 internlm3-8b-instruct。"
   },
   "jina-deepsearch-v1": {
     "description": "深度搜索结合了网络搜索、阅读和推理，可进行全面调查。您可以将其视为一个代理，接受您的研究任务 - 它会进行广泛搜索并经过多次迭代，然后才能给出答案。这个过程涉及持续的研究、推理和从各个角度解决问题。这与直接从预训练数据生成答案的标准大模型以及依赖一次性表面搜索的传统 RAG 系统有着根本的不同。"
@@ -1220,9 +1232,6 @@
   "meta-llama/llama-3-8b-instruct": {
     "description": "Llama 3 8B Instruct 优化了高质量对话场景，性能优于许多闭源模型。"
   },
-  "meta-llama/llama-3.1-405b-instruct": {
-    "description": "Llama 3.1 405B Instruct 是 Meta最新推出的版本，优化用于生成高质量对话，超越了许多领导闭源模型。"
-  },
   "meta-llama/llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct 专为高质量对话而设计，在人类评估中表现突出，特别适合高交互场景。"
   },
@@ -1285,9 +1294,6 @@
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 是微软AI提供的语言模型，在复杂对话、多语言、推理和智能助手领域表现尤为出色。"
-  },
-  "microsoft/wizardlm 2-7b": {
-    "description": "WizardLM 2 7B 是微软AI最新的快速轻量化模型，性能接近于现有开源领导模型的10倍。"
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B 是微软AI最先进的Wizard模型，显示出极其竞争力的表现。"
@@ -1580,10 +1586,10 @@
   "qwq-32b-preview": {
     "description": "QwQ模型是由 Qwen 团队开发的实验性研究模型，专注于增强 AI 推理能力。"
   },
-  "solar-1-mini-chat": {
+  "solar-mini": {
     "description": "Solar Mini 是一种紧凑型 LLM，性能优于 GPT-3.5，具备强大的多语言能力，支持英语和韩语，提供高效小巧的解决方案。"
   },
-  "solar-1-mini-chat-ja": {
+  "solar-mini-ja": {
     "description": "Solar Mini (Ja) 扩展了 Solar Mini 的能力，专注于日语，同时在英语和韩语的使用中保持高效和卓越性能。"
   },
   "solar-pro": {
@@ -1619,6 +1625,9 @@
   "step-1.5v-mini": {
     "description": "该模型拥有强大的视频理解能力。"
   },
+  "step-1o-turbo-vision": {
+    "description": "该模型拥有强大的图像理解能力，在数理、代码领域强于1o。模型比1o更小，输出速度更快。"
+  },
   "step-1o-vision-32k": {
     "description": "该模型拥有强大的图像理解能力。相比于 step-1v 系列模型，拥有更强的视觉性能。"
   },
@@ -1634,11 +1643,11 @@
   "step-2-mini": {
     "description": "基于新一代自研Attention架构MFA的极速大模型，用极低成本达到和step1类似的效果，同时保持了更高的吞吐和更快响应时延。能够处理通用任务，在代码能力上具备特长。"
   },
-  "taichu2_mm": {
-    "description": "融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出"
-  },
   "taichu_llm": {
     "description": "基于海量高质数据训练，具有更强的文本理解、内容创作、对话问答等能力"
+  },
+  "taichu_vl": {
+    "description": "融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出"
   },
   "text-embedding-3-large": {
     "description": "最强大的向量化模型，适用于英文和非英文任务"

@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support application search with searchXNG."]
+    },
+    "date": "2025-02-24",
+    "version": "1.64.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix citation=null issue in stream."]
     },
     "date": "2025-02-24",

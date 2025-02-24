@@ -134,6 +134,22 @@
     "plugin": "Запуск плагина..."
   },
   "pluginList": "Список плагинов",
+  "search": {
+    "config": {
+      "addKey": "Добавить ключ",
+      "close": "Удалить",
+      "confirm": "Конфигурация завершена, попробуйте снова"
+    },
+    "searchxng": {
+      "baseURL": "Введите",
+      "description": "Введите URL SearchXNG, чтобы начать поиск в сети",
+      "keyPlaceholder": "Введите ключ",
+      "title": "Настройка поисковой системы SearchXNG",
+      "unconfiguredDesc": "Пожалуйста, свяжитесь с администратором для завершения настройки поисковой системы SearchXNG, чтобы начать поиск в сети",
+      "unconfiguredTitle": "Поисковая система SearchXNG еще не настроена"
+    },
+    "title": "Поиск в сети"
+  },
   "setting": "Настройка плагина",
   "settings": {
     "indexUrl": {

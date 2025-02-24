@@ -170,9 +170,6 @@
   "MiniMax-Text-01": {
     "description": "Nella serie di modelli MiniMax-01, abbiamo fatto un'innovazione audace: per la prima volta abbiamo implementato su larga scala un meccanismo di attenzione lineare, rendendo l'architettura Transformer tradizionale non più l'unica opzione. Questo modello ha un numero di parametri che raggiunge i 456 miliardi, con un'attivazione singola di 45,9 miliardi. Le prestazioni complessive del modello sono paragonabili a quelle dei migliori modelli internazionali, mentre è in grado di gestire in modo efficiente contesti globali lunghi fino a 4 milioni di token, 32 volte rispetto a GPT-4o e 20 volte rispetto a Claude-3.5-Sonnet."
   },
-  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
-    "description": "Hermes 2 Mixtral 8x7B DPO è un modello altamente flessibile, progettato per offrire un'esperienza creativa eccezionale."
-  },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) è un modello di istruzioni ad alta precisione, adatto per calcoli complessi."
   },
@@ -323,6 +320,9 @@
   "SenseChat-5": {
     "description": "Modello dell'ultima versione (V5.5), lunghezza del contesto di 128K, con capacità significativamente migliorate in ragionamento matematico, conversazioni in inglese, seguire istruzioni e comprensione di testi lunghi, paragonabile a GPT-4o."
   },
+  "SenseChat-5-1202": {
+    "description": "È l'ultima versione basata su V5.5, con miglioramenti significativi rispetto alla versione precedente nelle capacità di base in cinese e inglese, chat, conoscenze scientifiche, conoscenze umanistiche, scrittura, logica matematica e controllo del numero di parole."
+  },
   "SenseChat-5-Cantonese": {
     "description": "Lunghezza del contesto di 32K, supera GPT-4 nella comprensione delle conversazioni in cantonese, paragonabile a GPT-4 Turbo in vari ambiti come conoscenza, ragionamento, matematica e scrittura di codice."
   },
@@ -334,6 +334,12 @@
   },
   "SenseChat-Turbo": {
     "description": "Adatto per domande e risposte rapide, scenari di micro-ottimizzazione del modello."
+  },
+  "SenseChat-Turbo-1202": {
+    "description": "È l'ultima versione leggera del modello, raggiungendo oltre il 90% delle capacità del modello completo, riducendo significativamente i costi di inferenza."
+  },
+  "SenseChat-Vision": {
+    "description": "L'ultima versione del modello (V5.5) supporta l'input di più immagini, ottimizzando le capacità di base del modello, con notevoli miglioramenti nel riconoscimento delle proprietà degli oggetti, nelle relazioni spaziali, nel riconoscimento degli eventi, nella comprensione delle scene, nel riconoscimento delle emozioni, nel ragionamento logico e nella comprensione e generazione del testo."
   },
   "Skylark2-lite-8k": {
     "description": "Il modello di seconda generazione Skylark (Skylark2-lite) ha un'elevata velocità di risposta, adatto per scenari in cui sono richieste elevate prestazioni in tempo reale, attento ai costi e con requisiti di precisione del modello non elevati, con una lunghezza della finestra di contesto di 8k."
@@ -1019,6 +1025,12 @@
   "hunyuan-standard-vision": {
     "description": "Il modello multimodale più recente di Hunyuan, supporta risposte in più lingue, con capacità equilibrate in cinese e inglese."
   },
+  "hunyuan-translation": {
+    "description": "Supporta la traduzione tra cinese e inglese, giapponese, francese, portoghese, spagnolo, turco, russo, arabo, coreano, italiano, tedesco, vietnamita, malese e indonesiano, per un totale di 15 lingue, con valutazione automatica basata su un set di valutazione di traduzione multi-scenario e punteggio COMET, mostrando complessivamente prestazioni superiori rispetto ai modelli di dimensioni simili sul mercato in termini di capacità di traduzione reciproca tra le lingue più comuni."
+  },
+  "hunyuan-translation-lite": {
+    "description": "Il modello di traduzione Hunyuan supporta la traduzione in modo conversazionale in linguaggio naturale; supporta la traduzione tra cinese e inglese, giapponese, francese, portoghese, spagnolo, turco, russo, arabo, coreano, italiano, tedesco, vietnamita, malese e indonesiano, per un totale di 15 lingue."
+  },
   "hunyuan-turbo": {
     "description": "Anteprima della nuova generazione di modelli di linguaggio di Hunyuan, utilizza una nuova struttura di modello ibrido di esperti (MoE), con una maggiore efficienza di inferenza e prestazioni superiori rispetto a hunyuan-pro."
   },
@@ -1220,9 +1232,6 @@
   "meta-llama/llama-3-8b-instruct": {
     "description": "Llama 3 8B Instruct è ottimizzato per scenari di dialogo di alta qualità, con prestazioni superiori a molti modelli chiusi."
   },
-  "meta-llama/llama-3.1-405b-instruct": {
-    "description": "Llama 3.1 405B Instruct è l'ultima versione rilasciata da Meta, ottimizzata per generare dialoghi di alta qualità, superando molti modelli chiusi di punta."
-  },
   "meta-llama/llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct è progettato per dialoghi di alta qualità, con prestazioni eccezionali nelle valutazioni umane, particolarmente adatto per scenari ad alta interazione."
   },
@@ -1285,9 +1294,6 @@
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 è un modello linguistico fornito da Microsoft AI, particolarmente efficace in conversazioni complesse, multilingue, ragionamento e assistenti intelligenti."
-  },
-  "microsoft/wizardlm 2-7b": {
-    "description": "WizardLM 2 7B è il modello leggero e veloce più recente di Microsoft AI, con prestazioni vicine a quelle dei modelli leader open source esistenti."
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B è il modello Wizard più avanzato di Microsoft AI, mostrando prestazioni estremamente competitive."
@@ -1580,11 +1586,11 @@
   "qwq-32b-preview": {
     "description": "Il modello QwQ è un modello di ricerca sperimentale sviluppato dal team Qwen, focalizzato sul potenziamento delle capacità di ragionamento dell'IA."
   },
-  "solar-1-mini-chat": {
-    "description": "Solar Mini è un LLM compatto, con prestazioni superiori a GPT-3.5, dotato di forti capacità multilingue, supportando inglese e coreano, offrendo soluzioni efficienti e compatte."
+  "solar-mini": {
+    "description": "Solar Mini è un LLM compatto, con prestazioni superiori a GPT-3.5, dotato di potenti capacità multilingue, supporta inglese e coreano, offrendo soluzioni efficienti e compatte."
   },
-  "solar-1-mini-chat-ja": {
-    "description": "Solar Mini (Ja) espande le capacità di Solar Mini, focalizzandosi sul giapponese, mantenendo al contempo prestazioni elevate e un uso efficiente in inglese e coreano."
+  "solar-mini-ja": {
+    "description": "Solar Mini (Ja) espande le capacità di Solar Mini, concentrandosi sul giapponese, mantenendo al contempo prestazioni elevate ed efficienti nell'uso dell'inglese e del coreano."
   },
   "solar-pro": {
     "description": "Solar Pro è un LLM altamente intelligente lanciato da Upstage, focalizzato sulla capacità di seguire istruzioni su singolo GPU, con un punteggio IFEval superiore a 80. Attualmente supporta l'inglese, con una versione ufficiale prevista per novembre 2024, che espanderà il supporto linguistico e la lunghezza del contesto."
@@ -1619,6 +1625,9 @@
   "step-1.5v-mini": {
     "description": "Questo modello possiede potenti capacità di comprensione video."
   },
+  "step-1o-turbo-vision": {
+    "description": "Questo modello ha potenti capacità di comprensione delle immagini, superando 1o nei campi matematici e di codifica. Il modello è più piccolo di 1o e offre una velocità di output più rapida."
+  },
   "step-1o-vision-32k": {
     "description": "Questo modello possiede una potente capacità di comprensione delle immagini. Rispetto ai modelli della serie step-1v, offre prestazioni visive superiori."
   },
@@ -1634,11 +1643,11 @@
   "step-2-mini": {
     "description": "Un modello di grandi dimensioni ad alta velocità basato sulla nuova architettura di attenzione auto-sviluppata MFA, in grado di raggiungere risultati simili a quelli di step1 a un costo molto basso, mantenendo al contempo una maggiore capacità di elaborazione e tempi di risposta più rapidi. È in grado di gestire compiti generali, con competenze particolari nella programmazione."
   },
-  "taichu2_mm": {
-    "description": "Integra capacità di comprensione delle immagini, trasferimento di conoscenze, attribuzione logica, ecc., e si distingue nel campo delle domande e risposte basate su testo e immagini."
-  },
   "taichu_llm": {
     "description": "Il modello linguistico Taichu di Zīdōng ha una straordinaria capacità di comprensione del linguaggio e abilità in creazione di testi, domande di conoscenza, programmazione, calcoli matematici, ragionamento logico, analisi del sentimento e sintesi di testi. Combina in modo innovativo il pre-addestramento su grandi dati con una ricca conoscenza multi-sorgente, affinando continuamente la tecnologia degli algoritmi e assorbendo costantemente nuove conoscenze da dati testuali massivi, migliorando continuamente le prestazioni del modello. Fornisce agli utenti informazioni e servizi più convenienti e un'esperienza più intelligente."
+  },
+  "taichu_vl": {
+    "description": "Integra capacità di comprensione delle immagini, trasferimento di conoscenze e attribuzione logica, mostrando prestazioni eccezionali nel campo delle domande e risposte basate su testo e immagini."
   },
   "text-embedding-3-large": {
     "description": "Il modello di vettorizzazione più potente, adatto per compiti in inglese e non inglese."
