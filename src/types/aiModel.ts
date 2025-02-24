@@ -294,6 +294,7 @@ export interface AiProviderModelListItem {
   id: string;
   pricing?: ChatModelPricing;
   releasedAt?: string;
+  settings?: AiModelSettings;
   source?: AiModelSourceType;
   type: AiModelType;
 }
