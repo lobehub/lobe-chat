@@ -20,7 +20,11 @@ export class SearXNGClient {
 
       const response = await fetch(urlJoin(this.baseUrl, `/search?${searchParams}`));
 
-      return await response.json();
+      if (response.ok) {
+        return await response.json();
+      }
+
+      throw new Error(`Failed to search: ${response.statusText}`);
     } catch (error) {
       console.error('Error searching:', error);
       throw error;

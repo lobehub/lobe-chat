@@ -1,3 +1,4 @@
+import { Alert, Highlighter } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -12,8 +13,24 @@ const WebBrowsing = memo<BuiltinRenderProps<SearchContent[], SearchQuery, Search
   ({ messageId, args, pluginState, pluginError }) => {
     const [editing, setEditing] = useState(false);
 
-    if (pluginError?.type === 'PluginSettingsInvalid') {
-      return <ConfigForm id={messageId} provider={pluginError.body?.provider} />;
+    if (pluginError) {
+      if (pluginError?.type === 'PluginSettingsInvalid') {
+        return <ConfigForm id={messageId} provider={pluginError.body?.provider} />;
+      }
+
+      return (
+        <Alert
+          extra={
+            <Flexbox>
+              <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+                {JSON.stringify(pluginError.body?.data || pluginError.body, null, 2)}
+              </Highlighter>
+            </Flexbox>
+          }
+          message={pluginError?.message}
+          type={'error'}
+        />
+      );
     }
 
     return (

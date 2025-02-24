@@ -175,14 +175,12 @@ class ChatService {
 
     const enabledSearch = chatConfig.searchMode !== 'off';
     const useBuiltinSearchTool = enabledSearch && !chatConfig.useModelBuiltinSearch;
-    console.log('useBuiltinSearchTool:', useBuiltinSearchTool);
 
     const pluginIds = [...(enabledPlugins || [])];
 
     if (useBuiltinSearchTool) {
       pluginIds.push(WebBrowsingManifest.identifier);
     }
-    console.log(pluginIds);
 
     // ============  1. preprocess messages   ============ //
 

@@ -24,6 +24,15 @@ export const searchRouter = router({
 
       const client = new SearXNGClient(toolsEnv.SEARXNG_URL);
 
-      return await client.search(input.query, input.searchEngine);
+      try {
+        return await client.search(input.query, input.searchEngine);
+      } catch (e) {
+        console.error(e);
+
+        throw new TRPCError({
+          code: 'SERVICE_UNAVAILABLE',
+          message: (e as Error).message,
+        });
+      }
     }),
 });

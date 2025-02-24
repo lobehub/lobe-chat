@@ -1,12 +1,11 @@
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
+import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { SearchResult } from '@/types/tool/search';
-
-import { EngineAvatar } from '../../components/EngineAvatar';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -14,12 +13,12 @@ const useStyles = createStyles(({ css, token }) => ({
 
     height: 100%;
     padding: 8px;
+    border-radius: 8px;
 
     font-size: 12px;
     color: initial;
 
     background: ${token.colorFillQuaternary};
-    border-radius: 8px;
 
     &:hover {
       background: ${token.colorFillTertiary};
@@ -43,17 +42,26 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const SearchResultItem = memo<SearchResult>(({ url, title, engine }) => {
+const SearchResultItem = memo<SearchResult>(({ url, title }) => {
   const { styles } = useStyles();
 
+  const urlObj = new URL(url);
+  const host = urlObj.hostname;
   return (
     <Link href={url} target={'_blank'}>
       <Flexbox className={styles.container} gap={2} justify={'space-between'} key={url}>
         <div className={styles.title}>{title}</div>
         <Flexbox align={'center'} gap={4} horizontal>
-          <EngineAvatar engine={engine} />
+          <Image
+            alt={title || url}
+            height={14}
+            src={`https://icons.duckduckgo.com/ip3/${host}.ico`}
+            style={{ borderRadius: 4 }}
+            unoptimized
+            width={14}
+          />
           <Typography.Text className={styles.url} type={'secondary'}>
-            {new URL(url).hostname.replace('www.', '')}
+            {host.replace('www.', '')}
           </Typography.Text>
         </Flexbox>
       </Flexbox>

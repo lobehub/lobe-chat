@@ -168,6 +168,12 @@ export const chatToolSlice: StateCreator<
           message: 'SearXNG is not configured',
           type: 'PluginSettingsInvalid',
         });
+      } else {
+        await get().internal_updateMessagePluginError(id, {
+          body: e,
+          message: (e as Error).message,
+          type: 'PluginServerError',
+        });
       }
     }
 
