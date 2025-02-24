@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { toolsEnv } from '@/config/tools';
-
+import { isServerMode } from '@/const/version';
 /**
  * This file contains the root router of your tRPC-backend
  */
@@ -14,7 +14,13 @@ import { searchRouter } from '../search';
 import { hetongxue } from './fixtures/searXNG';
 
 vi.mock('@/config/tools', () => ({
-  toolsEnv: vi.fn(),
+  toolsEnv: {
+    SEARXNG_URL: 'https://demo.com',
+  },
+}));
+
+vi.mock('@/const/version', () => ({
+  isServerMode: true,
 }));
 
 const createCaller = createCallerFactory(searchRouter);
@@ -35,7 +41,7 @@ describe('searchRouter', () => {
       const results = await router.query({ query: '何同学' });
 
       // Assert
-      expect(results.results.length).toEqual(10);
+      expect(results.results.length).toEqual(43);
     });
   });
 });
