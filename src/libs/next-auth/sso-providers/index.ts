@@ -4,6 +4,7 @@ import Authentik from './authentik';
 import AzureAD from './azure-ad';
 import Casdoor from './casdoor';
 import CloudflareZeroTrust from './cloudflare-zero-trust';
+import Feishu from './feishu';
 import GenericOIDC from './generic-oidc';
 import Github from './github';
 import Logto from './logto';
@@ -24,4 +25,5 @@ export const ssoProviders = [
   Casdoor,
   MicrosoftEntraID,
   WeChat,
+  Feishu,
 ];
