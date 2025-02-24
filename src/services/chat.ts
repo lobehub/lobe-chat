@@ -215,7 +215,7 @@ class ChatService {
     const tools = shouldUseTools ? filterTools : undefined;
 
     return this.getChatCompletion(
-      { ...params, enabledSearch, messages: oaiMessages, tools },
+      { ...params, enabledSearch: enabledSearch ? true : undefined, messages: oaiMessages, tools },
       options,
     );
   };
