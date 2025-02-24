@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix model settings config."]
+    },
+    "date": "2025-02-24",
+    "version": "1.63.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix groq location request."],
       "improvements": ["Improve plugin calling style."]
     },
