@@ -15,9 +15,10 @@ export const builtinTools: LobeBuiltinTool[] = [
     manifest: DalleManifest,
     type: 'builtin',
   },
-  {
-    identifier: WebBrowsingManifest.identifier,
-    manifest: WebBrowsingManifest,
-    type: 'builtin',
-  },
 ];
+
+export const builtinSearchTools = {
+  identifier: WebBrowsingManifest.identifier,
+  manifest: WebBrowsingManifest,
+  type: 'builtin',
+};
