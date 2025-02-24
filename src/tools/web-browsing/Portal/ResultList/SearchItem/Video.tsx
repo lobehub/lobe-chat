@@ -15,10 +15,9 @@ const useStyles = createStyles(({ css, token }) => {
       flex: 1;
 
       padding: 8px;
+      border-radius: 8px;
 
       color: initial;
-
-      border-radius: 8px;
 
       &:hover {
         background: ${token.colorFillTertiary};
