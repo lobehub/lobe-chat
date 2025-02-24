@@ -12,7 +12,7 @@ export const EPubLoader = async (content: Uint8Array) => {
 
     const splitter = new RecursiveCharacterTextSplitter(loaderConfig);
     return await splitter.splitDocuments(documents);
-  }catch (e) {
+  } catch (e) {
     throw new Error(`EPubLoader error: ${(e as Error).message}`);
   } finally {
     tempManager.cleanup(); // 确保清理
