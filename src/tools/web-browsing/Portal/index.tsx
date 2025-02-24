@@ -1,9 +1,6 @@
-import { ActionIcon } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { uniq } from 'lodash-es';
-import { PlusSquareIcon } from 'lucide-react';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
@@ -11,6 +8,7 @@ import { chatToolSelectors } from '@/store/chat/selectors';
 import { SearchResponse } from '@/types/tool/search';
 
 import SearchBar from '../components/SearchBar';
+import Footer from './Footer';
 import ResultList from './ResultList';
 
 interface SearchArguments {
@@ -29,11 +27,7 @@ const Inspector = memo<InspectorUIProps<SearchArguments, SearchResponse>>(
   ({ arguments: args, messageId, state }) => {
     const engines = uniq((state.results || []).map((result) => result.engine));
     const defaultEngines = engines.length > 0 ? engines : args.searchEngine || [];
-    const [loading, saveSearchResult] = useChatStore((s) => [
-      chatToolSelectors.isSearXNGSearching(messageId)(s),
-      s.saveSearXNGSearchResult,
-    ]);
-    const { t } = useTranslation('tool');
+    const loading = useChatStore(chatToolSelectors.isSearXNGSearching(messageId));
 
     return (
       <Flexbox gap={12} height={'100%'}>
@@ -42,15 +36,6 @@ const Inspector = memo<InspectorUIProps<SearchArguments, SearchResponse>>(
           defaultEngines={defaultEngines}
           defaultQuery={args.query}
           messageId={messageId}
-          searchAddon={
-            <ActionIcon
-              icon={PlusSquareIcon}
-              onClick={() => {
-                saveSearchResult(messageId);
-              }}
-              title={t('search.createNewSearch')}
-            />
-          }
           tooltip={false}
         />
         {loading ? (
@@ -65,9 +50,12 @@ const Inspector = memo<InspectorUIProps<SearchArguments, SearchResponse>>(
             ))}
           </Flexbox>
         ) : (
-          <Flexbox height={'100%'} width={'100%'}>
-            <ResultList dataSources={state.results} />
-          </Flexbox>
+          <>
+            <Flexbox height={'100%'} width={'100%'}>
+              <ResultList dataSources={state.results} />
+            </Flexbox>
+            <Footer />
+          </>
         )}
       </Flexbox>
     );
