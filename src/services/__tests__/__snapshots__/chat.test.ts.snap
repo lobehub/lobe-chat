@@ -2,6 +2,7 @@
 
 exports[`ChatService > createAssistantMessage > with tools messages > work with dalle3 1`] = `
 {
+  "enabledSearch": undefined,
   "messages": [
     {
       "content": "<plugins description="The plugins you can use below">

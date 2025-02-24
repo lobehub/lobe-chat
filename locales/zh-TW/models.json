@@ -170,9 +170,6 @@
   "MiniMax-Text-01": {
     "description": "在 MiniMax-01系列模型中，我們做了大膽創新：首次大規模實現線性注意力機制，傳統 Transformer架構不再是唯一的選擇。這個模型的參數量高達4560億，其中單次激活459億。模型綜合性能比肩海外頂尖模型，同時能夠高效處理全球最長400萬token的上下文，是GPT-4o的32倍，Claude-3.5-Sonnet的20倍。"
   },
-  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
-    "description": "Hermes 2 Mixtral 8x7B DPO 是一款高度靈活的多模型合併，旨在提供卓越的創造性體驗。"
-  },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) 是高精度的指令模型，適用於複雜計算。"
   },
@@ -323,6 +320,9 @@
   "SenseChat-5": {
     "description": "最新版本模型 (V5.5)，128K上下文長度，在數學推理、英文對話、指令跟隨以及長文本理解等領域能力顯著提升，比肩GPT-4o"
   },
+  "SenseChat-5-1202": {
+    "description": "是基於V5.5的最新版本，較上版本在中英文基礎能力、聊天、理科知識、文科知識、寫作、數理邏輯、字數控制等幾個維度的表現有顯著提升。"
+  },
   "SenseChat-5-Cantonese": {
     "description": "32K上下文長度，在粵語的對話理解上超越了GPT-4，在知識、推理、數學及程式編寫等多個領域均能與GPT-4 Turbo相媲美"
   },
@@ -334,6 +334,12 @@
   },
   "SenseChat-Turbo": {
     "description": "適用於快速問答、模型微調場景"
+  },
+  "SenseChat-Turbo-1202": {
+    "description": "是最新的輕量版本模型，達到全量模型90%以上能力，顯著降低推理成本。"
+  },
+  "SenseChat-Vision": {
+    "description": "最新版本模型 (V5.5)，支持多圖的輸入，全面實現模型基礎能力優化，在對象屬性識別、空間關係、動作事件識別、場景理解、情感識別、邏輯常識推理和文本理解生成上都實現了較大提升。"
   },
   "Skylark2-lite-8k": {
     "description": "雲雀（Skylark）第二代模型，Skylark2-lite 模型有較高的回應速度，適用於實時性要求高、成本敏感、對模型精度要求不高的場景，上下文窗口長度為 8k。"
@@ -1019,6 +1025,12 @@
   "hunyuan-standard-vision": {
     "description": "混元最新多模態模型，支持多語種作答，中英文能力均衡。"
   },
+  "hunyuan-translation": {
+    "description": "支持中文和英語、日語、法語、葡萄牙語、西班牙語、土耳其語、俄語、阿拉伯語、韓語、義大利語、德語、越南語、馬來語、印尼語15種語言互譯，基於多場景翻譯評測集自動化評估COMET評分，在十餘種常用語種中外互譯能力上整體優於市場同規模模型。"
+  },
+  "hunyuan-translation-lite": {
+    "description": "混元翻譯模型支持自然語言對話式翻譯；支持中文和英語、日語、法語、葡萄牙語、西班牙語、土耳其語、俄語、阿拉伯語、韓語、義大利語、德語、越南語、馬來語、印尼語15種語言互譯。"
+  },
   "hunyuan-turbo": {
     "description": "混元全新一代大語言模型的預覽版，採用全新的混合專家模型（MoE）結構，相較於 hunyuan-pro 推理效率更快，效果表現更強。"
   },
@@ -1220,9 +1232,6 @@
   "meta-llama/llama-3-8b-instruct": {
     "description": "Llama 3 8B Instruct 優化了高品質對話場景，性能優於許多閉源模型。"
   },
-  "meta-llama/llama-3.1-405b-instruct": {
-    "description": "Llama 3.1 405B Instruct 是 Meta 最新推出的版本，優化用於生成高品質對話，超越了許多領先的閉源模型。"
-  },
   "meta-llama/llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct 專為高品質對話而設計，在人類評估中表現突出，特別適合高互動場景。"
   },
@@ -1285,9 +1294,6 @@
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 是微軟AI提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"
-  },
-  "microsoft/wizardlm 2-7b": {
-    "description": "WizardLM 2 7B 是微軟AI最新的快速輕量化模型，性能接近於現有開源領導模型的10倍。"
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B 是微軟 AI 最先進的 Wizard 模型，顯示出極其競爭力的表現。"
@@ -1580,10 +1586,10 @@
   "qwq-32b-preview": {
     "description": "QwQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於增強 AI 推理能力。"
   },
-  "solar-1-mini-chat": {
+  "solar-mini": {
     "description": "Solar Mini 是一種緊湊型 LLM，性能優於 GPT-3.5，具備強大的多語言能力，支持英語和韓語，提供高效小巧的解決方案。"
   },
-  "solar-1-mini-chat-ja": {
+  "solar-mini-ja": {
     "description": "Solar Mini (Ja) 擴展了 Solar Mini 的能力，專注於日語，同時在英語和韓語的使用中保持高效和卓越性能。"
   },
   "solar-pro": {
@@ -1619,6 +1625,9 @@
   "step-1.5v-mini": {
     "description": "該模型擁有強大的視頻理解能力。"
   },
+  "step-1o-turbo-vision": {
+    "description": "該模型擁有強大的圖像理解能力，在數理、代碼領域強於1o。模型比1o更小，輸出速度更快。"
+  },
   "step-1o-vision-32k": {
     "description": "該模型擁有強大的圖像理解能力。相比於 step-1v 系列模型，擁有更強的視覺性能。"
   },
@@ -1634,11 +1643,11 @@
   "step-2-mini": {
     "description": "基於新一代自研Attention架構MFA的極速大模型，用極低成本達到和step1類似的效果，同時保持了更高的吞吐和更快響應時延。能夠處理通用任務，在程式碼能力上具備特長。"
   },
-  "taichu2_mm": {
-    "description": "融合了圖像理解、知識遷移、邏輯歸因等能力，在圖文問答領域表現突出"
-  },
   "taichu_llm": {
     "description": "紫東太初語言大模型具備超強語言理解能力以及文本創作、知識問答、代碼編程、數學計算、邏輯推理、情感分析、文本摘要等能力。創新性地將大數據預訓練與多源豐富知識相結合，通過持續打磨算法技術，並不斷吸收海量文本數據中詞彙、結構、語法、語義等方面的新知識，實現模型效果不斷進化。為用戶提供更加便捷的信息和服務以及更為智能化的體驗。"
+  },
+  "taichu_vl": {
+    "description": "融合了圖像理解、知識遷移、邏輯歸因等能力，在圖文問答領域表現突出。"
   },
   "text-embedding-3-large": {
     "description": "最強大的向量化模型，適用於英文和非英文任務"

@@ -50,6 +50,8 @@ export interface ModelListAction {
     config: Partial<UserKeyVaults[T]>,
   ) => Promise<void>;
 
+  updateKeyVaultSettings: (key: string, config: any) => Promise<void>;
+
   useFetchProviderModelList: (
     provider: GlobalLLMProviderKey,
     enabledAutoFetch: boolean,
@@ -186,6 +188,10 @@ export const createModelListSlice: StateCreator<
   },
 
   updateKeyVaultConfig: async (provider, config) => {
+    await get().setSettings({ keyVaults: { [provider]: config } });
+  },
+
+  updateKeyVaultSettings: async (provider, config) => {
     await get().setSettings({ keyVaults: { [provider]: config } });
   },
 

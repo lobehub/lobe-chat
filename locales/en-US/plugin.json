@@ -134,6 +134,22 @@
     "plugin": "Plugin is running..."
   },
   "pluginList": "Plugin List",
+  "search": {
+    "config": {
+      "addKey": "Add Key",
+      "close": "Delete",
+      "confirm": "Configuration completed, please retry"
+    },
+    "searchxng": {
+      "baseURL": "Please enter",
+      "description": "Enter the URL for SearchXNG to start online searching",
+      "keyPlaceholder": "Please enter key",
+      "title": "Configure SearchXNG Search Engine",
+      "unconfiguredDesc": "Please contact the administrator to complete the SearchXNG search engine configuration to start online searching",
+      "unconfiguredTitle": "SearchXNG search engine not configured yet"
+    },
+    "title": "Online Search"
+  },
   "setting": "Plugin Settings",
   "settings": {
     "indexUrl": {
