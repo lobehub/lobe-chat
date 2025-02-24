@@ -13,12 +13,14 @@ import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
 import KnowledgeTag from './KnowledgeTag';
+import SearchTags from './SearchTags';
 
 const TitleTags = memo(() => {
-  const [model, provider, hasKnowledge] = useAgentStore((s) => [
+  const [model, provider, hasKnowledge, isAgentEnableSearch] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
     agentSelectors.currentAgentModelProvider(s),
     agentSelectors.hasKnowledge(s),
+    agentSelectors.isAgentEnableSearch(s),
   ]);
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins, isEqual);
   const enabledKnowledge = useAgentStore(agentSelectors.currentEnabledKnowledge, isEqual);
@@ -34,6 +36,7 @@ const TitleTags = memo(() => {
       <ModelSwitchPanel>
         <ModelTag model={model} />
       </ModelSwitchPanel>
+      {isAgentEnableSearch && <SearchTags />}
       {showPlugin && plugins?.length > 0 && <PluginTag plugins={plugins} />}
       {hasKnowledge && <KnowledgeTag data={enabledKnowledge} />}
     </Flexbox>
