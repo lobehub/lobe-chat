@@ -4,6 +4,7 @@ const moonshotChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 131_072,
@@ -19,11 +20,15 @@ const moonshotChatModels: AIChatModelCard[] = [
       output: 60,
     },
     releasedAt: '2025-02-17',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -35,11 +40,15 @@ const moonshotChatModels: AIChatModelCard[] = [
       input: 60,
       output: 60,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8192,
     description:
@@ -51,11 +60,15 @@ const moonshotChatModels: AIChatModelCard[] = [
       input: 12,
       output: 12,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_768,
     description:
@@ -67,11 +80,15 @@ const moonshotChatModels: AIChatModelCard[] = [
       input: 24,
       output: 24,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -83,11 +100,15 @@ const moonshotChatModels: AIChatModelCard[] = [
       input: 60,
       output: 60,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 8192,
@@ -101,11 +122,15 @@ const moonshotChatModels: AIChatModelCard[] = [
       output: 12,
     },
     releasedAt: '2025-01-14',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 32_768,
@@ -119,11 +144,15 @@ const moonshotChatModels: AIChatModelCard[] = [
       output: 24,
     },
     releasedAt: '2025-01-14',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 131_072,
@@ -137,6 +166,9 @@ const moonshotChatModels: AIChatModelCard[] = [
       output: 60,
     },
     releasedAt: '2025-01-14',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
 ];

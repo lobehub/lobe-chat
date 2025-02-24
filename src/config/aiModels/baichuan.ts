@@ -4,6 +4,7 @@ const baichuanChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_768,
     description:
@@ -17,11 +18,15 @@ const baichuanChatModels: AIChatModelCard[] = [
       input: 100,
       output: 100,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_768,
     description:
@@ -35,11 +40,15 @@ const baichuanChatModels: AIChatModelCard[] = [
       input: 15,
       output: 15,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_768,
     description:
@@ -53,11 +62,15 @@ const baichuanChatModels: AIChatModelCard[] = [
       input: 0.98,
       output: 0.98,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_768,
     description:
@@ -69,6 +82,9 @@ const baichuanChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 12,
       output: 12,
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },

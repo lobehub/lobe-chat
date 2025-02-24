@@ -2,6 +2,9 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const sparkChatModels: AIChatModelCard[] = [
   {
+    abilities: {
+      search: true,
+    },
     contextWindowTokens: 8192,
     description:
       'Spark Lite 是一款轻量级大语言模型，具备极低的延迟与高效的处理能力，完全免费开放，支持实时在线搜索功能。其快速响应的特性使其在低算力设备上的推理应用和模型微调中表现出色，为用户带来出色的成本效益和智能体验，尤其在知识问答、内容生成及搜索场景下表现不俗。',
@@ -9,9 +12,15 @@ const sparkChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'lite',
     maxOutput: 4096,
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
   {
+    abilities: {
+      search: true,
+    },
     contextWindowTokens: 8192,
     description:
       'Spark Pro 是一款为专业领域优化的高性能大语言模型，专注数学、编程、医疗、教育等多个领域，并支持联网搜索及内置天气、日期等插件。其优化后模型在复杂知识问答、语言理解及高层次文本创作中展现出色表现和高效性能，是适合专业应用场景的理想选择。',
@@ -19,9 +28,15 @@ const sparkChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'generalv3',
     maxOutput: 8192,
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
   {
+    abilities: {
+      search: true,
+    },
     contextWindowTokens: 131_072,
     description:
       'Spark Pro 128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。',
@@ -29,11 +44,15 @@ const sparkChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'pro-128k',
     maxOutput: 4096,
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8192,
     description:
@@ -42,11 +61,15 @@ const sparkChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'generalv3.5',
     maxOutput: 8192,
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_768,
     description:
@@ -55,11 +78,15 @@ const sparkChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'max-32k',
     maxOutput: 8192,
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8192,
     description:
@@ -68,6 +95,9 @@ const sparkChatModels: AIChatModelCard[] = [
     enabled: true,
     id: '4.0Ultra',
     maxOutput: 8192,
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
 ];
