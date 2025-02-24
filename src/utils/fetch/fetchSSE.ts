@@ -62,9 +62,9 @@ export interface FetchSSEOptions {
   smoothing?: SmoothingParams | boolean;
 }
 
-const START_ANIMATION_SPEED = 50; // 默认每秒输出 50 个字符
+const START_ANIMATION_SPEED = 10; // 默认起始速度
 
-const END_ANIMATION_SPEED = 9_999_999;
+const END_ANIMATION_SPEED = 16;
 
 const createSmoothMessage = (params: {
   onTextUpdate: (delta: string, text: string) => void;
@@ -130,7 +130,7 @@ const createSmoothMessage = (params: {
           accumulatedTime -= (charsToProcess * 1000) / currentSpeed;
 
           let actualChars = Math.min(charsToProcess, outputQueue.length);
-          // actualChars = Math.min(speed, actualChars);
+          // actualChars = Math.min(speed, actualChars); // 速度上限
 
           // if (actualChars * 2 < outputQueue.length && /[\dA-Za-z]/.test(outputQueue[actualChars])) {
           //   actualChars *= 2;
