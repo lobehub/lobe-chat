@@ -216,6 +216,32 @@ describe('AiInfraRepos', () => {
         }),
       );
     });
+
+    it('should include settings property from builtin model', async () => {
+      const mockProviders = [
+        { enabled: true, id: 'openai', name: 'OpenAI', source: 'builtin' },
+      ] as AiProviderListItem[];
+      const mockAllModels: EnabledAiModel[] = [];
+      const mockSettings = { searchImpl: 'tool' as const };
+
+      vi.spyOn(repo, 'getAiProviderList').mockResolvedValue(mockProviders);
+      vi.spyOn(repo.aiModelModel, 'getAllModels').mockResolvedValue(mockAllModels);
+      vi.spyOn(repo as any, 'fetchBuiltinModels').mockResolvedValue([
+        {
+          enabled: true,
+          id: 'gpt-4',
+          settings: mockSettings,
+          type: 'chat',
+        },
+      ]);
+
+      const result = await repo.getEnabledModels();
+
+      expect(result[0]).toMatchObject({
+        id: 'gpt-4',
+        settings: mockSettings,
+      });
+    });
   });
 
   describe('getAiProviderModelList', () => {
@@ -239,6 +265,7 @@ describe('AiInfraRepos', () => {
         ]),
       );
     });
+
     it('should merge default and custom models', async () => {
       const mockCustomModels = [
         {
@@ -321,6 +348,7 @@ describe('AiInfraRepos', () => {
         runtimeConfig: expect.any(Object),
       });
     });
+
     it('should return provider runtime state', async () => {
       const mockRuntimeConfig = {
         openai: {
@@ -385,6 +413,7 @@ describe('AiInfraRepos', () => {
         enabled: true, // from mockProviderConfigs
       });
     });
+
     it('should merge provider configs correctly', async () => {
       const mockProviderDetail = {
         enabled: true,
