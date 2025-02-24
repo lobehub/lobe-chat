@@ -174,11 +174,17 @@ class ChatService {
     const chatConfig = getAgentChatConfig();
 
     const enabledSearch = chatConfig.searchMode !== 'off';
-    const useBuiltinSearchTool = enabledSearch && !chatConfig.useModelBuiltinSearch;
+    const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
+      payload.model,
+      payload.provider!,
+    )(useAiInfraStore.getState());
+
+    const useApplicationBuiltinSearchTool =
+      enabledSearch && !(isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch);
 
     const pluginIds = [...(enabledPlugins || [])];
 
-    if (useBuiltinSearchTool) {
+    if (useApplicationBuiltinSearchTool) {
       pluginIds.push(WebBrowsingManifest.identifier);
     }
 
