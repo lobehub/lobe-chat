@@ -10,7 +10,7 @@ import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
-import AuthIcons from './AuthIcons';
+import AuthIcons from '@/components/NextAuth/AuthIcons';
 
 const { Item } = List;
 
