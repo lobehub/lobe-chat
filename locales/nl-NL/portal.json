@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "Plugins",
-  "actions": {
-    "genAiMessage": "Creëer assistentbericht",
-    "summary": "Samenvatting",
-    "summaryTooltip": "Samenvatting van de huidige inhoud"
-  },
   "artifacts": {
     "display": {
       "code": "Code",

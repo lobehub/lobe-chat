@@ -10,6 +10,7 @@
   "search": {
     "createNewSearch": "Crear un nuevo registro de búsqueda",
     "emptyResult": "No se encontraron resultados, por favor modifica las palabras clave y vuelve a intentarlo",
+    "genAiMessage": "Crear mensaje del asistente",
     "includedTooltip": "Los resultados de búsqueda actuales se incluirán en el contexto de la conversación",
     "keywords": "Palabras clave:",
     "scoreTooltip": "Puntuación de relevancia, cuanto más alta sea la puntuación, más relevante será para las palabras clave de la consulta",
@@ -20,6 +21,8 @@
     },
     "searchEngine": "Motor de búsqueda:",
     "searchResult": "Número de búsquedas:",
+    "summary": "Resumen",
+    "summaryTooltip": "Resumir el contenido actual",
     "viewMoreResults": "Ver más {{results}} resultados"
   }
 }

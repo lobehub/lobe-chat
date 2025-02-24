@@ -10,6 +10,7 @@
   "search": {
     "createNewSearch": "Maak een nieuwe zoekopdracht",
     "emptyResult": "Geen resultaten gevonden, pas alstublieft uw zoekwoorden aan en probeer het opnieuw",
+    "genAiMessage": "Maak assistentbericht",
     "includedTooltip": "De huidige zoekresultaten worden opgenomen in de context van de sessie",
     "keywords": "Zoekwoorden:",
     "scoreTooltip": "Relevantie score, hoe hoger de score, hoe relevanter het is voor de zoekwoorden",
@@ -20,6 +21,8 @@
     },
     "searchEngine": "Zoekmachine:",
     "searchResult": "Aantal zoekresultaten:",
+    "summary": "Samenvatting",
+    "summaryTooltip": "Samenvatting van de huidige inhoud",
     "viewMoreResults": "Bekijk meer {{results}} resultaten"
   }
 }
