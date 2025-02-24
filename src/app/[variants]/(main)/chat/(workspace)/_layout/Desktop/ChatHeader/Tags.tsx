@@ -6,6 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
 import PluginTag from '@/features/PluginTag';
+import { useAgentEnableSearch } from '@/hooks/useAgentEnableSearch';
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -16,18 +17,20 @@ import KnowledgeTag from './KnowledgeTag';
 import SearchTags from './SearchTags';
 
 const TitleTags = memo(() => {
-  const [model, provider, hasKnowledge, isAgentEnableSearch] = useAgentStore((s) => [
+  const [model, provider, hasKnowledge, isLoading] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
     agentSelectors.currentAgentModelProvider(s),
     agentSelectors.hasKnowledge(s),
-    agentSelectors.isAgentEnableSearch(s),
+    agentSelectors.isAgentConfigLoading(s),
   ]);
+
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins, isEqual);
   const enabledKnowledge = useAgentStore(agentSelectors.currentEnabledKnowledge, isEqual);
 
   const showPlugin = useModelSupportToolUse(model, provider);
-  const isLoading = useAgentStore(agentSelectors.isAgentConfigLoading);
   const isLogin = useUserStore(authSelectors.isLogin);
+
+  const isAgentEnableSearch = useAgentEnableSearch();
 
   return isLoading && isLogin ? (
     <Skeleton.Button active size={'small'} style={{ height: 20 }} />
