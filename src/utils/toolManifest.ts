@@ -2,8 +2,6 @@ import { LobeChatPluginManifest, pluginManifestSchema } from '@lobehub/chat-plug
 import { uniqBy } from 'lodash-es';
 
 import { API_ENDPOINTS } from '@/services/_url';
-import { ToolStoreState } from '@/store/tool/initialState';
-import { pluginSelectors } from '@/store/tool/slices/plugin/selectors';
 import { ChatCompletionTool } from '@/types/openai/chat';
 import { OpenAIPluginManifest } from '@/types/openai/plugin';
 import { genToolCallingName } from '@/utils/toolCall';
