@@ -117,8 +117,8 @@ export const searchSlice: StateCreator<
 
     if (!data) return;
 
-    // 只取前 5 个结果作为上下文
-    const searchContent: SearchContent[] = data.results.slice(0, 5).map((item) => ({
+    // add 15 search results to message content
+    const searchContent: SearchContent[] = data.results.slice(0, 15).map((item) => ({
       content: item.content,
       title: item.title,
       url: item.url,
