@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add Claude 3.7 Sonnet and Haiku 3.5."]
+    },
+    "date": "2025-02-25",
+    "version": "1.64.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix 0 search results with specific search engine."]
     },
     "date": "2025-02-25",
