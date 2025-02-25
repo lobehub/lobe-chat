@@ -113,7 +113,12 @@ const VideoItem = memo<SearchResultProps>(
                   </AntAvatar.Group>
                   <Flexbox className={styles.title}>{title}</Flexbox>
                 </Flexbox>
-                <TitleExtra category={category} highlight={highlight} score={score} />
+                <TitleExtra
+                  category={category}
+                  engines={engines}
+                  highlight={highlight}
+                  score={score}
+                />
               </Flexbox>
               <Typography.Text className={styles.url} type={'secondary'}>
                 {url}
