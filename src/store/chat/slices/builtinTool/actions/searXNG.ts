@@ -134,6 +134,10 @@ export const searchSlice: StateCreator<
   },
 
   toggleSearchLoading: (id, loading) => {
-    set({ searchLoading: { ...get().searchLoading, [id]: loading } }, false, 'toggleSearchLoading');
+    set(
+      { searchLoading: { ...get().searchLoading, [id]: loading } },
+      false,
+      `toggleSearchLoading/${loading ? 'start' : 'end'}`,
+    );
   },
 });
