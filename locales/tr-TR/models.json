@@ -170,9 +170,6 @@
   "MiniMax-Text-01": {
     "description": "MiniMax-01 serisi modellerinde cesur yenilikler yaptık: ilk kez büyük ölçekli lineer dikkat mekanizmasını gerçekleştirdik, geleneksel Transformer mimarisi artık tek seçenek değil. Bu modelin parametre sayısı 456 milyara kadar çıkmakta, tek bir aktivasyonda 45.9 milyar. Modelin genel performansı, yurtdışındaki en iyi modellerle karşılaştırılabilirken, dünya genelinde 4 milyon token uzunluğundaki bağlamı verimli bir şekilde işleyebilir, bu da GPT-4o'nun 32 katı, Claude-3.5-Sonnet'in 20 katıdır."
   },
-  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
-    "description": "Hermes 2 Mixtral 8x7B DPO, olağanüstü yaratıcı deneyimler sunmak için tasarlanmış son derece esnek bir çoklu model birleşimidir."
-  },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B), karmaşık hesaplamalar için yüksek hassasiyetli bir talimat modelidir."
   },
@@ -323,6 +320,9 @@
   "SenseChat-5": {
     "description": "En son sürüm model (V5.5), 128K bağlam uzunluğu, matematiksel akıl yürütme, İngilizce diyalog, talimat takibi ve uzun metin anlama gibi alanlarda önemli gelişmeler göstermektedir ve GPT-4o ile karşılaştırılabilir."
   },
+  "SenseChat-5-1202": {
+    "description": "V5.5 tabanlı en son versiyondur, önceki versiyona göre Çince ve İngilizce temel yetenekleri, sohbet, fen bilgisi, sosyal bilimler bilgisi, yazım, matematiksel mantık, kelime sayısı kontrolü gibi birkaç boyutta önemli bir gelişim göstermiştir."
+  },
   "SenseChat-5-Cantonese": {
     "description": "32K bağlam uzunluğu ile, Kantonca diyalog anlama konusunda GPT-4'ü aşmakta, bilgi, akıl yürütme, matematik ve kod yazma gibi birçok alanda GPT-4 Turbo ile rekabet edebilmektedir."
   },
@@ -334,6 +334,12 @@
   },
   "SenseChat-Turbo": {
     "description": "Hızlı soru-cevap ve model ince ayar senaryoları için uygundur."
+  },
+  "SenseChat-Turbo-1202": {
+    "description": "En son hafif versiyon modelidir, tam modelin %90'ından fazla yetenek sunar ve çıkarım maliyetini önemli ölçüde azaltır."
+  },
+  "SenseChat-Vision": {
+    "description": "En son versiyon modeli (V5.5), çoklu görsel girişi destekler, modelin temel yetenek optimizasyonunu tamamen gerçekleştirir; nesne özellik tanıma, mekansal ilişkiler, hareket olayları tanıma, sahne anlama, duygu tanıma, mantıksal bilgi çıkarımı ve metin anlama üretimi gibi alanlarda önemli gelişmeler sağlamıştır."
   },
   "Skylark2-lite-8k": {
     "description": "Skylark'in (Bulut Şarkıcısı) ikinci nesil modeli, Skylark2-lite modeli yüksek yanıt hızı ile donatılmıştır; gerçek zamanlı talep gereksinimleri yüksek, maliyet duyarlı ve model hassasiyetine daha az ihtiyaç duyulan senaryolar için uygundur; bağlam pencere uzunluğu 8k'dır."
@@ -1019,6 +1025,12 @@
   "hunyuan-standard-vision": {
     "description": "Hunyuan'ın en son çok modlu modeli, çok dilli yanıtları destekler, Çince ve İngilizce yetenekleri dengelidir."
   },
+  "hunyuan-translation": {
+    "description": "Çince ve İngilizce, Japonca, Fransızca, Portekizce, İspanyolca, Türkçe, Rusça, Arapça, Korece, İtalyanca, Almanca, Vietnamca, Malayca, Endonezyaca dahil olmak üzere 15 dil arasında çeviri desteği sunar. Çoklu senaryo çeviri değerlendirme setine dayalı otomatik değerlendirme COMET puanı ile, ondan fazla yaygın dildeki çeviri yetenekleri, pazarın aynı ölçekli modellerine göre genel olarak daha üstündür."
+  },
+  "hunyuan-translation-lite": {
+    "description": "Hunyuan çeviri modeli, doğal dil diyalog tarzı çeviriyi destekler; Çince ve İngilizce, Japonca, Fransızca, Portekizce, İspanyolca, Türkçe, Rusça, Arapça, Korece, İtalyanca, Almanca, Vietnamca, Malayca, Endonezyaca dahil olmak üzere 15 dil arasında çeviri desteği sunar."
+  },
   "hunyuan-turbo": {
     "description": "Hunyuan'ın yeni nesil büyük dil modelinin önizleme sürümü, tamamen yeni bir karma uzman modeli (MoE) yapısı kullanır ve hunyuan-pro'ya kıyasla daha hızlı çıkarım verimliliği ve daha güçlü performans sunar."
   },
@@ -1220,9 +1232,6 @@
   "meta-llama/llama-3-8b-instruct": {
     "description": "Llama 3 8B Instruct, yüksek kaliteli diyalog senaryoları için optimize edilmiştir ve birçok kapalı kaynak modelden daha iyi performans göstermektedir."
   },
-  "meta-llama/llama-3.1-405b-instruct": {
-    "description": "Llama 3.1 405B Instruct, Meta'nın en son sunduğu versiyon olup, yüksek kaliteli diyalog üretimi için optimize edilmiştir ve birçok önde gelen kapalı kaynak modelden daha iyi performans göstermektedir."
-  },
   "meta-llama/llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct, yüksek kaliteli diyalog için tasarlanmış olup, insan değerlendirmelerinde öne çıkmakta ve özellikle yüksek etkileşimli senaryolar için uygundur."
   },
@@ -1285,9 +1294,6 @@
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2, Microsoft AI tarafından sağlanan bir dil modelidir ve karmaşık diyaloglar, çok dilli destek, akıl yürütme ve akıllı asistan alanlarında özellikle başarılıdır."
-  },
-  "microsoft/wizardlm 2-7b": {
-    "description": "WizardLM 2 7B, Microsoft AI'nın en son hızlı ve hafif modelidir ve mevcut açık kaynak lider modellerin performansına yakın bir performans sunmaktadır."
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B, Microsoft'un en gelişmiş AI Wizard modelidir ve son derece rekabetçi bir performans sergiler."
@@ -1580,11 +1586,11 @@
   "qwq-32b-preview": {
     "description": "QwQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir ve AI akıl yürütme yeteneklerini artırmaya odaklanmaktadır."
   },
-  "solar-1-mini-chat": {
-    "description": "Solar Mini, kompakt bir LLM'dir, GPT-3.5'ten daha iyi performans gösterir, güçlü çok dilli yeteneklere sahiptir, İngilizce ve Koreceyi destekler, etkili ve hafif bir çözüm sunar."
+  "solar-mini": {
+    "description": "Solar Mini, GPT-3.5'ten daha iyi performansa sahip kompakt bir LLM'dir, güçlü çok dilli yeteneklere sahiptir, İngilizce ve Korece'yi destekler ve etkili, kompakt çözümler sunar."
   },
-  "solar-1-mini-chat-ja": {
-    "description": "Solar Mini (Ja), Solar Mini'nin yeteneklerini genişletir, Japonca'ya odaklanır ve İngilizce ile Korece kullanımında yüksek verimlilik ve mükemmel performans sunar."
+  "solar-mini-ja": {
+    "description": "Solar Mini (Ja), Solar Mini'nin yeteneklerini genişletir, Japonca'ya odaklanır ve İngilizce ile Korece kullanımında yüksek verimlilik ve mükemmel performans sağlar."
   },
   "solar-pro": {
     "description": "Solar Pro, Upstage tarafından sunulan yüksek akıllı LLM'dir, tek GPU talimat takibi yeteneğine odaklanır, IFEval puanı 80'in üzerindedir. Şu anda İngilizceyi desteklemekte olup, resmi versiyonu 2024 Kasım'da piyasaya sürülmesi planlanmaktadır ve dil desteği ile bağlam uzunluğunu genişletecektir."
@@ -1619,6 +1625,9 @@
   "step-1.5v-mini": {
     "description": "Bu model, güçlü bir video anlama yeteneğine sahiptir."
   },
+  "step-1o-turbo-vision": {
+    "description": "Bu model, güçlü bir görüntü anlama yeteneğine sahiptir, matematik ve kod alanında 1o'dan daha üstündür. Model, 1o'dan daha küçüktür ve çıktı hızı daha yüksektir."
+  },
   "step-1o-vision-32k": {
     "description": "Bu model, güçlü bir görüntü anlama yeteneğine sahiptir. Step-1v serisi modellere kıyasla daha güçlü bir görsel performansa sahiptir."
   },
@@ -1634,11 +1643,11 @@
   "step-2-mini": {
     "description": "Yeni nesil kendi geliştirdiğimiz MFA Attention mimarisine dayanan hızlı büyük model, çok düşük maliyetle step1 ile benzer sonuçlar elde ederken, daha yüksek bir throughput ve daha hızlı yanıt süresi sağlıyor. Genel görevleri işleyebilme yeteneğine sahip olup, kodlama yeteneklerinde uzmanlık gösteriyor."
   },
-  "taichu2_mm": {
-    "description": "Görüntü anlama, bilgi transferi, mantıksal atıf gibi yetenekleri birleştirerek, metin ve görüntü ile soru-cevap alanında öne çıkmaktadır."
-  },
   "taichu_llm": {
     "description": "Zidong Taichu dil büyük modeli, güçlü dil anlama yeteneği ile metin oluşturma, bilgi sorgulama, kod programlama, matematik hesaplama, mantıksal akıl yürütme, duygu analizi, metin özeti gibi yeteneklere sahiptir. Yenilikçi bir şekilde büyük veri ön eğitimi ile çok kaynaklı zengin bilgiyi birleştirir, algoritma teknolojisini sürekli olarak geliştirir ve büyük metin verilerinden kelime, yapı, dil bilgisi, anlam gibi yeni bilgileri sürekli olarak edinir, modelin performansını sürekli olarak evrimleştirir. Kullanıcılara daha kolay bilgi ve hizmetler sunar ve daha akıllı bir deneyim sağlar."
+  },
+  "taichu_vl": {
+    "description": "Görüntü anlama, bilgi transferi, mantıksal çıkarım gibi yetenekleri birleştirir ve görsel-işitsel soru-cevap alanında öne çıkar."
   },
   "text-embedding-3-large": {
     "description": "En güçlü vektörleştirme modeli, İngilizce ve diğer dillerdeki görevler için uygundur."
