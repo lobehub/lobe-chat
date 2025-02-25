@@ -170,9 +170,6 @@
   "MiniMax-Text-01": {
     "description": "In the MiniMax-01 series of models, we have made bold innovations: for the first time, we have implemented a linear attention mechanism on a large scale, making the traditional Transformer architecture no longer the only option. This model has a parameter count of up to 456 billion, with a single activation of 45.9 billion. Its overall performance rivals that of top overseas models while efficiently handling the world's longest context of 4 million tokens, which is 32 times that of GPT-4o and 20 times that of Claude-3.5-Sonnet."
   },
-  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
-    "description": "Hermes 2 Mixtral 8x7B DPO is a highly flexible multi-model fusion designed to provide an exceptional creative experience."
-  },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) is a high-precision instruction model suitable for complex computations."
   },
@@ -323,6 +320,9 @@
   "SenseChat-5": {
     "description": "The latest version model (V5.5) with a context length of 128K shows significant improvements in mathematical reasoning, English conversation, instruction following, and long text comprehension, comparable to GPT-4o."
   },
+  "SenseChat-5-1202": {
+    "description": "This is the latest version based on V5.5, showing significant improvements in basic capabilities in Chinese and English, chatting, scientific knowledge, humanities knowledge, writing, mathematical logic, and word count control compared to the previous version."
+  },
   "SenseChat-5-Cantonese": {
     "description": "With a context length of 32K, it surpasses GPT-4 in Cantonese conversation comprehension and is competitive with GPT-4 Turbo in knowledge, reasoning, mathematics, and code writing across multiple domains."
   },
@@ -334,6 +334,12 @@
   },
   "SenseChat-Turbo": {
     "description": "Suitable for fast question answering and model fine-tuning scenarios."
+  },
+  "SenseChat-Turbo-1202": {
+    "description": "This is the latest lightweight version model, achieving over 90% of the full model's capabilities while significantly reducing inference costs."
+  },
+  "SenseChat-Vision": {
+    "description": "The latest version model (V5.5) supports multi-image input and fully optimizes the model's basic capabilities, achieving significant improvements in object attribute recognition, spatial relationships, action event recognition, scene understanding, emotion recognition, logical reasoning, and text understanding and generation."
   },
   "Skylark2-lite-8k": {
     "description": "Skylark 2nd generation model, Skylark2-lite model is characterized by high response speed, suitable for high real-time requirements, cost-sensitive scenarios, and situations where model accuracy is less critical, with a context window length of 8k."
@@ -1019,6 +1025,12 @@
   "hunyuan-standard-vision": {
     "description": "The latest multimodal model from Hunyuan, supporting multilingual responses with balanced capabilities in both Chinese and English."
   },
+  "hunyuan-translation": {
+    "description": "Supports translation between Chinese and 15 other languages including English, Japanese, French, Portuguese, Spanish, Turkish, Russian, Arabic, Korean, Italian, German, Vietnamese, Malay, and Indonesian. It is based on a multi-scenario translation evaluation set with automated COMET scoring, demonstrating overall superior translation capabilities compared to similarly scaled models in the market."
+  },
+  "hunyuan-translation-lite": {
+    "description": "The Hunyuan translation model supports natural language conversational translation; it supports translation between Chinese and 15 other languages including English, Japanese, French, Portuguese, Spanish, Turkish, Russian, Arabic, Korean, Italian, German, Vietnamese, Malay, and Indonesian."
+  },
   "hunyuan-turbo": {
     "description": "The preview version of the next-generation Hunyuan large language model, featuring a brand-new mixed expert model (MoE) structure, which offers faster inference efficiency and stronger performance compared to Hunyuan Pro."
   },
@@ -1220,9 +1232,6 @@
   "meta-llama/llama-3-8b-instruct": {
     "description": "Llama 3 8B Instruct is optimized for high-quality conversational scenarios, performing better than many closed-source models."
   },
-  "meta-llama/llama-3.1-405b-instruct": {
-    "description": "Llama 3.1 405B Instruct is the latest version from Meta, optimized for generating high-quality dialogues, surpassing many leading closed-source models."
-  },
   "meta-llama/llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct is designed for high-quality conversations, excelling in human evaluations, particularly in highly interactive scenarios."
   },
@@ -1285,9 +1294,6 @@
   },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 is a language model provided by Microsoft AI, excelling in complex dialogues, multilingual capabilities, reasoning, and intelligent assistant tasks."
-  },
-  "microsoft/wizardlm 2-7b": {
-    "description": "WizardLM 2 7B is Microsoft's latest lightweight AI model, performing nearly ten times better than existing leading open-source models."
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B is Microsoft's state-of-the-art Wizard model, demonstrating extremely competitive performance."
@@ -1580,10 +1586,10 @@
   "qwq-32b-preview": {
     "description": "The QwQ model is an experimental research model developed by the Qwen team, focusing on enhancing AI reasoning capabilities."
   },
-  "solar-1-mini-chat": {
-    "description": "Solar Mini is a compact LLM that outperforms GPT-3.5, featuring strong multilingual capabilities, supporting English and Korean, and providing an efficient and compact solution."
+  "solar-mini": {
+    "description": "Solar Mini is a compact LLM that outperforms GPT-3.5, featuring strong multilingual capabilities and supporting English and Korean, providing an efficient and compact solution."
   },
-  "solar-1-mini-chat-ja": {
+  "solar-mini-ja": {
     "description": "Solar Mini (Ja) extends the capabilities of Solar Mini, focusing on Japanese while maintaining efficiency and excellent performance in English and Korean usage."
   },
   "solar-pro": {
@@ -1619,6 +1625,9 @@
   "step-1.5v-mini": {
     "description": "This model has powerful video understanding capabilities."
   },
+  "step-1o-turbo-vision": {
+    "description": "This model has powerful image understanding capabilities, outperforming 1o in mathematical and coding fields. The model is smaller than 1o and has a faster output speed."
+  },
   "step-1o-vision-32k": {
     "description": "This model possesses powerful image understanding capabilities. Compared to the step-1v series models, it offers enhanced visual performance."
   },
@@ -1634,11 +1643,11 @@
   "step-2-mini": {
     "description": "A high-speed large model based on the next-generation self-developed Attention architecture MFA, achieving results similar to step-1 at a very low cost, while maintaining higher throughput and faster response times. It is capable of handling general tasks and has specialized skills in coding."
   },
-  "taichu2_mm": {
-    "description": "Integrating capabilities in image understanding, knowledge transfer, and logical attribution, it excels in the field of image-text question answering."
-  },
   "taichu_llm": {
     "description": "The ZD Taichu language model possesses strong language understanding capabilities and excels in text creation, knowledge Q&A, code programming, mathematical calculations, logical reasoning, sentiment analysis, and text summarization. It innovatively combines large-scale pre-training with rich knowledge from multiple sources, continuously refining algorithmic techniques and absorbing new knowledge in vocabulary, structure, grammar, and semantics from vast text data, resulting in an evolving model performance. It provides users with more convenient information and services, as well as a more intelligent experience."
+  },
+  "taichu_vl": {
+    "description": "Integrates capabilities in image understanding, knowledge transfer, and logical attribution, excelling in the field of image-text question answering."
   },
   "text-embedding-3-large": {
     "description": "The most powerful vectorization model, suitable for both English and non-English tasks."

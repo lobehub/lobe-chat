@@ -6,7 +6,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { createDevtools } from '../middleware/createDevtools';
 import { ChatStoreState, initialState } from './initialState';
-import { ChatBuiltinToolAction, chatToolSlice } from './slices/builtinTool/action';
+import { ChatBuiltinToolAction, chatToolSlice } from './slices/builtinTool/actions';
 import { ChatPortalAction, chatPortalSlice } from './slices/portal/action';
 import { ChatTranslateAction, chatTranslate } from './slices/translate/action';
 import { ChatMessageAction, chatMessage } from './slices/message/action';

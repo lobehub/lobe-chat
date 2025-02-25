@@ -6,5 +6,23 @@
     "generating": "Generowanie...",
     "images": "Obrazy:",
     "prompt": "słowo kluczowe"
+  },
+  "search": {
+    "createNewSearch": "Utwórz nową historię wyszukiwania",
+    "emptyResult": "Nie znaleziono wyników, spróbuj zmienić słowa kluczowe",
+    "genAiMessage": "Utwórz wiadomość asystenta",
+    "includedTooltip": "Aktualne wyniki wyszukiwania będą częścią kontekstu rozmowy",
+    "keywords": "Słowa kluczowe:",
+    "scoreTooltip": "Wynik trafności, im wyższy wynik, tym bardziej związany z zapytaniem",
+    "searchBar": {
+      "button": "Szukaj",
+      "placeholder": "Słowa kluczowe",
+      "tooltip": "Ponownie pobierze wyniki wyszukiwania i utworzy nową wiadomość podsumowującą"
+    },
+    "searchEngine": "Silnik wyszukiwania:",
+    "searchResult": "Liczba wyników:",
+    "summary": "Podsumowanie",
+    "summaryTooltip": "Podsumuj bieżącą treść",
+    "viewMoreResults": "Zobacz więcej {{results}} wyników"
   }
 }

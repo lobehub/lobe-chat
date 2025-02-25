@@ -11,15 +11,15 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useFileStore } from '@/store/file';
 import { DallEImageItem } from '@/types/tool/dalle';
+
+
 import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('tool');
 
 const SWR_FETCH_KEY = 'FetchImageItem';
-/**
- * builtin tool action
- */
-export interface ChatBuiltinToolAction {
+
+export interface ChatDallEAction {
   generateImageFromPrompts: (items: DallEImageItem[], id: string) => Promise<void>;
   text2image: (id: string, data: DallEImageItem[]) => Promise<void>;
   toggleDallEImageLoading: (key: string, value: boolean) => void;
@@ -27,11 +27,11 @@ export interface ChatBuiltinToolAction {
   useFetchDalleImageItem: (id: string) => SWRResponse;
 }
 
-export const chatToolSlice: StateCreator<
+export const dalleSlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  ChatBuiltinToolAction
+  ChatDallEAction
 > = (set, get) => ({
   generateImageFromPrompts: async (items, messageId) => {
     const { toggleDallEImageLoading, updateImageItem } = get();
@@ -88,6 +88,7 @@ export const chatToolSlice: StateCreator<
 
     await get().generateImageFromPrompts(data, id);
   },
+
   toggleDallEImageLoading: (key, value) => {
     set(
       { dalleImageLoading: { ...get().dalleImageLoading, [key]: value } },
@@ -95,6 +96,7 @@ export const chatToolSlice: StateCreator<
       n('toggleDallEImageLoading'),
     );
   },
+
   updateImageItem: async (id, updater) => {
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
@@ -104,6 +106,7 @@ export const chatToolSlice: StateCreator<
     const nextContent = produce(data, updater);
     await get().internal_updateMessageContent(id, JSON.stringify(nextContent));
   },
+
   useFetchDalleImageItem: (id) =>
     useClientDataSWR([SWR_FETCH_KEY, id], async () => {
       const item = await fileService.getFile(id);
