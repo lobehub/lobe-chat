@@ -13,6 +13,8 @@ export const getServerDBConfig = () => {
 
       KEY_VAULTS_SECRET: process.env.KEY_VAULTS_SECRET,
 
+      NEXT_AUTH_SSO_SESSION_STRATEGIE: process.env.NEXT_AUTH_SSO_SESSION_STRATEGIE || 'jwt',
+
       NEXT_PUBLIC_ENABLED_SERVER_SERVICE: process.env.NEXT_PUBLIC_SERVICE_MODE === 'server',
 
       REMOVE_GLOBAL_FILE: process.env.DISABLE_REMOVE_GLOBAL_FILE !== '0',
@@ -24,6 +26,8 @@ export const getServerDBConfig = () => {
 
       KEY_VAULTS_SECRET: z.string().optional(),
 
+      NEXT_AUTH_SSO_SESSION_STRATEGIE: z.enum(['jwt', 'database']).optional().default('jwt'),
+      
       REMOVE_GLOBAL_FILE: z.boolean().optional(),
     },
   });
