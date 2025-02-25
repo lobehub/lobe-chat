@@ -22,7 +22,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
+      // Not support tool use, ref: https://cloud.siliconflow.cn/models?target=deepseek-ai%2FDeepSeek-V3
+      functionCall: false,
     },
     contextWindowTokens: 65_536,
     description:
