@@ -1,5 +1,6 @@
 import { Button, Space } from 'antd';
 import { createStyles } from 'antd-style';
+import { useSearchParams } from 'next/navigation';
 import { rgba } from 'polished';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -53,18 +54,35 @@ const Footer = memo<FooterProps>(({ onExpandChange, expand }) => {
 
   const { styles } = useStyles();
 
-  const [isAIGenerating, stopGenerateMessage] = useChatStore((s) => [
+  const [isAIGenerating, stopGenerateMessage, updateInputMessage] = useChatStore((s) => [
     chatSelectors.isAIGenerating(s),
     s.stopGenerateMessage,
+    s.updateInputMessage,
   ]);
 
   const { send: sendMessage, canSend } = useSendMessage();
 
   const [isMac, setIsMac] = useState<boolean>();
 
+  const searchParams = useSearchParams();
+
   useEffect(() => {
     setIsMac(isMacOS());
   }, [setIsMac]);
+
+  useEffect(() => {
+    const message = searchParams.get('message');
+    if (message) {
+      // Remove message from URL
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete('message');
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.replaceState({}, '', newUrl);
+
+      updateInputMessage(message);
+      sendMessage();
+    }
+  }, []);
 
   return (
     <Flexbox
