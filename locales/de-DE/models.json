@@ -467,6 +467,9 @@
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet setzt neue Maßstäbe in der Branche, übertrifft die Modelle der Konkurrenz und Claude 3 Opus, und zeigt in umfassenden Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittelgroßen Modelle beibehält."
   },
+  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 Sonnet hebt den Branchenstandard an, übertrifft die Modelle der Konkurrenz und Claude 3 Opus, und zeigt in umfassenden Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittelgroßen Modelle beibehält."
+  },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku ist das schnellste und kompakteste Modell von Anthropic und bietet nahezu sofortige Reaktionsgeschwindigkeiten. Es kann schnell einfache Anfragen und Anforderungen beantworten. Kunden werden in der Lage sein, nahtlose AI-Erlebnisse zu schaffen, die menschliche Interaktionen nachahmen. Claude 3 Haiku kann Bilder verarbeiten und Textausgaben zurückgeben, mit einem Kontextfenster von 200K."
   },
@@ -523,6 +526,9 @@
   },
   "claude-3-5-sonnet-20241022": {
     "description": "Claude 3.5 Sonnet bietet überlegene Fähigkeiten im Vergleich zu Opus und schnellere Geschwindigkeiten als Sonnet, während es den gleichen Preis wie Sonnet beibehält. Sonnet ist besonders gut in den Bereichen Programmierung, Datenwissenschaft, visuelle Verarbeitung und Aufgabenübertragung."
+  },
+  "claude-3-7-sonnet-20250219": {
+    "description": "Claude 3.7 Sonnet hebt den Branchenstandard an, übertrifft die Modelle der Konkurrenz und Claude 3 Opus, und zeigt in umfassenden Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittelgroßen Modelle beibehält."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku ist das schnellste und kompakteste Modell von Anthropic, das darauf abzielt, nahezu sofortige Antworten zu liefern. Es bietet schnelle und präzise zielgerichtete Leistungen."
