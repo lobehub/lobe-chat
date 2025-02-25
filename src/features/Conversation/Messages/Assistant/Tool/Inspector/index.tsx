@@ -1,6 +1,5 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import {
   ChevronDown,
   ChevronRight,
@@ -13,16 +12,11 @@ import { CSSProperties, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import PluginAvatar from '@/features/PluginAvatar';
-import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
-import { pluginHelpers, useToolStore } from '@/store/tool';
-import { toolSelectors } from '@/store/tool/selectors';
 import { shinyTextStylish } from '@/styles/loading';
 
 import Debug from './Debug';
-import Loader from './Loader';
 import Settings from './Settings';
+import ToolTitle from './ToolTitle';
 
 export const useStyles = createStyles(({ css, token }) => ({
   apiName: css`
@@ -92,11 +86,6 @@ const Inspectors = memo<InspectorProps>(
 
     const [showDebug, setShowDebug] = useState(false);
 
-    const loading = useChatStore(chatSelectors.isToolCallStreaming(messageId, index));
-
-    const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
-    const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
-
     return (
       <Flexbox gap={4}>
         <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
@@ -110,15 +99,13 @@ const Inspectors = memo<InspectorProps>(
             }}
             paddingInline={4}
           >
-            <Flexbox
-              align={'center'}
-              className={loading ? styles.shinyText : ''}
-              gap={4}
-              horizontal
-            >
-              {loading ? <Loader /> : <PluginAvatar identifier={identifier} size={20} />}
-              <div>{pluginTitle}</div>/<span className={styles.apiName}>{apiName}</span>
-            </Flexbox>
+            <ToolTitle
+              apiName={apiName}
+              identifier={identifier}
+              index={index}
+              messageId={messageId}
+              toolCallId={id}
+            />
             <Icon icon={showRender ? ChevronDown : ChevronRight} />
           </Flexbox>
           <Flexbox horizontal>
