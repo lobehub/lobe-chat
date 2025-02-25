@@ -124,29 +124,30 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       method: 'GET',
     });
     const json = await response.json();
-  
+
     const modelList: AnthropicModelCard[] = json['data'];
-  
+
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
           displayName: model.display_name,
           enabled: knownModel?.enabled || false,
           functionCall:
-            model.id.toLowerCase().includes('claude-3')
-            || knownModel?.abilities?.functionCall
-            || false,
+            model.id.toLowerCase().includes('claude-3') ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: model.id,
-          reasoning:
-            knownModel?.abilities?.reasoning
-            || false,
+          reasoning: knownModel?.abilities?.reasoning || false,
           vision:
-            model.id.toLowerCase().includes('claude-3') && !model.id.toLowerCase().includes('claude-3-5-haiku')
-            || knownModel?.abilities?.vision
-            || false,
+            (model.id.toLowerCase().includes('claude-3') &&
+              !model.id.toLowerCase().includes('claude-3-5-haiku')) ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

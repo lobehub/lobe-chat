@@ -2,7 +2,6 @@ import { ModelIcon } from '@lobehub/icons';
 import { ActionIcon } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { Settings2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -101,10 +100,9 @@ const ModelSwitch = memo(() => {
           <Popover
             arrow={false}
             content={<ControlsForm />}
-            open
             styles={{
               body: {
-                minWidth: isMobile ? undefined : 300,
+                minWidth: isMobile ? undefined : 350,
                 paddingBlock: 4,
                 width: isMobile ? '100vw' : undefined,
               },
