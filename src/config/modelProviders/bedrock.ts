@@ -51,7 +51,7 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'anthropic.claude-3-7-sonnet-20250219-v1:0',
-      maxOutput: 64000,
+      maxOutput: 64_000,
       pricing: {
         cachedInput: 0.1,
         input: 1,
@@ -76,7 +76,7 @@ const Bedrock: ModelProviderCard = {
         writeCacheInput: 1.25,
       },
       releasedAt: '2024-11-05',
-    },    
+    },
     {
       contextWindowTokens: 200_000,
       description:

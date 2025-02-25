@@ -28,7 +28,7 @@ const Anthropic: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'claude-3-7-sonnet-20250219',
-      maxOutput: 64000,
+      maxOutput: 64_000,
       pricing: {
         cachedInput: 0.1,
         input: 1,
