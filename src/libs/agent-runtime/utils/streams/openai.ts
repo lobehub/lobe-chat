@@ -123,7 +123,7 @@ export const transformOpenAIStream = (
       }
 
       if (typeof reasoning_content === 'string') {
-        return { data: reasoning_content, id: chunk.id, type: 'reasoning' };
+        return { data: { content: reasoning_content }, id: chunk.id, type: 'reasoning' };
       }
 
       if (typeof content === 'string') {

@@ -9,6 +9,7 @@ import {
   MessageToolCall,
   MessageToolCallChunk,
   MessageToolCallSchema,
+  ModelReasoning,
 } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
 
@@ -23,7 +24,7 @@ export type OnFinishHandler = (
   context: {
     grounding?: GroundingSearch;
     observationId?: string | null;
-    reasoning?: string;
+    reasoning?: ModelReasoning;
     toolCalls?: MessageToolCall[];
     traceId?: string | null;
     type?: SSEFinishType;
@@ -36,7 +37,8 @@ export interface MessageTextChunk {
 }
 
 export interface MessageReasoningChunk {
-  text: string;
+  signature?: string;
+  text?: string;
   type: 'reasoning';
 }
 
@@ -271,6 +273,8 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   });
 
   let thinking = '';
+  let thinkingSignature = '';
+
   const thinkingController = createSmoothMessage({
     onTextUpdate: (delta, text) => {
       thinking = text;
@@ -366,13 +370,16 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         }
 
         case 'reasoning': {
+          if (!!data.signature) thinkingSignature = data.signature;
+
           if (textSmoothing) {
-            thinkingController.pushToQueue(data);
+            thinkingController.pushToQueue(data.content || '');
 
             if (!thinkingController.isAnimationActive) thinkingController.startAnimation();
           } else {
-            thinking += data;
-            options.onMessageHandle?.({ text: data, type: 'reasoning' });
+            const text = data.content;
+            thinking += text;
+            options.onMessageHandle?.({ text, type: 'reasoning' });
           }
 
           break;
@@ -436,7 +443,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       await options?.onFinish?.(output, {
         grounding,
         observationId,
-        reasoning: !!thinking ? thinking : undefined,
+        reasoning: !!thinking ? { content: thinking, signature: thinkingSignature } : undefined,
         toolCalls,
         traceId,
         type: finishedType,

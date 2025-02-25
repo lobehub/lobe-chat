@@ -53,12 +53,16 @@ export const transformAnthropicStream = (
       if (chunk.content_block.type === 'thinking') {
         const thinkingChunk = chunk.content_block;
 
-        return { data: thinkingChunk.thinking, id: context.id, type: 'reasoning' };
+        return {
+          data: { content: thinkingChunk.thinking, signature: thinkingChunk.signature },
+          id: context.id,
+          type: 'reasoning',
+        };
       }
 
       if (chunk.content_block.type === 'redacted_thinking') {
         return {
-          data: chunk.content_block.data,
+          data: { signature: chunk.content_block.data },
           id: context.id,
           type: 'reasoning',
         };
@@ -91,15 +95,15 @@ export const transformAnthropicStream = (
 
         case 'signature_delta': {
           return {
-            data: chunk.delta.signature,
+            data: { signature: chunk.delta.signature },
             id: context.id,
-            type: 'reasoning_signature' as any,
+            type: 'reasoning',
           };
         }
 
         case 'thinking_delta': {
           return {
-            data: chunk.delta.thinking,
+            data: { content: chunk.delta.thinking },
             id: context.id,
             type: 'reasoning',
           };
