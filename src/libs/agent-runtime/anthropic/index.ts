@@ -97,12 +97,29 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   }
 
   private async buildAnthropicPayload(payload: ChatStreamPayload) {
-    const { messages, model, max_tokens = 4096, temperature, top_p, tools } = payload;
+    const { messages, model, max_tokens, temperature, top_p, tools, thinking } = payload;
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
+    if (!!thinking) {
+      const maxTokens =
+        max_tokens ?? (thinking?.budget_tokens ? thinking?.budget_tokens + 4096 : 4096);
+
+      // `temperature` may only be set to 1 when thinking is enabled.
+      // `top_p` must be unset when thinking is enabled.
+      return {
+        max_tokens: maxTokens,
+        messages: await buildAnthropicMessages(user_messages),
+        model,
+        system: system_message?.content as string,
+
+        thinking,
+        tools: buildAnthropicTools(tools),
+      } satisfies Anthropic.MessageCreateParams;
+    }
+
     return {
-      max_tokens,
+      max_tokens: max_tokens ?? 4096,
       messages: await buildAnthropicMessages(user_messages),
       model,
       system: system_message?.content as string,

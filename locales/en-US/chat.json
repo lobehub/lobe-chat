@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} Copy",
   "emptyAgent": "No assistant available",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Enable Deep Thinking"
+    },
+    "reasoningBudgetToken": {
+      "title": "Thinking Consumption Token"
+    },
     "title": "Model Extension Features"
   },
   "historyRange": "History Range",
