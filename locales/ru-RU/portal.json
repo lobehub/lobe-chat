@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "Плагины",
-  "actions": {
-    "genAiMessage": "Создать сообщение помощника",
-    "summary": "Сводка",
-    "summaryTooltip": "Сводка текущего содержимого"
-  },
   "artifacts": {
     "display": {
       "code": "Код",

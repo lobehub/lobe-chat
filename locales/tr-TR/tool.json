@@ -6,5 +6,23 @@
     "generating": "Oluşturuluyor...",
     "images": "Görseller:",
     "prompt": "İpucu"
+  },
+  "search": {
+    "createNewSearch": "Yeni bir arama kaydı oluştur",
+    "emptyResult": "Sonuç bulunamadı, lütfen anahtar kelimeleri değiştirip tekrar deneyin",
+    "genAiMessage": "Yardımcı mesaj oluştur",
+    "includedTooltip": "Mevcut arama sonuçları oturumun bağlamına dahil edilecektir",
+    "keywords": "Anahtar kelimeler:",
+    "scoreTooltip": "İlgililik puanı, bu puan ne kadar yüksekse, sorgu anahtar kelimesiyle o kadar ilgili demektir",
+    "searchBar": {
+      "button": "Ara",
+      "placeholder": "Anahtar kelime",
+      "tooltip": "Arama sonuçları yeniden alınacak ve yeni bir özet mesajı oluşturulacaktır"
+    },
+    "searchEngine": "Arama motoru:",
+    "searchResult": "Arama sayısı:",
+    "summary": "Özet",
+    "summaryTooltip": "Mevcut içeriği özetle",
+    "viewMoreResults": "Daha fazla {{results}} sonuç görüntüle"
   }
 }

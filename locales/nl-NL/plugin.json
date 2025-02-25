@@ -134,6 +134,22 @@
     "plugin": "Plugin wordt uitgevoerd..."
   },
   "pluginList": "Lijst met plugins",
+  "search": {
+    "config": {
+      "addKey": "Voeg sleutel toe",
+      "close": "Verwijderen",
+      "confirm": "Configuratie voltooid en opnieuw proberen"
+    },
+    "searchxng": {
+      "baseURL": "Voer in",
+      "description": "Voer de URL van SearchXNG in om te beginnen met online zoeken",
+      "keyPlaceholder": "Voer sleutel in",
+      "title": "Configureer SearchXNG zoekmachine",
+      "unconfiguredDesc": "Neem contact op met de beheerder om de configuratie van de SearchXNG zoekmachine te voltooien en te beginnen met online zoeken",
+      "unconfiguredTitle": "SearchXNG zoekmachine is nog niet geconfigureerd"
+    },
+    "title": "Online zoeken"
+  },
   "setting": "Plugin-instellingen",
   "settings": {
     "indexUrl": {

@@ -200,8 +200,8 @@ export const chatPlugin: StateCreator<
     if (!message || message.role !== 'tool' || !message.plugin) return;
 
     // if there is error content, then clear the error
-    if (!!message.error) {
-      get().internal_updateMessageError(id, null);
+    if (!!message.pluginError) {
+      get().internal_updateMessagePluginError(id, null);
     }
 
     const payload: ChatToolPayload = { ...message.plugin, id: message.tool_call_id! };
