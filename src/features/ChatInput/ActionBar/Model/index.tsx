@@ -113,7 +113,7 @@ const ModelSwitch = memo(() => {
               icon={Settings2Icon}
               placement={'bottom'}
               style={{ borderRadius: 20 }}
-              title={t('extendControls.title')}
+              title={t('extendParams.title')}
             />
           </Popover>
         </Flexbox>

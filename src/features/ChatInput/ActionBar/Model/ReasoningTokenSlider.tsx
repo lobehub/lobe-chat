@@ -1,9 +1,7 @@
 import { InputNumber, Slider } from 'antd';
 import { memo, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
-
 
 const Kibi = 1024;
 
@@ -18,8 +16,6 @@ interface MaxTokenSliderProps {
 }
 
 const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValue }) => {
-  const { t } = useTranslation('components');
-
   const [token, setTokens] = useMergeState(0, {
     defaultValue,
     onChange,

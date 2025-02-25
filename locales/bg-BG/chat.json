@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} Копие",
   "emptyAgent": "Няма наличен асистент",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Активиране на дълбочинно мислене"
+    },
+    "reasoningBudgetToken": {
+      "title": "Токени за разходи при мислене"
+    },
     "title": "Разширени функции на модела"
   },
   "historyRange": "Диапазон на историята",

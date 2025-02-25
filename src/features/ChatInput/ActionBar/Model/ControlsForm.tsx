@@ -25,13 +25,13 @@ const ControlsForm = memo(() => {
   const items: FormItemProps[] = [
     {
       children: <Switch />,
-      label: '开启思考',
+      label: t('extendParams.enableReasoning.title'),
       minWidth: undefined,
       name: 'enableReasoning',
     },
     {
       children: <ReasoningTokenSlider />,
-      label: '思考消耗 Token',
+      label: t('extendParams.reasoningBudgetToken.title'),
       layout: 'vertical',
       minWidth: undefined,
       name: 'reasoningBudgetToken',
