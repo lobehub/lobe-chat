@@ -1,8 +1,6 @@
 import { customFetch } from 'next-auth';
 import type { OAuthConfig } from 'next-auth/providers';
 
-import { authEnv } from '@/config/auth';
-
 interface FeishuProfile {
   avatar_big: string;
   avatar_middle: string;
@@ -31,8 +29,6 @@ function Feishu(): OAuthConfig<FeishuProfileResponse> {
     client: {
       token_endpoint_auth_method: 'client_secret_post',
     },
-    clientId: authEnv.FEISHU_APP_ID,
-    clientSecret: authEnv.FEISHU_APP_SECRET,
     [customFetch]: (url, options = {}) => {
       if (
         url === 'https://open.feishu.cn/open-apis/authen/v2/oauth/token' &&
@@ -65,6 +61,7 @@ function Feishu(): OAuthConfig<FeishuProfileResponse> {
         id: profile.union_id,
         image: profile.avatar_url,
         name: profile.name,
+        providerAccountId: profile.union_id,
       };
     },
     style: {

@@ -40,10 +40,6 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
-
-      // feishu
-      FEISHU_APP_ID?: string;
-      FEISHU_APP_SECRET?: string;
     }
   }
 }
@@ -211,10 +207,6 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: z.string().optional(),
-
-      // feishu
-      FEISHU_APP_ID: z.string().optional(),
-      FEISHU_APP_SECRET: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -277,10 +269,6 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
-
-      // feishu
-      FEISHU_APP_ID: process.env.FEISHU_APP_ID,
-      FEISHU_APP_SECRET: process.env.FEISHU_APP_SECRET,
     },
   });
 };
