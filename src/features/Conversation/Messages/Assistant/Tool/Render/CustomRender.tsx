@@ -38,6 +38,7 @@ const CustomRender = memo<
     const { t } = useTranslation('plugin');
 
     const theme = useTheme();
+
     useEffect(() => {
       if (!plugin?.type || loading) return;
 
