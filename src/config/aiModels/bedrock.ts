@@ -25,8 +25,8 @@ const bedrockChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      vision: true,
       reasoning: true,
+      vision: true,
     },
     contextWindowTokens: 200_000,
     description:
@@ -34,6 +34,7 @@ const bedrockChatModels: AIChatModelCard[] = [
     displayName: 'Claude 3.7 Sonnet',
     enabled: true,
     id: 'anthropic.claude-3-7-sonnet-20250219-v1:0',
+    maxOutput: 8192,
     pricing: {
       input: 3,
       output: 15,
@@ -52,6 +53,7 @@ const bedrockChatModels: AIChatModelCard[] = [
     displayName: 'Claude 3.5 Sonnet',
     enabled: true,
     id: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
+    maxOutput: 8192,
     pricing: {
       input: 3,
       output: 15,
@@ -70,7 +72,7 @@ const bedrockChatModels: AIChatModelCard[] = [
     displayName: 'Claude 3.5 Sonnet v2 (Inference profile)',
     enabled: true,
     id: 'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
-    maxOutput: 4096,
+    maxOutput: 8192,
     pricing: {
       input: 3,
       output: 15,
@@ -88,7 +90,7 @@ const bedrockChatModels: AIChatModelCard[] = [
       'Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。',
     displayName: 'Claude 3.5 Sonnet 0620',
     enabled: true,
-
+    maxOutput: 8192,
     id: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
     pricing: {
       input: 3,
