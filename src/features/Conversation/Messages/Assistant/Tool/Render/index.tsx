@@ -1,5 +1,6 @@
 import { Suspense, memo } from 'react';
 
+import { LOADING_FLAT } from '@/const/message';
 import ErrorResponse from '@/features/Conversation/Messages/Assistant/Tool/Render/ErrorResponse';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -27,6 +28,11 @@ const Render = memo<RenderProps>(
       if (toolMessage.error) {
         return <ErrorResponse {...toolMessage.error} id={messageId} plugin={toolMessage.plugin} />;
       }
+
+      // 如果是 LOADING_FLAT 则说明还在加载中
+      // 而 standalone 模式的插件 content 应该始终是 LOADING_FLAT
+      if (toolMessage.content === LOADING_FLAT && toolMessage.plugin?.type !== 'standalone')
+        return <Arguments arguments={requestArgs} shine />;
 
       return (
         <Suspense fallback={<Arguments arguments={requestArgs} shine />}>
