@@ -1,7 +1,8 @@
 import { ModelIcon } from '@lobehub/icons';
-import { ActionIcon, Tooltip } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { Settings2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -63,8 +64,8 @@ const ModelSwitch = memo(() => {
     agentSelectors.currentAgentModelProvider(s),
   ]);
 
-  const isModelHasExtendControls = useAiInfraStore(
-    aiModelSelectors.isModelHasExtendControls(model, provider),
+  const isModelHasExtendParams = useAiInfraStore(
+    aiModelSelectors.isModelHasExtendParams(model, provider),
   );
 
   const isMobile = useIsMobile();
@@ -82,26 +83,20 @@ const ModelSwitch = memo(() => {
   //   );
 
   return (
-    <Flexbox
-      align={'center'}
-      className={isModelHasExtendControls ? styles.container : ''}
-      horizontal
-    >
+    <Flexbox align={'center'} className={isModelHasExtendParams ? styles.container : ''} horizontal>
       <ModelSwitchPanel>
         <Center
-          className={cx(styles.model, isModelHasExtendControls && styles.modelWithControl)}
+          className={cx(styles.model, isModelHasExtendParams && styles.modelWithControl)}
           height={36}
           width={36}
         >
-          <Tooltip placement={'bottom'} title={[provider, model].join(' / ')}>
-            <div className={styles.icon}>
-              <ModelIcon model={model} size={22} />
-            </div>
-          </Tooltip>
+          <div className={styles.icon}>
+            <ModelIcon model={model} size={22} />
+          </div>
         </Center>
       </ModelSwitchPanel>
 
-      {isModelHasExtendControls && (
+      {isModelHasExtendParams && (
         <Flexbox style={{ marginInlineStart: -4 }}>
           <Popover
             arrow={false}
@@ -109,7 +104,8 @@ const ModelSwitch = memo(() => {
             open
             styles={{
               body: {
-                minWidth: isMobile ? undefined : 200,
+                minWidth: isMobile ? undefined : 300,
+                paddingBlock: 4,
                 width: isMobile ? '100vw' : undefined,
               },
             }}
