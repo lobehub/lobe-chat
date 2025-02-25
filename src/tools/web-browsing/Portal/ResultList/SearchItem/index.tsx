@@ -3,9 +3,9 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import WebFavicon from '@/components/WebFavicon';
 import { SearchResult } from '@/types/tool/search';
 
-import { EngineAvatarGroup } from '../../../components/EngineAvatar';
 import TitleExtra from './TitleExtra';
 import Video from './Video';
 
@@ -73,10 +73,15 @@ const SearchItem = memo<SearchResultProps>((props) => {
         <Flexbox gap={8}>
           <Flexbox align={'center'} distribution={'space-between'} horizontal>
             <Flexbox align={'center'} gap={8} horizontal>
-              <EngineAvatarGroup engines={engines} />
+              <WebFavicon title={title} url={url} />
               <Flexbox className={styles.title}>{title}</Flexbox>
             </Flexbox>
-            <TitleExtra category={category} highlight={props.highlight} score={score} />
+            <TitleExtra
+              category={category}
+              engines={engines}
+              highlight={props.highlight}
+              score={score}
+            />
           </Flexbox>
           <Typography.Text className={styles.url} type={'secondary'}>
             {url}

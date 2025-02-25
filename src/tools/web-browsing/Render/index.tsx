@@ -34,7 +34,7 @@ const WebBrowsing = memo<BuiltinRenderProps<SearchContent[], SearchQuery, Search
     }
 
     return (
-      <Flexbox gap={16}>
+      <Flexbox gap={8}>
         <SearchQueryView
           args={args}
           editing={editing}
