@@ -1,10 +1,10 @@
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import WebFavicon from '@/components/WebFavicon';
 import { SearchResult } from '@/types/tool/search';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -52,14 +52,7 @@ const SearchResultItem = memo<SearchResult>(({ url, title }) => {
       <Flexbox className={styles.container} gap={2} justify={'space-between'} key={url}>
         <div className={styles.title}>{title}</div>
         <Flexbox align={'center'} gap={4} horizontal>
-          <Image
-            alt={title || url}
-            height={14}
-            src={`https://icons.duckduckgo.com/ip3/${host}.ico`}
-            style={{ borderRadius: 4 }}
-            unoptimized
-            width={14}
-          />
+          <WebFavicon size={14} title={title} url={url} />
           <Typography.Text className={styles.url} type={'secondary'}>
             {host.replace('www.', '')}
           </Typography.Text>
