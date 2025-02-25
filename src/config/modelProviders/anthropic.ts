@@ -10,7 +10,7 @@ const Anthropic: ModelProviderCard = {
       displayName: 'Claude 3.7 Sonnet',
       enabled: true,
       functionCall: true,
-      id: 'claude-3-7-sonnet-latest',
+      id: 'claude-3-7-sonnet-20250219',
       maxOutput: 8192,
       pricing: {
         cachedInput: 0.1,
@@ -27,7 +27,7 @@ const Anthropic: ModelProviderCard = {
       displayName: 'Claude 3.7 Sonnet Extended thinking',
       enabled: true,
       functionCall: true,
-      id: 'claude-3-7-sonnet-latest',
+      id: 'claude-3-7-sonnet-20250219',
       maxOutput: 64000,
       pricing: {
         cachedInput: 0.1,
