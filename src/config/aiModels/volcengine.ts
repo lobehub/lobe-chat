@@ -6,6 +6,7 @@ import { AIChatModelCard } from '@/types/aiModel';
 const doubaoChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      hot: true,
       reasoning: true,
     },
     config: {

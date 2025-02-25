@@ -7,6 +7,8 @@ import {
   AIText2ImageModelCard,
 } from '@/types/aiModel';
 
+import { allModels as doubaoChatModels } from './volcengine';
+
 export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
@@ -405,26 +407,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     type: 'chat',
   },
-  {
-    abilities: {
-      functionCall: false,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
-    displayName: 'DeepSeek V3',
-    enabled: true,
-    id: 'deepseek-v3',
-    maxOutput: 8192,
-    organization: 'DeepSeek',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    releasedAt: '2025-01-27',
-    type: 'chat',
-  },
+  ...doubaoChatModels,
 ];
 
 export const openaiEmbeddingModels: AIEmbeddingModelCard[] = [
