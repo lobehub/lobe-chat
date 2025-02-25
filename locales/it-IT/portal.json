@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "Plugin",
-  "actions": {
-    "genAiMessage": "Genera messaggio AI",
-    "summary": "Sommario",
-    "summaryTooltip": "Sommario del contenuto attuale"
-  },
   "artifacts": {
     "display": {
       "code": "Codice",

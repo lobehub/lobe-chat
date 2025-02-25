@@ -134,6 +134,22 @@
     "plugin": "جاري تشغيل الإضافة..."
   },
   "pluginList": "قائمة الإضافات",
+  "search": {
+    "config": {
+      "addKey": "إضافة مفتاح",
+      "close": "حذف",
+      "confirm": "تم تكوينه وإعادة المحاولة"
+    },
+    "searchxng": {
+      "baseURL": "الرجاء الإدخال",
+      "description": "الرجاء إدخال عنوان URL لـ SearchXNG لبدء البحث عبر الإنترنت",
+      "keyPlaceholder": "الرجاء إدخال المفتاح",
+      "title": "تكوين محرك بحث SearchXNG",
+      "unconfiguredDesc": "يرجى الاتصال بالمسؤول لإكمال تكوين محرك بحث SearchXNG لبدء البحث عبر الإنترنت",
+      "unconfiguredTitle": "لم يتم تكوين محرك بحث SearchXNG بعد"
+    },
+    "title": "البحث عبر الإنترنت"
+  },
   "setting": "إعدادات الإضافة",
   "settings": {
     "indexUrl": {

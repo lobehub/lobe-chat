@@ -134,6 +134,22 @@
     "plugin": "插件运行中..."
   },
   "pluginList": "插件列表",
+  "search": {
+    "config": {
+      "addKey": "添加秘钥",
+      "close": "删除",
+      "confirm": "已完成配置并重试"
+    },
+    "searchxng": {
+      "baseURL": "请输入",
+      "description": "请输入 SearchXNG 的网址，即可开始联网搜索",
+      "keyPlaceholder": "请输入秘钥",
+      "title": "配置 SearchXNG 搜索引擎",
+      "unconfiguredDesc": "请联系管理员完成 SearchXNG 搜索引擎配置，即可开始联网搜索",
+      "unconfiguredTitle": "暂未配置 SearchXNG 搜索引擎"
+    },
+    "title": "联网搜索"
+  },
   "setting": "插件设置",
   "settings": {
     "indexUrl": {
