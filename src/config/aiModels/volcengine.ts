@@ -67,7 +67,8 @@ const doubaoChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
+      // FC not supported yet, ref: https://www.volcengine.com/docs/82379/1262342#8c325d45
+      functionCall: false,
     },
     config: {
       deploymentName: 'deepseek-v3-241226',
