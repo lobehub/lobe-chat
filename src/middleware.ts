@@ -36,7 +36,7 @@ export const config = {
 
     '/login(.*)',
     '/signup(.*)',
-    '/next-auth/error',
+    '/next-auth/(.*)',
     // ↓ cloud ↓
   ],
 };
