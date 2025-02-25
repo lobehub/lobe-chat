@@ -20,6 +20,9 @@ const hunyuanChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      search: true,
+    },
     contextWindowTokens: 32_000,
     description:
       '采用更优的路由策略，同时缓解了负载均衡和专家趋同的问题。长文方面，大海捞针指标达到99.9%。MOE-32K 性价比相对更高，在平衡效果、价格的同时，可对实现对长文本输入的处理。',
@@ -33,9 +36,15 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 2,
     },
     releasedAt: '2025-02-10',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
+    abilities: {
+      search: true,
+    },
     contextWindowTokens: 256_000,
     description:
       '采用更优的路由策略，同时缓解了负载均衡和专家趋同的问题。长文方面，大海捞针指标达到99.9%。MOE-256K 在长度和效果上进一步突破，极大的扩展了可输入长度。',
@@ -49,11 +58,15 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 2,
     },
     releasedAt: '2025-02-10',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_000,
     description:
@@ -68,11 +81,15 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 50,
     },
     releasedAt: '2025-01-10',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_000,
     description:
@@ -86,11 +103,15 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 50,
     },
     releasedAt: '2025-01-10',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_000,
     description:
@@ -104,11 +125,15 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 50,
     },
     releasedAt: '2025-01-10',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_000,
     description:
@@ -122,9 +147,15 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 50,
     },
     releasedAt: '2024-11-20',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
+    abilities: {
+      search: true,
+    },
     contextWindowTokens: 32_000,
     description:
       'Hunyuan-large 模型总参数量约 389B，激活参数量约 52B，是当前业界参数规模最大、效果最好的 Transformer 架构的开源 MoE 模型。',
@@ -138,9 +169,15 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 12,
     },
     releasedAt: '2025-02-10',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
+    abilities: {
+      search: true,
+    },
     contextWindowTokens: 134_000,
     description:
       '擅长处理长文任务如文档摘要和文档问答等，同时也具备处理通用文本生成任务的能力。在长文本的分析和生成上表现优异，能有效应对复杂和详尽的长文内容处理需求。',
@@ -154,6 +191,9 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 18,
     },
     releasedAt: '2024-12-18',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {

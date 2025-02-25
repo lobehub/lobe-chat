@@ -52,6 +52,7 @@ const ai360ChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8000,
     description:
@@ -63,6 +64,9 @@ const ai360ChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 2,
       output: 5,
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
