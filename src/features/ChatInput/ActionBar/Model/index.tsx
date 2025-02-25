@@ -100,6 +100,7 @@ const ModelSwitch = memo(() => {
           <Popover
             arrow={false}
             content={<ControlsForm />}
+            placement={'topLeft'}
             styles={{
               body: {
                 minWidth: isMobile ? undefined : 350,
