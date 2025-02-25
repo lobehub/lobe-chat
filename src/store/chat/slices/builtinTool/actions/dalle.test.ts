@@ -10,9 +10,9 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 import { DallEImageItem } from '@/types/tool/dalle';
 
-import { useChatStore } from '../../store';
+import { useChatStore } from '../../../store';
 
-describe('chatToolSlice', () => {
+describe('chatToolSlice - dalle', () => {
   describe('generateImageFromPrompts', () => {
     it('should generate images from prompts, update items, and upload images', async () => {
       const { result } = renderHook(() => useChatStore());
