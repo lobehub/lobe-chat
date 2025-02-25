@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version 1.65.0](https://github.com/lobehub/lobe-chat/compare/v1.64.3...v1.65.0)
+
+<sup>Released on **2025-02-25**</sup>
+
+#### ✨ Features
+
+- **misc**: Support claude sonnet 3.7 thinking.
+
+#### 💄 Styles
+
+- **misc**: Update Gemini 2.0 search settings.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support claude sonnet 3.7 thinking, closes [#6515](https://github.com/lobehub/lobe-chat/issues/6515) ([bc9829f](https://github.com/lobehub/lobe-chat/commit/bc9829f))
+
+#### Styles
+
+- **misc**: Update Gemini 2.0 search settings, closes [#6516](https://github.com/lobehub/lobe-chat/issues/6516) ([250bbcb](https://github.com/lobehub/lobe-chat/commit/250bbcb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.64.3](https://github.com/lobehub/lobe-chat/compare/v1.64.2...v1.64.3)
 
 <sup>Released on **2025-02-25**</sup>
