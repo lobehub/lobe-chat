@@ -1,0 +1,44 @@
+{
+  "name": "electron-app",
+  "version": "1.0.0",
+  "description": "A minimal Electron application with TypeScript",
+  "homepage": "https://electron-vite.org",
+  "author": "example.com",
+  "main": "./out/main/index.js",
+  "scripts": {
+    "build": "npm run typecheck && electron-vite build",
+    "build:linux": "npm run build && electron-builder --linux",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "build:win": "npm run build && electron-builder --win",
+    "dev": "electron-vite dev",
+    "electron:run": "electron .",
+    "format": "prettier --write ",
+    "postinstall": "electron-builder install-app-deps",
+    "lint": "eslint --cache ",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json --composite false"
+  },
+  "dependencies": {
+    "@electron-toolkit/utils": "^4.0.0",
+    "electron-updater": "^6.3.9",
+    "get-port-please": "^3.1.2",
+    "next-electron-rsc": "^0.2.3"
+  },
+  "devDependencies": {
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
+    "@electron-toolkit/eslint-config-ts": "^3.0.0",
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "electron": "^34.2.0",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^3.0.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
+  }
+}

@@ -4,6 +4,7 @@ import { SideNav } from '@lobehub/ui';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 
+import { isDesktop } from '@/const/version';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -30,7 +31,7 @@ const Nav = memo(() => {
       <SideNav
         avatar={<Avatar />}
         bottomActions={<BottomActions />}
-        style={{ height: '100%', zIndex: 100 }}
+        style={{ height: '100%', paddingTop: isDesktop ? 24 : undefined, zIndex: 100 }}
         topActions={
           <Suspense>
             <Top />

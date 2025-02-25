@@ -27,7 +27,7 @@
       }
     ]
   },
-  "exclude": ["node_modules", "public/sw.js"],
+  "exclude": ["node_modules", "public/sw.js", "apps/desktop"],
   "include": [
     "next-env.d.ts",
     "vitest.config.ts",
