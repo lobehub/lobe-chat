@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "features": ["Support claude sonnet 3.7 thinking."],
+      "improvements": ["Update Gemini 2.0 search settings."]
+    },
+    "date": "2025-02-25",
+    "version": "1.65.0"
+  },
+  {
+    "children": {
       "improvements": ["Add Claude 3.7 Sonnet and Haiku 3.5."]
     },
     "date": "2025-02-25",
