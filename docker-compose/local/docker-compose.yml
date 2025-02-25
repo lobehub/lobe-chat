@@ -83,7 +83,7 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - './settings.yml:/etc/searxng/settings.yml'
+      - './searxng-settings.yml:/etc/searxng/settings.yml'
     environment:
       - 'SEARXNG_SETTINGS_FILE=/etc/searxng/settings.yml'
     restart: always
