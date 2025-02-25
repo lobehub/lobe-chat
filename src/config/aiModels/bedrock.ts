@@ -26,7 +26,7 @@ const bedrockChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       vision: true,
-      reasoning: true
+      reasoning: true,
     },
     contextWindowTokens: 200_000,
     description:
