@@ -1,35 +1,18 @@
-import { produce } from 'immer';
-import pMap from 'p-map';
-import { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { useClientDataSWR } from '@/libs/swr';
-import { fileService } from '@/services/file';
 import { searchService } from '@/services/search';
-import { imageGenerationService } from '@/services/textToImage';
-import { uploadService } from '@/services/upload';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
-import { useFileStore } from '@/store/file';
 import { CreateMessageParams } from '@/types/message';
-import { DallEImageItem } from '@/types/tool/dalle';
 import {
   SEARCH_SEARXNG_NOT_CONFIG,
   SearchContent,
   SearchQuery,
   SearchResponse,
 } from '@/types/tool/search';
-import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
-const n = setNamespace('tool');
-
-const SWR_FETCH_KEY = 'FetchImageItem';
-/**
- * builtin tool action
- */
-export interface ChatBuiltinToolAction {
-  generateImageFromPrompts: (items: DallEImageItem[], id: string) => Promise<void>;
+export interface SearchAction {
   /**
    * 重新发起搜索
    * @description 会更新插件的 arguments 参数，然后再次搜索
@@ -45,69 +28,15 @@ export interface ChatBuiltinToolAction {
     data: SearchQuery,
     aiSummary?: boolean,
   ) => Promise<void | boolean>;
-  text2image: (id: string, data: DallEImageItem[]) => Promise<void>;
-
-  toggleDallEImageLoading: (key: string, value: boolean) => void;
   toggleSearchLoading: (id: string, loading: boolean) => void;
-  updateImageItem: (id: string, updater: (data: DallEImageItem[]) => void) => Promise<void>;
-  useFetchDalleImageItem: (id: string) => SWRResponse;
 }
 
-export const chatToolSlice: StateCreator<
+export const searchSlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  ChatBuiltinToolAction
+  SearchAction
 > = (set, get) => ({
-  generateImageFromPrompts: async (items, messageId) => {
-    const { toggleDallEImageLoading, updateImageItem } = get();
-    // eslint-disable-next-line unicorn/consistent-function-scoping
-    const getMessageById = (id: string) => chatSelectors.getMessageById(id)(get());
-
-    const message = getMessageById(messageId);
-    if (!message) return;
-
-    const parent = getMessageById(message!.parentId!);
-    const originPrompt = parent?.content;
-    let errorArray: any[] = [];
-
-    await pMap(items, async (params, index) => {
-      toggleDallEImageLoading(messageId + params.prompt, true);
-
-      let url = '';
-      try {
-        url = await imageGenerationService.generateImage(params);
-      } catch (e) {
-        toggleDallEImageLoading(messageId + params.prompt, false);
-        errorArray[index] = e;
-
-        await get().updatePluginState(messageId, { error: errorArray });
-      }
-
-      if (!url) return;
-
-      await updateImageItem(messageId, (draft) => {
-        draft[index].previewUrl = url;
-      });
-
-      toggleDallEImageLoading(messageId + params.prompt, false);
-      const imageFile = await uploadService.getImageFileByUrlWithCORS(
-        url,
-        `${originPrompt || params.prompt}_${index}.png`,
-      );
-
-      const data = await useFileStore.getState().uploadWithProgress({
-        file: imageFile,
-      });
-
-      if (!data) return;
-
-      await updateImageItem(messageId, (draft) => {
-        draft[index].imageId = data.id;
-        draft[index].previewUrl = undefined;
-      });
-    });
-  },
   reSearchWithSearXNG: async (id, data, options) => {
     get().toggleSearchLoading(id, true);
     await get().updatePluginArguments(id, data);
@@ -158,6 +87,13 @@ export const chatToolSlice: StateCreator<
     let data: SearchResponse | undefined;
     try {
       data = await searchService.search(params.query, params.searchEngines);
+
+      // 如果没有搜索到结果，那么尝试使用默认的搜索引擎再搜一次
+      if (data?.results.length === 0 && params.searchEngines && params.searchEngines?.length > 0) {
+        data = await searchService.search(params.query);
+        get().updatePluginArguments(id, { ...params, searchEngines: undefined });
+      }
+
       await get().updatePluginState(id, data);
     } catch (e) {
       if ((e as Error).message === SEARCH_SEARXNG_NOT_CONFIG) {
@@ -196,49 +132,8 @@ export const chatToolSlice: StateCreator<
     // 如果 aiSummary 为 true，则会自动触发总结
     return aiSummary;
   },
-  text2image: async (id, data) => {
-    // const isAutoGen = settingsSelectors.isDalleAutoGenerating(useGlobalStore.getState());
-    // if (!isAutoGen) return;
-
-    await get().generateImageFromPrompts(data, id);
-  },
-
-  toggleDallEImageLoading: (key, value) => {
-    set(
-      { dalleImageLoading: { ...get().dalleImageLoading, [key]: value } },
-      false,
-      n('toggleDallEImageLoading'),
-    );
-  },
 
   toggleSearchLoading: (id, loading) => {
     set({ searchLoading: { ...get().searchLoading, [id]: loading } }, false, 'toggleSearchLoading');
   },
-
-  updateImageItem: async (id, updater) => {
-    const message = chatSelectors.getMessageById(id)(get());
-    if (!message) return;
-
-    const data: DallEImageItem[] = JSON.parse(message.content);
-
-    const nextContent = produce(data, updater);
-    await get().internal_updateMessageContent(id, JSON.stringify(nextContent));
-  },
-
-  useFetchDalleImageItem: (id) =>
-    useClientDataSWR([SWR_FETCH_KEY, id], async () => {
-      const item = await fileService.getFile(id);
-
-      set(
-        produce((draft) => {
-          if (draft.dalleImageMap[id]) return;
-
-          draft.dalleImageMap[id] = item;
-        }),
-        false,
-        n('useFetchFile'),
-      );
-
-      return item;
-    }),
 });
