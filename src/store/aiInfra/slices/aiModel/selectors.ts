@@ -70,14 +70,14 @@ const modelContextWindowTokens = (id: string, provider: string) => (s: AIProvide
   return model?.contextWindowTokens;
 };
 
-const modelExtendControls = (id: string, provider: string) => (s: AIProviderStoreState) => {
+const modelExtendParams = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
 
-  return model?.settings?.extendControls;
+  return model?.settings?.extendParams;
 };
 
-const isModelHasExtendControls = (id: string, provider: string) => (s: AIProviderStoreState) => {
-  const controls = modelExtendControls(id, provider)(s);
+const isModelHasExtendParams = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const controls = modelExtendParams(id, provider)(s);
 
   return !!controls && controls.length > 0;
 };
@@ -119,13 +119,13 @@ export const aiModelSelectors = {
   isModelHasBuiltinSearch,
   isModelHasBuiltinSearchConfig,
   isModelHasContextWindowToken,
-  isModelHasExtendControls,
+  isModelHasExtendParams,
   isModelLoading,
   isModelSupportReasoning,
   isModelSupportToolUse,
   isModelSupportVision,
   modelBuiltinSearchImpl,
   modelContextWindowTokens,
-  modelExtendControls,
+  modelExtendParams,
   totalAiProviderModelList,
 };

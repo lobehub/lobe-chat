@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} Cópia",
   "emptyAgent": "Sem assistente disponível",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Ativar Pensamento Profundo"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token de Consumo de Pensamento"
+    },
     "title": "Funcionalidade de Extensão do Modelo"
   },
   "historyRange": "Intervalo de Histórico",

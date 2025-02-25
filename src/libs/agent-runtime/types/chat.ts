@@ -88,8 +88,14 @@ export interface ChatStreamPayload {
    * @default 1
    */
   temperature: number;
+  /**
+   * use for Claude
+   */
+  thinking?: {
+    budget_tokens: number;
+    type: 'enabled' | 'disabled';
+  };
   tool_choice?: string;
-
   tools?: ChatCompletionTool[];
   /**
    * @title 控制生成文本中最高概率的单个令牌

@@ -461,17 +461,14 @@
   "ai21-jamba-1.5-mini": {
     "description": "Een meertalig model met 52 miljard parameters (12 miljard actief), biedt een contextvenster van 256K, functieaanroep, gestructureerde output en gegronde generatie."
   },
-  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
-    "description": "Claude 3.7 Sonnet is een van de nieuwste modellen van Anthropic, met verbeterde prestaties en een groter contextvenster, waardoor het model beter in staat is om complexe taken uit te voeren."
-  },
-  "anthropic.claude-3-5-haiku-20241022-v1:0": {
-    "description": "Claude 3.5 Haiku is een van de nieuwste modellen van Anthropic, met verbeterde prestaties en een groter contextvenster, waardoor het model beter in staat is om complexe taken uit te voeren."
-  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet heeft de industrienormen verbeterd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen, en presteert uitstekend in brede evaluaties, met de snelheid en kosten van ons gemiddelde model."
   },
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet heeft de industrienormen verhoogd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen. Het presteert uitstekend in uitgebreide evaluaties, terwijl het de snelheid en kosten van onze middelgrote modellen behoudt."
+  },
+  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 Sonnet is een van de nieuwste modellen van Anthropic, met verbeterde prestaties en een groter contextvenster, waardoor het model beter in staat is om complexe taken uit te voeren."
   },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku is het snelste en meest compacte model van Anthropic, met bijna onmiddellijke reactietijden. Het kan snel eenvoudige vragen en verzoeken beantwoorden. Klanten kunnen een naadloze AI-ervaring creëren die menselijke interactie nabootst. Claude 3 Haiku kan afbeeldingen verwerken en tekstoutput retourneren, met een contextvenster van 200K."
@@ -521,9 +518,6 @@
   "claude-2.1": {
     "description": "Claude 2 biedt belangrijke vooruitgangen in capaciteiten voor bedrijven, waaronder de toonaangevende 200K token context, een aanzienlijke vermindering van de frequentie van modelhallucinaties, systeemprompten en een nieuwe testfunctie: functie-aanroepen."
   },
-  "claude-3-7-sonnet-20250219": {
-    "description": "Claude 3.7 Sonnet is een van de nieuwste modellen van Anthropic, met verbeterde prestaties en een groter contextvenster, waardoor het model beter in staat is om complexe taken uit te voeren."
-  },
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku is het snelste volgende generatie model van Anthropic. In vergelijking met Claude 3 Haiku heeft Claude 3.5 Haiku verbeteringen in alle vaardigheden en overtreft het de grootste modellen van de vorige generatie, Claude 3 Opus, in veel intellectuele benchmarktests."
   },
@@ -532,6 +526,9 @@
   },
   "claude-3-5-sonnet-20241022": {
     "description": "Claude 3.5 Sonnet biedt mogelijkheden die verder gaan dan Opus en is sneller dan Sonnet, terwijl het dezelfde prijs als Sonnet behoudt. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agendataken."
+  },
+  "claude-3-7-sonnet-20250219": {
+    "description": "Claude 3.7 Sonnet is een van de nieuwste modellen van Anthropic, met verbeterde prestaties en een groter contextvenster, waardoor het model beter in staat is om complexe taken uit te voeren."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku is het snelste en meest compacte model van Anthropic, ontworpen voor bijna onmiddellijke reacties. Het heeft snelle en nauwkeurige gerichte prestaties."

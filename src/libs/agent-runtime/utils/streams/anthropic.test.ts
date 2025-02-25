@@ -384,6 +384,132 @@ describe('AnthropicStream', () => {
     expect(onToolCallMock).toHaveBeenCalledTimes(6);
   });
 
+  it('should handle thinking ', async () => {
+    const streams = [
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_01MNsLe7n1uVLtu6W8rCFujD',
+          type: 'message',
+          role: 'assistant',
+          model: 'claude-3-7-sonnet-20250219',
+          content: [],
+          stop_reason: null,
+          stop_sequence: null,
+          usage: {
+            input_tokens: 46,
+            cache_creation_input_tokens: 0,
+            cache_read_input_tokens: 0,
+            output_tokens: 11,
+          },
+        },
+      },
+      {
+        type: 'content_block_start',
+        index: 0,
+        content_block: { type: 'thinking', thinking: '', signature: '' },
+      },
+      {
+        type: 'content_block_delta',
+        index: 0,
+        delta: { type: 'thinking_delta', thinking: '我需要比较两个数字的' },
+      },
+      {
+        type: 'content_block_delta',
+        index: 0,
+        delta: { type: 'thinking_delta', thinking: '大小：9.8和9' },
+      },
+      {
+        type: 'content_block_delta',
+        index: 0,
+        delta: { type: 'thinking_delta', thinking: '11\n\n所以9.8比9.11大。' },
+      },
+      {
+        type: 'content_block_delta',
+        index: 0,
+        delta: {
+          type: 'signature_delta',
+          signature:
+            'EuYBCkQYAiJAHnHRJG4nPBrdTlo6CmXoyE8WYoQeoPiLnXaeuaM8ExdiIEkVvxK1DYXOz5sCubs2s/G1NsST8A003Zb8XmuhYBIMwDGMZSZ3+gxOEBpVGgzdpOlDNBTxke31SngiMKUk6WcSiA11OSVBuInNukoAhnRd5jPAEg7e5mIoz/qJwnQHV8I+heKUreP77eJdFipQaM3FHn+avEHuLa/Z/fu0O9BftDi+caB1UWDwJakNeWX1yYTvK+N1v4gRpKbj4AhctfYHMjq8qX9XTnXme5AGzCYC6HgYw2/RfalWzwNxI6k=',
+        },
+      },
+      { type: 'content_block_stop', index: 0 },
+      { type: 'content_block_start', index: 1, content_block: { type: 'text', text: '' } },
+      {
+        type: 'content_block_delta',
+        index: 1,
+        delta: { type: 'text_delta', text: '9.8比9.11大。' },
+      },
+      { type: 'content_block_stop', index: 1 },
+      {
+        type: 'message_delta',
+        delta: { stop_reason: 'end_turn', stop_sequence: null },
+        usage: { output_tokens: 354 },
+      },
+      { type: 'message_stop' },
+    ];
+
+    const mockReadableStream = new ReadableStream({
+      start(controller) {
+        streams.forEach((chunk) => {
+          controller.enqueue(chunk);
+        });
+        controller.close();
+      },
+    });
+
+    const protocolStream = AnthropicStream(mockReadableStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: data',
+        'data: {"id":"msg_01MNsLe7n1uVLtu6W8rCFujD","type":"message","role":"assistant","model":"claude-3-7-sonnet-20250219","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":46,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":11}}\n',
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: reasoning',
+        'data: ""\n',
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: reasoning',
+        'data: "我需要比较两个数字的"\n',
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: reasoning',
+        'data: "大小：9.8和9"\n',
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: reasoning',
+        'data: "11\\n\\n所以9.8比9.11大。"\n',
+        // Tool calls
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: reasoning_signature',
+        `data: "EuYBCkQYAiJAHnHRJG4nPBrdTlo6CmXoyE8WYoQeoPiLnXaeuaM8ExdiIEkVvxK1DYXOz5sCubs2s/G1NsST8A003Zb8XmuhYBIMwDGMZSZ3+gxOEBpVGgzdpOlDNBTxke31SngiMKUk6WcSiA11OSVBuInNukoAhnRd5jPAEg7e5mIoz/qJwnQHV8I+heKUreP77eJdFipQaM3FHn+avEHuLa/Z/fu0O9BftDi+caB1UWDwJakNeWX1yYTvK+N1v4gRpKbj4AhctfYHMjq8qX9XTnXme5AGzCYC6HgYw2/RfalWzwNxI6k="\n`,
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: data',
+        `data: {"type":"content_block_stop","index":0}\n`,
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: data',
+        `data: ""\n`,
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: text',
+        `data: "9.8比9.11大。"\n`,
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: data',
+        `data: {"type":"content_block_stop","index":1}\n`,
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: stop',
+        'data: "end_turn"\n',
+        'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+        'event: stop',
+        'data: "message_stop"\n',
+      ].map((item) => `${item}\n`),
+    );
+  });
   it('should handle ReadableStream input', async () => {
     const mockReadableStream = new ReadableStream({
       start(controller) {

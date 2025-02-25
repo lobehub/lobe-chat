@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} のコピー",
   "emptyAgent": "エージェントがいません",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "深い思考を有効にする"
+    },
+    "reasoningBudgetToken": {
+      "title": "思考消費トークン"
+    },
     "title": "モデル拡張機能"
   },
   "historyRange": "履歴範囲",

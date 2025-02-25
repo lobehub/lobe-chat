@@ -31,8 +31,14 @@
   },
   "duplicateTitle": "{{title}} Копия",
   "emptyAgent": "Нет ассистента",
-  "extendControls": {
-    "title": "Функции расширения модели"
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Включить глубокое мышление"
+    },
+    "reasoningBudgetToken": {
+      "title": "Токены на размышления"
+    },
+    "title": "Расширенные функции модели"
   },
   "historyRange": "История сообщений",
   "historySummary": "Сводка исторических сообщений",

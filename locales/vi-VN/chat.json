@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} Bản sao",
   "emptyAgent": "Không có trợ lý",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Bật tư duy sâu sắc"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token tiêu tốn cho tư duy"
+    },
     "title": "Chức năng mở rộng mô hình"
   },
   "historyRange": "Phạm vi lịch sử",

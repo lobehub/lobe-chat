@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} 복사본",
   "emptyAgent": "도우미가 없습니다",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "심층 사고 활성화"
+    },
+    "reasoningBudgetToken": {
+      "title": "사고 소모 토큰"
+    },
     "title": "모델 확장 기능"
   },
   "historyRange": "대화 기록 범위",

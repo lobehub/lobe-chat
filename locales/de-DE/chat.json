@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Kein Assistent verfügbar",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Tiefes Denken aktivieren"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token für Denkaufwand"
+    },
     "title": "Modell Erweiterungsfunktionen"
   },
   "historyRange": "Verlaufsbereich",

@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} نسخة",
   "emptyAgent": "لا يوجد مساعد",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "تفعيل التفكير العميق"
+    },
+    "reasoningBudgetToken": {
+      "title": "استهلاك توكن التفكير"
+    },
     "title": "وظائف توسيع النموذج"
   },
   "historyRange": "نطاق التاريخ",

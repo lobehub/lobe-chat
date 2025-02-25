@@ -461,17 +461,14 @@
   "ai21-jamba-1.5-mini": {
     "description": "Un modelo multilingüe de 52B parámetros (12B activos), que ofrece una ventana de contexto larga de 256K, llamada a funciones, salida estructurada y generación fundamentada."
   },
-  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
-    "description": "Claude 3.7 Sonnet es el modelo de IA más potente de Anthropic, con un rendimiento de vanguardia en tareas altamente complejas. Puede manejar indicaciones abiertas y escenarios no vistos, con una fluidez y comprensión humana excepcionales. Claude 3.7 Sonnet muestra la vanguardia de las posibilidades de la IA generativa. Claude 3.7 Sonnet puede manejar imágenes y devolver salidas de texto, con una ventana de contexto de 200K."
-  },
-  "anthropic.claude-3-5-haiku-20241022-v1:0": {
-    "description": "Claude 3.5 Haiku es el modelo más rápido y compacto de Anthropic, diseñado para lograr respuestas casi instantáneas. Tiene un rendimiento de orientación rápido y preciso."
-  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet eleva el estándar de la industria, superando a modelos competidores y a Claude 3 Opus, destacándose en evaluaciones amplias, mientras mantiene la velocidad y costo de nuestros modelos de nivel medio."
   },
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet ha elevado los estándares de la industria, superando el rendimiento de modelos competidores y de Claude 3 Opus, destacándose en evaluaciones amplias, mientras mantiene la velocidad y el costo de nuestros modelos de nivel medio."
+  },
+  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 Sonnet es el modelo de IA más potente de Anthropic, con un rendimiento de vanguardia en tareas altamente complejas. Puede manejar indicaciones abiertas y escenarios no vistos, con una fluidez y comprensión humana excepcionales. Claude 3.7 Sonnet muestra la vanguardia de las posibilidades de la IA generativa. Claude 3.7 Sonnet puede manejar imágenes y devolver salidas de texto, con una ventana de contexto de 200K."
   },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku es el modelo más rápido y compacto de Anthropic, ofreciendo una velocidad de respuesta casi instantánea. Puede responder rápidamente a consultas y solicitudes simples. Los clientes podrán construir experiencias de IA sin costuras que imiten la interacción humana. Claude 3 Haiku puede manejar imágenes y devolver salidas de texto, con una ventana de contexto de 200K."
@@ -521,9 +518,6 @@
   "claude-2.1": {
     "description": "Claude 2 ofrece avances en capacidades clave para empresas, incluyendo un contexto líder en la industria de 200K tokens, una reducción significativa en la tasa de alucinaciones del modelo, indicaciones del sistema y una nueva función de prueba: llamadas a herramientas."
   },
-  "claude-3-7-sonnet-20250219": {
-    "description": "Claude 3.7 Sonnet es el modelo de IA más potente de Anthropic, con un rendimiento de vanguardia en tareas altamente complejas. Puede manejar indicaciones abiertas y escenarios no vistos, con una fluidez y comprensión humana excepcionales. Claude 3.7 Sonnet muestra la vanguardia de las posibilidades de la IA generativa."
-  },
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku es el modelo de próxima generación más rápido de Anthropic. En comparación con Claude 3 Haiku, Claude 3.5 Haiku ha mejorado en todas las habilidades y ha superado al modelo más grande de la generación anterior, Claude 3 Opus, en muchas pruebas de referencia de inteligencia."
   },
@@ -532,6 +526,9 @@
   },
   "claude-3-5-sonnet-20241022": {
     "description": "Claude 3.5 Sonnet ofrece capacidades que superan a Opus y una velocidad más rápida que Sonnet, manteniendo el mismo precio que Sonnet. Sonnet es especialmente hábil en programación, ciencia de datos, procesamiento visual y tareas de agencia."
+  },
+  "claude-3-7-sonnet-20250219": {
+    "description": "Claude 3.7 Sonnet es el modelo de IA más potente de Anthropic, con un rendimiento de vanguardia en tareas altamente complejas. Puede manejar indicaciones abiertas y escenarios no vistos, con una fluidez y comprensión humana excepcionales. Claude 3.7 Sonnet muestra la vanguardia de las posibilidades de la IA generativa."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku es el modelo más rápido y compacto de Anthropic, diseñado para lograr respuestas casi instantáneas. Tiene un rendimiento de orientación rápido y preciso."

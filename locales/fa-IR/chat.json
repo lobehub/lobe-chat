@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "نسخه‌ای از {{title}}",
   "emptyAgent": "دستیار موجود نیست",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "فعال‌سازی تفکر عمیق"
+    },
+    "reasoningBudgetToken": {
+      "title": "توکن مصرف تفکر"
+    },
     "title": "ویژگی‌های گسترش مدل"
   },
   "historyRange": "محدوده تاریخی",

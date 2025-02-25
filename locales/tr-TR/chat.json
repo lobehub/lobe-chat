@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Derin Düşünmeyi Aç"
+    },
+    "reasoningBudgetToken": {
+      "title": "Düşünme Tüketim Tokeni"
+    },
     "title": "Model Genişletme Özellikleri"
   },
   "historyRange": "Geçmiş Aralığı",

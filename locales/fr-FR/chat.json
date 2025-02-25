@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} Copie",
   "emptyAgent": "Aucun assistant disponible",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Activer la réflexion approfondie"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token de consommation de réflexion"
+    },
     "title": "Fonctionnalités d'extension du modèle"
   },
   "historyRange": "Plage d'historique",

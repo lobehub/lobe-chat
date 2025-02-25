@@ -31,8 +31,14 @@
   },
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "No hay asistente disponible",
-  "extendControls": {
-    "title": "Funciones de extensión del modelo"
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Activar el pensamiento profundo"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token de consumo de pensamiento"
+    },
+    "title": "Funcionalidad de extensión del modelo"
   },
   "historyRange": "Rango de historial",
   "historySummary": "Resumen de mensajes históricos",
