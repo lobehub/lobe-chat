@@ -31,8 +31,14 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Geen assistent beschikbaar",
-  "extendControls": {
-    "title": "Modeluitbreidingsfuncties"
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Diepe denkwijze inschakelen"
+    },
+    "reasoningBudgetToken": {
+      "title": "Denken verbruik Token"
+    },
+    "title": "Modeluitbreidingsfunctie"
   },
   "historyRange": "Geschiedenisbereik",
   "historySummary": "Geschiedenis samenvatting",
