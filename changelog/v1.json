@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Disable fc for ds-v3 series."]
+    },
+    "date": "2025-02-25",
+    "version": "1.64.1"
+  },
+  {
+    "children": {
       "features": ["Support application search with searchXNG."]
     },
     "date": "2025-02-24",
