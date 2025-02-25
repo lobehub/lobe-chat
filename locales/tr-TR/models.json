@@ -461,6 +461,12 @@
   "ai21-jamba-1.5-mini": {
     "description": "52B parametreli (12B aktif) çok dilli bir model, 256K uzun bağlam penceresi, fonksiyon çağrısı, yapılandırılmış çıktı ve temellendirilmiş üretim sunar."
   },
+  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 Sonnet, endüstri standartlarını yükselterek, rakip modelleri ve Claude 3 Opus'u geride bırakarak, geniş bir değerlendirme yelpazesinde mükemmel performans sergilemekte, orta seviye modellerimizin hız ve maliyet avantajlarını sunmaktadır."
+  },
+  "anthropic.claude-3-5-haiku-20241022-v1:0": {
+    "description": "Claude 3.5 Haiku, endüstri standartlarını yükselterek, rakip modelleri ve Claude 3 Opus'u geride bırakarak, geniş bir değerlendirme yelpazesinde mükemmel performans sergilemekte, orta seviye modellerimizin hız ve maliyet avantajlarını sunmaktadır."
+  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet, endüstri standartlarını yükselterek, rakip modelleri ve Claude 3 Opus'u geride bırakarak geniş bir değerlendirmede mükemmel performans sergilerken, orta seviye modellerimizin hızı ve maliyeti ile birlikte gelir."
   },
@@ -514,6 +520,9 @@
   },
   "claude-2.1": {
     "description": "Claude 2, işletmelere kritik yeteneklerin ilerlemesini sunar, sektördeki en iyi 200K token bağlamı, model yanılsamalarının önemli ölçüde azaltılması, sistem ipuçları ve yeni bir test özelliği: araç çağrısı içerir."
+  },
+  "claude-3-7-sonnet-20250219": {
+    "description": "Claude 3.7 Sonnet, endüstri standartlarını yükselterek, rakip modelleri ve Claude 3 Opus'u geride bırakarak, geniş bir değerlendirme yelpazesinde mükemmel performans sergilemekte, orta seviye modellerimizin hız ve maliyet avantajlarını sunmaktadır."
   },
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku, Anthropic'in en hızlı bir sonraki nesil modelidir. Claude 3 Haiku ile karşılaştırıldığında, Claude 3.5 Haiku, tüm becerilerde gelişim göstermiştir ve birçok zeka standart testinde bir önceki neslin en büyük modeli olan Claude 3 Opus'u geride bırakmıştır."

@@ -461,6 +461,12 @@
   "ai21-jamba-1.5-mini": {
     "description": "Mô hình đa ngôn ngữ với 52B tham số (12B hoạt động), cung cấp cửa sổ ngữ cảnh dài 256K, gọi hàm, đầu ra có cấu trúc và tạo ra nội dung có căn cứ."
   },
+  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 Sonnet là mô hình AI mạnh nhất của Anthropic, với hiệu suất vượt trội so với các mô hình đối thủ và Claude 3 Opus, thể hiện xuất sắc trong nhiều đánh giá rộng rãi, đồng thời có tốc độ và chi phí tương đương với các mô hình tầm trung của chúng tôi."
+  },
+  "anthropic.claude-3-5-haiku-20241022-v1:0": {
+    "description": "Claude 3.5 Haiku là mô hình nhanh nhất và gọn nhẹ nhất của Anthropic, cung cấp tốc độ phản hồi gần như ngay lập tức. Nó có thể nhanh chóng trả lời các truy vấn và yêu cầu đơn giản. Khách hàng sẽ có thể xây dựng trải nghiệm AI liền mạch mô phỏng tương tác của con người. Claude 3.5 Haiku có thể xử lý hình ảnh và trả về đầu ra văn bản, với cửa sổ ngữ cảnh 200K."
+  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet nâng cao tiêu chuẩn ngành, hiệu suất vượt trội hơn các mô hình cạnh tranh và Claude 3 Opus, thể hiện xuất sắc trong nhiều đánh giá, đồng thời có tốc độ và chi phí của mô hình tầm trung của chúng tôi."
   },
@@ -514,6 +520,9 @@
   },
   "claude-2.1": {
     "description": "Claude 2 cung cấp những tiến bộ quan trọng trong khả năng cho doanh nghiệp, bao gồm ngữ cảnh 200K token hàng đầu trong ngành, giảm đáng kể tỷ lệ ảo giác của mô hình, nhắc nhở hệ thống và một tính năng kiểm tra mới: gọi công cụ."
+  },
+  "claude-3-7-sonnet-20250219": {
+    "description": "Claude 3.7 Sonnet là mô hình AI mạnh nhất của Anthropic, với hiệu suất vượt trội so với các mô hình đối thủ và Claude 3 Opus, thể hiện xuất sắc trong nhiều đánh giá rộng rãi, đồng thời có tốc độ và chi phí tương đương với các mô hình tầm trung của chúng tôi."
   },
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku là mô hình thế hệ tiếp theo nhanh nhất của Anthropic. So với Claude 3 Haiku, Claude 3.5 Haiku đã cải thiện ở nhiều kỹ năng và vượt qua mô hình lớn nhất thế hệ trước là Claude 3 Opus trong nhiều bài kiểm tra trí tuệ."

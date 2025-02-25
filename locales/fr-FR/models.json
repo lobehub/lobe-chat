@@ -461,6 +461,12 @@
   "ai21-jamba-1.5-mini": {
     "description": "Un modèle multilingue de 52 milliards de paramètres (12 milliards actifs), offrant une fenêtre de contexte longue de 256K, des appels de fonction, une sortie structurée et une génération ancrée."
   },
+  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 Sonnet élève les normes de l'industrie, surpassant les modèles concurrents et Claude 3 Opus, avec d'excellentes performances dans une large gamme d'évaluations, tout en offrant la vitesse et le coût de nos modèles de niveau intermédiaire."
+  },
+  "anthropic.claude-3-5-haiku-20241022-v1:0": {
+    "description": "Claude 3.5 Haiku est le modèle le plus rapide et le plus compact d'Anthropic, offrant une vitesse de réponse quasi instantanée. Il peut répondre rapidement à des requêtes et demandes simples. Les clients pourront construire une expérience AI transparente imitant l'interaction humaine. Claude 3.5 Haiku peut traiter des images et retourner des sorties textuelles, avec une fenêtre contextuelle de 200K."
+  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet élève les normes de l'industrie, surpassant les modèles concurrents et Claude 3 Opus, avec d'excellentes performances dans une large gamme d'évaluations, tout en offrant la vitesse et le coût de nos modèles de niveau intermédiaire."
   },
@@ -514,6 +520,9 @@
   },
   "claude-2.1": {
     "description": "Claude 2 offre des avancées clés pour les entreprises, y compris un contexte de 200K jetons, une réduction significative du taux d'illusion du modèle, des invites système et une nouvelle fonctionnalité de test : l'appel d'outils."
+  },
+  "claude-3-7-sonnet-20250219": {
+    "description": "Claude 3.7 Sonnet élève les normes de l'industrie, surpassant les modèles concurrents et Claude 3 Opus, avec d'excellentes performances dans une large gamme d'évaluations, tout en offrant la vitesse et le coût de nos modèles de niveau intermédiaire."
   },
   "claude-3-5-haiku-20241022": {
     "description": "Claude 3.5 Haiku est le modèle de prochaine génération le plus rapide d'Anthropic. Par rapport à Claude 3 Haiku, Claude 3.5 Haiku a amélioré ses compétences dans tous les domaines et a surpassé le plus grand modèle de la génération précédente, Claude 3 Opus, dans de nombreux tests de référence intellectuels."
