@@ -15,7 +15,7 @@ import {
 export const transformAnthropicStream = (
   chunk: Anthropic.MessageStreamEvent,
   context: StreamContext,
-): StreamProtocolChunk => {
+): StreamProtocolChunk | StreamProtocolChunk[] => {
   // maybe need another structure to add support for multiple choices
   switch (chunk.type) {
     case 'message_start': {
@@ -23,48 +23,68 @@ export const transformAnthropicStream = (
       return { data: chunk.message, id: chunk.message.id, type: 'data' };
     }
     case 'content_block_start': {
-      if (chunk.content_block.type === 'tool_use') {
-        const toolChunk = chunk.content_block;
-
-        // if toolIndex is not defined, set it to 0
-        if (typeof context.toolIndex === 'undefined') {
-          context.toolIndex = 0;
-        }
-        // if toolIndex is defined, increment it
-        else {
-          context.toolIndex += 1;
+      switch (chunk.content_block.type) {
+        case 'redacted_thinking': {
+          return {
+            data: chunk.content_block.data,
+            id: context.id,
+            type: 'flagged_reasoning_signature',
+          };
         }
 
-        const toolCall: StreamToolCallChunkData = {
-          function: {
-            arguments: '',
-            name: toolChunk.name,
-          },
-          id: toolChunk.id,
-          index: context.toolIndex,
-          type: 'function',
-        };
+        case 'text': {
+          return { data: chunk.content_block.text, id: context.id, type: 'data' };
+        }
 
-        context.tool = { id: toolChunk.id, index: context.toolIndex, name: toolChunk.name };
+        case 'tool_use': {
+          const toolChunk = chunk.content_block;
 
-        return { data: [toolCall], id: context.id, type: 'tool_calls' };
+          // if toolIndex is not defined, set it to 0
+          if (typeof context.toolIndex === 'undefined') {
+            context.toolIndex = 0;
+          }
+          // if toolIndex is defined, increment it
+          else {
+            context.toolIndex += 1;
+          }
+
+          const toolCall: StreamToolCallChunkData = {
+            function: {
+              arguments: '',
+              name: toolChunk.name,
+            },
+            id: toolChunk.id,
+            index: context.toolIndex,
+            type: 'function',
+          };
+
+          context.tool = { id: toolChunk.id, index: context.toolIndex, name: toolChunk.name };
+
+          return { data: [toolCall], id: context.id, type: 'tool_calls' };
+        }
+        case 'thinking': {
+          const thinkingChunk = chunk.content_block;
+
+          // if there is signature in the thinking block, return both thinking and signature
+          if (!!thinkingChunk.signature) {
+            return [
+              { data: thinkingChunk.thinking, id: context.id, type: 'reasoning' },
+              { data: thinkingChunk.signature, id: context.id, type: 'reasoning_signature' },
+            ];
+          }
+
+          if (typeof thinkingChunk.thinking === 'string')
+            return { data: thinkingChunk.thinking, id: context.id, type: 'reasoning' };
+
+          return { data: thinkingChunk, id: context.id, type: 'data' };
+        }
+
+        default: {
+          break;
+        }
       }
 
-      if (chunk.content_block.type === 'thinking') {
-        const thinkingChunk = chunk.content_block;
-
-        return { data: thinkingChunk.thinking, id: context.id, type: 'reasoning' };
-      }
-
-      if (chunk.content_block.type === 'redacted_thinking') {
-        return {
-          data: chunk.content_block.data,
-          id: context.id,
-          type: 'reasoning',
-        };
-      }
-
-      return { data: chunk.content_block.text, id: context.id, type: 'data' };
+      return { data: chunk, id: context.id, type: 'data' };
     }
 
     case 'content_block_delta': {
@@ -93,7 +113,7 @@ export const transformAnthropicStream = (
           return {
             data: chunk.delta.signature,
             id: context.id,
-            type: 'reasoning_signature' as any,
+            type: 'reasoning_signature',
           };
         }
 

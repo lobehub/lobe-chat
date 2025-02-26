@@ -449,6 +449,14 @@ describe('LobeGoogleAI', () => {
         });
         expect(result).toEqual({ text: 'Hello' });
       });
+      it('should handle thinking type messages', async () => {
+        const result = await instance['convertContentToGooglePart']({
+          type: 'thinking',
+          thinking: 'Hello',
+          signature: 'abc',
+        });
+        expect(result).toEqual(undefined);
+      });
 
       it('should handle base64 type images', async () => {
         const base64Image =
