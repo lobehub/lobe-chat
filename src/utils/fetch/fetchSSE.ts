@@ -273,7 +273,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   });
 
   let thinking = '';
-  let thinkingSignature = '';
+  let thinkingSignature: string | undefined;
 
   const thinkingController = createSmoothMessage({
     onTextUpdate: (delta, text) => {

@@ -182,7 +182,7 @@ describe('fetchSSE', () => {
     expect(mockOnFinish).toHaveBeenCalledWith('hi', {
       observationId: null,
       toolCalls: undefined,
-      reasoning: 'Hello World',
+      reasoning: { content: 'Hello World' },
       traceId: null,
       type: 'done',
     });
