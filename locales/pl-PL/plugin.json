@@ -118,6 +118,10 @@
     "reinstallError": "Nie udało się odświeżyć wtyczki {{name}}",
     "urlError": "Link nie zwrócił treści w formacie JSON. Upewnij się, że jest to poprawny link."
   },
+  "inspector": {
+    "args": "Zobacz listę parametrów",
+    "pluginRender": "Zobacz interfejs wtyczki"
+  },
   "list": {
     "item": {
       "deprecated.title": "Usunięte",
@@ -130,6 +134,22 @@
     "plugin": "Wtyczka jest uruchomiona..."
   },
   "pluginList": "Lista wtyczek",
+  "search": {
+    "config": {
+      "addKey": "Dodaj klucz",
+      "close": "Usuń",
+      "confirm": "Konfiguracja zakończona, spróbuj ponownie"
+    },
+    "searchxng": {
+      "baseURL": "Wprowadź",
+      "description": "Wprowadź adres URL SearchXNG, aby rozpocząć wyszukiwanie w sieci",
+      "keyPlaceholder": "Wprowadź klucz",
+      "title": "Konfiguracja silnika wyszukiwania SearchXNG",
+      "unconfiguredDesc": "Skontaktuj się z administratorem, aby zakończyć konfigurację silnika wyszukiwania SearchXNG i rozpocząć wyszukiwanie w sieci",
+      "unconfiguredTitle": "Silnik wyszukiwania SearchXNG nie jest jeszcze skonfigurowany"
+    },
+    "title": "Wyszukiwanie w sieci"
+  },
   "setting": "Ustawienia wtyczki",
   "settings": {
     "indexUrl": {

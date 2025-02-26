@@ -118,6 +118,10 @@
     "reinstallError": "Ricaricamento del plugin {{name}} fallito",
     "urlError": "Il collegamento non restituisce contenuti nel formato JSON. Assicurati che il collegamento sia valido"
   },
+  "inspector": {
+    "args": "Visualizza l'elenco dei parametri",
+    "pluginRender": "Visualizza l'interfaccia del plugin"
+  },
   "list": {
     "item": {
       "deprecated.title": "Deprecato",
@@ -130,6 +134,22 @@
     "plugin": "Esecuzione del plugin in corso..."
   },
   "pluginList": "Elenco dei plugin",
+  "search": {
+    "config": {
+      "addKey": "Aggiungi chiave",
+      "close": "Rimuovi",
+      "confirm": "Configurazione completata, riprovare"
+    },
+    "searchxng": {
+      "baseURL": "Inserisci",
+      "description": "Inserisci l'URL di SearchXNG per iniziare la ricerca online",
+      "keyPlaceholder": "Inserisci chiave",
+      "title": "Configura il motore di ricerca SearchXNG",
+      "unconfiguredDesc": "Contatta l'amministratore per completare la configurazione del motore di ricerca SearchXNG e iniziare la ricerca online",
+      "unconfiguredTitle": "Motore di ricerca SearchXNG non configurato"
+    },
+    "title": "Ricerca online"
+  },
   "setting": "Impostazioni del plugin",
   "settings": {
     "indexUrl": {

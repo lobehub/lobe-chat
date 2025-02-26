@@ -29,10 +29,29 @@ export class LobeAzureAI implements LobeRuntimeAI {
     const { messages, model, ...params } = payload;
     // o1 series models on Azure OpenAI does not support streaming currently
     const enableStreaming = model.includes('o1') ? false : (params.stream ?? true);
+
+    // Convert 'system' role to 'user' or 'developer' based on the model
+    const systemToUserModels = new Set([
+      'o1-preview',
+      'o1-preview-2024-09-12',
+      'o1-mini',
+      'o1-mini-2024-09-12',
+    ]);
+
+    const updatedMessages = messages.map((message) => ({
+      ...message,
+      role:
+        (model.includes('o1') || model.includes('o3')) && message.role === 'system'
+          ? [...systemToUserModels].some((sub) => model.includes(sub))
+            ? 'user'
+            : 'developer'
+          : message.role,
+    }));
+    
     try {
       const response = this.client.path('/chat/completions').post({
         body: {
-          messages: messages as OpenAI.ChatCompletionMessageParam[],
+          messages: updatedMessages as OpenAI.ChatCompletionMessageParam[],
           model,
           ...params,
           stream: enableStreaming,
@@ -98,7 +117,7 @@ export class LobeAzureAI implements LobeRuntimeAI {
 
   private maskSensitiveUrl = (url: string) => {
     // 使用正则表达式匹配 'https://' 后面和 '.azure.com/' 前面的内容
-    const regex = /^(https:\/\/)([^.]+)(\.azure\.com\/.*)$/;
+    const regex = /^(https:\/\/)([^.]+)(\.cognitiveservices\.azure\.com\/.*)$/;
 
     // 使用替换函数
     return url.replace(regex, (match, protocol, subdomain, rest) => {

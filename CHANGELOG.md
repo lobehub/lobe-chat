@@ -2,6 +2,463 @@
 
 # Changelog
 
+### [Version 1.65.1](https://github.com/lobehub/lobe-chat/compare/v1.65.0...v1.65.1)
+
+<sup>Released on **2025-02-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix claude 3.7 sonnet thinking with tool use.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix claude 3.7 sonnet thinking with tool use, closes [#6528](https://github.com/lobehub/lobe-chat/issues/6528) ([a76d2bf](https://github.com/lobehub/lobe-chat/commit/a76d2bf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.65.0](https://github.com/lobehub/lobe-chat/compare/v1.64.3...v1.65.0)
+
+<sup>Released on **2025-02-25**</sup>
+
+#### ✨ Features
+
+- **misc**: Support claude sonnet 3.7 thinking.
+
+#### 💄 Styles
+
+- **misc**: Update Gemini 2.0 search settings.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support claude sonnet 3.7 thinking, closes [#6515](https://github.com/lobehub/lobe-chat/issues/6515) ([bc9829f](https://github.com/lobehub/lobe-chat/commit/bc9829f))
+
+#### Styles
+
+- **misc**: Update Gemini 2.0 search settings, closes [#6516](https://github.com/lobehub/lobe-chat/issues/6516) ([250bbcb](https://github.com/lobehub/lobe-chat/commit/250bbcb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.64.3](https://github.com/lobehub/lobe-chat/compare/v1.64.2...v1.64.3)
+
+<sup>Released on **2025-02-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Claude 3.7 Sonnet and Haiku 3.5.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Claude 3.7 Sonnet and Haiku 3.5, closes [#6512](https://github.com/lobehub/lobe-chat/issues/6512) ([c8db2bb](https://github.com/lobehub/lobe-chat/commit/c8db2bb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.64.2](https://github.com/lobehub/lobe-chat/compare/v1.64.1...v1.64.2)
+
+<sup>Released on **2025-02-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix 0 search results with specific search engine.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix 0 search results with specific search engine, closes [#6487](https://github.com/lobehub/lobe-chat/issues/6487) ([74a09e2](https://github.com/lobehub/lobe-chat/commit/74a09e2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.64.1](https://github.com/lobehub/lobe-chat/compare/v1.64.0...v1.64.1)
+
+<sup>Released on **2025-02-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Disable fc for ds-v3 series.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Disable fc for ds-v3 series, closes [#6486](https://github.com/lobehub/lobe-chat/issues/6486) ([0092213](https://github.com/lobehub/lobe-chat/commit/0092213))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.64.0](https://github.com/lobehub/lobe-chat/compare/v1.63.3...v1.64.0)
+
+<sup>Released on **2025-02-24**</sup>
+
+#### ✨ Features
+
+- **misc**: Support application search with searchXNG.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support application search with searchXNG, closes [#6452](https://github.com/lobehub/lobe-chat/issues/6452) ([b61b5fc](https://github.com/lobehub/lobe-chat/commit/b61b5fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.63.3](https://github.com/lobehub/lobe-chat/compare/v1.63.2...v1.63.3)
+
+<sup>Released on **2025-02-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix citation=null issue in stream.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix citation=null issue in stream, closes [#6461](https://github.com/lobehub/lobe-chat/issues/6461) ([3f9498e](https://github.com/lobehub/lobe-chat/commit/3f9498e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.63.2](https://github.com/lobehub/lobe-chat/compare/v1.63.1...v1.63.2)
+
+<sup>Released on **2025-02-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix model settings config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix model settings config, closes [#6459](https://github.com/lobehub/lobe-chat/issues/6459) ([469bd10](https://github.com/lobehub/lobe-chat/commit/469bd10))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.63.1](https://github.com/lobehub/lobe-chat/compare/v1.63.0...v1.63.1)
+
+<sup>Released on **2025-02-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix groq location request.
+
+#### 💄 Styles
+
+- **misc**: Improve plugin calling style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix groq location request, closes [#6449](https://github.com/lobehub/lobe-chat/issues/6449) ([8c8af6b](https://github.com/lobehub/lobe-chat/commit/8c8af6b))
+
+#### Styles
+
+- **misc**: Improve plugin calling style, closes [#6446](https://github.com/lobehub/lobe-chat/issues/6446) ([406cd46](https://github.com/lobehub/lobe-chat/commit/406cd46))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.63.0](https://github.com/lobehub/lobe-chat/compare/v1.62.11...v1.63.0)
+
+<sup>Released on **2025-02-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Support model-level search for Google/Qwen.
+
+#### 💄 Styles
+
+- **misc**: Update many models info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support model-level search for Google/Qwen, closes [#6420](https://github.com/lobehub/lobe-chat/issues/6420) ([f1b97cd](https://github.com/lobehub/lobe-chat/commit/f1b97cd))
+
+#### Styles
+
+- **misc**: Update many models info, closes [#6205](https://github.com/lobehub/lobe-chat/issues/6205) ([c477588](https://github.com/lobehub/lobe-chat/commit/c477588))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.11](https://github.com/lobehub/lobe-chat/compare/v1.62.10...v1.62.11)
+
+<sup>Released on **2025-02-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Refine role assignment logic for specific Azure OpenAI models & Sensitive URL.
+
+#### 💄 Styles
+
+- **misc**: Add custom `proxyUrl` support for Volcengine.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Refine role assignment logic for specific Azure OpenAI models & Sensitive URL, closes [#6366](https://github.com/lobehub/lobe-chat/issues/6366) ([d47c2c6](https://github.com/lobehub/lobe-chat/commit/d47c2c6))
+
+#### Styles
+
+- **misc**: Add custom `proxyUrl` support for Volcengine, closes [#6433](https://github.com/lobehub/lobe-chat/issues/6433) ([2b1aca9](https://github.com/lobehub/lobe-chat/commit/2b1aca9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.10](https://github.com/lobehub/lobe-chat/compare/v1.62.9...v1.62.10)
+
+<sup>Released on **2025-02-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fetch on client check status display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fetch on client check status display, closes [#6405](https://github.com/lobehub/lobe-chat/issues/6405) ([9579e41](https://github.com/lobehub/lobe-chat/commit/9579e41))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.9](https://github.com/lobehub/lobe-chat/compare/v1.62.8...v1.62.9)
+
+<sup>Released on **2025-02-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Next-auth user id not found in create agent index.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Next-auth user id not found in create agent index, closes [#6410](https://github.com/lobehub/lobe-chat/issues/6410) ([704c7c8](https://github.com/lobehub/lobe-chat/commit/704c7c8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.8](https://github.com/lobehub/lobe-chat/compare/v1.62.7...v1.62.8)
+
+<sup>Released on **2025-02-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix image prompts with some user cases.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix image prompts with some user cases, closes [#6406](https://github.com/lobehub/lobe-chat/issues/6406) ([e9df49d](https://github.com/lobehub/lobe-chat/commit/e9df49d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.7](https://github.com/lobehub/lobe-chat/compare/v1.62.6...v1.62.7)
+
+<sup>Released on **2025-02-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Volcano Ark models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Volcano Ark models, closes [#6368](https://github.com/lobehub/lobe-chat/issues/6368) ([02136f5](https://github.com/lobehub/lobe-chat/commit/02136f5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.6](https://github.com/lobehub/lobe-chat/compare/v1.62.5...v1.62.6)
+
+<sup>Released on **2025-02-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Refactor the plugin render style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Refactor the plugin render style, closes [#6390](https://github.com/lobehub/lobe-chat/issues/6390) ([3ecdba1](https://github.com/lobehub/lobe-chat/commit/3ecdba1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.62.5](https://github.com/lobehub/lobe-chat/compare/v1.62.4...v1.62.5)
+
+<sup>Released on **2025-02-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix default agent loading.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix default agent loading, closes [#6393](https://github.com/lobehub/lobe-chat/issues/6393) ([7841122](https://github.com/lobehub/lobe-chat/commit/7841122))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.62.4](https://github.com/lobehub/lobe-chat/compare/v1.62.3...v1.62.4)
 
 <sup>Released on **2025-02-20**</sup>

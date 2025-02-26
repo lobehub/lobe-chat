@@ -1,3 +1,5 @@
+import { GroundingSearch } from '@/types/search';
+
 export interface CitationItem {
   id?: string;
   onlyUrl?: boolean;
@@ -5,14 +7,10 @@ export interface CitationItem {
   url: string;
 }
 
-export interface GroundingSearch {
-  citations?: CitationItem[];
-  searchQueries?: string[];
-}
-
 export interface ModelReasoning {
   content?: string;
   duration?: number;
+  signature?: string;
 }
 
 export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';

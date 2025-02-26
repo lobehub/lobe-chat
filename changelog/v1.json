@@ -1,6 +1,129 @@
 [
   {
     "children": {
+      "fixes": ["Fix claude 3.7 sonnet thinking with tool use."]
+    },
+    "date": "2025-02-26",
+    "version": "1.65.1"
+  },
+  {
+    "children": {
+      "features": ["Support claude sonnet 3.7 thinking."],
+      "improvements": ["Update Gemini 2.0 search settings."]
+    },
+    "date": "2025-02-25",
+    "version": "1.65.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add Claude 3.7 Sonnet and Haiku 3.5."]
+    },
+    "date": "2025-02-25",
+    "version": "1.64.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix 0 search results with specific search engine."]
+    },
+    "date": "2025-02-25",
+    "version": "1.64.2"
+  },
+  {
+    "children": {
+      "fixes": ["Disable fc for ds-v3 series."]
+    },
+    "date": "2025-02-25",
+    "version": "1.64.1"
+  },
+  {
+    "children": {
+      "features": ["Support application search with searchXNG."]
+    },
+    "date": "2025-02-24",
+    "version": "1.64.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix citation=null issue in stream."]
+    },
+    "date": "2025-02-24",
+    "version": "1.63.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix model settings config."]
+    },
+    "date": "2025-02-24",
+    "version": "1.63.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix groq location request."],
+      "improvements": ["Improve plugin calling style."]
+    },
+    "date": "2025-02-23",
+    "version": "1.63.1"
+  },
+  {
+    "children": {
+      "features": ["Support model-level search for Google/Qwen."],
+      "improvements": ["Update many models info."]
+    },
+    "date": "2025-02-23",
+    "version": "1.63.0"
+  },
+  {
+    "children": {
+      "fixes": ["Refine role assignment logic for specific Azure OpenAI models & Sensitive URL."],
+      "improvements": ["Add custom proxyUrl support for Volcengine."]
+    },
+    "date": "2025-02-23",
+    "version": "1.62.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fetch on client check status display."]
+    },
+    "date": "2025-02-22",
+    "version": "1.62.10"
+  },
+  {
+    "children": {
+      "fixes": ["Next-auth user id not found in create agent index."]
+    },
+    "date": "2025-02-22",
+    "version": "1.62.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix image prompts with some user cases."]
+    },
+    "date": "2025-02-22",
+    "version": "1.62.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add Volcano Ark models."]
+    },
+    "date": "2025-02-21",
+    "version": "1.62.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the plugin render style."]
+    },
+    "date": "2025-02-21",
+    "version": "1.62.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix default agent loading."]
+    },
+    "date": "2025-02-21",
+    "version": "1.62.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix hotkeys of open agent settings."],
       "improvements": ["Add some error types."]
     },

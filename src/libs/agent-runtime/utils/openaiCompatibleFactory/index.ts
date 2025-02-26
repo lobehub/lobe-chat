@@ -211,21 +211,23 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
           callbacks: options?.callback,
           provider,
         };
+
         if (customClient?.createChatCompletionStream) {
           response = customClient.createChatCompletionStream(this.client, payload, this) as any;
         } else {
-          response = await this.client.chat.completions.create(
-            {
-              ...postPayload,
-              messages,
-              ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
-            },
-            {
-              // https://github.com/lobehub/lobe-chat/pull/318
-              headers: { Accept: '*/*', ...options?.requestHeaders },
-              signal: options?.signal,
-            },
-          );
+          const finalPayload = {
+            ...postPayload,
+            messages,
+            ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
+          };
+          if (debug?.chatCompletion?.()) {
+            console.log('[requestPayload]:', JSON.stringify(finalPayload, null, 2));
+          }
+          response = await this.client.chat.completions.create(finalPayload, {
+            // https://github.com/lobehub/lobe-chat/pull/318
+            headers: { Accept: '*/*', ...options?.requestHeaders },
+            signal: options?.signal,
+          });
         }
 
         if (postPayload.stream) {

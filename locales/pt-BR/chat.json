@@ -31,6 +31,15 @@
   },
   "duplicateTitle": "{{title}} Cópia",
   "emptyAgent": "Sem assistente disponível",
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Ativar Pensamento Profundo"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token de Consumo de Pensamento"
+    },
+    "title": "Funcionalidade de Extensão do Modelo"
+  },
   "historyRange": "Intervalo de Histórico",
   "historySummary": "Resumo das mensagens históricas",
   "inbox": {
@@ -84,6 +93,29 @@
   },
   "regenerate": "Regenerar",
   "roleAndArchive": "Função e Arquivo",
+  "search": {
+    "grounding": {
+      "searchQueries": "Palavras-chave de pesquisa",
+      "title": "Foram encontrados {{count}} resultados"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Determina inteligentemente se é necessário pesquisar com base no conteúdo da conversa",
+        "title": "Conexão Inteligente"
+      },
+      "disable": "O modelo atual não suporta chamadas de função, portanto, a funcionalidade de conexão inteligente não está disponível",
+      "off": {
+        "desc": "Usa apenas o conhecimento básico do modelo, sem realizar pesquisas na web",
+        "title": "Desativar Conexão"
+      },
+      "on": {
+        "desc": "Realiza pesquisas contínuas na web para obter informações atualizadas",
+        "title": "Sempre Conectado"
+      },
+      "useModelBuiltin": "Usar o mecanismo de busca embutido no modelo"
+    },
+    "title": "Pesquisa Conectada"
+  },
   "searchAgentPlaceholder": "Assistente de busca...",
   "sendPlaceholder": "Digite a mensagem...",
   "sessionGroup": {

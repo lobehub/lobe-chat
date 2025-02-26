@@ -118,6 +118,10 @@
     "reinstallError": "플러그인 {{name}} 다시 설치 중 오류가 발생했습니다.",
     "urlError": "이 링크는 JSON 형식의 내용을 반환하지 않습니다. 유효한 링크인지 확인하세요."
   },
+  "inspector": {
+    "args": "매개변수 목록 보기",
+    "pluginRender": "플러그인 인터페이스 보기"
+  },
   "list": {
     "item": {
       "deprecated.title": "삭제됨",
@@ -130,6 +134,22 @@
     "plugin": "플러그인 실행 중..."
   },
   "pluginList": "플러그인 목록",
+  "search": {
+    "config": {
+      "addKey": "키 추가",
+      "close": "삭제",
+      "confirm": "구성이 완료되었습니다. 다시 시도하십시오."
+    },
+    "searchxng": {
+      "baseURL": "입력하십시오",
+      "description": "SearchXNG의 URL을 입력하면 인터넷 검색을 시작할 수 있습니다.",
+      "keyPlaceholder": "키를 입력하십시오",
+      "title": "SearchXNG 검색 엔진 구성",
+      "unconfiguredDesc": "관리자에게 연락하여 SearchXNG 검색 엔진 구성을 완료하십시오. 인터넷 검색을 시작할 수 있습니다.",
+      "unconfiguredTitle": "SearchXNG 검색 엔진이 아직 구성되지 않았습니다."
+    },
+    "title": "인터넷 검색"
+  },
   "setting": "플러그인 설정",
   "settings": {
     "indexUrl": {
