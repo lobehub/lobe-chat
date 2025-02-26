@@ -30,6 +30,7 @@ import {
   preferenceSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
@@ -168,6 +169,25 @@ class ChatService {
       },
       params,
     );
+
+    // =================== 0. process search =================== //
+    const chatConfig = getAgentChatConfig();
+
+    const enabledSearch = chatConfig.searchMode !== 'off';
+    const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
+      payload.model,
+      payload.provider!,
+    )(useAiInfraStore.getState());
+
+    const useApplicationBuiltinSearchTool =
+      enabledSearch && !(isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch);
+
+    const pluginIds = [...(enabledPlugins || [])];
+
+    if (useApplicationBuiltinSearchTool) {
+      pluginIds.push(WebBrowsingManifest.identifier);
+    }
+
     // ============  1. preprocess messages   ============ //
 
     const oaiMessages = this.processMessages(
@@ -175,14 +195,14 @@ class ChatService {
         messages,
         model: payload.model,
         provider: payload.provider!,
-        tools: enabledPlugins,
+        tools: pluginIds,
       },
       options,
     );
 
     // ============  2. preprocess tools   ============ //
 
-    const filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
+    let filterTools = toolSelectors.enabledSchema(pluginIds)(useToolStore.getState());
 
     // check this model can use function call
     const canUseFC = isCanUseFC(payload.model, payload.provider!);
@@ -194,7 +214,41 @@ class ChatService {
 
     const tools = shouldUseTools ? filterTools : undefined;
 
-    return this.getChatCompletion({ ...params, messages: oaiMessages, tools }, options);
+    // ============  3. process extend params   ============ //
+
+    let extendParams: Record<string, any> = {};
+
+    const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
+      payload.model,
+      payload.provider!,
+    )(useAiInfraStore.getState());
+
+    // model
+    if (isModelHasExtendParams) {
+      const modelExtendParams = aiModelSelectors.modelExtendParams(
+        payload.model,
+        payload.provider!,
+      )(useAiInfraStore.getState());
+      // if model has extended params, then we need to check if the model can use reasoning
+
+      if (modelExtendParams!.includes('enableReasoning') && chatConfig.enableReasoning) {
+        extendParams.thinking = {
+          budget_tokens: chatConfig.reasoningBudgetToken || 1024,
+          type: 'enabled',
+        };
+      }
+    }
+
+    return this.getChatCompletion(
+      {
+        ...params,
+        ...extendParams,
+        enabledSearch: enabledSearch && isModelHasBuiltinSearch ? true : undefined,
+        messages: oaiMessages,
+        tools,
+      },
+      options,
+    );
   };
 
   createAssistantMessageStream = async ({
@@ -239,13 +293,6 @@ class ChatService {
 
     if (providersWithDeploymentName.includes(provider)) {
       model = findDeploymentName(model, provider);
-    }
-
-    // =================== process search =================== //
-    // ===================================================== //
-    const chatConfig = getAgentChatConfig();
-    if (chatConfig.searchMode !== 'off') {
-      res.enabledSearch = true;
     }
 
     const payload = merge(

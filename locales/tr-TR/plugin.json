@@ -134,6 +134,22 @@
     "plugin": "Eklenti çalışıyor..."
   },
   "pluginList": "Eklenti Listesi",
+  "search": {
+    "config": {
+      "addKey": "Anahtar Ekle",
+      "close": "Sil",
+      "confirm": "Yapılandırma tamamlandı ve yeniden denendi"
+    },
+    "searchxng": {
+      "baseURL": "Lütfen girin",
+      "description": "SearchXNG'nin URL'sini girin, böylece çevrimiçi arama yapmaya başlayabilirsiniz",
+      "keyPlaceholder": "Anahtarı girin",
+      "title": "SearchXNG Arama Motorunu Yapılandır",
+      "unconfiguredDesc": "Lütfen yöneticinizle iletişime geçin ve SearchXNG arama motoru yapılandırmasını tamamlayın, böylece çevrimiçi arama yapmaya başlayabilirsiniz",
+      "unconfiguredTitle": "SearchXNG Arama Motoru Henüz Yapılandırılmadı"
+    },
+    "title": "Çevrimiçi Arama"
+  },
   "setting": "Eklenti Ayarları",
   "settings": {
     "indexUrl": {

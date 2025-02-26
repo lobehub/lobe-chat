@@ -134,6 +134,22 @@
     "plugin": "Plugin đang chạy..."
   },
   "pluginList": "Danh sách plugin",
+  "search": {
+    "config": {
+      "addKey": "Thêm khóa",
+      "close": "Xóa",
+      "confirm": "Đã hoàn thành cấu hình và thử lại"
+    },
+    "searchxng": {
+      "baseURL": "Nhập vào",
+      "description": "Nhập URL của SearchXNG để bắt đầu tìm kiếm trực tuyến",
+      "keyPlaceholder": "Nhập khóa",
+      "title": "Cấu hình công cụ tìm kiếm SearchXNG",
+      "unconfiguredDesc": "Vui lòng liên hệ với quản trị viên để hoàn thành cấu hình công cụ tìm kiếm SearchXNG, để bắt đầu tìm kiếm trực tuyến",
+      "unconfiguredTitle": "Chưa cấu hình công cụ tìm kiếm SearchXNG"
+    },
+    "title": "Tìm kiếm trực tuyến"
+  },
   "setting": "Cài đặt plugin",
   "settings": {
     "indexUrl": {

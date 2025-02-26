@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "外掛",
-  "actions": {
-    "genAiMessage": "生成助手訊息",
-    "summary": "摘要",
-    "summaryTooltip": "總結目前內容"
-  },
   "artifacts": {
     "display": {
       "code": "程式碼",

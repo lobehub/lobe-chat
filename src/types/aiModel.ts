@@ -138,17 +138,12 @@ export interface AiModelConfig {
   enabledSearch?: boolean;
 }
 
-export interface ExtendedControl {
-  key: string;
-  requestParams: string | string[];
-  type: 'params' | 'tool';
-  valueType: 'boolean';
-}
-
 export type ModelSearchImplementType = 'tool' | 'params' | 'internal';
 
+export type ExtendParamsType = 'reasoningBudgetToken' | 'enableReasoning';
+
 export interface AiModelSettings {
-  extendControls?: ExtendedControl[];
+  extendParams?: ExtendParamsType[];
   /**
    * 模型层实现搜索的方式
    */
@@ -294,6 +289,7 @@ export interface AiProviderModelListItem {
   id: string;
   pricing?: ChatModelPricing;
   releasedAt?: string;
+  settings?: AiModelSettings;
   source?: AiModelSourceType;
   type: AiModelType;
 }

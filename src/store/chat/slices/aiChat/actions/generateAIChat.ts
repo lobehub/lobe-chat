@@ -626,7 +626,7 @@ export const generateAIChat: StateCreator<
       },
 
       false,
-      'toggleToolCallingStreaming',
+      `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
     );
   },
 });
