@@ -485,8 +485,20 @@ class ChatService {
         }
 
         case 'assistant': {
+          // signature is a signal of anthropic thinking mode
+          const shouldIncludeThinking = m.reasoning && !!m.reasoning?.signature;
+
           return {
-            content: m.content,
+            content: shouldIncludeThinking
+              ? [
+                  {
+                    signature: m.reasoning!.signature,
+                    thinking: m.reasoning!.content,
+                    type: 'thinking',
+                  } as any,
+                  { text: m.content, type: 'text' },
+                ]
+              : m.content,
             role: m.role,
             tool_calls: m.tools?.map(
               (tool): MessageToolCall => ({

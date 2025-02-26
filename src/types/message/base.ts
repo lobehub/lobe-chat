@@ -10,6 +10,7 @@ export interface CitationItem {
 export interface ModelReasoning {
   content?: string;
   duration?: number;
+  signature?: string;
 }
 
 export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';
