@@ -46,6 +46,11 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
         return pruneReasoningPayload(payload) as any;
       }
 
+      // oneapi 下的claude也需要设置temperature为1
+      if (model.startsWith('claude')) {
+        return { ...payload, temperature: 1, top_p: null }
+      }
+
       return { ...payload, stream: payload.stream ?? true };
     },
   },
