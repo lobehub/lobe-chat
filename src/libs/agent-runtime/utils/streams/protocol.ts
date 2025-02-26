@@ -35,6 +35,8 @@ export interface StreamProtocolChunk {
     | 'reasoning'
     // use for reasoning signature, maybe only anthropic
     | 'reasoning_signature'
+    // flagged reasoning signature
+    | 'flagged_reasoning_signature'
     // Search or Grounding
     | 'grounding'
     // stop signal
