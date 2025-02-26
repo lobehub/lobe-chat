@@ -15,7 +15,7 @@ import {
 export const transformAnthropicStream = (
   chunk: Anthropic.MessageStreamEvent,
   context: StreamContext,
-): StreamProtocolChunk => {
+): StreamProtocolChunk | StreamProtocolChunk[] => {
   // maybe need another structure to add support for multiple choices
   switch (chunk.type) {
     case 'message_start': {
@@ -53,16 +53,20 @@ export const transformAnthropicStream = (
       if (chunk.content_block.type === 'thinking') {
         const thinkingChunk = chunk.content_block;
 
-        return {
-          data: { content: thinkingChunk.thinking, signature: thinkingChunk.signature },
-          id: context.id,
-          type: 'reasoning',
-        };
+        // if there is signature in the thinking block, return both thinking and signature
+        if (!!thinkingChunk.signature) {
+          return [
+            { data: thinkingChunk.thinking, id: context.id, type: 'reasoning' },
+            { data: thinkingChunk.signature, id: context.id, type: 'reasoning_signature' },
+          ];
+        }
+
+        return { data: thinkingChunk.thinking, id: context.id, type: 'reasoning' };
       }
 
       if (chunk.content_block.type === 'redacted_thinking') {
         return {
-          data: { signature: chunk.content_block.data },
+          data: chunk.content_block.data,
           id: context.id,
           type: 'reasoning',
         };
@@ -95,15 +99,15 @@ export const transformAnthropicStream = (
 
         case 'signature_delta': {
           return {
-            data: { signature: chunk.delta.signature },
+            data: chunk.delta.signature,
             id: context.id,
-            type: 'reasoning',
+            type: 'reasoning_signature',
           };
         }
 
         case 'thinking_delta': {
           return {
-            data: { content: chunk.delta.thinking },
+            data: chunk.delta.thinking,
             id: context.id,
             type: 'reasoning',
           };

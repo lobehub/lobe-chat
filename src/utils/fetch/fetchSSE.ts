@@ -369,17 +369,19 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           break;
         }
 
-        case 'reasoning': {
-          if (!!data.signature) thinkingSignature = data.signature;
+        case 'reasoning_signature': {
+          thinkingSignature = data;
+          break;
+        }
 
+        case 'reasoning': {
           if (textSmoothing) {
-            thinkingController.pushToQueue(data.content || '');
+            thinkingController.pushToQueue(data);
 
             if (!thinkingController.isAnimationActive) thinkingController.startAnimation();
           } else {
-            const text = data.content;
-            thinking += text;
-            options.onMessageHandle?.({ text, type: 'reasoning' });
+            thinking += data;
+            options.onMessageHandle?.({ text: data, type: 'reasoning' });
           }
 
           break;
