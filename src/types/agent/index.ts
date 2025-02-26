@@ -55,33 +55,45 @@ export interface LobeAgentConfig {
   tts: LobeAgentTTSConfig;
 }
 
+/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
+
 export interface LobeAgentChatConfig {
-  autoCreateTopicThreshold: number;
   displayMode?: 'chat' | 'docs';
+
   enableAutoCreateTopic?: boolean;
-  /**
-   * 历史消息长度压缩阈值
-   */
-  enableCompressHistory?: boolean;
-  /**
-   * 开启历史记录条数
-   */
-  enableHistoryCount?: boolean;
+  autoCreateTopicThreshold: number;
+
   enableMaxTokens?: boolean;
 
+  /**
+   * 是否开启推理
+   */
+  enableReasoning?: boolean;
   /**
    * 自定义推理强度
    */
   enableReasoningEffort?: boolean;
+  reasoningBudgetToken?: number;
 
   /**
    * 历史消息条数
    */
   historyCount?: number;
+  /**
+   * 开启历史记录条数
+   */
+  enableHistoryCount?: boolean;
+  /**
+   * 历史消息长度压缩阈值
+   */
+  enableCompressHistory?: boolean;
+
   inputTemplate?: string;
+
   searchMode?: SearchMode;
   useModelBuiltinSearch?: boolean;
 }
+/* eslint-enable */
 
 export const AgentChatConfigSchema = z.object({
   autoCreateTopicThreshold: z.number().default(2),
@@ -90,8 +102,10 @@ export const AgentChatConfigSchema = z.object({
   enableCompressHistory: z.boolean().optional(),
   enableHistoryCount: z.boolean().optional(),
   enableMaxTokens: z.boolean().optional(),
+  enableReasoning: z.boolean().optional(),
   enableReasoningEffort: z.boolean().optional(),
   historyCount: z.number().optional(),
+  reasoningBudgetToken: z.number().optional(),
   searchMode: z.enum(['off', 'on', 'auto']).optional(),
 });
 

@@ -31,7 +31,13 @@
   },
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暂无助手",
-  "extendControls": {
+  "extendParams": {
+    "enableReasoning": {
+      "title": "开启深度思考"
+    },
+    "reasoningBudgetToken": {
+      "title": "思考消耗 Token"
+    },
     "title": "模型扩展功能"
   },
   "historyRange": "历史范围",
