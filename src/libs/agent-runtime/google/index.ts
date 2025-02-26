@@ -208,11 +208,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       system: system_message?.content,
     };
   }
-  private convertContentToGooglePart = async (content: UserMessageContentPart): Promise<Part> => {
+  private convertContentToGooglePart = async (
+    content: UserMessageContentPart,
+  ): Promise<Part | undefined> => {
     switch (content.type) {
+      default: {
+        return undefined;
+      }
+
       case 'text': {
         return { text: content.text };
       }
+
       case 'image_url': {
         const { mimeType, base64, type } = parseDataUri(content.image_url.url);
 
@@ -261,11 +268,17 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       };
     }
 
+    const getParts = async () => {
+      if (typeof content === 'string') return [{ text: content }];
+
+      const parts = await Promise.all(
+        content.map(async (c) => await this.convertContentToGooglePart(c)),
+      );
+      return parts.filter(Boolean) as Part[];
+    };
+
     return {
-      parts:
-        typeof content === 'string'
-          ? [{ text: content }]
-          : await Promise.all(content.map(async (c) => await this.convertContentToGooglePart(c))),
+      parts: await getParts(),
       role: message.role === 'assistant' ? 'model' : 'user',
     };
   };
