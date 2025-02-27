@@ -10,6 +10,7 @@ export const buildAnthropicBlock = async (
   content: UserMessageContentPart,
 ): Promise<Anthropic.ContentBlock | Anthropic.ImageBlockParam> => {
   switch (content.type) {
+    case 'thinking':
     case 'text': {
       // just pass-through the content
       return content as any;
@@ -83,13 +84,15 @@ export const buildAnthropicMessage = async (
       // if there is tool_calls , we need to covert the tool_calls to tool_use content block
       // refs: https://docs.anthropic.com/claude/docs/tool-use#tool-use-and-tool-result-content-blocks
       if (message.tool_calls) {
+        const messageContent =
+          typeof content === 'string'
+            ? [{ text: message.content, type: 'text' }]
+            : await Promise.all(content.map(async (c) => await buildAnthropicBlock(c)));
+
         return {
           content: [
             // avoid empty text content block
-            !!message.content && {
-              text: message.content as string,
-              type: 'text',
-            },
+            ...messageContent,
             ...(message.tool_calls.map((tool) => ({
               id: tool.id,
               input: JSON.parse(tool.function.arguments),

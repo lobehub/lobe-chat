@@ -76,6 +76,19 @@ services:
     env_file:
       - .env
 
+  searxng:
+    image: searxng/searxng
+    container_name: lobe-searxng
+    volumes:
+      - './searxng-settings.yml:/etc/searxng/settings.yml'
+    environment:
+      - 'SEARXNG_SETTINGS_FILE=/etc/searxng/settings.yml'
+    restart: always
+    networks:
+      - lobe-network
+    env_file:
+      - .env
+
   lobe:
     image: lobehub/lobe-chat-database
     container_name: lobe-chat
@@ -102,6 +115,7 @@ services:
       - 'S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}'
       - 'LLM_VISION_IMAGE_USE_BASE64=1'
       - 'S3_SET_ACL=0'
+      - 'SEARXNG_URL=http://searxng:8080'
     env_file:
       - .env
     restart: always
