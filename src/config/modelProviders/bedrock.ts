@@ -33,7 +33,7 @@ const Bedrock: ModelProviderCard = {
       displayName: 'Claude 3.7 Sonnet',
       enabled: true,
       functionCall: true,
-      id: 'anthropic.claude-3-7-sonnet-20250219-v1:0',
+      id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
       maxOutput: 8192,
       pricing: {
         cachedInput: 0.1,
