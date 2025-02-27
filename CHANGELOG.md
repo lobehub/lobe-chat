@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.65.2](https://github.com/lobehub/lobe-chat/compare/v1.65.1...v1.65.2)
+
+<sup>Released on **2025-02-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support parsing the search flag when parsing the model list, Update Gemini & Qwen models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support parsing the search flag when parsing the model list, closes [#6546](https://github.com/lobehub/lobe-chat/issues/6546) ([8c768ed](https://github.com/lobehub/lobe-chat/commit/8c768ed))
+- **misc**: Update Gemini & Qwen models, closes [#6531](https://github.com/lobehub/lobe-chat/issues/6531) ([efde928](https://github.com/lobehub/lobe-chat/commit/efde928))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.65.1](https://github.com/lobehub/lobe-chat/compare/v1.65.0...v1.65.1)
 
 <sup>Released on **2025-02-26**</sup>
