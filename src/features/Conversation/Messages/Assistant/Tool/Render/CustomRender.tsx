@@ -13,13 +13,13 @@ import { ChatMessage } from '@/types/message';
 
 import Arguments from './Arguments';
 
-const CustomRender = memo<
-  ChatMessage & {
-    requestArgs?: string;
-    setShowPluginRender: (show: boolean) => void;
-    showPluginRender: boolean;
-  }
->(
+interface CustomRenderProps extends ChatMessage {
+  requestArgs?: string;
+  setShowPluginRender: (value: boolean) => void;
+  showPluginRender: boolean;
+}
+
+const CustomRender = memo<CustomRenderProps>(
   ({
     id,
     content,
