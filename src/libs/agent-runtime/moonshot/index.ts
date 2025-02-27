@@ -1,5 +1,3 @@
-import OpenAI from 'openai';
-
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
@@ -13,12 +11,23 @@ export const LobeMoonshotAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.moonshot.cn/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
-      const { temperature, ...rest } = payload;
+      const { enabledSearch, temperature, tools, ...rest } = payload;
+
+      const moonshotTools = enabledSearch ? [
+        ...(tools || []),
+        {
+          function: {
+            name: "$web_search",
+          },
+          type: "builtin_function",
+        }
+      ] : tools;
 
       return {
         ...rest,
         temperature: temperature !== undefined ? temperature / 2 : undefined,
-      } as OpenAI.ChatCompletionCreateParamsStreaming;
+        tools: moonshotTools,
+      } as any;
     },
   },
   debug: {

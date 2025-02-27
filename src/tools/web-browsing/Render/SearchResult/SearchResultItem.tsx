@@ -30,6 +30,7 @@ const useStyles = createStyles(({ css, token }) => ({
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 
+    color: ${token.colorTextSecondary};
     text-overflow: ellipsis;
   `,
   url: css`
