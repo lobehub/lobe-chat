@@ -68,7 +68,7 @@ const useBedrockCard = (): ProviderItem => {
         ) : (
           <Select
             allowClear
-            options={['us-east-1', 'us-west-2', 'ap-southeast-1'].map((i) => ({
+            options={['us-east-1', 'us-west-2', 'ap-southeast-1', 'eu-central-1'].map((i) => ({
               label: i,
               value: i,
             }))}
