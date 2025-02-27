@@ -177,6 +177,16 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    contextWindowTokens: 32_768,
+    displayName: 'Mixtral Saba 24B',
+    id: 'mistral-saba-24b',
+    pricing: {
+      input: 0.79,
+      output: 0.79,
+    },
+    type: 'chat',
+  },
+  {
     abilities: {
       functionCall: true,
     },

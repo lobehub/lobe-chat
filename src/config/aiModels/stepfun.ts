@@ -6,6 +6,7 @@ const stepfunChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8000,
     description: '高速模型，适合实时对话。',
@@ -17,11 +18,15 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 1,
       output: 4,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8000,
     description: '小型模型，适合轻量级任务。',
@@ -33,11 +38,15 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 5,
       output: 20,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_000,
     description: '支持中等长度的对话，适用于多种应用场景。',
@@ -49,11 +58,15 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 15,
       output: 70,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 128_000,
     description: '平衡性能与成本，适合一般场景。',
@@ -65,11 +78,15 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 40,
       output: 200,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 256_000,
     description: '具备超长上下文处理能力，尤其适合长文档分析。',
@@ -80,11 +97,15 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 95,
       output: 300,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 16_000,
     description: '支持大规模上下文交互，适合复杂对话场景。',
@@ -96,11 +117,15 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 38,
       output: 120,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8000,
     description: 
@@ -114,11 +139,15 @@ const stepfunChatModels: AIChatModelCard[] = [
       output: 2,
     },
     releasedAt: '2025-01-14',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 16_000,
     description: 'step-2模型的实验版本，包含最新的特性，滚动更新中。不推荐在正式生产环境使用。',
@@ -131,11 +160,15 @@ const stepfunChatModels: AIChatModelCard[] = [
       output: 120,
     },
     releasedAt: '2025-01-15',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 8000,
@@ -148,11 +181,15 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 5,
       output: 20,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 32_000,
@@ -164,11 +201,15 @@ const stepfunChatModels: AIChatModelCard[] = [
       input: 15,
       output: 70,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 32_000,
@@ -182,6 +223,9 @@ const stepfunChatModels: AIChatModelCard[] = [
       output: 70,
     },
     releasedAt: '2025-01-22',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
