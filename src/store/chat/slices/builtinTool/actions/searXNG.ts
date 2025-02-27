@@ -13,6 +13,8 @@ import {
 import { nanoid } from '@/utils/uuid';
 
 export interface SearchAction {
+  crawlMultiPages: (id: string, params: { urls: string[] }) => Promise<void>;
+  crawlSinglePage: (id: string, params: { url: string }) => Promise<void>;
   /**
    * 重新发起搜索
    * @description 会更新插件的 arguments 参数，然后再次搜索
@@ -37,6 +39,24 @@ export const searchSlice: StateCreator<
   [],
   SearchAction
 > = (set, get) => ({
+  crawlMultiPages: async (id, params) => {
+    const { internal_updateMessageContent } = get();
+    const data = await searchService.crawlPages(params.urls);
+
+    if (!data) return;
+
+    await internal_updateMessageContent(id, JSON.stringify(data));
+  },
+
+  crawlSinglePage: async (id, params) => {
+    const { internal_updateMessageContent } = get();
+    const data = await searchService.crawlPage(params.url);
+
+    if (!data) return;
+
+    await internal_updateMessageContent(id, JSON.stringify(data));
+  },
+
   reSearchWithSearXNG: async (id, data, options) => {
     get().toggleSearchLoading(id, true);
     await get().updatePluginArguments(id, data);
@@ -82,6 +102,7 @@ export const searchSlice: StateCreator<
     // 将新创建的 tool message 激活
     openToolUI(newMessageId, message.plugin.identifier);
   },
+
   searchWithSearXNG: async (id, params, aiSummary = true) => {
     get().toggleSearchLoading(id, true);
     let data: SearchResponse | undefined;

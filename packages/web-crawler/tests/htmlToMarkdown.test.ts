@@ -4,12 +4,22 @@ import { expect } from 'vitest';
 
 import { htmlToMarkdown } from '../src';
 
+const list = [
+  {
+    file: 'zhihu.html',
+    url: 'https://zhuanlan.zhihu.com/p/641434725',
+  },
+  { file: 'yingchao.html', url: 'https://www.qiumiwu.com/standings/yingchao' },
+];
+
 describe('htmlToMarkdown', () => {
-  it('Zhihu', () => {
-    const html = readFileSync(path.join(__dirname, './html/zhihu.html'), { encoding: 'utf8' });
+  list.forEach((item) => {
+    it(`should transform ${item.file} to markdown`, () => {
+      const html = readFileSync(path.join(__dirname, `./html/${item.file}`), { encoding: 'utf8' });
 
-    const data = htmlToMarkdown(html, 'https://zhuanlan.zhihu.com/p/641434725');
+      const data = htmlToMarkdown(html, item.url);
 
-    expect(data).toMatchSnapshot();
+      expect(data).toMatchSnapshot();
+    });
   });
 });

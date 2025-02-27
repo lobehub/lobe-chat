@@ -5,11 +5,12 @@ export const crawler = async ({ url }: { url: string }) => {
   try {
     const res = await fetch(url);
     const html = await res.text();
-    const article = htmlToMarkdown(html, url);
+    const result = htmlToMarkdown(html, url);
 
+    console.log('content:', result);
     // if the content is not empty, just return
-    if (!!article.content)
-      return { content: article.content, title: article?.title, url, website: article?.siteName };
+    if (!!result.content)
+      return { content: result.content, title: result?.title, url, website: result?.siteName };
   } catch (error) {
     console.error(error);
   }

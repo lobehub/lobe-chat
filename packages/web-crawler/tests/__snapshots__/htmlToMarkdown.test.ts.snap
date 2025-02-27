@@ -1,6 +1,33 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`htmlToMarkdown > Zhihu 1`] = `
+exports[`htmlToMarkdown > should transform yingchao.html to markdown 1`] = `
+{
+  "byline": null,
+  "content": "copyright © 2016 - 2025 qiumiwu.com All Rights Reserved 
+
+![icp](https://www.qiumiwu.com/static/images/ba.png?id=5885d4c1cb7c44ddd9a9fee60123d119) 粤公网安备 44190002004105号 [粤ICP备16062857号](https://beian.miit.gov.cn/#/Integrated/index) 增值电信业务经营许可证粤B2-20210041 粤网文\\[2021\\]4047-607号 ",
+  "dir": null,
+  "excerpt": "球迷屋为您提供2024-2025赛季英超积分排行榜，包含所有英超球队的全部赛季的排行榜数据，包含了英超球队的排名、场次、胜平负、进球、失球、积分等等详细积分数据，让大家迅速了解英超积分排行榜的数据。",
+  "lang": null,
+  "length": 201,
+  "publishedTime": null,
+  "siteName": null,
+  "textContent": "
+      copyright © 2016 - 2025 qiumiwu.com All Rights Reserved
+      
+
+      
+        粤公网安备 44190002004105号
+        粤ICP备16062857号
+        增值电信业务经营许可证粤B2-20210041
+        粤网文[2021]4047-607号
+      
+    ",
+  "title": "英超排行榜|英超积分榜2024-2025赛季 - 球迷屋",
+}
+`;
+
+exports[`htmlToMarkdown > should transform zhihu.html to markdown 1`] = `
 {
   "byline": null,
   "content": "_（省流版本：笔者认为由于LoRA和controlnet的加入，SDXL的参数量的扩大，SD模型ckpt的发展方向是往兼容性的大模型方向发展才是正确的道路，更好发挥现有8.59亿参数量（未来SDXL：35亿参数）的优势。而现在越来越多随意将LoRA和ckpt融合，越来越固定的画面风格，兼容性越来越差的模型，容易导致劣币驱逐良币，导致ckpt的发展方向偏移。）_ 

@@ -46,6 +46,39 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
+    {
+      description:
+        'A crawler can visit page content. Output is a JSON object of title, content, url and website',
+      name: 'crawlSinglePage',
+      parameters: {
+        properties: {
+          url: {
+            description: 'The url need to be crawled',
+            type: 'string',
+          },
+        },
+        required: ['url'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'A crawler can visit multi pages. If need to visit multi website, use this one. Output is an array of JSON object of title, content, url and website',
+      name: 'crawlMultiPages',
+      parameters: {
+        properties: {
+          urls: {
+            items: {
+              description: 'The url need to be crawled',
+              type: 'string',
+            },
+            type: 'array',
+          },
+        },
+        required: ['urls'],
+        type: 'object',
+      },
+    },
   ],
   identifier: 'lobe-web-browsing',
   meta: {
