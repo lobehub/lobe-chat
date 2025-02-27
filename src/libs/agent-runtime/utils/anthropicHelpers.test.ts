@@ -228,7 +228,7 @@ describe('anthropicHelpers', () => {
       ]);
     });
 
-    it('messages should end with user', async () => {
+    it('messages should dont need end with user', async () => {
       const messages: OpenAIChatMessage[] = [
         { content: 'Hello', role: 'user' },
         { content: 'Hello', role: 'user' },
@@ -245,107 +245,196 @@ describe('anthropicHelpers', () => {
       ]);
     });
 
-    it('should correctly convert OpenAI tool message to Anthropic format', async () => {
-      const messages: OpenAIChatMessage[] = [
-        {
-          content: '告诉我杭州和北京的天气，先回答我好的',
-          role: 'user',
-        },
-        {
-          content:
-            '好的,我会为您查询杭州和北京的天气信息。我现在就开始查询这两个城市的当前天气情况。',
-          role: 'assistant',
-          tool_calls: [
-            {
-              function: {
-                arguments: '{"city": "\\u676d\\u5dde"}',
-                name: 'realtime-weather____fetchCurrentWeather',
-              },
-              id: 'toolu_018PNQkH8ChbjoJz4QBiFVod',
-              type: 'function',
-            },
-            {
-              function: {
-                arguments: '{"city": "\\u5317\\u4eac"}',
-                name: 'realtime-weather____fetchCurrentWeather',
-              },
-              id: 'toolu_018VQTQ6fwAEC3eppuEfMxPp',
-              type: 'function',
-            },
-          ],
-        },
-        {
-          content:
-            '[{"city":"杭州市","adcode":"330100","province":"浙江","reporttime":"2024-06-24 17:02:14","casts":[{"date":"2024-06-24","week":"1","dayweather":"小雨","nightweather":"中雨","daytemp":"26","nighttemp":"20","daywind":"西","nightwind":"西","daypower":"1-3","nightpower":"1-3","daytemp_float":"26.0","nighttemp_float":"20.0"},{"date":"2024-06-25","week":"2","dayweather":"大雨","nightweather":"中雨","daytemp":"23","nighttemp":"19","daywind":"东","nightwind":"东","daypower":"1-3","nightpower":"1-3","daytemp_float":"23.0","nighttemp_float":"19.0"},{"date":"2024-06-26","week":"3","dayweather":"中雨","nightweather":"中雨","daytemp":"24","nighttemp":"21","daywind":"东南","nightwind":"东南","daypower":"1-3","nightpower":"1-3","daytemp_float":"24.0","nighttemp_float":"21.0"},{"date":"2024-06-27","week":"4","dayweather":"中雨-大雨","nightweather":"中雨","daytemp":"24","nighttemp":"22","daywind":"南","nightwind":"南","daypower":"1-3","nightpower":"1-3","daytemp_float":"24.0","nighttemp_float":"22.0"}]}]',
-          name: 'realtime-weather____fetchCurrentWeather',
-          role: 'tool',
-          tool_call_id: 'toolu_018PNQkH8ChbjoJz4QBiFVod',
-        },
-        {
-          content:
-            '[{"city":"北京市","adcode":"110000","province":"北京","reporttime":"2024-06-24 17:03:11","casts":[{"date":"2024-06-24","week":"1","dayweather":"晴","nightweather":"晴","daytemp":"33","nighttemp":"20","daywind":"北","nightwind":"北","daypower":"1-3","nightpower":"1-3","daytemp_float":"33.0","nighttemp_float":"20.0"},{"date":"2024-06-25","week":"2","dayweather":"晴","nightweather":"晴","daytemp":"35","nighttemp":"21","daywind":"东南","nightwind":"东南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"21.0"},{"date":"2024-06-26","week":"3","dayweather":"晴","nightweather":"晴","daytemp":"35","nighttemp":"23","daywind":"西南","nightwind":"西南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"23.0"},{"date":"2024-06-27","week":"4","dayweather":"多云","nightweather":"多云","daytemp":"35","nighttemp":"23","daywind":"西南","nightwind":"西南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"23.0"}]}]',
-          name: 'realtime-weather____fetchCurrentWeather',
-          role: 'tool',
-          tool_call_id: 'toolu_018VQTQ6fwAEC3eppuEfMxPp',
-        },
-        {
-          content: '继续',
-          role: 'user',
-        },
-      ];
+    describe('Tool messages', () => {
+      it('should handle empty tools', async () => {
+        const messages: OpenAIChatMessage[] = [
+          {
+            content: '## Tools\n\nYou can use these tools',
+            role: 'user',
+          },
+          {
+            content: '',
+            role: 'assistant',
+            tool_calls: [],
+          },
+        ];
 
-      const contents = await buildAnthropicMessages(messages);
+        const contents = await buildAnthropicMessages(messages);
 
-      expect(contents).toEqual([
-        { content: '告诉我杭州和北京的天气，先回答我好的', role: 'user' },
-        {
-          content: [
-            {
-              text: '好的,我会为您查询杭州和北京的天气信息。我现在就开始查询这两个城市的当前天气情况。',
-              type: 'text',
-            },
-            {
-              id: 'toolu_018PNQkH8ChbjoJz4QBiFVod',
-              input: { city: '杭州' },
-              name: 'realtime-weather____fetchCurrentWeather',
-              type: 'tool_use',
-            },
-            {
-              id: 'toolu_018VQTQ6fwAEC3eppuEfMxPp',
-              input: { city: '北京' },
-              name: 'realtime-weather____fetchCurrentWeather',
-              type: 'tool_use',
-            },
-          ],
-          role: 'assistant',
-        },
-        {
-          content: [
-            {
-              content: [
-                {
-                  text: '[{"city":"杭州市","adcode":"330100","province":"浙江","reporttime":"2024-06-24 17:02:14","casts":[{"date":"2024-06-24","week":"1","dayweather":"小雨","nightweather":"中雨","daytemp":"26","nighttemp":"20","daywind":"西","nightwind":"西","daypower":"1-3","nightpower":"1-3","daytemp_float":"26.0","nighttemp_float":"20.0"},{"date":"2024-06-25","week":"2","dayweather":"大雨","nightweather":"中雨","daytemp":"23","nighttemp":"19","daywind":"东","nightwind":"东","daypower":"1-3","nightpower":"1-3","daytemp_float":"23.0","nighttemp_float":"19.0"},{"date":"2024-06-26","week":"3","dayweather":"中雨","nightweather":"中雨","daytemp":"24","nighttemp":"21","daywind":"东南","nightwind":"东南","daypower":"1-3","nightpower":"1-3","daytemp_float":"24.0","nighttemp_float":"21.0"},{"date":"2024-06-27","week":"4","dayweather":"中雨-大雨","nightweather":"中雨","daytemp":"24","nighttemp":"22","daywind":"南","nightwind":"南","daypower":"1-3","nightpower":"1-3","daytemp_float":"24.0","nighttemp_float":"22.0"}]}]',
-                  type: 'text',
+        expect(contents).toEqual([
+          {
+            content: '## Tools\n\nYou can use these tools',
+            role: 'user',
+          },
+          {
+            content: '',
+            role: 'assistant',
+          },
+        ]);
+      });
+      it('should correctly convert OpenAI tool message to Anthropic format', async () => {
+        const messages: OpenAIChatMessage[] = [
+          {
+            content: '告诉我杭州和北京的天气，先回答我好的',
+            role: 'user',
+          },
+          {
+            content:
+              '好的,我会为您查询杭州和北京的天气信息。我现在就开始查询这两个城市的当前天气情况。',
+            role: 'assistant',
+            tool_calls: [
+              {
+                function: {
+                  arguments: '{"city": "\\u676d\\u5dde"}',
+                  name: 'realtime-weather____fetchCurrentWeather',
                 },
-              ],
-              tool_use_id: 'toolu_018PNQkH8ChbjoJz4QBiFVod',
-              type: 'tool_result',
-            },
-            {
-              content: [
-                {
-                  text: '[{"city":"北京市","adcode":"110000","province":"北京","reporttime":"2024-06-24 17:03:11","casts":[{"date":"2024-06-24","week":"1","dayweather":"晴","nightweather":"晴","daytemp":"33","nighttemp":"20","daywind":"北","nightwind":"北","daypower":"1-3","nightpower":"1-3","daytemp_float":"33.0","nighttemp_float":"20.0"},{"date":"2024-06-25","week":"2","dayweather":"晴","nightweather":"晴","daytemp":"35","nighttemp":"21","daywind":"东南","nightwind":"东南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"21.0"},{"date":"2024-06-26","week":"3","dayweather":"晴","nightweather":"晴","daytemp":"35","nighttemp":"23","daywind":"西南","nightwind":"西南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"23.0"},{"date":"2024-06-27","week":"4","dayweather":"多云","nightweather":"多云","daytemp":"35","nighttemp":"23","daywind":"西南","nightwind":"西南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"23.0"}]}]',
-                  type: 'text',
+                id: 'toolu_018PNQkH8ChbjoJz4QBiFVod',
+                type: 'function',
+              },
+              {
+                function: {
+                  arguments: '{"city": "\\u5317\\u4eac"}',
+                  name: 'realtime-weather____fetchCurrentWeather',
                 },
-              ],
-              tool_use_id: 'toolu_018VQTQ6fwAEC3eppuEfMxPp',
-              type: 'tool_result',
-            },
-          ],
-          role: 'user',
-        },
-        { content: '继续', role: 'user' },
-      ]);
+                id: 'toolu_018VQTQ6fwAEC3eppuEfMxPp',
+                type: 'function',
+              },
+            ],
+          },
+          {
+            content:
+              '[{"city":"杭州市","adcode":"330100","province":"浙江","reporttime":"2024-06-24 17:02:14","casts":[{"date":"2024-06-24","week":"1","dayweather":"小雨","nightweather":"中雨","daytemp":"26","nighttemp":"20","daywind":"西","nightwind":"西","daypower":"1-3","nightpower":"1-3","daytemp_float":"26.0","nighttemp_float":"20.0"},{"date":"2024-06-25","week":"2","dayweather":"大雨","nightweather":"中雨","daytemp":"23","nighttemp":"19","daywind":"东","nightwind":"东","daypower":"1-3","nightpower":"1-3","daytemp_float":"23.0","nighttemp_float":"19.0"},{"date":"2024-06-26","week":"3","dayweather":"中雨","nightweather":"中雨","daytemp":"24","nighttemp":"21","daywind":"东南","nightwind":"东南","daypower":"1-3","nightpower":"1-3","daytemp_float":"24.0","nighttemp_float":"21.0"},{"date":"2024-06-27","week":"4","dayweather":"中雨-大雨","nightweather":"中雨","daytemp":"24","nighttemp":"22","daywind":"南","nightwind":"南","daypower":"1-3","nightpower":"1-3","daytemp_float":"24.0","nighttemp_float":"22.0"}]}]',
+            name: 'realtime-weather____fetchCurrentWeather',
+            role: 'tool',
+            tool_call_id: 'toolu_018PNQkH8ChbjoJz4QBiFVod',
+          },
+          {
+            content:
+              '[{"city":"北京市","adcode":"110000","province":"北京","reporttime":"2024-06-24 17:03:11","casts":[{"date":"2024-06-24","week":"1","dayweather":"晴","nightweather":"晴","daytemp":"33","nighttemp":"20","daywind":"北","nightwind":"北","daypower":"1-3","nightpower":"1-3","daytemp_float":"33.0","nighttemp_float":"20.0"},{"date":"2024-06-25","week":"2","dayweather":"晴","nightweather":"晴","daytemp":"35","nighttemp":"21","daywind":"东南","nightwind":"东南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"21.0"},{"date":"2024-06-26","week":"3","dayweather":"晴","nightweather":"晴","daytemp":"35","nighttemp":"23","daywind":"西南","nightwind":"西南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"23.0"},{"date":"2024-06-27","week":"4","dayweather":"多云","nightweather":"多云","daytemp":"35","nighttemp":"23","daywind":"西南","nightwind":"西南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"23.0"}]}]',
+            name: 'realtime-weather____fetchCurrentWeather',
+            role: 'tool',
+            tool_call_id: 'toolu_018VQTQ6fwAEC3eppuEfMxPp',
+          },
+          {
+            content: '继续',
+            role: 'user',
+          },
+        ];
+
+        const contents = await buildAnthropicMessages(messages);
+
+        expect(contents).toEqual([
+          { content: '告诉我杭州和北京的天气，先回答我好的', role: 'user' },
+          {
+            content: [
+              {
+                text: '好的,我会为您查询杭州和北京的天气信息。我现在就开始查询这两个城市的当前天气情况。',
+                type: 'text',
+              },
+              {
+                id: 'toolu_018PNQkH8ChbjoJz4QBiFVod',
+                input: { city: '杭州' },
+                name: 'realtime-weather____fetchCurrentWeather',
+                type: 'tool_use',
+              },
+              {
+                id: 'toolu_018VQTQ6fwAEC3eppuEfMxPp',
+                input: { city: '北京' },
+                name: 'realtime-weather____fetchCurrentWeather',
+                type: 'tool_use',
+              },
+            ],
+            role: 'assistant',
+          },
+          {
+            content: [
+              {
+                content: [
+                  {
+                    text: '[{"city":"杭州市","adcode":"330100","province":"浙江","reporttime":"2024-06-24 17:02:14","casts":[{"date":"2024-06-24","week":"1","dayweather":"小雨","nightweather":"中雨","daytemp":"26","nighttemp":"20","daywind":"西","nightwind":"西","daypower":"1-3","nightpower":"1-3","daytemp_float":"26.0","nighttemp_float":"20.0"},{"date":"2024-06-25","week":"2","dayweather":"大雨","nightweather":"中雨","daytemp":"23","nighttemp":"19","daywind":"东","nightwind":"东","daypower":"1-3","nightpower":"1-3","daytemp_float":"23.0","nighttemp_float":"19.0"},{"date":"2024-06-26","week":"3","dayweather":"中雨","nightweather":"中雨","daytemp":"24","nighttemp":"21","daywind":"东南","nightwind":"东南","daypower":"1-3","nightpower":"1-3","daytemp_float":"24.0","nighttemp_float":"21.0"},{"date":"2024-06-27","week":"4","dayweather":"中雨-大雨","nightweather":"中雨","daytemp":"24","nighttemp":"22","daywind":"南","nightwind":"南","daypower":"1-3","nightpower":"1-3","daytemp_float":"24.0","nighttemp_float":"22.0"}]}]',
+                    type: 'text',
+                  },
+                ],
+                tool_use_id: 'toolu_018PNQkH8ChbjoJz4QBiFVod',
+                type: 'tool_result',
+              },
+              {
+                content: [
+                  {
+                    text: '[{"city":"北京市","adcode":"110000","province":"北京","reporttime":"2024-06-24 17:03:11","casts":[{"date":"2024-06-24","week":"1","dayweather":"晴","nightweather":"晴","daytemp":"33","nighttemp":"20","daywind":"北","nightwind":"北","daypower":"1-3","nightpower":"1-3","daytemp_float":"33.0","nighttemp_float":"20.0"},{"date":"2024-06-25","week":"2","dayweather":"晴","nightweather":"晴","daytemp":"35","nighttemp":"21","daywind":"东南","nightwind":"东南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"21.0"},{"date":"2024-06-26","week":"3","dayweather":"晴","nightweather":"晴","daytemp":"35","nighttemp":"23","daywind":"西南","nightwind":"西南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"23.0"},{"date":"2024-06-27","week":"4","dayweather":"多云","nightweather":"多云","daytemp":"35","nighttemp":"23","daywind":"西南","nightwind":"西南","daypower":"1-3","nightpower":"1-3","daytemp_float":"35.0","nighttemp_float":"23.0"}]}]',
+                    type: 'text',
+                  },
+                ],
+                tool_use_id: 'toolu_018VQTQ6fwAEC3eppuEfMxPp',
+                type: 'tool_result',
+              },
+            ],
+            role: 'user',
+          },
+          { content: '继续', role: 'user' },
+        ]);
+      });
+      it('should handle user messages with tool correctly', async () => {
+        const messages: OpenAIChatMessage[] = [
+          {
+            content: '搜索下 482的所有质因数？\n\n',
+            role: 'user',
+          },
+          {
+            content: '',
+            role: 'assistant',
+            tool_calls: [
+              {
+                function: {
+                  arguments: '{"query": "482的质因数分解"}',
+                  name: 'searchWithSearXNG',
+                },
+                id: 'toolu_01AgNoyb9FKuY8TGePPjEfrE',
+                type: 'function',
+              },
+            ],
+          },
+          {
+            content:
+              '[{"content":"因式分解, 2 * 241 ; 因数, 1, 2, 241, 482 ; 因数个数, 4 ; 因数和, 726 ; 前一个整数, 481.","title":"该数性质482","url":"https://zh.numberempire.com/482"}]',
+            name: 'searchWithSearXNG',
+            role: 'tool',
+            tool_call_id: 'toolu_01AgNoyb9FKuY8TGePPjEfrE',
+          },
+        ];
+
+        const contents = await buildAnthropicMessages(messages);
+
+        expect(contents).toEqual([
+          { content: '搜索下 482的所有质因数？\n\n', role: 'user' },
+          {
+            content: [
+              {
+                id: 'toolu_01AgNoyb9FKuY8TGePPjEfrE',
+                input: { query: '482的质因数分解' },
+                name: 'searchWithSearXNG',
+                type: 'tool_use',
+              },
+            ],
+            role: 'assistant',
+          },
+          {
+            content: [
+              {
+                content: [
+                  {
+                    text: '[{"content":"因式分解, 2 * 241 ; 因数, 1, 2, 241, 482 ; 因数个数, 4 ; 因数和, 726 ; 前一个整数, 481.","title":"该数性质482","url":"https://zh.numberempire.com/482"}]',
+                    type: 'text',
+                  },
+                ],
+                tool_use_id: 'toolu_01AgNoyb9FKuY8TGePPjEfrE',
+                type: 'tool_result',
+              },
+            ],
+            role: 'user',
+          },
+        ]);
+      });
     });
 
     it('should correctly handle thinking content part', async () => {

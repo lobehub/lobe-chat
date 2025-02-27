@@ -8,12 +8,17 @@ import { parseDataUri } from './uriParser';
 
 export const buildAnthropicBlock = async (
   content: UserMessageContentPart,
-): Promise<Anthropic.ContentBlock | Anthropic.ImageBlockParam> => {
+): Promise<Anthropic.ContentBlock | Anthropic.ImageBlockParam | undefined> => {
   switch (content.type) {
-    case 'thinking':
-    case 'text': {
+    case 'thinking': {
       // just pass-through the content
       return content as any;
+    }
+
+    case 'text': {
+      if (!!content.text) return content as any;
+
+      return undefined;
     }
 
     case 'image_url': {
@@ -46,6 +51,16 @@ export const buildAnthropicBlock = async (
   }
 };
 
+const buildArrayContent = async (content: UserMessageContentPart[]) => {
+  let messageContent = (await Promise.all(
+    (content as UserMessageContentPart[]).map(async (c) => await buildAnthropicBlock(c)),
+  )) as Anthropic.Messages.ContentBlockParam[];
+
+  messageContent = messageContent.filter(Boolean);
+
+  return messageContent;
+};
+
 export const buildAnthropicMessage = async (
   message: OpenAIChatMessage,
 ): Promise<Anthropic.Messages.MessageParam> => {
@@ -58,10 +73,7 @@ export const buildAnthropicMessage = async (
 
     case 'user': {
       return {
-        content:
-          typeof content === 'string'
-            ? content
-            : await Promise.all(content.map(async (c) => await buildAnthropicBlock(c))),
+        content: typeof content === 'string' ? content : await buildArrayContent(content),
         role: 'user',
       };
     }
@@ -83,11 +95,13 @@ export const buildAnthropicMessage = async (
     case 'assistant': {
       // if there is tool_calls , we need to covert the tool_calls to tool_use content block
       // refs: https://docs.anthropic.com/claude/docs/tool-use#tool-use-and-tool-result-content-blocks
-      if (message.tool_calls) {
-        const messageContent =
+      if (message.tool_calls && message.tool_calls.length > 0) {
+        const rawContent =
           typeof content === 'string'
-            ? [{ text: message.content, type: 'text' }]
-            : await Promise.all(content.map(async (c) => await buildAnthropicBlock(c)));
+            ? ([{ text: message.content, type: 'text' }] as UserMessageContentPart[])
+            : content;
+
+        const messageContent = await buildArrayContent(rawContent);
 
         return {
           content: [
