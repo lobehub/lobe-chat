@@ -72,6 +72,20 @@ describe('parseModelString', () => {
       });
     });
 
+    it('token and search', () => {
+      const result = parseModelString('qwen-max-latest=Qwen Max<32768:search>');
+
+      expect(result.add[0]).toEqual({
+        displayName: 'Qwen Max',
+        abilities: {
+          search: true,
+        },
+        id: 'qwen-max-latest',
+        contextWindowTokens: 32_768,
+        type: 'chat',
+      });
+    });
+
     it('multi models', () => {
       const result = parseModelString(
         'gemini-1.5-flash-latest=Gemini 1.5 Flash<16000:vision>,gpt-4-all=ChatGPT Plus<128000:fc:vision:file>',

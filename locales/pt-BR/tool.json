@@ -6,5 +6,23 @@
     "generating": "Gerando...",
     "images": "Imagens:",
     "prompt": "Palavra-chave"
+  },
+  "search": {
+    "createNewSearch": "Criar nova pesquisa",
+    "emptyResult": "Nenhum resultado encontrado, por favor, modifique as palavras-chave e tente novamente",
+    "genAiMessage": "Criar mensagem do assistente",
+    "includedTooltip": "Os resultados da pesquisa atual serão incluídos no contexto da conversa",
+    "keywords": "Palavras-chave:",
+    "scoreTooltip": "Pontuação de relevância, quanto maior a pontuação, mais relevante é em relação às palavras-chave da consulta",
+    "searchBar": {
+      "button": "Pesquisar",
+      "placeholder": "Palavras-chave",
+      "tooltip": "Isso irá recuperar os resultados da pesquisa novamente e criar uma nova mensagem de resumo"
+    },
+    "searchEngine": "Motor de busca:",
+    "searchResult": "Número de pesquisas:",
+    "summary": "Resumo",
+    "summaryTooltip": "Resumir o conteúdo atual",
+    "viewMoreResults": "Ver mais {{results}} resultados"
   }
 }

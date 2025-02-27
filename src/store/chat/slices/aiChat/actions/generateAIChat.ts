@@ -455,7 +455,7 @@ export const generateAIChat: StateCreator<
         await messageService.updateMessageError(messageId, error);
         await refreshMessages();
       },
-      onFinish: async (content, { traceId, observationId, toolCalls, reasoning, citations }) => {
+      onFinish: async (content, { traceId, observationId, toolCalls, reasoning, grounding }) => {
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
@@ -472,20 +472,30 @@ export const generateAIChat: StateCreator<
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
           toolCalls,
-          reasoning: !!reasoning ? { content: reasoning, duration } : undefined,
-          search: !!citations ? { citations } : undefined,
+          reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
+          search: !!grounding?.citations ? grounding : undefined,
         });
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {
-          case 'citations': {
+          case 'grounding': {
             // if there is no citations, then stop
-            if (!chunk.citations || chunk.citations.length <= 0) return;
+            if (
+              !chunk.grounding ||
+              !chunk.grounding.citations ||
+              chunk.grounding.citations.length <= 0
+            )
+              return;
 
             internal_dispatchMessage({
               id: messageId,
               type: 'updateMessage',
-              value: { search: { citations: chunk.citations } },
+              value: {
+                search: {
+                  citations: chunk.grounding.citations,
+                  searchQueries: chunk.grounding.searchQueries,
+                },
+              },
             });
             break;
           }
@@ -616,7 +626,7 @@ export const generateAIChat: StateCreator<
       },
 
       false,
-      'toggleToolCallingStreaming',
+      `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
     );
   },
 });

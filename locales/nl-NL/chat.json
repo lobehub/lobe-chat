@@ -31,6 +31,15 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Geen assistent beschikbaar",
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Diepe denkwijze inschakelen"
+    },
+    "reasoningBudgetToken": {
+      "title": "Denken verbruik Token"
+    },
+    "title": "Modeluitbreidingsfunctie"
+  },
   "historyRange": "Geschiedenisbereik",
   "historySummary": "Geschiedenis samenvatting",
   "inbox": {
@@ -84,6 +93,29 @@
   },
   "regenerate": "Opnieuw genereren",
   "roleAndArchive": "Rol en archief",
+  "search": {
+    "grounding": {
+      "searchQueries": "Zoekwoorden",
+      "title": "Er zijn {{count}} resultaten gevonden"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Intelligente beoordeling of er gezocht moet worden op basis van de gesprekinhoud",
+        "title": "Slimme verbinding"
+      },
+      "disable": "Het huidige model ondersteunt geen functieaanroepen, dus de slimme verbindingsfunctie kan niet worden gebruikt",
+      "off": {
+        "desc": "Gebruik alleen de basiskennis van het model, zonder online zoekopdrachten",
+        "title": "Verbinding uitschakelen"
+      },
+      "on": {
+        "desc": "Voortdurend online zoeken voor de nieuwste informatie",
+        "title": "Altijd verbonden"
+      },
+      "useModelBuiltin": "Gebruik de ingebouwde zoekmachine van het model"
+    },
+    "title": "Online zoeken"
+  },
   "searchAgentPlaceholder": "Zoekassistent...",
   "sendPlaceholder": "Voer chatbericht in...",
   "sessionGroup": {

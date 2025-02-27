@@ -31,6 +31,15 @@
   },
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暂无助手",
+  "extendParams": {
+    "enableReasoning": {
+      "title": "开启深度思考"
+    },
+    "reasoningBudgetToken": {
+      "title": "思考消耗 Token"
+    },
+    "title": "模型扩展功能"
+  },
   "historyRange": "历史范围",
   "historySummary": "历史消息总结",
   "inbox": {
@@ -84,6 +93,29 @@
   },
   "regenerate": "重新生成",
   "roleAndArchive": "角色与记录",
+  "search": {
+    "grounding": {
+      "searchQueries": "搜索关键词",
+      "title": "已搜索到 {{count}} 个结果"
+    },
+    "mode": {
+      "auto": {
+        "desc": "根据对话内容智能判断是否需要搜索",
+        "title": "智能联网"
+      },
+      "disable": "当前模型不支持函数调用，因此无法使用智能联网功能",
+      "off": {
+        "desc": "仅使用模型的基础知识，不进行网络搜索",
+        "title": "关闭联网"
+      },
+      "on": {
+        "desc": "持续进行网络搜索，获取最新信息",
+        "title": "始终联网"
+      },
+      "useModelBuiltin": "使用模型内置搜索引擎"
+    },
+    "title": "联网搜索"
+  },
   "searchAgentPlaceholder": "搜索助手...",
   "sendPlaceholder": "输入聊天内容...",
   "sessionGroup": {

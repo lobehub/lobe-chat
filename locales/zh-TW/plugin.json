@@ -118,6 +118,10 @@
     "reinstallError": "插件 {{name}} 刷新失敗",
     "urlError": "該連結沒有返回 JSON 格式的內容, 請確保是有效的連結"
   },
+  "inspector": {
+    "args": "查看參數列表",
+    "pluginRender": "查看插件介面"
+  },
   "list": {
     "item": {
       "deprecated.title": "已刪除",
@@ -130,6 +134,22 @@
     "plugin": "外掛執行中..."
   },
   "pluginList": "外掛清單",
+  "search": {
+    "config": {
+      "addKey": "添加密鑰",
+      "close": "刪除",
+      "confirm": "已完成配置並重試"
+    },
+    "searchxng": {
+      "baseURL": "請輸入",
+      "description": "請輸入 SearchXNG 的網址，即可開始聯網搜索",
+      "keyPlaceholder": "請輸入密鑰",
+      "title": "配置 SearchXNG 搜索引擎",
+      "unconfiguredDesc": "請聯繫管理員完成 SearchXNG 搜索引擎配置，即可開始聯網搜索",
+      "unconfiguredTitle": "暫未配置 SearchXNG 搜索引擎"
+    },
+    "title": "聯網搜索"
+  },
   "setting": "插件設置",
   "settings": {
     "indexUrl": {

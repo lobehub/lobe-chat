@@ -118,6 +118,10 @@
     "reinstallError": "Error al volver a instalar el complemento {{name}}.",
     "urlError": "El enlace no devuelve contenido en formato JSON. Asegúrese de que sea un enlace válido."
   },
+  "inspector": {
+    "args": "Ver lista de parámetros",
+    "pluginRender": "Ver interfaz del plugin"
+  },
   "list": {
     "item": {
       "deprecated.title": "Obsoleto",
@@ -130,6 +134,22 @@
     "plugin": "Ejecutando complemento..."
   },
   "pluginList": "Lista de complementos",
+  "search": {
+    "config": {
+      "addKey": "Agregar clave",
+      "close": "Eliminar",
+      "confirm": "Configuración completada, intente de nuevo"
+    },
+    "searchxng": {
+      "baseURL": "Introduzca",
+      "description": "Introduzca la URL de SearchXNG para comenzar la búsqueda en línea",
+      "keyPlaceholder": "Introduzca la clave",
+      "title": "Configurar el motor de búsqueda SearchXNG",
+      "unconfiguredDesc": "Por favor, contacte al administrador para completar la configuración del motor de búsqueda SearchXNG y comenzar la búsqueda en línea",
+      "unconfiguredTitle": "Motor de búsqueda SearchXNG no configurado"
+    },
+    "title": "Búsqueda en línea"
+  },
   "setting": "Configuración de complementos",
   "settings": {
     "indexUrl": {

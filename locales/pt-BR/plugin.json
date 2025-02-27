@@ -118,6 +118,10 @@
     "reinstallError": "Falha ao atualizar o plugin {{name}}",
     "urlError": "O link não retornou conteúdo no formato JSON. Certifique-se de que o link é válido."
   },
+  "inspector": {
+    "args": "Ver parâmetros",
+    "pluginRender": "Ver interface do plugin"
+  },
   "list": {
     "item": {
       "deprecated.title": "Obsoleto",
@@ -130,6 +134,22 @@
     "plugin": "Executando o plugin..."
   },
   "pluginList": "Lista de Plugins",
+  "search": {
+    "config": {
+      "addKey": "Adicionar chave",
+      "close": "Remover",
+      "confirm": "Configuração concluída, tente novamente"
+    },
+    "searchxng": {
+      "baseURL": "Digite",
+      "description": "Digite o URL do SearchXNG para começar a pesquisa na internet",
+      "keyPlaceholder": "Digite a chave",
+      "title": "Configurar o mecanismo de busca SearchXNG",
+      "unconfiguredDesc": "Por favor, entre em contato com o administrador para concluir a configuração do mecanismo de busca SearchXNG e começar a pesquisa na internet",
+      "unconfiguredTitle": "Mecanismo de busca SearchXNG ainda não configurado"
+    },
+    "title": "Pesquisa na internet"
+  },
   "setting": "Configuração do Plugin",
   "settings": {
     "indexUrl": {
