@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Added eu-central-1 region for bedrock."]
+    },
+    "date": "2025-02-27",
+    "version": "1.66.1"
+  },
+  {
+    "children": {
       "features": ["Add online search support for available providers."]
     },
     "date": "2025-02-27",
