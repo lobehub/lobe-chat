@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Update Claude sonnet 3.7 model ID."]
+    },
+    "date": "2025-02-27",
+    "version": "1.66.2"
+  },
+  {
+    "children": {
       "improvements": ["Added eu-central-1 region for bedrock."]
     },
     "date": "2025-02-27",
