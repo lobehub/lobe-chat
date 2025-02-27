@@ -33,7 +33,7 @@ const bedrockChatModels: AIChatModelCard[] = [
       'Claude 3.7 sonnet 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
     displayName: 'Claude 3.7 Sonnet',
     enabled: true,
-    id: 'anthropic.claude-3-7-sonnet-20250219-v1:0',
+    id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
     maxOutput: 8192,
     pricing: {
       input: 3,
