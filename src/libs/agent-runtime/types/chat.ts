@@ -2,6 +2,11 @@ import { MessageToolCall } from '@/types/message';
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
+interface UserMessageContentPartThinking {
+  signature: string;
+  thinking: string;
+  type: 'thinking';
+}
 interface UserMessageContentPartText {
   text: string;
   type: 'text';
@@ -15,7 +20,10 @@ interface UserMessageContentPartImage {
   type: 'image_url';
 }
 
-export type UserMessageContentPart = UserMessageContentPartText | UserMessageContentPartImage;
+export type UserMessageContentPart =
+  | UserMessageContentPartText
+  | UserMessageContentPartImage
+  | UserMessageContentPartThinking;
 
 export interface OpenAIChatMessage {
   /**

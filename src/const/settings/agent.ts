@@ -19,7 +19,7 @@ export const DEFAULT_AGENT_CHAT_CONFIG: LobeAgentChatConfig = {
   enableAutoCreateTopic: true,
   enableCompressHistory: true,
   enableHistoryCount: true,
-  enableReasoning: true,
+  enableReasoning: false,
   historyCount: 8,
   reasoningBudgetToken: 1024,
   searchMode: 'off',

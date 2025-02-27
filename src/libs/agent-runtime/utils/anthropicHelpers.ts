@@ -8,11 +8,17 @@ import { parseDataUri } from './uriParser';
 
 export const buildAnthropicBlock = async (
   content: UserMessageContentPart,
-): Promise<Anthropic.ContentBlock | Anthropic.ImageBlockParam> => {
+): Promise<Anthropic.ContentBlock | Anthropic.ImageBlockParam | undefined> => {
   switch (content.type) {
-    case 'text': {
+    case 'thinking': {
       // just pass-through the content
       return content as any;
+    }
+
+    case 'text': {
+      if (!!content.text) return content as any;
+
+      return undefined;
     }
 
     case 'image_url': {
@@ -45,6 +51,16 @@ export const buildAnthropicBlock = async (
   }
 };
 
+const buildArrayContent = async (content: UserMessageContentPart[]) => {
+  let messageContent = (await Promise.all(
+    (content as UserMessageContentPart[]).map(async (c) => await buildAnthropicBlock(c)),
+  )) as Anthropic.Messages.ContentBlockParam[];
+
+  messageContent = messageContent.filter(Boolean);
+
+  return messageContent;
+};
+
 export const buildAnthropicMessage = async (
   message: OpenAIChatMessage,
 ): Promise<Anthropic.Messages.MessageParam> => {
@@ -57,10 +73,7 @@ export const buildAnthropicMessage = async (
 
     case 'user': {
       return {
-        content:
-          typeof content === 'string'
-            ? content
-            : await Promise.all(content.map(async (c) => await buildAnthropicBlock(c))),
+        content: typeof content === 'string' ? content : await buildArrayContent(content),
         role: 'user',
       };
     }
@@ -82,14 +95,18 @@ export const buildAnthropicMessage = async (
     case 'assistant': {
       // if there is tool_calls , we need to covert the tool_calls to tool_use content block
       // refs: https://docs.anthropic.com/claude/docs/tool-use#tool-use-and-tool-result-content-blocks
-      if (message.tool_calls) {
+      if (message.tool_calls && message.tool_calls.length > 0) {
+        const rawContent =
+          typeof content === 'string'
+            ? ([{ text: message.content, type: 'text' }] as UserMessageContentPart[])
+            : content;
+
+        const messageContent = await buildArrayContent(rawContent);
+
         return {
           content: [
             // avoid empty text content block
-            !!message.content && {
-              text: message.content as string,
-              type: 'text',
-            },
+            ...messageContent,
             ...(message.tool_calls.map((tool) => ({
               id: tool.id,
               input: JSON.parse(tool.function.arguments),
@@ -117,39 +134,54 @@ export const buildAnthropicMessages = async (
   const messages: Anthropic.Messages.MessageParam[] = [];
   let pendingToolResults: Anthropic.ToolResultBlockParam[] = [];
 
+  // 首先收集所有 assistant 消息中的 tool_call_id 以便后续查找
+  const validToolCallIds = new Set<string>();
+  for (const message of oaiMessages) {
+    if (message.role === 'assistant' && message.tool_calls?.length) {
+      message.tool_calls.forEach((call) => {
+        if (call.id) {
+          validToolCallIds.add(call.id);
+        }
+      });
+    }
+  }
+
   for (const message of oaiMessages) {
     const index = oaiMessages.indexOf(message);
 
     // refs: https://docs.anthropic.com/claude/docs/tool-use#tool-use-and-tool-result-content-blocks
     if (message.role === 'tool') {
-      pendingToolResults.push({
-        content: [{ text: message.content as string, type: 'text' }],
-        tool_use_id: message.tool_call_id!,
-        type: 'tool_result',
-      });
+      // 检查这个工具消息是否有对应的 assistant 工具调用
+      if (message.tool_call_id && validToolCallIds.has(message.tool_call_id)) {
+        pendingToolResults.push({
+          content: [{ text: message.content as string, type: 'text' }],
+          tool_use_id: message.tool_call_id,
+          type: 'tool_result',
+        });
 
-      // If this is the last message or the next message is not a 'tool' message,
-      // we add the accumulated tool results as a single 'user' message
-      if (index === oaiMessages.length - 1 || oaiMessages[index + 1].role !== 'tool') {
+        // 如果这是最后一个消息或者下一个消息不是 'tool'，则添加累积的工具结果作为一个 'user' 消息
+        if (index === oaiMessages.length - 1 || oaiMessages[index + 1].role !== 'tool') {
+          messages.push({
+            content: pendingToolResults,
+            role: 'user',
+          });
+          pendingToolResults = [];
+        }
+      } else {
+        // 如果工具消息没有对应的 assistant 工具调用，则作为普通文本处理
         messages.push({
-          content: pendingToolResults,
+          content: message.content as string,
           role: 'user',
         });
-        pendingToolResults = [];
       }
     } else {
       const anthropicMessage = await buildAnthropicMessage(message);
-
-      messages.push({
-        ...anthropicMessage,
-        role: index === 0 && anthropicMessage.role === 'assistant' ? 'user' : anthropicMessage.role,
-      });
+      messages.push({ ...anthropicMessage, role: anthropicMessage.role });
     }
   }
 
   return messages;
 };
-
 export const buildAnthropicTools = (tools?: OpenAI.ChatCompletionTool[]) =>
   tools?.map(
     (tool): Anthropic.Tool => ({
