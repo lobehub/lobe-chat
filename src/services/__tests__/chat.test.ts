@@ -910,6 +910,37 @@ describe('ChatService', () => {
       });
     });
 
+    it('should handle empty tool calls messages correctly', () => {
+      const messages = [
+        {
+          content: '## Tools\n\nYou can use these tools',
+          role: 'system',
+        },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [],
+        },
+      ] as ChatMessage[];
+
+      const result = chatService['processMessages']({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result).toEqual([
+        {
+          content: '## Tools\n\nYou can use these tools',
+          role: 'system',
+        },
+        {
+          content: '',
+          role: 'assistant',
+        },
+      ]);
+    });
+
     it('should handle assistant messages with reasoning correctly', () => {
       const messages = [
         {
