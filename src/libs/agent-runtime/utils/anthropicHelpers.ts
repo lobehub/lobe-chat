@@ -143,10 +143,7 @@ export const buildAnthropicMessages = async (
     } else {
       const anthropicMessage = await buildAnthropicMessage(message);
 
-      messages.push({
-        ...anthropicMessage,
-        role: index === 0 && anthropicMessage.role === 'assistant' ? 'user' : anthropicMessage.role,
-      });
+      messages.push({ ...anthropicMessage, role: anthropicMessage.role });
     }
   }
 
