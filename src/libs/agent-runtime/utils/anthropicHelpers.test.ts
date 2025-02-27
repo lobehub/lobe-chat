@@ -435,6 +435,76 @@ describe('anthropicHelpers', () => {
           },
         ]);
       });
+
+      it('should work well starting with tool message', async () => {
+        const messages: OpenAIChatMessage[] = [
+          {
+            content:
+              '[{"content":"因式分解, 2 * 241 ; 因数, 1, 2, 241, 482 ; 因数个数, 4 ; 因数和, 726 ; 前一个整数, 481.","title":"该数性质482","url":"https://zh.numberempire.com/482"}]',
+            name: 'searchWithSearXNG',
+            role: 'tool',
+            tool_call_id: 'toolu_01AgNoyb9FKuY8TGePPjEfrE',
+          },
+          {
+            content: '',
+            role: 'assistant',
+            tool_calls: [
+              {
+                function: {
+                  arguments: '{"query": "杭州有啥好吃的"}',
+                  name: 'searchWithSearXNG',
+                },
+                id: 'toolu_02AgNoyb9FKuY8TGePPjEfrE',
+                type: 'function',
+              },
+            ],
+          },
+          {
+            content: '[{"content":"没啥好吃的","title":"该数性质482","url":"e.com/482"}]',
+            name: 'searchWithSearXNG',
+            role: 'tool',
+            tool_call_id: 'toolu_02AgNoyb9FKuY8TGePPjEfrE',
+          },
+        ];
+
+        const contents = await buildAnthropicMessages(messages);
+
+        expect(contents).toEqual([
+          {
+            content:
+              '[{"content":"因式分解, 2 * 241 ; 因数, 1, 2, 241, 482 ; 因数个数, 4 ; 因数和, 726 ; 前一个整数, 481.","title":"该数性质482","url":"https://zh.numberempire.com/482"}]',
+            role: 'user',
+          },
+          {
+            content: [
+              {
+                id: 'toolu_02AgNoyb9FKuY8TGePPjEfrE',
+                input: {
+                  query: '杭州有啥好吃的',
+                },
+                name: 'searchWithSearXNG',
+                type: 'tool_use',
+              },
+            ],
+            role: 'assistant',
+          },
+          {
+            content: [
+              {
+                content: [
+                  {
+                    text: '[{"content":"没啥好吃的","title":"该数性质482","url":"e.com/482"}]',
+                    type: 'text',
+                  },
+                ],
+                tool_use_id: 'toolu_02AgNoyb9FKuY8TGePPjEfrE',
+                type: 'tool_result',
+              },
+            ],
+            role: 'user',
+          },
+        ]);
+      });
     });
 
     it('should correctly handle thinking content part', async () => {
