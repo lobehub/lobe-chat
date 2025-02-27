@@ -635,7 +635,7 @@ describe('ChatService', () => {
     });
   });
 
-  describe('processMessage', () => {
+  describe('reorderToolMessages', () => {
     it('should reorderToolMessages', () => {
       const input: OpenAIChatMessage[] = [
         {
@@ -746,7 +746,9 @@ describe('ChatService', () => {
         },
       ]);
     });
+  });
 
+  describe('processMessage', () => {
     describe('handle with files content in server mode', () => {
       it('should includes files', async () => {
         // 重新模拟模块，设置 isServerMode 为 true
@@ -833,46 +835,45 @@ describe('ChatService', () => {
           },
         ]);
       });
-    });
 
-    it('should include image files in server mode', async () => {
-      // 重新模拟模块，设置 isServerMode 为 true
-      vi.doMock('@/const/version', () => ({
-        isServerMode: true,
-        isDeprecatedEdition: true,
-      }));
+      it('should include image files in server mode', async () => {
+        // 重新模拟模块，设置 isServerMode 为 true
+        vi.doMock('@/const/version', () => ({
+          isServerMode: true,
+          isDeprecatedEdition: true,
+        }));
 
-      // 需要在修改模拟后重新导入相关模块
-      const { chatService } = await import('../chat');
-      const messages = [
-        {
-          content: 'Hello',
-          role: 'user',
-          imageList: [
-            {
-              id: 'file1',
-              url: 'http://example.com/image.jpg',
-              alt: 'abc.png',
-            },
-          ],
-        }, // Message with files
-        { content: 'Hey', role: 'assistant' }, // Regular user message
-      ] as ChatMessage[];
+        // 需要在修改模拟后重新导入相关模块
+        const { chatService } = await import('../chat');
+        const messages = [
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'file1',
+                url: 'http://example.com/image.jpg',
+                alt: 'abc.png',
+              },
+            ],
+          }, // Message with files
+          { content: 'Hey', role: 'assistant' }, // Regular user message
+        ] as ChatMessage[];
 
-      const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-      await chatService.createAssistantMessage({
-        messages,
-        plugins: [],
-        model: 'gpt-4-vision-preview',
-      });
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        await chatService.createAssistantMessage({
+          messages,
+          plugins: [],
+          model: 'gpt-4-vision-preview',
+        });
 
-      expect(getChatCompletionSpy).toHaveBeenCalledWith(
-        {
-          messages: [
-            {
-              content: [
-                {
-                  text: `Hello
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            messages: [
+              {
+                content: [
+                  {
+                    text: `Hello
 
 <!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
 <context.instruction>following part contains context information injected by the system. Please follow these instructions:
@@ -888,24 +889,61 @@ describe('ChatService', () => {
 
 </files_info>
 <!-- END SYSTEM CONTEXT -->`,
-                  type: 'text',
-                },
-                {
-                  image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
-                  type: 'image_url',
-                },
-              ],
-              role: 'user',
+                    type: 'text',
+                  },
+                  {
+                    image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
+                    type: 'image_url',
+                  },
+                ],
+                role: 'user',
+              },
+              {
+                content: 'Hey',
+                role: 'assistant',
+              },
+            ],
+            model: 'gpt-4-vision-preview',
+          },
+          undefined,
+        );
+      });
+    });
+
+    it('should handle assistant messages with reasoning correctly', () => {
+      const messages = [
+        {
+          role: 'assistant',
+          content: 'The answer is 42.',
+          reasoning: {
+            content: 'I need to calculate the answer to life, universe, and everything.',
+            signature: 'thinking_process',
+          },
+        },
+      ] as ChatMessage[];
+
+      const result = chatService['processMessages']({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result).toEqual([
+        {
+          content: [
+            {
+              signature: 'thinking_process',
+              thinking: 'I need to calculate the answer to life, universe, and everything.',
+              type: 'thinking',
             },
             {
-              content: 'Hey',
-              role: 'assistant',
+              text: 'The answer is 42.',
+              type: 'text',
             },
           ],
-          model: 'gpt-4-vision-preview',
+          role: 'assistant',
         },
-        undefined,
-      );
+      ]);
     });
   });
 });
@@ -917,6 +955,7 @@ describe('ChatService', () => {
 vi.mock('../_auth', async (importOriginal) => {
   return importOriginal();
 });
+
 describe('AgentRuntimeOnClient', () => {
   describe('initializeWithClientStore', () => {
     describe('should initialize with options correctly', () => {

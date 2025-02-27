@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix claude 3.7 sonnet thinking with tool use."]
+    },
+    "date": "2025-02-26",
+    "version": "1.65.1"
+  },
+  {
+    "children": {
       "features": ["Support claude sonnet 3.7 thinking."],
       "improvements": ["Update Gemini 2.0 search settings."]
     },
