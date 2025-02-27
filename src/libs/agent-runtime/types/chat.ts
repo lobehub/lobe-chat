@@ -2,6 +2,11 @@ import { MessageToolCall } from '@/types/message';
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
+interface UserMessageContentPartThinking {
+  signature: string;
+  thinking: string;
+  type: 'thinking';
+}
 interface UserMessageContentPartText {
   text: string;
   type: 'text';
@@ -15,7 +20,10 @@ interface UserMessageContentPartImage {
   type: 'image_url';
 }
 
-export type UserMessageContentPart = UserMessageContentPartText | UserMessageContentPartImage;
+export type UserMessageContentPart =
+  | UserMessageContentPartText
+  | UserMessageContentPartImage
+  | UserMessageContentPartThinking;
 
 export interface OpenAIChatMessage {
   /**
@@ -88,8 +96,14 @@ export interface ChatStreamPayload {
    * @default 1
    */
   temperature: number;
+  /**
+   * use for Claude
+   */
+  thinking?: {
+    budget_tokens: number;
+    type: 'enabled' | 'disabled';
+  };
   tool_choice?: string;
-
   tools?: ChatCompletionTool[];
   /**
    * @title 控制生成文本中最高概率的单个令牌

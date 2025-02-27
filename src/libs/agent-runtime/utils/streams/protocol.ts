@@ -12,6 +12,10 @@ export interface StreamContext {
    * this flag is used to check if the pplx citation is returned,and then not return it again
    */
   returnedPplxCitation?: boolean;
+  thinking?: {
+    id: string;
+    name: string;
+  };
   tool?: {
     id: string;
     index: number;
@@ -29,6 +33,10 @@ export interface StreamProtocolChunk {
     | 'tool_calls'
     // Model Thinking
     | 'reasoning'
+    // use for reasoning signature, maybe only anthropic
+    | 'reasoning_signature'
+    // flagged reasoning signature
+    | 'flagged_reasoning_signature'
     // Search or Grounding
     | 'grounding'
     // stop signal

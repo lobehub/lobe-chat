@@ -380,7 +380,7 @@ export const chatMessage: StateCreator<
         messageLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
       },
       false,
-      'internal_toggleMessageLoading',
+      `internal_toggleMessageLoading/${loading ? 'start' : 'end'}`,
     );
   },
   internal_toggleLoadingArrays: (key, loading, id, action) => {

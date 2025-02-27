@@ -2,6 +2,215 @@
 
 # Changelog
 
+### [Version 1.66.2](https://github.com/lobehub/lobe-chat/compare/v1.66.1...v1.66.2)
+
+<sup>Released on **2025-02-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update Claude sonnet 3.7 model ID.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update Claude sonnet 3.7 model ID, closes [#6567](https://github.com/lobehub/lobe-chat/issues/6567) ([d1039d6](https://github.com/lobehub/lobe-chat/commit/d1039d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.66.1](https://github.com/lobehub/lobe-chat/compare/v1.66.0...v1.66.1)
+
+<sup>Released on **2025-02-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Added eu-central-1 region for bedrock.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Added eu-central-1 region for bedrock, closes [#6555](https://github.com/lobehub/lobe-chat/issues/6555) ([6f1e599](https://github.com/lobehub/lobe-chat/commit/6f1e599))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.66.0](https://github.com/lobehub/lobe-chat/compare/v1.65.2...v1.66.0)
+
+<sup>Released on **2025-02-27**</sup>
+
+#### ✨ Features
+
+- **misc**: Add online search support for available providers.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add online search support for available providers, closes [#6475](https://github.com/lobehub/lobe-chat/issues/6475) ([cb0a3bc](https://github.com/lobehub/lobe-chat/commit/cb0a3bc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.65.2](https://github.com/lobehub/lobe-chat/compare/v1.65.1...v1.65.2)
+
+<sup>Released on **2025-02-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support parsing the search flag when parsing the model list, Update Gemini & Qwen models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support parsing the search flag when parsing the model list, closes [#6546](https://github.com/lobehub/lobe-chat/issues/6546) ([8c768ed](https://github.com/lobehub/lobe-chat/commit/8c768ed))
+- **misc**: Update Gemini & Qwen models, closes [#6531](https://github.com/lobehub/lobe-chat/issues/6531) ([efde928](https://github.com/lobehub/lobe-chat/commit/efde928))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.65.1](https://github.com/lobehub/lobe-chat/compare/v1.65.0...v1.65.1)
+
+<sup>Released on **2025-02-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix claude 3.7 sonnet thinking with tool use.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix claude 3.7 sonnet thinking with tool use, closes [#6528](https://github.com/lobehub/lobe-chat/issues/6528) ([a76d2bf](https://github.com/lobehub/lobe-chat/commit/a76d2bf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.65.0](https://github.com/lobehub/lobe-chat/compare/v1.64.3...v1.65.0)
+
+<sup>Released on **2025-02-25**</sup>
+
+#### ✨ Features
+
+- **misc**: Support claude sonnet 3.7 thinking.
+
+#### 💄 Styles
+
+- **misc**: Update Gemini 2.0 search settings.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support claude sonnet 3.7 thinking, closes [#6515](https://github.com/lobehub/lobe-chat/issues/6515) ([bc9829f](https://github.com/lobehub/lobe-chat/commit/bc9829f))
+
+#### Styles
+
+- **misc**: Update Gemini 2.0 search settings, closes [#6516](https://github.com/lobehub/lobe-chat/issues/6516) ([250bbcb](https://github.com/lobehub/lobe-chat/commit/250bbcb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.64.3](https://github.com/lobehub/lobe-chat/compare/v1.64.2...v1.64.3)
+
+<sup>Released on **2025-02-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Claude 3.7 Sonnet and Haiku 3.5.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Claude 3.7 Sonnet and Haiku 3.5, closes [#6512](https://github.com/lobehub/lobe-chat/issues/6512) ([c8db2bb](https://github.com/lobehub/lobe-chat/commit/c8db2bb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.64.2](https://github.com/lobehub/lobe-chat/compare/v1.64.1...v1.64.2)
+
+<sup>Released on **2025-02-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix 0 search results with specific search engine.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix 0 search results with specific search engine, closes [#6487](https://github.com/lobehub/lobe-chat/issues/6487) ([74a09e2](https://github.com/lobehub/lobe-chat/commit/74a09e2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.64.1](https://github.com/lobehub/lobe-chat/compare/v1.64.0...v1.64.1)
 
 <sup>Released on **2025-02-25**</sup>

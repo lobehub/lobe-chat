@@ -214,9 +214,35 @@ class ChatService {
 
     const tools = shouldUseTools ? filterTools : undefined;
 
+    // ============  3. process extend params   ============ //
+
+    let extendParams: Record<string, any> = {};
+
+    const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
+      payload.model,
+      payload.provider!,
+    )(useAiInfraStore.getState());
+
+    // model
+    if (isModelHasExtendParams) {
+      const modelExtendParams = aiModelSelectors.modelExtendParams(
+        payload.model,
+        payload.provider!,
+      )(useAiInfraStore.getState());
+      // if model has extended params, then we need to check if the model can use reasoning
+
+      if (modelExtendParams!.includes('enableReasoning') && chatConfig.enableReasoning) {
+        extendParams.thinking = {
+          budget_tokens: chatConfig.reasoningBudgetToken || 1024,
+          type: 'enabled',
+        };
+      }
+    }
+
     return this.getChatCompletion(
       {
         ...params,
+        ...extendParams,
         enabledSearch: enabledSearch && isModelHasBuiltinSearch ? true : undefined,
         messages: oaiMessages,
         tools,
@@ -459,8 +485,20 @@ class ChatService {
         }
 
         case 'assistant': {
+          // signature is a signal of anthropic thinking mode
+          const shouldIncludeThinking = m.reasoning && !!m.reasoning?.signature;
+
           return {
-            content: m.content,
+            content: shouldIncludeThinking
+              ? [
+                  {
+                    signature: m.reasoning!.signature,
+                    thinking: m.reasoning!.content,
+                    type: 'thinking',
+                  } as any,
+                  { text: m.content, type: 'text' },
+                ]
+              : m.content,
             role: m.role,
             tool_calls: m.tools?.map(
               (tool): MessageToolCall => ({

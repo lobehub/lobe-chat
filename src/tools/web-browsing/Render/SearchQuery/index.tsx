@@ -33,8 +33,8 @@ const SearchQueryView = memo<SearchQueryViewProps>(
 
     return !pluginState ? (
       <Flexbox align={'center'} distribution={'space-between'} height={32} horizontal>
-        <Skeleton.Button active style={{ borderRadius: 8, height: 32, width: 180 }} />
-        <Skeleton.Button active style={{ borderRadius: 8, height: 32, width: 220 }} />
+        <Skeleton.Button active style={{ borderRadius: 4, height: 32, width: 180 }} />
+        <Skeleton.Button active style={{ borderRadius: 4, height: 32, width: 220 }} />
       </Flexbox>
     ) : editing ? (
       <SearchBar

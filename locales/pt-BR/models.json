@@ -467,6 +467,9 @@
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet elevou o padrão da indústria, superando modelos concorrentes e o Claude 3 Opus, apresentando um desempenho excepcional em avaliações amplas, enquanto mantém a velocidade e o custo de nossos modelos de nível médio."
   },
+  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 Sonnet é o modelo de IA mais poderoso da Anthropic, com desempenho de ponta em tarefas altamente complexas. Ele pode lidar com prompts abertos e cenários não vistos, apresentando fluência excepcional e compreensão semelhante à humana. O Claude 3.7 Sonnet demonstra as possibilidades de geração de IA na vanguarda. O Claude 3.7 Sonnet pode processar imagens e retornar saídas de texto, com uma janela de contexto de 200K."
+  },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "O Claude 3 Haiku é o modelo mais rápido e compacto da Anthropic, oferecendo uma velocidade de resposta quase instantânea. Ele pode responder rapidamente a consultas e solicitações simples. Os clientes poderão construir uma experiência de IA sem costura que imita a interação humana. O Claude 3 Haiku pode processar imagens e retornar saídas de texto, com uma janela de contexto de 200K."
   },
@@ -523,6 +526,9 @@
   },
   "claude-3-5-sonnet-20241022": {
     "description": "Claude 3.5 Sonnet oferece capacidades que vão além do Opus e uma velocidade mais rápida do que o Sonnet, mantendo o mesmo preço do Sonnet. O Sonnet é especialmente bom em programação, ciência de dados, processamento visual e tarefas de agente."
+  },
+  "claude-3-7-sonnet-20250219": {
+    "description": "Claude 3.7 Sonnet é o modelo de IA mais poderoso da Anthropic, com desempenho de ponta em tarefas altamente complexas. Ele pode lidar com prompts abertos e cenários não vistos, apresentando fluência excepcional e compreensão semelhante à humana. O Claude 3.7 Sonnet demonstra as possibilidades de geração de IA na vanguarda."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku é o modelo mais rápido e compacto da Anthropic, projetado para respostas quase instantâneas. Ele possui desempenho direcionado rápido e preciso."

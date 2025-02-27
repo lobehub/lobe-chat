@@ -467,6 +467,9 @@
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet a élevé les normes de l'industrie, surpassant les modèles concurrents et Claude 3 Opus, tout en affichant d'excellentes performances dans une large gamme d'évaluations, tout en conservant la vitesse et le coût de nos modèles de niveau intermédiaire."
   },
+  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 Sonnet élève les normes de l'industrie, surpassant les modèles concurrents et Claude 3 Opus, avec d'excellentes performances dans une large gamme d'évaluations, tout en offrant la vitesse et le coût de nos modèles de niveau intermédiaire."
+  },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku est le modèle le plus rapide et le plus compact d'Anthropic, offrant une vitesse de réponse quasi instantanée. Il peut répondre rapidement à des requêtes et demandes simples. Les clients pourront construire une expérience AI transparente imitant l'interaction humaine. Claude 3 Haiku peut traiter des images et retourner des sorties textuelles, avec une fenêtre contextuelle de 200K."
   },
@@ -523,6 +526,9 @@
   },
   "claude-3-5-sonnet-20241022": {
     "description": "Claude 3.5 Sonnet offre des capacités dépassant celles d'Opus et une vitesse supérieure à celle de Sonnet, tout en maintenant le même tarif que Sonnet. Sonnet excelle particulièrement dans la programmation, la science des données, le traitement visuel et les tâches d'agent."
+  },
+  "claude-3-7-sonnet-20250219": {
+    "description": "Claude 3.7 Sonnet élève les normes de l'industrie, surpassant les modèles concurrents et Claude 3 Opus, avec d'excellentes performances dans une large gamme d'évaluations, tout en offrant la vitesse et le coût de nos modèles de niveau intermédiaire."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku est le modèle le plus rapide et le plus compact d'Anthropic, conçu pour des réponses quasi instantanées. Il présente des performances directionnelles rapides et précises."

@@ -467,6 +467,9 @@
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet ha elevato gli standard del settore, superando le prestazioni dei modelli concorrenti e di Claude 3 Opus, dimostrando eccellenza in una vasta gamma di valutazioni, mantenendo al contempo la velocità e i costi dei nostri modelli di livello medio."
   },
+  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 Sonnet è il modello più recente di Anthropic, con prestazioni all'avanguardia in una vasta gamma di valutazioni, superando i modelli concorrenti e Claude 3.5 Sonnet, dimostrando eccellenza in una vasta gamma di valutazioni, mantenendo al contempo la velocità e i costi dei nostri modelli di livello medio."
+  },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku è il modello più veloce e compatto di Anthropic, offrendo una velocità di risposta quasi istantanea. Può rispondere rapidamente a query e richieste semplici. I clienti saranno in grado di costruire un'esperienza AI senza soluzione di continuità che imita l'interazione umana. Claude 3 Haiku può gestire immagini e restituire output testuali, con una finestra di contesto di 200K."
   },
@@ -523,6 +526,9 @@
   },
   "claude-3-5-sonnet-20241022": {
     "description": "Claude 3.5 Sonnet offre capacità superiori a Opus e velocità maggiore rispetto a Sonnet, mantenendo lo stesso prezzo di Sonnet. Sonnet è particolarmente abile nella programmazione, nella scienza dei dati, nell'elaborazione visiva e nei compiti di agenzia."
+  },
+  "claude-3-7-sonnet-20250219": {
+    "description": "Claude 3.7 Sonnet è il modello più recente di Anthropic, con prestazioni all'avanguardia in una vasta gamma di valutazioni, superando i modelli concorrenti e Claude 3.5 Sonnet, dimostrando eccellenza in una vasta gamma di valutazioni, mantenendo al contempo la velocità e i costi dei nostri modelli di livello medio."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku è il modello più veloce e compatto di Anthropic, progettato per risposte quasi istantanee. Ha prestazioni di orientamento rapide e accurate."

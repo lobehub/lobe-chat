@@ -472,7 +472,7 @@ export const generateAIChat: StateCreator<
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
           toolCalls,
-          reasoning: !!reasoning ? { content: reasoning, duration } : undefined,
+          reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
           search: !!grounding?.citations ? grounding : undefined,
         });
       },
@@ -626,7 +626,7 @@ export const generateAIChat: StateCreator<
       },
 
       false,
-      'toggleToolCallingStreaming',
+      `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
     );
   },
 });
