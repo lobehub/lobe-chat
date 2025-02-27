@@ -25,6 +25,9 @@
   "license": "MIT",
   "author": "LobeHub <i@lobehub.com>",
   "sideEffects": false,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "next build",
     "build:analyze": "ANALYZE=true next build",
