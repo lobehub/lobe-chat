@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add online search support for available providers."]
+    },
+    "date": "2025-02-27",
+    "version": "1.66.0"
+  },
+  {
+    "children": {
       "improvements": [
         "Support parsing the search flag when parsing the model list, Update Gemini & Qwen models."
       ]
