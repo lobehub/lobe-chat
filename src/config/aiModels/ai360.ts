@@ -51,6 +51,7 @@ const ai360ChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8000,
     description: '360智脑系列效果最好的主力千亿级大模型，广泛适用于各领域复杂任务场景。',
@@ -61,6 +62,9 @@ const ai360ChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 2,
       output: 5,
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },

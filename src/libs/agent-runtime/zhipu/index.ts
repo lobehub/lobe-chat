@@ -1,9 +1,7 @@
-import OpenAI from 'openai';
+import { ModelProvider } from '../types';
+import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 import type { ChatModelCard } from '@/types/llm';
-
-import { ChatStreamPayload, ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 export interface ZhipuModelCard {
   description: string;
@@ -14,17 +12,29 @@ export interface ZhipuModelCard {
 export const LobeZhipuAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   chatCompletion: {
-    handlePayload: ({ max_tokens, model, temperature, top_p, ...payload }: ChatStreamPayload) =>
-      ({
-        ...payload,
-        max_tokens:
-          max_tokens === undefined
-            ? undefined
-            : (model.includes('glm-4v') && Math.min(max_tokens, 1024)) ||
-              (model === 'glm-zero-preview' && Math.min(max_tokens, 15_300)) ||
-              max_tokens,
+    handlePayload: (payload) => {
+      const { enabledSearch, max_tokens, model, temperature, tools, top_p, ...rest } = payload;
+
+      const zhipuTools = enabledSearch ? [
+        ...(tools || []),
+        {
+          type: "web_search",
+          web_search: {
+            enable: true,
+          },
+        }
+      ] : tools;
+
+      return {
+        ...rest,
+        max_tokens: 
+          max_tokens === undefined ? undefined :
+          (model.includes('glm-4v') && Math.min(max_tokens, 1024)) ||
+          (model === 'glm-zero-preview' && Math.min(max_tokens, 15_300)) ||
+          max_tokens,
         model,
         stream: true,
+        tools: zhipuTools,
         ...(model === 'glm-4-alltools'
           ? {
               temperature:
@@ -37,7 +47,8 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
               temperature: temperature !== undefined ? temperature / 2 : undefined,
               top_p,
             }),
-      }) as OpenAI.ChatCompletionCreateParamsStreaming,
+      } as any;
+    },
   },
   constructorOptions: {
     defaultHeaders: {
@@ -52,17 +63,14 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
     // ref: https://open.bigmodel.cn/console/modelcenter/square
-    client.baseURL =
-      'https://open.bigmodel.cn/api/fine-tuning/model_center/list?pageSize=100&pageNum=1';
+    client.baseURL = 'https://open.bigmodel.cn/api/fine-tuning/model_center/list?pageSize=100&pageNum=1';
 
-    const modelsPage = (await client.models.list()) as any;
+    const modelsPage = await client.models.list() as any;
     const modelList: ZhipuModelCard[] = modelsPage.body.rows;
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.modelCode.toLowerCase() === m.id.toLowerCase(),
-        );
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.modelCode.toLowerCase() === m.id.toLowerCase());
 
         return {
           contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
@@ -70,19 +78,18 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
           displayName: model.modelName,
           enabled: knownModel?.enabled || false,
           functionCall:
-            (model.modelCode.toLowerCase().includes('glm-4') &&
-              !model.modelCode.toLowerCase().includes('glm-4v')) ||
-            knownModel?.abilities?.functionCall ||
-            false,
+            model.modelCode.toLowerCase().includes('glm-4') && !model.modelCode.toLowerCase().includes('glm-4v')
+            || knownModel?.abilities?.functionCall
+            || false,
           id: model.modelCode,
           reasoning:
-            model.modelCode.toLowerCase().includes('glm-zero-preview') ||
-            knownModel?.abilities?.reasoning ||
-            false,
+            model.modelCode.toLowerCase().includes('glm-zero-preview')
+            || knownModel?.abilities?.reasoning
+            || false,
           vision:
-            model.modelCode.toLowerCase().includes('glm-4v') ||
-            knownModel?.abilities?.vision ||
-            false,
+            model.modelCode.toLowerCase().includes('glm-4v')
+            || knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

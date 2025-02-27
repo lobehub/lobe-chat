@@ -1,9 +1,7 @@
-import OpenAI from 'openai';
-
-import type { ChatModelCard } from '@/types/llm';
-
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+
+import type { ChatModelCard } from '@/types/llm';
 
 export interface BaichuanModelCard {
   function_call: boolean;
@@ -17,14 +15,26 @@ export const LobeBaichuanAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.baichuan-ai.com/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
-      const { temperature, ...rest } = payload;
+      const { enabledSearch, temperature, tools, ...rest } = payload;
+
+      const baichuanTools = enabledSearch ? [
+        ...(tools || []),
+        {
+          type: "web_search",
+          web_search: {
+            enable: true,
+            search_mode: process.env.BAICHUAN_SEARCH_MODE || "performance_first", // performance_first or quality_first
+          },
+        }
+      ] : tools;
 
       return {
         ...rest,
         // [baichuan] frequency_penalty must be between 1 and 2.
         frequency_penalty: undefined,
         temperature: temperature !== undefined ? temperature / 2 : undefined,
-      } as OpenAI.ChatCompletionCreateParamsStreaming;
+        tools: baichuanTools,
+      } as any;
     },
   },
   debug: {
@@ -33,14 +43,12 @@ export const LobeBaichuanAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const modelsPage = (await client.models.list()) as any;
+    const modelsPage = await client.models.list() as any;
     const modelList: BaichuanModelCard[] = modelsPage.data;
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.model.toLowerCase() === m.id.toLowerCase(),
-        );
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.model.toLowerCase() === m.id.toLowerCase());
 
         return {
           contextWindowTokens: model.max_input_length,
@@ -49,8 +57,12 @@ export const LobeBaichuanAI = LobeOpenAICompatibleFactory({
           functionCall: model.function_call,
           id: model.model,
           maxTokens: model.max_tokens,
-          reasoning: knownModel?.abilities?.reasoning || false,
-          vision: knownModel?.abilities?.vision || false,
+          reasoning:
+            knownModel?.abilities?.reasoning
+            || false,
+          vision:
+            knownModel?.abilities?.vision
+            || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];
