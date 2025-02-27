@@ -223,14 +223,26 @@ describe('fetchSSE', () => {
         smoothing: true,
       });
 
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'reasoning' });
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'reasoning' });
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' Wor', type: 'reasoning' });
+      const expectedMessages = [
+        { text: 'H', type: 'reasoning' },
+        { text: 'e', type: 'reasoning' },
+        { text: 'l', type: 'reasoning' },
+        { text: 'h', type: 'text' },
+        { text: 'l', type: 'reasoning' },
+        { text: 'i', type: 'text' },
+      ];
+  
+      expectedMessages.forEach((message, index) => {
+        expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
+      });
+
       // more assertions for each character...
       expect(mockOnFinish).toHaveBeenCalledWith('hi', {
+        grounding: undefined,
         observationId: null,
         toolCalls: undefined,
-        reasoning: { content: 'Hello World' },
+        reasoning: { content: 'Hell' },
+        signature: undefined,
         traceId: null,
         type: 'done',
       });
@@ -260,14 +272,24 @@ describe('fetchSSE', () => {
         smoothing: true,
       });
 
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'reasoning' });
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'reasoning' });
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' Wor', type: 'reasoning' });
+      const expectedMessages = [
+        { text: 'H', type: 'reasoning' },
+        { text: 'e', type: 'reasoning' },
+        { text: 'l', type: 'reasoning' },
+        { text: 'h', type: 'text' },
+        { text: 'l', type: 'reasoning' },
+        { text: 'i', type: 'text' },
+      ];
+  
+      expectedMessages.forEach((message, index) => {
+        expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
+      });
+
       // more assertions for each character...
       expect(mockOnFinish).toHaveBeenCalledWith('hi', {
         observationId: null,
         toolCalls: undefined,
-        reasoning: { content: 'Hello World', signature: 'abcbcd' },
+        reasoning: { content: 'Hell', signature: 'abcbcd' },
         traceId: null,
         type: 'done',
       });
