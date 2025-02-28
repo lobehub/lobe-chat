@@ -244,6 +244,7 @@
     "zustand-utils": "^2"
   },
   "devDependencies": {
+    "@codecov/webpack-plugin": "^1.9.0",
     "@commitlint/cli": "^19.6.1",
     "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.15.0",

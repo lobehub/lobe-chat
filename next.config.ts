@@ -1,5 +1,6 @@
 import analyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
+import { codecovWebpackPlugin } from '@codecov/webpack-plugin';
 import withSerwistInit from '@serwist/next';
 import type { NextConfig } from 'next';
 import ReactComponentName from 'react-scan/react-component-name/webpack';
@@ -193,6 +194,18 @@ const nextConfig: NextConfig = {
       asyncWebAssembly: true,
       layers: true,
     };
+
+    // Add Codecov webpack plugin
+    if (process.env.CODECOV_TOKEN) {
+      config.plugins.push(
+        codecovWebpackPlugin({
+          enableBundleAnalysis: true,
+          bundleName: 'lobechat-bundle',
+          uploadToken: process.env.CODECOV_TOKEN,
+          gitService: 'github',
+        }),
+      );
+    }
 
     // 开启该插件会导致 pglite 的 fs bundler 被改表
     if (enableReactScan && !isUsePglite) {
