@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import * as path from 'node:path';
 import { expect } from 'vitest';
 
-import { htmlToMarkdown } from '../src';
+import { htmlToMarkdown } from './htmlToMarkdown';
 
 const list = [
   {

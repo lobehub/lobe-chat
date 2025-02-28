@@ -1,4 +1,4 @@
-import { htmlToMarkdown } from '../htmlToMarkdown';
+import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 import { CrawlImpl } from '../type';
 
 const mixinHeaders = {

@@ -1,6 +1,6 @@
 import qs from 'query-string';
 
-import { htmlToMarkdown } from '../htmlToMarkdown';
+import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 import { CrawResult, CrawlImpl } from '../type';
 
 const BASE_URL = process.env.BROWSERLESS_URL ?? 'https://chrome.browserless.io';
