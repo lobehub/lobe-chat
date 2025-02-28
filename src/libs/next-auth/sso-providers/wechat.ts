@@ -18,7 +18,7 @@ const provider = {
         providerAccountId: profile.unionid,
       };
     },
-    style: { bg: '#fff', logo: '/img/providers/wechat.svg', text: '#000' },
+    style: { bg: '#fff', logo: 'https://authjs.dev/img/providers/wechat.svg', text: '#000' },
     token: {
       async conform(response: any) {
         const data = await response.json();
