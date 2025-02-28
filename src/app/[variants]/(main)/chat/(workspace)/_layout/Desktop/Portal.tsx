@@ -104,7 +104,6 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
             flex: 'none',
             height: '100%',
             maxHeight: '100vh',
-            maxWidth: `min(calc(100vw - 365px - 64px), ${CHAT_PORTAL_MAX_WIDTH}px)`,
             minWidth: CHAT_PORTAL_WIDTH,
           }}
         >

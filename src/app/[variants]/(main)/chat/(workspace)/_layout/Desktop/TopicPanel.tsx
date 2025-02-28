@@ -5,6 +5,7 @@ import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 
+import AnimatedCollapsed from '@/components/AnimatedCollapsed';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
@@ -20,6 +21,7 @@ const useStyles = createStyles(({ css, token }) => ({
   drawer: css`
     z-index: 10;
     background: ${token.colorBgLayout};
+    height: 100%;
   `,
   header: css`
     border-block-end: 1px solid ${token.colorBorder};
@@ -49,7 +51,13 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   }, [lg, cacheExpand]);
 
   return (
-    !showPortal && (
+    <AnimatedCollapsed
+      height={{
+        collapsed: '100%',
+        open: '100%',
+      }}
+      open={!showPortal}
+    >
       <DraggablePanel
         className={styles.drawer}
         classNames={{
@@ -73,7 +81,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
           {children}
         </DraggablePanelContainer>
       </DraggablePanel>
-    )
+    </AnimatedCollapsed>
   );
 });
 
