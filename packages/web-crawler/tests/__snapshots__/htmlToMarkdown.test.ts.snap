@@ -1,5 +1,485 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`htmlToMarkdown > should transform terms.html to markdown 1`] = `
+{
+  "byline": null,
+  "content": " Lasted Updated at
+
+2024-03-01 
+
+ Welcome to LobeHub! Please carefully read the following Terms of Use (hereinafter referred to as the "Agreement"). This Agreement constitutes a legally binding agreement between You and LobeHub regarding the access and use of the LobeHub software applications, services, and websites (collectively referred to as the "Services").
+
+ By accessing or using the Services in any way, You acknowledge that You have read, understood, and agreed to be bound by all the terms of this Agreement. If You do not agree to any part of this Agreement, You are not permitted to continue accessing or using the Services.
+
+##  Definitions[ ](https://lobehub.com/zh/terms#definitions) 
+
+ The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.
+
+* **Affiliate** means an entity that controls, is controlled by or is under common control with a party, where "control" means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.
+* **Agreement** means this Terms of Use Agreement.
+* **Company** (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to LobeHub LLC.
+* **Service** means the LobeHub software applications, services, and website.
+* **You** means the individual accessing or using the Services, or the company, or other legal entity on behalf of which such individual is accessing or using the Services, as applicable.
+
+##  Our Services[ ](https://lobehub.com/zh/terms#our-services) 
+
+ LobeHub provides a platform and interface that enables users to interact with artificial intelligence technologies, including but not limited to natural language processing models or content generation models developed independently or provided by third parties such as Google, Microsoft, OpenAI, and other commercial companies as well as open-source communities. The Service facilitates functions such as information retrieval, content creation, and automation through user interaction with AI systems. Additionally, it utilizes cloud technology to provide capabilities like data synchronization, vector data storage, server-side functionalities, etc., to enhance the interactive experience with AI models.
+
+##  Eligibility[ ](https://lobehub.com/zh/terms#eligibility) 
+
+ By accessing or using the Services, You represent and warrant to the Company that You: (1)Are of legal age (18 years and above). (2)Have legal capacity and agree to abide by these terms. (3)Will use the Services in accordance with this Agreement and all applicable laws. (4)Will not use the Services for any illegal, harmful, dangerous, or offensive purposes.
+
+Examples of prohibited activities include but are not limited to:
+
+* Illegal activities
+* Infringement of intellectual property rights
+* Generating harmful, unsafe, deceptive, or illegal content
+* Impersonation, fraud
+
+ If You do not comply with the usage conditions, We reserve the right to suspend or terminate Your account and refuse any and all current or future use of the Services (or any part thereof).
+
+##  Account Registration[ ](https://lobehub.com/zh/terms#account-registration) 
+
+ To access the Services, You must register an account by providing true, accurate, up-to-date, and complete information. You are solely responsible for all activities that occur under Your account, including maintaining the security of Your account and restricting access. You must immediately notify LobeHub of any unauthorized account use or other security breaches.
+
+ Please ensure to keep Your password secure and take responsibility for all use of Your account and password. If We deem the chosen username inappropriate, containing obscene content, or otherwise offensive, We reserve the right to delete, revoke, or modify that username.
+
+##  Purchases and Payments[ ](https://lobehub.com/zh/terms#purchases-and-payments) 
+
+ You agree to provide current, complete, and accurate purchase and account information for all purchases made using the Services. You also agree to promptly update Your account and payment information, including email address, payment method, and payment card expiration date, to allow us to complete Your transactions and contact You when necessary. Sales tax will be added to the purchase price as required by law.
+
+ You agree to pay all charges at the current purchase price and authorize us to charge any such amounts to Your chosen payment provider at the time of purchase. If Your order requires recurring charges, You agree that We may charge Your payment method on a recurring basis at the specified intervals without obtaining prior approval for each recurring charge until the relevant order is canceled. We reserve the right to correct any errors or pricing errors even after payment has been requested or accepted.
+
+ We may utilize third-party payment processing services (such as Stripe) for payment processing. You may use a valid card (credit or debit card) for payment, subject to verification and authorization by Your card issuer. We will not be liable for any delays or failure to provide Services resulting from payment failures due to authorization issues or any reasons related to third-party payment providers.
+
+ We reserve the right to refuse or cancel Your order at any time for certain reasons, including but not limited to: (1) Service availability, (2) errors in Service description or pricing, (3) order errors, (4) suspected fraud or unauthorized or illegal transactions. We reserve the right, at our sole discretion, to limit or prohibit orders placed by dealers, resellers, or distributors.
+
+##  Fee Changes[ ](https://lobehub.com/zh/terms#fee-changes) 
+
+ We reserve the right to adjust the Service fees at our discretion and at any time. Any changes in fees will take effect immediately upon the change. Services that have already been paid for and purchased will not be affected.
+
+ If Your order requires recurring automatic billing, the revised price will take effect on the next billing cycle. We will notify You in advance of any fee adjustments so that You have the opportunity to cancel the order before the adjustment takes effect. If You do not cancel the order and continue to use the Services, You agree to pay the revised fee amount.
+
+##  Refunds[ ](https://lobehub.com/zh/terms#refunds) 
+
+ For Services that have been purchased but not used, We support refunds within 30 days of payment. However, for Services that have been used or purchased for more than 30 days, We will not accept refund requests.
+
+ For subscription-based Services where partial usage has occurred, Your refund request will be reviewed on a case-by-case basis, and the final decision on approving the refund will be at the Company's discretion.
+
+##  Content[ ](https://lobehub.com/zh/terms#content) 
+
+ Our Services allows You to generate and publish content. You are responsible for the legality, reliability, and appropriateness of the content generated using the AI ability. We do not assume responsibility for user-generated content on the Services. You explicitly understand and agree that You are solely responsible for the content You post and all activities conducted under Your account, whether by Yourself or by third parties using Your account.
+
+ By generating and publishing content in the Services, You grant us the rights and licenses necessary to use, modify, publicly perform, publicly display, copy, and distribute such content within the Services. You retain full ownership of all content created, published, or displayed within the Services and are responsible for maintaining these rights. You agree that this license includes the permission for us to provide Your content to other Service users for their use under these terms. Additionally, You declare and warrant that: (1) the content is owned by You or You have the legal right to use and authorize it to us under this agreement. (2) posting the shared information in the Services will not infringe upon the privacy rights, image rights, copyrights, contractual relationships, or other individual rights of others.
+
+ All content generated by You is by default stored locally on the client-side, and You are responsible for the storage and backup of Your content.
+
+ Additionally, We offer optional cloud sync content functionality. By using this feature, You agree that We may retain complete and accurate copies of any content in locations independent of the Services in our manner. However, We cannot guarantee that data will not be lost or damaged. Data or content loss or damage can occur due to various reasons, such as pre-existing damage before synchronization or changes during synchronization.
+
+ We do not assume any responsibility for the security and integrity of content in the event of content damage or loss under any circumstances.
+
+##  Intellectual Property Rights[ ](https://lobehub.com/zh/terms#intellectual-property-rights) 
+
+ LobeHub reserves all rights to the technology, software, first-party content, and data within the Services, including but not limited to patents, trademarks, trade secrets, copyrights, and other intellectual property rights. Your permission to use the Services does not grant You any ownership or title. You are not permitted to copy, modify, adapt, translate, create derivative works, reverse engineer, disassemble, or decompile the Services or any part thereof. If You wish to participate in collaborative technical development, please engage through our GitHub open-source community and adhere to the relevant open-source licenses.
+
+##  Privacy and Security[ ](https://lobehub.com/zh/terms#privacy-and-security) 
+
+ LobeHub employs industry-standard technical, managerial, and physical security measures to protect the security, confidentiality, and integrity of Your data. However, We cannot guarantee that unauthorized access, hacking attacks, data loss, or other breaches will never occur. LobeHub is not liable for any damages or liabilities related to security incidents. Please refer to our Privacy Policy for more detailed information.
+
+##  Termination of Services[ ](https://lobehub.com/zh/terms#termination-of-services) 
+
+ You may close Your account and cease using the Services at any time. In the event of a violation of the terms of the agreement, LobeHub may immediately suspend or terminate Your access to the Services. Upon termination, You will immediately lose the right to access or use the Services. LobeHub will not be liable to You or any third party for the termination of the Services.
+
+##  Disclaimer of Warranties[ ](https://lobehub.com/zh/terms#disclaimer-of-warranties) 
+
+ The Services provided by LobeHub are provided on an "as-is" basis, and without any form of guarantee. We explicitly disclaim all warranties, whether express, implied, statutory, or otherwise, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement. Your use of the Services is at Your own risk.
+
+##  Limitation of Liability[ ](https://lobehub.com/zh/terms#limitation-of-liability) 
+
+ In no event shall LobeHub, its Affiliates, directors, employees, or agents be liable for any direct, indirect, punitive, incidental, special, or consequential damages arising from or related to Your use or inability to use the Services. This limitation applies regardless of the basis or form of action.
+
+##  Modification of Terms[ ](https://lobehub.com/zh/terms#modification-of-terms) 
+
+ We may revise this agreement periodically, and the new version of the agreement will replace the previous version. We will indicate the "last updated" date at the beginning and provide notice within the Services to inform You of significant changes. It is Your responsibility to regularly review these legal terms to stay informed of any updates. By continuing to use the Services after the revised legal terms are posted, You will be deemed to have understood and accepted any changes to the revised legal terms.
+
+##  Governing Law and Jurisdiction[ ](https://lobehub.com/zh/terms#governing-law-and-jurisdiction) 
+
+ This agreement shall be governed by the laws of the State of Delaware, and You agree to submit to the exclusive jurisdiction of the state and federal courts located in Delaware for the resolution of any disputes related to this agreement or the Services. You may also be required to comply with the laws of Your local jurisdiction, state, country, or international laws when using the Services.
+
+##  Conclusion[ ](https://lobehub.com/zh/terms#conclusion) 
+
+ This agreement represents the entire agreement between You and LobeHub regarding the use of the Services. It supersedes any prior agreements or understandings. The failure of LobeHub to enforce any provision of this agreement does not constitute a waiver of its rights.
+
+ By accessing or using the LobeHub Services, You acknowledge that You have read, understood, and agreed to be bound by this agreement. If You have any questions regarding this agreement, please contact us at[support@lobehub.com](mailto:support@lobehub.com).",
+  "dir": null,
+  "excerpt": "Lasted Updated at",
+  "lang": null,
+  "length": 18284,
+  "publishedTime": null,
+  "siteName": null,
+  "textContent": "
+              
+              
+                  Lasted Updated at
+                  2024-03-01
+                  
+                
+              
+                Welcome to LobeHub! Please carefully read the following Terms of Use (hereinafter
+                referred to as the "Agreement"). This Agreement constitutes a legally binding
+                agreement between You and LobeHub regarding the access and use of the LobeHub
+                software applications, services, and websites (collectively referred to as the
+                "Services").
+              
+              
+                By accessing or using the Services in any way, You acknowledge that You have read,
+                understood, and agreed to be bound by all the terms of this Agreement. If You do not
+                agree to any part of this Agreement, You are not permitted to continue accessing or
+                using the Services.
+              
+              
+                Definitions
+                      
+                      
+                      
+                      
+              
+              
+                The words of which the initial letter is capitalized have meanings defined under the
+                following conditions. The following definitions shall have the same meaning
+                regardless of whether they appear in singular or in plural.
+              
+              
+                
+                  Affiliate means an entity that controls, is controlled by or is
+                  under common control with a party, where "control" means ownership of 50% or more
+                  of the shares, equity interest or other securities entitled to vote for election
+                  of directors or other managing authority.
+                
+                Agreement means this Terms of Use Agreement.
+                
+                  Company (referred to as either "the Company", "We", "Us" or "Our"
+                  in this Agreement) refers to LobeHub LLC.
+                
+                
+                  Service means the LobeHub software applications, services, and
+                  website.
+                
+                
+                  You means the individual accessing or using the Services, or the
+                  company, or other legal entity on behalf of which such individual is accessing or
+                  using the Services, as applicable.
+                
+              
+              
+                Our Services
+                      
+                      
+                      
+                      
+              
+              
+                LobeHub provides a platform and interface that enables users to interact with
+                artificial intelligence technologies, including but not limited to natural language
+                processing models or content generation models developed independently or provided
+                by third parties such as Google, Microsoft, OpenAI, and other commercial companies
+                as well as open-source communities. The Service facilitates functions such as
+                information retrieval, content creation, and automation through user interaction
+                with AI systems. Additionally, it utilizes cloud technology to provide capabilities
+                like data synchronization, vector data storage, server-side functionalities, etc.,
+                to enhance the interactive experience with AI models.
+              
+              
+                Eligibility
+                      
+                      
+                      
+                      
+              
+              
+                By accessing or using the Services, You represent and warrant to the Company that
+                You: (1)Are of legal age (18 years and above). (2)Have legal capacity and agree to
+                abide by these terms. (3)Will use the Services in accordance with this Agreement and
+                all applicable laws. (4)Will not use the Services for any illegal, harmful,
+                dangerous, or offensive purposes.
+              
+              Examples of prohibited activities include but are not limited to:
+              
+                Illegal activities
+                Infringement of intellectual property rights
+                Generating harmful, unsafe, deceptive, or illegal content
+                Impersonation, fraud
+              
+              
+                If You do not comply with the usage conditions, We reserve the right to suspend or
+                terminate Your account and refuse any and all current or future use of the Services
+                (or any part thereof).
+              
+              
+                Account Registration
+                      
+                      
+                      
+                      
+              
+              
+                To access the Services, You must register an account by providing true, accurate,
+                up-to-date, and complete information. You are solely responsible for all activities
+                that occur under Your account, including maintaining the security of Your account
+                and restricting access. You must immediately notify LobeHub of any unauthorized
+                account use or other security breaches.
+              
+              
+                Please ensure to keep Your password secure and take responsibility for all use of
+                Your account and password. If We deem the chosen username inappropriate, containing
+                obscene content, or otherwise offensive, We reserve the right to delete, revoke, or
+                modify that username.
+              
+              
+                Purchases and Payments
+                      
+                      
+                      
+                      
+              
+              
+                You agree to provide current, complete, and accurate purchase and account
+                information for all purchases made using the Services. You also agree to promptly
+                update Your account and payment information, including email address, payment
+                method, and payment card expiration date, to allow us to complete Your transactions
+                and contact You when necessary. Sales tax will be added to the purchase price as
+                required by law.
+              
+              
+                You agree to pay all charges at the current purchase price and authorize us to
+                charge any such amounts to Your chosen payment provider at the time of purchase. If
+                Your order requires recurring charges, You agree that We may charge Your payment
+                method on a recurring basis at the specified intervals without obtaining prior
+                approval for each recurring charge until the relevant order is canceled. We reserve
+                the right to correct any errors or pricing errors even after payment has been
+                requested or accepted.
+              
+              
+                We may utilize third-party payment processing services (such as Stripe) for payment
+                processing. You may use a valid card (credit or debit card) for payment, subject to
+                verification and authorization by Your card issuer. We will not be liable for any
+                delays or failure to provide Services resulting from payment failures due to
+                authorization issues or any reasons related to third-party payment providers.
+              
+              
+                We reserve the right to refuse or cancel Your order at any time for certain reasons,
+                including but not limited to: (1) Service availability, (2) errors in Service
+                description or pricing, (3) order errors, (4) suspected fraud or unauthorized or
+                illegal transactions. We reserve the right, at our sole discretion, to limit or
+                prohibit orders placed by dealers, resellers, or distributors.
+              
+              
+                Fee Changes
+                      
+                      
+                      
+                      
+              
+              
+                We reserve the right to adjust the Service fees at our discretion and at any time.
+                Any changes in fees will take effect immediately upon the change. Services that have
+                already been paid for and purchased will not be affected.
+              
+              
+                If Your order requires recurring automatic billing, the revised price will take
+                effect on the next billing cycle. We will notify You in advance of any fee
+                adjustments so that You have the opportunity to cancel the order before the
+                adjustment takes effect. If You do not cancel the order and continue to use the
+                Services, You agree to pay the revised fee amount.
+              
+              
+                Refunds
+                      
+                      
+                      
+                      
+              
+              
+                For Services that have been purchased but not used, We support refunds within 30
+                days of payment. However, for Services that have been used or purchased for more
+                than 30 days, We will not accept refund requests.
+              
+              
+                For subscription-based Services where partial usage has occurred, Your refund
+                request will be reviewed on a case-by-case basis, and the final decision on
+                approving the refund will be at the Company's discretion.
+              
+              
+                Content
+                      
+                      
+                      
+                      
+              
+              
+                Our Services allows You to generate and publish content. You are responsible for the
+                legality, reliability, and appropriateness of the content generated using the AI
+                ability. We do not assume responsibility for user-generated content on the Services.
+                You explicitly understand and agree that You are solely responsible for the content
+                You post and all activities conducted under Your account, whether by Yourself or by
+                third parties using Your account.
+              
+              
+                By generating and publishing content in the Services, You grant us the rights and
+                licenses necessary to use, modify, publicly perform, publicly display, copy, and
+                distribute such content within the Services. You retain full ownership of all
+                content created, published, or displayed within the Services and are responsible for
+                maintaining these rights. You agree that this license includes the permission for us
+                to provide Your content to other Service users for their use under these terms.
+                Additionally, You declare and warrant that: (1) the content is owned by You or You
+                have the legal right to use and authorize it to us under this agreement. (2) posting
+                the shared information in the Services will not infringe upon the privacy rights,
+                image rights, copyrights, contractual relationships, or other individual rights of
+                others.
+              
+              
+                All content generated by You is by default stored locally on the client-side, and
+                You are responsible for the storage and backup of Your content.
+              
+              
+                Additionally, We offer optional cloud sync content functionality. By using this
+                feature, You agree that We may retain complete and accurate copies of any content in
+                locations independent of the Services in our manner. However, We cannot guarantee
+                that data will not be lost or damaged. Data or content loss or damage can occur due
+                to various reasons, such as pre-existing damage before synchronization or changes
+                during synchronization.
+              
+              
+                We do not assume any responsibility for the security and integrity of content in the
+                event of content damage or loss under any circumstances.
+              
+              
+                Intellectual Property Rights
+                      
+                      
+                      
+                      
+              
+              
+                LobeHub reserves all rights to the technology, software, first-party content, and
+                data within the Services, including but not limited to patents, trademarks, trade
+                secrets, copyrights, and other intellectual property rights. Your permission to use
+                the Services does not grant You any ownership or title. You are not permitted to
+                copy, modify, adapt, translate, create derivative works, reverse engineer,
+                disassemble, or decompile the Services or any part thereof. If You wish to
+                participate in collaborative technical development, please engage through our GitHub
+                open-source community and adhere to the relevant open-source licenses.
+              
+              
+                Privacy and Security
+                      
+                      
+                      
+                      
+              
+              
+                LobeHub employs industry-standard technical, managerial, and physical security
+                measures to protect the security, confidentiality, and integrity of Your data.
+                However, We cannot guarantee that unauthorized access, hacking attacks, data loss,
+                or other breaches will never occur. LobeHub is not liable for any damages or
+                liabilities related to security incidents. Please refer to our Privacy Policy for
+                more detailed information.
+              
+              
+                Termination of Services
+                      
+                      
+                      
+                      
+              
+              
+                You may close Your account and cease using the Services at any time. In the event of
+                a violation of the terms of the agreement, LobeHub may immediately suspend or
+                terminate Your access to the Services. Upon termination, You will immediately lose
+                the right to access or use the Services. LobeHub will not be liable to You or any
+                third party for the termination of the Services.
+              
+              
+                Disclaimer of Warranties
+                      
+                      
+                      
+                      
+              
+              
+                The Services provided by LobeHub are provided on an "as-is" basis, and without any
+                form of guarantee. We explicitly disclaim all warranties, whether express, implied,
+                statutory, or otherwise, including but not limited to warranties of merchantability,
+                fitness for a particular purpose, and non-infringement. Your use of the Services is
+                at Your own risk.
+              
+              
+                Limitation of Liability
+                      
+                      
+                      
+                      
+              
+              
+                In no event shall LobeHub, its Affiliates, directors, employees, or agents be liable
+                for any direct, indirect, punitive, incidental, special, or consequential damages
+                arising from or related to Your use or inability to use the Services. This
+                limitation applies regardless of the basis or form of action.
+              
+              
+                Modification of Terms
+                      
+                      
+                      
+                      
+              
+              
+                We may revise this agreement periodically, and the new version of the agreement will
+                replace the previous version. We will indicate the "last updated" date at the
+                beginning and provide notice within the Services to inform You of significant
+                changes. It is Your responsibility to regularly review these legal terms to stay
+                informed of any updates. By continuing to use the Services after the revised legal
+                terms are posted, You will be deemed to have understood and accepted any changes to
+                the revised legal terms.
+              
+              
+                Governing Law and Jurisdiction
+                      
+                      
+                      
+                      
+              
+              
+                This agreement shall be governed by the laws of the State of Delaware, and You agree
+                to submit to the exclusive jurisdiction of the state and federal courts located in
+                Delaware for the resolution of any disputes related to this agreement or the
+                Services. You may also be required to comply with the laws of Your local
+                jurisdiction, state, country, or international laws when using the Services.
+              
+              
+                Conclusion
+                      
+                      
+                      
+                      
+              
+              
+                This agreement represents the entire agreement between You and LobeHub regarding the
+                use of the Services. It supersedes any prior agreements or understandings. The
+                failure of LobeHub to enforce any provision of this agreement does not constitute a
+                waiver of its rights.
+              
+              
+                By accessing or using the LobeHub Services, You acknowledge that You have read,
+                understood, and agreed to be bound by this agreement. If You have any questions
+                regarding this agreement, please contact us at
+                support@lobehub.com.
+              
+            ",
+  "title": "Terms of Service · LobeHub",
+}
+`;
+
 exports[`htmlToMarkdown > should transform yingchao.html to markdown 1`] = `
 {
   "byline": null,
@@ -24,159 +504,5 @@ exports[`htmlToMarkdown > should transform yingchao.html to markdown 1`] = `
       
     ",
   "title": "英超排行榜|英超积分榜2024-2025赛季 - 球迷屋",
-}
-`;
-
-exports[`htmlToMarkdown > should transform zhihu.html to markdown 1`] = `
-{
-  "byline": null,
-  "content": "_（省流版本：笔者认为由于LoRA和controlnet的加入，SDXL的参数量的扩大，SD模型ckpt的发展方向是往兼容性的大模型方向发展才是正确的道路，更好发挥现有8.59亿参数量（未来SDXL：35亿参数）的优势。而现在越来越多随意将LoRA和ckpt融合，越来越固定的画面风格，兼容性越来越差的模型，容易导致劣币驱逐良币，导致ckpt的发展方向偏移。）_ 
-
- 大家好，我是StableDiffusion模型GhostMix的制作者\\_GhostInShell\\_。写这篇文章主要是我觉得现在有些国内StableDiffusion（为书写方便，后面简称为SD）社区的发展方向是错误的，且因为最近很多SD社区都在搞活动，所以很多的“模型创作者”一哄而上，制作垃圾模型来薅羊毛。《经济学原理》第一条：人会对激励做出反应，不可否认，钱是可以激励创作者做出更好的模型，但现实情况是很多人眼里面只有钱，为了钱制作各种垃圾模型。所以我觉得作为知名模型制作者，非常有必要去表达自己的观点，尽可能的纠正现在ckpt的发展方向，为真正推动SD社区发展做出贡献。（**叠甲：下文纯属个人观点，每个人都有自己的理解，本文攻击性有点高，如果观点方面有不同意的地方，那你就当我是傻子，右上角叉掉就行了。没必要争论，Let the Model Speak，谢谢。**）
-
- 首先，我凭什么有资格去讨论其他Checkpoint(为书写方便，后面简称为ckpt)。GhostMix是我做的第一个ckpt，从4月11日第一个版本发布，在非真人模型，不做任何擦边色情内容的前提下，纯靠模型的画面质量和极高的兼容性，仅用了不到3个月的时间，在**全球模型网站Civitai上做到了历史全模型最高评价榜（All Time Highest Rated Rank）的第2名。**GhostMixV2.0在一共评分次数400次，平均分为4.99分（满分为5分），虽然评分次数不能跟Deliberate，ReV等“远古大神”级模型相比，但是均分也是跟DreamShaper一样处于最高的一档。因为没有更新模型，作者我现在是基础模型作者榜（Base Model Creator）第十五名（最高时第三名），也是唯一一个只发了一个ckpt模型就进入前十名的制作者。综上，我觉得作为Civitai上顶级的ckpt制作者，我完全有资格去告诉所有人什么才是一个好的模型以及ckpt未来正确的发展方向在哪里。
-
-![](https://pic4.zhimg.com/v2-ef7e209a5de40a7af56543a0fd1812c7_b.jpg) 
-
-Base Model Creator最高第三名
-
-![](https://pic3.zhimg.com/v2-d84bd31ea6f335beeadfc3cb7783a1b2_b.jpg) 
-
-2023年7月8日 All Time Highest Rated 第二名
-
- 在具体说问题之前，我们先要对ckpt和LoRA有基础的了解。（本人为金融专业研究生，所有关于deep learning的东西都是自学的，虽然参考了很多文章，但是依然非常不专业，如果错误的地方，欢迎提出来。）首先什么是ckpt？一个完整的ckpt包含Text Encoder, Image Auto Encoder&Decoder和U-Net三个结构。其中U-Net是SD的主要架构，U-Net结构见下图，U-Net中有12个输入层，1个中间层和12个输出层。根据Github用户ThanatosShinji的测算，**U-Net总参数量约为8.59亿（859M）**。这里多说一句，由于进行U-Net之前图片需经过AutoEncoder转化成隐空间向量，所以U-Net具体对图片生成的影响本身就是一个黑盒，这也是为什么我不去相信网络上所谓ckpt的每层对图片影响总结的原因。因为连CNN都没能具体知道哪一层是影响什么东西的，何况带attention机制的U-Net？那些所谓的总结，都是基于个人经验的揣测。所以最好的办法依然是自己一层一层去试，然后一个模型一个模型做测试，也就是我之前改进ckpt那篇文章介绍的。
-
-![](https://pic1.zhimg.com/v2-903a6d28d89097786d83e3815992f76c_b.jpg) 
-
- 关于U-Net的详细架构介绍，原引自文章： https://zhuanlan.zhihu.com/p/582266032
-
- 然后什么是LoRA？LoRA是Low-Rank Adaptation的缩写，Low-Rank是重点，即本质上LoRA是通过训练比原来模型小很多的低秩矩阵来达到学习特定画风和人物的目的。然后在推断（inference）过程中，将LoRA部分的权重与原权重相加，达到生成特定画风和人物的效果，即下图的右侧橙色的部分。LoRA的一大特点在于易于训练，如果训练原模型是训练维度是d\\*d的W矩阵，那么LoRA则是训练一个（d, r）的矩阵A和（r,d）的矩阵B。因为r是远小于d的，所以训练LoRA参数量更少，文件的大小（128dim的LoRA147M）也比最小的ckpt（1.99G）小了10多倍。
-
-![](https://pic1.zhimg.com/v2-360fd056db465c378631864276da0308_b.jpg) 
-
- 引自论文《LORA: LOW-RANK ADAPTATION OF LARGE LAN-GUAGE MODELS》
-
- 这里其实就引申出一个的问题，LoRA是特定的风格和人物信息的小模型，大小仅为147M。而作为有8.59亿参数，1.99G的ckpt，是不是应该有更多的内容？所以我认为ckpt的价值应该恰恰反应在大模型里面的**“大”**一字里面，即模型的兼容性。
-
- 我个人认为模型的兼容性，主要分为两部分：1.Prompts的兼容性2.画风及LoRA兼容性。Prompts兼容性主要说的是指定Prompts的情况下，模型是否能正确遵循Prompts做出相对应的图片。这里我之前模型评价体系的文章中有我自己的测试方式，可以看我上一篇文章。同时也推荐Anything模型系列的作者Yuno779的《模型理论科普》一文介绍的微笑测试。
-
- 然后重点说一下画风和LoRA兼容性。在SD发展早期Novelai时，因为LoRA还没有应用，都是ckpt直出，所以我们需要通过ckpt本身来确定画面的风格。但是随着LoRA的应用，ckpt本身其实已经不需要做这件事。原本ckpt是要一步解决做的对的问题，现在是ckpt+LoRA+controlnet一起完成，ckpt本身的定位也发生了变化。所以我经常强调的观点是：**现在ckpt应该是解决做的到的问题，然后LoRA,controlnet等是解决做的对的问题。**可能大家不理解什么意思，打个不恰当的比方，比如去画画，ckpt是画板，LoRA是画笔；去摄影，ckpt是相机，LoRA是胶卷，你画画带相机去是做不到的，同理摄影带画板也是不行的。而8.59亿参数带来的价值在于，优秀的ckpt既可以是画板也是相机，配合不同的LoRA就可以生成画或者照片。而且事实证明，这是SD1.5架构下是完全可以做得到的，你看Civitai上历史最高评价前十的非色情模型Deliberate,ReV,DreamShaper,GhostMix都属于这一类的模型。
-
-![](https://pic3.zhimg.com/v2-313221e958b2e64241a1209f24f7dff2_b.jpg) 
-
-GhostMix画风兼容性，ckpt直出，没有用任何LoRA
-
- 而现在的ckpt的乱象表现在于，因为ckpt融合很简单，门槛比炼LoRA还低，很多“模型制作者”把ckpt和好看的LoRA瞎融合一下，画风被各种LoRA固定死，画风兼容性为0，CLIP偏移不管，Prompts兼容性差，出1,2张好图就上传模型网站薅羊毛，然后打上什么“首发”，“独家”的标签。这些看上去很美，一测明显过拟合的垃圾，**名为ckpt实为LoRA的垃圾模型比比皆是。**而且劣币驱逐良币，还有一帮被强行喂答辩的新人们觉得这些垃圾模型才是好模型，是多么的滑稽。不信的话，你们看看除C站之外，国内的模型网站ReV,DreamShaper这些比GhostMix还厉害的模型有多少人在用，排名在哪里了？
-
- 有人可能觉得，只要出图漂亮就没什么。首先你看看自己硬盘里面有多少个G的模型吧，我这里是随随便便都300G的checkpoint，SDXL之后可能2个T都不够装。然后SDXL 7月份就马上就要发布了，据stability.ai的官方介绍，**SDXL 0.9的base model参数量是35亿**，ensemble pipeline的参数量是66亿（3.5B和6.6B），3.5B是什么概念，要知道清华的LLM—ChatGLM也才6B。莫非到3.5B了还要将模型做成固定成风格，各种兼容性泛化性差的垃圾模型吗？所以我觉得这个问题是一定要正视的问题。现在顶尖模型创作者基本都不懂深度学习，连验证数据集和测试数据集的概念都没有，连我这个自学了点深度学习的垃圾都被认为是“专业的大佬”，是真的需要反省反省了。最近我一直试SDXL，我真的觉得如果SDXL社区发展方向对，是应该能出**一个质量比肩Mid Journey的真人，2.5D，动漫完全统一的大一统模型**。但如果大家还在追求那一两张美图，把一堆LoRA融进模型，固定画风人脸，那我觉得何止SDXL做不出来，可能脸SDXXXXXL都不够用。所以在SDXL发布之前，一定要把这个问题提出来，忠言是逆耳的，如果提出来这个问题能够让所有模型开发者重视，我觉得就很高兴了。**还是希望SD开源社区能够少点金钱的浮躁，多点沉下心来认认真真做模型，好好把模型给做好测好再发出来**。其实GhostMixV2.0的改进版本也做了7,8个了，因为没一个更好的，所以就一直没发新的版本，流量排名不断往下掉，但是我觉得与其发垃圾的更新版本，还真不如不发。
-
- 也不能光说问题，不给解决方法，所以关于如何解决模型兼容性的问题，我个人的建议是：1.能自己训练，最好自己训练，保持模型的“干净”。2.融合模型的话，融时少融一点LoRA，原ckpt模型都一堆LoRA了，还怎么有很好的LoRA的兼容性？如果担心现在模型中太多LoRA那么就用旧模型，**我GhostMixV2.0全是用旧版本模型做的，很多模型为了更新，越搞越差**……3.多测、多测、还是多测。做完模型之后，还要用不同的，画风各异的Prompts去测，既要简单的Prompts不乱加细节，也要复杂的Prompts正确表达细节。（详细的还是可以看我之前的文章）
-
- 最后，真的感谢大家的支持，特别是整个开源社区的大佬们对我的支持。我的所有python和深度学习知识都是来自开源社区，没有Eric Grimson，吴恩达，李沐老师的免费教学，我也不可能制作出GhostMix。还要特别感谢蘑菇街WeShop的吴海波大佬和Tusi社区的支持和帮助，愿意在没有任何商业要求的情况下，提供给我更好的设备进行SD模型的制作，推动社区的发展，在此表达我最真诚的感谢，非常感谢。（本人以人格担保，本文没有任何利益关联，纯粹就事论事）因为他们的支持，我也能够力所能力的为SD社区做点微小的贡献。我将我原本使用的3060ti无偿送了一位正在用1060制作LoRA的优秀制作者：月月AI，希望他能够为社区做更多更好的作品。后续我也会将GhostMix模型获得的绝大多数收益用于奖励可以为SD社区解决现有模型缺陷的人。也欢迎所有真正希望推动StableDiffusion的社区找我合作，不求报酬，只为开源社区更健康的发展。
-
----
-
- 2023年7月6日更新：昨天刚发，今天SDXL就泄漏了，不就印证了我硬盘空间的问题吗，fp16版sd\\_xl\\_base\\_0.9 5.7GB，这只是主模型应该还没包括6.6B的pipeline...模型还没测，但听说comfyui可用..下载地址：[https://pub-2fdef7a2969f43289c42ac5ae3412fd4.r2.dev/sd\\_xl\\_refiner\\_0.9.safetensors](https://link.zhihu.com/?target=https%3A//pub-2fdef7a2969f43289c42ac5ae3412fd4.r2.dev/sd%5Fxl%5Frefiner%5F0.9.safetensors) ",
-  "dir": null,
-  "excerpt": "（省流版本：笔者认为由于LoRA和controlnet的加入，SDXL的参数量的扩大，SD模型ckpt的发展方向是往兼容性的大模型方向发展才是正确的道路，更好发挥现有8.59亿参数量（未来SDXL：35亿参数）的优势。而现在越来越多…",
-  "lang": null,
-  "length": 6889,
-  "publishedTime": null,
-  "siteName": "知乎专栏",
-  "textContent": "
-                      
-                        （省流版本：笔者认为由于LoRA和controlnet的加入，SDXL的参数量的扩大，SD模型ckpt的发展方向是往兼容性的大模型方向发展才是正确的道路，更好发挥现有8.59亿参数量（未来SDXL：35亿参数）的优势。而现在越来越多随意将LoRA和ckpt融合，越来越固定的画面风格，兼容性越来越差的模型，容易导致劣币驱逐良币，导致ckpt的发展方向偏移。）
-                      
-                      
-                        大家好，我是StableDiffusion模型GhostMix的制作者_GhostInShell_。写这篇文章主要是我觉得现在有些国内StableDiffusion（为书写方便，后面简称为SD）社区的发展方向是错误的，且因为最近很多SD社区都在搞活动，所以很多的“模型创作者”一哄而上，制作垃圾模型来薅羊毛。《经济学原理》第一条：人会对激励做出反应，不可否认，钱是可以激励创作者做出更好的模型，但现实情况是很多人眼里面只有钱，为了钱制作各种垃圾模型。所以我觉得作为知名模型制作者，非常有必要去表达自己的观点，尽可能的纠正现在ckpt的发展方向，为真正推动SD社区发展做出贡献。（叠甲：下文纯属个人观点，每个人都有自己的理解，本文攻击性有点高，如果观点方面有不同意的地方，那你就当我是傻子，右上角叉掉就行了。没必要争论，Let
-                          the Model Speak，谢谢。）
-                      
-                      
-                        首先，我凭什么有资格去讨论其他Checkpoint(为书写方便，后面简称为ckpt)。GhostMix是我做的第一个ckpt，从4月11日第一个版本发布，在非真人模型，不做任何擦边色情内容的前提下，纯靠模型的画面质量和极高的兼容性，仅用了不到3个月的时间，在全球模型网站Civitai上做到了历史全模型最高评价榜（All Time Highest Rated
-                          Rank）的第2名。GhostMixV2.0在一共评分次数400次，平均分为4.99分（满分为5分），虽然评分次数不能跟Deliberate，ReV等“远古大神”级模型相比，但是均分也是跟DreamShaper一样处于最高的一档。因为没有更新模型，作者我现在是基础模型作者榜（Base
-                        Model
-                        Creator）第十五名（最高时第三名），也是唯一一个只发了一个ckpt模型就进入前十名的制作者。综上，我觉得作为Civitai上顶级的ckpt制作者，我完全有资格去告诉所有人什么才是一个好的模型以及ckpt未来正确的发展方向在哪里。
-                      
-                      
-                        
-                        
-                        
-                        Base Model Creator最高第三名
-                      
-                      
-                        
-                        
-                        
-                        2023年7月8日 All Time Highest Rated 第二名
-                      
-                      
-                        在具体说问题之前，我们先要对ckpt和LoRA有基础的了解。（本人为金融专业研究生，所有关于deep
-                        learning的东西都是自学的，虽然参考了很多文章，但是依然非常不专业，如果错误的地方，欢迎提出来。）首先什么是ckpt？一个完整的ckpt包含Text
-                        Encoder, Image Auto
-                        Encoder&Decoder和U-Net三个结构。其中U-Net是SD的主要架构，U-Net结构见下图，U-Net中有12个输入层，1个中间层和12个输出层。根据Github用户ThanatosShinji的测算，U-Net总参数量约为8.59亿（859M）。这里多说一句，由于进行U-Net之前图片需经过AutoEncoder转化成隐空间向量，所以U-Net具体对图片生成的影响本身就是一个黑盒，这也是为什么我不去相信网络上所谓ckpt的每层对图片影响总结的原因。因为连CNN都没能具体知道哪一层是影响什么东西的，何况带attention机制的U-Net？那些所谓的总结，都是基于个人经验的揣测。所以最好的办法依然是自己一层一层去试，然后一个模型一个模型做测试，也就是我之前改进ckpt那篇文章介绍的。
-                      
-                      
-                      
-                        
-                        
-                        
-                        
-                          关于U-Net的详细架构介绍，原引自文章：
-                          https://zhuanlan.zhihu.com/p/582266032
-                        
-                      
-                      
-                        然后什么是LoRA？LoRA是Low-Rank
-                        Adaptation的缩写，Low-Rank是重点，即本质上LoRA是通过训练比原来模型小很多的低秩矩阵来达到学习特定画风和人物的目的。然后在推断（inference）过程中，将LoRA部分的权重与原权重相加，达到生成特定画风和人物的效果，即下图的右侧橙色的部分。LoRA的一大特点在于易于训练，如果训练原模型是训练维度是d*d的W矩阵，那么LoRA则是训练一个（d,
-                        r）的矩阵A和（r,d）的矩阵B。因为r是远小于d的，所以训练LoRA参数量更少，文件的大小（128dim的LoRA147M）也比最小的ckpt（1.99G）小了10多倍。
-                      
-                      
-                        
-                        
-                        
-                        
-                          引自论文《LORA: LOW-RANK ADAPTATION OF LARGE LAN-GUAGE MODELS》
-                        
-                      
-                      
-                        这里其实就引申出一个的问题，LoRA是特定的风格和人物信息的小模型，大小仅为147M。而作为有8.59亿参数，1.99G的ckpt，是不是应该有更多的内容？所以我认为ckpt的价值应该恰恰反应在大模型里面的“大”一字里面，即模型的兼容性。
-                      
-                      
-                        我个人认为模型的兼容性，主要分为两部分：1.Prompts的兼容性2.画风及LoRA兼容性。Prompts兼容性主要说的是指定Prompts的情况下，模型是否能正确遵循Prompts做出相对应的图片。这里我之前模型评价体系的文章中有我自己的测试方式，可以看我上一篇文章。同时也推荐Anything模型系列的作者Yuno779的《模型理论科普》一文介绍的微笑测试。
-                      
-                      
-                      
-                      
-                        然后重点说一下画风和LoRA兼容性。在SD发展早期Novelai时，因为LoRA还没有应用，都是ckpt直出，所以我们需要通过ckpt本身来确定画面的风格。但是随着LoRA的应用，ckpt本身其实已经不需要做这件事。原本ckpt是要一步解决做的对的问题，现在是ckpt+LoRA+controlnet一起完成，ckpt本身的定位也发生了变化。所以我经常强调的观点是：现在ckpt应该是解决做的到的问题，然后LoRA,controlnet等是解决做的对的问题。可能大家不理解什么意思，打个不恰当的比方，比如去画画，ckpt是画板，LoRA是画笔；去摄影，ckpt是相机，LoRA是胶卷，你画画带相机去是做不到的，同理摄影带画板也是不行的。而8.59亿参数带来的价值在于，优秀的ckpt既可以是画板也是相机，配合不同的LoRA就可以生成画或者照片。而且事实证明，这是SD1.5架构下是完全可以做得到的，你看Civitai上历史最高评价前十的非色情模型Deliberate,ReV,DreamShaper,GhostMix都属于这一类的模型。
-                      
-                      
-                        
-                        
-                        
-                        GhostMix画风兼容性，ckpt直出，没有用任何LoRA
-                      
-                      
-                        而现在的ckpt的乱象表现在于，因为ckpt融合很简单，门槛比炼LoRA还低，很多“模型制作者”把ckpt和好看的LoRA瞎融合一下，画风被各种LoRA固定死，画风兼容性为0，CLIP偏移不管，Prompts兼容性差，出1,2张好图就上传模型网站薅羊毛，然后打上什么“首发”，“独家”的标签。这些看上去很美，一测明显过拟合的垃圾，名为ckpt实为LoRA的垃圾模型比比皆是。而且劣币驱逐良币，还有一帮被强行喂答辩的新人们觉得这些垃圾模型才是好模型，是多么的滑稽。不信的话，你们看看除C站之外，国内的模型网站ReV,DreamShaper这些比GhostMix还厉害的模型有多少人在用，排名在哪里了？
-                      
-                      
-                        有人可能觉得，只要出图漂亮就没什么。首先你看看自己硬盘里面有多少个G的模型吧，我这里是随随便便都300G的checkpoint，SDXL之后可能2个T都不够装。然后SDXL
-                        7月份就马上就要发布了，据stability.ai的官方介绍，SDXL 0.9的base model参数量是35亿，ensemble
-                        pipeline的参数量是66亿（3.5B和6.6B），3.5B是什么概念，要知道清华的LLM—ChatGLM也才6B。莫非到3.5B了还要将模型做成固定成风格，各种兼容性泛化性差的垃圾模型吗？所以我觉得这个问题是一定要正视的问题。现在顶尖模型创作者基本都不懂深度学习，连验证数据集和测试数据集的概念都没有，连我这个自学了点深度学习的垃圾都被认为是“专业的大佬”，是真的需要反省反省了。最近我一直试SDXL，我真的觉得如果SDXL社区发展方向对，是应该能出一个质量比肩Mid Journey的真人，2.5D，动漫完全统一的大一统模型。但如果大家还在追求那一两张美图，把一堆LoRA融进模型，固定画风人脸，那我觉得何止SDXL做不出来，可能脸SDXXXXXL都不够用。所以在SDXL发布之前，一定要把这个问题提出来，忠言是逆耳的，如果提出来这个问题能够让所有模型开发者重视，我觉得就很高兴了。还是希望SD开源社区能够少点金钱的浮躁，多点沉下心来认认真真做模型，好好把模型给做好测好再发出来。其实GhostMixV2.0的改进版本也做了7,8个了，因为没一个更好的，所以就一直没发新的版本，流量排名不断往下掉，但是我觉得与其发垃圾的更新版本，还真不如不发。
-                      
-                      
-                        也不能光说问题，不给解决方法，所以关于如何解决模型兼容性的问题，我个人的建议是：1.能自己训练，最好自己训练，保持模型的“干净”。2.融合模型的话，融时少融一点LoRA，原ckpt模型都一堆LoRA了，还怎么有很好的LoRA的兼容性？如果担心现在模型中太多LoRA那么就用旧模型，我GhostMixV2.0全是用旧版本模型做的，很多模型为了更新，越搞越差……3.多测、多测、还是多测。做完模型之后，还要用不同的，画风各异的Prompts去测，既要简单的Prompts不乱加细节，也要复杂的Prompts正确表达细节。（详细的还是可以看我之前的文章）
-                      
-                      
-                        最后，真的感谢大家的支持，特别是整个开源社区的大佬们对我的支持。我的所有python和深度学习知识都是来自开源社区，没有Eric
-                        Grimson，吴恩达，李沐老师的免费教学，我也不可能制作出GhostMix。还要特别感谢蘑菇街WeShop的吴海波大佬
-                        和Tusi社区的支持和帮助，愿意在没有任何商业要求的情况下，提供给我更好的设备进行SD模型的制作，推动社区的发展，在此表达我最真诚的感谢，非常感谢。（本人以人格担保，本文没有任何利益关联，纯粹就事论事）因为他们的支持，我也能够力所能力的为SD社区做点微小的贡献。我将我原本使用的3060ti无偿送了一位正在用1060制作LoRA的优秀制作者：月月AI，希望他能够为社区做更多更好的作品。后续我也会将GhostMix模型获得的绝大多数收益用于奖励可以为SD社区解决现有模型缺陷的人。也欢迎所有真正希望推动StableDiffusion的社区找我合作，不求报酬，只为开源社区更健康的发展。
-                      
-                      
-                      
-                        2023年7月6日更新：昨天刚发，今天SDXL就泄漏了，不就印证了我硬盘空间的问题吗，fp16版sd_xl_base_0.9
-                        5.7GB，这只是主模型应该还没包括6.6B的pipeline...模型还没测，但听说comfyui可用..下载地址：https://pub-2fdef7a2969f43289c42ac5ae3412fd4.r2.dev/sd_xl_refiner_0.9.safetensors
-                      
-                    ",
-  "title": "GhostMix作者：关于StableDiffusion模型的发展方向和现有checkpoint模型乱象的思考",
 }
 `;

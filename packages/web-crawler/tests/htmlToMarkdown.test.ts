@@ -6,8 +6,8 @@ import { htmlToMarkdown } from '../src';
 
 const list = [
   {
-    file: 'zhihu.html',
-    url: 'https://zhuanlan.zhihu.com/p/641434725',
+    file: 'terms.html',
+    url: 'https://lobehub.com/terms',
   },
   { file: 'yingchao.html', url: 'https://www.qiumiwu.com/standings/yingchao' },
 ];
