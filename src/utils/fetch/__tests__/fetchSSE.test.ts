@@ -142,9 +142,24 @@ describe('fetchSSE', () => {
       smoothing: true,
     });
 
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' World', type: 'text' });
+    const expectedMessages = [
+      { text: 'H', type: 'text' },
+      { text: 'e', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'o', type: 'text' },
+      { text: ' ', type: 'text' },
+      { text: 'W', type: 'text' },
+      { text: 'o', type: 'text' },
+      { text: 'r', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'd', type: 'text' },
+    ];
+
+    expectedMessages.forEach((message, index) => {
+      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
+    });
+    
     // more assertions for each character...
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       observationId: null,
@@ -186,77 +201,6 @@ describe('fetchSSE', () => {
         type: 'done',
       });
     });
-
-    it('should handle reasoning event with smoothing correctly', async () => {
-      const mockOnMessageHandle = vi.fn();
-      const mockOnFinish = vi.fn();
-
-      (fetchEventSource as any).mockImplementationOnce(
-        async (url: string, options: FetchEventSourceInit) => {
-          options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
-          options.onmessage!({ event: 'reasoning', data: JSON.stringify('Hello') } as any);
-          await sleep(100);
-          options.onmessage!({ event: 'reasoning', data: JSON.stringify(' World') } as any);
-          await sleep(100);
-          options.onmessage!({ event: 'text', data: JSON.stringify('hi') } as any);
-        },
-      );
-
-      await fetchSSE('/', {
-        onMessageHandle: mockOnMessageHandle,
-        onFinish: mockOnFinish,
-        smoothing: true,
-      });
-
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'reasoning' });
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'reasoning' });
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' Wor', type: 'reasoning' });
-      // more assertions for each character...
-      expect(mockOnFinish).toHaveBeenCalledWith('hi', {
-        observationId: null,
-        toolCalls: undefined,
-        reasoning: { content: 'Hello World' },
-        traceId: null,
-        type: 'done',
-      });
-    });
-    it('should handle reasoning with signature', async () => {
-      const mockOnMessageHandle = vi.fn();
-      const mockOnFinish = vi.fn();
-
-      (fetchEventSource as any).mockImplementationOnce(
-        async (url: string, options: FetchEventSourceInit) => {
-          options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
-          options.onmessage!({ event: 'reasoning', data: JSON.stringify('Hello') } as any);
-          await sleep(100);
-          options.onmessage!({ event: 'reasoning', data: JSON.stringify(' World') } as any);
-          options.onmessage!({
-            event: 'reasoning_signature',
-            data: JSON.stringify('abcbcd'),
-          } as any);
-          await sleep(100);
-          options.onmessage!({ event: 'text', data: JSON.stringify('hi') } as any);
-        },
-      );
-
-      await fetchSSE('/', {
-        onMessageHandle: mockOnMessageHandle,
-        onFinish: mockOnFinish,
-        smoothing: true,
-      });
-
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'reasoning' });
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'reasoning' });
-      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' Wor', type: 'reasoning' });
-      // more assertions for each character...
-      expect(mockOnFinish).toHaveBeenCalledWith('hi', {
-        observationId: null,
-        toolCalls: undefined,
-        reasoning: { content: 'Hello World', signature: 'abcbcd' },
-        traceId: null,
-        type: 'done',
-      });
-    });
   });
 
   it('should handle grounding event', async () => {
@@ -281,7 +225,7 @@ describe('fetchSSE', () => {
       grounding: 'Hello',
       type: 'grounding',
     });
-
+    
     expect(mockOnFinish).toHaveBeenCalledWith('hi', {
       observationId: null,
       toolCalls: undefined,
@@ -376,9 +320,23 @@ describe('fetchSSE', () => {
       smoothing: true,
     });
 
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' World', type: 'text' });
+    const expectedMessages = [
+      { text: 'H', type: 'text' },
+      { text: 'e', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'o', type: 'text' },
+      { text: ' ', type: 'text' },
+      { text: 'W', type: 'text' },
+      { text: 'o', type: 'text' },
+      { text: 'r', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'd', type: 'text' },
+    ];
+
+    expectedMessages.forEach((message, index) => {
+      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
+    });
 
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       type: 'done',

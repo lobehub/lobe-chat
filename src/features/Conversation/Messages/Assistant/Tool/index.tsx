@@ -1,6 +1,7 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import { CSSProperties, memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
+
+import AnimatedCollapsed from '@/components/AnimatedCollapsed';
 
 import Inspectors from './Inspector';
 import Render from './Render';
@@ -36,32 +37,16 @@ const Tool = memo<InspectorProps>(
           showPluginRender={showPluginRender}
           showRender={showRender}
         />
-        <AnimatePresence initial={false}>
-          {showRender && (
-            <motion.div
-              animate="open"
-              exit="collapsed"
-              initial="collapsed"
-              transition={{
-                duration: 0.1,
-                ease: [0.4, 0, 0.2, 1], // 使用 ease-out 缓动函数
-              }}
-              variants={{
-                collapsed: { height: 0, opacity: 0, width: 0 },
-                open: { height: 'auto', opacity: 1, width: 'auto' },
-              }}
-            >
-              <Render
-                messageId={messageId}
-                requestArgs={requestArgs}
-                setShowPluginRender={setShowPluginRender}
-                showPluginRender={showPluginRender}
-                toolCallId={id}
-                toolIndex={index}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <AnimatedCollapsed open={showRender}>
+          <Render
+            messageId={messageId}
+            requestArgs={requestArgs}
+            setShowPluginRender={setShowPluginRender}
+            showPluginRender={showPluginRender}
+            toolCallId={id}
+            toolIndex={index}
+          />
+        </AnimatedCollapsed>
       </Flexbox>
     );
   },
