@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Optimize smooth output."]
+    },
+    "date": "2025-02-28",
+    "version": "1.66.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix fetch assistants plugin error."]
     },
     "date": "2025-02-27",
