@@ -11,7 +11,7 @@ interface ResultListProps {
 
 const ResultList = memo<ResultListProps>(({ dataSources }) => {
   const itemContent = useCallback(
-    (index: number, result: SearchResult) => <Item {...result} highlight={index < 5} />,
+    (index: number, result: SearchResult) => <Item {...result} highlight={index < 15} />,
     [],
   );
 

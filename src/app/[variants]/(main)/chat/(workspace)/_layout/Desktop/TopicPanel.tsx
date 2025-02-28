@@ -49,31 +49,29 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   }, [lg, cacheExpand]);
 
   return (
-    !showPortal && (
-      <DraggablePanel
-        className={styles.drawer}
-        classNames={{
-          content: styles.content,
+    <DraggablePanel
+      className={styles.drawer}
+      classNames={{
+        content: styles.content,
+      }}
+      expand={showTopic && !showPortal}
+      minWidth={CHAT_SIDEBAR_WIDTH}
+      mode={md ? 'fixed' : 'float'}
+      onExpandChange={handleExpand}
+      placement={'right'}
+      showHandlerWideArea={false}
+    >
+      <DraggablePanelContainer
+        style={{
+          flex: 'none',
+          height: '100%',
+          maxHeight: '100vh',
+          minWidth: CHAT_SIDEBAR_WIDTH,
         }}
-        expand={showTopic}
-        minWidth={CHAT_SIDEBAR_WIDTH}
-        mode={md ? 'fixed' : 'float'}
-        onExpandChange={handleExpand}
-        placement={'right'}
-        showHandlerWideArea={false}
       >
-        <DraggablePanelContainer
-          style={{
-            flex: 'none',
-            height: '100%',
-            maxHeight: '100vh',
-            minWidth: CHAT_SIDEBAR_WIDTH,
-          }}
-        >
-          {children}
-        </DraggablePanelContainer>
-      </DraggablePanel>
-    )
+        {children}
+      </DraggablePanelContainer>
+    </DraggablePanel>
   );
 });
 
