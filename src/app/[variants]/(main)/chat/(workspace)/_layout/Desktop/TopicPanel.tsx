@@ -5,7 +5,6 @@ import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 
-import AnimatedCollapsed from '@/components/AnimatedCollapsed';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
@@ -21,7 +20,6 @@ const useStyles = createStyles(({ css, token }) => ({
   drawer: css`
     z-index: 10;
     background: ${token.colorBgLayout};
-    height: 100%;
   `,
   header: css`
     border-block-end: 1px solid ${token.colorBorder};
@@ -51,37 +49,29 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   }, [lg, cacheExpand]);
 
   return (
-    <AnimatedCollapsed
-      height={{
-        collapsed: '100%',
-        open: '100%',
+    <DraggablePanel
+      className={styles.drawer}
+      classNames={{
+        content: styles.content,
       }}
-      open={!showPortal}
+      expand={showTopic && !showPortal}
+      minWidth={CHAT_SIDEBAR_WIDTH}
+      mode={md ? 'fixed' : 'float'}
+      onExpandChange={handleExpand}
+      placement={'right'}
+      showHandlerWideArea={false}
     >
-      <DraggablePanel
-        className={styles.drawer}
-        classNames={{
-          content: styles.content,
+      <DraggablePanelContainer
+        style={{
+          flex: 'none',
+          height: '100%',
+          maxHeight: '100vh',
+          minWidth: CHAT_SIDEBAR_WIDTH,
         }}
-        expand={showTopic}
-        minWidth={CHAT_SIDEBAR_WIDTH}
-        mode={md ? 'fixed' : 'float'}
-        onExpandChange={handleExpand}
-        placement={'right'}
-        showHandlerWideArea={false}
       >
-        <DraggablePanelContainer
-          style={{
-            flex: 'none',
-            height: '100%',
-            maxHeight: '100vh',
-            minWidth: CHAT_SIDEBAR_WIDTH,
-          }}
-        >
-          {children}
-        </DraggablePanelContainer>
-      </DraggablePanel>
-    </AnimatedCollapsed>
+        {children}
+      </DraggablePanelContainer>
+    </DraggablePanel>
   );
 });
 

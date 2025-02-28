@@ -7,7 +7,6 @@ import { rgba } from 'polished';
 import { PropsWithChildren, memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import AnimatedCollapsed from '@/components/AnimatedCollapsed';
 import {
   CHAT_PORTAL_MAX_WIDTH,
   CHAT_PORTAL_TOOL_UI_WIDTH,
@@ -73,44 +72,36 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
   };
 
   return (
-    <AnimatedCollapsed
-      height={{
-        collapsed: '100%',
-        open: '100%',
+    <DraggablePanel
+      className={styles.drawer}
+      classNames={{
+        content: styles.content,
       }}
-      open={showInspector}
+      defaultSize={{ width: tmpWidth }}
+      expand={showInspector}
+      hanlderStyle={{ display: 'none' }}
+      maxWidth={CHAT_PORTAL_MAX_WIDTH}
+      minWidth={
+        showArtifactUI || showToolUI || showThread ? CHAT_PORTAL_TOOL_UI_WIDTH : CHAT_PORTAL_WIDTH
+      }
+      mode={md ? 'fixed' : 'float'}
+      onSizeChange={handleSizeChange}
+      placement={'right'}
+      showHandlerWhenUnexpand={false}
+      showHandlerWideArea={false}
+      size={{ height: '100%', width: portalWidth }}
     >
-      <DraggablePanel
-        className={styles.drawer}
-        classNames={{
-          content: styles.content,
+      <DraggablePanelContainer
+        style={{
+          flex: 'none',
+          height: '100%',
+          maxHeight: '100vh',
+          minWidth: CHAT_PORTAL_WIDTH,
         }}
-        defaultSize={{ width: tmpWidth }}
-        expand
-        hanlderStyle={{ display: 'none' }}
-        maxWidth={CHAT_PORTAL_MAX_WIDTH}
-        minWidth={
-          showArtifactUI || showToolUI || showThread ? CHAT_PORTAL_TOOL_UI_WIDTH : CHAT_PORTAL_WIDTH
-        }
-        mode={md ? 'fixed' : 'float'}
-        onSizeChange={handleSizeChange}
-        placement={'right'}
-        showHandlerWhenUnexpand={false}
-        showHandlerWideArea={false}
-        size={{ height: '100%', width: portalWidth }}
       >
-        <DraggablePanelContainer
-          style={{
-            flex: 'none',
-            height: '100%',
-            maxHeight: '100vh',
-            minWidth: CHAT_PORTAL_WIDTH,
-          }}
-        >
-          <Flexbox className={cx(styles.panel, showThread && styles.thread)}>{children}</Flexbox>
-        </DraggablePanelContainer>
-      </DraggablePanel>
-    </AnimatedCollapsed>
+        <Flexbox className={cx(styles.panel, showThread && styles.thread)}>{children}</Flexbox>
+      </DraggablePanelContainer>
+    </DraggablePanel>
   );
 });
 
