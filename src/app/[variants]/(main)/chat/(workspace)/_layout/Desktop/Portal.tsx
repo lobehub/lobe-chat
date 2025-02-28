@@ -25,8 +25,8 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
   drawer: css`
     z-index: 10;
-    background: ${token.colorBgLayout};
     height: 100%;
+    background: ${token.colorBgLayout};
   `,
   header: css`
     border-block-end: 1px solid ${token.colorBorder};

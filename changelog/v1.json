@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve portal style."]
+    },
+    "date": "2025-02-28",
+    "version": "1.66.5"
+  },
+  {
+    "children": {
       "improvements": ["Optimize smooth output."]
     },
     "date": "2025-02-28",
