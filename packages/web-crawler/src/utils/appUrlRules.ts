@@ -1,4 +1,3 @@
-
 import { CrawlUrlRule } from '../type';
 
 export const applyUrlRules = (

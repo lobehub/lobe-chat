@@ -7,18 +7,16 @@ export interface CrawResult {
   url: string;
 }
 
-interface FilterOptions {
+export interface FilterOptions {
   // 是否启用Readability
   enableReadability?: boolean;
-  // 其他过滤选项
-  keepImages?: boolean;
-  keepTables?: boolean;
-  minContentLength?: number;
+
+  pureText?: boolean;
 }
 
-interface CrawlImplParams<T = Record<string, any>> extends T {
+type CrawlImplParams<T> = T & {
   filterOptions: FilterOptions;
-}
+};
 
 export type CrawlImpl<Params = object> = (
   url: string,

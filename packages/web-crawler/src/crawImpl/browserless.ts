@@ -1,7 +1,7 @@
 import qs from 'query-string';
 
-import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 import { CrawResult, CrawlImpl } from '../type';
+import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 
 const BASE_URL = process.env.BROWSERLESS_URL ?? 'https://chrome.browserless.io';
 const BROWSERLESS_TOKEN = process.env.BROWSERLESS_TOKEN;
@@ -13,7 +13,7 @@ class BrowserlessInitError extends Error {
   }
 }
 
-export const browserless: CrawlImpl = async (url) => {
+export const browserless: CrawlImpl = async (url, { filterOptions }) => {
   if (!process.env.BROWSERLESS_URL && !process.env.BROWSERLESS_TOKEN) {
     throw new BrowserlessInitError();
   }
@@ -36,7 +36,7 @@ export const browserless: CrawlImpl = async (url) => {
     );
     const html = await res.text();
 
-    const result = htmlToMarkdown(html, url);
+    const result = htmlToMarkdown(html, { filterOptions, url });
 
     // 说明被拦截了
     if (result.title && result.title.trim() === 'Just a moment...') {

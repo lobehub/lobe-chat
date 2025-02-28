@@ -1,6 +1,7 @@
 import { CrawlUrlRule } from './type';
 
 export const crawUrlRules: CrawlUrlRule[] = [
+  // github 源码解析
   {
     filterOptions: {
       enableReadability: false,
@@ -17,8 +18,9 @@ export const crawUrlRules: CrawlUrlRule[] = [
   // 体育数据网站规则
   {
     filterOptions: {
-      enableReadability: false, // 对体育数据表格禁用 Readability
-      keepTables: true,
+      // 对体育数据表格禁用 Readability 并且转换为纯文本
+      enableReadability: false,
+      pureText: true,
     },
     urlPattern: 'https://www.qiumiwu.com/standings/(.*)',
   },
