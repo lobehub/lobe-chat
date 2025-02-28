@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 1.66.5](https://github.com/lobehub/lobe-chat/compare/v1.66.4...v1.66.5)
+
+<sup>Released on **2025-02-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve portal style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve portal style, closes [#6588](https://github.com/lobehub/lobe-chat/issues/6588) ([55b5416](https://github.com/lobehub/lobe-chat/commit/55b5416))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.66.4](https://github.com/lobehub/lobe-chat/compare/v1.66.3...v1.66.4)
+
+<sup>Released on **2025-02-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Optimize smooth output.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Optimize smooth output, closes [#5824](https://github.com/lobehub/lobe-chat/issues/5824) ([7a84ad9](https://github.com/lobehub/lobe-chat/commit/7a84ad9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.66.3](https://github.com/lobehub/lobe-chat/compare/v1.66.2...v1.66.3)
+
+<sup>Released on **2025-02-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fetch assistants plugin error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fetch assistants plugin error, closes [#6576](https://github.com/lobehub/lobe-chat/issues/6576) ([9669a02](https://github.com/lobehub/lobe-chat/commit/9669a02))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.66.2](https://github.com/lobehub/lobe-chat/compare/v1.66.1...v1.66.2)
 
 <sup>Released on **2025-02-27**</sup>

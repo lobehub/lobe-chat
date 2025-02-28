@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "improvements": ["Improve portal style."]
+    },
+    "date": "2025-02-28",
+    "version": "1.66.5"
+  },
+  {
+    "children": {
+      "improvements": ["Optimize smooth output."]
+    },
+    "date": "2025-02-28",
+    "version": "1.66.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fetch assistants plugin error."]
+    },
+    "date": "2025-02-27",
+    "version": "1.66.3"
+  },
+  {
+    "children": {
       "fixes": ["Update Claude sonnet 3.7 model ID."]
     },
     "date": "2025-02-27",

@@ -25,6 +25,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
   drawer: css`
     z-index: 10;
+    height: 100%;
     background: ${token.colorBgLayout};
   `,
   header: css`
@@ -71,38 +72,36 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
   };
 
   return (
-    showInspector && (
-      <DraggablePanel
-        className={styles.drawer}
-        classNames={{
-          content: styles.content,
+    <DraggablePanel
+      className={styles.drawer}
+      classNames={{
+        content: styles.content,
+      }}
+      defaultSize={{ width: tmpWidth }}
+      expand={showInspector}
+      hanlderStyle={{ display: 'none' }}
+      maxWidth={CHAT_PORTAL_MAX_WIDTH}
+      minWidth={
+        showArtifactUI || showToolUI || showThread ? CHAT_PORTAL_TOOL_UI_WIDTH : CHAT_PORTAL_WIDTH
+      }
+      mode={md ? 'fixed' : 'float'}
+      onSizeChange={handleSizeChange}
+      placement={'right'}
+      showHandlerWhenUnexpand={false}
+      showHandlerWideArea={false}
+      size={{ height: '100%', width: portalWidth }}
+    >
+      <DraggablePanelContainer
+        style={{
+          flex: 'none',
+          height: '100%',
+          maxHeight: '100vh',
+          minWidth: CHAT_PORTAL_WIDTH,
         }}
-        defaultSize={{ width: tmpWidth }}
-        expand
-        hanlderStyle={{ display: 'none' }}
-        maxWidth={CHAT_PORTAL_MAX_WIDTH}
-        minWidth={
-          showArtifactUI || showToolUI || showThread ? CHAT_PORTAL_TOOL_UI_WIDTH : CHAT_PORTAL_WIDTH
-        }
-        mode={md ? 'fixed' : 'float'}
-        onSizeChange={handleSizeChange}
-        placement={'right'}
-        showHandlerWhenUnexpand={false}
-        showHandlerWideArea={false}
-        size={{ height: '100%', width: portalWidth }}
       >
-        <DraggablePanelContainer
-          style={{
-            flex: 'none',
-            height: '100%',
-            maxHeight: '100vh',
-            minWidth: CHAT_PORTAL_WIDTH,
-          }}
-        >
-          <Flexbox className={cx(styles.panel, showThread && styles.thread)}>{children}</Flexbox>
-        </DraggablePanelContainer>
-      </DraggablePanel>
-    )
+        <Flexbox className={cx(styles.panel, showThread && styles.thread)}>{children}</Flexbox>
+      </DraggablePanelContainer>
+    </DraggablePanel>
   );
 });
 
