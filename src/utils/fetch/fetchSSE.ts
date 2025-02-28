@@ -64,9 +64,9 @@ export interface FetchSSEOptions {
   smoothing?: SmoothingParams | boolean;
 }
 
-const START_ANIMATION_SPEED = 4;
+const START_ANIMATION_SPEED = 10; // 默认起始速度
 
-const END_ANIMATION_SPEED = 15;
+const END_ANIMATION_SPEED = 16;
 
 const createSmoothMessage = (params: {
   onTextUpdate: (delta: string, text: string) => void;
@@ -75,12 +75,14 @@ const createSmoothMessage = (params: {
   const { startSpeed = START_ANIMATION_SPEED } = params;
 
   let buffer = '';
-  // why use queue: https://shareg.pt/GLBrjpK
   let outputQueue: string[] = [];
   let isAnimationActive = false;
   let animationFrameId: number | null = null;
+  let lastFrameTime = 0;
+  let accumulatedTime = 0;
+  let currentSpeed = startSpeed;
+  let lastQueueLength = 0; // 记录上一帧的队列长度
 
-  // when you need to stop the animation, call this function
   const stopAnimation = () => {
     isAnimationActive = false;
     if (animationFrameId !== null) {
@@ -89,48 +91,72 @@ const createSmoothMessage = (params: {
     }
   };
 
-  // define startAnimation function to display the text in buffer smooth
-  // when you need to start the animation, call this function
-  const startAnimation = (speed = startSpeed) =>
-    new Promise<void>((resolve) => {
+  const startAnimation = (speed = startSpeed) => {
+    return new Promise<void>((resolve) => {
       if (isAnimationActive) {
         resolve();
         return;
       }
 
       isAnimationActive = true;
+      lastFrameTime = performance.now();
+      accumulatedTime = 0;
+      currentSpeed = speed;
+      lastQueueLength = 0; // 重置上一帧队列长度
 
-      const updateText = () => {
-        // 如果动画已经不再激活，则停止更新文本
+      const updateText = (timestamp: number) => {
         if (!isAnimationActive) {
-          cancelAnimationFrame(animationFrameId!);
-          animationFrameId = null;
+          if (animationFrameId !== null) {
+            cancelAnimationFrame(animationFrameId);
+          }
           resolve();
           return;
         }
 
-        // 如果还有文本没有显示
-        // 检查队列中是否有字符待显示
-        if (outputQueue.length > 0) {
-          // 从队列中获取前 n 个字符（如果存在）
-          const charsToAdd = outputQueue.splice(0, speed).join('');
-          buffer += charsToAdd;
+        const frameDuration = timestamp - lastFrameTime;
+        lastFrameTime = timestamp;
+        accumulatedTime += frameDuration;
 
-          // 更新消息内容，这里可能需要结合实际情况调整
+        let charsToProcess = 0;
+        if (outputQueue.length > 0) {
+          // 更平滑的速度调整
+          const targetSpeed = Math.max(speed, outputQueue.length);
+          // 根据队列长度变化调整速度变化率
+          const speedChangeRate = Math.abs(outputQueue.length - lastQueueLength) * 0.0008 + 0.005;
+          currentSpeed += (targetSpeed - currentSpeed) * speedChangeRate;
+
+          charsToProcess = Math.floor((accumulatedTime * currentSpeed) / 1000);
+        }
+
+        if (charsToProcess > 0) {
+          accumulatedTime -= (charsToProcess * 1000) / currentSpeed;
+
+          let actualChars = Math.min(charsToProcess, outputQueue.length);
+          // actualChars = Math.min(speed, actualChars); // 速度上限
+
+          // if (actualChars * 2 < outputQueue.length && /[\dA-Za-z]/.test(outputQueue[actualChars])) {
+          //   actualChars *= 2;
+          // }
+
+          const charsToAdd = outputQueue.splice(0, actualChars).join('');
+          buffer += charsToAdd;
           params.onTextUpdate(charsToAdd, buffer);
+        }
+
+        lastQueueLength = outputQueue.length; // 更新上一帧的队列长度
+
+        if (outputQueue.length > 0 && isAnimationActive) {
+          animationFrameId = requestAnimationFrame(updateText);
         } else {
-          // 当所有字符都显示完毕时，清除动画状态
           isAnimationActive = false;
           animationFrameId = null;
           resolve();
-          return;
         }
-
-        animationFrameId = requestAnimationFrame(updateText);
       };
 
       animationFrameId = requestAnimationFrame(updateText);
     });
+  };
 
   const pushToQueue = (text: string) => {
     outputQueue.push(...text.split(''));
@@ -435,7 +461,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
 
       if (textController.isTokenRemain()) {
-        await textController.startAnimation(END_ANIMATION_SPEED);
+        await textController.startAnimation(smoothingSpeed);
       }
 
       if (toolCallsController.isTokenRemain()) {
