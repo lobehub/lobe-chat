@@ -1,5 +1,5 @@
-import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 import { CrawlImpl } from '../type';
+import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 
 const mixinHeaders = {
   // 接受的内容类型
@@ -30,12 +30,12 @@ const mixinHeaders = {
   'sec-fetch-user': '?1',
 };
 
-export const naive: CrawlImpl = async (url) => {
+export const naive: CrawlImpl = async (url, { filterOptions }) => {
   try {
     const res = await fetch(url, { headers: mixinHeaders });
     const html = await res.text();
 
-    const result = htmlToMarkdown(html, url);
+    const result = htmlToMarkdown(html, { filterOptions, url });
 
     // if the content is not empty or blocked
     // just return

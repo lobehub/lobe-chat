@@ -9,8 +9,8 @@ describe('applyUrlRules', () => {
           filterOptions: {
             enableReadability: false,
           },
-          urlPattern: 'https://github.com/**/blob/**',
-          urlTransform: 'https://github.com/$1/raw/refs/heads/$2',
+          urlPattern: 'https://github.com/([^/]+)/([^/]+)/blob/([^/]+)/(.*)',
+          urlTransform: 'https://github.com/$1/$2/raw/refs/heads/$3/$4',
         },
       ],
     );

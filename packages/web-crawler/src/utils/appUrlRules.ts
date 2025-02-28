@@ -1,4 +1,3 @@
-import { isMatch } from 'micromatch';
 
 import { CrawlUrlRule } from '../type';
 
@@ -10,68 +9,33 @@ export const applyUrlRules = (
   transformedUrl: string;
 } => {
   for (const rule of urlRules) {
-    // 检查URL是否匹配规则
-    let isMatched = false;
-    let capturedGroups: string[] = [];
+    // 转换为正则表达式
+    const regex = new RegExp(rule.urlPattern);
+    const match = url.match(regex);
 
-    if (rule.isRegex) {
-      // 使用正则表达式匹配
-      const regex = new RegExp(rule.urlPattern);
-      const match = url.match(regex);
-      if (match) {
-        isMatched = true;
-        capturedGroups = match.slice(1); // 获取捕获组
-      }
-    } else {
-      // 使用glob模式匹配
-      isMatched = isMatch(url, rule.urlPattern);
-
-      // 对于glob模式，我们需要手动提取"通配符"部分
-      if (isMatched && rule.urlTransform) {
-        // 将glob模式转换为正则表达式来提取捕获组
-        const globToRegex = (pattern: string) => {
-          return new RegExp(
-            '^' +
-              pattern
-                .replaceAll('**', '(.*)') // ** 匹配任意字符
-                .replaceAll('*', '([^/]*)') // * 匹配非斜杠字符
-                .replaceAll('/', '\\/') +
-              '$',
-          );
-        };
-
-        const regex = globToRegex(rule.urlPattern);
-        const match = url.match(regex);
-        if (match) {
-          capturedGroups = match.slice(1);
-        }
-      }
-    }
-
-    if (isMatched) {
-      // 如果有URL转换规则，应用转换
+    if (match) {
       if (rule.urlTransform) {
-        let transformedUrl = rule.urlTransform;
-
-        // 替换占位符 $1, $2 等为捕获组的值
-        capturedGroups.forEach((group, index) => {
-          transformedUrl = transformedUrl.replace(`$${index + 1}`, group);
-        });
+        // 如果有转换规则，进行 URL 转换
+        // 替换 $1, $2 等占位符为捕获组内容
+        const transformedUrl = rule.urlTransform.replaceAll(
+          /\$(\d+)/g,
+          (_, index) => match[parseInt(index)] || '',
+        );
 
         return {
           filterOptions: rule.filterOptions,
           transformedUrl,
         };
+      } else {
+        // 没有转换规则但匹配了模式，只返回过滤选项
+        return {
+          filterOptions: rule.filterOptions,
+          transformedUrl: url,
+        };
       }
-
-      // 如果只有过滤选项而没有URL转换
-      return {
-        filterOptions: rule.filterOptions,
-        transformedUrl: url,
-      };
     }
   }
 
-  // 如果没有匹配的规则，返回原始URL
+  // 没有匹配任何规则，返回原始 URL
   return { transformedUrl: url };
 };
