@@ -1,4 +1,4 @@
-import { crawl } from '@lobechat/web-crawler';
+import { Crawler } from '@lobechat/web-crawler';
 import { TRPCError } from '@trpc/server';
 import pMap from 'p-map';
 import { z } from 'zod';
@@ -15,14 +15,17 @@ export const searchRouter = router({
   crawlPages: searchProcedure
     .input(
       z.object({
+        impls: z.string().array().optional(),
         urls: z.string().array(),
       }),
     )
     .mutation(async ({ input }) => {
+      const crawler = new Crawler();
+
       return pMap(
         input.urls,
         async (url) => {
-          return await crawl({ url });
+          return await crawler.crawl({ impls: input.impls, url });
         },
         { concurrency: 10 },
       );

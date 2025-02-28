@@ -1,6 +1,7 @@
 import qs from 'query-string';
 
-import { htmlToMarkdown } from './htmlToMarkdown';
+import { htmlToMarkdown } from '../htmlToMarkdown';
+import { CrawResult, CrawlImpl } from '../type';
 
 const BASE_URL = process.env.BROWSERLESS_URL ?? 'https://chrome.browserless.io';
 const BROWSERLESS_TOKEN = process.env.BROWSERLESS_TOKEN;
@@ -12,7 +13,7 @@ class BrowserlessInitError extends Error {
   }
 }
 
-export const fetchByBrowserless = async ({ url }: { url: string }) => {
+export const browserless: CrawlImpl = async (url) => {
   if (!process.env.BROWSERLESS_URL && !process.env.BROWSERLESS_TOKEN) {
     throw new BrowserlessInitError();
   }
@@ -37,8 +38,6 @@ export const fetchByBrowserless = async ({ url }: { url: string }) => {
 
     const result = htmlToMarkdown(html, url);
 
-    console.log(result.title);
-
     // 说明被拦截了
     if (result.title && result.title.trim() === 'Just a moment...') {
       return {
@@ -48,7 +47,14 @@ export const fetchByBrowserless = async ({ url }: { url: string }) => {
       };
     }
 
-    return { content: result.content, title: result?.title, url, website: result?.siteName };
+    return {
+      content: result.content,
+      description: result?.excerpt,
+      length: result.length,
+      siteName: result?.siteName,
+      title: result?.title,
+      url,
+    } satisfies CrawResult;
   } catch (error) {
     console.error(error);
     return { content: '抓取失败', errorMessage: (error as any).message, url };

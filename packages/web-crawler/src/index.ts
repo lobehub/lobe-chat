@@ -1,3 +1,2 @@
-export { crawl } from './crawl';
-export { fetchByBrowserless } from './fetchByBrowserless';
+export { Crawler } from './crawler';
 export { htmlToMarkdown } from './htmlToMarkdown';

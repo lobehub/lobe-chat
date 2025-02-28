@@ -1,5 +1,5 @@
-import { fetchByBrowserless } from './fetchByBrowserless';
-import { htmlToMarkdown } from './htmlToMarkdown';
+import { htmlToMarkdown } from '../htmlToMarkdown';
+import { CrawlImpl } from '../type';
 
 const mixinHeaders = {
   // 接受的内容类型
@@ -30,7 +30,7 @@ const mixinHeaders = {
   'sec-fetch-user': '?1',
 };
 
-export const crawl = async ({ url }: { url: string }) => {
+export const naive: CrawlImpl = async (url) => {
   try {
     const res = await fetch(url, { headers: mixinHeaders });
     const html = await res.text();
@@ -39,17 +39,19 @@ export const crawl = async ({ url }: { url: string }) => {
 
     // if the content is not empty or blocked
     // just return
-    if (!!result.content && result.title !== 'Just a moment...')
-      return { content: result.content, title: result?.title, url, website: result?.siteName };
+    if (!!result.content && result.title !== 'Just a moment...') {
+      return {
+        content: result.content,
+        description: result?.excerpt,
+        length: result.length,
+        siteName: result?.siteName,
+        title: result?.title,
+        url,
+      };
+    }
   } catch (error) {
     console.error(error);
   }
 
-  // if the content is empty, use browserless to fetch
-  try {
-    return fetchByBrowserless({ url });
-  } catch (e) {
-    console.error(e);
-    return { content: 'fail to crawl page content', errorMessage: (e as Error).message, url };
-  }
+  return;
 };
