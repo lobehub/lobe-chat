@@ -7,6 +7,7 @@ import { rgba } from 'polished';
 import { PropsWithChildren, memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import AnimatedCollapsed from '@/components/AnimatedCollapsed';
 import {
   CHAT_PORTAL_MAX_WIDTH,
   CHAT_PORTAL_TOOL_UI_WIDTH,
@@ -26,6 +27,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   drawer: css`
     z-index: 10;
     background: ${token.colorBgLayout};
+    height: 100%;
   `,
   header: css`
     border-block-end: 1px solid ${token.colorBorder};
@@ -71,7 +73,13 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
   };
 
   return (
-    showInspector && (
+    <AnimatedCollapsed
+      height={{
+        collapsed: '100%',
+        open: '100%',
+      }}
+      open={showInspector}
+    >
       <DraggablePanel
         className={styles.drawer}
         classNames={{
@@ -96,13 +104,14 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
             flex: 'none',
             height: '100%',
             maxHeight: '100vh',
+            maxWidth: `min(calc(100vw - 365px - 64px), ${CHAT_PORTAL_MAX_WIDTH}px)`,
             minWidth: CHAT_PORTAL_WIDTH,
           }}
         >
           <Flexbox className={cx(styles.panel, showThread && styles.thread)}>{children}</Flexbox>
         </DraggablePanelContainer>
       </DraggablePanel>
-    )
+    </AnimatedCollapsed>
   );
 });
 

@@ -29,16 +29,17 @@ const Inspector = memo<InspectorUIProps<SearchArguments, SearchResponse>>(
     const defaultEngines = engines.length > 0 ? engines : args.searchEngine || [];
     const loading = useChatStore(chatToolSelectors.isSearXNGSearching(messageId));
 
-    return (
-      <Flexbox gap={12} height={'100%'}>
-        <SearchBar
-          aiSummary={false}
-          defaultEngines={defaultEngines}
-          defaultQuery={args.query}
-          messageId={messageId}
-          tooltip={false}
-        />
-        {loading ? (
+    if (loading) {
+      return (
+        <Flexbox gap={12} height={'100%'}>
+          <SearchBar
+            aiSummary={false}
+            defaultEngines={defaultEngines}
+            defaultQuery={args.query}
+            messageId={messageId}
+            tooltip={false}
+          />
+
           <Flexbox gap={16} paddingBlock={16} paddingInline={12}>
             {[1, 2, 3, 4, 6].map((id) => (
               <Skeleton
@@ -49,14 +50,25 @@ const Inspector = memo<InspectorUIProps<SearchArguments, SearchResponse>>(
               />
             ))}
           </Flexbox>
-        ) : (
-          <>
-            <Flexbox height={'100%'} width={'100%'}>
-              <ResultList dataSources={state.results} />
-            </Flexbox>
-            <Footer />
-          </>
-        )}
+        </Flexbox>
+      );
+    }
+
+    return (
+      <Flexbox gap={0} height={'100%'}>
+        <Flexbox gap={12} height={'100%'}>
+          <SearchBar
+            aiSummary={false}
+            defaultEngines={defaultEngines}
+            defaultQuery={args.query}
+            messageId={messageId}
+            tooltip={false}
+          />
+          <Flexbox height={'100%'} width={'100%'}>
+            <ResultList dataSources={state.results} />
+          </Flexbox>
+        </Flexbox>
+        <Footer />
       </Flexbox>
     );
   },
