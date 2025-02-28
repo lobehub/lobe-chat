@@ -9,7 +9,7 @@ export const htmlToMarkdown = (html: string, url: string) => {
   document.body.innerHTML = html;
 
   // @ts-expect-error reason: Readability expects a Document type
-  const article = new Readability(document, { debug: true }).parse();
+  const article = new Readability(document).parse();
   const content = NodeHtmlMarkdown.translate(article?.content || '', {});
 
   return { ...article, content };

@@ -6,11 +6,11 @@ class SearchService {
   }
 
   crawlPage(url: string) {
-    return toolsClient.search.crawlPage.query({ url });
+    return toolsClient.search.crawlPages.mutate({ urls: [url] });
   }
 
   crawlPages(urls: string[]) {
-    return toolsClient.search.crawlPages.query({ urls });
+    return toolsClient.search.crawlPages.mutate({ urls });
   }
 }
 
