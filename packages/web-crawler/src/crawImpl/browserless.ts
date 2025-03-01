@@ -38,25 +38,25 @@ export const browserless: CrawlImpl = async (url, { filterOptions }) => {
 
     const result = htmlToMarkdown(html, { filterOptions, url });
 
-    // 说明被拦截了
-    if (result.title && result.title.trim() === 'Just a moment...') {
+    if (
+      !!result.content &&
+      result.title &&
+      // Just a moment... 说明被 CF 拦截了
+      result.title.trim() !== 'Just a moment...'
+    ) {
       return {
-        content: 'fail to craw content due to be blocked',
-        errorMessage: result.content,
+        content: result.content,
+        contentType: 'text',
+        description: result?.excerpt,
+        length: result.length,
+        siteName: result?.siteName,
+        title: result?.title,
         url,
-      };
+      } satisfies CrawlSuccessResult;
     }
-
-    return {
-      content: result.content,
-      description: result?.excerpt,
-      length: result.length,
-      siteName: result?.siteName,
-      title: result?.title,
-      url,
-    } satisfies CrawlSuccessResult;
   } catch (error) {
     console.error(error);
-    return { content: '抓取失败', errorMessage: (error as any).message, url };
   }
+
+  return;
 };

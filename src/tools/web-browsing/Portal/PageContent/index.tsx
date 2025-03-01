@@ -1,9 +1,9 @@
 import { Alert, CopyButton, Icon, Markdown } from '@lobehub/ui';
-import { Descriptions, Divider, Typography } from 'antd';
+import { Descriptions, Segmented, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { CrawlResult } from '@/types/tool/crawler';
@@ -31,7 +31,7 @@ const useStyles = createStyles(({ token, css }) => {
     `,
     description: css`
       margin-block: 0 4px !important;
-      color: ${token.colorTextTertiary};
+      color: ${token.colorTextSecondary};
     `,
     detailsSection: css`
       padding-block: ${token.paddingSM}px;
@@ -41,7 +41,7 @@ const useStyles = createStyles(({ token, css }) => {
     `,
     footer: css`
       padding: ${token.paddingXS}px;
-      border-radius: 4px;
+      border-radius: 6px;
       text-align: center;
       background-color: ${token.colorFillQuaternary};
     `,
@@ -53,6 +53,9 @@ const useStyles = createStyles(({ token, css }) => {
       display: flex;
       align-items: center;
       color: ${token.colorTextSecondary};
+    `,
+    sliced: css`
+      color: ${token.colorTextQuaternary};
     `,
     title: css`
       overflow: hidden;
@@ -68,6 +71,7 @@ const useStyles = createStyles(({ token, css }) => {
     titleRow: css`
       color: ${token.colorText};
     `,
+
     url: css`
       color: ${token.colorTextTertiary};
     `,
@@ -79,20 +83,23 @@ interface PageContentProps {
   result?: CrawlResult;
 }
 
+const SLICED_LIMITED = 5000;
+
 const PageContent = memo<PageContentProps>(({ result }) => {
   const { styles } = useStyles();
-  console.log(result);
+  const [display, setDisplay] = useState('render');
 
   if (!result) return undefined;
 
   const { url, title, description, content } = result.data;
   return (
-    <div>
+    <Flexbox gap={24}>
       <Flexbox gap={8}>
         <Link href={url} onClick={(e) => e.stopPropagation()} target={'_blank'}>
           <Flexbox
             align={'center'}
             className={styles.titleRow}
+            gap={24}
             horizontal
             justify={'space-between'}
           >
@@ -104,11 +111,6 @@ const PageContent = memo<PageContentProps>(({ result }) => {
             </Center>
           </Flexbox>
         </Link>
-        <Flexbox align={'center'} className={styles.url} gap={4} horizontal>
-          {result.originalUrl}
-          <CopyButton content={result.originalUrl} size={'small'} />
-        </Flexbox>
-
         {description && (
           <Typography.Paragraph
             className={styles.description}
@@ -117,6 +119,11 @@ const PageContent = memo<PageContentProps>(({ result }) => {
             {description}
           </Typography.Paragraph>
         )}
+        <Flexbox align={'center'} className={styles.url} gap={4} horizontal>
+          {result.data.siteName && <div>{result.data.siteName} · </div>}
+          {result.originalUrl}
+          <CopyButton content={result.originalUrl} size={'small'} />
+        </Flexbox>
 
         <div className={styles.footer}>
           <Descriptions
@@ -138,29 +145,49 @@ const PageContent = memo<PageContentProps>(({ result }) => {
           />
         </div>
       </Flexbox>
-      <Divider style={{ margin: '12px 0' }} />
-
       {content && (
-        <>
-          {content.length > 5000 && (
+        <Flexbox gap={12} paddingBlock={'0 12px'}>
+          <Flexbox horizontal justify={'space-between'}>
+            <Segmented
+              onChange={(value) => setDisplay(value)}
+              options={[
+                { label: '预览', value: 'render' },
+                { label: '原始文本', value: 'raw' },
+              ]}
+              value={display}
+            />
+            <CopyButton content={content} />
+          </Flexbox>
+          {display === 'render' ? (
+            <Markdown
+              // components={{
+              //   h1: () => null,
+              // }}
+              variant={'chat'}
+            >
+              {content}
+            </Markdown>
+          ) : (
+            <div style={{ paddingBlock: 12 }}>
+              {content.length < SLICED_LIMITED ? (
+                content
+              ) : (
+                <>
+                  <span>{content.slice(0, SLICED_LIMITED)}</span>
+                  <span className={styles.sliced}>{content.slice(SLICED_LIMITED, -1)}</span>
+                </>
+              )}
+            </div>
+          )}
+          {content.length > SLICED_LIMITED && (
             <Alert
-              message={
-                '文本内容过长，对话上下文将仅保留 5000 字符，超过部分不计入会话上下文，可在此查看'
-              }
+              message={'文本内容过长，对话上下文仅保留前 5000 字符，超过部分不计入会话上下文'}
               variant={'pure'}
             />
           )}
-          <Markdown
-            // components={{
-            //   h1: () => null,
-            // }}
-            variant={'chat'}
-          >
-            {content}
-          </Markdown>
-        </>
+        </Flexbox>
       )}
-    </div>
+    </Flexbox>
   );
 });
 

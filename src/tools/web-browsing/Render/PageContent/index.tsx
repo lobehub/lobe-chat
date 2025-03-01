@@ -3,6 +3,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { CrawlPluginState } from '@/types/tool/crawler';
 
+import Loading from './Loading';
 import Result from './Result';
 
 interface PagesContentProps {
@@ -11,9 +12,15 @@ interface PagesContentProps {
   urls: string[];
 }
 
-const PagesContent = memo<PagesContentProps>(({ results, messageId }) => {
+const PagesContent = memo<PagesContentProps>(({ results, messageId, urls }) => {
   if (!results || results.length === 0) {
-    return <div>loading...</div>;
+    return (
+      <Flexbox gap={12} horizontal>
+        {urls.map((url) => (
+          <Loading key={url} url={url} />
+        ))}
+      </Flexbox>
+    );
   }
 
   return (

@@ -18,6 +18,7 @@ export const jina: CrawlImpl<{ apiKey?: string }> = async (url, params) => {
         const result = json.data;
         return {
           content: result.content,
+          contentType: 'text',
           description: result?.description,
           length: result.content.length,
           siteName: result?.siteName,

@@ -12,7 +12,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 
-const { Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 const useStyles = createStyles(({ token, css }) => {
   return {
@@ -108,18 +108,10 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
             </Center>
           </Link>
         </Flexbox>
-        {result.siteName && (
-          <div className={styles.metaInfo}>
-            <Text style={{ fontSize: '12px' }} type="secondary">
-              {result.siteName}
-            </Text>
-          </div>
-        )}
         <Paragraph className={styles.description} ellipsis={{ expandable: false, rows: 2 }}>
           {description || result.content?.slice(0, 40)}
         </Paragraph>
       </Flexbox>
-
       <div className={styles.footer}>
         <Descriptions
           classNames={{
