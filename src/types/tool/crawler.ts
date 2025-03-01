@@ -7,12 +7,12 @@ export interface CrawlMultiPagesQuery {
   urls: string[];
 }
 
-interface CrawlResult {
+export interface CrawlResult {
   crawler: string;
   data: CrawlSuccessResult;
   originalUrl: string;
 }
 
-export interface CrawlResponse {
+export interface CrawlPluginState {
   results: CrawlResult[];
 }

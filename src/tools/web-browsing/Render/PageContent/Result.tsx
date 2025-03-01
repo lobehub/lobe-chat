@@ -9,22 +9,34 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { useChatStore } from '@/store/chat';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
+
 const { Text, Paragraph } = Typography;
 
 const useStyles = createStyles(({ token, css }) => {
   return {
     cardBody: css`
-      padding: ${token.padding}px;
-      padding-block-end: 0;
+      padding-block: 12px 8px;
+padding-inline: 16px;
     `,
     container: css`
+      cursor: pointer;
+
+      overflow: hidden;
+
       max-width: 360px;
       border: 1px solid ${token.colorBorderSecondary};
       border-radius: 12px;
+
+      transition: border-color 0.2s;
+
+      :hover {
+        border-color: ${token.colorPrimary};
+      }
     `,
     description: css`
-      margin-block: 0;
-      margin-block-start: ${token.marginSM}px;
+      margin-block: 0 4px !important;
       color: ${token.colorTextTertiary};
     `,
     detailsSection: css`
@@ -48,6 +60,11 @@ const useStyles = createStyles(({ token, css }) => {
       color: ${token.colorTextSecondary};
     `,
     title: css`
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+
       margin-block-end: 0;
     `,
     titleRow: css`
@@ -58,35 +75,35 @@ const useStyles = createStyles(({ token, css }) => {
 
 interface CrawlerData {
   crawler: string;
+  messageId: string;
   originalUrl: string;
   result: CrawlSuccessResult;
 }
 
-const CrawlerResultCard = memo<CrawlerData>(({ result, crawler, originalUrl }) => {
+const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, originalUrl }) => {
   const { styles } = useStyles();
+  const [openToolUI] = useChatStore((s) => [s.openToolUI]);
 
   const { url, title, description } = result;
 
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      onClick={() => {
+        openToolUI(messageId, WebBrowsingManifest.identifier);
+      }}
+    >
       <Flexbox className={styles.cardBody} gap={8}>
-        <Link href={url} target={'_blank'}>
-          <Flexbox
-            align={'center'}
-            className={styles.titleRow}
-            horizontal
-            justify={'space-between'}
-          >
-            <Flexbox>
-              <Text className={styles.title} ellipsis={{ tooltip: title }}>
-                {title || originalUrl}
-              </Text>
-            </Flexbox>
+        <Flexbox align={'center'} className={styles.titleRow} horizontal justify={'space-between'}>
+          <Flexbox>
+            <div className={styles.title}>{title || originalUrl}</div>
+          </Flexbox>
+          <Link href={url} onClick={(e) => e.stopPropagation()} target={'_blank'}>
             <Center>
               <Icon icon={ExternalLink} />
             </Center>
-          </Flexbox>
-        </Link>
+          </Link>
+        </Flexbox>
         {result.siteName && (
           <div className={styles.metaInfo}>
             <Text style={{ fontSize: '12px' }} type="secondary">

@@ -13,8 +13,16 @@ import {
 import { nanoid } from '@/utils/uuid';
 
 export interface SearchAction {
-  crawlMultiPages: (id: string, params: { urls: string[] }) => Promise<void>;
-  crawlSinglePage: (id: string, params: { url: string }) => Promise<void>;
+  crawlMultiPages: (
+    id: string,
+    params: { urls: string[] },
+    aiSummary?: boolean,
+  ) => Promise<boolean | undefined>;
+  crawlSinglePage: (
+    id: string,
+    params: { url: string },
+    aiSummary?: boolean,
+  ) => Promise<boolean | undefined>;
   /**
    * 重新发起搜索
    * @description 会更新插件的 arguments 参数，然后再次搜索
@@ -30,6 +38,7 @@ export interface SearchAction {
     data: SearchQuery,
     aiSummary?: boolean,
   ) => Promise<void | boolean>;
+  togglePageContent: (id: string, url: string) => void;
   toggleSearchLoading: (id: string, loading: boolean) => void;
 }
 
@@ -39,7 +48,7 @@ export const searchSlice: StateCreator<
   [],
   SearchAction
 > = (set, get) => ({
-  crawlMultiPages: async (id, params) => {
+  crawlMultiPages: async (id, params, aiSummary = true) => {
     const { internal_updateMessageContent } = get();
     get().toggleSearchLoading(id, true);
     const response = await searchService.crawlPages(params.urls);
@@ -62,12 +71,15 @@ export const searchSlice: StateCreator<
     );
 
     await internal_updateMessageContent(id, JSON.stringify(content));
+
+    // if aiSummary is true, then trigger ai message
+    return aiSummary;
   },
 
-  crawlSinglePage: async (id, params) => {
+  crawlSinglePage: async (id, params, aiSummary) => {
     const { crawlMultiPages } = get();
 
-    return await crawlMultiPages(id, { urls: [params.url] });
+    return await crawlMultiPages(id, { urls: [params.url] }, aiSummary);
   },
 
   reSearchWithSearXNG: async (id, data, options) => {
@@ -76,6 +88,7 @@ export const searchSlice: StateCreator<
 
     await get().searchWithSearXNG(id, data, options?.aiSummary);
   },
+
   saveSearXNGSearchResult: async (id) => {
     const message = chatSelectors.getMessageById(id)(get());
     if (!message || !message.plugin) return;
@@ -115,7 +128,6 @@ export const searchSlice: StateCreator<
     // 将新创建的 tool message 激活
     openToolUI(newMessageId, message.plugin.identifier);
   },
-
   searchWithSearXNG: async (id, params, aiSummary = true) => {
     get().toggleSearchLoading(id, true);
     let data: SearchResponse | undefined;
@@ -165,6 +177,10 @@ export const searchSlice: StateCreator<
 
     // 如果 aiSummary 为 true，则会自动触发总结
     return aiSummary;
+  },
+
+  togglePageContent: (id, url) => {
+    console.log(id, url);
   },
 
   toggleSearchLoading: (id, loading) => {

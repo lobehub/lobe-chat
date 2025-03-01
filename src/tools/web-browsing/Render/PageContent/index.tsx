@@ -1,29 +1,29 @@
 import { memo } from 'react';
 
-import { CrawlResponse } from '@/types/tool/crawler';
+import { CrawlPluginState } from '@/types/tool/crawler';
 
 import Result from './Result';
 
 interface PagesContentProps {
-  results: CrawlResponse['results'];
+  messageId: string;
+  results?: CrawlPluginState['results'];
   urls: string[];
 }
 
-const PagesContent = memo<PagesContentProps>(({ results }) => {
+const PagesContent = memo<PagesContentProps>(({ results, messageId }) => {
   if (!results || results.length === 0) {
-    return <div>无数据可显示</div>;
+    return <div>loading...</div>;
   }
 
-  return results.map((result) => {
-    return (
-      <Result
-        crawler={result.crawler}
-        key={result.originalUrl}
-        originalUrl={result.originalUrl}
-        result={result.data}
-      />
-    );
-  });
+  return results.map((result) => (
+    <Result
+      crawler={result.crawler}
+      key={result.originalUrl}
+      messageId={messageId}
+      originalUrl={result.originalUrl}
+      result={result.data}
+    />
+  ));
 });
 
 export default PagesContent;

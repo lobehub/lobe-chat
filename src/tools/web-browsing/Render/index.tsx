@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { WebBrowsingApiName } from '@/tools/web-browsing';
 import PageContent from '@/tools/web-browsing/Render/PageContent';
 import { BuiltinRenderProps } from '@/types/tool';
-import { CrawlMultiPagesQuery, CrawlResponse, CrawlSinglePageQuery } from '@/types/tool/crawler';
+import { CrawlMultiPagesQuery, CrawlPluginState, CrawlSinglePageQuery } from '@/types/tool/crawler';
 import { SearchContent, SearchQuery, SearchResponse } from '@/types/tool/search';
 
 import Search from './Search';
@@ -25,7 +25,8 @@ const WebBrowsing = memo<BuiltinRenderProps<SearchContent[]>>(
       case WebBrowsingApiName.crawlSinglePage: {
         return (
           <PageContent
-            results={(pluginState as CrawlResponse).results}
+            messageId={messageId}
+            results={(pluginState as CrawlPluginState)?.results}
             urls={[(args as CrawlSinglePageQuery).url]}
           />
         );
@@ -34,7 +35,8 @@ const WebBrowsing = memo<BuiltinRenderProps<SearchContent[]>>(
       case WebBrowsingApiName.crawlMultiPages: {
         return (
           <PageContent
-            results={(pluginState as CrawlResponse).results}
+            messageId={messageId}
+            results={(pluginState as CrawlPluginState)?.results}
             urls={(args as CrawlMultiPagesQuery).urls}
           />
         );
