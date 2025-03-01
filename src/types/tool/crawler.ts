@@ -3,6 +3,7 @@ import { CrawlSuccessResult } from '@lobechat/web-crawler';
 export interface CrawlSinglePageQuery {
   url: string;
 }
+
 export interface CrawlMultiPagesQuery {
   urls: string[];
 }

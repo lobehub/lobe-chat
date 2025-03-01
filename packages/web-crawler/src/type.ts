@@ -1,5 +1,6 @@
 export interface CrawlSuccessResult {
   content?: string;
+  contentType: 'text' | 'json';
   description?: string;
   length?: number;
   siteName?: string;
@@ -27,7 +28,7 @@ type CrawlImplParams<T> = T & {
 export type CrawlImpl<Params = object> = (
   url: string,
   params: CrawlImplParams<Params>,
-) => Promise<CrawlSuccessResult | CrawlErrorResult | undefined>;
+) => Promise<CrawlSuccessResult | undefined>;
 
 export interface CrawlUrlRule {
   // 内容过滤配置（可选）

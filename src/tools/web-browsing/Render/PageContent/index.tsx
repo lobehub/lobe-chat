@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import { CrawlPluginState } from '@/types/tool/crawler';
 
@@ -15,15 +16,19 @@ const PagesContent = memo<PagesContentProps>(({ results, messageId }) => {
     return <div>loading...</div>;
   }
 
-  return results.map((result) => (
-    <Result
-      crawler={result.crawler}
-      key={result.originalUrl}
-      messageId={messageId}
-      originalUrl={result.originalUrl}
-      result={result.data}
-    />
-  ));
+  return (
+    <Flexbox gap={12} horizontal>
+      {results.map((result) => (
+        <Result
+          crawler={result.crawler}
+          key={result.originalUrl}
+          messageId={messageId}
+          originalUrl={result.originalUrl}
+          result={result.data}
+        />
+      ))}
+    </Flexbox>
+  );
 });
 
 export default PagesContent;

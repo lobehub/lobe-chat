@@ -18,7 +18,7 @@ const useStyles = createStyles(({ token, css }) => {
   return {
     cardBody: css`
       padding-block: 12px 8px;
-padding-inline: 16px;
+      padding-inline: 16px;
     `,
     container: css`
       cursor: pointer;
@@ -43,7 +43,11 @@ padding-inline: 16px;
       padding-block: ${token.paddingSM}px;
     `,
     externalLink: css`
-      color: ${token.colorPrimary};
+      color: ${token.colorTextQuaternary};
+
+      :hover {
+        color: ${token.colorText};
+      }
     `,
     footer: css`
       padding: ${token.paddingXS}px;
@@ -99,7 +103,7 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
             <div className={styles.title}>{title || originalUrl}</div>
           </Flexbox>
           <Link href={url} onClick={(e) => e.stopPropagation()} target={'_blank'}>
-            <Center>
+            <Center className={styles.externalLink}>
               <Icon icon={ExternalLink} />
             </Center>
           </Link>

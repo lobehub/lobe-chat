@@ -1,4 +1,5 @@
-import { CrawlImpl } from '../type';
+import { CrawlImpl, CrawlSuccessResult } from '../type';
+import { NetworkConnectionError, PageNotFoundError } from '../utils/errorType';
 import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 
 const mixinHeaders = {
@@ -31,8 +32,33 @@ const mixinHeaders = {
 };
 
 export const naive: CrawlImpl = async (url, { filterOptions }) => {
+  let res: Response;
+
   try {
-    const res = await fetch(url, { headers: mixinHeaders });
+    res = await fetch(url, { headers: mixinHeaders });
+  } catch (e) {
+    if ((e as Error).message === 'fetch failed') {
+      throw new NetworkConnectionError();
+    }
+    throw e;
+  }
+
+  if (res.status === 404) {
+    throw new PageNotFoundError(res.statusText);
+  }
+  const type = res.headers.get('content-type');
+
+  if (type?.includes('application/json')) {
+    const json = await res.json();
+    return {
+      content: JSON.stringify(json, null, 2),
+      contentType: 'json',
+      length: json.length,
+      url,
+    } satisfies CrawlSuccessResult;
+  }
+
+  try {
     const html = await res.text();
 
     const result = htmlToMarkdown(html, { filterOptions, url });
@@ -42,12 +68,13 @@ export const naive: CrawlImpl = async (url, { filterOptions }) => {
     if (!!result.content && result.title !== 'Just a moment...') {
       return {
         content: result.content,
+        contentType: 'text',
         description: result?.excerpt,
         length: result.length,
         siteName: result?.siteName,
         title: result?.title,
         url,
-      };
+      } satisfies CrawlSuccessResult;
     }
   } catch (error) {
     console.error(error);

@@ -1,4 +1,4 @@
-import { Alert, Icon, Markdown } from '@lobehub/ui';
+import { Alert, CopyButton, Icon, Markdown } from '@lobehub/ui';
 import { Descriptions, Divider, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
@@ -12,7 +12,7 @@ const useStyles = createStyles(({ token, css }) => {
   return {
     cardBody: css`
       padding-block: 12px 8px;
-padding-inline: 16px;
+      padding-inline: 16px;
     `,
     container: css`
       cursor: pointer;
@@ -68,6 +68,9 @@ padding-inline: 16px;
     titleRow: css`
       color: ${token.colorText};
     `,
+    url: css`
+      color: ${token.colorTextTertiary};
+    `,
   };
 });
 
@@ -101,6 +104,10 @@ const PageContent = memo<PageContentProps>(({ result }) => {
             </Center>
           </Flexbox>
         </Link>
+        <Flexbox align={'center'} className={styles.url} gap={4} horizontal>
+          {result.originalUrl}
+          <CopyButton content={result.originalUrl} size={'small'} />
+        </Flexbox>
 
         {description && (
           <Typography.Paragraph
@@ -110,8 +117,6 @@ const PageContent = memo<PageContentProps>(({ result }) => {
             {description}
           </Typography.Paragraph>
         )}
-
-        {result.originalUrl}
 
         <div className={styles.footer}>
           <Descriptions

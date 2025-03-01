@@ -52,9 +52,13 @@ export class Crawler {
       }
     }
 
+    const errorType = finalError?.name || 'UnknownError';
+    const errorMessage = finalError?.message;
+
     return {
-      content: 'fail to crawl page content',
-      errorMessage: finalError?.message,
+      content: `Fail to crawl the page. Error type: ${errorType}, error message: ${errorMessage}`,
+      errorMessage: errorMessage,
+      errorType,
       originalUrl: url,
       transformedUrl: transformedUrl !== url ? transformedUrl : undefined,
     };
