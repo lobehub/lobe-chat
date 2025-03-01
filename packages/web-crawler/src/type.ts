@@ -1,9 +1,15 @@
-export interface CrawResult {
+export interface CrawlSuccessResult {
   content?: string;
   description?: string;
   length?: number;
   siteName?: string;
   title?: string;
+  url: string;
+}
+
+export interface CrawlErrorResult {
+  content: string;
+  errorMessage: string;
   url: string;
 }
 
@@ -21,7 +27,7 @@ type CrawlImplParams<T> = T & {
 export type CrawlImpl<Params = object> = (
   url: string,
   params: CrawlImplParams<Params>,
-) => Promise<CrawResult | undefined>;
+) => Promise<CrawlSuccessResult | CrawlErrorResult | undefined>;
 
 export interface CrawlUrlRule {
   // 内容过滤配置（可选）

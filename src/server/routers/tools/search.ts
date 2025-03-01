@@ -22,13 +22,15 @@ export const searchRouter = router({
     .mutation(async ({ input }) => {
       const crawler = new Crawler();
 
-      return pMap(
+      const results = await pMap(
         input.urls,
         async (url) => {
           return await crawler.crawl({ impls: input.impls, url });
         },
         { concurrency: 10 },
       );
+
+      return { results };
     }),
 
   query: searchProcedure

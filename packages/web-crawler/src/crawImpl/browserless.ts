@@ -1,6 +1,6 @@
 import qs from 'query-string';
 
-import { CrawResult, CrawlImpl } from '../type';
+import { CrawlImpl, CrawlSuccessResult } from '../type';
 import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 
 const BASE_URL = process.env.BROWSERLESS_URL ?? 'https://chrome.browserless.io';
@@ -54,7 +54,7 @@ export const browserless: CrawlImpl = async (url, { filterOptions }) => {
       siteName: result?.siteName,
       title: result?.title,
       url,
-    } satisfies CrawResult;
+    } satisfies CrawlSuccessResult;
   } catch (error) {
     console.error(error);
     return { content: '抓取失败', errorMessage: (error as any).message, url };

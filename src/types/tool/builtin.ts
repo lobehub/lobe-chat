@@ -29,6 +29,7 @@ export interface LobeBuiltinTool {
 }
 
 export interface BuiltinRenderProps<Content = any, Arguments = any, State = any> {
+  apiName?: string;
   args: Arguments;
   content: Content;
   identifier?: string;

@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 
-import { EngineAvatarGroup } from '../../components/EngineAvatar';
+import { EngineAvatarGroup } from '../../../components/EngineAvatar';
 
 const useStyles = createStyles(({ css, token }) => ({
   font: css`

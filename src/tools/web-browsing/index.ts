@@ -2,12 +2,18 @@ import dayjs from 'dayjs';
 
 import { BuiltinToolManifest } from '@/types/tool';
 
+export const WebBrowsingApiName = {
+  crawlMultiPages: 'crawlMultiPages',
+  crawlSinglePage: 'crawlSinglePage',
+  searchWithSearXNG: 'searchWithSearXNG',
+};
+
 export const WebBrowsingManifest: BuiltinToolManifest = {
   api: [
     {
       description:
         'A meta search engine. Useful for when you need to answer questions about current events. Input should be a search query. Output is a JSON array of the query results',
-      name: 'searchWithSearXNG',
+      name: WebBrowsingApiName.searchWithSearXNG,
       parameters: {
         properties: {
           query: {
@@ -49,7 +55,7 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
     {
       description:
         'A crawler can visit page content. Output is a JSON object of title, content, url and website',
-      name: 'crawlSinglePage',
+      name: WebBrowsingApiName.crawlSinglePage,
       parameters: {
         properties: {
           url: {
@@ -64,7 +70,7 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
     {
       description:
         'A crawler can visit multi pages. If need to visit multi website, use this one. Output is an array of JSON object of title, content, url and website',
-      name: 'crawlMultiPages',
+      name: WebBrowsingApiName.crawlMultiPages,
       parameters: {
         properties: {
           urls: {

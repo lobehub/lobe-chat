@@ -41,20 +41,33 @@ export const searchSlice: StateCreator<
 > = (set, get) => ({
   crawlMultiPages: async (id, params) => {
     const { internal_updateMessageContent } = get();
-    const data = await searchService.crawlPages(params.urls);
+    get().toggleSearchLoading(id, true);
+    const response = await searchService.crawlPages(params.urls);
 
-    if (!data) return;
+    await get().updatePluginState(id, response);
+    get().toggleSearchLoading(id, false);
+    const { results } = response;
 
-    await internal_updateMessageContent(id, JSON.stringify(data));
+    if (!results) return;
+
+    const content = results.map((item) =>
+      'errorMessage' in item
+        ? item
+        : {
+            ...item.data,
+            // if crawl too many content
+            // slice the top 5000 char
+            content: item.data.content?.slice(0, 5000),
+          },
+    );
+
+    await internal_updateMessageContent(id, JSON.stringify(content));
   },
 
   crawlSinglePage: async (id, params) => {
-    const { internal_updateMessageContent } = get();
-    const data = await searchService.crawlPage(params.url);
+    const { crawlMultiPages } = get();
 
-    if (!data) return;
-
-    await internal_updateMessageContent(id, JSON.stringify(data));
+    return await crawlMultiPages(id, { urls: [params.url] });
   },
 
   reSearchWithSearXNG: async (id, data, options) => {
