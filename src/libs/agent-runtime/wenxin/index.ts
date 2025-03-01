@@ -10,7 +10,13 @@ export const LobeWenxinAI = LobeOpenAICompatibleFactory({
       return {
         ...rest,
         ...(enabledSearch && {
-          web_search: true,
+          web_search: {
+            enable: true,
+            /*
+            enable_citation: true,
+            enable_trace: true,
+            */
+          }
         }),
       } as any;
     },
