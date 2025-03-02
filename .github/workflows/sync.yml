@@ -8,6 +8,8 @@ permissions:
 on:
   schedule:
     - cron: '0 */6 * * *' # every 6 hours
+  push:
+    tags: [ 'v*.*.*' ]
   workflow_dispatch:
 
 jobs:
