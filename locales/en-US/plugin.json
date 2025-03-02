@@ -140,6 +140,18 @@
       "close": "Delete",
       "confirm": "Configuration completed, please retry"
     },
+    "crawPages": {
+      "crawling": "Identifying links",
+      "detail": {
+        "preview": "Preview",
+        "raw": "Raw text",
+        "tooLong": "Text content is too long; only the first 10000 characters of the conversation context will be retained, and any excess will not be included in the conversation context."
+      },
+      "meta": {
+        "crawler": "Crawling Mode",
+        "words": "Character count"
+      }
+    },
     "searchxng": {
       "baseURL": "Please enter",
       "description": "Enter the URL for SearchXNG to start online searching",

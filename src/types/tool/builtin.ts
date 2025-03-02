@@ -29,6 +29,7 @@ export interface LobeBuiltinTool {
 }
 
 export interface BuiltinRenderProps<Content = any, Arguments = any, State = any> {
+  apiName?: string;
   args: Arguments;
   content: Content;
   identifier?: string;
@@ -40,6 +41,7 @@ export interface BuiltinRenderProps<Content = any, Arguments = any, State = any>
 export type BuiltinRender = <T = any>(props: BuiltinRenderProps<T>) => ReactNode;
 
 export interface BuiltinPortalProps<Arguments = Record<string, any>, State = any> {
+  apiName?: string;
   arguments: Arguments;
   identifier: string;
   messageId: string;

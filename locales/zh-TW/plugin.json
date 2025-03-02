@@ -140,6 +140,18 @@
       "close": "刪除",
       "confirm": "已完成配置並重試"
     },
+    "crawPages": {
+      "crawling": "連結識別中",
+      "detail": {
+        "preview": "預覽",
+        "raw": "原始文本",
+        "tooLong": "文本內容過長，對話上下文僅保留前 10000 字元，超過部分不計入會話上下文"
+      },
+      "meta": {
+        "crawler": "抓取模式",
+        "words": "字元數"
+      }
+    },
     "searchxng": {
       "baseURL": "請輸入",
       "description": "請輸入 SearchXNG 的網址，即可開始聯網搜索",

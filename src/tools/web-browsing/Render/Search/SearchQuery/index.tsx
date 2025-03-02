@@ -10,7 +10,7 @@ import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
 import { SearchQuery, SearchResponse } from '@/types/tool/search';
 
-import SearchBar from '../../components/SearchBar';
+import SearchBar from '../../../components/SearchBar';
 import SearchView from './SearchView';
 
 interface SearchQueryViewProps {

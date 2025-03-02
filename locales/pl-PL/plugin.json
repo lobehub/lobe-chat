@@ -140,6 +140,18 @@
       "close": "Usuń",
       "confirm": "Konfiguracja zakończona, spróbuj ponownie"
     },
+    "crawPages": {
+      "crawling": "Rozpoznawanie linków",
+      "detail": {
+        "preview": "Podgląd",
+        "raw": "Tekst źródłowy",
+        "tooLong": "Treść tekstu jest zbyt długa, kontekst rozmowy zachowuje tylko pierwsze 10000 znaków, a nadmiar nie jest uwzględniany w kontekście rozmowy"
+      },
+      "meta": {
+        "crawler": "Tryb przeszukiwania",
+        "words": "Liczba znaków"
+      }
+    },
     "searchxng": {
       "baseURL": "Wprowadź",
       "description": "Wprowadź adres URL SearchXNG, aby rozpocząć wyszukiwanie w sieci",

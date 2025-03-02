@@ -467,9 +467,6 @@
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet setzt neue Maßstäbe in der Branche, übertrifft die Modelle der Konkurrenz und Claude 3 Opus, und zeigt in umfassenden Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittelgroßen Modelle beibehält."
   },
-  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
-    "description": "Claude 3.7 Sonnet hebt den Branchenstandard an, übertrifft die Modelle der Konkurrenz und Claude 3 Opus, und zeigt in umfassenden Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittelgroßen Modelle beibehält."
-  },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku ist das schnellste und kompakteste Modell von Anthropic und bietet nahezu sofortige Reaktionsgeschwindigkeiten. Es kann schnell einfache Anfragen und Anforderungen beantworten. Kunden werden in der Lage sein, nahtlose AI-Erlebnisse zu schaffen, die menschliche Interaktionen nachahmen. Claude 3 Haiku kann Bilder verarbeiten und Textausgaben zurückgeben, mit einem Kontextfenster von 200K."
   },
@@ -799,6 +796,9 @@
   },
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash bietet nächste Generation Funktionen und Verbesserungen, einschließlich außergewöhnlicher Geschwindigkeit, nativer Werkzeugnutzung, multimodaler Generierung und einem Kontextfenster von 1M Tokens."
+  },
+  "gemini-2.0-flash-lite-001": {
+    "description": "Gemini 2.0 Flash ist eine Modellvariante, die auf Kosteneffizienz und niedrige Latenz optimiert ist."
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Ein Gemini 2.0 Flash Modell, das auf Kosteneffizienz und niedrige Latenz optimiert wurde."
@@ -1484,6 +1484,9 @@
   "qwen-max-latest": {
     "description": "Der Tongyi Qianwen ist ein Sprachmodell mit einem Umfang von mehreren Billionen, das Eingaben in verschiedenen Sprachen wie Chinesisch und Englisch unterstützt und die API-Modelle hinter der aktuellen Version 2.5 von Tongyi Qianwen darstellt."
   },
+  "qwen-omni-turbo-latest": {
+    "description": "Die Qwen-Omni-Serie unterstützt die Eingabe von Daten in verschiedenen Modalitäten, einschließlich Video, Audio, Bilder und Text, und gibt Audio und Text aus."
+  },
   "qwen-plus": {
     "description": "Qwen Plus ist die verbesserte Version des großangelegten Sprachmodells, das Eingaben in verschiedenen Sprachen wie Chinesisch und Englisch unterstützt."
   },
@@ -1675,6 +1678,9 @@
   },
   "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet hebt den Branchenstandard an, übertrifft die Konkurrenzmodelle und Claude 3 Opus und zeigt in umfangreichen Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittelgroßen Modelle beibehält."
+  },
+  "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 Sonett ist das schnellste nächste Modell von Anthropic. Im Vergleich zu Claude 3 Haiku hat Claude 3.7 Sonett in allen Fähigkeiten Verbesserungen erfahren und übertrifft in vielen intellektuellen Benchmark-Tests das größte Modell der vorherigen Generation, Claude 3 Opus."
   },
   "whisper-1": {
     "description": "Allgemeines Spracherkennungsmodell, unterstützt mehrsprachige Spracherkennung, Sprachübersetzung und Spracherkennung."
