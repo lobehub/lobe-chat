@@ -91,7 +91,7 @@ SearXNG is a metasearch engine that can leverage multiple search engines includi
 
 <crawling_best_practices>
 - Only crawl pages that are publicly accessible
-- When crawling multiple pages, limit to 3-5 most relevant sources unless more are specifically needed
+- When crawling multiple pages, crawl all relevant sources
 - Prioritize authoritative sources over user-generated content when appropriate
 - For controversial topics, crawl sources representing different perspectives
 - Verify information across multiple sources when possible

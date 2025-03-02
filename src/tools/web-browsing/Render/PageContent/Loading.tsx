@@ -2,6 +2,7 @@
 
 import { CopyButton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -16,6 +17,8 @@ const useStyles = createStyles(({ token, css }) => {
     `,
     container: css`
       overflow: hidden;
+      justify-content: space-between;
+
       max-width: 360px;
       border: 1px solid ${token.colorBorderSecondary};
       border-radius: 12px;
@@ -39,13 +42,15 @@ const LoadingCard = memo<{ url: string }>(({ url }) => {
   const { styles } = useStyles();
 
   return (
-    <div className={styles.container}>
+    <Flexbox className={styles.container}>
       <Flexbox className={styles.cardBody} horizontal>
-        <div className={styles.shining}>{url}</div>
+        <Link href={url}>
+          <div className={styles.shining}>{url}</div>
+        </Link>
         <CopyButton content={url} size={'small'} />
       </Flexbox>
       <div className={styles.footer}>{t('search.crawPages.crawling')}</div>
-    </div>
+    </Flexbox>
   );
 });
 

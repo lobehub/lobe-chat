@@ -65,8 +65,8 @@ export const searchSlice: StateCreator<
         : {
             ...item.data,
             // if crawl too many content
-            // slice the top 5000 char
-            content: item.data.content?.slice(0, 5000),
+            // slice the top 10000 char
+            content: item.data.content?.slice(0, 10_000),
           },
     );
 

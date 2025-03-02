@@ -93,8 +93,9 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
   const { url, title, description } = result;
 
   return (
-    <div
+    <Flexbox
       className={styles.container}
+      justify={'space-between'}
       onClick={() => {
         openToolUI(messageId, WebBrowsingManifest.identifier);
         togglePageContent(originalUrl);
@@ -134,7 +135,7 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
           size="small"
         />
       </div>
-    </div>
+    </Flexbox>
   );
 });
 

@@ -84,7 +84,7 @@ interface PageContentProps {
   result?: CrawlResult;
 }
 
-const SLICED_LIMITED = 5000;
+const SLICED_LIMITED = 10_000;
 
 const PageContent = memo<PageContentProps>(({ result }) => {
   const { t } = useTranslation('plugin');
