@@ -67,8 +67,9 @@ ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json pnpm-workspace.yaml ./
 COPY .npmrc ./
+COPY packages ./packages
 
 RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
@@ -89,7 +90,9 @@ RUN \
     && pnpm i \
     # Add sharp dependencies
     && mkdir -p /deps \
-    && pnpm add sharp --prefix /deps
+    && cd /deps \
+    && pnpm init \
+    && pnpm add sharp
 
 COPY . .
 
