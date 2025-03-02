@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support web page crawl in the search."]
+    },
+    "date": "2025-03-02",
+    "version": "1.67.0"
+  },
+  {
+    "children": {
       "improvements": ["Add gpt-4.5-preview for OpenAI."]
     },
     "date": "2025-03-02",
