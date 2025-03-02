@@ -88,6 +88,7 @@ RUN \
     && corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json) \
     # Install the dependencies
     && pnpm i \
+    &&  echo "  - 'deps'" >> pnpm-workspace.yaml \
     # Add sharp dependencies
     && mkdir -p /deps \
     && pnpm add sharp --prefix /deps
