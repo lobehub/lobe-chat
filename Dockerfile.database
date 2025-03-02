@@ -114,8 +114,6 @@ COPY --from=builder /app/.next/standalone /app/
 
 # copy dependencies
 COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
-COPY --from=builder /deps/node_modules/pg /app/node_modules/pg
-COPY --from=builder /deps/node_modules/drizzle-orm /app/node_modules/drizzle-orm
 
 # Copy database migrations
 COPY --from=builder /app/src/database/migrations /app/migrations
