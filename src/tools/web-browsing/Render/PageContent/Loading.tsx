@@ -44,7 +44,7 @@ const LoadingCard = memo<{ url: string }>(({ url }) => {
   return (
     <Flexbox className={styles.container}>
       <Flexbox className={styles.cardBody} horizontal>
-        <Link href={url}>
+        <Link href={url} rel={'nofollow'} target={'_blank'}>
           <div className={styles.shining}>{url}</div>
         </Link>
         <CopyButton content={url} size={'small'} />
