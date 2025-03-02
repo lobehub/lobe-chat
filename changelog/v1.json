@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add gpt-4.5-preview for OpenAI."]
+    },
+    "date": "2025-03-02",
+    "version": "1.66.6"
+  },
+  {
+    "children": {
       "improvements": ["Improve portal style."]
     },
     "date": "2025-02-28",
