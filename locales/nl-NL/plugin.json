@@ -140,6 +140,18 @@
       "close": "Verwijderen",
       "confirm": "Configuratie voltooid en opnieuw proberen"
     },
+    "crawPages": {
+      "crawling": "Linkherkenning",
+      "detail": {
+        "preview": "Voorbeeld",
+        "raw": "Oorspronkelijke tekst",
+        "tooLong": "De tekstinhoud is te lang, de gesprekscontext behoudt alleen de eerste 5000 tekens, het gedeelte daarboven wordt niet meegerekend in de gesprekscontext"
+      },
+      "meta": {
+        "crawler": "Type crawlen",
+        "words": "Aantal tekens"
+      }
+    },
     "searchxng": {
       "baseURL": "Voer in",
       "description": "Voer de URL van SearchXNG in om te beginnen met online zoeken",

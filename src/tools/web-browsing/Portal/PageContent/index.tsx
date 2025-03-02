@@ -4,6 +4,7 @@ import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { CrawlResult } from '@/types/tool/crawler';
@@ -86,6 +87,7 @@ interface PageContentProps {
 const SLICED_LIMITED = 5000;
 
 const PageContent = memo<PageContentProps>(({ result }) => {
+  const { t } = useTranslation('plugin');
   const { styles } = useStyles();
   const [display, setDisplay] = useState('render');
 
@@ -134,11 +136,11 @@ const PageContent = memo<PageContentProps>(({ result }) => {
             items={[
               {
                 children: result.data.content?.length,
-                label: '字符数',
+                label: t('search.crawPages.meta.words'),
               },
               {
                 children: result.crawler,
-                label: '抓取类型',
+                label: t('search.crawPages.meta.crawler'),
               },
             ]}
             size="small"
@@ -151,22 +153,15 @@ const PageContent = memo<PageContentProps>(({ result }) => {
             <Segmented
               onChange={(value) => setDisplay(value)}
               options={[
-                { label: '预览', value: 'render' },
-                { label: '原始文本', value: 'raw' },
+                { label: t('search.crawPages.detail.preview'), value: 'render' },
+                { label: t('search.crawPages.detail.raw'), value: 'raw' },
               ]}
               value={display}
             />
             <CopyButton content={content} />
           </Flexbox>
           {display === 'render' ? (
-            <Markdown
-              // components={{
-              //   h1: () => null,
-              // }}
-              variant={'chat'}
-            >
-              {content}
-            </Markdown>
+            <Markdown variant={'chat'}>{content}</Markdown>
           ) : (
             <div style={{ paddingBlock: 12 }}>
               {content.length < SLICED_LIMITED ? (
@@ -180,10 +175,7 @@ const PageContent = memo<PageContentProps>(({ result }) => {
             </div>
           )}
           {content.length > SLICED_LIMITED && (
-            <Alert
-              message={'文本内容过长，对话上下文仅保留前 5000 字符，超过部分不计入会话上下文'}
-              variant={'pure'}
-            />
+            <Alert message={t('search.crawPages.detail.tooLong')} variant={'pure'} />
           )}
         </Flexbox>
       )}

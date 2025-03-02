@@ -467,9 +467,6 @@
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet elevou o padrão da indústria, superando modelos concorrentes e o Claude 3 Opus, apresentando um desempenho excepcional em avaliações amplas, enquanto mantém a velocidade e o custo de nossos modelos de nível médio."
   },
-  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
-    "description": "Claude 3.7 Sonnet é o modelo de IA mais poderoso da Anthropic, com desempenho de ponta em tarefas altamente complexas. Ele pode lidar com prompts abertos e cenários não vistos, apresentando fluência excepcional e compreensão semelhante à humana. O Claude 3.7 Sonnet demonstra as possibilidades de geração de IA na vanguarda. O Claude 3.7 Sonnet pode processar imagens e retornar saídas de texto, com uma janela de contexto de 200K."
-  },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "O Claude 3 Haiku é o modelo mais rápido e compacto da Anthropic, oferecendo uma velocidade de resposta quase instantânea. Ele pode responder rapidamente a consultas e solicitações simples. Os clientes poderão construir uma experiência de IA sem costura que imita a interação humana. O Claude 3 Haiku pode processar imagens e retornar saídas de texto, com uma janela de contexto de 200K."
   },
@@ -799,6 +796,9 @@
   },
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash oferece funcionalidades e melhorias de próxima geração, incluindo velocidade excepcional, uso nativo de ferramentas, geração multimodal e uma janela de contexto de 1M tokens."
+  },
+  "gemini-2.0-flash-lite-001": {
+    "description": "Variante do modelo Gemini 2.0 Flash, otimizada para custo-benefício e baixa latência."
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Um modelo Gemini 2.0 Flash otimizado para custo-benefício e baixa latência."
@@ -1484,6 +1484,9 @@
   "qwen-max-latest": {
     "description": "O modelo de linguagem em larga escala Qwen Max, com trilhões de parâmetros, que suporta entradas em diferentes idiomas, incluindo chinês e inglês, e é o modelo de API por trás da versão do produto Qwen 2.5."
   },
+  "qwen-omni-turbo-latest": {
+    "description": "A série de modelos Qwen-Omni suporta a entrada de dados em várias modalidades, incluindo vídeo, áudio, imagens e texto, e produz saídas em áudio e texto."
+  },
   "qwen-plus": {
     "description": "Versão aprimorada do modelo de linguagem em larga escala Qwen, que suporta entradas em diferentes idiomas, como português e inglês."
   },
@@ -1675,6 +1678,9 @@
   },
   "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet eleva o padrão da indústria, superando modelos concorrentes e Claude 3 Opus, apresentando um desempenho excepcional em uma ampla gama de avaliações, enquanto mantém a velocidade e o custo de nossos modelos de nível médio."
+  },
+  "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 sonnet é o modelo de próxima geração mais rápido da Anthropic. Em comparação com o Claude 3 Haiku, o Claude 3.7 Sonnet apresenta melhorias em várias habilidades e supera o maior modelo da geração anterior, o Claude 3 Opus, em muitos testes de referência de inteligência."
   },
   "whisper-1": {
     "description": "Modelo de reconhecimento de voz universal, suporta reconhecimento de voz multilíngue, tradução de voz e identificação de idiomas."

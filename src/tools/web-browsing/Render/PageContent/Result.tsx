@@ -7,6 +7,7 @@ import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
@@ -85,6 +86,7 @@ interface CrawlerData {
 }
 
 const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, originalUrl }) => {
+  const { t } = useTranslation('plugin');
   const { styles } = useStyles();
   const [openToolUI] = useChatStore((s) => [s.openToolUI]);
 
@@ -121,11 +123,11 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
           items={[
             {
               children: result.content?.length,
-              label: '字符数',
+              label: t('search.crawPages.meta.words'),
             },
             {
               children: crawler,
-              label: '抓取类型',
+              label: t('search.crawPages.meta.crawler'),
             },
           ]}
           size="small"

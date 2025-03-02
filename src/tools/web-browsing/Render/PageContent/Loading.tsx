@@ -3,6 +3,7 @@
 import { CopyButton } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { shinyTextStylish } from '@/styles/loading';
@@ -34,6 +35,7 @@ const useStyles = createStyles(({ token, css }) => {
 });
 
 const LoadingCard = memo<{ url: string }>(({ url }) => {
+  const { t } = useTranslation('plugin');
   const { styles } = useStyles();
 
   return (
@@ -42,7 +44,7 @@ const LoadingCard = memo<{ url: string }>(({ url }) => {
         <div className={styles.shining}>{url}</div>
         <CopyButton content={url} size={'small'} />
       </Flexbox>
-      <div className={styles.footer}>链接识别中</div>
+      <div className={styles.footer}>{t('search.crawPages.crawling')}</div>
     </div>
   );
 });
