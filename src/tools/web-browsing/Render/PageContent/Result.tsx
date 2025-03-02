@@ -88,7 +88,7 @@ interface CrawlerData {
 const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, originalUrl }) => {
   const { t } = useTranslation('plugin');
   const { styles } = useStyles();
-  const [openToolUI] = useChatStore((s) => [s.openToolUI]);
+  const [openToolUI, togglePageContent] = useChatStore((s) => [s.openToolUI, s.togglePageContent]);
 
   const { url, title, description } = result;
 
@@ -97,7 +97,7 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
       className={styles.container}
       onClick={() => {
         openToolUI(messageId, WebBrowsingManifest.identifier);
-        useChatStore.setState({ activePageContentUrl: originalUrl });
+        togglePageContent(originalUrl);
       }}
     >
       <Flexbox className={styles.cardBody} gap={8}>

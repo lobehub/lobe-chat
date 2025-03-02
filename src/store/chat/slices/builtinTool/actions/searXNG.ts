@@ -38,7 +38,7 @@ export interface SearchAction {
     data: SearchQuery,
     aiSummary?: boolean,
   ) => Promise<void | boolean>;
-  togglePageContent: (id: string, url: string) => void;
+  togglePageContent: (url: string) => void;
   toggleSearchLoading: (id: string, loading: boolean) => void;
 }
 
@@ -179,8 +179,8 @@ export const searchSlice: StateCreator<
     return aiSummary;
   },
 
-  togglePageContent: (id, url) => {
-    console.log(id, url);
+  togglePageContent: (url) => {
+    set({ activePageContentUrl: url });
   },
 
   toggleSearchLoading: (id, loading) => {
