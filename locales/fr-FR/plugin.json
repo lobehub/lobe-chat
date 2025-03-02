@@ -145,7 +145,7 @@
       "detail": {
         "preview": "Aperçu",
         "raw": "Texte brut",
-        "tooLong": "Le contenu du texte est trop long, le contexte de la conversation ne conserve que les 10000 premiers caractères, la partie excédentaire n'est pas prise en compte dans le contexte de la conversation"
+        "tooLong": "Le contenu du texte est trop long, le contexte de la conversation ne conserve que les {{characters}} premiers caractères, la partie excédentaire n'est pas prise en compte dans le contexte de la conversation"
       },
       "meta": {
         "crawler": "Mode de collecte",

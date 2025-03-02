@@ -953,6 +953,9 @@
   "gpt-4-vision-preview": {
     "description": "En son GPT-4 Turbo modeli görsel işlevselliğe sahiptir. Artık görsel talepler JSON formatı ve fonksiyon çağrıları ile işlenebilir. GPT-4 Turbo, çok modlu görevler için maliyet etkin bir destek sunan geliştirilmiş bir versiyondur. Doğruluk ve verimlilik arasında bir denge sağlar, gerçek zamanlı etkileşim gerektiren uygulama senaryoları için uygundur."
   },
+  "gpt-4.5-preview": {
+    "description": "GPT-4.5'in araştırma önizleme sürümü, şimdiye kadar geliştirdiğimiz en büyük ve en güçlü GPT modelidir. Geniş bir dünya bilgisine sahip olup, kullanıcı niyetlerini daha iyi anlayarak yaratıcı görevler ve bağımsız planlama konularında mükemmel bir performans sergilemektedir. GPT-4.5, metin ve görsel girdi alabilir ve metin çıktısı (yapılandırılmış çıktı dahil) üretebilir. Fonksiyon çağrıları, toplu API ve akış çıktısı gibi önemli geliştirici özelliklerini destekler. Yaratıcılık, açık düşünme ve diyalog gerektiren görevlerde (örneğin yazma, öğrenme veya yeni fikirler keşfetme) GPT-4.5 özellikle başarılıdır. Bilgi kesim tarihi Ekim 2023'tür."
+  },
   "gpt-4o": {
     "description": "ChatGPT-4o, güncel versiyonunu korumak için gerçek zamanlı olarak güncellenen dinamik bir modeldir. Güçlü dil anlama ve üretme yeteneklerini birleştirir, müşteri hizmetleri, eğitim ve teknik destek gibi geniş ölçekli uygulama senaryoları için uygundur."
   },

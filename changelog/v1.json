@@ -1,6 +1,18 @@
 [
   {
     "children": {
+      "fixes": ["Improve some crawl case."]
+    },
+    "date": "2025-03-02",
+    "version": "1.67.2"
+  },
+  {
+    "children": {},
+    "date": "2025-03-02",
+    "version": "1.67.1"
+  },
+  {
+    "children": {
       "features": ["Support web page crawl in the search."]
     },
     "date": "2025-03-02",
