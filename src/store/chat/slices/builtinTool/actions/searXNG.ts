@@ -13,6 +13,16 @@ import {
 import { nanoid } from '@/utils/uuid';
 
 export interface SearchAction {
+  crawlMultiPages: (
+    id: string,
+    params: { urls: string[] },
+    aiSummary?: boolean,
+  ) => Promise<boolean | undefined>;
+  crawlSinglePage: (
+    id: string,
+    params: { url: string },
+    aiSummary?: boolean,
+  ) => Promise<boolean | undefined>;
   /**
    * 重新发起搜索
    * @description 会更新插件的 arguments 参数，然后再次搜索
@@ -28,6 +38,7 @@ export interface SearchAction {
     data: SearchQuery,
     aiSummary?: boolean,
   ) => Promise<void | boolean>;
+  togglePageContent: (url: string) => void;
   toggleSearchLoading: (id: string, loading: boolean) => void;
 }
 
@@ -37,12 +48,47 @@ export const searchSlice: StateCreator<
   [],
   SearchAction
 > = (set, get) => ({
+  crawlMultiPages: async (id, params, aiSummary = true) => {
+    const { internal_updateMessageContent } = get();
+    get().toggleSearchLoading(id, true);
+    const response = await searchService.crawlPages(params.urls);
+
+    await get().updatePluginState(id, response);
+    get().toggleSearchLoading(id, false);
+    const { results } = response;
+
+    if (!results) return;
+
+    const content = results.map((item) =>
+      'errorMessage' in item
+        ? item
+        : {
+            ...item.data,
+            // if crawl too many content
+            // slice the top 10000 char
+            content: item.data.content?.slice(0, 10_000),
+          },
+    );
+
+    await internal_updateMessageContent(id, JSON.stringify(content));
+
+    // if aiSummary is true, then trigger ai message
+    return aiSummary;
+  },
+
+  crawlSinglePage: async (id, params, aiSummary) => {
+    const { crawlMultiPages } = get();
+
+    return await crawlMultiPages(id, { urls: [params.url] }, aiSummary);
+  },
+
   reSearchWithSearXNG: async (id, data, options) => {
     get().toggleSearchLoading(id, true);
     await get().updatePluginArguments(id, data);
 
     await get().searchWithSearXNG(id, data, options?.aiSummary);
   },
+
   saveSearXNGSearchResult: async (id) => {
     const message = chatSelectors.getMessageById(id)(get());
     if (!message || !message.plugin) return;
@@ -131,6 +177,10 @@ export const searchSlice: StateCreator<
 
     // 如果 aiSummary 为 true，则会自动触发总结
     return aiSummary;
+  },
+
+  togglePageContent: (url) => {
+    set({ activePageContentUrl: url });
   },
 
   toggleSearchLoading: (id, loading) => {

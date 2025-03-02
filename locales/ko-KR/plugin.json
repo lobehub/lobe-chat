@@ -140,6 +140,18 @@
       "close": "삭제",
       "confirm": "구성이 완료되었습니다. 다시 시도하십시오."
     },
+    "crawPages": {
+      "crawling": "링크 인식 중",
+      "detail": {
+        "preview": "미리보기",
+        "raw": "원본 텍스트",
+        "tooLong": "텍스트 내용이 너무 깁니다. 대화 맥락은 처음 10000자만 유지되며, 초과 부분은 대화 맥락에 포함되지 않습니다."
+      },
+      "meta": {
+        "crawler": "크롤링 모드",
+        "words": "문자 수"
+      }
+    },
     "searchxng": {
       "baseURL": "입력하십시오",
       "description": "SearchXNG의 URL을 입력하면 인터넷 검색을 시작할 수 있습니다.",

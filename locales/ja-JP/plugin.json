@@ -140,6 +140,18 @@
       "close": "削除",
       "confirm": "設定が完了し、再試行しました"
     },
+    "crawPages": {
+      "crawling": "リンクを識別中",
+      "detail": {
+        "preview": "プレビュー",
+        "raw": "原文",
+        "tooLong": "テキストが長すぎます。会話のコンテキストには最初の10000文字のみが保持され、それを超える部分はカウントされません。"
+      },
+      "meta": {
+        "crawler": "クローリングモード",
+        "words": "文字数"
+      }
+    },
     "searchxng": {
       "baseURL": "入力してください",
       "description": "SearchXNG の URL を入力すると、ネット検索を開始できます",

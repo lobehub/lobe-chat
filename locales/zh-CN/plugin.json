@@ -140,6 +140,18 @@
       "close": "删除",
       "confirm": "已完成配置并重试"
     },
+    "crawPages": {
+      "crawling": "链接识别中",
+      "detail": {
+        "preview": "预览",
+        "raw": "原始文本",
+        "tooLong": "文本内容过长，对话上下文仅保留前 10000 字符，超过部分不计入会话上下文"
+      },
+      "meta": {
+        "crawler": "抓取模式",
+        "words": "字符数"
+      }
+    },
     "searchxng": {
       "baseURL": "请输入",
       "description": "请输入 SearchXNG 的网址，即可开始联网搜索",
