@@ -156,7 +156,7 @@
     "debug": "^4.4.0",
     "dexie": "^3.2.7",
     "diff": "^7.0.0",
-    "drizzle-orm": "^0.39.0",
+    "drizzle-orm": "^0.40.0",
     "drizzle-zod": "^0.5.1",
     "fast-deep-equal": "^3.1.3",
     "file-type": "^20.0.0",
