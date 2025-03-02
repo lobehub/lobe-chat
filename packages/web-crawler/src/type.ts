@@ -21,6 +21,8 @@ export interface FilterOptions {
   pureText?: boolean;
 }
 
+type CrawlImplType = 'naive' | 'jina' | 'browserless';
+
 type CrawlImplParams<T> = T & {
   filterOptions: FilterOptions;
 };
@@ -33,6 +35,7 @@ export type CrawlImpl<Params = object> = (
 export interface CrawlUrlRule {
   // 内容过滤配置（可选）
   filterOptions?: FilterOptions;
+  impls?: CrawlImplType[];
   // 是否使用正则表达式匹配（默认为glob模式）
   isRegex?: boolean;
   // URL匹配模式，支持glob模式或正则表达式

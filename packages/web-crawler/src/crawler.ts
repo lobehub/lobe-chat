@@ -12,15 +12,19 @@ export class Crawler {
    */
   async crawl({
     url,
-    impls,
+    impls: userImpls,
     filterOptions: userFilterOptions,
   }: {
     filterOptions?: CrawlUrlRule['filterOptions'];
-    impls?: string[];
+    impls?: CrawlImplType[];
     url: string;
   }) {
     // 应用URL规则
-    const { transformedUrl, filterOptions: ruleFilterOptions } = applyUrlRules(url, crawUrlRules);
+    const {
+      transformedUrl,
+      filterOptions: ruleFilterOptions,
+      impls: ruleImpls,
+    } = applyUrlRules(url, crawUrlRules);
 
     // 合并用户提供的过滤选项和规则中的过滤选项，用户选项优先
     const mergedFilterOptions = {
@@ -30,9 +34,11 @@ export class Crawler {
 
     let finalError: Error | undefined;
 
-    const finalImpls = impls
-      ? (impls.filter((impl) => Object.keys(crawlImpls).includes(impl)) as CrawlImplType[])
-      : this.impls;
+    const systemImpls = (ruleImpls ?? this.impls) as CrawlImplType[];
+
+    const finalImpls = userImpls
+      ? (userImpls.filter((impl) => Object.keys(crawlImpls).includes(impl)) as CrawlImplType[])
+      : systemImpls;
 
     //   按照内置的实现顺序依次尝试
     for (const impl of finalImpls) {
