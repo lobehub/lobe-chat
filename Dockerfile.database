@@ -76,8 +76,9 @@ ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json pnpm-workspace.yaml ./
 COPY .npmrc ./
+COPY packages ./packages
 
 RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
@@ -96,9 +97,11 @@ RUN \
     && corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json) \
     # Install the dependencies
     && pnpm i \
-    # Add sharp and db migration dependencies
+    # Add db migration dependencies
     && mkdir -p /deps \
-    && pnpm add sharp pg drizzle-orm --prefix /deps
+    && cd /deps \
+    && pnpm init \
+    && pnpm add pg drizzle-orm
 
 COPY . .
 
@@ -110,22 +113,19 @@ FROM busybox:latest AS app
 
 COPY --from=base /distroless/ /
 
-COPY --from=builder /app/public /app/public
-
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
-COPY --from=builder /app/.next/static /app/.next/static
-
-# copy dependencies
-COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
-COPY --from=builder /deps/node_modules/pg /app/node_modules/pg
-COPY --from=builder /deps/node_modules/drizzle-orm /app/node_modules/drizzle-orm
 
 # Copy database migrations
 COPY --from=builder /app/src/database/migrations /app/migrations
 COPY --from=builder /app/scripts/migrateServerDB/docker.cjs /app/docker.cjs
 COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
+
+# copy dependencies
+COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
+COPY --from=builder /deps/node_modules/pg /app/node_modules/pg
+COPY --from=builder /deps/node_modules/drizzle-orm /app/node_modules/drizzle-orm
 
 # Copy server launcher
 COPY --from=builder /app/scripts/serverLauncher/startServer.js /app/startServer.js
