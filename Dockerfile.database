@@ -112,9 +112,6 @@ COPY --from=base /distroless/ /
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
 
-# copy dependencies
-COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
-
 # Copy database migrations
 COPY --from=builder /app/src/database/migrations /app/migrations
 COPY --from=builder /app/scripts/migrateServerDB/docker.cjs /app/docker.cjs
