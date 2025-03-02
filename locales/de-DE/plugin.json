@@ -145,7 +145,7 @@
       "detail": {
         "preview": "Vorschau",
         "raw": "Ursprünglicher Text",
-        "tooLong": "Der Textinhalt ist zu lang, der Gesprächskontext behält nur die ersten 10000 Zeichen, der übersteigende Teil wird nicht in den Gesprächskontext einbezogen"
+        "tooLong": "Der Textinhalt ist zu lang, der Kontext des Gesprächs behält nur die ersten {{characters}} Zeichen bei, der übersteigende Teil wird nicht in den Gesprächskontext einbezogen."
       },
       "meta": {
         "crawler": "Crawler-Modus",

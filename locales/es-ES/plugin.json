@@ -145,7 +145,7 @@
       "detail": {
         "preview": "Vista previa",
         "raw": "Texto original",
-        "tooLong": "El contenido del texto es demasiado largo, el contexto de la conversación solo retiene los primeros 10000 caracteres, el exceso no se contabiliza en el contexto de la conversación"
+        "tooLong": "El contenido del texto es demasiado largo, el contexto de la conversación solo retiene los primeros {{characters}} caracteres, el resto no se incluye en el contexto de la conversación"
       },
       "meta": {
         "crawler": "Modo de rastreo",
