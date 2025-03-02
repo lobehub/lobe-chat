@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { SearchResult } from '@/types/tool/search';
 
-import { ENGINE_ICON_MAP } from '../../../const';
+import { ENGINE_ICON_MAP } from '../../../../const';
 import TitleExtra from './TitleExtra';
 
 const useStyles = createStyles(({ css, token }) => {

@@ -467,9 +467,6 @@
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet는 업계 표준을 향상시켰으며, 경쟁 모델과 Claude 3 Opus를 초월하는 성능을 보여주고, 광범위한 평가에서 뛰어난 성과를 보였습니다. 또한 중간 수준 모델의 속도와 비용을 갖추고 있습니다."
   },
-  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
-    "description": "Claude 3.7 Sonnet는 업계 표준을 향상시켰으며, 경쟁 모델과 Claude 3 Opus를 초월하는 성능을 보여주고, 광범위한 평가에서 뛰어난 성과를 보였습니다. 또한 중간 수준 모델의 속도와 비용을 갖추고 있습니다."
-  },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku는 Anthropic의 가장 빠르고 간결한 모델로, 거의 즉각적인 응답 속도를 제공합니다. 간단한 질문과 요청에 신속하게 답변할 수 있습니다. 고객은 인간 상호작용을 모방하는 원활한 AI 경험을 구축할 수 있습니다. Claude 3 Haiku는 이미지를 처리하고 텍스트 출력을 반환할 수 있으며, 200K의 컨텍스트 창을 갖추고 있습니다."
   },
@@ -799,6 +796,9 @@
   },
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash는 뛰어난 속도, 원주율 도구 사용, 다중 모달 생성 및 1M 토큰 문맥 창을 포함한 차세대 기능과 개선 사항을 제공합니다."
+  },
+  "gemini-2.0-flash-lite-001": {
+    "description": "Gemini 2.0 플래시 모델 변형으로, 비용 효율성과 낮은 지연 시간 등의 목표를 위해 최적화되었습니다."
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "비용 효율성과 낮은 지연 시간 등을 목표로 최적화된 Gemini 2.0 Flash 모델입니다."
@@ -1484,6 +1484,9 @@
   "qwen-max-latest": {
     "description": "통의 천문 1000억급 초대규모 언어 모델로, 중국어, 영어 등 다양한 언어 입력을 지원하며, 현재 통의 천문 2.5 제품 버전의 API 모델입니다."
   },
+  "qwen-omni-turbo-latest": {
+    "description": "Qwen-Omni 시리즈 모델은 비디오, 오디오, 이미지, 텍스트 등 다양한 모드의 데이터를 입력으로 지원하며, 오디오와 텍스트를 출력합니다."
+  },
   "qwen-plus": {
     "description": "통의천문 초대형 언어 모델의 강화 버전으로, 중국어, 영어 등 다양한 언어 입력을 지원합니다."
   },
@@ -1675,6 +1678,9 @@
   },
   "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet는 업계 표준을 향상시켰으며, 경쟁 모델과 Claude 3 Opus를 초월하는 성능을 보여주고, 광범위한 평가에서 뛰어난 성과를 보이며, 중간 수준 모델의 속도와 비용을 갖추고 있습니다."
+  },
+  "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 소네트는 Anthropic의 가장 빠른 차세대 모델입니다. Claude 3 하이쿠와 비교할 때, Claude 3.7 소네트는 모든 기술에서 향상되었으며, 많은 지능 기준 테스트에서 이전 세대의 가장 큰 모델인 Claude 3 오푸스를 초월했습니다."
   },
   "whisper-1": {
     "description": "범용 음성 인식 모델로, 다국어 음성 인식, 음성 번역 및 언어 인식을 지원합니다."

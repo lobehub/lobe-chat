@@ -1,56 +1,47 @@
-import { Alert, Highlighter } from '@lobehub/ui';
-import { memo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { memo } from 'react';
 
+import { WebBrowsingApiName } from '@/tools/web-browsing';
+import PageContent from '@/tools/web-browsing/Render/PageContent';
 import { BuiltinRenderProps } from '@/types/tool';
+import { CrawlMultiPagesQuery, CrawlPluginState, CrawlSinglePageQuery } from '@/types/tool/crawler';
 import { SearchContent, SearchQuery, SearchResponse } from '@/types/tool/search';
 
-import ConfigForm from './ConfigForm';
-import SearchQueryView from './SearchQuery';
-import SearchResult from './SearchResult';
+import Search from './Search';
 
-const WebBrowsing = memo<BuiltinRenderProps<SearchContent[], SearchQuery, SearchResponse>>(
-  ({ messageId, args, pluginState, pluginError }) => {
-    const [editing, setEditing] = useState(false);
-
-    if (pluginError) {
-      if (pluginError?.type === 'PluginSettingsInvalid') {
-        return <ConfigForm id={messageId} provider={pluginError.body?.provider} />;
+const WebBrowsing = memo<BuiltinRenderProps<SearchContent[]>>(
+  ({ messageId, args, pluginState, pluginError, apiName }) => {
+    switch (apiName) {
+      case WebBrowsingApiName.searchWithSearXNG: {
+        return (
+          <Search
+            messageId={messageId}
+            pluginError={pluginError}
+            searchQuery={args as SearchQuery}
+            searchResponse={pluginState as SearchResponse}
+          />
+        );
       }
 
-      return (
-        <Alert
-          extra={
-            <Flexbox>
-              <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
-                {JSON.stringify(pluginError.body?.data || pluginError.body, null, 2)}
-              </Highlighter>
-            </Flexbox>
-          }
-          message={pluginError?.message}
-          type={'error'}
-        />
-      );
-    }
+      case WebBrowsingApiName.crawlSinglePage: {
+        return (
+          <PageContent
+            messageId={messageId}
+            results={(pluginState as CrawlPluginState)?.results}
+            urls={[(args as CrawlSinglePageQuery).url]}
+          />
+        );
+      }
 
-    return (
-      <Flexbox gap={8}>
-        <SearchQueryView
-          args={args}
-          editing={editing}
-          messageId={messageId}
-          pluginState={pluginState}
-          setEditing={setEditing}
-        />
-        <SearchResult
-          args={args}
-          editing={editing}
-          messageId={messageId}
-          pluginState={pluginState}
-          setEditing={setEditing}
-        />
-      </Flexbox>
-    );
+      case WebBrowsingApiName.crawlMultiPages: {
+        return (
+          <PageContent
+            messageId={messageId}
+            results={(pluginState as CrawlPluginState)?.results}
+            urls={(args as CrawlMultiPagesQuery).urls}
+          />
+        );
+      }
+    }
   },
 );
 
