@@ -6,6 +6,7 @@ import { CrawlPluginState } from '@/types/tool/crawler';
 import { SearchQuery } from '@/types/tool/search';
 
 import PageContent from './PageContent';
+import PageContents from './PageContents';
 import Search from './Search';
 
 const Inspector = memo<BuiltinPortalProps>(({ arguments: args, messageId, state, apiName }) => {
@@ -19,15 +20,21 @@ const Inspector = memo<BuiltinPortalProps>(({ arguments: args, messageId, state,
       const result = (state as CrawlPluginState).results.find(
         (result) => result.originalUrl === url,
       );
+
       return <PageContent messageId={messageId} result={result} />;
     }
 
     case WebBrowsingApiName.crawlMultiPages: {
-      console.log(args);
-      console.log(state);
-      // return <PageContent content={state as CrawlPluginState} messageId={messageId} />;}
+      return (
+        <PageContents
+          messageId={messageId}
+          results={(state as CrawlPluginState).results}
+          urls={args.urls}
+        />
+      );
     }
   }
+
   return null;
 });
 

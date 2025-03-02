@@ -97,6 +97,7 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
       className={styles.container}
       onClick={() => {
         openToolUI(messageId, WebBrowsingManifest.identifier);
+        useChatStore.setState({ activePageContentUrl: originalUrl });
       }}
     >
       <Flexbox className={styles.cardBody} gap={8}>
