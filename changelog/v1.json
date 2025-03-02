@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-03-02",
+    "version": "1.67.1"
+  },
+  {
     "children": {
       "features": ["Support web page crawl in the search."]
     },
