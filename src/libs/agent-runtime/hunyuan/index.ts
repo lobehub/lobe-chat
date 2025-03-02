@@ -16,13 +16,13 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
       return {
         ...rest,
         ...(enabledSearch && {
-          /*
           citation: true,
-          enable_multimedia: true,
-          search_info: true
-          */
           enable_enhancement: true,
+          /*
+          enable_multimedia: true,
+          */
           enable_speed_search: process.env.HUNYUAN_ENABLE_SPEED_SEARCH === '1',
+          search_info: true,
         }),
       } as any;
     },
