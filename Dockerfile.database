@@ -78,7 +78,7 @@ WORKDIR /app
 
 COPY package.json ./
 COPY .npmrc ./
-COPY pacakges ./
+COPY packages ./
 
 RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
