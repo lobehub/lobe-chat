@@ -560,25 +560,22 @@ If you have deployed your own project following the one-click deployment steps i
 
 We provide a Docker image for deploying the LobeChat service on your own private device. Use the following command to start the LobeChat service:
 
+1. create a folder to for storage files
+
 ```fish
-$ docker run -d -p 3210:3210 \
-  -e OPENAI_API_KEY=sk-xxxx \
-  -e ACCESS_CODE=lobe66 \
-  --name lobe-chat \
-  lobehub/lobe-chat
+$ mkdir lobe-chat-db && cd lobe-chat-db
 ```
 
-> \[!TIP]
->
-> If you need to use the OpenAI service through a proxy, you can configure the proxy address using the `OPENAI_PROXY_URL` environment variable:
+2. init the LobeChat infrastructure
 
 ```fish
-$ docker run -d -p 3210:3210 \
-  -e OPENAI_API_KEY=sk-xxxx \
-  -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
-  -e ACCESS_CODE=lobe66 \
-  --name lobe-chat \
-  lobehub/lobe-chat
+bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
+```
+
+3. Start the LobeChat service
+
+```fish
+docker compose up -d
 ```
 
 > \[!NOTE]
@@ -793,12 +790,12 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
-[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square
-[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
-[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square&sort=semver
+[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat-database?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat-database?color=369eff&labelColor=black&style=flat-square&sort=semver
 [docs]: https://lobehub.com/docs/usage/start
 [docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
 [docs-docker]: https://lobehub.com/docs/self-hosting/platform/docker
