@@ -1,12 +1,12 @@
 import { Suspense, memo } from 'react';
 
 import { LOADING_FLAT } from '@/const/message';
-import ErrorResponse from '@/features/Conversation/Messages/Assistant/Tool/Render/ErrorResponse';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
 import Arguments from './Arguments';
 import CustomRender from './CustomRender';
+import ErrorResponse from './ErrorResponse';
 
 interface RenderProps {
   messageId: string;

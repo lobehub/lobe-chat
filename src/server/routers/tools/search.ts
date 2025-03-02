@@ -1,4 +1,6 @@
+import { Crawler } from '@lobechat/web-crawler';
 import { TRPCError } from '@trpc/server';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { toolsEnv } from '@/config/tools';
@@ -10,6 +12,27 @@ import { SEARCH_SEARXNG_NOT_CONFIG } from '@/types/tool/search';
 const searchProcedure = isServerMode ? authedProcedure : passwordProcedure;
 
 export const searchRouter = router({
+  crawlPages: searchProcedure
+    .input(
+      z.object({
+        impls: z.string().array().optional(),
+        urls: z.string().array(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const crawler = new Crawler();
+
+      const results = await pMap(
+        input.urls,
+        async (url) => {
+          return await crawler.crawl({ impls: input.impls, url });
+        },
+        { concurrency: 10 },
+      );
+
+      return { results };
+    }),
+
   query: searchProcedure
     .input(
       z.object({
