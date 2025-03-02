@@ -322,7 +322,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [必应网页搜索](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | 通过 BingApi 搜索互联网上的信息<br/>`bingsearch`                                   |
 | [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>      | 分析股票并获取全面的实时投资数据和分析。<br/>`股票`                                |
 
-> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**47**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 

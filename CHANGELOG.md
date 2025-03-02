@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.66.6](https://github.com/lobehub/lobe-chat/compare/v1.66.5...v1.66.6)
+
+<sup>Released on **2025-03-02**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `gpt-4.5-preview` for OpenAI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `gpt-4.5-preview` for OpenAI, closes [#6618](https://github.com/lobehub/lobe-chat/issues/6618) ([3ec3af0](https://github.com/lobehub/lobe-chat/commit/3ec3af0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.66.5](https://github.com/lobehub/lobe-chat/compare/v1.66.4...v1.66.5)
 
 <sup>Released on **2025-02-28**</sup>
