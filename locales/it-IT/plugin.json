@@ -140,6 +140,18 @@
       "close": "Rimuovi",
       "confirm": "Configurazione completata, riprovare"
     },
+    "crawPages": {
+      "crawling": "Riconoscimento del link in corso",
+      "detail": {
+        "preview": "Anteprima",
+        "raw": "Testo originale",
+        "tooLong": "Il contenuto del testo è troppo lungo, il contesto della conversazione conserva solo i primi 10000 caratteri, la parte eccedente non viene considerata nel contesto della conversazione"
+      },
+      "meta": {
+        "crawler": "Modalità di scansione",
+        "words": "Numero di caratteri"
+      }
+    },
     "searchxng": {
       "baseURL": "Inserisci",
       "description": "Inserisci l'URL di SearchXNG per iniziare la ricerca online",
