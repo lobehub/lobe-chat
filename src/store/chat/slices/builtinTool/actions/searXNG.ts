@@ -3,6 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { searchService } from '@/services/search';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
+import { CRAWL_CONTENT_LIMITED_COUNT } from '@/tools/web-browsing/const';
 import { CreateMessageParams } from '@/types/message';
 import {
   SEARCH_SEARXNG_NOT_CONFIG,
@@ -66,7 +67,7 @@ export const searchSlice: StateCreator<
             ...item.data,
             // if crawl too many content
             // slice the top 10000 char
-            content: item.data.content?.slice(0, 10_000),
+            content: item.data.content?.slice(0, CRAWL_CONTENT_LIMITED_COUNT),
           },
     );
 

@@ -10,3 +10,5 @@ export const ENGINE_ICON_MAP: Record<string, string> = {
   'qwant': 'https://icons.duckduckgo.com/ip3/www.qwant.com.ico',
   'youtube': 'https://icons.duckduckgo.com/ip3/youtube.com.ico',
 };
+
+export const CRAWL_CONTENT_LIMITED_COUNT = 7000;

@@ -146,7 +146,7 @@ export default {
       detail: {
         preview: '预览',
         raw: '原始文本',
-        tooLong: '文本内容过长，对话上下文仅保留前 10000 字符，超过部分不计入会话上下文',
+        tooLong: '文本内容过长，对话上下文仅保留前 {{characters}} 字符，超过部分不计入会话上下文',
       },
       meta: {
         crawler: '抓取模式',

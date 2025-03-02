@@ -953,6 +953,9 @@
   "gpt-4-vision-preview": {
     "description": "The latest GPT-4 Turbo model features visual capabilities. Now, visual requests can be made using JSON format and function calls. GPT-4 Turbo is an enhanced version that provides cost-effective support for multimodal tasks. It strikes a balance between accuracy and efficiency, making it suitable for applications requiring real-time interaction."
   },
+  "gpt-4.5-preview": {
+    "description": "The research preview of GPT-4.5, our largest and most powerful GPT model to date. It possesses extensive world knowledge and better understands user intent, excelling in creative tasks and autonomous planning. GPT-4.5 accepts both text and image inputs and generates text outputs (including structured outputs). It supports key developer features such as function calling, batch API, and streaming output. GPT-4.5 particularly shines in tasks that require creativity, open-ended thinking, and dialogue, such as writing, learning, or exploring new ideas. Knowledge cutoff date is October 2023."
+  },
   "gpt-4o": {
     "description": "ChatGPT-4o is a dynamic model that updates in real-time to stay current with the latest version. It combines powerful language understanding and generation capabilities, making it suitable for large-scale applications, including customer service, education, and technical support."
   },

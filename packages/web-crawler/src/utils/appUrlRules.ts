@@ -5,6 +5,7 @@ export const applyUrlRules = (
   urlRules: CrawlUrlRule[],
 ): {
   filterOptions?: CrawlUrlRule['filterOptions'];
+  impls?: string[];
   transformedUrl: string;
 } => {
   for (const rule of urlRules) {
@@ -23,12 +24,14 @@ export const applyUrlRules = (
 
         return {
           filterOptions: rule.filterOptions,
+          impls: rule.impls,
           transformedUrl,
         };
       } else {
         // 没有转换规则但匹配了模式，只返回过滤选项
         return {
           filterOptions: rule.filterOptions,
+          impls: rule.impls,
           transformedUrl: url,
         };
       }

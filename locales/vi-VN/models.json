@@ -953,6 +953,9 @@
   "gpt-4-vision-preview": {
     "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
   },
+  "gpt-4.5-preview": {
+    "description": "Bản nghiên cứu preview của GPT-4.5, đây là mô hình GPT lớn nhất và mạnh mẽ nhất mà chúng tôi từng phát triển. Nó sở hữu kiến thức rộng lớn về thế giới và có khả năng hiểu ý định của người dùng tốt hơn, giúp nó thể hiện xuất sắc trong các nhiệm vụ sáng tạo và lập kế hoạch tự động. GPT-4.5 có thể chấp nhận đầu vào văn bản và hình ảnh, và tạo ra đầu ra văn bản (bao gồm cả đầu ra có cấu trúc). Hỗ trợ các tính năng quan trọng cho nhà phát triển như gọi hàm, API theo lô và đầu ra theo luồng. Trong các nhiệm vụ cần sự sáng tạo, tư duy mở và đối thoại (như viết lách, học tập hoặc khám phá ý tưởng mới), GPT-4.5 thể hiện đặc biệt xuất sắc. Thời điểm cắt đứt kiến thức là tháng 10 năm 2023."
+  },
   "gpt-4o": {
     "description": "ChatGPT-4o là một mô hình động, được cập nhật theo thời gian thực để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và sinh ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
   },
