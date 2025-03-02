@@ -149,7 +149,7 @@ export default {
         tooLong: '文本内容过长，对话上下文仅保留前 5000 字符，超过部分不计入会话上下文',
       },
       meta: {
-        crawler: '抓取类型',
+        crawler: '抓取模式',
         words: '字符数',
       },
     },

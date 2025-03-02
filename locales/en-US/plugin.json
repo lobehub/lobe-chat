@@ -148,7 +148,7 @@
         "tooLong": "Text content is too long; only the first 5000 characters of the conversation context will be retained, and any excess will not be included in the conversation context."
       },
       "meta": {
-        "crawler": "Crawl type",
+        "crawler": "Crawling Mode",
         "words": "Character count"
       }
     },

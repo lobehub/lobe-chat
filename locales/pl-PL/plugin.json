@@ -148,7 +148,7 @@
         "tooLong": "Treść tekstu jest zbyt długa, kontekst rozmowy zachowuje tylko pierwsze 5000 znaków, a nadmiar nie jest uwzględniany w kontekście rozmowy"
       },
       "meta": {
-        "crawler": "Typ pobierania",
+        "crawler": "Tryb przeszukiwania",
         "words": "Liczba znaków"
       }
     },

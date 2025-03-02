@@ -148,7 +148,7 @@
         "tooLong": "Metin içeriği çok uzun, diyalog bağlamında yalnızca ilk 5000 karakter saklanır, fazlası bağlamda dikkate alınmaz"
       },
       "meta": {
-        "crawler": "Tarayıcı türü",
+        "crawler": "Tarayıcı Modu",
         "words": "Karakter sayısı"
       }
     },

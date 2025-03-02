@@ -10,6 +10,13 @@ export const crawUrlRules: CrawlUrlRule[] = [
     urlTransform: 'https://github.com/$1/$2/raw/refs/heads/$3/$4',
   },
   {
+    filterOptions: {
+      enableReadability: false,
+    },
+    // GitHub discussion
+    urlPattern: 'https://github.com/(.*)/discussions/(.*)',
+  },
+  {
     // Medium 文章转换为 Scribe.rip
     urlPattern: 'https://medium.com/(.*)',
     urlTransform: 'https://scribe.rip/$1',

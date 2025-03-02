@@ -148,7 +148,7 @@
         "tooLong": "El contenido del texto es demasiado largo, el contexto de la conversación solo retiene los primeros 5000 caracteres, el exceso no se contabiliza en el contexto de la conversación"
       },
       "meta": {
-        "crawler": "Tipo de rastreo",
+        "crawler": "Modo de rastreo",
         "words": "Número de caracteres"
       }
     },

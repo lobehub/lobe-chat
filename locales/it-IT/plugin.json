@@ -148,7 +148,7 @@
         "tooLong": "Il contenuto del testo è troppo lungo, il contesto della conversazione conserva solo i primi 5000 caratteri, la parte eccedente non viene considerata nel contesto della conversazione"
       },
       "meta": {
-        "crawler": "Tipo di estrazione",
+        "crawler": "Modalità di scansione",
         "words": "Numero di caratteri"
       }
     },

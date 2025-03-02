@@ -148,7 +148,7 @@
         "tooLong": "De tekstinhoud is te lang, de gesprekscontext behoudt alleen de eerste 5000 tekens, het gedeelte daarboven wordt niet meegerekend in de gesprekscontext"
       },
       "meta": {
-        "crawler": "Type crawlen",
+        "crawler": "Crawler-modus",
         "words": "Aantal tekens"
       }
     },

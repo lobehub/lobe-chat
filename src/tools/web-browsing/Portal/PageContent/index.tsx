@@ -5,7 +5,7 @@ import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import { CrawlResult } from '@/types/tool/crawler';
 
@@ -62,7 +62,7 @@ const useStyles = createStyles(({ token, css }) => {
       overflow: hidden;
       display: -webkit-box;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
+      -webkit-line-clamp: 2;
 
       margin-block-end: 0;
 
@@ -97,34 +97,38 @@ const PageContent = memo<PageContentProps>(({ result }) => {
   return (
     <Flexbox gap={24}>
       <Flexbox gap={8}>
-        <Link href={url} onClick={(e) => e.stopPropagation()} target={'_blank'}>
-          <Flexbox
-            align={'center'}
-            className={styles.titleRow}
-            gap={24}
-            horizontal
-            justify={'space-between'}
-          >
-            <Flexbox>
-              <div className={styles.title}>{title || result.originalUrl}</div>
-            </Flexbox>
-            <Center>
-              <Icon icon={ExternalLink} />
-            </Center>
+        <Flexbox
+          align={'center'}
+          className={styles.titleRow}
+          gap={24}
+          horizontal
+          justify={'space-between'}
+        >
+          <Flexbox>
+            <div className={styles.title}>{title || result.originalUrl}</div>
           </Flexbox>
-        </Link>
+        </Flexbox>
         {description && (
           <Typography.Paragraph
             className={styles.description}
-            ellipsis={{ expandable: false, rows: 2 }}
+            ellipsis={{ expandable: false, rows: 4 }}
           >
             {description}
           </Typography.Paragraph>
         )}
         <Flexbox align={'center'} className={styles.url} gap={4} horizontal>
           {result.data.siteName && <div>{result.data.siteName} · </div>}
-          {result.originalUrl}
-          <CopyButton content={result.originalUrl} size={'small'} />
+          <Link
+            className={styles.url}
+            href={url}
+            onClick={(e) => e.stopPropagation()}
+            rel={'nofollow'}
+            style={{ display: 'flex', gap: 4 }}
+            target={'_blank'}
+          >
+            {result.originalUrl}
+            <Icon icon={ExternalLink} />
+          </Link>
         </Flexbox>
 
         <div className={styles.footer}>
@@ -160,10 +164,13 @@ const PageContent = memo<PageContentProps>(({ result }) => {
             />
             <CopyButton content={content} />
           </Flexbox>
+          {content.length > SLICED_LIMITED && (
+            <Alert message={t('search.crawPages.detail.tooLong')} variant={'pure'} />
+          )}
           {display === 'render' ? (
             <Markdown variant={'chat'}>{content}</Markdown>
           ) : (
-            <div style={{ paddingBlock: 12 }}>
+            <div style={{ paddingBlock: '0 12px' }}>
               {content.length < SLICED_LIMITED ? (
                 content
               ) : (
@@ -173,9 +180,6 @@ const PageContent = memo<PageContentProps>(({ result }) => {
                 </>
               )}
             </div>
-          )}
-          {content.length > SLICED_LIMITED && (
-            <Alert message={t('search.crawPages.detail.tooLong')} variant={'pure'} />
           )}
         </Flexbox>
       )}

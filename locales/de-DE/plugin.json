@@ -148,7 +148,7 @@
         "tooLong": "Der Textinhalt ist zu lang, der Gesprächskontext behält nur die ersten 5000 Zeichen, der übersteigende Teil wird nicht in den Gesprächskontext einbezogen"
       },
       "meta": {
-        "crawler": "Crawler-Typ",
+        "crawler": "Crawler-Modus",
         "words": "Zeichenanzahl"
       }
     },
