@@ -12,6 +12,7 @@ export interface StreamContext {
    * this flag is used to check if the pplx citation is returned,and then not return it again
    */
   returnedPplxCitation?: boolean;
+  returnedWenxinCitation?: boolean;
   thinking?: {
     id: string;
     name: string;
