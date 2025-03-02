@@ -953,6 +953,9 @@
   "gpt-4-vision-preview": {
     "description": "O mais recente modelo GPT-4 Turbo possui funcionalidades visuais. Agora, solicitações visuais podem ser feitas usando o modo JSON e chamadas de função. O GPT-4 Turbo é uma versão aprimorada, oferecendo suporte econômico para tarefas multimodais. Ele encontra um equilíbrio entre precisão e eficiência, adequado para aplicações que requerem interação em tempo real."
   },
+  "gpt-4.5-preview": {
+    "description": "Versão de pesquisa do GPT-4.5, que é o nosso maior e mais poderoso modelo GPT até agora. Ele possui um amplo conhecimento sobre o mundo e consegue entender melhor a intenção do usuário, destacando-se em tarefas criativas e planejamento autônomo. O GPT-4.5 aceita entradas de texto e imagem, gerando saídas de texto (incluindo saídas estruturadas). Suporta recursos essenciais para desenvolvedores, como chamadas de função, API em lote e saída em fluxo. O GPT-4.5 se destaca especialmente em tarefas que requerem criatividade, pensamento aberto e diálogo (como escrita, aprendizado ou exploração de novas ideias). A data limite do conhecimento é outubro de 2023."
+  },
   "gpt-4o": {
     "description": "O ChatGPT-4o é um modelo dinâmico, atualizado em tempo real para manter a versão mais atual. Ele combina uma poderosa capacidade de compreensão e geração de linguagem, adequado para cenários de aplicação em larga escala, incluindo atendimento ao cliente, educação e suporte técnico."
   },

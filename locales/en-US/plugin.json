@@ -145,7 +145,7 @@
       "detail": {
         "preview": "Preview",
         "raw": "Raw text",
-        "tooLong": "Text content is too long; only the first 10000 characters of the conversation context will be retained, and any excess will not be included in the conversation context."
+        "tooLong": "The text content is too long; only the first {{characters}} characters of the conversation context will be retained, and the excess will not be included in the conversation context."
       },
       "meta": {
         "crawler": "Crawling Mode",
