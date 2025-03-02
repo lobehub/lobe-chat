@@ -16,6 +16,15 @@ export const crawUrlRules: CrawlUrlRule[] = [
     // GitHub discussion
     urlPattern: 'https://github.com/(.*)/discussions/(.*)',
   },
+
+  // 所有 PDF 都用 jina 抓取器转为文本
+  {
+    filterOptions: {
+      enableReadability: false,
+    },
+    impls: ['jina'],
+    urlPattern: 'https://(.*).pdf',
+  },
   {
     // Medium 文章转换为 Scribe.rip
     urlPattern: 'https://medium.com/(.*)',

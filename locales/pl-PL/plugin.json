@@ -145,7 +145,7 @@
       "detail": {
         "preview": "Podgląd",
         "raw": "Tekst źródłowy",
-        "tooLong": "Treść tekstu jest zbyt długa, kontekst rozmowy zachowuje tylko pierwsze 10000 znaków, a nadmiar nie jest uwzględniany w kontekście rozmowy"
+        "tooLong": "Treść tekstu jest zbyt długa, kontekst rozmowy zachowuje tylko pierwsze {{characters}} znaków, a nadmiar nie jest uwzględniany w kontekście rozmowy"
       },
       "meta": {
         "crawler": "Tryb przeszukiwania",

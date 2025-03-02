@@ -145,7 +145,7 @@
       "detail": {
         "preview": "Xem trước",
         "raw": "Văn bản gốc",
-        "tooLong": "Nội dung văn bản quá dài, ngữ cảnh cuộc trò chuyện chỉ giữ lại 10000 ký tự đầu tiên, phần vượt quá sẽ không được tính vào ngữ cảnh cuộc trò chuyện"
+        "tooLong": "Nội dung văn bản quá dài, chỉ giữ lại {{characters}} ký tự đầu tiên trong ngữ cảnh cuộc trò chuyện, phần vượt quá sẽ không được tính vào ngữ cảnh cuộc trò chuyện"
       },
       "meta": {
         "crawler": "Chế độ thu thập",

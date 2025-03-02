@@ -7,6 +7,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { CRAWL_CONTENT_LIMITED_COUNT } from '@/tools/web-browsing/const';
 import { CrawlResult } from '@/types/tool/crawler';
 
 const useStyles = createStyles(({ token, css }) => {
@@ -83,8 +84,6 @@ interface PageContentProps {
   messageId: string;
   result?: CrawlResult;
 }
-
-const SLICED_LIMITED = 10_000;
 
 const PageContent = memo<PageContentProps>(({ result }) => {
   const { t } = useTranslation('plugin');
@@ -164,19 +163,26 @@ const PageContent = memo<PageContentProps>(({ result }) => {
             />
             <CopyButton content={content} />
           </Flexbox>
-          {content.length > SLICED_LIMITED && (
-            <Alert message={t('search.crawPages.detail.tooLong')} variant={'pure'} />
+          {content.length > CRAWL_CONTENT_LIMITED_COUNT && (
+            <Alert
+              message={t('search.crawPages.detail.tooLong', {
+                characters: CRAWL_CONTENT_LIMITED_COUNT,
+              })}
+              variant={'pure'}
+            />
           )}
           {display === 'render' ? (
             <Markdown variant={'chat'}>{content}</Markdown>
           ) : (
             <div style={{ paddingBlock: '0 12px' }}>
-              {content.length < SLICED_LIMITED ? (
+              {content.length < CRAWL_CONTENT_LIMITED_COUNT ? (
                 content
               ) : (
                 <>
-                  <span>{content.slice(0, SLICED_LIMITED)}</span>
-                  <span className={styles.sliced}>{content.slice(SLICED_LIMITED, -1)}</span>
+                  <span>{content.slice(0, CRAWL_CONTENT_LIMITED_COUNT)}</span>
+                  <span className={styles.sliced}>
+                    {content.slice(CRAWL_CONTENT_LIMITED_COUNT, -1)}
+                  </span>
                 </>
               )}
             </div>
