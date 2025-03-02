@@ -145,7 +145,7 @@
       "detail": {
         "preview": "Önizleme",
         "raw": "Ham metin",
-        "tooLong": "Metin içeriği çok uzun, diyalog bağlamında yalnızca ilk 10000 karakter saklanır, fazlası bağlamda dikkate alınmaz"
+        "tooLong": "Metin içeriği çok uzun, diyalog bağlamında yalnızca ilk {{characters}} karakter saklanacak, fazlası diyalog bağlamına dahil edilmeyecek."
       },
       "meta": {
         "crawler": "Tarayıcı Modu",

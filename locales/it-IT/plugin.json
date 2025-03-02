@@ -145,7 +145,7 @@
       "detail": {
         "preview": "Anteprima",
         "raw": "Testo originale",
-        "tooLong": "Il contenuto del testo è troppo lungo, il contesto della conversazione conserva solo i primi 10000 caratteri, la parte eccedente non viene considerata nel contesto della conversazione"
+        "tooLong": "Il contenuto del testo è troppo lungo, il contesto della conversazione manterrà solo i primi {{characters}} caratteri, la parte in eccesso non verrà considerata nel contesto della conversazione"
       },
       "meta": {
         "crawler": "Modalità di scansione",
