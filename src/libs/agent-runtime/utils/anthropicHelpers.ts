@@ -28,7 +28,7 @@ export const buildAnthropicBlock = async (
         return {
           source: {
             data: base64 as string,
-            media_type: mimeType as Anthropic.ImageBlockParam.Source['media_type'],
+            media_type: mimeType as Anthropic.Base64ImageSource['media_type'],
             type: 'base64',
           },
           type: 'image',
@@ -39,7 +39,7 @@ export const buildAnthropicBlock = async (
         return {
           source: {
             data: base64 as string,
-            media_type: mimeType as Anthropic.ImageBlockParam.Source['media_type'],
+            media_type: mimeType as Anthropic.Base64ImageSource['media_type'],
             type: 'base64',
           },
           type: 'image',
