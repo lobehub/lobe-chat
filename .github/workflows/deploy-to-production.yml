@@ -33,10 +33,12 @@ jobs:
             git pull
 
             echo "🔧 更新 Docker 容器..."
-            docker-compose pull && docker-compose up -d && docker image prune -f  # 如果使用远程镜像仓库
-
+            docker-compose pull && docker-compose up -d --scale lobe-chat=2 --no-recreate
+            docker-compose up -d --scale lobe-chat=1
             echo "✅ 部署成功！"
             docker-compose ps
+
+            docker image prune -f
 
 #  deploy-server2:
 #    name: "Deploy - Server 2"

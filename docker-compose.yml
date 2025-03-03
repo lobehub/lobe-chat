@@ -4,7 +4,6 @@ services:
   lobe-chat:
     #image: lobehub/lobe-chat-database
     image: registry.si.icu/sijinhui/lobe-chat-database
-    container_name: lobe-chat
     restart: always
     build:
       context: .
@@ -12,10 +11,50 @@ services:
 #      args:
 #        USE_CN_MIRROR: true
     platform: linux/amd64
-    ports:
-      - '23210:3210'
+    networks:
+      - lobe-chat
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 3210 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 30s
+        order: start-first
+        failure_action: rollback
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.lobe-tcp.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.lobe-tcp.entrypoints=tcpservice"  # 改为tcpservice匹配反向代理定义
+      - "traefik.tcp.routers.lobe-tcp.service=lobe-tcp-service"
+      - "traefik.tcp.services.lobe-tcp-service.loadbalancer.server.port=3210"
+
+  reverse-proxy:
+    image: traefik
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.tcpservice.address=:23210"
+#      - "--api.insecure=true"
+      # 优化配置
+      - "--ping.entryPoint=tcpservice"
+      - "--providers.docker.network=lobe-chat"
+      # 热加载和更新配置
+      - "--providers.docker.watch=true"
+    ports:
+      - "23210:23210"
+      - "8080:8080"
+    networks:
+      - lobe-chat
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
 #  postgresql:
 #    image: pgvector/pgvector:pg16
 #    container_name: lobe-postgres
@@ -33,5 +72,8 @@ services:
 #      retries: 5
 #    restart: always
 
-volumes:
-  postgresql_data: {}
+#volumes:
+#  postgresql_data: {}
+
+networks:
+  lobe-chat: {}
