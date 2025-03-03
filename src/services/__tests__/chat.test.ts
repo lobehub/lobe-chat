@@ -635,7 +635,7 @@ describe('ChatService', () => {
     });
   });
 
-  describe('processMessage', () => {
+  describe('reorderToolMessages', () => {
     it('should reorderToolMessages', () => {
       const input: OpenAIChatMessage[] = [
         {
@@ -746,7 +746,9 @@ describe('ChatService', () => {
         },
       ]);
     });
+  });
 
+  describe('processMessage', () => {
     describe('handle with files content in server mode', () => {
       it('should includes files', async () => {
         // 重新模拟模块，设置 isServerMode 为 true
@@ -800,6 +802,12 @@ describe('ChatService', () => {
               {
                 text: `Hello
 
+<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
 <files_info>
 <images>
 <images_docstring>here are user upload images you can refer to</images_docstring>
@@ -810,7 +818,8 @@ describe('ChatService', () => {
 <file id="file1" name="abc.png" type="plain/txt" size="100000" url="http://abc.com/abc.txt"></file>
 <file id="file_oKMve9qySLMI" name="2402.16667v1.pdf" type="undefined" size="11256078" url="https://xxx.com/ppp/480497/5826c2b8-fde0-4de1-a54b-a224d5e3d898.pdf"></file>
 </files>
-</files_info>`,
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
                 type: 'text',
               },
               {
@@ -826,72 +835,146 @@ describe('ChatService', () => {
           },
         ]);
       });
-    });
 
-    it('should include image files in server mode', async () => {
-      // 重新模拟模块，设置 isServerMode 为 true
-      vi.doMock('@/const/version', () => ({
-        isServerMode: true,
-        isDeprecatedEdition: true,
-      }));
+      it('should include image files in server mode', async () => {
+        // 重新模拟模块，设置 isServerMode 为 true
+        vi.doMock('@/const/version', () => ({
+          isServerMode: true,
+          isDeprecatedEdition: true,
+        }));
 
-      // 需要在修改模拟后重新导入相关模块
-      const { chatService } = await import('../chat');
-      const messages = [
-        {
-          content: 'Hello',
-          role: 'user',
-          imageList: [
-            {
-              id: 'file1',
-              url: 'http://example.com/image.jpg',
-              alt: 'abc.png',
-            },
-          ],
-        }, // Message with files
-        { content: 'Hey', role: 'assistant' }, // Regular user message
-      ] as ChatMessage[];
+        // 需要在修改模拟后重新导入相关模块
+        const { chatService } = await import('../chat');
+        const messages = [
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'file1',
+                url: 'http://example.com/image.jpg',
+                alt: 'abc.png',
+              },
+            ],
+          }, // Message with files
+          { content: 'Hey', role: 'assistant' }, // Regular user message
+        ] as ChatMessage[];
 
-      const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-      await chatService.createAssistantMessage({
-        messages,
-        plugins: [],
-        model: 'gpt-4-vision-preview',
-      });
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        await chatService.createAssistantMessage({
+          messages,
+          plugins: [],
+          model: 'gpt-4-vision-preview',
+        });
 
-      expect(getChatCompletionSpy).toHaveBeenCalledWith(
-        {
-          messages: [
-            {
-              content: [
-                {
-                  text: `Hello
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            messages: [
+              {
+                content: [
+                  {
+                    text: `Hello
 
+<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
 <files_info>
 <images>
 <images_docstring>here are user upload images you can refer to</images_docstring>
 <image name="abc.png" url="http://example.com/image.jpg"></image>
 </images>
 
-</files_info>`,
-                  type: 'text',
-                },
-                {
-                  image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
-                  type: 'image_url',
-                },
-              ],
-              role: 'user',
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
+                    type: 'text',
+                  },
+                  {
+                    image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
+                    type: 'image_url',
+                  },
+                ],
+                role: 'user',
+              },
+              {
+                content: 'Hey',
+                role: 'assistant',
+              },
+            ],
+            model: 'gpt-4-vision-preview',
+          },
+          undefined,
+        );
+      });
+    });
+
+    it('should handle empty tool calls messages correctly', () => {
+      const messages = [
+        {
+          content: '## Tools\n\nYou can use these tools',
+          role: 'system',
+        },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [],
+        },
+      ] as ChatMessage[];
+
+      const result = chatService['processMessages']({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result).toEqual([
+        {
+          content: '## Tools\n\nYou can use these tools',
+          role: 'system',
+        },
+        {
+          content: '',
+          role: 'assistant',
+        },
+      ]);
+    });
+
+    it('should handle assistant messages with reasoning correctly', () => {
+      const messages = [
+        {
+          role: 'assistant',
+          content: 'The answer is 42.',
+          reasoning: {
+            content: 'I need to calculate the answer to life, universe, and everything.',
+            signature: 'thinking_process',
+          },
+        },
+      ] as ChatMessage[];
+
+      const result = chatService['processMessages']({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result).toEqual([
+        {
+          content: [
+            {
+              signature: 'thinking_process',
+              thinking: 'I need to calculate the answer to life, universe, and everything.',
+              type: 'thinking',
             },
             {
-              content: 'Hey',
-              role: 'assistant',
+              text: 'The answer is 42.',
+              type: 'text',
             },
           ],
-          model: 'gpt-4-vision-preview',
+          role: 'assistant',
         },
-        undefined,
-      );
+      ]);
     });
   });
 });
@@ -903,6 +986,7 @@ describe('ChatService', () => {
 vi.mock('../_auth', async (importOriginal) => {
   return importOriginal();
 });
+
 describe('AgentRuntimeOnClient', () => {
   describe('initializeWithClientStore', () => {
     describe('should initialize with options correctly', () => {

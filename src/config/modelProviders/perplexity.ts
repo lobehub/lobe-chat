@@ -5,24 +5,21 @@ const Perplexity: ModelProviderCard = {
   chatModels: [
     {
       contextWindowTokens: 127_072,
-      description:
-        '由 DeepSeek 推理模型提供支持的新 API 产品。',
+      description: '由 DeepSeek 推理模型提供支持的新 API 产品。',
       displayName: 'Sonar Reasoning',
       enabled: true,
       id: 'sonar-reasoning',
     },
     {
       contextWindowTokens: 200_000,
-      description:
-        '支持搜索上下文的高级搜索产品，支持高级查询和跟进。',
+      description: '支持搜索上下文的高级搜索产品，支持高级查询和跟进。',
       displayName: 'Sonar Pro',
       enabled: true,
       id: 'sonar-pro',
     },
     {
       contextWindowTokens: 127_072,
-      description:
-        '基于搜索上下文的轻量级搜索产品，比 Sonar Pro 更快、更便宜。',
+      description: '基于搜索上下文的轻量级搜索产品，比 Sonar Pro 更快、更便宜。',
       displayName: 'Sonar',
       enabled: true,
       id: 'sonar',
@@ -60,10 +57,16 @@ const Perplexity: ModelProviderCard = {
     placeholder: 'https://api.perplexity.ai',
   },
   settings: {
+    // perplexity doesn't support CORS
+    disableBrowserRequest: true,
     proxyUrl: {
       placeholder: 'https://api.perplexity.ai',
     },
     sdkType: 'openai',
+    smoothing: {
+      speed: 2,
+      text: true,
+    },
   },
   url: 'https://www.perplexity.ai',
 };

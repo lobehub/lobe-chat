@@ -1,21 +1,12 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
-import { Skeleton } from 'antd';
-import dynamic from 'next/dynamic';
 import { memo } from 'react';
 
 import { LobeToolRenderType } from '@/types/tool';
 
+import BuiltinType from './BuiltinType';
 import DefaultType from './DefaultType';
 import Markdown from './MarkdownType';
-
-const loading = () => (
-  <Skeleton.Node active style={{ width: '100%' }}>
-    {' '}
-  </Skeleton.Node>
-);
-
-const Standalone = dynamic(() => import('./StandaloneType'), { loading });
-const BuiltinType = dynamic(() => import('./BuiltinType'), { loading });
+import Standalone from './StandaloneType';
 
 export interface PluginRenderProps {
   arguments?: string;
@@ -24,6 +15,7 @@ export interface PluginRenderProps {
   identifier?: string;
   loading?: boolean;
   payload?: PluginRequestPayload;
+  pluginError?: any;
   pluginState?: any;
   type?: LobeToolRenderType;
 }
@@ -38,6 +30,7 @@ const PluginRender = memo<PluginRenderProps>(
     identifier,
     type,
     loading,
+    pluginError,
   }) => {
     switch (type) {
       case 'standalone': {
@@ -47,11 +40,13 @@ const PluginRender = memo<PluginRenderProps>(
       case 'builtin': {
         return (
           <BuiltinType
+            apiName={payload?.apiName}
             arguments={argumentsStr}
             content={content}
             id={id}
             identifier={identifier}
             loading={loading}
+            pluginError={pluginError}
             pluginState={pluginState}
           />
         );

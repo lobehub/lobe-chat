@@ -183,6 +183,24 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: -
 - Example: `sk-xxxxxx...xxxxxx`
 
+## XAI
+
+### `XAI_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the XAI service
+- Default: -
+- Example: `xai-xxxxxx...xxxxxx`
+
+## Wenxin
+
+### `WENXIN_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Baidu Wenxin service
+- Default: -
+- Example: `xxxxxx...xxxxxx`
+
 ## OpenRouter AI
 
 ### `OPENROUTER_API_KEY`
@@ -508,5 +526,22 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+hunyuan-lite,+hunyuan-standard`
+
+## Volcengine
+
+### `VOLCENGINE_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied from Volcengine service, you can check it out [here](https://console.volcengine.com/ark/region:ark+cn-beijing/endpoint)
+- Default: -
+- Example: `ad925b3d-aaaa-bbbb-cccc-51fde2f50547`
+
+### `VOLCENGINE_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+deepseek-r1-250120,+deepseek-v3-241226,+doubao-1-5-pro-256k-250115,+doubao-1-5-pro-32k-250115,+doubao-1-5-lite-32k-250115`
+
 
 [model-list]: /docs/self-hosting/advanced/model-list

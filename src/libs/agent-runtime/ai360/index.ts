@@ -13,9 +13,22 @@ export const LobeAi360AI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.360.cn/v1',
   chatCompletion: {
     handlePayload: (payload) => {
+      const { enabledSearch, tools, ...rest } = payload;
+
+      const ai360Tools = enabledSearch ? [
+        ...(tools || []),
+        {
+          type: "web_search",
+          web_search: {
+            search_mode: "auto",
+          },
+        }
+      ] : tools;
+
       return {
-        ...payload,
-        stream: !payload.tools,
+        ...rest,
+        stream: !ai360Tools,
+        tools: ai360Tools,
       } as any;
     },
   },

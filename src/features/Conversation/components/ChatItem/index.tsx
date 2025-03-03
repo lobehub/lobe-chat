@@ -172,12 +172,22 @@ const Item = memo<ChatListItemProps>(
 
     const markdownProps = useMemo(
       () => ({
+        citations: item?.role === 'user' ? undefined : item?.search?.citations,
         components,
         customRender: markdownCustomRender,
+        enableCustomFootnotes: item?.role === 'assistant',
         rehypePlugins: item?.role === 'user' ? undefined : rehypePlugins,
         remarkPlugins: item?.role === 'user' ? undefined : remarkPlugins,
+        showCitations:
+          item?.role === 'user'
+            ? undefined
+            : item?.search?.citations &&
+              // if the citations are all empty, we should not show the citations
+              item?.search?.citations.length > 0 &&
+              // if the citations's url and title are all the same, we should not show the citations
+              item?.search?.citations.every((item) => item.title !== item.url),
       }),
-      [components, markdownCustomRender, item?.role],
+      [components, markdownCustomRender, item?.role, item?.search],
     );
 
     const onChange = useCallback((value: string) => updateMessageContent(id, value), [id]);

@@ -77,6 +77,7 @@
       "file": "This model supports file upload for reading and recognition.",
       "functionCall": "This model supports function call.",
       "reasoning": "This model supports deep thinking",
+      "search": "This model supports online search",
       "tokens": "This model supports up to {{tokens}} tokens in a single session.",
       "vision": "This model supports visual recognition."
     },
@@ -111,8 +112,8 @@
     }
   },
   "Thinking": {
-    "thinking": "Deep in thought...",
-    "thought": "Deeply thought (took {{duration}} seconds)",
-    "thoughtWithDuration": "Deeply thought"
+    "thinking": "Deep Thinking...",
+    "thought": "Deeply Thought (in {{duration}} seconds)",
+    "thoughtWithDuration": "Deeply Thought"
   }
 }

@@ -11,6 +11,8 @@ import UserAvatar from '@/features/User/UserAvatar';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
+import SSOProvidersList from './features/SSOProvidersList';
+
 type SettingItemGroup = ItemGroup;
 
 const Client = memo<{ mobile?: boolean }>(() => {
@@ -40,6 +42,13 @@ const Client = memo<{ mobile?: boolean }>(() => {
         children: userProfile?.email || '--',
         hidden: !isLoginWithNextAuth || !userProfile?.email,
         label: t('profile.email'),
+        minWidth: undefined,
+      },
+      {
+        children: <SSOProvidersList />,
+        hidden: !isLoginWithNextAuth,
+        label: t('profile.sso.providers'),
+        layout: 'vertical',
         minWidth: undefined,
       },
     ],
