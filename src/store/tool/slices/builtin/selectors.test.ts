@@ -41,6 +41,18 @@ describe('builtinToolSelectors', () => {
       ]);
     });
 
+    it('should hide tool when not need visible with hidden', () => {
+      const state = {
+        ...initialState,
+        builtinTools: [
+          { identifier: 'tool-1', hidden: true, manifest: { meta: { title: 'Tool 1' } } },
+          { identifier: DalleManifest.identifier, manifest: { meta: { title: 'Dalle' } } },
+        ],
+      } as ToolStoreState;
+      const result = builtinToolSelectors.metaList(false)(state);
+      expect(result).toEqual([]);
+    });
+
     it('should return an empty list if no builtin tools are available', () => {
       const state: ToolStoreState = {
         ...initialState,

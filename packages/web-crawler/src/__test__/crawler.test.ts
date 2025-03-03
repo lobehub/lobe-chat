@@ -80,9 +80,12 @@ describe('Crawler', () => {
     });
 
     expect(result).toEqual({
-      content: 'Fail to crawl the page. Error type: CrawlError, error message: Crawl failed',
-      errorMessage: 'Crawl failed',
-      errorType: 'CrawlError',
+      crawler: 'browserless',
+      data: {
+        content: 'Fail to crawl the page. Error type: CrawlError, error message: Crawl failed',
+        errorMessage: 'Crawl failed',
+        errorType: 'CrawlError',
+      },
       originalUrl: 'https://example.com',
       transformedUrl: undefined,
     });
