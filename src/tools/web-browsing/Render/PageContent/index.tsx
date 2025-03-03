@@ -1,3 +1,4 @@
+import { CrawlErrorResult } from '@lobechat/web-crawler';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -31,7 +32,16 @@ const PagesContent = memo<PagesContentProps>(({ results, messageId, urls }) => {
           key={result.originalUrl}
           messageId={messageId}
           originalUrl={result.originalUrl}
-          result={result.data}
+          result={
+            result.data ||
+            // TODO: Remove this in v2 as it's deprecated
+            ({
+              content: (result as any)?.content,
+              errorMessage: (result as any)?.errorMessage,
+              errorType: (result as any)?.errorType,
+              url: result.originalUrl,
+            } as CrawlErrorResult)
+          }
         />
       ))}
     </Flexbox>

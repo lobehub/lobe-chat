@@ -32,6 +32,7 @@ export class Crawler {
       ...userFilterOptions,
     };
 
+    let finalCrawler: string | undefined;
     let finalError: Error | undefined;
 
     const systemImpls = (ruleImpls ?? this.impls) as CrawlImplType[];
@@ -55,6 +56,7 @@ export class Crawler {
       } catch (error) {
         console.error(error);
         finalError = error as Error;
+        finalCrawler = impl;
       }
     }
 
@@ -62,9 +64,12 @@ export class Crawler {
     const errorMessage = finalError?.message;
 
     return {
-      content: `Fail to crawl the page. Error type: ${errorType}, error message: ${errorMessage}`,
-      errorMessage: errorMessage,
-      errorType,
+      crawler: finalCrawler,
+      data: {
+        content: `Fail to crawl the page. Error type: ${errorType}, error message: ${errorMessage}`,
+        errorMessage: errorMessage,
+        errorType,
+      },
       originalUrl: url,
       transformedUrl: transformedUrl !== url ? transformedUrl : undefined,
     };

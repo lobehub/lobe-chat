@@ -1,4 +1,4 @@
-import { CrawlSuccessResult } from '@lobechat/web-crawler';
+import { CrawlErrorResult, CrawlSuccessResult } from '@lobechat/web-crawler';
 
 export interface CrawlSinglePageQuery {
   url: string;
@@ -10,7 +10,7 @@ export interface CrawlMultiPagesQuery {
 
 export interface CrawlResult {
   crawler: string;
-  data: CrawlSuccessResult;
+  data: CrawlSuccessResult | CrawlErrorResult;
   originalUrl: string;
 }
 
