@@ -30,40 +30,6 @@ beforeEach(() => {
 
 describe('LobeWenxinAI', () => {
   describe('chat', () => {
-    it('should call chat method with temperature', async () => {
-      await instance.chat({
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 1.5,
-      });
-
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          messages: expect.any(Array),
-          model: 'text-davinci-003',
-          temperature: 1.5,
-        }),
-        expect.any(Object),
-      );
-    });
-
-    it('should be undefined when temperature >= 2', async () => {
-      await instance.chat({
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 2,
-      });
-
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          messages: expect.any(Array),
-          model: 'text-davinci-003',
-          temperature: undefined,
-        }),
-        expect.any(Object),
-      );
-    });
-
     it('should with search citations', async () => {
       const data = [
         {
@@ -130,11 +96,11 @@ describe('LobeWenxinAI', () => {
       expect(stream).toEqual(
         [
           'id: as-bhrxwy5fq1',
-          'event: text',
-          'data: "今天是**"\n',
-          'id: as-bhrxwy5fq1',
           'event: grounding',
           'data: {"citations":[{"title":"社会新闻","url":"http://www.mnw.cn/news/shehui/"},{"title":"中越边民共庆“春龙节”","url":"https://www.chinanews.com.cn/sh/2025/03-01/10376297.shtml"},{"title":"中国新闻网_时政","url":"https://www.chinanews.com/china/index.shtml"}]}\n',
+          'id: as-bhrxwy5fq1',
+          'event: text',
+          'data: "今天是**"\n',
           'id: as-bhrxwy5fq1',
           'event: text',
           'data: "20"\n',

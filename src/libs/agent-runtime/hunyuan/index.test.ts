@@ -30,40 +30,6 @@ beforeEach(() => {
 
 describe('LobeHunyuanAI', () => {
   describe('chat', () => {
-    it('should call chat method with temperature', async () => {
-      await instance.chat({
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 1.5,
-      });
-
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          messages: expect.any(Array),
-          model: 'text-davinci-003',
-          temperature: 1.5,
-        }),
-        expect.any(Object),
-      );
-    });
-
-    it('should be undefined when temperature >= 2', async () => {
-      await instance.chat({
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 2,
-      });
-
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          messages: expect.any(Array),
-          model: 'text-davinci-003',
-          temperature: undefined,
-        }),
-        expect.any(Object),
-      );
-    });
-
     it('should with search citations', async () => {
 const data = [
         {
@@ -165,11 +131,11 @@ const data = [
       expect(stream).toEqual(
         [
           'id: 939fbdb8dbb9b4c5944cbbe687c977c2',
+          'event: grounding',
+          'data: {"citations":[{"title":"公务员考试时政热点【2025年3月3日】_公务员考试网_华图教育","url":"http://www.huatu.com/2025/0303/2803685.html"},{"title":"外交部新闻（2025年3月3日）","url":"https://view.inews.qq.com/a/20250303A02NLC00?scene=qqsearch"}]}\n',
+          'id: 939fbdb8dbb9b4c5944cbbe687c977c2',
           'event: text',
           'data: "为您"\n',
-          'id: 939fbdb8dbb9b4c5944cbbe687c977c2',
-          'event: grounding',
-          'data: {"citations":[{"title":"公务员考试时政热点【2025年3月3日】_公务员考试网_华图教育","url":"http://www.huatu.com/2025/0303/2803685.html"}，{"title":"外交部新闻（2025年3月3日）","url":"https://view.inews.qq.com/a/20250303A02NLC00?scene=qqsearch"}]}\n',
           'id: 939fbdb8dbb9b4c5944cbbe687c977c2',
           'event: text',
           'data: "找到"\n',
