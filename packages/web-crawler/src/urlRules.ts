@@ -41,7 +41,7 @@ export const crawUrlRules: CrawlUrlRule[] = [
     filterOptions: {
       enableReadability: false,
     },
-    impls: ['browserless'],
+    impls: ['jina', 'browserless'],
     urlPattern: 'https://(twitter.com|x.com)/(.*)',
   },
   // 体育数据网站规则
