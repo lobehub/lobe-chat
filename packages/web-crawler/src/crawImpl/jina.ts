@@ -1,7 +1,7 @@
 import { CrawlImpl } from '../type';
 
 export const jina: CrawlImpl<{ apiKey?: string }> = async (url, params) => {
-  const token = params.apiKey ?? process.env.JINA_API_KEY;
+  const token = params.apiKey ?? process.env.JINA_READER_API_KEY ?? process.env.JINA_API_KEY;
 
   try {
     const res = await fetch(`https://r.jina.ai/${url}`, {
