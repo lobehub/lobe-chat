@@ -21,6 +21,7 @@ import {
   NvidiaProviderCard,
   OpenRouterProviderCard,
   PerplexityProviderCard,
+  PPIOProviderCard,
   QwenProviderCard,
   SambaNovaProviderCard,
   SenseNovaProviderCard,
@@ -98,6 +99,7 @@ export const useProviderList = (): ProviderItem[] => {
       SiliconCloudProviderCard,
       HigressProviderCard,
       GiteeAIProviderCard,
+      PPIOProviderCard,
     ],
     [
       AzureProvider,
