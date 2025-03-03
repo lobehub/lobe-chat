@@ -1,6 +1,61 @@
 [
   {
     "children": {
+      "features": ["Add new model provider PPIO."],
+      "fixes": ["Fix search web-browsing display bug."]
+    },
+    "date": "2025-03-03",
+    "version": "1.68.0"
+  },
+  {
+    "children": {
+      "fixes": ["Improve some crawl case."]
+    },
+    "date": "2025-03-02",
+    "version": "1.67.2"
+  },
+  {
+    "children": {},
+    "date": "2025-03-02",
+    "version": "1.67.1"
+  },
+  {
+    "children": {
+      "features": ["Support web page crawl in the search."]
+    },
+    "date": "2025-03-02",
+    "version": "1.67.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add gpt-4.5-preview for OpenAI."]
+    },
+    "date": "2025-03-02",
+    "version": "1.66.6"
+  },
+  {
+    "children": {
+      "improvements": ["Improve portal style."]
+    },
+    "date": "2025-02-28",
+    "version": "1.66.5"
+  },
+  {
+    "children": {
+      "improvements": ["Optimize smooth output."]
+    },
+    "date": "2025-02-28",
+    "version": "1.66.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fetch assistants plugin error."]
+    },
+    "date": "2025-02-27",
+    "version": "1.66.3"
+  },
+  {
+    "children": {
       "fixes": ["Update Claude sonnet 3.7 model ID."]
     },
     "date": "2025-02-27",

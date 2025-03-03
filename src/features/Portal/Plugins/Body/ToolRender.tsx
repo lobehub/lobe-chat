@@ -40,6 +40,7 @@ const ToolRender = memo(() => {
 
   return (
     <Render
+      apiName={plugin.apiName}
       arguments={args}
       identifier={plugin.identifier}
       messageId={messageId}

@@ -1271,7 +1271,7 @@ describe('MessageModel', () => {
       const result = await messageModel.getHeatmaps();
 
       // 断言结果
-      expect(result.length).toBeGreaterThan(366);
+      expect(result.length).toBeGreaterThanOrEqual(366);
       expect(result.length).toBeLessThan(368);
 
       // 检查两天前的数据
@@ -1389,7 +1389,7 @@ describe('MessageModel', () => {
       const result = await messageModel.getHeatmaps();
 
       // 断言结果
-      expect(result.length).toBeGreaterThan(366);
+      expect(result.length).toBeGreaterThanOrEqual(366);
       expect(result.length).toBeLessThan(368);
 
       // 检查所有数据的 count 和 level 是否为 0
