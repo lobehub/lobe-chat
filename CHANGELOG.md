@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.68.3](https://github.com/lobehub/lobe-chat/compare/v1.68.2...v1.68.3)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve url rules.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve url rules, closes [#6669](https://github.com/lobehub/lobe-chat/issues/6669) ([5ee59e3](https://github.com/lobehub/lobe-chat/commit/5ee59e3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.68.2](https://github.com/lobehub/lobe-chat/compare/v1.68.1...v1.68.2)
 
 <sup>Released on **2025-03-03**</sup>
