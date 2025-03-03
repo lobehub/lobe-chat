@@ -1,7 +1,7 @@
 'use client';
 
-import { CrawlSuccessResult } from '@lobechat/web-crawler';
-import { Icon } from '@lobehub/ui';
+import { CrawlErrorResult, CrawlSuccessResult } from '@lobechat/web-crawler';
+import { Alert, Highlighter, Icon } from '@lobehub/ui';
 import { Descriptions, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
@@ -82,13 +82,46 @@ interface CrawlerData {
   crawler: string;
   messageId: string;
   originalUrl: string;
-  result: CrawlSuccessResult;
+  result: CrawlSuccessResult | CrawlErrorResult;
 }
 
 const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, originalUrl }) => {
   const { t } = useTranslation('plugin');
   const { styles } = useStyles();
   const [openToolUI, togglePageContent] = useChatStore((s) => [s.openToolUI, s.togglePageContent]);
+
+  if ('errorType' in result) {
+    return (
+      <Flexbox className={styles.footer} gap={4}>
+        <div>
+          <Descriptions
+            classNames={{
+              content: styles.footerText,
+            }}
+            column={1}
+            items={[
+              {
+                children: crawler,
+                label: t('search.crawPages.meta.crawler'),
+              },
+            ]}
+            size="small"
+          />
+        </div>
+        <Alert
+          extra={
+            <div style={{ maxWidth: 500, overflowX: 'scroll' }}>
+              <Highlighter language={'json'}>{JSON.stringify(result, null, 2)}</Highlighter>
+            </div>
+          }
+          message={
+            <div style={{ textAlign: 'start' }}>{result.errorMessage || result.content}</div>
+          }
+          type={'error'}
+        />
+      </Flexbox>
+    );
+  }
 
   const { url, title, description } = result;
 
