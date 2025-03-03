@@ -31,6 +31,15 @@
   },
   "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Derin Düşünmeyi Aç"
+    },
+    "reasoningBudgetToken": {
+      "title": "Düşünme Tüketim Tokeni"
+    },
+    "title": "Model Genişletme Özellikleri"
+  },
   "historyRange": "Geçmiş Aralığı",
   "historySummary": "Tarihsel haber özeti",
   "inbox": {
@@ -84,6 +93,29 @@
   },
   "regenerate": "Tekrarla",
   "roleAndArchive": "Rol ve Arşiv",
+  "search": {
+    "grounding": {
+      "searchQueries": "Arama Anahtar Kelimeleri",
+      "title": "{{count}} sonuç bulundu"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Sohbet içeriğine göre akıllıca arama gerekip gerekmediğini belirler",
+        "title": "Akıllı Bağlantı"
+      },
+      "disable": "Mevcut model fonksiyon çağrısını desteklemediği için akıllı bağlantı özelliği kullanılamaz",
+      "off": {
+        "desc": "Sadece modelin temel bilgilerini kullanır, ağ araması yapmaz",
+        "title": "Bağlantıyı Kapat"
+      },
+      "on": {
+        "desc": "Sürekli ağ araması yaparak en güncel bilgileri alır",
+        "title": "Her Zaman Bağlantıda"
+      },
+      "useModelBuiltin": "Modelin yerleşik arama motorunu kullan"
+    },
+    "title": "Ağ Araması"
+  },
   "searchAgentPlaceholder": "Arama Asistanı...",
   "sendPlaceholder": "Mesajınızı buraya yazın...",
   "sessionGroup": {

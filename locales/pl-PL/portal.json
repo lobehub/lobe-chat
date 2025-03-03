@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "Wtyczki",
-  "actions": {
-    "genAiMessage": "Tworzenie wiadomości AI",
-    "summary": "Podsumowanie",
-    "summaryTooltip": "Podsumowanie bieżącej zawartości"
-  },
   "artifacts": {
     "display": {
       "code": "Kod",

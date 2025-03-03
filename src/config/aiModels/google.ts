@@ -4,6 +4,7 @@ const googleChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 2_097_152 + 8192,
@@ -19,11 +20,16 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0,
     },
     releasedAt: '2025-02-05',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 8192,
@@ -39,11 +45,16 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0.4,
     },
     releasedAt: '2025-02-05',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 8192,
@@ -58,6 +69,10 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0.4,
     },
     releasedAt: '2025-02-05',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
     type: 'chat',
   },
   {
@@ -65,9 +80,9 @@ const googleChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 8192,
-    description: '一个 Gemini 2.0 Flash 模型，针对成本效益和低延迟等目标进行了优化。',
-    displayName: 'Gemini 2.0 Flash-Lite Preview 02-05',
-    id: 'gemini-2.0-flash-lite-preview-02-05',
+    description: 'Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。',
+    displayName: 'Gemini 2.0 Flash-Lite 001',
+    id: 'gemini-2.0-flash-lite-001',
     maxOutput: 8192,
     pricing: {
       cachedInput: 0.018_75,

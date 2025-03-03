@@ -31,6 +31,15 @@
   },
   "duplicateTitle": "{{title}} Bản sao",
   "emptyAgent": "Không có trợ lý",
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Bật tư duy sâu sắc"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token tiêu tốn cho tư duy"
+    },
+    "title": "Chức năng mở rộng mô hình"
+  },
   "historyRange": "Phạm vi lịch sử",
   "historySummary": "Tóm tắt tin tức lịch sử",
   "inbox": {
@@ -84,6 +93,29 @@
   },
   "regenerate": "Tạo lại",
   "roleAndArchive": "Vai trò và lưu trữ",
+  "search": {
+    "grounding": {
+      "searchQueries": "Từ khóa tìm kiếm",
+      "title": "Đã tìm thấy {{count}} kết quả"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Thông minh xác định xem có cần tìm kiếm dựa trên nội dung cuộc trò chuyện",
+        "title": "Kết nối thông minh"
+      },
+      "disable": "Mô hình hiện tại không hỗ trợ gọi hàm, do đó không thể sử dụng chức năng kết nối thông minh",
+      "off": {
+        "desc": "Chỉ sử dụng kiến thức cơ bản của mô hình, không thực hiện tìm kiếm trên mạng",
+        "title": "Tắt kết nối"
+      },
+      "on": {
+        "desc": "Tiếp tục tìm kiếm trên mạng để có thông tin mới nhất",
+        "title": "Luôn kết nối"
+      },
+      "useModelBuiltin": "Sử dụng công cụ tìm kiếm tích hợp của mô hình"
+    },
+    "title": "Tìm kiếm trực tuyến"
+  },
   "searchAgentPlaceholder": "Trợ lý tìm kiếm...",
   "sendPlaceholder": "Nhập nội dung trò chuyện...",
   "sessionGroup": {

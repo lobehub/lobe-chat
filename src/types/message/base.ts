@@ -1,6 +1,16 @@
+import { GroundingSearch } from '@/types/search';
+
+export interface CitationItem {
+  id?: string;
+  onlyUrl?: boolean;
+  title?: string;
+  url: string;
+}
+
 export interface ModelReasoning {
   content?: string;
   duration?: number;
+  signature?: string;
 }
 
 export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';
@@ -20,6 +30,7 @@ export interface MessageItem {
   quotaId: string | null;
   reasoning: ModelReasoning | null;
   role: string;
+  search: GroundingSearch | null;
   sessionId: string | null;
   threadId: string | null;
   // jsonb type

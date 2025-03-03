@@ -41,6 +41,7 @@ export const keyVaultsConfigSelectors = {
   getVaultByProvider,
   isProviderApiKeyNotEmpty,
   isProviderEndpointNotEmpty,
+  keyVaultsSettings,
   ollamaConfig,
   openAIConfig,
   password,

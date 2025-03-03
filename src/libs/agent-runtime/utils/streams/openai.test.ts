@@ -1576,5 +1576,186 @@ describe('OpenAIStream', () => {
         ].map((i) => `${i}\n`),
       );
     });
+
+    it('should handle claude reasoning in litellm openai mode', async () => {
+      const data = [
+        {
+          id: '1',
+          created: 1740505568,
+          model: 'claude-3-7-sonnet-latest',
+          object: 'chat.completion.chunk',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                thinking_blocks: [
+                  { type: 'thinking', thinking: '我需要找94的所有质', ignature_delta: null },
+                ],
+                reasoning_content: '我需要找出394的所有质',
+                content: '',
+                role: 'assistant',
+              },
+            },
+          ],
+          thinking_blocks: [
+            { type: 'thinking', thinking: '我需要找94的所有质', signature_delta: null },
+          ],
+        },
+        {
+          id: '1',
+          created: 1740505569,
+          model: 'claude-3-7-sonnet-latest',
+          object: 'chat.completion.chunk',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                thinking_blocks: [
+                  { type: 'thinking', thinking: '因数。\n质因数是', signature_delta: null },
+                ],
+                reasoning_content: '因数。\n\n质因数是',
+                content: '',
+              },
+            },
+          ],
+          thinking_blocks: [
+            { type: 'thinking', thinking: '因数。\n\n质因数是', signature_delta: null },
+          ],
+        },
+        {
+          id: '1',
+          created: 1740505569,
+          model: 'claude-3-7-sonnet-latest',
+          object: 'chat.completion.chunk',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                thinking_blocks: [
+                  { type: 'thinking', thinking: '÷ 2 = 197', signature_delta: null },
+                ],
+                reasoning_content: '÷ 2 = 197',
+                content: '',
+              },
+            },
+          ],
+          thinking_blocks: [{ type: 'thinking', thinking: '÷ 2 = 197', signature_delta: null }],
+        },
+        {
+          id: '1',
+          created: 1740505571,
+          model: 'claude-3-7-sonnet-latest',
+          object: 'chat.completion.chunk',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                thinking_blocks: [
+                  { type: 'thinking', thinking: '197。n394 = 2 ', signature_delta: null },
+                ],
+                reasoning_content: '197。\n394 = 2 ',
+                content: '',
+              },
+            },
+          ],
+          thinking_blocks: [{ type: 'thinking', thinking: '\n394 = 2 ', signature_delta: null }],
+        },
+        {
+          id: '1',
+          created: 1740505571,
+          model: 'claude-3-7-sonnet-latest',
+          object: 'chat.completion.chunk',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '',
+                tool_calls: [{ function: { arguments: '{}' }, type: 'function', index: -1 }],
+              },
+            },
+          ],
+        },
+        {
+          id: '1',
+          created: 1740505571,
+          model: 'claude-3-7-sonnet-latest',
+          object: 'chat.completion.chunk',
+          choices: [{ index: 0, delta: { content: '要找出394的质因数，我需要将' } }],
+        },
+        {
+          id: '1',
+          created: 1740505571,
+          model: 'claude-3-7-sonnet-latest',
+          object: 'chat.completion.chunk',
+          choices: [{ index: 0, delta: { content: '394分解为质数的乘积' } }],
+        },
+        {
+          id: '1',
+          created: 1740505573,
+          model: 'claude-3-7-sonnet-latest',
+          object: 'chat.completion.chunk',
+          choices: [{ index: 0, delta: { content: '2和197。' } }],
+        },
+        {
+          id: '1',
+          created: 1740505573,
+          model: 'claude-3-7-sonnet-latest',
+          object: 'chat.completion.chunk',
+          choices: [{ finish_reason: 'stop', index: 0, delta: {} }],
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 1',
+          'event: reasoning',
+          `data: "我需要找出394的所有质"\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "因数。\\n\\n质因数是"\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "÷ 2 = 197"\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "197。\\n394 = 2 "\n`,
+          'id: 1',
+          'event: text',
+          `data: ""\n`,
+          'id: 1',
+          'event: text',
+          `data: "要找出394的质因数，我需要将"\n`,
+          'id: 1',
+          'event: text',
+          `data: "394分解为质数的乘积"\n`,
+          'id: 1',
+          'event: text',
+          `data: "2和197。"\n`,
+          'id: 1',
+          'event: stop',
+          `data: "stop"\n`,
+        ].map((i) => `${i}\n`),
+      );
+    });
   });
 });

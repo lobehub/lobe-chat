@@ -15,9 +15,13 @@ const useStyles = createStyles(({ css, token, isDarkMode }, displayMode: 'chat' 
 
   return {
     mask: css`
+      pointer-events: none;
+
       position: absolute;
       inset-block: 0 0;
+
       width: 100%;
+
       background: linear-gradient(0deg, ${maskBgColor} 0%, transparent 50%);
     `,
   };
@@ -44,10 +48,12 @@ const ContentPreview = ({ content, id, displayMode }: ContentPreviewProps) => {
       <Flexbox padding={4}>
         <Button
           block
+          color={'default'}
           onClick={() => {
             openMessageDetail(id);
           }}
           size={'small'}
+          variant={'filled'}
         >
           {t('chatList.longMessageDetail')}
         </Button>

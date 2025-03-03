@@ -21,6 +21,7 @@ import SendButton from './Send';
 
 const defaultLeftActions: ActionKeys[] = [
   'model',
+  'search',
   'fileUpload',
   'knowledgeBase',
   'history',

@@ -455,7 +455,7 @@ export const generateAIChat: StateCreator<
         await messageService.updateMessageError(messageId, error);
         await refreshMessages();
       },
-      onFinish: async (content, { traceId, observationId, toolCalls, reasoning }) => {
+      onFinish: async (content, { traceId, observationId, toolCalls, reasoning, grounding }) => {
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
@@ -470,15 +470,36 @@ export const generateAIChat: StateCreator<
         }
 
         // update the content after fetch result
-        await internal_updateMessageContent(
-          messageId,
-          content,
+        await internal_updateMessageContent(messageId, content, {
           toolCalls,
-          !!reasoning ? { content: reasoning, duration } : undefined,
-        );
+          reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
+          search: !!grounding?.citations ? grounding : undefined,
+        });
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {
+          case 'grounding': {
+            // if there is no citations, then stop
+            if (
+              !chunk.grounding ||
+              !chunk.grounding.citations ||
+              chunk.grounding.citations.length <= 0
+            )
+              return;
+
+            internal_dispatchMessage({
+              id: messageId,
+              type: 'updateMessage',
+              value: {
+                search: {
+                  citations: chunk.grounding.citations,
+                  searchQueries: chunk.grounding.searchQueries,
+                },
+              },
+            });
+            break;
+          }
+
           case 'text': {
             output += chunk.text;
 
@@ -605,7 +626,7 @@ export const generateAIChat: StateCreator<
       },
 
       false,
-      'toggleToolCallingStreaming',
+      `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
     );
   },
 });

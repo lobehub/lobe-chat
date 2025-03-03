@@ -1,7 +1,7 @@
 import { uniqBy } from 'lodash-es';
 
 import { filterEnabledModels } from '@/config/modelProviders';
-import { EnabledProviderWithModels } from '@/types/aiModel';
+import { EnabledProviderWithModels } from '@/types/aiProvider';
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import { ServerModelProviderConfig } from '@/types/serverConfig';
 import { GlobalLLMProviderKey } from '@/types/user/settings';

@@ -4,6 +4,32 @@ const anthropicChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'Claude 3.7 Sonnet 是 Anthropic 迄今为止最智能的模型，也是市场上首个混合推理模型。Claude 3.7 Sonnet 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
+    displayName: 'Claude 3.7 Sonnet 0219',
+    enabled: true,
+    id: 'claude-3-7-sonnet-20250219',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0.3,
+      input: 3,
+      output: 15,
+      writeCacheInput: 3.75,
+    },
+    releasedAt: '2025-02-24',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
     },
     contextWindowTokens: 200_000,
     description:
