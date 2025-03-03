@@ -6,7 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 
-import { EngineAvatarGroup } from '../../components/EngineAvatar';
+import { EngineAvatarGroup } from '../../../components/EngineAvatar';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
