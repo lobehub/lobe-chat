@@ -2,6 +2,7 @@
 
 # Changelog
 
+<<<<<<< HEAD
 ### [Version 1.68.3](https://github.com/lobehub/lobe-chat/compare/v1.68.2...v1.68.3)
 
 <sup>Released on **2025-03-03**</sup>
@@ -52,6 +53,8 @@
 
 </div>
 
+=======
+>>>>>>> 9c4c72338 (:bookmark: chore(release): v1.68.1 [skip ci])
 ### [Version 1.68.1](https://github.com/lobehub/lobe-chat/compare/v1.68.0...v1.68.1)
 
 <sup>Released on **2025-03-03**</sup>
