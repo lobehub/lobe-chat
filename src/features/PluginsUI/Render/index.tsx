@@ -40,6 +40,7 @@ const PluginRender = memo<PluginRenderProps>(
       case 'builtin': {
         return (
           <BuiltinType
+            apiName={payload?.apiName}
             arguments={argumentsStr}
             content={content}
             id={id}

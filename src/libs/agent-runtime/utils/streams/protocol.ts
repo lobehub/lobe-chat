@@ -9,9 +9,14 @@ export interface StreamContext {
   id: string;
   /**
    * As pplx citations is in every chunk, but we only need to return it once
-   * this flag is used to check if the pplx citation is returned,and then not return it again
+   * this flag is used to check if the pplx citation is returned,and then not return it again.
+   * Same as Hunyuan and Wenxin
    */
-  returnedPplxCitation?: boolean;
+  returnedCitation?: boolean;
+  thinking?: {
+    id: string;
+    name: string;
+  };
   tool?: {
     id: string;
     index: number;
@@ -29,6 +34,10 @@ export interface StreamProtocolChunk {
     | 'tool_calls'
     // Model Thinking
     | 'reasoning'
+    // use for reasoning signature, maybe only anthropic
+    | 'reasoning_signature'
+    // flagged reasoning signature
+    | 'flagged_reasoning_signature'
     // Search or Grounding
     | 'grounding'
     // stop signal
