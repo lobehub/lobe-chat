@@ -22,6 +22,11 @@ export const crawUrlRules: CrawlUrlRule[] = [
     impls: ['jina'],
     urlPattern: 'https://(.*).pdf',
   },
+  // arxiv PDF use jina
+  {
+    impls: ['jina'],
+    urlPattern: 'https://arxiv.org/pdf/(.*)',
+  },
   // 知乎有爬虫防护，使用 jina
   {
     impls: ['jina'],

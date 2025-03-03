@@ -1,6 +1,21 @@
 [
   {
     "children": {
+      "fixes": ["Fix page crash with crawler error."]
+    },
+    "date": "2025-03-03",
+    "version": "1.68.1"
+  },
+  {
+    "children": {
+      "features": ["Add new model provider PPIO."],
+      "fixes": ["Fix search web-browsing display bug."]
+    },
+    "date": "2025-03-03",
+    "version": "1.68.0"
+  },
+  {
+    "children": {
       "fixes": ["Improve some crawl case."]
     },
     "date": "2025-03-02",

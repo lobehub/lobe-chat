@@ -2,6 +2,64 @@
 
 # Changelog
 
+### [Version 1.68.1](https://github.com/lobehub/lobe-chat/compare/v1.68.0...v1.68.1)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix page crash with crawler error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix page crash with crawler error, closes [#6662](https://github.com/lobehub/lobe-chat/issues/6662) ([0c24251](https://github.com/lobehub/lobe-chat/commit/0c24251))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.68.0](https://github.com/lobehub/lobe-chat/compare/v1.67.2...v1.68.0)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new model provider PPIO.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix search web-browsing display bug.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new model provider PPIO, closes [#6133](https://github.com/lobehub/lobe-chat/issues/6133) ([23a3fda](https://github.com/lobehub/lobe-chat/commit/23a3fda))
+
+#### What's fixed
+
+- **misc**: Fix search web-browsing display bug, closes [#6653](https://github.com/lobehub/lobe-chat/issues/6653) ([f472643](https://github.com/lobehub/lobe-chat/commit/f472643))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.67.2](https://github.com/lobehub/lobe-chat/compare/v1.67.1...v1.67.2)
 
 <sup>Released on **2025-03-02**</sup>
