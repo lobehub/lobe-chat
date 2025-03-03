@@ -11,6 +11,7 @@ export interface CrawlSuccessResult {
 export interface CrawlErrorResult {
   content: string;
   errorMessage: string;
+  errorType: string;
   url: string;
 }
 
