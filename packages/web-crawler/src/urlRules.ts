@@ -37,7 +37,13 @@ export const crawUrlRules: CrawlUrlRule[] = [
     urlPattern: 'https://medium.com/(.*)',
     urlTransform: 'https://scribe.rip/$1',
   },
-
+  {
+    filterOptions: {
+      enableReadability: false,
+    },
+    impls: ['jina', 'browserless'],
+    urlPattern: 'https://(twitter.com|x.com)/(.*)',
+  },
   // 体育数据网站规则
   {
     filterOptions: {
