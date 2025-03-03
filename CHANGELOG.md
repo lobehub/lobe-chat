@@ -2,6 +2,106 @@
 
 # Changelog
 
+## [Version 1.68.0](https://github.com/lobehub/lobe-chat/compare/v1.67.2...v1.68.0)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new model provider PPIO.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix search web-browsing display bug.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new model provider PPIO, closes [#6133](https://github.com/lobehub/lobe-chat/issues/6133) ([23a3fda](https://github.com/lobehub/lobe-chat/commit/23a3fda))
+
+#### What's fixed
+
+- **misc**: Fix search web-browsing display bug, closes [#6653](https://github.com/lobehub/lobe-chat/issues/6653) ([f472643](https://github.com/lobehub/lobe-chat/commit/f472643))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.67.2](https://github.com/lobehub/lobe-chat/compare/v1.67.1...v1.67.2)
+
+<sup>Released on **2025-03-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve some crawl case.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve some crawl case, closes [#6634](https://github.com/lobehub/lobe-chat/issues/6634) ([d38ab02](https://github.com/lobehub/lobe-chat/commit/d38ab02))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.67.1](https://github.com/lobehub/lobe-chat/compare/v1.67.0...v1.67.1)
+
+<sup>Released on **2025-03-02**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.67.0](https://github.com/lobehub/lobe-chat/compare/v1.66.6...v1.67.0)
+
+<sup>Released on **2025-03-02**</sup>
+
+#### ✨ Features
+
+- **misc**: Support web page crawl in the search.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support web page crawl in the search, closes [#6582](https://github.com/lobehub/lobe-chat/issues/6582) ([5e02602](https://github.com/lobehub/lobe-chat/commit/5e02602))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.66.6](https://github.com/lobehub/lobe-chat/compare/v1.66.5...v1.66.6)
 
 <sup>Released on **2025-03-02**</sup>

@@ -467,9 +467,6 @@
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet ha elevato gli standard del settore, superando le prestazioni dei modelli concorrenti e di Claude 3 Opus, dimostrando eccellenza in una vasta gamma di valutazioni, mantenendo al contempo la velocità e i costi dei nostri modelli di livello medio."
   },
-  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
-    "description": "Claude 3.7 Sonnet è il modello più recente di Anthropic, con prestazioni all'avanguardia in una vasta gamma di valutazioni, superando i modelli concorrenti e Claude 3.5 Sonnet, dimostrando eccellenza in una vasta gamma di valutazioni, mantenendo al contempo la velocità e i costi dei nostri modelli di livello medio."
-  },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku è il modello più veloce e compatto di Anthropic, offrendo una velocità di risposta quasi istantanea. Può rispondere rapidamente a query e richieste semplici. I clienti saranno in grado di costruire un'esperienza AI senza soluzione di continuità che imita l'interazione umana. Claude 3 Haiku può gestire immagini e restituire output testuali, con una finestra di contesto di 200K."
   },
@@ -800,6 +797,9 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash offre funzionalità e miglioramenti di nuova generazione, tra cui velocità eccezionale, utilizzo di strumenti nativi, generazione multimodale e una finestra di contesto di 1M token."
   },
+  "gemini-2.0-flash-lite-001": {
+    "description": "Gemini 2.0 Flash è una variante del modello Flash, ottimizzata per obiettivi come il rapporto costo-efficacia e la bassa latenza."
+  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Un modello Gemini 2.0 Flash ottimizzato per obiettivi di costo-efficacia e bassa latenza."
   },
@@ -952,6 +952,9 @@
   },
   "gpt-4-vision-preview": {
     "description": "L'ultimo modello GPT-4 Turbo ha funzionalità visive. Ora, le richieste visive possono essere effettuate utilizzando il formato JSON e le chiamate di funzione. GPT-4 Turbo è una versione potenziata che offre supporto economico per compiti multimodali. Trova un equilibrio tra accuratezza ed efficienza, adatta a scenari di applicazione che richiedono interazioni in tempo reale."
+  },
+  "gpt-4.5-preview": {
+    "description": "Anteprima di ricerca di GPT-4.5, il nostro modello GPT più grande e potente fino ad oggi. Possiede una vasta conoscenza del mondo e comprende meglio le intenzioni degli utenti, eccellendo in compiti creativi e nella pianificazione autonoma. GPT-4.5 accetta input testuali e visivi e genera output testuali (inclusi output strutturati). Supporta funzionalità chiave per gli sviluppatori, come chiamate di funzione, API in batch e output in streaming. GPT-4.5 si distingue particolarmente in compiti che richiedono pensiero creativo, aperto e dialogo (come scrittura, apprendimento o esplorazione di nuove idee). La data di scadenza delle conoscenze è ottobre 2023."
   },
   "gpt-4o": {
     "description": "ChatGPT-4o è un modello dinamico, aggiornato in tempo reale per mantenere la versione più recente. Combina una potente comprensione e generazione del linguaggio, adatta a scenari di applicazione su larga scala, inclusi servizi clienti, educazione e supporto tecnico."
@@ -1484,6 +1487,9 @@
   "qwen-max-latest": {
     "description": "Modello linguistico su larga scala Tongyi Qwen con miliardi di parametri, supporta input in diverse lingue tra cui cinese e inglese, attualmente il modello API dietro la versione del prodotto Tongyi Qwen 2.5."
   },
+  "qwen-omni-turbo-latest": {
+    "description": "La serie di modelli Qwen-Omni supporta l'input di dati in diverse modalità, inclusi video, audio, immagini e testo, e produce output audio e testuale."
+  },
   "qwen-plus": {
     "description": "Qwen Plus è una versione potenziata del modello linguistico di grandi dimensioni, che supporta input in diverse lingue, tra cui cinese e inglese."
   },
@@ -1675,6 +1681,9 @@
   },
   "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet ha elevato gli standard del settore, superando le prestazioni dei modelli concorrenti e di Claude 3 Opus, dimostrando eccellenza in una vasta gamma di valutazioni, mantenendo al contempo la velocità e i costi dei nostri modelli di livello medio."
+  },
+  "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 sonnet è il modello di prossima generazione più veloce di Anthropic. Rispetto a Claude 3 Haiku, Claude 3.7 Sonnet ha migliorato le sue capacità in vari ambiti e ha superato il modello di generazione precedente, Claude 3 Opus, in molti test di intelligenza."
   },
   "whisper-1": {
     "description": "Modello di riconoscimento vocale universale, supporta il riconoscimento vocale multilingue, la traduzione vocale e il riconoscimento linguistico."
