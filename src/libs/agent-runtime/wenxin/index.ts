@@ -9,6 +9,7 @@ export const LobeWenxinAI = LobeOpenAICompatibleFactory({
 
       return {
         ...rest,
+        stream: true,
         ...(enabledSearch && {
           web_search: {
             enable: true,

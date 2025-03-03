@@ -15,6 +15,7 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
 
       return {
         ...rest,
+        stream: true,
         ...(enabledSearch && {
           citation: true,
           enable_enhancement: true,
