@@ -217,6 +217,22 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: `-`
 - Example: `-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta`
 
+## PPIO
+
+### `PPIO_API_KEY`
+
+- Type: Required
+- Description: This your PPIO API Key.
+- Default: -
+- Example: `sk_xxxxxxxxxx`
+
+### `PPIO_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+deepseek/deepseek-v3/community,+deepseek/deepseek-r1-distill-llama-70b`
+
 ## Github
 
 ### `GITHUB_TOKEN`
