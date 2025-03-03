@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Improve url rules."]
+    },
+    "date": "2025-03-03",
+    "version": "1.68.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add build-in web search support for Wenxin & Hunyuan."]
+    },
+    "date": "2025-03-03",
+    "version": "1.68.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix page crash with crawler error."]
     },
     "date": "2025-03-03",
