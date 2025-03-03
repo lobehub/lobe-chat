@@ -1,34 +1,61 @@
 # @lobechat/web-crawler
 
-LobeChat 内置的网页抓取模块，用于从网页中提取结构化内容，并转换为 Markdown 格式。
+LobeChat's built-in web crawling module for intelligent extraction of web content and conversion to Markdown format.
 
-## 📝 简介
+## 📝 Introduction
 
-`@lobechat/web-crawler` 是 LobeChat 项目的内部组件，专门负责网页内容的抓取和处理。它能够智能地从各种网页中提取有意义的内容，剔除广告、导航栏等干扰元素，并将结果转换为结构良好的 Markdown 文本。
+`@lobechat/web-crawler` is a core component of LobeChat responsible for intelligent web content crawling and processing. It extracts valuable content from various webpages, filters out distracting elements, and generates structured Markdown text.
 
-## 🔍 主要功能
+## 🛠️ Core Features
 
-- **网页内容抓取**：支持从各类网站获取原始 HTML 内容
-- **智能内容提取**：使用 Mozilla 的 Readability 算法识别页面中的主要内容
-- **降级处理机制**：当标准抓取失败时，自动切换到 Browserless.io 服务进行渲染抓取（需要自行配置环境变量）
-- **Markdown 转换**：将提取的 HTML 内容转换为易于 AI 处理的 Markdown 格式
+- **Intelligent Content Extraction**: Identifies main content based on Mozilla Readability algorithm
+- **Multi-level Crawling Strategy**: Supports multiple crawling implementations including basic crawling, Jina, and Browserless rendering
+- **Custom URL Rules**: Handles specific website crawling logic through a flexible rule system
 
-## 🛠️ 技术实现
+## 🤝 Contribution
 
-该模块主要依赖以下技术：
+Web structures are diverse and complex. We welcome community contributions for specific website crawling rules. You can participate in improvements through:
 
-- **@mozilla/readability**：提供了强大的内容提取算法
-- **happy-dom**：轻量级的服务端 DOM 实现
-- **node-html-markdown**：高效的 HTML 到 Markdown 转换工具
+### How to Contribute URL Rules
 
-## 🤝 共建改进
+1. Add new rules to the [urlRules.ts](https://github.com/lobehub/lobe-chat/blob/main/packages/web-crawler/src/urlRules.ts) file
+2. Rule example:
 
-由于网页结构的多样性和复杂性，内容提取可能会遇到各种挑战。如果您发现某些网站的抓取效果不佳，欢迎通过以下方式参与改进：
+```typescript
+// Example: handling specific websites
+const url = [
+  // ... other URL matching rules
+  {
+    // URL matching pattern, supports regex
+    urlPattern: 'https://example.com/articles/(.*)',
 
-1. 提交具体的问题网址和期望的输出结果
-2. 分享您对特定网站类型的处理经验
-3. 提出针对性的算法或配置调整建议
+    // Optional: URL transformation, redirects to an easier-to-crawl version
+    urlTransform: 'https://example.com/print/$1',
 
-## 📌 注意事项
+    // Optional: specify crawling implementation, supports 'naive', 'jina', and 'browserless'
+    impls: ['naive', 'jina', 'browserless'],
 
-这是 LobeHub 的内部模块（`"private": true`），不作为独立包发布使用。它专为 LobeChat 的特定需求设计，与其他系统组件紧密集成。
+    // Optional: content filtering configuration
+    filterOptions: {
+      // Whether to enable Readability algorithm for filtering distracting elements
+      enableReadability: true,
+      // Whether to convert to plain text
+      pureText: false,
+    },
+  },
+];
+```
+
+### Rule Submission Process
+
+1. Fork the [LobeChat repository](https://github.com/lobehub/lobe-chat)
+2. Add or modify URL rules
+3. Submit a Pull Request describing:
+
+- Target website characteristics
+- Problems solved by the rule
+- Test cases (example URLs)
+
+## 📌 Note
+
+This is an internal module of LobeHub (`"private": true`), designed specifically for LobeChat and not published as a standalone package.
