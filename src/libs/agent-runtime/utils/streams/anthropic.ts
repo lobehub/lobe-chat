@@ -22,8 +22,21 @@ export const transformAnthropicStream = (
   switch (chunk.type) {
     case 'message_start': {
       context.id = chunk.message.id;
+      let inputTokens = chunk.message.usage?.input_tokens;
+      if (
+        chunk.message.usage?.cache_creation_input_tokens ||
+        chunk.message.usage?.cache_read_input_tokens
+      ) {
+        inputTokens =
+          chunk.message.usage?.input_tokens +
+          (chunk.message.usage.cache_creation_input_tokens || 0) +
+          (chunk.message.usage.cache_read_input_tokens || 0);
+      }
       context.usage = {
-        inputTokens: chunk.message.usage?.input_tokens,
+        cachedTokens: chunk.message.usage?.cache_read_input_tokens || undefined,
+        inputCacheMissTokens: chunk.message.usage?.input_tokens,
+        inputTokens: inputTokens,
+        inputWriteCacheTokens: chunk.message.usage?.cache_creation_input_tokens || undefined,
         outputTokens: chunk.message.usage?.output_tokens,
       };
 
@@ -149,6 +162,7 @@ export const transformAnthropicStream = (
           { data: chunk.delta.stop_reason, id: context.id, type: 'stop' },
           {
             data: {
+              ...context.usage,
               inputTokens: inputTokens,
               outputTokens: outputTokens,
               totalTokens: inputTokens + outputTokens,

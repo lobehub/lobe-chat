@@ -93,6 +93,7 @@ export default {
         inputMinutes: '${{amount}}/分钟',
         inputTokens: '输入 {{amount}}/积分 · ${{amount}}/M',
         outputTokens: '输出 {{amount}}/积分 · ${{amount}}/M',
+        writeCacheInputTokens: '缓存输入写入 {{amount}}/积分 · ${{amount}}/M',
       },
     },
     tokenDetails: {
@@ -102,6 +103,7 @@ export default {
       inputText: '文本输入',
       inputTitle: '输入明细',
       inputUncached: '输入未缓存',
+      inputWriteCached: '输入缓存写入',
       output: '输出',
       outputAudio: '音频输出',
       outputText: '文本输出',

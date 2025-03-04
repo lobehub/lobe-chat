@@ -97,9 +97,28 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   }
 
   private async buildAnthropicPayload(payload: ChatStreamPayload) {
-    const { messages, model, max_tokens, temperature, top_p, tools, thinking } = payload;
+    const {
+      messages,
+      model,
+      max_tokens,
+      temperature,
+      top_p,
+      tools,
+      thinking,
+      enabledContextCaching = true,
+    } = payload;
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
+
+    const systemPrompts = !!system_message?.content
+      ? ([
+          {
+            cache_control: enabledContextCaching ? { type: 'ephemeral' } : undefined,
+            text: system_message?.content as string,
+            type: 'text',
+          },
+        ] as Anthropic.TextBlockParam[])
+      : undefined;
 
     if (!!thinking) {
       const maxTokens =
@@ -109,10 +128,9 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       // `top_p` must be unset when thinking is enabled.
       return {
         max_tokens: maxTokens,
-        messages: await buildAnthropicMessages(user_messages),
+        messages: await buildAnthropicMessages(user_messages, enabledContextCaching),
         model,
-        system: system_message?.content as string,
-
+        system: systemPrompts,
         thinking,
         tools: buildAnthropicTools(tools),
       } satisfies Anthropic.MessageCreateParams;
@@ -120,9 +138,9 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     return {
       max_tokens: max_tokens ?? 4096,
-      messages: await buildAnthropicMessages(user_messages),
+      messages: await buildAnthropicMessages(user_messages, enabledContextCaching),
       model,
-      system: system_message?.content as string,
+      system: systemPrompts,
       temperature: payload.temperature !== undefined ? temperature / 2 : undefined,
       tools: buildAnthropicTools(tools),
       top_p,
