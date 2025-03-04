@@ -74,20 +74,24 @@ const runProxyChainsConfGenerator = async (url) => {
 
   let ip = isValidIP(host, 4) ? host : await resolveHostIP(host, 4);
 
-  const configContent = `
-localnet 127.0.0.0/255.0.0.0
-localnet 10.0.0.0/255.0.0.0
-localnet 172.16.0.0/255.240.0.0
-localnet 192.168.0.0/255.255.0.0
-localnet ::1/128
+  const proxyDNSConfig = process.env.ENABLE_PROXY_DNS === '1' ? `
 proxy_dns
 remote_dns_subnet 224
+`.trim() : '';
+
+  const configContent = `
+localnet 127.0.0.0/8
+localnet 10.0.0.0/8
+localnet 172.16.0.0/12
+localnet 192.168.0.0/16
+localnet ::/127
+${proxyDNSConfig}
 strict_chain
 tcp_connect_time_out 8000
 tcp_read_time_out 15000
 [ProxyList]
 ${protocol} ${ip} ${port} ${user} ${pass}
-`.trim();
+`.replace(/\n{2,}/g, '\n').trim();
 
   await fs.writeFile(PROXYCHAINS_CONF_PATH, configContent);
   console.log(`✅ ProxyChains: All outgoing traffic routed via ${url}.`);

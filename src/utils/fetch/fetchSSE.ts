@@ -10,6 +10,7 @@ import {
   MessageToolCallChunk,
   MessageToolCallSchema,
   ModelReasoning,
+  ModelTokensUsage,
 } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
 
@@ -28,8 +29,14 @@ export type OnFinishHandler = (
     toolCalls?: MessageToolCall[];
     traceId?: string | null;
     type?: SSEFinishType;
+    usage?: ModelTokensUsage;
   },
 ) => Promise<void>;
+
+export interface MessageUsageChunk {
+  type: 'usage';
+  usage: ModelTokensUsage;
+}
 
 export interface MessageTextChunk {
   text: string;
@@ -59,7 +66,12 @@ export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void;
   onFinish?: OnFinishHandler;
   onMessageHandle?: (
-    chunk: MessageTextChunk | MessageToolCallsChunk | MessageReasoningChunk | MessageGroundingChunk,
+    chunk:
+      | MessageTextChunk
+      | MessageToolCallsChunk
+      | MessageReasoningChunk
+      | MessageGroundingChunk
+      | MessageUsageChunk,
   ) => void;
   smoothing?: SmoothingParams | boolean;
 }
@@ -317,6 +329,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   });
 
   let grounding: GroundingSearch | undefined = undefined;
+  let usage: ModelTokensUsage | undefined = undefined;
   await fetchEventSource(url, {
     body: options.body,
     fetch: options?.fetcher,
@@ -377,6 +390,9 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         }
 
         case 'text': {
+          // skip empty text
+          if (!data) break;
+
           if (textSmoothing) {
             textController.pushToQueue(data);
 
@@ -386,6 +402,12 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
             options.onMessageHandle?.({ text: data, type: 'text' });
           }
 
+          break;
+        }
+
+        case 'usage': {
+          usage = data;
+          options.onMessageHandle?.({ type: 'usage', usage: data });
           break;
         }
 
@@ -475,6 +497,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         toolCalls,
         traceId,
         type: finishedType,
+        usage,
       });
     }
   }

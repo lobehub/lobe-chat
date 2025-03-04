@@ -79,6 +79,35 @@
     "deleteDisabledByThreads": "Существуют подтемы, удаление невозможно",
     "regenerate": "Пересоздать"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Кредиты",
+      "creditPricing": "Ценообразование",
+      "creditTooltip": "Для удобства подсчета мы приравниваем 1$ к 1M кредитов, например, $3/M токенов эквивалентно 3 кредитам/токен",
+      "pricing": {
+        "inputCachedTokens": "Кэшированные входные {{amount}}/кредиты · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M символов",
+        "inputMinutes": "${{amount}}/минуту",
+        "inputTokens": "Входные {{amount}}/кредиты · ${{amount}}/M",
+        "outputTokens": "Выходные {{amount}}/кредиты · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "input": "Вход",
+      "inputAudio": "Аудиовход",
+      "inputCached": "Кэшированный вход",
+      "inputText": "Текстовый вход",
+      "inputTitle": "Детали входа",
+      "inputUncached": "Некэшированный вход",
+      "output": "Выход",
+      "outputAudio": "Аудиовыход",
+      "outputText": "Текстовый выход",
+      "outputTitle": "Детали выхода",
+      "reasoning": "Глубокое мышление",
+      "title": "Детали генерации",
+      "total": "Общее потребление"
+    }
+  },
   "newAgent": "Создать помощника",
   "pin": "Закрепить",
   "pinOff": "Открепить",
