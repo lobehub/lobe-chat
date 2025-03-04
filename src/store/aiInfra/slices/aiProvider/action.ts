@@ -205,7 +205,7 @@ export const createAiProviderSlice: StateCreator<
             ...provider,
             children: getModelListByType(provider.id, 'chat'),
             name: provider.name || provider.id,
-          }));
+          })).filter((provider) => provider.children && provider.children.length > 0);
 
           set(
             {
