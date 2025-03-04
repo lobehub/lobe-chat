@@ -27,6 +27,7 @@ import LobeOllamaAI from './ollama';
 import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
+import { LobePPIOAI } from './ppio';
 import { LobeQwenAI } from './qwen';
 import { LobeSambaNovaAI } from './sambanova';
 import { LobeSenseNovaAI } from './sensenova';
@@ -90,6 +91,7 @@ export const providerRuntimeMap = {
   [ModelProvider.Higress]: LobeHigressAI,
   [ModelProvider.TencentCloud]: LobeTencentCloudAI,
   [ModelProvider.Volcengine]: LobeVolcengineAI,
+  [ModelProvider.PPIO]: LobePPIOAI,
   [ModelProvider.Doubao]: LobeVolcengineAI,
   [ModelProvider.Wenxin]: LobeWenxinAI,
 };
