@@ -16,6 +16,7 @@ const showChatSideBar = (s: GlobalStore) => !s.status.zenMode && s.status.showCh
 const showSessionPanel = (s: GlobalStore) => !s.status.zenMode && s.status.showSessionPanel;
 const showFilePanel = (s: GlobalStore) => s.status.showFilePanel;
 const hidePWAInstaller = (s: GlobalStore) => s.status.hidePWAInstaller;
+const isShowCredit = (s: GlobalStore) => s.status.isShowCredit;
 
 const showChatHeader = (s: GlobalStore) => !s.status.zenMode;
 const inZenMode = (s: GlobalStore) => s.status.zenMode;
@@ -58,6 +59,7 @@ export const systemStatusSelectors = {
   isPgliteInited,
   isPgliteNotEnabled,
   isPgliteNotInited,
+  isShowCredit,
   mobileShowPortal,
   mobileShowTopic,
   portalWidth,

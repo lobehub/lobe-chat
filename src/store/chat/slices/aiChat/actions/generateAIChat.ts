@@ -455,7 +455,10 @@ export const generateAIChat: StateCreator<
         await messageService.updateMessageError(messageId, error);
         await refreshMessages();
       },
-      onFinish: async (content, { traceId, observationId, toolCalls, reasoning, grounding }) => {
+      onFinish: async (
+        content,
+        { traceId, observationId, toolCalls, reasoning, grounding, usage },
+      ) => {
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
@@ -474,6 +477,7 @@ export const generateAIChat: StateCreator<
           toolCalls,
           reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
           search: !!grounding?.citations ? grounding : undefined,
+          metadata: usage,
         });
       },
       onMessageHandle: async (chunk) => {
