@@ -17,6 +17,7 @@ export interface ModelTokensUsage {
   acceptedPredictionTokens?: number;
   cachedTokens?: number;
   inputAudioTokens?: number;
+  inputCacheMissTokens?: number;
   inputTokens?: number;
   outputAudioTokens?: number;
   outputTokens?: number;

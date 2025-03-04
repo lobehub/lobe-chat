@@ -79,6 +79,35 @@
     "deleteDisabledByThreads": "Existen subtemas, no se puede eliminar",
     "regenerate": "Regenerar"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Créditos",
+      "creditPricing": "Precios",
+      "creditTooltip": "Para facilitar el conteo, convertimos 1$ en 1M créditos, por ejemplo, $3/M tokens se convierte en 3 créditos/token",
+      "pricing": {
+        "inputCachedTokens": "Entradas en caché {{amount}}/créditos · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M caracteres",
+        "inputMinutes": "${{amount}}/minuto",
+        "inputTokens": "Entradas {{amount}}/créditos · ${{amount}}/M",
+        "outputTokens": "Salidas {{amount}}/créditos · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "input": "Entrada",
+      "inputAudio": "Entrada de audio",
+      "inputCached": "Entrada en caché",
+      "inputText": "Entrada de texto",
+      "inputTitle": "Detalles de entrada",
+      "inputUncached": "Entrada no en caché",
+      "output": "Salida",
+      "outputAudio": "Salida de audio",
+      "outputText": "Salida de texto",
+      "outputTitle": "Detalles de salida",
+      "reasoning": "Razonamiento profundo",
+      "title": "Detalles de generación",
+      "total": "Total consumido"
+    }
+  },
   "newAgent": "Nuevo asistente",
   "pin": "Fijar",
   "pinOff": "Desfijar",

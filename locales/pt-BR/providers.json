@@ -89,6 +89,9 @@
   "perplexity": {
     "description": "Perplexity é um fornecedor líder de modelos de geração de diálogo, oferecendo uma variedade de modelos avançados Llama 3.1, suportando aplicações online e offline, especialmente adequados para tarefas complexas de processamento de linguagem natural."
   },
+  "ppio": {
+    "description": "O PPIO Paiouyun oferece serviços de API de modelos de código aberto estáveis e com alto custo-benefício, suportando toda a linha DeepSeek, Llama, Qwen e outros grandes modelos líderes da indústria."
+  },
   "qwen": {
     "description": "Qwen é um modelo de linguagem de grande escala desenvolvido pela Alibaba Cloud, com forte capacidade de compreensão e geração de linguagem natural. Ele pode responder a várias perguntas, criar conteúdo escrito, expressar opiniões e escrever código, atuando em vários campos."
   },

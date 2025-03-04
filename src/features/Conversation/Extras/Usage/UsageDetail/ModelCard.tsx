@@ -33,7 +33,7 @@ interface ModelCardProps extends LobeDefaultAiModelListItem {
   provider: string;
 }
 
-const ModelCard = memo<ModelCardProps>(({ pricing, id, provider }) => {
+const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
 
@@ -63,7 +63,7 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider }) => {
           <ModelIcon model={id} size={22} />
           <Flexbox flex={1} gap={2} style={{ minWidth: 0 }}>
             <Flexbox align={'center'} gap={8} horizontal style={{ lineHeight: '12px' }}>
-              {id}
+              {displayName || id}
             </Flexbox>
             <span className={styles.desc}>{provider}</span>
           </Flexbox>
