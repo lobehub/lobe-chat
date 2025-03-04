@@ -89,6 +89,9 @@
   "perplexity": {
     "description": "Perplexity ist ein führender Anbieter von Dialoggenerierungsmodellen und bietet eine Vielzahl fortschrittlicher Llama 3.1-Modelle an, die sowohl für Online- als auch Offline-Anwendungen geeignet sind und sich besonders für komplexe Aufgaben der Verarbeitung natürlicher Sprache eignen."
   },
+  "ppio": {
+    "description": "PPIO Paiou Cloud bietet stabile und kosteneffiziente Open-Source-Modell-API-Dienste und unterstützt die gesamte DeepSeek-Serie, Llama, Qwen und andere führende große Modelle der Branche."
+  },
   "qwen": {
     "description": "Tongyi Qianwen ist ein von Alibaba Cloud selbst entwickeltes, groß angelegtes Sprachmodell mit starken Fähigkeiten zur Verarbeitung und Generierung natürlicher Sprache. Es kann eine Vielzahl von Fragen beantworten, Texte erstellen, Meinungen äußern und Code schreiben und spielt in mehreren Bereichen eine Rolle."
   },
