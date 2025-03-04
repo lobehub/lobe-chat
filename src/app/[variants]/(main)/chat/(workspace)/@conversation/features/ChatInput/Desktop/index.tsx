@@ -12,12 +12,13 @@ import TextArea from './TextArea';
 
 const leftActions = [
   'model',
+  'search',
   'fileUpload',
   'knowledgeBase',
+  'params',
   'history',
   'stt',
   'tools',
-  'params',
   'mainToken',
 ] as ActionKeys[];
 

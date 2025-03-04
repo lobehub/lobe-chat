@@ -6,21 +6,12 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
 import { MarkdownElementProps } from '../type';
-
-/**
- * Replace all line breaks in the matched `lobeArtifact` tag with an empty string
- */
-export const isLobeThinkingClosed = (input: string = '') => {
-  const openTag = `<${ARTIFACT_THINKING_TAG}>`;
-  const closeTag = `</${ARTIFACT_THINKING_TAG}>`;
-
-  return input.includes(openTag) && input.includes(closeTag);
-};
+import { isTagClosed } from '../utils';
 
 const Render = memo<MarkdownElementProps>(({ children, id }) => {
   const [isGenerating] = useChatStore((s) => {
     const message = chatSelectors.getMessageById(id)(s);
-    return [!isLobeThinkingClosed(message?.content)];
+    return [!isTagClosed(ARTIFACT_THINKING_TAG, message?.content)];
   });
 
   return (

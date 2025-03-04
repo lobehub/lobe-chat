@@ -119,6 +119,9 @@
   "upstage": {
     "description": "Upstage 专注于为各种商业需求开发AI模型，包括 Solar LLM 和文档 AI，旨在实现工作的人造通用智能（AGI）。通过 Chat API 创建简单的对话代理，并支持功能调用、翻译、嵌入以及特定领域应用。"
   },
+  "vertexai": {
+    "description": "Google 的 Gemini 系列是其最先进、通用的 AI模型，由 Google DeepMind 打造，专为多模态设计，支持文本、代码、图像、音频和视频的无缝理解与处理。适用于从数据中心到移动设备的多种环境，极大提升了AI模型的效率与应用广泛性。"
+  },
   "vllm": {
     "description": "vLLM 是一个快速且易于使用的库，用于 LLM 推理和服务。"
   },
@@ -136,5 +139,9 @@
   },
   "zhipu": {
     "description": "智谱 AI 提供多模态与语言模型的开放平台，支持广泛的AI应用场景，包括文本处理、图像理解与编程辅助等。"
+  },
+  "ppio": {
+    "description": "PPIO 派欧云提供稳定、高性价比的开源模型 API 服务，支持 DeepSeek 全系列、Llama、Qwen 等行业领先大模型。"
   }
 }
+

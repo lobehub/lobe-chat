@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
@@ -32,13 +32,43 @@ describe('createErrorResponse', () => {
     expect(response.status).toBe(403);
   });
 
-  describe('Provider Biz Error', () => {
-    it('returns a 471 status for OpenAIBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.OpenAIBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(471);
-    });
+  it('returns a 404 status for ModelNotFound error type', () => {
+    const errorType = AgentRuntimeErrorType.ModelNotFound;
+    const response = createErrorResponse(errorType);
+    expect(response.status).toBe(404);
+  });
 
+  it('returns a 429 status for InsufficientQuota error type', () => {
+    const errorType = AgentRuntimeErrorType.InsufficientQuota;
+    const response = createErrorResponse(errorType);
+    expect(response.status).toBe(429);
+  });
+
+  it('returns a 429 status for QuotaLimitReached error type', () => {
+    const errorType = AgentRuntimeErrorType.QuotaLimitReached;
+    const response = createErrorResponse(errorType);
+    expect(response.status).toBe(429);
+  });
+
+  it('returns a 400 status for ExceededContextWindow error type', () => {
+    const errorType = AgentRuntimeErrorType.ExceededContextWindow;
+    const response = createErrorResponse(errorType);
+    expect(response.status).toBe(400);
+  });
+
+  it('returns a 400 status for SystemTimeNotMatchError error type', () => {
+    const errorType = ChatErrorType.SystemTimeNotMatchError;
+    const response = createErrorResponse(errorType);
+    expect(response.status).toBe(400);
+  });
+
+  it('returns a 400 status for SubscriptionKeyMismatch error type', () => {
+    const errorType = ChatErrorType.SubscriptionKeyMismatch;
+    const response = createErrorResponse(errorType);
+    expect(response.status).toBe(400);
+  });
+
+  describe('Provider Biz Error', () => {
     it('returns a 471 status for ProviderBizError error type', () => {
       const errorType = AgentRuntimeErrorType.ProviderBizError;
       const response = createErrorResponse(errorType);
@@ -51,10 +81,16 @@ describe('createErrorResponse', () => {
       expect(response.status).toBe(470);
     });
 
-    it('returns a 471 status for OpenAIBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.OpenAIBizError;
-      const response = createErrorResponse(errorType as any);
-      expect(response.status).toBe(471);
+    it('returns a 472 status for OllamaBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.OllamaBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(472);
+    });
+
+    it('returns a 472 status for OllamaServiceUnavailable error type', () => {
+      const errorType = ChatErrorType.OllamaServiceUnavailable;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(472);
     });
   });
 

@@ -1,5 +1,7 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
+// https://siliconflow.cn/zh-cn/models
+
 const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
@@ -20,7 +22,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
+      // Not support tool use, ref: https://cloud.siliconflow.cn/models?target=deepseek-ai%2FDeepSeek-V3
+      functionCall: false,
     },
     contextWindowTokens: 65_536,
     description:
@@ -28,10 +31,10 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek V3',
     enabled: true,
     id: 'deepseek-ai/DeepSeek-V3',
-    pricing: { // 2.9 涨价
+    pricing: {
       currency: 'CNY',
-      input: 1,
-      output: 2,
+      input: 2,
+      output: 8,
     },
     type: 'chat',
   },

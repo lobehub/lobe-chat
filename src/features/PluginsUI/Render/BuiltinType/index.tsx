@@ -7,16 +7,27 @@ import Loading from '../Loading';
 import { useParseContent } from '../useParseContent';
 
 export interface BuiltinTypeProps {
+  apiName?: string;
   arguments?: string;
   content: string;
   id: string;
   identifier?: string;
   loading?: boolean;
+  pluginError?: any;
   pluginState?: any;
 }
 
 const BuiltinType = memo<BuiltinTypeProps>(
-  ({ content, arguments: argumentsStr = '', pluginState, id, identifier, loading }) => {
+  ({
+    content,
+    arguments: argumentsStr = '',
+    pluginState,
+    id,
+    identifier,
+    loading,
+    pluginError,
+    apiName,
+  }) => {
     const { isJSON, data } = useParseContent(content);
 
     if (!isJSON) {
@@ -31,10 +42,12 @@ const BuiltinType = memo<BuiltinTypeProps>(
 
     return (
       <Render
+        apiName={apiName}
         args={args}
         content={data}
         identifier={identifier}
         messageId={id}
+        pluginError={pluginError}
         pluginState={pluginState}
       />
     );

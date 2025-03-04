@@ -322,6 +322,13 @@
     "tooltip": "به‌روزرسانی پیکربندی پایه ارائه‌دهنده",
     "updateSuccess": "به‌روزرسانی با موفقیت انجام شد"
   },
+  "vertexai": {
+    "apiKey": {
+      "desc": "کلیدهای Vertex AI خود را وارد کنید",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "کلیدهای Vertex AI"
+    }
+  },
   "zeroone": {
     "title": "01.AI صفر و یک همه چیز"
   },

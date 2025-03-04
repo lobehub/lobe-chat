@@ -5,12 +5,16 @@ import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { AiModelModel } from '@/database/server/models/aiModel';
 import { AiProviderModel } from '@/database/server/models/aiProvider';
 import { LobeChatDatabase } from '@/database/type';
-import { AIChatModelCard, AiModelSourceEnum, AiProviderModelListItem } from '@/types/aiModel';
+import {
+  AIChatModelCard,
+  AiModelSourceEnum,
+  AiProviderModelListItem,
+  EnabledAiModel,
+} from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
   AiProviderRuntimeState,
-  EnabledAiModel,
   EnabledProvider,
 } from '@/types/aiProvider';
 import { ProviderConfig } from '@/types/user/settings';
@@ -98,7 +102,6 @@ export class AiInfraRepos {
       enabledProviders,
       async (provider) => {
         const aiModels = await this.fetchBuiltinModels(provider.id);
-
         return (aiModels || [])
           .map<EnabledAiModel & { enabled?: boolean | null }>((item) => {
             const user = allModels.find((m) => m.id === item.id && m.providerId === provider.id);
@@ -121,6 +124,7 @@ export class AiInfraRepos {
               enabled: typeof user.enabled === 'boolean' ? user.enabled : item.enabled,
               id: item.id,
               providerId: provider.id,
+              settings: item.settings,
               sort: user.sort || undefined,
               type: item.type,
             };

@@ -322,6 +322,13 @@
     "tooltip": "Hizmet sağlayıcının temel yapılandırmasını güncelle",
     "updateSuccess": "Güncelleme başarılı"
   },
+  "vertexai": {
+    "apiKey": {
+      "desc": "Vertex AI Anahtarlarınızı buraya girin",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI Anahtarları"
+    }
+  },
   "zeroone": {
     "title": "01.AI Sıfır Bir"
   },

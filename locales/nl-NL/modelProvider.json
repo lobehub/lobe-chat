@@ -322,6 +322,13 @@
     "tooltip": "Werk basisconfiguratie van provider bij",
     "updateSuccess": "Bijwerking geslaagd"
   },
+  "vertexai": {
+    "apiKey": {
+      "desc": "Vul je Vertex AI-sleutels in",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI-sleutels"
+    }
+  },
   "zeroone": {
     "title": "01.AI Nul Een Alles"
   },

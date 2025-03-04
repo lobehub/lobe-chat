@@ -118,6 +118,10 @@
     "reinstallError": "Làm mới plugin {{name}} thất bại",
     "urlError": "Liên kết này không trả về nội dung dạng JSON, vui lòng đảm bảo rằng đó là một liên kết hợp lệ"
   },
+  "inspector": {
+    "args": "Xem danh sách tham số",
+    "pluginRender": "Xem giao diện plugin"
+  },
   "list": {
     "item": {
       "deprecated.title": "Đã loại bỏ",
@@ -130,6 +134,34 @@
     "plugin": "Plugin đang chạy..."
   },
   "pluginList": "Danh sách plugin",
+  "search": {
+    "config": {
+      "addKey": "Thêm khóa",
+      "close": "Xóa",
+      "confirm": "Đã hoàn thành cấu hình và thử lại"
+    },
+    "crawPages": {
+      "crawling": "Đang nhận diện liên kết",
+      "detail": {
+        "preview": "Xem trước",
+        "raw": "Văn bản gốc",
+        "tooLong": "Nội dung văn bản quá dài, chỉ giữ lại {{characters}} ký tự đầu tiên trong ngữ cảnh cuộc trò chuyện, phần vượt quá sẽ không được tính vào ngữ cảnh cuộc trò chuyện"
+      },
+      "meta": {
+        "crawler": "Chế độ thu thập",
+        "words": "Số ký tự"
+      }
+    },
+    "searchxng": {
+      "baseURL": "Nhập vào",
+      "description": "Nhập URL của SearchXNG để bắt đầu tìm kiếm trực tuyến",
+      "keyPlaceholder": "Nhập khóa",
+      "title": "Cấu hình công cụ tìm kiếm SearchXNG",
+      "unconfiguredDesc": "Vui lòng liên hệ với quản trị viên để hoàn thành cấu hình công cụ tìm kiếm SearchXNG, để bắt đầu tìm kiếm trực tuyến",
+      "unconfiguredTitle": "Chưa cấu hình công cụ tìm kiếm SearchXNG"
+    },
+    "title": "Tìm kiếm trực tuyến"
+  },
   "setting": "Cài đặt plugin",
   "settings": {
     "indexUrl": {

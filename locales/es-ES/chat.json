@@ -31,6 +31,15 @@
   },
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "No hay asistente disponible",
+  "extendParams": {
+    "enableReasoning": {
+      "title": "Activar el pensamiento profundo"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token de consumo de pensamiento"
+    },
+    "title": "Funcionalidad de extensión del modelo"
+  },
   "historyRange": "Rango de historial",
   "historySummary": "Resumen de mensajes históricos",
   "inbox": {
@@ -84,6 +93,29 @@
   },
   "regenerate": "Regenerar",
   "roleAndArchive": "Rol y archivo",
+  "search": {
+    "grounding": {
+      "searchQueries": "Palabras clave de búsqueda",
+      "title": "Se han encontrado {{count}} resultados"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Determina inteligentemente si se necesita buscar según el contenido de la conversación",
+        "title": "Conexión inteligente"
+      },
+      "disable": "El modelo actual no admite llamadas a funciones, por lo que no se puede utilizar la función de conexión inteligente",
+      "off": {
+        "desc": "Utiliza solo el conocimiento básico del modelo, sin realizar búsquedas en línea",
+        "title": "Desactivar conexión"
+      },
+      "on": {
+        "desc": "Realiza búsquedas en línea continuamente para obtener la información más reciente",
+        "title": "Siempre conectado"
+      },
+      "useModelBuiltin": "Utilizar el motor de búsqueda integrado del modelo"
+    },
+    "title": "Búsqueda en línea"
+  },
   "searchAgentPlaceholder": "Asistente de búsqueda...",
   "sendPlaceholder": "Escribe tu mensaje...",
   "sessionGroup": {

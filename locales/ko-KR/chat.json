@@ -31,6 +31,15 @@
   },
   "duplicateTitle": "{{title}} 복사본",
   "emptyAgent": "도우미가 없습니다",
+  "extendParams": {
+    "enableReasoning": {
+      "title": "심층 사고 활성화"
+    },
+    "reasoningBudgetToken": {
+      "title": "사고 소모 토큰"
+    },
+    "title": "모델 확장 기능"
+  },
   "historyRange": "대화 기록 범위",
   "historySummary": "역사 메시지 요약",
   "inbox": {
@@ -84,6 +93,29 @@
   },
   "regenerate": "재생성",
   "roleAndArchive": "역할 및 아카이브",
+  "search": {
+    "grounding": {
+      "searchQueries": "검색 키워드",
+      "title": "{{count}}개의 결과가 검색되었습니다"
+    },
+    "mode": {
+      "auto": {
+        "desc": "대화 내용을 기반으로 검색 필요성을 스마트하게 판단",
+        "title": "스마트 연결"
+      },
+      "disable": "현재 모델은 함수 호출을 지원하지 않으므로 스마트 연결 기능을 사용할 수 없습니다",
+      "off": {
+        "desc": "모델의 기본 지식만 사용하고 네트워크 검색을 수행하지 않음",
+        "title": "연결 끄기"
+      },
+      "on": {
+        "desc": "지속적으로 네트워크 검색을 수행하여 최신 정보를 얻음",
+        "title": "항상 연결"
+      },
+      "useModelBuiltin": "모델 내장 검색 엔진 사용"
+    },
+    "title": "연결 검색"
+  },
   "searchAgentPlaceholder": "검색 도우미...",
   "sendPlaceholder": "채팅 내용 입력...",
   "sessionGroup": {

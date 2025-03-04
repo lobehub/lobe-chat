@@ -322,6 +322,13 @@
     "tooltip": "更新服務商基礎配置",
     "updateSuccess": "更新成功"
   },
+  "vertexai": {
+    "apiKey": {
+      "desc": "填入你的 Vertex AI 金鑰",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Vertex AI 金鑰"
+    }
+  },
   "zeroone": {
     "title": "01.AI 零一萬物"
   },

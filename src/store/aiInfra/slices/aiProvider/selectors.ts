@@ -87,6 +87,18 @@ const providerKeyVaults = (provider: string | undefined) => (s: AIProviderStoreS
   return s.aiProviderRuntimeConfig?.[provider]?.keyVaults;
 };
 
+const isProviderHasBuiltinSearch = (provider: string) => (s: AIProviderStoreState) => {
+  const config = providerConfigById(provider)(s);
+
+  return !!config?.settings.searchMode;
+};
+
+const isProviderHasBuiltinSearchConfig = (id: string) => (s: AIProviderStoreState) => {
+  const providerCfg = providerConfigById(id)(s);
+
+  return !!providerCfg?.settings.searchMode && providerCfg?.settings.searchMode !== 'internal';
+};
+
 export const aiProviderSelectors = {
   activeProviderConfig,
   disabledAiProviderList,
@@ -97,6 +109,8 @@ export const aiProviderSelectors = {
   isProviderConfigUpdating,
   isProviderEnabled,
   isProviderFetchOnClient,
+  isProviderHasBuiltinSearch,
+  isProviderHasBuiltinSearchConfig,
   isProviderLoading,
   providerConfigById,
   providerKeyVaults,
