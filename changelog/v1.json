@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Fix provider order."]
+    },
+    "date": "2025-03-04",
+    "version": "1.68.5"
+  },
+  {
+    "children": {
+      "improvements": ["Support to show token usages."]
+    },
+    "date": "2025-03-04",
+    "version": "1.68.4"
+  },
+  {
+    "children": {
       "fixes": ["Improve url rules."]
     },
     "date": "2025-03-03",

@@ -34,6 +34,7 @@ describe('aiModelSelectors', () => {
         displayName: 'Remote Model',
       },
     ],
+    builtinAiModelList: [],
     modelSearchKeyword: '',
     aiModelLoadingIds: ['model2'],
     enabledAiModels: [
