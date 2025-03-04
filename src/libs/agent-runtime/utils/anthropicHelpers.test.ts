@@ -619,6 +619,26 @@ describe('anthropicHelpers', () => {
         { content: '继续', role: 'user' },
       ]);
     });
+
+    it('should enable cache control', async () => {
+      const messages: OpenAIChatMessage[] = [
+        { content: 'Hello', role: 'user' },
+        { content: 'Hello', role: 'user' },
+        { content: 'Hi', role: 'assistant' },
+      ];
+
+      const contents = await buildAnthropicMessages(messages, { enabledContextCaching: true });
+
+      expect(contents).toHaveLength(3);
+      expect(contents).toEqual([
+        { content: 'Hello', role: 'user' },
+        { content: 'Hello', role: 'user' },
+        {
+          content: [{ cache_control: { type: 'ephemeral' }, text: 'Hi', type: 'text' }],
+          role: 'assistant',
+        },
+      ]);
+    });
   });
 
   describe('buildAnthropicTools', () => {

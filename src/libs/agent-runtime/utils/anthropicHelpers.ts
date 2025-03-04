@@ -130,6 +130,7 @@ export const buildAnthropicMessage = async (
 
 export const buildAnthropicMessages = async (
   oaiMessages: OpenAIChatMessage[],
+  options: { enabledContextCaching?: boolean } = {},
 ): Promise<Anthropic.Messages.MessageParam[]> => {
   const messages: Anthropic.Messages.MessageParam[] = [];
   let pendingToolResults: Anthropic.ToolResultBlockParam[] = [];
@@ -180,8 +181,31 @@ export const buildAnthropicMessages = async (
     }
   }
 
+  const lastMessage = messages.at(-1);
+  if (options.enabledContextCaching && !!lastMessage) {
+    if (typeof lastMessage.content === 'string') {
+      lastMessage.content = [
+        {
+          cache_control: { type: 'ephemeral' },
+          text: lastMessage.content as string,
+          type: 'text',
+        },
+      ];
+    } else {
+      const lastContent = lastMessage.content.at(-1);
+
+      if (
+        lastContent &&
+        lastContent.type !== 'thinking' &&
+        lastContent.type !== 'redacted_thinking'
+      ) {
+        lastContent.cache_control = { type: 'ephemeral' };
+      }
+    }
+  }
   return messages;
 };
+
 export const buildAnthropicTools = (tools?: OpenAI.ChatCompletionTool[]) =>
   tools?.map(
     (tool): Anthropic.Tool => ({
