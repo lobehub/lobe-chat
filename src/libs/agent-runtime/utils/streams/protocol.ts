@@ -44,6 +44,8 @@ export interface StreamProtocolChunk {
     | 'stop'
     // Error
     | 'error'
+    // token usage
+    | 'usage'
     // unknown data result
     | 'data';
 }

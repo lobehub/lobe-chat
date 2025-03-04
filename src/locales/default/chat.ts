@@ -81,6 +81,33 @@ export default {
     deleteDisabledByThreads: '存在子话题，不能删除',
     regenerate: '重新生成',
   },
+  messages: {
+    modelCard: {
+      pricing: {
+        image: '${{amount}}/图片',
+        inputCachedTokens: '输入缓存 ${{amount}}/M',
+        inputCharts: '${{amount}}/M 字符',
+        inputMinutes: '${{amount}}/分钟',
+        inputTokens: '输入 ${{amount}}/M',
+        outputTokens: '输出 ${{amount}}/M',
+      },
+    },
+    tokenDetails: {
+      input: '输入',
+      inputAudio: '音频输入',
+      inputCached: '输入缓存',
+      inputText: '文本输入',
+      inputTitle: '输入明细',
+      inputUncached: '输入未缓存',
+      output: '输出',
+      outputAudio: '音频输出',
+      outputText: '文本输出',
+      outputTitle: '输出明细',
+      reasoning: '深度思考',
+      title: '生成明细',
+      total: '总计消耗',
+    },
+  },
   newAgent: '新建助手',
   pin: '置顶',
   pinOff: '取消置顶',
@@ -194,7 +221,6 @@ export default {
     action: '语音朗读',
     clear: '删除语音',
   },
-
   updateAgent: '更新助理信息',
   upload: {
     action: {

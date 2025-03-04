@@ -38,14 +38,34 @@ export const transformOpenAIStream = (
   }
 
   try {
+    if (chunk.usage) {
+      const usage = chunk.usage;
+      return {
+        data: {
+          acceptedPredictionTokens: usage.completion_tokens_details?.accepted_prediction_tokens,
+          cachedTokens:
+            (usage as any).prompt_cache_hit_tokens || usage.prompt_tokens_details?.cached_tokens,
+          completionTokens: usage.completion_tokens,
+          inputAudioTokens: usage.prompt_tokens_details?.audio_tokens,
+          inputCacheMissTokens: (usage as any).prompt_cache_miss_tokens,
+          inputTokens: usage.prompt_tokens,
+          outputAudioTokens: usage.completion_tokens_details?.audio_tokens,
+          reasoningTokens: usage.completion_tokens_details?.reasoning_tokens,
+          rejectedPredictionTokens: usage.completion_tokens_details?.rejected_prediction_tokens,
+          totalTokens: usage.total_tokens,
+        },
+        id: chunk.id,
+        type: 'usage',
+      };
+    }
     // maybe need another structure to add support for multiple choices
     const item = chunk.choices[0];
     if (!item) {
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
-    // tools calling
-    if (typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
+    if (item && typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
+      // tools calling
       const tool_calls = item.delta.tool_calls.filter(
         (value) => value.index >= 0 || typeof value.index === 'undefined',
       );
@@ -147,7 +167,7 @@ export const transformOpenAIStream = (
                       ({
                         title: typeof item === 'string' ? item : item.title,
                         url: typeof item === 'string' ? item : item.url,
-                      }) as CitationItem
+                      }) as CitationItem,
                   ),
                 },
                 id: chunk.id,
