@@ -22,7 +22,11 @@ const filteredAiProviderModelList = (s: AIProviderStoreState) => {
 };
 
 const totalAiProviderModelList = (s: AIProviderStoreState) => s.aiProviderModelList.length;
+
 const isEmptyAiProviderModelList = (s: AIProviderStoreState) => totalAiProviderModelList(s) === 0;
+
+const getModelCard = (model: string, provider: string) => (s: AIProviderStoreState) =>
+  s.builtinAiModelList.find((item) => item.id === model && item.providerId === provider);
 
 const hasRemoteModels = (s: AIProviderStoreState) =>
   s.aiProviderModelList.some((m) => m.source === AiModelSourceEnum.Remote);
@@ -113,6 +117,7 @@ export const aiModelSelectors = {
   filteredAiProviderModelList,
   getAiModelById,
   getEnabledModelById,
+  getModelCard,
   hasRemoteModels,
   isEmptyAiProviderModelList,
   isModelEnabled,
