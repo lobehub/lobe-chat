@@ -62,8 +62,11 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
               ? model.top_provider.max_completion_tokens
               : undefined,
           pricing: {
-            input: Number(model.pricing.prompt) * 1e6,
-            output: Number(model.pricing.completion) * 1e6,
+            input: model.pricing.prompt === '-1' ? undefined : Number(model.pricing.prompt) * 1e6,
+            output:
+              model.pricing.completion === '-1'
+                ? undefined
+                : Number(model.pricing.completion) * 1e6,
           },
           reasoning:
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
