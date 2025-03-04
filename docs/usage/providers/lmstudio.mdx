@@ -1,0 +1,75 @@
+---
+title: Using LM Studio in LobeChat
+description: Learn how to configure and use LM Studio, and run AI models for conversations in LobeChat through LM Studio.
+tags:
+  - LobeChat
+  - LM Studio
+  - Open Source Model
+  - Web UI
+---
+
+# Using LM Studio in LobeChat
+
+<Image alt={'Using LM Studio in LobeChat'} cover src={'https://github.com/user-attachments/assets/cc1f6146-8063-4a4d-947a-7fd6b9133c0c'} />
+
+[LM Studio](https://lmstudio.ai/) is a platform for testing and running large language models (LLMs), providing an intuitive and easy-to-use interface suitable for developers and AI enthusiasts. It supports deploying and running various open-source LLM models, such as Deepseek or Qwen, on local computers, enabling offline AI chatbot functionality, thereby protecting user privacy and providing greater flexibility.
+
+This document will guide you on how to use LM Studio in LobeChat:
+
+<Steps>
+  ### Step 1: Obtain and Install LM Studio
+
+  - Go to the [LM Studio official website](https://lmstudio.ai/)
+  - Choose your platform and download the installation package. LM Studio currently supports MacOS, Windows, and Linux platforms.
+  - Follow the prompts to complete the installation and run LM Studio.
+
+  <Image alt={'Install and run LM Studio'} inStep src={'https://github.com/user-attachments/assets/e887fa04-c553-45f1-917f-5c123ac9c68b'} />
+
+  ### Step 2: Search and Download Models
+
+  - Open the `Discover` menu on the left, search for and download the model you want to use.
+  - Find a suitable model (such as Deepseek R1) and click download.
+  - The download may take some time, please wait patiently for it to complete.
+
+  <Image alt={'Search and download models'} inStep src={'https://github.com/user-attachments/assets/f878355f-710b-452e-8606-0c75c47f29d2'} />
+
+  ### Step 3: Deploy and Run Models
+
+  - Select the downloaded model in the top model selection bar and load the model.
+  - Configure the model runtime parameters in the pop-up panel. Refer to the [LM Studio official documentation](https://lmstudio.ai/docs) for detailed parameter settings.
+
+  <Image alt={'Configure model runtime parameters'} inStep src={'https://github.com/user-attachments/assets/dba58ea6-7df8-4971-b6d4-b24d5f486ba7'} />
+
+  - Click the `Load Model` button and wait for the model to finish loading and running.
+  - Once the model is loaded, you can use it in the chat interface for conversations.
+
+  ### Step 4: Enable Local Service
+
+  - If you want to use the model through other programs, you need to start a local API service. Start the service through the `Developer` panel or the software menu. The LM Studio service starts on port `1234` on your local machine by default.
+
+  <Image alt={'Start local service'} inStep src={'https://github.com/user-attachments/assets/08ced88b-4968-46e8-b1da-0c04ddf5b743'} />
+
+  - After the local service is started, you also need to enable the `CORS (Cross-Origin Resource Sharing)` option in the service settings so that the model can be used in other programs.
+
+  <Image alt={'Enable CORS'} inStep src={'https://github.com/user-attachments/assets/8ce79bd6-f1a3-48bb-b3d0-5271c84801c2'} />
+
+  ### Step 5: Use LM Studio in LobeChat
+
+  - Visit the `AI Service Provider` interface in LobeChat's `Application Settings`.
+  - Find the settings for `LM Studio` in the list of providers.
+
+  <Image alt={'Fill in the LM Studio address'} inStep src={'https://github.com/user-attachments/assets/143ff392-97b5-427a-97a7-f2f577915728'} />
+
+  - Open the LM Studio service provider and fill in the API service address.
+
+  <Callout type={"warning"}>
+    If your LM Studio is running locally, make sure to turn on `Client Request Mode`.
+  </Callout>
+
+  - Add the model you are running in the model list below.
+  - Select a Volcano Engine model for your assistant to start the conversation.
+
+  <Image alt={'Select LM Studio model'} inStep src={'https://github.com/user-attachments/assets/bd399cef-283c-4706-bdc8-de9de662de41'} />
+</Steps>
+
+Now you can use the model running in LM Studio in LobeChat for conversations.
