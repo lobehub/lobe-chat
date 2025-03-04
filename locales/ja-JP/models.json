@@ -8,6 +8,12 @@
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9Bは16Kトークンをサポートし、高効率でスムーズな言語生成能力を提供します。"
   },
+  "01-ai/yi-1.5-34b-chat": {
+    "description": "零一万物、最新のオープンソース微調整モデル、340億パラメータ、微調整は多様な対話シーンをサポートし、高品質なトレーニングデータで人間の好みに合わせています。"
+  },
+  "01-ai/yi-1.5-9b-chat": {
+    "description": "零一万物、最新のオープンソース微調整モデル、90億パラメータ、微調整は多様な対話シーンをサポートし、高品質なトレーニングデータで人間の好みに合わせています。"
+  },
   "360gpt-pro": {
     "description": "360GPT Proは360 AIモデルシリーズの重要なメンバーであり、高効率なテキスト処理能力を持ち、多様な自然言語アプリケーションシーンに対応し、長文理解や多輪対話などの機能をサポートします。"
   },
@@ -503,6 +509,9 @@
   "aya:35b": {
     "description": "Aya 23は、Cohereが提供する多言語モデルであり、23の言語をサポートし、多様な言語アプリケーションを便利にします。"
   },
+  "baichuan/baichuan2-13b-chat": {
+    "description": "Baichuan-13Bは百川智能が開発した130億パラメータを持つオープンソースの商用大規模言語モデルで、権威ある中国語と英語のベンチマークで同サイズの中で最良の結果を達成しています。"
+  },
   "charglm-3": {
     "description": "CharGLM-3はキャラクター演技と感情的な伴侶のために設計されており、超長期の多段階記憶と個別化された対話をサポートし、幅広い用途に適しています。"
   },
@@ -683,8 +692,29 @@
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1は、わずかなラベル付きデータしかない状況で、モデルの推論能力を大幅に向上させました。最終的な回答を出力する前に、モデルは思考の連鎖を出力し、最終的な答えの正確性を向上させます。"
   },
+  "deepseek/deepseek-r1-distill-llama-70b": {
+    "description": "DeepSeek R1 Distill Llama 70BはLlama3.3 70Bに基づく大規模言語モデルで、DeepSeek R1の出力を微調整に利用し、大規模な最前線モデルと同等の競争力のある性能を実現しています。"
+  },
+  "deepseek/deepseek-r1-distill-llama-8b": {
+    "description": "DeepSeek R1 Distill Llama 8BはLlama-3.1-8B-Instructに基づく蒸留大言語モデルで、DeepSeek R1の出力を使用してトレーニングされています。"
+  },
+  "deepseek/deepseek-r1-distill-qwen-14b": {
+    "description": "DeepSeek R1 Distill Qwen 14BはQwen 2.5 14Bに基づく蒸留大言語モデルで、DeepSeek R1の出力を使用してトレーニングされています。このモデルは複数のベンチマークテストでOpenAIのo1-miniを超え、密なモデル（dense models）の最新技術の成果を達成しました。以下は一部のベンチマークテストの結果です：\nAIME 2024 pass@1: 69.7\nMATH-500 pass@1: 93.9\nCodeForces Rating: 1481\nこのモデルはDeepSeek R1の出力から微調整を行い、より大規模な最前線モデルと同等の競争力のある性能を示しています。"
+  },
+  "deepseek/deepseek-r1-distill-qwen-32b": {
+    "description": "DeepSeek R1 Distill Qwen 32BはQwen 2.5 32Bに基づく蒸留大言語モデルで、DeepSeek R1の出力を使用してトレーニングされています。このモデルは複数のベンチマークテストでOpenAIのo1-miniを超え、密なモデル（dense models）の最新技術の成果を達成しました。以下は一部のベンチマークテストの結果です：\nAIME 2024 pass@1: 72.6\nMATH-500 pass@1: 94.3\nCodeForces Rating: 1691\nこのモデルはDeepSeek R1の出力から微調整を行い、より大規模な最前線モデルと同等の競争力のある性能を示しています。"
+  },
+  "deepseek/deepseek-r1/community": {
+    "description": "DeepSeek R1はDeepSeekチームが発表した最新のオープンソースモデルで、特に数学、プログラミング、推論タスクにおいてOpenAIのo1モデルと同等の推論性能を持っています。"
+  },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1は、わずかなラベル付きデータしかない状況で、モデルの推論能力を大幅に向上させました。最終的な回答を出力する前に、モデルは思考の連鎖を出力し、最終的な答えの正確性を向上させます。"
+  },
+  "deepseek/deepseek-v3": {
+    "description": "DeepSeek-V3は推論速度において前のモデルに比べて大きなブレークスルーを達成しました。オープンソースモデルの中で1位にランクインし、世界の最先端のクローズドモデルと肩を並べることができます。DeepSeek-V3はマルチヘッド潜在注意（MLA）とDeepSeekMoEアーキテクチャを採用しており、これらのアーキテクチャはDeepSeek-V2で完全に検証されています。さらに、DeepSeek-V3は負荷分散のための補助的な非損失戦略を開発し、より強力な性能を得るためにマルチラベル予測トレーニング目標を設定しました。"
+  },
+  "deepseek/deepseek-v3/community": {
+    "description": "DeepSeek-V3は推論速度において前のモデルに比べて大きなブレークスルーを達成しました。オープンソースモデルの中で1位にランクインし、世界の最先端のクローズドモデルと肩を並べることができます。DeepSeek-V3はマルチヘッド潜在注意（MLA）とDeepSeekMoEアーキテクチャを採用しており、これらのアーキテクチャはDeepSeek-V2で完全に検証されています。さらに、DeepSeek-V3は負荷分散のための補助的な非損失戦略を開発し、より強力な性能を得るためにマルチラベル予測トレーニング目標を設定しました。"
   },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-liteは全く新しい世代の軽量版モデルで、極限の応答速度を実現し、効果と遅延の両方で世界トップレベルに達しています。"
@@ -1253,6 +1283,9 @@
   "meta-llama/llama-3.2-11b-vision-instruct": {
     "description": "LLaMA 3.2は、視覚とテキストデータを組み合わせたタスクを処理することを目的としています。画像の説明や視覚的な質問応答などのタスクで優れたパフォーマンスを発揮し、言語生成と視覚推論の間のギャップを超えています。"
   },
+  "meta-llama/llama-3.2-3b-instruct": {
+    "description": "meta-llama/llama-3.2-3b-instruct"
+  },
   "meta-llama/llama-3.2-90b-vision-instruct": {
     "description": "LLaMA 3.2は、視覚とテキストデータを組み合わせたタスクを処理することを目的としています。画像の説明や視覚的な質問応答などのタスクで優れたパフォーマンスを発揮し、言語生成と視覚推論の間のギャップを超えています。"
   },
@@ -1517,8 +1550,20 @@
   "qwen-vl-v1": {
     "description": "Qwen-7B言語モデルを初期化し、画像モデルを追加した、画像入力解像度448の事前トレーニングモデルです。"
   },
+  "qwen/qwen-2-7b-instruct": {
+    "description": "Qwen2は全く新しいQwen大規模言語モデルシリーズです。Qwen2 7Bはトランスフォーマーに基づくモデルで、言語理解、多言語能力、プログラミング、数学、推論において優れた性能を示しています。"
+  },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2は全く新しい大型言語モデルシリーズで、より強力な理解と生成能力を備えています。"
+  },
+  "qwen/qwen-2-vl-72b-instruct": {
+    "description": "Qwen2-VLはQwen-VLモデルの最新のイテレーションで、MathVista、DocVQA、RealWorldQA、MTVQAなどの視覚理解ベンチマークテストで最先端の性能を達成しました。Qwen2-VLは20分以上のビデオを理解し、高品質なビデオベースの質問応答、対話、コンテンツ作成を行うことができます。また、複雑な推論と意思決定能力を備えており、モバイルデバイスやロボットなどと統合し、視覚環境とテキスト指示に基づいて自動操作を行うことができます。英語と中国語に加えて、Qwen2-VLは現在、ほとんどのヨーロッパ言語、日本語、韓国語、アラビア語、ベトナム語など、異なる言語のテキストを画像内で理解することもサポートしています。"
+  },
+  "qwen/qwen-2.5-72b-instruct": {
+    "description": "Qwen2.5-72B-Instructはアリババクラウドが発表した最新の大言語モデルシリーズの一つです。この72Bモデルはコーディングや数学などの分野で顕著な能力の向上を示しています。このモデルは29以上の言語をカバーする多言語サポートも提供しており、中国語、英語などが含まれています。モデルは指示の追従、構造化データの理解、構造化出力（特にJSON）の生成においても顕著な向上を示しています。"
+  },
+  "qwen/qwen2.5-32b-instruct": {
+    "description": "Qwen2.5-32B-Instructはアリババクラウドが発表した最新の大言語モデルシリーズの一つです。この32Bモデルはコーディングや数学などの分野で顕著な能力の向上を示しています。このモデルは29以上の言語をカバーする多言語サポートも提供しており、中国語、英語などが含まれています。モデルは指示の追従、構造化データの理解、構造化出力（特にJSON）の生成においても顕著な向上を示しています。"
   },
   "qwen/qwen2.5-7b-instruct": {
     "description": "中国語と英語に対応したLLMで、言語、プログラミング、数学、推論などの分野に特化しています。"
@@ -1666,6 +1711,9 @@
   },
   "text-embedding-3-small": {
     "description": "効率的で経済的な次世代埋め込みモデル、知識検索やRAGアプリケーションなどのシーンに適しています"
+  },
+  "thudm/glm-4-9b-chat": {
+    "description": "智谱AIが発表したGLM-4シリーズの最新世代の事前トレーニングモデルのオープンソース版です。"
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B)は、高効率の戦略とモデルアーキテクチャを通じて、強化された計算能力を提供します。"
