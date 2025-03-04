@@ -1,20 +1,20 @@
 import { Icon } from '@lobehub/ui';
 import { Divider, Popover } from 'antd';
 import { useTheme } from 'antd-style';
-import { BadgeCent } from 'lucide-react';
+import { BadgeCent, CoinsIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { getDetailsToken } from '@/features/Conversation/Extras/Usage/UsageDetail/tokens';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { ModelTokensUsage } from '@/types/message';
-import { formatIntergerNumber, formatTokenNumber } from '@/utils/format';
+import { formatNumber } from '@/utils/format';
 
 import ModelCard from './ModelCard';
 import TokenProgress, { TokenProgressItem } from './TokenProgress';
+import { getDetailsToken } from './tokens';
 
 interface TokenDetailProps {
   model: string;
@@ -25,9 +25,9 @@ interface TokenDetailProps {
 const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
-  const isShowCredit = useGlobalStore(systemStatusSelectors.isShowCredit);
 
   const modelCard = useAiInfraStore(aiModelSelectors.getModelCard(model, provider));
+  const isShowCredit = useGlobalStore(systemStatusSelectors.isShowCredit) && !!modelCard?.pricing;
 
   const detailTokens = getDetailsToken(usage, modelCard);
   const inputDetails = [
@@ -88,11 +88,16 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
     },
   ].filter(Boolean) as TokenProgressItem[];
 
+  const displayTotal =
+    isShowCredit && !!detailTokens.totalTokens
+      ? formatNumber(detailTokens.totalTokens.credit)
+      : formatNumber(usage.totalTokens);
+
   return (
     <Popover
       arrow={false}
       content={
-        <Flexbox gap={12} style={{ minWidth: 200 }}>
+        <Flexbox gap={20} style={{ minWidth: 200 }}>
           {modelCard && <ModelCard {...modelCard} provider={provider} />}
           {inputDetails.length > 1 && (
             <>
@@ -122,22 +127,17 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
               <div style={{ color: theme.colorTextSecondary }}>
                 {t('messages.tokenDetails.total')}
               </div>
-              <div style={{ fontWeight: 500 }}>{formatIntergerNumber(usage.totalTokens)}</div>
+              <div style={{ fontWeight: 500 }}>{displayTotal}</div>
             </Flexbox>
           </Flexbox>
         </Flexbox>
       }
-      open
       placement={'top'}
       trigger={['hover', 'click']}
     >
       <Center gap={2} horizontal style={{ cursor: 'default' }}>
-        <Icon icon={BadgeCent} />
-        {
-          (isShowCredit
-            ? detailTokens.totalTokens?.credit
-            : formatTokenNumber(detailTokens.totalTokens?.token))!
-        }
+        <Icon icon={isShowCredit ? BadgeCent : CoinsIcon} />
+        {displayTotal}
       </Center>
     </Popover>
   );

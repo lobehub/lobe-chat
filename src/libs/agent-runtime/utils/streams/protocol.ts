@@ -1,4 +1,5 @@
 import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ModelTokensUsage } from '@/types/message';
 
 import { AgentRuntimeErrorType } from '../../error';
 
@@ -23,6 +24,7 @@ export interface StreamContext {
     name: string;
   };
   toolIndex?: number;
+  usage?: ModelTokensUsage;
 }
 
 export interface StreamProtocolChunk {

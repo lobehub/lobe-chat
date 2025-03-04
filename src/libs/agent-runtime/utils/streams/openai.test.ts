@@ -433,7 +433,7 @@ describe('OpenAIStream', () => {
         `data: "stop"\n`,
         'id: chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
         'event: usage',
-        `data: {"acceptedPredictionTokens":0,"cachedTokens":0,"completionTokens":11,"inputAudioTokens":0,"inputTokens":1646,"outputAudioTokens":0,"reasoningTokens":0,"rejectedPredictionTokens":0,"totalTokens":1657}\n`,
+        `data: {"acceptedPredictionTokens":0,"cachedTokens":0,"inputAudioTokens":0,"inputTokens":1646,"outputAudioTokens":0,"outputTokens":11,"reasoningTokens":0,"rejectedPredictionTokens":0,"totalTokens":1657}\n`,
       ].map((i) => `${i}\n`),
     );
   });
@@ -840,7 +840,7 @@ describe('OpenAIStream', () => {
           `data: "帮助。"\n`,
           'id: 1',
           'event: usage',
-          `data: {"cachedTokens":0,"completionTokens":104,"inputTokens":6,"reasoningTokens":70,"totalTokens":110}\n`,
+          `data: {"cachedTokens":0,"inputCacheMissTokens":6,"inputTokens":6,"outputTokens":104,"reasoningTokens":70,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -1059,7 +1059,7 @@ describe('OpenAIStream', () => {
           `data: "帮助。"\n`,
           'id: 1',
           'event: usage',
-          `data: {"cachedTokens":0,"completionTokens":104,"inputCacheMissTokens":6,"inputTokens":6,"reasoningTokens":70,"totalTokens":110}\n`,
+          `data: {"cachedTokens":0,"inputCacheMissTokens":6,"inputTokens":6,"outputTokens":104,"reasoningTokens":70,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -1260,7 +1260,7 @@ describe('OpenAIStream', () => {
           `data: "帮助。"\n`,
           'id: 1',
           'event: usage',
-          `data: {"cachedTokens":0,"completionTokens":104,"inputCacheMissTokens":6,"inputTokens":6,"reasoningTokens":70,"totalTokens":110}\n`,
+          `data: {"cachedTokens":0,"inputCacheMissTokens":6,"inputTokens":6,"outputTokens":104,"reasoningTokens":70,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -1461,7 +1461,7 @@ describe('OpenAIStream', () => {
           `data: "帮助。"\n`,
           'id: 1',
           'event: usage',
-          `data: {"cachedTokens":0,"completionTokens":104,"inputCacheMissTokens":6,"inputTokens":6,"reasoningTokens":70,"totalTokens":110}\n`,
+          `data: {"cachedTokens":0,"inputCacheMissTokens":6,"inputTokens":6,"outputTokens":104,"reasoningTokens":70,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -1662,7 +1662,7 @@ describe('OpenAIStream', () => {
           `data: "帮助。"\n`,
           'id: 1',
           'event: usage',
-          `data: {"cachedTokens":0,"completionTokens":104,"inputCacheMissTokens":6,"inputTokens":6,"reasoningTokens":70,"totalTokens":110}\n`,
+          `data: {"cachedTokens":0,"inputCacheMissTokens":6,"inputTokens":6,"outputTokens":104,"reasoningTokens":70,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });

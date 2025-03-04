@@ -83,13 +83,16 @@ export default {
   },
   messages: {
     modelCard: {
+      credit: '积分',
+      creditPricing: '定价',
+      creditTooltip:
+        '为便于计数，我们将 1$ 折算为 1M 积分，例如 $3/M tokens 即可折算为 3积分/token',
       pricing: {
-        image: '${{amount}}/图片',
-        inputCachedTokens: '输入缓存 ${{amount}}/M',
+        inputCachedTokens: '缓存输入 {{amount}}/积分 · ${{amount}}/M',
         inputCharts: '${{amount}}/M 字符',
         inputMinutes: '${{amount}}/分钟',
-        inputTokens: '输入 ${{amount}}/M',
-        outputTokens: '输出 ${{amount}}/M',
+        inputTokens: '输入 {{amount}}/积分 · ${{amount}}/M',
+        outputTokens: '输出 {{amount}}/积分 · ${{amount}}/M',
       },
     },
     tokenDetails: {

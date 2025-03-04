@@ -11,15 +11,21 @@ export const getDetailsToken = (
   usage: ModelTokensUsage,
   modelCard?: LobeDefaultAiModelListItem,
 ) => {
-  console.log('usage:', usage);
-  const uncachedInputCredit = !!usage.inputTokens
-    ? calcCredit(usage.inputTokens - (usage.cachedTokens || 0), modelCard?.pricing?.input)
-    : 0;
+  const uncachedInputCredit = (
+    !!usage.inputTokens
+      ? calcCredit(usage.inputTokens - (usage.cachedTokens || 0), modelCard?.pricing?.input)
+      : 0
+  ) as number;
 
-  const cachedInputCredit = !!usage.cachedTokens
-    ? calcCredit(usage.cachedTokens, modelCard?.pricing?.cachedInput)
-    : 0;
+  const cachedInputCredit = (
+    !!usage.cachedTokens ? calcCredit(usage.cachedTokens, modelCard?.pricing?.cachedInput) : 0
+  ) as number;
 
+  const totalOutput = (
+    !!usage.outputTokens ? calcCredit(usage.outputTokens, modelCard?.pricing?.output) : 0
+  ) as number;
+
+  const totalTokens = uncachedInputCredit + cachedInputCredit + totalOutput;
   return {
     cachedInput: !!usage.cachedTokens
       ? {
@@ -50,14 +56,13 @@ export const getDetailsToken = (
         }
       : undefined,
 
-    outputText: !!usage.completionTokens
+    outputText: !!usage.outputTokens
       ? {
           credit: calcCredit(
-            usage.completionTokens - (usage.reasoningTokens || 0) - (usage.outputAudioTokens || 0),
+            usage.outputTokens - (usage.reasoningTokens || 0) - (usage.outputAudioTokens || 0),
             modelCard?.pricing?.output,
           ),
-          token:
-            usage.completionTokens - (usage.reasoningTokens || 0) - (usage.outputAudioTokens || 0),
+          token: usage.outputTokens - (usage.reasoningTokens || 0) - (usage.outputAudioTokens || 0),
         }
       : undefined,
     reasoning: !!usage.reasoningTokens
@@ -67,15 +72,15 @@ export const getDetailsToken = (
         }
       : undefined,
 
-    totalOutput: !!usage.completionTokens
+    totalOutput: !!usage.outputTokens
       ? {
-          credit: calcCredit(usage.completionTokens, modelCard?.pricing?.output),
-          token: usage.completionTokens,
+          credit: totalOutput,
+          token: usage.outputTokens,
         }
       : undefined,
     totalTokens: !!usage.totalTokens
       ? {
-          credit: calcCredit(usage.totalTokens, modelCard?.pricing?.output),
+          credit: totalTokens,
           token: usage.totalTokens,
         }
       : undefined,

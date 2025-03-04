@@ -222,6 +222,10 @@ describe('AnthropicStream', () => {
         'id: msg_017aTuY86wNxth5TE544yqJq',
         'event: stop',
         'data: "tool_use"\n',
+
+        'id: msg_017aTuY86wNxth5TE544yqJq',
+        'event: usage',
+        'data: {"inputTokens":457,"outputTokens":84,"totalTokens":541}\n',
       ].map((item) => `${item}\n`),
     );
 
@@ -376,6 +380,10 @@ describe('AnthropicStream', () => {
         'data: "tool_use"\n',
 
         'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: usage',
+        'data: {"inputTokens":485,"outputTokens":154,"totalTokens":639}\n',
+
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
         'event: stop',
         'data: "message_stop"\n',
       ].map((item) => `${item}\n`),
@@ -505,6 +513,9 @@ describe('AnthropicStream', () => {
           'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
           'event: stop',
           'data: "end_turn"\n',
+          'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
+          'event: usage',
+          'data: {"inputTokens":46,"outputTokens":365,"totalTokens":411}\n',
           'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
           'event: stop',
           'data: "message_stop"\n',
@@ -662,6 +673,9 @@ describe('AnthropicStream', () => {
           'id: msg_019q32esPvu3TftzZnL6JPys',
           'event: stop',
           'data: "end_turn"\n',
+          'id: msg_019q32esPvu3TftzZnL6JPys',
+          'event: usage',
+          'data: {"inputTokens":92,"outputTokens":263,"totalTokens":355}\n',
           'id: msg_019q32esPvu3TftzZnL6JPys',
           'event: stop',
           'data: "message_stop"\n',

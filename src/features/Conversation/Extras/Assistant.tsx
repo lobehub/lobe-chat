@@ -13,11 +13,11 @@ import Translate from './Translate';
 import Usage from './Usage';
 
 export const AssistantMessageExtra: RenderMessageExtra = memo<ChatMessage>(
-  ({ extra, id, content, metadata }) => {
+  ({ extra, id, content, metadata, tools }) => {
     const loading = useChatStore(chatSelectors.isMessageGenerating(id));
 
     return (
-      <Flexbox gap={8}>
+      <Flexbox gap={8} style={{ marginTop: !!tools?.length ? 8 : 4 }}>
         {content !== LOADING_FLAT && extra?.fromModel && (
           <Usage
             metadata={metadata || {}}

@@ -390,6 +390,9 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         }
 
         case 'text': {
+          // skip empty text
+          if (!data) break;
+
           if (textSmoothing) {
             textController.pushToQueue(data);
 
