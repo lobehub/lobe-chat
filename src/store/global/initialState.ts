@@ -60,8 +60,8 @@ export interface SystemStatus {
   showChatSideBar?: boolean;
   showFilePanel?: boolean;
   showSessionPanel?: boolean;
-  threadInputHeight: number;
   showSystemRole?: boolean;
+  threadInputHeight: number;
   zenMode?: boolean;
 }
 
