@@ -8,6 +8,12 @@
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9B supports 16K tokens, providing efficient and smooth language generation capabilities."
   },
+  "01-ai/yi-1.5-34b-chat": {
+    "description": "Zero One Everything, the latest open-source fine-tuned model with 34 billion parameters, supports various dialogue scenarios with high-quality training data aligned with human preferences."
+  },
+  "01-ai/yi-1.5-9b-chat": {
+    "description": "Zero One Everything, the latest open-source fine-tuned model with 9 billion parameters, supports various dialogue scenarios with high-quality training data aligned with human preferences."
+  },
   "360gpt-pro": {
     "description": "360GPT Pro, as an important member of the 360 AI model series, meets diverse natural language application scenarios with efficient text processing capabilities, supporting long text understanding and multi-turn dialogue."
   },
@@ -503,6 +509,9 @@
   "aya:35b": {
     "description": "Aya 23 is a multilingual model launched by Cohere, supporting 23 languages, facilitating diverse language applications."
   },
+  "baichuan/baichuan2-13b-chat": {
+    "description": "Baichuan-13B is an open-source, commercially usable large language model developed by Baichuan Intelligence, containing 13 billion parameters, achieving the best results in its size on authoritative Chinese and English benchmarks."
+  },
   "charglm-3": {
     "description": "CharGLM-3 is designed for role-playing and emotional companionship, supporting ultra-long multi-turn memory and personalized dialogue, with wide applications."
   },
@@ -683,8 +692,29 @@
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 significantly enhances model reasoning capabilities with minimal labeled data. Before outputting the final answer, the model first provides a chain of thought to improve the accuracy of the final response."
   },
+  "deepseek/deepseek-r1-distill-llama-70b": {
+    "description": "DeepSeek R1 Distill Llama 70B is a large language model based on Llama3.3 70B, which achieves competitive performance comparable to large cutting-edge models by utilizing fine-tuning from DeepSeek R1 outputs."
+  },
+  "deepseek/deepseek-r1-distill-llama-8b": {
+    "description": "DeepSeek R1 Distill Llama 8B is a distilled large language model based on Llama-3.1-8B-Instruct, trained using outputs from DeepSeek R1."
+  },
+  "deepseek/deepseek-r1-distill-qwen-14b": {
+    "description": "DeepSeek R1 Distill Qwen 14B is a distilled large language model based on Qwen 2.5 14B, trained using outputs from DeepSeek R1. This model has surpassed OpenAI's o1-mini in several benchmark tests, achieving state-of-the-art results for dense models. Here are some benchmark results:\nAIME 2024 pass@1: 69.7\nMATH-500 pass@1: 93.9\nCodeForces Rating: 1481\nThis model demonstrates competitive performance comparable to larger cutting-edge models through fine-tuning from DeepSeek R1 outputs."
+  },
+  "deepseek/deepseek-r1-distill-qwen-32b": {
+    "description": "DeepSeek R1 Distill Qwen 32B is a distilled large language model based on Qwen 2.5 32B, trained using outputs from DeepSeek R1. This model has surpassed OpenAI's o1-mini in several benchmark tests, achieving state-of-the-art results for dense models. Here are some benchmark results:\nAIME 2024 pass@1: 72.6\nMATH-500 pass@1: 94.3\nCodeForces Rating: 1691\nThis model demonstrates competitive performance comparable to larger cutting-edge models through fine-tuning from DeepSeek R1 outputs."
+  },
+  "deepseek/deepseek-r1/community": {
+    "description": "DeepSeek R1 is the latest open-source model released by the DeepSeek team, featuring impressive inference performance, particularly in mathematics, programming, and reasoning tasks, reaching levels comparable to OpenAI's o1 model."
+  },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 significantly enhances model reasoning capabilities with minimal labeled data. Before outputting the final answer, the model first provides a chain of thought to improve the accuracy of the final response."
+  },
+  "deepseek/deepseek-v3": {
+    "description": "DeepSeek-V3 has achieved a significant breakthrough in inference speed compared to previous models. It ranks first among open-source models and can compete with the world's most advanced closed-source models. DeepSeek-V3 employs Multi-Head Latent Attention (MLA) and DeepSeekMoE architectures, which have been thoroughly validated in DeepSeek-V2. Additionally, DeepSeek-V3 introduces an auxiliary lossless strategy for load balancing and sets multi-label prediction training objectives for enhanced performance."
+  },
+  "deepseek/deepseek-v3/community": {
+    "description": "DeepSeek-V3 has achieved a significant breakthrough in inference speed compared to previous models. It ranks first among open-source models and can compete with the world's most advanced closed-source models. DeepSeek-V3 employs Multi-Head Latent Attention (MLA) and DeepSeekMoE architectures, which have been thoroughly validated in DeepSeek-V2. Additionally, DeepSeek-V3 introduces an auxiliary lossless strategy for load balancing and sets multi-label prediction training objectives for enhanced performance."
   },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite is a new generation lightweight model, offering extreme response speed with performance and latency at a world-class level."
@@ -1253,6 +1283,9 @@
   "meta-llama/llama-3.2-11b-vision-instruct": {
     "description": "LLaMA 3.2 is designed to handle tasks that combine visual and textual data. It excels in tasks such as image description and visual question answering, bridging the gap between language generation and visual reasoning."
   },
+  "meta-llama/llama-3.2-3b-instruct": {
+    "description": "meta-llama/llama-3.2-3b-instruct"
+  },
   "meta-llama/llama-3.2-90b-vision-instruct": {
     "description": "LLaMA 3.2 is designed to handle tasks that combine visual and textual data. It excels in tasks such as image description and visual question answering, bridging the gap between language generation and visual reasoning."
   },
@@ -1517,8 +1550,20 @@
   "qwen-vl-v1": {
     "description": "Initialized with the Qwen-7B language model, this pre-trained model adds an image model with an input resolution of 448."
   },
+  "qwen/qwen-2-7b-instruct": {
+    "description": "Qwen2 is a brand new series of large language models. Qwen2 7B is a transformer-based model that excels in language understanding, multilingual capabilities, programming, mathematics, and reasoning."
+  },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2 is a brand new series of large language models with enhanced understanding and generation capabilities."
+  },
+  "qwen/qwen-2-vl-72b-instruct": {
+    "description": "Qwen2-VL is the latest iteration of the Qwen-VL model, achieving state-of-the-art performance in visual understanding benchmarks, including MathVista, DocVQA, RealWorldQA, and MTVQA. Qwen2-VL can understand videos over 20 minutes long for high-quality video-based Q&A, dialogue, and content creation. It also possesses complex reasoning and decision-making capabilities, allowing integration with mobile devices, robots, and more for automated operations based on visual environments and text instructions. In addition to English and Chinese, Qwen2-VL now supports understanding text in different languages within images, including most European languages, Japanese, Korean, Arabic, and Vietnamese."
+  },
+  "qwen/qwen-2.5-72b-instruct": {
+    "description": "Qwen2.5-72B-Instruct is one of the latest large language model series released by Alibaba Cloud. This 72B model has significantly improved capabilities in coding and mathematics. The model also offers multilingual support, covering over 29 languages, including Chinese and English. It shows significant enhancements in instruction following, understanding structured data, and generating structured outputs (especially JSON)."
+  },
+  "qwen/qwen2.5-32b-instruct": {
+    "description": "Qwen2.5-32B-Instruct is one of the latest large language model series released by Alibaba Cloud. This 32B model has significantly improved capabilities in coding and mathematics. The model provides multilingual support, covering over 29 languages, including Chinese and English. It shows significant enhancements in instruction following, understanding structured data, and generating structured outputs (especially JSON)."
   },
   "qwen/qwen2.5-7b-instruct": {
     "description": "An LLM focused on both Chinese and English, targeting language, programming, mathematics, reasoning, and more."
@@ -1666,6 +1711,9 @@
   },
   "text-embedding-3-small": {
     "description": "An efficient and cost-effective next-generation embedding model, suitable for knowledge retrieval, RAG applications, and more."
+  },
+  "thudm/glm-4-9b-chat": {
+    "description": "The open-source version of the latest generation pre-trained model from the GLM-4 series released by Zhiyuan AI."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) provides enhanced computational capabilities through efficient strategies and model architecture."

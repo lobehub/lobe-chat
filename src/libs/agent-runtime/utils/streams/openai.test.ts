@@ -348,6 +348,96 @@ describe('OpenAIStream', () => {
     ]);
   });
 
+  it('should streaming token usage', async () => {
+    const data = [
+      {
+        id: 'chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+        object: 'chat.completion.chunk',
+        created: 1741056525,
+        model: 'gpt-4o-mini-2024-07-18',
+        choices: [{ index: 0, delta: { role: 'assistant', content: '' } }],
+        service_tier: 'default',
+        system_fingerprint: 'fp_06737a9306',
+      },
+      {
+        id: 'chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+        object: 'chat.completion.chunk',
+        created: 1741056525,
+        model: 'gpt-4o-mini-2024-07-18',
+        choices: [{ index: 0, delta: { content: '你好！' } }],
+        service_tier: 'default',
+        system_fingerprint: 'fp_06737a9306',
+      },
+      {
+        id: 'chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+        object: 'chat.completion.chunk',
+        created: 1741056525,
+        model: 'gpt-4o-mini-2024-07-18',
+        choices: [{ index: 0, delta: {}, finish_reason: 'stop' }],
+        service_tier: 'default',
+        system_fingerprint: 'fp_06737a9306',
+      },
+      {
+        id: 'chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+        object: 'chat.completion.chunk',
+        created: 1741056525,
+        model: 'gpt-4o-mini-2024-07-18',
+        choices: [],
+        service_tier: 'default',
+        system_fingerprint: 'fp_06737a9306',
+        usage: {
+          prompt_tokens: 1646,
+          completion_tokens: 11,
+          total_tokens: 1657,
+          prompt_tokens_details: { audio_tokens: 0, cached_tokens: 0 },
+          completion_tokens_details: {
+            accepted_prediction_tokens: 0,
+            audio_tokens: 0,
+            reasoning_tokens: 0,
+            rejected_prediction_tokens: 0,
+          },
+        },
+      },
+    ];
+
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        data.forEach((chunk) => {
+          controller.enqueue(chunk);
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+        'event: text',
+        `data: ""\n`,
+        'id: chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+        'event: text',
+        `data: "你好！"\n`,
+        'id: chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+        'event: stop',
+        `data: "stop"\n`,
+        'id: chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+        'event: usage',
+        `data: {"acceptedPredictionTokens":0,"cachedTokens":0,"inputAudioTokens":0,"inputTokens":1646,"outputAudioTokens":0,"outputTokens":11,"reasoningTokens":0,"rejectedPredictionTokens":0,"totalTokens":1657}\n`,
+      ].map((i) => `${i}\n`),
+    );
+  });
+
   describe('Tools Calling', () => {
     it('should handle OpenAI official tool calls', async () => {
       const mockOpenAIStream = new ReadableStream({
@@ -749,8 +839,8 @@ describe('OpenAIStream', () => {
           'event: text',
           `data: "帮助。"\n`,
           'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
+          'event: usage',
+          `data: {"cachedTokens":0,"inputCacheMissTokens":6,"inputTokens":6,"outputTokens":104,"reasoningTokens":70,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -968,8 +1058,8 @@ describe('OpenAIStream', () => {
           'event: text',
           `data: "帮助。"\n`,
           'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
+          'event: usage',
+          `data: {"cachedTokens":0,"inputCacheMissTokens":6,"inputTokens":6,"outputTokens":104,"reasoningTokens":70,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -1169,8 +1259,8 @@ describe('OpenAIStream', () => {
           'event: text',
           `data: "帮助。"\n`,
           'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
+          'event: usage',
+          `data: {"cachedTokens":0,"inputCacheMissTokens":6,"inputTokens":6,"outputTokens":104,"reasoningTokens":70,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -1370,8 +1460,8 @@ describe('OpenAIStream', () => {
           'event: text',
           `data: "帮助。"\n`,
           'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
+          'event: usage',
+          `data: {"cachedTokens":0,"inputCacheMissTokens":6,"inputTokens":6,"outputTokens":104,"reasoningTokens":70,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -1571,8 +1661,8 @@ describe('OpenAIStream', () => {
           'event: text',
           `data: "帮助。"\n`,
           'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
+          'event: usage',
+          `data: {"cachedTokens":0,"inputCacheMissTokens":6,"inputTokens":6,"outputTokens":104,"reasoningTokens":70,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
