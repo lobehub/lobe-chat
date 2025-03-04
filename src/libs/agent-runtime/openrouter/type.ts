@@ -19,6 +19,7 @@ interface ModelTopProvider {
 export interface OpenRouterModelCard {
   architecture: ModelArchitecture;
   context_length: number;
+  created: number;
   description: string;
   id: string;
   name: string;

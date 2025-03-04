@@ -28,8 +28,6 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const visionKeywords = ['qwen/qvq', 'vision'];
-
     const reasoningKeywords = [
       'deepseek/deepseek-r1',
       'openai/o1',
@@ -63,16 +61,17 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
             typeof model.top_provider.max_completion_tokens === 'number'
               ? model.top_provider.max_completion_tokens
               : undefined,
+          pricing: {
+            input: Number(model.pricing.prompt) * 1e6,
+            output: Number(model.pricing.completion) * 1e6,
+          },
           reasoning:
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.reasoning ||
             false,
+          releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
           vision:
-            model.description.includes('vision') ||
-            model.description.includes('multimodal') ||
-            visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.vision ||
-            false,
+            model.architecture.modality.includes('image') || knownModel?.abilities?.vision || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];
