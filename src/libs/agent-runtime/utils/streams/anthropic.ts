@@ -1,6 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Stream } from '@anthropic-ai/sdk/streaming';
 
+import { ModelTokensUsage } from '@/types/message';
+
 import { ChatStreamCallbacks } from '../../types';
 import {
   StreamContext,
@@ -20,6 +22,11 @@ export const transformAnthropicStream = (
   switch (chunk.type) {
     case 'message_start': {
       context.id = chunk.message.id;
+      context.usage = {
+        inputTokens: chunk.message.usage?.input_tokens,
+        outputTokens: chunk.message.usage?.output_tokens,
+      };
+
       return { data: chunk.message, id: chunk.message.id, type: 'data' };
     }
     case 'content_block_start': {
@@ -133,6 +140,24 @@ export const transformAnthropicStream = (
     }
 
     case 'message_delta': {
+      const outputTokens = chunk.usage?.output_tokens + (context.usage?.outputTokens || 0);
+      const inputTokens = context.usage?.inputTokens || 0;
+      const totalTokens = inputTokens + outputTokens;
+
+      if (totalTokens > 0) {
+        return [
+          { data: chunk.delta.stop_reason, id: context.id, type: 'stop' },
+          {
+            data: {
+              inputTokens: inputTokens,
+              outputTokens: outputTokens,
+              totalTokens: inputTokens + outputTokens,
+            } as ModelTokensUsage,
+            id: context.id,
+            type: 'usage',
+          },
+        ];
+      }
       return { data: chunk.delta.stop_reason, id: context.id, type: 'stop' };
     }
 

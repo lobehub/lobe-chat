@@ -79,6 +79,35 @@
     "deleteDisabledByThreads": "Có chủ đề con, không thể xóa",
     "regenerate": "Tạo lại"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Điểm",
+      "creditPricing": "Định giá",
+      "creditTooltip": "Để thuận tiện cho việc tính toán, chúng tôi quy đổi 1$ thành 1M điểm, ví dụ $3/M token sẽ được quy đổi thành 3 điểm/token",
+      "pricing": {
+        "inputCachedTokens": "Nhập cached {{amount}}/điểm · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M ký tự",
+        "inputMinutes": "${{amount}}/phút",
+        "inputTokens": "Nhập {{amount}}/điểm · ${{amount}}/M",
+        "outputTokens": "Xuất {{amount}}/điểm · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "input": "Nhập",
+      "inputAudio": "Âm thanh nhập",
+      "inputCached": "Nhập cached",
+      "inputText": "Văn bản nhập",
+      "inputTitle": "Chi tiết nhập",
+      "inputUncached": "Nhập chưa cached",
+      "output": "Xuất",
+      "outputAudio": "Âm thanh xuất",
+      "outputText": "Văn bản xuất",
+      "outputTitle": "Chi tiết xuất",
+      "reasoning": "Suy nghĩ sâu sắc",
+      "title": "Chi tiết tạo ra",
+      "total": "Tổng tiêu thụ"
+    }
+  },
   "newAgent": "Tạo trợ lý mới",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",

@@ -89,6 +89,9 @@
   "perplexity": {
     "description": "Perplexity là nhà cung cấp mô hình tạo đối thoại hàng đầu, cung cấp nhiều mô hình Llama 3.1 tiên tiến, hỗ trợ ứng dụng trực tuyến và ngoại tuyến, đặc biệt phù hợp cho các nhiệm vụ xử lý ngôn ngữ tự nhiên phức tạp."
   },
+  "ppio": {
+    "description": "PPIO派欧云 cung cấp dịch vụ API mô hình mã nguồn mở ổn định, hiệu quả chi phí cao, hỗ trợ toàn bộ dòng sản phẩm DeepSeek, Llama, Qwen và các mô hình lớn hàng đầu trong ngành."
+  },
   "qwen": {
     "description": "Qwen là mô hình ngôn ngữ quy mô lớn tự phát triển của Alibaba Cloud, có khả năng hiểu và tạo ngôn ngữ tự nhiên mạnh mẽ. Nó có thể trả lời nhiều câu hỏi, sáng tác nội dung văn bản, bày tỏ quan điểm, viết mã, v.v., hoạt động trong nhiều lĩnh vực."
   },
