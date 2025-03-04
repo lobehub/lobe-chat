@@ -9,8 +9,8 @@ import TokenDetail from './UsageDetail';
 
 export const useStyles = createStyles(({ token, css, cx }) => ({
   container: cx(css`
-    color: ${token.colorTextQuaternary};
     font-size: 12px;
+    color: ${token.colorTextQuaternary};
   `),
 }));
 
