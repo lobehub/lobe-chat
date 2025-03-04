@@ -79,6 +79,35 @@
     "deleteDisabledByThreads": "Il existe des sous-sujets, la suppression n'est pas possible.",
     "regenerate": "Régénérer"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Crédit",
+      "creditPricing": "Tarification",
+      "creditTooltip": "Pour faciliter le comptage, nous convertissons 1 $ en 1M de crédits, par exemple, 3 $/M tokens équivaut à 3 crédits/token",
+      "pricing": {
+        "inputCachedTokens": "Entrée mise en cache {{amount}}/crédit · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M caractères",
+        "inputMinutes": "${{amount}}/minute",
+        "inputTokens": "Entrée {{amount}}/crédit · ${{amount}}/M",
+        "outputTokens": "Sortie {{amount}}/crédit · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "input": "Entrée",
+      "inputAudio": "Entrée audio",
+      "inputCached": "Entrée mise en cache",
+      "inputText": "Entrée texte",
+      "inputTitle": "Détails de l'entrée",
+      "inputUncached": "Entrée non mise en cache",
+      "output": "Sortie",
+      "outputAudio": "Sortie audio",
+      "outputText": "Sortie texte",
+      "outputTitle": "Détails de la sortie",
+      "reasoning": "Raisonnement approfondi",
+      "title": "Détails de génération",
+      "total": "Total consommé"
+    }
+  },
   "newAgent": "Nouvel agent",
   "pin": "Épingler",
   "pinOff": "Désépingler",

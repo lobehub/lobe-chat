@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
-import { ChatMessageError, CitationItem } from '@/types/message';
+import { ChatMessageError, CitationItem, ModelTokensUsage } from '@/types/message';
 
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
 import { ChatStreamCallbacks } from '../../types';
@@ -17,6 +17,22 @@ import {
   createSSEProtocolTransformer,
   generateToolCallId,
 } from './protocol';
+
+const convertUsage = (usage: OpenAI.Completions.CompletionUsage): ModelTokensUsage => {
+  return {
+    acceptedPredictionTokens: usage.completion_tokens_details?.accepted_prediction_tokens,
+    cachedTokens:
+      (usage as any).prompt_cache_hit_tokens || usage.prompt_tokens_details?.cached_tokens,
+    inputAudioTokens: usage.prompt_tokens_details?.audio_tokens,
+    inputCacheMissTokens: (usage as any).prompt_cache_miss_tokens,
+    inputTokens: usage.prompt_tokens,
+    outputAudioTokens: usage.completion_tokens_details?.audio_tokens,
+    outputTokens: usage.completion_tokens,
+    reasoningTokens: usage.completion_tokens_details?.reasoning_tokens,
+    rejectedPredictionTokens: usage.completion_tokens_details?.rejected_prediction_tokens,
+    totalTokens: usage.total_tokens,
+  };
+};
 
 export const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
@@ -41,11 +57,16 @@ export const transformOpenAIStream = (
     // maybe need another structure to add support for multiple choices
     const item = chunk.choices[0];
     if (!item) {
+      if (chunk.usage) {
+        const usage = chunk.usage;
+        return { data: convertUsage(usage), id: chunk.id, type: 'usage' };
+      }
+
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
-    // tools calling
-    if (typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
+    if (item && typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
+      // tools calling
       const tool_calls = item.delta.tool_calls.filter(
         (value) => value.index >= 0 || typeof value.index === 'undefined',
       );
@@ -95,6 +116,11 @@ export const transformOpenAIStream = (
 
       if (typeof item.delta?.content === 'string' && !!item.delta.content) {
         return { data: item.delta.content, id: chunk.id, type: 'text' };
+      }
+
+      if (chunk.usage) {
+        const usage = chunk.usage;
+        return { data: convertUsage(usage), id: chunk.id, type: 'usage' };
       }
 
       return { data: item.finish_reason, id: chunk.id, type: 'stop' };
@@ -147,7 +173,7 @@ export const transformOpenAIStream = (
                       ({
                         title: typeof item === 'string' ? item : item.title,
                         url: typeof item === 'string' ? item : item.url,
-                      }) as CitationItem
+                      }) as CitationItem,
                   ),
                 },
                 id: chunk.id,

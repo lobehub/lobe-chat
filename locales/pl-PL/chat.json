@@ -79,6 +79,35 @@
     "deleteDisabledByThreads": "Istnieją podwątki, nie można usunąć",
     "regenerate": "Wygeneruj ponownie"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Punkty",
+      "creditPricing": "Cennik",
+      "creditTooltip": "Aby ułatwić obliczenia, przeliczamy 1$ na 1M punktów, na przykład $3/M tokenów to 3 punkty/token",
+      "pricing": {
+        "inputCachedTokens": "Zbuforowane wejście {{amount}}/punktów · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M znaków",
+        "inputMinutes": "${{amount}}/minutę",
+        "inputTokens": "Wejście {{amount}}/punktów · ${{amount}}/M",
+        "outputTokens": "Wyjście {{amount}}/punktów · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "input": "Wejście",
+      "inputAudio": "Wejście audio",
+      "inputCached": "Zbuforowane wejście",
+      "inputText": "Wejście tekstowe",
+      "inputTitle": "Szczegóły wejścia",
+      "inputUncached": "Wejście niezbuforowane",
+      "output": "Wyjście",
+      "outputAudio": "Wyjście audio",
+      "outputText": "Wyjście tekstowe",
+      "outputTitle": "Szczegóły wyjścia",
+      "reasoning": "Głębokie myślenie",
+      "title": "Szczegóły generacji",
+      "total": "Całkowite zużycie"
+    }
+  },
   "newAgent": "Nowy asystent",
   "pin": "Przypnij",
   "pinOff": "Odepnij",

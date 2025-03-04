@@ -27,7 +27,7 @@ export const searchRouter = router({
         async (url) => {
           return await crawler.crawl({ impls: input.impls, url });
         },
-        { concurrency: 10 },
+        { concurrency: 3 },
       );
 
       return { results };
