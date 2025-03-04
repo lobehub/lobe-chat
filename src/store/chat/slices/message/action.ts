@@ -17,6 +17,7 @@ import {
   ChatMessageError,
   ChatMessagePluginError,
   CreateMessageParams,
+  MessageMetadata,
   MessageToolCall,
   ModelReasoning,
 } from '@/types/message';
@@ -79,6 +80,7 @@ export interface ChatMessageAction {
       toolCalls?: MessageToolCall[];
       reasoning?: ModelReasoning;
       search?: GroundingSearch;
+      metadata?: MessageMetadata;
     },
   ) => Promise<void>;
   /**
@@ -308,6 +310,7 @@ export const chatMessage: StateCreator<
       tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
       reasoning: extra?.reasoning,
       search: extra?.search,
+      metadata: extra?.metadata,
     });
     await refreshMessages();
   },
