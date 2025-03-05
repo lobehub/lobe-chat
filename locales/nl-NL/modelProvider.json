@@ -322,6 +322,9 @@
     "tooltip": "Werk basisconfiguratie van provider bij",
     "updateSuccess": "Bijwerking geslaagd"
   },
+  "updateCustomAiProvider": {
+    "title": "Bijwerken van de configuratie van de aangepaste AI-provider"
+  },
   "vertexai": {
     "apiKey": {
       "desc": "Vul je Vertex AI-sleutels in",
