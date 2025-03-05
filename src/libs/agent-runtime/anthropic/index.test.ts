@@ -81,7 +81,12 @@ describe('LobeAnthropicAI', () => {
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
           max_tokens: 4096,
-          messages: [{ content: 'Hello', role: 'user' }],
+          messages: [
+            {
+              content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
+              role: 'user',
+            },
+          ],
           model: 'claude-3-haiku-20240307',
           stream: true,
           temperature: 0,
@@ -117,10 +122,21 @@ describe('LobeAnthropicAI', () => {
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
           max_tokens: 4096,
-          messages: [{ content: 'Hello', role: 'user' }],
+          messages: [
+            {
+              content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
+              role: 'user',
+            },
+          ],
           model: 'claude-3-haiku-20240307',
           stream: true,
-          system: 'You are an awesome greeter',
+          system: [
+            {
+              cache_control: { type: 'ephemeral' },
+              type: 'text',
+              text: 'You are an awesome greeter',
+            },
+          ],
           temperature: 0,
         },
         {},
@@ -152,7 +168,12 @@ describe('LobeAnthropicAI', () => {
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
           max_tokens: 2048,
-          messages: [{ content: 'Hello', role: 'user' }],
+          messages: [
+            {
+              content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
+              role: 'user',
+            },
+          ],
           model: 'claude-3-haiku-20240307',
           stream: true,
           temperature: 0.25,
@@ -189,7 +210,12 @@ describe('LobeAnthropicAI', () => {
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
           max_tokens: 2048,
-          messages: [{ content: 'Hello', role: 'user' }],
+          messages: [
+            {
+              content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
+              role: 'user',
+            },
+          ],
           model: 'claude-3-haiku-20240307',
           stream: true,
           temperature: 0.25,

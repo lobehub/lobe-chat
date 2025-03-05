@@ -120,6 +120,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         ] as Anthropic.TextBlockParam[])
       : undefined;
 
+    const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
+
+    const postTools = buildAnthropicTools(tools);
+
     if (!!thinking) {
       const maxTokens =
         max_tokens ?? (thinking?.budget_tokens ? thinking?.budget_tokens + 4096 : 4096);
@@ -128,21 +132,21 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       // `top_p` must be unset when thinking is enabled.
       return {
         max_tokens: maxTokens,
-        messages: await buildAnthropicMessages(user_messages, enabledContextCaching),
+        messages: postMessages,
         model,
         system: systemPrompts,
         thinking,
-        tools: buildAnthropicTools(tools),
+        tools: postTools,
       } satisfies Anthropic.MessageCreateParams;
     }
 
     return {
       max_tokens: max_tokens ?? 4096,
-      messages: await buildAnthropicMessages(user_messages, enabledContextCaching),
+      messages: postMessages,
       model,
       system: systemPrompts,
       temperature: payload.temperature !== undefined ? temperature / 2 : undefined,
-      tools: buildAnthropicTools(tools),
+      tools: postTools,
       top_p,
     } satisfies Anthropic.MessageCreateParams;
   }

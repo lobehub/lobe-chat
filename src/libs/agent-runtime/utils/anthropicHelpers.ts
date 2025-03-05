@@ -130,7 +130,7 @@ export const buildAnthropicMessage = async (
 
 export const buildAnthropicMessages = async (
   oaiMessages: OpenAIChatMessage[],
-  enabledContextCaching?: boolean,
+  options: { enabledContextCaching?: boolean } = {},
 ): Promise<Anthropic.Messages.MessageParam[]> => {
   const messages: Anthropic.Messages.MessageParam[] = [];
   let pendingToolResults: Anthropic.ToolResultBlockParam[] = [];
@@ -182,7 +182,7 @@ export const buildAnthropicMessages = async (
   }
 
   const lastMessage = messages.at(-1);
-  if (enabledContextCaching && !!lastMessage) {
+  if (options.enabledContextCaching && !!lastMessage) {
     if (typeof lastMessage.content === 'string') {
       lastMessage.content = [
         {
@@ -205,6 +205,7 @@ export const buildAnthropicMessages = async (
   }
   return messages;
 };
+
 export const buildAnthropicTools = (tools?: OpenAI.ChatCompletionTool[]) =>
   tools?.map(
     (tool): Anthropic.Tool => ({
