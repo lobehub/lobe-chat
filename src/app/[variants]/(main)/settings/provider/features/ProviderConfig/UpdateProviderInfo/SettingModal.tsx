@@ -1,6 +1,7 @@
+import { ProviderIcon } from '@lobehub/icons';
 import { FormModal, Icon } from '@lobehub/ui';
 import type { FormItemProps } from '@lobehub/ui/es/Form/components/FormItem';
-import { App, Button, Input } from 'antd';
+import { App, Button, Input, Select } from 'antd';
 import { BrainIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
@@ -78,6 +79,33 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open, initial
     },
   ];
 
+  const configItems: FormItemProps[] = [
+    {
+      children: (
+        <Select
+          optionRender={({ label, value }) => (
+            <Flexbox align={'center'} gap={8} horizontal>
+              <ProviderIcon provider={value as string} size={18} />
+              {label}
+            </Flexbox>
+          )}
+          options={[
+            { label: 'OpenAI', value: 'openai' },
+            { label: 'Anthropic', value: 'anthropic' },
+            { label: 'Ollama', value: 'ollama' },
+            // { label: 'Azure AI', value: 'azureai' },
+          ]}
+          placeholder={t('createNewAiProvider.sdkType.placeholder')}
+          variant={'filled'}
+        />
+      ),
+      label: t('createNewAiProvider.sdkType.title'),
+      minWidth: 400,
+      name: ['settings', 'sdkType'],
+      rules: [{ message: t('createNewAiProvider.sdkType.required'), required: true }],
+    },
+  ];
+
   return (
     <FormModal
       footer={
@@ -118,6 +146,10 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open, initial
           children: basicItems,
           title: t('createNewAiProvider.basicTitle'),
         },
+        {
+          children: configItems,
+          title: t('createNewAiProvider.configTitle'),
+        },
       ]}
       onCancel={onClose}
       onFinish={onFinish}
@@ -127,7 +159,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open, initial
       title={
         <Flexbox gap={8} horizontal>
           <Icon icon={BrainIcon} />
-          {t('createNewAiProvider.title')}
+          {t('updateCustomAiProvider.title')}
         </Flexbox>
       }
     />
