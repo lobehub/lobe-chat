@@ -27,3 +27,13 @@ export interface OpenRouterModelCard {
   pricing: ModelPricing;
   top_provider: ModelTopProvider;
 }
+
+interface OpenRouterModelEndpoint {
+  supports_reasoning?: boolean;
+  supports_tool_parameters?: boolean;
+}
+
+export interface OpenRouterModelExtraInfo {
+  endpoint?: OpenRouterModelEndpoint;
+  slug: string;
+}
