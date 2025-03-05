@@ -50,6 +50,7 @@ jobs:
         run: bun run release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ''
 
       - name: Workflow
         run: bun run workflow:readme
