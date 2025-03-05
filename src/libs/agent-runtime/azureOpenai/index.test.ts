@@ -16,11 +16,11 @@ describe('LobeAzureOpenAI', () => {
   let instance: LobeAzureOpenAI;
 
   beforeEach(() => {
-    instance = new LobeAzureOpenAI(
-      'https://test.openai.azure.com/',
-      'test_key',
-      '2023-03-15-preview',
-    );
+    instance = new LobeAzureOpenAI({
+      baseURL: 'https://test.openai.azure.com/',
+      apiKey: 'test_key',
+      apiVersion: '2023-03-15-preview',
+    });
 
     // 使用 vi.spyOn 来模拟 streamChatCompletions 方法
     vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
@@ -42,14 +42,14 @@ describe('LobeAzureOpenAI', () => {
     });
 
     it('should create an instance of OpenAIClient with correct parameters', () => {
-      const endpoint = 'https://test.openai.azure.com/';
-      const apikey = 'test_key';
+      const baseURL = 'https://test.openai.azure.com/';
+      const apiKey = 'test_key';
       const apiVersion = '2023-03-15-preview';
 
-      const instance = new LobeAzureOpenAI(endpoint, apikey, apiVersion);
+      const instance = new LobeAzureOpenAI({ baseURL, apiKey, apiVersion });
 
       expect(instance.client).toBeInstanceOf(AzureOpenAI);
-      expect(instance.baseURL).toBe(endpoint);
+      expect(instance.baseURL).toBe(baseURL);
     });
   });
 
