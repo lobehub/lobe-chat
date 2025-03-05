@@ -4,6 +4,11 @@ import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { OpenRouterModelCard, OpenRouterModelExtraInfo } from './type';
 
+const formatPrice = (price: string) => {
+  if (price === '-1') return undefined;
+  return Number((Number(price) * 1e6).toPrecision(5));
+};
+
 export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://openrouter.ai/api/v1',
   chatCompletion: {
@@ -73,11 +78,8 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
               ? model.top_provider.max_completion_tokens
               : undefined,
           pricing: {
-            input: model.pricing.prompt === '-1' ? undefined : Number(model.pricing.prompt) * 1e6,
-            output:
-              model.pricing.completion === '-1'
-                ? undefined
-                : Number(model.pricing.completion) * 1e6,
+            input: formatPrice(model.pricing.prompt),
+            output: formatPrice(model.pricing.completion),
           },
           reasoning:
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
