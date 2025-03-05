@@ -170,6 +170,16 @@ show_message() {
                 ;;
             esac
         ;;
+        tips_download_failed)
+            case $LANGUAGE in
+                zh_CN)
+                    echo "$2 下载失败，请检查网络连接。"
+                ;;
+                *)
+                    echo "$2 Download failed, please check the network connection."
+                ;;
+            esac
+        ;;
         tips_already_installed)
             case $LANGUAGE in
                 zh_CN)
@@ -260,6 +270,30 @@ show_message() {
                 ;;
             esac
         ;;
+        tips_no_docker_permission)
+            case $LANGUAGE in
+                zh_CN)
+                    echo "WARN: 看起来当前用户没有 Docker 权限。"
+                    echo "使用 'sudo usermod -aG docker $USER' 为用户分配 Docker 权限（可能需要重新启动 shell）。"
+                ;;
+                *)
+                    echo "WARN: It look like the current user does not have Docker permissions."
+                    echo "Use 'sudo usermod -aG docker $USER' to assign Docker permissions to the user (may require restarting shell)."
+                ;;
+            esac
+        ;;
+        tips_init_database_failed)
+            case $LANGUAGE in
+                zh_CN)
+                    echo "无法初始化数据库，为了避免你的数据重复初始化，请在首次成功启动时运行以下指令清空 Casdoor 初始配置文件："
+                    echo "echo '{}' > init_data.json"
+                ;;
+                *)
+                    echo "Failed to initialize the database. To avoid your data being initialized repeatedly, run the following command to unmount the initial configuration file of Casdoor when you first start successfully:"
+                    echo "echo '{}' > init_data.json"
+                ;;
+            esac
+        ;;
         ask_regenerate_secrets)
             case $LANGUAGE in
                 zh_CN)
@@ -320,12 +354,27 @@ show_message() {
                 ;;
             esac
         ;;
+        ask_init_database)
+            case $LANGUAGE in
+                zh_CN)
+                    echo "是否初始化数据库？"
+                ;;
+                *)
+                    echo "Do you want to initialize the database?"
+                ;;
+            esac
+        ;;
     esac
 }
 
 # Function to download files
 download_file() {
-    wget -q --show-progress "$1" -O "$2"
+    wget --show-progress "$1" -O "$2"
+    # If run failed, exit
+    if [ $? -ne 0 ]; then
+        show_message "tips_download_failed" "$2"
+        exit 1
+    fi
 }
 
 print_centered() {
@@ -629,10 +678,52 @@ section_regenerate_secrets() {
         fi
     fi
 }
+
 show_message "ask_regenerate_secrets"
 ask "(y/n)" "y"
 if [[ "$ask_result" == "y" ]]; then
     section_regenerate_secrets
+fi
+
+section_init_database() {
+    if ! command -v docker &> /dev/null ; then
+        echo "docker" $(show_message "tips_no_executable")
+	    return 1
+    fi
+
+    if ! docker compose &> /dev/null ; then
+	    echo "docker compose" $(show_message "tips_no_executable")
+	    return 1
+    fi
+
+    # Check if user has permissions to run Docker by trying to get the status of Docker (docker status).
+    # If this fails, the user probably does not have permissions for Docker.
+    # ref: https://github.com/paperless-ngx/paperless-ngx/blob/89e5c08a1fe4ca0b7641ae8fbd5554502199ae40/install-paperless-ngx.sh#L64-L72
+    if ! docker stats --no-stream &> /dev/null ; then
+	    echo $(show_message "tips_no_docker_permission")
+	    return 1
+    fi
+
+    docker compose pull
+    docker compose up --detach postgresql casdoor
+    # hopefully enough time for even the slower systems
+	sleep 15
+	docker compose stop
+
+    # Init finished, remove init mount
+    echo '{}' > init_data.json
+}
+
+show_message "ask_init_database"
+ask "(y/n)" "y"
+if [[ "$ask_result" == "y" ]]; then
+    # If return 1 means failed
+    section_init_database
+    if [ $? -ne 0 ]; then
+        echo $(show_message "tips_init_database_failed")
+    fi
+else 
+    show_message "tips_init_database_failed"
 fi
 
 section_display_configurated_report() {
