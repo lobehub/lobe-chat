@@ -322,6 +322,9 @@
     "tooltip": "Hizmet sağlayıcının temel yapılandırmasını güncelle",
     "updateSuccess": "Güncelleme başarılı"
   },
+  "updateCustomAiProvider": {
+    "title": "Özel AI Sağlayıcı Yapılandırmasını Güncelle"
+  },
   "vertexai": {
     "apiKey": {
       "desc": "Vertex AI Anahtarlarınızı buraya girin",

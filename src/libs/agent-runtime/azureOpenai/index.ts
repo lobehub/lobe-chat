@@ -13,18 +13,18 @@ import { OpenAIStream } from '../utils/streams';
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   client: AzureOpenAI;
 
-  constructor(endpoint?: string, apikey?: string, apiVersion?: string) {
-    if (!apikey || !endpoint)
+  constructor(params: { apiKey?: string; apiVersion?: string, baseURL?: string; } = {}) {
+    if (!params.apiKey || !params.baseURL)
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new AzureOpenAI({
-      apiKey: apikey,
-      apiVersion,
+      apiKey: params.apiKey,
+      apiVersion: params.apiVersion,
       dangerouslyAllowBrowser: true,
-      endpoint,
+      endpoint: params.baseURL,
     });
 
-    this.baseURL = endpoint;
+    this.baseURL = params.baseURL;
   }
 
   baseURL: string;

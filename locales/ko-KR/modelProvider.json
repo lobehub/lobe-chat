@@ -322,6 +322,9 @@
     "tooltip": "서비스 제공자 기본 설정 업데이트",
     "updateSuccess": "업데이트 성공"
   },
+  "updateCustomAiProvider": {
+    "title": "사용자 정의 AI 서비스 제공자 구성 업데이트"
+  },
   "vertexai": {
     "apiKey": {
       "desc": "당신의 Vertex AI 키를 입력하세요",

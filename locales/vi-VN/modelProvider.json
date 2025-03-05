@@ -322,6 +322,9 @@
     "tooltip": "Cập nhật cấu hình cơ bản của nhà cung cấp",
     "updateSuccess": "Cập nhật thành công"
   },
+  "updateCustomAiProvider": {
+    "title": "Cập nhật cấu hình nhà cung cấp AI tùy chỉnh"
+  },
   "vertexai": {
     "apiKey": {
       "desc": "Nhập khóa Vertex AI của bạn",

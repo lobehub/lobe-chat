@@ -324,19 +324,21 @@ const ProviderConfig = memo<ProviderConfigProps>(
               {name}
             </Flexbox>
           ) : (
-            <ProviderCombine provider={id} size={24} />
+            <>
+              <ProviderCombine provider={id} size={24} />
+              <Tooltip title={t('providerModels.config.helpDoc')}>
+                <Link
+                  href={urlJoin(BASE_PROVIDER_DOC_URL, id)}
+                  onClick={(e) => e.stopPropagation()}
+                  target={'_blank'}
+                >
+                  <Center className={styles.help} height={20} width={20}>
+                    ?
+                  </Center>
+                </Link>
+              </Tooltip>
+            </>
           )}
-          <Tooltip title={t('providerModels.config.helpDoc')}>
-            <Link
-              href={urlJoin(BASE_PROVIDER_DOC_URL, id)}
-              onClick={(e) => e.stopPropagation()}
-              target={'_blank'}
-            >
-              <Center className={styles.help} height={20} width={20}>
-                ?
-              </Center>
-            </Link>
-          </Tooltip>
         </Flexbox>
       ),
     };
