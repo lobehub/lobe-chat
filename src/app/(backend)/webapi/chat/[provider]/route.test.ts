@@ -71,7 +71,7 @@ describe('POST handler', () => {
 
       // migrate to new AgentRuntime init api
       const spy = vi
-        .spyOn(AgentRuntime, 'initializeWithProviderOptions')
+        .spyOn(AgentRuntime, 'initializeWithProvider')
         .mockResolvedValue(new AgentRuntime(mockRuntime));
 
       // 调用 POST 函数
@@ -117,7 +117,7 @@ describe('POST handler', () => {
 
       const mockRuntime: LobeRuntimeAI = { baseURL: 'abc', chat: vi.fn() };
 
-      vi.spyOn(AgentRuntime, 'initializeWithProviderOptions').mockResolvedValue(
+      vi.spyOn(AgentRuntime, 'initializeWithProvider').mockResolvedValue(
         new AgentRuntime(mockRuntime),
       );
 
