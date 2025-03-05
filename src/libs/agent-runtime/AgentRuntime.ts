@@ -12,7 +12,6 @@ import {
   ChatStreamPayload,
   EmbeddingsOptions,
   EmbeddingsPayload,
-  ModelProvider,
   TextToImagePayload,
   TextToSpeechPayload,
 } from './types';
@@ -101,7 +100,8 @@ class AgentRuntime {
         LobeCloudflareParams & { apiKey?: string; apiVersion?: string; baseURL?: string }
     >,
   ) {
-    const providerAI = providerRuntimeMap[provider as ModelProvider] ?? LobeOpenAI;
+    // @ts-expect-error runtime map not include vertex so it will be undefined
+    const providerAI = providerRuntimeMap[provider] ?? LobeOpenAI;
     const runtimeModel: LobeRuntimeAI = new providerAI(params);
 
     return new AgentRuntime(runtimeModel);

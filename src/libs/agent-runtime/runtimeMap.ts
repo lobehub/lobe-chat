@@ -39,7 +39,6 @@ import { LobeTencentCloudAI } from './tencentcloud';
 import { LobeTogetherAI } from './togetherai';
 import { ModelProvider } from './types';
 import { LobeUpstageAI } from './upstage';
-import { LobeVertexAI } from './vertexai';
 import { LobeVLLMAI } from './vllm';
 import { LobeVolcengineAI } from './volcengine';
 import { LobeWenxinAI } from './wenxin';
@@ -58,7 +57,6 @@ export const providerRuntimeMap = {
   [ModelProvider.LMStudio]: LobeLMStudioAI,
   [ModelProvider.Ollama]: LobeOllamaAI,
   [ModelProvider.VLLM]: LobeVLLMAI,
-  [ModelProvider.VertexAI]: LobeVertexAI,
   [ModelProvider.Perplexity]: LobePerplexityAI,
   [ModelProvider.Anthropic]: LobeAnthropicAI,
   [ModelProvider.DeepSeek]: LobeDeepSeekAI,
