@@ -92,7 +92,7 @@ class AgentRuntime {
    * - `src/app/api/chat/agentRuntime.ts: initAgentRuntimeWithUserPayload` on server
    * - `src/services/chat.ts: initializeWithClientStore` on client
    */
-  static async initializeWithProviderOptions(
+  static async initializeWithProvider(
     provider: string,
     params: Partial<
       ClientOptions &

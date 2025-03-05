@@ -51,7 +51,7 @@ const testRuntime = (providerId: string, payload?: any) => {
   describe(`${providerId} provider runtime`, () => {
     it('should initialize correctly', async () => {
       const jwtPayload: JWTPayload = { apiKey: 'user-key', ...payload };
-      const runtime = await AgentRuntime.initializeWithProviderOptions(providerId, jwtPayload);
+      const runtime = await AgentRuntime.initializeWithProvider(providerId, jwtPayload);
 
       // @ts-ignore
       expect(runtime['_runtime']).toBeInstanceOf(providerRuntimeMap[providerId]);
@@ -66,7 +66,7 @@ const testRuntime = (providerId: string, payload?: any) => {
 let mockModelRuntime: AgentRuntime;
 beforeEach(async () => {
   const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
-  mockModelRuntime = await AgentRuntime.initializeWithProviderOptions(
+  mockModelRuntime = await AgentRuntime.initializeWithProvider(
     ModelProvider.OpenAI,
     jwtPayload,
   );

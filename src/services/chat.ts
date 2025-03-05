@@ -147,7 +147,7 @@ export function initializeWithClientStore(provider: string, payload: any) {
    * Configuration override order:
    * payload -> providerAuthPayload -> commonOptions
    */
-  return AgentRuntime.initializeWithProviderOptions(provider, {
+  return AgentRuntime.initializeWithProvider(provider, {
     ...commonOptions,
     ...providerAuthPayload,
     ...payload,

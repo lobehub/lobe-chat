@@ -130,7 +130,7 @@ export const initAgentRuntimeWithUserPayload = (
   payload: JWTPayload,
   params: any = {},
 ) => {
-  return AgentRuntime.initializeWithProviderOptions(provider, {
+  return AgentRuntime.initializeWithProvider(provider, {
     ...getLlmOptionsFromPayload(provider, payload),
     ...params,
   });
