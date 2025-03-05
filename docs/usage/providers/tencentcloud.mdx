@@ -1,0 +1,49 @@
+---
+title: Using Tencent Cloud API Key in LobeChat
+description: Learn how to configure and use Tencent Cloud AI models in LobeChat, obtain an API key, and start a conversation.
+tags:
+  - LobeChat
+  - Tencent Cloud
+  - API Key
+  - Web UI
+---
+
+# Using Tencent Cloud in LobeChat
+
+<Image alt={'Using Tencent Cloud in LobeChat'} cover src={'https://github.com/user-attachments/assets/aa91ca54-65fc-4e33-8c76-999f0a5d2bee'} />
+
+[Tencent Cloud](https://cloud.tencent.com/) is the cloud computing service brand of Tencent, specializing in providing cloud computing services for enterprises and developers. Tencent Cloud provides a series of AI large model solutions, through which AI models can be connected stably and efficiently.
+
+This document will guide you on how to connect Tencent Cloud's AI models in LobeChat:
+
+<Steps>
+  ### Step 1: Obtain the Tencent Cloud API Key
+
+  - First, visit [Tencent Cloud](https://cloud.tencent.com/) and complete the registration and login.
+  - Enter the Tencent Cloud Console and navigate to [Large-scale Knowledge Engine Atomic Capability](https://console.cloud.tencent.com/lkeap).
+  - Activate the Large-scale Knowledge Engine, which requires real-name authentication during the activation process.
+
+  <Image alt={'Enter the Large-scale Knowledge Engine Atomic Capability Page'} inStep src={'https://github.com/user-attachments/assets/22e1a039-5e6e-4c40-8266-19821677618a'} />
+
+  - In the `Access via OpenAI SDK` option, click the `Create API Key` button to create a new API Key.
+  - You can view and manage the created API Keys in `API Key Management`.
+  - Copy and save the created API Key.
+
+  ### Step 2: Configure Tencent Cloud in LobeChat
+
+  - Visit the `Application Settings` and `AI Service Provider` interface of LobeChat.
+  - Find the `Tencent Cloud` settings item in the list of providers.
+
+  <Image alt={'Fill in the Tencent Cloud API Key'} inStep src={'https://github.com/user-attachments/assets/a9de7780-d0cb-47d5-ad9c-fcbbec14b940'} />
+
+  - Open the Tencent Cloud provider and fill in the obtained API Key.
+  - Select a Tencent Cloud model for your assistant to start the conversation.
+
+  <Image alt={'Select Tencent Cloud Model'} inStep src={'https://github.com/user-attachments/assets/162bc64e-0d34-4a4e-815a-028247b73143'} />
+
+  <Callout type={'warning'}>
+    You may need to pay the API service provider during use, please refer to Tencent Cloud's relevant fee policy.
+  </Callout>
+</Steps>
+
+You can now use the models provided by Tencent Cloud in LobeChat to have conversations.
