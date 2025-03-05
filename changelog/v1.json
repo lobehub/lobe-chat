@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Refactor agent runtime to better code format."]
+    },
+    "date": "2025-03-05",
+    "version": "1.68.7"
+  },
+  {
+    "children": {
+      "fixes": ["Fix custom ai provider sdk type."]
+    },
+    "date": "2025-03-05",
+    "version": "1.68.6"
+  },
+  {
+    "children": {
       "improvements": ["Fix provider order."]
     },
     "date": "2025-03-04",
