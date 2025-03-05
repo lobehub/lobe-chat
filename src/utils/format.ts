@@ -116,7 +116,9 @@ export const formatPrice = (price: number, fractionDigits: number = 2) => {
   return `${numeral(a).format('0,0')}.${b}`;
 };
 
-export const formatPriceByCurrency = (price: number, currency?: ModelPriceCurrency) => {
+export const formatPriceByCurrency = (price?: number, currency?: ModelPriceCurrency) => {
+  if (!price) return '-';
+
   if (currency === 'CNY') {
     return formatPrice(price / USD_TO_CNY);
   }

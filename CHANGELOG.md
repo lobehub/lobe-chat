@@ -2,6 +2,189 @@
 
 # Changelog
 
+### [Version 1.68.6](https://github.com/lobehub/lobe-chat/compare/v1.68.5...v1.68.6)
+
+<sup>Released on **2025-03-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix custom ai provider sdk type.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix custom ai provider sdk type, closes [#6712](https://github.com/lobehub/lobe-chat/issues/6712) ([7f8c379](https://github.com/lobehub/lobe-chat/commit/7f8c379))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.5](https://github.com/lobehub/lobe-chat/compare/v1.68.4...v1.68.5)
+
+<sup>Released on **2025-03-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix provider order.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix provider order, closes [#6702](https://github.com/lobehub/lobe-chat/issues/6702) ([27e4980](https://github.com/lobehub/lobe-chat/commit/27e4980))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.4](https://github.com/lobehub/lobe-chat/compare/v1.68.3...v1.68.4)
+
+<sup>Released on **2025-03-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support to show token usages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support to show token usages, closes [#6693](https://github.com/lobehub/lobe-chat/issues/6693) ([71a638e](https://github.com/lobehub/lobe-chat/commit/71a638e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.3](https://github.com/lobehub/lobe-chat/compare/v1.68.2...v1.68.3)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve url rules.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve url rules, closes [#6669](https://github.com/lobehub/lobe-chat/issues/6669) ([5ee59e3](https://github.com/lobehub/lobe-chat/commit/5ee59e3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.2](https://github.com/lobehub/lobe-chat/compare/v1.68.1...v1.68.2)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add build-in web search support for Wenxin & Hunyuan.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add build-in web search support for Wenxin & Hunyuan, closes [#6617](https://github.com/lobehub/lobe-chat/issues/6617) ([dfd1f09](https://github.com/lobehub/lobe-chat/commit/dfd1f09))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.1](https://github.com/lobehub/lobe-chat/compare/v1.68.0...v1.68.1)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix page crash with crawler error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix page crash with crawler error, closes [#6662](https://github.com/lobehub/lobe-chat/issues/6662) ([0c24251](https://github.com/lobehub/lobe-chat/commit/0c24251))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.68.0](https://github.com/lobehub/lobe-chat/compare/v1.67.2...v1.68.0)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### ✨ Features
+
+- **misc**: Add new model provider PPIO.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix search web-browsing display bug.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add new model provider PPIO, closes [#6133](https://github.com/lobehub/lobe-chat/issues/6133) ([23a3fda](https://github.com/lobehub/lobe-chat/commit/23a3fda))
+
+#### What's fixed
+
+- **misc**: Fix search web-browsing display bug, closes [#6653](https://github.com/lobehub/lobe-chat/issues/6653) ([f472643](https://github.com/lobehub/lobe-chat/commit/f472643))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.67.2](https://github.com/lobehub/lobe-chat/compare/v1.67.1...v1.67.2)
 
 <sup>Released on **2025-03-02**</sup>

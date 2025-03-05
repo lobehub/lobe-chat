@@ -1,6 +1,56 @@
 [
   {
     "children": {
+      "fixes": ["Fix custom ai provider sdk type."]
+    },
+    "date": "2025-03-05",
+    "version": "1.68.6"
+  },
+  {
+    "children": {
+      "improvements": ["Fix provider order."]
+    },
+    "date": "2025-03-04",
+    "version": "1.68.5"
+  },
+  {
+    "children": {
+      "improvements": ["Support to show token usages."]
+    },
+    "date": "2025-03-04",
+    "version": "1.68.4"
+  },
+  {
+    "children": {
+      "fixes": ["Improve url rules."]
+    },
+    "date": "2025-03-03",
+    "version": "1.68.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add build-in web search support for Wenxin & Hunyuan."]
+    },
+    "date": "2025-03-03",
+    "version": "1.68.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix page crash with crawler error."]
+    },
+    "date": "2025-03-03",
+    "version": "1.68.1"
+  },
+  {
+    "children": {
+      "features": ["Add new model provider PPIO."],
+      "fixes": ["Fix search web-browsing display bug."]
+    },
+    "date": "2025-03-03",
+    "version": "1.68.0"
+  },
+  {
+    "children": {
       "fixes": ["Improve some crawl case."]
     },
     "date": "2025-03-02",

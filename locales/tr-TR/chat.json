@@ -79,6 +79,35 @@
     "deleteDisabledByThreads": "Alt konular mevcut, silinemez",
     "regenerate": "Yeniden Oluştur"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Kredi",
+      "creditPricing": "Fiyatlandırma",
+      "creditTooltip": "Hesaplamayı kolaylaştırmak için, 1$'ı 1M kredi olarak hesaplıyoruz; örneğin, $3/M token, 3 kredi/token olarak hesaplanır.",
+      "pricing": {
+        "inputCachedTokens": "Önceden yüklenmiş giriş {{amount}}/kredi · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M karakter",
+        "inputMinutes": "${{amount}}/dakika",
+        "inputTokens": "Giriş {{amount}}/kredi · ${{amount}}/M",
+        "outputTokens": "Çıkış {{amount}}/kredi · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "input": "Giriş",
+      "inputAudio": "Ses girişi",
+      "inputCached": "Önceden yüklenmiş giriş",
+      "inputText": "Metin girişi",
+      "inputTitle": "Giriş detayları",
+      "inputUncached": "Önceden yüklenmemiş giriş",
+      "output": "Çıkış",
+      "outputAudio": "Ses çıkışı",
+      "outputText": "Metin çıkışı",
+      "outputTitle": "Çıkış detayları",
+      "reasoning": "Derin düşünme",
+      "title": "Üretim detayları",
+      "total": "Toplam tüketim"
+    }
+  },
   "newAgent": "Yeni Asistan",
   "pin": "Pin",
   "pinOff": "Unpin",

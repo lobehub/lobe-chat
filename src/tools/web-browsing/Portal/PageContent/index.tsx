@@ -1,4 +1,4 @@
-import { Alert, CopyButton, Icon, Markdown } from '@lobehub/ui';
+import { Alert, CopyButton, Highlighter, Icon, Markdown } from '@lobehub/ui';
 import { Descriptions, Segmented, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
@@ -90,7 +90,42 @@ const PageContent = memo<PageContentProps>(({ result }) => {
   const { styles } = useStyles();
   const [display, setDisplay] = useState('render');
 
-  if (!result) return undefined;
+  if (!result || !result.data) return undefined;
+
+  if ('errorType' in result.data) {
+    return (
+      <Flexbox className={styles.footer} gap={4}>
+        <div>
+          <Descriptions
+            classNames={{
+              content: styles.footerText,
+            }}
+            column={1}
+            items={[
+              {
+                children: result.crawler,
+                label: t('search.crawPages.meta.crawler'),
+              },
+            ]}
+            size="small"
+          />
+        </div>
+        <Alert
+          extra={
+            <div style={{ maxWidth: 500, overflowX: 'scroll' }}>
+              <Highlighter language={'json'}>{JSON.stringify(result.data, null, 2)}</Highlighter>
+            </div>
+          }
+          message={
+            <div style={{ textAlign: 'start' }}>
+              {result.data.errorMessage || result.data.content}
+            </div>
+          }
+          type={'error'}
+        />
+      </Flexbox>
+    );
+  }
 
   const { url, title, description, content } = result.data;
   return (

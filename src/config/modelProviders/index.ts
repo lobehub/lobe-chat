@@ -113,6 +113,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   CloudflareProvider,
   GithubProvider,
   NovitaProvider,
+  PPIOProvider,
   NvidiaProvider,
   TogetherAIProvider,
   FireworksAIProvider,
