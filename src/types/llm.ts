@@ -49,7 +49,7 @@ export interface ChatModelCard {
   reasoning?: boolean;
 
   /**
-   * whether model is legacy (deprecated but not removed yet)
+   * the date when model is released
    */
   releasedAt?: string;
 
