@@ -106,6 +106,9 @@ describe('LobeOpenAICompatibleFactory', () => {
           model: 'mistralai/mistral-7b-instruct:free',
           temperature: 0.7,
           stream: true,
+          stream_options: {
+            include_usage: true,
+          },
           top_p: 1,
         },
         { headers: { Accept: '*/*' } },
