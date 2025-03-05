@@ -827,11 +827,17 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flashは、卓越した速度、ネイティブツールの使用、マルチモーダル生成、1Mトークンのコンテキストウィンドウを含む次世代の機能と改善を提供します。"
   },
+  "gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 Flashモデルのバリアントで、コスト効率と低遅延などの目標に最適化されています。"
+  },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flashモデルのバリアントで、コスト効率と低遅延などの目標に最適化されています。"
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "コスト効率と低遅延を目指して最適化されたGemini 2.0 Flashモデルです。"
+  },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Expは、Googleの最新の実験的なマルチモーダルAIモデルであり、次世代の機能、卓越した速度、ネイティブツールの呼び出し、マルチモーダル生成を備えています。"
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Expは、Googleの最新の実験的なマルチモーダルAIモデルであり、次世代の機能、卓越した速度、ネイティブツールの呼び出し、マルチモーダル生成を備えています。"

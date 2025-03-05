@@ -827,11 +827,17 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash는 뛰어난 속도, 원주율 도구 사용, 다중 모달 생성 및 1M 토큰 문맥 창을 포함한 차세대 기능과 개선 사항을 제공합니다."
   },
+  "gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 플래시 모델 변형으로, 비용 효율성과 낮은 지연 시간 등의 목표를 위해 최적화되었습니다."
+  },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 플래시 모델 변형으로, 비용 효율성과 낮은 지연 시간 등의 목표를 위해 최적화되었습니다."
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "비용 효율성과 낮은 지연 시간 등을 목표로 최적화된 Gemini 2.0 Flash 모델입니다."
+  },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모드 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모드 생성을 제공합니다."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모드 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모드 생성을 제공합니다."

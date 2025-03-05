@@ -827,11 +827,17 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash, mükemmel hız, yerel araç kullanımı, çok modlu üretim ve 1M token bağlam penceresi dahil olmak üzere bir sonraki nesil özellikler ve iyileştirmeler sunar."
   },
+  "gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 Flash model varyantı, maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiştir."
+  },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash model varyantı, maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiştir."
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiş bir Gemini 2.0 Flash modelidir."
+  },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
