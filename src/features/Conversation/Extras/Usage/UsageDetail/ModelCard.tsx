@@ -96,6 +96,12 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
           <div />
           <Flexbox align={'center'} className={styles.pricing} gap={8} horizontal>
             {t('messages.modelCard.creditPricing')}:
+            <Tooltip title={t('messages.modelCard.pricing.inputTokens', { amount: inputPrice })}>
+              <Flexbox gap={2} horizontal>
+                <Icon icon={ArrowUpFromDot} />
+                {inputPrice}
+              </Flexbox>
+            </Tooltip>
             {pricing?.cachedInput && (
               <Tooltip
                 title={t('messages.modelCard.pricing.inputCachedTokens', {
@@ -108,12 +114,6 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
                 </Flexbox>
               </Tooltip>
             )}
-            <Tooltip title={t('messages.modelCard.pricing.inputTokens', { amount: inputPrice })}>
-              <Flexbox gap={2} horizontal>
-                <Icon icon={ArrowUpFromDot} />
-                {inputPrice}
-              </Flexbox>
-            </Tooltip>
             <Tooltip title={t('messages.modelCard.pricing.outputTokens', { amount: outputPrice })}>
               <Flexbox gap={2} horizontal>
                 <Icon icon={ArrowDownToDot} />

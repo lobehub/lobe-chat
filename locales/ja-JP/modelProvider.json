@@ -322,6 +322,9 @@
     "tooltip": "サービスプロバイダーの基本設定を更新",
     "updateSuccess": "更新に成功しました"
   },
+  "updateCustomAiProvider": {
+    "title": "カスタム AI プロバイダー設定の更新"
+  },
   "vertexai": {
     "apiKey": {
       "desc": "あなたの Vertex AI キーを入力してください",
