@@ -193,6 +193,12 @@ export const transformOpenAIStream = (
       return { data: item.delta, id: chunk.id, type: 'data' };
     }
 
+    // litellm 的返回结果中，存在 delta 为空，但是有 usage 的情况
+    if (chunk.usage) {
+      const usage = chunk.usage;
+      return { data: convertUsage(usage), id: chunk.id, type: 'usage' };
+    }
+
     // 其余情况下，返回 delta 和 index
     return {
       data: { delta: item.delta, id: chunk.id, index: item.index },

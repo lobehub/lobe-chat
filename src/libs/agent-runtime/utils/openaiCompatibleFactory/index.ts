@@ -219,7 +219,9 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             ...postPayload,
             messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
+            stream_options: { include_usage: true },
           };
+
           if (debug?.chatCompletion?.()) {
             console.log('[requestPayload]:', JSON.stringify(finalPayload, null, 2));
           }
