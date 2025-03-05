@@ -19,6 +19,7 @@ export interface ModelTokensUsage {
   inputAudioTokens?: number;
   inputCacheMissTokens?: number;
   inputTokens?: number;
+  inputWriteCacheTokens?: number;
   outputAudioTokens?: number;
   outputTokens?: number;
   reasoningTokens?: number;

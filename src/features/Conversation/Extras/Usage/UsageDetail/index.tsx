@@ -46,11 +46,13 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
   ].filter(Boolean) as TokenProgressItem[];
 
   const outputDetails = [
-    !!detailTokens.reasoning && {
+    !!detailTokens.outputReasoning && {
       color: theme.pink,
       id: 'reasoning',
       title: t('messages.tokenDetails.reasoning'),
-      value: isShowCredit ? detailTokens.reasoning.credit : detailTokens.reasoning.token,
+      value: isShowCredit
+        ? detailTokens.outputReasoning.credit
+        : detailTokens.outputReasoning.token,
     },
     !!detailTokens.outputAudio && {
       color: theme.cyan9,
@@ -80,11 +82,21 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
       title: t('messages.tokenDetails.inputCached'),
       value: isShowCredit ? detailTokens.cachedInput.credit : detailTokens.cachedInput.token,
     },
-    !!detailTokens.totalOutput && {
+    !!detailTokens.cachedWriteInput && {
+      color: theme.yellow,
+      id: 'cachedWriteInput',
+      title: t('messages.tokenDetails.inputWriteCached'),
+      value: isShowCredit
+        ? detailTokens.cachedWriteInput.credit
+        : detailTokens.cachedWriteInput.token,
+    },
+    !!detailTokens.totalOutputTokens && {
       color: theme.colorSuccess,
       id: 'output',
       title: t('messages.tokenDetails.output'),
-      value: isShowCredit ? detailTokens.totalOutput.credit : detailTokens.totalOutput.token,
+      value: isShowCredit
+        ? detailTokens.totalOutputTokens.credit
+        : detailTokens.totalOutputTokens.token,
     },
   ].filter(Boolean) as TokenProgressItem[];
 
