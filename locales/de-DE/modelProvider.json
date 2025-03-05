@@ -322,6 +322,9 @@
     "tooltip": "Aktualisieren Sie die grundlegenden Anbieterinformationen",
     "updateSuccess": "Aktualisierung erfolgreich"
   },
+  "updateCustomAiProvider": {
+    "title": "Konfiguration des benutzerdefinierten KI-Anbieters aktualisieren"
+  },
   "vertexai": {
     "apiKey": {
       "desc": "Geben Sie Ihre Vertex AI-Schlüssel ein",
