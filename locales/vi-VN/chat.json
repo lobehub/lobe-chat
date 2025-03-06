@@ -89,16 +89,20 @@
         "inputCharts": "${{amount}}/M ký tự",
         "inputMinutes": "${{amount}}/phút",
         "inputTokens": "Nhập {{amount}}/điểm · ${{amount}}/M",
-        "outputTokens": "Xuất {{amount}}/điểm · ${{amount}}/M"
+        "outputTokens": "Xuất {{amount}}/điểm · ${{amount}}/M",
+        "writeCacheInputTokens": "Ghi vào bộ nhớ đệm đầu vào {{amount}}/điểm · ${{amount}}/M"
       }
     },
     "tokenDetails": {
+      "average": "Giá trung bình",
       "input": "Nhập",
       "inputAudio": "Âm thanh nhập",
       "inputCached": "Nhập cached",
+      "inputCitation": "Trích dẫn đầu vào",
       "inputText": "Văn bản nhập",
       "inputTitle": "Chi tiết nhập",
       "inputUncached": "Nhập chưa cached",
+      "inputWriteCached": "Ghi vào bộ nhớ đệm đầu vào",
       "output": "Xuất",
       "outputAudio": "Âm thanh xuất",
       "outputText": "Văn bản xuất",

@@ -225,7 +225,7 @@ describe('AnthropicStream', () => {
 
         'id: msg_017aTuY86wNxth5TE544yqJq',
         'event: usage',
-        'data: {"inputTokens":457,"outputTokens":84,"totalTokens":541}\n',
+        'data: {"inputCacheMissTokens":457,"totalInputTokens":457,"totalOutputTokens":84,"totalTokens":541}\n',
       ].map((item) => `${item}\n`),
     );
 
@@ -381,8 +381,7 @@ describe('AnthropicStream', () => {
 
         'id: msg_0175ryA67RbGrnRrGBXFQEYK',
         'event: usage',
-        'data: {"inputTokens":485,"outputTokens":154,"totalTokens":639}\n',
-
+        'data: {"inputCacheMissTokens":485,"totalInputTokens":485,"totalOutputTokens":154,"totalTokens":639}\n',
         'id: msg_0175ryA67RbGrnRrGBXFQEYK',
         'event: stop',
         'data: "message_stop"\n',
@@ -392,6 +391,91 @@ describe('AnthropicStream', () => {
     expect(onToolCallMock).toHaveBeenCalledTimes(6);
   });
 
+  it('should handle prompts context caching', async () => {
+    const streams = [
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_01Vxc4yQTEjkDSba3N3BMbH8',
+          type: 'message',
+          role: 'assistant',
+          model: 'claude-3-7-sonnet-20250219',
+          content: [],
+          stop_reason: null,
+          stop_sequence: null,
+          usage: {
+            input_tokens: 6,
+            cache_creation_input_tokens: 457,
+            cache_read_input_tokens: 17918,
+            output_tokens: 2,
+          },
+        },
+      },
+      { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+      { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text: '\n\n根' } },
+      {
+        type: 'content_block_delta',
+        index: 0,
+        delta: { type: 'text_delta', text: '/\n[^20]: https://s' },
+      },
+      { type: 'content_block_stop', index: 0 },
+      {
+        type: 'message_delta',
+        delta: { stop_reason: 'end_turn', stop_sequence: null },
+        usage: { output_tokens: 3222 },
+      },
+      { type: 'message_stop' },
+    ];
+
+    const mockReadableStream = new ReadableStream({
+      start(controller) {
+        streams.forEach((chunk) => {
+          controller.enqueue(chunk);
+        });
+        controller.close();
+      },
+    });
+
+    const protocolStream = AnthropicStream(mockReadableStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: msg_01Vxc4yQTEjkDSba3N3BMbH8',
+        'event: data',
+        'data: {"id":"msg_01Vxc4yQTEjkDSba3N3BMbH8","type":"message","role":"assistant","model":"claude-3-7-sonnet-20250219","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":6,"cache_creation_input_tokens":457,"cache_read_input_tokens":17918,"output_tokens":2}}\n',
+        'id: msg_01Vxc4yQTEjkDSba3N3BMbH8',
+        'event: data',
+        'data: ""\n',
+        'id: msg_01Vxc4yQTEjkDSba3N3BMbH8',
+        'event: text',
+        'data: "\\n\\n根"\n',
+        'id: msg_01Vxc4yQTEjkDSba3N3BMbH8',
+        'event: text',
+        'data: "/\\n[^20]: https://s"\n',
+        'id: msg_01Vxc4yQTEjkDSba3N3BMbH8',
+        'event: data',
+        'data: {"type":"content_block_stop","index":0}\n',
+        'id: msg_01Vxc4yQTEjkDSba3N3BMbH8',
+        'event: stop',
+        'data: "end_turn"\n',
+        'id: msg_01Vxc4yQTEjkDSba3N3BMbH8',
+        'event: usage',
+        'data: {"inputCacheMissTokens":6,"inputCachedTokens":17918,"inputWriteCacheTokens":457,"totalInputTokens":18381,"totalOutputTokens":3224,"totalTokens":21605}\n',
+
+        'id: msg_01Vxc4yQTEjkDSba3N3BMbH8',
+        'event: stop',
+        'data: "message_stop"\n',
+      ].map((item) => `${item}\n`),
+    );
+  });
   describe('thinking', () => {
     it('should handle normal thinking ', async () => {
       const streams = [
@@ -515,7 +599,7 @@ describe('AnthropicStream', () => {
           'data: "end_turn"\n',
           'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
           'event: usage',
-          'data: {"inputTokens":46,"outputTokens":365,"totalTokens":411}\n',
+          'data: {"inputCacheMissTokens":46,"totalInputTokens":46,"totalOutputTokens":365,"totalTokens":411}\n',
           'id: msg_01MNsLe7n1uVLtu6W8rCFujD',
           'event: stop',
           'data: "message_stop"\n',
@@ -675,7 +759,7 @@ describe('AnthropicStream', () => {
           'data: "end_turn"\n',
           'id: msg_019q32esPvu3TftzZnL6JPys',
           'event: usage',
-          'data: {"inputTokens":92,"outputTokens":263,"totalTokens":355}\n',
+          'data: {"inputCacheMissTokens":92,"totalInputTokens":92,"totalOutputTokens":263,"totalTokens":355}\n',
           'id: msg_019q32esPvu3TftzZnL6JPys',
           'event: stop',
           'data: "message_stop"\n',
