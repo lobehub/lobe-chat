@@ -23,8 +23,8 @@ export const transformAnthropicStream = (
     case 'message_start': {
       context.id = chunk.message.id;
       context.usage = {
-        inputTokens: chunk.message.usage?.input_tokens,
         outputTokens: chunk.message.usage?.output_tokens,
+        totalInputTokens: chunk.message.usage?.input_tokens,
       };
 
       return { data: chunk.message, id: chunk.message.id, type: 'data' };
@@ -141,17 +141,18 @@ export const transformAnthropicStream = (
 
     case 'message_delta': {
       const outputTokens = chunk.usage?.output_tokens + (context.usage?.outputTokens || 0);
-      const inputTokens = context.usage?.inputTokens || 0;
-      const totalTokens = inputTokens + outputTokens;
+      const totalInputTokens = context.usage?.totalInputTokens || 0;
+      const totalTokens = totalInputTokens + outputTokens;
 
       if (totalTokens > 0) {
         return [
           { data: chunk.delta.stop_reason, id: context.id, type: 'stop' },
           {
             data: {
-              inputTokens: inputTokens,
+              inputTokens: totalInputTokens,
               outputTokens: outputTokens,
-              totalTokens: inputTokens + outputTokens,
+              totalInputTokens: totalInputTokens,
+              totalTokens,
             } as ModelTokensUsage,
             id: context.id,
             type: 'usage',

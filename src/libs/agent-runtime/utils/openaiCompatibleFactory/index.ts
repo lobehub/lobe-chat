@@ -102,7 +102,7 @@ export function transformResponseToStream(data: OpenAI.ChatCompletion) {
   return new ReadableStream({
     start(controller) {
       const chunk: OpenAI.ChatCompletionChunk = {
-        choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
+        choices: (data.choices || []).map((choice: OpenAI.ChatCompletion.Choice) => ({
           delta: {
             content: choice.message.content,
             role: choice.message.role,
