@@ -50,7 +50,7 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
     pricing?.currency as ModelPriceCurrency,
   );
   return (
-    <>
+    <Flexbox gap={4}>
       <Flexbox
         align={'center'}
         className={styles.container}
@@ -123,7 +123,7 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
           </Flexbox>
         </Flexbox>
       )}
-    </>
+    </Flexbox>
   );
 });
 

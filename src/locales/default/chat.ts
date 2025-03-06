@@ -96,6 +96,7 @@ export default {
       },
     },
     tokenDetails: {
+      average: '平均单价',
       input: '输入',
       inputAudio: '音频输入',
       inputCached: '输入缓存',

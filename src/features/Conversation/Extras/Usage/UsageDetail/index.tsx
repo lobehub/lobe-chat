@@ -97,48 +97,73 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
   const displayTotal =
     isShowCredit && !!detailTokens.totalTokens
       ? formatNumber(detailTokens.totalTokens.credit)
-      : formatNumber(usage.totalTokens);
+      : formatNumber(detailTokens.totalTokens!.token);
 
+  const averagePricing = formatNumber(
+    detailTokens.totalTokens!.credit / detailTokens.totalTokens!.token,
+    2,
+  );
   return (
     <Popover
       arrow={false}
       content={
-        <Flexbox gap={20} style={{ minWidth: 200 }}>
+        <Flexbox gap={16} style={{ minWidth: 200 }}>
           {modelCard && <ModelCard {...modelCard} provider={provider} />}
-          {inputDetails.length > 1 && (
-            <Flexbox gap={4}>
-              <Flexbox align={'center'} gap={4} horizontal justify={'space-between'} width={'100%'}>
-                <div style={{ color: theme.colorTextDescription, fontSize: 12 }}>
-                  {t('messages.tokenDetails.inputTitle')}
-                </div>
-              </Flexbox>
-              <TokenProgress data={inputDetails} showIcon />
-            </Flexbox>
-          )}
-          {outputDetails.length > 1 && (
-            <>
-              <Flexbox align={'center'} gap={4} horizontal justify={'space-between'} width={'100%'}>
-                <div style={{ color: theme.colorTextDescription }}>
-                  {t('messages.tokenDetails.outputTitle')}
-                </div>
-              </Flexbox>
-              <TokenProgress data={outputDetails} showIcon />
-            </>
-          )}
 
-          <Flexbox>
-            <TokenProgress data={totalDetail} showIcon />
-            <Divider style={{ marginBlock: 8 }} />
-            <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
-              <div style={{ color: theme.colorTextSecondary }}>
-                {t('messages.tokenDetails.total')}
-              </div>
-              <div style={{ fontWeight: 500 }}>{displayTotal}</div>
+          <Flexbox gap={20}>
+            {inputDetails.length > 1 && (
+              <Flexbox gap={4}>
+                <Flexbox
+                  align={'center'}
+                  gap={4}
+                  horizontal
+                  justify={'space-between'}
+                  width={'100%'}
+                >
+                  <div style={{ color: theme.colorTextDescription, fontSize: 12 }}>
+                    {t('messages.tokenDetails.inputTitle')}
+                  </div>
+                </Flexbox>
+                <TokenProgress data={inputDetails} showIcon />
+              </Flexbox>
+            )}
+            {outputDetails.length > 1 && (
+              <>
+                <Flexbox
+                  align={'center'}
+                  gap={4}
+                  horizontal
+                  justify={'space-between'}
+                  width={'100%'}
+                >
+                  <div style={{ color: theme.colorTextDescription }}>
+                    {t('messages.tokenDetails.outputTitle')}
+                  </div>
+                </Flexbox>
+                <TokenProgress data={outputDetails} showIcon />
+              </>
+            )}
+            <Flexbox>
+              <TokenProgress data={totalDetail} showIcon />
+              <Divider style={{ marginBlock: 8 }} />
+              <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
+                <div style={{ color: theme.colorTextSecondary }}>
+                  {t('messages.tokenDetails.total')}
+                </div>
+                <div style={{ fontWeight: 500 }}>{displayTotal}</div>
+              </Flexbox>
+              {isShowCredit && (
+                <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
+                  <div style={{ color: theme.colorTextSecondary }}>
+                    {t('messages.tokenDetails.average')}
+                  </div>
+                  <div style={{ fontWeight: 500 }}>{averagePricing}</div>
+                </Flexbox>
+              )}
             </Flexbox>
           </Flexbox>
         </Flexbox>
       }
-      open
       placement={'top'}
       trigger={['hover', 'click']}
     >
