@@ -11,37 +11,54 @@ export const getDetailsToken = (
   usage: ModelTokensUsage,
   modelCard?: LobeDefaultAiModelListItem,
 ) => {
-  const inputTextToken = usage.inputTextTokens || (usage as any).inputTokens || 0;
+  const inputTextTokens = usage.inputTextTokens || (usage as any).inputTokens || 0;
+  const totalInputTokens = usage.totalInputTokens || (usage as any).inputTokens || 0;
 
-  const totalInputToken = usage.totalInputTokens || (usage as any).inputTokens;
+  const totalOutputTokens = usage.totalOutputTokens || (usage as any).outputTokens || 0;
 
-  const uncachedInputCredit = (
-    !!totalInputToken
-      ? calcCredit(totalInputToken - (usage.cachedTokens || 0), modelCard?.pricing?.input)
+  const outputReasoningTokens = usage.outputReasoningTokens || (usage as any).reasoningTokens || 0;
+
+  const outputTextTokens = usage.outputTextTokens
+    ? usage.outputTextTokens
+    : totalOutputTokens - outputReasoningTokens - (usage.outputAudioTokens || 0);
+
+  const inputCacheMissTokens = usage?.inputCacheMissTokens
+    ? usage?.inputCacheMissTokens
+    : totalInputTokens - (usage.inputCachedTokens || 0);
+
+  const inputCacheMissCredit = (
+    !!inputCacheMissTokens ? calcCredit(inputCacheMissTokens, modelCard?.pricing?.input) : 0
+  ) as number;
+
+  const inputCachedCredit = (
+    !!usage.inputCachedTokens
+      ? calcCredit(usage.inputCachedTokens, modelCard?.pricing?.cachedInput)
       : 0
   ) as number;
 
-  const cachedInputCredit = (
-    !!usage.cachedTokens ? calcCredit(usage.cachedTokens, modelCard?.pricing?.cachedInput) : 0
+  const totalOutputCredit = (
+    !!totalOutputTokens ? calcCredit(totalOutputTokens, modelCard?.pricing?.output) : 0
+  ) as number;
+  const totalInputCredit = (
+    !!totalInputTokens ? calcCredit(totalInputTokens, modelCard?.pricing?.output) : 0
   ) as number;
 
-  const totalOutput = (
-    !!usage.outputTokens ? calcCredit(usage.outputTokens, modelCard?.pricing?.output) : 0
-  ) as number;
-
-  const totalCredit = uncachedInputCredit + cachedInputCredit + totalOutput;
+  const totalCredit = inputCacheMissCredit + inputCachedCredit + totalOutputCredit;
 
   return {
-    cachedInput: !!usage.cachedTokens
-      ? {
-          credit: cachedInputCredit,
-          token: usage.cachedTokens,
-        }
-      : undefined,
     inputAudio: !!usage.inputAudioTokens
       ? {
           credit: calcCredit(usage.inputAudioTokens, modelCard?.pricing?.audioInput),
           token: usage.inputAudioTokens,
+        }
+      : undefined,
+    inputCacheMiss: !!inputCacheMissTokens
+      ? { credit: inputCacheMissCredit, token: inputCacheMissTokens }
+      : undefined,
+    inputCached: !!usage.inputCachedTokens
+      ? {
+          credit: inputCachedCredit,
+          token: usage.inputCachedTokens,
         }
       : undefined,
     inputCitation: !!usage.inputCitationTokens
@@ -50,12 +67,13 @@ export const getDetailsToken = (
           token: usage.inputCitationTokens,
         }
       : undefined,
-    inputText: !!inputTextToken
+    inputText: !!inputTextTokens
       ? {
-          credit: calcCredit(inputTextToken, modelCard?.pricing?.input),
-          token: inputTextToken,
+          credit: calcCredit(inputTextTokens, modelCard?.pricing?.input),
+          token: inputTextTokens,
         }
       : undefined,
+
     outputAudio: !!usage.outputAudioTokens
       ? {
           credit: calcCredit(usage.outputAudioTokens, modelCard?.pricing?.audioOutput),
@@ -63,37 +81,27 @@ export const getDetailsToken = (
           token: usage.outputAudioTokens,
         }
       : undefined,
-
-    outputText: !!usage.outputTokens
+    outputReasoning: !!outputReasoningTokens
       ? {
-          credit: calcCredit(
-            usage.outputTokens - (usage.reasoningTokens || 0) - (usage.outputAudioTokens || 0),
-            modelCard?.pricing?.output,
-          ),
-          token: usage.outputTokens - (usage.reasoningTokens || 0) - (usage.outputAudioTokens || 0),
+          credit: calcCredit(outputReasoningTokens, modelCard?.pricing?.output),
+          token: outputReasoningTokens,
         }
       : undefined,
-    reasoning: !!usage.reasoningTokens
+    outputText: !!outputTextTokens
       ? {
-          credit: calcCredit(usage.reasoningTokens, modelCard?.pricing?.output),
-          token: usage.reasoningTokens,
+          credit: calcCredit(outputTextTokens, modelCard?.pricing?.output),
+          token: outputTextTokens,
         }
       : undefined,
 
-    totalOutput: !!usage.outputTokens
-      ? {
-          credit: totalOutput,
-          token: usage.outputTokens,
-        }
+    totalInput: !!totalInputTokens
+      ? { credit: totalInputCredit, token: totalInputTokens }
+      : undefined,
+    totalOutput: !!totalOutputTokens
+      ? { credit: totalOutputCredit, token: totalOutputTokens }
       : undefined,
     totalTokens: !!usage.totalTokens
       ? { credit: totalCredit, token: usage.totalTokens }
-      : undefined,
-    uncachedInput: !!totalInputToken
-      ? {
-          credit: uncachedInputCredit,
-          token: totalInputToken - (usage.cachedTokens || 0),
-        }
       : undefined,
   };
 };

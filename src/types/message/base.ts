@@ -15,9 +15,9 @@ export interface ModelReasoning {
 
 export interface ModelTokensUsage {
   acceptedPredictionTokens?: number;
-  cachedTokens?: number;
   inputAudioTokens?: number;
   inputCacheMissTokens?: number;
+  inputCachedTokens?: number;
   /**
    * currently only pplx has citation_tokens
    */
@@ -26,11 +26,13 @@ export interface ModelTokensUsage {
    * user prompt input
    */
   inputTextTokens?: number;
+  inputWriteCacheTokens?: number;
   outputAudioTokens?: number;
-  outputTokens?: number;
-  reasoningTokens?: number;
+  outputReasoningTokens?: number;
+  outputTextTokens?: number;
   rejectedPredictionTokens?: number;
   totalInputTokens?: number;
+  totalOutputTokens?: number;
   totalTokens?: number;
 }
 

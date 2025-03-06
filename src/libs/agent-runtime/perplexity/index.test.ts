@@ -241,7 +241,7 @@ describe('LobePerplexityAI', () => {
           'data: "天和未来几天的"\n',
           'id: 506d64fb-e7f2-4d94-b80f-158369e9446d',
           'event: usage',
-          'data: {"inputCitationTokens":3058,"inputTextTokens":2,"outputTokens":685,"totalInputTokens":3060,"totalTokens":3745}\n',
+          'data: {"inputCitationTokens":3058,"inputTextTokens":2,"outputTextTokens":685,"totalInputTokens":3060,"totalOutputTokens":685,"totalTokens":3745}\n',
         ].map((line) => `${line}\n`),
       );
 
