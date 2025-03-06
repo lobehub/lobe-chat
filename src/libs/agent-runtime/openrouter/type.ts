@@ -19,10 +19,21 @@ interface ModelTopProvider {
 export interface OpenRouterModelCard {
   architecture: ModelArchitecture;
   context_length: number;
+  created: number;
   description: string;
   id: string;
   name: string;
   per_request_limits: any | null;
   pricing: ModelPricing;
   top_provider: ModelTopProvider;
+}
+
+interface OpenRouterModelEndpoint {
+  supports_reasoning?: boolean;
+  supports_tool_parameters?: boolean;
+}
+
+export interface OpenRouterModelExtraInfo {
+  endpoint?: OpenRouterModelEndpoint;
+  slug: string;
 }
