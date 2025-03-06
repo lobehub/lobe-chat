@@ -75,18 +75,18 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
   ].filter(Boolean) as TokenProgressItem[];
 
   const totalDetail = [
-    !!detailTokens.inputCached && {
+    !!detailTokens.inputCacheMiss && {
       color: theme.colorFill,
 
       id: 'uncachedInput',
       title: t('messages.tokenDetails.inputUncached'),
-      value: isShowCredit ? detailTokens.inputCached.credit : detailTokens.inputCached.token,
-    },
-    !!detailTokens.inputCacheMiss && {
-      color: theme.orange,
-      id: 'inputCacheMiss',
-      title: t('messages.tokenDetails.inputCached'),
       value: isShowCredit ? detailTokens.inputCacheMiss.credit : detailTokens.inputCacheMiss.token,
+    },
+    !!detailTokens.inputCached && {
+      color: theme.orange,
+      id: 'inputCached',
+      title: t('messages.tokenDetails.inputCached'),
+      value: isShowCredit ? detailTokens.inputCached.credit : detailTokens.inputCached.token,
     },
     !!detailTokens.totalOutput && {
       color: theme.colorSuccess,
