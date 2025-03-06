@@ -89,16 +89,20 @@
         "inputCharts": "${{amount}}/M karakter",
         "inputMinutes": "${{amount}}/dakika",
         "inputTokens": "Giriş {{amount}}/kredi · ${{amount}}/M",
-        "outputTokens": "Çıkış {{amount}}/kredi · ${{amount}}/M"
+        "outputTokens": "Çıkış {{amount}}/kredi · ${{amount}}/M",
+        "writeCacheInputTokens": "Giriş yazma önbelleği {{amount}}/puan · ${{amount}}/M"
       }
     },
     "tokenDetails": {
+      "average": "Ortalama birim fiyat",
       "input": "Giriş",
       "inputAudio": "Ses girişi",
       "inputCached": "Önceden yüklenmiş giriş",
+      "inputCitation": "Giriş alıntısı",
       "inputText": "Metin girişi",
       "inputTitle": "Giriş detayları",
       "inputUncached": "Önceden yüklenmemiş giriş",
+      "inputWriteCached": "Giriş önbelleği yazma",
       "output": "Çıkış",
       "outputAudio": "Ses çıkışı",
       "outputText": "Metin çıkışı",

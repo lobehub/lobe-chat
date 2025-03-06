@@ -1121,15 +1121,6 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B는 효율적인 모델로, 빠른 텍스트 생성 능력을 제공하며, 대규모 효율성과 비용 효과성이 필요한 응용 프로그램에 매우 적합합니다."
   },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Online 모델은 405B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 복잡한 온라인 채팅 애플리케이션을 위해 설계되었습니다."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Online 모델은 70B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 대용량 및 다양한 채팅 작업에 적합합니다."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Online 모델은 8B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 온라인 채팅을 위해 설계되었습니다."
-  },
   "llama-3.2-11b-vision-instruct": {
     "description": "고해상도 이미지에서 탁월한 이미지 추론 능력을 발휘하며, 시각 이해 응용 프로그램에 적합합니다."
   },
@@ -1643,6 +1634,9 @@
   "qwq-32b-preview": {
     "description": "QwQ 모델은 Qwen 팀이 개발한 실험적 연구 모델로, AI 추론 능력을 향상시키는 데 중점을 두고 있습니다."
   },
+  "r1-1776": {
+    "description": "R1-1776은 DeepSeek R1 모델의 한 버전으로, 후속 훈련을 거쳐 검토되지 않은 편향 없는 사실 정보를 제공합니다."
+  },
   "solar-mini": {
     "description": "Solar Mini는 컴팩트한 LLM으로, GPT-3.5보다 성능이 우수하며, 강력한 다국어 능력을 갖추고 있어 영어와 한국어를 지원하며, 효율적이고 소형의 솔루션을 제공합니다."
   },
@@ -1654,6 +1648,9 @@
   },
   "sonar": {
     "description": "검색 맥락 기반의 경량 검색 제품으로, Sonar Pro보다 더 빠르고 저렴합니다."
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research는 포괄적인 전문가 수준의 연구를 수행하고 이를 접근 가능하고 실행 가능한 보고서로 통합합니다."
   },
   "sonar-pro": {
     "description": "고급 쿼리 및 후속 작업을 지원하는 검색 맥락 기반의 고급 검색 제품입니다."

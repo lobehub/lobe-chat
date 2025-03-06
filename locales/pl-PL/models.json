@@ -1121,15 +1121,6 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B to model o wysokiej wydajności, oferujący szybkie możliwości generowania tekstu, idealny do zastosowań wymagających dużej efektywności i opłacalności."
   },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Model Llama 3.1 Sonar Huge Online, z 405B parametrami, obsługujący kontekst o długości około 127,000 tokenów, zaprojektowany do złożonych aplikacji czatu online."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Model Llama 3.1 Sonar Large Online, z 70B parametrami, obsługujący kontekst o długości około 127,000 tokenów, idealny do zadań czatu o dużej pojemności i różnorodności."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Model Llama 3.1 Sonar Small Online, z 8B parametrami, obsługujący kontekst o długości około 127,000 tokenów, zaprojektowany do czatów online, efektywnie przetwarzający różne interakcje tekstowe."
-  },
   "llama-3.2-11b-vision-instruct": {
     "description": "Wyjątkowe zdolności wnioskowania wizualnego na obrazach o wysokiej rozdzielczości, idealne do zastosowań związanych ze zrozumieniem wizualnym."
   },
@@ -1643,6 +1634,9 @@
   "qwq-32b-preview": {
     "description": "Model QwQ to eksperymentalny model badawczy opracowany przez zespół Qwen, skoncentrowany na zwiększeniu zdolności wnioskowania AI."
   },
+  "r1-1776": {
+    "description": "R1-1776 to wersja modelu DeepSeek R1, która została poddana dalszemu treningowi, aby dostarczać nieocenzurowane, bezstronne informacje faktograficzne."
+  },
   "solar-mini": {
     "description": "Solar Mini to kompaktowy LLM, który przewyższa GPT-3.5, posiadając potężne zdolności wielojęzyczne, wspierając angielski i koreański, oferując efektywne i zgrabne rozwiązania."
   },
@@ -1654,6 +1648,9 @@
   },
   "sonar": {
     "description": "Lekki produkt wyszukiwania oparty na kontekście, szybszy i tańszy niż Sonar Pro."
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research przeprowadza kompleksowe badania na poziomie eksperckim i łączy je w dostępne, praktyczne raporty."
   },
   "sonar-pro": {
     "description": "Zaawansowany produkt wyszukiwania wspierający kontekst wyszukiwania, oferujący zaawansowane zapytania i śledzenie."
