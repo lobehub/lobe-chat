@@ -46,6 +46,7 @@ describe('specific LobeBaichuanAI tests', () => {
       messages: [{ content: 'Hello', role: 'user' }],
       model: 'open-mistral-7b',
       temperature: 0.7,
+      stream: true,
       top_p: 1,
     });
 
