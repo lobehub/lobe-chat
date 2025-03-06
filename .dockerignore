@@ -1,6 +1,7 @@
 Dockerfile
 .dockerignore
-node_modules
+**/node_modules/
+**/pnpm-lock.yaml
 npm-debug.log
 .next
 .git
