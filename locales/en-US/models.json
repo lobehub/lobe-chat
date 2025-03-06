@@ -1121,15 +1121,6 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B is a high-performance model that offers rapid text generation capabilities, making it ideal for applications requiring large-scale efficiency and cost-effectiveness."
   },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Online model, featuring 405B parameters, supports a context length of approximately 127,000 tokens, designed for complex online chat applications."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Online model, featuring 70B parameters, supports a context length of approximately 127,000 tokens, suitable for high-capacity and diverse chat tasks."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Online model, featuring 8B parameters, supports a context length of approximately 127,000 tokens, designed for online chat, efficiently handling various text interactions."
-  },
   "llama-3.2-11b-vision-instruct": {
     "description": "Excellent image reasoning capabilities on high-resolution images, suitable for visual understanding applications."
   },
@@ -1643,6 +1634,9 @@
   "qwq-32b-preview": {
     "description": "The QwQ model is an experimental research model developed by the Qwen team, focusing on enhancing AI reasoning capabilities."
   },
+  "r1-1776": {
+    "description": "R1-1776 is a version of the DeepSeek R1 model, fine-tuned to provide unfiltered, unbiased factual information."
+  },
   "solar-mini": {
     "description": "Solar Mini is a compact LLM that outperforms GPT-3.5, featuring strong multilingual capabilities and supporting English and Korean, providing an efficient and compact solution."
   },
@@ -1654,6 +1648,9 @@
   },
   "sonar": {
     "description": "A lightweight search product based on contextual search, faster and cheaper than Sonar Pro."
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research conducts comprehensive expert-level studies and synthesizes them into accessible, actionable reports."
   },
   "sonar-pro": {
     "description": "An advanced search product that supports contextual search, advanced queries, and follow-ups."

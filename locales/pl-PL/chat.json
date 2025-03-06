@@ -89,16 +89,20 @@
         "inputCharts": "${{amount}}/M znaków",
         "inputMinutes": "${{amount}}/minutę",
         "inputTokens": "Wejście {{amount}}/punktów · ${{amount}}/M",
-        "outputTokens": "Wyjście {{amount}}/punktów · ${{amount}}/M"
+        "outputTokens": "Wyjście {{amount}}/punktów · ${{amount}}/M",
+        "writeCacheInputTokens": "Zapisz wejście w pamięci podręcznej {{amount}}/punktów · ${{amount}}/M"
       }
     },
     "tokenDetails": {
+      "average": "Średnia cena",
       "input": "Wejście",
       "inputAudio": "Wejście audio",
       "inputCached": "Zbuforowane wejście",
+      "inputCitation": "Cytowanie wejścia",
       "inputText": "Wejście tekstowe",
       "inputTitle": "Szczegóły wejścia",
       "inputUncached": "Wejście niezbuforowane",
+      "inputWriteCached": "Zapisz wejście w pamięci podręcznej",
       "output": "Wyjście",
       "outputAudio": "Wyjście audio",
       "outputText": "Wyjście tekstowe",

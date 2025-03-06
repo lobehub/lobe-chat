@@ -89,16 +89,20 @@
         "inputCharts": "${{amount}}/M символов",
         "inputMinutes": "${{amount}}/минуту",
         "inputTokens": "Входные {{amount}}/кредиты · ${{amount}}/M",
-        "outputTokens": "Выходные {{amount}}/кредиты · ${{amount}}/M"
+        "outputTokens": "Выходные {{amount}}/кредиты · ${{amount}}/M",
+        "writeCacheInputTokens": "Кэширование ввода записи {{amount}}/баллов · ${{amount}}/М"
       }
     },
     "tokenDetails": {
+      "average": "Средняя цена",
       "input": "Вход",
       "inputAudio": "Аудиовход",
       "inputCached": "Кэшированный вход",
+      "inputCitation": "Цитирование ввода",
       "inputText": "Текстовый вход",
       "inputTitle": "Детали входа",
       "inputUncached": "Некэшированный вход",
+      "inputWriteCached": "Запись кэшированного ввода",
       "output": "Выход",
       "outputAudio": "Аудиовыход",
       "outputText": "Текстовый выход",

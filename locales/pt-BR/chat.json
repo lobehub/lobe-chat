@@ -89,16 +89,20 @@
         "inputCharts": "${{amount}}/M caracteres",
         "inputMinutes": "${{amount}}/minuto",
         "inputTokens": "Entrada {{amount}}/créditos · ${{amount}}/M",
-        "outputTokens": "Saída {{amount}}/créditos · ${{amount}}/M"
+        "outputTokens": "Saída {{amount}}/créditos · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache de entrada de escrita {{amount}}/pontos · ${{amount}}/M"
       }
     },
     "tokenDetails": {
+      "average": "Preço médio",
       "input": "Entrada",
       "inputAudio": "Entrada de áudio",
       "inputCached": "Entrada em cache",
+      "inputCitation": "Citação de entrada",
       "inputText": "Entrada de texto",
       "inputTitle": "Detalhes da entrada",
       "inputUncached": "Entrada não cacheada",
+      "inputWriteCached": "Entrada de cache de escrita",
       "output": "Saída",
       "outputAudio": "Saída de áudio",
       "outputText": "Saída de texto",
