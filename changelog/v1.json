@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add epub file chunk split support."]
+    },
+    "date": "2025-03-05",
+    "version": "1.68.9"
+  },
+  {
+    "children": {
       "improvements": ["Improve openrouter models info."]
     },
     "date": "2025-03-05",
