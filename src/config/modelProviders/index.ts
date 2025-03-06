@@ -107,6 +107,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   GoogleProvider,
   VertexAIProvider,
   DeepSeekProvider,
+  PPIOProvider,
   HuggingFaceProvider,
   OpenRouterProvider,
   CloudflareProvider,
