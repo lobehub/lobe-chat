@@ -107,7 +107,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
     <Popover
       arrow={false}
       content={
-        <Flexbox gap={16} style={{ minWidth: 200 }}>
+        <Flexbox gap={8} style={{ minWidth: 200 }}>
           {modelCard && <ModelCard {...modelCard} provider={provider} />}
 
           <Flexbox gap={20}>
