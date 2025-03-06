@@ -22,19 +22,24 @@ export const getDetailsToken = (
     ? usage.outputTextTokens
     : totalOutputTokens - outputReasoningTokens - (usage.outputAudioTokens || 0);
 
+  const inputWriteCacheTokens = usage.inputWriteCacheTokens || 0;
+  const inputCacheTokens = usage.inputCachedTokens || (usage as any).cachedTokens || 0;
+
   const inputCacheMissTokens = usage?.inputCacheMissTokens
     ? usage?.inputCacheMissTokens
-    : totalInputTokens - (usage.inputCachedTokens || 0);
+    : totalInputTokens - (inputCacheTokens || 0);
 
   const inputCacheMissCredit = (
     !!inputCacheMissTokens ? calcCredit(inputCacheMissTokens, modelCard?.pricing?.input) : 0
   ) as number;
 
   const inputCachedCredit = (
-    !!usage.inputCachedTokens
-      ? calcCredit(usage.inputCachedTokens, modelCard?.pricing?.cachedInput)
-      : 0
+    !!inputCacheTokens ? calcCredit(inputCacheTokens, modelCard?.pricing?.cachedInput) : 0
   ) as number;
+
+  const inputWriteCachedCredit = !!inputWriteCacheTokens
+    ? (calcCredit(inputWriteCacheTokens, modelCard?.pricing?.writeCacheInput) as number)
+    : 0;
 
   const totalOutputCredit = (
     !!totalOutputTokens ? calcCredit(totalOutputTokens, modelCard?.pricing?.output) : 0
@@ -43,7 +48,8 @@ export const getDetailsToken = (
     !!totalInputTokens ? calcCredit(totalInputTokens, modelCard?.pricing?.output) : 0
   ) as number;
 
-  const totalCredit = inputCacheMissCredit + inputCachedCredit + totalOutputCredit;
+  const totalCredit =
+    inputCacheMissCredit + inputCachedCredit + inputWriteCachedCredit + totalOutputCredit;
 
   return {
     inputAudio: !!usage.inputAudioTokens
@@ -55,11 +61,11 @@ export const getDetailsToken = (
     inputCacheMiss: !!inputCacheMissTokens
       ? { credit: inputCacheMissCredit, token: inputCacheMissTokens }
       : undefined,
-    inputCached: !!usage.inputCachedTokens
-      ? {
-          credit: inputCachedCredit,
-          token: usage.inputCachedTokens,
-        }
+    inputCached: !!inputCacheTokens
+      ? { credit: inputCachedCredit, token: inputCacheTokens }
+      : undefined,
+    inputCachedWrite: !!inputWriteCacheTokens
+      ? { credit: inputWriteCachedCredit, token: inputWriteCacheTokens }
       : undefined,
     inputCitation: !!usage.inputCitationTokens
       ? {

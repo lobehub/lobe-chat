@@ -62,10 +62,10 @@ describe('getDetailsToken', () => {
   });
 
   it('should handle cachedTokens correctly', () => {
-    const usage: ModelTokensUsage = {
+    const usage = {
       totalInputTokens: 200,
-      inputCachedTokens: 50,
-    };
+      cachedTokens: 50,
+    } as ModelTokensUsage;
 
     const result = getDetailsToken(usage, mockModelCard);
 
