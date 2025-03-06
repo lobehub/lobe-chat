@@ -11,9 +11,13 @@ export const getDetailsToken = (
   usage: ModelTokensUsage,
   modelCard?: LobeDefaultAiModelListItem,
 ) => {
+  const inputTextToken = usage.inputTextTokens || (usage as any).inputTokens || 0;
+
+  const totalInputToken = usage.totalInputTokens || (usage as any).inputTokens;
+
   const uncachedInputCredit = (
-    !!usage.inputTokens
-      ? calcCredit(usage.inputTokens - (usage.cachedTokens || 0), modelCard?.pricing?.input)
+    !!totalInputToken
+      ? calcCredit(totalInputToken - (usage.cachedTokens || 0), modelCard?.pricing?.input)
       : 0
   ) as number;
 
@@ -25,7 +29,8 @@ export const getDetailsToken = (
     !!usage.outputTokens ? calcCredit(usage.outputTokens, modelCard?.pricing?.output) : 0
   ) as number;
 
-  const totalTokens = uncachedInputCredit + cachedInputCredit + totalOutput;
+  const totalCredit = uncachedInputCredit + cachedInputCredit + totalOutput;
+
   return {
     cachedInput: !!usage.cachedTokens
       ? {
@@ -39,13 +44,16 @@ export const getDetailsToken = (
           token: usage.inputAudioTokens,
         }
       : undefined,
-    inputText: !!usage.inputTokens
+    inputCitation: !!usage.inputCitationTokens
       ? {
-          credit: calcCredit(
-            usage.inputTokens - (usage.inputAudioTokens || 0),
-            modelCard?.pricing?.input,
-          ),
-          token: usage.inputTokens - (usage.inputAudioTokens || 0),
+          credit: calcCredit(usage.inputCitationTokens, modelCard?.pricing?.input),
+          token: usage.inputCitationTokens,
+        }
+      : undefined,
+    inputText: !!inputTextToken
+      ? {
+          credit: calcCredit(inputTextToken, modelCard?.pricing?.input),
+          token: inputTextToken,
         }
       : undefined,
     outputAudio: !!usage.outputAudioTokens
@@ -79,15 +87,12 @@ export const getDetailsToken = (
         }
       : undefined,
     totalTokens: !!usage.totalTokens
-      ? {
-          credit: totalTokens,
-          token: usage.totalTokens,
-        }
+      ? { credit: totalCredit, token: usage.totalTokens }
       : undefined,
-    uncachedInput: !!usage.inputTokens
+    uncachedInput: !!totalInputToken
       ? {
           credit: uncachedInputCredit,
-          token: usage.inputTokens - (usage.cachedTokens || 0),
+          token: totalInputToken - (usage.cachedTokens || 0),
         }
       : undefined,
   };

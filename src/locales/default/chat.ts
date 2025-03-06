@@ -99,6 +99,7 @@ export default {
       input: '输入',
       inputAudio: '音频输入',
       inputCached: '输入缓存',
+      inputCitation: '引用输入',
       inputText: '文本输入',
       inputTitle: '输入明细',
       inputUncached: '输入未缓存',

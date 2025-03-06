@@ -11,3 +11,5 @@ testProvider({
   chatDebugEnv: 'DEBUG_BAICHUAN_CHAT_COMPLETION',
   chatModel: 'hunyuan-lite',
 });
+
+describe('', () => {});

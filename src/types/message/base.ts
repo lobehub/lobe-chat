@@ -18,11 +18,19 @@ export interface ModelTokensUsage {
   cachedTokens?: number;
   inputAudioTokens?: number;
   inputCacheMissTokens?: number;
-  inputTokens?: number;
+  /**
+   * currently only pplx has citation_tokens
+   */
+  inputCitationTokens?: number;
+  /**
+   * user prompt input
+   */
+  inputTextTokens?: number;
   outputAudioTokens?: number;
   outputTokens?: number;
   reasoningTokens?: number;
   rejectedPredictionTokens?: number;
+  totalInputTokens?: number;
   totalTokens?: number;
 }
 

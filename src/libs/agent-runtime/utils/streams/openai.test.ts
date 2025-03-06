@@ -434,7 +434,7 @@ describe('OpenAIStream', () => {
           `data: "stop"\n`,
           'id: chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
           'event: usage',
-          `data: {"acceptedPredictionTokens":0,"cachedTokens":0,"inputAudioTokens":0,"inputTokens":1646,"outputAudioTokens":0,"outputTokens":11,"reasoningTokens":0,"rejectedPredictionTokens":0,"totalTokens":1657}\n`,
+          `data: {"inputTextTokens":1646,"outputTokens":11,"totalInputTokens":1646,"totalTokens":1657}\n`,
         ].map((i) => `${i}\n`),
       );
     });

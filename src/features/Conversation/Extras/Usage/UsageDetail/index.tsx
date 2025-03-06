@@ -37,6 +37,12 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
       title: t('messages.tokenDetails.inputAudio'),
       value: isShowCredit ? detailTokens.inputAudio.credit : detailTokens.inputAudio.token,
     },
+    !!detailTokens.inputCitation && {
+      color: theme.orange,
+      id: 'inputText',
+      title: t('messages.tokenDetails.inputCitation'),
+      value: isShowCredit ? detailTokens.inputCitation.credit : detailTokens.inputCitation.token,
+    },
     !!detailTokens.inputText && {
       color: theme.green,
       id: 'inputText',
@@ -100,14 +106,14 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
         <Flexbox gap={20} style={{ minWidth: 200 }}>
           {modelCard && <ModelCard {...modelCard} provider={provider} />}
           {inputDetails.length > 1 && (
-            <>
+            <Flexbox gap={4}>
               <Flexbox align={'center'} gap={4} horizontal justify={'space-between'} width={'100%'}>
-                <div style={{ color: theme.colorTextDescription }}>
+                <div style={{ color: theme.colorTextDescription, fontSize: 12 }}>
                   {t('messages.tokenDetails.inputTitle')}
                 </div>
               </Flexbox>
               <TokenProgress data={inputDetails} showIcon />
-            </>
+            </Flexbox>
           )}
           {outputDetails.length > 1 && (
             <>
@@ -132,6 +138,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
           </Flexbox>
         </Flexbox>
       }
+      open
       placement={'top'}
       trigger={['hover', 'click']}
     >
