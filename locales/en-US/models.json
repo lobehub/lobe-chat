@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview is a research-oriented model developed by the Qwen team, focusing on visual reasoning capabilities, with unique advantages in understanding complex scenes and solving visually related mathematical problems."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ is the inference model of the Qwen series. Compared to traditional instruction-tuned models, QwQ possesses reasoning and cognitive abilities, achieving significantly enhanced performance in downstream tasks, especially in solving difficult problems. QwQ-32B is a medium-sized inference model that competes effectively against state-of-the-art inference models (such as DeepSeek-R1 and o1-mini). This model employs technologies such as RoPE, SwiGLU, RMSNorm, and Attention QKV bias, featuring a 64-layer network structure and 40 Q attention heads (with 8 KV heads in the GQA architecture)."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is Qwen's latest experimental research model, focusing on enhancing AI reasoning capabilities. By exploring complex mechanisms such as language mixing and recursive reasoning, its main advantages include strong analytical reasoning, mathematical, and programming abilities. However, it also faces challenges such as language switching issues, reasoning loops, safety considerations, and differences in other capabilities."
   },
@@ -1637,8 +1640,14 @@
   "qwq": {
     "description": "QwQ is an experimental research model focused on improving AI reasoning capabilities."
   },
+  "qwq-32b": {
+    "description": "The QwQ inference model is trained based on the Qwen2.5-32B model, significantly enhancing its reasoning capabilities through reinforcement learning. The core metrics of the model, including mathematical code (AIME 24/25, LiveCodeBench) and some general metrics (IFEval, LiveBench, etc.), reach the level of the full version of DeepSeek-R1, with all metrics significantly surpassing those of DeepSeek-R1-Distill-Qwen-32B, which is also based on Qwen2.5-32B."
+  },
   "qwq-32b-preview": {
     "description": "The QwQ model is an experimental research model developed by the Qwen team, focusing on enhancing AI reasoning capabilities."
+  },
+  "qwq-plus-latest": {
+    "description": "The QwQ inference model is trained based on the Qwen2.5 model, significantly enhancing its reasoning capabilities through reinforcement learning. The core metrics of the model, including mathematical code (AIME 24/25, LiveCodeBench) and some general metrics (IFEval, LiveBench, etc.), reach the level of the full version of DeepSeek-R1."
   },
   "r1-1776": {
     "description": "R1-1776 is a version of the DeepSeek R1 model, fine-tuned to provide unfiltered, unbiased factual information."
