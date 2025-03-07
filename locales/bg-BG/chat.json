@@ -89,16 +89,20 @@
         "inputCharts": "${{amount}}/M символи",
         "inputMinutes": "${{amount}}/минута",
         "inputTokens": "Входящи {{amount}}/кредити · ${{amount}}/M",
-        "outputTokens": "Изходящи {{amount}}/кредити · ${{amount}}/M"
+        "outputTokens": "Изходящи {{amount}}/кредити · ${{amount}}/M",
+        "writeCacheInputTokens": "Кеширане на входящи данни {{amount}}/точки · ${{amount}}/M"
       }
     },
     "tokenDetails": {
+      "average": "Средна цена",
       "input": "Вход",
       "inputAudio": "Аудио вход",
       "inputCached": "Кеширан вход",
+      "inputCitation": "Цитиране на входящи данни",
       "inputText": "Текстов вход",
       "inputTitle": "Детайли за входа",
       "inputUncached": "Некеширан вход",
+      "inputWriteCached": "Входящи кеширани данни",
       "output": "Изход",
       "outputAudio": "Аудио изход",
       "outputText": "Текстов изход",

@@ -89,16 +89,20 @@
         "inputCharts": "${{amount}}/M Zeichen",
         "inputMinutes": "${{amount}}/Minute",
         "inputTokens": "Eingabe {{amount}}/Punkte · ${{amount}}/M",
-        "outputTokens": "Ausgabe {{amount}}/Punkte · ${{amount}}/M"
+        "outputTokens": "Ausgabe {{amount}}/Punkte · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache-Eingabe schreiben {{amount}}/Punkte · ${{amount}}/M"
       }
     },
     "tokenDetails": {
+      "average": "Durchschnittspreis",
       "input": "Eingabe",
       "inputAudio": "Audioeingabe",
       "inputCached": "Eingabe zwischengespeichert",
+      "inputCitation": "Eingabe zitieren",
       "inputText": "Text-Eingabe",
       "inputTitle": "Eingabedetails",
       "inputUncached": "Eingabe nicht zwischengespeichert",
+      "inputWriteCached": "Eingabe Cache schreiben",
       "output": "Ausgabe",
       "outputAudio": "Audioausgabe",
       "outputText": "Text-Ausgabe",
