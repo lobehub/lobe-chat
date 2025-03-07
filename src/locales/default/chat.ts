@@ -46,6 +46,9 @@ export default {
     },
     title: '模型扩展功能',
   },
+  history: {
+    title: '助手将只记住最后{{count}}条消息',
+  },
   historyRange: '历史范围',
   historySummary: '历史消息总结',
   inbox: {

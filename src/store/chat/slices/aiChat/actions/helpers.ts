@@ -6,5 +6,8 @@ export const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentSt
 export const getAgentChatConfig = () =>
   agentChatConfigSelectors.currentChatConfig(useAgentStore.getState());
 
+export const getAgentEnableHistoryCount = () =>
+  agentChatConfigSelectors.enableHistoryCount(useAgentStore.getState());
+
 export const getAgentKnowledge = () =>
   agentSelectors.currentEnabledKnowledge(useAgentStore.getState());

@@ -57,4 +57,6 @@ const CustomRender = memo<CustomRenderProps>(
   },
 );
 
+CustomRender.displayName = 'CustomRender';
+
 export default CustomRender;

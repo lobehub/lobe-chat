@@ -123,9 +123,13 @@ const portalAIChatsWithHistoryConfig = (s: ChatStoreState) => {
 
   const messages = [...parentMessages, ...afterMessages].filter(Boolean) as ChatMessage[];
 
-  const config = agentChatConfigSelectors.currentChatConfig(useAgentStore.getState());
+  const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(useAgentStore.getState());
+  const historyCount = agentChatConfigSelectors.historyCount(useAgentStore.getState());
 
-  return chatHelpers.getSlicedMessagesWithConfig(messages, config);
+  return chatHelpers.getSlicedMessages(messages, {
+    enableHistoryCount,
+    historyCount,
+  });
 };
 
 const threadSourceMessageIndex = (s: ChatStoreState) => {

@@ -1,3 +1,4 @@
+import { contextCachingModels } from '@/const/models';
 import { AgentStoreState } from '@/store/agent/initialState';
 import { LobeAgentChatConfig } from '@/types/agent';
 
@@ -7,10 +8,16 @@ export const currentAgentChatConfig = (s: AgentStoreState): LobeAgentChatConfig 
   currentAgentConfig(s).chatConfig || {};
 
 const enableHistoryCount = (s: AgentStoreState) => {
+  const config = currentAgentConfig(s);
   const chatConfig = currentAgentChatConfig(s);
+
+  const enableContextCaching = !chatConfig.disableContextCaching;
+
+  if (enableContextCaching && contextCachingModels.has(config.model)) return false;
 
   return chatConfig.enableHistoryCount;
 };
+
 const historyCount = (s: AgentStoreState) => {
   const chatConfig = currentAgentChatConfig(s);
 
@@ -35,7 +42,7 @@ const enableHistoryDivider =
     const config = currentAgentChatConfig(s);
 
     return (
-      config.enableHistoryCount &&
+      enableHistoryCount(s) &&
       historyLength > (config.historyCount ?? 0) &&
       config.historyCount === historyLength - currentIndex
     );

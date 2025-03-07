@@ -84,9 +84,13 @@ const mainAIChats = (s: ChatStoreState): ChatMessage[] => {
 
 const mainAIChatsWithHistoryConfig = (s: ChatStoreState): ChatMessage[] => {
   const chats = mainAIChats(s);
-  const config = agentChatConfigSelectors.currentChatConfig(useAgentStore.getState());
+  const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(useAgentStore.getState());
+  const historyCount = agentChatConfigSelectors.historyCount(useAgentStore.getState());
 
-  return chatHelpers.getSlicedMessagesWithConfig(chats, config);
+  return chatHelpers.getSlicedMessages(chats, {
+    enableHistoryCount,
+    historyCount,
+  });
 };
 
 const mainAIChatsMessageString = (s: ChatStoreState): string => {
