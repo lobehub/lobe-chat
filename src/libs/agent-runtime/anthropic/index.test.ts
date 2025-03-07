@@ -356,7 +356,7 @@ describe('LobeAnthropicAI', () => {
           // Assert
           expect(e).toEqual({
             endpoint: 'https://api.anthropic.com',
-            error: apiError,
+            error: apiError.error.error,
             errorType: bizErrorType,
             provider,
           });
