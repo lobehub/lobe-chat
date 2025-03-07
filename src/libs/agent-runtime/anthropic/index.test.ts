@@ -266,7 +266,7 @@ describe('LobeAnthropicAI', () => {
     });
 
     describe('chat with tools', () => {
-      it('should call client.beta.tools.messages.create when tools are provided', async () => {
+      it('should call tools when tools are provided', async () => {
         // Arrange
         const tools: ChatCompletionTool[] = [
           { function: { name: 'tool1', description: 'desc1' }, type: 'function' },
@@ -283,7 +283,10 @@ describe('LobeAnthropicAI', () => {
 
         // Assert
         expect(instance['client'].messages.create).toHaveBeenCalled();
-        expect(spyOn).toHaveBeenCalledWith(tools);
+        expect(spyOn).toHaveBeenCalledWith([
+          { function: { name: 'tool1', description: 'desc1' }, type: 'function' },
+          { enabledContextCaching: true },
+        ]);
       });
     });
 
