@@ -33,7 +33,12 @@ export default {
   duplicateTitle: '{{title}} 副本',
   emptyAgent: '暂无助手',
   extendParams: {
+    disableContextCaching: {
+      desc: '单条对话生成成本最高可降低 90%，响应速度提升 4 倍（<1>了解更多</1>）。开启后将自动禁用历史消息数限制',
+      title: '开启上下文缓存',
+    },
     enableReasoning: {
+      desc: '基于 Claude Thinking 机制限制（<1>了解更多</1>），开启后将自动禁用历史消息数限制',
       title: '开启深度思考',
     },
     reasoningBudgetToken: {

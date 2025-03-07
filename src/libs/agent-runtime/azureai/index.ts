@@ -2,6 +2,8 @@ import createClient, { ModelClient } from '@azure-rest/ai-inference';
 import { AzureKeyCredential } from '@azure/core-auth';
 import OpenAI from 'openai';
 
+import { systemToUserModels } from '@/const/models';
+
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
@@ -30,24 +32,17 @@ export class LobeAzureAI implements LobeRuntimeAI {
     // o1 series models on Azure OpenAI does not support streaming currently
     const enableStreaming = model.includes('o1') ? false : (params.stream ?? true);
 
-    // Convert 'system' role to 'user' or 'developer' based on the model
-    const systemToUserModels = new Set([
-      'o1-preview',
-      'o1-preview-2024-09-12',
-      'o1-mini',
-      'o1-mini-2024-09-12',
-    ]);
-
     const updatedMessages = messages.map((message) => ({
       ...message,
       role:
+        // Convert 'system' role to 'user' or 'developer' based on the model
         (model.includes('o1') || model.includes('o3')) && message.role === 'system'
           ? [...systemToUserModels].some((sub) => model.includes(sub))
             ? 'user'
             : 'developer'
           : message.role,
     }));
-    
+
     try {
       const response = this.client.path('/chat/completions').post({
         body: {
