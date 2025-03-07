@@ -52,4 +52,6 @@ const Tool = memo<InspectorProps>(
   },
 );
 
+Tool.displayName = 'AssistantTool';
+
 export default Tool;

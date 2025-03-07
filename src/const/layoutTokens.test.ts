@@ -6,6 +6,6 @@ describe('HEADER_ICON_SIZE', () => {
   });
 
   it('desktop', () => {
-    expect(HEADER_ICON_SIZE(false)).toEqual({ fontSize: 24 });
+    expect(HEADER_ICON_SIZE(false)).toEqual({ blockSize: 32, fontSize: 20 });
   });
 });

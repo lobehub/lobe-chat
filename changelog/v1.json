@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support Anthropic Context Caching."]
+    },
+    "date": "2025-03-07",
+    "version": "1.69.0"
+  },
+  {
+    "children": {
       "improvements": ["Add Gemini 2.0 Flash model variations, add QwQ models."]
     },
     "date": "2025-03-07",

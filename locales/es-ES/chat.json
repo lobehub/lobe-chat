@@ -32,13 +32,21 @@
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "No hay asistente disponible",
   "extendParams": {
+    "disableContextCaching": {
+      "desc": "El costo de generación de una sola conversación puede reducirse hasta en un 90%, y la velocidad de respuesta se incrementa 4 veces (<1>Más información</1>). Al activarlo, se desactivará automáticamente el límite de mensajes históricos",
+      "title": "Activar caché de contexto"
+    },
     "enableReasoning": {
+      "desc": "Basado en las restricciones del mecanismo Claude Thinking (<1>Más información</1>), al activarlo se desactivará automáticamente el límite de mensajes históricos",
       "title": "Activar el pensamiento profundo"
     },
     "reasoningBudgetToken": {
       "title": "Token de consumo de pensamiento"
     },
     "title": "Funcionalidad de extensión del modelo"
+  },
+  "history": {
+    "title": "El asistente solo recordará los últimos {{count}} mensajes"
   },
   "historyRange": "Rango de historial",
   "historySummary": "Resumen de mensajes históricos",

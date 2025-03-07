@@ -16,7 +16,6 @@ export const crawUrlRules: CrawlUrlRule[] = [
     // GitHub discussion
     urlPattern: 'https://github.com/(.*)/discussions/(.*)',
   },
-
   // 所有 PDF 都用 jina
   {
     impls: ['jina'],
@@ -31,6 +30,15 @@ export const crawUrlRules: CrawlUrlRule[] = [
   {
     impls: ['jina'],
     urlPattern: 'https://zhuanlan.zhihu.com(.*)',
+  },
+  {
+    impls: ['jina'],
+    urlPattern: 'https://zhihu.com(.*)',
+  },
+  // 微信公众号有爬虫防护，使用 jina
+  {
+    impls: ['jina'],
+    urlPattern: 'https://mp.weixin.qq.com(.*)',
   },
   {
     // Medium 文章转换为 Scribe.rip
