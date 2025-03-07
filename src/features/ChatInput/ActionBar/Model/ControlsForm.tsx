@@ -7,7 +7,7 @@ import { memo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/slices/chat';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import ContextCachingSwitch from './ContextCachingSwitch';
@@ -23,7 +23,7 @@ const ControlsForm = memo(() => {
   const [form] = Form.useForm();
   const enableReasoning = AntdForm.useWatch(['enableReasoning'], form);
 
-  const config = useAgentStore(agentSelectors.currentAgentChatConfig, isEqual);
+  const config = useAgentStore(agentChatConfigSelectors.currentChatConfig, isEqual);
 
   const modelExtendParams = useAiInfraStore(aiModelSelectors.modelExtendParams(model, provider));
 
@@ -52,10 +52,12 @@ const ControlsForm = memo(() => {
       children: <Switch />,
       desc: (
         <span style={{ display: 'inline-block', width: 300 }}>
-             <Trans i18nKey={'extendParams.enableReasoning.desc'} ns={'chat'}>
+          <Trans i18nKey={'extendParams.enableReasoning.desc'} ns={'chat'}>
             基于 Claude Thinking 机制限制（
             <Link
-              href={'https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking?utm_source=lobechat#why-thinking-blocks-must-be-preserved'}
+              href={
+                'https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking?utm_source=lobechat#why-thinking-blocks-must-be-preserved'
+              }
               rel={'nofollow'}
             >
               了解更多

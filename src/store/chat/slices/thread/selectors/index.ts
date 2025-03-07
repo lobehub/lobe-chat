@@ -1,6 +1,6 @@
 import { THREAD_DRAFT_ID } from '@/const/message';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import type { ChatStoreState } from '@/store/chat';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatMessage } from '@/types/message';
@@ -123,7 +123,7 @@ const portalAIChatsWithHistoryConfig = (s: ChatStoreState) => {
 
   const messages = [...parentMessages, ...afterMessages].filter(Boolean) as ChatMessage[];
 
-  const config = agentSelectors.currentAgentChatConfig(useAgentStore.getState());
+  const config = agentChatConfigSelectors.currentChatConfig(useAgentStore.getState());
 
   return chatHelpers.getSlicedMessagesWithConfig(messages, config);
 };

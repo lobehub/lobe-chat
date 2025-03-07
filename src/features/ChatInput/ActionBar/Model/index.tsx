@@ -101,7 +101,6 @@ const ModelSwitch = memo(() => {
             arrow={false}
             content={<ControlsForm />}
             placement={'topLeft'}
-            open
             styles={{
               body: {
                 minWidth: isMobile ? undefined : 350,
