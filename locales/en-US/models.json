@@ -827,11 +827,17 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash offers next-generation features and improvements, including exceptional speed, native tool usage, multimodal generation, and a 1M token context window."
   },
+  "gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 Flash is a variant of the model optimized for cost-effectiveness and low latency."
+  },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash is a variant of the model optimized for cost-effectiveness and low latency."
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "A Gemini 2.0 Flash model optimized for cost-effectiveness and low latency."
+  },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."

@@ -47,6 +47,10 @@ export interface OpenAIChatMessage {
  */
 export interface ChatStreamPayload {
   /**
+   * 开启上下文缓存
+   */
+  enabledContextCaching?: boolean;
+  /**
    * 是否开启搜索
    */
   enabledSearch?: boolean;

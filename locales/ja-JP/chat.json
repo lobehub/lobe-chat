@@ -32,13 +32,21 @@
   "duplicateTitle": "{{title}} のコピー",
   "emptyAgent": "エージェントがいません",
   "extendParams": {
+    "disableContextCaching": {
+      "desc": "単一の対話生成コストは最大90%削減され、応答速度は4倍向上します（<1>詳細はこちら</1>）。有効にすると、過去のメッセージ数制限が自動的に無効になります。",
+      "title": "コンテキストキャッシュを有効にする"
+    },
     "enableReasoning": {
+      "desc": "Claude Thinkingメカニズムに基づく制限（<1>詳細はこちら</1>）により、有効にすると過去のメッセージ数制限が自動的に無効になります。",
       "title": "深い思考を有効にする"
     },
     "reasoningBudgetToken": {
       "title": "思考消費トークン"
     },
     "title": "モデル拡張機能"
+  },
+  "history": {
+    "title": "アシスタントは最後の{{count}}件のメッセージのみを記憶します"
   },
   "historyRange": "履歴範囲",
   "historySummary": "履歴メッセージの要約",

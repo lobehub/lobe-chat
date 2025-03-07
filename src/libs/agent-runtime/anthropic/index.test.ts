@@ -81,7 +81,12 @@ describe('LobeAnthropicAI', () => {
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
           max_tokens: 4096,
-          messages: [{ content: 'Hello', role: 'user' }],
+          messages: [
+            {
+              content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
+              role: 'user',
+            },
+          ],
           model: 'claude-3-haiku-20240307',
           stream: true,
           temperature: 0,
@@ -117,10 +122,21 @@ describe('LobeAnthropicAI', () => {
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
           max_tokens: 4096,
-          messages: [{ content: 'Hello', role: 'user' }],
+          messages: [
+            {
+              content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
+              role: 'user',
+            },
+          ],
           model: 'claude-3-haiku-20240307',
           stream: true,
-          system: 'You are an awesome greeter',
+          system: [
+            {
+              cache_control: { type: 'ephemeral' },
+              type: 'text',
+              text: 'You are an awesome greeter',
+            },
+          ],
           temperature: 0,
         },
         {},
@@ -152,7 +168,12 @@ describe('LobeAnthropicAI', () => {
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
           max_tokens: 2048,
-          messages: [{ content: 'Hello', role: 'user' }],
+          messages: [
+            {
+              content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
+              role: 'user',
+            },
+          ],
           model: 'claude-3-haiku-20240307',
           stream: true,
           temperature: 0.25,
@@ -189,7 +210,12 @@ describe('LobeAnthropicAI', () => {
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
           max_tokens: 2048,
-          messages: [{ content: 'Hello', role: 'user' }],
+          messages: [
+            {
+              content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
+              role: 'user',
+            },
+          ],
           model: 'claude-3-haiku-20240307',
           stream: true,
           temperature: 0.25,
@@ -240,7 +266,7 @@ describe('LobeAnthropicAI', () => {
     });
 
     describe('chat with tools', () => {
-      it('should call client.beta.tools.messages.create when tools are provided', async () => {
+      it('should call tools when tools are provided', async () => {
         // Arrange
         const tools: ChatCompletionTool[] = [
           { function: { name: 'tool1', description: 'desc1' }, type: 'function' },
@@ -257,7 +283,10 @@ describe('LobeAnthropicAI', () => {
 
         // Assert
         expect(instance['client'].messages.create).toHaveBeenCalled();
-        expect(spyOn).toHaveBeenCalledWith(tools);
+        expect(spyOn).toHaveBeenCalledWith(
+          [{ function: { name: 'tool1', description: 'desc1' }, type: 'function' }],
+          { enabledContextCaching: true },
+        );
       });
     });
 

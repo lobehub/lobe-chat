@@ -32,13 +32,21 @@
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Geen assistent beschikbaar",
   "extendParams": {
+    "disableContextCaching": {
+      "desc": "De kosten voor het genereren van een enkele conversatie kunnen met maximaal 90% worden verlaagd, en de responssnelheid kan tot 4 keer worden verhoogd (<1>Lees meer</1>). Wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
+      "title": "Contextcaching inschakelen"
+    },
     "enableReasoning": {
+      "desc": "Beperkingen op basis van het Claude Thinking-mechanisme (<1>Lees meer</1>), wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
       "title": "Diepe denkwijze inschakelen"
     },
     "reasoningBudgetToken": {
       "title": "Denken verbruik Token"
     },
     "title": "Modeluitbreidingsfunctie"
+  },
+  "history": {
+    "title": "De assistent onthoudt alleen de laatste {{count}} berichten"
   },
   "historyRange": "Geschiedenisbereik",
   "historySummary": "Geschiedenis samenvatting",
