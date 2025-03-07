@@ -10,6 +10,20 @@ const groqChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
+    displayName: 'Qwen QwQ 32B',
+    id: 'qwen-qwq-32b',
+    pricing: {
+      input: 0.29,
+      output: 0.39,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
     displayName: 'DeepSeek R1 Distill Llama 70B',
     enabled: true,
     id: 'deepseek-r1-distill-llama-70b',
