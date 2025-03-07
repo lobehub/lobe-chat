@@ -1121,15 +1121,6 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B est un modèle à haute performance, offrant une capacité de génération de texte rapide, particulièrement adapté aux scénarios d'application nécessitant une efficacité à grande échelle et un rapport coût-efficacité."
   },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Le modèle Llama 3.1 Sonar Huge Online, avec 405B de paramètres, prend en charge une longueur de contexte d'environ 127 000 jetons, conçu pour des applications de chat en ligne complexes."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Le modèle Llama 3.1 Sonar Large Online, avec 70B de paramètres, prend en charge une longueur de contexte d'environ 127 000 jetons, adapté aux tâches de chat à haute capacité et diversifiées."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Le modèle Llama 3.1 Sonar Small Online, avec 8B de paramètres, prend en charge une longueur de contexte d'environ 127 000 jetons, conçu pour le chat en ligne, capable de traiter efficacement diverses interactions textuelles."
-  },
   "llama-3.2-11b-vision-instruct": {
     "description": "Capacités d'inférence d'image exceptionnelles sur des images haute résolution, adaptées aux applications de compréhension visuelle."
   },
@@ -1643,6 +1634,9 @@
   "qwq-32b-preview": {
     "description": "Le modèle QwQ est un modèle de recherche expérimental développé par l'équipe Qwen, axé sur l'amélioration des capacités de raisonnement de l'IA."
   },
+  "r1-1776": {
+    "description": "R1-1776 est une version du modèle DeepSeek R1, après un entraînement supplémentaire, fournissant des informations factuelles non filtrées et impartiales."
+  },
   "solar-mini": {
     "description": "Solar Mini est un LLM compact, offrant des performances supérieures à celles de GPT-3.5, avec de puissantes capacités multilingues, prenant en charge l'anglais et le coréen, et fournissant une solution efficace et compacte."
   },
@@ -1654,6 +1648,9 @@
   },
   "sonar": {
     "description": "Produit de recherche léger basé sur le contexte de recherche, plus rapide et moins cher que Sonar Pro."
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research effectue des recherches approfondies de niveau expert et les synthétise en rapports accessibles et exploitables."
   },
   "sonar-pro": {
     "description": "Produit de recherche avancé prenant en charge le contexte de recherche, avec des requêtes avancées et un suivi."

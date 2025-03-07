@@ -89,16 +89,20 @@
         "inputCharts": "${{amount}}/M حرف",
         "inputMinutes": "${{amount}}/دقيقة",
         "inputTokens": "مدخلات {{amount}}/نقطة · ${{amount}}/M",
-        "outputTokens": "مخرجات {{amount}}/نقطة · ${{amount}}/M"
+        "outputTokens": "مخرجات {{amount}}/نقطة · ${{amount}}/M",
+        "writeCacheInputTokens": "تخزين إدخال الكتابة {{amount}}/نقطة · ${{amount}}/ميغابايت"
       }
     },
     "tokenDetails": {
+      "average": "متوسط السعر",
       "input": "مدخلات",
       "inputAudio": "مدخلات صوتية",
       "inputCached": "مدخلات مخزنة",
+      "inputCitation": "اقتباس الإدخال",
       "inputText": "مدخلات نصية",
       "inputTitle": "تفاصيل المدخلات",
       "inputUncached": "مدخلات غير مخزنة",
+      "inputWriteCached": "تخزين إدخال الكتابة",
       "output": "مخرجات",
       "outputAudio": "مخرجات صوتية",
       "outputText": "مخرجات نصية",

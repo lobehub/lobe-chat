@@ -1121,15 +1121,6 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B 是一款高效能模型，提供了快速的文本生成能力，非常適合需要大規模效率和成本效益的應用場景。"
   },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Online 模型，具備 405B 參數，支持約 127,000 個標記的上下文長度，設計用於複雜的在線聊天應用。"
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Online 模型，具備 70B 參數，支持約 127,000 個標記的上下文長度，適用於高容量和多樣化聊天任務。"
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Online 模型，具備 8B 參數，支持約 127,000 個標記的上下文長度，專為在線聊天設計，能高效處理各種文本交互。"
-  },
   "llama-3.2-11b-vision-instruct": {
     "description": "在高解析度圖像上表現優異的圖像推理能力，適用於視覺理解應用。"
   },
@@ -1643,6 +1634,9 @@
   "qwq-32b-preview": {
     "description": "QwQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於增強 AI 推理能力。"
   },
+  "r1-1776": {
+    "description": "R1-1776 是 DeepSeek R1 模型的一個版本，經過後訓練，可提供未經審查、無偏見的事實資訊。"
+  },
   "solar-mini": {
     "description": "Solar Mini 是一種緊湊型 LLM，性能優於 GPT-3.5，具備強大的多語言能力，支持英語和韓語，提供高效小巧的解決方案。"
   },
@@ -1654,6 +1648,9 @@
   },
   "sonar": {
     "description": "基於搜索上下文的輕量級搜索產品，比 Sonar Pro 更快、更便宜。"
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research 進行全面的專家級研究，並將其綜合成可訪問、可行的報告。"
   },
   "sonar-pro": {
     "description": "支持搜索上下文的高級搜索產品，支持高級查詢和跟進。"

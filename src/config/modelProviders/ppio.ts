@@ -243,7 +243,7 @@ const PPIO: ModelProviderCard = {
     sdkType: 'openai',
     showModelFetcher: true,
   },
-  url: 'https://ppinfra.com/user/register?invited_by=RQIMOC',
+  url: 'https://ppinfra.com/user/register?invited_by=RQIMOC&utm_source=github_lobechat',
 };
 
 export default PPIO; 

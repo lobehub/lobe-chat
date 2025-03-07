@@ -2,7 +2,7 @@ import { ModelIcon } from '@lobehub/icons';
 import { Icon, Tooltip } from '@lobehub/ui';
 import { Segmented } from 'antd';
 import { createStyles } from 'antd-style';
-import { ArrowDownToDot, ArrowUpFromDot, CircleFadingArrowUp } from 'lucide-react';
+import { ArrowDownToDot, ArrowUpFromDot, BookUp2Icon, CircleFadingArrowUp } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -45,12 +45,16 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
     pricing?.cachedInput,
     pricing?.currency as ModelPriceCurrency,
   );
+  const writeCacheInputPrice = formatPriceByCurrency(
+    pricing?.writeCacheInput,
+    pricing?.currency as ModelPriceCurrency,
+  );
   const outputPrice = formatPriceByCurrency(
     pricing?.output,
     pricing?.currency as ModelPriceCurrency,
   );
   return (
-    <>
+    <Flexbox gap={8}>
       <Flexbox
         align={'center'}
         className={styles.container}
@@ -91,17 +95,11 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
           </Flexbox>
         )}
       </Flexbox>
-      {isShowCredit && (
+      {isShowCredit ? (
         <Flexbox horizontal justify={'space-between'}>
           <div />
           <Flexbox align={'center'} className={styles.pricing} gap={8} horizontal>
             {t('messages.modelCard.creditPricing')}:
-            <Tooltip title={t('messages.modelCard.pricing.inputTokens', { amount: inputPrice })}>
-              <Flexbox gap={2} horizontal>
-                <Icon icon={ArrowUpFromDot} />
-                {inputPrice}
-              </Flexbox>
-            </Tooltip>
             {pricing?.cachedInput && (
               <Tooltip
                 title={t('messages.modelCard.pricing.inputCachedTokens', {
@@ -114,6 +112,24 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
                 </Flexbox>
               </Tooltip>
             )}
+            <Tooltip title={t('messages.modelCard.pricing.inputTokens', { amount: inputPrice })}>
+              <Flexbox gap={2} horizontal>
+                <Icon icon={ArrowUpFromDot} />
+                {inputPrice}
+              </Flexbox>
+            </Tooltip>
+            {pricing?.writeCacheInput && (
+              <Tooltip
+                title={t('messages.modelCard.pricing.writeCacheInputTokens', {
+                  amount: writeCacheInputPrice,
+                })}
+              >
+                <Flexbox gap={2} horizontal>
+                  <Icon icon={BookUp2Icon} />
+                  {writeCacheInputPrice}
+                </Flexbox>
+              </Tooltip>
+            )}
             <Tooltip title={t('messages.modelCard.pricing.outputTokens', { amount: outputPrice })}>
               <Flexbox gap={2} horizontal>
                 <Icon icon={ArrowDownToDot} />
@@ -122,8 +138,10 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
             </Tooltip>
           </Flexbox>
         </Flexbox>
+      ) : (
+        <div style={{ height: 18 }} />
       )}
-    </>
+    </Flexbox>
   );
 });
 

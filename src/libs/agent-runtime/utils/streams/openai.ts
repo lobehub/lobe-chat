@@ -1,10 +1,11 @@
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
-import { ChatMessageError, CitationItem, ModelTokensUsage } from '@/types/message';
+import { ChatMessageError, CitationItem } from '@/types/message';
 
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
 import { ChatStreamCallbacks } from '../../types';
+import { convertUsage } from '../usageConverter';
 import {
   FIRST_CHUNK_ERROR_KEY,
   StreamContext,
@@ -17,22 +18,6 @@ import {
   createSSEProtocolTransformer,
   generateToolCallId,
 } from './protocol';
-
-const convertUsage = (usage: OpenAI.Completions.CompletionUsage): ModelTokensUsage => {
-  return {
-    acceptedPredictionTokens: usage.completion_tokens_details?.accepted_prediction_tokens,
-    cachedTokens:
-      (usage as any).prompt_cache_hit_tokens || usage.prompt_tokens_details?.cached_tokens,
-    inputAudioTokens: usage.prompt_tokens_details?.audio_tokens,
-    inputCacheMissTokens: (usage as any).prompt_cache_miss_tokens,
-    inputTokens: usage.prompt_tokens,
-    outputAudioTokens: usage.completion_tokens_details?.audio_tokens,
-    outputTokens: usage.completion_tokens,
-    reasoningTokens: usage.completion_tokens_details?.reasoning_tokens,
-    rejectedPredictionTokens: usage.completion_tokens_details?.rejected_prediction_tokens,
-    totalTokens: usage.total_tokens,
-  };
-};
 
 export const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
@@ -191,6 +176,12 @@ export const transformOpenAIStream = (
     // 无内容情况
     if (item.delta && item.delta.content === null) {
       return { data: item.delta, id: chunk.id, type: 'data' };
+    }
+
+    // litellm 的返回结果中，存在 delta 为空，但是有 usage 的情况
+    if (chunk.usage) {
+      const usage = chunk.usage;
+      return { data: convertUsage(usage), id: chunk.id, type: 'usage' };
     }
 
     // 其余情况下，返回 delta 和 index
