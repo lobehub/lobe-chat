@@ -89,16 +89,20 @@
         "inputCharts": "${{amount}}/M کاراکتر",
         "inputMinutes": "${{amount}}/دقیقه",
         "inputTokens": "ورودی {{amount}}/اعتبار · ${{amount}}/M",
-        "outputTokens": "خروجی {{amount}}/اعتبار · ${{amount}}/M"
+        "outputTokens": "خروجی {{amount}}/اعتبار · ${{amount}}/M",
+        "writeCacheInputTokens": "ذخیره ورودی نوشتن {{amount}}/امتیاز · ${{amount}}/M"
       }
     },
     "tokenDetails": {
+      "average": "میانگین قیمت",
       "input": "ورودی",
       "inputAudio": "ورودی صوتی",
       "inputCached": "ورودی کش شده",
+      "inputCitation": "ارجاع ورودی",
       "inputText": "ورودی متنی",
       "inputTitle": "جزئیات ورودی",
       "inputUncached": "ورودی غیر کش شده",
+      "inputWriteCached": "ذخیره ورودی نوشتن",
       "output": "خروجی",
       "outputAudio": "خروجی صوتی",
       "outputText": "خروجی متنی",

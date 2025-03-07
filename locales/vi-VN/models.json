@@ -1121,15 +1121,6 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B là một mô hình hiệu suất cao, cung cấp khả năng sinh văn bản nhanh chóng, rất phù hợp cho các tình huống ứng dụng cần hiệu quả quy mô lớn và tiết kiệm chi phí."
   },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Mô hình Llama 3.1 Sonar Huge Online, có 405B tham số, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã, được thiết kế cho các ứng dụng trò chuyện trực tuyến phức tạp."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Mô hình Llama 3.1 Sonar Large Online, có 70B tham số, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã, phù hợp cho các nhiệm vụ trò chuyện có dung lượng lớn và đa dạng."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Mô hình Llama 3.1 Sonar Small Online, có 8B tham số, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã, được thiết kế cho trò chuyện trực tuyến, có khả năng xử lý hiệu quả các tương tác văn bản khác nhau."
-  },
   "llama-3.2-11b-vision-instruct": {
     "description": "Khả năng suy luận hình ảnh xuất sắc trên hình ảnh độ phân giải cao, phù hợp cho các ứng dụng hiểu biết hình ảnh."
   },
@@ -1643,6 +1634,9 @@
   "qwq-32b-preview": {
     "description": "Mô hình QwQ là một mô hình nghiên cứu thử nghiệm được phát triển bởi đội ngũ Qwen, tập trung vào việc nâng cao khả năng suy luận của AI."
   },
+  "r1-1776": {
+    "description": "R1-1776 là một phiên bản của mô hình DeepSeek R1, đã được huấn luyện lại, cung cấp thông tin sự thật chưa được kiểm duyệt và không thiên lệch."
+  },
   "solar-mini": {
     "description": "Solar Mini là một LLM dạng nhỏ gọn, hiệu suất vượt trội hơn GPT-3.5, có khả năng đa ngôn ngữ mạnh mẽ, hỗ trợ tiếng Anh và tiếng Hàn, cung cấp giải pháp hiệu quả và nhỏ gọn."
   },
@@ -1654,6 +1648,9 @@
   },
   "sonar": {
     "description": "Sản phẩm tìm kiếm nhẹ dựa trên ngữ cảnh tìm kiếm, nhanh hơn và rẻ hơn so với Sonar Pro."
+  },
+  "sonar-deep-research": {
+    "description": "Nghiên cứu sâu tiến hành nghiên cứu chuyên gia toàn diện và tổng hợp thành các báo cáo có thể truy cập và có thể hành động."
   },
   "sonar-pro": {
     "description": "Sản phẩm tìm kiếm nâng cao hỗ trợ ngữ cảnh tìm kiếm, cho phép truy vấn và theo dõi nâng cao."
