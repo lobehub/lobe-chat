@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview 是由 Qwen 团队开发的专注于视觉推理能力的研究型模型，其在复杂场景理解和解决视觉相关的数学问题方面具有独特优势。"
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ 是 Qwen 系列的推理模型。与传统的指令调优模型相比，QwQ 具备思考和推理能力，能够在下游任务中实现显著增强的性能，尤其是在解决困难问题方面。QwQ-32B 是中型推理模型，能够在与最先进的推理模型（如 DeepSeek-R1、o1-mini）的对比中取得有竞争力的性能。该模型采用 RoPE、SwiGLU、RMSNorm 和 Attention QKV bias 等技术，具有 64 层网络结构和 40 个 Q 注意力头（GQA 架构中 KV 为 8 个）。"
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "Qwen QwQ 是由 Qwen 团队开发的实验研究模型，专注于提升AI推理能力。"
   },
@@ -1637,8 +1640,14 @@
   "qwq": {
     "description": "QwQ 是一个实验研究模型，专注于提高 AI 推理能力。"
   },
+  "qwq-32b": {
+    "description": "基于 Qwen2.5-32B 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平，各指标均显著超过同样基于 Qwen2.5-32B 的 DeepSeek-R1-Distill-Qwen-32B。"
+  },
   "qwq-32b-preview": {
     "description": "QwQ模型是由 Qwen 团队开发的实验性研究模型，专注于增强 AI 推理能力。"
+  },
+  "qwq-plus-latest": {
+    "description": "基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。"
   },
   "r1-1776": {
     "description": "R1-1776 是 DeepSeek R1 模型的一个版本，经过后训练，可提供未经审查、无偏见的事实信息。"

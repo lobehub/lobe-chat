@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview is een onderzoeksmodel ontwikkeld door het Qwen-team, dat zich richt op visuele redeneervaardigheden en unieke voordelen heeft in het begrijpen van complexe scènes en het oplossen van visueel gerelateerde wiskundige problemen."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ is het inferentiemodel van de Qwen-serie. In vergelijking met traditionele instructie-geoptimaliseerde modellen beschikt QwQ over denk- en redeneervaardigheden, waardoor het in staat is om aanzienlijk verbeterde prestaties te leveren in downstream-taken, vooral bij het oplossen van moeilijke problemen. QwQ-32B is een middelgroot inferentiemodel dat concurrerende prestaties kan behalen in vergelijking met de meest geavanceerde inferentiemodellen (zoals DeepSeek-R1, o1-mini). Dit model maakt gebruik van technologieën zoals RoPE, SwiGLU, RMSNorm en Attention QKV bias, en heeft een netwerkstructuur van 64 lagen en 40 Q-aandachtshoofden (met KV van 8 in de GQA-architectuur)."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is het nieuwste experimentele onderzoeksmodel van Qwen, gericht op het verbeteren van AI-redeneringscapaciteiten. Door het verkennen van complexe mechanismen zoals taalmixing en recursieve redenering, zijn de belangrijkste voordelen onder andere krachtige redeneringsanalyses, wiskundige en programmeervaardigheden. Tegelijkertijd zijn er ook problemen met taalwisseling, redeneringscycli, veiligheidskwesties en verschillen in andere capaciteiten."
   },
@@ -1637,8 +1640,14 @@
   "qwq": {
     "description": "QwQ is een experimenteel onderzoeksmodel dat zich richt op het verbeteren van de AI-redeneringscapaciteiten."
   },
+  "qwq-32b": {
+    "description": "De QwQ-inferentiemodel, getraind op het Qwen2.5-32B-model, heeft zijn inferentievermogen aanzienlijk verbeterd door middel van versterkend leren. De kernindicatoren van het model, zoals wiskundige code (AIME 24/25, LiveCodeBench) en enkele algemene indicatoren (IFEval, LiveBench, enz.), bereiken het niveau van de DeepSeek-R1 volwaardige versie, waarbij alle indicatoren aanzienlijk beter presteren dan de DeepSeek-R1-Distill-Qwen-32B, die ook op Qwen2.5-32B is gebaseerd."
+  },
   "qwq-32b-preview": {
     "description": "Het QwQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van de AI-redeneringscapaciteiten."
+  },
+  "qwq-plus-latest": {
+    "description": "De QwQ-inferentiemodel, getraind op het Qwen2.5-model, heeft zijn inferentievermogen aanzienlijk verbeterd door middel van versterkend leren. De kernindicatoren van het model, zoals wiskundige code (AIME 24/25, LiveCodeBench) en enkele algemene indicatoren (IFEval, LiveBench, enz.), bereiken het niveau van de DeepSeek-R1 volwaardige versie."
   },
   "r1-1776": {
     "description": "R1-1776 is een versie van het DeepSeek R1-model, dat is bijgetraind om ongecensureerde, onpartijdige feitelijke informatie te bieden."

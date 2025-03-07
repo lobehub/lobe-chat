@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview는 Qwen 팀이 개발한 시각적 추론 능력에 중점을 둔 연구 모델로, 복잡한 장면 이해 및 시각 관련 수학 문제 해결에서 독특한 장점을 가지고 있습니다."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ는 Qwen 시리즈의 추론 모델입니다. 전통적인 지시 조정 모델과 비교할 때, QwQ는 사고 및 추론 능력을 갖추고 있어 하위 작업에서 특히 어려운 문제를 해결하는 데 있어 성능이 크게 향상됩니다. QwQ-32B는 중형 추론 모델로, 최신 추론 모델(예: DeepSeek-R1, o1-mini)과 비교할 때 경쟁력 있는 성능을 발휘합니다. 이 모델은 RoPE, SwiGLU, RMSNorm 및 Attention QKV bias와 같은 기술을 사용하며, 64층 네트워크 구조와 40개의 Q 주의 헤드(GQA 구조에서 KV는 8개)를 가지고 있습니다."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview는 Qwen의 최신 실험적 연구 모델로, AI 추론 능력을 향상시키는 데 중점을 두고 있습니다. 언어 혼합, 재귀 추론 등 복잡한 메커니즘을 탐구하며, 주요 장점으로는 강력한 추론 분석 능력, 수학 및 프로그래밍 능력이 포함됩니다. 동시에 언어 전환 문제, 추론 루프, 안전성 고려 및 기타 능력 차이와 같은 문제도 존재합니다."
   },
@@ -1637,8 +1640,14 @@
   "qwq": {
     "description": "QwQ는 AI 추론 능력을 향상시키는 데 중점을 둔 실험 연구 모델입니다."
   },
+  "qwq-32b": {
+    "description": "Qwen2.5-32B 모델을 기반으로 훈련된 QwQ 추론 모델로, 강화 학습을 통해 모델의 추론 능력을 크게 향상시켰습니다. 모델의 수학 코드 등 핵심 지표(AIME 24/25, LiveCodeBench) 및 일부 일반 지표(IFEval, LiveBench 등)는 DeepSeek-R1 풀 버전 수준에 도달했으며, 모든 지표는 동일하게 Qwen2.5-32B를 기반으로 한 DeepSeek-R1-Distill-Qwen-32B를 크게 초과합니다."
+  },
   "qwq-32b-preview": {
     "description": "QwQ 모델은 Qwen 팀이 개발한 실험적 연구 모델로, AI 추론 능력을 향상시키는 데 중점을 두고 있습니다."
+  },
+  "qwq-plus-latest": {
+    "description": "Qwen2.5 모델을 기반으로 훈련된 QwQ 추론 모델로, 강화 학습을 통해 모델의 추론 능력을 크게 향상시켰습니다. 모델의 수학 코드 등 핵심 지표(AIME 24/25, LiveCodeBench) 및 일부 일반 지표(IFEval, LiveBench 등)는 DeepSeek-R1 풀 버전 수준에 도달했습니다."
   },
   "r1-1776": {
     "description": "R1-1776은 DeepSeek R1 모델의 한 버전으로, 후속 훈련을 거쳐 검토되지 않은 편향 없는 사실 정보를 제공합니다."

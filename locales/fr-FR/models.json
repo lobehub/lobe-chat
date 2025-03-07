@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview est un modèle de recherche développé par l'équipe Qwen, axé sur les capacités de raisonnement visuel, qui possède des avantages uniques dans la compréhension de scènes complexes et la résolution de problèmes mathématiques liés à la vision."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ est le modèle d'inférence de la série Qwen. Comparé aux modèles d'optimisation d'instructions traditionnels, QwQ possède des capacités de réflexion et de raisonnement, permettant d'obtenir des performances nettement améliorées dans les tâches en aval, en particulier pour résoudre des problèmes difficiles. QwQ-32B est un modèle d'inférence de taille moyenne, capable d'obtenir des performances compétitives par rapport aux modèles d'inférence les plus avancés (comme DeepSeek-R1, o1-mini). Ce modèle utilise des techniques telles que RoPE, SwiGLU, RMSNorm et Attention QKV bias, avec une architecture de réseau de 64 couches et 40 têtes d'attention Q (dans l'architecture GQA, KV est de 8)."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview est le dernier modèle de recherche expérimental de Qwen, axé sur l'amélioration des capacités de raisonnement de l'IA. En explorant des mécanismes complexes tels que le mélange de langues et le raisonnement récursif, ses principaux avantages incluent de puissantes capacités d'analyse de raisonnement, ainsi que des compétences en mathématiques et en programmation. Cependant, il existe également des problèmes de changement de langue, des cycles de raisonnement, des considérations de sécurité et des différences dans d'autres capacités."
   },
@@ -1637,8 +1640,14 @@
   "qwq": {
     "description": "QwQ est un modèle de recherche expérimental, axé sur l'amélioration des capacités de raisonnement de l'IA."
   },
+  "qwq-32b": {
+    "description": "Le modèle d'inférence QwQ, entraîné sur le modèle Qwen2.5-32B, a considérablement amélioré ses capacités d'inférence grâce à l'apprentissage par renforcement. Les indicateurs clés du modèle, tels que le code mathématique (AIME 24/25, LiveCodeBench) ainsi que certains indicateurs généraux (IFEval, LiveBench, etc.), atteignent le niveau de la version complète de DeepSeek-R1, avec des performances nettement supérieures à celles de DeepSeek-R1-Distill-Qwen-32B, également basé sur Qwen2.5-32B."
+  },
   "qwq-32b-preview": {
     "description": "Le modèle QwQ est un modèle de recherche expérimental développé par l'équipe Qwen, axé sur l'amélioration des capacités de raisonnement de l'IA."
+  },
+  "qwq-plus-latest": {
+    "description": "Le modèle d'inférence QwQ, entraîné sur le modèle Qwen2.5, a considérablement amélioré ses capacités d'inférence grâce à l'apprentissage par renforcement. Les indicateurs clés du modèle, tels que le code mathématique (AIME 24/25, LiveCodeBench) ainsi que certains indicateurs généraux (IFEval, LiveBench, etc.), atteignent le niveau de la version complète de DeepSeek-R1."
   },
   "r1-1776": {
     "description": "R1-1776 est une version du modèle DeepSeek R1, après un entraînement supplémentaire, fournissant des informations factuelles non filtrées et impartiales."
