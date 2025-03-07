@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "Existen subtemas, no se puede eliminar",
     "regenerate": "Regenerar"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Créditos",
+      "creditPricing": "Precios",
+      "creditTooltip": "Para facilitar el conteo, convertimos 1$ en 1M créditos, por ejemplo, $3/M tokens se convierte en 3 créditos/token",
+      "pricing": {
+        "inputCachedTokens": "Entradas en caché {{amount}}/créditos · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M caracteres",
+        "inputMinutes": "${{amount}}/minuto",
+        "inputTokens": "Entradas {{amount}}/créditos · ${{amount}}/M",
+        "outputTokens": "Salidas {{amount}}/créditos · ${{amount}}/M",
+        "writeCacheInputTokens": "Escritura en caché de entrada {{amount}}/puntos · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Precio promedio",
+      "input": "Entrada",
+      "inputAudio": "Entrada de audio",
+      "inputCached": "Entrada en caché",
+      "inputCitation": "Citación de entrada",
+      "inputText": "Entrada de texto",
+      "inputTitle": "Detalles de entrada",
+      "inputUncached": "Entrada no en caché",
+      "inputWriteCached": "Escritura en caché de entrada",
+      "output": "Salida",
+      "outputAudio": "Salida de audio",
+      "outputText": "Salida de texto",
+      "outputTitle": "Detalles de salida",
+      "reasoning": "Razonamiento profundo",
+      "title": "Detalles de generación",
+      "total": "Total consumido"
+    }
+  },
   "newAgent": "Nuevo asistente",
   "pin": "Fijar",
   "pinOff": "Desfijar",

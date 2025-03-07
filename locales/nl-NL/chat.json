@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
     "regenerate": "Opnieuw genereren"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Credits",
+      "creditPricing": "Prijsstelling",
+      "creditTooltip": "Voor de eenvoud van de berekening beschouwen we $1 als 1M credits, bijvoorbeeld $3/M tokens wordt omgezet naar 3 credits/token",
+      "pricing": {
+        "inputCachedTokens": "Gecacheerde invoer {{amount}}/credits · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M tekens",
+        "inputMinutes": "${{amount}}/minuut",
+        "inputTokens": "Invoer {{amount}}/credits · ${{amount}}/M",
+        "outputTokens": "Uitvoer {{amount}}/credits · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache-invoer schrijven {{amount}}/punten · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Gemiddelde prijs",
+      "input": "Invoer",
+      "inputAudio": "Audio-invoer",
+      "inputCached": "Gecacheerde invoer",
+      "inputCitation": "Invoer citeren",
+      "inputText": "Tekstinvoer",
+      "inputTitle": "Invoerdetails",
+      "inputUncached": "Ongecacheerde invoer",
+      "inputWriteCached": "Invoer cache schrijven",
+      "output": "Uitvoer",
+      "outputAudio": "Audio-uitvoer",
+      "outputText": "Tekstuitvoer",
+      "outputTitle": "Uitvoerdetails",
+      "reasoning": "Diep nadenken",
+      "title": "Genereren van details",
+      "total": "Totaal verbruik"
+    }
+  },
   "newAgent": "Nieuwe assistent",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",

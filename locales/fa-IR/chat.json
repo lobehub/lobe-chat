@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "زیرموضوع وجود دارد، نمی‌توان حذف کرد",
     "regenerate": "بازتولید"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "اعتبار",
+      "creditPricing": "قیمت گذاری",
+      "creditTooltip": "برای سهولت در شمارش، ما 1$ را به 1M اعتبار تبدیل می‌کنیم، به عنوان مثال $3/M توکن‌ها معادل 3 اعتبار/token است",
+      "pricing": {
+        "inputCachedTokens": "ورودی کش شده {{amount}}/اعتبار · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M کاراکتر",
+        "inputMinutes": "${{amount}}/دقیقه",
+        "inputTokens": "ورودی {{amount}}/اعتبار · ${{amount}}/M",
+        "outputTokens": "خروجی {{amount}}/اعتبار · ${{amount}}/M",
+        "writeCacheInputTokens": "ذخیره ورودی نوشتن {{amount}}/امتیاز · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "میانگین قیمت",
+      "input": "ورودی",
+      "inputAudio": "ورودی صوتی",
+      "inputCached": "ورودی کش شده",
+      "inputCitation": "ارجاع ورودی",
+      "inputText": "ورودی متنی",
+      "inputTitle": "جزئیات ورودی",
+      "inputUncached": "ورودی غیر کش شده",
+      "inputWriteCached": "ذخیره ورودی نوشتن",
+      "output": "خروجی",
+      "outputAudio": "خروجی صوتی",
+      "outputText": "خروجی متنی",
+      "outputTitle": "جزئیات خروجی",
+      "reasoning": "تفکر عمیق",
+      "title": "جزئیات تولید",
+      "total": "مجموع مصرف"
+    }
+  },
   "newAgent": "دستیار جدید",
   "pin": "سنجاق کردن",
   "pinOff": "لغو سنجاق",

@@ -13,6 +13,33 @@ export interface ModelReasoning {
   signature?: string;
 }
 
+export interface ModelTokensUsage {
+  acceptedPredictionTokens?: number;
+  inputAudioTokens?: number;
+  inputCacheMissTokens?: number;
+  inputCachedTokens?: number;
+  /**
+   * currently only pplx has citation_tokens
+   */
+  inputCitationTokens?: number;
+  /**
+   * user prompt input
+   */
+  inputTextTokens?: number;
+  inputWriteCacheTokens?: number;
+  outputAudioTokens?: number;
+  outputReasoningTokens?: number;
+  outputTextTokens?: number;
+  rejectedPredictionTokens?: number;
+  totalInputTokens?: number;
+  totalOutputTokens?: number;
+  totalTokens?: number;
+}
+
+export interface MessageMetadata extends ModelTokensUsage {
+  tps?: number;
+}
+
 export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';
 
 export interface MessageItem {
@@ -23,6 +50,7 @@ export interface MessageItem {
   error: any | null;
   favorite: boolean | null;
   id: string;
+  metadata?: MessageMetadata | null;
   model: string | null;
   observationId: string | null;
   parentId: string | null;

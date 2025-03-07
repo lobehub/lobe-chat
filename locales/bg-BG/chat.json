@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "Съществуват подтеми, не можете да изтриете.",
     "regenerate": "Прегенерирай"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Кредити",
+      "creditPricing": "Ценообразуване",
+      "creditTooltip": "За удобство при броенето, 1$ се преобразува в 1M кредити, например $3/M токени се преобразува в 3 кредита/token",
+      "pricing": {
+        "inputCachedTokens": "Кеширани входящи {{amount}}/кредити · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M символи",
+        "inputMinutes": "${{amount}}/минута",
+        "inputTokens": "Входящи {{amount}}/кредити · ${{amount}}/M",
+        "outputTokens": "Изходящи {{amount}}/кредити · ${{amount}}/M",
+        "writeCacheInputTokens": "Кеширане на входящи данни {{amount}}/точки · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Средна цена",
+      "input": "Вход",
+      "inputAudio": "Аудио вход",
+      "inputCached": "Кеширан вход",
+      "inputCitation": "Цитиране на входящи данни",
+      "inputText": "Текстов вход",
+      "inputTitle": "Детайли за входа",
+      "inputUncached": "Некеширан вход",
+      "inputWriteCached": "Входящи кеширани данни",
+      "output": "Изход",
+      "outputAudio": "Аудио изход",
+      "outputText": "Текстов изход",
+      "outputTitle": "Детайли за изхода",
+      "reasoning": "Дълбочинно разсъждение",
+      "title": "Детайли за генериране",
+      "total": "Общо разходи"
+    }
+  },
   "newAgent": "Нов агент",
   "pin": "Закачи",
   "pinOff": "Откачи",

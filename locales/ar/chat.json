@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
     "regenerate": "إعادة الإنشاء"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "نقاط",
+      "creditPricing": "التسعير",
+      "creditTooltip": "لتسهيل العد، نقوم بتحويل 1$ إلى 1M نقطة، على سبيل المثال، 3$/M رموز تعني 3 نقاط/رمز",
+      "pricing": {
+        "inputCachedTokens": "مدخلات مخزنة {{amount}}/نقطة · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M حرف",
+        "inputMinutes": "${{amount}}/دقيقة",
+        "inputTokens": "مدخلات {{amount}}/نقطة · ${{amount}}/M",
+        "outputTokens": "مخرجات {{amount}}/نقطة · ${{amount}}/M",
+        "writeCacheInputTokens": "تخزين إدخال الكتابة {{amount}}/نقطة · ${{amount}}/ميغابايت"
+      }
+    },
+    "tokenDetails": {
+      "average": "متوسط السعر",
+      "input": "مدخلات",
+      "inputAudio": "مدخلات صوتية",
+      "inputCached": "مدخلات مخزنة",
+      "inputCitation": "اقتباس الإدخال",
+      "inputText": "مدخلات نصية",
+      "inputTitle": "تفاصيل المدخلات",
+      "inputUncached": "مدخلات غير مخزنة",
+      "inputWriteCached": "تخزين إدخال الكتابة",
+      "output": "مخرجات",
+      "outputAudio": "مخرجات صوتية",
+      "outputText": "مخرجات نصية",
+      "outputTitle": "تفاصيل المخرجات",
+      "reasoning": "تفكير عميق",
+      "title": "تفاصيل التوليد",
+      "total": "الإجمالي المستهلك"
+    }
+  },
   "newAgent": "مساعد جديد",
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",

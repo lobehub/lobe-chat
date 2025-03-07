@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "Esistono sottoargomenti, non è possibile eliminare",
     "regenerate": "Rigenera"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Crediti",
+      "creditPricing": "Prezzo",
+      "creditTooltip": "Per facilitare il conteggio, consideriamo 1$ equivalente a 1M crediti, ad esempio $3/M token equivalgono a 3 crediti/token",
+      "pricing": {
+        "inputCachedTokens": "Input memorizzato {{amount}}/crediti · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M caratteri",
+        "inputMinutes": "${{amount}}/minuto",
+        "inputTokens": "Input {{amount}}/crediti · ${{amount}}/M",
+        "outputTokens": "Output {{amount}}/crediti · ${{amount}}/M",
+        "writeCacheInputTokens": "Scrittura cache input {{amount}}/crediti · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Prezzo medio",
+      "input": "Input",
+      "inputAudio": "Input audio",
+      "inputCached": "Input memorizzato",
+      "inputCitation": "Citazione input",
+      "inputText": "Input testo",
+      "inputTitle": "Dettagli input",
+      "inputUncached": "Input non memorizzato",
+      "inputWriteCached": "Scrittura cache input",
+      "output": "Output",
+      "outputAudio": "Output audio",
+      "outputText": "Output testo",
+      "outputTitle": "Dettagli output",
+      "reasoning": "Ragionamento profondo",
+      "title": "Dettagli generati",
+      "total": "Totale consumato"
+    }
+  },
   "newAgent": "Nuovo assistente",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio in alto",

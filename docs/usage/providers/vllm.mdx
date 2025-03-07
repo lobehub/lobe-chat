@@ -1,0 +1,98 @@
+---
+title: Using vLLM API Key in LobeChat
+description: Learn how to configure and use the vLLM language model in LobeChat, obtain an API key, and start a conversation.
+tags:
+  - LobeChat
+  - vLLM
+  - API Key
+  - Web UI
+---
+
+# Using vLLM in LobeChat
+
+<Image alt={'Using vLLM in LobeChat'} cover src={'https://github.com/user-attachments/assets/1d77cca4-7363-4a46-9ad5-10604e111d7c'} />
+
+[vLLM](https://github.com/vllm-project/vllm) is an open-source local large language model (LLM) deployment tool that allows users to efficiently run LLM models on local devices and provides an OpenAI API-compatible service interface.
+
+This document will guide you on how to use vLLM in LobeChat:
+
+<Steps>
+  ### Step 1: Preparation
+
+  vLLM has certain requirements for hardware and software environments. Be sure to configure according to the following requirements:
+
+  | Hardware Requirements     |                                                                         |
+  | --------- | ----------------------------------------------------------------------- |
+  | GPU       | - NVIDIA CUDA <br /> - AMD ROCm <br /> - Intel XPU                      |
+  | CPU       | - Intel/AMD x86 <br /> - ARM AArch64 <br /> - Apple silicon             |
+  | Other AI Accelerators | - Google TPU <br /> - Intel Gaudi <br /> - AWS Neuron <br /> - OpenVINO |
+
+  | Software Requirements                                    |
+  | --------------------------------------- |
+  | - OS: Linux <br /> - Python: 3.9 – 3.12 |
+
+  ### Step 2: Install vLLM
+
+  If you are using an NVIDIA GPU, you can directly install vLLM using `pip`. However, it is recommended to use `uv` here, which is a very fast Python environment manager, to create and manage the Python environment. Please follow the [documentation](https://docs.astral.sh/uv/#getting-started) to install uv. After installing uv, you can use the following command to create a new Python environment and install vLLM:
+
+  ```shell
+  uv venv myenv --python 3.12 --seed
+  source myenv/bin/activate
+  uv pip install vllm
+  ```
+
+  Another method is to use `uv run` with the `--with [dependency]` option, which allows you to run commands such as `vllm serve` without creating an environment:
+
+  ```shell
+  uv run --with vllm vllm --help
+  ```
+
+  You can also use [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html) to create and manage your Python environment.
+
+  ```shell
+  conda create -n myenv python=3.12 -y
+  conda activate myenv
+  pip install vllm
+  ```
+
+  <Callout type={"note"}>
+    For non-CUDA platforms, please refer to the [official documentation](https://docs.vllm.ai/en/latest/getting_started/installation/index.html#installation-index) to learn how to install vLLM.
+  </Callout>
+
+  ### Step 3: Start Local Service
+
+  vLLM can be deployed as an OpenAI API protocol-compatible server. By default, it will start the server at `http://localhost:8000`. You can specify the address using the `--host` and `--port` parameters. The server currently runs only one model at a time.
+
+  The following command will start a vLLM server and run the `Qwen2.5-1.5B-Instruct` model:
+
+  ```shell
+  vllm serve Qwen/Qwen2.5-1.5B-Instruct
+  ```
+
+  You can enable the server to check the API key in the header by passing the parameter `--api-key` or the environment variable `VLLM_API_KEY`. If not set, no API Key is required to access.
+
+  <Callout type={'note'}>
+    For more detailed vLLM server configuration, please refer to the [official documentation](https://docs.vllm.ai/en/latest/).
+  </Callout>
+
+  ### Step 4: Configure vLLM in LobeChat
+
+  - Access the `Application Settings` interface of LobeChat.
+  - Find the `vLLM` settings item under `Language Model`.
+
+  <Image alt={'Fill in the vLLM API Key'} inStep src={'https://github.com/user-attachments/assets/669c68bf-3f85-4a6f-bb08-d0d7fb7f7417'} />
+
+  - Open the vLLM service provider and fill in the API service address and API Key.
+
+  <Callout type={"warning"}>
+    *   If your vLLM is not configured with an API Key, please leave the API Key blank.
+    *   If your vLLM is running locally, please make sure to turn on `Client Request Mode`.
+  </Callout>
+
+  - Add the model you are running to the model list below.
+  - Select a vLLM model to run for your assistant and start the conversation.
+
+  <Image alt={'Select vLLM Model'} inStep src={'https://github.com/user-attachments/assets/fcdfb9c5-819a-488f-b28d-0857fe861219'} />
+</Steps>
+
+Now you can use the models provided by vLLM in LobeChat to have conversations.

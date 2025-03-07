@@ -184,7 +184,7 @@ export const createAiProviderSlice: StateCreator<
         };
       },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           if (!data) return;
 
           const getModelListByType = (providerId: string, type: string) => {
@@ -206,10 +206,12 @@ export const createAiProviderSlice: StateCreator<
             children: getModelListByType(provider.id, 'chat'),
             name: provider.name || provider.id,
           }));
+          const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
           set(
             {
               aiProviderRuntimeConfig: data.runtimeConfig,
+              builtinAiModelList: LOBE_DEFAULT_MODEL_LIST,
               enabledAiModels: data.enabledAiModels,
               enabledAiProviders: data.enabledAiProviders,
               enabledChatModelList,

@@ -2,6 +2,256 @@
 
 # Changelog
 
+### [Version 1.68.10](https://github.com/lobehub/lobe-chat/compare/v1.68.9...v1.68.10)
+
+<sup>Released on **2025-03-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix litellm streaming usage and refactor the usage chunk.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix litellm streaming usage and refactor the usage chunk, closes [#6734](https://github.com/lobehub/lobe-chat/issues/6734) ([9f09952](https://github.com/lobehub/lobe-chat/commit/9f09952))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.9](https://github.com/lobehub/lobe-chat/compare/v1.68.8...v1.68.9)
+
+<sup>Released on **2025-03-05**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add epub file chunk split support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add epub file chunk split support, closes [#6317](https://github.com/lobehub/lobe-chat/issues/6317) ([a79ab7a](https://github.com/lobehub/lobe-chat/commit/a79ab7a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.8](https://github.com/lobehub/lobe-chat/compare/v1.68.7...v1.68.8)
+
+<sup>Released on **2025-03-05**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve openrouter models info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve openrouter models info, closes [#6708](https://github.com/lobehub/lobe-chat/issues/6708) ([5693e68](https://github.com/lobehub/lobe-chat/commit/5693e68))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.7](https://github.com/lobehub/lobe-chat/compare/v1.68.6...v1.68.7)
+
+<sup>Released on **2025-03-05**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor agent runtime to better code format.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor agent runtime to better code format, closes [#6284](https://github.com/lobehub/lobe-chat/issues/6284) ([fc1ed4a](https://github.com/lobehub/lobe-chat/commit/fc1ed4a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.6](https://github.com/lobehub/lobe-chat/compare/v1.68.5...v1.68.6)
+
+<sup>Released on **2025-03-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix custom ai provider sdk type.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix custom ai provider sdk type, closes [#6712](https://github.com/lobehub/lobe-chat/issues/6712) ([7f8c379](https://github.com/lobehub/lobe-chat/commit/7f8c379))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.5](https://github.com/lobehub/lobe-chat/compare/v1.68.4...v1.68.5)
+
+<sup>Released on **2025-03-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix provider order.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix provider order, closes [#6702](https://github.com/lobehub/lobe-chat/issues/6702) ([27e4980](https://github.com/lobehub/lobe-chat/commit/27e4980))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.4](https://github.com/lobehub/lobe-chat/compare/v1.68.3...v1.68.4)
+
+<sup>Released on **2025-03-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support to show token usages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support to show token usages, closes [#6693](https://github.com/lobehub/lobe-chat/issues/6693) ([71a638e](https://github.com/lobehub/lobe-chat/commit/71a638e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.3](https://github.com/lobehub/lobe-chat/compare/v1.68.2...v1.68.3)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve url rules.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve url rules, closes [#6669](https://github.com/lobehub/lobe-chat/issues/6669) ([5ee59e3](https://github.com/lobehub/lobe-chat/commit/5ee59e3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.2](https://github.com/lobehub/lobe-chat/compare/v1.68.1...v1.68.2)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add build-in web search support for Wenxin & Hunyuan.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add build-in web search support for Wenxin & Hunyuan, closes [#6617](https://github.com/lobehub/lobe-chat/issues/6617) ([dfd1f09](https://github.com/lobehub/lobe-chat/commit/dfd1f09))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.68.1](https://github.com/lobehub/lobe-chat/compare/v1.68.0...v1.68.1)
+
+<sup>Released on **2025-03-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix page crash with crawler error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix page crash with crawler error, closes [#6662](https://github.com/lobehub/lobe-chat/issues/6662) ([0c24251](https://github.com/lobehub/lobe-chat/commit/0c24251))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.68.0](https://github.com/lobehub/lobe-chat/compare/v1.67.2...v1.68.0)
 
 <sup>Released on **2025-03-03**</sup>

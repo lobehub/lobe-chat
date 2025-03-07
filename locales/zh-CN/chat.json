@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "存在子话题，不能删除",
     "regenerate": "重新生成"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "积分",
+      "creditPricing": "定价",
+      "creditTooltip": "为便于计数，我们将 1$ 折算为 1M 积分，例如 $3/M tokens 即可折算为 3积分/token",
+      "pricing": {
+        "inputCachedTokens": "缓存输入 {{amount}}/积分 · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M 字符",
+        "inputMinutes": "${{amount}}/分钟",
+        "inputTokens": "输入 {{amount}}/积分 · ${{amount}}/M",
+        "outputTokens": "输出 {{amount}}/积分 · ${{amount}}/M",
+        "writeCacheInputTokens": "缓存输入写入 {{amount}}/积分 · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "平均单价",
+      "input": "输入",
+      "inputAudio": "音频输入",
+      "inputCached": "输入缓存",
+      "inputCitation": "引用输入",
+      "inputText": "文本输入",
+      "inputTitle": "输入明细",
+      "inputUncached": "输入未缓存",
+      "inputWriteCached": "输入缓存写入",
+      "output": "输出",
+      "outputAudio": "音频输出",
+      "outputText": "文本输出",
+      "outputTitle": "输出明细",
+      "reasoning": "深度思考",
+      "title": "生成明细",
+      "total": "总计消耗"
+    }
+  },
   "newAgent": "新建助手",
   "pin": "置顶",
   "pinOff": "取消置顶",

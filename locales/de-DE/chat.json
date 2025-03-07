@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "Es gibt Unterthemen, die Löschung ist nicht möglich.",
     "regenerate": "Neu generieren"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Punkte",
+      "creditPricing": "Preisgestaltung",
+      "creditTooltip": "Zur Vereinfachung der Zählung rechnen wir 1$ als 1M Punkte um, zum Beispiel werden $3/M Tokens als 3 Punkte/token umgerechnet",
+      "pricing": {
+        "inputCachedTokens": "Zwischengespeicherte Eingabe {{amount}}/Punkte · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M Zeichen",
+        "inputMinutes": "${{amount}}/Minute",
+        "inputTokens": "Eingabe {{amount}}/Punkte · ${{amount}}/M",
+        "outputTokens": "Ausgabe {{amount}}/Punkte · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache-Eingabe schreiben {{amount}}/Punkte · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Durchschnittspreis",
+      "input": "Eingabe",
+      "inputAudio": "Audioeingabe",
+      "inputCached": "Eingabe zwischengespeichert",
+      "inputCitation": "Eingabe zitieren",
+      "inputText": "Text-Eingabe",
+      "inputTitle": "Eingabedetails",
+      "inputUncached": "Eingabe nicht zwischengespeichert",
+      "inputWriteCached": "Eingabe Cache schreiben",
+      "output": "Ausgabe",
+      "outputAudio": "Audioausgabe",
+      "outputText": "Text-Ausgabe",
+      "outputTitle": "Ausgabedetails",
+      "reasoning": "Tiefes Denken",
+      "title": "Generierungsdetails",
+      "total": "Gesamter Verbrauch"
+    }
+  },
   "newAgent": "Neuer Assistent",
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",

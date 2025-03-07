@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
     "regenerate": "Regenerate"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Credits",
+      "creditPricing": "Pricing",
+      "creditTooltip": "For counting purposes, we convert $1 to 1M credits; for example, $3/M tokens can be converted to 3 credits/token.",
+      "pricing": {
+        "inputCachedTokens": "Cached input {{amount}}/credits · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M characters",
+        "inputMinutes": "${{amount}}/minute",
+        "inputTokens": "Input {{amount}}/credits · ${{amount}}/M",
+        "outputTokens": "Output {{amount}}/credits · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache input write {{amount}}/points · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Average unit price",
+      "input": "Input",
+      "inputAudio": "Audio Input",
+      "inputCached": "Cached Input",
+      "inputCitation": "Input citation",
+      "inputText": "Text Input",
+      "inputTitle": "Input Details",
+      "inputUncached": "Uncached Input",
+      "inputWriteCached": "Input cache write",
+      "output": "Output",
+      "outputAudio": "Audio Output",
+      "outputText": "Text Output",
+      "outputTitle": "Output Details",
+      "reasoning": "Deep Thinking",
+      "title": "Generation Details",
+      "total": "Total Consumption"
+    }
+  },
   "newAgent": "New Assistant",
   "pin": "Pin",
   "pinOff": "Unpin",

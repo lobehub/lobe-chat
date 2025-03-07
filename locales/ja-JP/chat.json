@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "サブトピックが存在するため、削除できません。",
     "regenerate": "再生成"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "クレジット",
+      "creditPricing": "価格設定",
+      "creditTooltip": "カウントを容易にするために、1ドルを1Mクレジットに換算します。例えば、$3/Mトークンは3クレジット/トークンに相当します。",
+      "pricing": {
+        "inputCachedTokens": "キャッシュ入力 {{amount}}/クレジット · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M 文字",
+        "inputMinutes": "${{amount}}/分",
+        "inputTokens": "入力 {{amount}}/クレジット · ${{amount}}/M",
+        "outputTokens": "出力 {{amount}}/クレジット · ${{amount}}/M",
+        "writeCacheInputTokens": "キャッシュ入力の書き込み {{amount}}/ポイント · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "平均単価",
+      "input": "入力",
+      "inputAudio": "音声入力",
+      "inputCached": "キャッシュ入力",
+      "inputCitation": "引用入力",
+      "inputText": "テキスト入力",
+      "inputTitle": "入力の詳細",
+      "inputUncached": "未キャッシュ入力",
+      "inputWriteCached": "入力キャッシュ書き込み",
+      "output": "出力",
+      "outputAudio": "音声出力",
+      "outputText": "テキスト出力",
+      "outputTitle": "出力の詳細",
+      "reasoning": "深い思考",
+      "title": "生成の詳細",
+      "total": "合計消費"
+    }
+  },
   "newAgent": "新しいエージェント",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",

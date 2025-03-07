@@ -79,6 +79,39 @@
     "deleteDisabledByThreads": "存在子話題，無法刪除",
     "regenerate": "重新生成"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "積分",
+      "creditPricing": "定價",
+      "creditTooltip": "為便於計算，我們將 1$ 折算為 1M 積分，例如 $3/M tokens 即可折算為 3積分/token",
+      "pricing": {
+        "inputCachedTokens": "快取輸入 {{amount}}/積分 · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M 字元",
+        "inputMinutes": "${{amount}}/分鐘",
+        "inputTokens": "輸入 {{amount}}/積分 · ${{amount}}/M",
+        "outputTokens": "輸出 {{amount}}/積分 · ${{amount}}/M",
+        "writeCacheInputTokens": "快取輸入寫入 {{amount}}/積分 · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "平均單價",
+      "input": "輸入",
+      "inputAudio": "音頻輸入",
+      "inputCached": "輸入快取",
+      "inputCitation": "引用輸入",
+      "inputText": "文本輸入",
+      "inputTitle": "輸入明細",
+      "inputUncached": "輸入未快取",
+      "inputWriteCached": "輸入快取寫入",
+      "output": "輸出",
+      "outputAudio": "音頻輸出",
+      "outputText": "文本輸出",
+      "outputTitle": "輸出明細",
+      "reasoning": "深度思考",
+      "title": "生成明細",
+      "total": "總計消耗"
+    }
+  },
   "newAgent": "新建助手",
   "pin": "置頂",
   "pinOff": "取消置頂",

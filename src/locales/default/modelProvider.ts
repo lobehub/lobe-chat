@@ -325,6 +325,9 @@ export default {
     tooltip: '更新服务商基础配置',
     updateSuccess: '更新成功',
   },
+  updateCustomAiProvider: {
+    title: '更新自定义 AI 服务商配置',
+  },
   vertexai: {
     apiKey: {
       desc: '填入你的 Vertex Ai Keys',
