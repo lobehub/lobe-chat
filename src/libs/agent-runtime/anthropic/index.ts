@@ -122,7 +122,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
 
-    const postTools = buildAnthropicTools(tools);
+    const postTools = buildAnthropicTools(tools, { enabledContextCaching });
 
     if (!!thinking) {
       const maxTokens =

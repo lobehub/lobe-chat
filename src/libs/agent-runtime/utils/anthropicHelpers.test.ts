@@ -676,5 +676,40 @@ describe('anthropicHelpers', () => {
         },
       ]);
     });
+    it('should enable cache control', () => {
+      const tools: OpenAI.ChatCompletionTool[] = [
+        {
+          type: 'function',
+          function: {
+            name: 'search',
+            description: 'Searches the web',
+            parameters: {
+              type: 'object',
+              properties: {
+                query: { type: 'string' },
+              },
+              required: ['query'],
+            },
+          },
+        },
+      ];
+
+      const result = buildAnthropicTools(tools, { enabledContextCaching: true });
+
+      expect(result).toEqual([
+        {
+          name: 'search',
+          description: 'Searches the web',
+          input_schema: {
+            type: 'object',
+            properties: {
+              query: { type: 'string' },
+            },
+            required: ['query'],
+          },
+          cache_control: { type: 'ephemeral' },
+        },
+      ]);
+    });
   });
 });

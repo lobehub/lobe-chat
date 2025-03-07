@@ -206,11 +206,21 @@ export const buildAnthropicMessages = async (
   return messages;
 };
 
-export const buildAnthropicTools = (tools?: OpenAI.ChatCompletionTool[]) =>
-  tools?.map(
-    (tool): Anthropic.Tool => ({
+export const buildAnthropicTools = (
+  tools?: OpenAI.ChatCompletionTool[],
+  options: { enabledContextCaching?: boolean } = {},
+) => {
+  if (!tools) return;
+
+  return tools.map(
+    (tool, index): Anthropic.Tool => ({
+      cache_control:
+        options.enabledContextCaching && index === tools.length - 1
+          ? { type: 'ephemeral' }
+          : undefined,
       description: tool.function.description,
       input_schema: tool.function.parameters as Anthropic.Tool.InputSchema,
       name: tool.function.name,
     }),
   );
+};
