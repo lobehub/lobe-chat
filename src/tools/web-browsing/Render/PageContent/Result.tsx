@@ -51,7 +51,8 @@ const useStyles = createStyles(({ token, css }) => {
       }
     `,
     footer: css`
-      padding: 8px 16px;
+      padding-block: 8px;
+      padding-inline: 16px;
       text-align: center;
       background-color: ${token.colorFillQuaternary};
     `,
