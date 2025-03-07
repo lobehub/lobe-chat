@@ -1121,15 +1121,6 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B, hızlı metin üretim yeteneği sunan yüksek performanslı bir modeldir ve büyük ölçekli verimlilik ve maliyet etkinliği gerektiren uygulama senaryoları için son derece uygundur."
   },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Online modeli, 405B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, karmaşık çevrimiçi sohbet uygulamaları için tasarlanmıştır."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Online modeli, 70B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, yüksek kapasiteli ve çeşitli sohbet görevleri için uygundur."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Online modeli, 8B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, çevrimiçi sohbet için tasarlanmıştır ve çeşitli metin etkileşimlerini etkili bir şekilde işler."
-  },
   "llama-3.2-11b-vision-instruct": {
     "description": "Yüksek çözünürlüklü görüntülerde mükemmel görüntü akıl yürütme yeteneği, görsel anlama uygulamaları için uygundur."
   },
@@ -1643,6 +1634,9 @@
   "qwq-32b-preview": {
     "description": "QwQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir ve AI akıl yürütme yeteneklerini artırmaya odaklanmaktadır."
   },
+  "r1-1776": {
+    "description": "R1-1776, DeepSeek R1 modelinin bir versiyonudur ve son eğitimle, sansürsüz, tarafsız gerçek bilgileri sunar."
+  },
   "solar-mini": {
     "description": "Solar Mini, GPT-3.5'ten daha iyi performansa sahip kompakt bir LLM'dir, güçlü çok dilli yeteneklere sahiptir, İngilizce ve Korece'yi destekler ve etkili, kompakt çözümler sunar."
   },
@@ -1654,6 +1648,9 @@
   },
   "sonar": {
     "description": "Arama bağlamına dayalı hafif bir arama ürünüdür, Sonar Pro'dan daha hızlı ve daha ucuzdur."
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research, kapsamlı uzman düzeyinde araştırmalar yapar ve bunları erişilebilir, uygulanabilir raporlar haline getirir."
   },
   "sonar-pro": {
     "description": "Gelişmiş sorgular ve takip desteği sunan, arama bağlamını destekleyen bir üst düzey arama ürünüdür."

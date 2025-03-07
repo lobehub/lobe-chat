@@ -101,8 +101,9 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
 export function transformResponseToStream(data: OpenAI.ChatCompletion) {
   return new ReadableStream({
     start(controller) {
+      const choices = data.choices || [];
       const chunk: OpenAI.ChatCompletionChunk = {
-        choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
+        choices: choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
           delta: {
             content: choice.message.content,
             role: choice.message.role,
@@ -128,7 +129,7 @@ export function transformResponseToStream(data: OpenAI.ChatCompletion) {
       controller.enqueue(chunk);
 
       controller.enqueue({
-        choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
+        choices: choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
           delta: {
             content: null,
             role: choice.message.role,
@@ -219,7 +220,9 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             ...postPayload,
             messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
+            stream_options: postPayload.stream ? { include_usage: true } : undefined,
           };
+
           if (debug?.chatCompletion?.()) {
             console.log('[requestPayload]:', JSON.stringify(finalPayload, null, 2));
           }

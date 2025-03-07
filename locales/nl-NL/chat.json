@@ -89,16 +89,20 @@
         "inputCharts": "${{amount}}/M tekens",
         "inputMinutes": "${{amount}}/minuut",
         "inputTokens": "Invoer {{amount}}/credits · ${{amount}}/M",
-        "outputTokens": "Uitvoer {{amount}}/credits · ${{amount}}/M"
+        "outputTokens": "Uitvoer {{amount}}/credits · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache-invoer schrijven {{amount}}/punten · ${{amount}}/M"
       }
     },
     "tokenDetails": {
+      "average": "Gemiddelde prijs",
       "input": "Invoer",
       "inputAudio": "Audio-invoer",
       "inputCached": "Gecacheerde invoer",
+      "inputCitation": "Invoer citeren",
       "inputText": "Tekstinvoer",
       "inputTitle": "Invoerdetails",
       "inputUncached": "Ongecacheerde invoer",
+      "inputWriteCached": "Invoer cache schrijven",
       "output": "Uitvoer",
       "outputAudio": "Audio-uitvoer",
       "outputText": "Tekstuitvoer",

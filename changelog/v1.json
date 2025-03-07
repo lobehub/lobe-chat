@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix litellm streaming usage and refactor the usage chunk."]
+    },
+    "date": "2025-03-06",
+    "version": "1.68.10"
+  },
+  {
+    "children": {
       "improvements": ["Add epub file chunk split support."]
     },
     "date": "2025-03-05",
