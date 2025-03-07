@@ -529,9 +529,6 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: {
-      functionCall: true,
-    },
     contextWindowTokens: 65_792,
     description:
       'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
