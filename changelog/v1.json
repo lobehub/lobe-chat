@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add Qwen QwQ model."]
+    },
+    "date": "2025-03-07",
+    "version": "1.69.1"
+  },
+  {
+    "children": {
       "features": ["Support Anthropic Context Caching."]
     },
     "date": "2025-03-07",
