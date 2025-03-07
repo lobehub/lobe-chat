@@ -283,10 +283,10 @@ describe('LobeAnthropicAI', () => {
 
         // Assert
         expect(instance['client'].messages.create).toHaveBeenCalled();
-        expect(spyOn).toHaveBeenCalledWith([
-          { function: { name: 'tool1', description: 'desc1' }, type: 'function' },
+        expect(spyOn).toHaveBeenCalledWith(
+          [{ function: { name: 'tool1', description: 'desc1' }, type: 'function' }],
           { enabledContextCaching: true },
-        ]);
+        );
       });
     });
 
