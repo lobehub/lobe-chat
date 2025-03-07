@@ -7,15 +7,18 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 
 const History = memo(() => {
   const { t } = useTranslation('setting');
   const [popoverOpen, setPopoverOpen] = useState(false);
 
   const [historyCount, enableHistoryCount, updateAgentConfig] = useAgentStore((s) => {
-    const config = agentSelectors.currentAgentChatConfig(s);
-    return [config.historyCount, config.enableHistoryCount, s.updateAgentChatConfig];
+    return [
+      agentChatConfigSelectors.historyCount(s),
+      agentChatConfigSelectors.enableHistoryCount(s),
+      s.updateAgentChatConfig,
+    ];
   });
 
   const title = t(

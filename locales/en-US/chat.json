@@ -32,13 +32,21 @@
   "duplicateTitle": "{{title}} Copy",
   "emptyAgent": "No assistant available",
   "extendParams": {
+    "disableContextCaching": {
+      "desc": "The cost of generating a single conversation can be reduced by up to 90%, and the response speed is increased by 4 times (<1>Learn more</1>). Enabling this will automatically disable the limit on the number of historical messages.",
+      "title": "Enable Context Caching"
+    },
     "enableReasoning": {
+      "desc": "Based on the Claude Thinking mechanism limit (<1>Learn more</1>), enabling this will automatically disable the limit on the number of historical messages.",
       "title": "Enable Deep Thinking"
     },
     "reasoningBudgetToken": {
       "title": "Thinking Consumption Token"
     },
     "title": "Model Extension Features"
+  },
+  "history": {
+    "title": "The assistant will only remember the last {{count}} messages."
   },
   "historyRange": "History Range",
   "historySummary": "Historical Message Summary",

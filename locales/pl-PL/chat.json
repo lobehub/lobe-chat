@@ -32,13 +32,21 @@
   "duplicateTitle": "{{title}} kopia",
   "emptyAgent": "Brak asystenta",
   "extendParams": {
+    "disableContextCaching": {
+      "desc": "Koszt generowania pojedynczej rozmowy może zostać obniżony o 90%, a prędkość odpowiedzi wzrośnie czterokrotnie (<1>Dowiedz się więcej</1>). Po włączeniu automatycznie wyłączone zostanie ograniczenie liczby wiadomości historycznych",
+      "title": "Włącz pamięć kontekstową"
+    },
     "enableReasoning": {
+      "desc": "Ograniczenia oparte na mechanizmie Claude Thinking (<1>Dowiedz się więcej</1>), po włączeniu automatycznie wyłączone zostanie ograniczenie liczby wiadomości historycznych",
       "title": "Włącz głębokie myślenie"
     },
     "reasoningBudgetToken": {
       "title": "Token zużycia myślenia"
     },
     "title": "Funkcje rozszerzenia modelu"
+  },
+  "history": {
+    "title": "Asystent zapamięta tylko ostatnie {{count}} wiadomości"
   },
   "historyRange": "Zakres historii",
   "historySummary": "Podsumowanie wiadomości historycznych",

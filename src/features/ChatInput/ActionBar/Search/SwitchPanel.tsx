@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/slices/chat';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { SearchMode } from '@/types/search';
 
@@ -84,7 +84,7 @@ const Item = memo<NetworkOption>(({ value, description, icon, label, disable }) 
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const [mode, updateAgentChatConfig] = useAgentStore((s) => [
-    agentSelectors.agentSearchMode(s),
+    agentChatConfigSelectors.agentSearchMode(s),
     s.updateAgentChatConfig,
   ]);
 
