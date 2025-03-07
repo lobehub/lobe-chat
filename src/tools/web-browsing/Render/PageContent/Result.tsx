@@ -51,12 +51,12 @@ const useStyles = createStyles(({ token, css }) => {
       }
     `,
     footer: css`
-      padding: ${token.paddingXS}px;
+      padding: 8px 16px;
       text-align: center;
       background-color: ${token.colorFillQuaternary};
     `,
     footerText: css`
-      font-size: ${token.fontSizeSM}px;
+      font-size: 12px !important;
       color: ${token.colorTextTertiary} !important;
     `,
     metaInfo: css`
@@ -153,6 +153,7 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
         <Descriptions
           classNames={{
             content: styles.footerText,
+            label: styles.footerText,
           }}
           column={2}
           items={[
