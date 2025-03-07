@@ -1121,15 +1121,6 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B is een hoogpresterend model dat snelle tekstgeneratiecapaciteiten biedt, zeer geschikt voor toepassingen die grootschalige efficiëntie en kosteneffectiviteit vereisen."
   },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Online model, met 405B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, ontworpen voor complexe online chattoepassingen."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Online model, met 70B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, geschikt voor hoge capaciteit en diverse chattaken."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Online model, met 8B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, speciaal ontworpen voor online chat en kan efficiënt verschillende tekstinteracties verwerken."
-  },
   "llama-3.2-11b-vision-instruct": {
     "description": "Uitstekende beeldredeneringscapaciteiten op hoge resolutie-afbeeldingen, geschikt voor visuele begrijptoepassingen."
   },
@@ -1643,6 +1634,9 @@
   "qwq-32b-preview": {
     "description": "Het QwQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van de AI-redeneringscapaciteiten."
   },
+  "r1-1776": {
+    "description": "R1-1776 is een versie van het DeepSeek R1-model, dat is bijgetraind om ongecensureerde, onpartijdige feitelijke informatie te bieden."
+  },
   "solar-mini": {
     "description": "Solar Mini is een compacte LLM die beter presteert dan GPT-3.5, met sterke meertalige capaciteiten, ondersteunt Engels en Koreaans, en biedt een efficiënte en compacte oplossing."
   },
@@ -1654,6 +1648,9 @@
   },
   "sonar": {
     "description": "Een lichtgewicht zoekproduct op basis van contextuele zoekopdrachten, sneller en goedkoper dan Sonar Pro."
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research voert uitgebreide expertstudies uit en bundelt deze in toegankelijke, bruikbare rapporten."
   },
   "sonar-pro": {
     "description": "Een geavanceerd zoekproduct dat contextuele zoekopdrachten ondersteunt, met geavanceerde query's en vervolgacties."

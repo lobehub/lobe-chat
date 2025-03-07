@@ -1121,15 +1121,6 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8Bは、高効率モデルであり、迅速なテキスト生成能力を提供し、大規模な効率とコスト効果が求められるアプリケーションシナリオに非常に適しています。"
   },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Onlineモデルは、405Bパラメータを持ち、約127,000トークンのコンテキスト長をサポートし、複雑なオンラインチャットアプリケーション用に設計されています。"
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Onlineモデルは、70Bパラメータを持ち、約127,000トークンのコンテキスト長をサポートし、高容量で多様なチャットタスクに適しています。"
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Onlineモデルは、8Bパラメータを持ち、約127,000トークンのコンテキスト長をサポートし、オンラインチャット用に設計されており、さまざまなテキストインタラクションを効率的に処理できます。"
-  },
   "llama-3.2-11b-vision-instruct": {
     "description": "高解像度画像で優れた画像推論能力を発揮し、視覚理解アプリケーションに適しています。"
   },
@@ -1643,6 +1634,9 @@
   "qwq-32b-preview": {
     "description": "QwQモデルはQwenチームによって開発された実験的な研究モデルで、AIの推論能力を強化することに焦点を当てています。"
   },
+  "r1-1776": {
+    "description": "R1-1776は、DeepSeek R1モデルの一つのバージョンで、後処理を経て、検閲されていない偏りのない事実情報を提供します。"
+  },
   "solar-mini": {
     "description": "Solar MiniはコンパクトなLLMで、GPT-3.5を上回る性能を持ち、強力な多言語能力を備え、英語と韓国語をサポートし、高効率でコンパクトなソリューションを提供します。"
   },
@@ -1654,6 +1648,9 @@
   },
   "sonar": {
     "description": "検索コンテキストに基づく軽量検索製品で、Sonar Proよりも速く、安価です。"
+  },
+  "sonar-deep-research": {
+    "description": "Deep Researchは、専門家による包括的な研究を行い、それをアクセス可能で実行可能なレポートにまとめます。"
   },
   "sonar-pro": {
     "description": "検索コンテキストをサポートする高度な検索製品で、高度なクエリとフォローアップをサポートします。"

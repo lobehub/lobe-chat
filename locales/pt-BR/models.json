@@ -1121,15 +1121,6 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B é um modelo de alto desempenho, oferecendo capacidade de geração de texto rápida, ideal para cenários de aplicação que exigem eficiência em larga escala e custo-benefício."
   },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "O modelo Llama 3.1 Sonar Huge Online possui 405B de parâmetros, suportando um comprimento de contexto de aproximadamente 127.000 tokens, projetado para aplicações de chat online complexas."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "O modelo Llama 3.1 Sonar Large Online possui 70B de parâmetros, suportando um comprimento de contexto de aproximadamente 127.000 tokens, adequado para tarefas de chat de alta capacidade e diversidade."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "O modelo Llama 3.1 Sonar Small Online possui 8B de parâmetros, suportando um comprimento de contexto de aproximadamente 127.000 tokens, projetado para chats online, capaz de processar eficientemente diversas interações textuais."
-  },
   "llama-3.2-11b-vision-instruct": {
     "description": "Capacidade excepcional de raciocínio visual em imagens de alta resolução, adequada para aplicações de compreensão visual."
   },
@@ -1643,6 +1634,9 @@
   "qwq-32b-preview": {
     "description": "O modelo QwQ é um modelo de pesquisa experimental desenvolvido pela equipe Qwen, focado em aprimorar a capacidade de raciocínio da IA."
   },
+  "r1-1776": {
+    "description": "R1-1776 é uma versão do modelo DeepSeek R1, treinada posteriormente para fornecer informações factuais não filtradas e imparciais."
+  },
   "solar-mini": {
     "description": "Solar Mini é um LLM compacto, com desempenho superior ao GPT-3.5, possuindo forte capacidade multilíngue, suportando inglês e coreano, oferecendo uma solução eficiente e compacta."
   },
@@ -1654,6 +1648,9 @@
   },
   "sonar": {
     "description": "Produto de busca leve baseado em contexto de busca, mais rápido e mais barato que o Sonar Pro."
+  },
+  "sonar-deep-research": {
+    "description": "A Pesquisa Profunda realiza uma pesquisa abrangente de nível especialista e a sintetiza em relatórios acessíveis e acionáveis."
   },
   "sonar-pro": {
     "description": "Produto de busca avançada que suporta contexto de busca, consultas avançadas e acompanhamento."
