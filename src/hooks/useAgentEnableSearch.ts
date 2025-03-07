@@ -1,12 +1,12 @@
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/slices/chat';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 export const useAgentEnableSearch = () => {
   const [model, provider, agentSearchMode] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
     agentSelectors.currentAgentModelProvider(s),
-    agentSelectors.agentSearchMode(s),
+    agentChatConfigSelectors.agentSearchMode(s),
   ]);
 
   const isModelSupportToolUse = useAiInfraStore(

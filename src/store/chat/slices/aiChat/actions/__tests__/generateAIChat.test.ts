@@ -8,7 +8,7 @@ import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { chatSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { sessionMetaSelectors } from '@/store/session/selectors';
@@ -79,7 +79,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   useChatStore.setState(mockState, false);
   vi.spyOn(agentSelectors, 'currentAgentConfig').mockImplementation(() => DEFAULT_AGENT_CONFIG);
-  vi.spyOn(agentSelectors, 'currentAgentChatConfig').mockImplementation(
+  vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockImplementation(
     () => DEFAULT_AGENT_CHAT_CONFIG,
   );
   vi.spyOn(sessionMetaSelectors, 'currentAgentMeta').mockImplementation(() => ({ tags: [] }));
@@ -285,7 +285,7 @@ describe('chatMessage actions', () => {
         (messageService.createMessage as Mock).mockResolvedValue('new-message-id');
 
         // Mock agent config to simulate auto-create topic behavior
-        (agentSelectors.currentAgentChatConfig as Mock).mockImplementation(() => ({
+        (agentChatConfigSelectors.currentChatConfig as Mock).mockImplementation(() => ({
           autoCreateTopicThreshold,
           enableAutoCreateTopic,
         }));

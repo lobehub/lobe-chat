@@ -32,13 +32,21 @@
   "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
   "extendParams": {
+    "disableContextCaching": {
+      "desc": "Tek bir diyalogun üretim maliyeti en fazla %90 oranında düşürülebilir, yanıt hızı 4 kat artar (<1>Daha fazla bilgi edinin</1>). Açıldığında, otomatik olarak geçmiş mesaj sayısı sınırı devre dışı bırakılacaktır.",
+      "title": "Bağlam önbelleğini aç"
+    },
     "enableReasoning": {
+      "desc": "Claude Thinking mekanizmasına dayalı kısıtlamalar (<1>Daha fazla bilgi edinin</1>), açıldığında otomatik olarak geçmiş mesaj sayısı sınırı devre dışı bırakılacaktır.",
       "title": "Derin Düşünmeyi Aç"
     },
     "reasoningBudgetToken": {
       "title": "Düşünme Tüketim Tokeni"
     },
     "title": "Model Genişletme Özellikleri"
+  },
+  "history": {
+    "title": "Asistan yalnızca son {{count}} mesajı hatırlayacak"
   },
   "historyRange": "Geçmiş Aralığı",
   "historySummary": "Tarihsel haber özeti",

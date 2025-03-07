@@ -32,13 +32,21 @@
   "duplicateTitle": "{{title}} 복사본",
   "emptyAgent": "도우미가 없습니다",
   "extendParams": {
+    "disableContextCaching": {
+      "desc": "단일 대화 생성 비용을 최대 90%까지 줄이고, 응답 속도를 4배 향상시킵니다 (<1>자세히 알아보기</1>). 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
+      "title": "문맥 캐시 활성화"
+    },
     "enableReasoning": {
+      "desc": "Claude Thinking 메커니즘에 기반한 제한 (<1>자세히 알아보기</1>), 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
       "title": "심층 사고 활성화"
     },
     "reasoningBudgetToken": {
       "title": "사고 소모 토큰"
     },
     "title": "모델 확장 기능"
+  },
+  "history": {
+    "title": "도우미는 마지막 {{count}}개의 메시지만 기억합니다."
   },
   "historyRange": "대화 기록 범위",
   "historySummary": "역사 메시지 요약",
