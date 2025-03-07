@@ -619,6 +619,26 @@ describe('anthropicHelpers', () => {
         { content: '继续', role: 'user' },
       ]);
     });
+
+    it('should enable cache control', async () => {
+      const messages: OpenAIChatMessage[] = [
+        { content: 'Hello', role: 'user' },
+        { content: 'Hello', role: 'user' },
+        { content: 'Hi', role: 'assistant' },
+      ];
+
+      const contents = await buildAnthropicMessages(messages, { enabledContextCaching: true });
+
+      expect(contents).toHaveLength(3);
+      expect(contents).toEqual([
+        { content: 'Hello', role: 'user' },
+        { content: 'Hello', role: 'user' },
+        {
+          content: [{ cache_control: { type: 'ephemeral' }, text: 'Hi', type: 'text' }],
+          role: 'assistant',
+        },
+      ]);
+    });
   });
 
   describe('buildAnthropicTools', () => {
@@ -653,6 +673,41 @@ describe('anthropicHelpers', () => {
             },
             required: ['query'],
           },
+        },
+      ]);
+    });
+    it('should enable cache control', () => {
+      const tools: OpenAI.ChatCompletionTool[] = [
+        {
+          type: 'function',
+          function: {
+            name: 'search',
+            description: 'Searches the web',
+            parameters: {
+              type: 'object',
+              properties: {
+                query: { type: 'string' },
+              },
+              required: ['query'],
+            },
+          },
+        },
+      ];
+
+      const result = buildAnthropicTools(tools, { enabledContextCaching: true });
+
+      expect(result).toEqual([
+        {
+          name: 'search',
+          description: 'Searches the web',
+          input_schema: {
+            type: 'object',
+            properties: {
+              query: { type: 'string' },
+            },
+            required: ['query'],
+          },
+          cache_control: { type: 'ephemeral' },
         },
       ]);
     });

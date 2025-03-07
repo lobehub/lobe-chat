@@ -76,6 +76,10 @@ export interface LobeAgentChatConfig {
   reasoningBudgetToken?: number;
 
   /**
+   * 禁用上下文缓存
+   */
+  disableContextCaching?: boolean;
+  /**
    * 历史消息条数
    */
   historyCount?: number;

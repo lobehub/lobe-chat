@@ -6,7 +6,6 @@ import useMergeState from 'use-merge-value';
 const Kibi = 1024;
 
 const exponent = (num: number) => Math.log2(num);
-const getRealValue = (num: number) => Math.round(Math.pow(2, num));
 const powerKibi = (num: number) => Math.round(Math.pow(2, num) * Kibi);
 
 interface MaxTokenSliderProps {
@@ -15,7 +14,7 @@ interface MaxTokenSliderProps {
   value?: number;
 }
 
-const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValue }) => {
+const ReasoningTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValue }) => {
   const [token, setTokens] = useMergeState(0, {
     defaultValue,
     onChange,
@@ -30,7 +29,7 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
   const updateWithPowValue = (value: number) => {
     setPowValue(value);
 
-    setTokens(powerKibi(value));
+    setTokens(Math.min(powerKibi(value), 64_000));
   };
 
   const updateWithRealValue = (value: number) => {
@@ -52,7 +51,7 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
   }, []);
 
   return (
-    <Flexbox align={'center'} gap={12} horizontal>
+    <Flexbox align={'center'} gap={12} horizontal paddingInline={'4px 0'}>
       <Flexbox flex={1}>
         <Slider
           marks={marks}
@@ -60,21 +59,14 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
           min={exponent(1)}
           onChange={updateWithPowValue}
           step={null}
-          tooltip={{
-            formatter: (x) => {
-              if (typeof x === 'undefined') return;
-
-              let value = getRealValue(x);
-
-              if (value < Kibi) return ((value * Kibi) / 1000).toFixed(0) + 'k';
-            },
-          }}
+          tooltip={{ open: false }}
           value={powValue}
         />
       </Flexbox>
       <div>
         <InputNumber
           changeOnWheel
+          max={64_000}
           min={0}
           onChange={(e) => {
             if (!e && e !== 0) return;
@@ -89,4 +81,4 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
     </Flexbox>
   );
 });
-export default MaxTokenSlider;
+export default ReasoningTokenSlider;

@@ -2,15 +2,18 @@ import { Icon, Tag } from '@lobehub/ui';
 import { Globe } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 const SearchTag = memo(() => {
   const { t } = useTranslation('chat');
 
   return (
-    <Tag>
-      {<Icon icon={Globe} />}
-      <div>{t('search.title')}</div>
-    </Tag>
+    <Flexbox height={22}>
+      <Tag>
+        {<Icon icon={Globe} />}
+        <div>{t('search.title')}</div>
+      </Tag>
+    </Flexbox>
   );
 });
 
