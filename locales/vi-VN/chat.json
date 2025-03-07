@@ -32,13 +32,21 @@
   "duplicateTitle": "{{title}} Bản sao",
   "emptyAgent": "Không có trợ lý",
   "extendParams": {
+    "disableContextCaching": {
+      "desc": "Chi phí tạo ra một cuộc hội thoại đơn lẻ có thể giảm tới 90%, tốc độ phản hồi tăng gấp 4 lần (<1>Tìm hiểu thêm</1>). Khi bật, sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
+      "title": "Bật bộ nhớ ngữ cảnh"
+    },
     "enableReasoning": {
+      "desc": "Giới hạn dựa trên cơ chế Claude Thinking (<1>Tìm hiểu thêm</1>), khi bật sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
       "title": "Bật tư duy sâu sắc"
     },
     "reasoningBudgetToken": {
       "title": "Token tiêu tốn cho tư duy"
     },
     "title": "Chức năng mở rộng mô hình"
+  },
+  "history": {
+    "title": "Trợ lý sẽ chỉ nhớ {{count}} tin nhắn cuối cùng"
   },
   "historyRange": "Phạm vi lịch sử",
   "historySummary": "Tóm tắt tin tức lịch sử",

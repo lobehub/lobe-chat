@@ -6,8 +6,8 @@ import { AgentStore } from '@/store/agent';
 import { AgentState } from '@/store/agent/slices/chat/initialState';
 import { merge } from '@/utils/merge';
 
-import { initialState } from '../../initialState';
-import { agentSelectors } from './selectors';
+import { initialState } from '../../../initialState';
+import { agentSelectors } from './agent';
 
 vi.mock('i18next', () => ({
   t: vi.fn((key) => key), // Simplified mock return value

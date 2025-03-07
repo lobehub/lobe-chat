@@ -10,7 +10,7 @@ import { useModelContextWindowTokens } from '@/hooks/useModelContextWindowTokens
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
@@ -31,15 +31,13 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   ]);
 
   const [systemRole, model, provider] = useAgentStore((s) => {
-    const config = agentSelectors.currentAgentChatConfig(s);
-
     return [
       agentSelectors.currentAgentSystemRole(s),
       agentSelectors.currentAgentModel(s) as string,
       agentSelectors.currentAgentModelProvider(s) as string,
       // add these two params to enable the component to re-render
-      config.historyCount,
-      config.enableHistoryCount,
+      agentChatConfigSelectors.historyCount(s),
+      agentChatConfigSelectors.enableHistoryCount(s),
     ];
   });
 

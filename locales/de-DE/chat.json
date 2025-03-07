@@ -32,13 +32,21 @@
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Kein Assistent verfügbar",
   "extendParams": {
+    "disableContextCaching": {
+      "desc": "Die Kosten für die Generierung einer einzelnen Konversation können um bis zu 90 % gesenkt werden, die Reaktionsgeschwindigkeit wird um das Vierfache erhöht (<1>Mehr erfahren</1>). Wenn aktiviert, wird die Begrenzung der Anzahl historischer Nachrichten automatisch deaktiviert.",
+      "title": "Kontext-Caching aktivieren"
+    },
     "enableReasoning": {
+      "desc": "Basierend auf den Einschränkungen des Claude Thinking-Mechanismus (<1>Mehr erfahren</1>), wird bei Aktivierung die Begrenzung der Anzahl historischer Nachrichten automatisch deaktiviert.",
       "title": "Tiefes Denken aktivieren"
     },
     "reasoningBudgetToken": {
       "title": "Token für Denkaufwand"
     },
     "title": "Modell Erweiterungsfunktionen"
+  },
+  "history": {
+    "title": "Der Assistent wird nur die letzten {{count}} Nachrichten speichern"
   },
   "historyRange": "Verlaufsbereich",
   "historySummary": "Zusammenfassung historischer Nachrichten",
