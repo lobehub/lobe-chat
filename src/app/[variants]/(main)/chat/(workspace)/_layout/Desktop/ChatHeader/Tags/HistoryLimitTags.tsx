@@ -12,14 +12,14 @@ const SearchTag = memo(() => {
   const historyCount = useAgentStore(agentChatConfigSelectors.historyCount);
 
   return (
-    <Flexbox height={22}>
-      <Tooltip title={t('history.title', { count: historyCount })}>
+    <Tooltip title={t('history.title', { count: historyCount })}>
+      <Flexbox height={22}>
         <Tag>
           <Icon icon={HistoryIcon} />
           <span>{historyCount}</span>
         </Tag>
-      </Tooltip>
-    </Flexbox>
+      </Flexbox>
+    </Tooltip>
   );
 });
 
