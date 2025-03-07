@@ -19,7 +19,7 @@ import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selector
 
 import Tags from './Tags';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css }) => ({
   container: css`
     position: relative;
     overflow: hidden;
