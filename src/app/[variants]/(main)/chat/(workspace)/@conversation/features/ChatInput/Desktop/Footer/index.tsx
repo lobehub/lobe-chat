@@ -1,7 +1,7 @@
 import { Button, Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
-import { memo, useEffect, useState } from 'react';
+import { Suspense, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -13,6 +13,7 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { isMacOS } from '@/utils/platform';
 
+import MessageFromUrl from './MessageFromUrl';
 import SendMore from './SendMore';
 import ShortcutHint from './ShortcutHint';
 
@@ -67,49 +68,54 @@ const Footer = memo<FooterProps>(({ onExpandChange, expand }) => {
   }, [setIsMac]);
 
   return (
-    <Flexbox
-      align={'end'}
-      className={styles.overrideAntdIcon}
-      distribution={'space-between'}
-      flex={'none'}
-      gap={8}
-      horizontal
-      padding={'0 24px'}
-    >
-      <Flexbox align={'center'} gap={8} horizontal style={{ overflow: 'hidden' }}>
-        {expand && <LocalFiles />}
-      </Flexbox>
-      <Flexbox align={'center'} flex={'none'} gap={8} horizontal>
-        <ShortcutHint />
-        <SaveTopic />
-        <Flexbox style={{ minWidth: 92 }}>
-          {isAIGenerating ? (
-            <Button
-              className={styles.loadingButton}
-              icon={<StopLoadingIcon />}
-              onClick={stopGenerateMessage}
-            >
-              {t('input.stop')}
-            </Button>
-          ) : (
-            <Space.Compact>
+    <>
+      <Suspense fallback={null}>
+        <MessageFromUrl />
+      </Suspense>
+      <Flexbox
+        align={'end'}
+        className={styles.overrideAntdIcon}
+        distribution={'space-between'}
+        flex={'none'}
+        gap={8}
+        horizontal
+        padding={'0 24px'}
+      >
+        <Flexbox align={'center'} gap={8} horizontal style={{ overflow: 'hidden' }}>
+          {expand && <LocalFiles />}
+        </Flexbox>
+        <Flexbox align={'center'} flex={'none'} gap={8} horizontal>
+          <ShortcutHint />
+          <SaveTopic />
+          <Flexbox style={{ minWidth: 92 }}>
+            {isAIGenerating ? (
               <Button
-                disabled={!canSend}
-                loading={!canSend}
-                onClick={() => {
-                  sendMessage();
-                  onExpandChange?.(false);
-                }}
-                type={'primary'}
+                className={styles.loadingButton}
+                icon={<StopLoadingIcon />}
+                onClick={stopGenerateMessage}
               >
-                {t('input.send')}
+                {t('input.stop')}
               </Button>
-              <SendMore disabled={!canSend} isMac={isMac} />
-            </Space.Compact>
-          )}
+            ) : (
+              <Space.Compact>
+                <Button
+                  disabled={!canSend}
+                  loading={!canSend}
+                  onClick={() => {
+                    sendMessage();
+                    onExpandChange?.(false);
+                  }}
+                  type={'primary'}
+                >
+                  {t('input.send')}
+                </Button>
+                <SendMore disabled={!canSend} isMac={isMac} />
+              </Space.Compact>
+            )}
+          </Flexbox>
         </Flexbox>
       </Flexbox>
-    </Flexbox>
+    </>
   );
 });
 
