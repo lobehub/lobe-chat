@@ -13,10 +13,10 @@ tags:
 
 LobeChat 支持在部署时自定义模型列表，详情请参考 [模型提供商](/zh/docs/self-hosting/environment-variables/model-provider) 。
 
-你可以使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。通过 `<>` 来添加扩展配置。基本语法如下：
+你可以使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名->部署名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。通过 `<>` 来添加扩展配置。基本语法如下：
 
 ```text
-id=displayName<maxToken:vision:reasoning:search:fc:file>,model2,model3
+id->deploymentName=displayName<maxToken:vision:reasoning:search:fc:file>,model2,model3
 ```
 
 例如： `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
@@ -28,7 +28,7 @@ id=displayName<maxToken:vision:reasoning:search:fc:file>,model2,model3
 考虑到模型的能力多样性，我们在 `0.147.8` 版本开始增加扩展性配置，它的规则如下：
 
 ```shell
-id=displayName<maxToken:vision:reasoning:search:fc:file>
+id->deploymentName=displayName<maxToken:vision:reasoning:search:fc:file>
 ```
 
 尖括号第一个值约定为这个模型的 `maxToken` 。第二个及以后作为模型的扩展能力，能力与能力之间用冒号 `:` 作为分隔符，顺序不重要。
