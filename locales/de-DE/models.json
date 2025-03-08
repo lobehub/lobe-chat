@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview ist ein forschungsorientiertes Modell, das vom Qwen-Team entwickelt wurde und sich auf visuelle Inferenzfähigkeiten konzentriert. Es hat einzigartige Vorteile beim Verständnis komplexer Szenen und der Lösung visuell verwandter mathematischer Probleme."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ ist das Inferenzmodell der Qwen-Serie. Im Vergleich zu traditionellen, anweisungsoptimierten Modellen verfügt QwQ über Denk- und Schlussfolgerungsfähigkeiten, die eine signifikante Leistungssteigerung bei nachgelagerten Aufgaben ermöglichen, insbesondere bei der Lösung schwieriger Probleme. QwQ-32B ist ein mittelgroßes Inferenzmodell, das im Vergleich zu den fortschrittlichsten Inferenzmodellen (wie DeepSeek-R1, o1-mini) wettbewerbsfähige Leistungen erzielt. Dieses Modell verwendet Technologien wie RoPE, SwiGLU, RMSNorm und Attention QKV Bias und hat eine Netzwerkstruktur mit 64 Schichten und 40 Q-Attention-Köpfen (im GQA-Architektur sind es 8 KV)."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview ist das neueste experimentelle Forschungsmodell von Qwen, das sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert. Durch die Erforschung komplexer Mechanismen wie Sprachmischung und rekursive Inferenz bietet es Hauptvorteile wie starke Analysefähigkeiten, mathematische und Programmierfähigkeiten. Gleichzeitig gibt es Herausforderungen wie Sprachwechsel, Inferenzzyklen, Sicherheitsüberlegungen und Unterschiede in anderen Fähigkeiten."
   },
@@ -1637,8 +1640,14 @@
   "qwq": {
     "description": "QwQ ist ein experimentelles Forschungsmodell, das sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert."
   },
+  "qwq-32b": {
+    "description": "Das QwQ-Inferenzmodell, das auf dem Qwen2.5-32B-Modell trainiert wurde, hat durch verstärktes Lernen die Inferenzfähigkeiten des Modells erheblich verbessert. Die Kernmetriken des Modells, wie mathematische Codes (AIME 24/25, LiveCodeBench) sowie einige allgemeine Metriken (IFEval, LiveBench usw.), erreichen das Niveau der DeepSeek-R1 Vollversion, wobei alle Metriken deutlich die ebenfalls auf Qwen2.5-32B basierende DeepSeek-R1-Distill-Qwen-32B übertreffen."
+  },
   "qwq-32b-preview": {
     "description": "Das QwQ-Modell ist ein experimentelles Forschungsmodell, das vom Qwen-Team entwickelt wurde und sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert."
+  },
+  "qwq-plus-latest": {
+    "description": "Das QwQ-Inferenzmodell, das auf dem Qwen2.5-Modell trainiert wurde, hat durch verstärktes Lernen die Inferenzfähigkeiten des Modells erheblich verbessert. Die Kernmetriken des Modells, wie mathematische Codes (AIME 24/25, LiveCodeBench) sowie einige allgemeine Metriken (IFEval, LiveBench usw.), erreichen das Niveau der DeepSeek-R1 Vollversion."
   },
   "r1-1776": {
     "description": "R1-1776 ist eine Version des DeepSeek R1 Modells, die nachtrainiert wurde, um unverfälschte, unvoreingenommene Fakteninformationen bereitzustellen."

@@ -13,10 +13,16 @@ import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
 import { StreamingResponse } from '../utils/response';
 import { OpenAIStream, createSSEDataExtractor } from '../utils/streams';
 
+interface AzureAIParams {
+  apiKey?: string;
+  apiVersion?: string;
+  baseURL?: string;
+}
+
 export class LobeAzureAI implements LobeRuntimeAI {
   client: ModelClient;
 
-  constructor(params?: { apiKey?: string; apiVersion?: string; baseURL?: string }) {
+  constructor(params?: AzureAIParams) {
     if (!params?.apiKey || !params?.baseURL)
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 

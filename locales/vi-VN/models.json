@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview là một mô hình nghiên cứu do đội ngũ Qwen phát triển, tập trung vào khả năng suy diễn hình ảnh, có lợi thế độc đáo trong việc hiểu các cảnh phức tạp và giải quyết các vấn đề toán học liên quan đến hình ảnh."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ là mô hình suy diễn của dòng Qwen. So với các mô hình tinh chỉnh theo chỉ dẫn truyền thống, QwQ có khả năng tư duy và suy diễn, có thể đạt được hiệu suất được cải thiện đáng kể trong các nhiệm vụ hạ nguồn, đặc biệt là trong việc giải quyết các vấn đề khó khăn. QwQ-32B là mô hình suy diễn trung bình, có thể đạt được hiệu suất cạnh tranh khi so sánh với các mô hình suy diễn tiên tiến nhất (như DeepSeek-R1, o1-mini). Mô hình này sử dụng các công nghệ như RoPE, SwiGLU, RMSNorm và Attention QKV bias, có cấu trúc mạng 64 lớp và 40 đầu chú ý Q (trong kiến trúc GQA, KV là 8)."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview là mô hình nghiên cứu thử nghiệm mới nhất của Qwen, tập trung vào việc nâng cao khả năng suy luận của AI. Thông qua việc khám phá các cơ chế phức tạp như trộn ngôn ngữ và suy luận đệ quy, những lợi thế chính bao gồm khả năng phân tích suy luận mạnh mẽ, khả năng toán học và lập trình. Tuy nhiên, cũng có những vấn đề về chuyển đổi ngôn ngữ, vòng lặp suy luận, các vấn đề an toàn và sự khác biệt về các khả năng khác."
   },
@@ -1637,8 +1640,14 @@
   "qwq": {
     "description": "QwQ là một mô hình nghiên cứu thử nghiệm, tập trung vào việc nâng cao khả năng suy luận của AI."
   },
+  "qwq-32b": {
+    "description": "Mô hình suy diễn QwQ được đào tạo dựa trên mô hình Qwen2.5-32B, đã được cải thiện đáng kể khả năng suy diễn của mô hình thông qua học tăng cường. Các chỉ số cốt lõi của mô hình như mã toán (AIME 24/25, LiveCodeBench) và một số chỉ số chung (IFEval, LiveBench, v.v.) đạt đến mức độ của phiên bản đầy đủ DeepSeek-R1, tất cả các chỉ số đều vượt trội so với DeepSeek-R1-Distill-Qwen-32B cũng dựa trên Qwen2.5-32B."
+  },
   "qwq-32b-preview": {
     "description": "Mô hình QwQ là một mô hình nghiên cứu thử nghiệm được phát triển bởi đội ngũ Qwen, tập trung vào việc nâng cao khả năng suy luận của AI."
+  },
+  "qwq-plus-latest": {
+    "description": "Mô hình suy diễn QwQ được đào tạo dựa trên mô hình Qwen2.5, đã được cải thiện đáng kể khả năng suy diễn của mô hình thông qua học tăng cường. Các chỉ số cốt lõi của mô hình như mã toán (AIME 24/25, LiveCodeBench) và một số chỉ số chung (IFEval, LiveBench, v.v.) đạt đến mức độ của phiên bản đầy đủ DeepSeek-R1."
   },
   "r1-1776": {
     "description": "R1-1776 là một phiên bản của mô hình DeepSeek R1, đã được huấn luyện lại, cung cấp thông tin sự thật chưa được kiểm duyệt và không thiên lệch."
