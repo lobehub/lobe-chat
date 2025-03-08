@@ -49,6 +49,17 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
             },
             type: 'array',
           },
+          searchTimeRange: {
+            description: "The time range you can set:",
+            enum: [
+              'anytime',
+              'day',
+              'week',
+              'month',
+              'year',
+            ],
+            type: 'string'
+          },
         },
         required: ['query'],
         type: 'object',

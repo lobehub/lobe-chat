@@ -21,8 +21,16 @@
     },
     "searchEngine": "موتور جستجو:",
     "searchResult": "تعداد جستجو:",
+    "searchTimeRange": "محدوده زمانی:",
     "summary": "خلاصه",
     "summaryTooltip": "خلاصه محتوای فعلی",
+    "timeRange": {
+      "anytime": "بدون محدودیت زمانی",
+      "day": "در یک روز",
+      "month": "در یک ماه",
+      "week": "در یک هفته",
+      "year": "در یک سال"
+    },
     "viewMoreResults": "مشاهده {{results}} نتیجه بیشتر"
   }
 }

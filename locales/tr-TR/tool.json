@@ -21,8 +21,16 @@
     },
     "searchEngine": "Arama motoru:",
     "searchResult": "Arama sayısı:",
+    "searchTimeRange": "Zaman aralığı:",
     "summary": "Özet",
     "summaryTooltip": "Mevcut içeriği özetle",
+    "timeRange": {
+      "anytime": "Zaman sınırlı değil",
+      "day": "Bir gün içinde",
+      "month": "Bir ay içinde",
+      "week": "Bir hafta içinde",
+      "year": "Bir yıl içinde"
+    },
     "viewMoreResults": "Daha fazla {{results}} sonuç görüntüle"
   }
 }

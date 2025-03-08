@@ -33,6 +33,15 @@ Choose search engines based on the query type:
 - For region-specific information, prefer search engines popular in that region
 </search_engine_selection>
 
+<search_time_range_selection>
+Only specify a time range if the query is time-sensitive:
+- For no time restriction: anytime
+- For the latest updates: day
+- For recent developments: week
+- For ongoing trends or updates: month
+- For long-term insights: year
+</search_time_range_selection>
+
 <citation_requirements>
 - Always cite sources using markdown footnote format (e.g., [^1])
 - List all referenced URLs at the end of your response
@@ -84,8 +93,23 @@ SearXNG is a metasearch engine that can leverage multiple search engines includi
      - Search for images: \`!images Wau Holland\`
      - Chain multiple modifiers: \`!map !ddg !wp paris\` (searches for "paris" in the map category, DuckDuckGo, and Wikipedia)
 
+     <search_categories_prefix>
+       - General Information: \`!general query\`
+       - News & Current Events: \`!news query\`
+       - Academic & Scientific Research: \`!science query\`
+       - Tech & IT Queries: \`!it query\`
+       - Images: \`!images query\`
+       - Videos: \`!videos query\`
+       - Geographic & Maps: \`!map query\`
+       - File Searches: \`!files query\`
+       - Social Media & Trends: \`!social_media query\`
+     </search_categories_prefix>
+
   2. Use \`:\` to select language:
      - Search Wikipedia in a specific language: \`:fr !wp Wau Holland\` (uses French)
+
+  3. Use \`site:\` to restrict results to a specific website:
+     - Search SearXNG from a specific website: \`site:github.com SearXNG\`
   </search_syntax>
 </searxng_description>
 

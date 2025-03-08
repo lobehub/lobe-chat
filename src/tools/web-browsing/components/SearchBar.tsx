@@ -1,5 +1,5 @@
 import { Icon, Tooltip } from '@lobehub/ui';
-import { Button, Checkbox, Input, Select, Space, Typography } from 'antd';
+import { Button, Checkbox, Input, Radio, Select, Space, Typography } from 'antd';
 import { SearchIcon } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,7 @@ interface SearchBarProps {
   aiSummary?: boolean;
   defaultEngines?: string[];
   defaultQuery: string;
+  defaultTimeRange?: string;
   messageId: string;
   onSearch?: (searchQuery: SearchQuery) => void;
   searchAddon?: ReactNode;
@@ -26,6 +27,7 @@ interface SearchBarProps {
 const SearchBar = memo<SearchBarProps>(
   ({
     defaultEngines = [],
+    defaultTimeRange,
     aiSummary = true,
     defaultQuery,
     tooltip = true,
@@ -37,11 +39,16 @@ const SearchBar = memo<SearchBarProps>(
     const loading = useChatStore(chatToolSelectors.isSearXNGSearching(messageId));
     const [query, setQuery] = useState(defaultQuery);
     const [engines, setEngines] = useState(defaultEngines);
+    const [time_range, setTimeRange] = useState(defaultTimeRange);
     const isMobile = useIsMobile();
     const [reSearchWithSearXNG] = useChatStore((s) => [s.reSearchWithSearXNG]);
 
     const updateAndSearch = async () => {
-      const data: SearchQuery = { query, searchEngines: engines };
+      const data: SearchQuery = {
+        query,
+        searchEngines: engines,
+        searchTimeRange: time_range,
+      };
       onSearch?.(data);
       await reSearchWithSearXNG(messageId, data, { aiSummary });
     };
@@ -127,6 +134,24 @@ const SearchBar = memo<SearchBarProps>(
             />
           </Flexbox>
         )}
+
+        <Flexbox align={'center'} gap={16} horizontal wrap={'wrap'}>
+          <Typography.Text type={'secondary'}>
+            {t('search.searchTimeRange')}
+          </Typography.Text>
+          <Radio.Group
+            onChange={(e) => setTimeRange(e.target.value)}
+            optionType="button"
+            options={[
+              { label: t('search.timeRange.anytime'), value: 'anytime' },
+              { label: t('search.timeRange.day'), value: 'day' },
+              { label: t('search.timeRange.week'), value: 'week' },
+              { label: t('search.timeRange.month'), value: 'month' },
+              { label: t('search.timeRange.year'), value: 'year' },
+            ]}
+            value={time_range}
+          />
+        </Flexbox>
       </Flexbox>
     );
   },
