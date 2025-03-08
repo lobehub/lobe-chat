@@ -32,13 +32,21 @@
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暂无助手",
   "extendParams": {
+    "disableContextCaching": {
+      "desc": "单条对话生成成本最高可降低 90%，响应速度提升 4 倍（<1>了解更多</1>）。开启后将自动禁用历史消息数限制",
+      "title": "开启上下文缓存"
+    },
     "enableReasoning": {
+      "desc": "基于 Claude Thinking 机制限制（<1>了解更多</1>），开启后将自动禁用历史消息数限制",
       "title": "开启深度思考"
     },
     "reasoningBudgetToken": {
       "title": "思考消耗 Token"
     },
     "title": "模型扩展功能"
+  },
+  "history": {
+    "title": "助手将只记住最后{{count}}条消息"
   },
   "historyRange": "历史范围",
   "historySummary": "历史消息总结",

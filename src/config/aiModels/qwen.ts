@@ -5,6 +5,28 @@ import { AIChatModelCard } from '@/types/aiModel';
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
+    displayName: 'QwQ Plus',
+    enabled: true,
+    id: 'qwq-plus-latest',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-03-06',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
       search: true,
     },
@@ -71,10 +93,14 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 1_000_000,
     description:
       '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
     displayName: 'Qwen Long',
+    enabled: true,
     id: 'qwen-long',
     maxOutput: 6000,
     organization: 'Qwen',
@@ -82,6 +108,24 @@ const qwenChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 0.5,
       output: 2,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 32_768,
+    description: 'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
+    displayName: 'Qwen Omni Turbo',
+    enabled: true,
+    id: 'qwen-omni-turbo-latest',
+    maxOutput: 2048,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 1.5, // use image input price
+      output: 4.5,
     },
     type: 'chat',
   },
@@ -199,7 +243,24 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: '基于 Qwen2.5-32B 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平，各指标均显著超过同样基于 Qwen2.5-32B 的 DeepSeek-R1-Distill-Qwen-32B。',
+    displayName: 'QwQ 32B',
+    id: 'qwq-32b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-03-06',
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
     },
     contextWindowTokens: 32_768,
@@ -210,8 +271,8 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 3.5,
-      output: 7,
+      input: 2,
+      output: 6,
     },
     releasedAt: '2024-11-28',
     type: 'chat',
@@ -414,23 +475,6 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
-    contextWindowTokens: 32_768,
-    description: 'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
-    displayName: 'Qwen Omni Turbo',
-    id: 'qwen-omni-turbo-latest',
-    maxOutput: 2048,
-    organization: 'Qwen',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      vision: true,
-    },
     contextWindowTokens: 131_072,
     description:
       '指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。',
@@ -473,7 +517,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
     displayName: 'DeepSeek R1',
-    enabled: true,
     id: 'deepseek-r1',
     maxOutput: 8192,
     organization: 'DeepSeek',
@@ -486,14 +529,10 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: {
-      functionCall: true,
-    },
     contextWindowTokens: 65_792,
     description:
       'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
     displayName: 'DeepSeek V3',
-    enabled: true,
     id: 'deepseek-v3',
     maxOutput: 8192,
     organization: 'DeepSeek',

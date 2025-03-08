@@ -1,6 +1,8 @@
 import OpenAI, { AzureOpenAI } from 'openai';
 import type { Stream } from 'openai/streaming';
 
+import { systemToUserModels } from '@/const/models';
+
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
@@ -13,7 +15,7 @@ import { OpenAIStream } from '../utils/streams';
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   client: AzureOpenAI;
 
-  constructor(params: { apiKey?: string; apiVersion?: string, baseURL?: string; } = {}) {
+  constructor(params: { apiKey?: string; apiVersion?: string; baseURL?: string } = {}) {
     if (!params.apiKey || !params.baseURL)
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
@@ -34,17 +36,10 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
     // o1 series models on Azure OpenAI does not support streaming currently
     const enableStreaming = model.includes('o1') ? false : (params.stream ?? true);
 
-    // Convert 'system' role to 'user' or 'developer' based on the model
-    const systemToUserModels = new Set([
-      'o1-preview',
-      'o1-preview-2024-09-12',
-      'o1-mini',
-      'o1-mini-2024-09-12',
-    ]);
-
     const updatedMessages = messages.map((message) => ({
       ...message,
       role:
+        // Convert 'system' role to 'user' or 'developer' based on the model
         (model.includes('o1') || model.includes('o3')) && message.role === 'system'
           ? [...systemToUserModels].some((sub) => model.includes(sub))
             ? 'user'

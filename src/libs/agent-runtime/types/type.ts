@@ -13,7 +13,7 @@ export interface ChatCompletionErrorPayload {
   endpoint?: string;
   error: object;
   errorType: ILobeAgentRuntimeErrorType;
-  provider: ModelProvider;
+  provider: string;
 }
 
 export interface CreateChatCompletionOptions {

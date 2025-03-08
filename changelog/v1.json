@@ -1,6 +1,34 @@
 [
   {
     "children": {
+      "improvements": ["Refactor the agent runtime implement."]
+    },
+    "date": "2025-03-07",
+    "version": "1.69.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add Qwen QwQ model."]
+    },
+    "date": "2025-03-07",
+    "version": "1.69.1"
+  },
+  {
+    "children": {
+      "features": ["Support Anthropic Context Caching."]
+    },
+    "date": "2025-03-07",
+    "version": "1.69.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add Gemini 2.0 Flash model variations, add QwQ models."]
+    },
+    "date": "2025-03-07",
+    "version": "1.68.11"
+  },
+  {
+    "children": {
       "fixes": ["Fix litellm streaming usage and refactor the usage chunk."]
     },
     "date": "2025-03-06",

@@ -7,64 +7,62 @@ import {
   DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
 } from '@/const/settings';
-import { AgentStore } from '@/store/agent';
-import { LobeAgentChatConfig, LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
+import { AgentStoreState } from '@/store/agent/initialState';
+import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
 import { KnowledgeItem, KnowledgeType } from '@/types/knowledgeBase';
 import { merge } from '@/utils/merge';
 
-const isInboxSession = (s: AgentStore) => s.activeId === INBOX_SESSION_ID;
+const isInboxSession = (s: AgentStoreState) => s.activeId === INBOX_SESSION_ID;
 
 // ==========   Config   ============== //
 
-const inboxAgentConfig = (s: AgentStore) =>
+const inboxAgentConfig = (s: AgentStoreState) =>
   merge(DEFAULT_AGENT_CONFIG, s.agentMap[INBOX_SESSION_ID]);
-const inboxAgentModel = (s: AgentStore) => inboxAgentConfig(s).model;
+const inboxAgentModel = (s: AgentStoreState) => inboxAgentConfig(s).model;
 
 const getAgentConfigById =
   (id: string) =>
-  (s: AgentStore): LobeAgentConfig =>
+  (s: AgentStoreState): LobeAgentConfig =>
     merge(s.defaultAgentConfig, s.agentMap[id]);
 
-const currentAgentConfig = (s: AgentStore): LobeAgentConfig => getAgentConfigById(s.activeId)(s);
+export const currentAgentConfig = (s: AgentStoreState): LobeAgentConfig =>
+  getAgentConfigById(s.activeId)(s);
 
-const currentAgentChatConfig = (s: AgentStore): LobeAgentChatConfig =>
-  currentAgentConfig(s).chatConfig || {};
-
-const currentAgentSystemRole = (s: AgentStore) => {
+const currentAgentSystemRole = (s: AgentStoreState) => {
   return currentAgentConfig(s).systemRole;
 };
 
-const currentAgentModel = (s: AgentStore): string => {
+const currentAgentModel = (s: AgentStoreState): string => {
   const config = currentAgentConfig(s);
 
   return config?.model || DEFAULT_MODEL;
 };
 
-const currentAgentModelProvider = (s: AgentStore) => {
+const currentAgentModelProvider = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
 
   return config?.provider || DEFAULT_PROVIDER;
 };
 
-const currentAgentPlugins = (s: AgentStore) => {
+const currentAgentPlugins = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
 
   return config?.plugins || [];
 };
 
-const currentAgentKnowledgeBases = (s: AgentStore) => {
+const currentAgentKnowledgeBases = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
 
   return config?.knowledgeBases || [];
 };
 
-const currentAgentFiles = (s: AgentStore) => {
+const currentAgentFiles = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
 
   return config?.files || [];
 };
 
-const currentAgentTTS = (s: AgentStore): LobeAgentTTSConfig => {
+const currentAgentTTS = (s: AgentStoreState): LobeAgentTTSConfig => {
   const config = currentAgentConfig(s);
 
   return config?.tts || DEFAUTT_AGENT_TTS_CONFIG;
@@ -72,7 +70,7 @@ const currentAgentTTS = (s: AgentStore): LobeAgentTTSConfig => {
 
 const currentAgentTTSVoice =
   (lang: string) =>
-  (s: AgentStore): string => {
+  (s: AgentStoreState): string => {
     const { voice, ttsService } = currentAgentTTS(s);
     const voiceList = new VoiceList(lang);
     let currentVoice;
@@ -93,7 +91,7 @@ const currentAgentTTSVoice =
     return currentVoice || 'alloy';
   };
 
-const currentEnabledKnowledge = (s: AgentStore) => {
+const currentEnabledKnowledge = (s: AgentStoreState) => {
   const knowledgeBases = currentAgentKnowledgeBases(s);
   const files = currentAgentFiles(s);
 
@@ -107,29 +105,27 @@ const currentEnabledKnowledge = (s: AgentStore) => {
   ] as KnowledgeItem[];
 };
 
-const agentSearchMode = (s: AgentStore) => currentAgentChatConfig(s).searchMode || 'off';
-
-const hasSystemRole = (s: AgentStore) => {
+const hasSystemRole = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
 
   return !!config.systemRole;
 };
 
-const hasKnowledgeBases = (s: AgentStore) => {
+const hasKnowledgeBases = (s: AgentStoreState) => {
   const knowledgeBases = currentAgentKnowledgeBases(s);
 
   return knowledgeBases.length > 0;
 };
 
-const hasFiles = (s: AgentStore) => {
+const hasFiles = (s: AgentStoreState) => {
   const files = currentAgentFiles(s);
 
   return files.length > 0;
 };
 
-const hasKnowledge = (s: AgentStore) => hasKnowledgeBases(s) || hasFiles(s);
-const hasEnabledKnowledge = (s: AgentStore) => currentEnabledKnowledge(s).length > 0;
-const currentKnowledgeIds = (s: AgentStore) => {
+const hasKnowledge = (s: AgentStoreState) => hasKnowledgeBases(s) || hasFiles(s);
+const hasEnabledKnowledge = (s: AgentStoreState) => currentEnabledKnowledge(s).length > 0;
+const currentKnowledgeIds = (s: AgentStoreState) => {
   return {
     fileIds: currentAgentFiles(s)
       .filter((item) => item.enabled)
@@ -140,13 +136,9 @@ const currentKnowledgeIds = (s: AgentStore) => {
   };
 };
 
-const isAgentConfigLoading = (s: AgentStore) => !s.agentConfigInitMap[s.activeId];
-
-const isAgentEnableSearch = (s: AgentStore) => agentSearchMode(s) !== 'off';
+const isAgentConfigLoading = (s: AgentStoreState) => !s.agentConfigInitMap[s.activeId];
 
 export const agentSelectors = {
-  agentSearchMode,
-  currentAgentChatConfig,
   currentAgentConfig,
   currentAgentFiles,
   currentAgentKnowledgeBases,
@@ -165,6 +157,5 @@ export const agentSelectors = {
   inboxAgentConfig,
   inboxAgentModel,
   isAgentConfigLoading,
-  isAgentEnableSearch,
   isInboxSession,
 };
