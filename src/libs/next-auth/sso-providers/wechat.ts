@@ -9,7 +9,7 @@ const provider = {
     clientId: process.env.AUTH_WECHAT_ID,
     clientSecret: process.env.AUTH_WECHAT_SECRET,
     platformType: 'WebsiteApp',
-    profile: (profile) => {
+    profile: (profile: any) => {
       return {
         email: null,
         id: profile.unionid,
@@ -17,6 +17,18 @@ const provider = {
         name: profile.nickname,
         providerAccountId: profile.unionid,
       };
+    },
+    style: { bg: '#fff', logo: 'https://authjs.dev/img/providers/wechat.svg', text: '#000' },
+    token: {
+      async conform(response: any) {
+        const data = await response.json();
+        console.log('wechat data:', data);
+        return new Response(JSON.stringify({ ...data, token_type: 'bearer' }), {
+          headers: { 'Content-Type': 'application/json' },
+        });
+      },
+      params: { appid: process.env.AUTH_WECHAT_ID, secret: process.env.AUTH_WECHAT_SECRET },
+      url: 'https://api.weixin.qq.com/sns/oauth2/access_token',
     },
   }),
 };
