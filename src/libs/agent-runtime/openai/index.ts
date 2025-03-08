@@ -1,32 +1,12 @@
-import { disableStreamModels, systemToUserModels } from '@/const/models';
 import type { ChatModelCard } from '@/types/llm';
 
-import { ChatStreamPayload, ModelProvider, OpenAIChatMessage } from '../types';
+import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { pruneReasoningPayload } from '../utils/openaiHelpers';
 
 export interface OpenAIModelCard {
   id: string;
 }
-
-export const pruneReasoningPayload = (payload: ChatStreamPayload) => {
-  return {
-    ...payload,
-    frequency_penalty: 0,
-    messages: payload.messages.map((message: OpenAIChatMessage) => ({
-      ...message,
-      role:
-        message.role === 'system'
-          ? systemToUserModels.has(payload.model)
-            ? 'user'
-            : 'developer'
-          : message.role,
-    })),
-    presence_penalty: 0,
-    stream: !disableStreamModels.has(payload.model),
-    temperature: 1,
-    top_p: 1,
-  };
-};
 
 export const LobeOpenAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.openai.com/v1',
