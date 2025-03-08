@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add login ui for next-auth."]
+    },
+    "date": "2025-03-08",
+    "version": "1.69.3"
+  },
+  {
+    "children": {
       "improvements": ["Refactor the agent runtime implement."]
     },
     "date": "2025-03-07",
