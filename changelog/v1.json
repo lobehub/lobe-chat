@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor the agent runtime implement."]
+    },
+    "date": "2025-03-07",
+    "version": "1.69.2"
+  },
+  {
+    "children": {
       "improvements": ["Add Qwen QwQ model."]
     },
     "date": "2025-03-07",

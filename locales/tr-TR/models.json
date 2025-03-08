@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview, Qwen ekibi tarafından geliştirilen ve görsel çıkarım yeteneklerine odaklanan bir araştırma modelidir. Karmaşık sahne anlayışı ve görsel ile ilgili matematiksel sorunları çözme konusundaki benzersiz avantajları ile dikkat çekmektedir."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ, Qwen serisinin çıkarım modelidir. Geleneksel talimat ayarlama modellerine kıyasla, QwQ düşünme ve çıkarım yeteneğine sahiptir ve özellikle zor problemleri çözme konusunda önemli ölçüde artırılmış performans sergileyebilir. QwQ-32B, orta ölçekli bir çıkarım modelidir ve en son çıkarım modelleri (örneğin, DeepSeek-R1, o1-mini) ile karşılaştırıldığında rekabetçi bir performans elde edebilir. Bu model, RoPE, SwiGLU, RMSNorm ve Attention QKV bias gibi teknikleri kullanmakta olup, 64 katmanlı bir ağ yapısına ve 40 Q dikkat başlığına (GQA mimarisinde KV 8'dir) sahiptir."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview, Qwen'in en son deneysel araştırma modelidir ve AI akıl yürütme yeteneklerini artırmaya odaklanmaktadır. Dil karışımı, özyinelemeli akıl yürütme gibi karmaşık mekanizmaları keşfederek, güçlü akıl yürütme analizi, matematik ve programlama yetenekleri gibi ana avantajlar sunmaktadır. Bununla birlikte, dil geçiş sorunları, akıl yürütme döngüleri, güvenlik endişeleri ve diğer yetenek farklılıkları gibi zorluklar da bulunmaktadır."
   },
@@ -1637,8 +1640,14 @@
   "qwq": {
     "description": "QwQ, AI akıl yürütme yeteneklerini artırmaya odaklanan deneysel bir araştırma modelidir."
   },
+  "qwq-32b": {
+    "description": "Qwen2.5-32B modeli üzerine eğitilmiş QwQ çıkarım modeli, pekiştirmeli öğrenme ile modelin çıkarım yeteneğini önemli ölçüde artırmıştır. Modelin matematiksel kodları ve diğer temel göstergeleri (AIME 24/25, LiveCodeBench) ile bazı genel göstergeleri (IFEval, LiveBench vb.) DeepSeek-R1 tam sürüm seviyesine ulaşmıştır ve tüm göstergeler, yine Qwen2.5-32B tabanlı olan DeepSeek-R1-Distill-Qwen-32B'yi önemli ölçüde aşmaktadır."
+  },
   "qwq-32b-preview": {
     "description": "QwQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir ve AI akıl yürütme yeteneklerini artırmaya odaklanmaktadır."
+  },
+  "qwq-plus-latest": {
+    "description": "Qwen2.5 modeli üzerine eğitilmiş QwQ çıkarım modeli, pekiştirmeli öğrenme ile modelin çıkarım yeteneğini önemli ölçüde artırmıştır. Modelin matematiksel kodları ve diğer temel göstergeleri (AIME 24/25, LiveCodeBench) ile bazı genel göstergeleri (IFEval, LiveBench vb.) DeepSeek-R1 tam sürüm seviyesine ulaşmıştır."
   },
   "r1-1776": {
     "description": "R1-1776, DeepSeek R1 modelinin bir versiyonudur ve son eğitimle, sansürsüz, tarafsız gerçek bilgileri sunar."

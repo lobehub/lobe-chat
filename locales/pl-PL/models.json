@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview to model badawczy opracowany przez zespół Qwen, skoncentrowany na zdolnościach wnioskowania wizualnego, który ma unikalne zalety w zrozumieniu złożonych scenariuszy i rozwiązywaniu wizualnie związanych problemów matematycznych."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ jest modelem inferencyjnym z serii Qwen. W porównaniu do tradycyjnych modeli dostosowanych do instrukcji, QwQ posiada zdolności myślenia i wnioskowania, co pozwala na znaczące zwiększenie wydajności w zadaniach końcowych, szczególnie w rozwiązywaniu trudnych problemów. QwQ-32B to średniej wielkości model inferencyjny, który osiąga konkurencyjną wydajność w porównaniu z najnowocześniejszymi modelami inferencyjnymi, takimi jak DeepSeek-R1 i o1-mini. Model ten wykorzystuje technologie takie jak RoPE, SwiGLU, RMSNorm oraz Attention QKV bias, posiada 64-warstwową strukturę sieci i 40 głowic uwagi Q (w architekturze GQA KV wynosi 8)."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview to najnowszy eksperymentalny model badawczy Qwen, skoncentrowany na zwiększeniu zdolności wnioskowania AI. Poprzez eksplorację złożonych mechanizmów, takich jak mieszanie języków i wnioskowanie rekurencyjne, główne zalety obejmują silne zdolności analizy wnioskowania, matematyki i programowania. Jednocześnie występują problemy z przełączaniem języków, cyklami wnioskowania, kwestiami bezpieczeństwa oraz różnicami w innych zdolnościach."
   },
@@ -1637,8 +1640,14 @@
   "qwq": {
     "description": "QwQ to eksperymentalny model badawczy, skoncentrowany na zwiększeniu zdolności wnioskowania AI."
   },
+  "qwq-32b": {
+    "description": "Model inferency QwQ, oparty na modelu Qwen2.5-32B, został znacznie ulepszony dzięki uczeniu przez wzmocnienie, co zwiększa jego zdolności inferencyjne. Kluczowe wskaźniki modelu, takie jak matematyczny kod i inne (AIME 24/25, LiveCodeBench), oraz niektóre ogólne wskaźniki (IFEval, LiveBench itp.) osiągają poziom pełnej wersji DeepSeek-R1, a wszystkie wskaźniki znacznie przewyższają te, które są oparte na Qwen2.5-32B, w tym DeepSeek-R1-Distill-Qwen-32B."
+  },
   "qwq-32b-preview": {
     "description": "Model QwQ to eksperymentalny model badawczy opracowany przez zespół Qwen, skoncentrowany na zwiększeniu zdolności wnioskowania AI."
+  },
+  "qwq-plus-latest": {
+    "description": "Model inferency QwQ, oparty na modelu Qwen2.5, został znacznie ulepszony dzięki uczeniu przez wzmocnienie, co zwiększa jego zdolności inferencyjne. Kluczowe wskaźniki modelu, takie jak matematyczny kod i inne (AIME 24/25, LiveCodeBench), oraz niektóre ogólne wskaźniki (IFEval, LiveBench itp.) osiągają poziom pełnej wersji DeepSeek-R1."
   },
   "r1-1776": {
     "description": "R1-1776 to wersja modelu DeepSeek R1, która została poddana dalszemu treningowi, aby dostarczać nieocenzurowane, bezstronne informacje faktograficzne."
