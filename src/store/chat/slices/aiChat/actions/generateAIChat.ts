@@ -21,7 +21,12 @@ import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
-import { getAgentChatConfig, getAgentConfig, getAgentKnowledge } from './helpers';
+import {
+  getAgentChatConfig,
+  getAgentConfig,
+  getAgentEnableHistoryCount,
+  getAgentKnowledge,
+} from './helpers';
 
 const n = setNamespace('ai');
 
@@ -392,7 +397,11 @@ export const generateAIChat: StateCreator<
     // ================================== //
 
     // 1. slice messages with config
-    let preprocessMsgs = chatHelpers.getSlicedMessagesWithConfig(messages, chatConfig, true);
+    let preprocessMsgs = chatHelpers.getSlicedMessages(messages, {
+      includeNewUserMessage: true,
+      enableHistoryCount: getAgentEnableHistoryCount(),
+      historyCount: chatConfig.historyCount,
+    });
 
     // 2. replace inputMessage template
     preprocessMsgs = !chatConfig.inputTemplate
@@ -455,7 +464,10 @@ export const generateAIChat: StateCreator<
         await messageService.updateMessageError(messageId, error);
         await refreshMessages();
       },
-      onFinish: async (content, { traceId, observationId, toolCalls, reasoning }) => {
+      onFinish: async (
+        content,
+        { traceId, observationId, toolCalls, reasoning, grounding, usage },
+      ) => {
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
@@ -470,15 +482,37 @@ export const generateAIChat: StateCreator<
         }
 
         // update the content after fetch result
-        await internal_updateMessageContent(
-          messageId,
-          content,
+        await internal_updateMessageContent(messageId, content, {
           toolCalls,
-          !!reasoning ? { content: reasoning, duration } : undefined,
-        );
+          reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
+          search: !!grounding?.citations ? grounding : undefined,
+          metadata: usage,
+        });
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {
+          case 'grounding': {
+            // if there is no citations, then stop
+            if (
+              !chunk.grounding ||
+              !chunk.grounding.citations ||
+              chunk.grounding.citations.length <= 0
+            )
+              return;
+
+            internal_dispatchMessage({
+              id: messageId,
+              type: 'updateMessage',
+              value: {
+                search: {
+                  citations: chunk.grounding.citations,
+                  searchQueries: chunk.grounding.searchQueries,
+                },
+              },
+            });
+            break;
+          }
+
           case 'text': {
             output += chunk.text;
 
@@ -605,7 +639,7 @@ export const generateAIChat: StateCreator<
       },
 
       false,
-      'toggleToolCallingStreaming',
+      `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
     );
   },
 });

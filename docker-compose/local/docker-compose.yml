@@ -3,6 +3,7 @@ services:
   network-service:
     image: alpine
     container_name: lobe-network
+    restart: always
     ports:
       - '${MINIO_PORT}:${MINIO_PORT}' # MinIO API
       - '9001:9001' # MinIO Console
@@ -66,12 +67,26 @@ services:
       postgresql:
         condition: service_healthy
     environment:
+      httpport: ${CASDOOR_PORT}
       RUNNING_IN_DOCKER: 'true'
       driverName: 'postgres'
       dataSourceName: 'user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor'
       runmode: 'dev'
     volumes:
       - ./init_data.json:/init_data.json
+    env_file:
+      - .env
+
+  searxng:
+    image: searxng/searxng
+    container_name: lobe-searxng
+    volumes:
+      - './searxng-settings.yml:/etc/searxng/settings.yml'
+    environment:
+      - 'SEARXNG_SETTINGS_FILE=/etc/searxng/settings.yml'
+    restart: always
+    networks:
+      - lobe-network
     env_file:
       - .env
 
@@ -101,6 +116,7 @@ services:
       - 'S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}'
       - 'LLM_VISION_IMAGE_USE_BASE64=1'
       - 'S3_SET_ACL=0'
+      - 'SEARXNG_URL=http://searxng:8080'
     env_file:
       - .env
     restart: always

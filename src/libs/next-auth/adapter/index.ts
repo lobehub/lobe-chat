@@ -68,23 +68,26 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       }
 
       // create a new user if it does not exist
+      // Use id from provider if it exists, otherwise use id assigned by next-auth
+      // ref: https://github.com/lobehub/lobe-chat/pull/2935
+      const uid = providerAccountId ?? id;
       await UserModel.createUser(
         serverDB,
         mapAdapterUserToLobeUser({
           email,
           emailVerified,
           // Use providerAccountId as userid to identify if the user exists in a SSO provider
-          id: providerAccountId ?? id,
+          id: uid,
           image,
           name,
         }),
       );
 
       // 3. Create an inbox session for the user
-      const agentService = new AgentService(serverDB, id);
+      const agentService = new AgentService(serverDB, uid);
       await agentService.createInbox();
 
-      return { ...user, id: providerAccountId ?? id };
+      return { ...user, id: uid };
     },
     async createVerificationToken(data): Promise<VerificationToken | null | undefined> {
       return serverDB

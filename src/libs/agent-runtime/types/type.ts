@@ -13,7 +13,7 @@ export interface ChatCompletionErrorPayload {
   endpoint?: string;
   error: object;
   errorType: ILobeAgentRuntimeErrorType;
-  provider: ModelProvider;
+  provider: string;
 }
 
 export interface CreateChatCompletionOptions {
@@ -54,6 +54,7 @@ export enum ModelProvider {
   Ollama = 'ollama',
   OpenAI = 'openai',
   OpenRouter = 'openrouter',
+  PPIO = 'ppio',
   Perplexity = 'perplexity',
   Qwen = 'qwen',
   SambaNova = 'sambanova',

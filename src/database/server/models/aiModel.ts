@@ -5,9 +5,9 @@ import {
   AiModelSortMap,
   AiModelSourceEnum,
   AiProviderModelListItem,
+  EnabledAiModel,
   ToggleAiModelEnableParams,
 } from '@/types/aiModel';
-import { EnabledAiModel } from '@/types/aiProvider';
 
 import { AiModelSelectItem, NewAiModelItem, aiModels } from '../../schemas';
 
@@ -68,6 +68,7 @@ export class AiModelModel {
         enabled: aiModels.enabled,
         id: aiModels.id,
         pricing: aiModels.pricing,
+        releasedAt: aiModels.releasedAt,
         source: aiModels.source,
         type: aiModels.type,
       })

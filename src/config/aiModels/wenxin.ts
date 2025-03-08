@@ -4,6 +4,7 @@ const wenxinChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8192,
     description:
@@ -16,11 +17,15 @@ const wenxinChatModels: AIChatModelCard[] = [
       input: 0.8,
       output: 2,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8192,
     description:
@@ -32,11 +37,15 @@ const wenxinChatModels: AIChatModelCard[] = [
       input: 0.8,
       output: 2,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 128_000,
     description:
@@ -49,11 +58,15 @@ const wenxinChatModels: AIChatModelCard[] = [
       input: 0.8,
       output: 2,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8192,
     description:
@@ -66,11 +79,15 @@ const wenxinChatModels: AIChatModelCard[] = [
       input: 30,
       output: 90,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8192,
     description:
@@ -82,11 +99,15 @@ const wenxinChatModels: AIChatModelCard[] = [
       input: 30,
       output: 90,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8192,
     description:
@@ -99,11 +120,15 @@ const wenxinChatModels: AIChatModelCard[] = [
       input: 20,
       output: 60,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 128_000,
     description:
@@ -116,11 +141,15 @@ const wenxinChatModels: AIChatModelCard[] = [
       input: 20,
       output: 60,
     },
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 8192,
     description:
@@ -131,6 +160,9 @@ const wenxinChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 20,
       output: 60,
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },

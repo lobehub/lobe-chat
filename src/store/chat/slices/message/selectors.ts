@@ -1,7 +1,7 @@
 import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
@@ -84,9 +84,13 @@ const mainAIChats = (s: ChatStoreState): ChatMessage[] => {
 
 const mainAIChatsWithHistoryConfig = (s: ChatStoreState): ChatMessage[] => {
   const chats = mainAIChats(s);
-  const config = agentSelectors.currentAgentChatConfig(useAgentStore.getState());
+  const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(useAgentStore.getState());
+  const historyCount = agentChatConfigSelectors.historyCount(useAgentStore.getState());
 
-  return chatHelpers.getSlicedMessagesWithConfig(chats, config);
+  return chatHelpers.getSlicedMessages(chats, {
+    enableHistoryCount,
+    historyCount,
+  });
 };
 
 const mainAIChatsMessageString = (s: ChatStoreState): string => {

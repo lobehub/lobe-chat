@@ -1,9 +1,34 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
+// https://help.aliyun.com/zh/model-studio/developer-reference/use-qwen-by-calling-api#e1fada1a719u7
+
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
+    displayName: 'QwQ Plus',
+    enabled: true,
+    id: 'qwq-plus-latest',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-03-06',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 1_000_000,
     description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
@@ -11,16 +36,21 @@ const qwenChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen-turbo-latest',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 0.3,
       output: 0.6,
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
@@ -28,16 +58,21 @@ const qwenChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen-plus-latest',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 0.8,
       output: 2,
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
     },
     contextWindowTokens: 32_768,
     description:
@@ -46,24 +81,51 @@ const qwenChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen-max-latest',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 20,
-      output: 60,
+      input: 2.4,
+      output: 9.6,
+    },
+    settings: {
+      searchImpl: 'params',
     },
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 1_000_000,
     description:
       '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
     displayName: 'Qwen Long',
+    enabled: true,
     id: 'qwen-long',
     maxOutput: 6000,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 0.5,
       output: 2,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 32_768,
+    description: 'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
+    displayName: 'Qwen Omni Turbo',
+    enabled: true,
+    id: 'qwen-omni-turbo-latest',
+    maxOutput: 2048,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 1.5, // use image input price
+      output: 4.5,
     },
     type: 'chat',
   },
@@ -78,6 +140,7 @@ const qwenChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen-vl-plus-latest',
     maxOutput: 2048,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 1.5,
@@ -96,6 +159,7 @@ const qwenChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen-vl-max-latest',
     maxOutput: 2048,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 3,
@@ -113,6 +177,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen VL OCR',
     id: 'qwen-vl-ocr-latest',
     maxOutput: 4096,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 5,
@@ -126,6 +191,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen Math Turbo',
     id: 'qwen-math-turbo-latest',
     maxOutput: 3072,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 2,
@@ -139,6 +205,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen Math Plus',
     id: 'qwen-math-plus-latest',
     maxOutput: 3072,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 4,
@@ -152,6 +219,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen Coder Turbo',
     id: 'qwen-coder-turbo-latest',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 2,
@@ -165,6 +233,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen Coder Plus',
     id: 'qwen-coder-plus-latest',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 3.5,
@@ -174,7 +243,24 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description: '基于 Qwen2.5-32B 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平，各指标均显著超过同样基于 Qwen2.5-32B 的 DeepSeek-R1-Distill-Qwen-32B。',
+    displayName: 'QwQ 32B',
+    id: 'qwq-32b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-03-06',
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
     },
     contextWindowTokens: 32_768,
@@ -182,10 +268,11 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'QwQ 32B Preview',
     id: 'qwq-32b-preview',
     maxOutput: 16_384,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 3.5,
-      output: 7,
+      input: 2,
+      output: 6,
     },
     releasedAt: '2024-11-28',
     type: 'chat',
@@ -196,10 +283,12 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 32_768,
-    description: 'QVQ模型是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力，尤其在数学推理领域。',
+    description:
+      'QVQ模型是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力，尤其在数学推理领域。',
     displayName: 'QVQ 72B Preview',
     id: 'qvq-72b-preview',
     maxOutput: 16_384,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 12,
@@ -217,6 +306,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 7B',
     id: 'qwen2.5-7b-instruct',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 0.5,
@@ -233,6 +323,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 14B',
     id: 'qwen2.5-14b-instruct',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 1,
@@ -249,6 +340,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 32B',
     id: 'qwen2.5-32b-instruct',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 3.5,
@@ -265,6 +357,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 72B',
     id: 'qwen2.5-72b-instruct',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 4,
@@ -281,6 +374,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 14B 1M',
     id: 'qwen2.5-14b-instruct-1m',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 1,
@@ -295,6 +389,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 Math 7B',
     id: 'qwen2.5-math-7b-instruct',
     maxOutput: 3072,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 1,
@@ -308,6 +403,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 Math 72B',
     id: 'qwen2.5-math-72b-instruct',
     maxOutput: 3072,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 4,
@@ -321,6 +417,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 Coder 7B',
     id: 'qwen2.5-coder-7b-instruct',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 1,
@@ -334,6 +431,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 Coder 32B',
     id: 'qwen2.5-coder-32b-instruct',
     maxOutput: 8192,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 3.5,
@@ -349,6 +447,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description: '以 Qwen-7B 语言模型初始化，添加图像模型，图像输入分辨率为448的预训练模型。',
     displayName: 'Qwen VL',
     id: 'qwen-vl-v1',
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -364,6 +463,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description: '通义千问VL支持灵活的交互方式，包括多图、多轮问答、创作等能力的模型。',
     displayName: 'Qwen VL Chat',
     id: 'qwen-vl-chat-v1',
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -381,6 +481,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 VL 72B',
     id: 'qwen2.5-vl-72b-instruct',
     maxOutput: 2048,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 16,
@@ -399,6 +500,7 @@ const qwenChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 VL 7B',
     id: 'qwen2.5-vl-7b-instruct',
     maxOutput: 2048,
+    organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 2,
@@ -411,36 +513,33 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 65_792,
     description:
       'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
     displayName: 'DeepSeek R1',
-    enabled: true,
     id: 'deepseek-r1',
     maxOutput: 8192,
+    organization: 'DeepSeek',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      input: 4,
+      output: 16,
     },
     releasedAt: '2025-01-27',
     type: 'chat',
   },
   {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 65_792,
     description:
       'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
     displayName: 'DeepSeek V3',
-    enabled: true,
     id: 'deepseek-v3',
     maxOutput: 8192,
+    organization: 'DeepSeek',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      input: 2,
+      output: 8,
     },
     releasedAt: '2025-01-27',
     type: 'chat',
@@ -449,12 +548,13 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 32_768,
     description:
       'DeepSeek-R1-Distill-Qwen-1.5B 是一个基于 Qwen2.5-Math-1.5B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
     displayName: 'DeepSeek R1 Distill Qwen 1.5B',
     id: 'deepseek-r1-distill-qwen-1.5b',
-    maxOutput: 8192,
+    maxOutput: 16_384,
+    organization: 'DeepSeek',
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -464,84 +564,94 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true
+      reasoning: true,
     },
-    contextWindowTokens: 131_072,
-    description: "DeepSeek-R1-Distill-Qwen-7B 是一个基于 Qwen2.5-Math-7B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
-    displayName: "DeepSeek R1 Distill Qwen 7B",
-    id: "deepseek-r1-distill-qwen-7b",
-    maxOutput: 8192,
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Qwen-7B 是一个基于 Qwen2.5-Math-7B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+    displayName: 'DeepSeek R1 Distill Qwen 7B',
+    id: 'deepseek-r1-distill-qwen-7b',
+    maxOutput: 16_384,
+    organization: 'DeepSeek',
     pricing: {
-      currency: "CNY",
-      input: 0,
-      output: 0
+      currency: 'CNY',
+      input: 0.5,
+      output: 1,
     },
-    type: "chat"
+    type: 'chat',
   },
   {
     abilities: {
-      reasoning: true
+      reasoning: true,
     },
-    contextWindowTokens: 131_072,
-    description: "DeepSeek-R1-Distill-Qwen-14B 是一个基于 Qwen2.5-14B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
-    displayName: "DeepSeek R1 Distill Qwen 14B",
-    id: "deepseek-r1-distill-qwen-14b",
-    maxOutput: 8192,
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Qwen-14B 是一个基于 Qwen2.5-14B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+    displayName: 'DeepSeek R1 Distill Qwen 14B',
+    id: 'deepseek-r1-distill-qwen-14b',
+    maxOutput: 16_384,
+    organization: 'DeepSeek',
     pricing: {
-      currency: "CNY",
-      input: 0,
-      output: 0
+      currency: 'CNY',
+      input: 1,
+      output: 3,
     },
-    type: "chat"
+    type: 'chat',
   },
   {
     abilities: {
-      reasoning: true
+      reasoning: true,
     },
-    contextWindowTokens: 131_072,
-    description: "DeepSeek-R1-Distill-Qwen-32B 是一个基于 Qwen2.5-32B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
-    displayName: "DeepSeek R1 Distill Qwen 32B",
-    id: "deepseek-r1-distill-qwen-32b",
-    maxOutput: 8192,
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Qwen-32B 是一个基于 Qwen2.5-32B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+    displayName: 'DeepSeek R1 Distill Qwen 32B',
+    id: 'deepseek-r1-distill-qwen-32b',
+    maxOutput: 16_384,
+    organization: 'DeepSeek',
     pricing: {
-      currency: "CNY",
-      input: 0,
-      output: 0
+      currency: 'CNY',
+      input: 2,
+      output: 6,
     },
-    type: "chat"
+    type: 'chat',
   },
   {
     abilities: {
-      reasoning: true
+      reasoning: true,
     },
-    contextWindowTokens: 131_072,
-    description: "DeepSeek-R1-Distill-Llama-8B 是一个基于 Llama-3.1-8B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
-    displayName: "DeepSeek R1 Distill Llama 8B",
-    id: "deepseek-r1-distill-llama-8b",
-    maxOutput: 8192,
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Llama-8B 是一个基于 Llama-3.1-8B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+    displayName: 'DeepSeek R1 Distill Llama 8B',
+    id: 'deepseek-r1-distill-llama-8b',
+    maxOutput: 16_384,
+    organization: 'DeepSeek',
     pricing: {
-      currency: "CNY",
+      currency: 'CNY',
       input: 0,
-      output: 0
+      output: 0,
     },
-    type: "chat"
+    type: 'chat',
   },
   {
     abilities: {
-      reasoning: true
+      reasoning: true,
     },
-    contextWindowTokens: 131_072,
-    description: "DeepSeek-R1-Distill-Llama-70B 是一个基于 Llama-3.3-70B-Instruct 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。",
-    displayName: "DeepSeek R1 Distill Llama 70B",
-    id: "deepseek-r1-distill-llama-70b",
-    maxOutput: 8192,
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Llama-70B 是一个基于 Llama-3.3-70B-Instruct 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。',
+    displayName: 'DeepSeek R1 Distill Llama 70B',
+    id: 'deepseek-r1-distill-llama-70b',
+    maxOutput: 16_384,
+    organization: 'DeepSeek',
     pricing: {
-      currency: "CNY",
+      currency: 'CNY',
       input: 0,
-      output: 0
+      output: 0,
     },
-    type: "chat"
-  }
+    type: 'chat',
+  },
 ];
 
 export const allModels = [...qwenChatModels];

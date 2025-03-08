@@ -258,7 +258,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       children: isLoading ? (
         <Skeleton.Button active className={styles.switchLoading} />
       ) : (
-        <Switch disabled={configUpdating} value={isFetchOnClient} />
+        <Switch checked={isFetchOnClient} disabled={configUpdating} />
       ),
       desc: t('providerModels.config.fetchOnClient.desc'),
       label: t('providerModels.config.fetchOnClient.title'),
@@ -324,19 +324,21 @@ const ProviderConfig = memo<ProviderConfigProps>(
               {name}
             </Flexbox>
           ) : (
-            <ProviderCombine provider={id} size={24} />
+            <>
+              <ProviderCombine provider={id} size={24} />
+              <Tooltip title={t('providerModels.config.helpDoc')}>
+                <Link
+                  href={urlJoin(BASE_PROVIDER_DOC_URL, id)}
+                  onClick={(e) => e.stopPropagation()}
+                  target={'_blank'}
+                >
+                  <Center className={styles.help} height={20} width={20}>
+                    ?
+                  </Center>
+                </Link>
+              </Tooltip>
+            </>
           )}
-          <Tooltip title={t('providerModels.config.helpDoc')}>
-            <Link
-              href={urlJoin(BASE_PROVIDER_DOC_URL, id)}
-              onClick={(e) => e.stopPropagation()}
-              target={'_blank'}
-            >
-              <Center className={styles.help} height={20} width={20}>
-                ?
-              </Center>
-            </Link>
-          </Tooltip>
         </Flexbox>
       ),
     };

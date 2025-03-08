@@ -118,6 +118,10 @@
     "reinstallError": "{{name}} eklentisi yenilenemedi",
     "urlError": "Bağlantı JSON formatında içerik döndürmedi. Lütfen geçerli bir bağlantı olduğundan emin olun"
   },
+  "inspector": {
+    "args": "Parametre listesini görüntüle",
+    "pluginRender": "Eklenti arayüzünü görüntüle"
+  },
   "list": {
     "item": {
       "deprecated.title": "Eski",
@@ -130,6 +134,34 @@
     "plugin": "Eklenti çalışıyor..."
   },
   "pluginList": "Eklenti Listesi",
+  "search": {
+    "config": {
+      "addKey": "Anahtar Ekle",
+      "close": "Sil",
+      "confirm": "Yapılandırma tamamlandı ve yeniden denendi"
+    },
+    "crawPages": {
+      "crawling": "Bağlantı tanımlanıyor",
+      "detail": {
+        "preview": "Önizleme",
+        "raw": "Ham metin",
+        "tooLong": "Metin içeriği çok uzun, diyalog bağlamında yalnızca ilk {{characters}} karakter saklanacak, fazlası diyalog bağlamına dahil edilmeyecek."
+      },
+      "meta": {
+        "crawler": "Tarayıcı Modu",
+        "words": "Karakter sayısı"
+      }
+    },
+    "searchxng": {
+      "baseURL": "Lütfen girin",
+      "description": "SearchXNG'nin URL'sini girin, böylece çevrimiçi arama yapmaya başlayabilirsiniz",
+      "keyPlaceholder": "Anahtarı girin",
+      "title": "SearchXNG Arama Motorunu Yapılandır",
+      "unconfiguredDesc": "Lütfen yöneticinizle iletişime geçin ve SearchXNG arama motoru yapılandırmasını tamamlayın, böylece çevrimiçi arama yapmaya başlayabilirsiniz",
+      "unconfiguredTitle": "SearchXNG Arama Motoru Henüz Yapılandırılmadı"
+    },
+    "title": "Çevrimiçi Arama"
+  },
   "setting": "Eklenti Ayarları",
   "settings": {
     "indexUrl": {

@@ -322,6 +322,9 @@
     "tooltip": "Update provider basic configuration",
     "updateSuccess": "Update successful"
   },
+  "updateCustomAiProvider": {
+    "title": "Update Custom AI Provider Configuration"
+  },
   "vertexai": {
     "apiKey": {
       "desc": "Enter your Vertex AI Keys",

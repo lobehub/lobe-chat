@@ -7,7 +7,10 @@ const metaList =
   (showDalle?: boolean) =>
   (s: ToolStoreState): LobeToolMeta[] =>
     s.builtinTools
-      .filter((item) => (!showDalle ? item.identifier !== DalleManifest.identifier : true))
+      .filter(
+        (item) =>
+          !item.hidden && (!showDalle ? item.identifier !== DalleManifest.identifier : true),
+      )
       .map((t) => ({
         author: 'LobeHub',
         identifier: t.identifier,

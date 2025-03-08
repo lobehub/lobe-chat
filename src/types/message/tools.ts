@@ -1,3 +1,4 @@
+import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import { DeepPartial } from 'utility-types';
 import { z } from 'zod';
 
@@ -63,3 +64,12 @@ export const MessageToolCallSchema = z.object({
   id: z.string(),
   type: z.string(),
 });
+
+/**
+ * 聊天消息错误对象
+ */
+export interface ChatMessagePluginError {
+  body?: any;
+  message: string;
+  type: IPluginErrorType;
+}

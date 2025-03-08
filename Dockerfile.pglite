@@ -68,8 +68,9 @@ ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json pnpm-workspace.yaml ./
 COPY .npmrc ./
+COPY packages ./packages
 
 RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
@@ -87,10 +88,7 @@ RUN \
     # Use pnpm for corepack
     && corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json) \
     # Install the dependencies
-    && pnpm i \
-    # Add sharp dependencies
-    && mkdir -p /deps \
-    && pnpm add sharp --prefix /deps
+    && pnpm i
 
 COPY . .
 
@@ -102,13 +100,9 @@ FROM busybox:latest AS app
 
 COPY --from=base /distroless/ /
 
-COPY --from=builder /app/public /app/public
-
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
-COPY --from=builder /app/.next/static /app/.next/static
-COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 
 # Copy server launcher
 COPY --from=builder /app/scripts/serverLauncher/startServer.js /app/startServer.js
