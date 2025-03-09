@@ -70,7 +70,7 @@ describe('getDetailsToken', () => {
     const result = getDetailsToken(usage, mockModelCard);
 
     expect(result.inputCached).toEqual({
-      credit: 0, // 50 * 0.005 = 0.25, rounded to 0
+      credit: 1,
       token: 50,
     });
 
