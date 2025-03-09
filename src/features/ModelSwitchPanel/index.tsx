@@ -1,8 +1,9 @@
-import { Icon } from '@lobehub/ui';
+import { ActionIcon, Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
-import { LucideArrowRight } from 'lucide-react';
+import { LucideArrowRight, LucideBolt } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -86,17 +87,45 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
       return items;
     };
 
+    if (enabledList.length === 0)
+      return [
+        {
+          key: `no-provider`,
+          label: (
+            <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
+              {t('ModelSwitchPanel.emptyProvider')}
+              <Icon icon={LucideArrowRight} />
+            </Flexbox>
+          ),
+          onClick: () => {
+            router.push(isDeprecatedEdition ? '/settings/llm' : `/settings/provider`);
+          },
+        },
+      ];
+
     // otherwise show with provider group
     return enabledList.map((provider) => ({
       children: getModelItems(provider),
       key: provider.id,
       label: (
-        <ProviderItemRender
-          logo={provider.logo}
-          name={provider.name}
-          provider={provider.id}
-          source={provider.source}
-        />
+        <Flexbox horizontal justify="space-between">
+          <ProviderItemRender
+            logo={provider.logo}
+            name={provider.name}
+            provider={provider.id}
+            source={provider.source}
+          />
+          <Link
+            href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}
+            prefetch={false}
+          >
+            <ActionIcon
+              icon={LucideBolt}
+              size={'small'}
+              title={t('ModelSwitchPanel.goToSettings')}
+            />
+          </Link>
+        </Flexbox>
       ),
       type: 'group',
     }));

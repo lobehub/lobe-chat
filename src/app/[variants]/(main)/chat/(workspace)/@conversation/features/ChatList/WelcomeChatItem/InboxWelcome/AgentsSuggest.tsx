@@ -105,7 +105,11 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
           : assistantList
               .slice(sliceStart, sliceStart + agentLength)
               .map((item: DiscoverAssistantItem) => (
-                <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
+                <Link
+                  href={urlJoin('/discover/assistant/', item.identifier)}
+                  key={item.identifier}
+                  prefetch={false}
+                >
                   <Flexbox className={styles.card} gap={8} horizontal>
                     <Avatar avatar={item.meta.avatar} style={{ flex: 'none' }} />
                     <Flexbox gap={mobile ? 2 : 8} style={{ overflow: 'hidden', width: '100%' }}>
