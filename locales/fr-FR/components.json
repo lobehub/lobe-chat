@@ -85,6 +85,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "Aucun modèle activé. Veuillez vous rendre dans les paramètres pour l'activer.",
+    "emptyProvider": "Aucun fournisseur activé, veuillez aller dans les paramètres pour l'activer",
+    "goToSettings": "Aller aux paramètres",
     "provider": "Fournisseur"
   },
   "OllamaSetupGuide": {
