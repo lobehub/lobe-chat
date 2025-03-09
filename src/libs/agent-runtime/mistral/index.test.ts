@@ -57,9 +57,6 @@ describe('specific LobeMistralAI tests', () => {
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'open-mistral-7b',
         stream: true,
-        stream_options: {
-          include_usage: true,
-        },
         temperature: 0.35,
         top_p: 1,
       },

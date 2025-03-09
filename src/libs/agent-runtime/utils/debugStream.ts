@@ -35,7 +35,7 @@ export const debugStream = async (stream: ReadableStream) => {
 
       console.log(`[chunk ${chunk}] ${getTime()}`);
       console.log(chunkValue);
-      console.log(`\n`);
+      console.log('');
 
       finished = done;
       chunk++;

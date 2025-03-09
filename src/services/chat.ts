@@ -17,13 +17,14 @@ import {
 } from '@/libs/agent-runtime';
 import { filesPrompts } from '@/prompts/files';
 import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
-import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { getAgentChatConfig } from '@/store/chat/slices/aiChat/actions/helpers';
-import { useSessionStore } from '@/store/session';
+import { getAgentStoreState } from '@/store/agent';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
+import { getSessionStoreState } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
-import { useToolStore } from '@/store/tool';
+import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
-import { useUserStore } from '@/store/user';
+import { getUserStoreState, useUserStore } from '@/store/user';
 import {
   modelConfigSelectors,
   modelProviderSelectors,
@@ -46,10 +47,10 @@ import { API_ENDPOINTS } from './_url';
 const isCanUseFC = (model: string, provider: string) => {
   // TODO: remove isDeprecatedEdition condition in V2.0
   if (isDeprecatedEdition) {
-    return modelProviderSelectors.isModelEnabledFunctionCall(model)(useUserStore.getState());
+    return modelProviderSelectors.isModelEnabledFunctionCall(model)(getUserStoreState());
   }
 
-  return aiModelSelectors.isModelSupportToolUse(model, provider)(useAiInfraStore.getState());
+  return aiModelSelectors.isModelSupportToolUse(model, provider)(getAiInfraStoreState());
 };
 
 /**
@@ -68,9 +69,9 @@ const findDeploymentName = (model: string, provider: string) => {
     if (deploymentName) deploymentId = deploymentName;
   } else {
     // find the model by id
-    const modelItem = useAiInfraStore
-      .getState()
-      .enabledAiModels?.find((i) => i.id === model && i.providerId === provider);
+    const modelItem = getAiInfraStoreState().enabledAiModels?.find(
+      (i) => i.id === model && i.providerId === provider,
+    );
 
     if (modelItem && modelItem.config?.deploymentName) {
       deploymentId = modelItem.config?.deploymentName;
@@ -85,7 +86,7 @@ const isEnableFetchOnClient = (provider: string) => {
   if (isDeprecatedEdition) {
     return modelConfigSelectors.isProviderFetchOnClient(provider)(useUserStore.getState());
   } else {
-    return aiProviderSelectors.isProviderFetchOnClient(provider)(useAiInfraStore.getState());
+    return aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());
   }
 };
 
@@ -169,16 +170,16 @@ class ChatService {
     );
 
     // =================== 0. process search =================== //
-    const chatConfig = getAgentChatConfig();
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
     const enabledSearch = chatConfig.searchMode !== 'off';
     const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
       payload.model,
       payload.provider!,
-    )(useAiInfraStore.getState());
+    )(getAiInfraStoreState());
 
-    const useApplicationBuiltinSearchTool =
-      enabledSearch && !(isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch);
+    const useModelSearch = isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch;
+    const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
     const pluginIds = [...(enabledPlugins || [])];
 
@@ -200,7 +201,7 @@ class ChatService {
 
     // ============  2. preprocess tools   ============ //
 
-    let filterTools = toolSelectors.enabledSchema(pluginIds)(useToolStore.getState());
+    let filterTools = toolSelectors.enabledSchema(pluginIds)(getToolStoreState());
 
     // check this model can use function call
     const canUseFC = isCanUseFC(payload.model, payload.provider!);
@@ -219,14 +220,14 @@ class ChatService {
     const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
       payload.model,
       payload.provider!,
-    )(useAiInfraStore.getState());
+    )(getAiInfraStoreState());
 
     // model
     if (isModelHasExtendParams) {
       const modelExtendParams = aiModelSelectors.modelExtendParams(
         payload.model,
         payload.provider!,
-      )(useAiInfraStore.getState());
+      )(getAiInfraStoreState());
       // if model has extended params, then we need to check if the model can use reasoning
 
       if (modelExtendParams!.includes('enableReasoning') && chatConfig.enableReasoning) {
@@ -235,13 +236,19 @@ class ChatService {
           type: 'enabled',
         };
       }
+      if (
+        modelExtendParams!.includes('disableContextCaching') &&
+        chatConfig.disableContextCaching
+      ) {
+        extendParams.enabledContextCaching = false;
+      }
     }
 
     return this.getChatCompletion(
       {
         ...params,
         ...extendParams,
-        enabledSearch: enabledSearch && isModelHasBuiltinSearch ? true : undefined,
+        enabledSearch: enabledSearch && useModelSearch ? true : undefined,
         messages: oaiMessages,
         tools,
       },
@@ -345,9 +352,8 @@ class ChatService {
 
     // TODO: remove `!isDeprecatedEdition` condition in V2.0
     if (!isDeprecatedEdition && !isBuiltin) {
-      const providerConfig = aiProviderSelectors.providerConfigById(provider)(
-        useAiInfraStore.getState(),
-      );
+      const providerConfig =
+        aiProviderSelectors.providerConfigById(provider)(getAiInfraStoreState());
 
       sdkType = providerConfig?.settings.sdkType || 'openai';
     }
@@ -378,7 +384,7 @@ class ChatService {
    * @param options
    */
   runPluginApi = async (params: PluginRequestPayload, options?: FetchOptions) => {
-    const s = useToolStore.getState();
+    const s = getToolStoreState();
 
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
     const manifest = pluginSelectors.getToolManifestById(params.identifier)(s);
@@ -537,7 +543,7 @@ class ChatService {
       const hasTools = tools && tools?.length > 0;
       const hasFC = hasTools && isCanUseFC(model, provider);
       const toolsSystemRoles =
-        hasFC && toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
+        hasFC && toolSelectors.enabledSystemRoles(tools)(getToolStoreState());
 
       const injectSystemRoles = BuiltinSystemRolePrompts({
         historySummary: options?.historySummary,
@@ -565,9 +571,9 @@ class ChatService {
   };
 
   private mapTrace = (trace?: TracePayload, tag?: TraceTagMap): TracePayload => {
-    const tags = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
+    const tags = sessionMetaSelectors.currentAgentMeta(getSessionStoreState()).tags || [];
 
-    const enabled = preferenceSelectors.userAllowTrace(useUserStore.getState());
+    const enabled = preferenceSelectors.userAllowTrace(getUserStoreState());
 
     if (!enabled) return { ...trace, enabled: false };
 

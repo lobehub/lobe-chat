@@ -85,6 +85,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "Etkinleştirilmiş model bulunmamaktadır, lütfen ayarlara giderek açın",
+    "emptyProvider": "Etkinleştirilmiş bir sağlayıcı yok, lütfen ayarlara gidin",
+    "goToSettings": "Ayrıntılara git",
     "provider": "Sağlayıcı"
   },
   "OllamaSetupGuide": {
