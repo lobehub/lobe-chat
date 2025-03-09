@@ -355,6 +355,7 @@ export const generateAIChat: StateCreator<
       const { model, provider } = agentChatConfigSelectors.searchFCModel(getAgentStoreState());
 
       let isToolsCalling = false;
+      let isError = false;
 
       const abortController = get().internal_toggleChatLoading(
         true,
@@ -394,6 +395,11 @@ export const generateAIChat: StateCreator<
             abortController!.abort('not fc');
           }
         },
+        onErrorHandle: async (error) => {
+          isError = true;
+          await messageService.updateMessageError(assistantId, error);
+          await refreshMessages();
+        },
       });
 
       get().internal_toggleChatLoading(
@@ -403,7 +409,10 @@ export const generateAIChat: StateCreator<
       );
       get().internal_toggleSearchWorkflow(false, assistantId);
 
-      // 4. if it's the function call message, trigger the function method
+      // if there is error, then stop
+      if (isError) return;
+
+      // if it's the function call message, trigger the function method
       if (isToolsCalling) {
         await refreshMessages();
         await triggerToolCalls(assistantId, {
@@ -426,7 +435,7 @@ export const generateAIChat: StateCreator<
       provider: provider!,
     });
 
-    // 4. if it's the function call message, trigger the function method
+    // 5. if it's the function call message, trigger the function method
     if (isFunctionCall) {
       await refreshMessages();
       await triggerToolCalls(assistantId, {
@@ -435,7 +444,7 @@ export const generateAIChat: StateCreator<
       });
     }
 
-    // 5. summary history if context messages is larger than historyCount
+    // 6. summary history if context messages is larger than historyCount
     const historyCount = agentChatConfigSelectors.historyCount(getAgentStoreState());
 
     if (
