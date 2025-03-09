@@ -486,24 +486,20 @@ describe('ChatService', () => {
     });
 
     describe('search functionality', () => {
-      beforeEach(() => {
-        vi.resetAllMocks();
-      });
-
       it('should add WebBrowsingManifest when search is enabled and not using model built-in search', async () => {
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
 
         const messages = [{ content: 'Search for something', role: 'user' }] as ChatMessage[];
 
         // Mock agent store state with search enabled
-        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValue({
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValueOnce({
           searchMode: 'auto', // not 'off'
           useModelBuiltinSearch: false,
         } as any);
 
         // Mock AI infra store state
-        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValue(() => false);
-        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValue(() => false);
+        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => false);
+        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
         // Mock tool selectors
         vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
@@ -539,14 +535,14 @@ describe('ChatService', () => {
         const messages = [{ content: 'Search for something', role: 'user' }] as ChatMessage[];
 
         // Mock agent store state with search enabled and useModelBuiltinSearch enabled
-        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValue({
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValueOnce({
           searchMode: 'auto', // not 'off'
           useModelBuiltinSearch: true,
         } as any);
 
         // Mock AI infra store state - model has built-in search
-        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValue(() => true);
-        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValue(() => false);
+        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
+        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
         // Mock tool selectors
         vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
@@ -576,14 +572,14 @@ describe('ChatService', () => {
         const messages = [{ content: 'Search for something', role: 'user' }] as ChatMessage[];
 
         // Mock agent store state with search disabled
-        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValue({
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValueOnce({
           searchMode: 'off',
           useModelBuiltinSearch: true,
         } as any);
 
         // Mock AI infra store state
-        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValue(() => true);
-        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValue(() => false);
+        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
+        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
 
         // Mock tool selectors
         vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
