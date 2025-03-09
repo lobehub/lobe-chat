@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support no-fc models like deepseek r1 with online search."]
+    },
+    "date": "2025-03-09",
+    "version": "1.70.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix context cache control and model builtin search switch."]
     },
     "date": "2025-03-09",

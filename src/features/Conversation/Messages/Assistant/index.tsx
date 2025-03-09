@@ -8,6 +8,7 @@ import { ChatMessage } from '@/types/message';
 
 import { DefaultMessage } from '../Default';
 import FileChunks from './FileChunks';
+import IntentUnderstanding from './IntentUnderstanding';
 import Reasoning from './Reasoning';
 import SearchGrounding from './SearchGrounding';
 import Tool from './Tool';
@@ -24,6 +25,8 @@ export const AssistantMessage = memo<
 
   const isReasoning = useChatStore(aiChatSelectors.isMessageInReasoning(id));
 
+  const isIntentUnderstanding = useChatStore(aiChatSelectors.isIntentUnderstanding(id));
+
   const showSearch = !!search && !!search.citations?.length;
 
   // remove \n to avoid empty content
@@ -31,6 +34,8 @@ export const AssistantMessage = memo<
   const showReasoning =
     (!!props.reasoning && props.reasoning.content?.trim() !== '') ||
     (!props.reasoning && isReasoning);
+
+  const showFileChunks = !!chunksList && chunksList.length > 0;
 
   return editing ? (
     <DefaultMessage
@@ -44,16 +49,20 @@ export const AssistantMessage = memo<
       {showSearch && (
         <SearchGrounding citations={search?.citations} searchQueries={search?.searchQueries} />
       )}
-      {!!chunksList && chunksList.length > 0 && <FileChunks data={chunksList} />}
+      {showFileChunks && <FileChunks data={chunksList} />}
       {showReasoning && <Reasoning {...props.reasoning} id={id} />}
-      {content && (
-        <DefaultMessage
-          addIdOnDOM={false}
-          content={content}
-          id={id}
-          isToolCallGenerating={isToolCallGenerating}
-          {...props}
-        />
+      {isIntentUnderstanding ? (
+        <IntentUnderstanding />
+      ) : (
+        content && (
+          <DefaultMessage
+            addIdOnDOM={false}
+            content={content}
+            id={id}
+            isToolCallGenerating={isToolCallGenerating}
+            {...props}
+          />
+        )
       )}
       {tools && (
         <Flexbox gap={8}>

@@ -64,6 +64,9 @@
     "stop": "Stoppen",
     "warp": "Nieuwe regel"
   },
+  "intentUnderstanding": {
+    "title": "Bezig met het analyseren en begrijpen van uw intentie..."
+  },
   "knowledgeBase": {
     "all": "Alle inhoud",
     "allFiles": "Alle bestanden",
@@ -144,7 +147,6 @@
         "desc": "Intelligente beoordeling of er gezocht moet worden op basis van de gesprekinhoud",
         "title": "Slimme verbinding"
       },
-      "disable": "Het huidige model ondersteunt geen functieaanroepen, dus de slimme verbindingsfunctie kan niet worden gebruikt",
       "off": {
         "desc": "Gebruik alleen de basiskennis van het model, zonder online zoekopdrachten",
         "title": "Verbinding uitschakelen"
@@ -154,6 +156,10 @@
         "title": "Altijd verbonden"
       },
       "useModelBuiltin": "Gebruik de ingebouwde zoekmachine van het model"
+    },
+    "searchModel": {
+      "desc": "Het huidige model ondersteunt geen functieaanroepen, dus het moet worden gecombineerd met een model dat functieaanroepen ondersteunt om online te zoeken",
+      "title": "Zoekhulpmiddel model"
     },
     "title": "Online zoeken"
   },
