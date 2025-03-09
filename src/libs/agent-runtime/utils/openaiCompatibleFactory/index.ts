@@ -57,6 +57,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
   apiKey?: string;
   baseURL?: string;
   chatCompletion?: {
+    excludeUsage?: boolean;
     handleError?: (
       error: any,
       options: ConstructorOptions<T>,
@@ -224,12 +225,17 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             ...postPayload,
             messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
-            stream_options: postPayload.stream ? { include_usage: true } : undefined,
+            stream_options:
+              postPayload.stream && !chatCompletion?.excludeUsage
+                ? { include_usage: true }
+                : undefined,
           };
 
           if (debug?.chatCompletion?.()) {
-            console.log('[requestPayload]:', JSON.stringify(finalPayload, null, 2));
+            console.log('[requestPayload]');
+            console.log(JSON.stringify(finalPayload), '\n');
           }
+
           response = await this.client.chat.completions.create(finalPayload, {
             // https://github.com/lobehub/lobe-chat/pull/318
             headers: { Accept: '*/*', ...options?.requestHeaders },
