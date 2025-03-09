@@ -26,12 +26,16 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { AgentRuntime } from '@/libs/agent-runtime';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
+import { toolSelectors } from '@/store/tool/selectors';
 import { UserStore } from '@/store/user';
 import { useUserStore } from '@/store/user';
 import { modelConfigSelectors } from '@/store/user/selectors';
 import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
 import { DalleManifest } from '@/tools/dalle';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatMessage } from '@/types/message';
 import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
@@ -478,6 +482,125 @@ describe('ChatService', () => {
         // Take a snapshot of the first call's first argument
         expect(calls![0]).toMatchSnapshot();
         expect(calls![1]).toBeUndefined();
+      });
+    });
+
+    describe('search functionality', () => {
+      it('should add WebBrowsingManifest when search is enabled and not using model built-in search', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [{ content: 'Search for something', role: 'user' }] as ChatMessage[];
+
+        // Mock agent store state with search enabled
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValueOnce({
+          searchMode: 'auto', // not 'off'
+          useModelBuiltinSearch: false,
+        } as any);
+
+        // Mock AI infra store state
+        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => false);
+        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
+
+        // Mock tool selectors
+        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
+          {
+            type: 'function',
+            function: {
+              name: WebBrowsingManifest.identifier + '____search',
+              description: 'Search the web',
+            },
+          },
+        ]);
+
+        await chatService.createAssistantMessage({ messages, plugins: [] });
+
+        // Verify tools were passed to getChatCompletion
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            tools: expect.arrayContaining([
+              expect.objectContaining({
+                function: expect.objectContaining({
+                  name: expect.stringContaining(WebBrowsingManifest.identifier),
+                }),
+              }),
+            ]),
+          }),
+          undefined,
+        );
+      });
+
+      it('should enable built-in search when model supports it and useModelBuiltinSearch is true', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [{ content: 'Search for something', role: 'user' }] as ChatMessage[];
+
+        // Mock agent store state with search enabled and useModelBuiltinSearch enabled
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValueOnce({
+          searchMode: 'auto', // not 'off'
+          useModelBuiltinSearch: true,
+        } as any);
+
+        // Mock AI infra store state - model has built-in search
+        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
+        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
+
+        // Mock tool selectors
+        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
+          {
+            type: 'function',
+            function: {
+              name: WebBrowsingManifest.identifier + '____search',
+              description: 'Search the web',
+            },
+          },
+        ]);
+
+        await chatService.createAssistantMessage({ messages, plugins: [] });
+
+        // Verify enabledSearch was set to true
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            enabledSearch: true,
+          }),
+          undefined,
+        );
+      });
+
+      it('should not enable search when searchMode is off', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [{ content: 'Search for something', role: 'user' }] as ChatMessage[];
+
+        // Mock agent store state with search disabled
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValueOnce({
+          searchMode: 'off',
+          useModelBuiltinSearch: true,
+        } as any);
+
+        // Mock AI infra store state
+        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
+        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
+
+        // Mock tool selectors
+        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
+          {
+            type: 'function',
+            function: {
+              name: WebBrowsingManifest.identifier + '____search',
+              description: 'Search the web',
+            },
+          },
+        ]);
+
+        await chatService.createAssistantMessage({ messages, plugins: [] });
+
+        // Verify enabledSearch was not set
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            enabledSearch: undefined,
+          }),
+          undefined,
+        );
       });
     });
   });

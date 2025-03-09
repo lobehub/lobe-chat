@@ -506,6 +506,9 @@
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet ofrece capacidades que superan a Opus y una velocidad más rápida que Sonnet, manteniendo el mismo precio que Sonnet. Sonnet es especialmente hábil en programación, ciencia de datos, procesamiento visual y tareas de agente."
   },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet es el modelo más inteligente de Anthropic hasta la fecha y el primer modelo de razonamiento híbrido en el mercado. Claude 3.7 Sonnet puede generar respuestas casi instantáneas o un pensamiento prolongado y gradual, permitiendo a los usuarios observar claramente estos procesos. Sonnet es especialmente hábil en programación, ciencia de datos, procesamiento visual y tareas de agente."
+  },
   "aya": {
     "description": "Aya 23 es un modelo multilingüe lanzado por Cohere, que admite 23 idiomas, facilitando aplicaciones de lenguaje diversas."
   },

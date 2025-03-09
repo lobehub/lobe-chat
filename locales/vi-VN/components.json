@@ -85,6 +85,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "Không có mô hình nào được kích hoạt, vui lòng điều chỉnh trong cài đặt",
+    "emptyProvider": "Không có nhà cung cấp nào được kích hoạt, vui lòng vào cài đặt để bật",
+    "goToSettings": "Đi đến cài đặt",
     "provider": "Nhà cung cấp"
   },
   "OllamaSetupGuide": {
