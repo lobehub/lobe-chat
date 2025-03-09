@@ -506,6 +506,9 @@
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同時保持與 Sonnet 相同的價格。Sonnet 特別擅長程式設計、數據科學、視覺處理、代理任務。"
   },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet 是 Anthropic 迄今為止最智能的模型，也是市場上首個混合推理模型。Claude 3.7 Sonnet 可以產生近乎即時的回應或延長的逐步思考，使用者可以清晰地看到這些過程。Sonnet 特別擅長程式設計、數據科學、視覺處理、代理任務。"
+  },
   "aya": {
     "description": "Aya 23 是 Cohere 推出的多語言模型，支持 23 種語言，為多元化語言應用提供便利。"
   },

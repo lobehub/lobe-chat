@@ -85,6 +85,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "沒有啟用的模型，請前往設定開啟",
+    "emptyProvider": "沒有啟用的服務商，請前往設定開啟",
+    "goToSettings": "前往設定",
     "provider": "提供商"
   },
   "OllamaSetupGuide": {

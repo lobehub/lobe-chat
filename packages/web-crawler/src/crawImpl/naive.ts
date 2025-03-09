@@ -103,7 +103,7 @@ export const naive: CrawlImpl = async (url, { filterOptions }) => {
     return {
       content: result.content,
       contentType: 'text',
-      description: result?.excerpt,
+      description: result?.description,
       length: result.length,
       siteName: result?.siteName,
       title: result?.title,
