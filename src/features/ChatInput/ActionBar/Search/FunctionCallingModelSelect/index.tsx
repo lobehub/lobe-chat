@@ -48,17 +48,23 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange }) => {
       return getChatModels(provider);
     }
 
-    return enabledList.map((provider) => ({
-      label: (
-        <ProviderItemRender
-          logo={provider.logo}
-          name={provider.name}
-          provider={provider.id}
-          source={provider.source}
-        />
-      ),
-      options: getChatModels(provider),
-    }));
+    return enabledList
+      .filter((p) => !!getChatModels(p).length)
+      .map((provider) => {
+        const options = getChatModels(provider);
+
+        return {
+          label: (
+            <ProviderItemRender
+              logo={provider.logo}
+              name={provider.name}
+              provider={provider.id}
+              source={provider.source}
+            />
+          ),
+          options,
+        };
+      });
   }, [enabledList]);
 
   return (
