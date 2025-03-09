@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Support openrouter claude 3.7 sonnet reasoning."]
+    },
+    "date": "2025-03-09",
+    "version": "1.69.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix mistral can not chat."]
+    },
+    "date": "2025-03-09",
+    "version": "1.69.4"
+  },
+  {
+    "children": {
       "improvements": ["Add login ui for next-auth."]
     },
     "date": "2025-03-08",

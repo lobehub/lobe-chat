@@ -1,4 +1,5 @@
 import qs from 'query-string';
+import urlJoin from 'url-join';
 
 import { CrawlImpl, CrawlSuccessResult } from '../type';
 import { htmlToMarkdown } from '../utils/htmlToMarkdown';
@@ -25,7 +26,7 @@ export const browserless: CrawlImpl = async (url, { filterOptions }) => {
 
   try {
     const res = await fetch(
-      qs.stringifyUrl({ query: { token: BROWSERLESS_TOKEN }, url: `${BASE_URL}/content` }),
+      qs.stringifyUrl({ query: { token: BROWSERLESS_TOKEN }, url: urlJoin(BASE_URL, '/content') }),
       {
         body: JSON.stringify(input),
         headers: {
