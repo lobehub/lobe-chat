@@ -37,3 +37,22 @@ export interface OpenRouterModelExtraInfo {
   endpoint?: OpenRouterModelEndpoint;
   slug: string;
 }
+
+interface OpenRouterOpenAIReasoning {
+  effort: 'high' | 'medium' | 'low';
+  exclude?: boolean;
+}
+
+interface OpenRouterAnthropicReasoning {
+  exclude?: boolean;
+  max_tokens: number;
+}
+
+interface OpenRouterCommonReasoning {
+  exclude?: boolean;
+}
+
+export type OpenRouterReasoning =
+  | OpenRouterOpenAIReasoning
+  | OpenRouterAnthropicReasoning
+  | OpenRouterCommonReasoning;

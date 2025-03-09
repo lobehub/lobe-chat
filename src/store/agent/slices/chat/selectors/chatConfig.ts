@@ -1,4 +1,5 @@
 import { contextCachingModels, thinkingWithToolClaudeModels } from '@/const/models';
+import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
 import { AgentStoreState } from '@/store/agent/initialState';
 import { LobeAgentChatConfig } from '@/types/agent';
 
@@ -30,10 +31,10 @@ const enableHistoryCount = (s: AgentStoreState) => {
   return chatConfig.enableHistoryCount;
 };
 
-const historyCount = (s: AgentStoreState) => {
+const historyCount = (s: AgentStoreState): number => {
   const chatConfig = currentAgentChatConfig(s);
 
-  return chatConfig.historyCount;
+  return chatConfig.historyCount || (DEFAULT_AGENT_CHAT_CONFIG.historyCount as number);
 };
 
 const displayMode = (s: AgentStoreState) => {

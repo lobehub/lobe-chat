@@ -20,3 +20,5 @@ const createStore: StateCreator<AgentStore, [['zustand/devtools', never]]> = (..
 const devtools = createDevtools('agent');
 
 export const useAgentStore = createWithEqualityFn<AgentStore>()(devtools(createStore), shallow);
+
+export const getAgentStoreState = () => useAgentStore.getState();
