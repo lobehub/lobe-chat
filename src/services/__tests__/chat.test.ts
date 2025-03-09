@@ -877,6 +877,7 @@ describe('ChatService', () => {
         // 重新模拟模块，设置 isServerMode 为 true
         vi.doMock('@/const/version', () => ({
           isServerMode: true,
+          isDeprecatedEdition: false,
         }));
 
         // 需要在修改模拟后重新导入相关模块

@@ -459,7 +459,7 @@ class ChatService {
 
   private processMessages = (
     {
-      messages,
+      messages = [],
       tools,
       model,
       provider,
