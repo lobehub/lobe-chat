@@ -4,7 +4,7 @@ import React, { memo, useMemo } from 'react';
 import { ChatItem } from '@/features/Conversation';
 import ActionsBar from '@/features/Conversation/components/ChatItem/ActionsBar';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors, threadSelectors } from '@/store/chat/selectors';
 
@@ -50,28 +50,19 @@ export interface ThreadChatItemProps {
 const MainChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
   const { styles, cx } = useStyles();
 
-  const [displayMode] = useAgentStore((s) => {
-    const config = agentSelectors.currentAgentChatConfig(s);
-    return [config.displayMode || 'chat'];
-  });
-
-  const userRole = useChatStore((s) => chatSelectors.getMessageById(id)(s)?.role);
-
-  const placement = displayMode === 'chat' && userRole === 'user' ? 'end' : 'start';
-
   const [showThread, historyLength] = useChatStore((s) => [
     threadSelectors.hasThreadBySourceMsgId(id)(s),
     chatSelectors.mainDisplayChatIDs(s).length,
   ]);
 
-  const enableHistoryDivider = useAgentStore((s) => {
-    const config = agentSelectors.currentAgentChatConfig(s);
-    return (
-      config.enableHistoryCount &&
-      historyLength > (config.historyCount ?? 0) &&
-      config.historyCount === historyLength - index
-    );
-  });
+  const [displayMode, enableHistoryDivider] = useAgentStore((s) => [
+    agentChatConfigSelectors.displayMode(s),
+    agentChatConfigSelectors.enableHistoryDivider(historyLength, index)(s),
+  ]);
+
+  const userRole = useChatStore((s) => chatSelectors.getMessageById(id)(s)?.role);
+
+  const placement = displayMode === 'chat' && userRole === 'user' ? 'end' : 'start';
 
   const actionBar = useMemo(() => <ActionsBar id={id} />, [id]);
 

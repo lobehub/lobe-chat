@@ -322,6 +322,9 @@
     "tooltip": "Aktualizuj podstawowe ustawienia dostawcy",
     "updateSuccess": "Aktualizacja zakończona sukcesem"
   },
+  "updateCustomAiProvider": {
+    "title": "Aktualizuj konfigurację dostawcy AI"
+  },
   "vertexai": {
     "apiKey": {
       "desc": "Wprowadź swoje klucze Vertex AI",

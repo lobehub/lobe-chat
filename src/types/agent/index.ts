@@ -1,8 +1,8 @@
-import { z } from 'zod';
-
 import { FileItem } from '@/types/files';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 import { FewShots, LLMParams } from '@/types/llm';
+
+import { LobeAgentChatConfig } from './chatConfig';
 
 export type TTSServer = 'openai' | 'edge' | 'microsoft';
 
@@ -54,43 +54,8 @@ export interface LobeAgentConfig {
   tts: LobeAgentTTSConfig;
 }
 
-export interface LobeAgentChatConfig {
-  autoCreateTopicThreshold: number;
-  displayMode?: 'chat' | 'docs';
-  enableAutoCreateTopic?: boolean;
-  /**
-   * 历史消息长度压缩阈值
-   */
-  enableCompressHistory?: boolean;
-  /**
-   * 开启历史记录条数
-   */
-  enableHistoryCount?: boolean;
-  enableMaxTokens?: boolean;
-
-  /**
-   * 自定义推理强度
-   */
-  enableReasoningEffort?: boolean;
-
-  /**
-   * 历史消息条数
-   */
-  historyCount?: number;
-  inputTemplate?: string;
-}
-
-export const AgentChatConfigSchema = z.object({
-  autoCreateTopicThreshold: z.number().default(2),
-  displayMode: z.enum(['chat', 'docs']).optional(),
-  enableAutoCreateTopic: z.boolean().optional(),
-  enableCompressHistory: z.boolean().optional(),
-  enableHistoryCount: z.boolean().optional(),
-  enableMaxTokens: z.boolean().optional(),
-  enableReasoningEffort: z.boolean().optional(),
-  historyCount: z.number().optional(),
-});
-
 export type LobeAgentConfigKeys =
   | keyof LobeAgentConfig
   | ['params', keyof LobeAgentConfig['params']];
+
+export * from './chatConfig';

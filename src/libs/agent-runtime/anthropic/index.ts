@@ -2,18 +2,23 @@
 import '@anthropic-ai/sdk/shims/web';
 import Anthropic from '@anthropic-ai/sdk';
 import { ClientOptions } from 'openai';
+import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
+import {
+  ChatCompetitionOptions,
+  type ChatCompletionErrorPayload,
+  ChatStreamPayload,
+  ModelProvider,
+} from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
 import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { StreamingResponse } from '../utils/response';
 import { AnthropicStream } from '../utils/streams';
-
-import type { ChatModelCard } from '@/types/llm';
+import { handleAnthropicError } from './handleAnthropicError';
 
 export interface AnthropicModelCard {
   display_name: string;
@@ -22,18 +27,24 @@ export interface AnthropicModelCard {
 
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
 
+interface AnthropicAIParams extends ClientOptions {
+  id?: string;
+}
+
 export class LobeAnthropicAI implements LobeRuntimeAI {
   private client: Anthropic;
 
   baseURL: string;
   apiKey?: string;
+  private id: string;
 
-  constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions = {}) {
+  constructor({ apiKey, baseURL = DEFAULT_BASE_URL, id, ...res }: AnthropicAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new Anthropic({ apiKey, baseURL, ...res });
     this.baseURL = this.client.baseURL;
     this.apiKey = apiKey;
+    this.id = id || ModelProvider.Anthropic;
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
@@ -57,57 +68,61 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         headers: options?.headers,
       });
     } catch (error) {
-      let desensitizedEndpoint = this.baseURL;
-
-      if (this.baseURL !== DEFAULT_BASE_URL) {
-        desensitizedEndpoint = desensitizeUrl(this.baseURL);
-      }
-
-      if ('status' in (error as any)) {
-        switch ((error as Response).status) {
-          case 401: {
-            throw AgentRuntimeError.chat({
-              endpoint: desensitizedEndpoint,
-              error: error as any,
-              errorType: AgentRuntimeErrorType.InvalidProviderAPIKey,
-              provider: ModelProvider.Anthropic,
-            });
-          }
-
-          case 403: {
-            throw AgentRuntimeError.chat({
-              endpoint: desensitizedEndpoint,
-              error: error as any,
-              errorType: AgentRuntimeErrorType.LocationNotSupportError,
-              provider: ModelProvider.Anthropic,
-            });
-          }
-          default: {
-            break;
-          }
-        }
-      }
-      throw AgentRuntimeError.chat({
-        endpoint: desensitizedEndpoint,
-        error: error as any,
-        errorType: AgentRuntimeErrorType.ProviderBizError,
-        provider: ModelProvider.Anthropic,
-      });
+      throw this.handleError(error);
     }
   }
 
   private async buildAnthropicPayload(payload: ChatStreamPayload) {
-    const { messages, model, max_tokens = 4096, temperature, top_p, tools } = payload;
+    const {
+      messages,
+      model,
+      max_tokens,
+      temperature,
+      top_p,
+      tools,
+      thinking,
+      enabledContextCaching = true,
+    } = payload;
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
+    const systemPrompts = !!system_message?.content
+      ? ([
+          {
+            cache_control: enabledContextCaching ? { type: 'ephemeral' } : undefined,
+            text: system_message?.content as string,
+            type: 'text',
+          },
+        ] as Anthropic.TextBlockParam[])
+      : undefined;
+
+    const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
+
+    const postTools = buildAnthropicTools(tools, { enabledContextCaching });
+
+    if (!!thinking) {
+      const maxTokens =
+        max_tokens ?? (thinking?.budget_tokens ? thinking?.budget_tokens + 4096 : 4096);
+
+      // `temperature` may only be set to 1 when thinking is enabled.
+      // `top_p` must be unset when thinking is enabled.
+      return {
+        max_tokens: maxTokens,
+        messages: postMessages,
+        model,
+        system: systemPrompts,
+        thinking,
+        tools: postTools,
+      } satisfies Anthropic.MessageCreateParams;
+    }
+
     return {
-      max_tokens,
-      messages: await buildAnthropicMessages(user_messages),
+      max_tokens: max_tokens ?? 4096,
+      messages: postMessages,
       model,
-      system: system_message?.content as string,
+      system: systemPrompts,
       temperature: payload.temperature !== undefined ? temperature / 2 : undefined,
-      tools: buildAnthropicTools(tools),
+      tools: postTools,
       top_p,
     } satisfies Anthropic.MessageCreateParams;
   }
@@ -124,32 +139,75 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       method: 'GET',
     });
     const json = await response.json();
-  
+
     const modelList: AnthropicModelCard[] = json['data'];
-  
+
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
           displayName: model.display_name,
           enabled: knownModel?.enabled || false,
           functionCall:
-            model.id.toLowerCase().includes('claude-3')
-            || knownModel?.abilities?.functionCall
-            || false,
+            model.id.toLowerCase().includes('claude-3') ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: model.id,
-          reasoning:
-            knownModel?.abilities?.reasoning
-            || false,
+          reasoning: knownModel?.abilities?.reasoning || false,
           vision:
-            model.id.toLowerCase().includes('claude-3') && !model.id.toLowerCase().includes('claude-3-5-haiku')
-            || knownModel?.abilities?.vision
-            || false,
+            (model.id.toLowerCase().includes('claude-3') &&
+              !model.id.toLowerCase().includes('claude-3-5-haiku')) ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];
+  }
+
+  private handleError(error: any): ChatCompletionErrorPayload {
+    let desensitizedEndpoint = this.baseURL;
+
+    if (this.baseURL !== DEFAULT_BASE_URL) {
+      desensitizedEndpoint = desensitizeUrl(this.baseURL);
+    }
+
+    if ('status' in (error as any)) {
+      switch ((error as Response).status) {
+        case 401: {
+          throw AgentRuntimeError.chat({
+            endpoint: desensitizedEndpoint,
+            error: error as any,
+            errorType: AgentRuntimeErrorType.InvalidProviderAPIKey,
+            provider: this.id,
+          });
+        }
+
+        case 403: {
+          throw AgentRuntimeError.chat({
+            endpoint: desensitizedEndpoint,
+            error: error as any,
+            errorType: AgentRuntimeErrorType.LocationNotSupportError,
+            provider: this.id,
+          });
+        }
+        default: {
+          break;
+        }
+      }
+    }
+
+    const { errorResult } = handleAnthropicError(error);
+
+    throw AgentRuntimeError.chat({
+      endpoint: desensitizedEndpoint,
+      error: errorResult,
+      errorType: AgentRuntimeErrorType.ProviderBizError,
+      provider: this.id,
+    });
   }
 }
 

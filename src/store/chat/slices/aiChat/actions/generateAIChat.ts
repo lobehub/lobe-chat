@@ -5,13 +5,14 @@ import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { isServerMode } from '@/const/version';
 import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { useAgentStore } from '@/store/agent';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
+import { getAgentStoreState } from '@/store/agent/store';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -21,7 +22,6 @@ import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
-import { getAgentChatConfig, getAgentConfig, getAgentKnowledge } from './helpers';
 
 const n = setNamespace('ai');
 
@@ -158,7 +158,7 @@ export const generateAIChat: StateCreator<
       threadId: activeThreadId,
     };
 
-    const agentConfig = getAgentChatConfig();
+    const agentConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
     let tempMessageId: string | undefined = undefined;
     let newTopicId: string | undefined = undefined;
@@ -283,7 +283,7 @@ export const generateAIChat: StateCreator<
     // create a new array to avoid the original messages array change
     const messages = [...originalMessages];
 
-    const { model, provider, chatConfig } = getAgentConfig();
+    const { model, provider, chatConfig } = agentSelectors.currentAgentConfig(getAgentStoreState());
 
     let fileChunks: MessageSemanticSearchChunk[] | undefined;
     let ragQueryId;
@@ -307,7 +307,7 @@ export const generateAIChat: StateCreator<
         chunks,
         userQuery: lastMsg.content,
         rewriteQuery,
-        knowledge: getAgentKnowledge(),
+        knowledge: agentSelectors.currentEnabledKnowledge(getAgentStoreState()),
       });
 
       // 3. add the retrieve context messages to the messages history
@@ -349,11 +349,10 @@ export const generateAIChat: StateCreator<
     }
 
     // 5. summary history if context messages is larger than historyCount
-    const historyCount =
-      chatConfig.historyCount || (DEFAULT_AGENT_CHAT_CONFIG.historyCount as number);
+    const historyCount = agentChatConfigSelectors.historyCount(getAgentStoreState());
 
     if (
-      chatConfig.enableHistoryCount &&
+      agentChatConfigSelectors.enableHistoryCount(getAgentStoreState()) &&
       chatConfig.enableCompressHistory &&
       originalMessages.length > historyCount
     ) {
@@ -382,7 +381,7 @@ export const generateAIChat: StateCreator<
       n('generateMessage(start)', { messageId, messages }) as string,
     );
 
-    const agentConfig = getAgentConfig();
+    const agentConfig = agentSelectors.currentAgentConfig(getAgentStoreState());
     const chatConfig = agentConfig.chatConfig;
 
     const compiler = template(chatConfig.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
@@ -392,7 +391,14 @@ export const generateAIChat: StateCreator<
     // ================================== //
 
     // 1. slice messages with config
-    let preprocessMsgs = chatHelpers.getSlicedMessagesWithConfig(messages, chatConfig, true);
+    const historyCount = agentChatConfigSelectors.historyCount(getAgentStoreState());
+    const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(getAgentStoreState());
+
+    let preprocessMsgs = chatHelpers.getSlicedMessages(messages, {
+      includeNewUserMessage: true,
+      enableHistoryCount,
+      historyCount,
+    });
 
     // 2. replace inputMessage template
     preprocessMsgs = !chatConfig.inputTemplate
@@ -455,7 +461,10 @@ export const generateAIChat: StateCreator<
         await messageService.updateMessageError(messageId, error);
         await refreshMessages();
       },
-      onFinish: async (content, { traceId, observationId, toolCalls, reasoning }) => {
+      onFinish: async (
+        content,
+        { traceId, observationId, toolCalls, reasoning, grounding, usage },
+      ) => {
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
@@ -470,15 +479,37 @@ export const generateAIChat: StateCreator<
         }
 
         // update the content after fetch result
-        await internal_updateMessageContent(
-          messageId,
-          content,
+        await internal_updateMessageContent(messageId, content, {
           toolCalls,
-          !!reasoning ? { content: reasoning, duration } : undefined,
-        );
+          reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
+          search: !!grounding?.citations ? grounding : undefined,
+          metadata: usage,
+        });
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {
+          case 'grounding': {
+            // if there is no citations, then stop
+            if (
+              !chunk.grounding ||
+              !chunk.grounding.citations ||
+              chunk.grounding.citations.length <= 0
+            )
+              return;
+
+            internal_dispatchMessage({
+              id: messageId,
+              type: 'updateMessage',
+              value: {
+                search: {
+                  citations: chunk.grounding.citations,
+                  searchQueries: chunk.grounding.searchQueries,
+                },
+              },
+            });
+            break;
+          }
+
           case 'text': {
             output += chunk.text;
 
@@ -605,7 +636,7 @@ export const generateAIChat: StateCreator<
       },
 
       false,
-      'toggleToolCallingStreaming',
+      `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
     );
   },
 });

@@ -92,6 +92,39 @@ describe('LobeOpenRouterAI', () => {
       expect(result).toBeInstanceOf(Response);
     });
 
+    it('should add reasoning field when thinking is enabled', async () => {
+      // Arrange
+      const mockStream = new ReadableStream();
+      const mockResponse = Promise.resolve(mockStream);
+
+      (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
+
+      // Act
+      const result = await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'mistralai/mistral-7b-instruct:free',
+        temperature: 0.7,
+        thinking: {
+          type: 'enabled',
+          budget_tokens: 1500,
+        },
+      });
+
+      // Assert
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'mistralai/mistral-7b-instruct:free',
+          reasoning: {
+            max_tokens: 1500,
+          },
+          temperature: 0.7,
+        }),
+        { headers: { Accept: '*/*' } },
+      );
+      expect(result).toBeInstanceOf(Response);
+    });
+
     describe('Error', () => {
       it('should return OpenRouterBizError with an openai error response when OpenAI.APIError is thrown', async () => {
         // Arrange

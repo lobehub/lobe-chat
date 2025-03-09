@@ -2,6 +2,8 @@ import createClient, { ModelClient } from '@azure-rest/ai-inference';
 import { AzureKeyCredential } from '@azure/core-auth';
 import OpenAI from 'openai';
 
+import { systemToUserModels } from '@/const/models';
+
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
@@ -11,10 +13,16 @@ import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
 import { StreamingResponse } from '../utils/response';
 import { OpenAIStream, createSSEDataExtractor } from '../utils/streams';
 
+interface AzureAIParams {
+  apiKey?: string;
+  apiVersion?: string;
+  baseURL?: string;
+}
+
 export class LobeAzureAI implements LobeRuntimeAI {
   client: ModelClient;
 
-  constructor(params?: { apiKey?: string; apiVersion?: string; baseURL?: string }) {
+  constructor(params?: AzureAIParams) {
     if (!params?.apiKey || !params?.baseURL)
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
@@ -29,10 +37,22 @@ export class LobeAzureAI implements LobeRuntimeAI {
     const { messages, model, ...params } = payload;
     // o1 series models on Azure OpenAI does not support streaming currently
     const enableStreaming = model.includes('o1') ? false : (params.stream ?? true);
+
+    const updatedMessages = messages.map((message) => ({
+      ...message,
+      role:
+        // Convert 'system' role to 'user' or 'developer' based on the model
+        (model.includes('o1') || model.includes('o3')) && message.role === 'system'
+          ? [...systemToUserModels].some((sub) => model.includes(sub))
+            ? 'user'
+            : 'developer'
+          : message.role,
+    }));
+
     try {
       const response = this.client.path('/chat/completions').post({
         body: {
-          messages: messages as OpenAI.ChatCompletionMessageParam[],
+          messages: updatedMessages as OpenAI.ChatCompletionMessageParam[],
           model,
           ...params,
           stream: enableStreaming,
@@ -98,7 +118,7 @@ export class LobeAzureAI implements LobeRuntimeAI {
 
   private maskSensitiveUrl = (url: string) => {
     // 使用正则表达式匹配 'https://' 后面和 '.azure.com/' 前面的内容
-    const regex = /^(https:\/\/)([^.]+)(\.azure\.com\/.*)$/;
+    const regex = /^(https:\/\/)([^.]+)(\.cognitiveservices\.azure\.com\/.*)$/;
 
     // 使用替换函数
     return url.replace(regex, (match, protocol, subdomain, rest) => {

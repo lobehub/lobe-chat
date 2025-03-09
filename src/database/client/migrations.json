@@ -304,5 +304,14 @@
     "bps": true,
     "folderMillis": 1737609172353,
     "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"messages\" ADD COLUMN \"search\" jsonb;",
+      "\nALTER TABLE \"messages\" ADD COLUMN \"metadata\" jsonb;"
+    ],
+    "bps": true,
+    "folderMillis": 1739901891891,
+    "hash": "78d8fefd8c58938d7bc3da2295a73b35ce2e8d7cb2820f8e817acdb8dd5bebb2"
   }
 ]

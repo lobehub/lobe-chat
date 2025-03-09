@@ -17,18 +17,26 @@ import {
 } from '@/libs/agent-runtime';
 import { filesPrompts } from '@/prompts/files';
 import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
-import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { useSessionStore } from '@/store/session';
+import { getAgentStoreState } from '@/store/agent';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import {
+  aiModelSelectors,
+  aiProviderSelectors,
+  getAiInfraStoreState,
+  useAiInfraStore,
+} from '@/store/aiInfra';
+import { getSessionStoreState } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
-import { useToolStore } from '@/store/tool';
+import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
-import { useUserStore } from '@/store/user';
+import { getUserStoreState, useUserStore } from '@/store/user';
 import {
   modelConfigSelectors,
   modelProviderSelectors,
   preferenceSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
@@ -44,10 +52,10 @@ import { API_ENDPOINTS } from './_url';
 const isCanUseFC = (model: string, provider: string) => {
   // TODO: remove isDeprecatedEdition condition in V2.0
   if (isDeprecatedEdition) {
-    return modelProviderSelectors.isModelEnabledFunctionCall(model)(useUserStore.getState());
+    return modelProviderSelectors.isModelEnabledFunctionCall(model)(getUserStoreState());
   }
 
-  return aiModelSelectors.isModelSupportToolUse(model, provider)(useAiInfraStore.getState());
+  return aiModelSelectors.isModelSupportToolUse(model, provider)(getAiInfraStoreState());
 };
 
 /**
@@ -145,12 +153,10 @@ export function initializeWithClientStore(provider: string, payload: any) {
    * Configuration override order:
    * payload -> providerAuthPayload -> commonOptions
    */
-  return AgentRuntime.initializeWithProviderOptions(provider, {
-    [provider]: {
-      ...commonOptions,
-      ...providerAuthPayload,
-      ...payload,
-    },
+  return AgentRuntime.initializeWithProvider(provider, {
+    ...commonOptions,
+    ...providerAuthPayload,
+    ...payload,
   });
 }
 
@@ -167,6 +173,25 @@ class ChatService {
       },
       params,
     );
+
+    // =================== 0. process search =================== //
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
+
+    const enabledSearch = chatConfig.searchMode !== 'off';
+    const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
+      payload.model,
+      payload.provider!,
+    )(useAiInfraStore.getState());
+
+    const useApplicationBuiltinSearchTool =
+      enabledSearch && !(isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch);
+
+    const pluginIds = [...(enabledPlugins || [])];
+
+    if (useApplicationBuiltinSearchTool) {
+      pluginIds.push(WebBrowsingManifest.identifier);
+    }
+
     // ============  1. preprocess messages   ============ //
 
     const oaiMessages = this.processMessages(
@@ -174,14 +199,14 @@ class ChatService {
         messages,
         model: payload.model,
         provider: payload.provider!,
-        tools: enabledPlugins,
+        tools: pluginIds,
       },
       options,
     );
 
     // ============  2. preprocess tools   ============ //
 
-    const filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
+    let filterTools = toolSelectors.enabledSchema(pluginIds)(getToolStoreState());
 
     // check this model can use function call
     const canUseFC = isCanUseFC(payload.model, payload.provider!);
@@ -193,7 +218,41 @@ class ChatService {
 
     const tools = shouldUseTools ? filterTools : undefined;
 
-    return this.getChatCompletion({ ...params, messages: oaiMessages, tools }, options);
+    // ============  3. process extend params   ============ //
+
+    let extendParams: Record<string, any> = {};
+
+    const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
+      payload.model,
+      payload.provider!,
+    )(useAiInfraStore.getState());
+
+    // model
+    if (isModelHasExtendParams) {
+      const modelExtendParams = aiModelSelectors.modelExtendParams(
+        payload.model,
+        payload.provider!,
+      )(useAiInfraStore.getState());
+      // if model has extended params, then we need to check if the model can use reasoning
+
+      if (modelExtendParams!.includes('enableReasoning') && chatConfig.enableReasoning) {
+        extendParams.thinking = {
+          budget_tokens: chatConfig.reasoningBudgetToken || 1024,
+          type: 'enabled',
+        };
+      }
+    }
+
+    return this.getChatCompletion(
+      {
+        ...params,
+        ...extendParams,
+        enabledSearch: enabledSearch && isModelHasBuiltinSearch ? true : undefined,
+        messages: oaiMessages,
+        tools,
+      },
+      options,
+    );
   };
 
   createAssistantMessageStream = async ({
@@ -224,6 +283,8 @@ class ChatService {
 
     const { provider = ModelProvider.OpenAI, ...res } = params;
 
+    // =================== process model =================== //
+    // ===================================================== //
     let model = res.model || DEFAULT_AGENT_CONFIG.model;
 
     // if the provider is Azure, get the deployment name as the request model
@@ -323,7 +384,7 @@ class ChatService {
    * @param options
    */
   runPluginApi = async (params: PluginRequestPayload, options?: FetchOptions) => {
-    const s = useToolStore.getState();
+    const s = getToolStoreState();
 
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
     const manifest = pluginSelectors.getToolManifestById(params.identifier)(s);
@@ -428,8 +489,20 @@ class ChatService {
         }
 
         case 'assistant': {
+          // signature is a signal of anthropic thinking mode
+          const shouldIncludeThinking = m.reasoning && !!m.reasoning?.signature;
+
           return {
-            content: m.content,
+            content: shouldIncludeThinking
+              ? [
+                  {
+                    signature: m.reasoning!.signature,
+                    thinking: m.reasoning!.content,
+                    type: 'thinking',
+                  } as any,
+                  { text: m.content, type: 'text' },
+                ]
+              : m.content,
             role: m.role,
             tool_calls: m.tools?.map(
               (tool): MessageToolCall => ({
@@ -470,7 +543,7 @@ class ChatService {
       const hasTools = tools && tools?.length > 0;
       const hasFC = hasTools && isCanUseFC(model, provider);
       const toolsSystemRoles =
-        hasFC && toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
+        hasFC && toolSelectors.enabledSystemRoles(tools)(getToolStoreState());
 
       const injectSystemRoles = BuiltinSystemRolePrompts({
         historySummary: options?.historySummary,
@@ -498,9 +571,9 @@ class ChatService {
   };
 
   private mapTrace = (trace?: TracePayload, tag?: TraceTagMap): TracePayload => {
-    const tags = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
+    const tags = sessionMetaSelectors.currentAgentMeta(getSessionStoreState()).tags || [];
 
-    const enabled = preferenceSelectors.userAllowTrace(useUserStore.getState());
+    const enabled = preferenceSelectors.userAllowTrace(getUserStoreState());
 
     if (!enabled) return { ...trace, enabled: false };
 

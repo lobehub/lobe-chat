@@ -4,8 +4,8 @@ import { nanoid } from '@/utils/uuid';
 
 import { ChatStreamCallbacks } from '../../types';
 import {
+  StreamContext,
   StreamProtocolChunk,
-  StreamStack,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
@@ -13,7 +13,7 @@ import {
 
 const transformVertexAIStream = (
   chunk: GenerateContentResponse,
-  stack: StreamStack,
+  stack: StreamContext,
 ): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
   const candidates = chunk.candidates;
@@ -67,7 +67,7 @@ export const VertexAIStream = (
   rawStream: ReadableStream<EnhancedGenerateContentResponse>,
   callbacks?: ChatStreamCallbacks,
 ) => {
-  const streamStack: StreamStack = { id: 'chat_' + nanoid() };
+  const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   return rawStream
     .pipeThrough(createSSEProtocolTransformer(transformVertexAIStream, streamStack))

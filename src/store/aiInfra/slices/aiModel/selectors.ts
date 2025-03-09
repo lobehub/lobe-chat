@@ -1,5 +1,6 @@
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
 import { AiModelSourceEnum } from '@/types/aiModel';
+import { ModelSearchImplement } from '@/types/search';
 
 const aiProviderChatModelListIds = (s: AIProviderStoreState) =>
   s.aiProviderModelList.filter((item) => item.type === 'chat').map((item) => item.id);
@@ -21,7 +22,11 @@ const filteredAiProviderModelList = (s: AIProviderStoreState) => {
 };
 
 const totalAiProviderModelList = (s: AIProviderStoreState) => s.aiProviderModelList.length;
+
 const isEmptyAiProviderModelList = (s: AIProviderStoreState) => totalAiProviderModelList(s) === 0;
+
+const getModelCard = (model: string, provider: string) => (s: AIProviderStoreState) =>
+  s.builtinAiModelList.find((item) => item.id === model && item.providerId === provider);
 
 const hasRemoteModels = (s: AIProviderStoreState) =>
   s.aiProviderModelList.some((m) => m.source === AiModelSourceEnum.Remote);
@@ -69,20 +74,63 @@ const modelContextWindowTokens = (id: string, provider: string) => (s: AIProvide
   return model?.contextWindowTokens;
 };
 
+const modelExtendParams = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return model?.settings?.extendParams;
+};
+
+const isModelHasExtendParams = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const controls = modelExtendParams(id, provider)(s);
+
+  return !!controls && controls.length > 0;
+};
+
+const modelBuiltinSearchImpl = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return model?.settings?.searchImpl;
+};
+
+const isModelHasBuiltinSearch = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const searchImpl = modelBuiltinSearchImpl(id, provider)(s);
+
+  return !!searchImpl;
+};
+
+const isModelHasBuiltinSearchConfig =
+  (id: string, provider: string) => (s: AIProviderStoreState) => {
+    const searchImpl = modelBuiltinSearchImpl(id, provider)(s);
+
+    return (
+      !!searchImpl &&
+      [ModelSearchImplement.Tool, ModelSearchImplement.Params].includes(
+        searchImpl as ModelSearchImplement,
+      )
+    );
+  };
+
 export const aiModelSelectors = {
   aiProviderChatModelListIds,
   disabledAiProviderModelList,
   enabledAiProviderModelList,
   filteredAiProviderModelList,
   getAiModelById,
+  getEnabledModelById,
+  getModelCard,
   hasRemoteModels,
   isEmptyAiProviderModelList,
   isModelEnabled,
+  isModelHasBuiltinSearch,
+  isModelHasBuiltinSearchConfig,
   isModelHasContextWindowToken,
+  isModelHasExtendParams,
   isModelLoading,
   isModelSupportReasoning,
   isModelSupportToolUse,
   isModelSupportVision,
+  modelBuiltinSearchImpl,
   modelContextWindowTokens,
+  modelExtendParams,
   totalAiProviderModelList,
 };

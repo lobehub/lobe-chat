@@ -1,31 +1,39 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
+// https://novita.ai/pricing
+
 const novitaChatModels: AIChatModelCard[] = [
   {
-    contextWindowTokens: 8192,
-    description:
-      'Llama 3.1 8B Instruct 是 Meta 推出的最新版本，优化了高质量对话场景，表现优于许多领先的闭源模型。',
-    displayName: 'Llama 3.1 8B Instruct',
+    contextWindowTokens: 131_072,
+    displayName: 'Llama 3.3 70B Instruct',
     enabled: true,
-    id: 'meta-llama/llama-3.1-8b-instruct',
+    id: 'meta-llama/llama-3.3-70b-instruct',
+    pricing: {
+      input: 0.39,
+      output: 0.39,
+    },
     type: 'chat',
   },
   {
-    contextWindowTokens: 131_072,
-    description:
-      'Llama 3.1 70B Instruct 专为高质量对话而设计，在人类评估中表现突出，特别适合高交互场景。',
-    displayName: 'Llama 3.1 70B Instruct',
-    enabled: true,
-    id: 'meta-llama/llama-3.1-70b-instruct',
+    contextWindowTokens: 16_384,
+    description: 'Llama 3.1 8B Instruct 是 Meta 推出的最新版本，优化了高质量对话场景，表现优于许多领先的闭源模型。',
+    displayName: 'Llama 3.1 8B Instruct',
+    id: 'meta-llama/llama-3.1-8b-instruct',
+    pricing: {
+      input: 0.05,
+      output: 0.05,
+    },
     type: 'chat',
   },
   {
     contextWindowTokens: 32_768,
-    description:
-      'Llama 3.1 405B Instruct 是 Meta最新推出的版本，优化用于生成高质量对话，超越了许多领导闭源模型。',
-    displayName: 'Llama 3.1 405B Instruct',
-    enabled: true,
-    id: 'meta-llama/llama-3.1-405b-instruct',
+    description: 'Llama 3.1 70B Instruct 专为高质量对话而设计，在人类评估中表现突出，特别适合高交互场景。',
+    displayName: 'Llama 3.1 70B Instruct',
+    id: 'meta-llama/llama-3.1-70b-instruct',
+    pricing: {
+      input: 0.34,
+      output: 0.39,
+    },
     type: 'chat',
   },
   {
@@ -33,6 +41,10 @@ const novitaChatModels: AIChatModelCard[] = [
     description: 'Llama 3 8B Instruct 优化了高质量对话场景，性能优于许多闭源模型。',
     displayName: 'Llama 3 8B Instruct',
     id: 'meta-llama/llama-3-8b-instruct',
+    pricing: {
+      input: 0.04,
+      output: 0.04,
+    },
     type: 'chat',
   },
   {
@@ -40,6 +52,10 @@ const novitaChatModels: AIChatModelCard[] = [
     description: 'Llama 3 70B Instruct 优化用于高质量对话场景，在各类人类评估中表现优异。',
     displayName: 'Llama 3 70B Instruct',
     id: 'meta-llama/llama-3-70b-instruct',
+    pricing: {
+      input: 0.51,
+      output: 0.74,
+    },
     type: 'chat',
   },
   {
@@ -48,14 +64,22 @@ const novitaChatModels: AIChatModelCard[] = [
     displayName: 'Gemma 2 9B',
     enabled: true,
     id: 'google/gemma-2-9b-it',
+    pricing: {
+      input: 0.08,
+      output: 0.08,
+    },
     type: 'chat',
   },
   {
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description: 'Mistral Nemo 是多语言支持和高性能编程的7.3B参数模型。',
     displayName: 'Mistral Nemo',
     enabled: true,
     id: 'mistralai/mistral-nemo',
+    pricing: {
+      input: 0.17,
+      output: 0.17,
+    },
     type: 'chat',
   },
   {
@@ -64,14 +88,10 @@ const novitaChatModels: AIChatModelCard[] = [
     displayName: 'Mistral 7B Instruct',
     enabled: true,
     id: 'mistralai/mistral-7b-instruct',
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description: 'WizardLM 2 7B 是微软AI最新的快速轻量化模型，性能接近于现有开源领导模型的10倍。',
-    displayName: 'WizardLM 2 7B',
-    enabled: true,
-    id: 'microsoft/wizardlm 2-7b',
+    pricing: {
+      input: 0.059,
+      output: 0.059,
+    },
     type: 'chat',
   },
   {
@@ -80,6 +100,10 @@ const novitaChatModels: AIChatModelCard[] = [
     displayName: 'WizardLM-2 8x22B',
     enabled: true,
     id: 'microsoft/wizardlm-2-8x22b',
+    pricing: {
+      input: 0.62,
+      output: 0.62,
+    },
     type: 'chat',
   },
   {
@@ -87,6 +111,10 @@ const novitaChatModels: AIChatModelCard[] = [
     description: 'Dolphin Mixtral 8x22B 是一款为指令遵循、对话和编程设计的模型。',
     displayName: 'Dolphin Mixtral 8x22B',
     id: 'cognitivecomputations/dolphin-mixtral-8x22b',
+    pricing: {
+      input: 0.9,
+      output: 0.9,
+    },
     type: 'chat',
   },
   {
@@ -94,13 +122,10 @@ const novitaChatModels: AIChatModelCard[] = [
     description: 'Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2的升级版本，包含最新的内部开发的数据集。',
     displayName: 'Hermes 2 Pro Llama 3 8B',
     id: 'nousresearch/hermes-2-pro-llama-3-8b',
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description: 'Hermes 2 Mixtral 8x7B DPO 是一款高度灵活的多模型合并，旨在提供卓越的创造性体验。',
-    displayName: 'Hermes 2 Mixtral 8x7B DPO',
-    id: 'Nous-Hermes-2-Mixtral-8x7B-DPO',
+    pricing: {
+      input: 0.14,
+      output: 0.14,
+    },
     type: 'chat',
   },
   {
@@ -108,6 +133,10 @@ const novitaChatModels: AIChatModelCard[] = [
     description: 'MythoMax l2 13B 是一款合并了多个顶尖模型的创意与智能相结合的语言模型。',
     displayName: 'MythoMax l2 13B',
     id: 'gryphe/mythomax-l2-13b',
+    pricing: {
+      input: 0.09,
+      output: 0.09,
+    },
     type: 'chat',
   },
   {
@@ -115,6 +144,274 @@ const novitaChatModels: AIChatModelCard[] = [
     description: 'OpenChat 7B 是经过“C-RLFT（条件强化学习微调）”策略精调的开源语言模型库。',
     displayName: 'OpenChat 7B',
     id: 'openchat/openchat-7b',
+    pricing: {
+      input: 0.06,
+      output: 0.06,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 64_000,
+    displayName: 'Deepseek V3 Turbo',
+    id: 'deepseek/deepseek-v3-turbo',
+    pricing: {
+      input: 0.4,
+      output: 1.3,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 64_000,
+    displayName: 'Deepseek R1 Turbo',
+    id: 'deepseek/deepseek-r1-turbo',
+    pricing: {
+      input: 0.7,
+      output: 2.5,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 64_000,
+    displayName: 'Deepseek R1',
+    enabled: true,
+    id: 'deepseek/deepseek-r1',
+    pricing: {
+      input: 4,
+      output: 4,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 64_000,
+    displayName: 'Deepseek V3',
+    enabled: true,
+    id: 'deepseek/deepseek_v3',
+    pricing: {
+      input: 0.89,
+      output: 0.89,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_000,
+    displayName: 'Deepseek R1 Distill Llama 70B',
+    id: 'deepseek/deepseek-r1-distill-llama-70b',
+    pricing: {
+      input: 0.8,
+      output: 0.8,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 64_000,
+    displayName: 'Deepseek R1 Distill Qwen 14B',
+    id: 'deepseek/deepseek-r1-distill-qwen-14b',
+    pricing: {
+      input: 0.15,
+      output: 0.15,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 64_000,
+    displayName: 'Deepseek R1 Distill Qwen 32B',
+    enabled: true,
+    id: 'deepseek/deepseek-r1-distill-qwen-32b',
+    pricing: {
+      input: 0.3,
+      output: 0.3,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 8192,
+    displayName: 'L3 8B Stheno v3.2',
+    id: 'Sao10K/L3-8B-Stheno-v3.2',
+    pricing: {
+      input: 0.05,
+      output: 0.05,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_000,
+    displayName: 'Deepseek R1 Distill Llama 8B',
+    id: 'deepseek/deepseek-r1-distill-llama-8b',
+    pricing: {
+      input: 0.04,
+      output: 0.04,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'Qwen 2.5 72B Instruct',
+    id: 'qwen/qwen-2.5-72b-instruct',
+    pricing: {
+      input: 0.38,
+      output: 0.4,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 16_000,
+    displayName: 'L3 70B Euryale v2.1',
+    id: 'sao10k/l3-70b-euryale-v2.1',
+    pricing: {
+      input: 1.48,
+      output: 1.48,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 4096,
+    displayName: 'Airoboros L2 70B',
+    id: 'jondurbin/airoboros-l2-70b',
+    pricing: {
+      input: 0.5,
+      output: 0.5,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 4096,
+    displayName: 'Nous Hermes Llama2 13B',
+    id: 'nousresearch/nous-hermes-llama2-13b',
+    pricing: {
+      input: 0.17,
+      output: 0.17,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 4096,
+    displayName: 'OpenHermes 2.5 Mistral 7B',
+    id: 'teknium/openhermes-2.5-mistral-7b',
+    pricing: {
+      input: 0.17,
+      output: 0.17,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 4096,
+    displayName: 'Midnight Rose 70B',
+    id: 'sophosympatheia/midnight-rose-70b',
+    pricing: {
+      input: 0.8,
+      output: 0.8,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 8192,
+    displayName: 'L3 8B Lunaris',
+    id: 'sao10k/l3-8b-lunaris',
+    pricing: {
+      input: 0.05,
+      output: 0.05,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768,
+    displayName: 'Qwen 2 VL 72B Instruct',
+    id: 'qwen/qwen-2-vl-72b-instruct',
+    pricing: {
+      input: 0.45,
+      output: 0.45,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_000,
+    displayName: 'Llama 3.2 1B Instruct',
+    id: 'meta-llama/llama-3.2-1b-instruct',
+    pricing: {
+      input: 0.02,
+      output: 0.02,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768,
+    displayName: 'Llama 3.2 11B Vision Instruct',
+    id: 'meta-llama/llama-3.2-11b-vision-instruct',
+    pricing: {
+      input: 0.06,
+      output: 0.06,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768,
+    displayName: 'Llama 3.2 3B Instruct',
+    id: 'meta-llama/llama-3.2-3b-instruct',
+    pricing: {
+      input: 0.03,
+      output: 0.05,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 8192,
+    displayName: 'Llama 3.1 8B Instruct BF16',
+    id: 'meta-llama/llama-3.1-8b-instruct-bf16',
+    pricing: {
+      input: 0.06,
+      output: 0.06,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 16_000,
+    displayName: 'L31 70B Euryale v2.2',
+    id: 'sao10k/l31-70b-euryale-v2.2',
+    pricing: {
+      input: 1.48,
+      output: 1.48,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768,
+    displayName: 'Qwen 2 7B Instruct',
+    id: 'qwen/qwen-2-7b-instruct',
+    pricing: {
+      input: 0.054,
+      output: 0.054,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    displayName: 'QwQ 32B',
+    id: 'qwen/qwq-32b',
+    pricing: {
+      input: 0.18,
+      output: 0.2,
+    },
     type: 'chat',
   },
 ];

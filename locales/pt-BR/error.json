@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} API Key inválido ou em branco, por favor, verifique o {{provider}} API Key e tente novamente",
     "InvalidVertexCredentials": "A autenticação do Vertex falhou, por favor verifique suas credenciais e tente novamente",
     "LocationNotSupportError": "Desculpe, sua localização atual não suporta este serviço de modelo, pode ser devido a restrições geográficas ou serviço não disponível. Por favor, verifique se a localização atual suporta o uso deste serviço ou tente usar outras informações de localização.",
+    "ModelNotFound": "Desculpe, não foi possível solicitar o modelo correspondente. Isso pode ser devido ao modelo não existir ou a falta de permissões de acesso. Por favor, troque a chave da API ou ajuste as permissões de acesso e tente novamente.",
     "NoOpenAIAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
     "OllamaBizError": "Erro de negócio ao solicitar o serviço Ollama, verifique as informações a seguir ou tente novamente",
     "OllamaServiceUnavailable": "O serviço Ollama não está disponível. Verifique se o Ollama está em execução corretamente ou se a configuração de CORS do Ollama está correta",
@@ -100,6 +101,7 @@
     "ProviderBizError": "Erro no serviço {{provider}} solicitado. Por favor, verifique as informações abaixo ou tente novamente.",
     "QuotaLimitReached": "Desculpe, o uso atual de tokens ou o número de solicitações atingiu o limite de quota da chave. Por favor, aumente a quota dessa chave ou tente novamente mais tarde.",
     "StreamChunkError": "Erro de análise do bloco de mensagem da solicitação em fluxo. Verifique se a interface da API atual está em conformidade com os padrões ou entre em contato com seu fornecedor de API para mais informações.",
+    "SubscriptionKeyMismatch": "Desculpe, devido a uma falha ocasional no sistema, o uso da assinatura atual está temporariamente inativo. Por favor, clique no botão abaixo para restaurar a assinatura ou entre em contato conosco por e-mail para obter suporte.",
     "SubscriptionPlanLimit": "Seu limite de pontos de assinatura foi atingido, não é possível usar essa funcionalidade. Por favor, faça um upgrade para um plano superior ou configure a API do modelo personalizado para continuar usando.",
     "SystemTimeNotMatchError": "Desculpe, o horário do seu sistema não coincide com o do servidor. Por favor, verifique o horário do seu sistema e tente novamente.",
     "UnknownChatFetchError": "Desculpe, ocorreu um erro desconhecido na solicitação. Por favor, verifique as informações abaixo ou tente novamente."

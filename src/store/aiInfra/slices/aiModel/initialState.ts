@@ -1,8 +1,9 @@
-import { AiProviderModelListItem } from '@/types/aiModel';
+import { AiProviderModelListItem, LobeDefaultAiModelListItem } from '@/types/aiModel';
 
 export interface AIModelsState {
   aiModelLoadingIds: string[];
   aiProviderModelList: AiProviderModelListItem[];
+  builtinAiModelList: LobeDefaultAiModelListItem[];
   isAiModelListInit?: boolean;
   modelSearchKeyword: string;
 }
@@ -10,5 +11,6 @@ export interface AIModelsState {
 export const initialAIModelState: AIModelsState = {
   aiModelLoadingIds: [],
   aiProviderModelList: [],
+  builtinAiModelList: [],
   modelSearchKeyword: '',
 };

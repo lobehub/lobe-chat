@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} API Anahtarı geçersiz veya boş, lütfen {{provider}} API Anahtarını kontrol edip tekrar deneyin",
     "InvalidVertexCredentials": "Vertex kimlik doğrulaması başarısız oldu, lütfen kimlik bilgilerinizi kontrol edip tekrar deneyin",
     "LocationNotSupportError": "Üzgünüz, bulunduğunuz konum bu model hizmetini desteklemiyor, muhtemelen bölge kısıtlamaları veya hizmetin henüz açılmamış olması nedeniyle. Lütfen mevcut konumun bu hizmeti kullanmaya uygun olup olmadığını doğrulayın veya başka bir konum bilgisi kullanmayı deneyin.",
+    "ModelNotFound": "Üzgünüm, ilgili modele erişim sağlanamadı, model mevcut olmayabilir veya erişim izni yoktur. Lütfen API Anahtarınızı değiştirin veya erişim izinlerinizi ayarladıktan sonra tekrar deneyin.",
     "NoOpenAIAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",
     "OllamaBizError": "Ollama servisine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "OllamaServiceUnavailable": "Ollama servisi kullanılamıyor, lütfen Ollama'nın düzgün çalışıp çalışmadığını kontrol edin veya Ollama'nın çapraz kaynak yapılandırmasının doğru olup olmadığını kontrol edin",
@@ -100,6 +101,7 @@
     "ProviderBizError": "Talep {{provider}} hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "QuotaLimitReached": "Üzgünüz, mevcut Token kullanımı veya istek sayısı bu anahtarın kota (quota) sınırına ulaştı. Lütfen bu anahtarın kotasını artırın veya daha sonra tekrar deneyin.",
     "StreamChunkError": "Akış isteği mesaj parçası çözümleme hatası, lütfen mevcut API arayüzünün standartlara uygun olup olmadığını kontrol edin veya API sağlayıcınızla iletişime geçin.",
+    "SubscriptionKeyMismatch": "Üzgünüz, sistemdeki geçici bir arıza nedeniyle mevcut abonelik kullanımınız geçici olarak devre dışı kalmıştır. Lütfen aşağıdaki düğmeye tıklayarak aboneliğinizi geri yükleyin veya destek almak için bizimle iletişime geçin.",
     "SubscriptionPlanLimit": "Abonelik puanlarınız tükenmiştir, bu özelliği kullanamazsınız. Lütfen daha yüksek bir plana geçin veya özel model API'sini yapılandırarak devam edin.",
     "SystemTimeNotMatchError": "Üzgünüm, sistem saatiniz ile sunucu arasında bir uyumsuzluk var, lütfen sistem saatinizi kontrol edip tekrar deneyin",
     "UnknownChatFetchError": "Üzgünüm, bilinmeyen bir istek hatasıyla karşılaştık. Lütfen aşağıdaki bilgileri kontrol edin veya tekrar deneyin."

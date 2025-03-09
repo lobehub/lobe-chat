@@ -9,6 +9,25 @@ export interface HunyuanModelCard {
 
 export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.hunyuan.cloud.tencent.com/v1',
+  chatCompletion: {
+    handlePayload: (payload) => {
+      const { enabledSearch, ...rest } = payload;
+
+      return {
+        ...rest,
+        stream: true,
+        ...(enabledSearch && {
+          citation: true,
+          enable_enhancement: true,
+          /*
+          enable_multimedia: true,
+          */
+          enable_speed_search: process.env.HUNYUAN_ENABLE_SPEED_SEARCH === '1',
+          search_info: true,
+        }),
+      } as any;
+    },
+  },
   debug: {
     chatCompletion: () => process.env.DEBUG_HUNYUAN_CHAT_COMPLETION === '1',
   },

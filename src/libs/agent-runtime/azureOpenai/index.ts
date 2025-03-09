@@ -1,6 +1,8 @@
 import OpenAI, { AzureOpenAI } from 'openai';
 import type { Stream } from 'openai/streaming';
 
+import { systemToUserModels } from '@/const/models';
+
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
@@ -13,18 +15,18 @@ import { OpenAIStream } from '../utils/streams';
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   client: AzureOpenAI;
 
-  constructor(endpoint?: string, apikey?: string, apiVersion?: string) {
-    if (!apikey || !endpoint)
+  constructor(params: { apiKey?: string; apiVersion?: string; baseURL?: string } = {}) {
+    if (!params.apiKey || !params.baseURL)
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new AzureOpenAI({
-      apiKey: apikey,
-      apiVersion,
+      apiKey: params.apiKey,
+      apiVersion: params.apiVersion,
       dangerouslyAllowBrowser: true,
-      endpoint,
+      endpoint: params.baseURL,
     });
 
-    this.baseURL = endpoint;
+    this.baseURL = params.baseURL;
   }
 
   baseURL: string;
@@ -33,9 +35,21 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
     const { messages, model, ...params } = payload;
     // o1 series models on Azure OpenAI does not support streaming currently
     const enableStreaming = model.includes('o1') ? false : (params.stream ?? true);
+
+    const updatedMessages = messages.map((message) => ({
+      ...message,
+      role:
+        // Convert 'system' role to 'user' or 'developer' based on the model
+        (model.includes('o1') || model.includes('o3')) && message.role === 'system'
+          ? [...systemToUserModels].some((sub) => model.includes(sub))
+            ? 'user'
+            : 'developer'
+          : message.role,
+    }));
+
     try {
       const response = await this.client.chat.completions.create({
-        messages: messages as OpenAI.ChatCompletionMessageParam[],
+        messages: updatedMessages as OpenAI.ChatCompletionMessageParam[],
         model,
         ...params,
         max_completion_tokens: null,

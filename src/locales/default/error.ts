@@ -91,10 +91,14 @@ export default {
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 API Key',
     InvalidClerkUser: '很抱歉，你当前尚未登录，请先登录或注册账号后继续操作',
     SystemTimeNotMatchError: '很抱歉，您的系统时间和服务器不匹配，请检查您的系统时间后重试',
+    SubscriptionKeyMismatch:
+      '很抱歉，由于系统偶发故障，当前订阅用量暂时失效，请点击下方按钮恢复订阅，或邮件联系我们获取支持',
     LocationNotSupportError:
       '很抱歉，你的所在地区不支持此模型服务，可能是由于区域限制或服务未开通。请确认当前地区是否支持使用此服务，或尝试使用切换到其他地区后重试。',
     InsufficientQuota:
       '很抱歉，该密钥的配额(quota)已达上限，请检查账户余额是否充足，或增大密钥配额后再试',
+    ModelNotFound:
+      '很抱歉，无法请求到相应的模型，可能是模型不存在或者没有访问权限导致，请更换 API Key 或调整访问权限后重试',
     ExceededContextWindow: '当前请求内容超出模型可处理的长度，请减少内容量后重试',
     QuotaLimitReached:
       '很抱歉，当前 Token 用量或请求次数已达该密钥的配额(quota)上限，请增加该密钥的配额或稍后再试',

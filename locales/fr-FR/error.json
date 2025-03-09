@@ -80,6 +80,7 @@
     "InvalidProviderAPIKey": "{{provider}} API Key incorrect or missing, please check {{provider}} API Key and try again",
     "InvalidVertexCredentials": "L'authentification Vertex a échoué, veuillez vérifier vos informations d'authentification et réessayer",
     "LocationNotSupportError": "Désolé, votre emplacement actuel ne prend pas en charge ce service de modèle, peut-être en raison de restrictions géographiques ou de services non disponibles. Veuillez vérifier si votre emplacement actuel prend en charge ce service ou essayer avec une autre localisation.",
+    "ModelNotFound": "Désolé, il n'est pas possible de demander le modèle correspondant, il se peut que le modèle n'existe pas ou que vous n'ayez pas les droits d'accès. Veuillez changer la clé API ou ajuster les droits d'accès, puis réessayez.",
     "NoOpenAIAPIKey": "La clé API OpenAI est vide. Veuillez ajouter une clé API OpenAI personnalisée",
     "OllamaBizError": "Erreur commerciale lors de la demande de service Ollama, veuillez vérifier les informations ci-dessous ou réessayer",
     "OllamaServiceUnavailable": "Le service Ollama n'est pas disponible. Veuillez vérifier si Ollama fonctionne correctement ou si la configuration de la communication inter-domaines d'Ollama est correcte.",
@@ -100,6 +101,7 @@
     "ProviderBizError": "Erreur de service {{provider}}. Veuillez vérifier les informations suivantes ou réessayer.",
     "QuotaLimitReached": "Désolé, l'utilisation actuelle des tokens ou le nombre de requêtes a atteint la limite de quota de cette clé. Veuillez augmenter le quota de cette clé ou réessayer plus tard.",
     "StreamChunkError": "Erreur de parsing du bloc de message de la requête en streaming. Veuillez vérifier si l'API actuelle respecte les normes ou contacter votre fournisseur d'API pour des conseils.",
+    "SubscriptionKeyMismatch": "Nous sommes désolés, en raison d'une défaillance système occasionnelle, l'utilisation actuelle de l'abonnement est temporairement inactive. Veuillez cliquer sur le bouton ci-dessous pour rétablir votre abonnement ou nous contacter par e-mail pour obtenir de l'aide.",
     "SubscriptionPlanLimit": "Votre quota d'abonnement est épuisé, vous ne pouvez pas utiliser cette fonctionnalité. Veuillez passer à un plan supérieur ou configurer l'API du modèle personnalisé pour continuer à l'utiliser.",
     "SystemTimeNotMatchError": "Désolé, l'heure de votre système ne correspond pas à celle du serveur. Veuillez vérifier l'heure de votre système et réessayer.",
     "UnknownChatFetchError": "Désolé, une erreur de requête inconnue s'est produite. Veuillez vérifier les informations ci-dessous ou réessayer."

@@ -1,7 +1,7 @@
 import { AgentState, initialAgentChatState } from './slices/chat/initialState';
 
-export type SessionStoreState = AgentState;
+export type AgentStoreState = AgentState;
 
-export const initialState: SessionStoreState = {
+export const initialState: AgentStoreState = {
   ...initialAgentChatState,
 };
