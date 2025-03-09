@@ -19,12 +19,7 @@ import { filesPrompts } from '@/prompts/files';
 import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
-import {
-  aiModelSelectors,
-  aiProviderSelectors,
-  getAiInfraStoreState,
-  useAiInfraStore,
-} from '@/store/aiInfra';
+import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getSessionStoreState } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { getToolStoreState } from '@/store/tool';
@@ -74,9 +69,9 @@ const findDeploymentName = (model: string, provider: string) => {
     if (deploymentName) deploymentId = deploymentName;
   } else {
     // find the model by id
-    const modelItem = useAiInfraStore
-      .getState()
-      .enabledAiModels?.find((i) => i.id === model && i.providerId === provider);
+    const modelItem = getAiInfraStoreState().enabledAiModels?.find(
+      (i) => i.id === model && i.providerId === provider,
+    );
 
     if (modelItem && modelItem.config?.deploymentName) {
       deploymentId = modelItem.config?.deploymentName;
@@ -91,7 +86,7 @@ const isEnableFetchOnClient = (provider: string) => {
   if (isDeprecatedEdition) {
     return modelConfigSelectors.isProviderFetchOnClient(provider)(useUserStore.getState());
   } else {
-    return aiProviderSelectors.isProviderFetchOnClient(provider)(useAiInfraStore.getState());
+    return aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());
   }
 };
 
@@ -181,10 +176,10 @@ class ChatService {
     const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
       payload.model,
       payload.provider!,
-    )(useAiInfraStore.getState());
+    )(getAiInfraStoreState());
 
-    const useApplicationBuiltinSearchTool =
-      enabledSearch && !(isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch);
+    const useModelSearch = isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch;
+    const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
     const pluginIds = [...(enabledPlugins || [])];
 
@@ -225,14 +220,14 @@ class ChatService {
     const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
       payload.model,
       payload.provider!,
-    )(useAiInfraStore.getState());
+    )(getAiInfraStoreState());
 
     // model
     if (isModelHasExtendParams) {
       const modelExtendParams = aiModelSelectors.modelExtendParams(
         payload.model,
         payload.provider!,
-      )(useAiInfraStore.getState());
+      )(getAiInfraStoreState());
       // if model has extended params, then we need to check if the model can use reasoning
 
       if (modelExtendParams!.includes('enableReasoning') && chatConfig.enableReasoning) {
@@ -241,13 +236,19 @@ class ChatService {
           type: 'enabled',
         };
       }
+      if (
+        modelExtendParams!.includes('disableContextCaching') &&
+        chatConfig.disableContextCaching
+      ) {
+        extendParams.enabledContextCaching = false;
+      }
     }
 
     return this.getChatCompletion(
       {
         ...params,
         ...extendParams,
-        enabledSearch: enabledSearch && isModelHasBuiltinSearch ? true : undefined,
+        enabledSearch: enabledSearch && useModelSearch ? true : undefined,
         messages: oaiMessages,
         tools,
       },
@@ -351,9 +352,8 @@ class ChatService {
 
     // TODO: remove `!isDeprecatedEdition` condition in V2.0
     if (!isDeprecatedEdition && !isBuiltin) {
-      const providerConfig = aiProviderSelectors.providerConfigById(provider)(
-        useAiInfraStore.getState(),
-      );
+      const providerConfig =
+        aiProviderSelectors.providerConfigById(provider)(getAiInfraStoreState());
 
       sdkType = providerConfig?.settings.sdkType || 'openai';
     }
