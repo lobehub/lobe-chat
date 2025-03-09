@@ -506,6 +506,9 @@
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet, Opus'tan daha fazla yetenek ve Sonnet'ten daha hızlı bir hız sunar; aynı zamanda Sonnet ile aynı fiyatı korur. Sonnet, programlama, veri bilimi, görsel işleme ve ajan görevlerinde özellikle başarılıdır."
   },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet, Anthropic'in şimdiye kadarki en akıllı modeli ve piyasadaki ilk karma akıl yürütme modelidir. Claude 3.7 Sonnet, neredeyse anlık yanıtlar veya uzatılmış adım adım düşünme süreçleri üretebilir; kullanıcılar bu süreçleri net bir şekilde görebilir. Sonnet, programlama, veri bilimi, görsel işleme ve temsilci görevlerde özellikle yeteneklidir."
+  },
   "aya": {
     "description": "Aya 23, Cohere tarafından sunulan çok dilli bir modeldir, 23 dili destekler ve çok dilli uygulamalar için kolaylık sağlar."
   },
