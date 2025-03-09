@@ -8,7 +8,6 @@ import { FetchEventSourceInit } from '../fetchEventSource';
 import { fetchEventSource } from '../fetchEventSource';
 import { fetchSSE } from '../fetchSSE';
 
-// 模拟 i18next
 vi.mock('i18next', () => ({
   t: vi.fn((key) => `translated_${key}`),
 }));
@@ -17,7 +16,6 @@ vi.mock('../fetchEventSource', () => ({
   fetchEventSource: vi.fn(),
 }));
 
-// 在每次测试后清理所有模拟
 afterEach(() => {
   vi.restoreAllMocks();
 });
@@ -159,8 +157,7 @@ describe('fetchSSE', () => {
     expectedMessages.forEach((message, index) => {
       expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
     });
-    
-    // more assertions for each character...
+
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       observationId: null,
       toolCalls: undefined,
@@ -188,6 +185,7 @@ describe('fetchSSE', () => {
       await fetchSSE('/', {
         onMessageHandle: mockOnMessageHandle,
         onFinish: mockOnFinish,
+        smoothing: false,
       });
 
       expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hello', type: 'reasoning' });
@@ -225,7 +223,7 @@ describe('fetchSSE', () => {
       grounding: 'Hello',
       type: 'grounding',
     });
-    
+
     expect(mockOnFinish).toHaveBeenCalledWith('hi', {
       observationId: null,
       toolCalls: undefined,
@@ -268,7 +266,6 @@ describe('fetchSSE', () => {
       smoothing: true,
     });
 
-    // TODO: need to check whether the `aarg1` is correct
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, {
       isAnimationActives: [true, true],
       tool_calls: [
@@ -286,7 +283,6 @@ describe('fetchSSE', () => {
       type: 'tool_calls',
     });
 
-    // more assertions for each character...
     expect(mockOnFinish).toHaveBeenCalledWith('', {
       observationId: null,
       toolCalls: [
