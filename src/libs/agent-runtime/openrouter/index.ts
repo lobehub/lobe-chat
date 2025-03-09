@@ -2,7 +2,7 @@ import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
-import { OpenRouterModelCard, OpenRouterModelExtraInfo } from './type';
+import { OpenRouterModelCard, OpenRouterModelExtraInfo, OpenRouterReasoning } from './type';
 
 const formatPrice = (price: string) => {
   if (price === '-1') return undefined;
@@ -13,10 +13,19 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://openrouter.ai/api/v1',
   chatCompletion: {
     handlePayload: (payload) => {
+      const { thinking } = payload;
+
+      let reasoning: OpenRouterReasoning = {};
+      if (thinking?.type === 'enabled') {
+        reasoning = {
+          max_tokens: thinking.budget_tokens,
+        };
+      }
+
       return {
         ...payload,
-        include_reasoning: true,
         model: payload.enabledSearch ? `${payload.model}:online` : payload.model,
+        reasoning,
         stream: payload.stream ?? true,
       } as any;
     },
