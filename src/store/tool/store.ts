@@ -30,3 +30,5 @@ const createStore: StateCreator<ToolStore, [['zustand/devtools', never]]> = (...
 const devtools = createDevtools('tools');
 
 export const useToolStore = createWithEqualityFn<ToolStore>()(devtools(createStore), shallow);
+
+export const getToolStoreState = () => useToolStore.getState();

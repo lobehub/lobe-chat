@@ -31,3 +31,5 @@ export const useSessionStore = createWithEqualityFn<SessionStore>()(
   ),
   shallow,
 );
+
+export const getSessionStoreState = () => useSessionStore.getState();
