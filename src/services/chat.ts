@@ -181,10 +181,16 @@ class ChatService {
     const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
       payload.model,
       payload.provider!,
-    )(useAiInfraStore.getState());
+    )(getAiInfraStoreState());
 
-    const useApplicationBuiltinSearchTool =
-      enabledSearch && !(isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch);
+    console.log(
+      'isModelHasBuiltinSearch',
+      isModelHasBuiltinSearch,
+      'useModelBuiltinSearch',
+      chatConfig.useModelBuiltinSearch,
+    );
+    const useModelSearch = isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch;
+    const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
     const pluginIds = [...(enabledPlugins || [])];
 
@@ -247,7 +253,7 @@ class ChatService {
       {
         ...params,
         ...extendParams,
-        enabledSearch: enabledSearch && isModelHasBuiltinSearch ? true : undefined,
+        enabledSearch: enabledSearch && useModelSearch ? true : undefined,
         messages: oaiMessages,
         tools,
       },
