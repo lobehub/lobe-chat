@@ -232,8 +232,10 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
           };
 
           if (debug?.chatCompletion?.()) {
-            console.log('[requestPayload]:', JSON.stringify(finalPayload));
+            console.log('[requestPayload]');
+            console.log(JSON.stringify(finalPayload), '\n');
           }
+
           response = await this.client.chat.completions.create(finalPayload, {
             // https://github.com/lobehub/lobe-chat/pull/318
             headers: { Accept: '*/*', ...options?.requestHeaders },
