@@ -64,6 +64,9 @@
     "stop": "Stop",
     "warp": "New Line"
   },
+  "intentUnderstanding": {
+    "title": "Analyzing and understanding your intent..."
+  },
   "knowledgeBase": {
     "all": "All Content",
     "allFiles": "All Files",
@@ -144,7 +147,6 @@
         "desc": "Intelligently determine whether a search is needed based on the conversation content",
         "title": "Smart Online Search"
       },
-      "disable": "The current model does not support function calls, so the smart online search feature is unavailable",
       "off": {
         "desc": "Use only the model's basic knowledge without performing a web search",
         "title": "Disable Online Search"
@@ -154,6 +156,10 @@
         "title": "Always Online"
       },
       "useModelBuiltin": "Use the model's built-in search engine"
+    },
+    "searchModel": {
+      "desc": "The current model does not support function calls, so it needs to be paired with a model that does support function calls for online searching.",
+      "title": "Search Assistant Model"
     },
     "title": "Online Search"
   },

@@ -62,5 +62,11 @@ export const AgentChatConfigSchema = z.object({
   enableReasoningEffort: z.boolean().optional(),
   historyCount: z.number().optional(),
   reasoningBudgetToken: z.number().optional(),
+  searchFCModel: z
+    .object({
+      model: z.string(),
+      provider: z.string(),
+    })
+    .optional(),
   searchMode: z.enum(['off', 'on', 'auto']).optional(),
 });

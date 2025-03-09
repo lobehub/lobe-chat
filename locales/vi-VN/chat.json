@@ -64,6 +64,9 @@
     "stop": "Dừng",
     "warp": "Xuống dòng"
   },
+  "intentUnderstanding": {
+    "title": "Đang phân tích và hiểu ý định của bạn..."
+  },
   "knowledgeBase": {
     "all": "Tất cả nội dung",
     "allFiles": "Tất cả tệp",
@@ -144,7 +147,6 @@
         "desc": "Thông minh xác định xem có cần tìm kiếm dựa trên nội dung cuộc trò chuyện",
         "title": "Kết nối thông minh"
       },
-      "disable": "Mô hình hiện tại không hỗ trợ gọi hàm, do đó không thể sử dụng chức năng kết nối thông minh",
       "off": {
         "desc": "Chỉ sử dụng kiến thức cơ bản của mô hình, không thực hiện tìm kiếm trên mạng",
         "title": "Tắt kết nối"
@@ -154,6 +156,10 @@
         "title": "Luôn kết nối"
       },
       "useModelBuiltin": "Sử dụng công cụ tìm kiếm tích hợp của mô hình"
+    },
+    "searchModel": {
+      "desc": "Mô hình hiện tại không hỗ trợ gọi hàm, vì vậy cần kết hợp với mô hình hỗ trợ gọi hàm để tìm kiếm trực tuyến",
+      "title": "Mô hình hỗ trợ tìm kiếm"
     },
     "title": "Tìm kiếm trực tuyến"
   },
