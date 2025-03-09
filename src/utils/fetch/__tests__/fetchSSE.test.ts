@@ -8,7 +8,6 @@ import { FetchEventSourceInit } from '../fetchEventSource';
 import { fetchEventSource } from '../fetchEventSource';
 import { fetchSSE } from '../fetchSSE';
 
-// 模拟 i18next
 vi.mock('i18next', () => ({
   t: vi.fn((key) => `translated_${key}`),
 }));
@@ -17,7 +16,6 @@ vi.mock('../fetchEventSource', () => ({
   fetchEventSource: vi.fn(),
 }));
 
-// 在每次测试后清理所有模拟
 afterEach(() => {
   vi.restoreAllMocks();
 });
@@ -43,6 +41,51 @@ describe('fetchSSE', () => {
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hello', type: 'text' });
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: ' World', type: 'text' });
+    expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
+      observationId: null,
+      toolCalls: undefined,
+      traceId: null,
+      type: 'done',
+    });
+  });
+
+  it('should handle text smoothing correctly when smoothing is undefined', async () => {
+    const mockOnMessageHandle = vi.fn();
+    const mockOnFinish = vi.fn();
+
+    (fetchEventSource as any).mockImplementationOnce(
+      async (url: string, options: FetchEventSourceInit) => {
+        options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
+        options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+        await sleep(100);
+        options.onmessage!({ event: 'text', data: JSON.stringify(' World') } as any);
+      },
+    );
+
+    await fetchSSE('/', {
+      onMessageHandle: mockOnMessageHandle,
+      onFinish: mockOnFinish,
+    });
+
+    // Should use default smoothing behavior (true)
+    const expectedMessages = [
+      { text: 'H', type: 'text' },
+      { text: 'e', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'o', type: 'text' },
+      { text: ' ', type: 'text' },
+      { text: 'W', type: 'text' },
+      { text: 'o', type: 'text' },
+      { text: 'r', type: 'text' },
+      { text: 'l', type: 'text' },
+      { text: 'd', type: 'text' },
+    ];
+
+    expectedMessages.forEach((message, index) => {
+      expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
+    });
+
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       observationId: null,
       toolCalls: undefined,
@@ -160,7 +203,6 @@ describe('fetchSSE', () => {
       expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
     });
 
-    // more assertions for each character...
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       observationId: null,
       toolCalls: undefined,
@@ -269,7 +311,6 @@ describe('fetchSSE', () => {
       smoothing: true,
     });
 
-    // TODO: need to check whether the `aarg1` is correct
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, {
       isAnimationActives: [true, true],
       tool_calls: [
@@ -287,7 +328,6 @@ describe('fetchSSE', () => {
       type: 'tool_calls',
     });
 
-    // more assertions for each character...
     expect(mockOnFinish).toHaveBeenCalledWith('', {
       observationId: null,
       toolCalls: [
