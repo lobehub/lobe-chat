@@ -506,6 +506,9 @@
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet biedt mogelijkheden die verder gaan dan Opus en een snellere snelheid dan Sonnet, terwijl het dezelfde prijs als Sonnet behoudt. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
   },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet is het meest geavanceerde model van Anthropic tot nu toe en het eerste hybride redeneermodel op de markt. Claude 3.7 Sonnet kan bijna onmiddellijke reacties of uitgebreide stapsgewijze overpeinzingen genereren, waarbij gebruikers deze processen duidelijk kunnen volgen. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
+  },
   "aya": {
     "description": "Aya 23 is een meertalig model van Cohere, ondersteunt 23 talen en biedt gemak voor diverse taaltoepassingen."
   },
