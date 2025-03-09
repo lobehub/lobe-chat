@@ -37,7 +37,7 @@ const provider = {
   id: 'logto',
   provider: LobeLogtoProvider({
     authorization: {
-      params: { scope: 'openid offline_access profile email' },
+      params: { scope: 'openid profile email' },
     },
     // You can get the issuer value from the Logto Application Details page,
     // in the field "Issuer endpoint"
