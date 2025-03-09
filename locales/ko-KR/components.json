@@ -85,6 +85,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "활성화된 모델이 없습니다. 설정으로 이동하여 활성화하세요",
+    "emptyProvider": "활성화된 서비스 제공자가 없습니다. 설정으로 가서 활성화하세요.",
+    "goToSettings": "설정으로 가기",
     "provider": "제공자"
   },
   "OllamaSetupGuide": {
