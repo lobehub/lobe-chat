@@ -1,7 +1,7 @@
+import type { ChatModelCard } from '@/types/llm';
+
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
-
-import type { ChatModelCard } from '@/types/llm';
 
 export interface MistralModelCard {
   capabilities: {
@@ -16,6 +16,9 @@ export interface MistralModelCard {
 export const LobeMistralAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.mistral.ai/v1',
   chatCompletion: {
+    // Mistral API does not support stream_options: { include_usage: true }
+    // refs: https://github.com/lobehub/lobe-chat/issues/6825
+    excludeUsage: true,
     handlePayload: (payload) => ({
       ...(payload.max_tokens !== undefined && { max_tokens: payload.max_tokens }),
       messages: payload.messages as any,
@@ -33,12 +36,14 @@ export const LobeMistralAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const modelsPage = await client.models.list() as any;
+    const modelsPage = (await client.models.list()) as any;
     const modelList: MistralModelCard[] = modelsPage.data;
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: model.max_context_length,
@@ -47,9 +52,7 @@ export const LobeMistralAI = LobeOpenAICompatibleFactory({
           enabled: knownModel?.enabled || false,
           functionCall: model.capabilities.function_calling,
           id: model.id,
-          reasoning:
-            knownModel?.abilities?.reasoning
-            || false,
+          reasoning: knownModel?.abilities?.reasoning || false,
           vision: model.capabilities.vision,
         };
       })
