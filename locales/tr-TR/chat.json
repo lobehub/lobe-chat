@@ -64,6 +64,9 @@
     "stop": "Dur",
     "warp": "Satır atla"
   },
+  "intentUnderstanding": {
+    "title": "Niyetinizi analiz ediyor ve anlıyor..."
+  },
   "knowledgeBase": {
     "all": "Tüm İçerik",
     "allFiles": "Tüm Dosyalar",
@@ -144,7 +147,6 @@
         "desc": "Sohbet içeriğine göre akıllıca arama gerekip gerekmediğini belirler",
         "title": "Akıllı Bağlantı"
       },
-      "disable": "Mevcut model fonksiyon çağrısını desteklemediği için akıllı bağlantı özelliği kullanılamaz",
       "off": {
         "desc": "Sadece modelin temel bilgilerini kullanır, ağ araması yapmaz",
         "title": "Bağlantıyı Kapat"
@@ -154,6 +156,10 @@
         "title": "Her Zaman Bağlantıda"
       },
       "useModelBuiltin": "Modelin yerleşik arama motorunu kullan"
+    },
+    "searchModel": {
+      "desc": "Mevcut model fonksiyon çağrısını desteklemiyor, bu nedenle çevrimiçi arama yapmak için fonksiyon çağrısını destekleyen bir model ile birlikte kullanılması gerekiyor",
+      "title": "Arama Yardımcı Modeli"
     },
     "title": "Ağ Araması"
   },

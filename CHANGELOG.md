@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.70.0](https://github.com/lobehub/lobe-chat/compare/v1.69.6...v1.70.0)
+
+<sup>Released on **2025-03-09**</sup>
+
+#### ✨ Features
+
+- **misc**: Support no-fc models like deepseek r1 with online search.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support no-fc models like deepseek r1 with online search, closes [#6842](https://github.com/lobehub/lobe-chat/issues/6842) ([f284c25](https://github.com/lobehub/lobe-chat/commit/f284c25))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.69.6](https://github.com/lobehub/lobe-chat/compare/v1.69.5...v1.69.6)
 
 <sup>Released on **2025-03-09**</sup>

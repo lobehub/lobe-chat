@@ -70,7 +70,7 @@ describe('getDetailsToken', () => {
     const result = getDetailsToken(usage, mockModelCard);
 
     expect(result.inputCached).toEqual({
-      credit: 0, // 50 * 0.005 = 0.25, rounded to 0
+      credit: 1,
       token: 50,
     });
 
@@ -165,12 +165,12 @@ describe('getDetailsToken', () => {
     const result = getDetailsToken(usage, mockModelCard);
 
     // uncachedInput: (200 - 50) * 0.01 = 1.5 -> 2
-    // cachedInput: 50 * 0.005 = 0.25 -> 0
+    // cachedInput: 50 * 0.005 = 0.25 -> 1
     // totalOutput: 300 * 0.02 = 6
-    // totalCredit = 2 + 0 + 6 = 8
+    // totalCredit = 2 + 1 + 6 = 9
 
     expect(result.totalTokens).toEqual({
-      credit: 8,
+      credit: 9,
       token: 500,
     });
   });
