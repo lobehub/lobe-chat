@@ -13,6 +13,8 @@ import { messageService } from '@/services/message';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { getAgentStoreState } from '@/store/agent/store';
+import { aiModelSelectors } from '@/store/aiInfra';
+import { getAiInfraStoreState } from '@/store/aiInfra/store';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -23,8 +25,6 @@ import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
-import {getAiInfraStoreState} from "@/store/aiInfra/store";
-import {aiModelSelectors} from "@/store/aiInfra";
 
 const n = setNamespace('ai');
 
@@ -116,6 +116,8 @@ export interface AIGenerateAction {
     id?: string,
     action?: string,
   ) => AbortController | undefined;
+
+  internal_toggleSearchWorkflow: (loading: boolean, id?: string) => void;
 }
 
 export const generateAIChat: StateCreator<
@@ -354,7 +356,13 @@ export const generateAIChat: StateCreator<
 
       let isToolsCalling = false;
 
-      const abortController = new AbortController();
+      const abortController = get().internal_toggleChatLoading(
+        true,
+        assistantId,
+        n('generateMessage(start)', { messageId: assistantId, messages }) as string,
+      );
+
+      get().internal_toggleSearchWorkflow(true, assistantId);
       await chatService.fetchPresetTaskResult({
         params: { messages, model, provider, plugins: [WebBrowsingManifest.identifier] },
         onFinish: async (_, { toolCalls, usage }) => {
@@ -371,9 +379,8 @@ export const generateAIChat: StateCreator<
         },
         abortController,
         onMessageHandle: async (chunk) => {
-          console.log('chunk:', chunk);
-
           if (chunk.type === 'tool_calls') {
+            get().internal_toggleSearchWorkflow(false, assistantId);
             get().internal_toggleToolCallingStreaming(assistantId, chunk.isAnimationActives);
             get().internal_dispatchMessage({
               id: assistantId,
@@ -384,10 +391,17 @@ export const generateAIChat: StateCreator<
           }
 
           if (chunk.type === 'text') {
-            abortController.abort('not fc');
+            abortController!.abort('not fc');
           }
         },
       });
+
+      get().internal_toggleChatLoading(
+        false,
+        assistantId,
+        n('generateMessage(start)', { messageId: assistantId, messages }) as string,
+      );
+      get().internal_toggleSearchWorkflow(false, assistantId);
 
       // 4. if it's the function call message, trigger the function method
       if (isToolsCalling) {
@@ -712,5 +726,9 @@ export const generateAIChat: StateCreator<
       false,
       `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
     );
+  },
+
+  internal_toggleSearchWorkflow: (loading, id) => {
+    return get().internal_toggleLoadingArrays('searchWorkflowLoadingIds', loading, id);
   },
 });

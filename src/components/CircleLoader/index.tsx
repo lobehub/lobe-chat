@@ -1,4 +1,5 @@
 import { createStyles } from 'antd-style';
+import { memo } from 'react';
 
 export const useStyles = createStyles(({ css, token }, borderWidth: number = 2.5) => ({
   background: css`
@@ -44,7 +45,7 @@ export const useStyles = createStyles(({ css, token }, borderWidth: number = 2.5
   `,
 }));
 
-const Loader = () => {
+const CircleLoader = memo(() => {
   const { styles } = useStyles();
 
   return (
@@ -53,6 +54,6 @@ const Loader = () => {
       <div className={styles.background} />
     </div>
   );
-};
+});
 
-export default Loader;
+export default CircleLoader;

@@ -65,6 +65,9 @@ export default {
     stop: '停止',
     warp: '换行',
   },
+  intentUnderstanding: {
+    title: '正在分析并理解意图您的意图...',
+  },
   knowledgeBase: {
     all: '所有内容',
     allFiles: '所有文件',
