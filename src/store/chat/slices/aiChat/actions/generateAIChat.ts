@@ -351,7 +351,7 @@ export const generateAIChat: StateCreator<
     )(getAiInfraStoreState());
     const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(getAgentStoreState());
 
-    if (isAgentEnableSearch && !isModelSupportToolUse && !params?.inSearchWorkflow) {
+    if (isAgentEnableSearch && !isModelSupportToolUse) {
       const { model, provider } = agentChatConfigSelectors.searchFCModel(getAgentStoreState());
 
       let isToolsCalling = false;
@@ -418,7 +418,6 @@ export const generateAIChat: StateCreator<
         await triggerToolCalls(assistantId, {
           threadId: params?.threadId,
           inPortalThread: params?.inPortalThread,
-          inSearchWorkflow: true,
         });
 
         // then story the workflow
