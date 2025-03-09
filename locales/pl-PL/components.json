@@ -85,6 +85,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "Brak włączonych modeli, przejdź do ustawień i włącz je",
+    "emptyProvider": "Nie ma aktywnego dostawcy usług, przejdź do ustawień, aby go włączyć",
+    "goToSettings": "Przejdź do ustawień",
     "provider": "Dostawca"
   },
   "OllamaSetupGuide": {

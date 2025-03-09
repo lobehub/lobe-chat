@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix context cache control and model builtin search switch."]
+    },
+    "date": "2025-03-09",
+    "version": "1.69.6"
+  },
+  {
+    "children": {
       "improvements": ["Support openrouter claude 3.7 sonnet reasoning."]
     },
     "date": "2025-03-09",

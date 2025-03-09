@@ -67,7 +67,7 @@ describe('browserless', () => {
       contentType: 'text',
       description: expect.any(String),
       length: expect.any(Number),
-      siteName: null,
+      siteName: undefined,
       title: 'Test Title',
       url: 'https://example.com',
     });

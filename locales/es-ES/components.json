@@ -85,6 +85,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "No hay modelos habilitados. Vaya a la configuración para habilitarlos.",
+    "emptyProvider": "No hay proveedores habilitados, por favor ve a la configuración para activarlos",
+    "goToSettings": "Ir a la configuración",
     "provider": "Proveedor"
   },
   "OllamaSetupGuide": {
