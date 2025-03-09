@@ -21,8 +21,16 @@
     },
     "searchEngine": "محرك البحث:",
     "searchResult": "عدد النتائج:",
+    "searchTimeRange": "نطاق الوقت:",
     "summary": "ملخص",
     "summaryTooltip": "تلخيص المحتوى الحالي",
+    "timeRange": {
+      "anytime": "في أي وقت",
+      "day": "اليوم الماضي",
+      "month": "الشهر الماضي",
+      "week": "الأسبوع الماضي",
+      "year": "السنة الماضية"
+    },
     "viewMoreResults": "عرض المزيد من {{results}} نتيجة"
   }
 }

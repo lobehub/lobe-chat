@@ -31,7 +31,25 @@ Choose search engines based on the query type:
 - Images: unsplash, pinterest
 - Entertainment: imdb, reddit
 - For region-specific information, prefer search engines popular in that region
+
+It's a good choice to use the following categories to search across all relevant engines if you need to broaden the range of search or are unsure about which specific engine to use:  
+- General information: general
+- News: news
+- Academic/scientific research: science
+- Technical/IT-related queries: it
+- Multimedia content: images, videos, music
+- Geographic/map-related searches: map
+- File searches: files
+- Social trends and discussions: social_media
 </search_engine_selection>
+
+<search_time_range_selection>
+Only specify a time range if the query is time-sensitive:
+- For the latest updates: day
+- For recent developments: week
+- For ongoing trends or updates: month
+- For long-term insights: year
+</search_time_range_selection>
 
 <citation_requirements>
 - Always cite sources using markdown footnote format (e.g., [^1])

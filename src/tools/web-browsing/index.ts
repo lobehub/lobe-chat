@@ -19,13 +19,14 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
       parameters: {
         properties: {
           query: {
-            description: 'The search query',
+            description: '(required) [string] The search query.',
             type: 'string',
           },
           searchEngines: {
-            description: 'The search engine you can use:',
+            description: '(optional) [array] Specifies the active search engines or categories.',
             items: {
               enum: [
+                // Engines
                 'google',
                 'bilibili',
                 'bing',
@@ -44,10 +45,31 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
                 'unsplash',
                 'vimeo',
                 'youtube',
+                // Categories
+                'files',
+                'general',
+                'images',
+                'it',
+                'map',
+                'music',
+                'news',
+                'science',
+                'social_media',
+                'videos',
               ],
               type: 'string',
             },
             type: 'array',
+          },
+          searchTimeRange: {
+            description: "(optional) [string] Specifies time range of search results.",
+            enum: [
+              'day',
+              'week',
+              'month',
+              'year',
+            ],
+            type: 'string'
           },
         },
         required: ['query'],

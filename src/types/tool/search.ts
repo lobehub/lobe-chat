@@ -1,6 +1,7 @@
 export interface SearchQuery {
   query: string;
   searchEngines?: string[];
+  searchTimeRange?: string;
 }
 
 export const SEARCH_SEARXNG_NOT_CONFIG = 'SearXNG is not configured';
@@ -22,12 +23,14 @@ export interface SearchResult {
   engine: string;
   engines: string[];
   iframe_src?: string;
+  img_src?: string;
   parsed_url: string[];
   positions: number[];
   publishedDate?: string | null;
   score: number;
   template: string;
   thumbnail?: string | null;
+  thumbnail_src?: string;
   title: string;
   url: string;
 }

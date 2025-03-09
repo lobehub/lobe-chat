@@ -21,8 +21,16 @@
     },
     "searchEngine": "搜尋引擎：",
     "searchResult": "搜尋數量：",
+    "searchTimeRange": "時間範圍：",
     "summary": "總結",
     "summaryTooltip": "總結當前內容",
+    "timeRange": {
+      "anytime": "不限時間",
+      "day": "過去一天",
+      "month": "過去一個月",
+      "week": "過去一週",
+      "year": "過去一年"
+    },
     "viewMoreResults": "查看更多 {{results}} 個結果"
   }
 }

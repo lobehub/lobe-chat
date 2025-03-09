@@ -21,8 +21,16 @@
     },
     "searchEngine": "Search engine:",
     "searchResult": "Number of searches:",
+    "searchTimeRange": "Time Range:",
     "summary": "Summary",
     "summaryTooltip": "Summarize the current content",
+    "timeRange": {
+      "anytime": "Anytime",
+      "day": "Past Day",
+      "month": "Past Month",
+      "week": "Past Week",
+      "year": "Past Year"
+    },
     "viewMoreResults": "View {{results}} more results"
   }
 }

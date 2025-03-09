@@ -21,8 +21,16 @@
     },
     "searchEngine": "検索エンジン：",
     "searchResult": "検索結果の数：",
+    "searchTimeRange": "時間範囲：",
     "summary": "要約",
     "summaryTooltip": "現在の内容を要約",
+    "timeRange": {
+      "anytime": "制限なし",
+      "day": "過去1日",
+      "month": "過去1ヶ月",
+      "week": "過去1週間",
+      "year": "過去1年"
+    },
     "viewMoreResults": "さらに {{results}} 件の結果を見る"
   }
 }

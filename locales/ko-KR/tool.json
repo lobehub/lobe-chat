@@ -21,8 +21,16 @@
     },
     "searchEngine": "검색 엔진：",
     "searchResult": "검색 수：",
+    "searchTimeRange": "시간 범위:",
     "summary": "요약",
     "summaryTooltip": "현재 내용 요약",
+    "timeRange": {
+      "anytime": "제한 없음",
+      "day": "지난 하루",
+      "month": "지난 한 달",
+      "week": "지난 일주일",
+      "year": "지난 일년"
+    },
     "viewMoreResults": "{{results}}개의 결과 더 보기"
   }
 }

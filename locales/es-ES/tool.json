@@ -21,8 +21,16 @@
     },
     "searchEngine": "Motor de búsqueda:",
     "searchResult": "Número de búsquedas:",
+    "searchTimeRange": "Rango de tiempo:",
     "summary": "Resumen",
     "summaryTooltip": "Resumir el contenido actual",
+    "timeRange": {
+      "anytime": "Sin límite de tiempo",
+      "day": "Últimas 24 horas",
+      "month": "Último mes",
+      "week": "Última semana",
+      "year": "Último año"
+    },
     "viewMoreResults": "Ver más {{results}} resultados"
   }
 }

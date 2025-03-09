@@ -21,8 +21,16 @@
     },
     "searchEngine": "Công cụ tìm kiếm:",
     "searchResult": "Số lượng tìm kiếm:",
+    "searchTimeRange": "Khoảng thời gian:",
     "summary": "Tóm tắt",
     "summaryTooltip": "Tóm tắt nội dung hiện tại",
+    "timeRange": {
+      "anytime": "Không giới hạn thời gian",
+      "day": "Ngày qua",
+      "month": "Tháng qua",
+      "week": "Tuần qua",
+      "year": "Năm qua"
+    },
     "viewMoreResults": "Xem thêm {{results}} kết quả"
   }
 }
