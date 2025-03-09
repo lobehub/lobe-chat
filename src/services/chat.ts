@@ -17,8 +17,9 @@ import {
 } from '@/libs/agent-runtime';
 import { filesPrompts } from '@/prompts/files';
 import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
+import { agentChatConfigSelectors } from '@/store/agent/slices/chat';
+import { getAgentStoreState } from '@/store/agent/store';
 import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
-import { getAgentChatConfig } from '@/store/chat/slices/aiChat/actions/helpers';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -169,7 +170,7 @@ class ChatService {
     );
 
     // =================== 0. process search =================== //
-    const chatConfig = getAgentChatConfig();
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
     const enabledSearch = chatConfig.searchMode !== 'off';
     const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(

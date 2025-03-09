@@ -138,7 +138,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
               </Flexbox>
             )}
             {outputDetails.length > 1 && (
-              <>
+              <Flexbox gap={4}>
                 <Flexbox
                   align={'center'}
                   gap={4}
@@ -146,12 +146,12 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
                   justify={'space-between'}
                   width={'100%'}
                 >
-                  <div style={{ color: theme.colorTextDescription }}>
+                  <div style={{ color: theme.colorTextDescription, fontSize: 12 }}>
                     {t('messages.tokenDetails.outputTitle')}
                   </div>
                 </Flexbox>
                 <TokenProgress data={outputDetails} showIcon />
-              </>
+              </Flexbox>
             )}
             <Flexbox>
               <TokenProgress data={totalDetail} showIcon />
