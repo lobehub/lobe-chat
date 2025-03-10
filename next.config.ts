@@ -1,6 +1,6 @@
 import analyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
-import { codecovWebpackPlugin } from '@codecov/webpack-plugin';
+import { codecovNextJSWebpackPlugin } from '@codecov/nextjs-webpack-plugin';
 import withSerwistInit from '@serwist/next';
 import type { NextConfig } from 'next';
 import ReactComponentName from 'react-scan/react-component-name/webpack';
@@ -198,11 +198,11 @@ const nextConfig: NextConfig = {
     // Add Codecov webpack plugin
     if (process.env.CODECOV_TOKEN) {
       config.plugins.push(
-        codecovWebpackPlugin({
+        codecovNextJSWebpackPlugin({
           enableBundleAnalysis: true,
           bundleName: 'lobechat-bundle',
           uploadToken: process.env.CODECOV_TOKEN,
-          gitService: 'github',
+          webpack: config,
         }),
       );
     }
