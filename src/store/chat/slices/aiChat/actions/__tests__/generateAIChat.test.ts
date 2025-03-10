@@ -765,10 +765,12 @@ describe('chatMessage actions', () => {
       (fetch as Mock).mockResolvedValueOnce(new Response(aiResponse));
 
       await act(async () => {
-        const response = await result.current.internal_fetchAIChatMessage(
+        const response = await result.current.internal_fetchAIChatMessage({
           messages,
-          assistantMessageId,
-        );
+          messageId: assistantMessageId,
+          model: 'gpt-4o-mini',
+          provider: 'openai',
+        });
         expect(response.isFunctionCall).toEqual(false);
       });
     });
@@ -784,7 +786,13 @@ describe('chatMessage actions', () => {
 
       await act(async () => {
         expect(
-          await result.current.internal_fetchAIChatMessage(messages, assistantMessageId),
+          await result.current.internal_fetchAIChatMessage({
+            model: 'gpt-4o-mini',
+            provider: 'openai',
+
+            messages,
+            messageId: assistantMessageId,
+          }),
         ).toEqual({
           isFunctionCall: false,
         });

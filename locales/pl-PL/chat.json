@@ -64,6 +64,9 @@
     "stop": "Zatrzymaj",
     "warp": "Złamanie wiersza"
   },
+  "intentUnderstanding": {
+    "title": "Analizuję i rozumiem Twoje intencje..."
+  },
   "knowledgeBase": {
     "all": "Wszystkie treści",
     "allFiles": "Wszystkie pliki",
@@ -144,7 +147,6 @@
         "desc": "Inteligentne określenie, czy potrzebne jest wyszukiwanie na podstawie treści rozmowy",
         "title": "Inteligentne połączenie"
       },
-      "disable": "Aktualny model nie obsługuje wywołań funkcji, więc nie można korzystać z inteligentnego połączenia",
       "off": {
         "desc": "Używaj tylko podstawowej wiedzy modelu, bez wyszukiwania w sieci",
         "title": "Wyłącz połączenie"
@@ -154,6 +156,10 @@
         "title": "Zawsze połączony"
       },
       "useModelBuiltin": "Użyj wbudowanej wyszukiwarki modelu"
+    },
+    "searchModel": {
+      "desc": "Aktualny model nie obsługuje wywołań funkcji, dlatego wymaga współpracy z modelem obsługującym wywołania funkcji, aby móc przeszukiwać sieć",
+      "title": "Model wspomagający wyszukiwanie"
     },
     "title": "Wyszukiwanie w sieci"
   },

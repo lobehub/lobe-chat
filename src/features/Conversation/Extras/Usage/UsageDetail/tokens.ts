@@ -1,5 +1,7 @@
-import { LobeDefaultAiModelListItem } from '@/types/aiModel';
+import { ChatModelPricing, LobeDefaultAiModelListItem } from '@/types/aiModel';
 import { ModelTokensUsage } from '@/types/message';
+
+import { getPrice } from './pricing';
 
 const calcCredit = (token: number, pricing?: number) => {
   if (!pricing) return '-';
@@ -29,23 +31,26 @@ export const getDetailsToken = (
     ? usage?.inputCacheMissTokens
     : totalInputTokens - (inputCacheTokens || 0);
 
+  // Pricing
+  const formatPrice = getPrice(modelCard?.pricing as ChatModelPricing);
+
   const inputCacheMissCredit = (
-    !!inputCacheMissTokens ? calcCredit(inputCacheMissTokens, modelCard?.pricing?.input) : 0
+    !!inputCacheMissTokens ? calcCredit(inputCacheMissTokens, formatPrice.input) : 0
   ) as number;
 
   const inputCachedCredit = (
-    !!inputCacheTokens ? calcCredit(inputCacheTokens, modelCard?.pricing?.cachedInput) : 0
+    !!inputCacheTokens ? calcCredit(inputCacheTokens, formatPrice.cachedInput) : 0
   ) as number;
 
   const inputWriteCachedCredit = !!inputWriteCacheTokens
-    ? (calcCredit(inputWriteCacheTokens, modelCard?.pricing?.writeCacheInput) as number)
+    ? (calcCredit(inputWriteCacheTokens, formatPrice.writeCacheInput) as number)
     : 0;
 
   const totalOutputCredit = (
-    !!totalOutputTokens ? calcCredit(totalOutputTokens, modelCard?.pricing?.output) : 0
+    !!totalOutputTokens ? calcCredit(totalOutputTokens, formatPrice.output) : 0
   ) as number;
   const totalInputCredit = (
-    !!totalInputTokens ? calcCredit(totalInputTokens, modelCard?.pricing?.output) : 0
+    !!totalInputTokens ? calcCredit(totalInputTokens, formatPrice.output) : 0
   ) as number;
 
   const totalCredit =
@@ -69,13 +74,13 @@ export const getDetailsToken = (
       : undefined,
     inputCitation: !!usage.inputCitationTokens
       ? {
-          credit: calcCredit(usage.inputCitationTokens, modelCard?.pricing?.input),
+          credit: calcCredit(usage.inputCitationTokens, formatPrice.input),
           token: usage.inputCitationTokens,
         }
       : undefined,
     inputText: !!inputTextTokens
       ? {
-          credit: calcCredit(inputTextTokens, modelCard?.pricing?.input),
+          credit: calcCredit(inputTextTokens, formatPrice.input),
           token: inputTextTokens,
         }
       : undefined,
@@ -89,13 +94,13 @@ export const getDetailsToken = (
       : undefined,
     outputReasoning: !!outputReasoningTokens
       ? {
-          credit: calcCredit(outputReasoningTokens, modelCard?.pricing?.output),
+          credit: calcCredit(outputReasoningTokens, formatPrice.output),
           token: outputReasoningTokens,
         }
       : undefined,
     outputText: !!outputTextTokens
       ? {
-          credit: calcCredit(outputTextTokens, modelCard?.pricing?.output),
+          credit: calcCredit(outputTextTokens, formatPrice.output),
           token: outputTextTokens,
         }
       : undefined,
