@@ -21,8 +21,16 @@ export default {
     },
     searchEngine: '搜索引擎：',
     searchResult: '搜索数量：',
+    searchTimeRange: '时间范围：',
     summary: '总结',
     summaryTooltip: '总结当前内容',
+    timeRange: {
+      anytime: '时间不限',
+      day: '一天内',
+      month: '一月内',
+      week: '一周内',
+      year: '一年内',
+    },
     viewMoreResults: '查看更多 {{results}} 个结果',
   },
 };
