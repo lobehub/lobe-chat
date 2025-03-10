@@ -67,4 +67,9 @@ export const crawUrlRules: CrawlUrlRule[] = [
     impls: ['jina'],
     urlPattern: 'https://developer.mozilla.org(.*)',
   },
+  // cvpr thecvf
+  {
+    impls: ['jina'],
+    urlPattern: 'https://cvpr.thecvf.com(.*)',
+  },
 ];
