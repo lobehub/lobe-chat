@@ -1,5 +1,5 @@
 import { contextCachingModels, thinkingWithToolClaudeModels } from '@/const/models';
-import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
+import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_AGENT_SEARCH_FC_MODEL } from '@/const/settings';
 import { AgentStoreState } from '@/store/agent/initialState';
 import { LobeAgentChatConfig } from '@/types/agent';
 
@@ -13,6 +13,9 @@ const isAgentEnableSearch = (s: AgentStoreState) => agentSearchMode(s) !== 'off'
 
 const useModelBuiltinSearch = (s: AgentStoreState) =>
   currentAgentChatConfig(s).useModelBuiltinSearch;
+
+const searchFCModel = (s: AgentStoreState) =>
+  currentAgentChatConfig(s).searchFCModel || DEFAULT_AGENT_SEARCH_FC_MODEL;
 
 const enableHistoryCount = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
@@ -62,5 +65,6 @@ export const agentChatConfigSelectors = {
   enableHistoryDivider,
   historyCount,
   isAgentEnableSearch,
+  searchFCModel,
   useModelBuiltinSearch,
 };

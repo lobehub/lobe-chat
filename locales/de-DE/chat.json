@@ -64,6 +64,9 @@
     "stop": "Stoppen",
     "warp": "Zeilenumbruch"
   },
+  "intentUnderstanding": {
+    "title": "Analysiere und verstehe Ihre Absicht..."
+  },
   "knowledgeBase": {
     "all": "Alle Inhalte",
     "allFiles": "Alle Dateien",
@@ -144,7 +147,6 @@
         "desc": "Intelligente Beurteilung, ob eine Suche basierend auf dem Gesprächsinhalt erforderlich ist",
         "title": "Intelligente Vernetzung"
       },
-      "disable": "Das aktuelle Modell unterstützt keine Funktionsaufrufe, daher kann die intelligente Vernetzungsfunktion nicht verwendet werden",
       "off": {
         "desc": "Verwendet nur das Grundwissen des Modells, ohne Netzsuche",
         "title": "Vernetzung deaktivieren"
@@ -154,6 +156,10 @@
         "title": "Immer vernetzt"
       },
       "useModelBuiltin": "Verwenden Sie die integrierte Suchmaschine des Modells"
+    },
+    "searchModel": {
+      "desc": "Das aktuelle Modell unterstützt keine Funktionsaufrufe, daher muss es mit einem Modell kombiniert werden, das Funktionsaufrufe unterstützt, um online zu suchen",
+      "title": "Suchunterstützungsmodell"
     },
     "title": "Netzwerksuche"
   },

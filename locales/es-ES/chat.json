@@ -64,6 +64,9 @@
     "stop": "Detener",
     "warp": "Salto de línea"
   },
+  "intentUnderstanding": {
+    "title": "Analizando y comprendiendo su intención..."
+  },
   "knowledgeBase": {
     "all": "Todo el contenido",
     "allFiles": "Todos los archivos",
@@ -144,7 +147,6 @@
         "desc": "Determina inteligentemente si se necesita buscar según el contenido de la conversación",
         "title": "Conexión inteligente"
       },
-      "disable": "El modelo actual no admite llamadas a funciones, por lo que no se puede utilizar la función de conexión inteligente",
       "off": {
         "desc": "Utiliza solo el conocimiento básico del modelo, sin realizar búsquedas en línea",
         "title": "Desactivar conexión"
@@ -154,6 +156,10 @@
         "title": "Siempre conectado"
       },
       "useModelBuiltin": "Utilizar el motor de búsqueda integrado del modelo"
+    },
+    "searchModel": {
+      "desc": "El modelo actual no admite llamadas a funciones, por lo que se necesita combinarlo con un modelo que admita llamadas a funciones para realizar búsquedas en línea",
+      "title": "Modelo de búsqueda auxiliar"
     },
     "title": "Búsqueda en línea"
   },

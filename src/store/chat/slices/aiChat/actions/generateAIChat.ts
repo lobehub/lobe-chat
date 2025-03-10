@@ -13,10 +13,13 @@ import { messageService } from '@/services/message';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { getAgentStoreState } from '@/store/agent/store';
+import { aiModelSelectors } from '@/store/aiInfra';
+import { getAiInfraStoreState } from '@/store/aiInfra/store';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useSessionStore } from '@/store/session';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/message';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
@@ -28,6 +31,7 @@ const n = setNamespace('ai');
 interface ProcessMessageParams {
   traceId?: string;
   isWelcomeQuestion?: boolean;
+  inSearchWorkflow?: boolean;
   /**
    * the RAG query content, should be embedding and used in the semantic search
    */
@@ -70,11 +74,13 @@ export interface AIGenerateAction {
   /**
    * Retrieves an AI-generated chat message from the backend service
    */
-  internal_fetchAIChatMessage: (
-    messages: ChatMessage[],
-    messageId: string,
-    params?: ProcessMessageParams,
-  ) => Promise<{
+  internal_fetchAIChatMessage: (input: {
+    messages: ChatMessage[];
+    messageId: string;
+    params?: ProcessMessageParams;
+    model: string;
+    provider: string;
+  }) => Promise<{
     isFunctionCall: boolean;
     traceId?: string;
   }>;
@@ -110,6 +116,8 @@ export interface AIGenerateAction {
     id?: string,
     action?: string,
   ) => AbortController | undefined;
+
+  internal_toggleSearchWorkflow: (loading: boolean, id?: string) => void;
 }
 
 export const generateAIChat: StateCreator<
@@ -336,10 +344,97 @@ export const generateAIChat: StateCreator<
 
     const assistantId = await get().internal_createMessage(assistantMessage);
 
-    // 3. fetch the AI response
-    const { isFunctionCall } = await internal_fetchAIChatMessage(messages, assistantId, params);
+    // 3. place a search with the search working model if this model is not support tool use
+    const isModelSupportToolUse = aiModelSelectors.isModelSupportToolUse(
+      model,
+      provider!,
+    )(getAiInfraStoreState());
+    const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(getAgentStoreState());
 
-    // 4. if it's the function call message, trigger the function method
+    if (isAgentEnableSearch && !isModelSupportToolUse) {
+      const { model, provider } = agentChatConfigSelectors.searchFCModel(getAgentStoreState());
+
+      let isToolsCalling = false;
+      let isError = false;
+
+      const abortController = get().internal_toggleChatLoading(
+        true,
+        assistantId,
+        n('generateMessage(start)', { messageId: assistantId, messages }) as string,
+      );
+
+      get().internal_toggleSearchWorkflow(true, assistantId);
+      await chatService.fetchPresetTaskResult({
+        params: { messages, model, provider, plugins: [WebBrowsingManifest.identifier] },
+        onFinish: async (_, { toolCalls, usage }) => {
+          if (toolCalls && toolCalls.length > 0) {
+            get().internal_toggleToolCallingStreaming(assistantId, undefined);
+            // update tools calling
+            await get().internal_updateMessageContent(assistantId, '', {
+              toolCalls,
+              metadata: usage,
+              model,
+              provider,
+            });
+          }
+        },
+        abortController,
+        onMessageHandle: async (chunk) => {
+          if (chunk.type === 'tool_calls') {
+            get().internal_toggleSearchWorkflow(false, assistantId);
+            get().internal_toggleToolCallingStreaming(assistantId, chunk.isAnimationActives);
+            get().internal_dispatchMessage({
+              id: assistantId,
+              type: 'updateMessage',
+              value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
+            });
+            isToolsCalling = true;
+          }
+
+          if (chunk.type === 'text') {
+            abortController!.abort('not fc');
+          }
+        },
+        onErrorHandle: async (error) => {
+          isError = true;
+          await messageService.updateMessageError(assistantId, error);
+          await refreshMessages();
+        },
+      });
+
+      get().internal_toggleChatLoading(
+        false,
+        assistantId,
+        n('generateMessage(start)', { messageId: assistantId, messages }) as string,
+      );
+      get().internal_toggleSearchWorkflow(false, assistantId);
+
+      // if there is error, then stop
+      if (isError) return;
+
+      // if it's the function call message, trigger the function method
+      if (isToolsCalling) {
+        await refreshMessages();
+        await triggerToolCalls(assistantId, {
+          threadId: params?.threadId,
+          inPortalThread: params?.inPortalThread,
+        });
+
+        // then story the workflow
+        return;
+      }
+    }
+
+    // 4. fetch the AI response
+    const { isFunctionCall } = await internal_fetchAIChatMessage({
+      messages,
+      messageId: assistantId,
+      params,
+      model,
+      provider: provider!,
+    });
+
+    // 5. if it's the function call message, trigger the function method
     if (isFunctionCall) {
       await refreshMessages();
       await triggerToolCalls(assistantId, {
@@ -348,7 +443,7 @@ export const generateAIChat: StateCreator<
       });
     }
 
-    // 5. summary history if context messages is larger than historyCount
+    // 6. summary history if context messages is larger than historyCount
     const historyCount = agentChatConfigSelectors.historyCount(getAgentStoreState());
 
     if (
@@ -365,7 +460,7 @@ export const generateAIChat: StateCreator<
       await get().internal_summaryHistory(historyMessages);
     }
   },
-  internal_fetchAIChatMessage: async (messages, messageId, params) => {
+  internal_fetchAIChatMessage: async ({ messages, messageId, params, provider, model }) => {
     const {
       internal_toggleChatLoading,
       refreshMessages,
@@ -382,7 +477,7 @@ export const generateAIChat: StateCreator<
     );
 
     const agentConfig = agentSelectors.currentAgentConfig(getAgentStoreState());
-    const chatConfig = agentConfig.chatConfig;
+    const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
     const compiler = template(chatConfig.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
 
@@ -444,8 +539,8 @@ export const generateAIChat: StateCreator<
       abortController,
       params: {
         messages: preprocessMsgs,
-        model: agentConfig.model,
-        provider: agentConfig.provider,
+        model,
+        provider,
         ...agentConfig.params,
         plugins: agentConfig.plugins,
       },
@@ -529,6 +624,7 @@ export const generateAIChat: StateCreator<
             });
             break;
           }
+
           case 'reasoning': {
             // if there is no thinkingStartAt, it means the start of reasoning
             if (!thinkingStartAt) {
@@ -638,5 +734,9 @@ export const generateAIChat: StateCreator<
       false,
       `toggleToolCallingStreaming/${!!streaming ? 'start' : 'end'}`,
     );
+  },
+
+  internal_toggleSearchWorkflow: (loading, id) => {
+    return get().internal_toggleLoadingArrays('searchWorkflowLoadingIds', loading, id);
   },
 });

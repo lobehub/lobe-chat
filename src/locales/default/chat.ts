@@ -65,6 +65,9 @@ export default {
     stop: '停止',
     warp: '换行',
   },
+  intentUnderstanding: {
+    title: '正在分析并理解意图您的意图...',
+  },
   knowledgeBase: {
     all: '所有内容',
     allFiles: '所有文件',
@@ -142,13 +145,11 @@ export default {
       searchQueries: '搜索关键词',
       title: '已搜索到 {{count}} 个结果',
     },
-
     mode: {
       auto: {
         desc: '根据对话内容智能判断是否需要搜索',
         title: '智能联网',
       },
-      disable: '当前模型不支持函数调用，因此无法使用智能联网功能',
       off: {
         desc: '仅使用模型的基础知识，不进行网络搜索',
         title: '关闭联网',
@@ -159,7 +160,10 @@ export default {
       },
       useModelBuiltin: '使用模型内置搜索引擎',
     },
-
+    searchModel: {
+      desc: '当前模型不支持函数调用，因此需要搭配支持函数调用的模型才能联网搜索',
+      title: '搜索辅助模型',
+    },
     title: '联网搜索',
   },
   searchAgentPlaceholder: '搜索助手...',
