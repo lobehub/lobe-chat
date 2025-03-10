@@ -1,2 +1,2 @@
 export type { AgentStore } from './store';
-export { useAgentStore } from './store';
+export { getAgentStoreState, useAgentStore } from './store';

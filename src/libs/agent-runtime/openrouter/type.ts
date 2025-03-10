@@ -19,6 +19,7 @@ interface ModelTopProvider {
 export interface OpenRouterModelCard {
   architecture: ModelArchitecture;
   context_length: number;
+  created: number;
   description: string;
   id: string;
   name: string;
@@ -26,3 +27,32 @@ export interface OpenRouterModelCard {
   pricing: ModelPricing;
   top_provider: ModelTopProvider;
 }
+
+interface OpenRouterModelEndpoint {
+  supports_reasoning?: boolean;
+  supports_tool_parameters?: boolean;
+}
+
+export interface OpenRouterModelExtraInfo {
+  endpoint?: OpenRouterModelEndpoint;
+  slug: string;
+}
+
+interface OpenRouterOpenAIReasoning {
+  effort: 'high' | 'medium' | 'low';
+  exclude?: boolean;
+}
+
+interface OpenRouterAnthropicReasoning {
+  exclude?: boolean;
+  max_tokens: number;
+}
+
+interface OpenRouterCommonReasoning {
+  exclude?: boolean;
+}
+
+export type OpenRouterReasoning =
+  | OpenRouterOpenAIReasoning
+  | OpenRouterAnthropicReasoning
+  | OpenRouterCommonReasoning;

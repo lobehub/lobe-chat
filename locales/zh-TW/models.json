@@ -8,6 +8,12 @@
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9B 支持16K Tokens，提供高效、流暢的語言生成能力。"
   },
+  "01-ai/yi-1.5-34b-chat": {
+    "description": "零一萬物，最新開源微調模型，340億參數，微調支持多種對話場景，高質量訓練數據，對齊人類偏好。"
+  },
+  "01-ai/yi-1.5-9b-chat": {
+    "description": "零一萬物，最新開源微調模型，90億參數，微調支持多種對話場景，高質量訓練數據，對齊人類偏好。"
+  },
   "360gpt-pro": {
     "description": "360GPT Pro 作為 360 AI 模型系列的重要成員，以高效的文本處理能力滿足多樣化的自然語言應用場景，支持長文本理解和多輪對話等功能。"
   },
@@ -239,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview 是由 Qwen 團隊開發的專注於視覺推理能力的研究型模型，其在複雜場景理解和解決視覺相關的數學問題方面具有獨特優勢。"
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ 是 Qwen 系列的推理模型。與傳統的指令調優模型相比，QwQ 具備思考和推理能力，能夠在下游任務中實現顯著增強的性能，尤其是在解決困難問題方面。QwQ-32B 是中型推理模型，能夠在與最先進的推理模型（如 DeepSeek-R1、o1-mini）的對比中取得有競爭力的性能。該模型採用 RoPE、SwiGLU、RMSNorm 和 Attention QKV bias 等技術，具有 64 層網絡結構和 40 個 Q 注意力頭（GQA 架構中 KV 為 8 個）。"
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview是Qwen 最新的實驗性研究模型，專注於提升AI推理能力。通過探索語言混合、遞歸推理等複雜機制，主要優勢包括強大的推理分析能力、數學和編程能力。與此同時，也存在語言切換問題、推理循環、安全性考量、其他能力方面的差異。"
   },
@@ -467,9 +476,6 @@
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet 提升了行業標準，性能超越競爭對手模型和 Claude 3 Opus，在廣泛的評估中表現出色，同時具備我們中等層級模型的速度和成本。"
   },
-  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
-    "description": "Claude 3.7 Sonnet 提升了行業標準，性能超越競爭對手模型和 Claude 3 Opus，在廣泛的評估中表現出色，同時具備我們中等層級模型的速度和成本。"
-  },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku是Anthropic最快、最緊湊的模型，提供近乎即時的響應速度。它可以快速回答簡單的查詢和請求。客戶將能夠構建模仿人類互動的無縫AI體驗。Claude 3 Haiku可以處理圖像並返回文本輸出，具有200K的上下文窗口。"
   },
@@ -500,11 +506,17 @@
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同時保持與 Sonnet 相同的價格。Sonnet 特別擅長程式設計、數據科學、視覺處理、代理任務。"
   },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet 是 Anthropic 迄今為止最智能的模型，也是市場上首個混合推理模型。Claude 3.7 Sonnet 可以產生近乎即時的回應或延長的逐步思考，使用者可以清晰地看到這些過程。Sonnet 特別擅長程式設計、數據科學、視覺處理、代理任務。"
+  },
   "aya": {
     "description": "Aya 23 是 Cohere 推出的多語言模型，支持 23 種語言，為多元化語言應用提供便利。"
   },
   "aya:35b": {
     "description": "Aya 23 是 Cohere 推出的多語言模型，支持 23 種語言，為多元化語言應用提供便利。"
+  },
+  "baichuan/baichuan2-13b-chat": {
+    "description": "Baichuan-13B百川智能開發的包含130億參數的開源可商用的大規模語言模型，在權威的中文和英文benchmark上均取得同尺寸最好的效果。"
   },
   "charglm-3": {
     "description": "CharGLM-3專為角色扮演與情感陪伴設計，支持超長多輪記憶與個性化對話，應用廣泛。"
@@ -686,8 +698,29 @@
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 在僅有極少標註數據的情況下，極大提升了模型推理能力。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
   },
+  "deepseek/deepseek-r1-distill-llama-70b": {
+    "description": "DeepSeek R1 Distill Llama 70B是基於Llama3.3 70B的大型語言模型，該模型利用DeepSeek R1輸出的微調，實現了與大型前沿模型相當的競爭性能。"
+  },
+  "deepseek/deepseek-r1-distill-llama-8b": {
+    "description": "DeepSeek R1 Distill Llama 8B是一種基於Llama-3.1-8B-Instruct的蒸餾大語言模型，通過使用DeepSeek R1的輸出進行訓練而得。"
+  },
+  "deepseek/deepseek-r1-distill-qwen-14b": {
+    "description": "DeepSeek R1 Distill Qwen 14B是一種基於Qwen 2.5 14B的蒸餾大語言模型，通過使用DeepSeek R1的輸出進行訓練而得。該模型在多個基準測試中超越了OpenAI的o1-mini，取得了密集模型（dense models）的最新技術領先成果（state-of-the-art）。以下是一些基準測試的結果：\nAIME 2024 pass@1: 69.7\nMATH-500 pass@1: 93.9\nCodeForces Rating: 1481\n該模型通過從DeepSeek R1的輸出中進行微調，展現了與更大規模的前沿模型相當的競爭性能。"
+  },
+  "deepseek/deepseek-r1-distill-qwen-32b": {
+    "description": "DeepSeek R1 Distill Qwen 32B是一種基於Qwen 2.5 32B的蒸餾大語言模型，通過使用DeepSeek R1的輸出進行訓練而得。該模型在多個基準測試中超越了OpenAI的o1-mini，取得了密集模型（dense models）的最新技術領先成果（state-of-the-art）。以下是一些基準測試的結果：\nAIME 2024 pass@1: 72.6\nMATH-500 pass@1: 94.3\nCodeForces Rating: 1691\n該模型通過從DeepSeek R1的輸出中進行微調，展現了與更大規模的前沿模型相當的競爭性能。"
+  },
+  "deepseek/deepseek-r1/community": {
+    "description": "DeepSeek R1是DeepSeek團隊發布的最新開源模型，具備非常強悍的推理性能，尤其在數學、編程和推理任務上達到了與OpenAI的o1模型相當的水平。"
+  },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 在僅有極少標註數據的情況下，極大提升了模型推理能力。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
+  },
+  "deepseek/deepseek-v3": {
+    "description": "DeepSeek-V3在推理速度方面實現了比之前模型的重大突破。在開源模型中排名第一，並可與全球最先進的閉源模型相媲美。DeepSeek-V3 采用了多頭潛在注意力（MLA）和DeepSeekMoE架構，這些架構在DeepSeek-V2中得到了全面驗證。此外，DeepSeek-V3開創了一種用於負載均衡的輔助無損策略，並設定了多標記預測訓練目標以獲得更強的性能。"
+  },
+  "deepseek/deepseek-v3/community": {
+    "description": "DeepSeek-V3在推理速度方面實現了比之前模型的重大突破。在開源模型中排名第一，並可與全球最先進的閉源模型相媲美。DeepSeek-V3 采用了多頭潛在注意力（MLA）和DeepSeekMoE架構，這些架構在DeepSeek-V2中得到了全面驗證。此外，DeepSeek-V3開創了一種用於負載均衡的輔助無損策略，並設定了多標記預測訓練目標以獲得更強的性能。"
   },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite 全新一代輕量版模型，極致響應速度，效果與時延均達到全球一流水平。"
@@ -800,8 +833,17 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash 提供下一代功能和改進，包括卓越的速度、原生工具使用、多模態生成和1M令牌上下文窗口。"
   },
+  "gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 Flash 模型變體，針對成本效益和低延遲等目標進行了優化。"
+  },
+  "gemini-2.0-flash-lite-001": {
+    "description": "Gemini 2.0 Flash 模型變體，針對成本效益和低延遲等目標進行了優化。"
+  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "一個 Gemini 2.0 Flash 模型，針對成本效益和低延遲等目標進行了優化。"
+  },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
@@ -953,6 +995,9 @@
   "gpt-4-vision-preview": {
     "description": "最新的GPT-4 Turbo模型具備視覺功能。現在，視覺請求可以使用JSON模式和函數調用。GPT-4 Turbo是一個增強版本，為多模態任務提供成本效益高的支持。它在準確性和效率之間找到平衡，適合需要進行實時交互的應用程序場景。"
   },
+  "gpt-4.5-preview": {
+    "description": "GPT-4.5 的研究預覽版，它是我們迄今為止最大、最強大的 GPT 模型。它擁有廣泛的世界知識，並能更好地理解用戶意圖，使其在創造性任務和自主規劃方面表現出色。GPT-4.5 可接受文本和圖像輸入，並生成文本輸出（包括結構化輸出）。支持關鍵的開發者功能，如函數調用、批量 API 和串流輸出。在需要創造性、開放式思考和對話的任務（如寫作、學習或探索新想法）中，GPT-4.5 表現尤為出色。知識截止日期為 2023 年 10 月。"
+  },
   "gpt-4o": {
     "description": "ChatGPT-4o是一款動態模型，實時更新以保持當前最新版本。它結合了強大的語言理解與生成能力，適合於大規模應用場景，包括客戶服務、教育和技術支持。"
   },
@@ -1087,15 +1132,6 @@
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B 是一款高效能模型，提供了快速的文本生成能力，非常適合需要大規模效率和成本效益的應用場景。"
-  },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Online 模型，具備 405B 參數，支持約 127,000 個標記的上下文長度，設計用於複雜的在線聊天應用。"
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Online 模型，具備 70B 參數，支持約 127,000 個標記的上下文長度，適用於高容量和多樣化聊天任務。"
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Online 模型，具備 8B 參數，支持約 127,000 個標記的上下文長度，專為在線聊天設計，能高效處理各種文本交互。"
   },
   "llama-3.2-11b-vision-instruct": {
     "description": "在高解析度圖像上表現優異的圖像推理能力，適用於視覺理解應用。"
@@ -1249,6 +1285,9 @@
   },
   "meta-llama/llama-3.2-11b-vision-instruct": {
     "description": "LLaMA 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
+  },
+  "meta-llama/llama-3.2-3b-instruct": {
+    "description": "meta-llama/llama-3.2-3b-instruct"
   },
   "meta-llama/llama-3.2-90b-vision-instruct": {
     "description": "LLaMA 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
@@ -1484,6 +1523,9 @@
   "qwen-max-latest": {
     "description": "通義千問千億級別超大規模語言模型，支持中文、英文等不同語言輸入，當前通義千問2.5產品版本背後的API模型。"
   },
+  "qwen-omni-turbo-latest": {
+    "description": "Qwen-Omni 系列模型支持輸入多種模態的數據，包括視頻、音頻、圖片、文本，並輸出音頻與文本。"
+  },
   "qwen-plus": {
     "description": "通義千問超大規模語言模型增強版，支持中文、英文等不同語言輸入。"
   },
@@ -1511,8 +1553,20 @@
   "qwen-vl-v1": {
     "description": "以Qwen-7B語言模型初始化，添加圖像模型，圖像輸入分辨率為448的預訓練模型。"
   },
+  "qwen/qwen-2-7b-instruct": {
+    "description": "Qwen2是全新的Qwen大型語言模型系列。Qwen2 7B是一個基於transformer的模型，在語言理解、多語言能力、編程、數學和推理方面表現出色。"
+  },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2 是全新的大型語言模型系列，具有更強的理解和生成能力。"
+  },
+  "qwen/qwen-2-vl-72b-instruct": {
+    "description": "Qwen2-VL是Qwen-VL模型的最新迭代版本，在視覺理解基準測試中達到了最先進的性能，包括MathVista、DocVQA、RealWorldQA和MTVQA等。Qwen2-VL能夠理解超過20分鐘的視頻，用於高質量的基於視頻的問答、對話和內容創作。它還具備複雜推理和決策能力，可以與移動設備、機器人等集成，基於視覺環境和文本指令進行自動操作。除了英語和中文，Qwen2-VL現在還支持理解圖像中不同語言的文本，包括大多數歐洲語言、日語、韓語、阿拉伯語和越南語等。"
+  },
+  "qwen/qwen-2.5-72b-instruct": {
+    "description": "Qwen2.5-72B-Instruct是阿里雲發布的最新大語言模型系列之一。該72B模型在編碼和數學等領域具有顯著改進的能力。該模型還提供了多語言支持，覆蓋超過29種語言，包括中文、英文等。模型在指令跟隨、理解結構化數據以及生成結構化輸出（尤其是JSON）方面都有顯著提升。"
+  },
+  "qwen/qwen2.5-32b-instruct": {
+    "description": "Qwen2.5-32B-Instruct是阿里雲發布的最新大語言模型系列之一。該32B模型在編碼和數學等領域具有顯著改進的能力。該模型提供了多語言支持，覆蓋超過29種語言，包括中文、英文等。模型在指令跟隨、理解結構化數據以及生成結構化輸出（尤其是JSON）方面都有顯著提升。"
   },
   "qwen/qwen2.5-7b-instruct": {
     "description": "面向中文和英文的 LLM，針對語言、編程、數學、推理等領域。"
@@ -1589,8 +1643,17 @@
   "qwq": {
     "description": "QwQ 是一個實驗研究模型，專注於提高 AI 推理能力。"
   },
+  "qwq-32b": {
+    "description": "基於 Qwen2.5-32B 模型訓練的 QwQ 推理模型，通過強化學習大幅度提升了模型推理能力。模型數學代碼等核心指標（AIME 24/25、LiveCodeBench）以及部分通用指標（IFEval、LiveBench等）達到 DeepSeek-R1 滿血版水平，各指標均顯著超過同樣基於 Qwen2.5-32B 的 DeepSeek-R1-Distill-Qwen-32B。"
+  },
   "qwq-32b-preview": {
     "description": "QwQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於增強 AI 推理能力。"
+  },
+  "qwq-plus-latest": {
+    "description": "基於 Qwen2.5 模型訓練的 QwQ 推理模型，通過強化學習大幅度提升了模型推理能力。模型數學代碼等核心指標（AIME 24/25、LiveCodeBench）以及部分通用指標（IFEval、LiveBench等）達到 DeepSeek-R1 滿血版水平。"
+  },
+  "r1-1776": {
+    "description": "R1-1776 是 DeepSeek R1 模型的一個版本，經過後訓練，可提供未經審查、無偏見的事實資訊。"
   },
   "solar-mini": {
     "description": "Solar Mini 是一種緊湊型 LLM，性能優於 GPT-3.5，具備強大的多語言能力，支持英語和韓語，提供高效小巧的解決方案。"
@@ -1603,6 +1666,9 @@
   },
   "sonar": {
     "description": "基於搜索上下文的輕量級搜索產品，比 Sonar Pro 更快、更便宜。"
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research 進行全面的專家級研究，並將其綜合成可訪問、可行的報告。"
   },
   "sonar-pro": {
     "description": "支持搜索上下文的高級搜索產品，支持高級查詢和跟進。"
@@ -1661,6 +1727,9 @@
   "text-embedding-3-small": {
     "description": "高效且經濟的新一代 Embedding 模型，適用於知識檢索、RAG 應用等場景"
   },
+  "thudm/glm-4-9b-chat": {
+    "description": "智譜AI發布的GLM-4系列最新一代預訓練模型的開源版本。"
+  },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) 通過高效的策略和模型架構，提供增強的計算能力。"
   },
@@ -1675,6 +1744,9 @@
   },
   "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet 提升了行業標準，性能超越競爭對手模型和 Claude 3 Opus，在廣泛的評估中表現出色，同時具備我們中等層級模型的速度和成本。"
+  },
+  "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 sonnet 是 Anthropic 最快速的下一代模型。與 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各項技能上都有所提升，並在許多智力基準測試中超越了上一代最大的模型 Claude 3 Opus。"
   },
   "whisper-1": {
     "description": "通用語音識別模型，支持多語言語音識別、語音翻譯和語言識別"

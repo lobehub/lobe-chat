@@ -26,13 +26,13 @@ export class DatabaseManager {
 
   // CDN 配置
   private static WASM_CDN_URL =
-    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.13/files/dist/postgres.wasm';
+    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.17/files/dist/postgres.wasm';
 
   private static FSBUNDLER_CDN_URL =
-    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.13/files/dist/postgres.data';
+    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.17/files/dist/postgres.data';
 
   private static VECTOR_CDN_URL =
-    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.13/files/dist/vector.tar.gz';
+    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.17/files/dist/vector.tar.gz';
 
   private constructor() {}
 

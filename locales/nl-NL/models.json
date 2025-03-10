@@ -8,6 +8,12 @@
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9B ondersteunt 16K tokens en biedt efficiënte, vloeiende taalgeneratiecapaciteiten."
   },
+  "01-ai/yi-1.5-34b-chat": {
+    "description": "Zero One Everything, het nieuwste open-source fine-tuning model, met 34 miljard parameters, dat fine-tuning ondersteunt voor verschillende dialoogscenario's, met hoogwaardige trainingsdata die zijn afgestemd op menselijke voorkeuren."
+  },
+  "01-ai/yi-1.5-9b-chat": {
+    "description": "Zero One Everything, het nieuwste open-source fine-tuning model, met 9 miljard parameters, dat fine-tuning ondersteunt voor verschillende dialoogscenario's, met hoogwaardige trainingsdata die zijn afgestemd op menselijke voorkeuren."
+  },
   "360gpt-pro": {
     "description": "360GPT Pro, als een belangrijk lid van de 360 AI-modelreeks, voldoet aan de diverse natuurlijke taaltoepassingsscenario's met efficiënte tekstverwerkingscapaciteiten en ondersteunt lange tekstbegrip en meerdaagse gesprekken."
   },
@@ -239,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview is een onderzoeksmodel ontwikkeld door het Qwen-team, dat zich richt op visuele redeneervaardigheden en unieke voordelen heeft in het begrijpen van complexe scènes en het oplossen van visueel gerelateerde wiskundige problemen."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ is het inferentiemodel van de Qwen-serie. In vergelijking met traditionele instructie-geoptimaliseerde modellen beschikt QwQ over denk- en redeneervaardigheden, waardoor het in staat is om aanzienlijk verbeterde prestaties te leveren in downstream-taken, vooral bij het oplossen van moeilijke problemen. QwQ-32B is een middelgroot inferentiemodel dat concurrerende prestaties kan behalen in vergelijking met de meest geavanceerde inferentiemodellen (zoals DeepSeek-R1, o1-mini). Dit model maakt gebruik van technologieën zoals RoPE, SwiGLU, RMSNorm en Attention QKV bias, en heeft een netwerkstructuur van 64 lagen en 40 Q-aandachtshoofden (met KV van 8 in de GQA-architectuur)."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is het nieuwste experimentele onderzoeksmodel van Qwen, gericht op het verbeteren van AI-redeneringscapaciteiten. Door het verkennen van complexe mechanismen zoals taalmixing en recursieve redenering, zijn de belangrijkste voordelen onder andere krachtige redeneringsanalyses, wiskundige en programmeervaardigheden. Tegelijkertijd zijn er ook problemen met taalwisseling, redeneringscycli, veiligheidskwesties en verschillen in andere capaciteiten."
   },
@@ -467,9 +476,6 @@
   "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet heeft de industrienormen verhoogd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen. Het presteert uitstekend in uitgebreide evaluaties, terwijl het de snelheid en kosten van onze middelgrote modellen behoudt."
   },
-  "anthropic.claude-3-7-sonnet-20250219-v1:0": {
-    "description": "Claude 3.7 Sonnet is een van de nieuwste modellen van Anthropic, met verbeterde prestaties en een groter contextvenster, waardoor het model beter in staat is om complexe taken uit te voeren."
-  },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku is het snelste en meest compacte model van Anthropic, met bijna onmiddellijke reactietijden. Het kan snel eenvoudige vragen en verzoeken beantwoorden. Klanten kunnen een naadloze AI-ervaring creëren die menselijke interactie nabootst. Claude 3 Haiku kan afbeeldingen verwerken en tekstoutput retourneren, met een contextvenster van 200K."
   },
@@ -500,11 +506,17 @@
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet biedt mogelijkheden die verder gaan dan Opus en een snellere snelheid dan Sonnet, terwijl het dezelfde prijs als Sonnet behoudt. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
   },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet is het meest geavanceerde model van Anthropic tot nu toe en het eerste hybride redeneermodel op de markt. Claude 3.7 Sonnet kan bijna onmiddellijke reacties of uitgebreide stapsgewijze overpeinzingen genereren, waarbij gebruikers deze processen duidelijk kunnen volgen. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
+  },
   "aya": {
     "description": "Aya 23 is een meertalig model van Cohere, ondersteunt 23 talen en biedt gemak voor diverse taaltoepassingen."
   },
   "aya:35b": {
     "description": "Aya 23 is een meertalig model van Cohere, ondersteunt 23 talen en biedt gemak voor diverse taaltoepassingen."
+  },
+  "baichuan/baichuan2-13b-chat": {
+    "description": "Baichuan-13B is een open-source, commercieel bruikbaar groot taalmodel ontwikkeld door Baichuan Intelligent, met 13 miljard parameters, dat de beste prestaties in zijn klasse heeft behaald op gezaghebbende Chinese en Engelse benchmarks."
   },
   "charglm-3": {
     "description": "CharGLM-3 is ontworpen voor rollenspellen en emotionele begeleiding, ondersteunt zeer lange meerdaagse herinneringen en gepersonaliseerde gesprekken, met brede toepassingen."
@@ -686,8 +698,29 @@
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 heeft de redeneringscapaciteiten van het model aanzienlijk verbeterd, zelfs met zeer weinig gelabelde gegevens. Voordat het model het uiteindelijke antwoord geeft, genereert het eerst een denkproces om de nauwkeurigheid van het uiteindelijke antwoord te verbeteren."
   },
+  "deepseek/deepseek-r1-distill-llama-70b": {
+    "description": "DeepSeek R1 Distill Llama 70B is een groot taalmodel gebaseerd op Llama3.3 70B, dat gebruikmaakt van de fine-tuning van DeepSeek R1-output en vergelijkbare concurrentieprestaties bereikt als grote vooraanstaande modellen."
+  },
+  "deepseek/deepseek-r1-distill-llama-8b": {
+    "description": "DeepSeek R1 Distill Llama 8B is een gedistilleerd groot taalmodel gebaseerd op Llama-3.1-8B-Instruct, dat is getraind met behulp van de output van DeepSeek R1."
+  },
+  "deepseek/deepseek-r1-distill-qwen-14b": {
+    "description": "DeepSeek R1 Distill Qwen 14B is een gedistilleerd groot taalmodel gebaseerd op Qwen 2.5 14B, dat is getraind met behulp van de output van DeepSeek R1. Dit model heeft in verschillende benchmarktests OpenAI's o1-mini overtroffen en heeft de nieuwste technologische vooruitgang behaald voor dichte modellen (state-of-the-art). Hier zijn enkele resultaten van benchmarktests:\nAIME 2024 pass@1: 69.7\nMATH-500 pass@1: 93.9\nCodeForces Rating: 1481\nDit model toont concurrentieprestaties die vergelijkbaar zijn met grotere vooraanstaande modellen door fine-tuning op de output van DeepSeek R1."
+  },
+  "deepseek/deepseek-r1-distill-qwen-32b": {
+    "description": "DeepSeek R1 Distill Qwen 32B is een gedistilleerd groot taalmodel gebaseerd op Qwen 2.5 32B, dat is getraind met behulp van de output van DeepSeek R1. Dit model heeft in verschillende benchmarktests OpenAI's o1-mini overtroffen en heeft de nieuwste technologische vooruitgang behaald voor dichte modellen (state-of-the-art). Hier zijn enkele resultaten van benchmarktests:\nAIME 2024 pass@1: 72.6\nMATH-500 pass@1: 94.3\nCodeForces Rating: 1691\nDit model toont concurrentieprestaties die vergelijkbaar zijn met grotere vooraanstaande modellen door fine-tuning op de output van DeepSeek R1."
+  },
+  "deepseek/deepseek-r1/community": {
+    "description": "DeepSeek R1 is het nieuwste open-source model dat door het DeepSeek-team is uitgebracht, met zeer krachtige inferentieprestaties, vooral op het gebied van wiskunde, programmeren en redeneringstaken, en bereikt een niveau dat vergelijkbaar is met het o1-model van OpenAI."
+  },
   "deepseek/deepseek-r1:free": {
     "description": "DeepSeek-R1 heeft de redeneringscapaciteiten van het model aanzienlijk verbeterd, zelfs met zeer weinig gelabelde gegevens. Voordat het model het uiteindelijke antwoord geeft, genereert het eerst een denkproces om de nauwkeurigheid van het uiteindelijke antwoord te verbeteren."
+  },
+  "deepseek/deepseek-v3": {
+    "description": "DeepSeek-V3 heeft een belangrijke doorbraak bereikt in inferentiesnelheid ten opzichte van eerdere modellen. Het staat op de eerste plaats onder open-source modellen en kan zich meten met de meest geavanceerde gesloten modellen ter wereld. DeepSeek-V3 maakt gebruik van Multi-Head Latent Attention (MLA) en de DeepSeekMoE-architectuur, die grondig zijn gevalideerd in DeepSeek-V2. Bovendien introduceert DeepSeek-V3 een aanvullende verliesloze strategie voor load balancing en stelt het multi-label voorspellingsdoelen in om sterkere prestaties te behalen."
+  },
+  "deepseek/deepseek-v3/community": {
+    "description": "DeepSeek-V3 heeft een belangrijke doorbraak bereikt in inferentiesnelheid ten opzichte van eerdere modellen. Het staat op de eerste plaats onder open-source modellen en kan zich meten met de meest geavanceerde gesloten modellen ter wereld. DeepSeek-V3 maakt gebruik van Multi-Head Latent Attention (MLA) en de DeepSeekMoE-architectuur, die grondig zijn gevalideerd in DeepSeek-V2. Bovendien introduceert DeepSeek-V3 een aanvullende verliesloze strategie voor load balancing en stelt het multi-label voorspellingsdoelen in om sterkere prestaties te behalen."
   },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite is de nieuwste generatie lichtgewicht model, met extreme responssnelheid en prestaties die wereldwijd tot de top behoren."
@@ -800,8 +833,17 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash biedt next-gen functies en verbeteringen, waaronder uitstekende snelheid, native toolgebruik, multimodale generatie en een contextvenster van 1M tokens."
   },
+  "gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 Flash is een modelvariant die is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
+  },
+  "gemini-2.0-flash-lite-001": {
+    "description": "Gemini 2.0 Flash is een modelvariant die is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
+  },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Een Gemini 2.0 Flash-model dat is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
+  },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Exp is Google's nieuwste experimentele multimodale AI-model, met next-gen functies, uitstekende snelheid, native tool-aanroepen en multimodale generatie."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp is Google's nieuwste experimentele multimodale AI-model, met next-gen functies, uitstekende snelheid, native tool-aanroepen en multimodale generatie."
@@ -953,6 +995,9 @@
   "gpt-4-vision-preview": {
     "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
   },
+  "gpt-4.5-preview": {
+    "description": "De onderzoekspreview van GPT-4.5, ons grootste en krachtigste GPT-model tot nu toe. Het heeft een uitgebreide wereldkennis en kan de intenties van gebruikers beter begrijpen, waardoor het uitblinkt in creatieve taken en autonome planning. GPT-4.5 accepteert tekst- en afbeeldingsinvoer en genereert tekstuitvoer (inclusief gestructureerde uitvoer). Het ondersteunt belangrijke ontwikkelaarsfuncties zoals functieaanroepen, batch-API's en streaminguitvoer. In taken die creativiteit, open denken en dialoog vereisen (zoals schrijven, leren of het verkennen van nieuwe ideeën), presteert GPT-4.5 bijzonder goed. De kennis is bijgewerkt tot oktober 2023."
+  },
   "gpt-4o": {
     "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
   },
@@ -1087,15 +1132,6 @@
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B is een hoogpresterend model dat snelle tekstgeneratiecapaciteiten biedt, zeer geschikt voor toepassingen die grootschalige efficiëntie en kosteneffectiviteit vereisen."
-  },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Online model, met 405B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, ontworpen voor complexe online chattoepassingen."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Online model, met 70B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, geschikt voor hoge capaciteit en diverse chattaken."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Online model, met 8B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, speciaal ontworpen voor online chat en kan efficiënt verschillende tekstinteracties verwerken."
   },
   "llama-3.2-11b-vision-instruct": {
     "description": "Uitstekende beeldredeneringscapaciteiten op hoge resolutie-afbeeldingen, geschikt voor visuele begrijptoepassingen."
@@ -1249,6 +1285,9 @@
   },
   "meta-llama/llama-3.2-11b-vision-instruct": {
     "description": "LLaMA 3.2 is ontworpen voor taken die visuele en tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraag-en-antwoord, en overbrugt de kloof tussen taalgeneratie en visuele redenering."
+  },
+  "meta-llama/llama-3.2-3b-instruct": {
+    "description": "meta-llama/llama-3.2-3b-instruct"
   },
   "meta-llama/llama-3.2-90b-vision-instruct": {
     "description": "LLaMA 3.2 is ontworpen voor taken die visuele en tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraag-en-antwoord, en overbrugt de kloof tussen taalgeneratie en visuele redenering."
@@ -1484,6 +1523,9 @@
   "qwen-max-latest": {
     "description": "Het Tongyi Qianwen model met een schaal van honderden miljarden, ondersteunt invoer in verschillende talen, waaronder Chinees en Engels, en is de API-model achter de huidige Tongyi Qianwen 2.5 productversie."
   },
+  "qwen-omni-turbo-latest": {
+    "description": "De Qwen-Omni serie modellen ondersteunt het invoeren van gegevens in verschillende modaliteiten, waaronder video, audio, afbeeldingen en tekst, en kan audio en tekst als output genereren."
+  },
   "qwen-plus": {
     "description": "Qwen is een verbeterde versie van het grootschalige taalmodel dat ondersteuning biedt voor verschillende taalinputs zoals Chinees en Engels."
   },
@@ -1511,8 +1553,20 @@
   "qwen-vl-v1": {
     "description": "Geïnitieerd met het Qwen-7B taalmodel, voegt het een afbeeldingsmodel toe, met een invoerresolutie van 448 voor het voorgetrainde model."
   },
+  "qwen/qwen-2-7b-instruct": {
+    "description": "Qwen2 is de gloednieuwe serie van grote taalmodellen van Qwen. Qwen2 7B is een transformer-gebaseerd model dat uitblinkt in taalbegrip, meertalige capaciteiten, programmeren, wiskunde en redenering."
+  },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2 is een gloednieuwe serie grote taalmodellen met sterkere begrip- en generatiecapaciteiten."
+  },
+  "qwen/qwen-2-vl-72b-instruct": {
+    "description": "Qwen2-VL is de nieuwste iteratie van het Qwen-VL-model en heeft geavanceerde prestaties behaald in visuele begrip benchmarktests, waaronder MathVista, DocVQA, RealWorldQA en MTVQA. Qwen2-VL kan video's van meer dan 20 minuten begrijpen voor hoogwaardige video-gebaseerde vraag-en-antwoord, dialoog en contentcreatie. Het heeft ook complexe redenerings- en besluitvormingscapaciteiten en kan worden geïntegreerd met mobiele apparaten, robots, enzovoort, voor automatische operaties op basis van visuele omgevingen en tekstinstructies. Naast Engels en Chinees ondersteunt Qwen2-VL nu ook het begrijpen van tekst in verschillende talen in afbeeldingen, waaronder de meeste Europese talen, Japans, Koreaans, Arabisch en Vietnamees."
+  },
+  "qwen/qwen-2.5-72b-instruct": {
+    "description": "Qwen2.5-72B-Instruct is een van de nieuwste grote taalmodellen die door Alibaba Cloud is uitgebracht. Dit 72B-model heeft aanzienlijke verbeteringen in codering en wiskunde. Het model biedt ook ondersteuning voor meerdere talen, met meer dan 29 talen, waaronder Chinees en Engels. Het model heeft aanzienlijke verbeteringen in het volgen van instructies, het begrijpen van gestructureerde gegevens en het genereren van gestructureerde output (vooral JSON)."
+  },
+  "qwen/qwen2.5-32b-instruct": {
+    "description": "Qwen2.5-32B-Instruct is een van de nieuwste grote taalmodellen die door Alibaba Cloud is uitgebracht. Dit 32B-model heeft aanzienlijke verbeteringen in codering en wiskunde. Het model biedt ook ondersteuning voor meerdere talen, met meer dan 29 talen, waaronder Chinees en Engels. Het model heeft aanzienlijke verbeteringen in het volgen van instructies, het begrijpen van gestructureerde gegevens en het genereren van gestructureerde output (vooral JSON)."
   },
   "qwen/qwen2.5-7b-instruct": {
     "description": "LLM gericht op zowel Chinees als Engels, gericht op taal, programmeren, wiskunde, redeneren en meer."
@@ -1589,8 +1643,17 @@
   "qwq": {
     "description": "QwQ is een experimenteel onderzoeksmodel dat zich richt op het verbeteren van de AI-redeneringscapaciteiten."
   },
+  "qwq-32b": {
+    "description": "De QwQ-inferentiemodel, getraind op het Qwen2.5-32B-model, heeft zijn inferentievermogen aanzienlijk verbeterd door middel van versterkend leren. De kernindicatoren van het model, zoals wiskundige code (AIME 24/25, LiveCodeBench) en enkele algemene indicatoren (IFEval, LiveBench, enz.), bereiken het niveau van de DeepSeek-R1 volwaardige versie, waarbij alle indicatoren aanzienlijk beter presteren dan de DeepSeek-R1-Distill-Qwen-32B, die ook op Qwen2.5-32B is gebaseerd."
+  },
   "qwq-32b-preview": {
     "description": "Het QwQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van de AI-redeneringscapaciteiten."
+  },
+  "qwq-plus-latest": {
+    "description": "De QwQ-inferentiemodel, getraind op het Qwen2.5-model, heeft zijn inferentievermogen aanzienlijk verbeterd door middel van versterkend leren. De kernindicatoren van het model, zoals wiskundige code (AIME 24/25, LiveCodeBench) en enkele algemene indicatoren (IFEval, LiveBench, enz.), bereiken het niveau van de DeepSeek-R1 volwaardige versie."
+  },
+  "r1-1776": {
+    "description": "R1-1776 is een versie van het DeepSeek R1-model, dat is bijgetraind om ongecensureerde, onpartijdige feitelijke informatie te bieden."
   },
   "solar-mini": {
     "description": "Solar Mini is een compacte LLM die beter presteert dan GPT-3.5, met sterke meertalige capaciteiten, ondersteunt Engels en Koreaans, en biedt een efficiënte en compacte oplossing."
@@ -1603,6 +1666,9 @@
   },
   "sonar": {
     "description": "Een lichtgewicht zoekproduct op basis van contextuele zoekopdrachten, sneller en goedkoper dan Sonar Pro."
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research voert uitgebreide expertstudies uit en bundelt deze in toegankelijke, bruikbare rapporten."
   },
   "sonar-pro": {
     "description": "Een geavanceerd zoekproduct dat contextuele zoekopdrachten ondersteunt, met geavanceerde query's en vervolgacties."
@@ -1661,6 +1727,9 @@
   "text-embedding-3-small": {
     "description": "Een efficiënte en kosteneffectieve nieuwe generatie Embedding model, geschikt voor kennisretrieval, RAG-toepassingen en andere scenario's."
   },
+  "thudm/glm-4-9b-chat": {
+    "description": "De open-source versie van de nieuwste generatie voorgetrainde modellen van de GLM-4-serie, uitgebracht door Zhizhu AI."
+  },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) biedt verbeterde rekenkracht door middel van efficiënte strategieën en modelarchitectuur."
   },
@@ -1675,6 +1744,9 @@
   },
   "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet heeft de industrienormen verbeterd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen, en excelleert in uitgebreide evaluaties, terwijl het de snelheid en kosten van onze middelgrote modellen behoudt."
+  },
+  "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 sonnet is het snelste volgende generatie model van Anthropic. In vergelijking met Claude 3 Haiku heeft Claude 3.7 Sonnet verbeteringen in verschillende vaardigheden en overtreft het de grootste modellen van de vorige generatie, Claude 3 Opus, in veel intellectuele benchmarktests."
   },
   "whisper-1": {
     "description": "Algemeen spraakherkenningsmodel, ondersteunt meertalige spraakherkenning, spraakvertaling en taalherkenning."

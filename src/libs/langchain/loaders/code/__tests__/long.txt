@@ -579,7 +579,7 @@ export const chatMessage: StateCreator<
     // ================================== //
 
     // 1. slice messages with config
-    let preprocessMsgs = chatHelpers.getSlicedMessagesWithConfig(messages, chatConfig);
+    let preprocessMsgs = chatHelpers.getSlicedMessages(messages, chatConfig);
 
     // 2. replace inputMessage template
     preprocessMsgs = !chatConfig.inputTemplate

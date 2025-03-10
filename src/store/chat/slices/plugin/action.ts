@@ -50,12 +50,13 @@ export interface ChatPluginAction {
     traceId?: string;
     threadId?: string;
     inPortalThread?: boolean;
+    inSearchWorkflow?: boolean;
   }) => Promise<void>;
   summaryPluginContent: (id: string) => Promise<void>;
 
   triggerToolCalls: (
     id: string,
-    params?: { threadId?: string; inPortalThread?: boolean },
+    params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
   ) => Promise<void>;
   updatePluginState: (id: string, value: any) => Promise<void>;
   updatePluginArguments: <T = any>(id: string, value: T) => Promise<void>;
@@ -209,7 +210,7 @@ export const chatPlugin: StateCreator<
     await get().internal_invokeDifferentTypePlugin(id, payload);
   },
 
-  triggerAIMessage: async ({ parentId, traceId, threadId, inPortalThread }) => {
+  triggerAIMessage: async ({ parentId, traceId, threadId, inPortalThread, inSearchWorkflow }) => {
     const { internal_coreProcessMessage } = get();
 
     const chats = inPortalThread
@@ -220,6 +221,7 @@ export const chatPlugin: StateCreator<
       traceId,
       threadId,
       inPortalThread,
+      inSearchWorkflow,
     });
   },
 
@@ -245,7 +247,7 @@ export const chatPlugin: StateCreator<
     );
   },
 
-  triggerToolCalls: async (assistantId, { threadId, inPortalThread } = {}) => {
+  triggerToolCalls: async (assistantId, { threadId, inPortalThread, inSearchWorkflow } = {}) => {
     const message = chatSelectors.getMessageById(assistantId)(get());
     if (!message || !message.tools) return;
 
@@ -281,7 +283,7 @@ export const chatPlugin: StateCreator<
 
     const traceId = chatSelectors.getTraceIdByMessageId(latestToolId)(get());
 
-    await get().triggerAIMessage({ traceId, threadId, inPortalThread });
+    await get().triggerAIMessage({ traceId, threadId, inPortalThread, inSearchWorkflow });
   },
   updatePluginState: async (id, value) => {
     const { refreshMessages } = get();

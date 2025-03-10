@@ -140,6 +140,18 @@
       "close": "Sil",
       "confirm": "Yapılandırma tamamlandı ve yeniden denendi"
     },
+    "crawPages": {
+      "crawling": "Bağlantı tanımlanıyor",
+      "detail": {
+        "preview": "Önizleme",
+        "raw": "Ham metin",
+        "tooLong": "Metin içeriği çok uzun, diyalog bağlamında yalnızca ilk {{characters}} karakter saklanacak, fazlası diyalog bağlamına dahil edilmeyecek."
+      },
+      "meta": {
+        "crawler": "Tarayıcı Modu",
+        "words": "Karakter sayısı"
+      }
+    },
     "searchxng": {
       "baseURL": "Lütfen girin",
       "description": "SearchXNG'nin URL'sini girin, böylece çevrimiçi arama yapmaya başlayabilirsiniz",

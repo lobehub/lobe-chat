@@ -35,7 +35,7 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
           : presence_penalty !== undefined && presence_penalty >= -2 && presence_penalty <= 2
             ? presence_penalty
             : undefined,
-        stream: !payload.tools,
+        stream: true,
         temperature:
           temperature !== undefined && temperature >= 0 && temperature < 2
             ? temperature
@@ -50,6 +50,10 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
         ...(enabledSearch && {
           enable_search: enabledSearch,
           search_options: {
+            /*
+            enable_citation: true,
+            enable_source: true,
+            */
             search_strategy: process.env.QWEN_SEARCH_STRATEGY || 'standard', // standard or pro
           },
         }),

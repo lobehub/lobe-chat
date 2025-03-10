@@ -6,6 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import Loader from '@/components/CircleLoader';
 import PluginAvatar from '@/features/PluginAvatar';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -13,8 +14,6 @@ import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { shinyTextStylish } from '@/styles/loading';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
-
-import Loader from './Loader';
 
 export const useStyles = createStyles(({ css, token }) => ({
   apiName: css`

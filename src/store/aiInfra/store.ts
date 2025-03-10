@@ -23,3 +23,5 @@ const createStore: StateCreator<AiInfraStore, [['zustand/devtools', never]]> = (
 const devtools = createDevtools('aiInfra');
 
 export const useAiInfraStore = createWithEqualityFn<AiInfraStore>()(devtools(createStore), shallow);
+
+export const getAiInfraStoreState = () => useAiInfraStore.getState();

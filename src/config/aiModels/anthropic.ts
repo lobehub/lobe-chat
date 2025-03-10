@@ -22,7 +22,7 @@ const anthropicChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-02-24',
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -45,6 +45,9 @@ const anthropicChatModels: AIChatModelCard[] = [
       writeCacheInput: 1.25,
     },
     releasedAt: '2024-11-05',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -66,6 +69,9 @@ const anthropicChatModels: AIChatModelCard[] = [
       writeCacheInput: 3.75,
     },
     releasedAt: '2024-10-22',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -86,6 +92,9 @@ const anthropicChatModels: AIChatModelCard[] = [
       writeCacheInput: 3.75,
     },
     releasedAt: '2024-06-20',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -104,6 +113,9 @@ const anthropicChatModels: AIChatModelCard[] = [
       output: 1.25,
     },
     releasedAt: '2024-03-07',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
@@ -141,6 +153,9 @@ const anthropicChatModels: AIChatModelCard[] = [
       output: 75,
     },
     releasedAt: '2024-02-29',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
     type: 'chat',
   },
   {
