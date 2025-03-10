@@ -32,6 +32,7 @@ import {
   userProfileSelectors,
 } from '@/store/user/selectors';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
+import { WorkingModel } from '@/types/agent';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
@@ -201,17 +202,10 @@ class ChatService {
 
     // ============  2. preprocess tools   ============ //
 
-    let filterTools = toolSelectors.enabledSchema(pluginIds)(getToolStoreState());
-
-    // check this model can use function call
-    const canUseFC = isCanUseFC(payload.model, payload.provider!);
-
-    // the rule that model can use tools:
-    // 1. tools is not empty
-    // 2. model can use function call
-    const shouldUseTools = filterTools.length > 0 && canUseFC;
-
-    const tools = shouldUseTools ? filterTools : undefined;
+    const tools = this.prepareTools(pluginIds, {
+      model: payload.model,
+      provider: payload.provider!,
+    });
 
     // ============  3. process extend params   ============ //
 
@@ -433,15 +427,29 @@ class ChatService {
     onLoadingChange?.(true);
 
     try {
-      await this.getChatCompletion(params, {
-        onErrorHandle: (error) => {
-          errorHandle(new Error(error.message), error);
-        },
-        onFinish,
-        onMessageHandle,
-        signal: abortController?.signal,
-        trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+      const oaiMessages = this.processMessages({
+        messages: params.messages as any,
+        model: params.model!,
+        provider: params.provider!,
+        tools: params.plugins,
       });
+      const tools = this.prepareTools(params.plugins || [], {
+        model: params.model!,
+        provider: params.provider!,
+      });
+
+      await this.getChatCompletion(
+        { ...params, messages: oaiMessages, tools },
+        {
+          onErrorHandle: (error) => {
+            errorHandle(new Error(error.message), error);
+          },
+          onFinish,
+          onMessageHandle,
+          signal: abortController?.signal,
+          trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+        },
+      );
 
       onLoadingChange?.(false);
     } catch (e) {
@@ -451,7 +459,7 @@ class ChatService {
 
   private processMessages = (
     {
-      messages,
+      messages = [],
       tools,
       model,
       provider,
@@ -483,6 +491,7 @@ class ChatService {
     };
 
     let postMessages = messages.map((m): OpenAIChatMessage => {
+      const supportTools = isCanUseFC(model, provider);
       switch (m.role) {
         case 'user': {
           return { content: getContent(m), role: m.role };
@@ -492,17 +501,23 @@ class ChatService {
           // signature is a signal of anthropic thinking mode
           const shouldIncludeThinking = m.reasoning && !!m.reasoning?.signature;
 
+          const content = shouldIncludeThinking
+            ? [
+                {
+                  signature: m.reasoning!.signature,
+                  thinking: m.reasoning!.content,
+                  type: 'thinking',
+                } as any,
+                { text: m.content, type: 'text' },
+              ]
+            : m.content;
+
+          if (!supportTools) {
+            return { content, role: m.role };
+          }
+
           return {
-            content: shouldIncludeThinking
-              ? [
-                  {
-                    signature: m.reasoning!.signature,
-                    thinking: m.reasoning!.content,
-                    type: 'thinking',
-                  } as any,
-                  { text: m.content, type: 'text' },
-                ]
-              : m.content,
+            content,
             role: m.role,
             tool_calls: m.tools?.map(
               (tool): MessageToolCall => ({
@@ -518,6 +533,10 @@ class ChatService {
         }
 
         case 'tool': {
+          if (!supportTools) {
+            return { content: m.content, role: 'user' };
+          }
+
           return {
             content: m.content,
             name: genToolCallingName(m.plugin!.identifier, m.plugin!.apiName, m.plugin?.type),
@@ -668,6 +687,20 @@ class ChatService {
     });
 
     return reorderedMessages;
+  };
+
+  private prepareTools = (pluginIds: string[], { model, provider }: WorkingModel) => {
+    let filterTools = toolSelectors.enabledSchema(pluginIds)(getToolStoreState());
+
+    // check this model can use function call
+    const canUseFC = isCanUseFC(model, provider!);
+
+    // the rule that model can use tools:
+    // 1. tools is not empty
+    // 2. model can use function call
+    const shouldUseTools = filterTools.length > 0 && canUseFC;
+
+    return shouldUseTools ? filterTools : undefined;
   };
 }
 

@@ -181,7 +181,10 @@ describe('POST handler', () => {
       const response = await POST(request as unknown as Request, { params: mockParams });
 
       expect(response).toEqual(mockChatResponse);
-      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, { user: 'abc' });
+      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, {
+        user: 'abc',
+        signal: expect.anything(),
+      });
     });
 
     it('should return an error response when chat completion fails', async () => {
