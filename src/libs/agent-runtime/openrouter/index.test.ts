@@ -30,7 +30,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  vi.clearAllMocks();
+  vi.restoreAllMocks();
 });
 
 describe('LobeOpenRouterAI', () => {
@@ -39,6 +39,15 @@ describe('LobeOpenRouterAI', () => {
       const instance = new LobeOpenRouterAI({ apiKey: 'test_api_key' });
       expect(instance).toBeInstanceOf(LobeOpenRouterAI);
       expect(instance.baseURL).toEqual(defaultBaseURL);
+    });
+
+    it('should correctly initialize with a custom base URL', async () => {
+      const instance = new LobeOpenRouterAI({
+        apiKey: 'test_api_key',
+        baseURL: 'https://api.abc.com/v1',
+      });
+      expect(instance).toBeInstanceOf(LobeOpenRouterAI);
+      expect(instance.baseURL).toEqual('https://api.abc.com/v1');
     });
   });
 
