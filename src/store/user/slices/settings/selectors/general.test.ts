@@ -5,27 +5,17 @@ import { merge } from '@/utils/merge';
 import { userGeneralSettingsSelectors } from './general';
 
 describe('settingsSelectors', () => {
-  describe('currentThemeMode', () => {
-    it('should return the correct theme', () => {
+  describe('fontSize', () => {
+    it('should return the fontSize', () => {
       const s: UserState = merge(initialState, {
         settings: {
-          general: { themeMode: 'light' },
+          general: { fontSize: 12 },
         },
       });
 
-      const result = userGeneralSettingsSelectors.currentThemeMode(s as UserStore);
+      const result = userGeneralSettingsSelectors.fontSize(s as UserStore);
 
-      expect(result).toBe('light');
-    });
-    it('should return the auto if not set the themeMode', () => {
-      const s: UserState = merge(initialState, {
-        settings: {
-          general: { themeMode: undefined },
-        },
-      });
-      const result = userGeneralSettingsSelectors.currentThemeMode(s as UserStore);
-
-      expect(result).toBe('auto');
+      expect(result).toBe(12);
     });
   });
 });

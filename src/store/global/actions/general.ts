@@ -1,3 +1,4 @@
+import { ThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { gt, parse, valid } from 'semver';
 import { SWRResponse } from 'swr';
@@ -18,6 +19,7 @@ const n = setNamespace('g');
 
 export interface GlobalGeneralAction {
   switchLocale: (locale: LocaleMode) => void;
+  switchThemeMode: (themeMode: ThemeMode) => void;
   updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
   useCheckLatestVersion: (enabledCheck?: boolean) => SWRResponse<string>;
   useInitSystemStatus: () => SWRResponse;
@@ -34,15 +36,18 @@ export const generalActionSlice: StateCreator<
 
     switchLang(locale);
   },
+  switchThemeMode: (themeMode) => {
+    get().updateSystemStatus({ themeMode });
+  },
   updateSystemStatus: (status, action) => {
     // Status cannot be modified when it is not initialized
     if (!get().isStatusInit) return;
 
     const nextStatus = merge(get().status, status);
+
     if (isEqual(get().status, nextStatus)) return;
 
     set({ status: nextStatus }, false, action || n('updateSystemStatus'));
-
     get().statusStorage.saveToLocalStorage(nextStatus);
   },
 
