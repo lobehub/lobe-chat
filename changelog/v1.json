@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Update cvpr cvf url rules."]
+    },
+    "date": "2025-03-10",
+    "version": "1.70.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix anthropic max tokens."]
+    },
+    "date": "2025-03-10",
+    "version": "1.70.1"
+  },
+  {
+    "children": {
       "features": ["Support no-fc models like deepseek r1 with online search."]
     },
     "date": "2025-03-09",

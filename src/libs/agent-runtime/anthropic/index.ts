@@ -100,10 +100,13 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     const postTools = buildAnthropicTools(tools, { enabledContextCaching });
 
-    if (!!thinking) {
-      const maxTokens =
-        // claude 3.7 thinking has max output of 64000 tokens
-        max_tokens ?? (thinking?.budget_tokens ? thinking?.budget_tokens + 64_000 : 8192);
+    if (!!thinking && thinking.type === 'enabled') {
+      // claude 3.7 thinking has max output of 64000 tokens
+      const maxTokens = !!max_tokens
+        ? thinking?.budget_tokens && thinking?.budget_tokens > max_tokens
+          ? Math.min(thinking?.budget_tokens + max_tokens, 64_000)
+          : max_tokens
+        : 64_000;
 
       // `temperature` may only be set to 1 when thinking is enabled.
       // `top_p` must be unset when thinking is enabled.
