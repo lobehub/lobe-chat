@@ -39,7 +39,11 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
       });
     }
 
-    return await agentRuntime.chat(data, { user: jwtPayload.userId, ...traceOptions });
+    return await agentRuntime.chat(data, {
+      user: jwtPayload.userId,
+      ...traceOptions,
+      signal: req.signal,
+    });
   } catch (e) {
     const {
       errorType = ChatErrorType.InternalServerError,

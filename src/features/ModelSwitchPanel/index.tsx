@@ -115,10 +115,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
             provider={provider.id}
             source={provider.source}
           />
-          <Link
-            href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}
-            prefetch={false}
-          >
+          <Link href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}>
             <ActionIcon
               icon={LucideBolt}
               size={'small'}
