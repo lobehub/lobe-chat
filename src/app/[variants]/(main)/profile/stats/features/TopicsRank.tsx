@@ -15,7 +15,7 @@ import { useClientDataSWR } from '@/libs/swr';
 import { topicService } from '@/services/topic';
 import { TopicRankItem } from '@/types/topic';
 
-export const TopicsRank = memo(() => {
+export const TopicsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation('auth');
   const theme = useTheme();
@@ -31,6 +31,7 @@ export const TopicsRank = memo(() => {
       query: {
         session: item.sessionId || INBOX_SESSION_ID,
         topic: item.id,
+        ...(mobile ? { showMobileWorkspace: true } : {}),
       },
       url: '/chat',
     });
