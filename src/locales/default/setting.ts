@@ -291,7 +291,7 @@ export default {
       title: '语音识别语种',
     },
     sttService: {
-      desc: '其中 broswer 为浏览器原生的语音识别服务',
+      desc: '其中 browser 为浏览器原生的语音识别服务',
       title: '语音识别服务',
     },
     title: '语音服务',
