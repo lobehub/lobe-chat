@@ -289,7 +289,7 @@
       "title": "語音識別語種"
     },
     "sttService": {
-      "desc": "其中 broswer 為瀏覽器原生的語音識別服務",
+      "desc": "其中 browser 為瀏覽器原生的語音識別服務",
       "title": "語音識別服務"
     },
     "title": "語音服務",
