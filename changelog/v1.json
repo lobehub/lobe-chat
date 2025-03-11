@@ -1,6 +1,32 @@
 [
   {
     "children": {
+      "fixes": ["Link jump in mobile terminal data statistics."]
+    },
+    "date": "2025-03-11",
+    "version": "1.70.6"
+  },
+  {
+    "children": {
+      "fixes": ["Refactor the theme implement."]
+    },
+    "date": "2025-03-11",
+    "version": "1.70.5"
+  },
+  {
+    "children": {
+      "improvements": ["Support OpenRouter custom BaseURL."]
+    },
+    "date": "2025-03-11",
+    "version": "1.70.4"
+  },
+  {
+    "children": {},
+    "date": "2025-03-11",
+    "version": "1.70.3"
+  },
+  {
+    "children": {
       "fixes": ["Update cvpr cvf url rules."]
     },
     "date": "2025-03-10",
