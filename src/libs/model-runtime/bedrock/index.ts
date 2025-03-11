@@ -59,7 +59,6 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     };
 
     if (endpoint) {
-      console.log('endpoint', endpoint);
       clientOptions.endpoint = endpoint;
     }
 
