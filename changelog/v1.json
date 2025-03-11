@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Link jump in mobile terminal data statistics."]
+    },
+    "date": "2025-03-11",
+    "version": "1.70.6"
+  },
+  {
+    "children": {
       "fixes": ["Refactor the theme implement."]
     },
     "date": "2025-03-11",
