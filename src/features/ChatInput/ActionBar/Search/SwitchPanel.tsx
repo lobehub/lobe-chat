@@ -12,6 +12,7 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/c
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { SearchMode } from '@/types/search';
 
+import FCSearchModel from './FCSearchModel';
 import ModelBuiltinSearch from './ModelBuiltinSearch';
 
 const { Text } = Typography;
@@ -37,10 +38,6 @@ const useStyles = createStyles(({ css, token }) => ({
   description: css`
     font-size: 12px;
     color: ${token.colorTextSecondary};
-  `,
-  disable: css`
-    cursor: not-allowed;
-    opacity: 0.45;
   `,
   iconWrapper: css`
     display: flex;
@@ -80,8 +77,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Item = memo<NetworkOption>(({ value, description, icon, label, disable }) => {
-  const { t } = useTranslation('chat');
+const Item = memo<NetworkOption>(({ value, description, icon, label }) => {
   const { styles } = useStyles();
   const [mode, updateAgentChatConfig] = useAgentStore((s) => [
     agentChatConfigSelectors.agentSearchMode(s),
@@ -96,12 +92,12 @@ const Item = memo<NetworkOption>(({ value, description, icon, label, disable }) 
       key={value}
       onClick={() => updateAgentChatConfig({ searchMode: value })}
     >
-      <Flexbox className={disable ? styles.disable : ''} gap={8} horizontal>
+      <Flexbox gap={8} horizontal>
         <div className={styles.iconWrapper}>{icon}</div>
         <div className={styles.content}>
           <div className={styles.title}>{label}</div>
           <Text className={styles.description} type="secondary">
-            {disable ? t('search.mode.disable') : description}
+            {description}
           </Text>
         </div>
       </Flexbox>
@@ -132,34 +128,24 @@ const AINetworkSettings = memo<AINetworkSettingsProps>(() => {
       label: t('search.mode.off.title'),
       value: 'off',
     },
-    // 等应用层联网功能做好以后再开启
-    // {
-    //   description: t('search.mode.on.desc'),
-    //   icon: <WifiOutlined />,
-    //   label: t('search.mode.on.title'),
-    //   value: 'on',
-    // },
     {
       description: t('search.mode.auto.desc'),
-      disable: !supportFC,
       icon: <Icon icon={SparklesIcon} />,
       label: t('search.mode.auto.title'),
       value: 'auto',
     },
   ];
 
+  const showDivider = isModelHasBuiltinSearchConfig || !supportFC;
+
   return (
     <Flexbox gap={8}>
       {options.map((option) => (
         <Item {...option} key={option.value} />
       ))}
-
-      {isModelHasBuiltinSearchConfig && (
-        <>
-          <Divider style={{ margin: 0, paddingInline: 12 }} />
-          <ModelBuiltinSearch />
-        </>
-      )}
+      {showDivider && <Divider style={{ margin: 0, paddingInline: 12 }} />}
+      {isModelHasBuiltinSearchConfig && <ModelBuiltinSearch />}
+      {!supportFC && <FCSearchModel />}
     </Flexbox>
   );
 });

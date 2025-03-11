@@ -2,6 +2,258 @@
 
 # Changelog
 
+### [Version 1.70.6](https://github.com/lobehub/lobe-chat/compare/v1.70.5...v1.70.6)
+
+<sup>Released on **2025-03-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Link jump in mobile terminal data statistics.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Link jump in mobile terminal data statistics, closes [#6893](https://github.com/lobehub/lobe-chat/issues/6893) ([505d24d](https://github.com/lobehub/lobe-chat/commit/505d24d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.70.5](https://github.com/lobehub/lobe-chat/compare/v1.70.4...v1.70.5)
+
+<sup>Released on **2025-03-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Refactor the theme implement.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Refactor the theme implement, closes [#6844](https://github.com/lobehub/lobe-chat/issues/6844) ([e5c2161](https://github.com/lobehub/lobe-chat/commit/e5c2161))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.70.4](https://github.com/lobehub/lobe-chat/compare/v1.70.3...v1.70.4)
+
+<sup>Released on **2025-03-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support OpenRouter custom BaseURL.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support OpenRouter custom BaseURL ([a8089ed](https://github.com/lobehub/lobe-chat/commit/a8089ed))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.70.3](https://github.com/lobehub/lobe-chat/compare/v1.70.2...v1.70.3)
+
+<sup>Released on **2025-03-11**</sup>
+
+#### 💄 Styles
+
+- **spelling**: Correct "broswer" to "browser" across codebase.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **spelling**: Correct "broswer" to "browser" across codebase, closes [#6876](https://github.com/lobehub/lobe-chat/issues/6876) ([8d677a2](https://github.com/lobehub/lobe-chat/commit/8d677a2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.70.2](https://github.com/lobehub/lobe-chat/compare/v1.70.1...v1.70.2)
+
+<sup>Released on **2025-03-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update cvpr cvf url rules.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update cvpr cvf url rules, closes [#6860](https://github.com/lobehub/lobe-chat/issues/6860) ([c299067](https://github.com/lobehub/lobe-chat/commit/c299067))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.70.1](https://github.com/lobehub/lobe-chat/compare/v1.70.0...v1.70.1)
+
+<sup>Released on **2025-03-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix anthropic max tokens.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix anthropic max tokens, closes [#6859](https://github.com/lobehub/lobe-chat/issues/6859) ([35fbc6c](https://github.com/lobehub/lobe-chat/commit/35fbc6c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.70.0](https://github.com/lobehub/lobe-chat/compare/v1.69.6...v1.70.0)
+
+<sup>Released on **2025-03-09**</sup>
+
+#### ✨ Features
+
+- **misc**: Support no-fc models like deepseek r1 with online search.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support no-fc models like deepseek r1 with online search, closes [#6842](https://github.com/lobehub/lobe-chat/issues/6842) ([f284c25](https://github.com/lobehub/lobe-chat/commit/f284c25))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.69.6](https://github.com/lobehub/lobe-chat/compare/v1.69.5...v1.69.6)
+
+<sup>Released on **2025-03-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix context cache control and model builtin search switch.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix context cache control and model builtin search switch, closes [#6831](https://github.com/lobehub/lobe-chat/issues/6831) ([5c6b8ea](https://github.com/lobehub/lobe-chat/commit/5c6b8ea))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.69.5](https://github.com/lobehub/lobe-chat/compare/v1.69.4...v1.69.5)
+
+<sup>Released on **2025-03-09**</sup>
+
+#### 💄 Styles
+
+- **chat**: Auto send message from URL.
+- **misc**: Support openrouter claude 3.7 sonnet reasoning.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **chat**: Auto send message from URL, closes [#6497](https://github.com/lobehub/lobe-chat/issues/6497) ([30b2639](https://github.com/lobehub/lobe-chat/commit/30b2639))
+- **misc**: Support openrouter claude 3.7 sonnet reasoning, closes [#6806](https://github.com/lobehub/lobe-chat/issues/6806) ([f1ffc2c](https://github.com/lobehub/lobe-chat/commit/f1ffc2c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.69.4](https://github.com/lobehub/lobe-chat/compare/v1.69.3...v1.69.4)
+
+<sup>Released on **2025-03-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix mistral can not chat.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix mistral can not chat, closes [#6828](https://github.com/lobehub/lobe-chat/issues/6828) ([00cba71](https://github.com/lobehub/lobe-chat/commit/00cba71))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.69.3](https://github.com/lobehub/lobe-chat/compare/v1.69.2...v1.69.3)
 
 <sup>Released on **2025-03-08**</sup>
