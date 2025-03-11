@@ -56,7 +56,7 @@ export class Crawler {
       try {
         const res = await crawlImpls[impl](transformedUrl, { filterOptions: mergedFilterOptions });
 
-        if (res)
+        if (res && res.content && res.content?.length > 100)
           return {
             crawler: impl,
             data: res,
