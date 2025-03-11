@@ -12,8 +12,9 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
 import { Locales, localeOptions } from '@/locales/resources';
 import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors, userGeneralSettingsSelectors } from '@/store/user/selectors';
+import { settingsSelectors } from '@/store/user/selectors';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from './ThemeSwatches';
 
@@ -24,8 +25,9 @@ const Theme = memo(() => {
 
   const [form] = Form.useForm();
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const themeMode = useUserStore(userGeneralSettingsSelectors.currentThemeMode);
-  const [setThemeMode, setSettings] = useUserStore((s) => [s.switchThemeMode, s.setSettings]);
+  const themeMode = useGlobalStore(systemStatusSelectors.themeMode);
+  const [setSettings] = useUserStore((s) => [s.setSettings]);
+  const [setThemeMode] = useGlobalStore((s) => [s.switchThemeMode]);
 
   useSyncSettings(form);
   const [switchLocale] = useGlobalStore((s) => [s.switchLocale]);
