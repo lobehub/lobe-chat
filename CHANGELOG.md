@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.70.4](https://github.com/lobehub/lobe-chat/compare/v1.70.3...v1.70.4)
+
+<sup>Released on **2025-03-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support OpenRouter custom BaseURL.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support OpenRouter custom BaseURL ([a8089ed](https://github.com/lobehub/lobe-chat/commit/a8089ed))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.70.3](https://github.com/lobehub/lobe-chat/compare/v1.70.2...v1.70.3)
 
 <sup>Released on **2025-03-11**</sup>
