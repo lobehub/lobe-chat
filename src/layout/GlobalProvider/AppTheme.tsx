@@ -14,10 +14,7 @@ import Link from 'next/link';
 import { ReactNode, memo, useEffect } from 'react';
 
 import AntdStaticMethods from '@/components/AntdStaticMethods';
-import {
-  LOBE_THEME_NEUTRAL_COLOR,
-  LOBE_THEME_PRIMARY_COLOR,
-} from '@/const/theme';
+import { LOBE_THEME_NEUTRAL_COLOR, LOBE_THEME_PRIMARY_COLOR } from '@/const/theme';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
@@ -121,6 +118,7 @@ const AppTheme = memo<AppThemeProps>(
 
     return (
       <ThemeProvider
+        appearance={themeMode !== 'auto' ? themeMode : undefined}
         className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}
         customTheme={{
           neutralColor: neutralColor ?? defaultNeutralColor,
