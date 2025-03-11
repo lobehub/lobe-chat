@@ -54,7 +54,7 @@ describe('ClientService', () => {
   });
 
   it('should update user settings correctly', async () => {
-    const settingsPatch: DeepPartial<UserSettings> = { general: { themeMode: 'dark' } };
+    const settingsPatch: DeepPartial<UserSettings> = { general: { fontSize: 12 } };
 
     await clientService.updateUserSettings(settingsPatch);
 
