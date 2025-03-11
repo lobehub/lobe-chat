@@ -4,11 +4,13 @@ import { gt, parse, valid } from 'semver';
 import { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { LOBE_THEME_APPEARANCE } from '@/const/theme';
 import { CURRENT_VERSION } from '@/const/version';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { globalService } from '@/services/global';
 import type { SystemStatus } from '@/store/global/initialState';
 import { LocaleMode } from '@/types/locale';
+import { setCookie } from '@/utils/client/cookie';
 import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
@@ -38,6 +40,8 @@ export const generalActionSlice: StateCreator<
   },
   switchThemeMode: (themeMode) => {
     get().updateSystemStatus({ themeMode });
+
+    setCookie(LOBE_THEME_APPEARANCE, themeMode === 'auto' ? undefined : themeMode);
   },
   updateSystemStatus: (status, action) => {
     // Status cannot be modified when it is not initialized
