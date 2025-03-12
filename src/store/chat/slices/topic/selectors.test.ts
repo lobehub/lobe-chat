@@ -62,26 +62,71 @@ describe('topicSelectors', () => {
     });
   });
 
+  describe('currentActiveTopicSummary', () => {
+    it('should return undefined if there is no active topic', () => {
+      const summary = topicSelectors.currentActiveTopicSummary(initialStore);
+      expect(summary).toBeUndefined();
+    });
+
+    it('should return topic summary with content and metadata', () => {
+      const state = merge(initialStore, {
+        topicMaps: {
+          test: [
+            {
+              id: 'topic1',
+              historySummary: 'Test summary',
+              metadata: { model: 'gpt-4', provider: 'openai' },
+            },
+          ],
+        },
+        activeId: 'test',
+        activeTopicId: 'topic1',
+      });
+
+      const summary = topicSelectors.currentActiveTopicSummary(state);
+      expect(summary).toEqual({
+        content: 'Test summary',
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+    });
+
+    it('should handle missing metadata', () => {
+      const state = merge(initialStore, {
+        topicMaps: {
+          test: [{ id: 'topic1', historySummary: 'Test summary' }],
+        },
+        activeId: 'test',
+        activeTopicId: 'topic1',
+      });
+
+      const summary = topicSelectors.currentActiveTopicSummary(state);
+      expect(summary).toEqual({
+        content: 'Test summary',
+        model: '',
+        provider: '',
+      });
+    });
+  });
+
   describe('currentUnFavTopics', () => {
     it('should return all unfavorited topics', () => {
       const state = merge(initialStore, { topicMaps, activeId: 'test' });
       const topics = topicSelectors.currentUnFavTopics(state);
       expect(topics).toEqual([topicMaps.test[1]]);
     });
+
+    it('should return empty array if no topics exist', () => {
+      const topics = topicSelectors.currentUnFavTopics(initialStore);
+      expect(topics).toEqual([]);
+    });
   });
 
   describe('displayTopics', () => {
-    it('should return current topics if not searching', () => {
+    it('should return current topics', () => {
       const state = merge(initialStore, { topicMaps, activeId: 'test' });
       const topics = topicSelectors.displayTopics(state);
       expect(topics).toEqual(topicMaps.test);
-    });
-
-    it('should return search topics if searching', () => {
-      const searchTopics = [{ id: 'search1', name: 'Search 1' }];
-      const state = merge(initialStore, { isSearchingTopic: true, searchTopics });
-      const topics = topicSelectors.displayTopics(state);
-      expect(topics).toEqual(searchTopics);
     });
   });
 
@@ -169,6 +214,44 @@ describe('topicSelectors', () => {
       expect(grouped.every((g) => g.id !== 'favorite')).toBeTruthy();
     });
   });
-});
 
-// TODO: Unit Test
+  describe('isCreatingTopic', () => {
+    it('should return creatingTopic state', () => {
+      const state = merge(initialStore, { creatingTopic: true });
+      expect(topicSelectors.isCreatingTopic(state)).toBe(true);
+    });
+  });
+
+  describe('isUndefinedTopics', () => {
+    it('should return true when topics are undefined', () => {
+      expect(topicSelectors.isUndefinedTopics(initialStore)).toBe(true);
+    });
+
+    it('should return false when topics exist', () => {
+      const state = merge(initialStore, { topicMaps, activeId: 'test' });
+      expect(topicSelectors.isUndefinedTopics(state)).toBe(false);
+    });
+  });
+
+  describe('isInSearchMode', () => {
+    it('should return inSearchingMode state', () => {
+      const state = merge(initialStore, { inSearchingMode: true });
+      expect(topicSelectors.isInSearchMode(state)).toBe(true);
+    });
+  });
+
+  describe('isSearchingTopic', () => {
+    it('should return isSearchingTopic state', () => {
+      const state = merge(initialStore, { isSearchingTopic: true });
+      expect(topicSelectors.isSearchingTopic(state)).toBe(true);
+    });
+  });
+
+  describe('searchTopics', () => {
+    it('should return search topics', () => {
+      const searchTopics = [{ id: 'search1', name: 'Search Topic' }];
+      const state = merge(initialStore, { searchTopics });
+      expect(topicSelectors.searchTopics(state)).toEqual(searchTopics);
+    });
+  });
+});
