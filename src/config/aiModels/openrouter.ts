@@ -241,32 +241,32 @@ const openrouterChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 64_000,
     description:
-      '融合通用与代码能力的全新开源模型, 不仅保留了原有 Chat 模型的通用对话能力和 Coder 模型的强大代码处理能力，还更好地对齐了人类偏好。此外，DeepSeek-V2.5 在写作任务、指令跟随等多个方面也实现了大幅提升。',
-    displayName: 'DeepSeek V2.5',
+      'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
+    displayName: 'DeepSeek V3',
     enabled: true,
     id: 'deepseek/deepseek-chat',
     pricing: {
-      input: 0.14,
-      output: 0.28,
+      input: 0.4,
+      output: 1.3,
     },
-    releasedAt: '2024-09-05',
+    releasedAt: '2024-12-26',
     type: 'chat',
   },
   {
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 163_840,
+    contextWindowTokens: 64_000,
     description:
       'DeepSeek-R1 在仅有极少标注数据的情况下，极大提升了模型推理能力。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
     displayName: 'DeepSeek R1',
     enabled: true,
     id: 'deepseek/deepseek-r1',
     pricing: {
-      input: 3,
-      output: 8,
+      input: 0.7,
+      output: 2.5,
     },
     releasedAt: '2025-01-20',
     type: 'chat',
