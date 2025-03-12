@@ -11,7 +11,6 @@ import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 import { authedProcedure, router } from '@/libs/trpc';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserService } from '@/server/services/user';
-import { Plans } from '@/types/subscription';
 import {
   NextAuthAccountSchame,
   UserGuideSchema,
