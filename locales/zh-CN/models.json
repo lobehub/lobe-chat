@@ -1,9 +1,18 @@
 {
   "01-ai/Yi-1.5-34B-Chat-16K": {
-    "description": "Yi-1.5 34B, 以丰富的训练样本在行业应用中提供优越表现。"
+    "description": "Yi-1.5-34B-Chat-16K 是 Yi-1.5 系列的一个变体，属于开源聊天模型。Yi-1.5 是 Yi 的升级版本，在 500B 个高质量语料上进行了持续预训练，并在 3M 多样化的微调样本上进行了微调。相比于 Yi，Yi-1.5 在编码、数学、推理和指令遵循能力方面表现更强，同时保持了出色的语言理解、常识推理和阅读理解能力。该模型在大多数基准测试中与更大的模型相当或表现更佳，具有 16K 的上下文长度"
+  },
+  "01-ai/Yi-1.5-6B-Chat": {
+    "description": "Yi-1.5-6B-Chat 是 Yi-1.5 系列的一个变体，属于开源聊天模型。Yi-1.5 是 Yi 的升级版本，在 500B 个高质量语料上进行了持续预训练，并在 3M 多样化的微调样本上进行了微调。相比于 Yi，Yi-1.5 在编码、数学、推理和指令遵循能力方面表现更强，同时保持了出色的语言理解、常识推理和阅读理解能力。该模型具有 4K、16K 和 32K 的上下文长度版本，预训练总量达到 3.6T 个 token"
   },
   "01-ai/Yi-1.5-9B-Chat-16K": {
-    "description": "Yi-1.5 9B 支持16K Tokens, 提供高效、流畅的语言生成能力。"
+    "description": "Yi-1.5-9B-Chat-16K 是 Yi-1.5 系列的一个变体，属于开源聊天模型。Yi-1.5 是 Yi 的升级版本，在 500B 个高质量语料上进行了持续预训练，并在 3M 多样化的微调样本上进行了微调。相比于 Yi，Yi-1.5 在编码、数学、推理和指令遵循能力方面表现更强，同时保持了出色的语言理解、常识推理和阅读理解能力。该模型在同等规模的开源模型中表现最佳"
+  },
+  "01-ai/yi-1.5-34b-chat": {
+    "description": "零一万物，最新开源微调模型，340亿参数，微调支持多种对话场景，高质量训练数据，对齐人类偏好。"
+  },
+  "01-ai/yi-1.5-9b-chat": {
+    "description": "零一万物，最新开源微调模型，90亿参数，微调支持多种对话场景，高质量训练数据，对齐人类偏好。"
   },
   "360gpt-pro": {
     "description": "360GPT Pro 作为 360 AI 模型系列的重要成员，以高效的文本处理能力满足多样化的自然语言应用场景，支持长文本理解和多轮对话等功能。"
@@ -14,8 +23,14 @@
   "360gpt-turbo-responsibility-8k": {
     "description": "360GPT Turbo Responsibility 8K 强调语义安全和责任导向，专为对内容安全有高度要求的应用场景设计，确保用户体验的准确性与稳健性。"
   },
+  "360gpt2-o1": {
+    "description": "360gpt2-o1 使用树搜索构建思维链，并引入了反思机制，使用强化学习训练，模型具备自我反思与纠错的能力。"
+  },
   "360gpt2-pro": {
     "description": "360GPT2 Pro 是 360 公司推出的高级自然语言处理模型，具备卓越的文本生成和理解能力，尤其在生成与创作领域表现出色，能够处理复杂的语言转换和角色演绎任务。"
+  },
+  "360zhinao2-o1": {
+    "description": "360zhinao2-o1 使用树搜索构建思维链，并引入了反思机制，使用强化学习训练，模型具备自我反思与纠错的能力。"
   },
   "4.0Ultra": {
     "description": "Spark Ultra 是星火大模型系列中最为强大的版本，在升级联网搜索链路同时，提升对文本内容的理解和总结能力。它是用于提升办公生产力和准确响应需求的全方位解决方案，是引领行业的智能产品。"
@@ -31,6 +46,60 @@
   },
   "Baichuan4": {
     "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
+  },
+  "Baichuan4-Air": {
+    "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
+  },
+  "Baichuan4-Turbo": {
+    "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
+  },
+  "DeepSeek-R1": {
+    "description": "最先进的高效 LLM，擅长推理、数学和编程。"
+  },
+  "DeepSeek-R1-Distill-Llama-70B": {
+    "description": "DeepSeek R1——DeepSeek 套件中更大更智能的模型——被蒸馏到 Llama 70B 架构中。基于基准测试和人工评估，该模型比原始 Llama 70B 更智能，尤其在需要数学和事实精确性的任务上表现出色。"
+  },
+  "DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "基于 Qwen2.5-Math-1.5B 的 DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。"
+  },
+  "DeepSeek-R1-Distill-Qwen-14B": {
+    "description": "基于 Qwen2.5-14B 的 DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。"
+  },
+  "DeepSeek-R1-Distill-Qwen-32B": {
+    "description": "DeepSeek-R1 系列通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆，超越 OpenAI-o1-mini 水平。"
+  },
+  "DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "基于 Qwen2.5-Math-7B 的 DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。"
+  },
+  "Doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。"
+  },
+  "Doubao-lite-128k": {
+    "description": "拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 128k 上下文窗口的推理和精调。"
+  },
+  "Doubao-lite-32k": {
+    "description": "拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。"
+  },
+  "Doubao-lite-4k": {
+    "description": "拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 4k 上下文窗口的推理和精调。"
+  },
+  "Doubao-pro-128k": {
+    "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 128k 上下文窗口的推理和精调。"
+  },
+  "Doubao-pro-256k": {
+    "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 256k 上下文窗口的推理和精调。"
+  },
+  "Doubao-pro-32k": {
+    "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 32k 上下文窗口的推理和精调。"
+  },
+  "Doubao-pro-4k": {
+    "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 4k 上下文窗口的推理和精调。"
+  },
+  "Doubao-vision-lite-32k": {
+    "description": "Doubao-vision 模型是豆包推出的多模态大模型，具备强大的图片理解与推理能力，以及精准的指令理解能力。模型在图像文本信息抽取、基于图像的推理任务上有展现出了强大的性能，能够应用于更复杂、更广泛的视觉问答任务。"
+  },
+  "Doubao-vision-pro-32k": {
+    "description": "Doubao-vision 模型是豆包推出的多模态大模型，具备强大的图片理解与推理能力，以及精准的指令理解能力。模型在图像文本信息抽取、基于图像的推理任务上有展现出了强大的性能，能够应用于更复杂、更广泛的视觉问答任务。"
   },
   "ERNIE-3.5-128K": {
     "description": "百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。"
@@ -68,23 +137,50 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) 是一种创新模型，适合多领域应用和复杂任务。"
   },
-  "Max-32k": {
-    "description": "Spark Max 32K 配置了大上下文处理能力，更强的上下文理解和逻辑推理能力，支持32K tokens的文本输入，适用于长文档阅读、私有知识问答等场景"
+  "InternVL2-8B": {
+    "description": "InternVL2-8B 是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。"
   },
-  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
-    "description": "Hermes 2 Mixtral 8x7B DPO 是一款高度灵活的多模型合并，旨在提供卓越的创造性体验。"
+  "InternVL2.5-26B": {
+    "description": "InternVL2.5-26B 是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。"
+  },
+  "Llama-3.2-11B-Vision-Instruct": {
+    "description": "在高分辨率图像上表现出色的图像推理能力，适用于视觉理解应用。"
+  },
+  "Llama-3.2-90B-Vision-Instruct\t": {
+    "description": "适用于视觉理解代理应用的高级图像推理能力。"
+  },
+  "LoRA/Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
+  },
+  "LoRA/Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct 是阿里云发布的最新大语言模型系列之一。该 7B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
+  },
+  "Meta-Llama-3.1-405B-Instruct": {
+    "description": "Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。"
+  },
+  "Meta-Llama-3.1-70B-Instruct": {
+    "description": "Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。"
+  },
+  "Meta-Llama-3.1-8B-Instruct": {
+    "description": "Llama 3.1指令调优的文本模型，针对多语言对话用例进行了优化，在许多可用的开源和封闭聊天模型中，在常见行业基准上表现优异。"
+  },
+  "Meta-Llama-3.2-1B-Instruct": {
+    "description": "先进的最尖端小型语言模型，具备语言理解、卓越的推理能力和文本生成能力。"
+  },
+  "Meta-Llama-3.2-3B-Instruct": {
+    "description": "先进的最尖端小型语言模型，具备语言理解、卓越的推理能力和文本生成能力。"
+  },
+  "Meta-Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月"
+  },
+  "MiniMax-Text-01": {
+    "description": "在 MiniMax-01系列模型中，我们做了大胆创新：首次大规模实现线性注意力机制，传统 Transformer架构不再是唯一的选择。这个模型的参数量高达4560亿，其中单次激活459亿。模型综合性能比肩海外顶尖模型，同时能够高效处理全球最长400万token的上下文，是GPT-4o的32倍，Claude-3.5-Sonnet的20倍。"
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) 是高精度的指令模型，适用于复杂计算。"
   },
-  "NousResearch/Nous-Hermes-2-Yi-34B": {
-    "description": "Nous Hermes-2 Yi (34B) 提供优化的语言输出和多样化的应用可能。"
-  },
   "OpenGVLab/InternVL2-26B": {
-    "description": "InternVL2在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。"
-  },
-  "OpenGVLab/InternVL2-Llama3-76B": {
-    "description": "InternVL2在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。"
+    "description": "InternVL2-26B 是 InternVL 2.0 系列多模态大语言模型中的一员。该模型由 InternViT-6B-448px-V1-5 视觉模型、MLP 投影层和 internlm2-chat-20b 语言模型组成。它在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。InternVL2-26B 使用 8K 上下文窗口训练，能够处理长文本、多图像和视频输入，显著提升了模型在这些任务上的处理能力"
   },
   "Phi-3-medium-128k-instruct": {
     "description": "相同的Phi-3-medium模型，但具有更大的上下文大小，适用于RAG或少量提示。"
@@ -110,53 +206,182 @@
   "Phi-3.5-vision-instrust": {
     "description": "Phi-3-vision模型的更新版。"
   },
-  "Pro-128k": {
-    "description": "Spark Pro 128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。"
-  },
   "Pro/OpenGVLab/InternVL2-8B": {
-    "description": "InternVL2在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。"
+    "description": "InternVL2-8B 是 InternVL 2.0 系列多模态大语言模型中的一员。该模型由 InternViT-300M-448px 视觉模型、MLP 投影层和 internlm2_5-7b-chat 语言模型组成。它在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。InternVL2-8B 使用 8K 上下文窗口训练，能够处理长文本、多图像和视频输入，显著提升了模型在这些任务上的处理能力"
+  },
+  "Pro/Qwen/Qwen2-1.5B-Instruct": {
+    "description": "Qwen2-1.5B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 1.5B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型。与 Qwen1.5-1.8B-Chat 相比，Qwen2-1.5B-Instruct 在 MMLU、HumanEval、GSM8K、C-Eval 和 IFEval 等测试中均显示出显著的性能提升，尽管参数量略少"
+  },
+  "Pro/Qwen/Qwen2-7B-Instruct": {
+    "description": "Qwen2-7B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 7B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它能够处理大规模输入。该模型在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型，并在某些任务上展现出与专有模型相当的竞争力。Qwen2-7B-Instruct 在多项评测中均优于 Qwen1.5-7B-Chat，显示出显著的性能提升"
   },
   "Pro/Qwen/Qwen2-VL-7B-Instruct": {
-    "description": "Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能。"
+    "description": "Qwen2-VL-7B-Instruct 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能，包括 MathVista、DocVQA、RealWorldQA 和 MTVQA 等。Qwen2-VL 能够用于高质量的基于视频的问答、对话和内容创作，还具备复杂推理和决策能力，可以与移动设备、机器人等集成，基于视觉环境和文本指令进行自动操作。除了英语和中文，Qwen2-VL 现在还支持理解图像中不同语言的文本，包括大多数欧洲语言、日语、韩语、阿拉伯语和越南语等"
   },
-  "Qwen/Qwen1.5-110B-Chat": {
-    "description": "Qwen 1.5 Chat (110B) 是一款高效能的对话模型，支持复杂对话场景。"
+  "Pro/Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct 是阿里云发布的最新大语言模型系列之一。该 7B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
   },
-  "Qwen/Qwen1.5-72B-Chat": {
-    "description": "Qwen 1.5 Chat (72B) 提供快速响应和自然对话能力，适合多语言环境。"
+  "Pro/Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coder-7B-Instruct 是阿里云发布的代码特定大语言模型系列的最新版本。该模型在 Qwen2.5 的基础上，通过 5.5 万亿个 tokens 的训练，显著提升了代码生成、推理和修复能力。它不仅增强了编码能力，还保持了数学和通用能力的优势。模型为代码智能体等实际应用提供了更全面的基础"
+  },
+  "Pro/THUDM/glm-4-9b-chat": {
+    "description": "GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用"
+  },
+  "Pro/deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。"
+  },
+  "Pro/deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。"
+  },
+  "Pro/google/gemma-2-9b-it": {
+    "description": "Gemma 是 Google 开发的轻量级、最先进的开放模型系列之一。它是一个仅解码器的大型语言模型，支持英语，提供开放权重、预训练变体和指令微调变体。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。该 9B 模型是通过 8 万亿个 tokens 训练而成。其相对较小的规模使其可以在资源有限的环境中部署，如笔记本电脑、台式机或您自己的云基础设施，从而使更多人能够访问最先进的 AI 模型并促进创新"
+  },
+  "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
+    "description": "Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 8B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月"
+  },
+  "QwQ-32B-Preview": {
+    "description": "Qwen QwQ 是由 Qwen 团队开发的实验研究模型，专注于提升AI推理能力。"
+  },
+  "Qwen/QVQ-72B-Preview": {
+    "description": "QVQ-72B-Preview 是由 Qwen 团队开发的专注于视觉推理能力的研究型模型，其在复杂场景理解和解决视觉相关的数学问题方面具有独特优势。"
+  },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ 是 Qwen 系列的推理模型。与传统的指令调优模型相比，QwQ 具备思考和推理能力，能够在下游任务中实现显著增强的性能，尤其是在解决困难问题方面。QwQ-32B 是中型推理模型，能够在与最先进的推理模型（如 DeepSeek-R1、o1-mini）的对比中取得有竞争力的性能。该模型采用 RoPE、SwiGLU、RMSNorm 和 Attention QKV bias 等技术，具有 64 层网络结构和 40 个 Q 注意力头（GQA 架构中 KV 为 8 个）。"
+  },
+  "Qwen/QwQ-32B-Preview": {
+    "description": "Qwen QwQ 是由 Qwen 团队开发的实验研究模型，专注于提升AI推理能力。"
+  },
+  "Qwen/Qwen2-1.5B-Instruct": {
+    "description": "Qwen2-1.5B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 1.5B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型。与 Qwen1.5-1.8B-Chat 相比，Qwen2-1.5B-Instruct 在 MMLU、HumanEval、GSM8K、C-Eval 和 IFEval 等测试中均显示出显著的性能提升，尽管参数量略少"
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen 2 Instruct (72B) 为企业级应用提供精准的指令理解和响应。"
   },
+  "Qwen/Qwen2-7B-Instruct": {
+    "description": "Qwen2-7B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 7B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它能够处理大规模输入。该模型在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型，并在某些任务上展现出与专有模型相当的竞争力。Qwen2-7B-Instruct 在多项评测中均优于 Qwen1.5-7B-Chat，显示出显著的性能提升"
+  },
   "Qwen/Qwen2-VL-72B-Instruct": {
-    "description": "Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能。"
+    "description": "Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能，包括 MathVista、DocVQA、RealWorldQA 和 MTVQA 等。Qwen2-VL 能够理解超过 20 分钟的视频，用于高质量的基于视频的问答、对话和内容创作。它还具备复杂推理和决策能力，可以与移动设备、机器人等集成，基于视觉环境和文本指令进行自动操作。除了英语和中文，Qwen2-VL 现在还支持理解图像中不同语言的文本，包括大多数欧洲语言、日语、韩语、阿拉伯语和越南语等"
   },
   "Qwen/Qwen2.5-14B-Instruct": {
-    "description": "Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。"
+    "description": "Qwen2.5-14B-Instruct 是阿里云发布的最新大语言模型系列之一。该 14B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
   },
   "Qwen/Qwen2.5-32B-Instruct": {
-    "description": "Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。"
+    "description": "Qwen2.5-32B-Instruct 是阿里云发布的最新大语言模型系列之一。该 32B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
+  },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
   },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
-    "description": "Qwen2.5 是全新的大型语言模型系列，具有更强的理解和生成能力。"
+    "description": "Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。它支持长达 128K tokens 的输入，可以生成超过 8K tokens 的长文本。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
   },
   "Qwen/Qwen2.5-72B-Instruct-Turbo": {
     "description": "Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。"
   },
   "Qwen/Qwen2.5-7B-Instruct": {
-    "description": "Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。"
+    "description": "Qwen2.5-7B-Instruct 是阿里云发布的最新大语言模型系列之一。该 7B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
   },
   "Qwen/Qwen2.5-7B-Instruct-Turbo": {
     "description": "Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。"
   },
-  "Qwen/Qwen2.5-Coder-7B-Instruct": {
-    "description": "Qwen2.5-Coder 专注于代码编写。"
+  "Qwen/Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5 Coder 32B Instruct 是阿里云发布的代码特定大语言模型系列的最新版本。该模型在 Qwen2.5 的基础上，通过 5.5 万亿个 tokens 的训练，显著提升了代码生成、推理和修复能力。它不仅增强了编码能力，还保持了数学和通用能力的优势。模型为代码智能体等实际应用提供了更全面的基础"
   },
-  "Qwen/Qwen2.5-Math-72B-Instruct": {
-    "description": "Qwen2.5-Math 专注于数学领域的问题求解，为高难度题提供专业解答。"
+  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coder-7B-Instruct 是阿里云发布的代码特定大语言模型系列的最新版本。该模型在 Qwen2.5 的基础上，通过 5.5 万亿个 tokens 的训练，显著提升了代码生成、推理和修复能力。它不仅增强了编码能力，还保持了数学和通用能力的优势。模型为代码智能体等实际应用提供了更全面的基础"
+  },
+  "Qwen2-72B-Instruct": {
+    "description": "Qwen2 是 Qwen 模型的最新系列，支持 128k 上下文，对比当前最优的开源模型，Qwen2-72B 在自然语言理解、知识、代码、数学及多语言等多项能力上均显著超越当前领先的模型。"
+  },
+  "Qwen2-7B-Instruct": {
+    "description": "Qwen2 是 Qwen 模型的最新系列，能够超越同等规模的最优开源模型甚至更大规模的模型，Qwen2 7B 在多个评测上取得显著的优势，尤其是代码及中文理解上。"
+  },
+  "Qwen2-VL-72B": {
+    "description": "Qwen2-VL-72B是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。"
+  },
+  "Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5-14B-Instruct 是一款 140 亿参数的大语言模型，性能表现优秀，优化中文和多语言场景，支持智能问答、内容生成等应用。"
+  },
+  "Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5-32B-Instruct 是一款 320 亿参数的大语言模型，性能表现均衡，优化中文和多语言场景，支持智能问答、内容生成等应用。"
+  },
+  "Qwen2.5-72B-Instruct": {
+    "description": "面向中文和英文的 LLM，针对语言、编程、数学、推理等领域。"
+  },
+  "Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5-7B-Instruct 是一款 70 亿参数的大语言模型，支持 function call 与外部系统无缝交互，极大提升了灵活性和扩展性。优化中文和多语言场景，支持智能问答、内容生成等应用。"
+  },
+  "Qwen2.5-Coder-14B-Instruct": {
+    "description": "Qwen2.5-Coder-14B-Instruct 是一款基于大规模预训练的编程指令模型，具备强大的代码理解和生成能力，能够高效地处理各种编程任务，特别适合智能代码编写、自动化脚本生成和编程问题解答。"
+  },
+  "Qwen2.5-Coder-32B-Instruct": {
+    "description": "高级 LLM，支持代码生成、推理和修复，涵盖主流编程语言。"
+  },
+  "SenseChat": {
+    "description": "基础版本模型 (V4)，4K上下文长度，通用能力强大"
+  },
+  "SenseChat-128K": {
+    "description": "基础版本模型 (V4)，128K上下文长度，在长文本理解及生成等任务中表现出色"
+  },
+  "SenseChat-32K": {
+    "description": "基础版本模型 (V4)，32K上下文长度，灵活应用于各类场景"
+  },
+  "SenseChat-5": {
+    "description": "最新版本模型 (V5.5)，128K上下文长度，在数学推理、英文对话、指令跟随以及长文本理解等领域能力显著提升，比肩GPT-4o。"
+  },
+  "SenseChat-5-1202": {
+    "description": "是基于V5.5的最新版本，较上版本在中英文基础能力，聊天，理科知识， 文科知识，写作，数理逻辑，字数控制 等几个维度的表现有显著提升。"
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "专门为适应香港地区的对话习惯、俚语及本地知识而设计，在粤语的对话理解上超越了GPT-4，在知识、推理、数学及代码编写等多个领域均能与GPT-4 Turbo相媲美。"
+  },
+  "SenseChat-Character": {
+    "description": "拟人对话标准版模型，8K上下文长度，高响应速度"
+  },
+  "SenseChat-Character-Pro": {
+    "description": "拟人对话高级版模型，32K上下文长度，能力全面提升，支持中/英文对话"
+  },
+  "SenseChat-Turbo": {
+    "description": "适用于快速问答、模型微调场景"
+  },
+  "SenseChat-Turbo-1202": {
+    "description": "是最新的轻量版本模型，达到全量模型90%以上能力，显著降低推理成本。"
+  },
+  "SenseChat-Vision": {
+    "description": "最新版本模型 (V5.5)，支持多图的输入，全面实现模型基础能力优化，在对象属性识别、空间关系、动作事件识别、场景理解、情感识别、逻辑常识推理和文本理解生成上都实现了较大提升。"
+  },
+  "Skylark2-lite-8k": {
+    "description": "云雀（Skylark）第二代模型，Skylark2-lite模型有较高的响应速度，适用于实时性要求高、成本敏感、对模型精度要求不高的场景，上下文窗口长度为8k。"
+  },
+  "Skylark2-pro-32k": {
+    "description": "云雀（Skylark）第二代模型，Skylark2-pro版本有较高的模型精度，适用于较为复杂的文本生成场景，如专业领域文案生成、小说创作、高质量翻译等，上下文窗口长度为32k。"
+  },
+  "Skylark2-pro-4k": {
+    "description": "云雀（Skylark）第二代模型，Skylark2-pro模型有较高的模型精度，适用于较为复杂的文本生成场景，如专业领域文案生成、小说创作、高质量翻译等，上下文窗口长度为4k。"
+  },
+  "Skylark2-pro-character-4k": {
+    "description": "云雀（Skylark）第二代模型，Skylark2-pro-character模型具有优秀的角色扮演和聊天能力，擅长根据用户prompt要求扮演不同角色与用户展开聊天，角色风格突出，对话内容自然流畅，适用于构建聊天机器人、虚拟助手和在线客服等场景，有较高的响应速度。"
+  },
+  "Skylark2-pro-turbo-8k": {
+    "description": "云雀（Skylark）第二代模型，Skylark2-pro-turbo-8k推理更快，成本更低，上下文窗口长度为8k。"
+  },
+  "THUDM/chatglm3-6b": {
+    "description": "ChatGLM3-6B 是 ChatGLM 系列的开源模型，由智谱 AI 开发。该模型保留了前代模型的优秀特性，如对话流畅和部署门槛低，同时引入了新的特性。它采用了更多样的训练数据、更充分的训练步数和更合理的训练策略，在 10B 以下的预训练模型中表现出色。ChatGLM3-6B 支持多轮对话、工具调用、代码执行和 Agent 任务等复杂场景。除对话模型外，还开源了基础模型 ChatGLM-6B-Base 和长文本对话模型 ChatGLM3-6B-32K。该模型对学术研究完全开放，在登记后也允许免费商业使用"
   },
   "THUDM/glm-4-9b-chat": {
-    "description": "GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。"
+    "description": "GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用"
+  },
+  "TeleAI/TeleChat2": {
+    "description": "TeleChat2大模型是由中国电信从0到1自主研发的生成式语义大模型，支持百科问答、代码生成、长文生成等功能，为用户提供对话咨询服务，能够与用户进行对话互动，回答问题，协助创作，高效便捷地帮助用户获取信息、知识和灵感。模型在幻觉问题、长文生成、逻辑理解等方面均有较出色表现。"
+  },
+  "TeleAI/TeleMM": {
+    "description": "TeleMM多模态大模型是由中国电信自主研发的多模态理解大模型，能够处理文本、图像等多种模态输入，支持图像理解、图表分析等功能，为用户提供跨模态的理解服务。模型能够与用户进行多模态交互，准确理解输入内容，回答问题、协助创作，并高效提供多模态信息和灵感支持。在细粒度感知，逻辑推理等多模态任务上有出色表现"
+  },
+  "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
+  },
+  "Yi-34B-Chat": {
+    "description": "Yi-1.5-34B 在保持原系列模型优秀的通用语言能力的前提下，通过增量训练 5 千亿高质量 token，大幅提高了数学逻辑、代码能力。"
   },
   "abab5.5-chat": {
     "description": "面向生产力场景，支持复杂任务处理和高效文本生成，适用于专业领域应用。"
@@ -173,74 +398,71 @@
   "abab6.5t-chat": {
     "description": "针对中文人设对话场景优化，提供流畅且符合中文表达习惯的对话生成能力。"
   },
-  "accounts/fireworks/models/firefunction-v1": {
-    "description": "Fireworks 开源函数调用模型，提供卓越的指令执行能力和开放可定制的特性。"
+  "accounts/fireworks/models/deepseek-r1": {
+    "description": "DeepSeek-R1 是一款最先进的大型语言模型，经过强化学习和冷启动数据的优化，具有出色的推理、数学和编程性能。"
   },
-  "accounts/fireworks/models/firefunction-v2": {
-    "description": "Fireworks 公司最新推出的 Firefunction-v2 是一款性能卓越的函数调用模型，基于 Llama-3 开发，并通过大量优化，特别适用于函数调用、对话及指令跟随等场景。"
-  },
-  "accounts/fireworks/models/firellava-13b": {
-    "description": "fireworks-ai/FireLLaVA-13b 是一款视觉语言模型，可以同时接收图像和文本输入，经过高质量数据训练，适合多模态任务。"
+  "accounts/fireworks/models/deepseek-v3": {
+    "description": "Deepseek 提供的强大 Mixture-of-Experts (MoE) 语言模型，总参数量为 671B，每个标记激活 37B 参数。"
   },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
-    "description": "Llama 3 70B 指令模型，专为多语言对话和自然语言理解优化，性能优于多数竞争模型。"
-  },
-  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
-    "description": "Llama 3 70B 指令模型（HF 版本），与官方实现结果保持一致，适合高质量的指令跟随任务。"
+    "description": "Meta 开发并发布了 Meta Llama 3 系列大语言模型（LLM），该系列包含 8B 和 70B 参数规模的预训练和指令微调生成文本模型。Llama 3 指令微调模型专为对话应用场景优化，并在常见的行业基准测试中优于许多现有的开源聊天模型。"
   },
   "accounts/fireworks/models/llama-v3-8b-instruct": {
-    "description": "Llama 3 8B 指令模型，优化用于对话及多语言任务，表现卓越且高效。"
+    "description": "Meta 开发并发布了 Meta Llama 3 系列大语言模型（LLM），这是一个包含 8B 和 70B 参数规模的预训练和指令微调生成文本模型的集合。Llama 3 指令微调模型专为对话应用场景优化，并在常见的行业基准测试中优于许多现有的开源聊天模型。"
   },
   "accounts/fireworks/models/llama-v3-8b-instruct-hf": {
-    "description": "Llama 3 8B 指令模型（HF 版本），与官方实现结果一致，具备高度一致性和跨平台兼容性。"
+    "description": "Meta Llama 3 指令微调模型专为对话应用场景优化，并在常见的行业基准测试中优于许多现有的开源聊天模型。Llama 3 8B Instruct（HF 版本）是 Llama 3 8B Instruct 的原始 FP16 版本，其结果应与官方 Hugging Face 实现一致。"
   },
   "accounts/fireworks/models/llama-v3p1-405b-instruct": {
-    "description": "Llama 3.1 405B 指令模型，具备超大规模参数，适合复杂任务和高负载场景下的指令跟随。"
+    "description": "Meta Llama 3.1 系列是多语言大语言模型（LLM）集合，包含 8B、70B 和 405B 参数规模的预训练和指令微调生成模型。Llama 3.1 指令微调文本模型（8B、70B、405B）专为多语言对话场景优化，在常见的行业基准测试中优于许多现有的开源和闭源聊天模型。405B 是 Llama 3.1 家族中能力最强的模型。该模型采用 FP8 进行推理，与参考实现高度匹配。"
   },
   "accounts/fireworks/models/llama-v3p1-70b-instruct": {
-    "description": "Llama 3.1 70B 指令模型，提供卓越的自然语言理解和生成能力，是对话及分析任务的理想选择。"
+    "description": "Meta Llama 3.1 系列是多语言大语言模型（LLM）集合，包含 8B、70B 和 405B 三种参数规模的预训练和指令微调生成模型。Llama 3.1 指令微调文本模型（8B、70B、405B）专为多语言对话应用优化，并在常见的行业基准测试中优于许多现有的开源和闭源聊天模型。"
   },
   "accounts/fireworks/models/llama-v3p1-8b-instruct": {
-    "description": "Llama 3.1 8B 指令模型，专为多语言对话优化，能够在常见行业基准上超越多数开源及闭源模型。"
+    "description": "Meta Llama 3.1 系列是多语言大语言模型（LLM）集合，包含 8B、70B 和 405B 三种参数规模的预训练和指令微调生成模型。Llama 3.1 指令微调文本模型（8B、70B、405B）专为多语言对话应用优化，并在常见的行业基准测试中优于许多现有的开源和闭源聊天模型。"
   },
   "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
-    "description": "Meta的11B参数指令调整图像推理模型。该模型针对视觉识别、图像推理、图像描述和回答关于图像的一般性问题进行了优化。该模型能够理解视觉数据，如图表和图形，并通过生成文本描述图像细节来弥合视觉与语言之间的差距。"
-  },
-  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
-    "description": "Llama 3.2 1B 指令模型是Meta推出的一款轻量级多语言模型。该模型旨在提高效率，与更大型的模型相比，在延迟和成本方面提供了显著的改进。该模型的示例用例包括检索和摘要。"
+    "description": "Meta 推出的指令微调图像推理模型，拥有 110 亿参数。该模型针对视觉识别、图像推理、图片字幕生成以及图片相关的常规问答进行了优化。它能够理解视觉数据，如图表和图形，并通过生成文本描述图像细节，弥合视觉与语言之间的鸿沟。"
   },
   "accounts/fireworks/models/llama-v3p2-3b-instruct": {
-    "description": "Llama 3.2 3B 指令模型是Meta推出的一款轻量级多语言模型。该模型旨在提高效率，与更大型的模型相比，在延迟和成本方面提供了显著的改进。该模型的示例用例包括查询和提示重写以及写作辅助。"
+    "description": "Llama 3.2 3B Instruct 是 Meta 推出的轻量级多语言模型。该模型专为高效运行而设计，相较于更大型的模型，具有显著的延迟和成本优势。其典型应用场景包括查询和提示重写，以及写作辅助。"
   },
   "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
-    "description": "Meta的90B参数指令调整图像推理模型。该模型针对视觉识别、图像推理、图像描述和回答关于图像的一般性问题进行了优化。该模型能够理解视觉数据，如图表和图形，并通过生成文本描述图像细节来弥合视觉与语言之间的差距。"
+    "description": "Meta 推出的指令微调图像推理模型，拥有 900 亿参数。该模型针对视觉识别、图像推理、图片字幕生成以及图片相关的常规问答进行了优化。它能够理解视觉数据，如图表和图形，并通过生成文本描述图像细节，弥合视觉与语言之间的鸿沟。注意：该模型目前作为无服务器模型进行实验性提供。如果用于生产环境，请注意 Fireworks 可能会在短时间内取消部署该模型。"
+  },
+  "accounts/fireworks/models/llama-v3p3-70b-instruct": {
+    "description": "Llama 3.3 70B Instruct 是 Llama 3.1 70B 的 12 月更新版本。该模型在 Llama 3.1 70B（于 2024 年 7 月发布）的基础上进行了改进，增强了工具调用、多语言文本支持、数学和编程能力。该模型在推理、数学和指令遵循方面达到了行业领先水平，并且能够提供与 3.1 405B 相似的性能，同时在速度和成本上具有显著优势。"
+  },
+  "accounts/fireworks/models/mistral-small-24b-instruct-2501": {
+    "description": "24B 参数模型，具备与更大型模型相当的最先进能力。"
   },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
-    "description": "Mixtral MoE 8x22B 指令模型，大规模参数和多专家架构，全方位支持复杂任务的高效处理。"
+    "description": "Mixtral MoE 8x22B Instruct v0.1 是 Mixtral MoE 8x22B v0.1 的指令微调版本，已启用聊天完成功能 API。"
   },
   "accounts/fireworks/models/mixtral-8x7b-instruct": {
-    "description": "Mixtral MoE 8x7B 指令模型，多专家架构提供高效的指令跟随及执行。"
-  },
-  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
-    "description": "Mixtral MoE 8x7B 指令模型（HF 版本），性能与官方实现一致，适合多种高效任务场景。"
+    "description": "Mixtral MoE 8x7B Instruct 是 Mixtral MoE 8x7B 的指令微调版本，已启用聊天完成功能 API。"
   },
   "accounts/fireworks/models/mythomax-l2-13b": {
-    "description": "MythoMax L2 13B 模型，结合新颖的合并技术，擅长叙事和角色扮演。"
+    "description": "MythoMix 的改进版，可能是其更为完善的变体，是 MythoLogic-L2 和 Huginn 的合并，采用了高度实验性的张量类型合并技术。由于其独特的性质，该模型在讲故事和角色扮演方面表现出色。"
   },
   "accounts/fireworks/models/phi-3-vision-128k-instruct": {
-    "description": "Phi-3-Vision-128K-Instruct 是一个轻量级的、最先进的开放多模态模型，它基于包括合成数据和经过筛选的公开网站在内的数据集构建，专注于非常高质量、推理密集型的数据，这些数据既包括文本也包括视觉。该模型属于 Phi-3 模型系列，其多模态版本支持 128K 的上下文长度（以标记为单位）。该模型经过严格的增强过程，结合了监督微调和直接偏好优化，以确保精确遵循指令和强大的安全措施。"
+    "description": "Phi-3-Vision-128K-Instruct 是一个轻量级的、最先进的开放多模态模型，基于包括合成数据和筛选后的公开网站数据集构建，重点关注文本和视觉方面的高质量、推理密集型数据。该模型属于 Phi-3 模型家族，其多模态版本支持 128K 上下文长度（以标记为单位）。该模型经过严格的增强过程，包括监督微调和直接偏好优化，以确保精确的指令遵循和强大的安全措施。"
+  },
+  "accounts/fireworks/models/qwen-qwq-32b-preview": {
+    "description": "Qwen QwQ 模型专注于推动 AI 推理，并展示了开放模型在推理能力上与闭源前沿模型匹敌的力量。QwQ-32B-Preview 是一个实验性发布版本，在 GPQA、AIME、MATH-500 和 LiveCodeBench 基准测试中，在分析和推理能力上可与 o1 相媲美，并超越 GPT-4o 和 Claude 3.5 Sonnet。注意：该模型目前作为无服务器模型进行实验性提供。如果用于生产环境，请注意 Fireworks 可能会在短时间内取消部署该模型。"
+  },
+  "accounts/fireworks/models/qwen2-vl-72b-instruct": {
+    "description": "Qwen-VL 模型的 72B 版本是阿里巴巴最新迭代的成果，代表了近一年的创新。"
   },
   "accounts/fireworks/models/qwen2p5-72b-instruct": {
-    "description": "Qwen2.5 是由阿里云 Qwen 团队开发的一系列仅包含解码器的语言模型。这些模型提供不同的大小，包括 0.5B、1.5B、3B、7B、14B、32B 和 72B，并且有基础版（base）和指令版（instruct）两种变体。"
+    "description": "Qwen2.5 是由 Qwen 团队和阿里云开发的一系列仅解码语言模型，提供 0.5B、1.5B、3B、7B、14B、32B 和 72B 不同参数规模，并包含基础版和指令微调版。"
   },
-  "accounts/fireworks/models/starcoder-16b": {
-    "description": "StarCoder 15.5B 模型，支持高级编程任务，多语言能力增强，适合复杂代码生成和理解。"
-  },
-  "accounts/fireworks/models/starcoder-7b": {
-    "description": "StarCoder 7B 模型，针对80多种编程语言训练，拥有出色的编程填充能力和语境理解。"
+  "accounts/fireworks/models/qwen2p5-coder-32b-instruct": {
+    "description": "Qwen2.5-Coder 是最新一代专为代码设计的 Qwen 大型语言模型（前称为 CodeQwen）。注意：该模型目前作为无服务器模型进行实验性提供。如果用于生产环境，请注意 Fireworks 可能会在短时间内取消部署该模型。"
   },
   "accounts/yi-01-ai/models/yi-large": {
-    "description": "Yi-Large 模型，具备卓越的多语言处理能力，可用于各类语言生成和理解任务。"
+    "description": "Yi-Large 是顶尖的大型语言模型之一，在 LMSYS 基准测试排行榜上，其表现仅次于 GPT-4、Gemini 1.5 Pro 和 Claude 3 Opus。它在多语言能力方面表现卓越，特别是在西班牙语、中文、日语、德语和法语方面。Yi-Large 还具有用户友好性，采用与 OpenAI 相同的 API 定义，便于集成。"
   },
   "ai21-jamba-1.5-large": {
     "description": "一个398B参数（94B活跃）的多语言模型，提供256K长上下文窗口、函数调用、结构化输出和基于事实的生成。"
@@ -249,6 +471,9 @@
     "description": "一个52B参数（12B活跃）的多语言模型，提供256K长上下文窗口、函数调用、结构化输出和基于事实的生成。"
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
+    "description": "Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。"
+  },
+  "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。"
   },
   "anthropic.claude-3-haiku-20240307-v1:0": {
@@ -275,14 +500,23 @@
   "anthropic/claude-3-opus": {
     "description": "Claude 3 Opus 是 Anthropic 用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。"
   },
+  "anthropic/claude-3.5-haiku": {
+    "description": "Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。"
+  },
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。"
+  },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet 是 Anthropic 迄今为止最智能的模型，也是市场上首个混合推理模型。Claude 3.7 Sonnet 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。"
   },
   "aya": {
     "description": "Aya 23 是 Cohere 推出的多语言模型，支持 23 种语言，为多元化语言应用提供便利。"
   },
   "aya:35b": {
     "description": "Aya 23 是 Cohere 推出的多语言模型，支持 23 种语言，为多元化语言应用提供便利。"
+  },
+  "baichuan/baichuan2-13b-chat": {
+    "description": "Baichuan-13B 百川智能开发的包含 130 亿参数的开源可商用的大规模语言模型，在权威的中文和英文 benchmark 上均取得同尺寸最好的效果"
   },
   "charglm-3": {
     "description": "CharGLM-3 专为角色扮演与情感陪伴设计，支持超长多轮记忆与个性化对话，应用广泛。"
@@ -296,11 +530,17 @@
   "claude-2.1": {
     "description": "Claude 2 为企业提供了关键能力的进步，包括业界领先的 200K token 上下文、大幅降低模型幻觉的发生率、系统提示以及一个新的测试功能：工具调用。"
   },
+  "claude-3-5-haiku-20241022": {
+    "description": "Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。"
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。"
   },
   "claude-3-5-sonnet-20241022": {
     "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。"
+  },
+  "claude-3-7-sonnet-20250219": {
+    "description": "Claude 3.7 Sonnet 是 Anthropic 迄今为止最智能的模型，也是市场上首个混合推理模型。Claude 3.7 Sonnet 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。"
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku 是 Anthropic 的最快且最紧凑的模型，旨在实现近乎即时的响应。它具有快速且准确的定向性能。"
@@ -314,6 +554,9 @@
   "codegeex-4": {
     "description": "CodeGeeX-4 是强大的AI编程助手，支持多种编程语言的智能问答与代码补全，提升开发效率。"
   },
+  "codegeex4-all-9b": {
+    "description": "CodeGeeX4-ALL-9B 是一个多语言代码生成模型，支持包括代码补全和生成、代码解释器、网络搜索、函数调用、仓库级代码问答在内的全面功能，覆盖软件开发的各种场景。是参数少于 10B 的顶尖代码生成模型。"
+  },
   "codegemma": {
     "description": "CodeGemma 专用于不同编程任务的轻量级语言模型，支持快速迭代和集成。"
   },
@@ -321,6 +564,9 @@
     "description": "CodeGemma 专用于不同编程任务的轻量级语言模型，支持快速迭代和集成。"
   },
   "codellama": {
+    "description": "Code Llama 是一款专注于代码生成和讨论的 LLM，结合广泛的编程语言支持，适用于开发者环境。"
+  },
+  "codellama/CodeLlama-34b-Instruct-hf": {
     "description": "Code Llama 是一款专注于代码生成和讨论的 LLM，结合广泛的编程语言支持，适用于开发者环境。"
   },
   "codellama:13b": {
@@ -339,7 +585,7 @@
     "description": "Codestral 是 Mistral AI 的首款代码模型，为代码生成任务提供优异支持。"
   },
   "codestral-latest": {
-    "description": "Codestral是专注于代码生成的尖端生成模型，优化了中间填充和代码补全任务。"
+    "description": "Codestral 是我们最先进的编码语言模型，第二个版本于2025年1月发布，专门从事低延迟、高频任务如中间填充（RST）、代码纠正和测试生成。"
   },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B 是一款为指令遵循、对话和编程设计的模型。"
@@ -356,17 +602,56 @@
   "command-r-plus": {
     "description": "Command R+ 是一款高性能的大型语言模型，专为真实企业场景和复杂应用而设计。"
   },
+  "dall-e-2": {
+    "description": "第二代 DALL·E 模型，支持更真实、准确的图像生成，分辨率是第一代的4倍"
+  },
+  "dall-e-3": {
+    "description": "最新的 DALL·E 模型，于2023年11月发布。支持更真实、准确的图像生成，具有更强的细节表现力"
+  },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct 提供高可靠性的指令处理能力，支持多行业应用。"
   },
+  "deepseek-ai/DeepSeek-R1": {
+    "description": "DeepSeek-R1 系列通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆，超越 OpenAI-o1-mini 水平。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
+    "description": "DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B": {
+    "description": "DeepSeek-R1-Distill-Llama-8B 是基于 Llama-3.1-8B 开发的蒸馏模型。该模型使用 DeepSeek-R1 生成的样本进行微调，展现出优秀的推理能力。在多个基准测试中表现不俗，其中在 MATH-500 上达到了 89.1% 的准确率，在 AIME 2024 上达到了 50.4% 的通过率，在 CodeForces 上获得了 1205 的评分，作为 8B 规模的模型展示了较强的数学和编程能力。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B": {
+    "description": "DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B": {
+    "description": "DeepSeek-R1-Distill-Qwen-32B 是基于 Qwen2.5-32B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在数学、编程和推理等多个领域展现出卓越的性能。在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异成绩，其中在 MATH-500 上达到了 94.3% 的准确率，展现出强大的数学推理能力。"
+  },
+  "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "DeepSeek-R1-Distill-Qwen-7B 是基于 Qwen2.5-Math-7B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 92.8% 的准确率，在 AIME 2024 上达到了 55.5% 的通过率，在 CodeForces 上获得了 1189 的评分，作为 7B 规模的模型展示了较强的数学和编程能力。"
+  },
   "deepseek-ai/DeepSeek-V2.5": {
-    "description": "DeepSeek V2.5 集合了先前版本的优秀特征，增强了通用和编码能力。"
+    "description": "DeepSeek-V2.5 是 DeepSeek-V2-Chat 和 DeepSeek-Coder-V2-Instruct 的升级版本，集成了两个先前版本的通用和编码能力。该模型在多个方面进行了优化，包括写作和指令跟随能力，更好地与人类偏好保持一致。DeepSeek-V2.5 在各种评估基准上都取得了显著的提升，如 AlpacaEval 2.0、ArenaHard、AlignBench 和 MT-Bench 等。"
+  },
+  "deepseek-ai/DeepSeek-V3": {
+    "description": "DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。"
   },
   "deepseek-ai/deepseek-llm-67b-chat": {
     "description": "DeepSeek LLM Chat (67B) 是创新的 AI 模型 提供深度语言理解和互动能力。"
   },
+  "deepseek-ai/deepseek-r1": {
+    "description": "最先进的高效 LLM，擅长推理、数学和编程。"
+  },
+  "deepseek-ai/deepseek-vl2": {
+    "description": "DeepSeek-VL2 是一个基于 DeepSeekMoE-27B 开发的混合专家（MoE）视觉语言模型，采用稀疏激活的 MoE 架构，在仅激活 4.5B 参数的情况下实现了卓越性能。该模型在视觉问答、光学字符识别、文档/表格/图表理解和视觉定位等多个任务中表现优异。"
+  },
   "deepseek-chat": {
     "description": "融合通用与代码能力的全新开源模型, 不仅保留了原有 Chat 模型的通用对话能力和 Coder 模型的强大代码处理能力，还更好地对齐了人类偏好。此外，DeepSeek-V2.5 在写作任务、指令跟随等多个方面也实现了大幅提升。"
+  },
+  "deepseek-coder-33B-instruct": {
+    "description": "DeepSeek Coder 33B 是一个代码语言模型， 基于 2 万亿数据训练而成，其中 87% 为代码， 13% 为中英文语言。模型引入 16K 窗口大小和填空任务，提供项目级别的代码补全和片段填充功能。"
   },
   "deepseek-coder-v2": {
     "description": "DeepSeek Coder V2 是开源的混合专家代码模型，在代码任务方面表现优异，与 GPT4-Turbo 相媲美。"
@@ -374,17 +659,128 @@
   "deepseek-coder-v2:236b": {
     "description": "DeepSeek Coder V2 是开源的混合专家代码模型，在代码任务方面表现优异，与 GPT4-Turbo 相媲美。"
   },
+  "deepseek-r1": {
+    "description": "DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能比肩 OpenAI o1 正式版。"
+  },
+  "deepseek-r1-distill-llama-70b": {
+    "description": "DeepSeek-R1-Distill-Llama-70B 是一个基于 Llama-3.3-70B-Instruct 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
+  },
+  "deepseek-r1-distill-llama-8b": {
+    "description": "DeepSeek-R1-Distill-Llama-8B 是一个基于 Llama-3.1-8B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
+  },
+  "deepseek-r1-distill-qwen-1.5b": {
+    "description": "DeepSeek-R1-Distill-Qwen-1.5B 是一个基于 Qwen2.5-Math-1.5B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
+  },
+  "deepseek-r1-distill-qwen-14b": {
+    "description": "DeepSeek-R1-Distill-Qwen-14B 是一个基于 Qwen2.5-14B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
+  },
+  "deepseek-r1-distill-qwen-32b": {
+    "description": "DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。"
+  },
+  "deepseek-r1-distill-qwen-7b": {
+    "description": "DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。"
+  },
+  "deepseek-reasoner": {
+    "description": "DeepSeek 推出的推理模型。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
+  },
   "deepseek-v2": {
     "description": "DeepSeek V2 是高效的 Mixture-of-Experts 语言模型，适用于经济高效的处理需求。"
   },
   "deepseek-v2:236b": {
     "description": "DeepSeek V2 236B 是 DeepSeek 的设计代码模型，提供强大的代码生成能力。"
   },
+  "deepseek-v3": {
+    "description": "DeepSeek-V3 为杭州深度求索人工智能基础技术研究有限公司自研的 MoE 模型，其多项评测成绩突出，在主流榜单中位列开源模型榜首。V3 相比 V2.5 模型生成速度实现 3 倍提升，为用户带来更加迅速流畅的使用体验。"
+  },
   "deepseek/deepseek-chat": {
     "description": "融合通用与代码能力的全新开源模型, 不仅保留了原有 Chat 模型的通用对话能力和 Coder 模型的强大代码处理能力，还更好地对齐了人类偏好。此外，DeepSeek-V2.5 在写作任务、指令跟随等多个方面也实现了大幅提升。"
   },
+  "deepseek/deepseek-r1": {
+    "description": "DeepSeek R1是DeepSeek团队发布的最新开源模型，具备非常强悍的推理性能，尤其在数学、编程和推理任务上达到了与OpenAI的o1模型相当的水平。"
+  },
+  "deepseek/deepseek-r1-distill-llama-70b": {
+    "description": "DeepSeek R1 Distill Llama 70B是基于Llama3.3  70B的大型语言模型，该模型利用DeepSeek R1输出的微调，实现了与大型前沿模型相当的竞争性能。"
+  },
+  "deepseek/deepseek-r1-distill-llama-8b": {
+    "description": "DeepSeek R1 Distill Llama 8B 是一种基于 Llama-3.1-8B-Instruct 的蒸馏大语言模型，通过使用 DeepSeek R1 的输出进行训练而得。"
+  },
+  "deepseek/deepseek-r1-distill-qwen-14b": {
+    "description": "DeepSeek R1 Distill Qwen 14B 是一种基于 Qwen 2.5 14B 的蒸馏大语言模型，通过使用 DeepSeek R1 的输出进行训练而得。该模型在多个基准测试中超越了 OpenAI 的 o1-mini，取得了密集模型（dense models）的最新技术领先成果（state-of-the-art）。以下是一些基准测试的结果：\nAIME 2024 pass@1: 69.7\nMATH-500 pass@1: 93.9\nCodeForces Rating: 1481\n该模型通过从 DeepSeek R1 的输出中进行微调，展现了与更大规模的前沿模型相当的竞争性能。"
+  },
+  "deepseek/deepseek-r1-distill-qwen-32b": {
+    "description": "DeepSeek R1 Distill Qwen 32B 是一种基于 Qwen 2.5 32B 的蒸馏大语言模型，通过使用 DeepSeek R1 的输出进行训练而得。该模型在多个基准测试中超越了 OpenAI 的 o1-mini，取得了密集模型（dense models）的最新技术领先成果（state-of-the-art）。以下是一些基准测试的结果：\nAIME 2024 pass@1: 72.6\nMATH-500 pass@1: 94.3\nCodeForces Rating: 1691\n该模型通过从 DeepSeek R1 的输出中进行微调，展现了与更大规模的前沿模型相当的竞争性能。"
+  },
+  "deepseek/deepseek-r1/community": {
+    "description": "DeepSeek R1是DeepSeek团队发布的最新开源模型，具备非常强悍的推理性能，尤其在数学、编程和推理任务上达到了与OpenAI的o1模型相当的水平。"
+  },
+  "deepseek/deepseek-r1:free": {
+    "description": "DeepSeek-R1 在仅有极少标注数据的情况下，极大提升了模型推理能力。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
+  },
+  "deepseek/deepseek-v3": {
+    "description": "DeepSeek-V3在推理速度方面实现了比之前模型的重大突破。在开源模型中排名第一，并可与全球最先进的闭源模型相媲美。DeepSeek-V3 采用了多头潜在注意力 （MLA） 和 DeepSeekMoE 架构，这些架构在 DeepSeek-V2 中得到了全面验证。此外，DeepSeek-V3 开创了一种用于负载均衡的辅助无损策略，并设定了多标记预测训练目标以获得更强的性能。"
+  },
+  "deepseek/deepseek-v3/community": {
+    "description": "DeepSeek-V3在推理速度方面实现了比之前模型的重大突破。在开源模型中排名第一，并可与全球最先进的闭源模型相媲美。DeepSeek-V3 采用了多头潜在注意力 （MLA） 和 DeepSeekMoE 架构，这些架构在 DeepSeek-V2 中得到了全面验证。此外，DeepSeek-V3 开创了一种用于负载均衡的辅助无损策略，并设定了多标记预测训练目标以获得更强的性能。"
+  },
+  "doubao-1.5-lite-32k": {
+    "description": "Doubao-1.5-lite 全新一代轻量版模型，极致响应速度，效果与时延均达到全球一流水平。"
+  },
+  "doubao-1.5-pro-256k": {
+    "description": "Doubao-1.5-pro-256k 基于 Doubao-1.5-Pro 全面升级版，整体效果大幅提升 10%。支持 256k 上下文窗口的推理，输出长度支持最大 12k tokens。更高性能、更大窗口、超高性价比，适用于更广泛的应用场景。"
+  },
+  "doubao-1.5-pro-32k": {
+    "description": "Doubao-1.5-pro 全新一代主力模型，性能全面升级，在知识、代码、推理、等方面表现卓越。"
+  },
   "emohaa": {
     "description": "Emohaa 是心理模型，具备专业咨询能力，帮助用户理解情感问题。"
+  },
+  "ernie-3.5-128k": {
+    "description": "百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ernie-3.5-8k": {
+    "description": "百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ernie-3.5-8k-preview": {
+    "description": "百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ernie-4.0-8k-latest": {
+    "description": "百度自研的旗舰级超大规模⼤语⾔模型，相较ERNIE 3.5实现了模型能力全面升级，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ernie-4.0-8k-preview": {
+    "description": "百度自研的旗舰级超大规模⼤语⾔模型，相较ERNIE 3.5实现了模型能力全面升级，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ernie-4.0-turbo-128k": {
+    "description": "百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀"
+  },
+  "ernie-4.0-turbo-8k-latest": {
+    "description": "百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀"
+  },
+  "ernie-4.0-turbo-8k-preview": {
+    "description": "百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀"
+  },
+  "ernie-char-8k": {
+    "description": "百度自研的垂直场景大语言模型，适合游戏NPC、客服对话、对话角色扮演等应用场景，人设风格更为鲜明、一致，指令遵循能力更强，推理性能更优。"
+  },
+  "ernie-char-fiction-8k": {
+    "description": "百度自研的垂直场景大语言模型，适合游戏NPC、客服对话、对话角色扮演等应用场景，人设风格更为鲜明、一致，指令遵循能力更强，推理性能更优。"
+  },
+  "ernie-lite-8k": {
+    "description": "ERNIE Lite是百度自研的轻量级大语言模型，兼顾优异的模型效果与推理性能，适合低算力AI加速卡推理使用。"
+  },
+  "ernie-lite-pro-128k": {
+    "description": "百度自研的轻量级大语言模型，兼顾优异的模型效果与推理性能，效果比ERNIE Lite更优，适合低算力AI加速卡推理使用。"
+  },
+  "ernie-novel-8k": {
+    "description": "百度自研通用大语言模型，在小说续写能力上有明显优势，也可用在短剧、电影等场景。"
+  },
+  "ernie-speed-128k": {
+    "description": "百度2024年最新发布的自研高性能大语言模型，通用能力优异，适合作为基座模型进行精调，更好地处理特定场景问题，同时具备极佳的推理性能。"
+  },
+  "ernie-speed-pro-128k": {
+    "description": "百度2024年最新发布的自研高性能大语言模型，通用能力优异，效果比ERNIE Speed更优，适合作为基座模型进行精调，更好地处理特定场景问题，同时具备极佳的推理性能。"
+  },
+  "ernie-tiny-8k": {
+    "description": "ERNIE Tiny是百度自研的超高性能大语言模型，部署与精调成本在文心系列模型中最低。"
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供稳定并可调优的性能，是复杂任务解决方案的理想选择。"
@@ -395,11 +791,17 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro 是Google的高性能AI模型，专为广泛任务扩展而设计。"
   },
+  "gemini-1.5-flash": {
+    "description": "Gemini 1.5 Flash 是Google最新的多模态AI模型，具备快速处理能力，支持文本、图像和视频输入，适用于多种任务的高效扩展。"
+  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 是一款高效的多模态模型，支持广泛应用的扩展。"
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 是一款高效的多模态模型，支持广泛应用的扩展。"
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B 是一款高效的多模态模型，支持广泛应用的扩展。"
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 是最新的实验性模型，在文本和多模态用例中都有显著的性能提升。"
@@ -425,6 +827,30 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro 支持高达200万个tokens，是中型多模态模型的理想选择，适用于复杂任务的多方面支持。"
   },
+  "gemini-2.0-flash": {
+    "description": "Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。"
+  },
+  "gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。"
+  },
+  "gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。"
+  },
+  "gemini-2.0-flash-lite-001": {
+    "description": "Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。"
+  },
+  "gemini-2.0-flash-lite-preview-02-05": {
+    "description": "一个 Gemini 2.0 Flash 模型，针对成本效益和低延迟等目标进行了优化。"
+  },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。"
+  },
+  "gemini-2.0-flash-thinking-exp-01-21": {
+    "description": "Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。"
+  },
+  "gemini-2.0-pro-exp-02-05": {
+    "description": "Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。"
+  },
   "gemma-7b-it": {
     "description": "Gemma 7B 适合中小规模任务处理，兼具成本效益。"
   },
@@ -440,9 +866,6 @@
   "gemma2:2b": {
     "description": "Gemma 2 是 Google 推出的高效模型，涵盖从小型应用到复杂数据处理的多种应用场景。"
   },
-  "general": {
-    "description": "Spark Lite 是一款轻量级大语言模型，具备极低的延迟与高效的处理能力，完全免费开放，支持实时在线搜索功能。其快速响应的特性使其在低算力设备上的推理应用和模型微调中表现出色，为用户带来出色的成本效益和智能体验，尤其在知识问答、内容生成及搜索场景下表现不俗。"
-  },
   "generalv3": {
     "description": "Spark Pro 是一款为专业领域优化的高性能大语言模型，专注数学、编程、医疗、教育等多个领域，并支持联网搜索及内置天气、日期等插件。其优化后模型在复杂知识问答、语言理解及高层次文本创作中展现出色表现和高效性能，是适合专业应用场景的理想选择。"
   },
@@ -454,6 +877,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520 是最新模型版本，专为高度复杂和多样化任务设计，表现卓越。"
+  },
+  "glm-4-9b-chat": {
+    "description": "GLM-4-9B-Chat 在语义、数学、推理、代码和知识等多方面均表现出较高性能。还具备网页浏览、代码执行、自定义工具调用和长文本推理。 支持包括日语，韩语，德语在内的 26 种语言。"
   },
   "glm-4-air": {
     "description": "GLM-4-Air 是性价比高的版本，性能接近GLM-4，提供快速度和实惠的价格。"
@@ -479,8 +905,20 @@
   "glm-4v": {
     "description": "GLM-4V 提供强大的图像理解与推理能力，支持多种视觉任务。"
   },
+  "glm-4v-flash": {
+    "description": "GLM-4V-Flash 专注于高效的单一图像理解，适用于快速图像解析的场景，例如实时图像分析或批量图像处理。"
+  },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus 具备对视频内容及多图片的理解能力，适合多模态任务。"
+  },
+  "glm-zero-preview": {
+    "description": "GLM-Zero-Preview具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。"
+  },
+  "google/gemini-2.0-flash-001": {
+    "description": "Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。"
+  },
+  "google/gemini-2.0-pro-exp-02-05:free": {
+    "description": "Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。"
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash 提供了优化后的多模态处理能力，适用多种复杂任务场景。"
@@ -488,14 +926,20 @@
   "google/gemini-pro-1.5": {
     "description": "Gemini 1.5 Pro 结合最新优化技术，带来更高效的多模态数据处理能力。"
   },
+  "google/gemma-2-27b": {
+    "description": "Gemma 2 是 Google 推出的高效模型，涵盖从小型应用到复杂数据处理的多种应用场景。"
+  },
   "google/gemma-2-27b-it": {
-    "description": "Gemma 2 延续了轻量化与高效的设计理念。"
+    "description": "Gemma 2 27B 是一款通用大语言模型，具有优异的性能和广泛的应用场景。"
   },
   "google/gemma-2-2b-it": {
-    "description": "Google的轻量级指令调优模型"
+    "description": "面向边缘应用的高级小型语言生成 AI 模型。"
+  },
+  "google/gemma-2-9b": {
+    "description": "Gemma 2 是 Google 推出的高效模型，涵盖从小型应用到复杂数据处理的多种应用场景。"
   },
   "google/gemma-2-9b-it": {
-    "description": "Gemma 2 是Google轻量化的开源文本模型系列。"
+    "description": "Gemma 2 9B 由Google开发，提供高效的指令响应和综合能力。"
   },
   "google/gemma-2-9b-it:free": {
     "description": "Gemma 2 是Google轻量化的开源文本模型系列。"
@@ -515,6 +959,12 @@
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125"
   },
+  "gpt-35-turbo": {
+    "description": "GPT 3.5 Turbo，OpenAI提供的高效模型，适用于聊天和文本生成任务，支持并行函数调用。"
+  },
+  "gpt-35-turbo-16k": {
+    "description": "GPT 3.5 Turbo 16k，高容量文本生成模型，适合复杂任务。"
+  },
   "gpt-4": {
     "description": "GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。"
   },
@@ -525,9 +975,6 @@
     "description": "GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。"
   },
   "gpt-4-1106-preview": {
-    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。"
-  },
-  "gpt-4-1106-vision-preview": {
     "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。"
   },
   "gpt-4-32k": {
@@ -546,10 +993,13 @@
     "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。"
   },
   "gpt-4-vision-preview": {
-    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。"
+    "description": "GPT-4 视觉预览版，专为图像分析和处理任务设计。"
+  },
+  "gpt-4.5-preview": {
+    "description": "GPT-4.5 的研究预览版，它是我们迄今为止最大、最强大的 GPT 模型。它拥有广泛的世界知识，并能更好地理解用户意图，使其在创造性任务和自主规划方面表现出色。GPT-4.5 可接受文本和图像输入，并生成文本输出（包括结构化输出）。支持关键的开发者功能，如函数调用、批量 API 和流式输出。在需要创造性、开放式思考和对话的任务（如写作、学习或探索新想法）中，GPT-4.5 表现尤为出色。知识截止日期为 2023 年 10 月。"
   },
   "gpt-4o": {
-    "description": "OpenAI GPT-4系列中最先进的多模态模型，可以处理文本和图像输入。"
+    "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
   },
   "gpt-4o-2024-05-13": {
     "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
@@ -557,8 +1007,38 @@
   "gpt-4o-2024-08-06": {
     "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
   },
+  "gpt-4o-2024-11-20": {
+    "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
+  },
+  "gpt-4o-audio-preview": {
+    "description": "GPT-4o Audio 模型，支持音频输入输出"
+  },
   "gpt-4o-mini": {
-    "description": "一种经济高效的AI解决方案，适用于多种文本和图像任务。"
+    "description": "GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。"
+  },
+  "gpt-4o-mini-realtime-preview": {
+    "description": "GPT-4o-mini 实时版本，支持音频和文本实时输入输出"
+  },
+  "gpt-4o-realtime-preview": {
+    "description": "GPT-4o 实时版本，支持音频和文本实时输入输出"
+  },
+  "gpt-4o-realtime-preview-2024-10-01": {
+    "description": "GPT-4o 实时版本，支持音频和文本实时输入输出"
+  },
+  "gpt-4o-realtime-preview-2024-12-17": {
+    "description": "GPT-4o 实时版本，支持音频和文本实时输入输出"
+  },
+  "grok-2-1212": {
+    "description": "该模型在准确性、指令遵循和多语言能力方面有所改进。"
+  },
+  "grok-2-vision-1212": {
+    "description": "该模型在准确性、指令遵循和多语言能力方面有所改进。"
+  },
+  "grok-beta": {
+    "description": "拥有与 Grok 2 相当的性能，但具有更高的效率、速度和功能。"
+  },
+  "grok-vision-beta": {
+    "description": "最新的图像理解模型，可以处理各种各样的视觉信息，包括文档、图表、截图和照片等。"
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合并了多个顶尖模型的创意与智能相结合的语言模型。"
@@ -569,8 +1049,17 @@
   "hunyuan-functioncall": {
     "description": "混元最新 MOE 架构 FunctionCall 模型，经过高质量的 FunctionCall 数据训练，上下文窗口达 32K，在多个维度的评测指标上处于领先。"
   },
+  "hunyuan-large": {
+    "description": "Hunyuan-large 模型总参数量约 389B，激活参数量约 52B，是当前业界参数规模最大、效果最好的 Transformer 架构的开源 MoE 模型。"
+  },
+  "hunyuan-large-longcontext": {
+    "description": "擅长处理长文任务如文档摘要和文档问答等，同时也具备处理通用文本生成任务的能力。在长文本的分析和生成上表现优异，能有效应对复杂和详尽的长文内容处理需求。"
+  },
   "hunyuan-lite": {
     "description": "升级为 MOE 结构，上下文窗口为 256k ，在 NLP，代码，数学，行业等多项评测集上领先众多开源模型。"
+  },
+  "hunyuan-lite-vision": {
+    "description": "混元最新7B多模态模型，上下文窗口32K，支持中英文场景的多模态对话、图像物体识别、文档表格理解、多模态数学等，在多个维度上评测指标优于7B竞品模型。"
   },
   "hunyuan-pro": {
     "description": "万亿级参数规模 MOE-32K 长文模型。在各种 benchmark 上达到绝对领先的水平，复杂指令和推理，具备复杂数学能力，支持 functioncall，在多语言翻译、金融法律医疗等领域应用重点优化。"
@@ -584,46 +1073,65 @@
   "hunyuan-standard-256K": {
     "description": "采用更优的路由策略，同时缓解了负载均衡和专家趋同的问题。长文方面，大海捞针指标达到99.9%。MOE-256K 在长度和效果上进一步突破，极大的扩展了可输入长度。"
   },
+  "hunyuan-standard-vision": {
+    "description": "混元最新多模态模型，支持多语种作答，中英文能力均衡。"
+  },
+  "hunyuan-translation": {
+    "description": "支持中文和英语、日语、法语、葡萄牙语、西班牙语、土耳其语、俄语、阿拉伯语、韩语、意大利语、德语、越南语、马来语、印尼语15种语言互译，基于多场景翻译评测集自动化评估COMET评分，在十余种常用语种中外互译能力上整体优于市场同规模模型。"
+  },
+  "hunyuan-translation-lite": {
+    "description": "混元翻译模型支持自然语言对话式翻译；支持中文和英语、日语、法语、葡萄牙语、西班牙语、土耳其语、俄语、阿拉伯语、韩语、意大利语、德语、越南语、马来语、印尼语15种语言互译。"
+  },
   "hunyuan-turbo": {
-    "description": "混元全新一代大语言模型的预览版，采用全新的混合专家模型（MoE）结构，相比hunyuan-pro推理效率更快，效果表现更强。"
+    "description": "本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量"
+  },
+  "hunyuan-turbo-20241120": {
+    "description": "hunyuan-turbo 2024 年 11 月 20 日固定版本，介于 hunyuan-turbo 和 hunyuan-turbo-latest 之间的一个版本。"
+  },
+  "hunyuan-turbo-20241223": {
+    "description": "本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量"
+  },
+  "hunyuan-turbo-latest": {
+    "description": "通用体验优化，包括NLP理解、文本创作、闲聊、知识问答、翻译、领域等；提升拟人性，优化模型情商；提升意图模糊时模型主动澄清能力；提升字词解析类问题的处理能力；提升创作的质量和可互动性；提升多轮体验。"
+  },
+  "hunyuan-turbo-vision": {
+    "description": "混元新一代视觉语言旗舰大模型，采用全新的混合专家模型（MoE）结构，在图文理解相关的基础识别、内容创作、知识问答、分析推理等能力上相比前一代模型全面提升。"
   },
   "hunyuan-vision": {
     "description": "混元最新多模态模型，支持图片+文本输入生成文本内容。"
   },
   "internlm/internlm2_5-20b-chat": {
-    "description": "创新的开源模型InternLM2.5，通过大规模的参数提高了对话智能。"
+    "description": "InternLM2.5-20B-Chat 是一个开源的大规模对话模型，基于 InternLM2 架构开发。该模型拥有 200 亿参数，在数学推理方面表现出色，超越了同量级的 Llama3 和 Gemma2-27B 模型。InternLM2.5-20B-Chat 在工具调用能力方面有显著提升，支持从上百个网页收集信息进行分析推理，并具备更强的指令理解、工具选择和结果反思能力。它适用于构建复杂智能体，可进行多轮工具调用以完成复杂任务"
   },
   "internlm/internlm2_5-7b-chat": {
-    "description": "InternLM2.5 提供多场景下的智能对话解决方案。"
+    "description": "InternLM2.5-7B-Chat 是一个开源的对话模型，基于 InternLM2 架构开发。该 7B 参数规模的模型专注于对话生成任务，支持中英双语交互。模型采用了最新的训练技术，旨在提供流畅、智能的对话体验。InternLM2.5-7B-Chat 适用于各种对话应用场景，包括但不限于智能客服、个人助手等领域"
   },
-  "jamba-1.5-large": {},
-  "jamba-1.5-mini": {},
-  "llama-3.1-70b-instruct": {
-    "description": "Llama 3.1 70B Instruct 模型，具备70B参数，能在大型文本生成和指示任务中提供卓越性能。"
+  "internlm2-pro-chat": {
+    "description": "InternLM2 版本最大的模型，专注于高度复杂的任务"
+  },
+  "internlm2.5-latest": {
+    "description": "我们仍在维护的老版本模型，经过多轮迭代有着极其优异且稳定的性能，包含 7B、20B 多种模型参数量可选，支持 1M 的上下文长度以及更强的指令跟随和工具调用能力。默认指向我们最新发布的 InternLM2.5 系列模型，当前指向 internlm2.5-20b-chat。"
+  },
+  "internlm3-latest": {
+    "description": "我们最新的模型系列，有着卓越的推理性能，领跑同量级开源模型。默认指向我们最新发布的 InternLM3 系列模型，当前指向 internlm3-8b-instruct。"
+  },
+  "jina-deepsearch-v1": {
+    "description": "深度搜索结合了网络搜索、阅读和推理，可进行全面调查。您可以将其视为一个代理，接受您的研究任务 - 它会进行广泛搜索并经过多次迭代，然后才能给出答案。这个过程涉及持续的研究、推理和从各个角度解决问题。这与直接从预训练数据生成答案的标准大模型以及依赖一次性表面搜索的传统 RAG 系统有着根本的不同。"
+  },
+  "kimi-latest": {
+    "description": "Kimi 智能助手产品使用最新的 Kimi 大模型，可能包含尚未稳定的特性。支持图片理解，同时会自动根据请求的上下文长度选择 8k/32k/128k 模型作为计费模型"
+  },
+  "learnlm-1.5-pro-experimental": {
+    "description": "LearnLM 是一个实验性的、特定于任务的语言模型，经过训练以符合学习科学原则，可在教学和学习场景中遵循系统指令，充当专家导师等。"
+  },
+  "lite": {
+    "description": "Spark Lite 是一款轻量级大语言模型，具备极低的延迟与高效的处理能力，完全免费开放，支持实时在线搜索功能。其快速响应的特性使其在低算力设备上的推理应用和模型微调中表现出色，为用户带来出色的成本效益和智能体验，尤其在知识问答、内容生成及搜索场景下表现不俗。"
   },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B 提供更强大的AI推理能力，适合复杂应用，支持超多的计算处理并保证高效和准确率。"
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B 是一款高效能模型，提供了快速的文本生成能力，非常适合需要大规模效率和成本效益的应用场景。"
-  },
-  "llama-3.1-8b-instruct": {
-    "description": "Llama 3.1 8B Instruct 模型，具备8B参数，支持画面指示任务的高效执行，提供优质的文本生成能力。"
-  },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Online 模型，具备405B参数，支持约127,000个标记的上下文长度，设计用于复杂的在线聊天应用。"
-  },
-  "llama-3.1-sonar-large-128k-chat": {
-    "description": "Llama 3.1 Sonar Large Chat 模型，具备70B参数，支持约127,000个标记的上下文长度，适合于复杂的离线聊天任务。"
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Online 模型，具备70B参数，支持约127,000个标记的上下文长度，适用于高容量和多样化聊天任务。"
-  },
-  "llama-3.1-sonar-small-128k-chat": {
-    "description": "Llama 3.1 Sonar Small Chat 模型，具备8B参数，专为离线聊天设计，支持约127,000个标记的上下文长度。"
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Online 模型，具备8B参数，支持约127,000个标记的上下文长度，专为在线聊天设计，能高效处理各种文本交互。"
   },
   "llama-3.2-11b-vision-instruct": {
     "description": "在高分辨率图像上表现出色的图像推理能力，适用于视觉理解应用。"
@@ -636,6 +1144,12 @@
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。"
+  },
+  "llama-3.3-70b-instruct": {
+    "description": "Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月"
+  },
+  "llama-3.3-70b-versatile": {
+    "description": "Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。"
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B 提供无与伦比的复杂性处理能力，为高要求项目量身定制。"
@@ -673,6 +1187,9 @@
   "mathstral": {
     "description": "MathΣtral 专为科学研究和数学推理设计，提供有效的计算能力和结果解释。"
   },
+  "max-32k": {
+    "description": "Spark Max 32K 配置了大上下文处理能力，更强的上下文理解和逻辑推理能力，支持32K tokens的文本输入，适用于长文档阅读、私有知识问答等场景"
+  },
   "meta-llama-3-70b-instruct": {
     "description": "一个强大的700亿参数模型，在推理、编码和广泛的语言应用方面表现出色。"
   },
@@ -709,6 +1226,12 @@
   "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
     "description": "LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。"
   },
+  "meta-llama/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月"
+  },
+  "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
+    "description": "Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。"
+  },
   "meta-llama/Llama-Vision-Free": {
     "description": "LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。"
   },
@@ -725,19 +1248,22 @@
     "description": "Llama 3 8B Instruct Turbo 是一款高效能的大语言模型，支持广泛的应用场景。"
   },
   "meta-llama/Meta-Llama-3.1-405B-Instruct": {
-    "description": "LLaMA 3.1 405B 指令微调模型针对多语言对话场景进行了优化。"
+    "description": "Llama 3.1 是 Meta 推出的领先模型，支持高达 405B 参数，可应用于复杂对话、多语言翻译和数据分析领域。"
   },
   "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
     "description": "405B 的 Llama 3.1 Turbo 模型，为大数据处理提供超大容量的上下文支持，在超大规模的人工智能应用中表现突出。"
   },
+  "meta-llama/Meta-Llama-3.1-70B": {
+    "description": "Llama 3.1 是 Meta 推出的领先模型，支持高达 405B 参数，可应用于复杂对话、多语言翻译和数据分析领域。"
+  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct": {
-    "description": "LLaMA 3.1 70B 提供多语言的高效对话支持。"
+    "description": "Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 70B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月"
   },
   "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo": {
     "description": "Llama 3.1 70B 模型经过精细调整，适用于高负载应用，量化至FP8提供更高效的计算能力和准确性，确保在复杂场景中的卓越表现。"
   },
   "meta-llama/Meta-Llama-3.1-8B-Instruct": {
-    "description": "LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。"
+    "description": "Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 8B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月"
   },
   "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo": {
     "description": "Llama 3.1 8B 模型采用FP8量化，支持高达131,072个上下文标记，是开源模型中的佼佼者，适合复杂任务，表现优异于许多行业基准。"
@@ -748,14 +1274,11 @@
   "meta-llama/llama-3-8b-instruct": {
     "description": "Llama 3 8B Instruct 优化了高质量对话场景，性能优于许多闭源模型。"
   },
-  "meta-llama/llama-3.1-405b-instruct": {
-    "description": "Llama 3.1 405B Instruct 是 Meta最新推出的版本，优化用于生成高质量对话，超越了许多领导闭源模型。"
-  },
   "meta-llama/llama-3.1-70b-instruct": {
-    "description": "Llama 3.1 70B Instruct 专为高质量对话而设计，在人类评估中表现突出，特别适合高交互场景。"
+    "description": "Meta最新一代的Llama 3.1模型系列，70B（700亿参数）的指令微调版本针对高质量对话场景进行了优化。在业界评估中，与领先的闭源模型相比，它展现出了强劲的性能。(仅针对企业实名认证通过主体开放）"
   },
   "meta-llama/llama-3.1-8b-instruct": {
-    "description": "Llama 3.1 8B Instruct 是 Meta 推出的最新版本，优化了高质量对话场景，表现优于许多领先的闭源模型。"
+    "description": "Meta最新一代的Llama 3.1模型系列，8B（80亿参数）的指令微调版本特别快速高效。在业界评估中，表现出强劲的性能，超越了很多领先的闭源模型。(仅针对企业实名认证通过主体开放）"
   },
   "meta-llama/llama-3.1-8b-instruct:free": {
     "description": "LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。"
@@ -763,8 +1286,17 @@
   "meta-llama/llama-3.2-11b-vision-instruct": {
     "description": "LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。"
   },
+  "meta-llama/llama-3.2-3b-instruct": {
+    "description": "meta-llama/llama-3.2-3b-instruct"
+  },
   "meta-llama/llama-3.2-90b-vision-instruct": {
     "description": "LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。"
+  },
+  "meta-llama/llama-3.3-70b-instruct": {
+    "description": "Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月"
+  },
+  "meta-llama/llama-3.3-70b-instruct:free": {
+    "description": "Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月"
   },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct 是 Llama 3.1 Instruct 模型中最大、最强大的模型，是一款高度先进的对话推理和合成数据生成模型，也可以用作在特定领域进行专业持续预训练或微调的基础。Llama 3.1 提供的多语言大型语言模型 (LLMs) 是一组预训练的、指令调整的生成模型，包括 8B、70B 和 405B 大小 (文本输入/输出)。Llama 3.1 指令调整的文本模型 (8B、70B、405B) 专为多语言对话用例进行了优化，并在常见的行业基准测试中超过了许多可用的开源聊天模型。Llama 3.1 旨在用于多种语言的商业和研究用途。指令调整的文本模型适用于类似助手的聊天，而预训练模型可以适应各种自然语言生成任务。Llama 3.1 模型还支持利用其模型的输出来改进其他模型，包括合成数据生成和精炼。Llama 3.1 是使用优化的变压器架构的自回归语言模型。调整版本使用监督微调 (SFT) 和带有人类反馈的强化学习 (RLHF) 来符合人类对帮助性和安全性的偏好。"
@@ -781,8 +1313,32 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 是一款面向开发者、研究人员和企业的开放大型语言模型 (LLM)，旨在帮助他们构建、实验并负责任地扩展他们的生成 AI 想法。作为全球社区创新的基础系统的一部分，它非常适合计算能力和资源有限、边缘设备和更快的训练时间。"
   },
-  "microsoft/wizardlm 2-7b": {
-    "description": "WizardLM 2 7B 是微软AI最新的快速轻量化模型，性能接近于现有开源领导模型的10倍。"
+  "meta/llama-3.1-405b-instruct": {
+    "description": "高级 LLM，支持合成数据生成、知识蒸馏和推理，适用于聊天机器人、编程和特定领域任务。"
+  },
+  "meta/llama-3.1-70b-instruct": {
+    "description": "赋能复杂对话，具备卓越的上下文理解、推理能力和文本生成能力。"
+  },
+  "meta/llama-3.1-8b-instruct": {
+    "description": "先进的最尖端模型，具备语言理解、卓越的推理能力和文本生成能力。"
+  },
+  "meta/llama-3.2-11b-vision-instruct": {
+    "description": "尖端的视觉-语言模型，擅长从图像中进行高质量推理。"
+  },
+  "meta/llama-3.2-1b-instruct": {
+    "description": "先进的最尖端小型语言模型，具备语言理解、卓越的推理能力和文本生成能力。"
+  },
+  "meta/llama-3.2-3b-instruct": {
+    "description": "先进的最尖端小型语言模型，具备语言理解、卓越的推理能力和文本生成能力。"
+  },
+  "meta/llama-3.2-90b-vision-instruct": {
+    "description": "尖端的视觉-语言模型，擅长从图像中进行高质量推理。"
+  },
+  "meta/llama-3.3-70b-instruct": {
+    "description": "先进的 LLM，擅长推理、数学、常识和函数调用。"
+  },
+  "microsoft/WizardLM-2-8x22B": {
+    "description": "WizardLM 2 是微软AI提供的语言模型，在复杂对话、多语言、推理和智能助手领域表现尤为出色。"
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B 是微软AI最先进的Wizard模型，显示出极其竞争力的表现。"
@@ -818,7 +1374,7 @@
     "description": "Mistral (7B) Instruct 以高性能著称，适用于多种语言任务。"
   },
   "mistralai/Mistral-7B-Instruct-v0.2": {
-    "description": "Mistral AI的指令调优模型"
+    "description": "Mistral (7B) Instruct v0.2 提供改进的指令处理能力和更精确的结果。"
   },
   "mistralai/Mistral-7B-Instruct-v0.3": {
     "description": "Mistral (7B) Instruct v0.3 提供高效的计算能力和自然语言理解，适合广泛的应用。"
@@ -853,23 +1409,47 @@
   "moonshot-v1-128k": {
     "description": "Moonshot V1 128K 是一款拥有超长上下文处理能力的模型，适用于生成超长文本，满足复杂的生成任务需求，能够处理多达128,000个tokens的内容，非常适合科研、学术和大型文档生成等应用场景。"
   },
+  "moonshot-v1-128k-vision-preview": {
+    "description": "Kimi 视觉模型（包括 moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 等）能够理解图片内容，包括图片文字、图片颜色和物体形状等内容。"
+  },
   "moonshot-v1-32k": {
     "description": "Moonshot V1 32K 提供中等长度的上下文处理能力，能够处理32,768个tokens，特别适合生成各种长文档和复杂对话，应用于内容创作、报告生成和对话系统等领域。"
+  },
+  "moonshot-v1-32k-vision-preview": {
+    "description": "Kimi 视觉模型（包括 moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 等）能够理解图片内容，包括图片文字、图片颜色和物体形状等内容。"
   },
   "moonshot-v1-8k": {
     "description": "Moonshot V1 8K 专为生成短文本任务设计，具有高效的处理性能，能够处理8,192个tokens，非常适合简短对话、速记和快速内容生成。"
   },
+  "moonshot-v1-8k-vision-preview": {
+    "description": "Kimi 视觉模型（包括 moonshot-v1-8k-vision-preview/moonshot-v1-32k-vision-preview/moonshot-v1-128k-vision-preview 等）能够理解图片内容，包括图片文字、图片颜色和物体形状等内容。"
+  },
+  "moonshot-v1-auto": {
+    "description": "Moonshot V1 Auto 可以根据当前上下文占用的 Tokens 数量来选择合适的模型"
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2的升级版本，包含最新的内部开发的数据集。"
   },
-  "nvidia/Llama-3.1-Nemotron-70B-Instruct": {
-    "description": "Llama 3.1 Nemotron 70B 是由 NVIDIA 定制的大型语言模型，旨在提高 LLM 生成的响应对用户查询的帮助程度。"
+  "nvidia/Llama-3.1-Nemotron-70B-Instruct-HF": {
+    "description": "Llama 3.1 Nemotron 70B 是由 NVIDIA 定制的大型语言模型，旨在提高 LLM 生成的响应对用户查询的帮助程度。该模型在 Arena Hard、AlpacaEval 2 LC 和 GPT-4-Turbo MT-Bench 等基准测试中表现出色，截至 2024 年 10 月 1 日，在所有三个自动对齐基准测试中排名第一。该模型使用 RLHF（特别是 REINFORCE）、Llama-3.1-Nemotron-70B-Reward 和 HelpSteer2-Preference 提示在 Llama-3.1-70B-Instruct 模型基础上进行训练"
+  },
+  "nvidia/llama-3.1-nemotron-51b-instruct": {
+    "description": "独特的语言模型，提供无与伦比的准确性和效率表现。"
+  },
+  "nvidia/llama-3.1-nemotron-70b-instruct": {
+    "description": "Llama-3.1-Nemotron-70B-Instruct 是 NVIDIA 定制的大型语言模型，旨在提高 LLM 生成的响应的帮助性。"
+  },
+  "o1": {
+    "description": "o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。"
   },
   "o1-mini": {
-    "description": "比 o1-preview 更小、更快，成本低80%，在代码生成和小上下文操作方面表现良好。"
+    "description": "o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。"
   },
   "o1-preview": {
-    "description": "专注于高级推理和解决复杂问题，包括数学和科学任务。非常适合需要深度上下文理解和自主工作流程的应用。"
+    "description": "o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。"
+  },
+  "o3-mini": {
+    "description": "o3-mini 是我们最新的小型推理模型，在与 o1-mini 相同的成本和延迟目标下提供高智能。"
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba是专注于代码生成的Mamba 2语言模型，为先进的代码和推理任务提供强力支持。"
@@ -913,6 +1493,18 @@
   "pixtral-12b-2409": {
     "description": "Pixtral 模型在图表和图理解、文档问答、多模态推理和指令遵循等任务上表现出强大的能力，能够以自然分辨率和宽高比摄入图像，还能够在长达 128K 令牌的长上下文窗口中处理任意数量的图像。"
   },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large 是一款拥有 1240 亿参数的开源多模态模型，基于 Mistral Large 2 构建。这是我们多模态家族中的第二款模型，展现了前沿水平的图像理解能力。"
+  },
+  "pro-128k": {
+    "description": "Spark Pro 128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。"
+  },
+  "qvq-72b-preview": {
+    "description": "QVQ模型是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力，尤其在数学推理领域。"
+  },
+  "qwen-coder-plus-latest": {
+    "description": "通义千问代码模型。"
+  },
   "qwen-coder-turbo-latest": {
     "description": "通义千问代码模型。"
   },
@@ -925,11 +1517,23 @@
   "qwen-math-turbo-latest": {
     "description": "通义千问数学模型是专门用于数学解题的语言模型。"
   },
+  "qwen-max": {
+    "description": "通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型。"
+  },
   "qwen-max-latest": {
     "description": "通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型。"
   },
+  "qwen-omni-turbo-latest": {
+    "description": "Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。"
+  },
+  "qwen-plus": {
+    "description": "通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。"
+  },
   "qwen-plus-latest": {
     "description": "通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。"
+  },
+  "qwen-turbo": {
+    "description": "通义千问超大规模语言模型，支持中文、英文等不同语言输入。"
   },
   "qwen-turbo-latest": {
     "description": "通义千问超大规模语言模型，支持中文、英文等不同语言输入。"
@@ -940,20 +1544,50 @@
   "qwen-vl-max-latest": {
     "description": "通义千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。"
   },
+  "qwen-vl-ocr-latest": {
+    "description": "通义千问OCR是文字提取专有模型，专注于文档、表格、试题、手写体文字等类型图像的文字提取能力。它能够识别多种文字，目前支持的语言有：汉语、英语、法语、日语、韩语、德语、俄语、意大利语、越南语、阿拉伯语。"
+  },
   "qwen-vl-plus-latest": {
     "description": "通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。"
   },
   "qwen-vl-v1": {
     "description": "以 Qwen-7B 语言模型初始化，添加图像模型，图像输入分辨率为448的预训练模型。"
   },
+  "qwen/qwen-2-7b-instruct": {
+    "description": "Qwen2是全新的Qwen大型语言模型系列。Qwen2 7B是一个基于transformer的模型，在语言理解、多语言能力、编程、数学和推理方面表现出色。"
+  },
   "qwen/qwen-2-7b-instruct:free": {
     "description": "Qwen2 是全新的大型语言模型系列，具有更强的理解和生成能力。"
+  },
+  "qwen/qwen-2-vl-72b-instruct": {
+    "description": "Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能，包括 MathVista、DocVQA、RealWorldQA 和 MTVQA 等。Qwen2-VL 能够理解超过 20 分钟的视频，用于高质量的基于视频的问答、对话和内容创作。它还具备复杂推理和决策能力，可以与移动设备、机器人等集成，基于视觉环境和文本指令进行自动操作。除了英语和中文，Qwen2-VL 现在还支持理解图像中不同语言的文本，包括大多数欧洲语言、日语、韩语、阿拉伯语和越南语等"
+  },
+  "qwen/qwen-2.5-72b-instruct": {
+    "description": "Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升。"
+  },
+  "qwen/qwen2.5-32b-instruct": {
+    "description": "Qwen2.5-32B-Instruct 是阿里云发布的最新大语言模型系列之一。该 32B 模型在编码和数学等领域具有显著改进的能力。该模型提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升。"
+  },
+  "qwen/qwen2.5-7b-instruct": {
+    "description": "面向中文和英文的 LLM，针对语言、编程、数学、推理等领域。"
+  },
+  "qwen/qwen2.5-coder-32b-instruct": {
+    "description": "高级 LLM，支持代码生成、推理和修复，涵盖主流编程语言。"
+  },
+  "qwen/qwen2.5-coder-7b-instruct": {
+    "description": "强大的中型代码模型，支持 32K 上下文长度，擅长多语言编程。"
   },
   "qwen2": {
     "description": "Qwen2 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
   },
+  "qwen2.5": {
+    "description": "Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
+  },
   "qwen2.5-14b-instruct": {
     "description": "通义千问2.5对外开源的14B规模的模型。"
+  },
+  "qwen2.5-14b-instruct-1m": {
+    "description": "通义千问2.5对外开源的72B规模的模型。"
   },
   "qwen2.5-32b-instruct": {
     "description": "通义千问2.5对外开源的32B规模的模型。"
@@ -965,6 +1599,9 @@
     "description": "通义千问2.5对外开源的7B规模的模型。"
   },
   "qwen2.5-coder-1.5b-instruct": {
+    "description": "通义千问代码模型开源版。"
+  },
+  "qwen2.5-coder-32b-instruct": {
     "description": "通义千问代码模型开源版。"
   },
   "qwen2.5-coder-7b-instruct": {
@@ -979,6 +1616,21 @@
   "qwen2.5-math-7b-instruct": {
     "description": "Qwen-Math 模型具有强大的数学解题能力。"
   },
+  "qwen2.5-vl-72b-instruct": {
+    "description": "指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。"
+  },
+  "qwen2.5-vl-7b-instruct": {
+    "description": "指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。"
+  },
+  "qwen2.5:0.5b": {
+    "description": "Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
+  },
+  "qwen2.5:1.5b": {
+    "description": "Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
+  },
+  "qwen2.5:72b": {
+    "description": "Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
+  },
   "qwen2:0.5b": {
     "description": "Qwen2 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
   },
@@ -988,14 +1640,44 @@
   "qwen2:72b": {
     "description": "Qwen2 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
   },
-  "solar-1-mini-chat": {
+  "qwq": {
+    "description": "QwQ 是一个实验研究模型，专注于提高 AI 推理能力。"
+  },
+  "qwq-32b": {
+    "description": "基于 Qwen2.5-32B 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平，各指标均显著超过同样基于 Qwen2.5-32B 的 DeepSeek-R1-Distill-Qwen-32B。"
+  },
+  "qwq-32b-preview": {
+    "description": "QwQ模型是由 Qwen 团队开发的实验性研究模型，专注于增强 AI 推理能力。"
+  },
+  "qwq-plus-latest": {
+    "description": "基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。"
+  },
+  "r1-1776": {
+    "description": "R1-1776 是 DeepSeek R1 模型的一个版本，经过后训练，可提供未经审查、无偏见的事实信息。"
+  },
+  "solar-mini": {
     "description": "Solar Mini 是一种紧凑型 LLM，性能优于 GPT-3.5，具备强大的多语言能力，支持英语和韩语，提供高效小巧的解决方案。"
   },
-  "solar-1-mini-chat-ja": {
+  "solar-mini-ja": {
     "description": "Solar Mini (Ja) 扩展了 Solar Mini 的能力，专注于日语，同时在英语和韩语的使用中保持高效和卓越性能。"
   },
   "solar-pro": {
     "description": "Solar Pro 是 Upstage 推出的一款高智能LLM，专注于单GPU的指令跟随能力，IFEval得分80以上。目前支持英语，正式版本计划于2024年11月推出，将扩展语言支持和上下文长度。"
+  },
+  "sonar": {
+    "description": "基于搜索上下文的轻量级搜索产品，比 Sonar Pro 更快、更便宜。"
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research 进行全面的专家级研究，并将其综合成可访问、可作的报告。"
+  },
+  "sonar-pro": {
+    "description": "支持搜索上下文的高级搜索产品，支持高级查询和跟进。"
+  },
+  "sonar-reasoning": {
+    "description": "支持搜索上下文的高级搜索产品，支持高级查询和跟进。"
+  },
+  "sonar-reasoning-pro": {
+    "description": "支持搜索上下文的高级搜索产品，支持高级查询和跟进。"
   },
   "step-1-128k": {
     "description": "平衡性能与成本，适合一般场景。"
@@ -1012,8 +1694,14 @@
   "step-1-flash": {
     "description": "高速模型，适合实时对话。"
   },
-  "step-1.5v-turbo": {
+  "step-1.5v-mini": {
     "description": "该模型拥有强大的视频理解能力。"
+  },
+  "step-1o-turbo-vision": {
+    "description": "该模型拥有强大的图像理解能力，在数理、代码领域强于1o。模型比1o更小，输出速度更快。"
+  },
+  "step-1o-vision-32k": {
+    "description": "该模型拥有强大的图像理解能力。相比于 step-1v 系列模型，拥有更强的视觉性能。"
   },
   "step-1v-32k": {
     "description": "支持视觉输入，增强多模态交互体验。"
@@ -1022,16 +1710,46 @@
     "description": "小型视觉模型，适合基本的图文任务。"
   },
   "step-2-16k": {
-    "description": "支持大规模上下文交互，适合复杂对话场景。"
+    "description": "step-2模型的实验版本，包含最新的特性，滚动更新中。不推荐在正式生产环境使用。"
+  },
+  "step-2-mini": {
+    "description": "基于新一代自研Attention架构MFA的极速大模型，用极低成本达到和step1类似的效果，同时保持了更高的吞吐和更快响应时延。能够处理通用任务，在代码能力上具备特长。"
   },
   "taichu_llm": {
-    "description": "Taichu 2.0 基于海量高质数据训练，具有更强的文本理解、内容创作、对话问答等能力"
+    "description": "基于海量高质数据训练，具有更强的文本理解、内容创作、对话问答等能力"
+  },
+  "taichu_vl": {
+    "description": "融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出"
+  },
+  "text-embedding-3-large": {
+    "description": "最强大的向量化模型，适用于英文和非英文任务"
+  },
+  "text-embedding-3-small": {
+    "description": "高效且经济的新一代 Embedding 模型，适用于知识检索、RAG 应用等场景"
+  },
+  "thudm/glm-4-9b-chat": {
+    "description": "智谱AI发布的GLM-4系列最新一代预训练模型的开源版本。"
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) 通过高效的策略和模型架构，提供增强的计算能力。"
   },
+  "tts-1": {
+    "description": "最新的文本转语音模型，针对实时场景优化速度"
+  },
+  "tts-1-hd": {
+    "description": "最新的文本转语音模型，针对质量进行优化"
+  },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) 适用于精细化指令任务，提供出色的语言处理能力。"
+  },
+  "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。"
+  },
+  "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
+    "description": "Claude 3.7 sonnet 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。"
+  },
+  "whisper-1": {
+    "description": "通用语音识别模型，支持多语言语音识别、语音翻译和语言识别"
   },
   "wizardlm2": {
     "description": "WizardLM 2 是微软AI提供的语言模型，在复杂对话、多语言、推理和智能助手领域表现尤为出色。"
@@ -1071,5 +1789,8 @@
   },
   "yi-vision": {
     "description": "复杂视觉任务模型，提供高性能图片理解、分析能力。"
+  },
+  "yi-vision-v2": {
+    "description": "复杂视觉任务模型，提供基于多张图片的高性能理解、分析能力。"
   }
 }

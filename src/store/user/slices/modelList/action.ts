@@ -5,8 +5,8 @@ import type { StateCreator } from 'zustand/vanilla';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { UserStore } from '@/store/user';
-import { ChatModelCard } from '@/types/llm';
-import {
+import type { ChatModelCard, ModelProviderCard } from '@/types/llm';
+import type {
   GlobalLLMProviderKey,
   UserKeyVaults,
   UserModelProviderConfig,
@@ -20,6 +20,7 @@ import { modelProviderSelectors } from './selectors/modelProvider';
  * 设置操作
  */
 export interface ModelListAction {
+  clearObtainedModels: (provider: GlobalLLMProviderKey) => Promise<void>;
   dispatchCustomModelCards: (
     provider: GlobalLLMProviderKey,
     payload: CustomModelCardDispatch,
@@ -49,6 +50,8 @@ export interface ModelListAction {
     config: Partial<UserKeyVaults[T]>,
   ) => Promise<void>;
 
+  updateKeyVaultSettings: (key: string, config: any) => Promise<void>;
+
   useFetchProviderModelList: (
     provider: GlobalLLMProviderKey,
     enabledAutoFetch: boolean,
@@ -61,6 +64,13 @@ export const createModelListSlice: StateCreator<
   [],
   ModelListAction
 > = (set, get) => ({
+  clearObtainedModels: async (provider: GlobalLLMProviderKey) => {
+    await get().setModelProviderConfig(provider, {
+      remoteModelCards: [],
+    });
+
+    get().refreshDefaultModelProviderList();
+  },
   dispatchCustomModelCards: async (provider, payload) => {
     const prevState = settingsSelectors.providerConfig(provider)(get());
 
@@ -79,33 +89,28 @@ export const createModelListSlice: StateCreator<
      * 3 - default model cards
      */
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping
-    const mergeModels = (provider: GlobalLLMProviderKey, defaultChatModels: ChatModelCard[]) => {
+    const mergeModels = (providerKey: GlobalLLMProviderKey, providerCard: ModelProviderCard) => {
       // if the chat model is config in the server side, use the server side model cards
-      const serverChatModels = modelProviderSelectors.serverProviderModelCards(provider)(get());
-      const remoteChatModels = modelProviderSelectors.remoteProviderModelCards(provider)(get());
+      const serverChatModels = modelProviderSelectors.serverProviderModelCards(providerKey)(get());
+      const remoteChatModels = providerCard.modelList?.showModelFetcher
+        ? modelProviderSelectors.remoteProviderModelCards(providerKey)(get())
+        : undefined;
 
-      return serverChatModels ?? remoteChatModels ?? defaultChatModels;
+      if (serverChatModels && serverChatModels.length > 0) {
+        return serverChatModels;
+      }
+      if (remoteChatModels && remoteChatModels.length > 0) {
+        return remoteChatModels;
+      }
+
+      return providerCard.chatModels;
     };
 
     const defaultModelProviderList = produce(DEFAULT_MODEL_PROVIDER_LIST, (draft) => {
-      const openai = draft.find((d) => d.id === ModelProvider.OpenAI);
-      if (openai) openai.chatModels = mergeModels('openai', openai.chatModels);
-
-      const azure = draft.find((d) => d.id === ModelProvider.Azure);
-      if (azure) azure.chatModels = mergeModels('azure', azure.chatModels);
-
-      const ollama = draft.find((d) => d.id === ModelProvider.Ollama);
-      if (ollama) ollama.chatModels = mergeModels('ollama', ollama.chatModels);
-
-      const openrouter = draft.find((d) => d.id === ModelProvider.OpenRouter);
-      if (openrouter) openrouter.chatModels = mergeModels('openrouter', openrouter.chatModels);
-
-      const togetherai = draft.find((d) => d.id === ModelProvider.TogetherAI);
-      if (togetherai) togetherai.chatModels = mergeModels('togetherai', togetherai.chatModels);
-
-      const novita = draft.find((d) => d.id === ModelProvider.Novita);
-      if (novita) novita.chatModels = mergeModels('novita', novita.chatModels);
+      Object.values(ModelProvider).forEach((id) => {
+        const provider = draft.find((d) => d.id === id);
+        if (provider) provider.chatModels = mergeModels(id as any, provider);
+      });
     });
 
     set({ defaultModelProviderList }, false, `refreshDefaultModelList - ${params?.trigger}`);
@@ -113,22 +118,23 @@ export const createModelListSlice: StateCreator<
     get().refreshModelProviderList({ trigger: 'refreshDefaultModelList' });
   },
   refreshModelProviderList: (params) => {
-    const modelProviderList = get().defaultModelProviderList.map((list) => ({
-      ...list,
-      chatModels: modelProviderSelectors
-        .getModelCardsById(list.id)(get())
-        ?.map((model) => {
-          const models = modelProviderSelectors.getEnableModelsById(list.id)(get());
+    const modelProviderList = get().defaultModelProviderList.map((list) => {
+      const enabledModels = modelProviderSelectors.getEnableModelsById(list.id)(get());
+      return {
+        ...list,
+        chatModels: modelProviderSelectors
+          .getModelCardsById(list.id)(get())
+          ?.map((model) => {
+            if (!enabledModels) return model;
 
-          if (!models) return model;
-
-          return {
-            ...model,
-            enabled: models?.some((m) => m === model.id),
-          };
-        }),
-      enabled: modelProviderSelectors.isProviderEnabled(list.id as any)(get()),
-    }));
+            return {
+              ...model,
+              enabled: enabledModels?.some((m) => m === model.id),
+            };
+          }),
+        enabled: modelProviderSelectors.isProviderEnabled(list.id as any)(get()),
+      };
+    });
 
     set({ modelProviderList }, false, `refreshModelList - ${params?.trigger}`);
   },
@@ -183,6 +189,10 @@ export const createModelListSlice: StateCreator<
   },
 
   updateKeyVaultConfig: async (provider, config) => {
+    await get().setSettings({ keyVaults: { [provider]: config } });
+  },
+
+  updateKeyVaultSettings: async (provider, config) => {
     await get().setSettings({ keyVaults: { [provider]: config } });
   },
 

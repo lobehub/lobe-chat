@@ -1,63 +1,69 @@
 import { and, desc, eq } from 'drizzle-orm/expressions';
 
-import { serverDB } from '@/database/server';
+import { LobeChatDatabase } from '@/database/type';
 
-import { InstalledPluginItem, NewInstalledPlugin, installedPlugins } from '../schemas/lobechat';
+import { InstalledPluginItem, NewInstalledPlugin, userInstalledPlugins } from '../../schemas';
 
 export class PluginModel {
   private userId: string;
+  private db: LobeChatDatabase;
 
-  constructor(userId: string) {
+  constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
+    this.db = db;
   }
 
   create = async (
     params: Pick<NewInstalledPlugin, 'type' | 'identifier' | 'manifest' | 'customParams'>,
   ) => {
-    const [result] = await serverDB
-      .insert(installedPlugins)
+    const [result] = await this.db
+      .insert(userInstalledPlugins)
       .values({ ...params, createdAt: new Date(), updatedAt: new Date(), userId: this.userId })
+      .onConflictDoUpdate({
+        set: { ...params, updatedAt: new Date() },
+        target: [userInstalledPlugins.identifier, userInstalledPlugins.userId],
+      })
       .returning();
 
     return result;
   };
 
   delete = async (id: string) => {
-    return serverDB
-      .delete(installedPlugins)
-      .where(and(eq(installedPlugins.identifier, id), eq(installedPlugins.userId, this.userId)));
+    return this.db
+      .delete(userInstalledPlugins)
+      .where(and(eq(userInstalledPlugins.identifier, id), eq(userInstalledPlugins.userId, this.userId)));
   };
 
   deleteAll = async () => {
-    return serverDB.delete(installedPlugins).where(eq(installedPlugins.userId, this.userId));
+    return this.db.delete(userInstalledPlugins).where(eq(userInstalledPlugins.userId, this.userId));
   };
 
   query = async () => {
-    return serverDB
+    return this.db
       .select({
-        createdAt: installedPlugins.createdAt,
-        customParams: installedPlugins.customParams,
-        identifier: installedPlugins.identifier,
-        manifest: installedPlugins.manifest,
-        settings: installedPlugins.settings,
-        type: installedPlugins.type,
-        updatedAt: installedPlugins.updatedAt,
+        createdAt: userInstalledPlugins.createdAt,
+        customParams: userInstalledPlugins.customParams,
+        identifier: userInstalledPlugins.identifier,
+        manifest: userInstalledPlugins.manifest,
+        settings: userInstalledPlugins.settings,
+        type: userInstalledPlugins.type,
+        updatedAt: userInstalledPlugins.updatedAt,
       })
-      .from(installedPlugins)
-      .where(eq(installedPlugins.userId, this.userId))
-      .orderBy(desc(installedPlugins.createdAt));
+      .from(userInstalledPlugins)
+      .where(eq(userInstalledPlugins.userId, this.userId))
+      .orderBy(desc(userInstalledPlugins.createdAt));
   };
 
   findById = async (id: string) => {
-    return serverDB.query.installedPlugins.findFirst({
-      where: and(eq(installedPlugins.identifier, id), eq(installedPlugins.userId, this.userId)),
+    return this.db.query.userInstalledPlugins.findFirst({
+      where: and(eq(userInstalledPlugins.identifier, id), eq(userInstalledPlugins.userId, this.userId)),
     });
   };
 
-  async update(id: string, value: Partial<InstalledPluginItem>) {
-    return serverDB
-      .update(installedPlugins)
+  update = async (id: string, value: Partial<InstalledPluginItem>) => {
+    return this.db
+      .update(userInstalledPlugins)
       .set({ ...value, updatedAt: new Date() })
-      .where(and(eq(installedPlugins.identifier, id), eq(installedPlugins.userId, this.userId)));
-  }
+      .where(and(eq(userInstalledPlugins.identifier, id), eq(userInstalledPlugins.userId, this.userId)));
+  };
 }

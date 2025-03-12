@@ -1,0 +1,37 @@
+{
+  "actions": {
+    "autoRename": "Renomeação automática",
+    "confirmRemoveAll": "Você está prestes a remover todos os tópicos. Após a exclusão, não será possível recuperar. Por favor, proceda com cautela.",
+    "confirmRemoveTopic": "Você está prestes a remover este tópico. Após a exclusão, não será possível recuperar. Por favor, proceda com cautela.",
+    "confirmRemoveUnstarred": "Você está prestes a remover tópicos não favoritos. Após a exclusão, não será possível recuperar. Por favor, proceda com cautela.",
+    "duplicate": "Criar cópia",
+    "export": "Exportar tópicos",
+    "removeAll": "Remover todos os tópicos",
+    "removeUnstarred": "Remover tópicos não favoritos"
+  },
+  "defaultTitle": "Tópico padrão",
+  "duplicateLoading": "Copiando tópico...",
+  "duplicateSuccess": "Tópico copiado com sucesso",
+  "favorite": "Favoritar",
+  "groupMode": {
+    "ascMessages": "Por ordem de total de mensagens",
+    "byTime": "Agrupado por tempo",
+    "descMessages": "Por ordem decrescente de total de mensagens",
+    "flat": "Sem agrupamento"
+  },
+  "groupTitle": {
+    "byTime": {
+      "month": "Este mês",
+      "today": "Hoje",
+      "week": "Esta semana",
+      "yesterday": "Ontem"
+    }
+  },
+  "guide": {
+    "desc": "Clique no botão à esquerda para salvar a conversa atual como um tópico histórico e iniciar uma nova conversa.",
+    "title": "Lista de tópicos"
+  },
+  "searchPlaceholder": "Pesquisar tópicos...",
+  "temp": "Temporário",
+  "title": "Tópico"
+}

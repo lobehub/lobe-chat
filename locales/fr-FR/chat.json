@@ -8,6 +8,7 @@
   "agents": "Assistant",
   "artifact": {
     "generating": "Génération en cours",
+    "inThread": "Impossible de voir dans le sous-sujet, veuillez passer à la zone de discussion principale.",
     "thinking": "En réflexion",
     "thought": "Processus de pensée",
     "unknownTitle": "Œuvre sans nom"
@@ -30,7 +31,25 @@
   },
   "duplicateTitle": "{{title}} Copie",
   "emptyAgent": "Aucun assistant disponible",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "Le coût de génération d'une seule conversation peut être réduit de 90 % au maximum, avec une vitesse de réponse augmentée de 4 fois (<1>En savoir plus</1>). Une fois activé, la limite du nombre de messages historiques sera automatiquement désactivée.",
+      "title": "Activer le cache de contexte"
+    },
+    "enableReasoning": {
+      "desc": "Basé sur les restrictions du mécanisme Claude Thinking (<1>En savoir plus</1>), une fois activé, la limite du nombre de messages historiques sera automatiquement désactivée.",
+      "title": "Activer la réflexion approfondie"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token de consommation de réflexion"
+    },
+    "title": "Fonctionnalités d'extension du modèle"
+  },
+  "history": {
+    "title": "L'assistant ne se souviendra que des {{count}} derniers messages"
+  },
   "historyRange": "Plage d'historique",
+  "historySummary": "Résumé des messages historiques",
   "inbox": {
     "desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
     "title": "Discutons un peu"
@@ -44,6 +63,9 @@
     "sendWithEnter": "Envoyer avec Entrée",
     "stop": "Arrêter",
     "warp": "Saut de ligne"
+  },
+  "intentUnderstanding": {
+    "title": "En train de comprendre et d'analyser votre intention..."
   },
   "knowledgeBase": {
     "all": "Tout le contenu",
@@ -65,7 +87,41 @@
   },
   "messageAction": {
     "delAndRegenerate": "Supprimer et régénérer",
+    "deleteDisabledByThreads": "Il existe des sous-sujets, la suppression n'est pas possible.",
     "regenerate": "Régénérer"
+  },
+  "messages": {
+    "modelCard": {
+      "credit": "Crédit",
+      "creditPricing": "Tarification",
+      "creditTooltip": "Pour faciliter le comptage, nous convertissons 1 $ en 1M de crédits, par exemple, 3 $/M tokens équivaut à 3 crédits/token",
+      "pricing": {
+        "inputCachedTokens": "Entrée mise en cache {{amount}}/crédit · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M caractères",
+        "inputMinutes": "${{amount}}/minute",
+        "inputTokens": "Entrée {{amount}}/crédit · ${{amount}}/M",
+        "outputTokens": "Sortie {{amount}}/crédit · ${{amount}}/M",
+        "writeCacheInputTokens": "Écriture de cache d'entrée {{amount}}/points · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Prix moyen",
+      "input": "Entrée",
+      "inputAudio": "Entrée audio",
+      "inputCached": "Entrée mise en cache",
+      "inputCitation": "Citation d'entrée",
+      "inputText": "Entrée texte",
+      "inputTitle": "Détails de l'entrée",
+      "inputUncached": "Entrée non mise en cache",
+      "inputWriteCached": "Écriture de cache d'entrée",
+      "output": "Sortie",
+      "outputAudio": "Sortie audio",
+      "outputText": "Sortie texte",
+      "outputTitle": "Détails de la sortie",
+      "reasoning": "Raisonnement approfondi",
+      "title": "Détails de génération",
+      "total": "Total consommé"
+    }
   },
   "newAgent": "Nouvel agent",
   "pin": "Épingler",
@@ -81,6 +137,32 @@
   },
   "regenerate": "Regénérer",
   "roleAndArchive": "Rôle et archivage",
+  "search": {
+    "grounding": {
+      "searchQueries": "Mots-clés de recherche",
+      "title": "{{count}} résultats trouvés"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Détermine intelligemment si une recherche est nécessaire en fonction du contenu de la conversation",
+        "title": "Connexion intelligente"
+      },
+      "off": {
+        "desc": "Utilise uniquement les connaissances de base du modèle, sans recherche en ligne",
+        "title": "Déconnexion"
+      },
+      "on": {
+        "desc": "Effectue en continu des recherches en ligne pour obtenir les informations les plus récentes",
+        "title": "Toujours connecté"
+      },
+      "useModelBuiltin": "Utiliser le moteur de recherche intégré du modèle"
+    },
+    "searchModel": {
+      "desc": "Le modèle actuel ne prend pas en charge les appels de fonction, il doit donc être associé à un modèle prenant en charge les appels de fonction pour effectuer une recherche en ligne",
+      "title": "Modèle d'assistance à la recherche"
+    },
+    "title": "Recherche en ligne"
+  },
   "searchAgentPlaceholder": "Assistant de recherche...",
   "sendPlaceholder": "Saisissez votre message...",
   "sessionGroup": {
@@ -100,14 +182,20 @@
     "tooLong": "Le nom du groupe doit comporter entre 1 et 20 caractères"
   },
   "shareModal": {
+    "copy": "Copier",
     "download": "Télécharger la capture d'écran",
+    "downloadFile": "Télécharger le fichier",
+    "exportTitle": "Titre par défaut",
     "imageType": "Type d'image",
+    "includeTool": "Inclure les messages de l'outil",
+    "includeUser": "Inclure les messages de l'utilisateur",
     "screenshot": "Capture d'écran",
     "settings": "Paramètres d'exportation",
-    "shareToShareGPT": "Générer un lien de partage ShareGPT",
+    "text": "Texte",
     "withBackground": "Avec image de fond",
     "withFooter": "Avec pied de page",
     "withPluginInfo": "Avec informations sur le plugin",
+    "withRole": "Inclure le rôle du message",
     "withSystemRole": "Avec rôle de l'agent"
   },
   "stt": {
@@ -115,9 +203,14 @@
     "loading": "En cours de reconnaissance...",
     "prettifying": "En cours d'embellissement..."
   },
-  "temp": "Temporaire",
+  "thread": {
+    "divider": "Sous-sujet",
+    "threadMessageCount": "{{messageCount}} messages",
+    "title": "Sous-sujet"
+  },
   "tokenDetails": {
     "chats": "Messages de discussion",
+    "historySummary": "Résumé historique",
     "rest": "Restant disponible",
     "systemRole": "Rôle système",
     "title": "Détails du jeton",
@@ -131,29 +224,10 @@
     "used": "Utilisé"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Renommer automatiquement",
-      "duplicate": "Créer une copie",
-      "export": "Exporter le sujet"
-    },
     "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
     "checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
-    "confirmRemoveAll": "Vous êtes sur le point de supprimer tous les sujets. Cette action est irréversible. Veuillez confirmer.",
-    "confirmRemoveTopic": "Vous êtes sur le point de supprimer ce sujet. Cette action est irréversible. Veuillez confirmer.",
-    "confirmRemoveUnstarred": "Vous êtes sur le point de supprimer les sujets non favoris. Cette action est irréversible. Veuillez confirmer.",
-    "defaultTitle": "Sujet par défaut",
-    "duplicateLoading": "Duplication du sujet en cours...",
-    "duplicateSuccess": "Sujet dupliqué avec succès",
-    "guide": {
-      "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle comme un sujet historique et démarrer une nouvelle session.",
-      "title": "Liste des sujets"
-    },
     "openNewTopic": "Ouvrir un nouveau sujet",
-    "removeAll": "Supprimer tous les sujets",
-    "removeUnstarred": "Supprimer les sujets non favoris",
-    "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet",
-    "searchPlaceholder": "Rechercher un sujet...",
-    "title": "Liste des sujets"
+    "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet"
   },
   "translate": {
     "action": "Traduire",
@@ -184,5 +258,6 @@
         "processing": "Traitement du fichier..."
       }
     }
-  }
+  },
+  "zenMode": "Mode de concentration"
 }

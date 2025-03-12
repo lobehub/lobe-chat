@@ -23,6 +23,8 @@ describe('OpenAI POST function tests', () => {
   it('should call UniverseRoute with correct parameters', async () => {
     const mockRequest = new Request('https://example.com', { method: 'POST' });
     await POST(mockRequest);
-    expect(UniverseRoute).toHaveBeenCalledWith(mockRequest, { params: { provider: 'openai' } });
+    expect(UniverseRoute).toHaveBeenCalledWith(mockRequest, {
+      params: Promise.resolve({ provider: 'openai' }),
+    });
   });
 });

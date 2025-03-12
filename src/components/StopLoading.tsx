@@ -1,17 +1,20 @@
-import { useTheme } from 'antd-style';
-import { memo } from 'react';
+import type { IconType } from '@lobehub/icons';
+import { cx, useTheme } from 'antd-style';
+import { forwardRef } from 'react';
 
-const StopLoadingIcon = memo(() => {
+const StopLoadingIcon: IconType = forwardRef(({ size = 16, className, style, ...rest }, ref) => {
   const theme = useTheme();
   return (
     <svg
-      className={'anticon'}
+      className={cx('anticon', className)}
       color="currentColor"
-      height={16}
+      height={size}
+      ref={ref}
+      style={{ flex: 'none', lineHeight: 1, ...style }}
       viewBox="0 0 1024 1024"
-      width={16}
+      width={size}
       xmlns="http://www.w3.org/2000/svg"
-      xmlnsXlink="http://www.w3.org/1999/xlink"
+      {...rest}
     >
       <g fill="none">
         <circle cx="512" cy="512" fill="none" r="426" stroke={theme.colorBorder} strokeWidth="72" />

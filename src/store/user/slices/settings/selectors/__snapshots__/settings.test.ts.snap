@@ -73,7 +73,16 @@ exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.set
       "autoCreateTopicThreshold": 2,
       "displayMode": "chat",
       "enableAutoCreateTopic": true,
-      "historyCount": 1,
+      "enableCompressHistory": true,
+      "enableHistoryCount": true,
+      "enableReasoning": false,
+      "historyCount": 8,
+      "reasoningBudgetToken": 1024,
+      "searchFCModel": {
+        "model": "gpt-4o-mini",
+        "provider": "openai",
+      },
+      "searchMode": "off",
     },
     "model": "gpt-3.5-turbo",
     "params": {

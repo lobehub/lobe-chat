@@ -6,5 +6,23 @@
     "generating": "生成中...",
     "images": "画像:",
     "prompt": "プロンプト"
+  },
+  "search": {
+    "createNewSearch": "新しい検索記録を作成",
+    "emptyResult": "結果が見つかりませんでした。キーワードを変更して再試行してください",
+    "genAiMessage": "アシスタントメッセージを作成",
+    "includedTooltip": "現在の検索結果は会話の文脈に含まれます",
+    "keywords": "キーワード：",
+    "scoreTooltip": "関連性スコア。このスコアが高いほど、クエリキーワードとの関連性が高くなります",
+    "searchBar": {
+      "button": "検索",
+      "placeholder": "キーワード",
+      "tooltip": "検索結果を再取得し、新しい要約メッセージを作成します"
+    },
+    "searchEngine": "検索エンジン：",
+    "searchResult": "検索結果の数：",
+    "summary": "要約",
+    "summaryTooltip": "現在の内容を要約",
+    "viewMoreResults": "さらに {{results}} 件の結果を見る"
   }
 }

@@ -13,15 +13,17 @@ tags:
 <div style={{display:"flex", gap: 4}}>
   [![][docker-release-shield]][docker-release-link]
 
-[![][docker-size-shield]][docker-size-link]
+  [![][docker-size-shield]][docker-size-link]
 
-[![][docker-pulls-shield]][docker-pulls-link]
-
+  [![][docker-pulls-shield]][docker-pulls-link]
 </div>
 
 <Callout type="info">
-  本文已经假定你了解了 LobeChat 服务端数据库版本（下简称 DB 版）的部署基本原理和流程，因此只包含核心环境变量配置的内容。如果你还不了解 LobeChat DB 版的部署原理，请先查阅 [使用服务端数据库部署](/zh/docs/self-hosting/server-database) 。
-  此外，针对国内的腾讯云储存桶用户，可查询[配置腾讯云 COS 存储服务](/zh/docs/self-hosting/advanced/s3/tencent-cloud)。
+  本文已经假定你了解了 LobeChat 服务端数据库版本（下简称 DB
+  版）的部署基本原理和流程，因此只包含核心环境变量配置的内容。如果你还不了解 LobeChat DB
+  版的部署原理，请先查阅 [使用服务端数据库部署](/zh/docs/self-hosting/server-database) 。
+  此外，针对国内的腾讯云储存桶用户，可查询[配置腾讯云 COS
+  存储服务](/zh/docs/self-hosting/advanced/s3/tencent-cloud)。
 </Callout>
 
 <Callout type="warning">
@@ -36,92 +38,90 @@ tags:
 以下是在 Linux 服务器上部署 LobeChat DB 版的流程：
 
 <Steps>
+  ### 创建 Postgres 数据库实例
 
-### 创建 Postgres 数据库实例
+  请按照你自己的诉求创建一个带有 PGVector 插件的 Postgres 数据库实例，例如：
 
-请按照你自己的诉求创建一个带有 PGVector 插件的 Postgres 数据库实例，例如：
+  ```sh
+  docker network create pg
 
-```sh
-docker network create pg
+  docker run --name my-postgres --network pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d pgvector/pgvector:pg16
+  ```
 
-docker run --name my-postgres --network pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d pgvector/pgvector:pg16
-```
+  上述指令会创建一个名为 `my-postgres`，并且网络为 `pg` 的 PG 实例，其中 `pgvector/pgvector:pg16` 是一个 Postgres 16 的镜像，且默认安装了 pgvector 插件。
 
-上述指令会创建一个名为 `my-postgres`，并且网络为 `pg` 的 PG 实例，其中 `pgvector/pgvector:pg16` 是一个 Postgres 16 的镜像，且默认安装了 pgvector 插件。
+  <Callout type="info">
+    pgvector 插件为 Postgres 提供了向量搜索的能力，是 LobeChat 实现 RAG 的重要构件之一。
+  </Callout>
 
-<Callout type="info">
-  pgvector 插件为 Postgres 提供了向量搜索的能力，是 LobeChat 实现 RAG 的重要构件之一。
-</Callout>
+  <Callout type="warning">
+    以上指令得到的 pg
+    实例并没有指定持久化存储位置，因此仅用于测试 / 演示，生产环境请自行配置持久化存储。
+  </Callout>
 
-<Callout type="warning">
-  以上指令得到的 pg
-  实例并没有指定持久化存储位置，因此仅用于测试/演示，生产环境请自行配置持久化存储。
-</Callout>
+  ### 创建名为 `lobe-chat.env` 文件用于存放环境变量：
 
-### 创建名为 `lobe-chat.env` 文件用于存放环境变量：
+  ```shell
+  # 网站域名
+  APP_URL=https://your-prod-domain.com
 
-```shell
-# 网站域名
-APP_URL=https://your-prod-domain.com
+  # DB 必须的环境变量
+  # 用于加密敏感信息的密钥，可以使用 openssl rand -base64 32 生成
+  KEY_VAULTS_SECRET='jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk='
+  # Postgres 数据库连接字符串
+  # 格式：postgres://username:password@host:port/dbname，如果你的 pg 实例为 Docker 容器，请使用容器名
+  DATABASE_URL=postgres://postgres:mysecretpassword@my-postgres:5432/postgres
 
-# DB 必须的环境变量
-# 用于加密敏感信息的密钥，可以使用 openssl rand -base64 32 生成
-KEY_VAULTS_SECRET='jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk='
-# Postgres 数据库连接字符串
-# 格式：postgres://username:password@host:port/dbname，如果你的 pg 实例为 Docker 容器，请使用容器名
-DATABASE_URL=postgres://postgres:mysecretpassword@my-postgres:5432/postgres
+  # NEXT_AUTH 相关，可以使用 auth0、Azure AD、GitHub、Authentik、zitadel 等，如有其他接入诉求欢迎提 PR
+  NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250
+  NEXT_AUTH_SSO_PROVIDERS=auth0
+  NEXTAUTH_URL=https://your-prod-domain.com/api/auth
+  AUTH_AUTH0_ID=xxxxxx
+  AUTH_AUTH0_SECRET=cSX_xxxxx
+  AUTH_AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
 
-# NEXT_AUTH 相关，可以使用 auth0、Azure AD、GitHub、Authentik、zitadel 等，如有其他接入诉求欢迎提 PR
-NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250
-NEXT_AUTH_SSO_PROVIDERS=auth0
-NEXTAUTH_URL=https://your-prod-domain.com/api/auth
-AUTH_AUTH0_ID=xxxxxx
-AUTH_AUTH0_SECRET=cSX_xxxxx
-AUTH_AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
+  # S3 相关
+  S3_ACCESS_KEY_ID=xxxxxxxxxx
+  S3_SECRET_ACCESS_KEY=xxxxxxxxxx
+  # 用于 S3 API 访问的域名
+  S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com
+  S3_BUCKET=lobechat
+  # 用于外网访问 S3 的公共域名，需配置 CORS
+  S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com
+  # S3_REGION=ap-chengdu # 如果需要指定地域
 
-# S3 相关
-S3_ACCESS_KEY_ID=xxxxxxxxxx
-S3_SECRET_ACCESS_KEY=xxxxxxxxxx
-# 用于 S3 API 访问的域名
-S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com 
-S3_BUCKET=lobechat
-# 用于外网访问 S3 的公共域名，需配置 CORS
-S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com 
-# S3_REGION=ap-chengdu # 如果需要指定地域
+  # 其他环境变量，视需求而定
+  # OPENAI_API_KEY=sk-xxxx
+  # OPENAI_PROXY_URL=https://api.openai.com/v1
+  # OPENAI_MODEL_LIST=...
+  # ...
+  ```
 
-# 其他环境变量，视需求而定
-# OPENAI_API_KEY=sk-xxxx
-# OPENAI_PROXY_URL=https://api.openai.com/v1
-# OPENAI_MODEL_LIST=...
-# ...
-```
+  ### 启动 lobe-chat-database docker 镜像
 
-### 启动 lobe-chat-database docker 镜像
+  ```sh
+  docker run -it -d -p 3210:3210 --network pg --env-file lobe-chat.env --name lobe-chat-database lobehub/lobe-chat-database
+  ```
 
-```sh
-docker run -it -d -p 3210:3210 --network pg --env-file lobe-chat.env --name lobe-chat-database lobehub/lobe-chat-database
-```
+  你可以使用下述指令检查日志：
 
-你可以使用下述指令检查日志：
+  ```sh
+  docker logs -f lobe-chat-database
+  ```
 
-```sh
-docker logs -f lobe-chat-database
-```
+  如果你在容器中看到了以下日志，则说明已经启动成功：
 
-如果你在容器中看到了以下日志，则说明已经启动成功：
+  ```log
+  [Database] Start to migration...
+  ✅ database migration pass.
+  -------------------------------------
+    ▲ Next.js 14.x.x
+    - Local:        http://localhost:3210
+    - Network:      http://0.0.0.0:3210
 
-```log
-[Database] Start to migration...
-✅ database migration pass.
--------------------------------------
-  ▲ Next.js 14.x.x
-  - Local:        http://localhost:3210
-  - Network:      http://0.0.0.0:3210
-
- ✓ Starting...
- ✓ Ready in 95ms
-```
-
+   ✓ Starting...
+   ✓ Ready in 95ms
+  ```
 </Steps>
 
 <Callout type="tip">
@@ -163,10 +163,9 @@ $ docker run -it -d --name lobe-chat-database -p 3210:3210 \
   ，将会走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`
 </Callout>
 
-
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat-database?color=45cc11&labelColor=black&style=flat-square
 [docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
-[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat-database?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
+[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat-database?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
 [docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
-[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat-database?color=369eff&labelColor=black&style=flat-square
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat-database?color=369eff&labelColor=black&style=flat-square&sort=semver

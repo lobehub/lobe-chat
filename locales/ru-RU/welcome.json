@@ -1,9 +1,4 @@
 {
-  "button": {
-    "import": "Импорт конфига",
-    "market": "Посетить рынок",
-    "start": "Начать"
-  },
   "guide": {
     "agents": {
       "replaceBtn": "Заменить",

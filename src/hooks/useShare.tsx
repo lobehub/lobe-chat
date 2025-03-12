@@ -15,6 +15,7 @@ const stringifyHashtags = (hashtags: string[], joinfix: string = ',', prefix?: s
   if (prefix) hashtags = hashtags.map((tag) => prefix + camelCase(tag));
   return hashtags.filter(Boolean).join(joinfix);
 };
+
 export const useShare = ({
   url,
   title,

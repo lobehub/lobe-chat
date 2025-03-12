@@ -1,0 +1,373 @@
+// @vitest-environment node
+import { eq } from 'drizzle-orm/expressions';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { ModelProvider } from '@/libs/agent-runtime';
+
+import { aiProviders, users } from '../../../schemas';
+import { AiProviderModel } from '../aiProvider';
+
+let serverDB = await getTestDBInstance();
+
+const userId = 'session-group-model-test-user-id';
+const aiProviderModel = new AiProviderModel(serverDB, userId);
+
+beforeEach(async () => {
+  await serverDB.delete(users);
+  await serverDB.insert(users).values([{ id: userId }, { id: 'user2' }]);
+});
+
+afterEach(async () => {
+  await serverDB.delete(users).where(eq(users.id, userId));
+  await serverDB.delete(aiProviders).where(eq(aiProviders.userId, userId));
+});
+
+describe('AiProviderModel', () => {
+  describe('create', () => {
+    it('should create a new ai provider', async () => {
+      const params = {
+        name: 'AiHubMix',
+        id: 'aihubmix',
+        source: 'custom',
+      } as const;
+
+      const result = await aiProviderModel.create(params);
+      expect(result.id).toBeDefined();
+      expect(result).toMatchObject({ ...params, userId });
+
+      const group = await serverDB.query.aiProviders.findFirst({
+        where: eq(aiProviders.id, result.id),
+      });
+      expect(group).toMatchObject({ ...params, userId });
+    });
+  });
+  describe('delete', () => {
+    it('should delete a ai provider by id', async () => {
+      const { id } = await aiProviderModel.create({
+        name: 'AiHubMix',
+        id: 'aihubmix',
+        source: 'custom',
+      });
+
+      await aiProviderModel.delete(id);
+
+      const group = await serverDB.query.aiProviders.findFirst({
+        where: eq(aiProviders.id, id),
+      });
+      expect(group).toBeUndefined();
+    });
+  });
+  describe('deleteAll', () => {
+    it('should delete all ai providers for the user', async () => {
+      await aiProviderModel.create({ name: 'AiHubMix', source: 'custom', id: 'aihubmix' });
+      await aiProviderModel.create({ name: 'AiHubMix', source: 'custom', id: 'aihubmix-2' });
+
+      await aiProviderModel.deleteAll();
+
+      const userGroups = await serverDB.query.aiProviders.findMany({
+        where: eq(aiProviders.userId, userId),
+      });
+      expect(userGroups).toHaveLength(0);
+    });
+    it('should only delete ai providers for the user, not others', async () => {
+      await aiProviderModel.create({ name: 'AiHubMix', source: 'custom', id: 'aihubmix' });
+      await aiProviderModel.create({ name: 'AiHubMix', source: 'custom', id: 'aihubmix-2' });
+
+      const anotherAiProviderModel = new AiProviderModel(serverDB, 'user2');
+      await anotherAiProviderModel.create({
+        id: 'aihubmix',
+        source: 'custom',
+        name: 'Another provider',
+      });
+
+      await aiProviderModel.deleteAll();
+
+      const userGroups = await serverDB.query.aiProviders.findMany({
+        where: eq(aiProviders.userId, userId),
+      });
+      const total = await serverDB.query.aiProviders.findMany();
+      expect(userGroups).toHaveLength(0);
+      expect(total).toHaveLength(1);
+    });
+  });
+
+  describe('query', () => {
+    it('should query ai providers for the user', async () => {
+      await aiProviderModel.create({ name: 'AiHubMix', source: 'custom', id: 'aihubmix' });
+      await aiProviderModel.create({ name: 'AiHubMix', source: 'custom', id: 'aihubmix-2' });
+
+      const userGroups = await aiProviderModel.query();
+      expect(userGroups).toHaveLength(2);
+      expect(userGroups[0].id).toBe('aihubmix-2');
+      expect(userGroups[1].id).toBe('aihubmix');
+    });
+  });
+
+  describe('findById', () => {
+    it('should find a ai provider by id', async () => {
+      const { id } = await aiProviderModel.create({
+        name: 'AiHubMix',
+        source: 'custom',
+        id: 'aihubmix',
+      });
+
+      const group = await aiProviderModel.findById(id);
+      expect(group).toMatchObject({
+        id,
+        name: 'AiHubMix',
+        userId,
+      });
+    });
+  });
+
+  describe('update', () => {
+    it('should update a ai provider', async () => {
+      const { id } = await aiProviderModel.create({
+        name: 'AiHubMix',
+        source: 'custom',
+        id: 'aihubmix',
+      });
+
+      await aiProviderModel.update(id, { name: 'Updated Test Group', sort: 3 });
+
+      const updatedGroup = await serverDB.query.aiProviders.findFirst({
+        where: eq(aiProviders.id, id),
+      });
+      expect(updatedGroup).toMatchObject({
+        id,
+        name: 'Updated Test Group',
+        sort: 3,
+        userId,
+      });
+    });
+  });
+
+  describe('updateOrder', () => {
+    it('should update order of ai providers', async () => {
+      const group1 = await aiProviderModel.create({
+        name: 'AiHubMix',
+        source: 'custom',
+        id: 'aihubmix',
+      });
+      const group2 = await aiProviderModel.create({
+        name: 'AiHubMix',
+        source: 'custom',
+        id: 'aihubmix-2',
+      });
+
+      await aiProviderModel.updateOrder([
+        { id: group1.id, sort: 3 },
+        { id: group2.id, sort: 4 },
+      ]);
+
+      const updatedGroup1 = await serverDB.query.aiProviders.findFirst({
+        where: eq(aiProviders.id, group1.id),
+      });
+      const updatedGroup2 = await serverDB.query.aiProviders.findFirst({
+        where: eq(aiProviders.id, group2.id),
+      });
+
+      expect(updatedGroup1?.sort).toBe(3);
+      expect(updatedGroup2?.sort).toBe(4);
+    });
+  });
+
+  describe('getAiProviderList', () => {
+    it('should return a list of ai providers with selected fields', async () => {
+      await serverDB.insert(aiProviders).values({
+        description: 'Test description',
+        enabled: true,
+        id: 'aihubmix',
+        logo: 'test-logo',
+        name: 'AiHubMix',
+        sort: 1,
+        source: 'custom',
+        userId,
+      });
+
+      const list = await aiProviderModel.getAiProviderList();
+      expect(list).toHaveLength(1);
+      expect(list[0]).toMatchObject({
+        description: 'Test description',
+        enabled: true,
+        id: 'aihubmix',
+        logo: 'test-logo',
+        name: 'AiHubMix',
+        sort: 1,
+        source: 'custom',
+      });
+    });
+  });
+
+  describe('updateConfig', () => {
+    it('should update provider config with encryption', async () => {
+      const providerId = 'aihubmix';
+      await serverDB.insert(aiProviders).values({
+        id: providerId,
+        keyVaults: JSON.stringify({ key: 'value' }),
+        name: 'AiHubMix',
+        source: 'custom',
+        userId,
+      });
+
+      const mockEncryptor = vi.fn().mockResolvedValue('encrypted-data');
+      await aiProviderModel.updateConfig(
+        providerId,
+        {
+          keyVaults: { newKey: 'newValue' },
+          fetchOnClient: true,
+        },
+        mockEncryptor,
+      );
+
+      const updated = await serverDB.query.aiProviders.findFirst({
+        where: eq(aiProviders.id, providerId),
+      });
+
+      expect(mockEncryptor).toHaveBeenCalledWith(JSON.stringify({ newKey: 'newValue' }));
+      expect(updated?.keyVaults).toBe('encrypted-data');
+      expect(updated?.fetchOnClient).toBeTruthy();
+    });
+
+    it('should update provider config without encryption', async () => {
+      const providerId = 'aihubmix';
+      await serverDB.insert(aiProviders).values({
+        id: providerId,
+        keyVaults: JSON.stringify({ key: 'value' }),
+        name: 'AiHubMix',
+        source: 'custom',
+        userId,
+      });
+
+      await aiProviderModel.updateConfig(providerId, {
+        keyVaults: { newKey: 'newValue' },
+      });
+
+      const updated = await serverDB.query.aiProviders.findFirst({
+        where: eq(aiProviders.id, providerId),
+      });
+
+      expect(updated?.keyVaults).toBe(JSON.stringify({ newKey: 'newValue' }));
+    });
+  });
+
+  describe('toggleProviderEnabled', () => {
+    it('should toggle builtin provider enabled status', async () => {
+      const builtinId = ModelProvider.OpenAI;
+      await aiProviderModel.toggleProviderEnabled(builtinId, true);
+
+      const provider = await serverDB.query.aiProviders.findFirst({
+        where: eq(aiProviders.id, builtinId),
+      });
+
+      expect(provider?.enabled).toBe(true);
+      expect(provider?.source).toBe('builtin');
+    });
+
+    it('should toggle custom provider enabled status', async () => {
+      const customId = 'custom-provider';
+      await aiProviderModel.toggleProviderEnabled(customId, false);
+
+      const provider = await serverDB.query.aiProviders.findFirst({
+        where: eq(aiProviders.id, customId),
+      });
+
+      expect(provider?.enabled).toBe(false);
+      expect(provider?.source).toBe('custom');
+    });
+  });
+
+  describe('getAiProviderById', () => {
+    it('should get provider details with decryption', async () => {
+      const providerId = 'aihubmix';
+      const mockDecryptor = vi.fn().mockResolvedValue({ decryptedKey: 'value' });
+
+      await serverDB.insert(aiProviders).values({
+        id: providerId,
+        keyVaults: JSON.stringify({ key: 'value' }),
+        name: 'AiHubMix',
+        settings: { setting1: true } as any,
+        source: 'custom',
+        userId,
+      });
+
+      const provider = await aiProviderModel.getAiProviderById(providerId, mockDecryptor);
+
+      expect(provider).toBeDefined();
+      expect(provider?.keyVaults).toEqual({ decryptedKey: 'value' });
+    });
+
+    it('should handle non-existent provider for builtin provider', async () => {
+      const builtinId = ModelProvider.OpenAI;
+      const provider = await aiProviderModel.getAiProviderById(builtinId, (text) =>
+        JSON.parse(text as string),
+      );
+
+      expect(provider).toBeDefined();
+      expect(provider?.source).toBe('builtin');
+    });
+
+    it('should return undefined for non-existent custom provider', async () => {
+      const provider = await aiProviderModel.getAiProviderById('non-existent', (text) =>
+        JSON.parse(text as string),
+      );
+
+      expect(provider).toBeUndefined();
+    });
+
+    it('should handle null keyVaults', async () => {
+      const providerId = 'aihubmix';
+      await serverDB.insert(aiProviders).values({
+        id: providerId,
+        name: 'AiHubMix',
+        source: 'custom',
+        userId,
+      });
+
+      const provider = await aiProviderModel.getAiProviderById(providerId, (text) =>
+        JSON.parse(text as string),
+      );
+
+      expect(provider?.keyVaults).toEqual({});
+    });
+  });
+
+  describe('getAiProviderRuntimeConfig', () => {
+    it('should get runtime config for all providers', async () => {
+      const mockDecryptor = vi.fn().mockResolvedValue({ decryptedKey: 'value' });
+
+      await serverDB.insert(aiProviders).values([
+        {
+          fetchOnClient: true,
+          id: 'provider1',
+          keyVaults: JSON.stringify({ key: 'value' }),
+          name: 'Provider 1',
+          settings: { setting1: true } as any,
+          source: 'custom',
+          userId,
+        },
+        {
+          id: 'provider2',
+          name: 'Provider 2',
+          source: 'custom',
+          userId,
+        },
+      ]);
+
+      const config = await aiProviderModel.getAiProviderRuntimeConfig(mockDecryptor);
+
+      expect(config.provider1).toEqual({
+        fetchOnClient: true,
+        keyVaults: { decryptedKey: 'value' },
+        settings: { setting1: true },
+      });
+
+      expect(config.provider2).toEqual({
+        fetchOnClient: undefined,
+        keyVaults: {},
+        settings: {},
+      });
+    });
+  });
+});

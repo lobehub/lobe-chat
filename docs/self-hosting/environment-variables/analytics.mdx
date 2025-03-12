@@ -80,5 +80,34 @@ We have integrated several free/open-source data analytics services in LobeChat 
 - Default: `https://analytics.umami.is/script.js`
 - Example: `https://umami.your-site.com/script.js`
 
-[posthog-analytics-url]: https://posthog.com
-[umami-analytics-url]: https://umami.is
+## Langfuse Observability
+
+[Langfuse](https://langfuse.com/) is an [open-source](https://github.com/langfuse/langfuse) LLM Observability platform. By enabling the Langfuse integration, you can trace your chat data with Langfuse to develop, monitor, and evaluate the use of your LobeChat.
+
+### `ENABLE_LANGFUSE`
+
+- Type: Required
+- Description: Determines if Langfuse analytics is enabled.
+- Default: `1`
+- Example: `1`
+
+### `LANGFUSE_SECRET_KEY`
+
+- Type: Required
+- Description: Langfuse API secret key. Can be created by signing up for [Langfuse Cloud](https://cloud.langfuse.com) or by self-hosting Langfuse.
+- Default: \`\`
+- Example: `sk-lf-...`
+
+### `LANGFUSE_PUBLIC_KEY`
+
+- Type: Required
+- Description: Langfuse API public key. Can be created by signing up for [Langfuse Cloud](https://cloud.langfuse.com) or by self-hosting Langfuse.
+- Default: \`\`
+- Example: `pk-lf-...`
+
+### `LANGFUSE_HOST`
+
+- Type: Required
+- Description: Langfuse host address. Use `https://us.cloud.langfuse.com` if your Langfuse project is in the US data region.
+- Default: `https://cloud.langfuse.com`
+- Example: `https://cloud.langfuse.com`

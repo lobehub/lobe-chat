@@ -14,7 +14,6 @@ const useStyles = createStyles(({ css, token }) => ({
     height: 48px;
     padding-block: 4px;
     padding-inline: 8px;
-
     border: 1px solid ${token.colorSplit};
     border-radius: 6px;
   `,

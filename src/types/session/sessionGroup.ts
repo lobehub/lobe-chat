@@ -8,11 +8,11 @@ export enum SessionDefaultGroup {
 export type SessionGroupId = SessionDefaultGroup | string;
 
 export interface SessionGroupItem {
-  createdAt: number;
+  createdAt: Date;
   id: string;
   name: string;
-  sort?: number;
-  updatedAt: number;
+  sort?: number | null;
+  updatedAt: Date;
 }
 
 export type SessionGroups = SessionGroupItem[];

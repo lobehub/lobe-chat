@@ -9,9 +9,9 @@ import { INBOX_SESSION_ID } from './session';
 
 export const UTM_SOURCE = 'chat_preview';
 
-export const OFFICIAL_URL = 'https://lobechat.com/';
-export const OFFICIAL_PREVIEW_URL = 'https://chat-preview.lobehub.com/';
-export const OFFICIAL_SITE = 'https://lobehub.com/';
+export const OFFICIAL_URL = 'https://lobechat.com';
+export const OFFICIAL_PREVIEW_URL = 'https://chat-preview.lobehub.com';
+export const OFFICIAL_SITE = 'https://lobehub.com';
 
 export const OG_URL = '/og/cover.png?v=1';
 
@@ -44,7 +44,7 @@ export const TERMS_URL = urlJoin(OFFICIAL_SITE, '/terms');
 export const PLUGINS_INDEX_URL = 'https://chat-plugins.lobehub.com';
 
 export const MORE_MODEL_PROVIDER_REQUEST_URL =
-  'https://github.com/lobehub/lobe-chat/discussions/1284';
+  'https://github.com/lobehub/lobe-chat/discussions/6157';
 
 export const MORE_FILE_PREVIEW_REQUEST_URL =
   'https://github.com/lobehub/lobe-chat/discussions/3684';
@@ -73,3 +73,4 @@ export const mailTo = (email: string) => `mailto:${email}`;
 export const AES_GCM_URL = 'https://datatracker.ietf.org/doc/html/draft-ietf-avt-srtp-aes-gcm-01';
 export const BASE_PROVIDER_DOC_URL = 'https://lobehub.com/docs/usage/providers';
 export const SITEMAP_BASE_URL = isDev ? '/sitemap.xml/' : 'sitemap';
+export const CHANGELOG_URL = urlJoin(OFFICIAL_SITE, 'changelog/versions');

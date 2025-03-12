@@ -1,21 +1,18 @@
 // @vitest-environment node
-import OpenAI from 'openai';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import {
-  ChatStreamCallbacks,
-  LobeOpenAICompatibleRuntime,
-  ModelProvider,
-} from '@/libs/agent-runtime';
+import { LobeOpenAICompatibleRuntime, ModelProvider } from '@/libs/agent-runtime';
+import { testProvider } from '@/libs/agent-runtime/providerTestUtils';
 
-import * as debugStreamModule from '../utils/debugStream';
 import { LobeHunyuanAI } from './index';
 
-const provider = ModelProvider.Hunyuan;
-const defaultBaseURL = 'https://api.hunyuan.cloud.tencent.com/v1';
-
-const bizErrorType = 'ProviderBizError';
-const invalidErrorType = 'InvalidProviderAPIKey';
+testProvider({
+  Runtime: LobeHunyuanAI,
+  provider: ModelProvider.Hunyuan,
+  defaultBaseURL: 'https://api.hunyuan.cloud.tencent.com/v1',
+  chatDebugEnv: 'DEBUG_HUNYUAN_CHAT_COMPLETION',
+  chatModel: 'hunyuan-lite',
+});
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -31,225 +28,121 @@ beforeEach(() => {
   );
 });
 
-afterEach(() => {
-  vi.clearAllMocks();
-});
-
 describe('LobeHunyuanAI', () => {
-  describe('init', () => {
-    it('should correctly initialize with an API key', async () => {
-      const instance = new LobeHunyuanAI({ apiKey: 'test_api_key' });
-      expect(instance).toBeInstanceOf(LobeHunyuanAI);
-      expect(instance.baseURL).toEqual(defaultBaseURL);
-    });
-  });
-
   describe('chat', () => {
-    describe('Error', () => {
-      it('should return OpenAIBizError with an openai error response when OpenAI.APIError is thrown', async () => {
-        // Arrange
-        const apiError = new OpenAI.APIError(
-          400,
-          {
-            status: 400,
-            error: {
-              message: 'Bad Request',
-            },
-          },
-          'Error message',
-          {},
-        );
-
-        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
-
-        // Act
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'hunyuan-lite',
-            temperature: 0,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            endpoint: defaultBaseURL,
-            error: {
-              error: { message: 'Bad Request' },
-              status: 400,
-            },
-            errorType: bizErrorType,
-            provider,
-          });
+    it('should with search citations', async () => {
+const data = [
+        {
+          id: "939fbdb8dbb9b4c5944cbbe687c977c2",
+          object: "chat.completion.chunk",
+          created: 1741000456,
+          model: "hunyuan-turbo",
+          system_fingerprint: "",
+          choices: [
+            {
+              index: 0,
+              delta: { role: "assistant", content: "为您" },
+              finish_reason: null
+            }
+          ],
+          note: "以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记",
+          search_info: {
+            search_results: [
+              {
+                index: 1,
+                title: "公务员考试时政热点【2025年3月3日】_公务员考试网_华图教育",
+                url: "http://www.huatu.com/2025/0303/2803685.html",
+                icon: "https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/63ce96deffe0119827f12deaa5ffe7ef.jpg",
+                text: "华图教育官网"
+              },
+              {
+                index: 2,
+                title: "外交部新闻（2025年3月3日）",
+                url: "https://view.inews.qq.com/a/20250303A02NLC00?scene=qqsearch",
+                icon: "https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/00ce40298870d1accb7920d641152722.jpg",
+                text: "腾讯网"
+              }
+            ]
+          }
+        },
+        {
+          id: "939fbdb8dbb9b4c5944cbbe687c977c2",
+          object: "chat.completion.chunk",
+          created: 1741000456,
+          model: "hunyuan-turbo",
+          system_fingerprint: "",
+          choices: [
+            {
+              index: 0,
+              delta: { role: "assistant", content: "找到" },
+              finish_reason: null
+            }
+          ],
+          note: "以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记",
+          search_info: {
+            search_results: [
+              {
+                index: 1,
+                title: "公务员考试时政热点【2025年3月3日】_公务员考试网_华图教育",
+                url: "http://www.huatu.com/2025/0303/2803685.html",
+                icon: "https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/63ce96deffe0119827f12deaa5ffe7ef.jpg",
+                text: "华图教育官网"
+              },
+              {
+                index: 2,
+                title: "外交部新闻（2025年3月3日）",
+                url: "https://view.inews.qq.com/a/20250303A02NLC00?scene=qqsearch",
+                icon: "https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/00ce40298870d1accb7920d641152722.jpg",
+                text: "腾讯网"
+              }
+            ]
+          }
         }
+      ];
+
+      const mockStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
       });
 
-      it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
-        try {
-          new LobeHunyuanAI({});
-        } catch (e) {
-          expect(e).toEqual({ errorType: invalidErrorType });
-        }
+      vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(mockStream as any);
+
+      const result = await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'mistralai/mistral-7b-instruct:free',
+        temperature: 0,
       });
 
-      it('should return OpenAIBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
-        // Arrange
-        const errorInfo = {
-          stack: 'abc',
-          cause: {
-            message: 'api is undefined',
-          },
-        };
-        const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
+      const decoder = new TextDecoder();
+      const reader = result.body!.getReader();
+      const stream: string[] = [];
 
-        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        stream.push(decoder.decode(value));
+      }
 
-        // Act
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'hunyuan-lite',
-            temperature: 0,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            endpoint: defaultBaseURL,
-            error: {
-              cause: { message: 'api is undefined' },
-              stack: 'abc',
-            },
-            errorType: bizErrorType,
-            provider,
-          });
-        }
-      });
+      expect(stream).toEqual(
+        [
+          'id: 939fbdb8dbb9b4c5944cbbe687c977c2',
+          'event: grounding',
+          'data: {"citations":[{"title":"公务员考试时政热点【2025年3月3日】_公务员考试网_华图教育","url":"http://www.huatu.com/2025/0303/2803685.html"},{"title":"外交部新闻（2025年3月3日）","url":"https://view.inews.qq.com/a/20250303A02NLC00?scene=qqsearch"}]}\n',
+          'id: 939fbdb8dbb9b4c5944cbbe687c977c2',
+          'event: text',
+          'data: "为您"\n',
+          'id: 939fbdb8dbb9b4c5944cbbe687c977c2',
+          'event: text',
+          'data: "找到"\n',
+        ].map((line) => `${line}\n`),
+      );
 
-      it('should return OpenAIBizError with an cause response with desensitize Url', async () => {
-        // Arrange
-        const errorInfo = {
-          stack: 'abc',
-          cause: { message: 'api is undefined' },
-        };
-        const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
-
-        instance = new LobeHunyuanAI({
-          apiKey: 'test',
-
-          baseURL: 'https://api.abc.com/v1',
-        });
-
-        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
-
-        // Act
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'hunyuan-lite',
-            temperature: 0,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            endpoint: 'https://api.***.com/v1',
-            error: {
-              cause: { message: 'api is undefined' },
-              stack: 'abc',
-            },
-            errorType: bizErrorType,
-            provider,
-          });
-        }
-      });
-
-      it('should throw an InvalidHunyuanAPIKey error type on 401 status code', async () => {
-        // Mock the API call to simulate a 401 error
-        const error = new Error('Unauthorized') as any;
-        error.status = 401;
-        vi.mocked(instance['client'].chat.completions.create).mockRejectedValue(error);
-
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'hunyuan-lite',
-            temperature: 0,
-          });
-        } catch (e) {
-          // Expect the chat method to throw an error with InvalidHunyuanAPIKey
-          expect(e).toEqual({
-            endpoint: defaultBaseURL,
-            error: new Error('Unauthorized'),
-            errorType: invalidErrorType,
-            provider,
-          });
-        }
-      });
-
-      it('should return AgentRuntimeError for non-OpenAI errors', async () => {
-        // Arrange
-        const genericError = new Error('Generic Error');
-
-        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(genericError);
-
-        // Act
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'hunyuan-lite',
-            temperature: 0,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            endpoint: defaultBaseURL,
-            errorType: 'AgentRuntimeError',
-            provider,
-            error: {
-              name: genericError.name,
-              cause: genericError.cause,
-              message: genericError.message,
-              stack: genericError.stack,
-            },
-          });
-        }
-      });
-    });
-
-    describe('DEBUG', () => {
-      it('should call debugStream and return StreamingTextResponse when DEBUG_HUNYUAN_CHAT_COMPLETION is 1', async () => {
-        // Arrange
-        const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
-        const mockDebugStream = new ReadableStream({
-          start(controller) {
-            controller.enqueue('Debug stream content');
-            controller.close();
-          },
-        }) as any;
-        mockDebugStream.toReadableStream = () => mockDebugStream; // 添加 toReadableStream 方法
-
-        // 模拟 chat.completions.create 返回值，包括模拟的 tee 方法
-        (instance['client'].chat.completions.create as Mock).mockResolvedValue({
-          tee: () => [mockProdStream, { toReadableStream: () => mockDebugStream }],
-        });
-
-        // 保存原始环境变量值
-        const originalDebugValue = process.env.DEBUG_HUNYUAN_CHAT_COMPLETION;
-
-        // 模拟环境变量
-        process.env.DEBUG_HUNYUAN_CHAT_COMPLETION = '1';
-        vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
-
-        // 执行测试
-        // 运行你的测试函数，确保它会在条件满足时调用 debugStream
-        // 假设的测试函数调用，你可能需要根据实际情况调整
-        await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'hunyuan-lite',
-          stream: true,
-          temperature: 0,
-        });
-
-        // 验证 debugStream 被调用
-        expect(debugStreamModule.debugStream).toHaveBeenCalled();
-
-        // 恢复原始环境变量值
-        process.env.DEBUG_HUNYUAN_CHAT_COMPLETION = originalDebugValue;
-      });
+      expect((await reader.read()).done).toBe(true);
     });
   });
 });

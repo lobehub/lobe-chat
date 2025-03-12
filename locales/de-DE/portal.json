@@ -7,11 +7,6 @@
     }
   },
   "Plugins": "Plugins",
-  "actions": {
-    "genAiMessage": "Assistenten-Nachricht erstellen",
-    "summary": "Zusammenfassung",
-    "summaryTooltip": "Zusammenfassung des aktuellen Inhalts"
-  },
   "artifacts": {
     "display": {
       "code": "Code",

@@ -84,8 +84,7 @@
         },
         "modalTitle": "Configuração de Modelo Personalizado",
         "tokens": {
-          "title": "Número Máximo de Tokens",
-          "unlimited": "ilimitado"
+          "title": "Número Máximo de Tokens"
         },
         "vision": {
           "extra": "Esta configuração ativará apenas a configuração de upload de imagens dentro do aplicativo; a capacidade de reconhecimento depende totalmente do modelo em si. Por favor, teste a disponibilidade da capacidade de reconhecimento visual desse modelo.",
@@ -98,6 +97,7 @@
       "title": "Usar o modo de solicitação do cliente"
     },
     "fetcher": {
+      "clear": "Limpar o modelo obtido",
       "fetch": "Obter lista de modelos",
       "fetching": "Obtendo lista de modelos...",
       "latestTime": "Última atualização: {{time}}",
@@ -175,8 +175,8 @@
       "desc": "Se deve criar automaticamente um tópico durante a conversa, apenas válido em tópicos temporários",
       "title": "Criar tópico automaticamente"
     },
-    "enableCompressThreshold": {
-      "title": "Ativar limite de compactação de mensagens"
+    "enableCompressHistory": {
+      "title": "Ativar resumo automático de mensagens históricas"
     },
     "enableHistoryCount": {
       "alias": "Sem limite",
@@ -200,9 +200,12 @@
     "enableMaxTokens": {
       "title": "Ativar limite de resposta única"
     },
+    "enableReasoningEffort": {
+      "title": "Ativar ajuste de intensidade de raciocínio"
+    },
     "frequencyPenalty": {
-      "desc": "Quanto maior o valor, maior a probabilidade de reduzir palavras repetidas",
-      "title": "Penalidade de frequência"
+      "desc": "Quanto maior o valor, mais rica e variada será a escolha de palavras; quanto menor o valor, mais simples e direta será a escolha de palavras.",
+      "title": "Riqueza do Vocabulário"
     },
     "maxTokens": {
       "desc": "Número máximo de tokens a serem usados em uma interação única",
@@ -212,19 +215,31 @@
       "desc": "{{provider}} modelo",
       "title": "Modelo"
     },
+    "params": {
+      "title": "Parâmetros Avançados"
+    },
     "presencePenalty": {
-      "desc": "Quanto maior o valor, maior a probabilidade de expandir para novos tópicos",
-      "title": "Penalidade de novidade do tópico"
+      "desc": "Quanto maior o valor, mais inclinado a diferentes formas de expressão, evitando repetições de conceitos; quanto menor o valor, mais inclinado a usar conceitos ou narrativas repetidas, resultando em uma expressão mais consistente.",
+      "title": "Diversidade de Expressão"
+    },
+    "reasoningEffort": {
+      "desc": "Quanto maior o valor, mais forte será a capacidade de raciocínio, mas isso pode aumentar o tempo de resposta e o consumo de tokens",
+      "options": {
+        "high": "Alto",
+        "low": "Baixo",
+        "medium": "Médio"
+      },
+      "title": "Intensidade de raciocínio"
     },
     "temperature": {
-      "desc": "Quanto maior o valor, mais aleatória será a resposta",
-      "title": "Aleatoriedade",
-      "titleWithValue": "Aleatoriedade {{value}}"
+      "desc": "Quanto maior o valor, mais criativas e imaginativas serão as respostas; quanto menor o valor, mais rigorosas serão as respostas",
+      "title": "Atividade Criativa",
+      "warning": "Valor de atividade criativa muito alto pode resultar em saídas confusas"
     },
-    "title": "Configurações do modelo",
+    "title": "Configurações do Modelo",
     "topP": {
-      "desc": "Semelhante à aleatoriedade, mas não deve ser alterado junto com a aleatoriedade",
-      "title": "Amostragem principal"
+      "desc": "Quantas possibilidades considerar; quanto maior o valor, mais respostas possíveis serão aceitas; quanto menor o valor, mais se tende a escolher a resposta mais provável. Não é recomendado alterar junto com a atividade criativa",
+      "title": "Abertura Mental"
     }
   },
   "settingPlugin": {
@@ -372,10 +387,26 @@
       "modelDesc": "Especifica o modelo usado para gerar o nome, descrição, avatar e tags do assistente",
       "title": "Geração Automática de Informações do Assistente"
     },
+    "customPrompt": {
+      "addPrompt": "Adicionar prompt personalizado",
+      "desc": "Após preenchido, o assistente do sistema usará o prompt personalizado ao gerar conteúdo",
+      "placeholder": "Digite a palavra-chave personalizada",
+      "title": "Palavra-chave personalizada"
+    },
+    "historyCompress": {
+      "label": "Modelo de Histórico de Conversa",
+      "modelDesc": "Especifica o modelo usado para comprimir o histórico de conversa",
+      "title": "Resumo Automático do Histórico de Conversa"
+    },
     "queryRewrite": {
       "label": "Modelo de Reescrita de Perguntas",
       "modelDesc": "Modelo designado para otimizar as perguntas dos usuários",
-      "title": "Base de Conhecimento"
+      "title": "Reescrita de perguntas do banco de dados"
+    },
+    "thread": {
+      "label": "Modelo de Nomeação de Subtópicos",
+      "modelDesc": "Modelo designado para a renomeação automática de subtópicos",
+      "title": "Nomeação Automática de Subtópicos"
     },
     "title": "Assistente do Sistema",
     "topic": {
@@ -395,6 +426,7 @@
     "common": "Configurações Comuns",
     "experiment": "Experimento",
     "llm": "Modelo de Linguagem",
+    "provider": "Fornecedor de IA",
     "sync": "Sincronização na nuvem",
     "system-agent": "Assistente do Sistema",
     "tts": "Serviço de Voz"

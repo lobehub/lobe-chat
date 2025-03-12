@@ -1,4 +1,5 @@
 import { ModelProviderKey } from '@/libs/agent-runtime';
+import { AiFullModelCard } from '@/types/aiModel';
 import { ChatModelCard } from '@/types/llm';
 
 export interface ProviderConfig {
@@ -27,6 +28,7 @@ export interface ProviderConfig {
    * fetched models from provider side
    */
   remoteModelCards?: ChatModelCard[];
+  serverModelLists?: AiFullModelCard[];
 }
 
 export type GlobalLLMProviderKey = ModelProviderKey;

@@ -116,6 +116,9 @@ const TipGuide: FC<TipGuideProps> = ({
           >
             <Popover
               arrow={{ pointAtCenter: true }}
+              classNames={{
+                root: cx(className, styles.overlay),
+              }}
               color={'blue'}
               content={
                 <Flexbox gap={24} horizontal style={{ userSelect: 'none' }}>
@@ -131,9 +134,10 @@ const TipGuide: FC<TipGuideProps> = ({
                 </Flexbox>
               }
               open={open}
-              overlayClassName={cx(className, styles.overlay)}
-              overlayStyle={{ maxWidth, zIndex: 1000, ...style }}
               placement={placement}
+              styles={{
+                root: { maxWidth, zIndex: 1000, ...style },
+              }}
               trigger="hover"
             >
               {children}

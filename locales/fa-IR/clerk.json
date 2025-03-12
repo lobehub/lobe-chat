@@ -1,0 +1,769 @@
+{
+  "backButton": "بازگشت",
+  "badge__default": "پیش‌فرض",
+  "badge__otherImpersonatorDevice": "دستگاه شبیه‌ساز دیگر",
+  "badge__primary": "اصلی",
+  "badge__requiresAction": "نیاز به اقدام دارد",
+  "badge__thisDevice": "این دستگاه",
+  "badge__unverified": "تأیید نشده",
+  "badge__userDevice": "دستگاه کاربر",
+  "badge__you": "شما",
+  "createOrganization": {
+    "formButtonSubmit": "ایجاد سازمان",
+    "invitePage": {
+      "formButtonReset": "رد کردن"
+    },
+    "title": "ایجاد سازمان"
+  },
+  "dates": {
+    "lastDay": "دیروز {{ date | timeString('fa-IR') }}",
+    "next6Days": "{{ date | weekday('fa-IR','long') }} {{ date | timeString('fa-IR') }}",
+    "nextDay": "فردا {{ date | timeString('fa-IR') }}",
+    "numeric": "{{ date | numeric('fa-IR') }}",
+    "previous6Days": "هفته گذشته {{ date | weekday('fa-IR','long') }} {{ date | timeString('fa-IR') }}",
+    "sameDay": "امروز {{ date | timeString('fa-IR') }}"
+  },
+  "dividerText": "یا",
+  "footerActionLink__useAnotherMethod": "استفاده از روش دیگر",
+  "footerPageLink__help": "کمک",
+  "footerPageLink__privacy": "حریم خصوصی",
+  "footerPageLink__terms": "شرایط",
+  "formButtonPrimary": "ادامه",
+  "formButtonPrimary__verify": "تأیید",
+  "formFieldAction__forgotPassword": "فراموشی رمز عبور؟",
+  "formFieldError__matchingPasswords": "رمزهای عبور مطابقت دارند.",
+  "formFieldError__notMatchingPasswords": "رمزهای عبور مطابقت ندارند.",
+  "formFieldError__verificationLinkExpired": "لینک تأیید منقضی شده است. لطفاً یک لینک جدید درخواست کنید.",
+  "formFieldHintText__optional": "اختیاری",
+  "formFieldHintText__slug": "Slug یک شناسه قابل خواندن توسط انسان است که باید منحصربه‌فرد باشد. معمولاً در URL استفاده می‌شود.",
+  "formFieldInputPlaceholder__backupCode": "",
+  "formFieldInputPlaceholder__confirmDeletionUserAccount": "حذف حساب",
+  "formFieldInputPlaceholder__emailAddress": "",
+  "formFieldInputPlaceholder__emailAddress_username": "",
+  "formFieldInputPlaceholder__emailAddresses": "یک یا چند آدرس ایمیل را وارد یا جای‌گذاری کنید، با فاصله یا ویرگول جدا کنید",
+  "formFieldInputPlaceholder__firstName": "",
+  "formFieldInputPlaceholder__lastName": "نام خانوادگی",
+  "formFieldInputPlaceholder__organizationDomain": "",
+  "formFieldInputPlaceholder__organizationDomainEmailAddress": "",
+  "formFieldInputPlaceholder__organizationName": "",
+  "formFieldInputPlaceholder__organizationSlug": "سازمان-من",
+  "formFieldInputPlaceholder__password": "",
+  "formFieldInputPlaceholder__phoneNumber": "",
+  "formFieldInputPlaceholder__username": "",
+  "formFieldLabel__automaticInvitations": "فعال‌سازی دعوت‌نامه‌های خودکار برای این دامنه",
+  "formFieldLabel__backupCode": "کد پشتیبان",
+  "formFieldLabel__confirmDeletion": "تأیید",
+  "formFieldLabel__confirmPassword": "تأیید رمز عبور",
+  "formFieldLabel__currentPassword": "رمز عبور فعلی",
+  "formFieldLabel__emailAddress": "آدرس ایمیل",
+  "formFieldLabel__emailAddress_username": "آدرس ایمیل یا نام کاربری",
+  "formFieldLabel__emailAddresses": "آدرس‌های ایمیل",
+  "formFieldLabel__firstName": "نام",
+  "formFieldLabel__lastName": "نام خانوادگی",
+  "formFieldLabel__newPassword": "رمز عبور جدید",
+  "formFieldLabel__organizationDomain": "دامنه",
+  "formFieldLabel__organizationDomainDeletePending": "حذف دعوت‌نامه‌ها و پیشنهادات در انتظار بررسی",
+  "formFieldLabel__organizationDomainEmailAddress": "تأیید آدرس ایمیل",
+  "formFieldLabel__organizationDomainEmailAddressDescription": "یک آدرس ایمیل تحت این دامنه وارد کنید تا کد تأیید دریافت کرده و این دامنه را تأیید کنید.",
+  "formFieldLabel__organizationName": "نام سازمان",
+  "formFieldLabel__organizationSlug": "نام مختصر URL",
+  "formFieldLabel__passkeyName": "نام کلید عبور",
+  "formFieldLabel__password": "رمز عبور",
+  "formFieldLabel__phoneNumber": "شماره تلفن",
+  "formFieldLabel__role": "نقش",
+  "formFieldLabel__signOutOfOtherSessions": "خروج از تمام دستگاه‌های دیگر",
+  "formFieldLabel__username": "نام کاربری",
+  "impersonationFab": {
+    "action__signOut": "خروج از حساب",
+    "title": "ورود به عنوان {{identifier}}"
+  },
+  "locale": "fa-IR",
+  "maintenanceMode": "ما در حال حاضر در حال انجام تعمیرات هستیم، اما نگران نباشید، این کار بیش از چند دقیقه طول نخواهد کشید.",
+  "membershipRole__admin": "مدیر",
+  "membershipRole__basicMember": "عضو",
+  "membershipRole__guestMember": "مهمان",
+  "organizationList": {
+    "action__createOrganization": "ایجاد سازمان",
+    "action__invitationAccept": "پیوستن",
+    "action__suggestionsAccept": "درخواست پیوستن",
+    "createOrganization": "ایجاد سازمان",
+    "invitationAcceptedLabel": "پیوسته شد",
+    "subtitle": "برای ادامه استفاده از {{applicationName}}",
+    "suggestionsAcceptedLabel": "در انتظار تأیید",
+    "title": "یک حساب کاربری انتخاب کنید",
+    "titleWithoutPersonal": "یک سازمان انتخاب کنید"
+  },
+  "organizationProfile": {
+    "badge__automaticInvitation": "دعوت خودکار",
+    "badge__automaticSuggestion": "پیشنهاد خودکار",
+    "badge__manualInvitation": "بدون ثبت‌نام خودکار",
+    "badge__unverified": "تأیید نشده",
+    "createDomainPage": {
+      "subtitle": "دامنه‌ای اضافه کنید تا تأیید شود. کاربرانی که آدرس ایمیل با این دامنه دارند می‌توانند به‌طور خودکار به سازمان بپیوندند یا درخواست عضویت دهند.",
+      "title": "افزودن دامنه"
+    },
+    "invitePage": {
+      "detailsTitle__inviteFailed": "دعوت ارسال نشد. آدرس‌های ایمیل زیر دعوت‌های در حال انتظار دارند: {{email_addresses}}.",
+      "formButtonPrimary__continue": "ارسال دعوت",
+      "selectDropdown__role": "انتخاب نقش",
+      "subtitle": "یک یا چند آدرس ایمیل وارد یا جای‌گذاری کنید، با فاصله یا ویرگول جدا کنید.",
+      "successMessage": "دعوت با موفقیت ارسال شد",
+      "title": "دعوت از اعضای جدید"
+    },
+    "membersPage": {
+      "action__invite": "دعوت",
+      "activeMembersTab": {
+        "menuAction__remove": "حذف عضو",
+        "tableHeader__actions": "",
+        "tableHeader__joined": "زمان پیوستن",
+        "tableHeader__role": "نقش",
+        "tableHeader__user": "کاربر"
+      },
+      "detailsTitle__emptyRow": "هیچ عضوی برای نمایش وجود ندارد",
+      "invitationsTab": {
+        "autoInvitations": {
+          "headerSubtitle": "کاربران را از طریق اتصال دامنه ایمیل به سازمان دعوت کنید. هر کاربری که با دامنه ایمیل مطابقت داشته باشد می‌تواند در هر زمان به سازمان بپیوندد.",
+          "headerTitle": "دعوت خودکار",
+          "primaryButton": "مدیریت دامنه‌های تأیید شده"
+        },
+        "table__emptyRow": "هیچ دعوتی برای نمایش وجود ندارد"
+      },
+      "invitedMembersTab": {
+        "menuAction__revoke": "لغو دعوت",
+        "tableHeader__invited": "دعوت شده"
+      },
+      "requestsTab": {
+        "autoSuggestions": {
+          "headerSubtitle": "کاربرانی که با دامنه ایمیل مطابقت دارند می‌توانند پیشنهاد درخواست عضویت در سازمان را مشاهده کنند.",
+          "headerTitle": "پیشنهاد خودکار",
+          "primaryButton": "مدیریت دامنه‌های تأیید شده"
+        },
+        "menuAction__approve": "تأیید",
+        "menuAction__reject": "رد",
+        "tableHeader__requested": "درخواست دسترسی",
+        "table__emptyRow": "هیچ درخواستی برای نمایش وجود ندارد"
+      },
+      "start": {
+        "headerTitle__invitations": "دعوت‌ها",
+        "headerTitle__members": "اعضا",
+        "headerTitle__requests": "درخواست‌ها"
+      }
+    },
+    "navbar": {
+      "description": "مدیریت سازمان شما",
+      "general": "عمومی",
+      "members": "اعضا",
+      "title": "سازمان"
+    },
+    "profilePage": {
+      "dangerSection": {
+        "deleteOrganization": {
+          "actionDescription": "برای ادامه، «{{organizationName}}» را در زیر وارد کنید.",
+          "messageLine1": "آیا مطمئن هستید که می‌خواهید این سازمان را حذف کنید؟",
+          "messageLine2": "این عمل دائمی و غیرقابل بازگشت است.",
+          "successMessage": "شما سازمان را حذف کرده‌اید",
+          "title": "حذف سازمان"
+        },
+        "leaveOrganization": {
+          "actionDescription": "برای ادامه، «{{organizationName}}» را در زیر وارد کنید.",
+          "messageLine1": "آیا مطمئن هستید که می‌خواهید این سازمان را ترک کنید؟ شما دسترسی به این سازمان و برنامه‌های آن را از دست خواهید داد.",
+          "messageLine2": "این عمل دائمی و غیرقابل بازگشت است.",
+          "successMessage": "شما سازمان را ترک کرده‌اید",
+          "title": "ترک سازمان"
+        },
+        "title": "خطرناک"
+      },
+      "domainSection": {
+        "menuAction__manage": "مدیریت",
+        "menuAction__remove": "حذف",
+        "menuAction__verify": "تأیید",
+        "primaryButton": "افزودن دامنه",
+        "subtitle": "به کاربران اجازه دهید بر اساس دامنه‌های تأیید شده ایمیل به‌طور خودکار به سازمان بپیوندند یا درخواست عضویت دهند.",
+        "title": "دامنه‌های تأیید شده"
+      },
+      "successMessage": "سازمان به‌روزرسانی شد",
+      "title": "به‌روزرسانی پروفایل"
+    },
+    "removeDomainPage": {
+      "messageLine1": "دامنه ایمیل {{domain}} حذف خواهد شد.",
+      "messageLine2": "پس از آن، کاربران نمی‌توانند به‌طور خودکار به سازمان بپیوندند.",
+      "successMessage": "{{domain}} حذف شد",
+      "title": "حذف دامنه"
+    },
+    "start": {
+      "headerTitle__general": "عمومی",
+      "headerTitle__members": "اعضا",
+      "profileSection": {
+        "primaryButton": "به‌روزرسانی پروفایل",
+        "title": "پروفایل سازمان",
+        "uploadAction__title": "لوگو"
+      }
+    },
+    "verifiedDomainPage": {
+      "dangerTab": {
+        "calloutInfoLabel": "حذف این دامنه بر کاربران دعوت‌شده تأثیر خواهد گذاشت.",
+        "removeDomainActionLabel__remove": "حذف دامنه",
+        "removeDomainSubtitle": "حذف این دامنه از دامنه‌های تأیید شده",
+        "removeDomainTitle": "حذف دامنه"
+      },
+      "enrollmentTab": {
+        "automaticInvitationOption__description": "کاربران هنگام ثبت‌نام به‌طور خودکار به سازمان دعوت می‌شوند و می‌توانند در هر زمان بپیوندند.",
+        "automaticInvitationOption__label": "دعوت خودکار",
+        "automaticSuggestionOption__description": "کاربران پیشنهاد درخواست عضویت را دریافت می‌کنند، اما باید توسط مدیر تأیید شوند تا به سازمان بپیوندند.",
+        "automaticSuggestionOption__label": "پیشنهاد خودکار",
+        "calloutInfoLabel": "تغییر حالت ثبت‌نام فقط بر کاربران جدید تأثیر می‌گذارد.",
+        "calloutInvitationCountLabel": "دعوت‌های در حال انتظار ارسال شده به کاربران: {{count}}",
+        "calloutSuggestionCountLabel": "پیشنهادهای در حال انتظار ارسال شده به کاربران: {{count}}",
+        "manualInvitationOption__description": "کاربران فقط می‌توانند به‌صورت دستی به سازمان دعوت شوند.",
+        "manualInvitationOption__label": "بدون پیوستن خودکار",
+        "subtitle": "انتخاب کنید که کاربران از این دامنه چگونه به سازمان بپیوندند."
+      },
+      "start": {
+        "headerTitle__danger": "خطرناک",
+        "headerTitle__enrollment": "گزینه‌های ثبت‌نام"
+      },
+      "subtitle": "دامنه {{domain}} تأیید شده است. ادامه دهید و حالت ثبت‌نام را انتخاب کنید.",
+      "title": "به‌روزرسانی {{domain}}"
+    },
+    "verifyDomainPage": {
+      "formSubtitle": "کد تأیید ارسال شده به آدرس ایمیل خود را وارد کنید",
+      "formTitle": "کد تأیید",
+      "resendButton": "کد را دریافت نکردید؟ دوباره ارسال کنید",
+      "subtitle": "دامنه {{domainName}} باید از طریق ایمیل تأیید شود.",
+      "subtitleVerificationCodeScreen": "کد تأیید به {{emailAddress}} ارسال شده است. کد را وارد کنید تا ادامه دهید.",
+      "title": "تأیید دامنه"
+    }
+  },
+  "organizationSwitcher": {
+    "action__createOrganization": "ایجاد سازمان",
+    "action__invitationAccept": "پیوستن",
+    "action__manageOrganization": "مدیریت",
+    "action__suggestionsAccept": "درخواست پیوستن",
+    "notSelected": "سازمانی انتخاب نشده",
+    "personalWorkspace": "حساب شخصی",
+    "suggestionsAcceptedLabel": "در انتظار تأیید"
+  },
+  "paginationButton__next": "صفحه بعد",
+  "paginationButton__previous": "صفحه قبل",
+  "paginationRowText__displaying": "نمایش",
+  "paginationRowText__of": "از",
+  "signIn": {
+    "accountSwitcher": {
+      "action__addAccount": "افزودن حساب",
+      "action__signOutAll": "خروج از همه حساب‌ها",
+      "subtitle": "حسابی را برای ادامه انتخاب کنید.",
+      "title": "یک حساب انتخاب کنید"
+    },
+    "alternativeMethods": {
+      "actionLink": "دریافت کمک",
+      "actionText": "این‌ها را ندارید؟",
+      "blockButton__backupCode": "استفاده از کد پشتیبان",
+      "blockButton__emailCode": "ارسال کد به {{identifier}}",
+      "blockButton__emailLink": "ارسال لینک به {{identifier}}",
+      "blockButton__passkey": "ورود با کلید امنیتی",
+      "blockButton__password": "ورود با رمز عبور",
+      "blockButton__phoneCode": "ارسال کد پیامکی به {{identifier}}",
+      "blockButton__totp": "استفاده از برنامه احراز هویت",
+      "getHelp": {
+        "blockButton__emailSupport": "پشتیبانی ایمیلی",
+        "content": "اگر در ورود به حساب خود مشکل دارید، برای ما ایمیل بفرستید و ما در اسرع وقت با شما همکاری خواهیم کرد تا دسترسی شما را بازیابی کنیم.",
+        "title": "دریافت کمک"
+      },
+      "subtitle": "مشکلی دارید؟ می‌توانید از یکی از روش‌های زیر برای ورود استفاده کنید.",
+      "title": "استفاده از روش‌های دیگر"
+    },
+    "backupCodeMfa": {
+      "subtitle": "کد پشتیبان شما هنگام تنظیم احراز هویت دو مرحله‌ای دریافت شده است.",
+      "title": "کد پشتیبان را وارد کنید"
+    },
+    "emailCode": {
+      "formTitle": "کد تأیید",
+      "resendButton": "کد را دریافت نکردید؟ ارسال مجدد",
+      "subtitle": "برای ادامه به {{applicationName}}",
+      "title": "ایمیل خود را بررسی کنید"
+    },
+    "emailLink": {
+      "expired": {
+        "subtitle": "به برگه اصلی بازگردید و ادامه دهید.",
+        "title": "این لینک تأیید منقضی شده است"
+      },
+      "failed": {
+        "subtitle": "به برگه اصلی بازگردید و ادامه دهید.",
+        "title": "این لینک تأیید نامعتبر است"
+      },
+      "formSubtitle": "از لینک تأیید ارسال شده به ایمیل خود استفاده کنید",
+      "formTitle": "لینک تأیید",
+      "loading": {
+        "subtitle": "به زودی هدایت خواهید شد",
+        "title": "در حال ورود..."
+      },
+      "resendButton": "لینک را دریافت نکردید؟ ارسال مجدد",
+      "subtitle": "برای ادامه به {{applicationName}}",
+      "title": "ایمیل خود را بررسی کنید",
+      "unusedTab": {
+        "title": "می‌توانید این برگه را ببندید"
+      },
+      "verified": {
+        "subtitle": "به زودی هدایت خواهید شد",
+        "title": "ورود موفقیت‌آمیز"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "به برگه اصلی بازگردید و ادامه دهید",
+        "subtitleNewTab": "به برگه جدید بازگردید و ادامه دهید",
+        "titleNewTab": "ورود در برگه دیگر"
+      }
+    },
+    "forgotPassword": {
+      "formTitle": "کد بازنشانی رمز عبور",
+      "resendButton": "کد را دریافت نکردید؟ ارسال مجدد",
+      "subtitle": "رمز عبور خود را بازنشانی کنید",
+      "subtitle_email": "ابتدا کدی که به ایمیل شما ارسال شده است را وارد کنید",
+      "subtitle_phone": "ابتدا کدی که به تلفن شما ارسال شده است را وارد کنید",
+      "title": "بازنشانی رمز عبور"
+    },
+    "forgotPasswordAlternativeMethods": {
+      "blockButton__resetPassword": "بازنشانی رمز عبور",
+      "label__alternativeMethods": "یا از روش‌های دیگر برای ورود استفاده کنید",
+      "title": "رمز عبور را فراموش کرده‌اید؟"
+    },
+    "noAvailableMethods": {
+      "message": "امکان ادامه ورود وجود ندارد. هیچ عامل احراز هویتی در دسترس نیست.",
+      "subtitle": "خطایی رخ داده است",
+      "title": "ورود امکان‌پذیر نیست"
+    },
+    "passkey": {
+      "subtitle": "با استفاده از کلید امنیتی خود تأیید کنید که شما هستید. دستگاه شما ممکن است از شما اثر انگشت، چهره یا قفل صفحه بخواهد.",
+      "title": "استفاده از کلید امنیتی"
+    },
+    "password": {
+      "actionLink": "استفاده از روش‌های دیگر",
+      "subtitle": "رمز عبور مرتبط با حساب خود را وارد کنید",
+      "title": "رمز عبور خود را وارد کنید"
+    },
+    "passwordPwned": {
+      "title": "رمز عبور افشا شده است"
+    },
+    "phoneCode": {
+      "formTitle": "کد تأیید",
+      "resendButton": "کد را دریافت نکردید؟ ارسال مجدد",
+      "subtitle": "برای ادامه به {{applicationName}}",
+      "title": "تلفن خود را بررسی کنید"
+    },
+    "phoneCodeMfa": {
+      "formTitle": "کد تأیید",
+      "resendButton": "کد را دریافت نکردید؟ ارسال مجدد",
+      "subtitle": "لطفاً ادامه دهید و کدی که به تلفن شما ارسال شده است را وارد کنید",
+      "title": "تلفن خود را بررسی کنید"
+    },
+    "resetPassword": {
+      "formButtonPrimary": "بازنشانی رمز عبور",
+      "requiredMessage": "به دلایل امنیتی، لازم است رمز عبور خود را بازنشانی کنید.",
+      "successMessage": "رمز عبور شما با موفقیت تغییر کرد. در حال ورود، لطفاً صبر کنید.",
+      "title": "تنظیم رمز عبور جدید"
+    },
+    "resetPasswordMfa": {
+      "detailsLabel": "قبل از بازنشانی رمز عبور، باید هویت شما تأیید شود."
+    },
+    "start": {
+      "actionLink": "ثبت‌نام",
+      "actionLink__use_email": "استفاده از ایمیل",
+      "actionLink__use_email_username": "استفاده از ایمیل یا نام کاربری",
+      "actionLink__use_passkey": "استفاده از کلید امنیتی",
+      "actionLink__use_phone": "استفاده از تلفن",
+      "actionLink__use_username": "استفاده از نام کاربری",
+      "actionText": "حساب ندارید؟",
+      "subtitle": "خوش آمدید! لطفاً برای ادامه وارد شوید",
+      "title": "ورود به {{applicationName}}"
+    },
+    "totpMfa": {
+      "formTitle": "کد تأیید",
+      "subtitle": "لطفاً ادامه دهید و کدی که توسط برنامه احراز هویت شما تولید شده است را وارد کنید",
+      "title": "احراز هویت دو مرحله‌ای"
+    }
+  },
+  "signInEnterPasswordTitle": "رمز عبور خود را وارد کنید",
+  "signUp": {
+    "continue": {
+      "actionLink": "ورود",
+      "actionText": "حساب کاربری دارید؟",
+      "subtitle": "لطفاً جزئیات باقی‌مانده را برای ادامه پر کنید.",
+      "title": "فیلدهای ناقص را پر کنید"
+    },
+    "emailCode": {
+      "formSubtitle": "کد ارسال‌شده به آدرس ایمیل خود را وارد کنید",
+      "formTitle": "کد تأیید",
+      "resendButton": "کد را دریافت نکردید؟ دوباره ارسال کنید",
+      "subtitle": "کد ارسال‌شده به ایمیل خود را وارد کنید",
+      "title": "ایمیل خود را تأیید کنید"
+    },
+    "emailLink": {
+      "formSubtitle": "از لینک تأییدی که به آدرس ایمیل شما ارسال شده استفاده کنید",
+      "formTitle": "لینک تأیید",
+      "loading": {
+        "title": "در حال ثبت‌نام..."
+      },
+      "resendButton": "لینک را دریافت نکردید؟ دوباره ارسال کنید",
+      "subtitle": "برای ادامه به {{applicationName}} دسترسی پیدا کنید",
+      "title": "ایمیل خود را تأیید کنید",
+      "verified": {
+        "title": "ثبت‌نام موفقیت‌آمیز"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "برای ادامه به تب جدید بازگشته و ادامه دهید",
+        "subtitleNewTab": "برای ادامه به تب قبلی بازگردید",
+        "title": "ایمیل با موفقیت تأیید شد"
+      }
+    },
+    "phoneCode": {
+      "formSubtitle": "کد ارسال‌شده به شماره تلفن خود را وارد کنید",
+      "formTitle": "کد تأیید",
+      "resendButton": "کد را دریافت نکردید؟ دوباره ارسال کنید",
+      "subtitle": "کد ارسال‌شده به تلفن همراه خود را وارد کنید",
+      "title": "تلفن خود را تأیید کنید"
+    },
+    "start": {
+      "actionLink": "ورود",
+      "actionText": "حساب کاربری دارید؟",
+      "subtitle": "خوش آمدید! لطفاً برای شروع اطلاعات خود را وارد کنید.",
+      "title": "حساب کاربری خود را ایجاد کنید"
+    }
+  },
+  "socialButtonsBlockButton": "ادامه با {{provider|titleize}}",
+  "unstable__errors": {
+    "captcha_invalid": "ثبت‌نام به دلیل شکست در تأیید امنیتی ناموفق بود. لطفاً صفحه را تازه‌سازی کرده و دوباره تلاش کنید یا برای کمک بیشتر با پشتیبانی تماس بگیرید.",
+    "captcha_unavailable": "ثبت‌نام به دلیل شکست در تأیید ربات ناموفق بود. لطفاً صفحه را تازه‌سازی کرده و دوباره تلاش کنید یا برای کمک بیشتر با پشتیبانی تماس بگیرید.",
+    "form_code_incorrect": "",
+    "form_identifier_exists": "",
+    "form_identifier_exists__email_address": "این آدرس ایمیل قبلاً استفاده شده است. لطفاً یکی دیگر را امتحان کنید.",
+    "form_identifier_exists__phone_number": "این شماره تلفن قبلاً استفاده شده است. لطفاً یکی دیگر را امتحان کنید.",
+    "form_identifier_exists__username": "این نام کاربری قبلاً استفاده شده است. لطفاً یکی دیگر را امتحان کنید.",
+    "form_identifier_not_found": "",
+    "form_param_format_invalid": "",
+    "form_param_format_invalid__email_address": "آدرس ایمیل باید یک آدرس ایمیل معتبر باشد.",
+    "form_param_format_invalid__phone_number": "شماره تلفن باید با فرمت بین‌المللی معتبر مطابقت داشته باشد.",
+    "form_param_max_length_exceeded__first_name": "نام نباید بیش از ۲۵۶ کاراکتر باشد.",
+    "form_param_max_length_exceeded__last_name": "نام خانوادگی نباید بیش از ۲۵۶ کاراکتر باشد.",
+    "form_param_max_length_exceeded__name": "نام نباید بیش از ۲۵۶ کاراکتر باشد.",
+    "form_param_nil": "",
+    "form_password_incorrect": "",
+    "form_password_length_too_short": "",
+    "form_password_not_strong_enough": "رمز عبور شما به اندازه کافی قوی نیست.",
+    "form_password_pwned": "این رمز عبور به عنوان بخشی از یک افشای اطلاعات شناسایی شده است و نمی‌توان از آن استفاده کرد. لطفاً رمز عبور دیگری را امتحان کنید.",
+    "form_password_pwned__sign_in": "این رمز عبور به عنوان بخشی از یک افشای اطلاعات شناسایی شده است و نمی‌توان از آن استفاده کرد. لطفاً رمز عبور خود را بازنشانی کنید.",
+    "form_password_size_in_bytes_exceeded": "رمز عبور شما از حداکثر تعداد بایت مجاز فراتر رفته است. لطفاً آن را کوتاه‌تر کنید یا برخی از کاراکترهای خاص را حذف کنید.",
+    "form_password_validation_failed": "رمز عبور نادرست است.",
+    "form_username_invalid_character": "",
+    "form_username_invalid_length": "",
+    "identification_deletion_failed": "شما نمی‌توانید آخرین تأیید هویت خود را حذف کنید.",
+    "not_allowed_access": "",
+    "passkey_already_exists": "این دستگاه قبلاً کلید عبور را ثبت کرده است.",
+    "passkey_not_supported": "این دستگاه از کلید عبور پشتیبانی نمی‌کند.",
+    "passkey_pa_not_supported": "ثبت‌نام نیاز به تأییدکننده پلتفرم دارد، اما دستگاه پشتیبانی نمی‌کند.",
+    "passkey_registration_cancelled": "ثبت‌نام کلید عبور لغو یا منقضی شد.",
+    "passkey_retrieval_cancelled": "تأیید کلید عبور لغو یا منقضی شد.",
+    "passwordComplexity": {
+      "maximumLength": "کمتر از {{length}} کاراکتر",
+      "minimumLength": "{{length}} کاراکتر یا بیشتر",
+      "requireLowercase": "یک حرف کوچک",
+      "requireNumbers": "یک عدد",
+      "requireSpecialCharacter": "یک کاراکتر خاص",
+      "requireUppercase": "یک حرف بزرگ",
+      "sentencePrefix": "رمز عبور شما باید شامل موارد زیر باشد"
+    },
+    "phone_number_exists": "این شماره تلفن قبلاً استفاده شده است. لطفاً یکی دیگر را امتحان کنید.",
+    "zxcvbn": {
+      "couldBeStronger": "رمز عبور شما می‌تواند قوی‌تر باشد. سعی کنید کاراکترهای بیشتری اضافه کنید.",
+      "goodPassword": "رمز عبور شما تمام الزامات لازم را برآورده می‌کند.",
+      "notEnough": "رمز عبور شما به اندازه کافی قوی نیست.",
+      "suggestions": {
+        "allUppercase": "برخی از حروف را بزرگ کنید، اما نه همه.",
+        "anotherWord": "یک کلمه کمتر رایج اضافه کنید.",
+        "associatedYears": "از سال‌هایی که با شما مرتبط هستند اجتناب کنید.",
+        "capitalization": "بیش از یک حرف اول را بزرگ کنید.",
+        "dates": "از تاریخ‌ها و سال‌هایی که با شما مرتبط هستند اجتناب کنید.",
+        "l33t": "از جایگزینی‌های قابل پیش‌بینی حروف مانند جایگزینی '@' به جای 'a' اجتناب کنید.",
+        "longerKeyboardPattern": "از یک الگوی صفحه‌کلید طولانی‌تر استفاده کنید و چندین بار جهت ورودی را تغییر دهید.",
+        "noNeed": "شما می‌توانید یک رمز عبور قوی ایجاد کنید بدون نیاز به استفاده از نمادها، اعداد یا حروف بزرگ.",
+        "pwned": "اگر از این رمز عبور در جای دیگری استفاده کرده‌اید، باید آن را تغییر دهید.",
+        "recentYears": "از سال‌های اخیر اجتناب کنید.",
+        "repeated": "از کلمات و کاراکترهای تکراری اجتناب کنید.",
+        "reverseWords": "از معکوس کردن املای کلمات رایج اجتناب کنید.",
+        "sequences": "از توالی‌های کاراکتر رایج اجتناب کنید.",
+        "useWords": "از چندین کلمه استفاده کنید، اما از عبارات رایج اجتناب کنید."
+      },
+      "warnings": {
+        "common": "این یک رمز عبور رایج است.",
+        "commonNames": "نام‌ها و نام‌های خانوادگی رایج به راحتی قابل حدس زدن هستند.",
+        "dates": "تاریخ‌ها به راحتی قابل حدس زدن هستند.",
+        "extendedRepeat": "الگوهای تکراری کاراکتر مانند 'abcabcabc' به راحتی قابل حدس زدن هستند.",
+        "keyPattern": "الگوهای کوتاه صفحه‌کلید به راحتی قابل حدس زدن هستند.",
+        "namesByThemselves": "نام یا نام خانوادگی به تنهایی به راحتی قابل حدس زدن هستند.",
+        "pwned": "رمز عبور شما در یک افشای داده‌های اینترنتی فاش شده است.",
+        "recentYears": "سال‌های اخیر به راحتی قابل حدس زدن هستند.",
+        "sequences": "توالی‌های کاراکتر رایج مانند 'abc' به راحتی قابل حدس زدن هستند.",
+        "similarToCommon": "این شبیه به رمزهای عبور رایج است.",
+        "simpleRepeat": "کاراکترهای تکراری مانند 'aaa' به راحتی قابل حدس زدن هستند.",
+        "straightRow": "کلیدهای مرتب شده در یک ردیف مستقیم روی صفحه‌کلید به راحتی قابل حدس زدن هستند.",
+        "topHundred": "این یک رمز عبور رایج است.",
+        "topTen": "این یک رمز عبور بسیار رایج است.",
+        "userInputs": "رمز عبور نباید شامل هیچ‌گونه اطلاعات شخصی یا مرتبط با صفحه باشد.",
+        "wordByItself": "یک کلمه به تنهایی به راحتی قابل حدس زدن است."
+      }
+    }
+  },
+  "userButton": {
+    "action__addAccount": "افزودن حساب",
+    "action__manageAccount": "مدیریت حساب‌ها",
+    "action__signOut": "خروج",
+    "action__signOutAll": "خروج از همه حساب‌ها"
+  },
+  "userProfile": {
+    "backupCodePage": {
+      "actionLabel__copied": "کپی شد!",
+      "actionLabel__copy": "کپی همه",
+      "actionLabel__download": "دانلود .txt",
+      "actionLabel__print": "چاپ",
+      "infoText1": "این حساب کدهای پشتیبان را فعال خواهد کرد.",
+      "infoText2": "کدهای پشتیبان را محرمانه نگه دارید و در مکانی امن ذخیره کنید. اگر مشکوک هستید که کدهای پشتیبان فاش شده‌اند، می‌توانید آنها را دوباره تولید کنید.",
+      "subtitle__codelist": "کدهای پشتیبان را به‌طور امن ذخیره و محرمانه نگه دارید.",
+      "successMessage": "کدهای پشتیبان اکنون فعال شده‌اند. اگر به دستگاه احراز هویت خود دسترسی ندارید، می‌توانید از یکی از این کدها برای ورود به حساب خود استفاده کنید. هر کد فقط یک‌بار قابل استفاده است.",
+      "successSubtitle": "اگر به دستگاه احراز هویت خود دسترسی ندارید، می‌توانید از یکی از این کدها برای ورود به حساب خود استفاده کنید.",
+      "title": "افزودن تأیید کد پشتیبان",
+      "title__codelist": "کدهای پشتیبان"
+    },
+    "connectedAccountPage": {
+      "formHint": "ارائه‌دهنده‌ای را برای اتصال حساب خود انتخاب کنید.",
+      "formHint__noAccounts": "هیچ ارائه‌دهنده حساب خارجی در دسترس نیست.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} از این حساب حذف خواهد شد.",
+        "messageLine2": "شما دیگر نمی‌توانید از این حساب متصل استفاده کنید و هر ویژگی وابسته به آن دیگر کار نخواهد کرد.",
+        "successMessage": "{{connectedAccount}} از حساب شما حذف شد.",
+        "title": "حذف حساب متصل"
+      },
+      "socialButtonsBlockButton": "{{provider|titleize}}",
+      "successMessage": "ارائه‌دهنده به حساب شما اضافه شد",
+      "title": "افزودن حساب متصل"
+    },
+    "deletePage": {
+      "actionDescription": "برای ادامه، 'حذف حساب' را در زیر وارد کنید.",
+      "confirm": "حذف حساب",
+      "messageLine1": "آیا مطمئن هستید که می‌خواهید حساب خود را حذف کنید؟",
+      "messageLine2": "این عمل دائمی و غیرقابل بازگشت است.",
+      "title": "حذف حساب"
+    },
+    "emailAddressPage": {
+      "emailCode": {
+        "formHint": "یک ایمیل حاوی کد تأیید به این آدرس ایمیل ارسال خواهد شد.",
+        "formSubtitle": "کد ارسال‌شده به {{identifier}} را وارد کنید.",
+        "formTitle": "کد تأیید",
+        "resendButton": "کد را دریافت نکردید؟ دوباره ارسال کنید",
+        "successMessage": "ایمیل {{identifier}} به حساب شما اضافه شد."
+      },
+      "emailLink": {
+        "formHint": "یک ایمیل حاوی لینک تأیید به این آدرس ایمیل ارسال خواهد شد.",
+        "formSubtitle": "روی لینک تأیید در ایمیل ارسال‌شده به {{identifier}} کلیک کنید.",
+        "formTitle": "لینک تأیید",
+        "resendButton": "لینک را دریافت نکردید؟ دوباره ارسال کنید",
+        "successMessage": "ایمیل {{identifier}} به حساب شما اضافه شد."
+      },
+      "removeResource": {
+        "messageLine1": "{{identifier}} از این حساب حذف خواهد شد.",
+        "messageLine2": "شما دیگر نمی‌توانید با این آدرس ایمیل وارد شوید.",
+        "successMessage": "{{emailAddress}} از حساب شما حذف شد.",
+        "title": "حذف آدرس ایمیل"
+      },
+      "title": "افزودن آدرس ایمیل",
+      "verifyTitle": "تأیید آدرس ایمیل"
+    },
+    "formButtonPrimary__add": "افزودن",
+    "formButtonPrimary__continue": "ادامه",
+    "formButtonPrimary__finish": "پایان",
+    "formButtonPrimary__remove": "حذف",
+    "formButtonPrimary__save": "ذخیره",
+    "formButtonReset": "لغو",
+    "mfaPage": {
+      "formHint": "روشی را برای افزودن انتخاب کنید.",
+      "title": "افزودن تأیید دو مرحله‌ای"
+    },
+    "mfaPhoneCodePage": {
+      "backButton": "استفاده از شماره موجود",
+      "primaryButton__addPhoneNumber": "افزودن شماره تلفن",
+      "removeResource": {
+        "messageLine1": "{{identifier}} دیگر کد تأیید را هنگام ورود دریافت نخواهد کرد.",
+        "messageLine2": "حساب شما ممکن است به اندازه کافی امن نباشد. آیا مطمئن هستید که می‌خواهید ادامه دهید؟",
+        "successMessage": "تأیید دو مرحله‌ای با کد پیامکی برای {{mfaPhoneCode}} حذف شد.",
+        "title": "حذف تأیید دو مرحله‌ای"
+      },
+      "subtitle__availablePhoneNumbers": "یک شماره تلفن موجود را برای ثبت‌نام در تأیید دو مرحله‌ای با کد پیامکی انتخاب کنید یا شماره جدیدی اضافه کنید.",
+      "subtitle__unavailablePhoneNumbers": "هیچ شماره تلفنی برای ثبت‌نام در تأیید دو مرحله‌ای با کد پیامکی در دسترس نیست، لطفاً شماره جدیدی اضافه کنید.",
+      "successMessage1": "هنگام ورود، باید کدی که به این شماره تلفن ارسال می‌شود را به عنوان یک مرحله اضافی وارد کنید.",
+      "successMessage2": "این کدهای پشتیبان را ذخیره کرده و در مکانی امن نگه دارید. اگر به دستگاه احراز هویت خود دسترسی ندارید، می‌توانید از کدهای پشتیبان برای ورود استفاده کنید.",
+      "successTitle": "تأیید کد پیامکی فعال شد",
+      "title": "افزودن تأیید کد پیامکی"
+    },
+    "mfaTOTPPage": {
+      "authenticatorApp": {
+        "buttonAbleToScan__nonPrimary": "اسکن کد QR",
+        "buttonUnableToScan__nonPrimary": "نمی‌توانید کد QR را اسکن کنید؟",
+        "infoText__ableToScan": "یک روش ورود جدید را در برنامه احراز هویت خود تنظیم کرده و کد QR زیر را اسکن کنید تا آن را به حساب خود لینک کنید.",
+        "infoText__unableToScan": "یک روش ورود جدید را در برنامه احراز هویت خود تنظیم کرده و کلید زیر را وارد کنید.",
+        "inputLabel__unableToScan1": "مطمئن شوید که رمز عبور یک‌بار مصرف یا مبتنی بر زمان فعال است، سپس لینک کردن حساب خود را کامل کنید.",
+        "inputLabel__unableToScan2": "یا اگر برنامه احراز هویت شما از URI TOTP پشتیبانی می‌کند، می‌توانید URI کامل را کپی کنید."
+      },
+      "removeResource": {
+        "messageLine1": "دیگر نیازی به کد تأیید از این برنامه احراز هویت هنگام ورود نخواهد بود.",
+        "messageLine2": "حساب شما ممکن است به اندازه کافی امن نباشد. آیا مطمئن هستید که می‌خواهید ادامه دهید؟",
+        "successMessage": "تأیید دو مرحله‌ای از طریق برنامه احراز هویت حذف شد.",
+        "title": "حذف تأیید دو مرحله‌ای"
+      },
+      "successMessage": "تأیید دو مرحله‌ای اکنون فعال شده است. هنگام ورود، باید کدی که توسط این برنامه احراز هویت تولید می‌شود را به عنوان یک مرحله اضافی وارد کنید.",
+      "title": "افزودن برنامه احراز هویت",
+      "verifySubtitle": "کد تولیدشده توسط برنامه احراز هویت خود را وارد کنید",
+      "verifyTitle": "تأیید کد"
+    },
+    "mobileButton__menu": "منو",
+    "navbar": {
+      "account": "پروفایل",
+      "description": "مدیریت اطلاعات حساب خود",
+      "security": "امنیت",
+      "title": "حساب"
+    },
+    "passkeyScreen": {
+      "removeResource": {
+        "messageLine1": "{{name}} از این حساب حذف خواهد شد.",
+        "title": "حذف کلید عبور"
+      },
+      "subtitle__rename": "می‌توانید نام کلید عبور را تغییر دهید تا راحت‌تر آن را پیدا کنید.",
+      "title__rename": "تغییر نام کلید عبور"
+    },
+    "passwordPage": {
+      "checkboxInfoText__signOutOfOtherSessions": "پیشنهاد می‌شود از تمام دستگاه‌هایی که ممکن است از رمز عبور قدیمی استفاده کنند، خارج شوید.",
+      "readonly": "در حال حاضر نمی‌توانید رمز عبور را ویرایش کنید زیرا فقط از طریق اتصال سازمانی وارد شده‌اید.",
+      "successMessage__set": "رمز عبور شما تنظیم شد.",
+      "successMessage__signOutOfOtherSessions": "تمام دستگاه‌های دیگر خارج شدند.",
+      "successMessage__update": "رمز عبور شما به‌روزرسانی شد.",
+      "title__set": "تنظیم رمز عبور",
+      "title__update": "به‌روزرسانی رمز عبور"
+    },
+    "phoneNumberPage": {
+      "infoText": "یک پیامک حاوی کد تأیید به این شماره تلفن ارسال خواهد شد. ممکن است هزینه‌های پیامک و داده اعمال شود.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} از این حساب حذف خواهد شد.",
+        "messageLine2": "شما دیگر نمی‌توانید با این شماره تلفن وارد شوید.",
+        "successMessage": "{{phoneNumber}} از حساب شما حذف شد.",
+        "title": "حذف شماره تلفن"
+      },
+      "successMessage": "{{identifier}} به حساب شما اضافه شد.",
+      "title": "افزودن شماره تلفن",
+      "verifySubtitle": "کد ارسال‌شده به {{identifier}} را وارد کنید",
+      "verifyTitle": "تأیید شماره تلفن"
+    },
+    "profilePage": {
+      "fileDropAreaHint": "اندازه پیشنهادی 1:1، حداکثر 10MB.",
+      "imageFormDestructiveActionSubtitle": "حذف",
+      "imageFormSubtitle": "آپلود",
+      "imageFormTitle": "تصویر پروفایل",
+      "readonly": "اطلاعات پروفایل شما توسط اتصال سازمانی ارائه شده و قابل ویرایش نیست.",
+      "successMessage": "پروفایل شما به‌روزرسانی شد.",
+      "title": "به‌روزرسانی پروفایل"
+    },
+    "start": {
+      "activeDevicesSection": {
+        "destructiveAction": "خروج از دستگاه",
+        "title": "دستگاه‌های فعال"
+      },
+      "connectedAccountsSection": {
+        "actionLabel__connectionFailed": "دوباره تلاش کنید",
+        "actionLabel__reauthorize": "اکنون مجوز دهید",
+        "destructiveActionTitle": "حذف",
+        "primaryButton": "اتصال حساب",
+        "subtitle__reauthorize": "محدوده‌های مورد نیاز به‌روزرسانی شده‌اند، ممکن است با محدودیت‌هایی مواجه شوید. لطفاً این برنامه را دوباره مجوز دهید تا از هرگونه مشکل جلوگیری کنید.",
+        "title": "حساب‌های متصل"
+      },
+      "dangerSection": {
+        "deleteAccountButton": "حذف حساب",
+        "title": "حذف حساب"
+      },
+      "emailAddressesSection": {
+        "destructiveAction": "حذف ایمیل",
+        "detailsAction__nonPrimary": "تنظیم به عنوان اصلی",
+        "detailsAction__primary": "تأیید کامل",
+        "detailsAction__unverified": "تأیید",
+        "primaryButton": "افزودن آدرس ایمیل",
+        "title": "آدرس‌های ایمیل"
+      },
+      "enterpriseAccountsSection": {
+        "title": "حساب‌های سازمانی"
+      },
+      "headerTitle__account": "جزئیات پروفایل",
+      "headerTitle__security": "امنیت",
+      "mfaSection": {
+        "backupCodes": {
+          "actionLabel__regenerate": "دوباره تولید کنید",
+          "headerTitle": "کدهای پشتیبان",
+          "subtitle__regenerate": "یک مجموعه جدید از کدهای پشتیبان امن دریافت کنید. کدهای پشتیبان قبلی حذف شده و دیگر قابل استفاده نخواهند بود.",
+          "title__regenerate": "دوباره تولید کدهای پشتیبان"
+        },
+        "phoneCode": {
+          "actionLabel__setDefault": "تنظیم به عنوان پیش‌فرض",
+          "destructiveActionLabel": "حذف"
+        },
+        "primaryButton": "افزودن تأیید دو مرحله‌ای",
+        "title": "تأیید دو مرحله‌ای",
+        "totp": {
+          "destructiveActionTitle": "حذف",
+          "headerTitle": "برنامه احراز هویت"
+        }
+      },
+      "passkeysSection": {
+        "menuAction__destructive": "حذف",
+        "menuAction__rename": "تغییر نام",
+        "title": "کلیدهای عبور"
+      },
+      "passwordSection": {
+        "primaryButton__setPassword": "تنظیم رمز عبور",
+        "primaryButton__updatePassword": "به‌روزرسانی رمز عبور",
+        "title": "رمز عبور"
+      },
+      "phoneNumbersSection": {
+        "destructiveAction": "حذف شماره تلفن",
+        "detailsAction__nonPrimary": "تنظیم به عنوان اصلی",
+        "detailsAction__primary": "تأیید کامل",
+        "detailsAction__unverified": "تأیید شماره تلفن",
+        "primaryButton": "افزودن شماره تلفن",
+        "title": "شماره‌های تلفن"
+      },
+      "profileSection": {
+        "primaryButton": "به‌روزرسانی پروفایل",
+        "title": "پروفایل"
+      },
+      "usernameSection": {
+        "primaryButton__setUsername": "تنظیم نام کاربری",
+        "primaryButton__updateUsername": "به‌روزرسانی نام کاربری",
+        "title": "نام کاربری"
+      },
+      "web3WalletsSection": {
+        "destructiveAction": "حذف کیف پول",
+        "primaryButton": "کیف پول Web3",
+        "title": "کیف پول Web3"
+      }
+    },
+    "usernamePage": {
+      "successMessage": "نام کاربری شما به‌روزرسانی شد.",
+      "title__set": "تنظیم نام کاربری",
+      "title__update": "به‌روزرسانی نام کاربری"
+    },
+    "web3WalletPage": {
+      "removeResource": {
+        "messageLine1": "{{identifier}} از این حساب حذف خواهد شد.",
+        "messageLine2": "شما دیگر نمی‌توانید با این کیف پول Web3 وارد شوید.",
+        "successMessage": "{{web3Wallet}} از حساب شما حذف شد.",
+        "title": "حذف کیف پول Web3"
+      },
+      "subtitle__availableWallets": "کیف پول Web3 را که می‌خواهید به حساب خود متصل کنید، انتخاب کنید.",
+      "subtitle__unavailableWallets": "هیچ کیف پول Web3 در دسترس نیست.",
+      "successMessage": "کیف پول به حساب شما اضافه شد.",
+      "title": "افزودن کیف پول Web3"
+    }
+  }
+}

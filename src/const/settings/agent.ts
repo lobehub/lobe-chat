@@ -13,11 +13,22 @@ export const DEFAUTT_AGENT_TTS_CONFIG: LobeAgentTTSConfig = {
   },
 };
 
+export const DEFAULT_AGENT_SEARCH_FC_MODEL = {
+  model: DEFAULT_MODEL,
+  provider: ModelProvider.OpenAI,
+};
+
 export const DEFAULT_AGENT_CHAT_CONFIG: LobeAgentChatConfig = {
   autoCreateTopicThreshold: 2,
   displayMode: 'chat',
   enableAutoCreateTopic: true,
-  historyCount: 1,
+  enableCompressHistory: true,
+  enableHistoryCount: true,
+  enableReasoning: false,
+  historyCount: 8,
+  reasoningBudgetToken: 1024,
+  searchFCModel: DEFAULT_AGENT_SEARCH_FC_MODEL,
+  searchMode: 'off',
 };
 
 export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {

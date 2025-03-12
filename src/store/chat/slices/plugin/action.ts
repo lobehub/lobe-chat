@@ -25,7 +25,8 @@ import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors } from '../../slices/message/selectors';
+import { chatSelectors } from '../message/selectors';
+import { threadSelectors } from '../thread/selectors';
 
 const n = setNamespace('plugin');
 
@@ -44,10 +45,19 @@ export interface ChatPluginAction {
   invokeStandaloneTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
 
   reInvokeToolMessage: (id: string) => Promise<void>;
-  triggerAIMessage: (params: { parentId?: string; traceId?: string }) => Promise<void>;
+  triggerAIMessage: (params: {
+    parentId?: string;
+    traceId?: string;
+    threadId?: string;
+    inPortalThread?: boolean;
+    inSearchWorkflow?: boolean;
+  }) => Promise<void>;
   summaryPluginContent: (id: string) => Promise<void>;
 
-  triggerToolCalls: (id: string) => Promise<void>;
+  triggerToolCalls: (
+    id: string,
+    params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
+  ) => Promise<void>;
   updatePluginState: (id: string, value: any) => Promise<void>;
   updatePluginArguments: <T = any>(id: string, value: T) => Promise<void>;
 
@@ -191,8 +201,8 @@ export const chatPlugin: StateCreator<
     if (!message || message.role !== 'tool' || !message.plugin) return;
 
     // if there is error content, then clear the error
-    if (!!message.error) {
-      get().internal_updateMessageError(id, null);
+    if (!!message.pluginError) {
+      get().internal_updateMessagePluginError(id, null);
     }
 
     const payload: ChatToolPayload = { ...message.plugin, id: message.tool_call_id! };
@@ -200,10 +210,19 @@ export const chatPlugin: StateCreator<
     await get().internal_invokeDifferentTypePlugin(id, payload);
   },
 
-  triggerAIMessage: async ({ parentId, traceId }) => {
+  triggerAIMessage: async ({ parentId, traceId, threadId, inPortalThread, inSearchWorkflow }) => {
     const { internal_coreProcessMessage } = get();
-    const chats = chatSelectors.currentChats(get());
-    await internal_coreProcessMessage(chats, parentId ?? chats.at(-1)!.id, { traceId });
+
+    const chats = inPortalThread
+      ? threadSelectors.portalAIChatsWithHistoryConfig(get())
+      : chatSelectors.mainAIChatsWithHistoryConfig(get());
+
+    await internal_coreProcessMessage(chats, parentId ?? chats.at(-1)!.id, {
+      traceId,
+      threadId,
+      inPortalThread,
+      inSearchWorkflow,
+    });
   },
 
   summaryPluginContent: async (id) => {
@@ -228,7 +247,7 @@ export const chatPlugin: StateCreator<
     );
   },
 
-  triggerToolCalls: async (assistantId) => {
+  triggerToolCalls: async (assistantId, { threadId, inPortalThread, inSearchWorkflow } = {}) => {
     const message = chatSelectors.getMessageById(assistantId)(get());
     if (!message || !message.tools) return;
 
@@ -242,6 +261,7 @@ export const chatPlugin: StateCreator<
         role: 'tool',
         sessionId: get().activeId,
         tool_call_id: payload.id,
+        threadId,
         topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
       };
 
@@ -263,7 +283,7 @@ export const chatPlugin: StateCreator<
 
     const traceId = chatSelectors.getTraceIdByMessageId(latestToolId)(get());
 
-    await get().triggerAIMessage({ traceId });
+    await get().triggerAIMessage({ traceId, threadId, inPortalThread, inSearchWorkflow });
   },
   updatePluginState: async (id, value) => {
     const { refreshMessages } = get();

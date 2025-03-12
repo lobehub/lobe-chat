@@ -1,28 +1,37 @@
 import { IconAvatarProps, ModelIcon, ProviderIcon } from '@lobehub/icons';
-import { Icon, Tooltip } from '@lobehub/ui';
+import { Avatar, Icon, Tooltip } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { Infinity, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
+import {
+  Infinity,
+  AtomIcon,
+  LucideEye,
+  LucideGlobe,
+  LucidePaperclip,
+  ToyBrick,
+} from 'lucide-react';
 import numeral from 'numeral';
 import { rgba } from 'polished';
 import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { ModelAbilities } from '@/types/aiModel';
+import { AiProviderSourceType } from '@/types/aiProvider';
 import { ChatModelCard } from '@/types/llm';
 import { formatTokenNumber } from '@/utils/format';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   custom: css`
     width: 36px;
     height: 20px;
+    border-radius: 4px;
 
     font-family: ${token.fontFamilyCode};
     font-size: 12px;
     color: ${rgba(token.colorWarning, 0.75)};
 
     background: ${token.colorWarningBg};
-    border-radius: 4px;
   `,
   tag: css`
     cursor: default;
@@ -33,32 +42,41 @@ const useStyles = createStyles(({ css, token }) => ({
 
     width: 20px;
     height: 20px;
-
     border-radius: 4px;
   `,
   tagBlue: css`
     color: ${token.geekblue};
     background: ${token.geekblue1};
   `,
+  tagCyan: css`
+    color: ${isDarkMode ? token.cyan7 : token.cyan10};
+    background: ${isDarkMode ? token.cyan1 : token.cyan2};
+  `,
   tagGreen: css`
     color: ${token.green};
     background: ${token.green1};
   `,
+  tagPurple: css`
+    color: ${token.purple};
+    background: ${token.purple1};
+  `,
   token: css`
     width: 36px;
     height: 20px;
+    border-radius: 4px;
 
     font-family: ${token.fontFamilyCode};
     font-size: 11px;
     color: ${token.colorTextSecondary};
 
     background: ${token.colorFillTertiary};
-    border-radius: 4px;
   `,
 }));
 
-interface ModelInfoTagsProps extends ChatModelCard {
+interface ModelInfoTagsProps extends ModelAbilities {
+  contextWindowTokens?: number | null;
   directionReverse?: boolean;
+  isCustom?: boolean;
   placement?: 'top' | 'right';
 }
 
@@ -71,8 +89,8 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
       <Flexbox direction={directionReverse ? 'horizontal-reverse' : 'horizontal'} gap={4}>
         {model.files && (
           <Tooltip
-            overlayStyle={{ pointerEvents: 'none' }}
             placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
             title={t('ModelSelect.featureTag.file')}
           >
             <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
@@ -82,8 +100,8 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.vision && (
           <Tooltip
-            overlayStyle={{ pointerEvents: 'none' }}
             placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
             title={t('ModelSelect.featureTag.vision')}
           >
             <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
@@ -93,8 +111,10 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.functionCall && (
           <Tooltip
-            overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
+            styles={{
+              root: { maxWidth: 'unset', pointerEvents: 'none' },
+            }}
             title={t('ModelSelect.featureTag.functionCall')}
           >
             <div className={cx(styles.tag, styles.tagBlue)} style={{ cursor: 'pointer' }} title="">
@@ -102,19 +122,46 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
             </div>
           </Tooltip>
         )}
-        {model.tokens !== undefined && (
+        {model.reasoning && (
           <Tooltip
-            overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
+            title={t('ModelSelect.featureTag.reasoning')}
+          >
+            <div className={cx(styles.tag, styles.tagPurple)} style={{ cursor: 'pointer' }}>
+              <Icon icon={AtomIcon} />
+            </div>
+          </Tooltip>
+        )}
+        {model.search && (
+          <Tooltip
+            placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
+            title={t('ModelSelect.featureTag.search')}
+          >
+            <div className={cx(styles.tag, styles.tagCyan)} style={{ cursor: 'pointer' }} title="">
+              <Icon icon={LucideGlobe} />
+            </div>
+          </Tooltip>
+        )}
+        {typeof model.contextWindowTokens === 'number' && (
+          <Tooltip
+            placement={placement}
+            styles={{
+              root: { maxWidth: 'unset', pointerEvents: 'none' },
+            }}
             title={t('ModelSelect.featureTag.tokens', {
-              tokens: model.tokens === 0 ? '∞' : numeral(model.tokens).format('0,0'),
+              tokens:
+                model.contextWindowTokens === 0
+                  ? '∞'
+                  : numeral(model.contextWindowTokens).format('0,0'),
             })}
           >
             <Center className={styles.token} title="">
-              {model.tokens === 0 ? (
+              {model.contextWindowTokens === 0 ? (
                 <Infinity size={17} strokeWidth={1.6} />
               ) : (
-                formatTokenNumber(model.tokens)
+                formatTokenNumber(model.contextWindowTokens as number)
               )}
             </Center>
           </Tooltip>
@@ -144,16 +191,26 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
 });
 
 interface ProviderItemRenderProps {
+  logo?: string;
   name: string;
   provider: string;
+  source?: AiProviderSourceType;
 }
 
-export const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider, name }) => (
-  <Flexbox align={'center'} gap={4} horizontal>
-    <ProviderIcon provider={provider} size={20} type={'mono'} />
-    {name}
-  </Flexbox>
-));
+export const ProviderItemRender = memo<ProviderItemRenderProps>(
+  ({ provider, name, source, logo }) => {
+    return (
+      <Flexbox align={'center'} gap={4} horizontal>
+        {source === 'custom' && !!logo ? (
+          <Avatar avatar={logo} size={20} style={{ filter: 'grayscale(1)' }} title={name} />
+        ) : (
+          <ProviderIcon provider={provider} size={20} type={'mono'} />
+        )}
+        {name}
+      </Flexbox>
+    );
+  },
+);
 
 interface LabelRendererProps {
   Icon: FC<IconAvatarProps>;

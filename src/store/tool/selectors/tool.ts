@@ -1,10 +1,11 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { uniqBy } from 'lodash-es';
 
+import { pluginPrompts } from '@/prompts/plugin';
 import { MetaData } from '@/types/meta';
 import { ChatCompletionTool } from '@/types/openai/chat';
 import { LobeToolMeta } from '@/types/tool/tool';
 import { genToolCallingName } from '@/utils/toolCall';
+import { convertPluginManifestToToolsCalling } from '@/utils/toolManifest';
 
 import { pluginHelpers } from '../helpers';
 import { ToolStoreState } from '../initialState';
@@ -14,20 +15,13 @@ import { pluginSelectors } from '../slices/plugin/selectors';
 const enabledSchema =
   (tools: string[] = []) =>
   (s: ToolStoreState): ChatCompletionTool[] => {
-    const list = pluginSelectors
+    const manifests = pluginSelectors
       .installedPluginManifestList(s)
       .concat(s.builtinTools.map((b) => b.manifest as LobeChatPluginManifest))
       // 如果存在 enabledPlugins，那么只启用 enabledPlugins 中的插件
-      .filter((m) => tools.includes(m?.identifier))
-      .flatMap((manifest) =>
-        manifest.api.map((m) => ({
-          description: m.description,
-          name: genToolCallingName(manifest.identifier, m.name, manifest.type),
-          parameters: m.parameters,
-        })),
-      );
+      .filter((m) => tools.includes(m?.identifier));
 
-    return uniqBy(list, 'name').map((i) => ({ function: i, type: 'function' }));
+    return convertPluginManifestToToolsCalling(manifests);
   };
 
 const enabledSystemRoles =
@@ -37,32 +31,26 @@ const enabledSystemRoles =
       .installedPluginManifestList(s)
       .concat(s.builtinTools.map((b) => b.manifest as LobeChatPluginManifest))
       // 如果存在 enabledPlugins，那么只启用 enabledPlugins 中的插件
-      .filter((m) => tools.includes(m?.identifier))
+      .filter((m) => m && tools.includes(m.identifier))
       .map((manifest) => {
-        if (!manifest) return '';
-
         const meta = manifest.meta || {};
 
         const title = pluginHelpers.getPluginTitle(meta) || manifest.identifier;
         const systemRole = manifest.systemRole || pluginHelpers.getPluginDesc(meta);
 
-        const methods = manifest.api
-          .map((m) =>
-            [
-              `#### ${genToolCallingName(manifest.identifier, m.name, manifest.type)}`,
-              m.description,
-            ].join('\n\n'),
-          )
-          .join('\n\n');
-
-        return [`### ${title}`, systemRole, 'The APIs you can use:', methods].join('\n\n');
-      })
-      .filter(Boolean);
+        return {
+          apis: manifest.api.map((m) => ({
+            desc: m.description,
+            name: genToolCallingName(manifest.identifier, m.name, manifest.type),
+          })),
+          identifier: manifest.identifier,
+          name: title,
+          systemRole,
+        };
+      });
 
     if (toolsSystemRole.length > 0) {
-      return ['## Tools', 'You can use these tools below:', ...toolsSystemRole]
-        .filter(Boolean)
-        .join('\n\n');
+      return pluginPrompts({ tools: toolsSystemRole });
     }
 
     return '';

@@ -19,22 +19,18 @@ If you want to deploy LobeChat on Zeabur, you can follow the steps below:
 <Steps>
   ### Prepare your OpenAI API Key
 
-Go to [OpenAI API Key](https://platform.openai.com/account/api-keys) to get your OpenAI API Key.
+  Go to [OpenAI API Key](https://platform.openai.com/account/api-keys) to get your OpenAI API Key.
 
-### Click the button below to deploy
+  ### Click the button below to deploy
 
-[![][deploy-button-image]][deploy-link]
+  [![][deploy-button-image]][deploy-link]
 
-### Once deployed, you can start using it
+  ### Once deployed, you can start using it
 
-### Bind a custom domain (optional)
+  ### Bind a custom domain (optional)
 
-You can use the subdomain provided by Zeabur, or choose to bind a custom domain. Currently, the domains provided by Zeabur have not been contaminated, and most regions can connect directly.
-
+  You can use the subdomain provided by Zeabur, or choose to bind a custom domain. Currently, the domains provided by Zeabur have not been contaminated, and most regions can connect directly.
 </Steps>
-
-[deploy-button-image]: https://zeabur.com/button.svg
-[deploy-link]: https://zeabur.com/templates/VZGGTI
 
 # Deploy LobeChat with Zeabur as serverless function
 
@@ -45,40 +41,41 @@ Since Zeabur does NOT officially support FREE users deploy containerized service
 ## Zeabur Deployment Process
 
 <Steps>
+  ### Fork LobeChat
 
-### Fork LobeChat
+  ### Add Zeabur pack config file
 
-### Add Zeabur pack config file
+  Add a `zbpack.json` configuration file with the following content to the root dir of your fork:
 
-Add a `zbpack.json` configuration file with the following content to the root dir of your fork:
+  ```json
+  {
+    "ignore_dockerfile": true,
+    "serverless": true
+  }
+  ```
 
-```json
-{
-  "ignore_dockerfile": true,
-  "serverless": true
-}
-```
+  ### Prepare your OpenAI API Key
 
-### Prepare your OpenAI API Key
+  Go to [OpenAI API Key](https://platform.openai.com/account/api-keys) to get your OpenAI API Key.
 
-Go to [OpenAI API Key](https://platform.openai.com/account/api-keys) to get your OpenAI API Key.
+  ### Login to your [Zeabur dashboard](https://dash.zeabur.com)
 
-### Login to your [Zeabur dashboard](https://dash.zeabur.com)
+  If you do not already have an account, you will need to register one.
 
-If you do not already have an account, you will need to register one.
+  ### Create a project and service
 
-### Create a project and service
+  Create a project, then create a service under this project.
 
-Create a project, then create a service under this project.
+  ### Link your fork of LobeChat to the just created Zeabur service.
 
-### Link your fork of LobeChat to the just created Zeabur service.
+  When adding service, choose github. This may triger a oAuth depend on varies factors like how you login to Zeabur and if you have already authorized Zeabur to access all your repos
 
-When adding service, choose github. This may triger a oAuth depend on varies factors like how you login to Zeabur and if you have already authorized Zeabur to access all your repos
+  ### Bind a custom domain (optional)
 
-### Bind a custom domain (optional)
+  You can create a subdomain provided by Zeabur, or choose to bind a custom domain. Currently, the domains provided by Zeabur have not been contaminated, and most regions can connect directly.
 
-You can create a subdomain provided by Zeabur, or choose to bind a custom domain. Currently, the domains provided by Zeabur have not been contaminated, and most regions can connect directly.
-
-### Zeabur shall start auto build and you should be able to access it by the domain of your choice after a while.
-
+  ### Zeabur shall start auto build and you should be able to access it by the domain of your choice after a while.
 </Steps>
+
+[deploy-button-image]: https://zeabur.com/button.svg
+[deploy-link]: https://zeabur.com/templates/VZGGTI

@@ -22,8 +22,8 @@ export default {
     url: connectionString,
   },
   dialect: 'postgresql',
-  out: './src/database/server/migrations',
+  out: './src/database/migrations',
 
-  schema: './src/database/server/schemas/lobechat',
+  schema: './src/database/schemas',
   strict: true,
 } satisfies Config;

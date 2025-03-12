@@ -8,6 +8,7 @@
   "agents": "Assistent",
   "artifact": {
     "generating": "Genereren",
+    "inThread": "Je kunt het niet bekijken in het subonderwerp, schakel over naar het hoofdgesprek om het te openen.",
     "thinking": "Denken",
     "thought": "Denken proces",
     "unknownTitle": "Onbenoemd werk"
@@ -30,7 +31,25 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Geen assistent beschikbaar",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "De kosten voor het genereren van een enkele conversatie kunnen met maximaal 90% worden verlaagd, en de responssnelheid kan tot 4 keer worden verhoogd (<1>Lees meer</1>). Wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
+      "title": "Contextcaching inschakelen"
+    },
+    "enableReasoning": {
+      "desc": "Beperkingen op basis van het Claude Thinking-mechanisme (<1>Lees meer</1>), wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
+      "title": "Diepe denkwijze inschakelen"
+    },
+    "reasoningBudgetToken": {
+      "title": "Denken verbruik Token"
+    },
+    "title": "Modeluitbreidingsfunctie"
+  },
+  "history": {
+    "title": "De assistent onthoudt alleen de laatste {{count}} berichten"
+  },
   "historyRange": "Geschiedenisbereik",
+  "historySummary": "Geschiedenis samenvatting",
   "inbox": {
     "desc": "Activeer de hersencluster en laat de vonken van gedachten overslaan. Je slimme assistent, hier om met je over alles te praten.",
     "title": "Praat maar raak"
@@ -44,6 +63,9 @@
     "sendWithEnter": "Verzenden met Enter",
     "stop": "Stoppen",
     "warp": "Nieuwe regel"
+  },
+  "intentUnderstanding": {
+    "title": "Bezig met het begrijpen en analyseren van uw intentie..."
   },
   "knowledgeBase": {
     "all": "Alle inhoud",
@@ -65,7 +87,41 @@
   },
   "messageAction": {
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
+    "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
     "regenerate": "Opnieuw genereren"
+  },
+  "messages": {
+    "modelCard": {
+      "credit": "Credits",
+      "creditPricing": "Prijsstelling",
+      "creditTooltip": "Voor de eenvoud van de berekening beschouwen we $1 als 1M credits, bijvoorbeeld $3/M tokens wordt omgezet naar 3 credits/token",
+      "pricing": {
+        "inputCachedTokens": "Gecacheerde invoer {{amount}}/credits · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M tekens",
+        "inputMinutes": "${{amount}}/minuut",
+        "inputTokens": "Invoer {{amount}}/credits · ${{amount}}/M",
+        "outputTokens": "Uitvoer {{amount}}/credits · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache-invoer schrijven {{amount}}/punten · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Gemiddelde prijs",
+      "input": "Invoer",
+      "inputAudio": "Audio-invoer",
+      "inputCached": "Gecacheerde invoer",
+      "inputCitation": "Invoer citeren",
+      "inputText": "Tekstinvoer",
+      "inputTitle": "Invoerdetails",
+      "inputUncached": "Ongecacheerde invoer",
+      "inputWriteCached": "Invoer cache schrijven",
+      "output": "Uitvoer",
+      "outputAudio": "Audio-uitvoer",
+      "outputText": "Tekstuitvoer",
+      "outputTitle": "Uitvoerdetails",
+      "reasoning": "Diep nadenken",
+      "title": "Genereren van details",
+      "total": "Totaal verbruik"
+    }
   },
   "newAgent": "Nieuwe assistent",
   "pin": "Vastzetten",
@@ -81,6 +137,32 @@
   },
   "regenerate": "Opnieuw genereren",
   "roleAndArchive": "Rol en archief",
+  "search": {
+    "grounding": {
+      "searchQueries": "Zoekwoorden",
+      "title": "Er zijn {{count}} resultaten gevonden"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Intelligente beoordeling of er gezocht moet worden op basis van de gesprekinhoud",
+        "title": "Slimme verbinding"
+      },
+      "off": {
+        "desc": "Gebruik alleen de basiskennis van het model, zonder online zoekopdrachten",
+        "title": "Verbinding uitschakelen"
+      },
+      "on": {
+        "desc": "Voortdurend online zoeken voor de nieuwste informatie",
+        "title": "Altijd verbonden"
+      },
+      "useModelBuiltin": "Gebruik de ingebouwde zoekmachine van het model"
+    },
+    "searchModel": {
+      "desc": "Het huidige model ondersteunt geen functieaanroepen, dus het moet worden gecombineerd met een model dat functieaanroepen ondersteunt om online te zoeken",
+      "title": "Zoekhulpmiddel model"
+    },
+    "title": "Online zoeken"
+  },
   "searchAgentPlaceholder": "Zoekassistent...",
   "sendPlaceholder": "Voer chatbericht in...",
   "sessionGroup": {
@@ -100,14 +182,20 @@
     "tooLong": "De groepsnaam moet tussen 1 en 20 tekens lang zijn"
   },
   "shareModal": {
+    "copy": "Kopiëren",
     "download": "Screenshot downloaden",
+    "downloadFile": "Bestand downloaden",
+    "exportTitle": "Standaardtitel",
     "imageType": "Afbeeldingstype",
+    "includeTool": "Inclusief pluginbericht",
+    "includeUser": "Inclusief gebruikersbericht",
     "screenshot": "Screenshot",
     "settings": "Exportinstellingen",
-    "shareToShareGPT": "Genereer ShareGPT-deellink",
+    "text": "Tekst",
     "withBackground": "Met achtergrondafbeelding",
     "withFooter": "Met voettekst",
     "withPluginInfo": "Met plug-in informatie",
+    "withRole": "Inclusief berichtrol",
     "withSystemRole": "Met assistentrolinstelling"
   },
   "stt": {
@@ -115,9 +203,14 @@
     "loading": "Bezig met herkennen...",
     "prettifying": "Aan het verfraaien..."
   },
-  "temp": "Tijdelijk",
+  "thread": {
+    "divider": "Subonderwerp",
+    "threadMessageCount": "{{messageCount}} berichten",
+    "title": "Subonderwerp"
+  },
   "tokenDetails": {
     "chats": "Chats",
+    "historySummary": "Geschiedenis samenvatting",
     "rest": "Rust",
     "systemRole": "Systeemrol",
     "title": "Contextuele details",
@@ -131,29 +224,10 @@
     "used": "Gebruikt"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Automatisch hernoemen",
-      "duplicate": "Dupliceren",
-      "export": "Exporteren"
-    },
     "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",
     "checkSaveCurrentMessages": "Wil je het huidige gesprek opslaan als onderwerp?",
-    "confirmRemoveAll": "Alle onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",
-    "confirmRemoveTopic": "Dit onderwerp wordt verwijderd en kan niet worden hersteld. Wees voorzichtig.",
-    "confirmRemoveUnstarred": "Niet-gefavoriseerde onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",
-    "defaultTitle": "Standaard onderwerp",
-    "duplicateLoading": "Onderwerp dupliceren...",
-    "duplicateSuccess": "Onderwerp succesvol gedupliceerd",
-    "guide": {
-      "desc": "Klik op de knop aan de linkerkant om het huidige gesprek op te slaan als een historisch onderwerp en een nieuw gesprek te starten",
-      "title": "Onderwerplijst"
-    },
     "openNewTopic": "Nieuw onderwerp openen",
-    "removeAll": "Alle onderwerpen verwijderen",
-    "removeUnstarred": "Niet-gefavoriseerde onderwerpen verwijderen",
-    "saveCurrentMessages": "Huidig gesprek opslaan als onderwerp",
-    "searchPlaceholder": "Zoek onderwerpen...",
-    "title": "Onderwerpenlijst"
+    "saveCurrentMessages": "Huidig gesprek opslaan als onderwerp"
   },
   "translate": {
     "action": "Vertalen",
@@ -184,5 +258,6 @@
         "processing": "Bestand wordt verwerkt..."
       }
     }
-  }
+  },
+  "zenMode": "Focusmodus"
 }

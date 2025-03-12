@@ -1,0 +1,37 @@
+{
+  "actions": {
+    "autoRename": "Akıllı Yeniden Adlandırma",
+    "confirmRemoveAll": "Tüm konular silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+    "confirmRemoveTopic": "Bu konu silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+    "confirmRemoveUnstarred": "Favori olmayan konular silinecek, silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+    "duplicate": "Kopya Oluştur",
+    "export": "Konuları Dışa Aktar",
+    "removeAll": "Tüm Konuları Sil",
+    "removeUnstarred": "Favori Olmayan Konuları Sil"
+  },
+  "defaultTitle": "Varsayılan Konu",
+  "duplicateLoading": "Konu Kopyalanıyor...",
+  "duplicateSuccess": "Konu Başarıyla Kopyalandı",
+  "favorite": "Favori",
+  "groupMode": {
+    "ascMessages": "Mesaj Sayısına Göre Artan Sıra",
+    "byTime": "Zamana Göre Grupla",
+    "descMessages": "Mesaj Sayısına Göre Azalan Sıra",
+    "flat": "Gruplandırma Yok"
+  },
+  "groupTitle": {
+    "byTime": {
+      "month": "Bu Ay",
+      "today": "Bugün",
+      "week": "Bu Hafta",
+      "yesterday": "Dün"
+    }
+  },
+  "guide": {
+    "desc": "Mevcut sohbeti tarihsel konu olarak kaydetmek ve yeni bir sohbet başlatmak için sol taraftaki gönder butonuna tıklayın.",
+    "title": "Konu Listesi"
+  },
+  "searchPlaceholder": "Konuları Ara...",
+  "temp": "Geçici",
+  "title": "Konu"
+}

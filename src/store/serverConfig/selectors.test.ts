@@ -21,6 +21,7 @@ describe('featureFlagsSelectors', () => {
       isAgentEditable: false,
       enablePlugins: true,
       showCreateSession: true,
+      showChangelog: true,
       enableRAGEval: false,
       showDalle: true,
       enableKnowledgeBase: true,
@@ -33,7 +34,9 @@ describe('featureFlagsSelectors', () => {
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
       enableClerkSignUp: true,
+      showProvider: true,
       showMarket: true,
+      showPinList: false,
       enableSTT: true,
     });
   });
@@ -46,6 +49,7 @@ describe('serverConfigSelectors', () => {
         serverConfig: {
           enabledOAuthSSO: true,
           telemetry: {},
+          aiProvider: {},
         },
       });
 
@@ -60,6 +64,7 @@ describe('serverConfigSelectors', () => {
       const store = initServerConfigStore({
         serverConfig: {
           telemetry: { langfuse: true },
+          aiProvider: {},
         },
       });
 
@@ -72,6 +77,7 @@ describe('serverConfigSelectors', () => {
       const store = initServerConfigStore({
         serverConfig: {
           telemetry: {},
+          aiProvider: {},
         },
       });
 

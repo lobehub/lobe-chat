@@ -29,13 +29,28 @@ export const POST = async (req: Request): Promise<NextResponse> => {
   switch (type) {
     case 'user.created': {
       pino.info('creating user due to clerk webhook');
-      return userService.createUser(data.id, data);
+      const result = await userService.createUser(data.id, data);
+
+      return NextResponse.json(result, { status: 200 });
     }
+
     case 'user.deleted': {
-      return userService.deleteUser(data.id);
+      if (!data.id) {
+        pino.warn('clerk sent a delete user request, but no user ID was included in the payload');
+        return NextResponse.json({ message: 'ok' }, { status: 200 });
+      }
+
+      pino.info('delete user due to clerk webhook');
+
+      await userService.deleteUser(data.id);
+
+      return NextResponse.json({ message: 'user deleted' }, { status: 200 });
     }
+
     case 'user.updated': {
-      return userService.updateUser(data.id, data);
+      const result = await userService.updateUser(data.id, data);
+
+      return NextResponse.json(result, { status: 200 });
     }
 
     default: {

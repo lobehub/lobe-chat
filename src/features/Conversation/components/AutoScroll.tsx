@@ -12,7 +12,7 @@ interface AutoScrollProps {
 }
 const AutoScroll = memo<AutoScrollProps>(({ atBottom, isScrolling, onScrollToBottom }) => {
   const trackVisibility = useChatStore(chatSelectors.isAIGenerating);
-  const str = useChatStore(chatSelectors.chatsMessageString);
+  const str = useChatStore(chatSelectors.mainAIChatsMessageString);
 
   useEffect(() => {
     if (atBottom && trackVisibility && !isScrolling) {

@@ -1,0 +1,37 @@
+{
+  "actions": {
+    "autoRename": "Renombrar automáticamente",
+    "confirmRemoveAll": "Se eliminarán todos los temas. Una vez eliminados, no se podrán recuperar. Por favor, actúe con precaución.",
+    "confirmRemoveTopic": "Se eliminará este tema. Una vez eliminado, no se podrá recuperar. Por favor, actúe con precaución.",
+    "confirmRemoveUnstarred": "Se eliminarán los temas no favoritos. Una vez eliminados, no se podrán recuperar. Por favor, actúe con precaución.",
+    "duplicate": "Crear copia",
+    "export": "Exportar tema",
+    "removeAll": "Eliminar todos los temas",
+    "removeUnstarred": "Eliminar temas no favoritos"
+  },
+  "defaultTitle": "Tema por defecto",
+  "duplicateLoading": "Copiando tema...",
+  "duplicateSuccess": "Tema copiado con éxito",
+  "favorite": "Favorito",
+  "groupMode": {
+    "ascMessages": "Ordenar por número total de mensajes ascendente",
+    "byTime": "Agrupar por tiempo",
+    "descMessages": "Ordenar por número total de mensajes descendente",
+    "flat": "Sin agrupar"
+  },
+  "groupTitle": {
+    "byTime": {
+      "month": "Este mes",
+      "today": "Hoy",
+      "week": "Esta semana",
+      "yesterday": "Ayer"
+    }
+  },
+  "guide": {
+    "desc": "Haga clic en el botón a la izquierda para guardar la conversación actual como un tema histórico y comenzar una nueva conversación.",
+    "title": "Lista de temas"
+  },
+  "searchPlaceholder": "Buscar temas...",
+  "temp": "Temporal",
+  "title": "Tema"
+}

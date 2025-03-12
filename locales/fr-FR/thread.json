@@ -1,0 +1,10 @@
+{
+  "actions": {
+    "confirmRemoveThread": "Vous allez supprimer ce sous-sujet. Une fois supprimé, il ne pourra pas être récupéré. Veuillez agir avec prudence."
+  },
+  "newPortalThread": {
+    "includeContext": "Inclure le contexte du sujet",
+    "title": "Ouvrir un nouveau sous-sujet"
+  },
+  "notSupportMultiModals": "Les sous-sujets ne prennent pas encore en charge le téléchargement de fichiers/images. Si besoin, n'hésitez pas à laisser un message : <1>💬 Forum de discussion</1>"
+}

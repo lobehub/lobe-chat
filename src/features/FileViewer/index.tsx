@@ -24,7 +24,7 @@ interface FileViewerProps extends FileListItem {
 }
 
 const FileViewer = memo<FileViewerProps>(({ id, style, fileType, url, name }) => {
-  if (fileType === 'pdf' || name.endsWith('.pdf')) {
+  if (fileType?.toLowerCase() === 'pdf' || name?.toLowerCase().endsWith('.pdf')) {
     return <PDFRenderer fileId={id} url={url} />;
   }
 

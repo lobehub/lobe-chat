@@ -118,6 +118,10 @@
     "reinstallError": "プラグイン{{name}}の再インストールに失敗しました",
     "urlError": "このリンクはJSON形式のコンテンツを返していません。有効なリンクであることを確認してください"
   },
+  "inspector": {
+    "args": "パラメーターリストを表示",
+    "pluginRender": "プラグインインターフェースを表示"
+  },
   "list": {
     "item": {
       "deprecated.title": "削除済み",
@@ -130,6 +134,34 @@
     "plugin": "プラグインの実行中..."
   },
   "pluginList": "プラグインリスト",
+  "search": {
+    "config": {
+      "addKey": "キーを追加",
+      "close": "削除",
+      "confirm": "設定が完了し、再試行しました"
+    },
+    "crawPages": {
+      "crawling": "リンクを識別中",
+      "detail": {
+        "preview": "プレビュー",
+        "raw": "原文",
+        "tooLong": "テキストが長すぎます。会話のコンテキストには最初の {{characters}} 文字のみが保持され、それを超える部分は会話のコンテキストには含まれません"
+      },
+      "meta": {
+        "crawler": "クローリングモード",
+        "words": "文字数"
+      }
+    },
+    "searchxng": {
+      "baseURL": "入力してください",
+      "description": "SearchXNG の URL を入力すると、ネット検索を開始できます",
+      "keyPlaceholder": "キーを入力してください",
+      "title": "SearchXNG 検索エンジンの設定",
+      "unconfiguredDesc": "ネット検索を開始するには、管理者に連絡して SearchXNG 検索エンジンの設定を完了してください",
+      "unconfiguredTitle": "SearchXNG 検索エンジンはまだ設定されていません"
+    },
+    "title": "ネット検索"
+  },
   "setting": "プラグインの設定",
   "settings": {
     "indexUrl": {

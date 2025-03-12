@@ -2,33 +2,33 @@ import { lambdaClient } from '@/libs/trpc/client';
 import { CreateKnowledgeBaseParams } from '@/types/knowledgeBase';
 
 class KnowledgeBaseService {
-  async createKnowledgeBase(params: CreateKnowledgeBaseParams) {
-    return await lambdaClient.knowledgeBase.createKnowledgeBase.mutate(params);
-  }
+  createKnowledgeBase = async (params: CreateKnowledgeBaseParams) => {
+    return lambdaClient.knowledgeBase.createKnowledgeBase.mutate(params);
+  };
 
-  async getKnowledgeBaseList() {
-    return await lambdaClient.knowledgeBase.getKnowledgeBases.query();
-  }
+  getKnowledgeBaseList = async () => {
+    return lambdaClient.knowledgeBase.getKnowledgeBases.query();
+  };
 
-  async getKnowledgeBaseById(id: string) {
-    return await lambdaClient.knowledgeBase.getKnowledgeBaseById.query({ id });
-  }
+  getKnowledgeBaseById = async (id: string) => {
+    return lambdaClient.knowledgeBase.getKnowledgeBaseById.query({ id });
+  };
 
-  async updateKnowledgeBaseList(id: string, value: any) {
-    return await lambdaClient.knowledgeBase.updateKnowledgeBase.mutate({ id, value });
-  }
+  updateKnowledgeBaseList = async (id: string, value: any) => {
+    return lambdaClient.knowledgeBase.updateKnowledgeBase.mutate({ id, value });
+  };
 
-  async deleteKnowledgeBase(id: string) {
-    return await lambdaClient.knowledgeBase.removeKnowledgeBase.mutate({ id });
-  }
+  deleteKnowledgeBase = async (id: string) => {
+    return lambdaClient.knowledgeBase.removeKnowledgeBase.mutate({ id });
+  };
 
-  async addFilesToKnowledgeBase(knowledgeBaseId: string, ids: string[]) {
+  addFilesToKnowledgeBase = async (knowledgeBaseId: string, ids: string[]) => {
     return lambdaClient.knowledgeBase.addFilesToKnowledgeBase.mutate({ ids, knowledgeBaseId });
-  }
+  };
 
-  async removeFilesFromKnowledgeBase(knowledgeBaseId: string, ids: string[]) {
+  removeFilesFromKnowledgeBase = async (knowledgeBaseId: string, ids: string[]) => {
     return lambdaClient.knowledgeBase.removeFilesFromKnowledgeBase.mutate({ ids, knowledgeBaseId });
-  }
+  };
 }
 
 export const knowledgeBaseService = new KnowledgeBaseService();

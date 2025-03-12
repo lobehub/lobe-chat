@@ -9,11 +9,10 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     cursor: pointer;
 
     margin-block-start: 12px;
-
-    color: ${token.colorText};
-
     border: 1px solid ${token.colorBorder};
     border-radius: 8px;
+
+    color: ${token.colorText};
 
     &:hover {
       background: ${isDarkMode ? '' : token.colorFillSecondary};

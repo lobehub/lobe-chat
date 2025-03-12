@@ -1,0 +1,37 @@
+{
+  "actions": {
+    "autoRename": "자동 이름 변경",
+    "confirmRemoveAll": "모든 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중하게 진행해 주세요.",
+    "confirmRemoveTopic": "이 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중하게 진행해 주세요.",
+    "confirmRemoveUnstarred": "즐겨찾기하지 않은 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중하게 진행해 주세요.",
+    "duplicate": "복사본 만들기",
+    "export": "주제 내보내기",
+    "removeAll": "모든 주제 삭제",
+    "removeUnstarred": "즐겨찾기하지 않은 주제 삭제"
+  },
+  "defaultTitle": "기본 주제",
+  "duplicateLoading": "주제 복사 중...",
+  "duplicateSuccess": "주제 복사 성공",
+  "favorite": "즐겨찾기",
+  "groupMode": {
+    "ascMessages": "메시지 총 수 오름차순",
+    "byTime": "시간별 그룹화",
+    "descMessages": "메시지 총 수 내림차순",
+    "flat": "그룹화하지 않음"
+  },
+  "groupTitle": {
+    "byTime": {
+      "month": "이번 달",
+      "today": "오늘",
+      "week": "이번 주",
+      "yesterday": "어제"
+    }
+  },
+  "guide": {
+    "desc": "왼쪽 버튼을 클릭하여 현재 대화를 역사 주제로 저장하고 새로운 대화를 시작하세요.",
+    "title": "주제 목록"
+  },
+  "searchPlaceholder": "주제 검색...",
+  "temp": "임시",
+  "title": "주제"
+}

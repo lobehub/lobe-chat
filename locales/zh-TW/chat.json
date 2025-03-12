@@ -8,6 +8,7 @@
   "agents": "助手",
   "artifact": {
     "generating": "生成中",
+    "inThread": "子話題中無法查看，請切換到主對話區打開",
     "thinking": "思考中",
     "thought": "思考過程",
     "unknownTitle": "未命名作品"
@@ -30,7 +31,25 @@
   },
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暫無助手",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "單條對話生成成本最高可降低 90%，響應速度提升 4 倍（<1>了解更多</1>）。開啟後將自動禁用歷史消息數限制",
+      "title": "開啟上下文快取"
+    },
+    "enableReasoning": {
+      "desc": "基於 Claude Thinking 機制限制（<1>了解更多</1>），開啟後將自動禁用歷史消息數限制",
+      "title": "開啟深度思考"
+    },
+    "reasoningBudgetToken": {
+      "title": "思考消耗 Token"
+    },
+    "title": "模型擴展功能"
+  },
+  "history": {
+    "title": "助手將只記住最後{{count}}條消息"
+  },
   "historyRange": "歷史範圍",
+  "historySummary": "歷史消息總結",
   "inbox": {
     "desc": "開啟大腦集群，激發思維火花。你的智能助理，在這裡與你交流一切",
     "title": "隨便聊聊"
@@ -44,6 +63,9 @@
     "sendWithEnter": "按 Enter 鍵發送",
     "stop": "停止",
     "warp": "換行"
+  },
+  "intentUnderstanding": {
+    "title": "正在理解並分析您的意圖..."
   },
   "knowledgeBase": {
     "all": "所有內容",
@@ -65,7 +87,41 @@
   },
   "messageAction": {
     "delAndRegenerate": "刪除並重新生成",
+    "deleteDisabledByThreads": "存在子話題，無法刪除",
     "regenerate": "重新生成"
+  },
+  "messages": {
+    "modelCard": {
+      "credit": "積分",
+      "creditPricing": "定價",
+      "creditTooltip": "為便於計算，我們將 1$ 折算為 1M 積分，例如 $3/M tokens 即可折算為 3積分/token",
+      "pricing": {
+        "inputCachedTokens": "快取輸入 {{amount}}/積分 · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M 字元",
+        "inputMinutes": "${{amount}}/分鐘",
+        "inputTokens": "輸入 {{amount}}/積分 · ${{amount}}/M",
+        "outputTokens": "輸出 {{amount}}/積分 · ${{amount}}/M",
+        "writeCacheInputTokens": "快取輸入寫入 {{amount}}/積分 · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "平均單價",
+      "input": "輸入",
+      "inputAudio": "音頻輸入",
+      "inputCached": "輸入快取",
+      "inputCitation": "引用輸入",
+      "inputText": "文本輸入",
+      "inputTitle": "輸入明細",
+      "inputUncached": "輸入未快取",
+      "inputWriteCached": "輸入快取寫入",
+      "output": "輸出",
+      "outputAudio": "音頻輸出",
+      "outputText": "文本輸出",
+      "outputTitle": "輸出明細",
+      "reasoning": "深度思考",
+      "title": "生成明細",
+      "total": "總計消耗"
+    }
   },
   "newAgent": "新建助手",
   "pin": "置頂",
@@ -81,6 +137,32 @@
   },
   "regenerate": "重新生成",
   "roleAndArchive": "角色與記錄",
+  "search": {
+    "grounding": {
+      "searchQueries": "搜尋關鍵字",
+      "title": "已搜尋到 {{count}} 個結果"
+    },
+    "mode": {
+      "auto": {
+        "desc": "根據對話內容智能判斷是否需要搜尋",
+        "title": "智能連網"
+      },
+      "off": {
+        "desc": "僅使用模型的基礎知識，不進行網路搜尋",
+        "title": "關閉連網"
+      },
+      "on": {
+        "desc": "持續進行網路搜尋，獲取最新資訊",
+        "title": "始終連網"
+      },
+      "useModelBuiltin": "使用模型內建搜尋引擎"
+    },
+    "searchModel": {
+      "desc": "當前模型不支持函數調用，因此需要搭配支持函數調用的模型才能聯網搜索",
+      "title": "搜索輔助模型"
+    },
+    "title": "連網搜尋"
+  },
   "searchAgentPlaceholder": "搜尋助手...",
   "sendPlaceholder": "輸入聊天內容...",
   "sessionGroup": {
@@ -100,14 +182,20 @@
     "tooLong": "分組名稱長度需在 1-20 之內"
   },
   "shareModal": {
+    "copy": "複製",
     "download": "下載截圖",
+    "downloadFile": "下載檔案",
+    "exportTitle": "預設標題",
     "imageType": "圖片格式",
+    "includeTool": "包含插件訊息",
+    "includeUser": "包含使用者訊息",
     "screenshot": "截圖",
     "settings": "導出設置",
-    "shareToShareGPT": "生成 ShareGPT 分享鏈接",
+    "text": "文本",
     "withBackground": "包含背景圖片",
     "withFooter": "包含頁腳",
     "withPluginInfo": "包含插件信息",
+    "withRole": "包含訊息角色",
     "withSystemRole": "包含助手角色設定"
   },
   "stt": {
@@ -115,9 +203,14 @@
     "loading": "識別中...",
     "prettifying": "潤色中..."
   },
-  "temp": "臨時",
+  "thread": {
+    "divider": "子話題",
+    "threadMessageCount": "{{messageCount}} 條消息",
+    "title": "子話題"
+  },
   "tokenDetails": {
     "chats": "聊天訊息",
+    "historySummary": "歷史總結",
     "rest": "剩餘可用",
     "systemRole": "角色設定",
     "title": "上下文詳細資訊",
@@ -131,29 +224,10 @@
     "used": "使用"
   },
   "topic": {
-    "actions": {
-      "autoRename": "智能重新命名",
-      "duplicate": "建立副本",
-      "export": "匯出主題"
-    },
     "checkOpenNewTopic": "是否開啟新主題?",
     "checkSaveCurrentMessages": "是否將當前對話保存為話題？",
-    "confirmRemoveAll": "即將刪除全部話題，刪除後將不可恢復，請謹慎操作。",
-    "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",
-    "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",
-    "defaultTitle": "默認話題",
-    "duplicateLoading": "話題複製中...",
-    "duplicateSuccess": "話題複製成功",
-    "guide": {
-      "desc": "點擊發送左側按鈕可將當前對話保存為歷史話題，並開啟新一輪對話",
-      "title": "話題列表"
-    },
     "openNewTopic": "開啟新話題",
-    "removeAll": "刪除全部話題",
-    "removeUnstarred": "刪除未收藏話題",
-    "saveCurrentMessages": "將當前對話保存為話題",
-    "searchPlaceholder": "搜索話題...",
-    "title": "話題列表"
+    "saveCurrentMessages": "將當前對話保存為話題"
   },
   "translate": {
     "action": "翻譯",
@@ -184,5 +258,6 @@
         "processing": "檔案處理中..."
       }
     }
-  }
+  },
+  "zenMode": "專注模式"
 }

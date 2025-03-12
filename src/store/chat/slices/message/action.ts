@@ -15,9 +15,13 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import {
   ChatMessage,
   ChatMessageError,
+  ChatMessagePluginError,
   CreateMessageParams,
+  MessageMetadata,
   MessageToolCall,
+  ModelReasoning,
 } from '@/types/message';
+import { GroundingSearch } from '@/types/search';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
@@ -47,7 +51,11 @@ export interface ChatMessageAction {
   modifyMessageContent: (id: string, content: string) => Promise<void>;
   toggleMessageEditing: (id: string, editing: boolean) => void;
   // query
-  useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
+  useFetchMessages: (
+    enable: boolean,
+    sessionId: string,
+    topicId?: string,
+  ) => SWRResponse<ChatMessage[]>;
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
 
@@ -68,12 +76,23 @@ export interface ChatMessageAction {
   internal_updateMessageContent: (
     id: string,
     content: string,
-    toolCalls?: MessageToolCall[],
+    extra?: {
+      toolCalls?: MessageToolCall[];
+      reasoning?: ModelReasoning;
+      search?: GroundingSearch;
+      metadata?: MessageMetadata;
+      model?: string;
+      provider?: string;
+    },
   ) => Promise<void>;
   /**
    * update the message error with optimistic update
    */
   internal_updateMessageError: (id: string, error: ChatMessageError | null) => Promise<void>;
+  internal_updateMessagePluginError: (
+    id: string,
+    error: ChatMessagePluginError | null,
+  ) => Promise<void>;
   /**
    * create a message with optimistic update
    */
@@ -128,7 +147,7 @@ export const chatMessage: StateCreator<
     if (message.tools) {
       const toolMessageIds = message.tools.flatMap((tool) => {
         const messages = chatSelectors
-          .currentChats(get())
+          .activeBaseChats(get())
           .filter((m) => m.tool_call_id === tool.id);
 
         return messages.map((m) => m.id);
@@ -220,9 +239,9 @@ export const chatMessage: StateCreator<
 
     await get().internal_updateMessageContent(id, content);
   },
-  useFetchMessages: (sessionId, activeTopicId) =>
+  useFetchMessages: (enable, sessionId, activeTopicId) =>
     useClientDataSWR<ChatMessage[]>(
-      [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId],
+      enable ? [SWR_USE_FETCH_MESSAGES, sessionId, activeTopicId] : null,
       async ([, sessionId, topicId]: [string, string, string | undefined]) =>
         messageService.getMessages(sessionId, topicId),
       {
@@ -252,7 +271,7 @@ export const chatMessage: StateCreator<
 
     if (!activeId) return;
 
-    const messages = messagesReducer(chatSelectors.currentChats(get()), payload);
+    const messages = messagesReducer(chatSelectors.activeBaseChats(get()), payload);
 
     const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
 
@@ -266,25 +285,40 @@ export const chatMessage: StateCreator<
     await messageService.updateMessage(id, { error });
     await get().refreshMessages();
   },
-  internal_updateMessageContent: async (id, content, toolCalls) => {
+
+  internal_updateMessagePluginError: async (id, error) => {
+    await messageService.updateMessagePluginError(id, error);
+    await get().refreshMessages();
+  },
+
+  internal_updateMessageContent: async (id, content, extra) => {
     const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
 
     // Due to the async update method and refresh need about 100ms
     // we need to update the message content at the frontend to avoid the update flick
     // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
-    if (toolCalls) {
+    if (extra?.toolCalls) {
       internal_dispatchMessage({
         id,
         type: 'updateMessage',
-        value: { tools: internal_transformToolCalls(toolCalls) },
+        value: { tools: internal_transformToolCalls(extra?.toolCalls) },
       });
     } else {
-      internal_dispatchMessage({ id, type: 'updateMessage', value: { content } });
+      internal_dispatchMessage({
+        id,
+        type: 'updateMessage',
+        value: { content },
+      });
     }
 
     await messageService.updateMessage(id, {
       content,
-      tools: toolCalls ? internal_transformToolCalls(toolCalls) : undefined,
+      tools: extra?.toolCalls ? internal_transformToolCalls(extra?.toolCalls) : undefined,
+      reasoning: extra?.reasoning,
+      search: extra?.search,
+      metadata: extra?.metadata,
+      model: extra?.model,
+      provider: extra?.provider,
     });
     await refreshMessages();
   },
@@ -357,17 +391,18 @@ export const chatMessage: StateCreator<
         messageLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
       },
       false,
-      'internal_toggleMessageLoading',
+      `internal_toggleMessageLoading/${loading ? 'start' : 'end'}`,
     );
   },
   internal_toggleLoadingArrays: (key, loading, id, action) => {
+    const abortControllerKey = `${key}AbortController`;
     if (loading) {
       window.addEventListener('beforeunload', preventLeavingFn);
 
       const abortController = new AbortController();
       set(
         {
-          abortController,
+          [abortControllerKey]: abortController,
           [key]: toggleBooleanList(get()[key] as string[], id!, loading),
         },
         false,
@@ -377,11 +412,11 @@ export const chatMessage: StateCreator<
       return abortController;
     } else {
       if (!id) {
-        set({ abortController: undefined, [key]: [] }, false, action);
+        set({ [abortControllerKey]: undefined, [key]: [] }, false, action);
       } else
         set(
           {
-            abortController: undefined,
+            [abortControllerKey]: undefined,
             [key]: toggleBooleanList(get()[key] as string[], id, loading),
           },
           false,

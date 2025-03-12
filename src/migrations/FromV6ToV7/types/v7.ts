@@ -1,5 +1,3 @@
-
-
 interface OpenAICompatibleKeyVault {
   apiKey?: string;
   baseURL?: string;

@@ -27,7 +27,7 @@ export interface PluginStoreAction {
   uninstallPlugin: (identifier: string) => Promise<void>;
 
   updateInstallLoadingState: (key: string, value: boolean | undefined) => void;
-  useFetchInstalledPlugins: () => SWRResponse<LobeTool[]>;
+  useFetchInstalledPlugins: (enabled: boolean) => SWRResponse<LobeTool[]>;
   useFetchPluginStore: () => SWRResponse<LobeChatPluginMeta[]>;
 }
 
@@ -90,8 +90,9 @@ export const createPluginStoreSlice: StateCreator<
       n('updateInstallLoadingState'),
     );
   },
-  useFetchInstalledPlugins: () =>
-    useSWR<LobeTool[]>(INSTALLED_PLUGINS, pluginService.getInstalledPlugins, {
+
+  useFetchInstalledPlugins: (enabled: boolean) =>
+    useSWR<LobeTool[]>(enabled ? INSTALLED_PLUGINS : null, pluginService.getInstalledPlugins, {
       fallbackData: [],
       onSuccess: (data) => {
         set(

@@ -7,12 +7,14 @@ import { LANGCHAIN_SUPPORT_TEXT_LIST } from '@/libs/langchain/file';
 import { LangChainLoaderType } from '@/libs/langchain/types';
 
 import { CodeLoader } from './code';
+import { CsVLoader } from './csv';
 import { DocxLoader } from './docx';
 import { LatexLoader } from './latex';
 import { MarkdownLoader } from './markdown';
 import { PdfLoader } from './pdf';
 import { PPTXLoader } from './pptx';
 import { TextLoader } from './txt';
+import { EPubLoader } from './epub';
 
 class LangChainError extends Error {
   constructor(message: string) {
@@ -59,9 +61,17 @@ export class ChunkingLoader {
           return await TextLoader(txt);
         }
 
+        case 'csv': {
+          return await CsVLoader(fileBlob);
+        }
+
+        case 'epub': {
+          return await EPubLoader(content);
+        }
+
         default: {
           throw new Error(
-            'Unsupported file type, please check your file is a supported type, or just create an issue.',
+            `Unsupported file type [${type}], please check your file is supported, or create report issue here: https://github.com/lobehub/lobe-chat/discussions/3550`,
           );
         }
       }
@@ -89,6 +99,14 @@ export class ChunkingLoader {
 
     if (filename.endsWith('md') || filename.endsWith('mdx')) {
       return 'markdown';
+    }
+
+    if (filename.endsWith('csv')) {
+      return 'csv';
+    }
+
+    if (filename.endsWith('epub')) {
+      return 'epub';
     }
 
     const ext = filename.split('.').pop();

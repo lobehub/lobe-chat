@@ -16,8 +16,8 @@ export const useStyles = createStyles(
         height: 40px;
       `,
       cardBox: css`
-        background: ${token.colorBgContainer};
         border-radius: ${token.borderRadiusLG}px;
+        background: ${token.colorBgContainer};
         box-shadow: 0 0 0 1px ${token.colorBorderSecondary};
       `,
       header: css`
@@ -66,17 +66,17 @@ export const useStyles = createStyles(
           .${prefixCls}-cardBox {
             width: 100%;
             height: 100%;
-
             border: unset;
             border-radius: unset;
+
             box-shadow: unset;
           }
         }
       `,
       scrollBox: css`
-        background: ${isDarkMode ? token.colorFillQuaternary : token.colorBgElevated};
         border: unset;
         border-radius: unset;
+        background: ${isDarkMode ? token.colorFillQuaternary : token.colorBgElevated};
         box-shadow: 0 1px 0 1px ${token.colorFillTertiary};
       `,
       socialButtons: css`

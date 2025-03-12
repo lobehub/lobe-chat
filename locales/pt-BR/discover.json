@@ -126,6 +126,10 @@
         "title": "Novidade do Tópico"
       },
       "range": "Faixa",
+      "reasoning_effort": {
+        "desc": "Esta configuração é usada para controlar a intensidade de raciocínio do modelo antes de gerar uma resposta. Intensidade baixa prioriza a velocidade de resposta e economiza Tokens, enquanto intensidade alta oferece um raciocínio mais completo, mas consome mais Tokens e reduz a velocidade de resposta. O valor padrão é médio, equilibrando a precisão do raciocínio com a velocidade de resposta.",
+        "title": "Intensidade de Raciocínio"
+      },
       "temperature": {
         "desc": "Esta configuração afeta a diversidade das respostas do modelo. Valores mais baixos resultam em respostas mais previsíveis e típicas, enquanto valores mais altos incentivam respostas mais variadas e incomuns. Quando o valor é 0, o modelo sempre dá a mesma resposta para uma entrada dada.",
         "title": "Aleatoriedade"

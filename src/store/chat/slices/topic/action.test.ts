@@ -232,7 +232,7 @@ describe('topic action', () => {
       (topicService.getTopics as Mock).mockResolvedValue(topics);
 
       // Use the hook with the session id
-      const { result } = renderHook(() => useChatStore().useFetchTopics(sessionId));
+      const { result } = renderHook(() => useChatStore().useFetchTopics(true, sessionId));
 
       // Wait for the hook to resolve and update the state
       await waitFor(() => {
@@ -487,7 +487,7 @@ describe('topic action', () => {
       expect(createTopicSpy).toHaveBeenCalledWith({
         sessionId: activeId,
         messages: messages.map((m) => m.id),
-        title: 'topic.defaultTitle',
+        title: 'defaultTitle',
       });
       expect(refreshTopicSpy).toHaveBeenCalled();
     });

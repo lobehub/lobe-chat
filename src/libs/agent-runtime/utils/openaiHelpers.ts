@@ -1,5 +1,7 @@
 import OpenAI from 'openai';
 
+import { disableStreamModels, systemToUserModels } from '@/const/models';
+import { ChatStreamPayload, OpenAIChatMessage } from '@/libs/agent-runtime';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 
 import { parseDataUri } from './uriParser';
@@ -37,4 +39,24 @@ export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessa
             ),
     })),
   )) as OpenAI.ChatCompletionMessageParam[];
+};
+
+export const pruneReasoningPayload = (payload: ChatStreamPayload) => {
+  return {
+    ...payload,
+    frequency_penalty: 0,
+    messages: payload.messages.map((message: OpenAIChatMessage) => ({
+      ...message,
+      role:
+        message.role === 'system'
+          ? systemToUserModels.has(payload.model)
+            ? 'user'
+            : 'developer'
+          : message.role,
+    })),
+    presence_penalty: 0,
+    stream: !disableStreamModels.has(payload.model),
+    temperature: 1,
+    top_p: 1,
+  };
 };

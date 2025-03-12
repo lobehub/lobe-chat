@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { enableClerk } from '@/const/auth';
+import { enableAuth, enableClerk, enableNextAuth } from '@/const/auth';
 
 import { UserStore } from '../../store';
 
@@ -14,7 +14,6 @@ export interface UserAuthAction {
    * universal login method
    */
   openLogin: () => Promise<void>;
-  openUserProfile: () => Promise<void>;
 }
 
 export const createAuthSlice: StateCreator<
@@ -24,7 +23,7 @@ export const createAuthSlice: StateCreator<
   UserAuthAction
 > = (set, get) => ({
   enableAuth: () => {
-    return enableClerk || get()?.enabledNextAuth || false;
+    return enableAuth;
   },
   logout: async () => {
     if (enableClerk) {
@@ -33,7 +32,6 @@ export const createAuthSlice: StateCreator<
       return;
     }
 
-    const enableNextAuth = get().enabledNextAuth;
     if (enableNextAuth) {
       const { signOut } = await import('next-auth/react');
       signOut();
@@ -41,12 +39,16 @@ export const createAuthSlice: StateCreator<
   },
   openLogin: async () => {
     if (enableClerk) {
-      get().clerkSignIn?.({ fallbackRedirectUrl: location.toString() });
+      const reditectUrl = location.toString();
+      get().clerkSignIn?.({
+        fallbackRedirectUrl: reditectUrl,
+        signUpForceRedirectUrl: reditectUrl,
+        signUpUrl: '/signup',
+      });
 
       return;
     }
 
-    const enableNextAuth = get().enabledNextAuth;
     if (enableNextAuth) {
       const { signIn } = await import('next-auth/react');
       // Check if only one provider is available
@@ -56,14 +58,6 @@ export const createAuthSlice: StateCreator<
         return;
       }
       signIn();
-    }
-  },
-
-  openUserProfile: async () => {
-    if (enableClerk) {
-      get().clerkOpenUserProfile?.();
-
-      return;
     }
   },
 });

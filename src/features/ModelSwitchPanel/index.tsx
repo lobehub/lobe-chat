@@ -1,22 +1,21 @@
-import { Icon } from '@lobehub/ui';
+import { ActionIcon, Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
-import isEqual from 'fast-deep-equal';
-import { LucideArrowRight } from 'lucide-react';
+import { LucideArrowRight, LucideBolt } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
+import { isDeprecatedEdition } from '@/const/version';
+import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
-import { ModelProviderCard } from '@/types/llm';
-import { withBasePath } from '@/utils/basePath';
+import { EnabledProviderWithModels } from '@/types/aiProvider';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   menu: css`
@@ -54,13 +53,13 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
 
   const router = useRouter();
 
-  const enabledList = useUserStore(modelProviderSelectors.modelProviderListForModelSelect, isEqual);
+  const enabledList = useEnabledChatModels();
 
   const items = useMemo<ItemType[]>(() => {
-    const getModelItems = (provider: ModelProviderCard) => {
-      const items = provider.chatModels.map((model) => ({
+    const getModelItems = (provider: EnabledProviderWithModels) => {
+      const items = provider.children.map((model) => ({
         key: menuKey(provider.id, model.id),
-        label: <ModelItemRender {...model} />,
+        label: <ModelItemRender {...model} {...model.abilities} />,
         onClick: () => {
           updateAgentConfig({ model: model.id, provider: provider.id });
         },
@@ -70,7 +69,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
       if (items.length === 0)
         return [
           {
-            key: 'empty',
+            key: `${provider.id}-empty`,
             label: (
               <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
                 {t('ModelSwitchPanel.emptyModel')}
@@ -78,7 +77,9 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
               </Flexbox>
             ),
             onClick: () => {
-              router.push(withBasePath('/settings/llm'));
+              router.push(
+                isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`,
+              );
             },
           },
         ];
@@ -86,11 +87,43 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
       return items;
     };
 
+    if (enabledList.length === 0)
+      return [
+        {
+          key: `no-provider`,
+          label: (
+            <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
+              {t('ModelSwitchPanel.emptyProvider')}
+              <Icon icon={LucideArrowRight} />
+            </Flexbox>
+          ),
+          onClick: () => {
+            router.push(isDeprecatedEdition ? '/settings/llm' : `/settings/provider`);
+          },
+        },
+      ];
+
     // otherwise show with provider group
     return enabledList.map((provider) => ({
       children: getModelItems(provider),
       key: provider.id,
-      label: <ProviderItemRender name={provider.name} provider={provider.id} />,
+      label: (
+        <Flexbox horizontal justify="space-between">
+          <ProviderItemRender
+            logo={provider.logo}
+            name={provider.name}
+            provider={provider.id}
+            source={provider.source}
+          />
+          <Link href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}>
+            <ActionIcon
+              icon={LucideBolt}
+              size={'small'}
+              title={t('ModelSwitchPanel.goToSettings')}
+            />
+          </Link>
+        </Flexbox>
+      ),
       type: 'group',
     }));
   }, [enabledList]);
@@ -107,7 +140,6 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
         },
       }}
       placement={isMobile ? 'top' : 'topLeft'}
-      trigger={['click']}
     >
       <div className={styles.tag}>{children}</div>
     </Dropdown>

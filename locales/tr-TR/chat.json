@@ -8,6 +8,7 @@
   "agents": "Asistan",
   "artifact": {
     "generating": "Üretiliyor",
+    "inThread": "Alt konu içinde görüntülenemiyor, lütfen ana konuşma alanına geçin",
     "thinking": "Düşünülüyor",
     "thought": "Düşünce Süreci",
     "unknownTitle": "İsimsiz Eser"
@@ -30,7 +31,25 @@
   },
   "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "Tek bir diyalogun üretim maliyeti en fazla %90 oranında düşürülebilir, yanıt hızı 4 kat artar (<1>Daha fazla bilgi edinin</1>). Açıldığında, otomatik olarak geçmiş mesaj sayısı sınırı devre dışı bırakılacaktır.",
+      "title": "Bağlam önbelleğini aç"
+    },
+    "enableReasoning": {
+      "desc": "Claude Thinking mekanizmasına dayalı kısıtlamalar (<1>Daha fazla bilgi edinin</1>), açıldığında otomatik olarak geçmiş mesaj sayısı sınırı devre dışı bırakılacaktır.",
+      "title": "Derin Düşünmeyi Aç"
+    },
+    "reasoningBudgetToken": {
+      "title": "Düşünme Tüketim Tokeni"
+    },
+    "title": "Model Genişletme Özellikleri"
+  },
+  "history": {
+    "title": "Asistan yalnızca son {{count}} mesajı hatırlayacak"
+  },
   "historyRange": "Geçmiş Aralığı",
+  "historySummary": "Tarihsel haber özeti",
   "inbox": {
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
     "title": "Sohbet Et"
@@ -44,6 +63,9 @@
     "sendWithEnter": "Enter tuşuna basarak gönder",
     "stop": "Dur",
     "warp": "Satır atla"
+  },
+  "intentUnderstanding": {
+    "title": "Niyetinizi anlama ve analiz etme aşamasındayız..."
   },
   "knowledgeBase": {
     "all": "Tüm İçerik",
@@ -65,7 +87,41 @@
   },
   "messageAction": {
     "delAndRegenerate": "Sil ve Yeniden Oluştur",
+    "deleteDisabledByThreads": "Alt konular mevcut, silinemez",
     "regenerate": "Yeniden Oluştur"
+  },
+  "messages": {
+    "modelCard": {
+      "credit": "Kredi",
+      "creditPricing": "Fiyatlandırma",
+      "creditTooltip": "Hesaplamayı kolaylaştırmak için, 1$'ı 1M kredi olarak hesaplıyoruz; örneğin, $3/M token, 3 kredi/token olarak hesaplanır.",
+      "pricing": {
+        "inputCachedTokens": "Önceden yüklenmiş giriş {{amount}}/kredi · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M karakter",
+        "inputMinutes": "${{amount}}/dakika",
+        "inputTokens": "Giriş {{amount}}/kredi · ${{amount}}/M",
+        "outputTokens": "Çıkış {{amount}}/kredi · ${{amount}}/M",
+        "writeCacheInputTokens": "Giriş yazma önbelleği {{amount}}/puan · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Ortalama birim fiyat",
+      "input": "Giriş",
+      "inputAudio": "Ses girişi",
+      "inputCached": "Önceden yüklenmiş giriş",
+      "inputCitation": "Giriş alıntısı",
+      "inputText": "Metin girişi",
+      "inputTitle": "Giriş detayları",
+      "inputUncached": "Önceden yüklenmemiş giriş",
+      "inputWriteCached": "Giriş önbelleği yazma",
+      "output": "Çıkış",
+      "outputAudio": "Ses çıkışı",
+      "outputText": "Metin çıkışı",
+      "outputTitle": "Çıkış detayları",
+      "reasoning": "Derin düşünme",
+      "title": "Üretim detayları",
+      "total": "Toplam tüketim"
+    }
   },
   "newAgent": "Yeni Asistan",
   "pin": "Pin",
@@ -81,6 +137,32 @@
   },
   "regenerate": "Tekrarla",
   "roleAndArchive": "Rol ve Arşiv",
+  "search": {
+    "grounding": {
+      "searchQueries": "Arama Anahtar Kelimeleri",
+      "title": "{{count}} sonuç bulundu"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Sohbet içeriğine göre akıllıca arama gerekip gerekmediğini belirler",
+        "title": "Akıllı Bağlantı"
+      },
+      "off": {
+        "desc": "Sadece modelin temel bilgilerini kullanır, ağ araması yapmaz",
+        "title": "Bağlantıyı Kapat"
+      },
+      "on": {
+        "desc": "Sürekli ağ araması yaparak en güncel bilgileri alır",
+        "title": "Her Zaman Bağlantıda"
+      },
+      "useModelBuiltin": "Modelin yerleşik arama motorunu kullan"
+    },
+    "searchModel": {
+      "desc": "Mevcut model fonksiyon çağrısını desteklemiyor, bu nedenle çevrimiçi arama yapmak için fonksiyon çağrısını destekleyen bir model ile birlikte kullanılması gerekiyor",
+      "title": "Arama Yardımcı Modeli"
+    },
+    "title": "Ağ Araması"
+  },
   "searchAgentPlaceholder": "Arama Asistanı...",
   "sendPlaceholder": "Mesajınızı buraya yazın...",
   "sessionGroup": {
@@ -100,14 +182,20 @@
     "tooLong": "Grup adı 1-20 karakter arasında olmalıdır"
   },
   "shareModal": {
+    "copy": "Kopyala",
     "download": "Ekran Görüntüsünü İndir",
+    "downloadFile": "Dosyayı İndir",
+    "exportTitle": "Varsayılan Başlık",
     "imageType": "Format",
+    "includeTool": "Eklenti mesajını dahil et",
+    "includeUser": "Kullanıcı mesajını dahil et",
     "screenshot": "Ekran Görüntüsü",
     "settings": "Ayarlar",
-    "shareToShareGPT": "ShareGPT Link Oluştur",
+    "text": "Metin",
     "withBackground": "Arka Plan",
     "withFooter": "Footer",
     "withPluginInfo": "Plugin Bilgileri",
+    "withRole": "Mesaj rolünü dahil et",
     "withSystemRole": "Asistan Rol"
   },
   "stt": {
@@ -115,9 +203,14 @@
     "loading": "Tanımlanıyor...",
     "prettifying": "İyileştiriliyor..."
   },
-  "temp": "Geçici",
+  "thread": {
+    "divider": "Alt konu",
+    "threadMessageCount": "{{messageCount}} mesaj",
+    "title": "Alt konu"
+  },
   "tokenDetails": {
     "chats": "Sohbetler",
+    "historySummary": "Tarih Özeti",
     "rest": "Kalan",
     "systemRole": "Sistem Rolü",
     "title": "Bağlam Detayları",
@@ -131,29 +224,10 @@
     "used": "Kullanılan"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Akıllı Yeniden Adlandırma",
-      "duplicate": "Kopya Oluştur",
-      "export": "Konuyu Dışa Aktar"
-    },
     "checkOpenNewTopic": "Yeni bir konu açılsın mı?",
     "checkSaveCurrentMessages": "Mevcut sohbeti konu olarak kaydetmek istiyor musunuz?",
-    "confirmRemoveAll": "Tüm konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
-    "confirmRemoveTopic": "Bu konuyu silmek üzeresiniz. Bir kere silindiğinde, geri alınamaz. Lütfen dikkatli bir şekilde devam edin.",
-    "confirmRemoveUnstarred": "Yıldızlanmamış konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
-    "defaultTitle": "Konu",
-    "duplicateLoading": "Konu kopyalanıyor...",
-    "duplicateSuccess": "Konu başarıyla kopyalandı",
-    "guide": {
-      "desc": "Mevcut oturumu geçmiş konu olarak kaydetmek ve yeni bir oturum başlatmak için sol taraftaki düğmeye tıklayın",
-      "title": "Konu Listesi"
-    },
     "openNewTopic": "Yeni Konu",
-    "removeAll": "Tüm Konuları Sil",
-    "removeUnstarred": "Tüm Yıldızlanmamış Konuları Sil",
-    "saveCurrentMessages": "Mevcut oturumu konu olarak kaydet",
-    "searchPlaceholder": "Konuları ara...",
-    "title": "Konular"
+    "saveCurrentMessages": "Mevcut oturumu konu olarak kaydet"
   },
   "translate": {
     "action": "Çeviri",
@@ -184,5 +258,6 @@
         "processing": "Dosya İşleniyor..."
       }
     }
-  }
+  },
+  "zenMode": "Odak Modu"
 }

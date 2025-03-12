@@ -35,7 +35,12 @@ const artifactCode = (id: string) => (s: ChatStoreState) => {
   const messageContent = artifactMessageContent(id)(s);
   const result = messageContent.match(ARTIFACT_TAG_REGEX);
 
-  return result?.groups?.content || '';
+  let content = result?.groups?.content || '';
+
+  // Remove markdown code block if content is wrapped
+  content = content.replace(/^\s*```[^\n]*\n([\S\s]*?)\n```\s*$/, '$1');
+
+  return content;
 };
 
 const isArtifactTagClosed = (id: string) => (s: ChatStoreState) => {
@@ -71,3 +76,5 @@ export const chatPortalSelectors = {
   artifactCodeLanguage,
   isArtifactTagClosed,
 };
+
+export * from './selectors/thread';

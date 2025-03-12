@@ -50,21 +50,10 @@ export class DiscoverService {
   };
 
   getAssistantList = async (locale: Locales): Promise<DiscoverAssistantItem[]> => {
-    let res = await fetch(this.assistantStore.getAgentIndexUrl(locale), {
-      next: { revalidate },
-    });
+    const json = await this.assistantStore.getAgentIndex(locale, revalidate);
 
-    if (!res.ok) {
-      res = await fetch(this.assistantStore.getAgentIndexUrl(DEFAULT_LANG), {
-        next: { revalidate },
-      });
-    }
-
-    if (!res.ok) return [];
-
-    const json = await res.json();
-
-    return json.agents;
+    // @ts-expect-error 目前类型不一致，未来要统一
+    return json.agents ?? [];
   };
 
   getAssistantById = async (
@@ -142,21 +131,27 @@ export class DiscoverService {
   };
 
   getPluginList = async (locale: Locales): Promise<DiscoverPlugintem[]> => {
-    let res = await fetch(this.pluginStore.getPluginIndexUrl(locale), {
-      next: { revalidate: 12 * revalidate },
-    });
-
-    if (!res.ok) {
-      res = await fetch(this.pluginStore.getPluginIndexUrl(DEFAULT_LANG), {
+    try {
+      let res = await fetch(this.pluginStore.getPluginIndexUrl(locale), {
         next: { revalidate: 12 * revalidate },
       });
+
+      if (!res.ok) {
+        res = await fetch(this.pluginStore.getPluginIndexUrl(DEFAULT_LANG), {
+          next: { revalidate: 12 * revalidate },
+        });
+      }
+
+      if (!res.ok) return [];
+
+      const json = await res.json();
+
+      return json.plugins ?? [];
+    } catch (e) {
+      console.error('[getPluginListError] failed to fetch plugin list, error detail:');
+      console.error(e);
+      return [];
     }
-
-    if (!res.ok) return [];
-
-    const json = await res.json();
-
-    return json.plugins;
   };
 
   getPluginByIds = async (locale: Locales, identifiers: string[]): Promise<DiscoverPlugintem[]> => {

@@ -126,6 +126,10 @@
         "title": "Topic Freshness"
       },
       "range": "Range",
+      "reasoning_effort": {
+        "desc": "This setting controls the intensity of reasoning the model applies before generating a response. Low intensity prioritizes response speed and saves tokens, while high intensity provides more comprehensive reasoning but consumes more tokens and slows down response time. The default value is medium, balancing reasoning accuracy with response speed.",
+        "title": "Reasoning Intensity"
+      },
       "temperature": {
         "desc": "This setting affects the diversity of the model's responses. Lower values lead to more predictable and typical responses, while higher values encourage more diverse and less common responses. When set to 0, the model always gives the same response to a given input.",
         "title": "Randomness"

@@ -5,13 +5,13 @@ export const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   badge: css`
     padding-block: 4px;
     padding-inline: 6px;
+    border-radius: 2222px;
 
     font-size: 12px;
     line-height: 12px;
     color: ${token.colorTextSecondary};
 
     background: ${token.colorFillSecondary};
-    border-radius: 2222px;
   `,
 
   container: css`
@@ -21,11 +21,11 @@ export const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     padding-block: 6px;
     padding-inline: 8px;
     padding-inline-end: 12px;
+    border-radius: 8px;
 
     color: ${token.colorText};
 
     background: ${lighten(0.1, token.colorBgElevated)};
-    border-radius: 8px;
     box-shadow: ${token.boxShadowTertiary};
 
     transition: all 0.2s;

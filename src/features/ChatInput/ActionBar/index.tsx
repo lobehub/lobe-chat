@@ -1,7 +1,7 @@
 import { ChatInputActionBar } from '@lobehub/ui';
-import { ReactNode, memo, useMemo } from 'react';
+import { ReactNode, memo } from 'react';
 
-import { ActionKeys, actionMap, getLeftActionList, getRightActionList } from './config';
+import { ActionKeys, actionMap } from './config';
 
 const RenderActionList = ({ dataSource }: { dataSource: ActionKeys[] }) => (
   <>
@@ -13,10 +13,11 @@ const RenderActionList = ({ dataSource }: { dataSource: ActionKeys[] }) => (
 );
 
 export interface ActionBarProps {
+  leftActions: ActionKeys[];
   leftAreaEndRender?: ReactNode;
   leftAreaStartRender?: ReactNode;
-  mobile?: boolean;
   padding?: number | string;
+  rightActions: ActionKeys[];
   rightAreaEndRender?: ReactNode;
   rightAreaStartRender?: ReactNode;
 }
@@ -24,35 +25,31 @@ export interface ActionBarProps {
 const ActionBar = memo<ActionBarProps>(
   ({
     padding = '0 16px',
-    mobile,
     rightAreaStartRender,
     rightAreaEndRender,
     leftAreaStartRender,
     leftAreaEndRender,
-  }) => {
-    const leftActionList = useMemo(() => getLeftActionList(mobile), [mobile]);
-    const rightActionList = useMemo(() => getRightActionList(mobile), [mobile]);
-
-    return (
-      <ChatInputActionBar
-        leftAddons={
-          <>
-            {leftAreaStartRender}
-            <RenderActionList dataSource={leftActionList} />
-            {leftAreaEndRender}
-          </>
-        }
-        padding={padding}
-        rightAddons={
-          <>
-            {rightAreaStartRender}
-            <RenderActionList dataSource={rightActionList} />
-            {rightAreaEndRender}
-          </>
-        }
-      />
-    );
-  },
+    leftActions,
+    rightActions,
+  }) => (
+    <ChatInputActionBar
+      leftAddons={
+        <>
+          {leftAreaStartRender}
+          <RenderActionList dataSource={leftActions} />
+          {leftAreaEndRender}
+        </>
+      }
+      padding={padding}
+      rightAddons={
+        <>
+          {rightAreaStartRender}
+          <RenderActionList dataSource={rightActions} />
+          {rightAreaEndRender}
+        </>
+      }
+    />
+  ),
 );
 
 export default ActionBar;

@@ -8,6 +8,7 @@
   "agents": "도우미",
   "artifact": {
     "generating": "생성 중",
+    "inThread": "하위 주제에서는 볼 수 없습니다. 주 대화 영역으로 전환하여 열어주세요.",
     "thinking": "생각 중",
     "thought": "사고 과정",
     "unknownTitle": "제목 없음"
@@ -30,7 +31,25 @@
   },
   "duplicateTitle": "{{title}} 복사본",
   "emptyAgent": "도우미가 없습니다",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "단일 대화 생성 비용을 최대 90%까지 줄이고, 응답 속도를 4배 향상시킵니다 (<1>자세히 알아보기</1>). 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
+      "title": "문맥 캐시 활성화"
+    },
+    "enableReasoning": {
+      "desc": "Claude Thinking 메커니즘에 기반한 제한 (<1>자세히 알아보기</1>), 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
+      "title": "심층 사고 활성화"
+    },
+    "reasoningBudgetToken": {
+      "title": "사고 소모 토큰"
+    },
+    "title": "모델 확장 기능"
+  },
+  "history": {
+    "title": "도우미는 마지막 {{count}}개의 메시지만 기억합니다."
+  },
   "historyRange": "대화 기록 범위",
+  "historySummary": "역사 메시지 요약",
   "inbox": {
     "desc": "뇌 클러스터를 활성화하여 창의적인 아이디어를 끌어내는 인공지능 비서입니다. 여기서 모든 것에 대해 대화합니다.",
     "title": "무작위 대화"
@@ -44,6 +63,9 @@
     "sendWithEnter": "Enter 키로 전송",
     "stop": "중지",
     "warp": "줄바꿈"
+  },
+  "intentUnderstanding": {
+    "title": "귀하의 의도를 이해하고 분석하는 중입니다..."
   },
   "knowledgeBase": {
     "all": "모든 내용",
@@ -65,7 +87,41 @@
   },
   "messageAction": {
     "delAndRegenerate": "삭제하고 다시 생성",
+    "deleteDisabledByThreads": "하위 주제가 존재하여 삭제할 수 없습니다.",
     "regenerate": "다시 생성"
+  },
+  "messages": {
+    "modelCard": {
+      "credit": "포인트",
+      "creditPricing": "가격",
+      "creditTooltip": "계산을 용이하게 하기 위해, 1$를 1M 포인트로 환산합니다. 예를 들어, $3/M 토큰은 3포인트/토큰으로 환산됩니다.",
+      "pricing": {
+        "inputCachedTokens": "캐시된 입력 {{amount}}/포인트 · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M 문자",
+        "inputMinutes": "${{amount}}/분",
+        "inputTokens": "입력 {{amount}}/포인트 · ${{amount}}/M",
+        "outputTokens": "출력 {{amount}}/포인트 · ${{amount}}/M",
+        "writeCacheInputTokens": "캐시 입력 쓰기 {{amount}}/포인트 · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "평균 단가",
+      "input": "입력",
+      "inputAudio": "오디오 입력",
+      "inputCached": "입력 캐시",
+      "inputCitation": "입력 인용",
+      "inputText": "텍스트 입력",
+      "inputTitle": "입력 세부사항",
+      "inputUncached": "입력 비캐시",
+      "inputWriteCached": "입력 캐시 쓰기",
+      "output": "출력",
+      "outputAudio": "오디오 출력",
+      "outputText": "텍스트 출력",
+      "outputTitle": "출력 세부사항",
+      "reasoning": "심층 사고",
+      "title": "생성 세부사항",
+      "total": "총 소모"
+    }
   },
   "newAgent": "새 도우미",
   "pin": "고정",
@@ -81,6 +137,32 @@
   },
   "regenerate": "재생성",
   "roleAndArchive": "역할 및 아카이브",
+  "search": {
+    "grounding": {
+      "searchQueries": "검색 키워드",
+      "title": "{{count}}개의 결과가 검색되었습니다"
+    },
+    "mode": {
+      "auto": {
+        "desc": "대화 내용을 기반으로 검색 필요성을 스마트하게 판단",
+        "title": "스마트 연결"
+      },
+      "off": {
+        "desc": "모델의 기본 지식만 사용하고 네트워크 검색을 수행하지 않음",
+        "title": "연결 끄기"
+      },
+      "on": {
+        "desc": "지속적으로 네트워크 검색을 수행하여 최신 정보를 얻음",
+        "title": "항상 연결"
+      },
+      "useModelBuiltin": "모델 내장 검색 엔진 사용"
+    },
+    "searchModel": {
+      "desc": "현재 모델은 함수 호출을 지원하지 않으므로 함수 호출을 지원하는 모델과 함께 사용해야 인터넷 검색이 가능합니다.",
+      "title": "검색 보조 모델"
+    },
+    "title": "연결 검색"
+  },
   "searchAgentPlaceholder": "검색 도우미...",
   "sendPlaceholder": "채팅 내용 입력...",
   "sessionGroup": {
@@ -100,14 +182,20 @@
     "tooLong": "그룹 이름은 1-20자여야 합니다"
   },
   "shareModal": {
+    "copy": "복사",
     "download": "스크린샷 다운로드",
+    "downloadFile": "파일 다운로드",
+    "exportTitle": "기본 제목",
     "imageType": "이미지 형식",
+    "includeTool": "플러그인 메시지 포함",
+    "includeUser": "사용자 메시지 포함",
     "screenshot": "스크린샷",
     "settings": "내보내기 설정",
-    "shareToShareGPT": "ShareGPT 공유 링크 생성",
+    "text": "텍스트",
     "withBackground": "배경 이미지 포함",
     "withFooter": "푸터 포함",
     "withPluginInfo": "플러그인 정보 포함",
+    "withRole": "메시지 역할 포함",
     "withSystemRole": "도우미 역할 포함"
   },
   "stt": {
@@ -115,9 +203,14 @@
     "loading": "인식 중...",
     "prettifying": "정제 중..."
   },
-  "temp": "임시",
+  "thread": {
+    "divider": "하위 주제",
+    "threadMessageCount": "{{messageCount}}개의 메시지",
+    "title": "하위 주제"
+  },
   "tokenDetails": {
     "chats": "채팅 메시지",
+    "historySummary": "역사 요약",
     "rest": "남은 사용량",
     "systemRole": "시스템 역할",
     "title": "컨텍스트 세부 정보",
@@ -131,29 +224,10 @@
     "used": "사용됨"
   },
   "topic": {
-    "actions": {
-      "autoRename": "자동으로 이름 바꾸기",
-      "duplicate": "복사본 만들기",
-      "export": "주제 내보내기"
-    },
     "checkOpenNewTopic": "새 주제를 열까요?",
     "checkSaveCurrentMessages": "현재 대화를 주제로 저장하시겠습니까?",
-    "confirmRemoveAll": "모든 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
-    "confirmRemoveTopic": "이 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
-    "confirmRemoveUnstarred": "별표가 없는 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
-    "defaultTitle": "기본 주제",
-    "duplicateLoading": "주제 복사 중...",
-    "duplicateSuccess": "주제 복사 성공",
-    "guide": {
-      "desc": "현재 대화를 히스토리 토픽으로 저장하고 새 대화를 시작하려면 왼쪽 버튼을 클릭하세요.",
-      "title": "토픽 목록"
-    },
     "openNewTopic": "새 주제 열기",
-    "removeAll": "모든 주제 삭제",
-    "removeUnstarred": "별표가 없는 주제 삭제",
-    "saveCurrentMessages": "현재 대화를 주제로 저장",
-    "searchPlaceholder": "주제 검색...",
-    "title": "주제 목록"
+    "saveCurrentMessages": "현재 대화를 주제로 저장"
   },
   "translate": {
     "action": "번역",
@@ -184,5 +258,6 @@
         "processing": "파일 처리 중..."
       }
     }
-  }
+  },
+  "zenMode": "집중 모드"
 }

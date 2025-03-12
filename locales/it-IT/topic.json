@@ -1,0 +1,37 @@
+{
+  "actions": {
+    "autoRename": "Rinomina automaticamente",
+    "confirmRemoveAll": "Stai per eliminare tutti i temi. Dopo l'eliminazione, non sarà possibile recuperarli. Procedi con cautela.",
+    "confirmRemoveTopic": "Stai per eliminare questo tema. Dopo l'eliminazione, non sarà possibile recuperarlo. Procedi con cautela.",
+    "confirmRemoveUnstarred": "Stai per eliminare i temi non contrassegnati. Dopo l'eliminazione, non sarà possibile recuperarli. Procedi con cautela.",
+    "duplicate": "Crea una copia",
+    "export": "Esporta il tema",
+    "removeAll": "Elimina tutti i temi",
+    "removeUnstarred": "Elimina i temi non contrassegnati"
+  },
+  "defaultTitle": "Tema predefinito",
+  "duplicateLoading": "Copia del tema in corso...",
+  "duplicateSuccess": "Copia del tema riuscita",
+  "favorite": "Preferito",
+  "groupMode": {
+    "ascMessages": "In ordine crescente per numero di messaggi",
+    "byTime": "Raggruppa per tempo",
+    "descMessages": "In ordine decrescente per numero di messaggi",
+    "flat": "Non raggruppare"
+  },
+  "groupTitle": {
+    "byTime": {
+      "month": "Questo mese",
+      "today": "Oggi",
+      "week": "Questa settimana",
+      "yesterday": "Ieri"
+    }
+  },
+  "guide": {
+    "desc": "Clicca sul pulsante a sinistra per salvare la conversazione attuale come tema storico e avviare una nuova conversazione.",
+    "title": "Elenco dei temi"
+  },
+  "searchPlaceholder": "Cerca temi...",
+  "temp": "Temporaneo",
+  "title": "Tema"
+}

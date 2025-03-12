@@ -1,5 +1,6 @@
 export { default as AgentRuntime } from './AgentRuntime';
 export { LobeAnthropicAI } from './anthropic';
+export { LobeAzureAI } from './azureai';
 export { LobeAzureOpenAI } from './azureOpenai';
 export * from './BaseAI';
 export { LobeBedrockAI } from './bedrock';
@@ -18,5 +19,8 @@ export { LobeQwenAI } from './qwen';
 export { LobeTogetherAI } from './togetherai';
 export * from './types';
 export { AgentRuntimeError } from './utils/createError';
+export { LobeOpenAICompatibleFactory } from './utils/openaiCompatibleFactory';
+export { pruneReasoningPayload } from './utils/openaiHelpers';
+export { LobeVolcengineAI } from './volcengine';
 export { LobeZeroOneAI } from './zeroone';
 export { LobeZhipuAI } from './zhipu';

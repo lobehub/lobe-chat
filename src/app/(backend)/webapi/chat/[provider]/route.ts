@@ -1,5 +1,9 @@
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { AgentRuntime, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
+import {
+  AGENT_RUNTIME_ERROR_SET,
+  AgentRuntime,
+  ChatCompletionErrorPayload,
+} from '@/libs/agent-runtime';
 import { createTraceOptions, initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
@@ -9,7 +13,7 @@ import { getTracePayload } from '@/utils/trace';
 export const runtime = 'edge';
 
 export const POST = checkAuth(async (req: Request, { params, jwtPayload, createRuntime }) => {
-  const { provider } = params;
+  const { provider } = await params;
 
   try {
     // ============  1. init chat model   ============ //
@@ -35,7 +39,11 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
       });
     }
 
-    return await agentRuntime.chat(data, { user: jwtPayload.userId, ...traceOptions });
+    return await agentRuntime.chat(data, {
+      user: jwtPayload.userId,
+      ...traceOptions,
+      signal: req.signal,
+    });
   } catch (e) {
     const {
       errorType = ChatErrorType.InternalServerError,
@@ -44,8 +52,10 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
     } = e as ChatCompletionErrorPayload;
 
     const error = errorContent || e;
+
+    const logMethod = AGENT_RUNTIME_ERROR_SET.has(errorType as string) ? 'warn' : 'error';
     // track the error at server side
-    console.error(`Route: [${provider}] ${errorType}:`, error);
+    console[logMethod](`Route: [${provider}] ${errorType}:`, error);
 
     return createErrorResponse(errorType, { error, ...res, provider });
   }

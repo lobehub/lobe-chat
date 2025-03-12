@@ -5,7 +5,7 @@ import { ChatModelCard } from '@/types/llm';
 import {
   ChatCompetitionOptions,
   ChatStreamPayload,
-  EmbeddingItem,
+  Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
   TextToImagePayload,
@@ -17,7 +17,7 @@ export interface LobeRuntimeAI {
   baseURL?: string;
   chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response>;
 
-  embeddings?(payload: EmbeddingsPayload, options?: EmbeddingsOptions): Promise<EmbeddingItem[]>;
+  embeddings?(payload: EmbeddingsPayload, options?: EmbeddingsOptions): Promise<Embeddings[]>;
 
   models?(): Promise<any>;
 
@@ -40,5 +40,5 @@ export abstract class LobeOpenAICompatibleRuntime {
   abstract embeddings(
     payload: EmbeddingsPayload,
     options?: EmbeddingsOptions,
-  ): Promise<EmbeddingItem[]>;
+  ): Promise<Embeddings[]>;
 }

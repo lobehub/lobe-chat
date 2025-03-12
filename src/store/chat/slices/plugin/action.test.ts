@@ -149,7 +149,7 @@ describe('ChatPluginAction', () => {
     it('should update message content and trigger the ai message', async () => {
       // 设置模拟函数的返回值
       const mockCurrentChats: any[] = [];
-      vi.spyOn(chatSelectors, 'currentChats').mockReturnValue(mockCurrentChats);
+      vi.spyOn(chatSelectors, 'activeBaseChats').mockReturnValue(mockCurrentChats);
 
       // 设置初始状态
       const initialState = {
@@ -184,7 +184,7 @@ describe('ChatPluginAction', () => {
     it('should update message content and not trigger ai message', async () => {
       // 设置模拟函数的返回值
       const mockCurrentChats: any[] = [];
-      vi.spyOn(chatSelectors, 'currentChats').mockReturnValue(mockCurrentChats);
+      vi.spyOn(chatSelectors, 'activeBaseChats').mockReturnValue(mockCurrentChats);
 
       // 设置初始状态
       const initialState = {
@@ -855,7 +855,7 @@ describe('ChatPluginAction', () => {
           arguments: '{}',
         },
         tool_call_id: 'tool-id',
-        error: { message: 'Previous error', type: 'ProviderBizError' },
+        pluginError: { message: 'Previous error', type: 'ProviderBizError' },
       } as ChatMessage;
 
       const internal_updateMessageErrorMock = vi.fn();
@@ -865,7 +865,7 @@ describe('ChatPluginAction', () => {
           activeId: 'session-id',
           messagesMap: { [messageMapKey('session-id')]: [message] },
           internal_invokeDifferentTypePlugin: vi.fn(),
-          internal_updateMessageError: internal_updateMessageErrorMock,
+          internal_updateMessagePluginError: internal_updateMessageErrorMock,
         });
       });
 

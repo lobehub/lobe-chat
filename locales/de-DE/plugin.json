@@ -118,6 +118,10 @@
     "reinstallError": "Fehler beim Aktualisieren des Plugins {{name}}.",
     "urlError": "Der Link hat keine JSON-Format-Inhalte zurückgegeben. Stellen Sie sicher, dass der Link gültig ist."
   },
+  "inspector": {
+    "args": "Parameterliste anzeigen",
+    "pluginRender": "Plugin-Oberfläche anzeigen"
+  },
   "list": {
     "item": {
       "deprecated.title": "Veraltet",
@@ -130,6 +134,34 @@
     "plugin": "Plugin wird ausgeführt..."
   },
   "pluginList": "Plugin-Liste",
+  "search": {
+    "config": {
+      "addKey": "Schlüssel hinzufügen",
+      "close": "Löschen",
+      "confirm": "Konfiguration abgeschlossen und erneut versucht"
+    },
+    "crawPages": {
+      "crawling": "Linkerkennung läuft",
+      "detail": {
+        "preview": "Vorschau",
+        "raw": "Ursprünglicher Text",
+        "tooLong": "Der Textinhalt ist zu lang, der Kontext des Gesprächs behält nur die ersten {{characters}} Zeichen bei, der übersteigende Teil wird nicht in den Gesprächskontext einbezogen."
+      },
+      "meta": {
+        "crawler": "Crawler-Modus",
+        "words": "Zeichenanzahl"
+      }
+    },
+    "searchxng": {
+      "baseURL": "Bitte eingeben",
+      "description": "Geben Sie die URL von SearchXNG ein, um mit der Online-Suche zu beginnen",
+      "keyPlaceholder": "Bitte Schlüssel eingeben",
+      "title": "SearchXNG-Suchmaschine konfigurieren",
+      "unconfiguredDesc": "Bitte wenden Sie sich an den Administrator, um die Konfiguration der SearchXNG-Suchmaschine abzuschließen und mit der Online-Suche zu beginnen",
+      "unconfiguredTitle": "SearchXNG-Suchmaschine ist noch nicht konfiguriert"
+    },
+    "title": "Online-Suche"
+  },
   "setting": "Plugin-Einstellung",
   "settings": {
     "indexUrl": {

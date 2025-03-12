@@ -27,7 +27,7 @@ vi.mock('@/utils/server/jwt', () => ({
 describe('checkAuth', () => {
   const mockHandler: RequestHandler = vi.fn();
   const mockRequest = new Request('https://example.com');
-  const mockOptions = { params: { provider: 'mock' } };
+  const mockOptions = { params: Promise.resolve({ provider: 'mock' }) };
 
   beforeEach(() => {
     vi.clearAllMocks();

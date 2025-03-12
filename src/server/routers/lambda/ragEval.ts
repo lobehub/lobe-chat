@@ -6,6 +6,7 @@ import pMap from 'p-map';
 import { z } from 'zod';
 
 import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
+import { serverDB } from '@/database/server';
 import { FileModel } from '@/database/server/models/file';
 import {
   EvalDatasetModel,
@@ -34,7 +35,7 @@ const ragEvalProcedure = authedProcedure.use(keyVaults).use(async (opts) => {
   return opts.next({
     ctx: {
       datasetModel: new EvalDatasetModel(ctx.userId),
-      fileModel: new FileModel(ctx.userId),
+      fileModel: new FileModel(serverDB, ctx.userId),
       datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
       evaluationModel: new EvalEvaluationModel(ctx.userId),
       evaluationRecordModel: new EvaluationRecordModel(ctx.userId),
@@ -263,7 +264,7 @@ export const ragEvalRouter = router({
         // 保存数据
         await ctx.evaluationModel.update(input.id, {
           status: EvalEvaluationStatus.Success,
-          evalRecordsUrl: getFullFileUrl(path),
+          evalRecordsUrl: await getFullFileUrl(path),
         });
       }
 

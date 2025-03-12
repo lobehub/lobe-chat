@@ -53,7 +53,6 @@ export const FileMetadataSchema = z.object({
 export type FileMetadata = z.infer<typeof FileMetadataSchema>;
 
 export const UploadFileSchema = z.object({
-  data: z.instanceof(ArrayBuffer).optional(),
   /**
    * file type
    * @example 'image/png'
@@ -77,7 +76,6 @@ export const UploadFileSchema = z.object({
    * local mean save the raw file into data
    * url mean upload the file to a cdn and then save the url
    */
-  saveMode: z.enum(['local', 'url']),
   /**
    * file size
    */
@@ -89,3 +87,11 @@ export const UploadFileSchema = z.object({
 });
 
 export type UploadFileParams = z.infer<typeof UploadFileSchema>;
+
+export interface CheckFileHashResult {
+  fileType?: string;
+  isExist: boolean;
+  metadata?: unknown;
+  size?: number;
+  url?: string;
+}

@@ -17,6 +17,7 @@ import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { FileListItem } from '@/types/files';
 import { UploadFileItem } from '@/types/files/upload';
+import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { sleep } from '@/utils/sleep';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -151,7 +152,7 @@ export const createFileSlice: StateCreator<
       if (!fileResult) return;
 
       // image don't need to be chunked and embedding
-      if (file.type.startsWith('image')) return;
+      if (isChunkingUnsupported(file.type)) return;
 
       // 3. auto chunk and embedding
       dispatchChatUploadFileList({

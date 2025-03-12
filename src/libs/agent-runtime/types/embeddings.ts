@@ -25,19 +25,9 @@ export interface EmbeddingsOptions {
   user?: string;
 }
 
-export interface EmbeddingItem {
-  /**
-   * The embedding vector, which is a list of floats. The length of vector depends on
-   * the model as listed in the
-   * [embedding guide](https://platform.openai.com/docs/guides/embeddings).
-   */
-  embedding: Array<number>;
-  /**
-   * The index of the embedding in the list of embeddings.
-   */
-  index: number;
-  /**
-   * The object type, which is always "embedding".
-   */
-  object: 'embedding';
-}
+/**
+ * The embedding vector, which is a list of floats. The length of vector depends on
+ * the model as listed in the
+ * [embedding guide](https://platform.openai.com/docs/guides/embeddings).
+ */
+export type Embeddings = Array<number>;

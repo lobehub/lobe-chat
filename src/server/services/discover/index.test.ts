@@ -1,7 +1,6 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DEFAULT_LANG } from '@/const/locale';
 import { AssistantCategory, PluginCategory } from '@/types/discover';
 
 import { DiscoverService } from './index';

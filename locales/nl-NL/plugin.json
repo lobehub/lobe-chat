@@ -118,6 +118,10 @@
     "reinstallError": "Vernieuwen van de plugin {{name}} is mislukt.",
     "urlError": "De link retourneert geen JSON-indeling. Zorg ervoor dat het een geldige link is."
   },
+  "inspector": {
+    "args": "Bekijk parameterlijst",
+    "pluginRender": "Bekijk plugininterface"
+  },
   "list": {
     "item": {
       "deprecated.title": "Verouderd",
@@ -130,6 +134,34 @@
     "plugin": "Plugin wordt uitgevoerd..."
   },
   "pluginList": "Lijst met plugins",
+  "search": {
+    "config": {
+      "addKey": "Voeg sleutel toe",
+      "close": "Verwijderen",
+      "confirm": "Configuratie voltooid en opnieuw proberen"
+    },
+    "crawPages": {
+      "crawling": "Linkherkenning",
+      "detail": {
+        "preview": "Voorbeeld",
+        "raw": "Oorspronkelijke tekst",
+        "tooLong": "De tekstinhoud is te lang, de gesprekscontext houdt alleen de eerste {{characters}} tekens vast, het overschot wordt niet meegerekend in de gesprekscontext"
+      },
+      "meta": {
+        "crawler": "Crawler-modus",
+        "words": "Aantal tekens"
+      }
+    },
+    "searchxng": {
+      "baseURL": "Voer in",
+      "description": "Voer de URL van SearchXNG in om te beginnen met online zoeken",
+      "keyPlaceholder": "Voer sleutel in",
+      "title": "Configureer SearchXNG zoekmachine",
+      "unconfiguredDesc": "Neem contact op met de beheerder om de configuratie van de SearchXNG zoekmachine te voltooien en te beginnen met online zoeken",
+      "unconfiguredTitle": "SearchXNG zoekmachine is nog niet geconfigureerd"
+    },
+    "title": "Online zoeken"
+  },
   "setting": "Plugin-instellingen",
   "settings": {
     "indexUrl": {

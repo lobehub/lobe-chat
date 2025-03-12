@@ -1,3 +1,4 @@
+import { TopicDisplayMode } from '@/types/topic';
 import { UserPreference } from '@/types/user';
 
 export const DEFAULT_PREFERENCE: UserPreference = {
@@ -6,5 +7,6 @@ export const DEFAULT_PREFERENCE: UserPreference = {
     topic: true,
   },
   telemetry: null,
+  topicDisplayMode: TopicDisplayMode.ByTime,
   useCmdEnterToSend: false,
 };

@@ -51,6 +51,7 @@ export const chatPortalSlice: StateCreator<
 
     set({ portalMessageDetail: messageId }, false, 'openMessageDetail');
   },
+
   openToolUI: (id, identifier) => {
     get().togglePortal(true);
 

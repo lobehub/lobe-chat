@@ -58,7 +58,7 @@ afterEach(() => {
 describe('POST handler', () => {
   describe('init chat model', () => {
     it('should initialize AgentRuntime correctly with valid authorization', async () => {
-      const mockParams = { provider: 'test-provider' };
+      const mockParams = Promise.resolve({ provider: 'test-provider' });
 
       // 设置 getJWTPayload 和 initAgentRuntimeWithUserPayload 的模拟返回值
       vi.mocked(getJWTPayload).mockResolvedValueOnce({
@@ -71,7 +71,7 @@ describe('POST handler', () => {
 
       // migrate to new AgentRuntime init api
       const spy = vi
-        .spyOn(AgentRuntime, 'initializeWithProviderOptions')
+        .spyOn(AgentRuntime, 'initializeWithProvider')
         .mockResolvedValue(new AgentRuntime(mockRuntime));
 
       // 调用 POST 函数
@@ -83,7 +83,7 @@ describe('POST handler', () => {
     });
 
     it('should return Unauthorized error when LOBE_CHAT_AUTH_HEADER is missing', async () => {
-      const mockParams = { provider: 'test-provider' };
+      const mockParams = Promise.resolve({ provider: 'test-provider' });
       const requestWithoutAuthHeader = new Request(new URL('https://test.com'), {
         method: 'POST',
         body: JSON.stringify({ model: 'test-model' }),
@@ -110,14 +110,14 @@ describe('POST handler', () => {
         azureApiVersion: 'v1',
       });
 
-      const mockParams = { provider: 'test-provider' };
+      const mockParams = Promise.resolve({ provider: 'test-provider' });
       // 设置 initAgentRuntimeWithUserPayload 的模拟返回值
       vi.mocked(getAuth).mockReturnValue({} as any);
       vi.mocked(checkAuthMethod).mockReset();
 
       const mockRuntime: LobeRuntimeAI = { baseURL: 'abc', chat: vi.fn() };
 
-      vi.spyOn(AgentRuntime, 'initializeWithProviderOptions').mockResolvedValue(
+      vi.spyOn(AgentRuntime, 'initializeWithProvider').mockResolvedValue(
         new AgentRuntime(mockRuntime),
       );
 
@@ -141,7 +141,7 @@ describe('POST handler', () => {
     });
 
     it('should return InternalServerError error when throw a unknown error', async () => {
-      const mockParams = { provider: 'test-provider' };
+      const mockParams = Promise.resolve({ provider: 'test-provider' });
       vi.mocked(getJWTPayload).mockRejectedValueOnce(new Error('unknown error'));
 
       const response = await POST(request, { params: mockParams });
@@ -166,7 +166,7 @@ describe('POST handler', () => {
         userId: 'abc',
       });
 
-      const mockParams = { provider: 'test-provider' };
+      const mockParams = Promise.resolve({ provider: 'test-provider' });
       const mockChatPayload = { message: 'Hello, world!' };
       request = new Request(new URL('https://test.com'), {
         headers: { [LOBE_CHAT_AUTH_HEADER]: 'Bearer some-valid-token' },
@@ -181,7 +181,10 @@ describe('POST handler', () => {
       const response = await POST(request as unknown as Request, { params: mockParams });
 
       expect(response).toEqual(mockChatResponse);
-      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, { user: 'abc' });
+      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, {
+        user: 'abc',
+        signal: expect.anything(),
+      });
     });
 
     it('should return an error response when chat completion fails', async () => {
@@ -192,7 +195,7 @@ describe('POST handler', () => {
         azureApiVersion: 'v1',
       });
 
-      const mockParams = { provider: 'test-provider' };
+      const mockParams = Promise.resolve({ provider: 'test-provider' });
       const mockChatPayload = { message: 'Hello, world!' };
       request = new Request(new URL('https://test.com'), {
         headers: { [LOBE_CHAT_AUTH_HEADER]: 'Bearer some-valid-token' },

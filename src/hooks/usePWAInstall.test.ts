@@ -38,6 +38,7 @@ describe('usePWAInstall', () => {
   });
 
   it('should return canInstall based on canInstall state when support PWA', () => {
+    document.body.innerHTML = `<div id="${PWA_INSTALL_ID}"></div>`;
     vi.mocked(usePlatform).mockReturnValue({ isSupportInstallPWA: true, isPWA: false } as any);
 
     const { result, rerender } = renderHook(() => usePWAInstall());
@@ -53,12 +54,12 @@ describe('usePWAInstall', () => {
     expect(result.current.canInstall).toBe(true);
   });
 
-  it('should return canInstall as true when not support PWA', () => {
+  it('should return canInstall as false when not support PWA', () => {
     vi.mocked(usePlatform).mockReturnValue({ isSupportInstallPWA: false, isPWA: false } as any);
 
     const { result } = renderHook(() => usePWAInstall());
 
-    expect(result.current.canInstall).toBe(true);
+    expect(result.current.canInstall).toBe(false);
   });
 
   it('should call pwa.showDialog when install is called', () => {

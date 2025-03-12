@@ -1,20 +1,25 @@
-import { DEFAULT_LANG } from '@/const/locale';
+import { NextResponse } from 'next/server';
+
 import { AssistantStore } from '@/server/modules/AssistantStore';
 
 export const runtime = 'edge';
 
 export const GET = async (req: Request) => {
-  const locale = new URL(req.url).searchParams.get('locale');
+  try {
+    const locale = new URL(req.url).searchParams.get('locale');
 
-  const market = new AssistantStore();
+    const market = new AssistantStore();
 
-  let res: Response;
+    const data = await market.getAgentIndex(locale as any);
 
-  res = await fetch(market.getAgentIndexUrl(locale as any));
-
-  if (res.status === 404) {
-    res = await fetch(market.getAgentIndexUrl(DEFAULT_LANG));
+    return NextResponse.json(data);
+  } catch {
+    return new Response(`failed to fetch agent market index`, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+      status: 500,
+    });
   }
-
-  return res;
 };

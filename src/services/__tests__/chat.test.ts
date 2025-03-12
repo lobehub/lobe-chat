@@ -2,7 +2,7 @@ import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
 import { merge } from 'lodash-es';
 import OpenAI from 'openai';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import {
@@ -26,11 +26,16 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { AgentRuntime } from '@/libs/agent-runtime';
-import { useFileStore } from '@/store/file';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
+import { toolSelectors } from '@/store/tool/selectors';
 import { UserStore } from '@/store/user';
+import { useUserStore } from '@/store/user';
+import { modelConfigSelectors } from '@/store/user/selectors';
 import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
 import { DalleManifest } from '@/tools/dalle';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatMessage } from '@/types/message';
 import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
@@ -51,6 +56,16 @@ vi.mock('@/utils/fetch', async (importOriginal) => {
   const module = await importOriginal();
 
   return { ...(module as any), getMessageError: vi.fn() };
+});
+
+beforeEach(() => {
+  // 清除所有模块的缓存
+  vi.resetModules();
+  // 默认设置 isServerMode 为 false
+  vi.mock('@/const/version', () => ({
+    isServerMode: false,
+    isDeprecatedEdition: true,
+  }));
 });
 
 // mock auth
@@ -140,8 +155,6 @@ describe('ChatService', () => {
               },
             ],
           }, // Message with files
-          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
-          { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
 
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
@@ -156,22 +169,16 @@ describe('ChatService', () => {
             messages: [
               {
                 content: [
-                  { text: 'Hello', type: 'text' },
+                  {
+                    text: 'Hello',
+                    type: 'text',
+                  },
                   {
                     image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
                     type: 'image_url',
                   },
                 ],
                 role: 'user',
-              },
-              {
-                content: 'Hi',
-                name: 'plugin1____api1',
-                role: 'tool',
-              },
-              {
-                content: 'Hey',
-                role: 'assistant',
               },
             ],
             model: 'gpt-4-vision-preview',
@@ -183,7 +190,6 @@ describe('ChatService', () => {
       it('should not include image with vision models when can not find the image', async () => {
         const messages = [
           { content: 'Hello', role: 'user', files: ['file2'] }, // Message with files
-          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
 
@@ -194,7 +200,6 @@ describe('ChatService', () => {
           {
             messages: [
               { content: 'Hello', role: 'user' },
-              { content: 'Hi', name: 'plugin1____api1', role: 'tool' },
               { content: 'Hey', role: 'assistant' },
             ],
           },
@@ -296,19 +301,12 @@ describe('ChatService', () => {
             ],
             messages: [
               {
-                content: `## Tools
-
-You can use these tools below:
-
-### SEO
-
-The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.
-
-The APIs you can use:
-
-#### seo____getData
-
-Get data from users`,
+                content: `<plugins description="The plugins you can use below">
+<collection name="SEO">
+<collection.instructions>The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.</collection.instructions>
+<api identifier="seo____getData">Get data from users</api>
+</collection>
+</plugins>`,
                 role: 'system',
               },
               { content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n', role: 'user' },
@@ -405,19 +403,12 @@ Get data from users`,
               {
                 content: `system
 
-## Tools
-
-You can use these tools below:
-
-### SEO
-
-The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.
-
-The APIs you can use:
-
-#### seo____getData
-
-Get data from users`,
+<plugins description="The plugins you can use below">
+<collection name="SEO">
+<collection.instructions>The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.</collection.instructions>
+<api identifier="seo____getData">Get data from users</api>
+</collection>
+</plugins>`,
                 role: 'system',
               },
               { content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n', role: 'user' },
@@ -493,6 +484,125 @@ Get data from users`,
         expect(calls![1]).toBeUndefined();
       });
     });
+
+    describe('search functionality', () => {
+      it('should add WebBrowsingManifest when search is enabled and not using model built-in search', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [{ content: 'Search for something', role: 'user' }] as ChatMessage[];
+
+        // Mock agent store state with search enabled
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValueOnce({
+          searchMode: 'auto', // not 'off'
+          useModelBuiltinSearch: false,
+        } as any);
+
+        // Mock AI infra store state
+        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => false);
+        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
+
+        // Mock tool selectors
+        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
+          {
+            type: 'function',
+            function: {
+              name: WebBrowsingManifest.identifier + '____search',
+              description: 'Search the web',
+            },
+          },
+        ]);
+
+        await chatService.createAssistantMessage({ messages, plugins: [] });
+
+        // Verify tools were passed to getChatCompletion
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            tools: expect.arrayContaining([
+              expect.objectContaining({
+                function: expect.objectContaining({
+                  name: expect.stringContaining(WebBrowsingManifest.identifier),
+                }),
+              }),
+            ]),
+          }),
+          undefined,
+        );
+      });
+
+      it('should enable built-in search when model supports it and useModelBuiltinSearch is true', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [{ content: 'Search for something', role: 'user' }] as ChatMessage[];
+
+        // Mock agent store state with search enabled and useModelBuiltinSearch enabled
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValueOnce({
+          searchMode: 'auto', // not 'off'
+          useModelBuiltinSearch: true,
+        } as any);
+
+        // Mock AI infra store state - model has built-in search
+        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
+        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
+
+        // Mock tool selectors
+        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
+          {
+            type: 'function',
+            function: {
+              name: WebBrowsingManifest.identifier + '____search',
+              description: 'Search the web',
+            },
+          },
+        ]);
+
+        await chatService.createAssistantMessage({ messages, plugins: [] });
+
+        // Verify enabledSearch was set to true
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            enabledSearch: true,
+          }),
+          undefined,
+        );
+      });
+
+      it('should not enable search when searchMode is off', async () => {
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        const messages = [{ content: 'Search for something', role: 'user' }] as ChatMessage[];
+
+        // Mock agent store state with search disabled
+        vi.spyOn(agentChatConfigSelectors, 'currentChatConfig').mockReturnValueOnce({
+          searchMode: 'off',
+          useModelBuiltinSearch: true,
+        } as any);
+
+        // Mock AI infra store state
+        vi.spyOn(aiModelSelectors, 'isModelHasBuiltinSearch').mockReturnValueOnce(() => true);
+        vi.spyOn(aiModelSelectors, 'isModelHasExtendParams').mockReturnValueOnce(() => false);
+
+        // Mock tool selectors
+        vi.spyOn(toolSelectors, 'enabledSchema').mockReturnValueOnce(() => [
+          {
+            type: 'function',
+            function: {
+              name: WebBrowsingManifest.identifier + '____search',
+              description: 'Search the web',
+            },
+          },
+        ]);
+
+        await chatService.createAssistantMessage({ messages, plugins: [] });
+
+        // Verify enabledSearch was not set
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            enabledSearch: undefined,
+          }),
+          undefined,
+        );
+      });
+    });
   });
 
   describe('getChatCompletion', () => {
@@ -516,6 +626,47 @@ Get data from users`,
         headers: expect.any(Object),
         method: 'POST',
       });
+    });
+
+    it('should throw InvalidAccessCode error when enableFetchOnClient is true and auth is enabled but user is not signed in', async () => {
+      // Mock userStore
+      const mockUserStore = {
+        enableAuth: () => true,
+        isSignedIn: false,
+      };
+
+      // Mock modelConfigSelectors
+      const mockModelConfigSelectors = {
+        isProviderFetchOnClient: () => () => true,
+      };
+
+      vi.spyOn(useUserStore, 'getState').mockImplementationOnce(() => mockUserStore as any);
+      vi.spyOn(modelConfigSelectors, 'isProviderFetchOnClient').mockImplementationOnce(
+        mockModelConfigSelectors.isProviderFetchOnClient,
+      );
+
+      const params: Partial<ChatStreamPayload> = {
+        model: 'test-model',
+        messages: [],
+      };
+      const options = {};
+      const expectedPayload = {
+        model: DEFAULT_AGENT_CONFIG.model,
+        stream: true,
+        ...DEFAULT_AGENT_CONFIG.params,
+        ...params,
+      };
+
+      const result = await chatService.getChatCompletion(params, options);
+
+      expect(global.fetch).toHaveBeenCalledWith(expect.any(String), {
+        body: JSON.stringify(expectedPayload),
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+        }),
+        method: 'POST',
+      });
+      expect(result.status).toBe(401);
     });
 
     // Add more test cases to cover different scenarios and edge cases
@@ -607,7 +758,7 @@ Get data from users`,
     });
   });
 
-  describe('processMessage', () => {
+  describe('reorderToolMessages', () => {
     it('should reorderToolMessages', () => {
       const input: OpenAIChatMessage[] = [
         {
@@ -634,14 +785,6 @@ Get data from users`,
                 name: 'lobe-web-browsing____searchWithSearXNG____builtin',
               },
               id: 'tool_call_nXxXHW8Z',
-              type: 'function',
-            },
-            {
-              function: {
-                arguments: '{"query":"LobeHub","searchEngines":["bilibili"]}',
-                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
-              },
-              id: 'tool_call_2f3CEKz9',
               type: 'function',
             },
           ],
@@ -702,14 +845,6 @@ Get data from users`,
               id: 'tool_call_nXxXHW8Z',
               type: 'function',
             },
-            {
-              function: {
-                arguments: '{"query":"LobeHub","searchEngines":["bilibili"]}',
-                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
-              },
-              id: 'tool_call_2f3CEKz9',
-              type: 'function',
-            },
           ],
         },
         {
@@ -725,17 +860,242 @@ Get data from users`,
           tool_call_id: 'tool_call_nXxXHW8Z',
         },
         {
-          content: '[]',
-          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
-          role: 'tool',
-          tool_call_id: 'tool_call_2f3CEKz9',
-        },
-        {
           content: 'LobeHub 是一个专注于设计和开发现代人工智能生成内容（AIGC）工具和组件的团队。',
           role: 'assistant',
         },
         {
           content: '### LobeHub 智能AI聚合神器\n\nLobeHub 是一个强大的AI聚合平台',
+          role: 'assistant',
+        },
+      ]);
+    });
+  });
+
+  describe('processMessage', () => {
+    describe('handle with files content in server mode', () => {
+      it('should includes files', async () => {
+        // 重新模拟模块，设置 isServerMode 为 true
+        vi.doMock('@/const/version', () => ({
+          isServerMode: true,
+          isDeprecatedEdition: false,
+        }));
+
+        // 需要在修改模拟后重新导入相关模块
+        const { chatService } = await import('../chat');
+
+        const messages = [
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'imagecx1',
+                url: 'http://example.com/xxx0asd-dsd.png',
+                alt: 'ttt.png',
+              },
+            ],
+            fileList: [
+              {
+                fileType: 'plain/txt',
+                size: 100000,
+                id: 'file1',
+                url: 'http://abc.com/abc.txt',
+                name: 'abc.png',
+              },
+              {
+                id: 'file_oKMve9qySLMI',
+                name: '2402.16667v1.pdf',
+                type: 'application/pdf',
+                size: 11256078,
+                url: 'https://xxx.com/ppp/480497/5826c2b8-fde0-4de1-a54b-a224d5e3d898.pdf',
+              },
+            ],
+          }, // Message with files
+          { content: 'Hey', role: 'assistant' }, // Regular user message
+        ] as ChatMessage[];
+
+        const output = chatService['processMessages']({
+          messages,
+          model: 'gpt-4o',
+          provider: 'openai',
+        });
+
+        expect(output).toEqual([
+          {
+            content: [
+              {
+                text: `Hello
+
+<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="ttt.png" url="http://example.com/xxx0asd-dsd.png"></image>
+</images>
+<files>
+<files_docstring>here are user upload files you can refer to</files_docstring>
+<file id="file1" name="abc.png" type="plain/txt" size="100000" url="http://abc.com/abc.txt"></file>
+<file id="file_oKMve9qySLMI" name="2402.16667v1.pdf" type="undefined" size="11256078" url="https://xxx.com/ppp/480497/5826c2b8-fde0-4de1-a54b-a224d5e3d898.pdf"></file>
+</files>
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
+                type: 'text',
+              },
+              {
+                image_url: { detail: 'auto', url: 'http://example.com/xxx0asd-dsd.png' },
+                type: 'image_url',
+              },
+            ],
+            role: 'user',
+          },
+          {
+            content: 'Hey',
+            role: 'assistant',
+          },
+        ]);
+      });
+
+      it('should include image files in server mode', async () => {
+        // 重新模拟模块，设置 isServerMode 为 true
+        vi.doMock('@/const/version', () => ({
+          isServerMode: true,
+          isDeprecatedEdition: true,
+        }));
+
+        // 需要在修改模拟后重新导入相关模块
+        const { chatService } = await import('../chat');
+        const messages = [
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'file1',
+                url: 'http://example.com/image.jpg',
+                alt: 'abc.png',
+              },
+            ],
+          }, // Message with files
+          { content: 'Hey', role: 'assistant' }, // Regular user message
+        ] as ChatMessage[];
+
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        await chatService.createAssistantMessage({
+          messages,
+          plugins: [],
+          model: 'gpt-4-vision-preview',
+        });
+
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            messages: [
+              {
+                content: [
+                  {
+                    text: `Hello
+
+<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+<context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+1. Always prioritize handling user-visible content.
+2. the context is only required when user's queries rely on it.
+</context.instruction>
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="abc.png" url="http://example.com/image.jpg"></image>
+</images>
+
+</files_info>
+<!-- END SYSTEM CONTEXT -->`,
+                    type: 'text',
+                  },
+                  {
+                    image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
+                    type: 'image_url',
+                  },
+                ],
+                role: 'user',
+              },
+              {
+                content: 'Hey',
+                role: 'assistant',
+              },
+            ],
+            model: 'gpt-4-vision-preview',
+          },
+          undefined,
+        );
+      });
+    });
+
+    it('should handle empty tool calls messages correctly', () => {
+      const messages = [
+        {
+          content: '## Tools\n\nYou can use these tools',
+          role: 'system',
+        },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [],
+        },
+      ] as ChatMessage[];
+
+      const result = chatService['processMessages']({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result).toEqual([
+        {
+          content: '## Tools\n\nYou can use these tools',
+          role: 'system',
+        },
+        {
+          content: '',
+          role: 'assistant',
+        },
+      ]);
+    });
+
+    it('should handle assistant messages with reasoning correctly', () => {
+      const messages = [
+        {
+          role: 'assistant',
+          content: 'The answer is 42.',
+          reasoning: {
+            content: 'I need to calculate the answer to life, universe, and everything.',
+            signature: 'thinking_process',
+          },
+        },
+      ] as ChatMessage[];
+
+      const result = chatService['processMessages']({
+        messages,
+        model: 'gpt-4',
+        provider: 'openai',
+      });
+
+      expect(result).toEqual([
+        {
+          content: [
+            {
+              signature: 'thinking_process',
+              thinking: 'I need to calculate the answer to life, universe, and everything.',
+              type: 'thinking',
+            },
+            {
+              text: 'The answer is 42.',
+              type: 'text',
+            },
+          ],
           role: 'assistant',
         },
       ]);
@@ -748,8 +1108,9 @@ Get data from users`,
  * initialization of AgentRuntime with different providers
  */
 vi.mock('../_auth', async (importOriginal) => {
-  return await importOriginal();
+  return importOriginal();
 });
+
 describe('AgentRuntimeOnClient', () => {
   describe('initializeWithClientStore', () => {
     describe('should initialize with options correctly', () => {
@@ -783,6 +1144,7 @@ describe('AgentRuntimeOnClient', () => {
             },
           },
         } as UserSettingsState) as unknown as UserStore;
+
         const runtime = await initializeWithClientStore(ModelProvider.Azure, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);

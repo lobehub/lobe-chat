@@ -8,6 +8,7 @@
   "agents": "مساعد",
   "artifact": {
     "generating": "جاري الإنشاء",
+    "inThread": "لا يمكن عرض الموضوعات الفرعية، يرجى التبديل إلى منطقة المحادثة الرئيسية لفتحها",
     "thinking": "جاري التفكير",
     "thought": "عملية التفكير",
     "unknownTitle": "عمل غير مسمى"
@@ -30,7 +31,25 @@
   },
   "duplicateTitle": "{{title}} نسخة",
   "emptyAgent": "لا يوجد مساعد",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "يمكن تقليل تكلفة توليد محادثة واحدة بنسبة تصل إلى 90%، وزيادة سرعة الاستجابة بمقدار 4 مرات (<1>اعرف المزيد</1>). عند التفعيل، سيتم تعطيل حد عدد الرسائل التاريخية تلقائيًا",
+      "title": "تفعيل تخزين السياق"
+    },
+    "enableReasoning": {
+      "desc": "استنادًا إلى آلية تفكير كلود (Claude Thinking) المحدودة (<1>اعرف المزيد</1>)، عند التفعيل، سيتم تعطيل حد عدد الرسائل التاريخية تلقائيًا",
+      "title": "تفعيل التفكير العميق"
+    },
+    "reasoningBudgetToken": {
+      "title": "استهلاك توكن التفكير"
+    },
+    "title": "وظائف توسيع النموذج"
+  },
+  "history": {
+    "title": "سيتذكر المساعد آخر {{count}} رسالة فقط"
+  },
   "historyRange": "نطاق التاريخ",
+  "historySummary": "ملخص الرسائل التاريخية",
   "inbox": {
     "desc": "قم بتشغيل مجموعة الدماغ وأشعل شرارة التفكير. مساعدك الذكي، هنا حيث يمكنك التواصل بكل شيء",
     "title": "دردشة عشوائية"
@@ -44,6 +63,9 @@
     "sendWithEnter": "اضغط Enter للإرسال",
     "stop": "توقف",
     "warp": "تغيير السطر"
+  },
+  "intentUnderstanding": {
+    "title": "جارٍ فهم وتحليل نواياك..."
   },
   "knowledgeBase": {
     "all": "جميع المحتويات",
@@ -65,7 +87,41 @@
   },
   "messageAction": {
     "delAndRegenerate": "حذف وإعادة الإنشاء",
+    "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
     "regenerate": "إعادة الإنشاء"
+  },
+  "messages": {
+    "modelCard": {
+      "credit": "نقاط",
+      "creditPricing": "التسعير",
+      "creditTooltip": "لتسهيل العد، نقوم بتحويل 1$ إلى 1M نقطة، على سبيل المثال، 3$/M رموز تعني 3 نقاط/رمز",
+      "pricing": {
+        "inputCachedTokens": "مدخلات مخزنة {{amount}}/نقطة · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M حرف",
+        "inputMinutes": "${{amount}}/دقيقة",
+        "inputTokens": "مدخلات {{amount}}/نقطة · ${{amount}}/M",
+        "outputTokens": "مخرجات {{amount}}/نقطة · ${{amount}}/M",
+        "writeCacheInputTokens": "تخزين إدخال الكتابة {{amount}}/نقطة · ${{amount}}/ميغابايت"
+      }
+    },
+    "tokenDetails": {
+      "average": "متوسط السعر",
+      "input": "مدخلات",
+      "inputAudio": "مدخلات صوتية",
+      "inputCached": "مدخلات مخزنة",
+      "inputCitation": "اقتباس الإدخال",
+      "inputText": "مدخلات نصية",
+      "inputTitle": "تفاصيل المدخلات",
+      "inputUncached": "مدخلات غير مخزنة",
+      "inputWriteCached": "تخزين إدخال الكتابة",
+      "output": "مخرجات",
+      "outputAudio": "مخرجات صوتية",
+      "outputText": "مخرجات نصية",
+      "outputTitle": "تفاصيل المخرجات",
+      "reasoning": "تفكير عميق",
+      "title": "تفاصيل التوليد",
+      "total": "الإجمالي المستهلك"
+    }
   },
   "newAgent": "مساعد جديد",
   "pin": "تثبيت",
@@ -81,6 +137,32 @@
   },
   "regenerate": "إعادة الإنشاء",
   "roleAndArchive": "الدور والأرشيف",
+  "search": {
+    "grounding": {
+      "searchQueries": "كلمات البحث",
+      "title": "تم العثور على {{count}} نتيجة"
+    },
+    "mode": {
+      "auto": {
+        "desc": "تحديد ما إذا كان من الضروري البحث بناءً على محتوى المحادثة",
+        "title": "الاتصال الذكي"
+      },
+      "off": {
+        "desc": "استخدام المعرفة الأساسية للنموذج فقط، دون إجراء بحث عبر الإنترنت",
+        "title": "إيقاف الاتصال"
+      },
+      "on": {
+        "desc": "الاستمرار في البحث عبر الإنترنت للحصول على أحدث المعلومات",
+        "title": "الاتصال دائمًا"
+      },
+      "useModelBuiltin": "استخدام محرك البحث المدمج في النموذج"
+    },
+    "searchModel": {
+      "desc": "النموذج الحالي لا يدعم استدعاء الدوال، لذا يجب استخدام نموذج يدعم استدعاء الدوال للبحث عبر الإنترنت",
+      "title": "نموذج البحث المساعد"
+    },
+    "title": "بحث عبر الإنترنت"
+  },
   "searchAgentPlaceholder": "مساعد البحث...",
   "sendPlaceholder": "أدخل محتوى الدردشة...",
   "sessionGroup": {
@@ -100,14 +182,20 @@
     "tooLong": "يجب أن يكون طول اسم المجموعة بين 1 و 20"
   },
   "shareModal": {
+    "copy": "نسخ",
     "download": "تحميل اللقطة",
+    "downloadFile": "تحميل الملف",
+    "exportTitle": "العنوان الافتراضي",
     "imageType": "نوع الصورة",
+    "includeTool": "تضمين رسالة الأداة",
+    "includeUser": "تضمين رسالة المستخدم",
     "screenshot": "لقطة شاشة",
     "settings": "إعدادات التصدير",
-    "shareToShareGPT": "إنشاء رابط مشاركة ShareGPT",
+    "text": "نص",
     "withBackground": "تضمين صورة الخلفية",
     "withFooter": "تضمين تذييل",
     "withPluginInfo": "تضمين معلومات البرنامج المساعد",
+    "withRole": "تضمين رسالة الدور",
     "withSystemRole": "تضمين دور المساعد"
   },
   "stt": {
@@ -115,9 +203,14 @@
     "loading": "جارٍ التعرف...",
     "prettifying": "جارٍ التجميل..."
   },
-  "temp": "مؤقت",
+  "thread": {
+    "divider": "موضوع فرعي",
+    "threadMessageCount": "{{messageCount}} رسالة",
+    "title": "موضوع فرعي"
+  },
   "tokenDetails": {
     "chats": "رسائل المحادثة",
+    "historySummary": "ملخص التاريخ",
     "rest": "المتبقي",
     "systemRole": "تعيين الدور",
     "title": "تفاصيل الرمز",
@@ -131,29 +224,10 @@
     "used": "مستخدم"
   },
   "topic": {
-    "actions": {
-      "autoRename": "إعادة تسمية ذكية",
-      "duplicate": "إنشاء نسخة",
-      "export": "تصدير الموضوع"
-    },
     "checkOpenNewTopic": "هل ترغب في فتح موضوع جديد؟",
     "checkSaveCurrentMessages": "هل ترغب في حفظ الدردشة الحالية كموضوع؟",
-    "confirmRemoveAll": "سيتم حذف جميع المواضيع قريبًا، وبمجرد الحذف لن يمكن استعادتها، يرجى التحلي بالحذر.",
-    "confirmRemoveTopic": "سيتم حذف هذا الموضوع قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى التحلي بالحذر.",
-    "confirmRemoveUnstarred": "سيتم حذف المواضيع غير المحفوظة قريبًا، وبمجرد الحذف لن يمكن استعادتها، يرجى التحلي بالحذر.",
-    "defaultTitle": "الموضوع الافتراضي",
-    "duplicateLoading": "جاري نسخ الموضوع...",
-    "duplicateSuccess": "تم نسخ الموضوع بنجاح",
-    "guide": {
-      "desc": "انقر فوق زر الإرسال الأيسر لحفظ الجلسة الحالية كموضوع تاريخي وبدء جلسة جديدة",
-      "title": "قائمة المواضيع"
-    },
     "openNewTopic": "فتح موضوع جديد",
-    "removeAll": "حذف جميع المواضيع",
-    "removeUnstarred": "حذف المواضيع غير المحفوظة",
-    "saveCurrentMessages": "حفظ الجلسة الحالية كموضوع",
-    "searchPlaceholder": "البحث في المواضيع...",
-    "title": "الموضوع"
+    "saveCurrentMessages": "حفظ الجلسة الحالية كموضوع"
   },
   "translate": {
     "action": "ترجمة",
@@ -184,5 +258,6 @@
         "processing": "يتم معالجة الملف..."
       }
     }
-  }
+  },
+  "zenMode": "وضع التركيز"
 }

@@ -1,0 +1,10 @@
+{
+  "actions": {
+    "confirmRemoveThread": "이 하위 주제를 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니 신중하게 진행해 주시기 바랍니다."
+  },
+  "newPortalThread": {
+    "includeContext": "주제 맥락 포함",
+    "title": "새로운 하위 주제 시작하기"
+  },
+  "notSupportMultiModals": "하위 주제는 현재 파일/이미지 업로드를 지원하지 않습니다. 필요하신 경우 댓글로 남겨주세요: <1>💬 토론 구역</1>"
+}
