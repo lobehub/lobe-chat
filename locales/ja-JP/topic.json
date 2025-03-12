@@ -32,6 +32,7 @@
     "title": "トピックリスト"
   },
   "searchPlaceholder": "トピックを検索...",
+  "searchResultEmpty": "検索結果はありません",
   "temp": "一時的",
   "title": "トピック"
 }

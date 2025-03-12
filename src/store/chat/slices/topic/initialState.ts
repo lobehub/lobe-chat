@@ -4,6 +4,7 @@ export interface ChatTopicState {
   // TODO: need to add the null to the type
   activeTopicId?: string;
   creatingTopic: boolean;
+  inSearchingMode?: boolean;
   isSearchingTopic: boolean;
   searchTopics: ChatTopic[];
   topicLoadingIds: string[];

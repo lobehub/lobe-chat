@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-03-12",
+    "version": "1.70.9"
+  },
+  {
     "children": {
       "fixes": ["Fix theme flicking."]
     },
