@@ -32,6 +32,7 @@
     "title": "Themenliste"
   },
   "searchPlaceholder": "Themen suchen...",
+  "searchResultEmpty": "Keine Suchergebnisse vorhanden",
   "temp": "Vorübergehend",
   "title": "Thema"
 }
