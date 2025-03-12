@@ -2,6 +2,73 @@
 
 # Changelog
 
+### [Version 1.70.10](https://github.com/lobehub/lobe-chat/compare/v1.70.9...v1.70.10)
+
+<sup>Released on **2025-03-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: The agent setting `-edit_agent` not work.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: The agent setting `-edit_agent` not work, closes [#4609](https://github.com/lobehub/lobe-chat/issues/4609) ([7af0ec6](https://github.com/lobehub/lobe-chat/commit/7af0ec6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.70.9](https://github.com/lobehub/lobe-chat/compare/v1.70.8...v1.70.9)
+
+<sup>Released on **2025-03-12**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.70.8](https://github.com/lobehub/lobe-chat/compare/v1.70.7...v1.70.8)
+
+<sup>Released on **2025-03-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix theme flicking.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix theme flicking, closes [#6926](https://github.com/lobehub/lobe-chat/issues/6926) ([103c3e3](https://github.com/lobehub/lobe-chat/commit/103c3e3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.70.7](https://github.com/lobehub/lobe-chat/compare/v1.70.6...v1.70.7)
 
 <sup>Released on **2025-03-12**</sup>

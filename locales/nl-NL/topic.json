@@ -32,6 +32,7 @@
     "title": "Onderwerpenlijst"
   },
   "searchPlaceholder": "Zoek onderwerpen...",
+  "searchResultEmpty": "Geen zoekresultaten gevonden",
   "temp": "Tijdelijk",
   "title": "Onderwerp"
 }
