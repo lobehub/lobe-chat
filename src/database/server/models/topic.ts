@@ -1,5 +1,5 @@
 import { count, sql } from 'drizzle-orm';
-import { and, desc, eq, gt, inArray, isNull, like } from 'drizzle-orm/expressions';
+import { and, desc, eq, gt, ilike, inArray, isNull } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
 import {
@@ -85,7 +85,7 @@ export class TopicModel {
       where: and(
         eq(topics.userId, this.userId),
         this.matchSession(sessionId),
-        like(topics.title, `%${keywordLowerCase}%`),
+        ilike(topics.title, `%${keywordLowerCase}%`),
       ),
     });
 
@@ -97,7 +97,7 @@ export class TopicModel {
       .where(
         and(
           eq(messages.userId, this.userId),
-          like(messages.content, `%${keywordLowerCase}%`),
+          ilike(messages.content, `%${keywordLowerCase}%`),
           eq(topics.userId, this.userId),
           this.matchSession(sessionId),
         ),
