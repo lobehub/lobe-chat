@@ -174,7 +174,7 @@ export class UserModel {
     // if user already exists, skip creation
     if (params.id) {
       const user = await db.query.users.findFirst({ where: eq(users.id, params.id) });
-      if (!!user) return;
+      if (!!user) return { duplicate: true };
     }
 
     const [user] = await db
@@ -182,7 +182,7 @@ export class UserModel {
       .values({ ...params })
       .returning();
 
-    return user;
+    return { duplicate: false, user };
   };
 
   static deleteUser = async (db: LobeChatDatabase, id: string) => {
