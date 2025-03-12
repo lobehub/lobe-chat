@@ -39,9 +39,6 @@ export const userSettings = pgTable('user_settings', {
     .primaryKey(),
 
   tts: jsonb('tts'),
-  /**
-   * @deprecated
-   */
   keyVaults: text('key_vaults'),
   general: jsonb('general'),
   languageModel: jsonb('language_model'),
