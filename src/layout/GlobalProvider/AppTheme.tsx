@@ -14,7 +14,11 @@ import Link from 'next/link';
 import { ReactNode, memo, useEffect } from 'react';
 
 import AntdStaticMethods from '@/components/AntdStaticMethods';
-import { LOBE_THEME_NEUTRAL_COLOR, LOBE_THEME_PRIMARY_COLOR } from '@/const/theme';
+import {
+  LOBE_THEME_APPEARANCE,
+  LOBE_THEME_NEUTRAL_COLOR,
+  LOBE_THEME_PRIMARY_COLOR,
+} from '@/const/theme';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
@@ -125,6 +129,11 @@ const AppTheme = memo<AppThemeProps>(
           primaryColor: primaryColor ?? defaultPrimaryColor,
         }}
         defaultAppearance={defaultAppearance}
+        onAppearanceChange={(appearance) => {
+          if (themeMode !== 'auto') return;
+
+          setCookie(LOBE_THEME_APPEARANCE, appearance);
+        }}
         theme={{
           cssVar: true,
           token: {
