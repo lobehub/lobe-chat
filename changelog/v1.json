@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix crawl result for short content."]
+    },
+    "date": "2025-03-12",
+    "version": "1.70.7"
+  },
+  {
+    "children": {
       "fixes": ["Link jump in mobile terminal data statistics."]
     },
     "date": "2025-03-11",
