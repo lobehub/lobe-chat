@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["The agent setting -edit_agent not work."]
+    },
+    "date": "2025-03-12",
+    "version": "1.70.10"
+  },
+  {
     "children": {},
     "date": "2025-03-12",
     "version": "1.70.9"
