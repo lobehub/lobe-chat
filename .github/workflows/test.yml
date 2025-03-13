@@ -14,7 +14,6 @@ jobs:
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
 
-
         ports:
           - 5432:5432
 
@@ -31,11 +30,6 @@ jobs:
 
       - name: Lint
         run: bun run lint
-
-      - name: Build with Bundle Analysis
-        run: bun run build:analyze
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Test Server Coverage
         run: bun run test-server:coverage
