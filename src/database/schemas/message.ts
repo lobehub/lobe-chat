@@ -73,6 +73,9 @@ export const messages = pgTable(
       table.clientId,
       table.userId,
     ),
+    topicIdIdx: index('messages_topic_id_idx').on(table.topicId),
+    parentIdIdx: index('messages_parent_id_idx').on(table.parentId),
+    quotaIdIdx: index('messages_quota_id_idx').on(table.quotaId),
   }),
 );
 

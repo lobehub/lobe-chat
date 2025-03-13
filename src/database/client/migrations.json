@@ -313,5 +313,15 @@
     "bps": true,
     "folderMillis": 1739901891891,
     "hash": "78d8fefd8c58938d7bc3da2295a73b35ce2e8d7cb2820f8e817acdb8dd5bebb2"
+  },
+  {
+    "sql": [
+      "CREATE INDEX \"messages_topic_id_idx\" ON \"messages\" USING btree (\"topic_id\");",
+      "\nCREATE INDEX \"messages_parent_id_idx\" ON \"messages\" USING btree (\"parent_id\");",
+      "\nCREATE INDEX \"messages_quota_id_idx\" ON \"messages\" USING btree (\"quota_id\");"
+    ],
+    "bps": true,
+    "folderMillis": 1741844738677,
+    "hash": "f2fc4639bb0b00ca4ed0861d8d3eeaef55810e0e0910f8f3f4277b0912bbe588"
   }
 ]
