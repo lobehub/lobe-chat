@@ -2,6 +2,7 @@ name: '🌠 Feature Request'
 description: 'Suggest an idea'
 title: '[Request] '
 labels: ['🌠 Feature Request']
+type: Feature
 body:
   - type: textarea
     attributes:
