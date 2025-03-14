@@ -1,11 +1,7 @@
 import { ChatMessageError } from '@/types/message/chat';
 import { ChatImageItem } from '@/types/message/image';
-import { MessageToolCall } from '@/types/message/tools';
+import { ChatToolPayload, MessageToolCall } from '@/types/message/tools';
 import { GroundingSearch } from '@/types/search';
-
-
-
-
 
 export interface CitationItem {
   id?: string;
@@ -114,4 +110,5 @@ export interface UpdateMessageParams {
   role?: string;
   search?: GroundingSearch;
   toolCalls?: MessageToolCall[];
+  tools?: ChatToolPayload[] | null;
 }
