@@ -13,12 +13,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - name: Install dbdocs
+        run: sudo npm install -g dbdocs
 
       - name: Check dbdocs
         run: dbdocs
 
-      - name: sync database schema to dbdocs project
+      - name: sync database schema to dbdocs
         env:
           DBDOCS_TOKEN: ${{ secrets.DBDOCS_TOKEN }}
         run: npm run db:visualize
