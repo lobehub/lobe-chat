@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
     branches:
       - dev
@@ -17,7 +18,7 @@ jobs:
       - name: Check dbdocs
         run: dbdocs
 
-      - name: sync database  dbdocs project
+      - name: sync database schema to dbdocs project
         env:
           DBDOCS_TOKEN: ${{ secrets.DBDOCS_TOKEN }}
         run: npm run db:visualize
