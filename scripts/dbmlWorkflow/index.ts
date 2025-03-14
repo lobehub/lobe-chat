@@ -7,3 +7,5 @@ const out = join(__dirname,'../../docs/developer/database-schema.dbml');
 const relational = true;
 
 pgGenerate({ out, relational, schema });
+
+console.log('🏁 dbml generated successful!');
