@@ -316,12 +316,12 @@
   },
   {
     "sql": [
-      "CREATE INDEX \"messages_topic_id_idx\" ON \"messages\" USING btree (\"topic_id\");",
-      "\nCREATE INDEX \"messages_parent_id_idx\" ON \"messages\" USING btree (\"parent_id\");",
-      "\nCREATE INDEX \"messages_quota_id_idx\" ON \"messages\" USING btree (\"quota_id\");"
+      "CREATE INDEX IF NOT EXISTS \"messages_topic_id_idx\" ON \"messages\" USING btree (\"topic_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"messages_parent_id_idx\" ON \"messages\" USING btree (\"parent_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"messages_quota_id_idx\" ON \"messages\" USING btree (\"quota_id\");\n"
     ],
     "bps": true,
     "folderMillis": 1741844738677,
-    "hash": "f2fc4639bb0b00ca4ed0861d8d3eeaef55810e0e0910f8f3f4277b0912bbe588"
+    "hash": "2a7a98be2e49361391444d6fabf3fb5db0bcb6a65e5540e9c3d426ceeb1f7f3a"
   }
 ]
