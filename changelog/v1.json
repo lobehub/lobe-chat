@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "features": ["Support gemini image output in chat."]
+    },
+    "date": "2025-03-14",
+    "version": "1.71.0"
+  },
+  {
     "children": {},
     "date": "2025-03-13",
     "version": "1.70.11"
