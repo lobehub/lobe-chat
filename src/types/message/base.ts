@@ -26,11 +26,16 @@ export interface ModelTokensUsage {
    */
   inputCitationTokens?: number;
   /**
+   * user prompt image
+   */
+  inputImageTokens?: number;
+  /**
    * user prompt input
    */
   inputTextTokens?: number;
   inputWriteCacheTokens?: number;
   outputAudioTokens?: number;
+  outputImageTokens?: number;
   outputReasoningTokens?: number;
   outputTextTokens?: number;
   rejectedPredictionTokens?: number;

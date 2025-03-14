@@ -1,5 +1,6 @@
 import { EnhancedGenerateContentResponse } from '@google/generative-ai';
 
+import { ModelTokensUsage } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
 import { nanoid } from '@/utils/uuid';
 
@@ -66,11 +67,33 @@ const transformGoogleGenerativeAIStream = (
       ];
     }
 
-    if (!!text?.trim()) return { data: text, id: context?.id, type: 'text' };
-
     if (candidate.finishReason) {
+      if (chunk.usageMetadata) {
+        const usage = chunk.usageMetadata;
+        return [
+          { data: candidate.finishReason, id: context?.id, type: 'stop' },
+          {
+            data: {
+              // TODO: Google SDK 0.24.0 don't have promptTokensDetails types
+              inputImageTokens: (usage as any).promptTokensDetails?.find(
+                (i: any) => i.modality === 'IMAGE',
+              )?.tokenCount,
+              inputTextTokens: (usage as any).promptTokensDetails?.find(
+                (i: any) => i.modality === 'TEXT',
+              )?.tokenCount,
+              totalInputTokens: usage.promptTokenCount,
+              totalOutputTokens: usage.candidatesTokenCount,
+              totalTokens: usage.totalTokenCount,
+            } as ModelTokensUsage,
+            id: context?.id,
+            type: 'usage',
+          },
+        ];
+      }
       return { data: candidate.finishReason, id: context?.id, type: 'stop' };
     }
+
+    if (!!text?.trim()) return { data: text, id: context?.id, type: 'text' };
 
     // streaming the image
     if (Array.isArray(candidate.content.parts) && candidate.content.parts.length > 0) {
