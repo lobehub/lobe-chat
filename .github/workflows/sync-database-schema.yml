@@ -10,15 +10,14 @@ on:
 
 jobs:
   build:
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
-  steps:
-    - uses: actions/checkout@v2
+      - name: Check dbdocs
+        run: dbdocs
 
-    - name: Check dbdocs
-      run: dbdocs
-
-    - name: sync database  dbdocs project
-      env:
-        DBDOCS_TOKEN: ${{ secrets.DBDOCS_TOKEN }}
-      run: npm run db:visualize
+      - name: sync database  dbdocs project
+        env:
+          DBDOCS_TOKEN: ${{ secrets.DBDOCS_TOKEN }}
+        run: npm run db:visualize
