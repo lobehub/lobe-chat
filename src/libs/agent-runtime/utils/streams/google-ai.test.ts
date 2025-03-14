@@ -94,4 +94,103 @@ describe('GoogleGenerativeAIStream', () => {
 
     expect(chunks).toEqual([]);
   });
+
+  it('should handle image', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = {
+      candidates: [
+        {
+          content: {
+            parts: [{ inlineData: { mimeType: 'image/png', data: 'iVBORw0KGgoAA' } }],
+            role: 'model',
+          },
+          index: 0,
+        },
+      ],
+      usageMetadata: {
+        promptTokenCount: 6,
+        totalTokenCount: 6,
+        promptTokensDetails: [{ modality: 'TEXT', tokenCount: 6 }],
+      },
+      modelVersion: 'gemini-2.0-flash-exp',
+    };
+    const mockGenerateContentResponse = (text: string, functionCalls?: any[]) =>
+      ({
+        text: () => text,
+        functionCall: () => functionCalls?.[0],
+        functionCalls: () => functionCalls,
+      }) as EnhancedGenerateContentResponse;
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(data);
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      // image
+      'id: chat_1\n',
+      'event: base64_image\n',
+      `data: "data:image/png;base64,iVBORw0KGgoAA"\n\n`,
+    ]);
+  });
+
+  it('should handle token count', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = {
+      candidates: [{ content: { role: 'model' }, finishReason: 'STOP', index: 0 }],
+      usageMetadata: {
+        promptTokenCount: 266,
+        totalTokenCount: 266,
+        promptTokensDetails: [
+          { modality: 'TEXT', tokenCount: 8 },
+          { modality: 'IMAGE', tokenCount: 258 },
+        ],
+      },
+      modelVersion: 'gemini-2.0-flash-exp',
+    };
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(data);
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      // stop
+      'id: chat_1\n',
+      'event: stop\n',
+      `data: "STOP"\n\n`,
+      // usage
+      'id: chat_1\n',
+      'event: usage\n',
+      `data: {"inputImageTokens":258,"inputTextTokens":8,"totalInputTokens":266,"totalTokens":266}\n\n`,
+    ]);
+  });
 });

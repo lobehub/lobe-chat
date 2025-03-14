@@ -12,16 +12,16 @@ export const UserMessage = memo<
   ChatMessage & {
     editableContent: ReactNode;
   }
->(({ id, editableContent, content, ...res }) => {
+>(({ id, editableContent, content, imageList, fileList }) => {
   if (content === LOADING_FLAT) return <BubblesLoading />;
 
   return (
     <Flexbox gap={8} id={id}>
       {editableContent}
-      {res.imageList && res.imageList?.length > 0 && <ImageFileListViewer items={res.imageList} />}
-      {res.fileList && res.fileList?.length > 0 && (
+      {imageList && imageList?.length > 0 && <ImageFileListViewer items={imageList} />}
+      {fileList && fileList?.length > 0 && (
         <div style={{ marginTop: 8 }}>
-          <FileListViewer items={res.fileList} />
+          <FileListViewer items={fileList} />
         </div>
       )}
     </Flexbox>
