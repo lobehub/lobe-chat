@@ -38,7 +38,7 @@
     "db:generate": "drizzle-kit generate && npm run db:generate-client",
     "db:generate-client": "tsx ./scripts/migrateClientDB/compile-migrations.ts",
     "db:migrate": "MIGRATION_DB=1 tsx ./scripts/migrateServerDB/index.ts",
-    "db:visualize": "dbdocs build docs/developer/database-schema.dbml",
+    "db:visualize": "dbdocs build docs/developer/database-schema.dbml --project lobe-chat",
     "db:push": "drizzle-kit push",
     "db:push-test": "NODE_ENV=test drizzle-kit push",
     "db:studio": "drizzle-kit studio",
