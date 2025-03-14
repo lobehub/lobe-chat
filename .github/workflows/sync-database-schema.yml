@@ -5,9 +5,8 @@ on:
     branches:
       - main
       - dev
-  pull_request:
-    branches:
-      - dev
+    paths:
+      - 'docs/developer/database-schema.dbml'
 
 jobs:
   build:
