@@ -31,6 +31,9 @@ import { StreamingResponse } from '../utils/response';
 import { GoogleGenerativeAIStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 
+const modelsOffSafetySettings = new Set(['gemini-2.0-flash-exp']);
+const modelsWithModalities = new Set(['gemini-2.0-flash-exp']);
+
 export interface GoogleModelCard {
   displayName: string;
   inputTokenLimit: number;
@@ -50,8 +53,7 @@ enum HarmBlockThreshold {
 }
 
 function getThreshold(model: string): HarmBlockThreshold {
-  const useOFF = ['gemini-2.0-flash-exp'];
-  if (useOFF.includes(model)) {
+  if (modelsOffSafetySettings.has(model)) {
     return 'OFF' as HarmBlockThreshold; // https://discuss.ai.google.dev/t/59352
   }
   return HarmBlockThreshold.BLOCK_NONE;
@@ -94,6 +96,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           {
             generationConfig: {
               maxOutputTokens: payload.max_tokens,
+              // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
+              response_modalities: modelsWithModalities.has(model)
+                ? ['Text', 'Image']
+                : undefined,
               temperature: payload.temperature,
               topP: payload.top_p,
             },

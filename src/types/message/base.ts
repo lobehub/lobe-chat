@@ -1,4 +1,11 @@
+import { ChatMessageError } from '@/types/message/chat';
+import { ChatImageItem } from '@/types/message/image';
+import { MessageToolCall } from '@/types/message/tools';
 import { GroundingSearch } from '@/types/search';
+
+
+
+
 
 export interface CitationItem {
   id?: string;
@@ -61,7 +68,6 @@ export interface MessageItem {
   search: GroundingSearch | null;
   sessionId: string | null;
   threadId: string | null;
-  // jsonb type
   tools: any | null;
   topicId: string | null;
   // jsonb type
@@ -95,4 +101,17 @@ export interface NewMessage {
   // optional because it's generated
   updatedAt?: Date;
   userId: string; // optional because it's generated
+}
+
+export interface UpdateMessageParams {
+  content?: string;
+  error?: ChatMessageError | null;
+  imageList?: ChatImageItem[];
+  metadata?: MessageMetadata;
+  model?: string;
+  provider?: string;
+  reasoning?: ModelReasoning;
+  role?: string;
+  search?: GroundingSearch;
+  toolCalls?: MessageToolCall[];
 }
