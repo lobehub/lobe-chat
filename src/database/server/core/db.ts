@@ -1,13 +1,21 @@
+import { PGlite } from '@electric-sql/pglite';
 import { Pool as NeonPool, neonConfig } from '@neondatabase/serverless';
 import { NeonDatabase, drizzle as neonDrizzle } from 'drizzle-orm/neon-serverless';
 import { drizzle as nodeDrizzle } from 'drizzle-orm/node-postgres';
+import { drizzle as pgliteDrizzle } from 'drizzle-orm/pglite';
 import { Pool as NodePool } from 'pg';
 import ws from 'ws';
 
 import { serverDBEnv } from '@/config/db';
-import { isServerMode } from '@/const/version';
+import { isDesktop, isServerMode } from '@/const/version';
 
 import * as schema from '../../schemas';
+
+export const getPgliteInstance = () => {
+  const client = new PGlite('lobechat-db');
+
+  return pgliteDrizzle({ client, schema }) as unknown as NeonDatabase<typeof schema>;
+};
 
 export const getDBInstance = (): NeonDatabase<typeof schema> => {
   if (!isServerMode) return {} as any;
@@ -41,4 +49,4 @@ If you don't have it, please run \`openssl rand -base64 32\` to create one.
   return neonDrizzle(client, { schema });
 };
 
-export const serverDB = getDBInstance();
+export const serverDB = isDesktop ? getPgliteInstance() : getDBInstance();
