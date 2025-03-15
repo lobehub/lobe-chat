@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix knowledge base issue."]
+    },
+    "date": "2025-03-15",
+    "version": "1.71.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix google gemini output relative issue."],
       "improvements": ["Update Vertex AI models."]
     },
