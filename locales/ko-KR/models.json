@@ -836,6 +836,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash 모델 변형으로, 비용 효율성과 저지연 등의 목표를 위해 최적화되었습니다."
   },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Gemini 2.0 Flash 실험 모델, 이미지 생성을 지원합니다."
+  },
   "gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 플래시 모델 변형으로, 비용 효율성과 낮은 지연 시간 등의 목표를 위해 최적화되었습니다."
   },

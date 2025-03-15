@@ -836,6 +836,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Biến thể mô hình Gemini 2.0 Flash, được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
   },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Mô hình thử nghiệm Gemini 2.0 Flash, hỗ trợ tạo hình ảnh"
+  },
   "gemini-2.0-flash-lite": {
     "description": "Biến thể mô hình Gemini 2.0 Flash được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
   },
