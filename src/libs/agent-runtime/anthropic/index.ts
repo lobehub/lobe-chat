@@ -25,6 +25,8 @@ export interface AnthropicModelCard {
   id: string;
 }
 
+const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
+
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
 
 interface AnthropicAIParams extends ClientOptions {
@@ -132,7 +134,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     return {
       // claude 3 series model hax max output token of 4096, 3.x series has 8192
       // https://docs.anthropic.com/en/docs/about-claude/models/all-models#:~:text=200K-,Max%20output,-Normal%3A
-      max_tokens: max_tokens ?? (model.startsWith('claude-3-') ? 4096 : 8192),
+      max_tokens: max_tokens ?? (modelsWithSmallContextWindow.has(model) ? 4096 : 8192),
       messages: postMessages,
       model,
       system: systemPrompts,
