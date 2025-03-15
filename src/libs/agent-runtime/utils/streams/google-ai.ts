@@ -71,6 +71,7 @@ const transformGoogleGenerativeAIStream = (
       if (chunk.usageMetadata) {
         const usage = chunk.usageMetadata;
         return [
+          { data: text, id: context?.id, type: 'text' },
           { data: candidate.finishReason, id: context?.id, type: 'stop' },
           {
             data: {
