@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fix google gemini output relative issue."],
+      "improvements": ["Update Vertex AI models."]
+    },
+    "date": "2025-03-15",
+    "version": "1.71.1"
+  },
+  {
+    "children": {
       "features": ["Support gemini image output in chat."]
     },
     "date": "2025-03-14",
