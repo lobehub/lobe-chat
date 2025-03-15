@@ -23,7 +23,6 @@ import {
   OpenAIChatMessage,
   UserMessageContentPart,
 } from '../types';
-import { ModelProvider } from '../types/type';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
@@ -77,6 +76,7 @@ interface LobeGoogleAIParams {
   apiKey?: string;
   baseURL?: string;
   client?: GoogleGenerativeAI | VertexAI;
+  id?: string;
   isVertexAi?: boolean;
 }
 
@@ -85,8 +85,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   private isVertexAi: boolean;
   baseURL?: string;
   apiKey?: string;
+  provider: string;
 
-  constructor({ apiKey, baseURL, client, isVertexAi }: LobeGoogleAIParams = {}) {
+  constructor({ apiKey, baseURL, client, isVertexAi, id }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
@@ -94,6 +95,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     this.client = client ? (client as GoogleGenerativeAI) : new GoogleGenerativeAI(apiKey);
     this.baseURL = client ? undefined : baseURL || DEFAULT_BASE_URL;
     this.isVertexAi = isVertexAi || false;
+
+    this.provider = id || (isVertexAi ? 'vertexai' : 'google');
   }
 
   async chat(rawPayload: ChatStreamPayload, options?: ChatCompetitionOptions) {
@@ -168,7 +171,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       console.log(err);
       const { errorType, error } = this.parseErrorMessage(err.message);
 
-      throw AgentRuntimeError.chat({ error, errorType, provider: ModelProvider.Google });
+      throw AgentRuntimeError.chat({ error, errorType, provider: this.provider });
     }
   }
 

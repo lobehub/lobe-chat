@@ -38,6 +38,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   apiKey?: string;
   private id: string;
 
+  private isDebug() {
+    return process.env.DEBUG_ANTHROPIC_CHAT_COMPLETION === '1';
+  }
+
   constructor({ apiKey, baseURL = DEFAULT_BASE_URL, id, ...res }: AnthropicAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
@@ -51,6 +55,11 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     try {
       const anthropicPayload = await this.buildAnthropicPayload(payload);
 
+      if (this.isDebug()) {
+        console.log('[requestPayload]');
+        console.log(JSON.stringify(anthropicPayload), '\n');
+      }
+
       const response = await this.client.messages.create(
         { ...anthropicPayload, stream: true },
         {
@@ -60,7 +69,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
       const [prod, debug] = response.tee();
 
-      if (process.env.DEBUG_ANTHROPIC_CHAT_COMPLETION === '1') {
+      if (this.isDebug()) {
         debugStream(debug.toReadableStream()).catch(console.error);
       }
 
