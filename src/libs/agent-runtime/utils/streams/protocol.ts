@@ -32,6 +32,8 @@ export interface StreamProtocolChunk {
   id?: string;
   type: // pure text
   | 'text'
+    // base64 format image
+    | 'base64_image'
     // Tools use
     | 'tool_calls'
     // Model Thinking

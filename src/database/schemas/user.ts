@@ -39,9 +39,6 @@ export const userSettings = pgTable('user_settings', {
     .primaryKey(),
 
   tts: jsonb('tts'),
-  /**
-   * @deprecated
-   */
   keyVaults: text('key_vaults'),
   general: jsonb('general'),
   languageModel: jsonb('language_model'),
@@ -51,7 +48,7 @@ export const userSettings = pgTable('user_settings', {
 });
 export type UserSettingsItem = typeof userSettings.$inferSelect;
 
-export const installedPlugins = pgTable(
+export const userInstalledPlugins = pgTable(
   'user_installed_plugins',
   {
     userId: text('user_id')
@@ -71,5 +68,5 @@ export const installedPlugins = pgTable(
   }),
 );
 
-export type NewInstalledPlugin = typeof installedPlugins.$inferInsert;
-export type InstalledPluginItem = typeof installedPlugins.$inferSelect;
+export type NewInstalledPlugin = typeof userInstalledPlugins.$inferInsert;
+export type InstalledPluginItem = typeof userInstalledPlugins.$inferSelect;

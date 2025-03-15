@@ -19,12 +19,7 @@ import { filesPrompts } from '@/prompts/files';
 import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
 import { getAgentStoreState } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
-import {
-  aiModelSelectors,
-  aiProviderSelectors,
-  getAiInfraStoreState,
-  useAiInfraStore,
-} from '@/store/aiInfra';
+import { aiModelSelectors, aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { getSessionStoreState } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { getToolStoreState } from '@/store/tool';
@@ -37,6 +32,7 @@ import {
   userProfileSelectors,
 } from '@/store/user/selectors';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
+import { WorkingModel } from '@/types/agent';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
@@ -74,9 +70,9 @@ const findDeploymentName = (model: string, provider: string) => {
     if (deploymentName) deploymentId = deploymentName;
   } else {
     // find the model by id
-    const modelItem = useAiInfraStore
-      .getState()
-      .enabledAiModels?.find((i) => i.id === model && i.providerId === provider);
+    const modelItem = getAiInfraStoreState().enabledAiModels?.find(
+      (i) => i.id === model && i.providerId === provider,
+    );
 
     if (modelItem && modelItem.config?.deploymentName) {
       deploymentId = modelItem.config?.deploymentName;
@@ -91,7 +87,7 @@ const isEnableFetchOnClient = (provider: string) => {
   if (isDeprecatedEdition) {
     return modelConfigSelectors.isProviderFetchOnClient(provider)(useUserStore.getState());
   } else {
-    return aiProviderSelectors.isProviderFetchOnClient(provider)(useAiInfraStore.getState());
+    return aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());
   }
 };
 
@@ -181,10 +177,10 @@ class ChatService {
     const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
       payload.model,
       payload.provider!,
-    )(useAiInfraStore.getState());
+    )(getAiInfraStoreState());
 
-    const useApplicationBuiltinSearchTool =
-      enabledSearch && !(isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch);
+    const useModelSearch = isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch;
+    const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
     const pluginIds = [...(enabledPlugins || [])];
 
@@ -206,17 +202,10 @@ class ChatService {
 
     // ============  2. preprocess tools   ============ //
 
-    let filterTools = toolSelectors.enabledSchema(pluginIds)(getToolStoreState());
-
-    // check this model can use function call
-    const canUseFC = isCanUseFC(payload.model, payload.provider!);
-
-    // the rule that model can use tools:
-    // 1. tools is not empty
-    // 2. model can use function call
-    const shouldUseTools = filterTools.length > 0 && canUseFC;
-
-    const tools = shouldUseTools ? filterTools : undefined;
+    const tools = this.prepareTools(pluginIds, {
+      model: payload.model,
+      provider: payload.provider!,
+    });
 
     // ============  3. process extend params   ============ //
 
@@ -225,14 +214,14 @@ class ChatService {
     const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
       payload.model,
       payload.provider!,
-    )(useAiInfraStore.getState());
+    )(getAiInfraStoreState());
 
     // model
     if (isModelHasExtendParams) {
       const modelExtendParams = aiModelSelectors.modelExtendParams(
         payload.model,
         payload.provider!,
-      )(useAiInfraStore.getState());
+      )(getAiInfraStoreState());
       // if model has extended params, then we need to check if the model can use reasoning
 
       if (modelExtendParams!.includes('enableReasoning') && chatConfig.enableReasoning) {
@@ -241,13 +230,19 @@ class ChatService {
           type: 'enabled',
         };
       }
+      if (
+        modelExtendParams!.includes('disableContextCaching') &&
+        chatConfig.disableContextCaching
+      ) {
+        extendParams.enabledContextCaching = false;
+      }
     }
 
     return this.getChatCompletion(
       {
         ...params,
         ...extendParams,
-        enabledSearch: enabledSearch && isModelHasBuiltinSearch ? true : undefined,
+        enabledSearch: enabledSearch && useModelSearch ? true : undefined,
         messages: oaiMessages,
         tools,
       },
@@ -351,9 +346,8 @@ class ChatService {
 
     // TODO: remove `!isDeprecatedEdition` condition in V2.0
     if (!isDeprecatedEdition && !isBuiltin) {
-      const providerConfig = aiProviderSelectors.providerConfigById(provider)(
-        useAiInfraStore.getState(),
-      );
+      const providerConfig =
+        aiProviderSelectors.providerConfigById(provider)(getAiInfraStoreState());
 
       sdkType = providerConfig?.settings.sdkType || 'openai';
     }
@@ -433,15 +427,31 @@ class ChatService {
     onLoadingChange?.(true);
 
     try {
-      await this.getChatCompletion(params, {
-        onErrorHandle: (error) => {
-          errorHandle(new Error(error.message), error);
-        },
-        onFinish,
-        onMessageHandle,
-        signal: abortController?.signal,
-        trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+      const oaiMessages = this.processMessages({
+        messages: params.messages as any,
+        model: params.model!,
+        provider: params.provider!,
+        tools: params.plugins,
       });
+      const tools = this.prepareTools(params.plugins || [], {
+        model: params.model!,
+        provider: params.provider!,
+      });
+
+      // remove plugins
+      delete params.plugins;
+      await this.getChatCompletion(
+        { ...params, messages: oaiMessages, tools },
+        {
+          onErrorHandle: (error) => {
+            errorHandle(new Error(error.message), error);
+          },
+          onFinish,
+          onMessageHandle,
+          signal: abortController?.signal,
+          trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+        },
+      );
 
       onLoadingChange?.(false);
     } catch (e) {
@@ -451,7 +461,7 @@ class ChatService {
 
   private processMessages = (
     {
-      messages,
+      messages = [],
       tools,
       model,
       provider,
@@ -466,7 +476,7 @@ class ChatService {
     // handle content type for vision model
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
-    const getContent = (m: ChatMessage) => {
+    const getUserContent = (m: ChatMessage) => {
       // only if message doesn't have images and files, then return the plain content
       if ((!m.imageList || m.imageList.length === 0) && (!m.fileList || m.fileList.length === 0))
         return m.content;
@@ -482,27 +492,50 @@ class ChatService {
       ] as UserMessageContentPart[];
     };
 
+    const getAssistantContent = (m: ChatMessage) => {
+      // signature is a signal of anthropic thinking mode
+      const shouldIncludeThinking = m.reasoning && !!m.reasoning?.signature;
+
+      if (shouldIncludeThinking) {
+        return [
+          {
+            signature: m.reasoning!.signature,
+            thinking: m.reasoning!.content,
+            type: 'thinking',
+          },
+          { text: m.content, type: 'text' },
+        ] as UserMessageContentPart[];
+      }
+      // only if message doesn't have images and files, then return the plain content
+
+      if (m.imageList && m.imageList.length > 0) {
+        return [
+          !!m.content ? { text: m.content, type: 'text' } : undefined,
+          ...m.imageList.map(
+            (i) => ({ image_url: { detail: 'auto', url: i.url }, type: 'image_url' }) as const,
+          ),
+        ].filter(Boolean) as UserMessageContentPart[];
+      }
+
+      return m.content;
+    };
+
     let postMessages = messages.map((m): OpenAIChatMessage => {
+      const supportTools = isCanUseFC(model, provider);
       switch (m.role) {
         case 'user': {
-          return { content: getContent(m), role: m.role };
+          return { content: getUserContent(m), role: m.role };
         }
 
         case 'assistant': {
-          // signature is a signal of anthropic thinking mode
-          const shouldIncludeThinking = m.reasoning && !!m.reasoning?.signature;
+          const content = getAssistantContent(m);
+
+          if (!supportTools) {
+            return { content, role: m.role };
+          }
 
           return {
-            content: shouldIncludeThinking
-              ? [
-                  {
-                    signature: m.reasoning!.signature,
-                    thinking: m.reasoning!.content,
-                    type: 'thinking',
-                  } as any,
-                  { text: m.content, type: 'text' },
-                ]
-              : m.content,
+            content,
             role: m.role,
             tool_calls: m.tools?.map(
               (tool): MessageToolCall => ({
@@ -518,6 +551,10 @@ class ChatService {
         }
 
         case 'tool': {
+          if (!supportTools) {
+            return { content: m.content, role: 'user' };
+          }
+
           return {
             content: m.content,
             name: genToolCallingName(m.plugin!.identifier, m.plugin!.apiName, m.plugin?.type),
@@ -668,6 +705,20 @@ class ChatService {
     });
 
     return reorderedMessages;
+  };
+
+  private prepareTools = (pluginIds: string[], { model, provider }: WorkingModel) => {
+    let filterTools = toolSelectors.enabledSchema(pluginIds)(getToolStoreState());
+
+    // check this model can use function call
+    const canUseFC = isCanUseFC(model, provider!);
+
+    // the rule that model can use tools:
+    // 1. tools is not empty
+    // 2. model can use function call
+    const shouldUseTools = filterTools.length > 0 && canUseFC;
+
+    return shouldUseTools ? filterTools : undefined;
   };
 }
 

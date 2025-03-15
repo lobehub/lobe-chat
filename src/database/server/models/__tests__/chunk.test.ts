@@ -495,13 +495,13 @@ content in Table html is below:
     });
 
     // 测试结果限制
-    it('should limit results to 5 items', async () => {
+    it('should limit results to 15 items', async () => {
       const fileId = '1';
-      // Create 6 chunks
+      // Create 24 chunks
       const chunkResult = await serverDB
         .insert(chunks)
         .values(
-          Array(6)
+          Array(24)
             .fill(0)
             .map((_, i) => ({ text: `Test Chunk ${i}`, userId })),
         )
@@ -528,7 +528,7 @@ content in Table html is below:
         query: 'test',
       });
 
-      expect(result).toHaveLength(5);
+      expect(result).toHaveLength(15);
     });
   });
 });

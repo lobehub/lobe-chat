@@ -32,6 +32,7 @@
     "title": "Lista de temas"
   },
   "searchPlaceholder": "Buscar temas...",
+  "searchResultEmpty": "No hay resultados de búsqueda disponibles",
   "temp": "Temporal",
   "title": "Tema"
 }

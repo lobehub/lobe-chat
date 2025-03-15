@@ -11,6 +11,8 @@ export class ClientService extends BaseClientService implements IFileService {
   }
 
   createFile: IFileService['createFile'] = async (file) => {
+    const { isExist } = await this.fileModel.checkHash(file.hash!);
+
     // save to local storage
     // we may want to save to a remote server later
     const res = await this.fileModel.create(
@@ -23,7 +25,7 @@ export class ClientService extends BaseClientService implements IFileService {
         size: file.size,
         url: file.url!,
       },
-      true,
+      !isExist,
     );
 
     // get file to base64 url

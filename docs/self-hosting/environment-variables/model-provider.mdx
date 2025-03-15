@@ -94,7 +94,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `AZURE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `id->deplymentName=displayName` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `id->deploymentName=displayName` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `gpt-35-turbo->my-deploy=GPT 3.5 Turbo` 或 `gpt-4-turbo->my-gpt4=GPT 4 Turbo<128000:vision:fc>`
 
@@ -182,6 +182,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Description: This is the API key you applied for in the DeepSeek AI service
 - Default: -
 - Example: `sk-xxxxxx...xxxxxx`
+
+### `DEEPSEEK_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=displayName` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+deepseek-reasoner`
 
 ## XAI
 
@@ -425,6 +432,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: `-`
 - Example: `-all,+qwen-turbo-latest,+qwen-plus-latest`
 
+### `QWEN_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Qwen API proxy, you can use this configuration item to override the default Qwen API request base URL
+- Default: `https://dashscope.aliyuncs.com/compatible-mode/v1`
+- Example: `https://my-qwen-proxy.com/v1`
+
 ## Stepfun AI
 
 ### `STEPFUN_API_KEY`
@@ -555,9 +569,9 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `VOLCENGINE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
 - Default: `-`
-- Example: `-all,+deepseek-r1-250120,+deepseek-v3-241226,+doubao-1-5-pro-256k-250115,+doubao-1-5-pro-32k-250115,+doubao-1-5-lite-32k-250115`
+- Example: `-all,+deepseek-r1->deepseek-r1-250120,+deepseek-v3->deepseek-v3-241226,+doubao-1.5-pro-256k->doubao-1-5-pro-256k-250115,+doubao-1.5-pro-32k->doubao-1-5-pro-32k-250115,+doubao-1.5-lite-32k->doubao-1-5-lite-32k-250115`
 
 
 [model-list]: /docs/self-hosting/advanced/model-list

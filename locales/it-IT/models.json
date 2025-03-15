@@ -506,6 +506,9 @@
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet offre capacità superiori rispetto a Opus e una velocità maggiore rispetto a Sonnet, mantenendo lo stesso prezzo di Sonnet. Sonnet è particolarmente abile in programmazione, scienza dei dati, elaborazione visiva e compiti di agenzia."
   },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet è il modello più intelligente di Anthropic fino ad oggi ed è il primo modello di ragionamento ibrido sul mercato. Claude 3.7 Sonnet può generare risposte quasi istantanee o pensieri prolungati e graduali, consentendo agli utenti di vedere chiaramente questi processi. Sonnet è particolarmente abile nella programmazione, nella scienza dei dati, nell'elaborazione visiva e nei compiti di agenzia."
+  },
   "aya": {
     "description": "Aya 23 è un modello multilingue lanciato da Cohere, supporta 23 lingue, facilitando applicazioni linguistiche diversificate."
   },
@@ -829,6 +832,12 @@
   },
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash offre funzionalità e miglioramenti di nuova generazione, tra cui velocità eccezionale, utilizzo di strumenti nativi, generazione multimodale e una finestra di contesto di 1M token."
+  },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash è una variante del modello ottimizzata per obiettivi come il rapporto costo-efficacia e la bassa latenza."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Modello sperimentale Gemini 2.0 Flash, supporta la generazione di immagini"
   },
   "gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flash è una variante del modello Flash, ottimizzata per obiettivi come il rapporto costo-efficacia e la bassa latenza."

@@ -67,4 +67,15 @@ export const crawUrlRules: CrawlUrlRule[] = [
     impls: ['jina'],
     urlPattern: 'https://developer.mozilla.org(.*)',
   },
+  // cvpr thecvf
+  {
+    impls: ['jina'],
+    urlPattern: 'https://cvpr.thecvf.com(.*)',
+  },
+  // 飞书用 jina
+  // https://github.com/lobehub/lobe-chat/issues/6879
+  {
+    impls: ['jina'],
+    urlPattern: 'https://(.*).feishu.cn/(.*)',
+  },
 ];

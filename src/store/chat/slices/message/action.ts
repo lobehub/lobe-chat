@@ -21,6 +21,7 @@ import {
   MessageToolCall,
   ModelReasoning,
 } from '@/types/message';
+import { ChatImageItem } from '@/types/message/image';
 import { GroundingSearch } from '@/types/search';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
@@ -81,6 +82,9 @@ export interface ChatMessageAction {
       reasoning?: ModelReasoning;
       search?: GroundingSearch;
       metadata?: MessageMetadata;
+      imageList?: ChatImageItem[];
+      model?: string;
+      provider?: string;
     },
   ) => Promise<void>;
   /**
@@ -302,7 +306,11 @@ export const chatMessage: StateCreator<
         value: { tools: internal_transformToolCalls(extra?.toolCalls) },
       });
     } else {
-      internal_dispatchMessage({ id, type: 'updateMessage', value: { content } });
+      internal_dispatchMessage({
+        id,
+        type: 'updateMessage',
+        value: { content },
+      });
     }
 
     await messageService.updateMessage(id, {
@@ -311,6 +319,9 @@ export const chatMessage: StateCreator<
       reasoning: extra?.reasoning,
       search: extra?.search,
       metadata: extra?.metadata,
+      model: extra?.model,
+      provider: extra?.provider,
+      imageList: extra?.imageList,
     });
     await refreshMessages();
   },
