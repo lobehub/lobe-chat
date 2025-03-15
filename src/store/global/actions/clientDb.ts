@@ -43,8 +43,18 @@ export const clientDBSlice: StateCreator<
       },
     });
   },
-  markPgliteEnabled: () => {
+  markPgliteEnabled: async () => {
     get().updateSystemStatus({ isEnablePglite: true });
+
+    if (navigator.storage && !!navigator.storage.persist) {
+      // 1. Check if persistent permission has been obtained
+      const isPersisted = await navigator.storage.persisted();
+
+      // 2. If the persistent permission has not been obtained, request permission
+      if (!isPersisted) {
+        await navigator.storage.persist();
+      }
+    }
   },
   useInitClientDB: (params) =>
     useOnlyFetchOnceSWR('initClientDB', () => get().initializeClientDB(params)),

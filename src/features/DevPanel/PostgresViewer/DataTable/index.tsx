@@ -5,6 +5,8 @@ import React from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import { mutate } from 'swr';
 
+import { exportService } from '@/services/export';
+
 import Header from '../../features/Header';
 import Table from '../../features/Table';
 import { FETCH_TABLE_DATA_KEY, usePgTable, useTableColumns } from '../usePgTable';
@@ -40,6 +42,10 @@ const DataTable = ({ tableName }: DataTableProps) => {
           {
             icon: Download,
             title: 'Export',
+            onClick:async () => {
+          const data = await exportService.exportData();
+          console.log(data);
+        }
           },
           {
             icon: RefreshCw,
