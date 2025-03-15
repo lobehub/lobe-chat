@@ -836,6 +836,9 @@
   "gemini-2.0-flash-exp": {
     "description": "Gemini 2.0 Flash-Modellvariante, die auf Kosteneffizienz und niedrige Latenz optimiert ist."
   },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Gemini 2.0 Flash Experimentmodell, das die Bildgenerierung unterstützt"
+  },
   "gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flash ist eine Modellvariante, die auf Kosteneffizienz und niedrige Latenz optimiert ist."
   },
