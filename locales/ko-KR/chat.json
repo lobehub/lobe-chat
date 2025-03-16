@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} 복사본",
   "emptyAgent": "도우미가 없습니다",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "단일 대화 생성 비용을 최대 90%까지 줄이고, 응답 속도를 4배 향상시킵니다 (<1>자세히 알아보기</1>). 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
+      "title": "문맥 캐시 활성화"
+    },
+    "enableReasoning": {
+      "desc": "Claude Thinking 메커니즘에 기반한 제한 (<1>자세히 알아보기</1>), 활성화하면 자동으로 이전 메시지 수 제한이 비활성화됩니다.",
+      "title": "심층 사고 활성화"
+    },
+    "reasoningBudgetToken": {
+      "title": "사고 소모 토큰"
+    },
+    "title": "모델 확장 기능"
+  },
+  "history": {
+    "title": "도우미는 마지막 {{count}}개의 메시지만 기억합니다."
+  },
   "historyRange": "대화 기록 범위",
   "historySummary": "역사 메시지 요약",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "Enter 키로 전송",
     "stop": "중지",
     "warp": "줄바꿈"
+  },
+  "intentUnderstanding": {
+    "title": "귀하의 의도를 이해하고 분석하는 중입니다..."
   },
   "knowledgeBase": {
     "all": "모든 내용",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "하위 주제가 존재하여 삭제할 수 없습니다.",
     "regenerate": "다시 생성"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "포인트",
+      "creditPricing": "가격",
+      "creditTooltip": "계산을 용이하게 하기 위해, 1$를 1M 포인트로 환산합니다. 예를 들어, $3/M 토큰은 3포인트/토큰으로 환산됩니다.",
+      "pricing": {
+        "inputCachedTokens": "캐시된 입력 {{amount}}/포인트 · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M 문자",
+        "inputMinutes": "${{amount}}/분",
+        "inputTokens": "입력 {{amount}}/포인트 · ${{amount}}/M",
+        "outputTokens": "출력 {{amount}}/포인트 · ${{amount}}/M",
+        "writeCacheInputTokens": "캐시 입력 쓰기 {{amount}}/포인트 · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "평균 단가",
+      "input": "입력",
+      "inputAudio": "오디오 입력",
+      "inputCached": "입력 캐시",
+      "inputCitation": "입력 인용",
+      "inputText": "텍스트 입력",
+      "inputTitle": "입력 세부사항",
+      "inputUncached": "입력 비캐시",
+      "inputWriteCached": "입력 캐시 쓰기",
+      "output": "출력",
+      "outputAudio": "오디오 출력",
+      "outputText": "텍스트 출력",
+      "outputTitle": "출력 세부사항",
+      "reasoning": "심층 사고",
+      "title": "생성 세부사항",
+      "total": "총 소모"
+    }
+  },
   "newAgent": "새 도우미",
   "pin": "고정",
   "pinOff": "고정 해제",
@@ -84,6 +137,32 @@
   },
   "regenerate": "재생성",
   "roleAndArchive": "역할 및 아카이브",
+  "search": {
+    "grounding": {
+      "searchQueries": "검색 키워드",
+      "title": "{{count}}개의 결과가 검색되었습니다"
+    },
+    "mode": {
+      "auto": {
+        "desc": "대화 내용을 기반으로 검색 필요성을 스마트하게 판단",
+        "title": "스마트 연결"
+      },
+      "off": {
+        "desc": "모델의 기본 지식만 사용하고 네트워크 검색을 수행하지 않음",
+        "title": "연결 끄기"
+      },
+      "on": {
+        "desc": "지속적으로 네트워크 검색을 수행하여 최신 정보를 얻음",
+        "title": "항상 연결"
+      },
+      "useModelBuiltin": "모델 내장 검색 엔진 사용"
+    },
+    "searchModel": {
+      "desc": "현재 모델은 함수 호출을 지원하지 않으므로 함수 호출을 지원하는 모델과 함께 사용해야 인터넷 검색이 가능합니다.",
+      "title": "검색 보조 모델"
+    },
+    "title": "연결 검색"
+  },
   "searchAgentPlaceholder": "검색 도우미...",
   "sendPlaceholder": "채팅 내용 입력...",
   "sessionGroup": {

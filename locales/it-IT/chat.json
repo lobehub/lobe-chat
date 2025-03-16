@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "Nessun assistente disponibile",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "Il costo di generazione di una singola conversazione può essere ridotto fino al 90%, con una velocità di risposta aumentata di 4 volte (<1>Scopri di più</1>). Attivando questa opzione, verrà disabilitato automaticamente il limite sul numero di messaggi storici.",
+      "title": "Attiva la cache del contesto"
+    },
+    "enableReasoning": {
+      "desc": "Limitazioni basate sul meccanismo di pensiero di Claude (<1>Scopri di più</1>), attivando questa opzione verrà disabilitato automaticamente il limite sul numero di messaggi storici.",
+      "title": "Attiva il pensiero profondo"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token di consumo del pensiero"
+    },
+    "title": "Funzionalità di estensione del modello"
+  },
+  "history": {
+    "title": "L'assistente ricorderà solo gli ultimi {{count}} messaggi"
+  },
   "historyRange": "Intervallo cronologico",
   "historySummary": "Riepilogo della storia",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "Invia premendo Invio",
     "stop": "Ferma",
     "warp": "A capo"
+  },
+  "intentUnderstanding": {
+    "title": "Stiamo comprendendo e analizzando la tua intenzione..."
   },
   "knowledgeBase": {
     "all": "Tutti i contenuti",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "Esistono sottoargomenti, non è possibile eliminare",
     "regenerate": "Rigenera"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Crediti",
+      "creditPricing": "Prezzo",
+      "creditTooltip": "Per facilitare il conteggio, consideriamo 1$ equivalente a 1M crediti, ad esempio $3/M token equivalgono a 3 crediti/token",
+      "pricing": {
+        "inputCachedTokens": "Input memorizzato {{amount}}/crediti · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M caratteri",
+        "inputMinutes": "${{amount}}/minuto",
+        "inputTokens": "Input {{amount}}/crediti · ${{amount}}/M",
+        "outputTokens": "Output {{amount}}/crediti · ${{amount}}/M",
+        "writeCacheInputTokens": "Scrittura cache input {{amount}}/crediti · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Prezzo medio",
+      "input": "Input",
+      "inputAudio": "Input audio",
+      "inputCached": "Input memorizzato",
+      "inputCitation": "Citazione input",
+      "inputText": "Input testo",
+      "inputTitle": "Dettagli input",
+      "inputUncached": "Input non memorizzato",
+      "inputWriteCached": "Scrittura cache input",
+      "output": "Output",
+      "outputAudio": "Output audio",
+      "outputText": "Output testo",
+      "outputTitle": "Dettagli output",
+      "reasoning": "Ragionamento profondo",
+      "title": "Dettagli generati",
+      "total": "Totale consumato"
+    }
+  },
   "newAgent": "Nuovo assistente",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio in alto",
@@ -84,6 +137,32 @@
   },
   "regenerate": "Rigenera",
   "roleAndArchive": "Ruolo e archivio",
+  "search": {
+    "grounding": {
+      "searchQueries": "Parole chiave di ricerca",
+      "title": "Trovati {{count}} risultati"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Determina intelligentemente se è necessario cercare in base al contenuto della conversazione",
+        "title": "Collegamento intelligente"
+      },
+      "off": {
+        "desc": "Utilizza solo la conoscenza di base del modello, senza effettuare ricerche online",
+        "title": "Disattiva collegamento"
+      },
+      "on": {
+        "desc": "Esegue continuamente ricerche online per ottenere le informazioni più recenti",
+        "title": "Collegamento sempre attivo"
+      },
+      "useModelBuiltin": "Utilizza il motore di ricerca integrato del modello"
+    },
+    "searchModel": {
+      "desc": "Il modello attuale non supporta le chiamate di funzione, quindi è necessario utilizzarlo insieme a un modello che supporti le chiamate di funzione per cercare online",
+      "title": "Modello di ricerca assistita"
+    },
+    "title": "Ricerca online"
+  },
   "searchAgentPlaceholder": "Assistente di ricerca...",
   "sendPlaceholder": "Inserisci il testo della chat...",
   "sessionGroup": {

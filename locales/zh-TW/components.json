@@ -76,7 +76,9 @@
       "custom": "自訂模型，預設支援函式呼叫與視覺辨識，請根據實際情況驗證上述能力的可用性",
       "file": "該模型支援上傳檔案讀取與辨識",
       "functionCall": "該模型支援函式呼叫（Function Call）",
+      "imageOutput": "該模型支援生成圖片",
       "reasoning": "該模型支持深度思考",
+      "search": "該模型支援聯網搜尋",
       "tokens": "該模型單一會話最多支援 {{tokens}} Tokens",
       "vision": "該模型支援視覺辨識"
     },
@@ -84,6 +86,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "沒有啟用的模型，請前往設定開啟",
+    "emptyProvider": "沒有啟用的服務商，請前往設定開啟",
+    "goToSettings": "前往設定",
     "provider": "提供商"
   },
   "OllamaSetupGuide": {

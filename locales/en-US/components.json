@@ -76,7 +76,9 @@
       "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual situations.",
       "file": "This model supports file upload for reading and recognition.",
       "functionCall": "This model supports function call.",
+      "imageOutput": "This model supports image generation",
       "reasoning": "This model supports deep thinking",
+      "search": "This model supports online search",
       "tokens": "This model supports up to {{tokens}} tokens in a single session.",
       "vision": "This model supports visual recognition."
     },
@@ -84,6 +86,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "No enabled model. Please go to settings to enable.",
+    "emptyProvider": "No enabled providers. Please go to settings to enable one.",
+    "goToSettings": "Go to settings",
     "provider": "Provider"
   },
   "OllamaSetupGuide": {
@@ -111,8 +115,8 @@
     }
   },
   "Thinking": {
-    "thinking": "Deep in thought...",
-    "thought": "Deeply thought (took {{duration}} seconds)",
-    "thoughtWithDuration": "Deeply thought"
+    "thinking": "Deep Thinking...",
+    "thought": "Deeply Thought (in {{duration}} seconds)",
+    "thoughtWithDuration": "Deeply Thought"
   }
 }

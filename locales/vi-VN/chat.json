@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} Bản sao",
   "emptyAgent": "Không có trợ lý",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "Chi phí tạo ra một cuộc hội thoại đơn lẻ có thể giảm tới 90%, tốc độ phản hồi tăng gấp 4 lần (<1>Tìm hiểu thêm</1>). Khi bật, sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
+      "title": "Bật bộ nhớ ngữ cảnh"
+    },
+    "enableReasoning": {
+      "desc": "Giới hạn dựa trên cơ chế Claude Thinking (<1>Tìm hiểu thêm</1>), khi bật sẽ tự động vô hiệu hóa giới hạn số lượng tin nhắn lịch sử",
+      "title": "Bật tư duy sâu sắc"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token tiêu tốn cho tư duy"
+    },
+    "title": "Chức năng mở rộng mô hình"
+  },
+  "history": {
+    "title": "Trợ lý sẽ chỉ nhớ {{count}} tin nhắn cuối cùng"
+  },
   "historyRange": "Phạm vi lịch sử",
   "historySummary": "Tóm tắt tin tức lịch sử",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "Nhấn Enter để gửi",
     "stop": "Dừng",
     "warp": "Xuống dòng"
+  },
+  "intentUnderstanding": {
+    "title": "Đang hiểu và phân tích ý định của bạn..."
   },
   "knowledgeBase": {
     "all": "Tất cả nội dung",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "Có chủ đề con, không thể xóa",
     "regenerate": "Tạo lại"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Điểm",
+      "creditPricing": "Định giá",
+      "creditTooltip": "Để thuận tiện cho việc tính toán, chúng tôi quy đổi 1$ thành 1M điểm, ví dụ $3/M token sẽ được quy đổi thành 3 điểm/token",
+      "pricing": {
+        "inputCachedTokens": "Nhập cached {{amount}}/điểm · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M ký tự",
+        "inputMinutes": "${{amount}}/phút",
+        "inputTokens": "Nhập {{amount}}/điểm · ${{amount}}/M",
+        "outputTokens": "Xuất {{amount}}/điểm · ${{amount}}/M",
+        "writeCacheInputTokens": "Ghi vào bộ nhớ đệm đầu vào {{amount}}/điểm · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Giá trung bình",
+      "input": "Nhập",
+      "inputAudio": "Âm thanh nhập",
+      "inputCached": "Nhập cached",
+      "inputCitation": "Trích dẫn đầu vào",
+      "inputText": "Văn bản nhập",
+      "inputTitle": "Chi tiết nhập",
+      "inputUncached": "Nhập chưa cached",
+      "inputWriteCached": "Ghi vào bộ nhớ đệm đầu vào",
+      "output": "Xuất",
+      "outputAudio": "Âm thanh xuất",
+      "outputText": "Văn bản xuất",
+      "outputTitle": "Chi tiết xuất",
+      "reasoning": "Suy nghĩ sâu sắc",
+      "title": "Chi tiết tạo ra",
+      "total": "Tổng tiêu thụ"
+    }
+  },
   "newAgent": "Tạo trợ lý mới",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
@@ -84,6 +137,32 @@
   },
   "regenerate": "Tạo lại",
   "roleAndArchive": "Vai trò và lưu trữ",
+  "search": {
+    "grounding": {
+      "searchQueries": "Từ khóa tìm kiếm",
+      "title": "Đã tìm thấy {{count}} kết quả"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Thông minh xác định xem có cần tìm kiếm dựa trên nội dung cuộc trò chuyện",
+        "title": "Kết nối thông minh"
+      },
+      "off": {
+        "desc": "Chỉ sử dụng kiến thức cơ bản của mô hình, không thực hiện tìm kiếm trên mạng",
+        "title": "Tắt kết nối"
+      },
+      "on": {
+        "desc": "Tiếp tục tìm kiếm trên mạng để có thông tin mới nhất",
+        "title": "Luôn kết nối"
+      },
+      "useModelBuiltin": "Sử dụng công cụ tìm kiếm tích hợp của mô hình"
+    },
+    "searchModel": {
+      "desc": "Mô hình hiện tại không hỗ trợ gọi hàm, vì vậy cần kết hợp với mô hình hỗ trợ gọi hàm để tìm kiếm trực tuyến",
+      "title": "Mô hình hỗ trợ tìm kiếm"
+    },
+    "title": "Tìm kiếm trực tuyến"
+  },
   "searchAgentPlaceholder": "Trợ lý tìm kiếm...",
   "sendPlaceholder": "Nhập nội dung trò chuyện...",
   "sessionGroup": {

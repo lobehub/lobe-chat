@@ -1,6 +1,51 @@
+import { ChatMessageError } from '@/types/message/chat';
+import { ChatImageItem } from '@/types/message/image';
+import { ChatToolPayload, MessageToolCall } from '@/types/message/tools';
+import { GroundingSearch } from '@/types/search';
+
+export interface CitationItem {
+  id?: string;
+  onlyUrl?: boolean;
+  title?: string;
+  url: string;
+}
+
 export interface ModelReasoning {
   content?: string;
   duration?: number;
+  signature?: string;
+}
+
+export interface ModelTokensUsage {
+  acceptedPredictionTokens?: number;
+  inputAudioTokens?: number;
+  inputCacheMissTokens?: number;
+  inputCachedTokens?: number;
+  /**
+   * currently only pplx has citation_tokens
+   */
+  inputCitationTokens?: number;
+  /**
+   * user prompt image
+   */
+  inputImageTokens?: number;
+  /**
+   * user prompt input
+   */
+  inputTextTokens?: number;
+  inputWriteCacheTokens?: number;
+  outputAudioTokens?: number;
+  outputImageTokens?: number;
+  outputReasoningTokens?: number;
+  outputTextTokens?: number;
+  rejectedPredictionTokens?: number;
+  totalInputTokens?: number;
+  totalOutputTokens?: number;
+  totalTokens?: number;
+}
+
+export interface MessageMetadata extends ModelTokensUsage {
+  tps?: number;
 }
 
 export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';
@@ -13,6 +58,7 @@ export interface MessageItem {
   error: any | null;
   favorite: boolean | null;
   id: string;
+  metadata?: MessageMetadata | null;
   model: string | null;
   observationId: string | null;
   parentId: string | null;
@@ -20,9 +66,9 @@ export interface MessageItem {
   quotaId: string | null;
   reasoning: ModelReasoning | null;
   role: string;
+  search: GroundingSearch | null;
   sessionId: string | null;
   threadId: string | null;
-  // jsonb type
   tools: any | null;
   topicId: string | null;
   // jsonb type
@@ -56,4 +102,18 @@ export interface NewMessage {
   // optional because it's generated
   updatedAt?: Date;
   userId: string; // optional because it's generated
+}
+
+export interface UpdateMessageParams {
+  content?: string;
+  error?: ChatMessageError | null;
+  imageList?: ChatImageItem[];
+  metadata?: MessageMetadata;
+  model?: string;
+  provider?: string;
+  reasoning?: ModelReasoning;
+  role?: string;
+  search?: GroundingSearch;
+  toolCalls?: MessageToolCall[];
+  tools?: ChatToolPayload[] | null;
 }

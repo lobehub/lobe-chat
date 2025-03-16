@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} のコピー",
   "emptyAgent": "エージェントがいません",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "単一の対話生成コストは最大90%削減され、応答速度は4倍向上します（<1>詳細はこちら</1>）。有効にすると、過去のメッセージ数制限が自動的に無効になります。",
+      "title": "コンテキストキャッシュを有効にする"
+    },
+    "enableReasoning": {
+      "desc": "Claude Thinkingメカニズムに基づく制限（<1>詳細はこちら</1>）により、有効にすると過去のメッセージ数制限が自動的に無効になります。",
+      "title": "深い思考を有効にする"
+    },
+    "reasoningBudgetToken": {
+      "title": "思考消費トークン"
+    },
+    "title": "モデル拡張機能"
+  },
+  "history": {
+    "title": "アシスタントは最後の{{count}}件のメッセージのみを記憶します"
+  },
   "historyRange": "履歴範囲",
   "historySummary": "履歴メッセージの要約",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "Enter キーで送信",
     "stop": "停止",
     "warp": "改行"
+  },
+  "intentUnderstanding": {
+    "title": "あなたの意図を理解し、分析しています..."
   },
   "knowledgeBase": {
     "all": "すべてのコンテンツ",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "サブトピックが存在するため、削除できません。",
     "regenerate": "再生成"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "クレジット",
+      "creditPricing": "価格設定",
+      "creditTooltip": "カウントを容易にするために、1ドルを1Mクレジットに換算します。例えば、$3/Mトークンは3クレジット/トークンに相当します。",
+      "pricing": {
+        "inputCachedTokens": "キャッシュ入力 {{amount}}/クレジット · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M 文字",
+        "inputMinutes": "${{amount}}/分",
+        "inputTokens": "入力 {{amount}}/クレジット · ${{amount}}/M",
+        "outputTokens": "出力 {{amount}}/クレジット · ${{amount}}/M",
+        "writeCacheInputTokens": "キャッシュ入力の書き込み {{amount}}/ポイント · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "平均単価",
+      "input": "入力",
+      "inputAudio": "音声入力",
+      "inputCached": "キャッシュ入力",
+      "inputCitation": "引用入力",
+      "inputText": "テキスト入力",
+      "inputTitle": "入力の詳細",
+      "inputUncached": "未キャッシュ入力",
+      "inputWriteCached": "入力キャッシュ書き込み",
+      "output": "出力",
+      "outputAudio": "音声出力",
+      "outputText": "テキスト出力",
+      "outputTitle": "出力の詳細",
+      "reasoning": "深い思考",
+      "title": "生成の詳細",
+      "total": "合計消費"
+    }
+  },
   "newAgent": "新しいエージェント",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",
@@ -84,6 +137,32 @@
   },
   "regenerate": "再生成",
   "roleAndArchive": "役割とアーカイブ",
+  "search": {
+    "grounding": {
+      "searchQueries": "検索キーワード",
+      "title": "検索結果が {{count}} 件見つかりました"
+    },
+    "mode": {
+      "auto": {
+        "desc": "会話の内容に基づいて、検索が必要かどうかを自動的に判断します",
+        "title": "インテリジェント接続"
+      },
+      "off": {
+        "desc": "モデルの基本知識のみを使用し、ネット検索は行いません",
+        "title": "接続をオフ"
+      },
+      "on": {
+        "desc": "最新情報を取得するために継続的にネット検索を行います",
+        "title": "常に接続"
+      },
+      "useModelBuiltin": "モデル内蔵の検索エンジンを使用"
+    },
+    "searchModel": {
+      "desc": "現在のモデルは関数呼び出しをサポートしていないため、関数呼び出しをサポートするモデルと組み合わせてネット検索を行う必要があります",
+      "title": "検索補助モデル"
+    },
+    "title": "ネット接続検索"
+  },
   "searchAgentPlaceholder": "検索アシスタント...",
   "sendPlaceholder": "チャット内容を入力してください...",
   "sessionGroup": {

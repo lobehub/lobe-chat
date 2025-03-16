@@ -5,7 +5,6 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
-import Footer from '../Footer';
 import ToolRender from './ToolRender';
 
 const ToolUI = () => {
@@ -25,12 +24,9 @@ const ToolUI = () => {
   if (!args) return;
 
   return (
-    <>
-      <Flexbox flex={1} height={'100%'} paddingInline={12} style={{ overflow: 'auto' }}>
-        <ToolRender />
-      </Flexbox>
-      <Footer />
-    </>
+    <Flexbox flex={1} height={'100%'} paddingInline={12} style={{ overflow: 'auto' }}>
+      <ToolRender />
+    </Flexbox>
   );
 };
 

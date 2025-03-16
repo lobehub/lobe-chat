@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "No hay asistente disponible",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "El costo de generación de una sola conversación puede reducirse hasta en un 90%, y la velocidad de respuesta se incrementa 4 veces (<1>Más información</1>). Al activarlo, se desactivará automáticamente el límite de mensajes históricos",
+      "title": "Activar caché de contexto"
+    },
+    "enableReasoning": {
+      "desc": "Basado en las restricciones del mecanismo Claude Thinking (<1>Más información</1>), al activarlo se desactivará automáticamente el límite de mensajes históricos",
+      "title": "Activar el pensamiento profundo"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token de consumo de pensamiento"
+    },
+    "title": "Funcionalidad de extensión del modelo"
+  },
+  "history": {
+    "title": "El asistente solo recordará los últimos {{count}} mensajes"
+  },
   "historyRange": "Rango de historial",
   "historySummary": "Resumen de mensajes históricos",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "Enviar con Enter",
     "stop": "Detener",
     "warp": "Salto de línea"
+  },
+  "intentUnderstanding": {
+    "title": "Entendiendo y analizando su intención..."
   },
   "knowledgeBase": {
     "all": "Todo el contenido",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "Existen subtemas, no se puede eliminar",
     "regenerate": "Regenerar"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Créditos",
+      "creditPricing": "Precios",
+      "creditTooltip": "Para facilitar el conteo, convertimos 1$ en 1M créditos, por ejemplo, $3/M tokens se convierte en 3 créditos/token",
+      "pricing": {
+        "inputCachedTokens": "Entradas en caché {{amount}}/créditos · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M caracteres",
+        "inputMinutes": "${{amount}}/minuto",
+        "inputTokens": "Entradas {{amount}}/créditos · ${{amount}}/M",
+        "outputTokens": "Salidas {{amount}}/créditos · ${{amount}}/M",
+        "writeCacheInputTokens": "Escritura en caché de entrada {{amount}}/puntos · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Precio promedio",
+      "input": "Entrada",
+      "inputAudio": "Entrada de audio",
+      "inputCached": "Entrada en caché",
+      "inputCitation": "Citación de entrada",
+      "inputText": "Entrada de texto",
+      "inputTitle": "Detalles de entrada",
+      "inputUncached": "Entrada no en caché",
+      "inputWriteCached": "Escritura en caché de entrada",
+      "output": "Salida",
+      "outputAudio": "Salida de audio",
+      "outputText": "Salida de texto",
+      "outputTitle": "Detalles de salida",
+      "reasoning": "Razonamiento profundo",
+      "title": "Detalles de generación",
+      "total": "Total consumido"
+    }
+  },
   "newAgent": "Nuevo asistente",
   "pin": "Fijar",
   "pinOff": "Desfijar",
@@ -84,6 +137,32 @@
   },
   "regenerate": "Regenerar",
   "roleAndArchive": "Rol y archivo",
+  "search": {
+    "grounding": {
+      "searchQueries": "Palabras clave de búsqueda",
+      "title": "Se han encontrado {{count}} resultados"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Determina inteligentemente si se necesita buscar según el contenido de la conversación",
+        "title": "Conexión inteligente"
+      },
+      "off": {
+        "desc": "Utiliza solo el conocimiento básico del modelo, sin realizar búsquedas en línea",
+        "title": "Desactivar conexión"
+      },
+      "on": {
+        "desc": "Realiza búsquedas en línea continuamente para obtener la información más reciente",
+        "title": "Siempre conectado"
+      },
+      "useModelBuiltin": "Utilizar el motor de búsqueda integrado del modelo"
+    },
+    "searchModel": {
+      "desc": "El modelo actual no admite llamadas a funciones, por lo que se necesita combinarlo con un modelo que admita llamadas a funciones para realizar búsquedas en línea",
+      "title": "Modelo de búsqueda auxiliar"
+    },
+    "title": "Búsqueda en línea"
+  },
   "searchAgentPlaceholder": "Asistente de búsqueda...",
   "sendPlaceholder": "Escribe tu mensaje...",
   "sessionGroup": {

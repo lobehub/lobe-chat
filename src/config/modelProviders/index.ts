@@ -30,6 +30,7 @@ import OllamaProvider from './ollama';
 import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
+import PPIOProvider from './ppio';
 import QwenProvider from './qwen';
 import SambaNovaProvider from './sambanova';
 import SenseNovaProvider from './sensenova';
@@ -40,6 +41,7 @@ import TaichuProvider from './taichu';
 import TencentcloudProvider from './tencentcloud';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
+import VertexAIProvider from './vertexai';
 import VLLMProvider from './vllm';
 import VolcengineProvider from './volcengine';
 import WenxinProvider from './wenxin';
@@ -91,6 +93,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   SenseNovaProvider.chatModels,
   InternLMProvider.chatModels,
   HigressProvider.chatModels,
+  PPIOProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -102,12 +105,14 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   AnthropicProvider,
   BedrockProvider,
   GoogleProvider,
+  VertexAIProvider,
   DeepSeekProvider,
   HuggingFaceProvider,
   OpenRouterProvider,
   CloudflareProvider,
   GithubProvider,
   NovitaProvider,
+  PPIOProvider,
   NvidiaProvider,
   TogetherAIProvider,
   FireworksAIProvider,
@@ -146,7 +151,7 @@ export const filterEnabledModels = (provider: ModelProviderCard) => {
   return provider.chatModels.filter((v) => v.enabled).map((m) => m.id);
 };
 
-export const isProviderDisableBroswerRequest = (id: string) => {
+export const isProviderDisableBrowserRequest = (id: string) => {
   const provider = DEFAULT_MODEL_PROVIDER_LIST.find((v) => v.id === id && v.disableBrowserRequest);
   return !!provider;
 };
@@ -181,6 +186,7 @@ export { default as OllamaProviderCard } from './ollama';
 export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
+export { default as PPIOProviderCard } from './ppio';
 export { default as QwenProviderCard } from './qwen';
 export { default as SambaNovaProviderCard } from './sambanova';
 export { default as SenseNovaProviderCard } from './sensenova';
@@ -191,6 +197,7 @@ export { default as TaichuProviderCard } from './taichu';
 export { default as TencentCloudProviderCard } from './tencentcloud';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
+export { default as VertexAIProviderCard } from './vertexai';
 export { default as VLLMProviderCard } from './vllm';
 export { default as VolcengineProviderCard } from './volcengine';
 export { default as WenxinProviderCard } from './wenxin';

@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} Copy",
   "emptyAgent": "No assistant available",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "The cost of generating a single conversation can be reduced by up to 90%, and the response speed is increased by 4 times (<1>Learn more</1>). Enabling this will automatically disable the limit on the number of historical messages.",
+      "title": "Enable Context Caching"
+    },
+    "enableReasoning": {
+      "desc": "Based on the Claude Thinking mechanism limit (<1>Learn more</1>), enabling this will automatically disable the limit on the number of historical messages.",
+      "title": "Enable Deep Thinking"
+    },
+    "reasoningBudgetToken": {
+      "title": "Thinking Consumption Token"
+    },
+    "title": "Model Extension Features"
+  },
+  "history": {
+    "title": "The assistant will only remember the last {{count}} messages."
+  },
   "historyRange": "History Range",
   "historySummary": "Historical Message Summary",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "Press Enter to send",
     "stop": "Stop",
     "warp": "New Line"
+  },
+  "intentUnderstanding": {
+    "title": "Understanding and analyzing your intent..."
   },
   "knowledgeBase": {
     "all": "All Content",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
     "regenerate": "Regenerate"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Credits",
+      "creditPricing": "Pricing",
+      "creditTooltip": "For counting purposes, we convert $1 to 1M credits; for example, $3/M tokens can be converted to 3 credits/token.",
+      "pricing": {
+        "inputCachedTokens": "Cached input {{amount}}/credits · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M characters",
+        "inputMinutes": "${{amount}}/minute",
+        "inputTokens": "Input {{amount}}/credits · ${{amount}}/M",
+        "outputTokens": "Output {{amount}}/credits · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache input write {{amount}}/points · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Average unit price",
+      "input": "Input",
+      "inputAudio": "Audio Input",
+      "inputCached": "Cached Input",
+      "inputCitation": "Input citation",
+      "inputText": "Text Input",
+      "inputTitle": "Input Details",
+      "inputUncached": "Uncached Input",
+      "inputWriteCached": "Input cache write",
+      "output": "Output",
+      "outputAudio": "Audio Output",
+      "outputText": "Text Output",
+      "outputTitle": "Output Details",
+      "reasoning": "Deep Thinking",
+      "title": "Generation Details",
+      "total": "Total Consumption"
+    }
+  },
   "newAgent": "New Assistant",
   "pin": "Pin",
   "pinOff": "Unpin",
@@ -84,6 +137,32 @@
   },
   "regenerate": "Regenerate",
   "roleAndArchive": "Role and Archive",
+  "search": {
+    "grounding": {
+      "searchQueries": "Search Keywords",
+      "title": "Found {{count}} results"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Intelligently determine whether a search is needed based on the conversation content",
+        "title": "Smart Online Search"
+      },
+      "off": {
+        "desc": "Use only the model's basic knowledge without performing a web search",
+        "title": "Disable Online Search"
+      },
+      "on": {
+        "desc": "Continuously perform web searches to obtain the latest information",
+        "title": "Always Online"
+      },
+      "useModelBuiltin": "Use the model's built-in search engine"
+    },
+    "searchModel": {
+      "desc": "The current model does not support function calls, so it needs to be paired with a model that does support function calls for online searching.",
+      "title": "Search Assistant Model"
+    },
+    "title": "Online Search"
+  },
   "searchAgentPlaceholder": "Search assistants...",
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {

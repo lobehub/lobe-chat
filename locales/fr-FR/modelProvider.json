@@ -322,6 +322,16 @@
     "tooltip": "Mettre à jour la configuration de base du fournisseur",
     "updateSuccess": "Mise à jour réussie"
   },
+  "updateCustomAiProvider": {
+    "title": "Mettre à jour la configuration du fournisseur de services AI personnalisé"
+  },
+  "vertexai": {
+    "apiKey": {
+      "desc": "Entrez vos clés Vertex AI",
+      "placeholder": "{ \"type\": \"service_account\", \"project_id\": \"xxx\", \"private_key_id\": ... }",
+      "title": "Clés Vertex AI"
+    }
+  },
   "zeroone": {
     "title": "01.AI Zéro Un Tout"
   },

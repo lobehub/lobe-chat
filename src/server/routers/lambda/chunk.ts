@@ -1,3 +1,4 @@
+import { TRPCError } from '@trpc/server';
 import { inArray } from 'drizzle-orm/expressions';
 import { z } from 'zod';
 
@@ -126,60 +127,75 @@ export const chunkRouter = router({
   semanticSearchForChat: chunkProcedure
     .input(SemanticSearchSchema)
     .mutation(async ({ ctx, input }) => {
-      const item = await ctx.messageModel.findMessageQueriesById(input.messageId);
-      const { model, provider } =
-        getServerDefaultFilesConfig().embeddingModel || DEFAULT_FILE_EMBEDDING_MODEL_ITEM;
-      let embedding: number[];
-      let ragQueryId: string;
-      // if there is no message rag or it's embeddings, then we need to create one
-      if (!item || !item.embeddings) {
-        // TODO: need to support customize
-        const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
+      try {
+        const item = await ctx.messageModel.findMessageQueriesById(input.messageId);
+        const { model, provider } =
+          getServerDefaultFilesConfig().embeddingModel || DEFAULT_FILE_EMBEDDING_MODEL_ITEM;
+        let embedding: number[];
+        let ragQueryId: string;
 
-        const embeddings = await agentRuntime.embeddings({
-          dimensions: 1024,
-          input: input.rewriteQuery,
-          model,
+        // if there is no message rag or it's embeddings, then we need to create one
+        if (!item || !item.embeddings) {
+          // TODO: need to support customize
+          const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
+
+          // slice content to make sure in the context window limit
+          const query =
+            input.rewriteQuery.length > 8000
+              ? input.rewriteQuery.slice(0, 8000)
+              : input.rewriteQuery;
+
+          const embeddings = await agentRuntime.embeddings({
+            dimensions: 1024,
+            input: query,
+            model,
+          });
+
+          embedding = embeddings![0];
+          const embeddingsId = await ctx.embeddingModel.create({
+            embeddings: embedding,
+            model,
+          });
+
+          const result = await ctx.messageModel.createMessageQuery({
+            embeddingsId,
+            messageId: input.messageId,
+            rewriteQuery: input.rewriteQuery,
+            userQuery: input.userQuery,
+          });
+
+          ragQueryId = result.id;
+        } else {
+          embedding = item.embeddings;
+          ragQueryId = item.id;
+        }
+
+        let finalFileIds = input.fileIds ?? [];
+
+        if (input.knowledgeIds && input.knowledgeIds.length > 0) {
+          const knowledgeFiles = await serverDB.query.knowledgeBaseFiles.findMany({
+            where: inArray(knowledgeBaseFiles.knowledgeBaseId, input.knowledgeIds),
+          });
+
+          finalFileIds = knowledgeFiles.map((f) => f.fileId).concat(finalFileIds);
+        }
+
+        const chunks = await ctx.chunkModel.semanticSearchForChat({
+          embedding,
+          fileIds: finalFileIds,
+          query: input.rewriteQuery,
         });
 
-        embedding = embeddings![0];
-        const embeddingsId = await ctx.embeddingModel.create({
-          embeddings: embedding,
-          model,
-        });
+        // TODO: need to rerank the chunks
 
-        const result = await ctx.messageModel.createMessageQuery({
-          embeddingsId,
-          messageId: input.messageId,
-          rewriteQuery: input.rewriteQuery,
-          userQuery: input.userQuery,
-        });
+        return { chunks, queryId: ragQueryId };
+      } catch (e) {
+        console.error(e);
 
-        ragQueryId = result.id;
-      } else {
-        embedding = item.embeddings;
-        ragQueryId = item.id;
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: (e as any).errorType || JSON.stringify(e),
+        });
       }
-
-      console.time('semanticSearch');
-      let finalFileIds = input.fileIds ?? [];
-
-      if (input.knowledgeIds && input.knowledgeIds.length > 0) {
-        const knowledgeFiles = await serverDB.query.knowledgeBaseFiles.findMany({
-          where: inArray(knowledgeBaseFiles.knowledgeBaseId, input.knowledgeIds),
-        });
-
-        finalFileIds = knowledgeFiles.map((f) => f.fileId).concat(finalFileIds);
-      }
-
-      const chunks = await ctx.chunkModel.semanticSearchForChat({
-        embedding,
-        fileIds: finalFileIds,
-        query: input.rewriteQuery,
-      });
-      // TODO: need to rerank the chunks
-      console.timeEnd('semanticSearch');
-
-      return { chunks, queryId: ragQueryId };
     }),
 });

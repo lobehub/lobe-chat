@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Geen assistent beschikbaar",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "De kosten voor het genereren van een enkele conversatie kunnen met maximaal 90% worden verlaagd, en de responssnelheid kan tot 4 keer worden verhoogd (<1>Lees meer</1>). Wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
+      "title": "Contextcaching inschakelen"
+    },
+    "enableReasoning": {
+      "desc": "Beperkingen op basis van het Claude Thinking-mechanisme (<1>Lees meer</1>), wanneer ingeschakeld, wordt automatisch de limiet voor het aantal historische berichten uitgeschakeld.",
+      "title": "Diepe denkwijze inschakelen"
+    },
+    "reasoningBudgetToken": {
+      "title": "Denken verbruik Token"
+    },
+    "title": "Modeluitbreidingsfunctie"
+  },
+  "history": {
+    "title": "De assistent onthoudt alleen de laatste {{count}} berichten"
+  },
   "historyRange": "Geschiedenisbereik",
   "historySummary": "Geschiedenis samenvatting",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "Verzenden met Enter",
     "stop": "Stoppen",
     "warp": "Nieuwe regel"
+  },
+  "intentUnderstanding": {
+    "title": "Bezig met het begrijpen en analyseren van uw intentie..."
   },
   "knowledgeBase": {
     "all": "Alle inhoud",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "Er zijn subonderwerpen, verwijderen is niet mogelijk.",
     "regenerate": "Opnieuw genereren"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Credits",
+      "creditPricing": "Prijsstelling",
+      "creditTooltip": "Voor de eenvoud van de berekening beschouwen we $1 als 1M credits, bijvoorbeeld $3/M tokens wordt omgezet naar 3 credits/token",
+      "pricing": {
+        "inputCachedTokens": "Gecacheerde invoer {{amount}}/credits · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M tekens",
+        "inputMinutes": "${{amount}}/minuut",
+        "inputTokens": "Invoer {{amount}}/credits · ${{amount}}/M",
+        "outputTokens": "Uitvoer {{amount}}/credits · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache-invoer schrijven {{amount}}/punten · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Gemiddelde prijs",
+      "input": "Invoer",
+      "inputAudio": "Audio-invoer",
+      "inputCached": "Gecacheerde invoer",
+      "inputCitation": "Invoer citeren",
+      "inputText": "Tekstinvoer",
+      "inputTitle": "Invoerdetails",
+      "inputUncached": "Ongecacheerde invoer",
+      "inputWriteCached": "Invoer cache schrijven",
+      "output": "Uitvoer",
+      "outputAudio": "Audio-uitvoer",
+      "outputText": "Tekstuitvoer",
+      "outputTitle": "Uitvoerdetails",
+      "reasoning": "Diep nadenken",
+      "title": "Genereren van details",
+      "total": "Totaal verbruik"
+    }
+  },
   "newAgent": "Nieuwe assistent",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
@@ -84,6 +137,32 @@
   },
   "regenerate": "Opnieuw genereren",
   "roleAndArchive": "Rol en archief",
+  "search": {
+    "grounding": {
+      "searchQueries": "Zoekwoorden",
+      "title": "Er zijn {{count}} resultaten gevonden"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Intelligente beoordeling of er gezocht moet worden op basis van de gesprekinhoud",
+        "title": "Slimme verbinding"
+      },
+      "off": {
+        "desc": "Gebruik alleen de basiskennis van het model, zonder online zoekopdrachten",
+        "title": "Verbinding uitschakelen"
+      },
+      "on": {
+        "desc": "Voortdurend online zoeken voor de nieuwste informatie",
+        "title": "Altijd verbonden"
+      },
+      "useModelBuiltin": "Gebruik de ingebouwde zoekmachine van het model"
+    },
+    "searchModel": {
+      "desc": "Het huidige model ondersteunt geen functieaanroepen, dus het moet worden gecombineerd met een model dat functieaanroepen ondersteunt om online te zoeken",
+      "title": "Zoekhulpmiddel model"
+    },
+    "title": "Online zoeken"
+  },
   "searchAgentPlaceholder": "Zoekassistent...",
   "sendPlaceholder": "Voer chatbericht in...",
   "sessionGroup": {

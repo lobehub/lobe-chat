@@ -2,11 +2,14 @@ import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 
 import { ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ErrorType } from '@/types/fetch';
-import { MessageRoleType, ModelReasoning } from '@/types/message/base';
-import { ChatPluginPayload, ChatToolPayload } from '@/types/message/tools';
-import { Translate } from '@/types/message/translate';
 import { MetaData } from '@/types/meta';
 import { MessageSemanticSearchChunk } from '@/types/rag';
+import { GroundingSearch } from '@/types/search';
+
+import { MessageMetadata, MessageRoleType, ModelReasoning } from './base';
+import { ChatImageItem } from './image';
+import { ChatPluginPayload, ChatToolPayload } from './tools';
+import { Translate } from './translate';
 
 /**
  * 聊天消息错误对象
@@ -32,12 +35,6 @@ export interface ChatFileItem {
   id: string;
   name: string;
   size: number;
-  url: string;
-}
-
-export interface ChatImageItem {
-  alt: string;
-  id: string;
   url: string;
 }
 
@@ -80,16 +77,18 @@ export interface ChatMessage {
   imageList?: ChatImageItem[];
   meta: MetaData;
 
+  metadata?: MessageMetadata | null;
   /**
    * observation id
    */
   observationId?: string;
+
   /**
    * parent message id
    */
   parentId?: string;
-
   plugin?: ChatPluginPayload;
+  pluginError?: any;
   pluginState?: any;
   /**
    * quoted other message's id
@@ -97,14 +96,15 @@ export interface ChatMessage {
   quotaId?: string;
   ragQuery?: string | null;
   ragQueryId?: string | null;
+
   ragRawQuery?: string | null;
-
   reasoning?: ModelReasoning | null;
-
   /**
    * message role type
    */
   role: MessageRoleType;
+
+  search?: GroundingSearch | null;
   sessionId?: string;
   threadId?: string | null;
   tool_call_id?: string;

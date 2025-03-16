@@ -1,9 +1,11 @@
+import type { VertexAI } from '@google-cloud/vertexai';
 import {
   Content,
   FunctionCallPart,
   FunctionDeclaration,
   Tool as GoogleFunctionCallTool,
   GoogleGenerativeAI,
+  GoogleSearchRetrievalTool,
   Part,
   SchemaType,
 } from '@google/generative-ai';
@@ -21,12 +23,27 @@ import {
   OpenAIChatMessage,
   UserMessageContentPart,
 } from '../types';
-import { ModelProvider } from '../types/type';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { GoogleGenerativeAIStream, convertIterableToStream } from '../utils/streams';
+import {
+  GoogleGenerativeAIStream,
+  VertexAIStream,
+  convertIterableToStream,
+} from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
+
+const modelsOffSafetySettings = new Set(['gemini-2.0-flash-exp']);
+
+const modelsWithModalities = new Set([
+  'gemini-2.0-flash-exp',
+  'gemini-2.0-flash-exp-image-generation',
+]);
+
+const modelsDisableInstuction = new Set([
+  'gemini-2.0-flash-exp',
+  'gemini-2.0-flash-exp-image-generation',
+]);
 
 export interface GoogleModelCard {
   displayName: string;
@@ -47,8 +64,7 @@ enum HarmBlockThreshold {
 }
 
 function getThreshold(model: string): HarmBlockThreshold {
-  const useOFF = ['gemini-2.0-flash-exp'];
-  if (useOFF.includes(model)) {
+  if (modelsOffSafetySettings.has(model)) {
     return 'OFF' as HarmBlockThreshold; // https://discuss.ai.google.dev/t/59352
   }
   return HarmBlockThreshold.BLOCK_NONE;
@@ -56,17 +72,31 @@ function getThreshold(model: string): HarmBlockThreshold {
 
 const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
 
+interface LobeGoogleAIParams {
+  apiKey?: string;
+  baseURL?: string;
+  client?: GoogleGenerativeAI | VertexAI;
+  id?: string;
+  isVertexAi?: boolean;
+}
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
+  private isVertexAi: boolean;
   baseURL?: string;
   apiKey?: string;
+  provider: string;
 
-  constructor({ apiKey, baseURL }: { apiKey?: string; baseURL?: string } = {}) {
+  constructor({ apiKey, baseURL, client, isVertexAi, id }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
-    this.baseURL = baseURL || DEFAULT_BASE_URL;
     this.apiKey = apiKey;
+    this.client = client ? (client as GoogleGenerativeAI) : new GoogleGenerativeAI(apiKey);
+    this.baseURL = client ? undefined : baseURL || DEFAULT_BASE_URL;
+    this.isVertexAi = isVertexAi || false;
+
+    this.provider = id || (isVertexAi ? 'vertexai' : 'google');
   }
 
   async chat(rawPayload: ChatStreamPayload, options?: ChatCompetitionOptions) {
@@ -74,13 +104,15 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const payload = this.buildPayload(rawPayload);
       const model = payload.model;
 
-      const contents = await this.buildGoogleMessages(payload.messages, model);
+      const contents = await this.buildGoogleMessages(payload.messages);
 
       const geminiStreamResult = await this.client
         .getGenerativeModel(
           {
             generationConfig: {
               maxOutputTokens: payload.max_tokens,
+              // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
+              response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
               temperature: payload.temperature,
               topP: payload.top_p,
             },
@@ -110,28 +142,36 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         )
         .generateContentStream({
           contents,
-          systemInstruction: payload.system as string,
-          tools: this.buildGoogleTools(payload.tools),
+          systemInstruction: modelsDisableInstuction.has(model)
+            ? undefined
+            : (payload.system as string),
+          tools: this.buildGoogleTools(payload.tools, payload),
         });
 
       const googleStream = convertIterableToStream(geminiStreamResult.stream);
       const [prod, useForDebug] = googleStream.tee();
 
-      if (process.env.DEBUG_GOOGLE_CHAT_COMPLETION === '1') {
+      const key = this.isVertexAi
+        ? 'DEBUG_VERTEX_AI_CHAT_COMPLETION'
+        : 'DEBUG_GOOGLE_CHAT_COMPLETION';
+
+      if (process.env[key] === '1') {
         debugStream(useForDebug).catch();
       }
 
       // Convert the response into a friendly text-stream
-      const stream = GoogleGenerativeAIStream(prod, options?.callback);
+      const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
+      const stream = Stream(prod, options?.callback);
 
       // Respond with the stream
       return StreamingResponse(stream, { headers: options?.headers });
     } catch (e) {
       const err = e as Error;
 
+      console.log(err);
       const { errorType, error } = this.parseErrorMessage(err.message);
 
-      throw AgentRuntimeError.chat({ error, errorType, provider: ModelProvider.Google });
+      throw AgentRuntimeError.chat({ error, errorType, provider: this.provider });
     }
   }
 
@@ -150,26 +190,30 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       .map((model) => {
         const modelName = model.name.replace(/^models\//, '');
 
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => modelName.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => modelName.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: model.inputTokenLimit + model.outputTokenLimit,
           displayName: model.displayName,
           enabled: knownModel?.enabled || false,
           functionCall:
-            modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('thinking')
-            || knownModel?.abilities?.functionCall
-            || false,
+            (modelName.toLowerCase().includes('gemini') &&
+              !modelName.toLowerCase().includes('thinking')) ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: modelName,
           reasoning:
-            modelName.toLowerCase().includes('thinking')
-            || knownModel?.abilities?.reasoning
-            || false,
+            modelName.toLowerCase().includes('thinking') ||
+            knownModel?.abilities?.reasoning ||
+            false,
           vision:
-            modelName.toLowerCase().includes('vision')
-            || (modelName.toLowerCase().includes('gemini') && !modelName.toLowerCase().includes('gemini-1.0'))
-            || knownModel?.abilities?.vision
-            || false,
+            modelName.toLowerCase().includes('vision') ||
+            (modelName.toLowerCase().includes('gemini') &&
+              !modelName.toLowerCase().includes('gemini-1.0')) ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];
@@ -185,11 +229,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       system: system_message?.content,
     };
   }
-  private convertContentToGooglePart = async (content: UserMessageContentPart): Promise<Part> => {
+  private convertContentToGooglePart = async (
+    content: UserMessageContentPart,
+  ): Promise<Part | undefined> => {
     switch (content.type) {
+      default: {
+        return undefined;
+      }
+
       case 'text': {
         return { text: content.text };
       }
+
       case 'image_url': {
         const { mimeType, base64, type } = parseDataUri(content.image_url.url);
 
@@ -238,53 +289,23 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       };
     }
 
+    const getParts = async () => {
+      if (typeof content === 'string') return [{ text: content }];
+
+      const parts = await Promise.all(
+        content.map(async (c) => await this.convertContentToGooglePart(c)),
+      );
+      return parts.filter(Boolean) as Part[];
+    };
+
     return {
-      parts:
-        typeof content === 'string'
-          ? [{ text: content }]
-          : await Promise.all(content.map(async (c) => await this.convertContentToGooglePart(c))),
+      parts: await getParts(),
       role: message.role === 'assistant' ? 'model' : 'user',
     };
   };
 
   // convert messages from the OpenAI format to Google GenAI SDK
-  private buildGoogleMessages = async (
-    messages: OpenAIChatMessage[],
-    model: string,
-  ): Promise<Content[]> => {
-    // if the model is gemini-1.0 we need to pair messages
-    if (model.startsWith('gemini-1.0')) {
-      const contents: Content[] = [];
-      let lastRole = 'model';
-
-      for (const message of messages) {
-        // current to filter function message
-        if (message.role === 'function') {
-          continue;
-        }
-        const googleMessage = await this.convertOAIMessagesToGoogleMessage(message);
-
-        // if the last message is a model message and the current message is a model message
-        // then we need to add a user message to separate them
-        if (lastRole === googleMessage.role) {
-          contents.push({ parts: [{ text: '' }], role: lastRole === 'user' ? 'model' : 'user' });
-        }
-
-        // add the current message to the contents
-        contents.push(googleMessage);
-
-        // update the last role
-        lastRole = googleMessage.role;
-      }
-
-      // if the last message is a user message, then we need to add a model message to separate them
-      if (lastRole === 'model') {
-        contents.push({ parts: [{ text: '' }], role: 'user' });
-      }
-
-      return contents;
-    }
-
+  private buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promise<Content[]> => {
     const pools = messages
       .filter((message) => message.role !== 'function')
       .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg));
@@ -304,12 +325,12 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     if (message.includes('location is not supported'))
       return { error: { message }, errorType: AgentRuntimeErrorType.LocationNotSupportError };
 
-    try {
-      const startIndex = message.lastIndexOf('[');
-      if (startIndex === -1) {
-        return defaultError;
-      }
+    const startIndex = message.lastIndexOf('[');
+    if (startIndex === -1) {
+      return defaultError;
+    }
 
+    try {
       // 从开始位置截取字符串到最后
       const jsonString = message.slice(startIndex);
 
@@ -328,14 +349,29 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         }
       }
     } catch {
-      // 如果解析失败，则返回原始错误消息
-      return defaultError;
+      //
     }
+
+    const errorObj = this.extractErrorObjectFromError(message);
+
+    const { errorDetails } = errorObj;
+
+    if (errorDetails) {
+      return { error: errorDetails, errorType: AgentRuntimeErrorType.ProviderBizError };
+    }
+
+    return defaultError;
   }
 
   private buildGoogleTools(
     tools: ChatCompletionTool[] | undefined,
+    payload?: ChatStreamPayload,
   ): GoogleFunctionCallTool[] | undefined {
+    // 目前 Tools (例如 googleSearch) 无法与其他 FunctionCall 同时使用
+    if (payload?.enabledSearch) {
+      return [{ googleSearch: {} } as GoogleSearchRetrievalTool];
+    }
+
     if (!tools || tools.length === 0) return;
 
     return [
@@ -365,6 +401,40 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       },
     };
   };
+
+  private extractErrorObjectFromError(message: string) {
+    // 使用正则表达式匹配状态码部分 [数字 描述文本]
+    const regex = /^(.*?)(\[\d+ [^\]]+])(.*)$/;
+    const match = message.match(regex);
+
+    if (match) {
+      const prefix = match[1].trim();
+      const statusCodeWithBrackets = match[2].trim();
+      const message = match[3].trim();
+
+      // 提取状态码数字
+      const statusCodeMatch = statusCodeWithBrackets.match(/\[(\d+)/);
+      const statusCode = statusCodeMatch ? parseInt(statusCodeMatch[1]) : null;
+
+      // 创建包含状态码和消息的JSON
+      const resultJson = {
+        message: message,
+        statusCode: statusCode,
+        statusCodeText: statusCodeWithBrackets,
+      };
+
+      return {
+        errorDetails: resultJson,
+        prefix: prefix,
+      };
+    }
+
+    // 如果无法匹配，返回原始消息
+    return {
+      errorDetails: null,
+      prefix: message,
+    };
+  }
 }
 
 export default LobeGoogleAI;

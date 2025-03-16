@@ -1,5 +1,5 @@
-import { Column, count, sql } from 'drizzle-orm';
-import { and, desc, eq, exists, gt, inArray, isNull, like, or } from 'drizzle-orm/expressions';
+import { count, sql } from 'drizzle-orm';
+import { and, desc, eq, gt, ilike, inArray, isNull } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
 import {
@@ -79,27 +79,57 @@ export class TopicModel {
 
     const keywordLowerCase = keyword.toLowerCase();
 
-    const matchKeyword = (field: any) =>
-      like(sql`lower(${field})` as unknown as Column, `%${keywordLowerCase}%`);
-
-    return this.db.query.topics.findMany({
+    // 查询标题匹配的主题
+    const topicsByTitle = await this.db.query.topics.findMany({
       orderBy: [desc(topics.updatedAt)],
       where: and(
         eq(topics.userId, this.userId),
         this.matchSession(sessionId),
-        or(
-          matchKeyword(topics.title),
-          exists(
-            this.db
-              .select()
-              .from(messages)
-              .where(and(eq(messages.topicId, topics.id), matchKeyword(messages.content))),
-          ),
-        ),
+        ilike(topics.title, `%${keywordLowerCase}%`),
       ),
     });
-  };
 
+    // 查询消息内容匹配的主题ID
+    const topicIdsByMessages = await this.db
+      .select({ topicId: messages.topicId })
+      .from(messages)
+      .innerJoin(topics, eq(messages.topicId, topics.id))
+      .where(
+        and(
+          eq(messages.userId, this.userId),
+          ilike(messages.content, `%${keywordLowerCase}%`),
+          eq(topics.userId, this.userId),
+          this.matchSession(sessionId),
+        ),
+      )
+      .groupBy(messages.topicId);
+    // 如果没有通过消息内容找到主题，直接返回标题匹配的主题
+    if (topicIdsByMessages.length === 0) {
+      return topicsByTitle;
+    }
+
+    // 查询通过消息内容找到的主题
+    const topicIds = topicIdsByMessages.map((t) => t.topicId);
+    const topicsByMessages = await this.db.query.topics.findMany({
+      orderBy: [desc(topics.updatedAt)],
+      where: and(eq(topics.userId, this.userId), inArray(topics.id, topicIds)),
+    });
+
+    // 合并结果并去重
+    const allTopics = [...topicsByTitle];
+    const existingIds = new Set(topicsByTitle.map((t) => t.id));
+
+    for (const topic of topicsByMessages) {
+      if (!existingIds.has(topic.id)) {
+        allTopics.push(topic);
+      }
+    }
+
+    // 按更新时间排序
+    return allTopics.sort(
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    );
+  };
   count = async (params?: {
     endDate?: string;
     range?: [string, string];
@@ -224,6 +254,7 @@ export class TopicModel {
         .insert(topics)
         .values({
           ...originalTopic,
+          clientId: null,
           id: this.genId(),
           title: newTitle || originalTopic?.title,
         })
@@ -242,6 +273,7 @@ export class TopicModel {
             .insert(messages)
             .values({
               ...message,
+              clientId: null,
               id: idGenerator('messages'),
               topicId: duplicatedTopic.id,
             })

@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "Tek bir diyalogun üretim maliyeti en fazla %90 oranında düşürülebilir, yanıt hızı 4 kat artar (<1>Daha fazla bilgi edinin</1>). Açıldığında, otomatik olarak geçmiş mesaj sayısı sınırı devre dışı bırakılacaktır.",
+      "title": "Bağlam önbelleğini aç"
+    },
+    "enableReasoning": {
+      "desc": "Claude Thinking mekanizmasına dayalı kısıtlamalar (<1>Daha fazla bilgi edinin</1>), açıldığında otomatik olarak geçmiş mesaj sayısı sınırı devre dışı bırakılacaktır.",
+      "title": "Derin Düşünmeyi Aç"
+    },
+    "reasoningBudgetToken": {
+      "title": "Düşünme Tüketim Tokeni"
+    },
+    "title": "Model Genişletme Özellikleri"
+  },
+  "history": {
+    "title": "Asistan yalnızca son {{count}} mesajı hatırlayacak"
+  },
   "historyRange": "Geçmiş Aralığı",
   "historySummary": "Tarihsel haber özeti",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "Enter tuşuna basarak gönder",
     "stop": "Dur",
     "warp": "Satır atla"
+  },
+  "intentUnderstanding": {
+    "title": "Niyetinizi anlama ve analiz etme aşamasındayız..."
   },
   "knowledgeBase": {
     "all": "Tüm İçerik",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "Alt konular mevcut, silinemez",
     "regenerate": "Yeniden Oluştur"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Kredi",
+      "creditPricing": "Fiyatlandırma",
+      "creditTooltip": "Hesaplamayı kolaylaştırmak için, 1$'ı 1M kredi olarak hesaplıyoruz; örneğin, $3/M token, 3 kredi/token olarak hesaplanır.",
+      "pricing": {
+        "inputCachedTokens": "Önceden yüklenmiş giriş {{amount}}/kredi · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M karakter",
+        "inputMinutes": "${{amount}}/dakika",
+        "inputTokens": "Giriş {{amount}}/kredi · ${{amount}}/M",
+        "outputTokens": "Çıkış {{amount}}/kredi · ${{amount}}/M",
+        "writeCacheInputTokens": "Giriş yazma önbelleği {{amount}}/puan · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Ortalama birim fiyat",
+      "input": "Giriş",
+      "inputAudio": "Ses girişi",
+      "inputCached": "Önceden yüklenmiş giriş",
+      "inputCitation": "Giriş alıntısı",
+      "inputText": "Metin girişi",
+      "inputTitle": "Giriş detayları",
+      "inputUncached": "Önceden yüklenmemiş giriş",
+      "inputWriteCached": "Giriş önbelleği yazma",
+      "output": "Çıkış",
+      "outputAudio": "Ses çıkışı",
+      "outputText": "Metin çıkışı",
+      "outputTitle": "Çıkış detayları",
+      "reasoning": "Derin düşünme",
+      "title": "Üretim detayları",
+      "total": "Toplam tüketim"
+    }
+  },
   "newAgent": "Yeni Asistan",
   "pin": "Pin",
   "pinOff": "Unpin",
@@ -84,6 +137,32 @@
   },
   "regenerate": "Tekrarla",
   "roleAndArchive": "Rol ve Arşiv",
+  "search": {
+    "grounding": {
+      "searchQueries": "Arama Anahtar Kelimeleri",
+      "title": "{{count}} sonuç bulundu"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Sohbet içeriğine göre akıllıca arama gerekip gerekmediğini belirler",
+        "title": "Akıllı Bağlantı"
+      },
+      "off": {
+        "desc": "Sadece modelin temel bilgilerini kullanır, ağ araması yapmaz",
+        "title": "Bağlantıyı Kapat"
+      },
+      "on": {
+        "desc": "Sürekli ağ araması yaparak en güncel bilgileri alır",
+        "title": "Her Zaman Bağlantıda"
+      },
+      "useModelBuiltin": "Modelin yerleşik arama motorunu kullan"
+    },
+    "searchModel": {
+      "desc": "Mevcut model fonksiyon çağrısını desteklemiyor, bu nedenle çevrimiçi arama yapmak için fonksiyon çağrısını destekleyen bir model ile birlikte kullanılması gerekiyor",
+      "title": "Arama Yardımcı Modeli"
+    },
+    "title": "Ağ Araması"
+  },
   "searchAgentPlaceholder": "Arama Asistanı...",
   "sendPlaceholder": "Mesajınızı buraya yazın...",
   "sessionGroup": {

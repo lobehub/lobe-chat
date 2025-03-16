@@ -76,7 +76,9 @@
       "custom": "Niestandardowy model, domyślnie obsługujący zarówno wywołania funkcji, jak i rozpoznawanie wizualne. Proszę zweryfikować możliwość użycia tych funkcji w praktyce.",
       "file": "Ten model obsługuje wczytywanie plików i rozpoznawanie",
       "functionCall": "Ten model obsługuje wywołania funkcji (Function Call).",
+      "imageOutput": "Ten model wspiera generowanie obrazów",
       "reasoning": "Ten model wspiera głębokie myślenie",
+      "search": "Ten model wspiera wyszukiwanie w sieci",
       "tokens": "Ten model obsługuje maksymalnie {{tokens}} tokenów w pojedynczej sesji.",
       "vision": "Ten model obsługuje rozpoznawanie wizualne."
     },
@@ -84,6 +86,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "Brak włączonych modeli, przejdź do ustawień i włącz je",
+    "emptyProvider": "Nie ma aktywnego dostawcy usług, przejdź do ustawień, aby go włączyć",
+    "goToSettings": "Przejdź do ustawień",
     "provider": "Dostawca"
   },
   "OllamaSetupGuide": {

@@ -50,6 +50,8 @@ export interface ModelListAction {
     config: Partial<UserKeyVaults[T]>,
   ) => Promise<void>;
 
+  updateKeyVaultSettings: (key: string, config: any) => Promise<void>;
+
   useFetchProviderModelList: (
     provider: GlobalLLMProviderKey,
     enabledAutoFetch: boolean,
@@ -116,22 +118,23 @@ export const createModelListSlice: StateCreator<
     get().refreshModelProviderList({ trigger: 'refreshDefaultModelList' });
   },
   refreshModelProviderList: (params) => {
-    const modelProviderList = get().defaultModelProviderList.map((list) => ({
-      ...list,
-      chatModels: modelProviderSelectors
-        .getModelCardsById(list.id)(get())
-        ?.map((model) => {
-          const models = modelProviderSelectors.getEnableModelsById(list.id)(get());
+    const modelProviderList = get().defaultModelProviderList.map((list) => {
+      const enabledModels = modelProviderSelectors.getEnableModelsById(list.id)(get());
+      return {
+        ...list,
+        chatModels: modelProviderSelectors
+          .getModelCardsById(list.id)(get())
+          ?.map((model) => {
+            if (!enabledModels) return model;
 
-          if (!models) return model;
-
-          return {
-            ...model,
-            enabled: models?.some((m) => m === model.id),
-          };
-        }),
-      enabled: modelProviderSelectors.isProviderEnabled(list.id as any)(get()),
-    }));
+            return {
+              ...model,
+              enabled: enabledModels?.some((m) => m === model.id),
+            };
+          }),
+        enabled: modelProviderSelectors.isProviderEnabled(list.id as any)(get()),
+      };
+    });
 
     set({ modelProviderList }, false, `refreshModelList - ${params?.trigger}`);
   },
@@ -186,6 +189,10 @@ export const createModelListSlice: StateCreator<
   },
 
   updateKeyVaultConfig: async (provider, config) => {
+    await get().setSettings({ keyVaults: { [provider]: config } });
+  },
+
+  updateKeyVaultSettings: async (provider, config) => {
     await get().setSettings({ keyVaults: { [provider]: config } });
   },
 

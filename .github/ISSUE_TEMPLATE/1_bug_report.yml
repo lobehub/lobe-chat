@@ -2,6 +2,7 @@ name: '🐛 Bug Report'
 description: 'Report an bug'
 title: '[Bug] '
 labels: ['🐛 Bug']
+type: Bug
 body:
   - type: dropdown
     attributes:
@@ -23,6 +24,7 @@ body:
       multiple: true
       options:
         - 'client db (lobe-chat image)'
+        - 'client pgelite db (lobe-chat-pglite image)'
         - 'server db(lobe-chat-database image)'
     validations:
       required: true
@@ -31,7 +33,7 @@ body:
       label: '📌 Version'
     validations:
       required: true
-  
+
   - type: dropdown
     attributes:
       label: '💻 Operating System'

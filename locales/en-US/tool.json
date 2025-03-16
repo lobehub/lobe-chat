@@ -6,5 +6,23 @@
     "generating": "Generating...",
     "images": "Images:",
     "prompt": "Prompt"
+  },
+  "search": {
+    "createNewSearch": "Create a new search record",
+    "emptyResult": "No results found, please modify your keywords and try again",
+    "genAiMessage": "Create Assistant Message",
+    "includedTooltip": "The current search results will be included in the context of the conversation",
+    "keywords": "Keywords:",
+    "scoreTooltip": "Relevance score; a higher score indicates a closer match to the query keywords",
+    "searchBar": {
+      "button": "Search",
+      "placeholder": "Keywords",
+      "tooltip": "This will refresh the search results and create a new summary message"
+    },
+    "searchEngine": "Search engine:",
+    "searchResult": "Number of searches:",
+    "summary": "Summary",
+    "summaryTooltip": "Summarize the current content",
+    "viewMoreResults": "View {{results}} more results"
   }
 }

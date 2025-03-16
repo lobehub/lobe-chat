@@ -76,7 +76,9 @@
       "custom": "Modelo personalizado, por padrão, suporta chamadas de função e reconhecimento visual. Por favor, verifique a disponibilidade dessas capacidades de acordo com a situação real.",
       "file": "Este modelo suporta leitura e reconhecimento de arquivos enviados.",
       "functionCall": "Este modelo suporta chamadas de função.",
+      "imageOutput": "Este modelo suporta a geração de imagens",
       "reasoning": "Este modelo suporta pensamento profundo",
+      "search": "Este modelo suporta pesquisa online",
       "tokens": "Este modelo suporta no máximo {{tokens}} tokens por sessão.",
       "vision": "Este modelo suporta reconhecimento visual."
     },
@@ -84,6 +86,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "Nenhum modelo habilitado. Por favor, vá para as configurações e habilite um.",
+    "emptyProvider": "Nenhum provedor ativado, por favor vá para as configurações para ativar",
+    "goToSettings": "Ir para as configurações",
     "provider": "Fornecedor"
   },
   "OllamaSetupGuide": {

@@ -1,4 +1,4 @@
-import { isProviderDisableBroswerRequest } from '@/config/modelProviders';
+import { isProviderDisableBrowserRequest } from '@/config/modelProviders';
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
 import { AiProviderRuntimeConfig } from '@/types/aiProvider';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -59,8 +59,8 @@ const isProviderFetchOnClient =
   (provider: GlobalLLMProviderKey | string) => (s: AIProviderStoreState) => {
     const config = providerConfigById(provider)(s);
 
-    // If the provider already disable broswer request in model config, force on Server.
-    if (isProviderDisableBroswerRequest(provider)) return false;
+    // If the provider already disable browser request in model config, force on Server.
+    if (isProviderDisableBrowserRequest(provider)) return false;
 
     // If the provider in the whitelist, follow the user settings
     if (providerWhitelist.has(provider) && typeof config?.fetchOnClient !== 'undefined')
@@ -87,6 +87,18 @@ const providerKeyVaults = (provider: string | undefined) => (s: AIProviderStoreS
   return s.aiProviderRuntimeConfig?.[provider]?.keyVaults;
 };
 
+const isProviderHasBuiltinSearch = (provider: string) => (s: AIProviderStoreState) => {
+  const config = providerConfigById(provider)(s);
+
+  return !!config?.settings.searchMode;
+};
+
+const isProviderHasBuiltinSearchConfig = (id: string) => (s: AIProviderStoreState) => {
+  const providerCfg = providerConfigById(id)(s);
+
+  return !!providerCfg?.settings.searchMode && providerCfg?.settings.searchMode !== 'internal';
+};
+
 export const aiProviderSelectors = {
   activeProviderConfig,
   disabledAiProviderList,
@@ -97,6 +109,8 @@ export const aiProviderSelectors = {
   isProviderConfigUpdating,
   isProviderEnabled,
   isProviderFetchOnClient,
+  isProviderHasBuiltinSearch,
+  isProviderHasBuiltinSearchConfig,
   isProviderLoading,
   providerConfigById,
   providerKeyVaults,

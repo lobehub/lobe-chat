@@ -76,7 +76,9 @@
       "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, yukarıdaki yeteneklerin kullanılabilirliğini doğrulamak için lütfen gerçek durumu kontrol edin",
       "file": "Bu model dosya yükleme ve tanımayı destekler",
       "functionCall": "Bu model fonksiyon çağrısını destekler",
+      "imageOutput": "Bu model resim oluşturmayı destekler",
       "reasoning": "Bu model derin düşünmeyi destekler",
+      "search": "Bu model çevrimiçi aramayı destekler",
       "tokens": "Bu model tek bir oturumda en fazla {{tokens}} Token destekler",
       "vision": "Bu model görüntü tanımıyı destekler"
     },
@@ -84,6 +86,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "Etkinleştirilmiş model bulunmamaktadır, lütfen ayarlara giderek açın",
+    "emptyProvider": "Etkinleştirilmiş bir sağlayıcı yok, lütfen ayarlara gidin",
+    "goToSettings": "Ayrıntılara git",
     "provider": "Sağlayıcı"
   },
   "OllamaSetupGuide": {

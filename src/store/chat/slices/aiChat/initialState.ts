@@ -15,6 +15,7 @@ export interface ChatAIChatState {
    * is the AI message is reasoning
    */
   reasoningLoadingIds: string[];
+  searchWorkflowLoadingIds: string[];
   /**
    * the tool calling stream ids
    */
@@ -28,5 +29,6 @@ export const initialAiChatState: ChatAIChatState = {
   messageRAGLoadingIds: [],
   pluginApiLoadingIds: [],
   reasoningLoadingIds: [],
+  searchWorkflowLoadingIds: [],
   toolCallingStreamIds: {},
 };

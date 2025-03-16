@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} kopia",
   "emptyAgent": "Brak asystenta",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "Koszt generowania pojedynczej rozmowy może zostać obniżony o 90%, a prędkość odpowiedzi wzrośnie czterokrotnie (<1>Dowiedz się więcej</1>). Po włączeniu automatycznie wyłączone zostanie ograniczenie liczby wiadomości historycznych",
+      "title": "Włącz pamięć kontekstową"
+    },
+    "enableReasoning": {
+      "desc": "Ograniczenia oparte na mechanizmie Claude Thinking (<1>Dowiedz się więcej</1>), po włączeniu automatycznie wyłączone zostanie ograniczenie liczby wiadomości historycznych",
+      "title": "Włącz głębokie myślenie"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token zużycia myślenia"
+    },
+    "title": "Funkcje rozszerzenia modelu"
+  },
+  "history": {
+    "title": "Asystent zapamięta tylko ostatnie {{count}} wiadomości"
+  },
   "historyRange": "Zakres historii",
   "historySummary": "Podsumowanie wiadomości historycznych",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "Wyślij za pomocą klawisza Enter",
     "stop": "Zatrzymaj",
     "warp": "Złamanie wiersza"
+  },
+  "intentUnderstanding": {
+    "title": "Rozumiemy i analizujemy Twoje intencje..."
   },
   "knowledgeBase": {
     "all": "Wszystkie treści",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "Istnieją podwątki, nie można usunąć",
     "regenerate": "Wygeneruj ponownie"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Punkty",
+      "creditPricing": "Cennik",
+      "creditTooltip": "Aby ułatwić obliczenia, przeliczamy 1$ na 1M punktów, na przykład $3/M tokenów to 3 punkty/token",
+      "pricing": {
+        "inputCachedTokens": "Zbuforowane wejście {{amount}}/punktów · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M znaków",
+        "inputMinutes": "${{amount}}/minutę",
+        "inputTokens": "Wejście {{amount}}/punktów · ${{amount}}/M",
+        "outputTokens": "Wyjście {{amount}}/punktów · ${{amount}}/M",
+        "writeCacheInputTokens": "Zapisz wejście w pamięci podręcznej {{amount}}/punktów · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Średnia cena",
+      "input": "Wejście",
+      "inputAudio": "Wejście audio",
+      "inputCached": "Zbuforowane wejście",
+      "inputCitation": "Cytowanie wejścia",
+      "inputText": "Wejście tekstowe",
+      "inputTitle": "Szczegóły wejścia",
+      "inputUncached": "Wejście niezbuforowane",
+      "inputWriteCached": "Zapisz wejście w pamięci podręcznej",
+      "output": "Wyjście",
+      "outputAudio": "Wyjście audio",
+      "outputText": "Wyjście tekstowe",
+      "outputTitle": "Szczegóły wyjścia",
+      "reasoning": "Głębokie myślenie",
+      "title": "Szczegóły generacji",
+      "total": "Całkowite zużycie"
+    }
+  },
   "newAgent": "Nowy asystent",
   "pin": "Przypnij",
   "pinOff": "Odepnij",
@@ -84,6 +137,32 @@
   },
   "regenerate": "Wygeneruj ponownie",
   "roleAndArchive": "Rola i archiwum",
+  "search": {
+    "grounding": {
+      "searchQueries": "Szukaj słów kluczowych",
+      "title": "Znaleziono {{count}} wyników"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Inteligentne określenie, czy potrzebne jest wyszukiwanie na podstawie treści rozmowy",
+        "title": "Inteligentne połączenie"
+      },
+      "off": {
+        "desc": "Używaj tylko podstawowej wiedzy modelu, bez wyszukiwania w sieci",
+        "title": "Wyłącz połączenie"
+      },
+      "on": {
+        "desc": "Ciągłe wyszukiwanie w sieci, aby uzyskać najnowsze informacje",
+        "title": "Zawsze połączony"
+      },
+      "useModelBuiltin": "Użyj wbudowanej wyszukiwarki modelu"
+    },
+    "searchModel": {
+      "desc": "Aktualny model nie obsługuje wywołań funkcji, dlatego wymaga współpracy z modelem obsługującym wywołania funkcji, aby móc przeszukiwać sieć",
+      "title": "Model wspomagający wyszukiwanie"
+    },
+    "title": "Wyszukiwanie w sieci"
+  },
   "searchAgentPlaceholder": "Wyszukaj pomocnika...",
   "sendPlaceholder": "Wpisz treść rozmowy...",
   "sessionGroup": {

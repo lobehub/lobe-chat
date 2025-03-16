@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} 副本",
   "emptyAgent": "暫無助手",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "單條對話生成成本最高可降低 90%，響應速度提升 4 倍（<1>了解更多</1>）。開啟後將自動禁用歷史消息數限制",
+      "title": "開啟上下文快取"
+    },
+    "enableReasoning": {
+      "desc": "基於 Claude Thinking 機制限制（<1>了解更多</1>），開啟後將自動禁用歷史消息數限制",
+      "title": "開啟深度思考"
+    },
+    "reasoningBudgetToken": {
+      "title": "思考消耗 Token"
+    },
+    "title": "模型擴展功能"
+  },
+  "history": {
+    "title": "助手將只記住最後{{count}}條消息"
+  },
   "historyRange": "歷史範圍",
   "historySummary": "歷史消息總結",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "按 Enter 鍵發送",
     "stop": "停止",
     "warp": "換行"
+  },
+  "intentUnderstanding": {
+    "title": "正在理解並分析您的意圖..."
   },
   "knowledgeBase": {
     "all": "所有內容",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "存在子話題，無法刪除",
     "regenerate": "重新生成"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "積分",
+      "creditPricing": "定價",
+      "creditTooltip": "為便於計算，我們將 1$ 折算為 1M 積分，例如 $3/M tokens 即可折算為 3積分/token",
+      "pricing": {
+        "inputCachedTokens": "快取輸入 {{amount}}/積分 · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M 字元",
+        "inputMinutes": "${{amount}}/分鐘",
+        "inputTokens": "輸入 {{amount}}/積分 · ${{amount}}/M",
+        "outputTokens": "輸出 {{amount}}/積分 · ${{amount}}/M",
+        "writeCacheInputTokens": "快取輸入寫入 {{amount}}/積分 · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "平均單價",
+      "input": "輸入",
+      "inputAudio": "音頻輸入",
+      "inputCached": "輸入快取",
+      "inputCitation": "引用輸入",
+      "inputText": "文本輸入",
+      "inputTitle": "輸入明細",
+      "inputUncached": "輸入未快取",
+      "inputWriteCached": "輸入快取寫入",
+      "output": "輸出",
+      "outputAudio": "音頻輸出",
+      "outputText": "文本輸出",
+      "outputTitle": "輸出明細",
+      "reasoning": "深度思考",
+      "title": "生成明細",
+      "total": "總計消耗"
+    }
+  },
   "newAgent": "新建助手",
   "pin": "置頂",
   "pinOff": "取消置頂",
@@ -84,6 +137,32 @@
   },
   "regenerate": "重新生成",
   "roleAndArchive": "角色與記錄",
+  "search": {
+    "grounding": {
+      "searchQueries": "搜尋關鍵字",
+      "title": "已搜尋到 {{count}} 個結果"
+    },
+    "mode": {
+      "auto": {
+        "desc": "根據對話內容智能判斷是否需要搜尋",
+        "title": "智能連網"
+      },
+      "off": {
+        "desc": "僅使用模型的基礎知識，不進行網路搜尋",
+        "title": "關閉連網"
+      },
+      "on": {
+        "desc": "持續進行網路搜尋，獲取最新資訊",
+        "title": "始終連網"
+      },
+      "useModelBuiltin": "使用模型內建搜尋引擎"
+    },
+    "searchModel": {
+      "desc": "當前模型不支持函數調用，因此需要搭配支持函數調用的模型才能聯網搜索",
+      "title": "搜索輔助模型"
+    },
+    "title": "連網搜尋"
+  },
   "searchAgentPlaceholder": "搜尋助手...",
   "sendPlaceholder": "輸入聊天內容...",
   "sessionGroup": {

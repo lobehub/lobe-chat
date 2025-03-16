@@ -153,7 +153,8 @@ const Qwen: ModelProviderCard = {
     },
     {
       contextWindowTokens: 32_768,
-      description: 'QVQ模型是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力，尤其在数学推理领域。',
+      description:
+        'QVQ模型是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力，尤其在数学推理领域。',
       displayName: 'QVQ 72B Preview',
       id: 'qvq-72b-preview',
       pricing: {

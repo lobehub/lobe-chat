@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Kein Assistent verfügbar",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "Die Kosten für die Generierung einer einzelnen Konversation können um bis zu 90 % gesenkt werden, die Reaktionsgeschwindigkeit wird um das Vierfache erhöht (<1>Mehr erfahren</1>). Wenn aktiviert, wird die Begrenzung der Anzahl historischer Nachrichten automatisch deaktiviert.",
+      "title": "Kontext-Caching aktivieren"
+    },
+    "enableReasoning": {
+      "desc": "Basierend auf den Einschränkungen des Claude Thinking-Mechanismus (<1>Mehr erfahren</1>), wird bei Aktivierung die Begrenzung der Anzahl historischer Nachrichten automatisch deaktiviert.",
+      "title": "Tiefes Denken aktivieren"
+    },
+    "reasoningBudgetToken": {
+      "title": "Token für Denkaufwand"
+    },
+    "title": "Modell Erweiterungsfunktionen"
+  },
+  "history": {
+    "title": "Der Assistent wird nur die letzten {{count}} Nachrichten speichern"
+  },
   "historyRange": "Verlaufsbereich",
   "historySummary": "Zusammenfassung historischer Nachrichten",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "Mit Eingabetaste senden",
     "stop": "Stoppen",
     "warp": "Zeilenumbruch"
+  },
+  "intentUnderstanding": {
+    "title": "Verstehe und analysiere gerade Ihre Absicht..."
   },
   "knowledgeBase": {
     "all": "Alle Inhalte",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "Es gibt Unterthemen, die Löschung ist nicht möglich.",
     "regenerate": "Neu generieren"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "Punkte",
+      "creditPricing": "Preisgestaltung",
+      "creditTooltip": "Zur Vereinfachung der Zählung rechnen wir 1$ als 1M Punkte um, zum Beispiel werden $3/M Tokens als 3 Punkte/token umgerechnet",
+      "pricing": {
+        "inputCachedTokens": "Zwischengespeicherte Eingabe {{amount}}/Punkte · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M Zeichen",
+        "inputMinutes": "${{amount}}/Minute",
+        "inputTokens": "Eingabe {{amount}}/Punkte · ${{amount}}/M",
+        "outputTokens": "Ausgabe {{amount}}/Punkte · ${{amount}}/M",
+        "writeCacheInputTokens": "Cache-Eingabe schreiben {{amount}}/Punkte · ${{amount}}/M"
+      }
+    },
+    "tokenDetails": {
+      "average": "Durchschnittspreis",
+      "input": "Eingabe",
+      "inputAudio": "Audioeingabe",
+      "inputCached": "Eingabe zwischengespeichert",
+      "inputCitation": "Eingabe zitieren",
+      "inputText": "Text-Eingabe",
+      "inputTitle": "Eingabedetails",
+      "inputUncached": "Eingabe nicht zwischengespeichert",
+      "inputWriteCached": "Eingabe Cache schreiben",
+      "output": "Ausgabe",
+      "outputAudio": "Audioausgabe",
+      "outputText": "Text-Ausgabe",
+      "outputTitle": "Ausgabedetails",
+      "reasoning": "Tiefes Denken",
+      "title": "Generierungsdetails",
+      "total": "Gesamter Verbrauch"
+    }
+  },
   "newAgent": "Neuer Assistent",
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",
@@ -84,6 +137,32 @@
   },
   "regenerate": "Neu generieren",
   "roleAndArchive": "Rolle und Archiv",
+  "search": {
+    "grounding": {
+      "searchQueries": "Suchbegriffe",
+      "title": "Es wurden {{count}} Ergebnisse gefunden"
+    },
+    "mode": {
+      "auto": {
+        "desc": "Intelligente Beurteilung, ob eine Suche basierend auf dem Gesprächsinhalt erforderlich ist",
+        "title": "Intelligente Vernetzung"
+      },
+      "off": {
+        "desc": "Verwendet nur das Grundwissen des Modells, ohne Netzsuche",
+        "title": "Vernetzung deaktivieren"
+      },
+      "on": {
+        "desc": "Führt kontinuierlich Netzsuchen durch, um die neuesten Informationen zu erhalten",
+        "title": "Immer vernetzt"
+      },
+      "useModelBuiltin": "Verwenden Sie die integrierte Suchmaschine des Modells"
+    },
+    "searchModel": {
+      "desc": "Das aktuelle Modell unterstützt keine Funktionsaufrufe, daher muss es mit einem Modell kombiniert werden, das Funktionsaufrufe unterstützt, um online zu suchen",
+      "title": "Suchunterstützungsmodell"
+    },
+    "title": "Netzwerksuche"
+  },
   "searchAgentPlaceholder": "Suchassistent...",
   "sendPlaceholder": "Chat-Nachricht eingeben...",
   "sessionGroup": {

@@ -76,7 +76,9 @@
       "custom": "Benutzerdefiniertes Modell, standardmäßig unterstützt es sowohl Funktionsaufrufe als auch visuelle Erkennung. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Gegebenheiten.",
       "file": "Dieses Modell unterstützt das Hochladen von Dateien und deren Erkennung.",
       "functionCall": "Dieses Modell unterstützt Funktionsaufrufe.",
+      "imageOutput": "Dieses Modell unterstützt die Generierung von Bildern",
       "reasoning": "Dieses Modell unterstützt tiefes Denken",
+      "search": "Dieses Modell unterstützt die Online-Suche",
       "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro Sitzung.",
       "vision": "Dieses Modell unterstützt die visuelle Erkennung."
     },
@@ -84,6 +86,8 @@
   },
   "ModelSwitchPanel": {
     "emptyModel": "Kein aktiviertes Modell. Bitte gehen Sie zu den Einstellungen, um es zu aktivieren.",
+    "emptyProvider": "Es sind keine aktiven Anbieter vorhanden, bitte gehen Sie zu den Einstellungen, um sie zu aktivieren",
+    "goToSettings": "Zu den Einstellungen gehen",
     "provider": "Anbieter"
   },
   "OllamaSetupGuide": {

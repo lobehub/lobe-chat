@@ -3,7 +3,7 @@ import React, { memo, useMemo } from 'react';
 import { ChatItem } from '@/features/Conversation';
 import ActionsBar from '@/features/Conversation/components/ChatItem/ActionsBar';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
 
@@ -35,14 +35,9 @@ const ThreadChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
     [id, isParentMessage],
   );
 
-  const enableHistoryDivider = useAgentStore((s) => {
-    const config = agentSelectors.currentAgentChatConfig(s);
-    return (
-      config.enableHistoryCount &&
-      historyLength > (config.historyCount ?? 0) &&
-      config.historyCount === historyLength - index
-    );
-  });
+  const enableHistoryDivider = useAgentStore(
+    agentChatConfigSelectors.enableHistoryDivider(historyLength, index),
+  );
 
   return (
     <ChatItem

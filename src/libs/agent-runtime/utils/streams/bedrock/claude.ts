@@ -4,14 +4,18 @@ import { nanoid } from '@/utils/uuid';
 
 import { ChatStreamCallbacks } from '../../../types';
 import { transformAnthropicStream } from '../anthropic';
-import { StreamStack, createCallbacksTransformer, createSSEProtocolTransformer } from '../protocol';
+import {
+  StreamContext,
+  createCallbacksTransformer,
+  createSSEProtocolTransformer,
+} from '../protocol';
 import { createBedrockStream } from './common';
 
 export const AWSBedrockClaudeStream = (
   res: InvokeModelWithResponseStreamResponse | ReadableStream,
   cb?: ChatStreamCallbacks,
 ): ReadableStream<string> => {
-  const streamStack: StreamStack = { id: 'chat_' + nanoid() };
+  const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   const stream = res instanceof ReadableStream ? res : createBedrockStream(res);
 

@@ -31,6 +31,23 @@
   },
   "duplicateTitle": "{{title}} نسخة",
   "emptyAgent": "لا يوجد مساعد",
+  "extendParams": {
+    "disableContextCaching": {
+      "desc": "يمكن تقليل تكلفة توليد محادثة واحدة بنسبة تصل إلى 90%، وزيادة سرعة الاستجابة بمقدار 4 مرات (<1>اعرف المزيد</1>). عند التفعيل، سيتم تعطيل حد عدد الرسائل التاريخية تلقائيًا",
+      "title": "تفعيل تخزين السياق"
+    },
+    "enableReasoning": {
+      "desc": "استنادًا إلى آلية تفكير كلود (Claude Thinking) المحدودة (<1>اعرف المزيد</1>)، عند التفعيل، سيتم تعطيل حد عدد الرسائل التاريخية تلقائيًا",
+      "title": "تفعيل التفكير العميق"
+    },
+    "reasoningBudgetToken": {
+      "title": "استهلاك توكن التفكير"
+    },
+    "title": "وظائف توسيع النموذج"
+  },
+  "history": {
+    "title": "سيتذكر المساعد آخر {{count}} رسالة فقط"
+  },
   "historyRange": "نطاق التاريخ",
   "historySummary": "ملخص الرسائل التاريخية",
   "inbox": {
@@ -46,6 +63,9 @@
     "sendWithEnter": "اضغط Enter للإرسال",
     "stop": "توقف",
     "warp": "تغيير السطر"
+  },
+  "intentUnderstanding": {
+    "title": "جارٍ فهم وتحليل نواياك..."
   },
   "knowledgeBase": {
     "all": "جميع المحتويات",
@@ -70,6 +90,39 @@
     "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
     "regenerate": "إعادة الإنشاء"
   },
+  "messages": {
+    "modelCard": {
+      "credit": "نقاط",
+      "creditPricing": "التسعير",
+      "creditTooltip": "لتسهيل العد، نقوم بتحويل 1$ إلى 1M نقطة، على سبيل المثال، 3$/M رموز تعني 3 نقاط/رمز",
+      "pricing": {
+        "inputCachedTokens": "مدخلات مخزنة {{amount}}/نقطة · ${{amount}}/M",
+        "inputCharts": "${{amount}}/M حرف",
+        "inputMinutes": "${{amount}}/دقيقة",
+        "inputTokens": "مدخلات {{amount}}/نقطة · ${{amount}}/M",
+        "outputTokens": "مخرجات {{amount}}/نقطة · ${{amount}}/M",
+        "writeCacheInputTokens": "تخزين إدخال الكتابة {{amount}}/نقطة · ${{amount}}/ميغابايت"
+      }
+    },
+    "tokenDetails": {
+      "average": "متوسط السعر",
+      "input": "مدخلات",
+      "inputAudio": "مدخلات صوتية",
+      "inputCached": "مدخلات مخزنة",
+      "inputCitation": "اقتباس الإدخال",
+      "inputText": "مدخلات نصية",
+      "inputTitle": "تفاصيل المدخلات",
+      "inputUncached": "مدخلات غير مخزنة",
+      "inputWriteCached": "تخزين إدخال الكتابة",
+      "output": "مخرجات",
+      "outputAudio": "مخرجات صوتية",
+      "outputText": "مخرجات نصية",
+      "outputTitle": "تفاصيل المخرجات",
+      "reasoning": "تفكير عميق",
+      "title": "تفاصيل التوليد",
+      "total": "الإجمالي المستهلك"
+    }
+  },
   "newAgent": "مساعد جديد",
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",
@@ -84,6 +137,32 @@
   },
   "regenerate": "إعادة الإنشاء",
   "roleAndArchive": "الدور والأرشيف",
+  "search": {
+    "grounding": {
+      "searchQueries": "كلمات البحث",
+      "title": "تم العثور على {{count}} نتيجة"
+    },
+    "mode": {
+      "auto": {
+        "desc": "تحديد ما إذا كان من الضروري البحث بناءً على محتوى المحادثة",
+        "title": "الاتصال الذكي"
+      },
+      "off": {
+        "desc": "استخدام المعرفة الأساسية للنموذج فقط، دون إجراء بحث عبر الإنترنت",
+        "title": "إيقاف الاتصال"
+      },
+      "on": {
+        "desc": "الاستمرار في البحث عبر الإنترنت للحصول على أحدث المعلومات",
+        "title": "الاتصال دائمًا"
+      },
+      "useModelBuiltin": "استخدام محرك البحث المدمج في النموذج"
+    },
+    "searchModel": {
+      "desc": "النموذج الحالي لا يدعم استدعاء الدوال، لذا يجب استخدام نموذج يدعم استدعاء الدوال للبحث عبر الإنترنت",
+      "title": "نموذج البحث المساعد"
+    },
+    "title": "بحث عبر الإنترنت"
+  },
   "searchAgentPlaceholder": "مساعد البحث...",
   "sendPlaceholder": "أدخل محتوى الدردشة...",
   "sessionGroup": {

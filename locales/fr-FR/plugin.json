@@ -118,6 +118,10 @@
     "reinstallError": "Échec de la mise à jour du plugin {{name}}",
     "urlError": "Ce lien ne renvoie pas de contenu au format JSON. Veuillez vous assurer qu'il s'agit d'un lien valide."
   },
+  "inspector": {
+    "args": "Voir la liste des paramètres",
+    "pluginRender": "Voir l'interface du plugin"
+  },
   "list": {
     "item": {
       "deprecated.title": "Obsolète",
@@ -130,6 +134,34 @@
     "plugin": "Exécution du plugin en cours..."
   },
   "pluginList": "Liste des plugins",
+  "search": {
+    "config": {
+      "addKey": "Ajouter une clé",
+      "close": "Supprimer",
+      "confirm": "Configuration terminée, veuillez réessayer"
+    },
+    "crawPages": {
+      "crawling": "Identification des liens en cours",
+      "detail": {
+        "preview": "Aperçu",
+        "raw": "Texte brut",
+        "tooLong": "Le contenu du texte est trop long, le contexte de la conversation ne conserve que les {{characters}} premiers caractères, la partie excédentaire n'est pas prise en compte dans le contexte de la conversation"
+      },
+      "meta": {
+        "crawler": "Mode de collecte",
+        "words": "Nombre de caractères"
+      }
+    },
+    "searchxng": {
+      "baseURL": "Veuillez entrer",
+      "description": "Veuillez entrer l'URL de SearchXNG pour commencer la recherche en ligne",
+      "keyPlaceholder": "Veuillez entrer la clé",
+      "title": "Configurer le moteur de recherche SearchXNG",
+      "unconfiguredDesc": "Veuillez contacter l'administrateur pour compléter la configuration du moteur de recherche SearchXNG afin de commencer la recherche en ligne",
+      "unconfiguredTitle": "Moteur de recherche SearchXNG non configuré"
+    },
+    "title": "Recherche en ligne"
+  },
   "setting": "Paramètres des plugins",
   "settings": {
     "indexUrl": {
