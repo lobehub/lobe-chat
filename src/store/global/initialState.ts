@@ -1,3 +1,4 @@
+import type { ThemeMode } from 'antd-style';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 import { DatabaseLoadingState } from '@/types/clientDB';
@@ -61,6 +62,10 @@ export interface SystemStatus {
   showFilePanel?: boolean;
   showSessionPanel?: boolean;
   showSystemRole?: boolean;
+  /**
+   * theme mode
+   */
+  themeMode?: ThemeMode;
   threadInputHeight: number;
   zenMode?: boolean;
 }
@@ -96,6 +101,7 @@ export const INITIAL_STATUS = {
   showFilePanel: true,
   showSessionPanel: true,
   showSystemRole: false,
+  themeMode: 'auto',
   threadInputHeight: 200,
   zenMode: false,
 } satisfies SystemStatus;

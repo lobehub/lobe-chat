@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview ist ein forschungsorientiertes Modell, das vom Qwen-Team entwickelt wurde und sich auf visuelle Inferenzfähigkeiten konzentriert. Es hat einzigartige Vorteile beim Verständnis komplexer Szenen und der Lösung visuell verwandter mathematischer Probleme."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ ist das Inferenzmodell der Qwen-Serie. Im Vergleich zu traditionellen, anweisungsoptimierten Modellen verfügt QwQ über Denk- und Schlussfolgerungsfähigkeiten, die eine signifikante Leistungssteigerung bei nachgelagerten Aufgaben ermöglichen, insbesondere bei der Lösung schwieriger Probleme. QwQ-32B ist ein mittelgroßes Inferenzmodell, das im Vergleich zu den fortschrittlichsten Inferenzmodellen (wie DeepSeek-R1, o1-mini) wettbewerbsfähige Leistungen erzielt. Dieses Modell verwendet Technologien wie RoPE, SwiGLU, RMSNorm und Attention QKV Bias und hat eine Netzwerkstruktur mit 64 Schichten und 40 Q-Attention-Köpfen (im GQA-Architektur sind es 8 KV)."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview ist das neueste experimentelle Forschungsmodell von Qwen, das sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert. Durch die Erforschung komplexer Mechanismen wie Sprachmischung und rekursive Inferenz bietet es Hauptvorteile wie starke Analysefähigkeiten, mathematische und Programmierfähigkeiten. Gleichzeitig gibt es Herausforderungen wie Sprachwechsel, Inferenzzyklen, Sicherheitsüberlegungen und Unterschiede in anderen Fähigkeiten."
   },
@@ -502,6 +505,9 @@
   },
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet bietet Fähigkeiten, die über Opus hinausgehen, und eine schnellere Geschwindigkeit als Sonnet, während es den gleichen Preis wie Sonnet beibehält. Sonnet ist besonders gut in Programmierung, Datenwissenschaft, visueller Verarbeitung und Agentenaufgaben."
+  },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet ist das intelligenteste Modell von Anthropic bis heute und das erste hybride Inferenzmodell auf dem Markt. Claude 3.7 Sonnet kann nahezu sofortige Antworten oder verlängerte, schrittweise Überlegungen erzeugen, wobei die Benutzer diesen Prozess klar nachvollziehen können. Sonnet ist besonders gut in den Bereichen Programmierung, Datenwissenschaft, visuelle Verarbeitung und Agentenaufgaben."
   },
   "aya": {
     "description": "Aya 23 ist ein mehrsprachiges Modell von Cohere, das 23 Sprachen unterstützt und die Anwendung in einer Vielzahl von Sprachen erleichtert."
@@ -827,11 +833,23 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash bietet nächste Generation Funktionen und Verbesserungen, einschließlich außergewöhnlicher Geschwindigkeit, nativer Werkzeugnutzung, multimodaler Generierung und einem Kontextfenster von 1M Tokens."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash-Modellvariante, die auf Kosteneffizienz und niedrige Latenz optimiert ist."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Gemini 2.0 Flash Experimentmodell, das die Bildgenerierung unterstützt"
+  },
+  "gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 Flash ist eine Modellvariante, die auf Kosteneffizienz und niedrige Latenz optimiert ist."
+  },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash ist eine Modellvariante, die auf Kosteneffizienz und niedrige Latenz optimiert ist."
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Ein Gemini 2.0 Flash Modell, das auf Kosteneffizienz und niedrige Latenz optimiert wurde."
+  },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit der nächsten Generation von Funktionen, außergewöhnlicher Geschwindigkeit, nativer Tool-Nutzung und multimodaler Generierung."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit der nächsten Generation von Funktionen, außergewöhnlicher Geschwindigkeit, nativer Tool-Nutzung und multimodaler Generierung."
@@ -1120,15 +1138,6 @@
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B ist ein leistungsstarkes Modell, das schnelle Textgenerierungsfähigkeiten bietet und sich hervorragend für Anwendungen eignet, die große Effizienz und Kosteneffektivität erfordern."
-  },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Das Llama 3.1 Sonar Huge Online-Modell hat 405B Parameter und unterstützt eine Kontextlänge von etwa 127.000 Markierungen, es wurde für komplexe Online-Chat-Anwendungen entwickelt."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Das Llama 3.1 Sonar Large Online-Modell hat 70B Parameter und unterstützt eine Kontextlänge von etwa 127.000 Markierungen, es eignet sich für hochvolumige und vielfältige Chat-Aufgaben."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Das Llama 3.1 Sonar Small Online-Modell hat 8B Parameter und unterstützt eine Kontextlänge von etwa 127.000 Markierungen, es wurde speziell für Online-Chat entwickelt und kann verschiedene Textinteraktionen effizient verarbeiten."
   },
   "llama-3.2-11b-vision-instruct": {
     "description": "Überlegene Bildverarbeitungsfähigkeiten auf hochauflösenden Bildern, geeignet für visuelle Verständnisanwendungen."
@@ -1640,8 +1649,17 @@
   "qwq": {
     "description": "QwQ ist ein experimentelles Forschungsmodell, das sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert."
   },
+  "qwq-32b": {
+    "description": "Das QwQ-Inferenzmodell, das auf dem Qwen2.5-32B-Modell trainiert wurde, hat durch verstärktes Lernen die Inferenzfähigkeiten des Modells erheblich verbessert. Die Kernmetriken des Modells, wie mathematische Codes (AIME 24/25, LiveCodeBench) sowie einige allgemeine Metriken (IFEval, LiveBench usw.), erreichen das Niveau der DeepSeek-R1 Vollversion, wobei alle Metriken deutlich die ebenfalls auf Qwen2.5-32B basierende DeepSeek-R1-Distill-Qwen-32B übertreffen."
+  },
   "qwq-32b-preview": {
     "description": "Das QwQ-Modell ist ein experimentelles Forschungsmodell, das vom Qwen-Team entwickelt wurde und sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert."
+  },
+  "qwq-plus-latest": {
+    "description": "Das QwQ-Inferenzmodell, das auf dem Qwen2.5-Modell trainiert wurde, hat durch verstärktes Lernen die Inferenzfähigkeiten des Modells erheblich verbessert. Die Kernmetriken des Modells, wie mathematische Codes (AIME 24/25, LiveCodeBench) sowie einige allgemeine Metriken (IFEval, LiveBench usw.), erreichen das Niveau der DeepSeek-R1 Vollversion."
+  },
+  "r1-1776": {
+    "description": "R1-1776 ist eine Version des DeepSeek R1 Modells, die nachtrainiert wurde, um unverfälschte, unvoreingenommene Fakteninformationen bereitzustellen."
   },
   "solar-mini": {
     "description": "Solar Mini ist ein kompaktes LLM, das besser abschneidet als GPT-3.5 und über starke Mehrsprachigkeitsfähigkeiten verfügt. Es unterstützt Englisch und Koreanisch und bietet eine effiziente und kompakte Lösung."
@@ -1654,6 +1672,9 @@
   },
   "sonar": {
     "description": "Ein leichtgewichtiges Suchprodukt, das auf kontextbezogener Suche basiert und schneller und günstiger ist als Sonar Pro."
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research führt umfassende Expertenforschung durch und fasst diese in zugänglichen, umsetzbaren Berichten zusammen."
   },
   "sonar-pro": {
     "description": "Ein fortschrittliches Suchprodukt, das kontextbezogene Suche unterstützt und erweiterte Abfragen sowie Nachverfolgung ermöglicht."

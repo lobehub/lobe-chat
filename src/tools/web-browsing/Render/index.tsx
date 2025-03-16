@@ -45,4 +45,6 @@ const WebBrowsing = memo<BuiltinRenderProps<SearchContent[]>>(
   },
 );
 
+WebBrowsing.displayName = 'WebBrowsing';
+
 export default WebBrowsing;

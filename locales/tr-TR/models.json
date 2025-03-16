@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview, Qwen ekibi tarafından geliştirilen ve görsel çıkarım yeteneklerine odaklanan bir araştırma modelidir. Karmaşık sahne anlayışı ve görsel ile ilgili matematiksel sorunları çözme konusundaki benzersiz avantajları ile dikkat çekmektedir."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ, Qwen serisinin çıkarım modelidir. Geleneksel talimat ayarlama modellerine kıyasla, QwQ düşünme ve çıkarım yeteneğine sahiptir ve özellikle zor problemleri çözme konusunda önemli ölçüde artırılmış performans sergileyebilir. QwQ-32B, orta ölçekli bir çıkarım modelidir ve en son çıkarım modelleri (örneğin, DeepSeek-R1, o1-mini) ile karşılaştırıldığında rekabetçi bir performans elde edebilir. Bu model, RoPE, SwiGLU, RMSNorm ve Attention QKV bias gibi teknikleri kullanmakta olup, 64 katmanlı bir ağ yapısına ve 40 Q dikkat başlığına (GQA mimarisinde KV 8'dir) sahiptir."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview, Qwen'in en son deneysel araştırma modelidir ve AI akıl yürütme yeteneklerini artırmaya odaklanmaktadır. Dil karışımı, özyinelemeli akıl yürütme gibi karmaşık mekanizmaları keşfederek, güçlü akıl yürütme analizi, matematik ve programlama yetenekleri gibi ana avantajlar sunmaktadır. Bununla birlikte, dil geçiş sorunları, akıl yürütme döngüleri, güvenlik endişeleri ve diğer yetenek farklılıkları gibi zorluklar da bulunmaktadır."
   },
@@ -502,6 +505,9 @@
   },
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet, Opus'tan daha fazla yetenek ve Sonnet'ten daha hızlı bir hız sunar; aynı zamanda Sonnet ile aynı fiyatı korur. Sonnet, programlama, veri bilimi, görsel işleme ve ajan görevlerinde özellikle başarılıdır."
+  },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet, Anthropic'in şimdiye kadarki en akıllı modeli ve piyasadaki ilk karma akıl yürütme modelidir. Claude 3.7 Sonnet, neredeyse anlık yanıtlar veya uzatılmış adım adım düşünme süreçleri üretebilir; kullanıcılar bu süreçleri net bir şekilde görebilir. Sonnet, programlama, veri bilimi, görsel işleme ve temsilci görevlerde özellikle yeteneklidir."
   },
   "aya": {
     "description": "Aya 23, Cohere tarafından sunulan çok dilli bir modeldir, 23 dili destekler ve çok dilli uygulamalar için kolaylık sağlar."
@@ -827,11 +833,23 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash, mükemmel hız, yerel araç kullanımı, çok modlu üretim ve 1M token bağlam penceresi dahil olmak üzere bir sonraki nesil özellikler ve iyileştirmeler sunar."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash modeli varyantı, maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiştir."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Gemini 2.0 Flash deneysel modeli, görüntü oluşturmayı destekler"
+  },
+  "gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 Flash model varyantı, maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiştir."
+  },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash model varyantı, maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiştir."
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiş bir Gemini 2.0 Flash modelidir."
+  },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
@@ -1120,15 +1138,6 @@
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B, hızlı metin üretim yeteneği sunan yüksek performanslı bir modeldir ve büyük ölçekli verimlilik ve maliyet etkinliği gerektiren uygulama senaryoları için son derece uygundur."
-  },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Online modeli, 405B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, karmaşık çevrimiçi sohbet uygulamaları için tasarlanmıştır."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Online modeli, 70B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, yüksek kapasiteli ve çeşitli sohbet görevleri için uygundur."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Online modeli, 8B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, çevrimiçi sohbet için tasarlanmıştır ve çeşitli metin etkileşimlerini etkili bir şekilde işler."
   },
   "llama-3.2-11b-vision-instruct": {
     "description": "Yüksek çözünürlüklü görüntülerde mükemmel görüntü akıl yürütme yeteneği, görsel anlama uygulamaları için uygundur."
@@ -1640,8 +1649,17 @@
   "qwq": {
     "description": "QwQ, AI akıl yürütme yeteneklerini artırmaya odaklanan deneysel bir araştırma modelidir."
   },
+  "qwq-32b": {
+    "description": "Qwen2.5-32B modeli üzerine eğitilmiş QwQ çıkarım modeli, pekiştirmeli öğrenme ile modelin çıkarım yeteneğini önemli ölçüde artırmıştır. Modelin matematiksel kodları ve diğer temel göstergeleri (AIME 24/25, LiveCodeBench) ile bazı genel göstergeleri (IFEval, LiveBench vb.) DeepSeek-R1 tam sürüm seviyesine ulaşmıştır ve tüm göstergeler, yine Qwen2.5-32B tabanlı olan DeepSeek-R1-Distill-Qwen-32B'yi önemli ölçüde aşmaktadır."
+  },
   "qwq-32b-preview": {
     "description": "QwQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir ve AI akıl yürütme yeteneklerini artırmaya odaklanmaktadır."
+  },
+  "qwq-plus-latest": {
+    "description": "Qwen2.5 modeli üzerine eğitilmiş QwQ çıkarım modeli, pekiştirmeli öğrenme ile modelin çıkarım yeteneğini önemli ölçüde artırmıştır. Modelin matematiksel kodları ve diğer temel göstergeleri (AIME 24/25, LiveCodeBench) ile bazı genel göstergeleri (IFEval, LiveBench vb.) DeepSeek-R1 tam sürüm seviyesine ulaşmıştır."
+  },
+  "r1-1776": {
+    "description": "R1-1776, DeepSeek R1 modelinin bir versiyonudur ve son eğitimle, sansürsüz, tarafsız gerçek bilgileri sunar."
   },
   "solar-mini": {
     "description": "Solar Mini, GPT-3.5'ten daha iyi performansa sahip kompakt bir LLM'dir, güçlü çok dilli yeteneklere sahiptir, İngilizce ve Korece'yi destekler ve etkili, kompakt çözümler sunar."
@@ -1654,6 +1672,9 @@
   },
   "sonar": {
     "description": "Arama bağlamına dayalı hafif bir arama ürünüdür, Sonar Pro'dan daha hızlı ve daha ucuzdur."
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research, kapsamlı uzman düzeyinde araştırmalar yapar ve bunları erişilebilir, uygulanabilir raporlar haline getirir."
   },
   "sonar-pro": {
     "description": "Gelişmiş sorgular ve takip desteği sunan, arama bağlamını destekleyen bir üst düzey arama ürünüdür."

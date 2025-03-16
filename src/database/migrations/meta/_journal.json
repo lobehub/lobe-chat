@@ -112,6 +112,13 @@
       "when": 1739901891891,
       "tag": "0015_add_message_search_metadata",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1741844738677,
+      "tag": "0016_add_message_index",
+      "breakpoints": true
     }
   ],
   "version": "6"

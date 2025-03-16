@@ -75,11 +75,19 @@ export const naive: CrawlImpl = async (url, { filterOptions }) => {
   const type = res.headers.get('content-type');
 
   if (type?.includes('application/json')) {
-    const json = await res.json();
+    let content: string;
+
+    try {
+      const json = await res.clone().json();
+      content = JSON.stringify(json, null, 2);
+    } catch {
+      content = await res.text();
+    }
+
     return {
-      content: JSON.stringify(json, null, 2),
+      content: content,
       contentType: 'json',
-      length: json.length,
+      length: content.length,
       url,
     } satisfies CrawlSuccessResult;
   }
@@ -89,19 +97,26 @@ export const naive: CrawlImpl = async (url, { filterOptions }) => {
 
     const result = htmlToMarkdown(html, { filterOptions, url });
 
-    // if the content is not empty or blocked
-    // just return
-    if (!!result.content && result.title !== 'Just a moment...') {
-      return {
-        content: result.content,
-        contentType: 'text',
-        description: result?.excerpt,
-        length: result.length,
-        siteName: result?.siteName,
-        title: result?.title,
-        url,
-      } satisfies CrawlSuccessResult;
+    // if the content is empty or too short, just return
+    if (!result.content || result.content.length < 100) {
+      return;
     }
+
+    // it's blocked by cloudflare
+    if (result.title !== 'Just a moment...') {
+      return;
+    }
+
+    // just return
+    return {
+      content: result.content,
+      contentType: 'text',
+      description: result?.description,
+      length: result.length,
+      siteName: result?.siteName,
+      title: result?.title,
+      url,
+    } satisfies CrawlSuccessResult;
   } catch (error) {
     console.error(error);
   }

@@ -163,13 +163,13 @@ describe('LobePerplexityAI', () => {
         },
         {
           id: '506d64fb-e7f2-4d94-b80f-158369e9446d',
-          model: 'sonar-pro',
-          created: 1739896615,
+          model: 'sonar-reasoning-pro',
+          created: 1741250924,
           usage: {
-            prompt_tokens: 4,
-            completion_tokens: 14,
-            total_tokens: 18,
-            citation_tokens: 2217,
+            prompt_tokens: 2,
+            completion_tokens: 685,
+            total_tokens: 687,
+            citation_tokens: 3058,
             num_search_queries: 1,
           },
           citations: [
@@ -185,11 +185,13 @@ describe('LobePerplexityAI', () => {
           choices: [
             {
               index: 0,
-              finish_reason: null,
+              finish_reason: 'stop',
               message: {
                 role: 'assistant',
-                content: '杭州今天和未来几天的天气预报如',
+                content:
+                  '<think>\n好的，我现在要处理用户的我需要确定这个查询的类型。用户显然是在询问当前的天气情况和预报，因此属于天气预报类型。接下来我要查看提供的搜索结果，看看这些来源是否能提供准确的信息。\n\n第一个来源是weather.com.cn的、西北风5~6级等。接着查看第二个结果[2]是中央气象台的详细分时数据，比如7月18日和21日的温度、降水、风速等信息。[3]来自中国气象局的气象预报显示有阴天和多云交替的情况，（如星期三03/05阴温暖但空气质量差。[6][7]则是杭州市气象台的最新天气预报发布情况：后半夜转多云明天白天继续多云的天气。\n\n现在要将这些信息整合起来形成连贯的回答。需要注意是否有矛盾的地方以及按照可信度部或东北部常见四至五级阵风；昼夜温差较大比如最高温可达20多摄氏度最低至10℃左右这样需要提醒注意衣物调整防寒保暖同时也指出空气质量在某些时段可能不佳特别是根据[5]，AccuWeather提示空气质响出行健康的重点要素如空气指标并且保证引用每个相关数据都注明正确的出处编号避免遗漏重要细节同时保持回答简洁明了使用户一目了然.\n</think>\n\n杭州近期以阴到多云天气为主，夜间偶有小雨[1 未来三日预报\n- **今天傍晚至夜间**：局部小雨渐止转阴到多云\\[6\\] [7]\n- **明日（周六）**  \n  - 白天多云为主   \n  - 温度区间16℃~22℃，西北风5~6级 \\[2\\] [3]\n- **后天（周日）**\n\\] [3]\n\n### *注意事项*\n1. **昼夜温差大**：早晚低温多在10°C以下需加外套防风保温；\n2. **空气污染警告** AccuWeather指出当地PM指数超标易引发达呼吸道不适建议尽量减少户外长时间活动时r/china/zjejiang/hangzhou" target="_blank">墨迹实况雷达图</a>获取临近降水动态.',
               },
+              delta: { role: 'assistant', content: '' },
             },
           ],
         },
@@ -238,8 +240,8 @@ describe('LobePerplexityAI', () => {
           'event: text',
           'data: "天和未来几天的"\n',
           'id: 506d64fb-e7f2-4d94-b80f-158369e9446d',
-          'event: data',
-          'data: {"id":"506d64fb-e7f2-4d94-b80f-158369e9446d","index":0}\n',
+          'event: usage',
+          'data: {"inputCitationTokens":3058,"inputTextTokens":2,"outputTextTokens":685,"totalInputTokens":3060,"totalOutputTokens":685,"totalTokens":3745}\n',
         ].map((line) => `${line}\n`),
       );
 

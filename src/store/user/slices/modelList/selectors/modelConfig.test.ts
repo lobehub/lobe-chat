@@ -110,10 +110,10 @@ describe('modelConfigSelectors', () => {
       expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(true);
     });
 
-    // Qwen provider not work in broswer request. Please skip this case if it work in future.
+    // Qwen provider not work in browser request. Please skip this case if it work in future.
     // Issue: https://github.com/lobehub/lobe-chat/issues/3108
     // PR: https://github.com/lobehub/lobe-chat/pull/3133
-    it('client fecth should be disabled if provider is disable broswer request', () => {
+    it('client fecth should be disabled if provider is disable browser request', () => {
       const s = merge(initialSettingsState, {
         settings: {
           languageModel: {

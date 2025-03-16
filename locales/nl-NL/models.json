@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview is een onderzoeksmodel ontwikkeld door het Qwen-team, dat zich richt op visuele redeneervaardigheden en unieke voordelen heeft in het begrijpen van complexe scènes en het oplossen van visueel gerelateerde wiskundige problemen."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ is het inferentiemodel van de Qwen-serie. In vergelijking met traditionele instructie-geoptimaliseerde modellen beschikt QwQ over denk- en redeneervaardigheden, waardoor het in staat is om aanzienlijk verbeterde prestaties te leveren in downstream-taken, vooral bij het oplossen van moeilijke problemen. QwQ-32B is een middelgroot inferentiemodel dat concurrerende prestaties kan behalen in vergelijking met de meest geavanceerde inferentiemodellen (zoals DeepSeek-R1, o1-mini). Dit model maakt gebruik van technologieën zoals RoPE, SwiGLU, RMSNorm en Attention QKV bias, en heeft een netwerkstructuur van 64 lagen en 40 Q-aandachtshoofden (met KV van 8 in de GQA-architectuur)."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is het nieuwste experimentele onderzoeksmodel van Qwen, gericht op het verbeteren van AI-redeneringscapaciteiten. Door het verkennen van complexe mechanismen zoals taalmixing en recursieve redenering, zijn de belangrijkste voordelen onder andere krachtige redeneringsanalyses, wiskundige en programmeervaardigheden. Tegelijkertijd zijn er ook problemen met taalwisseling, redeneringscycli, veiligheidskwesties en verschillen in andere capaciteiten."
   },
@@ -502,6 +505,9 @@
   },
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet biedt mogelijkheden die verder gaan dan Opus en een snellere snelheid dan Sonnet, terwijl het dezelfde prijs als Sonnet behoudt. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
+  },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet is het meest geavanceerde model van Anthropic tot nu toe en het eerste hybride redeneermodel op de markt. Claude 3.7 Sonnet kan bijna onmiddellijke reacties of uitgebreide stapsgewijze overpeinzingen genereren, waarbij gebruikers deze processen duidelijk kunnen volgen. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
   },
   "aya": {
     "description": "Aya 23 is een meertalig model van Cohere, ondersteunt 23 talen en biedt gemak voor diverse taaltoepassingen."
@@ -827,11 +833,23 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash biedt next-gen functies en verbeteringen, waaronder uitstekende snelheid, native toolgebruik, multimodale generatie en een contextvenster van 1M tokens."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash modelvariant, geoptimaliseerd voor kosteneffectiviteit en lage latentie."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Gemini 2.0 Flash experimenteel model, ondersteunt afbeeldingsgeneratie"
+  },
+  "gemini-2.0-flash-lite": {
+    "description": "Gemini 2.0 Flash is een modelvariant die is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
+  },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash is een modelvariant die is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Een Gemini 2.0 Flash-model dat is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
+  },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Exp is Google's nieuwste experimentele multimodale AI-model, met next-gen functies, uitstekende snelheid, native tool-aanroepen en multimodale generatie."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp is Google's nieuwste experimentele multimodale AI-model, met next-gen functies, uitstekende snelheid, native tool-aanroepen en multimodale generatie."
@@ -1120,15 +1138,6 @@
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B is een hoogpresterend model dat snelle tekstgeneratiecapaciteiten biedt, zeer geschikt voor toepassingen die grootschalige efficiëntie en kosteneffectiviteit vereisen."
-  },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Llama 3.1 Sonar Huge Online model, met 405B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, ontworpen voor complexe online chattoepassingen."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Llama 3.1 Sonar Large Online model, met 70B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, geschikt voor hoge capaciteit en diverse chattaken."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Llama 3.1 Sonar Small Online model, met 8B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, speciaal ontworpen voor online chat en kan efficiënt verschillende tekstinteracties verwerken."
   },
   "llama-3.2-11b-vision-instruct": {
     "description": "Uitstekende beeldredeneringscapaciteiten op hoge resolutie-afbeeldingen, geschikt voor visuele begrijptoepassingen."
@@ -1640,8 +1649,17 @@
   "qwq": {
     "description": "QwQ is een experimenteel onderzoeksmodel dat zich richt op het verbeteren van de AI-redeneringscapaciteiten."
   },
+  "qwq-32b": {
+    "description": "De QwQ-inferentiemodel, getraind op het Qwen2.5-32B-model, heeft zijn inferentievermogen aanzienlijk verbeterd door middel van versterkend leren. De kernindicatoren van het model, zoals wiskundige code (AIME 24/25, LiveCodeBench) en enkele algemene indicatoren (IFEval, LiveBench, enz.), bereiken het niveau van de DeepSeek-R1 volwaardige versie, waarbij alle indicatoren aanzienlijk beter presteren dan de DeepSeek-R1-Distill-Qwen-32B, die ook op Qwen2.5-32B is gebaseerd."
+  },
   "qwq-32b-preview": {
     "description": "Het QwQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van de AI-redeneringscapaciteiten."
+  },
+  "qwq-plus-latest": {
+    "description": "De QwQ-inferentiemodel, getraind op het Qwen2.5-model, heeft zijn inferentievermogen aanzienlijk verbeterd door middel van versterkend leren. De kernindicatoren van het model, zoals wiskundige code (AIME 24/25, LiveCodeBench) en enkele algemene indicatoren (IFEval, LiveBench, enz.), bereiken het niveau van de DeepSeek-R1 volwaardige versie."
+  },
+  "r1-1776": {
+    "description": "R1-1776 is een versie van het DeepSeek R1-model, dat is bijgetraind om ongecensureerde, onpartijdige feitelijke informatie te bieden."
   },
   "solar-mini": {
     "description": "Solar Mini is een compacte LLM die beter presteert dan GPT-3.5, met sterke meertalige capaciteiten, ondersteunt Engels en Koreaans, en biedt een efficiënte en compacte oplossing."
@@ -1654,6 +1672,9 @@
   },
   "sonar": {
     "description": "Een lichtgewicht zoekproduct op basis van contextuele zoekopdrachten, sneller en goedkoper dan Sonar Pro."
+  },
+  "sonar-deep-research": {
+    "description": "Deep Research voert uitgebreide expertstudies uit en bundelt deze in toegankelijke, bruikbare rapporten."
   },
   "sonar-pro": {
     "description": "Een geavanceerd zoekproduct dat contextuele zoekopdrachten ondersteunt, met geavanceerde query's en vervolgacties."

@@ -159,7 +159,7 @@ describe('fetchSSE', () => {
     expectedMessages.forEach((message, index) => {
       expect(mockOnMessageHandle).toHaveBeenNthCalledWith(index + 1, message);
     });
-    
+
     // more assertions for each character...
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       observationId: null,
@@ -188,6 +188,7 @@ describe('fetchSSE', () => {
       await fetchSSE('/', {
         onMessageHandle: mockOnMessageHandle,
         onFinish: mockOnFinish,
+        smoothing: false,
       });
 
       expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hello', type: 'reasoning' });
@@ -225,7 +226,7 @@ describe('fetchSSE', () => {
       grounding: 'Hello',
       type: 'grounding',
     });
-    
+
     expect(mockOnFinish).toHaveBeenCalledWith('hi', {
       observationId: null,
       toolCalls: undefined,

@@ -70,7 +70,7 @@ describe('SettingsAction', () => {
   describe('setSettings', () => {
     it('should set partial settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const partialSettings: DeepPartial<UserSettings> = { general: { themeMode: 'dark' } };
+      const partialSettings: DeepPartial<UserSettings> = { general: { fontSize: 12 } };
 
       // Perform the action
       await act(async () => {
@@ -80,24 +80,6 @@ describe('SettingsAction', () => {
       // Assert that updateUserSettings was called with the correct settings
       expect(userService.updateUserSettings).toHaveBeenCalledWith(
         partialSettings,
-        expect.any(AbortSignal),
-      );
-    });
-  });
-
-  describe('switchThemeMode', () => {
-    it('should switch theme mode', async () => {
-      const { result } = renderHook(() => useUserStore());
-      const themeMode = 'light';
-
-      // Perform the action
-      await act(async () => {
-        await result.current.switchThemeMode(themeMode);
-      });
-
-      // Assert that updateUserSettings was called with the correct theme mode
-      expect(userService.updateUserSettings).toHaveBeenCalledWith(
-        { general: { themeMode } },
         expect.any(AbortSignal),
       );
     });

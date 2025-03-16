@@ -2,16 +2,15 @@ import { ModelIcon } from '@lobehub/icons';
 import { Icon, Tooltip } from '@lobehub/ui';
 import { Segmented } from 'antd';
 import { createStyles } from 'antd-style';
-import { ArrowDownToDot, ArrowUpFromDot, CircleFadingArrowUp } from 'lucide-react';
+import { ArrowDownToDot, ArrowUpFromDot, BookUp2Icon, CircleFadingArrowUp } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { getPrice } from '@/features/Conversation/Extras/Usage/UsageDetail/pricing';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { LobeDefaultAiModelListItem } from '@/types/aiModel';
-import { ModelPriceCurrency } from '@/types/llm';
-import { formatPriceByCurrency } from '@/utils/format';
 
 export const useStyles = createStyles(({ css, token }) => {
   return {
@@ -40,17 +39,10 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
   const isShowCredit = useGlobalStore(systemStatusSelectors.isShowCredit) && !!pricing;
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
-  const inputPrice = formatPriceByCurrency(pricing?.input, pricing?.currency as ModelPriceCurrency);
-  const cachedInputPrice = formatPriceByCurrency(
-    pricing?.cachedInput,
-    pricing?.currency as ModelPriceCurrency,
-  );
-  const outputPrice = formatPriceByCurrency(
-    pricing?.output,
-    pricing?.currency as ModelPriceCurrency,
-  );
+  const formatPrice = getPrice(pricing || {});
+
   return (
-    <>
+    <Flexbox gap={8}>
       <Flexbox
         align={'center'}
         className={styles.container}
@@ -91,39 +83,57 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
           </Flexbox>
         )}
       </Flexbox>
-      {isShowCredit && (
+      {isShowCredit ? (
         <Flexbox horizontal justify={'space-between'}>
           <div />
           <Flexbox align={'center'} className={styles.pricing} gap={8} horizontal>
             {t('messages.modelCard.creditPricing')}:
-            <Tooltip title={t('messages.modelCard.pricing.inputTokens', { amount: inputPrice })}>
-              <Flexbox gap={2} horizontal>
-                <Icon icon={ArrowUpFromDot} />
-                {inputPrice}
-              </Flexbox>
-            </Tooltip>
             {pricing?.cachedInput && (
               <Tooltip
                 title={t('messages.modelCard.pricing.inputCachedTokens', {
-                  amount: cachedInputPrice,
+                  amount: formatPrice.cachedInput,
                 })}
               >
                 <Flexbox gap={2} horizontal>
                   <Icon icon={CircleFadingArrowUp} />
-                  {cachedInputPrice}
+                  {formatPrice.cachedInput}
                 </Flexbox>
               </Tooltip>
             )}
-            <Tooltip title={t('messages.modelCard.pricing.outputTokens', { amount: outputPrice })}>
+            {pricing?.writeCacheInput && (
+              <Tooltip
+                title={t('messages.modelCard.pricing.writeCacheInputTokens', {
+                  amount: formatPrice.writeCacheInput,
+                })}
+              >
+                <Flexbox gap={2} horizontal>
+                  <Icon icon={BookUp2Icon} />
+                  {formatPrice.writeCacheInput}
+                </Flexbox>
+              </Tooltip>
+            )}
+            <Tooltip
+              title={t('messages.modelCard.pricing.inputTokens', { amount: formatPrice.input })}
+            >
+              <Flexbox gap={2} horizontal>
+                <Icon icon={ArrowUpFromDot} />
+                {formatPrice.input}
+              </Flexbox>
+            </Tooltip>
+            <Tooltip
+              title={t('messages.modelCard.pricing.outputTokens', { amount: formatPrice.output })}
+            >
               <Flexbox gap={2} horizontal>
                 <Icon icon={ArrowDownToDot} />
-                {outputPrice}
+                {formatPrice.output}
               </Flexbox>
             </Tooltip>
           </Flexbox>
         </Flexbox>
+      ) : (
+        <div style={{ height: 18 }} />
       )}
-    </>
+    </Flexbox>
   );
 });
 

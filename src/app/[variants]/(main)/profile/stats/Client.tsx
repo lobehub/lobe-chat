@@ -42,8 +42,8 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       <AiHeatmaps mobile={mobile} />
       <Grid gap={mobile ? 0 : 48} rows={3}>
         <ModelsRank />
-        <AssistantsRank />
-        <TopicsRank />
+        <AssistantsRank mobile={mobile} />
+        <TopicsRank mobile={mobile} />
       </Grid>
     </Flexbox>
   );

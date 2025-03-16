@@ -32,3 +32,5 @@ const createStore: StateCreator<FileStore, [['zustand/devtools', never]]> = (...
 const devtools = createDevtools('file');
 
 export const useFileStore = createWithEqualityFn<FileStore>()(devtools(createStore), shallow);
+
+export const getFileStoreState = () => useFileStore.getState();

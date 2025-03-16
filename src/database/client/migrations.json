@@ -223,7 +223,10 @@
     "hash": "9646161fa041354714f823d726af27247bcd6e60fa3be5698c0d69f337a5700b"
   },
   {
-    "sql": ["DROP TABLE \"user_budgets\";", "\nDROP TABLE \"user_subscriptions\";"],
+    "sql": [
+      "DROP TABLE \"user_budgets\";",
+      "\nDROP TABLE \"user_subscriptions\";"
+    ],
     "bps": true,
     "folderMillis": 1729699958471,
     "hash": "7dad43a2a25d1aec82124a4e53f8d82f8505c3073f23606c1dc5d2a4598eacf9"
@@ -295,7 +298,9 @@
     "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
   },
   {
-    "sql": ["ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1737609172353,
     "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
@@ -308,5 +313,15 @@
     "bps": true,
     "folderMillis": 1739901891891,
     "hash": "78d8fefd8c58938d7bc3da2295a73b35ce2e8d7cb2820f8e817acdb8dd5bebb2"
+  },
+  {
+    "sql": [
+      "CREATE INDEX IF NOT EXISTS \"messages_topic_id_idx\" ON \"messages\" USING btree (\"topic_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"messages_parent_id_idx\" ON \"messages\" USING btree (\"parent_id\");",
+      "\nCREATE INDEX IF NOT EXISTS \"messages_quota_id_idx\" ON \"messages\" USING btree (\"quota_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1741844738677,
+    "hash": "2a7a98be2e49361391444d6fabf3fb5db0bcb6a65e5540e9c3d426ceeb1f7f3a"
   }
 ]
