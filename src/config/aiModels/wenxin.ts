@@ -4,8 +4,8 @@ const wenxinChatModels: AIChatModelCard[] = [
   /*
   {
     abilities: {
-      search: true,
       resoning: true,
+      search: true,
     },
     contextWindowTokens: 32_768,
     description:
