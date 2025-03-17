@@ -1,7 +1,7 @@
 name: '🐛 Bug Report'
 description: 'Report an bug'
-title: '[Bug] '
-labels: ['🐛 Bug']
+title: ''
+labels: ['unconfirm']
 type: Bug
 body:
   - type: dropdown
@@ -10,6 +10,7 @@ body:
       multiple: true
       options:
         - 'Official Preview'
+        - 'Official Cloud'
         - 'Vercel'
         - 'Zeabur'
         - 'Sealos'
