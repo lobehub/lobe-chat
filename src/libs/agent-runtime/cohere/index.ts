@@ -12,6 +12,21 @@ export interface CohereModelCard {
 
 export const LobeCohereAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.cohere.ai/compatibility/v1',
+  chatCompletion: {
+    // https://docs.cohere.com/v2/docs/compatibility-api#unsupported-parameters
+    excludeUsage: true,
+    handlePayload: (payload) => {
+      const { frequency_penalty, presence_penalty, top_p, ...rest } = payload;
+
+      return {
+        ...rest,
+        frequency_penalty: frequency_penalty !== undefined ? Math.max(0, Math.min(1, frequency_penalty / 2)) : undefined,
+        presence_penalty: presence_penalty !== undefined ? Math.max(0, Math.min(1, presence_penalty / 2)) : undefined,
+        top_p: top_p !== undefined ? Math.max(0.01, Math.min(0.99, top_p)) : undefined,
+      } as any;
+    },
+    noUserId: true,
+  },
   debug: {
     chatCompletion: () => process.env.DEBUG_COHERE_CHAT_COMPLETION === '1',
   },
@@ -21,7 +36,7 @@ export const LobeCohereAI = LobeOpenAICompatibleFactory({
     client.baseURL = 'https://api.cohere.com/v1';
 
     const modelsPage = await client.models.list() as any;
-    const modelList: CohereModelCard[] = modelsPage.models;
+    const modelList: CohereModelCard[] = modelsPage.body.models;
 
     return modelList
       .map((model) => {
