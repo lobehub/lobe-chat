@@ -8,7 +8,7 @@ const cohereChatModels: AIChatModelCard[] = [
     contextWindowTokens: 256_000,
     description:
       'Command A 是我们迄今为止性能最强的模型，在工具使用、代理、检索增强生成（RAG）和多语言应用场景方面表现出色。Command A 具有 256K 的上下文长度，仅需两块 GPU 即可运行，并且相比于 Command R+ 08-2024，吞吐量提高了 150%。',
-    displayName: 'Command A',
+    displayName: 'Command A 03-2025',
     enabled: true,
     id: 'command-a-03-2025',
     maxOutput: 8000,
