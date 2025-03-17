@@ -340,7 +340,9 @@ describe('LobeGoogleAI', () => {
           expect(e).toEqual({
             errorType: bizErrorType,
             error: {
-              message: `[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-pro:streamGenerateContent?alt=sse: [400 Bad Request] API key not valid. Please pass a valid API key. [{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"Error","domain":"googleapis.com","metadata":{"service":"generativelanguage.googleapis.com}}]`,
+              message: `API key not valid. Please pass a valid API key. [{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"Error","domain":"googleapis.com","metadata":{"service":"generativelanguage.googleapis.com}}]`,
+              statusCode: 400,
+              statusCodeText: '[400 Bad Request]',
             },
             provider,
           });

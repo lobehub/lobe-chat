@@ -10,7 +10,6 @@ import {
   SchemaType,
 } from '@google/generative-ai';
 
-import { VertexAIStream } from '@/libs/agent-runtime/utils/streams/vertex-ai';
 import type { ChatModelCard } from '@/types/llm';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { safeParseJSON } from '@/utils/safeParseJSON';
@@ -24,12 +23,27 @@ import {
   OpenAIChatMessage,
   UserMessageContentPart,
 } from '../types';
-import { ModelProvider } from '../types/type';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { GoogleGenerativeAIStream, convertIterableToStream } from '../utils/streams';
+import {
+  GoogleGenerativeAIStream,
+  VertexAIStream,
+  convertIterableToStream,
+} from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
+
+const modelsOffSafetySettings = new Set(['gemini-2.0-flash-exp']);
+
+const modelsWithModalities = new Set([
+  'gemini-2.0-flash-exp',
+  'gemini-2.0-flash-exp-image-generation',
+]);
+
+const modelsDisableInstuction = new Set([
+  'gemini-2.0-flash-exp',
+  'gemini-2.0-flash-exp-image-generation',
+]);
 
 export interface GoogleModelCard {
   displayName: string;
@@ -50,8 +64,7 @@ enum HarmBlockThreshold {
 }
 
 function getThreshold(model: string): HarmBlockThreshold {
-  const useOFF = ['gemini-2.0-flash-exp'];
-  if (useOFF.includes(model)) {
+  if (modelsOffSafetySettings.has(model)) {
     return 'OFF' as HarmBlockThreshold; // https://discuss.ai.google.dev/t/59352
   }
   return HarmBlockThreshold.BLOCK_NONE;
@@ -63,6 +76,7 @@ interface LobeGoogleAIParams {
   apiKey?: string;
   baseURL?: string;
   client?: GoogleGenerativeAI | VertexAI;
+  id?: string;
   isVertexAi?: boolean;
 }
 
@@ -71,8 +85,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   private isVertexAi: boolean;
   baseURL?: string;
   apiKey?: string;
+  provider: string;
 
-  constructor({ apiKey, baseURL, client, isVertexAi }: LobeGoogleAIParams = {}) {
+  constructor({ apiKey, baseURL, client, isVertexAi, id }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
@@ -80,6 +95,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     this.client = client ? (client as GoogleGenerativeAI) : new GoogleGenerativeAI(apiKey);
     this.baseURL = client ? undefined : baseURL || DEFAULT_BASE_URL;
     this.isVertexAi = isVertexAi || false;
+
+    this.provider = id || (isVertexAi ? 'vertexai' : 'google');
   }
 
   async chat(rawPayload: ChatStreamPayload, options?: ChatCompetitionOptions) {
@@ -94,6 +111,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           {
             generationConfig: {
               maxOutputTokens: payload.max_tokens,
+              // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
+              response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
               temperature: payload.temperature,
               topP: payload.top_p,
             },
@@ -123,7 +142,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         )
         .generateContentStream({
           contents,
-          systemInstruction: payload.system as string,
+          systemInstruction: modelsDisableInstuction.has(model)
+            ? undefined
+            : (payload.system as string),
           tools: this.buildGoogleTools(payload.tools, payload),
         });
 
@@ -150,7 +171,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       console.log(err);
       const { errorType, error } = this.parseErrorMessage(err.message);
 
-      throw AgentRuntimeError.chat({ error, errorType, provider: ModelProvider.Google });
+      throw AgentRuntimeError.chat({ error, errorType, provider: this.provider });
     }
   }
 
@@ -304,12 +325,12 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     if (message.includes('location is not supported'))
       return { error: { message }, errorType: AgentRuntimeErrorType.LocationNotSupportError };
 
-    try {
-      const startIndex = message.lastIndexOf('[');
-      if (startIndex === -1) {
-        return defaultError;
-      }
+    const startIndex = message.lastIndexOf('[');
+    if (startIndex === -1) {
+      return defaultError;
+    }
 
+    try {
       // 从开始位置截取字符串到最后
       const jsonString = message.slice(startIndex);
 
@@ -328,9 +349,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         }
       }
     } catch {
-      // 如果解析失败，则返回原始错误消息
-      return defaultError;
+      //
     }
+
+    const errorObj = this.extractErrorObjectFromError(message);
+
+    const { errorDetails } = errorObj;
+
+    if (errorDetails) {
+      return { error: errorDetails, errorType: AgentRuntimeErrorType.ProviderBizError };
+    }
+
+    return defaultError;
   }
 
   private buildGoogleTools(
@@ -371,6 +401,40 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       },
     };
   };
+
+  private extractErrorObjectFromError(message: string) {
+    // 使用正则表达式匹配状态码部分 [数字 描述文本]
+    const regex = /^(.*?)(\[\d+ [^\]]+])(.*)$/;
+    const match = message.match(regex);
+
+    if (match) {
+      const prefix = match[1].trim();
+      const statusCodeWithBrackets = match[2].trim();
+      const message = match[3].trim();
+
+      // 提取状态码数字
+      const statusCodeMatch = statusCodeWithBrackets.match(/\[(\d+)/);
+      const statusCode = statusCodeMatch ? parseInt(statusCodeMatch[1]) : null;
+
+      // 创建包含状态码和消息的JSON
+      const resultJson = {
+        message: message,
+        statusCode: statusCode,
+        statusCodeText: statusCodeWithBrackets,
+      };
+
+      return {
+        errorDetails: resultJson,
+        prefix: prefix,
+      };
+    }
+
+    // 如果无法匹配，返回原始消息
+    return {
+      errorDetails: null,
+      prefix: message,
+    };
+  }
 }
 
 export default LobeGoogleAI;

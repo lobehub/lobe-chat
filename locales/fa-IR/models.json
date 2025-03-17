@@ -833,6 +833,12 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash ویژگی‌ها و بهبودهای نسل بعدی را ارائه می‌دهد، از جمله سرعت عالی، استفاده از ابزارهای بومی، تولید چندرسانه‌ای و پنجره متن 1M توکن."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "مدل متغیر Gemini 2.0 Flash که برای بهینه‌سازی هزینه و تأخیر کم طراحی شده است."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "مدل آزمایشی Gemini 2.0 Flash، از تولید تصویر پشتیبانی می‌کند"
+  },
   "gemini-2.0-flash-lite": {
     "description": "مدل متغیر Gemini 2.0 Flash برای بهینه‌سازی هزینه و تأخیر کم طراحی شده است."
   },

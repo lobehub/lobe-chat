@@ -833,6 +833,12 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flashは、卓越した速度、ネイティブツールの使用、マルチモーダル生成、1Mトークンのコンテキストウィンドウを含む次世代の機能と改善を提供します。"
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash モデルのバリアントで、コスト効率と低遅延などの目標に最適化されています。"
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Gemini 2.0 Flash 実験モデル、画像生成をサポート"
+  },
   "gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flashモデルのバリアントで、コスト効率と低遅延などの目標に最適化されています。"
   },

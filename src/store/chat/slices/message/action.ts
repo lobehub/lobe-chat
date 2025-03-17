@@ -21,6 +21,7 @@ import {
   MessageToolCall,
   ModelReasoning,
 } from '@/types/message';
+import { ChatImageItem } from '@/types/message/image';
 import { GroundingSearch } from '@/types/search';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
@@ -81,6 +82,7 @@ export interface ChatMessageAction {
       reasoning?: ModelReasoning;
       search?: GroundingSearch;
       metadata?: MessageMetadata;
+      imageList?: ChatImageItem[];
       model?: string;
       provider?: string;
     },
@@ -319,6 +321,7 @@ export const chatMessage: StateCreator<
       metadata: extra?.metadata,
       model: extra?.model,
       provider: extra?.provider,
+      imageList: extra?.imageList,
     });
     await refreshMessages();
   },

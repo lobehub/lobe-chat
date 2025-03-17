@@ -21,6 +21,7 @@ import {
   CreateMessageParams,
   MessageItem,
   ModelRankItem,
+  UpdateMessageParams,
 } from '@/types/message';
 import { merge } from '@/utils/merge';
 import { today } from '@/utils/time';
@@ -497,15 +498,25 @@ export class MessageModel {
   };
   // **************** Update *************** //
 
-  update = async (id: string, message: Partial<MessageItem>) => {
-    return this.db
-      .update(messages)
-      .set({
-        ...message,
-        // TODO: need a better way to handle this
-        role: message.role as any,
-      })
-      .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
+  update = async (id: string, { imageList, ...message }: Partial<UpdateMessageParams>) => {
+    return this.db.transaction(async (trx) => {
+      // 1. insert message files
+      if (imageList && imageList.length > 0) {
+        await trx
+          .insert(messagesFiles)
+          .values(imageList.map((file) => ({ fileId: file.id, messageId: id })));
+      }
+
+      return trx
+        .update(messages)
+        .set({
+          ...message,
+          // TODO: need a better way to handle this
+          // TODO: but I forget why 🤡
+          role: message.role as any,
+        })
+        .where(and(eq(messages.id, id), eq(messages.userId, this.userId)));
+    });
   };
 
   updatePluginState = async (id: string, state: Record<string, any>) => {

@@ -833,6 +833,12 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash oferuje funkcje i ulepszenia nowej generacji, w tym doskonałą prędkość, natywne korzystanie z narzędzi, generowanie multimodalne oraz okno kontekstowe o długości 1M tokenów."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash to wariant modelu, zoptymalizowany pod kątem efektywności kosztowej i niskiego opóźnienia."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Model eksperymentalny Gemini 2.0 Flash, wspierający generowanie obrazów"
+  },
   "gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flash to wariant modelu, zoptymalizowany pod kątem efektywności kosztowej i niskiego opóźnienia."
   },
