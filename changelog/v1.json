@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Support screenshot to clipboard when sharing."]
+    },
+    "date": "2025-03-17",
+    "version": "1.71.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update Wenxin & Hunyuan model list."]
+    },
+    "date": "2025-03-17",
+    "version": "1.71.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix claude 3.5+ models context max output."]
     },
     "date": "2025-03-15",
