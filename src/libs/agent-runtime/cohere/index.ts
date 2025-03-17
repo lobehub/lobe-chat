@@ -20,9 +20,15 @@ export const LobeCohereAI = LobeOpenAICompatibleFactory({
 
       return {
         ...rest,
-        frequency_penalty: frequency_penalty !== undefined ? Math.max(0, Math.min(1, frequency_penalty / 2)) : undefined,
-        presence_penalty: presence_penalty !== undefined ? Math.max(0, Math.min(1, presence_penalty / 2)) : undefined,
-        top_p: top_p !== undefined ? Math.max(0.01, Math.min(0.99, top_p)) : undefined,
+        frequency_penalty:
+          frequency_penalty !== undefined && frequency_penalty > 0 && frequency_penalty <= 1
+            ? frequency_penalty
+            : undefined,
+        presence_penalty:
+          presence_penalty !== undefined && presence_penalty > 0 && presence_penalty <= 1
+            ? presence_penalty
+            : undefined,
+        top_p: top_p !== undefined && top_p > 0 && top_p < 1 ? top_p : undefined,
       } as any;
     },
     noUserId: true,
