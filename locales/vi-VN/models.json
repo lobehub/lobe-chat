@@ -833,6 +833,12 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash cung cấp các tính năng và cải tiến thế hệ tiếp theo, bao gồm tốc độ vượt trội, sử dụng công cụ bản địa, tạo đa phương tiện và cửa sổ ngữ cảnh 1M token."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Biến thể mô hình Gemini 2.0 Flash, được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Mô hình thử nghiệm Gemini 2.0 Flash, hỗ trợ tạo hình ảnh"
+  },
   "gemini-2.0-flash-lite": {
     "description": "Biến thể mô hình Gemini 2.0 Flash được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
   },

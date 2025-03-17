@@ -833,6 +833,12 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash biedt next-gen functies en verbeteringen, waaronder uitstekende snelheid, native toolgebruik, multimodale generatie en een contextvenster van 1M tokens."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash modelvariant, geoptimaliseerd voor kosteneffectiviteit en lage latentie."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Gemini 2.0 Flash experimenteel model, ondersteunt afbeeldingsgeneratie"
+  },
   "gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flash is een modelvariant die is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
   },

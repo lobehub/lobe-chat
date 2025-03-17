@@ -95,3 +95,10 @@ export interface CheckFileHashResult {
   size?: number;
   url?: string;
 }
+
+export interface UploadBase64ToS3Result {
+  fileType: string;
+  hash: string;
+  metadata: FileMetadata;
+  size: number;
+}

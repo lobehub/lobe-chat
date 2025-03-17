@@ -207,7 +207,8 @@ export class ChunkModel {
       .leftJoin(files, eq(files.id, fileChunks.fileId))
       .where(inArray(fileChunks.fileId, fileIds))
       .orderBy((t) => desc(t.similarity))
-      .limit(5);
+      // 先放宽到 15
+      .limit(15);
 
     return result.map((item) => {
       return {
