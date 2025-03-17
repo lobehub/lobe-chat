@@ -114,10 +114,7 @@ RUN \
     && chown -R nextjs:nodejs /app /etc/proxychains4.conf
 
 ## Production image, copy all the files and run next
-FROM scratch
-
-# Copy all the files from app, set the correct permission for prerender cache
-COPY --from=app / /
+FROM app
 
 ENV NODE_ENV="production" \
     NODE_OPTIONS="--dns-result-order=ipv4first --use-openssl-ca" \
