@@ -323,5 +323,29 @@
     "bps": true,
     "folderMillis": 1741844738677,
     "hash": "2a7a98be2e49361391444d6fabf3fb5db0bcb6a65e5540e9c3d426ceeb1f7f3a"
+  },
+  {
+    "sql": [
+      "-- Simplified user_id migration script\n-- Contains three basic steps\n\nBEGIN;",
+      "\n\n-- Step 1: Add nullable user_id columns\nALTER TABLE \"agents_to_sessions\" ADD COLUMN IF NOT EXISTS \"user_id\" text;",
+      "\nALTER TABLE \"file_chunks\" ADD COLUMN IF NOT EXISTS \"user_id\" text;",
+      "\nALTER TABLE \"files_to_sessions\" ADD COLUMN IF NOT EXISTS \"user_id\" text;",
+      "\n\n-- Step 2: Populate user_id fields\n-- Populate user_id for agents_to_sessions\nUPDATE \"agents_to_sessions\" AS ats\nSET \"user_id\" = a.\"user_id\"\nFROM \"agents\" AS a\nWHERE ats.\"agent_id\" = a.\"id\";",
+      "\n\n-- Populate user_id for file_chunks\nUPDATE \"file_chunks\" AS fc\nSET \"user_id\" = f.\"user_id\"\nFROM \"files\" AS f\nWHERE fc.\"file_id\" = f.\"id\";",
+      "\n\n-- Populate user_id for files_to_sessions\nUPDATE \"files_to_sessions\" AS fts\nSET \"user_id\" = f.\"user_id\"\nFROM \"files\" AS f\nWHERE fts.\"file_id\" = f.\"id\";",
+      "\n\n-- Get user_id from sessions table (for handling potential NULL values)\nUPDATE \"files_to_sessions\" AS fts\nSET \"user_id\" = s.\"user_id\"\nFROM \"sessions\" AS s\nWHERE fts.\"session_id\" = s.\"id\" AND fts.\"user_id\" IS NULL;",
+      "\n\nUPDATE \"agents_to_sessions\" AS ats\nSET \"user_id\" = s.\"user_id\"\nFROM \"sessions\" AS s\nWHERE ats.\"session_id\" = s.\"id\" AND ats.\"user_id\" IS NULL;",
+      "\n\n-- Step 3: Add NOT NULL constraints and foreign keys\nALTER TABLE \"agents_to_sessions\" ALTER COLUMN \"user_id\" SET NOT NULL;",
+      "\nALTER TABLE \"file_chunks\" ALTER COLUMN \"user_id\" SET NOT NULL;",
+      "\nALTER TABLE \"files_to_sessions\" ALTER COLUMN \"user_id\" SET NOT NULL;",
+      "\n\nALTER TABLE \"agents_to_sessions\"\n    ADD CONSTRAINT \"agents_to_sessions_user_id_users_id_fk\"\n    FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\")\n    ON DELETE CASCADE ON UPDATE NO ACTION;",
+      "\n\nALTER TABLE \"file_chunks\"\n    ADD CONSTRAINT \"file_chunks_user_id_users_id_fk\"\n    FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\")\n    ON DELETE CASCADE ON UPDATE NO ACTION;",
+      "\n\nALTER TABLE \"files_to_sessions\"\n    ADD CONSTRAINT \"files_to_sessions_user_id_users_id_fk\"\n    FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\")\n    ON DELETE CASCADE ON UPDATE NO ACTION;",
+      "\n\nCOMMIT;",
+      "\n"
+    ],
+    "bps": true,
+    "folderMillis": 1742233314637,
+    "hash": "a31b1cc8b1daad073329582ee9890039998fdcc78bfe2b8c43fbae6be37801fb"
   }
 ]

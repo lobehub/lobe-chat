@@ -404,6 +404,7 @@ table rag_eval_evaluation_records {
 table agents_to_sessions {
   agent_id text [not null]
   session_id text [not null]
+  user_id text [not null]
 
   indexes {
     (agent_id, session_id) [pk]
@@ -414,6 +415,7 @@ table file_chunks {
   file_id varchar
   chunk_id uuid
   created_at "timestamp with time zone" [not null, default: `now()`]
+  user_id text [not null]
 
   indexes {
     (file_id, chunk_id) [pk]
@@ -423,6 +425,7 @@ table file_chunks {
 table files_to_sessions {
   file_id text [not null]
   session_id text [not null]
+  user_id text [not null]
 
   indexes {
     (file_id, session_id) [pk]
