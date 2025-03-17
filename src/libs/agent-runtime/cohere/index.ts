@@ -5,7 +5,7 @@ import type { ChatModelCard } from '@/types/llm';
 
 export interface CohereModelCard {
   context_length: number;
-  features: string[];
+  features: string[] | null;
   name: string;
   supports_vision: boolean;
 }
@@ -47,7 +47,7 @@ export const LobeCohereAI = LobeOpenAICompatibleFactory({
           displayName: knownModel?.displayName ?? undefined,
           enabled: knownModel?.enabled || false,
           functionCall:
-            model.features.includes("tools")
+            (model.features && model.features.includes("tools"))
             || knownModel?.abilities?.functionCall
             || false,
           id: model.name,
