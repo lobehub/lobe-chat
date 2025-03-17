@@ -2,7 +2,7 @@
 import { eq, inArray } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { getTestDBInstance } from '@/database/core/dbForTest';
 import { FilesTabs, SortType } from '@/types/files';
 
 import { files, globalFiles, knowledgeBaseFiles, knowledgeBases, users } from '../../../schemas';

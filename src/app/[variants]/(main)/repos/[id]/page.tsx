@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { serverDB } from '@/database/server';
+import { serverDB } from '@/database';
 import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 import FileManager from '@/features/FileManager';
 import { PagePropsWithId } from '@/types/next';

@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { enableClerk } from '@/const/auth';
-import { serverDB } from '@/database/server';
+import { serverDB } from '@/database';
 import { MessageModel } from '@/database/server/models/message';
 import { SessionModel } from '@/database/server/models/session';
 import { UserModel, UserNotFoundError } from '@/database/server/models/user';

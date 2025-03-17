@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
+import { serverDB } from '@/database';
 import { UserItem } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';

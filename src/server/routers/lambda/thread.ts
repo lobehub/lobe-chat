@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database';
 import { insertThreadSchema } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
 import { ThreadModel } from '@/database/server/models/thread';
 import { authedProcedure, router } from '@/libs/trpc';

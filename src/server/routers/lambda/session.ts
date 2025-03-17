@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database';
 import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 import { SessionModel } from '@/database/server/models/session';
 import { SessionGroupModel } from '@/database/server/models/sessionGroup';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';

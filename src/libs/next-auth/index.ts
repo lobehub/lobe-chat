@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 
 import { getServerDBConfig } from '@/config/db';
-import { serverDB } from '@/database/server';
+import { serverDB } from '@/database';
 
 import { LobeNextAuthDbAdapter } from './adapter';
 import config from './auth.config';

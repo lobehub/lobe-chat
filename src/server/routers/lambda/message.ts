@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database';
 import { updateMessagePluginSchema } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { getFullFileUrl } from '@/server/utils/files';

@@ -1,8 +1,8 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
+import { serverDB } from '@/database';
 import { DataImporterRepos } from '@/database/repositories/dataImporter';
-import { serverDB } from '@/database/server';
 import { authedProcedure, router } from '@/libs/trpc';
 import { S3 } from '@/server/modules/S3';
 import { ImportResults, ImporterEntryData } from '@/types/importer';

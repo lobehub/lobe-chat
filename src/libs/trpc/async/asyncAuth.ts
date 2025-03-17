@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 
 import { serverDBEnv } from '@/config/db';
-import { serverDB } from '@/database/server';
+import { serverDB } from '@/database';
 import { UserModel } from '@/database/server/models/user';
 
 import { asyncTrpc } from './init';

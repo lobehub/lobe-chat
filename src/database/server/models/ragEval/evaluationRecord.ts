@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm/expressions';
 
+import { serverDB } from '@/database';
 import { NewEvaluationRecordsItem, evaluationRecords } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 
 export class EvaluationRecordModel {
   private userId: string;

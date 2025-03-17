@@ -2,7 +2,7 @@ import { and, eq, inArray } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { getTestDBInstance } from '@/database/core/dbForTest';
 import { idGenerator } from '@/database/utils/idGenerator';
 
 import {

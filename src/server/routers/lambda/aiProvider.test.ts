@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { serverDB } from '@/database';
 import { AiInfraRepos } from '@/database/repositories/aiInfra';
-import { serverDB } from '@/database/server';
 import { AiProviderModel } from '@/database/server/models/aiProvider';
 import { UserModel } from '@/database/server/models/user';
 import { getServerGlobalConfig } from '@/server/globalConfig';

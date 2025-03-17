@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database';
 import { AiInfraRepos } from '@/database/repositories/aiInfra';
-import { serverDB } from '@/database/server';
 import { AiModelModel } from '@/database/server/models/aiModel';
 import { UserModel } from '@/database/server/models/user';
 import { authedProcedure, router } from '@/libs/trpc';

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { serverDB } from '@/database/server';
+import { serverDB } from '@/database';
 import { PluginModel } from '@/database/server/models/plugin';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { LobeTool } from '@/types/tool';

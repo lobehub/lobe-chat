@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { serverDBEnv } from '@/config/db';
-import { serverDB } from '@/database/server';
+import { serverDB } from '@/database';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { FileModel } from '@/database/server/models/file';

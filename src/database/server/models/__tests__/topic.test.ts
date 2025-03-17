@@ -1,7 +1,7 @@
 import { eq, inArray } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { getTestDBInstance } from '@/database/core/dbForTest';
 
 import { messages, sessions, topics, users } from '../../../schemas';
 import { CreateTopicParams, TopicModel } from '../topic';

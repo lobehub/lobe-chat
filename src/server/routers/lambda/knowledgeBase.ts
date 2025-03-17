@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
+import { serverDB } from '@/database';
 import { insertKnowledgeBasesSchema } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 import { authedProcedure, router } from '@/libs/trpc';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';

@@ -1,6 +1,6 @@
 import { UserJSON } from '@clerk/backend';
 
-import { serverDB } from '@/database/server';
+import { serverDB } from '@/database';
 import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';

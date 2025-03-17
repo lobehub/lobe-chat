@@ -1,7 +1,7 @@
 import { and, eq, inArray } from 'drizzle-orm/expressions';
 
+import { serverDB } from '@/database';
 import { NewEvalDatasetRecordsItem, evalDatasetRecords, files } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 import { EvalDatasetRecordRefFile } from '@/types/eval';
 
 export class EvalDatasetRecordModel {

@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { serverDB } from '@/database/server';
+import { serverDB } from '@/database';
 import { AgentModel } from '@/database/server/models/agent';
 import { FileModel } from '@/database/server/models/file';
 import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Flexbox } from 'react-layout-kit';
 
-import { serverDB } from '@/database/server';
+import { serverDB } from '@/database';
 import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 
 import Head from './Head';

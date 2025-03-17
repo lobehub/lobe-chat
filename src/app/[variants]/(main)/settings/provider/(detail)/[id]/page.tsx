@@ -2,8 +2,8 @@ import { redirect } from 'next/navigation';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { isServerMode } from '@/const/version';
+import { serverDB } from '@/database';
 import { AiInfraRepos } from '@/database/repositories/aiInfra';
-import { serverDB } from '@/database/server';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { PagePropsWithId } from '@/types/next';
