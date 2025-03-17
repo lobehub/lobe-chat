@@ -1,6 +1,5 @@
 name: '🐛 Bug Report'
 description: 'Report an bug'
-title: ''
 labels: ['unconfirm']
 type: Bug
 body:
