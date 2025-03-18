@@ -363,6 +363,7 @@ describe('SessionModel', () => {
       const result = await sessionModel.batchCreate(sessions);
 
       // 断言结果
+      // pglite return affectedRows while postgres return rowCount
       expect((result as any).affectedRows || result.rowCount).toEqual(2);
     });
 

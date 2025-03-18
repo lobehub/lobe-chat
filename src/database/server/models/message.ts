@@ -629,13 +629,19 @@ export class MessageModel {
       .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
 
   deleteMessageTranslate = async (id: string) =>
-    this.db.delete(messageTranslates).where(and(eq(messageTranslates.id, id)));
+    this.db
+      .delete(messageTranslates)
+      .where(and(eq(messageTranslates.id, id), eq(messageTranslates.userId, this.userId)));
 
   deleteMessageTTS = async (id: string) =>
-    this.db.delete(messageTTS).where(and(eq(messageTTS.id, id)));
+    this.db
+      .delete(messageTTS)
+      .where(and(eq(messageTTS.id, id), eq(messageTTS.userId, this.userId)));
 
   deleteMessageQuery = async (id: string) =>
-    this.db.delete(messageQueries).where(and(eq(messageQueries.id, id)));
+    this.db
+      .delete(messageQueries)
+      .where(and(eq(messageQueries.id, id), eq(messageQueries.userId, this.userId)));
 
   deleteMessagesBySession = async (sessionId?: string | null, topicId?: string | null) =>
     this.db
