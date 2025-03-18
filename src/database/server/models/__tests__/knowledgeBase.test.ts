@@ -160,12 +160,14 @@ describe('KnowledgeBaseModel', () => {
           url: 'https://example.com/document.pdf',
           size: 1000,
           fileType: 'application/pdf',
+          creator: userId,
         },
         {
           hashId: 'hash2',
           url: 'https://example.com/image.jpg',
           size: 500,
           fileType: 'image/jpeg',
+          creator: userId,
         },
       ]);
 
@@ -198,12 +200,14 @@ describe('KnowledgeBaseModel', () => {
           url: 'https://example.com/document.pdf',
           size: 1000,
           fileType: 'application/pdf',
+          creator: userId,
         },
         {
           hashId: 'hash2',
           url: 'https://example.com/image.jpg',
           size: 500,
           fileType: 'image/jpeg',
+          creator: userId,
         },
       ]);
 

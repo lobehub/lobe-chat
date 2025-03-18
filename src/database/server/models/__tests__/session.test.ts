@@ -236,8 +236,8 @@ describe('SessionModel', () => {
       ]);
 
       await serverDB.insert(agentsToSessions).values([
-        { agentId: 'agent-1', sessionId: '1' },
-        { agentId: 'agent-2', sessionId: '2' },
+        { agentId: 'agent-1', sessionId: '1', userId },
+        { agentId: 'agent-2', sessionId: '2', userId },
       ]);
 
       const result = await sessionModel.queryByKeyword('hello');
@@ -265,8 +265,8 @@ describe('SessionModel', () => {
       ]);
 
       await serverDB.insert(agentsToSessions).values([
-        { agentId: 'agent-1', sessionId: '1' },
-        { agentId: 'agent-2', sessionId: '2' },
+        { agentId: 'agent-1', sessionId: '1', userId },
+        { agentId: 'agent-2', sessionId: '2', userId },
       ]);
 
       const result = await sessionModel.queryByKeyword('keyword');
@@ -288,9 +288,9 @@ describe('SessionModel', () => {
       ]);
 
       await serverDB.insert(agentsToSessions).values([
-        { agentId: '1', sessionId: '1' },
-        { agentId: '2', sessionId: '2' },
-        { agentId: '3', sessionId: '3' },
+        { agentId: '1', sessionId: '1', userId },
+        { agentId: '2', sessionId: '2', userId },
+        { agentId: '3', sessionId: '3', userId },
       ]);
 
       const result = await sessionModel.queryByKeyword('keyword');
@@ -391,7 +391,7 @@ describe('SessionModel', () => {
           .insert(sessions)
           .values({ id: '1', userId, type: 'agent', title: 'Original Session', pinned: true });
         await trx.insert(agents).values({ id: 'agent-1', userId, model: 'gpt-3.5-turbo' });
-        await trx.insert(agentsToSessions).values({ agentId: 'agent-1', sessionId: '1' });
+        await trx.insert(agentsToSessions).values({ agentId: 'agent-1', sessionId: '1', userId });
       });
 
       // 调用 duplicate 方法
@@ -801,9 +801,9 @@ describe('SessionModel', () => {
 
         // Link agents to sessions
         await trx.insert(agentsToSessions).values([
-          { sessionId: '1', agentId: 'a1' },
-          { sessionId: '2', agentId: 'a2' },
-          { sessionId: '3', agentId: 'a3' },
+          { sessionId: '1', agentId: 'a1', userId },
+          { sessionId: '2', agentId: 'a2', userId },
+          { sessionId: '3', agentId: 'a3', userId },
         ]);
 
         // Create topics (different counts for ranking)
@@ -863,9 +863,9 @@ describe('SessionModel', () => {
         ]);
 
         await trx.insert(agentsToSessions).values([
-          { sessionId: '1', agentId: 'a1' },
-          { sessionId: '2', agentId: 'a2' },
-          { sessionId: '3', agentId: 'a3' },
+          { sessionId: '1', agentId: 'a1', userId },
+          { sessionId: '2', agentId: 'a2', userId },
+          { sessionId: '3', agentId: 'a3', userId },
         ]);
 
         await trx.insert(topics).values([
@@ -899,8 +899,8 @@ describe('SessionModel', () => {
         ]);
 
         await trx.insert(agentsToSessions).values([
-          { sessionId: '1', agentId: 'a1' },
-          { sessionId: '2', agentId: 'a2' },
+          { sessionId: '1', agentId: 'a1', userId },
+          { sessionId: '2', agentId: 'a2', userId },
         ]);
 
         // No topics created

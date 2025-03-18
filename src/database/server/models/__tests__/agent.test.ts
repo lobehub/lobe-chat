@@ -77,7 +77,7 @@ describe('AgentModel', () => {
       const sessionId = 'test-session-id';
       await serverDB.insert(agents).values({ id: agentId, userId });
       await serverDB.insert(sessions).values({ id: sessionId, userId });
-      await serverDB.insert(agentsToSessions).values({ agentId, sessionId });
+      await serverDB.insert(agentsToSessions).values({ agentId, sessionId, userId });
 
       const result = await agentModel.findBySessionId(sessionId);
 

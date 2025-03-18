@@ -201,13 +201,14 @@ describe('MessageModel', () => {
           { id: 'f-1', url: 'abc', name: 'file-1', userId, fileType: 'image/png', size: 100 },
           { id: 'f-3', url: 'abc', name: 'file-3', userId, fileType: 'image/png', size: 400 },
         ]);
-        await trx
-          .insert(messageTTS)
-          .values([{ id: '1' }, { id: '2', voice: 'a', fileId: 'f-1', contentMd5: 'abc' }]);
+        await trx.insert(messageTTS).values([
+          { id: '1', userId },
+          { id: '2', voice: 'a', fileId: 'f-1', contentMd5: 'abc', userId },
+        ]);
 
         await trx.insert(messagesFiles).values([
-          { fileId: 'f-0', messageId: '1' },
-          { fileId: 'f-3', messageId: '1' },
+          { fileId: 'f-0', messageId: '1', userId },
+          { fileId: 'f-3', messageId: '1', userId },
         ]);
       });
 
@@ -244,10 +245,10 @@ describe('MessageModel', () => {
         ]);
         await trx
           .insert(messageTranslates)
-          .values([{ id: '1', content: 'translated', from: 'en', to: 'zh' }]);
+          .values([{ id: '1', content: 'translated', from: 'en', to: 'zh', userId }]);
         await trx
           .insert(messageTTS)
-          .values([{ id: '1', voice: 'voice1', fileId: 'f1', contentMd5: 'md5' }]);
+          .values([{ id: '1', voice: 'voice1', fileId: 'f1', contentMd5: 'md5', userId }]);
       });
 
       // 调用 query 方法
@@ -316,12 +317,14 @@ describe('MessageModel', () => {
         // 关联消息和文件
         await trx.insert(messagesFiles).values({
           messageId: 'msg1',
+          userId,
           fileId: 'file1',
         });
 
         // 创建文件块关联
         await trx.insert(fileChunks).values({
           fileId: 'file1',
+          userId,
           chunkId: chunk1Id,
         });
 
@@ -329,6 +332,7 @@ describe('MessageModel', () => {
         await trx.insert(messageQueries).values({
           id: query1Id,
           messageId: 'msg1',
+          userId,
           userQuery: 'original query',
           rewriteQuery: 'rewritten query',
         });
@@ -339,6 +343,7 @@ describe('MessageModel', () => {
           queryId: query1Id,
           chunkId: chunk1Id,
           similarity: '0.95',
+          userId,
         });
       });
 
@@ -764,7 +769,7 @@ describe('MessageModel', () => {
         ]);
         await trx
           .insert(messagePlugins)
-          .values([{ id: '2', toolCallId: 'tool1', identifier: 'plugin-1' }]);
+          .values([{ id: '2', toolCallId: 'tool1', identifier: 'plugin-1', userId }]);
       });
 
       // 调用 deleteMessage 方法
@@ -858,11 +863,15 @@ describe('MessageModel', () => {
     it('should update the state field in messagePlugins table', async () => {
       // 创建测试数据
       await serverDB.insert(messages).values({ id: '1', content: 'abc', role: 'user', userId });
-      await serverDB
-        .insert(messagePlugins)
-        .values([
-          { id: '1', toolCallId: 'tool1', identifier: 'plugin1', state: { key1: 'value1' } },
-        ]);
+      await serverDB.insert(messagePlugins).values([
+        {
+          id: '1',
+          toolCallId: 'tool1',
+          identifier: 'plugin1',
+          state: { key1: 'value1' },
+          userId,
+        },
+      ]);
 
       // 调用 updatePluginState 方法
       await messageModel.updatePluginState('1', { key2: 'value2' });
@@ -884,11 +893,15 @@ describe('MessageModel', () => {
     it('should update the state field in messagePlugins table', async () => {
       // 创建测试数据
       await serverDB.insert(messages).values({ id: '1', content: 'abc', role: 'user', userId });
-      await serverDB
-        .insert(messagePlugins)
-        .values([
-          { id: '1', toolCallId: 'tool1', identifier: 'plugin1', state: { key1: 'value1' } },
-        ]);
+      await serverDB.insert(messagePlugins).values([
+        {
+          id: '1',
+          toolCallId: 'tool1',
+          identifier: 'plugin1',
+          state: { key1: 'value1' },
+          userId,
+        },
+      ]);
 
       // 调用 updatePluginState 方法
       await messageModel.updateMessagePlugin('1', { identifier: 'plugin2' });
@@ -939,7 +952,7 @@ describe('MessageModel', () => {
           .values([{ id: '1', userId, role: 'user', content: 'message 1' }]);
         await trx
           .insert(messageTranslates)
-          .values([{ id: '1', content: 'translated message 1', from: 'en', to: 'zh' }]);
+          .values([{ id: '1', content: 'translated message 1', from: 'en', to: 'zh', userId }]);
       });
 
       // 调用 updateTranslate 方法
@@ -980,7 +993,7 @@ describe('MessageModel', () => {
           .values([{ id: '1', userId, role: 'user', content: 'message 1' }]);
         await trx
           .insert(messageTTS)
-          .values([{ id: '1', contentMd5: 'md5', fileId: 'f1', voice: 'voice1' }]);
+          .values([{ id: '1', contentMd5: 'md5', fileId: 'f1', voice: 'voice1', userId }]);
       });
 
       // 调用 updateTTS 方法
@@ -997,7 +1010,7 @@ describe('MessageModel', () => {
     it('should delete the message translate record', async () => {
       // 创建测试数据
       await serverDB.insert(messages).values([{ id: '1', role: 'abc', userId }]);
-      await serverDB.insert(messageTranslates).values([{ id: '1' }]);
+      await serverDB.insert(messageTranslates).values([{ id: '1', userId }]);
 
       // 调用 deleteMessageTranslate 方法
       await messageModel.deleteMessageTranslate('1');
@@ -1016,7 +1029,7 @@ describe('MessageModel', () => {
     it('should delete the message TTS record', async () => {
       // 创建测试数据
       await serverDB.insert(messages).values([{ id: '1', role: 'abc', userId }]);
-      await serverDB.insert(messageTTS).values([{ id: '1' }]);
+      await serverDB.insert(messageTTS).values([{ userId, id: '1' }]);
 
       // 调用 deleteMessageTTS 方法
       await messageModel.deleteMessageTTS('1');
@@ -1068,6 +1081,7 @@ describe('MessageModel', () => {
           userQuery: 'test query',
           rewriteQuery: 'rewritten query',
           embeddingsId: embeddings1Id,
+          userId,
         });
       });
 

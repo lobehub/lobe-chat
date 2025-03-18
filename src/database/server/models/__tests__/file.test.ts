@@ -95,6 +95,7 @@ describe('FileModel', () => {
         size: 100,
         url: 'https://example.com/global-file.txt',
         metadata: { key: 'value' },
+        creator: userId,
       };
 
       const result = await fileModel.createGlobalFile(globalFile);
@@ -115,6 +116,7 @@ describe('FileModel', () => {
         size: 100,
         url: 'https://example.com/existing-file.txt',
         metadata: { key: 'value' },
+        creator: userId,
       };
 
       await serverDB.insert(globalFiles).values(globalFile);
@@ -137,6 +139,7 @@ describe('FileModel', () => {
         url: 'https://example.com/file1.txt',
         size: 100,
         fileType: 'text/plain',
+        creator: userId,
       });
 
       const { id } = await fileModel.create({
@@ -163,6 +166,7 @@ describe('FileModel', () => {
         url: 'https://example.com/file1.txt',
         size: 100,
         fileType: 'text/plain',
+        creator: userId,
       });
 
       const { id } = await fileModel.create({
@@ -192,12 +196,14 @@ describe('FileModel', () => {
         url: 'https://example.com/file1.txt',
         size: 100,
         fileType: 'text/plain',
+        creator: userId,
       });
       await fileModel.createGlobalFile({
         hashId: '2',
         url: 'https://example.com/file2.txt',
         size: 200,
         fileType: 'text/plain',
+        creator: userId,
       });
 
       const file1 = await fileModel.create({
@@ -240,12 +246,14 @@ describe('FileModel', () => {
         url: 'https://example.com/file1.txt',
         size: 100,
         fileType: 'text/plain',
+        creator: userId,
       });
       await fileModel.createGlobalFile({
         hashId: '2',
         url: 'https://example.com/file2.txt',
         size: 200,
         fileType: 'text/plain',
+        creator: userId,
       });
 
       const file1 = await fileModel.create({
@@ -450,7 +458,7 @@ describe('FileModel', () => {
         ]);
         await serverDB
           .insert(knowledgeBaseFiles)
-          .values([{ fileId: 'file1', knowledgeBaseId: 'kb1' }]);
+          .values([{ fileId: 'file1', knowledgeBaseId: 'kb1', userId }]);
       });
 
       it('should query files in a specific knowledge base', async () => {
@@ -551,12 +559,14 @@ describe('FileModel', () => {
         url: 'https://example.com/document.pdf',
         size: 1000,
         fileType: 'application/pdf',
+        creator: userId,
       },
       {
         hashId: 'hash2',
         url: 'https://example.com/image.jpg',
         size: 500,
         fileType: 'image/jpeg',
+        creator: userId,
       },
     ]);
 
@@ -674,6 +684,7 @@ describe('FileModel', () => {
         size: 100,
         url: 'https://example.com/global-file.txt',
         metadata: { key: 'value' },
+        creator: userId,
       };
 
       await serverDB.insert(globalFiles).values(globalFile);
@@ -700,12 +711,14 @@ describe('FileModel', () => {
         fileType: 'text/plain',
         size: 100,
         url: 'https://example.com/file1.txt',
+        creator: userId,
       };
       const globalFiles2 = {
         hashId: 'hash2',
         fileType: 'text/plain',
         size: 200,
         url: 'https://example.com/file2.txt',
+        creator: userId,
       };
 
       await serverDB.insert(globalFiles).values([globalFiles1, globalFiles2]);
