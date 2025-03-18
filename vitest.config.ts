@@ -30,7 +30,6 @@ export default defineConfig({
       '**/node_modules/**',
       '**/dist/**',
       '**/build/**',
-      'src/database/server/**/**',
       'src/database/repositories/dataImporter/**/**',
     ],
     globals: true,

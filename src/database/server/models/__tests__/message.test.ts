@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 import { MessageItem } from '@/types/message';
 import { uuid } from '@/utils/uuid';
 
@@ -23,9 +23,10 @@ import {
   users,
 } from '../../../schemas';
 import { MessageModel } from '../message';
+import { getTestDB } from './_util';
 import { codeEmbedding } from './fixtures/embedding';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'message-db';
 const messageModel = new MessageModel(serverDB, userId);

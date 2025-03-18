@@ -2,7 +2,7 @@
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 
 import {
   agents,
@@ -15,8 +15,9 @@ import {
   users,
 } from '../../../schemas';
 import { AgentModel } from '../agent';
+import { getTestDB } from './_util';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'agent-model-test-user-id';
 const agentModel = new AgentModel(serverDB, userId);

@@ -2,14 +2,15 @@
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 import { uuid } from '@/utils/uuid';
 
 import { chunks, embeddings, fileChunks, files, unstructuredChunks, users } from '../../../schemas';
 import { ChunkModel } from '../chunk';
+import { getTestDB } from './_util';
 import { codeEmbedding, designThinkingQuery, designThinkingQuery2 } from './fixtures/embedding';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'chunk-model-test-user-id';
 const chunkModel = new ChunkModel(serverDB, userId);
