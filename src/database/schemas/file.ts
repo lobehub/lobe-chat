@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import {
   boolean,
+  index,
   integer,
   jsonb,
   pgTable,
@@ -23,7 +24,9 @@ export const globalFiles = pgTable('global_files', {
   size: integer('size').notNull(),
   url: text('url').notNull(),
   metadata: jsonb('metadata'),
-
+  creator: text('creator')
+    .references(() => users.id, { onDelete: 'set null' })
+    .notNull(),
   createdAt: createdAt(),
   accessedAt: accessedAt(),
 });
@@ -31,31 +34,38 @@ export const globalFiles = pgTable('global_files', {
 export type NewGlobalFile = typeof globalFiles.$inferInsert;
 export type GlobalFileItem = typeof globalFiles.$inferSelect;
 
-export const files = pgTable('files', {
-  id: text('id')
-    .$defaultFn(() => idGenerator('files'))
-    .primaryKey(),
+export const files = pgTable(
+  'files',
+  {
+    id: text('id')
+      .$defaultFn(() => idGenerator('files'))
+      .primaryKey(),
 
-  userId: text('user_id')
-    .references(() => users.id, { onDelete: 'cascade' })
-    .notNull(),
-  fileType: varchar('file_type', { length: 255 }).notNull(),
-  fileHash: varchar('file_hash', { length: 64 }).references(() => globalFiles.hashId, {
-    onDelete: 'no action',
-  }),
-  name: text('name').notNull(),
-  size: integer('size').notNull(),
-  url: text('url').notNull(),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    fileType: varchar('file_type', { length: 255 }).notNull(),
+    fileHash: varchar('file_hash', { length: 64 }).references(() => globalFiles.hashId, {
+      onDelete: 'no action',
+    }),
+    name: text('name').notNull(),
+    size: integer('size').notNull(),
+    url: text('url').notNull(),
 
-  metadata: jsonb('metadata'),
-  chunkTaskId: uuid('chunk_task_id').references(() => asyncTasks.id, { onDelete: 'set null' }),
-  embeddingTaskId: uuid('embedding_task_id').references(() => asyncTasks.id, {
-    onDelete: 'set null',
-  }),
+    metadata: jsonb('metadata'),
+    chunkTaskId: uuid('chunk_task_id').references(() => asyncTasks.id, { onDelete: 'set null' }),
+    embeddingTaskId: uuid('embedding_task_id').references(() => asyncTasks.id, {
+      onDelete: 'set null',
+    }),
 
-  ...timestamps,
-});
-
+    ...timestamps,
+  },
+  (table) => {
+    return {
+      fileHashIdx: index('file_hash_idx').on(table.fileHash),
+    };
+  },
+);
 export type NewFile = typeof files.$inferInsert;
 export type FileItem = typeof files.$inferSelect;
 
@@ -97,19 +107,15 @@ export const knowledgeBaseFiles = pgTable(
       .references(() => files.id, { onDelete: 'cascade' })
       .notNull(),
 
-    // userId: text('user_id')
-    //   .references(() => users.id, { onDelete: 'cascade' })
-    //   .notNull(),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
 
     createdAt: createdAt(),
   },
   (t) => ({
     pk: primaryKey({
-      columns: [
-        t.knowledgeBaseId,
-        t.fileId,
-        // t.userId
-      ],
+      columns: [t.knowledgeBaseId, t.fileId],
     }),
   }),
 );

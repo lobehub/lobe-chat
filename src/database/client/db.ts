@@ -146,13 +146,15 @@ export class DatabaseManager {
   private async migrate(skipMultiRun = false): Promise<DrizzleInstance> {
     if (this.isLocalDBSchemaSynced && skipMultiRun) return this.db;
 
-    const cacheHash = localStorage.getItem(pgliteSchemaHashCache);
-    const hash = Md5.hashStr(JSON.stringify(migrations));
-
-    // if hash is the same, no need to migrate
-    if (hash === cacheHash) {
-      this.isLocalDBSchemaSynced = true;
-      return this.db;
+    let hash: string | undefined;
+    if (typeof localStorage !== 'undefined') {
+      const cacheHash = localStorage.getItem(pgliteSchemaHashCache);
+      hash = Md5.hashStr(JSON.stringify(migrations));
+      // if hash is the same, no need to migrate
+      if (hash === cacheHash) {
+        this.isLocalDBSchemaSynced = true;
+        return this.db;
+      }
     }
 
     const start = Date.now();
@@ -162,7 +164,11 @@ export class DatabaseManager {
       // refs: https://github.com/drizzle-team/drizzle-orm/discussions/2532
       // @ts-expect-error
       await this.db.dialect.migrate(migrations, this.db.session, {});
-      localStorage.setItem(pgliteSchemaHashCache, hash);
+
+      if (typeof localStorage !== 'undefined' && hash) {
+        localStorage.setItem(pgliteSchemaHashCache, hash);
+      }
+
       this.isLocalDBSchemaSynced = true;
 
       console.info(`🗂 Migration success, take ${Date.now() - start}ms`);

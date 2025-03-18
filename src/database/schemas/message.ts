@@ -95,6 +95,9 @@ export const messagePlugins = pgTable('message_plugins', {
   identifier: text('identifier'),
   state: jsonb('state'),
   error: jsonb('error'),
+  userId: text('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull(),
 });
 
 export type MessagePluginItem = typeof messagePlugins.$inferSelect;
@@ -107,6 +110,9 @@ export const messageTTS = pgTable('message_tts', {
   contentMd5: text('content_md5'),
   fileId: text('file_id').references(() => files.id, { onDelete: 'cascade' }),
   voice: text('voice'),
+  userId: text('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull(),
 });
 
 export const messageTranslates = pgTable('message_translates', {
@@ -116,6 +122,9 @@ export const messageTranslates = pgTable('message_translates', {
   content: text('content'),
   from: text('from'),
   to: text('to'),
+  userId: text('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull(),
 });
 
 // if the message contains a file
@@ -129,6 +138,9 @@ export const messagesFiles = pgTable(
     messageId: text('message_id')
       .notNull()
       .references(() => messages.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.fileId, t.messageId] }),
@@ -142,6 +154,9 @@ export const messageQueries = pgTable('message_queries', {
     .notNull(),
   rewriteQuery: text('rewrite_query'),
   userQuery: text('user_query'),
+  userId: text('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull(),
   embeddingsId: uuid('embeddings_id').references(() => embeddings.id, { onDelete: 'set null' }),
 });
 
@@ -154,6 +169,9 @@ export const messageQueryChunks = pgTable(
     queryId: uuid('query_id').references(() => messageQueries.id, { onDelete: 'cascade' }),
     chunkId: uuid('chunk_id').references(() => chunks.id, { onDelete: 'cascade' }),
     similarity: numeric('similarity', { precision: 6, scale: 5 }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.chunkId, t.messageId, t.queryId] }),
@@ -168,6 +186,9 @@ export const messageChunks = pgTable(
   {
     messageId: text('message_id').references(() => messages.id, { onDelete: 'cascade' }),
     chunkId: uuid('chunk_id').references(() => chunks.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.chunkId, t.messageId] }),
