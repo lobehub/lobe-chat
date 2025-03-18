@@ -363,7 +363,7 @@ describe('SessionModel', () => {
       const result = await sessionModel.batchCreate(sessions);
 
       // 断言结果
-      expect(result.rowCount).toEqual(2);
+      expect((result as any).affectedRows || result.rowCount).toEqual(2);
     });
 
     it.skip('should set group to default if group does not exist', async () => {
