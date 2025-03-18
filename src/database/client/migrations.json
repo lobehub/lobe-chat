@@ -327,7 +327,8 @@
   {
     "sql": [
       "-- 完整的用户ID迁移脚本\n-- 包含所有表的字段添加、数据填充和约束设置\n\nBEGIN;",
-      "\n\nCREATE INDEX \"file_hash_idx\" ON \"files\" USING btree (\"file_hash\");\n\n-- 步骤 1: 添加可为空的 user_id 列到所有需要的表\nALTER TABLE \"global_files\" ADD COLUMN IF NOT EXISTS \"creator\" text;",
+      "\n\nCREATE INDEX \"file_hash_idx\" ON \"files\" USING btree (\"file_hash\");",
+      "\n\n-- 步骤 1: 添加可为空的 user_id 列到所有需要的表\nALTER TABLE \"global_files\" ADD COLUMN IF NOT EXISTS \"creator\" text;",
       "\nALTER TABLE \"knowledge_base_files\" ADD COLUMN IF NOT EXISTS \"user_id\" text;",
       "\nALTER TABLE \"message_chunks\" ADD COLUMN IF NOT EXISTS \"user_id\" text;",
       "\nALTER TABLE \"message_plugins\" ADD COLUMN IF NOT EXISTS \"user_id\" text;",
@@ -383,6 +384,6 @@
     ],
     "bps": true,
     "folderMillis": 1742269437903,
-    "hash": "80b3d7af9d36eae8186aea6b1dc120f72ff76cf45e368352bb0786174caf4834"
+    "hash": "0f37167b5f24f0805d08b3c8b2bac618f56e7420dc795564879194ebce5ff5f3"
   }
 ]

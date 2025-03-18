@@ -3,7 +3,7 @@
 
 BEGIN;--> statement-breakpoint
 
-CREATE INDEX "file_hash_idx" ON "files" USING btree ("file_hash");
+CREATE INDEX "file_hash_idx" ON "files" USING btree ("file_hash");--> statement-breakpoint
 
 -- 步骤 1: 添加可为空的 user_id 列到所有需要的表
 ALTER TABLE "global_files" ADD COLUMN IF NOT EXISTS "creator" text;--> statement-breakpoint
