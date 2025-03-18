@@ -2,7 +2,7 @@
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 
 import {
   agents,
@@ -13,10 +13,11 @@ import {
   knowledgeBases,
   sessions,
   users,
-} from '../../../schemas';
-import { AgentModel } from '../agent';
+} from '../../schemas';
+import { AgentModel } from '../../server/models/agent';
+import { getTestDB } from './_util';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'agent-model-test-user-id';
 const agentModel = new AgentModel(serverDB, userId);
@@ -77,7 +78,7 @@ describe('AgentModel', () => {
       const sessionId = 'test-session-id';
       await serverDB.insert(agents).values({ id: agentId, userId });
       await serverDB.insert(sessions).values({ id: sessionId, userId });
-      await serverDB.insert(agentsToSessions).values({ agentId, sessionId });
+      await serverDB.insert(agentsToSessions).values({ agentId, sessionId, userId });
 
       const result = await agentModel.findBySessionId(sessionId);
 
