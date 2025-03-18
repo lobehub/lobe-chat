@@ -1,11 +1,11 @@
--- 完整的用户ID迁移脚本
--- 包含所有表的字段添加、数据填充和约束设置
+-- Complete User ID Migration Script
+-- Includes adding columns to all tables, populating data, and setting constraints
 
 BEGIN;--> statement-breakpoint
 
 CREATE INDEX "file_hash_idx" ON "files" USING btree ("file_hash");--> statement-breakpoint
 
--- 步骤 1: 添加可为空的 user_id 列到所有需要的表
+-- Step 1: Add nullable user_id columns to all required tables
 ALTER TABLE "global_files" ADD COLUMN IF NOT EXISTS "creator" text;--> statement-breakpoint
 ALTER TABLE "knowledge_base_files" ADD COLUMN IF NOT EXISTS "user_id" text;--> statement-breakpoint
 ALTER TABLE "message_chunks" ADD COLUMN IF NOT EXISTS "user_id" text;--> statement-breakpoint
@@ -19,59 +19,58 @@ ALTER TABLE "agents_to_sessions" ADD COLUMN IF NOT EXISTS "user_id" text;--> sta
 ALTER TABLE "file_chunks" ADD COLUMN IF NOT EXISTS "user_id" text;--> statement-breakpoint
 ALTER TABLE "files_to_sessions" ADD COLUMN IF NOT EXISTS "user_id" text;--> statement-breakpoint
 
--- 步骤 2: 填充 user_id 字段
--- 从关联表中获取 user_id
+-- Step 2: Populate user_id fields
+-- Retrieve user_id from associated tables
 
--- 为 knowledge_base_files 填充 user_id
+-- Populate user_id for knowledge_base_files
 UPDATE "knowledge_base_files" AS kbf
 SET "user_id" = kb."user_id"
   FROM "knowledge_bases" AS kb
 WHERE kbf."knowledge_base_id" = kb."id";--> statement-breakpoint
 
--- 为 message_chunks 填充 user_id
+-- Populate user_id for message_chunks
 UPDATE "message_chunks" AS mc
 SET "user_id" = m."user_id"
   FROM "messages" AS m
 WHERE mc."message_id" = m."id";--> statement-breakpoint
 
--- 为 message_plugins 填充 user_id (直接从 messages 表获取)
--- 修改: 将 LIKE 改为 =
+-- Populate user_id for message_plugins (directly from messages table)
 UPDATE "message_plugins" AS mp
 SET "user_id" = m."user_id"
   FROM "messages" AS m
 WHERE mp."id" = m."id";--> statement-breakpoint
 
--- 为 message_queries 填充 user_id
+-- Populate user_id for message_queries
 UPDATE "message_queries" AS mq
 SET "user_id" = m."user_id"
   FROM "messages" AS m
 WHERE mq."message_id" = m."id";--> statement-breakpoint
 
--- 为 message_query_chunks 填充 user_id
+-- Populate user_id for message_query_chunks
 UPDATE "message_query_chunks" AS mqc
 SET "user_id" = mq."user_id"
   FROM "message_queries" AS mq
 WHERE mqc."query_id" = mq."id";--> statement-breakpoint
 
--- 为 message_tts 填充 user_id
+-- Populate user_id for message_tts
 UPDATE "message_tts" AS mt
 SET "user_id" = m."user_id"
   FROM "messages" AS m
 WHERE mt."id" = m."id";--> statement-breakpoint
 
--- 为 message_translates 填充 user_id
+-- Populate user_id for message_translates
 UPDATE "message_translates" AS mt
 SET "user_id" = m."user_id"
   FROM "messages" AS m
 WHERE mt."id" = m."id";--> statement-breakpoint
 
--- 为 messages_files 填充 user_id
+-- Populate user_id for messages_files
 UPDATE "messages_files" AS mf
 SET "user_id" = m."user_id"
   FROM "messages" AS m
 WHERE mf."message_id" = m."id";--> statement-breakpoint
 
--- 为 global_files 填充 creator (从 files 表获取第一个创建该文件的用户)
+-- Populate creator for global_files (get the first user who created the file from files table)
 UPDATE "global_files" AS gf
 SET "creator" = (
   SELECT f."user_id"
@@ -81,29 +80,29 @@ SET "creator" = (
   LIMIT 1
   );--> statement-breakpoint
 
--- 删除在 files 表中找不到任何用户使用过的 global_files 记录
+-- Delete global_files records where no user has used the file in the files table
 DELETE FROM "global_files"
 WHERE "creator" IS NULL;--> statement-breakpoint
 
--- 为 agents_to_sessions 填充 user_id
+-- Populate user_id for agents_to_sessions
 UPDATE "agents_to_sessions" AS ats
 SET "user_id" = a."user_id"
   FROM "agents" AS a
 WHERE ats."agent_id" = a."id";--> statement-breakpoint
 
--- 为 file_chunks 填充 user_id
+-- Populate user_id for file_chunks
 UPDATE "file_chunks" AS fc
 SET "user_id" = f."user_id"
   FROM "files" AS f
 WHERE fc."file_id" = f."id";--> statement-breakpoint
 
--- 为 files_to_sessions 填充 user_id
+-- Populate user_id for files_to_sessions
 UPDATE "files_to_sessions" AS fts
 SET "user_id" = f."user_id"
   FROM "files" AS f
 WHERE fts."file_id" = f."id";--> statement-breakpoint
 
--- 从 sessions 表获取 user_id (处理潜在的 NULL 值)
+-- Get user_id from sessions table (handle potential NULL values)
 UPDATE "files_to_sessions" AS fts
 SET "user_id" = s."user_id"
   FROM "sessions" AS s
@@ -114,7 +113,7 @@ SET "user_id" = s."user_id"
   FROM "sessions" AS s
 WHERE ats."session_id" = s."id" AND ats."user_id" IS NULL;--> statement-breakpoint
 
--- 步骤 3: 检查是否有未填充的记录
+-- Step 3: Check for any unpopulated records
 DO $$
 DECLARE
 kb_files_count INTEGER;
@@ -149,7 +148,7 @@ IF kb_files_count > 0 OR msg_chunks_count > 0 OR msg_plugins_count > 0 OR
 END IF;
 END $$;--> statement-breakpoint
 
--- 步骤 4: 添加 NOT NULL 约束和外键
+-- Step 4: Add NOT NULL constraints and foreign keys
 ALTER TABLE "knowledge_base_files" ALTER COLUMN "user_id" SET NOT NULL;--> statement-breakpoint
 ALTER TABLE "message_chunks" ALTER COLUMN "user_id" SET NOT NULL;--> statement-breakpoint
 ALTER TABLE "message_plugins" ALTER COLUMN "user_id" SET NOT NULL;--> statement-breakpoint
@@ -162,7 +161,7 @@ ALTER TABLE "agents_to_sessions" ALTER COLUMN "user_id" SET NOT NULL;--> stateme
 ALTER TABLE "file_chunks" ALTER COLUMN "user_id" SET NOT NULL;--> statement-breakpoint
 ALTER TABLE "files_to_sessions" ALTER COLUMN "user_id" SET NOT NULL;--> statement-breakpoint
 
--- 添加外键约束
+-- Add foreign key constraints
 ALTER TABLE "global_files"
   ADD CONSTRAINT "global_files_creator_users_id_fk"
     FOREIGN KEY ("creator") REFERENCES "public"."users"("id")
