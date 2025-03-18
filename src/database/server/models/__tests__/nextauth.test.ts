@@ -15,12 +15,11 @@ import {
   nextauthVerificationTokens,
   users,
 } from '@/database/schemas';
+import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { LobeChatDatabase } from '@/database/type';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
-import { getTestDB } from './_util';
-
-const serverDB: LobeChatDatabase = await getTestDB();
+let serverDB = await getTestDBInstance();
 
 let nextAuthAdapter = LobeNextAuthDbAdapter(serverDB);
 

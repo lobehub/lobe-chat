@@ -13,8 +13,8 @@ import {
   knowledgeBases,
   sessions,
   users,
-} from '../../../schemas';
-import { AgentModel } from '../agent';
+} from '../../schemas';
+import { AgentModel } from '../../server/models/agent';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

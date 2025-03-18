@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LobeChatDatabase } from '@/database/type';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 
-import { asyncTasks, users } from '../../../schemas';
-import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '../asyncTask';
+import { asyncTasks, users } from '../../schemas';
+import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '../../server/models/asyncTask';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

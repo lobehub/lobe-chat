@@ -3,8 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
 
-import { NewInstalledPlugin, userInstalledPlugins, users } from '../../../schemas';
-import { PluginModel } from '../plugin';
+import { NewInstalledPlugin, userInstalledPlugins, users } from '../../schemas';
+import { PluginModel } from '../../server/models/plugin';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

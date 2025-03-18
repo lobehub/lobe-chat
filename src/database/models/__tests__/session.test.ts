@@ -16,8 +16,8 @@ import {
   sessions,
   topics,
   users,
-} from '../../../schemas';
-import { SessionModel } from '../session';
+} from '../../schemas';
+import { SessionModel } from '../../server/models/session';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { getTestDB } from '@/database/models/__tests__/_util';
 import { LobeChatDatabase } from '@/database/type';
 import { MessageItem } from '@/types/message';
 import { uuid } from '@/utils/uuid';
@@ -21,9 +22,8 @@ import {
   sessions,
   topics,
   users,
-} from '../../../schemas';
-import { MessageModel } from '../message';
-import { getTestDB } from './_util';
+} from '../../schemas';
+import { MessageModel } from '../../server/models/message';
 import { codeEmbedding } from './fixtures/embedding';
 
 const serverDB: LobeChatDatabase = await getTestDB();

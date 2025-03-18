@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LobeChatDatabase } from '@/database/type';
 import { FilesTabs, SortType } from '@/types/files';
 
-import { files, globalFiles, knowledgeBaseFiles, knowledgeBases, users } from '../../../schemas';
-import { FileModel } from '../file';
+import { files, globalFiles, knowledgeBaseFiles, knowledgeBases, users } from '../../schemas';
+import { FileModel } from '../../server/models/file';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

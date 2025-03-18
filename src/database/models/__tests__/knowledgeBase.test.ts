@@ -11,8 +11,8 @@ import {
   knowledgeBaseFiles,
   knowledgeBases,
   users,
-} from '../../../schemas';
-import { KnowledgeBaseModel } from '../knowledgeBase';
+} from '../../schemas';
+import { KnowledgeBaseModel } from '../../server/models/knowledgeBase';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { LobeChatDatabase } from '@/database/type';
 import { uuid } from '@/utils/uuid';
 
-import { chunks, embeddings, fileChunks, files, unstructuredChunks, users } from '../../../schemas';
-import { ChunkModel } from '../chunk';
+import { chunks, embeddings, fileChunks, files, unstructuredChunks, users } from '../../schemas';
+import { ChunkModel } from '../../server/models/chunk';
 import { getTestDB } from './_util';
 import { codeEmbedding, designThinkingQuery, designThinkingQuery2 } from './fixtures/embedding';
 

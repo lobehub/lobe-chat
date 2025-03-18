@@ -1,14 +1,13 @@
 // @vitest-environment node
 import { eq } from 'drizzle-orm/expressions';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
+import { getTestDBInstance } from '@/database/server/core/dbForTest';
 
-import { sessionGroups, users } from '../../../schemas';
-import { SessionGroupModel } from '../sessionGroup';
-import { getTestDB } from './_util';
+import { sessionGroups, users } from '../../schemas';
+import { SessionGroupModel } from '../../server/models/sessionGroup';
 
-const serverDB: LobeChatDatabase = await getTestDB();
+let serverDB = await getTestDBInstance();
 
 const userId = 'session-group-model-test-user-id';
 const sessionGroupModel = new SessionGroupModel(serverDB, userId);

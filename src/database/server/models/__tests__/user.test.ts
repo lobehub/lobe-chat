@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { LobeChatDatabase } from '@/database/type';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserGuide, UserPreference } from '@/types/user';
@@ -11,9 +12,8 @@ import { UserGuide, UserPreference } from '@/types/user';
 import { UserSettingsItem, userSettings, users } from '../../../schemas';
 import { SessionModel } from '../session';
 import { UserModel, UserNotFoundError } from '../user';
-import { getTestDB } from './_util';
 
-const serverDB: LobeChatDatabase = await getTestDB();
+let serverDB = await getTestDBInstance();
 
 const userId = 'user-db';
 const userEmail = 'user@example.com';
