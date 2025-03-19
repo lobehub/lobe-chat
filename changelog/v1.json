@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Allow historyCount to be set to 0."]
+    },
+    "date": "2025-03-19",
+    "version": "1.72.1"
+  },
+  {
+    "children": {
       "features": ["Update db schema to add user_id for data export."]
     },
     "date": "2025-03-18",
