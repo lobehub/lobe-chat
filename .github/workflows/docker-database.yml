@@ -12,7 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  REGISTRY_IMAGE: lobehub/lobe-chat-database
+  REGISTRY_URL: onejaacr.azurecr.io
+  REGISTRY_IMAGE: onejaacr.azurecr.io/ai/oneja-bot-database
   PR_TAG_PREFIX: pr-
 
 jobs:
@@ -70,8 +71,9 @@ jobs:
       - name: Docker login
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_REGISTRY_USER }}
-          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+          registry: ${{ env.REGISTRY_URL }}
+          username: ${{ secrets.CONTAINER_REGISTRY_USER }}
+          password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
 
       - name: Get commit SHA
         if: github.ref == 'refs/heads/main'
@@ -147,8 +149,9 @@ jobs:
       - name: Docker login
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_REGISTRY_USER }}
-          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+          registry: ${{ env.REGISTRY_URL }}
+          username: ${{ secrets.CONTAINER_REGISTRY_USER }}
+          password: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
 
       - name: Create manifest list and push
         working-directory: /tmp/digests
