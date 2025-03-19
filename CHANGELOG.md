@@ -2,6 +2,106 @@
 
 # Changelog
 
+## [Version 1.72.0](https://github.com/lobehub/lobe-chat/compare/v1.71.5...v1.72.0)
+
+<sup>Released on **2025-03-18**</sup>
+
+#### ✨ Features
+
+- **misc**: Update db schema to add `user_id` for data export.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Update db schema to add `user_id` for data export, closes [#7022](https://github.com/lobehub/lobe-chat/issues/7022) ([c35471a](https://github.com/lobehub/lobe-chat/commit/c35471a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.71.5](https://github.com/lobehub/lobe-chat/compare/v1.71.4...v1.71.5)
+
+<sup>Released on **2025-03-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support screenshot to clipboard when sharing.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support screenshot to clipboard when sharing, closes [#6275](https://github.com/lobehub/lobe-chat/issues/6275) ([45663c3](https://github.com/lobehub/lobe-chat/commit/45663c3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.71.4](https://github.com/lobehub/lobe-chat/compare/v1.71.3...v1.71.4)
+
+<sup>Released on **2025-03-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Wenxin & Hunyuan model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Wenxin & Hunyuan model list, closes [#6995](https://github.com/lobehub/lobe-chat/issues/6995) ([d017f35](https://github.com/lobehub/lobe-chat/commit/d017f35))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.71.3](https://github.com/lobehub/lobe-chat/compare/v1.71.2...v1.71.3)
+
+<sup>Released on **2025-03-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix claude 3.5+ models context max output.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix claude 3.5+ models context max output, closes [#6984](https://github.com/lobehub/lobe-chat/issues/6984) ([da342dd](https://github.com/lobehub/lobe-chat/commit/da342dd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.71.2](https://github.com/lobehub/lobe-chat/compare/v1.71.1...v1.71.2)
 
 <sup>Released on **2025-03-15**</sup>

@@ -2,13 +2,14 @@
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 import { AiProviderModelListItem } from '@/types/aiModel';
 
-import { AiModelSelectItem, NewAiModelItem, aiModels, users } from '../../../schemas';
-import { AiModelModel } from '../aiModel';
+import { AiModelSelectItem, NewAiModelItem, aiModels, users } from '../../schemas';
+import { AiModelModel } from '../../server/models/aiModel';
+import { getTestDB } from './_util';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'ai-model-test-user-id';
 const aiProviderModel = new AiModelModel(serverDB, userId);

@@ -123,21 +123,21 @@ describe('LobeAnthropicAI', () => {
           { content: 'You are an awesome greeter', role: 'system' },
           { content: 'Hello', role: 'user' },
         ],
-        model: 'claude-3-haiku-20240307',
+        model: 'claude-3-7-sonnet-20250219',
         temperature: 0,
       });
 
       // Assert
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
-          max_tokens: 4096,
+          max_tokens: 8192,
           messages: [
             {
               content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
               role: 'user',
             },
           ],
-          model: 'claude-3-haiku-20240307',
+          model: 'claude-3-7-sonnet-20250219',
           stream: true,
           system: [
             {
