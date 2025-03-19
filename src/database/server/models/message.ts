@@ -21,6 +21,7 @@ import {
   CreateMessageParams,
   MessageItem,
   ModelRankItem,
+  NewMessageQueryParams,
   UpdateMessageParams,
 } from '@/types/message';
 import { merge } from '@/utils/merge';
@@ -28,7 +29,6 @@ import { today } from '@/utils/time';
 
 import {
   MessagePluginItem,
-  NewMessageQuery,
   chunks,
   embeddings,
   fileChunks,
@@ -458,13 +458,14 @@ export class MessageModel {
           state: pluginState,
           toolCallId: message.tool_call_id,
           type: plugin?.type,
+          userId: this.userId,
         });
       }
 
       if (files && files.length > 0) {
         await trx
           .insert(messagesFiles)
-          .values(files.map((file) => ({ fileId: file, messageId: id })));
+          .values(files.map((file) => ({ fileId: file, messageId: id, userId: this.userId })));
       }
 
       if (fileChunks && fileChunks.length > 0 && ragQueryId) {
@@ -474,6 +475,7 @@ export class MessageModel {
             messageId: id,
             queryId: ragQueryId,
             similarity: chunk.similarity?.toString(),
+            userId: this.userId,
           })),
         );
       }
@@ -491,8 +493,11 @@ export class MessageModel {
     return this.db.insert(messages).values(messagesToInsert);
   };
 
-  createMessageQuery = async (params: NewMessageQuery) => {
-    const result = await this.db.insert(messageQueries).values(params).returning();
+  createMessageQuery = async (params: NewMessageQueryParams) => {
+    const result = await this.db
+      .insert(messageQueries)
+      .values({ ...params, userId: this.userId })
+      .returning();
 
     return result[0];
   };
@@ -504,7 +509,9 @@ export class MessageModel {
       if (imageList && imageList.length > 0) {
         await trx
           .insert(messagesFiles)
-          .values(imageList.map((file) => ({ fileId: file.id, messageId: id })));
+          .values(
+            imageList.map((file) => ({ fileId: file.id, messageId: id, userId: this.userId })),
+          );
       }
 
       return trx
@@ -547,7 +554,7 @@ export class MessageModel {
 
     // If the message does not exist in the translate table, insert it
     if (!result) {
-      return this.db.insert(messageTranslates).values({ ...translate, id });
+      return this.db.insert(messageTranslates).values({ ...translate, id, userId: this.userId });
     }
 
     // or just update the existing one
@@ -561,9 +568,13 @@ export class MessageModel {
 
     // If the message does not exist in the translate table, insert it
     if (!result) {
-      return this.db
-        .insert(messageTTS)
-        .values({ contentMd5: tts.contentMd5, fileId: tts.file, id, voice: tts.voice });
+      return this.db.insert(messageTTS).values({
+        contentMd5: tts.contentMd5,
+        fileId: tts.file,
+        id,
+        userId: this.userId,
+        voice: tts.voice,
+      });
     }
 
     // or just update the existing one
@@ -618,13 +629,19 @@ export class MessageModel {
       .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
 
   deleteMessageTranslate = async (id: string) =>
-    this.db.delete(messageTranslates).where(and(eq(messageTranslates.id, id)));
+    this.db
+      .delete(messageTranslates)
+      .where(and(eq(messageTranslates.id, id), eq(messageTranslates.userId, this.userId)));
 
   deleteMessageTTS = async (id: string) =>
-    this.db.delete(messageTTS).where(and(eq(messageTTS.id, id)));
+    this.db
+      .delete(messageTTS)
+      .where(and(eq(messageTTS.id, id), eq(messageTTS.userId, this.userId)));
 
   deleteMessageQuery = async (id: string) =>
-    this.db.delete(messageQueries).where(and(eq(messageQueries.id, id)));
+    this.db
+      .delete(messageQueries)
+      .where(and(eq(messageQueries.id, id), eq(messageQueries.userId, this.userId)));
 
   deleteMessagesBySession = async (sessionId?: string | null, topicId?: string | null) =>
     this.db

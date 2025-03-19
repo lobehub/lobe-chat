@@ -138,6 +138,7 @@ export class DataImporterRepos {
             shouldInsertSessionAgents.map(({ id }, index) => ({
               agentId: agentMapArray[index].id,
               sessionId: sessionIdMap[id],
+              userId: this.userId,
             })),
           );
         }
@@ -291,6 +292,7 @@ export class DataImporterRepos {
                 state: msg.pluginState,
                 toolCallId: msg.tool_call_id,
                 type: msg.plugin?.type,
+                userId: this.userId,
               })),
             );
           }
@@ -302,6 +304,7 @@ export class DataImporterRepos {
               translateInserts.map((msg) => ({
                 id: messageIdMap[msg.id],
                 ...msg.extra?.translate,
+                userId: this.userId,
               })),
             );
           }

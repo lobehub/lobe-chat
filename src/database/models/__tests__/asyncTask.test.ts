@@ -2,13 +2,14 @@
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 
-import { asyncTasks, users } from '../../../schemas';
-import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '../asyncTask';
+import { asyncTasks, users } from '../../schemas';
+import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '../../server/models/asyncTask';
+import { getTestDB } from './_util';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'async-task-model-test-user-id';
 const asyncTaskModel = new AsyncTaskModel(serverDB, userId);
