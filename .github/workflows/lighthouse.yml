@@ -2,7 +2,7 @@ name: Lighthouse Badger
 
 env:
   TOKEN_NAME: 'GH_TOKEN'
-  REPO_BRANCH: 'lobehub/lobe-chat lighthouse'
+  REPO_BRANCH: 'jaworldwideorg/OneJA-Bot lighthouse'
   USER_NAME: 'lobehubbot'
   USER_EMAIL: 'i@lobehub.com'
   AUDIT_TYPE: 'both'

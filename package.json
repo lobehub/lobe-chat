@@ -1,7 +1,7 @@
 {
-  "name": "@lobehub/chat",
+  "name": "@jaworldwide/oneja/ai",
   "version": "1.72.1",
-  "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
+  "description": "OneJA AI powered by Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
     "chatbot",
@@ -14,27 +14,27 @@
     "tts",
     "stt"
   ],
-  "homepage": "https://github.com/lobehub/lobe-chat",
+  "homepage": "https://github.com/jaworldwideorg/oneja-bot",
   "bugs": {
-    "url": "https://github.com/lobehub/lobe-chat/issues/new/choose"
+    "url": "https://github.com/jaworldwideorg/oneja-bot/issues/new/choose"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lobehub/lobe-chat.git"
+    "url": "https://github.com/jaworldwideorg/OneJA-Bot.git"
   },
   "license": "MIT",
-  "author": "LobeHub <i@lobehub.com>",
+  "author": "LobeHub <i@lobehub.com>, Jamie Stivala <jamie.stivala@jaworldwide.org>",
   "sideEffects": false,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
+    "build:docker": "DOCKER=true next build && npm run build-sitemap",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
     "build-migrate-db": "bun run db:migrate",
     "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
-    "build:analyze": "ANALYZE=true next build",
-    "build:docker": "DOCKER=true next build && npm run build-sitemap",
     "db:generate": "drizzle-kit generate && npm run db:generate-client && npm run workflow:dbml",
     "db:generate-client": "tsx ./scripts/migrateClientDB/compile-migrations.ts",
     "db:migrate": "MIGRATION_DB=1 tsx ./scripts/migrateServerDB/index.ts",
@@ -63,11 +63,11 @@
     "start": "next start -p 3210",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "test": "npm run test-app && npm run test-server",
+    "test:update": "vitest -u",
     "test-app": "vitest run --config vitest.config.ts",
     "test-app:coverage": "vitest run --config vitest.config.ts  --coverage",
     "test-server": "TEST_SERVER_DB=1 vitest run --config vitest.server.config.ts",
     "test-server:coverage": "TEST_SERVER_DB=1 vitest run --config vitest.server.config.ts --coverage",
-    "test:update": "vitest -u",
     "type-check": "tsc --noEmit",
     "webhook:ngrok": "ngrok http http://localhost:3011",
     "workflow:cdn": "tsx ./scripts/cdnWorkflow/index.ts",
