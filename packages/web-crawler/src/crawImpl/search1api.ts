@@ -18,7 +18,7 @@ export const search1api: CrawlImpl = async (url, { filterOptions }) => {
   const apiKey = process.env.SEARCH1API_API_KEY;
   
   if (!apiKey) {
-    throw new Error('SEARCH1API_API_KEY environment variable is not set');
+    throw new Error('SEARCH1API_API_KEY environment variable is not set. Visit https://www.search1api.com to get free quota.');
   }
 
   let res: Response;
