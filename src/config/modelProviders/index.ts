@@ -8,6 +8,7 @@ import AzureAIProvider from './azureai';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import CloudflareProvider from './cloudflare';
+import CohereProvider from './cohere';
 import DeepSeekProvider from './deepseek';
 import DoubaoProvider from './doubao';
 import FireworksAIProvider from './fireworksai';
@@ -75,6 +76,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   XAIProvider.chatModels,
   JinaProvider.chatModels,
   SambaNovaProvider.chatModels,
+  CohereProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   NovitaProvider.chatModels,
@@ -125,6 +127,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   XAIProvider,
   JinaProvider,
   SambaNovaProvider,
+  CohereProvider,
   QwenProvider,
   WenxinProvider,
   TencentcloudProvider,
@@ -165,6 +168,7 @@ export { default as AzureAIProviderCard } from './azureai';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as CloudflareProviderCard } from './cloudflare';
+export { default as CohereProviderCard } from './cohere';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as DoubaoProviderCard } from './doubao';
 export { default as FireworksAIProviderCard } from './fireworksai';
