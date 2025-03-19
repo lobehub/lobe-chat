@@ -196,5 +196,24 @@ describe('getAuthConfig', () => {
       );
     });
   });
+  it('should warn about Okta deprecated environment variables', () => {
+    // Set all deprecated environment variables
+    process.env.OKTA_CLIENT_ID = 'okta_client_id';
+    process.env.OKTA_CLIENT_SECRET = 'okta_client_secret';
+    process.env.OKTA_ISSUER = 'okta_issuer';
+    // Call the function
+    getAuthConfig();
+
+    // Check that the spyConsoleWarn function was called for each deprecated environment variable
+    expect(spyConsoleWarn).toHaveBeenCalledWith(
+      expect.stringMatching(/OKTA_CLIENT_ID.*AUTH_OKTA_ID/),
+    );
+    expect(spyConsoleWarn).toHaveBeenCalledWith(
+      expect.stringMatching(/OKTA_CLIENT_SECRET.*AUTH_OKTA_SECRET/),
+    );
+    expect(spyConsoleWarn).toHaveBeenCalledWith(
+      expect.stringMatching(/OKTA_ISSUER.*AUTH_OKTA_ISSUER/),
+    );
+  });
   // Remove end
 });
