@@ -1,6 +1,6 @@
-export const LOBE_CHAT_CLOUD = 'DoDoChat Cloud';
+export const LOBE_CHAT_CLOUD = 'PandoChat Cloud';
 
-export const BRANDING_NAME = 'DoDoChat';
+export const BRANDING_NAME = 'PandoChat';
 export const BRANDING_LOGO_URL = '';
 
 export const ORG_NAME = 'PandoRun';
