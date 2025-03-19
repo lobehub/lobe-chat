@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Update db schema to add user_id for data export."]
+    },
+    "date": "2025-03-18",
+    "version": "1.72.0"
+  },
+  {
+    "children": {
       "improvements": ["Support screenshot to clipboard when sharing."]
     },
     "date": "2025-03-17",

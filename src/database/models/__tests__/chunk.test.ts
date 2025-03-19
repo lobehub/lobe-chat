@@ -2,14 +2,15 @@
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 import { uuid } from '@/utils/uuid';
 
-import { chunks, embeddings, fileChunks, files, unstructuredChunks, users } from '../../../schemas';
-import { ChunkModel } from '../chunk';
+import { chunks, embeddings, fileChunks, files, unstructuredChunks, users } from '../../schemas';
+import { ChunkModel } from '../../server/models/chunk';
+import { getTestDB } from './_util';
 import { codeEmbedding, designThinkingQuery, designThinkingQuery2 } from './fixtures/embedding';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'chunk-model-test-user-id';
 const chunkModel = new ChunkModel(serverDB, userId);
@@ -124,7 +125,9 @@ describe('ChunkModel', () => {
         .values([{ text: 'Non-Orphan Chunk', userId }])
         .returning();
 
-      await serverDB.insert(fileChunks).values([{ fileId: '1', chunkId: nonOrphanChunk.id }]);
+      await serverDB
+        .insert(fileChunks)
+        .values([{ fileId: '1', chunkId: nonOrphanChunk.id, userId }]);
 
       // Execute the method
       await chunkModel.deleteOrphanChunks();
@@ -146,8 +149,8 @@ describe('ChunkModel', () => {
         .returning();
 
       await serverDB.insert(fileChunks).values([
-        { fileId: '1', chunkId: chunk1.id },
-        { fileId: '2', chunkId: chunk2.id },
+        { fileId: '1', chunkId: chunk1.id, userId },
+        { fileId: '2', chunkId: chunk2.id, userId },
       ]);
 
       // Execute the method
@@ -180,8 +183,8 @@ describe('ChunkModel', () => {
         .returning();
 
       await serverDB.insert(fileChunks).values([
-        { fileId, chunkId: chunk1.id },
-        { fileId, chunkId: chunk2.id },
+        { fileId, chunkId: chunk1.id, userId },
+        { fileId, chunkId: chunk2.id, userId },
       ]);
 
       await serverDB.insert(embeddings).values([
@@ -273,9 +276,9 @@ describe('ChunkModel', () => {
         .returning();
 
       await serverDB.insert(fileChunks).values([
-        { fileId, chunkId: chunk1.id },
-        { fileId, chunkId: chunk2.id },
-        { fileId, chunkId: chunk3.id },
+        { fileId, chunkId: chunk1.id, userId },
+        { fileId, chunkId: chunk2.id, userId },
+        { fileId, chunkId: chunk3.id, userId },
       ]);
 
       const result = await chunkModel.findByFileId(fileId, 0);
@@ -299,8 +302,8 @@ describe('ChunkModel', () => {
         .returning();
 
       await serverDB.insert(fileChunks).values([
-        { fileId, chunkId: chunk1.id },
-        { fileId, chunkId: chunk2.id },
+        { fileId, chunkId: chunk1.id, userId },
+        { fileId, chunkId: chunk2.id, userId },
       ]);
 
       const result = await chunkModel.getChunksTextByFileId(fileId);
@@ -324,9 +327,9 @@ describe('ChunkModel', () => {
         .returning();
 
       await serverDB.insert(fileChunks).values([
-        { fileId: '1', chunkId: chunk1.id },
-        { fileId: '1', chunkId: chunk2.id },
-        { fileId: '2', chunkId: chunk3.id },
+        { fileId: '1', chunkId: chunk1.id, userId },
+        { fileId: '1', chunkId: chunk2.id, userId },
+        { fileId: '2', chunkId: chunk3.id, userId },
       ]);
 
       const result = await chunkModel.countByFileIds(fileIds);
@@ -355,8 +358,8 @@ describe('ChunkModel', () => {
         .returning();
 
       await serverDB.insert(fileChunks).values([
-        { fileId, chunkId: chunk1.id },
-        { fileId, chunkId: chunk2.id },
+        { fileId, chunkId: chunk1.id, userId },
+        { fileId, chunkId: chunk2.id, userId },
       ]);
 
       const result = await chunkModel.countByFileId(fileId);
@@ -383,8 +386,8 @@ describe('ChunkModel', () => {
         .returning();
 
       await serverDB.insert(fileChunks).values([
-        { fileId, chunkId: chunk1.id },
-        { fileId, chunkId: chunk2.id },
+        { fileId, chunkId: chunk1.id, userId },
+        { fileId, chunkId: chunk2.id, userId },
       ]);
 
       await serverDB.insert(embeddings).values([
@@ -511,6 +514,7 @@ content in Table html is below:
         chunkResult.map((chunk) => ({
           fileId,
           chunkId: chunk.id,
+          userId,
         })),
       );
 

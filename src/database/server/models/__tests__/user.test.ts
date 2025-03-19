@@ -1,15 +1,17 @@
+import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserGuide, UserPreference } from '@/types/user';
 
 import { UserSettingsItem, userSettings, users } from '../../../schemas';
 import { SessionModel } from '../session';
-import { UserModel } from '../user';
+import { UserModel, UserNotFoundError } from '../user';
 
 let serverDB = await getTestDBInstance();
 
@@ -406,5 +408,15 @@ describe('UserModel', () => {
         });
       });
     });
+  });
+});
+
+describe('UserNotFoundError', () => {
+  it('should extend TRPCError with correct code and message', () => {
+    const error = new UserNotFoundError();
+
+    expect(error).toBeInstanceOf(TRPCError);
+    expect(error.code).toBe('UNAUTHORIZED');
+    expect(error.message).toBe('user not found');
   });
 });
