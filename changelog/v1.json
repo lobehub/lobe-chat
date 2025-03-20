@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "features": [
+        "Add Cohere provider support, add search1api crawler implementation for WeChat Sogou links."
+      ]
+    },
+    "date": "2025-03-19",
+    "version": "1.73.0"
+  },
+  {
+    "children": {
       "fixes": ["Allow historyCount to be set to 0."]
     },
     "date": "2025-03-19",
