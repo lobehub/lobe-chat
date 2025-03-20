@@ -19,18 +19,27 @@
       "placeholder": "Zoekwoorden",
       "tooltip": "De zoekresultaten worden opnieuw opgehaald en er wordt een nieuwe samenvattingsbericht aangemaakt"
     },
+    "searchCategory": {
+      "placeholder": "Zoekcategorie",
+      "title": "Zoekcategorie:",
+      "value": {
+        "files": "Bestanden",
+        "general": "Algemeen",
+        "images": "Afbeeldingen",
+        "it": "Informatietechnologie",
+        "map": "Kaart",
+        "music": "Muziek",
+        "news": "Nieuws",
+        "science": "Wetenschap",
+        "social_media": "Sociale media",
+        "videos": "Video's"
+      }
+    },
     "searchEngine": "Zoekmachine:",
     "searchResult": "Aantal zoekresultaten:",
     "searchTimeRange": "Tijdspanne:",
     "summary": "Samenvatting",
     "summaryTooltip": "Samenvatting van de huidige inhoud",
-    "timeRange": {
-      "anytime": "Geen tijdslimiet",
-      "day": "Binnen een dag",
-      "month": "Binnen een maand",
-      "week": "Binnen een week",
-      "year": "Binnen een jaar"
-    },
     "viewMoreResults": "Bekijk meer {{results}} resultaten"
   }
 }

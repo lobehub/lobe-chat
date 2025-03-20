@@ -19,18 +19,27 @@
       "placeholder": "Keywords",
       "tooltip": "This will refresh the search results and create a new summary message"
     },
+    "searchCategory": {
+      "placeholder": "Search Category",
+      "title": "Search Category:",
+      "value": {
+        "files": "Files",
+        "general": "General",
+        "images": "Images",
+        "it": "Information Technology",
+        "map": "Maps",
+        "music": "Music",
+        "news": "News",
+        "science": "Science",
+        "social_media": "Social Media",
+        "videos": "Videos"
+      }
+    },
     "searchEngine": "Search engine:",
     "searchResult": "Number of searches:",
     "searchTimeRange": "Time Range:",
     "summary": "Summary",
     "summaryTooltip": "Summarize the current content",
-    "timeRange": {
-      "anytime": "Anytime",
-      "day": "Within a day",
-      "month": "Within a month",
-      "week": "Within a week",
-      "year": "Within a year"
-    },
     "viewMoreResults": "View {{results}} more results"
   }
 }

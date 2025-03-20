@@ -10,11 +10,13 @@ import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
 import { SearchQuery } from '@/types/tool/search';
 
-import { ENGINE_ICON_MAP } from '../const';
+import { CATEGORY_ICON_MAP, ENGINE_ICON_MAP } from '../const';
+import { CategoryAvatar } from './CategoryAvatar';
 import { EngineAvatar } from './EngineAvatar';
 
 interface SearchBarProps {
   aiSummary?: boolean;
+  defaultCategories?: string[];
   defaultEngines?: string[];
   defaultQuery: string;
   defaultTimeRange?: string;
@@ -26,6 +28,7 @@ interface SearchBarProps {
 
 const SearchBar = memo<SearchBarProps>(
   ({
+    defaultCategories = [],
     defaultEngines = [],
     defaultTimeRange,
     aiSummary = true,
@@ -38,6 +41,7 @@ const SearchBar = memo<SearchBarProps>(
     const { t } = useTranslation('tool');
     const loading = useChatStore(chatToolSelectors.isSearXNGSearching(messageId));
     const [query, setQuery] = useState(defaultQuery);
+    const [categories, setCategories] = useState(defaultCategories);
     const [engines, setEngines] = useState(defaultEngines);
     const [time_range, setTimeRange] = useState(defaultTimeRange);
     const isMobile = useIsMobile();
@@ -46,6 +50,7 @@ const SearchBar = memo<SearchBarProps>(
     const updateAndSearch = async () => {
       const data: SearchQuery = {
         optionalParams: {
+          searchCategories: categories,
           searchEngines: engines,
           searchTimeRange: time_range,
         },
@@ -137,19 +142,66 @@ const SearchBar = memo<SearchBarProps>(
           </Flexbox>
         )}
 
+        {isMobile ? (
+          <Select
+            mode="multiple"
+            onChange={(checkedValue) => {
+              setCategories(checkedValue);
+            }}
+            optionRender={(item) => (
+              <Flexbox align={'center'} gap={8} horizontal>
+                <CategoryAvatar category={item.value as string} />
+                {t(`search.searchCategory.value.${item.value}` as any)}
+              </Flexbox>
+            )}
+            options={Object.keys(CATEGORY_ICON_MAP).map((item) => ({
+              label: (
+                <Flexbox align={'center'} gap={8} horizontal>
+                  <CategoryAvatar category={item as any} size={22} />
+                  {t(`search.searchCategory.value.${item}` as any)}
+                </Flexbox>
+              ),
+              value: item,
+            }))}
+            size="small"
+            value={categories}
+            variant="filled"
+            placeholder={t('search.searchCategory.placeholder')}
+          />
+        ) : (
+          <Flexbox align="flex-start" gap={8} horizontal>
+            <Typography.Text style={{ marginTop: 2, wordBreak: 'keep-all' }} type={'secondary'}>
+              {t('search.searchCategory.title')}
+            </Typography.Text>
+            <Checkbox.Group
+              onChange={(checkedValue) => setCategories(checkedValue)}
+              options={Object.keys(CATEGORY_ICON_MAP).map((item) => ({
+                label: (
+                  <Flexbox align={'center'} gap={8} horizontal>
+                    <CategoryAvatar category={item as any} />
+                    {t(`search.searchCategory.value.${item}` as any)}
+                  </Flexbox>
+                ),
+                value: item,
+              }))}
+              value={categories}
+            />
+          </Flexbox>
+        )}
+
         <Flexbox align={'center'} gap={16} horizontal wrap={'wrap'}>
           <Typography.Text type={'secondary'}>
-            {t('search.searchTimeRange')}
+            {t('search.searchTimeRange.title')}
           </Typography.Text>
           <Radio.Group
             onChange={(e) => setTimeRange(e.target.value)}
             optionType="button"
             options={[
-              { label: t('search.timeRange.anytime'), value: 'anytime' },
-              { label: t('search.timeRange.day'), value: 'day' },
-              { label: t('search.timeRange.week'), value: 'week' },
-              { label: t('search.timeRange.month'), value: 'month' },
-              { label: t('search.timeRange.year'), value: 'year' },
+              { label: t('search.searchTimeRange.value.anytime'), value: 'anytime' },
+              { label: t('search.searchTimeRange.value.day'), value: 'day' },
+              { label: t('search.searchTimeRange.value.week'), value: 'week' },
+              { label: t('search.searchTimeRange.value.month'), value: 'month' },
+              { label: t('search.searchTimeRange.value.year'), value: 'year' },
             ]}
             value={time_range}
           />

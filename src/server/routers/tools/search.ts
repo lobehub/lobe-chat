@@ -44,6 +44,7 @@ export const searchRouter = router({
     .input(
       z.object({
         optionalParams: z.object({
+          searchCategories: z.array(z.string()).optional(),
           searchEngines: z.array(z.string()).optional(),
           searchTimeRange: z.string().optional(),
         }).optional(),
@@ -59,6 +60,7 @@ export const searchRouter = router({
 
       try {
         return await client.search(input.query, {
+          categories: input.optionalParams?.searchCategories,
           engines: input.optionalParams?.searchEngines,
           time_range: input.optionalParams?.searchTimeRange,
         });

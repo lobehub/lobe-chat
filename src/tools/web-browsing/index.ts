@@ -21,6 +21,25 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
           optionalParams: {
             description: "The optional params you can set:",
             properties: {
+              searchCategories: {
+                description: 'The search category you can set:',
+                items: {
+                  enum: [
+                    'files',
+                    'general',
+                    'images',
+                    'it',
+                    'map',
+                    'music',
+                    'news',
+                    'science',
+                    'social_media',
+                    'videos',
+                  ],
+                  type: 'string',
+                },
+                type: 'array',
+              },
               searchEngines: {
                 description: 'The search engine you can use:',
                 items: {

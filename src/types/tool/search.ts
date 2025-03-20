@@ -1,5 +1,6 @@
 export interface SearchQuery {
   optionalParams?: {
+    searchCategories?: string[];
     searchEngines?: string[];
     searchTimeRange?: string;
   }

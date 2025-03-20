@@ -19,18 +19,27 @@
       "placeholder": "Anahtar kelime",
       "tooltip": "Arama sonuçları yeniden alınacak ve yeni bir özet mesajı oluşturulacaktır"
     },
+    "searchCategory": {
+      "placeholder": "Kategori Ara",
+      "title": "Kategori Ara:",
+      "value": {
+        "files": "Dosyalar",
+        "general": "Genel",
+        "images": "Görüntüler",
+        "it": "Bilgi Teknolojisi",
+        "map": "Harita",
+        "music": "Müzik",
+        "news": "Haberler",
+        "science": "Bilim",
+        "social_media": "Sosyal Medya",
+        "videos": "Videolar"
+      }
+    },
     "searchEngine": "Arama motoru:",
     "searchResult": "Arama sayısı:",
     "searchTimeRange": "Zaman aralığı:",
     "summary": "Özet",
     "summaryTooltip": "Mevcut içeriği özetle",
-    "timeRange": {
-      "anytime": "Zaman sınırlı değil",
-      "day": "Bir gün içinde",
-      "month": "Bir ay içinde",
-      "week": "Bir hafta içinde",
-      "year": "Bir yıl içinde"
-    },
     "viewMoreResults": "Daha fazla {{results}} sonuç görüntüle"
   }
 }

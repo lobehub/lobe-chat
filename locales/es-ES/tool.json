@@ -19,18 +19,27 @@
       "placeholder": "Palabras clave",
       "tooltip": "Se volverán a obtener los resultados de búsqueda y se creará un nuevo mensaje de resumen"
     },
+    "searchCategory": {
+      "placeholder": "Buscar categoría",
+      "title": "Categoría de búsqueda:",
+      "value": {
+        "files": "Archivos",
+        "general": "General",
+        "images": "Imágenes",
+        "it": "Tecnologías de la información",
+        "map": "Mapas",
+        "music": "Música",
+        "news": "Noticias",
+        "science": "Ciencia",
+        "social_media": "Redes sociales",
+        "videos": "Videos"
+      }
+    },
     "searchEngine": "Motor de búsqueda:",
     "searchResult": "Número de búsquedas:",
     "searchTimeRange": "Rango de tiempo:",
     "summary": "Resumen",
     "summaryTooltip": "Resumir el contenido actual",
-    "timeRange": {
-      "anytime": "Sin límite de tiempo",
-      "day": "En un día",
-      "month": "En un mes",
-      "week": "En una semana",
-      "year": "En un año"
-    },
     "viewMoreResults": "Ver más {{results}} resultados"
   }
 }

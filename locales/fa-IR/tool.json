@@ -19,18 +19,27 @@
       "placeholder": "کلمات کلیدی",
       "tooltip": "نتایج جستجو دوباره دریافت خواهد شد و یک پیام خلاصه جدید ایجاد خواهد شد"
     },
+    "searchCategory": {
+      "placeholder": "جستجوی دسته",
+      "title": "دسته جستجو:",
+      "value": {
+        "files": "فایل‌ها",
+        "general": "عمومی",
+        "images": "تصاویر",
+        "it": "فناوری اطلاعات",
+        "map": "نقشه",
+        "music": "موسیقی",
+        "news": "اخبار",
+        "science": "علم",
+        "social_media": "رسانه‌های اجتماعی",
+        "videos": "ویدیوها"
+      }
+    },
     "searchEngine": "موتور جستجو:",
     "searchResult": "تعداد جستجو:",
     "searchTimeRange": "محدوده زمانی:",
     "summary": "خلاصه",
     "summaryTooltip": "خلاصه محتوای فعلی",
-    "timeRange": {
-      "anytime": "بدون محدودیت زمانی",
-      "day": "در یک روز",
-      "month": "در یک ماه",
-      "week": "در یک هفته",
-      "year": "در یک سال"
-    },
     "viewMoreResults": "مشاهده {{results}} نتیجه بیشتر"
   }
 }

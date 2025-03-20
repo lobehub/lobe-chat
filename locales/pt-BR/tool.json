@@ -19,18 +19,27 @@
       "placeholder": "Palavras-chave",
       "tooltip": "Isso irá recuperar os resultados da pesquisa novamente e criar uma nova mensagem de resumo"
     },
+    "searchCategory": {
+      "placeholder": "Pesquisar categoria",
+      "title": "Categoria de pesquisa:",
+      "value": {
+        "files": "Arquivos",
+        "general": "Geral",
+        "images": "Imagens",
+        "it": "Tecnologia da Informação",
+        "map": "Mapa",
+        "music": "Música",
+        "news": "Notícias",
+        "science": "Ciência",
+        "social_media": "Mídias sociais",
+        "videos": "Vídeos"
+      }
+    },
     "searchEngine": "Motor de busca:",
     "searchResult": "Número de pesquisas:",
     "searchTimeRange": "Intervalo de tempo:",
     "summary": "Resumo",
     "summaryTooltip": "Resumir o conteúdo atual",
-    "timeRange": {
-      "anytime": "Sem restrição de tempo",
-      "day": "Dentro de um dia",
-      "month": "Dentro de um mês",
-      "week": "Dentro de uma semana",
-      "year": "Dentro de um ano"
-    },
     "viewMoreResults": "Ver mais {{results}} resultados"
   }
 }
