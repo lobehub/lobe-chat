@@ -72,8 +72,10 @@ describe('searXNG actions', () => {
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
+        optionalParams: {
+          searchEngines: ['google'],
+        },
         query: 'test query',
-        searchEngines: ['google'],
       };
 
       await act(async () => {
@@ -88,7 +90,9 @@ describe('searXNG actions', () => {
         },
       ];
 
-      expect(searchService.search).toHaveBeenCalledWith('test query', ['google'], undefined);
+      expect( searchService.search ).toHaveBeenCalledWith('test query', {
+        searchEngines: [ 'google' ]
+      });
       expect(result.current.searchLoading[messageId]).toBe(false);
       expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
         messageId,
@@ -141,9 +145,11 @@ describe('searXNG actions', () => {
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
+        optionalParams: {
+          searchEngines: ['custom-engine'],
+          searchTimeRange: 'year',
+        },
         query: 'test query',
-        searchEngines: ['custom-engine'],
-        searchTimeRange: 'year',
       };
 
       await act(async () => {
@@ -151,11 +157,14 @@ describe('searXNG actions', () => {
       });
 
       expect(searchService.search).toHaveBeenCalledTimes(2);
-      expect(searchService.search).toHaveBeenNthCalledWith(1, 'test query', ['custom-engine'], 'year');
-      expect(searchService.search).toHaveBeenNthCalledWith(2, 'test query');
+      expect(searchService.search).toHaveBeenNthCalledWith(1, "test query", {
+          "searchEngines": [ "custom-engine" ],
+          "searchTimeRange": "year",
+      });
+      expect(searchService.search).toHaveBeenNthCalledWith(2, "test query");
       expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, {
+        optionalParams: undefined,
         query: 'test query',
-        searchEngines: undefined,
       });
     });
 
