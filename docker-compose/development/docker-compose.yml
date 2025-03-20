@@ -61,7 +61,7 @@ services:
   lobe:
     build:
       context: ../../
-      dockerfile: docker-compose/barebones/Dockerfile.database
+      dockerfile: docker-compose/development/Dockerfile.dev.database
     container_name: lobe-chat
     network_mode: 'service:network-service'
     depends_on:
@@ -71,6 +71,10 @@ services:
         condition: service_started
       minio:
         condition: service_started
+
+    volumes:
+    - ../../:/app
+    - /app/node_modules
 
     environment:
       - 'NEXT_PUBLIC_ENABLE_NEXT_AUTH=1'

@@ -36,7 +36,7 @@ export default defineConfig({
     globals: true,
     server: {
       deps: {
-        inline: ['vitest-canvas-mock'],
+        inline: ['vi-canvas-mock'],
       },
     },
     setupFiles: './tests/setup.ts',
