@@ -33,6 +33,7 @@ export class FileModel {
     const result = await this.db.transaction(async (trx) => {
       if (insertToGlobalFiles) {
         await trx.insert(globalFiles).values({
+          creator: this.userId,
           fileType: params.fileType,
           hashId: params.fileHash!,
           metadata: params.metadata,
@@ -49,9 +50,11 @@ export class FileModel {
       const item = result[0];
 
       if (params.knowledgeBaseId) {
-        await trx
-          .insert(knowledgeBaseFiles)
-          .values({ fileId: item.id, knowledgeBaseId: params.knowledgeBaseId });
+        await trx.insert(knowledgeBaseFiles).values({
+          fileId: item.id,
+          knowledgeBaseId: params.knowledgeBaseId,
+          userId: this.userId,
+        });
       }
 
       return item;

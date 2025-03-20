@@ -122,13 +122,16 @@ export const agentRouter = router({
       const knowledge = await ctx.agentModel.getAgentAssignedKnowledge(input.agentId);
 
       return [
-        ...files.map((file) => ({
-          enabled: knowledge.files.some((item) => item.id === file.id),
-          fileType: file.fileType,
-          id: file.id,
-          name: file.name,
-          type: KnowledgeType.File,
-        })),
+        ...files
+          // 过滤掉所有图片
+          .filter((file) => !file.fileType.startsWith('image'))
+          .map((file) => ({
+            enabled: knowledge.files.some((item) => item.id === file.id),
+            fileType: file.fileType,
+            id: file.id,
+            name: file.name,
+            type: KnowledgeType.File,
+          })),
         ...knowledgeBases.map((knowledgeBase) => ({
           avatar: knowledgeBase.avatar,
           description: knowledgeBase.description,

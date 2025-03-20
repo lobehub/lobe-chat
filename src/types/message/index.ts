@@ -2,6 +2,7 @@ import { UploadFileItem } from '@/types/files';
 
 export * from './base';
 export * from './chat';
+export * from './image';
 export * from './tools';
 
 export interface SendMessageParams {

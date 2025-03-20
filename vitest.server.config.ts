@@ -15,7 +15,7 @@ export default defineConfig({
       reportsDirectory: './coverage/server',
     },
     environment: 'node',
-    include: ['src/database/server/**/**/*.test.ts'],
+    include: ['src/database/models/**/**/*.test.ts', 'src/database/server/**/**/*.test.ts'],
     poolOptions: {
       threads: { singleThread: true },
     },

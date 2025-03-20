@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
 import {
@@ -15,10 +16,11 @@ import {
   sessions,
   topics,
   users,
-} from '../../../schemas';
-import { SessionModel } from '../session';
+} from '../../schemas';
+import { SessionModel } from '../../server/models/session';
+import { getTestDB } from './_util';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'session-user';
 const sessionModel = new SessionModel(serverDB, userId);
@@ -236,8 +238,8 @@ describe('SessionModel', () => {
       ]);
 
       await serverDB.insert(agentsToSessions).values([
-        { agentId: 'agent-1', sessionId: '1' },
-        { agentId: 'agent-2', sessionId: '2' },
+        { agentId: 'agent-1', sessionId: '1', userId },
+        { agentId: 'agent-2', sessionId: '2', userId },
       ]);
 
       const result = await sessionModel.queryByKeyword('hello');
@@ -265,8 +267,8 @@ describe('SessionModel', () => {
       ]);
 
       await serverDB.insert(agentsToSessions).values([
-        { agentId: 'agent-1', sessionId: '1' },
-        { agentId: 'agent-2', sessionId: '2' },
+        { agentId: 'agent-1', sessionId: '1', userId },
+        { agentId: 'agent-2', sessionId: '2', userId },
       ]);
 
       const result = await sessionModel.queryByKeyword('keyword');
@@ -288,9 +290,9 @@ describe('SessionModel', () => {
       ]);
 
       await serverDB.insert(agentsToSessions).values([
-        { agentId: '1', sessionId: '1' },
-        { agentId: '2', sessionId: '2' },
-        { agentId: '3', sessionId: '3' },
+        { agentId: '1', sessionId: '1', userId },
+        { agentId: '2', sessionId: '2', userId },
+        { agentId: '3', sessionId: '3', userId },
       ]);
 
       const result = await sessionModel.queryByKeyword('keyword');
@@ -361,7 +363,8 @@ describe('SessionModel', () => {
       const result = await sessionModel.batchCreate(sessions);
 
       // 断言结果
-      expect(result.rowCount).toEqual(2);
+      // pglite return affectedRows while postgres return rowCount
+      expect((result as any).affectedRows || result.rowCount).toEqual(2);
     });
 
     it.skip('should set group to default if group does not exist', async () => {
@@ -391,7 +394,7 @@ describe('SessionModel', () => {
           .insert(sessions)
           .values({ id: '1', userId, type: 'agent', title: 'Original Session', pinned: true });
         await trx.insert(agents).values({ id: 'agent-1', userId, model: 'gpt-3.5-turbo' });
-        await trx.insert(agentsToSessions).values({ agentId: 'agent-1', sessionId: '1' });
+        await trx.insert(agentsToSessions).values({ agentId: 'agent-1', sessionId: '1', userId });
       });
 
       // 调用 duplicate 方法
@@ -801,9 +804,9 @@ describe('SessionModel', () => {
 
         // Link agents to sessions
         await trx.insert(agentsToSessions).values([
-          { sessionId: '1', agentId: 'a1' },
-          { sessionId: '2', agentId: 'a2' },
-          { sessionId: '3', agentId: 'a3' },
+          { sessionId: '1', agentId: 'a1', userId },
+          { sessionId: '2', agentId: 'a2', userId },
+          { sessionId: '3', agentId: 'a3', userId },
         ]);
 
         // Create topics (different counts for ranking)
@@ -863,9 +866,9 @@ describe('SessionModel', () => {
         ]);
 
         await trx.insert(agentsToSessions).values([
-          { sessionId: '1', agentId: 'a1' },
-          { sessionId: '2', agentId: 'a2' },
-          { sessionId: '3', agentId: 'a3' },
+          { sessionId: '1', agentId: 'a1', userId },
+          { sessionId: '2', agentId: 'a2', userId },
+          { sessionId: '3', agentId: 'a3', userId },
         ]);
 
         await trx.insert(topics).values([
@@ -899,8 +902,8 @@ describe('SessionModel', () => {
         ]);
 
         await trx.insert(agentsToSessions).values([
-          { sessionId: '1', agentId: 'a1' },
-          { sessionId: '2', agentId: 'a2' },
+          { sessionId: '1', agentId: 'a1', userId },
+          { sessionId: '2', agentId: 'a2', userId },
         ]);
 
         // No topics created

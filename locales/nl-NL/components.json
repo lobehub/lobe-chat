@@ -76,6 +76,7 @@
       "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual needs.",
       "file": "This model supports file upload for reading and recognition.",
       "functionCall": "This model supports function call.",
+      "imageOutput": "Dit model ondersteunt het genereren van afbeeldingen",
       "reasoning": "Dit model ondersteunt diepgaand denken",
       "search": "Dit model ondersteunt online zoeken",
       "tokens": "This model supports up to {{tokens}} tokens in a single session.",

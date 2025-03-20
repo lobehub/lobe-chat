@@ -833,6 +833,12 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash 提供下一代功能和改進，包括卓越的速度、原生工具使用、多模態生成和1M令牌上下文窗口。"
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash 模型變體，針對成本效益和低延遲等目標進行了優化。"
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Gemini 2.0 Flash 實驗模型，支持圖像生成"
+  },
   "gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flash 模型變體，針對成本效益和低延遲等目標進行了優化。"
   },
