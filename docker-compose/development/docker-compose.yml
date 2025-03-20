@@ -72,6 +72,10 @@ services:
       minio:
         condition: service_started
 
+    volumes:
+    - ../../:/app
+    - /app/node_modules
+
     environment:
       - 'NEXT_PUBLIC_ENABLE_NEXT_AUTH=1'
       - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
