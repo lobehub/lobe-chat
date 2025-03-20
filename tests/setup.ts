@@ -14,7 +14,7 @@ if (
   typeof (globalThis as any).EdgeRuntime !== 'string'
 ) {
   // test with canvas
-  await import('vitest-canvas-mock');
+  await import('vi-canvas-mock');
 }
 
 // node runtime
