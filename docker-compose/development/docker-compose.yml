@@ -61,7 +61,7 @@ services:
   lobe:
     build:
       context: ../../
-      dockerfile: docker-compose/development/Dockerfile.database
+      dockerfile: docker-compose/development/Dockerfile.dev.database
     container_name: lobe-chat
     network_mode: 'service:network-service'
     depends_on:
