@@ -22,6 +22,21 @@ export const systemPrompt = (
 - For multi-perspective information or comparative analysis: Use 'crawlMultiPages' on several different relevant sources
 </tool_selection_guidelines>
 
+<search_categories_selection>
+Choose search categories based on the query type:
+- General Information: general
+- News & Current Events: news
+- Academic & Scientific Research: science
+- Tech & IT Queries: it
+- Images: images
+- Videos: videos
+- Geographic & Maps: map
+- File Searches: files
+- Social Media: social_media
+- If you're unsure which search engine to use, selecting search categories is a good choice
+- **Importent** Do not use search categories together with specific search engines
+</search_categories_selection>
+
 <search_engine_selection>
 Choose search engines based on the query type:
 - General knowledge: google, bing, duckduckgo, brave, wikipedia
@@ -92,18 +107,6 @@ SearXNG is a metasearch engine that can leverage multiple search engines includi
      - Search for "paris" in the "map" category: \`!map paris\`
      - Search for images: \`!images Wau Holland\`
      - Chain multiple modifiers: \`!map !ddg !wp paris\` (searches for "paris" in the map category, DuckDuckGo, and Wikipedia)
-
-     <search_categories_prefix>
-       - General Information: \`!general query\`
-       - News & Current Events: \`!news query\`
-       - Academic & Scientific Research: \`!science query\`
-       - Tech & IT Queries: \`!it query\`
-       - Images: \`!images query\`
-       - Videos: \`!videos query\`
-       - Geographic & Maps: \`!map query\`
-       - File Searches: \`!files query\`
-       - Social Media & Trends: \`!social_media query\`
-     </search_categories_prefix>
 
   2. Use \`:\` to select language:
      - Search Wikipedia in a specific language: \`:fr !wp Wau Holland\` (uses French)
