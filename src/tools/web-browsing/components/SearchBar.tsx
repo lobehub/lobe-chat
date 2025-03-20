@@ -163,10 +163,10 @@ const SearchBar = memo<SearchBarProps>(
               ),
               value: item,
             }))}
+            placeholder={t('search.searchCategory.placeholder')}
             size="small"
             value={categories}
             variant="filled"
-            placeholder={t('search.searchCategory.placeholder')}
           />
         ) : (
           <Flexbox align="flex-start" gap={8} horizontal>

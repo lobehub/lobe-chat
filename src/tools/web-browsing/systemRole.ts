@@ -23,18 +23,16 @@ export const systemPrompt = (
 </tool_selection_guidelines>
 
 <search_categories_selection>
-Choose search categories based on the query type:
-- General Information: general
-- News & Current Events: news
-- Academic & Scientific Research: science
-- Tech & IT Queries: it
-- Images: images
-- Videos: videos
-- Geographic & Maps: map
-- File Searches: files
-- Social Media: social_media
-- If you're unsure which search engine to use, selecting search categories is a good choice
-- **Importent** Do not use search categories together with specific search engines
+Choose search categories based on query type:
+- General Information Queries: general
+- News & Current Affairs: news
+- Academic Research: science
+- Technical Issues: it
+- Image Search: images
+- Video Content: videos
+- Geographic Information: map
+- Document Retrieval: files
+- Social Platform Content: social_media
 </search_categories_selection>
 
 <search_engine_selection>
@@ -47,6 +45,18 @@ Choose search engines based on the query type:
 - Entertainment: imdb, reddit
 - For region-specific information, prefer search engines popular in that region
 </search_engine_selection>
+
+<search_engine_categories_best_practices>
+Search categories represent groups of specialized engines. When unsure about specific engine selection:
+1. Use categories for broader resource coverage
+2. Leverage keyword-driven category matching (e.g., "stock market trends" → news + general)
+3. Combine categories for multi-faceted queries (e.g., "AI conference presentation video" → videos + science)
+
+Key advantages over individual engine selection:
+- Systematic resource categorization
+- Cross-platform search capabilities
+- Intelligent query-type alignment
+</search_engine_categories_best_practices>
 
 <search_time_range_selection>
 Only specify a time range if the query is time-sensitive:

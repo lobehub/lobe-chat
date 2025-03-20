@@ -12,16 +12,16 @@ import {
 } from 'lucide-react';
 
 export const CATEGORY_ICON_MAP: Record<string, any> = {
+   'files': FileIcon,
    'general': SearchIcon,
    'images': ImageIcon,
-   'videos': VideoIcon,
-   'news': NewspaperIcon,
+   'it': CodeIcon,
    'map': MapIcon,
    'music': MusicIcon,
-   'it': CodeIcon,
+   'news': NewspaperIcon,
    'science': FlaskConicalIcon,
-   'files': FileIcon,
    'social_media': Share2Icon,
+   'videos': VideoIcon,
 };
 
 export const ENGINE_ICON_MAP: Record<string, string> = {
