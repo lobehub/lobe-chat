@@ -693,7 +693,7 @@
     "description": "DeepSeek-V3 is a MoE model developed by Hangzhou DeepSeek Artificial Intelligence Technology Research Co., Ltd., achieving outstanding results in multiple evaluations and ranking first among open-source models on mainstream leaderboards. Compared to the V2.5 model, V3 has achieved a threefold increase in generation speed, providing users with a faster and smoother experience."
   },
   "deepseek/deepseek-chat": {
-    "description": "A new open-source model that integrates general and coding capabilities, retaining the general conversational abilities of the original Chat model and the powerful code handling capabilities of the Coder model, while better aligning with human preferences. Additionally, DeepSeek-V2.5 has achieved significant improvements in writing tasks, instruction following, and more."
+    "description": "DeepSeek-V3 is the latest model from the DeepSeek team, building upon the instruction following and coding abilities of the previous versions. Pre-trained on nearly 15 trillion tokens, the reported evaluations reveal that the model outperforms other open-source models and rivals leading closed-source models."
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 significantly enhances model reasoning capabilities with minimal labeled data. Before outputting the final answer, the model first provides a chain of thought to improve the accuracy of the final response."

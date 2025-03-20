@@ -265,8 +265,8 @@ const openrouterChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-r1',
     pricing: {
-      input: 0.7,
-      output: 2.5,
+      input: 0.55,
+      output: 2.19,
     },
     releasedAt: '2025-01-20',
     type: 'chat',
