@@ -173,8 +173,8 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 
 - Type: Optional
 - Description: If you manually configure the DeepSeek API proxy, you can use this configuration item to override the default DeepSeek API request base URL
-- Default: -
-- Example: `https://xxxx.models.ai.azure.com/v1`
+- Default: `https://api.deepseek.com`
+- Example: `https://my-deepseek-proxy.com`
 
 ### `DEEPSEEK_API_KEY`
 
@@ -319,6 +319,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Description: This is the API key you applied for in the Moonshot AI service
 - Default: -
 - Example: `Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
+
+### `MOONSHOT_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Moonshot API proxy, you can use this configuration item to override the default Moonshot API request base URL
+- Default: `https://api.moonshot.cn/v1`
+- Example: `https://my-moonshot-proxy.com/v1`
 
 ## Perplexity AI
 
@@ -575,3 +582,10 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 
 
 [model-list]: /docs/self-hosting/advanced/model-list
+
+### `VOLCENGINE_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Volcengine API proxy, you can use this configuration item to override the default Volcengine API request base URL
+- Default: `https://ark.cn-beijing.volces.com/api/v3`
+- Example: `https://my-volcengine-proxy.com/v1`
