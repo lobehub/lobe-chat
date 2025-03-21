@@ -76,22 +76,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description: 
-      "DeepSeek-R1-Distill-Llama-70B 是基于 Llama-3.3-70B-Instruct 经过蒸馏训练得到的模型。该模型是 DeepSeek-R1 系列的一部分，通过使用 DeepSeek-R1 生成的样本进行微调，在数学、编程和推理等多个领域展现出优秀的性能。模型在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异的成绩，显示出强大的推理能力。",
-    displayName: "DeepSeek R1 Distill Llama 70B",
-    id: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B", // Informal
-    pricing: {
-      currency: "CNY",
-      input: 4.13,
-      output: 4.13  
-    },
-    type: "chat"
-  },
-  {
-    abilities: {
-      reasoning: true
-    },
-    contextWindowTokens: 32_768,
-    description: 
       "DeepSeek-R1-Distill-Qwen-32B 是基于 Qwen2.5-32B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在数学、编程和推理等多个领域展现出卓越的性能。在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异成绩，其中在 MATH-500 上达到了 94.3% 的准确率，展现出强大的数学推理能力。",
     displayName: "DeepSeek R1 Distill Qwen 32B",
     id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
@@ -115,22 +99,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       currency: "CNY",
       input: 0.7,
       output: 0.7
-    },
-    type: "chat"
-  },
-  {
-    abilities: {
-      reasoning: true
-    },
-    contextWindowTokens: 32_768,
-    description: 
-      "DeepSeek-R1-Distill-Llama-8B 是基于 Llama-3.1-8B 开发的蒸馏模型。该模型使用 DeepSeek-R1 生成的样本进行微调，展现出优秀的推理能力。在多个基准测试中表现不俗，其中在 MATH-500 上达到了 89.1% 的准确率，在 AIME 2024 上达到了 50.4% 的通过率，在 CodeForces 上获得了 1205 的评分，作为 8B 规模的模型展示了较强的数学和编程能力。",
-    displayName: "DeepSeek R1 Distill Llama 8B (Free)",
-    id: "deepseek-ai/DeepSeek-R1-Distill-Llama-8B", // Informal
-    pricing: {
-      currency: "CNY",
-      input: 0,
-      output: 0
     },
     type: "chat"
   },
@@ -624,120 +592,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 0,
       output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    description:
-      'Gemma 是 Google 开发的轻量级、最先进的开放模型系列之一。它是一个仅解码器的大型语言模型，支持英语，提供开放权重、预训练变体和指令微调变体。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。该 9B 模型是通过 8 万亿个 tokens 训练而成。其相对较小的规模使其可以在资源有限的环境中部署，如笔记本电脑、台式机或您自己的云基础设施，从而使更多人能够访问最先进的 AI 模型并促进创新',
-    displayName: 'Gemma 2 9B (Free)',
-    id: 'google/gemma-2-9b-it', // Informal
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    description:
-      'Gemma 是 Google 开发的轻量级、最先进的开放模型系列之一。它是一个仅解码器的大型语言模型，支持英语，提供开放权重、预训练变体和指令微调变体。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。该 9B 模型是通过 8 万亿个 tokens 训练而成。其相对较小的规模使其可以在资源有限的环境中部署，如笔记本电脑、台式机或您自己的云基础设施，从而使更多人能够访问最先进的 AI 模型并促进创新',
-    displayName: 'Gemma 2 9B (Pro)',
-    id: 'Pro/google/gemma-2-9b-it', // Informal
-    pricing: {
-      currency: 'CNY',
-      input: 0.6,
-      output: 0.6,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    description:
-      'Gemma 是由 Google 开发的轻量级、最先进的开放模型系列，采用与 Gemini 模型相同的研究和技术构建。这些模型是仅解码器的大型语言模型，支持英语，提供预训练和指令微调两种变体的开放权重。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。其相对较小的规模使其能够部署在资源有限的环境中，如笔记本电脑、台式机或个人云基础设施，从而让所有人都能获得最先进的 AI 模型，促进创新',
-    displayName: 'Gemma 2 27B',
-    id: 'google/gemma-2-27b-it', // Informal
-    pricing: {
-      currency: 'CNY',
-      input: 1.26,
-      output: 1.26,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 8B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
-    displayName: 'Llama 3.1 8B Instruct (Free)',
-    id: 'meta-llama/Meta-Llama-3.1-8B-Instruct', // Informal
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description:
-      'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 8B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
-    displayName: 'Llama 3.1 8B Instruct (Pro)',
-    id: 'Pro/meta-llama/Meta-Llama-3.1-8B-Instruct', // Informal
-    pricing: {
-      currency: 'CNY',
-      input: 0.42,
-      output: 0.42,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 70B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
-    displayName: 'Llama 3.1 70B Instruct',
-    id: 'meta-llama/Meta-Llama-3.1-70B-Instruct', // Informal
-    pricing: {
-      currency: 'CNY',
-      input: 4.13,
-      output: 4.13,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description:
-      'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 405B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
-    displayName: 'Llama 3.1 405B Instruct',
-    enabled: true,
-    id: 'meta-llama/Meta-Llama-3.1-405B-Instruct', // Informal
-    pricing: {
-      currency: 'CNY',
-      input: 21,
-      output: 21,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
-    displayName: 'Llama 3.3 70B Instruct',
-    id: 'meta-llama/Llama-3.3-70B-Instruct', // Informal
-    pricing: {
-      currency: 'CNY',
-      input: 4.13,
-      output: 4.13,
     },
     type: 'chat',
   },
