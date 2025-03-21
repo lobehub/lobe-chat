@@ -1,6 +1,7 @@
 import type { NextAuthConfig } from 'next-auth';
 
 import { authEnv } from '@/config/auth';
+import { withBasePath } from '@/utils/basePath';
 
 import { ssoProviders } from './sso-providers';
 
@@ -41,8 +42,8 @@ export default {
   },
   debug: authEnv.NEXT_AUTH_DEBUG,
   pages: {
-    error: '/next-auth/error',
-    signIn: '/next-auth/signin',
+    error: withBasePath('/next-auth/error'),
+    signIn: withBasePath('/next-auth/signin'),
   },
   providers: initSSOProviders(),
   secret: authEnv.NEXT_AUTH_SECRET,

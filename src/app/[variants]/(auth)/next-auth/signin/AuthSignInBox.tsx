@@ -13,6 +13,7 @@ import BrandWatermark from '@/components/BrandWatermark';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { DOCUMENTS_REFER_URL, PRIVACY_URL, TERMS_URL } from '@/const/url';
 import { useUserStore } from '@/store/user';
+import { withBasePath } from '@/utils/basePath';
 
 const { Title, Paragraph } = Typography;
 
@@ -77,10 +78,11 @@ export default memo(() => {
   const searchParams = useSearchParams();
 
   // Redirect back to the page url
-  const callbackUrl = searchParams.get('callbackUrl') ?? '';
+  const callbackUrl = searchParams.get('callbackUrl') ?? withBasePath('');
 
   const handleSignIn = async (provider: string) => {
     try {
+      console.log('callbackUrl', callbackUrl);
       await signIn(provider, { redirectTo: callbackUrl });
     } catch (error) {
       // Signin can fail for a number of reasons, such as the user

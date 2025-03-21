@@ -4,6 +4,7 @@ import superjson from 'superjson';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 import type { LambdaRouter } from '@/server/routers/lambda';
+import { withBasePath } from '@/utils/basePath';
 
 import { ErrorResponse } from './types';
 
@@ -45,7 +46,7 @@ const links = [
     },
     maxURLLength: 2083,
     transformer: superjson,
-    url: '/trpc/lambda',
+    url: withBasePath('/trpc/lambda'),
   }),
 ];
 
