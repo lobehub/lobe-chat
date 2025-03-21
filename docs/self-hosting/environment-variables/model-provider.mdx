@@ -580,6 +580,19 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: `-`
 - Example: `-all,+deepseek-r1->deepseek-r1-250120,+deepseek-v3->deepseek-v3-241226,+doubao-1.5-pro-256k->doubao-1-5-pro-256k-250115,+doubao-1.5-pro-32k->doubao-1-5-pro-32k-250115,+doubao-1.5-lite-32k->doubao-1-5-lite-32k-250115`
 
+### `INFINIAI_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied from Infini-AI, you can check it out [here](https://cloud.infini-ai.com)
+- Default: -
+- Example: `sk-xxxxxx...xxxxxx`
+
+### `INFINIAI_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+qwq-32b,+deepseek-r1`
 
 [model-list]: /docs/self-hosting/advanced/model-list
 

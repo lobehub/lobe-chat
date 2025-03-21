@@ -16,6 +16,7 @@ import { LobeGroq } from './groq';
 import { LobeHigressAI } from './higress';
 import { LobeHuggingFaceAI } from './huggingface';
 import { LobeHunyuanAI } from './hunyuan';
+import { LobeInfiniAI } from './infiniai';
 import { LobeInternLMAI } from './internlm';
 import { LobeJinaAI } from './jina';
 import { LobeLMStudioAI } from './lmstudio';
@@ -66,6 +67,7 @@ export const providerRuntimeMap = {
   higress: LobeHigressAI,
   huggingface: LobeHuggingFaceAI,
   hunyuan: LobeHunyuanAI,
+  infiniai: LobeInfiniAI,
   internlm: LobeInternLMAI,
   jina: LobeJinaAI,
   lmstudio: LobeLMStudioAI,
