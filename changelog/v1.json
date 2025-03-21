@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "features": [
+        "Add infini-ai provider, add Search1API provider with web search DeepSeek models."
+      ]
+    },
+    "date": "2025-03-21",
+    "version": "1.74.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix agent chatConfig override issue."]
     },
     "date": "2025-03-21",
