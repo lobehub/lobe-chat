@@ -12,4 +12,7 @@ testProvider({
   defaultBaseURL,
   chatDebugEnv: 'DEBUG_MOONSHOT_CHAT_COMPLETION',
   chatModel: 'moonshot-v1',
+  test: {
+    skipAPICall: true,
+  },
 });

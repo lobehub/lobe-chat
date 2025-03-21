@@ -10,4 +10,5 @@ testProvider({
   defaultBaseURL: 'https://models.inference.ai.azure.com',
   chatDebugEnv: 'DEBUG_GITHUB_CHAT_COMPLETION',
   chatModel: 'gpt-4o',
+  invalidErrorType: 'InvalidGithubToken',
 });

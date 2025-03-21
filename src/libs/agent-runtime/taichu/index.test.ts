@@ -22,6 +22,9 @@ testProvider({
   defaultBaseURL,
   chatDebugEnv: 'DEBUG_TAICHU_CHAT_COMPLETION',
   chatModel: 'taichu',
+  test: {
+    skipAPICall: true,
+  },
 });
 
 let instance: LobeOpenAICompatibleRuntime;

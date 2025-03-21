@@ -13,4 +13,7 @@ testProvider({
   defaultBaseURL,
   chatDebugEnv: 'DEBUG_SENSENOVA_CHAT_COMPLETION',
   chatModel: 'deepseek-r1',
+  test: {
+    skipAPICall: true,
+  },
 });

@@ -13,4 +13,7 @@ testProvider({
   defaultBaseURL,
   chatDebugEnv: 'DEBUG_QWEN_CHAT_COMPLETION',
   chatModel: 'qwen-2.5',
+  test: {
+    skipAPICall: true,
+  },
 });

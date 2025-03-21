@@ -1,19 +1,14 @@
 // @vitest-environment node
-import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks, LobeGroq, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
+import { LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 import { testProvider } from '@/libs/agent-runtime/providerTestUtils';
 
-import * as debugStreamModule from '../utils/debugStream';
 import models from './fixtures/models.json';
 import { LobeOpenRouterAI } from './index';
 
 const provider = 'openrouter';
 const defaultBaseURL = 'https://openrouter.ai/api/v1';
-
-const bizErrorType = 'ProviderBizError';
-const invalidErrorType = 'InvalidProviderAPIKey';
 
 testProvider({
   provider,
@@ -21,6 +16,9 @@ testProvider({
   chatModel: 'mistralai/mistral-7b-instruct:free',
   Runtime: LobeOpenRouterAI,
   chatDebugEnv: 'DEBUG_OPENROUTER_CHAT_COMPLETION',
+  test: {
+    skipAPICall: true,
+  },
 });
 
 // Mock the console.error to avoid polluting test output
