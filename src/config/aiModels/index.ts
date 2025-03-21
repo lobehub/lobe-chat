@@ -35,6 +35,7 @@ import { default as perplexity } from './perplexity';
 import { default as ppio } from './ppio';
 import { default as qwen } from './qwen';
 import { default as sambanova } from './sambanova';
+import { default as search1api } from './search1api';
 import { default as sensenova } from './sensenova';
 import { default as siliconcloud } from './siliconcloud';
 import { default as spark } from './spark';
@@ -106,6 +107,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   ppio,
   qwen,
   sambanova,
+  search1api,
   sensenova,
   siliconcloud,
   spark,
@@ -158,6 +160,7 @@ export { default as perplexity } from './perplexity';
 export { default as ppio } from './ppio';
 export { default as qwen } from './qwen';
 export { default as sambanova } from './sambanova';
+export { default as search1api } from './search1api';
 export { default as sensenova } from './sensenova';
 export { default as siliconcloud } from './siliconcloud';
 export { default as spark } from './spark';
