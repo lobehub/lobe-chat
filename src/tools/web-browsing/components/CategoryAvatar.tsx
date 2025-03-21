@@ -15,11 +15,12 @@ export const CategoryAvatar = memo<CategoryAvatarProps>(({ category }) => {
   return (
     <Avatar
       alt={category}
-      icon={<IconComponent size={16} />}
+      icon={<IconComponent />}
       style={{
         backgroundColor: 'transparent',
         color: theme.colorTextSecondary,
-        fontSize: 16,
+        height: 16,
+        width: 16
       }}
     />
   );
