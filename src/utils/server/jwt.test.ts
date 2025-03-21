@@ -56,7 +56,7 @@ describe('getJWTPayload', () => {
     try {
       await getJWTPayload(token);
     } catch (e) {
-      expect(e).toEqual(new TypeError('"exp" claim timestamp check failed'));
+      expect((e as Error).message).toEqual('"exp" claim timestamp check failed');
     }
   });
 });

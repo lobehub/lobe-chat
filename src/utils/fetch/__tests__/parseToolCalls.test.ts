@@ -107,17 +107,15 @@ describe('parseToolCalls', () => {
     try {
       parseToolCalls(origin, chunk as any);
     } catch (e) {
-      expect(e).toEqual(
-        new ZodError([
-          {
-            code: 'invalid_type',
-            expected: 'object',
-            received: 'undefined',
-            path: ['function'],
-            message: 'Required',
-          },
-        ]),
-      );
+      expect((e as any).issues).toMatchObject([
+        {
+          code: 'invalid_type',
+          expected: 'object',
+          received: 'undefined',
+          path: ['function'],
+          message: 'Required',
+        },
+      ]);
     }
   });
 });

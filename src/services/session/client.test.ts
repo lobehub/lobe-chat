@@ -32,7 +32,9 @@ beforeEach(async () => {
     await trx.insert(users).values([{ id: userId }, { id: '456' }]);
     await trx.insert(sessions).values([{ id: mockSessionId, userId }]);
     await trx.insert(agents).values([{ id: mockAgentId, userId }]);
-    await trx.insert(agentsToSessions).values([{ agentId: mockAgentId, sessionId: mockSessionId }]);
+    await trx
+      .insert(agentsToSessions)
+      .values([{ agentId: mockAgentId, sessionId: mockSessionId, userId }]);
     await trx.insert(sessionGroups).values([
       { id: 'group-1', name: 'group-A', sort: 2, userId },
       { id: 'group-2', name: 'group-B', sort: 1, userId },
@@ -176,7 +178,7 @@ describe('SessionService', () => {
       await clientDB.insert(agents).values({ userId, id: 'agent-1', title: 'Session Name' });
       await clientDB
         .insert(agentsToSessions)
-        .values({ agentId: 'agent-1', sessionId: mockSessionId });
+        .values({ agentId: 'agent-1', sessionId: mockSessionId, userId });
 
       // Execute
       const keyword = 'Name';
@@ -201,7 +203,7 @@ describe('SessionService', () => {
       await clientDB.insert(agents).values({ userId, id: 'agent-1' });
       await clientDB
         .insert(agentsToSessions)
-        .values({ agentId: 'agent-1', sessionId: 'duplicated-session-id' });
+        .values({ agentId: 'agent-1', sessionId: 'duplicated-session-id', userId });
 
       // Execute
       const duplicatedSessionId = await sessionService.cloneSession(mockSessionId, newTitle);

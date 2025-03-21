@@ -1,12 +1,13 @@
 import { eq, inArray } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 
-import { messages, sessions, topics, users } from '../../../schemas';
-import { CreateTopicParams, TopicModel } from '../topic';
+import { messages, sessions, topics, users } from '../../schemas';
+import { CreateTopicParams, TopicModel } from '../../server/models/topic';
+import { getTestDB } from './_util';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'topic-user-test';
 const sessionId = 'topic-session';

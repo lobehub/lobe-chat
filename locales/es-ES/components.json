@@ -76,6 +76,7 @@
       "custom": "Modelo personalizado: admite llamadas de función y reconocimiento visual. Verifique la disponibilidad de estas capacidades según sea necesario.",
       "file": "Este modelo admite la carga y reconocimiento de archivos.",
       "functionCall": "Este modelo admite llamadas de función.",
+      "imageOutput": "Este modelo admite la generación de imágenes",
       "reasoning": "Este modelo admite un pensamiento profundo",
       "search": "Este modelo admite búsqueda en línea",
       "tokens": "Este modelo admite un máximo de {{tokens}} tokens por sesión.",

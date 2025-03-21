@@ -1,6 +1,16 @@
 import { CrawlUrlRule } from './type';
 
 export const crawUrlRules: CrawlUrlRule[] = [
+  // 搜狗微信链接，使用 search1api
+  {
+    impls: ['search1api'],
+    urlPattern: 'https://weixin.sogou.com/link(.*)',
+  },
+  // 搜狗链接，使用 search1api
+  {
+    impls: ['search1api'],
+    urlPattern: 'https://sogou.com/link(.*)',
+  },
   // github 源码解析
   {
     filterOptions: {

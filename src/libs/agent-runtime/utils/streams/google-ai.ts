@@ -71,6 +71,7 @@ const transformGoogleGenerativeAIStream = (
       if (chunk.usageMetadata) {
         const usage = chunk.usageMetadata;
         return [
+          !!text ? { data: text, id: context?.id, type: 'text' } : undefined,
           { data: candidate.finishReason, id: context?.id, type: 'stop' },
           {
             data: {
@@ -88,7 +89,7 @@ const transformGoogleGenerativeAIStream = (
             id: context?.id,
             type: 'usage',
           },
-        ];
+        ].filter(Boolean) as StreamProtocolChunk[];
       }
       return { data: candidate.finishReason, id: context?.id, type: 'stop' };
     }

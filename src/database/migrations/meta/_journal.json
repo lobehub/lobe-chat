@@ -119,6 +119,13 @@
       "when": 1741844738677,
       "tag": "0016_add_message_index",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1742269437903,
+      "tag": "0017_add_user_id_to_tables",
+      "breakpoints": true
     }
   ],
   "version": "6"

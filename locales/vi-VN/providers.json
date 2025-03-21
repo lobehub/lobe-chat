@@ -53,6 +53,9 @@
   "hunyuan": {
     "description": "Mô hình ngôn ngữ lớn được phát triển bởi Tencent, có khả năng sáng tạo tiếng Trung mạnh mẽ, khả năng suy luận logic trong các ngữ cảnh phức tạp, và khả năng thực hiện nhiệm vụ đáng tin cậy."
   },
+  "infiniai": {
+    "description": "Cung cấp dịch vụ mô hình lớn hiệu suất cao, dễ sử dụng và an toàn cho nhà phát triển ứng dụng, bao gồm toàn bộ quy trình từ phát triển mô hình lớn đến triển khai dịch vụ mô hình lớn."
+  },
   "internlm": {
     "description": "Tổ chức mã nguồn mở chuyên nghiên cứu và phát triển công cụ cho mô hình lớn. Cung cấp nền tảng mã nguồn mở hiệu quả, dễ sử dụng cho tất cả các nhà phát triển AI, giúp tiếp cận công nghệ mô hình lớn và thuật toán tiên tiến nhất."
   },

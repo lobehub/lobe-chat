@@ -92,7 +92,7 @@ describe('FileService', () => {
         hashId: '123tttt',
       };
 
-      await clientDB.insert(globalFiles).values(file);
+      await clientDB.insert(globalFiles).values({ ...file, creator: userId });
 
       await clientDB.insert(files).values({
         id: fileId,
@@ -174,6 +174,7 @@ describe('FileService', () => {
       await clientDB.insert(globalFiles).values({
         ...mockFile,
         hashId: hash,
+        creator: userId,
       });
       await clientDB.insert(files).values({
         id: '1',

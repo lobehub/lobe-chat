@@ -53,6 +53,9 @@
   "hunyuan": {
     "description": "Een door Tencent ontwikkeld groot taalmodel, dat beschikt over krachtige Chinese creatiecapaciteiten, logische redeneervaardigheden in complexe contexten, en betrouwbare taakuitvoeringscapaciteiten."
   },
+  "infiniai": {
+    "description": "Hoogwaardige, gebruiksvriendelijke en veilige grote modelservices voor app-ontwikkelaars, die de hele processtroom van het ontwikkelen tot het implementeren van grote modellen dekken."
+  },
   "internlm": {
     "description": "Een open-source organisatie die zich richt op onderzoek en ontwikkeling van tools voor grote modellen. Biedt een efficiënt en gebruiksvriendelijk open-source platform voor alle AI-ontwikkelaars, zodat de meest geavanceerde modellen en algoritmische technologieën binnen handbereik zijn."
   },

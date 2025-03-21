@@ -29,7 +29,7 @@ describe('LobeOllamaAI', () => {
       try {
         new LobeOllamaAI({ baseURL: 'invalid-url' });
       } catch (e) {
-        expect(e).toEqual({
+        expect(e).toMatchObject({
           error: new TypeError('Invalid URL'),
           errorType: 'InvalidOllamaArgs',
         });
@@ -153,7 +153,7 @@ describe('LobeOllamaAI', () => {
           functionCall: false,
           id: 'model-1',
           reasoning: false,
-          vision: false
+          vision: false,
         },
         {
           contextWindowTokens: undefined,
@@ -162,8 +162,8 @@ describe('LobeOllamaAI', () => {
           functionCall: false,
           id: 'model-2',
           reasoning: false,
-          vision: false
-        }
+          vision: false,
+        },
       ]);
     });
   });

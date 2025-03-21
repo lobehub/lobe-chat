@@ -53,6 +53,9 @@
   "hunyuan": {
     "description": "Un modelo de lenguaje desarrollado por Tencent, que posee una poderosa capacidad de creación en chino, habilidades de razonamiento lógico en contextos complejos y una capacidad confiable para ejecutar tareas."
   },
+  "infiniai": {
+    "description": "Proporciona a los desarrolladores de aplicaciones servicios de modelos grandes de alto rendimiento, fáciles de usar y seguros, cubriendo todo el proceso desde el desarrollo de modelos grandes hasta su implementación como servicio."
+  },
   "internlm": {
     "description": "Organización de código abierto dedicada a la investigación y desarrollo de herramientas para modelos grandes. Proporciona a todos los desarrolladores de IA una plataforma de código abierto eficiente y fácil de usar, permitiendo el acceso a las tecnologías y algoritmos más avanzados."
   },

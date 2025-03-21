@@ -53,6 +53,9 @@
   "hunyuan": {
     "description": "Tencent tarafından geliştirilen büyük bir dil modeli, güçlü Çince yaratım yeteneklerine, karmaşık bağlamlarda mantıksal akıl yürütme yeteneğine ve güvenilir görev yerine getirme yeteneğine sahiptir."
   },
+  "infiniai": {
+    "description": "Uygulama geliştiricilere yüksek performanslı, kullanımı kolay ve güvenilir büyük model hizmetleri sunar. Büyük model geliştirme den hizmetleştirmeye kadar tüm süreçleri kapsar."
+  },
   "internlm": {
     "description": "Büyük model araştırma ve geliştirme araç zincirine adanmış bir açık kaynak organizasyonu. Tüm AI geliştiricilerine verimli ve kullanımı kolay bir açık kaynak platformu sunarak en son büyük model ve algoritma teknolojilerine erişimi kolaylaştırır."
   },

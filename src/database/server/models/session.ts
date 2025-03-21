@@ -220,6 +220,7 @@ export class SessionModel {
       await trx.insert(agentsToSessions).values({
         agentId: newAgents[0].id,
         sessionId: id,
+        userId: this.userId,
       });
 
       return result[0];

@@ -712,9 +712,9 @@ describe('LobeOpenAICompatibleFactory', () => {
           });
         } catch (e) {
           // Expect the chat method to throw an error with InvalidMoonshotAPIKey
-          expect(e).toEqual({
+          expect(e).toMatchObject({
             endpoint: defaultBaseURL,
-            error: new Error('Unauthorized'),
+            error,
             errorType: invalidErrorType,
             provider,
           });
