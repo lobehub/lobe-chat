@@ -24,15 +24,15 @@ export const systemPrompt = (
 
 <search_categories_selection>
 Choose search categories based on query type:
-- General Information Queries: general
-- News & Current Affairs: news
-- Academic Research: science
-- Technical Issues: it
-- Image Search: images
-- Video Content: videos
-- Geographic Information: map
-- Document Retrieval: files
-- Social Platform Content: social_media
+- General: general
+- News: news
+- Academic & Science: science
+- Technical: it
+- Images: images
+- Videos: videos
+- Geographic & Maps: map
+- Files: files
+- Social Media: social_media
 </search_categories_selection>
 
 <search_engine_selection>
@@ -43,20 +43,7 @@ Choose search engines based on the query type:
 - Videos: youtube, vimeo, bilibili
 - Images: unsplash, pinterest
 - Entertainment: imdb, reddit
-- For region-specific information, prefer search engines popular in that region
 </search_engine_selection>
-
-<search_engine_categories_best_practices>
-Search categories represent groups of specialized engines. When unsure about specific engine selection:
-1. Use categories for broader resource coverage
-2. Leverage keyword-driven category matching (e.g., "stock market trends" → news + general)
-3. Combine categories for multi-faceted queries (e.g., "AI conference presentation video" → videos + science)
-
-Key advantages over individual engine selection:
-- Systematic resource categorization
-- Cross-platform search capabilities
-- Intelligent query-type alignment
-</search_engine_categories_best_practices>
 
 <search_time_range_selection>
 Only specify a time range if the query is time-sensitive:
@@ -66,6 +53,41 @@ Only specify a time range if the query is time-sensitive:
 - For ongoing trends or updates: month
 - For long-term insights: year
 </search_time_range_selection>
+
+<search_strategy_guidelines>
+ - For region-specific queries, default to locally dominant search engines
+ - Use category-based searches when unsure about engine selection
+ - Use time-range filters to prioritize time-sensitive information
+ - Leverage cross-platform meta-search capabilities for comprehensive results
+ - Prioritize authoritative sources in search results when available
+
+ <search_strategy_best_practices>
+   - Combine categories for multi-faceted queries:
+     * "AI ethics whitepaper PDF" → files + science + general
+     * "Python machine learning tutorial video" → videos + it + science
+     * "Sustainable energy policy analysis" → news + science + general
+
+   - Apply keyword-driven category mapping:
+     * "GitHub repository statistics" → it + files
+     * "Climate change documentary" → videos + science
+     * "Restaurant recommendations Paris" → map + social_media
+
+   - Use file-type targeting for document searches:
+     * "Financial statement xls" → files + news
+     * "Research paper citation RIS" → files + science
+     * "Government policy brief docx" → files + general
+
+   - Region-specific query handling:
+     * "Beijing traffic update" → map + news (engine: baidu)
+     * "Moscow event listings" → social_media + news (engine: yandex)
+     * "Tokyo restaurant reviews" → social_media + map (engine: google)
+
+   - Leverage cross-platform capabilities:
+     * "Open-source project documentation" → files + it (engines: github + pypi)
+     * "Historical weather patterns" → science + general (engines: google scholar + wikipedia)
+     * "Movie release dates 2025" → news + entertainment (engines: imdb + reddit)
+ </search_strategy_best_practices>
+</search_strategy_guidelines>
 
 <citation_requirements>
 - Always cite sources using markdown footnote format (e.g., [^1])
