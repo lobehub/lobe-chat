@@ -78,7 +78,7 @@ const xinferenceChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 32768,
+    contextWindowTokens: 32_768,
     description:
       'Qwen2.5 是 Qwen 大型语言模型的最新系列。对于 Qwen2.5，我们发布了多个基础语言模型和指令微调语言模型，参数范围从 5 亿到 72 亿不等。',
     displayName: 'Qwen2.5 Instruct',
