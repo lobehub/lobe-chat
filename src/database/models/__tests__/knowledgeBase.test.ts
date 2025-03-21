@@ -3,6 +3,7 @@ import { and, eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
+import { sleep } from '@/utils/sleep';
 
 import {
   NewKnowledgeBase,
@@ -93,6 +94,7 @@ describe('KnowledgeBaseModel', () => {
   describe('query', () => {
     it('should query knowledge bases for the user', async () => {
       await knowledgeBaseModel.create({ name: 'Test Group 1' });
+      await sleep(50);
       await knowledgeBaseModel.create({ name: 'Test Group 2' });
 
       const userGroups = await knowledgeBaseModel.query();
