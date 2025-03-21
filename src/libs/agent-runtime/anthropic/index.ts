@@ -63,7 +63,11 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       }
 
       const response = await this.client.messages.create(
-        { ...anthropicPayload, stream: true },
+        {
+          ...anthropicPayload,
+          metadata: options?.user ? { user_id: options?.user } : undefined,
+          stream: true,
+        },
         {
           signal: options?.signal,
         },
