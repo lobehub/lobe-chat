@@ -5,7 +5,9 @@ import { CrawlImpl, CrawlSuccessResult } from '../type';
 import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 
 const BASE_URL = process.env.BROWSERLESS_URL ?? 'https://chrome.browserless.io';
-const REJECT_REQUEST_PATTERN = process.env.BROWSERLESS_REJECT_REQUEST_PATTERN ?? '';
+// Allowed file types: html, css, js, json, xml, webmanifest, txt, md
+const REJECT_REQUEST_PATTERN =
+  '.*\\.(?!(html|css|js|json|xml|webmanifest|txt|md)(\\?|#|$))[\\w-]+(?:[\\?#].*)?$';
 const BROWSERLESS_TOKEN = process.env.BROWSERLESS_TOKEN;
 
 class BrowserlessInitError extends Error {
