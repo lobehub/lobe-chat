@@ -155,7 +155,6 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description: 'Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。',
     displayName: 'Gemini 2.0 Flash Exp',
-    enabled: true,
     id: 'gemini-2.0-flash-exp',
     maxOutput: 8192,
     pricing: {
