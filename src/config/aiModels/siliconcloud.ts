@@ -5,6 +5,7 @@ import { AIChatModelCard } from '@/types/aiModel';
 const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: false,
       reasoning: true,
     },
     contextWindowTokens: 65_536,
@@ -22,7 +23,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      // Not support tool use, ref: https://cloud.siliconflow.cn/models?target=deepseek-ai%2FDeepSeek-V3
       functionCall: false,
     },
     contextWindowTokens: 65_536,
@@ -39,6 +39,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: false,
       reasoning: true,
     },
     contextWindowTokens: 65_536,
@@ -673,7 +674,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 8B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
     displayName: 'Llama 3.1 8B Instruct (Free)',
-    id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
+    id: 'meta-llama/Meta-Llama-3.1-8B-Instruct', // Informal
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -686,7 +687,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 8B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
     displayName: 'Llama 3.1 8B Instruct (Pro)',
-    id: 'Pro/meta-llama/Meta-Llama-3.1-8B-Instruct',
+    id: 'Pro/meta-llama/Meta-Llama-3.1-8B-Instruct', // Informal
     pricing: {
       currency: 'CNY',
       input: 0.42,
@@ -702,7 +703,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 70B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
     displayName: 'Llama 3.1 70B Instruct',
-    id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
+    id: 'meta-llama/Meta-Llama-3.1-70B-Instruct', // Informal
     pricing: {
       currency: 'CNY',
       input: 4.13,
@@ -716,7 +717,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 405B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
     displayName: 'Llama 3.1 405B Instruct',
     enabled: true,
-    id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
+    id: 'meta-llama/Meta-Llama-3.1-405B-Instruct', // Informal
     pricing: {
       currency: 'CNY',
       input: 21,
@@ -732,7 +733,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Llama 3.3 是 Llama 系列最先进的多语言开源大型语言模型，以极低成本体验媲美 405B 模型的性能。基于 Transformer 结构，并通过监督微调（SFT）和人类反馈强化学习（RLHF）提升有用性和安全性。其指令调优版本专为多语言对话优化，在多项行业基准上表现优于众多开源和封闭聊天模型。知识截止日期为 2023 年 12 月',
     displayName: 'Llama 3.3 70B Instruct',
-    id: 'meta-llama/Llama-3.3-70B-Instruct',
+    id: 'meta-llama/Llama-3.3-70B-Instruct', // Informal
     pricing: {
       currency: 'CNY',
       input: 4.13,
