@@ -8,8 +8,8 @@ export interface XinferenceModelCard {
   id: string;
   model_ability: string[];
   model_description: string;
-  model_name: string;
   model_type: string;
+  name: string;
 }
 
 export const LobeXinferenceAI = LobeOpenAICompatibleFactory({
@@ -30,7 +30,7 @@ export const LobeXinferenceAI = LobeOpenAICompatibleFactory({
         return {
           contextWindowTokens: model.context_length,
           description: model.model_description,
-          displayName: model.model_name,
+          displayName: model.name,
           enabled: knownModel?.enabled || false,
           functionCall:
             (model.model_ability && model.model_ability.includes("tools"))

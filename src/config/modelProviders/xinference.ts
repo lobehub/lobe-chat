@@ -10,7 +10,6 @@ const Xinference: ModelProviderCard = {
     proxyUrl: {
       placeholder: 'http://localhost:9997/v1',
     },
-    showDeployName: true,
     sdkType: 'openai',
   },
   url: 'https://inference.readthedocs.io/zh-cn/v0.12.3/index.html',
