@@ -171,8 +171,8 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 
 - 类型：可选
 - 描述：如果您手动配置了 DeepSeek API 代理，可以使用此配置项覆盖默认的 DeepSeek API 请求基础 URL
-- 默认值: -
-- 示例: `https://xxxx.models.ai.azure.com/v1`
+- 默认值：`https://api.deepseek.com`
+- 示例：`https://my-deepseek-proxy.com`
 
 ### `DEEPSEEK_API_KEY`
 
@@ -317,6 +317,14 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 描述：这是你在 Moonshot AI 服务中申请的 API 密钥
 - 默认值：-
 - 示例：`Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
+
+### `MOONSHOT_PROXY_URL`
+
+- 类型：可选
+- 描述：如果你手动配置了 Moonshot 接口代理，可以使用此配置项来覆盖默认的 Moonshot API 请求基础 URL
+- 默认值：`https://api.moonshot.cn/v1`
+- 示例：`https://my-moonshot-proxy.com/v1`
+
 
 ## Perplexity AI
 
@@ -572,3 +580,10 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 示例：`-all,+deepseek-r1->deepseek-r1-250120,+deepseek-v3->deepseek-v3-241226,+doubao-1.5-pro-256k->doubao-1-5-pro-256k-250115,+doubao-1.5-pro-32k->doubao-1-5-pro-32k-250115,+doubao-1.5-lite-32k->doubao-1-5-lite-32k-250115`
 
 [model-list]: /zh/docs/self-hosting/advanced/model-list
+
+### `VOLCENGINE_PROXY_URL`
+
+- 类型：可选
+- 描述：如果你手动配置了 Volcengine 接口代理，可以使用此配置项来覆盖默认的 Volcengine API 请求基础 URL
+- 默认值：`https://ark.cn-beijing.volces.com/api/v3`
+- 示例：`https://my-volcengine-proxy.com/v1`
