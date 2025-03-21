@@ -85,7 +85,6 @@ describe('searXNG actions', () => {
       const expectedContent: SearchContent[] = [
         {
           content: 'Test Content',
-          img_src: undefined,
           title: 'Test Result',
           url: 'https://test.com',
         },
