@@ -37,7 +37,7 @@ const enableHistoryCount = (s: AgentStoreState) => {
 const historyCount = (s: AgentStoreState): number => {
   const chatConfig = currentAgentChatConfig(s);
 
-  return chatConfig.historyCount || (DEFAULT_AGENT_CHAT_CONFIG.historyCount as number);
+  return chatConfig.historyCount ?? (DEFAULT_AGENT_CHAT_CONFIG.historyCount as number); // historyCount 为 0 即不携带历史消息
 };
 
 const displayMode = (s: AgentStoreState) => {

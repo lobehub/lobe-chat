@@ -31,7 +31,11 @@ export class ChunkModel {
 
       const result = await trx.insert(chunks).values(params).returning();
 
-      const fileChunksData = result.map((chunk) => ({ chunkId: chunk.id, fileId }));
+      const fileChunksData = result.map((chunk) => ({
+        chunkId: chunk.id,
+        fileId,
+        userId: this.userId,
+      }));
 
       if (fileChunksData.length > 0) {
         await trx.insert(fileChunks).values(fileChunksData);
