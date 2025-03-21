@@ -77,7 +77,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description: 
       "DeepSeek-R1-Distill-Llama-70B 是基于 Llama-3.3-70B-Instruct 经过蒸馏训练得到的模型。该模型是 DeepSeek-R1 系列的一部分，通过使用 DeepSeek-R1 生成的样本进行微调，在数学、编程和推理等多个领域展现出优秀的性能。模型在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异的成绩，显示出强大的推理能力。",
     displayName: "DeepSeek R1 Distill Llama 70B",
-    enabled: true,
     id: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B", // Informal
     pricing: {
       currency: "CNY",
@@ -541,6 +540,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Qwen2.5-VL 是 Qwen2.5 系列中的视觉语言模型。该模型在多方面有显著提升：具备更强的视觉理解能力，能够识别常见物体、分析文本、图表和布局；作为视觉代理能够推理并动态指导工具使用；支持理解超过 1 小时的长视频并捕捉关键事件；能够通过生成边界框或点准确定位图像中的物体；支持生成结构化输出，尤其适用于发票、表格等扫描数据。',
     displayName: 'Qwen2.5 VL 72B Instruct',
+    enabled: true,
     id: 'Qwen/Qwen2.5-VL-72B-Instruct',
     pricing: {
       currency: 'CNY',
@@ -631,7 +631,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Gemma 是 Google 开发的轻量级、最先进的开放模型系列之一。它是一个仅解码器的大型语言模型，支持英语，提供开放权重、预训练变体和指令微调变体。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。该 9B 模型是通过 8 万亿个 tokens 训练而成。其相对较小的规模使其可以在资源有限的环境中部署，如笔记本电脑、台式机或您自己的云基础设施，从而使更多人能够访问最先进的 AI 模型并促进创新',
     displayName: 'Gemma 2 9B (Free)',
-    id: 'google/gemma-2-9b-it',
+    id: 'google/gemma-2-9b-it', // Informal
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -644,7 +644,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Gemma 是 Google 开发的轻量级、最先进的开放模型系列之一。它是一个仅解码器的大型语言模型，支持英语，提供开放权重、预训练变体和指令微调变体。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。该 9B 模型是通过 8 万亿个 tokens 训练而成。其相对较小的规模使其可以在资源有限的环境中部署，如笔记本电脑、台式机或您自己的云基础设施，从而使更多人能够访问最先进的 AI 模型并促进创新',
     displayName: 'Gemma 2 9B (Pro)',
-    id: 'Pro/google/gemma-2-9b-it',
+    id: 'Pro/google/gemma-2-9b-it', // Informal
     pricing: {
       currency: 'CNY',
       input: 0.6,
@@ -657,7 +657,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Gemma 是由 Google 开发的轻量级、最先进的开放模型系列，采用与 Gemini 模型相同的研究和技术构建。这些模型是仅解码器的大型语言模型，支持英语，提供预训练和指令微调两种变体的开放权重。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。其相对较小的规模使其能够部署在资源有限的环境中，如笔记本电脑、台式机或个人云基础设施，从而让所有人都能获得最先进的 AI 模型，促进创新',
     displayName: 'Gemma 2 27B',
-    id: 'google/gemma-2-27b-it',
+    id: 'google/gemma-2-27b-it', // Informal
     pricing: {
       currency: 'CNY',
       input: 1.26,
