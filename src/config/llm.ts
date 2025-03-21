@@ -153,6 +153,9 @@ export const getLLMConfig = () => {
 
       ENABLED_COHERE: z.boolean(),
       COHERE_API_KEY: z.string().optional(),
+
+      ENABLED_INFINIAI: z.boolean(),
+      INFINIAI_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -304,6 +307,9 @@ export const getLLMConfig = () => {
 
       ENABLED_COHERE: !!process.env.COHERE_API_KEY,
       COHERE_API_KEY: process.env.COHERE_API_KEY,
+
+      ENABLED_INFINIAI: !!process.env.INFINIAI_API_KEY,
+      INFINIAI_API_KEY: process.env.INFINIAI_API_KEY,
     },
   });
 };

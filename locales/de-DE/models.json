@@ -521,6 +521,12 @@
   "charglm-3": {
     "description": "CharGLM-3 ist für Rollenspiele und emotionale Begleitung konzipiert und unterstützt extrem lange Mehrfachgedächtnisse und personalisierte Dialoge, mit breiter Anwendung."
   },
+  "chatglm3": {
+    "description": "ChatGLM3 ist ein proprietäres Modell, das von der KI-Forschungsgruppe Zhipu AI und dem KEG-Labor der Tsinghua-Universität veröffentlicht wurde. Es wurde durch umfangreiche Vortrainings mit chinesischen und englischen Bezeichnern sowie durch die Anpassung an menschliche Präferenzen entwickelt. Im Vergleich zum ersten Modell erzielte es Verbesserungen von 16 %, 36 % und 280 % in den Benchmarks MMLU, C-Eval und GSM8K und steht an der Spitze der chinesischen Aufgabenliste C-Eval. Es eignet sich für Szenarien, die hohe Anforderungen an das Wissensvolumen, die Inferenzfähigkeit und die Kreativität stellen, wie z. B. die Erstellung von Werbetexten, das Schreiben von Romanen, wissensbasiertes Schreiben und die Generierung von Code."
+  },
+  "chatglm3-6b-base": {
+    "description": "ChatGLM3-6b-base ist das neueste Modell der ChatGLM-Serie mit 6 Milliarden Parametern, entwickelt von Zhipu."
+  },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o ist ein dynamisches Modell, das in Echtzeit aktualisiert wird, um die neueste Version zu gewährleisten. Es kombiniert starke Sprachverständnis- und Generierungsfähigkeiten und eignet sich für großangelegte Anwendungsszenarien, einschließlich Kundenservice, Bildung und technische Unterstützung."
   },
@@ -1133,6 +1139,9 @@
   "lite": {
     "description": "Spark Lite ist ein leichtgewichtiges großes Sprachmodell mit extrem niedriger Latenz und effizienter Verarbeitung, das vollständig kostenlos und offen ist und Echtzeitsuchfunktionen unterstützt. Seine schnelle Reaktionsfähigkeit macht es besonders geeignet für Inferenzanwendungen und Modellanpassungen auf Geräten mit geringer Rechenleistung und bietet den Nutzern ein hervorragendes Kosten-Nutzen-Verhältnis sowie ein intelligentes Erlebnis, insbesondere in den Bereichen Wissensabfragen, Inhaltserstellung und Suchszenarien."
   },
+  "llama-2-7b-chat": {
+    "description": "Llama2 ist eine Serie großer Sprachmodelle (LLM), die von Meta entwickelt und als Open Source veröffentlicht wurden. Diese Serie umfasst generative Textmodelle mit einer Parameteranzahl von 7 Milliarden bis 70 Milliarden, die vortrainiert und feinjustiert wurden. Architekturtechnisch ist Llama2 ein autoregressives Sprachmodell, das eine optimierte Transformer-Architektur verwendet. Die angepassten Versionen nutzen überwachte Feinabstimmung (SFT) und Reinforcement Learning mit menschlichem Feedback (RLHF), um den menschlichen Vorlieben für Nützlichkeit und Sicherheit zu entsprechen. Llama2 übertrifft die Leistung der Llama-Serie in mehreren akademischen Datensätzen und bietet Inspiration für die Entwicklung und Gestaltung vieler anderer Modelle."
+  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B bietet leistungsstarke KI-Schlussfolgerungsfähigkeiten, die für komplexe Anwendungen geeignet sind und eine hohe Rechenverarbeitung bei gleichzeitiger Effizienz und Genauigkeit unterstützen."
   },
@@ -1195,6 +1204,9 @@
   },
   "max-32k": {
     "description": "Spark Max 32K bietet eine große Kontextverarbeitungsfähigkeit mit verbesserter Kontextverständnis und logischer Schlussfolgerungsfähigkeit und unterstützt Texteingaben von bis zu 32K Tokens, was es ideal für das Lesen langer Dokumente und private Wissensabfragen macht."
+  },
+  "megrez-3b-instruct": {
+    "description": "Megrez-3B-Instruct ist ein großes Sprachmodell, das vollständig von Wuxin XinQiong trainiert wurde. Megrez-3B-Instruct zielt darauf ab, durch die Idee der Hardware-Software-Kooperation eine schnelle Inferenz, ein kompaktes Design und eine benutzerfreundliche Endgerätlösung zu schaffen."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Ein leistungsstarkes Modell mit 70 Milliarden Parametern, das in den Bereichen Schlussfolgerungen, Programmierung und breiten Sprachanwendungen herausragt."
@@ -1583,8 +1595,23 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Leistungsstarkes, mittelgroßes Codierungsmodell, das 32K Kontextlängen unterstützt und in der mehrsprachigen Programmierung versiert ist."
   },
+  "qwen1.5-14b-chat": {
+    "description": "Die Qwen1.5-Serie ist die Beta-Version von Qwen2 und basiert auf einem Transformer-basierten dekodierenden Sprachmodell, das auf umfangreichen Daten vorab trainiert wurde. Im Vergleich zu früheren Versionen der Qwen-Serie können sowohl das Base-Modell als auch das Chat-Modell der Qwen1.5-Serie mehrere Sprachen unterstützen und bieten Verbesserungen in der gesamten Chat-Funktionalität und den grundlegenden Fähigkeiten. Qwen1.5-14b-chat ist ein 14-Milliarden-Parameter-Modell, das speziell für Chat-Szenarien entwickelt wurde."
+  },
+  "qwen1.5-32b-chat": {
+    "description": "Die Qwen1.5-Serie ist die Beta-Version von Qwen2 und basiert auf einem Transformer-basierten dekodierenden Sprachmodell, das auf umfangreichen Daten vorab trainiert wurde. Im Vergleich zu früheren Versionen der Qwen-Serie können sowohl das Base-Modell als auch das Chat-Modell der Qwen1.5-Serie mehrere Sprachen unterstützen und bieten Verbesserungen in der allgemeinen Konversation und den grundlegenden Fähigkeiten. Qwen1.5-32b-chat ist ein 32-Milliarden-Parameter-Modell, das speziell für Chat-Szenarien entwickelt wurde. Im Vergleich zum 14-Milliarden-Parameter-Modell ist es leistungsfähiger in Agentenszenarien, während es im Vergleich zum 72-Milliarden-Parameter-Modell günstigere Inferenzkosten aufweist."
+  },
+  "qwen1.5-72b-chat": {
+    "description": "Die Qwen1.5-Serie ist die Beta-Version von Qwen2 und basiert auf einem Transformer-basierten dekodierenden Sprachmodell, das auf umfangreichen Daten vorab trainiert wurde. Im Vergleich zu früheren Versionen der Qwen-Serie können sowohl das Base-Modell als auch das Chat-Modell der Qwen1.5-Serie mehrere Sprachen unterstützen und bieten Verbesserungen in der gesamten Chat-Funktionalität und den grundlegenden Fähigkeiten. Qwen1.5-72b-chat ist das 72-Milliarden-Parameter-Modell, das speziell für Chat-Szenarien entwickelt wurde."
+  },
   "qwen2": {
     "description": "Qwen2 ist das neue große Sprachmodell von Alibaba, das mit hervorragender Leistung eine Vielzahl von Anwendungsanforderungen unterstützt."
+  },
+  "qwen2-72b-instruct": {
+    "description": "Qwen2 ist die neueste Generation von Sprachmodellen, die vom Qwen-Team entwickelt wurde. Es basiert auf der Transformer-Architektur und verwendet Techniken wie die SwiGLU-Aktivierungsfunktion, die Aufmerksamkeits-QKV-Bias (attention QKV bias), die gruppenbasierte Abfrageaufmerksamkeit (group query attention) und eine Mischung aus rutschendem Fenster und voller Aufmerksamkeit (mixture of sliding window attention and full attention). Darüber hinaus hat das Qwen-Team den Tokenizer verbessert, der für die Verarbeitung von natürlicher Sprache und Code optimiert ist."
+  },
+  "qwen2-7b-instruct": {
+    "description": "Qwen2 ist die neueste Serie von großen Sprachmodellen, die vom Qwen-Team entwickelt wurde. Es basiert auf der Transformer-Architektur und verwendet Techniken wie die SwiGLU-Aktivierungsfunktion, die Aufmerksamkeits-QKV-Bias (attention QKV bias), die Gruppenabfrageaufmerksamkeit (group query attention) und eine Mischung aus rutschendem Fenster und voller Aufmerksamkeit (mixture of sliding window attention and full attention). Zudem hat das Qwen-Team den Tokenizer verbessert, um mehrere natürliche Sprachen und Code besser zu verarbeiten."
   },
   "qwen2.5": {
     "description": "Qwen2.5 ist das neue, groß angelegte Sprachmodell der Alibaba-Gruppe, das hervorragende Leistungen zur Unterstützung vielfältiger Anwendungsbedürfnisse bietet."
@@ -1762,6 +1789,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 ist ein Sprachmodell von Microsoft AI, das in komplexen Dialogen, mehrsprachigen Anwendungen, Schlussfolgerungen und intelligenten Assistenten besonders gut abschneidet."
+  },
+  "yi-1.5-34b-chat": {
+    "description": "Yi-1.5 ist eine verbesserte Version von Yi. Es wurde mit einem hochwertigen Korpus von 500B Tokens auf Yi fortlaufend vortrainiert und auf 3M diversen Feinabstimmungsbeispielen feinjustiert."
   },
   "yi-large": {
     "description": "Das brandneue Modell mit einer Billion Parametern bietet außergewöhnliche Frage- und Textgenerierungsfähigkeiten."

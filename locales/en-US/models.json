@@ -521,6 +521,12 @@
   "charglm-3": {
     "description": "CharGLM-3 is designed for role-playing and emotional companionship, supporting ultra-long multi-turn memory and personalized dialogue, with wide applications."
   },
+  "chatglm3": {
+    "description": "ChatGLM3 is a closed-source model released by Zhipu AI and Tsinghua KEG Lab. It has been pre-trained on a massive amount of Chinese and English identifiers and fine-tuned with human preference alignment. Compared to the first-generation model, it has achieved improvements of 16%, 36%, and 280% in MMLU, C-Eval, and GSM8K, respectively, and topped the Chinese task leaderboard C-Eval. It is suitable for scenarios that require a high level of knowledge, reasoning, and creativity, such as advertising copywriting, novel writing, knowledge-based writing, and code generation."
+  },
+  "chatglm3-6b-base": {
+    "description": "ChatGLM3-6b-base is the latest generation of the ChatGLM series, a 6 billion parameter open-source base model developed by Zhipu."
+  },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o is a dynamic model that updates in real-time to stay current with the latest version. It combines powerful language understanding and generation capabilities, making it suitable for large-scale applications, including customer service, education, and technical support."
   },
@@ -1133,6 +1139,9 @@
   "lite": {
     "description": "Spark Lite is a lightweight large language model with extremely low latency and efficient processing capabilities, completely free and open, supporting real-time online search functionality. Its quick response feature makes it excel in inference applications and model fine-tuning on low-power devices, providing users with excellent cost-effectiveness and intelligent experiences, particularly in knowledge Q&A, content generation, and search scenarios."
   },
+  "llama-2-7b-chat": {
+    "description": "Llama2 is a series of large language models (LLMs) developed and open-sourced by Meta. This series includes generative text models of varying sizes, ranging from 7 billion to 70 billion parameters, which have been pre-trained and fine-tuned. Architecturally, Llama2 is an autoregressive language model that uses an optimized transformer architecture. The fine-tuned versions leverage supervised fine-tuning (SFT) and reinforcement learning with human feedback (RLHF) to align with human preferences for usefulness and safety. Llama2 outperforms the Llama series on multiple academic datasets and provides valuable insights for the design and development of other models."
+  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B provides enhanced AI reasoning capabilities, suitable for complex applications, supporting extensive computational processing while ensuring efficiency and accuracy."
   },
@@ -1195,6 +1204,9 @@
   },
   "max-32k": {
     "description": "Spark Max 32K is configured with large context processing capabilities, enhanced contextual understanding, and logical reasoning abilities, supporting text input of 32K tokens, suitable for long document reading, private knowledge Q&A, and other scenarios."
+  },
+  "megrez-3b-instruct": {
+    "description": "Megrez-3B-Instruct is a large language model fully trained by Wuwen Xin Qiong. Megrez-3B-Instruct aims to create an ultra-fast, compact, and easy-to-use intelligent solution for edge devices through the concept of hardware-software co-design."
   },
   "meta-llama-3-70b-instruct": {
     "description": "A powerful 70-billion parameter model excelling in reasoning, coding, and broad language applications."
@@ -1583,8 +1595,23 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "A powerful medium-sized code model supporting 32K context length, proficient in multilingual programming."
   },
+  "qwen1.5-14b-chat": {
+    "description": "The Qwen1.5 series is the Beta version of Qwen2, a Transformer-based decoder-only language model pre-trained on a vast amount of data. Compared to previously released versions of Qwen, both the base and chat models in the Qwen1.5 series support multiple languages and have seen improvements in overall chat and foundational capabilities. Qwen1.5-14b-chat is a 14 billion parameter model specifically designed for chat scenarios, representing a mainstream size in the field."
+  },
+  "qwen1.5-32b-chat": {
+    "description": "The Qwen1.5 series is the Beta version of Qwen2, a Transformer-based decoder-only language model pre-trained on a vast amount of data. Compared to previously released versions of the Qwen series, the Qwen1.5 series, including both the base and chat models, supports multiple languages and has seen improvements in overall chat and foundational capabilities. Qwen1.5-32b-chat is a 32 billion parameter model specifically designed for chat scenarios, offering stronger performance in agent scenarios compared to the 14 billion parameter model, and lower inference costs compared to the 72 billion parameter model."
+  },
+  "qwen1.5-72b-chat": {
+    "description": "The Qwen1.5 series is the Beta version of Qwen2, a decoder-only language model based on the Transformer architecture, pre-trained on a vast amount of data. Compared to previously released versions of the Qwen series, the Qwen1.5 series, including both the base and chat models, supports multiple languages and has seen improvements in overall chat and foundational capabilities. Qwen1.5-72b-chat is a 72 billion parameter model specifically designed for chat scenarios."
+  },
   "qwen2": {
     "description": "Qwen2 is Alibaba's next-generation large-scale language model, supporting diverse application needs with excellent performance."
+  },
+  "qwen2-72b-instruct": {
+    "description": "Qwen2 is the new generation of large language model series introduced by the Qwen team. It is based on the Transformer architecture and incorporates technologies such as the SwiGLU activation function, attention QKV bias, group query attention, a mixture of sliding window attention, and full attention. Additionally, the Qwen team has improved the tokenizer to better adapt to multiple natural languages and code."
+  },
+  "qwen2-7b-instruct": {
+    "description": "Qwen2 is the new generation of large language model series introduced by the Qwen team. It is based on the Transformer architecture and incorporates technologies such as the SwiGLU activation function, attention QKV bias, group query attention, a mixture of sliding window attention, and full attention. Additionally, the Qwen team has improved the tokenizer to better adapt to multiple natural languages and code."
   },
   "qwen2.5": {
     "description": "Qwen2.5 is Alibaba's next-generation large-scale language model, supporting diverse application needs with outstanding performance."
@@ -1762,6 +1789,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 is a language model provided by Microsoft AI, excelling in complex dialogues, multilingual capabilities, reasoning, and intelligent assistant applications."
+  },
+  "yi-1.5-34b-chat": {
+    "description": "Yi-1.5 is an upgraded version of Yi. It continues pre-training on Yi using a high-quality corpus of 500B tokens and is fine-tuned on 3M diverse samples."
   },
   "yi-large": {
     "description": "A new trillion-parameter model, providing super strong question-answering and text generation capabilities."

@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.73.2](https://github.com/lobehub/lobe-chat/compare/v1.73.1...v1.73.2)
+
+<sup>Released on **2025-03-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix agent chatConfig override issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix agent chatConfig override issue, closes [#7047](https://github.com/lobehub/lobe-chat/issues/7047) ([83aa931](https://github.com/lobehub/lobe-chat/commit/83aa931))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.73.1](https://github.com/lobehub/lobe-chat/compare/v1.73.0...v1.73.1)
+
+<sup>Released on **2025-03-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update shiki to v3.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update shiki to v3, closes [#7069](https://github.com/lobehub/lobe-chat/issues/7069) ([03c95ab](https://github.com/lobehub/lobe-chat/commit/03c95ab))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.73.0](https://github.com/lobehub/lobe-chat/compare/v1.72.1...v1.73.0)
 
 <sup>Released on **2025-03-19**</sup>

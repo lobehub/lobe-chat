@@ -521,6 +521,12 @@
   "charglm-3": {
     "description": "CharGLM-3, rol yapma ve duygusal destek için tasarlanmış, ultra uzun çok turlu bellek ve kişiselleştirilmiş diyalog desteği sunan bir modeldir, geniş bir uygulama yelpazesine sahiptir."
   },
+  "chatglm3": {
+    "description": "ChatGLM3, ZhiPu AI ve Tsinghua KEG laboratuvarı tarafından yayınlanan kapalı kaynaklı bir modeldir. Büyük miktarda Çince ve İngilizce belirteçlerin önceden eğitilmesi ve insan tercihleriyle hizalama eğitimi ile, birinci nesil modellere göre MMLU, C-Eval ve GSM8K'da sırasıyla %16, %36 ve %280'lük iyileştirmeler elde edilmiştir ve Çince görevler listesinde C-Eval zirvesine ulaşmıştır. Bilgi hacmi, çıkarım yeteneği ve yaratıcılık gerektiren senaryolarda kullanılabilir, örneğin reklam metni, roman yazımı, bilgi tabanlı yazım, kod oluşturma vb."
+  },
+  "chatglm3-6b-base": {
+    "description": "ChatGLM3-6b-base, ZhiPu tarafından geliştirilen ChatGLM serisinin en yeni nesli olan 6 milyar parametrelik açık kaynaklı temel modeldir."
+  },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o, güncel versiyonunu korumak için gerçek zamanlı olarak güncellenen dinamik bir modeldir. Güçlü dil anlama ve üretme yeteneklerini birleştirir, müşteri hizmetleri, eğitim ve teknik destek gibi geniş ölçekli uygulama senaryoları için uygundur."
   },
@@ -1133,6 +1139,9 @@
   "lite": {
     "description": "Spark Lite, son derece düşük gecikme süresi ve yüksek verimlilikle çalışan hafif bir büyük dil modelidir. Tamamen ücretsiz ve açık olup, gerçek zamanlı çevrimiçi arama işlevini desteklemektedir. Hızlı yanıt verme özelliği, düşük hesaplama gücüne sahip cihazlarda çıkarım uygulamaları ve model ince ayarlarında mükemmel performans sergileyerek, kullanıcılara maliyet etkinliği ve akıllı deneyim sunmakta, özellikle bilgi sorgulama, içerik oluşturma ve arama senaryolarında başarılı olmaktadır."
   },
+  "llama-2-7b-chat": {
+    "description": "Llama2, Meta tarafından geliştirilmiş ve açık kaynaklı büyük dil modeli (LLM) serisidir. Bu, 7 milyar ile 70 milyar parametre arasında değişen, önceden eğitilmiş ve ince ayarlanmış üretici metin modellerinden oluşan bir gruptır. Mimari açısından, Llama2, optimize edilmiş dönüştürücü mimarisi kullanan bir otoregresif dil modelidir. Ayarlanmış versiyonlar, faydalılık ve güvenliğin insan tercihleriyle hizalanması için gözetimli ince ayarlama (SFT) ve insan geri bildirimleriyle güçlendirilmiş öğrenme (RLHF) kullanır. Llama2, Llama serisine göre çeşitli akademik veri kümelerinde daha iyi performans gösterir ve birçok diğer modelin tasarım ve geliştirilmesine ilham verir."
+  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B, daha güçlü AI akıl yürütme yeteneği sunar, karmaşık uygulamalar için uygundur ve yüksek verimlilik ve doğruluk sağlamak için çok sayıda hesaplama işlemini destekler."
   },
@@ -1195,6 +1204,9 @@
   },
   "max-32k": {
     "description": "Spark Max 32K, büyük bağlam işleme yeteneği ile donatılmıştır ve daha güçlü bağlam anlama ve mantıksal çıkarım yetenekleri sunmaktadır. 32K token'lık metin girişi desteklemekte olup, uzun belgelerin okunması, özel bilgi sorgulama gibi senaryolar için uygundur."
+  },
+  "megrez-3b-instruct": {
+    "description": "Megrez-3B-Instruct, Wuwen Xin Qiong tarafından tamamen bağımsız olarak eğitilen büyük dil modelidir. Megrez-3B-Instruct, yazılım ve donanım işbirliği felsefesiyle, hızlı çıkarım, küçük ve güçlü, kullanımı kolay bir uç tarafı zeka çözümü oluşturmayı amaçlamaktadır."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Akıl yürütme, kodlama ve geniş dil uygulamalarında mükemmel bir 70 milyar parametreli model."
@@ -1583,8 +1595,23 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Güçlü orta ölçekli kod modeli, 32K bağlam uzunluğunu destekler, çok dilli programlama konusunda uzmandır."
   },
+  "qwen1.5-14b-chat": {
+    "description": "Qwen1.5 serisi, Qwen2'nin Beta sürümüdür ve büyük veri setleri üzerinde ön eğitilmiş, Transformer tabanlı sadece dekodlama dil modelidir. Önceki Qwen serisi sürümlerine kıyasla, Qwen1.5 serisinin hem temel hem de sohbet modelleri birden fazla dile destek sağlar ve genel sohbet yetenekleri ve temel yetenekleri açısından iyileştirilmiştir. Qwen1.5-14b-chat, 14 milyar parametreli ve sohbet senaryoları için özel olarak tasarlanmış ana boyutlu modeldir."
+  },
+  "qwen1.5-32b-chat": {
+    "description": "Qwen1.5 serisi, Qwen2'nin Beta sürümüdür ve çok sayıda veri üzerinde ön eğitilmiş, Transformer tabanlı sadece çözücü dil modelidir. Önceki Qwen serisi sürümlerine kıyasla, Qwen1.5 serisinin hem base hem de chat modelleri, çeşitli dilleri destekleyebilir ve genel sohbet ve temel yeteneklerde iyileştirmeler sunar. Qwen1.5-32b-chat, 32 milyar parametreli ve özellikle chat senaryoları için tasarlanmış büyük modeldir. 14b modeline göre daha güçlü, 72b modeline göre ise çıkarım maliyeti daha düşüktür."
+  },
+  "qwen1.5-72b-chat": {
+    "description": "Qwen1.5 serisi, Qwen2'nin Beta sürümüdür ve Transformer tabanlı sadece çözücü bir dil modelidir, büyük hacimli veriler üzerinde ön eğitilmiş bulunmaktadır. Daha önce yayınlanan Qwen serisi sürümlerine kıyasla, Qwen1.5 serisinin hem temel hem de sohbet modelleri birden fazla dile destek verir ve genel sohbet ve temel yeteneklerde iyileştirmeler sunar. Qwen1.5-72b-chat, 72 milyar parametreli ve sohbet senaryoları için özel olarak tasarlanmış büyük modeldir."
+  },
   "qwen2": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."
+  },
+  "qwen2-72b-instruct": {
+    "description": "Qwen2, Qwen ekibinin yeni nesil büyük dil modeli serisidir. Bu model, Transformer mimarisine dayanır ve SwiGLU aktivasyon fonksiyonu, dikkat QKV yanlısı (attention QKV bias), grup sorgu dikkati (group query attention), kayan pencere dikkatı (mixture of sliding window attention) ve tam dikkatin karışımı gibi teknikleri kullanır. Ayrıca, Qwen ekibi, çeşitli doğal diller ve kodları destekleyen belirteçleyiciyi (tokenizer) de geliştirdi."
+  },
+  "qwen2-7b-instruct": {
+    "description": "Qwen2, Qwen ekibinin yeni nesil büyük dil modeli serisidir. Bu model, Transformer mimarisine dayanır ve SwiGLU aktivasyon fonksiyonu, dikkat QKV bias, grup sorgu dikkati, kayan pencere dikkatini ve tam dikkat karışımını içeren teknolojiler kullanır. Ayrıca, Qwen ekibi, çeşitli doğal diller ve kodları için belirteçleyiciyi de geliştirdi."
   },
   "qwen2.5": {
     "description": "Qwen2.5, Alibaba'nın yeni nesil büyük ölçekli dil modelidir ve mükemmel performansıyla çeşitli uygulama ihtiyaçlarını desteklemektedir."
@@ -1762,6 +1789,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2, Microsoft AI tarafından sunulan bir dil modelidir, karmaşık diyaloglar, çok dilli, akıl yürütme ve akıllı asistan alanlarında özellikle başarılıdır."
+  },
+  "yi-1.5-34b-chat": {
+    "description": "Yi-1.5, Yi'nin geliştirilmiş sürümüdür. Yüksek kaliteli 500B token'lı veri kümesi üzerinde devam eden ön eğitimi ve 3M çeşitlendirilmiş ince ayar örneği üzerinde ince ayarını içerir."
   },
   "yi-large": {
     "description": "Yeni nesil yüz milyar parametreli model, güçlü soru yanıtlama ve metin üretim yetenekleri sunar."
