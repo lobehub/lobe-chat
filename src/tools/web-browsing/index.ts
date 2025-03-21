@@ -19,10 +19,10 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
       parameters: {
         properties: {
           optionalParams: {
-            description: "The optional params you can set:",
+            description: "The optional parameters for search query",
             properties: {
               searchCategories: {
-                description: 'The search category you can set:',
+                description: 'The search categories you can set:',
                 items: {
                   enum: [
                     'files',
@@ -41,7 +41,7 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
                 type: 'array',
               },
               searchEngines: {
-                description: 'The search engine you can use:',
+                description: 'The search engines you can use:',
                 items: {
                   enum: [
                     'google',
@@ -107,7 +107,7 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
         properties: {
           urls: {
             items: {
-              description: 'The url need to be crawled',
+              description: 'The urls need to be crawled',
               type: 'string',
             },
             type: 'array',

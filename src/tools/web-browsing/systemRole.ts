@@ -46,7 +46,7 @@ Choose search engines based on the query type:
 </search_engine_selection>
 
 <search_time_range_selection>
-Only specify a time range if the query is time-sensitive:
+Choose time range based on the query type:
 - For no time restriction: anytime
 - For the latest updates: day
 - For recent developments: week
