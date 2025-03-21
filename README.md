@@ -196,7 +196,7 @@ We have implemented support for the following model service providers:
 - **[OpenRouter](https://lobechat.com/discover/provider/openrouter)**: OpenRouter is a service platform providing access to various cutting-edge large model interfaces, supporting OpenAI, Anthropic, LLaMA, and more, suitable for diverse development and application needs. Users can flexibly choose the optimal model and pricing based on their requirements, enhancing the AI experience.
 - **[Cloudflare Workers AI](https://lobechat.com/discover/provider/cloudflare)**: Run serverless GPU-powered machine learning models on Cloudflare's global network.
 
-<details><summary><kbd>See more providers (+28)</kbd></summary>
+<details><summary><kbd>See more providers (+30)</kbd></summary>
 
 - **[GitHub](https://lobechat.com/discover/provider/github)**: With GitHub Models, developers can become AI engineers and leverage the industry's leading AI models.
 - **[Novita](https://lobechat.com/discover/provider/novita)**: Novita AI is a platform providing a variety of large language models and AI image generation API services, flexible, reliable, and cost-effective. It supports the latest open-source models like Llama3 and Mistral, offering a comprehensive, user-friendly, and auto-scaling API solution for generative AI application development, suitable for the rapid growth of AI startups.
@@ -226,11 +226,12 @@ We have implemented support for the following model service providers:
 - **[Gitee AI](https://lobechat.com/discover/provider/giteeai)**: Gitee AI's Serverless API provides AI developers with an out of the box large model inference API service.
 - **[Taichu](https://lobechat.com/discover/provider/taichu)**: The Institute of Automation, Chinese Academy of Sciences, and Wuhan Artificial Intelligence Research Institute have launched a new generation of multimodal large models, supporting comprehensive question-answering tasks such as multi-turn Q\&A, text creation, image generation, 3D understanding, and signal analysis, with stronger cognitive, understanding, and creative abilities, providing a new interactive experience.
 - **[360 AI](https://lobechat.com/discover/provider/ai360)**: 360 AI is an AI model and service platform launched by 360 Company, offering various advanced natural language processing models, including 360GPT2 Pro, 360GPT Pro, 360GPT Turbo, and 360GPT Turbo Responsibility 8K. These models combine large-scale parameters and multimodal capabilities, widely applied in text generation, semantic understanding, dialogue systems, and code generation. With flexible pricing strategies, 360 AI meets diverse user needs, supports developer integration, and promotes the innovation and development of intelligent applications.
-- **[Infini-AI](https://lobechat.com/discover/provider/infiniai)**: Infini-AI is a leading AI infrastructure enterprise in China, committed to becoming the preferred computing power operator in the large model era. Leveraging its core technological advantages of "multi-heterogeneous, software-hardware synergy," it has created a new "MxN" AI infrastructure paradigm connecting "M types of models" and "N types of chips," enabling efficient collaborative deployment of various large model algorithms on diverse chips. The Infini-AI heterogeneous cloud platform, based on a multi-chip computing foundation, provides large model developers with high-performance computing power and native toolchains with exceptional cost-effectiveness, reducing costs and improving efficiency throughout the entire lifecycle of large models from development to deployment.
+- **[Search1API](https://lobechat.com/discover/provider/search1api)**:
+- **[InfiniAI](https://lobechat.com/discover/provider/infiniai)**: Provides high-performance, easy-to-use, and secure large model services for application developers, covering the entire process from large model development to service deployment.
 
 </details>
 
-> 📊 Total providers: [<kbd>**38**</kbd>](https://lobechat.com/discover/providers)
+> 📊 Total providers: [<kbd>**40**</kbd>](https://lobechat.com/discover/providers)
 
  <!-- PROVIDER LIST -->
 

@@ -365,10 +365,7 @@ class ChatService {
       smoothing:
         providerConfig?.settings?.smoothing ||
         // @deprecated in V2
-        providerConfig?.smoothing ||
-        // use smoothing when enable client fetch
-        // https://github.com/lobehub/lobe-chat/issues/3800
-        enableFetchOnClient,
+        providerConfig?.smoothing,
     });
   };
 
