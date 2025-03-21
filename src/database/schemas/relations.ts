@@ -11,6 +11,7 @@ import { messages, messagesFiles } from './message';
 import { chunks, unstructuredChunks } from './rag';
 import { sessionGroups, sessions } from './session';
 import { threads, topics } from './topic';
+import { users } from './user';
 
 export const agentsToSessions = pgTable(
   'agents_to_sessions',
@@ -21,6 +22,9 @@ export const agentsToSessions = pgTable(
     sessionId: text('session_id')
       .notNull()
       .references(() => sessions.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.agentId, t.sessionId] }),
@@ -36,6 +40,9 @@ export const filesToSessions = pgTable(
     sessionId: text('session_id')
       .notNull()
       .references(() => sessions.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.fileId, t.sessionId] }),
@@ -48,6 +55,9 @@ export const fileChunks = pgTable(
     fileId: varchar('file_id').references(() => files.id, { onDelete: 'cascade' }),
     chunkId: uuid('chunk_id').references(() => chunks.id, { onDelete: 'cascade' }),
     createdAt: createdAt(),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.fileId, t.chunkId] }),

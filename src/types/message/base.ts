@@ -117,3 +117,10 @@ export interface UpdateMessageParams {
   toolCalls?: MessageToolCall[];
   tools?: ChatToolPayload[] | null;
 }
+
+export interface NewMessageQueryParams {
+  embeddingsId: string;
+  messageId: string;
+  rewriteQuery: string;
+  userQuery: string;
+}
