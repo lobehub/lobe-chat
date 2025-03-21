@@ -226,6 +226,7 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[Gitee AI](https://lobechat.com/discover/provider/giteeai)**: Gitee AI 的 Serverless API 为 AI 开发者提供开箱即用的大模型推理 API 服务。
 - **[Taichu](https://lobechat.com/discover/provider/taichu)**: 中科院自动化研究所和武汉人工智能研究院推出新一代多模态大模型，支持多轮问答、文本创作、图像生成、3D 理解、信号分析等全面问答任务，拥有更强的认知、理解、创作能力，带来全新互动体验。
 - **[360 AI](https://lobechat.com/discover/provider/ai360)**: 360 AI 是 360 公司推出的 AI 模型和服务平台，提供多种先进的自然语言处理模型，包括 360GPT2 Pro、360GPT Pro、360GPT Turbo 和 360GPT Turbo Responsibility 8K。这些模型结合了大规模参数和多模态能力，广泛应用于文本生成、语义理解、对话系统与代码生成等领域。通过灵活的定价策略，360 AI 满足多样化用户需求，支持开发者集成，推动智能化应用的革新和发展。
+- **[Infini-AI](https://lobechat.com/discover/provider/infiniai)**: 无问芯穹 (InfinigenceAI) 作为国内领先的 AI 基础设施企业，致力于成为大模型时代首选的算力运营商。依托 “多元异构、软硬协同” 的核心技术优势，打造了连接 “M 种模型” 和 “N 种芯片” 的 “MxN” AI 基础设施新范式，实现多种大模型算法在多元芯片上的高效协同部署。无问芯穹 Infini-AI 异构云平台基于多元芯片算力底座，向大模型开发者提供极致性价比的高性能算力和原生工具链，为大模型从开发到部署的全生命流程降本增效。
 
 </details>
 
