@@ -19,6 +19,7 @@ import GroqProvider from './groq';
 import HigressProvider from './higress';
 import HuggingFaceProvider from './huggingface';
 import HunyuanProvider from './hunyuan';
+import InfiniAIProvider from './infiniai';
 import InternLMProvider from './internlm';
 import JinaProvider from './jina';
 import LMStudioProvider from './lmstudio';
@@ -98,6 +99,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   HigressProvider.chatModels,
   PPIOProvider.chatModels,
   Search1APIProvider.chatModels,
+  InfiniAIProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -152,6 +154,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai360Provider,
   DoubaoProvider,
   Search1APIProvider,
+  InfiniAIProvider
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -182,6 +185,7 @@ export { default as GroqProviderCard } from './groq';
 export { default as HigressProviderCard } from './higress';
 export { default as HuggingFaceProviderCard } from './huggingface';
 export { default as HunyuanProviderCard } from './hunyuan';
+export { default as InfiniAIProviderCard } from './infiniai';
 export { default as InternLMProviderCard } from './internlm';
 export { default as JinaProviderCard } from './jina';
 export { default as LMStudioProviderCard } from './lmstudio';

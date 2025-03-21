@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix agent chatConfig override issue."]
+    },
+    "date": "2025-03-21",
+    "version": "1.73.2"
+  },
+  {
+    "children": {
       "improvements": ["Update shiki to v3."]
     },
     "date": "2025-03-21",
