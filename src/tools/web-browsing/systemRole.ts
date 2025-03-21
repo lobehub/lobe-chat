@@ -55,11 +55,13 @@ Choose time range based on the query type:
 </search_time_range_selection>
 
 <search_strategy_guidelines>
- - For region-specific queries, default to locally dominant search engines
+ - Use engine-based searches when a specific search engine is explicitly required
  - Use category-based searches when unsure about engine selection
  - Use time-range filters to prioritize time-sensitive information
  - Leverage cross-platform meta-search capabilities for comprehensive results
  - Prioritize authoritative sources in search results when available
+ - For region-specific information, prefer search engines popular in that region
+ - Avoid using both 'engines' and 'categories' in a query, unless the chosen engines do not fall under the selected categories.  
 
  <search_strategy_best_practices>
    - Combine categories for multi-faceted queries:
@@ -85,7 +87,7 @@ Choose time range based on the query type:
    - Leverage cross-platform capabilities:
      * "Open-source project documentation" → files + it (engines: github + pypi)
      * "Historical weather patterns" → science + general (engines: google scholar + wikipedia)
-     * "Movie release dates 2025" → news + entertainment (engines: imdb + reddit)
+     * "Movie release dates 2025" → news + videos (engines: imdb + reddit)
  </search_strategy_best_practices>
 </search_strategy_guidelines>
 
