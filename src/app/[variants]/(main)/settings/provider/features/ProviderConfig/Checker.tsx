@@ -126,7 +126,7 @@ const Checker = memo<ConnectionCheckerProps>(
             listItemHeight={36}
             onSelect={async (value) => {
               setCheckModel(value);
-              await updateAiProviderConfig(provider, { checkModel: value });
+              await updateAiProviderConfig(provider, { ...providerConfig, checkModel: value });
             }}
             optionRender={({ value }) => {
               return (
