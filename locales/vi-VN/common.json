@@ -41,7 +41,10 @@
     "error": {
       "desc": "Xin lỗi, đã xảy ra sự cố trong quá trình khởi tạo cơ sở dữ liệu Pglite. Vui lòng nhấn nút để thử lại. Nếu vẫn gặp lỗi sau nhiều lần thử, vui lòng <1>gửi vấn đề</1>, chúng tôi sẽ hỗ trợ bạn kiểm tra ngay lập tức.",
       "detail": "Lý do lỗi: [{{type}}] {{message}}，Chi tiết như sau：",
+      "detailTitle": "Nguyên nhân lỗi",
+      "report": "Phản hồi vấn đề",
       "retry": "Thử lại",
+      "selfSolve": "Tự giải quyết",
       "title": "Khởi tạo cơ sở dữ liệu thất bại"
     },
     "initing": {
@@ -80,6 +83,54 @@
       "button": "Sử dụng ngay",
       "desc": "Sử dụng ngay",
       "title": "Cơ sở dữ liệu PGlite đã sẵn sàng"
+    },
+    "solve": {
+      "backup": {
+        "backup": "Sao lưu",
+        "backupSuccess": "Sao lưu thành công",
+        "desc": "Xuất dữ liệu quan trọng từ cơ sở dữ liệu hiện tại",
+        "export": "Xuất toàn bộ dữ liệu",
+        "exportDesc": "Dữ liệu xuất ra sẽ được lưu ở định dạng JSON, có thể sử dụng cho việc phục hồi hoặc phân tích sau này.",
+        "reset": {
+          "alert": "Cảnh báo",
+          "alertDesc": "Các thao tác dưới đây có thể dẫn đến mất dữ liệu. Vui lòng đảm bảo bạn đã sao lưu dữ liệu quan trọng trước khi tiếp tục.",
+          "button": "Đặt lại hoàn toàn cơ sở dữ liệu (xóa tất cả dữ liệu)",
+          "confirm": {
+            "desc": "Thao tác này sẽ xóa tất cả dữ liệu và không thể khôi phục, bạn có chắc chắn muốn tiếp tục không?",
+            "title": "Xác nhận đặt lại cơ sở dữ liệu"
+          },
+          "desc": "Đặt lại cơ sở dữ liệu trong trường hợp không thể phục hồi",
+          "title": "Đặt lại cơ sở dữ liệu"
+        },
+        "restore": "Khôi phục",
+        "restoreSuccess": "Khôi phục thành công",
+        "title": "Sao lưu dữ liệu"
+      },
+      "diagnosis": {
+        "createdAt": "Thời gian tạo",
+        "migratedAt": "Thời gian hoàn thành di chuyển",
+        "sql": "SQL di chuyển",
+        "title": "Trạng thái di chuyển"
+      },
+      "repair": {
+        "desc": "Quản lý trạng thái di chuyển thủ công",
+        "runSQL": "Thực thi tùy chỉnh",
+        "sql": {
+          "clear": "Xóa sạch",
+          "desc": "Thực thi câu lệnh SQL tùy chỉnh để sửa chữa vấn đề cơ sở dữ liệu",
+          "markFinished": "Đánh dấu là đã hoàn thành",
+          "placeholder": "Nhập câu lệnh SQL...",
+          "result": "Kết quả thực thi",
+          "run": "Thực thi",
+          "title": "Trình thực thi SQL"
+        },
+        "title": "Kiểm soát di chuyển"
+      },
+      "tabs": {
+        "backup": "Sao lưu và khôi phục",
+        "diagnosis": "Chẩn đoán",
+        "repair": "Sửa chữa"
+      }
     }
   },
   "close": "Đóng",

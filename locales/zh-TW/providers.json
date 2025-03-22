@@ -23,6 +23,9 @@
   "cloudflare": {
     "description": "在 Cloudflare 的全球網絡上運行由無伺服器 GPU 驅動的機器學習模型。"
   },
+  "cohere": {
+    "description": "Cohere 為您帶來最前沿的多語言模型、先進的檢索功能以及為現代企業量身定制的 AI 工作空間 — 一切都集成在一個安全的平台中。"
+  },
   "deepseek": {
     "description": "DeepSeek 是一家專注於人工智慧技術研究和應用的公司，其最新模型 DeepSeek-V2.5 融合了通用對話和代碼處理能力，並在人類偏好對齊、寫作任務和指令跟隨等方面實現了顯著提升。"
   },
@@ -100,6 +103,9 @@
   },
   "sambanova": {
     "description": "SambaNova Cloud 讓開發者輕鬆使用最佳的開源模型，並享受最快的推理速度。"
+  },
+  "search1api": {
+    "description": "Search1API 提供可根據需要自行聯網的 DeepSeek 系列模型的訪問，包括標準版和快速版本，支持多種參數規模的模型選擇。"
   },
   "sensenova": {
     "description": "商湯日日新，依托商湯大裝置的強大基礎支撐，提供高效易用的全棧大模型服務。"

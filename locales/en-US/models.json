@@ -518,6 +518,18 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B is an open-source, commercially usable large language model developed by Baichuan Intelligence, containing 13 billion parameters, achieving the best results in its size on authoritative Chinese and English benchmarks."
   },
+  "c4ai-aya-expanse-32b": {
+    "description": "Aya Expanse is a high-performance 32B multilingual model designed to challenge the performance of single-language models through innovations in instruction tuning, data arbitrage, preference training, and model merging. It supports 23 languages."
+  },
+  "c4ai-aya-expanse-8b": {
+    "description": "Aya Expanse is a high-performance 8B multilingual model designed to challenge the performance of single-language models through innovations in instruction tuning, data arbitrage, preference training, and model merging. It supports 23 languages."
+  },
+  "c4ai-aya-vision-32b": {
+    "description": "Aya Vision is a state-of-the-art multimodal model that excels in multiple key benchmarks for language, text, and image capabilities. This 32 billion parameter version focuses on cutting-edge multilingual performance and supports 23 languages."
+  },
+  "c4ai-aya-vision-8b": {
+    "description": "Aya Vision is a state-of-the-art multimodal model that excels in multiple key benchmarks for language, text, and image capabilities. This 8 billion parameter version focuses on low latency and optimal performance."
+  },
   "charglm-3": {
     "description": "CharGLM-3 is designed for role-playing and emotional companionship, supporting ultra-long multi-turn memory and personalized dialogue, with wide applications."
   },
@@ -602,11 +614,38 @@
   "cohere-command-r-plus": {
     "description": "Command R+ is a state-of-the-art RAG-optimized model designed to tackle enterprise-grade workloads."
   },
+  "command": {
+    "description": "An instruction-following dialogue model that delivers high quality and reliability in language tasks, with a longer context length compared to our base generation models."
+  },
+  "command-a-03-2025": {
+    "description": "Command A is our most powerful model to date, excelling in tool usage, agent tasks, retrieval-augmented generation (RAG), and multilingual applications. Command A features a context length of 256K and can run on just two GPUs, achieving a 150% increase in throughput compared to Command R+ 08-2024."
+  },
+  "command-light": {
+    "description": "A smaller, faster version of Command that is nearly as powerful but operates at a higher speed."
+  },
+  "command-light-nightly": {
+    "description": "To shorten the time interval between major version releases, we have launched nightly versions of the Command model. For the command-light series, this version is called command-light-nightly. Please note that command-light-nightly is the latest, most experimental, and (potentially) unstable version. Nightly versions are updated regularly without prior notice, so they are not recommended for production use."
+  },
+  "command-nightly": {
+    "description": "To shorten the time interval between major version releases, we have launched nightly versions of the Command model. For the Command series, this version is called command-cightly. Please note that command-nightly is the latest, most experimental, and (potentially) unstable version. Nightly versions are updated regularly without prior notice, so they are not recommended for production use."
+  },
   "command-r": {
     "description": "Command R is an LLM optimized for dialogue and long context tasks, particularly suitable for dynamic interactions and knowledge management."
   },
+  "command-r-03-2024": {
+    "description": "Command R is an instruction-following dialogue model that provides higher quality and reliability in language tasks, with a longer context length than previous models. It can be used for complex workflows such as code generation, retrieval-augmented generation (RAG), tool usage, and agent tasks."
+  },
+  "command-r-08-2024": {
+    "description": "command-r-08-2024 is an updated version of the Command R model, released in August 2024."
+  },
   "command-r-plus": {
     "description": "Command R+ is a high-performance large language model designed for real enterprise scenarios and complex applications."
+  },
+  "command-r-plus-04-2024": {
+    "description": "Command R+ is an instruction-following dialogue model that delivers higher quality and reliability in language tasks, with a longer context length than previous models. It is best suited for complex RAG workflows and multi-step tool usage."
+  },
+  "command-r7b-12-2024": {
+    "description": "command-r7b-12-2024 is a compact and efficient updated version, released in December 2024. It excels in tasks requiring complex reasoning and multi-step processing, such as RAG, tool usage, and agent tasks."
   },
   "dall-e-2": {
     "description": "The second generation DALL·E model, supporting more realistic and accurate image generation, with a resolution four times that of the first generation."
@@ -668,11 +707,23 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1 is a reinforcement learning (RL) driven inference model that addresses issues of repetitiveness and readability within the model. Prior to RL, DeepSeek-R1 introduced cold start data to further optimize inference performance. It performs comparably to OpenAI-o1 in mathematical, coding, and reasoning tasks, and enhances overall effectiveness through meticulously designed training methods."
   },
+  "deepseek-r1-70b-fast-online": {
+    "description": "DeepSeek R1 70B fast version, supporting real-time online search, providing faster response times while maintaining model performance."
+  },
+  "deepseek-r1-70b-online": {
+    "description": "DeepSeek R1 70B standard version, supporting real-time online search, suitable for dialogue and text processing tasks that require the latest information."
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1—the larger and smarter model in the DeepSeek suite—has been distilled into the Llama 70B architecture. Based on benchmark tests and human evaluations, this model is smarter than the original Llama 70B, especially excelling in tasks requiring mathematical and factual accuracy."
   },
   "deepseek-r1-distill-llama-8b": {
     "description": "The DeepSeek-R1-Distill series models are fine-tuned versions of samples generated by DeepSeek-R1, using knowledge distillation techniques on open-source models like Qwen and Llama."
+  },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "First released on February 14, 2025, distilled by the Qianfan model development team using Llama3_70B as the base model (Built with Meta Llama), with Qianfan's corpus also added to the distilled data."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "First released on February 14, 2025, distilled by the Qianfan model development team using Llama3_8B as the base model (Built with Meta Llama), with Qianfan's corpus also added to the distilled data."
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "The DeepSeek-R1-Distill series models are fine-tuned versions of samples generated by DeepSeek-R1, using knowledge distillation techniques on open-source models like Qwen and Llama."
@@ -685,6 +736,12 @@
   },
   "deepseek-r1-distill-qwen-7b": {
     "description": "The DeepSeek-R1-Distill series models are fine-tuned versions of samples generated by DeepSeek-R1, using knowledge distillation techniques on open-source models like Qwen and Llama."
+  },
+  "deepseek-r1-fast-online": {
+    "description": "DeepSeek R1 full fast version, supporting real-time online search, combining the powerful capabilities of 671B parameters with faster response times."
+  },
+  "deepseek-r1-online": {
+    "description": "DeepSeek R1 full version, with 671B parameters, supporting real-time online search, offering enhanced understanding and generation capabilities."
   },
   "deepseek-reasoner": {
     "description": "The reasoning model launched by DeepSeek. Before outputting the final answer, the model first provides a chain of thought to enhance the accuracy of the final response."
@@ -763,6 +820,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "Baidu's flagship ultra-large-scale language model, demonstrating outstanding overall performance, widely applicable to complex task scenarios across various fields; it supports automatic integration with Baidu search plugins to ensure the timeliness of Q&A information. It performs better than ERNIE 4.0 in terms of performance."
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "ERNIE 4.5 is Baidu's self-developed next-generation native multimodal foundational model, achieving collaborative optimization through joint modeling of multiple modalities, with excellent multimodal understanding capabilities; it features enhanced language abilities, with significant improvements in understanding, generation, logic, and memory, as well as reduced hallucinations and improved logical reasoning and coding capabilities."
   },
   "ernie-char-8k": {
     "description": "Baidu's vertical scene large language model, suitable for applications such as game NPCs, customer service dialogues, and role-playing conversations, with a more distinct and consistent character style, stronger instruction-following capabilities, and superior inference performance."
@@ -1097,9 +1157,6 @@
   "hunyuan-turbo": {
     "description": "The preview version of the next-generation Hunyuan large language model, featuring a brand-new mixed expert model (MoE) structure, which offers faster inference efficiency and stronger performance compared to Hunyuan Pro."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Hunyuan-turbo fixed version as of November 20, 2024, a version that lies between hunyuan-turbo and hunyuan-turbo-latest."
-  },
   "hunyuan-turbo-20241223": {
     "description": "This version optimizes: data instruction scaling, significantly enhancing the model's generalization capabilities; greatly improving mathematical, coding, and logical reasoning abilities; optimizing text understanding and word comprehension capabilities; enhancing the quality of content generation in text creation."
   },
@@ -1108,6 +1165,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "The next-generation flagship visual language model from Hunyuan, utilizing a new mixed expert model (MoE) structure, with comprehensive improvements in basic recognition, content creation, knowledge Q&A, and analytical reasoning capabilities compared to the previous generation model."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 fixed version with upgraded training tokens; enhanced reasoning capabilities in mathematics, logic, and coding; improved performance in both Chinese and English across text creation, comprehension, knowledge Q&A, and casual conversation."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Unifies the style of mathematical problem-solving steps and enhances multi-turn Q&A in mathematics. Optimizes the response style for text creation, removing AI-like characteristics and adding literary flair."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "The latest version of hunyuan-TurboS, the flagship model of Hunyuan, features enhanced reasoning capabilities and improved user experience."
   },
   "hunyuan-vision": {
     "description": "The latest multimodal model from Hunyuan, supporting image + text input to generate textual content."

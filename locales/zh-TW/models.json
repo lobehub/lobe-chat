@@ -1,5 +1,4 @@
 {
-  "0": "{",
   "01-ai/Yi-1.5-34B-Chat-16K": {
     "description": "Yi-1.5 34B，以豐富的訓練樣本在行業應用中提供優越表現。"
   },
@@ -519,11 +518,26 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B百川智能開發的包含130億參數的開源可商用的大規模語言模型，在權威的中文和英文benchmark上均取得同尺寸最好的效果。"
   },
+  "c4ai-aya-expanse-32b": {
+    "description": "Aya Expanse 是一款高性能的 32B 多語言模型，旨在通過指令調優、數據套利、偏好訓練和模型合併的創新，挑戰單語言模型的表現。它支持 23 種語言。"
+  },
+  "c4ai-aya-expanse-8b": {
+    "description": "Aya Expanse 是一款高性能的 8B 多語言模型，旨在通過指令調優、數據套利、偏好訓練和模型合併的創新，挑戰單語言模型的表現。它支持 23 種語言。"
+  },
+  "c4ai-aya-vision-32b": {
+    "description": "Aya Vision 是一款最先進的多模態模型，在語言、文本和圖像能力的多個關鍵基準上表現出色。它支持 23 種語言。這個 320 億參數的版本專注於最先進的多語言表現。"
+  },
+  "c4ai-aya-vision-8b": {
+    "description": "Aya Vision 是一款最先進的多模態模型，在語言、文本和圖像能力的多個關鍵基準上表現出色。這個 80 億參數的版本專注於低延遲和最佳性能。"
+  },
   "charglm-3": {
     "description": "CharGLM-3專為角色扮演與情感陪伴設計，支持超長多輪記憶與個性化對話，應用廣泛。"
   },
   "chatglm3": {
     "description": "ChatGLM3 是智譜 AI 與清華 KEG 實驗室發佈的閉源模型，經過海量中英標識符的預訓練與人類偏好對齊訓練，相比一代模型在 MMLU、C-Eval、GSM8K 分別取得了 16%、36%、280% 的提升，並登頂中文任務榜單 C-Eval。適用於對知識量、推理能力、創造力要求較高的場景，比如廣告文案、小說寫作、知識類寫作、代碼生成等。"
+  },
+  "chatglm3-6b-base": {
+    "description": "ChatGLM3-6b-base 是由智譜開發的 ChatGLM 系列最新一代的 60 億參數規模的開源的基礎模型。"
   },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o是一款動態模型，實時更新以保持當前最新版本。它結合了強大的語言理解與生成能力，適合於大規模應用場景，包括客戶服務、教育和技術支持。"
@@ -600,11 +614,38 @@
   "cohere-command-r-plus": {
     "description": "Command R+是一個最先進的RAG優化模型，旨在應對企業級工作負載。"
   },
+  "command": {
+    "description": "一個遵循指令的對話模型，在語言任務中表現出高質量、更可靠，並且相比我們的基礎生成模型具有更長的上下文長度。"
+  },
+  "command-a-03-2025": {
+    "description": "Command A 是我們迄今為止性能最強的模型，在工具使用、代理、檢索增強生成（RAG）和多語言應用場景方面表現出色。Command A 具有 256K 的上下文長度，僅需兩塊 GPU 即可運行，並且相比於 Command R+ 08-2024，吞吐量提高了 150%。"
+  },
+  "command-light": {
+    "description": "一個更小、更快的 Command 版本，幾乎同樣強大，但速度更快。"
+  },
+  "command-light-nightly": {
+    "description": "為了縮短主要版本發布之間的時間間隔，我們推出了 Command 模型的每夜版本。對於 command-light 系列，這一版本稱為 command-light-nightly。請注意，command-light-nightly 是最新、最具實驗性且（可能）不穩定的版本。每夜版本會定期更新，且不會提前通知，因此不建議在生產環境中使用。"
+  },
+  "command-nightly": {
+    "description": "為了縮短主要版本發布之間的時間間隔，我們推出了 Command 模型的每夜版本。對於 Command 系列，這一版本稱為 command-cightly。請注意，command-nightly 是最新、最具實驗性且（可能）不穩定的版本。每夜版本會定期更新，且不會提前通知，因此不建議在生產環境中使用。"
+  },
   "command-r": {
     "description": "Command R 是優化用於對話和長上下文任務的 LLM，特別適合動態交互與知識管理。"
   },
+  "command-r-03-2024": {
+    "description": "Command R 是一個遵循指令的對話模型，在語言任務方面表現出更高的質量、更可靠，並且相比以往模型具有更長的上下文長度。它可用於複雜的工作流程，如代碼生成、檢索增強生成（RAG）、工具使用和代理。"
+  },
+  "command-r-08-2024": {
+    "description": "command-r-08-2024 是 Command R 模型的更新版本，於 2024 年 8 月發布。"
+  },
   "command-r-plus": {
     "description": "Command R+ 是一款高性能的大型語言模型，專為真實企業場景和複雜應用而設計。"
+  },
+  "command-r-plus-04-2024": {
+    "description": "Command R+ 是一個遵循指令的對話模型，在語言任務方面表現出更高的質量、更可靠，並且相比以往模型具有更長的上下文長度。它最適用於複雜的 RAG 工作流和多步工具使用。"
+  },
+  "command-r7b-12-2024": {
+    "description": "command-r7b-12-2024 是一個小型且高效的更新版本，於 2024 年 12 月發布。它在 RAG、工具使用、代理等需要複雜推理和多步處理的任務中表現出色。"
   },
   "dall-e-2": {
     "description": "第二代 DALL·E 模型，支持更真實、準確的圖像生成，解析度是第一代的4倍"
@@ -666,11 +707,23 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且通過精心設計的訓練方法，提升了整體效果。"
   },
+  "deepseek-r1-70b-fast-online": {
+    "description": "DeepSeek R1 70B 快速版，支持即時聯網搜索，在保持模型性能的同時提供更快的響應速度。"
+  },
+  "deepseek-r1-70b-online": {
+    "description": "DeepSeek R1 70B 標準版，支持即時聯網搜索，適合需要最新信息的對話和文本處理任務。"
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1——DeepSeek 套件中更大更智能的模型——被蒸餾到 Llama 70B 架構中。基於基準測試和人工評估，該模型比原始 Llama 70B 更智能，尤其在需要數學和事實精確性的任務上表現出色。"
   },
   "deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+  },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "2025年2月14日首次發布，由千帆大模型研發團隊以 Llama3_70B為base模型（Built with Meta Llama）蒸餾所得，蒸餾數據中也同步添加了千帆的語料。"
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "2025年2月14日首次發布，由千帆大模型研發團隊以 Llama3_8B為base模型（Built with Meta Llama）蒸餾所得，蒸餾數據中也同步添加了千帆的語料。"
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
@@ -683,6 +736,12 @@
   },
   "deepseek-r1-distill-qwen-7b": {
     "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
+  },
+  "deepseek-r1-fast-online": {
+    "description": "DeepSeek R1 滿血快速版，支持即時聯網搜索，結合了 671B 參數的強大能力和更快的響應速度。"
+  },
+  "deepseek-r1-online": {
+    "description": "DeepSeek R1 滿血版，擁有 671B 參數，支持即時聯網搜索，具有更強大的理解和生成能力。"
   },
   "deepseek-reasoner": {
     "description": "DeepSeek 推出的推理模型。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
@@ -761,6 +820,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "文心大模型4.5是百度自主研發的新一代原生多模態基礎大模型，通過多個模態聯合建模實現協同優化，多模態理解能力優秀；具備更精進的語言能力，理解、生成、邏輯、記憶能力全面提升，去幻覺、邏輯推理、代碼能力顯著提升。"
   },
   "ernie-char-8k": {
     "description": "百度自研的垂直場景大語言模型，適合遊戲NPC、客服對話、對話角色扮演等應用場景，人設風格更為鮮明、一致，指令遵循能力更強，推理性能更優。"
@@ -1095,9 +1157,6 @@
   "hunyuan-turbo": {
     "description": "混元全新一代大語言模型的預覽版，採用全新的混合專家模型（MoE）結構，相較於 hunyuan-pro 推理效率更快，效果表現更強。"
   },
-  "hunyuan-turbo-20241120": {
-    "description": "hunyuan-turbo 2024 年 11 月 20 日固定版本，介於 hunyuan-turbo 和 hunyuan-turbo-latest 之間的一個版本。"
-  },
   "hunyuan-turbo-20241223": {
     "description": "本版本優化：數據指令scaling，大幅提升模型通用泛化能力；大幅提升數學、程式碼、邏輯推理能力；優化文本理解字詞理解相關能力；優化文本創作內容生成質量"
   },
@@ -1106,6 +1165,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "混元新一代視覺語言旗艦大模型，採用全新的混合專家模型（MoE）結構，在圖文理解相關的基礎識別、內容創作、知識問答、分析推理等能力上相比前一代模型全面提升。"
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 固定版本預訓練底座訓練token數升級；數學/邏輯/代碼等思考能力提升；中英文通用體驗效果提升，包括文本創作、文本理解、知識問答、閒聊等。"
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "統一數學解題步驟的風格，加強數學多輪問答。文本創作優化回答風格，去除AI味，增加文采。"
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS 混元旗艦大模型最新版本，具備更強的思考能力，更優的體驗效果。"
   },
   "hunyuan-vision": {
     "description": "混元最新多模態模型，支持圖片 + 文本輸入生成文本內容。"
@@ -1592,6 +1660,15 @@
   },
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "強大的中型代碼模型，支持 32K 上下文長度，擅長多語言編程。"
+  },
+  "qwen1.5-14b-chat": {
+    "description": "Qwen1.5 系列是 Qwen2 的 Beta 版本，是一個基於 Transformer 的僅解碼語言模型，在海量數據上進行預訓練。與之前發布的 Qwen 系列版本相比，Qwen1.5 系列 base 與 chat 模型均能支持多種語言，在整體聊天和基礎能力上都得到了提升。Qwen1.5-14b-chat 是其中專用於 chat 場景的 140 億參數的主流大小模型。"
+  },
+  "qwen1.5-32b-chat": {
+    "description": "Qwen1.5 系列是 Qwen2 的 Beta 版本，是一個基於 Transformer 的僅解碼語言模型，在海量數據上進行預訓練。與之前發布的 Qwen 系列版本相比，Qwen1.5 系列 base 與 chat 模型均能支持多種語言，在整體聊天和基礎能力上都得到了提升。Qwen1.5-32b-chat 是其中專用於 chat 場景的 320 億參數的大模型，較於 14b 模型在智能體場景更強，較於 72b 模型推理成本更低。"
+  },
+  "qwen1.5-72b-chat": {
+    "description": "Qwen1.5 系列是 Qwen2 的 Beta 版本，是一個基於 Transformer 的僅解碼語言模型，在海量數據上進行預訓練。與之前發布的 Qwen 系列版本相比，Qwen1.5 系列 base 與 chat 模型均能支持多種語言，在整體聊天和基礎能力上都得到了提升。Qwen1.5-72b-chat 是其中專用於 chat 場景的 720 億參數的大模型。"
   },
   "qwen2": {
     "description": "Qwen2 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"

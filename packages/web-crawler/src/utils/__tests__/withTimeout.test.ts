@@ -50,7 +50,6 @@ describe('withTimeout', () => {
   });
 
   it('should abort controller when timeout occurs', async () => {
-    const controller = new AbortController();
     const slowPromise = new Promise((resolve) => {
       setTimeout(() => resolve('too late'), 2000);
     });

@@ -518,6 +518,18 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B is een open-source, commercieel bruikbaar groot taalmodel ontwikkeld door Baichuan Intelligent, met 13 miljard parameters, dat de beste prestaties in zijn klasse heeft behaald op gezaghebbende Chinese en Engelse benchmarks."
   },
+  "c4ai-aya-expanse-32b": {
+    "description": "Aya Expanse is een hoogwaardig 32B meertalig model, ontworpen om de prestaties van eentalige modellen uit te dagen door middel van instructietuning, data-arbitrage, voorkeurstraining en modelintegratie. Het ondersteunt 23 talen."
+  },
+  "c4ai-aya-expanse-8b": {
+    "description": "Aya Expanse is een hoogwaardig 8B meertalig model, ontworpen om de prestaties van eentalige modellen uit te dagen door middel van instructietuning, data-arbitrage, voorkeurstraining en modelintegratie. Het ondersteunt 23 talen."
+  },
+  "c4ai-aya-vision-32b": {
+    "description": "Aya Vision is een geavanceerd multimodaal model dat uitstekende prestaties levert op meerdere belangrijke benchmarks voor taal-, tekst- en beeldcapaciteiten. Deze versie met 32 miljard parameters richt zich op de meest geavanceerde meertalige prestaties."
+  },
+  "c4ai-aya-vision-8b": {
+    "description": "Aya Vision is een geavanceerd multimodaal model dat uitstekende prestaties levert op meerdere belangrijke benchmarks voor taal-, tekst- en beeldcapaciteiten. Deze versie met 8 miljard parameters richt zich op lage latentie en optimale prestaties."
+  },
   "charglm-3": {
     "description": "CharGLM-3 is ontworpen voor rollenspellen en emotionele begeleiding, ondersteunt zeer lange meerdaagse herinneringen en gepersonaliseerde gesprekken, met brede toepassingen."
   },
@@ -602,11 +614,38 @@
   "cohere-command-r-plus": {
     "description": "Command R+ is een state-of-the-art RAG-geoptimaliseerd model ontworpen om enterprise-grade workloads aan te pakken."
   },
+  "command": {
+    "description": "Een instructievolgend dialoogmodel dat hoge kwaliteit en betrouwbaarheid biedt voor taaltaken, met een langere contextlengte dan ons basisgeneratiemodel."
+  },
+  "command-a-03-2025": {
+    "description": "Command A is ons krachtigste model tot nu toe, met uitstekende prestaties in het gebruik van tools, agenten, retrieval-augmented generation (RAG) en meertalige toepassingen. Command A heeft een contextlengte van 256K, kan draaien op slechts twee GPU's en heeft een doorvoersnelheid die 150% hoger is dan die van Command R+ 08-2024."
+  },
+  "command-light": {
+    "description": "Een kleinere, snellere versie van Command, die bijna even krachtig is, maar sneller."
+  },
+  "command-light-nightly": {
+    "description": "Om de tijd tussen de belangrijkste versies te verkorten, hebben we een nightly versie van het Command-model gelanceerd. Voor de command-light serie wordt deze versie command-light-nightly genoemd. Houd er rekening mee dat command-light-nightly de nieuwste, meest experimentele en (mogelijk) onbetrouwbare versie is. Nightly versies worden regelmatig bijgewerkt zonder voorafgaande kennisgeving, dus het wordt niet aanbevolen om deze in productieomgevingen te gebruiken."
+  },
+  "command-nightly": {
+    "description": "Om de tijd tussen de belangrijkste versies te verkorten, hebben we een nightly versie van het Command-model gelanceerd. Voor de Command-serie wordt deze versie command-cightly genoemd. Houd er rekening mee dat command-nightly de nieuwste, meest experimentele en (mogelijk) onbetrouwbare versie is. Nightly versies worden regelmatig bijgewerkt zonder voorafgaande kennisgeving, dus het wordt niet aanbevolen om deze in productieomgevingen te gebruiken."
+  },
   "command-r": {
     "description": "Command R is geoptimaliseerd voor conversatie- en lange contexttaken, bijzonder geschikt voor dynamische interactie en kennisbeheer."
   },
+  "command-r-03-2024": {
+    "description": "Command R is een instructievolgend dialoogmodel dat hogere kwaliteit en betrouwbaarheid biedt voor taaltaken, met een langere contextlengte dan eerdere modellen. Het kan worden gebruikt voor complexe workflows, zoals codegeneratie, retrieval-augmented generation (RAG), toolgebruik en agenten."
+  },
+  "command-r-08-2024": {
+    "description": "command-r-08-2024 is een bijgewerkte versie van het Command R-model, uitgebracht in augustus 2024."
+  },
   "command-r-plus": {
     "description": "Command R+ is een hoogpresterend groot taalmodel, speciaal ontworpen voor echte zakelijke scenario's en complexe toepassingen."
+  },
+  "command-r-plus-04-2024": {
+    "description": "Command R+ is een instructievolgend dialoogmodel dat hogere kwaliteit en betrouwbaarheid biedt voor taaltaken, met een langere contextlengte dan eerdere modellen. Het is het meest geschikt voor complexe RAG-workflows en meervoudig gebruik van tools."
+  },
+  "command-r7b-12-2024": {
+    "description": "command-r7b-12-2024 is een compacte en efficiënte bijgewerkte versie, uitgebracht in december 2024. Het presteert uitstekend in taken die complexe redenering en meervoudige verwerking vereisen, zoals RAG, toolgebruik en agenten."
   },
   "dall-e-2": {
     "description": "De tweede generatie DALL·E model, ondersteunt realistischere en nauwkeurigere beeldgeneratie, met een resolutie die vier keer zo hoog is als die van de eerste generatie."
@@ -668,11 +707,23 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1 is een op versterkend leren (RL) aangedreven inferentiemodel dat de problemen van herhaling en leesbaarheid in het model oplost. Voor RL introduceerde DeepSeek-R1 koude startdata om de inferentieprestaties verder te optimaliseren. Het presteert vergelijkbaar met OpenAI-o1 in wiskunde, code en inferentietaken, en verbetert de algehele effectiviteit door zorgvuldig ontworpen trainingsmethoden."
   },
+  "deepseek-r1-70b-fast-online": {
+    "description": "DeepSeek R1 70B snelle versie, ondersteunt realtime online zoeken en biedt snellere reactietijden zonder in te boeten op modelprestaties."
+  },
+  "deepseek-r1-70b-online": {
+    "description": "DeepSeek R1 70B standaardversie, ondersteunt realtime online zoeken, geschikt voor dialoog- en tekstverwerkingstaken die actuele informatie vereisen."
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 - een groter en slimmer model binnen de DeepSeek suite - is gedistilleerd naar de Llama 70B architectuur. Op basis van benchmarktests en menselijke evaluaties is dit model slimmer dan de originele Llama 70B, vooral in taken die wiskundige en feitelijke nauwkeurigheid vereisen."
   },
   "deepseek-r1-distill-llama-8b": {
     "description": "Het DeepSeek-R1-Distill model is verkregen door middel van kennisdistillatie-technologie, waarbij samples gegenereerd door DeepSeek-R1 zijn afgestemd op open-source modellen zoals Qwen en Llama."
+  },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "Eerste release op 14 februari 2025, gedistilleerd door het Qianfan grote model ontwikkelteam met Llama3_70B als basis (gebouwd met Meta Llama), waarbij ook Qianfan's corpora zijn toegevoegd aan de gedistilleerde data."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "Eerste release op 14 februari 2025, gedistilleerd door het Qianfan grote model ontwikkelteam met Llama3_8B als basis (gebouwd met Meta Llama), waarbij ook Qianfan's corpora zijn toegevoegd aan de gedistilleerde data."
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "Het DeepSeek-R1-Distill model is verkregen door middel van kennisdistillatie-technologie, waarbij samples gegenereerd door DeepSeek-R1 zijn afgestemd op open-source modellen zoals Qwen en Llama."
@@ -685,6 +736,12 @@
   },
   "deepseek-r1-distill-qwen-7b": {
     "description": "Het DeepSeek-R1-Distill model is verkregen door middel van kennisdistillatie-technologie, waarbij samples gegenereerd door DeepSeek-R1 zijn afgestemd op open-source modellen zoals Qwen en Llama."
+  },
+  "deepseek-r1-fast-online": {
+    "description": "DeepSeek R1 volledige snelle versie, ondersteunt realtime online zoeken en combineert de krachtige capaciteiten van 671B parameters met snellere reactietijden."
+  },
+  "deepseek-r1-online": {
+    "description": "DeepSeek R1 volledige versie, met 671B parameters, ondersteunt realtime online zoeken en heeft krachtige begrip- en generatiecapaciteiten."
   },
   "deepseek-reasoner": {
     "description": "Het redeneer model van DeepSeek. Voordat het model het uiteindelijke antwoord geeft, genereert het eerst een stuk denkproces om de nauwkeurigheid van het uiteindelijke antwoord te verbeteren."
@@ -763,6 +820,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "Het vlaggenschip ultra-grote taalmodel van Baidu, zelf ontwikkeld, presteert uitstekend in algehele effectiviteit en is breed toepasbaar in complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met Baidu zoekplug-ins om de actualiteit van vraag- en antwoordinformatie te waarborgen. Het presteert beter dan ERNIE 4.0."
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "Het Wenxin grote model 4.5 is een nieuwe generatie native multimodale basisgrootte model, ontwikkeld door Baidu, dat samenwerking optimaliseert door meerdere modaliteiten gezamenlijk te modelleren, met uitstekende multimodale begripcapaciteiten; het heeft verbeterde taalvaardigheden, met verbeteringen in begrip, generatie, logica en geheugen, en significante verbeteringen in hallucinatie, logische redenering en codecapaciteiten."
   },
   "ernie-char-8k": {
     "description": "Een door Baidu ontwikkeld groot taalmodel voor verticale scenario's, geschikt voor toepassingen zoals game NPC's, klantenservice dialoog, en rollenspellen, met een duidelijkere en consistentere karakterstijl, sterkere instructievolgcapaciteiten en betere inferentieprestaties."
@@ -1097,9 +1157,6 @@
   "hunyuan-turbo": {
     "description": "Een previewversie van het nieuwe generatie grote taalmodel van Hunyuan, met een nieuwe hybride expertmodel (MoE) structuur, die sneller inferentie-efficiëntie biedt en betere prestaties levert dan hunyan-pro."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Hunyuan-turbo versie van 20 november 2024, een vaste versie die zich tussen hunyuan-turbo en hunyuan-turbo-latest bevindt."
-  },
   "hunyuan-turbo-20241223": {
     "description": "Deze versie optimaliseert: gegevensinstructiescaling, wat de algemene generalisatiecapaciteit van het model aanzienlijk verbetert; aanzienlijke verbetering van wiskunde-, code- en logische redeneervaardigheden; optimalisatie van tekstbegrip en woordbegrip gerelateerde capaciteiten; optimalisatie van de kwaliteit van tekstcreatie en inhoudsgeneratie."
   },
@@ -1108,6 +1165,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "De nieuwe generatie visuele taal vlaggenschipmodel van Hunyuan, met een geheel nieuwe hybride expertmodel (MoE) structuur, biedt aanzienlijke verbeteringen in basisherkenning, inhoudcreatie, kennisvragen, en analytische redeneervaardigheden in vergelijking met de vorige generatie modellen."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 vaste versie met verbeterde training van token-upgrades; verbeterde denkcapaciteiten voor wiskunde/logica/code; verbeterde gebruikerservaring in zowel het Chinees als het Engels, inclusief tekstcreatie, tekstbegrip, kennisvragen en casual chat."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Een uniforme stijl voor het oplossen van wiskundige problemen, met een versterking van meerdaagse wiskundige vraag-en-antwoord. Optimalisatie van de antwoordstijl voor tekstcreatie, met verwijdering van AI-kenmerken en een toename van de literairheid."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS is de nieuwste versie van het Hunyuan vlaggenschipmodel, met verbeterde denkcapaciteiten en een betere gebruikerservaring."
   },
   "hunyuan-vision": {
     "description": "Het nieuwste multimodale model van Hunyuan, ondersteunt het genereren van tekstinhoud op basis van afbeelding + tekstinvoer."
