@@ -177,7 +177,8 @@ export const sessionRouter = router({
         );
       }
 
-      return ctx.sessionModel.updateConfig(session.agent.id, input.value);
+      const mergedValue = merge(session.agent, input.value);
+      return ctx.sessionModel.updateConfig(session.agent.id, mergedValue);
     }),
 });
 

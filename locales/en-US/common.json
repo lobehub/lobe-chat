@@ -41,7 +41,10 @@
     "error": {
       "desc": "We apologize, an error occurred during the Pglite database initialization process. Please click the button to retry. If the error persists after multiple attempts, please <1>submit an issue</1>, and we will assist you as soon as possible.",
       "detail": "Error reason: [{{type}}] {{message}}. Details are as follows:",
+      "detailTitle": "Error Reason",
+      "report": "Report Issue",
       "retry": "Retry",
+      "selfSolve": "Self-Solve",
       "title": "Database Initialization Failed"
     },
     "initing": {
@@ -80,6 +83,54 @@
       "button": "Use Now",
       "desc": "Ready to use",
       "title": "PGlite Database is Ready"
+    },
+    "solve": {
+      "backup": {
+        "backup": "Backup",
+        "backupSuccess": "Backup Successful",
+        "desc": "Export key data from the current database",
+        "export": "Export All Data",
+        "exportDesc": "The exported data will be saved in JSON format, which can be used for future recovery or analysis.",
+        "reset": {
+          "alert": "Warning",
+          "alertDesc": "The following actions may result in data loss. Please ensure you have backed up important data before proceeding.",
+          "button": "Completely Reset Database (Delete All Data)",
+          "confirm": {
+            "desc": "This action will delete all data and cannot be undone. Do you confirm to continue?",
+            "title": "Confirm Database Reset"
+          },
+          "desc": "Reset the database in case of irreversible migration",
+          "title": "Database Reset"
+        },
+        "restore": "Restore",
+        "restoreSuccess": "Restore Successful",
+        "title": "Data Backup"
+      },
+      "diagnosis": {
+        "createdAt": "Creation Time",
+        "migratedAt": "Migration Completion Time",
+        "sql": "Migration SQL",
+        "title": "Migration Status"
+      },
+      "repair": {
+        "desc": "Manually manage migration status",
+        "runSQL": "Custom Execute",
+        "sql": {
+          "clear": "Clear",
+          "desc": "Execute custom SQL statements to fix database issues",
+          "markFinished": "Mark as Finished",
+          "placeholder": "Enter SQL statement...",
+          "result": "Execution Result",
+          "run": "Execute",
+          "title": "SQL Executor"
+        },
+        "title": "Migration Control"
+      },
+      "tabs": {
+        "backup": "Backup & Restore",
+        "diagnosis": "Diagnosis",
+        "repair": "Repair"
+      }
     }
   },
   "close": "Close",

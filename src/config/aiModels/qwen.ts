@@ -16,8 +16,8 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      input: 1.6,
+      output: 4,
     },
     releasedAt: '2025-03-06',
     settings: {
@@ -253,8 +253,8 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      input: 2,
+      output: 6,
     },
     releasedAt: '2025-03-06',
     type: 'chat',

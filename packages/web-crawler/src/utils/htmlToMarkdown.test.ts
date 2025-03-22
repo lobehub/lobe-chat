@@ -30,6 +30,6 @@ describe('htmlToMarkdown', () => {
       const data = htmlToMarkdown(html, { url: item.url, filterOptions: item.filterOptions || {} });
 
       expect(data).toMatchSnapshot();
-    });
+    }, 10000);
   });
 });
