@@ -59,6 +59,9 @@ const Checker = memo<ConnectionCheckerProps>(
     );
     const totalModels = useAiInfraStore(aiModelSelectors.aiProviderChatModelListIds);
     const updateAiProviderConfig = useAiInfraStore((s) => s.updateAiProviderConfig);
+    const currentProviderData = useAiInfraStore((s) => 
+      aiProviderSelectors.providerConfigById(provider)(s)
+    );
 
     const [loading, setLoading] = useState(false);
     const [pass, setPass] = useState(false);
@@ -126,7 +129,7 @@ const Checker = memo<ConnectionCheckerProps>(
             listItemHeight={36}
             onSelect={async (value) => {
               setCheckModel(value);
-              await updateAiProviderConfig(provider, { ...providerConfig, checkModel: value });
+              await updateAiProviderConfig(provider, { checkModel: value });
             }}
             optionRender={({ value }) => {
               return (
