@@ -5,7 +5,7 @@ import { AIChatModelCard } from '@/types/aiModel';
 const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
-      functionCall: false,
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 65_536,
@@ -23,7 +23,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: false,
+      functionCall: true,
     },
     contextWindowTokens: 65_536,
     description:
@@ -39,7 +39,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: false,
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 65_536,
