@@ -1,4 +1,5 @@
 {
+  "0": "{",
   "01-ai/Yi-1.5-34B-Chat-16K": {
     "description": "Yi-1.5 34B，以豐富的訓練樣本在行業應用中提供優越表現。"
   },
@@ -520,6 +521,9 @@
   },
   "charglm-3": {
     "description": "CharGLM-3專為角色扮演與情感陪伴設計，支持超長多輪記憶與個性化對話，應用廣泛。"
+  },
+  "chatglm3": {
+    "description": "ChatGLM3 是智譜 AI 與清華 KEG 實驗室發佈的閉源模型，經過海量中英標識符的預訓練與人類偏好對齊訓練，相比一代模型在 MMLU、C-Eval、GSM8K 分別取得了 16%、36%、280% 的提升，並登頂中文任務榜單 C-Eval。適用於對知識量、推理能力、創造力要求較高的場景，比如廣告文案、小說寫作、知識類寫作、代碼生成等。"
   },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o是一款動態模型，實時更新以保持當前最新版本。它結合了強大的語言理解與生成能力，適合於大規模應用場景，包括客戶服務、教育和技術支持。"
@@ -1133,6 +1137,9 @@
   "lite": {
     "description": "Spark Lite 是一款輕量級大語言模型，具備極低的延遲與高效的處理能力，完全免費開放，支持即時在線搜索功能。其快速響應的特性使其在低算力設備上的推理應用和模型微調中表現出色，為用戶帶來出色的成本效益和智能體驗，尤其在知識問答、內容生成及搜索場景下表現不俗。"
   },
+  "llama-2-7b-chat": {
+    "description": "Llama2 是由 Meta 開發並開源的大型語言模型（LLM）系列，這是一組從 70 億到 700 億參數不同規模、經過預訓練和微調的生成式文本模型。架構層面，Llama2 是一個使用優化型轉換器架構的自動回歸語言模型。調整後的版本使用有監督的微調（SFT）和帶有人類反饋的強化學習（RLHF）以對齊人類對有用性和安全性的偏好。Llama2 較 Llama 系列在多種學術數據集上有着更加不俗的表現，為大量其他模型提供了設計和開發的思路。"
+  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B 提供更強大的 AI 推理能力，適合複雜應用，支持超多的計算處理並保證高效和準確率。"
   },
@@ -1195,6 +1202,9 @@
   },
   "max-32k": {
     "description": "Spark Max 32K 配置了大上下文處理能力，更強的上下文理解和邏輯推理能力，支持32K tokens的文本輸入，適用於長文檔閱讀、私有知識問答等場景。"
+  },
+  "megrez-3b-instruct": {
+    "description": "Megrez-3B-Instruct 是由無問芯穹完全自主訓練的大語言模型。Megrez-3B-Instruct 旨在通過軟硬協同理念，打造一款極速推理、小巧精悍、極易上手的端側智能解決方案。"
   },
   "meta-llama-3-70b-instruct": {
     "description": "一個強大的70億參數模型，在推理、編碼和廣泛的語言應用中表現出色。"
@@ -1586,6 +1596,12 @@
   "qwen2": {
     "description": "Qwen2 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
   },
+  "qwen2-72b-instruct": {
+    "description": "Qwen2 是 Qwen 團隊推出的新一代大型語言模型系列。它基於 Transformer 架構，並採用 SwiGLU 激活函數、注意力 QKV 偏置(attention QKV bias)、群組查詢注意力(group query attention)、滑動窗口注意力(mixture of sliding window attention)與全注意力的混合等技術。此外，Qwen 團隊還改進了適應多種自然語言和代碼的分詞器。"
+  },
+  "qwen2-7b-instruct": {
+    "description": "Qwen2 是 Qwen 團隊推出的新一代大型語言模型系列。它基於 Transformer 架構，並採用 SwiGLU 激活函數、注意力 QKV 偏置(attention QKV bias)、群組查詢注意力(group query attention)、滑動視窗注意力(mixture of sliding window attention)與全注意力的混合等技術。此外，Qwen 團隊還改進了適應多種自然語言和程式碼的分詞器。"
+  },
   "qwen2.5": {
     "description": "Qwen2.5 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
   },
@@ -1762,6 +1778,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 是微軟 AI 提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"
+  },
+  "yi-1.5-34b-chat": {
+    "description": "Yi-1.5 是 Yi 的升級版本。它使用 500B Tokens 的高品質語料庫在 Yi 上持續進行預訓練，並在 3M 個多樣化的微調樣本上進行微調。"
   },
   "yi-large": {
     "description": "全新千億參數模型，提供超強問答及文本生成能力。"

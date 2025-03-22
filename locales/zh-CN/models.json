@@ -521,6 +521,12 @@
   "charglm-3": {
     "description": "CharGLM-3 专为角色扮演与情感陪伴设计，支持超长多轮记忆与个性化对话，应用广泛。"
   },
+  "chatglm3": {
+    "description": "ChatGLM3 是智谱 AI 与清华 KEG 实验室发布的闭源模型，经过海量中英标识符的预训练与人类偏好对齐训练，相比一代模型在 MMLU、C-Eval、GSM8K 分别取得了 16%、36%、280% 的提升，并登顶中文任务榜单 C-Eval。适用于对知识量、推理能力、创造力要求较高的场景，比如广告文案、小说写作、知识类写作、代码生成等。"
+  },
+  "chatglm3-6b-base": {
+    "description": "ChatGLM3-6b-base 是由智谱开发的 ChatGLM 系列最新一代的 60 亿参数规模的开源的基础模型。"
+  },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
   },
@@ -1133,6 +1139,9 @@
   "lite": {
     "description": "Spark Lite 是一款轻量级大语言模型，具备极低的延迟与高效的处理能力，完全免费开放，支持实时在线搜索功能。其快速响应的特性使其在低算力设备上的推理应用和模型微调中表现出色，为用户带来出色的成本效益和智能体验，尤其在知识问答、内容生成及搜索场景下表现不俗。"
   },
+  "llama-2-7b-chat": {
+    "description": "Llama2 是由 Meta 开发并开源的大型语言模型（LLM）系列，这是一组从 70 亿到 700 亿参数不同规模、经过预训练和微调的生成式文本模型。架构层面，LLama2 是一个使用优化型转换器架构的自动回归语言模型。调整后的版本使用有监督的微调（SFT）和带有人类反馈的强化学习（RLHF）以对齐人类对有用性和安全性的偏好。Llama2 较 Llama 系列在多种学术数据集上有着更加不俗的表现，为大量其他模型提供了设计和开发的思路。"
+  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B 提供更强大的AI推理能力，适合复杂应用，支持超多的计算处理并保证高效和准确率。"
   },
@@ -1195,6 +1204,9 @@
   },
   "max-32k": {
     "description": "Spark Max 32K 配置了大上下文处理能力，更强的上下文理解和逻辑推理能力，支持32K tokens的文本输入，适用于长文档阅读、私有知识问答等场景"
+  },
+  "megrez-3b-instruct": {
+    "description": "Megrez-3B-Instruct 是由无问芯穹完全自主训练的大语言模型。Megrez-3B-Instruct 旨在通过软硬协同理念，打造一款极速推理、小巧精悍、极易上手的端侧智能解决方案。"
   },
   "meta-llama-3-70b-instruct": {
     "description": "一个强大的700亿参数模型，在推理、编码和广泛的语言应用方面表现出色。"
@@ -1583,8 +1595,23 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "强大的中型代码模型，支持 32K 上下文长度，擅长多语言编程。"
   },
+  "qwen1.5-14b-chat": {
+    "description": "Qwen1.5 系列是 Qwen2 的 Beta 版本，是一个基于 Transformer 的仅解码语言模型，在海量数据上进行预训练。与之前发布的 Qwen 系列版本相比，Qwen1.5 系列 base 与 chat 模型均能支持多种语言，在整体聊天和基础能力上都得到了提升。Qwen1.5-14b-chat 是其中专用于 chat 场景的 140 亿参数的主流大小模型。"
+  },
+  "qwen1.5-32b-chat": {
+    "description": "Qwen1.5 系列是 Qwen2 的 Beta 版本，是一个基于 Transformer 的仅解码语言模型，在海量数据上进行预训练。与之前发布的 Qwen 系列版本相比，Qwen1.5 系列 base 与 chat 模型均能支持多种语言，在整体聊天和基础能力上都得到了提升。Qwen1.5-32b-chat 是其中专用于 chat 场景的 320 亿参数的大模型，较于 14b 模型在智能体场景更强，较于 72b 模型推理成本更低。"
+  },
+  "qwen1.5-72b-chat": {
+    "description": "Qwen1.5 系列是 Qwen2 的 Beta 版本，是一个基于 Transformer 的仅解码语言模型，在海量数据上进行预训练。与之前发布的 Qwen 系列版本相比，Qwen1.5 系列 base 与 chat 模型均能支持多种语言，在整体聊天和基础能力上都得到了提升。Qwen1.5-72b-chat 是其中专用于 chat 场景的 720 亿参数的大模型。"
+  },
   "qwen2": {
     "description": "Qwen2 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
+  },
+  "qwen2-72b-instruct": {
+    "description": "Qwen2 是 Qwen 团队推出的新一代大型语言模型系列。它基于 Transformer 架构，并采用 SwiGLU 激活函数、注意力 QKV 偏置(attention QKV bias)、群组查询注意力(group query attention)、滑动窗口注意力(mixture of sliding window attention)与全注意力的混合等技术。此外，Qwen 团队还改进了适应多种自然语言和代码的分词器。"
+  },
+  "qwen2-7b-instruct": {
+    "description": "Qwen2 是 Qwen 团队推出的新一代大型语言模型系列。它基于 Transformer 架构，并采用 SwiGLU 激活函数、注意力 QKV 偏置(attention QKV bias)、群组查询注意力(group query attention)、滑动窗口注意力(mixture of sliding window attention)与全注意力的混合等技术。此外，Qwen 团队还改进了适应多种自然语言和代码的分词器。"
   },
   "qwen2.5": {
     "description": "Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
@@ -1762,6 +1789,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 是微软AI提供的语言模型，在复杂对话、多语言、推理和智能助手领域表现尤为出色。"
+  },
+  "yi-1.5-34b-chat": {
+    "description": "Yi-1.5 是 Yi 的升级版本。 它使用 500B Tokens 的高质量语料库在 Yi 上持续进行预训练，并在 3M 个多样化的微调样本上进行微调。"
   },
   "yi-large": {
     "description": "全新千亿参数模型，提供超强问答及文本生成能力。"
