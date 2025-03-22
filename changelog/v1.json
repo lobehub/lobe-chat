@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Fix deepseek-r1-70b-online search tag missing from Search1API."]
+    },
+    "date": "2025-03-22",
+    "version": "1.74.1"
+  },
+  {
+    "children": {
       "features": [
         "Add infini-ai provider, add Search1API provider with web search DeepSeek models."
       ]
