@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.74.2](https://github.com/lobehub/lobe-chat/compare/v1.74.1...v1.74.2)
+
+<sup>Released on **2025-03-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: CheckModel change clears other configs, update input and output prices.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: CheckModel change clears other configs, closes [#7083](https://github.com/lobehub/lobe-chat/issues/7083) ([a416c64](https://github.com/lobehub/lobe-chat/commit/a416c64))
+- **misc**: Update input and output prices, closes [#7094](https://github.com/lobehub/lobe-chat/issues/7094) ([460c56f](https://github.com/lobehub/lobe-chat/commit/460c56f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.74.1](https://github.com/lobehub/lobe-chat/compare/v1.74.0...v1.74.1)
 
 <sup>Released on **2025-03-22**</sup>
