@@ -35,7 +35,10 @@
         "videos": "影片"
       }
     },
-    "searchEngine": "搜尋引擎：",
+    "searchEngine": {
+      "placeholder": "搜尋引擎",
+      "title": "搜尋引擎："
+    },
     "searchResult": "搜尋數量：",
     "searchTimeRange": "時間範圍：",
     "summary": "總結",

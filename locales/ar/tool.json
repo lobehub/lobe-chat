@@ -35,7 +35,10 @@
         "videos": "فيديوهات"
       }
     },
-    "searchEngine": "محرك البحث:",
+    "searchEngine": {
+      "placeholder": "محرك البحث",
+      "title": "محرك البحث:"
+    },
     "searchResult": "عدد النتائج:",
     "searchTimeRange": "نطاق الوقت:",
     "summary": "ملخص",

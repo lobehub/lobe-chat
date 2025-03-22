@@ -35,7 +35,10 @@ export default {
         'videos': '视频',
       },
     },
-    searchEngine: '搜索引擎：',
+    searchEngine: {
+      placeholder: '搜索引擎',
+      title: '搜索引擎：',
+    },
     searchResult: '搜索数量：',
     searchTimeRange: {
       title: '时间范围：',

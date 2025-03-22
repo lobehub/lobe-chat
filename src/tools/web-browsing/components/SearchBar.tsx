@@ -115,6 +115,7 @@ const SearchBar = memo<SearchBarProps>(
               ),
               value: item,
             }))}
+            placeholder={t('search.searchEngine.placeholder')}
             size={'small'}
             value={engines}
             variant={'filled'}
@@ -122,7 +123,7 @@ const SearchBar = memo<SearchBarProps>(
         ) : (
           <Flexbox align={'flex-start'} gap={8} horizontal>
             <Typography.Text style={{ marginTop: 2, wordBreak: 'keep-all' }} type={'secondary'}>
-              {t('search.searchEngine')}
+              {t('search.searchEngine.title')}
             </Typography.Text>
             <Checkbox.Group
               onChange={(checkedValue) => {

@@ -35,7 +35,10 @@
         "videos": "비디오"
       }
     },
-    "searchEngine": "검색 엔진：",
+    "searchEngine": {
+      "placeholder": "검색 엔진",
+      "title": "검색 엔진："
+    },
     "searchResult": "검색 수：",
     "searchTimeRange": "시간 범위:",
     "summary": "요약",

@@ -35,7 +35,10 @@
         "videos": "Video"
       }
     },
-    "searchEngine": "Motore di ricerca:",
+    "searchEngine": {
+      "placeholder": "Motore di ricerca",
+      "title": "Motore di ricerca:"
+    },
     "searchResult": "Numero di ricerche:",
     "searchTimeRange": "Intervallo di tempo:",
     "summary": "Riepilogo",

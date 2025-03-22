@@ -35,7 +35,10 @@
         "videos": "ویدیوها"
       }
     },
-    "searchEngine": "موتور جستجو:",
+    "searchEngine": {
+      "placeholder": "موتور جستجو",
+      "title": "موتور جستجو:"
+    },
     "searchResult": "تعداد جستجو:",
     "searchTimeRange": "محدوده زمانی:",
     "summary": "خلاصه",

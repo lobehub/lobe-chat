@@ -35,7 +35,10 @@
         "videos": "Videolar"
       }
     },
-    "searchEngine": "Arama motoru:",
+    "searchEngine": {
+      "placeholder": "Arama Motoru",
+      "title": "Arama Motoru:"
+    },
     "searchResult": "Arama sayısı:",
     "searchTimeRange": "Zaman aralığı:",
     "summary": "Özet",

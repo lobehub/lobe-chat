@@ -35,7 +35,10 @@
         "videos": "Видеа"
       }
     },
-    "searchEngine": "Търсачка:",
+    "searchEngine": {
+      "placeholder": "Търсачка",
+      "title": "Търсачка:"
+    },
     "searchResult": "Брой резултати:",
     "searchTimeRange": "Времеви диапазон:",
     "summary": "Резюме",

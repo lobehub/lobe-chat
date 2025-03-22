@@ -35,7 +35,10 @@
         "videos": "Видео"
       }
     },
-    "searchEngine": "Поисковая система:",
+    "searchEngine": {
+      "placeholder": "Поисковая система",
+      "title": "Поисковая система:"
+    },
     "searchResult": "Количество результатов:",
     "searchTimeRange": "Временной диапазон:",
     "summary": "Резюме",

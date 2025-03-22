@@ -35,7 +35,10 @@
         "videos": "Videos"
       }
     },
-    "searchEngine": "Suchmaschine:",
+    "searchEngine": {
+      "placeholder": "Suchmaschine",
+      "title": "Suchmaschine:"
+    },
     "searchResult": "Anzahl der Suchergebnisse:",
     "searchTimeRange": "Zeitspanne:",
     "summary": "Zusammenfassung",

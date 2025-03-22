@@ -35,7 +35,10 @@
         "videos": "動画"
       }
     },
-    "searchEngine": "検索エンジン：",
+    "searchEngine": {
+      "placeholder": "検索エンジン",
+      "title": "検索エンジン："
+    },
     "searchResult": "検索結果の数：",
     "searchTimeRange": "時間範囲：",
     "summary": "要約",

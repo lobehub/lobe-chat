@@ -35,7 +35,10 @@
         "videos": "Video"
       }
     },
-    "searchEngine": "Công cụ tìm kiếm:",
+    "searchEngine": {
+      "placeholder": "Công cụ tìm kiếm",
+      "title": "Công cụ tìm kiếm:"
+    },
     "searchResult": "Số lượng tìm kiếm:",
     "searchTimeRange": "Khoảng thời gian:",
     "summary": "Tóm tắt",

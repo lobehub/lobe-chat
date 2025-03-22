@@ -35,7 +35,10 @@
         "videos": "Video's"
       }
     },
-    "searchEngine": "Zoekmachine:",
+    "searchEngine": {
+      "placeholder": "Zoekmachine",
+      "title": "Zoekmachine:"
+    },
     "searchResult": "Aantal zoekresultaten:",
     "searchTimeRange": "Tijdspanne:",
     "summary": "Samenvatting",
