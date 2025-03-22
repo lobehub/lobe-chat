@@ -18,7 +18,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1',
     enabled: true,
     id: 'deepseek-r1',
-    maxOutput: 16384,
+    maxOutput: 16_384,
     pricing: {
       currency: 'CNY',
       input: 4, 
@@ -80,7 +80,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       'DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多项评测成绩超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他开源模型，并在性能上和世界顶尖的闭源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。',
     displayName: 'DeepSeek V3',
     id: 'deepseek-v3',
-    maxOutput: 16384,
+    maxOutput: 16_384,
     pricing: {
       currency: 'CNY',
       input: 2,
