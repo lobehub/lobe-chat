@@ -41,7 +41,10 @@
     "error": {
       "desc": "非常抱歉，Pglite 資料庫初始化過程發生異常。請點擊按鈕重試。如多次重試後仍重複出錯，請 <1>提交問題</1> ，我們將會第一時間幫你排查",
       "detail": "錯誤原因：[{{type}}] {{message}}，明細如下：",
+      "detailTitle": "錯誤原因",
+      "report": "反饋問題",
       "retry": "重試",
+      "selfSolve": "自助解決",
       "title": "資料庫初始化失敗"
     },
     "initing": {
@@ -80,6 +83,54 @@
       "button": "立即使用",
       "desc": "立即想用",
       "title": "PGlite 數據庫已就緒"
+    },
+    "solve": {
+      "backup": {
+        "backup": "備份",
+        "backupSuccess": "備份成功",
+        "desc": "導出當前資料庫中的關鍵數據",
+        "export": "導出全部數據",
+        "exportDesc": "導出的數據將以JSON格式保存，可用於後續恢復或分析。",
+        "reset": {
+          "alert": "警告",
+          "alertDesc": "以下操作可能會導致數據丟失。請確保您已備份重要數據後再繼續。",
+          "button": "完全重置資料庫（刪除所有數據）",
+          "confirm": {
+            "desc": "此操作將會刪除所有數據並且不可撤銷，確認繼續嗎？",
+            "title": "確認重置資料庫"
+          },
+          "desc": "在遷移無法恢復的情況下重置資料庫",
+          "title": "資料庫重置"
+        },
+        "restore": "恢復",
+        "restoreSuccess": "恢復成功",
+        "title": "數據備份"
+      },
+      "diagnosis": {
+        "createdAt": "創建時間",
+        "migratedAt": "遷移完成時間",
+        "sql": "遷移SQL",
+        "title": "遷移狀態"
+      },
+      "repair": {
+        "desc": "手動管理遷移狀態",
+        "runSQL": "自定義執行",
+        "sql": {
+          "clear": "清空",
+          "desc": "執行自定義SQL語句修復資料庫問題",
+          "markFinished": "標記為已完成",
+          "placeholder": "輸入SQL語句...",
+          "result": "執行結果",
+          "run": "執行",
+          "title": "SQL執行器"
+        },
+        "title": "遷移控制"
+      },
+      "tabs": {
+        "backup": "備份恢復",
+        "diagnosis": "診斷",
+        "repair": "修復"
+      }
     }
   },
   "close": "關閉",
