@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.74.1](https://github.com/lobehub/lobe-chat/compare/v1.74.0...v1.74.1)
+
+<sup>Released on **2025-03-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix `deepseek-r1-70b-online` search tag missing from Search1API.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix `deepseek-r1-70b-online` search tag missing from Search1API, closes [#7085](https://github.com/lobehub/lobe-chat/issues/7085) ([0a06a7a](https://github.com/lobehub/lobe-chat/commit/0a06a7a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.74.0](https://github.com/lobehub/lobe-chat/compare/v1.73.2...v1.74.0)
 
 <sup>Released on **2025-03-21**</sup>
