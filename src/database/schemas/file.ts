@@ -7,6 +7,7 @@ import {
   pgTable,
   primaryKey,
   text,
+  uniqueIndex,
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
@@ -52,6 +53,7 @@ export const files = pgTable(
     size: integer('size').notNull(),
     url: text('url').notNull(),
 
+    clientId: text('client_id'),
     metadata: jsonb('metadata'),
     chunkTaskId: uuid('chunk_task_id').references(() => asyncTasks.id, { onDelete: 'set null' }),
     embeddingTaskId: uuid('embedding_task_id').references(() => asyncTasks.id, {
@@ -63,33 +65,47 @@ export const files = pgTable(
   (table) => {
     return {
       fileHashIdx: index('file_hash_idx').on(table.fileHash),
+      clientIdUnique: uniqueIndex('files_client_id_user_id_unique').on(
+        table.clientId,
+        table.userId,
+      ),
     };
   },
 );
 export type NewFile = typeof files.$inferInsert;
 export type FileItem = typeof files.$inferSelect;
 
-export const knowledgeBases = pgTable('knowledge_bases', {
-  id: text('id')
-    .$defaultFn(() => idGenerator('knowledgeBases'))
-    .primaryKey(),
+export const knowledgeBases = pgTable(
+  'knowledge_bases',
+  {
+    id: text('id')
+      .$defaultFn(() => idGenerator('knowledgeBases'))
+      .primaryKey(),
 
-  name: text('name').notNull(),
-  description: text('description'),
-  avatar: text('avatar'),
+    name: text('name').notNull(),
+    description: text('description'),
+    avatar: text('avatar'),
 
-  // different types of knowledge bases need to be distinguished
-  type: text('type'),
-  userId: text('user_id')
-    .references(() => users.id, { onDelete: 'cascade' })
-    .notNull(),
+    // different types of knowledge bases need to be distinguished
+    type: text('type'),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    clientId: text('client_id'),
 
-  isPublic: boolean('is_public').default(false),
+    isPublic: boolean('is_public').default(false),
 
-  settings: jsonb('settings'),
+    settings: jsonb('settings'),
 
-  ...timestamps,
-});
+    ...timestamps,
+  },
+  (t) => ({
+    clientIdUnique: uniqueIndex('knowledge_bases_client_id_user_id_unique').on(
+      t.clientId,
+      t.userId,
+    ),
+  }),
+);
 
 export const insertKnowledgeBasesSchema = createInsertSchema(knowledgeBases);
 

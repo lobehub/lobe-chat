@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { boolean, integer, pgTable, text, unique, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgTable, text, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator, randomSlug } from '@/database/utils/idGenerator';
@@ -26,7 +26,10 @@ export const sessionGroups = pgTable(
     ...timestamps,
   },
   (table) => ({
-    clientIdUnique: unique('session_group_client_id_user_unique').on(table.clientId, table.userId),
+    clientIdUnique: uniqueIndex('session_groups_client_id_user_id_unique').on(
+      table.clientId,
+      table.userId,
+    ),
   }),
 );
 
@@ -65,7 +68,7 @@ export const sessions = pgTable(
   (t) => ({
     slugUserIdUnique: uniqueIndex('slug_user_id_unique').on(t.slug, t.userId),
 
-    clientIdUnique: unique('sessions_client_id_user_id_unique').on(t.clientId, t.userId),
+    clientIdUnique: uniqueIndex('sessions_client_id_user_id_unique').on(t.clientId, t.userId),
   }),
 );
 

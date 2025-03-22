@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { boolean, jsonb, pgTable, text, unique } from 'drizzle-orm/pg-core';
+import { boolean, jsonb, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator } from '@/database/utils/idGenerator';
@@ -27,7 +27,7 @@ export const topics = pgTable(
     ...timestamps,
   },
   (t) => ({
-    clientIdUnique: unique('topic_client_id_user_id_unique').on(t.clientId, t.userId),
+    clientIdUnique: uniqueIndex('topics_client_id_user_id_unique').on(t.clientId, t.userId),
   }),
 );
 
@@ -35,28 +35,35 @@ export type NewTopic = typeof topics.$inferInsert;
 export type TopicItem = typeof topics.$inferSelect;
 
 // @ts-ignore
-export const threads = pgTable('threads', {
-  id: text('id')
-    .$defaultFn(() => idGenerator('threads', 16))
-    .primaryKey(),
+export const threads = pgTable(
+  'threads',
+  {
+    id: text('id')
+      .$defaultFn(() => idGenerator('threads', 16))
+      .primaryKey(),
 
-  title: text('title'),
-  type: text('type', { enum: ['continuation', 'standalone'] }).notNull(),
-  status: text('status', { enum: ['active', 'deprecated', 'archived'] }).default('active'),
-  topicId: text('topic_id')
-    .references(() => topics.id, { onDelete: 'cascade' })
-    .notNull(),
-  sourceMessageId: text('source_message_id').notNull(),
-  // @ts-ignore
-  parentThreadId: text('parent_thread_id').references(() => threads.id, { onDelete: 'set null' }),
+    title: text('title'),
+    type: text('type', { enum: ['continuation', 'standalone'] }).notNull(),
+    status: text('status', { enum: ['active', 'deprecated', 'archived'] }).default('active'),
+    topicId: text('topic_id')
+      .references(() => topics.id, { onDelete: 'cascade' })
+      .notNull(),
+    sourceMessageId: text('source_message_id').notNull(),
+    // @ts-ignore
+    parentThreadId: text('parent_thread_id').references(() => threads.id, { onDelete: 'set null' }),
+    clientId: text('client_id'),
 
-  userId: text('user_id')
-    .references(() => users.id, { onDelete: 'cascade' })
-    .notNull(),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
 
-  lastActiveAt: timestamptz('last_active_at').defaultNow(),
-  ...timestamps,
-});
+    lastActiveAt: timestamptz('last_active_at').defaultNow(),
+    ...timestamps,
+  },
+  (t) => ({
+    clientIdUnique: uniqueIndex('threads_client_id_user_id_unique').on(t.clientId, t.userId),
+  }),
+);
 
 export type NewThread = typeof threads.$inferInsert;
 export type ThreadItem = typeof threads.$inferSelect;

@@ -1,5 +1,13 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { boolean, jsonb, pgTable, primaryKey, text, varchar } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  jsonb,
+  pgTable,
+  primaryKey,
+  text,
+  uniqueIndex,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator, randomSlug } from '@/database/utils/idGenerator';
@@ -13,36 +21,45 @@ import { users } from './user';
 // agent is a model that represents the assistant that is created by the user
 // agent can have its own knowledge base and files
 
-export const agents = pgTable('agents', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => idGenerator('agents'))
-    .notNull(),
-  slug: varchar('slug', { length: 100 })
-    .$defaultFn(() => randomSlug(4))
-    .unique(),
-  title: text('title'),
-  description: text('description'),
-  tags: jsonb('tags').$type<string[]>().default([]),
-  avatar: text('avatar'),
-  backgroundColor: text('background_color'),
+export const agents = pgTable(
+  'agents',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => idGenerator('agents'))
+      .notNull(),
+    slug: varchar('slug', { length: 100 })
+      .$defaultFn(() => randomSlug(4))
+      .unique(),
+    title: text('title'),
+    description: text('description'),
+    tags: jsonb('tags').$type<string[]>().default([]),
+    avatar: text('avatar'),
+    backgroundColor: text('background_color'),
 
-  plugins: jsonb('plugins').$type<string[]>().default([]),
-  userId: text('user_id')
-    .references(() => users.id, { onDelete: 'cascade' })
-    .notNull(),
+    plugins: jsonb('plugins').$type<string[]>().default([]),
 
-  chatConfig: jsonb('chat_config').$type<LobeAgentChatConfig>(),
+    clientId: text('client_id'),
 
-  fewShots: jsonb('few_shots'),
-  model: text('model'),
-  params: jsonb('params').default({}),
-  provider: text('provider'),
-  systemRole: text('system_role'),
-  tts: jsonb('tts').$type<LobeAgentTTSConfig>(),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
 
-  ...timestamps,
-});
+    chatConfig: jsonb('chat_config').$type<LobeAgentChatConfig>(),
+
+    fewShots: jsonb('few_shots'),
+    model: text('model'),
+    params: jsonb('params').default({}),
+    provider: text('provider'),
+    systemRole: text('system_role'),
+    tts: jsonb('tts').$type<LobeAgentTTSConfig>(),
+
+    ...timestamps,
+  },
+  (t) => ({
+    clientIdUnique: uniqueIndex('client_id_user_id_unique').on(t.clientId, t.userId),
+  }),
+);
 
 export const insertAgentSchema = createInsertSchema(agents);
 

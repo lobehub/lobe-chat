@@ -126,6 +126,13 @@
       "when": 1742269437903,
       "tag": "0017_add_user_id_to_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1742616026643,
+      "tag": "0018_add_client_id_for_entities",
+      "breakpoints": true
     }
   ],
   "version": "6"
