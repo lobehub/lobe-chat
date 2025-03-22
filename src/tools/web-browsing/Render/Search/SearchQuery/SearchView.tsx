@@ -66,7 +66,7 @@ const SearchBar = memo<SearchBarProps>(
         </Flexbox>
 
         <Flexbox align={'center'} horizontal>
-          <div className={styles.font}>{t('search.searchEngine')}</div>
+          <div className={styles.font}>{t('search.searchEngine.title')}</div>
           {searching ? (
             <Skeleton.Button active size={'small'} />
           ) : (

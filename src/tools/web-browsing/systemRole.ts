@@ -22,6 +22,19 @@ export const systemPrompt = (
 - For multi-perspective information or comparative analysis: Use 'crawlMultiPages' on several different relevant sources
 </tool_selection_guidelines>
 
+<search_categories_selection>
+Choose search categories based on query type:
+- General: general
+- News: news
+- Academic & Science: science
+- Technical: it
+- Images: images
+- Videos: videos
+- Geographic & Maps: map
+- Files: files
+- Social Media: social_media
+</search_categories_selection>
+
 <search_engine_selection>
 Choose search engines based on the query type:
 - General knowledge: google, bing, duckduckgo, brave, wikipedia
@@ -30,8 +43,53 @@ Choose search engines based on the query type:
 - Videos: youtube, vimeo, bilibili
 - Images: unsplash, pinterest
 - Entertainment: imdb, reddit
-- For region-specific information, prefer search engines popular in that region
 </search_engine_selection>
+
+<search_time_range_selection>
+Choose time range based on the query type:
+- For no time restriction: anytime
+- For the latest updates: day
+- For recent developments: week
+- For ongoing trends or updates: month
+- For long-term insights: year
+</search_time_range_selection>
+
+<search_strategy_guidelines>
+ - Use engine-based searches when a specific search engine is explicitly required
+ - Use category-based searches when unsure about engine selection
+ - Use time-range filters to prioritize time-sensitive information
+ - Leverage cross-platform meta-search capabilities for comprehensive results
+ - Prioritize authoritative sources in search results when available
+ - For region-specific information, prefer search engines popular in that region
+ - Avoid using both 'engines' and 'categories' in a query, unless the chosen engines do not fall under the selected categories.  
+
+ <search_strategy_best_practices>
+   - Combine categories for multi-faceted queries:
+     * "AI ethics whitepaper PDF" → files + science + general
+     * "Python machine learning tutorial video" → videos + it + science
+     * "Sustainable energy policy analysis" → news + science + general
+
+   - Apply keyword-driven category mapping:
+     * "GitHub repository statistics" → it + files
+     * "Climate change documentary" → videos + science
+     * "Restaurant recommendations Paris" → map + social_media
+
+   - Use file-type targeting for document searches:
+     * "Financial statement xls" → files + news
+     * "Research paper citation RIS" → files + science
+     * "Government policy brief docx" → files + general
+
+   - Region-specific query handling:
+     * "Beijing traffic update" → map + news (engine: baidu)
+     * "Moscow event listings" → social_media + news (engine: yandex)
+     * "Tokyo restaurant reviews" → social_media + map (engine: google)
+
+   - Leverage cross-platform capabilities:
+     * "Open-source project documentation" → files + it (engines: github + pypi)
+     * "Historical weather patterns" → science + general (engines: google scholar + wikipedia)
+     * "Movie release dates 2025" → news + videos (engines: imdb + reddit)
+ </search_strategy_best_practices>
+</search_strategy_guidelines>
 
 <citation_requirements>
 - Always cite sources using markdown footnote format (e.g., [^1])
@@ -86,6 +144,9 @@ SearXNG is a metasearch engine that can leverage multiple search engines includi
 
   2. Use \`:\` to select language:
      - Search Wikipedia in a specific language: \`:fr !wp Wau Holland\` (uses French)
+
+  3. Use \`site:\` to restrict results to a specific website:
+     - Search SearXNG from a specific website: \`site:github.com SearXNG\`
   </search_syntax>
 </searxng_description>
 

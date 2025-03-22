@@ -19,8 +19,28 @@
       "placeholder": "キーワード",
       "tooltip": "検索結果を再取得し、新しい要約メッセージを作成します"
     },
-    "searchEngine": "検索エンジン：",
+    "searchCategory": {
+      "placeholder": "カテゴリを検索",
+      "title": "カテゴリを検索：",
+      "value": {
+        "files": "ファイル",
+        "general": "一般",
+        "images": "画像",
+        "it": "情報技術",
+        "map": "地図",
+        "music": "音楽",
+        "news": "ニュース",
+        "science": "科学",
+        "social_media": "ソーシャルメディア",
+        "videos": "動画"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "検索エンジン",
+      "title": "検索エンジン："
+    },
     "searchResult": "検索結果の数：",
+    "searchTimeRange": "時間範囲：",
     "summary": "要約",
     "summaryTooltip": "現在の内容を要約",
     "viewMoreResults": "さらに {{results}} 件の結果を見る"

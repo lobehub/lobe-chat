@@ -32,7 +32,7 @@ const SearchResult = memo<SearchResultProps>(
     const { t } = useTranslation(['tool', 'common']);
 
     const engines = uniq(searchResults.map((result) => result.engine));
-    const defaultEngines = engines.length > 0 ? engines : args.searchEngines || [];
+    const defaultEngines = engines.length > 0 ? engines : args.optionalParams?.searchEngines || [];
     const isMobile = useIsMobile();
 
     if (loading || !pluginState)
