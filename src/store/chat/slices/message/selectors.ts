@@ -98,6 +98,9 @@ const mainAIChatsMessageString = (s: ChatStoreState): string => {
   return chats.map((m) => m.content).join('');
 };
 
+const mainAILatestMessageReasoningContent = (s: ChatStoreState) =>
+  mainAIChats(s).at(-1)?.reasoning?.content;
+
 const currentToolMessages = (s: ChatStoreState) => {
   const messages = activeBaseChats(s);
 
@@ -214,6 +217,7 @@ export const chatSelectors = {
   mainAIChats,
   mainAIChatsMessageString,
   mainAIChatsWithHistoryConfig,
+  mainAILatestMessageReasoningContent,
   mainDisplayChatIDs,
   mainDisplayChats,
   showInboxWelcome,
