@@ -69,6 +69,10 @@ const Checker = memo<ConnectionCheckerProps>(
     const [error, setError] = useState<ChatMessageError | undefined>();
 
     const checkConnection = async () => {
+      // Clear previous check results immediately
+      setPass(false);
+      setError(undefined);
+      
       let isError = false;
 
       await chatService.fetchPresetTaskResult({
