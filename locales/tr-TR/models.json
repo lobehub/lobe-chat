@@ -518,6 +518,18 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B, Baichuan Zhi Neng tarafından geliştirilen 130 milyar parametreye sahip açık kaynaklı ticari bir büyük dil modelidir ve yetkili Çince ve İngilizce benchmark'larda aynı boyuttaki en iyi sonuçları elde etmiştir."
   },
+  "c4ai-aya-expanse-32b": {
+    "description": "Aya Expanse, talimat ayarlama, veri arbitrajı, tercih eğitimi ve model birleştirme yenilikleri ile tek dilli modellerin performansını zorlamak için tasarlanmış yüksek performanslı bir 32B çok dilli modeldir. 23 dili desteklemektedir."
+  },
+  "c4ai-aya-expanse-8b": {
+    "description": "Aya Expanse, talimat ayarlama, veri arbitrajı, tercih eğitimi ve model birleştirme yenilikleri ile tek dilli modellerin performansını zorlamak için tasarlanmış yüksek performanslı bir 8B çok dilli modeldir. 23 dili desteklemektedir."
+  },
+  "c4ai-aya-vision-32b": {
+    "description": "Aya Vision, dil, metin ve görüntü yeteneklerinin birden fazla anahtar ölçütünde mükemmel performans sergileyen en son teknoloji çok modlu bir modeldir. 23 dili desteklemektedir. Bu 32 milyar parametreli versiyon, en son teknoloji çok dilli performansa odaklanmaktadır."
+  },
+  "c4ai-aya-vision-8b": {
+    "description": "Aya Vision, dil, metin ve görüntü yeteneklerinin birden fazla anahtar ölçütünde mükemmel performans sergileyen en son teknoloji çok modlu bir modeldir. Bu 8 milyar parametreli versiyon, düşük gecikme ve en iyi performansa odaklanmaktadır."
+  },
   "charglm-3": {
     "description": "CharGLM-3, rol yapma ve duygusal destek için tasarlanmış, ultra uzun çok turlu bellek ve kişiselleştirilmiş diyalog desteği sunan bir modeldir, geniş bir uygulama yelpazesine sahiptir."
   },
@@ -602,11 +614,38 @@
   "cohere-command-r-plus": {
     "description": "Command R+, kurumsal düzeyde iş yüklerini ele almak için tasarlanmış en son RAG optimize edilmiş bir modeldir."
   },
+  "command": {
+    "description": "Dil görevlerinde yüksek kalite ve güvenilirlik sunan, talimatları izleyen bir diyalog modelidir ve temel üretim modelimize göre daha uzun bir bağlam uzunluğuna sahiptir."
+  },
+  "command-a-03-2025": {
+    "description": "Command A, şimdiye kadar geliştirdiğimiz en güçlü modeldir ve araç kullanımı, ajan, bilgi artırımlı üretim (RAG) ve çok dilli uygulama senaryolarında mükemmel performans sergilemektedir. Command A, 256K bağlam uzunluğuna sahiptir, yalnızca iki GPU ile çalıştırılabilir ve Command R+ 08-2024'e kıyasla %150 daha yüksek bir verimlilik sunar."
+  },
+  "command-light": {
+    "description": "Neredeyse aynı güçte, ancak daha hızlı olan daha küçük ve daha hızlı bir Command versiyonudur."
+  },
+  "command-light-nightly": {
+    "description": "Ana sürüm güncellemeleri arasındaki süreyi kısaltmak için Command modelinin her gece sürümünü sunuyoruz. command-light serisi için bu sürüm command-light-nightly olarak adlandırılmaktadır. Lütfen dikkat edin, command-light-nightly en güncel, en deneysel ve (muhtemelen) kararsız sürümdür. Her gece sürümü düzenli olarak güncellenir ve önceden bildirilmez, bu nedenle üretim ortamında kullanılması önerilmez."
+  },
+  "command-nightly": {
+    "description": "Ana sürüm güncellemeleri arasındaki süreyi kısaltmak için Command modelinin her gece sürümünü sunuyoruz. Command serisi için bu sürüm command-cightly olarak adlandırılmaktadır. Lütfen dikkat edin, command-nightly en güncel, en deneysel ve (muhtemelen) kararsız sürümdür. Her gece sürümü düzenli olarak güncellenir ve önceden bildirilmez, bu nedenle üretim ortamında kullanılması önerilmez."
+  },
   "command-r": {
     "description": "Command R, diyalog ve uzun bağlam görevleri için optimize edilmiş bir LLM'dir, dinamik etkileşim ve bilgi yönetimi için özellikle uygundur."
   },
+  "command-r-03-2024": {
+    "description": "Command R, dil görevlerinde daha yüksek kalite ve güvenilirlik sunan, talimatları izleyen bir diyalog modelidir ve önceki modellere göre daha uzun bir bağlam uzunluğuna sahiptir. Kod üretimi, bilgi artırımlı üretim (RAG), araç kullanımı ve ajan gibi karmaşık iş akışları için kullanılabilir."
+  },
+  "command-r-08-2024": {
+    "description": "command-r-08-2024, Command R modelinin güncellenmiş versiyonudur ve 2024 yılının Ağustos ayında piyasaya sürülmüştür."
+  },
   "command-r-plus": {
     "description": "Command R+, gerçek işletme senaryoları ve karmaşık uygulamalar için tasarlanmış yüksek performanslı bir büyük dil modelidir."
+  },
+  "command-r-plus-04-2024": {
+    "description": "Command R+, dil görevlerinde daha yüksek kalite ve güvenilirlik sunan, talimatları izleyen bir diyalog modelidir ve önceki modellere göre daha uzun bir bağlam uzunluğuna sahiptir. Karmaşık RAG iş akışları ve çok adımlı araç kullanımı için en uygunudur."
+  },
+  "command-r7b-12-2024": {
+    "description": "command-r7b-12-2024, 2024 yılının Aralık ayında piyasaya sürülen küçük ve verimli bir güncellenmiş versiyondur. RAG, araç kullanımı, ajan gibi karmaşık akıl yürütme ve çok adımlı işlemler gerektiren görevlerde mükemmel performans sergilemektedir."
   },
   "dall-e-2": {
     "description": "İkinci nesil DALL·E modeli, daha gerçekçi ve doğru görüntü üretimi destekler, çözünürlüğü birinci neslin 4 katıdır."
@@ -668,11 +707,23 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1, tekrarlayan öğrenme (RL) destekli bir çıkarım modelidir ve modeldeki tekrarlama ve okunabilirlik sorunlarını çözmektedir. RL'den önce, DeepSeek-R1 soğuk başlangıç verilerini tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer bir performans sergilemekte ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmaktadır."
   },
+  "deepseek-r1-70b-fast-online": {
+    "description": "DeepSeek R1 70B hızlı versiyonu, gerçek zamanlı çevrimiçi arama desteği ile, model performansını korurken daha hızlı yanıt süreleri sunar."
+  },
+  "deepseek-r1-70b-online": {
+    "description": "DeepSeek R1 70B standart versiyonu, gerçek zamanlı çevrimiçi arama desteği ile, en güncel bilgilere ihtiyaç duyan diyalog ve metin işleme görevleri için uygundur."
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 - DeepSeek paketindeki daha büyük ve daha akıllı model - Llama 70B mimarisine damıtılmıştır. Referans testleri ve insan değerlendirmelerine dayanarak, bu model orijinal Llama 70B'den daha akıllıdır, özellikle matematik ve gerçeklik doğruluğu gerektiren görevlerde mükemmel performans sergilemektedir."
   },
   "deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+  },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "14 Şubat 2025'te ilk kez piyasaya sürülen bu model, Qianfan büyük model geliştirme ekibi tarafından Llama3_70B temel modeli (Meta Llama ile oluşturulmuştur) kullanılarak damıtılmıştır ve damıtma verilerine Qianfan'ın metinleri de eklenmiştir."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "14 Şubat 2025'te ilk kez piyasaya sürülen bu model, Qianfan büyük model geliştirme ekibi tarafından Llama3_8B temel modeli (Meta Llama ile oluşturulmuştur) kullanılarak damıtılmıştır ve damıtma verilerine Qianfan'ın metinleri de eklenmiştir."
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
@@ -685,6 +736,12 @@
   },
   "deepseek-r1-distill-qwen-7b": {
     "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
+  },
+  "deepseek-r1-fast-online": {
+    "description": "DeepSeek R1 tam hızlı versiyonu, gerçek zamanlı çevrimiçi arama desteği ile, 671B parametrenin güçlü yetenekleri ile daha hızlı yanıt sürelerini birleştirir."
+  },
+  "deepseek-r1-online": {
+    "description": "DeepSeek R1 tam sürümü, 671B parametreye sahip olup, gerçek zamanlı çevrimiçi arama desteği ile daha güçlü anlama ve üretim yeteneklerine sahiptir."
   },
   "deepseek-reasoner": {
     "description": "DeepSeek tarafından sunulan bir akıl yürütme modeli. Model, nihai yanıtı vermeden önce bir düşünce zinciri içeriği sunarak nihai cevabın doğruluğunu artırır."
@@ -763,6 +820,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a göre performans açısından daha üstündür."
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "Wenxin büyük modeli 4.5, Baidu tarafından geliştirilen yeni nesil yerel çok modlu temel büyük modeldir. Birden fazla modun birleşik modellemesi ile işbirlikçi optimizasyon sağlar, çok modlu anlama yeteneği mükemmeldir; dil yetenekleri, anlama, üretim, mantık ve hafıza yetenekleri önemli ölçüde geliştirilmiştir, yanılsamaları ortadan kaldırma, mantıksal akıl yürütme ve kod yetenekleri belirgin şekilde artmıştır."
   },
   "ernie-char-8k": {
     "description": "Baidu tarafından geliştirilen dikey senaryo büyük dil modeli, oyun NPC'leri, müşteri hizmetleri diyalogları, diyalog karakter rolü gibi uygulama senaryolarına uygundur, karakter tarzı daha belirgin ve tutarlıdır, talimat takibi yeteneği daha güçlü, çıkarım performansı daha iyidir."
@@ -1097,9 +1157,6 @@
   "hunyuan-turbo": {
     "description": "Hunyuan'ın yeni nesil büyük dil modelinin önizleme sürümü, tamamen yeni bir karma uzman modeli (MoE) yapısı kullanır ve hunyuan-pro'ya kıyasla daha hızlı çıkarım verimliliği ve daha güçlü performans sunar."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Hunyuan-turbo 2024 yılı 11 ay 20 günü sabit sürümü, hunyuan-turbo ve hunyuan-turbo-latest arasında bir versiyon."
-  },
   "hunyuan-turbo-20241223": {
     "description": "Bu sürümde yapılan optimizasyonlar: veri talimatı ölçeklendirme, modelin genel genelleme yeteneğini büyük ölçüde artırma; matematik, kodlama, mantıksal akıl yürütme yeteneklerini büyük ölçüde artırma; metin anlama ve kelime anlama ile ilgili yetenekleri optimize etme; metin oluşturma içerik üretim kalitesini optimize etme."
   },
@@ -1108,6 +1165,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "Hunyuan'ın yeni nesil görsel dil amiral modeli, tamamen yeni bir karışık uzman modeli (MoE) yapısını benimser; metin ve görüntü anlama ile ilgili temel tanıma, içerik oluşturma, bilgi sorgulama, analiz ve akıl yürütme gibi yeteneklerde bir önceki nesil modele göre kapsamlı bir iyileştirme sağlar."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 sabit versiyonu, ön eğitim tabanlı token sayısını yükseltmiştir; matematik/lojik/kod gibi düşünme yeteneklerini geliştirmiştir; Çince ve İngilizce genel deneyim kalitesini artırmıştır, metin oluşturma, metin anlama, bilgi sorgulama, sohbet gibi alanlarda."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Matematik çözümleme adımlarının stilini birleştirerek, matematik çok aşamalı soru-cevap süreçlerini güçlendirir. Metin oluşturma, yanıt stilini optimize eder, AI hissini ortadan kaldırır ve edebi bir dokunuş ekler."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS, daha güçlü düşünme yeteneği ve daha iyi deneyim sunan en son sürümüdür."
   },
   "hunyuan-vision": {
     "description": "Hunyuan'ın en son çok modlu modeli, resim + metin girişi ile metin içeriği oluşturmayı destekler."

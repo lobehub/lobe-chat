@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Clear previous model check result."]
+    },
+    "date": "2025-03-22",
+    "version": "1.74.3"
+  },
+  {
+    "children": {
+      "fixes": ["CheckModel change clears other configs, update input and output prices."]
+    },
+    "date": "2025-03-22",
+    "version": "1.74.2"
+  },
+  {
+    "children": {
       "improvements": ["Fix deepseek-r1-70b-online search tag missing from Search1API."]
     },
     "date": "2025-03-22",

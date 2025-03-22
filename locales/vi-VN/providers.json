@@ -23,6 +23,9 @@
   "cloudflare": {
     "description": "Chạy các mô hình học máy được hỗ trợ bởi GPU không máy chủ trên mạng lưới toàn cầu của Cloudflare."
   },
+  "cohere": {
+    "description": "Cohere mang đến cho bạn các mô hình đa ngôn ngữ tiên tiến nhất, tính năng tìm kiếm hiện đại và không gian làm việc AI được thiết kế riêng cho các doanh nghiệp hiện đại - tất cả đều được tích hợp trong một nền tảng an toàn."
+  },
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
   },
@@ -100,6 +103,9 @@
   },
   "sambanova": {
     "description": "SambaNova Cloud cho phép các nhà phát triển dễ dàng sử dụng các mô hình mã nguồn mở tốt nhất và tận hưởng tốc độ suy diễn nhanh nhất."
+  },
+  "search1api": {
+    "description": "Search1API cung cấp quyền truy cập vào các mô hình DeepSeek có thể tự kết nối theo nhu cầu, bao gồm phiên bản tiêu chuẩn và phiên bản nhanh, hỗ trợ lựa chọn mô hình với nhiều quy mô tham số khác nhau."
   },
   "sensenova": {
     "description": "SenseTime luôn đổi mới, dựa vào nền tảng mạnh mẽ của SenseTime để cung cấp dịch vụ mô hình lớn toàn diện, hiệu quả và dễ sử dụng."
