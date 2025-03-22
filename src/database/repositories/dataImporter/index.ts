@@ -12,7 +12,7 @@ import {
   topics,
 } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
-import { ImportResult } from '@/services/config';
+import { ImportResult } from '@/services/import/_deprecated';
 import { ImporterEntryData } from '@/types/importer';
 import { sanitizeUTF8 } from '@/utils/sanitizeUTF8';
 

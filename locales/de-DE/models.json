@@ -674,6 +674,12 @@
   "deepseek-r1-distill-llama-8b": {
     "description": "Das DeepSeek-R1-Distill Modell wurde durch Wissensdistillationstechniken entwickelt, indem Proben, die von DeepSeek-R1 generiert wurden, auf Qwen, Llama und andere Open-Source-Modelle feinabgestimmt wurden."
   },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "Erstmals veröffentlicht am 14. Februar 2025, destilliert vom Qianfan-Modellentwicklungsteam auf Basis des Llama3_70B-Modells (gebaut mit Meta Llama), wobei auch die Korpora von Qianfan in die Destillationsdaten integriert wurden."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "Erstmals veröffentlicht am 14. Februar 2025, destilliert vom Qianfan-Modellentwicklungsteam auf Basis des Llama3_8B-Modells (gebaut mit Meta Llama), wobei auch die Korpora von Qianfan in die Destillationsdaten integriert wurden."
+  },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "Das DeepSeek-R1-Distill Modell wurde durch Wissensdistillationstechniken entwickelt, indem Proben, die von DeepSeek-R1 generiert wurden, auf Qwen, Llama und andere Open-Source-Modelle feinabgestimmt wurden."
   },
@@ -763,6 +769,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "Das von Baidu entwickelte Flaggschiff-Modell für große Sprachmodelle zeigt hervorragende Gesamtergebnisse und ist weit verbreitet in komplexen Aufgabenbereichen anwendbar; es unterstützt die automatische Anbindung an das Baidu-Suchplugin, um die Aktualität der Antwortinformationen zu gewährleisten. Im Vergleich zu ERNIE 4.0 bietet es eine bessere Leistung."
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "Das ERNIE 4.5-Modell ist ein neuartiges, von Baidu entwickeltes, natives multimodales Grundmodell der nächsten Generation, das durch die gemeinsame Modellierung mehrerer Modalitäten eine synergistische Optimierung erreicht und über hervorragende multimodale Verständnisfähigkeiten verfügt; es bietet verbesserte Sprachfähigkeiten mit umfassenden Fortschritten in Verständnis, Generierung, Logik und Gedächtnis, sowie signifikante Verbesserungen in der Vermeidung von Halluzinationen, logischen Schlussfolgerungen und Programmierfähigkeiten."
   },
   "ernie-char-8k": {
     "description": "Das von Baidu entwickelte große Sprachmodell für vertikale Szenarien eignet sich für Anwendungen wie NPCs in Spielen, Kundenservice-Dialoge und Rollenspiele, mit einem klareren und konsistenteren Charakterstil, einer stärkeren Befolgung von Anweisungen und besserer Inferenzleistung."
@@ -1097,9 +1106,6 @@
   "hunyuan-turbo": {
     "description": "Die Vorschauversion des neuen großen Sprachmodells von Hunyuan verwendet eine neuartige hybride Expertenmodellstruktur (MoE) und bietet im Vergleich zu Hunyuan-Pro eine schnellere Inferenz und bessere Leistung."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Hunyuan-turbo Version vom 20. November 2024, eine feste Version, die zwischen hunyuan-turbo und hunyuan-turbo-latest liegt."
-  },
   "hunyuan-turbo-20241223": {
     "description": "Diese Version optimiert: Datenanweisungs-Skalierung, erhebliche Verbesserung der allgemeinen Generalisierungsfähigkeit des Modells; erhebliche Verbesserung der mathematischen, programmierbaren und logischen Denkfähigkeiten; Optimierung der Fähigkeiten im Textverständnis und der Wortverständnisfähigkeiten; Optimierung der Qualität der Inhaltserzeugung in der Texterstellung."
   },
@@ -1108,6 +1114,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "Das neue Flaggschiff-Modell der visuellen Sprache von Hunyuan, das eine brandneue Struktur des gemischten Expertenmodells (MoE) verwendet, bietet umfassende Verbesserungen in den Fähigkeiten zur grundlegenden Erkennung, Inhaltserstellung, Wissensfragen und Analyse sowie Schlussfolgerungen im Vergleich zum vorherigen Modell."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "Hunyuan-TurboS pv2.1.2, eine feste Version mit aktualisierten Trainings-Tokens; verbesserte Denkfähigkeiten in Mathematik, Logik und Programmierung; verbesserte Benutzererfahrung in Chinesisch und Englisch, einschließlich Texterstellung, Textverständnis, Wissensfragen und Smalltalk."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Ein einheitlicher Stil für mathematische Problemlösungen, der die mehrstufige Beantwortung von Mathematikfragen verstärkt. Optimierung des Antwortstils bei der Texterstellung, um den AI-Geschmack zu reduzieren und die sprachliche Eleganz zu erhöhen."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "Die neueste Version des Hunyuan-TurboS, des Flaggschiffs des Hunyuan-Modells, bietet verbesserte Denkfähigkeiten und ein optimiertes Nutzungserlebnis."
   },
   "hunyuan-vision": {
     "description": "Das neueste multimodale Modell von Hunyuan unterstützt die Eingabe von Bildern und Text zur Generierung von Textinhalten."

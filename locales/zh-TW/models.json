@@ -672,6 +672,12 @@
   "deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
   },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "2025年2月14日首次發布，由千帆大模型研發團隊以 Llama3_70B為base模型（Built with Meta Llama）蒸餾所得，蒸餾數據中也同步添加了千帆的語料。"
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "2025年2月14日首次發布，由千帆大模型研發團隊以 Llama3_8B為base模型（Built with Meta Llama）蒸餾所得，蒸餾數據中也同步添加了千帆的語料。"
+  },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "DeepSeek-R1-Distill 系列模型透過知識蒸餾技術，將 DeepSeek-R1 生成的樣本對 Qwen、Llama 等開源模型進行微調後得到。"
   },
@@ -761,6 +767,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "文心大模型4.5是百度自主研發的新一代原生多模態基礎大模型，通過多個模態聯合建模實現協同優化，多模態理解能力優秀；具備更精進的語言能力，理解、生成、邏輯、記憶能力全面提升，去幻覺、邏輯推理、程式碼能力顯著提升。"
   },
   "ernie-char-8k": {
     "description": "百度自研的垂直場景大語言模型，適合遊戲NPC、客服對話、對話角色扮演等應用場景，人設風格更為鮮明、一致，指令遵循能力更強，推理性能更優。"
@@ -1095,9 +1104,6 @@
   "hunyuan-turbo": {
     "description": "混元全新一代大語言模型的預覽版，採用全新的混合專家模型（MoE）結構，相較於 hunyuan-pro 推理效率更快，效果表現更強。"
   },
-  "hunyuan-turbo-20241120": {
-    "description": "hunyuan-turbo 2024 年 11 月 20 日固定版本，介於 hunyuan-turbo 和 hunyuan-turbo-latest 之間的一個版本。"
-  },
   "hunyuan-turbo-20241223": {
     "description": "本版本優化：數據指令scaling，大幅提升模型通用泛化能力；大幅提升數學、程式碼、邏輯推理能力；優化文本理解字詞理解相關能力；優化文本創作內容生成質量"
   },
@@ -1106,6 +1112,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "混元新一代視覺語言旗艦大模型，採用全新的混合專家模型（MoE）結構，在圖文理解相關的基礎識別、內容創作、知識問答、分析推理等能力上相比前一代模型全面提升。"
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 固定版本預訓練底座訓練token數升級；數學/邏輯/程式碼等思考能力提升；中英文通用體驗效果提升，包括文本創作、文本理解、知識問答、閒聊等。"
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "統一數學解題步驟的風格，加強數學多輪問答。文本創作優化回答風格，去除AI味，增加文采。"
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS 混元旗艦大模型最新版本，具備更強的思考能力，更優的體驗效果。"
   },
   "hunyuan-vision": {
     "description": "混元最新多模態模型，支持圖片 + 文本輸入生成文本內容。"

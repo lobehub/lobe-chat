@@ -674,6 +674,12 @@
   "deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
   },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "14 Şubat 2025'te ilk kez yayımlandı, Qianfan büyük model geliştirme ekibi tarafından Llama3_70B temel modeli (Meta Llama ile inşa edilmiştir) kullanılarak damıtılmıştır, damıtma verilerine Qianfan'ın verileri de eklenmiştir."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "14 Şubat 2025'te ilk kez yayımlandı, Qianfan büyük model geliştirme ekibi tarafından Llama3_8B temel modeli (Meta Llama ile inşa edilmiştir) kullanılarak damıtılmıştır, damıtma verilerine Qianfan'ın verileri de eklenmiştir."
+  },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "DeepSeek-R1-Distill serisi modeller, bilgi damıtma teknolojisi ile DeepSeek-R1 tarafından üretilen örneklerin Qwen, Llama gibi açık kaynak modeller üzerinde ince ayar yapılmasıyla elde edilmiştir."
   },
@@ -763,6 +769,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "Baidu tarafından geliştirilen amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyon desteği sunarak soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a göre performans açısından daha üstündür."
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "Wenxin büyük modeli 4.5, Baidu tarafından geliştirilen yeni nesil yerel çok modlu temel modeldir. Birden fazla modun birleşik modellemesi ile işbirliği optimizasyonu sağlar ve çok modlu anlama yeteneği mükemmeldir; dil yetenekleri daha da geliştirilmiş, anlama, üretme, mantık ve hafıza yetenekleri kapsamlı bir şekilde artırılmıştır, yanılsama, mantıksal akıl yürütme ve kodlama yetenekleri belirgin şekilde iyileştirilmiştir."
   },
   "ernie-char-8k": {
     "description": "Baidu tarafından geliştirilen dikey senaryo büyük dil modeli, oyun NPC'leri, müşteri hizmetleri diyalogları, diyalog karakter rolü gibi uygulama senaryolarına uygundur, karakter tarzı daha belirgin ve tutarlıdır, talimat takibi yeteneği daha güçlü, çıkarım performansı daha iyidir."
@@ -1097,9 +1106,6 @@
   "hunyuan-turbo": {
     "description": "Hunyuan'ın yeni nesil büyük dil modelinin önizleme sürümü, tamamen yeni bir karma uzman modeli (MoE) yapısı kullanır ve hunyuan-pro'ya kıyasla daha hızlı çıkarım verimliliği ve daha güçlü performans sunar."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Hunyuan-turbo 2024 yılı 11 ay 20 günü sabit sürümü, hunyuan-turbo ve hunyuan-turbo-latest arasında bir versiyon."
-  },
   "hunyuan-turbo-20241223": {
     "description": "Bu sürümde yapılan optimizasyonlar: veri talimatı ölçeklendirme, modelin genel genelleme yeteneğini büyük ölçüde artırma; matematik, kodlama, mantıksal akıl yürütme yeteneklerini büyük ölçüde artırma; metin anlama ve kelime anlama ile ilgili yetenekleri optimize etme; metin oluşturma içerik üretim kalitesini optimize etme."
   },
@@ -1108,6 +1114,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "Hunyuan'ın yeni nesil görsel dil amiral modeli, tamamen yeni bir karışık uzman modeli (MoE) yapısını benimser; metin ve görüntü anlama ile ilgili temel tanıma, içerik oluşturma, bilgi sorgulama, analiz ve akıl yürütme gibi yeteneklerde bir önceki nesil modele göre kapsamlı bir iyileştirme sağlar."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 sabit sürümü, önceden eğitilmiş temel modelin token sayısını artırır; matematik/lojik/kod gibi düşünme yeteneklerini geliştirir; Çince ve İngilizce genel deneyim iyileştirmeleri sunar, metin oluşturma, metin anlama, bilgi sorgulama, sohbet gibi alanlarda."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Matematik problem çözme adımlarının stilini birleştirerek, çok aşamalı matematik sorularını güçlendirir. Metin oluşturma yanıt stilini optimize eder, yapay zeka hissini azaltır ve edebi bir dokunuş ekler."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS, en son sürümüyle daha güçlü düşünme yeteneği ve daha iyi bir deneyim sunan bir amiral gemisi modelidir."
   },
   "hunyuan-vision": {
     "description": "Hunyuan'ın en son çok modlu modeli, resim + metin girişi ile metin içeriği oluşturmayı destekler."

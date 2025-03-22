@@ -39,9 +39,12 @@
       "title": "Inizializzazione del database PGlite"
     },
     "error": {
-      "desc": "Ci scusiamo, si è verificato un errore durante il processo di inizializzazione del database Pglite. Clicca sul pulsante per riprovare. Se l'errore persiste dopo vari tentativi, per favore <1>invia un problema</1> e noi ci occuperemo di risolverlo il prima possibile",
+      "desc": "Ci scusiamo, si è verificato un errore durante l'inizializzazione del database Pglite. Si prega di fare clic sul pulsante a destra per riprovare. Se hai esperienza nella gestione SQL, puoi provare a fare clic sul pulsante di auto-risoluzione qui sotto. Se dopo vari tentativi l'errore persiste, fai clic sul pulsante di segnalazione problemi in basso a sinistra e ti aiuteremo a risolverlo il prima possibile.",
       "detail": "Motivo dell'errore: [{{type}}] {{message}}. Dettagli come segue:",
+      "detailTitle": "Motivo dell'errore",
+      "report": "Segnala un problema",
       "retry": "Riprova",
+      "selfSolve": "Auto-risoluzione",
       "title": "Inizializzazione del database fallita"
     },
     "initing": {
@@ -80,6 +83,50 @@
       "button": "Usa ora",
       "desc": "Inizia subito",
       "title": "Database PGlite pronto"
+    },
+    "solve": {
+      "backup": {
+        "backup": "Backup",
+        "backupSuccess": "Backup riuscito",
+        "desc": "Esporta i dati chiave dal database attuale",
+        "export": "Esporta tutti i dati",
+        "exportDesc": "I dati esportati verranno salvati in formato JSON e possono essere utilizzati per il ripristino o l'analisi successiva.",
+        "reset": {
+          "alert": "Attenzione",
+          "alertDesc": "Le seguenti operazioni potrebbero causare la perdita di dati. Assicurati di aver eseguito il backup dei dati importanti prima di continuare.",
+          "button": "Ripristina completamente il database (elimina tutti i dati)",
+          "desc": "Ripristina il database in caso di migrazione non recuperabile",
+          "title": "Ripristino del database"
+        },
+        "restore": "Ripristina",
+        "restoreSuccess": "Ripristino riuscito",
+        "title": "Backup dei dati"
+      },
+      "diagnosis": {
+        "createdAt": "Data di creazione",
+        "migratedAt": "Data di completamento della migrazione",
+        "sql": "SQL di migrazione",
+        "title": "Stato della migrazione"
+      },
+      "repair": {
+        "desc": "Gestisci manualmente lo stato della migrazione",
+        "runSQL": "Esecuzione personalizzata",
+        "sql": {
+          "clear": "Pulisci",
+          "desc": "Esegui istruzioni SQL personalizzate per risolvere i problemi del database",
+          "markFinished": "Contrassegna come completato",
+          "placeholder": "Inserisci istruzioni SQL...",
+          "result": "Risultato dell'esecuzione",
+          "run": "Esegui",
+          "title": "Esecutore SQL"
+        },
+        "title": "Controllo della migrazione"
+      },
+      "tabs": {
+        "backup": "Backup e ripristino",
+        "diagnosis": "Diagnosi",
+        "repair": "Riparazione"
+      }
     }
   },
   "close": "Chiudi",

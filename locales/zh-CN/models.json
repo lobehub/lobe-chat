@@ -669,22 +669,28 @@
     "description": "DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能比肩 OpenAI o1 正式版。"
   },
   "deepseek-r1-distill-llama-70b": {
-    "description": "DeepSeek-R1-Distill-Llama-70B 是一个基于 Llama-3.3-70B-Instruct 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
+    "description": "DeepSeek-R1-Distill-Llama-70B是DeepSeek-R1基于Llama3.3-70B-Instruct的蒸馏模型。"
   },
   "deepseek-r1-distill-llama-8b": {
-    "description": "DeepSeek-R1-Distill-Llama-8B 是一个基于 Llama-3.1-8B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
+    "description": "DeepSeek-R1-Distill-Llama-8B是DeepSeek-R1基于Llama3.1-8B-Base的蒸馏模型。"
+  },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "2025年2月14日首次发布，由千帆大模型研发团队以 Llama3_70B为base模型（Built with Meta Llama）蒸馏所得，蒸馏数据中也同步添加了千帆的语料。"
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "2025年2月14日首次发布，由千帆大模型研发团队以 Llama3_8B为base模型（Built with Meta Llama）蒸馏所得，蒸馏数据中也同步添加了千帆的语料。"
   },
   "deepseek-r1-distill-qwen-1.5b": {
-    "description": "DeepSeek-R1-Distill-Qwen-1.5B 是一个基于 Qwen2.5-Math-1.5B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
+    "description": "DeepSeek-R1-Distill-Qwen-1.5B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。"
   },
   "deepseek-r1-distill-qwen-14b": {
-    "description": "DeepSeek-R1-Distill-Qwen-14B 是一个基于 Qwen2.5-14B 的蒸馏大型语言模型，使用了 DeepSeek R1 的输出。"
+    "description": "DeepSeek-R1-Distill-Qwen-14B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。"
   },
   "deepseek-r1-distill-qwen-32b": {
-    "description": "DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。"
+    "description": "DeepSeek-R1-Distill-Qwen-32B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。"
   },
   "deepseek-r1-distill-qwen-7b": {
-    "description": "DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。"
+    "description": "DeepSeek-R1-Distill-Qwen-7B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。"
   },
   "deepseek-reasoner": {
     "description": "DeepSeek 推出的推理模型。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。"
@@ -763,6 +769,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀"
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "文心大模型4.5是百度自主研发的新一代原生多模态基础大模型，通过多个模态联合建模实现协同优化，多模态理解能力优秀；具备更精进的语言能力，理解、生成、逻辑、记忆能力全面提升，去幻觉、逻辑推理、代码能力显著提升。"
   },
   "ernie-char-8k": {
     "description": "百度自研的垂直场景大语言模型，适合游戏NPC、客服对话、对话角色扮演等应用场景，人设风格更为鲜明、一致，指令遵循能力更强，推理性能更优。"
@@ -1095,10 +1104,7 @@
     "description": "混元翻译模型支持自然语言对话式翻译；支持中文和英语、日语、法语、葡萄牙语、西班牙语、土耳其语、俄语、阿拉伯语、韩语、意大利语、德语、越南语、马来语、印尼语15种语言互译。"
   },
   "hunyuan-turbo": {
-    "description": "本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量"
-  },
-  "hunyuan-turbo-20241120": {
-    "description": "hunyuan-turbo 2024 年 11 月 20 日固定版本，介于 hunyuan-turbo 和 hunyuan-turbo-latest 之间的一个版本。"
+    "description": "混元全新一代大语言模型的预览版，采用全新的混合专家模型（MoE）结构，相比hunyuan-pro推理效率更快，效果表现更强。"
   },
   "hunyuan-turbo-20241223": {
     "description": "本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量"
@@ -1108,6 +1114,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "混元新一代视觉语言旗舰大模型，采用全新的混合专家模型（MoE）结构，在图文理解相关的基础识别、内容创作、知识问答、分析推理等能力上相比前一代模型全面提升。"
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 固定版本预训练底座训练token 数升级；数学/逻辑/代码等思考能力提升；中英文通用体验效果提升，包括文本创作、文本理解、知识问答、闲聊等。"
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "统一数学解题步骤的风格，加强数学多轮问答。文本创作优化回答风格，去除AI味，增加文采。"
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS 混元旗舰大模型最新版本，具备更强的思考能力，更优的体验效果。"
   },
   "hunyuan-vision": {
     "description": "混元最新多模态模型，支持图片+文本输入生成文本内容。"
@@ -1677,7 +1692,7 @@
     "description": "QwQ 是一个实验研究模型，专注于提高 AI 推理能力。"
   },
   "qwq-32b": {
-    "description": "基于 Qwen2.5-32B 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平，各指标均显著超过同样基于 Qwen2.5-32B 的 DeepSeek-R1-Distill-Qwen-32B。"
+    "description": "通义千问团队推出的高效推理模型，支持消费级硬件部署，具备强大的实时推理能力和与智能体Agent集成的潜力。"
   },
   "qwq-32b-preview": {
     "description": "QwQ模型是由 Qwen 团队开发的实验性研究模型，专注于增强 AI 推理能力。"

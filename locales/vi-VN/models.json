@@ -674,6 +674,12 @@
   "deepseek-r1-distill-llama-8b": {
     "description": "Mô hình DeepSeek-R1-Distill được tinh chỉnh từ các mẫu do DeepSeek-R1 tạo ra cho các mô hình mã nguồn mở như Qwen, Llama thông qua công nghệ chưng cất kiến thức."
   },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "Được phát hành lần đầu vào ngày 14 tháng 2 năm 2025, được nhóm phát triển mô hình lớn 千帆 (Qianfan) chưng cất từ mô hình cơ sở Llama3_70B (Xây dựng với Meta Llama), dữ liệu chưng cất cũng đồng thời bổ sung tài liệu của 千帆."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "Được phát hành lần đầu vào ngày 14 tháng 2 năm 2025, được nhóm phát triển mô hình lớn 千帆 (Qianfan) chưng cất từ mô hình cơ sở Llama3_8B (Xây dựng với Meta Llama), dữ liệu chưng cất cũng đồng thời bổ sung tài liệu của 千帆."
+  },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "Mô hình DeepSeek-R1-Distill được tinh chỉnh từ các mẫu do DeepSeek-R1 tạo ra cho các mô hình mã nguồn mở như Qwen, Llama thông qua công nghệ chưng cất kiến thức."
   },
@@ -763,6 +769,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "Mô hình ngôn ngữ lớn siêu quy mô tự phát triển của Baidu, có hiệu suất tổng thể xuất sắc, phù hợp rộng rãi với các tình huống nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm của Baidu, đảm bảo thông tin hỏi đáp kịp thời. So với ERNIE 4.0, hiệu suất tốt hơn."
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "Mô hình lớn văn tâm 4.5 là thế hệ mô hình đa phương tiện gốc mới do Baidu tự phát triển, thông qua mô hình hóa kết hợp nhiều phương thức để đạt được tối ưu hóa phối hợp, khả năng hiểu biết đa phương tiện xuất sắc; sở hữu khả năng ngôn ngữ tinh vi hơn, khả năng hiểu, tạo ra, logic và trí nhớ được nâng cao toàn diện, giảm ảo giác, suy luận logic và khả năng mã hóa được cải thiện đáng kể."
   },
   "ernie-char-8k": {
     "description": "Mô hình ngôn ngữ lớn theo ngữ cảnh tự phát triển của Baidu, phù hợp cho các ứng dụng như NPC trong trò chơi, đối thoại dịch vụ khách hàng, và vai trò trong đối thoại, có phong cách nhân vật rõ ràng và nhất quán, khả năng tuân theo lệnh mạnh mẽ, hiệu suất suy luận tốt hơn."
@@ -1097,9 +1106,6 @@
   "hunyuan-turbo": {
     "description": "Phiên bản xem trước của thế hệ mới mô hình ngôn ngữ lớn Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, so với hunyuan-pro, hiệu suất suy diễn nhanh hơn và hiệu quả mạnh mẽ hơn."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Phiên bản cố định hunyuan-turbo ngày 20 tháng 11 năm 2024, là một phiên bản nằm giữa hunyuan-turbo và hunyuan-turbo-latest."
-  },
   "hunyuan-turbo-20241223": {
     "description": "Phiên bản này tối ưu hóa: quy mô chỉ thị dữ liệu, nâng cao đáng kể khả năng tổng quát của mô hình; nâng cao đáng kể khả năng toán học, lập trình, và suy luận logic; tối ưu hóa khả năng hiểu biết văn bản và từ ngữ; tối ưu hóa chất lượng tạo nội dung văn bản."
   },
@@ -1108,6 +1114,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "Mô hình ngôn ngữ hình ảnh thế hệ mới của Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, nâng cao toàn diện khả năng nhận diện cơ bản, sáng tạo nội dung, hỏi đáp kiến thức, và phân tích suy luận so với mô hình thế hệ trước."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "Phiên bản cố định hunyuan-TurboS pv2.1.2 nâng cấp token trong đào tạo nền tảng; nâng cao khả năng tư duy về toán học/logic/mã; cải thiện trải nghiệm chung cho cả tiếng Trung và tiếng Anh, bao gồm sáng tác văn bản, hiểu văn bản, hỏi đáp kiến thức, trò chuyện, v.v."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Thống nhất phong cách giải quyết bài toán toán học, tăng cường khả năng hỏi đáp nhiều vòng về toán học. Tối ưu hóa phong cách trả lời trong sáng tác văn bản, loại bỏ cảm giác AI, tăng cường tính văn chương."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "Phiên bản mới nhất của hunyuan-TurboS, mô hình flagship hỗn hợp, sở hữu khả năng tư duy mạnh mẽ hơn và trải nghiệm tốt hơn."
   },
   "hunyuan-vision": {
     "description": "Mô hình đa phương thức mới nhất của Hunyuan, hỗ trợ đầu vào hình ảnh + văn bản để tạo ra nội dung văn bản."

@@ -27,3 +27,16 @@ export interface ClientDBLoadingProgress {
 }
 
 export type OnStageChange = (state: DatabaseLoadingState) => void;
+
+export interface MigrationSQL {
+  bps: boolean;
+  folderMillis: number;
+  hash: string;
+  sql: string[];
+}
+
+export interface MigrationTableItem {
+  created_at: number;
+  hash: string;
+  id: number;
+}

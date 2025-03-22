@@ -674,6 +674,12 @@
   "deepseek-r1-distill-llama-8b": {
     "description": "Het DeepSeek-R1-Distill model is verkregen door middel van kennisdistillatie-technologie, waarbij samples gegenereerd door DeepSeek-R1 zijn afgestemd op open-source modellen zoals Qwen en Llama."
   },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "Eerste publicatie op 14 februari 2025, gedistilleerd door het Qianfan grote model ontwikkelteam met Llama3_70B als basis (gebouwd met Meta Llama), waarbij ook Qianfan's corpora zijn toegevoegd aan de gedistilleerde data."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "Eerste publicatie op 14 februari 2025, gedistilleerd door het Qianfan grote model ontwikkelteam met Llama3_8B als basis (gebouwd met Meta Llama), waarbij ook Qianfan's corpora zijn toegevoegd aan de gedistilleerde data."
+  },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "Het DeepSeek-R1-Distill model is verkregen door middel van kennisdistillatie-technologie, waarbij samples gegenereerd door DeepSeek-R1 zijn afgestemd op open-source modellen zoals Qwen en Llama."
   },
@@ -763,6 +769,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "Het vlaggenschip ultra-grote taalmodel van Baidu, zelf ontwikkeld, presteert uitstekend in algehele effectiviteit en is breed toepasbaar in complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met Baidu zoekplug-ins om de actualiteit van vraag- en antwoordinformatie te waarborgen. Het presteert beter dan ERNIE 4.0."
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "Het Wenxin grote model 4.5 is een nieuwe generatie native multimodale basismodel, ontwikkeld door Baidu. Het bereikt coöperatieve optimalisatie door gezamenlijke modellering van meerdere modaliteiten, met uitstekende multimodale begripcapaciteiten; het heeft verbeterde taalvaardigheden, met een algehele verbetering van begrip, generatie, logica en geheugen, en significante verbeteringen in hallucinatie, logische redenering en codeercapaciteiten."
   },
   "ernie-char-8k": {
     "description": "Een door Baidu ontwikkeld groot taalmodel voor verticale scenario's, geschikt voor toepassingen zoals game NPC's, klantenservice dialoog, en rollenspellen, met een duidelijkere en consistentere karakterstijl, sterkere instructievolgcapaciteiten en betere inferentieprestaties."
@@ -1097,9 +1106,6 @@
   "hunyuan-turbo": {
     "description": "Een previewversie van het nieuwe generatie grote taalmodel van Hunyuan, met een nieuwe hybride expertmodel (MoE) structuur, die sneller inferentie-efficiëntie biedt en betere prestaties levert dan hunyan-pro."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Hunyuan-turbo versie van 20 november 2024, een vaste versie die zich tussen hunyuan-turbo en hunyuan-turbo-latest bevindt."
-  },
   "hunyuan-turbo-20241223": {
     "description": "Deze versie optimaliseert: gegevensinstructiescaling, wat de algemene generalisatiecapaciteit van het model aanzienlijk verbetert; aanzienlijke verbetering van wiskunde-, code- en logische redeneervaardigheden; optimalisatie van tekstbegrip en woordbegrip gerelateerde capaciteiten; optimalisatie van de kwaliteit van tekstcreatie en inhoudsgeneratie."
   },
@@ -1108,6 +1114,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "De nieuwe generatie visuele taal vlaggenschipmodel van Hunyuan, met een geheel nieuwe hybride expertmodel (MoE) structuur, biedt aanzienlijke verbeteringen in basisherkenning, inhoudcreatie, kennisvragen, en analytische redeneervaardigheden in vergelijking met de vorige generatie modellen."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 is een vaste versie met verbeterde training van de token basis; verbeterde denkcapaciteiten voor wiskunde/logica/code; verbeterde gebruikerservaring in zowel het Chinees als het Nederlands, inclusief tekstcreatie, tekstbegrip, kennisvragen en casual gesprekken."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Een uniforme stijl voor het oplossen van wiskundige problemen, met versterking van meerdaagse wiskundige vraag-en-antwoord sessies. Optimalisatie van de schrijfstijl voor tekstcreatie, met verwijdering van de AI-smaak en toevoeging van literair flair."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS is de nieuwste versie van het Hunyuan vlaggenschipmodel, met verbeterde denkcapaciteiten en een betere gebruikerservaring."
   },
   "hunyuan-vision": {
     "description": "Het nieuwste multimodale model van Hunyuan, ondersteunt het genereren van tekstinhoud op basis van afbeelding + tekstinvoer."

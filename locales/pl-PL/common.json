@@ -39,9 +39,12 @@
       "title": "Inicjalizacja bazy danych PGlite"
     },
     "error": {
-      "desc": "Przykro nam, wystąpił błąd podczas inicjalizacji bazy danych Pglite. Proszę kliknąć przycisk, aby spróbować ponownie. Jeśli błąd powtarza się po wielokrotnych próbach, proszę <1>zgłosić problem</1>, a my jak najszybciej pomożemy w rozwiązaniu.",
+      "desc": "Przepraszamy, wystąpił błąd podczas inicjalizacji bazy danych Pglite. Proszę kliknąć przycisk po prawej stronie, aby spróbować ponownie. Jeśli masz doświadczenie w administracji SQL, możesz spróbować kliknąć przycisk samodzielnego rozwiązania poniżej. Jeśli po wielokrotnych próbach nadal występuje ten sam błąd, kliknij przycisk zgłaszania problemu w lewym dolnym rogu, a my jak najszybciej pomożemy w rozwiązaniu.",
       "detail": "Powód błędu: [{{type}}] {{message}}. Szczegóły poniżej:",
+      "detailTitle": "Przyczyna błędu",
+      "report": "Zgłoś problem",
       "retry": "Spróbuj ponownie",
+      "selfSolve": "Samodzielne rozwiązanie",
       "title": "Błąd inicjalizacji bazy danych"
     },
     "initing": {
@@ -80,6 +83,50 @@
       "button": "Użyj teraz",
       "desc": "Chcę użyć teraz",
       "title": "Baza danych PGlite jest gotowa"
+    },
+    "solve": {
+      "backup": {
+        "backup": "Kopia zapasowa",
+        "backupSuccess": "Kopia zapasowa zakończona sukcesem",
+        "desc": "Eksportuj kluczowe dane z bieżącej bazy danych",
+        "export": "Eksportuj wszystkie dane",
+        "exportDesc": "Eksportowane dane będą zapisane w formacie JSON, co umożliwi ich późniejsze przywrócenie lub analizę.",
+        "reset": {
+          "alert": "Ostrzeżenie",
+          "alertDesc": "Następujące operacje mogą prowadzić do utraty danych. Upewnij się, że wykonałeś kopię zapasową ważnych danych przed kontynuowaniem.",
+          "button": "Całkowite zresetowanie bazy danych (usunięcie wszystkich danych)",
+          "desc": "Zresetuj bazę danych w przypadku, gdy migracja nie może być przywrócona",
+          "title": "Resetowanie bazy danych"
+        },
+        "restore": "Przywróć",
+        "restoreSuccess": "Przywrócenie zakończone sukcesem",
+        "title": "Kopia zapasowa danych"
+      },
+      "diagnosis": {
+        "createdAt": "Czas utworzenia",
+        "migratedAt": "Czas zakończenia migracji",
+        "sql": "Migracja SQL",
+        "title": "Stan migracji"
+      },
+      "repair": {
+        "desc": "Ręczne zarządzanie stanem migracji",
+        "runSQL": "Wykonaj niestandardowe",
+        "sql": {
+          "clear": "Wyczyść",
+          "desc": "Wykonaj niestandardowe zapytanie SQL, aby naprawić problemy z bazą danych",
+          "markFinished": "Oznacz jako zakończone",
+          "placeholder": "Wprowadź zapytanie SQL...",
+          "result": "Wynik wykonania",
+          "run": "Wykonaj",
+          "title": "Wykonawca SQL"
+        },
+        "title": "Kontrola migracji"
+      },
+      "tabs": {
+        "backup": "Kopia zapasowa i przywracanie",
+        "diagnosis": "Diagnostyka",
+        "repair": "Naprawa"
+      }
     }
   },
   "close": "Zamknij",

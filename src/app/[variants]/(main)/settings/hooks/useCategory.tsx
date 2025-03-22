@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { Tag } from 'antd';
-import { Bot, Brain, Cloudy, Info, Mic2, Settings2, Sparkles } from 'lucide-react';
+import { Bot, Brain, Cloudy, Database, Info, Mic2, Settings2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -52,26 +52,26 @@ export const useCategory = () => {
           ),
         },
         showLLM &&
-        // TODO: Remove /llm when v2.0
-        (isDeprecatedEdition
-          ? {
-              icon: <Icon icon={Brain} />,
-              key: SettingsTabs.LLM,
-              label: (
-                <Link href={'/settings/llm'} onClick={(e) => e.preventDefault()}>
-                  {t('tab.llm')}
-                </Link>
-              ),
-            }
-          : {
-              icon: <Icon icon={Brain} />,
-              key: SettingsTabs.Provider,
-              label: (
-                <Link href={'/settings/provider'} onClick={(e) => e.preventDefault()}>
-                  {t('tab.provider')}
-                </Link>
-              ),
-            }),
+          // TODO: Remove /llm when v2.0
+          (isDeprecatedEdition
+            ? {
+                icon: <Icon icon={Brain} />,
+                key: SettingsTabs.LLM,
+                label: (
+                  <Link href={'/settings/llm'} onClick={(e) => e.preventDefault()}>
+                    {t('tab.llm')}
+                  </Link>
+                ),
+              }
+            : {
+                icon: <Icon icon={Brain} />,
+                key: SettingsTabs.Provider,
+                label: (
+                  <Link href={'/settings/provider'} onClick={(e) => e.preventDefault()}>
+                    {t('tab.provider')}
+                  </Link>
+                ),
+              }),
 
         enableSTT && {
           icon: <Icon icon={Mic2} />,
@@ -88,6 +88,15 @@ export const useCategory = () => {
           label: (
             <Link href={'/settings/agent'} onClick={(e) => e.preventDefault()}>
               {t('tab.agent')}
+            </Link>
+          ),
+        },
+        {
+          icon: <Icon icon={Database} />,
+          key: SettingsTabs.Storage,
+          label: (
+            <Link href={'/settings/storage'} onClick={(e) => e.preventDefault()}>
+              {t('tab.storage')}
             </Link>
           ),
         },

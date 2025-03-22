@@ -7,6 +7,7 @@ import { agentRouter } from './agent';
 import { aiModelRouter } from './aiModel';
 import { aiProviderRouter } from './aiProvider';
 import { chunkRouter } from './chunk';
+import { exporterRouter } from './exporter';
 import { fileRouter } from './file';
 import { importerRouter } from './importer';
 import { knowledgeBaseRouter } from './knowledgeBase';
@@ -24,6 +25,7 @@ export const lambdaRouter = router({
   aiModel: aiModelRouter,
   aiProvider: aiProviderRouter,
   chunk: chunkRouter,
+  exporter: exporterRouter,
   file: fileRouter,
   healthcheck: publicProcedure.query(() => "i'm live!"),
   importer: importerRouter,

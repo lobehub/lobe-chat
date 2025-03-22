@@ -2,7 +2,7 @@ import { Button } from 'antd';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { configService } from '@/services/config';
+import { ClientService } from '@/services/import/_deprecated';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 
@@ -31,6 +31,7 @@ const UpgradeButton = memo<UpgradeButtonProps>(
       try {
         setUpgradeStatus(UpgradeStatus.UPGRADING);
 
+        const configService = new ClientService();
         await configService.importConfigState({
           exportType: 'sessions',
           state: state,

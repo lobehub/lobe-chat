@@ -39,9 +39,12 @@
       "title": "Initialisation de la base de données PGlite"
     },
     "error": {
-      "desc": "Nous sommes désolés, une erreur est survenue lors de l'initialisation de la base de données Pglite. Veuillez cliquer sur le bouton pour réessayer. Si l'erreur persiste après plusieurs tentatives, veuillez <1>soumettre un problème</1>, nous vous aiderons à le résoudre dans les meilleurs délais.",
+      "desc": "Nous sommes désolés, une exception s'est produite lors de l'initialisation de la base de données Pglite. Veuillez cliquer sur le bouton à droite pour réessayer. Si vous avez de l'expérience en administration SQL, vous pouvez essayer de cliquer sur le bouton d'auto-résolution ci-dessous. Si l'erreur persiste après plusieurs tentatives, veuillez cliquer sur le bouton de retour en bas à gauche, nous vous aiderons à résoudre le problème dans les plus brefs délais.",
       "detail": "Raison de l'erreur : [[{{type}}] {{message}}. Détails ci-dessous :",
+      "detailTitle": "Raison de l'erreur",
+      "report": "Signaler un problème",
       "retry": "Réessayer",
+      "selfSolve": "Auto-résolution",
       "title": "Échec de l'initialisation de la base de données"
     },
     "initing": {
@@ -80,6 +83,50 @@
       "button": "Utiliser maintenant",
       "desc": "Prêt à l'emploi",
       "title": "Base de données PGlite prête"
+    },
+    "solve": {
+      "backup": {
+        "backup": "Sauvegarde",
+        "backupSuccess": "Sauvegarde réussie",
+        "desc": "Exporter les données clés de la base de données actuelle",
+        "export": "Exporter toutes les données",
+        "exportDesc": "Les données exportées seront enregistrées au format JSON, pouvant être utilisées pour une restauration ou une analyse ultérieure.",
+        "reset": {
+          "alert": "Avertissement",
+          "alertDesc": "Les opérations suivantes peuvent entraîner une perte de données. Veuillez vous assurer que vous avez sauvegardé les données importantes avant de continuer.",
+          "button": "Réinitialiser complètement la base de données (supprimer toutes les données)",
+          "desc": "Réinitialiser la base de données en cas de migration irréversible",
+          "title": "Réinitialisation de la base de données"
+        },
+        "restore": "Restaurer",
+        "restoreSuccess": "Restauration réussie",
+        "title": "Sauvegarde des données"
+      },
+      "diagnosis": {
+        "createdAt": "Date de création",
+        "migratedAt": "Date de migration terminée",
+        "sql": "SQL de migration",
+        "title": "État de la migration"
+      },
+      "repair": {
+        "desc": "Gestion manuelle de l'état de migration",
+        "runSQL": "Exécution personnalisée",
+        "sql": {
+          "clear": "Vider",
+          "desc": "Exécuter des instructions SQL personnalisées pour réparer les problèmes de la base de données",
+          "markFinished": "Marquer comme terminé",
+          "placeholder": "Entrez l'instruction SQL...",
+          "result": "Résultat de l'exécution",
+          "run": "Exécuter",
+          "title": "Exécuteur SQL"
+        },
+        "title": "Contrôle de migration"
+      },
+      "tabs": {
+        "backup": "Sauvegarde et restauration",
+        "diagnosis": "Diagnostic",
+        "repair": "Réparation"
+      }
     }
   },
   "close": "Fermer",
