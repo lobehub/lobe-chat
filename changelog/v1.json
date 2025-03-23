@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Upgrade next to 15.2.3 to fix CVE-2025-29927."]
+    },
+    "date": "2025-03-23",
+    "version": "1.74.4"
+  },
+  {
+    "children": {
       "improvements": ["Clear previous model check result."]
     },
     "date": "2025-03-22",
