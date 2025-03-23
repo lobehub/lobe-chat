@@ -162,7 +162,7 @@
     "debug": "^4.4.0",
     "dexie": "^3.2.7",
     "diff": "^7.0.0",
-    "drizzle-orm": "^0.40.0",
+    "drizzle-orm": "^0.41.0",
     "drizzle-zod": "^0.5.1",
     "epub2": "^3.0.2",
     "fast-deep-equal": "^3.1.3",
