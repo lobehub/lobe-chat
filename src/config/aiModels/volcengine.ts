@@ -21,7 +21,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     pricing: {
       currency: 'CNY',
-      input: 4, 
+      input: 4,
       output: 16,
     },
     type: 'chat',
