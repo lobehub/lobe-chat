@@ -76,6 +76,7 @@
       "custom": "Modello personalizzato: di default supporta sia la chiamata di funzioni che il riconoscimento visivo. Verifica l'effettiva disponibilità di tali funzionalità.",
       "file": "Questo modello supporta il caricamento e il riconoscimento di file.",
       "functionCall": "Questo modello supporta la chiamata di funzioni.",
+      "imageOutput": "Questo modello supporta la generazione di immagini",
       "reasoning": "Questo modello supporta un pensiero profondo",
       "search": "Questo modello supporta la ricerca online",
       "tokens": "Questo modello supporta un massimo di {{tokens}} token per sessione.",

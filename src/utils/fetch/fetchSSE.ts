@@ -12,7 +12,9 @@ import {
   ModelReasoning,
   ModelTokensUsage,
 } from '@/types/message';
+import { ChatImageChunk } from '@/types/message/image';
 import { GroundingSearch } from '@/types/search';
+import { nanoid } from '@/utils/uuid';
 
 import { fetchEventSource } from './fetchEventSource';
 import { getMessageError } from './parseError';
@@ -24,6 +26,7 @@ export type OnFinishHandler = (
   text: string,
   context: {
     grounding?: GroundingSearch;
+    images?: ChatImageChunk[];
     observationId?: string | null;
     reasoning?: ModelReasoning;
     toolCalls?: MessageToolCall[];
@@ -41,6 +44,13 @@ export interface MessageUsageChunk {
 export interface MessageTextChunk {
   text: string;
   type: 'text';
+}
+
+export interface MessageBase64ImageChunk {
+  id: string;
+  image: ChatImageChunk;
+  images: ChatImageChunk[];
+  type: 'base64_image';
 }
 
 export interface MessageReasoningChunk {
@@ -71,7 +81,8 @@ export interface FetchSSEOptions {
       | MessageToolCallsChunk
       | MessageReasoningChunk
       | MessageGroundingChunk
-      | MessageUsageChunk,
+      | MessageUsageChunk
+      | MessageBase64ImageChunk,
   ) => void;
   smoothing?: SmoothingParams | boolean;
 }
@@ -330,6 +341,8 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   let grounding: GroundingSearch | undefined = undefined;
   let usage: ModelTokensUsage | undefined = undefined;
+  let images: ChatImageChunk[] = [];
+
   await fetchEventSource(url, {
     body: options.body,
     fetch: options?.fetcher,
@@ -386,6 +399,15 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         case 'error': {
           finishedType = 'error';
           options.onErrorHandle?.(data);
+          break;
+        }
+
+        case 'base64_image': {
+          const id = 'tmp_img_' + nanoid();
+          const item = { data, id, isBase64: true };
+          images.push(item);
+
+          options.onMessageHandle?.({ id, image: item, images, type: 'base64_image' });
           break;
         }
 
@@ -492,6 +514,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
       await options?.onFinish?.(output, {
         grounding,
+        images: images.length > 0 ? images : undefined,
         observationId,
         reasoning: !!thinking ? { content: thinking, signature: thinkingSignature } : undefined,
         toolCalls,

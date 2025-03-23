@@ -61,7 +61,7 @@ const CloudBanner = memo<{ mobile?: boolean }>(({ mobile }) => {
       <b>{t('alert.cloud.title', { name: LOBE_CHAT_CLOUD })}:</b>
       <span>
         {t(mobile ? 'alert.cloud.descOnMobile' : 'alert.cloud.desc', {
-          credit: new Intl.NumberFormat('en-US').format(450_000),
+          credit: new Intl.NumberFormat('en-US').format(500_000),
           name: LOBE_CHAT_CLOUD,
         })}
       </span>

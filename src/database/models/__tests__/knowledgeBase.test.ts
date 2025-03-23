@@ -2,7 +2,8 @@
 import { and, eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
+import { sleep } from '@/utils/sleep';
 
 import {
   NewKnowledgeBase,
@@ -11,10 +12,11 @@ import {
   knowledgeBaseFiles,
   knowledgeBases,
   users,
-} from '../../../schemas';
-import { KnowledgeBaseModel } from '../knowledgeBase';
+} from '../../schemas';
+import { KnowledgeBaseModel } from '../../server/models/knowledgeBase';
+import { getTestDB } from './_util';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'session-group-model-test-user-id';
 const knowledgeBaseModel = new KnowledgeBaseModel(serverDB, userId);
@@ -92,6 +94,7 @@ describe('KnowledgeBaseModel', () => {
   describe('query', () => {
     it('should query knowledge bases for the user', async () => {
       await knowledgeBaseModel.create({ name: 'Test Group 1' });
+      await sleep(50);
       await knowledgeBaseModel.create({ name: 'Test Group 2' });
 
       const userGroups = await knowledgeBaseModel.query();
@@ -160,12 +163,14 @@ describe('KnowledgeBaseModel', () => {
           url: 'https://example.com/document.pdf',
           size: 1000,
           fileType: 'application/pdf',
+          creator: userId,
         },
         {
           hashId: 'hash2',
           url: 'https://example.com/image.jpg',
           size: 500,
           fileType: 'image/jpeg',
+          creator: userId,
         },
       ]);
 
@@ -198,12 +203,14 @@ describe('KnowledgeBaseModel', () => {
           url: 'https://example.com/document.pdf',
           size: 1000,
           fileType: 'application/pdf',
+          creator: userId,
         },
         {
           hashId: 'hash2',
           url: 'https://example.com/image.jpg',
           size: 500,
           fileType: 'image/jpeg',
+          creator: userId,
         },
       ]);
 

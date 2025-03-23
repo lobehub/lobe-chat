@@ -518,8 +518,26 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B is an open-source, commercially usable large language model developed by Baichuan Intelligence, containing 13 billion parameters, achieving the best results in its size on authoritative Chinese and English benchmarks."
   },
+  "c4ai-aya-expanse-32b": {
+    "description": "Aya Expanse is a high-performance 32B multilingual model designed to challenge the performance of single-language models through innovations in instruction tuning, data arbitrage, preference training, and model merging. It supports 23 languages."
+  },
+  "c4ai-aya-expanse-8b": {
+    "description": "Aya Expanse is a high-performance 8B multilingual model designed to challenge the performance of single-language models through innovations in instruction tuning, data arbitrage, preference training, and model merging. It supports 23 languages."
+  },
+  "c4ai-aya-vision-32b": {
+    "description": "Aya Vision is a state-of-the-art multimodal model that excels in multiple key benchmarks for language, text, and image capabilities. This 32 billion parameter version focuses on cutting-edge multilingual performance and supports 23 languages."
+  },
+  "c4ai-aya-vision-8b": {
+    "description": "Aya Vision is a state-of-the-art multimodal model that excels in multiple key benchmarks for language, text, and image capabilities. This 8 billion parameter version focuses on low latency and optimal performance."
+  },
   "charglm-3": {
     "description": "CharGLM-3 is designed for role-playing and emotional companionship, supporting ultra-long multi-turn memory and personalized dialogue, with wide applications."
+  },
+  "chatglm3": {
+    "description": "ChatGLM3 is a closed-source model released by Zhipu AI and Tsinghua KEG Lab. It has been pre-trained on a massive amount of Chinese and English identifiers and fine-tuned with human preference alignment. Compared to the first-generation model, it has achieved improvements of 16%, 36%, and 280% in MMLU, C-Eval, and GSM8K, respectively, and topped the Chinese task leaderboard C-Eval. It is suitable for scenarios that require a high level of knowledge, reasoning, and creativity, such as advertising copywriting, novel writing, knowledge-based writing, and code generation."
+  },
+  "chatglm3-6b-base": {
+    "description": "ChatGLM3-6b-base is the latest generation of the ChatGLM series, a 6 billion parameter open-source base model developed by Zhipu."
   },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o is a dynamic model that updates in real-time to stay current with the latest version. It combines powerful language understanding and generation capabilities, making it suitable for large-scale applications, including customer service, education, and technical support."
@@ -596,11 +614,38 @@
   "cohere-command-r-plus": {
     "description": "Command R+ is a state-of-the-art RAG-optimized model designed to tackle enterprise-grade workloads."
   },
+  "command": {
+    "description": "An instruction-following dialogue model that delivers high quality and reliability in language tasks, with a longer context length compared to our base generation models."
+  },
+  "command-a-03-2025": {
+    "description": "Command A is our most powerful model to date, excelling in tool usage, agent tasks, retrieval-augmented generation (RAG), and multilingual applications. Command A features a context length of 256K and can run on just two GPUs, achieving a 150% increase in throughput compared to Command R+ 08-2024."
+  },
+  "command-light": {
+    "description": "A smaller, faster version of Command that is nearly as powerful but operates at a higher speed."
+  },
+  "command-light-nightly": {
+    "description": "To shorten the time interval between major version releases, we have launched nightly versions of the Command model. For the command-light series, this version is called command-light-nightly. Please note that command-light-nightly is the latest, most experimental, and (potentially) unstable version. Nightly versions are updated regularly without prior notice, so they are not recommended for production use."
+  },
+  "command-nightly": {
+    "description": "To shorten the time interval between major version releases, we have launched nightly versions of the Command model. For the Command series, this version is called command-cightly. Please note that command-nightly is the latest, most experimental, and (potentially) unstable version. Nightly versions are updated regularly without prior notice, so they are not recommended for production use."
+  },
   "command-r": {
     "description": "Command R is an LLM optimized for dialogue and long context tasks, particularly suitable for dynamic interactions and knowledge management."
   },
+  "command-r-03-2024": {
+    "description": "Command R is an instruction-following dialogue model that provides higher quality and reliability in language tasks, with a longer context length than previous models. It can be used for complex workflows such as code generation, retrieval-augmented generation (RAG), tool usage, and agent tasks."
+  },
+  "command-r-08-2024": {
+    "description": "command-r-08-2024 is an updated version of the Command R model, released in August 2024."
+  },
   "command-r-plus": {
     "description": "Command R+ is a high-performance large language model designed for real enterprise scenarios and complex applications."
+  },
+  "command-r-plus-04-2024": {
+    "description": "Command R+ is an instruction-following dialogue model that delivers higher quality and reliability in language tasks, with a longer context length than previous models. It is best suited for complex RAG workflows and multi-step tool usage."
+  },
+  "command-r7b-12-2024": {
+    "description": "command-r7b-12-2024 is a compact and efficient updated version, released in December 2024. It excels in tasks requiring complex reasoning and multi-step processing, such as RAG, tool usage, and agent tasks."
   },
   "dall-e-2": {
     "description": "The second generation DALL·E model, supporting more realistic and accurate image generation, with a resolution four times that of the first generation."
@@ -662,11 +707,23 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1 is a reinforcement learning (RL) driven inference model that addresses issues of repetitiveness and readability within the model. Prior to RL, DeepSeek-R1 introduced cold start data to further optimize inference performance. It performs comparably to OpenAI-o1 in mathematical, coding, and reasoning tasks, and enhances overall effectiveness through meticulously designed training methods."
   },
+  "deepseek-r1-70b-fast-online": {
+    "description": "DeepSeek R1 70B fast version, supporting real-time online search, providing faster response times while maintaining model performance."
+  },
+  "deepseek-r1-70b-online": {
+    "description": "DeepSeek R1 70B standard version, supporting real-time online search, suitable for dialogue and text processing tasks that require the latest information."
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1—the larger and smarter model in the DeepSeek suite—has been distilled into the Llama 70B architecture. Based on benchmark tests and human evaluations, this model is smarter than the original Llama 70B, especially excelling in tasks requiring mathematical and factual accuracy."
   },
   "deepseek-r1-distill-llama-8b": {
     "description": "The DeepSeek-R1-Distill series models are fine-tuned versions of samples generated by DeepSeek-R1, using knowledge distillation techniques on open-source models like Qwen and Llama."
+  },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "First released on February 14, 2025, distilled by the Qianfan model development team using Llama3_70B as the base model (Built with Meta Llama), with Qianfan's corpus also added to the distilled data."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "First released on February 14, 2025, distilled by the Qianfan model development team using Llama3_8B as the base model (Built with Meta Llama), with Qianfan's corpus also added to the distilled data."
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "The DeepSeek-R1-Distill series models are fine-tuned versions of samples generated by DeepSeek-R1, using knowledge distillation techniques on open-source models like Qwen and Llama."
@@ -679,6 +736,12 @@
   },
   "deepseek-r1-distill-qwen-7b": {
     "description": "The DeepSeek-R1-Distill series models are fine-tuned versions of samples generated by DeepSeek-R1, using knowledge distillation techniques on open-source models like Qwen and Llama."
+  },
+  "deepseek-r1-fast-online": {
+    "description": "DeepSeek R1 full fast version, supporting real-time online search, combining the powerful capabilities of 671B parameters with faster response times."
+  },
+  "deepseek-r1-online": {
+    "description": "DeepSeek R1 full version, with 671B parameters, supporting real-time online search, offering enhanced understanding and generation capabilities."
   },
   "deepseek-reasoner": {
     "description": "The reasoning model launched by DeepSeek. Before outputting the final answer, the model first provides a chain of thought to enhance the accuracy of the final response."
@@ -758,6 +821,9 @@
   "ernie-4.0-turbo-8k-preview": {
     "description": "Baidu's flagship ultra-large-scale language model, demonstrating outstanding overall performance, widely applicable to complex task scenarios across various fields; it supports automatic integration with Baidu search plugins to ensure the timeliness of Q&A information. It performs better than ERNIE 4.0 in terms of performance."
   },
+  "ernie-4.5-8k-preview": {
+    "description": "ERNIE 4.5 is Baidu's self-developed next-generation native multimodal foundational model, achieving collaborative optimization through joint modeling of multiple modalities, with excellent multimodal understanding capabilities; it features enhanced language abilities, with significant improvements in understanding, generation, logic, and memory, as well as reduced hallucinations and improved logical reasoning and coding capabilities."
+  },
   "ernie-char-8k": {
     "description": "Baidu's vertical scene large language model, suitable for applications such as game NPCs, customer service dialogues, and role-playing conversations, with a more distinct and consistent character style, stronger instruction-following capabilities, and superior inference performance."
   },
@@ -832,6 +898,12 @@
   },
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash offers next-generation features and improvements, including exceptional speed, native tool usage, multimodal generation, and a 1M token context window."
+  },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash model variant optimized for cost-effectiveness and low latency."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Gemini 2.0 Flash experimental model, supports image generation"
   },
   "gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flash is a variant of the model optimized for cost-effectiveness and low latency."
@@ -1085,9 +1157,6 @@
   "hunyuan-turbo": {
     "description": "The preview version of the next-generation Hunyuan large language model, featuring a brand-new mixed expert model (MoE) structure, which offers faster inference efficiency and stronger performance compared to Hunyuan Pro."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Hunyuan-turbo fixed version as of November 20, 2024, a version that lies between hunyuan-turbo and hunyuan-turbo-latest."
-  },
   "hunyuan-turbo-20241223": {
     "description": "This version optimizes: data instruction scaling, significantly enhancing the model's generalization capabilities; greatly improving mathematical, coding, and logical reasoning abilities; optimizing text understanding and word comprehension capabilities; enhancing the quality of content generation in text creation."
   },
@@ -1096,6 +1165,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "The next-generation flagship visual language model from Hunyuan, utilizing a new mixed expert model (MoE) structure, with comprehensive improvements in basic recognition, content creation, knowledge Q&A, and analytical reasoning capabilities compared to the previous generation model."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 fixed version with upgraded training tokens; enhanced reasoning capabilities in mathematics, logic, and coding; improved performance in both Chinese and English across text creation, comprehension, knowledge Q&A, and casual conversation."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Unifies the style of mathematical problem-solving steps and enhances multi-turn Q&A in mathematics. Optimizes the response style for text creation, removing AI-like characteristics and adding literary flair."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "The latest version of hunyuan-TurboS, the flagship model of Hunyuan, features enhanced reasoning capabilities and improved user experience."
   },
   "hunyuan-vision": {
     "description": "The latest multimodal model from Hunyuan, supporting image + text input to generate textual content."
@@ -1126,6 +1204,9 @@
   },
   "lite": {
     "description": "Spark Lite is a lightweight large language model with extremely low latency and efficient processing capabilities, completely free and open, supporting real-time online search functionality. Its quick response feature makes it excel in inference applications and model fine-tuning on low-power devices, providing users with excellent cost-effectiveness and intelligent experiences, particularly in knowledge Q&A, content generation, and search scenarios."
+  },
+  "llama-2-7b-chat": {
+    "description": "Llama2 is a series of large language models (LLMs) developed and open-sourced by Meta. This series includes generative text models of varying sizes, ranging from 7 billion to 70 billion parameters, which have been pre-trained and fine-tuned. Architecturally, Llama2 is an autoregressive language model that uses an optimized transformer architecture. The fine-tuned versions leverage supervised fine-tuning (SFT) and reinforcement learning with human feedback (RLHF) to align with human preferences for usefulness and safety. Llama2 outperforms the Llama series on multiple academic datasets and provides valuable insights for the design and development of other models."
   },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B provides enhanced AI reasoning capabilities, suitable for complex applications, supporting extensive computational processing while ensuring efficiency and accuracy."
@@ -1189,6 +1270,9 @@
   },
   "max-32k": {
     "description": "Spark Max 32K is configured with large context processing capabilities, enhanced contextual understanding, and logical reasoning abilities, supporting text input of 32K tokens, suitable for long document reading, private knowledge Q&A, and other scenarios."
+  },
+  "megrez-3b-instruct": {
+    "description": "Megrez-3B-Instruct is a large language model fully trained by Wuwen Xin Qiong. Megrez-3B-Instruct aims to create an ultra-fast, compact, and easy-to-use intelligent solution for edge devices through the concept of hardware-software co-design."
   },
   "meta-llama-3-70b-instruct": {
     "description": "A powerful 70-billion parameter model excelling in reasoning, coding, and broad language applications."
@@ -1577,8 +1661,23 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "A powerful medium-sized code model supporting 32K context length, proficient in multilingual programming."
   },
+  "qwen1.5-14b-chat": {
+    "description": "The Qwen1.5 series is the Beta version of Qwen2, a Transformer-based decoder-only language model pre-trained on a vast amount of data. Compared to previously released versions of Qwen, both the base and chat models in the Qwen1.5 series support multiple languages and have seen improvements in overall chat and foundational capabilities. Qwen1.5-14b-chat is a 14 billion parameter model specifically designed for chat scenarios, representing a mainstream size in the field."
+  },
+  "qwen1.5-32b-chat": {
+    "description": "The Qwen1.5 series is the Beta version of Qwen2, a Transformer-based decoder-only language model pre-trained on a vast amount of data. Compared to previously released versions of the Qwen series, the Qwen1.5 series, including both the base and chat models, supports multiple languages and has seen improvements in overall chat and foundational capabilities. Qwen1.5-32b-chat is a 32 billion parameter model specifically designed for chat scenarios, offering stronger performance in agent scenarios compared to the 14 billion parameter model, and lower inference costs compared to the 72 billion parameter model."
+  },
+  "qwen1.5-72b-chat": {
+    "description": "The Qwen1.5 series is the Beta version of Qwen2, a decoder-only language model based on the Transformer architecture, pre-trained on a vast amount of data. Compared to previously released versions of the Qwen series, the Qwen1.5 series, including both the base and chat models, supports multiple languages and has seen improvements in overall chat and foundational capabilities. Qwen1.5-72b-chat is a 72 billion parameter model specifically designed for chat scenarios."
+  },
   "qwen2": {
     "description": "Qwen2 is Alibaba's next-generation large-scale language model, supporting diverse application needs with excellent performance."
+  },
+  "qwen2-72b-instruct": {
+    "description": "Qwen2 is the new generation of large language model series introduced by the Qwen team. It is based on the Transformer architecture and incorporates technologies such as the SwiGLU activation function, attention QKV bias, group query attention, a mixture of sliding window attention, and full attention. Additionally, the Qwen team has improved the tokenizer to better adapt to multiple natural languages and code."
+  },
+  "qwen2-7b-instruct": {
+    "description": "Qwen2 is the new generation of large language model series introduced by the Qwen team. It is based on the Transformer architecture and incorporates technologies such as the SwiGLU activation function, attention QKV bias, group query attention, a mixture of sliding window attention, and full attention. Additionally, the Qwen team has improved the tokenizer to better adapt to multiple natural languages and code."
   },
   "qwen2.5": {
     "description": "Qwen2.5 is Alibaba's next-generation large-scale language model, supporting diverse application needs with outstanding performance."
@@ -1756,6 +1855,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 is a language model provided by Microsoft AI, excelling in complex dialogues, multilingual capabilities, reasoning, and intelligent assistant applications."
+  },
+  "yi-1.5-34b-chat": {
+    "description": "Yi-1.5 is an upgraded version of Yi. It continues pre-training on Yi using a high-quality corpus of 500B tokens and is fine-tuned on 3M diverse samples."
   },
   "yi-large": {
     "description": "A new trillion-parameter model, providing super strong question-answering and text generation capabilities."

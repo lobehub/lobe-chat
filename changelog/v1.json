@@ -1,5 +1,115 @@
 [
   {
+    "children": {
+      "improvements": ["Clear previous model check result."]
+    },
+    "date": "2025-03-22",
+    "version": "1.74.3"
+  },
+  {
+    "children": {
+      "fixes": ["CheckModel change clears other configs, update input and output prices."]
+    },
+    "date": "2025-03-22",
+    "version": "1.74.2"
+  },
+  {
+    "children": {
+      "improvements": ["Fix deepseek-r1-70b-online search tag missing from Search1API."]
+    },
+    "date": "2025-03-22",
+    "version": "1.74.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Add infini-ai provider, add Search1API provider with web search DeepSeek models."
+      ]
+    },
+    "date": "2025-03-21",
+    "version": "1.74.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix agent chatConfig override issue."]
+    },
+    "date": "2025-03-21",
+    "version": "1.73.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update shiki to v3."]
+    },
+    "date": "2025-03-21",
+    "version": "1.73.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Add Cohere provider support, add search1api crawler implementation for WeChat Sogou links."
+      ]
+    },
+    "date": "2025-03-19",
+    "version": "1.73.0"
+  },
+  {
+    "children": {
+      "fixes": ["Allow historyCount to be set to 0."]
+    },
+    "date": "2025-03-19",
+    "version": "1.72.1"
+  },
+  {
+    "children": {
+      "features": ["Update db schema to add user_id for data export."]
+    },
+    "date": "2025-03-18",
+    "version": "1.72.0"
+  },
+  {
+    "children": {
+      "improvements": ["Support screenshot to clipboard when sharing."]
+    },
+    "date": "2025-03-17",
+    "version": "1.71.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update Wenxin & Hunyuan model list."]
+    },
+    "date": "2025-03-17",
+    "version": "1.71.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix claude 3.5+ models context max output."]
+    },
+    "date": "2025-03-15",
+    "version": "1.71.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix knowledge base issue."]
+    },
+    "date": "2025-03-15",
+    "version": "1.71.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix google gemini output relative issue."],
+      "improvements": ["Update Vertex AI models."]
+    },
+    "date": "2025-03-15",
+    "version": "1.71.1"
+  },
+  {
+    "children": {
+      "features": ["Support gemini image output in chat."]
+    },
+    "date": "2025-03-14",
+    "version": "1.71.0"
+  },
+  {
     "children": {},
     "date": "2025-03-13",
     "version": "1.70.11"
