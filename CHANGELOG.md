@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.74.5](https://github.com/lobehub/lobe-chat/compare/v1.74.4...v1.74.5)
+
+<sup>Released on **2025-03-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix wechat login error with next-auth.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix wechat login error with next-auth, closes [#6585](https://github.com/lobehub/lobe-chat/issues/6585) ([c58d77a](https://github.com/lobehub/lobe-chat/commit/c58d77a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.74.4](https://github.com/lobehub/lobe-chat/compare/v1.74.3...v1.74.4)
+
+<sup>Released on **2025-03-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Upgrade next to 15.2.3 to fix CVE-2025-29927.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Upgrade next to 15.2.3 to fix CVE-2025-29927, closes [#7105](https://github.com/lobehub/lobe-chat/issues/7105) ([187a655](https://github.com/lobehub/lobe-chat/commit/187a655))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.74.3](https://github.com/lobehub/lobe-chat/compare/v1.74.2...v1.74.3)
 
 <sup>Released on **2025-03-22**</sup>
