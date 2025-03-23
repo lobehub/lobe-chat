@@ -41,7 +41,10 @@
     "error": {
       "desc": "Lamentamos, ocorreu uma exceção durante o processo de inicialização do banco de dados Pglite. Por favor, clique no botão para tentar novamente. Se o erro persistir após várias tentativas, por favor <1>envie um problema</1> e nós iremos ajudá-lo a resolver o quanto antes",
       "detail": "Causa do erro: [{{type}}] {{message}}. Detalhes abaixo:",
+      "detailTitle": "Razão do erro",
+      "report": "Relatar problema",
       "retry": "Tentar Novamente",
+      "selfSolve": "Solução autônoma",
       "title": "Falha na inicialização do banco de dados"
     },
     "initing": {
@@ -80,6 +83,54 @@
       "button": "Usar agora",
       "desc": "Pronto para uso",
       "title": "Banco de dados PGlite pronto"
+    },
+    "solve": {
+      "backup": {
+        "backup": "Backup",
+        "backupSuccess": "Backup realizado com sucesso",
+        "desc": "Exportar dados críticos do banco de dados atual",
+        "export": "Exportar todos os dados",
+        "exportDesc": "Os dados exportados serão salvos em formato JSON, podendo ser utilizados para recuperação ou análise posterior.",
+        "reset": {
+          "alert": "Aviso",
+          "alertDesc": "As operações a seguir podem resultar em perda de dados. Certifique-se de ter feito backup dos dados importantes antes de continuar.",
+          "button": "Redefinir completamente o banco de dados (excluir todos os dados)",
+          "confirm": {
+            "desc": "Esta operação excluirá todos os dados e não poderá ser desfeita. Você confirma que deseja continuar?",
+            "title": "Confirmar redefinição do banco de dados"
+          },
+          "desc": "Redefinir o banco de dados em caso de migração irreversível",
+          "title": "Redefinição do banco de dados"
+        },
+        "restore": "Restaurar",
+        "restoreSuccess": "Restauração realizada com sucesso",
+        "title": "Backup de dados"
+      },
+      "diagnosis": {
+        "createdAt": "Data de criação",
+        "migratedAt": "Data de conclusão da migração",
+        "sql": "SQL de migração",
+        "title": "Status da migração"
+      },
+      "repair": {
+        "desc": "Gerenciar manualmente o status da migração",
+        "runSQL": "Executar personalizado",
+        "sql": {
+          "clear": "Limpar",
+          "desc": "Executar instruções SQL personalizadas para corrigir problemas no banco de dados",
+          "markFinished": "Marcar como concluído",
+          "placeholder": "Digite a instrução SQL...",
+          "result": "Resultado da execução",
+          "run": "Executar",
+          "title": "Executor de SQL"
+        },
+        "title": "Controle de migração"
+      },
+      "tabs": {
+        "backup": "Backup e Restauração",
+        "diagnosis": "Diagnóstico",
+        "repair": "Reparo"
+      }
     }
   },
   "close": "Fechar",

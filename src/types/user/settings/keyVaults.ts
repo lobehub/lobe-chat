@@ -52,6 +52,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   higress?: OpenAICompatibleKeyVault;
   huggingface?: OpenAICompatibleKeyVault;
   hunyuan?: OpenAICompatibleKeyVault;
+  infiniai?: OpenAICompatibleKeyVault;
   internlm?: OpenAICompatibleKeyVault;
   jina?: OpenAICompatibleKeyVault;
   lmstudio?: OpenAICompatibleKeyVault;
@@ -69,6 +70,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   ppio?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
   sambanova?: OpenAICompatibleKeyVault;
+  search1api?: OpenAICompatibleKeyVault;
   sensenova?: OpenAICompatibleKeyVault;
   siliconcloud?: OpenAICompatibleKeyVault;
   spark?: OpenAICompatibleKeyVault;
