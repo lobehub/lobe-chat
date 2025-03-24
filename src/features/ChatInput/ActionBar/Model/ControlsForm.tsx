@@ -37,6 +37,7 @@ const ControlsForm = memo(() => {
             <Link
               href={'https://www.anthropic.com/news/prompt-caching?utm_source=lobechat'}
               rel={'nofollow'}
+              target="_blank"
             >
               了解更多
             </Link>
@@ -59,6 +60,7 @@ const ControlsForm = memo(() => {
                 'https://docs.anthropic.com/en/docs/build-with-claude/extended-thinking?utm_source=lobechat#why-thinking-blocks-must-be-preserved'
               }
               rel={'nofollow'}
+              target="_blank"
             >
               了解更多
             </Link>
