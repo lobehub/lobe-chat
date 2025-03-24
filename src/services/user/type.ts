@@ -14,6 +14,7 @@ export interface IUserService {
   getUserState: () => Promise<UserInitializationState>;
   resetUserSettings: () => Promise<any>;
   unlinkSSOProvider: (provider: string, providerAccountId: string) => Promise<any>;
+  updateAvatar: (avatar: string) => Promise<any>;
   updateGuide: (guide: Partial<UserGuide>) => Promise<any>;
   updatePreference: (preference: Partial<UserPreference>) => Promise<any>;
   updateUserSettings: (value: DeepPartial<UserSettings>, signal?: AbortSignal) => Promise<any>;

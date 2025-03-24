@@ -44,10 +44,28 @@ export const createCommonSlice: StateCreator<
     await mutate(GET_USER_STATE_KEY);
   },
   updateAvatar: async (avatar) => {
-    const { userClientService } = await import('@/services/user');
+    // 1. 更新服务端/数据库中的头像
+    await userService.updateAvatar(avatar);
 
-    await userClientService.updateAvatar(avatar);
-    await get().refreshUserState();
+    // 2. 手动获取完整的最新用户状态
+    const newUserState = await userService.getUserState();
+
+    // 3. 使用完整用户状态更新缓存，确保所有相关字段都更新
+    await mutate(GET_USER_STATE_KEY, newUserState, { revalidate: false });
+
+    // 4. 强制更新 Zustand store 中的用户数据
+    if (newUserState && newUserState.avatar) {
+      set(
+        (state: UserStore) => ({
+          user: {
+            ...state.user,
+            avatar: newUserState.avatar,
+          } as UserStore['user'],
+        }),
+        false,
+        n('updateAvatarInStore'),
+      );
+    }
   },
 
   useCheckTrace: (shouldFetch) =>
@@ -100,7 +118,7 @@ export const createCommonSlice: StateCreator<
                     username: data.username,
                   } as LobeUser)
                 : get().user;
-
+            // console.log('user', user);
             set(
               {
                 defaultSettings,
