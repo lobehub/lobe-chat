@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.74.8](https://github.com/lobehub/lobe-chat/compare/v1.74.7...v1.74.8)
+
+<sup>Released on **2025-03-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update create message loading issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update create message loading issue, closes [#7116](https://github.com/lobehub/lobe-chat/issues/7116) ([a4558a4](https://github.com/lobehub/lobe-chat/commit/a4558a4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.74.7](https://github.com/lobehub/lobe-chat/compare/v1.74.6...v1.74.7)
+
+<sup>Released on **2025-03-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove Tooltip component in Topic in mobile mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove Tooltip component in Topic in mobile mode, closes [#7121](https://github.com/lobehub/lobe-chat/issues/7121) ([375f924](https://github.com/lobehub/lobe-chat/commit/375f924))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.74.6](https://github.com/lobehub/lobe-chat/compare/v1.74.5...v1.74.6)
 
 <sup>Released on **2025-03-24**</sup>
