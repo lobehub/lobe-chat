@@ -20,8 +20,8 @@ const doubaoChatModels: AIChatModelCard[] = [
     maxOutput: 8000,
     pricing: {
       currency: 'CNY',
-      input: 2, // 2.24 恢复原价 4, 16
-      output: 8,
+      input: 4,
+      output: 16,
     },
     type: 'chat',
   },
@@ -137,8 +137,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       deploymentName: 'doubao-1-5-lite-32k-250115',
     },
     contextWindowTokens: 32_768,
-    description:
-      'Doubao-1.5-lite 全新一代轻量版模型，极致响应速度，效果与时延均达到全球一流水平。',
+    description: 'Doubao-1.5-lite 全新一代轻量版模型，极致响应速度，效果与时延均达到全球一流水平。',
     displayName: 'Doubao 1.5 Lite 32k',
     enabled: true,
     id: 'doubao-1.5-lite-32k',
