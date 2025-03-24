@@ -1,3 +1,4 @@
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
@@ -10,7 +11,7 @@ const formatPrice = (price: string) => {
 };
 
 export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
-  baseURL: 'https://openrouter.ai/api/v1',
+  baseURL: process?.env?.OPENROUTER_PROXY_URL ?? 'https://openrouter.ai/api/v1',
   chatCompletion: {
     handlePayload: (payload) => {
       const { thinking } = payload;
@@ -40,8 +41,6 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_OPENROUTER_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
     const reasoningKeywords = [
       'deepseek/deepseek-r1',
       'openai/o1',
