@@ -11,7 +11,7 @@ export const ChatErrorType = {
   SubscriptionKeyMismatch: 'SubscriptionKeyMismatch', // 订阅 key 不匹配
 
   InvalidUserKey: 'InvalidUserKey', // is not valid User key
-
+  CreateMessageError: 'CreateMessageError',
   /**
    * @deprecated
    */

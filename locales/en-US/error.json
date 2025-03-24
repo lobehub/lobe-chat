@@ -69,6 +69,7 @@
     "524": "Sorry, the server timed out while waiting for a response, possibly due to a slow reply. Please try again later.",
     "AgentRuntimeError": "Lobe language model runtime execution error. Please troubleshoot or retry based on the following information.",
     "ConnectionCheckFailed": "The request returned empty. Please check if the API proxy address does not end with `/v1`.",
+    "CreateMessageError": "Sorry, the message could not be sent successfully. Please copy the content and try sending it again. This message will not be retained after refreshing the page.",
     "ExceededContextWindow": "The current request content exceeds the length that the model can handle. Please reduce the amount of content and try again.",
     "FreePlanLimit": "You are currently a free user and cannot use this feature. Please upgrade to a paid plan to continue using it.",
     "InsufficientQuota": "Sorry, the quota for this key has been reached. Please check your account balance or increase the key quota and try again.",

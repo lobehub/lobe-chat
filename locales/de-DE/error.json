@@ -69,6 +69,7 @@
     "524": "Es tut uns leid, der Server hat beim Warten auf eine Antwort die Zeit überschritten, möglicherweise aufgrund einer zu langsamen Antwort. Bitte versuchen Sie es später erneut.",
     "AgentRuntimeError": "Es ist ein Fehler bei der Ausführung des Lobe-Sprachmodells aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "ConnectionCheckFailed": "Die Anfrage brachte eine leere Antwort zurück. Bitte überprüfen Sie, ob die API-Proxy-Adresse am Ende nicht mit `/v1` endet.",
+    "CreateMessageError": "Es tut uns leid, die Nachricht konnte nicht erfolgreich gesendet werden. Bitte kopieren Sie den Inhalt und senden Sie ihn erneut. Nach dem Aktualisieren der Seite wird diese Nachricht nicht gespeichert.",
     "ExceededContextWindow": "Der aktuelle Anfrageinhalt überschreitet die von dem Modell verarbeitbare Länge. Bitte reduzieren Sie die Menge des Inhalts und versuchen Sie es erneut.",
     "FreePlanLimit": "Sie sind derzeit ein kostenloser Benutzer und können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein kostenpflichtiges Abonnement, um fortzufahren.",
     "InsufficientQuota": "Es tut uns leid, das Kontingent (Quota) für diesen Schlüssel ist erreicht. Bitte überprüfen Sie Ihr Kontoguthaben oder erhöhen Sie das Kontingent des Schlüssels und versuchen Sie es erneut.",
