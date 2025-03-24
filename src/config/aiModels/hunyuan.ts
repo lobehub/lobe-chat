@@ -21,6 +21,9 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 4,
     },
     releasedAt: '2025-03-21',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
@@ -40,6 +43,9 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 4,
     },
     releasedAt: '2025-03-21',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
