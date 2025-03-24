@@ -27,6 +27,7 @@ export enum SettingsTabs {
   About = 'about',
   Agent = 'agent',
   Common = 'common',
+  Hotkey = 'hotkey',
   LLM = 'llm',
   Provider = 'provider',
   Sync = 'sync',

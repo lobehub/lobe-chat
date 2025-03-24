@@ -61,7 +61,7 @@ const PinList = () => {
   };
 
   useHotkeys(
-    list.slice(0, 9).map((e, i) => `mod+${i + 1}`),
+    list.slice(0, 9).map((e, i) => `ctrl+${i + 1}`),
     (keyboardEvent, hotkeysEvent) => {
       if (!hotkeysEvent.keys?.[0]) return;
 
@@ -82,7 +82,7 @@ const PinList = () => {
           {list.slice(0, 9).map((item, index) => (
             <Flexbox key={item.id} style={{ position: 'relative' }}>
               <Tooltip
-                hotkey={`mod+${index + 1}`}
+                hotkey={`ctrl+${index + 1}`}
                 placement={'right'}
                 title={sessionHelpers.getTitle(item.meta)}
               >

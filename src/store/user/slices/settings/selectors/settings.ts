@@ -2,6 +2,7 @@ import { DEFAULT_AGENT_META } from '@/const/meta';
 import {
   DEFAULT_AGENT,
   DEFAULT_AGENT_CONFIG,
+  DEFAULT_HOTKEY_CONFIG,
   DEFAULT_SYSTEM_AGENT_CONFIG,
   DEFAULT_TTS_CONFIG,
 } from '@/const/settings';
@@ -25,6 +26,8 @@ export const getProviderConfigById = (provider: string) => (s: UserStore) =>
 
 const currentTTS = (s: UserStore) => merge(DEFAULT_TTS_CONFIG, currentSettings(s).tts);
 
+const currentHotkey = (s: UserStore) => merge(DEFAULT_HOTKEY_CONFIG, currentSettings(s).hotkey);
+
 const defaultAgent = (s: UserStore) => merge(DEFAULT_AGENT, currentSettings(s).defaultAgent);
 const defaultAgentConfig = (s: UserStore) => merge(DEFAULT_AGENT_CONFIG, defaultAgent(s).config);
 
@@ -39,6 +42,7 @@ const currentSystemAgent = (s: UserStore) =>
   merge(DEFAULT_SYSTEM_AGENT_CONFIG, currentSettings(s).systemAgent);
 
 export const settingsSelectors = {
+  currentHotkey,
   currentSettings,
   currentSystemAgent,
   currentTTS,

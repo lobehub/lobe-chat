@@ -42,6 +42,9 @@ export default {
     sessionWithName: '会话设置 · {{name}}',
     title: '设置',
   },
+  hotkey: {
+    title: '快捷键',
+  },
   llm: {
     aesGcm: '您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密',
     apiKey: {
@@ -427,6 +430,7 @@ export default {
     'agent': '默认助手',
     'common': '通用设置',
     'experiment': '实验',
+    'hotkey': '快捷键',
     'llm': '语言模型',
     'provider': 'AI 服务商',
     'sync': '云端同步',
