@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Update create message loading issue."]
+    },
+    "date": "2025-03-24",
+    "version": "1.74.8"
+  },
+  {
+    "children": {
       "fixes": ["Remove Tooltip component in Topic in mobile mode."]
     },
     "date": "2025-03-24",
