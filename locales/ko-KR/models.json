@@ -518,6 +518,18 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B는 백천 인공지능이 개발한 130억 개의 매개변수를 가진 오픈 소스 상용 대형 언어 모델로, 권위 있는 중국어 및 영어 벤치마크에서 동일한 크기에서 최고의 성과를 달성했습니다."
   },
+  "c4ai-aya-expanse-32b": {
+    "description": "Aya Expanse는 지시 조정, 데이터 차익 거래, 선호 훈련 및 모델 통합의 혁신을 통해 단일 언어 모델의 성능에 도전하는 고성능 32B 다국어 모델입니다. 23개 언어를 지원합니다."
+  },
+  "c4ai-aya-expanse-8b": {
+    "description": "Aya Expanse는 지시 조정, 데이터 차익 거래, 선호 훈련 및 모델 통합의 혁신을 통해 단일 언어 모델의 성능에 도전하는 고성능 8B 다국어 모델입니다. 23개 언어를 지원합니다."
+  },
+  "c4ai-aya-vision-32b": {
+    "description": "Aya Vision은 언어, 텍스트 및 이미지 능력의 여러 주요 기준에서 뛰어난 성능을 발휘하는 최첨단 다중 모달 모델입니다. 23개 언어를 지원합니다. 이 320억 매개변수 버전은 최첨단 다국어 성능에 중점을 두고 있습니다."
+  },
+  "c4ai-aya-vision-8b": {
+    "description": "Aya Vision은 언어, 텍스트 및 이미지 능력의 여러 주요 기준에서 뛰어난 성능을 발휘하는 최첨단 다중 모달 모델입니다. 이 80억 매개변수 버전은 낮은 지연 시간과 최상의 성능에 중점을 두고 있습니다."
+  },
   "charglm-3": {
     "description": "CharGLM-3는 역할 수행 및 감정 동반을 위해 설계된 모델로, 초장 다회 기억 및 개인화된 대화를 지원하여 광범위하게 사용됩니다."
   },
@@ -602,11 +614,38 @@
   "cohere-command-r-plus": {
     "description": "Command R+는 기업급 작업을 처리하기 위해 설계된 최첨단 RAG 최적화 모델입니다."
   },
+  "command": {
+    "description": "지시를 따르는 대화 모델로, 언어 작업에서 높은 품질과 신뢰성을 제공하며, 우리의 기본 생성 모델에 비해 더 긴 컨텍스트 길이를 가지고 있습니다."
+  },
+  "command-a-03-2025": {
+    "description": "Command A는 지금까지 성능이 가장 뛰어난 모델로, 도구 사용, 에이전트, 검색 강화 생성(RAG) 및 다국어 응용 시나리오에서 뛰어난 성능을 발휘합니다. Command A는 256K의 컨텍스트 길이를 가지고 있으며, 두 개의 GPU만으로 실행할 수 있으며, Command R+ 08-2024에 비해 처리량이 150% 향상되었습니다."
+  },
+  "command-light": {
+    "description": "더 작고 빠른 Command 버전으로, 거의 동일한 강력함을 가지고 있지만 더 빠릅니다."
+  },
+  "command-light-nightly": {
+    "description": "주요 버전 출시 간의 시간 간격을 단축하기 위해 Command 모델의 매일 버전을 출시했습니다. command-light 시리즈의 경우 이 버전은 command-light-nightly로 불립니다. command-light-nightly는 최신이며 가장 실험적이고(아마도) 불안정한 버전입니다. 매일 버전은 정기적으로 업데이트되며 사전 통지 없이 제공되므로 생산 환경에서 사용하지 않는 것이 좋습니다."
+  },
+  "command-nightly": {
+    "description": "주요 버전 출시 간의 시간 간격을 단축하기 위해 Command 모델의 매일 버전을 출시했습니다. Command 시리즈의 경우 이 버전은 command-cightly로 불립니다. command-nightly는 최신이며 가장 실험적이고(아마도) 불안정한 버전입니다. 매일 버전은 정기적으로 업데이트되며 사전 통지 없이 제공되므로 생산 환경에서 사용하지 않는 것이 좋습니다."
+  },
   "command-r": {
     "description": "Command R은 대화 및 긴 컨텍스트 작업에 최적화된 LLM으로, 동적 상호작용 및 지식 관리에 특히 적합합니다."
   },
+  "command-r-03-2024": {
+    "description": "Command R은 지시를 따르는 대화 모델로, 언어 작업에서 더 높은 품질과 신뢰성을 제공하며, 이전 모델에 비해 더 긴 컨텍스트 길이를 가지고 있습니다. 코드 생성, 검색 강화 생성(RAG), 도구 사용 및 에이전트와 같은 복잡한 워크플로우에 사용할 수 있습니다."
+  },
+  "command-r-08-2024": {
+    "description": "command-r-08-2024는 Command R 모델의 업데이트 버전으로, 2024년 8월에 출시되었습니다."
+  },
   "command-r-plus": {
     "description": "Command R+는 실제 기업 환경 및 복잡한 응용을 위해 설계된 고성능 대형 언어 모델입니다."
+  },
+  "command-r-plus-04-2024": {
+    "description": "Command R+는 지시를 따르는 대화 모델로, 언어 작업에서 더 높은 품질과 신뢰성을 제공하며, 이전 모델에 비해 더 긴 컨텍스트 길이를 가지고 있습니다. 복잡한 RAG 워크플로우와 다단계 도구 사용에 가장 적합합니다."
+  },
+  "command-r7b-12-2024": {
+    "description": "command-r7b-12-2024는 소형이면서도 효율적인 업데이트 버전으로, 2024년 12월에 출시되었습니다. RAG, 도구 사용, 에이전트 등 복잡한 추론과 다단계 처리가 필요한 작업에서 뛰어난 성능을 발휘합니다."
   },
   "dall-e-2": {
     "description": "2세대 DALL·E 모델로, 더 사실적이고 정확한 이미지 생성을 지원하며, 해상도는 1세대의 4배입니다."
@@ -668,11 +707,23 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1은 강화 학습(RL) 기반의 추론 모델로, 모델 내의 반복성과 가독성 문제를 해결합니다. RL 이전에 DeepSeek-R1은 콜드 스타트 데이터를 도입하여 추론 성능을 더욱 최적화했습니다. 수학, 코드 및 추론 작업에서 OpenAI-o1과 유사한 성능을 보이며, 정교하게 설계된 훈련 방법을 통해 전체적인 효과를 향상시켰습니다."
   },
+  "deepseek-r1-70b-fast-online": {
+    "description": "DeepSeek R1 70B 빠른 버전으로, 실시간 온라인 검색을 지원하며 모델 성능을 유지하면서 더 빠른 응답 속도를 제공합니다."
+  },
+  "deepseek-r1-70b-online": {
+    "description": "DeepSeek R1 70B 표준 버전으로, 실시간 온라인 검색을 지원하며 최신 정보가 필요한 대화 및 텍스트 처리 작업에 적합합니다."
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 - DeepSeek 패키지에서 더 크고 더 스마트한 모델이 Llama 70B 아키텍처로 증류되었습니다. 기준 테스트와 인공지능 평가에 따르면, 이 모델은 원래 Llama 70B보다 더 스마트하며, 특히 수학 및 사실 정확성이 필요한 작업에서 뛰어난 성능을 보입니다."
   },
   "deepseek-r1-distill-llama-8b": {
     "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+  },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "2025년 2월 14일 최초 출시된 이 모델은 천범 대모델 연구팀이 Llama3_70B를 기반 모델로 하여(메타 라마로 구축) 증류한 것입니다. 증류 데이터에는 천범의 말뭉치도 동기화되어 추가되었습니다."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "2025년 2월 14일 최초 출시된 이 모델은 천범 대모델 연구팀이 Llama3_8B를 기반 모델로 하여(메타 라마로 구축) 증류한 것입니다. 증류 데이터에는 천범의 말뭉치도 동기화되어 추가되었습니다."
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
@@ -685,6 +736,12 @@
   },
   "deepseek-r1-distill-qwen-7b": {
     "description": "DeepSeek-R1-Distill 시리즈 모델은 지식 증류 기술을 통해 DeepSeek-R1이 생성한 샘플을 Qwen, Llama 등 오픈 소스 모델에 미세 조정하여 얻은 것입니다."
+  },
+  "deepseek-r1-fast-online": {
+    "description": "DeepSeek R1 풀 빠른 버전으로, 실시간 온라인 검색을 지원하며 671B 매개변수의 강력한 능력과 더 빠른 응답 속도를 결합합니다."
+  },
+  "deepseek-r1-online": {
+    "description": "DeepSeek R1 풀 버전으로, 671B 매개변수를 가지고 있으며 실시간 온라인 검색을 지원하여 더 강력한 이해 및 생성 능력을 제공합니다."
   },
   "deepseek-reasoner": {
     "description": "DeepSeek에서 제공하는 추론 모델입니다. 최종 답변을 출력하기 전에 모델은 먼저 사고 과정을 출력하여 최종 답변의 정확성을 높입니다."
@@ -763,6 +820,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "바이두가 자체 개발한 플래그십 초대규모 언어 모델로, 종합적인 성능이 뛰어나며, 다양한 분야의 복잡한 작업 시나리오에 널리 적용됩니다. 바이두 검색 플러그인과 자동으로 연결되어 질문 답변 정보의 시의성을 보장합니다. ERNIE 4.0에 비해 성능이 더 우수합니다."
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "문심 대모델 4.5는 바이두가 독자적으로 개발한 차세대 원주율 다중 모달 기본 대모델로, 여러 모달의 공동 모델링을 통해 협동 최적화를 실현하며, 다중 모달 이해 능력이 뛰어납니다. 언어 능력이 더욱 향상되어 이해, 생성, 논리, 기억 능력이 전반적으로 향상되었으며, 환각 제거, 논리 추론, 코드 능력이 현저히 향상되었습니다."
   },
   "ernie-char-8k": {
     "description": "바이두가 자체 개발한 수직 장면 대형 언어 모델로, 게임 NPC, 고객 서비스 대화, 대화 역할극 등 응용 시나리오에 적합하며, 캐릭터 스타일이 더 뚜렷하고 일관되며, 지시 따르기 능력이 더 강하고 추론 성능이 우수합니다."
@@ -1097,9 +1157,6 @@
   "hunyuan-turbo": {
     "description": "혼원 최신 세대 대형 언어 모델의 미리보기 버전으로, 새로운 혼합 전문가 모델(MoE) 구조를 채택하여 hunyuan-pro보다 추론 효율이 더 빠르고 성능이 더 뛰어납니다."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "hunyuan-turbo 2024년 11월 20일 고정 버전, hunyuan-turbo와 hunyuan-turbo-latest 사이의 버전."
-  },
   "hunyuan-turbo-20241223": {
     "description": "이번 버전 최적화: 데이터 지시 스케일링, 모델의 일반화 능력 대폭 향상; 수학, 코드, 논리 추론 능력 대폭 향상; 텍스트 이해 및 단어 이해 관련 능력 최적화; 텍스트 창작 내용 생성 질 최적화."
   },
@@ -1108,6 +1165,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "혼원 차세대 비주얼 언어 플래그십 대형 모델, 새로운 혼합 전문가 모델(MoE) 구조를 채택하여, 이미지 및 텍스트 이해 관련 기본 인식, 콘텐츠 창작, 지식 질문 응답, 분석 추론 등의 능력이 이전 세대 모델에 비해 전반적으로 향상되었습니다."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 고정 버전 사전 훈련 기반 훈련 토큰 수 업그레이드; 수학/논리/코드 등의 사고 능력 향상; 중문 및 영문 공통 경험 효과 향상, 텍스트 창작, 텍스트 이해, 지식 질문 응답, 잡담 등을 포함합니다."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "수학 문제 해결 단계를 통일하여 수학 다단계 질문 응답을 강화합니다. 텍스트 창작 최적화 답변 스타일로 AI 느낌을 제거하고 문학성을 높입니다."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS 혼원 플래그십 대모델 최신 버전으로, 더 강력한 사고 능력과 더 나은 경험 효과를 제공합니다."
   },
   "hunyuan-vision": {
     "description": "혼원 최신 다중 모달 모델로, 이미지와 텍스트 입력을 지원하여 텍스트 콘텐츠를 생성합니다."

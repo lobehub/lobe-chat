@@ -23,6 +23,9 @@
   "cloudflare": {
     "description": "Run serverless GPU-powered machine learning models on Cloudflare's global network."
   },
+  "cohere": {
+    "description": "Cohere brings you cutting-edge multilingual models, advanced retrieval capabilities, and an AI workspace tailored for modern enterprises—all integrated into a secure platform."
+  },
   "deepseek": {
     "description": "DeepSeek is a company focused on AI technology research and application, with its latest model DeepSeek-V2.5 integrating general dialogue and code processing capabilities, achieving significant improvements in human preference alignment, writing tasks, and instruction following."
   },
@@ -101,6 +104,9 @@
   "sambanova": {
     "description": "SambaNova Cloud allows developers to easily utilize the best open-source models and enjoy the fastest inference speeds."
   },
+  "search1api": {
+    "description": "Search1API provides access to the DeepSeek series of models that can connect to the internet as needed, including standard and fast versions, supporting a variety of model sizes."
+  },
   "sensenova": {
     "description": "SenseNova, backed by SenseTime's robust infrastructure, offers efficient and user-friendly full-stack large model services."
   },
@@ -145,8 +151,5 @@
   },
   "zhipu": {
     "description": "Zhipu AI offers an open platform for multimodal and language models, supporting a wide range of AI application scenarios, including text processing, image understanding, and programming assistance."
-  },
-  "ppio": {
-    "description": "PPIO supports stable and cost-efficient open-source LLM APIs, such as DeepSeek, Llama, Qwen etc."
   }
 }

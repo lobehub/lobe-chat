@@ -32,6 +32,7 @@ import { LobePerplexityAI } from './perplexity';
 import { LobePPIOAI } from './ppio';
 import { LobeQwenAI } from './qwen';
 import { LobeSambaNovaAI } from './sambanova';
+import { LobeSearch1API } from './search1api';
 import { LobeSenseNovaAI } from './sensenova';
 import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeSparkAI } from './spark';
@@ -83,6 +84,7 @@ export const providerRuntimeMap = {
   ppio: LobePPIOAI,
   qwen: LobeQwenAI,
   sambanova: LobeSambaNovaAI,
+  search1api: LobeSearch1API,
   sensenova: LobeSenseNovaAI,
   siliconcloud: LobeSiliconCloudAI,
   spark: LobeSparkAI,

@@ -23,6 +23,9 @@
   "cloudflare": {
     "description": "Cloudflare'ın küresel ağı üzerinde sunucusuz GPU destekli makine öğrenimi modelleri çalıştırın."
   },
+  "cohere": {
+    "description": "Cohere, en son çok dilli modelleri, gelişmiş arama işlevselliğini ve modern işletmeler için özel olarak tasarlanmış AI çalışma alanını sunar - hepsi güvenli bir platformda entegre edilmiştir."
+  },
   "deepseek": {
     "description": "DeepSeek, yapay zeka teknolojisi araştırma ve uygulamalarına odaklanan bir şirkettir. En son modeli DeepSeek-V2.5, genel diyalog ve kod işleme yeteneklerini birleştirerek, insan tercihleriyle uyum, yazma görevleri ve talimat takibi gibi alanlarda önemli iyileştirmeler sağlamaktadır."
   },
@@ -100,6 +103,9 @@
   },
   "sambanova": {
     "description": "SambaNova Cloud, geliştiricilerin en iyi açık kaynak modellerini kolayca kullanmalarını ve en hızlı çıkarım hızından yararlanmalarını sağlar."
+  },
+  "search1api": {
+    "description": "Search1API, ihtiyaç duyduğunuzda çevrimiçi olabilen DeepSeek serisi modellere erişim sağlar; standart ve hızlı sürümler dahil olmak üzere çeşitli parametre ölçeklerinde model seçimini destekler."
   },
   "sensenova": {
     "description": "SenseTime, güçlü altyapısına dayanarak, verimli ve kullanımı kolay tam yığın büyük model hizmetleri sunar."
