@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Set max_completion_tokens to undefined for Azure OpenAI."]
+    },
+    "date": "2025-03-24",
+    "version": "1.74.6"
+  },
+  {
+    "children": {
       "fixes": ["Fix wechat login error with next-auth."]
     },
     "date": "2025-03-23",
