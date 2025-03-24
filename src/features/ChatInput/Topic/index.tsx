@@ -1,11 +1,11 @@
-import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Hotkey, Icon, Tooltip } from '@lobehub/ui';
 import { Button, Popconfirm } from 'antd';
 import { LucideGalleryVerticalEnd, LucideMessageSquarePlus } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
-import HotKeys from '@/components/HotKeys';
 import { ALT_KEY, SAVE_TOPIC_KEY } from '@/const/hotkeys';
 import { useActionSWR } from '@/libs/swr';
 import { useChatStore } from '@/store/chat';
@@ -41,12 +41,12 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
         open={confirmOpened}
         placement={'top'}
         title={
-          <div style={{ alignItems: 'center', display: 'flex', marginBottom: '8px' }}>
+          <Flexbox align={'center'} horizontal style={{ marginBottom: 8 }}>
             <div style={{ marginRight: '16px', whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
               {t(hasTopic ? 'topic.checkOpenNewTopic' : 'topic.checkSaveCurrentMessages')}
             </div>
-            <HotKeys inverseTheme={false} keys={hotkeys} />
-          </div>
+            <Hotkey keys={hotkeys} />
+          </Flexbox>
         }
       >
         <ActionIcon
@@ -59,7 +59,7 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
     );
   } else {
     return (
-      <Tooltip title={<HotKeys desc={desc} inverseTheme keys={hotkeys} />}>
+      <Tooltip hotkey={hotkeys} title={desc}>
         <Button
           aria-label={desc}
           icon={<Icon icon={icon} />}

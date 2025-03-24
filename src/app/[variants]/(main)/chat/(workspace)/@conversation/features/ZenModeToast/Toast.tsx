@@ -1,11 +1,11 @@
 'use client';
 
+import { Hotkey } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import HotKeys from '@/components/HotKeys';
 import { HOTKEYS } from '@/const/hotkeys';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -76,8 +76,8 @@ const Toast = () => {
   return (
     <div className={styles.container}>
       <div className={styles.toast}>
-        <Flexbox className={styles.text} gap={12} horizontal>
-          {t('zenMode')} <HotKeys inverseTheme keys={HOTKEYS.zenMode} />
+        <Flexbox align={'center'} className={styles.text} gap={8} horizontal>
+          {t('zenMode')} <Hotkey inverseTheme keys={HOTKEYS.zenMode} />
         </Flexbox>
       </div>
     </div>

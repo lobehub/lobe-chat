@@ -6,7 +6,6 @@ import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 
-import HotKeys from '@/components/HotKeys';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
@@ -62,7 +61,7 @@ const PinList = () => {
   };
 
   useHotkeys(
-    list.slice(0, 9).map((e, i) => `ctrl+${i + 1}`),
+    list.slice(0, 9).map((e, i) => `mod+${i + 1}`),
     (keyboardEvent, hotkeysEvent) => {
       if (!hotkeysEvent.keys?.[0]) return;
 
@@ -83,13 +82,9 @@ const PinList = () => {
           {list.slice(0, 9).map((item, index) => (
             <Flexbox key={item.id} style={{ position: 'relative' }}>
               <Tooltip
+                hotkey={`mod+${index + 1}`}
                 placement={'right'}
-                title={
-                  <Flexbox gap={8} horizontal>
-                    {sessionHelpers.getTitle(item.meta)}
-                    <HotKeys inverseTheme keys={`ctrl+${index + 1}`} />
-                  </Flexbox>
-                }
+                title={sessionHelpers.getTitle(item.meta)}
               >
                 <Flexbox
                   className={cx(
