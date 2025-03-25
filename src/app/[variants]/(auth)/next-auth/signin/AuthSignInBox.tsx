@@ -82,7 +82,6 @@ export default memo(() => {
 
   const handleSignIn = async (provider: string) => {
     try {
-      console.log('callbackUrl', callbackUrl);
       await signIn(provider, { redirectTo: callbackUrl });
     } catch (error) {
       // Signin can fail for a number of reasons, such as the user
