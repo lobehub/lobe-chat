@@ -216,6 +216,12 @@ export const generateAIChat: StateCreator<
       skipRefresh: !onlyAddUserMessage && newMessage.fileList?.length === 0,
     });
 
+    if (!id) {
+      set({ isCreatingMessage: false }, false, n('creatingMessage/start'));
+      if (!!newTopicId) get().internal_updateTopicLoading(newTopicId, false);
+      return;
+    }
+
     if (tempMessageId) get().internal_toggleMessageLoading(false, tempMessageId);
 
     // switch to the new topic if create the new topic
@@ -345,6 +351,8 @@ export const generateAIChat: StateCreator<
     };
 
     const assistantId = await get().internal_createMessage(assistantMessage);
+
+    if (!assistantId) return;
 
     // 3. place a search with the search working model if this model is not support tool use
     const isModelSupportToolUse = aiModelSelectors.isModelSupportToolUse(

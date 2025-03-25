@@ -69,6 +69,7 @@
     "524": "Üzgünüm, sunucu yanıt beklerken zaman aşımına uğradı, bu muhtemelen yanıtın çok yavaş olmasından kaynaklanıyor, lütfen daha sonra tekrar deneyin",
     "AgentRuntimeError": "Lobe dil modeli çalışma zamanı hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "ConnectionCheckFailed": "İstek boş döndü, lütfen API代理地址ının sonuna `/v1` ekleyip eklemediğinizi kontrol edin.",
+    "CreateMessageError": "Üzgünüm, mesaj düzgün bir şekilde gönderilemedi. Lütfen içeriği kopyalayın ve yeniden gönderin, sayfayı yeniledikten sonra bu mesaj kaydedilmeyecek.",
     "ExceededContextWindow": "Mevcut istek içeriği modelin işleyebileceği uzunluğu aşıyor, lütfen içerik miktarını azaltıp tekrar deneyin",
     "FreePlanLimit": "Şu anda ücretsiz bir kullanıcısınız, bu özelliği kullanamazsınız. Lütfen devam etmek için bir ücretli plana yükseltin.",
     "InsufficientQuota": "Üzgünüm, bu anahtarın kotası (quota) dolmuş durumda, lütfen hesap bakiyenizi kontrol edin veya anahtar kotasını artırdıktan sonra tekrar deneyin",

@@ -13,7 +13,7 @@ interface Search1ApiResponse {
   };
 }
 
-export const search1api: CrawlImpl = async (url, { filterOptions }) => {
+export const search1api: CrawlImpl = async (url) => {
   // Get API key from environment variable
   const apiKey = process.env.SEARCH1API_API_KEY;
   
