@@ -43,11 +43,15 @@
     "title": "Settings"
   },
   "hotkey": {
+    "conflicts": "Conflicts with existing hotkeys",
     "group": {
       "conversation": "Conversation",
       "layout": "Layout",
       "system": "System"
     },
+    "invalidCombination": "The hotkey must include at least one modifier key (Ctrl, Alt, Shift) and one regular key",
+    "record": "Press a key to record the hotkey",
+    "reset": "Reset to default hotkeys",
     "title": "Hotkeys"
   },
   "llm": {

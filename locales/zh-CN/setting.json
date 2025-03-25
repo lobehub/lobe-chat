@@ -43,11 +43,15 @@
     "title": "设置"
   },
   "hotkey": {
+    "conflicts": "与现有快捷键冲突",
     "group": {
       "conversation": "会话",
       "layout": "布局",
       "system": "系统"
     },
+    "invalidCombination": "快捷键需要至少包含一个修饰键 (Ctrl, Alt, Shift) 和一个常规键",
+    "record": "按下按键以录制快捷键",
+    "reset": "重置为默认快捷键",
     "title": "快捷键"
   },
   "llm": {

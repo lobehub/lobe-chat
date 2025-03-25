@@ -43,11 +43,15 @@
     "title": "Instellingen"
   },
   "hotkey": {
+    "conflicts": "Conflict met bestaande sneltoetsen",
     "group": {
       "conversation": "Gesprek",
       "layout": "Indeling",
       "system": "Systeem"
     },
+    "invalidCombination": "Sneltoets moet ten minste één modifier-toets (Ctrl, Alt, Shift) en één reguliere toets bevatten",
+    "record": "Druk op een toets om de sneltoets op te nemen",
+    "reset": "Reset naar standaard sneltoetsen",
     "title": "Sneltoetsen"
   },
   "llm": {

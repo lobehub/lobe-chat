@@ -43,11 +43,15 @@
     "title": "Ustawienia"
   },
   "hotkey": {
+    "conflicts": "Kolizja z istniejącymi skrótami klawiszowymi",
     "group": {
       "conversation": "Rozmowa",
       "layout": "Układ",
       "system": "System"
     },
+    "invalidCombination": "Skrót klawiszowy musi zawierać przynajmniej jeden klawisz modyfikujący (Ctrl, Alt, Shift) oraz jeden klawisz zwykły",
+    "record": "Naciśnij klawisz, aby nagrać skrót klawiszowy",
+    "reset": "Przywróć domyślne skróty klawiszowe",
     "title": "Skróty klawiszowe"
   },
   "llm": {

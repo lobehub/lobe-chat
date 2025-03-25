@@ -43,11 +43,15 @@
     "title": "Paramètres"
   },
   "hotkey": {
+    "conflicts": "Conflit avec les raccourcis existants",
     "group": {
       "conversation": "Conversation",
       "layout": "Disposition",
       "system": "Système"
     },
+    "invalidCombination": "Le raccourci doit contenir au moins une touche de modification (Ctrl, Alt, Shift) et une touche normale",
+    "record": "Appuyez sur une touche pour enregistrer le raccourci",
+    "reset": "Réinitialiser aux raccourcis par défaut",
     "title": "Raccourcis clavier"
   },
   "llm": {

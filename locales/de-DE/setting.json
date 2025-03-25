@@ -43,11 +43,15 @@
     "title": "Einstellungen"
   },
   "hotkey": {
+    "conflicts": "Konflikte mit bestehenden Tastenkombinationen",
     "group": {
       "conversation": "Gespräch",
       "layout": "Layout",
       "system": "System"
     },
+    "invalidCombination": "Die Tastenkombination muss mindestens einen Modifikatortaste (Strg, Alt, Umschalt) und eine normale Taste enthalten",
+    "record": "Drücken Sie eine Taste, um die Tastenkombination aufzuzeichnen",
+    "reset": "Auf die Standard-Tastenkombination zurücksetzen",
     "title": "Tastenkombinationen"
   },
   "llm": {

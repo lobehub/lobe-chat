@@ -43,11 +43,15 @@
     "title": "Cài đặt"
   },
   "hotkey": {
+    "conflicts": "Xung đột với phím tắt hiện có",
     "group": {
       "conversation": "Cuộc trò chuyện",
       "layout": "Bố cục",
       "system": "Hệ thống"
     },
+    "invalidCombination": "Phím tắt cần ít nhất một phím sửa đổi (Ctrl, Alt, Shift) và một phím thông thường",
+    "record": "Nhấn phím để ghi lại phím tắt",
+    "reset": "Đặt lại thành phím tắt mặc định",
     "title": "Phím tắt"
   },
   "llm": {

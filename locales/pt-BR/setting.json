@@ -43,11 +43,15 @@
     "title": "Configurações"
   },
   "hotkey": {
+    "conflicts": "Conflito com teclas de atalho existentes",
     "group": {
       "conversation": "Conversa",
       "layout": "Layout",
       "system": "Sistema"
     },
+    "invalidCombination": "A combinação de teclas de atalho deve incluir pelo menos uma tecla modificadora (Ctrl, Alt, Shift) e uma tecla comum",
+    "record": "Pressione a tecla para gravar o atalho",
+    "reset": "Redefinir para os atalhos padrão",
     "title": "Atalhos"
   },
   "llm": {
