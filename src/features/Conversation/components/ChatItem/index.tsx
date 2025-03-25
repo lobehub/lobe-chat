@@ -190,6 +190,7 @@ const Item = memo<ChatListItemProps>(
     );
 
     const onChange = useCallback((value: string) => updateMessageContent(id, value), [id]);
+    const virtuosoRef = use(VirtuosoContext);
 
     const onDoubleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
       (e) => {
@@ -197,6 +198,8 @@ const Item = memo<ChatListItemProps>(
         if (item.id === 'default' || item.error) return;
         if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {
           toggleMessageEditing(id, true);
+
+          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
         }
       },
       [item, disableEditing],
@@ -218,7 +221,6 @@ const Item = memo<ChatListItemProps>(
     const belowMessage = useMemo(() => item && <BelowMessage data={item} />, [item]);
     const errorMessage = useMemo(() => item && <ErrorMessageExtra data={item} />, [item]);
     const messageExtra = useMemo(() => item && <MessageExtra data={item} />, [item]);
-    const virtuosoRef = use(VirtuosoContext);
 
     return (
       item && (
@@ -240,13 +242,7 @@ const Item = memo<ChatListItemProps>(
               onAvatarClick={onAvatarsClick}
               onChange={onChange}
               onDoubleClick={onDoubleClick}
-              onEditingChange={(edit) => {
-                onEditingChange(edit);
-
-                if (edit) {
-                  virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
-                }
-              }}
+              onEditingChange={onEditingChange}
               placement={type === 'chat' ? (item.role === 'user' ? 'right' : 'left') : 'left'}
               primary={item.role === 'user'}
               renderMessage={renderMessage}
