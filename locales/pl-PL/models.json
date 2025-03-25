@@ -518,6 +518,18 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B to otwarty model językowy stworzony przez Baichuan Intelligence, zawierający 13 miliardów parametrów, który osiągnął najlepsze wyniki w swojej klasie w autorytatywnych benchmarkach w języku chińskim i angielskim."
   },
+  "c4ai-aya-expanse-32b": {
+    "description": "Aya Expanse to model wielojęzyczny o wysokiej wydajności 32B, zaprojektowany w celu wyzwania wydajności modeli jednolanguage poprzez innowacje w zakresie dostosowywania instrukcji, arbitrażu danych, treningu preferencji i łączenia modeli. Obsługuje 23 języki."
+  },
+  "c4ai-aya-expanse-8b": {
+    "description": "Aya Expanse to model wielojęzyczny o wysokiej wydajności 8B, zaprojektowany w celu wyzwania wydajności modeli jednolanguage poprzez innowacje w zakresie dostosowywania instrukcji, arbitrażu danych, treningu preferencji i łączenia modeli. Obsługuje 23 języki."
+  },
+  "c4ai-aya-vision-32b": {
+    "description": "Aya Vision to zaawansowany model wielomodalny, który osiąga doskonałe wyniki w wielu kluczowych benchmarkach dotyczących zdolności językowych, tekstowych i obrazowych. Obsługuje 23 języki. Ta wersja z 32 miliardami parametrów koncentruje się na najnowocześniejszej wydajności wielojęzycznej."
+  },
+  "c4ai-aya-vision-8b": {
+    "description": "Aya Vision to zaawansowany model wielomodalny, który osiąga doskonałe wyniki w wielu kluczowych benchmarkach dotyczących zdolności językowych, tekstowych i obrazowych. Ta wersja z 8 miliardami parametrów koncentruje się na niskiej latencji i najlepszej wydajności."
+  },
   "charglm-3": {
     "description": "CharGLM-3 zaprojektowany z myślą o odgrywaniu ról i emocjonalnym towarzyszeniu, obsługujący ultra-długą pamięć wielokrotną i spersonalizowane dialogi, z szerokim zakresem zastosowań."
   },
@@ -602,11 +614,38 @@
   "cohere-command-r-plus": {
     "description": "Command R+ to model zoptymalizowany pod kątem RAG, zaprojektowany do obsługi obciążeń roboczych na poziomie przedsiębiorstwa."
   },
+  "command": {
+    "description": "Model konwersacyjny, który przestrzega instrukcji, oferujący wysoką jakość i niezawodność w zadaniach językowych, a także dłuższą długość kontekstu w porównaniu do naszych podstawowych modeli generacyjnych."
+  },
+  "command-a-03-2025": {
+    "description": "Command A to nasz najsilniejszy model, który do tej pory osiągnął najlepsze wyniki, doskonale sprawdzający się w zastosowaniach narzędziowych, agentowych, generacji wzbogaconej o wyszukiwanie (RAG) oraz w kontekście wielojęzycznym. Command A ma długość kontekstu 256K, działa na zaledwie dwóch GPU i w porównaniu do Command R+ 08-2024 zwiększa wydajność o 150%."
+  },
+  "command-light": {
+    "description": "Mniejsza i szybsza wersja Command, niemal równie potężna, ale szybsza."
+  },
+  "command-light-nightly": {
+    "description": "Aby skrócić czas między wydaniami głównych wersji, wprowadziliśmy nocną wersję modelu Command. Dla serii command-light ta wersja nazywa się command-light-nightly. Proszę pamiętać, że command-light-nightly to najnowsza, najbardziej eksperymentalna i (możliwie) niestabilna wersja. Wersje nocne są regularnie aktualizowane i nie są zapowiadane z wyprzedzeniem, dlatego nie zaleca się ich używania w środowisku produkcyjnym."
+  },
+  "command-nightly": {
+    "description": "Aby skrócić czas między wydaniami głównych wersji, wprowadziliśmy nocną wersję modelu Command. Dla serii Command ta wersja nazywa się command-cightly. Proszę pamiętać, że command-nightly to najnowsza, najbardziej eksperymentalna i (możliwie) niestabilna wersja. Wersje nocne są regularnie aktualizowane i nie są zapowiadane z wyprzedzeniem, dlatego nie zaleca się ich używania w środowisku produkcyjnym."
+  },
   "command-r": {
     "description": "Command R to LLM zoptymalizowany do dialogów i zadań z długim kontekstem, szczególnie odpowiedni do dynamicznej interakcji i zarządzania wiedzą."
   },
+  "command-r-03-2024": {
+    "description": "Command R to model konwersacyjny, który przestrzega instrukcji, oferujący wyższą jakość i niezawodność w zadaniach językowych, a także dłuższą długość kontekstu w porównaniu do wcześniejszych modeli. Może być używany w złożonych przepływach pracy, takich jak generacja kodu, generacja wzbogacona o wyszukiwanie (RAG), korzystanie z narzędzi i agentów."
+  },
+  "command-r-08-2024": {
+    "description": "command-r-08-2024 to zaktualizowana wersja modelu Command R, wydana w sierpniu 2024 roku."
+  },
   "command-r-plus": {
     "description": "Command R+ to model językowy o wysokiej wydajności, zaprojektowany z myślą o rzeczywistych scenariuszach biznesowych i złożonych zastosowaniach."
+  },
+  "command-r-plus-04-2024": {
+    "description": "Command R+ to model konwersacyjny, który przestrzega instrukcji, oferujący wyższą jakość i niezawodność w zadaniach językowych, a także dłuższą długość kontekstu w porównaniu do wcześniejszych modeli. Jest najlepiej dostosowany do złożonych przepływów pracy RAG i wieloetapowego korzystania z narzędzi."
+  },
+  "command-r7b-12-2024": {
+    "description": "command-r7b-12-2024 to mała i wydajna zaktualizowana wersja, wydana w grudniu 2024 roku. Doskonale sprawdza się w zadaniach wymagających złożonego rozumowania i wieloetapowego przetwarzania, takich jak RAG, korzystanie z narzędzi i agenci."
   },
   "dall-e-2": {
     "description": "Druga generacja modelu DALL·E, obsługująca bardziej realistyczne i dokładne generowanie obrazów, o rozdzielczości czterokrotnie większej niż pierwsza generacja."
@@ -668,11 +707,23 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem przez wzmacnianie (RL), który rozwiązuje problemy z powtarzalnością i czytelnością modelu. Przed RL, DeepSeek-R1 wprowadził dane z zimnego startu, co dodatkowo zoptymalizowało wydajność wnioskowania. W zadaniach matematycznych, kodowania i wnioskowania osiąga wyniki porównywalne z OpenAI-o1, a dzięki starannie zaprojektowanym metodom treningowym poprawia ogólne efekty."
   },
+  "deepseek-r1-70b-fast-online": {
+    "description": "DeepSeek R1 70B szybka wersja, wspierająca wyszukiwanie w czasie rzeczywistym, oferująca szybszy czas reakcji przy zachowaniu wydajności modelu."
+  },
+  "deepseek-r1-70b-online": {
+    "description": "DeepSeek R1 70B standardowa wersja, wspierająca wyszukiwanie w czasie rzeczywistym, odpowiednia do zadań konwersacyjnych i przetwarzania tekstu wymagających najnowszych informacji."
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 — większy i inteligentniejszy model w zestawie DeepSeek — został destylowany do architektury Llama 70B. Na podstawie testów referencyjnych i ocen ręcznych, model ten jest bardziej inteligentny niż oryginalna Llama 70B, szczególnie w zadaniach wymagających precyzji matematycznej i faktograficznej."
   },
   "deepseek-r1-distill-llama-8b": {
     "description": "Modele z serii DeepSeek-R1-Distill są dostosowywane do modeli open source, takich jak Qwen i Llama, poprzez technologię destylacji wiedzy, na podstawie próbek generowanych przez DeepSeek-R1."
+  },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "Pierwsze wydanie 14 lutego 2025 roku, wyodrębnione przez zespół badawczy Qianfan z modelu bazowego Llama3_70B (zbudowanego z Meta Llama), w którym dodano również korpus Qianfan."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "Pierwsze wydanie 14 lutego 2025 roku, wyodrębnione przez zespół badawczy Qianfan z modelu bazowego Llama3_8B (zbudowanego z Meta Llama), w którym dodano również korpus Qianfan."
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "Modele z serii DeepSeek-R1-Distill są dostosowywane do modeli open source, takich jak Qwen i Llama, poprzez technologię destylacji wiedzy, na podstawie próbek generowanych przez DeepSeek-R1."
@@ -685,6 +736,12 @@
   },
   "deepseek-r1-distill-qwen-7b": {
     "description": "Modele z serii DeepSeek-R1-Distill są dostosowywane do modeli open source, takich jak Qwen i Llama, poprzez technologię destylacji wiedzy, na podstawie próbek generowanych przez DeepSeek-R1."
+  },
+  "deepseek-r1-fast-online": {
+    "description": "DeepSeek R1 pełna szybka wersja, wspierająca wyszukiwanie w czasie rzeczywistym, łącząca potężne możliwości 671 miliardów parametrów z szybszym czasem reakcji."
+  },
+  "deepseek-r1-online": {
+    "description": "DeepSeek R1 pełna wersja, z 671 miliardami parametrów, wspierająca wyszukiwanie w czasie rzeczywistym, z potężniejszymi zdolnościami rozumienia i generowania."
   },
   "deepseek-reasoner": {
     "description": "Model inferency wprowadzony przez DeepSeek. Przed wygenerowaniem ostatecznej odpowiedzi, model najpierw przedstawia fragment łańcucha myślowego, aby zwiększyć dokładność końcowej odpowiedzi."
@@ -763,6 +820,9 @@
   },
   "ernie-4.0-turbo-8k-preview": {
     "description": "Flagowy model językowy Baidu o ultra dużej skali, charakteryzujący się doskonałymi wynikami ogólnymi, szeroko stosowany w złożonych zadaniach w różnych dziedzinach; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji. W porównaniu do ERNIE 4.0, oferuje lepsze wyniki wydajności."
+  },
+  "ernie-4.5-8k-preview": {
+    "description": "Model ERNIE 4.5 to nowa generacja natywnego modelu wielomodalnego opracowanego przez Baidu, który osiąga doskonałe wyniki w zakresie zrozumienia wielomodalnego dzięki wspólnemu modelowaniu wielu modalności; posiada bardziej zaawansowane zdolności językowe, a także znacznie poprawione zdolności rozumienia, generowania, logicznego myślenia i pamięci, eliminując halucynacje oraz poprawiając zdolności wnioskowania logicznego i kodowania."
   },
   "ernie-char-8k": {
     "description": "Model językowy opracowany przez Baidu, skoncentrowany na specyficznych scenariuszach, odpowiedni do zastosowań w grach NPC, dialogach obsługi klienta, odgrywaniu ról w dialogach, charakteryzujący się wyraźnym i spójnym stylem postaci, silniejszą zdolnością do podążania za instrukcjami oraz lepszą wydajnością wnioskowania."
@@ -1097,9 +1157,6 @@
   "hunyuan-turbo": {
     "description": "Hunyuan to nowa generacja dużego modelu językowego w wersji próbnej, wykorzystująca nową strukturę modelu mieszanych ekspertów (MoE), która w porównaniu do hunyuan-pro charakteryzuje się szybszą efektywnością wnioskowania i lepszymi wynikami."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Stała wersja hunyuan-turbo z dnia 20 listopada 2024 roku, będąca pomiędzy hunyuan-turbo a hunyuan-turbo-latest."
-  },
   "hunyuan-turbo-20241223": {
     "description": "Optymalizacja tej wersji: skalowanie danych instrukcji, znaczne zwiększenie ogólnej zdolności generalizacji modelu; znaczne zwiększenie zdolności w zakresie matematyki, kodowania i rozumowania logicznego; optymalizacja zdolności związanych z rozumieniem tekstu i słów; optymalizacja jakości generowania treści w tworzeniu tekstów."
   },
@@ -1108,6 +1165,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "Nowa generacja flagowego modelu językowo-wizualnego Hunyuan, wykorzystująca nową strukturę modelu mieszanych ekspertów (MoE), z pełnym zwiększeniem zdolności w zakresie podstawowego rozpoznawania, tworzenia treści, pytań i odpowiedzi oraz analizy i rozumowania w porównaniu do poprzedniej generacji modeli."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 to stabilna wersja zaktualizowanej bazy treningowej, z podniesioną liczbą tokenów; poprawione zdolności myślenia w matematyce/logice/kodzie; poprawa ogólnego doświadczenia w języku chińskim i angielskim, w tym w tworzeniu tekstu, rozumieniu tekstu, pytaniach i odpowiedziach oraz rozmowach."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Ujednolicenie stylu rozwiązywania problemów matematycznych, wzmocnienie wieloetapowych pytań i odpowiedzi matematycznych. Optymalizacja stylu odpowiedzi w tworzeniu tekstu, eliminacja smaku AI, zwiększenie literackiego wyrazu."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS to najnowsza wersja flagowego modelu Hunyuan, oferująca silniejsze zdolności myślenia i lepsze efekty doświadczenia."
   },
   "hunyuan-vision": {
     "description": "Najnowocześniejszy model multimodalny Hunyuan, wspierający generowanie treści tekstowych na podstawie obrazów i tekstu."

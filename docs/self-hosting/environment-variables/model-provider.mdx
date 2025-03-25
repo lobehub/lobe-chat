@@ -580,6 +580,15 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: `-`
 - Example: `-all,+deepseek-r1->deepseek-r1-250120,+deepseek-v3->deepseek-v3-241226,+doubao-1.5-pro-256k->doubao-1-5-pro-256k-250115,+doubao-1.5-pro-32k->doubao-1-5-pro-32k-250115,+doubao-1.5-lite-32k->doubao-1-5-lite-32k-250115`
 
+### `VOLCENGINE_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Volcengine API proxy, you can use this configuration item to override the default Volcengine API request base URL
+- Default: `https://ark.cn-beijing.volces.com/api/v3`
+- Example: `https://my-volcengine-proxy.com/v1`
+
+## InfiniAI
+
 ### `INFINIAI_API_KEY`
 
 - Type: Required
@@ -595,10 +604,3 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Example: `-all,+qwq-32b,+deepseek-r1`
 
 [model-list]: /docs/self-hosting/advanced/model-list
-
-### `VOLCENGINE_PROXY_URL`
-
-- Type: Optional
-- Description: If you manually configure the Volcengine API proxy, you can use this configuration item to override the default Volcengine API request base URL
-- Default: `https://ark.cn-beijing.volces.com/api/v3`
-- Example: `https://my-volcengine-proxy.com/v1`

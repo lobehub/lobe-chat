@@ -266,6 +266,7 @@ export const chatPlugin: StateCreator<
       };
 
       const id = await get().internal_createMessage(toolMessage);
+      if (!id) return;
 
       // trigger the plugin call
       const data = await get().internal_invokeDifferentTypePlugin(id, payload);

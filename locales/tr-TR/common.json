@@ -41,7 +41,10 @@
     "error": {
       "desc": "Üzgünüz, Pglite veritabanı başlatma sırasında bir hata oluştu. Lütfen düğmeye tıklayarak tekrar deneyin. Eğer birden fazla denemeden sonra hala hata alıyorsanız, lütfen <1>bir sorun bildirin</1>, size en kısa sürede yardımcı olacağız.",
       "detail": "Hata Nedeni: [{{type}}] {{message}}. Ayrıntılar aşağıda:",
+      "detailTitle": "Hata Nedeni",
+      "report": "Sorunu Bildir",
       "retry": "Tekrar Dene",
+      "selfSolve": "Kendin Çöz",
       "title": "Veritabanı başlatma hatası"
     },
     "initing": {
@@ -80,6 +83,54 @@
       "button": "Hemen Kullan",
       "desc": "Hemen kullanmak istiyorum",
       "title": "PGlite veritabanı hazır"
+    },
+    "solve": {
+      "backup": {
+        "backup": "Yedekle",
+        "backupSuccess": "Yedekleme Başarılı",
+        "desc": "Mevcut veritabanındaki kritik verileri dışa aktar",
+        "export": "Tüm Verileri Dışa Aktar",
+        "exportDesc": "Dışa aktarılan veriler JSON formatında kaydedilecektir, sonraki kurtarma veya analiz için kullanılabilir.",
+        "reset": {
+          "alert": "Uyarı",
+          "alertDesc": "Aşağıdaki işlemler veri kaybına neden olabilir. Devam etmeden önce önemli verilerinizi yedeklediğinizden emin olun.",
+          "button": "Veritabanını Tamamen Sıfırla (Tüm Verileri Sil)",
+          "confirm": {
+            "desc": "Bu işlem tüm verileri silecektir ve geri alınamaz, devam etmek istediğinizi onaylıyor musunuz?",
+            "title": "Veritabanını Sıfırlamayı Onayla"
+          },
+          "desc": "Geri alınamaz bir durumda veritabanını sıfırla",
+          "title": "Veritabanı Sıfırlama"
+        },
+        "restore": "Geri Yükle",
+        "restoreSuccess": "Geri Yükleme Başarılı",
+        "title": "Veri Yedekleme"
+      },
+      "diagnosis": {
+        "createdAt": "Oluşturulma Zamanı",
+        "migratedAt": "Göç Tamamlanma Zamanı",
+        "sql": "Göç SQL",
+        "title": "Göç Durumu"
+      },
+      "repair": {
+        "desc": "Göç durumunu manuel olarak yönet",
+        "runSQL": "Özel Çalıştır",
+        "sql": {
+          "clear": "Temizle",
+          "desc": "Veritabanı sorunlarını düzeltmek için özel SQL ifadelerini çalıştır",
+          "markFinished": "Tamamlandı Olarak İşaretle",
+          "placeholder": "SQL ifadesini girin...",
+          "result": "Çalıştırma Sonucu",
+          "run": "Çalıştır",
+          "title": "SQL Çalıştırıcı"
+        },
+        "title": "Göç Kontrolü"
+      },
+      "tabs": {
+        "backup": "Yedekleme ve Geri Yükleme",
+        "diagnosis": "Tanı",
+        "repair": "Onarım"
+      }
     }
   },
   "close": "Kapat",

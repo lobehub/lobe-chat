@@ -4,6 +4,7 @@ const search1apiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description: 'DeepSeek R1 70B 标准版，支持实时联网搜索，适合需要最新信息的对话和文本处理任务。',
@@ -50,7 +51,7 @@ const search1apiChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek R1 满血快速版，支持实时联网搜索，结合了 671B 参数的强大能力和更快的响应速度。',
     displayName: 'DeepSeek R1 Fast',
-    enabled: false,
+    enabled: true,
     id: 'deepseek-r1-fast-online',
     maxOutput: 16_384,
     type: 'chat',
