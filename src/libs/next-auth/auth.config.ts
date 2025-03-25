@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from 'next-auth';
 
+import { appEnv } from '@/config/app';
 import { authEnv } from '@/config/auth';
 import { withBasePath } from '@/utils/basePath';
 
@@ -19,6 +20,7 @@ export const initSSOProviders = () => {
 
 // Notice this is only an object, not a full Auth.js instance
 export default {
+  basePath: `${appEnv.NEXT_PUBLIC_BASE_PATH}/api/auth`,
   callbacks: {
     // Note: Data processing order of callback: authorize --> jwt --> session
     async jwt({ token, user }) {
