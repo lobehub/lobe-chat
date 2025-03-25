@@ -154,7 +154,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai360Provider,
   DoubaoProvider,
   Search1APIProvider,
-  InfiniAIProvider,
+  InfiniAIProvider
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {

@@ -8,8 +8,7 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description:
-      '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
+    description: '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
     displayName: 'QwQ Plus',
     enabled: true,
     id: 'qwq-plus-latest',
@@ -117,8 +116,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
+    description: 'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
     displayName: 'Qwen Omni Turbo',
     enabled: true,
     id: 'qwen-omni-turbo-latest',
@@ -248,8 +246,7 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description:
-      '基于 Qwen2.5-32B 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平，各指标均显著超过同样基于 Qwen2.5-32B 的 DeepSeek-R1-Distill-Qwen-32B。',
+    description: '基于 Qwen2.5-32B 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平，各指标均显著超过同样基于 Qwen2.5-32B 的 DeepSeek-R1-Distill-Qwen-32B。',
     displayName: 'QwQ 32B',
     id: 'qwq-32b',
     maxOutput: 8192,
