@@ -43,6 +43,11 @@ export default {
     title: '设置',
   },
   hotkey: {
+    group: {
+      conversation: '会话',
+      layout: '布局',
+      system: '系统',
+    },
     title: '快捷键',
   },
   llm: {

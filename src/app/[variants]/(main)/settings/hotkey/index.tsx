@@ -1,7 +1,7 @@
-import CommonHotkeys from './features/CommonHotkeys';
+import HotkeySetting from './features/HotkeySetting';
 
 const Page = () => {
-  return <CommonHotkeys />;
+  return <HotkeySetting />;
 };
 
 Page.displayName = 'HotkeySetting';

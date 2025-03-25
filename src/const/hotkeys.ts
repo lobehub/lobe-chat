@@ -1,4 +1,6 @@
-import { HotkeyRegistration } from '@/types/hotkey';
+import { KeyMapEnum as Key, combineKeys } from '@lobehub/ui';
+
+import { HotkeyEnum, HotkeyGroupEnum, HotkeyRegistration } from '@/types/hotkey';
 
 export const ALT_KEY = 'alt';
 export const META_KEY = 'mod';
@@ -12,25 +14,58 @@ export const HOTKEYS = {
   zenMode: 'mod+\\',
 };
 
+// mod 在 Mac 上是 command 键，alt 在 Win 上是 ctrl 键
 export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   {
+    group: HotkeyGroupEnum.System,
+    id: HotkeyEnum.SearchAgent,
+    keys: combineKeys([Key.Mod, 'k']),
+  },
+  {
+    group: HotkeyGroupEnum.System,
     id: 'openSettings',
-    isDesktop: false,
-    keys: 'mod+comma',
+    keys: combineKeys([Key.Mod, Key.Comma]),
   },
   {
-    id: 'regenerateMessage',
-    isDesktop: false,
-    keys: 'alt+r',
+    group: HotkeyGroupEnum.Layout,
+    id: HotkeyEnum.SwitchLeftPanel,
+    keys: combineKeys([Key.Mod, Key.Alt, Key.Left]),
   },
   {
-    id: 'saveTopic',
-    isDesktop: false,
-    keys: 'alt+n',
+    group: HotkeyGroupEnum.Layout,
+    id: HotkeyEnum.SwitchRightPanel,
+    keys: combineKeys([Key.Mod, Key.Alt, Key.Right]),
   },
   {
-    id: 'switchZenMode',
-    isDesktop: false,
-    keys: 'mod+\\',
+    group: HotkeyGroupEnum.Layout,
+    id: HotkeyEnum.SwitchZenMode,
+    keys: combineKeys([Key.Mod, Key.Backslash]),
+  },
+  {
+    group: HotkeyGroupEnum.Conversation,
+    id: HotkeyEnum.RegenerateMessage,
+    keys: combineKeys([Key.Alt, 'r']),
+  },
+  {
+    group: HotkeyGroupEnum.Conversation,
+    id: HotkeyEnum.SaveTopic,
+    keys: combineKeys([Key.Alt, 'n']),
+  },
+  {
+    group: HotkeyGroupEnum.Conversation,
+    id: HotkeyEnum.EditMessage,
+    keys: combineKeys([Key.Alt, Key.LeftDoubleClick]),
+    nonEditable: true,
+  },
+  {
+    group: HotkeyGroupEnum.Conversation,
+    id: HotkeyEnum.SwitchAgent,
+    keys: combineKeys([Key.Ctrl, '0-9']),
+    nonEditable: true,
+  },
+  {
+    group: HotkeyGroupEnum.Conversation,
+    id: HotkeyEnum.AddUserMessage,
+    keys: combineKeys([Key.Alt, Key.Enter]),
   },
 ];
