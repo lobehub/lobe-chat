@@ -44,6 +44,7 @@ const getHotkeyById = (id: HotkeyId) => (s: UserStore) =>
   merge(DEFAULT_HOTKEY_CONFIG, currentSettings(s).hotkey)[id];
 
 export const settingsSelectors = {
+  currentLLMSettings,
   currentSettings,
   currentSystemAgent,
   currentTTS,
