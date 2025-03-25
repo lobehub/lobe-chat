@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Upgrade styles for Drawer."]
+    },
+    "date": "2025-03-25",
+    "version": "1.74.11"
+  },
+  {
+    "children": {
       "improvements": ["Add hunyuan-t1-latest from Hunyuan."]
     },
     "date": "2025-03-25",
