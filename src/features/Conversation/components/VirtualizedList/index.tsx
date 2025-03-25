@@ -13,6 +13,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 
 import AutoScroll from '../AutoScroll';
 import SkeletonList from '../SkeletonList';
+import { VirtuosoContext } from './VirtuosoContext';
 
 interface VirtualizedListProps {
   dataSource: string[];
@@ -69,38 +70,40 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
     );
 
   return (
-    <Flexbox height={'100%'}>
-      <Virtuoso
-        atBottomStateChange={setAtBottom}
-        atBottomThreshold={50 * (mobile ? 2 : 1)}
-        computeItemKey={(_, item) => item}
-        data={dataSource}
-        followOutput={getFollowOutput}
-        increaseViewportBy={overscan}
-        initialTopMostItemIndex={dataSource?.length - 1}
-        isScrolling={setIsScrolling}
-        itemContent={itemContent}
-        overscan={overscan}
-        ref={virtuosoRef}
-      />
-      <AutoScroll
-        atBottom={atBottom}
-        isScrolling={isScrolling}
-        onScrollToBottom={(type) => {
-          const virtuoso = virtuosoRef.current;
-          switch (type) {
-            case 'auto': {
-              virtuoso?.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
-              break;
+    <VirtuosoContext value={virtuosoRef}>
+      <Flexbox height={'100%'}>
+        <Virtuoso
+          atBottomStateChange={setAtBottom}
+          atBottomThreshold={50 * (mobile ? 2 : 1)}
+          computeItemKey={(_, item) => item}
+          data={dataSource}
+          followOutput={getFollowOutput}
+          increaseViewportBy={overscan}
+          initialTopMostItemIndex={dataSource?.length - 1}
+          isScrolling={setIsScrolling}
+          itemContent={itemContent}
+          overscan={overscan}
+          ref={virtuosoRef}
+        />
+        <AutoScroll
+          atBottom={atBottom}
+          isScrolling={isScrolling}
+          onScrollToBottom={(type) => {
+            const virtuoso = virtuosoRef.current;
+            switch (type) {
+              case 'auto': {
+                virtuoso?.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
+                break;
+              }
+              case 'click': {
+                virtuoso?.scrollToIndex({ align: 'end', behavior: 'smooth', index: 'LAST' });
+                break;
+              }
             }
-            case 'click': {
-              virtuoso?.scrollToIndex({ align: 'end', behavior: 'smooth', index: 'LAST' });
-              break;
-            }
-          }
-        }}
-      />
-    </Flexbox>
+          }}
+        />
+      </Flexbox>
+    </VirtuosoContext>
   );
 });
 
