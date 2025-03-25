@@ -42,6 +42,14 @@
     "sessionWithName": "Oturum Ayarları · {{name}}",
     "title": "Ayarlar"
   },
+  "hotkey": {
+    "group": {
+      "conversation": "Sohbet",
+      "layout": "Düzen",
+      "system": "Sistem"
+    },
+    "title": "Kısayollar"
+  },
   "llm": {
     "aesGcm": "Anahtarınız ve vekil adresiniz <1>AES-GCM</1> şifreleme algoritması kullanılarak şifrelenecektir",
     "apiKey": {
@@ -425,6 +433,7 @@
     "agent": "Varsayılan Asistan",
     "common": "Genel Ayarlar",
     "experiment": "Deney",
+    "hotkey": "Kısayollar",
     "llm": "Modeller",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "sync": "Bulut Senkronizasyonu",

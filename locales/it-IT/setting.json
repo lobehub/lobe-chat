@@ -42,6 +42,14 @@
     "sessionWithName": "Impostazioni della sessione · {{name}}",
     "title": "Impostazioni"
   },
+  "hotkey": {
+    "group": {
+      "conversation": "Conversazione",
+      "layout": "Layout",
+      "system": "Sistema"
+    },
+    "title": "Scorciatoie"
+  },
   "llm": {
     "aesGcm": "La tua chiave e l'indirizzo dell'agente saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
     "apiKey": {
@@ -425,6 +433,7 @@
     "agent": "Assistente predefinito",
     "common": "Impostazioni comuni",
     "experiment": "实验",
+    "hotkey": "Scorciatoie",
     "llm": "Modello linguistico",
     "provider": "Fornitore di servizi AI",
     "sync": "云端同步",

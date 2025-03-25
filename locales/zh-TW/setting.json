@@ -42,6 +42,14 @@
     "sessionWithName": "對話設定 · {{name}}",
     "title": "設定"
   },
+  "hotkey": {
+    "group": {
+      "conversation": "對話",
+      "layout": "佈局",
+      "system": "系統"
+    },
+    "title": "快速鍵"
+  },
   "llm": {
     "aesGcm": "您的金鑰與代理地址等將使用 <1>AES-GCM</1> 加密演算法進行加密",
     "apiKey": {
@@ -425,6 +433,7 @@
     "agent": "默認助手",
     "common": "通用設置",
     "experiment": "實驗",
+    "hotkey": "快速鍵",
     "llm": "語言模型",
     "provider": "AI 服務商",
     "sync": "雲端同步",

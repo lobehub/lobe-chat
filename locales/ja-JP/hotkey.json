@@ -1,0 +1,37 @@
+{
+  "addUserMessage": {
+    "desc": "現在の入力内容をユーザーメッセージとして追加しますが、生成はトリガーしません",
+    "title": "ユーザーメッセージを追加"
+  },
+  "editMessage": {
+    "desc": "Altキーを押しながらメッセージをダブルクリックして編集モードに入ります",
+    "title": "メッセージを編集"
+  },
+  "openChatSettings": {
+    "title": "チャット設定を開く"
+  },
+  "regenerateMessage": {
+    "desc": "最後のメッセージを再生成します",
+    "title": "メッセージを再生成"
+  },
+  "saveTopic": {
+    "desc": "現在のトピックを保存し、新しいトピックを開きます",
+    "title": "新しいトピックを開始"
+  },
+  "search": {
+    "title": "検索"
+  },
+  "switchAgent": {
+    "desc": "Ctrlキーを押しながら数字0〜9を押してサイドバーに固定されたアシスタントを切り替えます",
+    "title": "アシスタントを素早く切り替え"
+  },
+  "toggleLeftPanel": {
+    "title": "アシスタントパネルを表示/非表示"
+  },
+  "toggleRightPanel": {
+    "title": "トピックパネルを表示/非表示"
+  },
+  "toggleZenMode": {
+    "title": "集中モードを切り替え"
+  }
+}

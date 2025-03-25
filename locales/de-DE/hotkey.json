@@ -1,0 +1,37 @@
+{
+  "addUserMessage": {
+    "desc": "Fügen Sie den aktuellen Eingabetext als Benutzernachricht hinzu, ohne die Generierung auszulösen",
+    "title": "Benutzernachricht hinzufügen"
+  },
+  "editMessage": {
+    "desc": "Treten Sie in den Bearbeitungsmodus, indem Sie die Alt-Taste gedrückt halten und auf die Nachricht doppelklicken",
+    "title": "Nachricht bearbeiten"
+  },
+  "openChatSettings": {
+    "title": "Chat-Einstellungen öffnen"
+  },
+  "regenerateMessage": {
+    "desc": "Die letzte Nachricht neu generieren",
+    "title": "Nachricht neu generieren"
+  },
+  "saveTopic": {
+    "desc": "Das aktuelle Thema speichern und ein neues Thema öffnen",
+    "title": "Neues Thema beginnen"
+  },
+  "search": {
+    "title": "Suche"
+  },
+  "switchAgent": {
+    "desc": "Wechseln Sie zwischen den im Seitenbereich fixierten Assistenten, indem Sie die Strg-Taste gedrückt halten und eine Zahl von 0 bis 9 drücken",
+    "title": "Schnell zwischen Assistenten wechseln"
+  },
+  "toggleLeftPanel": {
+    "title": "Assistentenpanel ein-/ausblenden"
+  },
+  "toggleRightPanel": {
+    "title": "Themenpanel ein-/ausblenden"
+  },
+  "toggleZenMode": {
+    "title": "Fokussierungsmodus umschalten"
+  }
+}

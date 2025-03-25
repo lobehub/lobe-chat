@@ -42,6 +42,14 @@
     "sessionWithName": "セッション設定 · {{name}}",
     "title": "設定"
   },
+  "hotkey": {
+    "group": {
+      "conversation": "会話",
+      "layout": "レイアウト",
+      "system": "システム"
+    },
+    "title": "ショートカットキー"
+  },
   "llm": {
     "aesGcm": "キーとプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムを使用して暗号化されます",
     "apiKey": {
@@ -425,6 +433,7 @@
     "agent": "デフォルトエージェント",
     "common": "一般設定",
     "experiment": "実験",
+    "hotkey": "ショートカットキー",
     "llm": "言語モデル",
     "provider": "AIサービスプロバイダー",
     "sync": "クラウド同期",

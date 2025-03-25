@@ -1,0 +1,37 @@
+{
+  "addUserMessage": {
+    "desc": "Thêm nội dung hiện tại vào tin nhắn của người dùng mà không kích hoạt việc tạo mới",
+    "title": "Thêm một tin nhắn người dùng"
+  },
+  "editMessage": {
+    "desc": "Vào chế độ chỉnh sửa bằng cách giữ phím Alt và nhấp đúp vào tin nhắn",
+    "title": "Chỉnh sửa tin nhắn"
+  },
+  "openChatSettings": {
+    "title": "Mở cài đặt cuộc trò chuyện"
+  },
+  "regenerateMessage": {
+    "desc": "Tạo lại tin nhắn cuối cùng",
+    "title": "Tạo lại tin nhắn"
+  },
+  "saveTopic": {
+    "desc": "Lưu chủ đề hiện tại và mở chủ đề mới",
+    "title": "Mở chủ đề mới"
+  },
+  "search": {
+    "title": "Tìm kiếm"
+  },
+  "switchAgent": {
+    "desc": "Chuyển đổi giữa các trợ lý cố định ở thanh bên bằng cách giữ phím Ctrl và nhấn số 0~9",
+    "title": "Chuyển đổi nhanh trợ lý"
+  },
+  "toggleLeftPanel": {
+    "title": "Hiện/Ẩn bảng trợ lý"
+  },
+  "toggleRightPanel": {
+    "title": "Hiện/Ẩn bảng chủ đề"
+  },
+  "toggleZenMode": {
+    "title": "Chuyển đổi chế độ tập trung"
+  }
+}

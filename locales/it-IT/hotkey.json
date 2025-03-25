@@ -1,0 +1,37 @@
+{
+  "addUserMessage": {
+    "desc": "Aggiungi il contenuto attuale come messaggio utente, senza attivare la generazione",
+    "title": "Aggiungi un messaggio utente"
+  },
+  "editMessage": {
+    "desc": "Entra in modalità di modifica tenendo premuto Alt e facendo doppio clic sul messaggio",
+    "title": "Modifica messaggio"
+  },
+  "openChatSettings": {
+    "title": "Apri impostazioni chat"
+  },
+  "regenerateMessage": {
+    "desc": "Rigenera l'ultimo messaggio",
+    "title": "Rigenera messaggio"
+  },
+  "saveTopic": {
+    "desc": "Salva l'argomento attuale e apri un nuovo argomento",
+    "title": "Inizia un nuovo argomento"
+  },
+  "search": {
+    "title": "Cerca"
+  },
+  "switchAgent": {
+    "desc": "Cambia l'assistente fissato nella barra laterale tenendo premuto Ctrl e premendo un numero da 0 a 9",
+    "title": "Cambia assistente rapidamente"
+  },
+  "toggleLeftPanel": {
+    "title": "Mostra/Nascondi pannello assistente"
+  },
+  "toggleRightPanel": {
+    "title": "Mostra/Nascondi pannello argomenti"
+  },
+  "toggleZenMode": {
+    "title": "Attiva/disattiva modalità di concentrazione"
+  }
+}

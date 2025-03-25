@@ -42,6 +42,14 @@
     "sessionWithName": "Configurações de Sessão · {{name}}",
     "title": "Configurações"
   },
+  "hotkey": {
+    "group": {
+      "conversation": "Conversa",
+      "layout": "Layout",
+      "system": "Sistema"
+    },
+    "title": "Atalhos"
+  },
   "llm": {
     "aesGcm": "Suas chaves, endereço do agente, etc., serão criptografados usando o algoritmo de criptografia <1>AES-GCM</1>",
     "apiKey": {
@@ -425,6 +433,7 @@
     "agent": "Assistente Padrão",
     "common": "Configurações Comuns",
     "experiment": "Experimento",
+    "hotkey": "Atalhos",
     "llm": "Modelo de Linguagem",
     "provider": "Fornecedor de IA",
     "sync": "Sincronização na nuvem",

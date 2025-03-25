@@ -1,0 +1,37 @@
+{
+  "addUserMessage": {
+    "desc": "Añadir el contenido actual como un mensaje de usuario, pero sin activar la generación",
+    "title": "Añadir un mensaje de usuario"
+  },
+  "editMessage": {
+    "desc": "Entrar en modo de edición manteniendo presionada la tecla Alt y haciendo doble clic en el mensaje",
+    "title": "Editar mensaje"
+  },
+  "openChatSettings": {
+    "title": "Abrir configuración de la conversación"
+  },
+  "regenerateMessage": {
+    "desc": "Regenerar el último mensaje",
+    "title": "Regenerar mensaje"
+  },
+  "saveTopic": {
+    "desc": "Guardar el tema actual y abrir un nuevo tema",
+    "title": "Iniciar un nuevo tema"
+  },
+  "search": {
+    "title": "Buscar"
+  },
+  "switchAgent": {
+    "desc": "Cambiar el asistente fijado en la barra lateral manteniendo presionada la tecla Ctrl y pulsando un número del 0 al 9",
+    "title": "Cambio rápido de asistente"
+  },
+  "toggleLeftPanel": {
+    "title": "Mostrar/Ocultar panel de asistente"
+  },
+  "toggleRightPanel": {
+    "title": "Mostrar/Ocultar panel de temas"
+  },
+  "toggleZenMode": {
+    "title": "Alternar modo de enfoque"
+  }
+}

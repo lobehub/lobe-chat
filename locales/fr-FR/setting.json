@@ -42,6 +42,14 @@
     "sessionWithName": "Paramètres de session · {{name}}",
     "title": "Paramètres"
   },
+  "hotkey": {
+    "group": {
+      "conversation": "Conversation",
+      "layout": "Disposition",
+      "system": "Système"
+    },
+    "title": "Raccourcis clavier"
+  },
   "llm": {
     "aesGcm": "Votre clé, votre adresse de proxy, etc. seront cryptées à l'aide de l'algorithme de chiffrement <1>AES-GCM</1>",
     "apiKey": {
@@ -425,6 +433,7 @@
     "agent": "Agent par défaut",
     "common": "Paramètres généraux",
     "experiment": "Expérience",
+    "hotkey": "Raccourcis clavier",
     "llm": "Modèle de langue",
     "provider": "Fournisseur de services d'IA",
     "sync": "Synchronisation cloud",

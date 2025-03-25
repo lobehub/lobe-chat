@@ -1,0 +1,37 @@
+{
+  "addUserMessage": {
+    "desc": "Mevcut girdi içeriğini kullanıcı mesajı olarak ekleyin, ancak oluşturmayı tetiklemeyin",
+    "title": "Bir kullanıcı mesajı ekle"
+  },
+  "editMessage": {
+    "desc": "Mesaja çift tıklayıp Alt tuşuna basarak düzenleme moduna geçin",
+    "title": "Mesajı düzenle"
+  },
+  "openChatSettings": {
+    "title": "Sohbet ayarlarını aç"
+  },
+  "regenerateMessage": {
+    "desc": "Son mesajı yeniden oluştur",
+    "title": "Mesajı yeniden oluştur"
+  },
+  "saveTopic": {
+    "desc": "Mevcut konuyu kaydedin ve yeni bir konu açın",
+    "title": "Yeni konu aç"
+  },
+  "search": {
+    "title": "Ara"
+  },
+  "switchAgent": {
+    "desc": "Yan panelde sabitlenmiş asistanı değiştirmek için Ctrl tuşuna basılı tutarak 0~9 sayısına basın",
+    "title": "Asistanı hızlıca değiştir"
+  },
+  "toggleLeftPanel": {
+    "title": "Asistan panelini göster/gizle"
+  },
+  "toggleRightPanel": {
+    "title": "Konu panelini göster/gizle"
+  },
+  "toggleZenMode": {
+    "title": "Odak modunu değiştir"
+  }
+}

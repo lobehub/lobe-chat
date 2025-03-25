@@ -42,6 +42,14 @@
     "sessionWithName": "Sessie-instellingen · {{name}}",
     "title": "Instellingen"
   },
+  "hotkey": {
+    "group": {
+      "conversation": "Gesprek",
+      "layout": "Indeling",
+      "system": "Systeem"
+    },
+    "title": "Sneltoetsen"
+  },
   "llm": {
     "aesGcm": "Uw sleutel en proxy-adres zullen worden versleuteld met het <1>AES-GCM</1> encryptie-algoritme",
     "apiKey": {
@@ -425,6 +433,7 @@
     "agent": "Standaardassistent",
     "common": "Algemene instellingen",
     "experiment": "Experiment",
+    "hotkey": "Sneltoetsen",
     "llm": "Taalmodel",
     "provider": "AI-dienstverlener",
     "sync": "Cloudsynchronisatie",

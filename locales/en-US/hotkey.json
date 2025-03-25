@@ -1,0 +1,37 @@
+{
+  "addUserMessage": {
+    "desc": "Add the current input as a user message without triggering generation",
+    "title": "Add a User Message"
+  },
+  "editMessage": {
+    "desc": "Enter edit mode by holding Alt and double-clicking the message",
+    "title": "Edit Message"
+  },
+  "openChatSettings": {
+    "title": "Open Chat Settings"
+  },
+  "regenerateMessage": {
+    "desc": "Regenerate the last message",
+    "title": "Regenerate Message"
+  },
+  "saveTopic": {
+    "desc": "Save the current topic and open a new one",
+    "title": "Start a New Topic"
+  },
+  "search": {
+    "title": "Search"
+  },
+  "switchAgent": {
+    "desc": "Switch between pinned assistants in the sidebar by holding Ctrl and pressing numbers 0-9",
+    "title": "Quick Switch Assistant"
+  },
+  "toggleLeftPanel": {
+    "title": "Show/Hide Assistant Panel"
+  },
+  "toggleRightPanel": {
+    "title": "Show/Hide Topic Panel"
+  },
+  "toggleZenMode": {
+    "title": "Toggle Focus Mode"
+  }
+}

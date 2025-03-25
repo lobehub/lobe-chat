@@ -18,8 +18,9 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   },
   {
     group: HotkeyGroupEnum.System,
-    id: HotkeyEnum.OpenChatSettings,
-    keys: combineKeys([Key.Mod, Key.Alt, 's']),
+    id: HotkeyEnum.SwitchAgent,
+    keys: combineKeys([Key.Ctrl, KEY_NUMBER]),
+    nonEditable: true,
   },
   {
     group: HotkeyGroupEnum.Layout,
@@ -35,6 +36,11 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     group: HotkeyGroupEnum.Layout,
     id: HotkeyEnum.ToggleZenMode,
     keys: combineKeys([Key.Mod, Key.Backslash]),
+  },
+  {
+    group: HotkeyGroupEnum.Conversation,
+    id: HotkeyEnum.OpenChatSettings,
+    keys: combineKeys([Key.Mod, Key.Alt, 's']),
   },
   {
     group: HotkeyGroupEnum.Conversation,
@@ -55,12 +61,6 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.EditMessage,
     keys: combineKeys([Key.Alt, Key.LeftDoubleClick]),
-    nonEditable: true,
-  },
-  {
-    group: HotkeyGroupEnum.Conversation,
-    id: HotkeyEnum.SwitchAgent,
-    keys: combineKeys([Key.Ctrl, KEY_NUMBER]),
     nonEditable: true,
   },
 ];
