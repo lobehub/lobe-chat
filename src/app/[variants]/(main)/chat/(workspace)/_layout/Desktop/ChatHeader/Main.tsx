@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Avatar } from '@lobehub/ui';
+import { ActionIcon, Avatar, Tooltip } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
@@ -16,6 +16,9 @@ import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
+import { HotkeyEnum } from '@/types/hotkey';
 
 import Tags from './Tags';
 
@@ -42,7 +45,9 @@ const useStyles = createStyles(({ css }) => ({
 }));
 
 const Main = memo(() => {
-  const { t } = useTranslation('chat');
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.ToggleLeftPanel));
+
+  const { t } = useTranslation(['chat', 'hotkey']);
   const { styles } = useStyles();
   useInitAgentConfig();
   const [isPinned] = useQueryState('pinned', parseAsBoolean);
@@ -61,23 +66,25 @@ const Main = memo(() => {
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
+  const ToggleAction = (
+    <Tooltip hotkey={hotkey} title={t('toggleLeftPanel.title', { ns: 'hotkey' })}>
+      <ActionIcon
+        icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
+        onClick={() => {
+          updateSystemStatus({
+            sessionsWidth: showSessionPanel ? 0 : 320,
+            showSessionPanel: !showSessionPanel,
+          });
+        }}
+        size={DESKTOP_HEADER_ICON_SIZE}
+      />
+    </Tooltip>
+  );
+
   if (!init)
     return (
       <Flexbox align={'center'} gap={8} horizontal>
-        {!isPinned && (
-          <ActionIcon
-            aria-label={t('agents')}
-            icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
-            onClick={() => {
-              updateSystemStatus({
-                sessionsWidth: showSessionPanel ? 0 : 320,
-                showSessionPanel: !showSessionPanel,
-              });
-            }}
-            size={DESKTOP_HEADER_ICON_SIZE}
-            title={t('agents')}
-          />
-        )}
+        {!isPinned && ToggleAction}
         <Skeleton
           active
           avatar={{ shape: 'circle', size: 28 }}
@@ -89,20 +96,7 @@ const Main = memo(() => {
 
   return (
     <Flexbox align={'center'} gap={4} horizontal>
-      {!isPinned && (
-        <ActionIcon
-          aria-label={t('agents')}
-          icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
-          onClick={() => {
-            updateSystemStatus({
-              sessionsWidth: showSessionPanel ? 0 : 320,
-              showSessionPanel: !showSessionPanel,
-            });
-          }}
-          size={DESKTOP_HEADER_ICON_SIZE}
-          title={t('agents')}
-        />
-      )}
+      {!isPinned && ToggleAction}
       <Avatar
         avatar={avatar}
         background={backgroundColor}

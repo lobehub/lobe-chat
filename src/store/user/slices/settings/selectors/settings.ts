@@ -6,6 +6,7 @@ import {
   DEFAULT_SYSTEM_AGENT_CONFIG,
   DEFAULT_TTS_CONFIG,
 } from '@/const/settings';
+import { HotkeyId } from '@/types/hotkey';
 import {
   GlobalLLMProviderKey,
   ProviderConfig,
@@ -26,8 +27,6 @@ export const getProviderConfigById = (provider: string) => (s: UserStore) =>
 
 const currentTTS = (s: UserStore) => merge(DEFAULT_TTS_CONFIG, currentSettings(s).tts);
 
-const currentHotkey = (s: UserStore) => merge(DEFAULT_HOTKEY_CONFIG, currentSettings(s).hotkey);
-
 const defaultAgent = (s: UserStore) => merge(DEFAULT_AGENT, currentSettings(s).defaultAgent);
 const defaultAgentConfig = (s: UserStore) => merge(DEFAULT_AGENT_CONFIG, defaultAgent(s).config);
 
@@ -41,8 +40,10 @@ const isDalleAutoGenerating = (s: UserStore) => currentSettings(s).tool?.dalle?.
 const currentSystemAgent = (s: UserStore) =>
   merge(DEFAULT_SYSTEM_AGENT_CONFIG, currentSettings(s).systemAgent);
 
+const getHotkeyById = (id: HotkeyId) => (s: UserStore) =>
+  merge(DEFAULT_HOTKEY_CONFIG, currentSettings(s).hotkey)[id];
+
 export const settingsSelectors = {
-  currentHotkey,
   currentSettings,
   currentSystemAgent,
   currentTTS,
@@ -51,6 +52,7 @@ export const settingsSelectors = {
   defaultAgentConfig,
   defaultAgentMeta,
   exportSettings,
+  getHotkeyById,
   isDalleAutoGenerating,
   providerConfig: getProviderConfigById,
 };

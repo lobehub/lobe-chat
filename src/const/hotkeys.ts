@@ -2,43 +2,38 @@ import { KeyMapEnum as Key, combineKeys } from '@lobehub/ui';
 
 import { HotkeyEnum, HotkeyGroupEnum, HotkeyRegistration } from '@/types/hotkey';
 
-export const ALT_KEY = 'alt';
-export const META_KEY = 'mod';
-export const SAVE_TOPIC_KEY = 'n';
-export const CLEAN_MESSAGE_KEY = 'backspace';
+// 默认全局注册的快捷键 scope
+// https://react-hotkeys-hook.vercel.app/docs/documentation/hotkeys-provider
+export const GLOBAL_HOTKEY_SCOPE = 'global';
+export const CHAT_HOTKEY_SCOPE = 'chat';
 
-export const HOTKEYS = {
-  chatSettings: 'mod+comma',
-  regenerate: 'alt+r',
-  saveTopic: 'alt+n',
-  zenMode: 'mod+\\',
-};
+export const KEY_NUMBER = '1-9';
 
 // mod 在 Mac 上是 command 键，alt 在 Win 上是 ctrl 键
 export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   {
     group: HotkeyGroupEnum.System,
-    id: HotkeyEnum.SearchAgent,
+    id: HotkeyEnum.Search,
     keys: combineKeys([Key.Mod, 'k']),
   },
   {
     group: HotkeyGroupEnum.System,
-    id: 'openSettings',
-    keys: combineKeys([Key.Mod, Key.Comma]),
+    id: HotkeyEnum.OpenChatSettings,
+    keys: combineKeys([Key.Mod, Key.Alt, 's']),
   },
   {
     group: HotkeyGroupEnum.Layout,
-    id: HotkeyEnum.SwitchLeftPanel,
+    id: HotkeyEnum.ToggleLeftPanel,
     keys: combineKeys([Key.Mod, Key.Alt, Key.Left]),
   },
   {
     group: HotkeyGroupEnum.Layout,
-    id: HotkeyEnum.SwitchRightPanel,
+    id: HotkeyEnum.ToggleRightPanel,
     keys: combineKeys([Key.Mod, Key.Alt, Key.Right]),
   },
   {
     group: HotkeyGroupEnum.Layout,
-    id: HotkeyEnum.SwitchZenMode,
+    id: HotkeyEnum.ToggleZenMode,
     keys: combineKeys([Key.Mod, Key.Backslash]),
   },
   {
@@ -53,6 +48,11 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   },
   {
     group: HotkeyGroupEnum.Conversation,
+    id: HotkeyEnum.AddUserMessage,
+    keys: combineKeys([Key.Alt, Key.Enter]),
+  },
+  {
+    group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.EditMessage,
     keys: combineKeys([Key.Alt, Key.LeftDoubleClick]),
     nonEditable: true,
@@ -60,12 +60,7 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.SwitchAgent,
-    keys: combineKeys([Key.Ctrl, '0-9']),
+    keys: combineKeys([Key.Ctrl, KEY_NUMBER]),
     nonEditable: true,
-  },
-  {
-    group: HotkeyGroupEnum.Conversation,
-    id: HotkeyEnum.AddUserMessage,
-    keys: combineKeys([Key.Alt, Key.Enter]),
   },
 ];

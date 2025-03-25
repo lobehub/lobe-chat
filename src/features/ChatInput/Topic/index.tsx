@@ -2,16 +2,18 @@ import { ActionIcon, Hotkey, Icon, Tooltip } from '@lobehub/ui';
 import { Button, Popconfirm } from 'antd';
 import { LucideGalleryVerticalEnd, LucideMessageSquarePlus } from 'lucide-react';
 import { memo, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ALT_KEY, SAVE_TOPIC_KEY } from '@/const/hotkeys';
 import { useActionSWR } from '@/libs/swr';
 import { useChatStore } from '@/store/chat';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
+import { HotkeyEnum } from '@/types/hotkey';
 
 const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SaveTopic));
   const [hasTopic, openNewTopicOrSaveTopic] = useChatStore((s) => [
     !!s.activeTopicId,
     s.openNewTopicOrSaveTopic,
@@ -23,13 +25,6 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const icon = hasTopic ? LucideMessageSquarePlus : LucideGalleryVerticalEnd;
   const desc = t(hasTopic ? 'topic.openNewTopic' : 'topic.saveCurrentMessages');
-
-  const hotkeys = [ALT_KEY, SAVE_TOPIC_KEY].join('+');
-
-  useHotkeys(hotkeys, () => mutate(), {
-    enableOnFormTags: true,
-    preventDefault: true,
-  });
 
   if (mobile) {
     return (
@@ -45,7 +40,7 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
             <div style={{ marginRight: '16px', whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
               {t(hasTopic ? 'topic.checkOpenNewTopic' : 'topic.checkSaveCurrentMessages')}
             </div>
-            <Hotkey keys={hotkeys} />
+            <Hotkey keys={hotkey} />
           </Flexbox>
         }
       >
@@ -59,7 +54,7 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
     );
   } else {
     return (
-      <Tooltip hotkey={hotkeys} title={desc}>
+      <Tooltip hotkey={hotkey} title={desc}>
         <Button
           aria-label={desc}
           icon={<Icon icon={icon} />}

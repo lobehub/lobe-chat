@@ -1,14 +1,14 @@
 export const HotkeyEnum = {
   AddUserMessage: 'addUserMessage',
   EditMessage: 'editMessage',
-  OpenSettings: 'openSettings',
+  OpenChatSettings: 'openChatSettings',
   RegenerateMessage: 'regenerateMessage',
   SaveTopic: 'saveTopic',
-  SearchAgent: 'searchAgent',
+  Search: 'search',
   SwitchAgent: 'switchAgent',
-  SwitchLeftPanel: 'switchLeftPanel',
-  SwitchRightPanel: 'switchRightPanel',
-  SwitchZenMode: 'switchZenMode',
+  ToggleLeftPanel: 'toggleLeftPanel',
+  ToggleRightPanel: 'toggleRightPanel',
+  ToggleZenMode: 'toggleZenMode',
 } as const;
 
 export const HotkeyGroupEnum = {
@@ -17,9 +17,12 @@ export const HotkeyGroupEnum = {
   System: 'system',
 } as const;
 
+export type HotkeyId = (typeof HotkeyEnum)[keyof typeof HotkeyEnum];
+export type HotkeyGroupId = (typeof HotkeyGroupEnum)[keyof typeof HotkeyGroupEnum];
+
 export interface HotkeyItem {
-  group: (typeof HotkeyGroupEnum)[keyof typeof HotkeyGroupEnum];
-  id: (typeof HotkeyEnum)[keyof typeof HotkeyEnum];
+  group: HotkeyGroupId;
+  id: HotkeyId;
   isDesktop?: boolean; // 是否是桌面端专用的快捷键
   keys: string;
   nonEditable?: boolean; // 是否为不可编辑的快捷键
@@ -28,7 +31,7 @@ export interface HotkeyItem {
 export type HotkeyRegistration = HotkeyItem[];
 
 export type HotkeyI18nTranslations = Record<
-  (typeof HotkeyEnum)[keyof typeof HotkeyEnum],
+  HotkeyId,
   {
     desc?: string;
     title: string;
