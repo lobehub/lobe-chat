@@ -3,10 +3,11 @@
 import { ChatItem } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { MouseEventHandler, ReactNode, memo, useCallback, useMemo } from 'react';
+import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -64,6 +65,7 @@ const Item = memo<ChatListItemProps>(
     endRender,
     disableEditing,
     inPortalThread = false,
+    index,
   }) => {
     const { t } = useTranslation('common');
     const { styles, cx } = useStyles();
@@ -216,6 +218,7 @@ const Item = memo<ChatListItemProps>(
     const belowMessage = useMemo(() => item && <BelowMessage data={item} />, [item]);
     const errorMessage = useMemo(() => item && <ErrorMessageExtra data={item} />, [item]);
     const messageExtra = useMemo(() => item && <MessageExtra data={item} />, [item]);
+    const virtuosoRef = use(VirtuosoContext);
 
     return (
       item && (
@@ -237,7 +240,13 @@ const Item = memo<ChatListItemProps>(
               onAvatarClick={onAvatarsClick}
               onChange={onChange}
               onDoubleClick={onDoubleClick}
-              onEditingChange={onEditingChange}
+              onEditingChange={(edit) => {
+                onEditingChange(edit);
+
+                if (edit) {
+                  virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
+                }
+              }}
               placement={type === 'chat' ? (item.role === 'user' ? 'right' : 'left') : 'left'}
               primary={item.role === 'user'}
               renderMessage={renderMessage}
