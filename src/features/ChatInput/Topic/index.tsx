@@ -49,14 +49,12 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
           </div>
         }
       >
-        <Tooltip>
-          <ActionIcon
-            aria-label={desc}
-            icon={icon}
-            loading={isValidating}
-            onClick={() => setConfirmOpened(true)}
-          />
-        </Tooltip>
+        <ActionIcon
+          aria-label={desc}
+          icon={icon}
+          loading={isValidating}
+          onClick={() => setConfirmOpened(true)}
+        />
       </Popconfirm>
     );
   } else {

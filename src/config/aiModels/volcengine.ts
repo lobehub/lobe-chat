@@ -20,8 +20,8 @@ const doubaoChatModels: AIChatModelCard[] = [
     maxOutput: 8000,
     pricing: {
       currency: 'CNY',
-      input: 2, // 2.24 恢复原价 4, 16
-      output: 8,
+      input: 4,
+      output: 16,
     },
     type: 'chat',
   },

@@ -7,6 +7,7 @@ table agents {
   avatar text
   background_color text
   plugins jsonb [default: `[]`]
+  client_id text
   user_id text [not null]
   chat_config jsonb
   few_shots jsonb
@@ -18,6 +19,10 @@ table agents {
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (client_id, user_id) [name: 'client_id_user_id_unique', unique]
+  }
 }
 
 table agents_files {
@@ -116,6 +121,7 @@ table files {
   name text [not null]
   size integer [not null]
   url text [not null]
+  client_id text
   metadata jsonb
   chunk_task_id uuid
   embedding_task_id uuid
@@ -125,6 +131,7 @@ table files {
 
   indexes {
     file_hash [name: 'file_hash_idx']
+    (client_id, user_id) [name: 'files_client_id_user_id_unique', unique]
   }
 }
 
@@ -157,11 +164,16 @@ table knowledge_bases {
   avatar text
   type text
   user_id text [not null]
+  client_id text
   is_public boolean [default: false]
   settings jsonb
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (client_id, user_id) [name: 'knowledge_bases_client_id_user_id_unique', unique]
+  }
 }
 
 table message_chunks {
@@ -183,7 +195,12 @@ table message_plugins {
   identifier text
   state jsonb
   error jsonb
+  client_id text
   user_id text [not null]
+
+  indexes {
+    (client_id, user_id) [name: 'message_plugins_client_id_user_id_unique', unique]
+  }
 }
 
 table message_queries {
@@ -191,8 +208,13 @@ table message_queries {
   message_id text [not null]
   rewrite_query text
   user_query text
+  client_id text
   user_id text [not null]
   embeddings_id uuid
+
+  indexes {
+    (client_id, user_id) [name: 'message_queries_client_id_user_id_unique', unique]
+  }
 }
 
 table message_query_chunks {
@@ -212,7 +234,12 @@ table message_tts {
   content_md5 text
   file_id text
   voice text
+  client_id text
   user_id text [not null]
+
+  indexes {
+    (client_id, user_id) [name: 'message_tts_client_id_user_id_unique', unique]
+  }
 }
 
 table message_translates {
@@ -220,7 +247,12 @@ table message_translates {
   content text
   from text
   to text
+  client_id text
   user_id text [not null]
+
+  indexes {
+    (client_id, user_id) [name: 'message_translates_client_id_user_id_unique', unique]
+  }
 }
 
 table messages {
@@ -324,10 +356,15 @@ table chunks {
   metadata jsonb
   index integer
   type varchar
+  client_id text
   user_id text
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (client_id, user_id) [name: 'chunks_client_id_user_id_unique', unique]
+  }
 }
 
 table embeddings {
@@ -335,7 +372,12 @@ table embeddings {
   chunk_id uuid [unique]
   embeddings vector(1024)
   model text
+  client_id text
   user_id text
+
+  indexes {
+    (client_id, user_id) [name: 'embeddings_client_id_user_id_unique', unique]
+  }
 }
 
 table unstructured_chunks {
@@ -349,8 +391,13 @@ table unstructured_chunks {
   updated_at "timestamp with time zone" [not null, default: `now()`]
   parent_id varchar
   composite_id uuid
+  client_id text
   user_id text
   file_id varchar
+
+  indexes {
+    (client_id, user_id) [name: 'unstructured_chunks_client_id_user_id_unique', unique]
+  }
 }
 
 table rag_eval_dataset_records {
@@ -456,7 +503,7 @@ table session_groups {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
-    (client_id, user_id) [name: 'session_group_client_id_user_unique', unique]
+    (client_id, user_id) [name: 'session_groups_client_id_user_id_unique', unique]
   }
 }
 
@@ -490,11 +537,16 @@ table threads {
   topic_id text [not null]
   source_message_id text [not null]
   parent_thread_id text
+  client_id text
   user_id text [not null]
   last_active_at "timestamp with time zone" [default: `now()`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (client_id, user_id) [name: 'threads_client_id_user_id_unique', unique]
+  }
 }
 
 table topics {
@@ -511,7 +563,7 @@ table topics {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 
   indexes {
-    (client_id, user_id) [name: 'topic_client_id_user_id_unique', unique]
+    (client_id, user_id) [name: 'topics_client_id_user_id_unique', unique]
   }
 }
 

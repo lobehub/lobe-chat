@@ -158,6 +158,7 @@ export const chatThreadMessage: StateCreator<
 
     get().internal_toggleMessageLoading(false, tempMessageId);
 
+    if (!parentMessageId) return;
     //  update assistant update to make it rerank
     useSessionStore.getState().triggerSessionUpdate(get().activeId);
 
