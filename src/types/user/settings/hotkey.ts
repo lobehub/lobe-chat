@@ -1,3 +1,3 @@
-import { HotkeyEnum } from '@/types/hotkey';
+import { HotkeyId } from '@/types/hotkey';
 
-export type UserHotkeyConfig = Record<(typeof HotkeyEnum)[keyof typeof HotkeyEnum], string>;
+export type UserHotkeyConfig = Record<HotkeyId, string>;
