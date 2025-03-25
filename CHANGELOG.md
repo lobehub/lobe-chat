@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.74.11](https://github.com/lobehub/lobe-chat/compare/v1.74.10...v1.74.11)
+
+<sup>Released on **2025-03-25**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Upgrade styles for Drawer.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Upgrade styles for Drawer, closes [#7141](https://github.com/lobehub/lobe-chat/issues/7141) ([bcbc8fc](https://github.com/lobehub/lobe-chat/commit/bcbc8fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.74.10](https://github.com/lobehub/lobe-chat/compare/v1.74.9...v1.74.10)
 
 <sup>Released on **2025-03-25**</sup>
