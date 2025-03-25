@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.74.10](https://github.com/lobehub/lobe-chat/compare/v1.74.9...v1.74.10)
+
+<sup>Released on **2025-03-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `hunyuan-t1-latest` from Hunyuan.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `hunyuan-t1-latest` from Hunyuan, closes [#7123](https://github.com/lobehub/lobe-chat/issues/7123) ([8377c6b](https://github.com/lobehub/lobe-chat/commit/8377c6b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.74.9](https://github.com/lobehub/lobe-chat/compare/v1.74.8...v1.74.9)
+
+<sup>Released on **2025-03-25**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Add reject pattern for browserless to boost crawl performance.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Add reject pattern for browserless to boost crawl performance, closes [#6996](https://github.com/lobehub/lobe-chat/issues/6996) ([184a1ba](https://github.com/lobehub/lobe-chat/commit/184a1ba))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.74.8](https://github.com/lobehub/lobe-chat/compare/v1.74.7...v1.74.8)
 
 <sup>Released on **2025-03-24**</sup>
