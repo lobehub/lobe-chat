@@ -43,3 +43,10 @@ export const useSwitchAgentHotkey = () => {
     ref,
   };
 };
+
+// 注册聚合
+
+export const useRegisterGlobalHotkeys = () => {
+  // 全局自动注册不需要 enableScope
+  useSwitchAgentHotkey();
+};

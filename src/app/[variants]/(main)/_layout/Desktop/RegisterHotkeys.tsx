@@ -1,9 +1,9 @@
 'use client';
 
-import { useSwitchAgentHotkey } from '@/hooks/useHotkeys';
+import { useRegisterGlobalHotkeys } from '@/hooks/useHotkeys';
 
 const RegisterHotkeys = () => {
-  useSwitchAgentHotkey();
+  useRegisterGlobalHotkeys();
 
   return null;
 };

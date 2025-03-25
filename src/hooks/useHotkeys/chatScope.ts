@@ -1,5 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import { parseAsBoolean, useQueryState } from 'nuqs';
+import { useEffect } from 'react';
+import { useHotkeysContext } from 'react-hotkeys-hook';
 
 import { CHAT_HOTKEY_SCOPE } from '@/const/hotkeys';
 import { useSendMessage } from '@/features/ChatInput/useSend';
@@ -80,4 +82,30 @@ export const useToggleRightPanelHotkey = () => {
 export const useAddUserMessageHotkey = () => {
   const { send } = useSendMessage();
   return useHotkeyById(HotkeyEnum.AddUserMessage, () => send({ onlyAddUserMessage: true }));
+};
+
+// 注册聚合
+
+export const useRegisterChatHotkeys = () => {
+  const { enableScope, disableScope } = useHotkeysContext();
+
+  // System
+  useOpenChatSettingsHotkey();
+
+  // Layout
+  useToggleLeftPanelHotkey();
+  useToggleRightPanelHotkey();
+  useToggleZenModeHotkey();
+
+  // Conversation
+  useRegenerateMessageHotkey();
+  useSaveTopicHotkey();
+  useAddUserMessageHotkey();
+
+  useEffect(() => {
+    enableScope(CHAT_HOTKEY_SCOPE);
+    return () => disableScope(CHAT_HOTKEY_SCOPE);
+  }, []);
+
+  return null;
 };
