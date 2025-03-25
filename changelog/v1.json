@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add reject pattern for browserless to boost crawl performance."]
+    },
+    "date": "2025-03-25",
+    "version": "1.74.9"
+  },
+  {
+    "children": {
       "fixes": ["Update create message loading issue."]
     },
     "date": "2025-03-24",
