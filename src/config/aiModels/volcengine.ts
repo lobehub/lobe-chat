@@ -6,6 +6,8 @@ import { AIChatModelCard } from '@/types/aiModel';
 const doubaoChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      // FC supported , ref: https://www.volcengine.com/docs/82379/1262342#8c325d45
+      functionCall: true,
       reasoning: true,
     },
     config: {
@@ -67,8 +69,8 @@ const doubaoChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      // FC not supported yet, ref: https://www.volcengine.com/docs/82379/1262342#8c325d45
-      functionCall: false,
+      // FC supported, ref: https://www.volcengine.com/docs/82379/1262342#8c325d45
+      functionCall: true,
     },
     config: {
       deploymentName: 'deepseek-v3-241226',
