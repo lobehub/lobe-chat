@@ -69,6 +69,7 @@
     "524": "Ci dispiace, il server ha superato il timeout in attesa di una risposta, potrebbe essere a causa di una risposta troppo lenta, per favore riprova più tardi",
     "AgentRuntimeError": "Errore di esecuzione del modello linguistico Lobe, controlla le informazioni seguenti o riprova",
     "ConnectionCheckFailed": "La risposta è vuota, controlla se l'indirizzo del proxy API termina con `/v1`",
+    "CreateMessageError": "Ci dispiace, il messaggio non è stato inviato correttamente. Si prega di copiare il contenuto e inviarlo nuovamente. Dopo aver aggiornato la pagina, questo messaggio non verrà conservato.",
     "ExceededContextWindow": "Il contenuto della richiesta attuale supera la lunghezza che il modello può gestire. Si prega di ridurre la quantità di contenuto e riprovare.",
     "FreePlanLimit": "Attualmente sei un utente gratuito e non puoi utilizzare questa funzione. Per favore, passa a un piano a pagamento per continuare.",
     "InsufficientQuota": "Ci dispiace, la quota per questa chiave ha raggiunto il limite. Si prega di controllare il saldo dell'account o di aumentare la quota della chiave e riprovare.",

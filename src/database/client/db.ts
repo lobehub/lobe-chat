@@ -1,7 +1,14 @@
+import { sql } from 'drizzle-orm';
 import { PgliteDatabase, drizzle } from 'drizzle-orm/pglite';
 import { Md5 } from 'ts-md5';
 
-import { ClientDBLoadingProgress, DatabaseLoadingState } from '@/types/clientDB';
+import { DrizzleMigrationModel } from '@/database/models/drizzleMigration';
+import {
+  ClientDBLoadingProgress,
+  DatabaseLoadingState,
+  MigrationSQL,
+  MigrationTableItem,
+} from '@/types/clientDB';
 import { sleep } from '@/utils/sleep';
 
 import * as schema from '../schemas';
@@ -9,10 +16,17 @@ import migrations from './migrations.json';
 
 const pgliteSchemaHashCache = 'LOBE_CHAT_PGLITE_SCHEMA_HASH';
 
+const DB_NAME = 'lobechat';
 type DrizzleInstance = PgliteDatabase<typeof schema>;
 
+interface onErrorState {
+  error: Error;
+  migrationTableItems: MigrationTableItem[];
+  migrationsSQL: MigrationSQL[];
+}
+
 export interface DatabaseLoadingCallbacks {
-  onError?: (error: Error) => void;
+  onError?: (error: onErrorState) => void;
   onProgress?: (progress: ClientDBLoadingProgress) => void;
   onStateChange?: (state: DatabaseLoadingState) => void;
 }
@@ -152,8 +166,28 @@ export class DatabaseManager {
       hash = Md5.hashStr(JSON.stringify(migrations));
       // if hash is the same, no need to migrate
       if (hash === cacheHash) {
-        this.isLocalDBSchemaSynced = true;
-        return this.db;
+        try {
+          // 检查数据库中是否存在表
+          // 这里使用 pg_tables 系统表查询用户表数量
+          const tablesResult = await this.db.execute(
+            sql`
+              SELECT COUNT(*) as table_count
+              FROM information_schema.tables
+              WHERE table_schema = 'public'
+            `,
+          );
+
+          const tableCount = parseInt((tablesResult.rows[0] as any).table_count || '0', 10);
+
+          // 如果表数量大于0，则认为数据库已正确初始化
+          if (tableCount > 0) {
+            this.isLocalDBSchemaSynced = true;
+            return this.db;
+          }
+        } catch (error) {
+          console.warn('Error checking table existence, proceeding with migration', error);
+          // 如果查询失败，继续执行迁移以确保安全
+        }
       }
     }
 
@@ -204,13 +238,11 @@ export class DatabaseManager {
 
         let db: typeof PGlite;
 
-        const dbName = 'lobechat';
-
         // make db as web worker if worker is available
         // https://github.com/lobehub/lobe-chat/issues/5785
         if (typeof Worker !== 'undefined' && typeof navigator.locks !== 'undefined') {
           db = await initPgliteWorker({
-            dbName,
+            dbName: DB_NAME,
             fsBundle: fsBundle as Blob,
             vectorBundlePath: DatabaseManager.VECTOR_CDN_URL,
             wasmModule,
@@ -219,7 +251,7 @@ export class DatabaseManager {
           // in edge runtime or test runtime, we don't have worker
           db = new PGlite({
             extensions: { vector },
-            fs: typeof window === 'undefined' ? new MemoryFS(dbName) : new IdbFs(dbName),
+            fs: typeof window === 'undefined' ? new MemoryFS(DB_NAME) : new IdbFs(DB_NAME),
             relaxedDurability: true,
             wasmModule,
           });
@@ -241,10 +273,25 @@ export class DatabaseManager {
         this.initPromise = null;
         this.callbacks?.onStateChange?.(DatabaseLoadingState.Error);
         const error = e as Error;
+
+        // 查询迁移表数据
+        let migrationsTableData: MigrationTableItem[] = [];
+        try {
+          // 尝试查询迁移表
+          const drizzleMigration = new DrizzleMigrationModel(this.db as any);
+          migrationsTableData = await drizzleMigration.getMigrationList();
+        } catch (queryError) {
+          console.error('Failed to query migrations table:', queryError);
+        }
+
         this.callbacks?.onError?.({
-          message: error.message,
-          name: error.name,
-          stack: error.stack,
+          error: {
+            message: error.message,
+            name: error.name,
+            stack: error.stack,
+          },
+          migrationTableItems: migrationsTableData,
+          migrationsSQL: migrations,
         });
 
         console.error(error);
@@ -271,6 +318,38 @@ export class DatabaseManager {
       },
     });
   }
+
+  async resetDatabase(): Promise<void> {
+    // 删除 IndexedDB 数据库
+    return new Promise<void>((resolve, reject) => {
+      // 检查 IndexedDB 是否可用
+      if (typeof indexedDB === 'undefined') {
+        console.warn('IndexedDB is not available, cannot delete database');
+        resolve();
+        return;
+      }
+
+      const dbName = `/pglite/${DB_NAME}`;
+      const request = indexedDB.deleteDatabase(dbName);
+
+      request.onsuccess = () => {
+        console.log(`✅ Database '${dbName}' reset successfully`);
+
+        // 清除本地存储的模式哈希
+        if (typeof localStorage !== 'undefined') {
+          localStorage.removeItem(pgliteSchemaHashCache);
+        }
+
+        resolve();
+      };
+
+      // eslint-disable-next-line unicorn/prefer-add-event-listener
+      request.onerror = (event) => {
+        console.error('❌ Error resetting database:', event);
+        reject(new Error(`Failed to reset database '${dbName}'`));
+      };
+    });
+  }
 }
 
 // 导出单例
@@ -282,3 +361,15 @@ export const clientDB = dbManager.createProxy();
 // 导出初始化方法，供应用启动时使用
 export const initializeDB = (callbacks?: DatabaseLoadingCallbacks) =>
   dbManager.initialize(callbacks);
+
+export const resetClientDatabase = async () => {
+  await dbManager.resetDatabase();
+};
+
+export const updateMigrationRecord = async (migrationHash: string) => {
+  await clientDB.execute(
+    sql`INSERT INTO "drizzle"."__drizzle_migrations" ("hash", "created_at") VALUES (${migrationHash}, ${Date.now()});`,
+  );
+
+  await initializeDB();
+};
