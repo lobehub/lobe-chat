@@ -10,10 +10,14 @@ export interface InfiniAIModelCard {
 
 export const LobeInfiniAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://cloud.infini-ai.com/maas/v1',
+  debug: {
+    chatCompletion: () => process.env.DEBUG_INFINIAI_CHAT_COMPLETION === '1',
+  },
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
     const reasoningKeywords = ['deepseek-r1', 'qwq'];
+    const visionKeywords = ['qwen2.5-vl'];
 
     const modelsPage = (await client.models.list()) as any;
     const modelList: InfiniAIModelCard[] = modelsPage.data;
@@ -34,7 +38,10 @@ export const LobeInfiniAI = LobeOpenAICompatibleFactory({
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.reasoning ||
             false,
-          vision: knownModel?.abilities?.vision || false,
+          vision:
+            visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

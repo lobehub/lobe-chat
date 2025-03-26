@@ -2,6 +2,7 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 // https://cloud.infini-ai.com/genstudio/model
 // All models are currently free
+// Currently the platform doesn't support Function Call
 
 const infiniaiChatModels: AIChatModelCard[] = [
   {
@@ -24,8 +25,8 @@ const infiniaiChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 65_536,
     description:
-      'DeepSeek-V3 是一个强大的专家混合（MoE）语言模型，总参数量为 671B，每个 Token 激活 37B 参数。该模型采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，实现了高效推理和经济训练。',
-    displayName: 'DeepSeek V3',
+      'DeepSeek-V3-0324 是一个强大的专家混合（MoE）语言模型，总参数量为 671B，每个 Token 激活 37B 参数。该模型采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，实现了高效推理和经济训练，并在前代 DeepSeek-V3 的基础上显著提升了性能。',
+    displayName: 'DeepSeek V3 0324',
     enabled: true,
     id: 'deepseek-v3',
     pricing: {
@@ -56,6 +57,39 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1 Distill Qwen 32B',
     enabled: true,
     id: 'deepseek-r1-distill-qwen-32b',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 125_000,
+    description:
+      'Qwen2.5-VL 系列模型提升了模型的智能水平、实用性和适用性，使其在自然对话、内容创作、专业知识服务及代码开发等场景中表现更优。旗舰模型 Qwen2.5-VL-72B-Instruct 在涵盖多个领域和任务的基准测试中展现出强大的竞争力，包括大学水平的问题解答、数学、文档理解、通用问答、视频理解以及视觉代理任务等。',
+    displayName: 'Qwen2.5 VL 72B Instruct',
+    enabled: true,
+    id: 'qwen2.5-vl-72b-instruct',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    description:
+      'Qwen2.5-VL 系列模型提升了模型的智能水平、实用性和适用性，使其在自然对话、内容创作、专业知识服务及代码开发等场景中表现更优。',
+    displayName: 'Qwen2.5 VL 7B Instruct',
+    enabled: true,
+    id: 'qwen2.5-vl-7b-instruct',
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -182,48 +216,6 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'Yi-1.5 34B Chat',
     enabled: true,
     id: 'yi-1.5-34b-chat',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description:
-      'Qwen1.5 系列是 Qwen2 的 Beta 版本，是一个基于 Transformer 的仅解码语言模型，在海量数据上进行预训练。与之前发布的 Qwen 系列版本相比，Qwen1.5 系列 base 与 chat 模型均能支持多种语言，在整体聊天和基础能力上都得到了提升。Qwen1.5-72b-chat 是其中专用于 chat 场景的 720 亿参数的大模型。',
-    displayName: 'Qwen1.5 72B Chat',
-    enabled: true,
-    id: 'qwen1.5-72b-chat',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description:
-      'Qwen1.5 系列是 Qwen2 的 Beta 版本，是一个基于 Transformer 的仅解码语言模型，在海量数据上进行预训练。与之前发布的 Qwen 系列版本相比，Qwen1.5 系列 base 与 chat 模型均能支持多种语言，在整体聊天和基础能力上都得到了提升。Qwen1.5-32b-chat 是其中专用于 chat 场景的 320 亿参数的大模型，较于 14b 模型在智能体场景更强，较于 72b 模型推理成本更低。',
-    displayName: 'Qwen1.5 32B Chat',
-    enabled: true,
-    id: 'qwen1.5-32b-chat',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    description:
-      'Qwen1.5 系列是 Qwen2 的 Beta 版本，是一个基于 Transformer 的仅解码语言模型，在海量数据上进行预训练。与之前发布的 Qwen 系列版本相比，Qwen1.5 系列 base 与 chat 模型均能支持多种语言，在整体聊天和基础能力上都得到了提升。Qwen1.5-14b-chat 是其中专用于 chat 场景的 140 亿参数的主流大小模型。',
-    displayName: 'Qwen1.5 14B Chat',
-    enabled: true,
-    id: 'qwen1.5-14b-chat',
     pricing: {
       currency: 'CNY',
       input: 0,
