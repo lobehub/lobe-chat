@@ -8,16 +8,6 @@ export const systemStatus = (s: GlobalState) => s.status;
 const sessionGroupKeys = (s: GlobalState): string[] =>
   s.status.expandSessionGroupKeys || INITIAL_STATUS.expandSessionGroupKeys;
 
-<<<<<<< HEAD
-const showSystemRole = (s: GlobalStore) => s.status.showSystemRole;
-const mobileShowTopic = (s: GlobalStore) => s.status.mobileShowTopic;
-const mobileShowPortal = (s: GlobalStore) => s.status.mobileShowPortal;
-const showChatSideBar = (s: GlobalStore) => !s.status.zenMode && s.status.showChatSideBar;
-const showSessionPanel = (s: GlobalStore) => !s.status.zenMode && s.status.showSessionPanel;
-const showFilePanel = (s: GlobalStore) => s.status.showFilePanel;
-const hidePWAInstaller = (s: GlobalStore) => s.status.hidePWAInstaller;
-const isShowCredit = (s: GlobalStore) => s.status.isShowCredit;
-=======
 const showSystemRole = (s: GlobalState) => s.status.showSystemRole;
 const mobileShowTopic = (s: GlobalState) => s.status.mobileShowTopic;
 const mobileShowPortal = (s: GlobalState) => s.status.mobileShowPortal;
@@ -27,7 +17,6 @@ const showFilePanel = (s: GlobalState) => s.status.showFilePanel;
 const hidePWAInstaller = (s: GlobalState) => s.status.hidePWAInstaller;
 const isShowCredit = (s: GlobalState) => s.status.isShowCredit;
 const themeMode = (s: GlobalState) => s.status.themeMode || 'auto';
->>>>>>> origin/main
 
 const showChatHeader = (s: GlobalState) => !s.status.zenMode;
 const inZenMode = (s: GlobalState) => s.status.zenMode;
