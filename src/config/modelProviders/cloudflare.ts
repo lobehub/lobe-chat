@@ -23,6 +23,14 @@ const Cloudflare: ModelProviderCard = {
       tokens: 4096,
     },
     {
+      description: 'Llama 3.3 70B quantized to fp8 precision, optimized to be faster.',
+      displayName: 'llama-3.3-70b-instruct-fp8-fast',
+      enabled: true,
+      functionCall: true,
+      id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+      tokens: 24_000,
+    },
+    {
       displayName: 'llama-3-8b-instruct-awq',
       id: '@cf/meta/llama-3-8b-instruct-awq',
       tokens: 8192,
