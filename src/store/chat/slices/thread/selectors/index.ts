@@ -1,6 +1,6 @@
 import { THREAD_DRAFT_ID } from '@/const/message';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import type { ChatStoreState } from '@/store/chat';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatMessage } from '@/types/message';
@@ -123,9 +123,13 @@ const portalAIChatsWithHistoryConfig = (s: ChatStoreState) => {
 
   const messages = [...parentMessages, ...afterMessages].filter(Boolean) as ChatMessage[];
 
-  const config = agentSelectors.currentAgentChatConfig(useAgentStore.getState());
+  const enableHistoryCount = agentChatConfigSelectors.enableHistoryCount(useAgentStore.getState());
+  const historyCount = agentChatConfigSelectors.historyCount(useAgentStore.getState());
 
-  return chatHelpers.getSlicedMessagesWithConfig(messages, config);
+  return chatHelpers.getSlicedMessages(messages, {
+    enableHistoryCount,
+    historyCount,
+  });
 };
 
 const threadSourceMessageIndex = (s: ChatStoreState) => {

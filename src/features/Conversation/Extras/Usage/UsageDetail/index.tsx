@@ -37,6 +37,15 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
       title: t('messages.tokenDetails.inputAudio'),
       value: isShowCredit ? detailTokens.inputAudio.credit : detailTokens.inputAudio.token,
     },
+<<<<<<< HEAD
+=======
+    !!detailTokens.inputCitation && {
+      color: theme.orange,
+      id: 'inputText',
+      title: t('messages.tokenDetails.inputCitation'),
+      value: isShowCredit ? detailTokens.inputCitation.credit : detailTokens.inputCitation.token,
+    },
+>>>>>>> origin/main
     !!detailTokens.inputText && {
       color: theme.green,
       id: 'inputText',
@@ -46,11 +55,21 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
   ].filter(Boolean) as TokenProgressItem[];
 
   const outputDetails = [
+<<<<<<< HEAD
     !!detailTokens.reasoning && {
       color: theme.pink,
       id: 'reasoning',
       title: t('messages.tokenDetails.reasoning'),
       value: isShowCredit ? detailTokens.reasoning.credit : detailTokens.reasoning.token,
+=======
+    !!detailTokens.outputReasoning && {
+      color: theme.pink,
+      id: 'reasoning',
+      title: t('messages.tokenDetails.reasoning'),
+      value: isShowCredit
+        ? detailTokens.outputReasoning.credit
+        : detailTokens.outputReasoning.token,
+>>>>>>> origin/main
     },
     !!detailTokens.outputAudio && {
       color: theme.cyan9,
@@ -67,6 +86,7 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
   ].filter(Boolean) as TokenProgressItem[];
 
   const totalDetail = [
+<<<<<<< HEAD
     !!detailTokens.cachedInput && {
       color: theme.orange,
       id: 'cachedInput',
@@ -74,11 +94,32 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
       value: isShowCredit ? detailTokens.cachedInput.credit : detailTokens.cachedInput.token,
     },
     !!detailTokens.uncachedInput && {
+=======
+    !!detailTokens.inputCacheMiss && {
+>>>>>>> origin/main
       color: theme.colorFill,
 
       id: 'uncachedInput',
       title: t('messages.tokenDetails.inputUncached'),
+<<<<<<< HEAD
       value: isShowCredit ? detailTokens.uncachedInput.credit : detailTokens.uncachedInput.token,
+=======
+      value: isShowCredit ? detailTokens.inputCacheMiss.credit : detailTokens.inputCacheMiss.token,
+    },
+    !!detailTokens.inputCached && {
+      color: theme.orange,
+      id: 'inputCached',
+      title: t('messages.tokenDetails.inputCached'),
+      value: isShowCredit ? detailTokens.inputCached.credit : detailTokens.inputCached.token,
+    },
+    !!detailTokens.inputCachedWrite && {
+      color: theme.yellow,
+      id: 'cachedWriteInput',
+      title: t('messages.tokenDetails.inputWriteCached'),
+      value: isShowCredit
+        ? detailTokens.inputCachedWrite.credit
+        : detailTokens.inputCachedWrite.token,
+>>>>>>> origin/main
     },
     !!detailTokens.totalOutput && {
       color: theme.colorSuccess,
@@ -91,12 +132,22 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
   const displayTotal =
     isShowCredit && !!detailTokens.totalTokens
       ? formatNumber(detailTokens.totalTokens.credit)
+<<<<<<< HEAD
       : formatNumber(usage.totalTokens);
 
+=======
+      : formatNumber(detailTokens.totalTokens!.token);
+
+  const averagePricing = formatNumber(
+    detailTokens.totalTokens!.credit / detailTokens.totalTokens!.token,
+    2,
+  );
+>>>>>>> origin/main
   return (
     <Popover
       arrow={false}
       content={
+<<<<<<< HEAD
         <Flexbox gap={20} style={{ minWidth: 200 }}>
           {modelCard && <ModelCard {...modelCard} provider={provider} />}
           {inputDetails.length > 1 && (
@@ -128,6 +179,61 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
                 {t('messages.tokenDetails.total')}
               </div>
               <div style={{ fontWeight: 500 }}>{displayTotal}</div>
+=======
+        <Flexbox gap={8} style={{ minWidth: 200 }}>
+          {modelCard && <ModelCard {...modelCard} provider={provider} />}
+
+          <Flexbox gap={20}>
+            {inputDetails.length > 1 && (
+              <Flexbox gap={4}>
+                <Flexbox
+                  align={'center'}
+                  gap={4}
+                  horizontal
+                  justify={'space-between'}
+                  width={'100%'}
+                >
+                  <div style={{ color: theme.colorTextDescription, fontSize: 12 }}>
+                    {t('messages.tokenDetails.inputTitle')}
+                  </div>
+                </Flexbox>
+                <TokenProgress data={inputDetails} showIcon />
+              </Flexbox>
+            )}
+            {outputDetails.length > 1 && (
+              <Flexbox gap={4}>
+                <Flexbox
+                  align={'center'}
+                  gap={4}
+                  horizontal
+                  justify={'space-between'}
+                  width={'100%'}
+                >
+                  <div style={{ color: theme.colorTextDescription, fontSize: 12 }}>
+                    {t('messages.tokenDetails.outputTitle')}
+                  </div>
+                </Flexbox>
+                <TokenProgress data={outputDetails} showIcon />
+              </Flexbox>
+            )}
+            <Flexbox>
+              <TokenProgress data={totalDetail} showIcon />
+              <Divider style={{ marginBlock: 8 }} />
+              <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
+                <div style={{ color: theme.colorTextSecondary }}>
+                  {t('messages.tokenDetails.total')}
+                </div>
+                <div style={{ fontWeight: 500 }}>{displayTotal}</div>
+              </Flexbox>
+              {isShowCredit && (
+                <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
+                  <div style={{ color: theme.colorTextSecondary }}>
+                    {t('messages.tokenDetails.average')}
+                  </div>
+                  <div style={{ fontWeight: 500 }}>{averagePricing}</div>
+                </Flexbox>
+              )}
+>>>>>>> origin/main
             </Flexbox>
           </Flexbox>
         </Flexbox>

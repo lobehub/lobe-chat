@@ -71,7 +71,7 @@ describe('POST handler', () => {
 
       // migrate to new AgentRuntime init api
       const spy = vi
-        .spyOn(AgentRuntime, 'initializeWithProviderOptions')
+        .spyOn(AgentRuntime, 'initializeWithProvider')
         .mockResolvedValue(new AgentRuntime(mockRuntime));
 
       // 调用 POST 函数
@@ -117,7 +117,7 @@ describe('POST handler', () => {
 
       const mockRuntime: LobeRuntimeAI = { baseURL: 'abc', chat: vi.fn() };
 
-      vi.spyOn(AgentRuntime, 'initializeWithProviderOptions').mockResolvedValue(
+      vi.spyOn(AgentRuntime, 'initializeWithProvider').mockResolvedValue(
         new AgentRuntime(mockRuntime),
       );
 
@@ -181,7 +181,10 @@ describe('POST handler', () => {
       const response = await POST(request as unknown as Request, { params: mockParams });
 
       expect(response).toEqual(mockChatResponse);
-      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, { user: 'abc' });
+      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, {
+        user: 'abc',
+        signal: expect.anything(),
+      });
     });
 
     it('should return an error response when chat completion fails', async () => {

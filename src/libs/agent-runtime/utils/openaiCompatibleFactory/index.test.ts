@@ -106,6 +106,9 @@ describe('LobeOpenAICompatibleFactory', () => {
           model: 'mistralai/mistral-7b-instruct:free',
           temperature: 0.7,
           stream: true,
+          stream_options: {
+            include_usage: true,
+          },
           top_p: 1,
         },
         { headers: { Accept: '*/*' } },
@@ -709,9 +712,9 @@ describe('LobeOpenAICompatibleFactory', () => {
           });
         } catch (e) {
           // Expect the chat method to throw an error with InvalidMoonshotAPIKey
-          expect(e).toEqual({
+          expect(e).toMatchObject({
             endpoint: defaultBaseURL,
-            error: new Error('Unauthorized'),
+            error,
             errorType: invalidErrorType,
             provider,
           });

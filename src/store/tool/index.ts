@@ -1,2 +1,2 @@
 export * from './helpers';
-export { useToolStore } from './store';
+export { getToolStoreState, useToolStore } from './store';

@@ -1,3 +1,6 @@
+import { ChatMessageError } from '@/types/message/chat';
+import { ChatImageItem } from '@/types/message/image';
+import { ChatToolPayload, MessageToolCall } from '@/types/message/tools';
 import { GroundingSearch } from '@/types/search';
 
 export interface CitationItem {
@@ -15,6 +18,7 @@ export interface ModelReasoning {
 
 export interface ModelTokensUsage {
   acceptedPredictionTokens?: number;
+<<<<<<< HEAD
   cachedTokens?: number;
   inputAudioTokens?: number;
   inputCacheMissTokens?: number;
@@ -23,6 +27,31 @@ export interface ModelTokensUsage {
   outputTokens?: number;
   reasoningTokens?: number;
   rejectedPredictionTokens?: number;
+=======
+  inputAudioTokens?: number;
+  inputCacheMissTokens?: number;
+  inputCachedTokens?: number;
+  /**
+   * currently only pplx has citation_tokens
+   */
+  inputCitationTokens?: number;
+  /**
+   * user prompt image
+   */
+  inputImageTokens?: number;
+  /**
+   * user prompt input
+   */
+  inputTextTokens?: number;
+  inputWriteCacheTokens?: number;
+  outputAudioTokens?: number;
+  outputImageTokens?: number;
+  outputReasoningTokens?: number;
+  outputTextTokens?: number;
+  rejectedPredictionTokens?: number;
+  totalInputTokens?: number;
+  totalOutputTokens?: number;
+>>>>>>> origin/main
   totalTokens?: number;
 }
 
@@ -51,7 +80,6 @@ export interface MessageItem {
   search: GroundingSearch | null;
   sessionId: string | null;
   threadId: string | null;
-  // jsonb type
   tools: any | null;
   topicId: string | null;
   // jsonb type
@@ -85,4 +113,25 @@ export interface NewMessage {
   // optional because it's generated
   updatedAt?: Date;
   userId: string; // optional because it's generated
+}
+
+export interface UpdateMessageParams {
+  content?: string;
+  error?: ChatMessageError | null;
+  imageList?: ChatImageItem[];
+  metadata?: MessageMetadata;
+  model?: string;
+  provider?: string;
+  reasoning?: ModelReasoning;
+  role?: string;
+  search?: GroundingSearch;
+  toolCalls?: MessageToolCall[];
+  tools?: ChatToolPayload[] | null;
+}
+
+export interface NewMessageQueryParams {
+  embeddingsId: string;
+  messageId: string;
+  rewriteQuery: string;
+  userQuery: string;
 }

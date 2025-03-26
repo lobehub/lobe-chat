@@ -7,6 +7,10 @@ import { MessageSemanticSearchChunk } from '@/types/rag';
 import { GroundingSearch } from '@/types/search';
 
 import { MessageMetadata, MessageRoleType, ModelReasoning } from './base';
+<<<<<<< HEAD
+=======
+import { ChatImageItem } from './image';
+>>>>>>> origin/main
 import { ChatPluginPayload, ChatToolPayload } from './tools';
 import { Translate } from './translate';
 
@@ -34,12 +38,6 @@ export interface ChatFileItem {
   id: string;
   name: string;
   size: number;
-  url: string;
-}
-
-export interface ChatImageItem {
-  alt: string;
-  id: string;
   url: string;
 }
 

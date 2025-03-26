@@ -13,6 +13,9 @@ interface TesstProviderParams {
   defaultBaseURL: string;
   invalidErrorType?: string;
   provider: string;
+  test?: {
+    skipAPICall?: boolean;
+  };
 }
 
 export const testProvider = ({
@@ -23,6 +26,7 @@ export const testProvider = ({
   Runtime,
   chatDebugEnv,
   chatModel,
+  test = {},
 }: TesstProviderParams) => {
   // Mock the console.error to avoid polluting test output
   vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -52,8 +56,62 @@ export const testProvider = ({
     });
 
     describe('chat', () => {
+      it('should return a StreamingTextResponse on successful API call', async () => {
+        // Arrange
+        const mockStream = new ReadableStream();
+        const mockResponse = Promise.resolve(mockStream);
+
+        (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
+
+        // Act
+        const result = await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: chatModel,
+          temperature: 0,
+        });
+
+        // Assert
+        expect(result).toBeInstanceOf(Response);
+      });
+
+      if (!test?.skipAPICall) {
+        it(`should call ${provider} API with corresponding options`, async () => {
+          // Arrange
+          const mockStream = new ReadableStream();
+          const mockResponse = Promise.resolve(mockStream);
+
+          (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
+
+          // Act
+          const result = await instance.chat({
+            max_tokens: 1024,
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: chatModel,
+            temperature: 0.7,
+            top_p: 1,
+          });
+
+          // Assert
+          expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+            {
+              max_tokens: 1024,
+              messages: [{ content: 'Hello', role: 'user' }],
+              model: chatModel,
+              stream: true,
+              stream_options: {
+                include_usage: true,
+              },
+              temperature: 0.7,
+              top_p: 1,
+            },
+            { headers: { Accept: '*/*' } },
+          );
+          expect(result).toBeInstanceOf(Response);
+        });
+      }
+
       describe('Error', () => {
-        it('should return OpenAIBizError with an openai error response when OpenAI.APIError is thrown', async () => {
+        it('should return ProviderBizError with an openai error response when OpenAI.APIError is thrown', async () => {
           // Arrange
           const apiError = new OpenAI.APIError(
             400,
@@ -89,7 +147,7 @@ export const testProvider = ({
           }
         });
 
-        it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
+        it('should throw AgentRuntimeError with InvalidProviderAPIKey if no apiKey is provided', async () => {
           try {
             new Runtime({});
           } catch (e) {
@@ -97,7 +155,7 @@ export const testProvider = ({
           }
         });
 
-        it('should return OpenAIBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
+        it('should return ProviderBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
           // Arrange
           const errorInfo = {
             cause: {
@@ -129,7 +187,7 @@ export const testProvider = ({
           }
         });
 
-        it('should return OpenAIBizError with an cause response with desensitize Url', async () => {
+        it('should return ProviderBizError with an cause response with desensitize Url', async () => {
           // Arrange
           const errorInfo = {
             cause: { message: 'api is undefined' },
@@ -165,7 +223,7 @@ export const testProvider = ({
           }
         });
 
-        it('should throw an InvalidHunyuanAPIKey error type on 401 status code', async () => {
+        it(`should throw an InvalidAPIKey error type on 401 status code`, async () => {
           // Mock the API call to simulate a 401 error
           const error = new Error('Unauthorized') as any;
           error.status = 401;
@@ -181,7 +239,7 @@ export const testProvider = ({
             // Expect the chat method to throw an error with InvalidHunyuanAPIKey
             expect(e).toEqual({
               endpoint: defaultBaseURL,
-              error: new Error('Unauthorized'),
+              error: error,
               errorType: invalidErrorType,
               provider,
             });

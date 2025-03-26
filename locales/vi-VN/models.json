@@ -245,6 +245,9 @@
   "Qwen/QVQ-72B-Preview": {
     "description": "QVQ-72B-Preview là một mô hình nghiên cứu do đội ngũ Qwen phát triển, tập trung vào khả năng suy diễn hình ảnh, có lợi thế độc đáo trong việc hiểu các cảnh phức tạp và giải quyết các vấn đề toán học liên quan đến hình ảnh."
   },
+  "Qwen/QwQ-32B": {
+    "description": "QwQ là mô hình suy diễn của dòng Qwen. So với các mô hình tinh chỉnh theo chỉ dẫn truyền thống, QwQ có khả năng tư duy và suy diễn, có thể đạt được hiệu suất được cải thiện đáng kể trong các nhiệm vụ hạ nguồn, đặc biệt là trong việc giải quyết các vấn đề khó khăn. QwQ-32B là mô hình suy diễn trung bình, có thể đạt được hiệu suất cạnh tranh khi so sánh với các mô hình suy diễn tiên tiến nhất (như DeepSeek-R1, o1-mini). Mô hình này sử dụng các công nghệ như RoPE, SwiGLU, RMSNorm và Attention QKV bias, có cấu trúc mạng 64 lớp và 40 đầu chú ý Q (trong kiến trúc GQA, KV là 8)."
+  },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview là mô hình nghiên cứu thử nghiệm mới nhất của Qwen, tập trung vào việc nâng cao khả năng suy luận của AI. Thông qua việc khám phá các cơ chế phức tạp như trộn ngôn ngữ và suy luận đệ quy, những lợi thế chính bao gồm khả năng phân tích suy luận mạnh mẽ, khả năng toán học và lập trình. Tuy nhiên, cũng có những vấn đề về chuyển đổi ngôn ngữ, vòng lặp suy luận, các vấn đề an toàn và sự khác biệt về các khả năng khác."
   },
@@ -503,6 +506,9 @@
   "anthropic/claude-3.5-sonnet": {
     "description": "Claude 3.5 Sonnet cung cấp khả năng vượt trội hơn Opus và tốc độ nhanh hơn Sonnet, trong khi vẫn giữ giá tương tự. Sonnet đặc biệt xuất sắc trong lập trình, khoa học dữ liệu, xử lý hình ảnh và các nhiệm vụ đại lý."
   },
+  "anthropic/claude-3.7-sonnet": {
+    "description": "Claude 3.7 Sonnet là mô hình thông minh nhất của Anthropic cho đến nay, và cũng là mô hình suy luận hỗn hợp đầu tiên trên thị trường. Claude 3.7 Sonnet có khả năng tạo ra phản hồi gần như ngay lập tức hoặc suy nghĩ từng bước kéo dài, cho phép người dùng thấy rõ những quá trình này. Sonnet đặc biệt xuất sắc trong lập trình, khoa học dữ liệu, xử lý hình ảnh và các nhiệm vụ đại diện."
+  },
   "aya": {
     "description": "Aya 23 là mô hình đa ngôn ngữ do Cohere phát hành, hỗ trợ 23 ngôn ngữ, tạo điều kiện thuận lợi cho các ứng dụng ngôn ngữ đa dạng."
   },
@@ -512,8 +518,29 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B là mô hình ngôn ngữ lớn mã nguồn mở có thể thương mại hóa với 130 tỷ tham số, được phát triển bởi Baichuan Intelligence, đã đạt được hiệu suất tốt nhất trong cùng kích thước trên các benchmark tiếng Trung và tiếng Anh."
   },
+<<<<<<< HEAD
+=======
+  "c4ai-aya-expanse-32b": {
+    "description": "Aya Expanse là một mô hình đa ngôn ngữ hiệu suất cao 32B, được thiết kế để thách thức hiệu suất của các mô hình đơn ngôn ngữ thông qua việc tinh chỉnh theo chỉ dẫn, khai thác dữ liệu, đào tạo theo sở thích và hợp nhất mô hình. Nó hỗ trợ 23 ngôn ngữ."
+  },
+  "c4ai-aya-expanse-8b": {
+    "description": "Aya Expanse là một mô hình đa ngôn ngữ hiệu suất cao 8B, được thiết kế để thách thức hiệu suất của các mô hình đơn ngôn ngữ thông qua việc tinh chỉnh theo chỉ dẫn, khai thác dữ liệu, đào tạo theo sở thích và hợp nhất mô hình. Nó hỗ trợ 23 ngôn ngữ."
+  },
+  "c4ai-aya-vision-32b": {
+    "description": "Aya Vision là một mô hình đa phương tiện tiên tiến, thể hiện xuất sắc trên nhiều tiêu chuẩn chính về khả năng ngôn ngữ, văn bản và hình ảnh. Phiên bản 32 tỷ tham số này tập trung vào hiệu suất đa ngôn ngữ tiên tiến."
+  },
+  "c4ai-aya-vision-8b": {
+    "description": "Aya Vision là một mô hình đa phương tiện tiên tiến, thể hiện xuất sắc trên nhiều tiêu chuẩn chính về khả năng ngôn ngữ, văn bản và hình ảnh. Phiên bản 8 tỷ tham số này tập trung vào độ trễ thấp và hiệu suất tối ưu."
+  },
+>>>>>>> origin/main
   "charglm-3": {
     "description": "CharGLM-3 được thiết kế đặc biệt cho vai trò và đồng hành cảm xúc, hỗ trợ trí nhớ nhiều vòng siêu dài và đối thoại cá nhân hóa, ứng dụng rộng rãi."
+  },
+  "chatglm3": {
+    "description": "ChatGLM3 là mô hình đóng nguồn do Trung tâm AI Zhizhu và Phòng thí nghiệm KEG của Đại học Thanh Hoa phát hành. Mô hình này đã được tiền huấn luyện với lượng lớn các bộ định danh tiếng Trung và tiếng Anh, cũng như được huấn luyện để phù hợp với sở thích của con người. So với mô hình thế hệ đầu tiên, ChatGLM3 đã cải thiện 16%, 36% và 280% trên các bảng xếp hạng MMLU, C-Eval và GSM8K, đồng thời đứng đầu bảng xếp hạng C-Eval cho các tác vụ tiếng Trung. Mô hình này phù hợp cho các trường hợp yêu cầu cao về lượng kiến thức, khả năng suy luận và sáng tạo, như viết quảng cáo, viết tiểu thuyết, viết nội dung kiến thức, và tạo mã nguồn."
+  },
+  "chatglm3-6b-base": {
+    "description": "ChatGLM3-6b-base là mô hình cơ bản có quy mô 6 tỷ tham số, thuộc thế hệ mới nhất của loạt ChatGLM do Zhipu phát triển."
   },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o là một mô hình động, được cập nhật theo thời gian thực để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và sinh ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
@@ -590,11 +617,38 @@
   "cohere-command-r-plus": {
     "description": "Command R+ là mô hình tối ưu hóa RAG hiện đại, được thiết kế để xử lý khối lượng công việc cấp doanh nghiệp."
   },
+  "command": {
+    "description": "Một mô hình đối thoại tuân theo chỉ dẫn, thể hiện chất lượng cao và đáng tin cậy trong các nhiệm vụ ngôn ngữ, đồng thời có độ dài ngữ cảnh dài hơn so với mô hình sinh cơ bản của chúng tôi."
+  },
+  "command-a-03-2025": {
+    "description": "Command A là mô hình mạnh nhất mà chúng tôi đã phát triển cho đến nay, thể hiện xuất sắc trong việc sử dụng công cụ, đại lý, tạo ra thông tin tăng cường (RAG) và các ứng dụng đa ngôn ngữ. Command A có độ dài ngữ cảnh 256K, chỉ cần hai GPU để vận hành, và so với Command R+ 08-2024, hiệu suất tăng 150%."
+  },
+  "command-light": {
+    "description": "Một phiên bản Command nhỏ hơn, nhanh hơn, gần như mạnh mẽ tương đương nhưng có tốc độ nhanh hơn."
+  },
+  "command-light-nightly": {
+    "description": "Để rút ngắn khoảng cách thời gian giữa các phiên bản chính, chúng tôi đã phát hành phiên bản hàng đêm của mô hình Command. Đối với dòng command-light, phiên bản này được gọi là command-light-nightly. Xin lưu ý rằng command-light-nightly là phiên bản mới nhất, mang tính thử nghiệm cao và (có thể) không ổn định. Phiên bản hàng đêm sẽ được cập nhật định kỳ mà không có thông báo trước, vì vậy không nên sử dụng trong môi trường sản xuất."
+  },
+  "command-nightly": {
+    "description": "Để rút ngắn khoảng cách thời gian giữa các phiên bản chính, chúng tôi đã phát hành phiên bản hàng đêm của mô hình Command. Đối với dòng Command, phiên bản này được gọi là command-cightly. Xin lưu ý rằng command-nightly là phiên bản mới nhất, mang tính thử nghiệm cao và (có thể) không ổn định. Phiên bản hàng đêm sẽ được cập nhật định kỳ mà không có thông báo trước, vì vậy không nên sử dụng trong môi trường sản xuất."
+  },
   "command-r": {
     "description": "Command R là LLM được tối ưu hóa cho các nhiệm vụ đối thoại và ngữ cảnh dài, đặc biệt phù hợp cho tương tác động và quản lý kiến thức."
   },
+  "command-r-03-2024": {
+    "description": "Command R là một mô hình đối thoại tuân theo chỉ dẫn, thể hiện chất lượng cao hơn và đáng tin cậy hơn trong các nhiệm vụ ngôn ngữ, đồng thời có độ dài ngữ cảnh dài hơn so với các mô hình trước đây. Nó có thể được sử dụng cho các quy trình phức tạp như tạo mã, tạo ra thông tin tăng cường (RAG), sử dụng công cụ và đại lý."
+  },
+  "command-r-08-2024": {
+    "description": "command-r-08-2024 là phiên bản cập nhật của mô hình Command R, được phát hành vào tháng 8 năm 2024."
+  },
   "command-r-plus": {
     "description": "Command R+ là một mô hình ngôn ngữ lớn hiệu suất cao, được thiết kế cho các tình huống doanh nghiệp thực tế và ứng dụng phức tạp."
+  },
+  "command-r-plus-04-2024": {
+    "description": "Command R+ là một mô hình đối thoại tuân theo chỉ dẫn, thể hiện chất lượng cao hơn và đáng tin cậy hơn trong các nhiệm vụ ngôn ngữ, đồng thời có độ dài ngữ cảnh dài hơn so với các mô hình trước đây. Nó phù hợp nhất cho các quy trình RAG phức tạp và việc sử dụng công cụ nhiều bước."
+  },
+  "command-r7b-12-2024": {
+    "description": "command-r7b-12-2024 là một phiên bản cập nhật nhỏ gọn và hiệu quả, được phát hành vào tháng 12 năm 2024. Nó thể hiện xuất sắc trong các nhiệm vụ cần suy luận phức tạp và xử lý nhiều bước như RAG, sử dụng công cụ và đại lý."
   },
   "dall-e-2": {
     "description": "Mô hình DALL·E thế hệ thứ hai, hỗ trợ tạo hình ảnh chân thực và chính xác hơn, với độ phân giải gấp 4 lần thế hệ đầu tiên."
@@ -656,11 +710,23 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1 là một mô hình suy diễn được điều khiển bởi học tăng cường (RL), giải quyết các vấn đề về tính lặp lại và khả năng đọc hiểu trong mô hình. Trước khi áp dụng RL, DeepSeek-R1 đã giới thiệu dữ liệu khởi động lạnh, tối ưu hóa thêm hiệu suất suy diễn. Nó thể hiện hiệu suất tương đương với OpenAI-o1 trong các nhiệm vụ toán học, mã và suy diễn, và thông qua phương pháp đào tạo được thiết kế cẩn thận, nâng cao hiệu quả tổng thể."
   },
+  "deepseek-r1-70b-fast-online": {
+    "description": "DeepSeek R1 70B phiên bản nhanh, hỗ trợ tìm kiếm trực tuyến theo thời gian thực, cung cấp tốc độ phản hồi nhanh hơn trong khi vẫn giữ hiệu suất của mô hình."
+  },
+  "deepseek-r1-70b-online": {
+    "description": "DeepSeek R1 70B phiên bản tiêu chuẩn, hỗ trợ tìm kiếm trực tuyến theo thời gian thực, phù hợp cho các nhiệm vụ đối thoại và xử lý văn bản cần thông tin mới nhất."
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 - mô hình lớn hơn và thông minh hơn trong bộ công cụ DeepSeek - đã được chưng cất vào kiến trúc Llama 70B. Dựa trên các bài kiểm tra chuẩn và đánh giá của con người, mô hình này thông minh hơn so với Llama 70B gốc, đặc biệt xuất sắc trong các nhiệm vụ yêu cầu độ chính xác về toán học và sự thật."
   },
   "deepseek-r1-distill-llama-8b": {
     "description": "Mô hình DeepSeek-R1-Distill được tinh chỉnh từ các mẫu do DeepSeek-R1 tạo ra cho các mô hình mã nguồn mở như Qwen, Llama thông qua công nghệ chưng cất kiến thức."
+  },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "Được phát hành lần đầu vào ngày 14 tháng 2 năm 2025, được chắt lọc từ mô hình cơ sở Llama3_70B (Xây dựng với Meta Llama) bởi đội ngũ phát triển mô hình Qianfan, dữ liệu chắt lọc cũng đồng thời bổ sung tài liệu của Qianfan."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "Được phát hành lần đầu vào ngày 14 tháng 2 năm 2025, được chắt lọc từ mô hình cơ sở Llama3_8B (Xây dựng với Meta Llama) bởi đội ngũ phát triển mô hình Qianfan, dữ liệu chắt lọc cũng đồng thời bổ sung tài liệu của Qianfan."
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "Mô hình DeepSeek-R1-Distill được tinh chỉnh từ các mẫu do DeepSeek-R1 tạo ra cho các mô hình mã nguồn mở như Qwen, Llama thông qua công nghệ chưng cất kiến thức."
@@ -673,6 +739,12 @@
   },
   "deepseek-r1-distill-qwen-7b": {
     "description": "Mô hình DeepSeek-R1-Distill được tinh chỉnh từ các mẫu do DeepSeek-R1 tạo ra cho các mô hình mã nguồn mở như Qwen, Llama thông qua công nghệ chưng cất kiến thức."
+  },
+  "deepseek-r1-fast-online": {
+    "description": "DeepSeek R1 phiên bản nhanh đầy đủ, hỗ trợ tìm kiếm trực tuyến theo thời gian thực, kết hợp sức mạnh của 671B tham số với tốc độ phản hồi nhanh hơn."
+  },
+  "deepseek-r1-online": {
+    "description": "DeepSeek R1 phiên bản đầy đủ, có 671B tham số, hỗ trợ tìm kiếm trực tuyến theo thời gian thực, có khả năng hiểu và tạo ra mạnh mẽ hơn."
   },
   "deepseek-reasoner": {
     "description": "Mô hình suy diễn do DeepSeek phát triển. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một đoạn nội dung chuỗi suy nghĩ để nâng cao độ chính xác của câu trả lời cuối."
@@ -752,6 +824,9 @@
   "ernie-4.0-turbo-8k-preview": {
     "description": "Mô hình ngôn ngữ lớn siêu quy mô tự phát triển của Baidu, có hiệu suất tổng thể xuất sắc, phù hợp rộng rãi với các tình huống nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm của Baidu, đảm bảo thông tin hỏi đáp kịp thời. So với ERNIE 4.0, hiệu suất tốt hơn."
   },
+  "ernie-4.5-8k-preview": {
+    "description": "Mô hình lớn văn tâm 4.5 là thế hệ mới của mô hình nền tảng đa phương tiện tự phát triển của Baidu, đạt được tối ưu hóa hợp tác thông qua mô hình hóa đa phương tiện, có khả năng hiểu đa phương tiện xuất sắc; có khả năng ngôn ngữ tinh vi hơn, khả năng hiểu, tạo ra, logic và ghi nhớ được cải thiện toàn diện, giảm ảo giác, khả năng suy luận logic và mã được nâng cao rõ rệt."
+  },
   "ernie-char-8k": {
     "description": "Mô hình ngôn ngữ lớn theo ngữ cảnh tự phát triển của Baidu, phù hợp cho các ứng dụng như NPC trong trò chơi, đối thoại dịch vụ khách hàng, và vai trò trong đối thoại, có phong cách nhân vật rõ ràng và nhất quán, khả năng tuân theo lệnh mạnh mẽ, hiệu suất suy luận tốt hơn."
   },
@@ -827,17 +902,32 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash cung cấp các tính năng và cải tiến thế hệ tiếp theo, bao gồm tốc độ vượt trội, sử dụng công cụ bản địa, tạo đa phương tiện và cửa sổ ngữ cảnh 1M token."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Biến thể mô hình Gemini 2.0 Flash, được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Mô hình thử nghiệm Gemini 2.0 Flash, hỗ trợ tạo hình ảnh"
+  },
+  "gemini-2.0-flash-lite": {
+    "description": "Biến thể mô hình Gemini 2.0 Flash được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
+  },
   "gemini-2.0-flash-lite-001": {
     "description": "Biến thể mô hình Gemini 2.0 Flash được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Một mô hình Gemini 2.0 Flash được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
   },
+  "gemini-2.0-flash-thinking-exp": {
+    "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, sở hữu các tính năng thế hệ tiếp theo, tốc độ vượt trội, gọi công cụ bản địa và sinh ra đa phương thức."
+  },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, sở hữu các tính năng thế hệ tiếp theo, tốc độ vượt trội, gọi công cụ bản địa và sinh ra đa phương thức."
   },
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental là mô hình AI đa phương tiện thử nghiệm mới nhất của Google, có sự cải thiện chất lượng nhất định so với các phiên bản trước, đặc biệt là về kiến thức thế giới, mã và ngữ cảnh dài."
+  },
+  "gemini-2.5-pro-exp-03-25": {
+    "description": "Gemini 2.5 Pro Experimental là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận về mã, toán học và các vấn đề phức tạp trong lĩnh vực STEM, đồng thời có thể phân tích các tập dữ liệu lớn, kho mã và tài liệu bằng cách sử dụng ngữ cảnh dài."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B phù hợp cho việc xử lý các nhiệm vụ quy mô vừa và nhỏ, đồng thời mang lại hiệu quả chi phí."
@@ -1064,6 +1154,12 @@
   "hunyuan-standard-vision": {
     "description": "Mô hình đa phương thức mới nhất của Hunyuan, hỗ trợ trả lời đa ngôn ngữ, khả năng tiếng Trung và tiếng Anh cân bằng."
   },
+  "hunyuan-t1-20250321": {
+    "description": "Xây dựng toàn diện khả năng mô hình cho cả khoa học tự nhiên và khoa học xã hội, khả năng nắm bắt thông tin văn bản dài mạnh mẽ. Hỗ trợ suy luận và giải đáp các vấn đề khoa học như toán học, logic, khoa học và mã với nhiều độ khó khác nhau."
+  },
+  "hunyuan-t1-latest": {
+    "description": "Mô hình suy luận Hybrid-Transformer-Mamba quy mô siêu lớn đầu tiên trong ngành, mở rộng khả năng suy luận, tốc độ giải mã cực nhanh, và tiếp tục điều chỉnh theo sở thích của con người."
+  },
   "hunyuan-translation": {
     "description": "Hỗ trợ dịch giữa 15 ngôn ngữ bao gồm tiếng Trung, tiếng Anh, tiếng Nhật, tiếng Pháp, tiếng Bồ Đào Nha, tiếng Tây Ban Nha, tiếng Thổ Nhĩ Kỳ, tiếng Nga, tiếng Ả Rập, tiếng Hàn, tiếng Ý, tiếng Đức, tiếng Việt, tiếng Mã Lai và tiếng Indonesia, dựa trên bộ đánh giá dịch tự động hóa COMET, có khả năng dịch giữa các ngôn ngữ phổ biến tốt hơn so với các mô hình cùng quy mô trên thị trường."
   },
@@ -1073,9 +1169,6 @@
   "hunyuan-turbo": {
     "description": "Phiên bản xem trước của thế hệ mới mô hình ngôn ngữ lớn Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, so với hunyuan-pro, hiệu suất suy diễn nhanh hơn và hiệu quả mạnh mẽ hơn."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Phiên bản cố định hunyuan-turbo ngày 20 tháng 11 năm 2024, là một phiên bản nằm giữa hunyuan-turbo và hunyuan-turbo-latest."
-  },
   "hunyuan-turbo-20241223": {
     "description": "Phiên bản này tối ưu hóa: quy mô chỉ thị dữ liệu, nâng cao đáng kể khả năng tổng quát của mô hình; nâng cao đáng kể khả năng toán học, lập trình, và suy luận logic; tối ưu hóa khả năng hiểu biết văn bản và từ ngữ; tối ưu hóa chất lượng tạo nội dung văn bản."
   },
@@ -1084,6 +1177,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "Mô hình ngôn ngữ hình ảnh thế hệ mới của Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, nâng cao toàn diện khả năng nhận diện cơ bản, sáng tạo nội dung, hỏi đáp kiến thức, và phân tích suy luận so với mô hình thế hệ trước."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 phiên bản cố định, nâng cấp số lượng token trong đào tạo nền tảng; nâng cao khả năng tư duy về toán học/logic/mã; cải thiện trải nghiệm chung cho cả tiếng Trung và tiếng Anh, bao gồm sáng tác văn bản, hiểu văn bản, hỏi đáp kiến thức, trò chuyện, v.v."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Thống nhất phong cách giải quyết vấn đề toán học, tăng cường khả năng hỏi đáp nhiều vòng về toán học. Tối ưu hóa phong cách trả lời trong sáng tác văn bản, loại bỏ cảm giác AI, tăng cường tính văn chương."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS là phiên bản mới nhất của mô hình lớn hỗn hợp Hunyuan, có khả năng tư duy mạnh mẽ hơn và trải nghiệm tốt hơn."
   },
   "hunyuan-vision": {
     "description": "Mô hình đa phương thức mới nhất của Hunyuan, hỗ trợ đầu vào hình ảnh + văn bản để tạo ra nội dung văn bản."
@@ -1115,20 +1217,14 @@
   "lite": {
     "description": "Spark Lite là một mô hình ngôn ngữ lớn nhẹ, có độ trễ cực thấp và khả năng xử lý hiệu quả, hoàn toàn miễn phí và mở, hỗ trợ chức năng tìm kiếm trực tuyến theo thời gian thực. Đặc điểm phản hồi nhanh của nó giúp nó nổi bật trong các ứng dụng suy diễn trên thiết bị có công suất thấp và tinh chỉnh mô hình, mang lại hiệu quả chi phí và trải nghiệm thông minh xuất sắc cho người dùng, đặc biệt trong các tình huống hỏi đáp kiến thức, tạo nội dung và tìm kiếm."
   },
+  "llama-2-7b-chat": {
+    "description": "Llama2 là một loạt các mô hình ngôn ngữ lớn (LLM) do Meta phát triển và công khai, bao gồm các mô hình tạo văn bản đã được tiền huấn luyện và tinh chỉnh với quy mô từ 7 tỷ đến 700 tỷ tham số. Về mặt kiến trúc, Llama2 là một mô hình ngôn ngữ hồi quy tự động sử dụng kiến trúc biến đổi tối ưu. Các phiên bản đã điều chỉnh sử dụng tinh chỉnh có giám sát (SFT) và học củng cố với phản hồi từ con người (RLHF) để đồng bộ hóa với sở thích của con người về tính hữu ích và an toàn. Llama2 có hiệu suất vượt trội hơn so với loạt Llama trên nhiều bộ dữ liệu học thuật, cung cấp ý tưởng cho thiết kế và phát triển của nhiều mô hình khác."
+  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B cung cấp khả năng suy luận AI mạnh mẽ hơn, phù hợp cho các ứng dụng phức tạp, hỗ trợ xử lý tính toán cực lớn và đảm bảo hiệu quả và độ chính xác cao."
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B là một mô hình hiệu suất cao, cung cấp khả năng sinh văn bản nhanh chóng, rất phù hợp cho các tình huống ứng dụng cần hiệu quả quy mô lớn và tiết kiệm chi phí."
-  },
-  "llama-3.1-sonar-huge-128k-online": {
-    "description": "Mô hình Llama 3.1 Sonar Huge Online, có 405B tham số, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã, được thiết kế cho các ứng dụng trò chuyện trực tuyến phức tạp."
-  },
-  "llama-3.1-sonar-large-128k-online": {
-    "description": "Mô hình Llama 3.1 Sonar Large Online, có 70B tham số, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã, phù hợp cho các nhiệm vụ trò chuyện có dung lượng lớn và đa dạng."
-  },
-  "llama-3.1-sonar-small-128k-online": {
-    "description": "Mô hình Llama 3.1 Sonar Small Online, có 8B tham số, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã, được thiết kế cho trò chuyện trực tuyến, có khả năng xử lý hiệu quả các tương tác văn bản khác nhau."
   },
   "llama-3.2-11b-vision-instruct": {
     "description": "Khả năng suy luận hình ảnh xuất sắc trên hình ảnh độ phân giải cao, phù hợp cho các ứng dụng hiểu biết hình ảnh."
@@ -1186,6 +1282,9 @@
   },
   "max-32k": {
     "description": "Spark Max 32K được cấu hình với khả năng xử lý ngữ cảnh lớn, có khả năng hiểu ngữ cảnh và suy luận logic mạnh mẽ hơn, hỗ trợ đầu vào văn bản 32K tokens, phù hợp cho việc đọc tài liệu dài, hỏi đáp kiến thức riêng tư và các tình huống khác."
+  },
+  "megrez-3b-instruct": {
+    "description": "Megrez-3B-Instruct là mô hình ngôn ngữ lớn được huấn luyện hoàn toàn độc lập bởi Wúwèn Xīnqióng. Megrez-3B-Instruct nhằm tạo ra một giải pháp thông minh ở đầu cuối với khả năng suy luận nhanh chóng, kích thước nhỏ gọn và dễ sử dụng thông qua lý thuyết tích hợp phần mềm và phần cứng."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Mô hình 70 tỷ tham số mạnh mẽ, xuất sắc trong lý luận, lập trình và các ứng dụng ngôn ngữ rộng lớn."
@@ -1574,8 +1673,23 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Mô hình mã mạnh mẽ cỡ trung, hỗ trợ độ dài ngữ cảnh 32K, xuất sắc trong lập trình đa ngôn ngữ."
   },
+  "qwen1.5-14b-chat": {
+    "description": "Qwen1.5 là phiên bản Beta của Qwen2, là mô hình ngôn ngữ chỉ giải mã dựa trên Transformer, được tiền huấn luyện trên dữ liệu lớn. So với các phiên bản Qwen đã phát hành trước đây, cả mô hình base và chat của Qwen1.5 đều hỗ trợ nhiều ngôn ngữ và có sự cải thiện đáng kể về khả năng trò chuyện tổng thể và các kỹ năng cơ bản. Qwen1.5-14b-chat là mô hình có 14 tỷ tham số, được thiết kế đặc biệt cho các tình huống trò chuyện."
+  },
+  "qwen1.5-32b-chat": {
+    "description": "Qwen1.5 series là phiên bản Beta của Qwen2, là mô hình ngôn ngữ chỉ giải mã dựa trên Transformer, được tiền huấn luyện trên dữ liệu lớn. So với các phiên bản Qwen series được phát hành trước đó, cả mô hình base và chat của Qwen1.5 series đều hỗ trợ nhiều ngôn ngữ, và có sự cải thiện đáng kể về khả năng trò chuyện tổng thể và các kỹ năng cơ bản. Qwen1.5-32b-chat là mô hình lớn 32 tỷ tham số chuyên dụng cho các tình huống trò chuyện, mạnh hơn mô hình 14 tỷ tham số trong các tình huống thực thể thông minh, và có chi phí suy luận thấp hơn mô hình 72 tỷ tham số."
+  },
+  "qwen1.5-72b-chat": {
+    "description": "Qwen1.5 là phiên bản Beta của Qwen2, là mô hình ngôn ngữ chỉ giải mã dựa trên Transformer, được tiền huấn luyện trên dữ liệu lớn. So với các phiên bản Qwen đã phát hành trước đó, cả mô hình base và chat của Qwen1.5 đều hỗ trợ nhiều ngôn ngữ, và có sự cải thiện đáng kể về khả năng trò chuyện tổng thể và các kỹ năng cơ bản. Qwen1.5-72b-chat là mô hình lớn có 72 tỷ tham số, chuyên dùng cho các tình huống trò chuyện."
+  },
   "qwen2": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
+  },
+  "qwen2-72b-instruct": {
+    "description": "Qwen2 là thế hệ mô hình ngôn ngữ lớn mới do đội Qwen phát triển. Nó dựa trên kiến trúc Transformer và sử dụng hàm kích hoạt SwiGLU, chệch QKV chú ý (attention QKV bias), chú ý truy vấn nhóm (group query attention), hỗn hợp chú ý cửa sổ trượt (mixture of sliding window attention) và chú ý đầy đủ. Ngoài ra, đội Qwen còn cải tiến bộ tách từ để thích ứng với nhiều ngôn ngữ tự nhiên và mã nguồn."
+  },
+  "qwen2-7b-instruct": {
+    "description": "Qwen2 là một loạt mô hình ngôn ngữ lớn mới do đội Qwen phát triển. Nó dựa trên kiến trúc Transformer và sử dụng hàm kích hoạt SwiGLU, chệch QKV chú ý (attention QKV bias), chú ý truy vấn nhóm (group query attention), hỗn hợp chú ý cửa sổ trượt (mixture of sliding window attention) và chú ý đầy đủ. Ngoài ra, đội Qwen còn cải tiến bộ tách từ để thích ứng với nhiều ngôn ngữ tự nhiên và mã nguồn."
   },
   "qwen2.5": {
     "description": "Qwen2.5 là thế hệ mô hình ngôn ngữ quy mô lớn mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
@@ -1640,8 +1754,17 @@
   "qwq": {
     "description": "QwQ là một mô hình nghiên cứu thử nghiệm, tập trung vào việc nâng cao khả năng suy luận của AI."
   },
+  "qwq-32b": {
+    "description": "Mô hình suy diễn QwQ được đào tạo dựa trên mô hình Qwen2.5-32B, đã được cải thiện đáng kể khả năng suy diễn của mô hình thông qua học tăng cường. Các chỉ số cốt lõi của mô hình như mã toán (AIME 24/25, LiveCodeBench) và một số chỉ số chung (IFEval, LiveBench, v.v.) đạt đến mức độ của phiên bản đầy đủ DeepSeek-R1, tất cả các chỉ số đều vượt trội so với DeepSeek-R1-Distill-Qwen-32B cũng dựa trên Qwen2.5-32B."
+  },
   "qwq-32b-preview": {
     "description": "Mô hình QwQ là một mô hình nghiên cứu thử nghiệm được phát triển bởi đội ngũ Qwen, tập trung vào việc nâng cao khả năng suy luận của AI."
+  },
+  "qwq-plus-latest": {
+    "description": "Mô hình suy diễn QwQ được đào tạo dựa trên mô hình Qwen2.5, đã được cải thiện đáng kể khả năng suy diễn của mô hình thông qua học tăng cường. Các chỉ số cốt lõi của mô hình như mã toán (AIME 24/25, LiveCodeBench) và một số chỉ số chung (IFEval, LiveBench, v.v.) đạt đến mức độ của phiên bản đầy đủ DeepSeek-R1."
+  },
+  "r1-1776": {
+    "description": "R1-1776 là một phiên bản của mô hình DeepSeek R1, đã được huấn luyện lại, cung cấp thông tin sự thật chưa được kiểm duyệt và không thiên lệch."
   },
   "solar-mini": {
     "description": "Solar Mini là một LLM dạng nhỏ gọn, hiệu suất vượt trội hơn GPT-3.5, có khả năng đa ngôn ngữ mạnh mẽ, hỗ trợ tiếng Anh và tiếng Hàn, cung cấp giải pháp hiệu quả và nhỏ gọn."
@@ -1654,6 +1777,9 @@
   },
   "sonar": {
     "description": "Sản phẩm tìm kiếm nhẹ dựa trên ngữ cảnh tìm kiếm, nhanh hơn và rẻ hơn so với Sonar Pro."
+  },
+  "sonar-deep-research": {
+    "description": "Nghiên cứu sâu tiến hành nghiên cứu chuyên gia toàn diện và tổng hợp thành các báo cáo có thể truy cập và có thể hành động."
   },
   "sonar-pro": {
     "description": "Sản phẩm tìm kiếm nâng cao hỗ trợ ngữ cảnh tìm kiếm, cho phép truy vấn và theo dõi nâng cao."
@@ -1741,6 +1867,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 là mô hình ngôn ngữ do Microsoft AI cung cấp, đặc biệt xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
+  },
+  "yi-1.5-34b-chat": {
+    "description": "Yi-1.5 là phiên bản nâng cấp của Yi. Nó sử dụng 500B token từ cơ sở dữ liệu chất lượng cao để tiếp tục tiền huấn luyện trên Yi, và được tinh chỉnh trên 3M mẫu đa dạng."
   },
   "yi-large": {
     "description": "Mô hình với hàng trăm tỷ tham số mới, cung cấp khả năng hỏi đáp và sinh văn bản mạnh mẽ."

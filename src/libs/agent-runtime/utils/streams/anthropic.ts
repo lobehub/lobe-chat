@@ -22,9 +22,30 @@ export const transformAnthropicStream = (
   switch (chunk.type) {
     case 'message_start': {
       context.id = chunk.message.id;
+<<<<<<< HEAD
       context.usage = {
         inputTokens: chunk.message.usage?.input_tokens,
         outputTokens: chunk.message.usage?.output_tokens,
+=======
+      let totalInputTokens = chunk.message.usage?.input_tokens;
+
+      if (
+        chunk.message.usage?.cache_creation_input_tokens ||
+        chunk.message.usage?.cache_read_input_tokens
+      ) {
+        totalInputTokens =
+          chunk.message.usage?.input_tokens +
+          (chunk.message.usage.cache_creation_input_tokens || 0) +
+          (chunk.message.usage.cache_read_input_tokens || 0);
+      }
+
+      context.usage = {
+        inputCacheMissTokens: chunk.message.usage?.input_tokens,
+        inputCachedTokens: chunk.message.usage?.cache_read_input_tokens || undefined,
+        inputWriteCacheTokens: chunk.message.usage?.cache_creation_input_tokens || undefined,
+        totalInputTokens,
+        totalOutputTokens: chunk.message.usage?.output_tokens,
+>>>>>>> origin/main
       };
 
       return { data: chunk.message, id: chunk.message.id, type: 'data' };
@@ -140,18 +161,32 @@ export const transformAnthropicStream = (
     }
 
     case 'message_delta': {
+<<<<<<< HEAD
       const outputTokens = chunk.usage?.output_tokens + (context.usage?.outputTokens || 0);
       const inputTokens = context.usage?.inputTokens || 0;
       const totalTokens = inputTokens + outputTokens;
+=======
+      const totalOutputTokens =
+        chunk.usage?.output_tokens + (context.usage?.totalOutputTokens || 0);
+      const totalInputTokens = context.usage?.totalInputTokens || 0;
+      const totalTokens = totalInputTokens + totalOutputTokens;
+>>>>>>> origin/main
 
       if (totalTokens > 0) {
         return [
           { data: chunk.delta.stop_reason, id: context.id, type: 'stop' },
           {
             data: {
+<<<<<<< HEAD
               inputTokens: inputTokens,
               outputTokens: outputTokens,
               totalTokens: inputTokens + outputTokens,
+=======
+              ...context.usage,
+              totalInputTokens,
+              totalOutputTokens,
+              totalTokens,
+>>>>>>> origin/main
             } as ModelTokensUsage,
             id: context.id,
             type: 'usage',
