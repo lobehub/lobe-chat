@@ -923,6 +923,9 @@
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental is Google's latest experimental multimodal AI model, showing a quality improvement compared to previous versions, especially in world knowledge, coding, and long context."
   },
+  "gemini-2.5-pro-exp-03-25": {
+    "description": "Gemini 2.5 Pro Experimental is Google's most advanced thinking model, capable of reasoning about complex problems in code, mathematics, and STEM fields, as well as analyzing large datasets, codebases, and documents using long context."
+  },
   "gemma-7b-it": {
     "description": "Gemma 7B is suitable for medium to small-scale task processing, offering cost-effectiveness."
   },
@@ -1147,6 +1150,12 @@
   },
   "hunyuan-standard-vision": {
     "description": "The latest multimodal model from Hunyuan, supporting multilingual responses with balanced capabilities in both Chinese and English."
+  },
+  "hunyuan-t1-20250321": {
+    "description": "Comprehensively builds model capabilities in both arts and sciences, with strong long-text information capture ability. Supports reasoning and answering various scientific questions, including mathematics, logic, science, and code, of varying difficulty."
+  },
+  "hunyuan-t1-latest": {
+    "description": "The industry's first ultra-large-scale Hybrid-Transformer-Mamba inference model, enhancing reasoning capabilities with exceptional decoding speed, further aligning with human preferences."
   },
   "hunyuan-translation": {
     "description": "Supports translation between Chinese and 15 other languages including English, Japanese, French, Portuguese, Spanish, Turkish, Russian, Arabic, Korean, Italian, German, Vietnamese, Malay, and Indonesian. It is based on a multi-scenario translation evaluation set with automated COMET scoring, demonstrating overall superior translation capabilities compared to similarly scaled models in the market."
