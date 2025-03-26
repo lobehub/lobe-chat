@@ -100,18 +100,6 @@
         "inputCharts": "${{amount}}/M کاراکتر",
         "inputMinutes": "${{amount}}/دقیقه",
         "inputTokens": "ورودی {{amount}}/اعتبار · ${{amount}}/M",
-<<<<<<< HEAD
-        "outputTokens": "خروجی {{amount}}/اعتبار · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "input": "ورودی",
-      "inputAudio": "ورودی صوتی",
-      "inputCached": "ورودی کش شده",
-      "inputText": "ورودی متنی",
-      "inputTitle": "جزئیات ورودی",
-      "inputUncached": "ورودی غیر کش شده",
-=======
         "outputTokens": "خروجی {{amount}}/اعتبار · ${{amount}}/M",
         "writeCacheInputTokens": "ذخیره ورودی نوشتن {{amount}}/امتیاز · ${{amount}}/M"
       }
@@ -126,7 +114,6 @@
       "inputTitle": "جزئیات ورودی",
       "inputUncached": "ورودی غیر کش شده",
       "inputWriteCached": "ذخیره ورودی نوشتن",
->>>>>>> origin/main
       "output": "خروجی",
       "outputAudio": "خروجی صوتی",
       "outputText": "خروجی متنی",

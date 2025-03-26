@@ -100,18 +100,6 @@
         "inputCharts": "${{amount}}/M tekens",
         "inputMinutes": "${{amount}}/minuut",
         "inputTokens": "Invoer {{amount}}/credits · ${{amount}}/M",
-<<<<<<< HEAD
-        "outputTokens": "Uitvoer {{amount}}/credits · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "input": "Invoer",
-      "inputAudio": "Audio-invoer",
-      "inputCached": "Gecacheerde invoer",
-      "inputText": "Tekstinvoer",
-      "inputTitle": "Invoerdetails",
-      "inputUncached": "Ongecacheerde invoer",
-=======
         "outputTokens": "Uitvoer {{amount}}/credits · ${{amount}}/M",
         "writeCacheInputTokens": "Cache-invoer schrijven {{amount}}/punten · ${{amount}}/M"
       }
@@ -126,7 +114,6 @@
       "inputTitle": "Invoerdetails",
       "inputUncached": "Ongecacheerde invoer",
       "inputWriteCached": "Invoer cache schrijven",
->>>>>>> origin/main
       "output": "Uitvoer",
       "outputAudio": "Audio-uitvoer",
       "outputText": "Tekstuitvoer",

@@ -1,8 +1,6 @@
 [
   {
     "children": {
-      "improvements": ["Update siliconcloud models."]
-    },
     "date": "2025-03-26",
     "version": "1.75.1"
   },
@@ -355,7 +353,6 @@
     "children": {
       "improvements": ["Fix provider order."]
     },
-    "date": "2025-03-04",
     "version": "1.68.5"
   },
   {

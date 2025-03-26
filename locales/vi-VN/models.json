@@ -518,8 +518,6 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B là mô hình ngôn ngữ lớn mã nguồn mở có thể thương mại hóa với 130 tỷ tham số, được phát triển bởi Baichuan Intelligence, đã đạt được hiệu suất tốt nhất trong cùng kích thước trên các benchmark tiếng Trung và tiếng Anh."
   },
-<<<<<<< HEAD
-=======
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse là một mô hình đa ngôn ngữ hiệu suất cao 32B, được thiết kế để thách thức hiệu suất của các mô hình đơn ngôn ngữ thông qua việc tinh chỉnh theo chỉ dẫn, khai thác dữ liệu, đào tạo theo sở thích và hợp nhất mô hình. Nó hỗ trợ 23 ngôn ngữ."
   },
@@ -532,7 +530,6 @@
   "c4ai-aya-vision-8b": {
     "description": "Aya Vision là một mô hình đa phương tiện tiên tiến, thể hiện xuất sắc trên nhiều tiêu chuẩn chính về khả năng ngôn ngữ, văn bản và hình ảnh. Phiên bản 8 tỷ tham số này tập trung vào độ trễ thấp và hiệu suất tối ưu."
   },
->>>>>>> origin/main
   "charglm-3": {
     "description": "CharGLM-3 được thiết kế đặc biệt cho vai trò và đồng hành cảm xúc, hỗ trợ trí nhớ nhiều vòng siêu dài và đối thoại cá nhân hóa, ứng dụng rộng rãi."
   },

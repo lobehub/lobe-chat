@@ -518,8 +518,6 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B is een open-source, commercieel bruikbaar groot taalmodel ontwikkeld door Baichuan Intelligent, met 13 miljard parameters, dat de beste prestaties in zijn klasse heeft behaald op gezaghebbende Chinese en Engelse benchmarks."
   },
-<<<<<<< HEAD
-=======
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse is een hoogwaardig 32B meertalig model, ontworpen om de prestaties van eentalige modellen uit te dagen door middel van instructietuning, data-arbitrage, voorkeurstraining en modelintegratie. Het ondersteunt 23 talen."
   },
@@ -532,7 +530,6 @@
   "c4ai-aya-vision-8b": {
     "description": "Aya Vision is een geavanceerd multimodaal model dat uitstekende prestaties levert op meerdere belangrijke benchmarks voor taal-, tekst- en beeldcapaciteiten. Deze versie met 8 miljard parameters richt zich op lage latentie en optimale prestaties."
   },
->>>>>>> origin/main
   "charglm-3": {
     "description": "CharGLM-3 is ontworpen voor rollenspellen en emotionele begeleiding, ondersteunt zeer lange meerdaagse herinneringen en gepersonaliseerde gesprekken, met brede toepassingen."
   },

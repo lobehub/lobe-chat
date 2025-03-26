@@ -518,8 +518,6 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B, Baichuan Zhi Neng tarafından geliştirilen 130 milyar parametreye sahip açık kaynaklı ticari bir büyük dil modelidir ve yetkili Çince ve İngilizce benchmark'larda aynı boyuttaki en iyi sonuçları elde etmiştir."
   },
-<<<<<<< HEAD
-=======
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse, talimat ayarlama, veri arbitrajı, tercih eğitimi ve model birleştirme yenilikleri ile tek dilli modellerin performansını zorlamak için tasarlanmış yüksek performanslı bir 32B çok dilli modeldir. 23 dili desteklemektedir."
   },
@@ -532,7 +530,6 @@
   "c4ai-aya-vision-8b": {
     "description": "Aya Vision, dil, metin ve görüntü yeteneklerinin birden fazla anahtar ölçütünde mükemmel performans sergileyen en son teknoloji çok modlu bir modeldir. Bu 8 milyar parametreli versiyon, düşük gecikme ve en iyi performansa odaklanmaktadır."
   },
->>>>>>> origin/main
   "charglm-3": {
     "description": "CharGLM-3, rol yapma ve duygusal destek için tasarlanmış, ultra uzun çok turlu bellek ve kişiselleştirilmiş diyalog desteği sunan bir modeldir, geniş bir uygulama yelpazesine sahiptir."
   },

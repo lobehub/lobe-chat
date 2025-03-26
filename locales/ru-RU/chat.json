@@ -100,18 +100,6 @@
         "inputCharts": "${{amount}}/M символов",
         "inputMinutes": "${{amount}}/минуту",
         "inputTokens": "Входные {{amount}}/кредиты · ${{amount}}/M",
-<<<<<<< HEAD
-        "outputTokens": "Выходные {{amount}}/кредиты · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "input": "Вход",
-      "inputAudio": "Аудиовход",
-      "inputCached": "Кэшированный вход",
-      "inputText": "Текстовый вход",
-      "inputTitle": "Детали входа",
-      "inputUncached": "Некэшированный вход",
-=======
         "outputTokens": "Выходные {{amount}}/кредиты · ${{amount}}/M",
         "writeCacheInputTokens": "Кэширование ввода записи {{amount}}/баллов · ${{amount}}/М"
       }
@@ -126,7 +114,6 @@
       "inputTitle": "Детали входа",
       "inputUncached": "Некэшированный вход",
       "inputWriteCached": "Запись кэшированного ввода",
->>>>>>> origin/main
       "output": "Выход",
       "outputAudio": "Аудиовыход",
       "outputText": "Текстовый выход",

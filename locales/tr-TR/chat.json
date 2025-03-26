@@ -100,18 +100,6 @@
         "inputCharts": "${{amount}}/M karakter",
         "inputMinutes": "${{amount}}/dakika",
         "inputTokens": "Giriş {{amount}}/kredi · ${{amount}}/M",
-<<<<<<< HEAD
-        "outputTokens": "Çıkış {{amount}}/kredi · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "input": "Giriş",
-      "inputAudio": "Ses girişi",
-      "inputCached": "Önceden yüklenmiş giriş",
-      "inputText": "Metin girişi",
-      "inputTitle": "Giriş detayları",
-      "inputUncached": "Önceden yüklenmemiş giriş",
-=======
         "outputTokens": "Çıkış {{amount}}/kredi · ${{amount}}/M",
         "writeCacheInputTokens": "Giriş yazma önbelleği {{amount}}/puan · ${{amount}}/M"
       }
@@ -126,7 +114,6 @@
       "inputTitle": "Giriş detayları",
       "inputUncached": "Önceden yüklenmemiş giriş",
       "inputWriteCached": "Giriş önbelleği yazma",
->>>>>>> origin/main
       "output": "Çıkış",
       "outputAudio": "Ses çıkışı",
       "outputText": "Metin çıkışı",

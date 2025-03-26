@@ -100,18 +100,6 @@
         "inputCharts": "${{amount}}/M caracteres",
         "inputMinutes": "${{amount}}/minuto",
         "inputTokens": "Entrada {{amount}}/créditos · ${{amount}}/M",
-<<<<<<< HEAD
-        "outputTokens": "Saída {{amount}}/créditos · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "input": "Entrada",
-      "inputAudio": "Entrada de áudio",
-      "inputCached": "Entrada em cache",
-      "inputText": "Entrada de texto",
-      "inputTitle": "Detalhes da entrada",
-      "inputUncached": "Entrada não cacheada",
-=======
         "outputTokens": "Saída {{amount}}/créditos · ${{amount}}/M",
         "writeCacheInputTokens": "Cache de entrada de escrita {{amount}}/pontos · ${{amount}}/M"
       }
@@ -126,7 +114,6 @@
       "inputTitle": "Detalhes da entrada",
       "inputUncached": "Entrada não cacheada",
       "inputWriteCached": "Entrada de cache de escrita",
->>>>>>> origin/main
       "output": "Saída",
       "outputAudio": "Saída de áudio",
       "outputText": "Saída de texto",

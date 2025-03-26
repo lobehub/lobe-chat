@@ -100,18 +100,6 @@
         "inputCharts": "${{amount}}/M caratteri",
         "inputMinutes": "${{amount}}/minuto",
         "inputTokens": "Input {{amount}}/crediti · ${{amount}}/M",
-<<<<<<< HEAD
-        "outputTokens": "Output {{amount}}/crediti · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "input": "Input",
-      "inputAudio": "Input audio",
-      "inputCached": "Input memorizzato",
-      "inputText": "Input testo",
-      "inputTitle": "Dettagli input",
-      "inputUncached": "Input non memorizzato",
-=======
         "outputTokens": "Output {{amount}}/crediti · ${{amount}}/M",
         "writeCacheInputTokens": "Scrittura cache input {{amount}}/crediti · ${{amount}}/M"
       }
@@ -126,7 +114,6 @@
       "inputTitle": "Dettagli input",
       "inputUncached": "Input non memorizzato",
       "inputWriteCached": "Scrittura cache input",
->>>>>>> origin/main
       "output": "Output",
       "outputAudio": "Output audio",
       "outputText": "Output testo",

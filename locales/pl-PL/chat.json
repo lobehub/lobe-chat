@@ -100,18 +100,6 @@
         "inputCharts": "${{amount}}/M znaków",
         "inputMinutes": "${{amount}}/minutę",
         "inputTokens": "Wejście {{amount}}/punktów · ${{amount}}/M",
-<<<<<<< HEAD
-        "outputTokens": "Wyjście {{amount}}/punktów · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "input": "Wejście",
-      "inputAudio": "Wejście audio",
-      "inputCached": "Zbuforowane wejście",
-      "inputText": "Wejście tekstowe",
-      "inputTitle": "Szczegóły wejścia",
-      "inputUncached": "Wejście niezbuforowane",
-=======
         "outputTokens": "Wyjście {{amount}}/punktów · ${{amount}}/M",
         "writeCacheInputTokens": "Zapisz wejście w pamięci podręcznej {{amount}}/punktów · ${{amount}}/M"
       }
@@ -126,7 +114,6 @@
       "inputTitle": "Szczegóły wejścia",
       "inputUncached": "Wejście niezbuforowane",
       "inputWriteCached": "Zapisz wejście w pamięci podręcznej",
->>>>>>> origin/main
       "output": "Wyjście",
       "outputAudio": "Wyjście audio",
       "outputText": "Wyjście tekstowe",

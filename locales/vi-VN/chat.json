@@ -100,18 +100,6 @@
         "inputCharts": "${{amount}}/M ký tự",
         "inputMinutes": "${{amount}}/phút",
         "inputTokens": "Nhập {{amount}}/điểm · ${{amount}}/M",
-<<<<<<< HEAD
-        "outputTokens": "Xuất {{amount}}/điểm · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "input": "Nhập",
-      "inputAudio": "Âm thanh nhập",
-      "inputCached": "Nhập cached",
-      "inputText": "Văn bản nhập",
-      "inputTitle": "Chi tiết nhập",
-      "inputUncached": "Nhập chưa cached",
-=======
         "outputTokens": "Xuất {{amount}}/điểm · ${{amount}}/M",
         "writeCacheInputTokens": "Ghi vào bộ nhớ đệm đầu vào {{amount}}/điểm · ${{amount}}/M"
       }
@@ -126,7 +114,6 @@
       "inputTitle": "Chi tiết nhập",
       "inputUncached": "Nhập chưa cached",
       "inputWriteCached": "Ghi vào bộ nhớ đệm đầu vào",
->>>>>>> origin/main
       "output": "Xuất",
       "outputAudio": "Âm thanh xuất",
       "outputText": "Văn bản xuất",
