@@ -1,5 +1,4 @@
-import { KeyMapEnum as Key } from '@lobehub/ui/es/Hotkey/type';
-import { combineKeys } from '@lobehub/ui/es/Hotkey/utils';
+import { KeyMapEnum as Key, combineKeys } from '@lobehub/ui/es/Hotkey';
 
 import { HotkeyEnum, HotkeyGroupEnum, HotkeyRegistration } from '@/types/hotkey';
 
