@@ -8,7 +8,12 @@
     "title": "Nachricht bearbeiten"
   },
   "openChatSettings": {
+    "desc": "Aktuelle Sitzungseinstellungen anzeigen und ändern",
     "title": "Chat-Einstellungen öffnen"
+  },
+  "openHotkeyHelper": {
+    "desc": "Anleitung zur Verwendung aller Tastenkombinationen anzeigen",
+    "title": "Tastenkombinationshilfe öffnen"
   },
   "regenerateMessage": {
     "desc": "Die letzte Nachricht neu generieren",
@@ -19,6 +24,7 @@
     "title": "Neues Thema beginnen"
   },
   "search": {
+    "desc": "Hauptsuchfeld der aktuellen Seite aufrufen",
     "title": "Suche"
   },
   "switchAgent": {
@@ -26,12 +32,15 @@
     "title": "Schnell zwischen Assistenten wechseln"
   },
   "toggleLeftPanel": {
+    "desc": "Linkes Hilfepanel ein- oder ausblenden",
     "title": "Assistentenpanel ein-/ausblenden"
   },
   "toggleRightPanel": {
+    "desc": "Rechtes Themenpanel ein- oder ausblenden",
     "title": "Themenpanel ein-/ausblenden"
   },
   "toggleZenMode": {
+    "desc": "Im Fokusmodus nur die aktuelle Sitzung anzeigen, andere UI ausblenden",
     "title": "Fokussierungsmodus umschalten"
   }
 }

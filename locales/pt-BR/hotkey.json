@@ -8,7 +8,12 @@
     "title": "Editar mensagem"
   },
   "openChatSettings": {
+    "desc": "Ver e modificar as configurações da conversa atual",
     "title": "Abrir configurações de conversa"
+  },
+  "openHotkeyHelper": {
+    "desc": "Ver as instruções de uso de todos os atalhos",
+    "title": "Abrir ajuda de atalhos"
   },
   "regenerateMessage": {
     "desc": "Regenerar a última mensagem",
@@ -19,6 +24,7 @@
     "title": "Iniciar novo tópico"
   },
   "search": {
+    "desc": "Abrir a caixa de pesquisa principal da página atual",
     "title": "Pesquisar"
   },
   "switchAgent": {
@@ -26,12 +32,15 @@
     "title": "Troca rápida de assistente"
   },
   "toggleLeftPanel": {
+    "desc": "Mostrar ou ocultar o painel de assistente à esquerda",
     "title": "Mostrar/Ocultar painel do assistente"
   },
   "toggleRightPanel": {
+    "desc": "Mostrar ou ocultar o painel de tópicos à direita",
     "title": "Mostrar/Ocultar painel de tópicos"
   },
   "toggleZenMode": {
+    "desc": "No modo de foco, exibe apenas a conversa atual, ocultando outras interfaces",
     "title": "Alternar modo de foco"
   }
 }

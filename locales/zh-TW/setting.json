@@ -46,8 +46,7 @@
     "conflicts": "與現有快捷鍵衝突",
     "group": {
       "conversation": "對話",
-      "layout": "佈局",
-      "system": "系統"
+      "essential": "基本"
     },
     "invalidCombination": "快捷鍵需要至少包含一個修飾鍵 (Ctrl, Alt, Shift) 和一個常規鍵",
     "record": "按下按鍵以錄製快捷鍵",

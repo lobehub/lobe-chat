@@ -2,6 +2,7 @@ export const HotkeyEnum = {
   AddUserMessage: 'addUserMessage',
   EditMessage: 'editMessage',
   OpenChatSettings: 'openChatSettings',
+  OpenHotkeyHelper: 'openHotkeyHelper',
   RegenerateMessage: 'regenerateMessage',
   SaveTopic: 'saveTopic',
   Search: 'search',
@@ -13,8 +14,7 @@ export const HotkeyEnum = {
 
 export const HotkeyGroupEnum = {
   Conversation: 'conversation',
-  Layout: 'layout',
-  System: 'system',
+  Essential: 'essential',
 } as const;
 
 export type HotkeyId = (typeof HotkeyEnum)[keyof typeof HotkeyEnum];

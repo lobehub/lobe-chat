@@ -8,7 +8,12 @@
     "title": "Edytuj wiadomość"
   },
   "openChatSettings": {
+    "desc": "Zobacz i zmodyfikuj ustawienia bieżącej rozmowy",
     "title": "Otwórz ustawienia czatu"
+  },
+  "openHotkeyHelper": {
+    "desc": "Zobacz wszystkie instrukcje dotyczące skrótów klawiszowych",
+    "title": "Otwórz pomoc dotyczącą skrótów klawiszowych"
   },
   "regenerateMessage": {
     "desc": "Ponownie wygeneruj ostatnią wiadomość",
@@ -19,6 +24,7 @@
     "title": "Rozpocznij nowy temat"
   },
   "search": {
+    "desc": "Wywołaj główne pole wyszukiwania na bieżącej stronie",
     "title": "Szukaj"
   },
   "switchAgent": {
@@ -26,12 +32,15 @@
     "title": "Szybkie przełączanie asystenta"
   },
   "toggleLeftPanel": {
+    "desc": "Pokaż lub ukryj lewy panel asystenta",
     "title": "Pokaż/ukryj panel asystenta"
   },
   "toggleRightPanel": {
+    "desc": "Pokaż lub ukryj prawy panel tematów",
     "title": "Pokaż/ukryj panel tematów"
   },
   "toggleZenMode": {
+    "desc": "W trybie skupienia wyświetlaj tylko bieżącą rozmowę, ukrywając inne interfejsy",
     "title": "Przełącz tryb skupienia"
   }
 }

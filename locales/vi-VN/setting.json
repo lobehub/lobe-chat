@@ -46,8 +46,7 @@
     "conflicts": "Xung đột với phím tắt hiện có",
     "group": {
       "conversation": "Cuộc trò chuyện",
-      "layout": "Bố cục",
-      "system": "Hệ thống"
+      "essential": "Cơ bản"
     },
     "invalidCombination": "Phím tắt cần ít nhất một phím sửa đổi (Ctrl, Alt, Shift) và một phím thông thường",
     "record": "Nhấn phím để ghi lại phím tắt",

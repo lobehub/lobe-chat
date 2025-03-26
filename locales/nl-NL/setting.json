@@ -46,8 +46,7 @@
     "conflicts": "Conflict met bestaande sneltoetsen",
     "group": {
       "conversation": "Gesprek",
-      "layout": "Indeling",
-      "system": "Systeem"
+      "essential": "Essentieel"
     },
     "invalidCombination": "Sneltoets moet ten minste één modifier-toets (Ctrl, Alt, Shift) en één reguliere toets bevatten",
     "record": "Druk op een toets om de sneltoets op te nemen",

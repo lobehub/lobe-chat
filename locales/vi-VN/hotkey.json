@@ -8,7 +8,12 @@
     "title": "Chỉnh sửa tin nhắn"
   },
   "openChatSettings": {
+    "desc": "Xem và chỉnh sửa cài đặt của cuộc trò chuyện hiện tại",
     "title": "Mở cài đặt cuộc trò chuyện"
+  },
+  "openHotkeyHelper": {
+    "desc": "Xem hướng dẫn sử dụng tất cả các phím tắt",
+    "title": "Mở trợ giúp phím tắt"
   },
   "regenerateMessage": {
     "desc": "Tạo lại tin nhắn cuối cùng",
@@ -19,6 +24,7 @@
     "title": "Mở chủ đề mới"
   },
   "search": {
+    "desc": "Kích hoạt hộp tìm kiếm chính của trang hiện tại",
     "title": "Tìm kiếm"
   },
   "switchAgent": {
@@ -26,12 +32,15 @@
     "title": "Chuyển đổi nhanh trợ lý"
   },
   "toggleLeftPanel": {
+    "desc": "Hiện hoặc ẩn bảng trợ giúp bên trái",
     "title": "Hiện/Ẩn bảng trợ lý"
   },
   "toggleRightPanel": {
+    "desc": "Hiện hoặc ẩn bảng chủ đề bên phải",
     "title": "Hiện/Ẩn bảng chủ đề"
   },
   "toggleZenMode": {
+    "desc": "Trong chế độ tập trung, chỉ hiển thị cuộc trò chuyện hiện tại, ẩn các giao diện người dùng khác",
     "title": "Chuyển đổi chế độ tập trung"
   }
 }

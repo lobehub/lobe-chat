@@ -8,7 +8,12 @@
     "title": "Bewerk bericht"
   },
   "openChatSettings": {
+    "desc": "Bekijk en wijzig de instellingen van de huidige sessie",
     "title": "Open gespreksinstellingen"
+  },
+  "openHotkeyHelper": {
+    "desc": "Bekijk de gebruiksaanwijzing voor alle sneltoetsen",
+    "title": "Open sneltoets hulp"
   },
   "regenerateMessage": {
     "desc": "Genereer het laatste bericht opnieuw",
@@ -19,6 +24,7 @@
     "title": "Start nieuw onderwerp"
   },
   "search": {
+    "desc": "Roep het hoofdzoekvak van de huidige pagina op",
     "title": "Zoeken"
   },
   "switchAgent": {
@@ -26,12 +32,15 @@
     "title": "Snel wisselen van assistent"
   },
   "toggleLeftPanel": {
+    "desc": "Toon of verberg het linker assistentpaneel",
     "title": "Toon/verberg assistentpaneel"
   },
   "toggleRightPanel": {
+    "desc": "Toon of verberg het rechter onderwerp paneel",
     "title": "Toon/verberg onderwerp paneel"
   },
   "toggleZenMode": {
+    "desc": "In de focusmodus wordt alleen de huidige sessie weergegeven, andere UI-elementen worden verborgen",
     "title": "Schakel focusmodus in"
   }
 }

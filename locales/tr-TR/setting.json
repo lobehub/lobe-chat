@@ -46,8 +46,7 @@
     "conflicts": "Mevcut kısayol tuşlarıyla çakışıyor",
     "group": {
       "conversation": "Sohbet",
-      "layout": "Düzen",
-      "system": "Sistem"
+      "essential": "Temel"
     },
     "invalidCombination": "Kısayol tuşu en az bir modifiye tuşu (Ctrl, Alt, Shift) ve bir normal tuş içermelidir",
     "record": "Kısayol tuşunu kaydetmek için tuşa basın",

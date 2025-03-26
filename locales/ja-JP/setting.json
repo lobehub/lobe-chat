@@ -46,8 +46,7 @@
     "conflicts": "既存のショートカットキーと衝突しています",
     "group": {
       "conversation": "会話",
-      "layout": "レイアウト",
-      "system": "システム"
+      "essential": "基本"
     },
     "invalidCombination": "ショートカットキーには少なくとも1つの修飾キー（Ctrl、Alt、Shift）と1つの通常のキーが必要です",
     "record": "ショートカットキーを録音するにはキーを押してください",

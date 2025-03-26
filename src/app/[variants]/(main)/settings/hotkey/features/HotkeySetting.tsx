@@ -50,18 +50,11 @@ const HotkeySetting = memo(() => {
     };
   };
 
-  const system: SettingItemGroup = {
-    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.System).map(
+  const essential: SettingItemGroup = {
+    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Essential).map(
       (item) => mapHotkeyItem(item),
     ),
-    title: t('hotkey.group.system'),
-  };
-
-  const layout: SettingItemGroup = {
-    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Layout).map(
-      (item) => mapHotkeyItem(item),
-    ),
-    title: t('hotkey.group.layout'),
+    title: t('hotkey.group.essential'),
   };
 
   const conversation: SettingItemGroup = {
@@ -75,7 +68,7 @@ const HotkeySetting = memo(() => {
     <Form
       form={form}
       initialValues={settings}
-      items={[system, layout, conversation]}
+      items={[essential, conversation]}
       itemsType={'group'}
       onValuesChange={setSettings}
       variant={'pure'}

@@ -46,8 +46,7 @@
     "conflicts": "기존 단축키와 충돌",
     "group": {
       "conversation": "대화",
-      "layout": "레이아웃",
-      "system": "시스템"
+      "essential": "기본"
     },
     "invalidCombination": "단축키는 최소한 하나의 수정 키(Ctrl, Alt, Shift)와 하나의 일반 키를 포함해야 합니다",
     "record": "단축키를 녹음하려면 키를 누르세요",

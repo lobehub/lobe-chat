@@ -8,7 +8,12 @@
     "title": "Edit Message"
   },
   "openChatSettings": {
+    "desc": "View and modify the settings for the current conversation",
     "title": "Open Chat Settings"
+  },
+  "openHotkeyHelper": {
+    "desc": "View instructions for all keyboard shortcuts",
+    "title": "Open Hotkey Help"
   },
   "regenerateMessage": {
     "desc": "Regenerate the last message",
@@ -19,6 +24,7 @@
     "title": "Start a New Topic"
   },
   "search": {
+    "desc": "Activate the main search box on the current page",
     "title": "Search"
   },
   "switchAgent": {
@@ -26,12 +32,15 @@
     "title": "Quick Switch Assistant"
   },
   "toggleLeftPanel": {
+    "desc": "Show or hide the left assistant panel",
     "title": "Show/Hide Assistant Panel"
   },
   "toggleRightPanel": {
+    "desc": "Show or hide the right topics panel",
     "title": "Show/Hide Topic Panel"
   },
   "toggleZenMode": {
+    "desc": "In focus mode, only display the current conversation and hide other UI elements",
     "title": "Toggle Focus Mode"
   }
 }

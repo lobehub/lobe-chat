@@ -46,8 +46,7 @@
     "conflicts": "Conflit avec les raccourcis existants",
     "group": {
       "conversation": "Conversation",
-      "layout": "Disposition",
-      "system": "Système"
+      "essential": "Essentiel"
     },
     "invalidCombination": "Le raccourci doit contenir au moins une touche de modification (Ctrl, Alt, Shift) et une touche normale",
     "record": "Appuyez sur une touche pour enregistrer le raccourci",

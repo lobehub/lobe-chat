@@ -12,30 +12,35 @@ export const KEY_NUMBER = '1-9';
 // mod 在 Mac 上是 command 键，alt 在 Win 上是 ctrl 键
 export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   {
-    group: HotkeyGroupEnum.System,
+    group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.Search,
     keys: combineKeys([Key.Mod, 'k']),
   },
   {
-    group: HotkeyGroupEnum.System,
+    group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.SwitchAgent,
     keys: combineKeys([Key.Ctrl, KEY_NUMBER]),
     nonEditable: true,
   },
   {
-    group: HotkeyGroupEnum.Layout,
+    group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleLeftPanel,
     keys: combineKeys([Key.Mod, Key.Alt, Key.Left]),
   },
   {
-    group: HotkeyGroupEnum.Layout,
+    group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleRightPanel,
     keys: combineKeys([Key.Mod, Key.Alt, Key.Right]),
   },
   {
-    group: HotkeyGroupEnum.Layout,
+    group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleZenMode,
     keys: combineKeys([Key.Mod, Key.Backslash]),
+  },
+  {
+    group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.OpenHotkeyHelper,
+    keys: combineKeys([Key.Mod, Key.Shift, '?']),
   },
   {
     group: HotkeyGroupEnum.Conversation,

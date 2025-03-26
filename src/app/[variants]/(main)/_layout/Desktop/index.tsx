@@ -8,6 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { GLOBAL_HOTKEY_SCOPE } from '@/const/hotkeys';
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
+import HotkeyHelperPanel from '@/features/HotkeyHelperPanel';
 import { usePlatform } from '@/hooks/usePlatform';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -19,7 +20,6 @@ const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 const Layout = memo<PropsWithChildren>(({ children }) => {
   const { isPWA } = usePlatform();
   const theme = useTheme();
-
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 
   return (
@@ -37,6 +37,7 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
         <SideBar />
         {children}
       </Flexbox>
+      <HotkeyHelperPanel />
       <RegisterHotkeys />
     </HotkeysProvider>
   );

@@ -10,7 +10,12 @@ const hotkey: HotkeyI18nTranslations = {
     title: '编辑消息',
   },
   openChatSettings: {
+    desc: '查看和修改当前会话的设置',
     title: '打开会话设置',
+  },
+  openHotkeyHelper: {
+    desc: '查看所有快捷键的使用说明',
+    title: '打开快捷键帮助',
   },
   regenerateMessage: {
     desc: '重新生成最后一条消息',
@@ -21,6 +26,7 @@ const hotkey: HotkeyI18nTranslations = {
     title: '开启新话题',
   },
   search: {
+    desc: '唤起当前页面主要搜索框',
     title: '搜索',
   },
   switchAgent: {
@@ -28,12 +34,15 @@ const hotkey: HotkeyI18nTranslations = {
     title: '快捷切换助手',
   },
   toggleLeftPanel: {
+    desc: '显示或隐藏左侧助手面板',
     title: '显示/隐藏助手面板',
   },
   toggleRightPanel: {
+    desc: '显示或隐藏右侧话题面板',
     title: '显示/隐藏话题面板',
   },
   toggleZenMode: {
+    desc: '专注模式下，只显示当前会话，隐藏其他 UI',
     title: '切换专注模式',
   },
 };
