@@ -83,12 +83,9 @@ export interface ChatMessageAction {
       reasoning?: ModelReasoning;
       search?: GroundingSearch;
       metadata?: MessageMetadata;
-<<<<<<< HEAD
-=======
       imageList?: ChatImageItem[];
       model?: string;
       provider?: string;
->>>>>>> origin/main
     },
   ) => Promise<void>;
   /**
@@ -323,12 +320,9 @@ export const chatMessage: StateCreator<
       reasoning: extra?.reasoning,
       search: extra?.search,
       metadata: extra?.metadata,
-<<<<<<< HEAD
-=======
       model: extra?.model,
       provider: extra?.provider,
       imageList: extra?.imageList,
->>>>>>> origin/main
     });
     await refreshMessages();
   },

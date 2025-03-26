@@ -606,10 +606,7 @@ export const generateAIChat: StateCreator<
           reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
           search: !!grounding?.citations ? grounding : undefined,
           metadata: usage,
-<<<<<<< HEAD
-=======
           imageList: finalImages.length > 0 ? finalImages : undefined,
->>>>>>> origin/main
         });
       },
       onMessageHandle: async (chunk) => {

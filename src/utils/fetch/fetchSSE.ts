@@ -81,12 +81,8 @@ export interface FetchSSEOptions {
       | MessageToolCallsChunk
       | MessageReasoningChunk
       | MessageGroundingChunk
-<<<<<<< HEAD
-      | MessageUsageChunk,
-=======
       | MessageUsageChunk
       | MessageBase64ImageChunk,
->>>>>>> origin/main
   ) => void;
   smoothing?: SmoothingParams | boolean;
 }
@@ -345,11 +341,8 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   let grounding: GroundingSearch | undefined = undefined;
   let usage: ModelTokensUsage | undefined = undefined;
-<<<<<<< HEAD
-=======
   let images: ChatImageChunk[] = [];
 
->>>>>>> origin/main
   await fetchEventSource(url, {
     body: options.body,
     fetch: options?.fetcher,

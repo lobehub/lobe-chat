@@ -38,59 +38,10 @@ const wenxinChatModels: AIChatModelCard[] = [
     id: 'ernie-4.5-8k-preview',
     pricing: {
       currency: 'CNY',
-<<<<<<< HEAD
-      input: 0.8,
-      output: 2,
-    },
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-    },
-    contextWindowTokens: 8192,
-    description:
-      '百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。',
-    displayName: 'ERNIE 3.5 8K Preview',
-    id: 'ernie-3.5-8k-preview',
-    pricing: {
-      currency: 'CNY',
-      input: 0.8,
-      output: 2,
-    },
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      '百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。',
-    displayName: 'ERNIE 3.5 128K',
-    enabled: true,
-    id: 'ernie-3.5-128k',
-    pricing: {
-      currency: 'CNY',
-      input: 0.8,
-      output: 2,
-=======
       input: 4,
       output: 16,
     },
     releasedAt: '2025-03-16',
-    settings: {
-      searchImpl: 'params',
->>>>>>> origin/main
-    },
     settings: {
       searchImpl: 'params',
     },
@@ -197,8 +148,6 @@ const wenxinChatModels: AIChatModelCard[] = [
     settings: {
       searchImpl: 'params',
     },
-<<<<<<< HEAD
-=======
     type: 'chat',
   },
   {
@@ -259,7 +208,6 @@ const wenxinChatModels: AIChatModelCard[] = [
     settings: {
       searchImpl: 'params',
     },
->>>>>>> origin/main
     type: 'chat',
   },
   {
@@ -293,8 +241,7 @@ const wenxinChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 8192,
-    description:
-      'ERNIE Tiny是百度自研的超高性能大语言模型，部署与精调成本在文心系列模型中最低。',
+    description: 'ERNIE Tiny是百度自研的超高性能大语言模型，部署与精调成本在文心系列模型中最低。',
     displayName: 'ERNIE Tiny 8K',
     id: 'ernie-tiny-8k',
     pricing: {
@@ -358,8 +305,7 @@ const wenxinChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 8192,
-    description:
-      '百度自研通用大语言模型，在小说续写能力上有明显优势，也可用在短剧、电影等场景。',
+    description: '百度自研通用大语言模型，在小说续写能力上有明显优势，也可用在短剧、电影等场景。',
     displayName: 'ERNIE Novel 8K',
     id: 'ernie-novel-8k',
     pricing: {
@@ -403,8 +349,7 @@ const wenxinChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'DeepSeek-R1-Distill-Qwen-1.5B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
+    description: 'DeepSeek-R1-Distill-Qwen-1.5B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
     displayName: 'DeepSeek R1 Distill Qwen 1.5B',
     id: 'deepseek-r1-distill-qwen-1.5b',
     pricing: {
@@ -419,8 +364,7 @@ const wenxinChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'DeepSeek-R1-Distill-Qwen-7B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
+    description: 'DeepSeek-R1-Distill-Qwen-7B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
     displayName: 'DeepSeek R1 Distill Qwen 7B',
     id: 'deepseek-r1-distill-qwen-7b',
     pricing: {
@@ -435,8 +379,7 @@ const wenxinChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'DeepSeek-R1-Distill-Qwen-14B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
+    description: 'DeepSeek-R1-Distill-Qwen-14B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
     displayName: 'DeepSeek R1 Distill Qwen 14B',
     id: 'deepseek-r1-distill-qwen-14b',
     pricing: {
@@ -451,8 +394,7 @@ const wenxinChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'DeepSeek-R1-Distill-Qwen-32B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
+    description: 'DeepSeek-R1-Distill-Qwen-32B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
     displayName: 'DeepSeek R1 Distill Qwen 32B',
     id: 'deepseek-r1-distill-qwen-32b',
     pricing: {
@@ -467,8 +409,7 @@ const wenxinChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'DeepSeek-R1-Distill-Llama-8B是DeepSeek-R1基于Llama3.1-8B-Base的蒸馏模型。',
+    description: 'DeepSeek-R1-Distill-Llama-8B是DeepSeek-R1基于Llama3.1-8B-Base的蒸馏模型。',
     displayName: 'DeepSeek R1 Distill Llama 8B',
     id: 'deepseek-r1-distill-llama-8b',
     pricing: {
@@ -483,8 +424,7 @@ const wenxinChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'DeepSeek-R1-Distill-Llama-70B是DeepSeek-R1基于Llama3.3-70B-Instruct的蒸馏模型。',
+    description: 'DeepSeek-R1-Distill-Llama-70B是DeepSeek-R1基于Llama3.3-70B-Instruct的蒸馏模型。',
     displayName: 'DeepSeek R1 Distill Llama 70B',
     id: 'deepseek-r1-distill-llama-70b',
     pricing: {

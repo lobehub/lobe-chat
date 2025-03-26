@@ -518,8 +518,6 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B百川智能開發的包含130億參數的開源可商用的大規模語言模型，在權威的中文和英文benchmark上均取得同尺寸最好的效果。"
   },
-<<<<<<< HEAD
-=======
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse 是一款高性能的 32B 多語言模型，旨在通過指令調優、數據套利、偏好訓練和模型合併的創新，挑戰單語言模型的表現。它支持 23 種語言。"
   },
@@ -532,7 +530,6 @@
   "c4ai-aya-vision-8b": {
     "description": "Aya Vision 是一款最先進的多模態模型，在語言、文本和圖像能力的多個關鍵基準上表現出色。這個 80 億參數的版本專注於低延遲和最佳性能。"
   },
->>>>>>> origin/main
   "charglm-3": {
     "description": "CharGLM-3專為角色扮演與情感陪伴設計，支持超長多輪記憶與個性化對話，應用廣泛。"
   },

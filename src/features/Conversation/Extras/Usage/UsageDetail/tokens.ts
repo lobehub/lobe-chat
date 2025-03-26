@@ -1,14 +1,8 @@
-<<<<<<< HEAD
-import { LobeDefaultAiModelListItem } from '@/types/aiModel';
-import { ModelTokensUsage } from '@/types/message';
-
-=======
 import { ChatModelPricing, LobeDefaultAiModelListItem } from '@/types/aiModel';
 import { ModelTokensUsage } from '@/types/message';
 
 import { getPrice } from './pricing';
 
->>>>>>> origin/main
 const calcCredit = (token: number, pricing?: number) => {
   if (!pricing) return '-';
 
@@ -19,30 +13,6 @@ export const getDetailsToken = (
   usage: ModelTokensUsage,
   modelCard?: LobeDefaultAiModelListItem,
 ) => {
-<<<<<<< HEAD
-  const uncachedInputCredit = (
-    !!usage.inputTokens
-      ? calcCredit(usage.inputTokens - (usage.cachedTokens || 0), modelCard?.pricing?.input)
-      : 0
-  ) as number;
-
-  const cachedInputCredit = (
-    !!usage.cachedTokens ? calcCredit(usage.cachedTokens, modelCard?.pricing?.cachedInput) : 0
-  ) as number;
-
-  const totalOutput = (
-    !!usage.outputTokens ? calcCredit(usage.outputTokens, modelCard?.pricing?.output) : 0
-  ) as number;
-
-  const totalTokens = uncachedInputCredit + cachedInputCredit + totalOutput;
-  return {
-    cachedInput: !!usage.cachedTokens
-      ? {
-          credit: cachedInputCredit,
-          token: usage.cachedTokens,
-        }
-      : undefined,
-=======
   const inputTextTokens = usage.inputTextTokens || (usage as any).inputTokens || 0;
   const totalInputTokens = usage.totalInputTokens || (usage as any).inputTokens || 0;
 
@@ -87,24 +57,12 @@ export const getDetailsToken = (
     inputCacheMissCredit + inputCachedCredit + inputWriteCachedCredit + totalOutputCredit;
 
   return {
->>>>>>> origin/main
     inputAudio: !!usage.inputAudioTokens
       ? {
           credit: calcCredit(usage.inputAudioTokens, modelCard?.pricing?.audioInput),
           token: usage.inputAudioTokens,
         }
       : undefined,
-<<<<<<< HEAD
-    inputText: !!usage.inputTokens
-      ? {
-          credit: calcCredit(
-            usage.inputTokens - (usage.inputAudioTokens || 0),
-            modelCard?.pricing?.input,
-          ),
-          token: usage.inputTokens - (usage.inputAudioTokens || 0),
-        }
-      : undefined,
-=======
     inputCacheMiss: !!inputCacheMissTokens
       ? { credit: inputCacheMissCredit, token: inputCacheMissTokens }
       : undefined,
@@ -127,7 +85,6 @@ export const getDetailsToken = (
         }
       : undefined,
 
->>>>>>> origin/main
     outputAudio: !!usage.outputAudioTokens
       ? {
           credit: calcCredit(usage.outputAudioTokens, modelCard?.pricing?.audioOutput),
@@ -135,42 +92,6 @@ export const getDetailsToken = (
           token: usage.outputAudioTokens,
         }
       : undefined,
-<<<<<<< HEAD
-
-    outputText: !!usage.outputTokens
-      ? {
-          credit: calcCredit(
-            usage.outputTokens - (usage.reasoningTokens || 0) - (usage.outputAudioTokens || 0),
-            modelCard?.pricing?.output,
-          ),
-          token: usage.outputTokens - (usage.reasoningTokens || 0) - (usage.outputAudioTokens || 0),
-        }
-      : undefined,
-    reasoning: !!usage.reasoningTokens
-      ? {
-          credit: calcCredit(usage.reasoningTokens, modelCard?.pricing?.output),
-          token: usage.reasoningTokens,
-        }
-      : undefined,
-
-    totalOutput: !!usage.outputTokens
-      ? {
-          credit: totalOutput,
-          token: usage.outputTokens,
-        }
-      : undefined,
-    totalTokens: !!usage.totalTokens
-      ? {
-          credit: totalTokens,
-          token: usage.totalTokens,
-        }
-      : undefined,
-    uncachedInput: !!usage.inputTokens
-      ? {
-          credit: uncachedInputCredit,
-          token: usage.inputTokens - (usage.cachedTokens || 0),
-        }
-=======
     outputReasoning: !!outputReasoningTokens
       ? {
           credit: calcCredit(outputReasoningTokens, formatPrice.output),
@@ -192,7 +113,6 @@ export const getDetailsToken = (
       : undefined,
     totalTokens: !!usage.totalTokens
       ? { credit: totalCredit, token: usage.totalTokens }
->>>>>>> origin/main
       : undefined,
   };
 };

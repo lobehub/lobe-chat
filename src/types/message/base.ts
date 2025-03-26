@@ -18,16 +18,6 @@ export interface ModelReasoning {
 
 export interface ModelTokensUsage {
   acceptedPredictionTokens?: number;
-<<<<<<< HEAD
-  cachedTokens?: number;
-  inputAudioTokens?: number;
-  inputCacheMissTokens?: number;
-  inputTokens?: number;
-  outputAudioTokens?: number;
-  outputTokens?: number;
-  reasoningTokens?: number;
-  rejectedPredictionTokens?: number;
-=======
   inputAudioTokens?: number;
   inputCacheMissTokens?: number;
   inputCachedTokens?: number;
@@ -51,7 +41,6 @@ export interface ModelTokensUsage {
   rejectedPredictionTokens?: number;
   totalInputTokens?: number;
   totalOutputTokens?: number;
->>>>>>> origin/main
   totalTokens?: number;
 }
 

@@ -7,10 +7,7 @@ import { MessageSemanticSearchChunk } from '@/types/rag';
 import { GroundingSearch } from '@/types/search';
 
 import { MessageMetadata, MessageRoleType, ModelReasoning } from './base';
-<<<<<<< HEAD
-=======
 import { ChatImageItem } from './image';
->>>>>>> origin/main
 import { ChatPluginPayload, ChatToolPayload } from './tools';
 import { Translate } from './translate';
 

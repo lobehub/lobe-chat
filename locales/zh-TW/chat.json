@@ -100,18 +100,6 @@
         "inputCharts": "${{amount}}/M 字元",
         "inputMinutes": "${{amount}}/分鐘",
         "inputTokens": "輸入 {{amount}}/積分 · ${{amount}}/M",
-<<<<<<< HEAD
-        "outputTokens": "輸出 {{amount}}/積分 · ${{amount}}/M"
-      }
-    },
-    "tokenDetails": {
-      "input": "輸入",
-      "inputAudio": "音頻輸入",
-      "inputCached": "輸入快取",
-      "inputText": "文本輸入",
-      "inputTitle": "輸入明細",
-      "inputUncached": "輸入未快取",
-=======
         "outputTokens": "輸出 {{amount}}/積分 · ${{amount}}/M",
         "writeCacheInputTokens": "快取輸入寫入 {{amount}}/積分 · ${{amount}}/M"
       }
@@ -126,7 +114,6 @@
       "inputTitle": "輸入明細",
       "inputUncached": "輸入未快取",
       "inputWriteCached": "輸入快取寫入",
->>>>>>> origin/main
       "output": "輸出",
       "outputAudio": "音頻輸出",
       "outputText": "文本輸出",
