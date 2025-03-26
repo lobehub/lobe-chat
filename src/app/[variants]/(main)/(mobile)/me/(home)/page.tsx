@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation';
-import { Suspense } from 'react';
 import { Center } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
@@ -10,7 +9,6 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 
 import Category from './features/Category';
 import UserBanner from './features/UserBanner';
-import Loaidng from './loading';
 
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);
@@ -27,13 +25,13 @@ const Page = async (props: DynamicLayoutProps) => {
   if (!isMobile) return redirect('/chat');
 
   return (
-    <Suspense fallback={<Loaidng />}>
+    <>
       <UserBanner />
       <Category />
       <Center padding={16}>
         <BrandWatermark />
       </Center>
-    </Suspense>
+    </>
   );
 };
 
