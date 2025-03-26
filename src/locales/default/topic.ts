@@ -32,6 +32,7 @@ export default {
     title: '话题列表',
   },
   searchPlaceholder: '搜索话题...',
+  searchResultEmpty: '暂无搜索结果',
   temp: '临时',
   title: '话题',
 };

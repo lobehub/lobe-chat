@@ -217,6 +217,12 @@ const nextConfig: NextConfig = {
 
     config.resolve.alias.canvas = false;
 
+    // to ignore epub2 compile error
+    // refs: https://github.com/lobehub/lobe-chat/discussions/6769
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      zipfile: false,
+    };
     return config;
   },
 };

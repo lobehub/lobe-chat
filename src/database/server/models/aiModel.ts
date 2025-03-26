@@ -68,6 +68,7 @@ export class AiModelModel {
         enabled: aiModels.enabled,
         id: aiModels.id,
         pricing: aiModels.pricing,
+        releasedAt: aiModels.releasedAt,
         source: aiModels.source,
         type: aiModels.type,
       })

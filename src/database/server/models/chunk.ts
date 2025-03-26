@@ -31,7 +31,11 @@ export class ChunkModel {
 
       const result = await trx.insert(chunks).values(params).returning();
 
-      const fileChunksData = result.map((chunk) => ({ chunkId: chunk.id, fileId }));
+      const fileChunksData = result.map((chunk) => ({
+        chunkId: chunk.id,
+        fileId,
+        userId: this.userId,
+      }));
 
       if (fileChunksData.length > 0) {
         await trx.insert(fileChunks).values(fileChunksData);
@@ -207,7 +211,8 @@ export class ChunkModel {
       .leftJoin(files, eq(files.id, fileChunks.fileId))
       .where(inArray(fileChunks.fileId, fileIds))
       .orderBy((t) => desc(t.similarity))
-      .limit(5);
+      // 先放宽到 15
+      .limit(15);
 
     return result.map((item) => {
       return {

@@ -32,6 +32,7 @@
     "title": "Списък с теми"
   },
   "searchPlaceholder": "Търсене на теми...",
+  "searchResultEmpty": "Няма намерени резултати",
   "temp": "Временен",
   "title": "Тема"
 }

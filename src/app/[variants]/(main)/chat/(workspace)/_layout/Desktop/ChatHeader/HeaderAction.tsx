@@ -4,6 +4,7 @@ import { ActionIcon } from '@lobehub/ui';
 import { PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
@@ -24,7 +25,7 @@ const HeaderAction = memo(() => {
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    <>
+    <Flexbox gap={4} horizontal>
       <ShareButton />
       <ActionIcon
         icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
@@ -33,7 +34,7 @@ const HeaderAction = memo(() => {
         title={t('roleAndArchive')}
       />
       {isAgentEditable && <SettingButton />}
-    </>
+    </Flexbox>
   );
 });
 

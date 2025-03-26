@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
@@ -12,10 +12,7 @@ import { sessionMetaSelectors } from '@/store/session/selectors';
 
 const WelcomeMessage = () => {
   const { t } = useTranslation('chat');
-  const [type = 'chat'] = useAgentStore((s) => {
-    const config = agentSelectors.currentAgentChatConfig(s);
-    return [config.displayMode];
-  });
+  const type = useAgentStore(agentChatConfigSelectors.displayMode);
 
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);

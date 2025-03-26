@@ -16,9 +16,11 @@ import {
   users,
 } from '@/database/schemas';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
 let serverDB = await getTestDBInstance();
+
 let nextAuthAdapter = LobeNextAuthDbAdapter(serverDB);
 
 const userId = 'user-db';

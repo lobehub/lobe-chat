@@ -322,6 +322,9 @@
     "tooltip": "تحديث التكوين الأساسي للمزود",
     "updateSuccess": "تم التحديث بنجاح"
   },
+  "updateCustomAiProvider": {
+    "title": "تحديث إعدادات مزود الذكاء الاصطناعي المخصص"
+  },
   "vertexai": {
     "apiKey": {
       "desc": "أدخل مفاتيح Vertex AI الخاصة بك",

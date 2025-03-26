@@ -1,5 +1,4 @@
 import { UserJSON } from '@clerk/backend';
-import { currentUser } from '@clerk/nextjs/server';
 import { z } from 'zod';
 
 import { enableClerk } from '@/const/auth';
@@ -7,6 +6,7 @@ import { serverDB } from '@/database/server';
 import { MessageModel } from '@/database/server/models/message';
 import { SessionModel } from '@/database/server/models/session';
 import { UserModel, UserNotFoundError } from '@/database/server/models/user';
+import { ClerkAuth } from '@/libs/clerk-auth';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 import { authedProcedure, router } from '@/libs/trpc';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
@@ -22,6 +22,7 @@ import { UserSettings } from '@/types/user/settings';
 const userProcedure = authedProcedure.use(async (opts) => {
   return opts.next({
     ctx: {
+      clerkAuth: new ClerkAuth(),
       nextAuthDbAdapter: LobeNextAuthDbAdapter(serverDB),
       userModel: new UserModel(serverDB, opts.ctx.userId),
     },
@@ -46,7 +47,7 @@ export const userRouter = router({
         state = await ctx.userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
       } catch (error) {
         if (enableClerk && error instanceof UserNotFoundError) {
-          const user = await currentUser();
+          const user = await ctx.clerkAuth.getCurrentUser();
           if (user) {
             const userService = new UserService();
 

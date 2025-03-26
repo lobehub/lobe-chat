@@ -33,13 +33,21 @@ export default {
   duplicateTitle: '{{title}} 副本',
   emptyAgent: '暂无助手',
   extendParams: {
+    disableContextCaching: {
+      desc: '单条对话生成成本最高可降低 90%，响应速度提升 4 倍（<1>了解更多</1>）。开启后将自动禁用历史消息数限制',
+      title: '开启上下文缓存',
+    },
     enableReasoning: {
+      desc: '基于 Claude Thinking 机制限制（<1>了解更多</1>），开启后将自动禁用历史消息数限制',
       title: '开启深度思考',
     },
     reasoningBudgetToken: {
       title: '思考消耗 Token',
     },
     title: '模型扩展功能',
+  },
+  history: {
+    title: '助手将只记住最后{{count}}条消息',
   },
   historyRange: '历史范围',
   historySummary: '历史消息总结',
@@ -56,6 +64,9 @@ export default {
     sendWithEnter: '按 Enter 键发送',
     stop: '停止',
     warp: '换行',
+  },
+  intentUnderstanding: {
+    title: '正在理解并分析您的意图...',
   },
   knowledgeBase: {
     all: '所有内容',
@@ -93,15 +104,19 @@ export default {
         inputMinutes: '${{amount}}/分钟',
         inputTokens: '输入 {{amount}}/积分 · ${{amount}}/M',
         outputTokens: '输出 {{amount}}/积分 · ${{amount}}/M',
+        writeCacheInputTokens: '缓存输入写入 {{amount}}/积分 · ${{amount}}/M',
       },
     },
     tokenDetails: {
+      average: '平均单价',
       input: '输入',
       inputAudio: '音频输入',
       inputCached: '输入缓存',
+      inputCitation: '引用输入',
       inputText: '文本输入',
       inputTitle: '输入明细',
       inputUncached: '输入未缓存',
+      inputWriteCached: '输入缓存写入',
       output: '输出',
       outputAudio: '音频输出',
       outputText: '文本输出',
@@ -130,13 +145,11 @@ export default {
       searchQueries: '搜索关键词',
       title: '已搜索到 {{count}} 个结果',
     },
-
     mode: {
       auto: {
         desc: '根据对话内容智能判断是否需要搜索',
         title: '智能联网',
       },
-      disable: '当前模型不支持函数调用，因此无法使用智能联网功能',
       off: {
         desc: '仅使用模型的基础知识，不进行网络搜索',
         title: '关闭联网',
@@ -147,7 +160,10 @@ export default {
       },
       useModelBuiltin: '使用模型内置搜索引擎',
     },
-
+    searchModel: {
+      desc: '当前模型不支持函数调用，因此需要搭配支持函数调用的模型才能联网搜索',
+      title: '搜索辅助模型',
+    },
     title: '联网搜索',
   },
   searchAgentPlaceholder: '搜索助手...',

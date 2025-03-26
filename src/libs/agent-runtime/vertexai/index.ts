@@ -1,6 +1,8 @@
 import { VertexAI, VertexInit } from '@google-cloud/vertexai';
 
-import { AgentRuntimeError, AgentRuntimeErrorType, LobeGoogleAI } from '@/libs/agent-runtime';
+import { AgentRuntimeErrorType } from '../error';
+import { LobeGoogleAI } from '../google';
+import { AgentRuntimeError } from '../utils/createError';
 
 export class LobeVertexAI extends LobeGoogleAI {
   static initFromVertexAI(params?: VertexInit) {

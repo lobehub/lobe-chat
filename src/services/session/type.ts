@@ -53,7 +53,7 @@ export interface ISessionService {
 
   updateSessionChatConfig(
     id: string,
-    config: DeepPartial<LobeAgentChatConfig>,
+    config: Partial<LobeAgentChatConfig>,
     signal?: AbortSignal,
   ): Promise<any>;
 

@@ -107,7 +107,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
       ),
       label: t('createNewAiProvider.sdkType.title'),
       minWidth: 400,
-      name: 'sdkType',
+      name: ['settings', 'sdkType'],
       rules: [{ message: t('createNewAiProvider.sdkType.required'), required: true }],
     },
     {
