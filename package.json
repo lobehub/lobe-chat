@@ -128,7 +128,7 @@
     "@huggingface/inference": "^2.8.1",
     "@icons-pack/react-simple-icons": "9.6.0",
     "@khmyznikov/pwa-install": "0.3.9",
-    "@langchain/community": "^0.3.22",
+    "@langchain/community": "^0.3.37",
     "@lobechat/web-crawler": "workspace:*",
     "@lobehub/charts": "^1.12.0",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
@@ -337,6 +337,7 @@
   },
   "pnpm": {
     "overrides": {
+      "@anthropic-ai/sdk": "^0.39.0",
       "mdast-util-gfm-autolink-literal": "2.0.0"
     },
     "packageExtensions": {
@@ -348,6 +349,7 @@
     }
   },
   "overrides": {
+    "@anthropic-ai/sdk": "^0.39.0",
     "mdast-util-gfm-autolink-literal": "2.0.0"
   }
 }
