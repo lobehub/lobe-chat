@@ -25,6 +25,14 @@ interface GlobalLayoutProps {
   primaryColor?: string;
 }
 
+const ConfigLoadingCheck = ({ children }: { children: ReactNode }) => {
+  return (
+    <Suspense fallback={<div>Loading configuration...</div>}>
+      {children}
+    </Suspense>
+  );
+};
+
 const GlobalLayout = async ({
   children,
   neutralColor,
@@ -37,7 +45,13 @@ const GlobalLayout = async ({
 
   // get default feature flags to use with ssr
   const serverFeatureFlags = getServerFeatureFlagsValue();
+  
   const serverConfig = await getServerGlobalConfig();
+  
+  if (!serverConfig.aiProvider || !serverConfig.languageModel) {
+    throw new Error('Server configuration is incomplete');
+  }
+
   return (
     <StyleRegistry>
       <Locale antdLocale={antdLocale} defaultLang={userLocale}>
@@ -49,19 +63,21 @@ const GlobalLayout = async ({
           defaultPrimaryColor={primaryColor as any}
           globalCDN={appEnv.CDN_USE_GLOBAL}
         >
-          <ServerConfigStoreProvider
-            featureFlags={serverFeatureFlags}
-            isMobile={isMobile}
-            serverConfig={serverConfig}
-          >
-            <QueryProvider>{children}</QueryProvider>
-            <StoreInitialization />
-            <Suspense>
-              <ImportSettings />
-              <ReactScan />
-              {process.env.NODE_ENV === 'development' && <DevPanel />}
-            </Suspense>
-          </ServerConfigStoreProvider>
+          <ConfigLoadingCheck>
+            <ServerConfigStoreProvider
+              featureFlags={serverFeatureFlags}
+              isMobile={isMobile}
+              serverConfig={serverConfig}
+            >
+              <QueryProvider>{children}</QueryProvider>
+              <StoreInitialization />
+              <Suspense>
+                <ImportSettings />
+                <ReactScan />
+                {process.env.NODE_ENV === 'development' && <DevPanel />}
+              </Suspense>
+            </ServerConfigStoreProvider>
+          </ConfigLoadingCheck>
         </AppTheme>
         <AntdV5MonkeyPatch />
       </Locale>
