@@ -45,6 +45,7 @@ import { LobeVLLMAI } from './vllm';
 import { LobeVolcengineAI } from './volcengine';
 import { LobeWenxinAI } from './wenxin';
 import { LobeXAI } from './xai';
+import { LobeXinferenceAI } from './xinference';
 import { LobeZeroOneAI } from './zeroone';
 import { LobeZhipuAI } from './zhipu';
 
@@ -97,6 +98,7 @@ export const providerRuntimeMap = {
   volcengine: LobeVolcengineAI,
   wenxin: LobeWenxinAI,
   xai: LobeXAI,
+  xinference: LobeXinferenceAI,
   zeroone: LobeZeroOneAI,
   zhipu: LobeZhipuAI,
 };

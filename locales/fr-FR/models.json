@@ -923,6 +923,9 @@
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental est le dernier modèle AI multimodal expérimental de Google, offrant une amélioration de la qualité par rapport aux versions précédentes, en particulier pour les connaissances générales, le code et les longs contextes."
   },
+  "gemini-2.5-pro-exp-03-25": {
+    "description": "Gemini 2.5 Pro Experimental est le modèle de pensée le plus avancé de Google, capable de raisonner sur des problèmes complexes en code, mathématiques et dans les domaines STEM, tout en utilisant un long contexte pour analyser de grands ensembles de données, des bibliothèques de code et des documents."
+  },
   "gemma-7b-it": {
     "description": "Gemma 7B est adapté au traitement de tâches de taille moyenne, alliant coût et efficacité."
   },
@@ -1147,6 +1150,12 @@
   },
   "hunyuan-standard-vision": {
     "description": "Le dernier modèle multimodal de Hunyuan, prenant en charge les réponses multilingues, avec des capacités équilibrées en chinois et en anglais."
+  },
+  "hunyuan-t1-20250321": {
+    "description": "Modèle complet construit pour les capacités en sciences humaines et exactes, avec une forte capacité de capture d'informations dans de longs textes. Prend en charge le raisonnement pour répondre à divers problèmes scientifiques de mathématiques/logique/sciences/code, quel que soit leur niveau de difficulté."
+  },
+  "hunyuan-t1-latest": {
+    "description": "Le premier modèle d'inférence Hybrid-Transformer-Mamba à grande échelle de l'industrie, qui étend les capacités d'inférence, offre une vitesse de décodage exceptionnelle et aligne davantage les préférences humaines."
   },
   "hunyuan-translation": {
     "description": "Supporte la traduction entre le chinois et l'anglais, le japonais, le français, le portugais, l'espagnol, le turc, le russe, l'arabe, le coréen, l'italien, l'allemand, le vietnamien, le malais et l'indonésien, soit 15 langues au total, avec une évaluation automatisée basée sur le score COMET à partir d'un ensemble d'évaluation de traduction multi-scénarios, montrant une capacité de traduction globale supérieure à celle des modèles de taille similaire sur le marché."

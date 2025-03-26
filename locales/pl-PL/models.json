@@ -923,6 +923,9 @@
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental to najnowszy eksperymentalny model AI o wielu modalnościach od Google, który w porównaniu do wcześniejszych wersji oferuje pewne poprawy jakości, szczególnie w zakresie wiedzy o świecie, kodu i długiego kontekstu."
   },
+  "gemini-2.5-pro-exp-03-25": {
+    "description": "Gemini 2.5 Pro Experimental to najnowocześniejszy model myślenia Google, zdolny do wnioskowania w zakresie kodu, matematyki i złożonych problemów w dziedzinie STEM, a także do analizy dużych zbiorów danych, repozytoriów kodu i dokumentów, wykorzystując długi kontekst."
+  },
   "gemma-7b-it": {
     "description": "Gemma 7B nadaje się do przetwarzania zadań średniej i małej skali, łącząc efektywność kosztową."
   },
@@ -1147,6 +1150,12 @@
   },
   "hunyuan-standard-vision": {
     "description": "Najnowocześniejszy model multimodalny Hunyuan, wspierający odpowiedzi w wielu językach, z równoważnymi zdolnościami w języku chińskim i angielskim."
+  },
+  "hunyuan-t1-20250321": {
+    "description": "Kompleksowy model zdolności w naukach ścisłych i humanistycznych, z silną zdolnością do uchwycenia długich informacji tekstowych. Wspiera wnioskowanie w odpowiedzi na różnorodne trudności w matematyce, logice, naukach ścisłych i kodowaniu."
+  },
+  "hunyuan-t1-latest": {
+    "description": "Pierwszy na świecie ultra-duży model wnioskowania Hybrid-Transformer-Mamba, rozszerzający zdolności wnioskowania, z niezwykle szybkim dekodowaniem, lepiej dostosowany do ludzkich preferencji."
   },
   "hunyuan-translation": {
     "description": "Obsługuje tłumaczenie między 15 językami, w tym chińskim, angielskim, japońskim, francuskim, portugalskim, hiszpańskim, tureckim, rosyjskim, arabskim, koreańskim, włoskim, niemieckim, wietnamskim, malajskim i indonezyjskim, opartym na automatycznej ocenie COMET w oparciu o zestaw testowy do tłumaczenia w różnych scenariuszach, wykazując ogólnie lepsze zdolności tłumaczeniowe w porównaniu do modeli o podobnej skali na rynku."
