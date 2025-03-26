@@ -14,21 +14,17 @@ export const LobeVolcengineAI = LobeOpenAICompatibleFactory({
   },
   customClient: {
     createChatCompletionStream: (client, payload, instance) => {
+      const customClient = new OpenAI({
+        ...instance._options,
+        baseURL: payload.model && payload.model.startsWith('bot-')
+          ? 'https://ark.cn-beijing.volces.com/api/v3/bots'
+          : 'https://ark.cn-beijing.volces.com/api/v3',
+      });
       
-      if (payload.model && payload.model.startsWith('bot-')) {
-        client.baseURL = 'https://ark.cn-beijing.volces.com/api/v3/bots';
-      } else {
-        client.baseURL = 'https://ark.cn-beijing.volces.com/api/v3';
-      }
-
-      const response = client.chat.completions.create(
+      const response = customClient.chat.completions.create(
         {
           ...payload,
           stream: payload.stream ?? true,
-        },
-        {
-          headers: instance._options?.requestHeaders,
-          signal: instance._options?.signal,
         },
       );
 
