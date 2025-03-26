@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Update 'gemini-2.5-pro-exp-03-25' maxOutput and contextWindowTokens."]
+    },
+    "date": "2025-03-26",
+    "version": "1.75.2"
+  },
+  {
+    "children": {
       "improvements": ["Update siliconcloud models."]
     },
     "date": "2025-03-26",
