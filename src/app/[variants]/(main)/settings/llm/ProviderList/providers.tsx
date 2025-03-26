@@ -37,6 +37,7 @@ import {
   VLLMProviderCard,
   WenxinProviderCard,
   XAIProviderCard,
+  XinferenceProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
@@ -65,6 +66,7 @@ export const useProviderList = (): ProviderItem[] => {
       AzureProvider,
       OllamaProvider,
       VLLMProviderCard,
+      XinferenceProviderCard,
       AnthropicProviderCard,
       BedrockProvider,
       GoogleProviderCard,
