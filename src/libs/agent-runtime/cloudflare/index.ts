@@ -1,3 +1,5 @@
+import type * as CloudflareAI from 'cloudflare/resources/workers/ai/ai';
+
 import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
@@ -6,15 +8,20 @@ import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../typ
 import {
   CloudflareStreamTransformer,
   DEFAULT_BASE_URL_PREFIX,
+  ToolPropertyError,
   convertModelManifest,
   desensitizeCloudflareUrl,
   fillUrl,
+  modifyTools,
   removePluginInfo,
 } from '../utils/cloudflareHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import { createCallbacksTransformer } from '../utils/streams';
+
+type ChatRequestBody = Omit<CloudflareAI.AIRunParams.Variant7, 'account_id'>;
+type ChatMessage = CloudflareAI.AIRunParams.Variant7.Message;
 
 export interface LobeCloudflareParams {
   apiKey?: string;
@@ -48,22 +55,31 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response> {
     try {
-      const { messages: _messages, model, stream: _stream, tools, ...restPayload } = payload;
-      const messages = tools ? removePluginInfo(_messages) : _messages;
-      const stream = tools ? false : _stream;
-      const functions = tools?.map((tool) => tool.function);
+      const {
+        messages: _messages,
+        model,
+        stream: _stream,
+        tools: _tools,
+        ...restPayload
+      } = payload;
+      const messages = _tools ? removePluginInfo(_messages) : _messages;
+      //const messages = _messages;
+      const stream = _tools ? false : _stream;
+      const tools = modifyTools(_tools);
+      //const functions = tools?.map((tool) => tool.function);
       const headers = options?.headers || {};
       if (this.apiKey) {
         headers['Authorization'] = `Bearer ${this.apiKey}`;
       }
       const url = new URL(model, this.baseURL);
+      const requestParams: ChatRequestBody = {
+        messages: messages as ChatMessage[],
+        stream,
+        tools, //: functions,
+        ...restPayload,
+      };
       const response = await fetch(url, {
-        body: JSON.stringify({
-          messages,
-          stream,
-          tools: functions,
-          ...restPayload,
-        }),
+        body: JSON.stringify(requestParams),
         headers: { 'Content-Type': 'application/json', ...headers },
         method: 'POST',
         signal: options?.signal,
@@ -100,6 +116,15 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
       );
     } catch (error) {
       const desensitizedEndpoint = desensitizeCloudflareUrl(this.baseURL);
+
+      if (error instanceof ToolPropertyError) {
+        throw AgentRuntimeError.chat({
+          endpoint: desensitizedEndpoint,
+          error: error,
+          errorType: AgentRuntimeErrorType.PluginNotSupportError,
+          provider: ModelProvider.Cloudflare,
+        });
+      }
 
       throw AgentRuntimeError.chat({
         endpoint: desensitizedEndpoint,

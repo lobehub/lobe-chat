@@ -1,10 +1,14 @@
-import { OpenAIChatMessage } from '../types';
+import type * as CloudflareAI from 'cloudflare/resources/workers/ai/ai';
+
+import type { ChatCompletionTool, OpenAIChatMessage } from '../types';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
 
-type CloudflareToolCall = {
-  arguments: object;
-  name: string;
-};
+type CloudflareToolCall = CloudflareAI.AIRunResponse.UnionMember6.ToolCall;
+
+type CloudflareAITool = CloudflareAI.AIRunParams.Variant7.Tool;
+type CloudflareAIFunctionParameters = CloudflareAI.AIRunParams.Variant7.Tool.Function.Parameters;
+type CloudflareAIFunctionParameterProperties =
+  CloudflareAI.AIRunParams.Variant7.Tool.Function.Parameters.Properties;
 
 const RANDOM_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -35,6 +39,9 @@ class CloudflareStreamTransformer {
     const parsedChunk = JSON.parse(json);
     const response = parsedChunk.response;
     if (response === CloudflareStreamTransformer.END_TOKEN) {
+      // Safe here because Cloudflare does not handle <|im_end|>.
+      // This will be treated as single token and once the model outputs this, response ends.
+      // TODO: However, in the future, the behavior may change and we'll need to handle it.
       controller.enqueue(`event: stop\n`);
       controller.enqueue(`data: ${JSON.stringify(response)}\n\n`);
       return;
@@ -180,11 +187,18 @@ function getModelFunctionCalling(model: any): boolean {
 
 function getModelTokens(model: any): number | undefined {
   try {
-    const tokensProperty = model['properties'].filter(
-      (property: any) => property[CF_PROPERTY_NAME] === 'max_total_tokens',
-    );
-    if (tokensProperty.length === 1) {
-      return parseInt(tokensProperty[0]['value']);
+    for (const property of model['properties']) {
+      switch (property[CF_PROPERTY_NAME]) {
+        case 'context_window': {
+          return parseInt(property['value']);
+        }
+        case 'max_total_tokens': {
+          return parseInt(property['value']);
+        }
+        case 'max_input_length': {
+          return parseInt(property['value']);
+        }
+      }
     }
     return undefined;
   } catch {
@@ -204,7 +218,7 @@ function convertModelManifest(model: any) {
   };
 }
 
-const PLUGIN_INFO_REGEX = /(<plugins_info>.*<\/plugins_info>)/s;
+const PLUGIN_INFO_REGEX = /(<plugins description=".*">.*<\/plugins>)/s;
 
 function removePluginInfo(messages: OpenAIChatMessage[]): OpenAIChatMessage[] {
   const [systemMessage, ...restMesssages] = messages;
@@ -227,13 +241,110 @@ function removePluginInfo(messages: OpenAIChatMessage[]): OpenAIChatMessage[] {
   }
 }
 
+class ToolPropertyError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ToolPropertyError';
+  }
+}
+
+function modifyTools(tools: ChatCompletionTool[] | undefined): CloudflareAITool[] | undefined {
+  return tools?.map((tool) => {
+    const _func = tool.function;
+    if (!_func.parameters) {
+      return tool;
+    }
+    const {
+      properties: _properties,
+      required: _required,
+      type,
+      ...restPayload
+    } = _func.parameters as CloudflareAIFunctionParameters;
+    if (Object.keys(restPayload).length > 0) {
+      throw new ToolPropertyError('Unexpected properties in function.parameters');
+    }
+    let requireBody = false;
+    //if (_properties) { // Cannot invert if, TS may not be able to recognize continue statement.
+    const records: Record<string, CloudflareAIFunctionParameterProperties>[] | undefined =
+      _properties
+        ? Object.entries(_properties).map(([k, v]) => {
+            //for (const [k, v] of Object.entries(_properties)) {
+            if (typeof v === 'object' && v.type && typeof v.type === 'string') {
+              const {
+                description: _description,
+                type,
+                ...otherProperties
+              } = v as CloudflareAIFunctionParameterProperties & { [key: string]: any };
+              if (type === 'string') {
+                let description = _description;
+                if (Object.keys(otherProperties).length > 0) {
+                  description = _description ? `<summary>${_description}</summary>` : '';
+                  description +=
+                    '\n' +
+                    Object.entries(otherProperties).map(([k, v]) => {
+                      return `\n<${k}>${v}</${k}>`;
+                    });
+                }
+                return {
+                  [k]: {
+                    description,
+                    type,
+                  },
+                };
+              } else if (type === 'object') {
+                if (k !== '_requestBody') {
+                  throw new ToolPropertyError('Object type value only allowed for _requestBody.');
+                }
+                if (otherProperties.required && otherProperties.required.length > 0) {
+                  requireBody = true;
+                }
+                return {
+                  [k]: {
+                    description:
+                      'Main properties. PROPERTIES HERE MUST BE WRAPPED UNDER "_requestBody",' +
+                      'i.e. { "_requestBody": {<rest>} }. (OpenAPI schema):\n' +
+                      JSON.stringify(otherProperties, null, 2),
+                    type,
+                  },
+                };
+              } else {
+                throw new ToolPropertyError(
+                  'Unexpected type property in function.parameters.value.',
+                );
+              }
+            } else {
+              throw new ToolPropertyError('Unexpected properties in function.parameters.value.');
+            }
+          })
+        : undefined;
+    //}
+
+    const required = requireBody ? ['_requestBody', ...(_required ?? [])] : _required;
+
+    return {
+      function: {
+        description: _func.description,
+        name: _func.name,
+        parameters: {
+          properties: records ? Object.assign({}, ...records) : undefined,
+          required,
+          type,
+        },
+      },
+      type: tool.type,
+    } satisfies CloudflareAITool;
+  });
+}
+
 export {
   CloudflareStreamTransformer,
   convertModelManifest,
   DEFAULT_BASE_URL_PREFIX,
   desensitizeCloudflareUrl,
   fillUrl,
+  modifyTools,
   removePluginInfo,
+  ToolPropertyError,
 };
 
 if (process?.env?.NODE_ENV === 'test') {

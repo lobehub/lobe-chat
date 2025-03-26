@@ -267,6 +267,7 @@
     "@types/ws": "^8.5.12",
     "@vitest/coverage-v8": "~1.2.2",
     "ajv-keywords": "^5.1.0",
+    "cloudflare": "^3.5.0",
     "commitlint": "^19.5.0",
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",

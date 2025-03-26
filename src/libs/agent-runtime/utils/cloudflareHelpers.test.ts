@@ -1,7 +1,8 @@
 // @vitest-environment node
+import type * as CloudflareAI from 'cloudflare/resources/workers/ai/ai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { OpenAIChatMessage } from '../types';
+import type { ChatCompletionTool, OpenAIChatMessage } from '../types';
 import * as desensitizeTool from '../utils/desensitizeUrl';
 import {
   CloudflareStreamTransformer,
@@ -11,6 +12,7 @@ import {
   getModelDisplayName,
   getModelFunctionCalling,
   getModelTokens,
+  modifyTools,
   removePluginInfo,
 } from './cloudflareHelpers';
 
@@ -20,6 +22,8 @@ declare module './cloudflareHelpers' {
   function getModelFunctionCalling(model: any): boolean;
   function getModelTokens(model: any): number | undefined;
 }
+
+type CloudflareAITool = CloudflareAI.AIRunParams.Variant7.Tool;
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -466,213 +470,364 @@ describe('cloudflareHelpers', () => {
     });
   });
 
-  describe('fillUrl', () => {
-    it('should return URL with account id', () => {
-      const url = fillUrl('80009000a000b000c000d000e000f000');
-      expect(url).toBe(
-        'https://api.cloudflare.com/client/v4/accounts/80009000a000b000c000d000e000f000/ai/run/',
-      );
-    });
-  });
-
-  describe('maskAccountId', () => {
-    describe('desensitizeAccountId', () => {
-      it('should replace account id with **** in official API endpoint', () => {
-        const url =
-          'https://api.cloudflare.com/client/v4/accounts/80009000a000b000c000d000e000f000/ai/run/';
-        const maskedUrl = desensitizeCloudflareUrl(url);
-        expect(maskedUrl).toBe('https://api.cloudflare.com/client/v4/accounts/****/ai/run/');
-      });
-
-      it('should replace account id with **** in custom API endpoint', () => {
-        const url =
-          'https://api.cloudflare.com/custom/prefix/80009000a000b000c000d000e000f000/custom/suffix/';
-        const maskedUrl = desensitizeCloudflareUrl(url);
-        expect(maskedUrl).toBe('https://api.cloudflare.com/custom/prefix/****/custom/suffix/');
-      });
-    });
-
-    describe('desensitizeCloudflareUrl', () => {
-      it('should mask account id in official API endpoint', () => {
-        const url =
-          'https://api.cloudflare.com/client/v4/accounts/80009000a000b000c000d000e000f000/ai/run/';
-        const maskedUrl = desensitizeCloudflareUrl(url);
-        expect(maskedUrl).toBe('https://api.cloudflare.com/client/v4/accounts/****/ai/run/');
-      });
-
-      it('should call desensitizeUrl for custom API endpoint', () => {
-        const url = 'https://custom.url/path';
-        vi.spyOn(desensitizeTool, 'desensitizeUrl').mockImplementation(
-          (_) => 'https://custom.mocked.url',
-        );
-        const maskedUrl = desensitizeCloudflareUrl(url);
-        expect(desensitizeTool.desensitizeUrl).toHaveBeenCalledWith('https://custom.url');
-        expect(maskedUrl).toBe('https://custom.mocked.url/path');
-      });
-
-      it('should mask account id in custom API endpoint', () => {
-        const url =
-          'https://custom.url/custom/prefix/80009000a000b000c000d000e000f000/custom/suffix/';
-        const maskedUrl = desensitizeCloudflareUrl(url);
-        expect(maskedUrl).toBe('https://cu****om.url/custom/prefix/****/custom/suffix/');
-      });
-
-      it('should mask account id in custom API endpoint with query params', () => {
-        const url =
-          'https://custom.url/custom/prefix/80009000a000b000c000d000e000f000/custom/suffix/?query=param';
-        const maskedUrl = desensitizeCloudflareUrl(url);
-        expect(maskedUrl).toBe(
-          'https://cu****om.url/custom/prefix/****/custom/suffix/?query=param',
+  describe('modelConfig', () => {
+    describe('fillUrl', () => {
+      it('should return URL with account id', () => {
+        const url = fillUrl('80009000a000b000c000d000e000f000');
+        expect(url).toBe(
+          'https://api.cloudflare.com/client/v4/accounts/80009000a000b000c000d000e000f000/ai/run/',
         );
       });
+    });
 
-      it('should mask account id in custom API endpoint with port', () => {
-        const url =
-          'https://custom.url:8080/custom/prefix/80009000a000b000c000d000e000f000/custom/suffix/';
-        const maskedUrl = desensitizeCloudflareUrl(url);
-        expect(maskedUrl).toBe('https://cu****om.url:****/custom/prefix/****/custom/suffix/');
+    describe('maskAccountId', () => {
+      describe('desensitizeAccountId', () => {
+        it('should replace account id with **** in official API endpoint', () => {
+          const url =
+            'https://api.cloudflare.com/client/v4/accounts/80009000a000b000c000d000e000f000/ai/run/';
+          const maskedUrl = desensitizeCloudflareUrl(url);
+          expect(maskedUrl).toBe('https://api.cloudflare.com/client/v4/accounts/****/ai/run/');
+        });
+
+        it('should replace account id with **** in custom API endpoint', () => {
+          const url =
+            'https://api.cloudflare.com/custom/prefix/80009000a000b000c000d000e000f000/custom/suffix/';
+          const maskedUrl = desensitizeCloudflareUrl(url);
+          expect(maskedUrl).toBe('https://api.cloudflare.com/custom/prefix/****/custom/suffix/');
+        });
+      });
+
+      describe('desensitizeCloudflareUrl', () => {
+        it('should mask account id in official API endpoint', () => {
+          const url =
+            'https://api.cloudflare.com/client/v4/accounts/80009000a000b000c000d000e000f000/ai/run/';
+          const maskedUrl = desensitizeCloudflareUrl(url);
+          expect(maskedUrl).toBe('https://api.cloudflare.com/client/v4/accounts/****/ai/run/');
+        });
+
+        it('should call desensitizeUrl for custom API endpoint', () => {
+          const url = 'https://custom.url/path';
+          vi.spyOn(desensitizeTool, 'desensitizeUrl').mockImplementation(
+            (_) => 'https://custom.mocked.url',
+          );
+          const maskedUrl = desensitizeCloudflareUrl(url);
+          expect(desensitizeTool.desensitizeUrl).toHaveBeenCalledWith('https://custom.url');
+          expect(maskedUrl).toBe('https://custom.mocked.url/path');
+        });
+
+        it('should mask account id in custom API endpoint', () => {
+          const url =
+            'https://custom.url/custom/prefix/80009000a000b000c000d000e000f000/custom/suffix/';
+          const maskedUrl = desensitizeCloudflareUrl(url);
+          expect(maskedUrl).toBe('https://cu****om.url/custom/prefix/****/custom/suffix/');
+        });
+
+        it('should mask account id in custom API endpoint with query params', () => {
+          const url =
+            'https://custom.url/custom/prefix/80009000a000b000c000d000e000f000/custom/suffix/?query=param';
+          const maskedUrl = desensitizeCloudflareUrl(url);
+          expect(maskedUrl).toBe(
+            'https://cu****om.url/custom/prefix/****/custom/suffix/?query=param',
+          );
+        });
+
+        it('should mask account id in custom API endpoint with port', () => {
+          const url =
+            'https://custom.url:8080/custom/prefix/80009000a000b000c000d000e000f000/custom/suffix/';
+          const maskedUrl = desensitizeCloudflareUrl(url);
+          expect(maskedUrl).toBe('https://cu****om.url:****/custom/prefix/****/custom/suffix/');
+        });
+      });
+    });
+
+    describe('modelManifest', () => {
+      describe('getModelBeta', () => {
+        it('should get beta property', () => {
+          const model = { properties: [{ property_id: 'beta', value: 'true' }] };
+          const beta = getModelBeta(model);
+          expect(beta).toBe(true);
+        });
+
+        it('should return false if beta property is false', () => {
+          const model = { properties: [{ property_id: 'beta', value: 'false' }] };
+          const beta = getModelBeta(model);
+          expect(beta).toBe(false);
+        });
+
+        it('should return false if beta property is not present', () => {
+          const model = { properties: [] };
+          const beta = getModelBeta(model);
+          expect(beta).toBe(false);
+        });
+      });
+
+      describe('getModelDisplayName', () => {
+        it('should return display name with beta suffix', () => {
+          const model = { name: 'model', properties: [{ property_id: 'beta', value: 'true' }] };
+          const name = getModelDisplayName(model, true);
+          expect(name).toBe('model (Beta)');
+        });
+
+        it('should return display name without beta suffix', () => {
+          const model = { name: 'model', properties: [] };
+          const name = getModelDisplayName(model, false);
+          expect(name).toBe('model');
+        });
+
+        it('should return model["name"]', () => {
+          const model = { id: 'modelID', name: 'modelName' };
+          const name = getModelDisplayName(model, false);
+          expect(name).toBe('modelName');
+        });
+
+        it('should return last part of model["name"]', () => {
+          const model = { name: '@provider/modelFamily/modelName' };
+          const name = getModelDisplayName(model, false);
+          expect(name).toBe('modelName');
+        });
+      });
+
+      describe('getModelFunctionCalling', () => {
+        it('should return true if function_calling property is true', () => {
+          const model = { properties: [{ property_id: 'function_calling', value: 'true' }] };
+          const functionCalling = getModelFunctionCalling(model);
+          expect(functionCalling).toBe(true);
+        });
+
+        it('should return false if function_calling property is false', () => {
+          const model = { properties: [{ property_id: 'function_calling', value: 'false' }] };
+          const functionCalling = getModelFunctionCalling(model);
+          expect(functionCalling).toBe(false);
+        });
+
+        it('should return false if function_calling property is not set', () => {
+          const model = { properties: [] };
+          const functionCalling = getModelFunctionCalling(model);
+          expect(functionCalling).toBe(false);
+        });
+
+        it('should return false if exception occurs', () => {
+          const model = {};
+          const functionCalling = getModelFunctionCalling(model);
+          expect(functionCalling).toBe(false);
+        });
+      });
+
+      describe('getModelTokens', () => {
+        it('should return tokens property value', () => {
+          const model = { properties: [{ property_id: 'max_total_tokens', value: '100' }] };
+          const tokens = getModelTokens(model);
+          expect(tokens).toBe(100);
+        });
+
+        it('should return undefined if tokens property is not present', () => {
+          const model = { properties: [] };
+          const tokens = getModelTokens(model);
+          expect(tokens).toBeUndefined();
+        });
       });
     });
   });
 
-  describe('modelManifest', () => {
-    describe('getModelBeta', () => {
-      it('should get beta property', () => {
-        const model = { properties: [{ property_id: 'beta', value: 'true' }] };
-        const beta = getModelBeta(model);
-        expect(beta).toBe(true);
+  describe('bodyModification', () => {
+    describe('removePluginInfo', () => {
+      it('should return messages as is if no plugin info', () => {
+        // Arrange
+        const messages: OpenAIChatMessage[] = [
+          { content: 'content1', role: 'system' },
+          { content: 'content2', role: 'user' },
+        ];
+
+        // Act
+        const result = removePluginInfo(messages);
+
+        // Assert
+        expect(result).toEqual(messages);
       });
 
-      it('should return false if beta property is false', () => {
-        const model = { properties: [{ property_id: 'beta', value: 'false' }] };
-        const beta = getModelBeta(model);
-        expect(beta).toBe(false);
-      });
-
-      it('should return false if beta property is not present', () => {
-        const model = { properties: [] };
-        const beta = getModelBeta(model);
-        expect(beta).toBe(false);
-      });
-    });
-
-    describe('getModelDisplayName', () => {
-      it('should return display name with beta suffix', () => {
-        const model = { name: 'model', properties: [{ property_id: 'beta', value: 'true' }] };
-        const name = getModelDisplayName(model, true);
-        expect(name).toBe('model (Beta)');
-      });
-
-      it('should return display name without beta suffix', () => {
-        const model = { name: 'model', properties: [] };
-        const name = getModelDisplayName(model, false);
-        expect(name).toBe('model');
-      });
-
-      it('should return model["name"]', () => {
-        const model = { id: 'modelID', name: 'modelName' };
-        const name = getModelDisplayName(model, false);
-        expect(name).toBe('modelName');
-      });
-
-      it('should return last part of model["name"]', () => {
-        const model = { name: '@provider/modelFamily/modelName' };
-        const name = getModelDisplayName(model, false);
-        expect(name).toBe('modelName');
-      });
-    });
-
-    describe('getModelFunctionCalling', () => {
-      it('should return true if function_calling property is true', () => {
-        const model = { properties: [{ property_id: 'function_calling', value: 'true' }] };
-        const functionCalling = getModelFunctionCalling(model);
-        expect(functionCalling).toBe(true);
-      });
-
-      it('should return false if function_calling property is false', () => {
-        const model = { properties: [{ property_id: 'function_calling', value: 'false' }] };
-        const functionCalling = getModelFunctionCalling(model);
-        expect(functionCalling).toBe(false);
-      });
-
-      it('should return false if function_calling property is not set', () => {
-        const model = { properties: [] };
-        const functionCalling = getModelFunctionCalling(model);
-        expect(functionCalling).toBe(false);
-      });
-
-      it('should return false if exception occurs', () => {
-        const model = {};
-        const functionCalling = getModelFunctionCalling(model);
-        expect(functionCalling).toBe(false);
-      });
-    });
-
-    describe('getModelTokens', () => {
-      it('should return tokens property value', () => {
-        const model = { properties: [{ property_id: 'max_total_tokens', value: '100' }] };
-        const tokens = getModelTokens(model);
-        expect(tokens).toBe(100);
-      });
-
-      it('should return undefined if tokens property is not present', () => {
-        const model = { properties: [] };
-        const tokens = getModelTokens(model);
-        expect(tokens).toBeUndefined();
-      });
-    });
-  });
-
-  describe('removePluginInfo', () => {
-    it('should return messages as is if no plugin info', () => {
-      // Arrange
-      const messages: OpenAIChatMessage[] = [
-        { content: 'content1', role: 'system' },
-        { content: 'content2', role: 'user' },
-      ];
-
-      // Act
-      const result = removePluginInfo(messages);
-
-      // Assert
-      expect(result).toEqual(messages);
-    });
-
-    it('should remove plugin info', () => {
-      // Arrange
-      const system: OpenAIChatMessage = {
-        content: `<plugins_info>
+      it('should remove plugin info', () => {
+        // Arrange
+        const system: OpenAIChatMessage = {
+          content: `<plugins_info>
 plugin info
 </plugins_info>`,
-        role: 'system',
-      };
-      const user: OpenAIChatMessage = { content: 'content', role: 'user' };
-      const messages: OpenAIChatMessage[] = [system, user];
+          role: 'system',
+        };
+        const user: OpenAIChatMessage = { content: 'content', role: 'user' };
+        const messages: OpenAIChatMessage[] = [system, user];
 
-      // Act
-      const result = removePluginInfo(messages);
+        // Act
+        const result = removePluginInfo(messages);
 
-      // Assert
-      expect(result).toEqual([user]);
-    });
+        // Assert
+        expect(result).toEqual([user]);
+      });
 
-    it('should remove plugin info and keep other system messages', () => {
-      // Arrange
-      const system: OpenAIChatMessage = {
-        content: `system
+      it('should remove plugin info and keep other system messages', () => {
+        // Arrange
+        const system: OpenAIChatMessage = {
+          content: `system
 <plugins_info>
 plugin info
 </plugins_info>`,
-        role: 'system',
-      };
-      const user: OpenAIChatMessage = { content: 'content', role: 'user' };
-      const messages: OpenAIChatMessage[] = [system, user];
+          role: 'system',
+        };
+        const user: OpenAIChatMessage = { content: 'content', role: 'user' };
+        const messages: OpenAIChatMessage[] = [system, user];
 
-      // Act
-      const result = removePluginInfo(messages);
+        // Act
+        const result = removePluginInfo(messages);
 
-      // Assert
-      expect(result).toEqual([{ content: 'system\n', role: 'system' }, user]);
+        // Assert
+        expect(result).toEqual([{ content: 'system\n', role: 'system' }, user]);
+      });
+    });
+
+    describe('modifyTools', () => {
+      const _tools: ChatCompletionTool[] = [
+        {
+          function: {
+            description: 'Search Google and return top 10 results',
+            name: 'web_search____searchGoogle',
+            parameters: {
+              properties: {
+                _requestBody: {
+                  type: 'object',
+                  required: ['query'],
+                  properties: {
+                    query: {
+                      type: 'string',
+                      example: 'nice places to visit',
+                    },
+                  },
+                },
+              },
+              type: 'object',
+            },
+          },
+          type: 'function',
+        },
+        {
+          function: {
+            description: '提取网页内容',
+            name: 'website-crawler____getWebsiteContent',
+            parameters: {
+              properties: {
+                url: {
+                  description: '网页链接',
+                  type: 'string',
+                },
+              },
+              required: ['url'],
+              type: 'object',
+            },
+          },
+          type: 'function',
+        },
+      ];
+
+      const _toolsExpected: CloudflareAITool[] = [
+        {
+          function: {
+            description: 'Search Google and return top 10 results',
+            name: 'web_search____searchGoogle',
+            parameters: {
+              properties: {
+                _requestBody: {
+                  type: 'object',
+                  description: `Request body in JSON format. Properties (OpenAPI schema):
+{
+  "required": [
+    "query"
+  ],
+  "properties": {
+    "query": {
+      "type": "string",
+      "example": "nice places to visit"
+    }
+  }
+}`,
+                },
+              },
+              required: ['_requestBody'],
+              type: 'object',
+            },
+          },
+          type: 'function',
+        },
+        {
+          function: {
+            description: '提取网页内容',
+            name: 'website-crawler____getWebsiteContent',
+            parameters: {
+              properties: {
+                url: {
+                  description: '网页链接',
+                  type: 'string',
+                },
+              },
+              required: ['url'],
+              type: 'object',
+            },
+          },
+          type: 'function',
+        },
+      ];
+
+      it('should return undefined if tools is undefined', () => {
+        // Arrange
+        const tools = undefined;
+
+        // Act
+        const result = modifyTools(tools);
+
+        // Assert
+        expect(result).toBeUndefined();
+      });
+
+      it('should return empty array if tools is empty', () => {
+        // Arrange
+        const tools: ChatCompletionTool[] = [];
+
+        // Act
+        const result = modifyTools(tools);
+
+        // Assert
+        expect(result).toEqual([]);
+      });
+
+      it('should simplify complex tools', () => {
+        // Arrange
+        const tools = [_tools[0]];
+
+        // Act
+        const result = modifyTools(tools);
+
+        // Assert
+        expect(result).toEqual([_toolsExpected[0]]);
+      });
+
+      it('should keep simple tools', () => {
+        // Arrange
+        const tools = [_tools[1]];
+
+        // Act
+        const result = modifyTools(tools);
+
+        // Assert
+        expect(result).toEqual([_toolsExpected[1]]);
+      });
+
+      it('should handle mixed tools', () => {
+        // Arrange
+        const tools = _tools;
+
+        // Act
+        const result = modifyTools(tools);
+
+        // Assert
+        expect(result).toEqual(_toolsExpected);
+      });
     });
   });
 });
