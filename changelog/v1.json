@@ -1,6 +1,16 @@
 [
   {
     "children": {
+      "features": [
+        "Add reasoning content selector and update AutoScroll component, add Xinference provider support."
+      ],
+      "improvements": ["Add Gemini 2.5 Pro Experimental model, improve editing scroll experience."]
+    },
+    "date": "2025-03-26",
+    "version": "1.75.0"
+  },
+  {
+    "children": {
       "improvements": ["Upgrade styles for Drawer."]
     },
     "date": "2025-03-25",
