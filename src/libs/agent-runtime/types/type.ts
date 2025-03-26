@@ -74,6 +74,7 @@ export enum ModelProvider {
   Volcengine = 'volcengine',
   Wenxin = 'wenxin',
   XAI = 'xai',
+  Xinference = 'xinference',
   ZeroOne = 'zeroone',
   ZhiPu = 'zhipu',
 }

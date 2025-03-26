@@ -41,7 +41,10 @@
     "error": {
       "desc": "Onze excuses, er is een fout opgetreden tijdens het initialisatieproces van de Pglite-database. Klik op de knop om het opnieuw te proberen. Als het probleem zich blijft voordoen na meerdere pogingen, gelieve <1>een probleem te melden</1> en we zullen u zo snel mogelijk helpen.",
       "detail": "Fout reden: [[{{type}}] {{message}}. Details zijn als volgt:",
+      "detailTitle": "Foutreden",
+      "report": "Probleem rapporteren",
       "retry": "Opnieuw proberen",
+      "selfSolve": "Zelf oplossen",
       "title": "Fout bij database-initialisatie"
     },
     "initing": {
@@ -80,6 +83,54 @@
       "button": "Nu gebruiken",
       "desc": "Direct gebruiken",
       "title": "PGlite-database is gereed"
+    },
+    "solve": {
+      "backup": {
+        "backup": "Back-up",
+        "backupSuccess": "Back-up succesvol",
+        "desc": "Exporteer belangrijke gegevens uit de huidige database",
+        "export": "Exporteer alle gegevens",
+        "exportDesc": "De geëxporteerde gegevens worden opgeslagen in JSON-formaat en kunnen worden gebruikt voor toekomstige herstel of analyse.",
+        "reset": {
+          "alert": "Waarschuwing",
+          "alertDesc": "De volgende acties kunnen leiden tot gegevensverlies. Zorg ervoor dat u belangrijke gegevens hebt geback-upt voordat u verdergaat.",
+          "button": "Database volledig resetten (alle gegevens verwijderen)",
+          "confirm": {
+            "desc": "Deze actie zal alle gegevens verwijderen en is onomkeerbaar. Bevestig dat u wilt doorgaan?",
+            "title": "Bevestig database reset"
+          },
+          "desc": "Reset de database in het geval van onherstelbare migratie",
+          "title": "Database reset"
+        },
+        "restore": "Herstellen",
+        "restoreSuccess": "Herstel succesvol",
+        "title": "Gegevensback-up"
+      },
+      "diagnosis": {
+        "createdAt": "Aanmaakdatum",
+        "migratedAt": "Migratie voltooid op",
+        "sql": "Migratie SQL",
+        "title": "Migratiestatus"
+      },
+      "repair": {
+        "desc": "Handmatig migratiestatus beheren",
+        "runSQL": "Aangepast uitvoeren",
+        "sql": {
+          "clear": "Leegmaken",
+          "desc": "Voer aangepaste SQL-opdrachten uit om databaseproblemen te verhelpen",
+          "markFinished": "Markeer als voltooid",
+          "placeholder": "Voer SQL-opdracht in...",
+          "result": "Uitvoeringsresultaat",
+          "run": "Uitvoeren",
+          "title": "SQL-uitvoerder"
+        },
+        "title": "Migratiecontrole"
+      },
+      "tabs": {
+        "backup": "Back-up en herstel",
+        "diagnosis": "Diagnose",
+        "repair": "Herstel"
+      }
     }
   },
   "close": "Sluiten",

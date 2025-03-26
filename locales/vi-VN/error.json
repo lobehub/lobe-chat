@@ -69,6 +69,7 @@
     "524": "Xin lỗi, máy chủ đã hết thời gian chờ khi đang chờ phản hồi, có thể do phản hồi quá chậm, vui lòng thử lại sau",
     "AgentRuntimeError": "Lobe mô hình ngôn ngữ thực thi gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
     "ConnectionCheckFailed": "Yêu cầu trả về trống, xin kiểm tra xem địa chỉ API proxy có đang thiếu `/v1` ở cuối không",
+    "CreateMessageError": "Xin lỗi, tin nhắn không thể được gửi đi bình thường, vui lòng sao chép nội dung và gửi lại, tin nhắn này sẽ không được lưu lại sau khi làm mới trang.",
     "ExceededContextWindow": "Nội dung yêu cầu hiện tại vượt quá độ dài mà mô hình có thể xử lý, vui lòng giảm khối lượng nội dung và thử lại",
     "FreePlanLimit": "Hiện tại bạn đang sử dụng tài khoản miễn phí, không thể sử dụng tính năng này. Vui lòng nâng cấp lên gói trả phí để tiếp tục sử dụng.",
     "InsufficientQuota": "Xin lỗi, hạn mức của khóa này đã đạt giới hạn, vui lòng kiểm tra số dư tài khoản của bạn hoặc tăng hạn mức khóa trước khi thử lại",

@@ -226,7 +226,7 @@ We have implemented support for the following model service providers:
 - **[Gitee AI](https://lobechat.com/discover/provider/giteeai)**: Gitee AI's Serverless API provides AI developers with an out of the box large model inference API service.
 - **[Taichu](https://lobechat.com/discover/provider/taichu)**: The Institute of Automation, Chinese Academy of Sciences, and Wuhan Artificial Intelligence Research Institute have launched a new generation of multimodal large models, supporting comprehensive question-answering tasks such as multi-turn Q\&A, text creation, image generation, 3D understanding, and signal analysis, with stronger cognitive, understanding, and creative abilities, providing a new interactive experience.
 - **[360 AI](https://lobechat.com/discover/provider/ai360)**: 360 AI is an AI model and service platform launched by 360 Company, offering various advanced natural language processing models, including 360GPT2 Pro, 360GPT Pro, 360GPT Turbo, and 360GPT Turbo Responsibility 8K. These models combine large-scale parameters and multimodal capabilities, widely applied in text generation, semantic understanding, dialogue systems, and code generation. With flexible pricing strategies, 360 AI meets diverse user needs, supports developer integration, and promotes the innovation and development of intelligent applications.
-- **[Search1API](https://lobechat.com/discover/provider/search1api)**:
+- **[Search1API](https://lobechat.com/discover/provider/search1api)**: Search1API provides access to the DeepSeek series of models that can connect to the internet as needed, including standard and fast versions, supporting a variety of model sizes.
 - **[InfiniAI](https://lobechat.com/discover/provider/infiniai)**: Provides high-performance, easy-to-use, and secure large model services for application developers, covering the entire process from large model development to service deployment.
 
 </details>
@@ -328,10 +328,10 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 | Recent Submits                                                                                                               | Description                                                                                                             |
 | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2025-03-23**</sup>        | Analyze stocks and get comprehensive real-time investment data and analytics.<br/>`stock`                               |
 | [Web](https://lobechat.com/discover/plugin/web)<br/><sup>By **Proghit** on **2025-01-24**</sup>                              | Smart web search that reads and analyzes pages to deliver comprehensive answers from Google results.<br/>`web` `search` |
 | [MintbaseSearch](https://lobechat.com/discover/plugin/mintbasesearch)<br/><sup>By **mintbase** on **2024-12-31**</sup>       | Find any NFT data on the NEAR Protocol.<br/>`crypto` `nft`                                                              |
 | [Bing_websearch](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | Search for information from the internet base BingApi<br/>`bingsearch`                                                  |
-| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>        | Analyze stocks and get comprehensive real-time investment data and analytics.<br/>`stock`                               |
 
 > 📊 Total plugins: [<kbd>**46**</kbd>](https://lobechat.com/discover/plugins)
 

@@ -133,6 +133,7 @@ export const searchSlice: StateCreator<
       // 2. 将这条 tool call message 插入到 ai 消息的 tools 中
       addToolItem(),
     ]);
+    if (!newMessageId) return;
 
     // 将新创建的 tool message 激活
     openToolUI(newMessageId, message.plugin.identifier);

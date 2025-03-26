@@ -28,6 +28,52 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description:
+      'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
+    displayName: 'Gemini 2.0 Flash Thinking Experimental 01-21',
+    enabled: true,
+      id: 'gemini-2.0-flash-thinking-exp-01-21',
+    maxOutput: 65_536,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-01-21',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 8192,
+    description:
+      'Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，还能利用长上下文来分析大型数据集、代码库和文档。',
+    displayName: 'Gemini 2.5 Pro Experimental 03-25',
+    enabled: true,
+    id: 'gemini-2.5-pro-exp-03-25',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-03-25',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
       search: true,
       vision: true,
@@ -77,41 +123,6 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 8192,
-    description: 'Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。',
-    displayName: 'Gemini 2.0 Flash-Lite',
-    id: 'gemini-2.0-flash-lite',
-    maxOutput: 8192,
-    pricing: {
-      cachedInput: 0.018_75,
-      input: 0.075,
-      output: 0.3,
-    },
-    releasedAt: '2025-02-05',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      imageOutput: true,
-      vision: true,
-    },
-    contextWindowTokens: 32_768,
-    description: 'Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。',
-    displayName: 'Gemini 2.0 Flash Exp',
-    enabled: true,
-    id: 'gemini-2.0-flash-exp',
-    maxOutput: 8192,
-    pricing: {
-      input: 0,
-      output: 0,
-    },
-    releasedAt: '2025-02-05',
-    type: 'chat',
-  },
-  {
-    abilities: {
       imageOutput: true,
       vision: true,
     },
@@ -134,6 +145,23 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576 + 8192,
     description: 'Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。',
+    displayName: 'Gemini 2.0 Flash-Lite',
+    id: 'gemini-2.0-flash-lite',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0.018_75,
+      input: 0.075,
+      output: 0.3,
+    },
+    releasedAt: '2025-02-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 8192,
+    description: 'Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。',
     displayName: 'Gemini 2.0 Flash-Lite 001',
     id: 'gemini-2.0-flash-lite-001',
     maxOutput: 8192,
@@ -147,41 +175,19 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
+      imageOutput: true,
       vision: true,
     },
-    contextWindowTokens: 1_048_576 + 65_536,
-    description:
-      'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
-    displayName: 'Gemini 2.0 Flash Thinking Experimental',
-    id: 'gemini-2.0-flash-thinking-exp',
-    maxOutput: 65_536,
+    contextWindowTokens: 32_768,
+    description: 'Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。',
+    displayName: 'Gemini 2.0 Flash Exp',
+    id: 'gemini-2.0-flash-exp',
+    maxOutput: 8192,
     pricing: {
-      cachedInput: 0,
       input: 0,
       output: 0,
     },
-    releasedAt: '2025-01-21',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 65_536,
-    description:
-      'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
-    displayName: 'Gemini 2.0 Flash Thinking Experimental 01-21',
-    enabled: true,
-    id: 'gemini-2.0-flash-thinking-exp-01-21',
-    maxOutput: 65_536,
-    pricing: {
-      cachedInput: 0,
-      input: 0,
-      output: 0,
-    },
-    releasedAt: '2025-01-21',
+    releasedAt: '2025-02-05',
     type: 'chat',
   },
   {
@@ -211,7 +217,7 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 1_008_192,
     description: 'Gemini 1.5 Flash 002 是一款高效的多模态模型，支持广泛应用的扩展。',
     displayName: 'Gemini 1.5 Flash 002',
-    id: 'gemini-1.5-flash-002',
+    id: 'gemini-1.5-flash-002', // Deprecated on 2025-09-24
     maxOutput: 8192,
     pricing: {
       cachedInput: 0.018_75,
@@ -229,7 +235,7 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 1_008_192,
     description: 'Gemini 1.5 Flash 001 是一款高效的多模态模型，支持广泛应用的扩展。',
     displayName: 'Gemini 1.5 Flash 001',
-    id: 'gemini-1.5-flash-001',
+    id: 'gemini-1.5-flash-001', // Deprecated on 2025-05-27
     maxOutput: 8192,
     pricing: {
       cachedInput: 0.018_75,
@@ -247,7 +253,7 @@ const googleChatModels: AIChatModelCard[] = [
     description:
       'Gemini 1.5 Pro 002 是最新的生产就绪模型，提供更高质量的输出，特别在数学、长上下文和视觉任务方面有显著提升。',
     displayName: 'Gemini 1.5 Pro 002',
-    id: 'gemini-1.5-pro-002',
+    id: 'gemini-1.5-pro-002', // Deprecated on 2025-09-24
     maxOutput: 8192,
     pricing: {
       cachedInput: 0.315,
@@ -265,7 +271,7 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 2_008_192,
     description: 'Gemini 1.5 Pro 001 是可扩展的多模态AI解决方案，支持广泛的复杂任务。',
     displayName: 'Gemini 1.5 Pro 001',
-    id: 'gemini-1.5-pro-001',
+    id: 'gemini-1.5-pro-001', // Deprecated on 2025-05-27
     maxOutput: 8192,
     pricing: {
       cachedInput: 0.875,
@@ -283,7 +289,7 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 1_008_192,
     description: 'Gemini 1.5 Flash 8B 是一款高效的多模态模型，支持广泛应用的扩展。',
     displayName: 'Gemini 1.5 Flash 8B',
-    id: 'gemini-1.5-flash-8b',
+    id: 'gemini-1.5-flash-8b-latest',
     maxOutput: 8192,
     pricing: {
       cachedInput: 0.02,

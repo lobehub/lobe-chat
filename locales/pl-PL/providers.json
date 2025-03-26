@@ -23,6 +23,9 @@
   "cloudflare": {
     "description": "Uruchamiaj modele uczenia maszynowego napędzane przez GPU w globalnej sieci Cloudflare."
   },
+  "cohere": {
+    "description": "Cohere przynosi najnowocześniejsze modele wielojęzyczne, zaawansowane funkcje wyszukiwania oraz dostosowane do nowoczesnych przedsiębiorstw przestrzenie robocze AI — wszystko zintegrowane w jednej bezpiecznej platformie."
+  },
   "deepseek": {
     "description": "DeepSeek to firma skoncentrowana na badaniach i zastosowaniach technologii sztucznej inteligencji, której najnowszy model DeepSeek-V2.5 łączy zdolności do prowadzenia ogólnych rozmów i przetwarzania kodu, osiągając znaczące postępy w zakresie dostosowywania do preferencji ludzkich, zadań pisarskich i przestrzegania instrukcji."
   },
@@ -100,6 +103,9 @@
   },
   "sambanova": {
     "description": "SambaNova Cloud umożliwia deweloperom łatwe korzystanie z najlepszych modeli open source oraz cieszenie się najszybszą prędkością wnioskowania."
+  },
+  "search1api": {
+    "description": "Search1API oferuje dostęp do serii modeli DeepSeek, które można łączyć z siecią w razie potrzeby, w tym wersji standardowej i szybkiej, wspierając wybór modeli o różnych rozmiarach parametrów."
   },
   "sensenova": {
     "description": "SenseTime codziennie się rozwija, opierając się na potężnym wsparciu infrastrukturalnym SenseTime, oferując wydajne i łatwe w użyciu usługi dużych modeli w pełnym zakresie."
