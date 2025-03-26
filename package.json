@@ -337,7 +337,6 @@
   },
   "pnpm": {
     "overrides": {
-      "@anthropic-ai/sdk": "^0.39.0",
       "mdast-util-gfm-autolink-literal": "2.0.0"
     },
     "packageExtensions": {
