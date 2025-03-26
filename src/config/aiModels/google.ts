@@ -53,7 +53,7 @@ const googleChatModels: AIChatModelCard[] = [
       search: true,
       vision: true,
     },
-    contextWindowTokens: 1_048_567 + 65_536,
+    contextWindowTokens: 1_048_576 + 65_536,
     description:
       'Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，还能利用长上下文来分析大型数据集、代码库和文档。',
     displayName: 'Gemini 2.5 Pro Experimental 03-25',
