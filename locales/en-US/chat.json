@@ -240,6 +240,7 @@
   "updateAgent": "Update Assistant Information",
   "upload": {
     "action": {
+      "fileDisabled": "The current model does not support file upload. Please switch models to use this feature.",
       "fileUpload": "Upload File",
       "folderUpload": "Upload Folder",
       "imageDisabled": "The current model does not support visual recognition. Please switch models to use this feature.",

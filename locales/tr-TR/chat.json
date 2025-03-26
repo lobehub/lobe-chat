@@ -244,6 +244,7 @@
       "folderUpload": "Klasör Yükle",
       "imageDisabled": "Mevcut model görsel tanımayı desteklemiyor, lütfen modeli değiştirin ve tekrar deneyin",
       "imageUpload": "Görüntü Yükle",
+      "fileDisabled": "Mevcut model dosya yüklemeyi desteklemiyor, lütfen modeli değiştirin ve tekrar deneyin",
       "tooltip": "Yükle"
     },
     "clientMode": {

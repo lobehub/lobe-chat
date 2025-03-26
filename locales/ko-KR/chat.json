@@ -244,6 +244,7 @@
       "folderUpload": "폴더 업로드",
       "imageDisabled": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 변경한 후 사용하세요.",
       "imageUpload": "이미지 업로드",
+      "fileDisabled": "현재 모델은 파일 업로드를 지원하지 않습니다. 모델을 변경한 후 사용하세요.",
       "tooltip": "업로드"
     },
     "clientMode": {

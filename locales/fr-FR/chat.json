@@ -242,6 +242,7 @@
     "action": {
       "fileUpload": "Télécharger un fichier",
       "folderUpload": "Télécharger un dossier",
+      "fileDisabled": "Le modèle actuel ne prend pas en charge le téléchargement de fichiers, veuillez changer de modèle pour l'utiliser",
       "imageDisabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser",
       "imageUpload": "Télécharger une image",
       "tooltip": "Télécharger"

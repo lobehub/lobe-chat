@@ -243,6 +243,7 @@ export default {
   updateAgent: '更新助理信息',
   upload: {
     action: {
+      fileDisabled: '当前模型不支持文件上传，请切换模型后使用',
       fileUpload: '上传文件',
       folderUpload: '上传文件夹',
       imageDisabled: '当前模型不支持视觉识别，请切换模型后使用',

@@ -244,6 +244,7 @@
       "folderUpload": "上傳資料夾",
       "imageDisabled": "當前模型不支援視覺識別，請切換模型後使用",
       "imageUpload": "上傳圖片",
+      "fileDisabled": "當前模型不支援檔案上傳，請切換模型後使用",
       "tooltip": "上傳"
     },
     "clientMode": {
