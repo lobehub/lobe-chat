@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update siliconcloud models."]
+    },
+    "date": "2025-03-26",
+    "version": "1.75.1"
+  },
+  {
+    "children": {
       "features": [
         "Add reasoning content selector and update AutoScroll component, add Xinference provider support."
       ],
