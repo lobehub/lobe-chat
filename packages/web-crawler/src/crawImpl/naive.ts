@@ -32,20 +32,6 @@ const mixinHeaders = {
   'sec-fetch-user': '?1',
 };
 
-const TIMEOUT_CONTROL = 10_000;
-
-const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
-  const controller = new AbortController();
-  const timeoutPromise = new Promise<T>((_, reject) => {
-    setTimeout(() => {
-      controller.abort();
-      reject(new TimeoutError(`Request timeout after ${ms}ms`));
-    }, ms);
-  });
-
-  return Promise.race([promise, timeoutPromise]);
-};
-
 export const naive: CrawlImpl = async (url, { filterOptions }) => {
   let res: Response;
 
