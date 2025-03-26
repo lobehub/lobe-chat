@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.75.3](https://github.com/lobehub/lobe-chat/compare/v1.75.2...v1.75.3)
+
+<sup>Released on **2025-03-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix anthropic import issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix anthropic import issue, closes [#7155](https://github.com/lobehub/lobe-chat/issues/7155) ([a9725b2](https://github.com/lobehub/lobe-chat/commit/a9725b2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.75.2](https://github.com/lobehub/lobe-chat/compare/v1.75.1...v1.75.2)
 
 <sup>Released on **2025-03-26**</sup>
