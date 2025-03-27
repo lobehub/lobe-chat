@@ -2,7 +2,7 @@
 
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { PropsWithChildren, memo } from 'react';
+import { PropsWithChildren, Suspense, memo } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 
@@ -38,7 +38,9 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
         {children}
       </Flexbox>
       <HotkeyHelperPanel />
-      <RegisterHotkeys />
+      <Suspense fallback={null}>
+        <RegisterHotkeys />
+      </Suspense>
     </HotkeysProvider>
   );
 });
