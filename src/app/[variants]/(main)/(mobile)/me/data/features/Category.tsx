@@ -42,7 +42,7 @@ const Category = memo(() => {
     },
   ];
 
-  return items?.map((item, index) => <Cell key={item.key || index} {...item} />);
+  return items?.map(({ key, ...item }, index) => <Cell key={key || index} {...item} />);
 });
 
 export default Category;
