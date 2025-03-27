@@ -1,7 +1,7 @@
-// import { AgentRuntimeErrorType } from '../error';
 import type { ChatModelCard } from '@/types/llm';
 
-import { ModelProvider } from '../types';
+import { AgentRuntimeErrorType } from '../error';
+import { ChatCompletionErrorPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 export interface InfiniAIModelCard {
@@ -10,6 +10,34 @@ export interface InfiniAIModelCard {
 
 export const LobeInfiniAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://cloud.infini-ai.com/maas/v1',
+  chatCompletion: {
+    handleError(error): Omit<ChatCompletionErrorPayload, 'provider'> | undefined {
+      let errorResponse: Response | undefined;
+      if (error instanceof Response) {
+        errorResponse = error;
+      } else if ('status' in (error as any)) {
+        errorResponse = error as Response;
+      }
+      if (errorResponse) {
+        if (errorResponse.status === 401) {
+          return {
+            error,
+            errorType: AgentRuntimeErrorType.InvalidProviderAPIKey,
+          };
+        }
+
+        if (errorResponse.status === 429) {
+          return {
+            error,
+            errorType: AgentRuntimeErrorType.QuotaLimitReached,
+          };
+        }
+      }
+      return {
+        error,
+      };
+    },
+  },
   debug: {
     chatCompletion: () => process.env.DEBUG_INFINIAI_CHAT_COMPLETION === '1',
   },
