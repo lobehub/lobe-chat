@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update models info."]
+    },
+    "date": "2025-03-27",
+    "version": "1.75.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix anthropic import issue."]
     },
     "date": "2025-03-26",
