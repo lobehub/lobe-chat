@@ -133,11 +133,27 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
+    contextWindowTokens: 32_768,
+    description: 'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
+    displayName: 'Qwen2.5 Omni 7B',
+    id: 'qwen2.5-omni-7b',
+    maxOutput: 2048,
+    organization: 'Qwen',
+    // pricing: {
+    //   currency: 'CNY',
+    //   input: 0,
+    //   output: 0,
+    // },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
     contextWindowTokens: 32_000,
     description:
       '通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。',
     displayName: 'Qwen VL Plus',
-    enabled: true,
     id: 'qwen-vl-plus-latest',
     maxOutput: 2048,
     organization: 'Qwen',
