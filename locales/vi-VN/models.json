@@ -1,13 +1,4 @@
 {
-  "01-ai/Yi-1.5-34B-Chat-16K": {
-    "description": "Yi-1.5 34B, với mẫu huấn luyện phong phú, cung cấp hiệu suất vượt trội trong ứng dụng ngành."
-  },
-  "01-ai/Yi-1.5-6B-Chat": {
-    "description": "Yi-1.5-6B-Chat là một biến thể trong loạt Yi-1.5, thuộc về mô hình trò chuyện mã nguồn mở. Yi-1.5 là phiên bản nâng cấp của Yi, đã được tiền huấn luyện trên 500B dữ liệu chất lượng cao và tinh chỉnh trên 3 triệu mẫu đa dạng. So với Yi, Yi-1.5 thể hiện khả năng mạnh mẽ hơn trong mã hóa, toán học, suy luận và tuân theo chỉ dẫn, đồng thời duy trì khả năng hiểu ngôn ngữ, suy luận thông thường và hiểu đọc xuất sắc. Mô hình có các phiên bản độ dài ngữ cảnh 4K, 16K và 32K, với tổng số lượng tiền huấn luyện đạt 3.6T tokens."
-  },
-  "01-ai/Yi-1.5-9B-Chat-16K": {
-    "description": "Yi-1.5 9B hỗ trợ 16K Tokens, cung cấp khả năng tạo ngôn ngữ hiệu quả và mượt mà."
-  },
   "01-ai/yi-1.5-34b-chat": {
     "description": "Zero One Vạn Vật, mô hình tinh chỉnh mã nguồn mở mới nhất với 34 tỷ tham số, hỗ trợ nhiều tình huống đối thoại, dữ liệu đào tạo chất lượng cao, phù hợp với sở thích của con người."
   },
@@ -149,12 +140,6 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "Khả năng suy luận hình ảnh cao cấp cho các ứng dụng đại lý hiểu biết thị giác."
   },
-  "LoRA/Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5-72B-Instruct là một trong những mô hình ngôn ngữ lớn mới nhất do Alibaba Cloud phát hành. Mô hình 72B này có khả năng cải thiện đáng kể trong các lĩnh vực mã hóa và toán học. Mô hình cũng cung cấp hỗ trợ đa ngôn ngữ, bao gồm hơn 29 ngôn ngữ, bao gồm tiếng Trung, tiếng Anh, v.v. Mô hình đã có sự cải thiện đáng kể trong việc tuân theo chỉ dẫn, hiểu dữ liệu có cấu trúc và tạo ra đầu ra có cấu trúc (đặc biệt là JSON)."
-  },
-  "LoRA/Qwen/Qwen2.5-7B-Instruct": {
-    "description": "Qwen2.5-7B-Instruct là một trong những mô hình ngôn ngữ lớn mới nhất do Alibaba Cloud phát hành. Mô hình 7B này có khả năng cải thiện đáng kể trong các lĩnh vực mã hóa và toán học. Mô hình cũng cung cấp hỗ trợ đa ngôn ngữ, bao gồm hơn 29 ngôn ngữ, bao gồm tiếng Trung, tiếng Anh, v.v. Mô hình đã có sự cải thiện đáng kể trong việc tuân theo chỉ dẫn, hiểu dữ liệu có cấu trúc và tạo ra đầu ra có cấu trúc (đặc biệt là JSON)."
-  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Mô hình văn bản được tinh chỉnh theo chỉ dẫn Llama 3.1, được tối ưu hóa cho các trường hợp sử dụng đối thoại đa ngôn ngữ, thể hiện xuất sắc trong nhiều mô hình trò chuyện mã nguồn mở và đóng có sẵn trên nhiều tiêu chuẩn ngành."
   },
@@ -178,9 +163,6 @@
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) là mô hình chỉ dẫn chính xác cao, phù hợp cho tính toán phức tạp."
-  },
-  "OpenGVLab/InternVL2-26B": {
-    "description": "InternVL2 đã thể hiện hiệu suất xuất sắc trong nhiều tác vụ ngôn ngữ hình ảnh, bao gồm hiểu tài liệu và biểu đồ, hiểu văn bản trong cảnh, OCR, giải quyết vấn đề khoa học và toán học."
   },
   "Phi-3-medium-128k-instruct": {
     "description": "Mô hình Phi-3-medium giống nhau, nhưng với kích thước ngữ cảnh lớn hơn cho RAG hoặc gợi ý ít."
@@ -206,9 +188,6 @@
   "Phi-3.5-vision-instrust": {
     "description": "Phi-3-vision là phiên bản cập nhật của mô hình."
   },
-  "Pro/OpenGVLab/InternVL2-8B": {
-    "description": "InternVL2 đã thể hiện hiệu suất xuất sắc trong nhiều tác vụ ngôn ngữ hình ảnh, bao gồm hiểu tài liệu và biểu đồ, hiểu văn bản trong cảnh, OCR, giải quyết vấn đề khoa học và toán học."
-  },
   "Pro/Qwen/Qwen2-1.5B-Instruct": {
     "description": "Qwen2-1.5B-Instruct là mô hình ngôn ngữ lớn được tinh chỉnh theo chỉ dẫn trong loạt Qwen2, với quy mô tham số là 1.5B. Mô hình này dựa trên kiến trúc Transformer, sử dụng hàm kích hoạt SwiGLU, độ lệch QKV trong chú ý và chú ý theo nhóm. Nó thể hiện xuất sắc trong nhiều bài kiểm tra chuẩn về hiểu ngôn ngữ, sinh ngôn ngữ, khả năng đa ngôn ngữ, mã hóa, toán học và suy luận, vượt qua hầu hết các mô hình mã nguồn mở. So với Qwen1.5-1.8B-Chat, Qwen2-1.5B-Instruct cho thấy sự cải thiện đáng kể về hiệu suất trong các bài kiểm tra MMLU, HumanEval, GSM8K, C-Eval và IFEval, mặc dù số lượng tham số hơi ít hơn."
   },
@@ -224,20 +203,23 @@
   "Pro/Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder-7B-Instruct là phiên bản mới nhất trong loạt mô hình ngôn ngữ lớn chuyên biệt cho mã do Alibaba Cloud phát hành. Mô hình này được cải thiện đáng kể khả năng tạo mã, suy luận và sửa chữa thông qua việc đào tạo trên 5.5 triệu tỷ tokens, không chỉ nâng cao khả năng lập trình mà còn duy trì lợi thế về khả năng toán học và tổng quát. Mô hình cung cấp nền tảng toàn diện hơn cho các ứng dụng thực tế như tác nhân mã."
   },
+  "Pro/Qwen/Qwen2.5-VL-7B-Instruct": {
+    "description": "Qwen2.5-VL là thành viên mới của series Qwen, sở hữu khả năng hiểu thị giác mạnh mẽ, có thể phân tích văn bản, biểu đồ và bố cục trong hình ảnh, cũng như hiểu video dài và bắt các sự kiện, có thể suy luận, thao tác công cụ, hỗ trợ định vị vật thể đa định dạng và tạo ra đầu ra có cấu trúc, tối ưu hóa việc huấn luyện độ phân giải và tốc độ khung hình động cho việc hiểu video, đồng thời cải thiện hiệu suất của bộ mã hóa thị giác."
+  },
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat là phiên bản mã nguồn mở trong loạt mô hình tiền huấn luyện GLM-4 do Zhizhu AI phát hành. Mô hình này thể hiện xuất sắc trong nhiều lĩnh vực như ngữ nghĩa, toán học, suy luận, mã và kiến thức. Ngoài việc hỗ trợ đối thoại nhiều vòng, GLM-4-9B-Chat còn có các tính năng nâng cao như duyệt web, thực thi mã, gọi công cụ tùy chỉnh (Function Call) và suy luận văn bản dài. Mô hình hỗ trợ 26 ngôn ngữ, bao gồm tiếng Trung, tiếng Anh, tiếng Nhật, tiếng Hàn và tiếng Đức. Trong nhiều bài kiểm tra chuẩn, GLM-4-9B-Chat đã thể hiện hiệu suất xuất sắc, như AlignBench-v2, MT-Bench, MMLU và C-Eval. Mô hình hỗ trợ độ dài ngữ cảnh tối đa 128K, phù hợp cho nghiên cứu học thuật và ứng dụng thương mại."
   },
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 là một mô hình suy diễn được điều khiển bởi học tăng cường (RL), giải quyết các vấn đề về tính lặp lại và khả năng đọc trong mô hình. Trước khi áp dụng RL, DeepSeek-R1 đã giới thiệu dữ liệu khởi động lạnh, tối ưu hóa thêm hiệu suất suy diễn. Nó thể hiện hiệu suất tương đương với OpenAI-o1 trong các nhiệm vụ toán học, mã và suy diễn, và thông qua phương pháp đào tạo được thiết kế cẩn thận, nâng cao hiệu quả tổng thể."
   },
+  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "DeepSeek-R1-Distill-Qwen-1.5B là mô hình được tạo ra từ Qwen2.5-Math-1.5B thông qua quá trình chưng cất kiến thức. Mô hình này được tinh chỉnh bằng 800.000 mẫu được chọn lọc từ DeepSeek-R1, thể hiện hiệu suất tốt trong nhiều bài kiểm tra chuẩn. Là một mô hình nhẹ, nó đạt được độ chính xác 83,9% trên MATH-500, tỷ lệ vượt qua 28,9% trên AIME 2024, và đạt điểm 954 trên CodeForces, cho thấy khả năng suy luận vượt quá quy mô tham số của nó."
+  },
+  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "DeepSeek-R1-Distill-Qwen-7B là mô hình được tạo ra từ Qwen2.5-Math-7B thông qua quá trình chưng cất kiến thức. Mô hình này được tinh chỉnh bằng 800.000 mẫu được chọn lọc từ DeepSeek-R1, thể hiện khả năng suy luận xuất sắc. Nó đã đạt được hiệu suất tốt trong nhiều bài kiểm tra chuẩn, trong đó có độ chính xác 92,8% trên MATH-500, tỷ lệ vượt qua 55,5% trên AIME 2024, và điểm số 1189 trên CodeForces, thể hiện khả năng toán học và lập trình mạnh mẽ cho một mô hình có quy mô 7B."
+  },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 là một mô hình ngôn ngữ hỗn hợp chuyên gia (MoE) với 6710 tỷ tham số, sử dụng chú ý tiềm ẩn đa đầu (MLA) và kiến trúc DeepSeekMoE, kết hợp chiến lược cân bằng tải không có tổn thất phụ trợ, tối ưu hóa hiệu suất suy diễn và đào tạo. Thông qua việc được tiền huấn luyện trên 14.8 triệu tỷ token chất lượng cao, và thực hiện tinh chỉnh giám sát và học tăng cường, DeepSeek-V3 vượt trội hơn các mô hình mã nguồn mở khác, gần với các mô hình đóng kín hàng đầu."
-  },
-  "Pro/google/gemma-2-9b-it": {
-    "description": "Gemma là một trong những loạt mô hình mở tiên tiến nhẹ của Google. Đây là một mô hình ngôn ngữ quy mô lớn chỉ có bộ giải mã, hỗ trợ tiếng Anh, cung cấp trọng số mở, biến thể tiền huấn luyện và biến thể tinh chỉnh theo chỉ dẫn. Mô hình Gemma phù hợp cho nhiều nhiệm vụ sinh văn bản, bao gồm hỏi đáp, tóm tắt và suy luận. Mô hình 9B này được đào tạo trên 8 triệu tỷ tokens. Quy mô tương đối nhỏ của nó cho phép triển khai trong các môi trường hạn chế tài nguyên, như máy tính xách tay, máy tính để bàn hoặc cơ sở hạ tầng đám mây của riêng bạn, giúp nhiều người hơn có thể tiếp cận các mô hình AI tiên tiến và thúc đẩy đổi mới."
-  },
-  "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
-    "description": "Meta Llama 3.1 là một phần của gia đình mô hình ngôn ngữ lớn đa ngôn ngữ do Meta phát triển, bao gồm các biến thể tiền huấn luyện và tinh chỉnh theo chỉ dẫn với quy mô tham số 8B, 70B và 405B. Mô hình 8B này được tối ưu hóa cho các tình huống đối thoại đa ngôn ngữ, thể hiện xuất sắc trong nhiều bài kiểm tra chuẩn ngành. Mô hình được đào tạo bằng hơn 15 triệu tỷ tokens từ dữ liệu công khai và sử dụng các kỹ thuật như tinh chỉnh giám sát và học tăng cường phản hồi của con người để nâng cao tính hữu ích và an toàn của mô hình. Llama 3.1 hỗ trợ sinh văn bản và sinh mã, với thời điểm cắt kiến thức là tháng 12 năm 2023."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview là một mô hình xử lý ngôn ngữ tự nhiên độc đáo, có khả năng xử lý hiệu quả các nhiệm vụ tạo đối thoại phức tạp và hiểu ngữ cảnh."
@@ -289,6 +271,12 @@
   },
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder-7B-Instruct là phiên bản mới nhất trong loạt mô hình ngôn ngữ lớn chuyên biệt cho mã do Alibaba Cloud phát hành. Mô hình này được cải thiện đáng kể khả năng tạo mã, suy luận và sửa chữa thông qua việc đào tạo trên 5.5 triệu tỷ tokens, không chỉ nâng cao khả năng lập trình mà còn duy trì lợi thế về khả năng toán học và tổng quát. Mô hình cung cấp nền tảng toàn diện hơn cho các ứng dụng thực tế như tác nhân mã."
+  },
+  "Qwen/Qwen2.5-VL-32B-Instruct": {
+    "description": "Qwen2.5-VL-32B-Instruct là mô hình đa phương thức do đội ngũ Qwen2.5-VL phát triển, là một phần của loạt Qwen2.5-VL. Mô hình này không chỉ giỏi nhận diện các vật thể thông thường, mà còn có thể phân tích văn bản, biểu đồ, biểu tượng, hình vẽ và bố cục trong hình ảnh. Nó có thể hoạt động như một đại lý thị giác, có khả năng suy luận và điều khiển công cụ một cách động, bao gồm cả việc sử dụng máy tính và điện thoại. Ngoài ra, mô hình này có thể xác định chính xác vị trí của các đối tượng trong hình ảnh và tạo ra đầu ra có cấu trúc cho hóa đơn, bảng biểu, v.v. So với mô hình tiền nhiệm Qwen2-VL, phiên bản này đã được cải thiện đáng kể về khả năng giải toán và giải quyết vấn đề thông qua học tăng cường, và phong cách phản hồi cũng phù hợp hơn với sở thích của con người."
+  },
+  "Qwen/Qwen2.5-VL-72B-Instruct": {
+    "description": "Qwen2.5-VL là mô hình ngôn ngữ thị giác trong loạt Qwen2.5. Mô hình này có những cải tiến đáng kể: có khả năng hiểu thị giác mạnh hơn, có thể nhận diện các vật thể thông thường, phân tích văn bản, biểu đồ và bố cục; hoạt động như một đại lý thị giác có thể suy luận và hướng dẫn sử dụng công cụ một cách động; hỗ trợ hiểu các video dài hơn 1 giờ và bắt các sự kiện quan trọng; có thể định vị chính xác các vật thể trong hình ảnh thông qua việc tạo khung giới hạn hoặc điểm; hỗ trợ tạo ra đầu ra có cấu trúc, đặc biệt phù hợp với dữ liệu quét như hóa đơn, bảng biểu."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 là dòng mô hình mới nhất của Qwen, hỗ trợ ngữ cảnh 128k, so với các mô hình mã nguồn mở tốt nhất hiện tại, Qwen2-72B vượt trội hơn hẳn trong nhiều khả năng như hiểu ngôn ngữ tự nhiên, kiến thức, mã, toán học và đa ngôn ngữ."
@@ -373,9 +361,6 @@
   },
   "TeleAI/TeleChat2": {
     "description": "Mô hình lớn TeleChat2 được phát triển độc lập từ 0 đến 1 bởi China Telecom, là một mô hình ngữ nghĩa sinh sinh, hỗ trợ các chức năng như hỏi đáp bách khoa, tạo mã, sinh văn bản dài, cung cấp dịch vụ tư vấn đối thoại cho người dùng, có khả năng tương tác đối thoại với người dùng, trả lời câu hỏi, hỗ trợ sáng tạo, giúp người dùng nhanh chóng và hiệu quả trong việc thu thập thông tin, kiến thức và cảm hứng. Mô hình thể hiện xuất sắc trong các vấn đề ảo giác, sinh văn bản dài và hiểu logic."
-  },
-  "TeleAI/TeleMM": {
-    "description": "Mô hình đa phương tiện TeleMM là một mô hình hiểu đa phương tiện do China Telecom phát triển, có khả năng xử lý nhiều loại đầu vào như văn bản và hình ảnh, hỗ trợ các chức năng như hiểu hình ảnh, phân tích biểu đồ, cung cấp dịch vụ hiểu đa phương tiện cho người dùng. Mô hình có khả năng tương tác đa phương tiện với người dùng, hiểu chính xác nội dung đầu vào, trả lời câu hỏi, hỗ trợ sáng tạo và cung cấp thông tin và cảm hứng đa phương tiện một cách hiệu quả. Mô hình thể hiện xuất sắc trong các nhiệm vụ đa phương tiện như nhận thức chi tiết và suy luận logic."
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct là một trong những mô hình ngôn ngữ lớn mới nhất do Alibaba Cloud phát hành. Mô hình 72B này có khả năng cải thiện đáng kể trong các lĩnh vực mã hóa và toán học. Mô hình cũng cung cấp hỗ trợ đa ngôn ngữ, bao gồm hơn 29 ngôn ngữ, bao gồm tiếng Trung, tiếng Anh, v.v. Mô hình đã có sự cải thiện đáng kể trong việc tuân theo chỉ dẫn, hiểu dữ liệu có cấu trúc và tạo ra đầu ra có cấu trúc (đặc biệt là JSON)."
@@ -662,9 +647,6 @@
   "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
     "description": "Mô hình chưng cất DeepSeek-R1, tối ưu hóa hiệu suất suy luận thông qua học tăng cường và dữ liệu khởi động lạnh, mô hình mã nguồn mở làm mới tiêu chuẩn đa nhiệm."
   },
-  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B": {
-    "description": "DeepSeek-R1-Distill-Llama-8B là mô hình chưng cất phát triển từ Llama-3.1-8B. Mô hình này sử dụng các mẫu được tạo ra từ DeepSeek-R1 để tinh chỉnh, thể hiện khả năng suy luận xuất sắc. Trong nhiều bài kiểm tra chuẩn, nó đã thể hiện tốt, trong đó đạt 89.1% độ chính xác trên MATH-500, đạt 50.4% tỷ lệ vượt qua trên AIME 2024, và đạt điểm 1205 trên CodeForces, thể hiện khả năng toán học và lập trình mạnh mẽ cho mô hình quy mô 8B."
-  },
   "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "Mô hình chưng cất DeepSeek-R1, tối ưu hóa hiệu suất suy luận thông qua học tăng cường và dữ liệu khởi động lạnh, mô hình mã nguồn mở làm mới tiêu chuẩn đa nhiệm."
   },
@@ -713,6 +695,9 @@
   "deepseek-r1-70b-online": {
     "description": "DeepSeek R1 70B phiên bản tiêu chuẩn, hỗ trợ tìm kiếm trực tuyến theo thời gian thực, phù hợp cho các nhiệm vụ đối thoại và xử lý văn bản cần thông tin mới nhất."
   },
+  "deepseek-r1-distill-llama": {
+    "description": "deepseek-r1-distill-llama là mô hình được chưng cất từ DeepSeek-R1 dựa trên Llama."
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 - mô hình lớn hơn và thông minh hơn trong bộ công cụ DeepSeek - đã được chưng cất vào kiến trúc Llama 70B. Dựa trên các bài kiểm tra chuẩn và đánh giá của con người, mô hình này thông minh hơn so với Llama 70B gốc, đặc biệt xuất sắc trong các nhiệm vụ yêu cầu độ chính xác về toán học và sự thật."
   },
@@ -724,6 +709,9 @@
   },
   "deepseek-r1-distill-qianfan-llama-8b": {
     "description": "Được phát hành lần đầu vào ngày 14 tháng 2 năm 2025, được chắt lọc từ mô hình cơ sở Llama3_8B (Xây dựng với Meta Llama) bởi đội ngũ phát triển mô hình Qianfan, dữ liệu chắt lọc cũng đồng thời bổ sung tài liệu của Qianfan."
+  },
+  "deepseek-r1-distill-qwen": {
+    "description": "deepseek-r1-distill-qwen là mô hình được chưng cất từ DeepSeek-R1 dựa trên Qwen."
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "Mô hình DeepSeek-R1-Distill được tinh chỉnh từ các mẫu do DeepSeek-R1 tạo ra cho các mô hình mã nguồn mở như Qwen, Llama thông qua công nghệ chưng cất kiến thức."
@@ -872,6 +860,9 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 là mô hình thử nghiệm mới nhất, có sự cải thiện đáng kể về hiệu suất trong các trường hợp sử dụng văn bản và đa phương thức."
   },
+  "gemini-1.5-flash-8b-latest": {
+    "description": "Gemini 1.5 Flash 8B là một mô hình đa chế độ hiệu quả, hỗ trợ mở rộng ứng dụng rộng rãi."
+  },
   "gemini-1.5-flash-exp-0827": {
     "description": "Gemini 1.5 Flash 0827 cung cấp khả năng xử lý đa phương tiện tối ưu, áp dụng cho nhiều tình huống tác vụ phức tạp."
   },
@@ -913,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "Một mô hình Gemini 2.0 Flash được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
-  },
-  "gemini-2.0-flash-thinking-exp": {
-    "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, sở hữu các tính năng thế hệ tiếp theo, tốc độ vượt trội, gọi công cụ bản địa và sinh ra đa phương thức."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, sở hữu các tính năng thế hệ tiếp theo, tốc độ vượt trội, gọi công cụ bản địa và sinh ra đa phương thức."
@@ -1223,6 +1211,9 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B là một mô hình hiệu suất cao, cung cấp khả năng sinh văn bản nhanh chóng, rất phù hợp cho các tình huống ứng dụng cần hiệu quả quy mô lớn và tiết kiệm chi phí."
   },
+  "llama-3.1-instruct": {
+    "description": "Mô hình Llama 3.1 được tối ưu hóa cho các tình huống đối thoại, vượt trội hơn nhiều mô hình trò chuyện nguồn mở hiện có trong các bài kiểm tra chuẩn ngành phổ biến."
+  },
   "llama-3.2-11b-vision-instruct": {
     "description": "Khả năng suy luận hình ảnh xuất sắc trên hình ảnh độ phân giải cao, phù hợp cho các ứng dụng hiểu biết hình ảnh."
   },
@@ -1235,11 +1226,17 @@
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 được thiết kế để xử lý các nhiệm vụ kết hợp dữ liệu hình ảnh và văn bản. Nó thể hiện xuất sắc trong các nhiệm vụ mô tả hình ảnh và hỏi đáp hình ảnh, vượt qua rào cản giữa tạo ngôn ngữ và suy luận hình ảnh."
   },
+  "llama-3.2-vision-instruct": {
+    "description": "Mô hình Llama 3.2-Vision đã được tối ưu hóa để nhận dạng hình ảnh, suy luận hình ảnh, mô tả hình ảnh và trả lời các câu hỏi thông thường liên quan đến hình ảnh."
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3 là mô hình ngôn ngữ lớn mã nguồn mở đa ngôn ngữ tiên tiến nhất trong dòng Llama, mang đến trải nghiệm hiệu suất tương đương với mô hình 405B với chi phí cực thấp. Dựa trên cấu trúc Transformer, và được cải thiện tính hữu ích và an toàn thông qua tinh chỉnh giám sát (SFT) và học tăng cường từ phản hồi của con người (RLHF). Phiên bản tinh chỉnh theo chỉ dẫn của nó được tối ưu hóa cho đối thoại đa ngôn ngữ, thể hiện tốt hơn nhiều mô hình trò chuyện mã nguồn mở và đóng kín trong nhiều tiêu chuẩn ngành. Ngày cắt đứt kiến thức là tháng 12 năm 2023."
   },
   "llama-3.3-70b-versatile": {
     "description": "Mô hình ngôn ngữ lớn Meta Llama 3.3 (LLM) đa ngôn ngữ là mô hình tạo ra dựa trên 70B (đầu vào/đầu ra văn bản) đã được huấn luyện và điều chỉnh theo chỉ dẫn. Mô hình thuần văn bản Llama 3.3 được tối ưu hóa cho các trường hợp hội thoại đa ngôn ngữ và vượt trội hơn nhiều mô hình trò chuyện mã nguồn mở và đóng khác trên các tiêu chuẩn ngành thông thường."
+  },
+  "llama-3.3-instruct": {
+    "description": "Mô hình Llama 3.3 được tối ưu hóa cho các tình huống đối thoại, và đã vượt qua nhiều mô hình trò chuyện nguồn mở hiện có trong các bài kiểm tra chuẩn ngành phổ biến."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B cung cấp khả năng xử lý phức tạp vô song, được thiết kế riêng cho các dự án yêu cầu cao."
@@ -1319,9 +1316,6 @@
   "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
     "description": "LLaMA 3.2 được thiết kế để xử lý các tác vụ kết hợp dữ liệu hình ảnh và văn bản. Nó có khả năng xuất sắc trong các tác vụ mô tả hình ảnh và trả lời câu hỏi hình ảnh, vượt qua khoảng cách giữa tạo ngôn ngữ và suy luận hình ảnh."
   },
-  "meta-llama/Llama-3.3-70B-Instruct": {
-    "description": "Llama 3.3 là mô hình ngôn ngữ lớn mã nguồn mở đa ngôn ngữ tiên tiến nhất trong dòng Llama, mang đến trải nghiệm hiệu suất tương đương mô hình 405B với chi phí cực thấp. Dựa trên cấu trúc Transformer, và được cải thiện tính hữu ích và an toàn thông qua tinh chỉnh giám sát (SFT) và học tăng cường phản hồi từ con người (RLHF). Phiên bản tinh chỉnh theo chỉ dẫn được tối ưu hóa cho đối thoại đa ngôn ngữ, thể hiện tốt hơn nhiều mô hình trò chuyện mã nguồn mở và đóng trong nhiều tiêu chuẩn ngành. Ngày cắt kiến thức là tháng 12 năm 2023."
-  },
   "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
     "description": "Mô hình ngôn ngữ lớn đa ngôn ngữ Meta Llama 3.3 (LLM) là mô hình sinh ra từ 70B (đầu vào văn bản/đầu ra văn bản) với việc điều chỉnh trước và điều chỉnh theo lệnh. Mô hình điều chỉnh theo lệnh Llama 3.3 được tối ưu hóa cho các trường hợp sử dụng đối thoại đa ngôn ngữ và vượt trội hơn nhiều mô hình trò chuyện mã nguồn mở và đóng khác trên các bài kiểm tra chuẩn ngành phổ biến."
   },
@@ -1349,14 +1343,8 @@
   "meta-llama/Meta-Llama-3.1-70B": {
     "description": "Llama 3.1 là mô hình hàng đầu do Meta phát hành, hỗ trợ lên đến 405B tham số, có thể áp dụng cho cuộc đối thoại phức tạp, dịch đa ngôn ngữ và phân tích dữ liệu."
   },
-  "meta-llama/Meta-Llama-3.1-70B-Instruct": {
-    "description": "LLaMA 3.1 70B cung cấp hỗ trợ đối thoại hiệu quả đa ngôn ngữ."
-  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo": {
     "description": "Mô hình Llama 3.1 70B được tinh chỉnh để phù hợp với các ứng dụng tải cao, định lượng đến FP8 cung cấp khả năng tính toán và độ chính xác hiệu quả hơn, đảm bảo hiệu suất xuất sắc trong các tình huống phức tạp."
-  },
-  "meta-llama/Meta-Llama-3.1-8B-Instruct": {
-    "description": "LLaMA 3.1 cung cấp hỗ trợ đa ngôn ngữ, là một trong những mô hình sinh nổi bật trong ngành."
   },
   "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo": {
     "description": "Mô hình Llama 3.1 8B sử dụng định lượng FP8, hỗ trợ lên đến 131,072 mã ngữ cảnh, là một trong những mô hình mã nguồn mở hàng đầu, phù hợp cho các nhiệm vụ phức tạp, vượt trội hơn nhiều tiêu chuẩn ngành."
@@ -1451,11 +1439,17 @@
   "mistral-large": {
     "description": "Mixtral Large là mô hình hàng đầu của Mistral, kết hợp khả năng sinh mã, toán học và suy luận, hỗ trợ cửa sổ ngữ cảnh 128k."
   },
+  "mistral-large-instruct": {
+    "description": "Mistral-Large-Instruct-2407 là một mô hình ngôn ngữ lớn (LLM) tiên tiến, có 123 tỷ tham số, với khả năng suy luận, kiến thức và lập trình hàng đầu."
+  },
   "mistral-large-latest": {
     "description": "Mistral Large là mô hình lớn hàng đầu, chuyên về các nhiệm vụ đa ngôn ngữ, suy luận phức tạp và sinh mã, là lựa chọn lý tưởng cho các ứng dụng cao cấp."
   },
   "mistral-nemo": {
     "description": "Mistral Nemo được phát triển hợp tác giữa Mistral AI và NVIDIA, là mô hình 12B hiệu suất cao."
+  },
+  "mistral-nemo-instruct": {
+    "description": "Mô hình ngôn ngữ lớn Mistral-Nemo-Instruct-2407 (LLM) là phiên bản điều chỉnh lệnh của Mistral-Nemo-Base-2407."
   },
   "mistral-small": {
     "description": "Mistral Small có thể được sử dụng cho bất kỳ nhiệm vụ nào dựa trên ngôn ngữ yêu cầu hiệu suất cao và độ trễ thấp."
@@ -1670,15 +1664,6 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Mô hình mã mạnh mẽ cỡ trung, hỗ trợ độ dài ngữ cảnh 32K, xuất sắc trong lập trình đa ngôn ngữ."
   },
-  "qwen1.5-14b-chat": {
-    "description": "Qwen1.5 là phiên bản Beta của Qwen2, là mô hình ngôn ngữ chỉ giải mã dựa trên Transformer, được tiền huấn luyện trên dữ liệu lớn. So với các phiên bản Qwen đã phát hành trước đây, cả mô hình base và chat của Qwen1.5 đều hỗ trợ nhiều ngôn ngữ và có sự cải thiện đáng kể về khả năng trò chuyện tổng thể và các kỹ năng cơ bản. Qwen1.5-14b-chat là mô hình có 14 tỷ tham số, được thiết kế đặc biệt cho các tình huống trò chuyện."
-  },
-  "qwen1.5-32b-chat": {
-    "description": "Qwen1.5 series là phiên bản Beta của Qwen2, là mô hình ngôn ngữ chỉ giải mã dựa trên Transformer, được tiền huấn luyện trên dữ liệu lớn. So với các phiên bản Qwen series được phát hành trước đó, cả mô hình base và chat của Qwen1.5 series đều hỗ trợ nhiều ngôn ngữ, và có sự cải thiện đáng kể về khả năng trò chuyện tổng thể và các kỹ năng cơ bản. Qwen1.5-32b-chat là mô hình lớn 32 tỷ tham số chuyên dụng cho các tình huống trò chuyện, mạnh hơn mô hình 14 tỷ tham số trong các tình huống thực thể thông minh, và có chi phí suy luận thấp hơn mô hình 72 tỷ tham số."
-  },
-  "qwen1.5-72b-chat": {
-    "description": "Qwen1.5 là phiên bản Beta của Qwen2, là mô hình ngôn ngữ chỉ giải mã dựa trên Transformer, được tiền huấn luyện trên dữ liệu lớn. So với các phiên bản Qwen đã phát hành trước đó, cả mô hình base và chat của Qwen1.5 đều hỗ trợ nhiều ngôn ngữ, và có sự cải thiện đáng kể về khả năng trò chuyện tổng thể và các kỹ năng cơ bản. Qwen1.5-72b-chat là mô hình lớn có 72 tỷ tham số, chuyên dùng cho các tình huống trò chuyện."
-  },
   "qwen2": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
   },
@@ -1715,6 +1700,12 @@
   "qwen2.5-coder-7b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã Qwen."
   },
+  "qwen2.5-coder-instruct": {
+    "description": "Qwen2.5-Coder là mô hình ngôn ngữ lớn mới nhất trong series Qwen, chuyên dụng cho lập trình (trước đây được gọi là CodeQwen)."
+  },
+  "qwen2.5-instruct": {
+    "description": "Qwen2.5 là phiên bản mới nhất của mô hình ngôn ngữ lớn Qwen. Đối với Qwen2.5, chúng tôi đã phát hành nhiều mô hình ngôn ngữ cơ sở và mô hình ngôn ngữ điều chỉnh theo lệnh, với phạm vi tham số từ 500 triệu đến 7,2 tỷ."
+  },
   "qwen2.5-math-1.5b-instruct": {
     "description": "Mô hình Qwen-Math có khả năng giải toán mạnh mẽ."
   },
@@ -1724,11 +1715,17 @@
   "qwen2.5-math-7b-instruct": {
     "description": "Mô hình Qwen-Math có khả năng giải quyết bài toán toán học mạnh mẽ."
   },
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Dòng mô hình Qwen2.5-VL đã nâng cao mức độ thông minh, tính thực tế và khả năng áp dụng, giúp mô hình hoạt động hiệu quả hơn trong các tình huống như đối thoại tự nhiên, sáng tạo nội dung, cung cấp dịch vụ kiến thức chuyên môn và phát triển mã. Phiên bản 32B đã sử dụng công nghệ học tăng cường để tối ưu hóa mô hình, so với các mô hình khác trong dòng Qwen2.5 VL, cung cấp phong cách đầu ra phù hợp hơn với sở thích của con người, khả năng suy luận các vấn đề toán học phức tạp, cũng như khả năng hiểu và suy luận chi tiết về hình ảnh."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "Nâng cao khả năng theo dõi lệnh, toán học, giải quyết vấn đề, mã hóa, nâng cao khả năng nhận diện mọi thứ, hỗ trợ định vị chính xác các yếu tố thị giác từ nhiều định dạng khác nhau, hỗ trợ hiểu và định vị thời gian sự kiện trong các tệp video dài (tối đa 10 phút), có khả năng hiểu thứ tự thời gian và tốc độ, hỗ trợ điều khiển Agent trên OS hoặc Mobile dựa trên khả năng phân tích và định vị, khả năng trích xuất thông tin quan trọng và xuất định dạng Json mạnh mẽ, phiên bản này là phiên bản 72B, phiên bản mạnh nhất trong dòng sản phẩm này."
   },
   "qwen2.5-vl-7b-instruct": {
     "description": "Nâng cao khả năng theo dõi lệnh, toán học, giải quyết vấn đề, mã hóa, nâng cao khả năng nhận diện mọi thứ, hỗ trợ định vị chính xác các yếu tố thị giác từ nhiều định dạng khác nhau, hỗ trợ hiểu và định vị thời gian sự kiện trong các tệp video dài (tối đa 10 phút), có khả năng hiểu thứ tự thời gian và tốc độ, hỗ trợ điều khiển Agent trên OS hoặc Mobile dựa trên khả năng phân tích và định vị, khả năng trích xuất thông tin quan trọng và xuất định dạng Json mạnh mẽ, phiên bản này là phiên bản 72B, phiên bản mạnh nhất trong dòng sản phẩm này."
+  },
+  "qwen2.5-vl-instruct": {
+    "description": "Qwen2.5-VL là phiên bản mới nhất của mô hình ngôn ngữ và hình ảnh trong gia đình mô hình Qwen."
   },
   "qwen2.5:0.5b": {
     "description": "Qwen2.5 là thế hệ mô hình ngôn ngữ quy mô lớn mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
