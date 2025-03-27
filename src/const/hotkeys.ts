@@ -40,7 +40,7 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.OpenHotkeyHelper,
-    keys: combineKeys([Key.Mod, Key.Shift, '?']),
+    keys: combineKeys([Key.Ctrl, Key.Shift, '?']),
   },
   {
     group: HotkeyGroupEnum.Conversation,
