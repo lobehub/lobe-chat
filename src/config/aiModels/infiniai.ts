@@ -85,6 +85,24 @@ const infiniaiChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
+    contextWindowTokens: 125_000,
+    description:
+      'Qwen2.5-VL 系列模型提升了模型的智能水平、实用性和适用性，使其在自然对话、内容创作、专业知识服务及代码开发等场景中表现更优。32B 版本使用了强化学习技术优化模型，与 Qwen2.5 VL 系列的其它模型相比，提供了更符合人类偏好的输出风格、复杂数学问题的推理能力，以及图像细粒度理解与推理能力。',
+    displayName: 'Qwen2.5 VL 32B Instruct',
+    enabled: true,
+    id: 'qwen2.5-vl-32b-instruct',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 125_000,
     description:
       'Qwen2.5-VL 系列模型提升了模型的智能水平、实用性和适用性，使其在自然对话、内容创作、专业知识服务及代码开发等场景中表现更优。',
     displayName: 'Qwen2.5 VL 7B Instruct',
