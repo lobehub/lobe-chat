@@ -5,14 +5,13 @@ import isEqual from 'fast-deep-equal';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Flexbox } from 'react-layout-kit';
 
-import { KEY_NUMBER } from '@/const/hotkeys';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import { HotkeyEnum } from '@/types/hotkey';
+import { HotkeyEnum, KeyEnum } from '@/types/hotkey';
 
 const useStyles = createStyles(({ css, token }) => ({
   avatar: css`
@@ -71,7 +70,7 @@ const PinList = () => {
           {list.slice(0, 9).map((item, index) => (
             <Flexbox key={item.id} style={{ position: 'relative' }}>
               <Tooltip
-                hotkey={hotkey.replaceAll(KEY_NUMBER, String(index + 1))}
+                hotkey={hotkey.replaceAll(KeyEnum.Number, String(index + 1))}
                 placement={'right'}
                 title={sessionHelpers.getTitle(item.meta)}
               >

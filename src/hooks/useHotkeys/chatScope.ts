@@ -3,7 +3,6 @@ import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useEffect } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
 
-import { CHAT_HOTKEY_SCOPE } from '@/const/hotkeys';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useActionSWR } from '@/libs/swr';
@@ -11,26 +10,24 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { HotkeyEnum } from '@/types/hotkey';
+import { HotkeyEnum, HotkeyScopeEnum } from '@/types/hotkey';
 
 import { useHotkeyById } from './useHotkeyById';
 
 export const useSaveTopicHotkey = () => {
   const openNewTopicOrSaveTopic = useChatStore((s) => s.openNewTopicOrSaveTopic);
   const { mutate } = useActionSWR('openNewTopicOrSaveTopic', openNewTopicOrSaveTopic);
-  return useHotkeyById(HotkeyEnum.SaveTopic, () => mutate(), { scopes: [CHAT_HOTKEY_SCOPE] });
+  return useHotkeyById(HotkeyEnum.SaveTopic, () => mutate());
 };
 
 export const useToggleZenModeHotkey = () => {
   const toggleZenMode = useGlobalStore((s) => s.toggleZenMode);
-  return useHotkeyById(HotkeyEnum.ToggleZenMode, toggleZenMode, { scopes: [CHAT_HOTKEY_SCOPE] });
+  return useHotkeyById(HotkeyEnum.ToggleZenMode, toggleZenMode);
 };
 
 export const useOpenChatSettingsHotkey = () => {
   const openChatSettings = useOpenChatSettings();
-  return useHotkeyById(HotkeyEnum.OpenChatSettings, openChatSettings, {
-    scopes: [CHAT_HOTKEY_SCOPE],
-  });
+  return useHotkeyById(HotkeyEnum.OpenChatSettings, openChatSettings);
 };
 
 export const useRegenerateMessageHotkey = () => {
@@ -44,7 +41,6 @@ export const useRegenerateMessageHotkey = () => {
     () => !disable && regenerateMessage(lastMessage.id),
     {
       enabled: !disable,
-      scopes: [CHAT_HOTKEY_SCOPE],
     },
   );
 };
@@ -64,7 +60,6 @@ export const useToggleLeftPanelHotkey = () => {
       }),
     {
       enabled: !isZenMode && !isPinned,
-      scopes: [CHAT_HOTKEY_SCOPE],
     },
   );
 };
@@ -75,7 +70,6 @@ export const useToggleRightPanelHotkey = () => {
 
   return useHotkeyById(HotkeyEnum.ToggleRightPanel, () => toggleConfig(), {
     enabled: !isZenMode,
-    scopes: [CHAT_HOTKEY_SCOPE],
   });
 };
 
@@ -103,8 +97,8 @@ export const useRegisterChatHotkeys = () => {
   useAddUserMessageHotkey();
 
   useEffect(() => {
-    enableScope(CHAT_HOTKEY_SCOPE);
-    return () => disableScope(CHAT_HOTKEY_SCOPE);
+    enableScope(HotkeyScopeEnum.Chat);
+    return () => disableScope(HotkeyScopeEnum.Chat);
   }, []);
 
   return null;

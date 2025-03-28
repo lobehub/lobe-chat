@@ -2,7 +2,6 @@ import isEqual from 'fast-deep-equal';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-import { GLOBAL_HOTKEY_SCOPE, KEY_NUMBER } from '@/const/hotkeys';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useGlobalStore } from '@/store/global';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -10,7 +9,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import { HotkeyEnum } from '@/types/hotkey';
+import { HotkeyEnum, HotkeyScopeEnum, KeyEnum } from '@/types/hotkey';
 
 import { useHotkeyById } from './useHotkeyById';
 
@@ -28,7 +27,7 @@ export const useSwitchAgentHotkey = () => {
   };
 
   const ref = useHotkeys(
-    list.slice(0, 9).map((e, i) => hotkey.replaceAll(KEY_NUMBER, String(i + 1))),
+    list.slice(0, 9).map((e, i) => hotkey.replaceAll(KeyEnum.Number, String(i + 1))),
     (_, hotkeysEvent) => {
       if (!hotkeysEvent.keys?.[0]) return;
       const index = parseInt(hotkeysEvent.keys?.[0]) - 1;
@@ -40,7 +39,7 @@ export const useSwitchAgentHotkey = () => {
       enableOnFormTags: true,
       enabled: showPinList,
       preventDefault: true,
-      scopes: [GLOBAL_HOTKEY_SCOPE, HotkeyEnum.SwitchAgent],
+      scopes: [HotkeyScopeEnum.Global, HotkeyEnum.SwitchAgent],
     },
   );
 
@@ -56,12 +55,8 @@ export const useOpenHotkeyHelperHotkey = () => {
     s.updateSystemStatus,
   ]);
 
-  return useHotkeyById(
-    HotkeyEnum.OpenHotkeyHelper,
-    () => updateSystemStatus({ showHotkeyHelper: !open }),
-    {
-      scopes: [GLOBAL_HOTKEY_SCOPE],
-    },
+  return useHotkeyById(HotkeyEnum.OpenHotkeyHelper, () =>
+    updateSystemStatus({ showHotkeyHelper: !open }),
   );
 };
 

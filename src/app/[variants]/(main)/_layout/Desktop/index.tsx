@@ -6,11 +6,11 @@ import { PropsWithChildren, Suspense, memo } from 'react';
 import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 
-import { GLOBAL_HOTKEY_SCOPE } from '@/const/hotkeys';
 import { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
 import HotkeyHelperPanel from '@/features/HotkeyHelperPanel';
 import { usePlatform } from '@/hooks/usePlatform';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { HotkeyScopeEnum } from '@/types/hotkey';
 
 import RegisterHotkeys from './RegisterHotkeys';
 import SideBar from './SideBar';
@@ -23,7 +23,7 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
   const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    <HotkeysProvider initiallyActiveScopes={[GLOBAL_HOTKEY_SCOPE]}>
+    <HotkeysProvider initiallyActiveScopes={[HotkeyScopeEnum.Global]}>
       {showCloudPromotion && <CloudBanner />}
       <Flexbox
         height={showCloudPromotion ? `calc(100% - ${BANNER_HEIGHT}px)` : '100%'}
@@ -38,7 +38,7 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
         {children}
       </Flexbox>
       <HotkeyHelperPanel />
-      <Suspense fallback={null}>
+      <Suspense>
         <RegisterHotkeys />
       </Suspense>
     </HotkeysProvider>

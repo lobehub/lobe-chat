@@ -157,38 +157,6 @@ describe('settingsSelectors', () => {
     });
   });
 
-  describe('currentLLMSettings', () => {
-    it('should return the language model settings', () => {
-      const s = {
-        settings: {
-          languageModel: {
-            openAI: {
-              OPENAI_API_KEY: 'test-key',
-              endpoint: 'https://test-endpoint.com',
-            },
-            anthropic: {
-              ANTHROPIC_API_KEY: 'anthropic-key',
-            },
-          },
-        },
-      } as unknown as UserStore;
-
-      const result = settingsSelectors.currentLLMSettings(s);
-
-      expect(result).toEqual(s.settings.languageModel);
-    });
-
-    it('should return empty object if languageModel is not defined', () => {
-      const s = {
-        settings: {},
-      } as unknown as UserStore;
-
-      const result = settingsSelectors.currentLLMSettings(s);
-
-      expect(result).toEqual({});
-    });
-  });
-
   describe('getProviderConfigById', () => {
     it('should return the provider config for a given provider id', () => {
       const providerConfig = {

@@ -1,6 +1,9 @@
+import { uniq } from 'lodash-es';
 import { DependencyList } from 'react';
 import { type HotkeyCallback, type Options, useHotkeys } from 'react-hotkeys-hook';
 
+import { HOTKEYS_REGISTRATION } from '@/const/hotkeys';
+import { useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyId } from '@/types/hotkey';
@@ -15,6 +18,7 @@ export const useHotkeyById = (
   dependencies?: OptionsOrDependencyArray,
 ) => {
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(hotkeyId));
+  const mobile = useServerConfigStore((s) => s.isMobile);
 
   const _options: Options | undefined = !Array.isArray(options)
     ? (options as Options)
@@ -28,6 +32,8 @@ export const useHotkeyById = (
       ? dependencies
       : undefined;
 
+  const item = HOTKEYS_REGISTRATION.find((item) => item.id === hotkeyId);
+
   const ref = useHotkeys(
     hotkey,
     (...props) => {
@@ -38,7 +44,8 @@ export const useHotkeyById = (
       enableOnFormTags: true,
       preventDefault: true,
       ..._options,
-      scopes: [hotkeyId, ...(_options?.scopes || [])],
+      enabled: !mobile && _options?.enabled,
+      scopes: uniq([hotkeyId, ...(item?.scopes || []), ...(_options?.scopes || [])]),
     },
     _deps,
   );

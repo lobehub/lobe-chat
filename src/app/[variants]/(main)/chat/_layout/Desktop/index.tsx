@@ -25,7 +25,7 @@ const Layout = ({ children, session }: LayoutProps) => {
       {/* ↓ cloud slot ↓ */}
 
       {/* ↑ cloud slot ↑ */}
-      <Suspense fallback={null}>
+      <Suspense>
         <RegisterHotkeys />
       </Suspense>
     </>

@@ -1,71 +1,81 @@
-import { KeyMapEnum as Key, combineKeys } from '@lobehub/ui/es/Hotkey';
+import { combineKeys } from '@lobehub/ui/es/Hotkey';
 
-import { HotkeyEnum, HotkeyGroupEnum, HotkeyRegistration } from '@/types/hotkey';
-
-// 默认全局注册的快捷键 scope
-// https://react-hotkeys-hook.vercel.app/docs/documentation/hotkeys-provider
-export const GLOBAL_HOTKEY_SCOPE = 'global';
-export const CHAT_HOTKEY_SCOPE = 'chat';
-
-export const KEY_NUMBER = '1-9';
+import {
+  HotkeyEnum,
+  HotkeyGroupEnum,
+  HotkeyRegistration,
+  HotkeyScopeEnum,
+  KeyEnum,
+} from '@/types/hotkey';
 
 // mod 在 Mac 上是 command 键，alt 在 Win 上是 ctrl 键
 export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.Search,
-    keys: combineKeys([Key.Mod, 'k']),
+    keys: combineKeys([KeyEnum.Mod, 'k']),
+    scopes: [HotkeyScopeEnum.Global],
   },
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.SwitchAgent,
-    keys: combineKeys([Key.Ctrl, KEY_NUMBER]),
+    keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Number]),
     nonEditable: true,
+    scopes: [HotkeyScopeEnum.Global],
   },
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleLeftPanel,
-    keys: combineKeys([Key.Mod, Key.Alt, Key.Left]),
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.Alt, KeyEnum.Left]),
+    scopes: [HotkeyScopeEnum.Chat],
   },
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleRightPanel,
-    keys: combineKeys([Key.Mod, Key.Alt, Key.Right]),
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.Alt, KeyEnum.Right]),
+    scopes: [HotkeyScopeEnum.Chat],
   },
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleZenMode,
-    keys: combineKeys([Key.Mod, Key.Backslash]),
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.Backslash]),
+    scopes: [HotkeyScopeEnum.Chat],
   },
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.OpenHotkeyHelper,
-    keys: combineKeys([Key.Ctrl, Key.Shift, '?']),
+    keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Shift, '?']),
+    scopes: [HotkeyScopeEnum.Global],
   },
   {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.OpenChatSettings,
-    keys: combineKeys([Key.Mod, Key.Alt, 's']),
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.Alt, 's']),
+    scopes: [HotkeyScopeEnum.Chat],
   },
   {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.RegenerateMessage,
-    keys: combineKeys([Key.Alt, 'r']),
+    keys: combineKeys([KeyEnum.Alt, 'r']),
+    scopes: [HotkeyScopeEnum.Chat],
   },
   {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.SaveTopic,
-    keys: combineKeys([Key.Alt, 'n']),
+    keys: combineKeys([KeyEnum.Alt, 'n']),
+    scopes: [HotkeyScopeEnum.Chat],
   },
   {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.AddUserMessage,
-    keys: combineKeys([Key.Alt, Key.Enter]),
+    keys: combineKeys([KeyEnum.Alt, KeyEnum.Enter]),
+    // 不通过 Scope 模式激活
   },
   {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.EditMessage,
-    keys: combineKeys([Key.Alt, Key.LeftDoubleClick]),
+    keys: combineKeys([KeyEnum.Alt, KeyEnum.LeftDoubleClick]),
     nonEditable: true,
+    scopes: [HotkeyScopeEnum.Chat],
   },
 ];

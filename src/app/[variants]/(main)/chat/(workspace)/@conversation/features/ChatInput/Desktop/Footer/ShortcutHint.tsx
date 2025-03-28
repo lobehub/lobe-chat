@@ -1,4 +1,4 @@
-import { Hotkey, KeyMapEnum, combineKeys } from '@lobehub/ui';
+import { Hotkey, combineKeys } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
+import { KeyEnum } from '@/types/hotkey';
 
 const ShortcutHint = memo(() => {
   const { t } = useTranslation('chat');
@@ -13,12 +14,12 @@ const ShortcutHint = memo(() => {
   const useCmdEnterToSend = useUserStore(preferenceSelectors.useCmdEnterToSend);
 
   const sendShortcut = useCmdEnterToSend
-    ? combineKeys([KeyMapEnum.Mod, KeyMapEnum.Enter])
-    : KeyMapEnum.Enter;
+    ? combineKeys([KeyEnum.Mod, KeyEnum.Enter])
+    : KeyEnum.Enter;
 
   const wrapperShortcut = useCmdEnterToSend
-    ? KeyMapEnum.Enter
-    : combineKeys([KeyMapEnum.Mod, KeyMapEnum.Enter]);
+    ? KeyEnum.Enter
+    : combineKeys([KeyEnum.Mod, KeyEnum.Enter]);
 
   return (
     <Flexbox
