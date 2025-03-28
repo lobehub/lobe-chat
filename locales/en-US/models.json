@@ -1,13 +1,4 @@
 {
-  "01-ai/Yi-1.5-34B-Chat-16K": {
-    "description": "Yi-1.5 34B delivers superior performance in industry applications with a wealth of training samples."
-  },
-  "01-ai/Yi-1.5-6B-Chat": {
-    "description": "Yi-1.5-6B-Chat is a variant of the Yi-1.5 series, belonging to the open-source chat model. Yi-1.5 is an upgraded version of Yi, continuously pre-trained on 500B high-quality corpora and fine-tuned on over 3M diverse samples. Compared to Yi, Yi-1.5 demonstrates stronger capabilities in coding, mathematics, reasoning, and instruction following, while maintaining excellent language understanding, common sense reasoning, and reading comprehension abilities. The model is available in context length versions of 4K, 16K, and 32K, with a total pre-training volume reaching 3.6T tokens."
-  },
-  "01-ai/Yi-1.5-9B-Chat-16K": {
-    "description": "Yi-1.5 9B supports 16K tokens, providing efficient and smooth language generation capabilities."
-  },
   "01-ai/yi-1.5-34b-chat": {
     "description": "Zero One Everything, the latest open-source fine-tuned model with 34 billion parameters, supports various dialogue scenarios with high-quality training data aligned with human preferences."
   },
@@ -149,12 +140,6 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "Advanced image reasoning capabilities suitable for visual understanding agent applications."
   },
-  "LoRA/Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5-72B-Instruct is one of the latest large language models released by Alibaba Cloud. This 72B model shows significant improvements in coding and mathematics. It also provides multilingual support, covering over 29 languages, including Chinese and English. The model has made notable advancements in instruction following, understanding structured data, and generating structured outputs, especially JSON."
-  },
-  "LoRA/Qwen/Qwen2.5-7B-Instruct": {
-    "description": "Qwen2.5-7B-Instruct is one of the latest large language models released by Alibaba Cloud. This 7B model shows significant improvements in coding and mathematics. It also provides multilingual support, covering over 29 languages, including Chinese and English. The model has made notable advancements in instruction following, understanding structured data, and generating structured outputs, especially JSON."
-  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Llama 3.1 instruction-tuned text model optimized for multilingual dialogue use cases, performing excellently on common industry benchmarks among many available open-source and closed chat models."
   },
@@ -178,9 +163,6 @@
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) is a high-precision instruction model suitable for complex computations."
-  },
-  "OpenGVLab/InternVL2-26B": {
-    "description": "InternVL2 demonstrates exceptional performance across various visual language tasks, including document and chart understanding, scene text understanding, OCR, and solving scientific and mathematical problems."
   },
   "Phi-3-medium-128k-instruct": {
     "description": "The same Phi-3-medium model, but with a larger context size for RAG or few-shot prompting."
@@ -206,9 +188,6 @@
   "Phi-3.5-vision-instrust": {
     "description": "An updated version of the Phi-3-vision model."
   },
-  "Pro/OpenGVLab/InternVL2-8B": {
-    "description": "InternVL2 demonstrates exceptional performance across various visual language tasks, including document and chart understanding, scene text understanding, OCR, and solving scientific and mathematical problems."
-  },
   "Pro/Qwen/Qwen2-1.5B-Instruct": {
     "description": "Qwen2-1.5B-Instruct is an instruction-tuned large language model in the Qwen2 series, with a parameter size of 1.5B. This model is based on the Transformer architecture and employs techniques such as the SwiGLU activation function, attention QKV bias, and group query attention. It excels in language understanding, generation, multilingual capabilities, coding, mathematics, and reasoning across multiple benchmark tests, surpassing most open-source models. Compared to Qwen1.5-1.8B-Chat, Qwen2-1.5B-Instruct shows significant performance improvements in tests such as MMLU, HumanEval, GSM8K, C-Eval, and IFEval, despite having slightly fewer parameters."
   },
@@ -224,20 +203,23 @@
   "Pro/Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder-7B-Instruct is the latest version in Alibaba Cloud's series of code-specific large language models. This model significantly enhances code generation, reasoning, and repair capabilities based on Qwen2.5, trained on 55 trillion tokens. It not only improves coding abilities but also maintains advantages in mathematics and general capabilities, providing a more comprehensive foundation for practical applications such as code agents."
   },
+  "Pro/Qwen/Qwen2.5-VL-7B-Instruct": {
+    "description": "Qwen2.5-VL is the newest addition to the Qwen series, featuring enhanced visual comprehension capabilities. It can analyze text, charts, and layouts within images, comprehend long videos while capturing events. The model supports reasoning, tool manipulation, multi-format object localization, and structured output generation. It incorporates optimized dynamic resolution and frame rate training for video understanding, along with improved efficiency in its visual encoder."
+  },
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat is the open-source version of the GLM-4 series pre-trained models launched by Zhipu AI. This model excels in semantics, mathematics, reasoning, code, and knowledge. In addition to supporting multi-turn dialogues, GLM-4-9B-Chat also features advanced capabilities such as web browsing, code execution, custom tool invocation (Function Call), and long-text reasoning. The model supports 26 languages, including Chinese, English, Japanese, Korean, and German. In multiple benchmark tests, GLM-4-9B-Chat has demonstrated excellent performance, such as in AlignBench-v2, MT-Bench, MMLU, and C-Eval. The model supports a maximum context length of 128K, making it suitable for academic research and commercial applications."
   },
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 is a reinforcement learning (RL) driven inference model that addresses issues of repetitiveness and readability in models. Prior to RL, DeepSeek-R1 introduced cold start data to further optimize inference performance. It performs comparably to OpenAI-o1 in mathematical, coding, and reasoning tasks, and enhances overall effectiveness through carefully designed training methods."
   },
+  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "DeepSeek-R1-Distill-Qwen-1.5B is a model derived from Qwen2.5-Math-1.5B through knowledge distillation. Fine-tuned with 800,000 carefully selected samples generated by DeepSeek-R1, this model demonstrates commendable performance across multiple benchmarks. As a lightweight model, it achieves an accuracy of 83.9% on MATH-500, a pass rate of 28.9% on AIME 2024, and a score of 954 on CodeForces, showcasing reasoning capabilities that exceed its parameter scale."
+  },
+  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "DeepSeek-R1-Distill-Qwen-7B is a model derived from Qwen2.5-Math-7B through knowledge distillation. It was fine-tuned using 800,000 carefully selected samples generated by DeepSeek-R1, demonstrating exceptional reasoning capabilities. The model achieves outstanding performance across multiple benchmarks, including 92.8% accuracy on MATH-500, a 55.5% pass rate on AIME 2024, and a score of 1189 on CodeForces, showcasing strong mathematical and programming abilities for a 7B-scale model."
+  },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 is a mixed expert (MoE) language model with 671 billion parameters, utilizing multi-head latent attention (MLA) and the DeepSeekMoE architecture, combined with a load balancing strategy without auxiliary loss to optimize inference and training efficiency. Pre-trained on 14.8 trillion high-quality tokens and fine-tuned with supervision and reinforcement learning, DeepSeek-V3 outperforms other open-source models and approaches leading closed-source models."
-  },
-  "Pro/google/gemma-2-9b-it": {
-    "description": "Gemma is one of Google's lightweight, state-of-the-art open model series. It is a large language model with a decoder-only architecture, supporting English, and providing open weights, pre-trained variants, and instruction-tuned variants. The Gemma model is suitable for various text generation tasks, including question answering, summarization, and reasoning. This 9B model is trained on 80 trillion tokens. Its relatively small size allows it to be deployed in resource-constrained environments, such as laptops, desktops, or your own cloud infrastructure, making cutting-edge AI models more accessible and fostering innovation."
-  },
-  "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
-    "description": "Meta Llama 3.1 is a family of multilingual large language models developed by Meta, including pre-trained and instruction-tuned variants with parameter sizes of 8B, 70B, and 405B. This 8B instruction-tuned model is optimized for multilingual dialogue scenarios and performs excellently in multiple industry benchmark tests. The model is trained using over 150 trillion tokens of public data and employs techniques such as supervised fine-tuning and human feedback reinforcement learning to enhance the model's usefulness and safety. Llama 3.1 supports text generation and code generation, with a knowledge cutoff date of December 2023."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is an innovative natural language processing model capable of efficiently handling complex dialogue generation and context understanding tasks."
@@ -289,6 +271,12 @@
   },
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder-7B-Instruct is the latest version in Alibaba Cloud's series of code-specific large language models. This model significantly enhances code generation, reasoning, and repair capabilities based on Qwen2.5, trained on 55 trillion tokens. It not only improves coding abilities but also maintains advantages in mathematics and general capabilities, providing a more comprehensive foundation for practical applications such as code agents."
+  },
+  "Qwen/Qwen2.5-VL-32B-Instruct": {
+    "description": "Qwen2.5-VL-32B-Instruct is a multimodal large language model developed by the Tongyi Qianwen team, representing part of the Qwen2.5-VL series. This model excels not only in recognizing common objects but also in analyzing text, charts, icons, graphics, and layouts within images. It functions as a visual agent capable of reasoning and dynamically manipulating tools, with the ability to operate computers and mobile devices. Additionally, the model can precisely locate objects in images and generate structured outputs for documents like invoices and tables. Compared to its predecessor Qwen2-VL, this version demonstrates enhanced mathematical and problem-solving capabilities through reinforcement learning, while also exhibiting more human-preferred response styles."
+  },
+  "Qwen/Qwen2.5-VL-72B-Instruct": {
+    "description": "Qwen2.5-VL is the vision-language model in the Qwen2.5 series. This model demonstrates significant improvements across multiple dimensions: enhanced visual comprehension capable of recognizing common objects, analyzing text, charts, and layouts; serving as a visual agent that can reason and dynamically guide tool usage; supporting understanding of long videos exceeding 1 hour while capturing key events; able to precisely locate objects in images by generating bounding boxes or points; and capable of producing structured outputs particularly suitable for scanned data like invoices and forms."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 is the latest series of the Qwen model, supporting 128k context. Compared to the current best open-source models, Qwen2-72B significantly surpasses leading models in natural language understanding, knowledge, coding, mathematics, and multilingual capabilities."
@@ -373,9 +361,6 @@
   },
   "TeleAI/TeleChat2": {
     "description": "The TeleChat2 large model is a generative semantic model independently developed from scratch by China Telecom, supporting functions such as encyclopedia Q&A, code generation, and long text generation, providing users with conversational consulting services. It can interact with users, answer questions, assist in creation, and efficiently help users obtain information, knowledge, and inspiration. The model performs well in areas such as hallucination issues, long text generation, and logical understanding."
-  },
-  "TeleAI/TeleMM": {
-    "description": "The TeleMM multimodal large model is a multimodal understanding model independently developed by China Telecom, capable of processing various modal inputs such as text and images, supporting functions like image understanding and chart analysis, providing users with cross-modal understanding services. The model can interact with users in a multimodal manner, accurately understand input content, answer questions, assist in creation, and efficiently provide multimodal information and inspiration support. It excels in fine-grained perception, logical reasoning, and other multimodal tasks."
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct is one of the latest large language models released by Alibaba Cloud. This 72B model shows significant improvements in coding and mathematics. It also provides multilingual support, covering over 29 languages, including Chinese and English. The model has made notable advancements in instruction following, understanding structured data, and generating structured outputs, especially JSON."
@@ -662,9 +647,6 @@
   "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
     "description": "The DeepSeek-R1 distillation model optimizes inference performance through reinforcement learning and cold-start data, refreshing the benchmark for open-source models across multiple tasks."
   },
-  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B": {
-    "description": "DeepSeek-R1-Distill-Llama-8B is a distillation model developed based on Llama-3.1-8B. This model is fine-tuned using samples generated by DeepSeek-R1, demonstrating excellent reasoning capabilities. It has performed well in multiple benchmark tests, achieving an 89.1% accuracy rate on MATH-500, a 50.4% pass rate on AIME 2024, and a score of 1205 on CodeForces, showcasing strong mathematical and programming abilities as an 8B scale model."
-  },
   "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "The DeepSeek-R1 distillation model optimizes inference performance through reinforcement learning and cold-start data, refreshing the benchmark for open-source models across multiple tasks."
   },
@@ -713,6 +695,9 @@
   "deepseek-r1-70b-online": {
     "description": "DeepSeek R1 70B standard version, supporting real-time online search, suitable for dialogue and text processing tasks that require the latest information."
   },
+  "deepseek-r1-distill-llama": {
+    "description": "deepseek-r1-distill-llama is a model distilled from DeepSeek-R1 based on Llama."
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1—the larger and smarter model in the DeepSeek suite—has been distilled into the Llama 70B architecture. Based on benchmark tests and human evaluations, this model is smarter than the original Llama 70B, especially excelling in tasks requiring mathematical and factual accuracy."
   },
@@ -724,6 +709,9 @@
   },
   "deepseek-r1-distill-qianfan-llama-8b": {
     "description": "First released on February 14, 2025, distilled by the Qianfan model development team using Llama3_8B as the base model (Built with Meta Llama), with Qianfan's corpus also added to the distilled data."
+  },
+  "deepseek-r1-distill-qwen": {
+    "description": "deepseek-r1-distill-qwen is a model distilled from DeepSeek-R1 based on Qwen."
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "The DeepSeek-R1-Distill series models are fine-tuned versions of samples generated by DeepSeek-R1, using knowledge distillation techniques on open-source models like Qwen and Llama."
@@ -872,6 +860,9 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 is the latest experimental model, showcasing significant performance improvements in both text and multimodal use cases."
   },
+  "gemini-1.5-flash-8b-latest": {
+    "description": "Gemini 1.5 Flash 8B is a highly efficient multimodal model designed for scalable applications."
+  },
   "gemini-1.5-flash-exp-0827": {
     "description": "Gemini 1.5 Flash 0827 provides optimized multimodal processing capabilities, suitable for various complex task scenarios."
   },
@@ -913,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-preview-02-05": {
     "description": "A Gemini 2.0 Flash model optimized for cost-effectiveness and low latency."
-  },
-  "gemini-2.0-flash-thinking-exp": {
-    "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
@@ -1223,6 +1211,9 @@
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B is a high-performance model that offers rapid text generation capabilities, making it ideal for applications requiring large-scale efficiency and cost-effectiveness."
   },
+  "llama-3.1-instruct": {
+    "description": "The Llama 3.1 instruction-tuned model is optimized for conversational scenarios, outperforming many existing open-source chat models on common industry benchmarks."
+  },
   "llama-3.2-11b-vision-instruct": {
     "description": "Excellent image reasoning capabilities on high-resolution images, suitable for visual understanding applications."
   },
@@ -1235,11 +1226,17 @@
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 is designed to handle tasks that combine visual and textual data. It excels in tasks such as image description and visual question answering, bridging the gap between language generation and visual reasoning."
   },
+  "llama-3.2-vision-instruct": {
+    "description": "The Llama 3.2-Vision instruction-tuned model is optimized for visual recognition, image reasoning, image captioning, and answering general questions related to images."
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3 is the most advanced multilingual open-source large language model in the Llama series, offering performance comparable to a 405B model at an extremely low cost. Based on the Transformer architecture, it enhances usability and safety through supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF). Its instruction-tuned version is optimized for multilingual dialogue and outperforms many open-source and closed chat models on various industry benchmarks. Knowledge cutoff date is December 2023."
   },
   "llama-3.3-70b-versatile": {
     "description": "Meta Llama 3.3 is a multilingual large language model (LLM) with 70 billion parameters (text input/text output), featuring pre-training and instruction-tuning. The instruction-tuned pure text model of Llama 3.3 is optimized for multilingual conversational use cases and outperforms many available open-source and closed chat models on common industry benchmarks."
+  },
+  "llama-3.3-instruct": {
+    "description": "The Llama 3.3 instruction-tuned model is optimized for conversational scenarios, outperforming many existing open-source chat models on common industry benchmarks."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B provides unparalleled complexity handling capabilities, tailored for high-demand projects."
@@ -1319,9 +1316,6 @@
   "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
     "description": "LLaMA 3.2 is designed for tasks involving both visual and textual data. It excels in tasks like image description and visual question answering, bridging the gap between language generation and visual reasoning."
   },
-  "meta-llama/Llama-3.3-70B-Instruct": {
-    "description": "Llama 3.3 is the most advanced multilingual open-source large language model in the Llama series, offering performance comparable to 405B models at a very low cost. Based on the Transformer architecture, it enhances usability and safety through supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF). Its instruction-tuned version is optimized for multilingual dialogue and outperforms many open-source and closed chat models on multiple industry benchmarks. Knowledge cutoff date is December 2023."
-  },
   "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
     "description": "Meta Llama 3.3 is a multilingual large language model (LLM) that is a pre-trained and instruction-tuned generative model within the 70B (text input/text output) framework. The instruction-tuned pure text model is optimized for multilingual dialogue use cases and outperforms many available open-source and closed chat models on common industry benchmarks."
   },
@@ -1349,14 +1343,8 @@
   "meta-llama/Meta-Llama-3.1-70B": {
     "description": "Llama 3.1 is a leading model launched by Meta, supporting up to 405B parameters, applicable in complex conversations, multilingual translation, and data analysis."
   },
-  "meta-llama/Meta-Llama-3.1-70B-Instruct": {
-    "description": "LLaMA 3.1 70B offers efficient conversational support in multiple languages."
-  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo": {
     "description": "Llama 3.1 70B model is finely tuned for high-load applications, quantized to FP8 for enhanced computational efficiency and accuracy, ensuring outstanding performance in complex scenarios."
-  },
-  "meta-llama/Meta-Llama-3.1-8B-Instruct": {
-    "description": "LLaMA 3.1 provides multilingual support and is one of the industry's leading generative models."
   },
   "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo": {
     "description": "Llama 3.1 8B model utilizes FP8 quantization, supporting up to 131,072 context tokens, making it a standout in open-source models, excelling in complex tasks and outperforming many industry benchmarks."
@@ -1451,11 +1439,17 @@
   "mistral-large": {
     "description": "Mixtral Large is Mistral's flagship model, combining capabilities in code generation, mathematics, and reasoning, supporting a 128k context window."
   },
+  "mistral-large-instruct": {
+    "description": "Mistral-Large-Instruct-2407 is an advanced dense large language model (LLM) with 123 billion parameters, featuring state-of-the-art reasoning, knowledge, and coding capabilities."
+  },
   "mistral-large-latest": {
     "description": "Mistral Large is the flagship model, excelling in multilingual tasks, complex reasoning, and code generation, making it an ideal choice for high-end applications."
   },
   "mistral-nemo": {
     "description": "Mistral Nemo, developed in collaboration with Mistral AI and NVIDIA, is a high-performance 12B model."
+  },
+  "mistral-nemo-instruct": {
+    "description": "Mistral-Nemo-Instruct-2407 is the instruction-tuned version of the Mistral-Nemo-Base-2407 large language model (LLM)."
   },
   "mistral-small": {
     "description": "Mistral Small can be used for any language-based task that requires high efficiency and low latency."
@@ -1670,15 +1664,6 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "A powerful medium-sized code model supporting 32K context length, proficient in multilingual programming."
   },
-  "qwen1.5-14b-chat": {
-    "description": "The Qwen1.5 series is the Beta version of Qwen2, a Transformer-based decoder-only language model pre-trained on a vast amount of data. Compared to previously released versions of Qwen, both the base and chat models in the Qwen1.5 series support multiple languages and have seen improvements in overall chat and foundational capabilities. Qwen1.5-14b-chat is a 14 billion parameter model specifically designed for chat scenarios, representing a mainstream size in the field."
-  },
-  "qwen1.5-32b-chat": {
-    "description": "The Qwen1.5 series is the Beta version of Qwen2, a Transformer-based decoder-only language model pre-trained on a vast amount of data. Compared to previously released versions of the Qwen series, the Qwen1.5 series, including both the base and chat models, supports multiple languages and has seen improvements in overall chat and foundational capabilities. Qwen1.5-32b-chat is a 32 billion parameter model specifically designed for chat scenarios, offering stronger performance in agent scenarios compared to the 14 billion parameter model, and lower inference costs compared to the 72 billion parameter model."
-  },
-  "qwen1.5-72b-chat": {
-    "description": "The Qwen1.5 series is the Beta version of Qwen2, a decoder-only language model based on the Transformer architecture, pre-trained on a vast amount of data. Compared to previously released versions of the Qwen series, the Qwen1.5 series, including both the base and chat models, supports multiple languages and has seen improvements in overall chat and foundational capabilities. Qwen1.5-72b-chat is a 72 billion parameter model specifically designed for chat scenarios."
-  },
   "qwen2": {
     "description": "Qwen2 is Alibaba's next-generation large-scale language model, supporting diverse application needs with excellent performance."
   },
@@ -1715,6 +1700,12 @@
   "qwen2.5-coder-7b-instruct": {
     "description": "The open-source version of the Tongyi Qianwen Coder model."
   },
+  "qwen2.5-coder-instruct": {
+    "description": "Qwen2.5-Coder is the latest code-specific large language model in the Qwen series (formerly known as CodeQwen)."
+  },
+  "qwen2.5-instruct": {
+    "description": "Qwen2.5 is the latest series of Qwen large language models. For Qwen2.5, we have released multiple base language models and instruction-tuned language models with parameter sizes ranging from 0.5 billion to 7.2 billion."
+  },
   "qwen2.5-math-1.5b-instruct": {
     "description": "Qwen-Math model has powerful mathematical problem-solving capabilities."
   },
@@ -1724,11 +1715,17 @@
   "qwen2.5-math-7b-instruct": {
     "description": "The Qwen-Math model possesses strong capabilities for solving mathematical problems."
   },
+  "qwen2.5-vl-32b-instruct": {
+    "description": "The Qwen2.5-VL model series enhances the model's intelligence level, practicality, and applicability, delivering superior performance in scenarios such as natural conversations, content creation, professional knowledge services, and code development. The 32B version employs reinforcement learning techniques to optimize the model, offering more human-preferred output styles, enhanced reasoning capabilities for complex mathematical problems, and fine-grained image understanding and reasoning compared to other models in the Qwen2.5-VL series."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "This version enhances instruction following, mathematics, problem-solving, and coding capabilities, improving the ability to recognize various formats and accurately locate visual elements. It supports understanding long video files (up to 10 minutes) and pinpointing events in seconds, comprehending the sequence and speed of time, and based on parsing and locating capabilities, it supports controlling OS or Mobile agents. It has strong key information extraction and JSON output capabilities, and this version is the most powerful in the series at 72B."
   },
   "qwen2.5-vl-7b-instruct": {
     "description": "This version enhances instruction following, mathematics, problem-solving, and coding capabilities, improving the ability to recognize various formats and accurately locate visual elements. It supports understanding long video files (up to 10 minutes) and pinpointing events in seconds, comprehending the sequence and speed of time, and based on parsing and locating capabilities, it supports controlling OS or Mobile agents. It has strong key information extraction and JSON output capabilities, and this version is the most powerful in the series at 72B."
+  },
+  "qwen2.5-vl-instruct": {
+    "description": "Qwen2.5-VL is the latest version of the visual language model in the Qwen model family."
   },
   "qwen2.5:0.5b": {
     "description": "Qwen2.5 is Alibaba's next-generation large-scale language model, supporting diverse application needs with outstanding performance."
