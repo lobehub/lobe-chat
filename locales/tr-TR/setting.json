@@ -42,6 +42,17 @@
     "sessionWithName": "Oturum Ayarları · {{name}}",
     "title": "Ayarlar"
   },
+  "hotkey": {
+    "conflicts": "Mevcut kısayol tuşlarıyla çakışıyor",
+    "group": {
+      "conversation": "Sohbet",
+      "essential": "Temel"
+    },
+    "invalidCombination": "Kısayol tuşu en az bir modifiye tuşu (Ctrl, Alt, Shift) ve bir normal tuş içermelidir",
+    "record": "Kısayol tuşunu kaydetmek için tuşa basın",
+    "reset": "Varsayılan kısayol tuşlarına sıfırla",
+    "title": "Kısayollar"
+  },
   "llm": {
     "aesGcm": "Anahtarınız ve vekil adresiniz <1>AES-GCM</1> şifreleme algoritması kullanılarak şifrelenecektir",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "Varsayılan Asistan",
     "common": "Genel Ayarlar",
     "experiment": "Deney",
+    "hotkey": "Kısayollar",
     "llm": "Modeller",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
     "sync": "Bulut Senkronizasyonu",

@@ -1,0 +1,46 @@
+{
+  "addUserMessage": {
+    "desc": "Aggiungi il contenuto attuale come messaggio utente, senza attivare la generazione",
+    "title": "Aggiungi un messaggio utente"
+  },
+  "editMessage": {
+    "desc": "Entra in modalità di modifica tenendo premuto Alt e facendo doppio clic sul messaggio",
+    "title": "Modifica messaggio"
+  },
+  "openChatSettings": {
+    "desc": "Visualizza e modifica le impostazioni della conversazione attuale",
+    "title": "Apri impostazioni chat"
+  },
+  "openHotkeyHelper": {
+    "desc": "Visualizza le istruzioni per l'uso di tutte le scorciatoie da tastiera",
+    "title": "Apri aiuto scorciatoie"
+  },
+  "regenerateMessage": {
+    "desc": "Rigenera l'ultimo messaggio",
+    "title": "Rigenera messaggio"
+  },
+  "saveTopic": {
+    "desc": "Salva l'argomento attuale e apri un nuovo argomento",
+    "title": "Inizia un nuovo argomento"
+  },
+  "search": {
+    "desc": "Attiva la barra di ricerca principale della pagina corrente",
+    "title": "Cerca"
+  },
+  "switchAgent": {
+    "desc": "Cambia l'assistente fissato nella barra laterale tenendo premuto Ctrl e premendo un numero da 0 a 9",
+    "title": "Cambia assistente rapidamente"
+  },
+  "toggleLeftPanel": {
+    "desc": "Mostra o nascondi il pannello assistente a sinistra",
+    "title": "Mostra/Nascondi pannello assistente"
+  },
+  "toggleRightPanel": {
+    "desc": "Mostra o nascondi il pannello argomenti a destra",
+    "title": "Mostra/Nascondi pannello argomenti"
+  },
+  "toggleZenMode": {
+    "desc": "In modalità concentrazione, mostra solo la conversazione attuale, nascondendo altre interfacce",
+    "title": "Attiva/disattiva modalità di concentrazione"
+  }
+}

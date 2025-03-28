@@ -586,6 +586,7 @@ table user_installed_plugins {
 table user_settings {
   id text [pk, not null]
   tts jsonb
+  hotkey jsonb
   key_vaults text
   general jsonb
   language_model jsonb

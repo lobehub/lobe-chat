@@ -39,6 +39,7 @@ export const userSettings = pgTable('user_settings', {
     .primaryKey(),
 
   tts: jsonb('tts'),
+  hotkey: jsonb('hotkey'),
   keyVaults: text('key_vaults'),
   general: jsonb('general'),
   languageModel: jsonb('language_model'),

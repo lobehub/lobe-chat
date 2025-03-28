@@ -42,6 +42,17 @@
     "sessionWithName": "Impostazioni della sessione · {{name}}",
     "title": "Impostazioni"
   },
+  "hotkey": {
+    "conflicts": "In conflitto con i tasti di scelta rapida esistenti",
+    "group": {
+      "conversation": "Conversazione",
+      "essential": "Essenziale"
+    },
+    "invalidCombination": "La combinazione di tasti deve contenere almeno un tasto modificatore (Ctrl, Alt, Shift) e un tasto normale",
+    "record": "Premi un tasto per registrare la scorciatoia",
+    "reset": "Ripristina le scorciatoie predefinite",
+    "title": "Scorciatoie"
+  },
   "llm": {
     "aesGcm": "La tua chiave e l'indirizzo dell'agente saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "Assistente predefinito",
     "common": "Impostazioni comuni",
     "experiment": "实验",
+    "hotkey": "Scorciatoie",
     "llm": "Modello linguistico",
     "provider": "Fornitore di servizi AI",
     "sync": "云端同步",

@@ -42,6 +42,17 @@
     "sessionWithName": "Configuración de la sesión · {{name}}",
     "title": "Configuración"
   },
+  "hotkey": {
+    "conflicts": "Conflicto con las teclas de acceso rápido existentes",
+    "group": {
+      "conversation": "Conversación",
+      "essential": "Esencial"
+    },
+    "invalidCombination": "La combinación de teclas de acceso rápido debe incluir al menos una tecla modificadora (Ctrl, Alt, Shift) y una tecla normal",
+    "record": "Presiona una tecla para grabar la tecla de acceso rápido",
+    "reset": "Restablecer a las teclas de acceso rápido predeterminadas",
+    "title": "Atajos de teclado"
+  },
   "llm": {
     "aesGcm": "Su clave y dirección del agente se cifrarán utilizando el algoritmo de cifrado <1>AES-GCM</1>",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "Asistente predeterminado",
     "common": "Configuración común",
     "experiment": "Experimento",
+    "hotkey": "Atajos de teclado",
     "llm": "Modelo de lenguaje",
     "provider": "Proveedor de servicios de IA",
     "sync": "Sincronización en la nube",
