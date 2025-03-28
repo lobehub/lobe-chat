@@ -1082,6 +1082,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "Phiên bản thời gian thực của GPT-4o-mini, hỗ trợ đầu vào và đầu ra âm thanh và văn bản theo thời gian thực."
   },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS là mô hình chuyển văn bản thành giọng nói dựa trên GPT-4o mini, cung cấp sinh âm thanh cao cấp với chi phí thấp hơn."
+  },
   "gpt-4o-realtime-preview": {
     "description": "Phiên bản thời gian thực của GPT-4o, hỗ trợ đầu vào và đầu ra âm thanh và văn bản theo thời gian thực."
   },

@@ -1082,6 +1082,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "Versión en tiempo real de GPT-4o-mini, que admite entrada y salida de audio y texto en tiempo real."
   },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS es un modelo de texto a voz basado en GPT-4o mini, que ofrece generación de voz de alta calidad a un costo más bajo."
+  },
   "gpt-4o-realtime-preview": {
     "description": "Versión en tiempo real de GPT-4o, que admite entrada y salida de audio y texto en tiempo real."
   },

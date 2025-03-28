@@ -1082,6 +1082,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-miniリアルタイムバージョン、音声とテキストのリアルタイム入力と出力をサポート"
   },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS は、GPT-4o mini に基づくテキスト音声合成モデルで、高品質な音声生成を低コストで提供します。"
+  },
   "gpt-4o-realtime-preview": {
     "description": "GPT-4oリアルタイムバージョン、音声とテキストのリアルタイム入力と出力をサポート"
   },

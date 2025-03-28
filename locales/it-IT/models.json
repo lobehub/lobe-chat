@@ -1082,6 +1082,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "Versione in tempo reale di GPT-4o-mini, supporta input e output audio e testuali in tempo reale."
   },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS è un modello di sintesi vocale basato su GPT-4o mini, che offre una generazione di voce di alta qualità a un costo più basso."
+  },
   "gpt-4o-realtime-preview": {
     "description": "Versione in tempo reale di GPT-4o, supporta input e output audio e testuali in tempo reale."
   },
