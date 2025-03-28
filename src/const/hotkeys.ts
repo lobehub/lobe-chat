@@ -32,13 +32,13 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleLeftPanel,
-    keys: combineKeys([KeyEnum.Mod, KeyEnum.Left]),
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.BracketLeft]),
     scopes: [HotkeyScopeEnum.Chat],
   },
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleRightPanel,
-    keys: combineKeys([KeyEnum.Mod, KeyEnum.Right]),
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.BracketRight]),
     scopes: [HotkeyScopeEnum.Chat],
   },
   {
