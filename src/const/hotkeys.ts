@@ -25,32 +25,32 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   },
   {
     group: HotkeyGroupEnum.Essential,
-    id: HotkeyEnum.ToggleLeftPanel,
-    keys: combineKeys([KeyEnum.Mod, KeyEnum.Alt, KeyEnum.Left]),
-    scopes: [HotkeyScopeEnum.Chat],
-  },
-  {
-    group: HotkeyGroupEnum.Essential,
-    id: HotkeyEnum.ToggleRightPanel,
-    keys: combineKeys([KeyEnum.Mod, KeyEnum.Alt, KeyEnum.Right]),
-    scopes: [HotkeyScopeEnum.Chat],
-  },
-  {
-    group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleZenMode,
     keys: combineKeys([KeyEnum.Mod, KeyEnum.Backslash]),
     scopes: [HotkeyScopeEnum.Chat],
   },
   {
     group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.ToggleLeftPanel,
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.Left]),
+    scopes: [HotkeyScopeEnum.Chat],
+  },
+  {
+    group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.ToggleRightPanel,
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.Right]),
+    scopes: [HotkeyScopeEnum.Chat],
+  },
+  {
+    group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.OpenHotkeyHelper,
-    keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Shift, '?']),
+    keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Shift, KeyEnum.QuestionMark]),
     scopes: [HotkeyScopeEnum.Global],
   },
   {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.OpenChatSettings,
-    keys: combineKeys([KeyEnum.Mod, KeyEnum.Alt, 's']),
+    keys: combineKeys([KeyEnum.Alt, KeyEnum.Comma]),
     scopes: [HotkeyScopeEnum.Chat],
   },
   {

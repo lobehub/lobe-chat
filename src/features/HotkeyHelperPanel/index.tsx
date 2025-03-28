@@ -1,9 +1,6 @@
 'use client';
 
-import { ActionIcon, Grid, TabsNav } from '@lobehub/ui';
-import { Drawer } from 'antd';
-import { useTheme } from 'antd-style';
-import { XIcon } from 'lucide-react';
+import { Drawer, Grid, TabsNav } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,8 +9,6 @@ import { HotkeyGroupEnum, HotkeyGroupId } from '@/types/hotkey';
 
 import HotkeyContent from './HotkeyContent';
 
-const MAX_WIDTH = 1024;
-
 const HotkeyHelperPanel = memo(() => {
   const [open, updateSystemStatus] = useGlobalStore((s) => [
     s.status.showHotkeyHelper,
@@ -21,30 +16,20 @@ const HotkeyHelperPanel = memo(() => {
   ]);
   const [active, setActive] = useState<HotkeyGroupId>(HotkeyGroupEnum.Essential);
   const { t } = useTranslation('setting');
-  const theme = useTheme();
 
   const handleClose = () => updateSystemStatus({ showHotkeyHelper: false });
 
   return (
     <Drawer
-      closable={false}
-      extra={<ActionIcon icon={XIcon} onClick={handleClose} size={'site'} />}
       height={240}
-      keyboard={true}
       mask={false}
       maskClosable={false}
       onClose={handleClose}
       open={open}
       placement={'bottom'}
       styles={{
-        body: {
-          background: theme.colorBgContainer,
-        },
-        header: {
-          background: theme.colorBgContainer,
-          borderTop: `1px solid ${theme.colorBorder}`,
-          padding: '0 4px',
-        },
+        bodyContent: { paddingBlock: 24 },
+        title: { paddingBlock: 0 },
       }}
       title={
         <TabsNav
@@ -60,24 +45,11 @@ const HotkeyHelperPanel = memo(() => {
             },
           ]}
           onChange={(key) => setActive(key as HotkeyGroupId)}
-          style={{
-            justifySelf: 'center',
-            marginLeft: 34,
-            maxWidth: MAX_WIDTH,
-            width: '100%',
-          }}
           variant={'compact'}
         />
       }
     >
-      <Grid
-        gap={32}
-        style={{
-          justifySelf: 'center',
-          maxWidth: MAX_WIDTH,
-          width: '100%',
-        }}
-      >
+      <Grid gap={32}>
         <HotkeyContent groupId={active} />
       </Grid>
     </Drawer>
