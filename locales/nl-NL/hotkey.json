@@ -1,0 +1,46 @@
+{
+  "addUserMessage": {
+    "desc": "Voeg de huidige invoer toe als gebruikersbericht, maar activeer geen generatie",
+    "title": "Voeg een gebruikersbericht toe"
+  },
+  "editMessage": {
+    "desc": "Ga naar de bewerkingsmodus door Alt ingedrukt te houden en op het bericht te dubbelklikken",
+    "title": "Bewerk bericht"
+  },
+  "openChatSettings": {
+    "desc": "Bekijk en wijzig de instellingen van de huidige sessie",
+    "title": "Open gespreksinstellingen"
+  },
+  "openHotkeyHelper": {
+    "desc": "Bekijk de gebruiksaanwijzing voor alle sneltoetsen",
+    "title": "Open sneltoets hulp"
+  },
+  "regenerateMessage": {
+    "desc": "Genereer het laatste bericht opnieuw",
+    "title": "Genereer bericht opnieuw"
+  },
+  "saveTopic": {
+    "desc": "Sla het huidige onderwerp op en open een nieuw onderwerp",
+    "title": "Start nieuw onderwerp"
+  },
+  "search": {
+    "desc": "Roep het hoofdzoekvak van de huidige pagina op",
+    "title": "Zoeken"
+  },
+  "switchAgent": {
+    "desc": "Schakel tussen de in de zijbalk vastgezette assistenten door Ctrl ingedrukt te houden en een cijfer van 0~9 te drukken",
+    "title": "Snel wisselen van assistent"
+  },
+  "toggleLeftPanel": {
+    "desc": "Toon of verberg het linker assistentpaneel",
+    "title": "Toon/verberg assistentpaneel"
+  },
+  "toggleRightPanel": {
+    "desc": "Toon of verberg het rechter onderwerp paneel",
+    "title": "Toon/verberg onderwerp paneel"
+  },
+  "toggleZenMode": {
+    "desc": "In de focusmodus wordt alleen de huidige sessie weergegeven, andere UI-elementen worden verborgen",
+    "title": "Schakel focusmodus in"
+  }
+}

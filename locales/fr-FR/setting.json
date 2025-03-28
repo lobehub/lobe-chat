@@ -42,6 +42,17 @@
     "sessionWithName": "Paramètres de session · {{name}}",
     "title": "Paramètres"
   },
+  "hotkey": {
+    "conflicts": "Conflit avec les raccourcis existants",
+    "group": {
+      "conversation": "Conversation",
+      "essential": "Essentiel"
+    },
+    "invalidCombination": "Le raccourci doit contenir au moins une touche de modification (Ctrl, Alt, Shift) et une touche normale",
+    "record": "Appuyez sur une touche pour enregistrer le raccourci",
+    "reset": "Réinitialiser aux raccourcis par défaut",
+    "title": "Raccourcis clavier"
+  },
   "llm": {
     "aesGcm": "Votre clé, votre adresse de proxy, etc. seront cryptées à l'aide de l'algorithme de chiffrement <1>AES-GCM</1>",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "Agent par défaut",
     "common": "Paramètres généraux",
     "experiment": "Expérience",
+    "hotkey": "Raccourcis clavier",
     "llm": "Modèle de langue",
     "provider": "Fournisseur de services d'IA",
     "sync": "Synchronisation cloud",

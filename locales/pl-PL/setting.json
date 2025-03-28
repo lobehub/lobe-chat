@@ -42,6 +42,17 @@
     "sessionWithName": "Ustawienia sesji · {{name}}",
     "title": "Ustawienia"
   },
+  "hotkey": {
+    "conflicts": "Kolizja z istniejącymi skrótami klawiszowymi",
+    "group": {
+      "conversation": "Rozmowa",
+      "essential": "Podstawowy"
+    },
+    "invalidCombination": "Skrót klawiszowy musi zawierać przynajmniej jeden klawisz modyfikujący (Ctrl, Alt, Shift) oraz jeden klawisz zwykły",
+    "record": "Naciśnij klawisz, aby nagrać skrót klawiszowy",
+    "reset": "Przywróć domyślne skróty klawiszowe",
+    "title": "Skróty klawiszowe"
+  },
   "llm": {
     "aesGcm": "Twój klucz, adres proxy i inne będą szyfrowane za pomocą algorytmu szyfrowania <1>AES-GCM</1>",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
     "experiment": "Eksperyment",
+    "hotkey": "Skróty klawiszowe",
     "llm": "Model językowy",
     "provider": "Dostawca usług AI",
     "sync": "Synchronizacja w chmurze",
