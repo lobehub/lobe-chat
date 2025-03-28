@@ -146,6 +146,9 @@
   "xai": {
     "description": "xAI es una empresa dedicada a construir inteligencia artificial para acelerar los descubrimientos científicos humanos. Nuestra misión es promover nuestra comprensión compartida del universo."
   },
+  "xinference": {
+    "description": "Xorbits Inference (Xinference) es una plataforma de código abierto diseñada para simplificar la ejecución e integración de diversos modelos de IA. Con Xinference, puedes utilizar cualquier modelo LLM de código abierto, modelos de incrustación y modelos multimodales para ejecutar inferencias en entornos locales o en la nube, y crear potentes aplicaciones de IA."
+  },
   "zeroone": {
     "description": "01.AI se centra en la tecnología de inteligencia artificial de la era 2.0, promoviendo enérgicamente la innovación y aplicación de 'humano + inteligencia artificial', utilizando modelos extremadamente potentes y tecnologías de IA avanzadas para mejorar la productividad humana y lograr el empoderamiento tecnológico."
   },
