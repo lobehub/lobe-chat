@@ -1,22 +1,49 @@
-import createClient, { ModelClient } from '@azure-rest/ai-inference';
+import createClient, { ModelClient, type ChatCompletionsOutput } from '@azure-rest/ai-inference';
 import { AzureKeyCredential } from '@azure/core-auth';
-import OpenAI from 'openai';
+import type OpenAI from 'openai';
+import type {
+  ResponseFormatJSONObject,
+  ResponseFormatJSONSchema,
+  ResponseFormatText,
+} from 'openai/resources/shared';
 
 import { systemToUserModels } from '@/const/models';
 
-import { LobeRuntimeAI } from '../BaseAI';
+import type { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
+import { type ChatCompetitionOptions, type ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
 import { StreamingResponse } from '../utils/response';
 import { OpenAIStream, createSSEDataExtractor } from '../utils/streams';
+import { Stream } from 'openai/streaming';
+import type { ErrorResponse } from "@azure-rest/core-client";
+import { CreateClient } from '@trpc/react-query/shared';
 
 interface AzureAIParams {
   apiKey?: string;
   apiVersion?: string;
   baseURL?: string;
+}
+
+function convertResponseMode(
+  responseMode?: 'streamText' | 'json',
+): ResponseFormatText | ResponseFormatJSONObject | ResponseFormatJSONSchema | undefined {
+  if (!responseMode) return undefined;
+  switch (responseMode) {
+    case 'streamText': {
+      return {
+        type: 'text',
+      };
+    }
+    case 'json': {
+      return {
+        type: 'json_object',
+      };
+    }
+  }
+  return undefined; // TODO: Decide whether we should return undefined or responseMode as is.
 }
 
 export class LobeAzureAI implements LobeRuntimeAI {
@@ -26,7 +53,9 @@ export class LobeAzureAI implements LobeRuntimeAI {
     if (!params?.apiKey || !params?.baseURL)
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    this.client = createClient(params?.baseURL, new AzureKeyCredential(params?.apiKey));
+    this.client = createClient(params?.baseURL, new AzureKeyCredential(params?.apiKey), {
+      apiVersion: params?.apiVersion,
+    });
 
     this.baseURL = params?.baseURL;
   }
@@ -34,9 +63,21 @@ export class LobeAzureAI implements LobeRuntimeAI {
   baseURL: string;
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
-    const { messages, model, ...params } = payload;
+    const {
+      messages,
+      model,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
+      n,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
+      plugins,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
+      provider,
+      responseMode,
+      stream: _stream,
+      ..._params
+    } = payload;
     // o1 series models on Azure OpenAI does not support streaming currently
-    const enableStreaming = model.includes('o1') ? false : (params.stream ?? true);
+    const enableStreaming = model.includes('o1') ? false : (_stream ?? true);
 
     const updatedMessages = messages.map((message) => ({
       ...message,
@@ -51,26 +92,34 @@ export class LobeAzureAI implements LobeRuntimeAI {
 
     try {
       const response = this.client.path('/chat/completions').post({
+        abortSignal: options?.signal,
         body: {
           messages: updatedMessages as OpenAI.ChatCompletionMessageParam[],
           model,
-          ...params,
+          response_format: convertResponseMode(responseMode),
+          ..._params,
           stream: enableStreaming,
-          tool_choice: params.tools ? 'auto' : undefined,
+          tool_choice: _params.tools ? 'auto' : undefined,
+        },
+        headers: {
+          ...options?.requestHeaders,
+          // "extra-parameters": 'pass-through', // TODO: Decide whether we need this.
         },
       });
 
       if (enableStreaming) {
         const stream = await response.asBrowserStream();
 
-        const [prod, debug] = stream.body!.tee();
+        let prod = stream.body;
+        let debug: ReadableStream;
 
         if (process.env.DEBUG_AZURE_AI_CHAT_COMPLETION === '1') {
+          [prod, debug] = stream.body?.tee();
           debugStream(debug).catch(console.error);
         }
 
         return StreamingResponse(
-          OpenAIStream(prod.pipeThrough(createSSEDataExtractor()), {
+          OpenAIStream(prod!.pipeThrough(createSSEDataExtractor()), {
             callbacks: options?.callback,
           }),
           {
@@ -80,28 +129,24 @@ export class LobeAzureAI implements LobeRuntimeAI {
       } else {
         const res = await response;
 
+        if (res.status !== "200") {
+          throw (res.body as ErrorResponse).error;
+        }
+
         // the azure AI inference response is openai compatible
-        const stream = transformResponseToStream(res.body as OpenAI.ChatCompletion);
+        const stream = transformResponseToStream(res.body as ChatCompletionsOutput as any);
         return StreamingResponse(OpenAIStream(stream, { callbacks: options?.callback }), {
           headers: options?.headers,
         });
       }
     } catch (e) {
+      // throw e;
+      // if (e instanceof Error) {
+      //   throw e;
+      // } else {
+      //   throw Error(`Unknown Error type ${typeof e}: ${e}`);
+      // }
       let error = e as { [key: string]: any; code: string; message: string };
-
-      if (error.code) {
-        switch (error.code) {
-          case 'DeploymentNotFound': {
-            error = { ...error, deployId: model };
-          }
-        }
-      } else {
-        error = {
-          cause: error.cause,
-          message: error.message,
-          name: error.name,
-        } as any;
-      }
 
       const errorType = error.code
         ? AgentRuntimeErrorType.ProviderBizError
@@ -118,12 +163,19 @@ export class LobeAzureAI implements LobeRuntimeAI {
 
   private maskSensitiveUrl = (url: string) => {
     // 使用正则表达式匹配 'https://' 后面和 '.azure.com/' 前面的内容
-    const regex = /^(https:\/\/)([^.]+)(\.cognitiveservices\.azure\.com\/.*)$/;
+    const regex = /^(https:\/\/)(.+)(\.(?:cognitiveservices|services\.ai|openai)\.azure\.com.*)$/;
 
     // 使用替换函数
     return url.replace(regex, (match, protocol, subdomain, rest) => {
       // 将子域名替换为 '***'
       return `${protocol}***${rest}`;
     });
+  };
+}
+
+if (process?.env?.NODE_ENV === 'test') {
+  module.exports = {
+    ...module.exports,
+    convertResponseMode,
   };
 }
