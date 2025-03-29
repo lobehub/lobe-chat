@@ -2,7 +2,7 @@
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { getTestDBInstance } from '@/database/core/dbForTest';
 
 import { sessionGroups, users } from '../../schemas';
 import { SessionGroupModel } from '../sessionGroup';
