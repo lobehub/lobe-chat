@@ -21,8 +21,8 @@ vi.mock('@/database/server', () => ({
   serverDB: {},
 }));
 
-vi.mock('@/database/server/models/message');
-vi.mock('@/database/server/models/session');
+vi.mock('@/database/models/message');
+vi.mock('@/database/models/session');
 vi.mock('@/database/models/user');
 vi.mock('@/libs/next-auth/adapter');
 vi.mock('@/server/modules/KeyVaultsEncrypt');

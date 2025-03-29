@@ -13,7 +13,7 @@ import { aiProviderRouter } from './aiProvider';
 vi.mock('@/server/globalConfig');
 vi.mock('@/server/modules/KeyVaultsEncrypt');
 vi.mock('@/database/repositories/aiInfra');
-vi.mock('@/database/server/models/aiProvider');
+vi.mock('@/database/models/aiProvider');
 vi.mock('@/database/models/user');
 
 describe('aiProviderRouter', () => {

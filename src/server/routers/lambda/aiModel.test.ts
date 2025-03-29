@@ -6,7 +6,7 @@ import { AiInfraRepos } from '@/database/repositories/aiInfra';
 
 import { aiModelRouter } from './aiModel';
 
-vi.mock('@/database/server/models/aiModel');
+vi.mock('@/database/models/aiModel');
 vi.mock('@/database/models/user');
 vi.mock('@/database/repositories/aiInfra');
 vi.mock('@/server/globalConfig', () => ({

@@ -20,19 +20,19 @@ vi.mock('@/database/models/user', () => ({
   },
 }));
 
-vi.mock('@/database/server/models/agent', () => ({
+vi.mock('@/database/models/agent', () => ({
   AgentModel: vi.fn(),
 }));
 
-vi.mock('@/database/server/models/session', () => ({
+vi.mock('@/database/models/session', () => ({
   SessionModel: vi.fn(),
 }));
 
-vi.mock('@/database/server/models/file', () => ({
+vi.mock('@/database/models/file', () => ({
   FileModel: vi.fn(),
 }));
 
-vi.mock('@/database/server/models/knowledgeBase', () => ({
+vi.mock('@/database/models/knowledgeBase', () => ({
   KnowledgeBaseModel: vi.fn(),
 }));
 

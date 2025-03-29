@@ -16,7 +16,7 @@ vi.mock('@/server/globalConfig/parseDefaultAgent', () => ({
   parseAgentConfig: vi.fn(),
 }));
 
-vi.mock('@/database/server/models/session', () => ({
+vi.mock('@/database/models/session', () => ({
   SessionModel: vi.fn(),
 }));
 
