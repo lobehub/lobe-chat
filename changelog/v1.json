@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix decrypt error with imported pg data."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix export button and clean orphan agent."]
     },
     "date": "2025-03-29",
