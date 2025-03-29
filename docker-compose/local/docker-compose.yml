@@ -73,7 +73,7 @@ services:
       dataSourceName: 'user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor'
       runmode: 'dev'
     volumes:
-      - ./init_data.json:/init_data.json
+      - ./init_data.json:/init_data.json #首次启动后建议注释此行，否则重启时Casdoor的密码修改等操作会被还原
     env_file:
       - .env
 
@@ -81,9 +81,9 @@ services:
     image: searxng/searxng
     container_name: lobe-searxng
     volumes:
-      - './searxng-settings.yml:/etc/searxng/settings.yml'
-    environment:
-      - 'SEARXNG_SETTINGS_FILE=/etc/searxng/settings.yml'
+      - ./searxng:/etc/searxng
+    ports:
+      #- '8080:8080' #取消注释后可外部访问
     restart: always
     networks:
       - lobe-network
@@ -117,6 +117,7 @@ services:
       - 'LLM_VISION_IMAGE_USE_BASE64=1'
       - 'S3_SET_ACL=0'
       - 'SEARXNG_URL=http://searxng:8080'
+      - 'CASDOOR_WEBHOOK_SECRET=' # Webhook 密钥
     env_file:
       - .env
     restart: always
