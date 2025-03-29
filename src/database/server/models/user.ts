@@ -62,6 +62,7 @@ export class UserModel {
   getUserState = async (decryptor: DecryptUserKeyVaults) => {
     const result = await this.db
       .select({
+        avatar: users.avatar,
         isOnboarded: users.isOnboarded,
         preference: users.preference,
 
@@ -99,6 +100,7 @@ export class UserModel {
     };
 
     return {
+      avatar: state.avatar,
       isOnboarded: state.isOnboarded,
       preference: state.preference as UserPreference,
       settings,

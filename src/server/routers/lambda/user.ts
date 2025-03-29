@@ -10,7 +10,9 @@ import { ClerkAuth } from '@/libs/clerk-auth';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 import { authedProcedure, router } from '@/libs/trpc';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+import { S3 } from '@/server/modules/S3';
 import { UserService } from '@/server/services/user';
+import { getFullFileUrl } from '@/server/utils/files';
 import {
   NextAuthAccountSchame,
   UserGuideSchema,
@@ -85,6 +87,7 @@ export const userRouter = router({
     const hasExtraSession = await sessionModel.hasMoreThanN(1);
 
     return {
+      avatar: state.avatar ?? '',
       canEnablePWAGuide: hasMoreThan4Messages,
       canEnableTrace: hasMoreThan4Messages,
       // 有消息，或者创建过助手，则认为有 conversation
@@ -121,6 +124,53 @@ export const userRouter = router({
     } else {
       throw new Error('The method in LobeNextAuthDbAdapter `unlinkAccount` is not implemented');
     }
+  }),
+
+  // 服务端上传头像
+  updateAvatar: userProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    // 如果是 Base64 数据，需要上传到 S3
+    if (input.startsWith('data:image')) {
+      try {
+        // 提取 mimeType，例如 "image/png"
+        const prefix = 'data:';
+        const semicolonIndex = input.indexOf(';');
+        const mimeType =
+          semicolonIndex !== -1 ? input.slice(prefix.length, semicolonIndex) : 'image/png';
+        const fileType = mimeType.split('/')[1];
+
+        // 分割字符串，获取 Base64 部分
+        const commaIndex = input.indexOf(',');
+        if (commaIndex === -1) {
+          throw new Error('Invalid Base64 data');
+        }
+        const base64Data = input.slice(commaIndex + 1);
+
+        // 创建 S3 客户端
+        const s3 = new S3();
+
+        // 使用固定文件名，确保每个用户只有一个头像（直接覆盖）
+        const fileName = `avatar.${fileType}`;
+        const filePath = `users/avatars/${ctx.userId}/${fileName}`;
+
+        // 将 Base64 数据转换为 Buffer 再上传到 S3
+        const buffer = Buffer.from(base64Data, 'base64');
+
+        await s3.uploadBuffer(filePath, buffer, mimeType);
+
+        // 获取公共访问 URL
+        let avatarUrl = await getFullFileUrl(filePath);
+        avatarUrl = avatarUrl + `?t=${Date.now()}`; // 添加时间戳以避免缓存
+
+        return ctx.userModel.updateUser({ avatar: avatarUrl });
+      } catch (error) {
+        throw new Error(
+          'Error uploading avatar: ' + (error instanceof Error ? error.message : String(error)),
+        );
+      }
+    }
+
+    // 如果不是 Base64 数据，直接使用 URL 更新用户头像
+    return ctx.userModel.updateUser({ avatar: input });
   }),
 
   updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {

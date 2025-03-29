@@ -25,6 +25,10 @@ export class ServerService implements IUserService {
     return lambdaClient.user.makeUserOnboarded.mutate();
   };
 
+  updateAvatar: IUserService['updateAvatar'] = async (avatar) => {
+    return lambdaClient.user.updateAvatar.mutate(avatar);
+  };
+
   updatePreference: IUserService['updatePreference'] = async (preference) => {
     return lambdaClient.user.updatePreference.mutate(preference);
   };
