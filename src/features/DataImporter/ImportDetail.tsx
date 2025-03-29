@@ -34,43 +34,45 @@ const getTotalRecords = (tables: { count: number; name: string }[]): number => {
 const useStyles = createStyles(({ token, css }) => {
   return {
     duplicateAlert: css`
-      background-color: ${token.colorWarningBg};
+      margin-block-start: ${token.marginMD}px;
+      padding: ${token.paddingMD}px;
       border: 1px solid ${token.colorWarningBorder};
       border-radius: ${token.borderRadiusLG}px;
-      padding: ${token.paddingMD}px;
-      margin-top: ${token.marginMD}px;
+
+      background-color: ${token.colorWarningBg};
     `,
     duplicateDescription: css`
-      color: ${token.colorTextSecondary};
+      margin-block-start: ${token.marginXS}px;
       font-size: ${token.fontSizeSM}px;
-      margin-top: ${token.marginXS}px;
+      color: ${token.colorTextSecondary};
     `,
     duplicateOptions: css`
-      margin-top: ${token.marginSM}px;
+      margin-block-start: ${token.marginSM}px;
     `,
     duplicateTag: css`
-      background-color: ${token.colorWarningBg};
       border-color: ${token.colorWarningBorder};
       color: ${token.colorWarning};
+      background-color: ${token.colorWarningBg};
     `,
     hash: css`
-      color: ${token.colorTextTertiary};
-      font-size: 12px;
       font-family: ${token.fontFamilyCode};
+      font-size: 12px;
+      color: ${token.colorTextTertiary};
     `,
     infoIcon: css`
       color: ${token.colorTextSecondary};
     `,
     modalContent: css`
-      padding: ${token.paddingMD}px 0;
+      padding-block: ${token.paddingMD}px;
+      padding-inline: 0;
     `,
     successIcon: css`
       color: ${token.colorSuccess};
     `,
     tableContainer: css`
+      overflow: hidden;
       border: 1px solid ${token.colorBorderSecondary};
       border-radius: ${token.borderRadiusLG}px;
-      overflow: hidden;
     `,
     tableName: css`
       font-family: ${token.fontFamilyCode};
