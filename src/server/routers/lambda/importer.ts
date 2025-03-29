@@ -5,7 +5,8 @@ import { DataImporterRepos } from '@/database/repositories/dataImporter';
 import { serverDB } from '@/database/server';
 import { authedProcedure, router } from '@/libs/trpc';
 import { S3 } from '@/server/modules/S3';
-import { ImportResults, ImporterEntryData } from '@/types/importer';
+import { ImportPgDataStructure } from '@/types/export';
+import { ImportResultData, ImporterEntryData } from '@/types/importer';
 
 const importProcedure = authedProcedure.use(async (opts) => {
   const { ctx } = opts;
@@ -19,7 +20,7 @@ const importProcedure = authedProcedure.use(async (opts) => {
 export const importerRouter = router({
   importByFile: importProcedure
     .input(z.object({ pathname: z.string() }))
-    .mutation(async ({ input, ctx }): Promise<ImportResults> => {
+    .mutation(async ({ input, ctx }): Promise<ImportResultData> => {
       let data: ImporterEntryData | undefined;
 
       try {
@@ -37,6 +38,10 @@ export const importerRouter = router({
         });
       }
 
+      if ('schemaHash' in data) {
+        return ctx.dataImporterService.importPgData(data as unknown as ImportPgDataStructure);
+      }
+
       return ctx.dataImporterService.importData(data);
     }),
 
@@ -52,7 +57,18 @@ export const importerRouter = router({
         }),
       }),
     )
-    .mutation(async ({ input, ctx }): Promise<ImportResults> => {
+    .mutation(async ({ input, ctx }): Promise<ImportResultData> => {
       return ctx.dataImporterService.importData(input.data);
+    }),
+  importPgByPost: importProcedure
+    .input(
+      z.object({
+        data: z.record(z.string(), z.array(z.any())),
+        mode: z.enum(['pglite', 'postgres']),
+        schemaHash: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }): Promise<ImportResultData> => {
+      return ctx.dataImporterService.importPgData(input);
     }),
 });

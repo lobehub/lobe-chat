@@ -16,6 +16,16 @@
     "detail": "Szczegóły błędu",
     "title": "Żądanie nie powiodło się"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Powód błędu: {{reason}}",
+      "title": "Import nie powiódł się"
+    },
+    "incompatible": {
+      "description": "Ten plik został wyeksportowany z wyższej wersji, spróbuj zaktualizować do najnowszej wersji, a następnie spróbuj ponownie zaimportować",
+      "title": "Bieżąca aplikacja nie obsługuje importu tego pliku"
+    }
+  },
   "loginRequired": {
     "desc": "Zaraz nastąpi automatyczne przekierowanie do strony logowania",
     "title": "Proszę zalogować się, aby korzystać z tej funkcji"

@@ -346,6 +346,33 @@
     },
     "title": "Impostazioni del tema"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Esporta",
+        "exportType": {
+          "agent": "Esporta impostazioni assistente",
+          "agentWithMessage": "Esporta assistente e messaggi",
+          "all": "Esporta impostazioni globali e tutti i dati degli assistenti",
+          "allAgent": "Esporta tutte le impostazioni degli assistenti",
+          "allAgentWithMessage": "Esporta tutti gli assistenti e messaggi",
+          "globalSetting": "Esporta impostazioni globali"
+        },
+        "title": "Esporta dati"
+      },
+      "import": {
+        "button": "Importa",
+        "title": "Importa dati"
+      },
+      "title": "Operazioni avanzate"
+    },
+    "desc": "Utilizzo dello storage nel browser attuale",
+    "embeddings": {
+      "used": "Storage vettoriale"
+    },
+    "title": "Storage dati",
+    "used": "Utilizzo dello storage"
+  },
   "submitAgentModal": {
     "button": "Invia assistente",
     "identifier": "Identificatore assistente",
@@ -439,6 +466,7 @@
     "hotkey": "Scorciatoie",
     "llm": "Modello linguistico",
     "provider": "Fornitore di servizi AI",
+    "storage": "Storage dati",
     "sync": "云端同步",
     "system-agent": "Assistente di sistema",
     "tts": "Servizio vocale"

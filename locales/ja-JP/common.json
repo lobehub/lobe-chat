@@ -205,7 +205,8 @@
       "sessions": "セッション",
       "skips": "重複スキップ",
       "topics": "トピック",
-      "type": "データタイプ"
+      "type": "データタイプ",
+      "update": "レコードが更新されました"
     },
     "title": "データのインポート",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "残り時間",
       "speed": "アップロード速度"
     }
+  },
+  "importPreview": {
+    "confirmImport": "インポートを確認",
+    "tables": {
+      "count": "レコード数",
+      "name": "テーブル名"
+    },
+    "title": "データインポートプレビュー",
+    "totalRecords": "合計で {{count}} 件のレコードがインポートされます",
+    "totalTables": "{{count}} 個のテーブル"
   },
   "information": "コミュニティと情報",
   "installPWA": "PWAをインストール",

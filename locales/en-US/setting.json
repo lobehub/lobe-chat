@@ -346,6 +346,33 @@
     },
     "title": "Theme Settings"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Export",
+        "exportType": {
+          "agent": "Export Assistant Settings",
+          "agentWithMessage": "Export Assistant and Messages",
+          "all": "Export Global Settings and All Assistant Data",
+          "allAgent": "Export All Assistant Settings",
+          "allAgentWithMessage": "Export All Assistants and Messages",
+          "globalSetting": "Export Global Settings"
+        },
+        "title": "Export Data"
+      },
+      "import": {
+        "button": "Import",
+        "title": "Import Data"
+      },
+      "title": "Advanced Operations"
+    },
+    "desc": "Current storage usage in the browser",
+    "embeddings": {
+      "used": "Vector Storage"
+    },
+    "title": "Data Storage",
+    "used": "Storage Usage"
+  },
   "submitAgentModal": {
     "button": "Submit Assistant",
     "identifier": "Assistant Identifier",
@@ -439,6 +466,7 @@
     "hotkey": "Hotkeys",
     "llm": "Language Model",
     "provider": "AI Service Provider",
+    "storage": "Data Storage",
     "sync": "Cloud Sync",
     "system-agent": "System Assistant",
     "tts": "Text-to-Speech"

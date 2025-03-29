@@ -346,6 +346,33 @@
     },
     "title": "Configuración de tema"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Exportar",
+        "exportType": {
+          "agent": "Exportar configuración del asistente",
+          "agentWithMessage": "Exportar asistente y mensajes",
+          "all": "Exportar configuración global y todos los datos del asistente",
+          "allAgent": "Exportar todas las configuraciones del asistente",
+          "allAgentWithMessage": "Exportar todos los asistentes y mensajes",
+          "globalSetting": "Exportar configuración global"
+        },
+        "title": "Exportar datos"
+      },
+      "import": {
+        "button": "Importar",
+        "title": "Importar datos"
+      },
+      "title": "Operaciones avanzadas"
+    },
+    "desc": "Uso de almacenamiento en el navegador actual",
+    "embeddings": {
+      "used": "Almacenamiento de vectores"
+    },
+    "title": "Almacenamiento de datos",
+    "used": "Uso de almacenamiento"
+  },
   "submitAgentModal": {
     "button": "Enviar asistente",
     "identifier": "Identificador del asistente",
@@ -439,6 +466,7 @@
     "hotkey": "Atajos de teclado",
     "llm": "Modelo de lenguaje",
     "provider": "Proveedor de servicios de IA",
+    "storage": "Almacenamiento de datos",
     "sync": "Sincronización en la nube",
     "system-agent": "Asistente del sistema",
     "tts": "Servicio de voz"

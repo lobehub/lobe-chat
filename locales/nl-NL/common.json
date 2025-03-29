@@ -205,7 +205,8 @@
       "sessions": "Assistenten",
       "skips": "Overslaan van duplicaten",
       "topics": "Onderwerpen",
-      "type": "Gegevenstype"
+      "type": "Gegevenstype",
+      "update": "Record bijgewerkt"
     },
     "title": "Gegevens importeren",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "Resterende tijd",
       "speed": "Uploadsnelheid"
     }
+  },
+  "importPreview": {
+    "confirmImport": "Bevestig import",
+    "tables": {
+      "count": "Aantal records",
+      "name": "Tabelnaam"
+    },
+    "title": "Voorbeeld van gegevensimport",
+    "totalRecords": "In totaal worden {{count}} records geïmporteerd",
+    "totalTables": "{{count}} tabellen"
   },
   "information": "Gemeenschap en Informatie",
   "installPWA": "Installeer de browser-app",

@@ -205,7 +205,8 @@
       "sessions": "Assistants",
       "skips": "Duplicates skipped",
       "topics": "Topics",
-      "type": "Data Type"
+      "type": "Data Type",
+      "update": "Record Updated"
     },
     "title": "Import Data",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "Time remaining",
       "speed": "Upload speed"
     }
+  },
+  "importPreview": {
+    "confirmImport": "Confirm Import",
+    "tables": {
+      "count": "Record Count",
+      "name": "Table Name"
+    },
+    "title": "Data Import Preview",
+    "totalRecords": "A total of {{count}} records will be imported",
+    "totalTables": "{{count}} tables"
   },
   "information": "Community and News",
   "installPWA": "Install browser app",

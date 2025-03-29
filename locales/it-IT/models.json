@@ -221,6 +221,9 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 è un modello di linguaggio con 6710 miliardi di parametri, basato su un'architettura di esperti misti (MoE) che utilizza attenzione multilivello (MLA) e la strategia di bilanciamento del carico senza perdite ausiliarie, ottimizzando l'efficienza di inferenza e addestramento. Pre-addestrato su 14,8 trilioni di token di alta qualità e successivamente affinato tramite supervisione e apprendimento per rinforzo, DeepSeek-V3 supera altri modelli open source, avvicinandosi ai modelli chiusi di punta."
   },
+  "Pro/deepseek-ai/DeepSeek-V3-1226": {
+    "description": "DeepSeek-V3 è un modello linguistico ibrido esperto (MoE) con 6710 miliardi di parametri, che utilizza l'attenzione multilivello (MLA) e l'architettura DeepSeekMoE, combinando strategie di bilanciamento del carico senza perdite ausiliarie per ottimizzare l'efficienza di inferenza e addestramento. Pre-addestrato su 14,8 trilioni di token di alta qualità e successivamente affinato supervisionato e tramite apprendimento rinforzato, DeepSeek-V3 supera le prestazioni di altri modelli open source, avvicinandosi ai modelli closed source leader."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview è un modello di elaborazione del linguaggio naturale innovativo, in grado di gestire in modo efficiente compiti complessi di generazione di dialoghi e comprensione del contesto."
   },
@@ -743,6 +746,9 @@
   "deepseek-v3": {
     "description": "DeepSeek-V3 è un modello MoE sviluppato internamente da Hangzhou DeepSeek Artificial Intelligence Technology Research Co., Ltd., con risultati eccezionali in molteplici valutazioni, posizionandosi al primo posto tra i modelli open source nelle classifiche principali. Rispetto al modello V2.5, la velocità di generazione è aumentata di 3 volte, offrendo un'esperienza utente più rapida e fluida."
   },
+  "deepseek-v3-0324": {
+    "description": "DeepSeek-V3-0324 è un modello MoE con 671 miliardi di parametri, con vantaggi notevoli nelle capacità di programmazione e tecniche, comprensione del contesto e gestione di testi lunghi."
+  },
   "deepseek/deepseek-chat": {
     "description": "Un nuovo modello open source che integra capacità generali e di codice, mantenendo non solo le capacità di dialogo generali del modello Chat originale e la potente capacità di elaborazione del codice del modello Coder, ma allineandosi anche meglio alle preferenze umane. Inoltre, DeepSeek-V2.5 ha ottenuto notevoli miglioramenti in vari aspetti, come compiti di scrittura e seguire istruzioni."
   },
@@ -845,9 +851,6 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro è il modello AI ad alte prestazioni di Google, progettato per l'espansione su una vasta gamma di compiti."
   },
-  "gemini-1.5-flash": {
-    "description": "Gemini 1.5 Flash è il più recente modello AI multimodale di Google, dotato di capacità di elaborazione rapida, supporta input di testo, immagini e video, ed è adatto per un'efficiente scalabilità in vari compiti."
-  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 è un modello multimodale efficiente, supporta l'espansione per applicazioni ampie."
   },
@@ -901,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash è una variante del modello Flash, ottimizzata per obiettivi come il rapporto costo-efficacia e la bassa latenza."
-  },
-  "gemini-2.0-flash-lite-preview-02-05": {
-    "description": "Un modello Gemini 2.0 Flash ottimizzato per obiettivi di costo-efficacia e bassa latenza."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp è il più recente modello AI multimodale sperimentale di Google, dotato di caratteristiche di nuova generazione, velocità eccezionale, chiamate a strumenti nativi e generazione multimodale."
@@ -1717,6 +1717,9 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Il modello Qwen-Math ha potenti capacità di risoluzione di problemi matematici."
+  },
+  "qwen2.5-omni-7b": {
+    "description": "La serie di modelli Qwen-Omni supporta l'input di dati multimodali, inclusi video, audio, immagini e testo, e produce output audio e testo."
   },
   "qwen2.5-vl-32b-instruct": {
     "description": "La serie di modelli Qwen2.5-VL ha migliorato il livello di intelligenza, praticità e applicabilità del modello, rendendolo più performante in scenari come conversazioni naturali, creazione di contenuti, servizi di conoscenza specialistica e sviluppo di codice. La versione 32B utilizza tecniche di apprendimento rinforzato per ottimizzare il modello, offrendo uno stile di output più in linea con le preferenze umane, capacità di ragionamento per problemi matematici complessi e comprensione e ragionamento dettagliati di immagini rispetto ad altri modelli della serie Qwen2.5 VL."

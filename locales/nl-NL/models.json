@@ -221,6 +221,9 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 is een hybride expert (MoE) taalmodel met 6710 miljard parameters, dat gebruikmaakt van multi-head latent attention (MLA) en de DeepSeekMoE-architectuur, gecombineerd met een load balancing-strategie zonder extra verlies, om de inferentie- en trainingsefficiëntie te optimaliseren. Door voorgetraind te worden op 14,8 biljoen hoogwaardige tokens en vervolgens te worden fijngesteld met supervisie en versterkend leren, overtreft DeepSeek-V3 andere open-source modellen in prestaties en komt het dicht in de buurt van toonaangevende gesloten modellen."
   },
+  "Pro/deepseek-ai/DeepSeek-V3-1226": {
+    "description": "DeepSeek-V3 is een hybride expert (MoE) taalmodel met 6710 miljard parameters, dat gebruikmaakt van multi-head latent attention (MLA) en de DeepSeekMoE-architectuur, gecombineerd met een load balancing strategie zonder extra verlies, om de efficiëntie van inferentie en training te optimaliseren. Door voorgetraind te worden op 14,8 biljoen hoogwaardige tokens en vervolgens te worden verfijnd met supervisie en versterkend leren, overtreft DeepSeek-V3 andere open-source modellen in prestaties en benadert het de toonaangevende gesloten-source modellen."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is een innovatief natuurlijk taalverwerkingsmodel dat efficiënt complexe dialooggeneratie en contextbegripstaken kan verwerken."
   },
@@ -743,6 +746,9 @@
   "deepseek-v3": {
     "description": "DeepSeek-V3 is een MoE-model dat is ontwikkeld door Hangzhou DeepSeek Artificial Intelligence Technology Research Co., Ltd. Het heeft uitstekende scores in verschillende evaluaties en staat bovenaan de open-source modellen in de mainstream ranglijsten. V3 heeft de generatiesnelheid met 3 keer verbeterd in vergelijking met het V2.5 model, wat zorgt voor een snellere en soepelere gebruikerservaring."
   },
+  "deepseek-v3-0324": {
+    "description": "DeepSeek-V3-0324 is een MoE-model met 671 miljard parameters, dat uitblinkt in programmeer- en technische vaardigheden, contextbegrip en het verwerken van lange teksten."
+  },
   "deepseek/deepseek-chat": {
     "description": "Een nieuw open-source model dat algemene en codeercapaciteiten combineert, niet alleen de algemene gespreksvaardigheden van het oorspronkelijke Chat-model en de krachtige codeverwerkingscapaciteiten van het Coder-model behoudt, maar ook beter is afgestemd op menselijke voorkeuren. Bovendien heeft DeepSeek-V2.5 aanzienlijke verbeteringen gerealiseerd in schrijfopdrachten, instructievolging en meer."
   },
@@ -845,9 +851,6 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro is Google's high-performance AI-model, ontworpen voor brede taakuitbreiding."
   },
-  "gemini-1.5-flash": {
-    "description": "Gemini 1.5 Flash is het nieuwste multimodale AI-model van Google, met snelle verwerkingscapaciteiten, ondersteuning voor tekst-, beeld- en video-invoer, en efficiënt schaalbaar voor verschillende taken."
-  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 is een efficiënt multimodaal model dat ondersteuning biedt voor brede toepassingsuitbreiding."
   },
@@ -901,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash is een modelvariant die is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
-  },
-  "gemini-2.0-flash-lite-preview-02-05": {
-    "description": "Een Gemini 2.0 Flash-model dat is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp is Google's nieuwste experimentele multimodale AI-model, met next-gen functies, uitstekende snelheid, native tool-aanroepen en multimodale generatie."
@@ -1717,6 +1717,9 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
+  },
+  "qwen2.5-omni-7b": {
+    "description": "Het Qwen-Omni serie model ondersteunt het invoeren van verschillende modaliteiten van gegevens, waaronder video, audio, afbeeldingen en tekst, en kan audio en tekst als output genereren."
   },
   "qwen2.5-vl-32b-instruct": {
     "description": "De Qwen2.5-VL-serie modellen verbeteren het intelligentieniveau, de praktisch toepasbaarheid en de bruikbaarheid, waardoor ze beter presteren in natuurlijke conversaties, inhoudscREATie, specialistische kennisdiensten en codeontwikkeling. De 32B-versie maakt gebruik van versterkingsleertechnieken om het model te optimaliseren, waardoor het in vergelijking met andere modellen uit de Qwen2.5 VL-serie een uitvoerstijl biedt die meer voldoet aan menselijke voorkeuren, een betere redeneringscapaciteit voor complexe wiskundige problemen, en een fijnere begrip en redenering van afbeeldingen."

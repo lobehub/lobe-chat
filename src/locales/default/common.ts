@@ -209,6 +209,7 @@ export default {
       skips: '重复跳过',
       topics: '话题',
       type: '数据类型',
+      update: '记录更新',
     },
     title: '导入数据',
     uploading: {
@@ -216,6 +217,16 @@ export default {
       restTime: '剩余时间',
       speed: '上传速度',
     },
+  },
+  importPreview: {
+    confirmImport: '确认导入',
+    tables: {
+      count: '记录数',
+      name: '表名',
+    },
+    title: '导入数据预览',
+    totalRecords:"总计将导入 {{count}} 条记录",
+    totalTables: '{{count}} 个表',
   },
   information: '社区与资讯',
   installPWA: '安装浏览器应用 (PWA)',

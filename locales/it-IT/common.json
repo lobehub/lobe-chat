@@ -205,7 +205,8 @@
       "sessions": "Sessioni",
       "skips": "Elementi saltati",
       "topics": "Argomenti",
-      "type": "Tipo di dati"
+      "type": "Tipo di dati",
+      "update": "Aggiornamento registrazione"
     },
     "title": "Importa dati",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "Tempo rimanente",
       "speed": "Velocità di caricamento"
     }
+  },
+  "importPreview": {
+    "confirmImport": "Conferma importazione",
+    "tables": {
+      "count": "Numero di registrazioni",
+      "name": "Nome della tabella"
+    },
+    "title": "Anteprima dei dati da importare",
+    "totalRecords": "Totale di {{count}} registrazioni da importare",
+    "totalTables": "{{count}} tabelle"
   },
   "information": "Comunità e informazioni",
   "installPWA": "Installa l'applicazione del browser",

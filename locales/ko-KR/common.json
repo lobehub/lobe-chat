@@ -205,7 +205,8 @@
       "sessions": "에이전트",
       "skips": "중복 건너뛰기",
       "topics": "주제",
-      "type": "데이터 유형"
+      "type": "데이터 유형",
+      "update": "기록 업데이트"
     },
     "title": "데이터 가져오기",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "남은 시간",
       "speed": "업로드 속도"
     }
+  },
+  "importPreview": {
+    "confirmImport": "가져오기 확인",
+    "tables": {
+      "count": "기록 수",
+      "name": "표 이름"
+    },
+    "title": "데이터 가져오기 미리보기",
+    "totalRecords": "총 {{count}} 개의 기록이 가져와집니다",
+    "totalTables": "{{count}} 개의 표"
   },
   "information": "커뮤니티 및 정보",
   "installPWA": "브라우저 앱 설치",

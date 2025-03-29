@@ -221,6 +221,9 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 là một mô hình ngôn ngữ hỗn hợp chuyên gia (MoE) với 6710 tỷ tham số, sử dụng chú ý tiềm ẩn đa đầu (MLA) và kiến trúc DeepSeekMoE, kết hợp chiến lược cân bằng tải không có tổn thất phụ trợ, tối ưu hóa hiệu suất suy diễn và đào tạo. Thông qua việc được tiền huấn luyện trên 14.8 triệu tỷ token chất lượng cao, và thực hiện tinh chỉnh giám sát và học tăng cường, DeepSeek-V3 vượt trội hơn các mô hình mã nguồn mở khác, gần với các mô hình đóng kín hàng đầu."
   },
+  "Pro/deepseek-ai/DeepSeek-V3-1226": {
+    "description": "DeepSeek-V3 là một mô hình ngôn ngữ hỗn hợp chuyên gia (MoE) với 6710 tỷ tham số, sử dụng cơ cấu chú ý tiềm ẩn đa đầu (MLA) và DeepSeekMoE, kết hợp với chiến lược cân bằng tải không có tổn thất phụ trợ, tối ưu hóa hiệu suất suy diễn và đào tạo. Qua việc được tiền huấn luyện trên 14.8 triệu tỷ token chất lượng cao, và thực hiện tinh chỉnh giám sát cũng như học tăng cường, DeepSeek-V3 vượt trội về hiệu suất so với các mô hình mã nguồn mở khác, gần đạt được hiệu suất của các mô hình đóng nguồn hàng đầu."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview là một mô hình xử lý ngôn ngữ tự nhiên độc đáo, có khả năng xử lý hiệu quả các nhiệm vụ tạo đối thoại phức tạp và hiểu ngữ cảnh."
   },
@@ -743,6 +746,9 @@
   "deepseek-v3": {
     "description": "DeepSeek-V3 là mô hình MoE tự phát triển của Công ty Nghiên cứu Công nghệ AI Độ Sâu Hàng Châu, có nhiều thành tích xuất sắc trong các bài kiểm tra, đứng đầu bảng xếp hạng mô hình mã nguồn mở. V3 so với mô hình V2.5 đã cải thiện tốc độ tạo ra gấp 3 lần, mang đến trải nghiệm sử dụng nhanh chóng và mượt mà hơn cho người dùng."
   },
+  "deepseek-v3-0324": {
+    "description": "DeepSeek-V3-0324 là mô hình MoE với 671B tham số, nổi bật trong khả năng lập trình và kỹ thuật, hiểu ngữ cảnh và xử lý văn bản dài."
+  },
   "deepseek/deepseek-chat": {
     "description": "Mô hình mã nguồn mở mới kết hợp khả năng tổng quát và mã, không chỉ giữ lại khả năng đối thoại tổng quát của mô hình Chat ban đầu và khả năng xử lý mã mạnh mẽ của mô hình Coder, mà còn tốt hơn trong việc phù hợp với sở thích của con người. Hơn nữa, DeepSeek-V2.5 cũng đã đạt được sự cải thiện lớn trong nhiều lĩnh vực như nhiệm vụ viết, theo dõi chỉ dẫn."
   },
@@ -845,9 +851,6 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro là mô hình AI hiệu suất cao của Google, được thiết kế để mở rộng cho nhiều nhiệm vụ."
   },
-  "gemini-1.5-flash": {
-    "description": "Gemini 1.5 Flash là mô hình AI đa phương thức mới nhất của Google, có khả năng xử lý nhanh, hỗ trợ đầu vào văn bản, hình ảnh và video, phù hợp cho việc mở rộng hiệu quả cho nhiều nhiệm vụ."
-  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 là một mô hình đa phương thức hiệu quả, hỗ trợ mở rộng cho nhiều ứng dụng."
   },
@@ -901,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-001": {
     "description": "Biến thể mô hình Gemini 2.0 Flash được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
-  },
-  "gemini-2.0-flash-lite-preview-02-05": {
-    "description": "Một mô hình Gemini 2.0 Flash được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, sở hữu các tính năng thế hệ tiếp theo, tốc độ vượt trội, gọi công cụ bản địa và sinh ra đa phương thức."
@@ -1717,6 +1717,9 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Mô hình Qwen-Math có khả năng giải quyết bài toán toán học mạnh mẽ."
+  },
+  "qwen2.5-omni-7b": {
+    "description": "Mô hình Qwen-Omni hỗ trợ đầu vào từ nhiều loại dữ liệu khác nhau, bao gồm video, âm thanh, hình ảnh và văn bản, và xuất ra âm thanh và văn bản."
   },
   "qwen2.5-vl-32b-instruct": {
     "description": "Dòng mô hình Qwen2.5-VL đã nâng cao mức độ thông minh, tính thực tế và khả năng áp dụng, giúp mô hình hoạt động hiệu quả hơn trong các tình huống như đối thoại tự nhiên, sáng tạo nội dung, cung cấp dịch vụ kiến thức chuyên môn và phát triển mã. Phiên bản 32B đã sử dụng công nghệ học tăng cường để tối ưu hóa mô hình, so với các mô hình khác trong dòng Qwen2.5 VL, cung cấp phong cách đầu ra phù hợp hơn với sở thích của con người, khả năng suy luận các vấn đề toán học phức tạp, cũng như khả năng hiểu và suy luận chi tiết về hình ảnh."

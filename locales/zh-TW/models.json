@@ -221,6 +221,9 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款擁有 6710 億參數的混合專家（MoE）語言模型，採用多頭潛在注意力（MLA）和 DeepSeekMoE 架構，結合無輔助損失的負載平衡策略，優化推理和訓練效率。透過在 14.8 萬億高質量tokens上預訓練，並進行監督微調和強化學習，DeepSeek-V3 在性能上超越其他開源模型，接近領先閉源模型。"
   },
+  "Pro/deepseek-ai/DeepSeek-V3-1226": {
+    "description": "DeepSeek-V3 是一款擁有 6710 億參數的混合專家（MoE）語言模型，採用多頭潛在注意力（MLA）和 DeepSeekMoE 架構，結合無輔助損失的負載平衡策略，優化推理和訓練效率。透過在 14.8 萬兆高品質 tokens 上預訓練，並進行監督微調和強化學習，DeepSeek-V3 在性能上超越其他開源模型，接近領先的閉源模型。"
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview 是一款獨具創新的自然語言處理模型，能夠高效處理複雜的對話生成與上下文理解任務。"
   },
@@ -743,6 +746,9 @@
   "deepseek-v3": {
     "description": "DeepSeek-V3 為杭州深度求索人工智能基礎技術研究有限公司自研的 MoE 模型，其多項評測成績突出，在主流榜單中位列開源模型榜首。V3 相較 V2.5 模型生成速度實現 3 倍提升，為用戶帶來更加迅速流暢的使用體驗。"
   },
+  "deepseek-v3-0324": {
+    "description": "DeepSeek-V3-0324 為 671B 參數的 MoE 模型，在程式設計與技術能力、上下文理解與長文本處理等方面優勢突出。"
+  },
   "deepseek/deepseek-chat": {
     "description": "融合通用與代碼能力的全新開源模型，不僅保留了原有 Chat 模型的通用對話能力和 Coder 模型的強大代碼處理能力，還更好地對齊了人類偏好。此外，DeepSeek-V2.5 在寫作任務、指令跟隨等多個方面也實現了大幅提升。"
   },
@@ -845,9 +851,6 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro 是 Google 的高性能 AI 模型，專為廣泛任務擴展而設計。"
   },
-  "gemini-1.5-flash": {
-    "description": "Gemini 1.5 Flash 是 Google 最新的多模態 AI 模型，具備快速處理能力，支持文本、圖像和視頻輸入，適用於多種任務的高效擴展。"
-  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 是一款高效的多模態模型，支持廣泛應用的擴展。"
   },
@@ -901,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash 模型變體，針對成本效益和低延遲等目標進行了優化。"
-  },
-  "gemini-2.0-flash-lite-preview-02-05": {
-    "description": "一個 Gemini 2.0 Flash 模型，針對成本效益和低延遲等目標進行了優化。"
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
@@ -1717,6 +1717,9 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Qwen-Math模型具有強大的數學解題能力。"
+  },
+  "qwen2.5-omni-7b": {
+    "description": "Qwen-Omni 系列模型支援輸入多種模態的數據，包括視頻、音頻、圖片、文本，並輸出音頻與文本。"
   },
   "qwen2.5-vl-32b-instruct": {
     "description": "Qwen2.5-VL 系列模型提升了模型的智能水準、實用性和適用性，使其在自然對話、內容創作、專業知識服務及程式碼開發等場景中表現更優。32B 版本使用了強化學習技術優化模型，與 Qwen2.5 VL 系列的其他模型相比，提供了更符合人類偏好的輸出風格、複雜數學問題的推理能力，以及影像細粒度理解與推理能力。"

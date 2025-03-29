@@ -16,6 +16,16 @@
     "detail": "Hata Detayı",
     "title": "İstek Başarısız"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Hata nedeni: {{reason}}",
+      "title": "İçe aktarma başarısız"
+    },
+    "incompatible": {
+      "description": "Bu dosya daha yüksek bir sürümden dışa aktarılmıştır, lütfen en son sürüme güncelleyip tekrar içe aktarmayı deneyin",
+      "title": "Mevcut uygulama bu dosyayı içe aktarmayı desteklemiyor"
+    }
+  },
   "loginRequired": {
     "desc": "Otomatik olarak giriş sayfasına yönlendirileceksiniz",
     "title": "Lütfen bu özelliği kullanmadan önce giriş yapın"

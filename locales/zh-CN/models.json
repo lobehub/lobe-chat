@@ -221,6 +221,9 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。"
   },
+  "Pro/deepseek-ai/DeepSeek-V3-1226": {
+    "description": "DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。"
+  },
   "QwQ-32B-Preview": {
     "description": "Qwen QwQ 是由 Qwen 团队开发的实验研究模型，专注于提升AI推理能力。"
   },
@@ -743,6 +746,9 @@
   "deepseek-v3": {
     "description": "DeepSeek-V3 是一个强大的专家混合（MoE）语言模型，拥有总计 6710 亿参数，每个 token 激活 370 亿参数。"
   },
+  "deepseek-v3-0324": {
+    "description": "DeepSeek-V3-0324 为671B 参数 MoE 模型，在编程与技术能力、上下文理解与长文本处理等方面优势突出。"
+  },
   "deepseek/deepseek-chat": {
     "description": "融合通用与代码能力的全新开源模型, 不仅保留了原有 Chat 模型的通用对话能力和 Coder 模型的强大代码处理能力，还更好地对齐了人类偏好。此外，DeepSeek-V2.5 在写作任务、指令跟随等多个方面也实现了大幅提升。"
   },
@@ -845,9 +851,6 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro 是Google的高性能AI模型，专为广泛任务扩展而设计。"
   },
-  "gemini-1.5-flash": {
-    "description": "Gemini 1.5 Flash 是Google最新的多模态AI模型，具备快速处理能力，支持文本、图像和视频输入，适用于多种任务的高效扩展。"
-  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 是一款高效的多模态模型，支持广泛应用的扩展。"
   },
@@ -901,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash 模型变体，针对成本效益和低延迟等目标进行了优化。"
-  },
-  "gemini-2.0-flash-lite-preview-02-05": {
-    "description": "一个 Gemini 2.0 Flash 模型，针对成本效益和低延迟等目标进行了优化。"
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。"
@@ -1717,6 +1717,9 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Qwen-Math 模型具有强大的数学解题能力。"
+  },
+  "qwen2.5-omni-7b": {
+    "description": "Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。"
   },
   "qwen2.5-vl-32b-instruct": {
     "description": "Qwen2.5-VL 系列模型提升了模型的智能水平、实用性和适用性，使其在自然对话、内容创作、专业知识服务及代码开发等场景中表现更优。32B 版本使用了强化学习技术优化模型，与 Qwen2.5 VL 系列的其它模型相比，提供了更符合人类偏好的输出风格、复杂数学问题的推理能力，以及图像细粒度理解与推理能力。"
