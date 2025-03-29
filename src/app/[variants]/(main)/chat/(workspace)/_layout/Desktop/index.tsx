@@ -5,7 +5,6 @@ import BrandTextLoading from '@/components/Loading/BrandTextLoading';
 
 import { LayoutProps } from '../type';
 import ChatHeader from './ChatHeader';
-import HotKeys from './HotKeys';
 import Portal from './Portal';
 import TopicPanel from './TopicPanel';
 
@@ -32,7 +31,6 @@ const Layout = ({ children, topic, conversation, portal }: LayoutProps) => {
         </Portal>
         <TopicPanel>{topic}</TopicPanel>
       </Flexbox>
-      <HotKeys />
     </>
   );
 };

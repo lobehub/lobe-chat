@@ -42,6 +42,17 @@
     "sessionWithName": "Configurações de Sessão · {{name}}",
     "title": "Configurações"
   },
+  "hotkey": {
+    "conflicts": "Conflito com teclas de atalho existentes",
+    "group": {
+      "conversation": "Conversa",
+      "essential": "Essencial"
+    },
+    "invalidCombination": "A combinação de teclas de atalho deve incluir pelo menos uma tecla modificadora (Ctrl, Alt, Shift) e uma tecla comum",
+    "record": "Pressione a tecla para gravar o atalho",
+    "reset": "Redefinir para os atalhos padrão",
+    "title": "Atalhos"
+  },
   "llm": {
     "aesGcm": "Suas chaves, endereço do agente, etc., serão criptografados usando o algoritmo de criptografia <1>AES-GCM</1>",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "Assistente Padrão",
     "common": "Configurações Comuns",
     "experiment": "Experimento",
+    "hotkey": "Atalhos",
     "llm": "Modelo de Linguagem",
     "provider": "Fornecedor de IA",
     "sync": "Sincronização na nuvem",

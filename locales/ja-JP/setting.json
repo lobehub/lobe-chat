@@ -42,6 +42,17 @@
     "sessionWithName": "セッション設定 · {{name}}",
     "title": "設定"
   },
+  "hotkey": {
+    "conflicts": "既存のショートカットキーと衝突しています",
+    "group": {
+      "conversation": "会話",
+      "essential": "基本"
+    },
+    "invalidCombination": "ショートカットキーには少なくとも1つの修飾キー（Ctrl、Alt、Shift）と1つの通常のキーが必要です",
+    "record": "ショートカットキーを録音するにはキーを押してください",
+    "reset": "デフォルトのショートカットキーにリセット",
+    "title": "ショートカットキー"
+  },
   "llm": {
     "aesGcm": "キーとプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムを使用して暗号化されます",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "デフォルトエージェント",
     "common": "一般設定",
     "experiment": "実験",
+    "hotkey": "ショートカットキー",
     "llm": "言語モデル",
     "provider": "AIサービスプロバイダー",
     "sync": "クラウド同期",

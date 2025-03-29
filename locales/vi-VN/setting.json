@@ -42,6 +42,17 @@
     "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}",
     "title": "Cài đặt"
   },
+  "hotkey": {
+    "conflicts": "Xung đột với phím tắt hiện có",
+    "group": {
+      "conversation": "Cuộc trò chuyện",
+      "essential": "Cơ bản"
+    },
+    "invalidCombination": "Phím tắt cần ít nhất một phím sửa đổi (Ctrl, Alt, Shift) và một phím thông thường",
+    "record": "Nhấn phím để ghi lại phím tắt",
+    "reset": "Đặt lại thành phím tắt mặc định",
+    "title": "Phím tắt"
+  },
   "llm": {
     "aesGcm": "Khóa và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán mã hóa <1>AES-GCM</1>",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "Trợ lý mặc định",
     "common": "Cài đặt chung",
     "experiment": "Thử nghiệm",
+    "hotkey": "Phím tắt",
     "llm": "Mô hình ngôn ngữ",
     "provider": "Nhà cung cấp AI",
     "sync": "Đồng bộ trên đám mây",
