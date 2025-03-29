@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
+import { TopicModel } from '@/database/models/topic';
 import { serverDB } from '@/database/server';
-import { TopicModel } from '@/database/server/models/topic';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { BatchTaskResult } from '@/types/service';
 

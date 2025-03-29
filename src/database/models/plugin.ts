@@ -2,7 +2,7 @@ import { and, desc, eq } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
 
-import { InstalledPluginItem, NewInstalledPlugin, userInstalledPlugins } from '../../schemas';
+import { InstalledPluginItem, NewInstalledPlugin, userInstalledPlugins } from '../schemas';
 
 export class PluginModel {
   private userId: string;
@@ -31,7 +31,9 @@ export class PluginModel {
   delete = async (id: string) => {
     return this.db
       .delete(userInstalledPlugins)
-      .where(and(eq(userInstalledPlugins.identifier, id), eq(userInstalledPlugins.userId, this.userId)));
+      .where(
+        and(eq(userInstalledPlugins.identifier, id), eq(userInstalledPlugins.userId, this.userId)),
+      );
   };
 
   deleteAll = async () => {
@@ -56,7 +58,10 @@ export class PluginModel {
 
   findById = async (id: string) => {
     return this.db.query.userInstalledPlugins.findFirst({
-      where: and(eq(userInstalledPlugins.identifier, id), eq(userInstalledPlugins.userId, this.userId)),
+      where: and(
+        eq(userInstalledPlugins.identifier, id),
+        eq(userInstalledPlugins.userId, this.userId),
+      ),
     });
   };
 
@@ -64,6 +69,8 @@ export class PluginModel {
     return this.db
       .update(userInstalledPlugins)
       .set({ ...value, updatedAt: new Date() })
-      .where(and(eq(userInstalledPlugins.identifier, id), eq(userInstalledPlugins.userId, this.userId)));
+      .where(
+        and(eq(userInstalledPlugins.identifier, id), eq(userInstalledPlugins.userId, this.userId)),
+      );
   };
 }

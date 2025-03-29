@@ -13,7 +13,7 @@ import {
 } from '@/types/aiProvider';
 import { merge } from '@/utils/merge';
 
-import { AiProviderSelectItem, aiModels, aiProviders } from '../../schemas';
+import { AiProviderSelectItem, aiModels, aiProviders } from '../schemas';
 
 type DecryptUserKeyVaults = (encryptKeyVaultsStr: string | null) => Promise<any>;
 
@@ -215,7 +215,15 @@ export class AiProviderModel {
 
     const decrypt = decryptor ?? JSON.parse;
 
-    const keyVaults = !!result.keyVaults ? await decrypt(result.keyVaults) : {};
+    let keyVaults = {};
+
+    if (!!result.keyVaults) {
+      try {
+        keyVaults = await decrypt(result.keyVaults);
+      } catch {
+        /* empty */
+      }
+    }
 
     return {
       ...result,

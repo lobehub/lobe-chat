@@ -13,7 +13,7 @@ import {
   knowledgeBases,
   users,
 } from '../../schemas';
-import { KnowledgeBaseModel } from '../../server/models/knowledgeBase';
+import { KnowledgeBaseModel } from '../knowledgeBase';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

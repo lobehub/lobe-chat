@@ -2,12 +2,12 @@ import { z } from 'zod';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { AgentModel } from '@/database/models/agent';
+import { FileModel } from '@/database/models/file';
+import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
+import { SessionModel } from '@/database/models/session';
+import { UserModel } from '@/database/models/user';
 import { serverDB } from '@/database/server';
-import { AgentModel } from '@/database/server/models/agent';
-import { FileModel } from '@/database/server/models/file';
-import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
-import { SessionModel } from '@/database/server/models/session';
-import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
 import { authedProcedure, router } from '@/libs/trpc';
 import { AgentService } from '@/server/services/agent';

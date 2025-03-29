@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { AiModelModel } from '@/database/models/aiModel';
+import { UserModel } from '@/database/models/user';
 import { AiInfraRepos } from '@/database/repositories/aiInfra';
-import { AiModelModel } from '@/database/server/models/aiModel';
-import { UserModel } from '@/database/server/models/user';
 
 import { aiModelRouter } from './aiModel';
 
-vi.mock('@/database/server/models/aiModel');
-vi.mock('@/database/server/models/user');
+vi.mock('@/database/models/aiModel');
+vi.mock('@/database/models/user');
 vi.mock('@/database/repositories/aiInfra');
 vi.mock('@/server/globalConfig', () => ({
   getServerGlobalConfig: vi.fn().mockReturnValue({

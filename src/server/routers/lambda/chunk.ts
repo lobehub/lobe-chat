@@ -3,13 +3,13 @@ import { inArray } from 'drizzle-orm/expressions';
 import { z } from 'zod';
 
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
+import { AsyncTaskModel } from '@/database/models/asyncTask';
+import { ChunkModel } from '@/database/models/chunk';
+import { EmbeddingModel } from '@/database/models/embedding';
+import { FileModel } from '@/database/models/file';
+import { MessageModel } from '@/database/models/message';
 import { knowledgeBaseFiles } from '@/database/schemas';
 import { serverDB } from '@/database/server';
-import { AsyncTaskModel } from '@/database/server/models/asyncTask';
-import { ChunkModel } from '@/database/server/models/chunk';
-import { EmbeddingModel } from '@/database/server/models/embedding';
-import { FileModel } from '@/database/server/models/file';
-import { MessageModel } from '@/database/server/models/message';
 import { authedProcedure, router } from '@/libs/trpc';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';

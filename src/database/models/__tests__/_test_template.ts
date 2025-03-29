@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 
 import { sessionGroups, users } from '../../schemas';
-import { SessionGroupModel } from '../../server/models/sessionGroup';
+import { SessionGroupModel } from '../sessionGroup';
 
 let serverDB = await getTestDBInstance();
 

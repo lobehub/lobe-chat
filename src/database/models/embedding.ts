@@ -3,7 +3,7 @@ import { and, eq } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
 
-import { NewEmbeddingsItem, embeddings } from '../../schemas';
+import { NewEmbeddingsItem, embeddings } from '../schemas';
 
 export class EmbeddingModel {
   private userId: string;
