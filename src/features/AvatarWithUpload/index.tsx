@@ -1,9 +1,10 @@
 'use client';
 
-import { Upload, message } from 'antd';
-import { memo, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Spin, Upload } from 'antd';
+import React, { memo, useCallback } from 'react';
 
+import { fetchErrorNotification } from '@/components/Error/fetchErrorNotification';
 import { useUserStore } from '@/store/user';
 import { imageToBase64 } from '@/utils/imageToBase64';
 import { createUploadImageHandler } from '@/utils/uploadFIle';
@@ -16,51 +17,49 @@ interface AvatarWithUploadProps extends UserAvatarProps {
 
 const AvatarWithUpload = memo<AvatarWithUploadProps>(
   ({ size = 40, compressSize = 256, ...rest }) => {
-    const { t } = useTranslation('file');
     const updateAvatar = useUserStore((state) => state.updateAvatar);
+    const [uploading, setUploading] = React.useState<boolean>(false);
 
     const handleUploadAvatar = useCallback(
-      createUploadImageHandler((avatar) => {
-        // 显示上传加载中提示
-        const loadingMessage = message.loading({
-          content: t('uploadDock.uploadStatus.uploading'),
-          duration: 0,
-        });
+      createUploadImageHandler(async (avatar) => {
+        try {
+          setUploading(true);
+          // 准备图像
+          const img = new Image();
+          img.src = avatar;
 
-        const img = new Image();
-        img.src = avatar;
-        img.addEventListener('load', async () => {
-          try {
-            const webpBase64 = imageToBase64({ img, size: compressSize });
-            await updateAvatar(webpBase64);
+          // 使用 Promise 等待图片加载
+          await new Promise((resolve, reject) => {
+            img.addEventListener('load', resolve);
+            img.addEventListener('error', reject);
+          });
 
-            // 关闭加载提示
-            loadingMessage();
+          // 压缩图像
+          const webpBase64 = imageToBase64({ img, size: compressSize });
 
-            // 显示上传成功提示
-            message.success({
-              content: t('uploadDock.uploadStatus.success'),
-            });
-          } catch (error) {
-            // 关闭加载提示
-            loadingMessage();
+          // 上传头像
+          await updateAvatar(webpBase64);
 
-            // 显示上传失败提示
-            message.error({
-              content: t('uploadDock.uploadStatus.error'),
-            });
+          setUploading(false);
+        } catch (error) {
+          console.error('Failed to upload avatar:', error);
+          setUploading(false);
 
-            console.error('Failed to upload avatar:', error);
-          }
-        });
+          fetchErrorNotification.error({
+            errorMessage: error instanceof Error ? error.message : String(error),
+            status: 500,
+          });
+        }
       }),
-      [t],
+      [compressSize, updateAvatar],
     );
 
     return (
-      <Upload beforeUpload={handleUploadAvatar} itemRender={() => void 0} maxCount={1}>
-        <UserAvatar clickable size={size} {...rest} />
-      </Upload>
+      <Spin indicator={<LoadingOutlined spin />} spinning={uploading}>
+        <Upload beforeUpload={handleUploadAvatar} itemRender={() => void 0} maxCount={1}>
+          <UserAvatar clickable size={size} {...rest} />
+        </Upload>
+      </Spin>
     );
   },
 );
