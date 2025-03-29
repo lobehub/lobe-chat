@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Supports OpenAI's latest voice model gpt-4o-mini-tts."]
+    },
+    "date": "2025-03-29",
+    "version": "1.76.1"
+  },
+  {
+    "children": {
       "features": ["Add Hotkey Settings."]
     },
     "date": "2025-03-28",
