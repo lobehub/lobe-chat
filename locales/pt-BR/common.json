@@ -183,7 +183,7 @@
   },
   "fullscreen": "Modo de Tela Cheia",
   "historyRange": "Intervalo de histórico",
-  "import": "Importar configuração",
+  "importData": "Importar dados",
   "importModal": {
     "error": {
       "desc": "Desculpe, ocorreu um erro durante o processo de importação de dados. Por favor, tente importar novamente ou <1>envie um problema</1>, e nós iremos ajudá-lo a resolver o problema o mais rápido possível.",

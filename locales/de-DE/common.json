@@ -183,7 +183,7 @@
   },
   "fullscreen": "Vollbildmodus",
   "historyRange": "Verlaufsbereich",
-  "import": "Importieren",
+  "importData": "Daten importieren",
   "importModal": {
     "error": {
       "desc": "Es tut uns sehr leid, aber beim Importieren der Daten ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder <1>senden Sie uns eine Anfrage</1>, damit wir das Problem umgehend für Sie lösen können.",

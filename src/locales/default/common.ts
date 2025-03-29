@@ -186,7 +186,7 @@ export default {
   },
   fullscreen: '全屏模式',
   historyRange: '历史范围',
-  import: '导入配置',
+  importData: '导入数据',
   importModal: {
     error: {
       desc: '非常抱歉，数据导入过程发生异常。请尝试重新导入，或 <1>提交问题</1>，我们将会第一时间帮你排查问题。',
@@ -225,7 +225,7 @@ export default {
       name: '表名',
     },
     title: '导入数据预览',
-    totalRecords:"总计将导入 {{count}} 条记录",
+    totalRecords: '总计将导入 {{count}} 条记录',
     totalTables: '{{count}} 个表',
   },
   information: '社区与资讯',
