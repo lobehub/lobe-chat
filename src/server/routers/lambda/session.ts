@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
+import { SessionModel } from '@/database/models/session';
+import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
 import { serverDB } from '@/database/server';
-import { SessionModel } from '@/database/server/models/session';
-import { SessionGroupModel } from '@/database/server/models/sessionGroup';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { AgentChatConfigSchema } from '@/types/agent';
 import { LobeMetaDataSchema } from '@/types/meta';

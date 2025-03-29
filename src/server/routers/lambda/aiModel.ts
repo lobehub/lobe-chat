@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
+import { AiModelModel } from '@/database/models/aiModel';
+import { UserModel } from '@/database/models/user';
 import { AiInfraRepos } from '@/database/repositories/aiInfra';
 import { serverDB } from '@/database/server';
-import { AiModelModel } from '@/database/server/models/aiModel';
-import { UserModel } from '@/database/server/models/user';
 import { authedProcedure, router } from '@/libs/trpc';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';

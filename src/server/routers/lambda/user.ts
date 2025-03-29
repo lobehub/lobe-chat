@@ -2,10 +2,10 @@ import { UserJSON } from '@clerk/backend';
 import { z } from 'zod';
 
 import { enableClerk } from '@/const/auth';
+import { MessageModel } from '@/database/models/message';
+import { SessionModel } from '@/database/models/session';
+import { UserModel, UserNotFoundError } from '@/database/models/user';
 import { serverDB } from '@/database/server';
-import { MessageModel } from '@/database/server/models/message';
-import { SessionModel } from '@/database/server/models/session';
-import { UserModel, UserNotFoundError } from '@/database/server/models/user';
 import { ClerkAuth } from '@/libs/clerk-auth';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 import { authedProcedure, router } from '@/libs/trpc';

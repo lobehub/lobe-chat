@@ -40,7 +40,7 @@ import {
   messageTranslates,
   messages,
   messagesFiles,
-} from '../../schemas';
+} from '../schemas';
 
 export interface QueryMessageParams {
   current?: number;

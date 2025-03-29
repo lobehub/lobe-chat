@@ -6,8 +6,8 @@ import pMap from 'p-map';
 import { z } from 'zod';
 
 import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
+import { FileModel } from '@/database/models/file';
 import { serverDB } from '@/database/server';
-import { FileModel } from '@/database/server/models/file';
 import {
   EvalDatasetModel,
   EvalDatasetRecordModel,

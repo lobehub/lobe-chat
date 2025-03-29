@@ -9,9 +9,9 @@ import { LobeChatDatabase } from '@/database/type';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserGuide, UserPreference } from '@/types/user';
 
+import { SessionModel } from '../../../models/session';
+import { UserModel, UserNotFoundError } from '../../../models/user';
 import { UserSettingsItem, userSettings, users } from '../../../schemas';
-import { SessionModel } from '../session';
-import { UserModel, UserNotFoundError } from '../user';
 
 let serverDB = await getTestDBInstance();
 

@@ -12,7 +12,7 @@ import { idGenerator } from '@/database/utils/idGenerator';
 import { MessageItem } from '@/types/message';
 import { TopicRankItem } from '@/types/topic';
 
-import { TopicItem, messages, topics } from '../../schemas';
+import { TopicItem, messages, topics } from '../schemas';
 
 export interface CreateTopicParams {
   favorite?: boolean;

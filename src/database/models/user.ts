@@ -17,7 +17,7 @@ import {
   nextauthAccounts,
   userSettings,
   users,
-} from '../../schemas';
+} from '../schemas';
 
 type DecryptUserKeyVaults = (
   encryptKeyVaultsStr: string | null,
