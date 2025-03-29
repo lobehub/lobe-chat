@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix export button and clean orphan agent."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.1"
+  },
+  {
+    "children": {
       "features": ["Support pglite and postgres data export."]
     },
     "date": "2025-03-29",
