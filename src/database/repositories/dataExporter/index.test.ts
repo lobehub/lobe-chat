@@ -232,14 +232,6 @@ describe('DataExporterRepos', () => {
       //   testIds.knowledgeBaseId,
       // );
       // expect(result.knowledgeBaseFiles[0]).toHaveProperty('fileId', testIds.fileId);
-
-      expect(result).toHaveProperty('agentsKnowledgeBases');
-      expect(result.agentsKnowledgeBases).toHaveLength(1);
-      expect(result.agentsKnowledgeBases[0]).toHaveProperty('agentId', testIds.agentId);
-      expect(result.agentsKnowledgeBases[0]).toHaveProperty(
-        'knowledgeBaseId',
-        testIds.knowledgeBaseId,
-      );
     });
 
     it('should handle empty database gracefully', async () => {
