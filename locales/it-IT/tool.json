@@ -19,8 +19,28 @@
       "placeholder": "Parole chiave",
       "tooltip": "Ricaricherà i risultati di ricerca e creerà un nuovo messaggio di sintesi"
     },
-    "searchEngine": "Motore di ricerca:",
+    "searchCategory": {
+      "placeholder": "Cerca categoria",
+      "title": "Categoria di ricerca:",
+      "value": {
+        "files": "File",
+        "general": "Generale",
+        "images": "Immagini",
+        "it": "Tecnologia dell'informazione",
+        "map": "Mappa",
+        "music": "Musica",
+        "news": "Notizie",
+        "science": "Scienza",
+        "social_media": "Social media",
+        "videos": "Video"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Motore di ricerca",
+      "title": "Motore di ricerca:"
+    },
     "searchResult": "Numero di ricerche:",
+    "searchTimeRange": "Intervallo di tempo:",
     "summary": "Riepilogo",
     "summaryTooltip": "Riepiloga il contenuto attuale",
     "viewMoreResults": "Visualizza altri {{results}} risultati"
