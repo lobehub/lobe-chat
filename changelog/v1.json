@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Move general db models to database folder."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix decrypt error with imported pg data."]
     },
     "date": "2025-03-29",
