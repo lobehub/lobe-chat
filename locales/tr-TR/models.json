@@ -1082,6 +1082,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini gerçek zamanlı versiyonu, ses ve metin için gerçek zamanlı giriş ve çıkış desteği sunar."
   },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS, GPT-4o mini'ye dayalı bir metin-ses modeldir ve yüksek kaliteli ses üretimi, düşük maliyetli oluşturma sunar."
+  },
   "gpt-4o-realtime-preview": {
     "description": "GPT-4o gerçek zamanlı versiyonu, ses ve metin için gerçek zamanlı giriş ve çıkış desteği sunar."
   },

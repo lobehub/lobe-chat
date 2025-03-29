@@ -1082,6 +1082,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini 실시간 버전으로, 오디오 및 텍스트의 실시간 입력 및 출력을 지원합니다."
   },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS 는 GPT-4o mini 에 기반한 텍스트 음성 변환 모델로, 높은 품질의 음성 생성을 저렴한 가격으로 제공합니다."
+  },
   "gpt-4o-realtime-preview": {
     "description": "GPT-4o 실시간 버전으로, 오디오 및 텍스트의 실시간 입력 및 출력을 지원합니다."
   },

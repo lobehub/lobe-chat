@@ -1082,6 +1082,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "نسخه زنده GPT-4o-mini، پشتیبانی از ورودی و خروجی صوتی و متنی به صورت زنده."
   },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS یک مدل تبدیل متن به گفتار است که بر اساس GPT-4o mini ساخته شده است و با قیمت پایین تری از GPT-4o mini ارائه می‌دهد."
+  },
   "gpt-4o-realtime-preview": {
     "description": "نسخه زنده GPT-4o، پشتیبانی از ورودی و خروجی صوتی و متنی به صورت زنده."
   },

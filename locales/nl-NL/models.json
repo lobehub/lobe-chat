@@ -1082,6 +1082,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini realtime versie, ondersteunt audio en tekst realtime invoer en uitvoer."
   },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS is een tekst-naar-spraak model dat is gebaseerd op GPT-4o mini, en biedt hoge kwaliteit spraakgeneratie tegen een lagere prijs."
+  },
   "gpt-4o-realtime-preview": {
     "description": "GPT-4o realtime versie, ondersteunt audio en tekst realtime invoer en uitvoer."
   },

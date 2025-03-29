@@ -1082,6 +1082,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini 實時版本，支持音頻和文本實時輸入輸出"
   },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS 是基於 GPT-4o mini 的文本轉語音模型，提供高品質的語音生成，同時降低成本。"
+  },
   "gpt-4o-realtime-preview": {
     "description": "GPT-4o 實時版本，支持音頻和文本實時輸入輸出"
   },

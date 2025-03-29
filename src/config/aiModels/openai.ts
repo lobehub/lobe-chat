@@ -480,6 +480,16 @@ export const openaiTTSModels: AITTSModelCard[] = [
     },
     type: 'tts',
   },
+  {
+    description:
+      'GPT-4o mini TTS 是一个基于 GPT-4o mini 构建的文本转语音模型，这是一种快速且强大的语言模型。使用它可以将文本转换为自然听起来的语音文本。最大输入标记数为 2000。',
+    displayName: 'GPT-4o Mini TTS',
+    id: 'gpt-4o-mini-tts',
+    pricing: {
+      input: 10,
+    },
+    type: 'tts',
+  },
 ];
 
 // 语音识别模型
