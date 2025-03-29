@@ -244,6 +244,7 @@
       "folderUpload": "上传文件夹",
       "imageDisabled": "当前模型不支持视觉识别，请切换模型后使用",
       "imageUpload": "上传图片",
+      "fileDisabled": "当前模型不支持文件上传，请切换模型后使用",
       "tooltip": "上传"
     },
     "clientMode": {

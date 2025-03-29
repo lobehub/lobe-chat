@@ -244,7 +244,8 @@
       "folderUpload": "Tải lên thư mục",
       "imageDisabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình để sử dụng",
       "imageUpload": "Tải lên hình ảnh",
-      "tooltip": "Tải lên"
+      "tooltip": "Tải lên",
+      "fileDisabled": "Mô hình hiện tại không hỗ trợ tải lên tệp, vui lòng chuyển đổi mô hình để sử dụng"
     },
     "clientMode": {
       "actionFiletip": "Tải lên tệp",

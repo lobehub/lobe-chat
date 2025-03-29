@@ -13,3 +13,9 @@ export const useModelSupportVision = (model: string, provider: string) => {
 
   return newValue;
 };
+
+export const useModelSupportFile = (model: string, provider: string) => {
+  const newValue = useAiInfraStore(aiModelSelectors.isModelSupportFile(model, provider));
+
+  return newValue;
+};

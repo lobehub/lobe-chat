@@ -244,6 +244,7 @@
       "folderUpload": "Map uploaden",
       "imageDisabled": "Dit model ondersteunt momenteel geen visuele herkenning, schakel alstublieft naar een ander model.",
       "imageUpload": "Afbeelding uploaden",
+      "fileDisabled": "Dit model ondersteunt momenteel geen bestandsupload, schakel alstublieft naar een ander model.",
       "tooltip": "Uploaden"
     },
     "clientMode": {
