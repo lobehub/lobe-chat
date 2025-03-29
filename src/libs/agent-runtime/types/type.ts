@@ -44,6 +44,7 @@ export enum ModelProvider {
   Higress = 'higress',
   HuggingFace = 'huggingface',
   Hunyuan = 'hunyuan',
+  InfiniAI = 'infiniai',
   InternLM = 'internlm',
   Jina = 'jina',
   LMStudio = 'lmstudio',
@@ -59,6 +60,7 @@ export enum ModelProvider {
   Perplexity = 'perplexity',
   Qwen = 'qwen',
   SambaNova = 'sambanova',
+  Search1API = 'search1api',
   SenseNova = 'sensenova',
   SiliconCloud = 'siliconcloud',
   Spark = 'spark',
@@ -72,6 +74,7 @@ export enum ModelProvider {
   Volcengine = 'volcengine',
   Wenxin = 'wenxin',
   XAI = 'xai',
+  Xinference = 'xinference',
   ZeroOne = 'zeroone',
   ZhiPu = 'zhipu',
 }

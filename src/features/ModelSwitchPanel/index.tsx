@@ -15,6 +15,7 @@ import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
@@ -49,6 +50,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
     s.updateAgentConfig,
   ]);
 
+  const { showLLM } = useServerConfigStore(featureFlagsSelectors);
   const isMobile = useIsMobile();
 
   const router = useRouter();
@@ -115,13 +117,17 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
             provider={provider.id}
             source={provider.source}
           />
-          <Link href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}>
-            <ActionIcon
-              icon={LucideBolt}
-              size={'small'}
-              title={t('ModelSwitchPanel.goToSettings')}
-            />
-          </Link>
+          {showLLM && (
+            <Link
+              href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}
+            >
+              <ActionIcon
+                icon={LucideBolt}
+                size={'small'}
+                title={t('ModelSwitchPanel.goToSettings')}
+              />
+            </Link>
+          )}
         </Flexbox>
       ),
       type: 'group',

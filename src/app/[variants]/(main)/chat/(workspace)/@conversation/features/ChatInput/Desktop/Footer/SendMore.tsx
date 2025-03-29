@@ -1,18 +1,16 @@
-import { Icon } from '@lobehub/ui';
+import { Hotkey, Icon } from '@lobehub/ui';
 import { Button, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { BotMessageSquare, LucideCheck, LucideChevronDown, MessageSquarePlus } from 'lucide-react';
 import { memo } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import HotKeys from '@/components/HotKeys';
-import { ALT_KEY } from '@/const/hotkeys';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
-import { preferenceSelectors } from '@/store/user/selectors';
+import { preferenceSelectors, settingsSelectors } from '@/store/user/selectors';
+import { HotkeyEnum } from '@/types/hotkey';
 
 const useStyles = createStyles(({ css, prefixCls }) => {
   return {
@@ -31,7 +29,7 @@ interface SendMoreProps {
 
 const SendMore = memo<SendMoreProps>(({ disabled, isMac }) => {
   const { t } = useTranslation('chat');
-
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.AddUserMessage));
   const { styles } = useStyles();
 
   const [useCmdEnterToSend, updatePreference] = useUserStore((s) => [
@@ -41,19 +39,6 @@ const SendMore = memo<SendMoreProps>(({ disabled, isMac }) => {
   const addAIMessage = useChatStore((s) => s.addAIMessage);
 
   const { send: sendMessage } = useSendMessage();
-
-  const hotKey = [ALT_KEY, 'enter'].join('+');
-  useHotkeys(
-    hotKey,
-    (keyboardEvent, hotkeysEvent) => {
-      console.log(keyboardEvent, hotkeysEvent);
-      sendMessage({ onlyAddUserMessage: true });
-    },
-    {
-      enableOnFormTags: true,
-      preventDefault: true,
-    },
-  );
 
   return (
     <Dropdown
@@ -91,9 +76,9 @@ const SendMore = memo<SendMoreProps>(({ disabled, isMac }) => {
             icon: <Icon icon={MessageSquarePlus} />,
             key: 'addUser',
             label: (
-              <Flexbox gap={24} horizontal>
+              <Flexbox align={'center'} gap={24} horizontal>
                 {t('input.addUser')}
-                <HotKeys keys={hotKey} />
+                <Hotkey keys={hotkey} />
               </Flexbox>
             ),
             onClick: () => {

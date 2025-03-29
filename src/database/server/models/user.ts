@@ -67,6 +67,7 @@ export class UserModel {
 
         settingsDefaultAgent: userSettings.defaultAgent,
         settingsGeneral: userSettings.general,
+        settingsHotkey: userSettings.hotkey,
         settingsKeyVaults: userSettings.keyVaults,
         settingsLanguageModel: userSettings.languageModel,
         settingsSystemAgent: userSettings.systemAgent,
@@ -89,6 +90,7 @@ export class UserModel {
     const settings: DeepPartial<UserSettings> = {
       defaultAgent: state.settingsDefaultAgent || {},
       general: state.settingsGeneral || {},
+      hotkey: state.settingsHotkey || {},
       keyVaults: decryptKeyVaults,
       languageModel: state.settingsLanguageModel || {},
       systemAgent: state.settingsSystemAgent || {},

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import Cell, { CellProps } from '@/components/Cell';
 import DataImporter from '@/features/DataImporter';
-import { configService } from '@/services/config';
+import { configService } from '@/services/export/_deprecated';
 
 const Category = memo(() => {
   const { t } = useTranslation('common');
@@ -42,7 +42,7 @@ const Category = memo(() => {
     },
   ];
 
-  return items?.map((item, index) => <Cell key={item.key || index} {...item} />);
+  return items?.map(({ key, ...item }, index) => <Cell key={key || index} {...item} />);
 });
 
 export default Category;
