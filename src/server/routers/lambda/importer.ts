@@ -5,6 +5,7 @@ import { DataImporterRepos } from '@/database/repositories/dataImporter';
 import { serverDB } from '@/database/server';
 import { authedProcedure, router } from '@/libs/trpc';
 import { S3 } from '@/server/modules/S3';
+import { ImportPgDataStructure } from '@/types/export';
 import { ImportResultData, ImporterEntryData } from '@/types/importer';
 
 const importProcedure = authedProcedure.use(async (opts) => {
@@ -35,6 +36,10 @@ export const importerRouter = router({
           code: 'BAD_REQUEST',
           message: `Failed to read file at ${input.pathname}`,
         });
+      }
+
+      if ('schemaHash' in data) {
+        return ctx.dataImporterService.importPgData(data as unknown as ImportPgDataStructure);
       }
 
       return ctx.dataImporterService.importData(data);
