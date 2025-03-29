@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",
+    "electron-is": "^3.0.0",
     "electron-updater": "^6.3.9",
     "get-port-please": "^3.1.2",
     "next-electron-rsc": "^0.2.3"
@@ -30,7 +31,7 @@
     "@electron-toolkit/eslint-config-ts": "^3.0.0",
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/tsconfig": "^1.0.1",
-    "electron": "^34.2.0",
+    "electron": "35.1.1",
     "electron-builder": "^25.1.8",
     "electron-vite": "^3.0.0",
     "typescript": "^5.7.3",

@@ -1,9 +1,7 @@
 import { BrowserWindow, app, protocol, shell } from 'electron';
-// import defaultMenu from 'electron-default-menu';
+import { macOS } from 'electron-is';
 import { createHandler } from 'next-electron-rsc';
 import path, { join } from 'node:path';
-
-// import {lambdaRouter} from "@lobechat/web/server/routers/lambda";
 
 const isDev = process.env.NODE_ENV === 'development';
 const appPath = app.getAppPath();
@@ -16,19 +14,13 @@ const standaloneDir = isDev
   ? path.join(process.cwd(), '../..')
   : path.join(appPath, 'dist', 'next');
 
-const { createInterceptor } = createHandler({
-  debug: true,
-  localhostUrl,
-  protocol,
-  standaloneDir,
-});
-
 // Next.js handler
 const createWindow = async () => {
   mainWindow = new BrowserWindow({
     autoHideMenuBar: true,
     height: 800,
     titleBarStyle: 'hidden',
+
     webPreferences: {
       contextIsolation: true, // protect against prototype pollution
       preload: join(__dirname, '../preload/index.js'),
@@ -38,6 +30,13 @@ const createWindow = async () => {
 
   // Next.js handler
   if (!isDev) {
+    const { createInterceptor } = createHandler({
+      debug: true,
+      localhostUrl,
+      protocol,
+      standaloneDir,
+    });
+
     console.log(
       `[APP] Server Debugging Enabled, ${localhostUrl} will be intercepted to ${standaloneDir}`,
     );
@@ -69,3 +68,10 @@ app.on(
   'activate',
   () => BrowserWindow.getAllWindows().length === 0 && !mainWindow && createWindow(),
 );
+
+if (isDev) {
+  app.setName('LobeHub Dev');
+  if (macOS()) {
+    app.dock.setIcon(path.join(__dirname, '../../resources/icon-dev.png'));
+  }
+}
