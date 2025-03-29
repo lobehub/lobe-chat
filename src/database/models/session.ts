@@ -27,7 +27,7 @@ import {
   sessionGroups,
   sessions,
   topics,
-} from '../../schemas';
+} from '../schemas';
 
 export class SessionModel {
   private userId: string;

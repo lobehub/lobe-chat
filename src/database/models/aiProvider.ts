@@ -13,7 +13,7 @@ import {
 } from '@/types/aiProvider';
 import { merge } from '@/utils/merge';
 
-import { AiProviderSelectItem, aiModels, aiProviders } from '../../schemas';
+import { AiProviderSelectItem, aiModels, aiProviders } from '../schemas';
 
 type DecryptUserKeyVaults = (encryptKeyVaultsStr: string | null) => Promise<any>;
 

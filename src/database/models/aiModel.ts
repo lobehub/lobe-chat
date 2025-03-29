@@ -9,7 +9,7 @@ import {
   ToggleAiModelEnableParams,
 } from '@/types/aiModel';
 
-import { AiModelSelectItem, NewAiModelItem, aiModels } from '../../schemas';
+import { AiModelSelectItem, NewAiModelItem, aiModels } from '../schemas';
 
 export class AiModelModel {
   private userId: string;

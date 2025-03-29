@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
+import { MessageModel } from '@/database/models/message';
 import { updateMessagePluginSchema } from '@/database/schemas';
 import { serverDB } from '@/database/server';
-import { MessageModel } from '@/database/server/models/message';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { getFullFileUrl } from '@/server/utils/files';
 import { ChatMessage } from '@/types/message';

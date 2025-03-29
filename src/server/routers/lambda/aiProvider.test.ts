@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { AiProviderModel } from '@/database/models/aiProvider';
+import { UserModel } from '@/database/models/user';
 import { AiInfraRepos } from '@/database/repositories/aiInfra';
 import { serverDB } from '@/database/server';
-import { AiProviderModel } from '@/database/server/models/aiProvider';
-import { UserModel } from '@/database/server/models/user';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { AiProviderDetailItem, AiProviderRuntimeState } from '@/types/aiProvider';
@@ -13,8 +13,8 @@ import { aiProviderRouter } from './aiProvider';
 vi.mock('@/server/globalConfig');
 vi.mock('@/server/modules/KeyVaultsEncrypt');
 vi.mock('@/database/repositories/aiInfra');
-vi.mock('@/database/server/models/aiProvider');
-vi.mock('@/database/server/models/user');
+vi.mock('@/database/models/aiProvider');
+vi.mock('@/database/models/user');
 
 describe('aiProviderRouter', () => {
   const mockUserId = 'test-user-id';

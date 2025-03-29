@@ -6,7 +6,7 @@ import { LobeChatDatabase } from '@/database/type';
 import { ModelProvider } from '@/libs/agent-runtime';
 
 import { aiProviders, users } from '../../schemas';
-import { AiProviderModel } from '../../server/models/aiProvider';
+import { AiProviderModel } from '../aiProvider';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

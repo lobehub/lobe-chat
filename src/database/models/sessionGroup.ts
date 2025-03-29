@@ -3,7 +3,7 @@ import { and, asc, desc, eq } from 'drizzle-orm/expressions';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
-import { SessionGroupItem, sessionGroups } from '../../schemas';
+import { SessionGroupItem, sessionGroups } from '../schemas';
 
 export class SessionGroupModel {
   private userId: string;

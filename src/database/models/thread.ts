@@ -3,7 +3,7 @@ import { and, desc, eq } from 'drizzle-orm/expressions';
 import { LobeChatDatabase } from '@/database/type';
 import { CreateThreadParams, ThreadStatus } from '@/types/topic';
 
-import { ThreadItem, threads } from '../../schemas';
+import { ThreadItem, threads } from '../schemas';
 
 const queryColumns = {
   createdAt: threads.createdAt,

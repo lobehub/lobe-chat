@@ -3,7 +3,7 @@ import { and, desc, eq, inArray } from 'drizzle-orm/expressions';
 import { LobeChatDatabase } from '@/database/type';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 
-import { NewKnowledgeBase, knowledgeBaseFiles, knowledgeBases } from '../../schemas';
+import { NewKnowledgeBase, knowledgeBaseFiles, knowledgeBases } from '../schemas';
 
 export class KnowledgeBaseModel {
   private userId: string;

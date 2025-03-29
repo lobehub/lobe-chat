@@ -15,7 +15,7 @@ import {
   files,
   globalFiles,
   knowledgeBaseFiles,
-} from '../../schemas';
+} from '../schemas';
 
 export class FileModel {
   private readonly userId: string;

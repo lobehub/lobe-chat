@@ -23,7 +23,7 @@ import {
   topics,
   users,
 } from '../../schemas';
-import { MessageModel } from '../../server/models/message';
+import { MessageModel } from '../message';
 import { codeEmbedding } from './fixtures/embedding';
 
 const serverDB: LobeChatDatabase = await getTestDB();
