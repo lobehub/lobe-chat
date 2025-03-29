@@ -1,7 +1,7 @@
 'use client';
 
 import { useClerk, useUser } from '@clerk/nextjs';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { useUserStore } from '@/store/user';
@@ -15,35 +15,25 @@ const UserUpdater = memo(() => {
 
   const useStoreUpdater = createStoreUpdater(useUserStore);
 
+  const lobeUser = {
+    avatar: user?.imageUrl,
+    firstName: user?.firstName,
+    fullName: user?.fullName,
+    id: user?.id,
+    latestName: user?.lastName,
+    username: user?.username,
+  } as LobeUser;
+
   useStoreUpdater('isLoaded', isLoaded);
+  useStoreUpdater('user', lobeUser);
   useStoreUpdater('isSignedIn', isSignedIn);
+
+  useStoreUpdater('clerkUser', user);
   useStoreUpdater('clerkSession', session);
   useStoreUpdater('clerkSignIn', openSignIn);
   useStoreUpdater('clerkOpenUserProfile', openUserProfile);
   useStoreUpdater('clerkSignOut', signOut);
 
-  // 使用 useEffect 处理需要保持同步的用户数据
-  useEffect(() => {
-    if (user) {
-      const userAvatar = useUserStore.getState().user?.avatar;
-
-      const lobeUser = {
-        // 头像使用设置的
-        avatar: userAvatar || '',
-        firstName: user.firstName,
-        fullName: user.fullName,
-        id: user.id,
-        latestName: user.lastName,
-        username: user.username,
-      } as LobeUser;
-
-      // 更新用户相关数据
-      useUserStore.setState({
-        clerkUser: user,
-        user: lobeUser,
-      });
-    }
-  }, [user]);
   return null;
 });
 
