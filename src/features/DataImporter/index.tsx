@@ -9,11 +9,12 @@ import { Center } from 'react-layout-kit';
 
 import DataStyleModal from '@/components/DataStyleModal';
 import { importService } from '@/services/import';
-import { ClientService, ImportResult, ImportResults } from '@/services/import/_deprecated';
+import { ImportResult, ImportResults } from '@/services/import/_deprecated';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { ImportPgDataStructure } from '@/types/export';
-import { ErrorShape, FileUploadState, ImportStage } from '@/types/importer';
+import { ConfigFile } from '@/types/exportConfig';
+import { ErrorShape, FileUploadState, ImportStage, OnImportCallbacks } from '@/types/importer';
 
 import ImportError from './Error';
 import { FileUploading } from './FileUploading';
@@ -161,10 +162,35 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
             // TODO: remove in V2
             await importConfigFile(file, async (config) => {
               setImportState(ImportStage.Preparing);
+              console.log(config);
 
-              const configService = new ClientService();
+              const importConfigState = async (
+                config: ConfigFile,
+                callbacks?: OnImportCallbacks,
+              ): Promise<void> => {
+                if (config.exportType === 'settings') {
+                  await importService.importSettings(config.state.settings);
+                  callbacks?.onStageChange?.(ImportStage.Success);
+                  return;
+                }
 
-              await configService.importConfigState(config, {
+                if (config.exportType === 'all') {
+                  await importService.importSettings(config.state.settings);
+                }
+
+                await importService.importData(
+                  {
+                    messages: (config.state as any).messages || [],
+                    sessionGroups: (config.state as any).sessionGroups || [],
+                    sessions: (config.state as any).sessions || [],
+                    topics: (config.state as any).topics || [],
+                    version: config.version,
+                  },
+                  callbacks,
+                );
+              };
+
+              await importConfigState(config, {
                 onError: (error) => {
                   setImportError(error);
                 },
