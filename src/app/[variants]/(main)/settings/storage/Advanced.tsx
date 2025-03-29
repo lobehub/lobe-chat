@@ -1,9 +1,9 @@
 'use client';
 
 import { Form, Icon, type ItemGroup } from '@lobehub/ui';
-import { App, Button, Dropdown, Space } from 'antd';
+import { App, Button } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { ChevronDown, HardDriveDownload, HardDriveUpload } from 'lucide-react';
+import { HardDriveDownload, HardDriveUpload } from 'lucide-react';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -68,39 +68,14 @@ const AdvancedActions = () => {
       },
       {
         children: (
-          <Space.Compact>
-            <Button
-              icon={<Icon icon={HardDriveUpload} />}
-              onClick={() => {
-                configService.exportAll();
-              }}
-            >
-              {t('storage.actions.export.button')}
-            </Button>
-            <Dropdown
-              menu={{
-                items: [
-                  {
-                    key: 'allAgent',
-                    label: t('storage.actions.export.exportType.allAgent'),
-                    onClick: configService.exportAgents,
-                  },
-                  {
-                    key: 'allAgentWithMessage',
-                    label: t('storage.actions.export.exportType.allAgentWithMessage'),
-                    onClick: configService.exportSessions,
-                  },
-                  {
-                    key: 'globalSetting',
-                    label: t('storage.actions.export.exportType.globalSetting'),
-                    onClick: configService.exportSettings,
-                  },
-                ],
-              }}
-            >
-              <Button icon={<Icon icon={ChevronDown} />} />
-            </Dropdown>
-          </Space.Compact>
+          <Button
+            icon={<Icon icon={HardDriveUpload} />}
+            onClick={() => {
+              configService.exportAll();
+            }}
+          >
+            {t('storage.actions.export.button')}
+          </Button>
         ),
         label: t('storage.actions.export.title'),
         minWidth: undefined,

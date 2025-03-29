@@ -1083,7 +1083,7 @@
     "description": "GPT-4o-mini 实时版本，支持音频和文本实时输入输出"
   },
   "gpt-4o-mini-tts": {
-    "description": "GPT-4o mini TTS 是基于 GPT-4o mini 的文本转语音模型，提供高品质的语音生成，同时降低成本。"
+    "description": "GPT-4o mini TTS 是一个基于 GPT-4o mini 构建的文本转语音模型，这是一种快速且强大的语言模型。使用它可以将文本转换为自然听起来的语音文本。最大输入标记数为 2000。"
   },
   "gpt-4o-realtime-preview": {
     "description": "GPT-4o 实时版本，支持音频和文本实时输入输出"

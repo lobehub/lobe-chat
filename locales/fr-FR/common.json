@@ -183,7 +183,7 @@
   },
   "fullscreen": "Mode plein écran",
   "historyRange": "Plage d'historique",
-  "import": "Importer",
+  "importData": "Importer des données",
   "importModal": {
     "error": {
       "desc": "Désolé, une erreur s'est produite lors de l'importation des données. Veuillez réessayer l'importation ou <1> soumettre un problème </1>, nous vous aiderons à résoudre le problème dès que possible.",

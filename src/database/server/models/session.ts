@@ -279,26 +279,102 @@ export class SessionModel {
   // **************** Delete *************** //
 
   /**
-   * Delete a session, also delete all messages and topics associated with it.
+   * Delete a session and its associated agent data if no longer referenced.
    */
   delete = async (id: string) => {
-    return this.db
-      .delete(sessions)
-      .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)));
+    return this.db.transaction(async (trx) => {
+      // First get the agent IDs associated with this session
+      const links = await trx
+        .select({ agentId: agentsToSessions.agentId })
+        .from(agentsToSessions)
+        .where(and(eq(agentsToSessions.sessionId, id), eq(agentsToSessions.userId, this.userId)));
+
+      const agentIds = links.map((link) => link.agentId);
+
+      // Delete links in agentsToSessions
+      await trx
+        .delete(agentsToSessions)
+        .where(and(eq(agentsToSessions.sessionId, id), eq(agentsToSessions.userId, this.userId)));
+
+      // Delete the session
+      const result = await trx
+        .delete(sessions)
+        .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)));
+
+      // Delete orphaned agents
+      await this.clearOrphanAgent(agentIds, trx);
+
+      return result;
+    });
   };
 
   /**
-   * Batch delete sessions, also delete all messages and topics associated with them.
+   * Batch delete sessions and their associated agent data if no longer referenced.
    */
   batchDelete = async (ids: string[]) => {
-    return this.db
-      .delete(sessions)
-      .where(and(inArray(sessions.id, ids), eq(sessions.userId, this.userId)));
+    if (ids.length === 0) return { count: 0 };
+
+    return this.db.transaction(async (trx) => {
+      // Get agent IDs associated with these sessions
+      const links = await trx
+        .select({ agentId: agentsToSessions.agentId })
+        .from(agentsToSessions)
+        .where(
+          and(inArray(agentsToSessions.sessionId, ids), eq(agentsToSessions.userId, this.userId)),
+        );
+
+      const agentIds = [...new Set(links.map((link) => link.agentId))];
+
+      // Delete links in agentsToSessions
+      await trx
+        .delete(agentsToSessions)
+        .where(
+          and(inArray(agentsToSessions.sessionId, ids), eq(agentsToSessions.userId, this.userId)),
+        );
+
+      // Delete the sessions
+      const result = await trx
+        .delete(sessions)
+        .where(and(inArray(sessions.id, ids), eq(sessions.userId, this.userId)));
+
+      // Delete orphaned agents
+      await this.clearOrphanAgent(agentIds, trx);
+
+      return result;
+    });
   };
 
+  /**
+   * Delete all sessions and their associated agent data for this user.
+   */
   deleteAll = async () => {
-    return this.db.delete(sessions).where(eq(sessions.userId, this.userId));
+    return this.db.transaction(async (trx) => {
+      // Delete all agentsToSessions for this user
+      await trx.delete(agentsToSessions).where(eq(agentsToSessions.userId, this.userId));
+
+      // Delete all agents that were only used by this user's sessions
+      await trx.delete(agents).where(eq(agents.userId, this.userId));
+
+      // Delete all sessions for this user
+      return trx.delete(sessions).where(eq(sessions.userId, this.userId));
+    });
   };
+
+  clearOrphanAgent = async (agentIds: string[], trx: any) => {
+    // Delete orphaned agents (those not linked to any other sessions)
+    for (const agentId of agentIds) {
+      const remaining = await trx
+        .select()
+        .from(agentsToSessions)
+        .where(eq(agentsToSessions.agentId, agentId))
+        .limit(1);
+
+      if (remaining.length === 0) {
+        await trx.delete(agents).where(and(eq(agents.id, agentId), eq(agents.userId, this.userId)));
+      }
+    }
+  };
+
   // **************** Update *************** //
 
   update = async (id: string, data: Partial<SessionItem>) => {

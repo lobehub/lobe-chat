@@ -183,7 +183,7 @@
   },
   "fullscreen": "Chế độ toàn màn hình",
   "historyRange": "Phạm vi lịch sử",
-  "import": "Nhập cấu hình",
+  "importData": "Nhập dữ liệu",
   "importModal": {
     "error": {
       "desc": "Xin lỗi vì quá trình nhập dữ liệu gặp sự cố. Vui lòng thử nhập lại hoặc <1>gửi vấn đề</1>, chúng tôi sẽ kiểm tra vấn đề ngay lập tức.",

@@ -183,7 +183,7 @@
   },
   "fullscreen": "Tam Ekran Modu",
   "historyRange": "Geçmiş Aralığı",
-  "import": "İçe Aktar",
+  "importData": "Veri İçe Aktar",
   "importModal": {
     "error": {
       "desc": "Üzgünüz, veri aktarımı sırasında bir hata oluştu. Lütfen tekrar deneyin veya <1>bir sorun bildirin</1>, sorunu çözmek için elimizden geleni yapacağız.",

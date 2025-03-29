@@ -183,7 +183,7 @@
   },
   "fullscreen": "Modalità a schermo intero",
   "historyRange": "Intervallo cronologico",
-  "import": "Importa configurazione",
+  "importData": "Importa dati",
   "importModal": {
     "error": {
       "desc": "Ci dispiace molto, si è verificato un errore durante il processo di importazione dei dati. Si prega di provare a importare nuovamente, o <1>invia un problema</1>, saremo pronti ad aiutarti a risolvere il problema al più presto.",

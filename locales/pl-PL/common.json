@@ -183,7 +183,7 @@
   },
   "fullscreen": "Tryb pełnoekranowy",
   "historyRange": "Zakres historii",
-  "import": "Importuj ustawienia",
+  "importData": "Importuj dane",
   "importModal": {
     "error": {
       "desc": "Przepraszamy, wystąpił błąd podczas importowania danych. Spróbuj ponownie zaimportować, lub <1>zgłoś problem</1>, a my postaramy się jak najszybciej rozwiązać problem.",
