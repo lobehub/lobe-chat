@@ -183,7 +183,7 @@
   },
   "fullscreen": "Vollbildmodus",
   "historyRange": "Verlaufsbereich",
-  "import": "Importieren",
+  "importData": "Daten importieren",
   "importModal": {
     "error": {
       "desc": "Es tut uns sehr leid, aber beim Importieren der Daten ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder <1>senden Sie uns eine Anfrage</1>, damit wir das Problem umgehend für Sie lösen können.",
@@ -205,7 +205,8 @@
       "sessions": "Assistenten",
       "skips": "Übersprungen (doppelt)",
       "topics": "Themen",
-      "type": "Datentyp"
+      "type": "Datentyp",
+      "update": "Datensatz aktualisiert"
     },
     "title": "Daten importieren",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "Verbleibende Zeit",
       "speed": "Upload-Geschwindigkeit"
     }
+  },
+  "importPreview": {
+    "confirmImport": "Import bestätigen",
+    "tables": {
+      "count": "Anzahl der Datensätze",
+      "name": "Tabellenname"
+    },
+    "title": "Datenimportvorschau",
+    "totalRecords": "Insgesamt werden {{count}} Datensätze importiert",
+    "totalTables": "{{count}} Tabellen"
   },
   "information": "Community und Informationen",
   "installPWA": "Installiere die Browser-App",

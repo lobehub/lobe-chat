@@ -16,6 +16,16 @@
     "detail": "Chi tiết lỗi",
     "title": "Yêu cầu thất bại"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Lý do lỗi: {{reason}}",
+      "title": "Nhập khẩu thất bại"
+    },
+    "incompatible": {
+      "description": "Tệp này được xuất từ phiên bản cao hơn, vui lòng thử nâng cấp lên phiên bản mới nhất trước khi nhập lại",
+      "title": "Ứng dụng hiện tại không hỗ trợ nhập tệp này"
+    }
+  },
   "loginRequired": {
     "desc": "Sẽ tự động chuyển hướng đến trang đăng nhập",
     "title": "Vui lòng đăng nhập để sử dụng tính năng này"

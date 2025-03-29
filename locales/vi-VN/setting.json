@@ -346,6 +346,33 @@
     },
     "title": "Cài đặt chủ đề"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Xuất",
+        "exportType": {
+          "agent": "Xuất cài đặt trợ lý",
+          "agentWithMessage": "Xuất trợ lý và tin nhắn",
+          "all": "Xuất cài đặt toàn cầu và tất cả dữ liệu trợ lý",
+          "allAgent": "Xuất tất cả cài đặt trợ lý",
+          "allAgentWithMessage": "Xuất tất cả trợ lý và tin nhắn",
+          "globalSetting": "Xuất cài đặt toàn cầu"
+        },
+        "title": "Xuất dữ liệu"
+      },
+      "import": {
+        "button": "Nhập",
+        "title": "Nhập dữ liệu"
+      },
+      "title": "Thao tác nâng cao"
+    },
+    "desc": "Dung lượng lưu trữ trong trình duyệt hiện tại",
+    "embeddings": {
+      "used": "Lưu trữ vector"
+    },
+    "title": "Lưu trữ dữ liệu",
+    "used": "Dung lượng lưu trữ"
+  },
   "submitAgentModal": {
     "button": "Gửi trợ lý",
     "identifier": "Nhận dạng trợ lý",
@@ -439,6 +466,7 @@
     "hotkey": "Phím tắt",
     "llm": "Mô hình ngôn ngữ",
     "provider": "Nhà cung cấp AI",
+    "storage": "Lưu trữ dữ liệu",
     "sync": "Đồng bộ trên đám mây",
     "system-agent": "Trợ lý hệ thống",
     "tts": "Dịch vụ giọng nói"

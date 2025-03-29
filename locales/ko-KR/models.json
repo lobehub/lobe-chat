@@ -221,6 +221,9 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3는 6710억 개의 매개변수를 가진 혼합 전문가(MoE) 언어 모델로, 다중 헤드 잠재 주의(MLA) 및 DeepSeekMoE 아키텍처를 사용하여 보조 손실 없는 부하 균형 전략을 결합하여 추론 및 훈련 효율성을 최적화합니다. 14.8조 개의 고품질 토큰에서 사전 훈련을 수행하고 감독 미세 조정 및 강화 학습을 통해 DeepSeek-V3는 성능 면에서 다른 오픈 소스 모델을 초월하며, 선도적인 폐쇄형 모델에 근접합니다."
   },
+  "Pro/deepseek-ai/DeepSeek-V3-1226": {
+    "description": "DeepSeek-V3는 6710억 개의 매개변수를 가진 혼합 전문가(MoE) 언어 모델로, 다중 헤드 잠재 주의(MLA) 및 DeepSeekMoE 아키텍처를 채택하고, 보조 손실 없는 부하 균형 전략을 결합하여 추론 및 훈련 효율성을 최적화합니다. 14.8조 개의 고품질 토큰에서 사전 훈련을 거치고 감독 미세 조정 및 강화 학습을 통해 DeepSeek-V3는 성능 면에서 다른 오픈 소스 모델을 초월하며, 선도적인 폐쇄형 모델에 근접합니다."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview는 복잡한 대화 생성 및 맥락 이해 작업을 효율적으로 처리할 수 있는 혁신적인 자연어 처리 모델입니다."
   },
@@ -743,6 +746,9 @@
   "deepseek-v3": {
     "description": "DeepSeek-V3는 항저우 심도 탐색 인공지능 기초 기술 연구 회사에서 자체 개발한 MoE 모델로, 여러 평가에서 뛰어난 성적을 거두며, 주류 순위에서 오픈 소스 모델 1위를 차지하고 있습니다. V3는 V2.5 모델에 비해 생성 속도가 3배 향상되어 사용자에게 더 빠르고 원활한 사용 경험을 제공합니다."
   },
+  "deepseek-v3-0324": {
+    "description": "DeepSeek-V3-0324는 671B 매개변수를 가진 MoE 모델로, 프로그래밍 및 기술 능력, 맥락 이해 및 긴 텍스트 처리 등에서 두드러진 장점을 보입니다."
+  },
   "deepseek/deepseek-chat": {
     "description": "일반 및 코드 능력을 통합한 새로운 오픈 소스 모델로, 기존 Chat 모델의 일반 대화 능력과 Coder 모델의 강력한 코드 처리 능력을 유지하면서 인간의 선호에 더 잘 맞춰졌습니다. 또한, DeepSeek-V2.5는 작문 작업, 지시 따르기 등 여러 분야에서 큰 향상을 이루었습니다."
   },
@@ -845,9 +851,6 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro는 Google의 고성능 AI 모델로, 광범위한 작업 확장을 위해 설계되었습니다."
   },
-  "gemini-1.5-flash": {
-    "description": "Gemini 1.5 Flash는 Google의 최신 다중 모달 AI 모델로, 빠른 처리 능력을 갖추고 있으며 텍스트, 이미지 및 비디오 입력을 지원하여 다양한 작업에 효율적으로 확장할 수 있습니다."
-  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001은 효율적인 다중 모달 모델로, 광범위한 응용 프로그램 확장을 지원합니다."
   },
@@ -901,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 플래시 모델 변형으로, 비용 효율성과 낮은 지연 시간 등의 목표를 위해 최적화되었습니다."
-  },
-  "gemini-2.0-flash-lite-preview-02-05": {
-    "description": "비용 효율성과 낮은 지연 시간 등을 목표로 최적화된 Gemini 2.0 Flash 모델입니다."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp는 Google의 최신 실험적 다중 모드 AI 모델로, 차세대 기능, 뛰어난 속도, 네이티브 도구 호출 및 다중 모드 생성을 제공합니다."
@@ -1081,6 +1081,9 @@
   },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini 실시간 버전으로, 오디오 및 텍스트의 실시간 입력 및 출력을 지원합니다."
+  },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS 는 GPT-4o mini 에 기반한 텍스트 음성 변환 모델로, 높은 품질의 음성 생성을 저렴한 가격으로 제공합니다."
   },
   "gpt-4o-realtime-preview": {
     "description": "GPT-4o 실시간 버전으로, 오디오 및 텍스트의 실시간 입력 및 출력을 지원합니다."
@@ -1714,6 +1717,9 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Qwen-Math 모델은 강력한 수학 문제 해결 능력을 가지고 있습니다."
+  },
+  "qwen2.5-omni-7b": {
+    "description": "Qwen-Omni 시리즈 모델은 비디오, 오디오, 이미지, 텍스트 등 다양한 모드의 데이터를 입력으로 지원하며, 오디오와 텍스트를 출력합니다."
   },
   "qwen2.5-vl-32b-instruct": {
     "description": "Qwen2.5-VL 시리즈 모델은 모델의 지능 수준, 실용성 및 적용성을 향상시켜 자연스러운 대화, 콘텐츠 제작, 전문 지식 서비스 및 코드 개발 등 다양한 시나리오에서 더 나은 성능을 발휘합니다. 32B 버전은 강화 학습 기술을 활용하여 최적화되었으며, Qwen2.5 VL 시리즈의 다른 모델들과 비교하여 인간의 선호도에 더 부합하는 출력 스타일, 복잡한 수학 문제의 추론 능력, 그리고 이미지의 세밀한 이해와 추론 능력을 제공합니다."

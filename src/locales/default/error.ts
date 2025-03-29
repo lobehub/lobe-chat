@@ -16,6 +16,16 @@ export default {
     detail: '错误详情',
     title: '请求失败',
   },
+  import: {
+    importConfigFile: {
+      description: '出错原因: {{reason}}',
+      title: '导入失败',
+    },
+    incompatible: {
+      description: '该文件由更高版本导出，请尝试升级到最新版本后再重新导入',
+      title: '当前应用不支持导入该文件',
+    },
+  },
   loginRequired: {
     desc: '即将自动跳转到登录页面',
     title: '请登录后使用该功能',

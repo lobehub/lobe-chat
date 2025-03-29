@@ -346,6 +346,33 @@
     },
     "title": "Paramètres du thème"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Exporter",
+        "exportType": {
+          "agent": "Exporter les paramètres de l'agent",
+          "agentWithMessage": "Exporter les paramètres de l'agent et les messages",
+          "all": "Exporter les paramètres globaux et toutes les données des agents",
+          "allAgent": "Exporter tous les paramètres des agents",
+          "allAgentWithMessage": "Exporter tous les agents et les messages",
+          "globalSetting": "Exporter les paramètres globaux"
+        },
+        "title": "Exporter les données"
+      },
+      "import": {
+        "button": "Importer",
+        "title": "Importer les données"
+      },
+      "title": "Opérations avancées"
+    },
+    "desc": "Utilisation du stockage dans le navigateur actuel",
+    "embeddings": {
+      "used": "Stockage des vecteurs"
+    },
+    "title": "Stockage des données",
+    "used": "Utilisation du stockage"
+  },
   "submitAgentModal": {
     "button": "Soumettre l'agent",
     "identifier": "Identifiant de l'agent",
@@ -439,6 +466,7 @@
     "hotkey": "Raccourcis clavier",
     "llm": "Modèle de langue",
     "provider": "Fournisseur de services d'IA",
+    "storage": "Stockage des données",
     "sync": "Synchronisation cloud",
     "system-agent": "Agent système",
     "tts": "Service vocal"

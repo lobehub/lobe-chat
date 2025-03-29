@@ -346,6 +346,33 @@
     },
     "title": "主題設定"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "匯出",
+        "exportType": {
+          "agent": "匯出助手設定",
+          "agentWithMessage": "匯出助手和訊息",
+          "all": "匯出全域設定和所有助手資料",
+          "allAgent": "匯出所有助手設定",
+          "allAgentWithMessage": "匯出所有助手和訊息",
+          "globalSetting": "匯出全域設定"
+        },
+        "title": "匯出資料"
+      },
+      "import": {
+        "button": "匯入",
+        "title": "匯入資料"
+      },
+      "title": "進階操作"
+    },
+    "desc": "當前瀏覽器中的儲存用量",
+    "embeddings": {
+      "used": "向量儲存"
+    },
+    "title": "資料儲存",
+    "used": "儲存用量"
+  },
   "submitAgentModal": {
     "button": "提交助手",
     "identifier": "助手標識符",
@@ -439,6 +466,7 @@
     "hotkey": "快速鍵",
     "llm": "語言模型",
     "provider": "AI 服務商",
+    "storage": "資料儲存",
     "sync": "雲端同步",
     "system-agent": "系統助手",
     "tts": "語音服務"

@@ -221,6 +221,9 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3, 6710 milyar parametreye sahip bir karma uzman (MoE) dil modelidir ve çok başlı potansiyel dikkat (MLA) ve DeepSeekMoE mimarisini kullanarak, yardımcı kayıplar olmadan yük dengeleme stratejileri ile çıkarım ve eğitim verimliliğini optimize etmektedir. 14.8 trilyon yüksek kaliteli token üzerinde önceden eğitilmiş ve denetimli ince ayar ve güçlendirilmiş öğrenme ile, DeepSeek-V3 performans açısından diğer açık kaynak modelleri geride bırakmakta ve lider kapalı kaynak modellere yaklaşmaktadır."
   },
+  "Pro/deepseek-ai/DeepSeek-V3-1226": {
+    "description": "DeepSeek-V3, 6710 milyar parametreye sahip bir karma uzman (MoE) dil modelidir. Çok başlı potansiyel dikkat (MLA) ve DeepSeekMoE mimarisini kullanarak, yardımcı kayıpsız yük dengeleme stratejileri ile optimizasyon yapar ve çıkarım ile eğitim verimliliğini artırır. 14.8 trilyon yüksek kaliteli token üzerinde önceden eğitilmiş ve denetimli ince ayar ile pekiştirmeli öğrenme ile geliştirilmiştir; DeepSeek-V3, performans açısından diğer açık kaynaklı modellere göre üstünlük sağlar ve lider kapalı kaynak modellere yakın bir performans sergiler."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview, karmaşık diyalog oluşturma ve bağlam anlama görevlerini etkili bir şekilde işleyebilen yenilikçi bir doğal dil işleme modelidir."
   },
@@ -743,6 +746,9 @@
   "deepseek-v3": {
     "description": "DeepSeek-V3, Hangzhou DeepSeek Yapay Zeka Temel Teknoloji Araştırma Şirketi tarafından geliştirilen MoE modelidir, birçok değerlendirme sonucunda öne çıkmakta ve ana akım listelerde açık kaynak modeller arasında birinci sırada yer almaktadır. V3, V2.5 modeline göre üretim hızında 3 kat artış sağlamış, kullanıcılara daha hızlı ve akıcı bir deneyim sunmuştur."
   },
+  "deepseek-v3-0324": {
+    "description": "DeepSeek-V3-0324, 671B parametreye sahip bir MoE modelidir ve programlama ile teknik yetenekler, bağlam anlama ve uzun metin işleme gibi alanlarda belirgin avantajlar sunar."
+  },
   "deepseek/deepseek-chat": {
     "description": "Genel ve kod yeteneklerini birleştiren yeni açık kaynak model, yalnızca mevcut Chat modelinin genel diyalog yeteneklerini ve Coder modelinin güçlü kod işleme yeteneklerini korumakla kalmaz, aynı zamanda insan tercihleriyle daha iyi hizalanmıştır. Ayrıca, DeepSeek-V2.5 yazma görevleri, talimat takibi gibi birçok alanda da büyük iyileştirmeler sağlamıştır."
   },
@@ -845,9 +851,6 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro, Google'ın yüksek performanslı AI modelidir ve geniş görev genişletmeleri için tasarlanmıştır."
   },
-  "gemini-1.5-flash": {
-    "description": "Gemini 1.5 Flash, Google'ın en son çok modlu AI modelidir, hızlı işleme yeteneğine sahiptir, metin, görüntü ve video girişi destekler, çeşitli görevler için verimli bir şekilde ölçeklenebilir."
-  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001, geniş uygulama alanları için destekleyen verimli bir çok modlu modeldir."
   },
@@ -901,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash model varyantı, maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiştir."
-  },
-  "gemini-2.0-flash-lite-preview-02-05": {
-    "description": "Maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiş bir Gemini 2.0 Flash modelidir."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
@@ -1081,6 +1081,9 @@
   },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini gerçek zamanlı versiyonu, ses ve metin için gerçek zamanlı giriş ve çıkış desteği sunar."
+  },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS, GPT-4o mini'ye dayalı bir metin-ses modeldir ve yüksek kaliteli ses üretimi, düşük maliyetli oluşturma sunar."
   },
   "gpt-4o-realtime-preview": {
     "description": "GPT-4o gerçek zamanlı versiyonu, ses ve metin için gerçek zamanlı giriş ve çıkış desteği sunar."
@@ -1714,6 +1717,9 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Qwen-Math modeli, güçlü matematik problem çözme yeteneklerine sahiptir."
+  },
+  "qwen2.5-omni-7b": {
+    "description": "Qwen-Omni serisi modeller, video, ses, resim ve metin gibi çeşitli modlarda veri girişi destekler ve ses ile metin çıktısı verir."
   },
   "qwen2.5-vl-32b-instruct": {
     "description": "Qwen2.5-VL serisi modeller, doğal konuşma, içerik oluşturma, uzmanlık hizmetleri ve kod geliştirme gibi senaryolarda daha iyi performans göstermek için modelin zekâ seviyesini, pratikliğini ve uygunluğunu artırmaktadır. 32B sürümü, pekiştirmeli öğrenme teknolojisi kullanılarak optimize edilmiş olup, Qwen2.5 VL serisinin diğer modellerine kıyasla insan tercihlerine daha uygun çıktı tarzı, karmaşık matematik problemlerini çözme yeteneği ve görüntülerin ince detaylarını anlama ve akıl yürütme becerisi sunmaktadır."

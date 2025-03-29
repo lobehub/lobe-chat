@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "fixes": ["Fix export button and clean orphan agent."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.1"
+  },
+  {
+    "children": {
+      "features": ["Support pglite and postgres data export."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.0"
+  },
+  {
+    "children": {
+      "improvements": ["Supports OpenAI's latest voice model gpt-4o-mini-tts."]
+    },
+    "date": "2025-03-29",
+    "version": "1.76.1"
+  },
+  {
+    "children": {
       "features": ["Add Hotkey Settings."]
     },
     "date": "2025-03-28",

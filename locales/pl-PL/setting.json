@@ -346,6 +346,33 @@
     },
     "title": "Ustawienia motywu"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Eksportuj",
+        "exportType": {
+          "agent": "Eksportuj ustawienia agenta",
+          "agentWithMessage": "Eksportuj ustawienia agenta i wiadomości",
+          "all": "Eksportuj globalne ustawienia i wszystkie dane agenta",
+          "allAgent": "Eksportuj wszystkie ustawienia agenta",
+          "allAgentWithMessage": "Eksportuj wszystkie agentów i wiadomości",
+          "globalSetting": "Eksportuj globalne ustawienia"
+        },
+        "title": "Eksportuj dane"
+      },
+      "import": {
+        "button": "Importuj",
+        "title": "Importuj dane"
+      },
+      "title": "Zaawansowane operacje"
+    },
+    "desc": "Aktualne zużycie pamięci w przeglądarce",
+    "embeddings": {
+      "used": "Przechowywanie wektorów"
+    },
+    "title": "Przechowywanie danych",
+    "used": "Zużycie pamięci"
+  },
   "submitAgentModal": {
     "button": "Prześlij asystenta",
     "identifier": "Identyfikator asystenta",
@@ -439,6 +466,7 @@
     "hotkey": "Skróty klawiszowe",
     "llm": "Model językowy",
     "provider": "Dostawca usług AI",
+    "storage": "Przechowywanie danych",
     "sync": "Synchronizacja w chmurze",
     "system-agent": "System Agent",
     "tts": "Usługa głosowa"

@@ -346,6 +346,33 @@
     },
     "title": "Thema-instellingen"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Exporteren",
+        "exportType": {
+          "agent": "Exporteren assistentinstellingen",
+          "agentWithMessage": "Exporteren assistent en berichten",
+          "all": "Exporteren globale instellingen en alle assistentgegevens",
+          "allAgent": "Exporteren alle assistentinstellingen",
+          "allAgentWithMessage": "Exporteren alle assistenten en berichten",
+          "globalSetting": "Exporteren globale instellingen"
+        },
+        "title": "Gegevens exporteren"
+      },
+      "import": {
+        "button": "Importeren",
+        "title": "Gegevens importeren"
+      },
+      "title": "Geavanceerde acties"
+    },
+    "desc": "Huidig opslaggebruik in de browser",
+    "embeddings": {
+      "used": "Vectoropslag"
+    },
+    "title": "Gegevensopslag",
+    "used": "Opslaggebruik"
+  },
   "submitAgentModal": {
     "button": "Assistent indienen",
     "identifier": "Assistent-identificatie",
@@ -439,6 +466,7 @@
     "hotkey": "Sneltoetsen",
     "llm": "Taalmodel",
     "provider": "AI-dienstverlener",
+    "storage": "Gegevensopslag",
     "sync": "Cloudsynchronisatie",
     "system-agent": "Systeemassistent",
     "tts": "Spraakdienst"

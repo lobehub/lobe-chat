@@ -16,6 +16,16 @@
     "detail": "Détails de l'erreur",
     "title": "Échec de la requête"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Raison de l'erreur : {{reason}}",
+      "title": "Échec de l'importation"
+    },
+    "incompatible": {
+      "description": "Ce fichier a été exporté par une version supérieure, veuillez essayer de mettre à jour vers la dernière version avant de réimporter",
+      "title": "L'application actuelle ne prend pas en charge l'importation de ce fichier"
+    }
+  },
   "loginRequired": {
     "desc": "Vous allez être redirigé vers la page de connexion",
     "title": "Veuillez vous connecter pour utiliser cette fonctionnalité"

@@ -16,6 +16,16 @@
     "detail": "Detalhes do erro",
     "title": "Solicitação falhou"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Motivo do erro: {{reason}}",
+      "title": "Falha na importação"
+    },
+    "incompatible": {
+      "description": "Este arquivo foi exportado de uma versão mais recente, por favor, tente atualizar para a versão mais recente e tente importar novamente",
+      "title": "O aplicativo atual não suporta a importação deste arquivo"
+    }
+  },
   "loginRequired": {
     "desc": "Você será redirecionado para a página de login em breve",
     "title": "Por favor, faça login para usar esta função"

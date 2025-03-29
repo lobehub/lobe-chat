@@ -221,6 +221,9 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 ist ein hybrides Experten (MoE) Sprachmodell mit 6710 Milliarden Parametern, das eine Multi-Head-Latente-Attention (MLA) und DeepSeekMoE-Architektur verwendet, kombiniert mit einer Lastenausgleichsstrategie ohne Hilfskosten, um die Inferenz- und Trainingseffizienz zu optimieren. Durch das Pre-Training auf 14,8 Billionen hochwertigen Tokens und anschließende überwachte Feinabstimmung und verstärktes Lernen übertrifft DeepSeek-V3 in der Leistung andere Open-Source-Modelle und nähert sich führenden geschlossenen Modellen."
   },
+  "Pro/deepseek-ai/DeepSeek-V3-1226": {
+    "description": "DeepSeek-V3 ist ein hybrides Expertenmodell (MoE) mit 6710 Milliarden Parametern, das eine Multi-Head-Latente-Attention (MLA) und die DeepSeekMoE-Architektur verwendet, kombiniert mit einer Lastenausgleichsstrategie ohne Hilfskosten, um die Effizienz von Inferenz und Training zu optimieren. Durch das Pre-Training auf 14,8 Billionen hochwertigen Tokens und anschließendes überwachten Feintuning und verstärkendes Lernen übertrifft DeepSeek-V3 in der Leistung andere Open-Source-Modelle und nähert sich führenden Closed-Source-Modellen."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview ist ein innovatives Modell für die Verarbeitung natürlicher Sprache, das komplexe Aufgaben der Dialoggenerierung und des Kontextverständnisses effizient bewältigen kann."
   },
@@ -743,6 +746,9 @@
   "deepseek-v3": {
     "description": "DeepSeek-V3 ist ein MoE-Modell, das von der Hangzhou DeepSeek Artificial Intelligence Technology Research Co., Ltd. entwickelt wurde. Es hat in mehreren Bewertungen herausragende Ergebnisse erzielt und belegt in den gängigen Rankings den ersten Platz unter den Open-Source-Modellen. Im Vergleich zum V2.5-Modell hat sich die Generierungsgeschwindigkeit um das Dreifache erhöht, was den Nutzern ein schnelleres und flüssigeres Nutzungserlebnis bietet."
   },
+  "deepseek-v3-0324": {
+    "description": "DeepSeek-V3-0324 ist ein MoE-Modell mit 671 Milliarden Parametern, das in den Bereichen Programmierung und technische Fähigkeiten, Kontextverständnis und Verarbeitung langer Texte herausragende Vorteile bietet."
+  },
   "deepseek/deepseek-chat": {
     "description": "Ein neues Open-Source-Modell, das allgemeine und Codefähigkeiten vereint. Es behält nicht nur die allgemeinen Dialogfähigkeiten des ursprünglichen Chat-Modells und die leistungsstarken Codeverarbeitungsfähigkeiten des Coder-Modells bei, sondern stimmt auch besser mit menschlichen Vorlieben überein. Darüber hinaus hat DeepSeek-V2.5 in vielen Bereichen wie Schreibaufgaben und Befehlsbefolgung erhebliche Verbesserungen erzielt."
   },
@@ -845,9 +851,6 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro ist Googles leistungsstarkes KI-Modell, das für die Skalierung einer Vielzahl von Aufgaben konzipiert ist."
   },
-  "gemini-1.5-flash": {
-    "description": "Gemini 1.5 Flash ist Googles neuestes multimodales KI-Modell, das über eine schnelle Verarbeitungskapazität verfügt und Texte, Bilder und Videoeingaben unterstützt, um eine effiziente Skalierung für verschiedene Aufgaben zu ermöglichen."
-  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 ist ein effizientes multimodales Modell, das eine breite Anwendbarkeit unterstützt."
   },
@@ -901,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash ist eine Modellvariante, die auf Kosteneffizienz und niedrige Latenz optimiert ist."
-  },
-  "gemini-2.0-flash-lite-preview-02-05": {
-    "description": "Ein Gemini 2.0 Flash Modell, das auf Kosteneffizienz und niedrige Latenz optimiert wurde."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp ist Googles neuestes experimentelles multimodales KI-Modell mit der nächsten Generation von Funktionen, außergewöhnlicher Geschwindigkeit, nativer Tool-Nutzung und multimodaler Generierung."
@@ -1081,6 +1081,9 @@
   },
   "gpt-4o-mini-realtime-preview": {
     "description": "Echtzeitversion von GPT-4o-mini, unterstützt Audio- und Texteingabe sowie -ausgabe in Echtzeit."
+  },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS ist ein Text-to-Speech-Modell, das auf GPT-4o mini basiert und hochwertige Sprachgenerierung bei niedrigeren Kosten bietet."
   },
   "gpt-4o-realtime-preview": {
     "description": "Echtzeitversion von GPT-4o, unterstützt Audio- und Texteingabe sowie -ausgabe in Echtzeit."
@@ -1714,6 +1717,9 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "Das Qwen-Math-Modell verfügt über starke Fähigkeiten zur Lösung mathematischer Probleme."
+  },
+  "qwen2.5-omni-7b": {
+    "description": "Das Qwen-Omni-Modell der Serie unterstützt die Eingabe verschiedener Modalitäten, einschließlich Video, Audio, Bilder und Text, und gibt Audio und Text aus."
   },
   "qwen2.5-vl-32b-instruct": {
     "description": "Die Qwen2.5-VL-Modellreihe verbessert die Intelligenz, Praktikabilität und Anwendbarkeit des Modells, sodass es in Szenarien wie natürlichen Dialogen, Inhaltserstellung, Fachwissensdiensten und Codeentwicklung besser abschneidet. Die 32B-Version verwendet Techniken des verstärkenden Lernens zur Optimierung des Modells. Im Vergleich zu anderen Modellen der Qwen2.5-VL-Reihe bietet sie einen für Menschen präferierten Ausgabe-Stil, Fähigkeiten zur Inferenz komplexer mathematischer Probleme sowie die Fähigkeit zur feingranularen Bildverarbeitung und -inferenz."

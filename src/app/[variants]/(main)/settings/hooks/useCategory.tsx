@@ -1,6 +1,16 @@
 import { Icon } from '@lobehub/ui';
 import { Tag } from 'antd';
-import { Bot, Brain, Cloudy, Info, KeyboardIcon, Mic2, Settings2, Sparkles } from 'lucide-react';
+import {
+  Bot,
+  Brain,
+  Cloudy,
+  Database,
+  Info,
+  KeyboardIcon,
+  Mic2,
+  Settings2,
+  Sparkles,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,14 +40,15 @@ export const useCategory = () => {
           ),
         },
         {
-          icon: <Icon icon={Sparkles} />,
-          key: SettingsTabs.SystemAgent,
+          icon: <Icon icon={Bot} />,
+          key: SettingsTabs.Agent,
           label: (
-            <Link href={'/settings/system-agent'} onClick={(e) => e.preventDefault()}>
-              {t('tab.system-agent')}
+            <Link href={'/settings/agent'} onClick={(e) => e.preventDefault()}>
+              {t('tab.agent')}
             </Link>
           ),
         },
+        // TODO: remove in V2
         enableWebrtc && {
           icon: <Icon icon={Cloudy} />,
           key: SettingsTabs.Sync,
@@ -51,6 +62,18 @@ export const useCategory = () => {
               </Flexbox>
             </Link>
           ),
+        },
+        !mobile && {
+          icon: <Icon icon={KeyboardIcon} />,
+          key: SettingsTabs.Hotkey,
+          label: (
+            <Link href={'/settings/hotkey'} onClick={(e) => e.preventDefault()}>
+              {t('tab.hotkey')}
+            </Link>
+          ),
+        },
+        {
+          type: 'divider',
         },
         showLLM &&
           // TODO: Remove /llm when v2.0
@@ -84,20 +107,23 @@ export const useCategory = () => {
           ),
         },
         {
-          icon: <Icon icon={Bot} />,
-          key: SettingsTabs.Agent,
+          icon: <Icon icon={Sparkles} />,
+          key: SettingsTabs.SystemAgent,
           label: (
-            <Link href={'/settings/agent'} onClick={(e) => e.preventDefault()}>
-              {t('tab.agent')}
+            <Link href={'/settings/system-agent'} onClick={(e) => e.preventDefault()}>
+              {t('tab.system-agent')}
             </Link>
           ),
         },
-        !mobile && {
-          icon: <Icon icon={KeyboardIcon} />,
-          key: SettingsTabs.Hotkey,
+        {
+          type: 'divider',
+        },
+        {
+          icon: <Icon icon={Database} />,
+          key: SettingsTabs.Storage,
           label: (
-            <Link href={'/settings/hotkey'} onClick={(e) => e.preventDefault()}>
-              {t('tab.hotkey')}
+            <Link href={'/settings/storage'} onClick={(e) => e.preventDefault()}>
+              {t('tab.storage')}
             </Link>
           ),
         },

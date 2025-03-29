@@ -221,6 +221,9 @@
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 is a mixed expert (MoE) language model with 671 billion parameters, utilizing multi-head latent attention (MLA) and the DeepSeekMoE architecture, combined with a load balancing strategy without auxiliary loss to optimize inference and training efficiency. Pre-trained on 14.8 trillion high-quality tokens and fine-tuned with supervision and reinforcement learning, DeepSeek-V3 outperforms other open-source models and approaches leading closed-source models."
   },
+  "Pro/deepseek-ai/DeepSeek-V3-1226": {
+    "description": "DeepSeek-V3 is a mixture of experts (MoE) language model with 671 billion parameters, utilizing multi-head latent attention (MLA) and the DeepSeekMoE architecture, combined with a load balancing strategy without auxiliary loss to optimize inference and training efficiency. Pre-trained on 14.8 trillion high-quality tokens and fine-tuned with supervised learning and reinforcement learning, DeepSeek-V3 outperforms other open-source models and approaches leading closed-source models in performance."
+  },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview is an innovative natural language processing model capable of efficiently handling complex dialogue generation and context understanding tasks."
   },
@@ -743,6 +746,9 @@
   "deepseek-v3": {
     "description": "DeepSeek-V3 is a MoE model developed by Hangzhou DeepSeek Artificial Intelligence Technology Research Co., Ltd., achieving outstanding results in multiple evaluations and ranking first among open-source models on mainstream leaderboards. Compared to the V2.5 model, V3 has achieved a threefold increase in generation speed, providing users with a faster and smoother experience."
   },
+  "deepseek-v3-0324": {
+    "description": "DeepSeek-V3-0324 is a 671B parameter MoE model, excelling in programming and technical capabilities, contextual understanding, and long text processing."
+  },
   "deepseek/deepseek-chat": {
     "description": "A new open-source model that integrates general and coding capabilities, retaining the general conversational abilities of the original Chat model and the powerful code handling capabilities of the Coder model, while better aligning with human preferences. Additionally, DeepSeek-V2.5 has achieved significant improvements in writing tasks, instruction following, and more."
   },
@@ -845,9 +851,6 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro is Google's high-performance AI model, designed for extensive task scaling."
   },
-  "gemini-1.5-flash": {
-    "description": "Gemini 1.5 Flash is Google's latest multimodal AI model, featuring rapid processing capabilities and supporting text, image, and video inputs, making it efficient for scaling across various tasks."
-  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 is an efficient multimodal model that supports extensive application scaling."
   },
@@ -901,9 +904,6 @@
   },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash is a variant of the model optimized for cost-effectiveness and low latency."
-  },
-  "gemini-2.0-flash-lite-preview-02-05": {
-    "description": "A Gemini 2.0 Flash model optimized for cost-effectiveness and low latency."
   },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
@@ -1081,6 +1081,9 @@
   },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini real-time version, supporting real-time audio and text input and output."
+  },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS is a text-to-speech model based on GPT-4o mini, providing high-quality speech generation at a lower cost."
   },
   "gpt-4o-realtime-preview": {
     "description": "GPT-4o real-time version, supporting real-time audio and text input and output."
@@ -1714,6 +1717,9 @@
   },
   "qwen2.5-math-7b-instruct": {
     "description": "The Qwen-Math model possesses strong capabilities for solving mathematical problems."
+  },
+  "qwen2.5-omni-7b": {
+    "description": "The Qwen-Omni series models support input of various modalities, including video, audio, images, and text, and output audio and text."
   },
   "qwen2.5-vl-32b-instruct": {
     "description": "The Qwen2.5-VL model series enhances the model's intelligence level, practicality, and applicability, delivering superior performance in scenarios such as natural conversations, content creation, professional knowledge services, and code development. The 32B version employs reinforcement learning techniques to optimize the model, offering more human-preferred output styles, enhanced reasoning capabilities for complex mathematical problems, and fine-grained image understanding and reasoning compared to other models in the Qwen2.5-VL series."
