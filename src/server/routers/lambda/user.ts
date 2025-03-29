@@ -1,7 +1,6 @@
 import { UserJSON } from '@clerk/backend';
 import { z } from 'zod';
 
-import { fileEnv } from '@/config/file';
 import { enableClerk } from '@/const/auth';
 import { MessageModel } from '@/database/models/message';
 import { SessionModel } from '@/database/models/session';
@@ -13,6 +12,7 @@ import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { S3 } from '@/server/modules/S3';
 import { UserService } from '@/server/services/user';
+import { getFullFileUrl } from '@/server/utils/files';
 import {
   NextAuthAccountSchame,
   UserGuideSchema,
@@ -164,15 +164,8 @@ export const userRouter = router({
         await s3.uploadBuffer(filePath, buffer, mimeType);
 
         // 获取公共访问 URL
-        let avatarUrl = '';
-
-        if (fileEnv.S3_PUBLIC_DOMAIN) {
-          // 使用公共域名构建 URL，添加时间戳避免缓存
-          avatarUrl = `${fileEnv.S3_PUBLIC_DOMAIN.replace(/\/$/, '')}/${filePath}?t=${Date.now()}`;
-        } else {
-          // 创建预签名 URL 用于访问（一年过期）
-          avatarUrl = await s3.createPreSignedUrlForPreview(filePath, 31_536_000);
-        }
+        let avatarUrl = await getFullFileUrl(filePath);
+        avatarUrl = avatarUrl + `?t=${Date.now()}`; // 添加时间戳以避免缓存
 
         return ctx.userModel.updateUser({ avatar: avatarUrl });
       } catch (error) {
