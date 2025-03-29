@@ -215,7 +215,15 @@ export class AiProviderModel {
 
     const decrypt = decryptor ?? JSON.parse;
 
-    const keyVaults = !!result.keyVaults ? await decrypt(result.keyVaults) : {};
+    let keyVaults = {};
+
+    if (!!result.keyVaults) {
+      try {
+        keyVaults = await decrypt(result.keyVaults);
+      } catch {
+        /* empty */
+      }
+    }
 
     return {
       ...result,
