@@ -12,7 +12,10 @@ let mainWindow;
 let stopIntercept;
 
 // Next.js handler
-const standaloneDir = path.join(appPath, 'dist', 'next');
+const standaloneDir = isDev
+  ? path.join(process.cwd(), '../..')
+  : path.join(appPath, 'dist', 'next');
+
 const { createInterceptor } = createHandler({
   debug: true,
   localhostUrl,

@@ -1,9 +1,9 @@
 {
-  "name": "electron-app",
-  "version": "1.0.0",
+  "name": "lobehub-desktop",
+  "version": "0.0.1-nightly",
   "description": "A minimal Electron application with TypeScript",
-  "homepage": "https://electron-vite.org",
-  "author": "example.com",
+  "homepage": "https://lobehub.com",
+  "author": "arvinxx",
   "main": "./dist/main/index.js",
   "scripts": {
     "build": "npm run typecheck && electron-vite build",
@@ -34,7 +34,7 @@
     "electron-builder": "^25.1.8",
     "electron-vite": "^3.0.0",
     "typescript": "^5.7.3",
-    "vite": "^6.1.0"
+    "vite": "^6.2.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
