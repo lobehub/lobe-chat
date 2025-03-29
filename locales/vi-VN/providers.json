@@ -146,6 +146,9 @@
   "xai": {
     "description": "xAI là một công ty cam kết xây dựng trí tuệ nhân tạo để tăng tốc khám phá khoa học của nhân loại. Sứ mệnh của chúng tôi là thúc đẩy sự hiểu biết chung của chúng ta về vũ trụ."
   },
+  "xinference": {
+    "description": "Xorbits Inference (Xinference) là một nền tảng mã nguồn mở, được thiết kế để đơn giản hóa việc chạy và tích hợp các mô hình AI khác nhau. Với Xinference, bạn có thể chạy suy luận trên bất kỳ mô hình LLM mã nguồn mở, mô hình nhúng và mô hình đa phương thức nào trong môi trường đám mây hoặc cục bộ, và tạo ra các ứng dụng AI mạnh mẽ."
+  },
   "zeroone": {
     "description": "01.AI tập trung vào công nghệ trí tuệ nhân tạo trong kỷ nguyên AI 2.0, thúc đẩy mạnh mẽ sự đổi mới và ứng dụng của \"người + trí tuệ nhân tạo\", sử dụng các mô hình mạnh mẽ và công nghệ AI tiên tiến để nâng cao năng suất của con người và thực hiện sự trao quyền công nghệ."
   },

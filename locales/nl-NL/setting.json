@@ -42,6 +42,17 @@
     "sessionWithName": "Sessie-instellingen · {{name}}",
     "title": "Instellingen"
   },
+  "hotkey": {
+    "conflicts": "Conflict met bestaande sneltoetsen",
+    "group": {
+      "conversation": "Gesprek",
+      "essential": "Essentieel"
+    },
+    "invalidCombination": "Sneltoets moet ten minste één modifier-toets (Ctrl, Alt, Shift) en één reguliere toets bevatten",
+    "record": "Druk op een toets om de sneltoets op te nemen",
+    "reset": "Reset naar standaard sneltoetsen",
+    "title": "Sneltoetsen"
+  },
   "llm": {
     "aesGcm": "Uw sleutel en proxy-adres zullen worden versleuteld met het <1>AES-GCM</1> encryptie-algoritme",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "Standaardassistent",
     "common": "Algemene instellingen",
     "experiment": "Experiment",
+    "hotkey": "Sneltoetsen",
     "llm": "Taalmodel",
     "provider": "AI-dienstverlener",
     "sync": "Cloudsynchronisatie",

@@ -42,6 +42,17 @@
     "sessionWithName": "Session Settings · {{name}}",
     "title": "Settings"
   },
+  "hotkey": {
+    "conflicts": "Conflicts with existing hotkeys",
+    "group": {
+      "conversation": "Conversation",
+      "essential": "Essential"
+    },
+    "invalidCombination": "The hotkey must include at least one modifier key (Ctrl, Alt, Shift) and one regular key",
+    "record": "Press a key to record the hotkey",
+    "reset": "Reset to default hotkeys",
+    "title": "Hotkeys"
+  },
   "llm": {
     "aesGcm": "Your keys and proxy address will be encrypted using the <1>AES-GCM</1> encryption algorithm",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "Default Assistant",
     "common": "Common Settings",
     "experiment": "Experiment",
+    "hotkey": "Hotkeys",
     "llm": "Language Model",
     "provider": "AI Service Provider",
     "sync": "Cloud Sync",

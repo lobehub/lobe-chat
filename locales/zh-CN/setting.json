@@ -42,6 +42,17 @@
     "sessionWithName": "会话设置 · {{name}}",
     "title": "设置"
   },
+  "hotkey": {
+    "conflicts": "与现有快捷键冲突",
+    "group": {
+      "conversation": "会话",
+      "essential": "基础"
+    },
+    "invalidCombination": "快捷键需要至少包含一个修饰键 (Ctrl, Alt, Shift) 和一个常规键",
+    "record": "按下按键以录制快捷键",
+    "reset": "重置为默认快捷键",
+    "title": "快捷键"
+  },
   "llm": {
     "aesGcm": "您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "默认助手",
     "common": "通用设置",
     "experiment": "实验",
+    "hotkey": "快捷键",
     "llm": "语言模型",
     "provider": "AI 服务商",
     "sync": "云端同步",

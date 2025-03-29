@@ -49,6 +49,7 @@ import VLLMProvider from './vllm';
 import VolcengineProvider from './volcengine';
 import WenxinProvider from './wenxin';
 import XAIProvider from './xai';
+import XinferenceProvider from './xinference';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -69,6 +70,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   MoonshotProvider.chatModels,
   OllamaProvider.chatModels,
   VLLMProvider.chatModels,
+  XinferenceProvider.chatModels,
   OpenRouterProvider.chatModels,
   TogetherAIProvider.chatModels,
   FireworksAIProvider.chatModels,
@@ -108,6 +110,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   AzureAIProvider,
   OllamaProvider,
   VLLMProvider,
+  XinferenceProvider,
   AnthropicProvider,
   BedrockProvider,
   GoogleProvider,
@@ -215,5 +218,6 @@ export { default as VLLMProviderCard } from './vllm';
 export { default as VolcengineProviderCard } from './volcengine';
 export { default as WenxinProviderCard } from './wenxin';
 export { default as XAIProviderCard } from './xai';
+export { default as XinferenceProviderCard } from './xinference';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

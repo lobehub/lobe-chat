@@ -42,6 +42,17 @@
     "sessionWithName": "Sitzungseinstellungen · {{name}}",
     "title": "Einstellungen"
   },
+  "hotkey": {
+    "conflicts": "Konflikte mit bestehenden Tastenkombinationen",
+    "group": {
+      "conversation": "Gespräch",
+      "essential": "Grundlegend"
+    },
+    "invalidCombination": "Die Tastenkombination muss mindestens einen Modifikatortaste (Strg, Alt, Umschalt) und eine normale Taste enthalten",
+    "record": "Drücken Sie eine Taste, um die Tastenkombination aufzuzeichnen",
+    "reset": "Auf die Standard-Tastenkombination zurücksetzen",
+    "title": "Tastenkombinationen"
+  },
   "llm": {
     "aesGcm": "Ihr Schlüssel und Ihre Proxy-Adresse werden mit dem <1>AES-GCM</1> Verschlüsselungsalgorithmus verschlüsselt.",
     "apiKey": {
@@ -425,6 +436,7 @@
     "agent": "Standard-Assistent",
     "common": "Allgemeine Einstellungen",
     "experiment": "Experiment",
+    "hotkey": "Tastenkombinationen",
     "llm": "Sprachmodell",
     "provider": "KI-Dienstanbieter",
     "sync": "Cloud-Synchronisierung",

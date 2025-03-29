@@ -133,6 +133,13 @@
       "when": 1742616026643,
       "tag": "0018_add_client_id_for_entities",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1742806552131,
+      "tag": "0019_add_hotkey_user_settings",
+      "breakpoints": true
     }
   ],
   "version": "6"

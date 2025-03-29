@@ -2,6 +2,193 @@
 
 # Changelog
 
+## [Version 1.76.0](https://github.com/lobehub/lobe-chat/compare/v1.75.5...v1.76.0)
+
+<sup>Released on **2025-03-28**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Hotkey Settings.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Hotkey Settings, closes [#7118](https://github.com/lobehub/lobe-chat/issues/7118) ([9773e74](https://github.com/lobehub/lobe-chat/commit/9773e74))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.75.5](https://github.com/lobehub/lobe-chat/compare/v1.75.4...v1.75.5)
+
+<sup>Released on **2025-03-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add tencentcloud deepseek-v3-0324, support for parsing `imageOutput`, update models for siliconcloud & infiniai.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add tencentcloud deepseek-v3-0324, closes [#7182](https://github.com/lobehub/lobe-chat/issues/7182) ([c67af99](https://github.com/lobehub/lobe-chat/commit/c67af99))
+- **misc**: Support for parsing `imageOutput`, closes [#7140](https://github.com/lobehub/lobe-chat/issues/7140) ([05bae9d](https://github.com/lobehub/lobe-chat/commit/05bae9d))
+- **misc**: Update models for siliconcloud & infiniai, closes [#7197](https://github.com/lobehub/lobe-chat/issues/7197) ([1c1f693](https://github.com/lobehub/lobe-chat/commit/1c1f693))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.75.4](https://github.com/lobehub/lobe-chat/compare/v1.75.3...v1.75.4)
+
+<sup>Released on **2025-03-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update models info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update models info, closes [#7164](https://github.com/lobehub/lobe-chat/issues/7164) ([74aff9b](https://github.com/lobehub/lobe-chat/commit/74aff9b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.75.3](https://github.com/lobehub/lobe-chat/compare/v1.75.2...v1.75.3)
+
+<sup>Released on **2025-03-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix anthropic import issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix anthropic import issue, closes [#7155](https://github.com/lobehub/lobe-chat/issues/7155) ([a9725b2](https://github.com/lobehub/lobe-chat/commit/a9725b2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.75.2](https://github.com/lobehub/lobe-chat/compare/v1.75.1...v1.75.2)
+
+<sup>Released on **2025-03-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update 'gemini-2.5-pro-exp-03-25' maxOutput and contextWindowTokens.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update 'gemini-2.5-pro-exp-03-25' maxOutput and contextWindowTokens, closes [#7156](https://github.com/lobehub/lobe-chat/issues/7156) ([a28b98e](https://github.com/lobehub/lobe-chat/commit/a28b98e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.75.1](https://github.com/lobehub/lobe-chat/compare/v1.75.0...v1.75.1)
+
+<sup>Released on **2025-03-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update siliconcloud models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update siliconcloud models, closes [#7072](https://github.com/lobehub/lobe-chat/issues/7072) ([8a524d4](https://github.com/lobehub/lobe-chat/commit/8a524d4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.75.0](https://github.com/lobehub/lobe-chat/compare/v1.74.11...v1.75.0)
+
+<sup>Released on **2025-03-26**</sup>
+
+#### ✨ Features
+
+- **misc**: Add reasoning content selector and update AutoScroll component, add Xinference provider support.
+
+#### 💄 Styles
+
+- **misc**: Add Gemini 2.5 Pro Experimental model, improve editing scroll experience.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add reasoning content selector and update AutoScroll component, closes [#7056](https://github.com/lobehub/lobe-chat/issues/7056) ([800d675](https://github.com/lobehub/lobe-chat/commit/800d675))
+- **misc**: Add Xinference provider support, closes [#7081](https://github.com/lobehub/lobe-chat/issues/7081) ([e32c8e7](https://github.com/lobehub/lobe-chat/commit/e32c8e7))
+
+#### Styles
+
+- **misc**: Add Gemini 2.5 Pro Experimental model, closes [#7153](https://github.com/lobehub/lobe-chat/issues/7153) ([4213d20](https://github.com/lobehub/lobe-chat/commit/4213d20))
+- **misc**: Improve editing scroll experience, closes [#7149](https://github.com/lobehub/lobe-chat/issues/7149) ([816331f](https://github.com/lobehub/lobe-chat/commit/816331f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.74.11](https://github.com/lobehub/lobe-chat/compare/v1.74.10...v1.74.11)
 
 <sup>Released on **2025-03-25**</sup>
