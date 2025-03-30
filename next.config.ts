@@ -173,6 +173,11 @@ const nextConfig: NextConfig = {
       permanent: true,
       source: '/welcome',
     },
+    {
+      destination: '/chat',
+      permanent: false,
+      source: '/',
+    },
     // TODO: 等 V2 做强制跳转吧
     // {
     //   destination: '/settings/provider/volcengine',
