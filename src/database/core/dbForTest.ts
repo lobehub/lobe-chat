@@ -9,7 +9,7 @@ import ws from 'ws';
 
 import { serverDBEnv } from '@/config/db';
 
-import * as schema from '../../schemas';
+import * as schema from '../schemas';
 
 const migrationsFolder = join(__dirname, '../../migrations');
 

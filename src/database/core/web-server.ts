@@ -1,15 +1,16 @@
 import { Pool as NeonPool, neonConfig } from '@neondatabase/serverless';
-import { NeonDatabase, drizzle as neonDrizzle } from 'drizzle-orm/neon-serverless';
+import { drizzle as neonDrizzle } from 'drizzle-orm/neon-serverless';
 import { drizzle as nodeDrizzle } from 'drizzle-orm/node-postgres';
 import { Pool as NodePool } from 'pg';
 import ws from 'ws';
 
 import { serverDBEnv } from '@/config/db';
 import { isServerMode } from '@/const/version';
+import * as schema from '@/database/schemas';
 
-import * as schema from '../../schemas';
+import { LobeChatDatabase } from '../type';
 
-export const getDBInstance = (): NeonDatabase<typeof schema> => {
+export const getDBInstance = (): LobeChatDatabase => {
   if (!isServerMode) return {} as any;
 
   if (!serverDBEnv.KEY_VAULTS_SECRET) {
@@ -40,5 +41,3 @@ If you don't have it, please run \`openssl rand -base64 32\` to create one.
   const client = new NeonPool({ connectionString });
   return neonDrizzle(client, { schema });
 };
-
-export const serverDB = getDBInstance();

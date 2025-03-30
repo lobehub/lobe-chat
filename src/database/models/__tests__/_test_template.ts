@@ -2,12 +2,13 @@
 import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 
 import { sessionGroups, users } from '../../schemas';
 import { SessionGroupModel } from '../sessionGroup';
+import { getTestDB } from './_util';
 
-let serverDB = await getTestDBInstance();
+const serverDB: LobeChatDatabase = await getTestDB();
 
 const userId = 'session-group-model-test-user-id';
 const sessionGroupModel = new SessionGroupModel(serverDB, userId);
