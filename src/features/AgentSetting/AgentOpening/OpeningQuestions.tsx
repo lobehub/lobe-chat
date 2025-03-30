@@ -1,9 +1,9 @@
 'use client';
 
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { SortableList } from '@lobehub/ui';
-import { Button, Empty, Input } from 'antd';
+import { Button, Input, SortableList } from '@lobehub/ui';
+import { Empty } from 'antd';
 import { createStyles } from 'antd-style';
+import { PlusIcon, Trash } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -96,7 +96,7 @@ const OpeningQuestions = memo(() => {
             <Button
               // don't allow repeat
               disabled={openingQuestions.includes(questionInput.trim())}
-              icon={<PlusOutlined />}
+              icon={PlusIcon}
               onClick={addQuestion}
               size="small"
               type="text"
@@ -122,11 +122,7 @@ const OpeningQuestions = memo(() => {
               <SortableList.Item className={styles.questionItemContainer} id={item.id}>
                 <SortableList.DragHandle />
                 <div className={styles.questionItemContent}>{item.content}</div>
-                <Button
-                  icon={<DeleteOutlined />}
-                  onClick={() => removeQuestion(item.content)}
-                  type="text"
-                />
+                <Button icon={Trash} onClick={() => removeQuestion(item.content)} type="text" />
               </SortableList.Item>
             )}
           />
@@ -134,6 +130,7 @@ const OpeningQuestions = memo(() => {
           <Empty
             className={styles.empty}
             description={t('settingOpening.openingQuestions.empty')}
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         )}
       </div>

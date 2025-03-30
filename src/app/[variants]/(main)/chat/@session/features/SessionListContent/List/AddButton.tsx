@@ -1,9 +1,7 @@
-import { Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button } from '@lobehub/ui';
 import { Plus } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useActionSWR } from '@/libs/swr';
 import { useSessionStore } from '@/store/session';
@@ -17,11 +15,18 @@ const AddButton = memo<{ groupId?: string }>(({ groupId }) => {
   });
 
   return (
-    <Flexbox style={{ margin: '12px 16px' }}>
-      <Button block icon={<Icon icon={Plus} />} loading={isValidating} onClick={() => mutate()}>
-        {t('newAgent')}
-      </Button>
-    </Flexbox>
+    <Button
+      block
+      icon={Plus}
+      loading={isValidating}
+      onClick={() => mutate()}
+      style={{
+        marginTop: 8,
+      }}
+      variant={'outlined'}
+    >
+      {t('newAgent')}
+    </Button>
   );
 });
 

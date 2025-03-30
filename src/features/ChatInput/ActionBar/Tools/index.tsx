@@ -24,10 +24,12 @@ const Tools = memo(() => {
       <Suspense fallback={<ActionIcon icon={LucideLoader2} spin />}>
         <DropdownMenu>
           <ActionIcon
-            disable={!enableFC}
+            disabled={!enableFC}
             icon={Blocks}
-            placement={'bottom'}
             title={t(enableFC ? 'tools.title' : 'tools.disabled')}
+            tooltipProps={{
+              placement: 'bottom',
+            }}
           />
         </DropdownMenu>
       </Suspense>

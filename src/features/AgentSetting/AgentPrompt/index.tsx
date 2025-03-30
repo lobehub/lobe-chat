@@ -1,7 +1,8 @@
 'use client';
 
-import { EditableMessage, Form } from '@lobehub/ui';
-import { Button, Skeleton } from 'antd';
+import { Button, Form } from '@lobehub/ui';
+import { EditableMessage } from '@lobehub/ui/chat';
+import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -62,7 +63,7 @@ const AgentPrompt = memo<{ modal?: boolean }>(({ modal }) => {
             },
           ]}
           itemsType={'group'}
-          variant={'pure'}
+          variant={'borderless'}
           {...FORM_STYLE}
         />
       );
@@ -100,7 +101,6 @@ const AgentPrompt = memo<{ modal?: boolean }>(({ modal }) => {
       editButtonSize={'small'}
       editing={editing}
       height={'auto'}
-      inputType={'pure'}
       onChange={(e) => {
         updateConfig({ systemRole: e });
       }}
@@ -112,6 +112,7 @@ const AgentPrompt = memo<{ modal?: boolean }>(({ modal }) => {
         confirm: t('ok', { ns: 'common' }),
       }}
       value={systemRole}
+      variant={'borderless'}
     />
   );
 
@@ -144,7 +145,7 @@ const AgentPrompt = memo<{ modal?: boolean }>(({ modal }) => {
           },
         ]}
         itemsType={'group'}
-        variant={'pure'}
+        variant={'borderless'}
         {...FORM_STYLE}
       />
     );

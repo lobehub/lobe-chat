@@ -1,6 +1,6 @@
 'use client';
 
-import { Form, type ItemGroup } from '@lobehub/ui';
+import { Form, type FormGroupItemType } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,8 +12,6 @@ import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 import SSOProvidersList from './features/SSOProvidersList';
-
-type SettingItemGroup = ItemGroup;
 
 const Client = memo<{ mobile?: boolean }>(() => {
   const [isLoginWithNextAuth, isLogin] = useUserStore((s) => [
@@ -29,7 +27,7 @@ const Client = memo<{ mobile?: boolean }>(() => {
   const [form] = Form.useForm();
   const { t } = useTranslation('auth');
 
-  const profile: SettingItemGroup = {
+  const profile: FormGroupItemType = {
     children: [
       {
         children: enableAuth && !isLogin ? <UserAvatar /> : <AvatarWithUpload />,
@@ -58,7 +56,13 @@ const Client = memo<{ mobile?: boolean }>(() => {
     title: t('tab.profile'),
   };
   return (
-    <Form form={form} items={[profile]} itemsType={'group'} variant={'pure'} {...FORM_STYLE} />
+    <Form
+      form={form}
+      items={[profile]}
+      itemsType={'group'}
+      variant={'borderless'}
+      {...FORM_STYLE}
+    />
   );
 });
 

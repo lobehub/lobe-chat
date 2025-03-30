@@ -55,7 +55,7 @@ const LangButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement 
     >
       <ActionIcon
         icon={Languages}
-        size={{ blockSize: 32, fontSize: 16 }}
+        size={{ blockSize: 32, size: 16 }}
         style={{ border: `1px solid ${theme.colorFillSecondary}` }}
       />
     </Popover>

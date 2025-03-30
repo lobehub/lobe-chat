@@ -33,7 +33,8 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     inset-inline-start: 8px;
   `,
   wrapper: css`
-    background: linear-gradient(
+    background:
+      linear-gradient(
         180deg,
         ${rgba(token.colorBgContainer, 0)},
         ${token.colorBgContainer} ${isDarkMode ? '80' : '140'}px

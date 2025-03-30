@@ -1,5 +1,4 @@
-import { Modal } from '@lobehub/ui';
-import { Segmented } from 'antd';
+import { Modal, Segmented } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';

@@ -1,7 +1,7 @@
 'use client';
 
-import { Form, Icon, type ItemGroup } from '@lobehub/ui';
-import { App, Button } from 'antd';
+import { Button, Form, type FormGroupItemType, Icon } from '@lobehub/ui';
+import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { HardDriveDownload, HardDriveUpload } from 'lucide-react';
 import { useCallback } from 'react';
@@ -53,7 +53,7 @@ const AdvancedActions = () => {
     });
   }, []);
 
-  const system: ItemGroup = {
+  const system: FormGroupItemType = {
     children: [
       {
         children: (
@@ -82,7 +82,7 @@ const AdvancedActions = () => {
       },
       {
         children: (
-          <Button danger onClick={handleClear} type="primary">
+          <Button danger onClick={handleClear} type={'primary'}>
             {t('danger.clear.action')}
           </Button>
         ),
@@ -99,7 +99,7 @@ const AdvancedActions = () => {
       initialValues={settings}
       items={[system]}
       itemsType={'group'}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

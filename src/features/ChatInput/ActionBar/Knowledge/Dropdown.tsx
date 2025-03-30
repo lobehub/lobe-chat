@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Dropdown } from 'antd';
+import { Dropdown, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
@@ -104,7 +103,7 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
           icon: (
             <Icon
               icon={LibraryBig}
-              size={{ fontSize: 16 }}
+              size={16}
               style={{ marginInlineEnd: 0, paddingInlineStart: 4 }}
             />
           ),

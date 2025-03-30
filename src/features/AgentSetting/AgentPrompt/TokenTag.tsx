@@ -1,4 +1,4 @@
-import { TokenTag } from '@lobehub/ui';
+import { TokenTag } from '@lobehub/ui/chat';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -21,9 +21,9 @@ const Tokens = memo(() => {
     <Flexbox align={'center'} gap={8} horizontal>
       {showTag && (
         <TokenTag
-          displayMode={'used'}
           maxValue={modelMaxTokens}
-          shape={'square'}
+          mode={'used'}
+          shape={'default'}
           text={{
             overload: t('tokenTag.overload'),
             remained: t('tokenTag.remained'),

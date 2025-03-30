@@ -1,5 +1,5 @@
-import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
-import { Dropdown, MenuProps, Upload } from 'antd';
+import { ActionIcon, Dropdown, Icon, MenuProps, Tooltip } from '@lobehub/ui';
+import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FileUp, FolderUp, ImageUp, Paperclip } from 'lucide-react';
 import { memo } from 'react';
@@ -96,7 +96,13 @@ const FileUpload = memo(() => {
 
   return (
     <Dropdown menu={{ items }} placement="top">
-      <ActionIcon icon={Paperclip} placement={'bottom'} title={t('upload.action.tooltip')} />
+      <ActionIcon
+        icon={Paperclip}
+        title={t('upload.action.tooltip')}
+        tooltipProps={{
+          placement: 'bottom',
+        }}
+      />
     </Dropdown>
   );
 });

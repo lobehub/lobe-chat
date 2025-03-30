@@ -26,7 +26,6 @@ const FileManager = memo<FileManagerProps>(({ title, knowledgeBaseId, category }
         >
           {title}
         </Typography.Text>
-
         <FileList category={category} knowledgeBaseId={knowledgeBaseId} />
       </Flexbox>
       <UploadDock />

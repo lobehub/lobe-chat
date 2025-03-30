@@ -1,4 +1,5 @@
-import { TokenTag, Tooltip } from '@lobehub/ui';
+import { Tooltip } from '@lobehub/ui';
+import { TokenTag } from '@lobehub/ui/chat';
 import { Popover } from 'antd';
 import { useTheme } from 'antd-style';
 import numeral from 'numeral';
@@ -67,7 +68,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
 
   const chatsString = useMemo(() => {
     const chats = chatSelectors.mainAIChatsWithHistoryConfig(useChatStore.getState());
-    return chats.map(chat => chat.content).join('');
+    return chats.map((chat) => chat.content).join('');
   }, [messageString, historyCount, enableHistoryCount]);
 
   const chatsToken = useTokenCount(chatsString) + inputTokenCount;
@@ -158,8 +159,8 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   return (
     <Popover arrow={false} content={content} placement={'top'} trigger={['hover', 'click']}>
       <TokenTag
-        displayMode={'used'}
         maxValue={maxTokens}
+        mode={'used'}
         style={{ marginLeft: 8 }}
         text={{
           overload: t('tokenTag.overload'),

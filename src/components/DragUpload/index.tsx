@@ -11,7 +11,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { getContainer, useDragUpload } from './useDragUpload';
 
 const BLOCK_SIZE = 64;
-const ICON_SIZE = 36;
+const ICON_SIZE = { size: 36, strokeWidth: 1.5 };
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -90,7 +90,7 @@ const DragUpload = memo<DragUploadProps>(({ enabledFiles = true, onUploadFiles }
               }}
               width={BLOCK_SIZE}
             >
-              <Icon icon={FileImage} size={{ fontSize: ICON_SIZE, strokeWidth: 1.5 }} />
+              <Icon icon={FileImage} size={ICON_SIZE} />
             </Center>
             <Center
               className={styles.icon}
@@ -101,7 +101,7 @@ const DragUpload = memo<DragUploadProps>(({ enabledFiles = true, onUploadFiles }
               }}
               width={BLOCK_SIZE}
             >
-              <Icon icon={FileUpIcon} size={{ fontSize: ICON_SIZE, strokeWidth: 1.5 }} />
+              <Icon icon={FileUpIcon} size={ICON_SIZE} />
             </Center>
             <Center
               className={styles.icon}
@@ -112,7 +112,7 @@ const DragUpload = memo<DragUploadProps>(({ enabledFiles = true, onUploadFiles }
               }}
               width={BLOCK_SIZE}
             >
-              <Icon icon={FileText} size={{ fontSize: ICON_SIZE, strokeWidth: 1.5 }} />
+              <Icon icon={FileText} size={ICON_SIZE} />
             </Center>
           </Flexbox>
           <Flexbox align={'center'} gap={8} style={{ textAlign: 'center' }}>

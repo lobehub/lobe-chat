@@ -8,7 +8,7 @@ const FileSkeleton = () => (
     {Array.from({ length: 4 }).map((_, index) => (
       <Flexbox align={'center'} distribution={'space-between'} height={64} horizontal key={index}>
         <Flexbox align={'center'} flex={1} gap={12} horizontal paddingInline={12}>
-          <Skeleton.Avatar active size={'large'} />
+          <Skeleton.Avatar active shape={'square'} size={48} />
           <Skeleton.Button active style={{ height: 20, width: 300 }} />
         </Flexbox>
         <Flexbox paddingInline={24} width={FILE_DATE_WIDTH}>

@@ -2,8 +2,8 @@
 
 import { CheckCircleFilled } from '@ant-design/icons';
 import { ModelIcon } from '@lobehub/icons';
-import { Alert, Highlighter, Icon } from '@lobehub/ui';
-import { Button, Select, Space } from 'antd';
+import { Alert, Button, Highlighter, Icon, Select } from '@lobehub/ui';
+import { Space } from 'antd';
 import { useTheme } from 'antd-style';
 import { Loader2Icon } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
@@ -25,7 +25,7 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
       <Alert
         extra={
           <Flexbox>
-            <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+            <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
               {JSON.stringify(error.body || error, null, 2)}
             </Highlighter>
           </Flexbox>
@@ -72,7 +72,7 @@ const Checker = memo<ConnectionCheckerProps>(
       // Clear previous check results immediately
       setPass(false);
       setError(undefined);
-      
+
       let isError = false;
 
       await chatService.fetchPresetTaskResult({

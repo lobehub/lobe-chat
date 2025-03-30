@@ -5,7 +5,7 @@ import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { DESKTOP_HEADER_ICON_SIZE, FOLDER_WIDTH } from '@/const/layoutTokens';
+import { FOLDER_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -18,7 +18,7 @@ const Header = memo<{ knowledgeBaseId?: string }>(({ knowledgeBaseId }) => {
 
   return (
     <Flexbox distribution={'space-between'} horizontal paddingBlock={12} paddingInline={24}>
-      <Flexbox gap={8} horizontal>
+      <Flexbox align={'center'} gap={8} horizontal>
         <ActionIcon
           icon={showFilePanel ? PanelLeftClose : PanelLeftOpen}
           onClick={() => {
@@ -27,7 +27,6 @@ const Header = memo<{ knowledgeBaseId?: string }>(({ knowledgeBaseId }) => {
               showFilePanel: !showFilePanel,
             });
           }}
-          size={DESKTOP_HEADER_ICON_SIZE}
         />
         <FilesSearchBar />
       </Flexbox>

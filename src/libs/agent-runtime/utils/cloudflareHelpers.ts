@@ -58,9 +58,4 @@ function desensitizeCloudflareUrl(url: string): string {
   }
 }
 
-export {
-  CloudflareStreamTransformer,
-  DEFAULT_BASE_URL_PREFIX,
-  desensitizeCloudflareUrl,
-  fillUrl,
-};
+export { CloudflareStreamTransformer, DEFAULT_BASE_URL_PREFIX, desensitizeCloudflareUrl, fillUrl };

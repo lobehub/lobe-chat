@@ -1,37 +1,25 @@
-import { PropsWithChildren } from 'react';
+'use client';
+
+import { usePathname } from 'next/navigation';
+import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import NProgress from '@/components/NProgress';
-import { MAX_WIDTH } from '@/const/layoutTokens';
+import SettingContainer from '@/features/Setting/SettingContainer';
 
 import ProviderMenu from '../ProviderMenu';
 
-const Layout = ({ children }: PropsWithChildren) => {
+const Layout = memo<PropsWithChildren>(({ children }) => {
+  const path = usePathname();
+  const isRoot = path === '/settings/provider';
   return (
     <>
       <NProgress />
       <Flexbox horizontal width={'100%'}>
         <ProviderMenu />
-        <Flexbox
-          align={'center'}
-          height={'100%'}
-          paddingBlock={16}
-          style={{ overflowX: 'hidden', overflowY: 'auto' }}
-          width={'100%'}
-        >
-          <Flexbox
-            gap={40}
-            paddingInline={24}
-            style={{
-              maxWidth: MAX_WIDTH,
-            }}
-            width={'100%'}
-          >
-            {children}
-          </Flexbox>
-        </Flexbox>
+        <SettingContainer variant={isRoot ? 'secondary' : undefined}>{children}</SettingContainer>
       </Flexbox>
     </>
   );
-};
+});
 export default Layout;

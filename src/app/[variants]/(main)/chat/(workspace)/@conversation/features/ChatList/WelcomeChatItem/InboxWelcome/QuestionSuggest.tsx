@@ -75,7 +75,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
         <Link href={USAGE_DOCUMENTS} target={'_blank'}>
           <ActionIcon
             icon={ArrowRight}
-            size={{ blockSize: 24, fontSize: 16 }}
+            size={{ blockSize: 24, size: 16 }}
             title={t('guide.questions.moreBtn')}
           />
         </Link>

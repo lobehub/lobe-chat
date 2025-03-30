@@ -56,7 +56,7 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
   if (identifier === WebBrowsingManifest.identifier) {
     return (
       <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>
-        {isLoading ? <Loader /> : <Icon icon={Globe} size={{ fontSize: 13 }} />}
+        {isLoading ? <Loader /> : <Icon icon={Globe} size={13} />}
         <div>{t('search.title')}</div>/<span className={styles.apiName}>{apiName}</span>
       </Flexbox>
     );

@@ -187,7 +187,7 @@ const WaitingOAuth = memo<WaitingOAuthProps>(({ setWaiting, setIsOpen }) => {
           <div className={cx(styles.pulseBase, styles.pulse2)} />
           <div className={cx(styles.pulseBase, styles.pulse3)} />
 
-          <Icon className={styles.radarIcon} icon={WifiIcon} size={{ fontSize: 40 }} />
+          <Icon className={styles.radarIcon} icon={WifiIcon} size={40} />
         </div>
         <Title className={styles.title} level={4}>
           {t('waitingOAuth.title')}

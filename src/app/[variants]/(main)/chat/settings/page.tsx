@@ -1,6 +1,6 @@
 'use client';
 
-import { TabsNav } from '@lobehub/ui';
+import { Tabs } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,8 +44,8 @@ const EditPage = memo(() => {
   return (
     <>
       <PageTitle title={t('header.sessionWithName', { name: title })} />
-
-      <TabsNav
+      <Tabs
+        compact
         items={[
           {
             key: ChatSettingsTabs.Prompt,
@@ -73,7 +73,6 @@ const EditPage = memo(() => {
           }) as any,
         ]}
         onChange={(value) => setTab(value as ChatSettingsTabs)}
-        variant={'compact'}
       />
       <AgentSettingsProvider
         config={config}

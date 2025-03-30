@@ -1,6 +1,6 @@
 'use client';
 
-import { EditableMessage } from '@lobehub/ui';
+import { EditableMessage } from '@lobehub/ui/chat';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { PencilLine } from 'lucide-react';
@@ -60,7 +60,6 @@ const OpeningMessage = memo(() => {
           editButtonSize={'small'}
           editing={editing}
           height={'auto'}
-          inputType={'pure'}
           onChange={setOpeningMessage}
           onEditingChange={setEditing}
           placeholder={t('settingOpening.openingMessage.placeholder')}
@@ -70,6 +69,7 @@ const OpeningMessage = memo(() => {
             confirm: t('ok', { ns: 'common' }),
           }}
           value={openingMessage ?? ''}
+          variant={'borderless'}
         />
         {editIconButton}
       </Flexbox>

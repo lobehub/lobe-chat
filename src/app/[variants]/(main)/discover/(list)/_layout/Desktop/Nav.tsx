@@ -1,7 +1,7 @@
 'use client';
 
+import { Button } from '@lobehub/ui';
 import { ChatHeader } from '@lobehub/ui/chat';
-import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

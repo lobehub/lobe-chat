@@ -51,8 +51,10 @@ const Search = memo(() => {
               isAgentEnableSearch ? (theme.isDarkMode ? theme.cyan7 : theme.cyan10) : undefined
             }
             icon={Globe}
-            placement={'bottom'}
             title={t('search.title')}
+            tooltipProps={{
+              placement: 'bottom',
+            }}
           />
         </Popover>
       </Flexbox>

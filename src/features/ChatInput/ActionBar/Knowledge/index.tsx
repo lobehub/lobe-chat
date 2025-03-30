@@ -31,14 +31,16 @@ const Knowledge = memo(() => {
   const content = (
     <DropdownMenu>
       <ActionIcon
-        disable={!enableKnowledge}
+        disabled={!enableKnowledge}
         icon={LibraryBig}
-        placement={'bottom'}
         title={
           enableKnowledge
             ? t('knowledgeBase.title')
             : t('knowledgeBase.disabled', { cloud: LOBE_CHAT_CLOUD })
         }
+        tooltipProps={{
+          placement: 'bottom',
+        }}
       />
     </DropdownMenu>
   );

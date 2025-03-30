@@ -33,36 +33,44 @@ describe('LobeWenxinAI', () => {
     it('should with search citations', async () => {
       const data = [
         {
-          id: "as-bhrxwy5fq1",
-          object: "chat.completion.chunk",
+          id: 'as-bhrxwy5fq1',
+          object: 'chat.completion.chunk',
           created: 1741000028,
-          model: "ernie-4.0-8k-latest",
+          model: 'ernie-4.0-8k-latest',
           choices: [
             {
               index: 0,
-              delta: { content: "今天是**", role: "assistant" },
-              flag: 0
-            }
+              delta: { content: '今天是**', role: 'assistant' },
+              flag: 0,
+            },
           ],
           search_results: [
-            { index: 1, url: "http://www.mnw.cn/news/shehui/", title: "社会新闻" },
-            { index: 2, url: "https://www.chinanews.com.cn/sh/2025/03-01/10376297.shtml", title: "中越边民共庆“春龙节”" },
-            { index: 3, url: "https://www.chinanews.com/china/index.shtml", title: "中国新闻网_时政" }
-          ]
+            { index: 1, url: 'http://www.mnw.cn/news/shehui/', title: '社会新闻' },
+            {
+              index: 2,
+              url: 'https://www.chinanews.com.cn/sh/2025/03-01/10376297.shtml',
+              title: '中越边民共庆“春龙节”',
+            },
+            {
+              index: 3,
+              url: 'https://www.chinanews.com/china/index.shtml',
+              title: '中国新闻网_时政',
+            },
+          ],
         },
         {
-          id: "as-bhrxwy5fq1",
-          object: "chat.completion.chunk",
+          id: 'as-bhrxwy5fq1',
+          object: 'chat.completion.chunk',
           created: 1741000028,
-          model: "ernie-4.0-8k-latest",
+          model: 'ernie-4.0-8k-latest',
           choices: [
             {
               index: 0,
-              delta: { content: "20" },
-              flag: 0
-            }
-          ]
-        }
+              delta: { content: '20' },
+              flag: 0,
+            },
+          ],
+        },
       ];
 
       const mockStream = new ReadableStream({

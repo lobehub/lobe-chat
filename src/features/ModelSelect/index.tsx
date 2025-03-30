@@ -1,4 +1,4 @@
-import { Select, SelectProps } from 'antd';
+import { Select, type SelectProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
 

@@ -63,13 +63,21 @@ const ProviderCard = memo<ProviderCardProps>(
                   </Flexbox>
                 )}
               </Flexbox>
-              <Paragraph className={styles.desc} ellipsis={{ rows: 2, tooltip: true }}>
+              <Paragraph
+                className={styles.desc}
+                ellipsis={{
+                  rows: 2,
+                  tooltip: {
+                    arrow: false,
+                  },
+                }}
+              >
                 {source === 'custom' ? description : t(`${id}.description`)}
               </Paragraph>
             </Flexbox>
           </Link>
           <Divider style={{ margin: '4px 0' }} />
-          <Flexbox horizontal justify={'space-between'} paddingBlock={'8px 0'}>
+          <Flexbox horizontal justify={'space-between'}>
             <div />
             <EnableSwitch enabled={enabled} id={id} />
           </Flexbox>

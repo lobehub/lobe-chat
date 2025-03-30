@@ -1,7 +1,6 @@
 'use client';
 
-import { Avatar, Icon, Tag } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Avatar, Button, Icon, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
 import { ChevronRight } from 'lucide-react';

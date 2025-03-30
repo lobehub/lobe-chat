@@ -1,7 +1,7 @@
 'use client';
 
 import { ModelIcon } from '@lobehub/icons';
-import { Button } from 'antd';
+import { Button } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import Link from 'next/link';

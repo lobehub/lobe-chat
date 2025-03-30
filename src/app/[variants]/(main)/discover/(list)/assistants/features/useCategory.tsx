@@ -28,7 +28,7 @@ export const useCategory = (fontsize?: number) => {
 
   const { t } = useTranslation('discover');
 
-  const size = fontsize ? { fontSize: fontsize } : ICON_SIZE;
+  const size = fontsize || ICON_SIZE;
 
   return [
     {

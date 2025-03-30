@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Input, InputProps } from 'antd';
+import { Icon, Input, InputProps } from '@lobehub/ui';
 import { SearchIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

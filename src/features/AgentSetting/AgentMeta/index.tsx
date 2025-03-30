@@ -1,19 +1,18 @@
 'use client';
 
-import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
-import { Button, Skeleton } from 'antd';
+import { Form, type FormGroupItemType, type FormItemProps, Icon, Tooltip } from '@lobehub/ui';
+import { GradientButton } from '@lobehub/ui/awesome';
 import isEqual from 'fast-deep-equal';
 import { isString } from 'lodash-es';
 import { Wand2 } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import { useStore } from '../store';
-import { SessionLoadingState } from '../store/initialState';
+import { selectors, useStore } from '../store';
 import AutoGenerateAvatar from './AutoGenerateAvatar';
 import AutoGenerateInput from './AutoGenerateInput';
 import AutoGenerateSelect from './AutoGenerateSelect';
@@ -21,21 +20,17 @@ import BackgroundSwatches from './BackgroundSwatches';
 
 const AgentMeta = memo(() => {
   const { t } = useTranslation('setting');
-
+  const [form] = Form.useForm();
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
-
   const [hasSystemRole, updateMeta, autocompleteMeta, autocompleteAllMeta] = useStore((s) => [
     !!s.config.systemRole,
     s.setAgentMeta,
     s.autocompleteMeta,
     s.autocompleteAllMeta,
   ]);
-  const [isInbox, isIniting, autocompleteLoading] = useStore((s) => [
-    s.id === INBOX_SESSION_ID,
-    s.loading,
-    s.autocompleteLoading,
-  ]);
-  const meta = useStore((s) => s.meta, isEqual);
+  const [isInbox, loadingState] = useStore((s) => [s.id === INBOX_SESSION_ID, s.loadingState]);
+  const meta = useStore(selectors.currentMetaConfig, isEqual);
+  const [background, setBackground] = useState(meta.backgroundColor);
 
   if (isInbox) return;
 
@@ -49,6 +44,7 @@ const AgentMeta = memo(() => {
     },
     {
       Render: AutoGenerateInput,
+      desc: t('settingAgent.description.desc'),
       key: 'description',
       label: t('settingAgent.description.title'),
       onChange: (value: string) => updateMeta({ description: value }),
@@ -56,6 +52,7 @@ const AgentMeta = memo(() => {
     },
     {
       Render: AutoGenerateSelect,
+      desc: t('settingAgent.tag.desc'),
       key: 'tags',
       label: t('settingAgent.tag.title'),
       onChange: (e: any) => updateMeta({ tags: isString(e) ? e.split(',') : e }),
@@ -66,57 +63,45 @@ const AgentMeta = memo(() => {
   const autocompleteItems: FormItemProps[] = basic.map((item) => {
     const AutoGenerate = item.Render;
     return {
-      children: isIniting ? (
-        <Skeleton.Button active block size={'small'} />
-      ) : (
+      children: (
         <AutoGenerate
           canAutoGenerate={hasSystemRole}
-          loading={autocompleteLoading[item.key as keyof SessionLoadingState]}
-          onChange={item.onChange}
+          loading={loadingState?.[item.key]}
           onGenerate={() => {
             autocompleteMeta(item.key as keyof typeof meta);
           }}
           placeholder={item.placeholder}
-          value={meta[item.key as keyof typeof meta]}
         />
       ),
       label: item.label,
+      name: item.key,
     };
   });
 
-  const metaData: ItemGroup = {
+  const metaData: FormGroupItemType = {
     children: [
       {
-        children: isIniting ? (
-          <Skeleton.Button active block size={'small'} />
-        ) : (
+        children: (
           <AutoGenerateAvatar
-            background={meta.backgroundColor}
+            background={background}
             canAutoGenerate={hasSystemRole}
-            loading={autocompleteLoading['avatar']}
-            onChange={(avatar) => updateMeta({ avatar })}
+            loading={loadingState?.['avatar']}
             onGenerate={() => autocompleteMeta('avatar')}
-            value={meta.avatar}
           />
         ),
         label: t('settingAgent.avatar.title'),
         minWidth: undefined,
+        name: 'avatar',
       },
       {
-        children: isIniting ? (
-          <Skeleton.Button active block size={'small'} />
-        ) : (
-          <BackgroundSwatches
-            backgroundColor={meta.backgroundColor}
-            onChange={(backgroundColor) => updateMeta({ backgroundColor })}
-          />
-        ),
+        children: <BackgroundSwatches onValuesChange={(c) => setBackground(c)} />,
         label: t('settingAgent.backgroundColor.title'),
         minWidth: undefined,
+        name: 'backgroundColor',
       },
       ...autocompleteItems,
     ],
-    extra: !isIniting && (
+    extra: (
       <Tooltip
         title={
           !hasSystemRole
@@ -124,19 +109,22 @@ const AgentMeta = memo(() => {
             : t('autoGenerateTooltip', { ns: 'common' })
         }
       >
-        <Button
+        <GradientButton
           disabled={!hasSystemRole}
+          glow={false}
           icon={<Icon icon={Wand2} />}
-          loading={Object.values(autocompleteLoading).some((i) => !!i)}
+          loading={Object.values(loadingState as any).some((i) => !!i)}
           onClick={(e: any) => {
             e.stopPropagation();
-
             autocompleteAllMeta(true);
           }}
-          size={'small'}
+          style={{
+            fontSize: 14,
+            height: 36,
+          }}
         >
           {t('autoGenerate', { ns: 'common' })}
-        </Button>
+        </GradientButton>
       </Tooltip>
     ),
     title: t('settingAgent.title'),
@@ -145,9 +133,22 @@ const AgentMeta = memo(() => {
   return (
     <Form
       disabled={!isAgentEditable}
+      footer={
+        <Form.SubmitFooter
+          texts={{
+            reset: t('submitFooter.reset'),
+            submit: t('settingAgent.submit'),
+            unSaved: t('submitFooter.unSaved'),
+            unSavedWarning: t('submitFooter.unSavedWarning'),
+          }}
+        />
+      }
+      form={form}
+      initialValues={meta}
       items={[metaData]}
       itemsType={'group'}
-      variant={'pure'}
+      onFinish={updateMeta}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );
