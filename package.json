@@ -136,7 +136,7 @@
     "@lobehub/icons": "^1.73.1",
     "@lobehub/tts": "^1.28.0",
     "@lobehub/ui": "^1.169.2",
-    "@neondatabase/serverless": "^0.10.4",
+    "@neondatabase/serverless": "^1.0.0",
     "@next/third-parties": "15.2.3",
     "@react-spring/web": "^9.7.5",
     "@sentry/nextjs": "^7.120.2",
