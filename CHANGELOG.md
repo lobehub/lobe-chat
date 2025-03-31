@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.77.4](https://github.com/lobehub/lobe-chat/compare/v1.77.3...v1.77.4)
+
+<sup>Released on **2025-03-31**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor db core.
+
+#### 💄 Styles
+
+- **misc**: Update branding.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor db core, closes [#7245](https://github.com/lobehub/lobe-chat/issues/7245) ([5c71db6](https://github.com/lobehub/lobe-chat/commit/5c71db6))
+
+#### Styles
+
+- **misc**: Update branding, closes [#7224](https://github.com/lobehub/lobe-chat/issues/7224) ([481cab0](https://github.com/lobehub/lobe-chat/commit/481cab0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.77.3](https://github.com/lobehub/lobe-chat/compare/v1.77.2...v1.77.3)
 
 <sup>Released on **2025-03-29**</sup>

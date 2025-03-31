@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update branding."]
+    },
+    "date": "2025-03-31",
+    "version": "1.77.4"
+  },
+  {
+    "children": {
       "improvements": ["Move general db models to database folder."]
     },
     "date": "2025-03-29",
