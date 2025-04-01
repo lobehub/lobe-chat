@@ -11,9 +11,10 @@ interface Params {
   id: string;
 }
 
-type Props = { params: Params };
+type Props = { params: Promise<Params> };
 
-const MenuPage = async ({ params }: Props) => {
+const MenuPage = async (props: Props) => {
+  const params = await props.params;
   const id = params.id;
   const item = await KnowledgeBaseModel.findById(serverDB, params.id);
 

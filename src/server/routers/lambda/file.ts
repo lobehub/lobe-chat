@@ -74,7 +74,7 @@ export const fileRouter = router({
     .query(async ({ ctx, input }): Promise<FileListItem | undefined> => {
       const item = await ctx.fileModel.findById(input.id);
 
-      if (!item) throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
+      if (!item) throw new TRPCError({ code: 'NOT_FOUND', message: 'File not found' });
 
       let embeddingTask = null;
       if (item.embeddingTaskId) {
