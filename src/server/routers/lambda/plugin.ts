@@ -1,15 +1,16 @@
 import { z } from 'zod';
 
 import { PluginModel } from '@/database/models/plugin';
-import { serverDB } from '@/database/server';
+import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { LobeTool } from '@/types/tool';
 
-const pluginProcedure = authedProcedure.use(async (opts) => {
+const pluginProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
-    ctx: { pluginModel: new PluginModel(serverDB, ctx.userId) },
+    ctx: { pluginModel: new PluginModel(ctx.serverDB, ctx.userId) },
   });
 });
 
@@ -66,6 +67,7 @@ export const pluginRouter = router({
   getPlugins: publicProcedure.query(async ({ ctx }): Promise<LobeTool[]> => {
     if (!ctx.userId) return [];
 
+    const serverDB = await getServerDB();
     const pluginModel = new PluginModel(serverDB, ctx.userId);
 
     return pluginModel.query();

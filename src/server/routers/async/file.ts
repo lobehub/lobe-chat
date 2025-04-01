@@ -11,7 +11,6 @@ import { ChunkModel } from '@/database/models/chunk';
 import { EmbeddingModel } from '@/database/models/embedding';
 import { FileModel } from '@/database/models/file';
 import { NewChunkItem, NewEmbeddingsItem } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
@@ -31,11 +30,11 @@ const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
 
   return opts.next({
     ctx: {
-      asyncTaskModel: new AsyncTaskModel(serverDB, ctx.userId),
-      chunkModel: new ChunkModel(serverDB, ctx.userId),
+      asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
+      chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
       chunkService: new ChunkService(ctx.userId),
-      embeddingModel: new EmbeddingModel(serverDB, ctx.userId),
-      fileModel: new FileModel(serverDB, ctx.userId),
+      embeddingModel: new EmbeddingModel(ctx.serverDB, ctx.userId),
+      fileModel: new FileModel(ctx.serverDB, ctx.userId),
     },
   });
 });

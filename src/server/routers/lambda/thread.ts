@@ -3,17 +3,17 @@ import { z } from 'zod';
 import { MessageModel } from '@/database/models/message';
 import { ThreadModel } from '@/database/models/thread';
 import { insertThreadSchema } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { ThreadItem, createThreadSchema } from '@/types/topic/thread';
 
-const threadProcedure = authedProcedure.use(async (opts) => {
+const threadProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
     ctx: {
-      messageModel: new MessageModel(serverDB, ctx.userId),
-      threadModel: new ThreadModel(serverDB, ctx.userId),
+      messageModel: new MessageModel(ctx.serverDB, ctx.userId),
+      threadModel: new ThreadModel(ctx.serverDB, ctx.userId),
     },
   });
 });

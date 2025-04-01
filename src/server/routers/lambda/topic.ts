@@ -1,15 +1,16 @@
 import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
-import { serverDB } from '@/database/server';
+import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { BatchTaskResult } from '@/types/service';
 
-const topicProcedure = authedProcedure.use(async (opts) => {
+const topicProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
-    ctx: { topicModel: new TopicModel(serverDB, ctx.userId) },
+    ctx: { topicModel: new TopicModel(ctx.serverDB, ctx.userId) },
   });
 });
 
@@ -101,6 +102,7 @@ export const topicRouter = router({
     .query(async ({ input, ctx }) => {
       if (!ctx.userId) return [];
 
+      const serverDB = await getServerDB();
       const topicModel = new TopicModel(serverDB, ctx.userId);
 
       return topicModel.query(input);
