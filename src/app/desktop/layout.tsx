@@ -5,11 +5,9 @@ import { ReactNode } from 'react';
 import { isDesktop } from '@/const/version';
 import GlobalLayout from '@/layout/GlobalProvider';
 import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';
-import { DynamicLayoutProps } from '@/types/next';
 
-interface RootLayoutProps extends DynamicLayoutProps {
+interface RootLayoutProps {
   children: ReactNode;
-  modal: ReactNode;
 }
 
 const RootLayout = async ({ children }: RootLayoutProps) => {
