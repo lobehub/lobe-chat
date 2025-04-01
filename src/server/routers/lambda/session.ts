@@ -3,21 +3,22 @@ import { z } from 'zod';
 import { SessionModel } from '@/database/models/session';
 import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
-import { serverDB } from '@/database/server';
+import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { AgentChatConfigSchema } from '@/types/agent';
 import { LobeMetaDataSchema } from '@/types/meta';
 import { BatchTaskResult } from '@/types/service';
 import { ChatSessionList } from '@/types/session';
 import { merge } from '@/utils/merge';
 
-const sessionProcedure = authedProcedure.use(async (opts) => {
+const sessionProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
     ctx: {
-      sessionGroupModel: new SessionGroupModel(serverDB, ctx.userId),
-      sessionModel: new SessionModel(serverDB, ctx.userId),
+      sessionGroupModel: new SessionGroupModel(ctx.serverDB, ctx.userId),
+      sessionModel: new SessionModel(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -95,6 +96,7 @@ export const sessionRouter = router({
         sessions: [],
       };
 
+    const serverDB = await getServerDB();
     const sessionModel = new SessionModel(serverDB, ctx.userId);
 
     return sessionModel.queryWithGroups();

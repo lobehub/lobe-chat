@@ -2,16 +2,16 @@ import { z } from 'zod';
 
 import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
 import { insertKnowledgeBasesSchema } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 
-const knowledgeBaseProcedure = authedProcedure.use(async (opts) => {
+const knowledgeBaseProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
     ctx: {
-      knowledgeBaseModel: new KnowledgeBaseModel(serverDB, ctx.userId),
+      knowledgeBaseModel: new KnowledgeBaseModel(ctx.serverDB, ctx.userId),
     },
   });
 });

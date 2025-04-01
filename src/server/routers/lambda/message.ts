@@ -2,19 +2,20 @@ import { z } from 'zod';
 
 import { MessageModel } from '@/database/models/message';
 import { updateMessagePluginSchema } from '@/database/schemas';
-import { serverDB } from '@/database/server';
+import { getServerDB } from '@/database/server';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { getFullFileUrl } from '@/server/utils/files';
 import { ChatMessage } from '@/types/message';
 import { BatchTaskResult } from '@/types/service';
 
 type ChatMessageList = ChatMessage[];
 
-const messageProcedure = authedProcedure.use(async (opts) => {
+const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
-    ctx: { messageModel: new MessageModel(serverDB, ctx.userId) },
+    ctx: { messageModel: new MessageModel(ctx.serverDB, ctx.userId) },
   });
 });
 
@@ -95,6 +96,7 @@ export const messageRouter = router({
     )
     .query(async ({ input, ctx }) => {
       if (!ctx.userId) return [];
+      const serverDB = await getServerDB();
 
       const messageModel = new MessageModel(serverDB, ctx.userId);
 
