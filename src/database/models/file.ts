@@ -128,50 +128,49 @@ export class FileModel {
   };
 
   deleteMany = async (ids: string[], removeGlobalFile: boolean = true) => {
-    const fileList = await this.findByIds(ids);
-    const hashList = fileList.map((file) => file.fileHash!);
+    if (ids.length === 0) return [];
 
     return await this.db.transaction(async (trx) => {
-      // 1. 删除相关的 chunks
+      // 1. 先获取文件列表，以便返回删除的文件
+      const fileList = await trx.query.files.findMany({
+        where: and(inArray(files.id, ids), eq(files.userId, this.userId)),
+      });
+
+      if (fileList.length === 0) return [];
+
+      // 提取需要检查的文件哈希值
+      const hashList = fileList.map((file) => file.fileHash!).filter(Boolean);
+
+      // 2. 删除相关的 chunks
       await this.deleteFileChunks(trx as any, ids);
 
-      // delete the files
+      // 3. 删除文件记录
       await trx.delete(files).where(and(inArray(files.id, ids), eq(files.userId, this.userId)));
 
-      // count the files by hash
-      const result = await trx
+      // 如果不需要删除全局文件，直接返回
+      if (!removeGlobalFile || hashList.length === 0) return fileList;
+
+      // 4. 找出不再被引用的哈希值
+      const remainingFiles = await trx
         .select({
-          count: count(),
-          hashId: files.fileHash,
+          fileHash: files.fileHash,
         })
         .from(files)
-        .where(inArray(files.fileHash, hashList))
-        .groupBy(files.fileHash);
+        .where(inArray(files.fileHash, hashList));
 
-      // Create a Map to store the query result
-      const countMap = new Map(result.map((item) => [item.hashId, item.count]));
+      // 将仍在使用的哈希值放入Set中，便于快速查找
+      const usedHashes = new Set(remainingFiles.map((file) => file.fileHash));
 
-      // Ensure that all incoming hashes have a result, even if it is 0
-      const fileHashCounts = hashList.map((hashId) => ({
-        count: countMap.get(hashId) || 0,
-        hashId: hashId,
-      }));
+      // 找出需要删除的哈希值(不再被任何文件使用的)
+      const hashesToDelete = hashList.filter((hash) => !usedHashes.has(hash));
 
-      const needToDeleteList = fileHashCounts.filter((item) => item.count === 0);
+      if (hashesToDelete.length === 0) return fileList;
 
-      if (needToDeleteList.length === 0 || !removeGlobalFile) return;
+      // 5. 删除不再被引用的全局文件
+      await trx.delete(globalFiles).where(inArray(globalFiles.hashId, hashesToDelete));
 
-      // delete the file from global file if it is not used by other files
-      await trx.delete(globalFiles).where(
-        inArray(
-          globalFiles.hashId,
-          needToDeleteList.map((item) => item.hashId!),
-        ),
-      );
-
-      return fileList.filter((file) =>
-        needToDeleteList.some((item) => item.hashId === file.fileHash),
-      );
+      // 返回删除的文件列表
+      return fileList;
     });
   };
 
@@ -318,25 +317,58 @@ export class FileModel {
 
   // 抽象出通用的删除 chunks 方法
   private deleteFileChunks = async (trx: PgTransaction<any>, fileIds: string[]) => {
-    const BATCH_SIZE = 1000; // 每批处理的数量
+    if (fileIds.length === 0) return;
 
-    // 1. 获取所有关联的 chunk IDs
+    // 直接使用 JOIN 优化查询，减少数据传输量
     const relatedChunks = await trx
       .select({ chunkId: fileChunks.chunkId })
       .from(fileChunks)
-      .where(inArray(fileChunks.fileId, fileIds));
+      .where(
+        and(
+          inArray(fileChunks.fileId, fileIds),
+          // 确保只查询有效的 chunkId
+          notExists(
+            trx
+              .select()
+              .from(knowledgeBaseFiles)
+              .where(eq(knowledgeBaseFiles.fileId, fileChunks.fileId)),
+          ),
+        ),
+      );
 
     const chunkIds = relatedChunks.map((c) => c.chunkId).filter(Boolean) as string[];
 
     if (chunkIds.length === 0) return;
 
-    // 2. 分批处理删除
-    for (let i = 0; i < chunkIds.length; i += BATCH_SIZE) {
-      const batchChunkIds = chunkIds.slice(i, i + BATCH_SIZE);
+    // 批量处理配置
+    const BATCH_SIZE = 1000; // 增加批处理量
+    const MAX_CONCURRENT_BATCHES = 3; // 最大并行批次数
 
-      await trx.delete(embeddings).where(inArray(embeddings.chunkId, batchChunkIds));
+    // 分批并行处理
+    for (let i = 0; i < chunkIds.length; i += BATCH_SIZE * MAX_CONCURRENT_BATCHES) {
+      const batchPromises = [];
 
-      await trx.delete(chunks).where(inArray(chunks.id, batchChunkIds));
+      // 创建多个并行批次
+      for (let j = 0; j < MAX_CONCURRENT_BATCHES; j++) {
+        const startIdx = i + j * BATCH_SIZE;
+        if (startIdx >= chunkIds.length) break;
+
+        const batchChunkIds = chunkIds.slice(startIdx, startIdx + BATCH_SIZE);
+        if (batchChunkIds.length === 0) continue;
+
+        // 为每个批次创建一个删除任务
+        const batchPromise = (async () => {
+          // 先删除嵌入向量
+          await trx.delete(embeddings).where(inArray(embeddings.chunkId, batchChunkIds));
+          // 再删除块
+          await trx.delete(chunks).where(inArray(chunks.id, batchChunkIds));
+        })();
+
+        batchPromises.push(batchPromise);
+      }
+
+      // 等待当前批次的所有任务完成
+      await Promise.all(batchPromises);
     }
 
     return chunkIds;
