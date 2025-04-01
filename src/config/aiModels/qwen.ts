@@ -298,6 +298,26 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
       vision: true,
     },
+    contextWindowTokens: 122_880,
+    description:
+      'QVQ模型是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力，尤其在数学推理领域。',
+    displayName: 'QVQ Max',
+    id: 'qvq-max-latest',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 8,
+      output: 32,
+    },
+    releasedAt: '2025-03-25',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
     contextWindowTokens: 32_768,
     description:
       'QVQ模型是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力，尤其在数学推理领域。',
