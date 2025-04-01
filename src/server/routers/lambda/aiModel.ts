@@ -3,8 +3,7 @@ import { z } from 'zod';
 import { AiModelModel } from '@/database/models/aiModel';
 import { UserModel } from '@/database/models/user';
 import { AiInfraRepos } from '@/database/repositories/aiInfra';
-import { serverDB } from '@/database/server';
-import { authedProcedure, router } from '@/libs/trpc';
+import { authedProcedure, router, serverDatabase } from '@/libs/trpc';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import {
@@ -15,7 +14,7 @@ import {
 } from '@/types/aiModel';
 import { ProviderConfig } from '@/types/user/settings';
 
-const aiModelProcedure = authedProcedure.use(async (opts) => {
+const aiModelProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
@@ -24,13 +23,13 @@ const aiModelProcedure = authedProcedure.use(async (opts) => {
   return opts.next({
     ctx: {
       aiInfraRepos: new AiInfraRepos(
-        serverDB,
+        ctx.serverDB,
         ctx.userId,
         aiProvider as Record<string, ProviderConfig>,
       ),
-      aiModelModel: new AiModelModel(serverDB, ctx.userId),
+      aiModelModel: new AiModelModel(ctx.serverDB, ctx.userId),
       gateKeeper,
-      userModel: new UserModel(serverDB, ctx.userId),
+      userModel: new UserModel(ctx.serverDB, ctx.userId),
     },
   });
 });

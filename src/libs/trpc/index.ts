@@ -11,6 +11,8 @@ import { trpc } from './init';
 import { jwtPayloadChecker } from './middleware/jwtPayload';
 import { userAuth } from './middleware/userAuth';
 
+export { serverDatabase } from './middleware/serverDatabase';
+
 /**
  * Create a router
  * @link https://trpc.io/docs/v11/router

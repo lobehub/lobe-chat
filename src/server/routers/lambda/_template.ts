@@ -2,16 +2,15 @@ import { z } from 'zod';
 
 import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { insertSessionGroupSchema } from '@/database/schemas';
-import { serverDB } from '@/database/server';
-import { authedProcedure, router } from '@/libs/trpc';
+import { authedProcedure, router, serverDatabase } from '@/libs/trpc';
 import { SessionGroupItem } from '@/types/session';
 
-const sessionProcedure = authedProcedure.use(async (opts) => {
+const sessionProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
     ctx: {
-      sessionGroupModel: new SessionGroupModel(serverDB, ctx.userId),
+      sessionGroupModel: new SessionGroupModel(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -69,8 +68,6 @@ export const sessionGroupRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      console.log('sortMap:', input.sortMap);
-
       return ctx.sessionGroupModel.updateOrder(input.sortMap);
     }),
 });
