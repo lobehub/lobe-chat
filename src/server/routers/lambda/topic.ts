@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 import { TopicModel } from '@/database/models/topic';
 import { getServerDB } from '@/database/server';
-import { authedProcedure, publicProcedure, router, serverDatabase } from '@/libs/trpc';
+import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { BatchTaskResult } from '@/types/service';
 
 const topicProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {

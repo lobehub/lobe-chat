@@ -13,7 +13,8 @@ import {
   EvalEvaluationModel,
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
-import { authedProcedure, router, serverDatabase } from '@/libs/trpc';
+import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
 import { S3 } from '@/server/modules/S3';
 import { createAsyncServerClient } from '@/server/routers/async';

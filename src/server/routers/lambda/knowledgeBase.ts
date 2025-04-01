@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
 import { insertKnowledgeBasesSchema } from '@/database/schemas';
-import { authedProcedure, router, serverDatabase } from '@/libs/trpc';
+import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 
 const knowledgeBaseProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {

@@ -3,7 +3,8 @@ import { z } from 'zod';
 import { AiModelModel } from '@/database/models/aiModel';
 import { UserModel } from '@/database/models/user';
 import { AiInfraRepos } from '@/database/repositories/aiInfra';
-import { authedProcedure, router, serverDatabase } from '@/libs/trpc';
+import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import {
