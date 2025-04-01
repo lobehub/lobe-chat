@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
 import { ModelProvider } from '@/libs/agent-runtime';
+import { sleep } from '@/utils/sleep';
 
 import { aiProviders, users } from '../../schemas';
 import { AiProviderModel } from '../aiProvider';
@@ -96,6 +97,7 @@ describe('AiProviderModel', () => {
   describe('query', () => {
     it('should query ai providers for the user', async () => {
       await aiProviderModel.create({ name: 'AiHubMix', source: 'custom', id: 'aihubmix' });
+      await sleep(10);
       await aiProviderModel.create({ name: 'AiHubMix', source: 'custom', id: 'aihubmix-2' });
 
       const userGroups = await aiProviderModel.query();
