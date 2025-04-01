@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-04-01",
+    "version": "1.77.5"
+  },
+  {
     "children": {
       "improvements": ["Update branding."]
     },
