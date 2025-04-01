@@ -193,13 +193,13 @@ export class SessionModel {
     type: 'agent' | 'group';
   }): Promise<SessionItem> => {
     return this.db.transaction(async (trx) => {
-      const existResult = await trx.query.sessions.findFirst({
-        where: slug
-          ? and(eq(sessions.slug, slug), eq(sessions.userId, this.userId))
-          : eq(sessions.userId, this.userId),
-      });
+      if (slug) {
+        const existResult = await trx.query.sessions.findFirst({
+          where: and(eq(sessions.slug, slug), eq(sessions.userId, this.userId)),
+        });
 
-      if (existResult) return existResult;
+        if (existResult) return existResult;
+      }
 
       const newAgents = await trx
         .insert(agents)
