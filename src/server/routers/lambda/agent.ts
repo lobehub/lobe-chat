@@ -7,22 +7,22 @@ import { FileModel } from '@/database/models/file';
 import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
 import { SessionModel } from '@/database/models/session';
 import { UserModel } from '@/database/models/user';
-import { serverDB } from '@/database/server';
 import { pino } from '@/libs/logger';
 import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { AgentService } from '@/server/services/agent';
 import { KnowledgeItem, KnowledgeType } from '@/types/knowledgeBase';
 
-const agentProcedure = authedProcedure.use(async (opts) => {
+const agentProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
     ctx: {
-      agentModel: new AgentModel(serverDB, ctx.userId),
-      agentService: new AgentService(serverDB, ctx.userId),
-      fileModel: new FileModel(serverDB, ctx.userId),
-      knowledgeBaseModel: new KnowledgeBaseModel(serverDB, ctx.userId),
-      sessionModel: new SessionModel(serverDB, ctx.userId),
+      agentModel: new AgentModel(ctx.serverDB, ctx.userId),
+      agentService: new AgentService(ctx.serverDB, ctx.userId),
+      fileModel: new FileModel(ctx.serverDB, ctx.userId),
+      knowledgeBaseModel: new KnowledgeBaseModel(ctx.serverDB, ctx.userId),
+      sessionModel: new SessionModel(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -90,7 +90,7 @@ export const agentRouter = router({
         // if there is no session for user, create one
         if (!item) {
           // if there is no user, return default config
-          const user = await UserModel.findById(serverDB, ctx.userId);
+          const user = await UserModel.findById(ctx.serverDB, ctx.userId);
           if (!user) return DEFAULT_AGENT_CONFIG;
 
           const res = await ctx.agentService.createInbox();

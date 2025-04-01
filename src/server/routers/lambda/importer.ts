@@ -2,15 +2,15 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { DataImporterRepos } from '@/database/repositories/dataImporter';
-import { serverDB } from '@/database/server';
 import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { S3 } from '@/server/modules/S3';
 import { ImportPgDataStructure } from '@/types/export';
 import { ImportResultData, ImporterEntryData } from '@/types/importer';
 
-const importProcedure = authedProcedure.use(async (opts) => {
+const importProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
-  const dataImporterService = new DataImporterRepos(serverDB, ctx.userId);
+  const dataImporterService = new DataImporterRepos(ctx.serverDB, ctx.userId);
 
   return opts.next({
     ctx: { dataImporterService },

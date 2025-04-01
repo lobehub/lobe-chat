@@ -6,7 +6,6 @@ import { UserModel } from '@/database/models/user';
 import { UserItem } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { pino } from '@/libs/logger';
-import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
 import { NextAuthUserService } from './index';
 
@@ -23,7 +22,7 @@ vi.mock('@/database/server');
 describe('NextAuthUserService', () => {
   let service: NextAuthUserService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
     service = new NextAuthUserService();
   });
