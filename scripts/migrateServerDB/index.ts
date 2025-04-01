@@ -3,7 +3,7 @@ import { migrate as neonMigrate } from 'drizzle-orm/neon-serverless/migrator';
 import { migrate as nodeMigrate } from 'drizzle-orm/node-postgres/migrator';
 import { join } from 'node:path';
 
-import { serverDB } from '../../src/database/server';
+import { webServerDB } from '../../src/database';
 import { DB_FAIL_INIT_HINT, PGVECTOR_HINT } from './errorHint';
 
 // Read the `.env` file if it exists, or a file specified by the
@@ -14,9 +14,9 @@ const migrationsFolder = join(__dirname, '../../src/database/migrations');
 
 const runMigrations = async () => {
   if (process.env.DATABASE_DRIVER === 'node') {
-    await nodeMigrate(serverDB, { migrationsFolder });
+    await nodeMigrate(webServerDB, { migrationsFolder });
   } else {
-    await neonMigrate(serverDB, { migrationsFolder });
+    await neonMigrate(webServerDB, { migrationsFolder });
   }
 
   console.log('✅ database migration pass.');
