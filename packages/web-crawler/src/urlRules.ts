@@ -11,6 +11,17 @@ export const crawUrlRules: CrawlUrlRule[] = [
     impls: ['search1api'],
     urlPattern: 'https://sogou.com/link(.*)',
   },
+  // YouTube 链接，使用 search1api，格式化 markdown，且可以返回字幕内容
+  {
+    impls: ['search1api'],
+    urlPattern: 'https://www.youtube.com/watch(.*)',
+    urlTransform: 'https://www.youtube.com/watch?v=$1',
+  },
+  // Reddit 链接，使用 search1api，格式化 markdown，包含标题、作者、互动数量、具体评论内容等
+  {
+    impls: ['search1api'],
+    urlPattern: 'https://www.reddit.com/r/(.*)/comments/(.*)',
+  },
   // github 源码解析
   {
     filterOptions: {
