@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
+import { webServerDB } from '@/database';
 import { UserModel } from '@/database/models/user';
 import { UserItem } from '@/database/schemas';
-import { serverDB } from '@/database/server';
 import { pino } from '@/libs/logger';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
@@ -10,7 +10,7 @@ export class NextAuthUserService {
   adapter;
 
   constructor() {
-    this.adapter = LobeNextAuthDbAdapter(serverDB);
+    this.adapter = LobeNextAuthDbAdapter(webServerDB);
   }
 
   safeUpdateUser = async (
@@ -27,7 +27,7 @@ export class NextAuthUserService {
 
     // 2. If found, Update user data from provider
     if (user?.id) {
-      const userModel = new UserModel(serverDB, user.id);
+      const userModel = new UserModel(webServerDB, user.id);
 
       // Perform update
       await userModel.updateUser({

@@ -13,3 +13,4 @@
  *    否则会抛出错误
  */
 export { getServerDB, serverDB } from '../core/db-adaptor';
+export { initializeDatabase } from '../core/initialize';
