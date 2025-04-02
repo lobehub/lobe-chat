@@ -1,7 +1,5 @@
 // @vitest-environment node
 import { cookies } from 'next/headers';
-import * as fs from 'node:fs';
-import * as path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
@@ -13,15 +11,6 @@ import { getLocale, translation } from './translation';
 // Mock external dependencies
 vi.mock('next/headers', () => ({
   cookies: vi.fn(),
-}));
-
-vi.mock('node:fs', () => ({
-  existsSync: vi.fn(),
-  readFileSync: vi.fn(),
-}));
-
-vi.mock('node:path', () => ({
-  join: vi.fn(),
 }));
 
 vi.mock('@/const/locale', () => ({
@@ -36,6 +25,24 @@ vi.mock('@/locales/resources', () => ({
 vi.mock('@/utils/env', () => ({
   isDev: false,
 }));
+
+const translations = {
+  key1: 'Value 1',
+  key2: 'Value 2 with {{param}}',
+  nested: { key: 'Nested value' },
+};
+
+vi.mock('@/locales/default/common', () => ({
+  ...translations,
+  default: translations,
+}));
+
+vi.mock('@/../locales/en-US/common.json', () => ({
+  ...translations,
+  nonexistent: undefined,
+}));
+
+vi.mock('@/../locales/zh-CN/common.json', () => translations);
 
 describe('getLocale', () => {
   const mockCookieStore = {
@@ -61,17 +68,9 @@ describe('getLocale', () => {
 });
 
 describe('translation', () => {
-  const mockTranslations = {
-    key1: 'Value 1',
-    key2: 'Value 2 with {{param}}',
-    nested: { key: 'Nested value' },
-  };
-
   beforeEach(() => {
     vi.clearAllMocks();
-    (fs.existsSync as any).mockReturnValue(true);
-    (fs.readFileSync as any).mockReturnValue(JSON.stringify(mockTranslations));
-    (path.join as any).mockImplementation((...args: any) => args.join('/'));
+    (env.isDev as any) = false;
   });
 
   it('should return correct translation object', async () => {
@@ -93,32 +92,17 @@ describe('translation', () => {
     expect(t('nonexistent.key')).toBe('nonexistent.key');
   });
 
-  it('should use fallback language if specified locale file does not exist', async () => {
-    (fs.existsSync as any).mockReturnValueOnce(false);
-    await translation('common', 'nonexistent-LANG');
-    expect(fs.readFileSync).toHaveBeenCalledWith(
-      expect.stringContaining(`/${DEFAULT_LANG}/common.json`),
-      'utf8',
-    );
+  it('should use zh-CN translations in dev mode for zh-CN locale', async () => {
+    (env.isDev as any) = true;
+    const result = await translation('common', 'zh-CN');
+    expect(result.locale).toBe('zh-CN');
+    expect(result.t('key1')).toBe('Value 1');
   });
 
-  it('should use zh-CN in dev mode when fallback is needed', async () => {
-    (fs.existsSync as any).mockReturnValueOnce(false);
-    (env.isDev as unknown as boolean) = true;
-    await translation('common', 'nonexistent-LANG');
-    expect(fs.readFileSync).toHaveBeenCalledWith(
-      expect.stringContaining('/zh-CN/common.json'),
-      'utf8',
-    );
-  });
-
-  it('should handle file reading errors', async () => {
+  it('should handle import errors gracefully', async () => {
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    (fs.readFileSync as any).mockImplementation(() => {
-      throw new Error('File read error');
-    });
 
-    const result = await translation('common', 'en-US');
+    const result = await translation('common', 'invalid-locale');
     expect(result.t('any.key')).toBe('any.key');
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Error while reading translation file',
