@@ -142,6 +142,9 @@ jobs:
       - name: Install deps
         run: pnpm install
 
+      - name: Install deps on Desktop
+        run: npm run install-isolated --prefix=./apps/desktop
+
       # 设置 package.json 的版本号
       - name: Set package version
         run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }}
