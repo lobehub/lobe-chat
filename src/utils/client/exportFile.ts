@@ -18,3 +18,24 @@ export const exportFile = (content: string, filename?: string) => {
   URL.revokeObjectURL(url);
   a.remove();
 };
+
+export const exportJSONFile = (data: object, fileName: string) => {
+  // 创建一个 Blob 对象
+  const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+
+  // 创建一个 URL 对象，用于下载
+  const url = URL.createObjectURL(blob);
+
+  // 创建一个 <a> 元素，设置下载链接和文件名
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+
+  // 触发 <a> 元素的点击事件，开始下载
+  document.body.append(a);
+  a.click();
+
+  // 下载完成后，清除 URL 对象
+  URL.revokeObjectURL(url);
+  a.remove();
+};

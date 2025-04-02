@@ -57,7 +57,7 @@ describe('ClientService', () => {
   });
 
   it('should update user settings correctly', async () => {
-    const settingsPatch: DeepPartial<UserSettings> = { general: { themeMode: 'dark' } };
+    const settingsPatch: DeepPartial<UserSettings> = { general: { fontSize: 12 } };
     (UserModel.updateSettings as Mock).mockResolvedValue(undefined);
 
     await clientService.updateUserSettings(settingsPatch);

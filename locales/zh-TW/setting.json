@@ -42,6 +42,17 @@
     "sessionWithName": "對話設定 · {{name}}",
     "title": "設定"
   },
+  "hotkey": {
+    "conflicts": "與現有快捷鍵衝突",
+    "group": {
+      "conversation": "對話",
+      "essential": "基本"
+    },
+    "invalidCombination": "快捷鍵需要至少包含一個修飾鍵 (Ctrl, Alt, Shift) 和一個常規鍵",
+    "record": "按下按鍵以錄製快捷鍵",
+    "reset": "重置為預設快捷鍵",
+    "title": "快速鍵"
+  },
   "llm": {
     "aesGcm": "您的金鑰與代理地址等將使用 <1>AES-GCM</1> 加密演算法進行加密",
     "apiKey": {
@@ -335,6 +346,33 @@
     },
     "title": "主題設定"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "匯出",
+        "exportType": {
+          "agent": "匯出助手設定",
+          "agentWithMessage": "匯出助手和訊息",
+          "all": "匯出全域設定和所有助手資料",
+          "allAgent": "匯出所有助手設定",
+          "allAgentWithMessage": "匯出所有助手和訊息",
+          "globalSetting": "匯出全域設定"
+        },
+        "title": "匯出資料"
+      },
+      "import": {
+        "button": "匯入",
+        "title": "匯入資料"
+      },
+      "title": "進階操作"
+    },
+    "desc": "當前瀏覽器中的儲存用量",
+    "embeddings": {
+      "used": "向量儲存"
+    },
+    "title": "資料儲存",
+    "used": "儲存用量"
+  },
   "submitAgentModal": {
     "button": "提交助手",
     "identifier": "助手標識符",
@@ -425,8 +463,10 @@
     "agent": "默認助手",
     "common": "通用設置",
     "experiment": "實驗",
+    "hotkey": "快速鍵",
     "llm": "語言模型",
     "provider": "AI 服務商",
+    "storage": "資料儲存",
     "sync": "雲端同步",
     "system-agent": "系統助手",
     "tts": "語音服務"

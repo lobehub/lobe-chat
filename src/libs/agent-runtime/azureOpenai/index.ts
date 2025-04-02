@@ -52,7 +52,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         messages: updatedMessages as OpenAI.ChatCompletionMessageParam[],
         model,
         ...params,
-        max_completion_tokens: null,
+        max_completion_tokens: undefined,
         stream: enableStreaming,
         tool_choice: params.tools ? 'auto' : undefined,
       });

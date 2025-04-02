@@ -3,6 +3,8 @@ import { LobeSessions, SessionGroupItem } from '@/types/session';
 import { ChatTopic } from '@/types/topic';
 import { UserSettings } from '@/types/user/settings';
 
+// ---------- TODO: this file need to be deleted in V2 ---------- //
+
 /**
  * 导出方式
  * @enum ['agents', 'sessions', 'singleSession', 'settings', 'all']

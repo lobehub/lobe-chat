@@ -86,6 +86,20 @@ describe('parseModelString', () => {
       });
     });
 
+    it('token and image output', () => {
+      const result = parseModelString('gemini-2.0-flash-exp-image-generation=Gemini 2.0 Flash (Image Generation) Experimental<32768:imageOutput>');
+
+      expect(result.add[0]).toEqual({
+        displayName: 'Gemini 2.0 Flash (Image Generation) Experimental',
+        abilities: {
+          imageOutput: true,
+        },
+        id: 'gemini-2.0-flash-exp-image-generation',
+        contextWindowTokens: 32_768,
+        type: 'chat',
+      });
+    });
+
     it('multi models', () => {
       const result = parseModelString(
         'gemini-1.5-flash-latest=Gemini 1.5 Flash<16000:vision>,gpt-4-all=ChatGPT Plus<128000:fc:vision:file>',

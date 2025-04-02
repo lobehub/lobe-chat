@@ -27,16 +27,16 @@
       }
     ]
   },
-  "exclude": ["node_modules", "public/sw.js"],
+  "exclude": ["node_modules", "public/sw.js", "apps/desktop"],
   "include": [
+    "**/*.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
     "next-env.d.ts",
-    "vitest.config.ts",
     "src",
     "tests",
-    "**/*.ts",
-    "**/*.d.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
+    "vitest.config.ts"
   ],
   "ts-node": {
     "compilerOptions": {

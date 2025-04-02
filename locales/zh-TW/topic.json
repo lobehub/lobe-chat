@@ -32,6 +32,7 @@
     "title": "話題列表"
   },
   "searchPlaceholder": "搜尋話題...",
+  "searchResultEmpty": "目前沒有搜尋結果",
   "temp": "臨時",
   "title": "話題"
 }

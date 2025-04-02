@@ -23,6 +23,9 @@
   "cloudflare": {
     "description": "在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。"
   },
+  "cohere": {
+    "description": "Cohere 为您带来最前沿的多语言模型、先进的检索功能以及为现代企业量身定制的 AI 工作空间 — 一切都集成在一个安全的平台中。"
+  },
   "deepseek": {
     "description": "DeepSeek 是一家专注于人工智能技术研究和应用的公司，其最新模型 DeepSeek-V3 多项评测成绩超越 Qwen2.5-72B 和 Llama-3.1-405B 等开源模型，性能对齐领军闭源模型 GPT-4o 与 Claude-3.5-Sonnet。"
   },
@@ -52,6 +55,9 @@
   },
   "hunyuan": {
     "description": "由腾讯研发的大语言模型，具备强大的中文创作能力，复杂语境下的逻辑推理能力，以及可靠的任务执行能力"
+  },
+  "infiniai": {
+    "description": "为应用开发者提供高性能、易上手、安全可靠的大模型服务，覆盖从大模型开发到大模型服务化部署的全流程。"
   },
   "internlm": {
     "description": "致力于大模型研究与开发工具链的开源组织。为所有 AI 开发者提供高效、易用的开源平台，让最前沿的大模型与算法技术触手可及"
@@ -98,6 +104,9 @@
   "sambanova": {
     "description": "SambaNova Cloud 可让开发者轻松使用最佳的开源模型，并享受最快的推理速度。"
   },
+  "search1api": {
+    "description": "Search1API 提供可根据需要自行联网的 DeepSeek 系列模型的访问，包括标准版和快速版本，支持多种参数规模的模型选择。"
+  },
   "sensenova": {
     "description": "商汤日日新，依托商汤大装置的强大的基础支撑，提供高效易用的全栈大模型服务。"
   },
@@ -136,6 +145,9 @@
   },
   "xai": {
     "description": "xAI 是一家致力于构建人工智能以加速人类科学发现的公司。我们的使命是推动我们对宇宙的共同理解。"
+  },
+  "xinference": {
+    "description": "Xorbits Inference (Xinference) 是一个开源平台，用于简化各种 AI 模型的运行和集成。借助 Xinference，您可以使用任何开源 LLM、嵌入模型和多模态模型在云端或本地环境中运行推理，并创建强大的 AI 应用。"
   },
   "zeroone": {
     "description": "零一万物致力于推动以人为本的AI 2.0技术革命，旨在通过大语言模型创造巨大的经济和社会价值，并开创新的AI生态与商业模式。"

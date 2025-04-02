@@ -284,7 +284,7 @@ describe('MessageClientService', () => {
     it('should update the plugin state of a message', async () => {
       // Setup
       await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
-      await clientDB.insert(messagePlugins).values({ id: mockMessageId });
+      await clientDB.insert(messagePlugins).values({ id: mockMessageId, userId });
       const key = 'stateKey';
       const value = 'stateValue';
       const newPluginState = { [key]: value };
@@ -304,7 +304,7 @@ describe('MessageClientService', () => {
     it('should update the plugin arguments object of a message', async () => {
       // Setup
       await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
-      await clientDB.insert(messagePlugins).values({ id: mockMessageId });
+      await clientDB.insert(messagePlugins).values({ id: mockMessageId, userId });
       const value = 'stateValue';
 
       // Execute
@@ -319,7 +319,7 @@ describe('MessageClientService', () => {
     it('should update the plugin arguments string of a message', async () => {
       // Setup
       await clientDB.insert(messages).values({ id: mockMessageId, role: 'user', userId });
-      await clientDB.insert(messagePlugins).values({ id: mockMessageId });
+      await clientDB.insert(messagePlugins).values({ id: mockMessageId, userId });
       const value = 'stateValue';
       // Execute
       await messageService.updateMessagePluginArguments(

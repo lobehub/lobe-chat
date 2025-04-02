@@ -2,11 +2,10 @@
 import { NextResponse } from 'next/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { UserModel } from '@/database/models/user';
 import { UserItem } from '@/database/schemas';
 import { serverDB } from '@/database/server';
-import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
-import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
 import { NextAuthUserService } from './index';
 
@@ -17,13 +16,13 @@ vi.mock('@/libs/logger', () => ({
   },
 }));
 
-vi.mock('@/database/server/models/user');
+vi.mock('@/database/models/user');
 vi.mock('@/database/server');
 
 describe('NextAuthUserService', () => {
   let service: NextAuthUserService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
     service = new NextAuthUserService();
   });

@@ -1724,7 +1724,7 @@ See benchmarks on the launch announcement [here](https://mistral.ai/news/mixtral
 #moe",
     "displayName": "Mistral: Mixtral 8x22B Instruct",
     "enabled": false,
-    "functionCall": false,
+    "functionCall": true,
     "id": "mistralai/mixtral-8x22b-instruct",
     "maxTokens": undefined,
     "pricing": {

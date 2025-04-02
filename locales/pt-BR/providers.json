@@ -23,6 +23,9 @@
   "cloudflare": {
     "description": "Execute modelos de aprendizado de máquina impulsionados por GPU sem servidor na rede global da Cloudflare."
   },
+  "cohere": {
+    "description": "Cohere traz para você os modelos multilíngues mais avançados, funcionalidades de busca sofisticadas e um espaço de trabalho de IA personalizado para empresas modernas — tudo integrado em uma plataforma segura."
+  },
   "deepseek": {
     "description": "A DeepSeek é uma empresa focada em pesquisa e aplicação de tecnologia de inteligência artificial, cujo modelo mais recente, DeepSeek-V2.5, combina capacidades de diálogo geral e processamento de código, alcançando melhorias significativas em alinhamento com preferências humanas, tarefas de escrita e seguimento de instruções."
   },
@@ -52,6 +55,9 @@
   },
   "hunyuan": {
     "description": "Um modelo de linguagem desenvolvido pela Tencent, com forte capacidade de criação em chinês, habilidade de raciocínio lógico em contextos complexos e capacidade confiável de execução de tarefas."
+  },
+  "infiniai": {
+    "description": "Fornecendo serviços de grandes modelos de alto desempenho, fáceis de usar e seguros para desenvolvedores de aplicativos, abrangendo todo o processo, desde o desenvolvimento de grandes modelos até a implantação de serviços de grandes modelos."
   },
   "internlm": {
     "description": "Uma organização de código aberto dedicada à pesquisa e desenvolvimento de ferramentas para grandes modelos. Oferece uma plataforma de código aberto eficiente e fácil de usar para todos os desenvolvedores de IA, tornando as tecnologias e algoritmos de ponta acessíveis."
@@ -98,6 +104,9 @@
   "sambanova": {
     "description": "O SambaNova Cloud permite que os desenvolvedores utilizem facilmente os melhores modelos de código aberto e desfrutem da maior velocidade de inferência."
   },
+  "search1api": {
+    "description": "Search1API oferece acesso à série de modelos DeepSeek que podem se conectar à internet conforme necessário, incluindo versões padrão e rápida, suportando a escolha de modelos em várias escalas de parâmetros."
+  },
   "sensenova": {
     "description": "A SenseTime oferece serviços de grandes modelos de pilha completa, aproveitando o forte suporte da infraestrutura da SenseTime."
   },
@@ -136,6 +145,9 @@
   },
   "xai": {
     "description": "xAI é uma empresa dedicada a construir inteligência artificial para acelerar as descobertas científicas da humanidade. Nossa missão é promover a nossa compreensão coletiva do universo."
+  },
+  "xinference": {
+    "description": "Xorbits Inference (Xinference) é uma plataforma de código aberto que simplifica a execução e integração de diversos modelos de IA. Com o Xinference, você pode utilizar qualquer LLM de código aberto, modelos de embedding e modelos multimodais para executar inferências em ambientes locais ou na nuvem, além de criar aplicações de IA poderosas."
   },
   "zeroone": {
     "description": "01.AI se concentra na tecnologia de inteligência artificial da era 2.0, promovendo fortemente a inovação e aplicação de 'humano + inteligência artificial', utilizando modelos poderosos e tecnologia de IA avançada para aumentar a produtividade humana e realizar a capacitação tecnológica."

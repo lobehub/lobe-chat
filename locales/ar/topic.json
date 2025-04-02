@@ -32,6 +32,7 @@
     "title": "قائمة المواضيع"
   },
   "searchPlaceholder": "ابحث عن موضوع...",
+  "searchResultEmpty": "لا توجد نتائج للبحث",
   "temp": "مؤقت",
   "title": "موضوع"
 }

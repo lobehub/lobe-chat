@@ -11,21 +11,23 @@ import { FileMetadata, UploadFileItem } from '@/types/files';
 
 import { FileStore } from '../../store';
 
+type OnStatusUpdate = (
+  data:
+    | {
+        id: string;
+        type: 'updateFile';
+        value: Partial<UploadFileItem>;
+      }
+    | {
+        id: string;
+        type: 'removeFile';
+      },
+) => void;
+
 interface UploadWithProgressParams {
   file: File;
   knowledgeBaseId?: string;
-  onStatusUpdate?: (
-    data:
-      | {
-          id: string;
-          type: 'updateFile';
-          value: Partial<UploadFileItem>;
-        }
-      | {
-          id: string;
-          type: 'removeFile';
-        },
-  ) => void;
+  onStatusUpdate?: OnStatusUpdate;
   /**
    * Optional flag to indicate whether to skip the file type check.
    * When set to `true`, any file type checks will be bypassed.
@@ -35,11 +37,19 @@ interface UploadWithProgressParams {
 }
 
 interface UploadWithProgressResult {
+  filename?: string;
   id: string;
   url: string;
 }
 
 export interface FileUploadAction {
+  uploadBase64FileWithProgress: (
+    base64: string,
+    params?: {
+      onStatusUpdate?: OnStatusUpdate;
+    },
+  ) => Promise<UploadWithProgressResult | undefined>;
+
   uploadWithProgress: (
     params: UploadWithProgressParams,
   ) => Promise<UploadWithProgressResult | undefined>;
@@ -51,6 +61,19 @@ export const createFileUploadSlice: StateCreator<
   [],
   FileUploadAction
 > = () => ({
+  uploadBase64FileWithProgress: async (base64) => {
+    const { metadata, fileType, size, hash } = await uploadService.uploadBase64ToS3(base64);
+
+    const res = await fileService.createFile({
+      fileType,
+      hash,
+      metadata,
+      name: metadata.filename,
+      size: size,
+      url: metadata.path,
+    });
+    return { ...res, filename: metadata.filename };
+  },
   uploadWithProgress: async ({ file, onStatusUpdate, knowledgeBaseId, skipCheckFileType }) => {
     const fileArrayBuffer = await file.arrayBuffer();
 
@@ -135,6 +158,6 @@ export const createFileUploadSlice: StateCreator<
       },
     });
 
-    return data;
+    return { ...data, filename: file.name };
   },
 });

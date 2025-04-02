@@ -53,16 +53,7 @@ const Header = memo<HeaderProps>(({ children, getContainer, title }) => {
         }
       />
       <Drawer
-        bodyStyle={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 20,
-          justifyContent: 'space-between',
-          padding: 16,
-        }}
         getContainer={getContainer}
-        headerStyle={{ display: 'none' }}
-        maskStyle={{ background: 'transparent' }}
         onClick={() => setOpen(false)}
         onClose={() => setOpen(false)}
         open={open}
@@ -71,6 +62,17 @@ const Header = memo<HeaderProps>(({ children, getContainer, title }) => {
         style={{
           background: theme.colorBgContainer,
           borderRight: `1px solid ${theme.colorSplit}`,
+        }}
+        styles={{
+          body: {
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 20,
+            justifyContent: 'space-between',
+            padding: 16,
+          },
+          header: { display: 'none' },
+          mask: { background: 'transparent' },
         }}
         width={260}
         zIndex={10}

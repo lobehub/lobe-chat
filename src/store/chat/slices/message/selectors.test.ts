@@ -48,6 +48,27 @@ const mockMessages = [
   },
 ] as ChatMessage[];
 
+const mockReasoningMessages = [
+  {
+    id: 'msg1',
+    content: 'Hello World',
+    role: 'user',
+  },
+  {
+    id: 'msg2',
+    content: 'Goodbye World',
+    role: 'user',
+  },
+  {
+    id: 'msg3',
+    content: 'Content Message',
+    role: 'assistant',
+    reasoning: {
+      content: 'Reasoning Content',
+    },
+  },
+] as ChatMessage[];
+
 const mockedChats = [
   {
     id: 'msg1',
@@ -264,6 +285,27 @@ describe('chatSelectors', () => {
       // Call the selector and verify the result
       const concatenatedString = chatSelectors.mainAIChatsMessageString(state);
       expect(concatenatedString).toBe(expectedString);
+
+      // Restore the mocks after the test
+      vi.restoreAllMocks();
+    });
+  });
+
+  describe('latestMessageReasoningContent', () => {
+    it('should return the reasoning content of the latest message', () => {
+      // Prepare a state with a few messages
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('active-session')]: mockReasoningMessages,
+        },
+        activeId: 'active-session',
+      });
+
+      const expectedString = mockReasoningMessages.at(-1)?.reasoning?.content;
+
+      // Call the selector and verify the result
+      const reasoningContent = chatSelectors.mainAILatestMessageReasoningContent(state);
+      expect(reasoningContent).toBe(expectedString);
 
       // Restore the mocks after the test
       vi.restoreAllMocks();

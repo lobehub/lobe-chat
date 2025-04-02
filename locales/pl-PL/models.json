@@ -1,13 +1,4 @@
 {
-  "01-ai/Yi-1.5-34B-Chat-16K": {
-    "description": "Yi-1.5 34B, dzięki bogatym próbom treningowym, oferuje doskonałe wyniki w zastosowaniach branżowych."
-  },
-  "01-ai/Yi-1.5-6B-Chat": {
-    "description": "Yi-1.5-6B-Chat to wariant serii Yi-1.5, należący do otwartych modeli czatu. Yi-1.5 to ulepszona wersja Yi, która była nieprzerwanie trenowana na 500B wysokiej jakości korpusie i dostosowywana na 3M zróżnicowanych próbkach. W porównaniu do Yi, Yi-1.5 wykazuje lepsze zdolności w zakresie kodowania, matematyki, wnioskowania i przestrzegania instrukcji, jednocześnie zachowując doskonałe umiejętności rozumienia języka, wnioskowania ogólnego i rozumienia tekstu. Model ten oferuje wersje o długości kontekstu 4K, 16K i 32K, a całkowita liczba tokenów w pretreningu wynosi 3.6T."
-  },
-  "01-ai/Yi-1.5-9B-Chat-16K": {
-    "description": "Yi-1.5 9B obsługuje 16K tokenów, oferując wydajne i płynne zdolności generowania języka."
-  },
   "01-ai/yi-1.5-34b-chat": {
     "description": "Zero One, najnowszy model open source z dostrojeniem, zawierający 34 miliardy parametrów, dostosowany do różnych scenariuszy dialogowych, z wysokiej jakości danymi treningowymi, dostosowany do preferencji ludzkich."
   },
@@ -149,12 +140,6 @@
   "Llama-3.2-90B-Vision-Instruct\t": {
     "description": "Zaawansowane zdolności wnioskowania obrazów, odpowiednie do zastosowań w agentach rozumienia wizualnego."
   },
-  "LoRA/Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5-72B-Instruct to jeden z najnowszych modeli dużych języków wydanych przez Alibaba Cloud. Model 72B ma znacząco poprawione zdolności w zakresie kodowania i matematyki. Oferuje również wsparcie dla wielu języków, obejmując ponad 29 języków, w tym chiński i angielski. Model ten wykazuje znaczną poprawę w zakresie przestrzegania instrukcji, rozumienia danych strukturalnych oraz generowania strukturalnych wyników (szczególnie JSON)."
-  },
-  "LoRA/Qwen/Qwen2.5-7B-Instruct": {
-    "description": "Qwen2.5-7B-Instruct to jeden z najnowszych modeli dużych języków wydanych przez Alibaba Cloud. Model 7B ma znacząco poprawione zdolności w zakresie kodowania i matematyki. Oferuje również wsparcie dla wielu języków, obejmując ponad 29 języków, w tym chiński i angielski. Model ten wykazuje znaczną poprawę w zakresie przestrzegania instrukcji, rozumienia danych strukturalnych oraz generowania strukturalnych wyników (szczególnie JSON)."
-  },
   "Meta-Llama-3.1-405B-Instruct": {
     "description": "Model tekstowy Llama 3.1 dostosowany do instrukcji, zoptymalizowany do wielojęzycznych przypadków użycia dialogów, osiągający doskonałe wyniki w wielu dostępnych modelach czatu, zarówno otwartych, jak i zamkniętych, w powszechnych benchmarkach branżowych."
   },
@@ -178,9 +163,6 @@
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) to model poleceń o wysokiej precyzji, idealny do złożonych obliczeń."
-  },
-  "OpenGVLab/InternVL2-26B": {
-    "description": "InternVL2 pokazuje wyjątkowe wyniki w różnych zadaniach językowych i wizualnych, w tym zrozumieniu dokumentów i wykresów, zrozumieniu tekstu w scenach, OCR, rozwiązywaniu problemów naukowych i matematycznych."
   },
   "Phi-3-medium-128k-instruct": {
     "description": "Ten sam model Phi-3-medium, ale z większym rozmiarem kontekstu do RAG lub kilku strzałowego wywoływania."
@@ -206,9 +188,6 @@
   "Phi-3.5-vision-instrust": {
     "description": "Zaktualizowana wersja modelu Phi-3-vision."
   },
-  "Pro/OpenGVLab/InternVL2-8B": {
-    "description": "InternVL2 pokazuje wyjątkowe wyniki w różnych zadaniach językowych i wizualnych, w tym zrozumieniu dokumentów i wykresów, zrozumieniu tekstu w scenach, OCR, rozwiązywaniu problemów naukowych i matematycznych."
-  },
   "Pro/Qwen/Qwen2-1.5B-Instruct": {
     "description": "Qwen2-1.5B-Instruct to model dużego języka z serii Qwen2, dostosowany do instrukcji, o rozmiarze parametrów wynoszącym 1.5B. Model ten oparty jest na architekturze Transformer, wykorzystując funkcję aktywacji SwiGLU, przesunięcia QKV w uwadze oraz grupowe zapytania uwagi. Wykazuje doskonałe wyniki w wielu testach benchmarkowych dotyczących rozumienia języka, generowania, zdolności wielojęzycznych, kodowania, matematyki i wnioskowania, przewyższając większość modeli open-source. W porównaniu do Qwen1.5-1.8B-Chat, Qwen2-1.5B-Instruct wykazuje znaczną poprawę wydajności w testach MMLU, HumanEval, GSM8K, C-Eval i IFEval, mimo że ma nieco mniejszą liczbę parametrów."
   },
@@ -224,20 +203,26 @@
   "Pro/Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder-7B-Instruct to najnowsza wersja serii dużych modeli językowych specyficznych dla kodu wydana przez Alibaba Cloud. Model ten, oparty na Qwen2.5, został przeszkolony na 55 bilionach tokenów, znacznie poprawiając zdolności generowania kodu, wnioskowania i naprawy. Wzmacnia on nie tylko zdolności kodowania, ale także utrzymuje przewagę w zakresie matematyki i ogólnych umiejętności. Model ten stanowi bardziej kompleksową podstawę dla rzeczywistych zastosowań, takich jak inteligentne agenty kodowe."
   },
+  "Pro/Qwen/Qwen2.5-VL-7B-Instruct": {
+    "description": "Qwen2.5-VL to nowa wersja serii Qwen, posiadająca zaawansowane zdolności zrozumienia wizualnego. Potrafi analizować tekst, wykresy i układ w obrazach, a także zrozumieć długie filmy i wykrywać zdarzenia. Jest zdolny do przeprowadzania wnioskowania, operowania narzędziami, obsługuje lokalizację obiektów w różnych formatach i generowanie wyjścia strukturalnego. Optymalizuje trening rozdzielczości i klatki wideo, a także zwiększa efektywność kodera wizualnego."
+  },
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat to otwarta wersja modelu pretrenowanego z serii GLM-4, wydana przez Zhipu AI. Model ten wykazuje doskonałe wyniki w zakresie semantyki, matematyki, wnioskowania, kodu i wiedzy. Oprócz wsparcia dla wieloetapowych rozmów, GLM-4-9B-Chat oferuje również zaawansowane funkcje, takie jak przeglądanie stron internetowych, wykonywanie kodu, wywoływanie niestandardowych narzędzi (Function Call) oraz wnioskowanie z długich tekstów. Model obsługuje 26 języków, w tym chiński, angielski, japoński, koreański i niemiecki. W wielu testach benchmarkowych, takich jak AlignBench-v2, MT-Bench, MMLU i C-Eval, GLM-4-9B-Chat wykazuje doskonałą wydajność. Model obsługuje maksymalną długość kontekstu 128K, co czyni go odpowiednim do badań akademickich i zastosowań komercyjnych."
   },
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem ze wzmocnieniem (RL), który rozwiązuje problemy z powtarzalnością i czytelnością modeli. Przed RL, DeepSeek-R1 wprowadził dane do zimnego startu, co dodatkowo zoptymalizowało wydajność wnioskowania. W zadaniach matematycznych, kodowych i wnioskowania, osiąga wyniki porównywalne z OpenAI-o1, a dzięki starannie zaprojektowanym metodom treningowym poprawia ogólne wyniki."
   },
+  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
+    "description": "DeepSeek-R1-Distill-Qwen-1.5B to model stworzony na podstawie Qwen2.5-Math-1.5B poprzez proces wiedzy distylacji. Model ten został dostrajony za pomocą 800 000 wybrukowanych próbek wygenerowanych przez DeepSeek-R1, co pozwoliło osiągnąć dobre wyniki na wielu testach benchmarkowych. Jako lekki model, osiągnął 83,9% dokładności na MATH-500, 28,9% sukcesów na AIME 2024 oraz 954 punkty na CodeForces, co świadczy o zdolnościach wnioskowania przekraczających jego rozmiar parametrów."
+  },
+  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
+    "description": "DeepSeek-R1-Distill-Qwen-7B to model stworzony na podstawie Qwen2.5-Math-7B poprzez proces wiedzy distylacji. Model ten został wytrenowany na 800 000 wybrukowanych próbkach wygenerowanych przez DeepSeek-R1, co pozwoliło mu wykazać się doskonałymi zdolnościami wnioskowania. W wielu testach referencyjnych osiągnął znakomite wyniki, w tym 92,8% dokładności na MATH-500, 55,5% sukcesów na AIME 2024 oraz 1189 punktów na CodeForces, co potwierdza jego silne umiejętności matematyczne i programistyczne jako modelu o rozmiarze 7B."
+  },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 to model językowy z 6710 miliardami parametrów, oparty na architekturze mieszanych ekspertów (MoE), wykorzystujący wielogłowicową potencjalną uwagę (MLA) oraz strategię równoważenia obciążenia bez dodatkowych strat, co optymalizuje wydajność wnioskowania i treningu. Dzięki wstępnemu treningowi na 14,8 bilionach wysokiej jakości tokenów oraz nadzorowanemu dostrajaniu i uczeniu ze wzmocnieniem, DeepSeek-V3 przewyższa inne modele open source, zbliżając się do wiodących modeli zamkniętych."
   },
-  "Pro/google/gemma-2-9b-it": {
-    "description": "Gemma to jedna z lekkich, nowoczesnych otwartych serii modeli opracowanych przez Google. Jest to duży model językowy z jedynie dekoderem, wspierający język angielski, oferujący otwarte wagi, pretrenowane warianty oraz warianty dostosowane do instrukcji. Model Gemma nadaje się do różnych zadań generowania tekstu, w tym pytania-odpowiedzi, streszczenia i wnioskowania. Model 9B został przeszkolony na 8 bilionach tokenów. Jego stosunkowo mała skala umożliwia wdrożenie w środowiskach o ograniczonych zasobach, takich jak laptopy, komputery stacjonarne lub własna infrastruktura chmurowa, co umożliwia większej liczbie osób dostęp do nowoczesnych modeli AI i wspiera innowacje."
-  },
-  "Pro/meta-llama/Meta-Llama-3.1-8B-Instruct": {
-    "description": "Meta Llama 3.1 to rodzina dużych modeli językowych opracowanych przez Meta, obejmująca pretrenowane i dostosowane do instrukcji warianty o rozmiarach parametrów 8B, 70B i 405B. Model 8B dostosowany do instrukcji został zoptymalizowany do scenariuszy rozmów wielojęzycznych, osiągając doskonałe wyniki w wielu branżowych testach benchmarkowych. Trening modelu wykorzystał ponad 150 bilionów tokenów danych publicznych oraz zastosował techniki takie jak nadzorowane dostrajanie i uczenie przez wzmacnianie z ludzkim feedbackiem, aby zwiększyć użyteczność i bezpieczeństwo modelu. Llama 3.1 wspiera generowanie tekstu i kodu, a data graniczna wiedzy to grudzień 2023 roku."
+  "Pro/deepseek-ai/DeepSeek-V3-1226": {
+    "description": "DeepSeek-V3 to model językowy z 671 miliardami parametrów, oparty na architekturze mieszanych ekspertów (MoE), wykorzystujący wielogłowicową uwagę (MLA) oraz strategię równoważenia obciążenia bez dodatkowych strat, co optymalizuje efektywność wnioskowania i treningu. Model został wstępnie wytrenowany na 14,8 bilionach wysokiej jakości tokenów, a następnie poddany nadzorowanemu dostrajaniu i uczeniu przez wzmocnienie, co pozwala mu przewyższać inne modele open-source i zbliżać się do wiodących modeli zamkniętych."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview to innowacyjny model przetwarzania języka naturalnego, który efektywnie radzi sobie z złożonymi zadaniami generowania dialogów i rozumienia kontekstu."
@@ -289,6 +274,12 @@
   },
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder-7B-Instruct to najnowsza wersja serii dużych modeli językowych specyficznych dla kodu wydana przez Alibaba Cloud. Model ten, oparty na Qwen2.5, został przeszkolony na 55 bilionach tokenów, znacznie poprawiając zdolności generowania kodu, wnioskowania i naprawy. Wzmacnia on nie tylko zdolności kodowania, ale także utrzymuje przewagę w zakresie matematyki i ogólnych umiejętności. Model ten stanowi bardziej kompleksową podstawę dla rzeczywistych zastosowań, takich jak inteligentne agenty kodowe."
+  },
+  "Qwen/Qwen2.5-VL-32B-Instruct": {
+    "description": "Qwen2.5-VL-32B-Instruct to wielomodalny model stworzony przez zespół Qwen2.5-VL, który jest częścią serii Qwen2.5-VL. Ten model nie tylko doskonale rozpoznaje obiekty, ale także analizuje tekst, wykresy, ikony, rysunki i układ w obrazach. Może działać jako inteligentny agent wizualny, który potrafi rozumować i dynamicznie sterować narzędziami, posiadając umiejętności korzystania z komputerów i telefonów. Ponadto, ten model może precyzyjnie lokalizować obiekty w obrazach i generować strukturalne wyjścia dla faktur, tabel i innych dokumentów. W porównaniu do poprzedniego modelu Qwen2-VL, ta wersja została dalej rozwinięta w zakresie umiejętności matematycznych i rozwiązywania problemów poprzez uczenie wzmacnianie, a styl odpowiedzi jest bardziej zgodny z preferencjami ludzkimi."
+  },
+  "Qwen/Qwen2.5-VL-72B-Instruct": {
+    "description": "Qwen2.5-VL to model językowo-wizualny z serii Qwen2.5. Ten model przynosi znaczące poprawy w wielu aspektach: posiada lepsze zdolności zrozumienia wizualnego, umożliwiając rozpoznawanie powszechnych obiektów, analizowanie tekstu, wykresów i układu; jako wizualny agent może wnioskować i dynamicznie kierować użyciem narzędzi; obsługuje zrozumienie filmów o długości przekraczającej 1 godzinę i łapanie kluczowych zdarzeń; może precyzyjnie lokalizować obiekty na obrazach poprzez generowanie ramki granicznej lub punktów; obsługuje generowanie danych strukturalnych, szczególnie przydatnych dla skanowanych danych, takich jak faktury i tabele."
   },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 to najnowsza seria modeli Qwen, obsługująca kontekst 128k. W porównaniu do obecnie najlepszych modeli open source, Qwen2-72B znacznie przewyższa w zakresie rozumienia języka naturalnego, wiedzy, kodowania, matematyki i wielu języków."
@@ -373,9 +364,6 @@
   },
   "TeleAI/TeleChat2": {
     "description": "Model TeleChat2 to generatywny model semantyczny opracowany przez China Telecom, który wspiera funkcje takie jak pytania i odpowiedzi encyklopedyczne, generowanie kodu oraz generowanie długich tekstów, oferując użytkownikom usługi konsultacyjne. Model ten potrafi prowadzić interakcje z użytkownikami, odpowiadać na pytania, wspierać twórczość oraz efektywnie pomagać w pozyskiwaniu informacji, wiedzy i inspiracji. Model wykazuje dobre wyniki w zakresie problemów z halucynacjami, generowaniem długich tekstów oraz rozumieniem logicznym."
-  },
-  "TeleAI/TeleMM": {
-    "description": "Model TeleMM to model wielomodalny opracowany przez China Telecom, który potrafi przetwarzać różne rodzaje wejść, takie jak tekst i obrazy, wspierając funkcje rozumienia obrazów oraz analizy wykresów, oferując użytkownikom usługi rozumienia międzymodalnego. Model ten potrafi prowadzić interakcje wielomodalne z użytkownikami, dokładnie rozumiejąc wprowadzone treści, odpowiadając na pytania, wspierając twórczość oraz efektywnie dostarczając informacji i inspiracji w różnych modalnościach. Wykazuje doskonałe wyniki w zadaniach wielomodalnych, takich jak precyzyjne postrzeganie i rozumowanie logiczne."
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct to jeden z najnowszych modeli dużych języków wydanych przez Alibaba Cloud. Model 72B ma znacząco poprawione zdolności w zakresie kodowania i matematyki. Oferuje również wsparcie dla wielu języków, obejmując ponad 29 języków, w tym chiński i angielski. Model ten wykazuje znaczną poprawę w zakresie przestrzegania instrukcji, rozumienia danych strukturalnych oraz generowania strukturalnych wyników (szczególnie JSON)."
@@ -518,8 +506,26 @@
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B to otwarty model językowy stworzony przez Baichuan Intelligence, zawierający 13 miliardów parametrów, który osiągnął najlepsze wyniki w swojej klasie w autorytatywnych benchmarkach w języku chińskim i angielskim."
   },
+  "c4ai-aya-expanse-32b": {
+    "description": "Aya Expanse to model wielojęzyczny o wysokiej wydajności 32B, zaprojektowany w celu wyzwania wydajności modeli jednolanguage poprzez innowacje w zakresie dostosowywania instrukcji, arbitrażu danych, treningu preferencji i łączenia modeli. Obsługuje 23 języki."
+  },
+  "c4ai-aya-expanse-8b": {
+    "description": "Aya Expanse to model wielojęzyczny o wysokiej wydajności 8B, zaprojektowany w celu wyzwania wydajności modeli jednolanguage poprzez innowacje w zakresie dostosowywania instrukcji, arbitrażu danych, treningu preferencji i łączenia modeli. Obsługuje 23 języki."
+  },
+  "c4ai-aya-vision-32b": {
+    "description": "Aya Vision to zaawansowany model wielomodalny, który osiąga doskonałe wyniki w wielu kluczowych benchmarkach dotyczących zdolności językowych, tekstowych i obrazowych. Obsługuje 23 języki. Ta wersja z 32 miliardami parametrów koncentruje się na najnowocześniejszej wydajności wielojęzycznej."
+  },
+  "c4ai-aya-vision-8b": {
+    "description": "Aya Vision to zaawansowany model wielomodalny, który osiąga doskonałe wyniki w wielu kluczowych benchmarkach dotyczących zdolności językowych, tekstowych i obrazowych. Ta wersja z 8 miliardami parametrów koncentruje się na niskiej latencji i najlepszej wydajności."
+  },
   "charglm-3": {
     "description": "CharGLM-3 zaprojektowany z myślą o odgrywaniu ról i emocjonalnym towarzyszeniu, obsługujący ultra-długą pamięć wielokrotną i spersonalizowane dialogi, z szerokim zakresem zastosowań."
+  },
+  "chatglm3": {
+    "description": "ChatGLM3 to zamknięty model opracowany przez AI ZhiPu i KEG Laboratorium z Politechniki Tsinghua, który przeszedł wstępne treningi na ogromnej liczbie identyfikatorów chińskich i angielskich oraz trening zgodności z preferencjami ludzkimi. W porównaniu do pierwszej generacji modelu, ChatGLM3 osiągnął poprawę o 16%, 36% i 280% w testach MMLU, C-Eval i GSM8K, oraz zajął pierwsze miejsce na liście chińskich zadań C-Eval. Jest odpowiedni do zastosowań, które wymagają wysokiej wiedzy, zdolności wnioskowania i kreatywności, takich jak tworzenie tekstów reklamowych, pisarstwo powieści, pisarstwo naukowe i generowanie kodu."
+  },
+  "chatglm3-6b-base": {
+    "description": "ChatGLM3-6b-base to najnowszy model z serii ChatGLM opracowany przez ZhiPu, o skali 6 miliardów parametrów, dostępny jako oprogramowanie open source."
   },
   "chatgpt-4o-latest": {
     "description": "ChatGPT-4o to dynamiczny model, który jest na bieżąco aktualizowany, aby utrzymać najnowszą wersję. Łączy potężne zdolności rozumienia i generowania języka, co czyni go odpowiednim do zastosowań na dużą skalę, w tym obsługi klienta, edukacji i wsparcia technicznego."
@@ -596,11 +602,38 @@
   "cohere-command-r-plus": {
     "description": "Command R+ to model zoptymalizowany pod kątem RAG, zaprojektowany do obsługi obciążeń roboczych na poziomie przedsiębiorstwa."
   },
+  "command": {
+    "description": "Model konwersacyjny, który przestrzega instrukcji, oferujący wysoką jakość i niezawodność w zadaniach językowych, a także dłuższą długość kontekstu w porównaniu do naszych podstawowych modeli generacyjnych."
+  },
+  "command-a-03-2025": {
+    "description": "Command A to nasz najsilniejszy model, który do tej pory osiągnął najlepsze wyniki, doskonale sprawdzający się w zastosowaniach narzędziowych, agentowych, generacji wzbogaconej o wyszukiwanie (RAG) oraz w kontekście wielojęzycznym. Command A ma długość kontekstu 256K, działa na zaledwie dwóch GPU i w porównaniu do Command R+ 08-2024 zwiększa wydajność o 150%."
+  },
+  "command-light": {
+    "description": "Mniejsza i szybsza wersja Command, niemal równie potężna, ale szybsza."
+  },
+  "command-light-nightly": {
+    "description": "Aby skrócić czas między wydaniami głównych wersji, wprowadziliśmy nocną wersję modelu Command. Dla serii command-light ta wersja nazywa się command-light-nightly. Proszę pamiętać, że command-light-nightly to najnowsza, najbardziej eksperymentalna i (możliwie) niestabilna wersja. Wersje nocne są regularnie aktualizowane i nie są zapowiadane z wyprzedzeniem, dlatego nie zaleca się ich używania w środowisku produkcyjnym."
+  },
+  "command-nightly": {
+    "description": "Aby skrócić czas między wydaniami głównych wersji, wprowadziliśmy nocną wersję modelu Command. Dla serii Command ta wersja nazywa się command-cightly. Proszę pamiętać, że command-nightly to najnowsza, najbardziej eksperymentalna i (możliwie) niestabilna wersja. Wersje nocne są regularnie aktualizowane i nie są zapowiadane z wyprzedzeniem, dlatego nie zaleca się ich używania w środowisku produkcyjnym."
+  },
   "command-r": {
     "description": "Command R to LLM zoptymalizowany do dialogów i zadań z długim kontekstem, szczególnie odpowiedni do dynamicznej interakcji i zarządzania wiedzą."
   },
+  "command-r-03-2024": {
+    "description": "Command R to model konwersacyjny, który przestrzega instrukcji, oferujący wyższą jakość i niezawodność w zadaniach językowych, a także dłuższą długość kontekstu w porównaniu do wcześniejszych modeli. Może być używany w złożonych przepływach pracy, takich jak generacja kodu, generacja wzbogacona o wyszukiwanie (RAG), korzystanie z narzędzi i agentów."
+  },
+  "command-r-08-2024": {
+    "description": "command-r-08-2024 to zaktualizowana wersja modelu Command R, wydana w sierpniu 2024 roku."
+  },
   "command-r-plus": {
     "description": "Command R+ to model językowy o wysokiej wydajności, zaprojektowany z myślą o rzeczywistych scenariuszach biznesowych i złożonych zastosowaniach."
+  },
+  "command-r-plus-04-2024": {
+    "description": "Command R+ to model konwersacyjny, który przestrzega instrukcji, oferujący wyższą jakość i niezawodność w zadaniach językowych, a także dłuższą długość kontekstu w porównaniu do wcześniejszych modeli. Jest najlepiej dostosowany do złożonych przepływów pracy RAG i wieloetapowego korzystania z narzędzi."
+  },
+  "command-r7b-12-2024": {
+    "description": "command-r7b-12-2024 to mała i wydajna zaktualizowana wersja, wydana w grudniu 2024 roku. Doskonale sprawdza się w zadaniach wymagających złożonego rozumowania i wieloetapowego przetwarzania, takich jak RAG, korzystanie z narzędzi i agenci."
   },
   "dall-e-2": {
     "description": "Druga generacja modelu DALL·E, obsługująca bardziej realistyczne i dokładne generowanie obrazów, o rozdzielczości czterokrotnie większej niż pierwsza generacja."
@@ -616,9 +649,6 @@
   },
   "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
     "description": "Model destylacyjny DeepSeek-R1, optymalizujący wydajność wnioskowania dzięki uczeniu przez wzmocnienie i danym z zimnego startu, otwarty model ustanawiający nowe standardy w wielu zadaniach."
-  },
-  "deepseek-ai/DeepSeek-R1-Distill-Llama-8B": {
-    "description": "DeepSeek-R1-Distill-Llama-8B to model destylacyjny oparty na Llama-3.1-8B. Model ten został dostosowany przy użyciu próbek wygenerowanych przez DeepSeek-R1, wykazując doskonałe zdolności wnioskowania. Osiągnął dobre wyniki w wielu testach referencyjnych, w tym 89,1% dokładności w MATH-500, 50,4% wskaźnika zdawalności w AIME 2024 oraz 1205 punktów w CodeForces, demonstrując silne zdolności matematyczne i programistyczne jako model o skali 8B."
   },
   "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "Model destylacyjny DeepSeek-R1, optymalizujący wydajność wnioskowania dzięki uczeniu przez wzmocnienie i danym z zimnego startu, otwarty model ustanawiający nowe standardy w wielu zadaniach."
@@ -662,11 +692,29 @@
   "deepseek-r1": {
     "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem przez wzmacnianie (RL), który rozwiązuje problemy z powtarzalnością i czytelnością modelu. Przed RL, DeepSeek-R1 wprowadził dane z zimnego startu, co dodatkowo zoptymalizowało wydajność wnioskowania. W zadaniach matematycznych, kodowania i wnioskowania osiąga wyniki porównywalne z OpenAI-o1, a dzięki starannie zaprojektowanym metodom treningowym poprawia ogólne efekty."
   },
+  "deepseek-r1-70b-fast-online": {
+    "description": "DeepSeek R1 70B szybka wersja, wspierająca wyszukiwanie w czasie rzeczywistym, oferująca szybszy czas reakcji przy zachowaniu wydajności modelu."
+  },
+  "deepseek-r1-70b-online": {
+    "description": "DeepSeek R1 70B standardowa wersja, wspierająca wyszukiwanie w czasie rzeczywistym, odpowiednia do zadań konwersacyjnych i przetwarzania tekstu wymagających najnowszych informacji."
+  },
+  "deepseek-r1-distill-llama": {
+    "description": "deepseek-r1-distill-llama to model stworzony na podstawie Llamy, uzyskany przez destylację z DeepSeek-R1."
+  },
   "deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 — większy i inteligentniejszy model w zestawie DeepSeek — został destylowany do architektury Llama 70B. Na podstawie testów referencyjnych i ocen ręcznych, model ten jest bardziej inteligentny niż oryginalna Llama 70B, szczególnie w zadaniach wymagających precyzji matematycznej i faktograficznej."
   },
   "deepseek-r1-distill-llama-8b": {
     "description": "Modele z serii DeepSeek-R1-Distill są dostosowywane do modeli open source, takich jak Qwen i Llama, poprzez technologię destylacji wiedzy, na podstawie próbek generowanych przez DeepSeek-R1."
+  },
+  "deepseek-r1-distill-qianfan-llama-70b": {
+    "description": "Pierwsze wydanie 14 lutego 2025 roku, wyodrębnione przez zespół badawczy Qianfan z modelu bazowego Llama3_70B (zbudowanego z Meta Llama), w którym dodano również korpus Qianfan."
+  },
+  "deepseek-r1-distill-qianfan-llama-8b": {
+    "description": "Pierwsze wydanie 14 lutego 2025 roku, wyodrębnione przez zespół badawczy Qianfan z modelu bazowego Llama3_8B (zbudowanego z Meta Llama), w którym dodano również korpus Qianfan."
+  },
+  "deepseek-r1-distill-qwen": {
+    "description": "deepseek-r1-distill-qwen to model stworzony na podstawie Qwen poprzez destylację z DeepSeek-R1."
   },
   "deepseek-r1-distill-qwen-1.5b": {
     "description": "Modele z serii DeepSeek-R1-Distill są dostosowywane do modeli open source, takich jak Qwen i Llama, poprzez technologię destylacji wiedzy, na podstawie próbek generowanych przez DeepSeek-R1."
@@ -680,6 +728,12 @@
   "deepseek-r1-distill-qwen-7b": {
     "description": "Modele z serii DeepSeek-R1-Distill są dostosowywane do modeli open source, takich jak Qwen i Llama, poprzez technologię destylacji wiedzy, na podstawie próbek generowanych przez DeepSeek-R1."
   },
+  "deepseek-r1-fast-online": {
+    "description": "DeepSeek R1 pełna szybka wersja, wspierająca wyszukiwanie w czasie rzeczywistym, łącząca potężne możliwości 671 miliardów parametrów z szybszym czasem reakcji."
+  },
+  "deepseek-r1-online": {
+    "description": "DeepSeek R1 pełna wersja, z 671 miliardami parametrów, wspierająca wyszukiwanie w czasie rzeczywistym, z potężniejszymi zdolnościami rozumienia i generowania."
+  },
   "deepseek-reasoner": {
     "description": "Model inferency wprowadzony przez DeepSeek. Przed wygenerowaniem ostatecznej odpowiedzi, model najpierw przedstawia fragment łańcucha myślowego, aby zwiększyć dokładność końcowej odpowiedzi."
   },
@@ -691,6 +745,9 @@
   },
   "deepseek-v3": {
     "description": "DeepSeek-V3 to model MoE opracowany przez Hangzhou DeepSeek AI Technology Research Co., Ltd., który osiągnął znakomite wyniki w wielu testach, zajmując pierwsze miejsce wśród modeli open-source na głównych listach. W porównaniu do modelu V2.5, prędkość generowania wzrosła trzykrotnie, co zapewnia użytkownikom szybsze i płynniejsze doświadczenia."
+  },
+  "deepseek-v3-0324": {
+    "description": "DeepSeek-V3-0324 to model MoE z 671 miliardami parametrów, który wyróżnia się w zakresie programowania i umiejętności technicznych, rozumienia kontekstu oraz przetwarzania długich tekstów."
   },
   "deepseek/deepseek-chat": {
     "description": "Nowy, otwarty model łączący zdolności ogólne i kodowe, który nie tylko zachowuje ogólne zdolności dialogowe oryginalnego modelu Chat, ale także potężne zdolności przetwarzania kodu modelu Coder, lepiej dostosowując się do ludzkich preferencji. Ponadto, DeepSeek-V2.5 osiągnął znaczne poprawy w zadaniach pisarskich, przestrzeganiu instrukcji i wielu innych obszarach."
@@ -758,6 +815,9 @@
   "ernie-4.0-turbo-8k-preview": {
     "description": "Flagowy model językowy Baidu o ultra dużej skali, charakteryzujący się doskonałymi wynikami ogólnymi, szeroko stosowany w złożonych zadaniach w różnych dziedzinach; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji. W porównaniu do ERNIE 4.0, oferuje lepsze wyniki wydajności."
   },
+  "ernie-4.5-8k-preview": {
+    "description": "Model ERNIE 4.5 to nowa generacja natywnego modelu wielomodalnego opracowanego przez Baidu, który osiąga doskonałe wyniki w zakresie zrozumienia wielomodalnego dzięki wspólnemu modelowaniu wielu modalności; posiada bardziej zaawansowane zdolności językowe, a także znacznie poprawione zdolności rozumienia, generowania, logicznego myślenia i pamięci, eliminując halucynacje oraz poprawiając zdolności wnioskowania logicznego i kodowania."
+  },
   "ernie-char-8k": {
     "description": "Model językowy opracowany przez Baidu, skoncentrowany na specyficznych scenariuszach, odpowiedni do zastosowań w grach NPC, dialogach obsługi klienta, odgrywaniu ról w dialogach, charakteryzujący się wyraźnym i spójnym stylem postaci, silniejszą zdolnością do podążania za instrukcjami oraz lepszą wydajnością wnioskowania."
   },
@@ -791,9 +851,6 @@
   "gemini-1.0-pro-latest": {
     "description": "Gemini 1.0 Pro to model AI o wysokiej wydajności od Google, zaprojektowany do szerokiego rozszerzania zadań."
   },
-  "gemini-1.5-flash": {
-    "description": "Gemini 1.5 Flash to najnowszy model AI wielomodalnego od Google, charakteryzujący się szybkim przetwarzaniem, obsługujący wejścia tekstowe, obrazowe i wideo, idealny do efektywnego rozszerzania w różnych zadaniach."
-  },
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 to wydajny model multimodalny, wspierający szerokie zastosowania."
   },
@@ -805,6 +862,9 @@
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 to najnowszy eksperymentalny model, który wykazuje znaczące poprawy wydajności w zastosowaniach tekstowych i multimodalnych."
+  },
+  "gemini-1.5-flash-8b-latest": {
+    "description": "Gemini 1.5 Flash 8B to wydajny model wielomodalny, który obsługuje szeroki zakres zastosowań."
   },
   "gemini-1.5-flash-exp-0827": {
     "description": "Gemini 1.5 Flash 0827 oferuje zoptymalizowane możliwości przetwarzania multimodalnego, odpowiednie dla wielu złożonych scenariuszy."
@@ -833,23 +893,26 @@
   "gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash oferuje funkcje i ulepszenia nowej generacji, w tym doskonałą prędkość, natywne korzystanie z narzędzi, generowanie multimodalne oraz okno kontekstowe o długości 1M tokenów."
   },
+  "gemini-2.0-flash-exp": {
+    "description": "Gemini 2.0 Flash to wariant modelu, zoptymalizowany pod kątem efektywności kosztowej i niskiego opóźnienia."
+  },
+  "gemini-2.0-flash-exp-image-generation": {
+    "description": "Model eksperymentalny Gemini 2.0 Flash, wspierający generowanie obrazów"
+  },
   "gemini-2.0-flash-lite": {
     "description": "Gemini 2.0 Flash to wariant modelu, zoptymalizowany pod kątem efektywności kosztowej i niskiego opóźnienia."
   },
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash to wariant modelu, zoptymalizowany pod kątem efektywności kosztowej i niskiego opóźnienia."
   },
-  "gemini-2.0-flash-lite-preview-02-05": {
-    "description": "Model Gemini 2.0 Flash, zoptymalizowany pod kątem efektywności kosztowej i niskiej latencji."
-  },
-  "gemini-2.0-flash-thinking-exp": {
-    "description": "Gemini 2.0 Flash Exp to najnowszy eksperymentalny model AI multimodalnego Google, posiadający cechy nowej generacji, doskonałą prędkość, natywne wywołania narzędzi oraz generację multimodalną."
-  },
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp to najnowszy eksperymentalny model AI multimodalnego Google, posiadający cechy nowej generacji, doskonałą prędkość, natywne wywołania narzędzi oraz generację multimodalną."
   },
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental to najnowszy eksperymentalny model AI o wielu modalnościach od Google, który w porównaniu do wcześniejszych wersji oferuje pewne poprawy jakości, szczególnie w zakresie wiedzy o świecie, kodu i długiego kontekstu."
+  },
+  "gemini-2.5-pro-exp-03-25": {
+    "description": "Gemini 2.5 Pro Experimental to najnowocześniejszy model myślenia Google, zdolny do wnioskowania w zakresie kodu, matematyki i złożonych problemów w dziedzinie STEM, a także do analizy dużych zbiorów danych, repozytoriów kodu i dokumentów, wykorzystując długi kontekst."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B nadaje się do przetwarzania zadań średniej i małej skali, łącząc efektywność kosztową."
@@ -1019,6 +1082,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "Wersja na żywo GPT-4o-mini, obsługująca wejście i wyjście audio oraz tekstowe w czasie rzeczywistym."
   },
+  "gpt-4o-mini-tts": {
+    "description": "GPT-4o mini TTS to model tekstu na mowę oparty na GPT-4o mini, oferujący wysokiej jakości generowanie mowy przy niższych kosztach."
+  },
   "gpt-4o-realtime-preview": {
     "description": "Wersja na żywo GPT-4o, obsługująca wejście i wyjście audio oraz tekstowe w czasie rzeczywistym."
   },
@@ -1076,6 +1142,12 @@
   "hunyuan-standard-vision": {
     "description": "Najnowocześniejszy model multimodalny Hunyuan, wspierający odpowiedzi w wielu językach, z równoważnymi zdolnościami w języku chińskim i angielskim."
   },
+  "hunyuan-t1-20250321": {
+    "description": "Kompleksowy model zdolności w naukach ścisłych i humanistycznych, z silną zdolnością do uchwycenia długich informacji tekstowych. Wspiera wnioskowanie w odpowiedzi na różnorodne trudności w matematyce, logice, naukach ścisłych i kodowaniu."
+  },
+  "hunyuan-t1-latest": {
+    "description": "Pierwszy na świecie ultra-duży model wnioskowania Hybrid-Transformer-Mamba, rozszerzający zdolności wnioskowania, z niezwykle szybkim dekodowaniem, lepiej dostosowany do ludzkich preferencji."
+  },
   "hunyuan-translation": {
     "description": "Obsługuje tłumaczenie między 15 językami, w tym chińskim, angielskim, japońskim, francuskim, portugalskim, hiszpańskim, tureckim, rosyjskim, arabskim, koreańskim, włoskim, niemieckim, wietnamskim, malajskim i indonezyjskim, opartym na automatycznej ocenie COMET w oparciu o zestaw testowy do tłumaczenia w różnych scenariuszach, wykazując ogólnie lepsze zdolności tłumaczeniowe w porównaniu do modeli o podobnej skali na rynku."
   },
@@ -1085,9 +1157,6 @@
   "hunyuan-turbo": {
     "description": "Hunyuan to nowa generacja dużego modelu językowego w wersji próbnej, wykorzystująca nową strukturę modelu mieszanych ekspertów (MoE), która w porównaniu do hunyuan-pro charakteryzuje się szybszą efektywnością wnioskowania i lepszymi wynikami."
   },
-  "hunyuan-turbo-20241120": {
-    "description": "Stała wersja hunyuan-turbo z dnia 20 listopada 2024 roku, będąca pomiędzy hunyuan-turbo a hunyuan-turbo-latest."
-  },
   "hunyuan-turbo-20241223": {
     "description": "Optymalizacja tej wersji: skalowanie danych instrukcji, znaczne zwiększenie ogólnej zdolności generalizacji modelu; znaczne zwiększenie zdolności w zakresie matematyki, kodowania i rozumowania logicznego; optymalizacja zdolności związanych z rozumieniem tekstu i słów; optymalizacja jakości generowania treści w tworzeniu tekstów."
   },
@@ -1096,6 +1165,15 @@
   },
   "hunyuan-turbo-vision": {
     "description": "Nowa generacja flagowego modelu językowo-wizualnego Hunyuan, wykorzystująca nową strukturę modelu mieszanych ekspertów (MoE), z pełnym zwiększeniem zdolności w zakresie podstawowego rozpoznawania, tworzenia treści, pytań i odpowiedzi oraz analizy i rozumowania w porównaniu do poprzedniej generacji modeli."
+  },
+  "hunyuan-turbos-20250226": {
+    "description": "hunyuan-TurboS pv2.1.2 to stabilna wersja zaktualizowanej bazy treningowej, z podniesioną liczbą tokenów; poprawione zdolności myślenia w matematyce/logice/kodzie; poprawa ogólnego doświadczenia w języku chińskim i angielskim, w tym w tworzeniu tekstu, rozumieniu tekstu, pytaniach i odpowiedziach oraz rozmowach."
+  },
+  "hunyuan-turbos-20250313": {
+    "description": "Ujednolicenie stylu rozwiązywania problemów matematycznych, wzmocnienie wieloetapowych pytań i odpowiedzi matematycznych. Optymalizacja stylu odpowiedzi w tworzeniu tekstu, eliminacja smaku AI, zwiększenie literackiego wyrazu."
+  },
+  "hunyuan-turbos-latest": {
+    "description": "hunyuan-TurboS to najnowsza wersja flagowego modelu Hunyuan, oferująca silniejsze zdolności myślenia i lepsze efekty doświadczenia."
   },
   "hunyuan-vision": {
     "description": "Najnowocześniejszy model multimodalny Hunyuan, wspierający generowanie treści tekstowych na podstawie obrazów i tekstu."
@@ -1127,11 +1205,17 @@
   "lite": {
     "description": "Spark Lite to lekki model językowy o dużej skali, charakteryzujący się niezwykle niskim opóźnieniem i wysoką wydajnością przetwarzania, całkowicie darmowy i otwarty, wspierający funkcje wyszukiwania w czasie rzeczywistym. Jego cechy szybkiej reakcji sprawiają, że doskonale sprawdza się w zastosowaniach inferencyjnych na urządzeniach o niskiej mocy obliczeniowej oraz w dostosowywaniu modeli, oferując użytkownikom znakomity stosunek kosztów do korzyści oraz inteligentne doświadczenie, szczególnie w kontekście pytań i odpowiedzi, generowania treści oraz wyszukiwania."
   },
+  "llama-2-7b-chat": {
+    "description": "Llama2 to seria modeli językowych (LLM) opracowanych i udostępnionych przez Meta, obejmująca modele generujące tekst o różnej skali, od 7 miliardów do 70 miliardów parametrów, które przeszły wstępną naukę i dostrajanie. Na poziomie architektury, Llama2 jest modelem językowym optymalizowanym za pomocą architektury transformerowej. Zdolność do dostosowywania modeli do preferencji ludzi pod względem użyteczności i bezpieczeństwa została osiągnięta poprzez nadzorowane dostrajanie (SFT) i uczenie wzmacnianie z uwzględnieniem opinii ludzi (RLHF). Llama2 osiąga lepsze wyniki niż poprzednia seria Llama na wielu zbiorach danych akademickich, co dostarcza inspiracji dla projektowania i tworzenia wielu innych modeli."
+  },
   "llama-3.1-70b-versatile": {
     "description": "Llama 3.1 70B oferuje potężne możliwości wnioskowania AI, odpowiednie do złożonych zastosowań, wspierające ogromne przetwarzanie obliczeniowe przy zachowaniu efektywności i dokładności."
   },
   "llama-3.1-8b-instant": {
     "description": "Llama 3.1 8B to model o wysokiej wydajności, oferujący szybkie możliwości generowania tekstu, idealny do zastosowań wymagających dużej efektywności i opłacalności."
+  },
+  "llama-3.1-instruct": {
+    "description": "Model Llama 3.1 zoptymalizowany do rozmów przewyższa wiele istniejących open-source modeli czatowych w standardowych testach branżowych."
   },
   "llama-3.2-11b-vision-instruct": {
     "description": "Wyjątkowe zdolności wnioskowania wizualnego na obrazach o wysokiej rozdzielczości, idealne do zastosowań związanych ze zrozumieniem wizualnym."
@@ -1145,11 +1229,17 @@
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 jest zaprojektowana do obsługi zadań łączących dane wizualne i tekstowe. Wykazuje doskonałe wyniki w zadaniach takich jak opisywanie obrazów i wizualne pytania i odpowiedzi, przekraczając przepaść między generowaniem języka a wnioskowaniem wizualnym."
   },
+  "llama-3.2-vision-instruct": {
+    "description": "Model Llama 3.2-Vision zoptymalizowany jest do rozpoznawania wizualnego, wnioskowania na podstawie obrazów, opisywania obrazów oraz odpowiadania na typowe pytania związane z obrazami."
+  },
   "llama-3.3-70b-instruct": {
     "description": "Llama 3.3 to najnowocześniejszy wielojęzyczny, otwarty model językowy z serii Llama, który oferuje wydajność porównywalną z modelem 405B przy bardzo niskich kosztach. Opiera się na strukturze Transformer i poprawia użyteczność oraz bezpieczeństwo dzięki nadzorowanemu dostrajaniu (SFT) i uczeniu ze wzmocnieniem na podstawie ludzkich opinii (RLHF). Jego wersja dostosowana do instrukcji jest zoptymalizowana do wielojęzycznych rozmów i w wielu branżowych benchmarkach przewyższa wiele otwartych i zamkniętych modeli czatu. Data graniczna wiedzy to grudzień 2023."
   },
   "llama-3.3-70b-versatile": {
     "description": "Meta Llama 3.3 to wielojęzyczny model językowy (LLM) 70B, pretrenowany i dostosowany do poleceń. Model Llama 3.3, dostosowany do poleceń, jest zoptymalizowany do zastosowań w dialogach wielojęzycznych i przewyższa wiele dostępnych modeli czatu, zarówno open source, jak i zamkniętych, w popularnych branżowych benchmarkach."
+  },
+  "llama-3.3-instruct": {
+    "description": "Model Llama 3.3 zoptymalizowany do rozmów, który w standardowych testach branżowych przewyższa wiele istniejących modeli czatowych o otwartym kodzie."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B oferuje niezrównane możliwości przetwarzania złożoności, dostosowane do projektów o wysokich wymaganiach."
@@ -1190,6 +1280,9 @@
   "max-32k": {
     "description": "Spark Max 32K jest wyposażony w dużą zdolność przetwarzania kontekstu, oferując silniejsze zrozumienie kontekstu i zdolności logicznego wnioskowania, obsługując teksty o długości do 32K tokenów, co czyni go odpowiednim do czytania długich dokumentów, prywatnych pytań i odpowiedzi oraz innych scenariuszy."
   },
+  "megrez-3b-instruct": {
+    "description": "Megrez-3B-Instruct to model językowy duży skali, w pełni samodzielnie wytrenowany przez Qwen. Megrez-3B-Instruct ma na celu stworzenie szybkiego, kompaktowego i łatwego w użyciu rozwiązania inteligentnego na urządzeniach klienckich, opartego na koncepcji integracji oprogramowania i sprzętu."
+  },
   "meta-llama-3-70b-instruct": {
     "description": "Potężny model z 70 miliardami parametrów, doskonały w rozumowaniu, kodowaniu i szerokich zastosowaniach językowych."
   },
@@ -1226,9 +1319,6 @@
   "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
     "description": "LLaMA 3.2 zaprojektowana do przetwarzania zadań łączących dane wizualne i tekstowe. Doskonała w zadaniach takich jak opisywanie obrazów i wizualne pytania odpowiedzi, przekracza granice między generowaniem języka a wnioskowaniem wizualnym."
   },
-  "meta-llama/Llama-3.3-70B-Instruct": {
-    "description": "Llama 3.3 to najnowocześniejszy wielojęzyczny model językowy open-source z serii Llama, oferujący wydajność porównywalną z modelem 405B przy bardzo niskich kosztach. Oparty na strukturze Transformer, poprawiony dzięki nadzorowanemu dostrajaniu (SFT) oraz uczeniu się z ludzkiego feedbacku (RLHF), co zwiększa użyteczność i bezpieczeństwo. Jego wersja dostosowana do instrukcji jest zoptymalizowana do wielojęzycznych rozmów, osiągając lepsze wyniki w wielu branżowych benchmarkach niż wiele modeli czatu open-source i zamkniętych. Data graniczna wiedzy to grudzień 2023 roku."
-  },
   "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
     "description": "Meta Llama 3.3 to wielojęzyczny model językowy (LLM) o skali 70B (wejście/wyjście tekstowe), będący modelem generacyjnym wstępnie wytrenowanym i dostosowanym do instrukcji. Model Llama 3.3 dostosowany do instrukcji jest zoptymalizowany pod kątem zastosowań w dialogach wielojęzycznych i przewyższa wiele dostępnych modeli open-source i zamkniętych w popularnych testach branżowych."
   },
@@ -1256,14 +1346,8 @@
   "meta-llama/Meta-Llama-3.1-70B": {
     "description": "Llama 3.1 to wiodący model wydany przez Meta, wspierający do 405B parametrów, mogący być stosowany w złożonych rozmowach, tłumaczeniach wielojęzycznych i analizie danych."
   },
-  "meta-llama/Meta-Llama-3.1-70B-Instruct": {
-    "description": "LLaMA 3.1 70B oferuje efektywne wsparcie dialogowe w wielu językach."
-  },
   "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo": {
     "description": "Model Llama 3.1 70B został starannie dostosowany do aplikacji o dużym obciążeniu, kwantyzowany do FP8, co zapewnia wyższą wydajność obliczeniową i dokładność, gwarantując doskonałe osiągi w złożonych scenariuszach."
-  },
-  "meta-llama/Meta-Llama-3.1-8B-Instruct": {
-    "description": "LLaMA 3.1 oferuje wsparcie dla wielu języków i jest jednym z wiodących modeli generacyjnych w branży."
   },
   "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo": {
     "description": "Model Llama 3.1 8B wykorzystuje kwantyzację FP8, obsługując do 131,072 kontekstowych tokenów, wyróżniając się wśród modeli open source, idealny do złożonych zadań, przewyższający wiele branżowych standardów."
@@ -1358,11 +1442,17 @@
   "mistral-large": {
     "description": "Mixtral Large to flagowy model Mistral, łączący zdolności generowania kodu, matematyki i wnioskowania, wspierający kontekst o długości 128k."
   },
+  "mistral-large-instruct": {
+    "description": "Mistral-Large-Instruct-2407 to zaawansowany gęsty model językowy o dużym rozmiarze (LLM) z 123 miliardami parametrów, posiadający najnowocześniejsze zdolności wnioskowania, wiedzy i kodowania."
+  },
   "mistral-large-latest": {
     "description": "Mistral Large to flagowy model, doskonały w zadaniach wielojęzycznych, złożonym wnioskowaniu i generowaniu kodu, idealny do zaawansowanych zastosowań."
   },
   "mistral-nemo": {
     "description": "Mistral Nemo, opracowany przez Mistral AI i NVIDIA, to model 12B o wysokiej wydajności."
+  },
+  "mistral-nemo-instruct": {
+    "description": "Duży model językowy (LLM) Mistral-Nemo-Instruct-2407 to wersja dostosowana do poleceń modelu Mistral-Nemo-Base-2407."
   },
   "mistral-small": {
     "description": "Mistral Small może być używany w każdym zadaniu opartym na języku, które wymaga wysokiej wydajności i niskiej latencji."
@@ -1580,6 +1670,12 @@
   "qwen2": {
     "description": "Qwen2 to nowa generacja dużego modelu językowego Alibaba, wspierająca różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
   },
+  "qwen2-72b-instruct": {
+    "description": "Qwen2 to nowa generacja modeli językowych stworzona przez zespół Qwen. Opiera się na architekturze Transformer i wykorzystuje funkcję aktywacji SwiGLU, obciążenie QKV uwagi (attention QKV bias), grupowe zapytanie uwagi (group query attention), mieszankę uwagi z oknem przesuwnym (mixture of sliding window attention) i pełną uwagą. Ponadto, zespół Qwen wprowadził ulepszony tokenizator dostosowany do wielu języków naturalnych i kodu."
+  },
+  "qwen2-7b-instruct": {
+    "description": "Qwen2 to nowa seria modeli językowych stworzona przez zespół Qwen. Opiera się na architekturze Transformer i wykorzystuje funkcję aktywacji SwiGLU, obciążenie QKV uwagi (attention QKV bias), grupowe zapytanie uwagi (group query attention), mieszankę uwagi okna suwającego się (mixture of sliding window attention) i pełnej uwagi. Ponadto, zespół Qwen wprowadził ulepszone tokenizery dostosowane do wielu języków naturalnych i kodu."
+  },
   "qwen2.5": {
     "description": "Qwen2.5 to nowa generacja dużego modelu językowego Alibaba, który wspiera różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
   },
@@ -1607,6 +1703,12 @@
   "qwen2.5-coder-7b-instruct": {
     "description": "Otwarta wersja modelu kodowania Qwen."
   },
+  "qwen2.5-coder-instruct": {
+    "description": "Qwen2.5-Coder to najnowszy model językowy o dużym rozmiarze z serii Qwen, specjalnie przeznaczony do obsługi kodu (wcześniej znany jako CodeQwen)."
+  },
+  "qwen2.5-instruct": {
+    "description": "Qwen2.5 to najnowsza seria modeli językowych Qwen. W przypadku Qwen2.5 wydaliśmy wiele podstawowych modeli językowych oraz modeli językowych dostosowanych do instrukcji, z zakresem parametrów od 500 milionów do 7,2 miliarda."
+  },
   "qwen2.5-math-1.5b-instruct": {
     "description": "Model Qwen-Math ma silne umiejętności rozwiązywania problemów matematycznych."
   },
@@ -1616,11 +1718,20 @@
   "qwen2.5-math-7b-instruct": {
     "description": "Model Qwen-Math, który ma silne zdolności rozwiązywania problemów matematycznych."
   },
+  "qwen2.5-omni-7b": {
+    "description": "Model serii Qwen-Omni obsługuje wprowadzanie danych w różnych modalnościach, w tym wideo, audio, obrazy i tekst, oraz generuje audio i tekst."
+  },
+  "qwen2.5-vl-32b-instruct": {
+    "description": "Seria modeli Qwen2.5-VL poprawia poziom inteligencji, praktyczności i zastosowania modelu, co pozwala mu lepiej radzić sobie w naturalnej konwersacji, tworzeniu treści, usługach wiedzy specjalistycznej i programowaniu. Wersja 32B została zoptymalizowana za pomocą technologii uczenia wzmacniającego, co w porównaniu z innymi modelami serii Qwen2.5 VL, zapewnia bardziej zgodny z preferencjami ludzi styl wyjściowy, zdolność wnioskowania w złożonych problemach matematycznych oraz zdolność szczegółowej interpretacji i wnioskowania na podstawie obrazów."
+  },
   "qwen2.5-vl-72b-instruct": {
     "description": "Zwiększona zdolność do podążania za instrukcjami, matematyki, rozwiązywania problemów i kodowania, poprawiona zdolność do rozpoznawania obiektów, wsparcie dla różnych formatów do precyzyjnego lokalizowania elementów wizualnych, zdolność do rozumienia długich plików wideo (do 10 minut) oraz lokalizowania momentów zdarzeń w czasie rzeczywistym, zdolność do rozumienia kolejności czasowej i szybkości, wsparcie dla operacji na systemach OS lub Mobile, silna zdolność do ekstrakcji kluczowych informacji i generowania wyjścia w formacie JSON. Ta wersja to wersja 72B, najsilniejsza w tej serii."
   },
   "qwen2.5-vl-7b-instruct": {
     "description": "Zwiększona zdolność do podążania za instrukcjami, matematyki, rozwiązywania problemów i kodowania, poprawiona zdolność do rozpoznawania obiektów, wsparcie dla różnych formatów do precyzyjnego lokalizowania elementów wizualnych, zdolność do rozumienia długich plików wideo (do 10 minut) oraz lokalizowania momentów zdarzeń w czasie rzeczywistym, zdolność do rozumienia kolejności czasowej i szybkości, wsparcie dla operacji na systemach OS lub Mobile, silna zdolność do ekstrakcji kluczowych informacji i generowania wyjścia w formacie JSON. Ta wersja to wersja 72B, najsilniejsza w tej serii."
+  },
+  "qwen2.5-vl-instruct": {
+    "description": "Qwen2.5-VL to najnowsza wersja modelu wizualno-lingwistycznego rodziny Qwen."
   },
   "qwen2.5:0.5b": {
     "description": "Qwen2.5 to nowa generacja dużego modelu językowego Alibaba, który wspiera różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
@@ -1756,6 +1867,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 to model językowy dostarczany przez Microsoft AI, który wyróżnia się w złożonych dialogach, wielojęzyczności, wnioskowaniu i inteligentnych asystentach."
+  },
+  "yi-1.5-34b-chat": {
+    "description": "Yi-1.5 to ulepszona wersja Yi. Używa ona wysokiej jakości korpusu danych o rozmiarze 500B tokenów do dalszego wstępnego treningu Yi, a także do dopasowywania na 3M różnorodnych próbkach dopasowujących."
   },
   "yi-large": {
     "description": "Nowy model z miliardami parametrów, oferujący niezwykłe możliwości w zakresie pytań i generowania tekstu."

@@ -4,6 +4,51 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const hunyuanChatModels: AIChatModelCard[] = [
   {
+    abilities: {
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 92_000,
+    description:
+      '业内首个超大规模 Hybrid-Transformer-Mamba 推理模型，扩展推理能力，超强解码速度，进一步对齐人类偏好。',
+    displayName: 'Hunyuan T1',
+    enabled: true,
+    id: 'hunyuan-t1-latest',
+    maxOutput: 64_000,
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-03-21',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 92_000,
+    description:
+      '全面搭建模型文理科能力，长文本信息捕捉能力强。支持推理解答各种难度的数学/逻辑推理/科学/代码等科学问题。',
+    displayName: 'Hunyuan T1 20250321',
+    id: 'hunyuan-t1-20250321',
+    maxOutput: 64_000,
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-03-21',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 256_000,
     description:
       '升级为 MOE 结构，上下文窗口为 256k ，在 NLP，代码，数学，行业等多项评测集上领先众多开源模型。',
@@ -49,7 +94,6 @@ const hunyuanChatModels: AIChatModelCard[] = [
     description:
       '采用更优的路由策略，同时缓解了负载均衡和专家趋同的问题。长文方面，大海捞针指标达到99.9%。MOE-256K 在长度和效果上进一步突破，极大的扩展了可输入长度。',
     displayName: 'Hunyuan Standard 256K',
-    enabled: true,
     id: 'hunyuan-standard-256K',
     maxOutput: 6000,
     pricing: {
@@ -58,95 +102,6 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 2,
     },
     releasedAt: '2025-02-10',
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-    },
-    contextWindowTokens: 32_000,
-    description:
-      '通用体验优化，包括NLP理解、文本创作、闲聊、知识问答、翻译、领域等；提升拟人性，优化模型情商；提升意图模糊时模型主动澄清能力；提升字词解析类问题的处理能力；提升创作的质量和可互动性；提升多轮体验。',
-    displayName: 'Hunyuan Turbo Latest',
-    enabled: true,
-    id: 'hunyuan-turbo-latest',
-    maxOutput: 4000,
-    pricing: {
-      currency: 'CNY',
-      input: 15,
-      output: 50,
-    },
-    releasedAt: '2025-01-10',
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-    },
-    contextWindowTokens: 32_000,
-    description:
-      '本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量',
-    displayName: 'Hunyuan Turbo',
-    id: 'hunyuan-turbo',
-    maxOutput: 4000,
-    pricing: {
-      currency: 'CNY',
-      input: 15,
-      output: 50,
-    },
-    releasedAt: '2025-01-10',
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-    },
-    contextWindowTokens: 32_000,
-    description:
-      '本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量',
-    displayName: 'Hunyuan Turbo 20241223',
-    id: 'hunyuan-turbo-20241223',
-    maxOutput: 4000,
-    pricing: {
-      currency: 'CNY',
-      input: 15,
-      output: 50,
-    },
-    releasedAt: '2025-01-10',
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-    },
-    contextWindowTokens: 32_000,
-    description:
-      'hunyuan-turbo 2024 年 11 月 20 日固定版本，介于 hunyuan-turbo 和 hunyuan-turbo-latest 之间的一个版本。',
-    displayName: 'Hunyuan Turbo 20241120',
-    id: 'hunyuan-turbo-20241120',
-    maxOutput: 4000,
-    pricing: {
-      currency: 'CNY',
-      input: 15,
-      output: 50,
-    },
-    releasedAt: '2024-11-20',
     settings: {
       searchImpl: 'params',
     },
@@ -191,6 +146,118 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 18,
     },
     releasedAt: '2024-12-18',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      '通用体验优化，包括NLP理解、文本创作、闲聊、知识问答、翻译、领域等；提升拟人性，优化模型情商；提升意图模糊时模型主动澄清能力；提升字词解析类问题的处理能力；提升创作的质量和可互动性；提升多轮体验。',
+    displayName: 'Hunyuan Turbo',
+    enabled: true,
+    id: 'hunyuan-turbo-latest',
+    maxOutput: 4000,
+    pricing: {
+      currency: 'CNY',
+      input: 2.4,
+      output: 9.6,
+    },
+    releasedAt: '2025-01-10',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      '本版本优化：数据指令scaling，大幅提升模型通用泛化能力；大幅提升数学、代码、逻辑推理能力；优化文本理解字词理解相关能力；优化文本创作内容生成质量',
+    displayName: 'Hunyuan Turbo 20241223',
+    id: 'hunyuan-turbo-20241223',
+    maxOutput: 4000,
+    pricing: {
+      currency: 'CNY',
+      input: 2.4,
+      output: 9.6,
+    },
+    releasedAt: '2025-01-10',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      'hunyuan-TurboS 混元旗舰大模型最新版本，具备更强的思考能力，更优的体验效果。',
+    displayName: 'Hunyuan TurboS',
+    enabled: true,
+    id: 'hunyuan-turbos-latest',
+    maxOutput: 8000,
+    pricing: {
+      currency: 'CNY',
+      input: 0.8,
+      output: 2,
+    },
+    releasedAt: '2025-03-13',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      '统一数学解题步骤的风格，加强数学多轮问答。文本创作优化回答风格，去除AI味，增加文采。',
+    displayName: 'Hunyuan TurboS 20250313',
+    id: 'hunyuan-turbos-20250313',
+    maxOutput: 8000,
+    pricing: {
+      currency: 'CNY',
+      input: 0.8,
+      output: 2,
+    },
+    releasedAt: '2025-03-13',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      'hunyuan-TurboS pv2.1.2 固定版本预训练底座训练token 数升级；数学/逻辑/代码等思考能力提升；中英文通用体验效果提升，包括文本创作、文本理解、知识问答、闲聊等。',
+    displayName: 'Hunyuan TurboS 20250226',
+    id: 'hunyuan-turbos-20250226',
+    maxOutput: 8000,
+    pricing: {
+      currency: 'CNY',
+      input: 0.8,
+      output: 2,
+    },
+    releasedAt: '2025-02-25',
     settings: {
       searchImpl: 'params',
     },
@@ -267,8 +334,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 8,
+      input: 3.5,
+      output: 7,
     },
     releasedAt: '2024-11-12',
     type: 'chat',
@@ -309,31 +376,31 @@ const hunyuanChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 8000,
     description:
-      '支持中文和英语、日语、法语、葡萄牙语、西班牙语、土耳其语、俄语、阿拉伯语、韩语、意大利语、德语、越南语、马来语、印尼语15种语言互译，基于多场景翻译评测集自动化评估COMET评分，在十余种常用语种中外互译能力上整体优于市场同规模模型。',
-    displayName: 'Hunyuan Translation',
-    id: 'hunyuan-translation',
-    maxOutput: 4000,
-    pricing: {
-      currency: 'CNY',
-      input: 25,
-      output: 75,
-    },
-    releasedAt: '2024-10-25',
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8000,
-    description:
       '混元翻译模型支持自然语言对话式翻译；支持中文和英语、日语、法语、葡萄牙语、西班牙语、土耳其语、俄语、阿拉伯语、韩语、意大利语、德语、越南语、马来语、印尼语15种语言互译。',
     displayName: 'Hunyuan Translation Lite',
     id: 'hunyuan-translation-lite',
     maxOutput: 4000,
     pricing: {
       currency: 'CNY',
-      input: 5,
-      output: 15,
+      input: 1,
+      output: 3,
     },
     releasedAt: '2024-11-25',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 8000,
+    description:
+      '支持中文和英语、日语、法语、葡萄牙语、西班牙语、土耳其语、俄语、阿拉伯语、韩语、意大利语、德语、越南语、马来语、印尼语15种语言互译，基于多场景翻译评测集自动化评估COMET评分，在十余种常用语种中外互译能力上整体优于市场同规模模型。',
+    displayName: 'Hunyuan Translation',
+    id: 'hunyuan-translation',
+    maxOutput: 4000,
+    pricing: {
+      currency: 'CNY',
+      input: 15,
+      output: 45,
+    },
+    releasedAt: '2024-10-25',
     type: 'chat',
   },
 ];

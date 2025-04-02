@@ -15,7 +15,7 @@ import { useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
 import { SessionRankItem } from '@/types/session';
 
-export const AssistantsRank = memo(() => {
+export const AssistantsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation(['auth', 'chat']);
   const router = useRouter();
@@ -29,6 +29,7 @@ export const AssistantsRank = memo(() => {
     const link = qs.stringifyUrl({
       query: {
         session: item.id,
+        ...(mobile ? { showMobileWorkspace: true } : {}),
       },
       url: '/chat',
     });

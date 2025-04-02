@@ -1,0 +1,46 @@
+{
+  "addUserMessage": {
+    "desc": "Fügen Sie den aktuellen Eingabetext als Benutzernachricht hinzu, ohne die Generierung auszulösen",
+    "title": "Benutzernachricht hinzufügen"
+  },
+  "editMessage": {
+    "desc": "Treten Sie in den Bearbeitungsmodus, indem Sie die Alt-Taste gedrückt halten und auf die Nachricht doppelklicken",
+    "title": "Nachricht bearbeiten"
+  },
+  "openChatSettings": {
+    "desc": "Aktuelle Sitzungseinstellungen anzeigen und ändern",
+    "title": "Chat-Einstellungen öffnen"
+  },
+  "openHotkeyHelper": {
+    "desc": "Anleitung zur Verwendung aller Tastenkombinationen anzeigen",
+    "title": "Tastenkombinationshilfe öffnen"
+  },
+  "regenerateMessage": {
+    "desc": "Die letzte Nachricht neu generieren",
+    "title": "Nachricht neu generieren"
+  },
+  "saveTopic": {
+    "desc": "Das aktuelle Thema speichern und ein neues Thema öffnen",
+    "title": "Neues Thema beginnen"
+  },
+  "search": {
+    "desc": "Hauptsuchfeld der aktuellen Seite aufrufen",
+    "title": "Suche"
+  },
+  "switchAgent": {
+    "desc": "Wechseln Sie zwischen den im Seitenbereich fixierten Assistenten, indem Sie die Strg-Taste gedrückt halten und eine Zahl von 0 bis 9 drücken",
+    "title": "Schnell zwischen Assistenten wechseln"
+  },
+  "toggleLeftPanel": {
+    "desc": "Linkes Hilfepanel ein- oder ausblenden",
+    "title": "Assistentenpanel ein-/ausblenden"
+  },
+  "toggleRightPanel": {
+    "desc": "Rechtes Themenpanel ein- oder ausblenden",
+    "title": "Themenpanel ein-/ausblenden"
+  },
+  "toggleZenMode": {
+    "desc": "Im Fokusmodus nur die aktuelle Sitzung anzeigen, andere UI ausblenden",
+    "title": "Fokussierungsmodus umschalten"
+  }
+}

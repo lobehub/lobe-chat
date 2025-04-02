@@ -2,7 +2,7 @@ import { eq, inArray } from 'drizzle-orm';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { clientDB, initializeDB } from '@/database/client/db';
-import mockImportData from '@/database/repositories/dataImporter/__tests__/fixtures/messages.json';
+import mockImportData from '@/database/repositories/dataImporter/deprecated/__tests__/fixtures/messages.json';
 import {
   agents,
   agentsToSessions,

@@ -9,7 +9,7 @@ import { useCategory } from './useCategory';
 const Category = memo(() => {
   const items = useCategory();
 
-  return items?.map((item, index) => <Cell {...item} key={item.key || index} />);
+  return items?.map(({ key, ...item }, index) => <Cell key={key || index} {...item} />);
 });
 
 export default Category;

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { SessionModel } from '@/database/server/models/session';
+import { SessionModel } from '@/database/models/session';
 import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
 
 import { AgentService } from './index';
@@ -16,7 +16,7 @@ vi.mock('@/server/globalConfig/parseDefaultAgent', () => ({
   parseAgentConfig: vi.fn(),
 }));
 
-vi.mock('@/database/server/models/session', () => ({
+vi.mock('@/database/models/session', () => ({
   SessionModel: vi.fn(),
 }));
 

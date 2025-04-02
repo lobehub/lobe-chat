@@ -41,6 +41,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
   cloudflare?: CloudflareKeyVault;
+  cohere?: OpenAICompatibleKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
   doubao?: OpenAICompatibleKeyVault;
   fireworksai?: OpenAICompatibleKeyVault;
@@ -51,6 +52,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   higress?: OpenAICompatibleKeyVault;
   huggingface?: OpenAICompatibleKeyVault;
   hunyuan?: OpenAICompatibleKeyVault;
+  infiniai?: OpenAICompatibleKeyVault;
   internlm?: OpenAICompatibleKeyVault;
   jina?: OpenAICompatibleKeyVault;
   lmstudio?: OpenAICompatibleKeyVault;
@@ -68,6 +70,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   ppio?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
   sambanova?: OpenAICompatibleKeyVault;
+  search1api?: OpenAICompatibleKeyVault;
   sensenova?: OpenAICompatibleKeyVault;
   siliconcloud?: OpenAICompatibleKeyVault;
   spark?: OpenAICompatibleKeyVault;
@@ -81,6 +84,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   volcengine?: OpenAICompatibleKeyVault;
   wenxin?: OpenAICompatibleKeyVault;
   xai?: OpenAICompatibleKeyVault;
+  xinference?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;
 }

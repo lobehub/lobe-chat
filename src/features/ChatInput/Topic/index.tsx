@@ -1,17 +1,19 @@
-import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Hotkey, Icon, Tooltip } from '@lobehub/ui';
 import { Button, Popconfirm } from 'antd';
 import { LucideGalleryVerticalEnd, LucideMessageSquarePlus } from 'lucide-react';
 import { memo, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
-import HotKeys from '@/components/HotKeys';
-import { ALT_KEY, SAVE_TOPIC_KEY } from '@/const/hotkeys';
 import { useActionSWR } from '@/libs/swr';
 import { useChatStore } from '@/store/chat';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
+import { HotkeyEnum } from '@/types/hotkey';
 
 const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SaveTopic));
   const [hasTopic, openNewTopicOrSaveTopic] = useChatStore((s) => [
     !!s.activeTopicId,
     s.openNewTopicOrSaveTopic,
@@ -24,13 +26,6 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
   const icon = hasTopic ? LucideMessageSquarePlus : LucideGalleryVerticalEnd;
   const desc = t(hasTopic ? 'topic.openNewTopic' : 'topic.saveCurrentMessages');
 
-  const hotkeys = [ALT_KEY, SAVE_TOPIC_KEY].join('+');
-
-  useHotkeys(hotkeys, () => mutate(), {
-    enableOnFormTags: true,
-    preventDefault: true,
-  });
-
   if (mobile) {
     return (
       <Popconfirm
@@ -41,27 +36,25 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
         open={confirmOpened}
         placement={'top'}
         title={
-          <div style={{ alignItems: 'center', display: 'flex', marginBottom: '8px' }}>
+          <Flexbox align={'center'} horizontal style={{ marginBottom: 8 }}>
             <div style={{ marginRight: '16px', whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
               {t(hasTopic ? 'topic.checkOpenNewTopic' : 'topic.checkSaveCurrentMessages')}
             </div>
-            <HotKeys inverseTheme={false} keys={hotkeys} />
-          </div>
+            <Hotkey keys={hotkey} />
+          </Flexbox>
         }
       >
-        <Tooltip>
-          <ActionIcon
-            aria-label={desc}
-            icon={icon}
-            loading={isValidating}
-            onClick={() => setConfirmOpened(true)}
-          />
-        </Tooltip>
+        <ActionIcon
+          aria-label={desc}
+          icon={icon}
+          loading={isValidating}
+          onClick={() => setConfirmOpened(true)}
+        />
       </Popconfirm>
     );
   } else {
     return (
-      <Tooltip title={<HotKeys desc={desc} inverseTheme keys={hotkeys} />}>
+      <Tooltip hotkey={hotkey} title={desc}>
         <Button
           aria-label={desc}
           icon={<Icon icon={icon} />}

@@ -16,6 +16,16 @@
     "detail": "Detalles del error",
     "title": "Solicitud fallida"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Razón del error: {{reason}}",
+      "title": "Importación fallida"
+    },
+    "incompatible": {
+      "description": "Este archivo fue exportado desde una versión más alta, por favor intente actualizar a la última versión y luego vuelva a importar",
+      "title": "La aplicación actual no admite la importación de este archivo"
+    }
+  },
   "loginRequired": {
     "desc": "Serás redirigido automáticamente a la página de inicio de sesión",
     "title": "Por favor, inicie sesión para utilizar esta función"
@@ -69,6 +79,7 @@
     "524": "Lo sentimos, el servidor ha agotado el tiempo de espera mientras esperaba una respuesta, puede ser debido a que la respuesta es demasiado lenta, por favor inténtelo de nuevo más tarde",
     "AgentRuntimeError": "Se produjo un error en la ejecución del tiempo de ejecución del modelo de lenguaje Lobe, por favor, verifica la siguiente información o inténtalo de nuevo",
     "ConnectionCheckFailed": "La respuesta de la solicitud está vacía, por favor verifica que la dirección del proxy de la API no termine con `/v1`",
+    "CreateMessageError": "Lo sentimos, el mensaje no se pudo enviar correctamente. Por favor, copia el contenido y vuelve a enviarlo. Después de actualizar la página, este mensaje no se conservará.",
     "ExceededContextWindow": "El contenido de la solicitud actual excede la longitud que el modelo puede procesar. Por favor, reduzca la cantidad de contenido y vuelva a intentarlo.",
     "FreePlanLimit": "Actualmente eres un usuario gratuito y no puedes utilizar esta función. Por favor, actualiza a un plan de pago para seguir utilizando.",
     "InsufficientQuota": "Lo sentimos, la cuota de esta clave ha alcanzado su límite. Por favor, verifique si el saldo de su cuenta es suficiente o aumente la cuota de la clave y vuelva a intentarlo.",

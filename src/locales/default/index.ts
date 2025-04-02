@@ -7,6 +7,7 @@ import components from './components';
 import discover from './discover';
 import error from './error';
 import file from './file';
+import hotkey from './hotkey';
 import knowledgeBase from './knowledgeBase';
 import metadata from './metadata';
 import migration from './migration';
@@ -32,6 +33,7 @@ const resources = {
   discover,
   error,
   file,
+  hotkey,
   knowledgeBase,
   metadata,
   migration,

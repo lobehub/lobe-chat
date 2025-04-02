@@ -12,8 +12,7 @@ const currentActiveTopic = (s: ChatStoreState): ChatTopic | undefined => {
 };
 const searchTopics = (s: ChatStoreState): ChatTopic[] => s.searchTopics;
 
-const displayTopics = (s: ChatStoreState): ChatTopic[] | undefined =>
-  s.isSearchingTopic ? searchTopics(s) : currentTopics(s);
+const displayTopics = (s: ChatStoreState): ChatTopic[] | undefined => currentTopics(s);
 
 const currentFavTopics = (s: ChatStoreState): ChatTopic[] =>
   currentTopics(s)?.filter((s) => s.favorite) || [];
@@ -40,6 +39,9 @@ const currentActiveTopicSummary = (s: ChatStoreState): ChatTopicSummary | undefi
 };
 
 const isCreatingTopic = (s: ChatStoreState) => s.creatingTopic;
+const isUndefinedTopics = (s: ChatStoreState) => !currentTopics(s);
+const isInSearchMode = (s: ChatStoreState) => s.inSearchingMode;
+const isSearchingTopic = (s: ChatStoreState) => s.isSearchingTopic;
 
 const groupedTopicsSelector = (s: ChatStoreState): GroupedTopic[] => {
   const topics = displayTopics(s);
@@ -70,5 +72,8 @@ export const topicSelectors = {
   getTopicById,
   groupedTopicsSelector,
   isCreatingTopic,
+  isInSearchMode,
+  isSearchingTopic,
+  isUndefinedTopics,
   searchTopics,
 };

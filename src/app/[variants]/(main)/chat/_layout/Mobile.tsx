@@ -40,7 +40,7 @@ const Layout = memo<LayoutProps>(({ children, session }) => {
       >
         {children}
       </Flexbox>
-      <Suspense fallback={null}>
+      <Suspense>
         <InitClientDB bottom={100} />
       </Suspense>
     </>

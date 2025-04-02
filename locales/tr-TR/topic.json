@@ -32,6 +32,7 @@
     "title": "Konu Listesi"
   },
   "searchPlaceholder": "Konuları Ara...",
+  "searchResultEmpty": "Hiçbir arama sonucu bulunamadı",
   "temp": "Geçici",
   "title": "Konu"
 }

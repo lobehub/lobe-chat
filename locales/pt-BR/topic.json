@@ -32,6 +32,7 @@
     "title": "Lista de tópicos"
   },
   "searchPlaceholder": "Pesquisar tópicos...",
+  "searchResultEmpty": "Nenhum resultado encontrado",
   "temp": "Temporário",
   "title": "Tópico"
 }

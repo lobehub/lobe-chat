@@ -1,9 +1,9 @@
 import { AuthObject } from '@clerk/backend';
-import { getAuth } from '@clerk/nextjs/server';
 import { NextRequest } from 'next/server';
 
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableClerk } from '@/const/auth';
 import { AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
+import { ClerkAuth } from '@/libs/clerk-auth';
 import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getJWTPayload } from '@/utils/server/jwt';
@@ -41,8 +41,11 @@ export const checkAuth =
       // check the Auth With payload and clerk auth
       let clerkAuth = {} as AuthObject;
 
+      // TODO: V2 完整移除 client 模式下的 clerk 集成代码
       if (enableClerk) {
-        clerkAuth = getAuth(req as NextRequest);
+        const auth = new ClerkAuth();
+        const data = auth.getAuthFromRequest(req as NextRequest);
+        clerkAuth = data.clerkAuth;
       }
 
       jwtPayload = await getJWTPayload(authorization);

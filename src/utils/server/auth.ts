@@ -1,14 +1,12 @@
-import { auth } from '@clerk/nextjs/server';
-
 import { enableClerk, enableNextAuth } from '@/const/auth';
+import { ClerkAuth } from '@/libs/clerk-auth';
 import NextAuthEdge from '@/libs/next-auth/edge';
 
 export const getUserAuth = async () => {
   if (enableClerk) {
-    const clerkAuth = await auth();
+    const clerkAuth = new ClerkAuth();
 
-    const userId = clerkAuth.userId;
-    return { clerkAuth: auth, userId };
+    return await clerkAuth.getAuth();
   }
 
   if (enableNextAuth) {

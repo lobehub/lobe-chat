@@ -10,7 +10,10 @@ import urlJoin from 'url-join';
 
 import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 import { DiscoverTab } from '@/types/discover';
+import { HotkeyEnum } from '@/types/hotkey';
 
 import { useNav } from './useNav';
 
@@ -34,6 +37,7 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
   const pathname = usePathname();
   const { activeKey } = useNav();
   const [searchKey, setSearchKey] = useQueryState('q', { clearOnDefault: true, defaultValue: '' });
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.Search));
 
   const { t } = useTranslation('discover');
   const { cx, styles } = useStyles();
@@ -69,7 +73,7 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
       }}
       onSearch={handleSearch}
       placeholder={t('search.placeholder')}
-      shortKey={'k'}
+      shortKey={hotkey}
       spotlight={!mobile}
       style={{ width: mobile || active ? '100%' : 'min(480px,100%)' }}
       styles={{ input: { width: '100%' } }}

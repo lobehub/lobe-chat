@@ -1,63 +1,47 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
 const wenxinChatModels: AIChatModelCard[] = [
+  /*
   {
     abilities: {
-      functionCall: true,
+      resoning: true,
       search: true,
     },
-    contextWindowTokens: 8192,
+    contextWindowTokens: 32_768,
     description:
-      '百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。',
-    displayName: 'ERNIE 3.5 8K',
+      '文心大模型X1具备更强的理解、规划、反思、进化能力。作为能力更全面的深度思考模型，文心X1兼备准确、创意和文采，在中文知识问答、文学创作、文稿写作、日常对话、逻辑推理、复杂计算及工具调用等方面表现尤为出色。',
+    displayName: 'ERNIE X1 32K Preview',
     enabled: true,
-    id: 'ernie-3.5-8k',
+    id: 'ernie-x1-32k-preview',
     pricing: {
       currency: 'CNY',
-      input: 0.8,
-      output: 2,
+      input: 2,
+      output: 8,
     },
+    releasedAt: '2025-03-16',
     settings: {
       searchImpl: 'params',
     },
     type: 'chat',
   },
+  */
   {
     abilities: {
-      functionCall: true,
       search: true,
+      vision: true,
     },
     contextWindowTokens: 8192,
     description:
-      '百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。',
-    displayName: 'ERNIE 3.5 8K Preview',
-    id: 'ernie-3.5-8k-preview',
-    pricing: {
-      currency: 'CNY',
-      input: 0.8,
-      output: 2,
-    },
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      '百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。',
-    displayName: 'ERNIE 3.5 128K',
+      '文心大模型4.5是百度自主研发的新一代原生多模态基础大模型，通过多个模态联合建模实现协同优化，多模态理解能力优秀；具备更精进的语言能力，理解、生成、逻辑、记忆能力全面提升，去幻觉、逻辑推理、代码能力显著提升。',
+    displayName: 'ERNIE 4.5 8K Preview',
     enabled: true,
-    id: 'ernie-3.5-128k',
+    id: 'ernie-4.5-8k-preview',
     pricing: {
       currency: 'CNY',
-      input: 0.8,
-      output: 2,
+      input: 4,
+      output: 16,
     },
+    releasedAt: '2025-03-16',
     settings: {
       searchImpl: 'params',
     },
@@ -160,6 +144,66 @@ const wenxinChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 20,
       output: 60,
+    },
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 8192,
+    description:
+      '百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。',
+    displayName: 'ERNIE 3.5 8K',
+    id: 'ernie-3.5-8k',
+    pricing: {
+      currency: 'CNY',
+      input: 0.8,
+      output: 2,
+    },
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 8192,
+    description:
+      '百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。',
+    displayName: 'ERNIE 3.5 8K Preview',
+    id: 'ernie-3.5-8k-preview',
+    pricing: {
+      currency: 'CNY',
+      input: 0.8,
+      output: 2,
+    },
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      '百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。',
+    displayName: 'ERNIE 3.5 128K',
+    id: 'ernie-3.5-128k',
+    pricing: {
+      currency: 'CNY',
+      input: 0.8,
+      output: 2,
     },
     settings: {
       searchImpl: 'params',
@@ -295,6 +339,150 @@ const wenxinChatModels: AIChatModelCard[] = [
       'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能比肩 OpenAI o1 正式版。',
     displayName: 'DeepSeek R1',
     id: 'deepseek-r1',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Qwen-1.5B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
+    displayName: 'DeepSeek R1 Distill Qwen 1.5B',
+    id: 'deepseek-r1-distill-qwen-1.5b',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Qwen-7B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
+    displayName: 'DeepSeek R1 Distill Qwen 7B',
+    id: 'deepseek-r1-distill-qwen-7b',
+    pricing: {
+      currency: 'CNY',
+      input: 0.6,
+      output: 2.4,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Qwen-14B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
+    displayName: 'DeepSeek R1 Distill Qwen 14B',
+    id: 'deepseek-r1-distill-qwen-14b',
+    pricing: {
+      currency: 'CNY',
+      input: 0.6,
+      output: 2.4,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Qwen-32B是DeepSeek-R1基于Qwen-2.5系列的蒸馏模型。',
+    displayName: 'DeepSeek R1 Distill Qwen 32B',
+    id: 'deepseek-r1-distill-qwen-32b',
+    pricing: {
+      currency: 'CNY',
+      input: 1.5,
+      output: 6,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Llama-8B是DeepSeek-R1基于Llama3.1-8B-Base的蒸馏模型。',
+    displayName: 'DeepSeek R1 Distill Llama 8B',
+    id: 'deepseek-r1-distill-llama-8b',
+    pricing: {
+      currency: 'CNY',
+      input: 1.5,
+      output: 6,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Llama-70B是DeepSeek-R1基于Llama3.3-70B-Instruct的蒸馏模型。',
+    displayName: 'DeepSeek R1 Distill Llama 70B',
+    id: 'deepseek-r1-distill-llama-70b',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      '2025年2月14日首次发布，由千帆大模型研发团队以 Llama3_8B为base模型（Built with Meta Llama）蒸馏所得，蒸馏数据中也同步添加了千帆的语料。',
+    displayName: 'DeepSeek R1 Distill Qianfan Llama 8B',
+    id: 'deepseek-r1-distill-qianfan-llama-8b',
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      '2025年2月14日首次发布，由千帆大模型研发团队以 Llama3_70B为base模型（Built with Meta Llama）蒸馏所得，蒸馏数据中也同步添加了千帆的语料。',
+    displayName: 'DeepSeek R1 Distill Qianfan Llama 70B',
+    id: 'deepseek-r1-distill-qianfan-llama-70b',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      '通义千问团队推出的高效推理模型，支持消费级硬件部署，具备强大的实时推理能力和与智能体Agent集成的潜力。',
+    displayName: 'QwQ 32B',
+    id: 'qwq-32b',
     pricing: {
       currency: 'CNY',
       input: 2,

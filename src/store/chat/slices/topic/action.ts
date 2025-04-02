@@ -218,7 +218,11 @@ export const chatTopic: StateCreator<
         topicService.searchTopics(keywords, sessionId),
       {
         onSuccess: (data) => {
-          set({ searchTopics: data }, false, n('useSearchTopics(success)', { keywords }));
+          set(
+            { searchTopics: data, isSearchingTopic: false },
+            false,
+            n('useSearchTopics(success)', { keywords }),
+          );
         },
       },
     ),

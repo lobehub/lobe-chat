@@ -1,15 +1,15 @@
 import { UserJSON } from '@clerk/backend';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { UserModel } from '@/database/models/user';
 import { UserItem } from '@/database/schemas';
-import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
 import { AgentService } from '@/server/services/agent';
 
 import { UserService } from './index';
 
 // Mock dependencies
-vi.mock('@/database/server/models/user', () => {
+vi.mock('@/database/models/user', () => {
   const MockUserModel = vi.fn();
   // @ts-ignore
   MockUserModel.findById = vi.fn();

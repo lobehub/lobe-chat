@@ -2,24 +2,24 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { serverDBEnv } from '@/config/db';
-import { serverDB } from '@/database/server';
-import { AsyncTaskModel } from '@/database/server/models/asyncTask';
-import { ChunkModel } from '@/database/server/models/chunk';
-import { FileModel } from '@/database/server/models/file';
+import { AsyncTaskModel } from '@/database/models/asyncTask';
+import { ChunkModel } from '@/database/models/chunk';
+import { FileModel } from '@/database/models/file';
 import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { S3 } from '@/server/modules/S3';
 import { getFullFileUrl } from '@/server/utils/files';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 import { FileListItem, QueryFileListSchema, UploadFileSchema } from '@/types/files';
 
-const fileProcedure = authedProcedure.use(async (opts) => {
+const fileProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
     ctx: {
-      asyncTaskModel: new AsyncTaskModel(serverDB, ctx.userId),
-      chunkModel: new ChunkModel(serverDB, ctx.userId),
-      fileModel: new FileModel(serverDB, ctx.userId),
+      asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
+      chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
+      fileModel: new FileModel(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -74,7 +74,7 @@ export const fileRouter = router({
     .query(async ({ ctx, input }): Promise<FileListItem | undefined> => {
       const item = await ctx.fileModel.findById(input.id);
 
-      if (!item) throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
+      if (!item) throw new TRPCError({ code: 'NOT_FOUND', message: 'File not found' });
 
       let embeddingTask = null;
       if (item.embeddingTaskId) {

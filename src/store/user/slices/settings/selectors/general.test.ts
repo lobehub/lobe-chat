@@ -5,27 +5,107 @@ import { merge } from '@/utils/merge';
 import { userGeneralSettingsSelectors } from './general';
 
 describe('settingsSelectors', () => {
-  describe('currentThemeMode', () => {
-    it('should return the correct theme', () => {
+  describe('generalConfig', () => {
+    it('should return general settings', () => {
       const s: UserState = merge(initialState, {
         settings: {
-          general: { themeMode: 'light' },
+          general: { fontSize: 12 },
         },
       });
 
-      const result = userGeneralSettingsSelectors.currentThemeMode(s as UserStore);
+      const result = userGeneralSettingsSelectors.config(s as UserStore);
 
-      expect(result).toBe('light');
+      expect(result).toEqual({ fontSize: 12 });
     });
-    it('should return the auto if not set the themeMode', () => {
+  });
+
+  describe('fontSize', () => {
+    it('should return the fontSize', () => {
       const s: UserState = merge(initialState, {
         settings: {
-          general: { themeMode: undefined },
+          general: { fontSize: 12 },
         },
       });
-      const result = userGeneralSettingsSelectors.currentThemeMode(s as UserStore);
 
-      expect(result).toBe('auto');
+      const result = userGeneralSettingsSelectors.fontSize(s as UserStore);
+
+      expect(result).toBe(12);
+    });
+  });
+
+  describe('neutralColor', () => {
+    it('should return undefined if general settings not exists', () => {
+      const s: UserState = merge(initialState, {
+        settings: {
+          general: undefined,
+        },
+      });
+
+      const result = userGeneralSettingsSelectors.neutralColor(s as UserStore);
+
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined if neutralColor not set', () => {
+      const s: UserState = merge(initialState, {
+        settings: {
+          general: {},
+        },
+      });
+
+      const result = userGeneralSettingsSelectors.neutralColor(s as UserStore);
+
+      expect(result).toBeUndefined();
+    });
+
+    it('should return the neutralColor', () => {
+      const s: UserState = merge(initialState, {
+        settings: {
+          general: { neutralColor: '#000000' },
+        },
+      });
+
+      const result = userGeneralSettingsSelectors.neutralColor(s as UserStore);
+
+      expect(result).toBe('#000000');
+    });
+  });
+
+  describe('primaryColor', () => {
+    it('should return undefined if general settings not exists', () => {
+      const s: UserState = merge(initialState, {
+        settings: {
+          general: undefined,
+        },
+      });
+
+      const result = userGeneralSettingsSelectors.primaryColor(s as UserStore);
+
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined if primaryColor not set', () => {
+      const s: UserState = merge(initialState, {
+        settings: {
+          general: {},
+        },
+      });
+
+      const result = userGeneralSettingsSelectors.primaryColor(s as UserStore);
+
+      expect(result).toBeUndefined();
+    });
+
+    it('should return the primaryColor', () => {
+      const s: UserState = merge(initialState, {
+        settings: {
+          general: { primaryColor: '#ffffff' },
+        },
+      });
+
+      const result = userGeneralSettingsSelectors.primaryColor(s as UserStore);
+
+      expect(result).toBe('#ffffff');
     });
   });
 });

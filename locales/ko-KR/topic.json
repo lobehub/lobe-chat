@@ -32,6 +32,7 @@
     "title": "주제 목록"
   },
   "searchPlaceholder": "주제 검색...",
+  "searchResultEmpty": "검색 결과가 없습니다.",
   "temp": "임시",
   "title": "주제"
 }

@@ -50,7 +50,7 @@ const SearchResultItem = memo<SearchResult>(({ url, title }) => {
   const host = urlObj.hostname;
   return (
     <Link href={url} target={'_blank'}>
-      <Flexbox className={styles.container} gap={2} justify={'space-between'} key={url}>
+      <Flexbox className={styles.container} gap={2} justify={'space-between'}>
         <div className={styles.title}>{title}</div>
         <Flexbox align={'center'} gap={4} horizontal>
           <WebFavicon size={14} title={title} url={url} />

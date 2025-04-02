@@ -1,9 +1,10 @@
 import { ActionEvent, ActionIconGroup, type ActionIconGroupProps } from '@lobehub/ui';
 import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { memo, useCallback } from 'react';
+import { memo, use, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { MessageRoleType } from '@/types/message';
@@ -29,9 +30,10 @@ const ActionsBar = memo<ActionsBarProps>((props) => {
 interface ActionsProps {
   id: string;
   inPortalThread?: boolean;
+  index: number;
 }
 
-const Actions = memo<ActionsProps>(({ id, inPortalThread }) => {
+const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
   const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
   const { t } = useTranslation('common');
   const [
@@ -58,12 +60,15 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread }) => {
     s.toggleMessageEditing,
   ]);
   const { message } = App.useApp();
+  const virtuosoRef = use(VirtuosoContext);
 
   const handleActionClick = useCallback(
     async (action: ActionEvent) => {
       switch (action.key) {
         case 'edit': {
           toggleMessageEditing(id, true);
+
+          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
         }
       }
       if (!item) return;

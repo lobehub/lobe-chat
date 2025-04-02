@@ -34,7 +34,6 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
     renderFooter,
   }) => {
     const [expand, setExpand] = useState<boolean>(false);
-
     const onSend = useCallback(() => {
       setExpand(false);
     }, []);

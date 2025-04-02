@@ -13,7 +13,7 @@ export class Crawler {
   constructor(options: CrawlOptions = {}) {
     this.impls = !!options.impls?.length
       ? (options.impls.filter((impl) => Object.keys(crawlImpls).includes(impl)) as CrawlImplType[])
-      : (['naive', 'jina', 'browserless'] as const);
+      : (['naive', 'jina', 'search1api','browserless'] as const);
   }
 
   /**
@@ -56,7 +56,7 @@ export class Crawler {
       try {
         const res = await crawlImpls[impl](transformedUrl, { filterOptions: mergedFilterOptions });
 
-        if (res)
+        if (res && res.content && res.content?.length > 100)
           return {
             crawler: impl,
             data: res,

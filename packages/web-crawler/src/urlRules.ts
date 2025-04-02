@@ -1,6 +1,16 @@
 import { CrawlUrlRule } from './type';
 
 export const crawUrlRules: CrawlUrlRule[] = [
+  // 搜狗微信链接，使用 search1api
+  {
+    impls: ['search1api'],
+    urlPattern: 'https://weixin.sogou.com/link(.*)',
+  },
+  // 搜狗链接，使用 search1api
+  {
+    impls: ['search1api'],
+    urlPattern: 'https://sogou.com/link(.*)',
+  },
   // github 源码解析
   {
     filterOptions: {
@@ -71,5 +81,11 @@ export const crawUrlRules: CrawlUrlRule[] = [
   {
     impls: ['jina'],
     urlPattern: 'https://cvpr.thecvf.com(.*)',
+  },
+  // 飞书用 jina
+  // https://github.com/lobehub/lobe-chat/issues/6879
+  {
+    impls: ['jina'],
+    urlPattern: 'https://(.*).feishu.cn/(.*)',
   },
 ];

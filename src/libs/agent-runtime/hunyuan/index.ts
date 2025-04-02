@@ -40,6 +40,10 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
       'hunyuan-pro',
     ];
 
+    const reasoningKeywords = [
+      'hunyuan-t1',
+    ];
+
     const modelsPage = await client.models.list() as any;
     const modelList: HunyuanModelCard[] = modelsPage.data;
 
@@ -57,7 +61,8 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
             || false,
           id: model.id,
           reasoning:
-            knownModel?.abilities?.reasoning
+            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.reasoning
             || false,
           vision:
             model.id.toLowerCase().includes('vision')

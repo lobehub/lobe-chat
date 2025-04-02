@@ -1,14 +1,95 @@
+import dayjs from 'dayjs';
+import { sha256 } from 'js-sha256';
+
 import { fileEnv } from '@/config/file';
+import { isServerMode } from '@/const/version';
+import { parseDataUri } from '@/libs/agent-runtime/utils/uriParser';
 import { edgeClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
 import { clientS3Storage } from '@/services/file/ClientS3';
-import { FileMetadata } from '@/types/files';
+import { FileMetadata, UploadBase64ToS3Result } from '@/types/files';
 import { FileUploadState, FileUploadStatus } from '@/types/files/upload';
 import { uuid } from '@/utils/uuid';
 
 export const UPLOAD_NETWORK_ERROR = 'NetWorkError';
 
+interface UploadFileToS3Options {
+  directory?: string;
+  filename?: string;
+  onProgress?: (status: FileUploadStatus, state: FileUploadState) => void;
+}
+
 class UploadService {
+  /**
+   * uniform upload method for both server and client
+   */
+  uploadFileToS3 = async (
+    file: File,
+    options: UploadFileToS3Options = {},
+  ): Promise<FileMetadata> => {
+    const { directory, onProgress } = options;
+
+    if (isServerMode) {
+      return this.uploadWithProgress(file, { directory, onProgress });
+    } else {
+      const fileArrayBuffer = await file.arrayBuffer();
+
+      // 1. check file hash
+      const hash = sha256(fileArrayBuffer);
+
+      return this.uploadToClientS3(hash, file);
+    }
+  };
+
+  uploadBase64ToS3 = async (
+    base64Data: string,
+    options: UploadFileToS3Options = {},
+  ): Promise<UploadBase64ToS3Result> => {
+    // 解析 base64 数据
+    const { base64, mimeType, type } = parseDataUri(base64Data);
+
+    if (!base64 || !mimeType || type !== 'base64') {
+      throw new Error('Invalid base64 data for image');
+    }
+
+    // 将 base64 转换为 Blob
+    const byteCharacters = atob(base64);
+    const byteArrays = [];
+
+    // 分块处理以避免内存问题
+    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+      const slice = byteCharacters.slice(offset, offset + 1024);
+
+      const byteNumbers: number[] = Array.from({ length: slice.length });
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, { type: mimeType });
+
+    // 确定文件扩展名
+    const fileExtension = mimeType.split('/')[1] || 'png';
+    const fileName = `${options.filename || `image_${dayjs().format('YYYY-MM-DD-hh-mm-ss')}`}.${fileExtension}`;
+
+    // 创建文件对象
+    const file = new File([blob], fileName, { type: mimeType });
+
+    // 使用统一的上传方法
+    const metadata = await this.uploadFileToS3(file, options);
+    const hash = sha256(await file.arrayBuffer());
+
+    return {
+      fileType: mimeType,
+      hash,
+      metadata,
+      size: file.size,
+    };
+  };
+
   uploadWithProgress = async (
     file: File,
     {

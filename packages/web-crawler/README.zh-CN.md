@@ -9,7 +9,7 @@ LobeChat 内置的网页抓取模块，用于智能提取网页内容并转换�
 ## 🛠️ 核心功能
 
 - **智能内容提取**：基于 Mozilla Readability 算法识别主要内容
-- **多级抓取策略**：支持多种抓取实现，包括基础抓取、Jina 和 Browserless 渲染抓取
+- **多级抓取策略**：支持多种抓取实现，包括基础抓取、Jina、Search1API 和 Browserless 渲染抓取
 - **自定义 URL 规则**：通过灵活的规则系统处理特定网站的抓取逻辑
 
 ## 🤝 参与共建
@@ -32,8 +32,8 @@ const url = [
     // 可选：URL 转换，用于重定向到更易抓取的版本
     urlTransform: 'https://example.com/print/$1',
 
-    // 可选：指定抓取实现方式，支持 'naive'、'jina' 和 'browserless' 三种
-    impls: ['naive', 'jina', 'browserless'],
+    // 可选：指定抓取实现方式，支持 'naive'、'jina'、'search1api' 和 'browserless' 四种
+    impls: ['naive', 'jina', 'search1api', 'browserless'],
 
     // 可选：内容过滤配置
     filterOptions: {

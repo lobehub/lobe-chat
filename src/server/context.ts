@@ -1,15 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { getAuth } from '@clerk/nextjs/server';
 import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
 
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER, enableClerk, enableNextAuth } from '@/const/auth';
-
-type ClerkAuth = ReturnType<typeof getAuth>;
+import { ClerkAuth, IClerkAuth } from '@/libs/clerk-auth';
 
 export interface AuthContext {
   authorizationHeader?: string | null;
-  clerkAuth?: ClerkAuth;
+  clerkAuth?: IClerkAuth;
   jwtPayload?: JWTPayload | null;
   nextAuth?: User;
   userId?: string | null;
@@ -21,7 +18,7 @@ export interface AuthContext {
  */
 export const createContextInner = async (params?: {
   authorizationHeader?: string | null;
-  clerkAuth?: ClerkAuth;
+  clerkAuth?: IClerkAuth;
   nextAuth?: User;
   userId?: string | null;
 }): Promise<AuthContext> => ({
@@ -46,9 +43,11 @@ export const createContext = async (request: NextRequest): Promise<Context> => {
   let auth;
 
   if (enableClerk) {
-    auth = getAuth(request);
+    const clerkAuth = new ClerkAuth();
+    const result = clerkAuth.getAuthFromRequest(request);
+    auth = result.clerkAuth;
+    userId = result.userId;
 
-    userId = auth.userId;
     return createContextInner({ authorizationHeader: authorization, clerkAuth: auth, userId });
   }
 

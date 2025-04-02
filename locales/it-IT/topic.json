@@ -32,6 +32,7 @@
     "title": "Elenco dei temi"
   },
   "searchPlaceholder": "Cerca temi...",
+  "searchResultEmpty": "Nessun risultato trovato",
   "temp": "Temporaneo",
   "title": "Tema"
 }

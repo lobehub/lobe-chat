@@ -42,6 +42,17 @@
     "sessionWithName": "Sessie-instellingen · {{name}}",
     "title": "Instellingen"
   },
+  "hotkey": {
+    "conflicts": "Conflict met bestaande sneltoetsen",
+    "group": {
+      "conversation": "Gesprek",
+      "essential": "Essentieel"
+    },
+    "invalidCombination": "Sneltoets moet ten minste één modifier-toets (Ctrl, Alt, Shift) en één reguliere toets bevatten",
+    "record": "Druk op een toets om de sneltoets op te nemen",
+    "reset": "Reset naar standaard sneltoetsen",
+    "title": "Sneltoetsen"
+  },
   "llm": {
     "aesGcm": "Uw sleutel en proxy-adres zullen worden versleuteld met het <1>AES-GCM</1> encryptie-algoritme",
     "apiKey": {
@@ -335,6 +346,33 @@
     },
     "title": "Thema-instellingen"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Exporteren",
+        "exportType": {
+          "agent": "Exporteren assistentinstellingen",
+          "agentWithMessage": "Exporteren assistent en berichten",
+          "all": "Exporteren globale instellingen en alle assistentgegevens",
+          "allAgent": "Exporteren alle assistentinstellingen",
+          "allAgentWithMessage": "Exporteren alle assistenten en berichten",
+          "globalSetting": "Exporteren globale instellingen"
+        },
+        "title": "Gegevens exporteren"
+      },
+      "import": {
+        "button": "Importeren",
+        "title": "Gegevens importeren"
+      },
+      "title": "Geavanceerde acties"
+    },
+    "desc": "Huidig opslaggebruik in de browser",
+    "embeddings": {
+      "used": "Vectoropslag"
+    },
+    "title": "Gegevensopslag",
+    "used": "Opslaggebruik"
+  },
   "submitAgentModal": {
     "button": "Assistent indienen",
     "identifier": "Assistent-identificatie",
@@ -425,8 +463,10 @@
     "agent": "Standaardassistent",
     "common": "Algemene instellingen",
     "experiment": "Experiment",
+    "hotkey": "Sneltoetsen",
     "llm": "Taalmodel",
     "provider": "AI-dienstverlener",
+    "storage": "Gegevensopslag",
     "sync": "Cloudsynchronisatie",
     "system-agent": "Systeemassistent",
     "tts": "Spraakdienst"

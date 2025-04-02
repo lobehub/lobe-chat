@@ -32,6 +32,7 @@
     "title": "Lista tematów"
   },
   "searchPlaceholder": "Szukaj tematów...",
+  "searchResultEmpty": "Brak wyników wyszukiwania",
   "temp": "Tymczasowy",
   "title": "Temat"
 }

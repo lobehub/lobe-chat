@@ -199,6 +199,17 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    contextWindowTokens: 64_000,
+    displayName: 'Deepseek V3 0324',
+    enabled: true,
+    id: 'deepseek/deepseek-v3-0324',
+    pricing: {
+      input: 1.2,
+      output: 1.2,
+    },
+    type: 'chat',
+  },
+  {
     abilities: {
       reasoning: true,
     },

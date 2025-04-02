@@ -21,6 +21,7 @@ vi.mock('@/config/tools', () => ({
 
 vi.mock('@/const/version', () => ({
   isServerMode: true,
+  isDesktop: false,
 }));
 
 const createCaller = createCallerFactory(searchRouter);

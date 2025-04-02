@@ -2,8 +2,8 @@ import { isEmpty } from 'lodash-es';
 import pMap from 'p-map';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { AiModelModel } from '@/database/server/models/aiModel';
-import { AiProviderModel } from '@/database/server/models/aiProvider';
+import { AiModelModel } from '@/database/models/aiModel';
+import { AiProviderModel } from '@/database/models/aiProvider';
 import { LobeChatDatabase } from '@/database/type';
 import {
   AIChatModelCard,

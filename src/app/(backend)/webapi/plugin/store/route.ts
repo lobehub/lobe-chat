@@ -19,8 +19,12 @@ export const GET = async (req: Request) => {
       res = await fetch(pluginStore.getPluginIndexUrl(DEFAULT_LANG));
     }
 
-    const data = await res.json();
-    return NextResponse.json(data);
+    if (res.ok) {
+      const data = await res.json();
+      return NextResponse.json(data);
+    }
+
+    return res;
   } catch (e) {
     console.error(e);
     return new Response(`failed to fetch agent market index`, {

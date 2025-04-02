@@ -23,7 +23,7 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 
   paragraph: css`
     > li {
-      height: 24px !important;
+      height: 20px !important;
     }
   `,
 }));
@@ -49,7 +49,7 @@ export const Placeholder = memo(() => {
 
 export const SkeletonList = memo(() => (
   <Flexbox style={{ paddingTop: 6 }}>
-    {Array.from({ length: 6 }).map((_, i) => (
+    {Array.from({ length: 4 }).map((_, i) => (
       <Placeholder key={i} />
     ))}
   </Flexbox>

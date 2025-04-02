@@ -7,6 +7,7 @@ import {
   AtomIcon,
   LucideEye,
   LucideGlobe,
+  LucideImage,
   LucidePaperclip,
   ToyBrick,
 } from 'lucide-react';
@@ -56,6 +57,10 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     color: ${token.green};
     background: ${token.green1};
   `,
+  tagGreenDeep: css`
+    color: ${token.green9};
+    background: ${token.green3};
+  `,
   tagPurple: css`
     color: ${token.purple};
     background: ${token.purple1};
@@ -95,6 +100,17 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
           >
             <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
               <Icon icon={LucidePaperclip} />
+            </div>
+          </Tooltip>
+        )}
+        {model.imageOutput && (
+          <Tooltip
+            placement={placement}
+            styles={{ root: { pointerEvents: 'none' } }}
+            title={t('ModelSelect.featureTag.imageOutput')}
+          >
+            <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
+              <Icon icon={LucideImage} />
             </div>
           </Tooltip>
         )}

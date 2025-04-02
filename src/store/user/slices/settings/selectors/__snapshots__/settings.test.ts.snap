@@ -48,6 +48,38 @@ exports[`settingsSelectors > currentSettings > should merge DEFAULT_SETTINGS and
 }
 `;
 
+exports[`settingsSelectors > currentSystemAgent > should merge DEFAULT_SYSTEM_AGENT_CONFIG and s.settings.systemAgent correctly 1`] = `
+{
+  "agentMeta": {
+    "model": "gpt-4o-mini",
+    "provider": "openai",
+  },
+  "enableAutoReply": true,
+  "historyCompress": {
+    "model": "gpt-4o-mini",
+    "provider": "openai",
+  },
+  "queryRewrite": {
+    "enabled": true,
+    "model": "gpt-4o-mini",
+    "provider": "openai",
+  },
+  "replyMessage": "Custom auto reply",
+  "thread": {
+    "model": "gpt-4o-mini",
+    "provider": "openai",
+  },
+  "topic": {
+    "model": "gpt-4o-mini",
+    "provider": "openai",
+  },
+  "translation": {
+    "model": "gpt-4o-mini",
+    "provider": "openai",
+  },
+}
+`;
+
 exports[`settingsSelectors > currentTTS > should merge DEFAULT_TTS_CONFIG and s.settings.tts correctly 1`] = `
 {
   "openAI": {
@@ -110,9 +142,56 @@ exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.set
 }
 `;
 
+exports[`settingsSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CONFIG and defaultAgent(s).config correctly 1`] = `
+{
+  "chatConfig": {
+    "autoCreateTopicThreshold": 2,
+    "displayMode": "chat",
+    "enableAutoCreateTopic": true,
+    "enableCompressHistory": true,
+    "enableHistoryCount": true,
+    "enableReasoning": false,
+    "historyCount": 8,
+    "reasoningBudgetToken": 1024,
+    "searchFCModel": {
+      "model": "gpt-4o-mini",
+      "provider": "openai",
+    },
+    "searchMode": "off",
+  },
+  "model": "gpt-4",
+  "params": {
+    "frequency_penalty": 0,
+    "presence_penalty": 0,
+    "temperature": 0.7,
+    "top_p": 1,
+  },
+  "plugins": [],
+  "provider": "openai",
+  "systemRole": "custom role",
+  "tts": {
+    "showAllLocaleVoice": false,
+    "sttLocale": "auto",
+    "ttsService": "openai",
+    "voice": {
+      "openai": "alloy",
+    },
+  },
+}
+`;
+
 exports[`settingsSelectors > defaultAgentMeta > should merge DEFAULT_AGENT_META and defaultAgent(s).meta correctly 1`] = `
 {
   "avatar": "agent-avatar.jpg",
   "description": "Test agent",
+}
+`;
+
+exports[`settingsSelectors > getHotkeyById > should return default hotkey if not defined in settings 1`] = `undefined`;
+
+exports[`settingsSelectors > getHotkeyById > should return the hotkey config for a given id 1`] = `
+{
+  "hotkey": "ctrl+shift+f",
+  "scope": "global",
 }
 `;

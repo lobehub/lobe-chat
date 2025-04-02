@@ -1,58 +1,37 @@
-import { Icon } from '@lobehub/ui';
-import { Skeleton } from 'antd';
+import { Hotkey, combineKeys } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { ChevronUp, CornerDownLeft, LucideCommand } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
-import { isMacOS } from '@/utils/platform';
+import { KeyEnum } from '@/types/hotkey';
 
 const ShortcutHint = memo(() => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
   const useCmdEnterToSend = useUserStore(preferenceSelectors.useCmdEnterToSend);
-  const [isMac, setIsMac] = useState<boolean>();
 
-  useEffect(() => {
-    setIsMac(isMacOS());
-  }, []);
+  const sendShortcut = useCmdEnterToSend
+    ? combineKeys([KeyEnum.Mod, KeyEnum.Enter])
+    : KeyEnum.Enter;
 
-  const cmdEnter = (
-    <Flexbox gap={2} horizontal>
-      {typeof isMac === 'boolean' ? (
-        <Icon icon={isMac ? LucideCommand : ChevronUp} />
-      ) : (
-        <Skeleton.Node active style={{ height: '100%', width: 12 }}>
-          {' '}
-        </Skeleton.Node>
-      )}
-      <Icon icon={CornerDownLeft} />
-    </Flexbox>
-  );
-
-  const enter = (
-    <Center>
-      <Icon icon={CornerDownLeft} />
-    </Center>
-  );
-
-  const sendShortcut = useCmdEnterToSend ? cmdEnter : enter;
-
-  const wrapperShortcut = useCmdEnterToSend ? enter : cmdEnter;
+  const wrapperShortcut = useCmdEnterToSend
+    ? KeyEnum.Enter
+    : combineKeys([KeyEnum.Mod, KeyEnum.Enter]);
 
   return (
     <Flexbox
+      align={'center'}
       gap={4}
       horizontal
       style={{ color: theme.colorTextDescription, fontSize: 12, marginRight: 12 }}
     >
-      {sendShortcut}
+      <Hotkey keys={sendShortcut} style={{ color: 'inherit' }} variant={'pure'} />
       <span>{t('input.send')}</span>
       <span>/</span>
-      {wrapperShortcut}
+      <Hotkey keys={wrapperShortcut} style={{ color: 'inherit' }} variant={'pure'} />
       <span>{t('input.warp')}</span>
     </Flexbox>
   );

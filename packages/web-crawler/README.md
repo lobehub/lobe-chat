@@ -9,7 +9,7 @@ LobeChat's built-in web crawling module for intelligent extraction of web conten
 ## 🛠️ Core Features
 
 - **Intelligent Content Extraction**: Identifies main content based on Mozilla Readability algorithm
-- **Multi-level Crawling Strategy**: Supports multiple crawling implementations including basic crawling, Jina, and Browserless rendering
+- **Multi-level Crawling Strategy**: Supports multiple crawling implementations including basic crawling, Jina, Search1API, and Browserless rendering
 - **Custom URL Rules**: Handles specific website crawling logic through a flexible rule system
 
 ## 🤝 Contribution
@@ -32,8 +32,8 @@ const url = [
     // Optional: URL transformation, redirects to an easier-to-crawl version
     urlTransform: 'https://example.com/print/$1',
 
-    // Optional: specify crawling implementation, supports 'naive', 'jina', and 'browserless'
-    impls: ['naive', 'jina', 'browserless'],
+    // Optional: specify crawling implementation, supports 'naive', 'jina', 'search1api', and 'browserless'
+    impls: ['naive', 'jina', 'search1api', 'browserless'],
 
     // Optional: content filtering configuration
     filterOptions: {

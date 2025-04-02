@@ -5,6 +5,9 @@ import { CrawlImpl, CrawlSuccessResult } from '../type';
 import { htmlToMarkdown } from '../utils/htmlToMarkdown';
 
 const BASE_URL = process.env.BROWSERLESS_URL ?? 'https://chrome.browserless.io';
+// Allowed file types: html, css, js, json, xml, webmanifest, txt, md
+const REJECT_REQUEST_PATTERN =
+  '.*\\.(?!(html|css|js|json|xml|webmanifest|txt|md)(\\?|#|$))[\\w-]+(?:[\\?#].*)?$';
 const BROWSERLESS_TOKEN = process.env.BROWSERLESS_TOKEN;
 
 class BrowserlessInitError extends Error {
@@ -21,6 +24,7 @@ export const browserless: CrawlImpl = async (url, { filterOptions }) => {
 
   const input = {
     gotoOptions: { waitUntil: 'networkidle2' },
+    rejectRequestPattern: [REJECT_REQUEST_PATTERN],
     url,
   };
 

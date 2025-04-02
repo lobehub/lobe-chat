@@ -1,7 +1,7 @@
 import { JWTPayload } from '@/const/auth';
+import { AsyncTaskModel } from '@/database/models/asyncTask';
+import { FileModel } from '@/database/models/file';
 import { serverDB } from '@/database/server';
-import { AsyncTaskModel } from '@/database/server/models/asyncTask';
-import { FileModel } from '@/database/server/models/file';
 import { ChunkContentParams, ContentChunk } from '@/server/modules/ContentChunk';
 import { createAsyncServerClient } from '@/server/routers/async';
 import {

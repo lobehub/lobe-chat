@@ -6,8 +6,8 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Menu, { type MenuProps } from '@/components/Menu';
-import { useUserStore } from '@/store/user';
-import { userGeneralSettingsSelectors } from '@/store/user/selectors';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 const themeIcons = {
   auto: Monitor,
@@ -17,8 +17,8 @@ const themeIcons = {
 
 const ThemeButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement = 'right' }) => {
   const theme = useTheme();
-  const [themeMode, switchThemeMode] = useUserStore((s) => [
-    userGeneralSettingsSelectors.currentThemeMode(s),
+  const [themeMode, switchThemeMode] = useGlobalStore((s) => [
+    systemStatusSelectors.themeMode(s),
     s.switchThemeMode,
   ]);
 

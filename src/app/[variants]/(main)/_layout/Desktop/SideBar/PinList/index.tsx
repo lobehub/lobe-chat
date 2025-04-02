@@ -3,14 +3,15 @@ import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { parseAsBoolean, useQueryState } from 'nuqs';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 
-import HotKeys from '@/components/HotKeys';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
+import { HotkeyEnum, KeyEnum } from '@/types/hotkey';
 
 const useStyles = createStyles(({ css, token }) => ({
   avatar: css`
@@ -52,7 +53,7 @@ const PinList = () => {
   const list = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
   const [activeId] = useSessionStore((s) => [s.activeId]);
   const switchSession = useSwitchSession();
-
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SwitchAgent));
   const hasList = list.length > 0;
   const [isPinned, setPinned] = useQueryState('pinned', parseAsBoolean);
 
@@ -60,20 +61,6 @@ const PinList = () => {
     switchSession(id);
     setPinned(true);
   };
-
-  useHotkeys(
-    list.slice(0, 9).map((e, i) => `ctrl+${i + 1}`),
-    (keyboardEvent, hotkeysEvent) => {
-      if (!hotkeysEvent.keys?.[0]) return;
-
-      const index = parseInt(hotkeysEvent.keys?.[0]) - 1;
-      const item = list[index];
-      if (!item) return;
-
-      switchAgent(item.id);
-    },
-    { enableOnFormTags: true, preventDefault: true },
-  );
 
   return (
     hasList && (
@@ -83,13 +70,9 @@ const PinList = () => {
           {list.slice(0, 9).map((item, index) => (
             <Flexbox key={item.id} style={{ position: 'relative' }}>
               <Tooltip
+                hotkey={hotkey.replaceAll(KeyEnum.Number, String(index + 1))}
                 placement={'right'}
-                title={
-                  <Flexbox gap={8} horizontal>
-                    {sessionHelpers.getTitle(item.meta)}
-                    <HotKeys inverseTheme keys={`ctrl+${index + 1}`} />
-                  </Flexbox>
-                }
+                title={sessionHelpers.getTitle(item.meta)}
               >
                 <Flexbox
                   className={cx(

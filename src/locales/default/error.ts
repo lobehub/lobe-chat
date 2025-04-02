@@ -16,6 +16,16 @@ export default {
     detail: '错误详情',
     title: '请求失败',
   },
+  import: {
+    importConfigFile: {
+      description: '出错原因: {{reason}}',
+      title: '导入失败',
+    },
+    incompatible: {
+      description: '该文件由更高版本导出，请尝试升级到最新版本后再重新导入',
+      title: '当前应用不支持导入该文件',
+    },
+  },
   loginRequired: {
     desc: '即将自动跳转到登录页面',
     title: '请登录后使用该功能',
@@ -93,6 +103,8 @@ export default {
     SystemTimeNotMatchError: '很抱歉，您的系统时间和服务器不匹配，请检查您的系统时间后重试',
     SubscriptionKeyMismatch:
       '很抱歉，由于系统偶发故障，当前订阅用量暂时失效，请点击下方按钮恢复订阅，或邮件联系我们获取支持',
+    CreateMessageError:
+      '很抱歉，消息未能正常发送，请复制内容后重新发送，刷新页面后此消息将不会保留',
     LocationNotSupportError:
       '很抱歉，你的所在地区不支持此模型服务，可能是由于区域限制或服务未开通。请确认当前地区是否支持使用此服务，或尝试使用切换到其他地区后重试。',
     InsufficientQuota:
