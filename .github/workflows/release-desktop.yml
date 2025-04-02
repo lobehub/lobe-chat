@@ -1,0 +1,223 @@
+name: Release Desktop
+
+on:
+  workflow_dispatch: # 手动触发构建
+  release:
+    types: [published] # 发布 release 时触发构建
+  pull_request:
+    types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
+
+# 确保同一时间只运行一个相同的 workflow，取消正在进行的旧的运行
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+env:
+  PR_TAG_PREFIX: pr- # PR 构建版本的前缀标识
+
+jobs:
+  test:
+    name: Code quality check
+    # 添加 PR label 触发条件，只有添加了 Build Desktop 标签的 PR 才会触发构建
+    if: |
+      (github.event_name == 'pull_request' &&
+       contains(github.event.pull_request.labels.*.name, 'Build Desktop')) ||
+      github.event_name != 'pull_request'
+    runs-on: ubuntu-latest # 只在 ubuntu 上运行一次检查
+    steps:
+      - name: Checkout base
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
+
+      - name: Lint
+        run: bun run lint
+
+  version:
+    name: Determine version
+    # 与 test job 相同的触发条件
+    if: |
+      (github.event_name == 'pull_request' &&
+       contains(github.event.pull_request.labels.*.name, 'Build Desktop')) ||
+      github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    outputs:
+      # 输出版本信息，供后续 job 使用
+      version: ${{ steps.set_version.outputs.version }}
+      is_pr_build: ${{ steps.set_version.outputs.is_pr_build }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 主要逻辑：确定构建版本号
+      - name: Set version
+        id: set_version
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # PR 构建使用特殊版本号
+            branch_name="${{ github.head_ref }}"
+            # 清理分支名，移除非法字符
+            sanitized_branch=$(echo "${branch_name}" | sed -E 's/[^a-zA-Z0-9_.-]+/-/g')
+            # 创建特殊的 PR 版本号
+            echo "version=${{ env.PR_TAG_PREFIX }}${sanitized_branch}-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+            echo "is_pr_build=true" >> $GITHUB_OUTPUT
+
+          elif [ "${{ github.event_name }}" == "release" ]; then
+            # Release 事件直接使用 release tag 作为版本号，去掉可能的 v 前缀
+            version="${{ github.event.release.tag_name }}"
+            version="${version#v}"
+            echo "version=${version}" >> $GITHUB_OUTPUT
+            echo "is_pr_build=false" >> $GITHUB_OUTPUT
+
+          else
+            # 其他情况（如手动触发）从 package.json 读取当前版本号
+            version=$(node -p "require('./package.json').version")
+            echo "version=${version}" >> $GITHUB_OUTPUT
+            echo "is_pr_build=false" >> $GITHUB_OUTPUT
+          fi
+
+  build:
+    needs: [version, test]
+    name: Build Desktop App
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 使用 bun 而不是 pnpm
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun install
+
+      # 设置 package.json 的版本号
+      - name: Set package version
+        run: npx npe version ${{ needs.version.outputs.version }}
+
+      # macOS 构建处理
+      - name: Build artifact on macOS
+        if: runner.os == 'macOS'
+        run: bun run build # 使用 bun 来构建
+        # 公证部分已注释掉，将来再加回
+        # env:
+        #   CSC_LINK: ./build/developer-id-app-certs.p12
+        #   CSC_KEY_PASSWORD: ${{ secrets.APPLE_APP_CERTS_PASSWORD }}
+        #   APPLE_ID: ${{ secrets.APPLE_ID }}
+        #   APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+
+      # 非 macOS 平台构建处理
+      - name: Build artifact on other platforms
+        if: runner.os != 'macOS'
+        run: bun run build --publish never
+
+      # 上传构建产物，移除了 zip 相关部分
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.os }}
+          path: |
+            release/latest*
+            release/umi*.dmg*
+            release/umi*.exe*
+            release/umi*.AppImage
+          retention-days: 5
+
+  status:
+    needs: version
+    runs-on: ubuntu-latest
+    name: Release Status
+    steps:
+      # 输出版本信息，方便查看构建状态
+      - name: Version Information
+        run: |
+          echo "🚦 Version: ${{ needs.version.outputs.version }}"
+          echo "🔄 Is PR Build: ${{ needs.version.outputs.is_pr_build }}"
+
+  merge:
+    needs: [build, version]
+    name: Merge Artifacts
+    runs-on: ubuntu-latest
+    steps:
+      # 下载所有平台的构建产物
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: release-*
+          merge-multiple: true
+
+      # 列出所有构建产物
+      - name: List artifacts
+        run: ls -R release
+
+  publish:
+    # 只有非 PR 构建且没有 [skip ci] 标记的提交才执行发布
+    if: |
+      needs.version.outputs.is_pr_build != 'true' &&
+      !contains(github.event.head_commit.message, '[skip ci]')
+    needs: [merge, version]
+    name: Publish Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 下载构建产物
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: release-*
+          merge-multiple: true
+
+      # 列出所有构建产物
+      - name: List artifacts
+        run: ls -R release
+
+      # 对于非 release 触发的构建，创建为 draft 状态的 GitHub Release
+      - name: Create Draft Release
+        if: github.event_name != 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Desktop v${{ needs.version.outputs.version }}
+          tag_name: v${{ needs.version.outputs.version }}
+          draft: true # 设置为 draft 状态
+          prerelease: false
+          files: |
+            release/latest*
+            release/umi*.dmg*
+            release/umi*.exe*
+            release/umi*.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 对于 release 触发的构建，将构建产物上传到现有 release
+      - name: Upload to existing Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: |
+            release/latest*
+            release/umi*.dmg*
+            release/umi*.exe*
+            release/umi*.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
