@@ -128,7 +128,7 @@ jobs:
       # macOS 构建处理
       - name: Build artifact on macOS
         if: runner.os == 'macOS'
-        run: bun run build # 使用 bun 来构建
+        run: bun run desktop:build-next
         # 公证部分已注释掉，将来再加回
         # env:
         #   CSC_LINK: ./build/developer-id-app-certs.p12

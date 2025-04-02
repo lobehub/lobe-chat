@@ -45,6 +45,7 @@
     "db:studio": "drizzle-kit studio",
     "db:visualize": "dbdocs build docs/developer/database-schema.dbml --project lobe-chat",
     "db:z-pull": "drizzle-kit introspect",
+    "desktop:build-next": "npm run build:electron",
     "dev": "next dev --turbopack -p 3010",
     "docs:i18n": "lobe-i18n md && npm run lint:md && npm run lint:mdx",
     "docs:seo": "lobe-seo && npm run lint:mdx",
