@@ -41,8 +41,8 @@ jobs:
       - name: Lint
         run: bun run lint
 
-#      - name: Test
-#        run: bun run test
+  #      - name: Test
+  #        run: bun run test
 
   version:
     name: Determine version
@@ -77,7 +77,7 @@ jobs:
             version="${base_version}-${{ env.PR_TAG_PREFIX }}${sanitized_branch}-$(git rev-parse --short HEAD)"
             echo "version=${version}" >> $GITHUB_OUTPUT
             echo "is_pr_build=true" >> $GITHUB_OUTPUT
-            echo "📦 Release Version: ${version} (基于基础版本 ${base_version})"
+            echo "📦 Release Version: ${version} (based on base version ${base_version})"
 
           elif [ "${{ github.event_name }}" == "release" ]; then
             # Release 事件直接使用 release tag 作为版本号，去掉可能的 v 前缀
@@ -99,7 +99,7 @@ jobs:
       - name: Version Summary
         run: |
           echo "🚦 Release Version: ${{ steps.set_version.outputs.version }}"
-          echo "🔄 is PR Build: ${{ steps.set_version.outputs.is_pr_build }}"
+          echo "🔄 Is PR Build: ${{ steps.set_version.outputs.is_pr_build }}"
 
   build:
     needs: [version, test]
@@ -118,8 +118,13 @@ jobs:
         with:
           bun-version: ${{ secrets.BUN_VERSION }}
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
       - name: Install deps
-        run: bun install
+        run: bun i
 
       # 设置 package.json 的版本号
       - name: Set package version
@@ -129,6 +134,13 @@ jobs:
       - name: Build artifact on macOS
         if: runner.os == 'macOS'
         run: bun run desktop:build-next
+        env:
+          APP_URL: http://localhost:3010
+          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
+          # 默认添加一个加密 SECRET
+          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+
+
         # 公证部分已注释掉，将来再加回
         # env:
         #   CSC_LINK: ./build/developer-id-app-certs.p12
@@ -140,6 +152,8 @@ jobs:
       - name: Build artifact on other platforms
         if: runner.os != 'macOS'
         run: bun run build --publish never
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
 
       # 上传构建产物，移除了 zip 相关部分
       - name: Upload artifact
@@ -203,7 +217,7 @@ jobs:
         with:
           name: Desktop v${{ needs.version.outputs.version }}
           tag_name: v${{ needs.version.outputs.version }}
-          draft: true # 设置为 draft 状态
+          draft: true # A draft release
           prerelease: false
           files: |
             release/latest*

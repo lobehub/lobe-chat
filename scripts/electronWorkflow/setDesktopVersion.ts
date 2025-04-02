@@ -6,7 +6,7 @@ import path from 'node:path';
 const version = process.argv[2];
 
 if (!version) {
-  console.error('版本号参数缺失，用法: bun run setDesktopVersion.ts <版本号>');
+  console.error('Missing version parameter, usage: bun run setDesktopVersion.ts <version>');
   process.exit(1);
 }
 
@@ -20,7 +20,7 @@ function updateVersion() {
   try {
     // 确保文件存在
     if (!fs.existsSync(desktopPackageJsonPath)) {
-      console.error(`错误: 找不到文件 ${desktopPackageJsonPath}`);
+      console.error(`Error: File not found ${desktopPackageJsonPath}`);
       process.exit(1);
     }
 
@@ -33,9 +33,9 @@ function updateVersion() {
     // 写回文件
     fs.writeJsonSync(desktopPackageJsonPath, packageJson, { spaces: 2 });
 
-    console.log(`桌面应用版本已更新为: ${version}`);
+    console.log(`Desktop app version updated to: ${version}`);
   } catch (error) {
-    console.error('更新版本号时出错:', error);
+    console.error('Error updating version:', error);
     process.exit(1);
   }
 }
