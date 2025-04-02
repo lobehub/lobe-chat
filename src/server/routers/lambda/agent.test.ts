@@ -3,36 +3,36 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { AgentModel } from '@/database/models/agent';
+import { FileModel } from '@/database/models/file';
+import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
+import { SessionModel } from '@/database/models/session';
+import { UserModel } from '@/database/models/user';
 import { serverDB } from '@/database/server';
-import { AgentModel } from '@/database/server/models/agent';
-import { FileModel } from '@/database/server/models/file';
-import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
-import { SessionModel } from '@/database/server/models/session';
-import { UserModel } from '@/database/server/models/user';
 import { AgentService } from '@/server/services/agent';
 import { KnowledgeType } from '@/types/knowledgeBase';
 
 import { agentRouter } from './agent';
 
-vi.mock('@/database/server/models/user', () => ({
+vi.mock('@/database/models/user', () => ({
   UserModel: {
     findById: vi.fn(),
   },
 }));
 
-vi.mock('@/database/server/models/agent', () => ({
+vi.mock('@/database/models/agent', () => ({
   AgentModel: vi.fn(),
 }));
 
-vi.mock('@/database/server/models/session', () => ({
+vi.mock('@/database/models/session', () => ({
   SessionModel: vi.fn(),
 }));
 
-vi.mock('@/database/server/models/file', () => ({
+vi.mock('@/database/models/file', () => ({
   FileModel: vi.fn(),
 }));
 
-vi.mock('@/database/server/models/knowledgeBase', () => ({
+vi.mock('@/database/models/knowledgeBase', () => ({
   KnowledgeBaseModel: vi.fn(),
 }));
 

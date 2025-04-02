@@ -4,6 +4,51 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const hunyuanChatModels: AIChatModelCard[] = [
   {
+    abilities: {
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 92_000,
+    description:
+      '业内首个超大规模 Hybrid-Transformer-Mamba 推理模型，扩展推理能力，超强解码速度，进一步对齐人类偏好。',
+    displayName: 'Hunyuan T1',
+    enabled: true,
+    id: 'hunyuan-t1-latest',
+    maxOutput: 64_000,
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-03-21',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 92_000,
+    description:
+      '全面搭建模型文理科能力，长文本信息捕捉能力强。支持推理解答各种难度的数学/逻辑推理/科学/代码等科学问题。',
+    displayName: 'Hunyuan T1 20250321',
+    id: 'hunyuan-t1-20250321',
+    maxOutput: 64_000,
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-03-21',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 256_000,
     description:
       '升级为 MOE 结构，上下文窗口为 256k ，在 NLP，代码，数学，行业等多项评测集上领先众多开源模型。',

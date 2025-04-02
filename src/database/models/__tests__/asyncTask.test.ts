@@ -6,7 +6,7 @@ import { LobeChatDatabase } from '@/database/type';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 
 import { asyncTasks, users } from '../../schemas';
-import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '../../server/models/asyncTask';
+import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '../asyncTask';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

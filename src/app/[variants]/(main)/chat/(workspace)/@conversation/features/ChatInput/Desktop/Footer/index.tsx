@@ -69,7 +69,7 @@ const Footer = memo<FooterProps>(({ onExpandChange, expand }) => {
 
   return (
     <>
-      <Suspense fallback={null}>
+      <Suspense>
         <MessageFromUrl />
       </Suspense>
       <Flexbox

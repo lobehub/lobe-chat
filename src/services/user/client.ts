@@ -1,8 +1,8 @@
 import { clientDB } from '@/database/client/db';
+import { MessageModel } from '@/database/models/message';
+import { SessionModel } from '@/database/models/session';
+import { UserModel } from '@/database/models/user';
 import { users } from '@/database/schemas';
-import { MessageModel } from '@/database/server/models/message';
-import { SessionModel } from '@/database/server/models/session';
-import { UserModel } from '@/database/server/models/user';
 import { BaseClientService } from '@/services/baseClientService';
 import { UserPreference } from '@/types/user';
 import { AsyncLocalStorage } from '@/utils/localStorage';

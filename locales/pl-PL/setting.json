@@ -42,6 +42,17 @@
     "sessionWithName": "Ustawienia sesji · {{name}}",
     "title": "Ustawienia"
   },
+  "hotkey": {
+    "conflicts": "Kolizja z istniejącymi skrótami klawiszowymi",
+    "group": {
+      "conversation": "Rozmowa",
+      "essential": "Podstawowy"
+    },
+    "invalidCombination": "Skrót klawiszowy musi zawierać przynajmniej jeden klawisz modyfikujący (Ctrl, Alt, Shift) oraz jeden klawisz zwykły",
+    "record": "Naciśnij klawisz, aby nagrać skrót klawiszowy",
+    "reset": "Przywróć domyślne skróty klawiszowe",
+    "title": "Skróty klawiszowe"
+  },
   "llm": {
     "aesGcm": "Twój klucz, adres proxy i inne będą szyfrowane za pomocą algorytmu szyfrowania <1>AES-GCM</1>",
     "apiKey": {
@@ -335,6 +346,33 @@
     },
     "title": "Ustawienia motywu"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Eksportuj",
+        "exportType": {
+          "agent": "Eksportuj ustawienia agenta",
+          "agentWithMessage": "Eksportuj ustawienia agenta i wiadomości",
+          "all": "Eksportuj globalne ustawienia i wszystkie dane agenta",
+          "allAgent": "Eksportuj wszystkie ustawienia agenta",
+          "allAgentWithMessage": "Eksportuj wszystkie agentów i wiadomości",
+          "globalSetting": "Eksportuj globalne ustawienia"
+        },
+        "title": "Eksportuj dane"
+      },
+      "import": {
+        "button": "Importuj",
+        "title": "Importuj dane"
+      },
+      "title": "Zaawansowane operacje"
+    },
+    "desc": "Aktualne zużycie pamięci w przeglądarce",
+    "embeddings": {
+      "used": "Przechowywanie wektorów"
+    },
+    "title": "Przechowywanie danych",
+    "used": "Zużycie pamięci"
+  },
   "submitAgentModal": {
     "button": "Prześlij asystenta",
     "identifier": "Identyfikator asystenta",
@@ -425,8 +463,10 @@
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
     "experiment": "Eksperyment",
+    "hotkey": "Skróty klawiszowe",
     "llm": "Model językowy",
     "provider": "Dostawca usług AI",
+    "storage": "Przechowywanie danych",
     "sync": "Synchronizacja w chmurze",
     "system-agent": "System Agent",
     "tts": "Usługa głosowa"
