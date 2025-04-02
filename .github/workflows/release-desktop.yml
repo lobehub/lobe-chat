@@ -144,7 +144,7 @@ jobs:
 
       # 设置 package.json 的版本号
       - name: Set package version
-        run: tsx scripts/electronWorkflow/setDesktopVersion.ts ${{ needs.version.outputs.version }}
+        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }}
 
       # macOS 构建处理
       - name: Build artifact on macOS
