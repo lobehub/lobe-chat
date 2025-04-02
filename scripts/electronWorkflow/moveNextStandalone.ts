@@ -1,4 +1,7 @@
+/* eslint-disable unicorn/no-process-exit */
 import fs from 'fs-extra';
+import { execSync } from 'node:child_process';
+import os from 'node:os';
 import path from 'node:path';
 
 const rootDir = path.resolve(__dirname, '../..');
@@ -7,13 +10,54 @@ const rootDir = path.resolve(__dirname, '../..');
 const sourceDir: string = path.join(rootDir, '.next/standalone');
 const targetDir: string = path.join(rootDir, 'apps/desktop/dist/next');
 
-// 确保目标目录存在
-fs.ensureDirSync(targetDir);
+// 确保目标目录的父目录存在
+fs.ensureDirSync(path.dirname(targetDir));
 
-// 复制文件
-fs.copySync(sourceDir, targetDir, {
-  dereference: true,
-  overwrite: true,
-});
+// 如果目标目录已存在，先删除它
+if (fs.existsSync(targetDir)) {
+  console.log(`🗑️  Target directory ${targetDir} already exists, deleting...`);
+  try {
+    fs.removeSync(targetDir);
+    console.log(`✅ Old target directory removed successfully`);
+  } catch (error) {
+    console.warn(`⚠️  Failed to delete target directory: ${error}`);
+    console.log('🔄 Trying to delete using system command...');
+    try {
+      if (os.platform() === 'win32') {
+        execSync(`rmdir /S /Q "${targetDir}"`, { stdio: 'inherit' });
+      } else {
+        execSync(`rm -rf "${targetDir}"`, { stdio: 'inherit' });
+      }
+      console.log('✅ Successfully deleted old target directory');
+    } catch (cmdError) {
+      console.error(`❌ Unable to delete target directory, might need manual cleanup: ${cmdError}`);
+    }
+  }
+}
 
-console.log(`copy ${sourceDir} to ${targetDir} successfully`);
+console.log(`🚚 Moving ${sourceDir} to ${targetDir}...`);
+
+try {
+  // 使用 fs-extra 的 move 方法
+  fs.moveSync(sourceDir, targetDir, { overwrite: true });
+  console.log(`✅ Directory moved successfully!`);
+} catch (error) {
+  console.error('❌ fs-extra move failed:', error);
+  console.log('🔄 Trying to move using system command...');
+
+  try {
+    // 使用系统命令进行移动
+    if (os.platform() === 'win32') {
+      execSync(`move "${sourceDir}" "${targetDir}"`, { stdio: 'inherit' });
+    } else {
+      execSync(`mv "${sourceDir}" "${targetDir}"`, { stdio: 'inherit' });
+    }
+    console.log('✅ System command move completed successfully!');
+  } catch (mvError) {
+    console.error('❌ Failed to move directory:', mvError);
+    console.log('💡 Try running manually: sudo mv ' + sourceDir + ' ' + targetDir);
+    process.exit(1);
+  }
+}
+
+console.log(`🎉 Move completed!`);

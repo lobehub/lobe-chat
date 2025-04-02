@@ -177,10 +177,10 @@ jobs:
         with:
           name: release-${{ matrix.os }}
           path: |
-            release/latest*
-            release/umi*.dmg*
-            release/umi*.exe*
-            release/umi*.AppImage
+            apps/desktop/release/latest*
+            apps/desktop/release/lobehub*.dmg*
+            apps/desktop/release/lobehub*.exe*
+            apps/desktop/release/lobehub*.AppImage
           retention-days: 5
           echo "🔄 Is PR Build: ${{ needs.version.outputs.is_pr_build }}"
 

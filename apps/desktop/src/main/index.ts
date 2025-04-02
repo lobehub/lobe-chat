@@ -44,10 +44,10 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     autoHideMenuBar: true,
     height: 800,
+    minWidth: 400,
     show: false,
     titleBarStyle: 'hidden',
     vibrancy: 'under-window',
-
     webPreferences: {
       contextIsolation: true, // protect against prototype pollution
       preload: join(preloadDir, 'index.js'),

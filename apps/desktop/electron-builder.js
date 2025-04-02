@@ -5,7 +5,7 @@
 const config = {
   appId: 'com.lobehub.lobehub-desktop',
   appImage: {
-    artifactName: '${name}-${version}.${ext}',
+    artifactName: '${productName}-${version}.${ext}',
   },
   asar: false,
   // TODO: 研究下怎么样可以做成 asar 的模式
@@ -16,7 +16,7 @@ const config = {
     output: 'release',
   },
   dmg: {
-    artifactName: '${name}-${version}.${ext}',
+    artifactName: '${productName}-${version}.${ext}',
   },
   electronDownload: {
     mirror: 'https://npmmirror.com/mirrors/electron/',
@@ -53,7 +53,7 @@ const config = {
   },
   npmRebuild: true,
   nsis: {
-    artifactName: '${name}-${version}-setup.${ext}',
+    artifactName: '${productName}-${version}-setup.${ext}',
     createDesktopShortcut: 'always',
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
