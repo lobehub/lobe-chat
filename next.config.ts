@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
       '@lobehub/ui',
       'gpt-tokenizer',
     ],
+    reactCompiler: true,
     webVitalsAttribution: ['CLS', 'LCP'],
     webpackMemoryOptimizations: true,
   },
