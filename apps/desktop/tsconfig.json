@@ -1,4 +1,17 @@
 {
-  "files": [],
-  "references": [{ "path": "./tsconfig.node.json"}, { "path": "./tsconfig.web.json"}]
+  "compilerOptions": {
+    "allowJs": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "types": ["electron-vite/node", "electron-builder"]
+  },
+  "include": ["electron.vite.config.*", "src/main/**/*", "src/preload/**/*", "electron-builder.js"]
 }

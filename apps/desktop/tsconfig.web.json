@@ -1,7 +1,0 @@
-{
-  "compilerOptions": {
-    "composite": true
-  },
-  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
-  "include": ["src/preload/*.d.ts"]
-}

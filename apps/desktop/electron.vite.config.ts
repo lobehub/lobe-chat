@@ -9,7 +9,7 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin({})],
     resolve: {
       alias: {
-        '@lobehub/web': resolve(__dirname, '../../src'),
+        '@': resolve(__dirname, 'src/main'),
       },
     },
   },

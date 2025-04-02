@@ -19,7 +19,7 @@
     "lint": "eslint --cache ",
     "pg-server": "bun run scripts/pglite-server.ts",
     "start": "electron-vite preview",
-    "typecheck": "tsc --noEmit -p tsconfig.node.json --composite false"
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",
