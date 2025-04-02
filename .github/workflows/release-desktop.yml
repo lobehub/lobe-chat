@@ -67,7 +67,7 @@ jobs:
         run: |
           # 从 apps/desktop/package.json 读取基础版本号
           base_version=$(node -p "require('./apps/desktop/package.json').version")
-          
+
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             # PR 构建：在基础版本号上添加 PR 信息
             branch_name="${{ github.head_ref }}"
@@ -77,7 +77,7 @@ jobs:
             version="${base_version}-${{ env.PR_TAG_PREFIX }}${sanitized_branch}-$(git rev-parse --short HEAD)"
             echo "version=${version}" >> $GITHUB_OUTPUT
             echo "is_pr_build=true" >> $GITHUB_OUTPUT
-            echo "📦 确定的版本号: ${version} (基于基础版本 ${base_version})"
+            echo "📦 Release Version: ${version} (基于基础版本 ${base_version})"
 
           elif [ "${{ github.event_name }}" == "release" ]; then
             # Release 事件直接使用 release tag 作为版本号，去掉可能的 v 前缀
@@ -85,15 +85,21 @@ jobs:
             version="${version#v}"
             echo "version=${version}" >> $GITHUB_OUTPUT
             echo "is_pr_build=false" >> $GITHUB_OUTPUT
-            echo "📦 确定的版本号: ${version}"
+            echo "📦 Release Version: ${version}"
 
           else
             # 其他情况（如手动触发）使用 apps/desktop/package.json 的版本号
             version="${base_version}"
             echo "version=${version}" >> $GITHUB_OUTPUT
             echo "is_pr_build=false" >> $GITHUB_OUTPUT
-            echo "📦 确定的版本号: ${version}"
+            echo "📦 Release Version: ${version}"
           fi
+
+      # 输出版本信息总结，方便在 GitHub Actions 界面查看
+      - name: Version Summary
+        run: |
+          echo "🚦 Release Version: ${{ steps.set_version.outputs.version }}"
+          echo "🔄 is PR Build: ${{ steps.set_version.outputs.is_pr_build }}"
 
   build:
     needs: [version, test]
@@ -146,16 +152,6 @@ jobs:
             release/umi*.exe*
             release/umi*.AppImage
           retention-days: 5
-
-  status:
-    needs: version
-    runs-on: ubuntu-latest
-    name: Release Status
-    steps:
-      # 输出版本信息，方便查看构建状态
-      - name: Version Information
-        run: |
-          echo "🚦 Version: ${{ needs.version.outputs.version }}"
           echo "🔄 Is PR Build: ${{ needs.version.outputs.is_pr_build }}"
 
   merge:
