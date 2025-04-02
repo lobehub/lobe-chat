@@ -41,6 +41,9 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      - name: Test
+        run: bun run test
+
   version:
     name: Determine version
     # 与 test job 相同的触发条件
@@ -62,14 +65,19 @@ jobs:
       - name: Set version
         id: set_version
         run: |
+          # 从 apps/desktop/package.json 读取基础版本号
+          base_version=$(node -p "require('./apps/desktop/package.json').version")
+          
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            # PR 构建使用特殊版本号
+            # PR 构建：在基础版本号上添加 PR 信息
             branch_name="${{ github.head_ref }}"
             # 清理分支名，移除非法字符
             sanitized_branch=$(echo "${branch_name}" | sed -E 's/[^a-zA-Z0-9_.-]+/-/g')
-            # 创建特殊的 PR 版本号
-            echo "version=${{ env.PR_TAG_PREFIX }}${sanitized_branch}-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+            # 创建特殊的 PR 版本号：基础版本号-PR前缀-分支名-提交哈希
+            version="${base_version}-${{ env.PR_TAG_PREFIX }}${sanitized_branch}-$(git rev-parse --short HEAD)"
+            echo "version=${version}" >> $GITHUB_OUTPUT
             echo "is_pr_build=true" >> $GITHUB_OUTPUT
+            echo "📦 确定的版本号: ${version} (基于基础版本 ${base_version})"
 
           elif [ "${{ github.event_name }}" == "release" ]; then
             # Release 事件直接使用 release tag 作为版本号，去掉可能的 v 前缀
@@ -77,12 +85,14 @@ jobs:
             version="${version#v}"
             echo "version=${version}" >> $GITHUB_OUTPUT
             echo "is_pr_build=false" >> $GITHUB_OUTPUT
+            echo "📦 确定的版本号: ${version}"
 
           else
-            # 其他情况（如手动触发）从 package.json 读取当前版本号
-            version=$(node -p "require('./package.json').version")
+            # 其他情况（如手动触发）使用 apps/desktop/package.json 的版本号
+            version="${base_version}"
             echo "version=${version}" >> $GITHUB_OUTPUT
             echo "is_pr_build=false" >> $GITHUB_OUTPUT
+            echo "📦 确定的版本号: ${version}"
           fi
 
   build:
@@ -97,7 +107,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 使用 bun 而不是 pnpm
       - name: Install bun
         uses: oven-sh/setup-bun@v1
         with:
@@ -108,7 +117,7 @@ jobs:
 
       # 设置 package.json 的版本号
       - name: Set package version
-        run: npx npe version ${{ needs.version.outputs.version }}
+        run: npx npe version ${{ needs.version.outputs.version }} -p apps/desktop/package.json
 
       # macOS 构建处理
       - name: Build artifact on macOS
