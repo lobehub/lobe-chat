@@ -99,6 +99,7 @@ const AgentPlugin = memo(() => {
       {hasDeprecated ? (
         <Tooltip title={t('plugin.clearDeprecated')}>
           <Button
+            color={'default'}
             icon={<Icon icon={LucideTrash2} />}
             onClick={(e) => {
               e.stopPropagation();
@@ -107,6 +108,7 @@ const AgentPlugin = memo(() => {
               }
             }}
             size={'small'}
+            variant={'filled'}
           />
         </Tooltip>
       ) : null}

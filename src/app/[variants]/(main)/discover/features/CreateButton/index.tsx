@@ -26,7 +26,12 @@ const CreateButton = memo<{ mobile?: boolean }>(({ mobile }) => {
         title={t('create')}
       />
     ) : (
-      <Button icon={<Icon icon={Brush} />} onClick={() => setIsModalOpen(true)}>
+      <Button
+        color={'default'}
+        icon={<Icon icon={Brush} />}
+        onClick={() => setIsModalOpen(true)}
+        variant={'filled'}
+      >
         {t('create')}
       </Button>
     );

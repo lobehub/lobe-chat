@@ -22,21 +22,16 @@ const FilesSearchBar = memo<{ mobile?: boolean }>(({ mobile }) => {
     <SearchBar
       allowClear
       enableShortKey={!mobile}
-      // loading={isValidating}
       onChange={(e) => {
         setKeywords(e.target.value);
-
-        if (!e.target.value) {
-          setQuery(null);
-        }
+        if (!e.target.value) setQuery(null);
       }}
-      onPressEnter={() => {
-        setQuery(keywords);
-      }}
+      onPressEnter={() => setQuery(keywords)}
       placeholder={t('searchFilePlaceholder')}
       shortKey={hotkey}
       spotlight={!mobile}
       style={{ width: 320 }}
+      type={'block'}
       value={keywords}
     />
   );

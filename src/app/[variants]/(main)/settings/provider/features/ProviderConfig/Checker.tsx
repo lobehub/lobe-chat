@@ -72,7 +72,7 @@ const Checker = memo<ConnectionCheckerProps>(
       // Clear previous check results immediately
       setPass(false);
       setError(undefined);
-      
+
       let isError = false;
 
       await chatService.fetchPresetTaskResult({
@@ -149,7 +149,13 @@ const Checker = memo<ConnectionCheckerProps>(
             value={checkModel}
             virtual
           />
-          <Button disabled={isProviderConfigUpdating} loading={loading} onClick={checkConnection}>
+          <Button
+            color={'default'}
+            disabled={isProviderConfigUpdating}
+            loading={loading}
+            onClick={checkConnection}
+            variant={'filled'}
+          >
             {t('llm.checker.button')}
           </Button>
         </Space.Compact>

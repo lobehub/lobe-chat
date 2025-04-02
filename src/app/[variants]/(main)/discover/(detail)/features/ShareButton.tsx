@@ -140,9 +140,11 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
   return (
     <>
       <Button
+        color={'default'}
         icon={<Icon icon={Share2Icon} />}
         onClick={() => setOpen(true)}
         size={'large'}
+        variant={'filled'}
         {...rest}
       />
       <Modal

@@ -1,7 +1,6 @@
 'use client';
 
-import { Icon, Tooltip } from '@lobehub/ui';
-import { Button } from 'antd';
+import { ActionIcon } from '@lobehub/ui';
 import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,15 +12,15 @@ const AddNewProvider = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Tooltip title={t('menu.addCustomProvider')}>
-      <Button
-        color={'default'}
-        icon={<Icon icon={PlusIcon} />}
+    <>
+      <ActionIcon
+        icon={PlusIcon}
         onClick={() => setOpen(true)}
-        variant={'filled'}
+        title={t('menu.addCustomProvider')}
+        variant={'block'}
       />
       <CreateNewProvider onClose={() => setOpen(false)} open={open} />
-    </Tooltip>
+    </>
   );
 };
 

@@ -76,7 +76,13 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
         {!mobile && (
           <Flexbox align={'center'} gap={4} horizontal justify={'flex-end'}>
             <Link href={'/discover/assistants'}>
-              <Button className={styles.tag} shape={'round'} size={'small'}>
+              <Button
+                className={styles.tag}
+                color={'default'}
+                shape={'round'}
+                size={'small'}
+                variant={'filled'}
+              >
                 {t('tab.assistants')}
               </Button>
             </Link>
@@ -84,7 +90,13 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
               <>
                 <Icon color={theme.colorTextSecondary} icon={ChevronRight} />
                 <Link href={urlJoin('/discover/assistants', data.meta.category)}>
-                  <Button className={styles.tag} shape={'round'} size={'small'}>
+                  <Button
+                    className={styles.tag}
+                    color={'default'}
+                    shape={'round'}
+                    size={'small'}
+                    variant={'filled'}
+                  >
                     {t(`category.assistant.${data.meta.category}`)}
                   </Button>
                 </Link>

@@ -112,9 +112,11 @@ const OllamaModelDownloader = memo<OllamaModelDownloaderProps>(({ model }) => {
         </Button>
         {isDownloading && (
           <Button
+            color={'default'}
             onClick={() => {
               ollamaService.abort();
             }}
+            variant={'filled'}
           >
             {t('ollama.unlock.cancel')}
           </Button>

@@ -65,10 +65,12 @@ const SystemAgentForm = memo(
           ) : (
             <Button
               block
+              color={'default'}
               icon={<Icon icon={PencilIcon} />}
               onClick={async () => {
                 await updateSystemAgent(systemAgentKey, { customPrompt: defaultPrompt });
               }}
+              variant={'filled'}
             >
               {t('systemAgent.customPrompt.addPrompt')}
             </Button>

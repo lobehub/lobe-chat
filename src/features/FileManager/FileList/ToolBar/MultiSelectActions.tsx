@@ -74,6 +74,7 @@ const MultiSelectActions = memo<MultiSelectActionsProps>(
             {isInKnowledgeBase ? (
               <>
                 <Button
+                  color={'default'}
                   icon={<Icon icon={BookMinusIcon} />}
                   onClick={() => {
                     modal.confirm({
@@ -90,40 +91,48 @@ const MultiSelectActions = memo<MultiSelectActionsProps>(
                     });
                   }}
                   size={'small'}
+                  variant={'filled'}
                 >
                   {t('FileManager.actions.removeFromKnowledgeBase')}
                 </Button>
                 <Button
+                  color={'default'}
                   icon={<Icon icon={BookPlusIcon} />}
                   onClick={() => {
                     onActionClick('addToOtherKnowledgeBase');
                   }}
                   size={'small'}
+                  variant={'filled'}
                 >
                   {t('FileManager.actions.addToOtherKnowledgeBase')}
                 </Button>
               </>
             ) : (
               <Button
+                color={'default'}
                 icon={<Icon icon={BookPlusIcon} />}
                 onClick={() => {
                   onActionClick('addToKnowledgeBase');
                 }}
                 size={'small'}
+                variant={'filled'}
               >
                 {t('FileManager.actions.addToKnowledgeBase')}
               </Button>
             )}
             <Button
+              color={'default'}
               icon={<Icon icon={FileBoxIcon} />}
               onClick={async () => {
                 await onActionClick('batchChunking');
               }}
               size={'small'}
+              variant={'filled'}
             >
               {t('FileManager.actions.batchChunking')}
             </Button>
             <Button
+              color={'danger'}
               danger
               icon={<Icon icon={Trash2Icon} />}
               onClick={async () => {
@@ -139,6 +148,7 @@ const MultiSelectActions = memo<MultiSelectActionsProps>(
                 });
               }}
               size={'small'}
+              variant={'filled'}
             >
               {t('batchDelete', { ns: 'common' })}
             </Button>

@@ -32,7 +32,7 @@ const SessionSearchBar = memo<{ mobile?: boolean }>(({ mobile }) => {
       placeholder={t('searchAgentPlaceholder')}
       shortKey={hotkey}
       spotlight={!mobile}
-      type={mobile ? 'block' : 'ghost'}
+      type={'block'}
       value={keywords}
     />
   );

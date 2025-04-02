@@ -44,7 +44,6 @@ const EditPage = memo(() => {
   return (
     <>
       <PageTitle title={t('header.sessionWithName', { name: title })} />
-
       <TabsNav
         items={[
           {

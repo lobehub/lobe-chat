@@ -108,7 +108,7 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
             {t('llm.checker.pass')}
           </Flexbox>
         )}
-        <Button loading={loading} onClick={checkConnection}>
+        <Button color={'default'} loading={loading} onClick={checkConnection} variant={'filled'}>
           {t('llm.checker.button')}
         </Button>
       </Flexbox>

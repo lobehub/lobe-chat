@@ -32,11 +32,13 @@ const AddPluginButton = forwardRef<HTMLButtonElement>((props, ref) => {
         open={showModal}
       />
       <Button
+        color={'default'}
         icon={<Icon icon={PackagePlus} />}
         onClick={() => {
           setModal(true);
         }}
         ref={ref}
+        variant={'filled'}
       >
         {t('plugin.addTooltip')}
       </Button>

@@ -29,7 +29,7 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
 
   useFetchAiProviderList();
 
-  const width = mobile ? undefined : 260;
+  const width = mobile ? undefined : 280;
   return (
     <Flexbox style={{ minWidth: width, overflow: mobile ? undefined : 'scroll' }} width={width}>
       <Flexbox
@@ -37,7 +37,12 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
         horizontal
         justify={'space-between'}
         padding={'16px 12px 12px'}
-        style={{ background: theme.colorBgLayout, position: 'sticky', top: 0, zIndex: 50 }}
+        style={{
+          background: theme.colorBgContainerSecondary,
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+        }}
         width={'100%'}
       >
         <SearchBar

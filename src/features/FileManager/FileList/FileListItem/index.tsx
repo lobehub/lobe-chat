@@ -35,6 +35,7 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
       cursor: pointer;
       margin-inline: 24px;
       border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
+      border-radius: ${token.borderRadius}px;
 
       &:hover {
         background: ${token.colorFillTertiary};
@@ -121,6 +122,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
         className={cx(styles.container, selected && styles.selected)}
         height={64}
         horizontal
+        paddingInline={8}
       >
         <Flexbox
           align={'center'}

@@ -57,10 +57,12 @@ const UpgradeButton = memo<UpgradeButtonProps>(
 
     return (
       <Button
+        color={primary ? undefined : 'default'}
         loading={upgradeStatus === UpgradeStatus.UPGRADING}
         onClick={upgrade}
         size={'large'}
         type={primary ? 'primary' : undefined}
+        variant={primary ? undefined : 'filled'}
       >
         {children ?? t('dbV1.action.upgrade')}
       </Button>

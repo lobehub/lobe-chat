@@ -56,7 +56,7 @@ const Common = memo(() => {
       },
       {
         children: (
-          <Button danger onClick={handleReset} type="primary">
+          <Button color={'danger'} danger onClick={handleReset} type="primary" variant={'filled'}>
             {t('danger.reset.action')}
           </Button>
         ),

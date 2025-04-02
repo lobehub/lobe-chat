@@ -51,7 +51,12 @@ export const HeaderContent = memo<{ mobile?: boolean; modal?: boolean }>(({ moda
       {!isServerMode && (
         <Dropdown arrow={false} menu={{ items }} trigger={['click']}>
           {modal ? (
-            <Button block icon={<Icon icon={HardDriveDownload} />}>
+            <Button
+              block
+              color={'default'}
+              icon={<Icon icon={HardDriveDownload} />}
+              variant={'filled'}
+            >
               {t('export', { ns: 'common' })}
             </Button>
           ) : (

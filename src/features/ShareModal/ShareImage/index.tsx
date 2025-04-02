@@ -83,6 +83,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
       </Button>
       <Button
         block
+        color={'default'}
         loading={loading}
         onClick={onDownload}
         size={isMobile ? undefined : 'large'}
@@ -97,7 +98,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     <>
       <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
         <Preview title={title} {...fieldValue} />
-        <Flexbox className={styles.sidebar} gap={16}>
+        <Flexbox className={styles.sidebar} gap={12}>
           <Form
             initialValues={DEFAULT_FIELD_VALUE}
             items={settings}

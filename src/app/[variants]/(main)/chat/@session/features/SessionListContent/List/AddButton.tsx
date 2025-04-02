@@ -18,7 +18,14 @@ const AddButton = memo<{ groupId?: string }>(({ groupId }) => {
 
   return (
     <Flexbox style={{ margin: '12px 16px' }}>
-      <Button block icon={<Icon icon={Plus} />} loading={isValidating} onClick={() => mutate()}>
+      <Button
+        block
+        color={'default'}
+        icon={<Icon icon={Plus} />}
+        loading={isValidating}
+        onClick={() => mutate()}
+        variant={'filled'}
+      >
         {t('newAgent')}
       </Button>
     </Flexbox>

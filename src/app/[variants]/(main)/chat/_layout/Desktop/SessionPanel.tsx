@@ -15,7 +15,7 @@ export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
     height: 100%;
     color: ${token.colorTextSecondary};
-    background: ${token.colorBgContainer};
+    background: ${token.colorBgLayout};
   `,
 }));
 

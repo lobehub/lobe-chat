@@ -45,7 +45,7 @@ const OllamaChecker = memo(() => {
             {t('llm.checker.pass')}
           </Flexbox>
         )}
-        <Button loading={isLoading} onClick={checkConnection}>
+        <Button color={'default'} loading={isLoading} onClick={checkConnection} variant={'filled'}>
           {t('llm.checker.button')}
         </Button>
       </Flexbox>

@@ -67,10 +67,12 @@ const EmptyState = memo<{ provider: string }>(({ provider }) => {
 
       <Flexbox gap={8} horizontal>
         <Button
+          color={'default'}
           icon={<Icon icon={PlusIcon} />}
           onClick={() => {
             setShowModal(true);
           }}
+          variant={'filled'}
         >
           {t('providerModels.list.addNew')}
         </Button>

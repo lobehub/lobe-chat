@@ -1,6 +1,7 @@
 'use client';
 
 import { SideNav } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 
@@ -22,6 +23,7 @@ const Top = () => {
 };
 
 const Nav = memo(() => {
+  const theme = useTheme();
   const inZenMode = useGlobalStore(systemStatusSelectors.inZenMode);
   const { showPinList } = useServerConfigStore(featureFlagsSelectors);
 
@@ -30,7 +32,7 @@ const Nav = memo(() => {
       <SideNav
         avatar={<Avatar />}
         bottomActions={<BottomActions />}
-        style={{ height: '100%', zIndex: 100 }}
+        style={{ background: theme.colorBgLayout, height: '100%', zIndex: 100 }}
         topActions={
           <Suspense>
             <Top />

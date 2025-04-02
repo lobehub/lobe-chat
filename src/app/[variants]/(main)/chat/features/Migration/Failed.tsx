@@ -76,7 +76,9 @@ const Failed = memo<FailedProps>(({ error, state, setUpgradeStatus, setError, up
               }}
               title={t('dbV1.clear.confirm')}
             >
-              <Button size={'large'}>{t('dbV1.action.clearDB')}</Button>
+              <Button color={'default'} size={'large'} variant={'filled'}>
+                {t('dbV1.action.clearDB')}
+              </Button>
             </Popconfirm>
             <UpgradeButton
               primary={false}
