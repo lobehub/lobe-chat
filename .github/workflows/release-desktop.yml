@@ -30,19 +30,28 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install bun
-        uses: oven-sh/setup-bun@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: ${{ secrets.BUN_VERSION }}
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Install deps
-        run: bun i
+        run: pnpm install
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Lint
-        run: bun run lint
+        run: pnpm run lint
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
 
   #      - name: Test
-  #        run: bun run test
+  #        run: pnpm run test
 
   version:
     name: Determine version
@@ -60,6 +69,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       # 主要逻辑：确定构建版本号
       - name: Set version
@@ -94,6 +108,8 @@ jobs:
             echo "is_pr_build=false" >> $GITHUB_OUTPUT
             echo "📦 Release Version: ${version}"
           fi
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
 
       # 输出版本信息总结，方便在 GitHub Actions 界面查看
       - name: Version Summary
@@ -113,36 +129,33 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: ${{ secrets.BUN_VERSION }}
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Install deps
-        run: bun i
+        run: pnpm install
 
       # 设置 package.json 的版本号
       - name: Set package version
-        run: bun run scripts/electronWorkflow/setDesktopVersion.ts ${{ needs.version.outputs.version }}
+        run: tsx scripts/electronWorkflow/setDesktopVersion.ts ${{ needs.version.outputs.version }}
 
       # macOS 构建处理
       - name: Build artifact on macOS
         if: runner.os == 'macOS'
-        run: bun run desktop:build-next
+        run: npm run desktop:build-next
         env:
           APP_URL: http://localhost:3010
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           # 默认添加一个加密 SECRET
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
-
-
-        # 公证部分已注释掉，将来再加回
-        # env:
+        # 公证部分将来再加回
         #   CSC_LINK: ./build/developer-id-app-certs.p12
         #   CSC_KEY_PASSWORD: ${{ secrets.APPLE_APP_CERTS_PASSWORD }}
         #   APPLE_ID: ${{ secrets.APPLE_ID }}
@@ -151,9 +164,12 @@ jobs:
       # 非 macOS 平台构建处理
       - name: Build artifact on other platforms
         if: runner.os != 'macOS'
-        run: bun run build --publish never
+        run: npm run desktop:build-next
         env:
           NODE_OPTIONS: --max-old-space-size=6144
+          APP_URL: http://localhost:3010
+          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
+          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
 
       # 上传构建产物，移除了 zip 相关部分
       - name: Upload artifact
