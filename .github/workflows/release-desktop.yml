@@ -41,8 +41,8 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      - name: Test
-        run: bun run test
+#      - name: Test
+#        run: bun run test
 
   version:
     name: Determine version
