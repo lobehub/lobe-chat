@@ -177,6 +177,9 @@ export class UserModel {
   };
 
   // Static method
+  static makeSureUserExist = async (db: LobeChatDatabase, userId: string) => {
+    await db.insert(users).values({ id: userId }).onConflictDoNothing();
+  };
 
   static createUser = async (db: LobeChatDatabase, params: NewUser) => {
     // if user already exists, skip creation

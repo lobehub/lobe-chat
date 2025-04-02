@@ -167,17 +167,10 @@ export class DatabaseManager {
       // if hash is the same, no need to migrate
       if (hash === cacheHash) {
         try {
-          // 检查数据库中是否存在表
-          // 这里使用 pg_tables 系统表查询用户表数量
-          const tablesResult = await this.db.execute(
-            sql`
-              SELECT COUNT(*) as table_count
-              FROM information_schema.tables
-              WHERE table_schema = 'public'
-            `,
-          );
+          const drizzleMigration = new DrizzleMigrationModel(this.db as any);
 
-          const tableCount = parseInt((tablesResult.rows[0] as any).table_count || '0', 10);
+          // 检查数据库中是否存在表
+          const tableCount = await drizzleMigration.getTableCounts();
 
           // 如果表数量大于0，则认为数据库已正确初始化
           if (tableCount > 0) {
