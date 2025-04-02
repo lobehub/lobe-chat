@@ -4,6 +4,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
+    "target": "ESNext",
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -14,5 +15,5 @@
     "incremental": true,
     "baseUrl": "."
   },
-  "include": ["electron.vite.config.*", "src/main/**/*", "src/preload/**/*", "electron-builder.js"]
+  "include": ["src/main/**/*", "src/preload/**/*", "electron-builder.js"]
 }
