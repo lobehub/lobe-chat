@@ -123,7 +123,7 @@ jobs:
 
       # 设置 package.json 的版本号
       - name: Set package version
-        run: npx npe version ${{ needs.version.outputs.version }} -p apps/desktop/package.json
+        run: bun run scripts/electronWorkflow/setDesktopVersion.ts ${{ needs.version.outputs.version }}
 
       # macOS 构建处理
       - name: Build artifact on macOS
