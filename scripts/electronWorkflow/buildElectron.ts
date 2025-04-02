@@ -7,6 +7,7 @@ import os from 'node:os';
  */
 const buildElectron = () => {
   const platform = os.platform();
+  const startTime = Date.now();
 
   console.log(`🔨 Starting to build desktop app for ${platform} platform...`);
 
@@ -38,7 +39,9 @@ const buildElectron = () => {
     // Execute build command
     execSync(buildCommand, { stdio: 'inherit' });
 
-    console.log('✅ Desktop application build completed!');
+    const endTime = Date.now();
+    const buildTime = ((endTime - startTime) / 1000).toFixed(2);
+    console.log(`✅ Desktop application build completed! (${buildTime}s)`);
   } catch (error) {
     console.error('❌ Build failed:', error);
     process.exit(1);

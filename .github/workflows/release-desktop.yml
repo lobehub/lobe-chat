@@ -149,7 +149,7 @@ jobs:
       # macOS 构建处理
       - name: Build artifact on macOS
         if: runner.os == 'macOS'
-        run: npm run desktop:build-next
+        run: npm run desktop:build
         env:
           APP_URL: http://localhost:3010
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
@@ -164,9 +164,8 @@ jobs:
       # 非 macOS 平台构建处理
       - name: Build artifact on other platforms
         if: runner.os != 'macOS'
-        run: npm run desktop:build-next
+        run: npm run desktop:build
         env:
-          NODE_OPTIONS: --max-old-space-size=6144
           APP_URL: http://localhost:3010
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
