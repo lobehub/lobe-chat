@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Add SEARCH1API_CRAWL_API_KEY env."],
+      "improvements": ["Auto refresh TokenTag count."]
+    },
+    "date": "2025-04-03",
+    "version": "1.77.8"
+  },
+  {
+    "children": {
       "improvements": ["Add desktop-release workflow and improve code."]
     },
     "date": "2025-04-03",
