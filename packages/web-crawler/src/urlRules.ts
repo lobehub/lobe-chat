@@ -15,7 +15,6 @@ export const crawUrlRules: CrawlUrlRule[] = [
   {
     impls: ['search1api'],
     urlPattern: 'https://www.youtube.com/watch(.*)',
-    urlTransform: 'https://www.youtube.com/watch?v=$1',
   },
   // Reddit 链接，使用 search1api，格式化 markdown，包含标题、作者、互动数量、具体评论内容等
   {
