@@ -85,7 +85,13 @@ export class UserModel {
     const state = result[0];
 
     // Decrypt keyVaults
-    const decryptKeyVaults = await decryptor(state.settingsKeyVaults, this.userId);
+    let decryptKeyVaults = {};
+
+    try {
+      decryptKeyVaults = await decryptor(state.settingsKeyVaults, this.userId);
+    } catch {
+      /* empty */
+    }
 
     const settings: DeepPartial<UserSettings> = {
       defaultAgent: state.settingsDefaultAgent || {},
@@ -171,6 +177,9 @@ export class UserModel {
   };
 
   // Static method
+  static makeSureUserExist = async (db: LobeChatDatabase, userId: string) => {
+    await db.insert(users).values({ id: userId }).onConflictDoNothing();
+  };
 
   static createUser = async (db: LobeChatDatabase, params: NewUser) => {
     // if user already exists, skip creation

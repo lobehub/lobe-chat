@@ -7,7 +7,6 @@ import { z } from 'zod';
 
 import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
 import { FileModel } from '@/database/models/file';
-import { serverDB } from '@/database/server';
 import {
   EvalDatasetModel,
   EvalDatasetRecordModel,
@@ -15,6 +14,7 @@ import {
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
 import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
 import { S3 } from '@/server/modules/S3';
 import { createAsyncServerClient } from '@/server/routers/async';
@@ -29,20 +29,23 @@ import {
   insertEvalEvaluationSchema,
 } from '@/types/eval';
 
-const ragEvalProcedure = authedProcedure.use(keyVaults).use(async (opts) => {
-  const { ctx } = opts;
+const ragEvalProcedure = authedProcedure
+  .use(serverDatabase)
+  .use(keyVaults)
+  .use(async (opts) => {
+    const { ctx } = opts;
 
-  return opts.next({
-    ctx: {
-      datasetModel: new EvalDatasetModel(ctx.userId),
-      fileModel: new FileModel(serverDB, ctx.userId),
-      datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
-      evaluationModel: new EvalEvaluationModel(ctx.userId),
-      evaluationRecordModel: new EvaluationRecordModel(ctx.userId),
-      s3: new S3(),
-    },
+    return opts.next({
+      ctx: {
+        datasetModel: new EvalDatasetModel(ctx.userId),
+        fileModel: new FileModel(ctx.serverDB, ctx.userId),
+        datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
+        evaluationModel: new EvalEvaluationModel(ctx.userId),
+        evaluationRecordModel: new EvaluationRecordModel(ctx.userId),
+        s3: new S3(),
+      },
+    });
   });
-});
 
 export const ragEvalRouter = router({
   createDataset: ragEvalProcedure
