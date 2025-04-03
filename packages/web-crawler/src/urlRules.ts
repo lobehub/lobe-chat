@@ -22,6 +22,11 @@ export const crawUrlRules: CrawlUrlRule[] = [
     impls: ['search1api'],
     urlPattern: 'https://www.reddit.com/r/(.*)/comments/(.*)',
   },
+  // 微信公众号有爬虫防护，使用 search1api
+  {
+    impls: ['search1api'],
+    urlPattern: 'https://mp.weixin.qq.com(.*)',
+  },
   // github 源码解析
   {
     filterOptions: {
@@ -55,11 +60,6 @@ export const crawUrlRules: CrawlUrlRule[] = [
   {
     impls: ['jina'],
     urlPattern: 'https://zhihu.com(.*)',
-  },
-  // 微信公众号有爬虫防护，使用 jina
-  {
-    impls: ['jina'],
-    urlPattern: 'https://mp.weixin.qq.com(.*)',
   },
   {
     // Medium 文章转换为 Scribe.rip
