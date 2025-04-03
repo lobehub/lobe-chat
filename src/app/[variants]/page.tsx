@@ -1,9 +1,5 @@
-import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
-import { getCanonicalUrl } from '@/server/utils/url';
-
-export const metadata: Metadata = {
-  alternates: { canonical: getCanonicalUrl('/') },
-};
-
-export { default } from './loading';
+export default function Page() {
+  redirect('/chat?session=dce7e535-28f2-4761-ba51-29ac1982c55b');
+}
