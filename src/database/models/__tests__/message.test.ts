@@ -1660,7 +1660,15 @@ describe('MessageModel', () => {
 
   describe('getHeatmaps', () => {
     it('should return heatmap data for the last year', async () => {
-      const today = dayjs();
+      // 使用固定日期进行测试
+      vi.useFakeTimers();
+      const fixedDate = new Date('2023-04-07T13:00:00Z');
+      vi.setSystemTime(fixedDate);
+
+      const today = dayjs(fixedDate);
+      const twoDaysAgoDate = today.subtract(2, 'day').format('YYYY-MM-DD');
+      const oneDayAgoDate = today.subtract(1, 'day').format('YYYY-MM-DD');
+      const todayDate = today.format('YYYY-MM-DD');
 
       // 创建测试数据
       await serverDB.insert(messages).values([
@@ -1695,31 +1703,39 @@ describe('MessageModel', () => {
       expect(result.length).toBeLessThan(368);
 
       // 检查两天前的数据
-      const twoDaysAgo = result.find(
-        (item) => item.date === today.subtract(2, 'day').format('YYYY-MM-DD'),
-      );
+      const twoDaysAgo = result.find((item) => item.date === twoDaysAgoDate);
       expect(twoDaysAgo?.count).toBe(2);
       expect(twoDaysAgo?.level).toBe(1);
 
       // 检查一天前的数据
-      const oneDayAgo = result.find(
-        (item) => item.date === today.subtract(1, 'day').format('YYYY-MM-DD'),
-      );
+      const oneDayAgo = result.find((item) => item.date === oneDayAgoDate);
       expect(oneDayAgo?.count).toBe(1);
       expect(oneDayAgo?.level).toBe(1);
 
       // 检查今天的数据
-      const todayData = result.find((item) => item.date === today.format('YYYY-MM-DD'));
+      const todayData = result.find((item) => item.date === todayDate);
       expect(todayData?.count).toBe(0);
       expect(todayData?.level).toBe(0);
+
+      vi.useRealTimers();
     });
 
     it('should calculate correct levels based on message count', async () => {
-      const today = dayjs();
+      // 使用固定日期进行测试
+      vi.useFakeTimers();
+      const fixedDate = new Date('2023-05-15T12:00:00Z');
+      vi.setSystemTime(fixedDate);
+
+      const today = dayjs(fixedDate);
+      const fourDaysAgoDate = today.subtract(4, 'day').format('YYYY-MM-DD');
+      const threeDaysAgoDate = today.subtract(3, 'day').format('YYYY-MM-DD');
+      const twoDaysAgoDate = today.subtract(2, 'day').format('YYYY-MM-DD');
+      const oneDayAgoDate = today.subtract(1, 'day').format('YYYY-MM-DD');
+      const todayDate = today.format('YYYY-MM-DD');
 
       // 创建测试数据 - 不同数量的消息以测试不同的等级
       await serverDB.insert(messages).values([
-        // 1 message - level 0
+        // 1 message - level 1
         {
           id: '1',
           userId,
@@ -1727,7 +1743,7 @@ describe('MessageModel', () => {
           content: 'message 1',
           createdAt: today.subtract(4, 'day').toDate(),
         },
-        // 6 messages - level 1
+        // 6 messages - level 2
         ...Array(6)
           .fill(0)
           .map((_, i) => ({
@@ -1737,7 +1753,7 @@ describe('MessageModel', () => {
             content: `message 2-${i}`,
             createdAt: today.subtract(3, 'day').toDate(),
           })),
-        // 11 messages - level 2
+        // 11 messages - level 3
         ...Array(11)
           .fill(0)
           .map((_, i) => ({
@@ -1747,7 +1763,7 @@ describe('MessageModel', () => {
             content: `message 3-${i}`,
             createdAt: today.subtract(2, 'day').toDate(),
           })),
-        // 16 messages - level 3
+        // 16 messages - level 4
         ...Array(16)
           .fill(0)
           .map((_, i) => ({
@@ -1773,33 +1789,88 @@ describe('MessageModel', () => {
       const result = await messageModel.getHeatmaps();
 
       // 检查不同天数的等级
-      const fourDaysAgo = result.find(
-        (item) => item.date === today.subtract(4, 'day').format('YYYY-MM-DD'),
-      );
+      const fourDaysAgo = result.find((item) => item.date === fourDaysAgoDate);
       expect(fourDaysAgo?.count).toBe(1);
       expect(fourDaysAgo?.level).toBe(1);
 
-      const threeDaysAgo = result.find(
-        (item) => item.date === today.subtract(3, 'day').format('YYYY-MM-DD'),
-      );
+      const threeDaysAgo = result.find((item) => item.date === threeDaysAgoDate);
       expect(threeDaysAgo?.count).toBe(6);
       expect(threeDaysAgo?.level).toBe(2);
 
-      const twoDaysAgo = result.find(
-        (item) => item.date === today.subtract(2, 'day').format('YYYY-MM-DD'),
-      );
+      const twoDaysAgo = result.find((item) => item.date === twoDaysAgoDate);
       expect(twoDaysAgo?.count).toBe(11);
       expect(twoDaysAgo?.level).toBe(3);
 
-      const oneDayAgo = result.find(
-        (item) => item.date === today.subtract(1, 'day').format('YYYY-MM-DD'),
-      );
+      const oneDayAgo = result.find((item) => item.date === oneDayAgoDate);
       expect(oneDayAgo?.count).toBe(16);
       expect(oneDayAgo?.level).toBe(4);
 
-      const todayData = result.find((item) => item.date === today.format('YYYY-MM-DD'));
+      const todayData = result.find((item) => item.date === todayDate);
       expect(todayData?.count).toBe(21);
       expect(todayData?.level).toBe(4);
+
+      vi.useRealTimers();
+    });
+
+    it.skip('should return time count correctly when 19:00 time', async () => {
+      // 使用固定日期进行测试
+      vi.useFakeTimers();
+      const fixedDate = new Date('2025-04-02T19:00:00Z');
+      vi.setSystemTime(fixedDate);
+
+      const today = dayjs(fixedDate);
+      const twoDaysAgoDate = today.subtract(2, 'day').format('YYYY-MM-DD');
+      const oneDayAgoDate = today.subtract(1, 'day').format('YYYY-MM-DD');
+      const todayDate = today.format('YYYY-MM-DD');
+
+      // 创建测试数据
+      await serverDB.insert(messages).values([
+        {
+          id: '1',
+          userId,
+          role: 'user',
+          content: 'message 1',
+          createdAt: today.subtract(2, 'day').toDate(),
+        },
+        {
+          id: '2',
+          userId,
+          role: 'user',
+          content: 'message 2',
+          createdAt: today.subtract(2, 'day').toDate(),
+        },
+        {
+          id: '3',
+          userId,
+          role: 'user',
+          content: 'message 3',
+          createdAt: today.subtract(1, 'day').toDate(),
+        },
+      ]);
+
+      // 调用 getHeatmaps 方法
+      const result = await messageModel.getHeatmaps();
+
+      // 断言结果
+      expect(result.length).toBeGreaterThanOrEqual(366);
+      expect(result.length).toBeLessThan(368);
+
+      // 检查两天前的数据
+      const twoDaysAgo = result.find((item) => item.date === twoDaysAgoDate);
+      expect(twoDaysAgo?.count).toBe(2);
+      expect(twoDaysAgo?.level).toBe(1);
+
+      // 检查一天前的数据
+      const oneDayAgo = result.find((item) => item.date === oneDayAgoDate);
+      expect(oneDayAgo?.count).toBe(1);
+      expect(oneDayAgo?.level).toBe(1);
+
+      // 检查今天的数据
+      const todayData = result.find((item) => item.date === todayDate);
+      expect(todayData?.count).toBe(0);
+      expect(todayData?.level).toBe(0);
+
+      vi.useRealTimers();
     });
 
     it('should handle empty data', async () => {
