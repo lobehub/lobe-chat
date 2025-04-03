@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-04-03",
+    "version": "1.77.10"
+  },
+  {
     "children": {
       "improvements": ["Add QVQ-Max model."]
     },
