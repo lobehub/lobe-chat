@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { defineConfig } from 'vitest/config';
+import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   optimizeDeps: {
@@ -14,6 +14,7 @@ export default defineConfig({
     coverage: {
       all: false,
       exclude: [
+        ...coverageConfigDefaults.exclude,
         '__mocks__/**',
         // just ignore the migration code
         // we will use pglite in the future
