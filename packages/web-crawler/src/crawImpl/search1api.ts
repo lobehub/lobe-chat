@@ -7,18 +7,20 @@ interface Search1ApiResponse {
     url: string;
   };
   results: {
-    title?: string;
-    link?: string;
     content?: string;
+    link?: string;
+    title?: string;
   };
 }
 
 export const search1api: CrawlImpl = async (url) => {
   // Get API key from environment variable
-  const apiKey = process.env.SEARCH1API_API_KEY;
-  
+  const apiKey = process.env.SEARCH1API_CRAWL_API_KEY || process.env.SEARCH1API_API_KEY;
+
   if (!apiKey) {
-    throw new Error('SEARCH1API_API_KEY environment variable is not set. Visit https://www.search1api.com to get free quota.');
+    throw new Error(
+      'SEARCH1API_API_KEY environment variable is not set. Visit https://www.search1api.com to get free quota.',
+    );
   }
 
   let res: Response;
@@ -26,14 +28,14 @@ export const search1api: CrawlImpl = async (url) => {
   try {
     res = await withTimeout(
       fetch('https://api.search1api.com/crawl', {
-        method: 'POST',
+        body: JSON.stringify({
+          url,
+        }),
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          url,
-        }),
+        method: 'POST',
       }),
       DEFAULT_TIMEOUT,
     );
@@ -54,30 +56,31 @@ export const search1api: CrawlImpl = async (url) => {
     if (res.status === 404) {
       throw new PageNotFoundError(res.statusText);
     }
-    
+
     throw new Error(`Search1API request failed with status ${res.status}: ${res.statusText}`);
   }
 
   try {
-    const data = await res.json() as Search1ApiResponse;
-    
+    const data = (await res.json()) as Search1ApiResponse;
+
     // Check if content is empty or too short
     if (!data.results.content || data.results.content.length < 100) {
       return;
     }
-    
+
     return {
       content: data.results.content,
       contentType: 'text',
-      title: data.results.title,
-      description: data.results.title, // Using title as description since API doesn't provide a separate description
+      description: data.results.title,
+      // Using title as description since API doesn't provide a separate description
       length: data.results.content.length,
       siteName: new URL(url).hostname,
+      title: data.results.title,
       url: data.results.link || url,
     } satisfies CrawlSuccessResult;
   } catch (error) {
     console.error(error);
   }
-  
+
   return;
-}; 
+};
