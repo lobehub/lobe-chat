@@ -14,12 +14,12 @@ const useStyles = createStyles(({ css, token }) => ({
 
     height: 100%;
     padding: 8px;
+    border-radius: 8px;
 
     font-size: 12px;
     color: initial;
 
     background: ${token.colorFillQuaternary};
-    border-radius: 8px;
 
     &:hover {
       background: ${token.colorFillTertiary};
@@ -27,13 +27,11 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   title: css`
     overflow: hidden;
-   { /* stylelint-disable-line */ }
     display: -webkit-box;
     -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 
     text-overflow: ellipsis;
-
-    -webkit-line-clamp: 2;
   `,
 }));
 

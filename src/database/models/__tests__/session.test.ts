@@ -894,7 +894,9 @@ describe('SessionModel', () => {
         await trx.insert(topics).values([
           { id: 't1', sessionId: '1', userId },
           { id: 't2', sessionId: '1', userId },
+          { id: 't6', sessionId: '1', userId },
           { id: 't3', sessionId: '2', userId },
+          { id: 't8', sessionId: '2', userId },
           { id: 't4', sessionId: '3', userId },
         ]);
       });
