@@ -2,6 +2,33 @@
 
 # Changelog
 
+### [Version 1.77.9](https://github.com/lobehub/lobe-chat/compare/v1.77.8...v1.77.9)
+
+<sup>Released on **2025-04-03**</sup>
+
+#### 💄 Styles
+
+- **web-crawler**: Add special support for YouTube,Reddit and WeChat links.
+- **misc**: Add QVQ-Max model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **web-crawler**: Add special support for YouTube,Reddit and WeChat links, closes [#7251](https://github.com/lobehub/lobe-chat/issues/7251) ([8f0da93](https://github.com/lobehub/lobe-chat/commit/8f0da93))
+- **misc**: Add QVQ-Max model, closes [#7258](https://github.com/lobehub/lobe-chat/issues/7258) ([2be019c](https://github.com/lobehub/lobe-chat/commit/2be019c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.77.8](https://github.com/lobehub/lobe-chat/compare/v1.77.7...v1.77.8)
 
 <sup>Released on **2025-04-03**</sup>
