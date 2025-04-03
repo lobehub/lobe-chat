@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.77.7](https://github.com/lobehub/lobe-chat/compare/v1.77.6...v1.77.7)
+
+<sup>Released on **2025-04-03**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Add desktop-release workflow and improve code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Add desktop-release workflow and improve code, closes [#7265](https://github.com/lobehub/lobe-chat/issues/7265) ([773d5dd](https://github.com/lobehub/lobe-chat/commit/773d5dd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.77.6](https://github.com/lobehub/lobe-chat/compare/v1.77.5...v1.77.6)
 
 <sup>Released on **2025-04-01**</sup>
