@@ -8,7 +8,7 @@ jobs:
 
     services:
       postgres:
-        image: pgvector/pgvector:pg16
+        image: paradedb/paradedb:latest
         env:
           POSTGRES_PASSWORD: postgres
         options: >-

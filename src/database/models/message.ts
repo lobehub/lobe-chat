@@ -382,15 +382,20 @@ export class MessageModel {
       .orderBy(desc(sql`heatmaps_date`));
 
     const heatmapData: HeatmapsProps['data'] = [];
-    let currentDate = startDate;
+    let currentDate = startDate.clone();
+
+    const dateCountMap = new Map<string, number>();
+    for (const item of result) {
+      if (item?.date) {
+        const dateStr = dayjs(item.date as string).format('YYYY-MM-DD');
+        dateCountMap.set(dateStr, Number(item.count) || 0);
+      }
+    }
 
     while (currentDate.isBefore(endDate) || currentDate.isSame(endDate, 'day')) {
       const formattedDate = currentDate.format('YYYY-MM-DD');
-      const matchingResult = result.find(
-        (r) => r?.date && dayjs(r.date as string).format('YYYY-MM-DD') === formattedDate,
-      );
+      const count = dateCountMap.get(formattedDate) || 0;
 
-      const count = matchingResult ? matchingResult.count : 0;
       const levelCount = count > 0 ? Math.ceil(count / 5) : 0;
       const level = levelCount > 4 ? 4 : levelCount;
 
