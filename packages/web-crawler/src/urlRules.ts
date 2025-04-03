@@ -22,9 +22,9 @@ export const crawUrlRules: CrawlUrlRule[] = [
     impls: ['search1api'],
     urlPattern: 'https://www.reddit.com/r/(.*)/comments/(.*)',
   },
-  // 微信公众号有爬虫防护，使用 search1api
+  // 微信公众号有爬虫防护，优先使用 search1api，jina 作为兜底（目前 jina 爬取会被风控）
   {
-    impls: ['search1api'],
+    impls: ['search1api', 'jina'],
     urlPattern: 'https://mp.weixin.qq.com(.*)',
   },
   // github 源码解析
