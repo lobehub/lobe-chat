@@ -668,7 +668,7 @@ The model is multilingual, supporting English, French, German, Spanish, Italian,
 
 It supports function calling and is released under the Apache 2.0 license.",
     "displayName": "Mistral: Mistral Nemo",
-    "enabled": true,
+    "enabled": false,
     "functionCall": true,
     "id": "mistralai/mistral-nemo",
     "maxTokens": undefined,
@@ -856,7 +856,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
 
 See the [launch announcement](https://blog.google/technology/developers/google-gemma-2/) for more details. Usage of Gemma is subject to Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms).",
     "displayName": "Google: Gemma 2 9B",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "google/gemma-2-9b-it",
     "maxTokens": undefined,
@@ -1135,7 +1135,7 @@ _These are free, rate-limited endpoints for [Mistral 7B Instruct](/models/mistra
 
 *Mistral 7B Instruct has multiple version variants, and this is intended to be the latest version.*",
     "displayName": "Mistral: Mistral 7B Instruct",
-    "enabled": true,
+    "enabled": false,
     "functionCall": true,
     "id": "mistralai/mistral-7b-instruct",
     "maxTokens": undefined,
@@ -1767,7 +1767,7 @@ To read more about the model release, [click here](https://wizardlm.github.io/Wi
 
 #moe",
     "displayName": "WizardLM-2 8x22B",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "microsoft/wizardlm-2-8x22b",
     "maxTokens": undefined,
