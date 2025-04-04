@@ -148,17 +148,6 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 4096,
-    description: 'OpenChat 7B 是经过“C-RLFT（条件强化学习微调）”策略精调的开源语言模型库。',
-    displayName: 'OpenChat 7B',
-    id: 'openchat/openchat-7b',
-    pricing: {
-      input: 0.06,
-      output: 0.06,
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 64_000,
     displayName: 'Deepseek V3 Turbo',
     id: 'deepseek/deepseek-v3-turbo',
@@ -305,26 +294,6 @@ const novitaChatModels: AIChatModelCard[] = [
     pricing: {
       input: 0.5,
       output: 0.5,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 4096,
-    displayName: 'Nous Hermes Llama2 13B',
-    id: 'nousresearch/nous-hermes-llama2-13b',
-    pricing: {
-      input: 0.17,
-      output: 0.17,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 4096,
-    displayName: 'OpenHermes 2.5 Mistral 7B',
-    id: 'teknium/openhermes-2.5-mistral-7b',
-    pricing: {
-      input: 0.17,
-      output: 0.17,
     },
     type: 'chat',
   },
