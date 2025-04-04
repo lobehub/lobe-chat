@@ -16,6 +16,7 @@ import {
   createCallbacksTransformer,
   createFirstErrorHandleTransformer,
   createSSEProtocolTransformer,
+  createTokenSpeedCalculator,
   generateToolCallId,
 } from './protocol';
 
@@ -39,6 +40,11 @@ export const transformOpenAIStream = (
   }
 
   try {
+    // performance monitor return
+    if (chunk.id === 'speed') {
+      return { data: chunk.object, id: chunk.id, type: 'speed' };
+    }
+
     // maybe need another structure to add support for multiple choices
     const item = chunk.choices[0];
     if (!item) {
@@ -221,9 +227,14 @@ export interface OpenAIStreamOptions {
   provider?: string;
 }
 
+export interface TraceOptions {
+  inputStartAt?: number;
+}
+
 export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
   { callbacks, provider, bizErrorTypeTransformer }: OpenAIStreamOptions = {},
+  { inputStartAt }: TraceOptions = {},
 ) => {
   const streamStack: StreamContext = { id: '' };
 
@@ -236,7 +247,8 @@ export const OpenAIStream = (
       // provider like huggingface or minimax will return error in the stream,
       // so in the first Transformer, we need to handle the error
       .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, provider))
-      .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream, streamStack))
+      .pipeThrough(createTokenSpeedCalculator(transformOpenAIStream, { inputStartAt, streamStack }))
+      .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
       .pipeThrough(createCallbacksTransformer(callbacks))
   );
 };
