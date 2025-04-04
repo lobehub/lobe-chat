@@ -1,8 +1,8 @@
 import { INBOX_SESSION_ID } from '@/const/session';
 import { clientDB } from '@/database/client/db';
+import { SessionModel } from '@/database/models/session';
+import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { AgentItem } from '@/database/schemas';
-import { SessionModel } from '@/database/server/models/session';
-import { SessionGroupModel } from '@/database/server/models/sessionGroup';
 import { BaseClientService } from '@/services/baseClientService';
 import { LobeAgentConfig } from '@/types/agent';
 

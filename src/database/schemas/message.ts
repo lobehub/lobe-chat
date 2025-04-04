@@ -80,43 +80,79 @@ export const messages = pgTable(
 );
 
 // if the message container a plugin
-export const messagePlugins = pgTable('message_plugins', {
-  id: text('id')
-    .references(() => messages.id, { onDelete: 'cascade' })
-    .primaryKey(),
+export const messagePlugins = pgTable(
+  'message_plugins',
+  {
+    id: text('id')
+      .references(() => messages.id, { onDelete: 'cascade' })
+      .primaryKey(),
 
-  toolCallId: text('tool_call_id'),
-  type: text('type', {
-    enum: ['default', 'markdown', 'standalone', 'builtin'],
-  }).default('default'),
+    toolCallId: text('tool_call_id'),
+    type: text('type', {
+      enum: ['default', 'markdown', 'standalone', 'builtin'],
+    }).default('default'),
 
-  apiName: text('api_name'),
-  arguments: text('arguments'),
-  identifier: text('identifier'),
-  state: jsonb('state'),
-  error: jsonb('error'),
-});
+    apiName: text('api_name'),
+    arguments: text('arguments'),
+    identifier: text('identifier'),
+    state: jsonb('state'),
+    error: jsonb('error'),
+    clientId: text('client_id'),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+  },
+  (t) => ({
+    clientIdUnique: uniqueIndex('message_plugins_client_id_user_id_unique').on(
+      t.clientId,
+      t.userId,
+    ),
+  }),
+);
 
 export type MessagePluginItem = typeof messagePlugins.$inferSelect;
 export const updateMessagePluginSchema = createSelectSchema(messagePlugins);
 
-export const messageTTS = pgTable('message_tts', {
-  id: text('id')
-    .references(() => messages.id, { onDelete: 'cascade' })
-    .primaryKey(),
-  contentMd5: text('content_md5'),
-  fileId: text('file_id').references(() => files.id, { onDelete: 'cascade' }),
-  voice: text('voice'),
-});
+export const messageTTS = pgTable(
+  'message_tts',
+  {
+    id: text('id')
+      .references(() => messages.id, { onDelete: 'cascade' })
+      .primaryKey(),
+    contentMd5: text('content_md5'),
+    fileId: text('file_id').references(() => files.id, { onDelete: 'cascade' }),
+    voice: text('voice'),
+    clientId: text('client_id'),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+  },
+  (t) => ({
+    clientIdUnique: uniqueIndex('message_tts_client_id_user_id_unique').on(t.clientId, t.userId),
+  }),
+);
 
-export const messageTranslates = pgTable('message_translates', {
-  id: text('id')
-    .references(() => messages.id, { onDelete: 'cascade' })
-    .primaryKey(),
-  content: text('content'),
-  from: text('from'),
-  to: text('to'),
-});
+export const messageTranslates = pgTable(
+  'message_translates',
+  {
+    id: text('id')
+      .references(() => messages.id, { onDelete: 'cascade' })
+      .primaryKey(),
+    content: text('content'),
+    from: text('from'),
+    to: text('to'),
+    clientId: text('client_id'),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+  },
+  (t) => ({
+    clientIdUnique: uniqueIndex('message_translates_client_id_user_id_unique').on(
+      t.clientId,
+      t.userId,
+    ),
+  }),
+);
 
 // if the message contains a file
 // save the file id and message id
@@ -129,21 +165,37 @@ export const messagesFiles = pgTable(
     messageId: text('message_id')
       .notNull()
       .references(() => messages.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.fileId, t.messageId] }),
   }),
 );
 
-export const messageQueries = pgTable('message_queries', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  messageId: text('message_id')
-    .references(() => messages.id, { onDelete: 'cascade' })
-    .notNull(),
-  rewriteQuery: text('rewrite_query'),
-  userQuery: text('user_query'),
-  embeddingsId: uuid('embeddings_id').references(() => embeddings.id, { onDelete: 'set null' }),
-});
+export const messageQueries = pgTable(
+  'message_queries',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    messageId: text('message_id')
+      .references(() => messages.id, { onDelete: 'cascade' })
+      .notNull(),
+    rewriteQuery: text('rewrite_query'),
+    userQuery: text('user_query'),
+    clientId: text('client_id'),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+    embeddingsId: uuid('embeddings_id').references(() => embeddings.id, { onDelete: 'set null' }),
+  },
+  (t) => ({
+    clientIdUnique: uniqueIndex('message_queries_client_id_user_id_unique').on(
+      t.clientId,
+      t.userId,
+    ),
+  }),
+);
 
 export type NewMessageQuery = typeof messageQueries.$inferInsert;
 
@@ -154,6 +206,9 @@ export const messageQueryChunks = pgTable(
     queryId: uuid('query_id').references(() => messageQueries.id, { onDelete: 'cascade' }),
     chunkId: uuid('chunk_id').references(() => chunks.id, { onDelete: 'cascade' }),
     similarity: numeric('similarity', { precision: 6, scale: 5 }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.chunkId, t.messageId, t.queryId] }),
@@ -168,6 +223,9 @@ export const messageChunks = pgTable(
   {
     messageId: text('message_id').references(() => messages.id, { onDelete: 'cascade' }),
     chunkId: uuid('chunk_id').references(() => chunks.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.chunkId, t.messageId] }),

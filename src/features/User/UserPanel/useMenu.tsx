@@ -9,7 +9,6 @@ import {
   Feather,
   FileClockIcon,
   HardDriveDownload,
-  HardDriveUpload,
   LifeBuoy,
   LogOut,
   Mail,
@@ -32,10 +31,8 @@ import {
   UTM_SOURCE,
   mailTo,
 } from '@/const/url';
-import { isServerMode } from '@/const/version';
 import DataImporter from '@/features/DataImporter';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
-import { configService } from '@/services/config';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
@@ -119,40 +116,8 @@ export const useMenu = () => {
         {
           icon: <Icon icon={HardDriveDownload} />,
           key: 'import',
-          label: <DataImporter>{t('import')}</DataImporter>,
+          label: <DataImporter>{t('importData')}</DataImporter>,
         },
-        isServerMode
-          ? null
-          : {
-              children: [
-                {
-                  key: 'allAgent',
-                  label: t('exportType.allAgent'),
-                  onClick: configService.exportAgents,
-                },
-                {
-                  key: 'allAgentWithMessage',
-                  label: t('exportType.allAgentWithMessage'),
-                  onClick: configService.exportSessions,
-                },
-                {
-                  key: 'globalSetting',
-                  label: t('exportType.globalSetting'),
-                  onClick: configService.exportSettings,
-                },
-                {
-                  type: 'divider',
-                },
-                {
-                  key: 'all',
-                  label: t('exportType.all'),
-                  onClick: configService.exportAll,
-                },
-              ],
-              icon: <Icon icon={HardDriveUpload} />,
-              key: 'export',
-              label: t('export'),
-            },
         {
           type: 'divider',
         },

@@ -1,0 +1,331 @@
+name: Release Desktop
+
+on:
+#  uncomment when official desktop version released
+#  release:
+#    types: [published] # 发布 release 时触发构建
+  pull_request:
+    types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
+
+# 确保同一时间只运行一个相同的 workflow，取消正在进行的旧的运行
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+env:
+  PR_TAG_PREFIX: pr- # PR 构建版本的前缀标识
+
+jobs:
+  test:
+    name: Code quality check
+    # 添加 PR label 触发条件，只有添加了 Build Desktop 标签的 PR 才会触发构建
+    if: |
+      (github.event_name == 'pull_request' &&
+       contains(github.event.pull_request.labels.*.name, 'Build Desktop')) ||
+      github.event_name != 'pull_request'
+    runs-on: ubuntu-latest # 只在 ubuntu 上运行一次检查
+    steps:
+      - name: Checkout base
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install deps
+        run: pnpm install
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+
+      - name: Lint
+        run: pnpm run lint
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+
+  #      - name: Test
+  #        run: pnpm run test
+
+  version:
+    name: Determine version
+    # 与 test job 相同的触发条件
+    if: |
+      (github.event_name == 'pull_request' &&
+       contains(github.event.pull_request.labels.*.name, 'Build Desktop')) ||
+      github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    outputs:
+      # 输出版本信息，供后续 job 使用
+      version: ${{ steps.set_version.outputs.version }}
+      is_pr_build: ${{ steps.set_version.outputs.is_pr_build }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 主要逻辑：确定构建版本号
+      - name: Set version
+        id: set_version
+        run: |
+          # 从 apps/desktop/package.json 读取基础版本号
+          base_version=$(node -p "require('./apps/desktop/package.json').version")
+
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # PR 构建：在基础版本号上添加 PR 信息
+            branch_name="${{ github.head_ref }}"
+            # 清理分支名，移除非法字符
+            sanitized_branch=$(echo "${branch_name}" | sed -E 's/[^a-zA-Z0-9_.-]+/-/g')
+            # 创建特殊的 PR 版本号：基础版本号-PR前缀-分支名-提交哈希
+            version="${base_version}-${{ env.PR_TAG_PREFIX }}${sanitized_branch}-$(git rev-parse --short HEAD)"
+            echo "version=${version}" >> $GITHUB_OUTPUT
+            echo "is_pr_build=true" >> $GITHUB_OUTPUT
+            echo "📦 Release Version: ${version} (based on base version ${base_version})"
+
+          elif [ "${{ github.event_name }}" == "release" ]; then
+            # Release 事件直接使用 release tag 作为版本号，去掉可能的 v 前缀
+            version="${{ github.event.release.tag_name }}"
+            version="${version#v}"
+            echo "version=${version}" >> $GITHUB_OUTPUT
+            echo "is_pr_build=false" >> $GITHUB_OUTPUT
+            echo "📦 Release Version: ${version}"
+
+          else
+            # 其他情况（如手动触发）使用 apps/desktop/package.json 的版本号
+            version="${base_version}"
+            echo "version=${version}" >> $GITHUB_OUTPUT
+            echo "is_pr_build=false" >> $GITHUB_OUTPUT
+            echo "📦 Release Version: ${version}"
+          fi
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+
+      # 输出版本信息总结，方便在 GitHub Actions 界面查看
+      - name: Version Summary
+        run: |
+          echo "🚦 Release Version: ${{ steps.set_version.outputs.version }}"
+          echo "🔄 Is PR Build: ${{ steps.set_version.outputs.is_pr_build }}"
+
+  build:
+    needs: [version, test]
+    name: Build Desktop App
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install deps
+        run: pnpm install
+
+      - name: Install deps on Desktop
+        run: npm run install-isolated --prefix=./apps/desktop
+
+      # 设置 package.json 的版本号
+      - name: Set package version
+        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }}
+
+      # macOS 构建处理
+      - name: Build artifact on macOS
+        if: runner.os == 'macOS'
+        run: npm run desktop:build
+        env:
+          APP_URL: http://localhost:3010
+          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
+          # 默认添加一个加密 SECRET
+          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+        # 公证部分将来再加回
+        #   CSC_LINK: ./build/developer-id-app-certs.p12
+        #   CSC_KEY_PASSWORD: ${{ secrets.APPLE_APP_CERTS_PASSWORD }}
+        #   APPLE_ID: ${{ secrets.APPLE_ID }}
+        #   APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+
+      # 非 macOS 平台构建处理
+      - name: Build artifact on other platforms
+        if: runner.os != 'macOS'
+        run: npm run desktop:build
+        env:
+          APP_URL: http://localhost:3010
+          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
+          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+
+      # 上传构建产物，移除了 zip 相关部分
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.os }}
+          path: |
+            apps/desktop/release/latest*
+            apps/desktop/release/*.dmg*
+            apps/desktop/release/*.zip*
+            apps/desktop/release/*.exe*
+            apps/desktop/release/*.AppImage
+          retention-days: 5
+
+      - name: Log build info
+        run: |
+          echo "🔄 Is PR Build: ${{ needs.version.outputs.is_pr_build }}"
+
+  # 将原本的 merge job 调整，作为所有构建产物的准备步骤
+  prepare-artifacts:
+    needs: [build, version]
+    name: Prepare Artifacts
+    runs-on: ubuntu-latest
+    outputs:
+      artifact_path: ${{ steps.set_path.outputs.path }}
+    steps:
+      # 下载所有平台的构建产物
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: release-*
+          merge-multiple: true
+
+      # 列出所有构建产物
+      - name: List artifacts
+        run: ls -R release
+
+      # 设置构建产物路径，供后续 job 使用
+      - name: Set artifact path
+        id: set_path
+        run: echo "path=release" >> $GITHUB_OUTPUT
+
+  # 正式版发布 job - 只处理 release 触发的场景
+  publish-release:
+    # 只在 release 事件触发且不是 PR 构建时执行
+    if: |
+      github.event_name == 'release' &&
+      needs.version.outputs.is_pr_build != 'true'
+    needs: [prepare-artifacts, version]
+    name: Publish Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 下载构建产物
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ needs.prepare-artifacts.outputs.artifact_path }}
+          pattern: release-*
+          merge-multiple: true
+
+      # 将构建产物上传到现有 release
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: |
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/latest*
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.dmg*
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.zip*
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.exe*
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # PR 构建的处理步骤
+  publish-pr:
+    if: needs.version.outputs.is_pr_build == 'true'
+    needs: [prepare-artifacts, version]
+    name: Publish PR Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 下载构建产物
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ needs.prepare-artifacts.outputs.artifact_path }}
+          pattern: release-*
+          merge-multiple: true
+
+      # 生成PR发布描述
+      - name: Generate PR Release Body
+        id: pr_release_body
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const generateReleaseBody = require('${{ github.workspace }}/.github/scripts/pr-release-body.js');
+
+            const body = generateReleaseBody({
+              version: "${{ needs.version.outputs.version }}",
+              prNumber: "${{ github.event.pull_request.number }}",
+              branch: "${{ github.head_ref }}"
+            });
+
+            return body;
+
+      # 为构建产物创建一个临时发布
+      - name: Create Temporary Release for PR
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: PR Build v${{ needs.version.outputs.version }}
+          tag_name: pr-build-${{ github.event.pull_request.number }}-${{ github.sha }}
+          body: ${{ steps.pr_release_body.outputs.result }}
+          draft: false
+          prerelease: true
+          files: |
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/latest*
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.dmg*
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.zip*
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.exe*
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 在 PR 上添加评论，包含构建信息和下载链接
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const releaseUrl = "${{ steps.create_release.outputs.url }}";
+            const prCommentGenerator = require('${{ github.workspace }}/.github/scripts/pr-comment.js');
+
+            const body = await prCommentGenerator({
+              github,
+              context,
+              releaseUrl,
+              version: "${{ needs.version.outputs.version }}",
+              tag: "pr-build-${{ github.event.pull_request.number }}-${{ github.sha }}"
+            });
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });

@@ -119,6 +119,27 @@
       "when": 1741844738677,
       "tag": "0016_add_message_index",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1742269437903,
+      "tag": "0017_add_user_id_to_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1742616026643,
+      "tag": "0018_add_client_id_for_entities",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1742806552131,
+      "tag": "0019_add_hotkey_user_settings",
+      "breakpoints": true
     }
   ],
   "version": "6"
