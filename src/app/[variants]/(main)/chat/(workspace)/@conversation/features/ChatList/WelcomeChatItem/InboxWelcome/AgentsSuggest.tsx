@@ -88,6 +88,9 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
     setSliceStart(Math.floor((Math.random() * assistantList.length) / 2));
   };
 
+  // if no assistant data, just hide the component
+  if (!isLoading && assistantList?.length === 0) return null;
+
   return (
     <Flexbox gap={8} width={'100%'}>
       <Flexbox align={'center'} horizontal justify={'space-between'}>

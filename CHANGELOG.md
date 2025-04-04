@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.77.11](https://github.com/lobehub/lobe-chat/compare/v1.77.10...v1.77.11)
+
+<sup>Released on **2025-04-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix fetch issue in offline mode and make jina crawler first.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix fetch issue in offline mode and make jina crawler first, closes [#7288](https://github.com/lobehub/lobe-chat/issues/7288) ([6bed7a3](https://github.com/lobehub/lobe-chat/commit/6bed7a3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.77.10](https://github.com/lobehub/lobe-chat/compare/v1.77.9...v1.77.10)
 
 <sup>Released on **2025-04-03**</sup>
