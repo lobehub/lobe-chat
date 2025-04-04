@@ -199,7 +199,7 @@
     "officeparser": "^5.1.1",
     "ollama": "^0.5.14",
     "openai": "^4.91.1",
-    "openapi-fetch": "^0.9.8",
+    "openapi-fetch": "^0.13.0",
     "partial-json": "^0.1.7",
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "4.8.69",
