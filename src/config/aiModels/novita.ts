@@ -9,7 +9,7 @@ const novitaChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'meta-llama/llama-3.3-70b-instruct',
     pricing: {
-      input: 0.39,
+      input: 0.13,
       output: 0.39,
     },
     type: 'chat',
