@@ -26,8 +26,13 @@ export const GET = async (req: Request) => {
 
     return res;
   } catch (e) {
+    // it means failed to fetch
+    if ((e as Error).message.includes('fetch failed')) {
+      return NextResponse.json([]);
+    }
+
     console.error(e);
-    return new Response(`failed to fetch agent market index`, {
+    return new Response(`failed to fetch plugin market index`, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
