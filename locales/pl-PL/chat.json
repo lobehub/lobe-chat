@@ -244,7 +244,8 @@
       "folderUpload": "Prześlij folder",
       "imageDisabled": "Aktualny model nie obsługuje rozpoznawania wizualnego, przełącz się na inny model, aby użyć tej funkcji",
       "imageUpload": "Prześlij obraz",
-      "tooltip": "Prześlij"
+      "tooltip": "Prześlij",
+      "fileDisabled": "Aktualny model nie obsługuje przesyłania plików, przełącz się na inny model, aby użyć tej funkcji"
     },
     "clientMode": {
       "actionFiletip": "Prześlij plik",

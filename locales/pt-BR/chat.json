@@ -244,6 +244,7 @@
       "folderUpload": "Enviar pasta",
       "imageDisabled": "O modelo atual não suporta reconhecimento visual, por favor, mude de modelo antes de usar",
       "imageUpload": "Enviar imagem",
+      "fileDisabled": "O modelo atual não suporta envio de arquivos, por favor, mude de modelo antes de usar",
       "tooltip": "Enviar"
     },
     "clientMode": {

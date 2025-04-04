@@ -244,6 +244,7 @@
       "folderUpload": "Carica cartella",
       "imageDisabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello per utilizzare questa funzione",
       "imageUpload": "Carica immagine",
+      "fileDisabled": "Il modello attuale non supporta il caricamento di file, si prega di cambiare modello per utilizzare questa funzione",
       "tooltip": "Carica"
     },
     "clientMode": {
