@@ -19,6 +19,10 @@ import { ErrorActionContainer } from './style';
 const loading = () => <Skeleton active />;
 
 const OllamaBizError = dynamic(() => import('./OllamaBizError'), { loading, ssr: false });
+const OllamaSetupGuide = dynamic(() => import('./OllamaBizError/SetupGuide'), {
+  loading,
+  ssr: false,
+});
 
 // Config for the errorMessage display
 const getErrorAlertConfig = (
@@ -49,6 +53,7 @@ const getErrorAlertConfig = (
       };
     }
 
+    case AgentRuntimeErrorType.OllamaServiceUnavailable:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return {
         extraDefaultExpand: true,
@@ -85,6 +90,11 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
   if (!error?.type) return;
 
   switch (error.type) {
+    // TODO: 优化 Ollama setup 的流程，isDesktop 模式下可以直接做到端到端检测
+    case AgentRuntimeErrorType.OllamaServiceUnavailable: {
+      return <OllamaSetupGuide />;
+    }
+
     case AgentRuntimeErrorType.OllamaBizError: {
       return <OllamaBizError {...data} />;
     }
