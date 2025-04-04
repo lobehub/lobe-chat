@@ -66,6 +66,14 @@ export class AssistantStore {
 
       return data;
     } catch (e) {
+      // it means failed to fetch
+      if ((e as Error).message.includes('fetch failed')) {
+        return {
+          agents: [],
+          schemaVersion: 1,
+        };
+      }
+
       console.error('[AgentIndexFetchError] failed to fetch agent index, error detail:');
       console.error(e);
 
