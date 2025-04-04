@@ -15,6 +15,10 @@
     "desc": "Anleitung zur Verwendung aller Tastenkombinationen anzeigen",
     "title": "Tastenkombinationshilfe öffnen"
   },
+  "openSettings": {
+    "desc": "Öffnen Sie die Anwendungseinstellungen",
+    "title": "Anwendungseinstellungen"
+  },
   "regenerateMessage": {
     "desc": "Die letzte Nachricht neu generieren",
     "title": "Nachricht neu generieren"

@@ -15,6 +15,10 @@
     "desc": "View instructions for all keyboard shortcuts",
     "title": "Open Hotkey Help"
   },
+  "openSettings": {
+    "desc": "Open the application settings page",
+    "title": "Application Settings"
+  },
   "regenerateMessage": {
     "desc": "Regenerate the last message",
     "title": "Regenerate Message"

@@ -1010,6 +1010,9 @@
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) 提供基本的指令处理能力，适合轻量级应用。"
   },
+  "google/gemma-3-27b-it": {
+    "description": "Gemma 3 27B 是谷歌的一款开源语言模型，以其在效率和性能方面设立了新的标准。"
+  },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125"
   },
@@ -1592,6 +1595,9 @@
   "qvq-72b-preview": {
     "description": "QVQ-72B-Preview 是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力。"
   },
+  "qvq-max-latest": {
+    "description": "通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。"
+  },
   "qwen-coder-plus-latest": {
     "description": "通义千问代码模型。"
   },
@@ -1722,7 +1728,7 @@
     "description": "Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。"
   },
   "qwen2.5-vl-32b-instruct": {
-    "description": "Qwen2.5-VL 系列模型提升了模型的智能水平、实用性和适用性，使其在自然对话、内容创作、专业知识服务及代码开发等场景中表现更优。32B 版本使用了强化学习技术优化模型，与 Qwen2.5 VL 系列的其它模型相比，提供了更符合人类偏好的输出风格、复杂数学问题的推理能力，以及图像细粒度理解与推理能力。"
+    "description": "Qwen2.5VL系列模型，在math和学科问题解答达到了接近Qwen2.5VL-72B的水平，回复风格面向人类偏好进行大幅调整，尤其是数学、逻辑推理、知识问答等客观类query，模型回复详实程度和格式清晰度明显改善。此版本为32B版本。"
   },
   "qwen2.5-vl-72b-instruct": {
     "description": "指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。"

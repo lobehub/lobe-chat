@@ -1010,6 +1010,9 @@
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B), temel talimat işleme yetenekleri sunar ve hafif uygulamalar için uygundur."
   },
+  "google/gemma-3-27b-it": {
+    "description": "Gemma 3 27B, Google'ın verimlilik ve performans açısından yeni standartlar belirleyen açık kaynaklı bir dil modelidir."
+  },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo, çeşitli metin üretimi ve anlama görevleri için uygundur, şu anda gpt-3.5-turbo-0125'e işaret ediyor."
   },
@@ -1591,6 +1594,9 @@
   },
   "qvq-72b-preview": {
     "description": "QVQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir; görsel akıl yürütme yeteneğini artırmaya odaklanır, özellikle matematik akıl yürütme alanında."
+  },
+  "qvq-max-latest": {
+    "description": "Tongyi Qianwen QVQ görsel akıl yürütme modeli, görsel girdi ve düşünce zinciri çıktısını destekler; matematik, programlama, görsel analiz, yaratıcılık ve genel görevlerde daha güçlü yetenekler sergilemektedir."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen kod modeli."

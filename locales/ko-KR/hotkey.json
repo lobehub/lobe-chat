@@ -15,6 +15,10 @@
     "desc": "모든 단축키 사용 설명을 확인합니다.",
     "title": "단축키 도움말 열기"
   },
+  "openSettings": {
+    "desc": "앱 설정 페이지 열기",
+    "title": "앱 설정"
+  },
   "regenerateMessage": {
     "desc": "마지막 메시지를 다시 생성합니다",
     "title": "메시지 다시 생성"

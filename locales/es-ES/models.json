@@ -1010,6 +1010,9 @@
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) ofrece capacidades básicas de procesamiento de instrucciones, adecuado para aplicaciones ligeras."
   },
+  "google/gemma-3-27b-it": {
+    "description": "Gemma 3 27B es un modelo de lenguaje de código abierto de Google, que establece nuevos estándares en eficiencia y rendimiento."
+  },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo, adecuado para diversas tareas de generación y comprensión de texto, actualmente apunta a gpt-3.5-turbo-0125."
   },
@@ -1591,6 +1594,9 @@
   },
   "qvq-72b-preview": {
     "description": "El modelo QVQ es un modelo de investigación experimental desarrollado por el equipo de Qwen, enfocado en mejorar la capacidad de razonamiento visual, especialmente en el ámbito del razonamiento matemático."
+  },
+  "qvq-max-latest": {
+    "description": "El modelo de razonamiento visual QVQ de Tongyi Qianwen admite entradas visuales y salidas de cadena de pensamiento, mostrando una mayor capacidad en matemáticas, programación, análisis visual, creación y tareas generales."
   },
   "qwen-coder-plus-latest": {
     "description": "Modelo de código Qwen de Tongyi."
