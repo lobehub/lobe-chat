@@ -108,7 +108,7 @@
     ]
   },
   "dependencies": {
-    "@ant-design/icons": "^5.6.1",
+    "@ant-design/icons": "^6.0.0",
     "@ant-design/pro-components": "^2.8.7",
     "@anthropic-ai/sdk": "^0.39.0",
     "@auth/core": "^0.38.0",
