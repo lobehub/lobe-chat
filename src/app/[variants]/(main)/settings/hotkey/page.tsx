@@ -3,6 +3,8 @@ import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
+import HotkeySetting from './features/HotkeySetting';
+
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);
   const { t } = await translation('setting', locale);
@@ -12,4 +14,11 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
     url: '/settings/hotkey',
   });
 };
-export { default } from './index';
+
+const Page = () => {
+  return <HotkeySetting />;
+};
+
+Page.displayName = 'HotkeySetting';
+
+export default Page;
