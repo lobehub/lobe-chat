@@ -13,7 +13,8 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/main/*"]
+      "@/*": ["src/main/*"],
+      "~common/*": ["src/common/*"]
     }
   },
   "include": ["src/main/**/*", "src/preload/**/*", "electron-builder.js"]

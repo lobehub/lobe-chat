@@ -10,6 +10,7 @@ export default defineConfig({
     resolve: {
       alias: {
         '@': resolve(__dirname, 'src/main'),
+        '~common': resolve(__dirname, 'src/common'),
       },
     },
   },
@@ -18,5 +19,10 @@ export default defineConfig({
       outDir: 'dist/preload',
     },
     plugins: [externalizeDepsPlugin({})],
+    resolve: {
+      alias: {
+        '~common': resolve(__dirname, 'src/common'),
+      },
+    },
   },
 });

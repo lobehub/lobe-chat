@@ -64,25 +64,47 @@ export default class Browser {
     const initUrl = this.app.nextServerUrl + path;
 
     try {
+      console.log(`[APP] 正在加载 ${initUrl}`);
       await this._browserWindow.loadURL(initUrl);
-      console.log('[APP] Loaded', initUrl);
+      console.log(`[APP] 成功加载 ${initUrl}`);
     } catch (error) {
-      console.error('[APP] Failed to load URL:', error);
+      console.error(`[APP] 加载URL失败 (${initUrl}):`, error);
 
-      // 加载本地错误页面
-      await this._browserWindow.loadFile(join(resourcesDir, 'error.html'));
+      // 尝试加载本地错误页面
+      try {
+        await this._browserWindow.loadFile(join(resourcesDir, 'error.html'));
+        console.log('[APP] 已加载错误页面');
 
-      // 设置简单的重试逻辑
-      ipcMain.on('retry-connection', async () => {
+        // 移除之前可能设置的重试监听器，避免重复添加
+        ipcMain.removeAllListeners('retry-connection');
+
+        // 设置重试逻辑
+        ipcMain.on('retry-connection', async () => {
+          console.log(`[APP] 尝试重新连接 ${initUrl}`);
+          try {
+            await this._browserWindow?.loadURL(initUrl);
+            console.log('[APP] 重新连接成功');
+          } catch (err) {
+            console.error('[APP] 重试失败:', err);
+            // 重新加载错误页面
+            try {
+              await this._browserWindow?.loadFile(join(resourcesDir, 'error.html'));
+            } catch (loadErr) {
+              console.error('[APP] 加载错误页面失败:', loadErr);
+            }
+          }
+        });
+      } catch (err) {
+        console.error('[APP] 加载错误页面失败:', err);
+        // 如果连错误页面都加载不了，我们至少显示一个简单的错误信息
         try {
-          await this._browserWindow?.loadURL(initUrl);
-          console.log('[APP] Reconnected successfully');
-        } catch (err) {
-          console.error('[APP] Retry failed:', err);
-          // 重新加载错误页面，重置状态
-          this._browserWindow?.loadFile(join(resourcesDir, 'error.html'));
+          await this._browserWindow.loadURL(
+            'data:text/html,<html><body><h1>加载失败</h1><p>无法连接到服务器，请重启应用</p></body></html>',
+          );
+        } catch (finalErr) {
+          console.error('[APP] 无法显示任何页面:', finalErr);
         }
-      });
+      }
     }
   };
 
@@ -118,6 +140,7 @@ export default class Browser {
 
     const { path, title, width, height, devTools, showOnInit, ...res } = this.options;
 
+    console.log(`[Browser] 创建新窗口: ${this.identifier}`);
     const browserWindow = new BrowserWindow({
       ...res,
       height,
@@ -161,13 +184,17 @@ export default class Browser {
       if (showOnInit) browserWindow?.show();
     });
 
-    browserWindow.on('close', () => {
-      // the ones who need keepAlive won't be destroyed
-      this.stopInterceptHandler?.();
+    browserWindow.on('close', (e) => {
+      console.log(`[Browser] 窗口关闭事件: ${this.identifier}`);
+
+      // 阻止窗口被销毁，只隐藏它 (若标记为 keepAlive)
       if (this.options.keepAlive) {
-        console.log('need to handle');
-        // e.preventDefault();
-        // browserWindow.hide();
+        console.log(`[Browser] 窗口需要保持活跃状态: ${this.identifier}`);
+        e.preventDefault();
+        browserWindow.hide();
+      } else {
+        // 需要清理拦截处理器
+        this.stopInterceptHandler?.();
       }
     });
 
