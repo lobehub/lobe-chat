@@ -1010,6 +1010,9 @@
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B)는 기본적인 지시 처리 능력을 제공하며, 경량 애플리케이션에 적합합니다."
   },
+  "google/gemma-3-27b-it": {
+    "description": "Gemma 3 27B는 구글의 오픈 소스 언어 모델로, 효율성과 성능 면에서 새로운 기준을 세웠습니다."
+  },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo는 다양한 텍스트 생성 및 이해 작업에 적합하며, 현재 gpt-3.5-turbo-0125를 가리킵니다."
   },
@@ -1591,6 +1594,9 @@
   },
   "qvq-72b-preview": {
     "description": "QVQ 모델은 Qwen 팀이 개발한 실험적 연구 모델로, 시각적 추론 능력 향상에 중점을 두고 있으며, 특히 수학적 추론 분야에서 두드러진 성과를 보입니다."
+  },
+  "qvq-max-latest": {
+    "description": "통의천문 QVQ 비주얼 추론 모델로, 비주얼 입력과 사고 체인 출력을 지원하며, 수학, 프로그래밍, 비주얼 분석, 창작 및 일반 작업에서 더 강력한 능력을 보여줍니다."
   },
   "qwen-coder-plus-latest": {
     "description": "통의 천문 코드 모델입니다."

@@ -2,6 +2,15 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const ollamaChatModels: AIChatModelCard[] = [
   {
+    contextWindowTokens: 65_536,
+    description:
+      'DeepSeek-V3 是一个强大的专家混合（MoE）语言模型，总参数量为 671B，每个 Token 激活 37B 参数。该模型采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，实现了高效推理和经济训练，并在前代 DeepSeek-V3 的基础上显著提升了性能。',
+    displayName: 'DeepSeek V3',
+    enabled: true,
+    id: 'deepseek-v3',
+    type: 'chat',
+  },
+  {
     abilities: {
       reasoning: true,
     },

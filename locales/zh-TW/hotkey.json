@@ -15,6 +15,10 @@
     "desc": "查看所有快捷鍵的使用說明",
     "title": "打開快捷鍵幫助"
   },
+  "openSettings": {
+    "desc": "打開應用設定頁面",
+    "title": "應用設定"
+  },
   "regenerateMessage": {
     "desc": "重新生成最後一條消息",
     "title": "重新生成消息"

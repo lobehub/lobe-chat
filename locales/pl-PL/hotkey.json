@@ -15,6 +15,10 @@
     "desc": "Zobacz wszystkie instrukcje dotyczące skrótów klawiszowych",
     "title": "Otwórz pomoc dotyczącą skrótów klawiszowych"
   },
+  "openSettings": {
+    "desc": "Otwórz stronę ustawień aplikacji",
+    "title": "Ustawienia aplikacji"
+  },
   "regenerateMessage": {
     "desc": "Ponownie wygeneruj ostatnią wiadomość",
     "title": "Ponownie wygeneruj wiadomość"

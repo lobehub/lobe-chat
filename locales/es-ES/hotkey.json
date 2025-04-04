@@ -15,6 +15,10 @@
     "desc": "Ver las instrucciones de uso de todos los atajos de teclado",
     "title": "Abrir ayuda de atajos de teclado"
   },
+  "openSettings": {
+    "desc": "Abrir la página de configuración de la aplicación",
+    "title": "Configuración de la aplicación"
+  },
   "regenerateMessage": {
     "desc": "Regenerar el último mensaje",
     "title": "Regenerar mensaje"
