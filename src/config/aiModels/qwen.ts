@@ -302,7 +302,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。',
     displayName: 'QVQ Max',
-    id: 'qvq-max-latest',
+    id: 'qvq-max', // Unsupported model `qvq-max-latest` for OpenAI compatibility mode
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
