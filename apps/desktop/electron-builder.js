@@ -61,7 +61,6 @@ const config = {
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
   },
-  productName: 'LobeHub',
   publish: {
     provider: 'generic',
     url: 'https://example.com/auto-updates',
