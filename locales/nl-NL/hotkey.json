@@ -15,6 +15,10 @@
     "desc": "Bekijk de gebruiksaanwijzing voor alle sneltoetsen",
     "title": "Open sneltoets hulp"
   },
+  "openSettings": {
+    "desc": "Open de applicatie-instellingenpagina",
+    "title": "Applicatie-instellingen"
+  },
   "regenerateMessage": {
     "desc": "Genereer het laatste bericht opnieuw",
     "title": "Genereer bericht opnieuw"

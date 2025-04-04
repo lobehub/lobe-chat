@@ -15,6 +15,10 @@
     "desc": "Tüm kısayol tuşlarının kullanım talimatlarını görüntüle",
     "title": "Kısayol Yardımını Aç"
   },
+  "openSettings": {
+    "desc": "Uygulama ayarları sayfasını aç",
+    "title": "Uygulama Ayarları"
+  },
   "regenerateMessage": {
     "desc": "Son mesajı yeniden oluştur",
     "title": "Mesajı yeniden oluştur"

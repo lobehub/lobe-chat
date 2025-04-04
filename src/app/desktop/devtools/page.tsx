@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, FluentEmoji, SideNav } from '@lobehub/ui';
+import { ActionIcon, SideNav } from '@lobehub/ui';
 import { Cog, DatabaseIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -33,13 +33,13 @@ const DevTools = memo(() => {
     <Flexbox
       height={'100%'}
       horizontal
-      style={{ overflow: 'hidden', position: 'relative' }}
+      style={{ background: theme.colorBgLayout, overflow: 'hidden', position: 'relative' }}
       width={'100%'}
     >
       <SideNav
-        avatar={<FluentEmoji emoji={'🧰'} size={24} />}
         bottomActions={[]}
         style={{
+          background: 'transparent',
           paddingBlock: 32,
           width: 48,
         }}

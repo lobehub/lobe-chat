@@ -15,6 +15,10 @@
     "desc": "Ver as instruções de uso de todos os atalhos",
     "title": "Abrir ajuda de atalhos"
   },
+  "openSettings": {
+    "desc": "Abra a página de configurações do aplicativo",
+    "title": "Configurações do Aplicativo"
+  },
   "regenerateMessage": {
     "desc": "Regenerar a última mensagem",
     "title": "Regenerar mensagem"

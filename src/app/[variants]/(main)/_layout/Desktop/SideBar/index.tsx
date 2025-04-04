@@ -4,10 +4,12 @@ import { SideNav } from '@lobehub/ui';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 
+import { isDesktop } from '@/const/version';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { electronStylish } from '@/styles/electron';
 
 import Avatar from './Avatar';
 import BottomActions from './BottomActions';
@@ -28,13 +30,30 @@ const Nav = memo(() => {
   return (
     !inZenMode && (
       <SideNav
-        avatar={<Avatar />}
-        bottomActions={<BottomActions />}
-        style={{ height: '100%', zIndex: 100 }}
+        avatar={
+          <div className={electronStylish.nodrag}>
+            <Avatar />
+          </div>
+        }
+        bottomActions={
+          <div className={electronStylish.nodrag}>
+            <BottomActions />
+          </div>
+        }
+        className={electronStylish.draggable}
+        style={{
+          height: '100%',
+          zIndex: 100,
+          ...(isDesktop
+            ? { background: 'transparent', borderInlineEnd: 0, paddingBlockStart: 8 }
+            : {}),
+        }}
         topActions={
           <Suspense>
-            <Top />
-            {showPinList && <PinList />}
+            <div className={electronStylish.nodrag}>
+              <Top />
+              {showPinList && <PinList />}
+            </div>
           </Suspense>
         }
       />

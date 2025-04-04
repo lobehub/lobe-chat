@@ -1010,6 +1010,9 @@
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) cung cấp khả năng xử lý chỉ dẫn cơ bản, phù hợp cho các ứng dụng nhẹ."
   },
+  "google/gemma-3-27b-it": {
+    "description": "Gemma 3 27B là một mô hình ngôn ngữ mã nguồn mở của Google, thiết lập tiêu chuẩn mới về hiệu suất và hiệu quả."
+  },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo, phù hợp cho nhiều nhiệm vụ sinh và hiểu văn bản, hiện tại trỏ đến gpt-3.5-turbo-0125."
   },
@@ -1591,6 +1594,9 @@
   },
   "qvq-72b-preview": {
     "description": "Mô hình QVQ là mô hình nghiên cứu thử nghiệm do đội ngũ Qwen phát triển, tập trung vào việc nâng cao khả năng suy luận hình ảnh, đặc biệt trong lĩnh vực suy luận toán học."
+  },
+  "qvq-max-latest": {
+    "description": "Mô hình suy luận thị giác QVQ của Tongyi Qianwen, hỗ trợ đầu vào thị giác và đầu ra chuỗi tư duy, thể hiện khả năng mạnh mẽ hơn trong toán học, lập trình, phân tích thị giác, sáng tạo và các nhiệm vụ chung."
   },
   "qwen-coder-plus-latest": {
     "description": "Mô hình mã Qwen."

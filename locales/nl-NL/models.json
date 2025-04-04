@@ -1010,6 +1010,9 @@
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) biedt basis instructieverwerkingscapaciteiten, geschikt voor lichte toepassingen."
   },
+  "google/gemma-3-27b-it": {
+    "description": "Gemma 3 27B is een open-source taalmodel van Google dat nieuwe normen heeft gesteld op het gebied van efficiëntie en prestaties."
+  },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
   },
@@ -1591,6 +1594,9 @@
   },
   "qvq-72b-preview": {
     "description": "Het QVQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van visuele redeneervaardigheden, vooral in het domein van wiskundige redenering."
+  },
+  "qvq-max-latest": {
+    "description": "De QVQ visuele redeneermodel van Tongyi Qianwen ondersteunt visuele invoer en output van denkprocessen, en heeft betere prestaties getoond in wiskunde, programmeren, visuele analyse, creatie en algemene taken."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen code model."

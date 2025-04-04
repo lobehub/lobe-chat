@@ -7,10 +7,18 @@ import { useTranslation } from 'react-i18next';
 
 import { HOTKEYS_REGISTRATION } from '@/const/hotkeys';
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { isDesktop } from '@/const/version';
 import hotkeyMeta from '@/locales/default/hotkey';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyGroupEnum, HotkeyItem } from '@/types/hotkey';
+
+const filterByDesktop = (item: HotkeyItem) => {
+  if (isDesktop) return true;
+
+  // is not desktop, filter out desktop only items
+  if (!isDesktop) return !item.isDesktop;
+};
 
 type SettingItemGroup = ItemGroup;
 
@@ -30,6 +38,7 @@ const HotkeySetting = memo(() => {
         return value;
       })
       .filter(Boolean) as string[];
+
     return {
       children: (
         <HotkeyInput
@@ -51,16 +60,16 @@ const HotkeySetting = memo(() => {
   };
 
   const essential: SettingItemGroup = {
-    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Essential).map(
-      (item) => mapHotkeyItem(item),
-    ),
+    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Essential)
+      .filter((item) => filterByDesktop(item))
+      .map((item) => mapHotkeyItem(item)),
     title: t('hotkey.group.essential'),
   };
 
   const conversation: SettingItemGroup = {
-    children: HOTKEYS_REGISTRATION.filter(
-      (item) => item.group === HotkeyGroupEnum.Conversation,
-    ).map((item) => mapHotkeyItem(item)),
+    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Conversation)
+      .filter((item) => filterByDesktop(item))
+      .map((item) => mapHotkeyItem(item)),
     title: t('hotkey.group.conversation'),
   };
 

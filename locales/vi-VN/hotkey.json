@@ -15,6 +15,10 @@
     "desc": "Xem hướng dẫn sử dụng tất cả các phím tắt",
     "title": "Mở trợ giúp phím tắt"
   },
+  "openSettings": {
+    "desc": "Mở trang cài đặt ứng dụng",
+    "title": "Cài đặt ứng dụng"
+  },
   "regenerateMessage": {
     "desc": "Tạo lại tin nhắn cuối cùng",
     "title": "Tạo lại tin nhắn"
