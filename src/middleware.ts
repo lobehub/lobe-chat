@@ -41,14 +41,15 @@ export const config = {
   ],
 };
 
+const apiMatcher = ['/api', '/trpc', '/webapi'].map((i) => `${appEnv.NEXT_PUBLIC_BASE_PATH}${i}`);
+
 const defaultMiddleware = (request: NextRequest) => {
   const url = new URL(request.url);
 
   // skip all api requests
-  if (['/api', '/trpc', '/webapi'].some((path) => url.pathname.startsWith(path))) {
+  if (apiMatcher.some((path) => url.pathname.startsWith(path))) {
     return NextResponse.next();
   }
-
   // 1. 从 cookie 中读取用户偏好
   const theme =
     request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
@@ -81,7 +82,9 @@ const defaultMiddleware = (request: NextRequest) => {
   // new handle segment rewrite: /${route}${originalPathname}
   // / -> /zh-CN__0__dark
   // /discover -> /zh-CN__0__dark/discover
-  const nextPathname = `/${route}` + (url.pathname === '/' ? '' : url.pathname);
+  const realPathname = url.pathname.replace(appEnv.NEXT_PUBLIC_BASE_PATH, '');
+  const nextPathname =
+    `${appEnv.NEXT_PUBLIC_BASE_PATH}/${route}` + (url.pathname === '/' ? '' : realPathname);
   const nextURL = appEnv.MIDDLEWARE_REWRITE_THROUGH_LOCAL
     ? urlJoin(url.origin, nextPathname)
     : nextPathname;

@@ -202,8 +202,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 32_000,
-    description:
-      'hunyuan-TurboS 混元旗舰大模型最新版本，具备更强的思考能力，更优的体验效果。',
+    description: 'hunyuan-TurboS 混元旗舰大模型最新版本，具备更强的思考能力，更优的体验效果。',
     displayName: 'Hunyuan TurboS',
     enabled: true,
     id: 'hunyuan-turbos-latest',
@@ -268,7 +267,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 36_000,
-    description: '混元最新7B多模态模型，上下文窗口32K，支持中英文场景的多模态对话、图像物体识别、文档表格理解、多模态数学等，在多个维度上评测指标优于7B竞品模型。',
+    description:
+      '混元最新7B多模态模型，上下文窗口32K，支持中英文场景的多模态对话、图像物体识别、文档表格理解、多模态数学等，在多个维度上评测指标优于7B竞品模型。',
     displayName: 'Hunyuan Lite Vision',
     enabled: true,
     id: 'hunyuan-lite-vision',
@@ -294,7 +294,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 8000,
-    description: '混元新一代视觉语言旗舰大模型，采用全新的混合专家模型（MoE）结构，在图文理解相关的基础识别、内容创作、知识问答、分析推理等能力上相比前一代模型全面提升。',
+    description:
+      '混元新一代视觉语言旗舰大模型，采用全新的混合专家模型（MoE）结构，在图文理解相关的基础识别、内容创作、知识问答、分析推理等能力上相比前一代模型全面提升。',
     displayName: 'Hunyuan Turbo Vision',
     enabled: true,
     id: 'hunyuan-turbo-vision',
