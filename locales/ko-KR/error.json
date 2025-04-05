@@ -16,6 +16,16 @@
     "detail": "오류 세부정보",
     "title": "요청 실패"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "오류 원인: {{reason}}",
+      "title": "가져오기 실패"
+    },
+    "incompatible": {
+      "description": "이 파일은 더 높은 버전에서 내보낸 것입니다. 최신 버전으로 업그레이드한 후 다시 가져오기를 시도하십시오.",
+      "title": "현재 애플리케이션은 이 파일의 가져오기를 지원하지 않습니다."
+    }
+  },
   "loginRequired": {
     "desc": "곧 로그인 페이지로 자동 이동합니다",
     "title": "이 기능을 사용하려면 로그인해 주세요"

@@ -146,6 +146,9 @@
   "xai": {
     "description": "xAI to firma, która dąży do budowy sztucznej inteligencji w celu przyspieszenia ludzkich odkryć naukowych. Naszą misją jest wspieranie wspólnego zrozumienia wszechświata."
   },
+  "xinference": {
+    "description": "Xorbits Inference (Xinference) to otwarty platforma, która ułatwia uruchamianie i integrację różnych modeli AI. Dzięki Xinference możesz wykonywać wnioskowanie za pomocą dowolnego otwartego modelu LLM, modelu osadzania i modelu wielomodalnego w środowisku chmurowym lub lokalnym, tworząc przy tym potężne aplikacje AI."
+  },
   "zeroone": {
     "description": "01.AI koncentruje się na technologiach sztucznej inteligencji w erze AI 2.0, intensywnie promując innowacje i zastosowania „człowiek + sztuczna inteligencja”, wykorzystując potężne modele i zaawansowane technologie AI w celu zwiększenia wydajności ludzkiej produkcji i realizacji technologicznego wsparcia."
   },

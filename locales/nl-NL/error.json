@@ -16,6 +16,16 @@
     "detail": "Foutdetails",
     "title": "Verzoek mislukt"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Foutmelding: {{reason}}",
+      "title": "Import mislukt"
+    },
+    "incompatible": {
+      "description": "Dit bestand is geëxporteerd vanuit een hogere versie, probeer te upgraden naar de nieuwste versie en importeer opnieuw",
+      "title": "De huidige applicatie ondersteunt het importeren van dit bestand niet"
+    }
+  },
   "loginRequired": {
     "desc": "U wordt binnenkort automatisch doorgestuurd naar de inlogpagina",
     "title": "Log in om deze functie te gebruiken"

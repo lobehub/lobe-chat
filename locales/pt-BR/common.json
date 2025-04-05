@@ -183,7 +183,7 @@
   },
   "fullscreen": "Modo de Tela Cheia",
   "historyRange": "Intervalo de histórico",
-  "import": "Importar configuração",
+  "importData": "Importar dados",
   "importModal": {
     "error": {
       "desc": "Desculpe, ocorreu um erro durante o processo de importação de dados. Por favor, tente importar novamente ou <1>envie um problema</1>, e nós iremos ajudá-lo a resolver o problema o mais rápido possível.",
@@ -205,7 +205,8 @@
       "sessions": "Assistentes",
       "skips": "Ignorados",
       "topics": "Tópicos",
-      "type": "Tipo de dados"
+      "type": "Tipo de dados",
+      "update": "Registro atualizado"
     },
     "title": "Importar dados",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "Tempo restante",
       "speed": "Velocidade de upload"
     }
+  },
+  "importPreview": {
+    "confirmImport": "Confirmar importação",
+    "tables": {
+      "count": "Número de registros",
+      "name": "Nome da tabela"
+    },
+    "title": "Pré-visualização da importação de dados",
+    "totalRecords": "Total de {{count}} registros a serem importados",
+    "totalTables": "{{count}} tabelas"
   },
   "information": "Comunidade e Informações",
   "installPWA": "Instalar aplicativo de navegador",

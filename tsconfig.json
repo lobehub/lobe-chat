@@ -27,20 +27,15 @@
       }
     ]
   },
-  "exclude": ["node_modules", "public/sw.js"],
+  "exclude": ["node_modules", "public/sw.js", "apps/desktop"],
   "include": [
+    "**/*.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
     "next-env.d.ts",
-    "vitest.config.ts",
     "src",
     "tests",
-    "**/*.ts",
-    "**/*.d.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  }
+    "vitest.config.ts"
+  ]
 }

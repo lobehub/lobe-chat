@@ -42,6 +42,17 @@ export default {
     sessionWithName: '会话设置 · {{name}}',
     title: '设置',
   },
+  hotkey: {
+    conflicts: '与现有快捷键冲突',
+    group: {
+      conversation: '会话',
+      essential: '基础',
+    },
+    invalidCombination: '快捷键需要至少包含一个修饰键 (Ctrl, Alt, Shift) 和一个常规键',
+    record: '按下按键以录制快捷键',
+    reset: '重置为默认快捷键',
+    title: '快捷键',
+  },
   llm: {
     aesGcm: '您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密',
     apiKey: {
@@ -337,6 +348,33 @@ export default {
     },
     title: '主题设置',
   },
+  storage: {
+    actions: {
+      export: {
+        button: '导出',
+        exportType: {
+          agent: '导出助手设定',
+          agentWithMessage: '导出助手和消息',
+          all: '导出全局设置和所有助手数据',
+          allAgent: '导出所有助手设定',
+          allAgentWithMessage: '导出所有助手和消息',
+          globalSetting: '导出全局设置',
+        },
+        title: '导出数据',
+      },
+      import: {
+        button: '导入',
+        title: '导入数据',
+      },
+      title: '高级操作',
+    },
+    desc: '当前浏览器中的存储用量',
+    embeddings: {
+      used: '向量存储',
+    },
+    title: '数据存储',
+    used: '存储用量',
+  },
   submitAgentModal: {
     button: '提交助手',
     identifier: 'identifier 助手标识符',
@@ -427,8 +465,10 @@ export default {
     'agent': '默认助手',
     'common': '通用设置',
     'experiment': '实验',
+    'hotkey': '快捷键',
     'llm': '语言模型',
     'provider': 'AI 服务商',
+    'storage': '数据存储',
     'sync': '云端同步',
     'system-agent': '系统助手',
     'tts': '语音服务',

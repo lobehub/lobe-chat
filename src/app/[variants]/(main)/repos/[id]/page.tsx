@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
+import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
 import { serverDB } from '@/database/server';
-import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 import FileManager from '@/features/FileManager';
 import { PagePropsWithId } from '@/types/next';
 

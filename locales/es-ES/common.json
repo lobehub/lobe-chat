@@ -183,7 +183,7 @@
   },
   "fullscreen": "Pantalla completa",
   "historyRange": "Rango de historial",
-  "import": "Importar configuración",
+  "importData": "Importar datos",
   "importModal": {
     "error": {
       "desc": "Lo sentimos mucho, se produjo un error durante el proceso de importación de datos. Inténtalo de nuevo o <1>envía un informe</1>, y te ayudaremos a solucionar el problema lo antes posible.",
@@ -205,7 +205,8 @@
       "sessions": "Asistentes",
       "skips": "Saltos de duplicados",
       "topics": "Temas",
-      "type": "Tipo de datos"
+      "type": "Tipo de datos",
+      "update": "Registro actualizado"
     },
     "title": "Importar datos",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "Tiempo restante",
       "speed": "Velocidad de carga"
     }
+  },
+  "importPreview": {
+    "confirmImport": "Confirmar importación",
+    "tables": {
+      "count": "Número de registros",
+      "name": "Nombre de la tabla"
+    },
+    "title": "Vista previa de la importación de datos",
+    "totalRecords": "Se importarán un total de {{count}} registros",
+    "totalTables": "{{count}} tablas"
   },
   "information": "Comunidad e Información",
   "installPWA": "Instalar la aplicación del navegador",

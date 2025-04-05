@@ -72,6 +72,22 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
+    displayName: 'DeepSeek V3 1226 (Pro)',
+    id: 'Pro/deepseek-ai/DeepSeek-V3-1226', // 将于 2025 年 4 月 30 日废弃
+    pricing: { 
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true
     },
     contextWindowTokens: 32_768,
@@ -505,7 +521,23 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen2.5-VL-32B-Instruct 是通义千问团队推出的多模态大模型，是 Qwen2.5-VL 系列的一部分。该模型不仅精通识别常见物体，还能分析图像中的文本、图表、图标、图形和布局。它可作为视觉智能体，能够推理并动态操控工具，具备使用电脑和手机的能力。此外，这个模型可以精确定位图像中的对象，并为发票、表格等生成结构化输出。相比前代模型 Qwen2-VL，该版本在数学和问题解决能力方面通过强化学习得到了进一步提升，响应风格也更符合人类偏好。',
+    displayName: 'Qwen2.5 VL 32B Instruct',
+    id: 'Qwen/Qwen2.5-VL-32B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      input: 1.89,
+      output: 1.89,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
     description:
       'Qwen2.5-VL 是 Qwen2.5 系列中的视觉语言模型。该模型在多方面有显著提升：具备更强的视觉理解能力，能够识别常见物体、分析文本、图表和布局；作为视觉代理能够推理并动态指导工具使用；支持理解超过 1 小时的长视频并捕捉关键事件；能够通过生成边界框或点准确定位图像中的物体；支持生成结构化输出，尤其适用于发票、表格等扫描数据。',
     displayName: 'Qwen2.5 VL 72B Instruct',

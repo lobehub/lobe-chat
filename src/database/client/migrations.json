@@ -223,7 +223,10 @@
     "hash": "9646161fa041354714f823d726af27247bcd6e60fa3be5698c0d69f337a5700b"
   },
   {
-    "sql": ["DROP TABLE \"user_budgets\";", "\nDROP TABLE \"user_subscriptions\";"],
+    "sql": [
+      "DROP TABLE \"user_budgets\";",
+      "\nDROP TABLE \"user_subscriptions\";"
+    ],
     "bps": true,
     "folderMillis": 1729699958471,
     "hash": "7dad43a2a25d1aec82124a4e53f8d82f8505c3073f23606c1dc5d2a4598eacf9"
@@ -295,7 +298,9 @@
     "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
   },
   {
-    "sql": ["ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1737609172353,
     "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
@@ -383,37 +388,46 @@
   },
   {
     "sql": [
-      "ALTER TABLE \"session_groups\" DROP CONSTRAINT \"session_group_client_id_user_unique\";",
-      "\nALTER TABLE \"sessions\" DROP CONSTRAINT \"sessions_client_id_user_id_unique\";",
-      "\nALTER TABLE \"topics\" DROP CONSTRAINT \"topic_client_id_user_id_unique\";",
-      "\nALTER TABLE \"agents\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"files\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"knowledge_bases\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"message_plugins\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"message_queries\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"message_tts\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"message_translates\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"chunks\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"embeddings\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"unstructured_chunks\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"threads\" ADD COLUMN \"client_id\" text;",
-      "\nCREATE UNIQUE INDEX \"client_id_user_id_unique\" ON \"agents\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"files_client_id_user_id_unique\" ON \"files\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"knowledge_bases_client_id_user_id_unique\" ON \"knowledge_bases\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"message_plugins_client_id_user_id_unique\" ON \"message_plugins\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"message_queries_client_id_user_id_unique\" ON \"message_queries\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"message_tts_client_id_user_id_unique\" ON \"message_tts\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"message_translates_client_id_user_id_unique\" ON \"message_translates\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"chunks_client_id_user_id_unique\" ON \"chunks\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"embeddings_client_id_user_id_unique\" ON \"embeddings\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"unstructured_chunks_client_id_user_id_unique\" ON \"unstructured_chunks\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"session_groups_client_id_user_id_unique\" ON \"session_groups\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"sessions_client_id_user_id_unique\" ON \"sessions\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"threads_client_id_user_id_unique\" ON \"threads\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"topics_client_id_user_id_unique\" ON \"topics\" USING btree (\"client_id\",\"user_id\");"
+      "ALTER TABLE \"session_groups\" DROP CONSTRAINT IF EXISTS \"session_group_client_id_user_unique\";",
+      "\nALTER TABLE \"sessions\" DROP CONSTRAINT IF EXISTS \"sessions_client_id_user_id_unique\";",
+      "\nALTER TABLE \"topics\" DROP CONSTRAINT IF EXISTS \"topic_client_id_user_id_unique\";",
+      "\n\n-- add client_id column\nALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"files\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"knowledge_bases\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"message_plugins\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"message_queries\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"message_tts\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"message_translates\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"chunks\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"embeddings\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"unstructured_chunks\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\n\n-- Create unique index（using IF NOT EXISTS）\nCREATE UNIQUE INDEX IF NOT EXISTS \"client_id_user_id_unique\" ON \"agents\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"files_client_id_user_id_unique\" ON \"files\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"knowledge_bases_client_id_user_id_unique\" ON \"knowledge_bases\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"message_plugins_client_id_user_id_unique\" ON \"message_plugins\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"message_queries_client_id_user_id_unique\" ON \"message_queries\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"message_tts_client_id_user_id_unique\" ON \"message_tts\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"message_translates_client_id_user_id_unique\" ON \"message_translates\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"chunks_client_id_user_id_unique\" ON \"chunks\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"embeddings_client_id_user_id_unique\" ON \"embeddings\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"unstructured_chunks_client_id_user_id_unique\" ON \"unstructured_chunks\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"session_groups_client_id_user_id_unique\" ON \"session_groups\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"sessions_client_id_user_id_unique\" ON \"sessions\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"threads_client_id_user_id_unique\" ON \"threads\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"topics_client_id_user_id_unique\" ON \"topics\" USING btree (\"client_id\",\"user_id\");\n"
     ],
     "bps": true,
     "folderMillis": 1742616026643,
-    "hash": "f885f1b1467b6564498f0d54ac2366c2d596f59bdd63a0feb63810c2ba346ae5"
+    "hash": "110a49a1a7c42ded9a9613edb8dc15fee0b4b3dd8061f871b7b42241f29987b5"
+  },
+  {
+    "sql": [
+      "-- Add hotkey column to user_settings table\nALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"hotkey\" jsonb;",
+      "\n"
+    ],
+    "bps": true,
+    "folderMillis": 1742806552131,
+    "hash": "d9032edf59f717e0e71da5a95b3545ec251c311155cafe14df01a12800a9eae0"
   }
 ]

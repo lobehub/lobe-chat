@@ -1,6 +1,131 @@
 [
   {
     "children": {
+      "fixes": ["Fix fetch issue in offline mode and make jina crawler first."]
+    },
+    "date": "2025-04-04",
+    "version": "1.77.11"
+  },
+  {
+    "children": {},
+    "date": "2025-04-03",
+    "version": "1.77.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add QVQ-Max model."]
+    },
+    "date": "2025-04-03",
+    "version": "1.77.9"
+  },
+  {
+    "children": {
+      "fixes": ["Add SEARCH1API_CRAWL_API_KEY env."],
+      "improvements": ["Auto refresh TokenTag count."]
+    },
+    "date": "2025-04-03",
+    "version": "1.77.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add desktop-release workflow and improve code."]
+    },
+    "date": "2025-04-03",
+    "version": "1.77.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the db to context inject mode."]
+    },
+    "date": "2025-04-01",
+    "version": "1.77.6"
+  },
+  {
+    "children": {},
+    "date": "2025-04-01",
+    "version": "1.77.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update branding."]
+    },
+    "date": "2025-03-31",
+    "version": "1.77.4"
+  },
+  {
+    "children": {
+      "improvements": ["Move general db models to database folder."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix decrypt error with imported pg data."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix export button and clean orphan agent."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.1"
+  },
+  {
+    "children": {
+      "features": ["Support pglite and postgres data export."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.0"
+  },
+  {
+    "children": {
+      "improvements": ["Supports OpenAI's latest voice model gpt-4o-mini-tts."]
+    },
+    "date": "2025-03-29",
+    "version": "1.76.1"
+  },
+  {
+    "children": {
+      "features": ["Add Hotkey Settings."]
+    },
+    "date": "2025-03-28",
+    "version": "1.76.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add tencentcloud deepseek-v3-0324, support for parsing imageOutput, update models for siliconcloud & infiniai."
+      ]
+    },
+    "date": "2025-03-28",
+    "version": "1.75.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update models info."]
+    },
+    "date": "2025-03-27",
+    "version": "1.75.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix anthropic import issue."]
+    },
+    "date": "2025-03-26",
+    "version": "1.75.3"
+  },
+  {
+    "children": {
+      "fixes": ["Update 'gemini-2.5-pro-exp-03-25' maxOutput and contextWindowTokens."]
+    },
+    "date": "2025-03-26",
+    "version": "1.75.2"
+  },
+  {
+    "children": {
       "improvements": ["Update siliconcloud models."]
     },
     "date": "2025-03-26",
