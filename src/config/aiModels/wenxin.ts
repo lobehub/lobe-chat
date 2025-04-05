@@ -3,7 +3,7 @@ import { AIChatModelCard } from '@/types/aiModel';
 const wenxinChatModels: AIChatModelCard[] = [
   {
     abilities: {
-      resoning: true,
+      reasoning: true,
     },
     contextWindowTokens: 32_768,
     description:
