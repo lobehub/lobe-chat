@@ -7,20 +7,20 @@ const interceptRoute = async (
   source: 'link-click' | 'push-state' | 'replace-state',
   url: string,
 ) => {
-  console.log(`[preload] 拦截到 ${source} 并阻止默认行为:`, path);
+  console.log(`[preload] Intercepted ${source} and prevented default behavior:`, path);
 
   // 使用electron-client-ipc的dispatch方法
   try {
     await invoke('interceptRoute', { path, source, url });
   } catch (e) {
-    console.error(`[preload] 路由拦截(${source})调用失败`, e);
+    console.error(`[preload] Route interception (${source}) call failed`, e);
   }
 };
 /**
  * 路由拦截器 - 负责捕获和拦截客户端路由导航
  */
 export const setupRouteInterceptors = function () {
-  console.log('[preload] 设置路由拦截器');
+  console.log('[preload] Setting up route interceptors');
 
   // 存储被阻止的路径，避免pushState重复触发
   const preventedPaths = new Set<string>();
@@ -48,7 +48,7 @@ export const setupRouteInterceptors = function () {
             return false;
           }
         } catch (err) {
-          console.error('[preload] 链接拦截错误:', err);
+          console.error('[preload] Link interception error:', err);
         }
       }
     },
@@ -82,7 +82,7 @@ export const setupRouteInterceptors = function () {
           return;
         }
       } catch (err) {
-        console.error('[preload] pushState拦截错误:', err);
+        console.error('[preload] pushState interception error:', err);
       }
     }
     return Reflect.apply(originalPushState, this, arguments);
@@ -109,7 +109,7 @@ export const setupRouteInterceptors = function () {
           return;
         }
       } catch (err) {
-        console.error('[preload] replaceState拦截错误:', err);
+        console.error('[preload] replaceState interception error:', err);
       }
     }
     return Reflect.apply(originalReplaceState, this, arguments);
@@ -120,12 +120,12 @@ export const setupRouteInterceptors = function () {
     'error',
     function (e) {
       if (e.message && e.message.includes('navigation') && preventedPaths.size > 0) {
-        console.log('[preload] 捕获到可能的路由错误，阻止默认行为');
+        console.log('[preload] Captured possible routing error, preventing default behavior');
         e.preventDefault();
       }
     },
     true,
   );
 
-  console.log('[preload] 路由拦截器设置完成');
+  console.log('[preload] Route interceptors setup completed');
 };

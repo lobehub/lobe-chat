@@ -64,11 +64,11 @@ export default class Browser {
     const initUrl = this.app.nextServerUrl + path;
 
     try {
-      console.log(`[APP] 正在加载 ${initUrl}`);
+      console.log(`[Browser] loading ${initUrl}`);
       await this._browserWindow.loadURL(initUrl);
-      console.log(`[APP] 成功加载 ${initUrl}`);
+      console.log(`[Browser] loaded ${initUrl}`);
     } catch (error) {
-      console.error(`[APP] 加载URL失败 (${initUrl}):`, error);
+      console.error(`[Browser] failed to load (${initUrl}):`, error);
 
       // 尝试加载本地错误页面
       try {
@@ -140,7 +140,7 @@ export default class Browser {
 
     const { path, title, width, height, devTools, showOnInit, ...res } = this.options;
 
-    console.log(`[Browser] 创建新窗口: ${this.identifier}`);
+    console.log(`[Browser] create new Browser instance: ${this.identifier}`);
     const browserWindow = new BrowserWindow({
       ...res,
       height,

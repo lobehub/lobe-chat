@@ -92,7 +92,7 @@ export default class BrowserManager {
    */
   initializeBrowsers() {
     Object.values(appBrowsers).forEach((browser) => {
-      console.log('initialize browser:', browser.identifier);
+      console.log('[BrowserManager] initialize browser:', browser.identifier);
       this.retrieveOrInitialize(browser);
     });
   }
