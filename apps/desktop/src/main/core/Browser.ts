@@ -207,4 +207,16 @@ export default class Browser {
 
     return browserWindow;
   }
+
+  moveToCenter() {
+    this._browserWindow?.center();
+  }
+
+  setWindowSize(boundSize: { height?: number; width?: number }) {
+    const windowSize = this._browserWindow.getBounds();
+    this._browserWindow?.setBounds({
+      height: boundSize.height || windowSize.height,
+      width: boundSize.width || windowSize.width,
+    });
+  }
 }

@@ -22,6 +22,8 @@ export default class BrowserManager {
     const window = this.retrieveByIdentifier('settings');
 
     window.show();
+
+    return window;
   }
 
   /**
@@ -31,9 +33,17 @@ export default class BrowserManager {
   async showSettingsWindowWithTab(tab?: string) {
     // common 是 settings 路由的主路径
     if (tab && tab !== 'common') {
-      await this.redirectToPage('settings', tab);
+      const browser = await this.redirectToPage('settings', tab);
+
+      // make provider page more large
+      if (tab.startsWith('provider/')) {
+        browser.setWindowSize({ height: 1000, width: 1400 });
+        browser.moveToCenter();
+      }
+
+      return browser;
     } else {
-      this.showSettingsWindow();
+      return this.showSettingsWindow();
     }
   }
 
@@ -46,6 +56,7 @@ export default class BrowserManager {
     try {
       // 确保获取或创建窗口
       const browser = this.retrieveByIdentifier(identifier);
+      browser.hide();
 
       const baseRoute = appBrowsers[identifier].path;
 
