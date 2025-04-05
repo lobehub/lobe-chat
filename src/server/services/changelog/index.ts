@@ -55,9 +55,13 @@ export class ChangelogService {
         next: { revalidate: 3600, tags: [FetchCacheTag.Changelog] },
       });
 
-      const data = await res.json();
+      if (res.ok) {
+        const data = await res.json();
 
-      return this.mergeChangelogs(data.cloud, data.community).slice(0, 5);
+        return this.mergeChangelogs(data.cloud, data.community).slice(0, 5);
+      }
+
+      return [];
     } catch (e) {
       const cause = (e as Error).cause as { code: string };
       if (cause?.code.includes('ETIMEDOUT')) {
