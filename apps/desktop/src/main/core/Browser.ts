@@ -24,30 +24,30 @@ export default class Browser {
   private app: App;
 
   /**
-   * 内部的 electron 窗口
+   * Internal electron window
    */
   private _browserWindow?: BrowserWindow;
 
   private stopInterceptHandler;
   /**
-   * 标识符
+   * Identifier
    */
   identifier: string;
 
   /**
-   * 生成时的选项
+   * Options at creation
    */
   options: BrowserWindowOpts;
 
   /**
-   * 对外暴露的获取窗口的方法
+   * Method to expose window externally
    */
   get browserWindow() {
     return this.retrieveOrInitialize();
   }
 
   /**
-   * 构建 BrowserWindows 对象的方法
+   * Method to construct BrowserWindows object
    * @param options
    * @param application
    */
@@ -56,7 +56,7 @@ export default class Browser {
     this.identifier = options.identifier;
     this.options = options;
 
-    // 初始化
+    // Initialization
     this.retrieveOrInitialize();
   }
 
@@ -70,46 +70,46 @@ export default class Browser {
     } catch (error) {
       console.error(`[Browser] failed to load (${initUrl}):`, error);
 
-      // 尝试加载本地错误页面
+      // Try to load local error page
       try {
         await this._browserWindow.loadFile(join(resourcesDir, 'error.html'));
-        console.log('[APP] 已加载错误页面');
+        console.log('[APP] Error page loaded');
 
-        // 移除之前可能设置的重试监听器，避免重复添加
+        // Remove previously set retry listeners to avoid duplicates
         ipcMain.removeAllListeners('retry-connection');
 
-        // 设置重试逻辑
+        // Set retry logic
         ipcMain.on('retry-connection', async () => {
-          console.log(`[APP] 尝试重新连接 ${initUrl}`);
+          console.log(`[APP] Attempting to reconnect ${initUrl}`);
           try {
             await this._browserWindow?.loadURL(initUrl);
-            console.log('[APP] 重新连接成功');
+            console.log('[APP] Reconnection successful');
           } catch (err) {
-            console.error('[APP] 重试失败:', err);
-            // 重新加载错误页面
+            console.error('[APP] Retry failed:', err);
+            // Reload error page
             try {
               await this._browserWindow?.loadFile(join(resourcesDir, 'error.html'));
             } catch (loadErr) {
-              console.error('[APP] 加载错误页面失败:', loadErr);
+              console.error('[APP] Failed to load error page:', loadErr);
             }
           }
         });
       } catch (err) {
-        console.error('[APP] 加载错误页面失败:', err);
-        // 如果连错误页面都加载不了，我们至少显示一个简单的错误信息
+        console.error('[APP] Failed to load error page:', err);
+        // If even the error page can't be loaded, at least show a simple error message
         try {
           await this._browserWindow.loadURL(
-            'data:text/html,<html><body><h1>加载失败</h1><p>无法连接到服务器，请重启应用</p></body></html>',
+            'data:text/html,<html><body><h1>Loading Failed</h1><p>Unable to connect to server, please restart the application</p></body></html>',
           );
         } catch (finalErr) {
-          console.error('[APP] 无法显示任何页面:', finalErr);
+          console.error('[APP] Unable to display any page:', finalErr);
         }
       }
     }
   };
 
   loadPlaceholder = async () => {
-    // 首先加载一个本地的HTML加载页面
+    // First load a local HTML loading page
     await this._browserWindow.loadFile(join(resourcesDir, 'splash.html'));
   };
 
@@ -122,7 +122,7 @@ export default class Browser {
   }
 
   /**
-   * 销毁实例
+   * Destroy instance
    */
   destroy() {
     this.stopInterceptHandler?.();
@@ -130,10 +130,10 @@ export default class Browser {
   }
 
   /**
-   * 初始化
+   * Initialize
    */
   retrieveOrInitialize() {
-    // 当有这个窗口 且这个窗口没有被注销时
+    // When there is this window and it has not been destroyed
     if (this._browserWindow && !this._browserWindow.isDestroyed()) {
       return this._browserWindow;
     }
@@ -148,7 +148,7 @@ export default class Browser {
       title,
       transparent: true,
       webPreferences: {
-        // 上下文隔离环境
+        // Context isolation environment
         // https://www.electronjs.org/docs/tutorial/context-isolation
         contextIsolation: true,
         preload: join(preloadDir, 'index.js'),
@@ -164,7 +164,7 @@ export default class Browser {
       session: browserWindow.webContents.session,
     });
 
-    // Windows 11 可以使用这个新 API
+    // Windows 11 can use this new API
     if (process.platform === 'win32' && browserWindow.setBackgroundMaterial) {
       browserWindow.setBackgroundMaterial('acrylic');
     }
@@ -175,7 +175,7 @@ export default class Browser {
       });
     });
 
-    // 显示 devtools 就打开
+    // Show devtools if enabled
     if (devTools) {
       browserWindow.webContents.openDevTools();
     }
@@ -185,22 +185,22 @@ export default class Browser {
     });
 
     browserWindow.on('close', (e) => {
-      console.log(`[Browser] 窗口关闭事件: ${this.identifier}`);
+      console.log(`[Browser] Window close event: ${this.identifier}`);
 
-      // 如果是应用退出过程中，允许窗口被关闭
+      // If in application quitting process, allow window to be closed
       if (global.isAppQuitting) {
-        // 需要清理拦截处理器
+        // Need to clean up intercept handler
         this.stopInterceptHandler?.();
         return;
       }
 
-      // 阻止窗口被销毁，只隐藏它 (若标记为 keepAlive)
+      // Prevent window from being destroyed, just hide it (if marked as keepAlive)
       if (this.options.keepAlive) {
-        console.log(`[Browser] 窗口需要保持活跃状态: ${this.identifier}`);
+        console.log(`[Browser] Window needs to remain active: ${this.identifier}`);
         e.preventDefault();
         browserWindow.hide();
       } else {
-        // 需要清理拦截处理器
+        // Need to clean up intercept handler
         this.stopInterceptHandler?.();
       }
     });

@@ -27,11 +27,11 @@ export default class BrowserManager {
   }
 
   /**
-   * 显示设置窗口并导航到特定tab
-   * @param tab 设置窗口的子路径tab
+   * Display the settings window and navigate to a specific tab
+   * @param tab Settings window sub-path tab
    */
   async showSettingsWindowWithTab(tab?: string) {
-    // common 是 settings 路由的主路径
+    // common is the main path for settings route
     if (tab && tab !== 'common') {
       const browser = await this.redirectToPage('settings', tab);
 
@@ -48,30 +48,30 @@ export default class BrowserManager {
   }
 
   /**
-   * 将窗口导航到特定子路径
-   * @param identifier 窗口标识符
-   * @param subPath 子路径，如 'agent', 'about' 等
+   * Navigate window to specific sub-path
+   * @param identifier Window identifier
+   * @param subPath Sub-path, such as 'agent', 'about', etc.
    */
   async redirectToPage(identifier: AppBrowsersIdentifiers, subPath?: string) {
     try {
-      // 确保获取或创建窗口
+      // Ensure window is retrieved or created
       const browser = this.retrieveByIdentifier(identifier);
       browser.hide();
 
       const baseRoute = appBrowsers[identifier].path;
 
-      // 构建完整的URL路径
+      // Build complete URL path
       const fullPath = subPath ? `${baseRoute}/${subPath}` : baseRoute;
 
-      console.log(`[BrowserManager] 重定向到: ${fullPath}`);
+      console.log(`[BrowserManager] Redirecting to: ${fullPath}`);
 
-      // 加载URL并显示窗口
+      // Load URL and show window
       await browser.loadUrl(fullPath);
       browser.show();
 
       return browser;
     } catch (error) {
-      console.error(`[BrowserManager] redirectToTab 失败 (${identifier}/${subPath}):`, error);
+      console.error(`[BrowserManager] Failed to redirect (${identifier}/${subPath}):`, error);
       throw error;
     }
   }
@@ -100,7 +100,7 @@ export default class BrowserManager {
   // helper
 
   /**
-   * 启动或初始化
+   * Retrieve or initialize
    * @param options
    */
   private retrieveOrInitialize(options: BrowserWindowOpts) {
