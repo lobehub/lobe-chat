@@ -19,8 +19,28 @@
       "placeholder": "Từ khóa",
       "tooltip": "Sẽ lấy lại kết quả tìm kiếm và tạo một tin nhắn tóm tắt mới"
     },
-    "searchEngine": "Công cụ tìm kiếm:",
+    "searchCategory": {
+      "placeholder": "Tìm kiếm danh mục",
+      "title": "Danh mục tìm kiếm:",
+      "value": {
+        "files": "Tài liệu",
+        "general": "Chung",
+        "images": "Hình ảnh",
+        "it": "Công nghệ thông tin",
+        "map": "Bản đồ",
+        "music": "Âm nhạc",
+        "news": "Tin tức",
+        "science": "Khoa học",
+        "social_media": "Mạng xã hội",
+        "videos": "Video"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Công cụ tìm kiếm",
+      "title": "Công cụ tìm kiếm:"
+    },
     "searchResult": "Số lượng tìm kiếm:",
+    "searchTimeRange": "Khoảng thời gian:",
     "summary": "Tóm tắt",
     "summaryTooltip": "Tóm tắt nội dung hiện tại",
     "viewMoreResults": "Xem thêm {{results}} kết quả"

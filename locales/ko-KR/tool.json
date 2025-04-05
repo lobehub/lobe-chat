@@ -19,8 +19,28 @@
       "placeholder": "키워드",
       "tooltip": "검색 결과를 다시 가져오고 새로운 요약 메시지를 생성합니다."
     },
-    "searchEngine": "검색 엔진：",
+    "searchCategory": {
+      "placeholder": "카테고리 검색",
+      "title": "카테고리 검색：",
+      "value": {
+        "files": "파일",
+        "general": "일반",
+        "images": "이미지",
+        "it": "정보 기술",
+        "map": "지도",
+        "music": "음악",
+        "news": "뉴스",
+        "science": "과학",
+        "social_media": "소셜 미디어",
+        "videos": "비디오"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "검색 엔진",
+      "title": "검색 엔진："
+    },
     "searchResult": "검색 수：",
+    "searchTimeRange": "시간 범위:",
     "summary": "요약",
     "summaryTooltip": "현재 내용 요약",
     "viewMoreResults": "{{results}}개의 결과 더 보기"

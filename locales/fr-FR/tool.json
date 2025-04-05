@@ -19,8 +19,28 @@
       "placeholder": "Mots-clés",
       "tooltip": "Cela va récupérer à nouveau les résultats de recherche et créer un nouveau message de résumé"
     },
-    "searchEngine": "Moteur de recherche :",
+    "searchCategory": {
+      "placeholder": "Catégorie de recherche",
+      "title": "Catégorie de recherche :",
+      "value": {
+        "files": "Fichiers",
+        "general": "Général",
+        "images": "Images",
+        "it": "Technologies de l'information",
+        "map": "Cartes",
+        "music": "Musique",
+        "news": "Actualités",
+        "science": "Science",
+        "social_media": "Médias sociaux",
+        "videos": "Vidéos"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Moteur de recherche",
+      "title": "Moteur de recherche :"
+    },
     "searchResult": "Nombre de recherches :",
+    "searchTimeRange": "Plage horaire :",
     "summary": "Résumé",
     "summaryTooltip": "Résumer le contenu actuel",
     "viewMoreResults": "Voir {{results}} résultats supplémentaires"
