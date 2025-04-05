@@ -79,11 +79,12 @@ export default class Browser {
         ipcMain.removeAllListeners('retry-connection');
 
         // Set retry logic
-        ipcMain.on('retry-connection', async () => {
+        ipcMain.handle('retry-connection', async () => {
           console.log(`[APP] Attempting to reconnect ${initUrl}`);
           try {
             await this._browserWindow?.loadURL(initUrl);
             console.log('[APP] Reconnection successful');
+            return { success: true };
           } catch (err) {
             console.error('[APP] Retry failed:', err);
             // Reload error page
@@ -92,6 +93,7 @@ export default class Browser {
             } catch (loadErr) {
               console.error('[APP] Failed to load error page:', loadErr);
             }
+            return { error: err.message, success: false };
           }
         });
       } catch (err) {
