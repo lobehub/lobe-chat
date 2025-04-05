@@ -39,6 +39,13 @@ export const setupRouteInterceptors = function () {
 
           // 如果是需要拦截的路径，立即阻止默认行为
           if (matchedRoute) {
+            // 检查当前页面是否已经在目标路径下，如果是则不拦截
+            const currentPath = window.location.pathname;
+            const isAlreadyInTargetPage = currentPath.startsWith(matchedRoute.pathPrefix);
+
+            // 如果已经在目标页面下，则不拦截，让默认导航继续
+            if (isAlreadyInTargetPage) return;
+
             // 立即阻止默认行为，避免Next.js接管路由
             e.preventDefault();
             e.stopPropagation();
@@ -72,6 +79,18 @@ export const setupRouteInterceptors = function () {
 
         // 检查是否需要拦截这个导航
         if (matchedRoute) {
+          // 检查当前页面是否已经在目标路径下，如果是则不拦截
+          const currentPath = window.location.pathname;
+          const isAlreadyInTargetPage = currentPath.startsWith(matchedRoute.pathPrefix);
+
+          // 如果已经在目标页面下，则不拦截，让默认导航继续
+          if (isAlreadyInTargetPage) {
+            console.log(
+              `[preload] Skip pushState interception for ${parsedUrl.pathname} because already in target page ${matchedRoute.pathPrefix}`,
+            );
+            return Reflect.apply(originalPushState, this, arguments);
+          }
+
           // 将此路径添加到已阻止集合中
           preventedPaths.add(parsedUrl.pathname);
 
@@ -100,6 +119,18 @@ export const setupRouteInterceptors = function () {
 
         // 检查是否需要拦截这个导航
         if (matchedRoute) {
+          // 检查当前页面是否已经在目标路径下，如果是则不拦截
+          const currentPath = window.location.pathname;
+          const isAlreadyInTargetPage = currentPath.startsWith(matchedRoute.pathPrefix);
+
+          // 如果已经在目标页面下，则不拦截，让默认导航继续
+          if (isAlreadyInTargetPage) {
+            console.log(
+              `[preload] Skip replaceState interception for ${parsedUrl.pathname} because already in target page ${matchedRoute.pathPrefix}`,
+            );
+            return Reflect.apply(originalReplaceState, this, arguments);
+          }
+
           // 添加到已阻止集合
           preventedPaths.add(parsedUrl.pathname);
 
