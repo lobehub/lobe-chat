@@ -1,11 +1,9 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
 const wenxinChatModels: AIChatModelCard[] = [
-  /*
   {
     abilities: {
-      resoning: true,
-      search: true,
+      reasoning: true,
     },
     contextWindowTokens: 32_768,
     description:
@@ -19,12 +17,8 @@ const wenxinChatModels: AIChatModelCard[] = [
       output: 8,
     },
     releasedAt: '2025-03-16',
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
-  */
   {
     abilities: {
       search: true,
