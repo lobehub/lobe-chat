@@ -58,6 +58,17 @@ export class WindowsMenu extends BaseMenuPlatform implements IMenuPlatform {
             label: t('file.preferences'),
           },
           { type: 'separator' },
+          {
+            accelerator: 'Alt+F4',
+            label: t('window.close'),
+            role: 'close',
+          },
+          {
+            accelerator: 'Ctrl+M',
+            label: t('window.minimize'),
+            role: 'minimize',
+          },
+          { type: 'separator' },
           { label: t('file.quit'), role: 'quit' },
         ],
       },

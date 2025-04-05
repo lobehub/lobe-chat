@@ -1,5 +1,11 @@
 import type { BrowserWindowOpts } from './core/Browser';
 
+export const BrowsersIdentifiers = {
+  chat: 'chat',
+  devtools: 'devtools',
+  settings: 'settings',
+};
+
 export const appBrowsers = {
   chat: {
     autoHideMenuBar: true,
@@ -29,6 +35,7 @@ export const appBrowsers = {
     autoHideMenuBar: true,
     height: 800,
     identifier: 'settings',
+    keepAlive: true,
     minWidth: 600,
     path: '/settings',
     titleBarStyle: 'hidden',

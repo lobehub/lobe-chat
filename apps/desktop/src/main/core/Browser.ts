@@ -187,6 +187,13 @@ export default class Browser {
     browserWindow.on('close', (e) => {
       console.log(`[Browser] 窗口关闭事件: ${this.identifier}`);
 
+      // 如果是应用退出过程中，允许窗口被关闭
+      if (global.isAppQuitting) {
+        // 需要清理拦截处理器
+        this.stopInterceptHandler?.();
+        return;
+      }
+
       // 阻止窗口被销毁，只隐藏它 (若标记为 keepAlive)
       if (this.options.keepAlive) {
         console.log(`[Browser] 窗口需要保持活跃状态: ${this.identifier}`);

@@ -1,8 +1,8 @@
 import { InterceptRouteParams } from '@lobechat/electron-client-ipc';
+import { extractSubPath, findMatchingRoute } from '~common/routes';
 
-import { AppBrowsersIdentifiers } from '@/appBrowsers';
+import { AppBrowsersIdentifiers, BrowsersIdentifiers } from '@/appBrowsers';
 
-import { findMatchingRoute } from '../../common/routes';
 import { ControllerModule, ipcClientEvent } from './index';
 
 /**
@@ -30,47 +30,46 @@ export default class RouteInterceptCtr extends ControllerModule {
 
     console.log(`[RouteInterceptCtr] 拦截到路由: ${path}，目标窗口: ${matchedRoute.targetWindow}`);
 
-    // try {
-    //   // 提取子路径
-    //   const subPath = extractSubPath(path, matchedRoute.pathPrefix);
-    //
-    //   // 打开对应的窗口
-    //   await this.openTargetWindow(matchedRoute.targetWindow as AppBrowsersIdentifiers, subPath);
-    //
-    //   return {
-    //     intercepted: true,
-    //     path,
-    //     source,
-    //     subPath,
-    //     targetWindow: matchedRoute.targetWindow,
-    //   };
-    // } catch (error) {
-    //   console.error('[RouteInterceptCtr] 处理路由拦截时出错:', error);
-    //   return {
-    //     error: error.message,
-    //     intercepted: false,
-    //     path,
-    //     source,
-    //   };
-    // }
+    try {
+      if (matchedRoute.targetWindow === BrowsersIdentifiers.settings) {
+        const subPath = extractSubPath(path, matchedRoute.pathPrefix);
+
+        await this.app.browserManager.showSettingsWindowWithTab(subPath);
+
+        return {
+          intercepted: true,
+          path,
+          source,
+          subPath,
+          targetWindow: matchedRoute.targetWindow,
+        };
+      } else {
+        await this.openTargetWindow(matchedRoute.targetWindow as AppBrowsersIdentifiers);
+
+        return {
+          intercepted: true,
+          path,
+          source,
+          targetWindow: matchedRoute.targetWindow,
+        };
+      }
+    } catch (error) {
+      console.error('[RouteInterceptCtr] 处理路由拦截时出错:', error);
+      return {
+        error: error.message,
+        intercepted: false,
+        path,
+        source,
+      };
+    }
   }
 
   /**
    * 打开目标窗口并导航到指定子路径
    */
-  private async openTargetWindow(targetWindow: AppBrowsersIdentifiers, subPath?: string) {
-    // 使用 redirectToTab 方法，它会确保窗口存在或创建它
-    try {
-      if (subPath) {
-        this.app.browserManager.redirectToTab(targetWindow, subPath);
-      } else {
-        // 这里确保窗口始终能被创建或重新打开
-        const browser = this.app.browserManager.retrieveByIdentifier(targetWindow);
-        browser.show();
-      }
-    } catch (error) {
-      console.error(`[RouteInterceptCtr] 打开窗口 ${targetWindow} 失败:`, error);
-      throw new Error(`无法打开窗口: ${error.message}`);
-    }
+  private async openTargetWindow(targetWindow: AppBrowsersIdentifiers) {
+    // 这里确保窗口始终能被创建或重新打开
+    const browser = this.app.browserManager.retrieveByIdentifier(targetWindow);
+    browser.show();
   }
 }

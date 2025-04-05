@@ -20,7 +20,7 @@ export default class BrowserWindowsCtr extends ControllerModule {
     try {
       // 使用redirectToTab打开设置窗口
       if (tab) {
-        this.app.browserManager.redirectToTab('settings', tab);
+        this.app.browserManager.redirectToPage('settings', tab);
       } else {
         const browser = this.app.browserManager.retrieveByIdentifier('settings');
         browser.show();

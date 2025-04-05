@@ -109,6 +109,16 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
         ],
       },
       {
+        label: t('file.title'),
+        submenu: [
+          {
+            accelerator: 'Command+W',
+            label: t('window.close'),
+            role: 'close',
+          },
+        ],
+      },
+      {
         label: t('edit.title'),
         submenu: [
           { accelerator: 'Command+Z', label: t('edit.undo'), role: 'undo' },

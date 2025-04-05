@@ -14,6 +14,18 @@ import { initIPCServer } from './IPCServer';
 import { IoCContainer } from './IoCContainer';
 import MenuManager from './MenuManager';
 
+declare global {
+  // eslint-disable-next-line no-var
+  var isAppQuitting: boolean;
+
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface Global {
+      isAppQuitting: boolean;
+    }
+  }
+}
+
 export type IPCClientEventMap = Map<string, { controller: any; methodName: string }>;
 type Class<T> = new (...args: any[]) => T;
 
@@ -81,6 +93,14 @@ export class App {
     await app.whenReady();
 
     this.browserManager.initializeBrowsers();
+
+    // 添加全局应用退出状态
+    global.isAppQuitting = false;
+
+    // 监听 before-quit 事件，设置退出标志
+    app.on('before-quit', () => {
+      global.isAppQuitting = true;
+    });
 
     app.on('window-all-closed', () => {
       if (windows()) {
