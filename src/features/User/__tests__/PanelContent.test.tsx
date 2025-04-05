@@ -63,6 +63,7 @@ vi.mock('../DataStatistics', () => ({
 
 vi.mock('@/const/version', () => ({
   isDeprecatedEdition: false,
+  isDesktop: false,
 }));
 
 // 定义一个变量来存储 enableAuth 的值

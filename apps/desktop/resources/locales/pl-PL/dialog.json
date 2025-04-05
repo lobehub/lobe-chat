@@ -1,0 +1,31 @@
+{
+  "about": {
+    "button": "OK",
+    "detail": "Aplikacja czatu oparta na dużym modelu językowym",
+    "message": "{{appName}} {{appVersion}}",
+    "title": "O aplikacji"
+  },
+  "confirm": {
+    "cancel": "Anuluj",
+    "no": "Nie",
+    "title": "Potwierdzenie",
+    "yes": "Tak"
+  },
+  "error": {
+    "button": "OK",
+    "detail": "Wystąpił błąd podczas operacji, spróbuj ponownie później",
+    "message": "Wystąpił błąd",
+    "title": "Błąd"
+  },
+  "update": {
+    "downloadAndInstall": "Pobierz i zainstaluj",
+    "downloadComplete": "Pobieranie zakończone",
+    "downloadCompleteMessage": "Pakiet aktualizacji został pobrany, czy chcesz go teraz zainstalować?",
+    "installLater": "Zainstaluj później",
+    "installNow": "Zainstaluj teraz",
+    "later": "Przypomnij później",
+    "newVersion": "Nowa wersja dostępna",
+    "newVersionAvailable": "Znaleziono nową wersję: {{version}}",
+    "skipThisVersion": "Pomiń tę wersję"
+  }
+}

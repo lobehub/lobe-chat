@@ -1,0 +1,32 @@
+{
+  "actions": {
+    "add": "Dodaj",
+    "back": "Wstecz",
+    "cancel": "Anuluj",
+    "close": "Zamknij",
+    "confirm": "Potwierdź",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "more": "Więcej",
+    "next": "Dalej",
+    "ok": "OK",
+    "previous": "Cofnij",
+    "refresh": "Odśwież",
+    "remove": "Usuń",
+    "retry": "Spróbuj ponownie",
+    "save": "Zapisz",
+    "search": "Szukaj",
+    "submit": "Wyślij"
+  },
+  "app": {
+    "description": "Twoja platforma współpracy z asystentem AI",
+    "name": "LobeHub"
+  },
+  "status": {
+    "error": "Błąd",
+    "info": "Informacja",
+    "loading": "Ładowanie",
+    "success": "Sukces",
+    "warning": "Ostrzeżenie"
+  }
+}

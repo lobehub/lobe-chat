@@ -1,0 +1,31 @@
+{
+  "about": {
+    "button": "Aceptar",
+    "detail": "Una aplicación de chat basada en un modelo de lenguaje grande",
+    "message": "{{appName}} {{appVersion}}",
+    "title": "Acerca de"
+  },
+  "confirm": {
+    "cancel": "Cancelar",
+    "no": "No",
+    "title": "Confirmar",
+    "yes": "Sí"
+  },
+  "error": {
+    "button": "Aceptar",
+    "detail": "Se produjo un error durante la operación, por favor intente de nuevo más tarde",
+    "message": "Se produjo un error",
+    "title": "Error"
+  },
+  "update": {
+    "downloadAndInstall": "Descargar e instalar",
+    "downloadComplete": "Descarga completada",
+    "downloadCompleteMessage": "El paquete de actualización se ha descargado, ¿desea instalarlo ahora?",
+    "installLater": "Instalar más tarde",
+    "installNow": "Instalar ahora",
+    "later": "Recordar más tarde",
+    "newVersion": "Nueva versión disponible",
+    "newVersionAvailable": "Nueva versión encontrada: {{version}}",
+    "skipThisVersion": "Saltar esta versión"
+  }
+}
