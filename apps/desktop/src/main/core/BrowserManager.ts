@@ -29,7 +29,8 @@ export default class BrowserManager {
    * @param tab 设置窗口的子路径tab
    */
   async showSettingsWindowWithTab(tab?: string) {
-    if (tab) {
+    // common 是 settings 路由的主路径
+    if (tab && tab !== 'common') {
       await this.redirectToPage('settings', tab);
     } else {
       this.showSettingsWindow();
