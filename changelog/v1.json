@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "improvements": [
+        "Fix QVQ Max model, support default config for system agent and pre-merge some desktop code."
+      ]
+    },
+    "date": "2025-04-06",
+    "version": "1.77.12"
+  },
+  {
+    "children": {
       "fixes": ["Fix fetch issue in offline mode and make jina crawler first."]
     },
     "date": "2025-04-04",
