@@ -91,7 +91,15 @@ For specific content, please refer to the [Feature Flags](/docs/self-hosting/adv
   If you're using Docker Desktop on Windows or macOS, it relies on a virtual machine. In this setup,
   `localhost` / `127.0.0.1` refers to the localhost of the container itself. In such cases, please
   try using `host.docker.internal` instead of `localhost`.
+  Use `http://user:password@127.0.0.1:7890` to connect to an authenticated proxy server.
 </Callout>
+
+### `ENABLE_PROXY_DNS`
+
+- Type: Optional
+- Description: Used to control whether to send DNS queries to the proxy server. When configured as `0`, all DNS queries are resolved locally. If you encounter API access failures or timeouts in your network environment, try setting this option to `1`.
+- Default: `0`
+- Example: `1` or `0`
 
 ### `SSRF_ALLOW_PRIVATE_IP_ADDRESS`
 

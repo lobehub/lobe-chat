@@ -85,8 +85,16 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 
 <Callout type="info">
   `Docker Desktop` 在 `Windows `和 `macOS `上走的是虚拟机方案，如果是 `localhost` / `127.0.0.1`
-  是走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`
+  是走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`。
+  使用 `http://user:password@127.0.0.1:7890` 来连接到带认证的代理服务器。
 </Callout>
+
+### `ENABLE_PROXY_DNS`
+
+- 类型：可选
+- 描述：用于控制是否将DNS发送到代理服务器，配置为 `0` 时所有 DNS 查询在本地完成，当你的网络环境无法访问 API 或访问超时，请尝试将该项配置为 `1`。
+- 默认值：`0`
+- 示例：`1` or `0`
 
 ### `SSRF_ALLOW_PRIVATE_IP_ADDRESS`
 
