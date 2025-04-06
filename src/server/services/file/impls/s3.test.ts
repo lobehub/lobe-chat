@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { FileService } from './index';
+import { S3StaticFileImpl } from './s3';
 
 const config = {
   S3_ENABLE_PATH_STYLE: false,
@@ -31,11 +31,11 @@ vi.mock('@/server/modules/S3', () => ({
   })),
 }));
 
-describe('FileService', () => {
-  let fileService: FileService;
+describe('S3StaticFileImpl', () => {
+  let fileService: S3StaticFileImpl;
 
   beforeEach(() => {
-    fileService = new FileService();
+    fileService = new S3StaticFileImpl();
   });
 
   describe('getFullFileUrl', () => {
