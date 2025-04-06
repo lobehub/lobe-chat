@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.77.13](https://github.com/lobehub/lobe-chat/compare/v1.77.12...v1.77.13)
+
+<sup>Released on **2025-04-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix data not show correctly in 1.77.11.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix data not show correctly in 1.77.11, closes [#7311](https://github.com/lobehub/lobe-chat/issues/7311) ([d99ca04](https://github.com/lobehub/lobe-chat/commit/d99ca04))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.77.12](https://github.com/lobehub/lobe-chat/compare/v1.77.11...v1.77.12)
 
 <sup>Released on **2025-04-06**</sup>
