@@ -7,8 +7,6 @@
  * @link https://trpc.io/docs/v11/router
  * @link https://trpc.io/docs/v11/procedures
  */
-import { DESKTOP_USER_ID } from '@/const/desktop';
-import { isDesktop } from '@/const/version';
 
 import { trpc } from './init';
 import { jwtPayloadChecker } from './middleware/jwtPayload';
@@ -24,11 +22,7 @@ export const router = trpc.router;
  * Create an unprotected procedure
  * @link https://trpc.io/docs/v11/procedures
  **/
-export const publicProcedure = trpc.procedure.use(({ next }) => {
-  return next({
-    ctx: { userId: isDesktop ? DESKTOP_USER_ID : null },
-  });
-});
+export const publicProcedure = trpc.procedure;
 
 // procedure that asserts that the user is logged in
 export const authedProcedure = trpc.procedure.use(userAuth);
