@@ -63,6 +63,7 @@ module.exports = async ({ github, context, releaseUrl, version, tag }) => {
 ### 🚀 Desktop App Build Completed!
 
 **Version**: \`${version}\`
+**Build Time**: \`${new Date().toISOString()}\`
 
 📦 [View All Build Artifacts](${releaseUrl})
 
@@ -81,6 +82,7 @@ ${assetTable}
 ### 🚀 Desktop App Build Completed!
 
 **Version**: \`${version}\`
+**Build Time**: \`${new Date().toISOString()}\`
 
 ## 📦 [View All Build Artifacts](${releaseUrl})
 
