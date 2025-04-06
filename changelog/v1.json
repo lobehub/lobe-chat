@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix data not show correctly in 1.77.11."]
+    },
+    "date": "2025-04-06",
+    "version": "1.77.13"
+  },
+  {
+    "children": {
       "improvements": [
         "Fix QVQ Max model, support default config for system agent and pre-merge some desktop code."
       ]
