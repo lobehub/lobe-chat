@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.77.12](https://github.com/lobehub/lobe-chat/compare/v1.77.11...v1.77.12)
+
+<sup>Released on **2025-04-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix QVQ Max model, support default config for system agent and pre-merge some desktop code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix QVQ Max model, closes [#7289](https://github.com/lobehub/lobe-chat/issues/7289) ([540aaf6](https://github.com/lobehub/lobe-chat/commit/540aaf6))
+- **misc**: Support default config for system agent and pre-merge some desktop code, closes [#7296](https://github.com/lobehub/lobe-chat/issues/7296) ([addea48](https://github.com/lobehub/lobe-chat/commit/addea48))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.77.11](https://github.com/lobehub/lobe-chat/compare/v1.77.10...v1.77.11)
 
 <sup>Released on **2025-04-04**</sup>
