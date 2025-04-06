@@ -71,6 +71,37 @@ Further reading:
 
 - [\[RFC\] 022 - Default Assistant Parameters Configuration via Environment Variables](https://github.com/lobehub/lobe-chat/discussions/913)
 
+### `SYSTEM_AGENT`
+
+- Type: Optional
+- Description: Used to configure models and providers for LobeChat system agents (such as topic generation, translation, etc.).
+- Default value: `-`
+- Example: `default=ollama/deepseek-v3` or `topic=openai/gpt-4,translation=anthropic/claude-1`
+
+The `SYSTEM_AGENT` environment variable supports two configuration methods:
+
+1. Use `default=provider/model` to set the same default configuration for all system agents
+2. Configure specific system agents individually using the format `agent-name=provider/model`
+
+Configuration details:
+
+| Config Type         | Format                                          | Explanation                                                            |
+| ------------------- | ----------------------------------------------- | ---------------------------------------------------------------------- |
+| Default setting     | `default=ollama/deepseek-v3`                    | Set deepseek-v3 from ollama as the default model for all system agents |
+| Specific setting    | `topic=openai/gpt-4`                            | Set a specific provider and model for topic generation                 |
+| Mixed configuration | `default=ollama/deepseek-v3,topic=openai/gpt-4` | First set default values for all agents, then override specific agents |
+
+Available system agents and their functions:
+
+| System Agent        | Key Name          | Function Description                                                                                |
+| ------------------- | ----------------- | --------------------------------------------------------------------------------------------------- |
+| Topic Generation    | `topic`           | Automatically generates topic names and summaries based on chat content                             |
+| Translation         | `translation`     | Handles text translation between multiple languages                                                 |
+| Metadata Generation | `agentMeta`       | Generates descriptive information and metadata for assistants                                       |
+| History Compression | `historyCompress` | Compresses and organizes history for long conversations, optimizing context management              |
+| Query Rewrite       | `queryRewrite`    | Rewrites follow-up questions as standalone questions with context, improving conversation coherence |
+| Thread Management   | `thread`          | Handles the creation and management of conversation threads                                         |
+
 ### `FEATURE_FLAGS`
 
 - Type: Optional
