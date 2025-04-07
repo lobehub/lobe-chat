@@ -38,7 +38,8 @@ export class ModelsService {
         useUserStore.getState(),
       );
       if (enableFetchOnClient) {
-        const agentRuntime = await initializeWithClientStore(provider, {});
+        const payload = createPayloadWithKeyVaults(provider);
+        const agentRuntime = await initializeWithClientStore(provider, payload);
         return agentRuntime.models();
       }
 
