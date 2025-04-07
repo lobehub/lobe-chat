@@ -1,4 +1,4 @@
-import { createHeaderWithAuth, createPayloadWithKeyVaults } from '@/services/_auth';
+import { createHeaderWithAuth } from '@/services/_auth';
 import { useUserStore } from '@/store/user';
 import { modelConfigSelectors } from '@/store/user/selectors';
 import { ChatModelCard } from '@/types/llm';
@@ -38,8 +38,7 @@ export class ModelsService {
         useUserStore.getState(),
       );
       if (enableFetchOnClient) {
-        const payload = createPayloadWithKeyVaults(provider);
-        const agentRuntime = await initializeWithClientStore(provider, payload);
+        const agentRuntime = await initializeWithClientStore(provider);
         return agentRuntime.models();
       }
 
@@ -75,9 +74,7 @@ export class ModelsService {
 
       let res: Response;
       if (enableFetchOnClient) {
-        const payload = createPayloadWithKeyVaults(provider);
-
-        const agentRuntime = await initializeWithClientStore(provider, payload);
+        const agentRuntime = await initializeWithClientStore(provider);
         res = (await agentRuntime.pullModel({ model }, { signal }))!;
       } else {
         res = await fetch(API_ENDPOINTS.modelPull(provider), {

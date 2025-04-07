@@ -133,7 +133,7 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
  *
  * **Note**: if you try to fetch directly, use `fetchOnClient` instead.
  */
-export function initializeWithClientStore(provider: string, payload: any) {
+export function initializeWithClientStore(provider: string, payload?: any) {
   /**
    * Since #5267, we map parameters for client-fetch in function `getProviderAuthPayload`
    * which called by `createPayloadWithKeyVaults` below.
