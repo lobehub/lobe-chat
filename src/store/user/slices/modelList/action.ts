@@ -202,7 +202,7 @@ export const createModelListSlice: StateCreator<
       async ([p]) => {
         const { modelsService } = await import('@/services/models');
 
-        return modelsService.getChatModels(p);
+        return modelsService.getModels(p);
       },
       {
         onSuccess: async (data) => {

@@ -1,8 +1,9 @@
 import { Ollama, Tool } from 'ollama/browser';
 import { ClientOptions } from 'openai';
 
-import { OpenAIChatMessage } from '@/libs/agent-runtime';
+import { ModelRequestOptions, OpenAIChatMessage } from '@/libs/agent-runtime';
 import { ChatModelCard } from '@/types/llm';
+import { createErrorResponse } from '@/utils/errorResponse';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -11,12 +12,15 @@ import {
   ChatStreamPayload,
   Embeddings,
   EmbeddingsPayload,
+  ModelDetail,
+  ModelDetailParams,
   ModelProvider,
+  PullModelParams,
 } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { OllamaStream, convertIterableToStream } from '../utils/streams';
+import { OllamaStream, convertIterableToStream, createModelPullStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { OllamaMessage } from './type';
 
@@ -193,6 +197,105 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
     return ollamaMessage;
   };
+
+  async pullModel(params: PullModelParams, options?: ModelRequestOptions): Promise<Response> {
+    const { model, insecure } = params;
+
+    try {
+      // 获取 Ollama pull 的迭代器
+      const iterable = await this.client.pull({
+        insecure: insecure ?? false,
+        model,
+        stream: true,
+      });
+
+      // 使用专门的模型下载流转换方法
+      const progressStream = createModelPullStream(iterable, model, {
+        onAbort: () => {
+          this.client.abort();
+        },
+        signal: options?.signal,
+      });
+
+      // 返回标准响应
+      return new Response(progressStream, { headers: { 'Content-Type': 'application/json' } });
+    } catch (error) {
+      // 处理错误
+      if ((error as Error).message === 'fetch failed') {
+        return createErrorResponse(AgentRuntimeErrorType.OllamaServiceUnavailable, {
+          message: 'please check whether your ollama service is available',
+          provider: ModelProvider.Ollama,
+        });
+      }
+
+      console.error('model download error:', error);
+
+      // 检查是否是取消操作
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return new Response(
+          JSON.stringify({
+            model,
+            status: 'cancelled',
+          }),
+          {
+            headers: { 'Content-Type': 'application/json' },
+            status: 499,
+          },
+        );
+      }
+
+      // 返回错误响应
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return new Response(
+        JSON.stringify({
+          error: errorMessage,
+          model,
+          status: 'error',
+        }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          status: 500,
+        },
+      );
+    }
+  }
+
+  async getModelDetail(params: ModelDetailParams): Promise<ModelDetail> {
+    try {
+      const response = await this.client.show({ model: params.model });
+
+      return {
+        details: response.details,
+        // digest: response.digest,
+        id: params.model,
+        modified_at: response.modified_at,
+        // name: response.model.name,
+        // size: response.size,
+      };
+    } catch (error) {
+      const e = error as { message: string; name: string; status_code: number };
+
+      throw AgentRuntimeError.chat({
+        error: { message: e.message, name: e.name, status_code: e.status_code },
+        errorType: AgentRuntimeErrorType.OllamaBizError,
+        provider: ModelProvider.Ollama,
+      });
+    }
+  }
+
+  async deleteModel(model: string): Promise<void> {
+    try {
+      await this.client.delete({ model });
+    } catch (error) {
+      const e = error as { message: string; name: string; status_code: number };
+
+      throw AgentRuntimeError.chat({
+        error: { message: e.message, name: e.name, status_code: e.status_code },
+        errorType: AgentRuntimeErrorType.OllamaBizError,
+        provider: ModelProvider.Ollama,
+      });
+    }
+  }
 }
 
 export default LobeOllamaAI;
