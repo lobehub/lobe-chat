@@ -1,3 +1,4 @@
+import { FilesDispatchEvents } from './file';
 import { MenuDispatchEvents } from './menu';
 import { FilesSearchDispatchEvents } from './search';
 import { SystemDispatchEvents } from './system';
@@ -11,7 +12,8 @@ export interface ClientDispatchEvents
   extends WindowsDispatchEvents,
     FilesSearchDispatchEvents,
     SystemDispatchEvents,
-    MenuDispatchEvents {}
+    MenuDispatchEvents,
+    FilesDispatchEvents {}
 
 export type ClientDispatchEventKey = keyof ClientDispatchEvents;
 

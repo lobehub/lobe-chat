@@ -20,6 +20,10 @@ class LobeHubElectronIpcClient extends ElectronIpcClient {
 
     return this.sendRequest('setDatabaseSchemaHash', hash);
   };
+
+  getFilePathById = async (id: string) => {
+    return this.sendRequest<string>('getStaticFilePath', id);
+  };
 }
 
 export const electronIpcClient = new LobeHubElectronIpcClient();

@@ -53,7 +53,7 @@ export class ElectronIpcClient {
         this.socket = net.createConnection(this.socketPath!, () => {
           this.connected = true;
           this.connectionAttempts = 0;
-          console.log('Connected to Electron IPC server');
+          console.log('[ElectronIpcClient] Connected to Electron IPC server');
           resolve();
         });
 
@@ -72,24 +72,24 @@ export class ElectronIpcClient {
               }
             }
           } catch (err) {
-            console.error('Failed to parse response:', err);
+            console.error('[ElectronIpcClient] Failed to parse response:', err);
           }
         });
 
         this.socket.on('error', (err) => {
-          console.error('Socket error:', err);
+          console.error('[ElectronIpcClient] Socket error:', err);
           this.connected = false;
           this.handleDisconnect();
           reject(err);
         });
 
         this.socket.on('close', () => {
-          console.log('Socket closed');
+          console.log('[ElectronIpcClient] Socket closed');
           this.connected = false;
           this.handleDisconnect();
         });
       } catch (err) {
-        console.error('Failed to connect to IPC server:', err);
+        console.error('[ElectronIpcClient] Failed to connect to IPC server:', err);
         this.handleDisconnect();
         reject(err);
       }
@@ -106,7 +106,7 @@ export class ElectronIpcClient {
 
     // 拒绝所有待处理的请求
     for (const [, { reject }] of this.requestQueue) {
-      reject(new Error('Connection to Electron IPC server lost'));
+      reject(new Error('[ElectronIpcClient] Connection to Electron IPC server lost'));
     }
     this.requestQueue.clear();
 
@@ -117,7 +117,10 @@ export class ElectronIpcClient {
 
       this.reconnectTimeout = setTimeout(() => {
         this.connect().catch((err) => {
-          console.error(`Reconnection attempt ${this.connectionAttempts} failed:`, err);
+          console.error(
+            `[ElectronIpcClient] Reconnection attempt ${this.connectionAttempts} failed:`,
+            err,
+          );
         });
       }, delay);
     }
@@ -145,8 +148,8 @@ export class ElectronIpcClient {
         // 设置超时
         const timeout = setTimeout(() => {
           this.requestQueue.delete(id);
-          reject(new Error(`Request ${method} timed out`));
-        }, 10_000);
+          reject(new Error(`[ElectronIpcClient] Request timed out, method: ${method}`));
+        }, 5000);
 
         // 发送请求
         this.socket!.write(JSON.stringify(request), (err) => {
