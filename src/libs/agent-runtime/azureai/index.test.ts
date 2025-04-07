@@ -219,6 +219,8 @@ describe('LobeAzureAI', () => {
     });
 
     it('should create a client with the provided parameters', () => {
+      (createClient as Mock).mockReturnValue(mockClient);
+
       const azureAI = new LobeAzureAI({
         apiKey,
         apiVersion,
