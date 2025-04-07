@@ -1,4 +1,5 @@
-import createClient, { ModelClient, type ChatCompletionsOutput } from '@azure-rest/ai-inference';
+import createClient, { type ChatCompletionsOutput, ModelClient } from '@azure-rest/ai-inference';
+import type { ErrorResponse } from '@azure-rest/core-client';
 import { AzureKeyCredential } from '@azure/core-auth';
 import type OpenAI from 'openai';
 import type {
@@ -17,9 +18,6 @@ import { debugStream } from '../utils/debugStream';
 import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
 import { StreamingResponse } from '../utils/response';
 import { OpenAIStream, createSSEDataExtractor } from '../utils/streams';
-import { Stream } from 'openai/streaming';
-import type { ErrorResponse } from "@azure-rest/core-client";
-import { CreateClient } from '@trpc/react-query/shared';
 
 interface AzureAIParams {
   apiKey?: string;
@@ -111,11 +109,15 @@ export class LobeAzureAI implements LobeRuntimeAI {
         const stream = await response.asBrowserStream();
 
         let prod = stream.body;
-        let debug: ReadableStream;
 
         if (process.env.DEBUG_AZURE_AI_CHAT_COMPLETION === '1') {
-          [prod, debug] = stream.body?.tee();
-          debugStream(debug).catch(console.error);
+          if (prod) {
+            let debug: ReadableStream<Uint8Array<ArrayBufferLike>>;
+            [prod, debug] = prod.tee();
+            debugStream(debug).catch(console.error);
+          } else {
+            console.error(typeof prod);
+          }
         }
 
         return StreamingResponse(
@@ -129,7 +131,7 @@ export class LobeAzureAI implements LobeRuntimeAI {
       } else {
         const res = await response;
 
-        if (res.status !== "200") {
+        if (res.status !== '200') {
           throw (res.body as ErrorResponse).error;
         }
 

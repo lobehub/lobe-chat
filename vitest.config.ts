@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
-import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 import { defaultServerConditions } from 'vite';
+import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   optimizeDeps: {
@@ -10,10 +10,7 @@ export default defineConfig({
   ssr: {
     resolve: {
       // TODO: Check the impact to other tests
-      conditions: [
-        'browser',
-        ...defaultServerConditions.filter((v) => v !== 'module'),
-      ],
+      conditions: ['browser', ...defaultServerConditions.filter((v) => v !== 'module')],
     },
   },
   test: {
@@ -39,7 +36,7 @@ export default defineConfig({
     },
     environment: 'happy-dom',
     exclude: [
-      //'**/node_modules/**',
+      '**/node_modules/**',
       '**/dist/**',
       '**/build/**',
       'src/database/server/**/**',

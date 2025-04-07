@@ -1,4 +1,9 @@
 // @vitest-environment edge-runtime
+import * as AzureAI from '@azure-rest/ai-inference';
+import createClient from '@azure-rest/ai-inference';
+import * as AzureCoreUtil from '@azure/core-util';
+import { isBrowser, isNodeLike } from '@azure/core-util';
+import * as NodeHttp from 'node:http';
 import { AzureOpenAI } from 'openai';
 import type { ChatCompletionToolChoiceOption } from 'openai/resources/chat/completions';
 import type {
@@ -8,21 +13,16 @@ import type {
 } from 'openai/resources/shared';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as debugStreamModule from '../utils/debugStream';
-import { LobeAzureAI, convertResponseMode } from './index';
 import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider, OpenAIChatMessage } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import * as CreateErrorUtils from '../utils/createError';
-import * as AzureAI from '@azure-rest/ai-inference';
-import createClient from '@azure-rest/ai-inference';
+import * as debugStreamModule from '../utils/debugStream';
+import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
 import { StreamingResponse } from '../utils/response';
 import { OpenAIStream } from '../utils/streams';
 import * as StreamUtils from '../utils/streams';
-import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
-import * as AzureCoreUtil from '@azure/core-util';
-import { isBrowser, isNodeLike } from '@azure/core-util';
-import * as NodeHttp from 'node:http';
+import { LobeAzureAI, convertResponseMode } from './index';
 
 vi.mock('node:http', async (importOriginal) => {
   const actual: any = await importOriginal();
@@ -36,8 +36,8 @@ vi.mock('node:http', async (importOriginal) => {
   };
 });
 
-vi.mock("node:https", async (importOriginal) => {
-  const actual: any = await importOriginal()
+vi.mock('node:https', async (importOriginal) => {
+  const actual: any = await importOriginal();
   return {
     ...actual,
     // your mocked methods
@@ -45,7 +45,7 @@ vi.mock("node:https", async (importOriginal) => {
       throw Error('node:https');
       return undefined as any;
     }),
-  }
+  };
 });
 
 //vi.mock('@azure/core-util', async (importOriginal) => {
@@ -227,96 +227,98 @@ describe('LobeAzureAI', () => {
 
     it('should handle non-streaming responses', async () => {
       // Arrange
-      const messages: OpenAIChatMessage[] = [{ content: 'What is the capital of France?', role: 'user' }];
+      const messages: OpenAIChatMessage[] = [
+        { content: 'What is the capital of France?', role: 'user' },
+      ];
       const model = 'o1-mini';
       const temperature = 0;
 
       const responseData = {
-        "choices": [
+        choices: [
           {
-            "content_filter_results": {
-              "hate": {
-                "filtered": false,
-                "severity": "safe"
+            content_filter_results: {
+              hate: {
+                filtered: false,
+                severity: 'safe',
               },
-              "protected_material_code": {
-                "filtered": false,
-                "detected": false
+              protected_material_code: {
+                filtered: false,
+                detected: false,
               },
-              "protected_material_text": {
-                "filtered": false,
-                "detected": false
+              protected_material_text: {
+                filtered: false,
+                detected: false,
               },
-              "self_harm": {
-                "filtered": false,
-                "severity": "safe"
+              self_harm: {
+                filtered: false,
+                severity: 'safe',
               },
-              "sexual": {
-                "filtered": false,
-                "severity": "safe"
+              sexual: {
+                filtered: false,
+                severity: 'safe',
               },
-              "violence": {
-                "filtered": false,
-                "severity": "safe"
-              }
+              violence: {
+                filtered: false,
+                severity: 'safe',
+              },
             },
-            "finish_reason": "stop",
-            "index": 0,
-            "message": {
-              "content": "Paris is the capital of France.",
-              "refusal": null,
-              "role": "assistant"
-            }
-          }
+            finish_reason: 'stop',
+            index: 0,
+            message: {
+              content: 'Paris is the capital of France.',
+              refusal: null,
+              role: 'assistant',
+            },
+          },
         ],
-        "created": 1741748227,
-        "id": "chatcmpl-BA6ZHQ4Q0fsyOaJ6rO8F3QocxfUAR",
-        "model": "o1-mini-2024-09-12",
-        "object": "chat.completion",
-        "prompt_filter_results": [
+        created: 1741748227,
+        id: 'chatcmpl-BA6ZHQ4Q0fsyOaJ6rO8F3QocxfUAR',
+        model: 'o1-mini-2024-09-12',
+        object: 'chat.completion',
+        prompt_filter_results: [
           {
-            "prompt_index": 0,
-            "content_filter_results": {
-              "hate": {
-                "filtered": false,
-                "severity": "safe"
+            prompt_index: 0,
+            content_filter_results: {
+              hate: {
+                filtered: false,
+                severity: 'safe',
               },
-              "jailbreak": {
-                "filtered": false,
-                "detected": false
+              jailbreak: {
+                filtered: false,
+                detected: false,
               },
-              "self_harm": {
-                "filtered": false,
-                "severity": "safe"
+              self_harm: {
+                filtered: false,
+                severity: 'safe',
               },
-              "sexual": {
-                "filtered": false,
-                "severity": "safe"
+              sexual: {
+                filtered: false,
+                severity: 'safe',
               },
-              "violence": {
-                "filtered": false,
-                "severity": "safe"
-              }
-            }
-          }
+              violence: {
+                filtered: false,
+                severity: 'safe',
+              },
+            },
+          },
         ],
-        "system_fingerprint": "fp_f6ff3bb326",
-        "usage": {
-          "completion_tokens": 338,
-          "completion_tokens_details": {
-            "accepted_prediction_tokens": 0,
-            "audio_tokens": 0,
-            "reasoning_tokens": 320,
-            "rejected_prediction_tokens": 0
+        system_fingerprint: 'fp_f6ff3bb326',
+        usage: {
+          completion_tokens: 338,
+          completion_tokens_details: {
+            accepted_prediction_tokens: 0,
+            audio_tokens: 0,
+            reasoning_tokens: 320,
+            rejected_prediction_tokens: 0,
           },
-          "prompt_tokens": 14,
-          "prompt_tokens_details": {
-            "audio_tokens": 0,
-            "cached_tokens": 0
+          prompt_tokens: 14,
+          prompt_tokens_details: {
+            audio_tokens: 0,
+            cached_tokens: 0,
           },
-          "total_tokens": 352
-        }
-      }
+          total_tokens: 352,
+        },
+      };
 
       const mockResponse = new Response(JSON.stringify(responseData), {
         headers: {
@@ -351,10 +353,12 @@ describe('LobeAzureAI', () => {
       expect(authorizationHeader).toBe(`Bearer ${apiKey}`);
 
       const requestBody = JSON.parse(options.body);
-      expect(requestBody).toEqual(expect.objectContaining({
-        messages,
-        model,
-      }));
+      expect(requestBody).toEqual(
+        expect.objectContaining({
+          messages,
+          model,
+        }),
+      );
 
       expect(result).toBeInstanceOf(Response);
       expect(result.body).toBeDefined();
@@ -368,20 +372,24 @@ describe('LobeAzureAI', () => {
         if (done) break;
         stream.push(decoder.decode(value));
       }
-      
-      expect(stream).toEqual([
-        'id: chatcmpl-BA6ZHQ4Q0fsyOaJ6rO8F3QocxfUAR',
-        'event: text',
-        'data: "Paris is the capital of France."\n',
-        'id: chatcmpl-BA6ZHQ4Q0fsyOaJ6rO8F3QocxfUAR',
-        'event: stop',
-        'data: "stop"\n',
-      ].map((s) => s + '\n'));
+
+      expect(stream).toEqual(
+        [
+          'id: chatcmpl-BA6ZHQ4Q0fsyOaJ6rO8F3QocxfUAR',
+          'event: text',
+          'data: "Paris is the capital of France."\n',
+          'id: chatcmpl-BA6ZHQ4Q0fsyOaJ6rO8F3QocxfUAR',
+          'event: stop',
+          'data: "stop"\n',
+        ].map((s) => s + '\n'),
+      );
     });
 
     it('should handle streaming responses', async () => {
       // Arrange
-      const messages: OpenAIChatMessage[] = [{ content: 'What is the capital of France?', role: 'user' }];
+      const messages: OpenAIChatMessage[] = [
+        { content: 'What is the capital of France?', role: 'user' },
+      ];
       const model = 'gpt-4o';
       const temperature = 0;
 
@@ -444,10 +452,12 @@ data: [DONE]
       expect(authorizationHeader).toBe(`Bearer ${apiKey}`);
 
       const requestBody = JSON.parse(options.body);
-      expect(requestBody).toEqual(expect.objectContaining({
-        messages,
-        model,
-      }));
+      expect(requestBody).toEqual(
+        expect.objectContaining({
+          messages,
+          model,
+        }),
+      );
 
       expect(result).toBeInstanceOf(Response);
       expect(result.body).toBeDefined();
@@ -461,55 +471,59 @@ data: [DONE]
         if (done) break;
         stream.push(decoder.decode(value));
       }
-      
-      expect(stream).toEqual([
-        'id: ',
-        'event: data',
-        'data: {"choices":[],"created":0,"id":"","model":"","object":"","prompt_filter_results":[{"prompt_index":0,"content_filter_results":{"hate":{"filtered":false,"severity":"safe"},"jailbreak":{"filtered":false,"detected":false},"self_harm":{"filtered":false,"severity":"safe"},"sexual":{"filtered":false,"severity":"safe"},"violence":{"filtered":false,"severity":"safe"}}}]}\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: text',
-        'data: ""\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: text',
-        'data: "The"\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: text',
-        'data: " capital"\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: text',
-        'data: " of"\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: text',
-        'data: " France"\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: text',
-        'data: " is"\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: text',
-        'data: " **"\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: text',
-        'data: "Paris"\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: text',
-        'data: "**"\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: text',
-        'data: "."\n',
-        'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
-        'event: stop',
-        'data: "stop"\n',
-      ].map((s) => s + '\n'));
+
+      expect(stream).toEqual(
+        [
+          'id: ',
+          'event: data',
+          'data: {"choices":[],"created":0,"id":"","model":"","object":"","prompt_filter_results":[{"prompt_index":0,"content_filter_results":{"hate":{"filtered":false,"severity":"safe"},"jailbreak":{"filtered":false,"detected":false},"self_harm":{"filtered":false,"severity":"safe"},"sexual":{"filtered":false,"severity":"safe"},"violence":{"filtered":false,"severity":"safe"}}}]}\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: text',
+          'data: ""\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: text',
+          'data: "The"\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: text',
+          'data: " capital"\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: text',
+          'data: " of"\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: text',
+          'data: " France"\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: text',
+          'data: " is"\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: text',
+          'data: " **"\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: text',
+          'data: "Paris"\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: text',
+          'data: "**"\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: text',
+          'data: "."\n',
+          'id: chatcmpl-BD5yZBfhSLLcuDtRtF48KwOywtED5',
+          'event: stop',
+          'data: "stop"\n',
+        ].map((s) => s + '\n'),
+      );
     });
 
     it('should handle error in non-streaming request', async () => {
       // Arrange
-      const messages: OpenAIChatMessage[] = [{ content: 'What is the capital of France?', role: 'user' }];
+      const messages: OpenAIChatMessage[] = [
+        { content: 'What is the capital of France?', role: 'user' },
+      ];
       const model = 'gpt-4o1';
       const temperature = 0;
 
       // This is an error response from GitHub, Azure AI Foundry may have different behavior
-      const responseData = `{"error":{"code":"unknown_model","message":"Unknown model: gpt-4o1","details":"Unknown model: gpt-4o1"}}`
+      const responseData = `{"error":{"code":"unknown_model","message":"Unknown model: gpt-4o1","details":"Unknown model: gpt-4o1"}}`;
 
       const mockResponse = new Response(responseData, {
         headers: {
@@ -528,16 +542,18 @@ data: [DONE]
       });
 
       // Assert
-      await expect(promise).rejects.toThrowError(expect.objectContaining({
-        endpoint: 'https://***.cognitiveservices.azure.com',
-        error: expect.objectContaining({
-          code: 'unknown_model',
-          message: 'Unknown model: gpt-4o1',
-          details: 'Unknown model: gpt-4o1',
+      await expect(promise).rejects.toThrowError(
+        expect.objectContaining({
+          endpoint: 'https://***.cognitiveservices.azure.com',
+          error: expect.objectContaining({
+            code: 'unknown_model',
+            message: 'Unknown model: gpt-4o1',
+            details: 'Unknown model: gpt-4o1',
+          }),
+          errorType: AgentRuntimeErrorType.ProviderBizError,
+          provider: 'azure', // We don't use ModelProvider.Azure here.
         }),
-        errorType: AgentRuntimeErrorType.ProviderBizError,
-        provider: 'azure', // We don't use ModelProvider.Azure here.
-      }));
+      );
     });
   });
 });
