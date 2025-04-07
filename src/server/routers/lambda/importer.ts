@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { DataImporterRepos } from '@/database/repositories/dataImporter';
 import { authedProcedure, router } from '@/libs/trpc';
 import { serverDatabase } from '@/libs/trpc/lambda';
-import { S3 } from '@/server/modules/S3';
+import { FileService } from '@/server/services/file';
 import { ImportPgDataStructure } from '@/types/export';
 import { ImportResultData, ImporterEntryData } from '@/types/importer';
 
@@ -13,7 +13,7 @@ const importProcedure = authedProcedure.use(serverDatabase).use(async (opts) => 
   const dataImporterService = new DataImporterRepos(ctx.serverDB, ctx.userId);
 
   return opts.next({
-    ctx: { dataImporterService },
+    ctx: { dataImporterService, fileService: new FileService() },
   });
 });
 
@@ -24,8 +24,7 @@ export const importerRouter = router({
       let data: ImporterEntryData | undefined;
 
       try {
-        const s3 = new S3();
-        const dataStr = await s3.getFileContent(input.pathname);
+        const dataStr = await ctx.fileService.getFileContent(input.pathname);
         data = JSON.parse(dataStr);
       } catch {
         data = undefined;

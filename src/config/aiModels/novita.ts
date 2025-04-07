@@ -9,7 +9,7 @@ const novitaChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'meta-llama/llama-3.3-70b-instruct',
     pricing: {
-      input: 0.39,
+      input: 0.13,
       output: 0.39,
     },
     type: 'chat',
@@ -62,7 +62,6 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 8192,
     description: 'Gemma 2 9B 是谷歌的一款开源语言模型，以其在效率和性能方面设立了新的标准。',
     displayName: 'Gemma 2 9B',
-    enabled: true,
     id: 'google/gemma-2-9b-it',
     pricing: {
       input: 0.08,
@@ -71,10 +70,21 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    contextWindowTokens: 32_000,
+    description: 'Gemma 3 27B 是谷歌的一款开源语言模型，以其在效率和性能方面设立了新的标准。',
+    displayName: 'Gemma 3 27B',
+    enabled: true,
+    id: 'google/gemma-3-27b-it',
+    pricing: {
+      input: 0.2,
+      output: 0.2,
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 131_072,
     description: 'Mistral Nemo 是多语言支持和高性能编程的7.3B参数模型。',
     displayName: 'Mistral Nemo',
-    enabled: true,
     id: 'mistralai/mistral-nemo',
     pricing: {
       input: 0.17,
@@ -86,7 +96,6 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description: 'Mistral 7B Instruct 是一款兼有速度优化和长上下文支持的高性能行业标准模型。',
     displayName: 'Mistral 7B Instruct',
-    enabled: true,
     id: 'mistralai/mistral-7b-instruct',
     pricing: {
       input: 0.059,
@@ -98,7 +107,6 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 65_535,
     description: 'WizardLM-2 8x22B 是微软AI最先进的Wizard模型，显示出极其竞争力的表现。',
     displayName: 'WizardLM-2 8x22B',
-    enabled: true,
     id: 'microsoft/wizardlm-2-8x22b',
     pricing: {
       input: 0.62,
@@ -140,17 +148,6 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 4096,
-    description: 'OpenChat 7B 是经过“C-RLFT（条件强化学习微调）”策略精调的开源语言模型库。',
-    displayName: 'OpenChat 7B',
-    id: 'openchat/openchat-7b',
-    pricing: {
-      input: 0.06,
-      output: 0.06,
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 64_000,
     displayName: 'Deepseek V3 Turbo',
     id: 'deepseek/deepseek-v3-turbo',
@@ -166,6 +163,7 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 64_000,
     displayName: 'Deepseek R1 Turbo',
+    enabled: true,
     id: 'deepseek/deepseek-r1-turbo',
     pricing: {
       input: 0.7,
@@ -179,7 +177,6 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 64_000,
     displayName: 'Deepseek R1',
-    enabled: true,
     id: 'deepseek/deepseek-r1',
     pricing: {
       input: 4,
@@ -188,24 +185,23 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 64_000,
-    displayName: 'Deepseek V3',
+    contextWindowTokens: 128_000,
+    displayName: 'Deepseek V3 0324',
     enabled: true,
-    id: 'deepseek/deepseek_v3',
+    id: 'deepseek/deepseek-v3-0324',
     pricing: {
-      input: 0.89,
-      output: 0.89,
+      input: 0.4,
+      output: 1.3,
     },
     type: 'chat',
   },
   {
     contextWindowTokens: 64_000,
-    displayName: 'Deepseek V3 0324',
-    enabled: true,
-    id: 'deepseek/deepseek-v3-0324',
+    displayName: 'Deepseek V3',
+    id: 'deepseek/deepseek_v3',
     pricing: {
-      input: 1.2,
-      output: 1.2,
+      input: 0.89,
+      output: 0.89,
     },
     type: 'chat',
   },
@@ -241,7 +237,6 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 64_000,
     displayName: 'Deepseek R1 Distill Qwen 32B',
-    enabled: true,
     id: 'deepseek/deepseek-r1-distill-qwen-32b',
     pricing: {
       input: 0.3,
@@ -304,26 +299,6 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 4096,
-    displayName: 'Nous Hermes Llama2 13B',
-    id: 'nousresearch/nous-hermes-llama2-13b',
-    pricing: {
-      input: 0.17,
-      output: 0.17,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 4096,
-    displayName: 'OpenHermes 2.5 Mistral 7B',
-    id: 'teknium/openhermes-2.5-mistral-7b',
-    pricing: {
-      input: 0.17,
-      output: 0.17,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 4096,
     displayName: 'Midnight Rose 70B',
     id: 'sophosympatheia/midnight-rose-70b',
     pricing: {
@@ -349,6 +324,16 @@ const novitaChatModels: AIChatModelCard[] = [
     pricing: {
       input: 0.45,
       output: 0.45,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 96_000,
+    displayName: 'Qwen 2.5 VL 72B Instruct',
+    id: 'qwen/qwen2.5-vl-72b-instruct',
+    pricing: {
+      input: 0.8,
+      output: 0.8,
     },
     type: 'chat',
   },

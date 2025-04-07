@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, FluentEmoji, SideNav } from '@lobehub/ui';
+import { ActionIcon, SideNav } from '@lobehub/ui';
 import { Cog, DatabaseIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -30,44 +30,43 @@ const DevTools = memo(() => {
   const [tab, setTab] = useState<string>(items[0].key);
 
   return (
-    <Flexbox
-      height={'100%'}
-      horizontal
-      style={{ overflow: 'hidden', position: 'relative' }}
-      width={'100%'}
-    >
-      <SideNav
-        avatar={<FluentEmoji emoji={'🧰'} size={24} />}
-        bottomActions={[]}
-        style={{
-          paddingBlock: 32,
-          width: 48,
-        }}
-        topActions={items.map((item) => (
-          <ActionIcon
-            active={tab === item.key}
-            key={item.key}
-            onClick={() => setTab(item.key)}
-            placement={'right'}
-            title={item.key}
-          >
-            {item.icon}
-          </ActionIcon>
-        ))}
-      />
-      <Flexbox height={'100%'} style={{ overflow: 'hidden', position: 'relative' }} width={'100%'}>
-        <Flexbox
-          align={'center'}
-          className={cx(`panel-drag-handle`, styles.header, electronStylish.draggable)}
-          horizontal
-          justify={'center'}
-        >
-          <Flexbox align={'baseline'} gap={6} horizontal>
-            <b>{BRANDING_NAME} Dev Tools</b>
-            <span style={{ color: theme.colorTextDescription }}>/</span>
-            <span style={{ color: theme.colorTextDescription }}>{tab}</span>
-          </Flexbox>
+    <Flexbox height={'100%'} style={{ overflow: 'hidden', position: 'relative' }} width={'100%'}>
+      <Flexbox
+        align={'center'}
+        className={cx(`panel-drag-handle`, styles.header, electronStylish.draggable)}
+        horizontal
+        justify={'center'}
+      >
+        <Flexbox align={'baseline'} gap={6} horizontal>
+          <b>{BRANDING_NAME} Dev Tools</b>
+          <span style={{ color: theme.colorTextDescription }}>/</span>
+          <span style={{ color: theme.colorTextDescription }}>{tab}</span>
         </Flexbox>
+      </Flexbox>
+      <Flexbox
+        height={'100%'}
+        horizontal
+        style={{ background: theme.colorBgLayout, overflow: 'hidden', position: 'relative' }}
+        width={'100%'}
+      >
+        <SideNav
+          bottomActions={[]}
+          style={{
+            background: 'transparent',
+            width: 48,
+          }}
+          topActions={items.map((item) => (
+            <ActionIcon
+              active={tab === item.key}
+              key={item.key}
+              onClick={() => setTab(item.key)}
+              placement={'right'}
+              title={item.key}
+            >
+              {item.icon}
+            </ActionIcon>
+          ))}
+        />
         {items.map((item) => (
           <Flexbox
             flex={1}

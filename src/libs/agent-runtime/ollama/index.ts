@@ -2,6 +2,7 @@ import { Ollama, Tool } from 'ollama/browser';
 import { ClientOptions } from 'openai';
 
 import { OpenAIChatMessage } from '@/libs/agent-runtime';
+import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -18,8 +19,6 @@ import { StreamingResponse } from '../utils/response';
 import { OllamaStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { OllamaMessage } from './type';
-
-import { ChatModelCard } from '@/types/llm';
 
 export interface OllamaModelCard {
   name: string;
@@ -81,6 +80,15 @@ export class LobeOllamaAI implements LobeRuntimeAI {
         name: string;
         status_code: number;
       };
+      if (e.message === 'fetch failed') {
+        throw AgentRuntimeError.chat({
+          error: {
+            message: 'please check whether your ollama service is available',
+          },
+          errorType: AgentRuntimeErrorType.OllamaServiceUnavailable,
+          provider: ModelProvider.Ollama,
+        });
+      }
 
       throw AgentRuntimeError.chat({
         error: {
@@ -116,22 +124,18 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.name.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
           displayName: knownModel?.displayName ?? undefined,
           enabled: knownModel?.enabled || false,
-          functionCall:
-            knownModel?.abilities?.functionCall
-            || false,
+          functionCall: knownModel?.abilities?.functionCall || false,
           id: model.name,
-          reasoning:
-            knownModel?.abilities?.functionCall
-            || false,
-          vision:
-            knownModel?.abilities?.functionCall
-            || false,
+          reasoning: knownModel?.abilities?.functionCall || false,
+          vision: knownModel?.abilities?.functionCall || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

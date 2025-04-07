@@ -10,6 +10,7 @@ import {
 
 // mod 在 Mac 上是 command 键，alt 在 Win 上是 ctrl 键
 export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
+  // basic
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.Search,
@@ -47,6 +48,15 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Shift, KeyEnum.QuestionMark]),
     scopes: [HotkeyScopeEnum.Global],
   },
+  {
+    group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.OpenSettings,
+    isDesktop: true,
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.Comma]),
+    nonEditable: true,
+    scopes: [HotkeyScopeEnum.Global],
+  },
+  // Chat
   {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.OpenChatSettings,

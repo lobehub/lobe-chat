@@ -2,7 +2,7 @@ import { TokenTag, Tooltip } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { useTheme } from 'antd-style';
 import numeral from 'numeral';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -12,7 +12,7 @@ import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { topicSelectors } from '@/store/chat/selectors';
+import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
@@ -41,6 +41,11 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
     ];
   });
 
+  const [historyCount, enableHistoryCount] = useAgentStore((s) => [
+    agentChatConfigSelectors.historyCount(s),
+    agentChatConfigSelectors.enableHistoryCount(s),
+  ]);
+
   const maxTokens = useModelContextWindowTokens(model, provider);
 
   // Tool usage token
@@ -60,7 +65,12 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   // Chat usage token
   const inputTokenCount = useTokenCount(input);
 
-  const chatsToken = useTokenCount(messageString) + inputTokenCount;
+  const chatsString = useMemo(() => {
+    const chats = chatSelectors.mainAIChatsWithHistoryConfig(useChatStore.getState());
+    return chats.map(chat => chat.content).join('');
+  }, [messageString, historyCount, enableHistoryCount]);
+
+  const chatsToken = useTokenCount(chatsString) + inputTokenCount;
 
   // SystemRole token
   const systemRoleToken = useTokenCount(systemRole);

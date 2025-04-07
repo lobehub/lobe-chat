@@ -1010,6 +1010,9 @@
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) 提供基本的指令處理能力，適合輕量級應用。"
   },
+  "google/gemma-3-27b-it": {
+    "description": "Gemma 3 27B 是谷歌的一款開源語言模型，以其在效率和性能方面設立了新的標準。"
+  },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo，適用於各種文本生成和理解任務，Currently points to gpt-3.5-turbo-0125"
   },
@@ -1591,6 +1594,9 @@
   },
   "qvq-72b-preview": {
     "description": "QVQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於提升視覺推理能力，尤其在數學推理領域。"
+  },
+  "qvq-max-latest": {
+    "description": "通義千問QVQ視覺推理模型，支持視覺輸入及思維鏈輸出，在數學、程式設計、視覺分析、創作以及通用任務上都表現了更強的能力。"
   },
   "qwen-coder-plus-latest": {
     "description": "通義千問代碼模型。"

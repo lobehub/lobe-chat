@@ -1010,6 +1010,9 @@
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B)は、基本的な指示処理能力を提供し、軽量アプリケーションに適しています。"
   },
+  "google/gemma-3-27b-it": {
+    "description": "Gemma 3 27Bは、Googleのオープンソース言語モデルで、効率と性能の面で新たな基準を打ち立てました。"
+  },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turboは、さまざまなテキスト生成と理解タスクに適しており、現在はgpt-3.5-turbo-0125を指しています。"
   },
@@ -1591,6 +1594,9 @@
   },
   "qvq-72b-preview": {
     "description": "QVQモデルはQwenチームによって開発された実験的研究モデルで、視覚推論能力の向上に特化しており、特に数学推論の分野で優れた性能を発揮。"
+  },
+  "qvq-max-latest": {
+    "description": "通義千問QVQ視覚推論モデルは、視覚入力と思考連鎖出力をサポートし、数学、プログラミング、視覚分析、創作、一般的なタスクにおいてより強力な能力を発揮します。"
   },
   "qwen-coder-plus-latest": {
     "description": "通義千問コードモデル。"
