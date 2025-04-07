@@ -59,7 +59,7 @@ services:
       "
 
   casdoor:
-    image: casbin/casdoor
+    image: casbin/casdoor:v1.843.0
     container_name: lobe-casdoor
     entrypoint: /bin/sh -c './server --createDatabase=true'
     network_mode: 'service:network-service'
