@@ -1,4 +1,4 @@
-import { createHeaderWithAuth } from '@/services/_auth';
+import { createHeaderWithAuth, createPayloadWithKeyVaults } from '@/services/_auth';
 import { useUserStore } from '@/store/user';
 import { modelConfigSelectors } from '@/store/user/selectors';
 import { ChatModelCard } from '@/types/llm';
@@ -68,12 +68,24 @@ export class ModelsService {
         provider,
       });
 
-      const res = await fetch(API_ENDPOINTS.modelPull(provider), {
-        body: JSON.stringify({ model }),
-        headers,
-        method: 'POST',
-        signal, // 传入信号以支持取消
-      });
+      const enableFetchOnClient = modelConfigSelectors.isProviderFetchOnClient(provider)(
+        useUserStore.getState(),
+      );
+
+      let res: Response;
+      if (enableFetchOnClient) {
+        const payload = createPayloadWithKeyVaults(provider);
+
+        const agentRuntime = await initializeWithClientStore(provider, payload);
+        res = (await agentRuntime.pullModel({ model }, { signal }))!;
+      } else {
+        res = await fetch(API_ENDPOINTS.modelPull(provider), {
+          body: JSON.stringify({ model }),
+          headers,
+          method: 'POST',
+          signal,
+        });
+      }
 
       if (!res.ok) {
         throw await getMessageError(res);

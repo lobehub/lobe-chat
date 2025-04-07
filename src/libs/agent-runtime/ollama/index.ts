@@ -247,7 +247,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
       console.error('model download error:', error);
 
       // 检查是否是取消操作
-      if (error instanceof DOMException && error.name === 'AbortError') {
+      if ((error as Error).name === 'AbortError') {
         return new Response(
           JSON.stringify({
             model,

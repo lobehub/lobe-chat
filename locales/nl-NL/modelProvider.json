@@ -164,6 +164,7 @@
     },
     "download": {
       "desc": "Ollama is het model aan het downloaden, sluit deze pagina alstublieft niet af. Bij een herstart zal het downloaden op de onderbroken plaats verdergaan.",
+      "failed": "Het downloaden van het model is mislukt. Controleer uw netwerk of de Ollama-instellingen en probeer het opnieuw.",
       "remainingTime": "Overgebleven tijd",
       "speed": "Downloadsnelheid",
       "title": "Model {{model}} wordt gedownload"
