@@ -5,9 +5,9 @@ import { useTheme } from 'antd-style';
 import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
-import useSWR from 'swr';
 
 import FormAction from '@/components/FormAction';
+import { useActionSWR } from '@/libs/swr';
 import { ModelProgressInfo, modelsService } from '@/services/models';
 import { formatSize } from '@/utils/format';
 
@@ -43,7 +43,7 @@ const OllamaModelDownloader = memo<OllamaModelDownloaderProps>(
       mutate,
       isValidating: isDownloading,
       error,
-    } = useSWR(
+    } = useActionSWR(
       [modelToPull],
       async ([model]) => {
         await modelsService.downloadModel(
@@ -55,8 +55,6 @@ const OllamaModelDownloader = memo<OllamaModelDownloaderProps>(
       },
       {
         onSuccess: onSuccessDownload,
-        revalidateOnFocus: false,
-        revalidateOnMount: false,
       },
     );
 

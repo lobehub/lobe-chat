@@ -1,4 +1,6 @@
+import { isDeprecatedEdition } from '@/const/version';
 import { createHeaderWithAuth } from '@/services/_auth';
+import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { useUserStore } from '@/store/user';
 import { modelConfigSelectors } from '@/store/user/selectors';
 import { ChatModelCard } from '@/types/llm';
@@ -6,6 +8,15 @@ import { getMessageError } from '@/utils/fetch';
 
 import { API_ENDPOINTS } from './_url';
 import { initializeWithClientStore } from './chat';
+
+const isEnableFetchOnClient = (provider: string) => {
+  // TODO: remove this condition in V2.0
+  if (isDeprecatedEdition) {
+    return modelConfigSelectors.isProviderFetchOnClient(provider)(useUserStore.getState());
+  } else {
+    return aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());
+  }
+};
 
 // 进度信息接口
 export interface ModelProgressInfo {
@@ -34,9 +45,7 @@ export class ModelsService {
       /**
        * Use browser agent runtime
        */
-      const enableFetchOnClient = modelConfigSelectors.isProviderFetchOnClient(provider)(
-        useUserStore.getState(),
-      );
+      const enableFetchOnClient = isEnableFetchOnClient(provider);
       if (enableFetchOnClient) {
         const agentRuntime = await initializeWithClientStore(provider);
         return agentRuntime.models();
@@ -68,10 +77,9 @@ export class ModelsService {
         provider,
       });
 
-      const enableFetchOnClient = modelConfigSelectors.isProviderFetchOnClient(provider)(
-        useUserStore.getState(),
-      );
+      const enableFetchOnClient = isEnableFetchOnClient(provider);
 
+      console.log('enableFetchOnClient：', enableFetchOnClient);
       let res: Response;
       if (enableFetchOnClient) {
         const agentRuntime = await initializeWithClientStore(provider);
