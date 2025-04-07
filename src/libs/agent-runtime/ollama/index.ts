@@ -12,8 +12,6 @@ import {
   ChatStreamPayload,
   Embeddings,
   EmbeddingsPayload,
-  ModelDetail,
-  ModelDetailParams,
   ModelProvider,
   PullModelParams,
 } from '../types';
@@ -200,6 +198,17 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
   async pullModel(params: PullModelParams, options?: ModelRequestOptions): Promise<Response> {
     const { model, insecure } = params;
+    const signal = options?.signal; // 获取传入的 AbortSignal
+
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const abortOllama = () => {
+      // 假设 this.client.abort() 是幂等的或者可以安全地多次调用
+      this.client.abort();
+    };
+
+    // 如果有 AbortSignal，监听 abort 事件
+    // 使用 { once: true } 确保监听器只触发一次
+    signal?.addEventListener('abort', abortOllama, { once: true });
 
     try {
       // 获取 Ollama pull 的迭代器
@@ -211,15 +220,22 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
       // 使用专门的模型下载流转换方法
       const progressStream = createModelPullStream(iterable, model, {
-        onAbort: () => {
-          this.client.abort();
+        onCancel: () => {
+          // 当流被取消时，调用 abortOllama
+          // 移除 signal 的监听器，避免重复调用（如果 abortOllama 不是幂等的）
+          signal?.removeEventListener('abort', abortOllama);
+          abortOllama(); // 执行中止逻辑
         },
-        signal: options?.signal,
       });
 
       // 返回标准响应
-      return new Response(progressStream, { headers: { 'Content-Type': 'application/json' } });
+      return new Response(progressStream, {
+        headers: { 'Content-Type': 'application/json' },
+      });
     } catch (error) {
+      // 如果在调用 client.pull 或创建流的初始阶段出错，需要移除监听器
+      signal?.removeEventListener('abort', abortOllama);
+
       // 处理错误
       if ((error as Error).message === 'fetch failed') {
         return createErrorResponse(AgentRuntimeErrorType.OllamaServiceUnavailable, {
@@ -257,43 +273,6 @@ export class LobeOllamaAI implements LobeRuntimeAI {
           status: 500,
         },
       );
-    }
-  }
-
-  async getModelDetail(params: ModelDetailParams): Promise<ModelDetail> {
-    try {
-      const response = await this.client.show({ model: params.model });
-
-      return {
-        details: response.details,
-        // digest: response.digest,
-        id: params.model,
-        modified_at: response.modified_at,
-        // name: response.model.name,
-        // size: response.size,
-      };
-    } catch (error) {
-      const e = error as { message: string; name: string; status_code: number };
-
-      throw AgentRuntimeError.chat({
-        error: { message: e.message, name: e.name, status_code: e.status_code },
-        errorType: AgentRuntimeErrorType.OllamaBizError,
-        provider: ModelProvider.Ollama,
-      });
-    }
-  }
-
-  async deleteModel(model: string): Promise<void> {
-    try {
-      await this.client.delete({ model });
-    } catch (error) {
-      const e = error as { message: string; name: string; status_code: number };
-
-      throw AgentRuntimeError.chat({
-        error: { message: e.message, name: e.name, status_code: e.status_code },
-        errorType: AgentRuntimeErrorType.OllamaBizError,
-        provider: ModelProvider.Ollama,
-      });
     }
   }
 }

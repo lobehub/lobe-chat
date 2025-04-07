@@ -41,7 +41,7 @@ const OllamaModelDownloader = memo<OllamaModelDownloaderProps>(
 
     const {
       mutate,
-      isLoading: isDownloading,
+      isValidating: isDownloading,
       error,
     } = useSWR(
       [modelToPull],
