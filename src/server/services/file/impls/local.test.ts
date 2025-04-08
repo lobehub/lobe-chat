@@ -13,10 +13,14 @@ vi.mock('@/server/modules/ElectronIPCClient', () => ({
 }));
 
 // 模拟文件系统
-vi.mock('fs', () => ({
-  existsSync: vi.fn().mockReturnValue(true),
-  readFileSync: vi.fn().mockReturnValue(Buffer.from('test image content')),
-}));
+vi.mock('fs', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...(actual as any),
+    existsSync: vi.fn().mockReturnValue(true),
+    readFileSync: vi.fn().mockReturnValue(Buffer.from('test image content')),
+  };
+});
 
 describe('DesktopLocalFileImpl', () => {
   let fileService: DesktopLocalFileImpl;
