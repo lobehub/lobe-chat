@@ -196,11 +196,35 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
             },
             label: t('dev.devPanel'),
           },
+          { type: 'separator' },
           {
-            click: async () => {
-              await this.app.storeManager.openInEditor();
-            },
-            label: t('dev.openStore'),
+            label: '测试更新功能',
+            submenu: [
+              {
+                click: () => {
+                  this.app.updaterManager.checkForUpdates();
+                },
+                label: '检查更新',
+              },
+              {
+                click: () => {
+                  this.app.updaterManager.simulateUpdateAvailable();
+                },
+                label: '模拟可用更新',
+              },
+              {
+                click: () => {
+                  this.app.updaterManager.simulateDownloadProgress();
+                },
+                label: '模拟下载进度',
+              },
+              {
+                click: () => {
+                  this.app.updaterManager.simulateUpdateDownloaded();
+                },
+                label: '模拟更新下载完成',
+              },
+            ],
           },
         ],
       });

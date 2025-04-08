@@ -1,3 +1,4 @@
+import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-client-ipc';
 import { BrowserWindow, BrowserWindowConstructorOptions, ipcMain } from 'electron';
 import { join } from 'node:path';
 
@@ -122,6 +123,10 @@ export default class Browser {
     this.browserWindow.hide();
   }
 
+  close() {
+    this.browserWindow.close();
+  }
+
   /**
    * Destroy instance
    */
@@ -220,4 +225,8 @@ export default class Browser {
       width: boundSize.width || windowSize.width,
     });
   }
+
+  broadcast = <T extends MainBroadcastEventKey>(channel: T, data: MainBroadcastParams<T>) => {
+    this._browserWindow.webContents.send(channel, data);
+  };
 }

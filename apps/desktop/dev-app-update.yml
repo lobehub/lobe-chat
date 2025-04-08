@@ -1,3 +1,8 @@
 provider: generic
 url: https://example.com/auto-updates
 updaterCacheDirName: electron-app-updater
+
+#provider: github
+#owner: lobehub
+#repo: lobe-chat
+#updaterCacheDirName: electron-app-updater

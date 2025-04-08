@@ -31,9 +31,11 @@ const config = {
     '!dist/next/.next/server/app/sitemap',
     '!dist/next/.next/static/media',
   ],
+  generateUpdatesFilesForAllChannels: true,
   linux: {
     category: 'Utility',
     maintainer: 'electronjs.org',
+    publish: ['github'],
     target: ['AppImage', 'snap', 'deb'],
   },
   mac: {
@@ -54,21 +56,34 @@ const config = {
     gatekeeperAssess: false,
     hardenedRuntime: true,
     notarize: true,
+    publish: ['github'],
     target: [{ arch: ['x64', 'arm64'], target: 'dmg' }],
   },
   npmRebuild: true,
   nsis: {
+    allowToChangeInstallationDirectory: true,
     artifactName: '${productName}-${version}-setup.${ext}',
     createDesktopShortcut: 'always',
+    include: 'build/installer.nsh',
+    oneClick: false,
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
   },
-  publish: {
-    provider: 'generic',
-    url: 'https://example.com/auto-updates',
+  publish: [
+    {
+      owner: 'lobehub',
+      provider: 'github',
+      releaseType: 'release',
+      repo: 'lobe-chat',
+    },
+  ],
+  releaseInfo: {
+    releaseNotes: 'release notes',
   },
   win: {
     executableName: 'LobeHub-app',
+    publish: ['github'],
+    publisherName: ['LobeHub'],
   },
 };
 

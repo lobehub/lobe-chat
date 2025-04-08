@@ -1,3 +1,5 @@
+import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-client-ipc';
+
 import { AppBrowsersIdentifiers, appBrowsers } from '../appBrowsers';
 import type { App } from './App';
 import type { BrowserWindowOpts } from './Browser';
@@ -12,8 +14,12 @@ export default class BrowserManager {
     this.app = app;
   }
 
+  getMainWindow() {
+    return this.retrieveByIdentifier('chat');
+  }
+
   showMainWindow() {
-    const window = this.retrieveByIdentifier('chat');
+    const window = this.getMainWindow();
 
     window.show();
   }
@@ -25,6 +31,23 @@ export default class BrowserManager {
 
     return window;
   }
+
+  broadcastToAllWindows = <T extends MainBroadcastEventKey>(
+    event: T,
+    data: MainBroadcastParams<T>,
+  ) => {
+    this.browsers.forEach((browser) => {
+      browser.broadcast(event, data);
+    });
+  };
+
+  broadcastToWindow = <T extends MainBroadcastEventKey>(
+    identifier: AppBrowsersIdentifiers,
+    event: T,
+    data: MainBroadcastParams<T>,
+  ) => {
+    this.browsers.get(identifier).broadcast(event, data);
+  };
 
   /**
    * Display the settings window and navigate to a specific tab

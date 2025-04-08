@@ -14,6 +14,7 @@ import { I18nManager } from './I18nManager';
 import { IoCContainer } from './IoCContainer';
 import MenuManager from './MenuManager';
 import { StoreManager } from './StoreManager';
+import { UpdaterManager } from './UpdaterManager';
 
 export type IPCEventMap = Map<string, { controller: any; methodName: string }>;
 
@@ -28,6 +29,7 @@ export class App {
   menuManager: MenuManager;
   i18n: I18nManager;
   storeManager: StoreManager;
+  updaterManager: UpdaterManager;
 
   /**
    * whether app is in quiting
@@ -57,6 +59,7 @@ export class App {
     this.i18n = new I18nManager(this);
     this.browserManager = new BrowserManager(this);
     this.menuManager = new MenuManager(this);
+    this.updaterManager = new UpdaterManager(this);
 
     // register the schema to interceptor url
     // it should register before app ready
@@ -81,6 +84,9 @@ export class App {
     this.menuManager.initialize();
 
     this.browserManager.initializeBrowsers();
+
+    // 初始化更新管理器
+    await this.updaterManager.initialize();
 
     // 添加全局应用退出状态
     this.isQuiting = false;
