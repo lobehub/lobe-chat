@@ -16,6 +16,7 @@ export class ElectronIpcClient {
   private reconnectTimeout: NodeJS.Timeout | null = null;
   private connectionAttempts: number = 0;
   private maxConnectionAttempts: number = 5;
+  private dataBuffer: string = '';
 
   constructor() {
     this.initialize();
@@ -58,22 +59,42 @@ export class ElectronIpcClient {
         });
 
         this.socket.on('data', (data) => {
-          console.log('output:', data.toString());
-          try {
-            const response = JSON.parse(data.toString());
-            const { id, result, error } = response;
+          const dataStr = data.toString();
+          console.log('output:', dataStr);
 
-            const pending = this.requestQueue.get(id);
-            if (pending) {
-              this.requestQueue.delete(id);
-              if (error) {
-                pending.reject(new Error(error));
-              } else {
-                pending.resolve(result);
+          // 将新数据添加到缓冲区
+          this.dataBuffer += dataStr;
+
+          // 按换行符分割消息
+          const messages = this.dataBuffer.split('\n');
+
+          // 最后一个元素可能是不完整的消息，保留在缓冲区
+          this.dataBuffer = messages.pop() || '';
+
+          for (const message of messages) {
+            if (!message.trim()) continue; // 跳过空消息
+
+            try {
+              const response = JSON.parse(message);
+              const { id, result, error } = response;
+
+              const pending = this.requestQueue.get(id);
+              if (pending) {
+                this.requestQueue.delete(id);
+                if (error) {
+                  pending.reject(new Error(error));
+                } else {
+                  pending.resolve(result);
+                }
               }
+            } catch (err) {
+              console.error(
+                '[ElectronIpcClient] Failed to parse response:',
+                err,
+                'message:',
+                message,
+              );
             }
-          } catch (err) {
-            console.error('[ElectronIpcClient] Failed to parse response:', err);
           }
         });
 
@@ -105,6 +126,9 @@ export class ElectronIpcClient {
       this.reconnectTimeout = null;
     }
 
+    // 清空数据缓冲区
+    this.dataBuffer = '';
+
     // 拒绝所有待处理的请求
     for (const [, { reject }] of this.requestQueue) {
       reject(new Error('[ElectronIpcClient] Connection to Electron IPC server lost'));
@@ -130,7 +154,7 @@ export class ElectronIpcClient {
   // 发送请求到 Electron IPC 服务器
   public async sendRequest<T>(method: ServerDispatchEventKey, params: any = {}): Promise<T> {
     if (!this.socketPath) {
-      throw new Error('Electron IPC connection not available');
+      throw new Error('[ElectronIpcClient] Electron IPC connection not available');
     }
 
     // 如果未连接，先连接

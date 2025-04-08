@@ -92,12 +92,12 @@ export class ElectronIPCServer {
 
   // 发送结果
   private sendResult(socket: net.Socket, id: string, result: any): void {
-    socket.write(JSON.stringify({ id, result }));
+    socket.write(JSON.stringify({ id, result }) + '\n');
   }
 
   // 发送错误
   private sendError(socket: net.Socket, id: string, error: string): void {
-    socket.write(JSON.stringify({ error, id }));
+    socket.write(JSON.stringify({ error, id }) + '\n');
   }
 
   // 关闭服务器

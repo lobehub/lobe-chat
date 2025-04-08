@@ -24,7 +24,6 @@ export default class FileCtr extends ControllerModule {
 
   @ipcServerEvent('getStaticFilePath')
   async getFileUrlById(id: string) {
-    console.log('send from server', id);
     return this.fileService.getFilePath(id);
   }
 
