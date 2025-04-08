@@ -182,7 +182,7 @@ export const useSessionStore = createWithEqualityFn<SessionStore>()(
 
 ```
 
-在这个 `store.ts` 文件中，我们创建了一个 `useSessionStore` 钩子，它使用 `zustand` 库来创建一个全局状态管理器。我们将 initialState 和每个 Slice 的状态和动作合并，以创建完整的 SessionStore。
+在这个 `store.ts` 文件中，我们创建了一个 `useSessionStore` 钩子，它使用 `zustand` 库来创建一个全局状态管理器。我们将 initialState 和每个 Slice 的动作合并，以创建完整的 SessionStore。
 
 #### slices/session/action.ts
 
