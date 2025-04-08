@@ -35,7 +35,7 @@ const config = {
   linux: {
     category: 'Utility',
     maintainer: 'electronjs.org',
-    publish: ['github'],
+    // publish: ['github'],
     target: ['AppImage', 'snap', 'deb'],
   },
   mac: {
@@ -79,7 +79,7 @@ const config = {
   ],
   win: {
     executableName: 'LobeHub-app',
-    publish: ['github'],
+    // publish: ['github'],
     publisherName: ['LobeHub'],
   },
 };
