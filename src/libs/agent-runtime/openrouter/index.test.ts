@@ -4,6 +4,7 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 import { testProvider } from '@/libs/agent-runtime/providerTestUtils';
 
+import frontendModels from './fixtures/frontendModels.json';
 import models from './fixtures/models.json';
 import { LobeOpenRouterAI } from './index';
 
@@ -137,12 +138,66 @@ describe('LobeOpenRouterAI', () => {
   });
 
   describe('models', () => {
-    it('should get models', async () => {
+    it('should get models with frontend models data', async () => {
       // mock the models.list method
       (instance['client'].models.list as Mock).mockResolvedValue({ data: models });
 
+      // 模拟成功的 fetch 响应
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({
+          ok: true,
+          json: vi.fn().mockResolvedValue(frontendModels),
+        }),
+      );
+
       const list = await instance.models();
 
+      // 验证 fetch 被正确调用
+      expect(fetch).toHaveBeenCalledWith('https://openrouter.ai/api/frontend/models');
+
+      // 验证模型列表中包含了从前端 API 获取的额外信息
+      const reflectionModel = list.find((model) => model.id === 'mattshumer/reflection-70b:free');
+      expect(reflectionModel).toBeDefined();
+      expect(reflectionModel?.reasoning).toBe(true);
+      expect(reflectionModel?.functionCall).toBe(true);
+
+      expect(list).toMatchSnapshot();
+    });
+
+    it('should handle fetch failure gracefully', async () => {
+      // mock the models.list method
+      (instance['client'].models.list as Mock).mockResolvedValue({ data: models });
+
+      // 模拟失败的 fetch 响应
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({
+          ok: false,
+        }),
+      );
+
+      const list = await instance.models();
+
+      // 验证即使 fetch 失败，方法仍然能返回有效的模型列表
+      expect(fetch).toHaveBeenCalledWith('https://openrouter.ai/api/frontend/models');
+      expect(list.length).toBeGreaterThan(0); // 确保返回了模型列表
+      expect(list).toMatchSnapshot();
+    });
+
+    it('should handle fetch error gracefully', async () => {
+      // mock the models.list method
+      (instance['client'].models.list as Mock).mockResolvedValue({ data: models });
+
+      // 在测试环境中，需要先修改 fetch 的实现，确保错误被捕获
+      vi.spyOn(global, 'fetch').mockImplementation(() => {
+        throw new Error('Network error');
+      });
+
+      const list = await instance.models();
+
+      // 验证即使 fetch 出错，方法仍然能返回有效的模型列表
+      expect(list.length).toBeGreaterThan(0); // 确保返回了模型列表
       expect(list).toMatchSnapshot();
     });
   });
