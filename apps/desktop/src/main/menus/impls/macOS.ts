@@ -71,6 +71,12 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
             label: t('macOS.about', { appName }),
             role: 'about',
           },
+          {
+            click: () => {
+              this.app.updaterManager.checkForUpdates(true);
+            },
+            label: t('common.checkUpdates'),
+          },
           { type: 'separator' },
           {
             accelerator: 'Command+,',
@@ -196,21 +202,21 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
             },
             label: t('dev.devPanel'),
           },
+          {
+            click: () => {
+              this.app.menuManager.rebuildAppMenu();
+            },
+            label: t('dev.refreshMenu'),
+          },
           { type: 'separator' },
           {
-            label: '测试更新功能',
+            label: '自动更新测试模拟',
             submenu: [
-              {
-                click: () => {
-                  this.app.updaterManager.checkForUpdates();
-                },
-                label: '检查更新',
-              },
               {
                 click: () => {
                   this.app.updaterManager.simulateUpdateAvailable();
                 },
-                label: '模拟可用更新',
+                label: '模拟启动后台自动下载更新（3s 下完）',
               },
               {
                 click: () => {
@@ -222,7 +228,7 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
                 click: () => {
                   this.app.updaterManager.simulateUpdateDownloaded();
                 },
-                label: '模拟更新下载完成',
+                label: '模拟下载完成',
               },
             ],
           },

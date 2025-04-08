@@ -10,8 +10,11 @@ export interface AutoUpdateDispatchEvents {
 
 export interface AutoUpdateBroadcastEvents {
   updateAvailable: (info: UpdateInfo) => void;
+  updateCheckStart: () => void;
   updateDownloadProgress: (progress: ProgressInfo) => void;
+  updateDownloadStart: () => void;
   updateDownloaded: (info: UpdateInfo) => void;
   updateError: (message: string) => void;
+  updateNotAvailable: (info: UpdateInfo) => void;
   updateWillInstallLater: () => void;
 }

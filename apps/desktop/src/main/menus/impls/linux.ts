@@ -58,6 +58,12 @@ export class LinuxMenu extends BaseMenuPlatform implements IMenuPlatform {
             click: () => this.app.browserManager.retrieveByIdentifier('settings').show(),
             label: t('file.preferences'),
           },
+          {
+            click: () => {
+              this.app.updaterManager.checkForUpdates(true);
+            },
+            label: t('common.checkUpdates') || '检查更新',
+          },
           { type: 'separator' },
           {
             accelerator: 'Ctrl+W',
