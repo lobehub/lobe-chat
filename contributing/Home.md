@@ -19,16 +19,16 @@ LobeChat is an open-source, extensible ([Function Calling][fc-url]), high-perfor
 ### 🤯 Basic
 
 - [Architecture Design](https://github.com/lobehub/lobe-chat/wiki/Architecture) | [架构设计](https://github.com/lobehub/lobe-chat/wiki/Architecture.zh-CN)
+- [Development Environment Setup Guide](https://github.com/lobehub/lobe-chat/wiki/Setup-Development) | [配置开发环境指南](https://github.com/lobehub/lobe-chat/wiki/Setup-Development.zh-CN)
+- [Project Directory Structure](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure) | [项目目录架构](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure.zh-CN)
+- [Technical Development Getting Started Guide](https://github.com/lobehub/lobe-chat/wiki/Intro) | [技术开发上手指南](https://github.com/lobehub/lobe-chat/wiki/Intro.zh-CN)
 - [Code Style and Contribution Guidelines](https://github.com/lobehub/lobe-chat/wiki/Contributing-Guidelines) | [代码风格与贡献指南](https://github.com/lobehub/lobe-chat/wiki/Contributing-Guidelines.zh-CN)
+- [How to Develop a New Feature](https://github.com/lobehub/lobe-chat/wiki/Feature-Development-Frontend) | [如何开发一个新功能：前端实现](https://github.com/lobehub/lobe-chat/wiki/Feature-Development-Frontend.zh-CN)
 - [Complete Guide to LobeChat Feature Development](https://github.com/lobehub/lobe-chat/wiki/Feature-Development) | [LobeChat 功能开发完全指南](https://github.com/lobehub/lobe-chat/wiki/Feature-Development.zh-CN)
 - [Conversation API Implementation Logic](https://github.com/lobehub/lobe-chat/wiki/Chat-API) | [会话 API 实现逻辑](https://github.com/lobehub/lobe-chat/wiki/Chat-API.zh-CN)
-- [Directory Structure](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure) | [目录架构](https://github.com/lobehub/lobe-chat/wiki/Folder-Structure.zh-CN)
-- [Environment Setup Guide](https://github.com/lobehub/lobe-chat/wiki/Setup-Development) | [环境设置指南](https://github.com/lobehub/lobe-chat/wiki/Setup-Development.zh-CN)
-- [How to Develop a New Feature](https://github.com/lobehub/lobe-chat/wiki/Feature-Development-Frontend) | [如何开发一个新功能：前端实现](https://github.com/lobehub/lobe-chat/wiki/Feature-Development-Frontend.zh-CN)
 - [New Authentication Provider Guide](https://github.com/lobehub/lobe-chat/wiki/Add-New-Authentication-Providers) | [新身份验证方式开发指南](https://github.com/lobehub/lobe-chat/wiki/Add-New-Authentication-Providers.zh-CN)
-- [Resources and References](https://github.com/lobehub/lobe-chat/wiki/Resources) | [资源与参考](https://github.com/lobehub/lobe-chat/wiki/Resources.zh-CN)
-- [Technical Development Getting Started Guide](https://github.com/lobehub/lobe-chat/wiki/Intro) | [技术开发上手指南](https://github.com/lobehub/lobe-chat/wiki/Intro.zh-CN)
 - [Testing Guide](https://github.com/lobehub/lobe-chat/wiki/Test) | [测试指南](https://github.com/lobehub/lobe-chat/wiki/Test.zh-CN)
+- [Resources and References](https://github.com/lobehub/lobe-chat/wiki/Resources) | [资源与参考](https://github.com/lobehub/lobe-chat/wiki/Resources.zh-CN)
 
 <br/>
 
