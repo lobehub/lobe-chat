@@ -1,10 +1,11 @@
 import { ProgressInfo, UpdateInfo } from '../types';
 
 export interface AutoUpdateDispatchEvents {
-  checkUpdate: () => { success: true };
-  downloadUpdate: () => { success: true };
-  installUpdate: () => { success: true };
-  quitAndInstallUpdate: () => { success: true };
+  checkUpdate: () => void;
+  downloadUpdate: () => void;
+  installLater: () => void;
+  installNow: () => void;
+  installUpdate: () => void;
 }
 
 export interface AutoUpdateBroadcastEvents {
@@ -12,4 +13,5 @@ export interface AutoUpdateBroadcastEvents {
   updateDownloadProgress: (progress: ProgressInfo) => void;
   updateDownloaded: (info: UpdateInfo) => void;
   updateError: (message: string) => void;
+  updateWillInstallLater: () => void;
 }

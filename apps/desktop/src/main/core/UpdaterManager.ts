@@ -27,6 +27,10 @@ export class UpdaterManager {
     autoUpdater.logger = log;
   }
 
+  get mainWindow() {
+    return this.app.browserManager.getMainWindow();
+  }
+
   public initialize = async () => {
     // 如果是开发环境或禁用了更新，不初始化更新
     if (!updaterConfig.enableAppUpdate && !isDev) return;
@@ -40,7 +44,7 @@ export class UpdaterManager {
     if (isDev) {
       log.info('[Updater] Running in dev mode, forcing update check');
       // 开发环境下允许测试更新
-      autoUpdater.forceDevUpdateConfig = true;
+      // autoUpdater.forceDevUpdateConfig = true;
     }
 
     // 设置更新源
@@ -100,21 +104,31 @@ export class UpdaterManager {
   };
 
   /**
-   * 安装更新
+   * 立即安装更新
    */
-  public quitAndInstall = () => {
-    log.info('[Updater] Quitting and installing update...');
+  public installNow = () => {
+    log.info('[Updater] Installing update now...');
 
     // 关闭主窗口
-    const mainWindow = this.app.browserManager.getMainWindow();
-    if (mainWindow) {
-      mainWindow.close();
-    }
+    this.mainWindow.close();
 
     // 延迟 1 秒后安装更新，确保窗口已关闭
     setTimeout(() => {
       autoUpdater.quitAndInstall(false, true);
     }, 1000);
+  };
+
+  /**
+   * 下次启动时安装更新
+   */
+  public installLater = () => {
+    log.info('[Updater] Update will be installed on next restart');
+
+    // 标记下次启动时安装，但不退出应用
+    autoUpdater.autoInstallOnAppQuit = true;
+
+    // 通知渲染进程更新将在下次启动时安装
+    this.mainWindow.broadcast('updateWillInstallLater');
   };
 
   /**
@@ -131,7 +145,12 @@ export class UpdaterManager {
       // 模拟一个新版本更新
       const mockUpdateInfo = {
         releaseDate: new Date().toISOString(),
-        releaseNotes: '这是一个模拟的更新版本，用于测试更新功能。',
+        releaseNotes: ` #### 版本 1.0.0 更新内容
+- 新增了一些非常棒的功能
+- 修复了一些影响使用的 bug
+- 优化了应用的整体性能
+- 更新了依赖库版本
+`,
         version: '1.0.0',
       };
 
@@ -157,7 +176,15 @@ export class UpdaterManager {
       // 模拟一个新版本更新
       const mockUpdateInfo = {
         releaseDate: new Date().toISOString(),
-        releaseNotes: '这是一个模拟的更新版本，用于测试更新功能。',
+        releaseNotes: `
+          <h4>版本 1.0.0 更新内容</h4>
+          <ul>
+            <li>新增了一些非常棒的功能</li>
+            <li>修复了一些影响使用的 bug</li>
+            <li>优化了应用的整体性能</li>
+            <li>更新了依赖库版本</li>
+          </ul>
+        `,
         version: '1.0.0',
       };
 
@@ -167,27 +194,7 @@ export class UpdaterManager {
       // 通知渲染进程
       mainWindow.broadcast('updateDownloaded', mockUpdateInfo);
 
-      // 显示更新提示对话框
-      dialog
-        .showMessageBox(mainWindow.browserWindow, {
-          buttons: ['立即安装', '稍后安装'],
-          defaultId: 0,
-          detail: '模拟更新已下载，是否立即安装并重启应用？',
-          message: `Lobe Chat 1.0.0 (模拟版本) 已准备好安装`,
-          title: '更新已下载 (测试模式)',
-          type: 'info',
-        })
-        .then(({ response }) => {
-          if (
-            response === 0 && // 在测试模式下，不实际执行安装，只是关闭主窗口然后重新打开
-            mainWindow
-          ) {
-            mainWindow.close();
-            setTimeout(() => {
-              this.app.browserManager.showMainWindow();
-            }, 1000);
-          }
-        });
+      // 不再显示对话框，因为现在使用右上角图标和 Popover 了
     }
   };
 
@@ -271,22 +278,7 @@ export class UpdaterManager {
       const mainWindow = this.app.browserManager.getMainWindow();
       if (mainWindow) {
         mainWindow.broadcast('updateDownloaded', info);
-
-        // 显示更新提示对话框
-        dialog
-          .showMessageBox(mainWindow.browserWindow, {
-            buttons: ['立即安装', '稍后安装'],
-            defaultId: 0,
-            detail: '更新已下载，是否立即安装并重启应用？',
-            message: `Lobe Chat ${info.version} 已准备好安装`,
-            title: '更新已下载',
-            type: 'info',
-          })
-          .then(({ response }) => {
-            if (response === 0) {
-              this.quitAndInstall();
-            }
-          });
+        // 不再显示对话框，而是由渲染进程通过右上角图标和 Popover 显示
       }
     });
 

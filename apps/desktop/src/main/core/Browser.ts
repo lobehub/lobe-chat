@@ -226,7 +226,7 @@ export default class Browser {
     });
   }
 
-  broadcast = <T extends MainBroadcastEventKey>(channel: T, data: MainBroadcastParams<T>) => {
+  broadcast = <T extends MainBroadcastEventKey>(channel: T, data?: MainBroadcastParams<T>) => {
     this._browserWindow.webContents.send(channel, data);
   };
 }

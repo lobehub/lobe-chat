@@ -6,7 +6,11 @@ class AutoUpdateService {
   };
 
   quitAndInstallUpdate = async () => {
-    return dispatch('quitAndInstallUpdate');
+    return dispatch('installNow');
+  };
+
+  installLater = async () => {
+    return dispatch('installLater');
   };
 }
 

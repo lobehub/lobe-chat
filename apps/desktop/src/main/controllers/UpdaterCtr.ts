@@ -16,7 +16,6 @@ export default class UpdaterService {
   async checkForUpdates() {
     console.log('[UpdaterSrv] Check for updates requested');
     await this.app.updaterManager.checkForUpdates();
-    return { success: true };
   }
 
   /**
@@ -26,26 +25,23 @@ export default class UpdaterService {
   async downloadUpdate() {
     console.log('[UpdaterSrv] Download update requested');
     await this.app.updaterManager.downloadUpdate();
-    return { success: true };
-  }
-
-  /**
-   * 安装更新
-   */
-  @ipcClientEvent('installUpdate')
-  quitAndInstall() {
-    console.log('[UpdaterSrv] Install update requested');
-    this.app.updaterManager.quitAndInstall();
-    return { success: true };
   }
 
   /**
    * 关闭应用并安装更新
    */
-  @ipcClientEvent('quitAndInstallUpdate')
+  @ipcClientEvent('installNow')
   quitAndInstallUpdate() {
     console.log('[UpdaterSrv] Quit and install update requested');
-    this.app.updaterManager.quitAndInstall();
-    return { success: true };
+    this.app.updaterManager.installNow();
+  }
+
+  /**
+   * 下次启动时安装更新
+   */
+  @ipcClientEvent('installLater')
+  installLater() {
+    console.log('[UpdaterSrv] Install later requested');
+    this.app.updaterManager.installLater();
   }
 }
