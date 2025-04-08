@@ -1,8 +1,9 @@
 import { Ollama, Tool } from 'ollama/browser';
 import { ClientOptions } from 'openai';
 
-import { OpenAIChatMessage } from '@/libs/agent-runtime';
+import { ModelRequestOptions, OpenAIChatMessage } from '@/libs/agent-runtime';
 import { ChatModelCard } from '@/types/llm';
+import { createErrorResponse } from '@/utils/errorResponse';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -12,11 +13,12 @@ import {
   Embeddings,
   EmbeddingsPayload,
   ModelProvider,
+  PullModelParams,
 } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { OllamaStream, convertIterableToStream } from '../utils/streams';
+import { OllamaStream, convertIterableToStream, createModelPullStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { OllamaMessage } from './type';
 
@@ -193,6 +195,86 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
     return ollamaMessage;
   };
+
+  async pullModel(params: PullModelParams, options?: ModelRequestOptions): Promise<Response> {
+    const { model, insecure } = params;
+    const signal = options?.signal; // 获取传入的 AbortSignal
+
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const abortOllama = () => {
+      // 假设 this.client.abort() 是幂等的或者可以安全地多次调用
+      this.client.abort();
+    };
+
+    // 如果有 AbortSignal，监听 abort 事件
+    // 使用 { once: true } 确保监听器只触发一次
+    signal?.addEventListener('abort', abortOllama, { once: true });
+
+    try {
+      // 获取 Ollama pull 的迭代器
+      const iterable = await this.client.pull({
+        insecure: insecure ?? false,
+        model,
+        stream: true,
+      });
+
+      // 使用专门的模型下载流转换方法
+      const progressStream = createModelPullStream(iterable, model, {
+        onCancel: () => {
+          // 当流被取消时，调用 abortOllama
+          // 移除 signal 的监听器，避免重复调用（如果 abortOllama 不是幂等的）
+          signal?.removeEventListener('abort', abortOllama);
+          abortOllama(); // 执行中止逻辑
+        },
+      });
+
+      // 返回标准响应
+      return new Response(progressStream, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+    } catch (error) {
+      // 如果在调用 client.pull 或创建流的初始阶段出错，需要移除监听器
+      signal?.removeEventListener('abort', abortOllama);
+
+      // 处理错误
+      if ((error as Error).message === 'fetch failed') {
+        return createErrorResponse(AgentRuntimeErrorType.OllamaServiceUnavailable, {
+          message: 'please check whether your ollama service is available',
+          provider: ModelProvider.Ollama,
+        });
+      }
+
+      console.error('model download error:', error);
+
+      // 检查是否是取消操作
+      if ((error as Error).name === 'AbortError') {
+        return new Response(
+          JSON.stringify({
+            model,
+            status: 'cancelled',
+          }),
+          {
+            headers: { 'Content-Type': 'application/json' },
+            status: 499,
+          },
+        );
+      }
+
+      // 返回错误响应
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return new Response(
+        JSON.stringify({
+          error: errorMessage,
+          model,
+          status: 'error',
+        }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          status: 500,
+        },
+      );
+    }
+  }
 }
 
 export default LobeOllamaAI;

@@ -842,6 +842,9 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny是百度自研的超高性能大語言模型，部署與精調成本在文心系列模型中最低。"
   },
+  "ernie-x1-32k-preview": {
+    "description": "文心大模型X1具備更強的理解、規劃、反思、進化能力。作為能力更全面的深度思考模型，文心X1兼具準確、創意和文采，在中文知識問答、文學創作、文稿寫作、日常對話、邏輯推理、複雜計算及工具調用等方面表現尤為出色。"
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供穩定並可調優的性能，是複雜任務解決方案的理想選擇。"
   },
@@ -913,6 +916,9 @@
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro 實驗版是 Google 最先進的思維模型，能夠對代碼、數學和 STEM 領域的複雜問題進行推理，還能利用長上下文來分析大型數據集、代碼庫和文檔。"
+  },
+  "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和STEM領域的複雜問題進行推理，以及使用長上下文分析大型數據集、程式庫和文檔。"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 適合中小規模任務處理，兼具成本效益。"
@@ -1571,9 +1577,6 @@
   "openai/o1-preview": {
     "description": "o1是OpenAI新的推理模型，適用於需要廣泛通用知識的複雜任務。該模型具有128K上下文和2023年10月的知識截止日期。"
   },
-  "openchat/openchat-7b": {
-    "description": "OpenChat 7B 是經過“C-RLFT（條件強化學習微調）”策略精調的開源語言模型庫。"
-  },
   "openrouter/auto": {
     "description": "根據上下文長度、主題和複雜性，你的請求將發送到 Llama 3 70B Instruct、Claude 3.5 Sonnet（自我調節）或 GPT-4o。"
   },
@@ -1595,7 +1598,7 @@
   "qvq-72b-preview": {
     "description": "QVQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於提升視覺推理能力，尤其在數學推理領域。"
   },
-  "qvq-max-latest": {
+  "qvq-max": {
     "description": "通義千問QVQ視覺推理模型，支持視覺輸入及思維鏈輸出，在數學、程式設計、視覺分析、創作以及通用任務上都表現了更強的能力。"
   },
   "qwen-coder-plus-latest": {
