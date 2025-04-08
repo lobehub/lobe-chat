@@ -842,6 +842,9 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny es un modelo de lenguaje grande de alto rendimiento desarrollado internamente por Baidu, con los costos de implementación y ajuste más bajos entre los modelos de la serie Wenxin."
   },
+  "ernie-x1-32k-preview": {
+    "description": "El modelo grande Wenxin X1 posee una mayor capacidad de comprensión, planificación, reflexión y evolución. Como un modelo de pensamiento profundo más completo, Wenxin X1 combina precisión, creatividad y elocuencia, destacándose especialmente en preguntas y respuestas de conocimiento en chino, creación literaria, redacción de documentos, diálogos cotidianos, razonamiento lógico, cálculos complejos y llamadas a herramientas."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Ajuste) ofrece un rendimiento estable y ajustable, siendo una opción ideal para soluciones de tareas complejas."
   },
@@ -913,6 +916,9 @@
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental es el modelo de pensamiento más avanzado de Google, capaz de razonar sobre problemas complejos en código, matemáticas y campos STEM, además de utilizar contextos largos para analizar grandes conjuntos de datos, bibliotecas de código y documentos."
+  },
+  "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Preview es el modelo de pensamiento más avanzado de Google, capaz de razonar sobre problemas complejos en código, matemáticas y campos STEM, así como de analizar grandes conjuntos de datos, bibliotecas de código y documentos utilizando un contexto largo."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B es adecuado para el procesamiento de tareas de pequeña y mediana escala, combinando rentabilidad."
@@ -1571,9 +1577,6 @@
   "openai/o1-preview": {
     "description": "o1 es el nuevo modelo de inferencia de OpenAI, adecuado para tareas complejas que requieren un amplio conocimiento general. Este modelo tiene un contexto de 128K y una fecha de corte de conocimiento en octubre de 2023."
   },
-  "openchat/openchat-7b": {
-    "description": "OpenChat 7B es una biblioteca de modelos de lenguaje de código abierto ajustada mediante la estrategia de 'C-RLFT (ajuste fino de refuerzo condicional)'."
-  },
   "openrouter/auto": {
     "description": "Según la longitud del contexto, el tema y la complejidad, tu solicitud se enviará a Llama 3 70B Instruct, Claude 3.5 Sonnet (autoajuste) o GPT-4o."
   },
@@ -1595,7 +1598,7 @@
   "qvq-72b-preview": {
     "description": "El modelo QVQ es un modelo de investigación experimental desarrollado por el equipo de Qwen, enfocado en mejorar la capacidad de razonamiento visual, especialmente en el ámbito del razonamiento matemático."
   },
-  "qvq-max-latest": {
+  "qvq-max": {
     "description": "El modelo de razonamiento visual QVQ de Tongyi Qianwen admite entradas visuales y salidas de cadena de pensamiento, mostrando una mayor capacidad en matemáticas, programación, análisis visual, creación y tareas generales."
   },
   "qwen-coder-plus-latest": {

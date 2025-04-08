@@ -842,6 +842,9 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny là mô hình ngôn ngữ lớn hiệu suất siêu cao tự phát triển của Baidu, có chi phí triển khai và tinh chỉnh thấp nhất trong dòng sản phẩm văn tâm."
   },
+  "ernie-x1-32k-preview": {
+    "description": "Mô hình lớn Wenxin X1 có khả năng hiểu, lập kế hoạch, phản ánh và tiến hóa mạnh mẽ hơn. Là một mô hình tư duy sâu sắc toàn diện hơn, Wenxin X1 kết hợp độ chính xác, sự sáng tạo và văn phong, đặc biệt xuất sắc trong các lĩnh vực như hỏi đáp kiến thức tiếng Trung, sáng tác văn học, viết tài liệu, đối thoại hàng ngày, suy luận logic, tính toán phức tạp và gọi công cụ."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) cung cấp hiệu suất ổn định và có thể điều chỉnh, là lựa chọn lý tưởng cho các giải pháp nhiệm vụ phức tạp."
   },
@@ -913,6 +916,9 @@
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận về mã, toán học và các vấn đề phức tạp trong lĩnh vực STEM, đồng thời có thể phân tích các tập dữ liệu lớn, kho mã và tài liệu bằng cách sử dụng ngữ cảnh dài."
+  },
+  "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Preview là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận về mã, toán học và các vấn đề phức tạp trong lĩnh vực STEM, cũng như phân tích các tập dữ liệu lớn, kho mã và tài liệu bằng cách sử dụng ngữ cảnh dài."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B phù hợp cho việc xử lý các nhiệm vụ quy mô vừa và nhỏ, đồng thời mang lại hiệu quả chi phí."
@@ -1571,9 +1577,6 @@
   "openai/o1-preview": {
     "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
   },
-  "openchat/openchat-7b": {
-    "description": "OpenChat 7B là thư viện mô hình ngôn ngữ mã nguồn mở được tinh chỉnh bằng chiến lược 'C-RLFT (tinh chỉnh tăng cường có điều kiện)'."
-  },
   "openrouter/auto": {
     "description": "Dựa trên độ dài ngữ cảnh, chủ đề và độ phức tạp, yêu cầu của bạn sẽ được gửi đến Llama 3 70B Instruct, Claude 3.5 Sonnet (tự điều chỉnh) hoặc GPT-4o."
   },
@@ -1595,8 +1598,8 @@
   "qvq-72b-preview": {
     "description": "Mô hình QVQ là mô hình nghiên cứu thử nghiệm do đội ngũ Qwen phát triển, tập trung vào việc nâng cao khả năng suy luận hình ảnh, đặc biệt trong lĩnh vực suy luận toán học."
   },
-  "qvq-max-latest": {
-    "description": "Mô hình suy luận thị giác QVQ của Tongyi Qianwen, hỗ trợ đầu vào thị giác và đầu ra chuỗi tư duy, thể hiện khả năng mạnh mẽ hơn trong toán học, lập trình, phân tích thị giác, sáng tạo và các nhiệm vụ chung."
+  "qvq-max": {
+    "description": "Mô hình suy luận thị giác QVQ của Tongyi Qianwen hỗ trợ đầu vào thị giác và đầu ra chuỗi tư duy, thể hiện khả năng mạnh mẽ hơn trong toán học, lập trình, phân tích thị giác, sáng tạo và các nhiệm vụ chung."
   },
   "qwen-coder-plus-latest": {
     "description": "Mô hình mã Qwen."

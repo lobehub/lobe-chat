@@ -842,6 +842,9 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny, Baidu tarafından geliştirilen ultra yüksek performanslı büyük dil modelidir, dağıtım ve ince ayar maliyetleri Wenxin serisi modelleri arasında en düşüktür."
   },
+  "ernie-x1-32k-preview": {
+    "description": "Wenxin Büyük Model X1, daha güçlü anlama, planlama, düşünme ve evrim yeteneklerine sahiptir. Daha kapsamlı bir derin düşünme modeli olarak, Wenxin X1, doğru, yaratıcı ve edebi bir üslup sunarak, Çince bilgi sorgulama, edebi yaratım, metin yazımı, günlük diyalog, mantıksal akıl yürütme, karmaşık hesaplamalar ve araç çağırma gibi alanlarda özellikle başarılıdır."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning), kararlı ve ayarlanabilir bir performans sunar, karmaşık görev çözümleri için ideal bir seçimdir."
   },
@@ -913,6 +916,9 @@
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Deneysel, Google'ın en gelişmiş düşünce modeli olup, kod, matematik ve STEM alanlarındaki karmaşık sorunları akıl yürütebilmektedir. Ayrıca, uzun bağlamları kullanarak büyük veri setlerini, kod havuzlarını ve belgeleri analiz edebilir."
+  },
+  "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Önizleme, Google'ın en gelişmiş düşünce modeli olup, kod, matematik ve STEM alanlarındaki karmaşık sorunları akıl yürütme yeteneğine sahiptir. Uzun bağlamları analiz ederek büyük veri setleri, kod havuzları ve belgeler üzerinde çalışabilir."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B, orta ölçekli görev işleme için uygundur ve maliyet etkinliği sunar."
@@ -1571,9 +1577,6 @@
   "openai/o1-preview": {
     "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
   },
-  "openchat/openchat-7b": {
-    "description": "OpenChat 7B, 'C-RLFT (koşullu pekiştirme öğrenimi ince ayarı)' stratejisi ile ince ayar yapılmış açık kaynak dil modeli kütüphanesidir."
-  },
   "openrouter/auto": {
     "description": "Bağlam uzunluğu, konu ve karmaşıklığa göre isteğiniz, Llama 3 70B Instruct, Claude 3.5 Sonnet (kendini ayarlama) veya GPT-4o'ya gönderilecektir."
   },
@@ -1595,8 +1598,8 @@
   "qvq-72b-preview": {
     "description": "QVQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir; görsel akıl yürütme yeteneğini artırmaya odaklanır, özellikle matematik akıl yürütme alanında."
   },
-  "qvq-max-latest": {
-    "description": "Tongyi Qianwen QVQ görsel akıl yürütme modeli, görsel girdi ve düşünce zinciri çıktısını destekler; matematik, programlama, görsel analiz, yaratıcılık ve genel görevlerde daha güçlü yetenekler sergilemektedir."
+  "qvq-max": {
+    "description": "Genel Amaçlı QVQ Görsel Akıl Yürütme Modeli, görsel girdi ve düşünce zinciri çıktısını destekler. Matematik, programlama, görsel analiz, yaratıcılık ve genel görevlerde daha güçlü yetenekler sergilemektedir."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen kod modeli."
