@@ -3,6 +3,10 @@
   "version": "0.0.3",
   "description": "A minimal Electron application with TypeScript",
   "homepage": "https://lobehub.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lobehub/lobe-chat.git"
+  },
   "author": "LobeHub",
   "main": "./dist/main/index.js",
   "scripts": {
