@@ -154,6 +154,8 @@ jobs:
         if: runner.os == 'macOS'
         run: npm run desktop:build
         env:
+          # 设置更新通道，PR构建为nightly，否则为stable
+          UPDATE_CHANNEL: ${{ needs.version.outputs.is_pr_build == 'true' && 'nightly' || 'stable' }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           # 默认添加一个加密 SECRET
@@ -172,6 +174,8 @@ jobs:
         if: runner.os != 'macOS'
         run: npm run desktop:build
         env:
+          # 设置更新通道，PR构建为nightly，否则为stable
+          UPDATE_CHANNEL: ${{ needs.version.outputs.is_pr_build == 'true' && 'nightly' || 'stable' }}
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='

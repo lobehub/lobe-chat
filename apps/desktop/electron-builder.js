@@ -77,9 +77,6 @@ const config = {
       repo: 'lobe-chat',
     },
   ],
-  releaseInfo: {
-    releaseNotes: 'release notes',
-  },
   win: {
     executableName: 'LobeHub-app',
     publish: ['github'],
