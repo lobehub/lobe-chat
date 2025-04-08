@@ -2,15 +2,6 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const ollamaChatModels: AIChatModelCard[] = [
   {
-    contextWindowTokens: 65_536,
-    description:
-      'DeepSeek-V3 是一个强大的专家混合（MoE）语言模型，总参数量为 671B，每个 Token 激活 37B 参数。该模型采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，实现了高效推理和经济训练，并在前代 DeepSeek-V3 的基础上显著提升了性能。',
-    displayName: 'DeepSeek V3',
-    enabled: true,
-    id: 'deepseek-v3',
-    type: 'chat',
-  },
-  {
     abilities: {
       reasoning: true,
     },
@@ -20,6 +11,14 @@ const ollamaChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1',
     enabled: true,
     id: 'deepseek-r1',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 65_536,
+    description:
+      'DeepSeek-V3 是一个强大的专家混合（MoE）语言模型，总参数量为 671B，每个 Token 激活 37B 参数。该模型采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，实现了高效推理和经济训练，并在前代 DeepSeek-V3 的基础上显著提升了性能。',
+    displayName: 'DeepSeek V3 671B',
+    id: 'deepseek-v3',
     type: 'chat',
   },
   {
@@ -87,8 +86,10 @@ const ollamaChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 128_000,
-    description: 'QwQ 是一个实验研究模型，专注于提高 AI 推理能力。',
+    description:
+      'QwQ 是 Qwen 系列的推理模型。与传统的指令调优模型相比，QwQ 具备思考和推理的能力，能够在下游任务中，尤其是困难问题上，显著提升性能。QwQ-32B 是中型推理模型，能够在与最先进的推理模型（如 DeepSeek-R1、o1-mini）竞争时取得可观的表现。',
     displayName: 'QwQ 32B',
+    enabled: true,
     id: 'qwq',
     releasedAt: '2024-11-28',
     type: 'chat',
@@ -114,6 +115,7 @@ const ollamaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description: 'Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。',
     displayName: 'Qwen2.5 7B',
+    enabled: true,
     id: 'qwen2.5',
     type: 'chat',
   },

@@ -91,6 +91,10 @@
     "provider": "Provider"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Sluit melding",
+      "start": "Geïnstalleerd en actief, begin gesprek"
+    },
     "cors": {
       "description": "Vanwege beveiligingsbeperkingen in de browser moet je cross-origin configuratie voor Ollama instellen om het correct te kunnen gebruiken.",
       "linux": {
