@@ -1,6 +1,6 @@
 # Architecture Design
 
-LobeChat is an AI conversation application built on the Next.js framework, aiming to provide an AI productivity platform that enables users to interact with AI through natural language. The following is an overview of the architecture design of LobeChat:
+LobeChat is an AI chat application built on the Next.js framework, aiming to provide an AI productivity platform that enables users to interact with AI through natural language. The following is an overview of the architecture design of LobeChat:
 
 #### TOC
 
