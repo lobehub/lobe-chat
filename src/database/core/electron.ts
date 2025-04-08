@@ -111,10 +111,13 @@ process.on('SIGINT', () => {
   releaseLock();
   process.exit(0);
 });
+
 process.on('uncaughtException', (error) => {
+  // ignore ECONNRESET error
+  if ((error as any).code === 'ECONNRESET') return;
+
   console.error('Uncaught exception:', error);
   releaseLock();
-  process.exit(1);
 });
 
 const migrateDatabase = async (db: LobeChatDatabase): Promise<void> => {
