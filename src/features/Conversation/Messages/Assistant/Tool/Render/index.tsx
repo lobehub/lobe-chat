@@ -1,12 +1,13 @@
+import isEqual from 'fast-deep-equal';
 import { Suspense, memo } from 'react';
 
 import { LOADING_FLAT } from '@/const/message';
-import ErrorResponse from '@/features/Conversation/Messages/Assistant/Tool/Render/ErrorResponse';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
 import Arguments from './Arguments';
 import CustomRender from './CustomRender';
+import ErrorResponse from './ErrorResponse';
 
 interface RenderProps {
   messageId: string;
@@ -16,10 +17,11 @@ interface RenderProps {
   toolCallId: string;
   toolIndex: number;
 }
+
 const Render = memo<RenderProps>(
   ({ toolCallId, toolIndex, messageId, requestArgs, showPluginRender, setShowPluginRender }) => {
     const loading = useChatStore(chatSelectors.isToolCallStreaming(messageId, toolIndex));
-    const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(toolCallId));
+    const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(toolCallId), isEqual);
 
     // 如果处于 loading 或者找不到 toolMessage 则展示 Arguments
     if (loading || !toolMessage) return <Arguments arguments={requestArgs} />;
@@ -47,5 +49,7 @@ const Render = memo<RenderProps>(
     }
   },
 );
+
+Render.displayName = 'ToolRender';
 
 export default Render;

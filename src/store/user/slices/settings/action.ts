@@ -1,4 +1,3 @@
-import { ThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
@@ -24,7 +23,6 @@ export interface UserSettingsAction {
   internal_createSignal: () => AbortController;
   resetSettings: () => Promise<void>;
   setSettings: (settings: DeepPartial<UserSettings>) => Promise<void>;
-  switchThemeMode: (themeMode: ThemeMode) => Promise<void>;
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
   updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
   updateKeyVaults: (settings: Partial<UserKeyVaults>) => Promise<void>;
@@ -91,9 +89,6 @@ export const createSettingsSlice: StateCreator<
     const abortController = get().internal_createSignal();
     await userService.updateUserSettings(diffs, abortController.signal);
     await get().refreshUserState();
-  },
-  switchThemeMode: async (themeMode) => {
-    await get().updateGeneralConfig({ themeMode });
   },
   updateDefaultAgent: async (defaultAgent) => {
     await get().setSettings({ defaultAgent });

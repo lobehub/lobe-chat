@@ -180,12 +180,10 @@ const Anthropic: ModelProviderCard = {
     sdkType: 'anthropic',
     showModelFetcher: true,
     smoothing: {
-      speed: 5,
       text: true,
     },
   },
   smoothing: {
-    speed: 5,
     text: true,
   },
   url: 'https://anthropic.com',

@@ -42,6 +42,17 @@
     "sessionWithName": "Paramètres de session · {{name}}",
     "title": "Paramètres"
   },
+  "hotkey": {
+    "conflicts": "Conflit avec les raccourcis existants",
+    "group": {
+      "conversation": "Conversation",
+      "essential": "Essentiel"
+    },
+    "invalidCombination": "Le raccourci doit contenir au moins une touche de modification (Ctrl, Alt, Shift) et une touche normale",
+    "record": "Appuyez sur une touche pour enregistrer le raccourci",
+    "reset": "Réinitialiser aux raccourcis par défaut",
+    "title": "Raccourcis clavier"
+  },
   "llm": {
     "aesGcm": "Votre clé, votre adresse de proxy, etc. seront cryptées à l'aide de l'algorithme de chiffrement <1>AES-GCM</1>",
     "apiKey": {
@@ -335,6 +346,33 @@
     },
     "title": "Paramètres du thème"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Exporter",
+        "exportType": {
+          "agent": "Exporter les paramètres de l'agent",
+          "agentWithMessage": "Exporter les paramètres de l'agent et les messages",
+          "all": "Exporter les paramètres globaux et toutes les données des agents",
+          "allAgent": "Exporter tous les paramètres des agents",
+          "allAgentWithMessage": "Exporter tous les agents et les messages",
+          "globalSetting": "Exporter les paramètres globaux"
+        },
+        "title": "Exporter les données"
+      },
+      "import": {
+        "button": "Importer",
+        "title": "Importer les données"
+      },
+      "title": "Opérations avancées"
+    },
+    "desc": "Utilisation du stockage dans le navigateur actuel",
+    "embeddings": {
+      "used": "Stockage des vecteurs"
+    },
+    "title": "Stockage des données",
+    "used": "Utilisation du stockage"
+  },
   "submitAgentModal": {
     "button": "Soumettre l'agent",
     "identifier": "Identifiant de l'agent",
@@ -425,8 +463,10 @@
     "agent": "Agent par défaut",
     "common": "Paramètres généraux",
     "experiment": "Expérience",
+    "hotkey": "Raccourcis clavier",
     "llm": "Modèle de langue",
     "provider": "Fournisseur de services d'IA",
+    "storage": "Stockage des données",
     "sync": "Synchronisation cloud",
     "system-agent": "Agent système",
     "tts": "Service vocal"

@@ -7,14 +7,22 @@ import ReactComponentName from 'react-scan/react-component-name/webpack';
 
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
+const isDesktop = process.env.NEXT_PUBLIC_IS_DESKTOP_APP === '1';
 const enableReactScan = !!process.env.REACT_SCAN_MONITOR_API_KEY;
 const isUsePglite = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
 
 // if you need to proxy the api endpoint to remote server
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH;
+const isStandaloneMode = buildWithDocker || isDesktop;
+
+const standaloneConfig: NextConfig = {
+  output: 'standalone',
+  outputFileTracingIncludes: { '*': ['public/**/*', '.next/static/**/*'] },
+};
 
 const nextConfig: NextConfig = {
+  ...(isStandaloneMode ? standaloneConfig : {}),
   basePath,
   compress: isProd,
   experimental: {
@@ -111,7 +119,6 @@ const nextConfig: NextConfig = {
       hmrRefreshes: true,
     },
   },
-  output: buildWithDocker ? 'standalone' : undefined,
   reactStrictMode: true,
   redirects: async () => [
     {
@@ -227,6 +234,12 @@ const nextConfig: NextConfig = {
 
     config.resolve.alias.canvas = false;
 
+    // to ignore epub2 compile error
+    // refs: https://github.com/lobehub/lobe-chat/discussions/6769
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      zipfile: false,
+    };
     return config;
   },
 };
@@ -235,13 +248,14 @@ const noWrapper = (config: NextConfig) => config;
 
 const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapper;
 
-const withPWA = isProd
-  ? withSerwistInit({
-      register: false,
-      swDest: 'public/sw.js',
-      swSrc: 'src/app/sw.ts',
-    })
-  : noWrapper;
+const withPWA =
+  isProd && !isDesktop
+    ? withSerwistInit({
+        register: false,
+        swDest: 'public/sw.js',
+        swSrc: 'src/app/sw.ts',
+      })
+    : noWrapper;
 
 const hasSentry = !!process.env.NEXT_PUBLIC_SENTRY_DSN;
 const withSentry =

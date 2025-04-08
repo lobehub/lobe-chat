@@ -28,7 +28,7 @@ export const buildAnthropicBlock = async (
         return {
           source: {
             data: base64 as string,
-            media_type: mimeType as Anthropic.ImageBlockParam.Source['media_type'],
+            media_type: mimeType as Anthropic.Base64ImageSource['media_type'],
             type: 'base64',
           },
           type: 'image',
@@ -39,7 +39,7 @@ export const buildAnthropicBlock = async (
         return {
           source: {
             data: base64 as string,
-            media_type: mimeType as Anthropic.ImageBlockParam.Source['media_type'],
+            media_type: mimeType as Anthropic.Base64ImageSource['media_type'],
             type: 'base64',
           },
           type: 'image',
@@ -130,6 +130,7 @@ export const buildAnthropicMessage = async (
 
 export const buildAnthropicMessages = async (
   oaiMessages: OpenAIChatMessage[],
+  options: { enabledContextCaching?: boolean } = {},
 ): Promise<Anthropic.Messages.MessageParam[]> => {
   const messages: Anthropic.Messages.MessageParam[] = [];
   let pendingToolResults: Anthropic.ToolResultBlockParam[] = [];
@@ -180,13 +181,46 @@ export const buildAnthropicMessages = async (
     }
   }
 
+  const lastMessage = messages.at(-1);
+  if (options.enabledContextCaching && !!lastMessage) {
+    if (typeof lastMessage.content === 'string') {
+      lastMessage.content = [
+        {
+          cache_control: { type: 'ephemeral' },
+          text: lastMessage.content as string,
+          type: 'text',
+        },
+      ];
+    } else {
+      const lastContent = lastMessage.content.at(-1);
+
+      if (
+        lastContent &&
+        lastContent.type !== 'thinking' &&
+        lastContent.type !== 'redacted_thinking'
+      ) {
+        lastContent.cache_control = { type: 'ephemeral' };
+      }
+    }
+  }
   return messages;
 };
-export const buildAnthropicTools = (tools?: OpenAI.ChatCompletionTool[]) =>
-  tools?.map(
-    (tool): Anthropic.Tool => ({
+
+export const buildAnthropicTools = (
+  tools?: OpenAI.ChatCompletionTool[],
+  options: { enabledContextCaching?: boolean } = {},
+) => {
+  if (!tools) return;
+
+  return tools.map(
+    (tool, index): Anthropic.Tool => ({
+      cache_control:
+        options.enabledContextCaching && index === tools.length - 1
+          ? { type: 'ephemeral' }
+          : undefined,
       description: tool.function.description,
       input_schema: tool.function.parameters as Anthropic.Tool.InputSchema,
       name: tool.function.name,
     }),
   );
+};

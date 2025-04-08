@@ -1,77 +1,41 @@
-import { Skeleton } from 'antd';
-import { uniq } from 'lodash-es';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
-import { useChatStore } from '@/store/chat';
-import { chatToolSelectors } from '@/store/chat/selectors';
-import { SearchResponse } from '@/types/tool/search';
+import { WebBrowsingApiName } from '@/tools/web-browsing';
+import { BuiltinPortalProps } from '@/types/tool';
+import { CrawlPluginState } from '@/types/tool/crawler';
+import { SearchQuery } from '@/types/tool/search';
 
-import SearchBar from '../components/SearchBar';
-import Footer from './Footer';
-import ResultList from './ResultList';
+import PageContent from './PageContent';
+import PageContents from './PageContents';
+import Search from './Search';
 
-interface SearchArguments {
-  query: string;
-  searchEngine?: string[];
-}
-
-interface InspectorUIProps<T = Record<string, any>, S = any> {
-  arguments: T;
-  identifier: string;
-  messageId: string;
-  state: S;
-}
-
-const Inspector = memo<InspectorUIProps<SearchArguments, SearchResponse>>(
-  ({ arguments: args, messageId, state }) => {
-    const engines = uniq((state.results || []).map((result) => result.engine));
-    const defaultEngines = engines.length > 0 ? engines : args.searchEngine || [];
-    const loading = useChatStore(chatToolSelectors.isSearXNGSearching(messageId));
-
-    if (loading) {
-      return (
-        <Flexbox gap={12} height={'100%'}>
-          <SearchBar
-            aiSummary={false}
-            defaultEngines={defaultEngines}
-            defaultQuery={args.query}
-            messageId={messageId}
-            tooltip={false}
-          />
-
-          <Flexbox gap={16} paddingBlock={16} paddingInline={12}>
-            {[1, 2, 3, 4, 6].map((id) => (
-              <Skeleton
-                active
-                key={id}
-                paragraph={{ rows: 3, width: `${(id % 4) + 5}0%` }}
-                title={false}
-              />
-            ))}
-          </Flexbox>
-        </Flexbox>
-      );
+const Inspector = memo<BuiltinPortalProps>(({ arguments: args, messageId, state, apiName }) => {
+  switch (apiName) {
+    case WebBrowsingApiName.searchWithSearXNG: {
+      return <Search messageId={messageId} query={args as SearchQuery} response={state} />;
     }
 
-    return (
-      <Flexbox gap={0} height={'100%'}>
-        <Flexbox gap={12} height={'100%'}>
-          <SearchBar
-            aiSummary={false}
-            defaultEngines={defaultEngines}
-            defaultQuery={args.query}
-            messageId={messageId}
-            tooltip={false}
-          />
-          <Flexbox height={'100%'} width={'100%'}>
-            <ResultList dataSources={state.results} />
-          </Flexbox>
-        </Flexbox>
-        <Footer />
-      </Flexbox>
-    );
-  },
-);
+    case WebBrowsingApiName.crawlSinglePage: {
+      const url = args.url;
+      const result = (state as CrawlPluginState).results.find(
+        (result) => result.originalUrl === url,
+      );
+
+      return <PageContent messageId={messageId} result={result} />;
+    }
+
+    case WebBrowsingApiName.crawlMultiPages: {
+      return (
+        <PageContents
+          messageId={messageId}
+          results={(state as CrawlPluginState).results}
+          urls={args.urls}
+        />
+      );
+    }
+  }
+
+  return null;
+});
 
 export default Inspector;

@@ -10,8 +10,11 @@ import {
   MessageToolCallChunk,
   MessageToolCallSchema,
   ModelReasoning,
+  ModelTokensUsage,
 } from '@/types/message';
+import { ChatImageChunk } from '@/types/message/image';
 import { GroundingSearch } from '@/types/search';
+import { nanoid } from '@/utils/uuid';
 
 import { fetchEventSource } from './fetchEventSource';
 import { getMessageError } from './parseError';
@@ -23,17 +26,31 @@ export type OnFinishHandler = (
   text: string,
   context: {
     grounding?: GroundingSearch;
+    images?: ChatImageChunk[];
     observationId?: string | null;
     reasoning?: ModelReasoning;
     toolCalls?: MessageToolCall[];
     traceId?: string | null;
     type?: SSEFinishType;
+    usage?: ModelTokensUsage;
   },
 ) => Promise<void>;
+
+export interface MessageUsageChunk {
+  type: 'usage';
+  usage: ModelTokensUsage;
+}
 
 export interface MessageTextChunk {
   text: string;
   type: 'text';
+}
+
+export interface MessageBase64ImageChunk {
+  id: string;
+  image: ChatImageChunk;
+  images: ChatImageChunk[];
+  type: 'base64_image';
 }
 
 export interface MessageReasoningChunk {
@@ -59,7 +76,13 @@ export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void;
   onFinish?: OnFinishHandler;
   onMessageHandle?: (
-    chunk: MessageTextChunk | MessageToolCallsChunk | MessageReasoningChunk | MessageGroundingChunk,
+    chunk:
+      | MessageTextChunk
+      | MessageToolCallsChunk
+      | MessageReasoningChunk
+      | MessageGroundingChunk
+      | MessageUsageChunk
+      | MessageBase64ImageChunk,
   ) => void;
   smoothing?: SmoothingParams | boolean;
 }
@@ -284,7 +307,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   const { smoothing } = options;
 
-  const textSmoothing = typeof smoothing === 'boolean' ? smoothing : smoothing?.text;
+  const textSmoothing = typeof smoothing === 'boolean' ? smoothing : (smoothing?.text ?? true);
   const toolsCallingSmoothing =
     typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? true);
   const smoothingSpeed = isObject(smoothing) ? smoothing.speed : undefined;
@@ -317,6 +340,9 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   });
 
   let grounding: GroundingSearch | undefined = undefined;
+  let usage: ModelTokensUsage | undefined = undefined;
+  let images: ChatImageChunk[] = [];
+
   await fetchEventSource(url, {
     body: options.body,
     fetch: options?.fetcher,
@@ -376,7 +402,19 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           break;
         }
 
+        case 'base64_image': {
+          const id = 'tmp_img_' + nanoid();
+          const item = { data, id, isBase64: true };
+          images.push(item);
+
+          options.onMessageHandle?.({ id, image: item, images, type: 'base64_image' });
+          break;
+        }
+
         case 'text': {
+          // skip empty text
+          if (!data) break;
+
           if (textSmoothing) {
             textController.pushToQueue(data);
 
@@ -386,6 +424,12 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
             options.onMessageHandle?.({ text: data, type: 'text' });
           }
 
+          break;
+        }
+
+        case 'usage': {
+          usage = data;
+          options.onMessageHandle?.({ type: 'usage', usage: data });
           break;
         }
 
@@ -470,11 +514,13 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
       await options?.onFinish?.(output, {
         grounding,
+        images: images.length > 0 ? images : undefined,
         observationId,
         reasoning: !!thinking ? { content: thinking, signature: thinkingSignature } : undefined,
         toolCalls,
         traceId,
         type: finishedType,
+        usage,
       });
     }
   }

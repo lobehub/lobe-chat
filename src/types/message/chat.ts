@@ -6,7 +6,8 @@ import { MetaData } from '@/types/meta';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 import { GroundingSearch } from '@/types/search';
 
-import { MessageRoleType, ModelReasoning } from './base';
+import { MessageMetadata, MessageRoleType, ModelReasoning } from './base';
+import { ChatImageItem } from './image';
 import { ChatPluginPayload, ChatToolPayload } from './tools';
 import { Translate } from './translate';
 
@@ -34,12 +35,6 @@ export interface ChatFileItem {
   id: string;
   name: string;
   size: number;
-  url: string;
-}
-
-export interface ChatImageItem {
-  alt: string;
-  id: string;
   url: string;
 }
 
@@ -82,15 +77,16 @@ export interface ChatMessage {
   imageList?: ChatImageItem[];
   meta: MetaData;
 
+  metadata?: MessageMetadata | null;
   /**
    * observation id
    */
   observationId?: string;
+
   /**
    * parent message id
    */
   parentId?: string;
-
   plugin?: ChatPluginPayload;
   pluginError?: any;
   pluginState?: any;
@@ -100,8 +96,8 @@ export interface ChatMessage {
   quotaId?: string;
   ragQuery?: string | null;
   ragQueryId?: string | null;
-  ragRawQuery?: string | null;
 
+  ragRawQuery?: string | null;
   reasoning?: ModelReasoning | null;
   /**
    * message role type

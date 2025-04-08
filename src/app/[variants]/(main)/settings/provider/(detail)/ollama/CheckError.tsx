@@ -13,7 +13,7 @@ const OllamaSetupGuide = dynamic(() => import('@/components/OllamaSetupGuide'), 
   ssr: false,
 });
 
-const InvalidModel = dynamic(() => import('./OllamaModelDownloader'), {
+const InvalidModel = dynamic(() => import('@/features/OllamaModelDownloader'), {
   loading,
   ssr: false,
 });

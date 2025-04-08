@@ -88,6 +88,9 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
     setSliceStart(Math.floor((Math.random() * assistantList.length) / 2));
   };
 
+  // if no assistant data, just hide the component
+  if (!isLoading && assistantList?.length === 0) return null;
+
   return (
     <Flexbox gap={8} width={'100%'}>
       <Flexbox align={'center'} horizontal justify={'space-between'}>
@@ -105,7 +108,11 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
           : assistantList
               .slice(sliceStart, sliceStart + agentLength)
               .map((item: DiscoverAssistantItem) => (
-                <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
+                <Link
+                  href={urlJoin('/discover/assistant/', item.identifier)}
+                  key={item.identifier}
+                  prefetch={false}
+                >
                   <Flexbox className={styles.card} gap={8} horizontal>
                     <Avatar avatar={item.meta.avatar} style={{ flex: 'none' }} />
                     <Flexbox gap={mobile ? 2 : 8} style={{ overflow: 'hidden', width: '100%' }}>

@@ -1,2 +1,2 @@
 export * from './selectors';
-export { useAiInfraStore } from './store';
+export { getAiInfraStoreState,useAiInfraStore } from './store';

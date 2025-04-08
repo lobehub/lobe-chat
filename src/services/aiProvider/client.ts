@@ -1,6 +1,6 @@
 import { clientDB } from '@/database/client/db';
+import { AiProviderModel } from '@/database/models/aiProvider';
 import { AiInfraRepos } from '@/database/repositories/aiInfra';
-import { AiProviderModel } from '@/database/server/models/aiProvider';
 import { BaseClientService } from '@/services/baseClientService';
 
 import { IAiProviderService } from './type';

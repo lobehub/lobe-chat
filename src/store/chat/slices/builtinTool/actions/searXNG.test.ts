@@ -4,6 +4,7 @@ import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 import { searchService } from '@/services/search';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { CRAWL_CONTENT_LIMITED_COUNT } from '@/tools/web-browsing/const';
 import { ChatMessage } from '@/types/message';
 import { SearchContent, SearchQuery, SearchResponse } from '@/types/tool/search';
 
@@ -11,6 +12,7 @@ import { SearchContent, SearchQuery, SearchResponse } from '@/types/tool/search'
 vi.mock('@/services/search', () => ({
   searchService: {
     search: vi.fn(),
+    crawlPages: vi.fn(),
   },
 }));
 
@@ -178,6 +180,71 @@ describe('searXNG actions', () => {
         type: 'PluginServerError',
       });
       expect(result.current.searchLoading[messageId]).toBe(false);
+    });
+  });
+
+  describe('crawlMultiPages', () => {
+    it('should truncate content that exceeds limit', async () => {
+      const longContent = 'a'.repeat(CRAWL_CONTENT_LIMITED_COUNT + 1000);
+      const mockResponse = {
+        results: [
+          {
+            data: {
+              content: longContent,
+              title: 'Test Page',
+            },
+            crawler: 'naive',
+            originalUrl: 'https://test.com',
+          },
+        ],
+      };
+
+      (searchService.crawlPages as Mock).mockResolvedValue(mockResponse);
+
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'test-message-id';
+
+      await act(async () => {
+        await result.current.crawlMultiPages(messageId, { urls: ['https://test.com'] });
+      });
+
+      const expectedContent = [
+        {
+          content: longContent.slice(0, CRAWL_CONTENT_LIMITED_COUNT),
+          title: 'Test Page',
+        },
+      ];
+
+      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
+        messageId,
+        JSON.stringify(expectedContent),
+      );
+    });
+
+    it('should handle crawl errors', async () => {
+      const mockResponse = {
+        results: [
+          {
+            errorMessage: 'Failed to crawl',
+            errorType: 'CRAWL_ERROR',
+            originalUrl: 'https://test.com',
+          },
+        ],
+      };
+
+      (searchService.crawlPages as Mock).mockResolvedValue(mockResponse);
+
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'test-message-id';
+
+      await act(async () => {
+        await result.current.crawlMultiPages(messageId, { urls: ['https://test.com'] });
+      });
+
+      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
+        messageId,
+        JSON.stringify(mockResponse.results),
+      );
     });
   });
 

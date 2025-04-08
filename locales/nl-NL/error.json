@@ -16,6 +16,16 @@
     "detail": "Foutdetails",
     "title": "Verzoek mislukt"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Foutmelding: {{reason}}",
+      "title": "Import mislukt"
+    },
+    "incompatible": {
+      "description": "Dit bestand is geëxporteerd vanuit een hogere versie, probeer te upgraden naar de nieuwste versie en importeer opnieuw",
+      "title": "De huidige applicatie ondersteunt het importeren van dit bestand niet"
+    }
+  },
   "loginRequired": {
     "desc": "U wordt binnenkort automatisch doorgestuurd naar de inlogpagina",
     "title": "Log in om deze functie te gebruiken"
@@ -69,6 +79,7 @@
     "524": "Het spijt ons, de server heeft een time-out terwijl hij op een antwoord wacht, mogelijk omdat de reactie te traag is, probeer het alstublieft later opnieuw",
     "AgentRuntimeError": "Lobe language model runtime execution error, please troubleshoot or retry based on the following information",
     "ConnectionCheckFailed": "Het verzoek heeft geen antwoord geleverd. Controleer of het API-proxyadres niet eindigt met `/v1`.",
+    "CreateMessageError": "Het spijt ons, het bericht kon niet correct worden verzonden. Kopieer de inhoud en probeer het opnieuw. Na het vernieuwen van de pagina gaat dit bericht verloren.",
     "ExceededContextWindow": "De inhoud van de huidige aanvraag overschrijdt de lengte die het model kan verwerken. Verminder de hoeveelheid inhoud en probeer het opnieuw.",
     "FreePlanLimit": "U bent momenteel een gratis gebruiker en kunt deze functie niet gebruiken. Upgrade naar een betaald plan om door te gaan met gebruiken.",
     "InsufficientQuota": "Het spijt ons, de quotum van deze sleutel is bereikt. Controleer of uw account voldoende saldo heeft of vergroot het sleutelquotum en probeer het opnieuw.",

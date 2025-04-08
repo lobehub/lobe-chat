@@ -15,14 +15,15 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
 
       return {
         ...rest,
+        stream: true,
         ...(enabledSearch && {
-          /*
           citation: true,
-          enable_multimedia: true,
-          search_info: true
-          */
           enable_enhancement: true,
+          /*
+          enable_multimedia: true,
+          */
           enable_speed_search: process.env.HUNYUAN_ENABLE_SPEED_SEARCH === '1',
+          search_info: true,
         }),
       } as any;
     },
@@ -37,6 +38,10 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
       'hunyuan-functioncall',
       'hunyuan-turbo',
       'hunyuan-pro',
+    ];
+
+    const reasoningKeywords = [
+      'hunyuan-t1',
     ];
 
     const modelsPage = await client.models.list() as any;
@@ -56,7 +61,8 @@ export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
             || false,
           id: model.id,
           reasoning:
-            knownModel?.abilities?.reasoning
+            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.reasoning
             || false,
           vision:
             model.id.toLowerCase().includes('vision')

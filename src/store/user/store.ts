@@ -40,3 +40,5 @@ export const useUserStore = createWithEqualityFn<UserStore>()(
   subscribeWithSelector(devtools(createStore)),
   shallow,
 );
+
+export const getUserStoreState = () => useUserStore.getState();
