@@ -64,8 +64,6 @@ const config = {
     allowToChangeInstallationDirectory: true,
     artifactName: '${productName}-${version}-setup.${ext}',
     createDesktopShortcut: 'always',
-    include: 'build/installer.nsh',
-    oneClick: false,
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
   },
@@ -80,7 +78,6 @@ const config = {
   win: {
     executableName: 'LobeHub-app',
     // publish: ['github'],
-    publisherName: ['LobeHub'],
   },
 };
 
