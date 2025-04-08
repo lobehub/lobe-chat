@@ -9,6 +9,7 @@ Welcome to the Code Style and Contribution Guidelines for LobeChat. This guide w
   - [Prettier](#prettier)
   - [remarklint](#remarklint)
   - [stylelint](#stylelint)
+  - [Style Checking](#style-checking)
 - [Contribution Process](#contribution-process)
   - [Gitmoji](#gitmoji)
   - [Semantic Release](#semantic-release)
@@ -17,7 +18,7 @@ Welcome to the Code Style and Contribution Guidelines for LobeChat. This guide w
 
 ## Code Style
 
-In LobeChat, we use the `@lobehub/lint` package to maintain a unified code style. This package incorporates configurations for `ESLint`, `Prettier`, `remarklint`, and `stylelint` to ensure that our JavaScript, Markdown, and CSS files adhere to the same coding standards.
+In LobeChat, we use the [@lobehub/lint](https://github.com/lobehub/lobe-lint) package to maintain a unified code style. This package incorporates configurations for `ESLint`, `Prettier`, `remarklint`, and `stylelint` to ensure that our JavaScript, Markdown, and CSS files adhere to the same coding standards.
 
 ### ESLint
 
@@ -29,7 +30,7 @@ To ensure your code aligns with the project's standards, run ESLint before commi
 
 Prettier is responsible for code formatting to maintain consistency. Our Prettier configuration can be found in `.prettierrc.js`, imported from `@lobehub/lint`.
 
-It's recommended to configure your editor to run Prettier automatically upon saving files or manually run it before committing.
+It's recommended to configure your editor to run Prettier automatically when saving files.
 
 ### remarklint
 
@@ -39,7 +40,9 @@ For Markdown files, we use remarklint to ensure consistent document formatting. 
 
 We utilize stylelint to standardize the style of our CSS code. In the configuration file for stylelint, we have made some custom rule adjustments based on `@lobehub/lint` configuration.
 
-Ensure that your style code passes stylelint checks before committing.
+### Style Checking
+
+You don't need to manually run these checks. The project is configured with husky to automatically run lint-staged when you commit code, which will check if your committed files comply with the above standards.
 
 ## Contribution Process
 
@@ -51,7 +54,7 @@ When committing code, please use gitmoji to label your commit messages. This hel
 
 Gitmoji commit messages use specific emojis to represent the type or intent of the commit. Here's an example:
 
-```
+```markdown
 📝 Update README with contribution guidelines
 
 - Added section about code style preferences
