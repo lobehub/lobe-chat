@@ -190,7 +190,7 @@ export const useSessionStore = createWithEqualityFn<SessionStore>()(
 
 ```
 
-In this `store.ts` file, we create a `useSessionStore` hook that uses the `zustand` library to create a global state manager. We merge the initialState and the state and actions of each Slice to create a complete SessionStore.
+In this `store.ts` file, we create a `useSessionStore` hook that uses the `zustand` library to create a global state manager. We merge the initialState with the actions from each Slice to create a complete SessionStore.
 
 #### slices/session/action.ts
 
