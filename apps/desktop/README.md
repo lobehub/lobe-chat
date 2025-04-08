@@ -1,3 +1,5 @@
+# LobeHub Desktop
+
 构建路径：
 
 - dist: 构建产物路径
