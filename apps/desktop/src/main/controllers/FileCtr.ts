@@ -17,17 +17,7 @@ export default class FileCtr extends ControllerModule {
 
   @ipcClientEvent('createFile')
   async uploadFile(params: UploadFileParams) {
-    console.log('uploadFile', params);
     return this.fileService.uploadFile(params);
-  }
-
-  @ipcClientEvent('getFile')
-  async getFile(path: string) {
-    return this.fileService.getFile(path);
-  }
-  @ipcClientEvent('deleteFile')
-  async deleteFile(path: string) {
-    return this.fileService.deleteFile(path);
   }
 
   // ======== server event
@@ -36,5 +26,10 @@ export default class FileCtr extends ControllerModule {
   async getFileUrlById(id: string) {
     console.log('send from server', id);
     return this.fileService.getFilePath(id);
+  }
+
+  @ipcServerEvent('deleteFiles')
+  async deleteFiles(paths: string[]) {
+    return this.fileService.deleteFiles(paths);
   }
 }

@@ -26,28 +26,6 @@ class DesktopFileAPI {
       type: file.type,
     });
   }
-
-  /**
-   * 获取桌面存储的文件
-   * @param path 文件路径 (desktop://...)
-   * @returns 文件内容和MIME类型
-   */
-  async getFile(path: string): Promise<{ content: ArrayBuffer; mimeType: string }> {
-    if (!path.startsWith('desktop://')) throw new Error('Invalid desktop file path');
-
-    return dispatch('getFile', path);
-  }
-
-  /**
-   * 删除桌面存储的文件
-   * @param path 文件路径 (desktop://...)
-   * @returns 操作结果
-   */
-  async deleteFile(path: string): Promise<{ success: boolean }> {
-    if (!path.startsWith('desktop://')) throw new Error('Invalid desktop file path');
-
-    return dispatch('deleteFile', path);
-  }
 }
 
 export const desktopFileAPI = new DesktopFileAPI();

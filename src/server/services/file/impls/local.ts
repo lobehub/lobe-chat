@@ -80,26 +80,41 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
     return this.getLocalFileUrl(key);
   }
 
-  /**
-   * 删除文件（需要通过IPC通知Electron删除本地文件）
-   * 注意：这个功能可能需要扩展Electron IPC接口
-   */
   async deleteFile(key: string): Promise<any> {
-    // 这里需要扩展electronIpcClient以支持删除文件
-    // 例如: return electronIpcClient.deleteFile(key);
-    console.warn('deleteFile not implemented for Desktop local file service', key);
-    return;
+    return await this.deleteFiles([key]);
   }
 
   /**
    * 批量删除文件
-   * 注意：这个功能可能需要扩展Electron IPC接口
    */
   async deleteFiles(keys: string[]): Promise<any> {
-    // 这里需要扩展electronIpcClient以支持批量删除文件
-    // 例如: return electronIpcClient.deleteFiles(keys);
-    console.warn('deleteFiles not implemented for Desktop local file service', keys);
-    return;
+    try {
+      if (!keys || keys.length === 0) return { success: true };
+
+      // 确保所有路径都是合法的desktop://路径
+      const invalidKeys = keys.filter((key) => !key.startsWith('desktop://'));
+      if (invalidKeys.length > 0) {
+        console.error('Invalid desktop file paths:', invalidKeys);
+        return {
+          errors: invalidKeys.map((key) => ({ message: 'Invalid desktop file path', path: key })),
+          success: false,
+        };
+      }
+
+      // 使用electronIpcClient的专用方法
+      return await electronIpcClient.deleteFiles(keys);
+    } catch (error) {
+      console.error('Failed to delete files:', error);
+      return {
+        errors: [
+          {
+            message: `Batch delete failed: ${(error as Error).message}`,
+            path: 'batch',
+          },
+        ],
+        success: false,
+      };
+    }
   }
 
   /**

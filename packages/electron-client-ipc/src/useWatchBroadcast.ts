@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from 'react';
 
 import { MainBroadcastEventKey, MainBroadcastParams } from './events';

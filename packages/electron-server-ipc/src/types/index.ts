@@ -10,3 +10,5 @@ export type IPCEventMethod = (
 export type ElectronIPCEventHandler = {
   [key in ServerDispatchEventKey]: IPCEventMethod;
 };
+
+export * from './file';

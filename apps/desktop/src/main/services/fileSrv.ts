@@ -1,3 +1,4 @@
+import { DeleteFilesResponse } from '@lobechat/electron-server-ipc';
 import * as fs from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -190,6 +191,51 @@ export default class FileService extends ServiceModule {
       console.error('File deletion failed:', error);
       throw new Error(`File deletion failed: ${(error as Error).message}`);
     }
+  }
+
+  /**
+   * 批量删除文件
+   */
+  async deleteFiles(paths: string[]): Promise<DeleteFilesResponse> {
+    await this.ensureStorageDir();
+
+    const errors: { message: string; path: string }[] = [];
+
+    // 并行处理所有删除请求
+    const results = await Promise.allSettled(
+      paths.map(async (path) => {
+        try {
+          await this.deleteFile(path);
+          return { path, success: true };
+        } catch (error) {
+          return {
+            error: (error as Error).message,
+            path,
+            success: false,
+          };
+        }
+      }),
+    );
+
+    // 处理结果
+    results.forEach((result) => {
+      if (result.status === 'rejected') {
+        errors.push({
+          message: `Unexpected error: ${result.reason}`,
+          path: 'unknown',
+        });
+      } else if (!result.value.success) {
+        errors.push({
+          message: result.value.error,
+          path: result.value.path,
+        });
+      }
+    });
+
+    return {
+      success: errors.length === 0,
+      ...(errors.length > 0 && { errors }),
+    };
   }
 
   async getFilePath(path: string): Promise<string> {

@@ -58,6 +58,7 @@ export class ElectronIpcClient {
         });
 
         this.socket.on('data', (data) => {
+          console.log('output:', data.toString());
           try {
             const response = JSON.parse(data.toString());
             const { id, result, error } = response;
