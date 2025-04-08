@@ -54,11 +54,16 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
     const modelsPage = (await client.models.list()) as any;
     const modelList: OpenRouterModelCard[] = modelsPage.data;
 
-    const response = await fetch('https://openrouter.ai/api/frontend/models');
     const modelsExtraInfo: OpenRouterModelExtraInfo[] = [];
-    if (response.ok) {
-      const data = await response.json();
-      modelsExtraInfo.push(...data['data']);
+    try {
+      const response = await fetch('https://openrouter.ai/api/frontend/models');
+      if (response.ok) {
+        const data = await response.json();
+        modelsExtraInfo.push(...data['data']);
+      }
+    } catch (error) {
+      // 忽略 fetch 错误，使用空的 modelsExtraInfo 数组继续处理
+      console.error('Failed to fetch OpenRouter frontend models:', error);
     }
 
     return modelList

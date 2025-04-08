@@ -93,6 +93,10 @@ export default {
     provider: '服务商',
   },
   OllamaSetupGuide: {
+    action: {
+      close: '关闭提示',
+      start: '已安装并运行，开始对话',
+    },
     cors: {
       description: '因浏览器安全限制，你需要为 Ollama 进行跨域配置后方可正常使用。',
       linux: {
