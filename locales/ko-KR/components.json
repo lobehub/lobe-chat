@@ -91,6 +91,10 @@
     "provider": "제공자"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "팝업 닫기",
+      "start": "설치 및 실행 완료, 대화 시작"
+    },
     "cors": {
       "description": "브라우저 보안 제한으로 인해 Ollama를 사용하기 위해서는 교차 출처 구성이 필요합니다.",
       "linux": {

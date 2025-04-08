@@ -842,6 +842,9 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny is Baidu's ultra-high-performance large language model, with the lowest deployment and fine-tuning costs among the Wenxin series models."
   },
+  "ernie-x1-32k-preview": {
+    "description": "The ERNIE X1 model possesses stronger understanding, planning, reflection, and evolution capabilities. As a more comprehensive deep thinking model, ERNIE X1 excels in accuracy, creativity, and eloquence, particularly in Chinese knowledge Q&A, literary creation, document writing, daily conversation, logical reasoning, complex calculations, and tool invocation."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) offers stable and tunable performance, making it an ideal choice for complex task solutions."
   },
@@ -913,6 +916,9 @@
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental is Google's most advanced thinking model, capable of reasoning about complex problems in code, mathematics, and STEM fields, as well as analyzing large datasets, codebases, and documents using long context."
+  },
+  "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Preview is Google's most advanced thinking model, capable of reasoning about complex problems in code, mathematics, and STEM fields, as well as analyzing large datasets, codebases, and documents using long-context analysis."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is suitable for medium to small-scale task processing, offering cost-effectiveness."
@@ -1571,9 +1577,6 @@
   "openai/o1-preview": {
     "description": "o1 is OpenAI's new reasoning model, suitable for complex tasks that require extensive general knowledge. This model features a 128K context and has a knowledge cutoff date of October 2023."
   },
-  "openchat/openchat-7b": {
-    "description": "OpenChat 7B is an open-source language model library fine-tuned using the 'C-RLFT (Conditional Reinforcement Learning Fine-Tuning)' strategy."
-  },
   "openrouter/auto": {
     "description": "Based on context length, topic, and complexity, your request will be sent to Llama 3 70B Instruct, Claude 3.5 Sonnet (self-regulating), or GPT-4o."
   },
@@ -1595,8 +1598,8 @@
   "qvq-72b-preview": {
     "description": "The QVQ model is an experimental research model developed by the Qwen team, focusing on enhancing visual reasoning capabilities, particularly in the field of mathematical reasoning."
   },
-  "qvq-max-latest": {
-    "description": "The Tongyi Qianwen QVQ visual reasoning model supports visual input and chain-of-thought output, demonstrating enhanced capabilities in mathematics, programming, visual analysis, creative tasks, and general tasks."
+  "qvq-max": {
+    "description": "The QVQ Visual Reasoning Model supports visual input and chain-of-thought output, demonstrating enhanced capabilities in mathematics, programming, visual analysis, creative tasks, and general tasks."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen code model."

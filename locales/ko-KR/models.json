@@ -842,6 +842,9 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny는 바이두가 자체 개발한 초고성능 대형 언어 모델로, 문신 시리즈 모델 중 배포 및 미세 조정 비용이 가장 낮습니다."
   },
+  "ernie-x1-32k-preview": {
+    "description": "문심 대모델 X1은 더 강력한 이해, 계획, 반성 및 진화 능력을 갖추고 있습니다. 보다 포괄적인 심층 사고 모델로서, 문심 X1은 정확성, 창의성 및 문체를 겸비하여 중국어 지식 질문 응답, 문학 창작, 문서 작성, 일상 대화, 논리 추론, 복잡한 계산 및 도구 호출 등에서 특히 뛰어난 성과를 보입니다."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning)은 안정적이고 조정 가능한 성능을 제공하며, 복잡한 작업 솔루션의 이상적인 선택입니다."
   },
@@ -913,6 +916,9 @@
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental은 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 활용하여 대규모 데이터 세트, 코드베이스 및 문서를 분석할 수 있습니다."
+  },
+  "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Preview는 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론하고 긴 맥락을 사용하여 대규모 데이터 세트, 코드베이스 및 문서를 분석할 수 있습니다."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B는 중소 규모 작업 처리에 적합하며, 비용 효과성을 갖추고 있습니다."
@@ -1571,9 +1577,6 @@
   "openai/o1-preview": {
     "description": "o1은 OpenAI의 새로운 추론 모델로, 광범위한 일반 지식이 필요한 복잡한 작업에 적합합니다. 이 모델은 128K의 컨텍스트와 2023년 10월의 지식 기준일을 가지고 있습니다."
   },
-  "openchat/openchat-7b": {
-    "description": "OpenChat 7B는 'C-RLFT(조건 강화 학습 미세 조정)' 전략으로 정교하게 조정된 오픈 소스 언어 모델 라이브러리입니다."
-  },
   "openrouter/auto": {
     "description": "요청은 컨텍스트 길이, 주제 및 복잡성에 따라 Llama 3 70B Instruct, Claude 3.5 Sonnet(자기 조정) 또는 GPT-4o로 전송됩니다."
   },
@@ -1595,8 +1598,8 @@
   "qvq-72b-preview": {
     "description": "QVQ 모델은 Qwen 팀이 개발한 실험적 연구 모델로, 시각적 추론 능력 향상에 중점을 두고 있으며, 특히 수학적 추론 분야에서 두드러진 성과를 보입니다."
   },
-  "qvq-max-latest": {
-    "description": "통의천문 QVQ 비주얼 추론 모델로, 비주얼 입력과 사고 체인 출력을 지원하며, 수학, 프로그래밍, 비주얼 분석, 창작 및 일반 작업에서 더 강력한 능력을 보여줍니다."
+  "qvq-max": {
+    "description": "통의천문 QVQ 비주얼 추론 모델은 비주얼 입력과 사고 체인 출력을 지원하며, 수학, 프로그래밍, 비주얼 분석, 창작 및 일반 작업에서 더 강력한 능력을 보여줍니다."
   },
   "qwen-coder-plus-latest": {
     "description": "통의 천문 코드 모델입니다."

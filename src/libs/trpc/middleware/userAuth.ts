@@ -9,11 +9,10 @@ import { trpc } from '../init';
 export const userAuth = trpc.middleware(async (opts) => {
   const { ctx } = opts;
 
+  // 桌面端模式下，跳过默认鉴权逻辑
   if (isDesktop) {
     return opts.next({
-      ctx: {
-        userId: DESKTOP_USER_ID,
-      },
+      ctx: { userId: DESKTOP_USER_ID },
     });
   }
   // `ctx.user` is nullable

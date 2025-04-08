@@ -842,6 +842,9 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny是百度自研的超高性能大语言模型，部署与精调成本在文心系列模型中最低。"
   },
+  "ernie-x1-32k-preview": {
+    "description": "文心大模型X1具备更强的理解、规划、反思、进化能力。作为能力更全面的深度思考模型，文心X1兼备准确、创意和文采，在中文知识问答、文学创作、文稿写作、日常对话、逻辑推理、复杂计算及工具调用等方面表现尤为出色。"
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供稳定并可调优的性能，是复杂任务解决方案的理想选择。"
   },
@@ -912,7 +915,10 @@
     "description": "Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。"
   },
   "gemini-2.5-pro-exp-03-25": {
-    "description": "Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，还能利用长上下文来分析大型数据集、代码库和文档。"
+    "description": "Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。"
+  },
+  "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 适合中小规模任务处理，兼具成本效益。"
@@ -1571,9 +1577,6 @@
   "openai/o1-preview": {
     "description": "o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。"
   },
-  "openchat/openchat-7b": {
-    "description": "OpenChat 7B 是经过“C-RLFT（条件强化学习微调）”策略精调的开源语言模型库。"
-  },
   "openrouter/auto": {
     "description": "根据上下文长度、主题和复杂性，你的请求将发送到 Llama 3 70B Instruct、Claude 3.5 Sonnet（自我调节）或 GPT-4o。"
   },
@@ -1595,7 +1598,7 @@
   "qvq-72b-preview": {
     "description": "QVQ-72B-Preview 是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力。"
   },
-  "qvq-max-latest": {
+  "qvq-max": {
     "description": "通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。"
   },
   "qwen-coder-plus-latest": {
@@ -1758,7 +1761,7 @@
     "description": "Qwen2 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
   },
   "qwq": {
-    "description": "QwQ 是一个实验研究模型，专注于提高 AI 推理能力。"
+    "description": "QwQ 是 Qwen 系列的推理模型。与传统的指令调优模型相比，QwQ 具备思考和推理的能力，能够在下游任务中，尤其是困难问题上，显著提升性能。QwQ-32B 是中型推理模型，能够在与最先进的推理模型（如 DeepSeek-R1、o1-mini）竞争时取得可观的表现。"
   },
   "qwq-32b": {
     "description": "QwQ 是 Qwen 系列的推理模型。与传统的指令微调模型相比，QwQ 具备思考和推理能力，在下游任务中，尤其是复杂问题上，能够实现显著增强的性能。QwQ-32B 是一款中型推理模型，其性能可与最先进的推理模型（如 DeepSeek-R1、o1-mini）相媲美。"

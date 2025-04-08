@@ -2,6 +2,157 @@
 
 # Changelog
 
+### [Version 1.77.17](https://github.com/lobehub/lobe-chat/compare/v1.77.16...v1.77.17)
+
+<sup>Released on **2025-04-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Refactor ollama pull flow and model service.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Refactor ollama pull flow and model service, closes [#7330](https://github.com/lobehub/lobe-chat/issues/7330) ([44d63b8](https://github.com/lobehub/lobe-chat/commit/44d63b8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.77.16](https://github.com/lobehub/lobe-chat/compare/v1.77.15...v1.77.16)
+
+<sup>Released on **2025-04-06**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the file service.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the file service, closes [#7323](https://github.com/lobehub/lobe-chat/issues/7323) ([3721b88](https://github.com/lobehub/lobe-chat/commit/3721b88))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.77.15](https://github.com/lobehub/lobe-chat/compare/v1.77.14...v1.77.15)
+
+<sup>Released on **2025-04-06**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Improve public procedure implement.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Improve public procedure implement, closes [#7314](https://github.com/lobehub/lobe-chat/issues/7314) ([1b28230](https://github.com/lobehub/lobe-chat/commit/1b28230))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.77.14](https://github.com/lobehub/lobe-chat/compare/v1.77.13...v1.77.14)
+
+<sup>Released on **2025-04-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `ernie-x1-32k-preview` support for Wenxin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `ernie-x1-32k-preview` support for Wenxin, closes [#7302](https://github.com/lobehub/lobe-chat/issues/7302) ([8e8337c](https://github.com/lobehub/lobe-chat/commit/8e8337c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.77.13](https://github.com/lobehub/lobe-chat/compare/v1.77.12...v1.77.13)
+
+<sup>Released on **2025-04-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix data not show correctly in 1.77.11.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix data not show correctly in 1.77.11, closes [#7311](https://github.com/lobehub/lobe-chat/issues/7311) ([d99ca04](https://github.com/lobehub/lobe-chat/commit/d99ca04))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.77.12](https://github.com/lobehub/lobe-chat/compare/v1.77.11...v1.77.12)
+
+<sup>Released on **2025-04-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix QVQ Max model, support default config for system agent and pre-merge some desktop code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix QVQ Max model, closes [#7289](https://github.com/lobehub/lobe-chat/issues/7289) ([540aaf6](https://github.com/lobehub/lobe-chat/commit/540aaf6))
+- **misc**: Support default config for system agent and pre-merge some desktop code, closes [#7296](https://github.com/lobehub/lobe-chat/issues/7296) ([addea48](https://github.com/lobehub/lobe-chat/commit/addea48))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.77.11](https://github.com/lobehub/lobe-chat/compare/v1.77.10...v1.77.11)
 
 <sup>Released on **2025-04-04**</sup>
