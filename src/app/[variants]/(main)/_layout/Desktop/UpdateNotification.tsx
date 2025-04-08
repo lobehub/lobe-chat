@@ -13,16 +13,19 @@ import { electronStylish } from '@/styles/electron';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
-    padding-inline: 8px;
-    border-radius: 24px;
+    cursor: pointer;
+
     height: 24px;
-    background-color: ${isDarkMode ? token.colorFill : token.colorFillSecondary};
-    background: ${token.green2A};
-    color: ${token.green11A};
+    padding-inline: 8px;
     border: 1px solid ${token.green7A};
+    border-radius: 24px;
+
     font-size: 12px;
     line-height: 22px;
-    cursor: pointer;
+    color: ${token.green11A};
+
+    background: ${token.green2A};
+    background-color: ${isDarkMode ? token.colorFill : token.colorFillSecondary};
   `,
 }));
 
@@ -34,7 +37,6 @@ export const UpdateNotification: React.FC = () => {
   const [updateDownloaded, setUpdateDownloaded] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [willInstallLater, setWillInstallLater] = useState(false);
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
 
@@ -57,14 +59,6 @@ export const UpdateNotification: React.FC = () => {
     setWillInstallLater(true);
     setTimeout(() => setWillInstallLater(false), 5000); // 5秒后自动隐藏提示
   });
-
-  useWatchBroadcast('updateError', (message: string) => {
-    setError(message);
-  });
-
-  const handleDownload = () => {
-    autoUpdateService.downloadUpdate();
-  };
 
   // 没有更新或正在下载时不显示任何内容
   if ((!updateAvailable && !updateDownloaded) || (downloadProgress > 0 && downloadProgress < 100)) {
@@ -143,7 +137,13 @@ export const UpdateNotification: React.FC = () => {
             {updateInfo?.releaseNotes && <Markdown>{updateInfo.releaseNotes as string}</Markdown>}
 
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <Button onClick={handleDownload} size="small" type="primary">
+              <Button
+                onClick={() => {
+                  autoUpdateService.downloadUpdate();
+                }}
+                size="small"
+                type="primary"
+              >
                 {t('updater.downloadNow', '立即更新')}
               </Button>
             </div>
