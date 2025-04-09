@@ -88,6 +88,7 @@ jobs:
           echo "🚦 Release Version: ${{ steps.set_version.outputs.version }}"
           echo "🔄 Is PR Build: ${{ steps.set_version.outputs.is_pr_build }}"
 
+
   build:
     needs: [version, test]
     name: Build Desktop App
@@ -170,9 +171,10 @@ jobs:
         run: |
           echo "🔄 Is PR Build: ${{ needs.version.outputs.is_pr_build }}"
 
-  prepare-artifacts:
+
+  publish-pr:
     needs: [build, version]
-    name: Prepare Artifacts
+    name: Publish PR Build
     runs-on: ubuntu-latest
     outputs:
       artifact_path: ${{ steps.set_path.outputs.path }}
@@ -188,28 +190,6 @@ jobs:
       # 列出所有构建产物
       - name: List artifacts
         run: ls -R release
-
-      # 设置构建产物路径，供后续 job 使用
-      - name: Set artifact path
-        id: set_path
-        run: echo "path=release" >> $GITHUB_OUTPUT
-  # PR 构建的处理步骤
-  publish-pr:
-    needs: [prepare-artifacts, version]
-    name: Publish PR Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # 下载构建产物
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: ${{ needs.prepare-artifacts.outputs.artifact_path }}
-          pattern: release-*
-          merge-multiple: true
 
       # 生成PR发布描述
       - name: Generate PR Release Body
