@@ -9,6 +9,10 @@ export interface XAIModelCard {
 
 export const LobeXAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.x.ai/v1',
+  chatCompletion: {
+    // xAI API does not support stream_options: { include_usage: true }
+    excludeUsage: true,
+  },
   debug: {
     chatCompletion: () => process.env.DEBUG_XAI_CHAT_COMPLETION === '1',
   },
