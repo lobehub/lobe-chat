@@ -4,13 +4,6 @@
 
 LobeChat differs from traditional CRUD web applications in that it involves a large amount of rich interactive capabilities. Therefore, it is crucial to design a data flow architecture that is easy to develop and maintain. This document will introduce the best practices for data flow management in LobeChat.
 
-#### TOC
-
-- [Key Concepts](#key-concepts)
-- [Hierarchical Structure](#hierarchical-structure)
-  - [Best Practices for LobeChat SessionStore Directory Structure](#best-practices-for-lobechat-sessionstore-directory-structure)
-- [Implementation of SessionStore](#implementation-of-sessionstore)
-
 ## Key Concepts
 
 | Concept  | Explanation                                                                                                                                                                                                                                                                                                                                                                      |
@@ -153,7 +146,7 @@ src/store/session
 
 In LobeChat, the SessionStore is designed as the core module for managing session state and logic. It consists of multiple Slices, with each Slice managing a relevant portion of state and logic. Below is a simplified example of the SessionStore implementation:
 
-#### store.ts
+### store.ts
 
 ```ts
 import { PersistOptions, devtools, persist, subscribeWithSelector } from 'zustand/middleware';
@@ -194,7 +187,7 @@ export const useSessionStore = createWithEqualityFn<SessionStore>()(
 
 In this `store.ts` file, we create a `useSessionStore` hook that uses the `zustand` library to create a global state manager. We merge the initialState with the actions from each Slice to create a complete SessionStore.
 
-#### slices/session/action.ts
+### slices/session/action.ts
 
 ```ts
 import { StateCreator } from 'zustand';

@@ -2,12 +2,6 @@
 
 本文档说明了 Lobe Chat API 在前后端交互中的实现逻辑，包括事件序列和涉及的核心组件。
 
-#### TOC
-
-- [交互时序图](#交互时序图)
-- [主要步骤说明](#主要步骤说明)
-- [AgentRuntime 说明](#agentruntime-说明)
-
 ## 交互时序图
 
 ```mermaid
@@ -129,7 +123,7 @@ sequenceDiagram
 
    角色头像自动生成实现：
 
-   ```typescript
+   ```ts
    // src/features/AgentSetting/store/action.ts
    autoPickEmoji: async () => {
      const { config, meta, dispatchMeta } = get();
@@ -153,7 +147,7 @@ sequenceDiagram
 
    翻译功能实现：
 
-   ```typescript
+   ```ts
    // src/store/chat/slices/translate/action.ts
    translateMessage: async (id, targetLang) => {
      // ...省略部分代码...
@@ -209,7 +203,7 @@ AgentRuntime 是 Lobe Chat 中的一个核心抽象层，它封装了与不同 A
 
 4. **插件化架构**：通过 `src/libs/agent-runtime/runtimeMap.ts` 映射表，实现了可扩展的插件化架构，方便添加新的模型提供商。目前支持超过 40 个不同的模型提供商：
 
-   ```typescript
+   ```ts
    export const providerRuntimeMap = {
      openai: LobeOpenAI,
      anthropic: LobeAnthropicAI,
@@ -223,7 +217,7 @@ AgentRuntime 是 Lobe Chat 中的一个核心抽象层，它封装了与不同 A
 
 5. **适配器模式**：在内部使用适配器模式，将不同提供商的 API 适配到统一的 `src/libs/agent-runtime/BaseAI.ts` 接口：
 
-   ```typescript
+   ```ts
    export interface LobeRuntimeAI {
      baseURL?: string;
      chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response>;
@@ -242,7 +236,7 @@ AgentRuntime 是 Lobe Chat 中的一个核心抽象层，它封装了与不同 A
    1. **OpenRouter 适配器**：
       OpenRouter 是一个统一 API，可以通过它访问多个模型提供商的 AI 模型。Lobe Chat 通过适配器实现对 OpenRouter 的支持：
 
-      ```typescript
+      ```ts
       // OpenRouter 适配器实现
       class LobeOpenRouterAI implements LobeRuntimeAI {
         client: OpenAI;
@@ -281,7 +275,7 @@ AgentRuntime 是 Lobe Chat 中的一个核心抽象层，它封装了与不同 A
    2. **Google Gemini 适配器**：
       Gemini 是 Google 的大语言模型，Lobe Chat 通过专门的适配器支持 Gemini 系列模型：
 
-      ```typescript
+      ```ts
       import { GoogleGenerativeAI } from '@google/generative-ai';
 
       // Gemini 适配器实现

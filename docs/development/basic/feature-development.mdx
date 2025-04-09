@@ -13,7 +13,7 @@ We will use the implementation of sessionGroup as an example: [✨ feat: add ses
 
 ## 1. Data Model / Database Definition
 
-To implement the Session Group feature, it is necessary to define the relevant data model and indexes at the database level.
+To implementation the Session Group feature, it is necessary to define the relevant data model and indexes at the database level.
 
 Define a new sessionGroup table in 3 steps:
 
@@ -21,7 +21,7 @@ Define a new sessionGroup table in 3 steps:
 
 Define the data model of `DB_SessionGroup` in `src/database/schema/sessionGroup.ts`:
 
-```typescript
+```ts
 import { z } from 'zod';
 
 export const DB_SessionGroupSchema = z.object({
@@ -127,7 +127,7 @@ When building the LobeChat application, the Model is responsible for interacting
 
 In `src/database/model/sessionGroup.ts`, the `SessionGroupModel` is defined as follows:
 
-```typescript
+```ts
 import { BaseModel } from '@/database/client/core';
 import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/client/schemas/sessionGroup';
 import { nanoid } from '@/utils/uuid';
@@ -155,7 +155,7 @@ To maintain code maintainability and extensibility, we place the logic related t
 
 `SessionService` implements session group-related request logic by calling methods from `SessionGroupModel`. The following is the implementation of Session Group-related request logic in `sessionService`:
 
-```typescript
+```ts
 class SessionService {
   // ... Omitted session business logic
 
@@ -238,7 +238,7 @@ To handle these groups, we need to refactor the implementation logic of `useFetc
 
 This method is defined in `createSessionSlice` as follows:
 
-```typescript
+```ts
 export const createSessionSlice: StateCreator<
   SessionStore,
   [['zustand/devtools', never]],
@@ -271,7 +271,7 @@ After successfully retrieving the data, we use the `set` method to update the `c
 
 The `sessionService.getGroupedSessions` method is responsible for calling the backend API `SessionModel.queryWithGroups()`.
 
-```typescript
+```ts
 class SessionService {
   // ... other SessionGroup related implementations
 
@@ -285,7 +285,7 @@ class SessionService {
 
 This method is the core method called by `sessionService.getGroupedSessions`, and it is responsible for querying and organizing session data. The code is as follows:
 
-```typescript
+```ts
 class _SessionModel extends BaseModel {
   // ... other methods
 

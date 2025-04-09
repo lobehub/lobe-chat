@@ -2,12 +2,6 @@
 
 This document explains the implementation logic of Lobe Chat API in client-server interactions, including event sequences and core components involved.
 
-#### TOC
-
-- [Interaction Sequence Diagram](#interaction-sequence-diagram)
-- [Main Process Steps](#main-process-steps)
-- [AgentRuntime Overview](#agentruntime-overview)
-
 ## Interaction Sequence Diagram
 
 ```mermaid
@@ -129,7 +123,7 @@ sequenceDiagram
 
    Agent avatar auto-generation implementation:
 
-   ```typescript
+   ```ts
    // src/features/AgentSetting/store/action.ts
    autoPickEmoji: async () => {
      const { config, meta, dispatchMeta } = get();
@@ -153,7 +147,7 @@ sequenceDiagram
 
    Translation feature implementation:
 
-   ```typescript
+   ```ts
    // src/store/chat/slices/translate/action.ts
    translateMessage: async (id, targetLang) => {
      // ...omitted code...
@@ -209,7 +203,7 @@ AgentRuntime is a core abstraction layer in Lobe Chat that encapsulates a unifie
 
 4. **Plugin Architecture**: Through the `src/libs/agent-runtime/runtimeMap.ts` mapping table, it implements an extensible plugin architecture, making it easy to add new model providers. Currently, it supports over 40 different model providers:
 
-   ```typescript
+   ```ts
    export const providerRuntimeMap = {
      openai: LobeOpenAI,
      anthropic: LobeAnthropicAI,
@@ -223,7 +217,7 @@ AgentRuntime is a core abstraction layer in Lobe Chat that encapsulates a unifie
 
 5. **Adapter Pattern**: Internally, it uses the adapter pattern to adapt different provider APIs to the unified `src/libs/agent-runtime/BaseAI.ts` interface:
 
-   ```typescript
+   ```ts
    export interface LobeRuntimeAI {
      baseURL?: string;
      chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response>;
@@ -242,7 +236,7 @@ AgentRuntime is a core abstraction layer in Lobe Chat that encapsulates a unifie
    1. **OpenRouter Adapter**:
       OpenRouter is a unified API that allows access to AI models from multiple providers. Lobe Chat implements support for OpenRouter through an adapter:
 
-      ```typescript
+      ```ts
       // OpenRouter adapter implementation
       class LobeOpenRouterAI implements LobeRuntimeAI {
         client: OpenAI;
@@ -281,7 +275,7 @@ AgentRuntime is a core abstraction layer in Lobe Chat that encapsulates a unifie
    2. **Google Gemini Adapter**:
       Gemini is Google's large language model. Lobe Chat supports Gemini series models through a dedicated adapter:
 
-      ```typescript
+      ```ts
       import { GoogleGenerativeAI } from '@google/generative-ai';
 
       // Gemini adapter implementation

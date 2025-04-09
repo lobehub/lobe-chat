@@ -2,21 +2,13 @@
 
 LobeChat's testing strategy includes unit testing and end-to-end (E2E) testing. Below are detailed explanations of each type of testing:
 
-#### TOC
-
-- [Unit Testing](#unit-testing)
-- [🚧 End-to-End Testing](#-end-to-end-testing)
-- [Development Testing](#development-testing)
-  - [1. Unit Testing](#1-unit-testing)
-- [Testing Strategy](#testing-strategy)
-
 ## Unit Testing
 
 Unit testing is used to test the functionality of independent units in the application, such as components, functions, utility functions, etc. We use [vitest][vitest-url] for unit testing.
 
 To run unit tests, you can use the following command:
 
-```
+```bash
 npm run test
 ```
 
@@ -42,7 +34,7 @@ Before writing unit tests, you need to create a directory with the same name as 
 
 In the test file, you can use the `describe` and `it` functions to organize and write test cases. The `describe` function is used to create a test suite, and the `it` function is used to write specific test cases.
 
-```typescript
+```ts
 import { formatNumber } from './formatNumber';
 
 describe('formatNumber', () => {
@@ -64,7 +56,7 @@ In test cases, you can use the `expect` function to assert whether the test resu
 
 Execute unit tests by running the following command:
 
-```
+```bash
 npm run test
 ```
 

@@ -21,7 +21,7 @@
 
 在 `src/database/schema/sessionGroup.ts` 中定义 `DB_SessionGroup` 的数据模型：
 
-```typescript
+```ts
 import { z } from 'zod';
 
 export const DB_SessionGroupSchema = z.object({
@@ -127,7 +127,7 @@ export class LocalDB extends Dexie {
 
 在 `src/database/model/sessionGroup.ts` 中定义 `SessionGroupModel`：
 
-```typescript
+```ts
 import { BaseModel } from '@/database/client/core';
 import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/client/schemas/sessionGroup';
 import { nanoid } from '@/utils/uuid';
@@ -155,7 +155,7 @@ export const SessionGroupModel = new _SessionGroupModel();
 
 `SessionService` 通过调用 `SessionGroupModel` 的方法来实现对会话分组的管理。 在 `sessionService` 中实现 Session Group 相关的请求逻辑：
 
-```typescript
+```ts
 class SessionService {
   // ... 省略 session 业务逻辑
 
@@ -238,7 +238,7 @@ export const createSessionGroupSlice: StateCreator<
 
 该方法在 `createSessionSlice` 中定义，如下所示：
 
-```typescript
+```ts
 export const createSessionSlice: StateCreator<
   SessionStore,
   [['zustand/devtools', never]],
@@ -271,7 +271,7 @@ export const createSessionSlice: StateCreator<
 
 使用 `sessionService.getGroupedSessions` 方法负责调用后端接口 `SessionModel.queryWithGroups()`
 
-```typescript
+```ts
 class SessionService {
   // ... 其他 SessionGroup 相关的实现
 
@@ -285,7 +285,7 @@ class SessionService {
 
 此方法是 `sessionService.getGroupedSessions` 调用的核心方法，它负责查询和组织会话数据，代码如下：
 
-```typescript
+```ts
 class _SessionModel extends BaseModel {
   // ... 其他方法
 

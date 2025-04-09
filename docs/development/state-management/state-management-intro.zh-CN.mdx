@@ -4,13 +4,6 @@
 
 LobeChat 不同于传统 CRUD 的网页，存在大量的富交互能力，如何设计一个易于开发与易于维护的数据流架构非常重要。本篇文档将介绍 LobeChat 中的数据流管理最佳实践。
 
-#### TOC
-
-- [概念要素](#概念要素)
-- [结构分层](#结构分层)
-  - [LobeChat SessionStore 目录结构最佳实践](#lobechat-sessionstore-目录结构最佳实践)
-- [SessionStore 的实现](#sessionstore-的实现)
-
 ## 概念要素
 
 | 概念名词     | 解释                                                                                                                                                   |
@@ -145,7 +138,7 @@ src/store/session
 
 在 LobeChat 中，SessionStore 被设计为管理会话状态和逻辑的核心模块。它由多个 Slices 组成，每个 Slice 管理一部分相关的状态和逻辑。下面是一个简化的 SessionStore 的实现示例：
 
-#### store.ts
+### store.ts
 
 ```ts
 import { PersistOptions, devtools, persist, subscribeWithSelector } from 'zustand/middleware';
@@ -186,7 +179,7 @@ export const useSessionStore = createWithEqualityFn<SessionStore>()(
 
 在这个 `store.ts` 文件中，我们创建了一个 `useSessionStore` 钩子，它使用 `zustand` 库来创建一个全局状态管理器。我们将 initialState 和每个 Slice 的动作合并，以创建完整的 SessionStore。
 
-#### slices/session/action.ts
+### slices/session/action.ts
 
 ```ts
 import { StateCreator } from 'zustand';
