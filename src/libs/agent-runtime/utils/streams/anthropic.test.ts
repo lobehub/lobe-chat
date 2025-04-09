@@ -62,10 +62,12 @@ describe('AnthropicStream', () => {
     const onCompletionMock = vi.fn();
 
     const protocolStream = AnthropicStream(mockAnthropicStream, {
-      onStart: onStartMock,
-      onText: onTextMock,
-      onToken: onTokenMock,
-      onCompletion: onCompletionMock,
+      callbacks: {
+        onStart: onStartMock,
+        onText: onTextMock,
+        onToken: onTokenMock,
+        onCompletion: onCompletionMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -168,7 +170,9 @@ describe('AnthropicStream', () => {
     const onToolCallMock = vi.fn();
 
     const protocolStream = AnthropicStream(mockReadableStream, {
-      onToolCall: onToolCallMock,
+      callbacks: {
+        onToolCall: onToolCallMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -320,7 +324,9 @@ describe('AnthropicStream', () => {
     const onToolCallMock = vi.fn();
 
     const protocolStream = AnthropicStream(mockReadableStream, {
-      onToolCall: onToolCallMock,
+      callbacks: {
+        onToolCall: onToolCallMock,
+      },
     });
 
     const decoder = new TextDecoder();
