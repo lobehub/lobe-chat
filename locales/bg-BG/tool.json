@@ -19,8 +19,28 @@
       "placeholder": "Ключови думи",
       "tooltip": "Ще се извлекат отново резултатите от търсенето и ще се създаде ново резюме"
     },
-    "searchEngine": "Търсачка:",
+    "searchCategory": {
+      "placeholder": "Търсене на категория",
+      "title": "Категория за търсене:",
+      "value": {
+        "files": "Файлове",
+        "general": "Общи",
+        "images": "Снимки",
+        "it": "Информационни технологии",
+        "map": "Карта",
+        "music": "Музика",
+        "news": "Новини",
+        "science": "Наука",
+        "social_media": "Социални медии",
+        "videos": "Видеа"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Търсачка",
+      "title": "Търсачка:"
+    },
     "searchResult": "Брой резултати:",
+    "searchTimeRange": "Времеви диапазон:",
     "summary": "Резюме",
     "summaryTooltip": "Резюме на текущото съдържание",
     "viewMoreResults": "Вижте още {{results}} резултата"

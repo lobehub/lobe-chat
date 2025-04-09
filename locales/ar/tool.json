@@ -19,8 +19,28 @@
       "placeholder": "الكلمات الرئيسية",
       "tooltip": "سيتم إعادة الحصول على نتائج البحث، وإنشاء رسالة ملخص جديدة"
     },
-    "searchEngine": "محرك البحث:",
+    "searchCategory": {
+      "placeholder": "ابحث عن الفئة",
+      "title": "فئة البحث:",
+      "value": {
+        "files": "ملفات",
+        "general": "عام",
+        "images": "صور",
+        "it": "تكنولوجيا المعلومات",
+        "map": "خريطة",
+        "music": "موسيقى",
+        "news": "أخبار",
+        "science": "علوم",
+        "social_media": "وسائل التواصل الاجتماعي",
+        "videos": "فيديوهات"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "محرك البحث",
+      "title": "محرك البحث:"
+    },
     "searchResult": "عدد النتائج:",
+    "searchTimeRange": "نطاق الوقت:",
     "summary": "ملخص",
     "summaryTooltip": "تلخيص المحتوى الحالي",
     "viewMoreResults": "عرض المزيد من {{results}} نتيجة"
