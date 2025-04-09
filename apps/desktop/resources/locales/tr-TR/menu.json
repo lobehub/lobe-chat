@@ -1,9 +1,13 @@
 {
+  "common": {
+    "checkUpdates": "Güncellemeleri kontrol et..."
+  },
   "dev": {
     "devPanel": "Geliştirici Paneli",
     "devTools": "Geliştirici Araçları",
     "forceReload": "Zorla Yenile",
     "openStore": "Depolama dosyasını aç",
+    "refreshMenu": "Menüyü yenile",
     "reload": "Yenile",
     "title": "Geliştir"
   },

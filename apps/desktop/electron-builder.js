@@ -37,6 +37,8 @@ const config = {
   },
   files: [
     'dist',
+    'resources',
+    '!resources/locales',
     '!dist/next/docs',
     '!dist/next/packages',
     '!dist/next/.next/server/app/sitemap',

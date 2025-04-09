@@ -1,9 +1,13 @@
 {
+  "common": {
+    "checkUpdates": "檢查更新..."
+  },
   "dev": {
     "devPanel": "開發者面板",
     "devTools": "開發者工具",
     "forceReload": "強制重新載入",
     "openStore": "打開儲存檔案",
+    "refreshMenu": "刷新選單",
     "reload": "重新載入",
     "title": "開發"
   },

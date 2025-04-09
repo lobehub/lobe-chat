@@ -1,9 +1,13 @@
 {
+  "common": {
+    "checkUpdates": "Kiểm tra cập nhật..."
+  },
   "dev": {
     "devPanel": "Bảng điều khiển nhà phát triển",
     "devTools": "Công cụ phát triển",
     "forceReload": "Tải lại cưỡng bức",
     "openStore": "Mở tệp lưu trữ",
+    "refreshMenu": "Làm mới menu",
     "reload": "Tải lại",
     "title": "Phát triển"
   },

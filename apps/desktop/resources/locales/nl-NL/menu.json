@@ -1,9 +1,13 @@
 {
+  "common": {
+    "checkUpdates": "Updates controleren..."
+  },
   "dev": {
     "devPanel": "Ontwikkelaarspaneel",
     "devTools": "Ontwikkelaarstools",
     "forceReload": "Forceer herladen",
     "openStore": "Open opslagbestand",
+    "refreshMenu": "Menu verversen",
     "reload": "Herladen",
     "title": "Ontwikkeling"
   },

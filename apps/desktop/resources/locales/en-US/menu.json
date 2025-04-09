@@ -1,9 +1,13 @@
 {
+  "common": {
+    "checkUpdates": "Checking for updates..."
+  },
   "dev": {
     "devPanel": "Developer Panel",
     "devTools": "Developer Tools",
     "forceReload": "Force Reload",
     "openStore": "Open Storage File",
+    "refreshMenu": "Refresh menu",
     "reload": "Reload",
     "title": "Development"
   },

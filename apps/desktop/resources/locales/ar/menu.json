@@ -1,9 +1,13 @@
 {
+  "common": {
+    "checkUpdates": "التحقق من التحديثات..."
+  },
   "dev": {
     "devPanel": "لوحة المطور",
     "devTools": "أدوات المطور",
     "forceReload": "إعادة تحميل قسري",
     "openStore": "فتح ملف التخزين",
+    "refreshMenu": "تحديث القائمة",
     "reload": "إعادة تحميل",
     "title": "تطوير"
   },

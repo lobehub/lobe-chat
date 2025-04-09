@@ -1,9 +1,13 @@
 {
+  "common": {
+    "checkUpdates": "Überprüfen Sie auf Updates..."
+  },
   "dev": {
     "devPanel": "Entwicklerpanel",
     "devTools": "Entwicklerwerkzeuge",
     "forceReload": "Erzwinge Neuladen",
     "openStore": "Speicherdatei öffnen",
+    "refreshMenu": "Menü aktualisieren",
     "reload": "Neuladen",
     "title": "Entwicklung"
   },

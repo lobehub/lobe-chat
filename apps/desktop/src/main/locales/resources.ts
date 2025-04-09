@@ -1,5 +1,3 @@
-import fs from 'node:fs';
-
 import { isDev } from '@/const/env';
 
 /**
@@ -27,19 +25,11 @@ export const loadResources = async (lng: string, ns: string) => {
   }
 
   // 生产环境使用编译后的 JSON 文件
-  const normalizedLocale = normalizeLocale(lng);
-  const resourceFilePath = await import(`@/../../resources/locales/${normalizedLocale}/${ns}.json`);
 
   try {
-    if (fs.existsSync(resourceFilePath)) {
-      const content = fs.readFileSync(resourceFilePath, 'utf8');
-      return JSON.parse(content);
-    } else {
-      console.warn(`翻译文件不存在: ${resourceFilePath}`);
-      return {};
-    }
+    return await import(`@/../../resources/locales/${lng}/${ns}.json`);
   } catch (error) {
-    console.error(`无法加载翻译文件: ${resourceFilePath}`, error);
+    console.error(`无法加载翻译文件: ${lng} - ${ns}`, error);
     return {};
   }
 };

@@ -1,9 +1,13 @@
 {
+  "common": {
+    "checkUpdates": "更新を確認しています..."
+  },
   "dev": {
     "devPanel": "開発者パネル",
     "devTools": "開発者ツール",
     "forceReload": "強制再読み込み",
     "openStore": "ストレージファイルを開く",
+    "refreshMenu": "メニューを更新",
     "reload": "再読み込み",
     "title": "開発"
   },

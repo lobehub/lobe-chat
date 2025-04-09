@@ -1,9 +1,13 @@
 {
+  "common": {
+    "checkUpdates": "Vérifier les mises à jour..."
+  },
   "dev": {
     "devPanel": "Panneau de développement",
     "devTools": "Outils de développement",
     "forceReload": "Recharger de force",
     "openStore": "Ouvrir le fichier de stockage",
+    "refreshMenu": "Rafraîchir le menu",
     "reload": "Recharger",
     "title": "Développement"
   },
