@@ -1,10 +1,8 @@
-name: Release Desktop
+name: Desktop PR Build
 
 on:
-  release:
-    types: [published] # 发布 release 时触发构建
-#  pull_request:
-#    types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
+  pull_request:
+    types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
 
 # 确保同一时间只运行一个相同的 workflow，取消正在进行的旧的运行
 concurrency:
@@ -18,10 +16,7 @@ jobs:
   test:
     name: Code quality check
     # 添加 PR label 触发条件，只有添加了 Build Desktop 标签的 PR 才会触发构建
-    if: |
-      (github.event_name == 'pull_request' &&
-       contains(github.event.pull_request.labels.*.name, 'Build Desktop')) ||
-      github.event_name != 'pull_request'
+    if: contains(github.event.pull_request.labels.*.name, 'Build Desktop')
     runs-on: ubuntu-latest # 只在 ubuntu 上运行一次检查
     steps:
       - name: Checkout base
@@ -37,7 +32,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 9
 
       - name: Install deps
         run: pnpm install
@@ -52,10 +47,7 @@ jobs:
   version:
     name: Determine version
     # 与 test job 相同的触发条件
-    if: |
-      (github.event_name == 'pull_request' &&
-       contains(github.event.pull_request.labels.*.name, 'Build Desktop')) ||
-      github.event_name != 'pull_request'
+    if: contains(github.event.pull_request.labels.*.name, 'Build Desktop')
     runs-on: ubuntu-latest
     outputs:
       # 输出版本信息，供后续 job 使用
@@ -78,31 +70,15 @@ jobs:
           # 从 apps/desktop/package.json 读取基础版本号
           base_version=$(node -p "require('./apps/desktop/package.json').version")
 
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            # PR 构建：在基础版本号上添加 PR 信息
-            pr_number="${{ github.event.pull_request.number }}"
-            # 添加时间戳确保版本号有顺序语义
-            timestamp=$(date +'%Y%m%d%H%M%S')
-            version="${base_version}-nightly-pr${pr_number}-${timestamp}"
-            echo "version=${version}" >> $GITHUB_OUTPUT
-            echo "is_pr_build=true" >> $GITHUB_OUTPUT
-            echo "📦 Release Version: ${version} (based on base version ${base_version})"
+          # PR 构建：在基础版本号上添加 PR 信息
+          pr_number="${{ github.event.pull_request.number }}"
+          # 添加时间戳确保版本号有顺序语义
+          timestamp=$(date +'%Y%m%d%H%M%S')
+          version="${base_version}-nightly-pr${pr_number}-${timestamp}"
+          echo "version=${version}" >> $GITHUB_OUTPUT
+          echo "is_pr_build=true" >> $GITHUB_OUTPUT
+          echo "📦 Release Version: ${version} (based on base version ${base_version})"
 
-          elif [ "${{ github.event_name }}" == "release" ]; then
-            # Release 事件直接使用 release tag 作为版本号，去掉可能的 v 前缀
-            version="${{ github.event.release.tag_name }}"
-            version="${version#v}"
-            echo "version=${version}" >> $GITHUB_OUTPUT
-            echo "is_pr_build=false" >> $GITHUB_OUTPUT
-            echo "📦 Release Version: ${version}"
-
-          else
-            # 其他情况（如手动触发）使用 apps/desktop/package.json 的版本号
-            version="${base_version}"
-            echo "version=${version}" >> $GITHUB_OUTPUT
-            echo "is_pr_build=false" >> $GITHUB_OUTPUT
-            echo "📦 Release Version: ${version}"
-          fi
         env:
           NODE_OPTIONS: --max-old-space-size=6144
 
@@ -194,7 +170,6 @@ jobs:
         run: |
           echo "🔄 Is PR Build: ${{ needs.version.outputs.is_pr_build }}"
 
-  # 将原本的 merge job 调整，作为所有构建产物的准备步骤
   prepare-artifacts:
     needs: [build, version]
     name: Prepare Artifacts
@@ -218,47 +193,8 @@ jobs:
       - name: Set artifact path
         id: set_path
         run: echo "path=release" >> $GITHUB_OUTPUT
-
-  # 正式版发布 job - 只处理 release 触发的场景
-  publish-release:
-    # 只在 release 事件触发且不是 PR 构建时执行
-    if: |
-      github.event_name == 'release' &&
-      needs.version.outputs.is_pr_build != 'true'
-    needs: [prepare-artifacts, version]
-    name: Publish Release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # 下载构建产物
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: ${{ needs.prepare-artifacts.outputs.artifact_path }}
-          pattern: release-*
-          merge-multiple: true
-
-      # 将构建产物上传到现有 release
-      - name: Upload to Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ github.event.release.tag_name }}
-          files: |
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/nightly*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/latest*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.dmg*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.zip*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.exe*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.AppImage
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   # PR 构建的处理步骤
   publish-pr:
-    if: needs.version.outputs.is_pr_build == 'true'
     needs: [prepare-artifacts, version]
     name: Publish PR Build
     runs-on: ubuntu-latest
