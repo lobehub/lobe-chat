@@ -1,11 +1,8 @@
-import { GithubOptions } from 'builder-util-runtime';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 
 import { isDev } from '@/const/env';
 import {
-  GITHUB_OWNER,
-  GITHUB_REPO,
   UPDATE_CHANNEL as channel,
   updaterConfig,
 } from '@/modules/updater/configs';
@@ -32,29 +29,24 @@ export class UpdaterManager {
   }
 
   public initialize = async () => {
-    // 如果是开发环境或禁用了更新，不初始化更新
+    // 如果是禁用了更新且为生产环境，不初始化更新
     if (!updaterConfig.enableAppUpdate && !isDev) return;
 
     // 配置 autoUpdater
     autoUpdater.autoDownload = false; // 设置为false，我们将手动控制下载
     autoUpdater.autoInstallOnAppQuit = false;
+
+    autoUpdater.channel = channel;
     autoUpdater.allowPrerelease = channel !== 'stable';
 
     // 开发环境时启用测试模式
     if (isDev) {
-      log.info('[Updater] Running in dev mode, forcing update check');
+      log.info(
+        `[Updater] Running in dev mode, forcing update check, channel: ${autoUpdater.channel}`,
+      );
       // 开发环境下允许测试更新
       autoUpdater.forceDevUpdateConfig = true;
     }
-
-    // 设置更新源
-    const feedUrl = {
-      channel: channel,
-      owner: GITHUB_OWNER,
-      provider: 'github',
-      repo: GITHUB_REPO,
-    } satisfies GithubOptions;
-    autoUpdater.setFeedURL(feedUrl);
 
     // 注册事件
     this.registerEvents();
@@ -274,7 +266,7 @@ export class UpdaterManager {
       log.info('[Updater] Update available:', info);
       this.updateAvailable = true;
 
-      const mainWindow = this.app.browserManager.getMainWindow();
+      const mainWindow = this.mainWindow;
 
       // 只有在手动检查更新时，才通知渲染进程有更新可用
       if (mainWindow && this.isManualCheck) {
@@ -299,11 +291,9 @@ export class UpdaterManager {
 
     // 更新下载进度事件
     autoUpdater.on('download-progress', (progressObj) => {
-      const mainWindow = this.app.browserManager.getMainWindow();
-
       // 只有在手动检查更新时，才广播下载进度
-      if (mainWindow && this.isManualCheck) {
-        mainWindow.broadcast('updateDownloadProgress', progressObj);
+      if (this.isManualCheck) {
+        this.mainWindow.broadcast('updateDownloadProgress', progressObj);
       }
     });
 
@@ -313,10 +303,7 @@ export class UpdaterManager {
       this.downloading = false;
 
       // 下载完成后，总是通知渲染进程，无论是自动检查还是手动检查
-      const mainWindow = this.app.browserManager.getMainWindow();
-      if (mainWindow) {
-        mainWindow.broadcast('updateDownloaded', info);
-      }
+      this.mainWindow.broadcast('updateDownloaded', info);
     });
 
     // 更新错误事件

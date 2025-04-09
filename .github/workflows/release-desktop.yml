@@ -301,7 +301,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: PR Build v${{ needs.version.outputs.version }}
-          tag_name: pr-build-${{ github.event.pull_request.number }}-${{ github.sha }}
+          tag_name: ${{ needs.version.outputs.version }}
+#          tag_name: pr-build-${{ github.event.pull_request.number }}-${{ github.sha }}
           body: ${{ steps.pr_release_body.outputs.result }}
           draft: false
           prerelease: true

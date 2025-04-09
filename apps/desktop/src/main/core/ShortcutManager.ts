@@ -152,7 +152,6 @@ export class ShortcutManager {
     // 先注销所有快捷键
     this.unregisterAll();
 
-    console.log(this.shortcuts, this.shortcutsConfig);
     // 注册每个启用的快捷键
     Object.entries(this.shortcutsConfig).forEach(([id, accelerator]) => {
       console.log(`[ShortcutManager] registering '${id}' with ${accelerator}...`);
