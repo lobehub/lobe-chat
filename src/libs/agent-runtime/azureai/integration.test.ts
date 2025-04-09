@@ -11,7 +11,7 @@ import type {
   ResponseFormatJSONSchema,
   ResponseFormatText,
 } from 'openai/resources/shared';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider, OpenAIChatMessage } from '../types';

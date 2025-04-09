@@ -14,6 +14,7 @@ export default defineProject({
     },
   },
   test: {
+    ...happyDomConfig.test,
     name: 'edge-runtime',
     alias: {
       '@': resolve(__dirname, './src'),
