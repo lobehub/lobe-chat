@@ -14,10 +14,13 @@ export class SearXNGClient {
     try {
       const { time_range, ...otherParams } = optionalParams;
 
-      const processedParams = Object.entries(otherParams).reduce<Record<string, any>>((acc, [key, value]) => {
-        acc[key] = Array.isArray(value) ? value.join(',') : value;
-        return acc;
-      }, {});
+      const processedParams = Object.entries(otherParams).reduce<Record<string, any>>(
+        (acc, [key, value]) => {
+          acc[key] = Array.isArray(value) ? value.join(',') : value;
+          return acc;
+        },
+        {},
+      );
 
       const searchParams = qs.stringify({
         ...processedParams,

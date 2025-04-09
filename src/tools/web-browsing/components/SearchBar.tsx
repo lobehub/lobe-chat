@@ -191,9 +191,7 @@ const SearchBar = memo<SearchBarProps>(
         )}
 
         <Flexbox align={'center'} gap={16} horizontal wrap={'wrap'}>
-          <Typography.Text type={'secondary'}>
-            {t('search.searchTimeRange.title')}
-          </Typography.Text>
+          <Typography.Text type={'secondary'}>{t('search.searchTimeRange.title')}</Typography.Text>
           <Radio.Group
             onChange={(e) => setTimeRange(e.target.value)}
             optionType="button"

@@ -70,7 +70,7 @@ export const dbSchemaV3 = {
 
 > \[!Important]
 >
-> 如果你不了解为何此处需要创建索引，以及不了解此处的 schema 的定义语法。你可能需要提前了解下 Dexie.js 相关的基础知识，可以查阅 [📘 本地数据库](./Local-Database.zh-CN) 部分了解相关内容。
+> 如果你不了解为何此处需要创建索引，以及不了解此处的 schema 的定义语法。你可能需要提前了解下 Dexie.js 相关的基础知识。
 
 ### 3. 在本地 DB 中加入 sessionGroups 表
 
@@ -178,7 +178,7 @@ class SessionService {
 
 ## 三、前端数据流 Store 实现
 
-在 LobeChat 应用中，Store 是用于管理应用前端状态的模块。其中的 Action 是触发状态更新的函数，通常会调用服务层的方法来执行实际的数据处理操作，然后更新 Store 中的状态。我们采用了 `zustand` 作为 Store 模块的底层依赖，对于状态管理的详细实践介绍，可以查阅 [📘 状态管理最佳实践](../State-Management/State-Management-Intro.zh-CN.md)
+在 LobeChat 应用中，Store 是用于管理应用前端状态的模块。其中的 Action 是触发状态更新的函数，通常会调用服务层的方法来执行实际的数据处理操作，然后更新 Store 中的状态。我们采用了 `zustand` 作为 Store 模块的底层依赖，对于状态管理的详细实践介绍，可以查阅 [📘 状态管理最佳实践](/zh/docs/development/state-management/state-management-intro)
 
 ### sessionGroup CRUD
 
@@ -348,8 +348,7 @@ const customSessionGroups = (s: SessionStore): CustomSessionGroup[] => s.customS
 由于在 UI 中的取数全部是通过 `useSessionStore(sessionSelectors.defaultSessions)` 这样的写法实现的，因此我们只需要修改 `defaultSessions` 的选择器实现，即可完成数据结构的变更。 UI 层的取数代码完全不用变更，可以大大降低重构的成本和风险。
 
 > !\[Important]
->
-> 如果你对 Selectors 的概念和功能不太了解，可以查阅 [📘 数据存储取数模块](../State-Management/State-Management-Selectors.zh-CN.md) 部分了解相关内容。
+> 如果你对 Selectors 的概念和功能不太了解，可以查阅 [📘 数据存储取数模块](/zh/docs/development/state-management/state-management-selectors) 部分了解相关内容。
 
 ## 四、UI 实现与 action 绑定
 
@@ -570,15 +569,15 @@ export class LocalDB extends Dexie {
 
 数据导入导出的核心实现在 `src/service/config.ts` 的 `ConfigService` 中，其中的关键方法如下：
 
-| 方法名称              | 描述             |
-| --------------------- | ---------------- |
-| `importConfigState`   | 导入配置数据     |
+| 方法名称                  | 描述       |
+| --------------------- | -------- |
+| `importConfigState`   | 导入配置数据   |
 | `exportAgents`        | 导出所有助理数据 |
 | `exportSessions`      | 导出所有会话数据 |
 | `exportSingleSession` | 导出单个会话数据 |
 | `exportSingleAgent`   | 导出单个助理数据 |
-| `exportSettings`      | 导出设置数据     |
-| `exportAll`           | 导出所有数据     |
+| `exportSettings`      | 导出设置数据   |
+| `exportAll`           | 导出所有数据   |
 
 ### 数据导出
 

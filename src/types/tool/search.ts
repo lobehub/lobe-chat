@@ -3,7 +3,7 @@ export interface SearchQuery {
     searchCategories?: string[];
     searchEngines?: string[];
     searchTimeRange?: string;
-  }
+  };
   query: string;
 }
 

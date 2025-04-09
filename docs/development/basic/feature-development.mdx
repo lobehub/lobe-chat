@@ -70,7 +70,7 @@ export const dbSchemaV3 = {
 
 > \[!Important]
 >
-> If you are unfamiliar with the need to create indexes here and the syntax of schema definition, you may need to familiarize yourself with the basics of Dexie.js. You can refer to the [📘 Local Database](./Local-Database.zh-CN) section for relevant information.
+> If you are unfamiliar with the need to create indexes here and the syntax of schema definition, you may need to familiarize yourself with the basics of Dexie.js.
 
 ### 3. Add the sessionGroups Table to the Local DB
 
@@ -178,7 +178,7 @@ class SessionService {
 
 ## 3. Frontend Data Flow Store Implementation
 
-In the LobeChat application, the Store module is used to manage the frontend state of the application. The Actions within it are functions that trigger state updates, usually by calling methods in the service layer to perform actual data processing operations and then updating the state in the Store. We use `zustand` as the underlying dependency for the Store module. For a detailed practical introduction to state management, you can refer to [📘 Best Practices for State Management](../State-Management/State-Management-Intro.zh-CN.md).
+In the LobeChat application, the Store module is used to manage the frontend state of the application. The Actions within it are functions that trigger state updates, usually by calling methods in the service layer to perform actual data processing operations and then updating the state in the Store. We use `zustand` as the underlying dependency for the Store module. For a detailed practical introduction to state management, you can refer to [📘 Best Practices for State Management](../state-management/state-management-intro).
 
 ### sessionGroup CRUD
 
@@ -510,7 +510,6 @@ describe('MigrationV2ToV3', () => {
 ```
 
 ```markdown
-
 ```
 
 Unit tests require the use of `fixtures` to fix the test data. The test cases include verification logic for two parts: 1) the correctness of a single migration (v2 -> v3) and 2) the correctness of a complete migration (v1 -> v3).
