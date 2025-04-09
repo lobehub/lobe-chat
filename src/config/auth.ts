@@ -40,6 +40,11 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
+
+      // Keycloak
+      KEYCLOAK_CLIENT_ID?: string;
+      KEYCLOAK_CLIENT_SECRET?: string;
+      KEYCLOAK_ISSUER?: string;
     }
   }
 }
@@ -138,6 +143,15 @@ export const getAuthConfig = () => {
   if (process.env.ZITADEL_ISSUER) {
     console.warn(removeTipsTemplate('ZITADEL_ISSUER', 'AUTH_ZITADEL_ISSUER'));
   }
+  if (process.env.KEYCLOAK_CLIENT_ID) {
+    console.warn(removeTipsTemplate('KEYCLOAK_CLIENT_ID', 'AUTH_KEYCLOAK_ID'));
+  }
+  if (process.env.KEYCLOAK_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('KEYCLOAK_CLIENT_SECRET', 'AUTH_KEYCLOAK_SECRET'));
+  }
+  if (process.env.KEYCLOAK_ISSUER) {
+    console.warn(removeTipsTemplate('KEYCLOAK_ISSUER', 'AUTH_KEYCLOAK_ISSUER'));
+  }
   // End
 
   return createEnv({
@@ -207,6 +221,11 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: z.string().optional(),
+
+      // Keycloak
+      KEYCLOAK_CLIENT_ID: z.string().optional(),
+      KEYCLOAK_CLIENT_SECRET: z.string().optional(),
+      KEYCLOAK_ISSUER: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -269,6 +288,11 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
+
+      // Keycloak
+      KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
+      KEYCLOAK_CLIENT_SECRET: process.env.KEYCLOAK_CLIENT_SECRET,
+      KEYCLOAK_ISSUER: process.env.KEYCLOAK_ISSUER,
     },
   });
 };
