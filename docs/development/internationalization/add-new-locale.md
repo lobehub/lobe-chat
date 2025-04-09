@@ -2,7 +2,7 @@
 
 LobeChat uses [lobe-i18n](https://github.com/lobehub/lobe-cli-toolbox/tree/master/packages/lobe-i18n) as the i18n solution, which allows for quick addition of new language support in the application.
 
-## TOC
+#### TOC
 
 - [Adding New Language Support](#adding-new-language-support)
   - [Step 1: Update the Internationalization Configuration File](#step-1-update-the-internationalization-configuration-file)

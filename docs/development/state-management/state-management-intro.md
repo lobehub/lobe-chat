@@ -2,7 +2,7 @@
 
 LobeChat differs from traditional CRUD web applications in that it involves a large amount of rich interactive capabilities. Therefore, it is crucial to design a data flow architecture that is easy to develop and maintain. This document will introduce the best practices for data flow management in LobeChat.
 
-## TOC
+#### TOC
 
 - [Key Concepts](#key-concepts)
 - [Hierarchical Structure](#hierarchical-structure)

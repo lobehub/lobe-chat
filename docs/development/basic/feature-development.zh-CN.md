@@ -178,7 +178,7 @@ class SessionService {
 
 ## 三、前端数据流 Store 实现
 
-在 LobeChat 应用中，Store 是用于管理应用前端状态的模块。其中的 Action 是触发状态更新的函数，通常会调用服务层的方法来执行实际的数据处理操作，然后更新 Store 中的状态。我们采用了 `zustand` 作为 Store 模块的底层依赖，对于状态管理的详细实践介绍，可以查阅 [📘 状态管理最佳实践](../State-Management/State-Management-Intro.zh-CN.md)
+在 LobeChat 应用中，Store 是用于管理应用前端状态的模块。其中的 Action 是触发状态更新的函数，通常会调用服务层的方法来执行实际的数据处理操作，然后更新 Store 中的状态。我们采用了 `zustand` 作为 Store 模块的底层依赖，对于状态管理的详细实践介绍，可以查阅 [📘 状态管理最佳实践](../state-management/state-management-intro.zh-CN.md)
 
 ### sessionGroup CRUD
 

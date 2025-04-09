@@ -2,7 +2,7 @@
 
 LobeChat 使用 [lobe-i18n](https://github.com/lobehub/lobe-cli-toolbox/tree/master/packages/lobe-i18n) 作为 i18n 解决方案，可以在应用中快速添加新的语言支持。
 
-## TOC
+#### TOC
 
 - [添加新的语言支持](#添加新的语言支持)
   - [步骤 1: 更新国际化配置文件](#步骤-1-更新国际化配置文件)

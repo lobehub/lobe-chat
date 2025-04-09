@@ -2,7 +2,7 @@
 
 Welcome to the Code Style and Contribution Guidelines for LobeChat. This guide will help you understand our code standards and contribution process, ensuring code consistency and smooth project progression.
 
-## TOC
+#### TOC
 
 - [Code Style](#code-style)
   - [ESLint](#eslint)

@@ -2,7 +2,7 @@
 
 Welcome to the LobeChat Internationalization Implementation Guide. This document will guide you through understanding the internationalization mechanism of LobeChat, including file structure and how to add new languages. LobeChat uses `i18next` and `lobe-i18n` as the internationalization solution, aiming to provide users with seamless multilingual support.
 
-## TOC
+#### TOC
 
 - [Internationalization Overview](#internationalization-overview)
 - [File Structure](#file-structure)

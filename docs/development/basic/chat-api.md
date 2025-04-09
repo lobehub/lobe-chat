@@ -2,7 +2,7 @@
 
 This document explains the implementation logic of Lobe Chat API in client-server interactions, including event sequences and core components involved.
 
-## Table of Contents
+#### TOC
 
 - [Interaction Sequence Diagram](#interaction-sequence-diagram)
 - [Main Process Steps](#main-process-steps)

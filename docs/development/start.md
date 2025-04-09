@@ -98,13 +98,13 @@ LobeChat uses `i18next` and `lobe-i18n` to implement multilingual support, ensur
 
 Internationalization files are located in `src/locales`, containing the default language (Chinese). We generate other language JSON files automatically through `lobe-i18n`.
 
-If you want to add a new language, follow specific steps detailed in [New Language Addition Guide](../Internationalization/Add-New-Locale.zh-CN.md). We encourage you to participate in our internationalization efforts to provide better services to global users.
+If you want to add a new language, follow specific steps detailed in [New Language Addition Guide](../internationalization/add-new-locale.md). We encourage you to participate in our internationalization efforts to provide better services to global users.
 
-For a detailed guide on internationalization implementation, please refer to [Internationalization Implementation Guide](../Internationalization/Internationalization-Implementation.zh-CN.md).
+For a detailed guide on internationalization implementation, please refer to [Internationalization Implementation Guide](../internationalization/internationalization-implementation.md).
 
 ## Appendix: Resources and References
 
-To support developers in better understanding and using the technology stack of LobeChat, we provide a comprehensive list of resources and references — [LobeChat Resources and References](https://github.com/lobehub/lobe-chat/wiki/Resources.zh-CN) - Visit our maintained list of resources, including tutorials, articles, and other useful links.
+To support developers in better understanding and using the technology stack of LobeChat, we provide a comprehensive list of resources and references — [LobeChat Resources and References](./basic/resources.md) - Visit our maintained list of resources, including tutorials, articles, and other useful links.
 
 We encourage developers to utilize these resources to deepen their learning and enhance their skills, join community discussions through [LobeChat GitHub Discussions](https://github.com/lobehub/lobe-chat/discussions) or [Discord](https://discord.com/invite/AYFPHvv2jT), ask questions, or share your experiences.
 

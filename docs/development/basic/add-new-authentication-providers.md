@@ -2,7 +2,7 @@
 
 LobeChat uses [Auth.js v5](https://authjs.dev/) as the external authentication service. Auth.js is an open-source authentication library that provides a simple way to implement authentication and authorization features. This document will introduce how to use Auth.js to implement a new authentication provider.
 
-### TOC
+#### TOC
 
 - [Add New Authentication Provider](#add-new-authentication-provider)
   - [Pre-requisites: Check the Official Provider List](#pre-requisites-check-the-official-provider-list)
