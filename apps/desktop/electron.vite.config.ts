@@ -1,5 +1,11 @@
+import dotenv from 'dotenv';
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 import { resolve } from 'node:path';
+
+dotenv.config();
+
+const updateChannel = process.env.UPDATE_CHANNEL || 'stable';
+console.log(`[electron-vite.config.ts] Detected UPDATE_CHANNEL: ${updateChannel}`); // 添加日志确认
 
 export default defineConfig({
   main: {

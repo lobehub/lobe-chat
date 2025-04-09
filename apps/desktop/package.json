@@ -1,6 +1,6 @@
 {
-  "name": "lobehub-desktop",
-  "version": "0.0.5",
+  "name": "lobehub-desktop-dev",
+  "version": "0.0.6",
   "description": "A minimal Electron application with TypeScript",
   "homepage": "https://lobehub.com",
   "repository": {
@@ -28,8 +28,7 @@
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",
-    "electron-updater": "^6.3.9",
-    "function-bind": "^1.1.2",
+    "electron-updater": "^6.6.2",
     "get-port-please": "^3.1.2"
   },
   "devDependencies": {

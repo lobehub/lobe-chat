@@ -19,6 +19,8 @@ export class UpdaterManager {
     // 设置日志
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
+
+    log.info(`[Updater] Log file should be at: ${log.transports.file.getFile().path}`); // 打印路径
   }
 
   get mainWindow() {
@@ -51,11 +53,16 @@ export class UpdaterManager {
     // 如果配置了自动检查更新，则设置定时检查
     if (updaterConfig.app.autoCheckUpdate) {
       // 启动后延迟 1 分钟检查更新，避免启动时网络可能不稳定
-      setTimeout(() => this.checkForUpdates(false), 60 * 1000);
+      setTimeout(() => this.checkForUpdates(false), 3 * 1000);
 
       // 设置定期检查
       setInterval(() => this.checkForUpdates(false), updaterConfig.app.checkUpdateInterval);
     }
+
+    // 在 initialize 的开头也打印一下 channel 和 allowPrerelease 的最终值
+    log.debug(
+      `[Updater] Initializing with channel: ${autoUpdater.channel}, allowPrerelease: ${autoUpdater.allowPrerelease}`,
+    );
   };
 
   /**
