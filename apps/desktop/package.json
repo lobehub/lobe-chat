@@ -67,6 +67,5 @@
     "onlyBuiltDependencies": [
       "electron"
     ]
-  },
-  "productName": "LobeHub Dev"
+  }
 }

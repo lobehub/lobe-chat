@@ -64,7 +64,6 @@ function updateVersion() {
 
     // 更新版本号
     packageJson.version = version;
-    packageJson.productName = 'LobeHub';
 
     // 如果是 PR 构建，设置为 Nightly 版本
     if (isPr) {
@@ -74,9 +73,8 @@ function updateVersion() {
       }
 
       // 修改产品名称为 LobeHub Nightly
-      packageJson.productName = 'LobeHub Nightly';
 
-      console.log('🌙 Setting as Nightly version with modified package name and productName');
+      console.log('🌙 Setting as Nightly version with modified package name');
 
       // 使用 nightly 图标替换常规图标
       updateAppIcon();
