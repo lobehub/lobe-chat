@@ -3,6 +3,7 @@ import type { ServerDispatchEvents } from '@lobechat/electron-server-ipc';
 
 import type { App } from '@/core/App';
 import { IoCContainer } from '@/core/IoCContainer';
+import { ShortcutActionType } from '@/shortcuts';
 
 const ipcDecorator =
   (name: string, mode: 'client' | 'server') =>
@@ -28,6 +29,20 @@ export const ipcClientEvent = (method: keyof ClientDispatchEvents) =>
  */
 export const ipcServerEvent = (method: keyof ServerDispatchEvents) =>
   ipcDecorator(method, 'server');
+
+const shortcutDecorator = (name: string) => (target: any, methodName: string, descriptor?: any) => {
+  const actions = IoCContainer.shortcuts.get(target.constructor) || [];
+  actions.push({ methodName, name });
+
+  IoCContainer.shortcuts.set(target.constructor, actions);
+
+  return descriptor;
+};
+
+/**
+ *  shortcut inject decorator
+ */
+export const shortcut = (method: ShortcutActionType) => shortcutDecorator(method);
 
 export class ControllerModule {
   constructor(public app: App) {

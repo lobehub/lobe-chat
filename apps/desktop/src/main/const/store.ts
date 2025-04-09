@@ -1,6 +1,7 @@
 /**
  * 应用设置存储相关常量
  */
+import { DEFAULT_SHORTCUTS_CONFIG } from '@/shortcuts';
 import { ElectronMainStore } from '@/types/store';
 
 /**
@@ -13,4 +14,5 @@ export const STORE_NAME = 'lobehub-settings';
  */
 export const STORE_DEFAULTS: ElectronMainStore = {
   locale: 'auto',
+  shortcuts: DEFAULT_SHORTCUTS_CONFIG,
 };

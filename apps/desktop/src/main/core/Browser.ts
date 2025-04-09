@@ -229,4 +229,13 @@ export default class Browser {
   broadcast = <T extends MainBroadcastEventKey>(channel: T, data?: MainBroadcastParams<T>) => {
     this._browserWindow.webContents.send(channel, data);
   };
+
+  toggleVisible() {
+    if (this._browserWindow.isVisible() && this._browserWindow.isFocused()) {
+      this._browserWindow.hide();
+    } else {
+      this._browserWindow.show();
+      this._browserWindow.focus();
+    }
+  }
 }

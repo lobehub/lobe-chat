@@ -1,4 +1,4 @@
-import { PublishProvider } from 'builder-util-runtime/out/publishOptions';
+import { GithubOptions } from 'builder-util-runtime';
 import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 
@@ -49,10 +49,11 @@ export class UpdaterManager {
 
     // 设置更新源
     const feedUrl = {
+      channel: channel,
       owner: GITHUB_OWNER,
-      provider: 'github' as PublishProvider,
+      provider: 'github',
       repo: GITHUB_REPO,
-    };
+    } satisfies GithubOptions;
     autoUpdater.setFeedURL(feedUrl);
 
     // 注册事件

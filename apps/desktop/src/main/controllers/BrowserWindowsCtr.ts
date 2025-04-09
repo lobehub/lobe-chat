@@ -3,9 +3,15 @@ import { extractSubPath, findMatchingRoute } from '~common/routes';
 
 import { AppBrowsersIdentifiers, BrowsersIdentifiers } from '@/appBrowsers';
 
-import { ControllerModule, ipcClientEvent } from './index';
+import { ControllerModule, ipcClientEvent, shortcut } from './index';
 
 export default class BrowserWindowsCtr extends ControllerModule {
+  @shortcut('toggleMainWindow')
+  async toggleMainWindow() {
+    const mainWindow = this.app.browserManager.getMainWindow();
+    mainWindow.toggleVisible();
+  }
+
   @ipcClientEvent('openSettingsWindow')
   async openSettingsWindow(tab?: string) {
     console.log('[BrowserWindowsCtr] Received request to open settings window', tab);

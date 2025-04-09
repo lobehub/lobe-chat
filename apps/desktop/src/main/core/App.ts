@@ -13,10 +13,12 @@ import BrowserManager from './BrowserManager';
 import { I18nManager } from './I18nManager';
 import { IoCContainer } from './IoCContainer';
 import MenuManager from './MenuManager';
+import { ShortcutManager } from './ShortcutManager';
 import { StoreManager } from './StoreManager';
 import { UpdaterManager } from './UpdaterManager';
 
 export type IPCEventMap = Map<string, { controller: any; methodName: string }>;
+export type ShortcutMethodMap = Map<string, () => Promise<void>>;
 
 type Class<T> = new (...args: any[]) => T;
 
@@ -30,6 +32,7 @@ export class App {
   i18n: I18nManager;
   storeManager: StoreManager;
   updaterManager: UpdaterManager;
+  shortcutManager: ShortcutManager;
 
   /**
    * whether app is in quiting
@@ -60,6 +63,7 @@ export class App {
     this.browserManager = new BrowserManager(this);
     this.menuManager = new MenuManager(this);
     this.updaterManager = new UpdaterManager(this);
+    this.shortcutManager = new ShortcutManager(this);
 
     // register the schema to interceptor url
     // it should register before app ready
@@ -80,8 +84,10 @@ export class App {
 
     // 初始化 i18n. PS: app.getLocale() 必须在 app.whenReady() 之后调用才能拿到正确的值
     await this.i18n.init();
-
     this.menuManager.initialize();
+
+    // 初始化全局快捷键: globalShortcut  必须在 app.whenReady() 之后调用
+    this.shortcutManager.initialize();
 
     this.browserManager.initializeBrowsers();
 
@@ -94,6 +100,8 @@ export class App {
     // 监听 before-quit 事件，设置退出标志
     app.on('before-quit', () => {
       this.isQuiting = true;
+      // 在应用退出前注销所有快捷键
+      this.shortcutManager.unregisterAll();
     });
 
     app.on('window-all-closed', () => {
@@ -130,6 +138,7 @@ export class App {
    */
   private ipcClientEventMap: IPCEventMap = new Map();
   private ipcServerEventMap: IPCEventMap = new Map();
+  shortcutMethodMap: ShortcutMethodMap = new Map();
 
   /**
    * use in next router interceptor in prod browser render
@@ -156,6 +165,12 @@ export class App {
           methodName: event.methodName,
         });
       }
+    });
+
+    IoCContainer.shortcuts.get(ControllerClass)?.forEach((shortcut) => {
+      this.shortcutMethodMap.set(shortcut.name, async () => {
+        controller[shortcut.methodName]();
+      });
     });
   };
 

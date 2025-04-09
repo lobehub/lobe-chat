@@ -7,5 +7,6 @@ export class IoCContainer {
     { methodName: string; mode: 'client' | 'server'; name: string }[]
   > = new WeakMap();
 
+  static shortcuts: WeakMap<any, { methodName: string; name: string }[]> = new WeakMap();
   init() {}
 }

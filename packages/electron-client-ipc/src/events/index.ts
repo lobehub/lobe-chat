@@ -1,6 +1,7 @@
 import { FilesDispatchEvents } from './file';
 import { MenuDispatchEvents } from './menu';
 import { FilesSearchDispatchEvents } from './search';
+import { ShortcutDispatchEvents } from './shortcut';
 import { SystemDispatchEvents } from './system';
 import { AutoUpdateBroadcastEvents, AutoUpdateDispatchEvents } from './update';
 import { WindowsDispatchEvents } from './windows';
@@ -15,7 +16,8 @@ export interface ClientDispatchEvents
     SystemDispatchEvents,
     MenuDispatchEvents,
     FilesDispatchEvents,
-    AutoUpdateDispatchEvents {}
+    AutoUpdateDispatchEvents,
+    ShortcutDispatchEvents {}
 
 export type ClientDispatchEventKey = keyof ClientDispatchEvents;
 
