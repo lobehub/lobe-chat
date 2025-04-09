@@ -64,6 +64,7 @@
     "start": "next start -p 3210",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "test": "vitest",
+    "test:coverage": "vitest --coverage",
     "test-app": "vitest run --config vitest.config.ts",
     "test-app:coverage": "vitest run --config vitest.config.ts  --coverage",
     "test-server": "TEST_SERVER_DB=1 vitest run --config vitest.server.config.ts",
