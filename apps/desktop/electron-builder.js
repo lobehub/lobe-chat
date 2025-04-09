@@ -67,7 +67,10 @@ const config = {
     gatekeeperAssess: false,
     hardenedRuntime: true,
     notarize: true,
-    target: [{ arch: ['x64', 'arm64'], target: 'dmg' }],
+    target: [
+      { arch: ['x64', 'arm64'], target: 'dmg' },
+      { arch: ['x64', 'arm64'], target: 'zip' },
+    ],
   },
   npmRebuild: true,
   nsis: {
