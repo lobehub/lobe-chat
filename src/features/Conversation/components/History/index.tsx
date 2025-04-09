@@ -38,8 +38,8 @@ const History = memo(() => {
   });
 
   const enableCompressHistory = useAgentStore(
-    agentChatConfigSelectors.currentChatConfig,
-  ).enableCompressHistory;
+    (s) => agentChatConfigSelectors.currentChatConfig(s).enableCompressHistory,
+  );
 
   return (
     <Flexbox paddingInline={16} style={{ paddingBottom: 8 }}>
