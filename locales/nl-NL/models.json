@@ -842,6 +842,9 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny is een ultra-presterend groot taalmodel dat de laagste implementatie- en afstemmingskosten heeft binnen de Wenxin modelreeks."
   },
+  "ernie-x1-32k-preview": {
+    "description": "Het Wenxin grote model X1 heeft sterkere capaciteiten in begrip, planning, reflectie en evolutie. Als een dieper denkmodel met bredere mogelijkheden, combineert Wenxin X1 nauwkeurigheid, creativiteit en stijl, en excelleert in Chinese kennisvragen, literaire creatie, tekstschrijven, dagelijkse gesprekken, logische redenering, complexe berekeningen en het aanroepen van tools."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) biedt stabiele en afstelbare prestaties, ideaal voor oplossingen voor complexe taken."
   },
@@ -913,6 +916,9 @@
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental is Google's meest geavanceerde denkmodel, dat in staat is om te redeneren over complexe problemen in code, wiskunde en STEM-gebieden, en bovendien gebruik maakt van lange contexten om grote datasets, codebases en documenten te analyseren."
+  },
+  "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Preview is Google's meest geavanceerde denkmodel, dat in staat is om te redeneren over complexe problemen in code, wiskunde en STEM-gebieden, en grote datasets, codebases en documenten te analyseren met behulp van lange context."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is geschikt voor het verwerken van middelgrote taken, met een goede kosteneffectiviteit."
@@ -1571,9 +1577,6 @@
   "openai/o1-preview": {
     "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
   },
-  "openchat/openchat-7b": {
-    "description": "OpenChat 7B is een open-source taalmodelbibliotheek die is geoptimaliseerd met de 'C-RLFT (Conditionele Versterkingsleer Fijnstelling)' strategie."
-  },
   "openrouter/auto": {
     "description": "Afhankelijk van de contextlengte, het onderwerp en de complexiteit, wordt uw verzoek verzonden naar Llama 3 70B Instruct, Claude 3.5 Sonnet (zelfregulerend) of GPT-4o."
   },
@@ -1595,8 +1598,8 @@
   "qvq-72b-preview": {
     "description": "Het QVQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van visuele redeneervaardigheden, vooral in het domein van wiskundige redenering."
   },
-  "qvq-max-latest": {
-    "description": "De QVQ visuele redeneermodel van Tongyi Qianwen ondersteunt visuele invoer en output van denkprocessen, en heeft betere prestaties getoond in wiskunde, programmeren, visuele analyse, creatie en algemene taken."
+  "qvq-max": {
+    "description": "De QVQ visuele redeneermodel ondersteunt visuele invoer en denktaken, en toont sterkere capaciteiten in wiskunde, programmeren, visuele analyse, creatie en algemene taken."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen code model."

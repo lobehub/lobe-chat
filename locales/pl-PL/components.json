@@ -91,6 +91,10 @@
     "provider": "Dostawca"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Zamknij powiadomienie",
+      "start": "Zainstalowano i uruchomiono, rozpocznij rozmowę"
+    },
     "cors": {
       "description": "Z powodu ograniczeń bezpieczeństwa przeglądarki, musisz skonfigurować CORS dla Ollama, aby móc go używać.",
       "linux": {

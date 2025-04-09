@@ -91,6 +91,10 @@
     "provider": "Sağlayıcı"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Uyarıyı Kapat",
+      "start": "Yüklendi ve çalışıyor, sohbete başla"
+    },
     "cors": {
       "description": "Tarayıcı güvenlik kısıtlamaları nedeniyle, Ollama'yı düzgün bir şekilde kullanabilmek için çapraz alan yapılandırması yapmanız gerekmektedir.",
       "linux": {

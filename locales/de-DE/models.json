@@ -842,6 +842,9 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny ist ein hochleistungsfähiges großes Sprachmodell, dessen Bereitstellungs- und Feinabstimmungskosten die niedrigsten unter den Wenshin-Modellen sind."
   },
+  "ernie-x1-32k-preview": {
+    "description": "Das große Modell ERNIE X1 verfügt über verbesserte Fähigkeiten in Verständnis, Planung, Reflexion und Evolution. Als umfassenderes tiefes Denkmodell kombiniert ERNIE X1 Genauigkeit, Kreativität und Ausdruckskraft und zeigt herausragende Leistungen in den Bereichen chinesische Wissensabfragen, literarisches Schaffen, Textverfassung, alltägliche Gespräche, logisches Denken, komplexe Berechnungen und Werkzeugnutzung."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) bietet stabile und anpassbare Leistung und ist die ideale Wahl für Lösungen komplexer Aufgaben."
   },
@@ -913,6 +916,9 @@
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental ist Googles fortschrittlichstes Denkmodell, das in der Lage ist, komplexe Probleme in den Bereichen Code, Mathematik und STEM zu analysieren. Es kann auch lange Kontexte nutzen, um große Datensätze, Codebasen und Dokumente zu analysieren."
+  },
+  "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Preview ist Googles fortschrittlichstes Denkmodell, das in der Lage ist, komplexe Probleme in den Bereichen Code, Mathematik und STEM zu analysieren sowie große Datensätze, Codebasen und Dokumente mithilfe von langen Kontextanalysen zu verarbeiten."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B eignet sich für die Verarbeitung von mittelgroßen Aufgaben und bietet ein gutes Kosten-Nutzen-Verhältnis."
@@ -1571,9 +1577,6 @@
   "openai/o1-preview": {
     "description": "o1 ist OpenAIs neues Inferenzmodell, das für komplexe Aufgaben geeignet ist, die umfangreiches Allgemeinwissen erfordern. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
   },
-  "openchat/openchat-7b": {
-    "description": "OpenChat 7B ist eine Open-Source-Sprachmodellbibliothek, die mit der Strategie „C-RLFT (Conditional Reinforcement Learning Fine-Tuning)“ optimiert wurde."
-  },
   "openrouter/auto": {
     "description": "Je nach Kontextlänge, Thema und Komplexität wird Ihre Anfrage an Llama 3 70B Instruct, Claude 3.5 Sonnet (selbstregulierend) oder GPT-4o gesendet."
   },
@@ -1595,8 +1598,8 @@
   "qvq-72b-preview": {
     "description": "Das QVQ-Modell ist ein experimentelles Forschungsmodell, das vom Qwen-Team entwickelt wurde und sich auf die Verbesserung der visuellen Schlussfolgerungsfähigkeiten konzentriert, insbesondere im Bereich der mathematischen Schlussfolgerungen."
   },
-  "qvq-max-latest": {
-    "description": "Das QVQ-Vision-Reasoning-Modell von Tongyi Qianwen unterstützt visuelle Eingaben und Denkketten-Ausgaben und zeigt in Mathematik, Programmierung, visueller Analyse, Kreativität und allgemeinen Aufgaben eine stärkere Leistungsfähigkeit."
+  "qvq-max": {
+    "description": "Das universelle QVQ-Visionsmodell unterstützt visuelle Eingaben und Denkkettenausgaben und zeigt in Mathematik, Programmierung, visueller Analyse, Kreativität und allgemeinen Aufgaben verbesserte Fähigkeiten."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen Code-Modell."

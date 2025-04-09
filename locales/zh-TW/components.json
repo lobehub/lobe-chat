@@ -91,6 +91,10 @@
     "provider": "提供商"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "關閉提示",
+      "start": "已安裝並運行，開始對話"
+    },
     "cors": {
       "description": "因瀏覽器安全限制，你需要為 Ollama 進行跨域配置後方可正常使用。",
       "linux": {
