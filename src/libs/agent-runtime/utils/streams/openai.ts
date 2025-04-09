@@ -40,11 +40,6 @@ export const transformOpenAIStream = (
   }
 
   try {
-    // performance monitor return
-    if (chunk.id === 'speed') {
-      return { data: chunk.object, id: chunk.id, type: 'speed' };
-    }
-
     // maybe need another structure to add support for multiple choices
     const item = chunk.choices[0];
     if (!item) {
