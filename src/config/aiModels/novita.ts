@@ -30,7 +30,7 @@ const novitaChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.1 8B Instruct',
     id: 'meta-llama/llama-3.1-8b-instruct',
     pricing: {
-      input: 0.05,
+      input: 0.02,
       output: 0.05,
     },
     type: 'chat',
