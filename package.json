@@ -262,7 +262,7 @@
     "@lobehub/lint": "^1.26.1",
     "@lobehub/seo-cli": "^1.4.3",
     "@next/bundle-analyzer": "15.2.3",
-    "@next/eslint-plugin-next": "15.2.3",
+    "@next/eslint-plugin-next": "15.3.0",
     "@peculiar/webcrypto": "^1.5.0",
     "@semantic-release/exec": "^6.0.3",
     "@testing-library/jest-dom": "^6.6.3",
