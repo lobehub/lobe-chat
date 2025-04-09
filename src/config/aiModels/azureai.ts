@@ -124,12 +124,12 @@ const azureChatModels: AIChatModelCard[] = [
     description: 'GPT-4o Mini，小型高效模型，具备与GPT-4o相似的卓越性能。',
     displayName: 'GPT 4o Mini',
     id: 'gpt-4o-mini',
+    maxOutput: 16_384,
     pricing: {
       cachedInput: 0.075,
       input: 0.15,
       output: 0.6,
     },
-    maxOutput: 16_384,
     type: 'chat',
   },
 ];
