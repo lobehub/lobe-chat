@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix xAI API calling, not support stream_options."]
+    },
+    "date": "2025-04-09",
+    "version": "1.79.1"
+  },
+  {
+    "children": {
       "features": ["Add wiki migrate instructions."]
     },
     "date": "2025-04-09",
