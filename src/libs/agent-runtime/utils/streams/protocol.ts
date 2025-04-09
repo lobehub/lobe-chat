@@ -247,6 +247,8 @@ export const createSSEDataExtractor = () =>
     },
   });
 
+export const TOKEN_SPEED_CHUNK_ID = 'output_speed';
+
 /**
  * Create a middleware to calculate the token generate speed
  * @requires createSSEProtocolTransformer
@@ -269,7 +271,7 @@ export const createTokenSpeedCalculator = (
           tps: (outputTokens / (Date.now() - outputStartAt)) * 1000,
           ttft: outputStartAt - inputStartAt,
         } as ModelSpeed,
-        id: 'output_speed',
+        id: TOKEN_SPEED_CHUNK_ID,
         type: 'speed',
       });
     }
