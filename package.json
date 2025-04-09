@@ -42,7 +42,7 @@
     "db:push": "drizzle-kit push",
     "db:push-test": "NODE_ENV=test drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:visualize": "dbdocs build docs/developer/database-schema.dbml --project lobe-chat",
+    "db:visualize": "dbdocs build docs/development/database-schema.dbml --project lobe-chat",
     "db:z-pull": "drizzle-kit introspect",
     "dev": "next dev --turbopack -p 3010",
     "docs:i18n": "lobe-i18n md && npm run lint:md && npm run lint:mdx",
