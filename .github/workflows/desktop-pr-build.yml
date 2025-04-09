@@ -179,6 +179,10 @@ jobs:
     outputs:
       artifact_path: ${{ steps.set_path.outputs.path }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       # 下载所有平台的构建产物
       - name: Download artifacts
         uses: actions/download-artifact@v4

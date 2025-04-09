@@ -1,7 +1,5 @@
 import fs from 'node:fs';
-import path from 'node:path';
 
-import { resourcesDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 
 /**
@@ -30,7 +28,7 @@ export const loadResources = async (lng: string, ns: string) => {
 
   // 生产环境使用编译后的 JSON 文件
   const normalizedLocale = normalizeLocale(lng);
-  const resourceFilePath = path.join(resourcesDir, 'locales', normalizedLocale, `${ns}.json`);
+  const resourceFilePath = await import(`@/../../resources/locales/${normalizedLocale}/${ns}.json`);
 
   try {
     if (fs.existsSync(resourceFilePath)) {

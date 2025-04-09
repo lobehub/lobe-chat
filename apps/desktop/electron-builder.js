@@ -6,6 +6,7 @@ const packageJSON = require('./package.json');
 
 const isDev = process.env.NODE_ENV === 'development';
 const channel = process.env.UPDATE_CHANNEL || 'stable';
+
 console.log(`🚄 Build Version ${packageJSON.version}, Channel: ${channel}`);
 
 const isNightly = channel === 'nightly';
@@ -23,13 +24,7 @@ const config = {
     artifactName: '${productName}-${version}.${ext}',
   },
   asar: true,
-
   detectUpdateChannel: true,
-  // asarUnpack: [
-  //   'dist/next/.next/**/*',
-  //   // 'dist/next/node_modules/**/*',
-  //   // 'dist/next/public/**/*'
-  // ],
   directories: {
     buildResources: 'build',
     output: 'release',
@@ -42,7 +37,6 @@ const config = {
   },
   files: [
     'dist',
-    'resources',
     '!dist/next/docs',
     '!dist/next/packages',
     '!dist/next/.next/server/app/sitemap',

@@ -2,10 +2,7 @@ import log from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 
 import { isDev } from '@/const/env';
-import {
-  UPDATE_CHANNEL as channel,
-  updaterConfig,
-} from '@/modules/updater/configs';
+import { UPDATE_CHANNEL as channel, updaterConfig } from '@/modules/updater/configs';
 
 import type { App as AppCore } from './App';
 

@@ -1,11 +1,7 @@
 import { isDev } from '@/const/env';
 
-// GitHub 仓库信息
-export const GITHUB_OWNER = 'lobehub';
-export const GITHUB_REPO = 'lobe-chat';
-
 // 更新频道（stable, beta, alpha 等）
-export const UPDATE_CHANNEL = isDev ? 'nightly' : 'stable';
+export const UPDATE_CHANNEL = process.env.UPDATE_CHANNEL;
 
 export const updaterConfig = {
   // 应用更新配置
