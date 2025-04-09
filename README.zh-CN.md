@@ -326,7 +326,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [MintbaseSearch](https://lobechat.com/discover/plugin/mintbasesearch)<br/><sup>By **mintbase** on **2024-12-31**</sup>     | 在 NEAR 协议上查找任何 NFT 数据。<br/>`加密货币` `nft`                             |
 | [必应网页搜索](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | 通过 BingApi 搜索互联网上的信息<br/>`bingsearch`                                   |
 
-> 📊 Total plugins: [<kbd>**46**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**45**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
