@@ -74,7 +74,7 @@ jobs:
           pr_number="${{ github.event.pull_request.number }}"
           # 添加时间戳确保版本号有顺序语义
           timestamp=$(date +'%Y%m%d%H%M%S')
-          version="${base_version}-nightly-pr${pr_number}-${timestamp}"
+          version="${base_version}-nightly.pr${pr_number}-${timestamp}"
           echo "version=${version}" >> $GITHUB_OUTPUT
           echo "is_pr_build=true" >> $GITHUB_OUTPUT
           echo "📦 Release Version: ${version} (based on base version ${base_version})"
