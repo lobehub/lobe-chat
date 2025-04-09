@@ -1,23 +1,21 @@
-import { resolve } from 'node:path';
-import { coverageConfigDefaults, defineConfig } from 'vitest/config';
+import {  defineConfig, defineProject } from 'vitest/config';
 
-export default defineConfig({
+import { sharedTestConfig } from './vitest.shared';
+
+export default defineProject({
   test: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
-    coverage: {
-      all: false,
-      exclude: [
-        // https://github.com/lobehub/lobe-chat/pull/7265
-        ...coverageConfigDefaults.exclude,
-        'src/database/server/core/dbForTest.ts',
-      ],
-      include: ['src/database/models/**/*.ts', 'src/database/server/**/*.ts'],
-      provider: 'v8',
-      reporter: ['text', 'json', 'lcov', 'text-summary'],
-      reportsDirectory: './coverage/server',
-    },
+    name: 'server',
+    alias: sharedTestConfig.alias,
+    //coverage: {
+    //  ...sharedTestConfig.coverage,
+    //  exclude: [
+    //    ...sharedTestConfig.coverage!.exclude!,
+    //    'src/database/server/core/dbForTest.ts',
+    //  ],
+    //  include: ['src/database/models/**/*.ts', 'src/database/server/**/*.ts'],
+    //  provider: 'v8',
+    //  reportsDirectory: './coverage/server',
+    //},
     environment: 'node',
     include: ['src/database/models/**/**/*.test.ts', 'src/database/server/**/**/*.test.ts'],
     poolOptions: {
