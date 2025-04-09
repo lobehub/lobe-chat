@@ -37,14 +37,14 @@ export class UpdaterManager {
 
     // 配置 autoUpdater
     autoUpdater.autoDownload = false; // 设置为false，我们将手动控制下载
-    autoUpdater.autoInstallOnAppQuit = true;
+    autoUpdater.autoInstallOnAppQuit = false;
     autoUpdater.allowPrerelease = channel !== 'stable';
 
     // 开发环境时启用测试模式
     if (isDev) {
       log.info('[Updater] Running in dev mode, forcing update check');
       // 开发环境下允许测试更新
-      // autoUpdater.forceDevUpdateConfig = true;
+      autoUpdater.forceDevUpdateConfig = true;
     }
 
     // 设置更新源
@@ -87,7 +87,7 @@ export class UpdaterManager {
     try {
       await autoUpdater.checkForUpdates();
     } catch (error) {
-      log.error('[Updater] Error checking for updates:', error);
+      log.error('[Updater] Error checking for updates:', error.message);
 
       // 如果是手动检查，通知渲染进程检查更新出错
       if (manual) {

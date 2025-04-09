@@ -1,3 +1,13 @@
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const packageJSON = require('./package.json');
+
+console.log(
+  `🚄 Build Version ${packageJSON.version}, Channel: ${process.env.UPDATE_CHANNEL || 'stable'}`,
+);
+
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration
@@ -8,6 +18,8 @@ const config = {
     artifactName: '${productName}-${version}.${ext}',
   },
   asar: true,
+
+  detectUpdateChannel: true,
   // asarUnpack: [
   //   'dist/next/.next/**/*',
   //   // 'dist/next/node_modules/**/*',
@@ -35,7 +47,6 @@ const config = {
   linux: {
     category: 'Utility',
     maintainer: 'electronjs.org',
-    // publish: ['github'],
     target: ['AppImage', 'snap', 'deb'],
   },
   mac: {
@@ -56,7 +67,6 @@ const config = {
     gatekeeperAssess: false,
     hardenedRuntime: true,
     notarize: true,
-    publish: ['github'],
     target: [{ arch: ['x64', 'arm64'], target: 'dmg' }],
   },
   npmRebuild: true,
@@ -70,16 +80,15 @@ const config = {
   },
   publish: [
     {
+      channel: process.env.UPDATE_CHANNEL,
       owner: 'lobehub',
       provider: 'github',
-      releaseType: 'release',
       repo: 'lobe-chat',
     },
   ],
   win: {
-    executableName: 'LobeHub-app',
-    // publish: ['github'],
+    executableName: 'LobeHub',
   },
 };
 
-export default config;
+module.exports = config;

@@ -186,6 +186,7 @@ jobs:
         with:
           name: release-${{ matrix.os }}
           path: |
+            apps/desktop/release/nightly*
             apps/desktop/release/latest*
             apps/desktop/release/*.dmg*
             apps/desktop/release/*.zip*
@@ -250,6 +251,7 @@ jobs:
         with:
           tag_name: ${{ github.event.release.tag_name }}
           files: |
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/nightly*
             ${{ needs.prepare-artifacts.outputs.artifact_path }}/latest*
             ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.dmg*
             ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.zip*
@@ -305,6 +307,7 @@ jobs:
           draft: false
           prerelease: true
           files: |
+            ${{ needs.prepare-artifacts.outputs.artifact_path }}/nightly*
             ${{ needs.prepare-artifacts.outputs.artifact_path }}/latest*
             ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.dmg*
             ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.zip*
