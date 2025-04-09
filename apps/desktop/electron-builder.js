@@ -80,6 +80,7 @@ const config = {
   productName: isNightly ? 'LobeHub Nightly' : 'LobeHub',
   publish: [
     {
+      channel: process.env.UPDATE_CHANNEL,
       owner: 'lobehub',
       provider: 'github',
       repo: 'lobe-chat',

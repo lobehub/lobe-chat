@@ -222,12 +222,12 @@ jobs:
           draft: false
           prerelease: true
           files: |
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/nightly*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/latest*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.dmg*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.zip*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.exe*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.AppImage
+            release/nightly*
+            release/latest*
+            release/*.dmg*
+            release/*.zip*
+            release/*.exe*
+            release/*.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
