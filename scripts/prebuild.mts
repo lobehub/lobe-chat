@@ -58,11 +58,10 @@ const removeDirectories = async () => {
 
         // 检查目录是否存在
         if (existsSync(fullPath)) {
-          console.log(`Removing directory: ${dirPath}`);
           try {
             // 递归删除目录
             await rm(fullPath, { force: true, recursive: true });
-            console.log(`Successfully removed: ${dirPath}`);
+            console.log(`♻️ Removed ${dirPath} successfully`);
           } catch (error) {
             console.error(`Failed to remove directory ${dirPath}:`, error);
           }

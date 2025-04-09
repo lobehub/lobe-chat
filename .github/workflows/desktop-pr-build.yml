@@ -211,7 +211,6 @@ jobs:
 
             return body;
 
-      # 为构建产物创建一个临时发布
       - name: Create Temporary Release for PR
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -246,7 +245,7 @@ jobs:
               context,
               releaseUrl,
               version: "${{ needs.version.outputs.version }}",
-              tag: "pr-build-${{ github.event.pull_request.number }}-${{ github.sha }}"
+              tag: "v${{ needs.version.outputs.version }}"
             });
 
             console.log(`评论状态: ${result.updated ? '已更新' : '已创建'}, ID: ${result.id}`);
