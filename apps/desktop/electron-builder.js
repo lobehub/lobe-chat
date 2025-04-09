@@ -4,7 +4,6 @@ dotenv.config();
 
 const packageJSON = require('./package.json');
 
-const isDev = process.env.NODE_ENV === 'development';
 const channel = process.env.UPDATE_CHANNEL || 'stable';
 
 console.log(`🚄 Build Version ${packageJSON.version}, Channel: ${channel}`);
@@ -15,11 +14,7 @@ const isNightly = channel === 'nightly';
  * @see https://www.electron.build/configuration
  */
 const config = {
-  appId: isDev
-    ? 'com.lobehub.lobehub-desktop-dev'
-    : isNightly
-      ? 'com.lobehub.lobehub-desktop-nightly'
-      : 'com.lobehub.lobehub-desktop',
+  appId: isNightly ? 'com.lobehub.lobehub-desktop-nightly' : 'com.lobehub.lobehub-desktop',
   appImage: {
     artifactName: '${productName}-${version}.${ext}',
   },
@@ -82,10 +77,9 @@ const config = {
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
   },
-  productName: isDev ? 'LobeHub Dev' : isNightly ? 'LobeHub Nightly' : 'LobeHub',
+  productName: isNightly ? 'LobeHub Nightly' : 'LobeHub',
   publish: [
     {
-      channel: process.env.UPDATE_CHANNEL,
       owner: 'lobehub',
       provider: 'github',
       repo: 'lobe-chat',
