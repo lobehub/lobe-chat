@@ -72,8 +72,10 @@ describe('searXNG actions', () => {
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
+        optionalParams: {
+          searchEngines: ['google'],
+        },
         query: 'test query',
-        searchEngines: ['google'],
       };
 
       await act(async () => {
@@ -82,13 +84,15 @@ describe('searXNG actions', () => {
 
       const expectedContent: SearchContent[] = [
         {
-          content: 'Test Content',
           title: 'Test Result',
           url: 'https://test.com',
+          content: 'Test Content',
         },
       ];
 
-      expect(searchService.search).toHaveBeenCalledWith('test query', ['google']);
+      expect( searchService.search ).toHaveBeenCalledWith('test query', {
+        searchEngines: [ 'google' ]
+      });
       expect(result.current.searchLoading[messageId]).toBe(false);
       expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
         messageId,
@@ -134,6 +138,7 @@ describe('searXNG actions', () => {
 
       (searchService.search as Mock)
         .mockResolvedValueOnce(emptyResponse)
+        .mockResolvedValueOnce(emptyResponse)
         .mockResolvedValueOnce(retryResponse);
 
       const { result } = renderHook(() => useChatStore());
@@ -141,20 +146,35 @@ describe('searXNG actions', () => {
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
+        optionalParams: {
+          searchEngines: ['custom-engine'],
+          searchTimeRange: 'year',
+        },
         query: 'test query',
-        searchEngines: ['custom-engine'],
       };
 
       await act(async () => {
         await searchWithSearXNG(messageId, query);
       });
 
-      expect(searchService.search).toHaveBeenCalledTimes(2);
-      expect(searchService.search).toHaveBeenNthCalledWith(1, 'test query', ['custom-engine']);
-      expect(searchService.search).toHaveBeenNthCalledWith(2, 'test query');
+      expect(searchService.search).toHaveBeenCalledTimes(3);
+      expect(searchService.search).toHaveBeenNthCalledWith(1, "test query", {
+          "searchEngines": [ "custom-engine" ],
+          "searchTimeRange": "year",
+      });
+      expect(searchService.search).toHaveBeenNthCalledWith(2, "test query", {
+          "searchTimeRange": "year",
+      });
       expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, {
+        optionalParams: {
+          "searchTimeRange": "year",
+        },
         query: 'test query',
-        searchEngines: undefined,
+      });
+      expect(searchService.search).toHaveBeenNthCalledWith(3, "test query");
+      expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, {
+        optionalParams: undefined,
+        query: 'test query',
       });
     });
 
