@@ -74,10 +74,6 @@ export const getServerGlobalConfig = async () => {
         enabledKey: 'ENABLED_GITEE_AI',
         modelListKey: 'GITEE_AI_MODEL_LIST',
       },
-      tencentcloud: {
-        enabledKey: 'ENABLED_TENCENT_CLOUD',
-        modelListKey: 'TENCENT_CLOUD_MODEL_LIST',
-      },
       ollama: {
         fetchOnClient: !process.env.OLLAMA_PROXY_URL,
       },
