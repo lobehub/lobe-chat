@@ -52,7 +52,6 @@ jobs:
     outputs:
       # 输出版本信息，供后续 job 使用
       version: ${{ steps.set_version.outputs.version }}
-      is_pr_build: ${{ steps.set_version.outputs.is_pr_build }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -75,7 +74,6 @@ jobs:
           ci_build_number="${{ github.run_number }}" # CI 构建编号
           version="${base_version}-nightly.pr${pr_number}.${ci_build_number}"
           echo "version=${version}" >> $GITHUB_OUTPUT
-          echo "is_pr_build=true" >> $GITHUB_OUTPUT
           echo "📦 Release Version: ${version} (based on base version ${base_version})"
 
         env:
@@ -85,8 +83,6 @@ jobs:
       - name: Version Summary
         run: |
           echo "🚦 Release Version: ${{ steps.set_version.outputs.version }}"
-          echo "🔄 Is PR Build: ${{ steps.set_version.outputs.is_pr_build }}"
-
 
   build:
     needs: [version, test]
@@ -108,7 +104,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 9
 
       # node-linker=hoisted 模式将可以确保 asar 压缩可用
       - name: Install deps
@@ -119,7 +115,7 @@ jobs:
 
       # 设置 package.json 的版本号
       - name: Set package version
-        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} ${{ needs.version.outputs.is_pr_build }}
+        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} true
 
       # macOS 构建处理
       - name: Build artifact on macOS
@@ -127,7 +123,7 @@ jobs:
         run: npm run desktop:build
         env:
           # 设置更新通道，PR构建为nightly，否则为stable
-          UPDATE_CHANNEL: ${{ needs.version.outputs.is_pr_build == 'true' && 'nightly' || 'stable' }}
+          UPDATE_CHANNEL: 'nightly'
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           # 默认添加一个加密 SECRET
@@ -147,29 +143,23 @@ jobs:
         run: npm run desktop:build
         env:
           # 设置更新通道，PR构建为nightly，否则为stable
-          UPDATE_CHANNEL: ${{ needs.version.outputs.is_pr_build == 'true' && 'nightly' || 'stable' }}
+          UPDATE_CHANNEL: 'nightly'
           APP_URL: http://localhost:3015
           DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
 
-      # 上传构建产物，移除了 zip 相关部分
+      # 上传构建产物
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: release-${{ matrix.os }}
           path: |
-            apps/desktop/release/nightly*
             apps/desktop/release/latest*
             apps/desktop/release/*.dmg*
             apps/desktop/release/*.zip*
             apps/desktop/release/*.exe*
             apps/desktop/release/*.AppImage
           retention-days: 5
-
-      - name: Log build info
-        run: |
-          echo "🔄 Is PR Build: ${{ needs.version.outputs.is_pr_build }}"
-
 
   publish-pr:
     needs: [build, version]
@@ -222,7 +212,6 @@ jobs:
           draft: false
           prerelease: true
           files: |
-            release/nightly*
             release/latest*
             release/*.dmg*
             release/*.zip*
