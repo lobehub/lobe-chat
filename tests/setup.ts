@@ -35,11 +35,11 @@ theme.defaultConfig.hashed = false;
 (global as any).React = React;
 
 // ======= Temporary env modification for test =======
-process.env.TEST_SERVER_DB = undefined;
+// delete process.env.TEST_SERVER_DB;
 
-process.env.DATABASE_TEST_URL = undefined;
-process.env.DATABASE_DRIVER = undefined;
-process.env.NEXT_PUBLIC_SERVICE_MODE = undefined;
-process.env.KEY_VAULTS_SECRET = undefined;
-process.env.S3_PUBLIC_DOMAIN = undefined;
-process.env.APP_URL = undefined;
+// delete process.env.DATABASE_TEST_URL;
+// delete process.env.DATABASE_DRIVER;
+// delete process.env.NEXT_PUBLIC_SERVICE_MODE;
+// delete process.env.KEY_VAULTS_SECRET;
+// delete process.env.S3_PUBLIC_DOMAIN;
+// delete process.env.APP_URL;
