@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix env for Tencent Cloud & remove deepseek-v3 series fc tag."]
+    },
+    "date": "2025-04-09",
+    "version": "1.79.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix xAI API calling, not support stream_options."]
     },
     "date": "2025-04-09",
