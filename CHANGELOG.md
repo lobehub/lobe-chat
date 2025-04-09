@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.77.18](https://github.com/lobehub/lobe-chat/compare/v1.77.17...v1.77.18)
+
+<sup>Released on **2025-04-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `time_range` & `categories` support for SearXNG.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `time_range` & `categories` support for SearXNG, closes [#6813](https://github.com/lobehub/lobe-chat/issues/6813) ([9e4cd8c](https://github.com/lobehub/lobe-chat/commit/9e4cd8c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.77.17](https://github.com/lobehub/lobe-chat/compare/v1.77.16...v1.77.17)
 
 <sup>Released on **2025-04-08**</sup>

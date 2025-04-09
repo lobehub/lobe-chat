@@ -43,8 +43,12 @@ export const searchRouter = router({
   query: searchProcedure
     .input(
       z.object({
+        optionalParams: z.object({
+          searchCategories: z.array(z.string()).optional(),
+          searchEngines: z.array(z.string()).optional(),
+          searchTimeRange: z.string().optional(),
+        }).optional(),
         query: z.string(),
-        searchEngine: z.array(z.string()).optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -55,7 +59,11 @@ export const searchRouter = router({
       const client = new SearXNGClient(toolsEnv.SEARXNG_URL);
 
       try {
-        return await client.search(input.query, input.searchEngine);
+        return await client.search(input.query, {
+          categories: input.optionalParams?.searchCategories,
+          engines: input.optionalParams?.searchEngines,
+          time_range: input.optionalParams?.searchTimeRange,
+        });
       } catch (e) {
         console.error(e);
 
