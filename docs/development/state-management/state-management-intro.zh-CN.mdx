@@ -138,7 +138,7 @@ src/store/session
 
 在 LobeChat 中，SessionStore 被设计为管理会话状态和逻辑的核心模块。它由多个 Slices 组成，每个 Slice 管理一部分相关的状态和逻辑。下面是一个简化的 SessionStore 的实现示例：
 
-#### store.ts
+### store.ts
 
 ```ts
 import { PersistOptions, devtools, persist, subscribeWithSelector } from 'zustand/middleware';
@@ -179,7 +179,7 @@ export const useSessionStore = createWithEqualityFn<SessionStore>()(
 
 在这个 `store.ts` 文件中，我们创建了一个 `useSessionStore` 钩子，它使用 `zustand` 库来创建一个全局状态管理器。我们将 initialState 和每个 Slice 的动作合并，以创建完整的 SessionStore。
 
-#### slices/session/action.ts
+### slices/session/action.ts
 
 ```ts
 import { StateCreator } from 'zustand';

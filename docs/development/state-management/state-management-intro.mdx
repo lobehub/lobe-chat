@@ -146,7 +146,7 @@ src/store/session
 
 In LobeChat, the SessionStore is designed as the core module for managing session state and logic. It consists of multiple Slices, with each Slice managing a relevant portion of state and logic. Below is a simplified example of the SessionStore implementation:
 
-#### store.ts
+### store.ts
 
 ```ts
 import { PersistOptions, devtools, persist, subscribeWithSelector } from 'zustand/middleware';
@@ -187,7 +187,7 @@ export const useSessionStore = createWithEqualityFn<SessionStore>()(
 
 In this `store.ts` file, we create a `useSessionStore` hook that uses the `zustand` library to create a global state manager. We merge the initialState with the actions from each Slice to create a complete SessionStore.
 
-#### slices/session/action.ts
+### slices/session/action.ts
 
 ```ts
 import { StateCreator } from 'zustand';
