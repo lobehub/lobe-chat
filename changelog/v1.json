@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix langfuse intergation."]
+    },
+    "date": "2025-04-10",
+    "version": "1.79.5"
+  },
+  {
+    "children": {
       "improvements": ["Update Grok 3 models."]
     },
     "date": "2025-04-10",
