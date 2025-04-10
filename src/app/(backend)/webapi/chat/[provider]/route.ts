@@ -33,10 +33,7 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
     let traceOptions = {};
     // If user enable trace
     if (tracePayload?.enabled) {
-      traceOptions = createTraceOptions(data, {
-        provider,
-        trace: tracePayload,
-      });
+      traceOptions = createTraceOptions(data, { provider, trace: tracePayload });
     }
 
     return await agentRuntime.chat(data, {

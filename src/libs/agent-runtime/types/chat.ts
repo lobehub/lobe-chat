@@ -1,4 +1,25 @@
-import { MessageToolCall } from '@/types/message';
+import { DeepPartial } from 'utility-types';
+
+import { ModelTokensUsage, ToolFunction } from '@/types/message';
+
+export interface MessageToolCall {
+  /**
+   * The function that the model called.
+   */
+  function: ToolFunction;
+
+  /**
+   * The ID of the tool call.
+   */
+  id: string;
+
+  /**
+   * The type of the tool. Currently, only `function` is supported.
+   */
+  type: 'function' | string;
+}
+
+export type MessageToolCallChunk = DeepPartial<MessageToolCall> & { index: number };
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
@@ -165,18 +186,29 @@ export interface ChatCompletionTool {
   type: 'function';
 }
 
+interface OnFinishData {
+  grounding?: any;
+  text: string;
+  thinking?: string;
+  toolsCalling?: MessageToolCall[];
+  usage?: ModelTokensUsage;
+}
+
 export interface ChatStreamCallbacks {
+  onCompletion?: (data: OnFinishData) => Promise<void> | void;
   /**
-   * `onCompletion`: Called for each tokenized message.
+   * `onFinal`: Called once when the stream is closed with the final completion message.
    **/
-  onCompletion?: (completion: string) => Promise<void> | void;
-  /** `onFinal`: Called once when the stream is closed with the final completion message. */
-  onFinal?: (completion: string) => Promise<void> | void;
+  onFinal?: (data: OnFinishData) => Promise<void> | void;
+  onGrounding?: (grounding: any) => Promise<void> | void;
   /** `onStart`: Called once when the stream is initialized. */
   onStart?: () => Promise<void> | void;
   /** `onText`: Called for each text chunk. */
-  onText?: (text: string) => Promise<void> | void;
-  /** `onToken`: Called for each tokenized message. */
-  onToken?: (token: string) => Promise<void> | void;
-  onToolCall?: () => Promise<void> | void;
+  onText?: (content: string) => Promise<void> | void;
+  onThinking?: (content: string) => Promise<void> | void;
+  onToolsCalling?: (data: {
+    chunk: MessageToolCallChunk[];
+    toolsCalling: MessageToolCall[];
+  }) => Promise<void> | void;
+  onUsage?: (usage: ModelTokensUsage) => Promise<void> | void;
 }

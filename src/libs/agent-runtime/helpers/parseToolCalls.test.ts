@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ZodError } from 'zod';
 
-import { parseToolCalls } from '../parseToolCalls';
+import { parseToolCalls } from './parseToolCalls';
 
 describe('parseToolCalls', () => {
   it('should create add new item', () => {
