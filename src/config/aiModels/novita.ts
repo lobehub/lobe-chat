@@ -199,7 +199,7 @@ const novitaChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-v3-0324',
     pricing: {
-      input: 0.39,
+      input: 0.37,
       output: 1.3,
     },
     type: 'chat',
