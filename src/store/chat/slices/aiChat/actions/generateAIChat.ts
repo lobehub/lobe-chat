@@ -388,6 +388,12 @@ export const generateAIChat: StateCreator<
             });
           }
         },
+        trace: {
+          traceId: params?.traceId,
+          sessionId: get().activeId,
+          topicId: get().activeTopicId,
+          traceName: TraceNameMap.SearchIntentRecognition,
+        },
         abortController,
         onMessageHandle: async (chunk) => {
           if (chunk.type === 'tool_calls') {

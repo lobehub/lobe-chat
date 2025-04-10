@@ -1,4 +1,4 @@
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, parseToolCalls } from '@/libs/agent-runtime';
 import { ModelTokensUsage } from '@/types/message';
 
 import { AgentRuntimeErrorType } from '../../error';
@@ -144,13 +144,20 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
   let aggregatedThinking: string | undefined = undefined;
   let usage: ModelTokensUsage | undefined;
   let grounding: any;
+  let toolsCalling: any;
 
   let currentType = '' as unknown as StreamProtocolChunk['type'];
   const callbacks = cb || {};
 
   return new TransformStream({
     async flush(): Promise<void> {
-      const data = { grounding, text: aggregatedText, thinking: aggregatedThinking, usage };
+      const data = {
+        grounding,
+        text: aggregatedText,
+        thinking: aggregatedThinking,
+        toolsCalling,
+        usage,
+      };
 
       if (callbacks.onCompletion) {
         await callbacks.onCompletion(data);
@@ -213,8 +220,10 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
           }
 
           case 'tool_calls': {
-            // TODO: make on ToolCall callback
-            await callbacks.onToolsCalling?.(data);
+            if (!toolsCalling) toolsCalling = [];
+            toolsCalling = parseToolCalls(toolsCalling, data);
+
+            await callbacks.onToolsCalling?.({ chunk: data, toolsCalling });
           }
         }
       }

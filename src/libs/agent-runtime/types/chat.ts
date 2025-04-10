@@ -1,4 +1,25 @@
-import { MessageToolCall, ModelTokensUsage } from '@/types/message';
+import { DeepPartial } from 'utility-types';
+
+import { ModelTokensUsage, ToolFunction } from '@/types/message';
+
+export interface MessageToolCall {
+  /**
+   * The function that the model called.
+   */
+  function: ToolFunction;
+
+  /**
+   * The ID of the tool call.
+   */
+  id: string;
+
+  /**
+   * The type of the tool. Currently, only `function` is supported.
+   */
+  type: 'function' | string;
+}
+
+export type MessageToolCallChunk = DeepPartial<MessageToolCall> & { index: number };
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
@@ -169,6 +190,7 @@ interface OnFinishData {
   grounding?: any;
   text: string;
   thinking?: string;
+  toolsCalling?: MessageToolCall[];
   usage?: ModelTokensUsage;
 }
 
@@ -184,7 +206,9 @@ export interface ChatStreamCallbacks {
   /** `onText`: Called for each text chunk. */
   onText?: (content: string) => Promise<void> | void;
   onThinking?: (content: string) => Promise<void> | void;
-  // TODO: improving types
-  onToolsCalling?: (toolsCalling: any) => Promise<void> | void;
+  onToolsCalling?: (data: {
+    chunk: MessageToolCallChunk[];
+    toolsCalling: MessageToolCall[];
+  }) => Promise<void> | void;
   onUsage?: (usage: ModelTokensUsage) => Promise<void> | void;
 }

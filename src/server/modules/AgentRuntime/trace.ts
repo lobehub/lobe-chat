@@ -24,10 +24,12 @@ export const createTraceOptions = (
   // create a trace to monitor the completion
   const traceClient = new TraceClient();
   const messageLength = messages.length;
+  const systemRole = messages.find((message) => message.role === 'system')?.content;
+
   const trace = traceClient.createTrace({
     id: tracePayload?.traceId,
     input: messages,
-    metadata: { messageLength, model, provider, tools },
+    metadata: { messageLength, model, provider, systemRole, tools },
     name: tracePayload?.traceName,
     sessionId: tracePayload?.topicId
       ? tracePayload.topicId
@@ -47,11 +49,22 @@ export const createTraceOptions = (
 
   return {
     callback: {
-      onCompletion: async ({ text, thinking, usage }) => {
+      onCompletion: async ({ text, thinking, usage, grounding, toolsCalling }) => {
+        const output =
+          // if the toolsCalling is not empty, we need to return the toolsCalling
+          !!toolsCalling && toolsCalling.length > 0
+            ? !!text
+              ? // tools calling with thinking and text
+                { text, thinking, toolsCalling }
+              : toolsCalling
+            : !!thinking
+              ? { text, thinking }
+              : text;
+
         generation?.update({
           endTime: new Date(),
-          metadata: { messageLength: messageLength + 1, provider, thinking, tools },
-          output: text,
+          metadata: { grounding, thinking },
+          output,
           usage: usage
             ? {
                 completionTokens: usage.outputTextTokens,
@@ -63,7 +76,7 @@ export const createTraceOptions = (
             : undefined,
         });
 
-        trace?.update({ output: text });
+        trace?.update({ output });
       },
 
       onFinal: () => {

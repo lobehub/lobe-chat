@@ -109,7 +109,7 @@ describe('AgentRuntime', () => {
         provider: 'openai',
         trace: {
           traceId: 'test-trace-id',
-          traceName: TraceNameMap.Conversation,
+          traceName: TraceNameMap.SummaryTopicTitle,
           sessionId: 'test-session-id',
           topicId: 'test-topic-id',
           tags: [],
@@ -133,7 +133,7 @@ describe('AgentRuntime', () => {
         provider: 'openai',
         trace: {
           traceId: 'test-trace-id',
-          traceName: TraceNameMap.Conversation,
+          traceName: TraceNameMap.SummaryTopicTitle,
           sessionId: 'test-session-id',
           topicId: 'test-topic-id',
           tags: [],
@@ -212,10 +212,7 @@ describe('AgentRuntime', () => {
         // Verify onCompletion was called with expected output
         expect(updateMock).toHaveBeenCalledWith({
           endTime: expect.any(Date),
-          metadata: {
-            provider: 'openai',
-            messageLength: 2,
-          },
+          metadata: {},
           output: 'Test completion',
         });
       });
