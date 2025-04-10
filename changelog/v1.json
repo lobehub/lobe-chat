@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update Grok 3 models."]
+    },
+    "date": "2025-04-10",
+    "version": "1.79.4"
+  },
+  {
+    "children": {
       "fixes": ["Remove Azure AI o3-mini unsupported parameters."]
     },
     "date": "2025-04-10",
