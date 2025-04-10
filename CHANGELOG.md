@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.79.4](https://github.com/lobehub/lobe-chat/compare/v1.79.3...v1.79.4)
+
+<sup>Released on **2025-04-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Grok 3 models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Grok 3 models, closes [#7360](https://github.com/lobehub/lobe-chat/issues/7360) ([d2b9120](https://github.com/lobehub/lobe-chat/commit/d2b9120))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.79.3](https://github.com/lobehub/lobe-chat/compare/v1.79.2...v1.79.3)
 
 <sup>Released on **2025-04-10**</sup>
