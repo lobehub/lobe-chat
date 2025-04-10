@@ -77,7 +77,6 @@ const config = {
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
   },
-  productName: isNightly ? 'LobeHub Nightly' : 'LobeHub',
   publish: [
     {
       owner: 'lobehub',
