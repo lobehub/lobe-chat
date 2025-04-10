@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Remove Azure AI o3-mini unsupported parameters."]
+    },
+    "date": "2025-04-10",
+    "version": "1.79.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix env for Tencent Cloud & remove deepseek-v3 series fc tag."]
     },
     "date": "2025-04-09",
