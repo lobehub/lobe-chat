@@ -75,7 +75,7 @@ function updateVersion() {
       }
 
       // 修改产品名称为 LobeHub Nightly
-      packageJson.productName = 'LobeHub Nightly';
+      packageJson.productName = 'LobeHub-Nightly';
 
       console.log('🌙 Setting as Nightly version with modified package name and productName');
 
