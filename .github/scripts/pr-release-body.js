@@ -9,8 +9,9 @@ module.exports = ({ version, prNumber, branch }) => {
 ## PR Build Information
 
 **Version**: \`${version}\`
-**PR**: [#${prNumber}](${prLink})
 **Release Time**: \`${new Date().toISOString()}\`
+**PR**: [#${prNumber}](${prLink})
+
 
 ## ⚠️ Important Notice
 
@@ -36,8 +37,8 @@ Please report any issues found in this build directly in the PR discussion.
 ## PR 构建信息
 
 **版本**: \`${version}\`
-**PR**: [#${prNumber}](${prLink})
 **发布时间**: \`${new Date().toISOString()}\`
+**PR**: [#${prNumber}](${prLink})
 
 ## ⚠️ 重要提示
 
