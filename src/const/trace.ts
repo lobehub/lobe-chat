@@ -33,7 +33,7 @@ export enum TraceTagMap {
   Chat = 'Chat Competition',
   SystemChain = 'System Chain',
   ToolCalling = 'Tool Calling',
-  ToolsCall = 'Tools Call',
+  ToolsCalling = 'Tools Calling',
 }
 
 export interface TracePayload {

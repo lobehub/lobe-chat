@@ -46,6 +46,10 @@ export class TraceClient {
     return this._client?.trace({ ...param });
   }
 
+  createGeneration(param: Parameters<Langfuse['generation']>[0]) {
+    return this._client?.generation(param);
+  }
+
   async shutdownAsync() {
     await this._client?.shutdownAsync();
   }
