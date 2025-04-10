@@ -18,20 +18,20 @@ LobeChat 支持为 AI 配置联网搜索功能，这使得 AI 能够获取最新
 
 # 核心环境变量
 
-<Steps>
-  ### `SEARXNG_URL`
+## `SEARXNG_URL`
 
-  SearXNG 实例的 URL 地址，这是启用联网搜索功能的必要配置。例如：
+SearXNG 实例的 URL 地址，这是启用联网搜索功能的必要配置。例如：
 
-  ```shell
-  SEARXNG_URL=https://searxng-instance.com
-  ```
+```shell
+SEARXNG_URL=https://searxng-instance.com
+```
 
-  这个 URL 应该指向一个可用的 SearXNG 实例。您可以选择自行部署 SearXNG，或使用公共可用的 SearXNG 实例。
+这个 URL 应该指向一个可用的 SearXNG 实例。您可以选择自行部署 SearXNG，或使用公共可用的 SearXNG 实例。
 
-  您可以在 [SearXNG 实例列表](https://searx.space/) 中找到公开可用的 SearXNG 实例。选择一个响应速度快、可靠性高的实例，然后将其 URL 配置到 LobeChat 中。
+您可以在 [SearXNG 实例列表](https://searx.space/) 中找到公开可用的 SearXNG 实例。选择一个响应速度快、可靠性高的实例，然后将其 URL 配置到 LobeChat 中。
 
-注意，如果您是自己部署 searxng，务必开启 json 输出，否则 lobe-chat 调用会报错。类似下面这样，找到 searxng 的配置文件，追加 `json` 即可。
+> 注意，使用的 `searxng` 必须开启 `json` 输出，否则 `lobe-chat` 调用会报错。
+> 如果是自托管，类似下面这样，找到 `searxng` 的配置文件，追加 `json` 即可。
 
 ```bash
 $ vi searxng/settings.yml
