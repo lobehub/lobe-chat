@@ -32,7 +32,10 @@ export const API_ENDPOINTS = mapWithBasePath({
 
   // chat
   chat: (provider: string) => withBasePath(`/webapi/chat/${provider}`),
-  chatModels: (provider: string) => withBasePath(`/webapi/chat/models/${provider}`),
+
+  // models
+  models: (provider: string) => withBasePath(`/webapi/models/${provider}`),
+  modelPull: (provider: string) => withBasePath(`/webapi/models/${provider}/pull`),
 
   // image
   images: (provider: string) => `/webapi/text-to-image/${provider}`,

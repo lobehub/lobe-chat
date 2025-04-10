@@ -91,6 +91,10 @@
     "provider": "مزود"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "إغلاق الإشعار",
+      "start": "تم التثبيت والتشغيل، ابدأ المحادثة"
+    },
     "cors": {
       "description": "بسبب قيود أمان المتصفح، تحتاج إلى تكوين CORS لـ Ollama لاستخدامه بشكل صحيح.",
       "linux": {

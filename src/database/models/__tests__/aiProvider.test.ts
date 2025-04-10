@@ -4,9 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
 import { ModelProvider } from '@/libs/agent-runtime';
+import { sleep } from '@/utils/sleep';
 
 import { aiProviders, users } from '../../schemas';
-import { AiProviderModel } from '../../server/models/aiProvider';
+import { AiProviderModel } from '../aiProvider';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -96,6 +97,7 @@ describe('AiProviderModel', () => {
   describe('query', () => {
     it('should query ai providers for the user', async () => {
       await aiProviderModel.create({ name: 'AiHubMix', source: 'custom', id: 'aihubmix' });
+      await sleep(10);
       await aiProviderModel.create({ name: 'AiHubMix', source: 'custom', id: 'aihubmix-2' });
 
       const userGroups = await aiProviderModel.query();
@@ -369,6 +371,106 @@ describe('AiProviderModel', () => {
         keyVaults: {},
         settings: {},
       });
+    });
+
+    it('should handle decrypt error gracefully', async () => {
+      const failingDecryptor = vi.fn().mockImplementation(() => {
+        throw new Error('Decryption failed');
+      });
+
+      await serverDB.insert(aiProviders).values({
+        id: 'provider-with-bad-keys',
+        keyVaults: 'invalid-encrypted-data',
+        name: 'Bad Provider',
+        source: 'custom',
+        userId,
+      });
+
+      const config = await aiProviderModel.getAiProviderRuntimeConfig(failingDecryptor);
+
+      expect(config['provider-with-bad-keys'].keyVaults).toEqual({});
+      expect(failingDecryptor).toHaveBeenCalled();
+    });
+
+    it('should handle null keyVaults gracefully', async () => {
+      await serverDB.insert(aiProviders).values({
+        id: 'provider-no-keys',
+        keyVaults: null,
+        name: 'No Keys Provider',
+        source: 'custom',
+        userId,
+      });
+
+      const config = await aiProviderModel.getAiProviderRuntimeConfig();
+
+      expect(config['provider-no-keys'].keyVaults).toEqual({});
+    });
+
+    it('should respect fetchOnClient property', async () => {
+      await serverDB.insert(aiProviders).values([
+        {
+          fetchOnClient: true,
+          id: 'client-provider',
+          name: 'Client Provider',
+          source: 'custom',
+          userId,
+        },
+        {
+          fetchOnClient: false,
+          id: 'server-provider',
+          name: 'Server Provider',
+          source: 'custom',
+          userId,
+        },
+        {
+          id: 'undefined-provider',
+          name: 'Undefined Provider',
+          source: 'custom',
+          userId,
+        },
+      ]);
+
+      const config = await aiProviderModel.getAiProviderRuntimeConfig();
+
+      expect(config['client-provider'].fetchOnClient).toBe(true);
+      expect(config['server-provider'].fetchOnClient).toBe(false);
+      expect(config['undefined-provider'].fetchOnClient).toBeUndefined();
+    });
+
+    it('should use empty object as default for settings', async () => {
+      await serverDB.insert(aiProviders).values({
+        id: 'no-settings-provider',
+        name: 'No Settings Provider',
+        settings: null as any,
+        source: 'custom',
+        userId,
+      });
+
+      const config = await aiProviderModel.getAiProviderRuntimeConfig();
+
+      expect(config['no-settings-provider'].settings).toEqual({});
+    });
+
+    it('should only include providers for the current user', async () => {
+      await serverDB.insert(aiProviders).values([
+        {
+          id: 'user1-provider',
+          name: 'User 1 Provider',
+          source: 'custom',
+          userId,
+        },
+        {
+          id: 'user2-provider',
+          name: 'User 2 Provider',
+          source: 'custom',
+          userId: 'user2',
+        },
+      ]);
+
+      const config = await aiProviderModel.getAiProviderRuntimeConfig();
+
+      expect(config['user1-provider']).toBeDefined();
+      expect(config['user2-provider']).toBeUndefined();
     });
   });
 });

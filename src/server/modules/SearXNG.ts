@@ -10,10 +10,18 @@ export class SearXNGClient {
     this.baseUrl = baseUrl;
   }
 
-  async search(query: string, engines?: string[]): Promise<SearchResponse> {
+  async search(query: string, optionalParams: Record<string, any> = {}): Promise<SearchResponse> {
     try {
+      const { time_range, ...otherParams } = optionalParams;
+
+      const processedParams = Object.entries(otherParams).reduce<Record<string, any>>((acc, [key, value]) => {
+        acc[key] = Array.isArray(value) ? value.join(',') : value;
+        return acc;
+      }, {});
+
       const searchParams = qs.stringify({
-        engines: engines?.join(','),
+        ...processedParams,
+        ...(time_range !== 'anytime' && { time_range }),
         format: 'json',
         q: query,
       });

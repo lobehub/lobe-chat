@@ -3,7 +3,7 @@ import { migrate as neonMigrate } from 'drizzle-orm/neon-serverless/migrator';
 import { migrate as nodeMigrate } from 'drizzle-orm/node-postgres/migrator';
 import { join } from 'node:path';
 
-import { serverDB } from '../../src/database/server/core/db';
+import { serverDB } from '../../src/database/server';
 import { DB_FAIL_INIT_HINT, PGVECTOR_HINT } from './errorHint';
 
 // Read the `.env` file if it exists, or a file specified by the
@@ -12,6 +12,7 @@ dotenv.config();
 
 const migrationsFolder = join(__dirname, '../../src/database/migrations');
 
+const isDesktop = process.env.NEXT_PUBLIC_IS_DESKTOP_APP === '1';
 const runMigrations = async () => {
   if (process.env.DATABASE_DRIVER === 'node') {
     await nodeMigrate(serverDB, { migrationsFolder });
@@ -27,7 +28,7 @@ const runMigrations = async () => {
 let connectionString = process.env.DATABASE_URL;
 
 // only migrate database if the connection string is available
-if (connectionString) {
+if (!isDesktop && connectionString) {
   // eslint-disable-next-line unicorn/prefer-top-level-await
   runMigrations().catch((err) => {
     console.error('❌ Database migrate failed:', err);
@@ -44,5 +45,5 @@ if (connectionString) {
     process.exit(1);
   });
 } else {
-  console.log('🟢 not find database env, migration skipped');
+  console.log('🟢 not find database env or in desktop mode, migration skipped');
 }

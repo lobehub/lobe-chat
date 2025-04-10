@@ -29,7 +29,7 @@ const SearchQueryView = memo<SearchQueryViewProps>(
     const { t } = useTranslation('common');
 
     const engines = uniq(searchResults.map((result) => result.engine));
-    const defaultEngines = engines.length > 0 ? engines : args.searchEngines || [];
+    const defaultEngines = engines.length > 0 ? engines : args.optionalParams?.searchEngines || [];
 
     return !pluginState ? (
       <Flexbox align={'center'} distribution={'space-between'} height={32} horizontal>

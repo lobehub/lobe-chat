@@ -2,7 +2,6 @@ import { and, eq, inArray } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
@@ -17,7 +16,7 @@ import {
   topics,
   users,
 } from '../../schemas';
-import { SessionModel } from '../../server/models/session';
+import { SessionModel } from '../session';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();
@@ -489,6 +488,7 @@ describe('SessionModel', () => {
     it('should delete a session and its associated topics and messages', async () => {
       // Create a session
       const sessionId = '1';
+      await serverDB.insert(users).values([{ id: '456' }]);
       await serverDB.insert(sessions).values({ id: sessionId, userId });
 
       // Create some topics and messages associated with the session
@@ -500,6 +500,11 @@ describe('SessionModel', () => {
         { id: '1', sessionId, userId, role: 'user' },
         { id: '2', sessionId, userId, role: 'assistant' },
       ]);
+      await serverDB.insert(agents).values([
+        { id: 'a1', userId },
+        { id: 'a2', userId: '456' },
+      ]);
+      await serverDB.insert(agentsToSessions).values([{ agentId: 'a1', userId, sessionId: '1' }]);
 
       // Delete the session
       await sessionModel.delete(sessionId);
@@ -514,6 +519,7 @@ describe('SessionModel', () => {
       expect(
         await serverDB.select().from(messages).where(eq(messages.sessionId, sessionId)),
       ).toHaveLength(0);
+      expect(await serverDB.select().from(agents).where(eq(agents.userId, userId))).toHaveLength(0);
     });
 
     it('should not delete sessions belonging to other users', async () => {
@@ -576,6 +582,8 @@ describe('SessionModel', () => {
       // Create some sessions
       const sessionIds = ['1', '2', '3'];
       await serverDB.insert(sessions).values(sessionIds.map((id) => ({ id, userId })));
+      await serverDB.insert(agents).values([{ id: '1', userId }]);
+      await serverDB.insert(agentsToSessions).values([{ sessionId: '1', agentId: '1', userId }]);
 
       // Create some topics and messages associated with the sessions
       await serverDB.insert(topics).values([
@@ -602,6 +610,7 @@ describe('SessionModel', () => {
       expect(
         await serverDB.select().from(messages).where(inArray(messages.sessionId, sessionIds)),
       ).toHaveLength(0);
+      expect(await serverDB.select().from(agents)).toHaveLength(0);
     });
 
     it('should not delete sessions belonging to other users', async () => {
@@ -710,6 +719,14 @@ describe('SessionModel', () => {
           { id: 'm1', sessionId: '1', userId, role: 'user' },
           { id: 'm2', sessionId: '2', userId, role: 'assistant' },
         ]);
+        await trx.insert(agents).values([
+          { id: 'a1', userId },
+          { id: 'a2', userId },
+        ]);
+        await trx.insert(agentsToSessions).values([
+          { agentId: 'a1', sessionId: '1', userId },
+          { agentId: 'a2', sessionId: '2', userId },
+        ]);
       });
 
       await sessionModel.deleteAll();
@@ -723,6 +740,9 @@ describe('SessionModel', () => {
         .from(messages)
         .where(eq(messages.userId, userId));
       expect(remainingMessages).toHaveLength(0);
+
+      const agentsTopics = await serverDB.select().from(agents).where(eq(agents.userId, userId));
+      expect(agentsTopics).toHaveLength(0);
     });
   });
 
@@ -874,7 +894,9 @@ describe('SessionModel', () => {
         await trx.insert(topics).values([
           { id: 't1', sessionId: '1', userId },
           { id: 't2', sessionId: '1', userId },
+          { id: 't6', sessionId: '1', userId },
           { id: 't3', sessionId: '2', userId },
+          { id: 't8', sessionId: '2', userId },
           { id: 't4', sessionId: '3', userId },
         ]);
       });

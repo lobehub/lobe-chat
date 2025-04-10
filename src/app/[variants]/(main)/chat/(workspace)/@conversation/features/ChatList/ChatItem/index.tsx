@@ -64,7 +64,7 @@ const MainChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
 
   const placement = displayMode === 'chat' && userRole === 'user' ? 'end' : 'start';
 
-  const actionBar = useMemo(() => <ActionsBar id={id} />, [id]);
+  const actionBar = useMemo(() => <ActionsBar id={id} index={index} />, [id]);
 
   return (
     <ChatItem

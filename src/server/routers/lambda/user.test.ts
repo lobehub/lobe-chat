@@ -2,10 +2,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { enableClerk } from '@/const/auth';
+import { MessageModel } from '@/database/models/message';
+import { SessionModel } from '@/database/models/session';
+import { UserModel, UserNotFoundError } from '@/database/models/user';
 import { serverDB } from '@/database/server';
-import { MessageModel } from '@/database/server/models/message';
-import { SessionModel } from '@/database/server/models/session';
-import { UserModel, UserNotFoundError } from '@/database/server/models/user';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserService } from '@/server/services/user';
@@ -21,9 +21,9 @@ vi.mock('@/database/server', () => ({
   serverDB: {},
 }));
 
-vi.mock('@/database/server/models/message');
-vi.mock('@/database/server/models/session');
-vi.mock('@/database/server/models/user');
+vi.mock('@/database/models/message');
+vi.mock('@/database/models/session');
+vi.mock('@/database/models/user');
 vi.mock('@/libs/next-auth/adapter');
 vi.mock('@/server/modules/KeyVaultsEncrypt');
 vi.mock('@/server/services/user');
