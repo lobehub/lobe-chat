@@ -38,7 +38,7 @@ const Category = memo(() => {
     },
     {
       key: 'import',
-      label: <DataImporter>{t('import')}</DataImporter>,
+      label: <DataImporter>{t('importData')}</DataImporter>,
     },
   ];
 

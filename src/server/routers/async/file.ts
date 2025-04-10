@@ -6,17 +6,16 @@ import { z } from 'zod';
 import { serverDBEnv } from '@/config/db';
 import { fileEnv } from '@/config/file';
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
+import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/models/asyncTask';
+import { ChunkModel } from '@/database/models/chunk';
+import { EmbeddingModel } from '@/database/models/embedding';
+import { FileModel } from '@/database/models/file';
 import { NewChunkItem, NewEmbeddingsItem } from '@/database/schemas';
-import { serverDB } from '@/database/server';
-import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/server/models/asyncTask';
-import { ChunkModel } from '@/database/server/models/chunk';
-import { EmbeddingModel } from '@/database/server/models/embedding';
-import { FileModel } from '@/database/server/models/file';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
-import { S3 } from '@/server/modules/S3';
 import { ChunkService } from '@/server/services/chunk';
+import { FileService } from '@/server/services/file';
 import {
   AsyncTaskError,
   AsyncTaskErrorType,
@@ -31,11 +30,12 @@ const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
 
   return opts.next({
     ctx: {
-      asyncTaskModel: new AsyncTaskModel(serverDB, ctx.userId),
-      chunkModel: new ChunkModel(serverDB, ctx.userId),
+      asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
+      chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
       chunkService: new ChunkService(ctx.userId),
-      embeddingModel: new EmbeddingModel(serverDB, ctx.userId),
-      fileModel: new FileModel(serverDB, ctx.userId),
+      embeddingModel: new EmbeddingModel(ctx.serverDB, ctx.userId),
+      fileModel: new FileModel(ctx.serverDB, ctx.userId),
+      fileService: new FileService(),
     },
   });
 });
@@ -163,11 +163,9 @@ export const fileRouter = router({
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
       }
 
-      const s3 = new S3();
-
       let content: Uint8Array | undefined;
       try {
-        content = await s3.getFileByteArray(file.url);
+        content = await ctx.fileService.getFileByteArray(file.url);
       } catch (e) {
         console.error(e);
         // if file not found, delete it from db

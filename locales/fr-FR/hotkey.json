@@ -15,6 +15,10 @@
     "desc": "Voir les instructions d'utilisation de tous les raccourcis",
     "title": "Ouvrir l'aide des raccourcis"
   },
+  "openSettings": {
+    "desc": "Ouvrir la page des paramètres de l'application",
+    "title": "Paramètres de l'application"
+  },
   "regenerateMessage": {
     "desc": "Régénérer le dernier message",
     "title": "Régénérer le message"

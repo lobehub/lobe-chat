@@ -19,8 +19,28 @@
       "placeholder": "關鍵字",
       "tooltip": "將會重新獲取搜尋結果，並建立一條新的總結消息"
     },
-    "searchEngine": "搜尋引擎：",
+    "searchCategory": {
+      "placeholder": "搜尋類別",
+      "title": "搜尋類別：",
+      "value": {
+        "files": "文件",
+        "general": "通用",
+        "images": "圖片",
+        "it": "資訊科技",
+        "map": "地圖",
+        "music": "音樂",
+        "news": "新聞",
+        "science": "科學",
+        "social_media": "社交媒體",
+        "videos": "影片"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "搜尋引擎",
+      "title": "搜尋引擎："
+    },
     "searchResult": "搜尋數量：",
+    "searchTimeRange": "時間範圍：",
     "summary": "總結",
     "summaryTooltip": "總結當前內容",
     "viewMoreResults": "查看更多 {{results}} 個結果"

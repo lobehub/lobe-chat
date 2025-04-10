@@ -183,7 +183,7 @@
   },
   "fullscreen": "Volledig scherm",
   "historyRange": "Geschiedenisbereik",
-  "import": "Importeren",
+  "importData": "Gegevens importeren",
   "importModal": {
     "error": {
       "desc": "Sorry, er is een uitzondering opgetreden tijdens het importeren van gegevens. Probeer opnieuw te importeren of <1>diend een probleem in</1>, we zullen het probleem zo snel mogelijk voor je onderzoeken.",

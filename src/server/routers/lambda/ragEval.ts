@@ -6,8 +6,7 @@ import pMap from 'p-map';
 import { z } from 'zod';
 
 import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
-import { serverDB } from '@/database/server';
-import { FileModel } from '@/database/server/models/file';
+import { FileModel } from '@/database/models/file';
 import {
   EvalDatasetModel,
   EvalDatasetRecordModel,
@@ -15,10 +14,10 @@ import {
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
 import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
-import { S3 } from '@/server/modules/S3';
 import { createAsyncServerClient } from '@/server/routers/async';
-import { getFullFileUrl } from '@/server/utils/files';
+import { FileService } from '@/server/services/file';
 import {
   EvalDatasetRecord,
   EvalEvaluationStatus,
@@ -29,20 +28,23 @@ import {
   insertEvalEvaluationSchema,
 } from '@/types/eval';
 
-const ragEvalProcedure = authedProcedure.use(keyVaults).use(async (opts) => {
-  const { ctx } = opts;
+const ragEvalProcedure = authedProcedure
+  .use(serverDatabase)
+  .use(keyVaults)
+  .use(async (opts) => {
+    const { ctx } = opts;
 
-  return opts.next({
-    ctx: {
-      datasetModel: new EvalDatasetModel(ctx.userId),
-      fileModel: new FileModel(serverDB, ctx.userId),
-      datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
-      evaluationModel: new EvalEvaluationModel(ctx.userId),
-      evaluationRecordModel: new EvaluationRecordModel(ctx.userId),
-      s3: new S3(),
-    },
+    return opts.next({
+      ctx: {
+        datasetModel: new EvalDatasetModel(ctx.userId),
+        fileModel: new FileModel(ctx.serverDB, ctx.userId),
+        datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
+        evaluationModel: new EvalEvaluationModel(ctx.userId),
+        evaluationRecordModel: new EvaluationRecordModel(ctx.userId),
+        fileService: new FileService(),
+      },
+    });
   });
-});
 
 export const ragEvalRouter = router({
   createDataset: ragEvalProcedure
@@ -141,7 +143,7 @@ export const ragEvalRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const dataStr = await ctx.s3.getFileContent(input.pathname);
+      const dataStr = await ctx.fileService.getFileContent(input.pathname);
       const items = JSONL.parse<InsertEvalDatasetRecord>(dataStr);
 
       insertEvalDatasetRecordSchema.array().parse(items);
@@ -259,12 +261,12 @@ export const ragEvalRouter = router({
         const filename = `${date}-eval_${evaluation.id}-${evaluation.name}.jsonl`;
         const path = `rag_eval_records/${filename}`;
 
-        await ctx.s3.uploadContent(path, JSONL.stringify(evalRecords));
+        await ctx.fileService.uploadContent(path, JSONL.stringify(evalRecords));
 
         // 保存数据
         await ctx.evaluationModel.update(input.id, {
           status: EvalEvaluationStatus.Success,
-          evalRecordsUrl: await getFullFileUrl(path),
+          evalRecordsUrl: await ctx.fileService.getFullFileUrl(path),
         });
       }
 

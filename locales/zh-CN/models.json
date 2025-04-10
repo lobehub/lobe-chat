@@ -842,6 +842,9 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny是百度自研的超高性能大语言模型，部署与精调成本在文心系列模型中最低。"
   },
+  "ernie-x1-32k-preview": {
+    "description": "文心大模型X1具备更强的理解、规划、反思、进化能力。作为能力更全面的深度思考模型，文心X1兼备准确、创意和文采，在中文知识问答、文学创作、文稿写作、日常对话、逻辑推理、复杂计算及工具调用等方面表现尤为出色。"
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供稳定并可调优的性能，是复杂任务解决方案的理想选择。"
   },
@@ -912,7 +915,10 @@
     "description": "Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。"
   },
   "gemini-2.5-pro-exp-03-25": {
-    "description": "Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，还能利用长上下文来分析大型数据集、代码库和文档。"
+    "description": "Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。"
+  },
+  "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 适合中小规模任务处理，兼具成本效益。"
@@ -1010,6 +1016,9 @@
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) 提供基本的指令处理能力，适合轻量级应用。"
   },
+  "google/gemma-3-27b-it": {
+    "description": "Gemma 3 27B 是谷歌的一款开源语言模型，以其在效率和性能方面设立了新的标准。"
+  },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125"
   },
@@ -1083,7 +1092,7 @@
     "description": "GPT-4o-mini 实时版本，支持音频和文本实时输入输出"
   },
   "gpt-4o-mini-tts": {
-    "description": "GPT-4o mini TTS 是基于 GPT-4o mini 的文本转语音模型，提供高品质的语音生成，同时降低成本。"
+    "description": "GPT-4o mini TTS 是一个基于 GPT-4o mini 构建的文本转语音模型，这是一种快速且强大的语言模型。使用它可以将文本转换为自然听起来的语音文本。最大输入标记数为 2000。"
   },
   "gpt-4o-realtime-preview": {
     "description": "GPT-4o 实时版本，支持音频和文本实时输入输出"
@@ -1568,9 +1577,6 @@
   "openai/o1-preview": {
     "description": "o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。"
   },
-  "openchat/openchat-7b": {
-    "description": "OpenChat 7B 是经过“C-RLFT（条件强化学习微调）”策略精调的开源语言模型库。"
-  },
   "openrouter/auto": {
     "description": "根据上下文长度、主题和复杂性，你的请求将发送到 Llama 3 70B Instruct、Claude 3.5 Sonnet（自我调节）或 GPT-4o。"
   },
@@ -1591,6 +1597,9 @@
   },
   "qvq-72b-preview": {
     "description": "QVQ-72B-Preview 是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力。"
+  },
+  "qvq-max": {
+    "description": "通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。"
   },
   "qwen-coder-plus-latest": {
     "description": "通义千问代码模型。"
@@ -1722,7 +1731,7 @@
     "description": "Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。"
   },
   "qwen2.5-vl-32b-instruct": {
-    "description": "Qwen2.5-VL 系列模型提升了模型的智能水平、实用性和适用性，使其在自然对话、内容创作、专业知识服务及代码开发等场景中表现更优。32B 版本使用了强化学习技术优化模型，与 Qwen2.5 VL 系列的其它模型相比，提供了更符合人类偏好的输出风格、复杂数学问题的推理能力，以及图像细粒度理解与推理能力。"
+    "description": "Qwen2.5VL系列模型，在math和学科问题解答达到了接近Qwen2.5VL-72B的水平，回复风格面向人类偏好进行大幅调整，尤其是数学、逻辑推理、知识问答等客观类query，模型回复详实程度和格式清晰度明显改善。此版本为32B版本。"
   },
   "qwen2.5-vl-72b-instruct": {
     "description": "指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。"
@@ -1752,7 +1761,7 @@
     "description": "Qwen2 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。"
   },
   "qwq": {
-    "description": "QwQ 是一个实验研究模型，专注于提高 AI 推理能力。"
+    "description": "QwQ 是 Qwen 系列的推理模型。与传统的指令调优模型相比，QwQ 具备思考和推理的能力，能够在下游任务中，尤其是困难问题上，显著提升性能。QwQ-32B 是中型推理模型，能够在与最先进的推理模型（如 DeepSeek-R1、o1-mini）竞争时取得可观的表现。"
   },
   "qwq-32b": {
     "description": "QwQ 是 Qwen 系列的推理模型。与传统的指令微调模型相比，QwQ 具备思考和推理能力，在下游任务中，尤其是复杂问题上，能够实现显著增强的性能。QwQ-32B 是一款中型推理模型，其性能可与最先进的推理模型（如 DeepSeek-R1、o1-mini）相媲美。"

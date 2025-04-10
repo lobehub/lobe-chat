@@ -1,13 +1,13 @@
 import { DrizzleMigrationModel } from '@/database/models/drizzleMigration';
 import { DataExporterRepos } from '@/database/repositories/dataExporter';
-import { serverDB } from '@/database/server';
 import { authedProcedure, router } from '@/libs/trpc';
+import { serverDatabase } from '@/libs/trpc/lambda';
 import { ExportDatabaseData } from '@/types/export';
 
-const exportProcedure = authedProcedure.use(async (opts) => {
+const exportProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
-  const dataExporterRepos = new DataExporterRepos(serverDB, ctx.userId);
-  const drizzleMigration = new DrizzleMigrationModel(serverDB);
+  const dataExporterRepos = new DataExporterRepos(ctx.serverDB, ctx.userId);
+  const drizzleMigration = new DrizzleMigrationModel(ctx.serverDB);
 
   return opts.next({
     ctx: { dataExporterRepos, drizzleMigration },

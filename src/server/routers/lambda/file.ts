@@ -2,24 +2,24 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { serverDBEnv } from '@/config/db';
-import { serverDB } from '@/database/server';
-import { AsyncTaskModel } from '@/database/server/models/asyncTask';
-import { ChunkModel } from '@/database/server/models/chunk';
-import { FileModel } from '@/database/server/models/file';
+import { AsyncTaskModel } from '@/database/models/asyncTask';
+import { ChunkModel } from '@/database/models/chunk';
+import { FileModel } from '@/database/models/file';
 import { authedProcedure, router } from '@/libs/trpc';
-import { S3 } from '@/server/modules/S3';
-import { getFullFileUrl } from '@/server/utils/files';
+import { serverDatabase } from '@/libs/trpc/lambda';
+import { FileService } from '@/server/services/file';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 import { FileListItem, QueryFileListSchema, UploadFileSchema } from '@/types/files';
 
-const fileProcedure = authedProcedure.use(async (opts) => {
+const fileProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
     ctx: {
-      asyncTaskModel: new AsyncTaskModel(serverDB, ctx.userId),
-      chunkModel: new ChunkModel(serverDB, ctx.userId),
-      fileModel: new FileModel(serverDB, ctx.userId),
+      asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
+      chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
+      fileModel: new FileModel(ctx.serverDB, ctx.userId),
+      fileService: new FileService(),
     },
   });
 });
@@ -50,7 +50,7 @@ export const fileRouter = router({
         !isExist,
       );
 
-      return { id, url: await getFullFileUrl(input.url) };
+      return { id, url: await ctx.fileService.getFullFileUrl(input.url) };
     }),
   findById: fileProcedure
     .input(
@@ -62,7 +62,7 @@ export const fileRouter = router({
       const item = await ctx.fileModel.findById(input.id);
       if (!item) throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
 
-      return { ...item, url: await getFullFileUrl(item?.url) };
+      return { ...item, url: await ctx.fileService.getFullFileUrl(item?.url) };
     }),
 
   getFileItemById: fileProcedure
@@ -74,7 +74,7 @@ export const fileRouter = router({
     .query(async ({ ctx, input }): Promise<FileListItem | undefined> => {
       const item = await ctx.fileModel.findById(input.id);
 
-      if (!item) throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
+      if (!item) throw new TRPCError({ code: 'NOT_FOUND', message: 'File not found' });
 
       let embeddingTask = null;
       if (item.embeddingTaskId) {
@@ -95,7 +95,7 @@ export const fileRouter = router({
         embeddingError: embeddingTask?.error,
         embeddingStatus: embeddingTask?.status as AsyncTaskStatus,
         finishEmbedding: embeddingTask?.status === AsyncTaskStatus.Success,
-        url: await getFullFileUrl(item.url!),
+        url: await ctx.fileService.getFullFileUrl(item.url!),
       };
     }),
 
@@ -132,7 +132,7 @@ export const fileRouter = router({
         embeddingError: embeddingTask?.error ?? null,
         embeddingStatus: embeddingTask?.status as AsyncTaskStatus,
         finishEmbedding: embeddingTask?.status === AsyncTaskStatus.Success,
-        url: await getFullFileUrl(item.url!),
+        url: await ctx.fileService.getFullFileUrl(item.url!),
       } as FileListItem;
       resultFiles.push(fileItem);
     }
@@ -150,8 +150,7 @@ export const fileRouter = router({
     if (!file) return;
 
     // delele the file from remove from S3 if it is not used by other files
-    const s3Client = new S3();
-    await s3Client.deleteFile(file.url!);
+    await ctx.fileService.deleteFile(file.url!);
   }),
 
   removeFileAsyncTask: fileProcedure
@@ -184,9 +183,7 @@ export const fileRouter = router({
       if (!needToRemoveFileList || needToRemoveFileList.length === 0) return;
 
       // remove from S3
-      const s3Client = new S3();
-
-      await s3Client.deleteFiles(needToRemoveFileList.map((file) => file.url!));
+      await ctx.fileService.deleteFiles(needToRemoveFileList.map((file) => file.url!));
     }),
 });
 

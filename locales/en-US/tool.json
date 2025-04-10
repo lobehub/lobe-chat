@@ -19,8 +19,28 @@
       "placeholder": "Keywords",
       "tooltip": "This will refresh the search results and create a new summary message"
     },
-    "searchEngine": "Search engine:",
+    "searchCategory": {
+      "placeholder": "Search Category",
+      "title": "Search Category:",
+      "value": {
+        "files": "Files",
+        "general": "General",
+        "images": "Images",
+        "it": "Information Technology",
+        "map": "Maps",
+        "music": "Music",
+        "news": "News",
+        "science": "Science",
+        "social_media": "Social Media",
+        "videos": "Videos"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Search Engine",
+      "title": "Search Engine:"
+    },
     "searchResult": "Number of searches:",
+    "searchTimeRange": "Time Range:",
     "summary": "Summary",
     "summaryTooltip": "Summarize the current content",
     "viewMoreResults": "View {{results}} more results"

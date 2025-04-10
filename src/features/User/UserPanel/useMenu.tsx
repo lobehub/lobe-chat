@@ -116,7 +116,7 @@ export const useMenu = () => {
         {
           icon: <Icon icon={HardDriveDownload} />,
           key: 'import',
-          label: <DataImporter>{t('import')}</DataImporter>,
+          label: <DataImporter>{t('importData')}</DataImporter>,
         },
         {
           type: 'divider',

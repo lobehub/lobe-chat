@@ -4,14 +4,16 @@ import { ActionIcon, FluentEmoji, Icon, SideNav } from '@lobehub/ui';
 import { FloatButton } from 'antd';
 import { createStyles } from 'antd-style';
 import { BugIcon, BugOff, XIcon } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { ReactNode, memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { Rnd } from 'react-rnd';
 
 import { BRANDING_NAME } from '@/const/branding';
+import { isDesktop } from '@/const/version';
 
 // 定义样式
-const useStyles = createStyles(({ token, css, prefixCls }) => {
+export const useStyles = createStyles(({ token, css, prefixCls }) => {
   return {
     collapsed: css`
       pointer-events: none;
@@ -86,6 +88,7 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [size, setSize] = useState({ height: minHeight, width: minWidth });
 
+  const pathname = usePathname();
   useEffect(() => {
     try {
       const localStoragePosition = localStorage.getItem('debug-panel-position');
@@ -108,11 +111,25 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
 
   return (
     <>
-      <FloatButton
-        className={styles.floatButton}
-        icon={<Icon icon={isExpanded ? BugOff : BugIcon} />}
-        onClick={() => setIsExpanded(!isExpanded)}
-      />
+      {
+        // desktop devtools 下隐藏
+        pathname !== '/desktop/devtools' && (
+          <FloatButton
+            className={styles.floatButton}
+            icon={<Icon icon={isExpanded ? BugOff : BugIcon} />}
+            onClick={async () => {
+              if (isDesktop) {
+                const { electronDevtoolsService } = await import('@/services/electron/devtools');
+
+                await electronDevtoolsService.openDevtools();
+
+                return;
+              }
+              setIsExpanded(!isExpanded);
+            }}
+          />
+        )
+      }
       {isExpanded && (
         <Rnd
           bounds="window"
