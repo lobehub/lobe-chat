@@ -43,6 +43,10 @@ export const getServerGlobalConfig = async () => {
       openai: {
         enabled: isDesktop ? false : undefined,
       },
+      tencentcloud: {
+        enabledKey: 'ENABLED_TENCENT_CLOUD',
+        modelListKey: 'TENCENT_CLOUD_MODEL_LIST',
+      },
       volcengine: {
         withDeploymentName: true,
       },

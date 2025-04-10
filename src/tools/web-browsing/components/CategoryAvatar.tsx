@@ -20,7 +20,7 @@ export const CategoryAvatar = memo<CategoryAvatarProps>(({ category }) => {
         backgroundColor: 'transparent',
         color: theme.colorTextSecondary,
         height: 16,
-        width: 16
+        width: 16,
       }}
     />
   );
