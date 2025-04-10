@@ -224,12 +224,7 @@ export const createChatSlice: StateCreator<
           draft[id] = merge(draft[id], filteredConfig);
         }
       });
-  
-      if (isEqual(get().agentMap, agentMap)) return;
-  
-      set({ agentMap }, false, 'dispatchAgent' + (actions ? `/${actions}` : ''));
-    },
-
+    
     if (isEqual(get().agentMap, agentMap)) return;
 
     set({ agentMap }, false, 'dispatchAgent' + (actions ? `/${actions}` : ''));
