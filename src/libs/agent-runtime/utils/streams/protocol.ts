@@ -1,7 +1,8 @@
-import { ChatStreamCallbacks, parseToolCalls } from '@/libs/agent-runtime';
 import { ModelTokensUsage } from '@/types/message';
 
 import { AgentRuntimeErrorType } from '../../error';
+import { parseToolCalls } from '../../helpers';
+import { ChatStreamCallbacks } from '../../types';
 
 /**
  * context in the stream to save temporarily data
