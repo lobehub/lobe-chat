@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.79.3](https://github.com/lobehub/lobe-chat/compare/v1.79.2...v1.79.3)
+
+<sup>Released on **2025-04-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove Azure AI o3-mini unsupported parameters.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove Azure AI o3-mini unsupported parameters, closes [#7355](https://github.com/lobehub/lobe-chat/issues/7355) ([fe0711f](https://github.com/lobehub/lobe-chat/commit/fe0711f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.79.2](https://github.com/lobehub/lobe-chat/compare/v1.79.1...v1.79.2)
 
 <sup>Released on **2025-04-09**</sup>
