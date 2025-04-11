@@ -3,6 +3,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { electronStylish } from '@/styles/electron';
 
+import { UpdateNotification } from './UpdateNotification';
+
 export const TITLE_BAR_HEIGHT = 36;
 
 const TitleBar = memo(() => {
@@ -19,7 +21,9 @@ const TitleBar = memo(() => {
     >
       <div />
       <div>{/* TODO */}</div>
-      <div>{/* TODO */}</div>
+      <div>
+        <UpdateNotification />
+      </div>
     </Flexbox>
   );
 });

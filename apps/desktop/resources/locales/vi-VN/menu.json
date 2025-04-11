@@ -1,0 +1,70 @@
+{
+  "common": {
+    "checkUpdates": "Kiểm tra cập nhật..."
+  },
+  "dev": {
+    "devPanel": "Bảng điều khiển nhà phát triển",
+    "devTools": "Công cụ phát triển",
+    "forceReload": "Tải lại cưỡng bức",
+    "openStore": "Mở tệp lưu trữ",
+    "refreshMenu": "Làm mới menu",
+    "reload": "Tải lại",
+    "title": "Phát triển"
+  },
+  "edit": {
+    "copy": "Sao chép",
+    "cut": "Cắt",
+    "paste": "Dán",
+    "redo": "Làm lại",
+    "selectAll": "Chọn tất cả",
+    "speech": "Giọng nói",
+    "startSpeaking": "Bắt đầu đọc",
+    "stopSpeaking": "Dừng đọc",
+    "title": "Chỉnh sửa",
+    "undo": "Hoàn tác"
+  },
+  "file": {
+    "preferences": "Tùy chọn",
+    "quit": "Thoát",
+    "title": "Tập tin"
+  },
+  "help": {
+    "about": "Về",
+    "githubRepo": "Kho lưu trữ GitHub",
+    "reportIssue": "Báo cáo sự cố",
+    "title": "Trợ giúp",
+    "visitWebsite": "Truy cập trang web"
+  },
+  "macOS": {
+    "about": "Về {{appName}}",
+    "devTools": "Công cụ phát triển LobeHub",
+    "hide": "Ẩn {{appName}}",
+    "hideOthers": "Ẩn khác",
+    "preferences": "Cài đặt ưu tiên...",
+    "services": "Dịch vụ",
+    "unhide": "Hiện tất cả"
+  },
+  "tray": {
+    "open": "Mở {{appName}}",
+    "quit": "Thoát",
+    "show": "Hiện {{appName}}"
+  },
+  "view": {
+    "forceReload": "Tải lại cưỡng bức",
+    "reload": "Tải lại",
+    "resetZoom": "Đặt lại thu phóng",
+    "title": "Xem",
+    "toggleFullscreen": "Chuyển đổi toàn màn hình",
+    "zoomIn": "Phóng to",
+    "zoomOut": "Thu nhỏ"
+  },
+  "window": {
+    "bringAllToFront": "Đưa tất cả cửa sổ lên trước",
+    "close": "Đóng",
+    "front": "Đưa tất cả cửa sổ lên trước",
+    "minimize": "Thu nhỏ",
+    "title": "Cửa sổ",
+    "toggleFullscreen": "Chuyển đổi toàn màn hình",
+    "zoom": "Thu phóng"
+  }
+}
