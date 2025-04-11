@@ -11,7 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 import { autoUpdateService } from '@/services/electron/autoUpdate';
 import { electronStylish } from '@/styles/electron';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+const useStyles = createStyles(({ css, token }) => ({
   container: css`
     cursor: pointer;
 
@@ -25,7 +25,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     color: ${token.green11A};
 
     background: ${token.green2A};
-    background-color: ${isDarkMode ? token.colorFill : token.colorFillSecondary};
   `,
 }));
 

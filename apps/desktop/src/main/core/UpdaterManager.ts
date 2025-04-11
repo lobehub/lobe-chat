@@ -53,7 +53,7 @@ export class UpdaterManager {
     // 如果配置了自动检查更新，则设置定时检查
     if (updaterConfig.app.autoCheckUpdate) {
       // 启动后延迟 1 分钟检查更新，避免启动时网络可能不稳定
-      setTimeout(() => this.checkForUpdates(false), 3 * 1000);
+      setTimeout(() => this.checkForUpdates(false), 60 * 1000);
 
       // 设置定期检查
       setInterval(() => this.checkForUpdates(false), updaterConfig.app.checkUpdateInterval);
