@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix grok-3-mini series calling."]
+    },
+    "date": "2025-04-11",
+    "version": "1.79.6"
+  },
+  {
+    "children": {
       "fixes": ["Fix langfuse intergation."]
     },
     "date": "2025-04-10",
