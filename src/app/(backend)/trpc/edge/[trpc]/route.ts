@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server';
 import { pino } from '@/libs/logger';
 import { createContext } from '@/server/context';
 import { edgeRouter } from '@/server/routers/edge';
+import { withBasePath } from '@/utils/basePath';
 
 export const runtime = 'edge';
 
@@ -14,7 +15,7 @@ const handler = (req: NextRequest) =>
      */
     createContext: () => createContext(req),
 
-    endpoint: '/trpc/edge',
+    endpoint: withBasePath('/trpc/edge'),
 
     onError: ({ error, path }) => {
       pino.info(`Error in tRPC handler (edge) on path: ${path}`);
