@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
 import DragUpload from '@/components/DragUpload';
-import { useModelSupportVision } from '@/hooks/useModelSupportVision';
+import { useModelSupportFile, useModelSupportVision } from '@/hooks/useModelSupportVision';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useFileStore } from '@/store/file';
@@ -13,6 +13,7 @@ const FilePreview = memo(() => {
   const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
 
   const canUploadImage = useModelSupportVision(model, provider);
+  const canUploadFile = useModelSupportFile(model, provider);
 
   const [uploadFiles] = useFileStore((s) => [s.uploadChatFiles]);
 
@@ -22,6 +23,7 @@ const FilePreview = memo(() => {
     // Filter out files that are not images if the model does not support image uploads
     const files = Array.from(fileList).filter((file) => {
       if (canUploadImage) return true;
+      if (canUploadFile) return true;
 
       return !file.type.startsWith('image');
     });
