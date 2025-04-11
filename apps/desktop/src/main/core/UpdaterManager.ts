@@ -129,8 +129,8 @@ export class UpdaterManager {
   public installNow = () => {
     log.info('[Updater] Installing update now...');
 
-    // 关闭主窗口
-    this.mainWindow.destroy();
+    // 标记应用需要退出
+    this.app.isQuiting = true;
 
     // 延迟 1 秒后安装更新，确保窗口已关闭
     setTimeout(() => {
