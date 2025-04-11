@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor hotkey import to avoid db generate error."]
+    },
+    "date": "2025-04-11",
+    "version": "1.79.7"
+  },
+  {
+    "children": {
       "fixes": ["Fix grok-3-mini series calling."]
     },
     "date": "2025-04-11",
