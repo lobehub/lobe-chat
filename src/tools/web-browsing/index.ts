@@ -19,7 +19,7 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
       parameters: {
         properties: {
           optionalParams: {
-            description: "The optional parameters for search query",
+            description: 'The optional parameters for search query',
             properties: {
               searchCategories: {
                 description: 'The search categories you can set:',
@@ -68,7 +68,7 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
                 type: 'array',
               },
               searchTimeRange: {
-                description: "The time range you can set:",
+                description: 'The time range you can set:',
                 enum: ['anytime', 'day', 'week', 'month', 'year'],
                 type: 'string',
               },

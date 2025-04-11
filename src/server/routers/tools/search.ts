@@ -43,11 +43,13 @@ export const searchRouter = router({
   query: searchProcedure
     .input(
       z.object({
-        optionalParams: z.object({
-          searchCategories: z.array(z.string()).optional(),
-          searchEngines: z.array(z.string()).optional(),
-          searchTimeRange: z.string().optional(),
-        }).optional(),
+        optionalParams: z
+          .object({
+            searchCategories: z.array(z.string()).optional(),
+            searchEngines: z.array(z.string()).optional(),
+            searchTimeRange: z.string().optional(),
+          })
+          .optional(),
         query: z.string(),
       }),
     )

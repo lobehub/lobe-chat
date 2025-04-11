@@ -20,13 +20,11 @@ describe('AWSBedrockLlamaStream', () => {
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
-    const onTokenMock = vi.fn();
     const onCompletionMock = vi.fn();
 
     const protocolStream = AWSBedrockLlamaStream(mockBedrockStream, {
       onStart: onStartMock,
       onText: onTextMock,
-      onToken: onTokenMock,
       onCompletion: onCompletionMock,
     });
 
@@ -51,9 +49,8 @@ describe('AWSBedrockLlamaStream', () => {
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
-    expect(onTextMock).toHaveBeenNthCalledWith(1, '"Hello"');
-    expect(onTextMock).toHaveBeenNthCalledWith(2, '" world!"');
-    expect(onTokenMock).toHaveBeenCalledTimes(2);
+    expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
+    expect(onTextMock).toHaveBeenNthCalledWith(2, ' world!');
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
 
@@ -73,13 +70,11 @@ describe('AWSBedrockLlamaStream', () => {
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
-    const onTokenMock = vi.fn();
     const onCompletionMock = vi.fn();
 
     const protocolStream = AWSBedrockLlamaStream(mockBedrockStream, {
       onStart: onStartMock,
       onText: onTextMock,
-      onToken: onTokenMock,
       onCompletion: onCompletionMock,
     });
 
@@ -104,9 +99,8 @@ describe('AWSBedrockLlamaStream', () => {
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
-    expect(onTextMock).toHaveBeenNthCalledWith(1, '"Hello"');
-    expect(onTextMock).toHaveBeenNthCalledWith(2, '" world!"');
-    expect(onTokenMock).toHaveBeenCalledTimes(2);
+    expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
+    expect(onTextMock).toHaveBeenNthCalledWith(2, ' world!');
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
 
@@ -143,7 +137,6 @@ describe('AWSBedrockLlamaStream', () => {
     const protocolStream = AWSBedrockLlamaStream(mockBedrockStream, {
       onStart: onStartMock,
       onText: onTextMock,
-      onToken: onTokenMock,
       onCompletion: onCompletionMock,
     });
 
@@ -168,9 +161,8 @@ describe('AWSBedrockLlamaStream', () => {
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
-    expect(onTextMock).toHaveBeenNthCalledWith(1, '"Hello"');
-    expect(onTextMock).toHaveBeenNthCalledWith(2, '" world!"');
-    expect(onTokenMock).toHaveBeenCalledTimes(2);
+    expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
+    expect(onTextMock).toHaveBeenNthCalledWith(2, ' world!');
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
 

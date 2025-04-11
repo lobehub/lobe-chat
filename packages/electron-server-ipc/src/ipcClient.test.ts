@@ -5,7 +5,6 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ElectronIpcClient } from './ipcClient';
-import { ElectronIPCMethods } from './types';
 
 // Mock node modules
 vi.mock('node:fs');
@@ -124,7 +123,7 @@ describe('ElectronIpcClient', () => {
 
     it('should handle connection errors', async () => {
       // Start request - but don't await it yet
-      const requestPromise = client.sendRequest(ElectronIPCMethods.getDatabasePath);
+      const requestPromise = client.sendRequest('getDatabasePath');
 
       // Find the error event handler
       const errorCallArgs = mockSocket.on.mock.calls.find((call) => call[0] === 'error');
@@ -154,7 +153,7 @@ describe('ElectronIpcClient', () => {
       });
 
       // Start request
-      const requestPromise = client.sendRequest(ElectronIPCMethods.getDatabasePath);
+      const requestPromise = client.sendRequest('getDatabasePath');
 
       // Simulate connection established
       if (connectionCallback) connectionCallback();
@@ -188,7 +187,7 @@ describe('ElectronIpcClient', () => {
       });
 
       // Start a request to establish connection (but don't wait for it)
-      const requestPromise = client.sendRequest(ElectronIPCMethods.getDatabasePath).catch(() => {}); // Ignore any errors
+      const requestPromise = client.sendRequest('getDatabasePath').catch(() => {}); // Ignore any errors
 
       // Simulate connection
       if (connectionCallback) connectionCallback();

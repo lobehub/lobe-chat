@@ -1,4 +1,4 @@
-import { 
+import {
   CodeIcon,
   FileIcon,
   FlaskConicalIcon,
@@ -12,16 +12,16 @@ import {
 } from 'lucide-react';
 
 export const CATEGORY_ICON_MAP: Record<string, any> = {
-   'files': FileIcon,
-   'general': SearchIcon,
-   'images': ImageIcon,
-   'it': CodeIcon,
-   'map': MapIcon,
-   'music': MusicIcon,
-   'news': NewspaperIcon,
-   'science': FlaskConicalIcon,
-   'social_media': Share2Icon,
-   'videos': VideoIcon,
+  files: FileIcon,
+  general: SearchIcon,
+  images: ImageIcon,
+  it: CodeIcon,
+  map: MapIcon,
+  music: MusicIcon,
+  news: NewspaperIcon,
+  science: FlaskConicalIcon,
+  social_media: Share2Icon,
+  videos: VideoIcon,
 };
 
 export const ENGINE_ICON_MAP: Record<string, string> = {
