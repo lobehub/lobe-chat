@@ -130,7 +130,7 @@ export class UpdaterManager {
     log.info('[Updater] Installing update now...');
 
     // 关闭主窗口
-    this.mainWindow.close();
+    this.mainWindow.destroy();
 
     // 延迟 1 秒后安装更新，确保窗口已关闭
     setTimeout(() => {
