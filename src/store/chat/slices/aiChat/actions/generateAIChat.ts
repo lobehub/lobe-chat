@@ -473,7 +473,8 @@ export const generateAIChat: StateCreator<
       // because user find UI is [u1,a1,u2,a2 | u3,a3]
       const historyMessages = originalMessages.slice(0, -historyCount + 1);
 
-      await get().internal_summaryHistory(historyMessages);
+      // not block chat, make summary async
+      get().internal_summaryHistory(historyMessages);
     }
   },
   internal_fetchAIChatMessage: async ({ messages, messageId, params, provider, model }) => {
