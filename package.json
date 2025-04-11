@@ -204,6 +204,7 @@
     "numeral": "^2.0.6",
     "nuqs": "^2.4.1",
     "officeparser": "^5.1.1",
+    "oidc-provider": "^8.4.0",
     "ollama": "^0.5.14",
     "openai": "^4.91.1",
     "openapi-fetch": "^0.9.8",
