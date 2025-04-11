@@ -66,6 +66,7 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
         />
         <Button
           block
+          color={'default'}
           icon={<Icon icon={Plus} />}
           loading={loading}
           onClick={async () => {
@@ -73,6 +74,7 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
             await addSessionGroup(t('sessionGroup.newGroup'));
             setLoading(false);
           }}
+          variant={'filled'}
         >
           {t('sessionGroup.createGroup')}
         </Button>

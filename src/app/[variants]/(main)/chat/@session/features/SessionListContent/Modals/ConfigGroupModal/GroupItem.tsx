@@ -61,24 +61,26 @@ const GroupItem = memo<SessionGroupItem>(({ id, name }) => {
       ) : (
         <EditableText
           editing={editing}
-          onChangeEnd={async (input) => {
-            if (name !== input) {
-              if (!input) return;
-              if (input.length === 0 || input.length > 20)
-                return message.warning(t('sessionGroup.tooLong'));
+          inputProps={{
+            onChangeEnd: async (input) => {
+              if (name !== input) {
+                if (!input) return;
+                if (input.length === 0 || input.length > 20)
+                  return message.warning(t('sessionGroup.tooLong'));
 
-              await updateSessionGroupName(id, input);
-              message.success(t('sessionGroup.renameSuccess'));
-            }
-            setEditing(false);
+                await updateSessionGroupName(id, input);
+                message.success(t('sessionGroup.renameSuccess'));
+              }
+              setEditing(false);
+            },
+            size: 'small',
+            style: {
+              height: 28,
+            },
+            variant: 'borderless',
           }}
           onEditingChange={(e) => setEditing(e)}
           showEditIcon={false}
-          size={'small'}
-          style={{
-            height: 28,
-          }}
-          type={'pure'}
           value={name}
         />
       )}

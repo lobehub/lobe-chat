@@ -81,7 +81,7 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLe
                     <Icon
                       color={theme.purple}
                       icon={user.isMobile ? LucideSmartphone : LucideLaptop}
-                      size={{ fontSize: 24 }}
+                      size={24}
                     />
                   }
                   background={theme.purple1}

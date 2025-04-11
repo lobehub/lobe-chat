@@ -178,19 +178,19 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       ) : (
         <EditableText
           editing={editing}
-          onChangeEnd={(v) => {
-            if (title !== v) {
-              updateTopicTitle(id, v);
-            }
-            toggleEditing(false);
+          inputProps={{
+            onChangeEnd: (v) => {
+              if (title !== v) {
+                updateTopicTitle(id, v);
+              }
+              toggleEditing(false);
+            },
+            size: 'small',
+            style: { height: 28 },
+            variant: 'borderless',
           }}
           onEditingChange={toggleEditing}
           showEditIcon={false}
-          size={'small'}
-          style={{
-            height: 28,
-          }}
-          type={'pure'}
           value={title}
         />
       )}

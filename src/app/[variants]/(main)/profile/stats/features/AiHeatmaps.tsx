@@ -119,7 +119,7 @@ const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'> & { inShare?: boolean; mobil
         extra={tags}
         style={FORM_STYLE.style}
         title={t('stats.lastYearActivity')}
-        variant={'pure'}
+        variant={'borderless'}
       >
         <Flexbox paddingBlock={24}>{content}</Flexbox>
       </FormGroup>

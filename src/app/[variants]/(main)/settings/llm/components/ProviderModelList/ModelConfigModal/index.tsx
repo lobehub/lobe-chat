@@ -41,10 +41,9 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
     <Modal
       destroyOnClose
       footer={[
-        <Button key="cancel" onClick={closeModal}>
+        <Button color={'default'} key="cancel" onClick={closeModal} variant={'filled'}>
           {tc('cancel')}
         </Button>,
-
         <Button
           key="ok"
           onClick={() => {

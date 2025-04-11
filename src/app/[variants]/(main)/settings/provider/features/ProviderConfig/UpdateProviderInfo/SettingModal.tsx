@@ -1,6 +1,5 @@
 import { ProviderIcon } from '@lobehub/icons';
-import { FormModal, Icon } from '@lobehub/ui';
-import type { FormItemProps } from '@lobehub/ui/es/Form/components/FormItem';
+import { type FormItemProps, FormModal, Icon } from '@lobehub/ui';
 import { App, Button, Input, Select } from 'antd';
 import { BrainIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';

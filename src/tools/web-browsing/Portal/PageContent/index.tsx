@@ -203,7 +203,7 @@ const PageContent = memo<PageContentProps>(({ result }) => {
               message={t('search.crawPages.detail.tooLong', {
                 characters: CRAWL_CONTENT_LIMITED_COUNT,
               })}
-              variant={'pure'}
+              variant={'borderless'}
             />
           )}
           {display === 'render' ? (

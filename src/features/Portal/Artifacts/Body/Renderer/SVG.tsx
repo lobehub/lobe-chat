@@ -89,7 +89,7 @@ const SVGRenderer = ({ content }: SVGRendererProps) => {
               },
             }}
           >
-            <Button icon={<Icon icon={DownloadIcon} />} />
+            <Button color={'default'} icon={<Icon icon={DownloadIcon} />} variant={'filled'} />
           </Dropdown>
           <Tooltip title={t('artifacts.svg.copyAsImage')}>
             <Button

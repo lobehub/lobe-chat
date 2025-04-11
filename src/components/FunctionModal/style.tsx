@@ -35,4 +35,4 @@ export const useStyles = createStyles(({ css, token, prefixCls, isDarkMode, resp
   };
 });
 
-export const closeIcon = <Icon icon={XIcon} size={{ fontSize: 20 }} />;
+export const closeIcon = <Icon icon={XIcon} size={20} />;

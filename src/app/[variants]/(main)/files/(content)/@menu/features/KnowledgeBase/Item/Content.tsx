@@ -129,20 +129,24 @@ const Content = memo<KnowledgeBaseItemProps>(({ id, name, showMore }) => {
       ) : (
         <EditableText
           editing={editing}
-          onChangeEnd={(v) => {
-            if (name !== v) {
-              updateKnowledgeBase(id, { name: v });
-            }
-            toggleEditing(false);
+          inputProps={{
+            autoFocus: true,
+            maxLength: 64,
+            onChangeEnd: (v) => {
+              if (name !== v) {
+                updateKnowledgeBase(id, { name: v });
+              }
+              toggleEditing(false);
+            },
+            size: 'small',
+            style: { height: 28 },
+            variant: 'borderless',
           }}
           onClick={(e) => {
             e.preventDefault();
           }}
           onEditingChange={toggleEditing}
           showEditIcon={false}
-          size={'small'}
-          style={{ height: 28 }}
-          type={'pure'}
           value={name}
         />
       )}

@@ -1,6 +1,5 @@
 import { ProviderIcon } from '@lobehub/icons';
-import { FormModal, Icon } from '@lobehub/ui';
-import type { FormItemProps } from '@lobehub/ui/es/Form/components/FormItem';
+import { type FormItemProps, FormModal, Icon } from '@lobehub/ui';
 import { App, Input, Select } from 'antd';
 import { BrainIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -134,6 +133,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
   return (
     <FormModal
       destroyOnClose
+      height={'90%'}
       items={[
         {
           children: basicItems,
@@ -144,7 +144,6 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
           title: t('createNewAiProvider.configTitle'),
         },
       ]}
-      maxHeight={'90%'}
       onCancel={onClose}
       onFinish={onFinish}
       open={open}

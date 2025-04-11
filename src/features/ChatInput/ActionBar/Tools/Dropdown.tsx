@@ -69,7 +69,7 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
           icon: item.meta?.avatar ? (
             <Avatar avatar={pluginHelpers.getPluginAvatar(item.meta)} size={24} />
           ) : (
-            <Icon icon={ToyBrick} size={{ fontSize: 16 }} style={{ padding: 4 }} />
+            <Icon icon={ToyBrick} size={16} style={{ padding: 4 }} />
           ),
           key: item.identifier,
           label: (
@@ -80,7 +80,7 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
           ),
         })),
         {
-          icon: <Icon icon={Store} size={{ fontSize: 16 }} style={{ padding: 4 }} />,
+          icon: <Icon icon={Store} size={16} style={{ padding: 4 }} />,
 
           key: 'plugin-store',
           label: (

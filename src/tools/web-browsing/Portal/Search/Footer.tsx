@@ -20,6 +20,7 @@ const Footer = () => {
   return (
     <Flexbox gap={8} horizontal paddingBlock={12} paddingInline={12}>
       <Button
+        color={'default'}
         icon={<Icon icon={LucideNotepadText} />}
         loading={isAIGenerating}
         onClick={() => {
@@ -27,6 +28,7 @@ const Footer = () => {
 
           triggerAIMessage({});
         }}
+        variant={'filled'}
       >
         {t('search.summaryTooltip')}
       </Button>

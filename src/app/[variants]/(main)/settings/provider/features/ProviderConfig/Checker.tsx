@@ -25,7 +25,7 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
       <Alert
         extra={
           <Flexbox>
-            <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+            <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
               {JSON.stringify(error.body || error, null, 2)}
             </Highlighter>
           </Flexbox>
@@ -72,7 +72,7 @@ const Checker = memo<ConnectionCheckerProps>(
       // Clear previous check results immediately
       setPass(false);
       setError(undefined);
-      
+
       let isError = false;
 
       await chatService.fetchPresetTaskResult({
@@ -149,7 +149,13 @@ const Checker = memo<ConnectionCheckerProps>(
             value={checkModel}
             virtual
           />
-          <Button disabled={isProviderConfigUpdating} loading={loading} onClick={checkConnection}>
+          <Button
+            color={'default'}
+            disabled={isProviderConfigUpdating}
+            loading={loading}
+            onClick={checkConnection}
+            variant={'filled'}
+          >
             {t('llm.checker.button')}
           </Button>
         </Space.Compact>

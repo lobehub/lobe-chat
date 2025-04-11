@@ -79,7 +79,6 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
       }}
       defaultSize={{ width: tmpWidth }}
       expand={showInspector}
-      hanlderStyle={{ display: 'none' }}
       maxWidth={CHAT_PORTAL_MAX_WIDTH}
       minWidth={
         showArtifactUI || showToolUI || showThread ? CHAT_PORTAL_TOOL_UI_WIDTH : CHAT_PORTAL_WIDTH
@@ -87,9 +86,12 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
       mode={md ? 'fixed' : 'float'}
       onSizeChange={handleSizeChange}
       placement={'right'}
-      showHandlerWhenUnexpand={false}
-      showHandlerWideArea={false}
+      showHandleWhenCollapsed={false}
+      showHandleWideArea={false}
       size={{ height: '100%', width: portalWidth }}
+      styles={{
+        handle: { display: 'none' },
+      }}
     >
       <DraggablePanelContainer
         style={{

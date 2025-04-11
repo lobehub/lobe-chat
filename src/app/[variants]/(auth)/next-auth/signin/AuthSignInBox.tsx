@@ -124,9 +124,11 @@ export default memo(() => {
               oAuthSSOProviders.map((provider) => (
                 <Button
                   className={styles.button}
+                  color={'default'}
                   icon={AuthIcons(provider, 16)}
                   key={provider}
                   onClick={() => handleSignIn(provider)}
+                  variant={'filled'}
                 >
                   {provider}
                 </Button>

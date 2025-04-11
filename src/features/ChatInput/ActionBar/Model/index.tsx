@@ -111,9 +111,11 @@ const ModelSwitch = memo(() => {
           >
             <ActionIcon
               icon={Settings2Icon}
-              placement={'bottom'}
               style={{ borderRadius: 20 }}
               title={t('extendParams.title')}
+              tooltipProps={{
+                placement: 'bottom',
+              }}
             />
           </Popover>
         </Flexbox>

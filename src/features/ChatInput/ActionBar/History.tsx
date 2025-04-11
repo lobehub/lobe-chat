@@ -66,8 +66,10 @@ const History = memo(() => {
     >
       <ActionIcon
         icon={enableHistoryCount ? Timer : TimerOff}
-        placement={'bottom'}
         title={popoverOpen ? undefined : title}
+        tooltipProps={{
+          placement: 'bottom',
+        }}
       />
     </Popover>
   );

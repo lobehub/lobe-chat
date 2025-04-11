@@ -154,7 +154,9 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
 
         return (
           <Flexbox gap={4} horizontal>
-            {!actionProps ? null : <Button {...actionProps} size={'small'} />}
+            {!actionProps ? null : (
+              <Button color={'default'} variant={'filled'} {...actionProps} size={'small'} />
+            )}
             <ActionIcon
               icon={Trash2Icon}
               onClick={async () => {

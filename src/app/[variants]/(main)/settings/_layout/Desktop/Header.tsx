@@ -1,6 +1,7 @@
 'use client';
 
-import { ActionIcon, ChatHeader, ChatHeaderTitle } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
+import { ChatHeader } from '@lobehub/ui/chat';
 import { Drawer, type DrawerProps } from 'antd';
 import { createStyles } from 'antd-style';
 import { Menu } from 'lucide-react';
@@ -37,14 +38,14 @@ const Header = memo<HeaderProps>(({ children, getContainer, title }) => {
       <ChatHeader
         className={styles.container}
         left={
-          <ChatHeaderTitle
+          <ChatHeader.Title
             title={
               <Flexbox align={'center'} className={styles.title} gap={4} horizontal>
                 <ActionIcon
                   color={theme.colorText}
                   icon={Menu}
                   onClick={() => setOpen(true)}
-                  size={{ blockSize: 32, fontSize: 18 }}
+                  size={{ blockSize: 32, size: 18 }}
                 />
                 {title}
               </Flexbox>

@@ -63,7 +63,11 @@ const CommonSTT = memo<{
                   closable
                   extra={
                     error.body && (
-                      <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+                      <Highlighter
+                        actionIconSize={'small'}
+                        language={'json'}
+                        variant={'borderless'}
+                      >
                         {JSON.stringify(error.body, null, 2)}
                       </Highlighter>
                     )
@@ -107,10 +111,12 @@ const CommonSTT = memo<{
           active={isRecording}
           icon={isLoading ? MicOff : Mic}
           onClick={handleTriggerStartStop}
-          placement={'bottom'}
-          size={mobile ? { blockSize: 36, fontSize: 16 } : { fontSize: 22 }}
+          size={mobile ? { blockSize: 36, size: 16 } : 22}
           style={{ flex: 'none' }}
           title={dropdownOpen ? '' : desc}
+          tooltipProps={{
+            placement: 'bottom',
+          }}
         />
       </Dropdown>
     );

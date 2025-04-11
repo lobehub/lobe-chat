@@ -16,7 +16,7 @@ const Active = () => {
   return (
     currentThread && (
       <Flexbox align={'center'} gap={8} horizontal style={{ marginInlineStart: 8 }}>
-        <Icon icon={ListTree} size={{ fontSize: 20 }} />
+        <Icon icon={ListTree} size={20} />
 
         <Typography.Text className={oneLineEllipsis} style={{ fontSize: 16, fontWeight: 'bold' }}>
           {currentThread?.title === LOADING_FLAT ? (

@@ -29,11 +29,13 @@ const LikeButton = memo<LikeButtonProps>(
           <Tooltip title={t('like')}>
             <Button
               className={styles.number}
+              color={isLiked ? undefined : 'default'}
               icon={<Icon icon={ThumbsUpIcon} />}
               onClick={() => onLikeClick?.(!isLiked)}
               size={'large'}
               style={{ flex: 1 }}
               type={isLiked ? 'primary' : 'default'}
+              variant={isLiked ? undefined : 'filled'}
             >
               {formatShortenNumber(count)}
             </Button>

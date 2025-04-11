@@ -27,7 +27,7 @@ const Error = memo<ErrorProps>(({ messageId, index }) => {
       <Flexbox gap={12}>
         <Alert
           extra={
-            <Highlighter copyButtonSize={'small'} language={'json'}>
+            <Highlighter actionIconSize={'small'} language={'json'}>
               {JSON.stringify(error?.body || error, null, 2)}
             </Highlighter>
           }

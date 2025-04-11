@@ -29,7 +29,7 @@ const Player = memo<PlayerProps>(({ onRetry, error, onDelete, audio, isLoading, 
           closable
           extra={
             error.body && (
-              <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+              <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
                 {JSON.stringify(error.body, null, 2)}
               </Highlighter>
             )

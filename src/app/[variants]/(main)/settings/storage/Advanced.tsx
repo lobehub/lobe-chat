@@ -1,6 +1,6 @@
 'use client';
 
-import { Form, Icon, type ItemGroup } from '@lobehub/ui';
+import { Form, type FormGroupItemType, Icon } from '@lobehub/ui';
 import { App, Button } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { HardDriveDownload, HardDriveUpload } from 'lucide-react';
@@ -53,7 +53,7 @@ const AdvancedActions = () => {
     });
   }, []);
 
-  const system: ItemGroup = {
+  const system: FormGroupItemType = {
     children: [
       {
         children: (
@@ -99,7 +99,7 @@ const AdvancedActions = () => {
       initialValues={settings}
       items={[system]}
       itemsType={'group'}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

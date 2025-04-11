@@ -38,8 +38,8 @@ const BedrockForm = memo(() => {
           setConfig(ModelProvider.Bedrock, { accessKeyId: e.target.value });
         }}
         placeholder={'Aws Access Key Id'}
-        type={'block'}
         value={accessKeyId}
+        variant={'filled'}
       />
       <Input.Password
         autoComplete={'new-password'}
@@ -47,8 +47,8 @@ const BedrockForm = memo(() => {
           setConfig(ModelProvider.Bedrock, { secretAccessKey: e.target.value });
         }}
         placeholder={'Aws Secret Access Key'}
-        type={'block'}
         value={secretAccessKey}
+        variant={'filled'}
       />
       {showSessionToken ? (
         <Input.Password
@@ -57,8 +57,8 @@ const BedrockForm = memo(() => {
             setConfig(ModelProvider.Bedrock, { sessionToken: e.target.value });
           }}
           placeholder={'Aws Session Token'}
-          type={'block'}
           value={sessionToken}
+          variant={'filled'}
         />
       ) : (
         <Button

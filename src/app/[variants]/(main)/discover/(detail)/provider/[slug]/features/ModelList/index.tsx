@@ -45,7 +45,12 @@ const ModelList = memo<ModelListProps>(({ mobile, modelData, identifier }) => {
       ))}
       {modelData.length > DEFAULT_LENGTH && !showAll && (
         <Flexbox padding={16}>
-          <Button icon={<Icon icon={ChevronsUpDown} />} onClick={() => setShowAll(true)}>
+          <Button
+            color={'default'}
+            icon={<Icon icon={ChevronsUpDown} />}
+            onClick={() => setShowAll(true)}
+            variant={'filled'}
+          >
             {t('providers.showAllModels')}{' '}
             <span style={{ color: theme.colorTextDescription }}>
               (+{modelData.length - DEFAULT_LENGTH})

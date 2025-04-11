@@ -75,7 +75,7 @@ const ErrorResult = memo<FailedModalProps>(({ children }) => {
           }}
         >
           <Center height={40} width={24}>
-            <Icon icon={TriangleAlert} size={{ fontSize: 20 }} />
+            <Icon icon={TriangleAlert} size={20} />
           </Center>
           <span className={styles.text}>{t('clientDB.initing.error')}</span>
         </Flexbox>
@@ -101,7 +101,7 @@ const ErrorResult = memo<FailedModalProps>(({ children }) => {
                 description={`[${error?.name}] ${error?.message}`}
                 extra={
                   <Flexbox gap={8} style={{ marginTop: 8, overflow: 'scroll' }} width={'100%'}>
-                    <Highlighter copyButtonSize={'small'} language={'json'}>
+                    <Highlighter actionIconSize={'small'} language={'json'}>
                       {JSON.stringify(error, null, 2)}
                     </Highlighter>
                   </Flexbox>

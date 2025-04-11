@@ -1,5 +1,6 @@
 import { ActionIcon, Hotkey, Icon, Tooltip } from '@lobehub/ui';
 import { Button, Popconfirm } from 'antd';
+import { useTheme } from 'antd-style';
 import { LucideGalleryVerticalEnd, LucideMessageSquarePlus } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ import { HotkeyEnum } from '@/types/hotkey';
 
 const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
+  const theme = useTheme();
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SaveTopic));
   const [hasTopic, openNewTopicOrSaveTopic] = useChatStore((s) => [
     !!s.activeTopicId,
@@ -60,6 +62,10 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
           icon={<Icon icon={icon} />}
           loading={isValidating}
           onClick={() => mutate()}
+          style={{
+            borderColor: theme.colorBorderSecondary,
+          }}
+          variant={'filled'}
         />
       </Tooltip>
     );

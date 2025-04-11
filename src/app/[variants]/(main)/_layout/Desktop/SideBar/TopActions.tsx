@@ -33,9 +33,9 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
         <ActionIcon
           active={tab === SidebarTabKey.Chat && !isPinned}
           icon={MessageSquare}
-          placement={'right'}
           size="large"
           title={t('tab.chat')}
+          tooltipProps={{ placement: 'right' }}
         />
       </Link>
       {enableKnowledgeBase && (
@@ -43,9 +43,9 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           <ActionIcon
             active={tab === SidebarTabKey.Files}
             icon={FolderClosed}
-            placement={'right'}
             size="large"
             title={t('tab.files')}
+            tooltipProps={{ placement: 'right' }}
           />
         </Link>
       )}
@@ -54,9 +54,9 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           <ActionIcon
             active={tab === SidebarTabKey.Discover}
             icon={Compass}
-            placement={'right'}
             size="large"
             title={t('tab.discover')}
+            tooltipProps={{ placement: 'right' }}
           />
         </Link>
       )}

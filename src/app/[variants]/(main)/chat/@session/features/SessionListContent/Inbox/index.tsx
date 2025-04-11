@@ -29,6 +29,7 @@ const Inbox = memo(() => {
       <ListItem
         active={activeId === INBOX_SESSION_ID}
         avatar={DEFAULT_INBOX_AVATAR}
+        key={INBOX_SESSION_ID}
         title={t('inbox.title')}
       />
     </Link>

@@ -1,5 +1,4 @@
-import { Form, Tag } from '@lobehub/ui';
-import type { FormItemProps } from '@lobehub/ui/es/Form/components/FormItem';
+import { Form, type FormItemProps, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
@@ -98,7 +97,7 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
       }, 500)}
       size={'small'}
       style={{ fontSize: 12 }}
-      variant={'pure'}
+      variant={'borderless'}
     />
   );
 });

@@ -57,7 +57,7 @@ const ModelTitle = memo<ModelFetcherProps>(
         gap={12}
         paddingBlock={8}
         style={{
-          background: theme.colorBgLayout,
+          background: theme.colorBgContainerSecondary,
           position: 'sticky',
           top: mobile ? -2 : -16,
           zIndex: 15,
@@ -107,6 +107,7 @@ const ModelTitle = memo<ModelFetcherProps>(
               <Space.Compact>
                 {showModelFetcher && (
                   <Button
+                    color={'default'}
                     icon={<Icon icon={LucideRefreshCcwDot} />}
                     loading={fetchRemoteModelsLoading}
                     onClick={async () => {
@@ -119,6 +120,7 @@ const ModelTitle = memo<ModelFetcherProps>(
                       setFetchRemoteModelsLoading(false);
                     }}
                     size={'small'}
+                    variant={'filled'}
                   >
                     {fetchRemoteModelsLoading
                       ? t('providerModels.list.fetcher.fetching')
@@ -128,11 +130,13 @@ const ModelTitle = memo<ModelFetcherProps>(
                 {showAddNewModel && (
                   <>
                     <Button
+                      color={'default'}
                       icon={<Icon icon={PlusIcon} />}
                       onClick={() => {
                         setShowModal(true);
                       }}
                       size={'small'}
+                      variant={'filled'}
                     />
                     <CreateNewModelModal open={showModal} setOpen={setShowModal} />
                   </>
@@ -157,7 +161,12 @@ const ModelTitle = memo<ModelFetcherProps>(
                     ],
                   }}
                 >
-                  <Button icon={<Icon icon={EllipsisVertical} />} size={'small'} />
+                  <Button
+                    color={'default'}
+                    icon={<Icon icon={EllipsisVertical} />}
+                    size={'small'}
+                    variant={'filled'}
+                  />
                 </Dropdown>
               </Space.Compact>
             </Flexbox>

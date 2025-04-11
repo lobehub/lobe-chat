@@ -31,6 +31,6 @@ export const useStyles = createStyles(({ css, token }) => ({
     width: 100%;
     height: 32px;
 
-    background: linear-gradient(to bottom, transparent, ${token.colorBgLayout});
+    background: linear-gradient(to bottom, transparent, ${token.colorBgContainerSecondary});
   `,
 }));

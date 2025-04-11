@@ -46,6 +46,7 @@ const NotSupport: ComponentType<{
             </Trans>
           </Flexbox>
           <Button
+            color={'default'}
             loading={loading}
             onClick={async () => {
               if (!doc) return;
@@ -53,6 +54,7 @@ const NotSupport: ComponentType<{
               await downloadFile(doc.uri, fileName);
               setLoading(false);
             }}
+            variant={'filled'}
           >
             {t('preview.downloadFile')}
           </Button>

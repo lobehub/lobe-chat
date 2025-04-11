@@ -186,7 +186,7 @@ const Actions = memo<ActionProps>(({ group, id, openCreateGroupModal, setOpen })
         icon={MoreVertical}
         size={{
           blockSize: 28,
-          fontSize: 16,
+          size: 16,
         }}
       />
     </Dropdown>

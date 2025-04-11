@@ -36,7 +36,7 @@ const ItemCard = memo<ItemCardProps>(({ label, icon, href }) => {
   return (
     <Link href={href} style={{ color: 'inherit' }} target={'_blank'}>
       <Flexbox className={styles.card} gap={12} horizontal>
-        {icon && <Icon fill={theme.colorText} icon={icon} size={{ fontSize: 18 }} />}
+        {icon && <Icon fill={theme.colorText} icon={icon} size={18} />}
         {label}
       </Flexbox>
     </Link>

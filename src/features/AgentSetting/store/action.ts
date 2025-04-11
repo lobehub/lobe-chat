@@ -16,7 +16,7 @@ import { MessageTextChunk } from '@/utils/fetch';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { SessionLoadingState } from '../store/initialState';
+import { LoadingState } from '../store/initialState';
 import { State, initialState } from './initialState';
 import { ConfigDispatch, configReducer } from './reducers/config';
 import { MetaDataDispatch, metaDataReducer } from './reducers/meta';
@@ -48,18 +48,18 @@ export interface PublicAction {
 }
 
 export interface Action extends PublicAction {
-  dispatchConfig: (payload: ConfigDispatch) => void;
-  dispatchMeta: (payload: MetaDataDispatch) => void;
+  dispatchConfig: (payload: ConfigDispatch) => Promise<void>;
+  dispatchMeta: (payload: MetaDataDispatch) => Promise<void>;
   getCurrentTracePayload: (data: Partial<TracePayload>) => TracePayload;
 
   internal_getSystemAgentForMeta: () => SystemAgentItem;
-  resetAgentConfig: () => void;
+  resetAgentConfig: () => Promise<void>;
 
-  resetAgentMeta: () => void;
-  setAgentConfig: (config: DeepPartial<LobeAgentConfig>) => void;
-  setAgentMeta: (meta: Partial<MetaData>) => void;
+  resetAgentMeta: () => Promise<void>;
+  setAgentConfig: (config: DeepPartial<LobeAgentConfig>) => Promise<void>;
+  setAgentMeta: (meta: Partial<MetaData>) => Promise<void>;
 
-  setChatConfig: (config: Partial<LobeAgentChatConfig>) => void;
+  setChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
   streamUpdateMetaArray: (key: keyof MetaData) => any;
   streamUpdateMetaString: (key: keyof MetaData) => any;
   toggleAgentPlugin: (pluginId: string, state?: boolean) => void;
@@ -69,7 +69,7 @@ export interface Action extends PublicAction {
    * @param key - SessionLoadingState 的键
    * @param value - 加载状态的值
    */
-  updateLoadingState: (key: keyof SessionLoadingState, value: boolean) => void;
+  updateLoadingState: (key: keyof LoadingState, value: boolean) => void;
 }
 
 export type Store = Action & State;
@@ -225,19 +225,19 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
       }
     }
   },
-  dispatchConfig: (payload) => {
+  dispatchConfig: async (payload) => {
     const nextConfig = configReducer(get().config, payload);
 
     set({ config: nextConfig }, false, payload);
 
-    get().onConfigChange?.(nextConfig);
+    await get().onConfigChange?.(nextConfig);
   },
-  dispatchMeta: (payload) => {
+  dispatchMeta: async (payload) => {
     const nextValue = metaDataReducer(get().meta, payload);
 
     set({ meta: nextValue }, false, payload);
 
-    get().onMetaChange?.(nextValue);
+    await get().onMetaChange?.(nextValue);
   },
   getCurrentTracePayload: (data) => ({
     sessionId: get().id,
@@ -249,22 +249,22 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     return systemAgentSelectors.agentMeta(useUserStore.getState());
   },
 
-  resetAgentConfig: () => {
-    get().dispatchConfig({ type: 'reset' });
+  resetAgentConfig: async () => {
+    await get().dispatchConfig({ type: 'reset' });
   },
 
-  resetAgentMeta: () => {
-    get().dispatchMeta({ type: 'reset' });
+  resetAgentMeta: async () => {
+    await get().dispatchMeta({ type: 'reset' });
   },
-  setAgentConfig: (config) => {
-    get().dispatchConfig({ config, type: 'update' });
+  setAgentConfig: async (config) => {
+    await get().dispatchConfig({ config, type: 'update' });
   },
-  setAgentMeta: (meta) => {
-    get().dispatchMeta({ type: 'update', value: meta });
+  setAgentMeta: async (meta) => {
+    await get().dispatchMeta({ type: 'update', value: meta });
   },
 
-  setChatConfig: (config) => {
-    get().setAgentConfig({ chatConfig: config });
+  setChatConfig: async (config) => {
+    await get().setAgentConfig({ chatConfig: config });
   },
 
   streamUpdateMetaArray: (key: keyof MetaData) => {
@@ -297,7 +297,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
 
   updateLoadingState: (key, value) => {
     set(
-      { autocompleteLoading: { ...get().autocompleteLoading, [key]: value } },
+      { loadingState: { ...get().loadingState, [key]: value } },
       false,
       t('updateLoadingState', { key, value }),
     );

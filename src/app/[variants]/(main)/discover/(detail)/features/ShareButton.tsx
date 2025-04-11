@@ -115,20 +115,20 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
               <ActionIcon
                 className={styles.icon}
                 icon={item.icon as any}
-                size={{ blockSize: 36, borderRadius: 18, fontSize: 16 }}
+                size={{ blockSize: 36, borderRadius: 18, size: 16 }}
                 title={item.title}
               />
             </Link>
           ))}
         </Flexbox>
         <Flexbox align={'center'} gap={8} horizontal width={'100%'}>
-          <Input type={'block'} value={meta.url} />
+          <Input value={meta.url} variant={'filled'} />
           <CopyButton
             className={styles.copy}
             color={theme.colorBgLayout}
             content={meta.url}
             icon={LinkIcon}
-            size={{ blockSize: 36, fontSize: 16 }}
+            size={{ blockSize: 36, size: 16 }}
           />
         </Flexbox>
       </Center>
@@ -140,9 +140,11 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
   return (
     <>
       <Button
+        color={'default'}
         icon={<Icon icon={Share2Icon} />}
         onClick={() => setOpen(true)}
         size={'large'}
+        variant={'filled'}
         {...rest}
       />
       <Modal

@@ -1,7 +1,7 @@
 'use client';
 
 import { SiWebrtc } from '@icons-pack/react-simple-icons';
-import { Form, type ItemGroup, Tooltip } from '@lobehub/ui';
+import { Form, type FormGroupItemType, Tooltip } from '@lobehub/ui';
 import { Form as AntForm, Input, Switch, Typography } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,8 +14,6 @@ import { useUserStore } from '@/store/user';
 
 import ChannelNameInput from './ChannelNameInput';
 
-type SettingItemGroup = ItemGroup;
-
 const WebRTC = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
@@ -27,7 +25,7 @@ const WebRTC = memo(() => {
   const channelName = AntForm.useWatch(['sync', 'webrtc', 'channelName'], form);
   const signaling = AntForm.useWatch(['sync', 'webrtc', 'signaling'], form);
 
-  const config: SettingItemGroup = {
+  const config: FormGroupItemType = {
     children: [
       {
         children: <Input placeholder={t('sync.webrtc.signaling.placeholder')} />,
@@ -96,7 +94,7 @@ const WebRTC = memo(() => {
       itemsType={'group'}
       onFinish={setSettings}
       onValuesChange={setSettings}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

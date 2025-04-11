@@ -29,7 +29,7 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
         banner
         extra={
           <Flexbox>
-            <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+            <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
               {JSON.stringify(error.body || error, null, 2)}
             </Highlighter>
           </Flexbox>
@@ -108,7 +108,7 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
             {t('llm.checker.pass')}
           </Flexbox>
         )}
-        <Button loading={loading} onClick={checkConnection}>
+        <Button color={'default'} loading={loading} onClick={checkConnection} variant={'filled'}>
           {t('llm.checker.button')}
         </Button>
       </Flexbox>

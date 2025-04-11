@@ -1,7 +1,7 @@
 'use client';
 
 import { ProviderCombine } from '@lobehub/icons';
-import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
+import { Form, type FormGroupItemType, type FormItemProps, Icon, Tooltip } from '@lobehub/ui';
 import { Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
@@ -236,7 +236,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
     /* ↑ cloud slot ↑ */
 
-    const model: ItemGroup = {
+    const model: FormGroupItemType = {
       children: formItems,
 
       defaultActive: canDeactivate ? enabled : undefined,

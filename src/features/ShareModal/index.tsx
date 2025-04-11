@@ -44,7 +44,6 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
       allowFullscreen
       centered={false}
       footer={null}
-      maxHeight={false}
       onCancel={onCancel}
       open={open}
       title={t('share', { ns: 'common' })}

@@ -3,6 +3,7 @@ import { Flexbox } from 'react-layout-kit';
 import FilePanel from '@/features/FileSidePanel';
 
 import { LayoutProps } from '../type';
+import Container from './Container';
 
 const Layout = ({ children, menu, modal }: LayoutProps) => {
   return (
@@ -14,9 +15,7 @@ const Layout = ({ children, menu, modal }: LayoutProps) => {
         width={'100%'}
       >
         <FilePanel>{menu}</FilePanel>
-        <Flexbox flex={1} style={{ overflow: 'hidden', position: 'relative' }}>
-          {children}
-        </Flexbox>
+        <Container>{children}</Container>
       </Flexbox>
       {modal}
     </>

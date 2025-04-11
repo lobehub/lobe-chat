@@ -52,9 +52,11 @@ const ConfigAlert = memo<ConfigAlertProps>(({ provider, id }) => {
             {t('search.config.confirm')}
           </Button>
           <Button
+            color={'default'}
             onClick={() => {
               deleteMessage(id);
             }}
+            variant={'filled'}
           >
             {t('search.config.close')}
           </Button>

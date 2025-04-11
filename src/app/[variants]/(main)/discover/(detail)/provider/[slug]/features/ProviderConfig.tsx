@@ -35,7 +35,7 @@ const ProviderConfig = memo<ProviderConfigProps>(({ data, identifier }) => {
     router.push(isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${identifier}`);
   };
 
-  const icon = <Icon icon={SquareArrowOutUpRight} size={{ fontSize: 16 }} />;
+  const icon = <Icon icon={SquareArrowOutUpRight} size={16} />;
 
   const items = [
     data.meta?.url && {

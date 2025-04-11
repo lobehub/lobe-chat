@@ -92,6 +92,7 @@ const ShareText = memo(() => {
       </Button>
       <Button
         block
+        color={'default'}
         onClick={() => {
           exportFile(content, `${title}.md`);
         }}
@@ -107,7 +108,7 @@ const ShareText = memo(() => {
     <>
       <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
         <Preview content={content} />
-        <Flexbox className={styles.sidebar} gap={16}>
+        <Flexbox className={styles.sidebar} gap={12}>
           <Form
             initialValues={DEFAULT_FIELD_VALUE}
             items={settings}

@@ -22,7 +22,7 @@ const MetaData = memo(() => {
         },
       ]}
       itemsType={'flat'}
-      variant={'pure'}
+      variant={'borderless'}
     />
   );
 });

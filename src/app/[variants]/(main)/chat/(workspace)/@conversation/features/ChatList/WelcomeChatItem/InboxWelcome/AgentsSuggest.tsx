@@ -98,7 +98,7 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
         <ActionIcon
           icon={RefreshCw}
           onClick={handleRefresh}
-          size={{ blockSize: 24, fontSize: 14 }}
+          size={{ blockSize: 24, size: 14 }}
           title={t('guide.agents.replaceBtn')}
         />
       </Flexbox>

@@ -96,7 +96,13 @@ const FileUpload = memo(() => {
 
   return (
     <Dropdown menu={{ items }} placement="top">
-      <ActionIcon icon={Paperclip} placement={'bottom'} title={t('upload.action.tooltip')} />
+      <ActionIcon
+        icon={Paperclip}
+        title={t('upload.action.tooltip')}
+        tooltipProps={{
+          placement: 'bottom',
+        }}
+      />
     </Dropdown>
   );
 });

@@ -79,7 +79,7 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
             allowPause={false}
             audio={audio}
             buttonActive
-            buttonSize={{ blockSize: 36, fontSize: 16 }}
+            buttonSize={{ blockSize: 36, size: 16 }}
             buttonStyle={{ border: `1px solid ${theme.colorBorder}` }}
             isLoading={isGlobalLoading}
             onInitPlay={start}
@@ -101,7 +101,7 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
             closable
             extra={
               error.body && (
-                <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+                <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
                   {JSON.stringify(error.body, null, 2)}
                 </Highlighter>
               )

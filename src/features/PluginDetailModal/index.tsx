@@ -1,4 +1,4 @@
-import { Modal, TabsNav } from '@lobehub/ui';
+import { Modal, Tabs } from '@lobehub/ui';
 import { Divider, TabsProps } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,8 +44,9 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
         <Center gap={8}>
           <Meta id={id} />
           <Divider style={{ marginBottom: 0, marginTop: 8 }} />
-          <TabsNav
+          <Tabs
             activeKey={tabKey}
+            compact
             items={
               [
                 {
@@ -59,7 +60,6 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
               ].filter(Boolean) as TabsProps['items']
             }
             onChange={setTabKey}
-            variant={'compact'}
           />
           {tabKey === 'settings' ? (
             hasSettings && <PluginSettingsConfig id={id} schema={schema} />

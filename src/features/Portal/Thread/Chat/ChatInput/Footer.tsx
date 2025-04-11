@@ -63,8 +63,10 @@ const Footer = memo<FooterProps>(({ onExpandChange }) => {
       {isAIGenerating ? (
         <Button
           className={styles.loadingButton}
+          color={'default'}
           icon={<StopLoadingIcon />}
           onClick={stopGenerateMessage}
+          variant={'filled'}
         >
           {t('input.stop')}
         </Button>

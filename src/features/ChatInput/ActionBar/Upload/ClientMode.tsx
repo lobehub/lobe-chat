@@ -34,9 +34,8 @@ const FileUpload = memo(() => {
       showUploadList={false}
     >
       <ActionIcon
-        disable={!canUpload}
+        disabled={!canUpload}
         icon={enabledFiles ? FileUp : LucideImage}
-        placement={'bottom'}
         title={t(
           canUpload
             ? enabledFiles
@@ -44,6 +43,9 @@ const FileUpload = memo(() => {
               : 'upload.clientMode.actionTooltip'
             : 'upload.clientMode.disabled',
         )}
+        tooltipProps={{
+          placement: 'bottom',
+        }}
       />
     </Upload>
   );

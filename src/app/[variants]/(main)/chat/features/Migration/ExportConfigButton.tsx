@@ -26,7 +26,13 @@ const ExportConfigButton = memo<{ primary?: boolean; state: any }>(({ state, pri
   };
 
   return (
-    <Button onClick={exportData} size={'large'} type={primary ? 'primary' : undefined}>
+    <Button
+      color={primary ? undefined : 'default'}
+      onClick={exportData}
+      size={'large'}
+      type={primary ? 'primary' : undefined}
+      variant={primary ? undefined : 'filled'}
+    >
       {t('dbV1.action.downloadBackup')}
     </Button>
   );

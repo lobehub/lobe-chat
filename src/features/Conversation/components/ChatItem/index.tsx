@@ -1,6 +1,6 @@
 'use client';
 
-import { ChatItem } from '@lobehub/ui';
+import { ChatItem } from '@lobehub/ui/chat';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo } from 'react';

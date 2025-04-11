@@ -1,6 +1,6 @@
 'use client';
 
-import { Form, type ItemGroup } from '@lobehub/ui';
+import { Form, type FormGroupItemType } from '@lobehub/ui';
 import { Switch } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,14 +10,12 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 
-type SettingItemGroup = ItemGroup;
-
 const Analytics = memo(() => {
   const { t } = useTranslation('setting');
   const checked = useUserStore(preferenceSelectors.userAllowTrace);
   const [updatePreference] = useUserStore((s) => [s.updatePreference]);
 
-  const items: SettingItemGroup = {
+  const items: FormGroupItemType = {
     children: [
       {
         children: (
@@ -37,7 +35,7 @@ const Analytics = memo(() => {
     title: t('analytics.title'),
   };
 
-  return <Form items={[items]} itemsType={'group'} variant={'pure'} {...FORM_STYLE} />;
+  return <Form items={[items]} itemsType={'group'} variant={'borderless'} {...FORM_STYLE} />;
 });
 
 export default Analytics;

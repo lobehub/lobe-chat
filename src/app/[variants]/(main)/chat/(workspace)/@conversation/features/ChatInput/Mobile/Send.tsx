@@ -14,7 +14,7 @@ const MobileChatSendButton = memo<MobileChatSendButtonProps>(
   ({ loading, onStop, onSend, disabled }) => {
     const size: ActionIconSize = {
       blockSize: 36,
-      fontSize: 16,
+      size: 16,
     };
 
     return loading ? (

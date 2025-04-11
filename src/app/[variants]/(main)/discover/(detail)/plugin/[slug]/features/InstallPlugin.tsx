@@ -61,6 +61,7 @@ const InstallPlugin = memo<{ identifier: string }>(({ identifier }) => {
   return (
     <Button
       className={styles.button}
+      color={installed ? 'default' : undefined}
       loading={loadingState}
       onClick={() => {
         if (loading || installing) return;
@@ -73,6 +74,7 @@ const InstallPlugin = memo<{ identifier: string }>(({ identifier }) => {
       size={'large'}
       style={{ flex: 1, width: 'unset' }}
       type={installed ? 'default' : 'primary'}
+      variant={installed ? 'filled' : undefined}
     >
       {t(installed ? 'plugins.installed' : 'plugins.install')}
     </Button>

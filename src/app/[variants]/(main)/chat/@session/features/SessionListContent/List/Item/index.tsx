@@ -78,6 +78,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         avatarBackground={avatarBackground}
         date={updateAt?.valueOf()}
         description={description}
+        key={id}
         loading={loading}
         pin={pin}
         showAction={open}

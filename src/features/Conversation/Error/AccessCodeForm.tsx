@@ -34,8 +34,8 @@ const AccessCodeForm = memo<AccessCodeFormProps>(({ id }) => {
             updateKeyVaults({ password: e.target.value });
           }}
           placeholder={t('unlock.password.placeholder')}
-          type={'block'}
           value={password}
+          variant={'filled'}
         />
       </FormAction>
       <Flexbox gap={12}>

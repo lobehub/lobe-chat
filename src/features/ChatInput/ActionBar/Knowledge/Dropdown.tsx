@@ -104,7 +104,7 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
           icon: (
             <Icon
               icon={LibraryBig}
-              size={{ fontSize: 16 }}
+              size={16}
               style={{ marginInlineEnd: 0, paddingInlineStart: 4 }}
             />
           ),

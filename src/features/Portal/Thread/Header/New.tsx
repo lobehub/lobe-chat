@@ -16,7 +16,7 @@ const NewThreadHeader = () => {
   return (
     <Flexbox>
       <Flexbox align={'center'} gap={8} horizontal style={{ marginInlineStart: 8 }}>
-        <Icon icon={GitBranch} size={{ fontSize: 20 }} />
+        <Icon icon={GitBranch} size={20} />
         <Typography.Text className={oneLineEllipsis} style={{ fontSize: 16, fontWeight: 'bold' }}>
           {t('newPortalThread.title')}
         </Typography.Text>

@@ -45,7 +45,7 @@ const Backup = () => {
             message={t('clientDB.solve.backup.reset.alert')}
             showIcon
             type="error"
-            variant={'pure'}
+            variant={'borderless'}
           />
 
           <Button

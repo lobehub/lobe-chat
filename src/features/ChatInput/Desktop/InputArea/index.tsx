@@ -117,8 +117,8 @@ const InputArea = memo<InputAreaProps>(({ onSend, value, loading, onChange }) =>
         }}
         placeholder={t('sendPlaceholder')}
         ref={ref}
-        type={'pure'}
         value={value}
+        variant={'borderless'}
       />
     </div>
   );
