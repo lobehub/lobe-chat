@@ -12,6 +12,7 @@ export enum TraceNameMap {
   SummaryAgentDescription = 'Summary Agent Description',
   SummaryAgentTags = 'Summary Agent Tags',
   SummaryAgentTitle = 'Summary Agent Title',
+  SummaryHistoryMessages = 'Summary History Messages',
   SummaryTopicTitle = 'Summary Topic Title',
   Translator = 'Translator',
 }
