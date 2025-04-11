@@ -5,12 +5,37 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const groqChatModels: AIChatModelCard[] = [
   {
+    contextWindowTokens: 131_072,
+    displayName: 'Llama 4 Scout (17Bx16E)',
+    enabled: true,
+    id: 'meta-llama/llama-4-scout-17b-16e-instruct',
+    maxOutput: 8192,
+    pricing: {
+      input: 0.11,
+      output: 0.34,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    displayName: 'Llama 4 Maverick (17Bx128E)',
+    enabled: true,
+    id: 'meta-llama/llama-4-maverick-17b-128e-instruct',
+    maxOutput: 8192,
+    pricing: {
+      input: 0.5,
+      output: 0.77,
+    },
+    type: 'chat',
+  },
+  {
     abilities: {
       functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
     displayName: 'Qwen QwQ 32B',
+    enabled: true,
     id: 'qwen-qwq-32b',
     pricing: {
       input: 0.29,
@@ -25,7 +50,6 @@ const groqChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     displayName: 'DeepSeek R1 Distill Llama 70B',
-    enabled: true,
     id: 'deepseek-r1-distill-llama-70b',
     pricing: {
       input: 0.75, // 0.75 - 5.00
@@ -51,7 +75,6 @@ const groqChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     displayName: 'DeepSeek R1 Distill Qwen 32B',
-    enabled: true,
     id: 'deepseek-r1-distill-qwen-32b',
     maxOutput: 16_384,
     pricing: {
@@ -159,7 +182,6 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description: 'Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。',
     displayName: 'Llama 3.3 70B Versatile',
-    enabled: true,
     id: 'llama-3.3-70b-versatile',
     maxOutput: 32_768,
     pricing: {
@@ -245,6 +267,12 @@ const groqChatModels: AIChatModelCard[] = [
       input: 0.2,
       output: 0.2,
     },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 4096,
+    displayName: 'ALLaM 2 7B',
+    id: 'allam-2-7b',
     type: 'chat',
   },
 ];

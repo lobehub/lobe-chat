@@ -16,7 +16,6 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro-exp-03-25',
     maxOutput: 65_536,
     pricing: {
-      cachedInput: 0,
       input: 0,
       output: 0,
     },
@@ -174,7 +173,6 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      imageOutput: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 8192,
@@ -295,6 +293,42 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0.15,
     },
     releasedAt: '2024-10-03',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768 + 8192,
+    displayName: 'Gemma 3 1B',
+    id: 'gemma-3-1b-it',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768 + 8192,
+    displayName: 'Gemma 3 4B',
+    id: 'gemma-3-4b-it',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768 + 8192,
+    displayName: 'Gemma 3 12B',
+    id: 'gemma-3-12b-it',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
     type: 'chat',
   },
 ];

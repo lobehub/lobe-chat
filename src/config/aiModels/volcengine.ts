@@ -149,6 +149,7 @@ const doubaoChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       vision: true,
     },
     config: {
