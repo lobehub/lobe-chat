@@ -1,6 +1,6 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { UpdateInfo, useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { Icon, Markdown } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import { Badge, Button, Popover, Progress, Tooltip, theme } from 'antd';
 import { createStyles } from 'antd-style';
 import { Download } from 'lucide-react';
@@ -25,6 +25,16 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.green11A};
 
     background: ${token.green2A};
+  `,
+
+  releaseNote: css`
+    overflow: scroll;
+
+    max-height: 300px;
+    padding: 8px;
+    border-radius: 8px;
+
+    background: ${token.colorFillQuaternary};
   `,
 }));
 
@@ -121,32 +131,34 @@ export const UpdateNotification: React.FC = () => {
       <Popover
         arrow={false}
         content={
-          <div style={{ maxWidth: 280 }}>
-            <div style={{ marginBottom: 12 }}>
-              <h3 style={{ margin: 0 }}>
-                {updateDownloaded
-                  ? t('updater.updateReady', '更新已就绪')
-                  : t('updater.newVersionAvailable', '发现新版本')}
-              </h3>
+          <Flexbox gap={8} style={{ maxWidth: 380 }}>
+            <div>
+              <h3 style={{ margin: 0 }}>{t('updater.updateReady')}</h3>
               <div style={{ color: token.colorTextSecondary, fontSize: 12 }}>
                 {updateInfo?.version}
               </div>
             </div>
 
-            {updateInfo?.releaseNotes && <Markdown>{updateInfo.releaseNotes as string}</Markdown>}
+            {updateInfo?.releaseNotes && (
+              <div
+                className={styles.releaseNote}
+                dangerouslySetInnerHTML={{ __html: updateInfo.releaseNotes }}
+                style={{ maxHeight: 300, overflow: 'scroll' }}
+              />
+            )}
 
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
               <Button
                 onClick={() => {
-                  autoUpdateService.downloadUpdate();
+                  autoUpdateService.installNow();
                 }}
                 size="small"
                 type="primary"
               >
-                {t('updater.downloadNow', '立即更新')}
+                {t('updater.upgradeNow')}
               </Button>
             </div>
-          </div>
+          </Flexbox>
         }
         onOpenChange={setIsPopoverVisible}
         open={isPopoverVisible}

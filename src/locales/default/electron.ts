@@ -1,6 +1,5 @@
 const electron = {
   updater: {
-    downloadNow: '立即下载',
     downloadingUpdate: '正在下载更新',
     downloadingUpdateDesc: '更新正在下载中，请稍候...',
     later: '稍后更新',
@@ -10,6 +9,7 @@ const electron = {
     updateError: '更新错误',
     updateReady: '更新已就绪',
     updateReadyDesc: 'Lobe Chat {{version}} 已下载完成，重启应用后即可完成安装。',
+    upgradeNow: '立即更新',
   },
 };
 

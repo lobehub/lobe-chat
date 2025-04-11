@@ -1,11 +1,7 @@
 import { dispatch } from '@lobechat/electron-client-ipc';
 
 class AutoUpdateService {
-  downloadUpdate = async () => {
-    return dispatch('downloadUpdate');
-  };
-
-  quitAndInstallUpdate = async () => {
+  installNow = async () => {
     return dispatch('installNow');
   };
 
