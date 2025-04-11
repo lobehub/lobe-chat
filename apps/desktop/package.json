@@ -27,7 +27,6 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@electron-toolkit/utils": "^4.0.0",
     "electron-updater": "^6.6.2",
     "get-port-please": "^3.1.2"
   },
@@ -36,6 +35,7 @@
     "@electron-toolkit/eslint-config-ts": "^3.0.0",
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/tsconfig": "^1.0.1",
+    "@electron-toolkit/utils": "^4.0.0",
     "@lobechat/electron-client-ipc": "workspace:*",
     "@lobechat/electron-server-ipc": "workspace:*",
     "@lobehub/i18n-cli": "^1.20.3",
