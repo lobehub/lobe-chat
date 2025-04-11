@@ -271,8 +271,10 @@ export function createHandler({
     }
 
     return function stopIntercept() {
-      protocol.unhandle('http');
-      registerProtocolHandle = false;
+      if (registerProtocolHandle) {
+        protocol.unhandle('http');
+        registerProtocolHandle = false;
+      }
       process.off('SIGTERM', () => closeSocket);
       process.off('SIGINT', () => closeSocket);
       closeSocket();
