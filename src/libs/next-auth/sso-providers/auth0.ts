@@ -2,6 +2,7 @@ import Auth0 from 'next-auth/providers/auth0';
 
 import { authEnv } from '@/config/auth';
 
+import { oAuth2RefreshToken } from '../utils';
 import { CommonProviderConfig } from './sso.config';
 
 const provider = {
@@ -10,7 +11,7 @@ const provider = {
     ...CommonProviderConfig,
     // Specify auth scope, at least include 'openid email'
     // all scopes in Auth0 ref: https://auth0.com/docs/get-started/apis/scopes/openid-connect-scopes#standard-claims
-    authorization: { params: { scope: 'openid email profile' } },
+    authorization: { params: { scope: 'openid email profile offline_access' } },
     // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
     clientId: authEnv.AUTH0_CLIENT_ID ?? process.env.AUTH_AUTH0_ID,
     clientSecret: authEnv.AUTH0_CLIENT_SECRET ?? process.env.AUTH_AUTH0_SECRET,
@@ -26,6 +27,15 @@ const provider = {
       };
     },
   }),
+  // ref: https://auth0.com/docs/secure/tokens/refresh-tokens/use-refresh-tokens#use-post-authentication
+  refreshToken: (iss: string, refreshToken: string) =>
+    oAuth2RefreshToken(
+      iss,
+      '/oauth/token',
+      process.env.AUTH_AUTH0_ID!,
+      process.env.AUTH_AUTH0_SECRET!,
+      refreshToken,
+    ),
 };
 
 export default provider;
