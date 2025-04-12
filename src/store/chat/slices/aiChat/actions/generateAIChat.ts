@@ -606,8 +606,6 @@ export const generateAIChat: StateCreator<
           internal_toggleToolCallingStreaming(messageId, undefined);
         }
 
-        console.log('Generate Message Finish:', usage, speed);
-
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
           toolCalls,
