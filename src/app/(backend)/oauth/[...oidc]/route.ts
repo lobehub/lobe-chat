@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { oidcEnv } from '@/envs/oidc';
+import { appEnv } from '@/config/app';
 import { getDBInstance } from '@/database/core/web-server';
+import { oidcEnv } from '@/envs/oidc';
 import { createOIDCProvider } from '@/libs/oidc-provider/provider';
 
 /**
@@ -10,29 +11,16 @@ import { createOIDCProvider } from '@/libs/oidc-provider/provider';
 let provider: any;
 
 /**
- * 获取当前应用的基础 URL
- * @param req - 当前请求
- * @returns 应用基础 URL
- */
-const getBaseUrl = (req: NextRequest): string => {
-  // 从请求中获取主机和协议
-  const host = req.headers.get('host') || 'localhost:3000';
-  const protocol = host.includes('localhost') ? 'http' : 'https';
-  return `${protocol}://${host}`;
-};
-
-/**
  * 获取 OIDC Provider 实例
- * @param req - 当前请求
  * @returns OIDC Provider 实例
  */
-const getProvider = async (req: NextRequest) => {
+const getProvider = async () => {
   if (!provider) {
     if (!oidcEnv.ENABLE_OIDC) {
       throw new Error('OIDC is not enabled. Set ENABLE_OIDC=1 to enable it.');
     }
 
-    const baseUrl = getBaseUrl(req);
+    const baseUrl = appEnv.APP_URL!;
     const db = getDBInstance();
     provider = await createOIDCProvider(db, baseUrl);
   }
@@ -60,30 +48,31 @@ const convertOidcResponseToNextResponse = (oidcResponse: any): NextResponse => {
   const { body, status, headers } = oidcResponse;
 
   // 创建 NextResponse
-  const response = new NextResponse(body, {
+  return new NextResponse(body, {
     headers,
     status,
   });
-
-  return response;
 };
+
+type Props = { params: Promise<{ oidc: string[] }> };
 
 /**
  * 处理 catch-all 路由下的所有 OIDC 请求
  * 这个处理器会捕获所有 /oauth/[...oidc] 的请求
  * 例如: /oauth/auth, /oauth/token, /oauth/userinfo 等
  */
-export async function GET(req: NextRequest, { params }: { params: { oidc: string[] } }) {
+export async function GET(req: NextRequest, props: Props) {
   try {
     if (!oidcEnv.ENABLE_OIDC) {
       return new NextResponse('OIDC is not enabled', { status: 404 });
     }
 
     // 获取子路径
+    const params = await props.params;
     const subpath = params.oidc.join('/');
 
     // 获取 OIDC Provider 实例
-    const provider = await getProvider(req);
+    const provider = await getProvider();
 
     // 将 NextRequest 转换为 oidc-provider 兼容的请求格式
     // 实际实现需要更复杂的适配逻辑，这里只是简化版
@@ -113,17 +102,18 @@ export async function GET(req: NextRequest, { params }: { params: { oidc: string
 /**
  * 处理 POST 请求 (用于令牌端点等)
  */
-export async function POST(req: NextRequest, context: { params: { oidc: string[] } }) {
+export async function POST(req: NextRequest, props: Props) {
   try {
     if (!oidcEnv.ENABLE_OIDC) {
       return new NextResponse('OIDC is not enabled', { status: 404 });
     }
 
     // 获取子路径
-    const subpath = context.params.oidc.join('/');
+    const params = await props.params;
+    const subpath = params.oidc.join('/');
 
     // 获取 OIDC Provider 实例
-    const provider = await getProvider(req);
+    const provider = await getProvider();
 
     // 将 NextRequest 转换为 oidc-provider 兼容的请求格式
     // 注意：POST 请求需要解析 body

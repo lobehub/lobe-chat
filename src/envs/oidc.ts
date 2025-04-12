@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const oidcEnv = createEnv({
   client: {},
   runtimeEnv: {
-    ENABLE_OIDC: process.env.ENABLE_OIDC !== '0',
+    ENABLE_OIDC: process.env.ENABLE_OIDC === '1',
     OIDC_JWKS_KEY: process.env.OIDC_JWKS_KEY,
   },
   server: {
@@ -38,7 +38,7 @@ export const defaultClients = [
     post_logout_redirect_uris: ['lobehub-desktop://auth/logout/callback'],
 
     // 公共客户端，无密钥
-    redirect_uris: ['lobehub-desktop://auth/callback'],
+    redirect_uris: ['lobehub-desktop://auth/callback','https://oauthdebugger.com/debug'],
 
     response_types: ['code'],
     // 支持授权码获取令牌和刷新令牌
