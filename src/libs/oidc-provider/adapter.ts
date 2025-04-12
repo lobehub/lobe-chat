@@ -117,7 +117,7 @@ class OIDCAdapter {
             scopes: payload.scope ? payload.scope.split(' ') : [],
             tokenEndpointAuthMethod: payload.token_endpoint_auth_method,
             tosUri: payload.tos_uri,
-          })
+          } as any)
           .onConflictDoUpdate({
             set: {
               applicationType: payload.application_type,
@@ -134,7 +134,7 @@ class OIDCAdapter {
               scopes: payload.scope ? payload.scope.split(' ') : [],
               tokenEndpointAuthMethod: payload.token_endpoint_auth_method,
               tosUri: payload.tos_uri,
-            },
+            } as any,
             target: (table as any).id,
           });
         log('[Client] Successfully upserted client: %s', id);
@@ -180,7 +180,7 @@ class OIDCAdapter {
       log('[%s] Executing upsert DB operation', this.name);
       await this.db
         .insert(table)
-        .values(record)
+        .values(record as any)
         .onConflictDoUpdate({
           set: {
             data: payload,
@@ -191,7 +191,7 @@ class OIDCAdapter {
             ...(this.name === 'DeviceCode' && payload.userCode
               ? { userCode: payload.userCode }
               : {}),
-          },
+          } as any,
           target: (table as any).id,
         });
       log('[%s] Successfully upserted record: %s', this.name, id);
@@ -229,7 +229,7 @@ class OIDCAdapter {
         return undefined;
       }
 
-      const model = result[0];
+      const model = result[0] as any;
 
       // 客户端模型特殊处理
       if (this.name === 'Client') {
@@ -340,6 +340,47 @@ class OIDCAdapter {
   }
 
   /**
+   * 根据用户 ID 查找会话
+   * 用于会话预同步
+   */
+  async findSessionByUserId(userId: string): Promise<any> {
+    log('[%s] findSessionByUserId called - userId: %s', this.name, userId);
+
+    if (this.name !== 'Session') {
+      log('[%s] findSessionByUserId - Not a Session model, returning undefined', this.name);
+      return undefined;
+    }
+
+    const table = this.getTable();
+    if (!table) {
+      log('[%s] findSessionByUserId - No table for model, returning undefined', this.name);
+      return undefined;
+    }
+
+    try {
+      log('[%s] Executing findSessionByUserId DB query', this.name);
+      const result = await this.db
+        .select()
+        .from(table)
+        .where(eq((table as any).userId, userId))
+        .limit(1);
+
+      log('[%s] findSessionByUserId query results: %O', this.name, result);
+
+      if (!result || result.length === 0) {
+        log('[%s] No session found for userId: %s', this.name, userId);
+        return undefined;
+      }
+
+      return (result[0] as { data: any }).data;
+    } catch (error) {
+      log('[%s] ERROR finding session by userId: %O', this.name, error);
+      console.error(`[OIDC Adapter] Error finding session by userId:`, error);
+      return undefined;
+    }
+  }
+
+  /**
    * 销毁模型实例
    */
   async destroy(id: string): Promise<void> {
@@ -378,6 +419,7 @@ class OIDCAdapter {
       log('[%s] Executing consume DB operation', this.name);
       await this.db
         .update(table)
+        // @ts-ignore
         .set({ consumedAt: new Date() })
         .where(eq((table as any).id, id));
       log('[%s] Successfully consumed record: %s', this.name, id);
@@ -407,7 +449,7 @@ class OIDCAdapter {
     }
 
     // 检查表是否有 grantId 字段
-    if ((!'grantId') in table) {
+    if (!('grantId' in table)) {
       log('[%s] revokeByGrantId - Table does not have grantId column, returning early', this.name);
       return;
     }
