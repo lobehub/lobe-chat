@@ -1,38 +1,38 @@
 CREATE TABLE IF NOT EXISTS "oidc_access_tokens" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"data" jsonb NOT NULL,
-	"expires_at" timestamp NOT NULL,
-	"consumed_at" timestamp,
+	"expires_at" timestamp with time zone NOT NULL,
+	"consumed_at" timestamp with time zone,
 	"user_id" text NOT NULL,
-	"client_id" text NOT NULL,
-	"grant_id" text,
+	"client_id" varchar(255) NOT NULL,
+	"grant_id" varchar(255),
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "oidc_authorization_codes" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"data" jsonb NOT NULL,
-	"expires_at" timestamp NOT NULL,
-	"consumed_at" timestamp,
+	"expires_at" timestamp with time zone NOT NULL,
+	"consumed_at" timestamp with time zone,
 	"user_id" text NOT NULL,
-	"client_id" text NOT NULL,
-	"grant_id" text,
+	"client_id" varchar(255) NOT NULL,
+	"grant_id" varchar(255),
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "oidc_clients" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"description" text,
-	"client_secret" text,
-	"redirect_uris" jsonb NOT NULL,
-	"grants" jsonb NOT NULL,
-	"response_types" jsonb NOT NULL,
-	"scopes" jsonb NOT NULL,
+	"client_secret" varchar(255),
+	"redirect_uris" text[] NOT NULL,
+	"grants" text[] NOT NULL,
+	"response_types" text[] NOT NULL,
+	"scopes" text[] NOT NULL,
 	"token_endpoint_auth_method" varchar(20),
 	"application_type" varchar(20),
 	"client_uri" text,
@@ -47,9 +47,9 @@ CREATE TABLE IF NOT EXISTS "oidc_clients" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "oidc_consents" (
 	"user_id" text NOT NULL,
-	"client_id" text NOT NULL,
-	"scopes" jsonb NOT NULL,
-	"expires_at" timestamp,
+	"client_id" varchar(255) NOT NULL,
+	"scopes" text[] NOT NULL,
+	"expires_at" timestamp with time zone,
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
@@ -57,57 +57,57 @@ CREATE TABLE IF NOT EXISTS "oidc_consents" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "oidc_device_codes" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"data" jsonb NOT NULL,
-	"expires_at" timestamp NOT NULL,
-	"consumed_at" timestamp,
+	"expires_at" timestamp with time zone NOT NULL,
+	"consumed_at" timestamp with time zone,
 	"user_id" text,
-	"client_id" text NOT NULL,
-	"grant_id" text,
-	"user_code" text,
+	"client_id" varchar(255) NOT NULL,
+	"grant_id" varchar(255),
+	"user_code" varchar(255),
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "oidc_grants" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"data" jsonb NOT NULL,
-	"expires_at" timestamp NOT NULL,
-	"consumed_at" timestamp,
+	"expires_at" timestamp with time zone NOT NULL,
+	"consumed_at" timestamp with time zone,
 	"user_id" text NOT NULL,
-	"client_id" text NOT NULL,
+	"client_id" varchar(255) NOT NULL,
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "oidc_interactions" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"data" jsonb NOT NULL,
-	"expires_at" timestamp NOT NULL,
+	"expires_at" timestamp with time zone NOT NULL,
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "oidc_refresh_tokens" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"data" jsonb NOT NULL,
-	"expires_at" timestamp NOT NULL,
-	"consumed_at" timestamp,
+	"expires_at" timestamp with time zone NOT NULL,
+	"consumed_at" timestamp with time zone,
 	"user_id" text NOT NULL,
-	"client_id" text NOT NULL,
-	"grant_id" text,
+	"client_id" varchar(255) NOT NULL,
+	"grant_id" varchar(255),
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "oidc_sessions" (
-	"id" text PRIMARY KEY NOT NULL,
+	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"data" jsonb NOT NULL,
-	"expires_at" timestamp NOT NULL,
+	"expires_at" timestamp with time zone NOT NULL,
 	"user_id" text NOT NULL,
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,

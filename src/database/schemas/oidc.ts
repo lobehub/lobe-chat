@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { boolean, jsonb, pgTable, primaryKey, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { boolean, jsonb, pgTable, primaryKey, text, varchar } from 'drizzle-orm/pg-core';
 
-import { timestamps } from './_helpers';
+import { timestamps, timestamptz } from './_helpers';
 import { users } from './user';
 
 /**
@@ -9,15 +9,15 @@ import { users } from './user';
  * oidc-provider 需要持久化的模型之一
  */
 export const oidcAuthorizationCodes = pgTable('oidc_authorization_codes', {
-  id: text('id').primaryKey(),
+  id: varchar('id', { length: 255 }).primaryKey(),
   data: jsonb('data').notNull(),
-  expiresAt: timestamp('expires_at', { mode: 'date' }).notNull(),
-  consumedAt: timestamp('consumed_at', { mode: 'date' }),
+  expiresAt: timestamptz('expires_at').notNull(),
+  consumedAt: timestamptz('consumed_at'),
   userId: text('user_id')
     .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
-  clientId: text('client_id').notNull(),
-  grantId: text('grant_id'),
+  clientId: varchar('client_id', { length: 255 }).notNull(),
+  grantId: varchar('grant_id', { length: 255 }),
   ...timestamps,
 });
 
@@ -26,15 +26,15 @@ export const oidcAuthorizationCodes = pgTable('oidc_authorization_codes', {
  * oidc-provider 需要持久化的模型之一
  */
 export const oidcAccessTokens = pgTable('oidc_access_tokens', {
-  id: text('id').primaryKey(),
+  id: varchar('id', { length: 255 }).primaryKey(),
   data: jsonb('data').notNull(),
-  expiresAt: timestamp('expires_at', { mode: 'date' }).notNull(),
-  consumedAt: timestamp('consumed_at', { mode: 'date' }),
+  expiresAt: timestamptz('expires_at').notNull(),
+  consumedAt: timestamptz('consumed_at'),
   userId: text('user_id')
     .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
-  clientId: text('client_id').notNull(),
-  grantId: text('grant_id'),
+  clientId: varchar('client_id', { length: 255 }).notNull(),
+  grantId: varchar('grant_id', { length: 255 }),
   ...timestamps,
 });
 
@@ -43,15 +43,15 @@ export const oidcAccessTokens = pgTable('oidc_access_tokens', {
  * oidc-provider 需要持久化的模型之一
  */
 export const oidcRefreshTokens = pgTable('oidc_refresh_tokens', {
-  id: text('id').primaryKey(),
+  id: varchar('id', { length: 255 }).primaryKey(),
   data: jsonb('data').notNull(),
-  expiresAt: timestamp('expires_at', { mode: 'date' }).notNull(),
-  consumedAt: timestamp('consumed_at', { mode: 'date' }),
+  expiresAt: timestamptz('expires_at').notNull(),
+  consumedAt: timestamptz('consumed_at'),
   userId: text('user_id')
     .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
-  clientId: text('client_id').notNull(),
-  grantId: text('grant_id'),
+  clientId: varchar('client_id', { length: 255 }).notNull(),
+  grantId: varchar('grant_id', { length: 255 }),
   ...timestamps,
 });
 
@@ -60,14 +60,14 @@ export const oidcRefreshTokens = pgTable('oidc_refresh_tokens', {
  * oidc-provider 需要持久化的模型之一
  */
 export const oidcDeviceCodes = pgTable('oidc_device_codes', {
-  id: text('id').primaryKey(),
+  id: varchar('id', { length: 255 }).primaryKey(),
   data: jsonb('data').notNull(),
-  expiresAt: timestamp('expires_at', { mode: 'date' }).notNull(),
-  consumedAt: timestamp('consumed_at', { mode: 'date' }),
+  expiresAt: timestamptz('expires_at').notNull(),
+  consumedAt: timestamptz('consumed_at'),
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  clientId: text('client_id').notNull(),
-  grantId: text('grant_id'),
-  userCode: text('user_code'),
+  clientId: varchar('client_id', { length: 255 }).notNull(),
+  grantId: varchar('grant_id', { length: 255 }),
+  userCode: varchar('user_code', { length: 255 }),
   ...timestamps,
 });
 
@@ -76,9 +76,9 @@ export const oidcDeviceCodes = pgTable('oidc_device_codes', {
  * oidc-provider 需要持久化的模型之一
  */
 export const oidcInteractions = pgTable('oidc_interactions', {
-  id: text('id').primaryKey(),
+  id: varchar('id', { length: 255 }).primaryKey(),
   data: jsonb('data').notNull(),
-  expiresAt: timestamp('expires_at', { mode: 'date' }).notNull(),
+  expiresAt: timestamptz('expires_at').notNull(),
   ...timestamps,
 });
 
@@ -87,14 +87,14 @@ export const oidcInteractions = pgTable('oidc_interactions', {
  * oidc-provider 需要持久化的模型之一
  */
 export const oidcGrants = pgTable('oidc_grants', {
-  id: text('id').primaryKey(),
+  id: varchar('id', { length: 255 }).primaryKey(),
   data: jsonb('data').notNull(),
-  expiresAt: timestamp('expires_at', { mode: 'date' }).notNull(),
-  consumedAt: timestamp('consumed_at', { mode: 'date' }),
+  expiresAt: timestamptz('expires_at').notNull(),
+  consumedAt: timestamptz('consumed_at'),
   userId: text('user_id')
     .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
-  clientId: text('client_id').notNull(),
+  clientId: varchar('client_id', { length: 255 }).notNull(),
   ...timestamps,
 });
 
@@ -103,14 +103,14 @@ export const oidcGrants = pgTable('oidc_grants', {
  * 存储 OIDC 客户端配置信息
  */
 export const oidcClients = pgTable('oidc_clients', {
-  id: text('id').primaryKey(), // client_id
+  id: varchar('id', { length: 255 }).primaryKey(), // client_id
   name: text('name').notNull(),
   description: text('description'),
-  clientSecret: text('client_secret'), // 公共客户端可为 null
-  redirectUris: jsonb('redirect_uris').$type<string[]>().notNull(),
-  grants: jsonb('grants').$type<string[]>().notNull(),
-  responseTypes: jsonb('response_types').$type<string[]>().notNull(),
-  scopes: jsonb('scopes').$type<string[]>().notNull(),
+  clientSecret: varchar('client_secret', { length: 255 }), // 公共客户端可为 null
+  redirectUris: text('redirect_uris').array().notNull(),
+  grants: text('grants').array().notNull(),
+  responseTypes: text('response_types').array().notNull(),
+  scopes: text('scopes').array().notNull(),
   tokenEndpointAuthMethod: varchar('token_endpoint_auth_method', { length: 20 }),
   applicationType: varchar('application_type', { length: 20 }),
   clientUri: text('client_uri'),
@@ -126,9 +126,9 @@ export const oidcClients = pgTable('oidc_clients', {
  * oidc-provider 需要持久化的模型之一
  */
 export const oidcSessions = pgTable('oidc_sessions', {
-  id: text('id').primaryKey(),
+  id: varchar('id', { length: 255 }).primaryKey(),
   data: jsonb('data').notNull(),
-  expiresAt: timestamp('expires_at', { mode: 'date' }).notNull(),
+  expiresAt: timestamptz('expires_at').notNull(),
   userId: text('user_id')
     .references(() => users.id, { onDelete: 'cascade' })
     .notNull(),
@@ -145,11 +145,11 @@ export const oidcConsents = pgTable(
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
-    clientId: text('client_id')
+    clientId: varchar('client_id', { length: 255 })
       .references(() => oidcClients.id, { onDelete: 'cascade' })
       .notNull(),
-    scopes: jsonb('scopes').$type<string[]>().notNull(),
-    expiresAt: timestamp('expires_at', { mode: 'date' }),
+    scopes: text('scopes').array().notNull(),
+    expiresAt: timestamptz('expires_at'),
     ...timestamps,
   },
   (table) => ({
