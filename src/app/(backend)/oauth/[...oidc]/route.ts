@@ -1,32 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { appEnv } from '@/config/app';
-import { getDBInstance } from '@/database/core/web-server';
 import { oidcEnv } from '@/envs/oidc';
-import { createOIDCProvider } from '@/libs/oidc-provider/provider';
 
-/**
- * OIDC Provider 实例
- */
-let provider: any;
-
-/**
- * 获取 OIDC Provider 实例
- * @returns OIDC Provider 实例
- */
-const getProvider = async () => {
-  if (!provider) {
-    if (!oidcEnv.ENABLE_OIDC) {
-      throw new Error('OIDC is not enabled. Set ENABLE_OIDC=1 to enable it.');
-    }
-
-    const baseUrl = appEnv.APP_URL!;
-    const db = getDBInstance();
-    provider = await createOIDCProvider(db, baseUrl);
-  }
-
-  return provider;
-};
+import { getOIDCProvider } from '../oidcProvider';
 
 /**
  * 处理请求头部兼容性
@@ -72,7 +48,7 @@ export async function GET(req: NextRequest, props: Props) {
     const subpath = params.oidc.join('/');
 
     // 获取 OIDC Provider 实例
-    const provider = await getProvider();
+    const provider = await getOIDCProvider();
 
     // 将 NextRequest 转换为 oidc-provider 兼容的请求格式
     // 实际实现需要更复杂的适配逻辑，这里只是简化版
@@ -113,7 +89,7 @@ export async function POST(req: NextRequest, props: Props) {
     const subpath = params.oidc.join('/');
 
     // 获取 OIDC Provider 实例
-    const provider = await getProvider();
+    const provider = await getOIDCProvider();
 
     // 将 NextRequest 转换为 oidc-provider 兼容的请求格式
     // 注意：POST 请求需要解析 body

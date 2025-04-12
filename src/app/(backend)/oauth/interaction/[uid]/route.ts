@@ -1,45 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { redirect } from 'next/navigation';
 
 import { oidcEnv } from '@/envs/oidc';
-import { getDBInstance } from '@/database/core/web-server';
-import { createOIDCProvider } from '@/libs/oidc-provider/provider';
 
-/**
- * OIDC Provider 实例
- */
-let provider: any;
-
-/**
- * 获取当前应用的基础 URL
- * @param req - 当前请求
- * @returns 应用基础 URL
- */
-const getBaseUrl = (req: NextRequest): string => {
-  // 从请求中获取主机和协议
-  const host = req.headers.get('host') || 'localhost:3000';
-  const protocol = host.includes('localhost') ? 'http' : 'https';
-  return `${protocol}://${host}`;
-};
-
-/**
- * 获取 OIDC Provider 实例
- * @param req - 当前请求
- * @returns OIDC Provider 实例
- */
-const getProvider = async (req: NextRequest) => {
-  if (!provider) {
-    if (!oidcEnv.ENABLE_OIDC) {
-      throw new Error('OIDC is not enabled. Set ENABLE_OIDC=1 to enable it.');
-    }
-
-    const baseUrl = getBaseUrl(req);
-    const db = getDBInstance();
-    provider = await createOIDCProvider(db, baseUrl);
-  }
-
-  return provider;
-};
+import { getOIDCProvider } from '../../oidcProvider';
 
 /**
  * 处理交互请求 GET
@@ -52,7 +15,7 @@ export async function GET(req: NextRequest, { params }: { params: { uid: string 
     }
 
     const { uid } = params;
-    const provider = await getProvider(req);
+    const provider = await getOIDCProvider();
 
     // 获取交互详情
     // 注意：此处应该做更好的 NextRequest 和 oidc-provider 之间的适配
@@ -68,10 +31,10 @@ export async function GET(req: NextRequest, { params }: { params: { uid: string 
       const loginUrl = `${nextauthPath}?callbackUrl=${encodeURIComponent(returnUrl)}`;
 
       return new NextResponse(null, {
-        status: 302,
         headers: {
-          'Location': loginUrl,
+          Location: loginUrl,
         },
+        status: 302,
       });
     }
 
@@ -104,7 +67,7 @@ export async function GET(req: NextRequest, { params }: { params: { uid: string 
 
               <div class="scopes">
                 <p>应用请求以下权限：</p>
-                ${scopes.map(scope => `<div class="scope">${getScopeDescription(scope)}</div>`).join('')}
+                ${scopes.map((scope) => `<div class="scope">${getScopeDescription(scope)}</div>`).join('')}
               </div>
 
               <form method="post">
@@ -119,10 +82,10 @@ export async function GET(req: NextRequest, { params }: { params: { uid: string 
       `;
 
       return new NextResponse(html, {
-        status: 200,
         headers: {
           'Content-Type': 'text/html',
         },
+        status: 200,
       });
     }
 
@@ -145,7 +108,7 @@ export async function POST(req: NextRequest, { params }: { params: { uid: string
     }
 
     const { uid } = params;
-    const provider = await getProvider(req);
+    const provider = await getOIDCProvider();
 
     // 解析表单数据
     const formData = await req.formData();
@@ -162,9 +125,9 @@ export async function POST(req: NextRequest, { params }: { params: { uid: string
         // 用户同意授权
         result = {
           consent: {
+            rejectedClaims: [],
             // 授权所有请求的 scopes
             rejectedScopes: [],
-            rejectedClaims: [],
           },
         };
       } else {
@@ -179,14 +142,16 @@ export async function POST(req: NextRequest, { params }: { params: { uid: string
     }
 
     // 完成交互
-    const redirectUrl = await provider.interactionFinished(req, {} as any, result, { mergeWithLastSubmission: true });
+    const redirectUrl = await provider.interactionFinished(req, {} as any, result, {
+      mergeWithLastSubmission: true,
+    });
 
     // 重定向到 OIDC 流程的下一步
     return new NextResponse(null, {
-      status: 302,
       headers: {
-        'Location': redirectUrl,
+        Location: redirectUrl,
       },
+      status: 302,
     });
   } catch (error) {
     console.error('Error handling OIDC interaction submission:', error);
@@ -201,10 +166,10 @@ export async function POST(req: NextRequest, { params }: { params: { uid: string
  */
 function getScopeDescription(scope: string): string {
   const descriptions: Record<string, string> = {
-    'openid': '使用您的 LobeChat 账户进行身份验证',
-    'profile': '访问您的基本资料信息（名称、头像等）',
     'email': '访问您的电子邮件地址',
     'offline_access': '在您离线时继续访问您的数据',
+    'openid': '使用您的 LobeChat 账户进行身份验证',
+    'profile': '访问您的基本资料信息（名称、头像等）',
     'sync:read': '读取您的同步数据',
     'sync:write': '写入并更新您的同步数据',
   };
