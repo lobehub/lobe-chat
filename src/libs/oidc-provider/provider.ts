@@ -89,7 +89,7 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
     // 7. Cookie 配置
     cookies: {
       keys: cookieKeys,
-      long: { maxAge: 14 * 24 * 60 * 60 * 1000, signed: true },
+      long: { signed: true },
       short: { signed: true },
     },
 
@@ -108,35 +108,53 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
 
     // 10. 账户查找
     async findAccount(ctx: KoaContextWithOIDC, id: string) {
-      logProvider('findAccount called');
-      // ---> Check for externalAccountId set by our custom check first <--- 
-      // Extend KoaContextWithOIDC with our custom property if necessary (using // @ts-ignore for simplicity here)
-      // @ts-ignore 
-      const accountIdToFind = ctx.externalAccountId || id;
-      
-      logProvider('Attempting to find account with ID: %s (source: %s)', 
-          accountIdToFind, 
-          // @ts-ignore 
-          ctx.externalAccountId ? 'externalAccountId' : 'oidc_id'
+      logProvider('findAccount called for id: %s', id);
+
+      // 检查是否有预先存储的外部账户 ID
+      // @ts-ignore - 自定义属性
+      const externalAccountId = ctx.externalAccountId;
+      if (externalAccountId) {
+        logProvider('Found externalAccountId in context: %s', externalAccountId);
+      }
+
+      // 确定要查找的账户 ID
+      // 优先级: 1. externalAccountId 2. ctx.oidc.session?.accountId 3. 传入的 id
+      const accountIdToFind = externalAccountId || ctx.oidc?.session?.accountId || id;
+
+      logProvider(
+        'Attempting to find account with ID: %s (source: %s)',
+        accountIdToFind,
+        externalAccountId
+          ? 'externalAccountId'
+          : ctx.oidc?.session?.accountId
+            ? 'oidc_session'
+            : 'parameter_id',
       );
 
-      // If no ID is available (neither external nor OIDC session), return undefined
+      // 如果没有可用的 ID，返回 undefined
       if (!accountIdToFind) {
-         logProvider('findAccount: No account ID available (neither external nor OIDC), returning undefined.');
-         return undefined;
+        logProvider('findAccount: No account ID available, returning undefined.');
+        return undefined;
       }
-      
+
       try {
         const user = await UserModel.findById(db, accountIdToFind);
-        logProvider('UserModel.findById result for %s: %O', accountIdToFind, user ? { id: user.id, name: user.username } : null);
-        
-        if (!user) return undefined;
+        logProvider(
+          'UserModel.findById result for %s: %O',
+          accountIdToFind,
+          user ? { id: user.id, name: user.username } : null,
+        );
+
+        if (!user) {
+          logProvider('No user found for accountId: %s', accountIdToFind);
+          return undefined;
+        }
 
         return {
           accountId: user.id,
-          async claims(use, scope) {
+          async claims(use, scope): Promise<{ [key: string]: any; sub: string }> {
             logProvider('claims function called for user %s with scope: %s', user.id, scope);
-            const claims: Record<string, any> = {
+            const claims: { [key: string]: any; sub: string } = {
               sub: user.id,
             };
 
@@ -150,8 +168,9 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
 
             if (scope.includes('email')) {
               claims.email = user.email;
-              claims.email_verified = user.emailVerifiedAt ? true : false;
+              claims.email_verified = !!user.emailVerifiedAt;
             }
+
             logProvider('Returning claims: %O', claims);
             return claims;
           },
@@ -162,10 +181,6 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
         return undefined;
       }
     },
-
-    // -- 配置签名算法为 RS256 --
-    idTokenSignedResponseAlg: 'RS256',
-
     // 9. 交互策略
     interactions: {
       policy: createInteractionPolicy(),
@@ -223,8 +238,6 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
       RefreshToken: 30 * 24 * 60 * 60, // 30 days
       Session: 30 * 24 * 60 * 60, // 30 days
     },
-
-    userinfoSignedResponseAlg: 'RS256',
   };
 
   // 创建提供者实例
