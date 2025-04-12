@@ -80,9 +80,12 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         debugStream(debug.toReadableStream()).catch(console.error);
       }
 
-      return StreamingResponse(AnthropicStream(prod, { callbacks: options?.callback, inputStartAt }), {
-        headers: options?.headers,
-      });
+      return StreamingResponse(
+        AnthropicStream(prod, { callbacks: options?.callback, inputStartAt }),
+        {
+          headers: options?.headers,
+        },
+      );
     } catch (error) {
       throw this.handleError(error);
     }
@@ -104,12 +107,12 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     const systemPrompts = !!system_message?.content
       ? ([
-        {
-          cache_control: enabledContextCaching ? { type: 'ephemeral' } : undefined,
-          text: system_message?.content as string,
-          type: 'text',
-        },
-      ] as Anthropic.TextBlockParam[])
+          {
+            cache_control: enabledContextCaching ? { type: 'ephemeral' } : undefined,
+            text: system_message?.content as string,
+            type: 'text',
+          },
+        ] as Anthropic.TextBlockParam[])
       : undefined;
 
     const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
