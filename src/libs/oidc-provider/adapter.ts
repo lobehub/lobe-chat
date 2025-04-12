@@ -444,6 +444,9 @@ class OIDCAdapter {
       return;
     }
 
+    // 提前检查模型名称是否有效，即使后续不直接使用 table
+    this.getTable();
+
     try {
       log('[%s] Starting transaction for revokeByGrantId operations', this.name);
 
