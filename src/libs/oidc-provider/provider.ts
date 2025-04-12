@@ -92,7 +92,7 @@ export const createOIDCProvider = async (
     cookies: {
       keys: cookieKeys,
       long: { signed: true },
-      short: { signed: true },
+      short: { path: '/', signed: true },
     },
 
     // 5. 特性配置

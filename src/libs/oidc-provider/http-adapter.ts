@@ -2,6 +2,9 @@ import debug from 'debug';
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { IncomingMessage, ServerResponse } from 'node:http';
+import urlJoin from 'url-join';
+
+import { appEnv } from '@/config/app';
 
 const log = debug('lobe-oidc:http-adapter');
 
@@ -31,9 +34,15 @@ export const createNodeRequest = (
   const url = new URL(req.url);
 
   // 计算相对于前缀的路径
-  const providerPath = url.pathname.startsWith(pathPrefix)
-    ? url.pathname.slice(pathPrefix.length)
-    : url.pathname;
+  let providerPath = url.pathname;
+  if (pathPrefix && url.pathname.startsWith(pathPrefix)) {
+    providerPath = url.pathname.slice(pathPrefix.length);
+  }
+
+  // 确保路径始终以/开头
+  if (!providerPath.startsWith('/')) {
+    providerPath = '/' + providerPath;
+  }
 
   log('Creating Node.js request from Next.js request');
   log('Original path: %s, Provider path: %s', url.pathname, providerPath);
@@ -183,16 +192,19 @@ export const createNodeResponse = (resolvePromise: () => void): ResponseCollecto
 
 /**
  * 创建用于调用 provider.interactionDetails 的上下文 (req, res)
- * (设计用于 Next.js Server Component 环境)
  * @param uid 交互 ID
- * @param host 可选的主机名
  */
 export const createContextForInteractionDetails = async (
   uid: string,
-  host?: string,
 ): Promise<{ req: IncomingMessage; res: ServerResponse }> => {
   log('Creating context for interaction details for uid: %s', uid);
-  const hostName = host || process.env.NEXTAUTH_URL || 'localhost:3000';
+
+  // 使用APP_URL环境变量来构建URL基础部分
+  const baseUrl = appEnv.APP_URL!;
+  log('Using base URL: %s', baseUrl);
+
+  // 从baseUrl提取主机名用于headers
+  const hostName = new URL(baseUrl).host;
 
   // 1. 获取真实的 Cookies
   const cookieStore = await cookies();
@@ -201,6 +213,14 @@ export const createContextForInteractionDetails = async (
     realCookies[cookie.name] = cookie.value;
   });
   log('Real cookies found: %o', Object.keys(realCookies));
+
+  // 特别检查交互会话cookie
+  const interactionCookieName = `_interaction_${uid}`;
+  if (realCookies[interactionCookieName]) {
+    log('Found interaction session cookie: %s', interactionCookieName);
+  } else {
+    log('Warning: Interaction session cookie not found: %s', interactionCookieName);
+  }
 
   // 2. 构建包含真实 Cookie 的 Headers
   const headers = new Headers({ host: hostName });
@@ -217,6 +237,9 @@ export const createContextForInteractionDetails = async (
   // 3. 创建模拟的 NextRequest
   // 注意：这里的 IP, geo, ua 等信息可能是 oidc-provider 某些特性需要的，
   // 如果遇到相关问题，可能需要从真实请求头中提取 (e.g., 'x-forwarded-for', 'user-agent')
+  const interactionUrl = urlJoin(baseUrl, `/oauth/consent/${uid}`);
+  log('Creating interaction URL: %s', interactionUrl);
+
   const mockNextRequest = {
     cookies: {
       // 模拟 NextRequestCookies 接口
@@ -228,10 +251,10 @@ export const createContextForInteractionDetails = async (
     headers: headers,
     ip: '127.0.0.1',
     method: 'GET',
-    nextUrl: new URL(`https://${hostName}/interaction/${uid}`),
+    nextUrl: new URL(interactionUrl),
     page: { name: undefined, params: undefined },
     ua: undefined,
-    url: new URL(`https://${hostName}/interaction/${uid}`),
+    url: new URL(interactionUrl),
   } as unknown as NextRequest;
   log('Mock NextRequest created for url: %s', mockNextRequest.url);
 
