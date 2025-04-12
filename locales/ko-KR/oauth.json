@@ -1,0 +1,39 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "허가",
+      "deny": "거부"
+    },
+    "description": "{clientId} 애플리케이션이 귀하의 LobeChat 계정에 접근을 요청합니다",
+    "error": {
+      "sessionInvalid": {
+        "message": "허가 세션이 만료되었거나 유효하지 않습니다. 허가 프로세스를 다시 시작하십시오.",
+        "title": "허가 세션 무효"
+      },
+      "title": "오류 발생",
+      "unsupportedInteraction": {
+        "message": "지원되지 않는 상호작용 유형: {promptName}",
+        "title": "지원되지 않는 상호작용 유형"
+      }
+    },
+    "permissionsTitle": "애플리케이션이 다음 권한을 요청합니다:",
+    "scope": {
+      "email": "귀하의 이메일 주소에 접근",
+      "offline_access": "오프라인 상태에서도 귀하의 데이터에 접근",
+      "openid": "귀하의 LobeChat 계정으로 인증",
+      "profile": "귀하의 기본 프로필 정보(이름, 프로필 사진 등)에 접근",
+      "sync:read": "귀하의 동기화 데이터 읽기",
+      "sync:write": "귀하의 동기화 데이터 쓰기 및 업데이트"
+    },
+    "title": "허가 요청"
+  },
+  "failed": {
+    "backToHome": "홈으로 돌아가기",
+    "subTitle": "귀하가 애플리케이션의 LobeChat 계정 접근을 거부했습니다",
+    "title": "허가가 거부되었습니다"
+  },
+  "success": {
+    "subTitle": "귀하가 애플리케이션의 LobeChat 계정 접근을 성공적으로 허가했습니다. 이 페이지를 닫아도 됩니다",
+    "title": "허가 성공"
+  }
+}

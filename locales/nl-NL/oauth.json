@@ -1,0 +1,39 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Toestaan",
+      "deny": "Weigeren"
+    },
+    "description": "De applicatie {clientId} vraagt toegang tot uw LobeChat-account",
+    "error": {
+      "sessionInvalid": {
+        "message": "De autorisatiesessie is verlopen of ongeldig, start het autorisatieproces opnieuw.",
+        "title": "Ongeldige autorisatiesessie"
+      },
+      "title": "Er is een fout opgetreden",
+      "unsupportedInteraction": {
+        "message": "Niet-ondersteund interactietype: {promptName}",
+        "title": "Niet-ondersteund interactietype"
+      }
+    },
+    "permissionsTitle": "De applicatie vraagt om de volgende machtigingen:",
+    "scope": {
+      "email": "Toegang tot uw e-mailadres",
+      "offline_access": "Toegang tot uw gegevens wanneer u offline bent",
+      "openid": "Authenticatie met uw LobeChat-account",
+      "profile": "Toegang tot uw basisprofielinformatie (naam, profielfoto, enz.)",
+      "sync:read": "Lezen van uw synchronisatiegegevens",
+      "sync:write": "Schrijven en bijwerken van uw synchronisatiegegevens"
+    },
+    "title": "Autorisatieverzoek"
+  },
+  "failed": {
+    "backToHome": "Terug naar de startpagina",
+    "subTitle": "U heeft de autorisatie voor de applicatie om toegang te krijgen tot uw LobeChat-account geweigerd",
+    "title": "Autorisatie geweigerd"
+  },
+  "success": {
+    "subTitle": "U heeft de applicatie succesvol gemachtigd om toegang te krijgen tot uw LobeChat-account, u kunt deze pagina nu sluiten",
+    "title": "Autorisatie succesvol"
+  }
+}

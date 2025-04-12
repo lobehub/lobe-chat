@@ -1109,6 +1109,18 @@
   "grok-2-vision-1212": {
     "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
   },
+  "grok-3-beta": {
+    "description": "Mô hình hàng đầu, chuyên về trích xuất dữ liệu, lập trình và tóm tắt văn bản cho các ứng dụng doanh nghiệp, có kiến thức sâu rộng trong các lĩnh vực tài chính, y tế, pháp lý và khoa học."
+  },
+  "grok-3-fast-beta": {
+    "description": "Mô hình hàng đầu, chuyên về trích xuất dữ liệu, lập trình và tóm tắt văn bản cho các ứng dụng doanh nghiệp, có kiến thức sâu rộng trong các lĩnh vực tài chính, y tế, pháp lý và khoa học."
+  },
+  "grok-3-mini-beta": {
+    "description": "Mô hình nhẹ, sẽ suy nghĩ trước khi trò chuyện. Chạy nhanh, thông minh, phù hợp cho các nhiệm vụ logic không cần kiến thức chuyên sâu, và có thể thu thập được các dấu vết tư duy ban đầu."
+  },
+  "grok-3-mini-fast-beta": {
+    "description": "Mô hình nhẹ, sẽ suy nghĩ trước khi trò chuyện. Chạy nhanh, thông minh, phù hợp cho các nhiệm vụ logic không cần kiến thức chuyên sâu, và có thể thu thập được các dấu vết tư duy ban đầu."
+  },
   "grok-beta": {
     "description": "Có hiệu suất tương đương với Grok 2, nhưng hiệu quả, tốc độ và tính năng cao hơn."
   },

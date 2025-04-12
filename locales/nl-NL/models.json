@@ -1109,6 +1109,18 @@
   "grok-2-vision-1212": {
     "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
   },
+  "grok-3-beta": {
+    "description": "Vlaggenschipmodel, gespecialiseerd in data-extractie, programmeren en tekstsamenvattingen voor zakelijke toepassingen, met diepgaande kennis in de financiële, medische, juridische en wetenschappelijke sectoren."
+  },
+  "grok-3-fast-beta": {
+    "description": "Vlaggenschipmodel, gespecialiseerd in data-extractie, programmeren en tekstsamenvattingen voor zakelijke toepassingen, met diepgaande kennis in de financiële, medische, juridische en wetenschappelijke sectoren."
+  },
+  "grok-3-mini-beta": {
+    "description": "Lichtgewicht model dat vooraf nadenkt voordat het een gesprek aangaat. Snel en intelligent, geschikt voor logische taken die geen diepgaande domeinkennis vereisen, en kan de oorspronkelijke denksporen vastleggen."
+  },
+  "grok-3-mini-fast-beta": {
+    "description": "Lichtgewicht model dat vooraf nadenkt voordat het een gesprek aangaat. Snel en intelligent, geschikt voor logische taken die geen diepgaande domeinkennis vereisen, en kan de oorspronkelijke denksporen vastleggen."
+  },
   "grok-beta": {
     "description": "Biedt prestaties vergelijkbaar met Grok 2, maar met hogere efficiëntie, snelheid en functionaliteit."
   },

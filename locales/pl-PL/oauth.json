@@ -1,0 +1,39 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Zgoda",
+      "deny": "Odmowa"
+    },
+    "description": "Aplikacja {clientId} prosi o dostęp do Twojego konta LobeChat",
+    "error": {
+      "sessionInvalid": {
+        "message": "Sesja autoryzacyjna wygasła lub jest nieprawidłowa, proszę ponownie rozpocząć proces autoryzacji.",
+        "title": "Sesja autoryzacyjna nieprawidłowa"
+      },
+      "title": "Wystąpił błąd",
+      "unsupportedInteraction": {
+        "message": "Nieobsługiwany typ interakcji: {promptName}",
+        "title": "Nieobsługiwany typ interakcji"
+      }
+    },
+    "permissionsTitle": "Aplikacja prosi o następujące uprawnienia:",
+    "scope": {
+      "email": "Dostęp do Twojego adresu e-mail",
+      "offline_access": "Dostęp do Twoich danych, gdy jesteś offline",
+      "openid": "Uwierzytelnienie za pomocą Twojego konta LobeChat",
+      "profile": "Dostęp do Twoich podstawowych informacji (imię, zdjęcie profilowe itp.)",
+      "sync:read": "Odczyt Twoich danych synchronizacji",
+      "sync:write": "Zapis i aktualizacja Twoich danych synchronizacji"
+    },
+    "title": "Prośba o autoryzację"
+  },
+  "failed": {
+    "backToHome": "Powrót do strony głównej",
+    "subTitle": "Odmówiłeś autoryzacji aplikacji do dostępu do Twojego konta LobeChat",
+    "title": "Autoryzacja odrzucona"
+  },
+  "success": {
+    "subTitle": "Pomyślnie autoryzowałeś aplikację do dostępu do Twojego konta LobeChat, możesz zamknąć tę stronę",
+    "title": "Autoryzacja zakończona sukcesem"
+  }
+}

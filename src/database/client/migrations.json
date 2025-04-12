@@ -223,10 +223,7 @@
     "hash": "9646161fa041354714f823d726af27247bcd6e60fa3be5698c0d69f337a5700b"
   },
   {
-    "sql": [
-      "DROP TABLE \"user_budgets\";",
-      "\nDROP TABLE \"user_subscriptions\";"
-    ],
+    "sql": ["DROP TABLE \"user_budgets\";", "\nDROP TABLE \"user_subscriptions\";"],
     "bps": true,
     "folderMillis": 1729699958471,
     "hash": "7dad43a2a25d1aec82124a4e53f8d82f8505c3073f23606c1dc5d2a4598eacf9"
@@ -298,9 +295,7 @@
     "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
   },
   {
-    "sql": [
-      "ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"
-    ],
+    "sql": ["ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"],
     "bps": true,
     "folderMillis": 1737609172353,
     "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
@@ -429,5 +424,29 @@
     "bps": true,
     "folderMillis": 1742806552131,
     "hash": "d9032edf59f717e0e71da5a95b3545ec251c311155cafe14df01a12800a9eae0"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"oidc_access_tokens\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"consumed_at\" timestamp with time zone,\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"grant_id\" varchar(255),\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_authorization_codes\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"consumed_at\" timestamp with time zone,\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"grant_id\" varchar(255),\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_clients\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"client_secret\" varchar(255),\n\t\"redirect_uris\" text[] NOT NULL,\n\t\"grants\" text[] NOT NULL,\n\t\"response_types\" text[] NOT NULL,\n\t\"scopes\" text[] NOT NULL,\n\t\"token_endpoint_auth_method\" varchar(20),\n\t\"application_type\" varchar(20),\n\t\"client_uri\" text,\n\t\"logo_uri\" text,\n\t\"policy_uri\" text,\n\t\"tos_uri\" text,\n\t\"is_first_party\" boolean DEFAULT false,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_consents\" (\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"scopes\" text[] NOT NULL,\n\t\"expires_at\" timestamp with time zone,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"oidc_consents_user_id_client_id_pk\" PRIMARY KEY(\"user_id\",\"client_id\")\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_device_codes\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"consumed_at\" timestamp with time zone,\n\t\"user_id\" text,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"grant_id\" varchar(255),\n\t\"user_code\" varchar(255),\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_grants\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"consumed_at\" timestamp with time zone,\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_interactions\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_refresh_tokens\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"consumed_at\" timestamp with time zone,\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"grant_id\" varchar(255),\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_sessions\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nALTER TABLE \"oidc_access_tokens\" ADD CONSTRAINT \"oidc_access_tokens_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_authorization_codes\" ADD CONSTRAINT \"oidc_authorization_codes_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_consents\" ADD CONSTRAINT \"oidc_consents_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_consents\" ADD CONSTRAINT \"oidc_consents_client_id_oidc_clients_id_fk\" FOREIGN KEY (\"client_id\") REFERENCES \"public\".\"oidc_clients\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_device_codes\" ADD CONSTRAINT \"oidc_device_codes_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_grants\" ADD CONSTRAINT \"oidc_grants_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_refresh_tokens\" ADD CONSTRAINT \"oidc_refresh_tokens_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_sessions\" ADD CONSTRAINT \"oidc_sessions_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1744458287757,
+    "hash": "f3a80b900906b54ba658208cd448610647fc03f1f4d51963509c07f4e53ef4de"
   }
 ]
