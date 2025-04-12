@@ -138,6 +138,9 @@ const currentKnowledgeIds = (s: AgentStoreState) => {
 
 const isAgentConfigLoading = (s: AgentStoreState) => !s.agentConfigInitMap[s.activeId];
 
+const openingQuestions = (s: AgentStoreState) => currentAgentConfig(s).openingQuestions || [];
+const openingMessage = (s: AgentStoreState) => currentAgentConfig(s).openingMessage || '';
+
 export const agentSelectors = {
   currentAgentConfig,
   currentAgentFiles,
@@ -158,4 +161,6 @@ export const agentSelectors = {
   inboxAgentModel,
   isAgentConfigLoading,
   isInboxSession,
+  openingMessage,
+  openingQuestions,
 };

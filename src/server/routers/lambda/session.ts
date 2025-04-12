@@ -76,7 +76,14 @@ export const sessionRouter = router({
     .input(
       z.object({
         config: insertAgentSchema
-          .omit({ chatConfig: true, plugins: true, tags: true, tts: true })
+          .omit({
+            chatConfig: true,
+            openingMessage: true,
+            openingQuestions: true,
+            plugins: true,
+            tags: true,
+            tts: true,
+          })
           .passthrough()
           .partial(),
         session: insertSessionSchema.omit({ createdAt: true, updatedAt: true }).partial(),

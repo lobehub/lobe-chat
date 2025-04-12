@@ -8,4 +8,6 @@ const chatConfig = (s: Store): LobeAgentChatConfig =>
 
 export const selectors = {
   chatConfig,
+  openingMessage: (s: Store) => s.config.openingMessage,
+  openingQuestions: (s: Store) => s.config.openingQuestions,
 };

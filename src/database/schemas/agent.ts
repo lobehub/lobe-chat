@@ -54,6 +54,9 @@ export const agents = pgTable(
     systemRole: text('system_role'),
     tts: jsonb('tts').$type<LobeAgentTTSConfig>(),
 
+    openingMessage: text('opening_message'),
+    openingQuestions: jsonb('opening_questions').$type<string[]>().default([]),
+
     ...timestamps,
   },
   (t) => ({

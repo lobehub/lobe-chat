@@ -12,6 +12,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import AgentChat from '@/features/AgentSetting/AgentChat';
 import AgentMeta from '@/features/AgentSetting/AgentMeta';
 import AgentModal from '@/features/AgentSetting/AgentModal';
+import AgentOpening from '@/features/AgentSetting/AgentOpening';
 import AgentPlugin from '@/features/AgentSetting/AgentPlugin';
 import AgentPrompt from '@/features/AgentSetting/AgentPrompt';
 import { AgentSettingsProvider } from '@/features/AgentSetting/AgentSettingsProvider';
@@ -104,6 +105,7 @@ const AgentSettings = memo(() => {
           >
             {tab === ChatSettingsTabs.Meta && <AgentMeta />}
             {tab === ChatSettingsTabs.Prompt && <AgentPrompt />}
+            {tab === ChatSettingsTabs.Opening && <AgentOpening />}
             {tab === ChatSettingsTabs.Chat && <AgentChat />}
             {tab === ChatSettingsTabs.Modal && <AgentModal />}
             {tab === ChatSettingsTabs.TTS && <AgentTTS />}
