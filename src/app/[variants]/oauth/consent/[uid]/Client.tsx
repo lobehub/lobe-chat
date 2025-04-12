@@ -2,6 +2,8 @@
 
 import { Button, Card, Typography } from 'antd';
 import { createStyles } from 'antd-style';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 type ClientProps = {
@@ -35,21 +37,13 @@ const useStyles = createStyles(({ css, token }) => ({
 /**
  * 获取 Scope 的描述
  */
-function getScopeDescription(scope: string): string {
-  const descriptions: Record<string, string> = {
-    'email': '访问您的电子邮件地址',
-    'offline_access': '在您离线时继续访问您的数据',
-    'openid': '使用您的 LobeChat 账户进行身份验证',
-    'profile': '访问您的基本资料信息（名称、头像等）',
-    'sync:read': '读取您的同步数据',
-    'sync:write': '写入并更新您的同步数据',
-  };
-
-  return descriptions[scope] || scope;
+function getScopeDescription(scope: string, t: any): string {
+  return t(`consent.scope.${scope}`, scope);
 }
 
-export const ConsentClient = ({ uid, clientId, scopes, error }: ClientProps) => {
+const ConsentClient = memo(({ uid, clientId, scopes, error }: ClientProps) => {
   const { styles } = useStyles();
+  const { t } = useTranslation('oauth');
 
   // 如果有错误，显示错误信息
   if (error) {
@@ -68,17 +62,17 @@ export const ConsentClient = ({ uid, clientId, scopes, error }: ClientProps) => 
       <Card style={{ maxWidth: 500, width: '100%' }}>
         <Flexbox gap={24}>
           <Title level={3} style={{ margin: 0 }}>
-            授权请求
+            {t('consent.title')}
           </Title>
           <Paragraph>
-            应用 <Text strong>{clientId}</Text> 请求访问您的 LobeChat 账户
+            {t('consent.description', { clientId: <Text strong>{clientId}</Text> })}
           </Paragraph>
 
           <div className={styles.scopes}>
-            <Paragraph>应用请求以下权限：</Paragraph>
+            <Paragraph>{t('consent.permissionsTitle')}</Paragraph>
             {scopes.map((scope) => (
               <div className={styles.scope} key={scope}>
-                <Text>{getScopeDescription(scope)}</Text>
+                <Text>{getScopeDescription(scope, t)}</Text>
               </div>
             ))}
           </div>
@@ -87,10 +81,10 @@ export const ConsentClient = ({ uid, clientId, scopes, error }: ClientProps) => 
             <input name="uid" type="hidden" value={uid} />
             <Flexbox gap={12} horizontal justify="flex-end">
               <Button htmlType="submit" name="consent" value="deny">
-                拒绝
+                {t('consent.buttons.deny')}
               </Button>
               <Button htmlType="submit" name="consent" type="primary" value="accept">
-                授权
+                {t('consent.buttons.accept')}
               </Button>
             </Flexbox>
           </form>
@@ -98,4 +92,8 @@ export const ConsentClient = ({ uid, clientId, scopes, error }: ClientProps) => 
       </Card>
     </Center>
   );
-};
+});
+
+ConsentClient.displayName = 'ConsentClient';
+
+export { ConsentClient };

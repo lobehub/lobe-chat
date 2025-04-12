@@ -3,10 +3,13 @@
 import { Icon } from '@lobehub/ui';
 import { Card, Result } from 'antd';
 import { CheckCircle } from 'lucide-react';
-import React from 'react';
+import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
-const SuccessPage = () => {
+const SuccessPage = memo(() => {
+  const { t } = useTranslation('oauth');
+
   return (
     <Center height="100vh">
       <Card style={{ maxWidth: 500, width: '100%' }}>
@@ -14,12 +17,14 @@ const SuccessPage = () => {
           icon={<Icon icon={CheckCircle} />}
           status="success"
           style={{ padding: 0 }}
-          subTitle="您已成功授权应用访问您的 LobeChat 账户，可以关闭该页面了"
-          title="授权成功"
+          subTitle={t('success.subTitle')}
+          title={t('success.title')}
         />
       </Card>
     </Center>
   );
-};
+});
+
+SuccessPage.displayName = 'SuccessPage';
 
 export default SuccessPage;
