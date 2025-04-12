@@ -1,0 +1,39 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Onayla",
+      "deny": "Reddet"
+    },
+    "description": "{clientId} uygulaması, LobeChat hesabınıza erişim talep ediyor",
+    "error": {
+      "sessionInvalid": {
+        "message": "Yetki oturumu süresi dolmuş veya geçersiz, lütfen yetkilendirme sürecini yeniden başlatın.",
+        "title": "Yetki oturumu geçersiz"
+      },
+      "title": "Bir hata oluştu",
+      "unsupportedInteraction": {
+        "message": "Desteklenmeyen etkileşim türü: {promptName}",
+        "title": "Desteklenmeyen etkileşim türü"
+      }
+    },
+    "permissionsTitle": "Uygulama aşağıdaki izinleri talep ediyor:",
+    "scope": {
+      "email": "E-posta adresinize erişim",
+      "offline_access": "Çevrimdışı olduğunuzda verilerinize erişmeye devam etme",
+      "openid": "LobeChat hesabınızla kimlik doğrulama",
+      "profile": "Temel profil bilgilerinize (isim, avatar vb.) erişim",
+      "sync:read": "Senkronize verilerinizi okuma",
+      "sync:write": "Senkronize verilerinizi yazma ve güncelleme"
+    },
+    "title": "Yetkilendirme talebi"
+  },
+  "failed": {
+    "backToHome": "Ana sayfaya dön",
+    "subTitle": "Uygulamaya LobeChat hesabınıza erişim izni vermeyi reddettiniz",
+    "title": "Yetkilendirme reddedildi"
+  },
+  "success": {
+    "subTitle": "Uygulamaya LobeChat hesabınıza erişim izni verdiniz, bu sayfayı kapatabilirsiniz",
+    "title": "Yetkilendirme başarılı"
+  }
+}

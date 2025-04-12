@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix Azure OpenAI unable to process image messages in local s3."]
+    },
+    "date": "2025-04-12",
+    "version": "1.79.8"
+  },
+  {
+    "children": {
       "improvements": ["Refactor hotkey import to avoid db generate error."]
     },
     "date": "2025-04-11",

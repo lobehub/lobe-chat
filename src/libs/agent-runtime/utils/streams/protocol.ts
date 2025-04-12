@@ -1,4 +1,5 @@
 import { ModelTokensUsage } from '@/types/message';
+import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { AgentRuntimeErrorType } from '../../error';
 import { parseToolCalls } from '../../helpers';
@@ -184,10 +185,7 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
       else if (chunk.startsWith('data:')) {
         const content = chunk.split('data:')[1].trim();
 
-        let data: any = undefined;
-        try {
-          data = JSON.parse(content);
-        } catch {}
+        const data = safeParseJSON(content) as any;
 
         if (!data) return;
 
