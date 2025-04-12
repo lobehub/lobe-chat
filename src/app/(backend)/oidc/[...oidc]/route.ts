@@ -184,9 +184,6 @@ export async function POST(req: NextRequest) {
   const bodyText = await req.text(); // Read body first
   log('Body: %s', bodyText); // Log body as string
 
-  // Clone request for reuse as body is consumed
-  const clonedReq = req.clone();
-
   // 声明响应收集器
   let responseCollector;
 
@@ -220,7 +217,7 @@ export async function POST(req: NextRequest) {
       const nodeResponse = responseCollector.nodeResponse;
 
       // 使用辅助方法创建 Node.js 请求对象，包含 POST 请求体
-      const nodeRequest = createNodeRequest(clonedReq as NextRequest, '/oauth', bodyText);
+      const nodeRequest = createNodeRequest(req, '/oauth', bodyText);
 
       log('Calling the obtained middleware...');
       middleware(nodeRequest, nodeResponse, (error?: Error) => {
