@@ -4,9 +4,10 @@ import Provider, { Configuration } from 'oidc-provider';
 import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
 import * as schema from '@/database/schemas';
-import { defaultClaims, defaultClients, defaultScopes, oidcEnv } from '@/envs/oidc';
+import { oidcEnv } from '@/envs/oidc';
 
 import { DrizzleAdapter } from './adapter';
+import { defaultClaims, defaultClients, defaultScopes } from './config';
 import { createInteractionPolicy } from './interaction-policy';
 
 /**
@@ -32,7 +33,7 @@ const getJWKS = (): object => {
     }
 
     // 检查是否有 RS256 算法的密钥
-    const hasRS256Key = jwks.keys.some((key) => key.alg === 'RS256' && key.kty === 'RSA');
+    const hasRS256Key = jwks.keys.some((key: any) => key.alg === 'RS256' && key.kty === 'RSA');
     if (!hasRS256Key) {
       throw new Error('JWKS 中没有找到 RS256 算法的 RSA 密钥');
     }
@@ -62,7 +63,7 @@ const getCookieKeys = () => {
  * @returns 配置好的 OIDC Provider 实例
  */
 export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUrl: string) => {
-  const issuerUrl = baseUrl;
+  const issuerUrl = `${baseUrl}/oauth`;
   if (!issuerUrl) {
     throw new Error('Base URL is required for OIDC Provider');
   }
@@ -93,10 +94,9 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
     features: {
       backchannelLogout: { enabled: true },
       clientCredentials: { enabled: false },
-      devInteractions: { enabled: process.env.NODE_ENV !== 'production' },
+      devInteractions: { enabled: false },
       deviceFlow: { enabled: false },
       introspection: { enabled: true },
-      refreshTokenRotation: { enabled: true, rotateAndConsume: true },
       resourceIndicators: { enabled: false },
       revocation: { enabled: true },
       rpInitiatedLogout: { enabled: true },
@@ -106,7 +106,7 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
     // 10. 账户查找
     async findAccount(ctx, id) {
       try {
-        const user = await UserModel.findUserById(db, id);
+        const user = await UserModel.findById(db, id);
         if (!user) return undefined;
 
         return {
@@ -173,6 +173,9 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
         </html>
       `;
     },
+
+    // 新增：启用 Refresh Token 轮换
+    rotateRefreshToken: true,
 
     // 3. Scopes 定义
     scopes: defaultScopes,

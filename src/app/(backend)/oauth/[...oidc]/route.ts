@@ -1,8 +1,13 @@
+import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
+import { IncomingMessage, ServerResponse } from 'node:http';
+import { URL } from 'node:url';
 
 import { oidcEnv } from '@/envs/oidc';
 
 import { getOIDCProvider } from '../oidcProvider';
+
+const log = debug('lobe-oidc:route'); // Create a debug instance with a namespace
 
 /**
  * 处理请求头部兼容性
@@ -17,103 +22,219 @@ const convertHeadersToNodeHeaders = (nextHeaders: Headers): Record<string, strin
 };
 
 /**
- * 将 oidc-provider 的响应转换为 NextResponse
+ * 创建伪造的 Node.js HTTP 响应对象
+ * 用于捕获 oidc-provider 处理的响应内容
  */
-const convertOidcResponseToNextResponse = (oidcResponse: any): NextResponse => {
-  // 从 oidc-provider 响应中提取关键信息
-  const { body, status, headers } = oidcResponse;
+interface ResponseCollector {
+  nodeResponse: ServerResponse;
+  responseBody: string | Buffer;
+  responseHeaders: Record<string, string | string[]>;
+  responseStatus: number;
+}
 
-  // 创建 NextResponse
-  return new NextResponse(body, {
-    headers,
-    status,
-  });
+const createNodeResponse = (): ResponseCollector => {
+  // 创建响应收集器
+  let responseBody: string | Buffer = '';
+  let responseStatus = 200;
+  let responseHeaders: Record<string, string | string[]> = {};
+
+  // 创建一个伪造的 Node.js HTTP 响应对象
+  const nodeResponse: any = {
+    end: (chunk?: string | Buffer) => {
+      if (chunk) {
+        // @ts-ignore
+        responseBody += chunk;
+      }
+    },
+    getHeader: (name: string) => responseHeaders[name.toLowerCase()],
+    // 添加其他必需的方法
+    getHeaderNames: () => Object.keys(responseHeaders),
+
+    getHeaders: () => responseHeaders,
+
+    headersSent: false,
+
+    setHeader: (name: string, value: string | string[]) => {
+      responseHeaders[name.toLowerCase()] = value;
+    },
+
+    write: (chunk: string | Buffer) => {
+      // @ts-ignore
+      responseBody += chunk;
+    },
+    writeHead: (status: number, headers?: Record<string, string | string[]>) => {
+      responseStatus = status;
+      if (headers) {
+        responseHeaders = { ...responseHeaders, ...headers };
+      }
+    },
+  } as unknown as ServerResponse;
+
+  return {
+    nodeResponse,
+    responseBody,
+    responseHeaders,
+    responseStatus,
+  };
 };
-
-type Props = { params: Promise<{ oidc: string[] }> };
 
 /**
  * 处理 catch-all 路由下的所有 OIDC 请求
  * 这个处理器会捕获所有 /oauth/[...oidc] 的请求
  * 例如: /oauth/auth, /oauth/token, /oauth/userinfo 等
  */
-export async function GET(req: NextRequest, props: Props) {
+export async function GET(req: NextRequest) {
+  const requestUrl = new URL(req.url);
+  log('Received GET request: %s %s', req.method, req.url);
+  log('Path: %s, Pathname: %s', requestUrl.pathname, requestUrl.pathname);
+  log('Headers: %O', Object.fromEntries(req.headers.entries())); // Log headers object
   try {
     if (!oidcEnv.ENABLE_OIDC) {
+      log('OIDC is not enabled');
       return new NextResponse('OIDC is not enabled', { status: 404 });
     }
-
-    // 获取子路径
-    const params = await props.params;
-    const subpath = params.oidc.join('/');
 
     // 获取 OIDC Provider 实例
     const provider = await getOIDCProvider();
 
-    // 将 NextRequest 转换为 oidc-provider 兼容的请求格式
-    // 实际实现需要更复杂的适配逻辑，这里只是简化版
-    const oidcCompatibleRequest = {
-      body: null,
+    // 构建 URL 对象
+    const url = new URL(req.url);
+
+    // --> 新增：计算相对于 /oauth 的路径
+    const providerPath = url.pathname.startsWith('/oauth')
+      ? url.pathname.slice('/oauth'.length)
+      : url.pathname;
+
+    // 创建一个伪造的 Node.js HTTP 请求对象
+    const nodeRequest = {
       headers: convertHeadersToNodeHeaders(req.headers),
       method: req.method,
-      url: req.url, // GET 请求无 body
-    };
+      // 添加 Node.js 服务器所期望的方法
+      on: () => {},
 
-    // 使用 oidc-provider 处理请求
-    // 注意：这里的实现简化了，在实际项目中需要进一步处理
-    const oidcResponse = await provider.callback()(oidcCompatibleRequest, {
-      end: () => {},
-      setHeader: () => {},
-      statusCode: 200,
+      // 添加更多的请求属性
+      socket: {
+        remoteAddress: req.headers.get('x-forwarded-for') || '127.0.0.1',
+      },
+
+      url: providerPath + url.search, // <-- 修改这里，使用相对路径
+    } as unknown as IncomingMessage;
+
+    // 创建响应对象
+    const { nodeResponse, responseBody, responseStatus, responseHeaders } = createNodeResponse();
+
+    log('Calling provider.callback() for GET');
+    await new Promise<void>((resolve, reject) => {
+      const middleware = provider.callback();
+
+      // 调用中间件并在完成时解决 Promise
+      middleware(nodeRequest, nodeResponse, (error?: Error) => {
+        if (error) {
+          log('Middleware error during GET: %O', error); // Log middleware error
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
     });
 
-    // 将 oidc-provider 的响应转换为 NextResponse
-    return convertOidcResponseToNextResponse(oidcResponse);
+    log('provider.callback() finished for GET. Status: %d', responseStatus); // Log status
+
+    // 构建 NextResponse
+    const nextResponse = new NextResponse(responseBody, {
+      // eslint-disable-next-line no-undef
+      headers: responseHeaders as HeadersInit,
+      status: responseStatus,
+    });
+
+    return nextResponse;
   } catch (error) {
-    console.error('Error handling OIDC request:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    log('Error handling OIDC GET request: %O', error); // Log the full error object
+    return new NextResponse(`Internal Server Error: ${(error as Error).message}`, { status: 500 });
   }
 }
 
 /**
  * 处理 POST 请求 (用于令牌端点等)
  */
-export async function POST(req: NextRequest, props: Props) {
+export async function POST(req: NextRequest) {
+  log('Received POST request: %s %s', req.method, req.url);
+  const bodyText = await req.text(); // Read body first
+  log('Body: %s', bodyText); // Log body as string
+
+  // Clone request for reuse as body is consumed
+  const clonedReq = req.clone();
+
   try {
     if (!oidcEnv.ENABLE_OIDC) {
+      log('OIDC is not enabled');
       return new NextResponse('OIDC is not enabled', { status: 404 });
     }
-
-    // 获取子路径
-    const params = await props.params;
-    const subpath = params.oidc.join('/');
 
     // 获取 OIDC Provider 实例
     const provider = await getOIDCProvider();
 
-    // 将 NextRequest 转换为 oidc-provider 兼容的请求格式
-    // 注意：POST 请求需要解析 body
-    const body = await req.text();
+    // 构建 URL 对象
+    const url = new URL(clonedReq.url);
 
-    const oidcCompatibleRequest = {
-      body,
-      headers: convertHeadersToNodeHeaders(req.headers),
-      method: req.method,
-      url: req.url,
-    };
+    // --> 新增：计算相对于 /oauth 的路径
+    const providerPath = url.pathname.startsWith('/oauth')
+      ? url.pathname.slice('/oauth'.length)
+      : url.pathname;
 
-    // 使用 oidc-provider 处理请求
-    const oidcResponse = await provider.callback()(oidcCompatibleRequest, {
-      end: () => {},
-      setHeader: () => {},
-      statusCode: 200,
+    // 创建一个伪造的 Node.js HTTP 请求对象，包含 POST 请求体
+    const nodeRequest = {
+      body: bodyText, // Use the read body text
+      headers: convertHeadersToNodeHeaders(clonedReq.headers),
+      method: clonedReq.method,
+      // 模拟可读流
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      on: (event: string, handler: Function) => {
+        if (event === 'data' && bodyText) {
+          handler(bodyText);
+        }
+        if (event === 'end') {
+          handler();
+        }
+      },
+      // 为 POST 请求添加特定属性
+      readable: true,
+      socket: {
+        remoteAddress: clonedReq.headers.get('x-forwarded-for') || '127.0.0.1',
+      },
+      url: providerPath + url.search, // <-- 修改这里，使用相对路径
+    } as unknown as IncomingMessage;
+
+    // 创建响应对象
+    const { nodeResponse, responseBody, responseStatus, responseHeaders } = createNodeResponse();
+
+    log('Calling provider.callback() for POST');
+    // 使用 Promise 来包装 provider.callback() 的调用
+    await new Promise<void>((resolve, reject) => {
+      const middleware = provider.callback();
+
+      // 调用中间件并在完成时解决 Promise
+      middleware(nodeRequest, nodeResponse, (error?: Error) => {
+        if (error) {
+          log('Middleware error during POST: %O', error); // Log middleware error
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
     });
 
-    // 将 oidc-provider 的响应转换为 NextResponse
-    return convertOidcResponseToNextResponse(oidcResponse);
+    log('provider.callback() finished for POST. Status: %d', responseStatus); // Log status
+
+    // 构建 NextResponse
+    return new NextResponse(responseBody, {
+      // eslint-disable-next-line no-undef
+      headers: responseHeaders as HeadersInit,
+      status: responseStatus,
+    });
   } catch (error) {
-    console.error('Error handling OIDC request:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    log('Error handling OIDC POST request: %O', error); // Log the full error object
+    return new NextResponse(`Internal Server Error: ${(error as Error).message}`, { status: 500 });
   }
 }
 
