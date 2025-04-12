@@ -19,7 +19,7 @@ const Header = memo(() => {
   const isStats = activeSettingsKey === 'stats';
 
   const handleBackClick = () => {
-    router.push('/me/profile');
+    router.push('/me');
   };
 
   return (
