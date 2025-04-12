@@ -183,15 +183,14 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
     // 8. 令牌有效期
     ttl: {
       AccessToken: 3600, // 1 hour in seconds
-      AuthorizationCode: 600,
-      // 30 days
-      DeviceCode: 600,
+      AuthorizationCode: 600, // 10 minutes
+      DeviceCode: 600, // 10 minutes (if enabled)
 
-      // 10 minutes
-      IdToken: 3600,
-      // 1 hour
-      RefreshToken: 30 * 24 * 60 * 60, // 10 minutes (if enabled)
-      // 根据需要可以配置更多，例如 Session, Interaction 等
+      IdToken: 3600, // 1 hour
+      Interaction: 3600, // 1 hour
+
+      RefreshToken: 30 * 24 * 60 * 60, // 30 days
+      Session: 30 * 24 * 60 * 60, // 30 days
     },
 
     userinfoSignedResponseAlg: 'RS256',
