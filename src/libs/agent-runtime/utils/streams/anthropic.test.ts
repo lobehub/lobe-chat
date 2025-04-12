@@ -168,7 +168,7 @@ describe('AnthropicStream', () => {
 
     const protocolStream = AnthropicStream(mockReadableStream, {
       callbacks: {
-        onToolCall: onToolCallMock,
+        onToolsCalling: onToolCallMock,
       },
     });
 
@@ -322,7 +322,7 @@ describe('AnthropicStream', () => {
 
     const protocolStream = AnthropicStream(mockReadableStream, {
       callbacks: {
-        onToolCall: onToolCallMock,
+        onToolsCalling: onToolCallMock,
       },
     });
 

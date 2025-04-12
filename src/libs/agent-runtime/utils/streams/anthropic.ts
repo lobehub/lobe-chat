@@ -191,12 +191,12 @@ export const transformAnthropicStream = (
 
 export interface AnthropicStreamOptions {
   callbacks?: ChatStreamCallbacks;
+  inputStartAt?: number;
 }
 
 export const AnthropicStream = (
   stream: Stream<Anthropic.MessageStreamEvent> | ReadableStream,
-  { callbacks }: AnthropicStreamOptions = {},
-  { inputStartAt }: { inputStartAt?: number } = {},
+  { callbacks, inputStartAt }: AnthropicStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: '' };
 

@@ -219,13 +219,13 @@ export interface OpenAIStreamOptions {
     name: string;
   }) => ILobeAgentRuntimeErrorType | undefined;
   callbacks?: ChatStreamCallbacks;
+  inputStartAt?: number;
   provider?: string;
 }
 
 export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
-  { callbacks, provider, bizErrorTypeTransformer }: OpenAIStreamOptions = {},
-  { inputStartAt }: { inputStartAt?: number } = {},
+  { callbacks, provider, bizErrorTypeTransformer, inputStartAt }: OpenAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: '' };
 

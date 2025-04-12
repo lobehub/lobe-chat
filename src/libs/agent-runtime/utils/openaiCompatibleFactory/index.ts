@@ -257,7 +257,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
           return StreamingResponse(
             chatCompletion?.handleStream
               ? chatCompletion.handleStream(prod, streamOptions.callbacks)
-              : OpenAIStream(prod, streamOptions, { inputStartAt }),
+              : OpenAIStream(prod, { ...streamOptions, inputStartAt }),
             {
               headers: options?.headers,
             },
@@ -277,7 +277,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         return StreamingResponse(
           chatCompletion?.handleStream
             ? chatCompletion.handleStream(stream, streamOptions.callbacks)
-            : OpenAIStream(stream, streamOptions, { inputStartAt }),
+            : OpenAIStream(stream, { ...streamOptions, inputStartAt }),
           {
             headers: options?.headers,
           },
