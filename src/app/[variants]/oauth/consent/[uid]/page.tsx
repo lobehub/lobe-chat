@@ -9,10 +9,7 @@ import { ConsentClient } from './Client';
  * Consent 授权页面
  */
 const InteractionPage = async (props: { params: Promise<{ uid: string }> }) => {
-  // 如果 OIDC 功能未启用，显示错误
-  if (!oidcEnv.ENABLE_OIDC) {
-    return notFound();
-  }
+  if (!oidcEnv.ENABLE_OIDC) return notFound();
 
   const params = await props.params;
   const uid = params.uid;

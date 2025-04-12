@@ -64,9 +64,7 @@ const ConsentClient = memo(({ uid, clientId, scopes, error }: ClientProps) => {
           <Title level={3} style={{ margin: 0 }}>
             {t('consent.title')}
           </Title>
-          <Paragraph>
-            {t('consent.description', { clientId: <Text strong>{clientId}</Text> })}
-          </Paragraph>
+          <Paragraph>{t('consent.description', { clientId })}</Paragraph>
 
           <div className={styles.scopes}>
             <Paragraph>{t('consent.permissionsTitle')}</Paragraph>
