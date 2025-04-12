@@ -1,4 +1,5 @@
 import debug from 'debug';
+import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { IncomingMessage, ServerResponse } from 'node:http';
 
@@ -79,38 +80,6 @@ export interface ResponseCollector {
   readonly responseHeaders: Record<string, string | string[]>;
   readonly responseStatus: number;
 }
-
-/**
- * 创建用于 OIDC Provider 交互细节的基本请求和响应对象
- * @param uid 交互 ID
- * @param host 主机名，默认从环境变量或使用 localhost:3000
- */
-export const createInteractionRequestResponse = (uid: string, host?: string) => {
-  const hostName = host || process.env.NEXTAUTH_URL || 'localhost:3000';
-
-  // 创建请求对象
-  const req = {
-    cookies: {},
-    headers: {
-      host: hostName,
-    },
-    url: `/interaction/${uid}`,
-  } as unknown as IncomingMessage;
-
-  // 创建响应对象
-  const res = {
-    end: () => {},
-    getHeader: () => {},
-    getHeaderNames: () => [],
-    getHeaders: () => ({}),
-    headersSent: false,
-    setHeader: () => {},
-    write: () => {},
-    writeHead: () => {},
-  } as unknown as ServerResponse;
-
-  return { req, res };
-};
 
 /**
  * 创建用于 OIDC Provider 的 Node.js HTTP 响应对象
@@ -210,4 +179,78 @@ export const createNodeResponse = (resolvePromise: () => void): ResponseCollecto
       return state.responseStatus;
     },
   };
+};
+
+/**
+ * 创建用于调用 provider.interactionDetails 的上下文 (req, res)
+ * (设计用于 Next.js Server Component 环境)
+ * @param uid 交互 ID
+ * @param host 可选的主机名
+ */
+export const createContextForInteractionDetails = async (
+  uid: string,
+  host?: string,
+): Promise<{ req: IncomingMessage; res: ServerResponse }> => {
+  log('Creating context for interaction details for uid: %s', uid);
+  const hostName = host || process.env.NEXTAUTH_URL || 'localhost:3000';
+
+  // 1. 获取真实的 Cookies
+  const cookieStore = await cookies();
+  const realCookies: Record<string, string> = {};
+  cookieStore.getAll().forEach((cookie) => {
+    realCookies[cookie.name] = cookie.value;
+  });
+  log('Real cookies found: %o', Object.keys(realCookies));
+
+  // 2. 构建包含真实 Cookie 的 Headers
+  const headers = new Headers({ host: hostName });
+  const cookieString = Object.entries(realCookies)
+    .map(([name, value]) => `${name}=${value}`)
+    .join('; ');
+  if (cookieString) {
+    headers.set('cookie', cookieString);
+    log('Setting cookie header');
+  } else {
+    log('No cookies found to set in header');
+  }
+
+  // 3. 创建模拟的 NextRequest
+  // 注意：这里的 IP, geo, ua 等信息可能是 oidc-provider 某些特性需要的，
+  // 如果遇到相关问题，可能需要从真实请求头中提取 (e.g., 'x-forwarded-for', 'user-agent')
+  const mockNextRequest = {
+    cookies: {
+      // 模拟 NextRequestCookies 接口
+      get: (name: string) => cookieStore.get(name)?.value,
+      getAll: () => cookieStore.getAll(),
+      has: (name: string) => cookieStore.has(name),
+    },
+    geo: {},
+    headers: headers,
+    ip: '127.0.0.1',
+    method: 'GET',
+    nextUrl: new URL(`https://${hostName}/interaction/${uid}`),
+    page: { name: undefined, params: undefined },
+    ua: undefined,
+    url: new URL(`https://${hostName}/interaction/${uid}`),
+  } as unknown as NextRequest;
+  log('Mock NextRequest created for url: %s', mockNextRequest.url);
+
+  // 4. 使用 createNodeRequest 创建模拟的 Node.js IncomingMessage
+  // pathPrefix 设置为 '/' 因为我们的 URL 已经是 Provider 期望的路径格式 /interaction/:uid
+  const req: IncomingMessage = createNodeRequest(mockNextRequest, '/');
+  // @ts-ignore - 将解析出的 cookies 附加到模拟的 Node.js 请求上
+  req.cookies = realCookies;
+  log('Node.js IncomingMessage created, attached real cookies');
+
+  // 5. 使用 createNodeResponse 创建模拟的 Node.js ServerResponse
+  let resolveFunc: () => void;
+  new Promise<void>((resolve) => {
+    resolveFunc = resolve;
+  });
+
+  const responseCollector: ResponseCollector = createNodeResponse(() => resolveFunc());
+  const res: ServerResponse = responseCollector.nodeResponse;
+  log('Node.js ServerResponse created');
+
+  return { req, res };
 };

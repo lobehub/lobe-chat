@@ -7,8 +7,7 @@ import { getDBInstance } from '@/database/core/web-server';
 import { oidcEnv } from '@/envs/oidc';
 import { DrizzleAdapter } from '@/libs/oidc-provider/adapter';
 import { createNodeRequest, createNodeResponse } from '@/libs/oidc-provider/http-adapter';
-
-import { getOIDCProvider } from '../oidcProvider';
+import { getOIDCProvider } from '@/server/services/oidc/oidcProvider';
 
 const log = debug('lobe-oidc:route'); // Create a debug instance with a namespace
 
@@ -115,7 +114,7 @@ export async function GET(req: NextRequest) {
 
     log('Calling provider.callback() for GET');
     await new Promise<void>((resolve, reject) => {
-      let middleware;
+      let middleware: any;
       try {
         log('Attempting to get middleware from provider.callback()');
         middleware = provider.callback();
@@ -205,7 +204,7 @@ export async function POST(req: NextRequest) {
 
     log('Calling provider.callback() for POST');
     await new Promise<void>((resolve, reject) => {
-      let middleware;
+      let middleware: any;
       try {
         log('Attempting to get middleware from provider.callback()');
         middleware = provider.callback();

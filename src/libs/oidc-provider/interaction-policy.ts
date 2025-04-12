@@ -92,50 +92,6 @@ export const createInteractionPolicy = () => {
       name: loginPrompt.name,
       requestable: loginPrompt.requestable,
     });
-
-    const noSessionCheck = loginPrompt.checks.get('no_session');
-    log('Found no_session check: %O', !!noSessionCheck);
-    log('Original no_session check details: %O', noSessionCheck);
-
-    if (noSessionCheck) {
-      const originalCheck = noSessionCheck.check;
-
-      noSessionCheck.check = async (ctx: any) => {
-        log('Custom no_session check called for request: %s %s', ctx.method, ctx.url);
-
-        try {
-          // 检查是否存在任何有效会话 (OIDC/Clerk/NextAuth)
-          // 仅用于记录 externalAccountId，不改变流程
-          const sessionCheckResult = await checkExistingSession(ctx);
-          log('Session check result: %O', sessionCheckResult);
-
-          // 将 accountId (如果存在) 存储在 ctx 中，供 findAccount 使用
-          if (sessionCheckResult.accountId) {
-            ctx.externalAccountId = sessionCheckResult.accountId;
-            log('Stored accountId (%s) in ctx.externalAccountId', sessionCheckResult.accountId);
-          }
-
-          // 调用原始检查函数，保持 OIDC 原生流程不变
-          log('Calling original check function, preserving the original OIDC flow');
-          const originalResult = await originalCheck(ctx);
-          log('Original check function result: %O', originalResult);
-
-          // 重要变更: 始终返回原始检查的结果，不再覆盖
-          log('Returning original check result without overriding');
-          return originalResult;
-        } catch (error) {
-          log('ERROR in custom no_session check: %O', error);
-          console.error('Error in custom no_session check:', error);
-          // 发生错误时，保持原有的错误处理逻辑
-          throw error;
-        }
-      };
-    } else {
-      console.warn(
-        "Could not find 'no_session' check in the 'login' prompt. Custom session check not applied.",
-      );
-      log('WARNING: no_session check not found in login prompt');
-    }
   } else {
     console.warn(
       "Could not find 'login' prompt in the base policy. Custom session check not applied.",

@@ -1,10 +1,9 @@
 import debug from 'debug';
-import { NeonDatabase } from 'drizzle-orm/neon-serverless';
 import Provider, { Configuration, KoaContextWithOIDC } from 'oidc-provider';
 
 import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
-import * as schema from '@/database/schemas';
+import { LobeChatDatabase } from '@/database/type';
 import { oidcEnv } from '@/envs/oidc';
 
 import { DrizzleAdapter } from './adapter';
@@ -65,7 +64,10 @@ const getCookieKeys = () => {
  * @param baseUrl - 服务部署的基础URL
  * @returns 配置好的 OIDC Provider 实例
  */
-export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUrl: string) => {
+export const createOIDCProvider = async (
+  db: LobeChatDatabase,
+  baseUrl: string,
+): Promise<Provider> => {
   const issuerUrl = `${baseUrl}/oauth`;
   if (!issuerUrl) {
     throw new Error('Base URL is required for OIDC Provider');
@@ -213,8 +215,8 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
           </head>
           <body>
             <h1>LobeHub OIDC Error</h1>
-            <p>${error}</p>
-            <p>${out}</p>
+            <p>${JSON.stringify(error, null, 2)}</p>
+            <p>${JSON.stringify(out, null, 2)}</p>
           </body>
         </html>
       `;
@@ -254,3 +256,5 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
 
   return provider;
 };
+
+export { type default as OIDCProvider } from 'oidc-provider';
