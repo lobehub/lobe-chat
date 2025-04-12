@@ -112,7 +112,11 @@ class OIDCAdapter {
             policyUri: payload.policy_uri,
             redirectUris: payload.redirectUris || [],
             responseTypes: payload.response_types || [],
-            scopes: payload.scope ? payload.scope.split(' ') : [],
+            scopes: Array.isArray(payload.scopes)
+              ? payload.scopes
+              : payload.scope
+                ? payload.scope.split(' ')
+                : [],
             tokenEndpointAuthMethod: payload.token_endpoint_auth_method,
             tosUri: payload.tos_uri,
           } as any)

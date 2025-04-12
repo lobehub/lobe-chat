@@ -141,6 +141,68 @@ describe('DrizzleAdapter', () => {
       expect(result?.userCode).toBe(testUserCode);
       expect(result?.data).toEqual(payload);
     });
+
+    it('应该更新现有的Session记录', async () => {
+      const adapter = new DrizzleAdapter('Session', serverDB);
+      const initialPayload = { accountId: testUserId, cookie: 'initial-cookie' };
+      const updatedPayload = { accountId: testUserId, cookie: 'updated-cookie' };
+
+      // 初始插入
+      await adapter.upsert(testId, initialPayload, 3600);
+      let result = await serverDB.query.oidcSessions.findFirst({
+        where: eq(oidcSessions.id, testId),
+      });
+      expect(result?.data).toEqual(initialPayload);
+
+      // 更新
+      await adapter.upsert(testId, updatedPayload, 7200); // 新的过期时间
+      result = await serverDB.query.oidcSessions.findFirst({ where: eq(oidcSessions.id, testId) });
+      expect(result?.data).toEqual(updatedPayload);
+      // 验证 expiresAt 是否也更新了 (大约 2 小时后)
+      expect(result?.expiresAt).toBeInstanceOf(Date);
+      const expectedExpires = Date.now() + 7200 * 1000;
+      expect(result!.expiresAt!.getTime()).toBeGreaterThan(expectedExpires - 5000); // 允许 5 秒误差
+      expect(result!.expiresAt!.getTime()).toBeLessThan(expectedExpires + 5000);
+    });
+
+    it('应该更新现有的Client记录', async () => {
+      const adapter = new DrizzleAdapter('Client', serverDB);
+      const initialPayload = {
+        client_id: testClientId,
+        client_uri: 'https://initial.com',
+        name: 'Initial Client',
+        redirectUris: ['https://initial.com/callback'],
+        scopes: ['openid'],
+      };
+      const updatedPayload = {
+        ...initialPayload,
+        client_uri: 'https://updated.com',
+        name: 'Updated Client',
+        scopes: ['openid', 'profile'], // 假设 scope 格式是空格分隔字符串
+        scope: 'openid profile',
+        redirectUris: ['https://updated.com/callback'],
+      };
+
+      // 初始插入
+      await adapter.upsert(testClientId, initialPayload, 0);
+      let result = await serverDB.query.oidcClients.findFirst({
+        where: eq(oidcClients.id, testClientId),
+      });
+
+      expect(result?.name).toBe('Initial Client');
+      expect(result?.clientUri).toBe('https://initial.com');
+      expect(result?.scopes).toEqual(['openid']);
+
+      // 更新
+      await adapter.upsert(testClientId, updatedPayload, 0);
+      result = await serverDB.query.oidcClients.findFirst({
+        where: eq(oidcClients.id, testClientId),
+      });
+      expect(result?.name).toBe('Updated Client');
+      expect(result?.clientUri).toBe('https://updated.com');
+      expect(result?.scopes).toEqual(['openid', 'profile']); // 验证数据库中存储的是数组
+      expect(result?.redirectUris).toEqual(['https://updated.com/callback']);
+    });
   });
 
   describe('find', () => {
@@ -216,6 +278,19 @@ describe('DrizzleAdapter', () => {
 
       expect(result).toBeUndefined();
     });
+
+    it('应该返回undefined如果记录已被消费', async () => {
+      const adapter = new DrizzleAdapter('AccessToken', serverDB);
+      const payload = { accountId: testUserId, clientId: testClientId };
+      await adapter.upsert(testId, payload, 3600);
+
+      // 消费记录
+      await adapter.consume(testId);
+
+      // 查找已消费记录
+      const result = await adapter.find(testId);
+      expect(result).toBeUndefined();
+    });
   });
 
   describe('findByUserCode', () => {
@@ -235,6 +310,30 @@ describe('DrizzleAdapter', () => {
 
       expect(result).toBeDefined();
       expect(result).toEqual(payload);
+    });
+
+    it('应该返回undefined如果DeviceCode记录已过期', async () => {
+      const adapter = new DrizzleAdapter('DeviceCode', serverDB);
+      const payload = { clientId: testClientId, userCode: testUserCode };
+      // 使用负数 expiresIn 使其立即过期
+      await adapter.upsert(testId, payload, -1);
+      await new Promise((resolve) => setTimeout(resolve, 10)); // 短暂等待确保过期
+
+      const result = await adapter.findByUserCode(testUserCode);
+      expect(result).toBeUndefined();
+    });
+
+    it('应该返回undefined如果DeviceCode记录已被消费', async () => {
+      const adapter = new DrizzleAdapter('DeviceCode', serverDB);
+      const payload = { clientId: testClientId, userCode: testUserCode };
+      await adapter.upsert(testId, payload, 3600);
+
+      // 消费记录
+      await adapter.consume(testId);
+
+      // 查找已消费记录
+      const result = await adapter.findByUserCode(testUserCode);
+      expect(result).toBeUndefined();
     });
 
     it('应该在非DeviceCode模型上抛出错误', async () => {
@@ -379,6 +478,26 @@ describe('DrizzleAdapter', () => {
       const adapter = factory('Session');
       expect(adapter).toBeDefined();
       expect(adapter).toBeInstanceOf(DrizzleAdapter);
+    });
+  });
+
+  describe('getTable (indirectly via public methods)', () => {
+    it('当使用不支持的模型名称时应该抛出错误', async () => {
+      const invalidAdapter = new DrizzleAdapter('InvalidModelName', serverDB);
+      // 调用一个会触发 getTable 的方法
+      await expect(invalidAdapter.find('any-id')).rejects.toThrow('不支持的模型: InvalidModelName');
+      await expect(invalidAdapter.upsert('any-id', {}, 3600)).rejects.toThrow(
+        '不支持的模型: InvalidModelName',
+      );
+      await expect(invalidAdapter.destroy('any-id')).rejects.toThrow(
+        '不支持的模型: InvalidModelName',
+      );
+      await expect(invalidAdapter.consume('any-id')).rejects.toThrow(
+        '不支持的模型: InvalidModelName',
+      );
+      await expect(invalidAdapter.revokeByGrantId('any-grant-id')).rejects.toThrow(
+        '不支持的模型: InvalidModelName',
+      );
     });
   });
 });
