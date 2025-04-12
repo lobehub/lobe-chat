@@ -1,7 +1,9 @@
+import type { AdapterUser } from '@auth/core/adapters';
 import { eq } from 'drizzle-orm/expressions';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDBInstance } from '@/database/core/dbForTest';
+import { users } from '@/database/schemas';
 import {
   oidcAccessTokens,
   oidcAuthorizationCodes,
@@ -26,40 +28,16 @@ const testGrantId = 'test-grant-id';
 const testUserCode = 'test-user-code';
 const testExpires = new Date(Date.now() + 3600 * 1000); // 1小时后过期
 
-// 清理测试表
-beforeAll(async () => {
-  await serverDB.delete(oidcSessions);
-  await serverDB.delete(oidcAccessTokens);
-  await serverDB.delete(oidcAuthorizationCodes);
-  await serverDB.delete(oidcClients);
-  await serverDB.delete(oidcDeviceCodes);
-  await serverDB.delete(oidcGrants);
-  await serverDB.delete(oidcInteractions);
-  await serverDB.delete(oidcRefreshTokens);
+beforeEach(async () => {
+  await serverDB.insert(users).values({ id: testUserId });
 });
 
 // 每次测试后清理数据
 afterEach(async () => {
-  await serverDB.delete(oidcSessions);
-  await serverDB.delete(oidcAccessTokens);
-  await serverDB.delete(oidcAuthorizationCodes);
+  await serverDB.delete(users);
   await serverDB.delete(oidcClients);
   await serverDB.delete(oidcDeviceCodes);
-  await serverDB.delete(oidcGrants);
   await serverDB.delete(oidcInteractions);
-  await serverDB.delete(oidcRefreshTokens);
-});
-
-// 所有测试完成后清理数据
-afterAll(async () => {
-  await serverDB.delete(oidcSessions);
-  await serverDB.delete(oidcAccessTokens);
-  await serverDB.delete(oidcAuthorizationCodes);
-  await serverDB.delete(oidcClients);
-  await serverDB.delete(oidcDeviceCodes);
-  await serverDB.delete(oidcGrants);
-  await serverDB.delete(oidcInteractions);
-  await serverDB.delete(oidcRefreshTokens);
 });
 
 describe('DrizzleAdapter', () => {
@@ -78,13 +56,13 @@ describe('DrizzleAdapter', () => {
         cookie: 'cookie-value',
         exp: Math.floor(Date.now() / 1000) + 3600,
       };
-      
+
       await adapter.upsert(testId, payload, 3600);
-      
+
       const result = await serverDB.query.oidcSessions.findFirst({
         where: eq(oidcSessions.id, testId),
       });
-      
+
       expect(result).toBeDefined();
       expect(result?.id).toBe(testId);
       expect(result?.userId).toBe(testUserId);
@@ -105,13 +83,13 @@ describe('DrizzleAdapter', () => {
         scope: 'openid profile email',
         token_endpoint_auth_method: 'client_secret_basic',
       };
-      
+
       await adapter.upsert(testClientId, payload, 0);
-      
+
       const result = await serverDB.query.oidcClients.findFirst({
         where: eq(oidcClients.id, testClientId),
       });
-      
+
       expect(result).toBeDefined();
       expect(result?.id).toBe(testClientId);
       expect(result?.name).toBe(payload.name);
@@ -128,13 +106,13 @@ describe('DrizzleAdapter', () => {
         scope: 'openid profile',
         iat: Math.floor(Date.now() / 1000),
       };
-      
+
       await adapter.upsert(testId, payload, 3600);
-      
+
       const result = await serverDB.query.oidcAccessTokens.findFirst({
         where: eq(oidcAccessTokens.id, testId),
       });
-      
+
       expect(result).toBeDefined();
       expect(result?.id).toBe(testId);
       expect(result?.userId).toBe(testUserId);
@@ -150,13 +128,13 @@ describe('DrizzleAdapter', () => {
         userCode: testUserCode,
         exp: Math.floor(Date.now() / 1000) + 3600,
       };
-      
+
       await adapter.upsert(testId, payload, 3600);
-      
+
       const result = await serverDB.query.oidcDeviceCodes.findFirst({
         where: eq(oidcDeviceCodes.id, testId),
       });
-      
+
       expect(result).toBeDefined();
       expect(result?.id).toBe(testId);
       expect(result?.clientId).toBe(testClientId);
@@ -174,12 +152,12 @@ describe('DrizzleAdapter', () => {
         cookie: 'cookie-value',
         exp: Math.floor(Date.now() / 1000) + 3600,
       };
-      
+
       await adapter.upsert(testId, payload, 3600);
-      
+
       // 然后查找它
       const result = await adapter.find(testId);
-      
+
       expect(result).toBeDefined();
       expect(result).toEqual(payload);
     });
@@ -199,12 +177,12 @@ describe('DrizzleAdapter', () => {
         scope: 'openid profile email',
         token_endpoint_auth_method: 'client_secret_basic',
       };
-      
+
       await adapter.upsert(testClientId, payload, 0);
-      
+
       // 然后查找它
       const result = await adapter.find(testClientId);
-      
+
       expect(result).toBeDefined();
       expect(result.client_id).toBe(testClientId);
       expect(result.client_secret).toBe(payload.client_secret);
@@ -226,16 +204,16 @@ describe('DrizzleAdapter', () => {
         cookie: 'cookie-value',
         exp: Math.floor(Date.now() / 1000) - 3600, // 1小时前
       };
-      
+
       // 负的过期时间表示立即过期
       await adapter.upsert(testId, payload, -1);
-      
+
       // 等待一小段时间确保过期
-      await new Promise(resolve => setTimeout(resolve, 10));
-      
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
       // 然后查找它
       const result = await adapter.find(testId);
-      
+
       expect(result).toBeUndefined();
     });
   });
@@ -249,12 +227,12 @@ describe('DrizzleAdapter', () => {
         userCode: testUserCode,
         exp: Math.floor(Date.now() / 1000) + 3600,
       };
-      
+
       await adapter.upsert(testId, payload, 3600);
-      
+
       // 然后通过userCode查找它
       const result = await adapter.findByUserCode(testUserCode);
-      
+
       expect(result).toBeDefined();
       expect(result).toEqual(payload);
     });
@@ -274,12 +252,12 @@ describe('DrizzleAdapter', () => {
         cookie: 'cookie-value',
         exp: Math.floor(Date.now() / 1000) + 3600,
       };
-      
+
       await adapter.upsert(testId, payload, 3600);
-      
+
       // 然后通过userId查找它
       const result = await adapter.findSessionByUserId(testUserId);
-      
+
       expect(result).toBeDefined();
       expect(result).toEqual(payload);
     });
@@ -300,18 +278,18 @@ describe('DrizzleAdapter', () => {
         cookie: 'cookie-value',
         exp: Math.floor(Date.now() / 1000) + 3600,
       };
-      
+
       await adapter.upsert(testId, payload, 3600);
-      
+
       // 确认记录存在
       let result = await serverDB.query.oidcSessions.findFirst({
         where: eq(oidcSessions.id, testId),
       });
       expect(result).toBeDefined();
-      
+
       // 删除记录
       await adapter.destroy(testId);
-      
+
       // 验证记录已被删除
       result = await serverDB.query.oidcSessions.findFirst({
         where: eq(oidcSessions.id, testId),
@@ -329,24 +307,24 @@ describe('DrizzleAdapter', () => {
         clientId: testClientId,
         exp: Math.floor(Date.now() / 1000) + 3600,
       };
-      
+
       await adapter.upsert(testId, payload, 3600);
-      
+
       // 消费记录
       await adapter.consume(testId);
-      
+
       // 验证记录已被标记为已消费
       const result = await serverDB.query.oidcAccessTokens.findFirst({
         where: eq(oidcAccessTokens.id, testId),
       });
-      
+
       expect(result).toBeDefined();
       expect(result?.consumedAt).not.toBeNull();
     });
   });
 
   describe('revokeByGrantId', () => {
-    it('应该撤销与指定grantId相关的所有记录', async () => {
+    it('应该撤销与指定 grantId 相关的所有记录', async () => {
       // 创建AccessToken记录
       const accessTokenAdapter = new DrizzleAdapter('AccessToken', serverDB);
       const accessTokenPayload = {
@@ -356,7 +334,7 @@ describe('DrizzleAdapter', () => {
         exp: Math.floor(Date.now() / 1000) + 3600,
       };
       await accessTokenAdapter.upsert(testId, accessTokenPayload, 3600);
-      
+
       // 创建RefreshToken记录
       const refreshTokenAdapter = new DrizzleAdapter('RefreshToken', serverDB);
       const refreshTokenPayload = {
@@ -366,19 +344,21 @@ describe('DrizzleAdapter', () => {
         exp: Math.floor(Date.now() / 1000) + 3600,
       };
       await refreshTokenAdapter.upsert('refresh-' + testId, refreshTokenPayload, 3600);
-      
+
       // 撤销与testGrantId相关的所有记录
       await accessTokenAdapter.revokeByGrantId(testGrantId);
-      
+
       // 验证记录已被删除
       const accessTokenResult = await serverDB.query.oidcAccessTokens.findFirst({
         where: eq(oidcAccessTokens.id, testId),
       });
+
       expect(accessTokenResult).toBeUndefined();
-      
+
       const refreshTokenResult = await serverDB.query.oidcRefreshTokens.findFirst({
-        where: eq(oidcRefreshTokens.id, 'refresh-' + testId),
+        where: eq(oidcRefreshTokens.id, `refresh-${testId}`),
       });
+      console.log('refreshTokenResult:', refreshTokenResult);
       expect(refreshTokenResult).toBeUndefined();
     });
 
@@ -395,10 +375,10 @@ describe('DrizzleAdapter', () => {
       const factory = DrizzleAdapter.createAdapterFactory(serverDB as any);
       expect(factory).toBeDefined();
       expect(typeof factory).toBe('function');
-      
+
       const adapter = factory('Session');
       expect(adapter).toBeDefined();
       expect(adapter).toBeInstanceOf(DrizzleAdapter);
     });
   });
-}); 
+});

@@ -1,0 +1,39 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Zustimmen",
+      "deny": "Ablehnen"
+    },
+    "description": "Die Anwendung {clientId} fordert Zugriff auf Ihr LobeChat-Konto an",
+    "error": {
+      "sessionInvalid": {
+        "message": "Die Autorisierungssitzung ist abgelaufen oder ungültig. Bitte starten Sie den Autorisierungsprozess erneut.",
+        "title": "Ungültige Autorisierungssitzung"
+      },
+      "title": "Ein Fehler ist aufgetreten",
+      "unsupportedInteraction": {
+        "message": "Nicht unterstützter Interaktionstyp: {promptName}",
+        "title": "Nicht unterstützter Interaktionstyp"
+      }
+    },
+    "permissionsTitle": "Die Anwendung fordert die folgenden Berechtigungen an:",
+    "scope": {
+      "email": "Zugriff auf Ihre E-Mail-Adresse",
+      "offline_access": "Zugriff auf Ihre Daten auch im Offline-Modus",
+      "openid": "Authentifizierung mit Ihrem LobeChat-Konto",
+      "profile": "Zugriff auf Ihre Profilinformationen (Name, Avatar usw.)",
+      "sync:read": "Lesen Ihrer Synchronisierungsdaten",
+      "sync:write": "Schreiben und Aktualisieren Ihrer Synchronisierungsdaten"
+    },
+    "title": "Autorisierungsanfrage"
+  },
+  "failed": {
+    "backToHome": "Zurück zur Startseite",
+    "subTitle": "Sie haben die Autorisierung für die Anwendung zum Zugriff auf Ihr LobeChat-Konto abgelehnt",
+    "title": "Autorisierung abgelehnt"
+  },
+  "success": {
+    "subTitle": "Sie haben der Anwendung erfolgreich Zugriff auf Ihr LobeChat-Konto gewährt. Sie können diese Seite jetzt schließen.",
+    "title": "Autorisierung erfolgreich"
+  }
+}

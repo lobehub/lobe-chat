@@ -1,8 +1,6 @@
 import debug from 'debug';
 import { eq } from 'drizzle-orm/expressions';
-import { NeonDatabase } from 'drizzle-orm/neon-serverless';
 
-import * as schema from '@/database/schemas';
 import {
   oidcAccessTokens,
   oidcAuthorizationCodes,
@@ -103,7 +101,7 @@ class OIDCAdapter {
           .insert(table)
           .values({
             applicationType: payload.application_type,
-            clientSecret: payload.clientSecret,
+            clientSecret: payload.client_secret,
             clientUri: payload.client_uri,
             description: payload.description,
             grants: payload.grant_types || [],
@@ -442,25 +440,35 @@ class OIDCAdapter {
       return;
     }
 
-    const table = this.getTable();
-    if (!table) {
-      log('[%s] revokeByGrantId - No table for model, returning early', this.name);
-      return;
-    }
-
-    // 检查表是否有 grantId 字段
-    if (!('grantId' in table)) {
-      log('[%s] revokeByGrantId - Table does not have grantId column, returning early', this.name);
-      return;
-    }
-
     try {
-      log('[%s] Executing revokeByGrantId DB operation', this.name);
-      await this.db.delete(table).where(eq((table as any).grantId, grantId));
-      log('[%s] Successfully revoked records by grantId: %s', this.name, grantId);
+      log('[%s] Starting transaction for revokeByGrantId operations', this.name);
+
+      // 使用事务删除所有包含grantId的记录，确保原子性
+      await this.db.transaction(async (tx) => {
+        // 所有可能包含grantId的表
+        const tables = [
+          oidcAccessTokens,
+          oidcAuthorizationCodes,
+          oidcRefreshTokens,
+          oidcDeviceCodes,
+        ];
+
+        for (const table of tables) {
+          if ('grantId' in table) {
+            log('[%s] Revoking %s records by grantId: %s', this.name, grantId);
+            await tx.delete(table).where(eq((table as any).grantId, grantId));
+          }
+        }
+      });
+
+      log(
+        '[%s] Successfully completed transaction for revoking all records by grantId: %s',
+        this.name,
+        grantId,
+      );
     } catch (error) {
-      log('[%s] ERROR revoking records by grantId: %O', this.name, error);
-      console.error(`[OIDC Adapter] Error revoking ${this.name} by grantId:`, error);
+      log('[%s] ERROR in revokeByGrantId transaction: %O', this.name, error);
+      console.error(`[OIDC Adapter] Error in revokeByGrantId transaction:`, error);
       throw error;
     }
   }
@@ -468,7 +476,7 @@ class OIDCAdapter {
   /**
    * 创建适配器工厂
    */
-  static createAdapterFactory(db: NeonDatabase<typeof schema>) {
+  static createAdapterFactory(db: LobeChatDatabase) {
     log('Creating adapter factory with database instance');
     return function (name: string) {
       return new OIDCAdapter(name, db);

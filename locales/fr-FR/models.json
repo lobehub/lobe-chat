@@ -1109,6 +1109,18 @@
   "grok-2-vision-1212": {
     "description": "Ce modèle a été amélioré en termes de précision, de respect des instructions et de capacités multilingues."
   },
+  "grok-3-beta": {
+    "description": "Modèle phare, spécialisé dans l'extraction de données, la programmation et le résumé de texte pour des applications d'entreprise, avec une connaissance approfondie des domaines financier, médical, juridique et scientifique."
+  },
+  "grok-3-fast-beta": {
+    "description": "Modèle phare, spécialisé dans l'extraction de données, la programmation et le résumé de texte pour des applications d'entreprise, avec une connaissance approfondie des domaines financier, médical, juridique et scientifique."
+  },
+  "grok-3-mini-beta": {
+    "description": "Modèle léger, qui réfléchit avant de répondre. Rapide et intelligent, il est adapté aux tâches logiques ne nécessitant pas de connaissances approfondies dans un domaine, tout en permettant de capturer les pensées brutes."
+  },
+  "grok-3-mini-fast-beta": {
+    "description": "Modèle léger, qui réfléchit avant de répondre. Rapide et intelligent, il est adapté aux tâches logiques ne nécessitant pas de connaissances approfondies dans un domaine, tout en permettant de capturer les pensées brutes."
+  },
   "grok-beta": {
     "description": "Offre des performances comparables à Grok 2, mais avec une efficacité, une vitesse et des fonctionnalités supérieures."
   },

@@ -1109,6 +1109,18 @@
   "grok-2-vision-1212": {
     "description": "Model ten poprawił dokładność, przestrzeganie instrukcji oraz zdolności wielojęzyczne."
   },
+  "grok-3-beta": {
+    "description": "Flagowy model, specjalizujący się w ekstrakcji danych, programowaniu i podsumowywaniu tekstów w zastosowaniach korporacyjnych, posiadający głęboką wiedzę w dziedzinach takich jak finanse, medycyna, prawo i nauka."
+  },
+  "grok-3-fast-beta": {
+    "description": "Flagowy model, specjalizujący się w ekstrakcji danych, programowaniu i podsumowywaniu tekstów w zastosowaniach korporacyjnych, posiadający głęboką wiedzę w dziedzinach takich jak finanse, medycyna, prawo i nauka."
+  },
+  "grok-3-mini-beta": {
+    "description": "Lekki model, który przed rozmową najpierw przemyśli. Działa szybko i inteligentnie, nadaje się do logicznych zadań, które nie wymagają głębokiej wiedzy w danej dziedzinie, i potrafi uchwycić pierwotne ścieżki myślenia."
+  },
+  "grok-3-mini-fast-beta": {
+    "description": "Lekki model, który przed rozmową najpierw przemyśli. Działa szybko i inteligentnie, nadaje się do logicznych zadań, które nie wymagają głębokiej wiedzy w danej dziedzinie, i potrafi uchwycić pierwotne ścieżki myślenia."
+  },
   "grok-beta": {
     "description": "Oferuje wydajność porównywalną z Grok 2, ale z wyższą efektywnością, prędkością i funkcjonalnością."
   },
