@@ -5,7 +5,7 @@ import { enableClerk, enableNextAuth } from '@/const/auth';
 import { ClerkAuth } from '@/libs/clerk-auth';
 import NextAuth from '@/libs/next-auth';
 
-const { Check, base } = interactionPolicy; // Import Check and base
+const { base } = interactionPolicy; // Import Check and base
 const log = debug('lobe-oidc:interaction-policy');
 
 /**
@@ -14,21 +14,19 @@ const log = debug('lobe-oidc:interaction-policy');
  * @param ctx - 请求上下文
  * @returns 包含会话是否存在及用户ID的对象
  */
-const checkExistingSession = async (
-  ctx: any,
-): Promise<{ exists: boolean; accountId?: string }> => {
+const checkExistingSession = async (ctx: any): Promise<{ accountId?: string; exists: boolean }> => {
   const { session } = ctx.oidc; // Access session via ctx.oidc
 
   log('checkExistingSession: Checking session: %O', {
-    hasSession: !!session,
     accountId: session?.accountId,
     cookie: ctx.request?.cookies || 'no cookies',
+    hasSession: !!session,
   });
 
   // 1. 检查 OIDC session
   if (session?.accountId) {
     log('checkExistingSession: OIDC session found:', session.accountId);
-    return { exists: true, accountId: session.accountId };
+    return { accountId: session.accountId, exists: true };
   }
 
   // 2. 检查 Clerk 会话
@@ -43,7 +41,7 @@ const checkExistingSession = async (
       if (result.userId) {
         log('checkExistingSession: Clerk session found:', result.userId);
         // 只返回存在性和 ID，不修改 OIDC session
-        return { exists: true, accountId: result.userId };
+        return { accountId: result.userId, exists: true };
       }
     } catch (error) {
       log('checkExistingSession: Error checking Clerk session: %O', error);
@@ -61,7 +59,7 @@ const checkExistingSession = async (
       if (res?.user?.id) {
         log('checkExistingSession: NextAuth session found:', res.user.id);
         // 只返回存在性和 ID，不修改 OIDC session
-        return { exists: true, accountId: res.user.id };
+        return { accountId: res.user.id, exists: true };
       }
     } catch (error) {
       log('checkExistingSession: Error checking NextAuth session: %O', error);
@@ -81,8 +79,8 @@ export const createInteractionPolicy = () => {
   const policy = base();
 
   log('Base policy details: %O', {
-    size: policy.size,
     promptNames: Array.from(policy.keys()),
+    size: policy.length,
   });
 
   const loginPrompt = policy.get('login');
@@ -90,9 +88,9 @@ export const createInteractionPolicy = () => {
 
   if (loginPrompt) {
     log('Login prompt details: %O', {
+      checks: Array.from(loginPrompt.checks.keys()),
       name: loginPrompt.name,
       requestable: loginPrompt.requestable,
-      checks: Array.from(loginPrompt.checks.keys()),
     });
 
     const noSessionCheck = loginPrompt.checks.get('no_session');
@@ -100,45 +98,38 @@ export const createInteractionPolicy = () => {
     log('Original no_session check details: %O', noSessionCheck);
 
     if (noSessionCheck) {
-      log('Overriding default no_session check logic');
       const originalCheck = noSessionCheck.check;
-      log('Original check function reference saved');
 
       noSessionCheck.check = async (ctx: any) => {
         log('Custom no_session check called for request: %s %s', ctx.method, ctx.url);
 
         try {
           // 检查是否存在任何有效会话 (OIDC/Clerk/NextAuth)
+          // 仅用于记录 externalAccountId，不改变流程
           const sessionCheckResult = await checkExistingSession(ctx);
           log('Session check result: %O', sessionCheckResult);
 
-          if (sessionCheckResult.exists && sessionCheckResult.accountId) {
-            // 找到会话 (OIDC 或外部)
-            // !! 不修改 ctx.oidc.session !!
-            // 将 accountId 存储在自定义的 ctx 属性中
+          // 将 accountId (如果存在) 存储在 ctx 中，供 findAccount 使用
+          if (sessionCheckResult.accountId) {
             ctx.externalAccountId = sessionCheckResult.accountId;
-            log(
-              'Custom no_session: External/OIDC session found. Stored accountId (%s) in ctx.externalAccountId. Returning NO_NEED_TO_PROMPT.',
-              sessionCheckResult.accountId,
-            );
-            // 不需要登录提示
-            return Check.NO_NEED_TO_PROMPT;
-            
-          } else {
-            // 未找到任何会话，调用原始检查函数处理 OIDC 默认逻辑
-            log('No session found via checkExistingSession, calling original check function.');
-            const result = await originalCheck(ctx);
-            log('Original check function result (case: no session found): %O', result);
-            return result;
+            log('Stored accountId (%s) in ctx.externalAccountId', sessionCheckResult.accountId);
           }
+
+          // 调用原始检查函数，保持 OIDC 原生流程不变
+          log('Calling original check function, preserving the original OIDC flow');
+          const originalResult = await originalCheck(ctx);
+          log('Original check function result: %O', originalResult);
+
+          // 重要变更: 始终返回原始检查的结果，不再覆盖
+          log('Returning original check result without overriding');
+          return originalResult;
         } catch (error) {
           log('ERROR in custom no_session check: %O', error);
           console.error('Error in custom no_session check:', error);
-          // Fallback on error
-          return Check.REQUEST_PROMPT; 
+          // 发生错误时，保持原有的错误处理逻辑
+          throw error;
         }
       };
-      log('Custom no_session check function installed');
     } else {
       console.warn(
         "Could not find 'no_session' check in the 'login' prompt. Custom session check not applied.",
