@@ -222,14 +222,10 @@ export interface OpenAIStreamOptions {
   provider?: string;
 }
 
-export interface TraceOptions {
-  inputStartAt?: number;
-}
-
 export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
   { callbacks, provider, bizErrorTypeTransformer }: OpenAIStreamOptions = {},
-  { inputStartAt }: TraceOptions = {},
+  { inputStartAt }: { inputStartAt?: number } = {},
 ) => {
   const streamStack: StreamContext = { id: '' };
 
