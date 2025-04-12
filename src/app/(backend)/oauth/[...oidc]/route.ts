@@ -1,13 +1,91 @@
 import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'node:crypto';
 import { IncomingMessage, ServerResponse } from 'node:http';
 import { URL } from 'node:url';
 
+import { getDBInstance } from '@/database/core/web-server';
 import { oidcEnv } from '@/envs/oidc';
+import { DrizzleAdapter } from '@/libs/oidc-provider/adapter';
 
 import { getOIDCProvider } from '../oidcProvider';
 
 const log = debug('lobe-oidc:route'); // Create a debug instance with a namespace
+
+// 会话同步标头
+const OIDC_SESSION_HEADER = 'x-oidc-session-sync';
+
+/**
+ * 处理会话同步
+ * 如果请求中包含 x-oidc-session-sync 头，预先创建一个 OIDC 会话
+ */
+const syncOIDCSession = async (req: NextRequest): Promise<void> => {
+  const externalUserId = req.headers.get(OIDC_SESSION_HEADER);
+
+  if (!externalUserId) {
+    log('没有找到 x-oidc-session-sync 头，跳过会话同步');
+    return;
+  }
+
+  log('找到会话同步请求，外部用户 ID: %s', externalUserId);
+
+  try {
+    const db = getDBInstance();
+    const sessionAdapter = new DrizzleAdapter('Session', db);
+
+    // 查找是否已有对应的 OIDC 会话
+    // 使用新方法按用户 ID 查找会话
+    const existingSession = await sessionAdapter.findSessionByUserId(externalUserId);
+
+    if (existingSession) {
+      log(
+        '已找到与用户 %s 关联的现有 OIDC 会话，ID: %s',
+        externalUserId,
+        existingSession.uid || existingSession.jti,
+      );
+      return;
+    }
+
+    // 创建新的会话
+    const sessionId = randomUUID();
+    const now = Math.floor(Date.now() / 1000);
+    const expiresIn = 30 * 24 * 60 * 60; // 30 天，与 provider.ts 中的 TTL 配置一致
+
+    // 创建基本会话数据
+    const sessionData = {
+      accountId: externalUserId,
+
+      // 添加额外会话信息
+      authTime: now,
+
+      // 添加所有必要的 OIDC 会话字段
+      cookie: `oidc.session.${sessionId}`,
+
+      exp: now + expiresIn,
+
+      iat: now,
+
+      jti: sessionId,
+
+      // 为 findAccount 添加必要的字段
+      login: {
+        accountId: externalUserId,
+        remember: true,
+      },
+
+      uid: sessionId,
+      username: externalUserId,
+    };
+
+    // 使用适配器创建会话
+    await sessionAdapter.upsert(sessionId, sessionData, expiresIn);
+    log('成功为外部用户 %s 创建 OIDC 会话 %s', externalUserId, sessionId);
+  } catch (error) {
+    log('同步 OIDC 会话时出错: %O', error);
+    console.error('同步 OIDC 会话错误:', error);
+    // 不抛出错误，让请求继续处理
+  }
+};
 
 /**
  * 处理请求头部兼容性
@@ -49,6 +127,7 @@ const createNodeResponse = (resolvePromise: () => void): ResponseCollector => {
       log('NodeResponse.end called');
       if (chunk) {
         log('NodeResponse.end chunk: %s', chunk.toString());
+        // @ts-ignore
         state.responseBody += chunk; // Modify state object
       }
 
@@ -98,6 +177,7 @@ const createNodeResponse = (resolvePromise: () => void): ResponseCollector => {
     write: (chunk: string | Buffer) => {
       log('NodeResponse.write called');
       log('NodeResponse.write chunk: %s', chunk.toString());
+      // @ts-ignore
       state.responseBody += chunk; // Modify state object
       log('NodeResponse.write finished');
     },
@@ -155,6 +235,9 @@ export async function GET(req: NextRequest) {
       log('OIDC is not enabled');
       return new NextResponse('OIDC is not enabled', { status: 404 });
     }
+
+    // 在获取 OIDC 提供者实例前同步会话
+    await syncOIDCSession(req);
 
     // 获取 OIDC Provider 实例
     const provider = await getOIDCProvider();
@@ -263,6 +346,9 @@ export async function POST(req: NextRequest) {
       return new NextResponse('OIDC is not enabled', { status: 404 });
     }
 
+    // 在获取 OIDC 提供者实例前同步会话
+    await syncOIDCSession(req);
+
     // 获取 OIDC Provider 实例
     const provider = await getOIDCProvider();
 
@@ -336,14 +422,17 @@ export async function POST(req: NextRequest) {
     if (!responseCollector) {
       throw new Error('ResponseCollector was not initialized.');
     }
-    const finalStatus = responseCollector.responseStatus;
-    const finalBody = responseCollector.responseBody;
-    const finalHeaders = responseCollector.responseHeaders;
+    const {
+      responseStatus: finalStatus,
+      responseBody: finalBody,
+      responseHeaders: finalHeaders,
+    } = responseCollector as ResponseCollector;
 
     log('Final Response Status: %d', finalStatus);
     log('Final Response Headers: %O', finalHeaders);
 
     return new NextResponse(finalBody, {
+      // eslint-disable-next-line no-undef
       headers: finalHeaders as HeadersInit,
       status: finalStatus,
     });
