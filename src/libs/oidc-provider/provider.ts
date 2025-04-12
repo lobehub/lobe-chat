@@ -188,7 +188,7 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
         // ---> 添加日志 <---
         logProvider('interactions.url function called');
         logProvider('Interaction details: %O', interaction);
-        const interactionUrl = `/oauth/interaction/${interaction.uid}`;
+        const interactionUrl = `/oauth/consent/${interaction.uid}`;
         logProvider('Generated interaction URL: %s', interactionUrl);
         // ---> 添加日志结束 <---
         return interactionUrl;
@@ -209,10 +209,10 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
       ctx.body = `
         <html>
           <head>
-            <title>LobeChat OIDC Error</title>
+            <title>LobeHub OIDC Error</title>
           </head>
           <body>
-            <h1>LobeChat OIDC Error</h1>
+            <h1>LobeHub OIDC Error</h1>
             <p>${error}</p>
             <p>${out}</p>
           </body>
