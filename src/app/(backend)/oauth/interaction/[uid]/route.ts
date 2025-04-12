@@ -8,13 +8,13 @@ import { getOIDCProvider } from '../../oidcProvider';
  * 处理交互请求 GET
  * 显示交互页面 (登录或同意授权)
  */
-export async function GET(req: NextRequest, { params }: { params: { uid: string } }) {
+export async function GET(req: NextRequest, props: { params: Promise<{ uid: string }> }) {
   try {
     if (!oidcEnv.ENABLE_OIDC) {
       return new NextResponse('OIDC is not enabled', { status: 404 });
     }
 
-    const { uid } = params;
+    const { uid } = await props.params;
     const provider = await getOIDCProvider();
 
     // 获取交互详情

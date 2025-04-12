@@ -1,5 +1,6 @@
+import debug from 'debug';
 import { NeonDatabase } from 'drizzle-orm/neon-serverless';
-import Provider, { Configuration } from 'oidc-provider';
+import Provider, { Configuration, KoaContextWithOIDC } from 'oidc-provider';
 
 import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
@@ -9,6 +10,8 @@ import { oidcEnv } from '@/envs/oidc';
 import { DrizzleAdapter } from './adapter';
 import { defaultClaims, defaultClients, defaultScopes } from './config';
 import { createInteractionPolicy } from './interaction-policy';
+
+const logProvider = debug('lobe-oidc:provider'); // <--- 添加 provider 日志实例
 
 /**
  * 从环境变量中获取 JWKS
@@ -104,14 +107,35 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
     },
 
     // 10. 账户查找
-    async findAccount(ctx, id) {
+    async findAccount(ctx: KoaContextWithOIDC, id: string) {
+      logProvider('findAccount called');
+      // ---> Check for externalAccountId set by our custom check first <--- 
+      // Extend KoaContextWithOIDC with our custom property if necessary (using // @ts-ignore for simplicity here)
+      // @ts-ignore 
+      const accountIdToFind = ctx.externalAccountId || id;
+      
+      logProvider('Attempting to find account with ID: %s (source: %s)', 
+          accountIdToFind, 
+          // @ts-ignore 
+          ctx.externalAccountId ? 'externalAccountId' : 'oidc_id'
+      );
+
+      // If no ID is available (neither external nor OIDC session), return undefined
+      if (!accountIdToFind) {
+         logProvider('findAccount: No account ID available (neither external nor OIDC), returning undefined.');
+         return undefined;
+      }
+      
       try {
-        const user = await UserModel.findById(db, id);
+        const user = await UserModel.findById(db, accountIdToFind);
+        logProvider('UserModel.findById result for %s: %O', accountIdToFind, user ? { id: user.id, name: user.username } : null);
+        
         if (!user) return undefined;
 
         return {
           accountId: user.id,
           async claims(use, scope) {
+            logProvider('claims function called for user %s with scope: %s', user.id, scope);
             const claims: Record<string, any> = {
               sub: user.id,
             };
@@ -128,11 +152,12 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
               claims.email = user.email;
               claims.email_verified = user.emailVerifiedAt ? true : false;
             }
-
+            logProvider('Returning claims: %O', claims);
             return claims;
           },
         };
       } catch (error) {
+        logProvider('Error finding account or generating claims: %O', error);
         console.error('Error finding account:', error);
         return undefined;
       }
@@ -145,7 +170,13 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
     interactions: {
       policy: createInteractionPolicy(),
       url(ctx, interaction) {
-        return `/oauth/interaction/${interaction.uid}`;
+        // ---> 添加日志 <---
+        logProvider('interactions.url function called');
+        logProvider('Interaction details: %O', interaction);
+        const interactionUrl = `/oauth/interaction/${interaction.uid}`;
+        logProvider('Generated interaction URL: %s', interactionUrl);
+        // ---> 添加日志结束 <---
+        return interactionUrl;
       },
     },
 
@@ -200,11 +231,12 @@ export const createOIDCProvider = async (db: NeonDatabase<typeof schema>, baseUr
   const provider = new Provider(issuerUrl, configuration);
 
   provider.on('server_error', (ctx, err) => {
+    logProvider('OIDC Provider Server Error: %O', err); // Use logProvider
     console.error('OIDC Provider Error:', err);
   });
 
   provider.on('authorization.success', (ctx) => {
-    // Logging etc.
+    logProvider('Authorization successful for client: %s', ctx.oidc.client?.clientId); // Use logProvider
   });
 
   return provider;

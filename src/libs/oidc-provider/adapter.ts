@@ -1,3 +1,4 @@
+import debug from 'debug';
 import { eq } from 'drizzle-orm/expressions';
 import { NeonDatabase } from 'drizzle-orm/neon-serverless';
 
@@ -12,28 +13,26 @@ import {
   oidcRefreshTokens,
   oidcSessions,
 } from '@/database/schemas/oidc';
+import { LobeChatDatabase } from '@/database/type';
 
-interface OIDCModel {
-  [key: string]: any;
-  consumedAt?: Date;
-  data: Record<string, any>;
-  expiresAt?: Date;
-  id: string;
-}
+// 创建 adapter 日志命名空间
+const log = debug('lobe-oidc:adapter');
 
 class OIDCAdapter {
-  private db: NeonDatabase<typeof schema>;
+  private db: LobeChatDatabase;
   private name: string;
 
-  constructor(name: string, db: NeonDatabase<typeof schema>) {
+  constructor(name: string, db: LobeChatDatabase) {
     this.name = name;
     this.db = db;
+    log('Creating adapter for model: %s', name);
   }
 
   /**
    * 根据模型名称获取对应的数据库表
    */
   private getTable() {
+    log('Getting table for model: %s', this.name);
     switch (this.name) {
       case 'AccessToken': {
         return oidcAccessTokens;
@@ -63,6 +62,7 @@ class OIDCAdapter {
         return oidcInteractions;
       }
       case 'ReplayDetection': {
+        log('ReplayDetection - no persistent storage needed');
         return null;
       } // 不需要持久化
       case 'PushedAuthorizationRequest': {
@@ -75,7 +75,9 @@ class OIDCAdapter {
         return oidcSessions;
       }
       default: {
-        throw new Error(`不支持的模型: ${this.name}`);
+        const error = `不支持的模型: ${this.name}`;
+        log('ERROR: %s', error);
+        throw new Error(error);
       }
     }
   }
@@ -84,37 +86,28 @@ class OIDCAdapter {
    * 创建模型实例
    */
   async upsert(id: string, payload: any, expiresIn: number): Promise<void> {
+    log('[%s] upsert called - id: %s, expiresIn: %d', this.name, id, `${expiresIn}s`);
+    log('[%s] payload: %O', this.name, payload);
+
     const table = this.getTable();
-    if (!table) return;
+    if (!table) {
+      log('[%s] upsert - No table for model, returning early', this.name);
+      return;
+    }
 
     if (this.name === 'Client') {
       // 客户端模型特殊处理，直接使用传入的数据
-      await this.db
-        .insert(table)
-        .values({
-          applicationType: payload.application_type,
-          clientSecret: payload.clientSecret,
-          clientUri: payload.client_uri,
-          description: payload.description,
-          grants: payload.grant_types || [],
-          id,
-          isFirstParty: !!payload.isFirstParty,
-          logoUri: payload.logo_uri,
-          name: payload.name,
-          policyUri: payload.policy_uri,
-          redirectUris: payload.redirectUris || [],
-          responseTypes: payload.response_types || [],
-          scopes: payload.scope ? payload.scope.split(' ') : [],
-          tokenEndpointAuthMethod: payload.token_endpoint_auth_method,
-          tosUri: payload.tos_uri,
-        })
-        .onConflictDoUpdate({
-          set: {
+      log('[Client] Upserting client record');
+      try {
+        await this.db
+          .insert(table)
+          .values({
             applicationType: payload.application_type,
             clientSecret: payload.clientSecret,
             clientUri: payload.client_uri,
             description: payload.description,
             grants: payload.grant_types || [],
+            id,
             isFirstParty: !!payload.isFirstParty,
             logoUri: payload.logo_uri,
             name: payload.name,
@@ -124,14 +117,37 @@ class OIDCAdapter {
             scopes: payload.scope ? payload.scope.split(' ') : [],
             tokenEndpointAuthMethod: payload.token_endpoint_auth_method,
             tosUri: payload.tos_uri,
-          },
-          target: (table as any).id,
-        });
+          })
+          .onConflictDoUpdate({
+            set: {
+              applicationType: payload.application_type,
+              clientSecret: payload.clientSecret,
+              clientUri: payload.client_uri,
+              description: payload.description,
+              grants: payload.grant_types || [],
+              isFirstParty: !!payload.isFirstParty,
+              logoUri: payload.logo_uri,
+              name: payload.name,
+              policyUri: payload.policy_uri,
+              redirectUris: payload.redirectUris || [],
+              responseTypes: payload.response_types || [],
+              scopes: payload.scope ? payload.scope.split(' ') : [],
+              tokenEndpointAuthMethod: payload.token_endpoint_auth_method,
+              tosUri: payload.tos_uri,
+            },
+            target: (table as any).id,
+          });
+        log('[Client] Successfully upserted client: %s', id);
+      } catch (error) {
+        log('[Client] ERROR upserting client: %O', error);
+        throw error;
+      }
       return;
     }
 
     // 对其他模型，保存完整数据和元数据
     const expiresAt = expiresIn ? new Date(Date.now() + expiresIn * 1000) : undefined;
+    log('[%s] expiresAt set to: %s', this.name, expiresAt ? expiresAt.toISOString() : 'undefined');
 
     const record: Record<string, any> = {
       data: payload,
@@ -142,21 +158,26 @@ class OIDCAdapter {
     // 添加特定字段
     if (payload.accountId) {
       record.userId = payload.accountId;
+      log('[%s] Setting userId: %s', this.name, payload.accountId);
     }
 
     if (payload.clientId) {
       record.clientId = payload.clientId;
+      log('[%s] Setting clientId: %s', this.name, payload.clientId);
     }
 
     if (payload.grantId) {
       record.grantId = payload.grantId;
+      log('[%s] Setting grantId: %s', this.name, payload.grantId);
     }
 
     if (this.name === 'DeviceCode' && payload.userCode) {
       record.userCode = payload.userCode;
+      log('[DeviceCode] Setting userCode: %s', payload.userCode);
     }
 
     try {
+      log('[%s] Executing upsert DB operation', this.name);
       await this.db
         .insert(table)
         .values(record)
@@ -173,7 +194,9 @@ class OIDCAdapter {
           },
           target: (table as any).id,
         });
+      log('[%s] Successfully upserted record: %s', this.name, id);
     } catch (error) {
+      log('[%s] ERROR upserting record: %O', this.name, error);
       console.error(`[OIDC Adapter] Error upserting ${this.name}:`, error);
       throw error;
     }
@@ -183,22 +206,34 @@ class OIDCAdapter {
    * 查找模型实例
    */
   async find(id: string): Promise<any> {
+    log('[%s] find called - id: %s', this.name, id);
+
     const table = this.getTable();
-    if (!table) return undefined;
+    if (!table) {
+      log('[%s] find - No table for model, returning undefined', this.name);
+      return undefined;
+    }
 
     try {
+      log('[%s] Executing find DB query', this.name);
       const result = await this.db
         .select()
         .from(table)
         .where(eq((table as any).id, id))
         .limit(1);
 
-      if (!result || result.length === 0) return undefined;
+      log('[%s] Find query results: %O', this.name, result);
+
+      if (!result || result.length === 0) {
+        log('[%s] No record found for id: %s', this.name, id);
+        return undefined;
+      }
 
       const model = result[0];
 
       // 客户端模型特殊处理
       if (this.name === 'Client') {
+        log('[Client] Converting client record to expected format');
         return {
           application_type: model.applicationType,
           client_id: model.id,
@@ -218,16 +253,24 @@ class OIDCAdapter {
 
       // 如果记录已过期，返回 undefined
       if (model.expiresAt && new Date() > new Date(model.expiresAt)) {
+        log('[%s] Record expired (expiresAt: %s), returning undefined', this.name, model.expiresAt);
         return undefined;
       }
 
       // 如果记录已被消费，返回 undefined
       if (model.consumedAt) {
+        log(
+          '[%s] Record already consumed (consumedAt: %s), returning undefined',
+          this.name,
+          model.consumedAt,
+        );
         return undefined;
       }
 
+      log('[%s] Successfully found and returning record data', this.name);
       return model.data;
     } catch (error) {
+      log('[%s] ERROR finding record: %O', this.name, error);
       console.error(`[OIDC Adapter] Error finding ${this.name}:`, error);
       return undefined;
     }
@@ -237,46 +280,62 @@ class OIDCAdapter {
    * 查找模型实例 by userCode (仅用于设备流程)
    */
   async findByUserCode(userCode: string): Promise<any> {
+    log('[DeviceCode] findByUserCode called - userCode: %s', userCode);
+
     if (this.name !== 'DeviceCode') {
-      throw new Error('findByUserCode 只能用于 DeviceCode 模型');
+      const error = 'findByUserCode 只能用于 DeviceCode 模型';
+      log('ERROR: %s', error);
+      throw new Error(error);
     }
 
     try {
+      log('[DeviceCode] Executing findByUserCode DB query');
       const result = await this.db
         .select()
         .from(oidcDeviceCodes)
         .where(eq(oidcDeviceCodes.userCode, userCode))
         .limit(1);
 
-      if (!result || result.length === 0) return undefined;
+      log('[DeviceCode] findByUserCode query results: %O', result);
+
+      if (!result || result.length === 0) {
+        log('[DeviceCode] No record found for userCode: %s', userCode);
+        return undefined;
+      }
 
       const model = result[0];
 
-      // 如果记录已过期，返回 undefined
+      // 如果记录已过期或已被消费，返回 undefined
       if (model.expiresAt && new Date() > new Date(model.expiresAt)) {
+        log('[DeviceCode] Record expired (expiresAt: %s), returning undefined', model.expiresAt);
         return undefined;
       }
 
-      // 如果记录已被消费，返回 undefined
       if (model.consumedAt) {
+        log(
+          '[DeviceCode] Record already consumed (consumedAt: %s), returning undefined',
+          model.consumedAt,
+        );
         return undefined;
       }
 
+      log('[DeviceCode] Successfully found and returning record data by userCode');
       return model.data;
     } catch (error) {
+      log('[DeviceCode] ERROR finding record by userCode: %O', error);
       console.error('[OIDC Adapter] Error finding DeviceCode by userCode:', error);
       return undefined;
     }
   }
 
   /**
-   * 查找模型实例 by uid (仅用于交互)
+   * 查找交互实例 by uid
    */
   async findByUid(uid: string): Promise<any> {
-    if (this.name !== 'Interaction') {
-      throw new Error('findByUid 只能用于 Interaction 模型');
-    }
+    log('[Interaction] findByUid called - uid: %s', uid);
 
+    // 复用 find 方法实现
+    log('[Interaction] Delegating to find() method');
     return this.find(uid);
   }
 
@@ -284,68 +343,95 @@ class OIDCAdapter {
    * 销毁模型实例
    */
   async destroy(id: string): Promise<void> {
+    log('[%s] destroy called - id: %s', this.name, id);
+
     const table = this.getTable();
-    if (!table) return;
+    if (!table) {
+      log('[%s] destroy - No table for model, returning early', this.name);
+      return;
+    }
 
     try {
+      log('[%s] Executing destroy DB operation', this.name);
       await this.db.delete(table).where(eq((table as any).id, id));
+      log('[%s] Successfully destroyed record: %s', this.name, id);
     } catch (error) {
+      log('[%s] ERROR destroying record: %O', this.name, error);
       console.error(`[OIDC Adapter] Error destroying ${this.name}:`, error);
       throw error;
     }
   }
 
   /**
-   * 消费模型实例 (标记为已使用)
+   * 标记模型实例为已消费
    */
   async consume(id: string): Promise<void> {
+    log('[%s] consume called - id: %s', this.name, id);
+
     const table = this.getTable();
-    if (!table || !('consumedAt' in table)) return;
+    if (!table) {
+      log('[%s] consume - No table for model, returning early', this.name);
+      return;
+    }
 
     try {
+      log('[%s] Executing consume DB operation', this.name);
       await this.db
         .update(table)
         .set({ consumedAt: new Date() })
         .where(eq((table as any).id, id));
+      log('[%s] Successfully consumed record: %s', this.name, id);
     } catch (error) {
+      log('[%s] ERROR consuming record: %O', this.name, error);
       console.error(`[OIDC Adapter] Error consuming ${this.name}:`, error);
       throw error;
     }
   }
 
   /**
-   * 根据授权ID查找匹配的模型实例
+   * 根据 grantId 撤销所有相关模型实例
    */
   async revokeByGrantId(grantId: string): Promise<void> {
-    // 确保模型支持 grantId
-    if (
-      !(
-        this.name === 'AccessToken' ||
-        this.name === 'AuthorizationCode' ||
-        this.name === 'RefreshToken' ||
-        this.name === 'DeviceCode'
-      )
-    ) {
+    log('[%s] revokeByGrantId called - grantId: %s', this.name, grantId);
+
+    // Grants 本身不需要通过 grantId 来撤销
+    if (this.name === 'Grant') {
+      log('[Grant] revokeByGrantId skipped for Grant model, as it is the grant itself');
       return;
     }
 
     const table = this.getTable();
-    if (!table || !('grantId' in table)) return;
+    if (!table) {
+      log('[%s] revokeByGrantId - No table for model, returning early', this.name);
+      return;
+    }
+
+    // 检查表是否有 grantId 字段
+    if ((!'grantId') in table) {
+      log('[%s] revokeByGrantId - Table does not have grantId column, returning early', this.name);
+      return;
+    }
 
     try {
+      log('[%s] Executing revokeByGrantId DB operation', this.name);
       await this.db.delete(table).where(eq((table as any).grantId, grantId));
+      log('[%s] Successfully revoked records by grantId: %s', this.name, grantId);
     } catch (error) {
+      log('[%s] ERROR revoking records by grantId: %O', this.name, error);
       console.error(`[OIDC Adapter] Error revoking ${this.name} by grantId:`, error);
       throw error;
     }
   }
-}
 
-export const DrizzleAdapter = {
   /**
    * 创建适配器工厂
    */
-  createAdapterFactory(db: NeonDatabase<typeof schema>) {
-    return (name: string) => new OIDCAdapter(name, db);
-  },
-};
+  static createAdapterFactory(db: NeonDatabase<typeof schema>) {
+    log('Creating adapter factory with database instance');
+    return function (name: string) {
+      return new OIDCAdapter(name, db);
+    };
+  }
+}
+
+export { OIDCAdapter as DrizzleAdapter };

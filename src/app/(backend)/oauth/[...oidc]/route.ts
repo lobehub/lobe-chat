@@ -27,54 +27,112 @@ const convertHeadersToNodeHeaders = (nextHeaders: Headers): Record<string, strin
  */
 interface ResponseCollector {
   nodeResponse: ServerResponse;
-  responseBody: string | Buffer;
-  responseHeaders: Record<string, string | string[]>;
-  responseStatus: number;
+  // Use getters to access the final state
+  readonly responseBody: string | Buffer;
+  readonly responseHeaders: Record<string, string | string[]>;
+  readonly responseStatus: number;
 }
 
-const createNodeResponse = (): ResponseCollector => {
-  // 创建响应收集器
-  let responseBody: string | Buffer = '';
-  let responseStatus = 200;
-  let responseHeaders: Record<string, string | string[]> = {};
+const createNodeResponse = (resolvePromise: () => void): ResponseCollector => {
+  log('Creating NodeResponse adapter');
+  // ---> Store state in an object to modify by reference <---
+  const state = {
+    responseBody: '' as string | Buffer,
+    // Default status
+    responseHeaders: {} as Record<string, string | string[]>,
+    responseStatus: 200,
+  };
+  let promiseResolved = false;
 
-  // 创建一个伪造的 Node.js HTTP 响应对象
   const nodeResponse: any = {
     end: (chunk?: string | Buffer) => {
+      log('NodeResponse.end called');
       if (chunk) {
-        // @ts-ignore
-        responseBody += chunk;
+        log('NodeResponse.end chunk: %s', chunk.toString());
+        state.responseBody += chunk; // Modify state object
+      }
+
+      const locationHeader = state.responseHeaders['location'];
+      if (locationHeader && state.responseStatus === 200) {
+        log(
+          'NodeResponse.end detected Location header (%s) with status 200. Overriding status to 302.',
+          locationHeader,
+        );
+        state.responseStatus = 302; // Modify state object
+      }
+
+      log('NodeResponse.end finished');
+
+      if (!promiseResolved) {
+        log('NodeResponse.end resolving the main promise.');
+        promiseResolved = true;
+        resolvePromise();
+      } else {
+        log('NodeResponse.end: Main promise already resolved, doing nothing.');
       }
     },
-    getHeader: (name: string) => responseHeaders[name.toLowerCase()],
-    // 添加其他必需的方法
-    getHeaderNames: () => Object.keys(responseHeaders),
-
-    getHeaders: () => responseHeaders,
-
-    headersSent: false,
-
-    setHeader: (name: string, value: string | string[]) => {
-      responseHeaders[name.toLowerCase()] = value;
+    getHeader: (name: string) => {
+      const lowerName = name.toLowerCase();
+      log(
+        'NodeResponse.getHeader called for: %s, value: %s',
+        lowerName,
+        state.responseHeaders[lowerName],
+      );
+      return state.responseHeaders[lowerName]; // Read from state object
     },
-
+    getHeaderNames: () => {
+      const names = Object.keys(state.responseHeaders);
+      log('NodeResponse.getHeaderNames called, returning: %O', names);
+      return names;
+    },
+    getHeaders: () => {
+      log('NodeResponse.getHeaders called, returning: %O', state.responseHeaders);
+      return state.responseHeaders; // Read from state object
+    },
+    headersSent: false,
+    setHeader: (name: string, value: string | string[]) => {
+      const lowerName = name.toLowerCase();
+      log('NodeResponse.setHeader called - name: %s, value: %s', lowerName, value);
+      state.responseHeaders[lowerName] = value; // Modify state object
+    },
     write: (chunk: string | Buffer) => {
-      // @ts-ignore
-      responseBody += chunk;
+      log('NodeResponse.write called');
+      log('NodeResponse.write chunk: %s', chunk.toString());
+      state.responseBody += chunk; // Modify state object
+      log('NodeResponse.write finished');
     },
     writeHead: (status: number, headers?: Record<string, string | string[]>) => {
-      responseStatus = status;
+      log('NodeResponse.writeHead called - status: %d', status);
+      state.responseStatus = status; // Modify state object
       if (headers) {
-        responseHeaders = { ...responseHeaders, ...headers };
+        log('NodeResponse.writeHead headers: %O', headers);
+        const lowerCaseHeaders = Object.entries(headers).reduce(
+          (acc, [key, value]) => {
+            acc[key.toLowerCase()] = value;
+            return acc;
+          },
+          {} as Record<string, string | string[]>,
+        );
+        state.responseHeaders = { ...state.responseHeaders, ...lowerCaseHeaders }; // Modify state object
       }
+      (nodeResponse as any).headersSent = true;
+      log('NodeResponse.writeHead finished, headersSent = true');
     },
   } as unknown as ServerResponse;
 
+  log('NodeResponse adapter created successfully');
+  // ---> Return collector with getters accessing the internal state object <---
   return {
     nodeResponse,
-    responseBody,
-    responseHeaders,
-    responseStatus,
+    get responseBody() {
+      return state.responseBody;
+    },
+    get responseHeaders() {
+      return state.responseHeaders;
+    },
+    get responseStatus() {
+      return state.responseStatus;
+    },
   };
 };
 
@@ -88,6 +146,10 @@ export async function GET(req: NextRequest) {
   log('Received GET request: %s %s', req.method, req.url);
   log('Path: %s, Pathname: %s', requestUrl.pathname, requestUrl.pathname);
   log('Headers: %O', Object.fromEntries(req.headers.entries())); // Log headers object
+
+  // ---> Declare collector OUTSIDE the promise scope <---
+  let responseCollector: ResponseCollector | null = null;
+
   try {
     if (!oidcEnv.ENABLE_OIDC) {
       log('OIDC is not enabled');
@@ -120,36 +182,63 @@ export async function GET(req: NextRequest) {
       url: providerPath + url.search, // <-- 修改这里，使用相对路径
     } as unknown as IncomingMessage;
 
-    // 创建响应对象
-    const { nodeResponse, responseBody, responseStatus, responseHeaders } = createNodeResponse();
-
     log('Calling provider.callback() for GET');
     await new Promise<void>((resolve, reject) => {
-      const middleware = provider.callback();
+      let middleware;
+      try {
+        log('Attempting to get middleware from provider.callback()');
+        middleware = provider.callback();
+        log('Successfully obtained middleware function.');
+      } catch (syncError) {
+        log('SYNC ERROR during provider.callback() call itself: %O', syncError);
+        reject(syncError);
+        return;
+      }
 
-      // 调用中间件并在完成时解决 Promise
+      // ---> Assign collector OUTSIDE the promise scope <---
+      responseCollector = createNodeResponse(resolve);
+      const nodeResponse = responseCollector.nodeResponse;
+
+      log('Calling the obtained middleware...');
       middleware(nodeRequest, nodeResponse, (error?: Error) => {
+        log('Middleware callback function HAS BEEN EXECUTED.');
         if (error) {
-          log('Middleware error during GET: %O', error); // Log middleware error
-          reject(error);
+          log('Middleware error reported via callback: %O', error);
+          reject(error); // Reject if callback reports error
         } else {
+          log(
+            'Middleware completed successfully via callback (may be redundant if .end() was called).',
+          );
+          // Ensure promise resolves even if end() wasn't called but callback was
           resolve();
         }
       });
+      log('Middleware call initiated, waiting for its callback OR nodeResponse.end()...');
     });
 
-    log('provider.callback() finished for GET. Status: %d', responseStatus); // Log status
+    log('Promise surrounding middleware call resolved.');
 
-    // 构建 NextResponse
-    const nextResponse = new NextResponse(responseBody, {
+    if (!responseCollector) {
+      throw new Error('ResponseCollector was not initialized.');
+    }
+
+    const {
+      responseStatus: finalStatus,
+      responseBody: finalBody,
+      responseHeaders: finalHeaders,
+    } = responseCollector as ResponseCollector;
+
+    log('Final Response Status: %d', finalStatus);
+    log('Final Response Headers: %O', finalHeaders);
+
+    return new NextResponse(finalBody, {
       // eslint-disable-next-line no-undef
-      headers: responseHeaders as HeadersInit,
-      status: responseStatus,
+      headers: finalHeaders as HeadersInit,
+      status: finalStatus,
     });
-
-    return nextResponse;
   } catch (error) {
     log('Error handling OIDC GET request: %O', error); // Log the full error object
+    // Ensure responseCollector is checked even in catch block if needed, though error likely occurred before/during promise
     return new NextResponse(`Internal Server Error: ${(error as Error).message}`, { status: 500 });
   }
 }
@@ -164,6 +253,9 @@ export async function POST(req: NextRequest) {
 
   // Clone request for reuse as body is consumed
   const clonedReq = req.clone();
+
+  // ---> Declare collector OUTSIDE the promise scope <---
+  let responseCollector: ResponseCollector | null = null;
 
   try {
     if (!oidcEnv.ENABLE_OIDC) {
@@ -205,32 +297,55 @@ export async function POST(req: NextRequest) {
       url: providerPath + url.search, // <-- 修改这里，使用相对路径
     } as unknown as IncomingMessage;
 
-    // 创建响应对象
-    const { nodeResponse, responseBody, responseStatus, responseHeaders } = createNodeResponse();
-
     log('Calling provider.callback() for POST');
-    // 使用 Promise 来包装 provider.callback() 的调用
     await new Promise<void>((resolve, reject) => {
-      const middleware = provider.callback();
+      let middleware;
+      try {
+        log('Attempting to get middleware from provider.callback()');
+        middleware = provider.callback();
+        log('Successfully obtained middleware function.');
+      } catch (syncError) {
+        log('SYNC ERROR during provider.callback() call itself: %O', syncError);
+        reject(syncError);
+        return;
+      }
 
-      // 调用中间件并在完成时解决 Promise
+      // ---> Assign collector OUTSIDE the promise scope <---
+      responseCollector = createNodeResponse(resolve);
+      const nodeResponse = responseCollector.nodeResponse;
+
+      log('Calling the obtained middleware...');
       middleware(nodeRequest, nodeResponse, (error?: Error) => {
+        log('Middleware callback function HAS BEEN EXECUTED.');
         if (error) {
-          log('Middleware error during POST: %O', error); // Log middleware error
+          log('Middleware error reported via callback: %O', error);
           reject(error);
         } else {
+          log(
+            'Middleware completed successfully via callback (may be redundant if .end() was called).',
+          );
           resolve();
         }
       });
+      log('Middleware call initiated, waiting for its callback OR nodeResponse.end()...');
     });
 
-    log('provider.callback() finished for POST. Status: %d', responseStatus); // Log status
+    log('Promise surrounding middleware call resolved.');
 
-    // 构建 NextResponse
-    return new NextResponse(responseBody, {
-      // eslint-disable-next-line no-undef
-      headers: responseHeaders as HeadersInit,
-      status: responseStatus,
+    // ---> Access final state from the collector OUTSIDE the promise <---
+    if (!responseCollector) {
+      throw new Error('ResponseCollector was not initialized.');
+    }
+    const finalStatus = responseCollector.responseStatus;
+    const finalBody = responseCollector.responseBody;
+    const finalHeaders = responseCollector.responseHeaders;
+
+    log('Final Response Status: %d', finalStatus);
+    log('Final Response Headers: %O', finalHeaders);
+
+    return new NextResponse(finalBody, {
+      headers: finalHeaders as HeadersInit,
+      status: finalStatus,
     });
   } catch (error) {
     log('Error handling OIDC POST request: %O', error); // Log the full error object
