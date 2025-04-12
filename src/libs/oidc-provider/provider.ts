@@ -68,7 +68,7 @@ export const createOIDCProvider = async (
   db: LobeChatDatabase,
   baseUrl: string,
 ): Promise<Provider> => {
-  const issuerUrl = `${baseUrl}/oauth`;
+  const issuerUrl = `${baseUrl}/oidc`;
   if (!issuerUrl) {
     throw new Error('Base URL is required for OIDC Provider');
   }

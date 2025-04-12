@@ -22,12 +22,12 @@ export const convertHeadersToNodeHeaders = (nextHeaders: Headers): Record<string
 /**
  * 创建用于 OIDC Provider 的 Node.js HTTP 请求对象
  * @param req Next.js 请求对象
- * @param pathPrefix 路径前缀，如 '/oauth'
+ * @param pathPrefix 路径前缀
  * @param bodyText 可选的请求体文本，用于 POST 请求
  */
 export const createNodeRequest = (
   req: NextRequest,
-  pathPrefix: string = '/oauth',
+  pathPrefix: string = '/oidc',
   bodyText?: string,
 ): IncomingMessage => {
   // 构建 URL 对象

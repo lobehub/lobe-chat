@@ -48,11 +48,12 @@ export const config = {
     '/signup(.*)',
     '/next-auth/(.*)',
     '/oauth(.*)',
+    '/oidc(.*)',
     // ↓ cloud ↓
   ],
 };
 
-const backendApiEndpoints = ['/api', '/trpc', '/webapi', '/oauth'];
+const backendApiEndpoints = ['/api', '/trpc', '/webapi', '/oidc'];
 
 const defaultMiddleware = (request: NextRequest) => {
   const url = new URL(request.url);
