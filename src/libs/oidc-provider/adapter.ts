@@ -1,4 +1,5 @@
 import debug from 'debug';
+import { sql } from 'drizzle-orm';
 import { eq } from 'drizzle-orm/expressions';
 
 import {
@@ -161,6 +162,14 @@ class OIDCAdapter {
     if (payload.accountId) {
       record.userId = payload.accountId;
       log('[%s] Setting userId: %s', this.name, payload.accountId);
+    } else {
+      const { getUserAuth } = await import('@/utils/server/auth');
+      const { userId } = await getUserAuth();
+      if (userId) {
+        payload.accountId = userId;
+        record.userId = userId;
+        log('[%s] Setting userId from auth context: %s', this.name, userId);
+      }
     }
 
     if (payload.clientId) {
@@ -180,6 +189,7 @@ class OIDCAdapter {
 
     try {
       log('[%s] Executing upsert DB operation', this.name);
+
       await this.db
         .insert(table)
         .values(record as any)
@@ -335,7 +345,34 @@ class OIDCAdapter {
    */
   async findByUid(uid: string): Promise<any> {
     log('[Interaction] findByUid called - uid: %s', uid);
+    const table = this.getTable();
+    if (this.name === 'Session') {
+      try {
+        const jsonbUidEq = sql`${(table as any).data}->>'uid' = ${uid}`;
+        // @ts-ignore
+        const results = await this.db.select().from(table).where(jsonbUidEq).limit(1);
+        log('[Session] Find by data.uid query results: %O', results);
 
+        if (!results || results.length === 0) {
+          log('[Session] No record found by data.uid: %s', uid);
+          return undefined;
+        }
+
+        const model = results[0] as any;
+        // 检查过期
+        if (model.expiresAt && model.expiresAt < new Date()) {
+          log('[Session] Record found by data.uid but expired: %s', uid);
+          await this.destroy(model.id); // 仍然使用主键 id 删除
+          return undefined;
+        }
+
+        log('[Session] Successfully found by data.uid and returning record data for uid %s', uid);
+        return model.data;
+      } catch (error) {
+        log('[Session] ERROR during findSessionByUid operation for %s: %O', uid, error);
+        console.error(`[OIDC Adapter] Error finding Session by uid:`, error);
+      }
+    }
     // 复用 find 方法实现
     log('[Interaction] Delegating to find() method');
     return this.find(uid);

@@ -24,6 +24,11 @@ export class OIDCService {
     const { req, res } = await createContextForInteractionDetails(uid);
     return this.provider.interactionResult(req, res, result, { mergeWithLastSubmission: true });
   }
+
+  async finishInteraction(uid: string, result: any) {
+    const { req, res } = await createContextForInteractionDetails(uid);
+    return this.provider.interactionFinished(req, res, result, { mergeWithLastSubmission: true });
+  }
 }
 
 export { getOIDCProvider } from './oidcProvider';

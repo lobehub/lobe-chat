@@ -38,7 +38,7 @@ const useStyles = createStyles(({ css, token }) => ({
  * 获取 Scope 的描述
  */
 function getScopeDescription(scope: string, t: any): string {
-  return t(`consent.scope.${scope}`, scope);
+  return t(`consent.scope.${scope.replace(':', '-')}`, scope);
 }
 
 const ConsentClient = memo(({ uid, clientId, scopes, error }: ClientProps) => {
