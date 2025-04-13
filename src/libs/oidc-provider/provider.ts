@@ -100,7 +100,6 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
       rpInitiatedLogout: { enabled: true },
       userinfo: { enabled: true },
     },
-
     // 10. 账户查找
     async findAccount(ctx: KoaContextWithOIDC, id: string) {
       logProvider('findAccount called for id: %s', id);
@@ -176,6 +175,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
         return undefined;
       }
     },
+
     // 9. 交互策略
     interactions: {
       policy: createInteractionPolicy(),
@@ -192,6 +192,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
 
     // 6. 密钥配置 - 使用 RS256 JWKS
     jwks: jwks as { keys: any[] },
+
     // 2. PKCE 配置
     pkce: {
       required: () => true,
@@ -216,6 +217,8 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
 
     // 新增：启用 Refresh Token 轮换
     rotateRefreshToken: true,
+
+    routes: { authorization: '/oidc/auth' },
     // 3. Scopes 定义
     scopes: defaultScopes,
 

@@ -22,22 +22,17 @@ export const convertHeadersToNodeHeaders = (nextHeaders: Headers): Record<string
 /**
  * 创建用于 OIDC Provider 的 Node.js HTTP 请求对象
  * @param req Next.js 请求对象
- * @param pathPrefix 路径前缀
  * @param bodyText 可选的请求体文本，用于 POST 请求
  */
-export const createNodeRequest = (
-  req: NextRequest,
-  pathPrefix: string = '/oidc',
-  bodyText?: string,
-): IncomingMessage => {
+export const createNodeRequest = (req: NextRequest, bodyText?: string): IncomingMessage => {
   // 构建 URL 对象
   const url = new URL(req.url);
 
   // 计算相对于前缀的路径
   let providerPath = url.pathname;
-  if (pathPrefix && url.pathname.startsWith(pathPrefix)) {
-    providerPath = url.pathname.slice(pathPrefix.length);
-  }
+  // if (pathPrefix && url.pathname.startsWith(pathPrefix)) {
+  //   providerPath = url.pathname.slice(pathPrefix.length);
+  // }
 
   // 确保路径始终以/开头
   if (!providerPath.startsWith('/')) {
@@ -198,8 +193,6 @@ export const createContextForInteractionDetails = async (
   uid: string,
 ): Promise<{ req: IncomingMessage; res: ServerResponse }> => {
   log('Creating context for interaction details for uid: %s', uid);
-
-  // 使用APP_URL环境变量来构建URL基础部分
   const baseUrl = appEnv.APP_URL!;
   log('Using base URL: %s', baseUrl);
 
@@ -260,7 +253,7 @@ export const createContextForInteractionDetails = async (
 
   // 4. 使用 createNodeRequest 创建模拟的 Node.js IncomingMessage
   // pathPrefix 设置为 '/' 因为我们的 URL 已经是 Provider 期望的路径格式 /interaction/:uid
-  const req: IncomingMessage = createNodeRequest(mockNextRequest, '/');
+  const req: IncomingMessage = createNodeRequest(mockNextRequest);
   // @ts-ignore - 将解析出的 cookies 附加到模拟的 Node.js 请求上
   req.cookies = realCookies;
   log('Node.js IncomingMessage created, attached real cookies');

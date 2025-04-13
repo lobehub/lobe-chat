@@ -1,6 +1,5 @@
 import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
-import { URL } from 'node:url';
 
 import { OIDCService } from '@/server/services/oidc';
 
@@ -65,25 +64,12 @@ export async function POST(request: NextRequest) {
       log('User %s the authorization', consent);
     }
 
+    // await oidcService.finishInteraction(uid, result);
+
     // 获取OIDC提供商的默认重定向URL，但不会直接使用它
-    let internalRedirectUrlString = await oidcService.getInteractionResult(uid, result);
+    const internalRedirectUrlString = await oidcService.getInteractionResult(uid, result);
     log('OIDC Provider internal redirect URL string: %s', internalRedirectUrlString);
 
-    try {
-      const redirectUrl = new URL(internalRedirectUrlString);
-
-      if (redirectUrl.pathname.startsWith('/auth/')) {
-        redirectUrl.pathname = `/oidc${redirectUrl.pathname}`;
-        internalRedirectUrlString = redirectUrl.toString();
-        log('Applied prefix, corrected redirect URL: %s', internalRedirectUrlString);
-      } else {
-        log('Pathname (%s) does not start with /auth/, no prefix applied.', redirectUrl.pathname);
-      }
-    } catch (e) {
-      log('Error parsing internalRedirectUrl: %s. URL: %s', e, internalRedirectUrlString);
-    }
-
-    log('Redirecting back to OIDC provider flow at: %s', internalRedirectUrlString);
     return NextResponse.redirect(internalRedirectUrlString, {
       headers: request.headers,
       status: 303,
