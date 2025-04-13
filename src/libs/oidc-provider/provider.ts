@@ -1,6 +1,8 @@
 import debug from 'debug';
 import Provider, { Configuration, KoaContextWithOIDC } from 'oidc-provider';
+import urlJoin from 'url-join';
 
+import { appEnv } from '@/config/app';
 import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
 import { LobeChatDatabase } from '@/database/type';
@@ -61,18 +63,9 @@ const getCookieKeys = () => {
 /**
  * 创建 OIDC Provider 实例
  * @param db - 数据库实例
- * @param baseUrl - 服务部署的基础URL
  * @returns 配置好的 OIDC Provider 实例
  */
-export const createOIDCProvider = async (
-  db: LobeChatDatabase,
-  baseUrl: string,
-): Promise<Provider> => {
-  const issuerUrl = `${baseUrl}/oidc`;
-  if (!issuerUrl) {
-    throw new Error('Base URL is required for OIDC Provider');
-  }
-
+export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider> => {
   // 获取 JWKS
   const jwks = getJWKS();
 
@@ -199,7 +192,6 @@ export const createOIDCProvider = async (
 
     // 6. 密钥配置 - 使用 RS256 JWKS
     jwks: jwks as { keys: any[] },
-
     // 2. PKCE 配置
     pkce: {
       required: () => true,
@@ -224,7 +216,6 @@ export const createOIDCProvider = async (
 
     // 新增：启用 Refresh Token 轮换
     rotateRefreshToken: true,
-
     // 3. Scopes 定义
     scopes: defaultScopes,
 
@@ -243,7 +234,9 @@ export const createOIDCProvider = async (
   };
 
   // 创建提供者实例
-  const provider = new Provider(issuerUrl, configuration);
+  const baseUrl = urlJoin(appEnv.APP_URL!, '/oidc');
+
+  const provider = new Provider(baseUrl, configuration);
 
   provider.on('server_error', (ctx, err) => {
     logProvider('OIDC Provider Server Error: %O', err); // Use logProvider
