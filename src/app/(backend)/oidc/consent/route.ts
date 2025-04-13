@@ -1,8 +1,7 @@
 import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
-import urlJoin from 'url-join';
+import { URL } from 'node:url';
 
-import { appEnv } from '@/config/app';
 import { OIDCService } from '@/server/services/oidc';
 
 const log = debug('lobe-oidc:consent');
@@ -67,22 +66,28 @@ export async function POST(request: NextRequest) {
     }
 
     // 获取OIDC提供商的默认重定向URL，但不会直接使用它
-    const redirectUrl = await oidcService.getInteractionResult(uid, result);
-    log('Default redirectUrl: %s', redirectUrl);
+    let internalRedirectUrlString = await oidcService.getInteractionResult(uid, result);
+    log('OIDC Provider internal redirect URL string: %s', internalRedirectUrlString);
 
-    // 根据用户选择定制重定向地址
+    try {
+      const redirectUrl = new URL(internalRedirectUrlString);
 
-    if (consent === 'accept') {
-      // 用户同意授权，跳转到success页面
-      const successUrl = urlJoin(appEnv.APP_URL!, `/oauth/consent/${uid}/success`);
-      log('Redirecting to success page: %s', successUrl);
-      return NextResponse.redirect(successUrl);
-    } else {
-      // 用户拒绝授权，跳转到failed页面
-      const failedUrl = urlJoin(appEnv.APP_URL!, `/oauth/consent/${uid}/failed`);
-      log('Redirecting to failed page: %s', failedUrl);
-      return NextResponse.redirect(failedUrl);
+      if (redirectUrl.pathname.startsWith('/auth/')) {
+        redirectUrl.pathname = `/oidc${redirectUrl.pathname}`;
+        internalRedirectUrlString = redirectUrl.toString();
+        log('Applied prefix, corrected redirect URL: %s', internalRedirectUrlString);
+      } else {
+        log('Pathname (%s) does not start with /auth/, no prefix applied.', redirectUrl.pathname);
+      }
+    } catch (e) {
+      log('Error parsing internalRedirectUrl: %s. URL: %s', e, internalRedirectUrlString);
     }
+
+    log('Redirecting back to OIDC provider flow at: %s', internalRedirectUrlString);
+    return NextResponse.redirect(internalRedirectUrlString, {
+      headers: request.headers,
+      status: 303,
+    });
   } catch (error) {
     log('Error processing consent: %s', error instanceof Error ? error.message : 'unknown error');
     console.error('Error processing consent:', error);

@@ -84,7 +84,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
     // 7. Cookie 配置
     cookies: {
       keys: cookieKeys,
-      long: { signed: true },
+      long: { path: '/', signed: true },
       short: { path: '/', signed: true },
     },
 
