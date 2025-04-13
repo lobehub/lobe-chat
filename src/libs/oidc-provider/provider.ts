@@ -218,7 +218,11 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
     // 新增：启用 Refresh Token 轮换
     rotateRefreshToken: true,
 
-    routes: { authorization: '/oidc/auth' },
+    routes: {
+      authorization: '/oidc/auth',
+      end_session: '/oidc/session/end',
+      token: '/oidc/token',
+    },
     // 3. Scopes 定义
     scopes: defaultScopes,
 
