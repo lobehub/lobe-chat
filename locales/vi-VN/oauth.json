@@ -19,11 +19,11 @@
     "permissionsTitle": "Ứng dụng yêu cầu các quyền sau:",
     "scope": {
       "email": "Truy cập địa chỉ email của bạn",
-      "offline_access": "Tiếp tục truy cập dữ liệu của bạn khi bạn ngoại tuyến",
+      "offline_access": "Cho phép ứng dụng truy cập dữ liệu của bạn",
       "openid": "Xác thực bằng tài khoản LobeChat của bạn",
       "profile": "Truy cập thông tin hồ sơ cơ bản của bạn (tên, ảnh đại diện, v.v.)",
-      "sync:read": "Đọc dữ liệu đồng bộ của bạn",
-      "sync:write": "Ghi và cập nhật dữ liệu đồng bộ của bạn"
+      "sync-read": "Đọc dữ liệu đồng bộ của bạn",
+      "sync-write": "Ghi và cập nhật dữ liệu đồng bộ của bạn"
     },
     "title": "Yêu cầu ủy quyền"
   },

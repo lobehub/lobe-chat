@@ -19,7 +19,7 @@ const oauth = {
     permissionsTitle: '应用请求以下权限：',
     scope: {
       'email': '访问您的电子邮件地址',
-      'offline_access': '在您离线时继续访问您的数据',
+      'offline_access': '允许客户端访问您的数据',
       'openid': '使用您的 LobeChat 账户进行身份验证',
       'profile': '访问您的基本资料信息（名称、头像等）',
       'sync-read': '读取您的同步数据',

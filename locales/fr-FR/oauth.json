@@ -19,11 +19,11 @@
     "permissionsTitle": "L'application demande les permissions suivantes :",
     "scope": {
       "email": "Accéder à votre adresse e-mail",
-      "offline_access": "Continuer à accéder à vos données lorsque vous êtes hors ligne",
+      "offline_access": "Autoriser le client à accéder à vos données",
       "openid": "S'authentifier avec votre compte LobeChat",
       "profile": "Accéder à vos informations de profil (nom, photo, etc.)",
-      "sync:read": "Lire vos données de synchronisation",
-      "sync:write": "Écrire et mettre à jour vos données de synchronisation"
+      "sync-read": "Lire vos données synchronisées",
+      "sync-write": "Écrire et mettre à jour vos données synchronisées"
     },
     "title": "Demande d'autorisation"
   },

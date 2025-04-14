@@ -19,11 +19,11 @@
     "permissionsTitle": "應用請求以下權限：",
     "scope": {
       "email": "訪問您的電子郵件地址",
-      "offline_access": "在您離線時繼續訪問您的數據",
+      "offline_access": "允許客戶端訪問您的資料",
       "openid": "使用您的 LobeChat 帳戶進行身份驗證",
       "profile": "訪問您的基本資料信息（名稱、頭像等）",
-      "sync:read": "讀取您的同步數據",
-      "sync:write": "寫入並更新您的同步數據"
+      "sync-read": "讀取您的同步資料",
+      "sync-write": "寫入並更新您的同步資料"
     },
     "title": "授權請求"
   },
