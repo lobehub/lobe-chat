@@ -6,8 +6,9 @@ import { Store } from './action';
 const chatConfig = (s: Store): LobeAgentChatConfig =>
   s.config.chatConfig || DEFAULT_AGENT_CHAT_CONFIG;
 
+const DEFAULT_OPENING_QUESTIONS: string[] = [];
 export const selectors = {
   chatConfig,
   openingMessage: (s: Store) => s.config.openingMessage,
-  openingQuestions: (s: Store) => s.config.openingQuestions,
+  openingQuestions: (s: Store) => s.config.openingQuestions ?? DEFAULT_OPENING_QUESTIONS,
 };

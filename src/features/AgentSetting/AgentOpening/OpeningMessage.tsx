@@ -18,7 +18,9 @@ export const useStyles = createStyles(({ css, token }) => ({
   wrapper: css`
     width: 100%;
     padding: 8px;
+    border: 1px solid ${token.colorBorder};
     border-radius: ${token.borderRadiusLG - 1}px;
+
     background: ${token.colorBgContainer};
   `,
 }));

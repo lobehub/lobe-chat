@@ -39,7 +39,7 @@ export interface LobeAgentConfig {
   /**
    * 开场问题
    */
-  openingQuestions: string[];
+  openingQuestions?: string[];
 
   /**
    * 语言模型参数
