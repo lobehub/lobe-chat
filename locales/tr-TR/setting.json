@@ -6,6 +6,7 @@
     "chat": "Sohbet Tercihi",
     "meta": "Asistan Bilgisi",
     "modal": "Model Ayarları",
+    "opening": "Açılış Ayarları",
     "plugin": "Eklenti Ayarları",
     "prompt": "Karakter Ayarları",
     "tts": "Metin Okuma Hizmeti"
@@ -252,6 +253,21 @@
       "desc": "Ne kadar olasılığı dikkate alır, değer ne kadar büyükse, daha fazla olası cevabı kabul eder; değer ne kadar küçükse, en olası cevabı seçme eğilimindedir. Yaratıcılık aktifliği ile birlikte değiştirilmesi önerilmez.",
       "title": "Düşünce Açıklığı"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Sohbet açıldığında gösterilecek açılış mesajı, asistanın işlevlerini tanıtmak için kullanılır",
+      "placeholder": "Merhaba, ben Özelleştirilmiş Asistan, hemen benimle sohbet edebilirsiniz veya Asistan Ayarları'na giderek bilgimi tamamlayabilirsiniz.",
+      "title": "Açılış Mesajı"
+    },
+    "openingQuestions": {
+      "desc": "Sohbetin başlangıcında gösterilecek yönlendirici sorular",
+      "empty": "Henüz soru yok",
+      "placeholder": "Soruyu girin",
+      "repeat": "Soru zaten mevcut",
+      "title": "Açılış Soruları"
+    },
+    "title": "Açılış Ayarları"
   },
   "settingPlugin": {
     "title": "Eklenti Listesi"
