@@ -5,7 +5,6 @@ import { ClientMetadata } from 'oidc-provider';
  */
 export const defaultClients: ClientMetadata[] = [
   {
-    // 公共客户端，令牌端点无需认证
     application_type: 'native',
     client_id: 'lobehub-desktop',
     description: 'LobeHub Desktop',
@@ -19,13 +18,12 @@ export const defaultClients: ClientMetadata[] = [
     // 桌面端注册的自定义协议回调（使用反向域名格式）
     post_logout_redirect_uris: ['com.lobehub.desktop://auth/logout/callback'],
 
-    // 公共客户端，无密钥
     redirect_uris: ['com.lobehub.desktop://auth/callback', 'https://oauthdebugger.com/debug'],
 
     // 支持授权码获取令牌和刷新令牌
     response_types: ['code'],
 
-    // 标记为第一方客户端
+    // 标记为公共客户端客户端，无密钥
     token_endpoint_auth_method: 'none',
   },
 ];

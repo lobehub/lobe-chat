@@ -22,17 +22,13 @@ export const convertHeadersToNodeHeaders = (nextHeaders: Headers): Record<string
 /**
  * 创建用于 OIDC Provider 的 Node.js HTTP 请求对象
  * @param req Next.js 请求对象
- * @param bodyText 可选的请求体文本，用于 POST 请求
  */
-export const createNodeRequest = (req: NextRequest, bodyText?: string): IncomingMessage => {
+export const createNodeRequest = (req: NextRequest): IncomingMessage => {
   // 构建 URL 对象
   const url = new URL(req.url);
 
   // 计算相对于前缀的路径
   let providerPath = url.pathname;
-  // if (pathPrefix && url.pathname.startsWith(pathPrefix)) {
-  //   providerPath = url.pathname.slice(pathPrefix.length);
-  // }
 
   // 确保路径始终以/开头
   if (!providerPath.startsWith('/')) {
@@ -45,30 +41,20 @@ export const createNodeRequest = (req: NextRequest, bodyText?: string): Incoming
   const nodeRequest = {
     // 基本属性
     headers: convertHeadersToNodeHeaders(req.headers),
+
     method: req.method,
     // 模拟可读流行为
     // eslint-disable-next-line @typescript-eslint/ban-types
     on: (event: string, handler: Function) => {
-      if (event === 'data' && bodyText) {
-        handler(bodyText);
-      }
       if (event === 'end') {
         handler();
       }
     },
-
-    url: providerPath + url.search,
-
-    // POST 请求所需属性
-    ...(bodyText && {
-      body: bodyText,
-      readable: true,
-    }),
-
     // 添加 Node.js 服务器所期望的额外属性
     socket: {
       remoteAddress: req.headers.get('x-forwarded-for') || '127.0.0.1',
     },
+    url: providerPath + url.search,
   } as unknown as IncomingMessage;
 
   log('Node.js request created with method %s and path %s', nodeRequest.method, nodeRequest.url);
