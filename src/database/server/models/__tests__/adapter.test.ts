@@ -1,20 +1,16 @@
-import type { AdapterUser } from '@auth/core/adapters';
 import { eq } from 'drizzle-orm/expressions';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getTestDBInstance } from '@/database/core/dbForTest';
 import { users } from '@/database/schemas';
 import {
   oidcAccessTokens,
-  oidcAuthorizationCodes,
   oidcClients,
   oidcDeviceCodes,
-  oidcGrants,
   oidcInteractions,
   oidcRefreshTokens,
   oidcSessions,
 } from '@/database/schemas/oidc';
-import { LobeChatDatabase } from '@/database/type';
 import { DrizzleAdapter } from '@/libs/oidc-provider/adapter';
 
 let serverDB = await getTestDBInstance();

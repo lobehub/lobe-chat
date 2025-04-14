@@ -22,22 +22,13 @@ export const convertHeadersToNodeHeaders = (nextHeaders: Headers): Record<string
 /**
  * 创建用于 OIDC Provider 的 Node.js HTTP 请求对象
  * @param req Next.js 请求对象
- * @param pathPrefix 路径前缀
- * @param bodyText 可选的请求体文本，用于 POST 请求
  */
-export const createNodeRequest = (
-  req: NextRequest,
-  pathPrefix: string = '/oidc',
-  bodyText?: string,
-): IncomingMessage => {
+export const createNodeRequest = async (req: NextRequest): Promise<IncomingMessage> => {
   // 构建 URL 对象
   const url = new URL(req.url);
 
   // 计算相对于前缀的路径
   let providerPath = url.pathname;
-  if (pathPrefix && url.pathname.startsWith(pathPrefix)) {
-    providerPath = url.pathname.slice(pathPrefix.length);
-  }
 
   // 确保路径始终以/开头
   if (!providerPath.startsWith('/')) {
@@ -47,37 +38,74 @@ export const createNodeRequest = (
   log('Creating Node.js request from Next.js request');
   log('Original path: %s, Provider path: %s', url.pathname, providerPath);
 
+  // Attempt to parse and attach body for relevant methods
+  let parsedBody: any = undefined;
+  const methodsWithBody = ['POST', 'PUT', 'PATCH', 'DELETE'];
+  if (methodsWithBody.includes(req.method)) {
+    const contentType = req.headers.get('content-type')?.split(';')[0]; // Get content type without charset etc.
+    log(`Attempting to parse body for ${req.method} with Content-Type: ${contentType}`);
+    try {
+      // Check if body exists and has size before attempting to parse
+      if (req.body && req.headers.get('content-length') !== '0') {
+        if (contentType === 'application/x-www-form-urlencoded') {
+          const formData = await req.formData();
+          parsedBody = {};
+          formData.forEach((value, key) => {
+            // If a key appears multiple times, keep the last one (standard form behavior)
+            // Or convert to array if oidc-provider expects it:
+            // if (parsedBody[key]) {
+            //   if (!Array.isArray(parsedBody[key])) parsedBody[key] = [parsedBody[key]];
+            //   parsedBody[key].push(value);
+            // } else {
+            //   parsedBody[key] = value;
+            // }
+            parsedBody[key] = value;
+          });
+          log('Parsed form data body: %O', parsedBody);
+        } else if (contentType === 'application/json') {
+          parsedBody = await req.json();
+          log('Parsed JSON body: %O', parsedBody);
+        } else {
+          log(`Body parsing skipped for Content-Type: ${contentType}. Trying text() as fallback.`);
+          // Fallback: try reading as text if content type is unknown but body exists
+          parsedBody = await req.text();
+          log('Parsed body as text fallback.');
+        }
+      } else {
+        log('Request has no body or content-length is 0, skipping parsing.');
+      }
+    } catch (error) {
+      log('Error parsing request body: %O', error);
+      // Keep parsedBody as undefined, let oidc-provider handle the potential issue
+    }
+  }
   const nodeRequest = {
     // 基本属性
     headers: convertHeadersToNodeHeaders(req.headers),
+
     method: req.method,
-    // 模拟可读流行为
+    // 模拟可读流行为 (oidc-provider might not rely on this if body is pre-parsed)
     // eslint-disable-next-line @typescript-eslint/ban-types
     on: (event: string, handler: Function) => {
-      if (event === 'data' && bodyText) {
-        handler(bodyText);
-      }
       if (event === 'end') {
+        // Simulate end immediately as body is already processed or will be attached
         handler();
       }
     },
-
-    url: providerPath + url.search,
-
-    // POST 请求所需属性
-    ...(bodyText && {
-      body: bodyText,
-      readable: true,
-    }),
-
     // 添加 Node.js 服务器所期望的额外属性
     socket: {
       remoteAddress: req.headers.get('x-forwarded-for') || '127.0.0.1',
     },
-  } as unknown as IncomingMessage;
+    url: providerPath + url.search,
+    ...(parsedBody !== undefined && { body: parsedBody }), // Attach body if it exists
+  };
 
   log('Node.js request created with method %s and path %s', nodeRequest.method, nodeRequest.url);
-  return nodeRequest;
+  if (nodeRequest.body) {
+    log('Attached parsed body to Node.js request.');
+  }
+  // Cast back to IncomingMessage for the function's return signature
+  return nodeRequest as unknown as IncomingMessage;
 };
 
 /**
@@ -143,6 +171,12 @@ export const createNodeResponse = (resolvePromise: () => void): ResponseCollecto
 
     headersSent: false,
 
+    removeHeader: (name: string) => {
+      const lowerName = name.toLowerCase();
+      log('Removing header: %s', lowerName);
+      delete state.responseHeaders[lowerName];
+    },
+
     setHeader: (name: string, value: string | string[]) => {
       const lowerName = name.toLowerCase();
       log('Setting header: %s = %s', lowerName, value);
@@ -198,8 +232,6 @@ export const createContextForInteractionDetails = async (
   uid: string,
 ): Promise<{ req: IncomingMessage; res: ServerResponse }> => {
   log('Creating context for interaction details for uid: %s', uid);
-
-  // 使用APP_URL环境变量来构建URL基础部分
   const baseUrl = appEnv.APP_URL!;
   log('Using base URL: %s', baseUrl);
 
@@ -260,7 +292,7 @@ export const createContextForInteractionDetails = async (
 
   // 4. 使用 createNodeRequest 创建模拟的 Node.js IncomingMessage
   // pathPrefix 设置为 '/' 因为我们的 URL 已经是 Provider 期望的路径格式 /interaction/:uid
-  const req: IncomingMessage = createNodeRequest(mockNextRequest, '/');
+  const req: IncomingMessage = await createNodeRequest(mockNextRequest);
   // @ts-ignore - 将解析出的 cookies 附加到模拟的 Node.js 请求上
   req.cookies = realCookies;
   log('Node.js IncomingMessage created, attached real cookies');
