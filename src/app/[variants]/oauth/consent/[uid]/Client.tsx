@@ -13,14 +13,11 @@ import { ProductLogo } from '@/components/Branding';
 
 interface ClientProps {
   clientId: string;
-  clientMetadata?: {
+  clientMetadata: {
     clientName?: string;
     logo?: string;
   };
-  error?: {
-    message: string;
-    title: string;
-  };
+
   redirectUri?: string;
   scopes: string[];
   uid: string;
@@ -68,9 +65,6 @@ const useStyles = createStyles(({ css, token }) => ({
     min-height: 100vh;
     color: ${token.colorTextBase};
     background-color: ${token.colorBgLayout};
-  `,
-  error: css`
-    text-align: center;
   `,
   icon: css`
     overflow: hidden;
@@ -126,23 +120,9 @@ function getScopeDescription(scope: string, t: any): string {
 }
 
 const ConsentClient = memo<ClientProps>(
-  ({ uid, clientId, scopes, error, clientMetadata, redirectUri }) => {
+  ({ uid, clientId, scopes, clientMetadata, redirectUri }) => {
     const { styles, theme } = useStyles();
     const { t } = useTranslation('oauth');
-
-    // 如果有错误，显示错误信息
-    if (error) {
-      return (
-        <Center className={styles.container}>
-          <div className={styles.error}>
-            <Title level={2} style={{ color: 'inherit' }}>
-              {error.title}
-            </Title>
-            <Paragraph style={{ color: 'inherit' }}>{error.message}</Paragraph>
-          </div>
-        </Center>
-      );
-    }
 
     const clientDisplayName = clientMetadata?.clientName || clientId;
     return (
@@ -241,4 +221,4 @@ const ConsentClient = memo<ClientProps>(
 
 ConsentClient.displayName = 'ConsentClient';
 
-export { ConsentClient };
+export default ConsentClient;

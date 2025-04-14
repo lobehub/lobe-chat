@@ -3,11 +3,9 @@ import { notFound } from 'next/navigation';
 import { oidcEnv } from '@/envs/oidc';
 import { OIDCService } from '@/server/services/oidc';
 
-import { ConsentClient } from './Client';
+import ConsentClient from './Client';
+import ConsentClientError from './ClientError';
 
-/**
- * Consent 授权页面
- */
 const InteractionPage = async (props: { params: Promise<{ uid: string }> }) => {
   if (!oidcEnv.ENABLE_OIDC) return notFound();
 
@@ -23,14 +21,11 @@ const InteractionPage = async (props: { params: Promise<{ uid: string }> }) => {
     // 支持 login 和 consent 类型的交互
     if (details.prompt.name !== 'consent' && details.prompt.name !== 'login') {
       return (
-        <ConsentClient
-          clientId=""
+        <ConsentClientError
           error={{
             message: `不支持的交互类型: ${details.prompt.name}`,
             title: '不支持的交互类型',
           }}
-          scopes={[]}
-          uid={params.uid}
         />
       );
     }
@@ -61,23 +56,13 @@ const InteractionPage = async (props: { params: Promise<{ uid: string }> }) => {
     // 检查是否是 'interaction session not found' 错误，可以给用户更友好的提示
     if (errorMessage.includes('interaction session not found')) {
       return (
-        <ConsentClient
-          clientId=""
+        <ConsentClientError
           error={{ message: '授权会话已过期或无效，请重新发起授权流程。', title: '授权会话无效' }}
-          scopes={[]}
-          uid={params.uid} // uid 可能已失效，但仍传递给 Client
         />
       );
     }
 
-    return (
-      <ConsentClient
-        clientId=""
-        error={{ message: errorMessage, title: '发生错误' }}
-        scopes={[]}
-        uid={params.uid}
-      />
-    );
+    return <ConsentClientError error={{ message: errorMessage, title: '发生错误' }} />;
   }
 };
 
