@@ -163,12 +163,22 @@ class OIDCAdapter {
       record.userId = payload.accountId;
       log('[%s] Setting userId: %s', this.name, payload.accountId);
     } else {
-      const { getUserAuth } = await import('@/utils/server/auth');
-      const { userId } = await getUserAuth();
-      if (userId) {
-        payload.accountId = userId;
-        record.userId = userId;
-        log('[%s] Setting userId from auth context: %s', this.name, userId);
+      try {
+        const { getUserAuth } = await import('@/utils/server/auth');
+        try {
+          const { userId } = await getUserAuth();
+          if (userId) {
+            payload.accountId = userId;
+            record.userId = userId;
+            log('[%s] Setting userId from auth context: %s', this.name, userId);
+          }
+        } catch (authError) {
+          log('[%s] Error getting userId from auth context: %O', this.name, authError);
+          // 如果获取 userId 失败，继续处理而不抛出错误
+        }
+      } catch (importError) {
+        log('[%s] Error importing auth module: %O', this.name, importError);
+        // 如果导入模块失败，继续处理而不抛出错误
       }
     }
 
