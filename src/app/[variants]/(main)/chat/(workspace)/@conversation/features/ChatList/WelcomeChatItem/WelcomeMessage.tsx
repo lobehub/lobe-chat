@@ -39,18 +39,23 @@ const WelcomeMessage = () => {
     return !!meta.description ? agentSystemRoleMsg : agentMsg;
   }, [openingMessage, agentSystemRoleMsg, agentMsg, meta.description]);
 
-  return (
-    <Flexbox>
-      <ChatItem
-        avatar={meta}
-        editing={false}
-        message={message}
-        placement={'left'}
-        type={type === 'chat' ? 'block' : 'pure'}
-      />
+  const chatItem = (
+    <ChatItem
+      avatar={meta}
+      editing={false}
+      message={message}
+      placement={'left'}
+      type={type === 'chat' ? 'block' : 'pure'}
+    />
+  );
 
+  return openingQuestions.length > 0 ? (
+    <Flexbox>
+      {chatItem}
       <OpeningQuestions mobile={mobile} questions={openingQuestions} />
     </Flexbox>
+  ) : (
+    chatItem
   );
 };
 export default WelcomeMessage;
