@@ -1,7 +1,8 @@
 import { TRPCError } from '@trpc/server';
 
-import { trpc } from '@/libs/trpc/init';
 import { getJWTPayload } from '@/utils/server/jwt';
+
+import { trpc } from '../init';
 
 export const keyVaults = trpc.middleware(async (opts) => {
   const { ctx } = opts;

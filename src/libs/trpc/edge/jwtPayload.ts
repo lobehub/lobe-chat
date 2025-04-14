@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 
-import { trpc } from '@/libs/trpc/init';
+import { trpc } from '@/libs/trpc/lambda/init';
 import { getJWTPayload } from '@/utils/server/jwt';
 
 export const jwtPayloadChecker = trpc.middleware(async (opts) => {

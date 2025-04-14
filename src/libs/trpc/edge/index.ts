@@ -10,9 +10,9 @@
 import { DESKTOP_USER_ID } from '@/const/desktop';
 import { isDesktop } from '@/const/version';
 
+import { userAuth } from '../lambda/middleware/userAuth';
 import { trpc } from './init';
-import { jwtPayloadChecker } from './middleware/jwtPayload';
-import { userAuth } from './middleware/userAuth';
+import { jwtPayloadChecker } from './jwtPayload';
 
 /**
  * Create a router

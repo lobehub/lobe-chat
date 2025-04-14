@@ -2,9 +2,9 @@
 import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createCallerFactory } from '@/libs/trpc';
-import { trpc } from '@/libs/trpc/init';
-import { AuthContext, createContextInner } from '@/server/context';
+import { createCallerFactory } from '@/libs/trpc/lambda';
+import { AuthContext, createContextInner } from '@/libs/trpc/lambda/context';
+import { trpc } from '@/libs/trpc/lambda/init';
 import * as utils from '@/utils/server/jwt';
 
 import { jwtPayloadChecker } from './jwtPayload';
