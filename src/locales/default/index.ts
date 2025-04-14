@@ -13,6 +13,7 @@ import metadata from './metadata';
 import migration from './migration';
 import modelProvider from './modelProvider';
 import models from './models';
+import oauth from './oauth';
 import plugin from './plugin';
 import portal from './portal';
 import providers from './providers';
@@ -39,6 +40,7 @@ const resources = {
   migration,
   modelProvider,
   models,
+  oauth,
   plugin,
   portal,
   providers,

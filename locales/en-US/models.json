@@ -1109,6 +1109,18 @@
   "grok-2-vision-1212": {
     "description": "This model has improved in accuracy, instruction adherence, and multilingual capabilities."
   },
+  "grok-3-beta": {
+    "description": "A flagship model, proficient in data extraction, programming, and text summarization for enterprise applications, with deep knowledge in fields such as finance, healthcare, law, and science."
+  },
+  "grok-3-fast-beta": {
+    "description": "A flagship model, proficient in data extraction, programming, and text summarization for enterprise applications, with deep knowledge in fields such as finance, healthcare, law, and science."
+  },
+  "grok-3-mini-beta": {
+    "description": "A lightweight model that thinks before responding. It operates quickly and intelligently, suitable for logical tasks that do not require deep domain knowledge, while capturing the raw thought process."
+  },
+  "grok-3-mini-fast-beta": {
+    "description": "A lightweight model that thinks before responding. It operates quickly and intelligently, suitable for logical tasks that do not require deep domain knowledge, while capturing the raw thought process."
+  },
   "grok-beta": {
     "description": "Offers performance comparable to Grok 2 but with higher efficiency, speed, and functionality."
   },

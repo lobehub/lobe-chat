@@ -1109,6 +1109,18 @@
   "grok-2-vision-1212": {
     "description": "Este modelo ha mejorado en precisión, cumplimiento de instrucciones y capacidades multilingües."
   },
+  "grok-3-beta": {
+    "description": "Modelo insignia, experto en extracción de datos, programación y resúmenes de texto para aplicaciones empresariales, con un profundo conocimiento en campos como finanzas, salud, derecho y ciencia."
+  },
+  "grok-3-fast-beta": {
+    "description": "Modelo insignia, experto en extracción de datos, programación y resúmenes de texto para aplicaciones empresariales, con un profundo conocimiento en campos como finanzas, salud, derecho y ciencia."
+  },
+  "grok-3-mini-beta": {
+    "description": "Modelo ligero, que reflexiona antes de la conversación. Rápido e inteligente, adecuado para tareas lógicas que no requieren un conocimiento profundo del dominio, y capaz de capturar la trayectoria de pensamiento original."
+  },
+  "grok-3-mini-fast-beta": {
+    "description": "Modelo ligero, que reflexiona antes de la conversación. Rápido e inteligente, adecuado para tareas lógicas que no requieren un conocimiento profundo del dominio, y capaz de capturar la trayectoria de pensamiento original."
+  },
   "grok-beta": {
     "description": "Ofrece un rendimiento comparable al de Grok 2, pero con mayor eficiencia, velocidad y funcionalidad."
   },

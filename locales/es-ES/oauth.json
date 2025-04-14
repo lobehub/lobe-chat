@@ -1,0 +1,39 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Autorizar",
+      "deny": "Denegar"
+    },
+    "description": "La aplicación {clientId} solicita acceso a su cuenta de LobeChat",
+    "error": {
+      "sessionInvalid": {
+        "message": "La sesión de autorización ha expirado o es inválida, por favor inicie nuevamente el proceso de autorización.",
+        "title": "Sesión de autorización inválida"
+      },
+      "title": "Ocurrió un error",
+      "unsupportedInteraction": {
+        "message": "Tipo de interacción no soportado: {promptName}",
+        "title": "Tipo de interacción no soportado"
+      }
+    },
+    "permissionsTitle": "La aplicación solicita los siguientes permisos:",
+    "scope": {
+      "email": "Acceder a su dirección de correo electrónico",
+      "offline_access": "Continuar accediendo a sus datos mientras está desconectado",
+      "openid": "Autenticarse con su cuenta de LobeChat",
+      "profile": "Acceder a su información básica de perfil (nombre, foto, etc.)",
+      "sync:read": "Leer sus datos de sincronización",
+      "sync:write": "Escribir y actualizar sus datos de sincronización"
+    },
+    "title": "Solicitud de autorización"
+  },
+  "failed": {
+    "backToHome": "Volver a la página de inicio",
+    "subTitle": "Ha denegado el acceso de la aplicación a su cuenta de LobeChat",
+    "title": "Autorización denegada"
+  },
+  "success": {
+    "subTitle": "Ha autorizado con éxito a la aplicación para acceder a su cuenta de LobeChat, puede cerrar esta página",
+    "title": "Autorización exitosa"
+  }
+}

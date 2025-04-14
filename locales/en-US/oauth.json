@@ -1,0 +1,39 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Authorize",
+      "deny": "Deny"
+    },
+    "description": "The application {clientId} is requesting access to your LobeChat account",
+    "error": {
+      "sessionInvalid": {
+        "message": "The authorization session has expired or is invalid. Please restart the authorization process.",
+        "title": "Invalid Authorization Session"
+      },
+      "title": "An Error Occurred",
+      "unsupportedInteraction": {
+        "message": "Unsupported interaction type: {promptName}",
+        "title": "Unsupported Interaction Type"
+      }
+    },
+    "permissionsTitle": "The application requests the following permissions:",
+    "scope": {
+      "email": "Access your email address",
+      "offline_access": "Continue to access your data while you are offline",
+      "openid": "Authenticate using your LobeChat account",
+      "profile": "Access your basic profile information (name, avatar, etc.)",
+      "sync:read": "Read your sync data",
+      "sync:write": "Write and update your sync data"
+    },
+    "title": "Authorization Request"
+  },
+  "failed": {
+    "backToHome": "Back to Home",
+    "subTitle": "You have denied the application access to your LobeChat account",
+    "title": "Authorization Denied"
+  },
+  "success": {
+    "subTitle": "You have successfully authorized the application to access your LobeChat account. You can close this page now.",
+    "title": "Authorization Successful"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Cho phép",
+      "deny": "Từ chối"
+    },
+    "description": "Ứng dụng {clientId} yêu cầu truy cập vào tài khoản LobeChat của bạn",
+    "error": {
+      "sessionInvalid": {
+        "message": "Phiên ủy quyền đã hết hạn hoặc không hợp lệ, vui lòng khởi động lại quy trình ủy quyền.",
+        "title": "Phiên ủy quyền không hợp lệ"
+      },
+      "title": "Đã xảy ra lỗi",
+      "unsupportedInteraction": {
+        "message": "Loại tương tác không được hỗ trợ: {promptName}",
+        "title": "Loại tương tác không được hỗ trợ"
+      }
+    },
+    "permissionsTitle": "Ứng dụng yêu cầu các quyền sau:",
+    "scope": {
+      "email": "Truy cập địa chỉ email của bạn",
+      "offline_access": "Tiếp tục truy cập dữ liệu của bạn khi bạn ngoại tuyến",
+      "openid": "Xác thực bằng tài khoản LobeChat của bạn",
+      "profile": "Truy cập thông tin hồ sơ cơ bản của bạn (tên, ảnh đại diện, v.v.)",
+      "sync:read": "Đọc dữ liệu đồng bộ của bạn",
+      "sync:write": "Ghi và cập nhật dữ liệu đồng bộ của bạn"
+    },
+    "title": "Yêu cầu ủy quyền"
+  },
+  "failed": {
+    "backToHome": "Quay lại trang chính",
+    "subTitle": "Bạn đã từ chối cho phép ứng dụng truy cập vào tài khoản LobeChat của bạn",
+    "title": "Ủy quyền bị từ chối"
+  },
+  "success": {
+    "subTitle": "Bạn đã thành công trong việc cho phép ứng dụng truy cập vào tài khoản LobeChat của bạn, bạn có thể đóng trang này.",
+    "title": "Ủy quyền thành công"
+  }
+}
