@@ -18,7 +18,7 @@ export const defaultClients: ClientMetadata[] = [
     // 桌面端注册的自定义协议回调（使用反向域名格式）
     post_logout_redirect_uris: ['com.lobehub.desktop://auth/logout/callback'],
 
-    redirect_uris: ['com.lobehub.desktop://auth/callback', 'https://oauthdebugger.com/debug'],
+    redirect_uris: ['com.lobehub.desktop://auth/callback'],
 
     // 支持授权码获取令牌和刷新令牌
     response_types: ['code'],
