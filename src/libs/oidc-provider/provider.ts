@@ -78,6 +78,34 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
     // 4. Claims 定义
     claims: defaultClaims,
 
+    // 新增：客户端 CORS 控制逻辑
+    clientBasedCORS(ctx, origin, client) {
+      // 检查客户端是否允许此来源
+      // 一个常见的策略是允许所有已注册的 redirect_uris 的来源
+      if (!client || !client.redirectUris) {
+        logProvider('clientBasedCORS: No client or redirectUris found, denying origin: %s', origin);
+        return false; // 如果没有客户端或重定向URI，则拒绝
+      }
+
+      const allowed = client.redirectUris.some((uri) => {
+        try {
+          // 比较来源 (scheme, hostname, port)
+          return new URL(uri).origin === origin;
+        } catch {
+          // 如果 redirect_uri 不是有效的 URL (例如自定义协议)，则跳过
+          return false;
+        }
+      });
+
+      logProvider(
+        'clientBasedCORS check for origin [%s] and client [%s]: %s',
+        origin,
+        client.clientId,
+        allowed ? 'Allowed' : 'Denied',
+      );
+      return allowed;
+    },
+
     // 1. 客户端配置
     clients: defaultClients,
 

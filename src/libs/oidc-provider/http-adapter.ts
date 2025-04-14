@@ -23,7 +23,7 @@ export const convertHeadersToNodeHeaders = (nextHeaders: Headers): Record<string
  * 创建用于 OIDC Provider 的 Node.js HTTP 请求对象
  * @param req Next.js 请求对象
  */
-export const createNodeRequest = (req: NextRequest): IncomingMessage => {
+export const createNodeRequest = async (req: NextRequest): Promise<IncomingMessage> => {
   // 构建 URL 对象
   const url = new URL(req.url);
 
@@ -38,15 +38,57 @@ export const createNodeRequest = (req: NextRequest): IncomingMessage => {
   log('Creating Node.js request from Next.js request');
   log('Original path: %s, Provider path: %s', url.pathname, providerPath);
 
+  // Attempt to parse and attach body for relevant methods
+  let parsedBody: any = undefined;
+  const methodsWithBody = ['POST', 'PUT', 'PATCH', 'DELETE'];
+  if (methodsWithBody.includes(req.method)) {
+    const contentType = req.headers.get('content-type')?.split(';')[0]; // Get content type without charset etc.
+    log(`Attempting to parse body for ${req.method} with Content-Type: ${contentType}`);
+    try {
+      // Check if body exists and has size before attempting to parse
+      if (req.body && req.headers.get('content-length') !== '0') {
+        if (contentType === 'application/x-www-form-urlencoded') {
+          const formData = await req.formData();
+          parsedBody = {};
+          formData.forEach((value, key) => {
+            // If a key appears multiple times, keep the last one (standard form behavior)
+            // Or convert to array if oidc-provider expects it:
+            // if (parsedBody[key]) {
+            //   if (!Array.isArray(parsedBody[key])) parsedBody[key] = [parsedBody[key]];
+            //   parsedBody[key].push(value);
+            // } else {
+            //   parsedBody[key] = value;
+            // }
+            parsedBody[key] = value;
+          });
+          log('Parsed form data body: %O', parsedBody);
+        } else if (contentType === 'application/json') {
+          parsedBody = await req.json();
+          log('Parsed JSON body: %O', parsedBody);
+        } else {
+          log(`Body parsing skipped for Content-Type: ${contentType}. Trying text() as fallback.`);
+          // Fallback: try reading as text if content type is unknown but body exists
+          parsedBody = await req.text();
+          log('Parsed body as text fallback.');
+        }
+      } else {
+        log('Request has no body or content-length is 0, skipping parsing.');
+      }
+    } catch (error) {
+      log('Error parsing request body: %O', error);
+      // Keep parsedBody as undefined, let oidc-provider handle the potential issue
+    }
+  }
   const nodeRequest = {
     // 基本属性
     headers: convertHeadersToNodeHeaders(req.headers),
 
     method: req.method,
-    // 模拟可读流行为
+    // 模拟可读流行为 (oidc-provider might not rely on this if body is pre-parsed)
     // eslint-disable-next-line @typescript-eslint/ban-types
     on: (event: string, handler: Function) => {
       if (event === 'end') {
+        // Simulate end immediately as body is already processed or will be attached
         handler();
       }
     },
@@ -55,10 +97,15 @@ export const createNodeRequest = (req: NextRequest): IncomingMessage => {
       remoteAddress: req.headers.get('x-forwarded-for') || '127.0.0.1',
     },
     url: providerPath + url.search,
-  } as unknown as IncomingMessage;
+    ...(parsedBody !== undefined && { body: parsedBody }), // Attach body if it exists
+  };
 
   log('Node.js request created with method %s and path %s', nodeRequest.method, nodeRequest.url);
-  return nodeRequest;
+  if (nodeRequest.body) {
+    log('Attached parsed body to Node.js request.');
+  }
+  // Cast back to IncomingMessage for the function's return signature
+  return nodeRequest as unknown as IncomingMessage;
 };
 
 /**
@@ -245,7 +292,7 @@ export const createContextForInteractionDetails = async (
 
   // 4. 使用 createNodeRequest 创建模拟的 Node.js IncomingMessage
   // pathPrefix 设置为 '/' 因为我们的 URL 已经是 Provider 期望的路径格式 /interaction/:uid
-  const req: IncomingMessage = createNodeRequest(mockNextRequest);
+  const req: IncomingMessage = await createNodeRequest(mockNextRequest);
   // @ts-ignore - 将解析出的 cookies 附加到模拟的 Node.js 请求上
   req.cookies = realCookies;
   log('Node.js IncomingMessage created, attached real cookies');
