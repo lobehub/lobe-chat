@@ -1109,6 +1109,18 @@
   "grok-2-vision-1212": {
     "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
   },
+  "grok-3-beta": {
+    "description": "Amiral gemisi model, veri çıkarımı, programlama ve metin özeti gibi kurumsal uygulamalarda uzmandır ve finans, sağlık, hukuk ve bilim gibi alanlarda derin bir bilgiye sahiptir."
+  },
+  "grok-3-fast-beta": {
+    "description": "Amiral gemisi model, veri çıkarımı, programlama ve metin özeti gibi kurumsal uygulamalarda uzmandır ve finans, sağlık, hukuk ve bilim gibi alanlarda derin bir bilgiye sahiptir."
+  },
+  "grok-3-mini-beta": {
+    "description": "Hafif model, konuşmadan önce düşünür. Hızlı ve akıllı çalışır, derin alan bilgisi gerektirmeyen mantıksal görevler için uygundur ve ham düşünce izlerini elde edebilir."
+  },
+  "grok-3-mini-fast-beta": {
+    "description": "Hafif model, konuşmadan önce düşünür. Hızlı ve akıllı çalışır, derin alan bilgisi gerektirmeyen mantıksal görevler için uygundur ve ham düşünce izlerini elde edebilir."
+  },
   "grok-beta": {
     "description": "Grok 2 ile karşılaştırılabilir performansa sahip, ancak daha yüksek verimlilik, hız ve işlevsellik sunar."
   },
