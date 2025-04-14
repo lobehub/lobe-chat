@@ -54,6 +54,11 @@ export class OIDCService {
 
     return grant;
   }
+
+  async getClientMetadata(clientId: string) {
+    const client = await this.provider.Client.find(clientId);
+    return client?.metadata();
+  }
 }
 
 export { getOIDCProvider } from './oidcProvider';

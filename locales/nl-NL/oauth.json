@@ -4,7 +4,7 @@
       "accept": "Toestaan",
       "deny": "Weigeren"
     },
-    "description": "De applicatie {clientId} vraagt toegang tot uw LobeChat-account",
+    "description": "De applicatie {{clientName}} vraagt om toestemming voor uw account",
     "error": {
       "sessionInvalid": {
         "message": "De autorisatiesessie is verlopen of ongeldig, start het autorisatieproces opnieuw.",
@@ -16,7 +16,8 @@
         "title": "Niet-ondersteund interactietype"
       }
     },
-    "permissionsTitle": "De applicatie vraagt om de volgende machtigingen:",
+    "permissionsTitle": "Vraag om de volgende toestemmingen:",
+    "redirectUri": "U wordt omgeleid naar na succesvolle autorisatie",
     "scope": {
       "email": "Toegang tot uw e-mailadres",
       "offline_access": "Toestaan dat de client toegang heeft tot uw gegevens",
@@ -25,7 +26,7 @@
       "sync-read": "Lees uw gesynchroniseerde gegevens",
       "sync-write": "Schrijf en werk uw gesynchroniseerde gegevens bij"
     },
-    "title": "Autorisatieverzoek"
+    "title": "Toestemming voor {{clientName}}"
   },
   "failed": {
     "backToHome": "Terug naar de startpagina",

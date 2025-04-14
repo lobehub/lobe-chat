@@ -39,8 +39,21 @@ const InteractionPage = async (props: { params: Promise<{ uid: string }> }) => {
     const clientId = (details.params.client_id as string) || 'unknown';
     const scopes = (details.params.scope as string)?.split(' ') || [];
 
+    const clientDetail = await oidcService.getClientMetadata(clientId);
+
     // 渲染客户端组件，无论是 login 还是 consent 类型
-    return <ConsentClient clientId={clientId} scopes={scopes} uid={params.uid} />;
+    return (
+      <ConsentClient
+        clientId={clientId}
+        clientMetadata={{
+          clientName: clientDetail?.client_name,
+          logo: clientDetail?.logo_uri,
+        }}
+        redirectUri={details.params.redirect_uri as string}
+        scopes={scopes}
+        uid={params.uid}
+      />
+    );
   } catch (error) {
     console.error('Error handling OIDC interaction:', error);
     // 确保错误处理能正确显示
