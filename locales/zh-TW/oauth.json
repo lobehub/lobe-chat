@@ -4,7 +4,7 @@
       "accept": "授權",
       "deny": "拒絕"
     },
-    "description": "應用 {clientId} 請求訪問您的 LobeChat 帳戶",
+    "description": "應用 {{clientName}} 申請您的帳戶授權",
     "error": {
       "sessionInvalid": {
         "message": "授權會話已過期或無效，請重新發起授權流程。",
@@ -16,16 +16,17 @@
         "title": "不支援的互動類型"
       }
     },
-    "permissionsTitle": "應用請求以下權限：",
+    "permissionsTitle": "請求以下權限：",
+    "redirectUri": "授權成功後將重定向到",
     "scope": {
       "email": "訪問您的電子郵件地址",
-      "offline_access": "在您離線時繼續訪問您的數據",
+      "offline_access": "允許客戶端訪問您的資料",
       "openid": "使用您的 LobeChat 帳戶進行身份驗證",
       "profile": "訪問您的基本資料信息（名稱、頭像等）",
-      "sync:read": "讀取您的同步數據",
-      "sync:write": "寫入並更新您的同步數據"
+      "sync-read": "讀取您的同步資料",
+      "sync-write": "寫入並更新您的同步資料"
     },
-    "title": "授權請求"
+    "title": "授權 {{clientName}}"
   },
   "failed": {
     "backToHome": "返回首頁",

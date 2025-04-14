@@ -1,6 +1,8 @@
 import debug from 'debug';
 import Provider, { Configuration, KoaContextWithOIDC } from 'oidc-provider';
+import urlJoin from 'url-join';
 
+import { appEnv } from '@/config/app';
 import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
 import { LobeChatDatabase } from '@/database/type';
@@ -61,18 +63,9 @@ const getCookieKeys = () => {
 /**
  * 创建 OIDC Provider 实例
  * @param db - 数据库实例
- * @param baseUrl - 服务部署的基础URL
  * @returns 配置好的 OIDC Provider 实例
  */
-export const createOIDCProvider = async (
-  db: LobeChatDatabase,
-  baseUrl: string,
-): Promise<Provider> => {
-  const issuerUrl = `${baseUrl}/oidc`;
-  if (!issuerUrl) {
-    throw new Error('Base URL is required for OIDC Provider');
-  }
-
+export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider> => {
   // 获取 JWKS
   const jwks = getJWKS();
 
@@ -85,13 +78,41 @@ export const createOIDCProvider = async (
     // 4. Claims 定义
     claims: defaultClaims,
 
+    // 新增：客户端 CORS 控制逻辑
+    clientBasedCORS(ctx, origin, client) {
+      // 检查客户端是否允许此来源
+      // 一个常见的策略是允许所有已注册的 redirect_uris 的来源
+      if (!client || !client.redirectUris) {
+        logProvider('clientBasedCORS: No client or redirectUris found, denying origin: %s', origin);
+        return false; // 如果没有客户端或重定向URI，则拒绝
+      }
+
+      const allowed = client.redirectUris.some((uri) => {
+        try {
+          // 比较来源 (scheme, hostname, port)
+          return new URL(uri).origin === origin;
+        } catch {
+          // 如果 redirect_uri 不是有效的 URL (例如自定义协议)，则跳过
+          return false;
+        }
+      });
+
+      logProvider(
+        'clientBasedCORS check for origin [%s] and client [%s]: %s',
+        origin,
+        client.clientId,
+        allowed ? 'Allowed' : 'Denied',
+      );
+      return allowed;
+    },
+
     // 1. 客户端配置
     clients: defaultClients,
 
     // 7. Cookie 配置
     cookies: {
       keys: cookieKeys,
-      long: { signed: true },
+      long: { path: '/', signed: true },
       short: { path: '/', signed: true },
     },
 
@@ -107,7 +128,6 @@ export const createOIDCProvider = async (
       rpInitiatedLogout: { enabled: true },
       userinfo: { enabled: true },
     },
-
     // 10. 账户查找
     async findAccount(ctx: KoaContextWithOIDC, id: string) {
       logProvider('findAccount called for id: %s', id);
@@ -183,6 +203,7 @@ export const createOIDCProvider = async (
         return undefined;
       }
     },
+
     // 9. 交互策略
     interactions: {
       policy: createInteractionPolicy(),
@@ -225,6 +246,11 @@ export const createOIDCProvider = async (
     // 新增：启用 Refresh Token 轮换
     rotateRefreshToken: true,
 
+    routes: {
+      authorization: '/oidc/auth',
+      end_session: '/oidc/session/end',
+      token: '/oidc/token',
+    },
     // 3. Scopes 定义
     scopes: defaultScopes,
 
@@ -243,7 +269,9 @@ export const createOIDCProvider = async (
   };
 
   // 创建提供者实例
-  const provider = new Provider(issuerUrl, configuration);
+  const baseUrl = urlJoin(appEnv.APP_URL!, '/oidc');
+
+  const provider = new Provider(baseUrl, configuration);
 
   provider.on('server_error', (ctx, err) => {
     logProvider('OIDC Provider Server Error: %O', err); // Use logProvider

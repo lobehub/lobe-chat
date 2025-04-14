@@ -4,7 +4,7 @@
       "accept": "承認",
       "deny": "拒否"
     },
-    "description": "{clientId} アプリがあなたの LobeChat アカウントへのアクセスを要求しています",
+    "description": "アプリケーション {{clientName}} があなたのアカウントの承認を要求しています",
     "error": {
       "sessionInvalid": {
         "message": "承認セッションが期限切れまたは無効です。再度承認プロセスを開始してください。",
@@ -16,16 +16,17 @@
         "title": "サポートされていないインタラクションタイプ"
       }
     },
-    "permissionsTitle": "アプリが以下の権限を要求しています：",
+    "permissionsTitle": "以下の権限をリクエストします：",
+    "redirectUri": "承認が成功した後、次の場所にリダイレクトされます",
     "scope": {
       "email": "あなたのメールアドレスにアクセス",
-      "offline_access": "オフラインの際もデータにアクセス",
+      "offline_access": "クライアントがあなたのデータにアクセスすることを許可",
       "openid": "あなたの LobeChat アカウントで認証",
       "profile": "基本的なプロフィール情報（名前、アバターなど）にアクセス",
-      "sync:read": "あなたの同期データを読み取る",
-      "sync:write": "あなたの同期データを書き込み、更新する"
+      "sync-read": "あなたの同期データを読み取る",
+      "sync-write": "あなたの同期データを書き込み、更新する"
     },
-    "title": "承認リクエスト"
+    "title": "{{clientName}} の承認"
   },
   "failed": {
     "backToHome": "ホームに戻る",
