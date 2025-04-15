@@ -9,6 +9,20 @@ export interface XAIModelCard {
 
 export const LobeXAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.x.ai/v1',
+  chatCompletion: {
+    // xAI API does not support stream_options: { include_usage: true }
+    excludeUsage: true,
+    handlePayload: (payload) => {
+      const { frequency_penalty, model, presence_penalty, ...rest } = payload;
+
+      return {
+        ...rest,
+        frequency_penalty: model.includes('grok-3-mini') ? undefined : frequency_penalty,
+        model,
+        presence_penalty: model.includes('grok-3-mini') ? undefined : presence_penalty,
+      } as any;
+    },
+  },
   debug: {
     chatCompletion: () => process.env.DEBUG_XAI_CHAT_COMPLETION === '1',
   },

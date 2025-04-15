@@ -1,7 +1,7 @@
 /**
  * This file contains the edge router of Lobe Chat tRPC-backend
  */
-import { publicProcedure, router } from '@/libs/trpc';
+import { publicProcedure, router } from '@/libs/trpc/edge';
 
 import { appStatusRouter } from './appStatus';
 import { configRouter } from './config';

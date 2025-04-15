@@ -19,7 +19,7 @@ interface InspectorUIProps {
 
 const Inspector = memo<InspectorUIProps>(({ query: args, messageId, response }) => {
   const engines = uniq((response.results || []).map((result) => result.engine));
-  const defaultEngines = engines.length > 0 ? engines : args.searchEngines || [];
+  const defaultEngines = engines.length > 0 ? engines : args.optionalParams?.searchEngines || [];
   const loading = useChatStore(chatToolSelectors.isSearXNGSearching(messageId));
 
   if (loading) {

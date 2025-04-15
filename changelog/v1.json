@@ -1,6 +1,283 @@
 [
   {
     "children": {
+      "improvements": ["Make gpt-4.1-mini default model."]
+    },
+    "date": "2025-04-15",
+    "version": "1.79.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add GPT-4.1 models."]
+    },
+    "date": "2025-04-15",
+    "version": "1.79.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix Azure OpenAI unable to process image messages in local s3."]
+    },
+    "date": "2025-04-12",
+    "version": "1.79.8"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor hotkey import to avoid db generate error."]
+    },
+    "date": "2025-04-11",
+    "version": "1.79.7"
+  },
+  {
+    "children": {
+      "fixes": ["Fix grok-3-mini series calling."]
+    },
+    "date": "2025-04-11",
+    "version": "1.79.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix langfuse intergation."]
+    },
+    "date": "2025-04-10",
+    "version": "1.79.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update Grok 3 models."]
+    },
+    "date": "2025-04-10",
+    "version": "1.79.4"
+  },
+  {
+    "children": {
+      "fixes": ["Remove Azure AI o3-mini unsupported parameters."]
+    },
+    "date": "2025-04-10",
+    "version": "1.79.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix env for Tencent Cloud & remove deepseek-v3 series fc tag."]
+    },
+    "date": "2025-04-09",
+    "version": "1.79.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix xAI API calling, not support stream_options."]
+    },
+    "date": "2025-04-09",
+    "version": "1.79.1"
+  },
+  {
+    "children": {
+      "features": ["Add wiki migrate instructions."]
+    },
+    "date": "2025-04-09",
+    "version": "1.79.0"
+  },
+  {
+    "children": {
+      "features": ["Add Keycloak SSO provider support."]
+    },
+    "date": "2025-04-09",
+    "version": "1.78.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add time_range & categories support for SearXNG."]
+    },
+    "date": "2025-04-09",
+    "version": "1.77.18"
+  },
+  {
+    "children": {
+      "fixes": ["Refactor ollama pull flow and model service."]
+    },
+    "date": "2025-04-08",
+    "version": "1.77.17"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the file service."]
+    },
+    "date": "2025-04-06",
+    "version": "1.77.16"
+  },
+  {
+    "children": {
+      "improvements": ["Improve public procedure implement."]
+    },
+    "date": "2025-04-06",
+    "version": "1.77.15"
+  },
+  {
+    "children": {
+      "improvements": ["Add ernie-x1-32k-preview support for Wenxin."]
+    },
+    "date": "2025-04-06",
+    "version": "1.77.14"
+  },
+  {
+    "children": {
+      "fixes": ["Fix data not show correctly in 1.77.11."]
+    },
+    "date": "2025-04-06",
+    "version": "1.77.13"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Fix QVQ Max model, support default config for system agent and pre-merge some desktop code."
+      ]
+    },
+    "date": "2025-04-06",
+    "version": "1.77.12"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fetch issue in offline mode and make jina crawler first."]
+    },
+    "date": "2025-04-04",
+    "version": "1.77.11"
+  },
+  {
+    "children": {},
+    "date": "2025-04-03",
+    "version": "1.77.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add QVQ-Max model."]
+    },
+    "date": "2025-04-03",
+    "version": "1.77.9"
+  },
+  {
+    "children": {
+      "fixes": ["Add SEARCH1API_CRAWL_API_KEY env."],
+      "improvements": ["Auto refresh TokenTag count."]
+    },
+    "date": "2025-04-03",
+    "version": "1.77.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add desktop-release workflow and improve code."]
+    },
+    "date": "2025-04-03",
+    "version": "1.77.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the db to context inject mode."]
+    },
+    "date": "2025-04-01",
+    "version": "1.77.6"
+  },
+  {
+    "children": {},
+    "date": "2025-04-01",
+    "version": "1.77.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update branding."]
+    },
+    "date": "2025-03-31",
+    "version": "1.77.4"
+  },
+  {
+    "children": {
+      "improvements": ["Move general db models to database folder."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix decrypt error with imported pg data."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix export button and clean orphan agent."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.1"
+  },
+  {
+    "children": {
+      "features": ["Support pglite and postgres data export."]
+    },
+    "date": "2025-03-29",
+    "version": "1.77.0"
+  },
+  {
+    "children": {
+      "improvements": ["Supports OpenAI's latest voice model gpt-4o-mini-tts."]
+    },
+    "date": "2025-03-29",
+    "version": "1.76.1"
+  },
+  {
+    "children": {
+      "features": ["Add Hotkey Settings."]
+    },
+    "date": "2025-03-28",
+    "version": "1.76.0"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add tencentcloud deepseek-v3-0324, support for parsing imageOutput, update models for siliconcloud & infiniai."
+      ]
+    },
+    "date": "2025-03-28",
+    "version": "1.75.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update models info."]
+    },
+    "date": "2025-03-27",
+    "version": "1.75.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix anthropic import issue."]
+    },
+    "date": "2025-03-26",
+    "version": "1.75.3"
+  },
+  {
+    "children": {
+      "fixes": ["Update 'gemini-2.5-pro-exp-03-25' maxOutput and contextWindowTokens."]
+    },
+    "date": "2025-03-26",
+    "version": "1.75.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update siliconcloud models."]
+    },
+    "date": "2025-03-26",
+    "version": "1.75.1"
+  },
+  {
+    "children": {
+      "features": [
+        "Add reasoning content selector and update AutoScroll component, add Xinference provider support."
+      ],
+      "improvements": ["Add Gemini 2.5 Pro Experimental model, improve editing scroll experience."]
+    },
+    "date": "2025-03-26",
+    "version": "1.75.0"
+  },
+  {
+    "children": {
       "improvements": ["Upgrade styles for Drawer."]
     },
     "date": "2025-03-25",

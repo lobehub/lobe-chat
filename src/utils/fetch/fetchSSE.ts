@@ -2,6 +2,7 @@ import { isObject } from 'lodash-es';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
+import { parseToolCalls } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { SmoothingParams } from '@/types/llm';
 import {
@@ -18,7 +19,6 @@ import { nanoid } from '@/utils/uuid';
 
 import { fetchEventSource } from './fetchEventSource';
 import { getMessageError } from './parseError';
-import { parseToolCalls } from './parseToolCalls';
 
 type SSEFinishType = 'done' | 'error' | 'abort';
 

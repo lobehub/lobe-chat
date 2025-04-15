@@ -12,7 +12,7 @@ exports[`agentSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CONFIG
     "historyCount": 8,
     "reasoningBudgetToken": 1024,
     "searchFCModel": {
-      "model": "gpt-4o-mini",
+      "model": "gpt-4.1-mini",
       "provider": "openai",
     },
     "searchMode": "off",

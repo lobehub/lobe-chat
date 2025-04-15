@@ -31,7 +31,7 @@ const ThreadChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
   const isParentMessage = index <= threadStartMessageIndex;
 
   const actionBar = useMemo(
-    () => !isParentMessage && <ActionsBar id={id} inPortalThread />,
+    () => !isParentMessage && <ActionsBar id={id} inPortalThread index={index} />,
     [id, isParentMessage],
   );
 

@@ -6,8 +6,8 @@ import { isServerMode } from '@/const/version';
 /**
  * This file contains the root router of your tRPC-backend
  */
-import { createCallerFactory } from '@/libs/trpc';
-import { AuthContext, createContextInner } from '@/server/context';
+import { createCallerFactory } from '@/libs/trpc/lambda';
+import { AuthContext, createContextInner } from '@/libs/trpc/lambda/context';
 import { SearXNGClient } from '@/server/modules/SearXNG';
 
 import { searchRouter } from '../search';
@@ -21,6 +21,7 @@ vi.mock('@/config/tools', () => ({
 
 vi.mock('@/const/version', () => ({
   isServerMode: true,
+  isDesktop: false,
 }));
 
 const createCaller = createCallerFactory(searchRouter);

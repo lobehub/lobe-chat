@@ -43,13 +43,11 @@ describe('QwenAIStream', () => {
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
-    const onTokenMock = vi.fn();
     const onCompletionMock = vi.fn();
 
     const protocolStream = QwenAIStream(mockOpenAIStream, {
       onStart: onStartMock,
       onText: onTextMock,
-      onToken: onTokenMock,
       onCompletion: onCompletionMock,
     });
 
@@ -74,9 +72,8 @@ describe('QwenAIStream', () => {
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
-    expect(onTextMock).toHaveBeenNthCalledWith(1, '"Hello"');
-    expect(onTextMock).toHaveBeenNthCalledWith(2, '" world!"');
-    expect(onTokenMock).toHaveBeenCalledTimes(2);
+    expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
+    expect(onTextMock).toHaveBeenNthCalledWith(2, ' world!');
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
 
@@ -114,7 +111,7 @@ describe('QwenAIStream', () => {
     const onToolCallMock = vi.fn();
 
     const protocolStream = QwenAIStream(mockOpenAIStream, {
-      onToolCall: onToolCallMock,
+      onToolsCalling: onToolCallMock,
     });
 
     const decoder = new TextDecoder();

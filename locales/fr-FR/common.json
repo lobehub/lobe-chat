@@ -183,7 +183,7 @@
   },
   "fullscreen": "Mode plein écran",
   "historyRange": "Plage d'historique",
-  "import": "Importer",
+  "importData": "Importer des données",
   "importModal": {
     "error": {
       "desc": "Désolé, une erreur s'est produite lors de l'importation des données. Veuillez réessayer l'importation ou <1> soumettre un problème </1>, nous vous aiderons à résoudre le problème dès que possible.",
@@ -205,7 +205,8 @@
       "sessions": "Agents",
       "skips": "Éléments ignorés en double",
       "topics": "Sujets",
-      "type": "Type de données"
+      "type": "Type de données",
+      "update": "Mise à jour des enregistrements"
     },
     "title": "Importer des données",
     "uploading": {
@@ -213,6 +214,16 @@
       "restTime": "Temps restant",
       "speed": "Vitesse de téléchargement"
     }
+  },
+  "importPreview": {
+    "confirmImport": "Confirmer l'importation",
+    "tables": {
+      "count": "Nombre d'enregistrements",
+      "name": "Nom de la table"
+    },
+    "title": "Aperçu de l'importation des données",
+    "totalRecords": "Au total, {{count}} enregistrements seront importés",
+    "totalTables": "{{count}} tables"
   },
   "information": "Communauté et Informations",
   "installPWA": "Installer l'application du navigateur",

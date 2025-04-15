@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import { Flexbox } from 'react-layout-kit';
 
+import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
 import { serverDB } from '@/database/server';
-import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 
 import Head from './Head';
 import Menu from './Menu';
@@ -11,9 +11,10 @@ interface Params {
   id: string;
 }
 
-type Props = { params: Params };
+type Props = { params: Promise<Params> };
 
-const MenuPage = async ({ params }: Props) => {
+const MenuPage = async (props: Props) => {
+  const params = await props.params;
   const id = params.id;
   const item = await KnowledgeBaseModel.findById(serverDB, params.id);
 

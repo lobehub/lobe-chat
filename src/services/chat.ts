@@ -8,7 +8,7 @@ import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
-import { isDeprecatedEdition, isServerMode } from '@/const/version';
+import { isDeprecatedEdition, isDesktop, isServerMode } from '@/const/version';
 import {
   AgentRuntime,
   AgentRuntimeError,
@@ -133,7 +133,7 @@ interface CreateAssistantMessageStream extends FetchSSEOptions {
  *
  * **Note**: if you try to fetch directly, use `fetchOnClient` instead.
  */
-export function initializeWithClientStore(provider: string, payload: any) {
+export function initializeWithClientStore(provider: string, payload?: any) {
   /**
    * Since #5267, we map parameters for client-fetch in function `getProviderAuthPayload`
    * which called by `createPayloadWithKeyVaults` below.
@@ -180,6 +180,7 @@ class ChatService {
     )(getAiInfraStoreState());
 
     const useModelSearch = isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch;
+
     const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
     const pluginIds = [...(enabledPlugins || [])];
@@ -480,7 +481,9 @@ class ChatService {
 
       const imageList = m.imageList || [];
 
-      const filesContext = isServerMode ? filesPrompts({ fileList: m.fileList, imageList }) : '';
+      const filesContext = isServerMode
+        ? filesPrompts({ addUrl: !isDesktop, fileList: m.fileList, imageList })
+        : '';
       return [
         { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
         ...imageList.map(

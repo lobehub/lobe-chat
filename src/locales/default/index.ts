@@ -7,11 +7,13 @@ import components from './components';
 import discover from './discover';
 import error from './error';
 import file from './file';
+import hotkey from './hotkey';
 import knowledgeBase from './knowledgeBase';
 import metadata from './metadata';
 import migration from './migration';
 import modelProvider from './modelProvider';
 import models from './models';
+import oauth from './oauth';
 import plugin from './plugin';
 import portal from './portal';
 import providers from './providers';
@@ -32,11 +34,13 @@ const resources = {
   discover,
   error,
   file,
+  hotkey,
   knowledgeBase,
   metadata,
   migration,
   modelProvider,
   models,
+  oauth,
   plugin,
   portal,
   providers,

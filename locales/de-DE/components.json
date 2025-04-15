@@ -91,6 +91,10 @@
     "provider": "Anbieter"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Hinweis schließen",
+      "start": "Installiert und ausgeführt, beginnen Sie das Gespräch"
+    },
     "cors": {
       "description": "Aufgrund von Sicherheitsbeschränkungen im Browser müssen Sie CORS für Ollama konfigurieren, um es ordnungsgemäß nutzen zu können.",
       "linux": {

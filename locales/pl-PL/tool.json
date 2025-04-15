@@ -19,8 +19,28 @@
       "placeholder": "Słowa kluczowe",
       "tooltip": "Ponownie pobierze wyniki wyszukiwania i utworzy nową wiadomość podsumowującą"
     },
-    "searchEngine": "Silnik wyszukiwania:",
+    "searchCategory": {
+      "placeholder": "Wyszukaj kategorię",
+      "title": "Kategoria wyszukiwania:",
+      "value": {
+        "files": "Pliki",
+        "general": "Ogólne",
+        "images": "Obrazy",
+        "it": "Technologia informacyjna",
+        "map": "Mapa",
+        "music": "Muzyka",
+        "news": "Aktualności",
+        "science": "Nauka",
+        "social_media": "Media społecznościowe",
+        "videos": "Filmy"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Silnik wyszukiwania",
+      "title": "Silnik wyszukiwania:"
+    },
     "searchResult": "Liczba wyników:",
+    "searchTimeRange": "Zakres czasu:",
     "summary": "Podsumowanie",
     "summaryTooltip": "Podsumuj bieżącą treść",
     "viewMoreResults": "Zobacz więcej {{results}} wyników"
