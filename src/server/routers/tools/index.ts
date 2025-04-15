@@ -1,4 +1,4 @@
-import { publicProcedure, router } from '@/libs/trpc';
+import { publicProcedure, router } from '@/libs/trpc/lambda';
 
 import { searchRouter } from './search';
 

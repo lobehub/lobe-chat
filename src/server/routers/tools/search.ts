@@ -5,7 +5,8 @@ import { z } from 'zod';
 
 import { toolsEnv } from '@/config/tools';
 import { isServerMode } from '@/const/version';
-import { authedProcedure, passwordProcedure, router } from '@/libs/trpc';
+import { passwordProcedure } from '@/libs/trpc/edge';
+import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { SearXNGClient } from '@/server/modules/SearXNG';
 import { SEARCH_SEARXNG_NOT_CONFIG } from '@/types/tool/search';
 

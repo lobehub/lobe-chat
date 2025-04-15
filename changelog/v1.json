@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add GPT-4.1 models."]
+    },
+    "date": "2025-04-15",
+    "version": "1.79.9"
+  },
+  {
+    "children": {
       "fixes": ["Fix Azure OpenAI unable to process image messages in local s3."]
     },
     "date": "2025-04-12",
