@@ -1,5 +1,5 @@
-import { Alert, Icon, Modal, Tooltip } from '@lobehub/ui';
-import { App, Button, Form, Popconfirm, Segmented } from 'antd';
+import { Alert, Button, Icon, Modal, Segmented, Tooltip } from '@lobehub/ui';
+import { App, Form, Popconfirm } from 'antd';
 import { useResponsive } from 'antd-style';
 import { MoveUpRight } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';

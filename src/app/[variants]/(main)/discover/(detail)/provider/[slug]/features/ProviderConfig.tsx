@@ -1,7 +1,7 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Button, Dropdown } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
+import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDownIcon, SquareArrowOutUpRight } from 'lucide-react';
 import Link from 'next/link';
@@ -35,7 +35,7 @@ const ProviderConfig = memo<ProviderConfigProps>(({ data, identifier }) => {
     router.push(isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${identifier}`);
   };
 
-  const icon = <Icon icon={SquareArrowOutUpRight} size={{ fontSize: 16 }} />;
+  const icon = <Icon icon={SquareArrowOutUpRight} size={16} />;
 
   const items = [
     data.meta?.url && {
@@ -60,7 +60,7 @@ const ProviderConfig = memo<ProviderConfigProps>(({ data, identifier }) => {
 
   if (!items || items?.length === 0)
     return (
-      <Button size={'large'} style={{ flex: 1 }} type={'primary'}>
+      <Button block size={'large'} style={{ flex: 1 }} type={'primary'}>
         {t('providers.config')}
       </Button>
     );

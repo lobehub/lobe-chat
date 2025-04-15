@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';

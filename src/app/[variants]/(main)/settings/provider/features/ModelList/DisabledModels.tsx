@@ -1,5 +1,5 @@
-import { Icon } from '@lobehub/ui';
-import { Button, Typography } from 'antd';
+import { Button } from '@lobehub/ui';
+import { Typography } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { ChevronDown } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -31,13 +31,11 @@ const DisabledModels = memo(() => {
         {!showMore && disabledModels.length > 10 && (
           <Button
             block
-            color={'default'}
-            icon={<Icon icon={ChevronDown} />}
+            icon={ChevronDown}
             onClick={() => {
               setShowMore(true);
             }}
             size={'small'}
-            variant={'filled'}
           >
             {t('providerModels.list.disabledActions.showMore')}
           </Button>

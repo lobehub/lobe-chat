@@ -1,5 +1,5 @@
 import { Ollama } from '@lobehub/icons';
-import { Button } from 'antd';
+import { Button } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';

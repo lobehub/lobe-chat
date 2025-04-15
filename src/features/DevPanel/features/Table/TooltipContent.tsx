@@ -35,7 +35,7 @@ const TooltipContent = memo<{ children: ReactNode }>(({ children }) => {
           maxHeight: 400,
           overflow: 'auto',
         }}
-        type={'pure'}
+        variant={'borderless'}
       >
         {JSON.stringify(JSON.parse(code), null, 2)}
       </Highlighter>

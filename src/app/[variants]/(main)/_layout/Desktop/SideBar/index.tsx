@@ -1,6 +1,7 @@
 'use client';
 
 import { SideNav } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 
@@ -24,6 +25,7 @@ const Top = () => {
 };
 
 const Nav = memo(() => {
+  const theme = useTheme();
   const inZenMode = useGlobalStore(systemStatusSelectors.inZenMode);
   const { showPinList } = useServerConfigStore(featureFlagsSelectors);
 
@@ -46,7 +48,7 @@ const Nav = memo(() => {
           zIndex: 100,
           ...(isDesktop
             ? { background: 'transparent', borderInlineEnd: 0, paddingBlockStart: 8 }
-            : {}),
+            : { background: theme.colorBgLayout }),
         }}
         topActions={
           <Suspense>

@@ -1,7 +1,7 @@
 'use client';
 
-import { Alert, CodeEditor, Icon } from '@lobehub/ui';
-import { Button, Card, List, Typography } from 'antd';
+import { Alert, Button, CodeEditor, Icon } from '@lobehub/ui';
+import { Card, List, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import isEqual from 'fast-deep-equal';

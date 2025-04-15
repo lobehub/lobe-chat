@@ -1,8 +1,8 @@
 'use client';
 
 import { SiWebrtc } from '@icons-pack/react-simple-icons';
-import { Form, type ItemGroup, Tooltip } from '@lobehub/ui';
-import { Form as AntForm, Input, Switch, Typography } from 'antd';
+import { Form, type FormGroupItemType, Input, InputPassword, Tooltip } from '@lobehub/ui';
+import { Form as AntForm, Switch, Typography } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -13,8 +13,6 @@ import SyncStatusInspector from '@/features/SyncStatusInspector';
 import { useUserStore } from '@/store/user';
 
 import ChannelNameInput from './ChannelNameInput';
-
-type SettingItemGroup = ItemGroup;
 
 const WebRTC = memo(() => {
   const { t } = useTranslation('setting');
@@ -27,7 +25,7 @@ const WebRTC = memo(() => {
   const channelName = AntForm.useWatch(['sync', 'webrtc', 'channelName'], form);
   const signaling = AntForm.useWatch(['sync', 'webrtc', 'signaling'], form);
 
-  const config: SettingItemGroup = {
+  const config: FormGroupItemType = {
     children: [
       {
         children: <Input placeholder={t('sync.webrtc.signaling.placeholder')} />,
@@ -43,7 +41,7 @@ const WebRTC = memo(() => {
       },
       {
         children: (
-          <Input.Password
+          <InputPassword
             autoComplete={'nw-password'}
             placeholder={t('sync.webrtc.channelPassword.placeholder')}
           />
@@ -96,7 +94,7 @@ const WebRTC = memo(() => {
       itemsType={'group'}
       onFinish={setSettings}
       onValuesChange={setSettings}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

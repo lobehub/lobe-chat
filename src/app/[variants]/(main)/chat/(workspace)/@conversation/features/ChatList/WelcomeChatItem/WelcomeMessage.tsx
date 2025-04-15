@@ -1,4 +1,4 @@
-import { ChatItem } from '@lobehub/ui';
+import { ChatItem } from '@lobehub/ui/chat';
 import isEqual from 'fast-deep-equal';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -34,7 +34,7 @@ const WelcomeMessage = () => {
       editing={false}
       message={!!meta.description ? agentSystemRoleMsg : agentMsg}
       placement={'left'}
-      type={type === 'chat' ? 'block' : 'pure'}
+      variant={type === 'chat' ? 'bubble' : 'docs'}
     />
   );
 };

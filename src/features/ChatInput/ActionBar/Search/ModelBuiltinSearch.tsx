@@ -27,7 +27,7 @@ const SearchEngineIcon = ({ icon }: SearchEngineIconProps) => {
     }
 
     default: {
-      return <Icon icon={Search} size={{ fontSize: 16 }} />;
+      return <Icon icon={Search} size={16} />;
     }
   }
 };

@@ -1,5 +1,5 @@
-import { Icon, Tooltip } from '@lobehub/ui';
-import { Badge, Tag } from 'antd';
+import { Icon, Tag, Tooltip } from '@lobehub/ui';
+import { Badge } from 'antd';
 import { LucideCloudy, LucideRefreshCw, LucideRouter, LucideWifiOff } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';

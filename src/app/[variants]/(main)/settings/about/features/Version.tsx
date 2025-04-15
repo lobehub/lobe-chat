@@ -1,9 +1,9 @@
-import { Button, Tag } from 'antd';
+import { Block, Button, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 import { BRANDING_NAME } from '@/const/branding';
@@ -14,10 +14,7 @@ import { useGlobalStore } from '@/store/global';
 
 const useStyles = createStyles(({ css, token }) => ({
   logo: css`
-    overflow: hidden;
     border-radius: ${token.borderRadiusLG * 2}px;
-    background: ${token.colorBgContainer};
-    box-shadow: 0 0 0 1px ${token.colorFillSecondary} inset;
   `,
 }));
 
@@ -25,7 +22,7 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
   const hasNewVersion = useNewVersion();
   const [latestVersion] = useGlobalStore((s) => [s.latestVersion]);
   const { t } = useTranslation('common');
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
 
   return (
     <Flexbox
@@ -37,24 +34,23 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
     >
       <Flexbox align={'center'} flex={'none'} gap={16} horizontal>
         <Link href={OFFICIAL_SITE} target={'_blank'}>
-          <Center className={styles.logo} height={64} width={64}>
+          <Block
+            align={'center'}
+            className={styles.logo}
+            clickable
+            height={64}
+            justify={'center'}
+            width={64}
+          >
             <ProductLogo size={52} />
-          </Center>
+          </Block>
         </Link>
-        <Flexbox>
+        <Flexbox align={'flex-start'} gap={6}>
           <div style={{ fontSize: 18, fontWeight: 'bolder' }}>{BRANDING_NAME}</div>
           <div>
-            <Tag color={theme.colorFillSecondary} style={{ color: theme.colorTextSecondary }}>
-              v{CURRENT_VERSION}
-            </Tag>
+            <Tag>v{CURRENT_VERSION}</Tag>
             {hasNewVersion && (
-              <Tag
-                bordered={false}
-                style={{
-                  background: theme.colorInfoBgHover,
-                  color: theme.colorInfo,
-                }}
-              >
+              <Tag color={'info'}>
                 {t('upgradeVersion.newVersion', { version: `v${latestVersion}` })}
               </Tag>
             )}

@@ -1,5 +1,4 @@
-import { Icon, Tooltip } from '@lobehub/ui';
-import { Tag } from 'antd';
+import { Icon, Tag, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { LucideEye, ToyBrick } from 'lucide-react';
 import { memo } from 'react';

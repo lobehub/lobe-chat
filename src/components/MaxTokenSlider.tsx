@@ -1,4 +1,5 @@
-import { InputNumber, Slider } from 'antd';
+import { InputNumber } from '@lobehub/ui';
+import { Slider } from 'antd';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -90,8 +91,7 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
           min={0}
           onChange={(e) => {
             if (!e && e !== 0) return;
-
-            updateWithRealValue(e);
+            updateWithRealValue(e as number);
           }}
           step={4 * Kibi}
           value={token}

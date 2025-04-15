@@ -1,4 +1,5 @@
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Input, Select, TextArea } from '@lobehub/ui';
+import { Form } from 'antd';
 import { css, cx } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -58,7 +59,7 @@ const CreateForm = memo<CreateFormProps>(({ onClose, onCreate, knowledgeBaseId }
           <Input autoFocus placeholder={t('evaluation.addEvaluation.name.placeholder')} />
         </Form.Item>
         <Form.Item name={'description'}>
-          <Input.TextArea
+          <TextArea
             placeholder={t('evaluation.addEvaluation.description.placeholder')}
             style={{ minHeight: 120 }}
           />

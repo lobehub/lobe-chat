@@ -60,11 +60,10 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
 }));
 
 export interface MenuProps extends AntdMenuProps {
-  variant?: 'default' | 'compact';
+  compact?: boolean;
 }
 
-const Menu = memo<MenuProps>(({ className, selectable = false, variant, ...rest }) => {
-  const isCompact = variant === 'compact';
+const Menu = memo<MenuProps>(({ className, selectable = false, compact, ...rest }) => {
   const { cx, styles, theme } = useStyles();
   return (
     <ConfigProvider
@@ -77,8 +76,8 @@ const Menu = memo<MenuProps>(({ className, selectable = false, variant, ...rest 
             itemBorderRadius: theme.borderRadius,
             itemColor: selectable ? theme.colorTextSecondary : theme.colorText,
             itemHoverBg: theme.colorFillTertiary,
-            itemMarginBlock: isCompact ? 0 : 4,
-            itemMarginInline: isCompact ? 0 : 4,
+            itemMarginBlock: compact ? 0 : 4,
+            itemMarginInline: compact ? 0 : 4,
             itemSelectedBg: theme.colorFillSecondary,
             paddingXS: -8,
           },
@@ -86,7 +85,7 @@ const Menu = memo<MenuProps>(({ className, selectable = false, variant, ...rest 
       }}
     >
       <AntdMenu
-        className={cx(styles.menu, isCompact && styles.compact, className)}
+        className={cx(styles.menu, compact && styles.compact, className)}
         mode="vertical"
         selectable={selectable}
         {...rest}

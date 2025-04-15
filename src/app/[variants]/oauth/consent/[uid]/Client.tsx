@@ -1,7 +1,7 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Button, Card, Divider, Typography } from 'antd';
+import { Icon,Button } from '@lobehub/ui';
+import { Card, Divider,Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { Link2Icon, ServerIcon } from 'lucide-react';
 import Image from 'next/image';
