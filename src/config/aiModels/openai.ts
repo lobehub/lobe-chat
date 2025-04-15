@@ -18,7 +18,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
     displayName: 'GPT-4.1',
     enabled: true,
-    id: 'gpt-4.1-2025-04-14',
+    id: 'gpt-4.1',
     maxOutput: 32_768,
     pricing: {
       cachedInput: 0.5,
@@ -38,7 +38,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
     displayName: 'GPT-4.1 mini',
     enabled: true,
-    id: 'gpt-4.1-mini-2025-04-14',
+    id: 'gpt-4.1-mini',
     maxOutput: 32_768,
     pricing: {
       cachedInput: 0.1,
@@ -58,7 +58,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
     displayName: 'GPT-4.1 nano',
     enabled: true,
-    id: 'gpt-4.1-nano-2025-04-14',
+    id: 'gpt-4.1-nano',
     maxOutput: 32_768,
     pricing: {
       cachedInput: 0.025,
@@ -155,7 +155,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       'GPT-4.5 的研究预览版，它是我们迄今为止最大、最强大的 GPT 模型。它拥有广泛的世界知识，并能更好地理解用户意图，使其在创造性任务和自主规划方面表现出色。GPT-4.5 可接受文本和图像输入，并生成文本输出（包括结构化输出）。支持关键的开发者功能，如函数调用、批量 API 和流式输出。在需要创造性、开放式思考和对话的任务（如写作、学习或探索新想法）中，GPT-4.5 表现尤为出色。知识截止日期为 2023 年 10 月。',
     displayName: 'GPT-4.5 Preview',
     enabled: true,
-    id: 'gpt-4.5-preview',
+    id: 'gpt-4.5-preview', // deprecated on 2025-07-14
     maxOutput: 16_384,
     pricing: {
       cachedInput: 37.5,
@@ -196,6 +196,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4o 1120',
     id: 'gpt-4o-2024-11-20',
     pricing: {
+      cachedInput: 1.25,
       input: 2.5,
       output: 10,
     },
@@ -219,23 +220,6 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 10,
     },
     releasedAt: '2024-05-13',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
-    displayName: 'GPT-4o 0806',
-    id: 'gpt-4o-2024-08-06',
-    pricing: {
-      input: 2.5,
-      output: 10,
-    },
-    releasedAt: '2024-08-06',
     type: 'chat',
   },
   {
@@ -405,29 +389,12 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
     displayName: 'GPT-4 32K',
-    id: 'gpt-4-32k',
-    // Will be discontinued on June 6, 2025
+    id: 'gpt-4-32k', // deprecated on 2025-06-06
     legacy: true,
     pricing: {
       input: 60,
       output: 120,
     },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
-    displayName: 'GPT-4 32K 0613',
-    id: 'gpt-4-32k-0613',
-    pricing: {
-      input: 60,
-      output: 120,
-    },
-    releasedAt: '2023-06-13',
     type: 'chat',
   },
   {
