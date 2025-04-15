@@ -240,6 +240,7 @@
   "updateAgent": "Actualizar información del asistente",
   "upload": {
     "action": {
+      "fileDisabled": "El modelo actual no soporta subir archivos, por favor cambie de modelo para usar esta función",
       "fileUpload": "Subir archivo",
       "folderUpload": "Subir carpeta",
       "imageDisabled": "El modelo actual no soporta reconocimiento visual, por favor cambie de modelo para usar esta función",

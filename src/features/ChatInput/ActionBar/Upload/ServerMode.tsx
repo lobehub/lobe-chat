@@ -5,7 +5,7 @@ import { FileUp, FolderUp, ImageUp, Paperclip } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useModelSupportVision } from '@/hooks/useModelSupportVision';
+import { useModelSupportVision, useModelSupportFile } from '@/hooks/useModelSupportVision';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useFileStore } from '@/store/file';
@@ -28,6 +28,7 @@ const FileUpload = memo(() => {
   const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
 
   const canUploadImage = useModelSupportVision(model, provider);
+  const canUploadFile = useModelSupportFile(model, provider);
 
   const items: MenuProps['items'] = [
     {
@@ -54,9 +55,10 @@ const FileUpload = memo(() => {
       ),
     },
     {
+      disabled: !canUploadFile,
       icon: <Icon icon={FileUp} style={{ fontSize: '16px' }} />,
       key: 'upload-file',
-      label: (
+      label: canUploadFile ? (
         <Upload
           beforeUpload={async (file) => {
             if (!canUploadImage && file.type.startsWith('image')) return false;
@@ -70,12 +72,17 @@ const FileUpload = memo(() => {
         >
           <div className={cx(hotArea)}>{t('upload.action.fileUpload')}</div>
         </Upload>
+      ) : (
+        <Tooltip placement={'right'} title={t('upload.action.fileDisabled')}>
+          <div className={cx(hotArea)}>{t('upload.action.fileUpload')}</div>
+        </Tooltip>
       ),
     },
     {
+      disabled: !canUploadFile,
       icon: <Icon icon={FolderUp} style={{ fontSize: '16px' }} />,
       key: 'upload-folder',
-      label: (
+      label: canUploadFile ? (
         <Upload
           beforeUpload={async (file) => {
             if (!canUploadImage && file.type.startsWith('image')) return false;
@@ -90,6 +97,10 @@ const FileUpload = memo(() => {
         >
           <div className={cx(hotArea)}>{t('upload.action.folderUpload')}</div>
         </Upload>
+      ) : (
+        <Tooltip placement={'right'} title={t('upload.action.fileDisabled')}>
+          <div className={cx(hotArea)}>{t('upload.action.folderUpload')}</div>
+        </Tooltip>
       ),
     },
   ];

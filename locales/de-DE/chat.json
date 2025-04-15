@@ -242,6 +242,7 @@
     "action": {
       "fileUpload": "Datei hochladen",
       "folderUpload": "Ordner hochladen",
+      "fileDisabled": "Das aktuelle Modell unterstützt keine Datei hochladen. Bitte wechseln Sie das Modell, um diese Funktion zu nutzen.",
       "imageDisabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um diese Funktion zu nutzen.",
       "imageUpload": "Bild hochladen",
       "tooltip": "Hochladen"
