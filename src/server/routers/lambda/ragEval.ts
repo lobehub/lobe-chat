@@ -14,8 +14,7 @@ import {
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
-import { serverDatabase } from '@/libs/trpc/lambda/middleware';
-import { keyVaults } from '@/libs/trpc/lambda/middleware/keyVaults';
+import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { createAsyncServerClient } from '@/server/routers/async';
 import { FileService } from '@/server/services/file';
 import {
