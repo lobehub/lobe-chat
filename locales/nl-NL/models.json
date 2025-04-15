@@ -1067,6 +1067,15 @@
   "gpt-4-vision-preview": {
     "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
   },
+  "gpt-4.1": {
+    "description": "GPT-4.1 is ons vlaggenschipmodel voor complexe taken. Het is zeer geschikt voor het oplossen van problemen over verschillende domeinen."
+  },
+  "gpt-4.1-mini": {
+    "description": "GPT-4.1 mini biedt een balans tussen intelligentie, snelheid en kosten, waardoor het een aantrekkelijk model is voor veel gebruikssituaties."
+  },
+  "gpt-4.1-nano": {
+    "description": "GPT-4.1 mini biedt een balans tussen intelligentie, snelheid en kosten, waardoor het een aantrekkelijk model is voor veel gebruikssituaties."
+  },
   "gpt-4.5-preview": {
     "description": "De onderzoekspreview van GPT-4.5, ons grootste en krachtigste GPT-model tot nu toe. Het heeft een uitgebreide wereldkennis en kan de intenties van gebruikers beter begrijpen, waardoor het uitblinkt in creatieve taken en autonome planning. GPT-4.5 accepteert tekst- en afbeeldingsinvoer en genereert tekstuitvoer (inclusief gestructureerde uitvoer). Het ondersteunt belangrijke ontwikkelaarsfuncties zoals functieaanroepen, batch-API's en streaminguitvoer. In taken die creativiteit, open denken en dialoog vereisen (zoals schrijven, leren of het verkennen van nieuwe ideeën), presteert GPT-4.5 bijzonder goed. De kennis is bijgewerkt tot oktober 2023."
   },

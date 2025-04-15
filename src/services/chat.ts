@@ -180,6 +180,7 @@ class ChatService {
     )(getAiInfraStoreState());
 
     const useModelSearch = isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch;
+
     const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
     const pluginIds = [...(enabledPlugins || [])];

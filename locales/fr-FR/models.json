@@ -1067,6 +1067,15 @@
   "gpt-4-vision-preview": {
     "description": "Le dernier modèle GPT-4 Turbo dispose de fonctionnalités visuelles. Désormais, les requêtes visuelles peuvent être effectuées en utilisant le mode JSON et les appels de fonction. GPT-4 Turbo est une version améliorée, offrant un soutien rentable pour les tâches multimodales. Il trouve un équilibre entre précision et efficacité, adapté aux applications nécessitant des interactions en temps réel."
   },
+  "gpt-4.1": {
+    "description": "GPT-4.1 est notre modèle phare pour des tâches complexes. Il est particulièrement adapté à la résolution de problèmes interdomaines."
+  },
+  "gpt-4.1-mini": {
+    "description": "GPT-4.1 mini offre un équilibre entre intelligence, rapidité et coût, ce qui en fait un modèle attrayant pour de nombreux cas d'utilisation."
+  },
+  "gpt-4.1-nano": {
+    "description": "GPT-4.1 mini offre un équilibre entre intelligence, rapidité et coût, ce qui en fait un modèle attrayant pour de nombreux cas d'utilisation."
+  },
   "gpt-4.5-preview": {
     "description": "La version de recherche préliminaire de GPT-4.5, qui est notre modèle GPT le plus grand et le plus puissant à ce jour. Il possède une vaste connaissance du monde et comprend mieux les intentions des utilisateurs, ce qui le rend exceptionnel dans les tâches créatives et la planification autonome. GPT-4.5 accepte les entrées textuelles et visuelles et génère des sorties textuelles (y compris des sorties structurées). Il prend en charge des fonctionnalités clés pour les développeurs, telles que les appels de fonctions, l'API par lots et les sorties en continu. GPT-4.5 excelle particulièrement dans les tâches nécessitant créativité, pensée ouverte et dialogue (comme l'écriture, l'apprentissage ou l'exploration de nouvelles idées). La date limite des connaissances est fixée à octobre 2023."
   },
