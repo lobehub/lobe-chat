@@ -4,7 +4,7 @@ import { ActionIcon } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
 import { Skeleton } from 'antd';
 import { Edit } from 'lucide-react';
-import { memo, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
@@ -24,6 +24,7 @@ import { useStyles } from './style';
 
 const SystemRole = memo(() => {
   const [editing, setEditing] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const { styles } = useStyles();
   const openChatSettings = useOpenChatSettings(ChatSettingsTabs.Prompt);
   const [init, meta] = useSessionStore((s) => [
@@ -52,8 +53,10 @@ const SystemRole = memo(() => {
 
   const isLoading = !init || isAgentConfigLoading;
 
-  const handleOpenWithEdit = () => {
+  const handleOpenWithEdit = (e: React.MouseEvent) => {
     if (isLoading) return;
+
+    e.stopPropagation();
     setEditing(true);
     setOpen(true);
   };
@@ -64,20 +67,31 @@ const SystemRole = memo(() => {
     setOpen(true);
   };
 
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
+  };
+
   return (
     <Flexbox height={'fit-content'}>
       <SidebarHeader
         actions={
           <ActionIcon icon={Edit} onClick={handleOpenWithEdit} size={'small'} title={t('edit')} />
         }
+        onClick={toggleExpanded}
+        style={{ cursor: 'pointer' }}
         title={t('settingAgent.prompt.title', { ns: 'setting' })}
       />
       <Flexbox
-        className={styles.promptBox}
-        height={200}
+        className={`${styles.promptBox} ${styles.animatedContainer}`}
+        height={expanded ? 200 : 0}
         onClick={handleOpen}
         onDoubleClick={(e) => {
-          if (e.altKey) handleOpenWithEdit();
+          if (e.altKey) handleOpenWithEdit(e);
+        }}
+        style={{
+          opacity: expanded ? 1 : 0,
+          overflow: 'hidden',
+          transition: 'height 0.3s ease',
         }}
       >
         {isLoading ? (
