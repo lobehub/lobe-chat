@@ -87,7 +87,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     displayName: 'GLM-4-Flash-250414',
     enabled: true,
     id: 'glm-4-flash-250414',
-    maxOutput: 4_000,
+    maxOutput: 4000,
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -107,7 +107,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     description: 'GLM-4-FlashX 是Flash的增强版本，超快推理速度。',
     displayName: 'GLM-4-FlashX',
     id: 'glm-4-flashx',
-    maxOutput: 4_000,
+    maxOutput: 4000,
     pricing: {
       currency: 'CNY',
       input: 0.1,
@@ -127,7 +127,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     description: 'GLM-4-Long 支持超长文本输入，适合记忆型任务与大规模文档处理。',
     displayName: 'GLM-4-Long',
     id: 'glm-4-long',
-    maxOutput: 4_000,
+    maxOutput: 4000,
     pricing: {
       currency: 'CNY',
       input: 1,
@@ -147,7 +147,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     description: 'GLM-4-Air 是性价比高的版本，性能接近GLM-4，提供快速度和实惠的价格。',
     displayName: 'GLM-4-Air-250414',
     id: 'glm-4-air-250414',
-    maxOutput: 4_000,
+    maxOutput: 4000,
     pricing: {
       currency: 'CNY',
       input: 0.5,
@@ -167,7 +167,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     description: 'GLM-4-AirX 提供 GLM-4-Air 的高效版本，推理速度可达其2.6倍。',
     displayName: 'GLM-4-AirX',
     id: 'glm-4-airx',
-     maxOutput: 4_000,
+     maxOutput: 4000,
     pricing: {
       currency: 'CNY',
       input: 10,
@@ -207,7 +207,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     description: 'GLM-4-Plus 作为高智能旗舰，具备强大的处理长文本和复杂任务的能力，性能全面提升。',
     displayName: 'GLM-4-Plus',
     id: 'glm-4-plus',
-    maxOutput: 4_000,
+    maxOutput: 4000,
     pricing: {
       currency: 'CNY',
       input: 50,
@@ -323,7 +323,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     description: 'CharGLM-4 专为角色扮演与情感陪伴设计，支持超长多轮记忆与个性化对话，应用广泛。',
     displayName: 'CharGLM-4',
     id: 'charglm-4',
-    maxOutput: 4_000,
+    maxOutput: 4000,
     pricing: {
       currency: 'CNY',
       input: 1,
@@ -336,7 +336,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     description: 'Emohaa 是心理模型，具备专业咨询能力，帮助用户理解情感问题。',
     displayName: 'Emohaa',
     id: 'emohaa',
-    maxOutput: 4_000,
+    maxOutput: 4000,
     pricing: {
       currency: 'CNY',
       input: 15,
