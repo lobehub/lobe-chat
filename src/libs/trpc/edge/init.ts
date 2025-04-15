@@ -10,9 +10,9 @@
 import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 
-import type { LambdaContext } from '@/libs/trpc/lambda/context';
+import type { EdgeContext } from './context';
 
-export const trpc = initTRPC.context<LambdaContext>().create({
+export const edgeTrpc = initTRPC.context<EdgeContext>().create({
   /**
    * @link https://trpc.io/docs/v11/error-formatting
    */

@@ -10,8 +10,8 @@
 import { DESKTOP_USER_ID } from '@/const/desktop';
 import { isDesktop } from '@/const/version';
 
+import { userAuth } from '../middleware/userAuth';
 import { trpc } from './init';
-import { userAuth } from './middleware/userAuth';
 
 /**
  * Create a router
