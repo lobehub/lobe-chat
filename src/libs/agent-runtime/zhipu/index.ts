@@ -65,6 +65,11 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
     // ref: https://open.bigmodel.cn/console/modelcenter/square
     client.baseURL = 'https://open.bigmodel.cn/api/fine-tuning/model_center/list?pageSize=100&pageNum=1';
 
+    const reasoningKeywords = [
+      'glm-zero',
+      'glm-z1',
+    ];
+
     const modelsPage = await client.models.list() as any;
     const modelList: ZhipuModelCard[] = modelsPage.body.rows;
 
@@ -83,7 +88,7 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
             || false,
           id: model.modelCode,
           reasoning:
-            model.modelCode.toLowerCase().includes('glm-zero-preview')
+            reasoningKeywords.some(keyword => model.modelCode.toLowerCase().includes(keyword))
             || knownModel?.abilities?.reasoning
             || false,
           vision:
