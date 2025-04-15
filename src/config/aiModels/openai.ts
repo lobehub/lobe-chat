@@ -96,7 +96,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
     displayName: 'OpenAI o1-mini',
-    enabled: true,
     id: 'o1-mini',
     maxOutput: 65_536,
     pricing: {
@@ -135,7 +134,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
     displayName: 'OpenAI o1-preview',
-    enabled: true,
     id: 'o1-preview',
     maxOutput: 32_768,
     pricing: {
@@ -154,7 +152,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'GPT-4.5 的研究预览版，它是我们迄今为止最大、最强大的 GPT 模型。它拥有广泛的世界知识，并能更好地理解用户意图，使其在创造性任务和自主规划方面表现出色。GPT-4.5 可接受文本和图像输入，并生成文本输出（包括结构化输出）。支持关键的开发者功能，如函数调用、批量 API 和流式输出。在需要创造性、开放式思考和对话的任务（如写作、学习或探索新想法）中，GPT-4.5 表现尤为出色。知识截止日期为 2023 年 10 月。',
     displayName: 'GPT-4.5 Preview',
-    enabled: true,
     id: 'gpt-4.5-preview', // deprecated on 2025-07-14
     maxOutput: 16_384,
     pricing: {
@@ -174,7 +171,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。',
     displayName: 'GPT-4o mini',
-    enabled: true,
     id: 'gpt-4o-mini',
     maxOutput: 16_384,
     pricing: {
@@ -212,7 +208,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
     displayName: 'GPT-4o',
-    enabled: true,
     id: 'gpt-4o',
     pricing: {
       cachedInput: 1.25,
