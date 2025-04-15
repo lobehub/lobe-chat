@@ -259,8 +259,7 @@ export default {
   settingOpening: {
     openingMessage: {
       desc: '打开会话时的开场消息，用来介绍助手的功能',
-      placeholder:
-        '你好，我是 自定义助手，你可以立即与我开始对话，也可以前往 助手设置 完善我的信息。',
+      placeholder: '你好，我是自定义助手。你可以立即与我开始对话，也可以前往助手设置完善我的信息。',
       title: '开场消息',
     },
     openingQuestions: {
