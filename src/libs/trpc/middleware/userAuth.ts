@@ -4,7 +4,7 @@ import { enableClerk } from '@/const/auth';
 import { DESKTOP_USER_ID } from '@/const/desktop';
 import { isDesktop } from '@/const/version';
 
-import { trpc } from '../init';
+import { trpc } from '../lambda/init';
 
 export const userAuth = trpc.middleware(async (opts) => {
   const { ctx } = opts;

@@ -2,7 +2,7 @@ import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import type { NextRequest } from 'next/server';
 
 import { pino } from '@/libs/logger';
-import { createAsyncRouteContext } from '@/server/asyncContext';
+import { createAsyncRouteContext } from '@/libs/trpc/async/context';
 import { asyncRouter } from '@/server/routers/async';
 
 export const maxDuration = 60;

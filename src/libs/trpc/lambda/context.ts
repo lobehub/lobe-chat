@@ -28,13 +28,13 @@ export const createContextInner = async (params?: {
   userId: params?.userId,
 });
 
-export type Context = Awaited<ReturnType<typeof createContextInner>>;
+export type LambdaContext = Awaited<ReturnType<typeof createContextInner>>;
 
 /**
  * Creates context for an incoming request
  * @link https://trpc.io/docs/v11/context
  */
-export const createContext = async (request: NextRequest): Promise<Context> => {
+export const createLambdaContext = async (request: NextRequest): Promise<LambdaContext> => {
   // for API-response caching see https://trpc.io/docs/v11/caching
 
   const authorization = request.headers.get(LOBE_CHAT_AUTH_HEADER);

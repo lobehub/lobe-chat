@@ -10,40 +10,40 @@
 import { DESKTOP_USER_ID } from '@/const/desktop';
 import { isDesktop } from '@/const/version';
 
-import { trpc } from './init';
+import { userAuth } from '../middleware/userAuth';
+import { edgeTrpc } from './init';
 import { jwtPayloadChecker } from './middleware/jwtPayload';
-import { userAuth } from './middleware/userAuth';
 
 /**
  * Create a router
  * @link https://trpc.io/docs/v11/router
  */
-export const router = trpc.router;
+export const router = edgeTrpc.router;
 
 /**
  * Create an unprotected procedure
  * @link https://trpc.io/docs/v11/procedures
  **/
-export const publicProcedure = trpc.procedure.use(({ next, ctx }) => {
+export const publicProcedure = edgeTrpc.procedure.use(({ next, ctx }) => {
   return next({
     ctx: { userId: isDesktop ? DESKTOP_USER_ID : ctx.userId },
   });
 });
 
 // procedure that asserts that the user is logged in
-export const authedProcedure = trpc.procedure.use(userAuth);
+export const authedProcedure = edgeTrpc.procedure.use(userAuth);
 
 // procedure that asserts that the user add the password
-export const passwordProcedure = trpc.procedure.use(jwtPayloadChecker);
+export const passwordProcedure = edgeTrpc.procedure.use(jwtPayloadChecker);
 
 /**
  * Merge multiple routers together
  * @link https://trpc.io/docs/v11/merging-routers
  */
-export const mergeRouters = trpc.mergeRouters;
+export const mergeRouters = edgeTrpc.mergeRouters;
 
 /**
  * Create a server-side caller
  * @link https://trpc.io/docs/v11/server/server-side-calls
  */
-export const createCallerFactory = trpc.createCallerFactory;
+export const createCallerFactory = edgeTrpc.createCallerFactory;
