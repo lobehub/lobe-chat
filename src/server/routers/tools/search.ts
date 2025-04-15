@@ -10,6 +10,7 @@ import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { SearXNGClient } from '@/server/modules/SearXNG';
 import { SEARCH_SEARXNG_NOT_CONFIG } from '@/types/tool/search';
 
+// TODO: password procedure 未来的处理方式可能要思考下
 const searchProcedure = isServerMode ? authedProcedure : passwordProcedure;
 
 export const searchRouter = router({

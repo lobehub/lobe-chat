@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.79.10](https://github.com/lobehub/lobe-chat/compare/v1.79.9...v1.79.10)
+
+<sup>Released on **2025-04-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Make gpt-4.1-mini default model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Make gpt-4.1-mini default model, closes [#7414](https://github.com/lobehub/lobe-chat/issues/7414) ([724fcee](https://github.com/lobehub/lobe-chat/commit/724fcee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.79.9](https://github.com/lobehub/lobe-chat/compare/v1.79.8...v1.79.9)
 
 <sup>Released on **2025-04-15**</sup>
