@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { oidcEnv } from '@/envs/oidc';
+import { defaultClients } from '@/libs/oidc-provider/config';
 import { OIDCService } from '@/server/services/oidc';
 
 import ConsentClient from './Client';
@@ -42,6 +43,7 @@ const InteractionPage = async (props: { params: Promise<{ uid: string }> }) => {
         clientId={clientId}
         clientMetadata={{
           clientName: clientDetail?.client_name,
+          isFirstParty: defaultClients.map((c) => c.client_id).includes(clientId),
           logo: clientDetail?.logo_uri,
         }}
         redirectUri={details.params.redirect_uri as string}

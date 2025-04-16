@@ -6,6 +6,7 @@
     "chat": "聊天偏好",
     "meta": "助手資訊",
     "modal": "模型設定",
+    "opening": "開場設定",
     "plugin": "外掛程式設定",
     "prompt": "角色設定",
     "tts": "語音服務"
@@ -252,6 +253,21 @@
       "desc": "考慮多少種可能性，值越大，接受更多可能的回答；值越小，傾向選擇最可能的回答。不推薦和創意活躍度一起更改",
       "title": "思維開放度"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "打開會話時的開場消息，用來介紹助手的功能",
+      "placeholder": "你好，我是 自訂助手，你可以立即與我開始對話，也可以前往 助手設定 完善我的資訊。",
+      "title": "開場消息"
+    },
+    "openingQuestions": {
+      "desc": "會話開始時展示的引導性問題",
+      "empty": "暫無問題",
+      "placeholder": "請輸入問題",
+      "repeat": "問題已存在",
+      "title": "開場問題"
+    },
+    "title": "開場設定"
   },
   "settingPlugin": {
     "title": "插件列表"

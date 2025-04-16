@@ -94,6 +94,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -110,6 +111,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 2',
@@ -156,6 +158,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -172,6 +175,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 2',
@@ -207,6 +211,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -224,6 +229,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 2',
@@ -241,6 +247,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 3',
@@ -287,6 +294,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'Test Agent 1',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -303,6 +311,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'Test Agent 2',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 2',
@@ -367,6 +376,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'Test Agent 1',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -390,6 +400,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'Test Agent 1',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -439,6 +450,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -455,6 +467,8 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
+              openingMessage: `Hello, I'm Agent 2, learn more from [xxx](https://xxx.com)`,
             },
             meta: {
               title: 'Session 2',
@@ -507,6 +521,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -582,6 +597,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -661,6 +677,7 @@ describe('DataImporter', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -872,6 +889,8 @@ describe('DataImporter', () => {
                   enableAutoCreateTopic: true,
                   historyCount: 1,
                 },
+                openingQuestions: ['Question 1', 'Question 2'],
+                openingMessage: `Hello, I'm Agent 1, learn more from [xxx](https://xxx.com)`,
               },
               group: 'XlUbvOvL',
               meta: {

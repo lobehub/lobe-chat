@@ -10,7 +10,6 @@
 import { DESKTOP_USER_ID } from '@/const/desktop';
 import { isDesktop } from '@/const/version';
 
-import { userAuth } from '../middleware/userAuth';
 import { edgeTrpc } from './init';
 import { jwtPayloadChecker } from './middleware/jwtPayload';
 
@@ -29,9 +28,6 @@ export const publicProcedure = edgeTrpc.procedure.use(({ next, ctx }) => {
     ctx: { userId: isDesktop ? DESKTOP_USER_ID : ctx.userId },
   });
 });
-
-// procedure that asserts that the user is logged in
-export const authedProcedure = edgeTrpc.procedure.use(userAuth);
 
 // procedure that asserts that the user add the password
 export const passwordProcedure = edgeTrpc.procedure.use(jwtPayloadChecker);

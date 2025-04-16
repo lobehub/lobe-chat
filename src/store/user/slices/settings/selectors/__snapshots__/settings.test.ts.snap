@@ -117,6 +117,7 @@ exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.set
       "searchMode": "off",
     },
     "model": "gpt-3.5-turbo",
+    "openingQuestions": [],
     "params": {
       "frequency_penalty": 0,
       "presence_penalty": 0,
@@ -160,6 +161,7 @@ exports[`settingsSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CON
     "searchMode": "off",
   },
   "model": "gpt-4",
+  "openingQuestions": [],
   "params": {
     "frequency_penalty": 0,
     "presence_penalty": 0,
