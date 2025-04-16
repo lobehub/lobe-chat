@@ -272,6 +272,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
   const baseUrl = urlJoin(appEnv.APP_URL!, '/oidc');
 
   const provider = new Provider(baseUrl, configuration);
+  provider.proxy = true;
 
   provider.on('server_error', (ctx, err) => {
     logProvider('OIDC Provider Server Error: %O', err); // Use logProvider
