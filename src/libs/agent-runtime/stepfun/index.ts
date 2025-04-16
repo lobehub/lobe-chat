@@ -46,7 +46,12 @@ export const LobeStepfunAI = LobeOpenAICompatibleFactory({
 
     const visionKeywords = [
       'step-1o-',
+      'step-r1-v-',
       'step-1v-',
+    ];
+
+    const reasoningKeywords = [
+      'step-r1-',
     ];
 
     const modelsPage = await client.models.list() as any;
@@ -66,7 +71,8 @@ export const LobeStepfunAI = LobeOpenAICompatibleFactory({
             || false,
           id: model.id,
           reasoning:
-            knownModel?.abilities?.reasoning
+            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.reasoning
             || false,
           vision:
             visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword))

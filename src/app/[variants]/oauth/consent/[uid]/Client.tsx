@@ -15,6 +15,7 @@ interface ClientProps {
   clientId: string;
   clientMetadata: {
     clientName?: string;
+    isFirstParty?: boolean;
     logo?: string;
   };
 
@@ -128,29 +129,41 @@ const ConsentClient = memo<ClientProps>(
     return (
       <Center className={styles.container} gap={16}>
         <Flexbox gap={40}>
-          <Flexbox align={'center'} gap={12} horizontal justify={'center'}>
-            <div className={styles.icon}>
-              {clientMetadata?.logo ? (
-                <Image
-                  alt={clientDisplayName}
-                  height={56}
-                  src={clientMetadata?.logo}
-                  unoptimized
-                  width={56}
-                />
-              ) : (
-                <Icon icon={ServerIcon} />
-              )}
-            </div>
-            <div className={styles.connectorLine} />
-            <Center className={styles.connector}>
-              <Icon icon={Link2Icon} style={{ color: theme.colorTextSecondary, fontSize: 20 }} />
-            </Center>
-            <div className={styles.connectorLine} />
-            <div className={styles.lobeIcon}>
-              <ProductLogo height={48} style={{ objectFit: 'cover' }} width={48} />
-            </div>
-          </Flexbox>
+          {clientMetadata.isFirstParty ? (
+            <Flexbox align={'center'} gap={12} horizontal justify={'center'}>
+              <Image
+                alt={clientDisplayName}
+                height={64}
+                src={clientMetadata.logo!}
+                unoptimized
+                width={64}
+              />
+            </Flexbox>
+          ) : (
+            <Flexbox align={'center'} gap={12} horizontal justify={'center'}>
+              <div className={styles.icon}>
+                {clientMetadata?.logo ? (
+                  <Image
+                    alt={clientDisplayName}
+                    height={56}
+                    src={clientMetadata?.logo}
+                    unoptimized
+                    width={56}
+                  />
+                ) : (
+                  <Icon icon={ServerIcon} />
+                )}
+              </div>
+              <div className={styles.connectorLine} />
+              <Center className={styles.connector}>
+                <Icon icon={Link2Icon} style={{ color: theme.colorTextSecondary, fontSize: 20 }} />
+              </Center>
+              <div className={styles.connectorLine} />
+              <div className={styles.lobeIcon}>
+                <ProductLogo height={48} style={{ objectFit: 'cover' }} width={48} />
+              </div>
+            </Flexbox>
+          )}
 
           <Title className={styles.title} level={3}>
             {t('consent.title', { clientName: clientDisplayName })}

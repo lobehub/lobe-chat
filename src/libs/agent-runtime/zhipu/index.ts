@@ -50,23 +50,30 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
       } as any;
     },
   },
-  constructorOptions: {
-    defaultHeaders: {
-      'Bigmodel-Organization': 'lobehub',
-      'Bigmodel-project': 'lobechat',
-    },
-  },
   debug: {
     chatCompletion: () => process.env.DEBUG_ZHIPU_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    // ref: https://open.bigmodel.cn/console/modelcenter/square
-    client.baseURL = 'https://open.bigmodel.cn/api/fine-tuning/model_center/list?pageSize=100&pageNum=1';
+    const reasoningKeywords = [
+      'glm-zero',
+      'glm-z1',
+    ];
 
-    const modelsPage = await client.models.list() as any;
-    const modelList: ZhipuModelCard[] = modelsPage.body.rows;
+    // ref: https://open.bigmodel.cn/console/modelcenter/square
+    const url = 'https://open.bigmodel.cn/api/fine-tuning/model_center/list?pageSize=100&pageNum=1';
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${client.apiKey}`,
+        'Bigmodel-Organization': 'lobehub',
+        'Bigmodel-Project': 'lobechat',
+      },
+      method: 'GET',
+    });
+    const json = await response.json();
+
+    const modelList: ZhipuModelCard[] = json.rows;
 
     return modelList
       .map((model) => {
@@ -83,7 +90,7 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
             || false,
           id: model.modelCode,
           reasoning:
-            model.modelCode.toLowerCase().includes('glm-zero-preview')
+            reasoningKeywords.some(keyword => model.modelCode.toLowerCase().includes(keyword))
             || knownModel?.abilities?.reasoning
             || false,
           vision:

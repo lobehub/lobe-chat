@@ -16,6 +16,8 @@ table agents {
   provider text
   system_role text
   tts jsonb
+  opening_message text
+  opening_questions text[] [default: `[]`]
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]

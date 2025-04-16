@@ -18,6 +18,7 @@ export enum ChatSettingsTabs {
   Chat = 'chat',
   Meta = 'meta',
   Modal = 'modal',
+  Opening = 'opening',
   Plugin = 'plugin',
   Prompt = 'prompt',
   TTS = 'tts',
