@@ -4,6 +4,75 @@ const azureChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'gpt-4.1',
+    },
+    contextWindowTokens: 1_047_576,
+    description:
+      'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
+    displayName: 'GPT-4.1',
+    enabled: true,
+    id: 'gpt-4.1',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.5,
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'gpt-4.1-mini',
+    },
+    contextWindowTokens: 1_047_576,
+    description:
+      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+    displayName: 'GPT-4.1 mini',
+    enabled: true,
+    id: 'gpt-4.1-mini',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.1,
+      input: 0.4,
+      output: 1.6,
+    },
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'gpt-4.1-nano',
+    },
+    contextWindowTokens: 1_047_576,
+    description:
+      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+    displayName: 'GPT-4.1 nano',
+    enabled: true,
+    id: 'gpt-4.1-nano',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.025,
+      input: 0.1,
+      output: 0.4,
+    },
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     config: {
@@ -16,6 +85,7 @@ const azureChatModels: AIChatModelCard[] = [
     id: 'o3-mini',
     maxOutput: 100_000,
     pricing: {
+      cachedInput: 0.55,
       input: 1.1,
       output: 4.4,
     },
@@ -37,6 +107,7 @@ const azureChatModels: AIChatModelCard[] = [
     id: 'o1-mini',
     maxOutput: 65_536,
     pricing: {
+      cachedInput: 0.55,
       input: 1.1,
       output: 4.4,
     },
@@ -58,6 +129,7 @@ const azureChatModels: AIChatModelCard[] = [
     id: 'o1',
     maxOutput: 100_000,
     pricing: {
+      cachedInput: 7.5,
       input: 15,
       output: 60,
     },
@@ -98,14 +170,15 @@ const azureChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4o',
     enabled: true,
     id: 'gpt-4o',
+    maxOutput: 4096,
     pricing: {
+      cachedInput: 1.25,
       input: 2.5,
       output: 10,
     },
     releasedAt: '2024-05-13',
     type: 'chat',
   },
-
   {
     abilities: {
       functionCall: true,
@@ -135,6 +208,11 @@ const azureChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'gpt-4o-mini',
     maxOutput: 4096,
+    pricing: {
+      cachedInput: 0.075,
+      input: 0.15,
+      output: 0.6,
+    },
     type: 'chat',
   },
 ];

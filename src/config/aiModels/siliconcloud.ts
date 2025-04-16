@@ -5,6 +5,85 @@ import { AIChatModelCard } from '@/types/aiModel';
 const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'GLM-Z1-Rumination-32B-0414 是一个具有沉思能力的深度推理模型（与 OpenAI 的 Deep Research 对标）。与典型的深度思考模型不同，沉思模型采用更长时间的深度思考来解决更开放和复杂的问题。',
+    displayName: 'GLM-Z1-Rumination 32B 0414',
+    enabled: true,
+    id: 'THUDM/GLM-Z1-Rumination-32B-0414',
+    pricing: {
+      currency: 'CNY',
+      input: 0.5,
+      output: 0.5,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'GLM-Z1-32B-0414 是一个具有深度思考能力的推理模型。该模型基于 GLM-4-32B-0414 通过冷启动和扩展强化学习开发，并在数学、代码和逻辑任务上进行了进一步训练。与基础模型相比，GLM-Z1-32B-0414 显著提升了数学能力和解决复杂任务的能力。',
+    displayName: 'GLM-Z1 32B 0414',
+    enabled: true,
+    id: 'THUDM/GLM-Z1-32B-0414',
+    pricing: {
+      currency: 'CNY',
+      input: 0.5,
+      output: 0.5,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'GLM-Z1-9B-0414 是 GLM 系列的小型模型，仅有 90 亿参数，但保持了开源传统的同时展现出惊人的能力。尽管规模较小，该模型在数学推理和通用任务上仍表现出色，其总体性能在同等规模的开源模型中已处于领先水平。',
+    displayName: 'GLM-Z1 9B 0414',
+    enabled: true,
+    id: 'THUDM/GLM-Z1-9B-0414',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768,
+    description:
+      'GLM-4-32B-0414 是 GLM 系列的新一代开源模型，拥有 320 亿参数。该模型性能可与 OpenAI 的 GPT 系列和 DeepSeek 的 V3/R1 系列相媲美。',
+    displayName: 'GLM-4 32B 0414',
+    enabled: true,
+    id: 'THUDM/GLM-4-32B-0414',
+    pricing: {
+      currency: 'CNY',
+      input: 0.5,
+      output: 0.5,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768,
+    description:
+      'GLM-4-9B-0414 是 GLM 系列的小型模型，拥有 90 亿参数。该模型继承了 GLM-4-32B 系列的技术特点，但提供了更轻量级的部署选择。尽管规模较小，GLM-4-9B-0414 仍在代码生成、网页设计、SVG 图形生成和基于搜索的写作等任务上展现出色能力。',
+    displayName: 'GLM-4 9B 0414',
+    enabled: true,
+    id: 'THUDM/GLM-4-9B-0414',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
       reasoning: true,
     },
@@ -29,6 +108,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
     displayName: 'DeepSeek V3',
+    enabled: true,
     id: 'deepseek-ai/DeepSeek-V3',
     pricing: {
       currency: 'CNY',
@@ -369,7 +449,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。它支持长达 128K tokens 的输入，可以生成超过 8K tokens 的长文本。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升',
     displayName: 'Qwen2.5 72B Instruct 128K',
-    enabled: true,
     id: 'Qwen/Qwen2.5-72B-Instruct-128K',
     pricing: {
       currency: 'CNY',
@@ -541,7 +620,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Qwen2.5-VL 是 Qwen2.5 系列中的视觉语言模型。该模型在多方面有显著提升：具备更强的视觉理解能力，能够识别常见物体、分析文本、图表和布局；作为视觉代理能够推理并动态指导工具使用；支持理解超过 1 小时的长视频并捕捉关键事件；能够通过生成边界框或点准确定位图像中的物体；支持生成结构化输出，尤其适用于发票、表格等扫描数据。',
     displayName: 'Qwen2.5 VL 72B Instruct',
-    enabled: true,
     id: 'Qwen/Qwen2.5-VL-72B-Instruct',
     pricing: {
       currency: 'CNY',
