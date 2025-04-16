@@ -4,6 +4,48 @@ const githubChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description:
+      'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
+    displayName: 'GPT-4.1',
+    enabled: true,
+    id: 'gpt-4.1',
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description:
+      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+    displayName: 'GPT-4.1 mini',
+    enabled: true,
+    id: 'gpt-4.1-mini',
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description:
+      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+    displayName: 'GPT-4.1 nano',
+    enabled: true,
+    id: 'gpt-4.1-nano',
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 200_000,
