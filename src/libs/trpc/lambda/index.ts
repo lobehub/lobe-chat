@@ -12,6 +12,7 @@ import { isDesktop } from '@/const/version';
 
 import { userAuth } from '../middleware/userAuth';
 import { trpc } from './init';
+import { oidcAuth } from './middleware/oidcAuth';
 
 /**
  * Create a router
@@ -30,7 +31,7 @@ export const publicProcedure = trpc.procedure.use(({ next, ctx }) => {
 });
 
 // procedure that asserts that the user is logged in
-export const authedProcedure = trpc.procedure.use(userAuth);
+export const authedProcedure = trpc.procedure.use(oidcAuth).use(userAuth);
 
 /**
  * Create a server-side caller

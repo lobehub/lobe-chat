@@ -11,6 +11,7 @@
 venv
 temp
 tmp
+.windsurfrules
 
 # dependencies
 node_modules

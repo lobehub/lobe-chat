@@ -6,6 +6,7 @@
     "chat": "Preferencias de chat",
     "meta": "Información del asistente",
     "modal": "Configuración del modelo",
+    "opening": "Configuración de apertura",
     "plugin": "Configuración de complementos",
     "prompt": "Configuración de roles",
     "tts": "Servicio de voz"
@@ -252,6 +253,21 @@
       "desc": "Cuántas posibilidades se consideran, cuanto mayor sea el valor, más respuestas posibles se aceptan; cuanto menor sea el valor, se tiende a elegir la respuesta más probable. No se recomienda cambiarlo junto con el nivel de creatividad",
       "title": "Apertura mental"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Mensaje de apertura al iniciar la conversación, utilizado para presentar las funciones del asistente",
+      "placeholder": "Hola, soy el asistente personalizado, puedes comenzar a hablar conmigo de inmediato o ir a la configuración del asistente para completar mi información.",
+      "title": "Mensaje de apertura"
+    },
+    "openingQuestions": {
+      "desc": "Preguntas orientativas que se muestran al inicio de la conversación",
+      "empty": "No hay preguntas disponibles",
+      "placeholder": "Introduce una pregunta",
+      "repeat": "La pregunta ya existe",
+      "title": "Preguntas de apertura"
+    },
+    "title": "Configuración de apertura"
   },
   "settingPlugin": {
     "title": "Lista de complementos"

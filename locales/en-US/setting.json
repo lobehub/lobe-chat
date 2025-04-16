@@ -6,6 +6,7 @@
     "chat": "Chat Preferences",
     "meta": "Assistant Info",
     "modal": "Model Settings",
+    "opening": "Opening Settings",
     "plugin": "Plugin Settings",
     "prompt": "Role Configuration",
     "tts": "Voice Service"
@@ -252,6 +253,21 @@
       "desc": "How many possibilities to consider; a higher value accepts more potential answers, while a lower value tends to choose the most likely answer. It is not recommended to change this alongside the creativity level.",
       "title": "Openness to Ideas"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "The opening message displayed when the conversation starts, used to introduce the assistant's features",
+      "placeholder": "Hello, I am your Custom Assistant. You can start chatting with me right away, or go to Assistant Settings to complete my information.",
+      "title": "Opening Message"
+    },
+    "openingQuestions": {
+      "desc": "Guiding questions displayed at the beginning of the conversation",
+      "empty": "No questions available",
+      "placeholder": "Please enter a question",
+      "repeat": "Question already exists",
+      "title": "Opening Questions"
+    },
+    "title": "Opening Settings"
   },
   "settingPlugin": {
     "title": "Plugin List"

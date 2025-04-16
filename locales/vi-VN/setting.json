@@ -6,6 +6,7 @@
     "chat": "Tùy chọn Trò chuyện",
     "meta": "Thông tin Trợ lý",
     "modal": "Cài đặt Mô hình",
+    "opening": "Cài đặt mở đầu",
     "plugin": "Cài đặt Plugin",
     "prompt": "Thiết lập Nhân vật",
     "tts": "Dịch vụ Giọng nói"
@@ -252,6 +253,21 @@
       "desc": "Xem xét bao nhiêu khả năng, giá trị càng lớn, chấp nhận nhiều câu trả lời khả thi hơn; giá trị càng nhỏ, có xu hướng chọn câu trả lời khả thi nhất. Không khuyến nghị thay đổi cùng với mức độ sáng tạo",
       "title": "Mức độ mở trong tư duy"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Tin nhắn mở đầu khi bắt đầu cuộc trò chuyện, dùng để giới thiệu chức năng của trợ lý",
+      "placeholder": "Xin chào, tôi là Trợ lý tùy chỉnh, bạn có thể bắt đầu trò chuyện với tôi ngay lập tức, hoặc đến Cài đặt trợ lý để hoàn thiện thông tin của tôi.",
+      "title": "Tin nhắn mở đầu"
+    },
+    "openingQuestions": {
+      "desc": "Câu hỏi hướng dẫn hiển thị khi bắt đầu cuộc trò chuyện",
+      "empty": "Chưa có câu hỏi nào",
+      "placeholder": "Nhập câu hỏi",
+      "repeat": "Câu hỏi đã tồn tại",
+      "title": "Câu hỏi mở đầu"
+    },
+    "title": "Cài đặt mở đầu"
   },
   "settingPlugin": {
     "title": "Danh sách plugin"
