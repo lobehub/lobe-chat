@@ -1,15 +1,17 @@
 import { enableClerk, enableNextAuth } from '@/const/auth';
-import { ClerkAuth } from '@/libs/clerk-auth';
-import NextAuthEdge from '@/libs/next-auth/edge';
 
 export const getUserAuth = async () => {
   if (enableClerk) {
+    const { ClerkAuth } = await import('@/libs/clerk-auth');
+
     const clerkAuth = new ClerkAuth();
 
     return await clerkAuth.getAuth();
   }
 
   if (enableNextAuth) {
+    const { default: NextAuthEdge } = await import('@/libs/next-auth/edge');
+
     const session = await NextAuthEdge.auth();
 
     const userId = session?.user.id;
