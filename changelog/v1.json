@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fix model support file and image logic."],
+      "improvements": ["Add step-r1 & glm-z1 model fetch support."]
+    },
+    "date": "2025-04-16",
+    "version": "1.80.1"
+  },
+  {
+    "children": {
       "improvements": ["Opening message container add border."],
       "features": [
         "Opening settings copyright i18n, regenerate migrate sql for new agent opening settings."
