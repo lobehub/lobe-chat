@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useFileStore } from '@/store/file';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
+import { useModelSupportFiles } from "@/hooks/useModelSupportFiles";
+import { useModelSupportVision } from "@/hooks/useModelSupportVision";
 
 const FileUpload = memo(() => {
   const { t } = useTranslation('chat');
@@ -16,10 +16,11 @@ const FileUpload = memo(() => {
   const upload = useFileStore((s) => s.uploadChatFiles);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
-  const [canUpload, enabledFiles] = useUserStore((s) => [
-    modelProviderSelectors.isModelEnabledUpload(model)(s),
-    modelProviderSelectors.isModelEnabledFiles(model)(s),
-  ]);
+  const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
+
+  const enabledFiles = useModelSupportFiles(model, provider);
+  const supportVision = useModelSupportVision(model, provider);
+  const canUpload = enabledFiles || supportVision;
 
   return (
     <Upload
