@@ -40,12 +40,12 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
 
     const visionKeywords = [
       'vision',
-      'sensenova-v6'
+      'sensenova-v6',
     ];
 
     const reasoningKeywords = [
-      'deepseek-r1'
-      'sensenova-v6'
+      'deepseek-r1',
+      'sensenova-v6',
     ];
 
     client.baseURL = 'https://api.sensenova.cn/v1/llm';
