@@ -48,12 +48,12 @@ export class ClientService extends BaseClientService implements IUserService {
       canEnablePWAGuide: messageCount >= 4,
       canEnableTrace: messageCount >= 4,
       firstName: state.firstName,
-      fullName: state.fullName || '',
+      fullName: state.fullName,
       hasConversation: messageCount > 0 || sessionCount > 0,
       isOnboard: true,
       lastName: state.lastName,
       preference: await this.preferenceStorage.getFromLocalStorage(),
-      username: state.username || '',
+      username: state.username,
     };
   };
 
