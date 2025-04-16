@@ -11,9 +11,6 @@ export const defaultClients: ClientMetadata[] = [
     // 仅支持授权码流程
     grant_types: ['authorization_code', 'refresh_token'],
 
-    // 明确指明是原生应用
-    isFirstParty: true,
-
     logo_uri: 'https://hub-apac-1.lobeobjects.space/lobehub-desktop-icon.png',
 
     // 桌面端注册的自定义协议回调（使用反向域名格式）
