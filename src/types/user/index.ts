@@ -48,6 +48,7 @@ export interface UserInitializationState {
   avatar?: string;
   canEnablePWAGuide?: boolean;
   canEnableTrace?: boolean;
+  email?: string;
   firstName?: string;
   fullName?: string;
   hasConversation?: boolean;

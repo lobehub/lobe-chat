@@ -111,16 +111,16 @@ export class UserModel {
     };
 
     return {
-      avatar: state.avatar || '',
-      email: state.email,
-      firstName: state.firstName || '',
-      fullName: state.fullName || '',
+      avatar: state.avatar || undefined,
+      email: state.email || undefined,
+      firstName: state.firstName || undefined,
+      fullName: state.fullName || undefined,
       isOnboarded: state.isOnboarded,
-      lastName: state.lastName || '',
+      lastName: state.lastName || undefined,
       preference: state.preference as UserPreference,
       settings,
       userId: this.userId,
-      username: state.username,
+      username: state.username || undefined,
     };
   };
 

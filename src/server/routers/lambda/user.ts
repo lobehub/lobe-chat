@@ -85,21 +85,23 @@ export const userRouter = router({
     const hasExtraSession = await sessionModel.hasMoreThanN(1);
 
     return {
-      avatar: state.avatar ?? '',
+      avatar: state.avatar,
       canEnablePWAGuide: hasMoreThan4Messages,
       canEnableTrace: hasMoreThan4Messages,
+      email: state.email,
       firstName: state.firstName,
-      fullName: state.fullName || '',
+
+      fullName: state.fullName,
+
       // 有消息，或者创建过助手，则认为有 conversation
       hasConversation: hasAnyMessages || hasExtraSession,
-
       // always return true for community version
       isOnboard: state.isOnboarded || true,
       lastName: state.lastName,
       preference: state.preference as UserPreference,
       settings: state.settings,
       userId: ctx.userId,
-      username: state.username || '',
+      username: state.username,
     } satisfies UserInitializationState;
   }),
 
