@@ -22,9 +22,18 @@ class OIDCAdapter {
   private name: string;
 
   constructor(name: string, db: LobeChatDatabase) {
+    log('[%s] Constructor called with name: %s', name, name); // <-- 日志1
+    if (!name) {
+      log('[%s] ERROR: Constructor received empty name!', name); // <-- 潜在问题点
+      console.error('OIDCAdapter constructor received empty name!');
+    }
+    if (!db) {
+      log('[%s] ERROR: Constructor received invalid db object!', name); // <-- 潜在问题点
+      console.error('OIDCAdapter constructor received invalid db object!');
+    }
+
     this.name = name;
     this.db = db;
-    log('Creating adapter for model: %s', name);
   }
 
   /**
@@ -530,12 +539,10 @@ class OIDCAdapter {
   /**
    * 创建适配器工厂
    */
-  static createAdapterFactory(db: LobeChatDatabase) {
+  static createAdapterFactory = (db: LobeChatDatabase) => {
     log('Creating adapter factory with database instance');
-    return function (name: string) {
-      return new OIDCAdapter(name, db);
-    };
-  }
+    return (name: string) => new OIDCAdapter(name, db);
+  };
 }
 
 export { OIDCAdapter as DrizzleAdapter };
