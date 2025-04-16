@@ -11,8 +11,8 @@ import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { S3 } from '@/server/modules/S3';
+import { FileService } from '@/server/services/file';
 import { UserService } from '@/server/services/user';
-import { getFullFileUrl } from '@/server/utils/files';
 import {
   NextAuthAccountSchame,
   UserGuideSchema,
@@ -25,6 +25,7 @@ const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next
   return next({
     ctx: {
       clerkAuth: new ClerkAuth(),
+      fileService: new FileService(),
       nextAuthDbAdapter: LobeNextAuthDbAdapter(ctx.serverDB),
       userModel: new UserModel(ctx.serverDB, ctx.userId),
     },
@@ -164,7 +165,7 @@ export const userRouter = router({
         await s3.uploadBuffer(filePath, buffer, mimeType);
 
         // 获取公共访问 URL
-        let avatarUrl = await getFullFileUrl(filePath);
+        let avatarUrl = await ctx.fileService.getFullFileUrl(filePath);
         avatarUrl = avatarUrl + `?t=${Date.now()}`; // 添加时间戳以避免缓存
 
         return ctx.userModel.updateUser({ avatar: avatarUrl });
