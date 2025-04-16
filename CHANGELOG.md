@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.80.1](https://github.com/lobehub/lobe-chat/compare/v1.80.0...v1.80.1)
+
+<sup>Released on **2025-04-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix model support file and image logic.
+
+#### 💄 Styles
+
+- **misc**: Add `step-r1` & `glm-z1` model fetch support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix model support file and image logic, closes [#7387](https://github.com/lobehub/lobe-chat/issues/7387) ([4d26885](https://github.com/lobehub/lobe-chat/commit/4d26885))
+
+#### Styles
+
+- **misc**: Add `step-r1` & `glm-z1` model fetch support, closes [#7420](https://github.com/lobehub/lobe-chat/issues/7420) ([4055840](https://github.com/lobehub/lobe-chat/commit/4055840))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.80.0](https://github.com/lobehub/lobe-chat/compare/v1.79.10...v1.80.0)
 
 <sup>Released on **2025-04-16**</sup>
