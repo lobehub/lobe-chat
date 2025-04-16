@@ -24,12 +24,12 @@ import { useStyles } from './style';
 
 const SystemRole = memo(() => {
   const [editing, setEditing] = useState(false);
-  const [expanded, setExpanded] = useState(true);
   const { styles } = useStyles();
   const openChatSettings = useOpenChatSettings(ChatSettingsTabs.Prompt);
-  const [init, meta] = useSessionStore((s) => [
+  const [init, meta, sessionId] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
     sessionMetaSelectors.currentAgentMeta(s),
+    s.activeId,
   ]);
 
   const [isAgentConfigLoading, systemRole, updateAgentConfig] = useAgentStore((s) => [
@@ -67,8 +67,13 @@ const SystemRole = memo(() => {
     setOpen(true);
   };
 
+  const [expanded, toggleAgentSystemRoleExpand] = useGlobalStore((s) => [
+    systemStatusSelectors.getAgentSystemRoleExpanded(sessionId)(s),
+    s.toggleAgentSystemRoleExpand,
+  ]);
+
   const toggleExpanded = () => {
-    setExpanded(!expanded);
+    toggleAgentSystemRoleExpand(sessionId);
   };
 
   return (
