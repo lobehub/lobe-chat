@@ -4,7 +4,7 @@ import { ActionIcon } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
 import { Skeleton } from 'antd';
 import { Edit } from 'lucide-react';
-import React, { memo, useState } from 'react';
+import { MouseEvent, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
@@ -24,7 +24,7 @@ import { useStyles } from './style';
 
 const SystemRole = memo(() => {
   const [editing, setEditing] = useState(false);
-  const { styles } = useStyles();
+  const { styles, cx } = useStyles();
   const openChatSettings = useOpenChatSettings(ChatSettingsTabs.Prompt);
   const [init, meta, sessionId] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
@@ -53,7 +53,7 @@ const SystemRole = memo(() => {
 
   const isLoading = !init || isAgentConfigLoading;
 
-  const handleOpenWithEdit = (e: React.MouseEvent) => {
+  const handleOpenWithEdit = (e: MouseEvent) => {
     if (isLoading) return;
 
     e.stopPropagation();
@@ -87,7 +87,7 @@ const SystemRole = memo(() => {
         title={t('settingAgent.prompt.title', { ns: 'setting' })}
       />
       <Flexbox
-        className={`${styles.promptBox} ${styles.animatedContainer}`}
+        className={cx(styles.promptBox, styles.animatedContainer)}
         height={expanded ? 200 : 0}
         onClick={handleOpen}
         onDoubleClick={(e) => {
