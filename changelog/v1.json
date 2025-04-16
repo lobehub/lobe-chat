@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Update default file embedding model info."]
+    },
+    "date": "2025-04-16",
+    "version": "1.80.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix model support file and image logic."],
       "improvements": ["Add step-r1 & glm-z1 model fetch support."]
     },
