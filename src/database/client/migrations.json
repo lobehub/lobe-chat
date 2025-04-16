@@ -448,5 +448,14 @@
     "bps": true,
     "folderMillis": 1744458287757,
     "hash": "f3a80b900906b54ba658208cd448610647fc03f1f4d51963509c07f4e53ef4de"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"opening_message\" text;",
+      "\nALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"opening_questions\" text[] DEFAULT '{}';"
+    ],
+    "bps": true,
+    "folderMillis": 1744602998656,
+    "hash": "9a32c373461472a4afdb45e690c3009a0db0eaae81dcf6c8d05277a48f3a5e85"
   }
 ]

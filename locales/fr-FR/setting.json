@@ -6,6 +6,7 @@
     "chat": "Préférences de discussion",
     "meta": "Informations de l'agent",
     "modal": "Paramètres du modèle",
+    "opening": "Paramètres d'ouverture",
     "plugin": "Paramètres du plugin",
     "prompt": "Configuration du rôle",
     "tts": "Service vocal"
@@ -252,6 +253,21 @@
       "desc": "Considère combien de possibilités, plus la valeur est élevée, plus il accepte de réponses possibles ; plus la valeur est basse, plus il a tendance à choisir la réponse la plus probable. Il n'est pas recommandé de modifier cela en même temps que le niveau de créativité",
       "title": "Ouverture d'esprit"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Message d'ouverture lors de l'initiation de la conversation, utilisé pour présenter les fonctionnalités de l'assistant",
+      "placeholder": "Bonjour, je suis l'assistant personnalisé, vous pouvez commencer à discuter avec moi immédiatement ou aller dans les paramètres de l'assistant pour compléter mes informations.",
+      "title": "Message d'ouverture"
+    },
+    "openingQuestions": {
+      "desc": "Questions d'orientation affichées au début de la conversation",
+      "empty": "Aucune question pour le moment",
+      "placeholder": "Veuillez entrer une question",
+      "repeat": "La question existe déjà",
+      "title": "Questions d'ouverture"
+    },
+    "title": "Paramètres d'ouverture"
   },
   "settingPlugin": {
     "title": "Liste des plugins"
