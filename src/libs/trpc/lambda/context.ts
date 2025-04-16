@@ -5,7 +5,6 @@ import { NextRequest } from 'next/server';
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER, enableClerk, enableNextAuth } from '@/const/auth';
 import { oidcEnv } from '@/envs/oidc';
 import { ClerkAuth, IClerkAuth } from '@/libs/clerk-auth';
-import { extractBearerToken } from '@/utils/server/auth';
 
 // Create context logger namespace
 const log = debug('lobe-trpc:lambda:context');
@@ -73,6 +72,7 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
     const standardAuthorization = request.headers.get('Authorization');
     log('Standard Authorization header: %s', standardAuthorization ? 'exists' : 'not found');
 
+    const { extractBearerToken } = await import('@/utils/server/auth');
     try {
       // Use extractBearerToken from utils
       const bearerToken = extractBearerToken(standardAuthorization);
