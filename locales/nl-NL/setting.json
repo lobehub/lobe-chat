@@ -6,6 +6,7 @@
     "chat": "Chatvoorkeur",
     "meta": "Assistentinformatie",
     "modal": "Modelinstellingen",
+    "opening": "Openingsinstellingen",
     "plugin": "Plugin-instellingen",
     "prompt": "Rolinstelling",
     "tts": "Tekst-naar-spraakdienst"
@@ -252,6 +253,21 @@
       "desc": "Hoeveel mogelijkheden er in overweging worden genomen; hoe hoger de waarde, hoe meer mogelijke antwoorden worden geaccepteerd; hoe lager de waarde, hoe meer de voorkeur uitgaat naar het meest waarschijnlijke antwoord. Het wordt niet aanbevolen om dit samen met creativiteit activiteit te wijzigen.",
       "title": "Openheid van Denken"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "De openingsboodschap bij het starten van een gesprek, bedoeld om de functies van de assistent voor te stellen",
+      "placeholder": "Hallo, ik ben de aangepaste assistent. Je kunt direct met me beginnen praten of naar de assistentinstellingen gaan om mijn informatie aan te vullen.",
+      "title": "Openingsboodschap"
+    },
+    "openingQuestions": {
+      "desc": "Leidende vragen die worden weergegeven aan het begin van het gesprek",
+      "empty": "Geen vragen beschikbaar",
+      "placeholder": "Voer een vraag in",
+      "repeat": "Vraag bestaat al",
+      "title": "Openingsvragen"
+    },
+    "title": "Openingsinstellingen"
   },
   "settingPlugin": {
     "title": "Plugin-lijst"

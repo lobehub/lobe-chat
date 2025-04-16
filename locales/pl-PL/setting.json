@@ -6,6 +6,7 @@
     "chat": "Preferencje czatu",
     "meta": "Informacje o asystencie",
     "modal": "Ustawienia modalne",
+    "opening": "Ustawienia otwarcia",
     "plugin": "Ustawienia wtyczki",
     "prompt": "Ustawienia roli",
     "tts": "Usługi głosowe"
@@ -252,6 +253,21 @@
       "desc": "Ile możliwości należy rozważyć, im większa wartość, tym więcej możliwych odpowiedzi; im mniejsza wartość, tym większa tendencja do wyboru najbardziej prawdopodobnej odpowiedzi. Nie zaleca się jednoczesnej zmiany z aktywnością kreatywną",
       "title": "Otwartość myślenia"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Wiadomość powitalna wyświetlana przy otwarciu rozmowy, służąca do przedstawienia funkcji asystenta",
+      "placeholder": "Cześć, jestem dostosowanym asystentem, możesz od razu rozpocząć rozmowę lub przejść do ustawień asystenta, aby uzupełnić moje informacje.",
+      "title": "Wiadomość powitalna"
+    },
+    "openingQuestions": {
+      "desc": "Pytania wprowadzające wyświetlane na początku rozmowy",
+      "empty": "Brak pytań",
+      "placeholder": "Wprowadź pytanie",
+      "repeat": "Pytanie już istnieje",
+      "title": "Pytania powitalne"
+    },
+    "title": "Ustawienia otwarcia"
   },
   "settingPlugin": {
     "title": "Lista wtyczek"
