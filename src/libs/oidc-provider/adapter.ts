@@ -22,15 +22,7 @@ class OIDCAdapter {
   private name: string;
 
   constructor(name: string, db: LobeChatDatabase) {
-    log('[%s] Constructor called with name: %s', name, name); // <-- 日志1
-    if (!name) {
-      log('[%s] ERROR: Constructor received empty name!', name); // <-- 潜在问题点
-      console.error('OIDCAdapter constructor received empty name!');
-    }
-    if (!db) {
-      log('[%s] ERROR: Constructor received invalid db object!', name); // <-- 潜在问题点
-      console.error('OIDCAdapter constructor received invalid db object!');
-    }
+    log('[%s] Constructor called with name: %s', name, name);
 
     this.name = name;
     this.db = db;
