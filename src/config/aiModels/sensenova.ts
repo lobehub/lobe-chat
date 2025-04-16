@@ -6,8 +6,8 @@ import { AIChatModelCard } from '@/types/aiModel';
 const sensenovaChatModels: AIChatModelCard[] = [
   {
     abilities: {
-      vision: true,
       reasoning: true,
+      vision: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -210,6 +210,67 @@ const sensenovaChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 15,
       output: 15,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多项评测成绩超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他开源模型，并在性能上和世界顶尖的闭源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。',
+    displayName: 'DeepSeek V3',
+    id: 'DeepSeek-V3',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能比肩 OpenAI o1 正式版。',
+    displayName: 'DeepSeek R1',
+    id: 'DeepSeek-R1',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。',
+    displayName: 'DeepSeek R1 Distill Qwen 14B',
+    id: 'DeepSeek-R1-Distill-Qwen-14B',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 8192,
+    description:
+      'DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。',
+    displayName: 'DeepSeek R1 Distill Qwen 32B',
+    id: 'DeepSeek-R1-Distill-Qwen-32B',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
     },
     type: 'chat',
   },
