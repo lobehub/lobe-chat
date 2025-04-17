@@ -1,17 +1,30 @@
 import { CrawlImplType, Crawler } from '@lobechat/web-crawler';
-import { TRPCError } from '@trpc/server';
 import pMap from 'p-map';
 
 import { toolsEnv } from '@/config/tools';
-import { SearXNGClient } from '@/server/modules/SearXNG';
-import { SEARCH_SEARXNG_NOT_CONFIG } from '@/types/tool/search';
+import { SearchParams } from '@/types/tool/search';
 
+import { SearchServiceImpl, createSearchServiceImpl } from './impls';
+
+const parseImplEnv = (envString: string = '') => {
+  // 处理全角逗号和多余空格
+  const envValue = envString.replaceAll('，', ',').trim();
+  return envValue.split(',').filter(Boolean);
+};
+
+/**
+ * Search service class
+ * Uses different implementations for different search operations
+ */
 export class SearchService {
+  private searchImpl: SearchServiceImpl;
+
   private get crawlerImpls() {
-    const envString = toolsEnv.CRAWLER_IMPLS || '';
-    // 处理全角逗号和多余空格
-    let envValue = envString.replaceAll('，', ',').trim();
-    return envValue.split(',').filter(Boolean);
+    return parseImplEnv(toolsEnv.CRAWLER_IMPLS);
+  }
+
+  constructor() {
+    this.searchImpl = createSearchServiceImpl();
   }
 
   async crawlPages(input: { impls?: CrawlImplType[]; urls: string[] }) {
@@ -28,36 +41,17 @@ export class SearchService {
     return { results };
   }
 
-  async query(
-    query: string,
-    params?: {
-      searchCategories?: string[];
-      searchEngines?: string[];
-      searchTimeRange?: string;
-    },
-  ) {
-    if (!toolsEnv.SEARXNG_URL) {
-      throw new TRPCError({ code: 'NOT_IMPLEMENTED', message: SEARCH_SEARXNG_NOT_CONFIG });
-    }
+  private get searchImpls() {
+    return parseImplEnv(toolsEnv.SEARCH_PROVIDERS);
+  }
 
-    const client = new SearXNGClient(toolsEnv.SEARXNG_URL);
-
-    try {
-      return await client.search(query, {
-        categories: params?.searchCategories,
-        engines: params?.searchEngines,
-        time_range: params?.searchTimeRange,
-      });
-    } catch (e) {
-      console.error(e);
-
-      throw new TRPCError({
-        code: 'SERVICE_UNAVAILABLE',
-        message: (e as Error).message,
-      });
-    }
+  /**
+   * Query for search results
+   */
+  async query(query: string, params?: SearchParams) {
+    return this.searchImpl.query(query, params);
   }
 }
 
-// 添加一个默认导出的实例，方便使用
+// Add a default exported instance for convenience
 export const searchService = new SearchService();

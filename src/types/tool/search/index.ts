@@ -1,9 +1,11 @@
+export interface SearchParams {
+  searchCategories?: string[];
+  searchEngines?: string[];
+  searchTimeRange?: string;
+}
+
 export interface SearchQuery {
-  optionalParams?: {
-    searchCategories?: string[];
-    searchEngines?: string[];
-    searchTimeRange?: string;
-  };
+  optionalParams?: SearchParams;
   query: string;
 }
 
