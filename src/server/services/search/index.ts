@@ -4,7 +4,7 @@ import pMap from 'p-map';
 import { toolsEnv } from '@/config/tools';
 import { SearchParams } from '@/types/tool/search';
 
-import { SearchServiceImpl, createSearchServiceImpl } from './impls';
+import { SearchImplType, SearchServiceImpl, createSearchServiceImpl } from './impls';
 
 const parseImplEnv = (envString: string = '') => {
   // 处理全角逗号和多余空格
@@ -24,7 +24,9 @@ export class SearchService {
   }
 
   constructor() {
-    this.searchImpl = createSearchServiceImpl();
+    const impls = this.searchImpls;
+    // TODO: need use turn mode
+    this.searchImpl = createSearchServiceImpl(impls.length > 0 ? impls[0] : undefined);
   }
 
   async crawlPages(input: { impls?: CrawlImplType[]; urls: string[] }) {
@@ -42,7 +44,7 @@ export class SearchService {
   }
 
   private get searchImpls() {
-    return parseImplEnv(toolsEnv.SEARCH_PROVIDERS);
+    return parseImplEnv(toolsEnv.SEARCH_PROVIDERS) as SearchImplType[];
   }
 
   /**

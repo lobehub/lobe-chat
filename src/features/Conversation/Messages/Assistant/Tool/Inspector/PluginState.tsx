@@ -13,7 +13,7 @@ const PluginState = memo<FunctionMessageProps>(({ toolCallId }) => {
 
   return (
     <Highlighter language={'json'} style={{ maxHeight: 200, maxWidth: 800, overflow: 'scroll' }}>
-      {toolMessage?.pluginState}
+      {JSON.stringify(toolMessage?.pluginState, null, 2)}
     </Highlighter>
   );
 });
