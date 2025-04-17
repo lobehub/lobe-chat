@@ -25,24 +25,7 @@ const sensenovaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      '实现图片、文本、视频能力的原生统一，突破传统多模态分立局限，在OpenCompass和SuperCLUE评测中斩获双冠军。',
-    displayName: 'SenseNova V6 Pro',
-    enabled: true,
-    id: 'SenseNova-V6-Pro',
-    pricing: {
-      currency: 'CNY',
-      input: 9,
-      output: 3,
-    },
-    releasedAt: '2025-04-14',
-    type: 'chat',
-  },
-  {
-    abilities: {
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 131_072,
@@ -55,6 +38,24 @@ const sensenovaChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 1.5,
       output: 4.5,
+    },
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '实现图片、文本、视频能力的原生统一，突破传统多模态分立局限，在OpenCompass和SuperCLUE评测中斩获双冠军。',
+    displayName: 'SenseNova V6 Pro',
+    enabled: true,
+    id: 'SenseNova-V6-Pro',
+    pricing: {
+      currency: 'CNY',
+      input: 9,
+      output: 3,
     },
     releasedAt: '2025-04-14',
     type: 'chat',
