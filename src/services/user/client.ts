@@ -39,18 +39,21 @@ export class ClientService extends BaseClientService implements IUserService {
       encryptKeyVaultsStr ? JSON.parse(encryptKeyVaultsStr) : {},
     );
 
-    const user = await UserModel.findById(clientDB as any, this.userId);
     const messageCount = await this.messageModel.count();
     const sessionCount = await this.sessionModel.count();
 
     return {
       ...state,
-      avatar: user?.avatar as string,
+      avatar: state.avatar ?? '',
       canEnablePWAGuide: messageCount >= 4,
       canEnableTrace: messageCount >= 4,
+      firstName: state.firstName,
+      fullName: state.fullName,
       hasConversation: messageCount > 0 || sessionCount > 0,
       isOnboard: true,
+      lastName: state.lastName,
       preference: await this.preferenceStorage.getFromLocalStorage(),
+      username: state.username,
     };
   };
 

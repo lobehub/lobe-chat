@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.80.3](https://github.com/lobehub/lobe-chat/compare/v1.80.2...v1.80.3)
+
+<sup>Released on **2025-04-16**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor to get user info from api.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor to get user info from api, closes [#7444](https://github.com/lobehub/lobe-chat/issues/7444) ([4c1fb4a](https://github.com/lobehub/lobe-chat/commit/4c1fb4a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.80.2](https://github.com/lobehub/lobe-chat/compare/v1.80.1...v1.80.2)
 
 <sup>Released on **2025-04-16**</sup>
