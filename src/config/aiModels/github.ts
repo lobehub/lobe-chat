@@ -107,6 +107,17 @@ const githubChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 200_000,
+    displayName: 'OpenAI o4-mini',
+    id: 'o4-mini',
+    maxOutput: 100_000,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 200_000,
     description:
       'o3-mini 是我们最新的小型推理模型，在与 o1-mini 相同的成本和延迟目标下提供高智能。',
     displayName: 'o3-mini',
@@ -172,6 +183,39 @@ const githubChatModels: AIChatModelCard[] = [
       output: 60,
     },
     releasedAt: '2024-09-12',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_074_176,
+    displayName: 'OpenAI GPT-4.1',
+    id: 'gpt-4.1',
+    maxOutput: 33_792,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_074_176,
+    displayName: 'OpenAI GPT-4.1 mini',
+    id: 'gpt-4.1-mini',
+    maxOutput: 33_792,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_074_176,
+    displayName: 'OpenAI GPT-4.1 nano',
+    id: 'gpt-4.1-nano',
+    maxOutput: 33_792,
     type: 'chat',
   },
   {
