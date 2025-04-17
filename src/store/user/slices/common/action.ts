@@ -7,7 +7,7 @@ import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
-import { UserInitializationState } from '@/types/user';
+import { LobeUser, UserInitializationState } from '@/types/user';
 import type { UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
@@ -91,7 +91,14 @@ export const createCommonSlice: StateCreator<
             // if there is avatar or userId (from client DB), update it into user
             const user =
               data.avatar || data.userId
-                ? merge(get().user, { avatar: data.avatar, id: data.userId })
+                ? merge(get().user, {
+                    avatar: data.avatar,
+                    firstName: data.firstName,
+                    fullName: data.fullName,
+                    id: data.userId,
+                    latestName: data.lastName,
+                    username: data.username,
+                  } as LobeUser)
                 : get().user;
 
             set(

@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor to get user info from api."]
+    },
+    "date": "2025-04-16",
+    "version": "1.80.3"
+  },
+  {
+    "children": {
       "fixes": ["Update default file embedding model info."]
     },
     "date": "2025-04-16",
