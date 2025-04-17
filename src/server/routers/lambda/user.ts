@@ -1,5 +1,6 @@
 import { UserJSON } from '@clerk/backend';
 import { z } from 'zod';
+import { v4 as uuidv4 } from 'uuid'; // 需要添加此导入
 
 import { enableClerk } from '@/const/auth';
 import { MessageModel } from '@/database/models/message';
@@ -155,18 +156,26 @@ export const userRouter = router({
         // 创建 S3 客户端
         const s3 = new S3();
 
-        // 使用固定文件名，确保每个用户只有一个头像（直接覆盖）
-        const fileName = `avatar.${fileType}`;
-        const filePath = `users/avatars/${ctx.userId}/${fileName}`;
+        // 使用 UUID 生成唯一文件名，防止缓存问题
+        // 获取旧头像 URL, 后面删除该头像
+        const userState = await ctx.userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
+        const oldAvatarUrl = userState.avatar;
+
+        const fileName = `${uuidv4()}.${fileType}`;
+        const filePath = `user/avatar/${ctx.userId}/${fileName}`;
 
         // 将 Base64 数据转换为 Buffer 再上传到 S3
         const buffer = Buffer.from(base64Data, 'base64');
 
         await s3.uploadBuffer(filePath, buffer, mimeType);
 
-        // 获取公共访问 URL
-        let avatarUrl = await ctx.fileService.getFullFileUrl(filePath);
-        avatarUrl = avatarUrl + `?t=${Date.now()}`; // 添加时间戳以避免缓存
+        // 删除旧头像
+        if (oldAvatarUrl && oldAvatarUrl.startsWith('/webapi/')) {
+          const oldFilePath = oldAvatarUrl.replace('/webapi/', '');
+          await s3.deleteFile(oldFilePath);
+        }
+
+        const avatarUrl = '/webapi/' + filePath;
 
         return ctx.userModel.updateUser({ avatar: avatarUrl });
       } catch (error) {
