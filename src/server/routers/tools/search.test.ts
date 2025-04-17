@@ -3,10 +3,10 @@ import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { toolsEnv } from '@/config/tools';
-import { SearXNGClient } from '@/server/modules/SearXNG';
+import { SearXNGClient } from '@/server/services/search/impls/searxng/client';
 import { SEARCH_SEARXNG_NOT_CONFIG } from '@/types/tool/search';
 
-import { searchRouter } from '../search';
+import { searchRouter } from './search';
 
 // Mock JWT verification
 vi.mock('@/utils/server/jwt', () => ({
@@ -19,7 +19,7 @@ vi.mock('@lobechat/web-crawler', () => ({
   })),
 }));
 
-vi.mock('@/server/modules/SearXNG');
+vi.mock('@/server/services/search/impls/searxng/client');
 
 describe('searchRouter', () => {
   const mockContext = {
@@ -104,7 +104,18 @@ describe('searchRouter', () => {
         query: 'test query',
       });
 
-      expect(result).toEqual(mockSearchResult);
+      expect(result).toEqual({
+        costTime: 0,
+        query: 'test query',
+        results: [
+          {
+            title: 'Test Result',
+            parsedUrl: 'test.com',
+            url: 'http://test.com',
+            content: 'Test content',
+          },
+        ],
+      });
     });
 
     it('should work without specifying search engines', async () => {
@@ -128,7 +139,18 @@ describe('searchRouter', () => {
         query: 'test query',
       });
 
-      expect(result).toEqual(mockSearchResult);
+      expect(result).toEqual({
+        costTime: 0,
+        query: 'test query',
+        results: [
+          {
+            title: 'Test Result',
+            parsedUrl: 'test.com',
+            url: 'http://test.com',
+            content: 'Test content',
+          },
+        ],
+      });
     });
 
     it('should handle search errors', async () => {

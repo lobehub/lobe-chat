@@ -93,7 +93,7 @@ const ObjectDisplay = memo(({ data, shine }: ObjectDisplayProps) => {
           <div className={styles.row} key={key}>
             <span
               className={styles.key}
-              style={{ minWidth: hasMinWidth ? (isMobile ? 60 : 80) : undefined }}
+              style={{ minWidth: hasMinWidth ? (isMobile ? 60 : 140) : undefined }}
             >
               {key}
             </span>

@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "features": ["Support search1api as search provider."]
+    },
+    "date": "2025-04-17",
+    "version": "1.81.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update 360 AI & Taichu & AI21 model list."]
+    },
+    "date": "2025-04-17",
+    "version": "1.80.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add o3/o4-mini models."]
+    },
+    "date": "2025-04-17",
+    "version": "1.80.4"
+  },
+  {
+    "children": {
       "improvements": ["Refactor to get user info from api."]
     },
     "date": "2025-04-16",

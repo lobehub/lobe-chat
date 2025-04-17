@@ -9,7 +9,7 @@ import { EngineAvatarGroup } from '@/tools/web-browsing/components/EngineAvatar'
 import CategoryAvatar from './CategoryAvatar';
 
 interface TitleExtraProps {
-  category: string;
+  category?: string;
   engines: string[];
   highlight?: boolean;
   score: number;
@@ -35,7 +35,7 @@ const TitleExtra = memo<TitleExtraProps>(({ category, score, highlight, engines 
           </Typography.Text>
         )}
       </Tooltip>
-      <CategoryAvatar category={category} />
+      <CategoryAvatar category={category || 'general'} />
     </Flexbox>
   );
 });

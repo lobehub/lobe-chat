@@ -9,7 +9,7 @@ import {
   SEARCH_SEARXNG_NOT_CONFIG,
   SearchContent,
   SearchQuery,
-  SearchResponse,
+  UniformSearchResponse,
 } from '@/types/tool/search';
 import { nanoid } from '@/utils/uuid';
 
@@ -24,23 +24,19 @@ export interface SearchAction {
     params: { url: string },
     aiSummary?: boolean,
   ) => Promise<boolean | undefined>;
+  saveSearchResult: (id: string) => Promise<void>;
+  search: (id: string, data: SearchQuery, aiSummary?: boolean) => Promise<void | boolean>;
+  togglePageContent: (url: string) => void;
+  toggleSearchLoading: (id: string, loading: boolean) => void;
   /**
    * 重新发起搜索
    * @description 会更新插件的 arguments 参数，然后再次搜索
    */
-  reSearchWithSearXNG: (
+  triggerSearchAgain: (
     id: string,
     data: SearchQuery,
     options?: { aiSummary: boolean },
   ) => Promise<void>;
-  saveSearXNGSearchResult: (id: string) => Promise<void>;
-  searchWithSearXNG: (
-    id: string,
-    data: SearchQuery,
-    aiSummary?: boolean,
-  ) => Promise<void | boolean>;
-  togglePageContent: (url: string) => void;
-  toggleSearchLoading: (id: string, loading: boolean) => void;
 }
 
 export const searchSlice: StateCreator<
@@ -91,14 +87,7 @@ export const searchSlice: StateCreator<
     return await crawlMultiPages(id, { urls: [params.url] }, aiSummary);
   },
 
-  reSearchWithSearXNG: async (id, data, options) => {
-    get().toggleSearchLoading(id, true);
-    await get().updatePluginArguments(id, data);
-
-    await get().searchWithSearXNG(id, data, options?.aiSummary);
-  },
-
-  saveSearXNGSearchResult: async (id) => {
+  saveSearchResult: async (id) => {
     const message = chatSelectors.getMessageById(id)(get());
     if (!message || !message.plugin) return;
 
@@ -138,34 +127,32 @@ export const searchSlice: StateCreator<
     // 将新创建的 tool message 激活
     openToolUI(newMessageId, message.plugin.identifier);
   },
-  searchWithSearXNG: async (id, params, aiSummary = true) => {
+
+  search: async (id, { query, ...params }, aiSummary = true) => {
     get().toggleSearchLoading(id, true);
-    let data: SearchResponse | undefined;
+    let data: UniformSearchResponse | undefined;
     try {
       // 首次查询
-      data = await searchService.search(params.query, params.optionalParams);
+      data = await searchService.search(query, params);
 
       // 如果没有搜索到结果，则执行第一次重试（移除搜索引擎限制）
       if (
         data?.results.length === 0 &&
-        params.optionalParams?.searchEngines &&
-        params.optionalParams?.searchEngines?.length > 0
+        params?.searchEngines &&
+        params?.searchEngines?.length > 0
       ) {
         const paramsExcludeSearchEngines = {
           ...params,
-          optionalParams: {
-            ...params.optionalParams,
-            searchEngines: undefined,
-          },
+          searchEngines: undefined,
         };
-        data = await searchService.search(params.query, paramsExcludeSearchEngines.optionalParams);
+        data = await searchService.search(query, paramsExcludeSearchEngines);
         get().updatePluginArguments(id, paramsExcludeSearchEngines);
       }
 
       // 如果仍然没有搜索到结果，则执行第二次重试（移除所有限制）
       if (data?.results.length === 0) {
-        data = await searchService.search(params.query);
-        get().updatePluginArguments(id, { ...params, optionalParams: undefined });
+        data = await searchService.search(query);
+        get().updatePluginArguments(id, { query });
       }
 
       await get().updatePluginState(id, data);
@@ -197,7 +184,7 @@ export const searchSlice: StateCreator<
       url: item.url,
       ...(item.content && { content: item.content }),
       ...(item.publishedDate && { publishedDate: item.publishedDate }),
-      ...(item.img_src && { img_src: item.img_src }),
+      ...(item.imgSrc && { imgSrc: item.imgSrc }),
       ...(item.thumbnail && { thumbnail: item.thumbnail }),
     }));
 
@@ -209,7 +196,6 @@ export const searchSlice: StateCreator<
     // 如果 aiSummary 为 true，则会自动触发总结
     return aiSummary;
   },
-
   togglePageContent: (url) => {
     set({ activePageContentUrl: url });
   },
@@ -220,5 +206,12 @@ export const searchSlice: StateCreator<
       false,
       `toggleSearchLoading/${loading ? 'start' : 'end'}`,
     );
+  },
+
+  triggerSearchAgain: async (id, data, options) => {
+    get().toggleSearchLoading(id, true);
+    await get().updatePluginArguments(id, data);
+
+    await get().search(id, data, options?.aiSummary);
   },
 });
