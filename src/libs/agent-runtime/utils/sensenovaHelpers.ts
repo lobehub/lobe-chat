@@ -2,7 +2,7 @@ export const convertSenseNovaMessage = (content: any) => {
 
   // 如果为单条 string 类 content，则格式转换为 text 类
   if (typeof content === 'string') {
-    return [{ type: 'text', text: content }];
+    return [{ text: content, type: 'text' }];
   }
 
   // 如果内容包含图片内容，则需要对 array 类 content，进行格式转换
@@ -18,10 +18,10 @@ export const convertSenseNovaMessage = (content: any) => {
         // 如果 image_url 为 base64 格式，则返回 image_base64 类，否则返回 image_url 类
         return url.startsWith('data:image/jpeg;base64') 
           ? { 
-              type: 'image_base64', 
-              image_base64: url.split(',')[1] 
+              image_base64: url.split(',')[1],
+              type: 'image_base64',
             }
-          : { type: 'image_url', image_url: url };
+          : { image_url: url, type: 'image_url' };
       }
 
       return null;
