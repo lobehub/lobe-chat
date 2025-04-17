@@ -118,6 +118,18 @@ const githubChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 200_000,
+    displayName: 'OpenAI o3',
+    enabled: true,
+    id: 'o3',
+    maxOutput: 100_000,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 200_000,
     description:
       'o3-mini 是我们最新的小型推理模型，在与 o1-mini 相同的成本和延迟目标下提供高智能。',
     displayName: 'o3-mini',
@@ -256,6 +268,16 @@ const githubChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
+    contextWindowTokens: 128_000,
+    displayName: 'DeepSeek V3',
+    id: 'DeepSeek-V3-0324',
+    maxOutput: 4096,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 262_144,
     description:
       '一个52B参数（12B活跃）的多语言模型，提供256K长上下文窗口、函数调用、结构化输出和基于事实的生成。',
@@ -357,6 +379,20 @@ const githubChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.3 70B Instruct',
     enabled: true,
     id: 'llama-3.3-70b-instruct',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 10_240_000,
+    displayName: 'Meta Llama 4 Scout 17B',
+    id: 'llama-4-Scout-17B-16E-Instruct',
+    maxOutput: 4096,
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 10_240_000,
+    displayName: 'Meta Llama 4 Maverick 17B',
+    id: 'llama-4-Maverick-17B-128E-Instruct-FP8',
+    maxOutput: 4096,
     type: 'chat',
   },
   {
