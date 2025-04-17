@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add o3/o4-mini models."]
+    },
+    "date": "2025-04-17",
+    "version": "1.80.4"
+  },
+  {
+    "children": {
       "improvements": ["Refactor to get user info from api."]
     },
     "date": "2025-04-16",
