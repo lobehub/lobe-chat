@@ -104,7 +104,18 @@ describe('searchRouter', () => {
         query: 'test query',
       });
 
-      expect(result).toEqual(mockSearchResult);
+      expect(result).toEqual({
+        costTime: 0,
+        query: 'test query',
+        results: [
+          {
+            title: 'Test Result',
+            parsedUrl: 'test.com',
+            url: 'http://test.com',
+            content: 'Test content',
+          },
+        ],
+      });
     });
 
     it('should work without specifying search engines', async () => {
@@ -128,7 +139,18 @@ describe('searchRouter', () => {
         query: 'test query',
       });
 
-      expect(result).toEqual(mockSearchResult);
+      expect(result).toEqual({
+        costTime: 0,
+        query: 'test query',
+        results: [
+          {
+            title: 'Test Result',
+            parsedUrl: 'test.com',
+            url: 'http://test.com',
+            content: 'Test content',
+          },
+        ],
+      });
     });
 
     it('should handle search errors', async () => {
