@@ -6,6 +6,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     description:
       '根据上下文长度、主题和复杂性，你的请求将发送到 Llama 3 70B Instruct、Claude 3.5 Sonnet（自我调节）或 GPT-4o。',
     displayName: 'Auto (best for prompt)',
+    enabled: true,
     id: 'openrouter/auto',
     type: 'chat',
   },
