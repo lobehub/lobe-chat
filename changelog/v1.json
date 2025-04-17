@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update 360 AI & Taichu & AI21 model list."]
+    },
+    "date": "2025-04-17",
+    "version": "1.80.5"
+  },
+  {
+    "children": {
       "improvements": ["Add o3/o4-mini models."]
     },
     "date": "2025-04-17",
