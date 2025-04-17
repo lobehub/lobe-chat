@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import WebFavicon from '@/components/WebFavicon';
-import { SearchResult } from '@/types/tool/search';
+import { UniformSearchResult } from '@/types/tool/search';
 
 import TitleExtra from './TitleExtra';
 import Video from './Video';
@@ -52,7 +52,7 @@ const useStyles = createStyles(({ css, token }) => {
   };
 });
 
-interface SearchResultProps extends SearchResult {
+interface SearchResultProps extends UniformSearchResult {
   highlight?: boolean;
 }
 

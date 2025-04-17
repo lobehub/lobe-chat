@@ -6,7 +6,7 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { CRAWL_CONTENT_LIMITED_COUNT } from '@/tools/web-browsing/const';
 import { ChatMessage } from '@/types/message';
-import { SearchContent, SearchQuery, SearchResponse } from '@/types/tool/search';
+import { SearchContent, SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 // Mock services
 vi.mock('@/services/search', () => ({
@@ -22,7 +22,7 @@ vi.mock('@/store/chat/selectors', () => ({
   },
 }));
 
-describe('searXNG actions', () => {
+describe('search actions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useChatStore.setState({
@@ -41,28 +41,21 @@ describe('searXNG actions', () => {
 
   describe('searchWithSearXNG', () => {
     it('should handle successful search', async () => {
-      const mockResponse: SearchResponse = {
+      const mockResponse: UniformSearchResponse = {
         results: [
           {
             title: 'Test Result',
             content: 'Test Content',
             url: 'https://test.com',
             category: 'general',
-            engine: 'google',
             engines: ['google'],
-            parsed_url: ['test.com'],
-            positions: [1],
+            parsedUrl: 'test.com',
             score: 1,
-            template: 'default',
           },
         ],
-        answers: [],
-        corrections: [],
-        infoboxes: [],
-        number_of_results: 1,
+        costTime: 1,
+        resultNumbers: 1,
         query: 'test',
-        suggestions: [],
-        unresponsive_engines: [],
       };
 
       (searchService.search as Mock).mockResolvedValue(mockResponse);
@@ -101,39 +94,28 @@ describe('searXNG actions', () => {
     });
 
     it('should handle empty search results and retry with default engine', async () => {
-      const emptyResponse: SearchResponse = {
+      const emptyResponse: UniformSearchResponse = {
         results: [],
-        answers: [],
-        corrections: [],
-        infoboxes: [],
-        number_of_results: 0,
+        costTime: 1,
+        resultNumbers: 0,
         query: 'test',
-        suggestions: [],
-        unresponsive_engines: [],
       };
 
-      const retryResponse: SearchResponse = {
+      const retryResponse: UniformSearchResponse = {
         results: [
           {
             title: 'Retry Result',
             content: 'Retry Content',
             url: 'https://retry.com',
             category: 'general',
-            engine: 'google',
             engines: ['google'],
-            parsed_url: ['retry.com'],
-            positions: [1],
+            parsedUrl: 'retry.com',
             score: 1,
-            template: 'default',
           },
         ],
-        answers: [],
-        corrections: [],
-        infoboxes: [],
-        number_of_results: 1,
+        costTime: 1,
+        resultNumbers: 1,
         query: 'test',
-        suggestions: [],
-        unresponsive_engines: [],
       };
 
       (searchService.search as Mock)

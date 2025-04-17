@@ -9,7 +9,7 @@ import {
   SEARCH_SEARXNG_NOT_CONFIG,
   SearchContent,
   SearchQuery,
-  SearchResponse,
+  UniformSearchResponse,
 } from '@/types/tool/search';
 import { nanoid } from '@/utils/uuid';
 
@@ -140,7 +140,7 @@ export const searchSlice: StateCreator<
   },
   searchWithSearXNG: async (id, params, aiSummary = true) => {
     get().toggleSearchLoading(id, true);
-    let data: SearchResponse | undefined;
+    let data: UniformSearchResponse | undefined;
     try {
       // 首次查询
       data = await searchService.search(params.query, params.optionalParams);
@@ -197,7 +197,7 @@ export const searchSlice: StateCreator<
       url: item.url,
       ...(item.content && { content: item.content }),
       ...(item.publishedDate && { publishedDate: item.publishedDate }),
-      ...(item.img_src && { img_src: item.img_src }),
+      ...(item.imgSrc && { imgSrc: item.imgSrc }),
       ...(item.thumbnail && { thumbnail: item.thumbnail }),
     }));
 

@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
-import { SearchQuery, SearchResponse } from '@/types/tool/search';
+import { SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 import SearchBar from '../../../components/SearchBar';
 import SearchView from './SearchView';
@@ -17,7 +17,7 @@ interface SearchQueryViewProps {
   args: SearchQuery;
   editing: boolean;
   messageId: string;
-  pluginState?: SearchResponse;
+  pluginState?: UniformSearchResponse;
   setEditing: (editing: boolean) => void;
 }
 
@@ -28,7 +28,7 @@ const SearchQueryView = memo<SearchQueryViewProps>(
 
     const { t } = useTranslation('common');
 
-    const engines = uniq(searchResults.map((result) => result.engine));
+    const engines = uniq(searchResults.flatMap((result) => result.engines));
     const defaultEngines = engines.length > 0 ? engines : args.optionalParams?.searchEngines || [];
 
     return !pluginState ? (
