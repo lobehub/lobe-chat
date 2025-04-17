@@ -144,7 +144,6 @@ describe('search actions', () => {
         searchTimeRange: 'year',
       });
       expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, {
-        searchTimeRange: 'year',
         query: 'test query',
       });
       expect(searchService.search).toHaveBeenNthCalledWith(3, 'test query');
