@@ -1,7 +1,34 @@
 import qs from 'query-string';
 import urlJoin from 'url-join';
 
-import { SearchResponse } from '@/types/tool/search';
+export interface SearXNGSearchResult {
+  category: string;
+  content?: string;
+  engine: string;
+  engines: string[];
+  iframe_src?: string;
+  img_src?: string;
+  parsed_url: string[];
+  positions: number[];
+  publishedDate?: string | null;
+  score: number;
+  template: string;
+  thumbnail?: string | null;
+  thumbnail_src?: string | null;
+  title: string;
+  url: string;
+}
+
+export interface SearXNGSearchResponse {
+  answers: any[];
+  corrections: any[];
+  infoboxes: any[];
+  number_of_results: number;
+  query: string;
+  results: SearXNGSearchResult[];
+  suggestions: string[];
+  unresponsive_engines: any[];
+}
 
 export class SearXNGClient {
   private baseUrl: string;
@@ -10,7 +37,10 @@ export class SearXNGClient {
     this.baseUrl = baseUrl;
   }
 
-  async search(query: string, optionalParams: Record<string, any> = {}): Promise<SearchResponse> {
+  async search(
+    query: string,
+    optionalParams: Record<string, any> = {},
+  ): Promise<SearXNGSearchResponse> {
     try {
       const { time_range, ...otherParams } = optionalParams;
 

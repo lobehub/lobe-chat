@@ -1,6 +1,6 @@
-import { SearchResponse } from '@/types/tool/search';
+import { SearXNGSearchResponse } from '../client';
 
-export const hetongxue: SearchResponse = {
+export const hetongxue: SearXNGSearchResponse = {
   answers: [
     '老师好我叫何同学. 目标是做有意思的视频 合作请联系：xhaxx1123@163.com. 【何同学】我拍了一张600万人的合影...共计2条视频，包括：正片、教程等，UP主更多精彩视频，请关注UP账号。.',
   ],
