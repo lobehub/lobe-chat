@@ -11,7 +11,7 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.sensenova.cn/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { frequency_penalty, temperature, top_p, ...rest } = payload;
+      const { frequency_penalty, messages, model, temperature, top_p, ...rest } = payload;
 
       return {
         ...rest,
@@ -19,6 +19,46 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
           frequency_penalty !== undefined && frequency_penalty > 0 && frequency_penalty <= 2
             ? frequency_penalty
             : undefined,
+        messages: messages.map((message) => {
+          // 如果是非 V6 模型，则直接返回标准 message
+          if (!model.startsWith('SenseNova-V6') || message.role !== 'user') return message;
+
+          const processContent = (content) => {
+            // 如果为单条 string 类 content，则格式转换为 text 类
+            if (typeof content === 'string') {
+              return [{ type: 'text', text: content }];
+            }
+
+            // 如果内容包含图片内容，则需要对 array 类 content，进行格式转换
+            return content
+              .map((item) => {
+                // 如果为 content，则格式转换为 text 类
+                if (item.type === 'text') return item;
+
+                // 如果为 image_url，则格式转换为 image_url 类
+                if (item.type === 'image_url' && item.image_url?.url) {
+                  const url = item.image_url.url;
+
+                  // 如果 image_url 为 base64 格式，则返回 image_base64 类
+                  return url.startsWith('data:image/jpeg;base64') 
+                    ? { 
+                        type: 'image_base64', 
+                        image_base64: url.split(',')[1] 
+                      }
+                    : { type: 'image_url', image_url: url };
+                }
+
+                return null;
+              })
+              .filter(Boolean);
+          };
+
+          return {
+            ...message,
+            content: processContent(message.content),
+          } as any;
+        }),
+        model,
         stream: true,
         temperature:
           temperature !== undefined && temperature > 0 && temperature <= 2
