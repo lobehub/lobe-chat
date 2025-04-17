@@ -32,13 +32,13 @@ const SearchResult = memo<SearchResultProps>(
     const { t } = useTranslation(['tool', 'common']);
 
     const engines = uniq(searchResults.flatMap((result) => result.engines));
-    const defaultEngines = engines.length > 0 ? engines : args.optionalParams?.searchEngines || [];
+    const defaultEngines = engines.length > 0 ? engines : args?.searchEngines || [];
     const isMobile = useIsMobile();
 
     if (loading || !pluginState)
       return (
         <Flexbox gap={12} horizontal>
-          {['1', '2', '3', '4'].map((id) => (
+          {['1', '2', '3', '4', '5'].map((id) => (
             <Skeleton.Button
               active
               key={id}

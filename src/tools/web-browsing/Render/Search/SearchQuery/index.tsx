@@ -1,10 +1,8 @@
 import { ActionIcon } from '@lobehub/ui';
-import { Skeleton } from 'antd';
 import { uniq } from 'lodash-es';
 import { XIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
@@ -29,14 +27,9 @@ const SearchQueryView = memo<SearchQueryViewProps>(
     const { t } = useTranslation('common');
 
     const engines = uniq(searchResults.flatMap((result) => result.engines));
-    const defaultEngines = engines.length > 0 ? engines : args.optionalParams?.searchEngines || [];
+    const defaultEngines = engines.length > 0 ? engines : args.searchEngines || [];
 
-    return !pluginState ? (
-      <Flexbox align={'center'} distribution={'space-between'} height={32} horizontal>
-        <Skeleton.Button active style={{ borderRadius: 4, height: 32, width: 180 }} />
-        <Skeleton.Button active style={{ borderRadius: 4, height: 32, width: 220 }} />
-      </Flexbox>
-    ) : editing ? (
+    return editing ? (
       <SearchBar
         defaultEngines={defaultEngines}
         defaultQuery={args?.query}
@@ -52,7 +45,7 @@ const SearchQueryView = memo<SearchQueryViewProps>(
         defaultQuery={args?.query}
         onEditingChange={setEditing}
         resultsNumber={searchResults.length}
-        searching={loading}
+        searching={loading || !pluginState}
       />
     );
   },

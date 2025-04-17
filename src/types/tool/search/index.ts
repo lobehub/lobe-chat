@@ -4,8 +4,7 @@ export interface SearchParams {
   searchTimeRange?: string;
 }
 
-export interface SearchQuery {
-  optionalParams?: SearchParams;
+export interface SearchQuery extends SearchParams {
   query: string;
 }
 

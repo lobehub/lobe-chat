@@ -11,7 +11,8 @@ import Search from './Search';
 const WebBrowsing = memo<BuiltinRenderProps<SearchContent[]>>(
   ({ messageId, args, pluginState, pluginError, apiName }) => {
     switch (apiName) {
-      case WebBrowsingApiName.searchWithSearXNG: {
+      case WebBrowsingApiName.search:
+      case 'searchWithSearXNG': {
         return (
           <Search
             messageId={messageId}

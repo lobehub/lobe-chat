@@ -39,7 +39,7 @@ describe('search actions', () => {
     });
   });
 
-  describe('searchWithSearXNG', () => {
+  describe('search', () => {
     it('should handle successful search', async () => {
       const mockResponse: UniformSearchResponse = {
         results: [
@@ -61,18 +61,16 @@ describe('search actions', () => {
       (searchService.search as Mock).mockResolvedValue(mockResponse);
 
       const { result } = renderHook(() => useChatStore());
-      const { searchWithSearXNG } = result.current;
+      const { search } = result.current;
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
-        optionalParams: {
-          searchEngines: ['google'],
-        },
+        searchEngines: ['google'],
         query: 'test query',
       };
 
       await act(async () => {
-        await searchWithSearXNG(messageId, query);
+        await search(messageId, query);
       });
 
       const expectedContent: SearchContent[] = [
@@ -124,19 +122,17 @@ describe('search actions', () => {
         .mockResolvedValueOnce(retryResponse);
 
       const { result } = renderHook(() => useChatStore());
-      const { searchWithSearXNG } = result.current;
+      const { search } = result.current;
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
-        optionalParams: {
-          searchEngines: ['custom-engine'],
-          searchTimeRange: 'year',
-        },
+        searchEngines: ['custom-engine'],
+        searchTimeRange: 'year',
         query: 'test query',
       };
 
       await act(async () => {
-        await searchWithSearXNG(messageId, query);
+        await search(messageId, query);
       });
 
       expect(searchService.search).toHaveBeenCalledTimes(3);
@@ -165,7 +161,7 @@ describe('search actions', () => {
       (searchService.search as Mock).mockRejectedValue(error);
 
       const { result } = renderHook(() => useChatStore());
-      const { searchWithSearXNG } = result.current;
+      const { search } = result.current;
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
@@ -173,7 +169,7 @@ describe('search actions', () => {
       };
 
       await act(async () => {
-        await searchWithSearXNG(messageId, query);
+        await search(messageId, query);
       });
 
       expect(result.current.internal_updateMessagePluginError).toHaveBeenCalledWith(messageId, {
@@ -253,8 +249,8 @@ describe('search actions', () => {
   describe('reSearchWithSearXNG', () => {
     it('should update arguments and perform search', async () => {
       const { result } = renderHook(() => useChatStore());
-      const spy = vi.spyOn(result.current, 'searchWithSearXNG');
-      const { reSearchWithSearXNG } = result.current;
+      const spy = vi.spyOn(result.current, 'search');
+      const { triggerSearchAgain } = result.current;
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
@@ -262,7 +258,7 @@ describe('search actions', () => {
       };
 
       await act(async () => {
-        await reSearchWithSearXNG(messageId, query, { aiSummary: true });
+        await triggerSearchAgain(messageId, query, { aiSummary: true });
       });
 
       expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, query);
@@ -296,10 +292,10 @@ describe('search actions', () => {
       );
 
       const { result } = renderHook(() => useChatStore());
-      const { saveSearXNGSearchResult } = result.current;
+      const { saveSearchResult } = result.current;
 
       await act(async () => {
-        await saveSearXNGSearchResult(messageId);
+        await saveSearchResult(messageId);
       });
 
       expect(result.current.internal_createMessage).toHaveBeenCalledWith(
@@ -325,10 +321,10 @@ describe('search actions', () => {
       vi.spyOn(chatSelectors, 'getMessageById').mockImplementation(() => () => undefined);
 
       const { result } = renderHook(() => useChatStore());
-      const { saveSearXNGSearchResult } = result.current;
+      const { saveSearchResult } = result.current;
 
       await act(async () => {
-        await saveSearXNGSearchResult('non-existent-id');
+        await saveSearchResult('non-existent-id');
       });
 
       expect(result.current.internal_createMessage).not.toHaveBeenCalled();

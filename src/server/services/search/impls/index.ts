@@ -14,7 +14,7 @@ export enum SearchImplType {
  * Create a search service implementation instance
  */
 export const createSearchServiceImpl = (
-  type: SearchImplType = SearchImplType.SearXNG,
+  type: SearchImplType = SearchImplType.Search1API,
 ): SearchServiceImpl => {
   switch (type) {
     case SearchImplType.SearXNG: {
