@@ -21,17 +21,11 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
           frequency_penalty !== undefined && frequency_penalty > 0 && frequency_penalty <= 2
             ? frequency_penalty
             : undefined,
-        messages: messages.map((message) => {
-          const isV6Model = model.startsWith('SenseNova-V6') && message.role === 'user';
-          const isVisionModel = model.startsWith('SenseChat-Vision') && message.role === 'user';
-
-          if (!isV6Model && !isVisionModel) return message;
-
-          return {
-            ...message,
-            content: convertSenseNovaMessage(message.content),
-          } as any;
-        }),
+        messages: messages.map((message) => 
+          message.role !== 'user' || !/^Sense(Nova-V6|Chat-Vision)/.test(model)
+            ? message
+            : { ...message, content: convertSenseNovaMessage(message.content) }
+        ) as any[],
         model,
         stream: true,
         temperature:
