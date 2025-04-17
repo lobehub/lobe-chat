@@ -38,7 +38,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     contextWindowTokens: 200_000,
     description:
       'o4-mini 高推理等级版，专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
-    displayName: 'o4 mini (high)',
+    displayName: 'o4-mini (high)',
     id: 'openai/o4-mini-high',
     maxOutput: 100_000,
     pricing: {
@@ -58,7 +58,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     contextWindowTokens: 200_000,
     description:
       'o4-mini 专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
-    displayName: 'o4 mini',
+    displayName: 'o4-mini',
     id: 'openai/o4-mini',
     maxOutput: 100_000,
     pricing: {
