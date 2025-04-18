@@ -5,6 +5,7 @@
     "off": "關閉偵錯",
     "on": "查看插件呼叫資訊",
     "payload": "插件載荷",
+    "pluginState": "插件狀態",
     "response": "回應",
     "tool_call": "工具呼叫"
   },

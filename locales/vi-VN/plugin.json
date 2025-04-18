@@ -5,6 +5,7 @@
     "off": "Tắt gỡ lỗi",
     "on": "Xem thông tin gọi plugin",
     "payload": "Dữ liệu cắm",
+    "pluginState": "Trạng thái plugin",
     "response": "Kết quả trả về",
     "tool_call": "Yêu cầu công cụ"
   },

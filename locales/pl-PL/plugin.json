@@ -5,6 +5,7 @@
     "off": "Wyłącz debugowanie",
     "on": "Wyświetl informacje o wywołaniach wtyczki",
     "payload": "dane wejściowe wtyczki",
+    "pluginState": "Stan wtyczki",
     "response": "Odpowiedź",
     "tool_call": "żądanie wywołania narzędzia"
   },

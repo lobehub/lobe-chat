@@ -5,6 +5,7 @@
     "off": "Debugging deaktivieren",
     "on": "Plugin-Aufrufinformationen anzeigen",
     "payload": "Plugin-Payload",
+    "pluginState": "Plugin-Zustand",
     "response": "Antwort",
     "tool_call": "Tool Call Request"
   },

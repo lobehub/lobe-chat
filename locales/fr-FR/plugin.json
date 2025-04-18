@@ -5,6 +5,7 @@
     "off": "Désactivé",
     "on": "Activer le débogage",
     "payload": "charge du plugin",
+    "pluginState": "État du plugin",
     "response": "Réponse",
     "tool_call": "demande d'appel d'outil"
   },

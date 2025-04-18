@@ -3,6 +3,10 @@
     "desc": "Fügen Sie den aktuellen Eingabetext als Benutzernachricht hinzu, ohne die Generierung auszulösen",
     "title": "Benutzernachricht hinzufügen"
   },
+  "clearCurrentMessages": {
+    "desc": "Aktuelle Nachrichten und hochgeladene Dateien im Gespräch löschen",
+    "title": "Gesprächsnachrichten löschen"
+  },
   "editMessage": {
     "desc": "Treten Sie in den Bearbeitungsmodus, indem Sie die Alt-Taste gedrückt halten und auf die Nachricht doppelklicken",
     "title": "Nachricht bearbeiten"

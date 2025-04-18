@@ -5,6 +5,7 @@
     "off": "Zet debug uit",
     "on": "Bekijk plug-in oproepinformatie",
     "payload": "plug-in payload",
+    "pluginState": "Pluginstatus",
     "response": "Reactie",
     "tool_call": "Tool-oproepverzoek"
   },
