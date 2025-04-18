@@ -259,6 +259,16 @@ const githubChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 128_000,
+    displayName: 'MAI DS R1',
+    id: 'MAI-DS-R1',
+    maxOutput: 4096,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
     displayName: 'DeepSeek R1',
     id: 'DeepSeek-R1',
     maxOutput: 4096,
