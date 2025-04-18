@@ -576,7 +576,7 @@ export const generateAIChat: StateCreator<
       },
       onFinish: async (
         content,
-        { traceId, observationId, toolCalls, reasoning, grounding, usage },
+        { traceId, observationId, toolCalls, reasoning, grounding, usage, speed },
       ) => {
         // if there is traceId, update it
         if (traceId) {
@@ -606,13 +606,15 @@ export const generateAIChat: StateCreator<
           internal_toggleToolCallingStreaming(messageId, undefined);
         }
 
+        console.log('Generate Message Finish:', usage, speed);
+
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
           toolCalls,
           reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
           search: !!grounding?.citations ? grounding : undefined,
-          metadata: usage,
           imageList: finalImages.length > 0 ? finalImages : undefined,
+          metadata: speed ? { ...usage, ...speed } : usage,
         });
       },
       onMessageHandle: async (chunk) => {

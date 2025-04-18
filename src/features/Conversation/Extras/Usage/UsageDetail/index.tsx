@@ -9,7 +9,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { ModelTokensUsage } from '@/types/message';
+import { MessageMetadata } from '@/types/message';
 import { formatNumber } from '@/utils/format';
 
 import ModelCard from './ModelCard';
@@ -17,19 +17,19 @@ import TokenProgress, { TokenProgressItem } from './TokenProgress';
 import { getDetailsToken } from './tokens';
 
 interface TokenDetailProps {
+  meta: MessageMetadata;
   model: string;
   provider: string;
-  usage: ModelTokensUsage;
 }
 
-const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
+const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
   const { t } = useTranslation('chat');
   const theme = useTheme();
 
   const modelCard = useAiInfraStore(aiModelSelectors.getModelCard(model, provider));
   const isShowCredit = useGlobalStore(systemStatusSelectors.isShowCredit) && !!modelCard?.pricing;
 
-  const detailTokens = getDetailsToken(usage, modelCard);
+  const detailTokens = getDetailsToken(meta, modelCard);
   const inputDetails = [
     !!detailTokens.inputAudio && {
       color: theme.cyan9,
@@ -113,6 +113,10 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
     detailTokens.totalTokens!.credit / detailTokens.totalTokens!.token,
     2,
   );
+
+  const tps = meta?.tps ? formatNumber(meta.tps, 2) : undefined;
+  const ttft = meta?.ttft ? formatNumber(meta.ttft / 1000, 2) : undefined;
+
   return (
     <Popover
       arrow={false}
@@ -168,6 +172,18 @@ const TokenDetail = memo<TokenDetailProps>(({ usage, model, provider }) => {
                     {t('messages.tokenDetails.average')}
                   </div>
                   <div style={{ fontWeight: 500 }}>{averagePricing}</div>
+                </Flexbox>
+              )}
+              {tps && (
+                <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
+                  <div style={{ color: theme.colorTextSecondary }}>{'Token Speed (t/s)'}</div>
+                  <div style={{ fontWeight: 500 }}>{tps}</div>
+                </Flexbox>
+              )}
+              {ttft && (
+                <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
+                  <div style={{ color: theme.colorTextSecondary }}>{'Delay (s)'}</div>
+                  <div style={{ fontWeight: 500 }}>{ttft}</div>
                 </Flexbox>
               )}
             </Flexbox>

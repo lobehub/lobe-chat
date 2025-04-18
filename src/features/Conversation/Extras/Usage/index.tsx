@@ -31,7 +31,7 @@ const Usage = memo<UsageProps>(({ model, metadata, provider }) => {
       </Center>
 
       {!!metadata.totalTokens && (
-        <TokenDetail model={model as string} provider={provider} usage={metadata} />
+        <TokenDetail meta={metadata} model={model as string} provider={provider} />
       )}
     </Flexbox>
   );
