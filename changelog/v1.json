@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Allow folding SystemRole box."]
+    },
+    "date": "2025-04-18",
+    "version": "1.81.2"
+  },
+  {
+    "children": {
       "improvements": ["Add SenseNova-V6 series & SenseChat-Vision support."]
     },
     "date": "2025-04-18",
