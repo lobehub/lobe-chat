@@ -6,7 +6,7 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { CRAWL_CONTENT_LIMITED_COUNT } from '@/tools/web-browsing/const';
 import { ChatMessage } from '@/types/message';
-import { SearchContent, SearchQuery, SearchResponse } from '@/types/tool/search';
+import { SearchContent, SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 // Mock services
 vi.mock('@/services/search', () => ({
@@ -22,7 +22,7 @@ vi.mock('@/store/chat/selectors', () => ({
   },
 }));
 
-describe('searXNG actions', () => {
+describe('search actions', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useChatStore.setState({
@@ -39,47 +39,38 @@ describe('searXNG actions', () => {
     });
   });
 
-  describe('searchWithSearXNG', () => {
+  describe('search', () => {
     it('should handle successful search', async () => {
-      const mockResponse: SearchResponse = {
+      const mockResponse: UniformSearchResponse = {
         results: [
           {
             title: 'Test Result',
             content: 'Test Content',
             url: 'https://test.com',
             category: 'general',
-            engine: 'google',
             engines: ['google'],
-            parsed_url: ['test.com'],
-            positions: [1],
+            parsedUrl: 'test.com',
             score: 1,
-            template: 'default',
           },
         ],
-        answers: [],
-        corrections: [],
-        infoboxes: [],
-        number_of_results: 1,
+        costTime: 1,
+        resultNumbers: 1,
         query: 'test',
-        suggestions: [],
-        unresponsive_engines: [],
       };
 
       (searchService.search as Mock).mockResolvedValue(mockResponse);
 
       const { result } = renderHook(() => useChatStore());
-      const { searchWithSearXNG } = result.current;
+      const { search } = result.current;
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
-        optionalParams: {
-          searchEngines: ['google'],
-        },
+        searchEngines: ['google'],
         query: 'test query',
       };
 
       await act(async () => {
-        await searchWithSearXNG(messageId, query);
+        await search(messageId, query);
       });
 
       const expectedContent: SearchContent[] = [
@@ -101,39 +92,28 @@ describe('searXNG actions', () => {
     });
 
     it('should handle empty search results and retry with default engine', async () => {
-      const emptyResponse: SearchResponse = {
+      const emptyResponse: UniformSearchResponse = {
         results: [],
-        answers: [],
-        corrections: [],
-        infoboxes: [],
-        number_of_results: 0,
+        costTime: 1,
+        resultNumbers: 0,
         query: 'test',
-        suggestions: [],
-        unresponsive_engines: [],
       };
 
-      const retryResponse: SearchResponse = {
+      const retryResponse: UniformSearchResponse = {
         results: [
           {
             title: 'Retry Result',
             content: 'Retry Content',
             url: 'https://retry.com',
             category: 'general',
-            engine: 'google',
             engines: ['google'],
-            parsed_url: ['retry.com'],
-            positions: [1],
+            parsedUrl: 'retry.com',
             score: 1,
-            template: 'default',
           },
         ],
-        answers: [],
-        corrections: [],
-        infoboxes: [],
-        number_of_results: 1,
+        costTime: 1,
+        resultNumbers: 1,
         query: 'test',
-        suggestions: [],
-        unresponsive_engines: [],
       };
 
       (searchService.search as Mock)
@@ -142,19 +122,17 @@ describe('searXNG actions', () => {
         .mockResolvedValueOnce(retryResponse);
 
       const { result } = renderHook(() => useChatStore());
-      const { searchWithSearXNG } = result.current;
+      const { search } = result.current;
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
-        optionalParams: {
-          searchEngines: ['custom-engine'],
-          searchTimeRange: 'year',
-        },
+        searchEngines: ['custom-engine'],
+        searchTimeRange: 'year',
         query: 'test query',
       };
 
       await act(async () => {
-        await searchWithSearXNG(messageId, query);
+        await search(messageId, query);
       });
 
       expect(searchService.search).toHaveBeenCalledTimes(3);
@@ -166,9 +144,6 @@ describe('searXNG actions', () => {
         searchTimeRange: 'year',
       });
       expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, {
-        optionalParams: {
-          searchTimeRange: 'year',
-        },
         query: 'test query',
       });
       expect(searchService.search).toHaveBeenNthCalledWith(3, 'test query');
@@ -183,7 +158,7 @@ describe('searXNG actions', () => {
       (searchService.search as Mock).mockRejectedValue(error);
 
       const { result } = renderHook(() => useChatStore());
-      const { searchWithSearXNG } = result.current;
+      const { search } = result.current;
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
@@ -191,7 +166,7 @@ describe('searXNG actions', () => {
       };
 
       await act(async () => {
-        await searchWithSearXNG(messageId, query);
+        await search(messageId, query);
       });
 
       expect(result.current.internal_updateMessagePluginError).toHaveBeenCalledWith(messageId, {
@@ -271,8 +246,8 @@ describe('searXNG actions', () => {
   describe('reSearchWithSearXNG', () => {
     it('should update arguments and perform search', async () => {
       const { result } = renderHook(() => useChatStore());
-      const spy = vi.spyOn(result.current, 'searchWithSearXNG');
-      const { reSearchWithSearXNG } = result.current;
+      const spy = vi.spyOn(result.current, 'search');
+      const { triggerSearchAgain } = result.current;
 
       const messageId = 'test-message-id';
       const query: SearchQuery = {
@@ -280,7 +255,7 @@ describe('searXNG actions', () => {
       };
 
       await act(async () => {
-        await reSearchWithSearXNG(messageId, query, { aiSummary: true });
+        await triggerSearchAgain(messageId, query, { aiSummary: true });
       });
 
       expect(result.current.updatePluginArguments).toHaveBeenCalledWith(messageId, query);
@@ -314,10 +289,10 @@ describe('searXNG actions', () => {
       );
 
       const { result } = renderHook(() => useChatStore());
-      const { saveSearXNGSearchResult } = result.current;
+      const { saveSearchResult } = result.current;
 
       await act(async () => {
-        await saveSearXNGSearchResult(messageId);
+        await saveSearchResult(messageId);
       });
 
       expect(result.current.internal_createMessage).toHaveBeenCalledWith(
@@ -343,10 +318,10 @@ describe('searXNG actions', () => {
       vi.spyOn(chatSelectors, 'getMessageById').mockImplementation(() => () => undefined);
 
       const { result } = renderHook(() => useChatStore());
-      const { saveSearXNGSearchResult } = result.current;
+      const { saveSearchResult } = result.current;
 
       await act(async () => {
-        await saveSearXNGSearchResult('non-existent-id');
+        await saveSearchResult('non-existent-id');
       });
 
       expect(result.current.internal_createMessage).not.toHaveBeenCalled();

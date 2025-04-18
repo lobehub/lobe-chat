@@ -1,5 +1,6 @@
 import { FilesDispatchEvents } from './file';
 import { MenuDispatchEvents } from './menu';
+import { RemoteServerBroadcastEvents, RemoteServerDispatchEvents } from './remoteServer';
 import { FilesSearchDispatchEvents } from './search';
 import { ShortcutDispatchEvents } from './shortcut';
 import { SystemDispatchEvents } from './system';
@@ -17,7 +18,8 @@ export interface ClientDispatchEvents
     MenuDispatchEvents,
     FilesDispatchEvents,
     AutoUpdateDispatchEvents,
-    ShortcutDispatchEvents {}
+    ShortcutDispatchEvents,
+    RemoteServerDispatchEvents {}
 
 export type ClientDispatchEventKey = keyof ClientDispatchEvents;
 
@@ -29,7 +31,9 @@ export type ClientEventReturnType<T extends ClientDispatchEventKey> = ReturnType
  * main -> render broadcast events
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MainBroadcastEvents extends AutoUpdateBroadcastEvents {}
+export interface MainBroadcastEvents
+  extends AutoUpdateBroadcastEvents,
+    RemoteServerBroadcastEvents {}
 
 export type MainBroadcastEventKey = keyof MainBroadcastEvents;
 

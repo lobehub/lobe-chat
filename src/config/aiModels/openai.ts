@@ -11,6 +11,48 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
+    displayName: 'o3',
+    enabled: true,
+    id: 'o3',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 2.5,
+      input: 10,
+      output: 40,
+    },
+    releasedAt: '2025-04-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
+    displayName: 'o4-mini',
+    enabled: true,
+    id: 'o4-mini',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 0.275,
+      input: 1.1,
+      output: 4.4,
+    },
+    releasedAt: '2025-04-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       vision: true,
     },
     contextWindowTokens: 1_047_576,
@@ -55,9 +97,8 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_047_576,
     description:
-      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+      'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
     displayName: 'GPT-4.1 nano',
-    enabled: true,
     id: 'gpt-4.1-nano',
     maxOutput: 32_768,
     pricing: {
@@ -76,8 +117,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 200_000,
     description:
       'o3-mini 是我们最新的小型推理模型，在与 o1-mini 相同的成本和延迟目标下提供高智能。',
-    displayName: 'OpenAI o3-mini',
-    enabled: true,
+    displayName: 'o3-mini',
     id: 'o3-mini',
     maxOutput: 100_000,
     pricing: {
@@ -95,7 +135,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description:
       'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
-    displayName: 'OpenAI o1-mini',
+    displayName: 'o1-mini',
     id: 'o1-mini',
     maxOutput: 65_536,
     pricing: {
@@ -114,8 +154,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 200_000,
     description:
       'o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。',
-    displayName: 'OpenAI o1',
-    enabled: true,
+    displayName: 'o1',
     id: 'o1',
     maxOutput: 100_000,
     pricing: {
@@ -133,7 +172,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description:
       'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
-    displayName: 'OpenAI o1-preview',
+    displayName: 'o1-preview',
     id: 'o1-preview',
     maxOutput: 32_768,
     pricing: {
