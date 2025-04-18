@@ -37,18 +37,24 @@ const cloudflareChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 24_000,
     displayName: 'llama 3.3 70b',
     id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 131_000,
     displayName: 'llama 4 17b',
     id: '@cf/meta/llama-4-scout-17b-16e-instruct',
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 128_000,
     displayName: 'mistral small 3.1 24b',
     id: '@cf/mistralai/mistral-small-3.1-24b-instruct',
