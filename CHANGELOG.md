@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.81.2](https://github.com/lobehub/lobe-chat/compare/v1.81.1...v1.81.2)
+
+<sup>Released on **2025-04-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Allow folding SystemRole box.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Allow folding SystemRole box, closes [#7421](https://github.com/lobehub/lobe-chat/issues/7421) ([c147df7](https://github.com/lobehub/lobe-chat/commit/c147df7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.81.1](https://github.com/lobehub/lobe-chat/compare/v1.81.0...v1.81.1)
 
 <sup>Released on **2025-04-18**</sup>
