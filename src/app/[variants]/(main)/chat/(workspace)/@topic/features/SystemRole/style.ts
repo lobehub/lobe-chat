@@ -1,6 +1,11 @@
 import { createStyles } from 'antd-style';
 
 export const useStyles = createStyles(({ css, token }) => ({
+  animatedContainer: css`
+    transition:
+      height 0.3s ease,
+      opacity 0.3s ease;
+  `,
   prompt: css`
     overflow: hidden auto;
 
