@@ -6,6 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import InfoTooltip from '@/components/InfoTooltip';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -176,14 +177,24 @@ const TokenDetail = memo<TokenDetailProps>(({ meta, model, provider }) => {
               )}
               {tps && (
                 <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
-                  <div style={{ color: theme.colorTextSecondary }}>{'Token Speed (t/s)'}</div>
+                  <Flexbox gap={8} horizontal>
+                    <div style={{ color: theme.colorTextSecondary }}>
+                      {t('messages.tokenDetails.speed.tps.title')}
+                    </div>
+                    <InfoTooltip title={t('messages.tokenDetails.speed.tps.tooltip')} />
+                  </Flexbox>
                   <div style={{ fontWeight: 500 }}>{tps}</div>
                 </Flexbox>
               )}
               {ttft && (
                 <Flexbox align={'center'} gap={4} horizontal justify={'space-between'}>
-                  <div style={{ color: theme.colorTextSecondary }}>{'Delay (s)'}</div>
-                  <div style={{ fontWeight: 500 }}>{ttft}</div>
+                  <Flexbox gap={8} horizontal>
+                    <div style={{ color: theme.colorTextSecondary }}>
+                      {t('messages.tokenDetails.speed.ttft.title')}
+                    </div>
+                    <InfoTooltip title={t('messages.tokenDetails.speed.ttft.tooltip')} />
+                  </Flexbox>
+                  <div style={{ fontWeight: 500 }}>{ttft}s</div>
                 </Flexbox>
               )}
             </Flexbox>
