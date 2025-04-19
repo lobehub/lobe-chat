@@ -31,6 +31,7 @@ export const crawUrlRules: CrawlUrlRule[] = [
     filterOptions: {
       enableReadability: false,
     },
+    impls: ['naive', 'jina'],
     urlPattern: 'https://github.com/([^/]+)/([^/]+)/blob/([^/]+)/(.*)',
     urlTransform: 'https://github.com/$1/$2/raw/refs/heads/$3/$4',
   },
@@ -38,6 +39,7 @@ export const crawUrlRules: CrawlUrlRule[] = [
     filterOptions: {
       enableReadability: false,
     },
+    impls: ['naive', 'jina'],
     // GitHub discussion
     urlPattern: 'https://github.com/(.*)/discussions/(.*)',
   },
@@ -79,9 +81,9 @@ export const crawUrlRules: CrawlUrlRule[] = [
       enableReadability: false,
       pureText: true,
     },
+    impls: ['naive'],
     urlPattern: 'https://www.qiumiwu.com/standings/(.*)',
   },
-
   // mozilla use jina
   {
     impls: ['jina'],

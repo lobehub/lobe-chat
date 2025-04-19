@@ -44,14 +44,12 @@ describe('OpenAIStream', () => {
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
-    const onTokenMock = vi.fn();
     const onCompletionMock = vi.fn();
 
     const protocolStream = OpenAIStream(mockOpenAIStream, {
       callbacks: {
         onStart: onStartMock,
         onText: onTextMock,
-        onToken: onTokenMock,
         onCompletion: onCompletionMock,
       },
     });
@@ -77,9 +75,8 @@ describe('OpenAIStream', () => {
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
-    expect(onTextMock).toHaveBeenNthCalledWith(1, '"Hello"');
-    expect(onTextMock).toHaveBeenNthCalledWith(2, '" world!"');
-    expect(onTokenMock).toHaveBeenCalledTimes(2);
+    expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
+    expect(onTextMock).toHaveBeenNthCalledWith(2, ' world!');
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
 
@@ -195,7 +192,7 @@ describe('OpenAIStream', () => {
 
     const protocolStream = OpenAIStream(mockOpenAIStream, {
       callbacks: {
-        onToolCall: onToolCallMock,
+        onToolsCalling: onToolCallMock,
       },
     });
 
@@ -578,7 +575,7 @@ describe('OpenAIStream', () => {
 
       const protocolStream = OpenAIStream(mockOpenAIStream, {
         callbacks: {
-          onToolCall: onToolCallMock,
+          onToolsCalling: onToolCallMock,
         },
       });
 
@@ -711,7 +708,7 @@ describe('OpenAIStream', () => {
 
       const protocolStream = OpenAIStream(mockOpenAIStream, {
         callbacks: {
-          onToolCall: onToolCallMock,
+          onToolsCalling: onToolCallMock,
         },
       });
 

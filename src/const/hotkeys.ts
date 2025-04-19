@@ -1,5 +1,3 @@
-import { combineKeys } from '@lobehub/ui/es/Hotkey';
-
 import {
   HotkeyEnum,
   HotkeyGroupEnum,
@@ -7,6 +5,8 @@ import {
   HotkeyScopeEnum,
   KeyEnum,
 } from '@/types/hotkey';
+
+const combineKeys = (keys: string[]) => keys.join('+');
 
 // mod 在 Mac 上是 command 键，alt 在 Win 上是 ctrl 键
 export const HOTKEYS_REGISTRATION: HotkeyRegistration = [

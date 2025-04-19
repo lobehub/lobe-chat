@@ -5,12 +5,54 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const groqChatModels: AIChatModelCard[] = [
   {
+    contextWindowTokens: 131_072,
+    description: 'Compound-beta 是一个复合 AI 系统，由 GroqCloud 中已经支持的多个开放可用的模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
+    displayName: 'Compound Beta',
+    enabled: true,
+    id: 'compound-beta',
+    maxOutput: 8192,
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    description: 'Compound-beta-mini 是一个复合 AI 系统，由 GroqCloud 中已经支持的公开可用模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
+    displayName: 'Compound Beta Mini',
+    id: 'compound-beta-mini',
+    maxOutput: 8192,
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    displayName: 'Llama 4 Scout (17Bx16E)',
+    enabled: true,
+    id: 'meta-llama/llama-4-scout-17b-16e-instruct',
+    maxOutput: 8192,
+    pricing: {
+      input: 0.11,
+      output: 0.34,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    displayName: 'Llama 4 Maverick (17Bx128E)',
+    enabled: true,
+    id: 'meta-llama/llama-4-maverick-17b-128e-instruct',
+    maxOutput: 8192,
+    pricing: {
+      input: 0.5,
+      output: 0.77,
+    },
+    type: 'chat',
+  },
+  {
     abilities: {
       functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
     displayName: 'Qwen QwQ 32B',
+    enabled: true,
     id: 'qwen-qwq-32b',
     pricing: {
       input: 0.29,
@@ -25,7 +67,6 @@ const groqChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     displayName: 'DeepSeek R1 Distill Llama 70B',
-    enabled: true,
     id: 'deepseek-r1-distill-llama-70b',
     pricing: {
       input: 0.75, // 0.75 - 5.00
@@ -41,22 +82,6 @@ const groqChatModels: AIChatModelCard[] = [
     pricing: {
       input: 0.75,
       output: 0.99,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-    },
-    contextWindowTokens: 131_072,
-    displayName: 'DeepSeek R1 Distill Qwen 32B',
-    enabled: true,
-    id: 'deepseek-r1-distill-qwen-32b',
-    maxOutput: 16_384,
-    pricing: {
-      input: 0.69,
-      output: 0.69,
     },
     type: 'chat',
   },
@@ -91,75 +116,11 @@ const groqChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 131_072,
-    description: 'Llama 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
-    displayName: 'Llama 3.2 11B Vision (Preview)',
-    id: 'llama-3.2-11b-vision-preview',
-    maxOutput: 8192,
-    pricing: {
-      input: 0.18,
-      output: 0.18,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 131_072,
-    description: 'Llama 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
-    displayName: 'Llama 3.2 90B Vision (Preview)',
-    enabled: true,
-    id: 'llama-3.2-90b-vision-preview',
-    maxOutput: 8192,
-    pricing: {
-      input: 0.9,
-      output: 0.9,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 131_072,
-    displayName: 'Llama 3.2 1B (Preview)',
-    id: 'llama-3.2-1b-preview',
-    maxOutput: 8192,
-    pricing: {
-      input: 0.04,
-      output: 0.04,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 131_072,
-    displayName: 'Llama 3.2 3B (Preview)',
-    id: 'llama-3.2-3b-preview',
-    maxOutput: 8192,
-    pricing: {
-      input: 0.06,
-      output: 0.06,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    displayName: 'Llama 3.3 70B SpecDec',
-    id: 'llama-3.3-70b-specdec',
-    pricing: {
-      input: 0.59,
-      output: 0.99,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
       functionCall: true,
     },
     contextWindowTokens: 131_072,
     description: 'Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。',
     displayName: 'Llama 3.3 70B Versatile',
-    enabled: true,
     id: 'llama-3.3-70b-versatile',
     maxOutput: 32_768,
     pricing: {
@@ -215,29 +176,6 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    displayName: 'Qwen 2.5 32B',
-    id: 'qwen-2.5-32b',
-    pricing: {
-      input: 0.79,
-      output: 0.79,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 131_072,
-    displayName: 'Qwen 2.5 Coder 32B',
-    id: 'qwen-2.5-coder-32b',
-    pricing: {
-      input: 0.79,
-      output: 0.79,
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 8192,
     displayName: 'Llama Guard 3 8B',
     id: 'llama-guard-3-8b',
@@ -245,6 +183,12 @@ const groqChatModels: AIChatModelCard[] = [
       input: 0.2,
       output: 0.2,
     },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 4096,
+    displayName: 'ALLaM 2 7B',
+    id: 'allam-2-7b',
     type: 'chat',
   },
 ];

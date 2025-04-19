@@ -3,7 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { ChatStore } from '@/store/chat/store';
 
 import { ChatDallEAction, dalleSlice } from './dalle';
-import { SearchAction, searchSlice } from './searXNG';
+import { SearchAction, searchSlice } from './search';
 
 export interface ChatBuiltinToolAction extends ChatDallEAction, SearchAction {}
 

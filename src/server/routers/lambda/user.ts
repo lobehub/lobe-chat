@@ -7,8 +7,8 @@ import { SessionModel } from '@/database/models/session';
 import { UserModel, UserNotFoundError } from '@/database/models/user';
 import { ClerkAuth } from '@/libs/clerk-auth';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
-import { authedProcedure, router } from '@/libs/trpc';
-import { serverDatabase } from '@/libs/trpc/lambda';
+import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserService } from '@/server/services/user';
 import {
@@ -85,17 +85,24 @@ export const userRouter = router({
     const hasExtraSession = await sessionModel.hasMoreThanN(1);
 
     return {
+      avatar: state.avatar,
       canEnablePWAGuide: hasMoreThan4Messages,
       canEnableTrace: hasMoreThan4Messages,
+      email: state.email,
+      firstName: state.firstName,
+
+      fullName: state.fullName,
+
       // 有消息，或者创建过助手，则认为有 conversation
       hasConversation: hasAnyMessages || hasExtraSession,
-
       // always return true for community version
       isOnboard: state.isOnboarded || true,
+      lastName: state.lastName,
       preference: state.preference as UserPreference,
       settings: state.settings,
       userId: ctx.userId,
-    };
+      username: state.username,
+    } satisfies UserInitializationState;
   }),
 
   makeUserOnboarded: userProcedure.mutation(async ({ ctx }) => {

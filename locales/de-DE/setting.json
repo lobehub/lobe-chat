@@ -6,6 +6,7 @@
     "chat": "Chat-Präferenz",
     "meta": "Assistenteninformation",
     "modal": "Modell-Einstellungen",
+    "opening": "Eröffnungs Einstellungen",
     "plugin": "Plugin-Einstellungen",
     "prompt": "Rollenkonfiguration",
     "tts": "Sprachdienst"
@@ -252,6 +253,21 @@
       "desc": "Wie viele Möglichkeiten in Betracht gezogen werden, je höher der Wert, desto mehr mögliche Antworten werden akzeptiert; je niedriger der Wert, desto eher wird die wahrscheinlichste Antwort gewählt. Es wird nicht empfohlen, dies zusammen mit dem Kreativitätsgrad zu ändern",
       "title": "Offenheit des Denkens"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Die Eröffnungsnachricht beim Start des Gesprächs, um die Funktionen des Assistenten vorzustellen",
+      "placeholder": "Hallo, ich bin der benutzerdefinierte Assistent. Du kannst sofort mit mir sprechen oder zu den Assistenteneinstellungen gehen, um meine Informationen zu vervollständigen.",
+      "title": "Eröffnungsnachricht"
+    },
+    "openingQuestions": {
+      "desc": "Leitfragen, die zu Beginn des Gesprächs angezeigt werden",
+      "empty": "Keine Fragen vorhanden",
+      "placeholder": "Bitte Frage eingeben",
+      "repeat": "Frage existiert bereits",
+      "title": "Eröffnungsfragen"
+    },
+    "title": "Eröffnungs Einstellungen"
   },
   "settingPlugin": {
     "title": "Plugin-Liste"

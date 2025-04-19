@@ -10,13 +10,57 @@ const doubaoChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     config: {
+      deploymentName: 'doubao-1-5-thinking-pro-250415',
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'Doubao-1.5全新深度思考模型，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。',
+    displayName: 'Doubao 1.5 Thinking Pro',
+    enabled: true,
+    id: 'Doubao-1.5-thinking-pro',
+    maxOutput: 16_000,
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'doubao-1-5-thinking-pro-vision-250415',
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'Doubao-1.5全新深度思考模型，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。',
+    displayName: 'Doubao 1.5 Thinking Pro Vision',
+    enabled: true,
+    id: 'Doubao-1.5-thinking-pro-vision',
+    maxOutput: 16_000,
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    config: {
       deploymentName: 'deepseek-r1-250120',
     },
     contextWindowTokens: 65_536,
     description:
       'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能比肩 OpenAI o1 正式版。',
     displayName: 'DeepSeek R1',
-    enabled: true,
     id: 'deepseek-r1',
     maxOutput: 16_384,
     pricing: {
@@ -113,7 +157,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'doubao-1-5-pro-256k-250115',
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 256_000,
     description:
       'Doubao-1.5-pro-256k 基于 Doubao-1.5-Pro 全面升级版，整体效果大幅提升 10%。支持 256k 上下文窗口的推理，输出长度支持最大 12k tokens。更高性能、更大窗口、超高性价比，适用于更广泛的应用场景。',
     displayName: 'Doubao 1.5 Pro 256k',
@@ -149,6 +193,7 @@ const doubaoChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       vision: true,
     },
     config: {
@@ -158,7 +203,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5-vision-pro 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。',
     displayName: 'Doubao 1.5 Vision Pro 32k',
-    enabled: true,
     id: 'Doubao-1.5-vision-pro-32k',
     maxOutput: 12_288,
     pricing: {
@@ -167,6 +211,50 @@ const doubaoChatModels: AIChatModelCard[] = [
       output: 9,
     },
     releasedAt: '2025-01-15',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'doubao-1-5-vision-pro-250328',
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'Doubao-1.5-vision-pro 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。',
+    displayName: 'Doubao 1.5 Vision Pro',
+    id: 'Doubao-1.5-vision-pro',
+    maxOutput: 16_384,
+    pricing: {
+      currency: 'CNY',
+      input: 3,
+      output: 9,
+    },
+    releasedAt: '2025-03-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'doubao-1-5-vision-lite-250315',
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'Doubao-1.5-vision-lite 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。支持 128k 上下文窗口，输出长度支持最大 16k tokens。',
+    displayName: 'Doubao 1.5 Vision Lite',
+    id: 'doubao-1.5-vision-lite',
+    maxOutput: 16_384,
+    pricing: {
+      currency: 'CNY',
+      input: 1.5,
+      output: 4.5,
+    },
+    releasedAt: '2025-03-15',
     type: 'chat',
   },
   {

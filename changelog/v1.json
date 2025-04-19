@@ -1,6 +1,160 @@
 [
   {
     "children": {
+      "improvements": ["Allow folding SystemRole box."]
+    },
+    "date": "2025-04-18",
+    "version": "1.81.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add SenseNova-V6 series & SenseChat-Vision support."]
+    },
+    "date": "2025-04-18",
+    "version": "1.81.1"
+  },
+  {
+    "children": {
+      "features": ["Support search1api as search provider."]
+    },
+    "date": "2025-04-17",
+    "version": "1.81.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update 360 AI & Taichu & AI21 model list."]
+    },
+    "date": "2025-04-17",
+    "version": "1.80.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add o3/o4-mini models."]
+    },
+    "date": "2025-04-17",
+    "version": "1.80.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to get user info from api."]
+    },
+    "date": "2025-04-16",
+    "version": "1.80.3"
+  },
+  {
+    "children": {
+      "fixes": ["Update default file embedding model info."]
+    },
+    "date": "2025-04-16",
+    "version": "1.80.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix model support file and image logic."],
+      "improvements": ["Add step-r1 & glm-z1 model fetch support."]
+    },
+    "date": "2025-04-16",
+    "version": "1.80.1"
+  },
+  {
+    "children": {
+      "improvements": ["Opening message container add border."],
+      "features": [
+        "Opening settings copyright i18n, regenerate migrate sql for new agent opening settings."
+      ],
+      "fixes": [
+        "Opening questions should should be hidden when no setted, opening settings migration type error."
+      ]
+    },
+    "date": "2025-04-16",
+    "version": "1.80.0"
+  },
+  {
+    "children": {
+      "improvements": ["Make gpt-4.1-mini default model."]
+    },
+    "date": "2025-04-15",
+    "version": "1.79.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add GPT-4.1 models."]
+    },
+    "date": "2025-04-15",
+    "version": "1.79.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix Azure OpenAI unable to process image messages in local s3."]
+    },
+    "date": "2025-04-12",
+    "version": "1.79.8"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor hotkey import to avoid db generate error."]
+    },
+    "date": "2025-04-11",
+    "version": "1.79.7"
+  },
+  {
+    "children": {
+      "fixes": ["Fix grok-3-mini series calling."]
+    },
+    "date": "2025-04-11",
+    "version": "1.79.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix langfuse intergation."]
+    },
+    "date": "2025-04-10",
+    "version": "1.79.5"
+  },
+  {
+    "children": {
+      "improvements": ["Update Grok 3 models."]
+    },
+    "date": "2025-04-10",
+    "version": "1.79.4"
+  },
+  {
+    "children": {
+      "fixes": ["Remove Azure AI o3-mini unsupported parameters."]
+    },
+    "date": "2025-04-10",
+    "version": "1.79.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix env for Tencent Cloud & remove deepseek-v3 series fc tag."]
+    },
+    "date": "2025-04-09",
+    "version": "1.79.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix xAI API calling, not support stream_options."]
+    },
+    "date": "2025-04-09",
+    "version": "1.79.1"
+  },
+  {
+    "children": {
+      "features": ["Add wiki migrate instructions."]
+    },
+    "date": "2025-04-09",
+    "version": "1.79.0"
+  },
+  {
+    "children": {
+      "features": ["Add Keycloak SSO provider support."]
+    },
+    "date": "2025-04-09",
+    "version": "1.78.0"
+  },
+  {
+    "children": {
       "improvements": ["Add time_range & categories support for SearXNG."]
     },
     "date": "2025-04-09",

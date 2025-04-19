@@ -6,6 +6,7 @@
     "chat": "Preferências de bate-papo",
     "meta": "Informações do assistente",
     "modal": "Configurações do modelo",
+    "opening": "Configuração de Abertura",
     "plugin": "Configurações do plug-in",
     "prompt": "Configuração de personagem",
     "tts": "Serviço de voz"
@@ -252,6 +253,21 @@
       "desc": "Quantas possibilidades considerar; quanto maior o valor, mais respostas possíveis serão aceitas; quanto menor o valor, mais se tende a escolher a resposta mais provável. Não é recomendado alterar junto com a atividade criativa",
       "title": "Abertura Mental"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Mensagem de abertura exibida ao iniciar a conversa, usada para apresentar as funcionalidades do assistente",
+      "placeholder": "Olá, eu sou o Assistente Personalizado, você pode começar a conversar comigo imediatamente ou ir para Configurações do Assistente para completar minhas informações.",
+      "title": "Mensagem de Abertura"
+    },
+    "openingQuestions": {
+      "desc": "Perguntas orientadoras exibidas no início da conversa",
+      "empty": "Nenhuma pergunta disponível",
+      "placeholder": "Digite uma pergunta",
+      "repeat": "A pergunta já existe",
+      "title": "Perguntas de Abertura"
+    },
+    "title": "Configuração de Abertura"
   },
   "settingPlugin": {
     "title": "Lista de plugins"

@@ -12,7 +12,7 @@ const Footer = () => {
     chatPortalSelectors.toolMessageId(s),
     chatSelectors.isAIGenerating(s),
     s.triggerAIMessage,
-    s.saveSearXNGSearchResult,
+    s.saveSearchResult,
   ]);
 
   const { t } = useTranslation('tool');

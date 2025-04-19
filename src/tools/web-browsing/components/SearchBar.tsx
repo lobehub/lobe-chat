@@ -45,16 +45,14 @@ const SearchBar = memo<SearchBarProps>(
     const [engines, setEngines] = useState(defaultEngines);
     const [time_range, setTimeRange] = useState(defaultTimeRange);
     const isMobile = useIsMobile();
-    const [reSearchWithSearXNG] = useChatStore((s) => [s.reSearchWithSearXNG]);
+    const [reSearchWithSearXNG] = useChatStore((s) => [s.triggerSearchAgain]);
 
     const updateAndSearch = async () => {
       const data: SearchQuery = {
-        optionalParams: {
-          searchCategories: categories,
-          searchEngines: engines,
-          searchTimeRange: time_range,
-        },
         query,
+        searchCategories: categories,
+        searchEngines: engines,
+        searchTimeRange: time_range,
       };
       onSearch?.(data);
       await reSearchWithSearXNG(messageId, data, { aiSummary });
@@ -191,9 +189,7 @@ const SearchBar = memo<SearchBarProps>(
         )}
 
         <Flexbox align={'center'} gap={16} horizontal wrap={'wrap'}>
-          <Typography.Text type={'secondary'}>
-            {t('search.searchTimeRange.title')}
-          </Typography.Text>
+          <Typography.Text type={'secondary'}>{t('search.searchTimeRange.title')}</Typography.Text>
           <Radio.Group
             onChange={(e) => setTimeRange(e.target.value)}
             optionType="button"

@@ -1,7 +1,9 @@
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
 import { ModelTokensUsage } from '@/types/message';
+import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { AgentRuntimeErrorType } from '../../error';
+import { parseToolCalls } from '../../helpers';
+import { ChatStreamCallbacks } from '../../types';
 
 /**
  * context in the stream to save temporarily data
@@ -140,18 +142,31 @@ export const createSSEProtocolTransformer = (
 
 export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) {
   const textEncoder = new TextEncoder();
-  let aggregatedResponse = '';
-  let currentType = '';
+  let aggregatedText = '';
+  let aggregatedThinking: string | undefined = undefined;
+  let usage: ModelTokensUsage | undefined;
+  let grounding: any;
+  let toolsCalling: any;
+
+  let currentType = '' as unknown as StreamProtocolChunk['type'];
   const callbacks = cb || {};
 
   return new TransformStream({
     async flush(): Promise<void> {
+      const data = {
+        grounding,
+        text: aggregatedText,
+        thinking: aggregatedThinking,
+        toolsCalling,
+        usage,
+      };
+
       if (callbacks.onCompletion) {
-        await callbacks.onCompletion(aggregatedResponse);
+        await callbacks.onCompletion(data);
       }
 
       if (callbacks.onFinal) {
-        await callbacks.onFinal(aggregatedResponse);
+        await callbacks.onFinal(data);
       }
     },
 
@@ -164,22 +179,50 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
 
       // track the type of the chunk
       if (chunk.startsWith('event:')) {
-        currentType = chunk.split('event:')[1].trim();
+        currentType = chunk.split('event:')[1].trim() as unknown as StreamProtocolChunk['type'];
       }
       // if the message is a data chunk, handle the callback
       else if (chunk.startsWith('data:')) {
         const content = chunk.split('data:')[1].trim();
 
+        const data = safeParseJSON(content) as any;
+
+        if (!data) return;
+
         switch (currentType) {
           case 'text': {
-            await callbacks.onText?.(content);
-            await callbacks.onToken?.(JSON.parse(content));
+            aggregatedText += data;
+            await callbacks.onText?.(data);
+            break;
+          }
+
+          case 'reasoning': {
+            if (!aggregatedThinking) {
+              aggregatedThinking = '';
+            }
+
+            aggregatedThinking += data;
+            await callbacks.onThinking?.(data);
+            break;
+          }
+
+          case 'usage': {
+            usage = data;
+            await callbacks.onUsage?.(data);
+            break;
+          }
+
+          case 'grounding': {
+            grounding = data;
+            await callbacks.onGrounding?.(data);
             break;
           }
 
           case 'tool_calls': {
-            // TODO: make on ToolCall callback
-            await callbacks.onToolCall?.();
+            if (!toolsCalling) toolsCalling = [];
+            toolsCalling = parseToolCalls(toolsCalling, data);
+
+            await callbacks.onToolsCalling?.({ chunk: data, toolsCalling });
           }
         }
       }

@@ -1,0 +1,40 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Autoriser",
+      "deny": "Refuser"
+    },
+    "description": "L'application {{clientName}} demande l'autorisation de votre compte",
+    "error": {
+      "sessionInvalid": {
+        "message": "La session d'autorisation a expiré ou est invalide, veuillez relancer le processus d'autorisation.",
+        "title": "Session d'autorisation invalide"
+      },
+      "title": "Une erreur s'est produite",
+      "unsupportedInteraction": {
+        "message": "Type d'interaction non pris en charge : {promptName}",
+        "title": "Type d'interaction non pris en charge"
+      }
+    },
+    "permissionsTitle": "Demander les autorisations suivantes :",
+    "redirectUri": "Vous serez redirigé vers après une autorisation réussie",
+    "scope": {
+      "email": "Accéder à votre adresse e-mail",
+      "offline_access": "Autoriser le client à accéder à vos données",
+      "openid": "S'authentifier avec votre compte LobeChat",
+      "profile": "Accéder à vos informations de profil (nom, photo, etc.)",
+      "sync-read": "Lire vos données synchronisées",
+      "sync-write": "Écrire et mettre à jour vos données synchronisées"
+    },
+    "title": "Autoriser {{clientName}}"
+  },
+  "failed": {
+    "backToHome": "Retour à l'accueil",
+    "subTitle": "Vous avez refusé d'autoriser l'application à accéder à votre compte LobeChat",
+    "title": "Autorisation refusée"
+  },
+  "success": {
+    "subTitle": "Vous avez réussi à autoriser l'application à accéder à votre compte LobeChat, vous pouvez fermer cette page",
+    "title": "Autorisation réussie"
+  }
+}
