@@ -70,6 +70,9 @@ const Spark: ModelProviderCard = {
   name: 'Spark',
   settings: {
     modelEditable: false,
+    proxyUrl: {
+      placeholder: 'https://spark-api-open.xf-yun.com/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: false,
     smoothing: {
