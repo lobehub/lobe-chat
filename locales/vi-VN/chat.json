@@ -119,6 +119,16 @@
       "outputText": "Văn bản xuất",
       "outputTitle": "Chi tiết xuất",
       "reasoning": "Suy nghĩ sâu sắc",
+      "speed": {
+        "tps": {
+          "title": "TPS",
+          "tooltip": "Tokens Mỗi Giây, TPS. Chỉ tốc độ trung bình của nội dung do AI tạo ra (Token/giây), bắt đầu tính từ khi nhận được Token đầu tiên."
+        },
+        "ttft": {
+          "title": "TTFT",
+          "tooltip": "Thời Gian Đến Token Đầu Tiên, TTFT. Chỉ khoảng thời gian từ khi bạn gửi tin nhắn đến khi khách hàng nhận được Token đầu tiên."
+        }
+      },
       "title": "Chi tiết tạo ra",
       "total": "Tổng tiêu thụ"
     }
