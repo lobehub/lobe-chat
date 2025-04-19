@@ -16,7 +16,10 @@ import SSOProvidersList from './features/SSOProvidersList';
 type SettingItemGroup = ItemGroup;
 
 const Client = memo<{ mobile?: boolean }>(() => {
-  const [isLoginWithNextAuth] = useUserStore((s) => [authSelectors.isLoginWithNextAuth(s)]);
+  const [isLoginWithNextAuth, isLogin] = useUserStore((s) => [
+    authSelectors.isLoginWithNextAuth(s),
+    authSelectors.isLogin(s),
+  ]);
   const [nickname, username, userProfile] = useUserStore((s) => [
     userProfileSelectors.nickName(s),
     userProfileSelectors.username(s),
@@ -29,7 +32,7 @@ const Client = memo<{ mobile?: boolean }>(() => {
   const profile: SettingItemGroup = {
     children: [
       {
-        children: enableAuth && isLoginWithNextAuth ? <UserAvatar /> : <AvatarWithUpload />,
+        children: enableAuth && !isLogin ? <UserAvatar /> : <AvatarWithUpload />,
         label: t('profile.avatar'),
         minWidth: undefined,
       },
