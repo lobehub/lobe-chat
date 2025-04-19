@@ -97,7 +97,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }} # 使用 metadata action 生成的标签
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            # 传递 Clerk Publishable Key 作为构建参数
             NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY_ARG=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-            # 如果 Dockerfile 需要 SHA，可以像官方 workflow 一样传递
-            # SHA=${{ github.sha }} # 或者取短 SHA
+            CLERK_WEBHOOK_SECRET_ARG=${{ secrets.CLERK_WEBHOOK_SECRET }} 
+            CLERK_SECRET_KEY_ARG=${{ secrets.CLERK_SECRET_KEY }}         
+            # SHA=${{ github.sha }} # 如果需要 SHA
