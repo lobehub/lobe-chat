@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Gemini error Tool use with function calling is unsupported."],
+      "improvements": ["Support update tool calling params and trigger again."]
+    },
+    "date": "2025-04-19",
+    "version": "1.81.4"
+  },
+  {
+    "children": {
       "improvements": ["Update GitHub & Cloudflare models, Update Google models."]
     },
     "date": "2025-04-19",
