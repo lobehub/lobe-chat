@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.81.4](https://github.com/lobehub/lobe-chat/compare/v1.81.3...v1.81.4)
+
+<sup>Released on **2025-04-19**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Gemini error `Tool use with function calling is unsupported`.
+
+#### 💄 Styles
+
+- **misc**: Support update tool calling params and trigger again.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Gemini error `Tool use with function calling is unsupported`, closes [#7463](https://github.com/lobehub/lobe-chat/issues/7463) ([0567095](https://github.com/lobehub/lobe-chat/commit/0567095))
+
+#### Styles
+
+- **misc**: Support update tool calling params and trigger again, closes [#7476](https://github.com/lobehub/lobe-chat/issues/7476) ([0085e63](https://github.com/lobehub/lobe-chat/commit/0085e63))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.81.3](https://github.com/lobehub/lobe-chat/compare/v1.81.2...v1.81.3)
 
 <sup>Released on **2025-04-19**</sup>
