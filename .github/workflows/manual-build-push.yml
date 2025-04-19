@@ -1,0 +1,54 @@
+name: Manual Docker Build and Push
+
+on:
+  workflow_dispatch: # 只允许手动触发
+
+jobs:
+  manual_build_push:
+    name: Manually Build and Push Docker Image (amd64)
+    runs-on: ubuntu-latest # 使用标准的 amd64 runner
+
+    steps:
+      # 1. 检出代码，确保 Dockerfile 等文件存在
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. 设置 Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. 登录到你的 Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }} # 你的 Docker Hub 用户名 Secret
+          password: ${{ secrets.DOCKERHUB_TOKEN }}    # 你的 Docker Hub Token Secret
+
+      # 4. (可选但推荐) 生成 Docker 元数据 (标签)
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # !! 修改为你自己的 Docker Hub 镜像名称 !!
+          images: marvinlee514/lobechat-docker-clerk
+          tags: |
+            # 推送一个固定的测试标签，例如 'manual-test' 或 'latest'
+            type=raw,value=manual-test-${{ github.run_id }} # 使用 run_id 保证每次手动运行标签唯一
+            type=raw,value=latest # 也可以同时推送 latest
+
+      # 5. 构建并推送 Docker 镜像
+      - name: Build and push Docker image (amd64)
+        uses: docker/build-push-action@v5
+        with:
+          context: . # 构建上下文为仓库根目录
+          # !! 非常重要：确认 LobeChat 数据库版本的 Dockerfile 路径是否正确 !!
+          file: ./Dockerfile.database # <--- 确认这个路径!
+          platforms: linux/amd64 # 只构建 amd64 平台
+          push: true # 推送镜像
+          tags: ${{ steps.meta.outputs.tags }} # 使用上面生成的标签
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            # 传递 Clerk Publishable Key 作为构建参数
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY_ARG=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+            # 如果你的 Dockerfile 需要 SHA 参数，可以在这里加上
+            # SHA=${{ github.sha }}
