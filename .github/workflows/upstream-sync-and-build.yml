@@ -1,0 +1,103 @@
+name: Upstream Sync and Build Docker
+
+permissions:
+  contents: write # Fork-Sync-With-Upstream-action 需要写权限来推送同步的代码
+  issues: write   # 用于同步失败时创建 issue
+  # Docker build/push 不需要特殊权限，但 packages:write 可能需要（如果推送到 GHCR 而不是 Docker Hub）
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # 每 6 小时运行一次
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  sync_and_build: # 将两个任务合并到一个 job 中
+    name: Sync Upstream and Build Docker Image
+    runs-on: ubuntu-latest
+    # 仅在 fork 仓库中运行同步逻辑
+    if: ${{ github.event.repository.fork }}
+
+    steps:
+      # 1. 检出当前 fork 的代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 需要获取历史记录，以便 aormsby action 能正确判断是否有新提交
+          fetch-depth: 0
+
+      # 2. 清理可能存在的旧的同步失败 issue
+      - name: Clean issue notice
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'close-issues'
+          labels: '🚨 Sync Fail'
+
+      # 3. 执行上游同步
+      - name: Sync upstream changes
+        id: sync # 给这个步骤一个 id，方便后面引用它的输出
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          upstream_sync_repo: lobehub/lobe-chat # 上游仓库
+          upstream_sync_branch: main           # 上游分支
+          target_sync_branch: main             # 同步到你的 fork 的哪个分支
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # 使用 GitHub 自动生成的 Token
+          # fetch-depth: 0 # aormsby action v3.4 默认会获取完整历史记录
+          test_mode: false # 设置为 false 以实际执行同步
+
+      # 4. 检查同步是否成功，如果失败则创建 issue (这部分保持不变)
+      - name: Sync check
+        if: failure() && steps.sync.outcome == 'failure' # 仅在 sync 步骤明确失败时运行
+        uses: actions-cool/issues-helper@v3
+        with:
+          actions: 'create-issue'
+          title: '🚨 同步失败 | Sync Fail'
+          labels: '🚨 Sync Fail'
+          body: |
+            同步上游仓库 lobehub/lobe-chat 时发生错误。请检查 Action 日志或手动同步。
+            Error occurred while syncing with upstream repository lobehub/lobe-chat. Please check Action logs or sync manually.
+            [lobechat]: https://github.com/lobehub/lobe-chat
+            [tutorial-zh-CN]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN
+            [tutorial-en-US]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync
+
+      # --- Docker 构建和推送步骤 ---
+      # 仅在同步成功 (steps.sync.outcome == 'success')
+      # 并且 aormsby action 确认有新的提交被拉取 (steps.sync.outputs.has_new_commits == 'true') 时运行
+      - name: Set up Docker Buildx
+        if: success() && steps.sync.outputs.has_new_commits == 'true' # 条件：同步成功且有新提交
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: success() && steps.sync.outputs.has_new_commits == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }} # 使用你自己的 Docker Hub 用户名 Secret
+          password: ${{ secrets.DOCKERHUB_TOKEN }}    # 使用你自己的 Docker Hub Token Secret
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        if: success() && steps.sync.outputs.has_new_commits == 'true'
+        uses: docker/metadata-action@v5
+        with:
+          # 修改为你自己的 Docker Hub 镜像名称
+          images: marvinlee514/lobechat-docker-clerk
+          tags: |
+            type=raw,value=latest # 始终推送 latest 标签
+            # 可以选择性地添加基于 commit SHA 的标签
+            type=sha,prefix=,suffix=,format=short
+
+      - name: Build and push Docker image (amd64)
+        if: success() && steps.sync.outputs.has_new_commits == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: . # Docker 构建上下文为仓库根目录
+          # 确认 LobeChat 数据库版本的 Dockerfile 路径是否正确！
+          file: ./Dockerfile.database # <--- 确认这个路径是否是 LobeChat 实际的 Dockerfile 路径
+          platforms: linux/amd64 # 只构建 amd64 平台
+          push: true # 推送镜像
+          tags: ${{ steps.meta.outputs.tags }} # 使用 metadata action 生成的标签
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            # 传递 Clerk Publishable Key 作为构建参数
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY_ARG=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+            # 如果 Dockerfile 需要 SHA，可以像官方 workflow 一样传递
+            # SHA=${{ github.sha }} # 或者取短 SHA
