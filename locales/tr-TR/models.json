@@ -5,8 +5,14 @@
   "01-ai/yi-1.5-9b-chat": {
     "description": "Zero One Everything, en son açık kaynak ince ayar modelidir, 9 milyar parametreye sahiptir, ince ayar çeşitli diyalog senaryolarını destekler, yüksek kaliteli eğitim verileri ile insan tercihleri ile hizalanmıştır."
   },
+  "360/deepseek-r1": {
+    "description": "[360 Dağıtım Versiyonu] DeepSeek-R1, son eğitim aşamasında geniş çapta pekiştirme öğrenimi teknikleri kullanarak, çok az etiketli veri ile modelin çıkarım yeteneğini büyük ölçüde artırmıştır. Matematik, kod, doğal dil çıkarımı gibi görevlerde, OpenAI o1 resmi sürümü ile benzer performans sergilemektedir."
+  },
   "360gpt-pro": {
     "description": "360GPT Pro, 360 AI model serisinin önemli bir üyesi olarak, çeşitli doğal dil uygulama senaryolarını karşılamak için etkili metin işleme yeteneği sunar, uzun metin anlama ve çoklu diyalog gibi işlevleri destekler."
+  },
+  "360gpt-pro-trans": {
+    "description": "Çeviri için özel olarak tasarlanmış model, derinlemesine ince ayar yapılmış ve çeviri sonuçları lider konumdadır."
   },
   "360gpt-turbo": {
     "description": "360GPT Turbo, güçlü hesaplama ve diyalog yetenekleri sunar, mükemmel anlam anlama ve oluşturma verimliliğine sahiptir, işletmeler ve geliştiriciler için ideal bir akıllı asistan çözümüdür."
@@ -61,6 +67,18 @@
   },
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Qwen2.5-Math-7B temel alınarak oluşturulmuş DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
+  },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3, Derin Arayış şirketi tarafından geliştirilen bir MoE modelidir. DeepSeek-V3, birçok değerlendirmede Qwen2.5-72B ve Llama-3.1-405B gibi diğer açık kaynak modelleri geride bırakmış ve performans açısından dünya çapında en iyi kapalı kaynak model olan GPT-4o ve Claude-3.5-Sonnet ile eşit seviyededir."
+  },
+  "Doubao-1.5-thinking-pro": {
+    "description": "Doubao-1.5, yeni derin düşünme modelidir, matematik, programlama, bilimsel çıkarım gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde mükemmel performans sergilemektedir, AIME 2024, Codeforces, GPQA gibi birçok otoriter ölçekte endüstri lideri seviyesine ulaşmakta veya yaklaşmaktadır. 128k bağlam penceresi ve 16k çıktı destekler."
+  },
+  "Doubao-1.5-thinking-pro-vision": {
+    "description": "Doubao-1.5, yeni derin düşünme modelidir, matematik, programlama, bilimsel çıkarım gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde mükemmel performans sergilemektedir, AIME 2024, Codeforces, GPQA gibi birçok otoriter ölçekte endüstri lideri seviyesine ulaşmakta veya yaklaşmaktadır. 128k bağlam penceresi ve 16k çıktı destekler."
+  },
+  "Doubao-1.5-vision-pro": {
+    "description": "Doubao-1.5-vision-pro, yeni güncellenmiş çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranı görüntü tanıma desteği sunar, görsel çıkarım, belge tanıma, detay bilgisi anlama ve talimat takibi yeteneklerini artırır."
   },
   "Doubao-1.5-vision-pro-32k": {
     "description": "Doubao-1.5-vision-pro, tamamen yenilenen çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranına sahip görüntü tanıma desteği sunar, görsel akıl yürütme, belge tanıma, detay bilgisi anlama ve talimatları takip etme yeteneklerini artırır."
@@ -341,6 +359,15 @@
   "SenseChat-Vision": {
     "description": "En son versiyon modeli (V5.5), çoklu görsel girişi destekler, modelin temel yetenek optimizasyonunu tamamen gerçekleştirir; nesne özellik tanıma, mekansal ilişkiler, hareket olayları tanıma, sahne anlama, duygu tanıma, mantıksal bilgi çıkarımı ve metin anlama üretimi gibi alanlarda önemli gelişmeler sağlamıştır."
   },
+  "SenseNova-V6-Pro": {
+    "description": "Görüntü, metin ve video yeteneklerinin yerel birliğini sağlar, geleneksel çok modlu ayrım sınırlamalarını aşar, OpenCompass ve SuperCLUE değerlendirmelerinde çift şampiyonluk kazanmıştır."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Görsel ve dil derin akıl yürütmesini bir araya getirerek, yavaş düşünme ve derin akıl yürütmeyi gerçekleştirir, tam bir düşünce zinciri sürecini sunar."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Görüntü, metin ve video yeteneklerinin yerel birliğini sağlar, geleneksel çok modlu ayrım sınırlamalarını aşar, çoklu temel yetenekler, dil temel yetenekleri gibi ana boyutlarda kapsamlı bir şekilde önde gelir, hem edebi hem de mantıksal olarak dengelidir ve birçok değerlendirmede ulusal ve uluslararası birinci lig seviyesinde yer almıştır."
+  },
   "Skylark2-lite-8k": {
     "description": "Skylark'in (Bulut Şarkıcısı) ikinci nesil modeli, Skylark2-lite modeli yüksek yanıt hızı ile donatılmıştır; gerçek zamanlı talep gereksinimleri yüksek, maliyet duyarlı ve model hassasiyetine daha az ihtiyaç duyulan senaryolar için uygundur; bağlam pencere uzunluğu 8k'dır."
   },
@@ -355,6 +382,21 @@
   },
   "Skylark2-pro-turbo-8k": {
     "description": "Skylark'in (Bulut Şarkıcısı) ikinci nesil modeli, Skylark2-pro-turbo-8k ile daha hızlı çıkarım gerçekleştirir, maliyeti düşüktür ve bağlam pencere uzunluğu 8k'dır."
+  },
+  "THUDM/GLM-4-32B-0414": {
+    "description": "GLM-4-32B-0414, GLM serisinin yeni nesil açık kaynak modelidir ve 32 milyar parametreye sahiptir. Bu model, OpenAI'nin GPT serisi ve DeepSeek'in V3/R1 serisi ile karşılaştırılabilir performans sunar."
+  },
+  "THUDM/GLM-4-9B-0414": {
+    "description": "GLM-4-9B-0414, GLM serisinin küçük modelidir ve 9 milyar parametreye sahiptir. Bu model, GLM-4-32B serisinin teknik özelliklerini devralır, ancak daha hafif bir dağıtım seçeneği sunar. Boyutu daha küçük olmasına rağmen, GLM-4-9B-0414, kod oluşturma, web tasarımı, SVG grafik oluşturma ve arama tabanlı yazım gibi görevlerde mükemmel yetenekler sergiler."
+  },
+  "THUDM/GLM-Z1-32B-0414": {
+    "description": "GLM-Z1-32B-0414, derin düşünme yeteneğine sahip bir çıkarım modelidir. Bu model, GLM-4-32B-0414 temel alınarak soğuk başlatma ve genişletilmiş pekiştirme öğrenimi ile geliştirilmiştir ve matematik, kod ve mantık görevlerinde daha fazla eğitim almıştır. Temel model ile karşılaştırıldığında, GLM-Z1-32B-0414, matematik yeteneklerini ve karmaşık görevleri çözme yeteneğini önemli ölçüde artırmıştır."
+  },
+  "THUDM/GLM-Z1-9B-0414": {
+    "description": "GLM-Z1-9B-0414, GLM serisinin küçük modelidir, yalnızca 9 milyar parametreye sahiptir, ancak açık kaynak geleneğini sürdürürken etkileyici yetenekler sergiler. Boyutu daha küçük olmasına rağmen, bu model matematik çıkarımı ve genel görevlerde mükemmel performans gösterir, genel performansı eşit boyuttaki açık kaynak modeller arasında lider konumdadır."
+  },
+  "THUDM/GLM-Z1-Rumination-32B-0414": {
+    "description": "GLM-Z1-Rumination-32B-0414, derin düşünme yeteneğine sahip bir derin çıkarım modelidir (OpenAI'nin Derin Araştırması ile karşılaştırılabilir). Tipik derin düşünme modellerinin aksine, düşünme modeli daha uzun süreli derin düşünme ile daha açık ve karmaşık sorunları çözmektedir."
   },
   "THUDM/chatglm3-6b": {
     "description": "ChatGLM3-6B, Zhipu AI tarafından geliştirilen ChatGLM serisinin açık kaynak modelidir. Bu model, önceki nesil modellerin mükemmel özelliklerini korurken, yeni özellikler de eklenmiştir. Daha çeşitli eğitim verileri, daha fazla eğitim adımı ve daha mantıklı eğitim stratejileri kullanarak, 10B altındaki önceden eğitilmiş modeller arasında mükemmel performans sergilemektedir. ChatGLM3-6B, çoklu diyalog, araç çağrısı, kod yürütme ve ajan görevleri gibi karmaşık senaryoları desteklemektedir. Diyalog modelinin yanı sıra, temel model ChatGLM-6B-Base ve uzun metin diyalog modeli ChatGLM3-6B-32K da açık kaynak olarak sunulmuştur. Bu model, akademik araştırmalara tamamen açıktır ve kayıt olduktan sonra ücretsiz ticari kullanımına da izin verilmektedir."
@@ -521,6 +563,9 @@
   "charglm-3": {
     "description": "CharGLM-3, rol yapma ve duygusal destek için tasarlanmış, ultra uzun çok turlu bellek ve kişiselleştirilmiş diyalog desteği sunan bir modeldir, geniş bir uygulama yelpazesine sahiptir."
   },
+  "charglm-4": {
+    "description": "CharGLM-4, rol yapma ve duygusal destek için tasarlanmıştır, uzun süreli çoklu hafıza ve kişiselleştirilmiş diyalogları destekler, geniş bir uygulama yelpazesine sahiptir."
+  },
   "chatglm3": {
     "description": "ChatGLM3, ZhiPu AI ve Tsinghua KEG laboratuvarı tarafından yayınlanan kapalı kaynaklı bir modeldir. Büyük miktarda Çince ve İngilizce belirteçlerin önceden eğitilmesi ve insan tercihleriyle hizalama eğitimi ile, birinci nesil modellere göre MMLU, C-Eval ve GSM8K'da sırasıyla %16, %36 ve %280'lük iyileştirmeler elde edilmiştir ve Çince görevler listesinde C-Eval zirvesine ulaşmıştır. Bilgi hacmi, çıkarım yeteneği ve yaratıcılık gerektiren senaryolarda kullanılabilir, örneğin reklam metni, roman yazımı, bilgi tabanlı yazım, kod oluşturma vb."
   },
@@ -632,8 +677,17 @@
   "command-r-plus-04-2024": {
     "description": "Command R+, dil görevlerinde daha yüksek kalite ve güvenilirlik sunan, talimatları izleyen bir diyalog modelidir ve önceki modellere göre daha uzun bir bağlam uzunluğuna sahiptir. Karmaşık RAG iş akışları ve çok adımlı araç kullanımı için en uygunudur."
   },
+  "command-r-plus-08-2024": {
+    "description": "Command R+ talimatları takip eden bir diyalog modelidir, dil görevlerinde daha yüksek kalite, daha güvenilirlik sunar ve önceki modellere göre daha uzun bağlam uzunluğuna sahiptir. Karmaşık RAG iş akışları ve çok adımlı araç kullanımı için en uygunudur."
+  },
   "command-r7b-12-2024": {
     "description": "command-r7b-12-2024, 2024 yılının Aralık ayında piyasaya sürülen küçük ve verimli bir güncellenmiş versiyondur. RAG, araç kullanımı, ajan gibi karmaşık akıl yürütme ve çok adımlı işlemler gerektiren görevlerde mükemmel performans sergilemektedir."
+  },
+  "compound-beta": {
+    "description": "Compound-beta, GroqCloud'da desteklenen birden fazla açık kullanılabilir modelden güç alan bir bileşik AI sistemidir, kullanıcı sorgularını yanıtlamak için araçları akıllıca ve seçici bir şekilde kullanabilir."
+  },
+  "compound-beta-mini": {
+    "description": "Compound-beta-mini, GroqCloud'da desteklenen açık kullanılabilir modellerden güç alan bir bileşik AI sistemidir, kullanıcı sorgularını yanıtlamak için araçları akıllıca ve seçici bir şekilde kullanabilir."
   },
   "dall-e-2": {
     "description": "İkinci nesil DALL·E modeli, daha gerçekçi ve doğru görüntü üretimi destekler, çözünürlüğü birinci neslin 4 katıdır."
@@ -779,6 +833,18 @@
   "deepseek/deepseek-v3/community": {
     "description": "DeepSeek-V3, çıkarım hızında önceki modellere göre önemli bir atılım gerçekleştirmiştir. Açık kaynak modeller arasında birinci sırada yer almakta ve dünya çapındaki en gelişmiş kapalı kaynak modellerle rekabet edebilmektedir. DeepSeek-V3, DeepSeek-V2'de kapsamlı bir şekilde doğrulanan çok başlı potansiyel dikkat (MLA) ve DeepSeekMoE mimarilerini kullanmaktadır. Ayrıca, DeepSeek-V3, yük dengeleme için yardımcı kayıpsız bir strateji geliştirmiştir ve daha güçlü bir performans elde etmek için çok etiketli tahmin eğitim hedefleri belirlemiştir."
   },
+  "deepseek_r1": {
+    "description": "DeepSeek-R1, pekiştirme öğrenimi (RL) ile yönlendirilen bir çıkarım modelidir, modeldeki tekrarlama ve okunabilirlik sorunlarını çözmektedir. RL'den önce, DeepSeek-R1, soğuk başlatma verilerini tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer performans sergilemekte ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmaktadır."
+  },
+  "deepseek_r1_distill_llama_70b": {
+    "description": "DeepSeek-R1-Distill-Llama-70B, Llama-3.3-70B-Instruct temel alınarak damıtma eğitimi ile elde edilen bir modeldir. Bu model, DeepSeek-R1 serisinin bir parçasıdır ve DeepSeek-R1 tarafından üretilen örnekler kullanılarak ince ayar yapılmış, matematik, programlama ve çıkarım gibi birçok alanda mükemmel performans sergilemektedir."
+  },
+  "deepseek_r1_distill_qwen_14b": {
+    "description": "DeepSeek-R1-Distill-Qwen-14B, Qwen2.5-14B temel alınarak bilgi damıtma ile elde edilen bir modeldir. Bu model, DeepSeek-R1 tarafından üretilen 800.000 seçkin örnek ile ince ayar yapılmış ve mükemmel çıkarım yetenekleri sergilemektedir."
+  },
+  "deepseek_r1_distill_qwen_32b": {
+    "description": "DeepSeek-R1-Distill-Qwen-32B, Qwen2.5-32B temel alınarak bilgi damıtma ile elde edilen bir modeldir. Bu model, DeepSeek-R1 tarafından üretilen 800.000 seçkin örnek ile ince ayar yapılmış ve matematik, programlama ve çıkarım gibi birçok alanda olağanüstü performans sergilemektedir."
+  },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite, tamamen yeni nesil hafif modeldir, olağanüstü yanıt hızı ile etkisi ve gecikmesi dünya standartlarında bir seviyeye ulaşmıştır."
   },
@@ -787,6 +853,9 @@
   },
   "doubao-1.5-pro-32k": {
     "description": "Doubao-1.5-pro, tamamen yeni nesil ana model, performansı tamamen yükseltilmiş olup, bilgi, kod, akıl yürütme gibi alanlarda mükemmel bir performans sergilemektedir."
+  },
+  "doubao-1.5-vision-lite": {
+    "description": "Doubao-1.5-vision-lite, yeni güncellenmiş çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranı görüntü tanıma desteği sunar, görsel çıkarım, belge tanıma, detay bilgisi anlama ve talimat takibi yeteneklerini artırır. 128k bağlam penceresi destekler, çıktı uzunluğu maksimum 16k token destekler."
   },
   "emohaa": {
     "description": "Emohaa, duygusal sorunları anlamalarına yardımcı olmak için profesyonel danışmanlık yeteneklerine sahip bir psikolojik modeldir."
@@ -953,6 +1022,9 @@
   "glm-4-air": {
     "description": "GLM-4-Air, maliyet etkin bir versiyondur, GLM-4'e yakın performans sunar ve hızlı hız ve uygun fiyat sağlar."
   },
+  "glm-4-air-250414": {
+    "description": "GLM-4-Air, maliyet açısından yüksek verimlilik sunan bir versiyondur, GLM-4'e yakın performans sunar, hızlı hız ve uygun fiyat sağlar."
+  },
   "glm-4-airx": {
     "description": "GLM-4-AirX, GLM-4-Air'ın verimli bir versiyonunu sunar, çıkarım hızı 2.6 katına kadar çıkabilir."
   },
@@ -961,6 +1033,9 @@
   },
   "glm-4-flash": {
     "description": "GLM-4-Flash, basit görevleri işlemek için ideal bir seçimdir, en hızlı ve en uygun fiyatlıdır."
+  },
+  "glm-4-flash-250414": {
+    "description": "GLM-4-Flash, basit görevler için ideal bir seçimdir, en hızlı ve ücretsizdir."
   },
   "glm-4-flashx": {
     "description": "GLM-4-FlashX, Flash'ın geliştirilmiş bir versiyonudur ve ultra hızlı çıkarım hızı sunar."
@@ -979,6 +1054,18 @@
   },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus, video içeriği ve çoklu görüntüleri anlama yeteneğine sahiptir, çok modlu görevler için uygundur."
+  },
+  "glm-4v-plus-0111": {
+    "description": "GLM-4V-Plus, video içeriği ve çoklu görüntüleri anlama yeteneğine sahiptir, çok modlu görevler için uygundur."
+  },
+  "glm-z1-air": {
+    "description": "Çıkarım modeli: Güçlü çıkarım yeteneklerine sahiptir, derin çıkarım gerektiren görevler için uygundur."
+  },
+  "glm-z1-airx": {
+    "description": "Hızlı çıkarım: Süper hızlı çıkarım hızı ve güçlü çıkarım etkisi sunar."
+  },
+  "glm-z1-flash": {
+    "description": "GLM-Z1 serisi, karmaşık çıkarım yeteneklerine sahiptir, mantıksal çıkarım, matematik, programlama gibi alanlarda mükemmel performans gösterir. Maksimum bağlam uzunluğu 32K'dır."
   },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview, karmaşık akıl yürütme yeteneklerine sahip olup, mantıksal akıl yürütme, matematik, programlama gibi alanlarda mükemmel performans sergilemektedir."
@@ -1199,11 +1286,14 @@
   "hunyuan-turbos-20250226": {
     "description": "hunyuan-TurboS pv2.1.2 sabit versiyonu, ön eğitim tabanlı token sayısını yükseltmiştir; matematik/lojik/kod gibi düşünme yeteneklerini geliştirmiştir; Çince ve İngilizce genel deneyim kalitesini artırmıştır, metin oluşturma, metin anlama, bilgi sorgulama, sohbet gibi alanlarda."
   },
-  "hunyuan-turbos-20250313": {
-    "description": "Matematik çözümleme adımlarının stilini birleştirerek, matematik çok aşamalı soru-cevap süreçlerini güçlendirir. Metin oluşturma, yanıt stilini optimize eder, AI hissini ortadan kaldırır ve edebi bir dokunuş ekler."
-  },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS, daha güçlü düşünme yeteneği ve daha iyi deneyim sunan en son sürümüdür."
+  },
+  "hunyuan-turbos-longtext-128k-20250325": {
+    "description": "Uzun metin görevlerini, örneğin belge özetleme ve belge yanıtları gibi, işleme konusunda uzmandır ve genel metin oluşturma görevlerini de yerine getirebilir. Uzun metinlerin analizi ve oluşturulmasında mükemmel performans gösterir, karmaşık ve ayrıntılı uzun metin içerik işleme ihtiyaçlarını etkili bir şekilde karşılar."
+  },
+  "hunyuan-turbos-vision": {
+    "description": "Bu model, görsel ve metin anlama senaryoları için uygundur, en son Hunyuan turbosuna dayanan yeni nesil görsel dil amiral modeli olup, görsel ve metin anlama ile ilgili görevlerde, resim tabanlı varlık tanıma, bilgi yanıtı, metin yazımı, fotoğrafla problem çözme gibi alanlarda, önceki nesil modellere göre kapsamlı bir iyileşme sunar."
   },
   "hunyuan-vision": {
     "description": "Hunyuan'ın en son çok modlu modeli, resim + metin girişi ile metin içeriği oluşturmayı destekler."
@@ -1222,6 +1312,12 @@
   },
   "internlm3-latest": {
     "description": "En son model serimiz, olağanüstü çıkarım performansına sahiptir ve aynı ölçekli açık kaynak modeller arasında liderdir. Varsayılan olarak en son yayımlanan InternLM3 serisi modellerine işaret eder."
+  },
+  "jamba-large": {
+    "description": "En güçlü ve en gelişmiş modelimiz, kurumsal düzeyde karmaşık görevleri işlemek için tasarlanmıştır ve olağanüstü performans sunar."
+  },
+  "jamba-mini": {
+    "description": "Sınıfındaki en verimli model, hız ve kaliteyi dengeler, daha küçük bir boyuta sahiptir."
   },
   "jina-deepsearch-v1": {
     "description": "Derin arama, web araması, okuma ve akıl yürütmeyi birleştirerek kapsamlı bir araştırma yapar. Bunu, araştırma görevlerinizi kabul eden bir ajan olarak düşünebilirsiniz - geniş bir arama yapar ve birden fazla yineleme ile cevap verir. Bu süreç, sürekli araştırma, akıl yürütme ve sorunları çeşitli açılardan çözmeyi içerir. Bu, doğrudan önceden eğitilmiş verilerden cevaplar üreten standart büyük modellerle ve tek seferlik yüzey aramasına dayanan geleneksel RAG sistemleriyle temelde farklıdır."
@@ -1568,8 +1664,17 @@
   "o1-preview": {
     "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
   },
+  "o3": {
+    "description": "o3, çok çeşitli alanlarda mükemmel performans gösteren çok yönlü güçlü bir modeldir. Matematik, bilim, programlama ve görsel çıkarım görevlerinde yeni standartlar belirler. Ayrıca teknik yazım ve talimat takibi konusunda da uzmandır. Kullanıcılar, metin, kod ve görüntüleri analiz ederek çok adımlı karmaşık sorunları çözebilir."
+  },
   "o3-mini": {
     "description": "o3-mini, aynı maliyet ve gecikme hedefleriyle yüksek zeka sunan en yeni küçük ölçekli çıkarım modelimizdir."
+  },
+  "o3-mini-high": {
+    "description": "o3-mini yüksek çıkarım seviyesinde, o1-mini ile aynı maliyet ve gecikme hedefleri altında yüksek zeka sunar."
+  },
+  "o4-mini": {
+    "description": "o4-mini, en yeni küçük o serisi modelimizdir. Hızlı ve etkili çıkarım için optimize edilmiştir ve kodlama ile görsel görevlerde son derece yüksek verimlilik ve performans sergiler."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba, kod üretimine odaklanan Mamba 2 dil modelidir ve ileri düzey kod ve akıl yürütme görevlerine güçlü destek sunar."
@@ -1597,6 +1702,12 @@
   },
   "openai/o1-preview": {
     "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
+  },
+  "openai/o4-mini": {
+    "description": "o4-mini, hızlı ve etkili çıkarım için optimize edilmiştir ve kodlama ile görsel görevlerde son derece yüksek verimlilik ve performans sergiler."
+  },
+  "openai/o4-mini-high": {
+    "description": "o4-mini yüksek çıkarım seviyesinde, hızlı ve etkili çıkarım için optimize edilmiştir ve kodlama ile görsel görevlerde son derece yüksek verimlilik ve performans sergiler."
   },
   "openrouter/auto": {
     "description": "Bağlam uzunluğu, konu ve karmaşıklığa göre isteğiniz, Llama 3 70B Instruct, Claude 3.5 Sonnet (kendini ayarlama) veya GPT-4o'ya gönderilecektir."
@@ -1793,6 +1904,9 @@
   "qwq-plus-latest": {
     "description": "Qwen2.5 modeli üzerine eğitilmiş QwQ çıkarım modeli, pekiştirmeli öğrenme ile modelin çıkarım yeteneğini önemli ölçüde artırmıştır. Modelin matematiksel kodları ve diğer temel göstergeleri (AIME 24/25, LiveCodeBench) ile bazı genel göstergeleri (IFEval, LiveBench vb.) DeepSeek-R1 tam sürüm seviyesine ulaşmıştır."
   },
+  "qwq_32b": {
+    "description": "Qwen serisinin orta ölçekli çıkarım modelidir. Geleneksel talimat ayarlama modellerine kıyasla, düşünme ve çıkarım yeteneğine sahip QwQ, özellikle zorlu görevleri çözme konusunda, alt görevlerde performansı önemli ölçüde artırabilir."
+  },
   "r1-1776": {
     "description": "R1-1776, DeepSeek R1 modelinin bir versiyonudur ve son eğitimle, sansürsüz, tarafsız gerçek bilgileri sunar."
   },
@@ -1853,11 +1967,20 @@
   "step-2-16k": {
     "description": "Büyük ölçekli bağlam etkileşimlerini destekler, karmaşık diyalog senaryoları için uygundur."
   },
+  "step-2-16k-exp": {
+    "description": "step-2 modelinin deneysel versiyonu, en son özellikleri içerir ve sürekli güncellenmektedir. Resmi üretim ortamında kullanılması önerilmez."
+  },
   "step-2-mini": {
     "description": "Yeni nesil kendi geliştirdiğimiz MFA Attention mimarisine dayanan hızlı büyük model, çok düşük maliyetle step1 ile benzer sonuçlar elde ederken, daha yüksek bir throughput ve daha hızlı yanıt süresi sağlıyor. Genel görevleri işleyebilme yeteneğine sahip olup, kodlama yeteneklerinde uzmanlık gösteriyor."
   },
+  "step-r1-v-mini": {
+    "description": "Bu model, güçlü görüntü anlama yeteneğine sahip bir çıkarım büyük modelidir, görüntü ve metin bilgilerini işleyebilir, derin düşünme sonrası metin oluşturma çıktısı verebilir. Bu model, görsel çıkarım alanında öne çıkarken, birinci sınıf matematik, kod ve metin çıkarım yeteneklerine de sahiptir. Bağlam uzunluğu 100k'dır."
+  },
   "taichu_llm": {
     "description": "Zidong Taichu dil büyük modeli, güçlü dil anlama yeteneği ile metin oluşturma, bilgi sorgulama, kod programlama, matematik hesaplama, mantıksal akıl yürütme, duygu analizi, metin özeti gibi yeteneklere sahiptir. Yenilikçi bir şekilde büyük veri ön eğitimi ile çok kaynaklı zengin bilgiyi birleştirir, algoritma teknolojisini sürekli olarak geliştirir ve büyük metin verilerinden kelime, yapı, dil bilgisi, anlam gibi yeni bilgileri sürekli olarak edinir, modelin performansını sürekli olarak evrimleştirir. Kullanıcılara daha kolay bilgi ve hizmetler sunar ve daha akıllı bir deneyim sağlar."
+  },
+  "taichu_o1": {
+    "description": "taichu_o1, yeni nesil çıkarım büyük modelidir, çok modlu etkileşim ve pekiştirme öğrenimi ile insan benzeri düşünme zincirleri oluşturur, karmaşık karar verme senaryolarını destekler, yüksek hassasiyetli çıktılar sunarken model çıkarım düşünce yollarını sergiler, strateji analizi ve derin düşünme gibi senaryolar için uygundur."
   },
   "taichu_vl": {
     "description": "Görüntü anlama, bilgi transferi, mantıksal çıkarım gibi yetenekleri birleştirir ve görsel-işitsel soru-cevap alanında öne çıkar."

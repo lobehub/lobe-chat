@@ -1,10 +1,10 @@
-import { FilesDispatchEvents } from './file';
+import { LocalFilesDispatchEvents } from './localFile';
 import { MenuDispatchEvents } from './menu';
 import { RemoteServerBroadcastEvents, RemoteServerDispatchEvents } from './remoteServer';
-import { FilesSearchDispatchEvents } from './search';
 import { ShortcutDispatchEvents } from './shortcut';
 import { SystemDispatchEvents } from './system';
 import { AutoUpdateBroadcastEvents, AutoUpdateDispatchEvents } from './update';
+import { UploadFilesDispatchEvents } from './upload';
 import { WindowsDispatchEvents } from './windows';
 
 /**
@@ -13,13 +13,13 @@ import { WindowsDispatchEvents } from './windows';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ClientDispatchEvents
   extends WindowsDispatchEvents,
-    FilesSearchDispatchEvents,
     SystemDispatchEvents,
     MenuDispatchEvents,
-    FilesDispatchEvents,
+    LocalFilesDispatchEvents,
     AutoUpdateDispatchEvents,
     ShortcutDispatchEvents,
-    RemoteServerDispatchEvents {}
+    RemoteServerDispatchEvents,
+    UploadFilesDispatchEvents {}
 
 export type ClientDispatchEventKey = keyof ClientDispatchEvents;
 

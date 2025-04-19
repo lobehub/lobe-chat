@@ -1,0 +1,32 @@
+{
+  "remoteServer": {
+    "authError": "인증 실패: {{error}}",
+    "authPending": "브라우저에서 인증을 완료하세요",
+    "configDesc": "원격 LobeChat 서버에 연결하여 데이터 동기화를 활성화합니다",
+    "configError": "구성 오류",
+    "configTitle": "클라우드 동기화 구성",
+    "connect": "연결 및 인증",
+    "connected": "연결됨",
+    "disconnect": "연결 끊기",
+    "disconnectError": "연결 끊기 실패",
+    "disconnected": "연결되지 않음",
+    "fetchError": "구성 가져오기 실패",
+    "invalidUrl": "유효한 URL 주소를 입력하세요",
+    "serverUrl": "서버 주소",
+    "statusConnected": "연결됨",
+    "statusDisconnected": "연결되지 않음",
+    "urlRequired": "서버 주소를 입력하세요"
+  },
+  "updater": {
+    "downloadingUpdate": "업데이트 다운로드 중",
+    "downloadingUpdateDesc": "업데이트가 다운로드 중입니다. 잠시 기다려 주세요...",
+    "later": "나중에 업데이트",
+    "newVersionAvailable": "새 버전 사용 가능",
+    "newVersionAvailableDesc": "새 버전 {{version}}이 발견되었습니다. 지금 다운로드 하시겠습니까?",
+    "restartAndInstall": "재시작 및 설치",
+    "updateError": "업데이트 오류",
+    "updateReady": "업데이트 준비 완료",
+    "updateReadyDesc": "Lobe Chat {{version}}이 다운로드 완료되었습니다. 앱을 재시작하면 설치가 완료됩니다.",
+    "upgradeNow": "지금 업데이트"
+  }
+}
