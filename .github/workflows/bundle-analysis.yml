@@ -1,0 +1,22 @@
+name: Bundle Analysis
+
+on: [push, pull_request]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
+
+      - name: Build with Bundle Analysis
+        run: bun run build:analyze
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }} 
