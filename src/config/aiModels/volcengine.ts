@@ -33,7 +33,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'doubao-1-5-thinking-pro-vision-250415',
+      deploymentName: 'doubao-1-5-thinking-pro-m-250415',
     },
     contextWindowTokens: 128_000,
     description:
