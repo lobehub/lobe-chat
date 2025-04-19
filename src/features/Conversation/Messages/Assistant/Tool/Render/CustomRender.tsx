@@ -50,7 +50,7 @@ const CustomRender = memo<CustomRenderProps>(
             type={plugin?.type}
           />
         ) : (
-          <Arguments arguments={requestArgs} />
+          <Arguments arguments={requestArgs} messageId={id} />
         )}
       </Flexbox>
     );
