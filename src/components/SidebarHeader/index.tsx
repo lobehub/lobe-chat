@@ -10,11 +10,12 @@ const useStyles = createStyles(({ css }) => ({
 
 interface SidebarHeaderProps {
   actions?: ReactNode;
+  onClick?: () => void;
   style?: CSSProperties;
   title: ReactNode;
 }
 
-const SidebarHeader = memo<SidebarHeaderProps>(({ title, style, actions }) => {
+const SidebarHeader = memo<SidebarHeaderProps>(({ title, style, actions, onClick }) => {
   const { styles } = useStyles();
 
   return (
@@ -23,6 +24,7 @@ const SidebarHeader = memo<SidebarHeaderProps>(({ title, style, actions }) => {
       className={styles.header}
       distribution={'space-between'}
       horizontal
+      onClick={onClick}
       padding={14}
       paddingInline={16}
       style={style}
