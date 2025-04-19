@@ -6,8 +6,7 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css, cx, token }) => ({
-  deleteButton: cx('delete-button', css``),
+const useStyles = createStyles(({ css, token }) => ({
   form: css`
     position: relative;
 

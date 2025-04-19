@@ -1,16 +1,11 @@
-import { ActionIcon, Highlighter } from '@lobehub/ui';
-import { App } from 'antd';
+import { Highlighter } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Edit3Icon, PlayCircleIcon } from 'lucide-react';
 import { parse } from 'partial-json';
-import { memo, useCallback, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { ReactNode, memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useYamlArguments } from '@/hooks/useYamlArguments';
-import { useChatStore } from '@/store/chat';
 
-import KeyValueEditor from './KeyValueEditor';
 import ObjectEntity from './ObjectEntity';
 
 const useStyles = createStyles(({ css, token, cx }) => ({
@@ -61,29 +56,13 @@ const useStyles = createStyles(({ css, token, cx }) => ({
 }));
 
 export interface ArgumentsProps {
+  actions?: ReactNode;
   arguments?: string;
-  messageId?: string;
   shine?: boolean;
 }
 
-const safeParseJson = (str: string): Record<string, any> => {
-  try {
-    const obj = parse(str);
-    return typeof obj === 'object' && obj !== null ? obj : {};
-  } catch {
-    return {};
-  }
-};
-
-const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, messageId }) => {
+const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, actions }) => {
   const { styles } = useStyles();
-  const { t } = useTranslation(['tool', 'common']);
-  const [isEditing, setIsEditing] = useState(false);
-  const { message } = App.useApp();
-  const [updatePluginArguments, reInvokeToolMessage] = useChatStore((s) => [
-    s.updatePluginArguments,
-    s.reInvokeToolMessage,
-  ]);
 
   const displayArgs = useMemo(() => {
     try {
@@ -97,59 +76,12 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, messageId
 
   const yaml = useYamlArguments(args);
 
-  const handleEditStart = useCallback(() => {
-    setIsEditing(true);
-  }, []);
-
-  const handleCancel = useCallback(() => {
-    setIsEditing(false);
-  }, []);
-
-  const handleFinish = useCallback(
-    async (editedObject: Record<string, any>) => {
-      if (!messageId) return;
-
-      try {
-        const newArgsString = JSON.stringify(editedObject, null, 2);
-
-        if (newArgsString !== args) {
-          await updatePluginArguments(messageId, editedObject, true);
-          await reInvokeToolMessage(messageId);
-        }
-        setIsEditing(false);
-      } catch (error) {
-        console.error('Error stringifying arguments:', error);
-        message.error(t('updateArgs.stringifyError'));
-      }
-    },
-    [args, messageId, message],
-  );
-
-  if (isEditing) {
-    return (
-      <KeyValueEditor
-        initialValue={safeParseJson(args)}
-        onCancel={handleCancel}
-        onFinish={handleFinish}
-      />
-    );
-  }
-
-  const showActions = !!messageId;
+  const showActions = !!actions;
 
   if (typeof displayArgs === 'string') {
     return (
       !!yaml && (
         <div className={styles.container}>
-          {showActions && (
-            <ActionIcon
-              className={styles.editButton}
-              icon={Edit3Icon}
-              onClick={handleEditStart}
-              size={'small'}
-              title={t('edit', { ns: 'common' })}
-            />
-          )}
           <Highlighter language={'yaml'} showLanguage={false}>
             {yaml}
           </Highlighter>
@@ -166,20 +98,7 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, messageId
     <div className={styles.container}>
       {showActions && (
         <Flexbox className={styles.editButton} gap={4} horizontal>
-          <ActionIcon
-            icon={Edit3Icon}
-            onClick={handleEditStart}
-            size={'small'}
-            title={t('edit', { ns: 'common' })}
-          />
-          <ActionIcon
-            icon={PlayCircleIcon}
-            onClick={async () => {
-              await reInvokeToolMessage(messageId);
-            }}
-            size={'small'}
-            title={t('run', { ns: 'common' })}
-          />
+          {actions}
         </Flexbox>
       )}
       {Object.entries(displayArgs).map(([key, value]) => {
