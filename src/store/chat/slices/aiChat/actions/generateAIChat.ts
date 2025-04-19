@@ -552,7 +552,9 @@ export const generateAIChat: StateCreator<
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
-    const historySummary = topicSelectors.currentActiveTopicSummary(get());
+    const historySummary = chatConfig.enableCompressHistory
+      ? topicSelectors.currentActiveTopicSummary(get())
+      : undefined;
     await chatService.createAssistantMessageStream({
       abortController,
       params: {
