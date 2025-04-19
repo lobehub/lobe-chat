@@ -5,6 +5,7 @@
     "off": "Disattivato",
     "on": "Visualizza informazioni sulla chiamata del plugin",
     "payload": "carico del plugin",
+    "pluginState": "Stato del plugin",
     "response": "Risposta",
     "tool_call": "richiesta di chiamata dello strumento"
   },

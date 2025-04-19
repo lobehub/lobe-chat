@@ -5,8 +5,14 @@
   "01-ai/yi-1.5-9b-chat": {
     "description": "Yi 1.5, das neueste Open-Source-Fine-Tuning-Modell mit 9 Milliarden Parametern, unterstützt verschiedene Dialogszenarien mit hochwertigen Trainingsdaten, die auf menschliche Präferenzen abgestimmt sind."
   },
+  "360/deepseek-r1": {
+    "description": "【360 Deployment Version】DeepSeek-R1 nutzt in der Nachtrainingsphase umfangreiche Techniken des verstärkenden Lernens, um die Modellinferenzfähigkeit erheblich zu verbessern, selbst bei minimalen gekennzeichneten Daten. In Aufgaben wie Mathematik, Programmierung und natürlicher Sprachverarbeitung erreicht es Leistungen auf Augenhöhe mit der offiziellen Version von OpenAI o1."
+  },
   "360gpt-pro": {
     "description": "360GPT Pro ist ein wichtiger Bestandteil der 360 AI-Modellreihe und erfüllt mit seiner effizienten Textverarbeitungsfähigkeit vielfältige Anwendungen der natürlichen Sprache, unterstützt das Verständnis langer Texte und Mehrfachdialoge."
+  },
+  "360gpt-pro-trans": {
+    "description": "Ein auf Übersetzungen spezialisiertes Modell, das durch tiefes Feintuning optimiert wurde und führende Übersetzungsergebnisse liefert."
   },
   "360gpt-turbo": {
     "description": "360GPT Turbo bietet leistungsstarke Berechnungs- und Dialogfähigkeiten, mit hervorragendem semantischen Verständnis und Generierungseffizienz, und ist die ideale intelligente Assistentenlösung für Unternehmen und Entwickler."
@@ -61,6 +67,18 @@
   },
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Das DeepSeek-R1-Distill-Modell basiert auf Qwen2.5-Math-7B und optimiert die Inferenzleistung durch verstärkendes Lernen und Kaltstartdaten. Das Open-Source-Modell setzt neue Maßstäbe für Multitasking."
+  },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 ist ein von der DeepSeek Company entwickeltes MoE-Modell. Die Ergebnisse von DeepSeek-V3 übertreffen die anderer Open-Source-Modelle wie Qwen2.5-72B und Llama-3.1-405B und stehen in der Leistung auf Augenhöhe mit den weltweit führenden Closed-Source-Modellen GPT-4o und Claude-3.5-Sonnet."
+  },
+  "Doubao-1.5-thinking-pro": {
+    "description": "Doubao-1.5 ist ein neues tiefes Denkmodell, das in den Fachbereichen Mathematik, Programmierung, wissenschaftlicher Schlussfolgerung und kreativen Schreibaufgaben herausragende Leistungen zeigt und in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA die Spitzenposition erreicht oder nahe kommt. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
+  },
+  "Doubao-1.5-thinking-pro-vision": {
+    "description": "Doubao-1.5 ist ein neues tiefes Denkmodell, das in den Fachbereichen Mathematik, Programmierung, wissenschaftlicher Schlussfolgerung und kreativen Schreibaufgaben herausragende Leistungen zeigt und in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA die Spitzenposition erreicht oder nahe kommt. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
+  },
+  "Doubao-1.5-vision-pro": {
+    "description": "Doubao-1.5-vision-pro ist ein neu verbessertes multimodales großes Modell, das beliebige Auflösungen und extreme Seitenverhältnisse bei der Bilderkennung unterstützt und die Fähigkeiten in visueller Schlussfolgerung, Dokumentenerkennung, Detailverständnis und Befolgung von Anweisungen verbessert."
   },
   "Doubao-1.5-vision-pro-32k": {
     "description": "Doubao-1.5-vision-pro ist das neueste Upgrade des multimodalen Großmodells, das die Erkennung von Bildern mit beliebiger Auflösung und extremen Seitenverhältnissen unterstützt und die Fähigkeiten zur visuellen Schlussfolgerung, Dokumentenerkennung, Detailverständnis und Befehlsbefolgung verbessert."
@@ -341,6 +359,15 @@
   "SenseChat-Vision": {
     "description": "Das neueste Modell (V5.5) unterstützt die Eingabe mehrerer Bilder und optimiert umfassend die grundlegenden Fähigkeiten des Modells. Es hat signifikante Verbesserungen in der Erkennung von Objektattributen, räumlichen Beziehungen, Aktionsereignissen, Szenenverständnis, Emotionserkennung, logischem Wissen und Textverständnis und -generierung erreicht."
   },
+  "SenseNova-V6-Pro": {
+    "description": "Erreicht eine native Einheit von Bild-, Text- und Video-Fähigkeiten, überwindet die traditionellen Grenzen der multimodalen Trennung und hat in den Bewertungen von OpenCompass und SuperCLUE zwei Meistertitel gewonnen."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Vereint visuelle und sprachliche Tiefenlogik, ermöglicht langsames Denken und tiefgreifende Schlussfolgerungen und präsentiert den vollständigen Denkprozess."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Erreicht eine native Einheit von Bild-, Text- und Video-Fähigkeiten, überwindet die traditionellen Grenzen der multimodalen Trennung und führt in den Kernbereichen wie multimodalen Grundfähigkeiten und sprachlichen Grundfähigkeiten umfassend. Es kombiniert literarische und wissenschaftliche Bildung und hat in mehreren Bewertungen mehrfach die Spitzenposition im In- und Ausland erreicht."
+  },
   "Skylark2-lite-8k": {
     "description": "Das zweite Modell der Skylark-Reihe, das Skylark2-lite-Modell bietet eine hohe Reaktionsgeschwindigkeit und eignet sich für Szenarien mit hohen Echtzeitanforderungen, kostensensitiven Anforderungen und geringeren Genauigkeitsanforderungen, mit einer Kontextfensterlänge von 8k."
   },
@@ -355,6 +382,21 @@
   },
   "Skylark2-pro-turbo-8k": {
     "description": "Das zweite Modell der Skylark-Reihe, das Skylark2-pro-turbo-8k bietet schnellere Schlussfolgerungen und niedrigere Kosten, mit einer Kontextfensterlänge von 8k."
+  },
+  "THUDM/GLM-4-32B-0414": {
+    "description": "GLM-4-32B-0414 ist das neue Open-Source-Modell der GLM-Serie mit 32 Milliarden Parametern. Die Leistung dieses Modells kann mit der GPT-Serie von OpenAI und der V3/R1-Serie von DeepSeek verglichen werden."
+  },
+  "THUDM/GLM-4-9B-0414": {
+    "description": "GLM-4-9B-0414 ist ein kleines Modell der GLM-Serie mit 9 Milliarden Parametern. Dieses Modell übernimmt die technischen Merkmale der GLM-4-32B-Serie, bietet jedoch eine leichtere Bereitstellungsoption. Trotz seiner kleineren Größe zeigt GLM-4-9B-0414 hervorragende Fähigkeiten in Aufgaben wie Codegenerierung, Webdesign, SVG-Grafikgenerierung und suchbasiertem Schreiben."
+  },
+  "THUDM/GLM-Z1-32B-0414": {
+    "description": "GLM-Z1-32B-0414 ist ein Schlussfolgerungsmodell mit tiefen Denkfähigkeiten. Dieses Modell wurde auf der Grundlage von GLM-4-32B-0414 durch Kaltstart und verstärktes Lernen entwickelt und wurde weiter in Mathematik, Programmierung und logischen Aufgaben trainiert. Im Vergleich zum Basismodell hat GLM-Z1-32B-0414 die mathematischen Fähigkeiten und die Fähigkeit zur Lösung komplexer Aufgaben erheblich verbessert."
+  },
+  "THUDM/GLM-Z1-9B-0414": {
+    "description": "GLM-Z1-9B-0414 ist ein kleines Modell der GLM-Serie mit nur 9 Milliarden Parametern, das jedoch erstaunliche Fähigkeiten zeigt, während es die Open-Source-Tradition beibehält. Trotz seiner kleineren Größe zeigt dieses Modell hervorragende Leistungen in mathematischen Schlussfolgerungen und allgemeinen Aufgaben und hat in seiner Größenklasse eine führende Gesamtleistung unter Open-Source-Modellen."
+  },
+  "THUDM/GLM-Z1-Rumination-32B-0414": {
+    "description": "GLM-Z1-Rumination-32B-0414 ist ein tiefes Schlussfolgerungsmodell mit nachdenklichen Fähigkeiten (vergleichbar mit OpenAI's Deep Research). Im Gegensatz zu typischen tiefen Denkmodellen verwendet das nachdenkliche Modell längere Zeiträume des tiefen Denkens, um offenere und komplexere Probleme zu lösen."
   },
   "THUDM/chatglm3-6b": {
     "description": "ChatGLM3-6B ist das Open-Source-Modell der ChatGLM-Serie, das von Zhizhu AI entwickelt wurde. Dieses Modell bewahrt die hervorragenden Eigenschaften der Vorgängermodelle, wie flüssige Dialoge und niedrige Bereitstellungskosten, während es neue Funktionen einführt. Es verwendet vielfältigere Trainingsdaten, eine größere Anzahl an Trainingsschritten und eine sinnvollere Trainingsstrategie und zeigt hervorragende Leistungen unter den vortrainierten Modellen mit weniger als 10B. ChatGLM3-6B unterstützt mehrstufige Dialoge, Tool-Aufrufe, Code-Ausführung und Agentenaufgaben in komplexen Szenarien. Neben dem Dialogmodell wurden auch das Basis-Modell ChatGLM-6B-Base und das lange Textdialogmodell ChatGLM3-6B-32K als Open Source veröffentlicht. Dieses Modell ist vollständig für akademische Forschung geöffnet und erlaubt auch kostenlose kommerzielle Nutzung nach Registrierung."
@@ -521,6 +563,9 @@
   "charglm-3": {
     "description": "CharGLM-3 ist für Rollenspiele und emotionale Begleitung konzipiert und unterstützt extrem lange Mehrfachgedächtnisse und personalisierte Dialoge, mit breiter Anwendung."
   },
+  "charglm-4": {
+    "description": "CharGLM-4 wurde speziell für Rollenspiele und emotionale Begleitung entwickelt, unterstützt extrem lange Mehrfachgedächtnisse und personalisierte Dialoge und findet breite Anwendung."
+  },
   "chatglm3": {
     "description": "ChatGLM3 ist ein proprietäres Modell, das von der KI-Forschungsgruppe Zhipu AI und dem KEG-Labor der Tsinghua-Universität veröffentlicht wurde. Es wurde durch umfangreiche Vortrainings mit chinesischen und englischen Bezeichnern sowie durch die Anpassung an menschliche Präferenzen entwickelt. Im Vergleich zum ersten Modell erzielte es Verbesserungen von 16 %, 36 % und 280 % in den Benchmarks MMLU, C-Eval und GSM8K und steht an der Spitze der chinesischen Aufgabenliste C-Eval. Es eignet sich für Szenarien, die hohe Anforderungen an das Wissensvolumen, die Inferenzfähigkeit und die Kreativität stellen, wie z. B. die Erstellung von Werbetexten, das Schreiben von Romanen, wissensbasiertes Schreiben und die Generierung von Code."
   },
@@ -632,8 +677,17 @@
   "command-r-plus-04-2024": {
     "description": "Command R+ ist ein dialogbasiertes Modell, das Anweisungen folgt und in sprachlichen Aufgaben eine höhere Qualität und Zuverlässigkeit bietet. Im Vergleich zu früheren Modellen hat es eine längere Kontextlänge. Es eignet sich am besten für komplexe RAG-Workflows und mehrstufige Werkzeugnutzung."
   },
+  "command-r-plus-08-2024": {
+    "description": "Command R+ ist ein dialogbasiertes Modell, das Anweisungen befolgt und in sprachlichen Aufgaben eine höhere Qualität und Zuverlässigkeit bietet, mit einer längeren Kontextlänge im Vergleich zu früheren Modellen. Es eignet sich am besten für komplexe RAG-Workflows und die Nutzung mehrerer Werkzeuge."
+  },
   "command-r7b-12-2024": {
     "description": "command-r7b-12-2024 ist eine kompakte und effiziente aktualisierte Version, die im Dezember 2024 veröffentlicht wurde. Es zeigt hervorragende Leistungen in Aufgaben, die komplexes Denken und mehrstufige Verarbeitung erfordern, wie RAG, Werkzeugnutzung und Agenten."
+  },
+  "compound-beta": {
+    "description": "Compound-beta ist ein hybrides KI-System, das von mehreren öffentlich verfügbaren Modellen in GroqCloud unterstützt wird und intelligent und selektiv Werkzeuge zur Beantwortung von Benutzeranfragen einsetzt."
+  },
+  "compound-beta-mini": {
+    "description": "Compound-beta-mini ist ein hybrides KI-System, das von öffentlich verfügbaren Modellen in GroqCloud unterstützt wird und intelligent und selektiv Werkzeuge zur Beantwortung von Benutzeranfragen einsetzt."
   },
   "dall-e-2": {
     "description": "Zweite Generation des DALL·E-Modells, unterstützt realistischere und genauere Bildgenerierung, mit einer Auflösung, die viermal so hoch ist wie die der ersten Generation."
@@ -779,6 +833,18 @@
   "deepseek/deepseek-v3/community": {
     "description": "DeepSeek-V3 hat einen bedeutenden Durchbruch in der Inferenzgeschwindigkeit im Vergleich zu früheren Modellen erzielt. Es belegt den ersten Platz unter den Open-Source-Modellen und kann mit den weltweit fortschrittlichsten proprietären Modellen konkurrieren. DeepSeek-V3 verwendet die Multi-Head-Latent-Attention (MLA) und die DeepSeekMoE-Architektur, die in DeepSeek-V2 umfassend validiert wurden. Darüber hinaus hat DeepSeek-V3 eine unterstützende verlustfreie Strategie für die Lastenverteilung eingeführt und mehrere Zielvorgaben für das Training von Mehrfachvorhersagen festgelegt, um eine stärkere Leistung zu erzielen."
   },
+  "deepseek_r1": {
+    "description": "DeepSeek-R1 ist ein durch verstärktes Lernen (RL) gesteuertes Schlussfolgerungsmodell, das Probleme der Wiederholung und Lesbarkeit im Modell löst. Vor dem RL führte DeepSeek-R1 Kaltstartdaten ein, um die Inferenzleistung weiter zu optimieren. Es zeigt in Mathematik, Programmierung und Schlussfolgerungsaufgaben vergleichbare Leistungen zu OpenAI-o1 und hat durch sorgfältig gestaltete Trainingsmethoden die Gesamtleistung verbessert."
+  },
+  "deepseek_r1_distill_llama_70b": {
+    "description": "DeepSeek-R1-Distill-Llama-70B ist ein Modell, das durch Destillationstraining auf der Basis von Llama-3.3-70B-Instruct entwickelt wurde. Dieses Modell ist Teil der DeepSeek-R1-Serie und zeigt durch die Feinabstimmung mit Beispielen, die von DeepSeek-R1 generiert wurden, hervorragende Leistungen in Mathematik, Programmierung und Schlussfolgerung in mehreren Bereichen."
+  },
+  "deepseek_r1_distill_qwen_14b": {
+    "description": "DeepSeek-R1-Distill-Qwen-14B ist ein Modell, das durch Wissensdistillation auf der Basis von Qwen2.5-14B entwickelt wurde. Dieses Modell wurde mit 800.000 ausgewählten Beispielen, die von DeepSeek-R1 generiert wurden, feinabgestimmt und zeigt hervorragende Schlussfolgerungsfähigkeiten."
+  },
+  "deepseek_r1_distill_qwen_32b": {
+    "description": "DeepSeek-R1-Distill-Qwen-32B ist ein Modell, das durch Wissensdistillation auf der Basis von Qwen2.5-32B entwickelt wurde. Dieses Modell wurde mit 800.000 ausgewählten Beispielen, die von DeepSeek-R1 generiert wurden, feinabgestimmt und zeigt in Mathematik, Programmierung und Schlussfolgerung in mehreren Bereichen herausragende Leistungen."
+  },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite ist das neueste leichte Modell der nächsten Generation, das eine extrem schnelle Reaktionszeit bietet und sowohl in der Leistung als auch in der Latenz weltweit erstklassig ist."
   },
@@ -787,6 +853,9 @@
   },
   "doubao-1.5-pro-32k": {
     "description": "Doubao-1.5-pro ist das neueste Hauptmodell der nächsten Generation, dessen Leistung umfassend verbessert wurde und das in den Bereichen Wissen, Code, Schlussfolgerungen usw. herausragende Leistungen zeigt."
+  },
+  "doubao-1.5-vision-lite": {
+    "description": "Doubao-1.5-vision-lite ist ein neu verbessertes multimodales großes Modell, das beliebige Auflösungen und extreme Seitenverhältnisse bei der Bilderkennung unterstützt und die Fähigkeiten in visueller Schlussfolgerung, Dokumentenerkennung, Detailverständnis und Befolgung von Anweisungen verbessert. Es unterstützt ein Kontextfenster von 128k und eine maximale Ausgabelänge von 16k Tokens."
   },
   "emohaa": {
     "description": "Emohaa ist ein psychologisches Modell mit professionellen Beratungsfähigkeiten, das den Nutzern hilft, emotionale Probleme zu verstehen."
@@ -953,6 +1022,9 @@
   "glm-4-air": {
     "description": "GLM-4-Air ist eine kosteneffiziente Version, die in der Leistung nahe am GLM-4 liegt und schnelle Geschwindigkeiten zu einem erschwinglichen Preis bietet."
   },
+  "glm-4-air-250414": {
+    "description": "GLM-4-Air ist die kosteneffiziente Version, deren Leistung nahe an der von GLM-4 liegt und schnelle Geschwindigkeiten zu einem erschwinglichen Preis bietet."
+  },
   "glm-4-airx": {
     "description": "GLM-4-AirX bietet eine effiziente Version von GLM-4-Air mit einer Inferenzgeschwindigkeit von bis zu 2,6-fach."
   },
@@ -961,6 +1033,9 @@
   },
   "glm-4-flash": {
     "description": "GLM-4-Flash ist die ideale Wahl für die Verarbeitung einfacher Aufgaben, mit der schnellsten Geschwindigkeit und dem besten Preis."
+  },
+  "glm-4-flash-250414": {
+    "description": "GLM-4-Flash ist die ideale Wahl für die Bearbeitung einfacher Aufgaben, mit der schnellsten Geschwindigkeit und kostenlos."
   },
   "glm-4-flashx": {
     "description": "GLM-4-FlashX ist eine verbesserte Version von Flash mit extrem schneller Inferenzgeschwindigkeit."
@@ -979,6 +1054,18 @@
   },
   "glm-4v-plus": {
     "description": "GLM-4V-Plus hat die Fähigkeit, Videoinhalte und mehrere Bilder zu verstehen und eignet sich für multimodale Aufgaben."
+  },
+  "glm-4v-plus-0111": {
+    "description": "GLM-4V-Plus verfügt über die Fähigkeit, Videoinhalte und mehrere Bilder zu verstehen und eignet sich für multimodale Aufgaben."
+  },
+  "glm-z1-air": {
+    "description": "Schlussfolgerungsmodell: Verfügt über starke Schlussfolgerungsfähigkeiten und eignet sich für Aufgaben, die tiefes Denken erfordern."
+  },
+  "glm-z1-airx": {
+    "description": "Blitzschlussfolgerung: Bietet extrem schnelle Schlussfolgerungsgeschwindigkeit und starke Schlussfolgerungseffekte."
+  },
+  "glm-z1-flash": {
+    "description": "Die GLM-Z1-Serie verfügt über starke Fähigkeiten zur komplexen Schlussfolgerung und zeigt in den Bereichen logische Schlussfolgerung, Mathematik und Programmierung hervorragende Leistungen. Die maximale Kontextlänge beträgt 32K."
   },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview verfügt über starke Fähigkeiten zur komplexen Schlussfolgerung und zeigt hervorragende Leistungen in den Bereichen logisches Denken, Mathematik und Programmierung."
@@ -1199,11 +1286,14 @@
   "hunyuan-turbos-20250226": {
     "description": "hunyuan-TurboS pv2.1.2 ist eine feste Version mit aktualisierten Trainings-Tokens; verbesserte Denkfähigkeiten in Mathematik/Logik/Code; verbesserte allgemeine Erfahrung in Chinesisch und Englisch, einschließlich Textgenerierung, Textverständnis, Wissensfragen und Smalltalk."
   },
-  "hunyuan-turbos-20250313": {
-    "description": "Ein einheitlicher Stil für mathematische Problemlösungsprozesse, der die mehrstufige Beantwortung von mathematischen Fragen verbessert. Textgenerierung optimiert den Antwortstil, entfernt AI-typische Formulierungen und erhöht die sprachliche Eleganz."
-  },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS ist die neueste Version des Hunyuan-Flaggschiffmodells, das über verbesserte Denkfähigkeiten und ein besseres Nutzungserlebnis verfügt."
+  },
+  "hunyuan-turbos-longtext-128k-20250325": {
+    "description": "Experte für die Verarbeitung von langen Textaufgaben wie Dokumentenzusammenfassungen und Dokumentenfragen, mit der Fähigkeit, allgemeine Textgenerierungsaufgaben zu bewältigen. Es zeigt hervorragende Leistungen bei der Analyse und Generierung von langen Texten und kann komplexe und detaillierte Anforderungen an die Verarbeitung langer Inhalte effektiv bewältigen."
+  },
+  "hunyuan-turbos-vision": {
+    "description": "Dieses Modell eignet sich für Szenarien der Bild-Text-Verständnis und ist das neueste Flaggschiffmodell der turbos von Hunyuan, das sich auf Aufgaben des Bild-Text-Verstehens konzentriert, einschließlich bildbasierter Entitätsidentifikation, Wissensfragen, Texterstellung und Problemlösung durch Fotografieren, mit umfassenden Verbesserungen im Vergleich zur vorherigen Generation."
   },
   "hunyuan-vision": {
     "description": "Das neueste multimodale Modell von Hunyuan unterstützt die Eingabe von Bildern und Text zur Generierung von Textinhalten."
@@ -1222,6 +1312,12 @@
   },
   "internlm3-latest": {
     "description": "Unsere neueste Modellreihe bietet herausragende Inferenzleistungen und führt die Open-Source-Modelle in ihrer Gewichtsklasse an. Standardmäßig verweist sie auf unser neuestes veröffentlichtes InternLM3-Modell."
+  },
+  "jamba-large": {
+    "description": "Unser leistungsstärkstes und fortschrittlichstes Modell, das speziell für die Bewältigung komplexer Aufgaben auf Unternehmensebene entwickelt wurde und herausragende Leistung bietet."
+  },
+  "jamba-mini": {
+    "description": "Das effizienteste Modell seiner Klasse, das Geschwindigkeit und Qualität vereint und eine kompakte Bauweise aufweist."
   },
   "jina-deepsearch-v1": {
     "description": "Die Tiefensuche kombiniert Websuche, Lesen und Schlussfolgern und ermöglicht umfassende Untersuchungen. Sie können es als einen Agenten betrachten, der Ihre Forschungsaufgaben übernimmt – er führt eine umfassende Suche durch und iteriert mehrfach, bevor er eine Antwort gibt. Dieser Prozess umfasst kontinuierliche Forschung, Schlussfolgerungen und die Lösung von Problemen aus verschiedenen Perspektiven. Dies unterscheidet sich grundlegend von den Standard-Großmodellen, die Antworten direkt aus vortrainierten Daten generieren, sowie von traditionellen RAG-Systemen, die auf einmaligen Oberflächensuchen basieren."
@@ -1568,8 +1664,17 @@
   "o1-preview": {
     "description": "o1 ist OpenAIs neues Inferenzmodell, das für komplexe Aufgaben geeignet ist, die umfangreiches Allgemeinwissen erfordern. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
   },
+  "o3": {
+    "description": "o3 ist ein vielseitiges und leistungsstarkes Modell, das in mehreren Bereichen hervorragende Leistungen zeigt. Es setzt neue Maßstäbe für mathematische, wissenschaftliche, programmiertechnische und visuelle Schlussfolgerungsaufgaben. Es ist auch versiert in technischer Schreibweise und der Befolgung von Anweisungen. Benutzer können es nutzen, um Texte, Code und Bilder zu analysieren und komplexe Probleme mit mehreren Schritten zu lösen."
+  },
   "o3-mini": {
     "description": "o3-mini ist unser neuestes kompaktes Inferenzmodell, das bei den gleichen Kosten- und Verzögerungszielen wie o1-mini hohe Intelligenz bietet."
+  },
+  "o3-mini-high": {
+    "description": "o3-mini Hochleistungsmodell, das bei den gleichen Kosten- und Verzögerungszielen wie o1-mini hohe Intelligenz bietet."
+  },
+  "o4-mini": {
+    "description": "o4-mini ist unser neuestes kompaktes Modell der o-Serie. Es wurde für schnelle und effektive Inferenz optimiert und zeigt in Programmier- und visuellen Aufgaben eine hohe Effizienz und Leistung."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba ist ein auf die Codegenerierung spezialisiertes Mamba 2-Sprachmodell, das starke Unterstützung für fortschrittliche Code- und Schlussfolgerungsaufgaben bietet."
@@ -1597,6 +1702,12 @@
   },
   "openai/o1-preview": {
     "description": "o1 ist OpenAIs neues Inferenzmodell, das für komplexe Aufgaben geeignet ist, die umfangreiches Allgemeinwissen erfordern. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
+  },
+  "openai/o4-mini": {
+    "description": "o4-mini ist für schnelle und effektive Inferenz optimiert und zeigt in Programmier- und visuellen Aufgaben eine hohe Effizienz und Leistung."
+  },
+  "openai/o4-mini-high": {
+    "description": "o4-mini Hochleistungsmodell, optimiert für schnelle und effektive Inferenz, zeigt in Programmier- und visuellen Aufgaben eine hohe Effizienz und Leistung."
   },
   "openrouter/auto": {
     "description": "Je nach Kontextlänge, Thema und Komplexität wird Ihre Anfrage an Llama 3 70B Instruct, Claude 3.5 Sonnet (selbstregulierend) oder GPT-4o gesendet."
@@ -1793,6 +1904,9 @@
   "qwq-plus-latest": {
     "description": "Das QwQ-Inferenzmodell, das auf dem Qwen2.5-Modell trainiert wurde, hat durch verstärktes Lernen die Inferenzfähigkeiten des Modells erheblich verbessert. Die Kernmetriken des Modells, wie mathematische Codes (AIME 24/25, LiveCodeBench) sowie einige allgemeine Metriken (IFEval, LiveBench usw.), erreichen das Niveau der DeepSeek-R1 Vollversion."
   },
+  "qwq_32b": {
+    "description": "Ein mittelgroßes Schlussfolgerungsmodell der Qwen-Serie. Im Vergleich zu traditionellen Modellen mit Anweisungsoptimierung zeigt QwQ, das über Denk- und Schlussfolgerungsfähigkeiten verfügt, in nachgelagerten Aufgaben, insbesondere bei der Lösung schwieriger Probleme, eine signifikante Leistungssteigerung."
+  },
   "r1-1776": {
     "description": "R1-1776 ist eine Version des DeepSeek R1 Modells, die nachtrainiert wurde, um unverfälschte, unvoreingenommene Fakteninformationen bereitzustellen."
   },
@@ -1853,11 +1967,20 @@
   "step-2-16k": {
     "description": "Unterstützt groß angelegte Kontextinteraktionen und eignet sich für komplexe Dialogszenarien."
   },
+  "step-2-16k-exp": {
+    "description": "Experimentelle Version des step-2 Modells, die die neuesten Funktionen enthält und kontinuierlich aktualisiert wird. Nicht für den Einsatz in produktiven Umgebungen empfohlen."
+  },
   "step-2-mini": {
     "description": "Ein ultraschnelles Großmodell, das auf der neuen, selbstentwickelten Attention-Architektur MFA basiert. Es erreicht mit extrem niedrigen Kosten ähnliche Ergebnisse wie Schritt 1 und bietet gleichzeitig eine höhere Durchsatzrate und schnellere Reaktionszeiten. Es kann allgemeine Aufgaben bearbeiten und hat besondere Fähigkeiten im Bereich der Codierung."
   },
+  "step-r1-v-mini": {
+    "description": "Dieses Modell ist ein leistungsstarkes Schlussfolgerungsmodell mit starker Bildverständnisfähigkeit, das in der Lage ist, Bild- und Textinformationen zu verarbeiten und nach tiefem Denken Textinhalte zu generieren. Es zeigt herausragende Leistungen im Bereich der visuellen Schlussfolgerung und verfügt über erstklassige Fähigkeiten in Mathematik, Programmierung und Textschlussfolgerung. Die Kontextlänge beträgt 100k."
+  },
   "taichu_llm": {
     "description": "Das Zīdōng Taichu Sprachmodell verfügt über außergewöhnliche Sprachverständnisfähigkeiten sowie Fähigkeiten in Textgenerierung, Wissensabfrage, Programmierung, mathematischen Berechnungen, logischem Denken, Sentimentanalyse und Textzusammenfassung. Es kombiniert innovativ große Datenvortrainings mit reichhaltigem Wissen aus mehreren Quellen, verfeinert kontinuierlich die Algorithmen und absorbiert ständig neues Wissen aus umfangreichen Textdaten in Bezug auf Vokabular, Struktur, Grammatik und Semantik, um die Leistung des Modells kontinuierlich zu verbessern. Es bietet den Nutzern bequemere Informationen und Dienstleistungen sowie ein intelligenteres Erlebnis."
+  },
+  "taichu_o1": {
+    "description": "taichu_o1 ist ein neues großes Schlussfolgerungsmodell, das durch multimodale Interaktion und verstärktes Lernen menschenähnliche Denkprozesse ermöglicht, komplexe Entscheidungsfindungen unterstützt und dabei präzise Ausgaben liefert, während es die Denkpfade des Modells zeigt. Es eignet sich für Szenarien wie strategische Analysen und tiefes Denken."
   },
   "taichu_vl": {
     "description": "Integriert Fähigkeiten wie Bildverständnis, Wissensübertragung und logische Attribution und zeigt herausragende Leistungen im Bereich der Bild-Text-Fragen."
