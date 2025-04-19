@@ -199,7 +199,7 @@
     "mdast-util-to-markdown": "^2.1.2",
     "modern-screenshot": "^4.6.0",
     "nanoid": "^5.1.5",
-    "next": "^15.3.0",
+    "next": "^15.3.1",
     "next-auth": "beta",
     "next-mdx-remote": "^5.0.0",
     "nextjs-toploader": "^3.8.16",

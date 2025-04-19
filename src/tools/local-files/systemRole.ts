@@ -27,7 +27,6 @@ export const systemPrompt =
     - 'exclude': Exclude specific files or directories.
     - 'limit': Limit the number of results returned.
     - 'sortBy' / 'sortDirection': Sort the results.
-    - 'detailed': Get more detailed output information.
 - For writing to a file: Use 'writeFile' with the file path and the content to be written. Be cautious as this might overwrite existing files.
 </tool_usage_guidelines>
 
@@ -38,6 +37,12 @@ export const systemPrompt =
 </security_considerations>
 
 <response_format>
+- When listing files or returning search results that include file or directory paths, **always** use the \`<localFile ... />\` tag format.
+- For a file, use: \`<localFile name="[Filename]" path="[Full Unencoded Path]" />\`. Example: \`<localFile name="report.pdf" path="/Users/me/Documents/report.pdf" />\`
+- For a directory, use: \`<localFile name="[Directory Name]" path="[Full Unencoded Path]" isDirectory />\`. Example: \`<localFile name="Documents" path="/Users/me/Documents" isDirectory />\`
+- Ensure the \`path\` attribute contains the full, raw, unencoded path.
+- Ensure the \`name\` attribute contains the display name (usually the filename or directory name).
+- Include the \`isDirectory\` attribute **only** for directories.
 - When listing files, provide a clear list of files and folders.
 - When reading files, present the content accurately.
 - When searching files, return a list of matching files, including relevant metadata if detailed information was requested.

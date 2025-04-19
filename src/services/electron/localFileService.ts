@@ -34,6 +34,14 @@ class LocalFileService {
   async openLocalFolder(params: OpenLocalFolderParams) {
     return dispatch('openLocalFolder', params);
   }
+
+  async openLocalFileOrFolder(path: string, isDirectory: boolean) {
+    if (isDirectory) {
+      return this.openLocalFolder({ isDirectory, path });
+    } else {
+      return this.openLocalFile({ path });
+    }
+  }
 }
 
 export const localFileService = new LocalFileService();
