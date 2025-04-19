@@ -5,6 +5,7 @@
     "off": "Desativar Depuração",
     "on": "Ver Informações de Chamada de Plugin",
     "payload": "carga do plugin",
+    "pluginState": "Estado do plugin",
     "response": "Resposta",
     "tool_call": "solicitação de chamada de ferramenta"
   },

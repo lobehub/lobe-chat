@@ -1,0 +1,32 @@
+{
+  "remoteServer": {
+    "authError": "فشل التفويض: {{error}}",
+    "authPending": "يرجى إكمال التفويض في المتصفح",
+    "configDesc": "الاتصال بخادم LobeChat البعيد، تمكين مزامنة البيانات",
+    "configError": "خطأ في التكوين",
+    "configTitle": "تكوين المزامنة السحابية",
+    "connect": "الاتصال والتفويض",
+    "connected": "متصل",
+    "disconnect": "قطع الاتصال",
+    "disconnectError": "فشل في قطع الاتصال",
+    "disconnected": "غير متصل",
+    "fetchError": "فشل في جلب التكوين",
+    "invalidUrl": "يرجى إدخال عنوان URL صالح",
+    "serverUrl": "عنوان الخادم",
+    "statusConnected": "متصل",
+    "statusDisconnected": "غير متصل",
+    "urlRequired": "يرجى إدخال عنوان الخادم"
+  },
+  "updater": {
+    "downloadingUpdate": "جارٍ تنزيل التحديث",
+    "downloadingUpdateDesc": "يتم تنزيل التحديث، يرجى الانتظار...",
+    "later": "تحديث لاحقًا",
+    "newVersionAvailable": "يتوفر إصدار جديد",
+    "newVersionAvailableDesc": "تم العثور على إصدار جديد {{version}}، هل ترغب في التنزيل الآن؟",
+    "restartAndInstall": "إعادة التشغيل والتثبيت",
+    "updateError": "خطأ في التحديث",
+    "updateReady": "التحديث جاهز",
+    "updateReadyDesc": "تم تنزيل Lobe Chat {{version}} بنجاح، سيتم التثبيت بعد إعادة تشغيل التطبيق.",
+    "upgradeNow": "تحديث الآن"
+  }
+}

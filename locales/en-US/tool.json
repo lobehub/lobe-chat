@@ -7,6 +7,20 @@
     "images": "Images:",
     "prompt": "Prompt"
   },
+  "localFiles": {
+    "file": "File",
+    "folder": "Folder",
+    "open": "Open",
+    "openFile": "Open File",
+    "openFolder": "Open Folder",
+    "read": {
+      "more": "View More"
+    },
+    "readFile": "Read File",
+    "readFileError": "Failed to read file, please check if the file path is correct",
+    "readFiles": "Read Files",
+    "readFilesError": "Failed to read files, please check if the file path is correct"
+  },
   "search": {
     "createNewSearch": "Create a new search record",
     "emptyResult": "No results found, please modify your keywords and try again",
@@ -44,5 +58,16 @@
     "summary": "Summary",
     "summaryTooltip": "Summarize the current content",
     "viewMoreResults": "View {{results}} more results"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "Field key must be unique",
+    "form": {
+      "add": "Add an Item",
+      "key": "Field Key",
+      "value": "Field Value"
+    },
+    "formValidationFailed": "Form validation failed, please check the parameter format",
+    "keyRequired": "Field key cannot be empty",
+    "stringifyError": "Unable to serialize parameters, please check the parameter format"
   }
 }

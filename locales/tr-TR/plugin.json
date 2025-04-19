@@ -5,6 +5,7 @@
     "off": "Hata Ayıklamayı Kapat",
     "on": "Eklenti Çağrı Bilgilerini Görüntüle",
     "payload": "eklenti yükü",
+    "pluginState": "Eklenti Durumu",
     "response": "Yanıt",
     "tool_call": "aracı çağrı"
   },
