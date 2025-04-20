@@ -7,13 +7,11 @@ exports[`loadFile Integration Tests > Text Handling (.txt, .csv, .md, etc.) > sh
 2,Beta,200
 3,Gamma,300
 ",
-  "createdTime": 2025-04-20T03:38:24.640Z,
   "fileType": "csv",
   "filename": "test.csv",
   "metadata": {
     "loaderSpecific": undefined,
   },
-  "modifiedTime": 2025-04-20T03:38:24.639Z,
   "pages": [
     {
       "charCount": 49,
@@ -40,13 +38,11 @@ exports[`loadFile Integration Tests > Text Handling (.txt, .csv, .md, etc.) > sh
 
 This is a test.
 ",
-  "createdTime": 2025-04-20T03:38:24.642Z,
   "fileType": "md",
   "filename": "test.md",
   "metadata": {
     "loaderSpecific": undefined,
   },
-  "modifiedTime": 2025-04-20T03:38:24.642Z,
   "pages": [
     {
       "charCount": 33,
@@ -72,13 +68,11 @@ exports[`loadFile Integration Tests > Text Handling (.txt, .csv, .md, etc.) > sh
 This is line 2.
 End of text file.
 ",
-  "createdTime": 2025-04-20T03:38:24.645Z,
   "fileType": "txt",
   "filename": "test.txt",
   "metadata": {
     "loaderSpecific": undefined,
   },
-  "modifiedTime": 2025-04-20T03:38:24.645Z,
   "pages": [
     {
       "charCount": 50,

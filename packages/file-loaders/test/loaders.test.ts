@@ -24,6 +24,10 @@ describe('loadFile Integration Tests', () => {
 
         // @ts-expect-error
         delete docs.source;
+        // @ts-expect-error
+        delete docs.createdTime;
+        // @ts-expect-error
+        delete docs.modifiedTime;
         expect(docs).toMatchSnapshot();
       });
     };
