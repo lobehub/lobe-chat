@@ -57,11 +57,11 @@ export class PptxLoader implements FileLoaderInterface {
         .map((slideFile, index) => {
           try {
             const xmlDoc = parseString(slideFile.content);
-            const paragraphNodes = xmlDoc.querySelectorAll('a:p');
+            const paragraphNodes = xmlDoc.getElementsByTagName('a:p');
 
             const slideText = Array.from(paragraphNodes)
               .map((pNode) => {
-                const textNodes = pNode.querySelectorAll('a:t');
+                const textNodes = pNode.getElementsByTagName('a:t');
                 return Array.from(textNodes)
                   .map((tNode) => (tNode.childNodes[0] ? tNode.childNodes[0].nodeValue : ''))
                   .join(''); // Join text within a paragraph without spaces
