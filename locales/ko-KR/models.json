@@ -983,6 +983,9 @@
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental은 Google의 최신 실험적 다중 모달 AI 모델로, 이전 버전과 비교하여 품질이 향상되었습니다. 특히 세계 지식, 코드 및 긴 문맥에 대해 개선되었습니다."
   },
+  "gemini-2.5-flash-preview-04-17": {
+    "description": "Gemini 2.5 Flash Preview는 Google의 가장 가성비 높은 모델로, 포괄적인 기능을 제공합니다."
+  },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental은 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 활용하여 대규모 데이터 세트, 코드베이스 및 문서를 분석할 수 있습니다."
   },
