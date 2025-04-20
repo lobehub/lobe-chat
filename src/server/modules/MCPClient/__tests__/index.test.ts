@@ -1,51 +1,87 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MCPClient } from '../index';
 
+// Mock the SDK modules
+vi.mock('@modelcontextprotocol/sdk/client/index.js', () => ({
+  Client: vi.fn().mockImplementation(() => ({
+    connect: vi.fn().mockResolvedValue(undefined),
+    listTools: vi.fn().mockResolvedValue({
+      tools: [
+        { name: 'echo', description: 'Echoes a message' },
+        { name: 'add', description: 'Adds two numbers' },
+        { name: 'hello', description: 'Says hello' },
+      ],
+    }),
+    callTool: vi.fn().mockImplementation(({ name, arguments: args }) => {
+      switch (name) {
+        case 'echo':
+          return Promise.resolve({
+            content: [{ type: 'text', text: `You said: ${args.message}` }],
+          });
+        case 'add':
+          return Promise.resolve({
+            content: [{ type: 'text', text: `The sum is: ${args.a + args.b}` }],
+          });
+        default:
+          return Promise.reject(new Error(`Unknown tool: ${name}`));
+      }
+    }),
+  })),
+}));
+
+vi.mock('@modelcontextprotocol/sdk/client/stdio.js', () => ({
+  StdioClientTransport: vi.fn().mockImplementation(() => ({
+    // Mock transport methods if needed
+  })),
+}));
+
+vi.mock('@modelcontextprotocol/sdk/client/streamableHttp.js', () => ({
+  StreamableHTTPClientTransport: vi.fn().mockImplementation(() => ({
+    // Mock transport methods if needed
+  })),
+}));
+
 describe('MCPClient', () => {
-  // --- Updated Stdio Transport tests ---
   describe('Stdio Transport', () => {
     let mcpClient: MCPClient;
     const stdioConnection = {
       id: 'mcp-hello-world',
       name: 'Stdio SDK Test Connection',
       type: 'stdio' as const,
-      command: 'npx', // Use node to run the compiled mock server
-      args: ['mcp-hello-world@1.1.2'], // Use the path to the compiled JS file
+      command: 'npx',
+      args: ['mcp-hello-world@1.1.2'],
     };
 
-    beforeEach(async () => {
-      // args are now set directly in the connection object
+    beforeEach(() => {
       mcpClient = new MCPClient(stdioConnection);
-      // Initialize the client - this starts the stdio process
+    });
+
+    afterEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should create and initialize an instance with stdio transport', async () => {
       await mcpClient.initialize();
-      // Add a small delay to allow the server process to fully start (optional, but can help)
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    });
-
-    afterEach(async () => {
-      // Assume SDK client/transport handles process termination gracefully
-      // If processes leak, more explicit cleanup might be needed here
-    });
-
-    it('should create and initialize an instance with stdio transport', () => {
       expect(mcpClient).toBeInstanceOf(MCPClient);
     });
 
     it('should list tools via stdio', async () => {
+      await mcpClient.initialize();
       const result = await mcpClient.listTools();
 
-      // Check exact length if no other tools are expected
       expect(result.tools).toHaveLength(3);
-
-      // Expect the tools defined in mock-sdk-server.ts
-      expect(result.tools).toMatchSnapshot();
+      expect(result.tools).toEqual([
+        { name: 'echo', description: 'Echoes a message' },
+        { name: 'add', description: 'Adds two numbers' },
+        { name: 'hello', description: 'Says hello' },
+      ]);
     });
 
     it('should call the "echo" tool via stdio', async () => {
+      await mcpClient.initialize();
       const toolName = 'echo';
       const toolArgs = { message: 'hello stdio' };
-      // Expect the result format defined in mock-sdk-server.ts
       const expectedResult = {
         content: [{ type: 'text', text: 'You said: hello stdio' }],
       };
@@ -55,6 +91,7 @@ describe('MCPClient', () => {
     });
 
     it('should call the "add" tool via stdio', async () => {
+      await mcpClient.initialize();
       const toolName = 'add';
       const toolArgs = { a: 5, b: 7 };
 
@@ -65,7 +102,25 @@ describe('MCPClient', () => {
     });
   });
 
-  // Error Handling tests remain the same...
+  describe('HTTP Transport', () => {
+    let mcpClient: MCPClient;
+    const httpConnection = {
+      id: 'http-test',
+      name: 'HTTP Test Connection',
+      type: 'http' as const,
+      url: 'http://localhost:3000',
+    };
+
+    beforeEach(() => {
+      mcpClient = new MCPClient(httpConnection);
+    });
+
+    it('should create and initialize an instance with HTTP transport', async () => {
+      await mcpClient.initialize();
+      expect(mcpClient).toBeInstanceOf(MCPClient);
+    });
+  });
+
   describe('Error Handling', () => {
     it('should throw error for unsupported connection type', () => {
       const connection = {
