@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Lock nextauth to beta.25."]
+    },
+    "date": "2025-04-20",
+    "version": "1.81.5"
+  },
+  {
+    "children": {
       "fixes": ["Gemini error Tool use with function calling is unsupported."],
       "improvements": ["Support update tool calling params and trigger again."]
     },
