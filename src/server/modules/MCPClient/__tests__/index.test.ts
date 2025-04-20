@@ -10,7 +10,7 @@ describe('MCPClient', () => {
       id: 'mcp-hello-world',
       name: 'Stdio SDK Test Connection',
       type: 'stdio' as const,
-      command: 'pnpx', // Use node to run the compiled mock server
+      command: 'npx', // Use node to run the compiled mock server
       args: ['mcp-hello-world@1.1.2'], // Use the path to the compiled JS file
     };
 
