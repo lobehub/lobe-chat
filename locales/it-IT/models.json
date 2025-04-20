@@ -68,6 +68,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Il modello di distillazione DeepSeek-R1 basato su Qwen2.5-Math-7B ottimizza le prestazioni di inferenza attraverso l'apprendimento rinforzato e dati di avvio a freddo, aggiornando il benchmark multi-task del modello open source."
   },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 è un modello MoE sviluppato internamente dalla DeepSeek Company. I risultati di DeepSeek-V3 in molte valutazioni superano quelli di altri modelli open source come Qwen2.5-72B e Llama-3.1-405B, e si confronta alla pari con i modelli closed source di punta a livello mondiale come GPT-4o e Claude-3.5-Sonnet."
+  },
   "Doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5 è un nuovo modello di profonda riflessione, che si distingue in campi professionali come matematica, programmazione e ragionamento scientifico, nonché in compiti generali di scrittura creativa, raggiungendo o avvicinandosi ai vertici del settore in vari benchmark autorevoli come AIME 2024, Codeforces e GPQA. Supporta una finestra di contesto di 128k e un'uscita di 16k."
   },
@@ -355,6 +358,15 @@
   },
   "SenseChat-Vision": {
     "description": "L'ultima versione del modello (V5.5) supporta l'input di più immagini, ottimizzando le capacità di base del modello, con notevoli miglioramenti nel riconoscimento delle proprietà degli oggetti, nelle relazioni spaziali, nel riconoscimento degli eventi, nella comprensione delle scene, nel riconoscimento delle emozioni, nel ragionamento logico e nella comprensione e generazione del testo."
+  },
+  "SenseNova-V6-Pro": {
+    "description": "Realizza un'unificazione nativa delle capacità di immagini, testi e video, superando i limiti tradizionali della multimodalità disgiunta, e ha conquistato il doppio campionato nelle valutazioni OpenCompass e SuperCLUE."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Equilibra il ragionamento profondo visivo e linguistico, realizzando un pensiero lento e un ragionamento approfondito, presentando un processo completo della catena di pensiero."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Realizza un'unificazione nativa delle capacità di immagini, testi e video, superando i limiti tradizionali della multimodalità disgiunta, e si distingue in modo completo nelle dimensioni fondamentali delle capacità multimodali e linguistiche, eccellendo in molte valutazioni e posizionandosi ripetutamente ai vertici nazionali e internazionali."
   },
   "Skylark2-lite-8k": {
     "description": "Il modello di seconda generazione Skylark (Skylark2-lite) ha un'elevata velocità di risposta, adatto per scenari in cui sono richieste elevate prestazioni in tempo reale, attento ai costi e con requisiti di precisione del modello non elevati, con una lunghezza della finestra di contesto di 8k."

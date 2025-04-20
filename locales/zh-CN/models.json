@@ -51,7 +51,7 @@
     "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
   },
   "DeepSeek-R1": {
-    "description": "最先进的高效 LLM，擅长推理、数学和编程。"
+    "description": "DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能比肩 OpenAI o1 正式版。"
   },
   "DeepSeek-R1-Distill-Llama-70B": {
     "description": "DeepSeek R1——DeepSeek 套件中更大更智能的模型——被蒸馏到 Llama 70B 架构中。基于基准测试和人工评估，该模型比原始 Llama 70B 更智能，尤其在需要数学和事实精确性的任务上表现出色。"
@@ -60,13 +60,16 @@
     "description": "基于 Qwen2.5-Math-1.5B 的 DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。"
   },
   "DeepSeek-R1-Distill-Qwen-14B": {
-    "description": "基于 Qwen2.5-14B 的 DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。"
+    "description": "DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。"
   },
   "DeepSeek-R1-Distill-Qwen-32B": {
-    "description": "DeepSeek-R1 系列通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆，超越 OpenAI-o1-mini 水平。"
+    "description": "DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。"
   },
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "基于 Qwen2.5-Math-7B 的 DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。"
+  },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多项评测成绩超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他开源模型，并在性能上和世界顶尖的闭源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。"
   },
   "Doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5全新深度思考模型，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。"
@@ -355,6 +358,15 @@
   },
   "SenseChat-Vision": {
     "description": "最新版本模型 (V5.5)，支持多图的输入，全面实现模型基础能力优化，在对象属性识别、空间关系、动作事件识别、场景理解、情感识别、逻辑常识推理和文本理解生成上都实现了较大提升。"
+  },
+  "SenseNova-V6-Pro": {
+    "description": "实现图片、文本、视频能力的原生统一，突破传统多模态分立局限，在OpenCompass和SuperCLUE评测中斩获双冠军。"
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "兼顾视觉、语言深度推理，实现慢思考和深度推理，呈现完整的思维链过程。"
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "实现图片、文本、视频能力的原生统一，突破传统多模态分立局限，在多模基础能力、语言基础能力等核心维度全面领先，文理兼修，在多项测评中多次位列国内外第一梯队水平。"
   },
   "Skylark2-lite-8k": {
     "description": "云雀（Skylark）第二代模型，Skylark2-lite模型有较高的响应速度，适用于实时性要求高、成本敏感、对模型精度要求不高的场景，上下文窗口长度为8k。"

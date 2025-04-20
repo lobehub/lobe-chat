@@ -2,6 +2,115 @@
 
 # Changelog
 
+### [Version 1.81.4](https://github.com/lobehub/lobe-chat/compare/v1.81.3...v1.81.4)
+
+<sup>Released on **2025-04-19**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Gemini error `Tool use with function calling is unsupported`.
+
+#### 💄 Styles
+
+- **misc**: Support update tool calling params and trigger again.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Gemini error `Tool use with function calling is unsupported`, closes [#7463](https://github.com/lobehub/lobe-chat/issues/7463) ([0567095](https://github.com/lobehub/lobe-chat/commit/0567095))
+
+#### Styles
+
+- **misc**: Support update tool calling params and trigger again, closes [#7476](https://github.com/lobehub/lobe-chat/issues/7476) ([0085e63](https://github.com/lobehub/lobe-chat/commit/0085e63))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.81.3](https://github.com/lobehub/lobe-chat/compare/v1.81.2...v1.81.3)
+
+<sup>Released on **2025-04-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update GitHub & Cloudflare models, Update Google models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update GitHub & Cloudflare models, closes [#7453](https://github.com/lobehub/lobe-chat/issues/7453) ([4f34a62](https://github.com/lobehub/lobe-chat/commit/4f34a62))
+- **misc**: Update Google models, closes [#7456](https://github.com/lobehub/lobe-chat/issues/7456) ([3199f69](https://github.com/lobehub/lobe-chat/commit/3199f69))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.81.2](https://github.com/lobehub/lobe-chat/compare/v1.81.1...v1.81.2)
+
+<sup>Released on **2025-04-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Allow folding SystemRole box.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Allow folding SystemRole box, closes [#7421](https://github.com/lobehub/lobe-chat/issues/7421) ([c147df7](https://github.com/lobehub/lobe-chat/commit/c147df7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.81.1](https://github.com/lobehub/lobe-chat/compare/v1.81.0...v1.81.1)
+
+<sup>Released on **2025-04-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `SenseNova-V6` series & `SenseChat-Vision` support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `SenseNova-V6` series & `SenseChat-Vision` support, closes [#7439](https://github.com/lobehub/lobe-chat/issues/7439) ([9c8597f](https://github.com/lobehub/lobe-chat/commit/9c8597f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.81.0](https://github.com/lobehub/lobe-chat/compare/v1.80.5...v1.81.0)
 
 <sup>Released on **2025-04-17**</sup>

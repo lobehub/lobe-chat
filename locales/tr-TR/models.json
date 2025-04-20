@@ -68,6 +68,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Qwen2.5-Math-7B temel alınarak oluşturulmuş DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
   },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3, Derin Arayış şirketi tarafından geliştirilen bir MoE modelidir. DeepSeek-V3, birçok değerlendirmede Qwen2.5-72B ve Llama-3.1-405B gibi diğer açık kaynak modelleri geride bırakmış ve performans açısından dünya çapında en iyi kapalı kaynak model olan GPT-4o ve Claude-3.5-Sonnet ile eşit seviyededir."
+  },
   "Doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5, yeni derin düşünme modelidir, matematik, programlama, bilimsel çıkarım gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde mükemmel performans sergilemektedir, AIME 2024, Codeforces, GPQA gibi birçok otoriter ölçekte endüstri lideri seviyesine ulaşmakta veya yaklaşmaktadır. 128k bağlam penceresi ve 16k çıktı destekler."
   },
@@ -355,6 +358,15 @@
   },
   "SenseChat-Vision": {
     "description": "En son versiyon modeli (V5.5), çoklu görsel girişi destekler, modelin temel yetenek optimizasyonunu tamamen gerçekleştirir; nesne özellik tanıma, mekansal ilişkiler, hareket olayları tanıma, sahne anlama, duygu tanıma, mantıksal bilgi çıkarımı ve metin anlama üretimi gibi alanlarda önemli gelişmeler sağlamıştır."
+  },
+  "SenseNova-V6-Pro": {
+    "description": "Görüntü, metin ve video yeteneklerinin yerel birliğini sağlar, geleneksel çok modlu ayrım sınırlamalarını aşar, OpenCompass ve SuperCLUE değerlendirmelerinde çift şampiyonluk kazanmıştır."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Görsel ve dil derin akıl yürütmesini bir araya getirerek, yavaş düşünme ve derin akıl yürütmeyi gerçekleştirir, tam bir düşünce zinciri sürecini sunar."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Görüntü, metin ve video yeteneklerinin yerel birliğini sağlar, geleneksel çok modlu ayrım sınırlamalarını aşar, çoklu temel yetenekler, dil temel yetenekleri gibi ana boyutlarda kapsamlı bir şekilde önde gelir, hem edebi hem de mantıksal olarak dengelidir ve birçok değerlendirmede ulusal ve uluslararası birinci lig seviyesinde yer almıştır."
   },
   "Skylark2-lite-8k": {
     "description": "Skylark'in (Bulut Şarkıcısı) ikinci nesil modeli, Skylark2-lite modeli yüksek yanıt hızı ile donatılmıştır; gerçek zamanlı talep gereksinimleri yüksek, maliyet duyarlı ve model hassasiyetine daha az ihtiyaç duyulan senaryolar için uygundur; bağlam pencere uzunluğu 8k'dır."

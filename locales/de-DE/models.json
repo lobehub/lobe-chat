@@ -68,6 +68,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Das DeepSeek-R1-Distill-Modell basiert auf Qwen2.5-Math-7B und optimiert die Inferenzleistung durch verstärkendes Lernen und Kaltstartdaten. Das Open-Source-Modell setzt neue Maßstäbe für Multitasking."
   },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 ist ein von der DeepSeek Company entwickeltes MoE-Modell. Die Ergebnisse von DeepSeek-V3 übertreffen die anderer Open-Source-Modelle wie Qwen2.5-72B und Llama-3.1-405B und stehen in der Leistung auf Augenhöhe mit den weltweit führenden Closed-Source-Modellen GPT-4o und Claude-3.5-Sonnet."
+  },
   "Doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5 ist ein neues tiefes Denkmodell, das in den Fachbereichen Mathematik, Programmierung, wissenschaftlicher Schlussfolgerung und kreativen Schreibaufgaben herausragende Leistungen zeigt und in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA die Spitzenposition erreicht oder nahe kommt. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
   },
@@ -355,6 +358,15 @@
   },
   "SenseChat-Vision": {
     "description": "Das neueste Modell (V5.5) unterstützt die Eingabe mehrerer Bilder und optimiert umfassend die grundlegenden Fähigkeiten des Modells. Es hat signifikante Verbesserungen in der Erkennung von Objektattributen, räumlichen Beziehungen, Aktionsereignissen, Szenenverständnis, Emotionserkennung, logischem Wissen und Textverständnis und -generierung erreicht."
+  },
+  "SenseNova-V6-Pro": {
+    "description": "Erreicht eine native Einheit von Bild-, Text- und Video-Fähigkeiten, überwindet die traditionellen Grenzen der multimodalen Trennung und hat in den Bewertungen von OpenCompass und SuperCLUE zwei Meistertitel gewonnen."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Vereint visuelle und sprachliche Tiefenlogik, ermöglicht langsames Denken und tiefgreifende Schlussfolgerungen und präsentiert den vollständigen Denkprozess."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Erreicht eine native Einheit von Bild-, Text- und Video-Fähigkeiten, überwindet die traditionellen Grenzen der multimodalen Trennung und führt in den Kernbereichen wie multimodalen Grundfähigkeiten und sprachlichen Grundfähigkeiten umfassend. Es kombiniert literarische und wissenschaftliche Bildung und hat in mehreren Bewertungen mehrfach die Spitzenposition im In- und Ausland erreicht."
   },
   "Skylark2-lite-8k": {
     "description": "Das zweite Modell der Skylark-Reihe, das Skylark2-lite-Modell bietet eine hohe Reaktionsgeschwindigkeit und eignet sich für Szenarien mit hohen Echtzeitanforderungen, kostensensitiven Anforderungen und geringeren Genauigkeitsanforderungen, mit einer Kontextfensterlänge von 8k."

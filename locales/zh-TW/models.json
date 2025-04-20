@@ -68,6 +68,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "基於 Qwen2.5-Math-7B 的 DeepSeek-R1 蒸餾模型，通過強化學習與冷啟動數據優化推理性能，開源模型刷新多任務標杆。"
   },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多項評測成績超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他開源模型，並在性能上和世界頂尖的閉源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。"
+  },
   "Doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5全新深度思考模型，在數學、程式設計、科學推理等專業領域及創意寫作等通用任務中表現突出，在AIME 2024、Codeforces、GPQA等多項權威基準上達到或接近業界第一梯隊水平。支持128k上下文窗口，16k輸出。"
   },
@@ -355,6 +358,15 @@
   },
   "SenseChat-Vision": {
     "description": "最新版本模型 (V5.5)，支持多圖的輸入，全面實現模型基礎能力優化，在對象屬性識別、空間關係、動作事件識別、場景理解、情感識別、邏輯常識推理和文本理解生成上都實現了較大提升。"
+  },
+  "SenseNova-V6-Pro": {
+    "description": "實現圖片、文本、視頻能力的原生統一，突破傳統多模態分立局限，在OpenCompass和SuperCLUE評測中斬獲雙冠軍。"
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "兼顧視覺、語言深度推理，實現慢思考和深度推理，呈現完整的思維鏈過程。"
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "實現圖片、文本、視頻能力的原生統一，突破傳統多模態分立局限，在多模基礎能力、語言基礎能力等核心維度全面領先，文理兼修，在多項測評中多次位列國內外第一梯隊水平。"
   },
   "Skylark2-lite-8k": {
     "description": "雲雀（Skylark）第二代模型，Skylark2-lite 模型有較高的回應速度，適用於實時性要求高、成本敏感、對模型精度要求不高的場景，上下文窗口長度為 8k。"

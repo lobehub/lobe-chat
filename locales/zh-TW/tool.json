@@ -7,6 +7,20 @@
     "images": "圖片:",
     "prompt": "提示詞"
   },
+  "localFiles": {
+    "file": "檔案",
+    "folder": "資料夾",
+    "open": "打開",
+    "openFile": "打開檔案",
+    "openFolder": "打開資料夾",
+    "read": {
+      "more": "查看更多"
+    },
+    "readFile": "讀取檔案",
+    "readFileError": "讀取檔案失敗，請檢查檔案路徑是否正確",
+    "readFiles": "讀取檔案",
+    "readFilesError": "讀取檔案失敗，請檢查檔案路徑是否正確"
+  },
   "search": {
     "createNewSearch": "建立新的搜尋紀錄",
     "emptyResult": "沒有搜尋到結果，請修改關鍵字後重試",
@@ -44,5 +58,16 @@
     "summary": "總結",
     "summaryTooltip": "總結當前內容",
     "viewMoreResults": "查看更多 {{results}} 個結果"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "欄位鍵必須唯一",
+    "form": {
+      "add": "新增一項",
+      "key": "欄位鍵",
+      "value": "欄位值"
+    },
+    "formValidationFailed": "表單驗證失敗，請檢查參數格式",
+    "keyRequired": "欄位鍵不可為空",
+    "stringifyError": "無法序列化參數，請檢查參數格式"
   }
 }

@@ -68,6 +68,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Mô hình chưng cất DeepSeek-R1 dựa trên Qwen2.5-Math-7B, tối ưu hóa hiệu suất suy luận thông qua học tăng cường và dữ liệu khởi động lạnh, mô hình mã nguồn mở làm mới tiêu chuẩn đa nhiệm."
   },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 là một mô hình MoE do công ty DeepSeek tự phát triển. Nhiều kết quả đánh giá của DeepSeek-V3 đã vượt qua các mô hình mã nguồn mở khác như Qwen2.5-72B và Llama-3.1-405B, và về hiệu suất không thua kém các mô hình đóng nguồn hàng đầu thế giới như GPT-4o và Claude-3.5-Sonnet."
+  },
   "Doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5 là mô hình suy nghĩ sâu mới, thể hiện xuất sắc trong các lĩnh vực chuyên môn như toán học, lập trình, suy luận khoa học và các nhiệm vụ chung như viết sáng tạo, đạt hoặc gần đạt mức hàng đầu trong nhiều tiêu chuẩn uy tín như AIME 2024, Codeforces, GPQA. Hỗ trợ cửa sổ ngữ cảnh 128k, đầu ra 16k."
   },
@@ -355,6 +358,15 @@
   },
   "SenseChat-Vision": {
     "description": "Mô hình phiên bản mới nhất (V5.5), hỗ trợ đầu vào nhiều hình ảnh, hoàn thiện khả năng cơ bản của mô hình, đạt được sự cải thiện lớn trong nhận diện thuộc tính đối tượng, mối quan hệ không gian, nhận diện sự kiện hành động, hiểu cảnh, nhận diện cảm xúc, suy luận kiến thức logic và hiểu sinh ra văn bản."
+  },
+  "SenseNova-V6-Pro": {
+    "description": "Thực hiện sự thống nhất nguyên bản giữa hình ảnh, văn bản và video, vượt qua giới hạn phân tách đa phương thức truyền thống, giành được hai giải vô địch trong các đánh giá OpenCompass và SuperCLUE."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Kết hợp giữa lý luận sâu sắc về thị giác và ngôn ngữ, thực hiện tư duy chậm và lý luận sâu, trình bày quy trình chuỗi tư duy hoàn chỉnh."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Thực hiện sự thống nhất nguyên bản giữa hình ảnh, văn bản và video, vượt qua giới hạn phân tách đa phương thức truyền thống, dẫn đầu toàn diện trong các khía cạnh cốt lõi như khả năng đa phương thức và khả năng ngôn ngữ, vừa văn vừa lý, nhiều lần đứng đầu trong các đánh giá trong và ngoài nước."
   },
   "Skylark2-lite-8k": {
     "description": "Mô hình thế hệ thứ hai Skylark, mô hình Skylark2-lite có tốc độ phản hồi cao, phù hợp cho các tình huống yêu cầu tính thời gian thực cao, nhạy cảm với chi phí, không yêu cầu độ chính xác mô hình cao, chiều dài cửa sổ ngữ cảnh là 8k."

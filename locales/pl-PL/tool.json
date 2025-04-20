@@ -7,6 +7,20 @@
     "images": "Obrazy:",
     "prompt": "słowo kluczowe"
   },
+  "localFiles": {
+    "file": "Plik",
+    "folder": "Folder",
+    "open": "Otwórz",
+    "openFile": "Otwórz plik",
+    "openFolder": "Otwórz folder",
+    "read": {
+      "more": "Zobacz więcej"
+    },
+    "readFile": "Odczytaj plik",
+    "readFileError": "Błąd odczytu pliku, sprawdź, czy ścieżka do pliku jest poprawna",
+    "readFiles": "Odczytaj pliki",
+    "readFilesError": "Błąd odczytu plików, sprawdź, czy ścieżka do plików jest poprawna"
+  },
   "search": {
     "createNewSearch": "Utwórz nową historię wyszukiwania",
     "emptyResult": "Nie znaleziono wyników, spróbuj zmienić słowa kluczowe",
@@ -44,5 +58,16 @@
     "summary": "Podsumowanie",
     "summaryTooltip": "Podsumuj bieżącą treść",
     "viewMoreResults": "Zobacz więcej {{results}} wyników"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "Klucz pola musi być unikalny",
+    "form": {
+      "add": "Dodaj element",
+      "key": "Klucz pola",
+      "value": "Wartość pola"
+    },
+    "formValidationFailed": "Walidacja formularza nie powiodła się, sprawdź format parametrów",
+    "keyRequired": "Klucz pola nie może być pusty",
+    "stringifyError": "Nie można zserializować parametrów, sprawdź format parametrów"
   }
 }

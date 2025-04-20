@@ -68,6 +68,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Model destylacyjny DeepSeek-R1 oparty na Qwen2.5-Math-7B, optymalizujący wydajność wnioskowania dzięki uczeniu przez wzmocnienie i danym z zimnego startu, otwarty model ustanawiający nowe standardy w wielu zadaniach."
   },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 to model MoE opracowany przez firmę DeepSeek. Wyniki DeepSeek-V3 w wielu testach przewyższają inne modele open source, takie jak Qwen2.5-72B i Llama-3.1-405B, a jego wydajność jest porównywalna z najlepszymi zamkniętymi modelami na świecie, takimi jak GPT-4o i Claude-3.5-Sonnet."
+  },
   "Doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5 to nowy model głębokiego myślenia, który wyróżnia się w dziedzinach takich jak matematyka, programowanie, wnioskowanie naukowe oraz w ogólnych zadaniach kreatywnego pisania, osiągając lub zbliżając się do poziomu pierwszej ligi w wielu uznawanych benchmarkach, takich jak AIME 2024, Codeforces, GPQA. Obsługuje okno kontekstowe 128k, 16k wyjścia."
   },
@@ -355,6 +358,15 @@
   },
   "SenseChat-Vision": {
     "description": "Najnowsza wersja modelu (V5.5), obsługująca wiele obrazów jako wejście, w pełni optymalizuje podstawowe możliwości modelu, osiągając znaczną poprawę w rozpoznawaniu atrybutów obiektów, relacji przestrzennych, rozpoznawaniu zdarzeń, zrozumieniu scen, rozpoznawaniu emocji, wnioskowaniu logicznym oraz generowaniu i rozumieniu tekstu."
+  },
+  "SenseNova-V6-Pro": {
+    "description": "Osiąga natywną jedność zdolności do przetwarzania obrazów, tekstów i wideo, przełamując tradycyjne ograniczenia rozdzielnych modalności, zdobywając podwójne mistrzostwo w ocenach OpenCompass i SuperCLUE."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Łączy głębokie rozumienie wizualne i językowe, umożliwiając powolne myślenie i głęboką analizę, prezentując pełny proces myślowy."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Osiąga natywną jedność zdolności do przetwarzania obrazów, tekstów i wideo, przełamując tradycyjne ograniczenia rozdzielnych modalności, przewyższając w kluczowych wymiarach, takich jak podstawowe umiejętności multimodalne i językowe, oraz osiągając wysokie wyniki w wielu testach, wielokrotnie plasując się w czołówce krajowej i międzynarodowej."
   },
   "Skylark2-lite-8k": {
     "description": "Model drugiej generacji Skylark (Skylark2) o wysokiej szybkości reakcji, odpowiedni do scenariuszy wymagających wysokiej reaktywności, wrażliwych na koszty, z mniejszymi wymaganiami co do precyzji modelu, z długością okna kontekstowego 8k."

@@ -68,6 +68,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "Modelo de destilação DeepSeek-R1 baseado no Qwen2.5-Math-7B, otimizado para desempenho de inferência através de aprendizado por reforço e dados de inicialização fria, modelo de código aberto que redefine os padrões de múltiplas tarefas."
   },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 é um modelo MoE desenvolvido internamente pela DeepSeek. Os resultados de várias avaliações do DeepSeek-V3 superaram outros modelos de código aberto, como Qwen2.5-72B e Llama-3.1-405B, e seu desempenho é comparável aos melhores modelos fechados do mundo, como GPT-4o e Claude-3.5-Sonnet."
+  },
   "Doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5 é um novo modelo de pensamento profundo, destacando-se em áreas profissionais como matemática, programação e raciocínio científico, bem como em tarefas gerais de redação criativa, alcançando ou se aproximando do nível de liderança da indústria em várias referências de prestígio, como AIME 2024, Codeforces e GPQA. Suporta uma janela de contexto de 128k e saída de 16k."
   },
@@ -355,6 +358,15 @@
   },
   "SenseChat-Vision": {
     "description": "Modelo da versão mais recente (V5.5), suporta entrada de múltiplas imagens, otimizando completamente as capacidades básicas do modelo, com grandes melhorias em reconhecimento de atributos de objetos, relações espaciais, reconhecimento de eventos, compreensão de cenários, reconhecimento de emoções, raciocínio lógico e compreensão e geração de texto."
+  },
+  "SenseNova-V6-Pro": {
+    "description": "Realizar a unificação nativa de capacidades de imagem, texto e vídeo, superando as limitações tradicionais da multimodalidade discreta, conquistando o título duplo nas avaliações OpenCompass e SuperCLUE."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Equilibrar raciocínio visual e linguístico profundo, realizando um pensamento lento e uma inferência profunda, apresentando um processo completo de cadeia de pensamento."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Realizar a unificação nativa de capacidades de imagem, texto e vídeo, superando as limitações tradicionais da multimodalidade discreta, liderando amplamente em dimensões centrais como capacidades básicas multimodais e linguísticas, combinando rigor acadêmico e prático, e alcançando repetidamente o nível da primeira divisão em várias avaliações nacionais e internacionais."
   },
   "Skylark2-lite-8k": {
     "description": "Modelo de segunda geração Skylark, o modelo Skylark2-lite possui alta velocidade de resposta, adequado para cenários que exigem alta capacidade de resposta, sensíveis ao custo e com baixa exigência de precisão do modelo, com uma janela de contexto de 8k."

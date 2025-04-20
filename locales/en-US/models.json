@@ -68,6 +68,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "The DeepSeek-R1 distillation model based on Qwen2.5-Math-7B optimizes inference performance through reinforcement learning and cold-start data, refreshing the benchmark for open-source models across multiple tasks."
   },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 is a MoE model developed in-house by Deep Seek Company. Its performance surpasses that of other open-source models such as Qwen2.5-72B and Llama-3.1-405B in multiple assessments, and it stands on par with the world's top proprietary models like GPT-4o and Claude-3.5-Sonnet."
+  },
   "Doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5 is a new deep thinking model that excels in specialized fields such as mathematics, programming, and scientific reasoning, as well as in general tasks like creative writing, achieving or nearing top-tier industry levels in authoritative benchmarks such as AIME 2024, Codeforces, and GPQA. It supports a context window of 128k and an output length of 16k."
   },
@@ -355,6 +358,15 @@
   },
   "SenseChat-Vision": {
     "description": "The latest version model (V5.5) supports multi-image input and fully optimizes the model's basic capabilities, achieving significant improvements in object attribute recognition, spatial relationships, action event recognition, scene understanding, emotion recognition, logical reasoning, and text understanding and generation."
+  },
+  "SenseNova-V6-Pro": {
+    "description": "Achieves a native unification of image, text, and video capabilities, breaking through the limitations of traditional discrete multimodality, winning dual championships in the OpenCompass and SuperCLUE evaluations."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Balances visual and linguistic deep reasoning, enabling slow thinking and profound inference, presenting a complete chain of thought process."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Achieves a native unification of image, text, and video capabilities, breaking through the limitations of traditional discrete multimodality, leading comprehensively in core dimensions such as multimodal foundational abilities and linguistic foundational abilities, excelling in both literature and science, and consistently ranking among the top tier in various assessments both domestically and internationally."
   },
   "Skylark2-lite-8k": {
     "description": "Skylark 2nd generation model, Skylark2-lite model is characterized by high response speed, suitable for high real-time requirements, cost-sensitive scenarios, and situations where model accuracy is less critical, with a context window length of 8k."

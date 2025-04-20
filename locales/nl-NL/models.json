@@ -68,6 +68,9 @@
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1 distillatiemodel gebaseerd op Qwen2.5-Math-7B, geoptimaliseerd voor inferentieprestaties door versterkend leren en koude startdata, open-source model dat de multi-taak benchmark vernieuwt."
   },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 is een MoE-model dat zelf is ontwikkeld door DeepSeek Company. De prestaties van DeepSeek-V3 overtreffen die van andere open-source modellen zoals Qwen2.5-72B en Llama-3.1-405B, en presteert op het gebied van prestaties gelijkwaardig aan de wereldtop gesloten modellen zoals GPT-4o en Claude-3.5-Sonnet."
+  },
   "Doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5 is een nieuw diep denkmodel dat uitblinkt in wiskunde, programmeren, wetenschappelijke redenering en creatieve schrijfopdrachten, en heeft in verschillende autoritaire benchmarks zoals AIME 2024, Codeforces, GPQA het niveau van de top in de industrie bereikt of benaderd. Ondersteunt een contextvenster van 128k en 16k output."
   },
@@ -355,6 +358,15 @@
   },
   "SenseChat-Vision": {
     "description": "De nieuwste versie van het model (V5.5) ondersteunt meerdere afbeeldingen als invoer en heeft aanzienlijke optimalisaties doorgevoerd in de basiscapaciteiten van het model, met verbeteringen in objecteigenschappenherkenning, ruimtelijke relaties, actie-evenementherkenning, scènebegrip, emotieherkenning, logische kennisredenering en tekstbegrip en -generatie."
+  },
+  "SenseNova-V6-Pro": {
+    "description": "Realiseert de native integratie van afbeeldingen, tekst en video, doorbreekt de traditionele beperkingen van gescheiden multimodaliteit, en heeft in de OpenCompass en SuperCLUE evaluaties dubbele kampioenstitels behaald."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Combineert visuele en taaldiepe redenering, realiseert langzaam denken en diepgaande redenering, en presenteert het volledige denkproces."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Realiseert de native integratie van afbeeldingen, tekst en video, doorbreekt de traditionele beperkingen van gescheiden multimodaliteit, en is op alle belangrijke dimensies zoals basisvaardigheden in multimodaliteit en taalvaardigheden toonaangevend, met een evenwichtige benadering van tekst en redenering, en heeft in verschillende evaluaties herhaaldelijk de top van binnen- en buitenlandse ranglijsten bereikt."
   },
   "Skylark2-lite-8k": {
     "description": "De tweede generatie Skylark (Skylark2) model, Skylark2-lite model heeft een hoge responssnelheid, geschikt voor scenario's met hoge realtimevereisten, kostenbewustzijn en lagere modelnauwkeurigheidsvereisten, met een contextvenster lengte van 8k."
