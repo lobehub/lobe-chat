@@ -3,7 +3,6 @@ name: Upstream Sync and Build Docker
 permissions:
   contents: write # Fork-Sync-With-Upstream-action 需要写权限来推送同步的代码
   issues: write   # 用于同步失败时创建 issue
-  workflows: write
   # Docker build/push 不需要特殊权限，但 packages:write 可能需要（如果推送到 GHCR 而不是 Docker Hub）
 
 on:
