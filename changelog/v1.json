@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Together.ai fetch model list."]
+    },
+    "date": "2025-04-21",
+    "version": "1.81.7"
+  },
+  {
+    "children": {
+      "improvements": ["Add hotkey for clear chat messages."]
+    },
+    "date": "2025-04-21",
+    "version": "1.81.6"
+  },
+  {
+    "children": {
       "fixes": ["Lock nextauth to beta.25."]
     },
     "date": "2025-04-20",
