@@ -35,10 +35,10 @@ const transformGoogleGenerativeAIStream = (
           inputImageTokens: (usage as any).promptTokensDetails?.find(
             (i: any) => i.modality === 'IMAGE',
           )?.tokenCount,
-          outputReasoningTokens,
           inputTextTokens: (usage as any).promptTokensDetails?.find(
             (i: any) => i.modality === 'TEXT',
           )?.tokenCount,
+          outputReasoningTokens,
           totalInputTokens: usage.promptTokenCount,
           totalOutputTokens,
           totalTokens: usage.totalTokenCount,
