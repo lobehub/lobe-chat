@@ -22,9 +22,10 @@ class OIDCAdapter {
   private name: string;
 
   constructor(name: string, db: LobeChatDatabase) {
+    log('[%s] Constructor called with name: %s', name, name);
+
     this.name = name;
     this.db = db;
-    log('Creating adapter for model: %s', name);
   }
 
   /**
@@ -530,12 +531,10 @@ class OIDCAdapter {
   /**
    * 创建适配器工厂
    */
-  static createAdapterFactory(db: LobeChatDatabase) {
+  static createAdapterFactory = (db: LobeChatDatabase) => {
     log('Creating adapter factory with database instance');
-    return function (name: string) {
-      return new OIDCAdapter(name, db);
-    };
-  }
+    return (name: string) => new OIDCAdapter(name, db);
+  };
 }
 
 export { OIDCAdapter as DrizzleAdapter };

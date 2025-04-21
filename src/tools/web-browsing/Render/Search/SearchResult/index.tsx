@@ -9,7 +9,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
-import { SearchQuery, SearchResponse } from '@/types/tool/search';
+import { SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 import SearchResultItem from './SearchResultItem';
 import ShowMore from './ShowMore';
@@ -21,7 +21,7 @@ interface SearchResultProps {
   args: SearchQuery;
   editing: boolean;
   messageId: string;
-  pluginState?: SearchResponse;
+  pluginState?: UniformSearchResponse;
   setEditing: (editing: boolean) => void;
 }
 
@@ -31,14 +31,14 @@ const SearchResult = memo<SearchResultProps>(
     const searchResults = pluginState?.results || [];
     const { t } = useTranslation(['tool', 'common']);
 
-    const engines = uniq(searchResults.map((result) => result.engine));
-    const defaultEngines = engines.length > 0 ? engines : args.optionalParams?.searchEngines || [];
+    const engines = uniq(searchResults.flatMap((result) => result.engines));
+    const defaultEngines = engines.length > 0 ? engines : args?.searchEngines || [];
     const isMobile = useIsMobile();
 
     if (loading || !pluginState)
       return (
         <Flexbox gap={12} horizontal>
-          {['1', '2', '3', '4'].map((id) => (
+          {['1', '2', '3', '4', '5'].map((id) => (
             <Skeleton.Button
               active
               key={id}

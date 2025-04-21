@@ -58,6 +58,7 @@ export const KeyEnum = {
 
 export const HotkeyEnum = {
   AddUserMessage: 'addUserMessage',
+  ClearCurrentMessages: 'clearCurrentMessages',
   EditMessage: 'editMessage',
   OpenChatSettings: 'openChatSettings',
   OpenHotkeyHelper: 'openHotkeyHelper',

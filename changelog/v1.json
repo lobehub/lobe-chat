@@ -1,6 +1,84 @@
 [
   {
     "children": {
+      "fixes": ["Together.ai fetch model list."]
+    },
+    "date": "2025-04-21",
+    "version": "1.81.7"
+  },
+  {
+    "children": {
+      "improvements": ["Add hotkey for clear chat messages."]
+    },
+    "date": "2025-04-21",
+    "version": "1.81.6"
+  },
+  {
+    "children": {
+      "fixes": ["Lock nextauth to beta.25."]
+    },
+    "date": "2025-04-20",
+    "version": "1.81.5"
+  },
+  {
+    "children": {
+      "fixes": ["Gemini error Tool use with function calling is unsupported."],
+      "improvements": ["Support update tool calling params and trigger again."]
+    },
+    "date": "2025-04-19",
+    "version": "1.81.4"
+  },
+  {
+    "children": {
+      "improvements": ["Update GitHub & Cloudflare models, Update Google models."]
+    },
+    "date": "2025-04-19",
+    "version": "1.81.3"
+  },
+  {
+    "children": {
+      "improvements": ["Allow folding SystemRole box."]
+    },
+    "date": "2025-04-18",
+    "version": "1.81.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add SenseNova-V6 series & SenseChat-Vision support."]
+    },
+    "date": "2025-04-18",
+    "version": "1.81.1"
+  },
+  {
+    "children": {
+      "features": ["Support search1api as search provider."]
+    },
+    "date": "2025-04-17",
+    "version": "1.81.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update 360 AI & Taichu & AI21 model list."]
+    },
+    "date": "2025-04-17",
+    "version": "1.80.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add o3/o4-mini models."]
+    },
+    "date": "2025-04-17",
+    "version": "1.80.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor to get user info from api."]
+    },
+    "date": "2025-04-16",
+    "version": "1.80.3"
+  },
+  {
+    "children": {
       "fixes": ["Update default file embedding model info."]
     },
     "date": "2025-04-16",

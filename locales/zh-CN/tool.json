@@ -7,6 +7,20 @@
     "images": "图片:",
     "prompt": "提示词"
   },
+  "localFiles": {
+    "file": "文件",
+    "folder": "文件夹",
+    "open": "打开",
+    "openFile": "打开文件",
+    "openFolder": "打开文件夹",
+    "read": {
+      "more": "查看更多"
+    },
+    "readFile": "读取文件",
+    "readFileError": "读取文件失败，请检查文件路径是否正确",
+    "readFiles": "读取文件",
+    "readFilesError": "读取文件失败，请检查文件路径是否正确"
+  },
   "search": {
     "createNewSearch": "创建新的搜索记录",
     "emptyResult": "没有搜索到结果，请修改关键词后重试",
@@ -53,5 +67,16 @@
     "summary": "总结",
     "summaryTooltip": "总结当前内容",
     "viewMoreResults": "查看更多 {{results}} 个结果"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "字段键必须唯一",
+    "form": {
+      "add": "添加一项",
+      "key": "字段键",
+      "value": "字段值"
+    },
+    "formValidationFailed": "表单验证失败，请检查参数格式",
+    "keyRequired": "字段键不能为空",
+    "stringifyError": "无法序列化参数，请检查参数格式"
   }
 }

@@ -5,6 +5,7 @@
     "off": "Turn off debug",
     "on": "View plugin invocation information",
     "payload": "plugin payload",
+    "pluginState": "Plugin State",
     "response": "Response",
     "tool_call": "tool call request"
   },
