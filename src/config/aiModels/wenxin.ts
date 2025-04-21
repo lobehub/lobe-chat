@@ -7,9 +7,26 @@ const wenxinChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
+      '具备更强的理解、规划、反思、进化能力。作为能力更全面的深度思考模型，文心X1兼备准确、创意和文采，在中文知识问答、文学创作、文稿写作、日常对话、逻辑推理、复杂计算及工具调用等方面表现尤为出色。',
+    displayName: 'ERNIE X1 32K',
+    enabled: true,
+    id: 'ernie-x1-32k',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-04-15',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
       '文心大模型X1具备更强的理解、规划、反思、进化能力。作为能力更全面的深度思考模型，文心X1兼备准确、创意和文采，在中文知识问答、文学创作、文稿写作、日常对话、逻辑推理、复杂计算及工具调用等方面表现尤为出色。',
     displayName: 'ERNIE X1 32K Preview',
-    enabled: true,
     id: 'ernie-x1-32k-preview',
     pricing: {
       currency: 'CNY',
