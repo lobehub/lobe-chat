@@ -1,5 +1,5 @@
 import { LocalFileItem } from '@lobechat/electron-client-ipc';
-import { ActionIcon, FileTypeIcon } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { FolderOpen } from 'lucide-react';
@@ -64,22 +64,20 @@ const FileItem = memo<FileItemProps>(
         gap={12}
         horizontal
         onClick={() => {
-          if (isDirectory) {
-            localFileService.openLocalFolder({ isDirectory, path });
-          } else {
-            localFileService.openLocalFile({ path });
-          }
+          localFileService.openLocalFileOrFolder(path, isDirectory);
         }}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
         padding={'2px 8px'}
         style={{ cursor: 'pointer', fontSize: 12, width: '100%' }}
       >
-        {isDirectory ? (
-          <FileTypeIcon size={16} type={'folder'} variant={'mono'} />
-        ) : (
-          <FileIcon fileName={name} fileType={type} size={16} variant={'pure'} />
-        )}
+        <FileIcon
+          fileName={name}
+          fileType={type}
+          isDirectory={isDirectory}
+          size={16}
+          variant={'pure'}
+        />
         <Flexbox
           align={'baseline'}
           gap={4}
