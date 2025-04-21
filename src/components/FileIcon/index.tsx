@@ -1,16 +1,20 @@
 import { FileTypeIcon, MaterialFileTypeIcon } from '@lobehub/ui';
-import { memo } from 'react';
+import React, { memo } from 'react';
 
 import { mimeTypeMap } from './config';
 
 interface FileListProps {
   fileName: string;
-  fileType: string;
+  fileType?: string;
+  isDirectory?: boolean;
   size?: number;
   variant?: 'pure' | 'file' | 'folder';
 }
 
-const FileIcon = memo<FileListProps>(({ fileName, size, variant = 'file' }) => {
+const FileIcon = memo<FileListProps>(({ fileName, size, variant = 'file', isDirectory }) => {
+  if (isDirectory)
+    return <FileTypeIcon color={'gold'} size={size} type={'folder'} variant={'color'} />;
+
   if (Object.keys(mimeTypeMap).some((key) => fileName?.toLowerCase().endsWith(`.${key}`))) {
     const ext = fileName.split('.').pop()?.toLowerCase() as string;
 
