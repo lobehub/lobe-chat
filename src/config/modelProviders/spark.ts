@@ -69,6 +69,7 @@ const Spark: ModelProviderCard = {
   modelsUrl: 'https://xinghuo.xfyun.cn/spark',
   name: 'Spark',
   settings: {
+    disableBrowserRequest: true,
     modelEditable: false,
     proxyUrl: {
       placeholder: 'https://spark-api-open.xf-yun.com/v1',
