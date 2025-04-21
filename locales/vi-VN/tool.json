@@ -7,6 +7,20 @@
     "images": "Hình ảnh:",
     "prompt": "Từ khóa"
   },
+  "localFiles": {
+    "file": "Tệp",
+    "folder": "Thư mục",
+    "open": "Mở",
+    "openFile": "Mở tệp",
+    "openFolder": "Mở thư mục",
+    "read": {
+      "more": "Xem thêm"
+    },
+    "readFile": "Đọc tệp",
+    "readFileError": "Đọc tệp thất bại, vui lòng kiểm tra đường dẫn tệp có đúng không",
+    "readFiles": "Đọc tệp",
+    "readFilesError": "Đọc tệp thất bại, vui lòng kiểm tra đường dẫn tệp có đúng không"
+  },
   "search": {
     "createNewSearch": "Tạo mới tìm kiếm",
     "emptyResult": "Không tìm thấy kết quả, vui lòng sửa đổi từ khóa và thử lại",
@@ -44,5 +58,16 @@
     "summary": "Tóm tắt",
     "summaryTooltip": "Tóm tắt nội dung hiện tại",
     "viewMoreResults": "Xem thêm {{results}} kết quả"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "Khóa trường phải là duy nhất",
+    "form": {
+      "add": "Thêm một mục",
+      "key": "Khóa trường",
+      "value": "Giá trị trường"
+    },
+    "formValidationFailed": "Xác thực biểu mẫu thất bại, vui lòng kiểm tra định dạng tham số",
+    "keyRequired": "Khóa trường không được để trống",
+    "stringifyError": "Không thể tuần tự hóa tham số, vui lòng kiểm tra định dạng tham số"
   }
 }

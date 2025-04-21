@@ -7,6 +7,20 @@
     "images": "이미지:",
     "prompt": "알림 단어"
   },
+  "localFiles": {
+    "file": "파일",
+    "folder": "폴더",
+    "open": "열기",
+    "openFile": "파일 열기",
+    "openFolder": "폴더 열기",
+    "read": {
+      "more": "더 보기"
+    },
+    "readFile": "파일 읽기",
+    "readFileError": "파일 읽기 실패, 파일 경로가 올바른지 확인하세요",
+    "readFiles": "파일 읽기",
+    "readFilesError": "파일 읽기 실패, 파일 경로가 올바른지 확인하세요"
+  },
   "search": {
     "createNewSearch": "새 검색 기록 만들기",
     "emptyResult": "결과를 찾을 수 없습니다. 키워드를 수정한 후 다시 시도해 주세요.",
@@ -44,5 +58,16 @@
     "summary": "요약",
     "summaryTooltip": "현재 내용 요약",
     "viewMoreResults": "{{results}}개의 결과 더 보기"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "필드 키는 고유해야 합니다",
+    "form": {
+      "add": "항목 추가",
+      "key": "필드 키",
+      "value": "필드 값"
+    },
+    "formValidationFailed": "양식 검증 실패, 매개변수 형식을 확인하세요",
+    "keyRequired": "필드 키는 비워둘 수 없습니다",
+    "stringifyError": "매개변수를 직렬화할 수 없습니다, 매개변수 형식을 확인하세요"
   }
 }

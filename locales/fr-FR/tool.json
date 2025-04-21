@@ -7,6 +7,20 @@
     "images": "Images :",
     "prompt": "Mot de rappel"
   },
+  "localFiles": {
+    "file": "Fichier",
+    "folder": "Dossier",
+    "open": "Ouvrir",
+    "openFile": "Ouvrir le fichier",
+    "openFolder": "Ouvrir le dossier",
+    "read": {
+      "more": "Voir plus"
+    },
+    "readFile": "Lire le fichier",
+    "readFileError": "Échec de la lecture du fichier, veuillez vérifier si le chemin du fichier est correct",
+    "readFiles": "Lire les fichiers",
+    "readFilesError": "Échec de la lecture des fichiers, veuillez vérifier si le chemin du fichier est correct"
+  },
   "search": {
     "createNewSearch": "Créer un nouvel enregistrement de recherche",
     "emptyResult": "Aucun résultat trouvé, veuillez modifier les mots-clés et réessayer",
@@ -44,5 +58,16 @@
     "summary": "Résumé",
     "summaryTooltip": "Résumer le contenu actuel",
     "viewMoreResults": "Voir {{results}} résultats supplémentaires"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "La clé du champ doit être unique",
+    "form": {
+      "add": "Ajouter un élément",
+      "key": "Clé du champ",
+      "value": "Valeur du champ"
+    },
+    "formValidationFailed": "Échec de la validation du formulaire, veuillez vérifier le format des paramètres",
+    "keyRequired": "La clé du champ ne peut pas être vide",
+    "stringifyError": "Impossible de sérialiser les paramètres, veuillez vérifier le format des paramètres"
   }
 }

@@ -1,0 +1,32 @@
+{
+  "remoteServer": {
+    "authError": "授權失敗: {{error}}",
+    "authPending": "請在瀏覽器中完成授權",
+    "configDesc": "連接到遠端LobeChat伺服器，啟用資料同步",
+    "configError": "配置出錯",
+    "configTitle": "配置雲端同步",
+    "connect": "連接並授權",
+    "connected": "已連接",
+    "disconnect": "斷開連接",
+    "disconnectError": "斷開連接失敗",
+    "disconnected": "未連接",
+    "fetchError": "獲取配置失敗",
+    "invalidUrl": "請輸入有效的URL地址",
+    "serverUrl": "伺服器地址",
+    "statusConnected": "已連接",
+    "statusDisconnected": "未連接",
+    "urlRequired": "請輸入伺服器地址"
+  },
+  "updater": {
+    "downloadingUpdate": "正在下載更新",
+    "downloadingUpdateDesc": "更新正在下載中，請稍候...",
+    "later": "稍後更新",
+    "newVersionAvailable": "新版本可用",
+    "newVersionAvailableDesc": "發現新版本 {{version}}，是否立即下載？",
+    "restartAndInstall": "重啟並安裝",
+    "updateError": "更新錯誤",
+    "updateReady": "更新已就緒",
+    "updateReadyDesc": "Lobe Chat {{version}} 已下載完成，重啟應用後即可完成安裝。",
+    "upgradeNow": "立即更新"
+  }
+}

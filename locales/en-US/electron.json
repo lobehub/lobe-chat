@@ -1,0 +1,32 @@
+{
+  "remoteServer": {
+    "authError": "Authorization failed: {{error}}",
+    "authPending": "Please complete the authorization in your browser",
+    "configDesc": "Connect to the remote LobeChat server to enable data synchronization",
+    "configError": "Configuration error",
+    "configTitle": "Configure Cloud Sync",
+    "connect": "Connect and authorize",
+    "connected": "Connected",
+    "disconnect": "Disconnect",
+    "disconnectError": "Failed to disconnect",
+    "disconnected": "Not connected",
+    "fetchError": "Failed to fetch configuration",
+    "invalidUrl": "Please enter a valid URL",
+    "serverUrl": "Server address",
+    "statusConnected": "Connected",
+    "statusDisconnected": "Not connected",
+    "urlRequired": "Please enter the server address"
+  },
+  "updater": {
+    "downloadingUpdate": "Downloading update",
+    "downloadingUpdateDesc": "The update is downloading, please wait...",
+    "later": "Update later",
+    "newVersionAvailable": "New version available",
+    "newVersionAvailableDesc": "A new version {{version}} has been found, would you like to download it now?",
+    "restartAndInstall": "Restart and install",
+    "updateError": "Update error",
+    "updateReady": "Update ready",
+    "updateReadyDesc": "Lobe Chat {{version}} has been downloaded, restart the application to complete the installation.",
+    "upgradeNow": "Update now"
+  }
+}

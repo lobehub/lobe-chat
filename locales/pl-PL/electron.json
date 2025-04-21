@@ -1,0 +1,32 @@
+{
+  "remoteServer": {
+    "authError": "Błąd autoryzacji: {{error}}",
+    "authPending": "Proszę zakończyć autoryzację w przeglądarce",
+    "configDesc": "Połącz z zdalnym serwerem LobeChat, aby włączyć synchronizację danych",
+    "configError": "Błąd konfiguracji",
+    "configTitle": "Konfiguracja synchronizacji w chmurze",
+    "connect": "Połącz i autoryzuj",
+    "connected": "Połączono",
+    "disconnect": "Rozłącz",
+    "disconnectError": "Błąd rozłączenia",
+    "disconnected": "Nie połączono",
+    "fetchError": "Błąd pobierania konfiguracji",
+    "invalidUrl": "Proszę wprowadzić prawidłowy adres URL",
+    "serverUrl": "Adres serwera",
+    "statusConnected": "Połączono",
+    "statusDisconnected": "Nie połączono",
+    "urlRequired": "Proszę wprowadzić adres serwera"
+  },
+  "updater": {
+    "downloadingUpdate": "Pobieranie aktualizacji",
+    "downloadingUpdateDesc": "Aktualizacja jest pobierana, proszę czekać...",
+    "later": "Zaktualizuj później",
+    "newVersionAvailable": "Dostępna nowa wersja",
+    "newVersionAvailableDesc": "Znaleziono nową wersję {{version}}, czy chcesz ją pobrać teraz?",
+    "restartAndInstall": "Uruchom ponownie i zainstaluj",
+    "updateError": "Błąd aktualizacji",
+    "updateReady": "Aktualizacja gotowa",
+    "updateReadyDesc": "Lobe Chat {{version}} została pobrana, uruchom aplikację ponownie, aby zakończyć instalację.",
+    "upgradeNow": "Zaktualizuj teraz"
+  }
+}
