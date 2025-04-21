@@ -24,6 +24,9 @@ const transformGoogleGenerativeAIStream = (
   const usage = chunk.usageMetadata;
   const usageChunks: StreamProtocolChunk[] = [];
   if (candidate?.finishReason && usage) {
+    const outputReasoningTokens = (usage as any).thoughtsTokenCount || 0;
+    const totalOutputTokens = (usage.candidatesTokenCount ?? 0) + (outputReasoningTokens ?? 0);
+
     usageChunks.push(
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
       {
@@ -32,11 +35,12 @@ const transformGoogleGenerativeAIStream = (
           inputImageTokens: (usage as any).promptTokensDetails?.find(
             (i: any) => i.modality === 'IMAGE',
           )?.tokenCount,
+          outputReasoningTokens,
           inputTextTokens: (usage as any).promptTokensDetails?.find(
             (i: any) => i.modality === 'TEXT',
           )?.tokenCount,
           totalInputTokens: usage.promptTokenCount,
-          totalOutputTokens: usage.candidatesTokenCount,
+          totalOutputTokens,
           totalTokens: usage.totalTokenCount,
         } as ModelTokensUsage,
         id: context?.id,
