@@ -1,0 +1,32 @@
+{
+  "remoteServer": {
+    "authError": "Autorisatiefout: {{error}}",
+    "authPending": "Voltooi de autorisatie in de browser",
+    "configDesc": "Verbind met de externe LobeChat-server om gegevenssynchronisatie in te schakelen",
+    "configError": "Configuratiefout",
+    "configTitle": "Cloud-synchronisatie configureren",
+    "connect": "Verbinden en autoriseren",
+    "connected": "Verbonden",
+    "disconnect": "Verbinding verbreken",
+    "disconnectError": "Verbinding verbreken mislukt",
+    "disconnected": "Niet verbonden",
+    "fetchError": "Configuratie ophalen mislukt",
+    "invalidUrl": "Voer een geldige URL in",
+    "serverUrl": "Serveradres",
+    "statusConnected": "Verbonden",
+    "statusDisconnected": "Niet verbonden",
+    "urlRequired": "Voer het serveradres in"
+  },
+  "updater": {
+    "downloadingUpdate": "Update aan het downloaden",
+    "downloadingUpdateDesc": "De update wordt gedownload, even geduld...",
+    "later": "Later bijwerken",
+    "newVersionAvailable": "Nieuwe versie beschikbaar",
+    "newVersionAvailableDesc": "Nieuwe versie {{version}} gevonden, wilt u deze nu downloaden?",
+    "restartAndInstall": "Herstarten en installeren",
+    "updateError": "Updatefout",
+    "updateReady": "Update gereed",
+    "updateReadyDesc": "Lobe Chat {{version}} is gedownload, herstart de applicatie om de installatie te voltooien.",
+    "upgradeNow": "Nu bijwerken"
+  }
+}

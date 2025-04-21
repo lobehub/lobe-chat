@@ -7,6 +7,20 @@
     "images": "画像:",
     "prompt": "プロンプト"
   },
+  "localFiles": {
+    "file": "ファイル",
+    "folder": "フォルダー",
+    "open": "開く",
+    "openFile": "ファイルを開く",
+    "openFolder": "フォルダーを開く",
+    "read": {
+      "more": "もっと見る"
+    },
+    "readFile": "ファイルを読み込む",
+    "readFileError": "ファイルの読み込みに失敗しました。ファイルパスが正しいか確認してください。",
+    "readFiles": "ファイルを読み込む",
+    "readFilesError": "ファイルの読み込みに失敗しました。ファイルパスが正しいか確認してください。"
+  },
   "search": {
     "createNewSearch": "新しい検索記録を作成",
     "emptyResult": "結果が見つかりませんでした。キーワードを変更して再試行してください",
@@ -44,5 +58,16 @@
     "summary": "要約",
     "summaryTooltip": "現在の内容を要約",
     "viewMoreResults": "さらに {{results}} 件の結果を見る"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "フィールドキーは一意でなければなりません。",
+    "form": {
+      "add": "項目を追加",
+      "key": "フィールドキー",
+      "value": "フィールド値"
+    },
+    "formValidationFailed": "フォームの検証に失敗しました。パラメータの形式を確認してください。",
+    "keyRequired": "フィールドキーは空にできません。",
+    "stringifyError": "パラメータをシリアライズできません。パラメータの形式を確認してください。"
   }
 }

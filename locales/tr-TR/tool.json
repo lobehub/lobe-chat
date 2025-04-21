@@ -7,6 +7,20 @@
     "images": "Görseller:",
     "prompt": "İpucu"
   },
+  "localFiles": {
+    "file": "Dosya",
+    "folder": "Klasör",
+    "open": "Aç",
+    "openFile": "Dosyayı Aç",
+    "openFolder": "Klasörü Aç",
+    "read": {
+      "more": "Daha Fazla Göster"
+    },
+    "readFile": "Dosyayı Oku",
+    "readFileError": "Dosya okunamadı, lütfen dosya yolunu kontrol edin",
+    "readFiles": "Dosyaları Oku",
+    "readFilesError": "Dosyalar okunamadı, lütfen dosya yolunu kontrol edin"
+  },
   "search": {
     "createNewSearch": "Yeni bir arama kaydı oluştur",
     "emptyResult": "Sonuç bulunamadı, lütfen anahtar kelimeleri değiştirip tekrar deneyin",
@@ -44,5 +58,16 @@
     "summary": "Özet",
     "summaryTooltip": "Mevcut içeriği özetle",
     "viewMoreResults": "Daha fazla {{results}} sonuç görüntüle"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "Alan anahtarları benzersiz olmalıdır",
+    "form": {
+      "add": "Bir Öğe Ekle",
+      "key": "Alan Anahtarı",
+      "value": "Alan Değeri"
+    },
+    "formValidationFailed": "Form doğrulaması başarısız oldu, lütfen parametre formatını kontrol edin",
+    "keyRequired": "Alan anahtarı boş olamaz",
+    "stringifyError": "Parametre seri hale getirilemedi, lütfen parametre formatını kontrol edin"
   }
 }

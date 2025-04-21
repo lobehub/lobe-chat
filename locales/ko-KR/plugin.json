@@ -5,6 +5,7 @@
     "off": "디버그 끄기",
     "on": "플러그인 호출 정보 보기",
     "payload": "페이로드",
+    "pluginState": "플러그인 상태",
     "response": "응답",
     "tool_call": "도구 호출"
   },
