@@ -16,6 +16,7 @@ import {
   createCallbacksTransformer,
   createFirstErrorHandleTransformer,
   createSSEProtocolTransformer,
+  createTokenSpeedCalculator,
   generateToolCallId,
 } from './protocol';
 
@@ -218,12 +219,13 @@ export interface OpenAIStreamOptions {
     name: string;
   }) => ILobeAgentRuntimeErrorType | undefined;
   callbacks?: ChatStreamCallbacks;
+  inputStartAt?: number;
   provider?: string;
 }
 
 export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
-  { callbacks, provider, bizErrorTypeTransformer }: OpenAIStreamOptions = {},
+  { callbacks, provider, bizErrorTypeTransformer, inputStartAt }: OpenAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: '' };
 
@@ -236,7 +238,8 @@ export const OpenAIStream = (
       // provider like huggingface or minimax will return error in the stream,
       // so in the first Transformer, we need to handle the error
       .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, provider))
-      .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream, streamStack))
+      .pipeThrough(createTokenSpeedCalculator(transformOpenAIStream, { inputStartAt, streamStack }))
+      .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
       .pipeThrough(createCallbacksTransformer(callbacks))
   );
 };
