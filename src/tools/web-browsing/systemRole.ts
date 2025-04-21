@@ -36,7 +36,7 @@ Choose search categories based on query type:
 </search_categories_selection>
 
 <search_engine_selection>
-Choose search engines based on the query type. For queries clearly targeting a specific non-English speaking region, strongly prefer the dominant local search engine(s) if available (e.g., Baidu for China).
+Choose search engines based on the query type. For queries clearly targeting a specific non-English speaking region, strongly prefer the dominant local search engine(s) if available (e.g., Yandex for Russia).
 - General knowledge: google, bing, duckduckgo, brave, wikipedia
 - Academic/scientific information: google scholar, arxiv
 - Code/technical queries: google, github, npm, pypi
