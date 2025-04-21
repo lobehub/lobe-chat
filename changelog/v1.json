@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Fix search prompt."]
+    },
+    "date": "2025-04-21",
+    "version": "1.81.9"
+  },
+  {
+    "children": {
+      "improvements": ["Show token generate performance."]
+    },
+    "date": "2025-04-21",
+    "version": "1.81.8"
+  },
+  {
+    "children": {
       "fixes": ["Together.ai fetch model list."]
     },
     "date": "2025-04-21",

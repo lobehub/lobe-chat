@@ -4,7 +4,9 @@ import { systemPrompt } from './systemRole';
 
 export const LocalFilesApiName = {
   listLocalFiles: 'listLocalFiles',
+  moveLocalFiles: 'moveLocalFiles',
   readLocalFile: 'readLocalFile',
+  renameLocalFile: 'renameLocalFile',
   searchLocalFiles: 'searchLocalFiles',
   writeFile: 'writeFile',
 };
@@ -32,6 +34,14 @@ export const LocalFilesManifest: BuiltinToolManifest = {
       name: LocalFilesApiName.readLocalFile,
       parameters: {
         properties: {
+          loc: {
+            description:
+              'Optional range of lines to read [startLine, endLine]. Defaults to [0, 200] if not specified.',
+            items: {
+              type: 'number',
+            },
+            type: 'array',
+          },
           path: {
             description: 'The file path to read',
             type: 'string',
@@ -117,6 +127,55 @@ export const LocalFilesManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
+    {
+      description:
+        'Moves or renames multiple files/directories. Input is an array of objects, each containing an oldPath and a newPath.',
+      name: LocalFilesApiName.moveLocalFiles,
+      parameters: {
+        properties: {
+          items: {
+            description: 'A list of move/rename operations to perform.',
+            items: {
+              properties: {
+                newPath: {
+                  description:
+                    'The target absolute path for the file/directory (can include a new name).',
+                  type: 'string',
+                },
+                oldPath: {
+                  description: 'The current absolute path of the file/directory to move or rename.',
+                  type: 'string',
+                },
+              },
+              required: ['oldPath', 'newPath'],
+              type: 'object',
+            },
+            type: 'array',
+          },
+        },
+        required: ['items'],
+        type: 'object',
+      },
+    },
+    {
+      description:
+        'Rename a file or folder in its current location. Input should be the current full path and the new name.',
+      name: LocalFilesApiName.renameLocalFile,
+      parameters: {
+        properties: {
+          newName: {
+            description: 'The new name for the file or folder (without path)',
+            type: 'string',
+          },
+          path: {
+            description: 'The current full path of the file or folder to rename',
+            type: 'string',
+          },
+        },
+        required: ['path', 'newName'],
+        type: 'object',
+      },
+    },
     // TODO: Add writeFile API definition later
     // {
     //   description:
@@ -143,7 +202,6 @@ export const LocalFilesManifest: BuiltinToolManifest = {
     avatar: '📁',
     title: 'Local Files',
   },
-  // Use a simplified system role for now
-  systemRole: systemPrompt(),
+  systemRole: systemPrompt,
   type: 'builtin',
 };

@@ -42,6 +42,7 @@ describe('PdfLoader', () => {
 
   it('should attach document metadata correctly', async () => {
     // 首先加载页面以初始化 pdfInstance，尽管此方法不直接使用页面
+    await loader.loadPages(testFile);
     const metadata = await loader.attachDocumentMetadata!(testFile);
 
     expect(metadata).toMatchSnapshot();
