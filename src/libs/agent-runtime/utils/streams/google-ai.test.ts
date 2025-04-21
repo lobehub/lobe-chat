@@ -193,6 +193,53 @@ describe('GoogleGenerativeAIStream', () => {
     ]);
   });
 
+  it('should handle token count with thought', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = {
+      candidates: [{ content: { role: 'model' }, finishReason: 'STOP', index: 0 }],
+      usageMetadata: {
+        promptTokenCount: 266,
+        totalTokenCount: 266,
+        promptTokensDetails: [
+          { modality: 'TEXT', tokenCount: 8 },
+          { modality: 'IMAGE', tokenCount: 258 },
+        ],
+        thoughtsTokenCount: 108,
+      },
+      modelVersion: 'gemini-2.5-flash-preview-04-17',
+    };
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(data);
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      // stop
+      'id: chat_1\n',
+      'event: stop\n',
+      `data: "STOP"\n\n`,
+      // usage
+      'id: chat_1\n',
+      'event: usage\n',
+      `data: {"inputImageTokens":258,"inputTextTokens":8,"outputReasoningTokens":108,"totalInputTokens":266,"totalTokens":266}\n\n`,
+    ]);
+  });
+
   it('should handle stop with content', async () => {
     vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
 
