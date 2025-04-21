@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.81.8](https://github.com/lobehub/lobe-chat/compare/v1.81.7...v1.81.8)
+
+<sup>Released on **2025-04-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Show token generate performance.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Show token generate performance, closes [#6959](https://github.com/lobehub/lobe-chat/issues/6959) ([33c3fe7](https://github.com/lobehub/lobe-chat/commit/33c3fe7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.81.7](https://github.com/lobehub/lobe-chat/compare/v1.81.6...v1.81.7)
 
 <sup>Released on **2025-04-21**</sup>
