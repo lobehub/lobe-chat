@@ -1,0 +1,32 @@
+{
+  "remoteServer": {
+    "authError": "خطای مجوز: {{error}}",
+    "authPending": "لطفاً مجوز را در مرورگر کامل کنید",
+    "configDesc": "اتصال به سرور LobeChat از راه دور، فعال‌سازی همگام‌سازی داده‌ها",
+    "configError": "خطا در پیکربندی",
+    "configTitle": "پیکربندی همگام‌سازی ابری",
+    "connect": "اتصال و مجوز",
+    "connected": "متصل شده",
+    "disconnect": "قطع اتصال",
+    "disconnectError": "خطا در قطع اتصال",
+    "disconnected": "قطع شده",
+    "fetchError": "خطا در دریافت پیکربندی",
+    "invalidUrl": "لطفاً یک آدرس URL معتبر وارد کنید",
+    "serverUrl": "آدرس سرور",
+    "statusConnected": "متصل شده",
+    "statusDisconnected": "قطع شده",
+    "urlRequired": "لطفاً آدرس سرور را وارد کنید"
+  },
+  "updater": {
+    "downloadingUpdate": "در حال دانلود به‌روزرسانی",
+    "downloadingUpdateDesc": "به‌روزرسانی در حال دانلود است، لطفاً صبر کنید...",
+    "later": "به‌روزرسانی بعداً",
+    "newVersionAvailable": "نسخه جدید در دسترس است",
+    "newVersionAvailableDesc": "نسخه جدید {{version}} شناسایی شد، آیا می‌خواهید بلافاصله دانلود کنید؟",
+    "restartAndInstall": "راه‌اندازی مجدد و نصب",
+    "updateError": "خطا در به‌روزرسانی",
+    "updateReady": "به‌روزرسانی آماده است",
+    "updateReadyDesc": "Lobe Chat {{version}} دانلود شده است، با راه‌اندازی مجدد برنامه می‌توانید نصب را کامل کنید.",
+    "upgradeNow": "همین حالا به‌روزرسانی کنید"
+  }
+}

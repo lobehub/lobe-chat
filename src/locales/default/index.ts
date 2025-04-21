@@ -5,6 +5,7 @@ import clerk from './clerk';
 import common from './common';
 import components from './components';
 import discover from './discover';
+import electron from './electron';
 import error from './error';
 import file from './file';
 import hotkey from './hotkey';
@@ -32,6 +33,7 @@ const resources = {
   common,
   components,
   discover,
+  electron,
   error,
   file,
   hotkey,

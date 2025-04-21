@@ -1,0 +1,32 @@
+{
+  "remoteServer": {
+    "authError": "Xác thực thất bại: {{error}}",
+    "authPending": "Vui lòng hoàn tất xác thực trong trình duyệt",
+    "configDesc": "Kết nối đến máy chủ LobeChat từ xa, kích hoạt đồng bộ dữ liệu",
+    "configError": "Lỗi cấu hình",
+    "configTitle": "Cấu hình đồng bộ đám mây",
+    "connect": "Kết nối và xác thực",
+    "connected": "Đã kết nối",
+    "disconnect": "Ngắt kết nối",
+    "disconnectError": "Ngắt kết nối thất bại",
+    "disconnected": "Chưa kết nối",
+    "fetchError": "Lấy cấu hình thất bại",
+    "invalidUrl": "Vui lòng nhập địa chỉ URL hợp lệ",
+    "serverUrl": "Địa chỉ máy chủ",
+    "statusConnected": "Đã kết nối",
+    "statusDisconnected": "Chưa kết nối",
+    "urlRequired": "Vui lòng nhập địa chỉ máy chủ"
+  },
+  "updater": {
+    "downloadingUpdate": "Đang tải bản cập nhật",
+    "downloadingUpdateDesc": "Bản cập nhật đang được tải xuống, vui lòng chờ...",
+    "later": "Cập nhật sau",
+    "newVersionAvailable": "Có phiên bản mới",
+    "newVersionAvailableDesc": "Đã phát hiện phiên bản mới {{version}}, có muốn tải xuống ngay không?",
+    "restartAndInstall": "Khởi động lại và cài đặt",
+    "updateError": "Lỗi cập nhật",
+    "updateReady": "Cập nhật đã sẵn sàng",
+    "updateReadyDesc": "Lobe Chat {{version}} đã tải xong, khởi động lại ứng dụng để hoàn tất cài đặt.",
+    "upgradeNow": "Cập nhật ngay"
+  }
+}

@@ -59,7 +59,7 @@ export interface ChatPluginAction {
     params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
   ) => Promise<void>;
   updatePluginState: (id: string, value: any) => Promise<void>;
-  updatePluginArguments: <T = any>(id: string, value: T) => Promise<void>;
+  updatePluginArguments: <T = any>(id: string, value: T, replace?: boolean) => Promise<void>;
 
   internal_addToolToAssistantMessage: (id: string, tool: ChatToolPayload) => Promise<void>;
   internal_removeToolToAssistantMessage: (id: string, tool_call_id?: string) => Promise<void>;
@@ -296,7 +296,7 @@ export const chatPlugin: StateCreator<
     await refreshMessages();
   },
 
-  updatePluginArguments: async (id, value) => {
+  updatePluginArguments: async (id, value, replace = false) => {
     const { refreshMessages } = get();
     const toolMessage = chatSelectors.getMessageById(id)(get());
     if (!toolMessage || !toolMessage?.tool_call_id) return;
@@ -305,7 +305,7 @@ export const chatPlugin: StateCreator<
 
     const prevArguments = toolMessage?.plugin?.arguments;
     const prevJson = safeParseJSON(prevArguments || '');
-    const nextValue = merge(prevJson || {}, value);
+    const nextValue = replace ? (value as any) : merge(prevJson || {}, value);
     if (isEqual(prevJson, nextValue)) return;
 
     // optimistic update

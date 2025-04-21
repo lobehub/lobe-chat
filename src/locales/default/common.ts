@@ -287,6 +287,8 @@ export default {
   rename: '重命名',
   reset: '重置',
   retry: '重试',
+  run: '运行',
+  save: '保存',
   send: '发送',
   setting: '设置',
   share: '分享',

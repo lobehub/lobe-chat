@@ -1,0 +1,32 @@
+{
+  "remoteServer": {
+    "authError": "Yetkilendirme hatası: {{error}}",
+    "authPending": "Yetkilendirmeyi tarayıcıda tamamlayın",
+    "configDesc": "Uzak LobeChat sunucusuna bağlanın, veri senkronizasyonunu etkinleştirin",
+    "configError": "Yapılandırma hatası",
+    "configTitle": "Bulut Senkronizasyonunu Yapılandır",
+    "connect": "Bağlan ve yetkilendir",
+    "connected": "Bağlandı",
+    "disconnect": "Bağlantıyı kes",
+    "disconnectError": "Bağlantıyı kesme hatası",
+    "disconnected": "Bağlı değil",
+    "fetchError": "Yapılandırma alınamadı",
+    "invalidUrl": "Geçerli bir URL girin",
+    "serverUrl": "Sunucu adresi",
+    "statusConnected": "Bağlı",
+    "statusDisconnected": "Bağlı değil",
+    "urlRequired": "Lütfen sunucu adresini girin"
+  },
+  "updater": {
+    "downloadingUpdate": "Güncelleme indiriliyor",
+    "downloadingUpdateDesc": "Güncelleme indiriliyor, lütfen bekleyin...",
+    "later": "Güncellemeyi daha sonra yap",
+    "newVersionAvailable": "Yeni sürüm mevcut",
+    "newVersionAvailableDesc": "Yeni sürüm {{version}} bulundu, hemen indirmek ister misiniz?",
+    "restartAndInstall": "Yeniden başlat ve yükle",
+    "updateError": "Güncelleme hatası",
+    "updateReady": "Güncelleme hazır",
+    "updateReadyDesc": "Lobe Chat {{version}} indirildi, yüklemeyi tamamlamak için uygulamayı yeniden başlatın.",
+    "upgradeNow": "Şimdi güncelle"
+  }
+}

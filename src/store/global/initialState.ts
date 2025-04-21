@@ -66,6 +66,7 @@ export interface SystemStatus {
   showHotkeyHelper?: boolean;
   showSessionPanel?: boolean;
   showSystemRole?: boolean;
+  systemRoleExpandedMap: Record<string, boolean>;
   /**
    * theme mode
    */
@@ -111,6 +112,7 @@ export const INITIAL_STATUS = {
   showHotkeyHelper: false,
   showSessionPanel: true,
   showSystemRole: false,
+  systemRoleExpandedMap: {},
   themeMode: 'auto',
   threadInputHeight: 200,
   zenMode: false,

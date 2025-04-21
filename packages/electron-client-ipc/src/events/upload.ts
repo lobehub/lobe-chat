@@ -1,5 +1,5 @@
 import { FileMetadata, UploadFileParams } from '../types';
 
-export interface FilesDispatchEvents {
+export interface UploadFilesDispatchEvents {
   createFile: (params: UploadFileParams) => { metadata: FileMetadata; success: boolean };
 }

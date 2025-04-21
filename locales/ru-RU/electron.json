@@ -1,0 +1,32 @@
+{
+  "remoteServer": {
+    "authError": "Ошибка авторизации: {{error}}",
+    "authPending": "Пожалуйста, завершите авторизацию в браузере",
+    "configDesc": "Подключение к удаленному серверу LobeChat для включения синхронизации данных",
+    "configError": "Ошибка конфигурации",
+    "configTitle": "Настройка облачной синхронизации",
+    "connect": "Подключиться и авторизоваться",
+    "connected": "Подключено",
+    "disconnect": "Отключиться",
+    "disconnectError": "Ошибка отключения",
+    "disconnected": "Не подключено",
+    "fetchError": "Ошибка получения конфигурации",
+    "invalidUrl": "Пожалуйста, введите действительный URL-адрес",
+    "serverUrl": "Адрес сервера",
+    "statusConnected": "Подключено",
+    "statusDisconnected": "Не подключено",
+    "urlRequired": "Пожалуйста, введите адрес сервера"
+  },
+  "updater": {
+    "downloadingUpdate": "Загрузка обновления",
+    "downloadingUpdateDesc": "Обновление загружается, пожалуйста, подождите...",
+    "later": "Обновить позже",
+    "newVersionAvailable": "Доступна новая версия",
+    "newVersionAvailableDesc": "Обнаружена новая версия {{version}}, хотите скачать сейчас?",
+    "restartAndInstall": "Перезагрузить и установить",
+    "updateError": "Ошибка обновления",
+    "updateReady": "Обновление готово",
+    "updateReadyDesc": "Lobe Chat {{version}} загружен, перезагрузите приложение для завершения установки.",
+    "upgradeNow": "Обновить сейчас"
+  }
+}

@@ -7,6 +7,20 @@
     "images": "Afbeeldingen:",
     "prompt": "prompt"
   },
+  "localFiles": {
+    "file": "Bestand",
+    "folder": "Map",
+    "open": "Openen",
+    "openFile": "Bestand openen",
+    "openFolder": "Map openen",
+    "read": {
+      "more": "Meer weergeven"
+    },
+    "readFile": "Bestand lezen",
+    "readFileError": "Fout bij het lezen van het bestand, controleer of het bestandspad correct is",
+    "readFiles": "Bestanden lezen",
+    "readFilesError": "Fout bij het lezen van bestanden, controleer of het bestandspad correct is"
+  },
   "search": {
     "createNewSearch": "Maak een nieuwe zoekopdracht",
     "emptyResult": "Geen resultaten gevonden, pas alstublieft uw zoekwoorden aan en probeer het opnieuw",
@@ -44,5 +58,16 @@
     "summary": "Samenvatting",
     "summaryTooltip": "Samenvatting van de huidige inhoud",
     "viewMoreResults": "Bekijk meer {{results}} resultaten"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "Veldsleutel moet uniek zijn",
+    "form": {
+      "add": "Een item toevoegen",
+      "key": "Veldsleutel",
+      "value": "Veldwaarde"
+    },
+    "formValidationFailed": "Formuliervalidatie is mislukt, controleer het parameterformaat",
+    "keyRequired": "Veldsleutel mag niet leeg zijn",
+    "stringifyError": "Kan parameters niet serialiseren, controleer het parameterformaat"
   }
 }
