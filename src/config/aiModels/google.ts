@@ -1,7 +1,7 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
 const googleChatModels: AIChatModelCard[] = [
-    {
+  {
     abilities: {
       functionCall: true,
       reasoning: true,
@@ -9,8 +9,7 @@ const googleChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 65_536,
-    description:
-      'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
+    description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
     displayName: 'Gemini 2.5 Flash Preview 04-17',
     enabled: true,
     id: 'gemini-2.5-flash-preview-04-17',
@@ -85,7 +84,7 @@ const googleChatModels: AIChatModelCard[] = [
       'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
     displayName: 'Gemini 2.0 Flash Thinking Experimental 01-21',
     enabled: true,
-      id: 'gemini-2.0-flash-thinking-exp-01-21',
+    id: 'gemini-2.0-flash-thinking-exp-01-21',
     maxOutput: 65_536,
     pricing: {
       cachedInput: 0,
