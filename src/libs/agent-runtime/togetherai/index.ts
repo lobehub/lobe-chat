@@ -29,7 +29,6 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
 
     return modelList
       .map((model) => {
-        console.log(modelList);
         const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
           (m) => model.id.toLowerCase() === m.id.toLowerCase(),
         );
