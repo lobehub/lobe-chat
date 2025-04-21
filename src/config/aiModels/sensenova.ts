@@ -10,8 +10,7 @@ const sensenovaChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 131_072,
-    description:
-      '兼顾视觉、语言深度推理，实现慢思考和深度推理，呈现完整的思维链过程。',
+    description: '兼顾视觉、语言深度推理，实现慢思考和深度推理，呈现完整的思维链过程。',
     displayName: 'SenseNova V6 Reasoner',
     enabled: true,
     id: 'SenseNova-V6-Reasoner',
@@ -82,8 +81,7 @@ const sensenovaChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      '是最新的轻量版本模型，达到全量模型90%以上能力，显著降低推理成本。',
+    description: '是最新的轻量版本模型，达到全量模型90%以上能力，显著降低推理成本。',
     displayName: 'SenseChat Turbo 1202',
     id: 'SenseChat-Turbo-1202',
     pricing: {
@@ -115,7 +113,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 32_768,
-    description: '最新版本模型 (V5.5)，支持多图的输入，全面实现模型基础能力优化，在对象属性识别、空间关系、动作事件识别、场景理解、情感识别、逻辑常识推理和文本理解生成上都实现了较大提升。',
+    description:
+      '最新版本模型 (V5.5)，支持多图的输入，全面实现模型基础能力优化，在对象属性识别、空间关系、动作事件识别、场景理解、情感识别、逻辑常识推理和文本理解生成上都实现了较大提升。',
     displayName: 'SenseChat 5.5 Vision',
     id: 'SenseChat-Vision',
     pricing: {

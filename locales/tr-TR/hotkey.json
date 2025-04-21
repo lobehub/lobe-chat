@@ -3,6 +3,10 @@
     "desc": "Mevcut girdi içeriğini kullanıcı mesajı olarak ekleyin, ancak oluşturmayı tetiklemeyin",
     "title": "Bir kullanıcı mesajı ekle"
   },
+  "clearCurrentMessages": {
+    "desc": "Geçerli oturumun mesajlarını ve yüklenen dosyaları temizle",
+    "title": "Oturum mesajlarını temizle"
+  },
   "editMessage": {
     "desc": "Mesaja çift tıklayıp Alt tuşuna basarak düzenleme moduna geçin",
     "title": "Mesajı düzenle"

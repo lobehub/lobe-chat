@@ -39,7 +39,11 @@ export class MCPClient {
         break;
       }
       case 'stdio': {
-        log('Using Stdio transport with command: %s and args: %O', connection.command, connection.args);
+        log(
+          'Using Stdio transport with command: %s and args: %O',
+          connection.command,
+          connection.args,
+        );
         this.transport = new StdioClientTransport({
           args: connection.args,
           command: connection.command,
