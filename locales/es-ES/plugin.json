@@ -34,9 +34,40 @@
         "desc": "Identificador único del complemento",
         "label": "Identificador"
       },
+      "mcp": {
+        "args": {
+          "desc": "Lista de parámetros a pasar al comando STDIO",
+          "label": "Parámetros del comando",
+          "placeholder": "Por ejemplo: --port 8080 --debug",
+          "tooltip": "Presiona enter después de ingresar los parámetros o usa comas/espacios para separarlos"
+        },
+        "command": {
+          "desc": "Archivo ejecutable o script para iniciar el plugin MCP STDIO",
+          "label": "Comando",
+          "placeholder": "Por ejemplo: python main.py o /ruta/al/ejecutable"
+        },
+        "endpoint": {
+          "desc": "Ingresa la dirección de tu servidor HTTP Streamable MCP",
+          "label": "URL del Endpoint MCP"
+        },
+        "identifier": {
+          "desc": "Especifica un nombre para tu plugin MCP, debe usar caracteres en inglés",
+          "invalid": "Solo se pueden ingresar caracteres en inglés, números, y los símbolos - y _",
+          "label": "Nombre del plugin MCP",
+          "placeholder": "Por ejemplo: my-mcp-plugin"
+        },
+        "type": {
+          "desc": "Selecciona el método de comunicación del plugin MCP, la versión web solo soporta HTTP Streamable",
+          "label": "Tipo de plugin MCP"
+        },
+        "url": {
+          "desc": "Ingresa la dirección del Endpoint de tu plugin HTTP MCP",
+          "label": "URL del Endpoint HTTP"
+        }
+      },
       "mode": {
-        "local": "Configuración visual",
-        "local-tooltip": "La configuración visual no está disponible temporalmente",
+        "mcp": "Plugin MCP",
+        "mcpExp": "Experimental",
         "url": "Enlace en línea"
       },
       "name": {

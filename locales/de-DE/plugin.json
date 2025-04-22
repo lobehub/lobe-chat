@@ -35,14 +35,45 @@
         "label": "Kennung"
       },
       "mode": {
-        "local": "Visuelle Konfiguration",
-        "local-tooltip": "Visuelle Konfiguration vorübergehend nicht unterstützt",
+        "mcp": "MCP-Plugin",
+        "mcpExp": "Experimentell",
         "url": "Online-Link"
       },
       "name": {
         "desc": "Plugin-Titel",
         "label": "Titel",
         "placeholder": "Suchmaschine"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "Liste der Parameter, die an den STDIO-Befehl übergeben werden",
+        "label": "Befehlsparameter",
+        "placeholder": "z.B.: --port 8080 --debug",
+        "tooltip": "Drücken Sie die Eingabetaste oder verwenden Sie Kommas/Leerzeichen zur Trennung der Eingabeparameter"
+      },
+      "command": {
+        "desc": "Die ausführbare Datei oder das Skript zum Starten des MCP STDIO-Plugins",
+        "label": "Befehl",
+        "placeholder": "z.B.: python main.py oder /path/to/executable"
+      },
+      "endpoint": {
+        "desc": "Geben Sie die Adresse Ihres MCP Streamable HTTP Servers ein",
+        "label": "MCP Endpoint-URL"
+      },
+      "identifier": {
+        "desc": "Geben Sie Ihrem MCP-Plugin einen Namen, der englische Zeichen verwenden muss",
+        "invalid": "Es dürfen nur englische Zeichen, Zahlen, - und _ verwendet werden",
+        "label": "MCP-Plugin-Name",
+        "placeholder": "z.B.: my-mcp-plugin"
+      },
+      "type": {
+        "desc": "Wählen Sie die Kommunikationsart des MCP-Plugins, die Webversion unterstützt nur Streamable HTTP",
+        "label": "MCP-Plugin-Typ"
+      },
+      "url": {
+        "desc": "Geben Sie die Endpoint-Adresse Ihres MCP HTTP-Plugins ein",
+        "label": "HTTP Endpoint-URL"
       }
     },
     "meta": {
