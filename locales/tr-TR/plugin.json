@@ -34,9 +34,40 @@
         "desc": "Eklenti için benzersiz tanımlayıcı",
         "label": "Tanımlayıcı"
       },
+      "mcp": {
+        "args": {
+          "desc": "STDIO komutuna iletilen parametreler listesi",
+          "label": "Komut Parametreleri",
+          "placeholder": "Örneğin: --port 8080 --debug",
+          "tooltip": "Parametreleri girdikten sonra enter tuşuna basın veya virgül/boşluk ile ayırın"
+        },
+        "command": {
+          "desc": "MCP STDIO eklentisini başlatmak için kullanılacak yürütülebilir dosya veya betik",
+          "label": "Komut",
+          "placeholder": "Örneğin: python main.py veya /path/to/executable"
+        },
+        "endpoint": {
+          "desc": "MCP Streamable HTTP Sunucunuzun adresini girin",
+          "label": "MCP Endpoint URL"
+        },
+        "identifier": {
+          "desc": "MCP eklentinize bir ad verin, İngilizce karakterler kullanmalısınız",
+          "invalid": "Sadece İngilizce karakterler, rakamlar, - ve _ bu iki sembolü girebilirsiniz",
+          "label": "MCP Eklenti Adı",
+          "placeholder": "Örneğin: my-mcp-plugin"
+        },
+        "type": {
+          "desc": "MCP eklentisinin iletişim yöntemini seçin, web sürümü yalnızca Streamable HTTP'yi destekler",
+          "label": "MCP Eklenti Türü"
+        },
+        "url": {
+          "desc": "MCP HTTP eklentinizin Endpoint adresini girin",
+          "label": "HTTP Endpoint URL"
+        }
+      },
       "mode": {
-        "local": "Yapılandırma",
-        "local-tooltip": "Yapılandırma geçici olarak desteklenmiyor",
+        "mcp": "MCP Eklentisi",
+        "mcpExp": "Deneysel",
         "url": "Çevrimiçi Bağlantı"
       },
       "name": {
