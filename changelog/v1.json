@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support Streamable HTTP MCP server."]
+    },
+    "date": "2025-04-22",
+    "version": "1.82.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix search prompt."]
     },
     "date": "2025-04-21",
