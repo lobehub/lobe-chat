@@ -15,9 +15,9 @@ export const STORE_NAME = 'lobehub-settings';
  */
 export const STORE_DEFAULTS: ElectronMainStore = {
   locale: 'auto',
-  shortcuts: DEFAULT_SHORTCUTS_CONFIG,
-  storagePath: appStorageDir,
-  syncConfig: {
+  remoteServerConfig: {
     active: false,
   },
+  shortcuts: DEFAULT_SHORTCUTS_CONFIG,
+  storagePath: appStorageDir,
 };
