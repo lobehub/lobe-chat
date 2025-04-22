@@ -34,9 +34,40 @@
         "desc": "شناسه‌ی یکتای افزونه",
         "label": "شناسه"
       },
+      "mcp": {
+        "args": {
+          "desc": "لیست پارامترهای منتقل شده به دستور STDIO",
+          "label": "پارامترهای دستور",
+          "placeholder": "برای مثال: --port 8080 --debug",
+          "tooltip": "پس از وارد کردن پارامترها، کلید Enter را فشار دهید یا از کاما/فاصله برای جداسازی استفاده کنید"
+        },
+        "command": {
+          "desc": "فایل اجرایی یا اسکریپتی که برای راه‌اندازی افزونه MCP STDIO استفاده می‌شود",
+          "label": "دستور",
+          "placeholder": "برای مثال: python main.py یا /path/to/executable"
+        },
+        "endpoint": {
+          "desc": "آدرس سرور HTTP Streamable MCP خود را وارد کنید",
+          "label": "آدرس URL Endpoint MCP"
+        },
+        "identifier": {
+          "desc": "برای افزونه MCP خود یک نام مشخص کنید، باید از کاراکترهای انگلیسی استفاده کنید",
+          "invalid": "فقط می‌توانید از کاراکترهای انگلیسی، اعداد، و دو علامت - و _ استفاده کنید",
+          "label": "نام افزونه MCP",
+          "placeholder": "برای مثال: my-mcp-plugin"
+        },
+        "type": {
+          "desc": "روش ارتباطی افزونه MCP را انتخاب کنید، نسخه وب فقط از Streamable HTTP پشتیبانی می‌کند",
+          "label": "نوع افزونه MCP"
+        },
+        "url": {
+          "desc": "آدرس Endpoint افزونه HTTP MCP خود را وارد کنید",
+          "label": "آدرس URL Endpoint HTTP"
+        }
+      },
       "mode": {
-        "local": "پیکربندی بصری",
-        "local-tooltip": "پیکربندی بصری در حال حاضر پشتیبانی نمی‌شود",
+        "mcp": "افزونه MCP",
+        "mcpExp": "تجربی",
         "url": "لینک آنلاین"
       },
       "name": {
