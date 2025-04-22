@@ -35,14 +35,45 @@
         "label": "标识符"
       },
       "mode": {
-        "local": "可视化配置",
-        "local-tooltip": "暂时不支持可视化配置",
+        "mcp": "MCP 插件",
+        "mcpExp": "实验性",
         "url": "在线链接"
       },
       "name": {
         "desc": "插件标题",
         "label": "标题",
         "placeholder": "搜索引擎"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "传递给 STDIO 命令的参数列表",
+        "label": "命令参数",
+        "placeholder": "例如：--port 8080 --debug",
+        "tooltip": "输入参数后按回车或使用逗号/空格分隔"
+      },
+      "command": {
+        "desc": "用于启动 MCP STDIO 插件的可执行文件或脚本",
+        "label": "命令",
+        "placeholder": "例如：python main.py 或 /path/to/executable"
+      },
+      "endpoint": {
+        "desc": "输入你的 MCP Streamable HTTP Server 的地址",
+        "label": "MCP Endpoint URL"
+      },
+      "identifier": {
+        "desc": "为你的 MCP 插件指定一个名称，需要使用英文字符",
+        "invalid": "只能输入英文字符、数字 、- 和_ 这两个符号",
+        "label": "MCP 插件名称",
+        "placeholder": "例如：my-mcp-plugin"
+      },
+      "type": {
+        "desc": "选择 MCP 插件的通信方式，网页版只支持 Streamable HTTP",
+        "label": "MCP 插件类型"
+      },
+      "url": {
+        "desc": "输入你的 MCP HTTP 插件的 Endpoint 地址",
+        "label": "HTTP Endpoint URL"
       }
     },
     "meta": {

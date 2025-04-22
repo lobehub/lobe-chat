@@ -17,16 +17,52 @@
     "statusDisconnected": "Chưa kết nối",
     "urlRequired": "Vui lòng nhập địa chỉ máy chủ"
   },
+  "sync": {
+    "continue": "Tiếp tục",
+    "inCloud": "Hiện đang sử dụng đồng bộ đám mây",
+    "inLocalStorage": "Hiện đang sử dụng lưu trữ cục bộ",
+    "isIniting": "Đang khởi tạo...",
+    "lobehubCloud": {
+      "description": "Phiên bản đám mây do chính thức cung cấp",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Sử dụng cơ sở dữ liệu cục bộ, hoàn toàn có thể sử dụng ngoại tuyến",
+      "title": "Cơ sở dữ liệu cục bộ"
+    },
+    "mode": {
+      "cloudSync": "Đồng bộ đám mây",
+      "localStorage": "Lưu trữ cục bộ",
+      "title": "Chọn chế độ kết nối của bạn",
+      "useSelfHosted": "Sử dụng phiên bản tự lưu trữ?"
+    },
+    "selfHosted": {
+      "description": "Phiên bản cộng đồng tự triển khai",
+      "title": "Phiên bản tự lưu trữ"
+    }
+  },
   "updater": {
+    "checkingUpdate": "Kiểm tra phiên bản mới",
+    "checkingUpdateDesc": "Đang lấy thông tin phiên bản...",
+    "downloadNewVersion": "Tải phiên bản mới",
     "downloadingUpdate": "Đang tải bản cập nhật",
     "downloadingUpdateDesc": "Bản cập nhật đang được tải xuống, vui lòng chờ...",
+    "installLater": "Cập nhật khi khởi động lần sau",
+    "isLatestVersion": "Hiện tại đã là phiên bản mới nhất",
+    "isLatestVersionDesc": "Rất tuyệt, phiên bản {{version}} bạn đang sử dụng đã là phiên bản tiên tiến nhất.",
     "later": "Cập nhật sau",
     "newVersionAvailable": "Có phiên bản mới",
     "newVersionAvailableDesc": "Đã phát hiện phiên bản mới {{version}}, có muốn tải xuống ngay không?",
-    "restartAndInstall": "Khởi động lại và cài đặt",
+    "restartAndInstall": "Cài đặt cập nhật và khởi động lại",
     "updateError": "Lỗi cập nhật",
     "updateReady": "Cập nhật đã sẵn sàng",
-    "updateReadyDesc": "Lobe Chat {{version}} đã tải xong, khởi động lại ứng dụng để hoàn tất cài đặt.",
+    "updateReadyDesc": "Phiên bản mới {{version}} đã tải xong, khởi động lại ứng dụng để hoàn tất cài đặt.",
     "upgradeNow": "Cập nhật ngay"
+  },
+  "waitingOAuth": {
+    "cancel": "Hủy",
+    "description": "Trình duyệt đã mở trang ủy quyền, vui lòng hoàn tất ủy quyền trong trình duyệt",
+    "helpText": "Nếu trình duyệt không tự động mở, vui lòng nhấp vào hủy và thử lại",
+    "title": "Đang chờ kết nối ủy quyền"
   }
 }

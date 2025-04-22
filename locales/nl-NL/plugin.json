@@ -34,9 +34,40 @@
         "desc": "De unieke identificatie van de plug-in",
         "label": "Identificatie"
       },
+      "mcp": {
+        "args": {
+          "desc": "Lijst van parameters die aan het STDIO-commando worden doorgegeven",
+          "label": "Commando-parameters",
+          "placeholder": "Bijvoorbeeld: --port 8080 --debug",
+          "tooltip": "Druk op enter of gebruik komma's/spaties om parameters te scheiden"
+        },
+        "command": {
+          "desc": "Uitvoerbaar bestand of script om de MCP STDIO-plugin te starten",
+          "label": "Commando",
+          "placeholder": "Bijvoorbeeld: python main.py of /path/to/executable"
+        },
+        "endpoint": {
+          "desc": "Voer het adres van je MCP Streamable HTTP Server in",
+          "label": "MCP Endpoint URL"
+        },
+        "identifier": {
+          "desc": "Geef je MCP-plugin een naam, gebruik Engelse karakters",
+          "invalid": "Alleen Engelse karakters, cijfers, - en _ zijn toegestaan",
+          "label": "Naam van de MCP-plugin",
+          "placeholder": "Bijvoorbeeld: my-mcp-plugin"
+        },
+        "type": {
+          "desc": "Kies de communicatiemethode voor de MCP-plugin, de webversie ondersteunt alleen Streamable HTTP",
+          "label": "Type MCP-plugin"
+        },
+        "url": {
+          "desc": "Voer het Endpoint-adres van je MCP HTTP-plugin in",
+          "label": "HTTP Endpoint URL"
+        }
+      },
       "mode": {
-        "local": "Visuele configuratie",
-        "local-tooltip": "Visuele configuratie wordt op dit moment niet ondersteund",
+        "mcp": "MCP-plugin",
+        "mcpExp": "Experimenteel",
         "url": "Online link"
       },
       "name": {

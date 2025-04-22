@@ -17,16 +17,52 @@
     "statusDisconnected": "Not connected",
     "urlRequired": "Please enter the server address"
   },
+  "sync": {
+    "continue": "Continue",
+    "inCloud": "Currently using cloud sync",
+    "inLocalStorage": "Currently using local storage",
+    "isIniting": "Initializing...",
+    "lobehubCloud": {
+      "description": "Officially provided cloud version",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Uses a local database, fully available offline",
+      "title": "Local Database"
+    },
+    "mode": {
+      "cloudSync": "Cloud Sync",
+      "localStorage": "Local Storage",
+      "title": "Select your connection mode",
+      "useSelfHosted": "Use a self-hosted instance?"
+    },
+    "selfHosted": {
+      "description": "Community version that you can deploy yourself",
+      "title": "Self-Hosted Instance"
+    }
+  },
   "updater": {
+    "checkingUpdate": "Checking for updates",
+    "checkingUpdateDesc": "Retrieving version information...",
+    "downloadNewVersion": "Download new version",
     "downloadingUpdate": "Downloading update",
     "downloadingUpdateDesc": "The update is downloading, please wait...",
+    "installLater": "Update on next launch",
+    "isLatestVersion": "You are using the latest version",
+    "isLatestVersionDesc": "Great! The version {{version}} you are using is the latest available.",
     "later": "Update later",
     "newVersionAvailable": "New version available",
     "newVersionAvailableDesc": "A new version {{version}} has been found, would you like to download it now?",
-    "restartAndInstall": "Restart and install",
+    "restartAndInstall": "Install updates and restart",
     "updateError": "Update error",
     "updateReady": "Update ready",
-    "updateReadyDesc": "Lobe Chat {{version}} has been downloaded, restart the application to complete the installation.",
+    "updateReadyDesc": "The new version {{version}} has been downloaded. Restart the application to complete the installation.",
     "upgradeNow": "Update now"
+  },
+  "waitingOAuth": {
+    "cancel": "Cancel",
+    "description": "The browser has opened the authorization page, please complete the authorization in the browser",
+    "helpText": "If the browser did not open automatically, please click cancel and try again",
+    "title": "Waiting for Authorization Connection"
   }
 }

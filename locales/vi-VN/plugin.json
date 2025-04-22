@@ -35,14 +35,45 @@
         "label": "Định danh"
       },
       "mode": {
-        "local": "Cấu hình trực quan",
-        "local-tooltip": "Tạm thời không hỗ trợ cấu hình trực quan",
+        "mcp": "MCP Plugin",
+        "mcpExp": "Thí nghiệm",
         "url": "Liên kết trực tuyến"
       },
       "name": {
         "desc": "Tiêu đề plugin",
         "label": "Tiêu đề",
         "placeholder": "Tìm kiếm công cụ tìm kiếm"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "Danh sách các tham số được truyền cho lệnh STDIO",
+        "label": "Tham số lệnh",
+        "placeholder": "Ví dụ: --port 8080 --debug",
+        "tooltip": "Nhấn Enter sau khi nhập tham số hoặc sử dụng dấu phẩy/khoảng trắng để phân tách"
+      },
+      "command": {
+        "desc": "Tệp thực thi hoặc kịch bản để khởi động plugin MCP STDIO",
+        "label": "Lệnh",
+        "placeholder": "Ví dụ: python main.py hoặc /path/to/executable"
+      },
+      "endpoint": {
+        "desc": "Nhập địa chỉ của máy chủ HTTP Streamable MCP của bạn",
+        "label": "URL Điểm cuối MCP"
+      },
+      "identifier": {
+        "desc": "Chỉ định một tên cho plugin MCP của bạn, cần sử dụng ký tự tiếng Anh",
+        "invalid": "Chỉ có thể nhập ký tự tiếng Anh, số, và hai ký hiệu - và _",
+        "label": "Tên plugin MCP",
+        "placeholder": "Ví dụ: my-mcp-plugin"
+      },
+      "type": {
+        "desc": "Chọn phương thức giao tiếp của plugin MCP, phiên bản web chỉ hỗ trợ Streamable HTTP",
+        "label": "Loại plugin MCP"
+      },
+      "url": {
+        "desc": "Nhập địa chỉ Điểm cuối HTTP của plugin MCP của bạn",
+        "label": "URL Điểm cuối HTTP"
       }
     },
     "meta": {
