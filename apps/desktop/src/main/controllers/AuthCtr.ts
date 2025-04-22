@@ -43,8 +43,9 @@ export default class AuthCtr extends ControllerModule {
       // First, update the server URL configuration
       logger.debug('Setting remote server configuration');
       await this.remoteServerConfigCtr.setRemoteServerConfig({
+        // Set to true after successful authorization
         active: false,
-        remoteServerUrl: serverUrl, // Set to true after successful authorization
+        remoteServerUrl: serverUrl,
       });
 
       // Generate PKCE parameters

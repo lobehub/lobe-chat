@@ -3,6 +3,6 @@
  */
 export interface RemoteServerConfig {
   active: boolean;
-  isSelfHosted: boolean;
+  isSelfHosted?: boolean;
   remoteServerUrl?: string;
 }

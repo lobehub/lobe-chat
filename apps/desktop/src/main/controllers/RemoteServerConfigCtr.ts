@@ -23,11 +23,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     logger.debug('Getting remote server configuration');
     const { storeManager } = this.app;
 
-    const config: RemoteServerConfig = {
-      active: storeManager.get('active', false),
-      isSelfHosted: storeManager.get('isSelfHosted', false),
-      remoteServerUrl: storeManager.get('remoteServerUrl', ''),
-    };
+    const config: RemoteServerConfig = storeManager.get('syncConfig');
 
     logger.debug(
       `Remote server config: active=${config.active}, url=${config.remoteServerUrl}, isSelfHosted=${config.isSelfHosted}`,
@@ -46,9 +42,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     const { storeManager } = this.app;
 
     // Save configuration
-    storeManager.set('remoteServerUrl', config.remoteServerUrl);
-    storeManager.set('active', config.active);
-    storeManager.set('isSelfHosted', config.isSelfHosted);
+    storeManager.set('syncConfig', config);
 
     return true;
   }
@@ -62,8 +56,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     const { storeManager } = this.app;
 
     // Clear instance configuration
-    storeManager.delete('remoteServerUrl');
-    storeManager.set('active', false);
+    storeManager.set('syncConfig', { active: false });
 
     // Clear tokens (if any)
     await this.clearTokens();

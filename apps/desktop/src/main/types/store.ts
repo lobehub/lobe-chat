@@ -1,10 +1,10 @@
+import { RemoteServerConfig } from '@lobechat/electron-client-ipc';
+
 export interface ElectronMainStore {
-  active?: boolean;
-  isSelfHosted: boolean;
   locale: string;
-  remoteServerUrl?: string;
   shortcuts: Record<string, string>;
   storagePath: string;
+  syncConfig: RemoteServerConfig;
 }
 
 export type StoreKey = keyof ElectronMainStore;
