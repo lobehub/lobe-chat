@@ -27,8 +27,6 @@ const run = () => {
         .replaceAll(`"<`, `"`)
         .replaceAll(`>'`, `'`)
         .replaceAll(`>"`, `"`)
-        .replaceAll(' </', '\n</')
-        .replaceAll(' </', '\n</')
         .replaceAll('}> width', '} width')
         .replaceAll("'[https", "'https")
         .replaceAll('"[https', '"https')
