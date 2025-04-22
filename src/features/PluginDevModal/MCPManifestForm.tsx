@@ -115,7 +115,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
             ]}
           >
             <Input
-              placeholder="https://example.com/api/mcp"
+              placeholder="https://mcp.higress.ai/mcp-github/xxxxx"
               suffix={
                 <ActionIcon
                   icon={RotateCwIcon}
