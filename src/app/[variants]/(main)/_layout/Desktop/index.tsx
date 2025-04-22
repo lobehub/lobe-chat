@@ -14,9 +14,9 @@ import { usePlatform } from '@/hooks/usePlatform';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { HotkeyScopeEnum } from '@/types/hotkey';
 
+import TitleBar, { TITLE_BAR_HEIGHT } from './ElectronTitlebar';
 import RegisterHotkeys from './RegisterHotkeys';
 import SideBar from './SideBar';
-import TitleBar, { TITLE_BAR_HEIGHT } from './Titlebar';
 
 const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 

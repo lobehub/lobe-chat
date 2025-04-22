@@ -7,6 +7,7 @@ import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
 import { DEFAULT_LANG } from '@/const/locale';
+import { isDesktop } from '@/const/version';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
@@ -78,7 +79,7 @@ export const generateViewport = async (props: DynamicLayoutProps): ResolvingView
 
 export const generateStaticParams = () => {
   const themes: ThemeAppearance[] = ['dark', 'light'];
-  const mobileOptions = [true, false];
+  const mobileOptions = isDesktop ? [false] : [true, false];
   // only static for serveral page, other go to dynamtic
   const staticLocales: Locales[] = [DEFAULT_LANG, 'zh-CN'];
 
