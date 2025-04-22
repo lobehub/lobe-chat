@@ -60,6 +60,13 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
     <Form form={form} layout={'vertical'}>
       <Flexbox>
         <Form.Item
+          label={t('dev.mcp.type.title')}
+          name={['customParams', 'mcp', 'type']}
+          rules={[{ required: true }]}
+        >
+          <MCPTypeSelect />
+        </Form.Item>
+        <Form.Item
           extra={t('dev.mcp.identifier.desc')}
           label={t('dev.mcp.identifier.label')}
           name={'identifier'}
@@ -84,14 +91,6 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
           ]}
         >
           <Input placeholder={t('dev.mcp.identifier.placeholder')} />
-        </Form.Item>
-
-        <Form.Item
-          label={t('dev.mcp.type.title')}
-          name={['customParams', 'mcp', 'type']}
-          rules={[{ required: true }]}
-        >
-          <MCPTypeSelect />
         </Form.Item>
 
         {mcpType === 'http' && (
