@@ -21,21 +21,16 @@ module.exports = async ({ github, context, releaseUrl, version, tag }) => {
       // Organize assets by platform
       const macAssets = release.data.assets.filter(
         (asset) =>
-          ((asset.name.includes('.dmg') || asset.name.includes('.zip')) &&
-            !asset.name.includes('.blockmap')) ||
-          (asset.name.includes('latest-mac') && asset.name.endsWith('.yml')),
+          (asset.name.includes('.dmg') || asset.name.includes('.zip')) &&
+          !asset.name.includes('.blockmap'),
       );
 
       const winAssets = release.data.assets.filter(
-        (asset) =>
-          (asset.name.includes('.exe') && !asset.name.includes('.blockmap')) ||
-          (asset.name.includes('latest-win') && asset.name.endsWith('.yml')),
+        (asset) => asset.name.includes('.exe') && !asset.name.includes('.blockmap'),
       );
 
       const linuxAssets = release.data.assets.filter(
-        (asset) =>
-          (asset.name.includes('.AppImage') && !asset.name.includes('.blockmap')) ||
-          (asset.name.includes('latest-linux') && asset.name.endsWith('.yml')),
+        (asset) => asset.name.includes('.AppImage') && !asset.name.includes('.blockmap'),
       );
 
       // Generate combined download table
