@@ -72,7 +72,7 @@
         "label": "Тип на MCP плъгин"
       },
       "url": {
-        "desc": "Въведете адреса на вашия MCP HTTP плъгин Endpoint",
+        "desc": "Въведете адреса на вашия MCP сървър Streamable HTTP, който не завършва с /sse",
         "label": "HTTP Endpoint URL"
       }
     },

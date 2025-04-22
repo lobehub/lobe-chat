@@ -72,7 +72,7 @@
         "label": "MCP 插件類型"
       },
       "url": {
-        "desc": "輸入你的 MCP HTTP 插件的 Endpoint 地址",
+        "desc": "輸入你的 MCP Server Streamable HTTP 地址，結尾不會有 /sse",
         "label": "HTTP Endpoint URL"
       }
     },

@@ -72,7 +72,7 @@
         "label": "Тип MCP плагина"
       },
       "url": {
-        "desc": "Введите адрес Endpoint вашего MCP HTTP плагина",
+        "desc": "Введите адрес вашего MCP Server Streamable HTTP, который не заканчивается на /sse",
         "label": "URL-адрес HTTP Endpoint"
       }
     },

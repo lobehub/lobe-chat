@@ -72,7 +72,7 @@
         "label": "MCP Plugin Type"
       },
       "url": {
-        "desc": "Enter the Endpoint address of your MCP HTTP plugin",
+        "desc": "Enter your MCP Server Streamable HTTP address, which should not end with /sse",
         "label": "HTTP Endpoint URL"
       }
     },

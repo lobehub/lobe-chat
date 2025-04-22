@@ -72,8 +72,8 @@
         "label": "MCP 插件类型"
       },
       "url": {
-        "desc": "输入你的 MCP HTTP 插件的 Endpoint 地址",
-        "label": "HTTP Endpoint URL"
+        "desc": "输入你的 MCP Server Streamable HTTP 地址，不会以 /sse 结尾",
+        "label": "Streamable HTTP Endpoint URL"
       }
     },
     "meta": {

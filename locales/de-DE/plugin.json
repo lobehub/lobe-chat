@@ -72,7 +72,7 @@
         "label": "MCP-Plugin-Typ"
       },
       "url": {
-        "desc": "Geben Sie die Endpoint-Adresse Ihres MCP HTTP-Plugins ein",
+        "desc": "Geben Sie Ihre MCP-Server-Streamable-HTTP-Adresse ein, die nicht mit /sse endet",
         "label": "HTTP Endpoint-URL"
       }
     },

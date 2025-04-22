@@ -72,7 +72,7 @@
         "label": "MCP 플러그인 유형"
       },
       "url": {
-        "desc": "당신의 MCP HTTP 플러그인의 엔드포인트 주소를 입력하세요",
+        "desc": "MCP 서버의 스트리밍 HTTP 주소를 입력하세요. /sse로 끝나지 않습니다.",
         "label": "HTTP 엔드포인트 URL"
       }
     },

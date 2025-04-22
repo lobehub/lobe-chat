@@ -72,7 +72,7 @@
         "label": "Typ wtyczki MCP"
       },
       "url": {
-        "desc": "Wprowadź adres punktu końcowego swojej wtyczki MCP HTTP",
+        "desc": "Wprowadź adres HTTP swojego serwera MCP Streamable, który nie kończy się na /sse",
         "label": "URL punktu końcowego HTTP"
       }
     },

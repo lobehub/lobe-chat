@@ -72,7 +72,7 @@
         "label": "MCP Eklenti Türü"
       },
       "url": {
-        "desc": "MCP HTTP eklentinizin Endpoint adresini girin",
+        "desc": "MCP Sunucu Akış HTTP adresinizi girin, /sse ile bitmemelidir",
         "label": "HTTP Endpoint URL"
       }
     },

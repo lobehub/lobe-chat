@@ -72,7 +72,7 @@
         "label": "Tipo de complemento MCP"
       },
       "url": {
-        "desc": "Ingresa la dirección del Endpoint de tu complemento HTTP MCP",
+        "desc": "Introduce la dirección HTTP transmitible de tu servidor MCP, que no debe terminar con /sse",
         "label": "URL del Endpoint HTTP"
       }
     },
