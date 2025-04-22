@@ -58,6 +58,15 @@ Dockerfile*
 *.jpg
 *.svg
 
+# use remark formatter
+*.mdx
+*.md
+
 # misc
 # add other ignore file below
 .next
+
+# auto generated files
+src/database/migrations/meta
+
+**/fixtures/**
