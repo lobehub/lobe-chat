@@ -27,7 +27,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
   const HTTP_URL_KEY = ['customParams', 'mcp', 'url'];
   return (
     <Form form={form} layout={'vertical'}>
-      <Flexbox gap={16}>
+      <Flexbox>
         <Form.Item
           extra={t('dev.mcp.identifier.desc')}
           label={t('dev.mcp.identifier.label')}
