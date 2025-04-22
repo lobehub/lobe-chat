@@ -109,8 +109,12 @@ export const remoteSyncSlice: StateCreator<
       },
       {
         onSuccess: (data) => {
+          console.log('remote server config:', data);
           set({ isInitRemoteServerConfig: true, remoteServerConfig: data });
-          get().refreshUserData();
+
+          if (data.active) {
+            get().refreshUserData();
+          }
         },
       },
     ),
