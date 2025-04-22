@@ -34,6 +34,13 @@ config.overrides = [
       'mdx/code-blocks': false,
     },
   },
+  {
+    files: ['scripts/**/*'],
+    rules: {
+      'unicorn/no-process-exit': 0,
+      'unicorn/prefer-top-level-await': 0,
+    },
+  },
 ];
 
 module.exports = config;

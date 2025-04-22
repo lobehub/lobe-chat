@@ -9,8 +9,7 @@ const PROXYCHAINS_CONF_PATH = '/etc/proxychains4.conf';
 
 // Function to check if a string is a valid IP address
 const isValidIP = (ip, version = 4) => {
-  const ipv4Regex =
-    /^(25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3}$/;
+  const ipv4Regex = /^(25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3}$/;
   const ipv6Regex =
     /^(([\da-f]{1,4}:){7}[\da-f]{1,4}|([\da-f]{1,4}:){1,7}:|([\da-f]{1,4}:){1,6}:[\da-f]{1,4}|([\da-f]{1,4}:){1,5}(:[\da-f]{1,4}){1,2}|([\da-f]{1,4}:){1,4}(:[\da-f]{1,4}){1,3}|([\da-f]{1,4}:){1,3}(:[\da-f]{1,4}){1,4}|([\da-f]{1,4}:){1,2}(:[\da-f]{1,4}){1,5}|[\da-f]{1,4}:((:[\da-f]{1,4}){1,6})|:((:[\da-f]{1,4}){1,7}|:)|fe80:(:[\da-f]{0,4}){0,4}%[\da-z]+|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}\d){0,1}\d)\.){3}(25[0-5]|(2[0-4]|1{0,1}\d){0,1}\d)|([\da-f]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}\d){0,1}\d)\.){3}(25[0-5]|(2[0-4]|1{0,1}\d){0,1}\d))$/;
 
@@ -74,10 +73,13 @@ const runProxyChainsConfGenerator = async (url) => {
 
   let ip = isValidIP(host, 4) ? host : await resolveHostIP(host, 4);
 
-  const proxyDNSConfig = process.env.ENABLE_PROXY_DNS === '1' ? `
+  const proxyDNSConfig =
+    process.env.ENABLE_PROXY_DNS === '1'
+      ? `
 proxy_dns
 remote_dns_subnet 224
-`.trim() : '';
+`.trim()
+      : '';
 
   const configContent = `
 localnet 127.0.0.0/8
@@ -91,7 +93,9 @@ tcp_connect_time_out 8000
 tcp_read_time_out 15000
 [ProxyList]
 ${protocol} ${ip} ${port} ${user} ${pass}
-`.replace(/\n{2,}/g, '\n').trim();
+`
+    .replaceAll(/\n{2,}/g, '\n')
+    .trim();
 
   await fs.writeFile(PROXYCHAINS_CONF_PATH, configContent);
   console.log(`✅ ProxyChains: All outgoing traffic routed via ${url}.`);

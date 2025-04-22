@@ -13,9 +13,9 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
+import HistoryLimitTags from './HistoryLimitTags';
 import KnowledgeTag from './KnowledgeTag';
 import SearchTags from './SearchTags';
-import HistoryLimitTags from './HistoryLimitTags';
 
 const TitleTags = memo(() => {
   const [model, provider, hasKnowledge, isLoading] = useAgentStore((s) => [

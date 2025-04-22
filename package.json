@@ -61,7 +61,7 @@
     "lint:md": "remark . --silent --output",
     "lint:mdx": "npm run workflow:mdx && remark \"docs/**/*.mdx\" -r ./.remarkrc.mdx.js --silent --output && eslint \"docs/**/*.mdx\" --quiet --fix",
     "lint:style": "stylelint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
-    "lint:ts": "eslint \"{src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
+    "lint:ts": "eslint \"{scripts,src,tests}/**/*.{js,jsx,ts,tsx}\" --fix",
     "prepare": "husky",
     "prettier": "prettier -c --write .",
     "pull": "git pull",

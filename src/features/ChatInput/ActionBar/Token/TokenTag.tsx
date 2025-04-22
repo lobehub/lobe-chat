@@ -67,7 +67,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
 
   const chatsString = useMemo(() => {
     const chats = chatSelectors.mainAIChatsWithHistoryConfig(useChatStore.getState());
-    return chats.map(chat => chat.content).join('');
+    return chats.map((chat) => chat.content).join('');
   }, [messageString, historyCount, enableHistoryCount]);
 
   const chatsToken = useTokenCount(chatsString) + inputTokenCount;

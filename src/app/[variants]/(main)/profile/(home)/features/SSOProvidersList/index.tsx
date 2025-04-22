@@ -5,12 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { modal, notification } from '@/components/AntdStaticMethods';
+import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
-
-import AuthIcons from '@/components/NextAuth/AuthIcons';
 
 const { Item } = List;
 

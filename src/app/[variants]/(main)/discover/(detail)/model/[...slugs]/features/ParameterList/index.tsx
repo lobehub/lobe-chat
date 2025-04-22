@@ -5,9 +5,9 @@ import {
   ChartColumnBig,
   Delete,
   FileMinus,
-  Pickaxe,
   LucideIcon,
   MessageSquareText,
+  Pickaxe,
   Thermometer,
 } from 'lucide-react';
 import { memo } from 'react';

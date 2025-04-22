@@ -230,9 +230,7 @@
           "isCustom": false
         }
       ],
-      "grantTypes": [
-        "authorization_code"
-      ],
+      "grantTypes": ["authorization_code"],
       "organizationObj": null,
       "certPublicKey": "",
       "tags": [],
@@ -359,39 +357,12 @@
       "favicon": "https://cdn.casbin.org/img/casbin/favicon.ico",
       "passwordType": "plain",
       "passwordSalt": "",
-      "passwordOptions": [
-        "AtLeast6"
-      ],
-      "countryCodes": [
-        "US",
-        "ES",
-        "FR",
-        "DE",
-        "GB",
-        "CN",
-        "JP",
-        "KR",
-        "VN",
-        "ID",
-        "SG",
-        "IN"
-      ],
+      "passwordOptions": ["AtLeast6"],
+      "countryCodes": ["US", "ES", "FR", "DE", "GB", "CN", "JP", "KR", "VN", "ID", "SG", "IN"],
       "defaultAvatar": "https://cdn.casbin.org/img/casbin.svg",
       "defaultApplication": "",
       "tags": [],
-      "languages": [
-        "en",
-        "zh",
-        "es",
-        "fr",
-        "de",
-        "id",
-        "ja",
-        "ko",
-        "ru",
-        "vi",
-        "pt"
-      ],
+      "languages": ["en", "zh", "es", "fr", "de", "id", "ja", "ko", "ru", "vi", "pt"],
       "themeData": null,
       "masterPassword": "",
       "defaultPassword": "",
@@ -626,39 +597,12 @@
       "favicon": "https://lobehub.com/favicon.ico",
       "passwordType": "plain",
       "passwordSalt": "",
-      "passwordOptions": [
-        "AtLeast6"
-      ],
-      "countryCodes": [
-        "US",
-        "ES",
-        "FR",
-        "DE",
-        "GB",
-        "CN",
-        "JP",
-        "KR",
-        "VN",
-        "ID",
-        "SG",
-        "IN"
-      ],
+      "passwordOptions": ["AtLeast6"],
+      "countryCodes": ["US", "ES", "FR", "DE", "GB", "CN", "JP", "KR", "VN", "ID", "SG", "IN"],
       "defaultAvatar": "https://cdn.casbin.org/img/casbin.svg",
       "defaultApplication": "",
       "tags": [],
-      "languages": [
-        "en",
-        "zh",
-        "es",
-        "fr",
-        "de",
-        "id",
-        "ja",
-        "ko",
-        "ru",
-        "vi",
-        "pt"
-      ],
+      "languages": ["en", "zh", "es", "fr", "de", "id", "ja", "ko", "ru", "vi", "pt"],
       "themeData": null,
       "masterPassword": "",
       "defaultPassword": "",
@@ -891,23 +835,15 @@
       "createdTime": "2024-09-09T09:26:04Z",
       "displayName": "Built-in Permission",
       "description": "Built-in Permission",
-      "users": [
-        "built-in/*"
-      ],
+      "users": ["built-in/*"],
       "groups": [],
       "roles": [],
       "domains": [],
       "model": "user-model-built-in",
       "adapter": "",
       "resourceType": "Application",
-      "resources": [
-        "app-built-in"
-      ],
-      "actions": [
-        "Read",
-        "Write",
-        "Admin"
-      ],
+      "resources": ["app-built-in"],
+      "actions": ["Read", "Write", "Admin"],
       "effect": "Allow",
       "isEnabled": true,
       "submitter": "admin",

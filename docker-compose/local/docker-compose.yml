@@ -58,7 +58,8 @@ services:
         wait \$MINIO_PID
       "
 
-# version lock ref: https://github.com/lobehub/lobe-chat/pull/7331
+
+  # version lock ref: https://github.com/lobehub/lobe-chat/pull/7331
   casdoor:
     image: casbin/casdoor:v1.843.0
     container_name: lobe-casdoor
@@ -161,6 +162,7 @@ services:
         fi
         wait \$LOBE_PID
       "
+
 
 volumes:
   data:
