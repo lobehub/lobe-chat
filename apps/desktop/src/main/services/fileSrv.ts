@@ -1,18 +1,15 @@
 import { DeleteFilesResponse } from '@lobechat/electron-server-ipc';
 import * as fs from 'node:fs';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
 
-import { userDataDir } from '@/const/dir';
+import { FILE_STORAGE_DIR } from '@/const/dir';
+import { makeSureDirExist } from '@/utils/file-system';
 
 import { ServiceModule } from './index';
 
-const FILE_STORAGE_DIR = join(userDataDir, 'file-storage');
-const UPLOADS_DIR = join(FILE_STORAGE_DIR, 'uploads');
-
 const readFilePromise = promisify(fs.readFile);
-const statPromise = promisify(fs.stat);
 const unlinkPromise = promisify(fs.unlink);
 
 interface UploadFileParams {
@@ -31,6 +28,17 @@ interface FileMetadata {
 }
 
 export default class FileService extends ServiceModule {
+  get UPLOADS_DIR() {
+    return join(this.app.appStoragePath, FILE_STORAGE_DIR, 'uploads');
+  }
+
+  constructor(app) {
+    super(app);
+
+    // 初始化文件存储目录
+    makeSureDirExist(this.UPLOADS_DIR);
+  }
+
   /**
    * 上传文件到本地存储
    */
@@ -40,12 +48,11 @@ export default class FileService extends ServiceModule {
     hash,
     type,
   }: UploadFileParams): Promise<{ metadata: FileMetadata; success: boolean }> {
-    await this.ensureStorageDir();
     try {
       // 创建时间戳目录
       const date = (Date.now() / 1000 / 60 / 60).toFixed(0);
-      const dirname = join(UPLOADS_DIR, date);
-      await this.ensureDir(dirname);
+      const dirname = join(this.UPLOADS_DIR, date);
+      makeSureDirExist(dirname);
 
       // 生成文件保存路径
       const fileExt = filename.split('.').pop() || '';
@@ -101,7 +108,7 @@ export default class FileService extends ServiceModule {
 
       // 解析路径
       const relativePath = normalizedPath.replace('desktop://', '');
-      const filePath = join(UPLOADS_DIR, relativePath);
+      const filePath = join(this.UPLOADS_DIR, relativePath);
 
       console.log('Reading file from:', filePath);
 
@@ -165,7 +172,6 @@ export default class FileService extends ServiceModule {
    * 删除文件
    */
   async deleteFile(path: string): Promise<{ success: boolean }> {
-    await this.ensureStorageDir();
     try {
       // 处理desktop://路径
       if (!path.startsWith('desktop://')) {
@@ -174,7 +180,7 @@ export default class FileService extends ServiceModule {
 
       // 解析路径
       const relativePath = path.replace('desktop://', '');
-      const filePath = join(UPLOADS_DIR, relativePath);
+      const filePath = join(this.UPLOADS_DIR, relativePath);
 
       // 删除文件及其元数据
       await unlinkPromise(filePath);
@@ -197,8 +203,6 @@ export default class FileService extends ServiceModule {
    * 批量删除文件
    */
   async deleteFiles(paths: string[]): Promise<DeleteFilesResponse> {
-    await this.ensureStorageDir();
-
     const errors: { message: string; path: string }[] = [];
 
     // 并行处理所有删除请求
@@ -246,21 +250,6 @@ export default class FileService extends ServiceModule {
 
     // 解析路径
     const relativePath = path.replace('desktop://', '');
-    return join(UPLOADS_DIR, relativePath);
+    return join(this.UPLOADS_DIR, relativePath);
   }
-
-  private ensureStorageDir = async () => {
-    // 初始化文件存储目录
-    await this.ensureDir(FILE_STORAGE_DIR);
-    await this.ensureDir(UPLOADS_DIR);
-  };
-
-  // 确保文件目录存在
-  private ensureDir = async (dir: string) => {
-    try {
-      await statPromise(dir);
-    } catch {
-      await mkdir(dir, { recursive: true });
-    }
-  };
 }

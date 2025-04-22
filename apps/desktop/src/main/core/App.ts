@@ -42,6 +42,16 @@ export class App {
    */
   isQuiting: boolean = false;
 
+  get appStoragePath() {
+    const storagePath = this.storeManager.get('storagePath');
+
+    if (!storagePath) {
+      throw new Error('Storage path not found in store');
+    }
+
+    return storagePath;
+  }
+
   constructor() {
     logger.info('----------------------------------------------');
     logger.info('Starting LobeHub...');

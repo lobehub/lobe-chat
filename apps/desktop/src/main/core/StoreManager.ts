@@ -2,6 +2,7 @@ import Store from 'electron-store';
 
 import { STORE_DEFAULTS, STORE_NAME } from '@/const/store';
 import { ElectronMainStore, StoreKey } from '@/types/store';
+import { makeSureDirExist } from '@/utils/file-system';
 import { createLogger } from '@/utils/logger';
 
 import { App } from './App';
@@ -27,6 +28,11 @@ export class StoreManager {
       name: STORE_NAME,
     });
     logger.info('StoreManager initialized with store name:', STORE_NAME);
+
+    const storagePath = this.store.get('storagePath');
+    logger.info('app storage path:', storagePath);
+
+    makeSureDirExist(storagePath);
   }
 
   /**

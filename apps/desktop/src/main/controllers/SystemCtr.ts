@@ -2,14 +2,12 @@ import { ElectronAppState } from '@lobechat/electron-client-ipc';
 import { app, systemPreferences } from 'electron';
 import { macOS } from 'electron-is';
 import { readFileSync, writeFileSync } from 'node:fs';
-import path from 'node:path';
+import { join } from 'node:path';
 import process from 'node:process';
 
-import { userDataDir } from '@/const/dir';
+import { DB_SCHEMA_HASH_FILENAME, LOCAL_DATABASE_DIR, userDataDir } from '@/const/dir';
 
 import { ControllerModule, ipcClientEvent, ipcServerEvent } from './index';
-
-const DB_SCHEMA_HASH_PATH = path.join(userDataDir, 'lobehub-local-db-schema-hash');
 
 export default class SystemController extends ControllerModule {
   /**
@@ -67,13 +65,13 @@ export default class SystemController extends ControllerModule {
 
   @ipcServerEvent('getDatabasePath')
   async getDatabasePath() {
-    return path.join(userDataDir, 'lobehub-local-db');
+    return join(this.app.appStoragePath, LOCAL_DATABASE_DIR);
   }
 
   @ipcServerEvent('getDatabaseSchemaHash')
   async getDatabaseSchemaHash() {
     try {
-      return readFileSync(DB_SCHEMA_HASH_PATH, 'utf8');
+      return readFileSync(this.DB_SCHEMA_HASH_PATH, 'utf8');
     } catch {
       return undefined;
     }
@@ -86,6 +84,10 @@ export default class SystemController extends ControllerModule {
 
   @ipcServerEvent('setDatabaseSchemaHash')
   async setDatabaseSchemaHash(hash: string) {
-    writeFileSync(DB_SCHEMA_HASH_PATH, hash, 'utf8');
+    writeFileSync(this.DB_SCHEMA_HASH_PATH, hash, 'utf8');
+  }
+
+  private get DB_SCHEMA_HASH_PATH() {
+    return join(this.app.appStoragePath, DB_SCHEMA_HASH_FILENAME);
   }
 }

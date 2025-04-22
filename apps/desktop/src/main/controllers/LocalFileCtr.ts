@@ -19,6 +19,7 @@ import { promisify } from 'node:util';
 
 import FileSearchService from '@/services/fileSearchSrv';
 import { FileResult, SearchOptions } from '@/types/fileSearch';
+import { makeSureDirExist } from '@/utils/file-system';
 
 import { ControllerModule, ipcClientEvent } from './index';
 
@@ -257,15 +258,7 @@ export default class LocalFileCtr extends ControllerModule {
 
         // LBYL: 确保目标目录存在
         const targetDir = path.dirname(newPath);
-        try {
-          // 使用 recursive: true，如果目录已存在则此操作无效果，如果不存在则创建
-          await fs.promises.mkdir(targetDir, { recursive: true });
-        } catch (mkdirError: any) {
-          // 如果创建目录失败（例如权限问题），则抛出错误
-          throw new Error(
-            `Could not create target directory: ${targetDir}. Error: ${mkdirError.message}`,
-          );
-        }
+        makeSureDirExist(targetDir);
 
         // 执行移动 (rename)
         await renamePromiseFs(sourcePath, newPath);
