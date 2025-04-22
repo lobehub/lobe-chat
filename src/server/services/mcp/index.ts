@@ -1,8 +1,9 @@
-import { LobeChatPluginApi, PluginSchema } from '@lobehub/chat-plugin-sdk';
+import { LobeChatPluginApi, LobeChatPluginManifest, PluginSchema } from '@lobehub/chat-plugin-sdk';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
-import { MCPClient, MCPClientParams } from '@/server/modules/MCPClient';
+import { MCPClient, MCPClientParams } from '@/libs/mcp';
+import { safeParseJSON } from '@/utils/safeParseJSON';
 
 const log = debug('lobe-mcp:service');
 
@@ -44,14 +45,20 @@ class MCPService {
   }
 
   // callTool now accepts MCPClientParams, toolName, and args
-  async callTool(params: MCPClientParams, toolName: string, args: any): Promise<any> {
+  async callTool(params: MCPClientParams, toolName: string, argsStr: any): Promise<any> {
     const client = await this.getClient(params); // Get client using params
+
+    const args = safeParseJSON(argsStr);
+
     log(`Calling tool "${toolName}" using client for params: %O with args: %O`, params, args);
 
     try {
       // Delegate the call to the MCPClient instance
       const result = await client.callTool(toolName, args); // Pass args directly
       log(`Tool "${toolName}" called successfully for params: %O, result: %O`, params, result);
+      const { content, isError } = result;
+      if (!isError) return content;
+
       return result;
     } catch (error) {
       console.error(`Error calling tool "${toolName}" for params %O:`, params, error);
@@ -124,6 +131,25 @@ class MCPService {
     }
 
     return JSON.stringify(sortedParams);
+  }
+
+  async getStreamableMcpServerManifest(
+    identifier: string,
+    url: string,
+  ): Promise<LobeChatPluginManifest> {
+    const tools = await this.listTools({ name: identifier, type: 'http', url }); // Get client using params
+
+    return {
+      api: tools,
+      identifier,
+      meta: {
+        avatar: 'MCP_AVATAR',
+        description: `${identifier} MCP server has ${tools.length} tools, like "${tools[0]?.name}"`,
+        title: identifier,
+      },
+      // TODO: temporary
+      type: 'mcp' as any,
+    };
   }
 }
 

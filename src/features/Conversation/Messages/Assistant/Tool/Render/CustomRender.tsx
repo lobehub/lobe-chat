@@ -75,7 +75,7 @@ const CustomRender = memo<CustomRenderProps>(
     useEffect(() => {
       if (!plugin?.type || loading) return;
 
-      setShowPluginRender(plugin?.type !== 'default');
+      setShowPluginRender(!['default', 'mcp'].includes(plugin?.type));
     }, [plugin?.type, loading]);
 
     if (loading) return <Arguments arguments={requestArgs} shine />;

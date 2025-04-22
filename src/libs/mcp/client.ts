@@ -4,24 +4,9 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.d.ts';
 import debug from 'debug';
 
-import { McpTool } from './types';
+import { MCPClientParams, McpTool } from './types';
 
 const log = debug('lobe-mcp:client');
-
-interface HttpMCPClientParams {
-  name: string;
-  type: 'http';
-  url: string;
-}
-
-interface StdioMCPParams {
-  args: string[];
-  command: string;
-  name: string;
-  type: 'stdio';
-}
-
-export type MCPClientParams = HttpMCPClientParams | StdioMCPParams;
 
 export class MCPClient {
   private mcp: Client;
