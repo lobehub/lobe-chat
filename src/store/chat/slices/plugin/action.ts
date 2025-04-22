@@ -41,6 +41,7 @@ export interface ChatPluginAction {
   invokeBuiltinTool: (id: string, payload: ChatToolPayload) => Promise<void>;
   invokeDefaultTypePlugin: (id: string, payload: any) => Promise<string | undefined>;
   invokeMarkdownTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
+  invokeMCPTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
 
   invokeStandaloneTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
 
@@ -438,11 +439,16 @@ export const chatPlugin: StateCreator<
         return await get().invokeBuiltinTool(id, payload);
       }
 
+      case 'mcp': {
+        return await get().invokeMCPTypePlugin(id, payload);
+      }
+
       default: {
         return await get().invokeDefaultTypePlugin(id, payload);
       }
     }
   },
+  invokeMCPTypePlugin: async (id, payload) => {},
 
   internal_togglePluginApiCalling: (loading, id, action) => {
     return get().internal_toggleLoadingArrays('pluginApiLoadingIds', loading, id, action);

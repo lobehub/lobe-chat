@@ -4,54 +4,49 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.d.ts';
 import debug from 'debug';
 
+import { McpTool } from './types';
+
 const log = debug('lobe-mcp:client');
 
-interface MCPConnectionBase {
-  id: string;
+interface HttpMCPClientParams {
   name: string;
-  type: 'http' | 'stdio';
-}
-
-interface HttpMCPConnection extends MCPConnectionBase {
   type: 'http';
   url: string;
 }
 
-interface StdioMCPConnection extends MCPConnectionBase {
+interface StdioMCPParams {
   args: string[];
   command: string;
+  name: string;
   type: 'stdio';
 }
-type MCPConnection = HttpMCPConnection | StdioMCPConnection;
+
+export type MCPClientParams = HttpMCPClientParams | StdioMCPParams;
 
 export class MCPClient {
   private mcp: Client;
   private transport: Transport;
 
-  constructor(connection: MCPConnection) {
-    log('Creating MCPClient with connection: %O', connection);
+  constructor(params: MCPClientParams) {
+    log('Creating MCPClient with connection: %O', params);
     this.mcp = new Client({ name: 'lobehub-mcp-client', version: '1.0.0' });
 
-    switch (connection.type) {
+    switch (params.type) {
       case 'http': {
-        log('Using HTTP transport with url: %s', connection.url);
-        this.transport = new StreamableHTTPClientTransport(new URL(connection.url));
+        log('Using HTTP transport with url: %s', params.url);
+        this.transport = new StreamableHTTPClientTransport(new URL(params.url));
         break;
       }
       case 'stdio': {
-        log(
-          'Using Stdio transport with command: %s and args: %O',
-          connection.command,
-          connection.args,
-        );
+        log('Using Stdio transport with command: %s and args: %O', params.command, params.args);
         this.transport = new StdioClientTransport({
-          args: connection.args,
-          command: connection.command,
+          args: params.args,
+          command: params.command,
         });
         break;
       }
       default: {
-        const err = new Error(`Unsupported MCP connection type: ${(connection as any).type}`);
+        const err = new Error(`Unsupported MCP connection type: ${(params as any).type}`);
         log('Error creating client: %O', err);
         throw err;
       }
@@ -64,11 +59,27 @@ export class MCPClient {
     log('MCP connection initialized.');
   }
 
+  async disconnect() {
+    log('Disconnecting MCP connection...');
+    // Assuming the mcp client has a disconnect method
+    if (this.mcp && typeof (this.mcp as any).disconnect === 'function') {
+      await (this.mcp as any).disconnect();
+      log('MCP connection disconnected.');
+    } else {
+      log('MCP client does not have a disconnect method or is not initialized.');
+      // Depending on the transport, we might need specific cleanup
+      if (this.transport && typeof (this.transport as any).close === 'function') {
+        (this.transport as any).close();
+        log('Transport closed.');
+      }
+    }
+  }
+
   async listTools() {
     log('Listing tools...');
-    const tools = await this.mcp.listTools();
+    const { tools } = await this.mcp.listTools();
     log('Listed tools: %O', tools);
-    return tools;
+    return tools as McpTool[];
   }
 
   async callTool(toolName: string, args: any) {
