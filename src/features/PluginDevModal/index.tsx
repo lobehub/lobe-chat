@@ -64,7 +64,9 @@ const DevModal = memo<DevModalProps>(
               {t('delete', { ns: 'common' })}
             </Button>
           </Popconfirm>
-        ) : null}
+        ) : (
+          <div />
+        )}
         <Flexbox gap={12} horizontal>
           <Button
             onClick={() => {
