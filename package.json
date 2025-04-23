@@ -147,7 +147,6 @@
     "@lobehub/icons": "^1.95.0",
     "@lobehub/tts": "^1.28.3",
     "@lobehub/ui": "^1.171.0",
-    "@microsoft/clarity": "^1.0.0",
     "@modelcontextprotocol/sdk": "^1.10.1",
     "@neondatabase/serverless": "^1.0.0",
     "@next/third-parties": "^15.3.0",
