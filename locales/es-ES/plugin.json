@@ -7,6 +7,7 @@
     "payload": "carga del complemento",
     "pluginState": "Estado del plugin",
     "response": "Respuesta",
+    "title": "Detalles del complemento",
     "tool_call": "solicitud de llamada de herramienta"
   },
   "detailModal": {
@@ -50,12 +51,13 @@
         "desc": "Lista de parámetros a pasar al comando STDIO",
         "label": "Parámetros del comando",
         "placeholder": "Por ejemplo: --port 8080 --debug",
-        "tooltip": "Presiona enter o usa comas/espacios para separar los parámetros después de ingresarlos"
+        "required": "Por favor, introduce los parámetros de inicio"
       },
       "command": {
         "desc": "Archivo ejecutable o script para iniciar el complemento MCP STDIO",
         "label": "Comando",
-        "placeholder": "Por ejemplo: python main.py o /ruta/al/ejecutable"
+        "placeholder": "Por ejemplo: python main.py o /ruta/al/ejecutable",
+        "required": "Por favor, introduce el comando de inicio"
       },
       "endpoint": {
         "desc": "Ingresa la dirección de tu servidor HTTP Streamable MCP",
@@ -65,15 +67,29 @@
         "desc": "Especifica un nombre para tu complemento MCP, debe usar caracteres en inglés",
         "invalid": "Solo se pueden ingresar caracteres en inglés, números, y los símbolos - y _",
         "label": "Nombre del complemento MCP",
-        "placeholder": "Por ejemplo: my-mcp-plugin"
+        "placeholder": "Por ejemplo: my-mcp-plugin",
+        "required": "Por favor, introduce el identificador del servicio MCP"
       },
+      "previewManifest": "Previsualizar el archivo de descripción del complemento",
+      "testConnection": "Probar conexión",
+      "testConnectionTip": "El complemento MCP solo se puede utilizar correctamente después de que la prueba de conexión sea exitosa",
       "type": {
         "desc": "Selecciona el método de comunicación del complemento MCP, la versión web solo admite HTTP Streamable",
-        "label": "Tipo de complemento MCP"
+        "httpFeature1": "Compatible con la versión web y de escritorio",
+        "httpFeature2": "Conéctese al servidor MCP remoto sin necesidad de instalación adicional",
+        "httpShortDesc": "Protocolo de comunicación basado en HTTP por streaming",
+        "label": "Tipo de complemento MCP",
+        "stdioFeature1": "Menor latencia de comunicación, adecuado para ejecución local",
+        "stdioFeature2": "Se requiere instalar y ejecutar el servidor MCP localmente",
+        "stdioNotAvailable": "El modo STDIO solo está disponible en la versión de escritorio",
+        "stdioShortDesc": "Protocolo de comunicación basado en entrada y salida estándar",
+        "title": "Tipo de complemento MCP"
       },
       "url": {
         "desc": "Introduce la dirección HTTP transmitible de tu servidor MCP, que no debe terminar con /sse",
-        "label": "URL del Endpoint HTTP"
+        "invalid": "Por favor, introduce una URL válida",
+        "label": "URL del Endpoint HTTP",
+        "required": "Por favor, introduce la URL del servicio MCP"
       }
     },
     "meta": {
@@ -101,12 +117,14 @@
         "label": "Identificador",
         "pattenErrorMessage": "Solo se pueden ingresar caracteres alfanuméricos, - y _"
       },
+      "lobe": "Complemento de {{appName}}",
       "manifest": {
         "desc": "{{appName}} se instalará el complemento a través de este enlace.",
         "label": "URL del archivo de descripción del complemento (Manifest)",
         "preview": "Vista previa del Manifest",
         "refresh": "Actualizar"
       },
+      "openai": "Complemento de OpenAI",
       "title": {
         "desc": "Título del complemento",
         "label": "Título",
@@ -148,6 +166,7 @@
     "noManifest": "No se encontró el archivo de descripción",
     "openAPIInvalid": "Error al analizar OpenAPI. Error: \n\n {{error}}",
     "reinstallError": "Error al volver a instalar el complemento {{name}}.",
+    "testConnectionFailed": "Error al obtener el Manifest: {{error}}",
     "urlError": "El enlace no devuelve contenido en formato JSON. Asegúrese de que sea un enlace válido."
   },
   "inspector": {
@@ -226,5 +245,6 @@
     },
     "title": "Tienda de complementos"
   },
+  "unknownError": "Error desconocido",
   "unknownPlugin": "Plugin desconocido"
 }

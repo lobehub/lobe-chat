@@ -7,6 +7,7 @@
     "payload": "插件載荷",
     "pluginState": "插件狀態",
     "response": "回應",
+    "title": "插件詳情",
     "tool_call": "工具呼叫"
   },
   "detailModal": {
@@ -50,12 +51,13 @@
         "desc": "傳遞給 STDIO 命令的參數列表",
         "label": "命令參數",
         "placeholder": "例如：--port 8080 --debug",
-        "tooltip": "輸入參數後按回車或使用逗號/空格分隔"
+        "required": "請輸入啟動參數"
       },
       "command": {
         "desc": "用於啟動 MCP STDIO 插件的可執行文件或腳本",
         "label": "命令",
-        "placeholder": "例如：python main.py 或 /path/to/executable"
+        "placeholder": "例如：python main.py 或 /path/to/executable",
+        "required": "請輸入啟動命令"
       },
       "endpoint": {
         "desc": "輸入你的 MCP Streamable HTTP Server 的地址",
@@ -65,15 +67,29 @@
         "desc": "為你的 MCP 插件指定一個名稱，需要使用英文字符",
         "invalid": "只能輸入英文字符、數字、- 和_ 這兩個符號",
         "label": "MCP 插件名稱",
-        "placeholder": "例如：my-mcp-plugin"
+        "placeholder": "例如：my-mcp-plugin",
+        "required": "請輸入 MCP 服務標識符"
       },
+      "previewManifest": "預覽插件描述文件",
+      "testConnection": "測試連接",
+      "testConnectionTip": "測試連接成功後 MCP 插件才可以被正常使用",
       "type": {
         "desc": "選擇 MCP 插件的通信方式，網頁版只支持 Streamable HTTP",
-        "label": "MCP 插件類型"
+        "httpFeature1": "兼容網頁版與桌面端",
+        "httpFeature2": "連接遠端 MCP 伺服器, 無需額外安裝配置",
+        "httpShortDesc": "基於串流 HTTP 的通訊協議",
+        "label": "MCP 插件類型",
+        "stdioFeature1": "更低的通訊延遲, 適合本地執行",
+        "stdioFeature2": "需在本地安裝運行 MCP 伺服器",
+        "stdioNotAvailable": "STDIO 模式僅在桌面版可用",
+        "stdioShortDesc": "基於標準輸入輸出的通訊協議",
+        "title": "MCP 插件類型"
       },
       "url": {
         "desc": "輸入你的 MCP Server Streamable HTTP 地址，結尾不會有 /sse",
-        "label": "HTTP Endpoint URL"
+        "invalid": "請輸入有效的 URL 地址",
+        "label": "HTTP Endpoint URL",
+        "required": "請輸入 MCP 服務 URL"
       }
     },
     "meta": {
@@ -101,12 +117,14 @@
         "label": "識別碼",
         "pattenErrorMessage": "只允許英數字元、連字號 -，以及底線 _"
       },
+      "lobe": "{{appName}} 插件",
       "manifest": {
         "desc": "{{appName}}將會透過該連結安裝插件",
         "label": "插件描述檔 (Manifest) URL",
         "preview": "預覽 Manifest",
         "refresh": "重新載入"
       },
+      "openai": "OpenAI 插件",
       "title": {
         "desc": "外掛的名稱",
         "label": "名稱",
@@ -148,6 +166,7 @@
     "noManifest": "描述檔不存在",
     "openAPIInvalid": "OpenAPI 解析失敗，錯誤: \n\n {{error}}",
     "reinstallError": "插件 {{name}} 刷新失敗",
+    "testConnectionFailed": "獲取 Manifest 失敗: {{error}}",
     "urlError": "該連結沒有返回 JSON 格式的內容, 請確保是有效的連結"
   },
   "inspector": {
@@ -226,5 +245,6 @@
     },
     "title": "插件商店"
   },
+  "unknownError": "未知錯誤",
   "unknownPlugin": "未知插件"
 }
