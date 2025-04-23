@@ -190,13 +190,11 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
               ? {}
               : {
                   message: t('dev.meta.identifier.errorDuplicate'),
-                  validator: async (_, value) => {
-                    if (
-                      value &&
-                      pluginIds.includes(value) && // If paste error for duplicate is already showing, let it be.
-                      pasteError !== t('dev.meta.identifier.errorDuplicate')
-                    ) {
-                      throw new Error(t('dev.meta.identifier.errorDuplicate'));
+                  validator: async () => {
+                    const id = form.getFieldValue('identifier');
+                    if (!id) return true;
+                    if (pluginIds.includes(id)) {
+                      throw new Error('Duplicate');
                     }
                   },
                 },
