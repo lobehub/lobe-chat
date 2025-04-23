@@ -35,6 +35,12 @@ const checkStdioEnvironment = (params: z.infer<typeof mcpClientParamsSchema>) =>
 const mcpProcedure = isServerMode ? authedProcedure : passwordProcedure;
 
 export const mcpRouter = router({
+  getStdioMcpServerManifest: mcpProcedure.input(stdioParamsSchema).query(async ({ input }) => {
+    // Stdio check can be done here or rely on the service/client layer
+    checkStdioEnvironment(input);
+
+    return await mcpService.getStdioMcpServerManifest(input.name, input.command, input.args);
+  }),
   getStreamableMcpServerManifest: mcpProcedure
     .input(
       z.object({

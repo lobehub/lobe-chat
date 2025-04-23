@@ -47,15 +47,10 @@
     },
     "mcp": {
       "args": {
-        "desc": "Liste der Parameter, die an den STDIO-Befehl übergeben werden",
-        "label": "Befehlsparameter",
-        "placeholder": "z.B.: --port 8080 --debug",
-        "tooltip": "Drücken Sie die Eingabetaste oder verwenden Sie Kommas/Leerzeichen zur Trennung der Eingabeparameter"
+        "label": "Befehlsparameter"
       },
       "command": {
-        "desc": "Die ausführbare Datei oder das Skript zum Starten des MCP STDIO-Plugins",
-        "label": "Befehl",
-        "placeholder": "z.B.: python main.py oder /path/to/executable"
+        "label": "Befehl"
       },
       "endpoint": {
         "desc": "Geben Sie die Adresse Ihres MCP Streamable HTTP Servers ein",
@@ -72,7 +67,7 @@
         "label": "MCP-Plugin-Typ"
       },
       "url": {
-        "desc": "Geben Sie die Endpoint-Adresse Ihres MCP HTTP-Plugins ein",
+        "desc": "Geben Sie Ihre MCP-Server-Streamable-HTTP-Adresse ein, die nicht mit /sse endet",
         "label": "HTTP Endpoint-URL"
       }
     },

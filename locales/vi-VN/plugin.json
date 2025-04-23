@@ -47,15 +47,10 @@
     },
     "mcp": {
       "args": {
-        "desc": "Danh sách các tham số được truyền cho lệnh STDIO",
-        "label": "Tham số lệnh",
-        "placeholder": "Ví dụ: --port 8080 --debug",
-        "tooltip": "Nhấn Enter sau khi nhập tham số hoặc sử dụng dấu phẩy/khoảng trắng để phân tách"
+        "label": "Tham số lệnh"
       },
       "command": {
-        "desc": "Tệp thực thi hoặc kịch bản để khởi động plugin MCP STDIO",
-        "label": "Lệnh",
-        "placeholder": "Ví dụ: python main.py hoặc /path/to/executable"
+        "label": "Lệnh"
       },
       "endpoint": {
         "desc": "Nhập địa chỉ của máy chủ HTTP Streamable MCP của bạn",
@@ -72,7 +67,7 @@
         "label": "Loại plugin MCP"
       },
       "url": {
-        "desc": "Nhập địa chỉ Điểm cuối HTTP của plugin MCP của bạn",
+        "desc": "Nhập địa chỉ HTTP Streamable của máy chủ MCP của bạn, không kết thúc bằng /sse",
         "label": "URL Điểm cuối HTTP"
       }
     },
