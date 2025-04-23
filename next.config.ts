@@ -1,4 +1,5 @@
 import analyzer from '@next/bundle-analyzer';
+import Clarity from '@microsoft/clarity';
 import { withSentryConfig } from '@sentry/nextjs';
 import withSerwistInit from '@serwist/next';
 import type { NextConfig } from 'next';
@@ -9,6 +10,13 @@ const buildWithDocker = process.env.DOCKER === 'true';
 const isDesktop = process.env.NEXT_PUBLIC_IS_DESKTOP_APP === '1';
 const enableReactScan = !!process.env.REACT_SCAN_MONITOR_API_KEY;
 const isUsePglite = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
+
+
+
+// add
+const projectId = "r87mqlbn7m"
+
+Clarity.init(projectId);
 
 // if you need to proxy the api endpoint to remote server
 
