@@ -1,12 +1,14 @@
 import { toolsClient } from '@/libs/trpc/client';
-import { getToolStoreState } from '@/store/tool';
-import { pluginSelectors } from '@/store/tool/slices/plugin/selectors';
 import { ChatToolPayload } from '@/types/message';
 
 class MCPService {
   async invokeMcpToolCall(payload: ChatToolPayload, { signal }: { signal?: AbortSignal }) {
+    const { pluginSelectors } = await import('@/store/tool/selectors');
+    const { getToolStoreState } = await import('@/store/tool/store');
+
     const s = getToolStoreState();
     const { identifier, arguments: args, apiName } = payload;
+
     const plugin = pluginSelectors.getCustomPluginById(identifier)(s);
 
     if (!plugin) return;
@@ -19,6 +21,15 @@ class MCPService {
 
   async getStreamableMcpServerManifest(identifier: string, url: string) {
     return toolsClient.mcp.getStreamableMcpServerManifest.query({ identifier, url });
+  }
+
+  async getStdioMcpServerManifest(identifier: string, command: string, args?: string[]) {
+    return toolsClient.mcp.getStdioMcpServerManifest.query({
+      args: args,
+      command,
+      name: identifier,
+      type: 'stdio',
+    });
   }
 }
 

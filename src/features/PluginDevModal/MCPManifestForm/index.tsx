@@ -1,22 +1,51 @@
+import {
+  SiBun,
+  SiDocker,
+  SiNodedotjs,
+  SiNpm,
+  SiPnpm,
+  SiPython,
+} from '@icons-pack/react-simple-icons';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { ActionIcon, FormItem } from '@lobehub/ui';
-import { Form, FormInstance, Input, Radio, Select } from 'antd';
+import { AutoComplete, Form, FormInstance, Input } from 'antd';
 import { FileCode, RotateCwIcon } from 'lucide-react';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
-import { isDesktop } from '@/const/version';
 import { mcpService } from '@/services/mcp';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { PluginInstallError } from '@/types/tool/plugin';
 
+import ArgsInput from './ArgsInput';
+import MCPTypeSelect from './MCPTypeSelect';
+
 interface MCPManifestFormProps {
   form: FormInstance;
   isEditMode?: boolean;
 }
+
+// 定义预设的命令选项
+const STDIO_COMMAND_OPTIONS: {
+  // 假设图标是 React 函数组件
+  color?: string;
+  icon?: FC<{ color?: string; size?: number }>;
+  value: string;
+}[] = [
+  { color: '#CB3837', icon: SiNpm, value: 'npx' },
+  { color: '#CB3837', icon: SiNpm, value: 'npm' },
+  { color: '#F69220', icon: SiPnpm, value: 'pnpm' },
+  { color: '#F69220', icon: SiPnpm, value: 'pnpx' },
+  { color: '#339933', icon: SiNodedotjs, value: 'node' },
+  { color: '#efe2d2', icon: SiBun, value: 'bun' },
+  { color: '#efe2d2', icon: SiBun, value: 'bunx' },
+  { color: '#DE5FE9', icon: SiPython, value: 'uv' },
+  { color: '#3776AB', icon: SiPython, value: 'python' },
+  { color: '#2496ED', icon: SiDocker, value: 'docker' },
+];
 
 const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
   const { t } = useTranslation('plugin');
@@ -25,9 +54,18 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
   const pluginIds = useToolStore(pluginSelectors.storeAndInstallPluginsIdList);
 
   const HTTP_URL_KEY = ['customParams', 'mcp', 'url'];
+  const STDIO_COMMAND = ['customParams', 'mcp', 'command'];
+  const STDIO_ARGS = ['customParams', 'mcp', 'args'];
   return (
     <Form form={form} layout={'vertical'}>
-      <Flexbox gap={16}>
+      <Flexbox>
+        <Form.Item
+          label={t('dev.mcp.type.title')}
+          name={['customParams', 'mcp', 'type']}
+          rules={[{ required: true }]}
+        >
+          <MCPTypeSelect />
+        </Form.Item>
         <Form.Item
           extra={t('dev.mcp.identifier.desc')}
           label={t('dev.mcp.identifier.label')}
@@ -38,7 +76,6 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
               message: t('dev.mcp.identifier.invalid'),
               pattern: /^[\w-]+$/,
             },
-            // 编辑模式下，不进行重复校验
             isEditMode
               ? {}
               : {
@@ -46,7 +83,6 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
                   validator: async () => {
                     const id = form.getFieldValue('identifier');
                     if (!id) return true;
-
                     if (pluginIds.includes(id)) {
                       throw new Error('Duplicate');
                     }
@@ -55,21 +91,6 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
           ]}
         >
           <Input placeholder={t('dev.mcp.identifier.placeholder')} />
-        </Form.Item>
-
-        <Form.Item
-          extra={t('dev.mcp.type.desc')}
-          initialValue={'http'}
-          label={t('dev.mcp.type.label')}
-          name={['customParams', 'mcp', 'type']}
-          rules={[{ required: true }]}
-        >
-          <Radio.Group>
-            <Radio value={'http'}>Streamable HTTP</Radio>
-            <Radio disabled={!isDesktop} value={'stdio'}>
-              STDIO
-            </Radio>
-          </Radio.Group>
         </Form.Item>
 
         {mcpType === 'http' && (
@@ -97,14 +118,12 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
               {
                 validator: async (_, value) => {
                   if (!value) return true;
-
                   try {
                     const data = await mcpService.getStreamableMcpServerManifest(
                       form.getFieldValue('identifier'),
                       value,
                     );
                     setManifest(data);
-
                     form.setFieldsValue({ identifier: data.identifier, manifest: data });
                   } catch (error) {
                     const err = error as PluginInstallError;
@@ -136,21 +155,64 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
             <Form.Item
               extra={t('dev.mcp.command.desc')}
               label={t('dev.mcp.command.label')}
-              name={['mcp', 'command']}
+              name={STDIO_COMMAND}
               rules={[{ required: true }]}
             >
-              <Input placeholder={t('dev.mcp.command.placeholder')} />
+              <AutoComplete
+                options={STDIO_COMMAND_OPTIONS.map(({ value, icon: Icon, color }) => ({
+                  label: (
+                    <Flexbox align={'center'} gap={8} horizontal>
+                      {Icon && <Icon color={color} size={16} />}
+                      {value}
+                    </Flexbox>
+                  ),
+                  value: value,
+                }))}
+                placeholder={t('dev.mcp.command.placeholder')}
+              />
             </Form.Item>
             <Form.Item
               extra={t('dev.mcp.args.desc')}
+              hasFeedback
               label={t('dev.mcp.args.label')}
-              name={['mcp', 'args']}
-              tooltip={t('dev.mcp.args.tooltip')}
+              name={STDIO_ARGS}
+              rules={[
+                { required: true },
+                {
+                  validator: async (_, value) => {
+                    if (!value) return true;
+                    const name = form.getFieldValue('identifier');
+
+                    if (!name) throw new Error('Please input mcp server name');
+                    try {
+                      const data = await mcpService.getStdioMcpServerManifest(
+                        name,
+                        form.getFieldValue(STDIO_COMMAND),
+                        value,
+                      );
+                      setManifest(data);
+                      form.setFieldsValue({ identifier: data.identifier, manifest: data });
+                    } catch (error) {
+                      const err = error as PluginInstallError;
+                      throw t(`error.${err.message}`, { error: err.cause! });
+                    }
+                  },
+                },
+              ]}
             >
-              <Select
-                mode="tags"
+              <ArgsInput
                 placeholder={t('dev.mcp.args.placeholder')}
-                tokenSeparators={[',', ' ']}
+                suffix={
+                  <ActionIcon
+                    icon={RotateCwIcon}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      form.validateFields([STDIO_ARGS]);
+                    }}
+                    size={'small'}
+                    title={t('dev.meta.manifest.refresh')}
+                  />
+                }
               />
             </Form.Item>
           </>

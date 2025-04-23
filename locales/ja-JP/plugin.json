@@ -34,37 +34,6 @@
         "desc": "プラグインの一意の識別子",
         "label": "識別子"
       },
-      "mcp": {
-        "args": {
-          "desc": "STDIO コマンドに渡すパラメータのリスト",
-          "label": "コマンドパラメータ",
-          "placeholder": "例：--port 8080 --debug",
-          "tooltip": "パラメータを入力したら Enter を押すか、カンマ/スペースで区切ってください"
-        },
-        "command": {
-          "desc": "MCP STDIO プラグインを起動するための実行可能ファイルまたはスクリプト",
-          "label": "コマンド",
-          "placeholder": "例：python main.py または /path/to/executable"
-        },
-        "endpoint": {
-          "desc": "あなたの MCP ストリーミング HTTP サーバーのアドレスを入力してください",
-          "label": "MCP エンドポイント URL"
-        },
-        "identifier": {
-          "desc": "あなたの MCP プラグインに名前を指定してください。英字を使用する必要があります",
-          "invalid": "英字、数字、- および _ のみ入力できます",
-          "label": "MCP プラグイン名",
-          "placeholder": "例：my-mcp-plugin"
-        },
-        "type": {
-          "desc": "MCP プラグインの通信方法を選択してください。ウェブ版はストリーミング HTTP のみサポートしています",
-          "label": "MCP プラグインタイプ"
-        },
-        "url": {
-          "desc": "あなたの MCP HTTP プラグインのエンドポイントアドレスを入力してください",
-          "label": "HTTP エンドポイント URL"
-        }
-      },
       "mode": {
         "mcp": "MCP プラグイン",
         "mcpExp": "実験的",
@@ -74,6 +43,37 @@
         "desc": "プラグインのタイトル",
         "label": "タイトル",
         "placeholder": "検索エンジン"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "STDIO コマンドに渡すパラメータのリスト",
+        "label": "コマンドパラメータ",
+        "placeholder": "例：--port 8080 --debug",
+        "tooltip": "パラメータを入力したら、Enter キーを押すか、カンマ/スペースで区切ってください"
+      },
+      "command": {
+        "desc": "MCP STDIO プラグインを起動するための実行可能ファイルまたはスクリプト",
+        "label": "コマンド",
+        "placeholder": "例：python main.py または /path/to/executable"
+      },
+      "endpoint": {
+        "desc": "あなたの MCP Streamable HTTP サーバーのアドレスを入力してください",
+        "label": "MCP エンドポイント URL"
+      },
+      "identifier": {
+        "desc": "あなたの MCP プラグインに名前を指定してください。英字を使用する必要があります",
+        "invalid": "英字、数字、- および _ のみを入力できます",
+        "label": "MCP プラグイン名",
+        "placeholder": "例：my-mcp-plugin"
+      },
+      "type": {
+        "desc": "MCP プラグインの通信方式を選択してください。ウェブ版は Streamable HTTP のみをサポートしています",
+        "label": "MCP プラグインタイプ"
+      },
+      "url": {
+        "desc": "あなたのMCPサーバーストリーミングHTTPアドレスを入力してください。/sseで終わることはありません",
+        "label": "HTTP エンドポイント URL"
       }
     },
     "meta": {

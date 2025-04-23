@@ -34,37 +34,6 @@
         "desc": "外掛的唯一識別碼",
         "label": "識別碼"
       },
-      "mcp": {
-        "args": {
-          "desc": "傳遞給 STDIO 命令的參數列表",
-          "label": "命令參數",
-          "placeholder": "例如：--port 8080 --debug",
-          "tooltip": "輸入參數後按回車或使用逗號/空格分隔"
-        },
-        "command": {
-          "desc": "用於啟動 MCP STDIO 插件的可執行文件或腳本",
-          "label": "命令",
-          "placeholder": "例如：python main.py 或 /path/to/executable"
-        },
-        "endpoint": {
-          "desc": "輸入你的 MCP Streamable HTTP Server 的地址",
-          "label": "MCP Endpoint URL"
-        },
-        "identifier": {
-          "desc": "為你的 MCP 插件指定一個名稱，需要使用英文字符",
-          "invalid": "只能輸入英文字符、數字、- 和_ 這兩個符號",
-          "label": "MCP 插件名稱",
-          "placeholder": "例如：my-mcp-plugin"
-        },
-        "type": {
-          "desc": "選擇 MCP 插件的通信方式，網頁版只支持 Streamable HTTP",
-          "label": "MCP 插件類型"
-        },
-        "url": {
-          "desc": "輸入你的 MCP HTTP 插件的 Endpoint 地址",
-          "label": "HTTP Endpoint URL"
-        }
-      },
       "mode": {
         "mcp": "MCP 插件",
         "mcpExp": "實驗性",
@@ -74,6 +43,37 @@
         "desc": "外掛的名稱",
         "label": "名稱",
         "placeholder": "搜尋引擎"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "傳遞給 STDIO 命令的參數列表",
+        "label": "命令參數",
+        "placeholder": "例如：--port 8080 --debug",
+        "tooltip": "輸入參數後按回車或使用逗號/空格分隔"
+      },
+      "command": {
+        "desc": "用於啟動 MCP STDIO 插件的可執行文件或腳本",
+        "label": "命令",
+        "placeholder": "例如：python main.py 或 /path/to/executable"
+      },
+      "endpoint": {
+        "desc": "輸入你的 MCP Streamable HTTP Server 的地址",
+        "label": "MCP Endpoint URL"
+      },
+      "identifier": {
+        "desc": "為你的 MCP 插件指定一個名稱，需要使用英文字符",
+        "invalid": "只能輸入英文字符、數字、- 和_ 這兩個符號",
+        "label": "MCP 插件名稱",
+        "placeholder": "例如：my-mcp-plugin"
+      },
+      "type": {
+        "desc": "選擇 MCP 插件的通信方式，網頁版只支持 Streamable HTTP",
+        "label": "MCP 插件類型"
+      },
+      "url": {
+        "desc": "輸入你的 MCP Server Streamable HTTP 地址，結尾不會有 /sse",
+        "label": "HTTP Endpoint URL"
       }
     },
     "meta": {

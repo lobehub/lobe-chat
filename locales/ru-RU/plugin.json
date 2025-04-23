@@ -34,37 +34,6 @@
         "desc": "Уникальный идентификатор плагина",
         "label": "Идентификатор"
       },
-      "mcp": {
-        "args": {
-          "desc": "Список параметров, передаваемых в команду STDIO",
-          "label": "Параметры команды",
-          "placeholder": "Например: --port 8080 --debug",
-          "tooltip": "Нажмите Enter после ввода параметров или используйте запятую/пробел для разделения"
-        },
-        "command": {
-          "desc": "Исполняемый файл или скрипт для запуска MCP STDIO плагина",
-          "label": "Команда",
-          "placeholder": "Например: python main.py или /path/to/executable"
-        },
-        "endpoint": {
-          "desc": "Введите адрес вашего MCP Streamable HTTP сервера",
-          "label": "MCP Endpoint URL"
-        },
-        "identifier": {
-          "desc": "Укажите имя для вашего MCP плагина, необходимо использовать английские символы",
-          "invalid": "Можно вводить только английские буквы, цифры, символы - и _",
-          "label": "Имя MCP плагина",
-          "placeholder": "Например: my-mcp-plugin"
-        },
-        "type": {
-          "desc": "Выберите способ связи для MCP плагина, веб-версия поддерживает только Streamable HTTP",
-          "label": "Тип MCP плагина"
-        },
-        "url": {
-          "desc": "Введите адрес Endpoint вашего MCP HTTP плагина",
-          "label": "HTTP Endpoint URL"
-        }
-      },
       "mode": {
         "mcp": "MCP плагин",
         "mcpExp": "Экспериментальный",
@@ -74,6 +43,37 @@
         "desc": "Название плагина",
         "label": "Название",
         "placeholder": "Поиск в поисковике"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "Список параметров, передаваемых команде STDIO",
+        "label": "Параметры команды",
+        "placeholder": "Например: --port 8080 --debug",
+        "tooltip": "Нажмите Enter после ввода параметров или используйте запятую/пробел для разделения"
+      },
+      "command": {
+        "desc": "Исполняемый файл или скрипт для запуска плагина MCP STDIO",
+        "label": "Команда",
+        "placeholder": "Например: python main.py или /path/to/executable"
+      },
+      "endpoint": {
+        "desc": "Введите адрес вашего MCP Streamable HTTP Server",
+        "label": "URL-адрес MCP Endpoint"
+      },
+      "identifier": {
+        "desc": "Укажите имя для вашего MCP плагина, необходимо использовать английские символы",
+        "invalid": "Можно вводить только английские буквы, цифры, символы - и _",
+        "label": "Имя MCP плагина",
+        "placeholder": "Например: my-mcp-plugin"
+      },
+      "type": {
+        "desc": "Выберите способ связи для MCP плагина, веб-версия поддерживает только Streamable HTTP",
+        "label": "Тип MCP плагина"
+      },
+      "url": {
+        "desc": "Введите адрес вашего MCP Server Streamable HTTP, который не заканчивается на /sse",
+        "label": "URL-адрес HTTP Endpoint"
       }
     },
     "meta": {

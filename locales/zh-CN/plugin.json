@@ -47,15 +47,12 @@
     },
     "mcp": {
       "args": {
-        "desc": "传递给 STDIO 命令的参数列表",
         "label": "命令参数",
-        "placeholder": "例如：--port 8080 --debug",
-        "tooltip": "输入参数后按回车或使用逗号/空格分隔"
+        "desc": "传递给 STDIO 命令的参数列表，一般在这里输入 MCP 服务器名称",
+        "placeholder": "例如：mcp-hello-world"
       },
       "command": {
-        "desc": "用于启动 MCP STDIO 插件的可执行文件或脚本",
-        "label": "命令",
-        "placeholder": "例如：python main.py 或 /path/to/executable"
+        "label": "命令"
       },
       "endpoint": {
         "desc": "输入你的 MCP Streamable HTTP Server 的地址",
@@ -69,11 +66,19 @@
       },
       "type": {
         "desc": "选择 MCP 插件的通信方式，网页版只支持 Streamable HTTP",
-        "label": "MCP 插件类型"
+        "httpFeature1": "兼容网页版与桌面端",
+        "httpFeature2": "连接远程 MCP 服务端, 无需额外安装配置",
+        "httpShortDesc": "基于流式 HTTP 的通信协议",
+        "label": "MCP 插件类型",
+        "stdioFeature1": "更低的通信延迟, 适合本地执行",
+        "stdioFeature2": "通过系统标准输入输出通信，需在本地安装运行 MCP 服务端",
+        "stdioNotAvailable": "STDIO 模式仅在桌面版可用",
+        "stdioShortDesc": "基于标准输入输出的通信协议",
+        "title": "MCP 插件类型"
       },
       "url": {
-        "desc": "输入你的 MCP HTTP 插件的 Endpoint 地址",
-        "label": "HTTP Endpoint URL"
+        "desc": "输入你的 MCP Server Streamable HTTP 地址，不会以 /sse 结尾",
+        "label": "Streamable HTTP Endpoint URL"
       }
     },
     "meta": {
