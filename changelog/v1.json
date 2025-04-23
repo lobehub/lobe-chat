@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve mcp server type select and fix refresh mcp manifest issue."]
+    },
+    "date": "2025-04-23",
+    "version": "1.82.1"
+  },
+  {
+    "children": {
       "features": ["Support Streamable HTTP MCP server."]
     },
     "date": "2025-04-22",
