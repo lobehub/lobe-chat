@@ -7,6 +7,7 @@
     "payload": "حمولة البرنامج المساعد",
     "pluginState": "حالة المكون",
     "response": "الرد",
+    "title": "تفاصيل الإضافة",
     "tool_call": "طلب استدعاء الأداة"
   },
   "detailModal": {
@@ -50,12 +51,13 @@
         "desc": "قائمة المعلمات المرسلة إلى أمر STDIO",
         "label": "معلمات الأمر",
         "placeholder": "على سبيل المثال: --port 8080 --debug",
-        "tooltip": "اضغط على Enter بعد إدخال المعلمات أو استخدم الفاصلة/المسافة للفصل"
+        "required": "يرجى إدخال معلمات التشغيل"
       },
       "command": {
         "desc": "الملف القابل للتنفيذ أو البرنامج النصي المستخدم لبدء ملحق MCP STDIO",
         "label": "الأمر",
-        "placeholder": "على سبيل المثال: python main.py أو /path/to/executable"
+        "placeholder": "على سبيل المثال: python main.py أو /path/to/executable",
+        "required": "يرجى إدخال أمر التشغيل"
       },
       "endpoint": {
         "desc": "أدخل عنوان خادم MCP Streamable HTTP الخاص بك",
@@ -65,15 +67,29 @@
         "desc": "حدد اسمًا لملحق MCP الخاص بك، يجب أن يكون باستخدام أحرف إنجليزية",
         "invalid": "يمكنك إدخال أحرف إنجليزية، أرقام، والرمزين - و _ فقط",
         "label": "اسم ملحق MCP",
-        "placeholder": "على سبيل المثال: my-mcp-plugin"
+        "placeholder": "على سبيل المثال: my-mcp-plugin",
+        "required": "يرجى إدخال معرف خدمة MCP"
       },
+      "previewManifest": "معاينة ملف وصف الإضافة",
+      "testConnection": "اختبار الاتصال",
+      "testConnectionTip": "يمكن استخدام إضافة MCP بشكل طبيعي بعد نجاح اختبار الاتصال",
       "type": {
         "desc": "اختر طريقة الاتصال لملحق MCP، النسخة الويب تدعم فقط Streamable HTTP",
-        "label": "نوع ملحق MCP"
+        "httpFeature1": "متوافق مع النسخة الويب وسطح المكتب",
+        "httpFeature2": "الاتصال بخادم MCP عن بُعد، دون الحاجة إلى تثبيت أو إعداد إضافي",
+        "httpShortDesc": "بروتوكول الاتصال القائم على HTTP المتدفق",
+        "label": "نوع ملحق MCP",
+        "stdioFeature1": "زمن تأخير أقل في الاتصال، مناسب للتنفيذ المحلي",
+        "stdioFeature2": "يجب تثبيت خادم MCP وتشغيله محليًا",
+        "stdioNotAvailable": "وضع STDIO متاح فقط في النسخة المكتبية",
+        "stdioShortDesc": "بروتوكول الاتصال القائم على الإدخال والإخراج القياسي",
+        "title": "نوع ملحق MCP"
       },
       "url": {
         "desc": "أدخل عنوان HTTP القابل للبث لخادم MCP الخاص بك، ولا ينتهي بـ /sse",
-        "label": "عنوان URL لنقطة نهاية HTTP"
+        "invalid": "يرجى إدخال عنوان URL صالح",
+        "label": "عنوان URL لنقطة نهاية HTTP",
+        "required": "يرجى إدخال عنوان URL لخدمة MCP"
       }
     },
     "meta": {
@@ -101,12 +117,14 @@
         "label": "المعرف",
         "pattenErrorMessage": "يمكن إدخال الأحرف الإنجليزية والأرقام والرمزين - و_ فقط"
       },
+      "lobe": "إضافة {{appName}}",
       "manifest": {
         "desc": "{{appName}} سيتم تثبيت الإضافة من خلال هذا الرابط",
         "label": "ملف وصف البرنامج المساعد (Manifest) URL",
         "preview": "معاينة الملف التعريفي",
         "refresh": "تحديث"
       },
+      "openai": "إضافة OpenAI",
       "title": {
         "desc": "عنوان البرنامج المساعد",
         "label": "العنوان",
@@ -148,6 +166,7 @@
     "noManifest": "ملف الوصف غير موجود",
     "openAPIInvalid": "فشل تحليل OpenAPI، الخطأ: \n\n {{error}}",
     "reinstallError": "فشل تحديث الإضافة {{name}}",
+    "testConnectionFailed": "فشل في الحصول على ملف التعريف: {{error}}",
     "urlError": "الرابط لا يعيد محتوى بتنسيق JSON، يرجى التأكد من صحة الرابط"
   },
   "inspector": {
@@ -226,5 +245,6 @@
     },
     "title": "متجر الإضافات"
   },
+  "unknownError": "خطأ غير معروف",
   "unknownPlugin": "البرنامج المساعد غير معروف"
 }

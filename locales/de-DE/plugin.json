@@ -7,6 +7,7 @@
     "payload": "Plugin-Payload",
     "pluginState": "Plugin-Zustand",
     "response": "Antwort",
+    "title": "Plugin-Details",
     "tool_call": "Tool Call Request"
   },
   "detailModal": {
@@ -47,10 +48,16 @@
     },
     "mcp": {
       "args": {
-        "label": "Befehlsparameter"
+        "desc": "Liste der Parameter, die an den STDIO-Befehl übergeben werden, normalerweise hier den MCP-Servernamen eingeben",
+        "label": "Befehlsparameter",
+        "placeholder": "Zum Beispiel: mcp-hello-world",
+        "required": "Bitte geben Sie die Startparameter ein"
       },
       "command": {
-        "label": "Befehl"
+        "desc": "Die ausführbare Datei oder das Skript zum Starten des MCP STDIO-Servers",
+        "label": "Befehl",
+        "placeholder": "Zum Beispiel: npx / uv / docker usw.",
+        "required": "Bitte geben Sie den Startbefehl ein"
       },
       "endpoint": {
         "desc": "Geben Sie die Adresse Ihres MCP Streamable HTTP Servers ein",
@@ -60,15 +67,29 @@
         "desc": "Geben Sie Ihrem MCP-Plugin einen Namen, der englische Zeichen verwenden muss",
         "invalid": "Es dürfen nur englische Zeichen, Zahlen, - und _ verwendet werden",
         "label": "MCP-Plugin-Name",
-        "placeholder": "z.B.: my-mcp-plugin"
+        "placeholder": "z.B.: my-mcp-plugin",
+        "required": "Bitte geben Sie die MCP-Dienstkennung ein"
       },
+      "previewManifest": "Vorschau auf die Plugin-Beschreibungsdatei",
+      "testConnection": "Verbindung testen",
+      "testConnectionTip": "Die MCP-Plugins können erst nach erfolgreichem Test der Verbindung normal verwendet werden",
       "type": {
         "desc": "Wählen Sie die Kommunikationsart des MCP-Plugins, die Webversion unterstützt nur Streamable HTTP",
-        "label": "MCP-Plugin-Typ"
+        "httpFeature1": "Kompatibel mit Web- und Desktop-Version",
+        "httpFeature2": "Verbindung zu einem entfernten MCP-Server, keine zusätzliche Installation oder Konfiguration erforderlich",
+        "httpShortDesc": "Kommunikationsprotokoll basierend auf Streaming-HTTP",
+        "label": "MCP-Plugin-Typ",
+        "stdioFeature1": "Geringere Kommunikationslatenz, geeignet für lokale Ausführung",
+        "stdioFeature2": "MCP-Server muss lokal installiert und ausgeführt werden",
+        "stdioNotAvailable": "Der STDIO-Modus ist nur in der Desktop-Version verfügbar",
+        "stdioShortDesc": "Kommunikationsprotokoll basierend auf Standard-Eingabe und -Ausgabe",
+        "title": "MCP-Plugin-Typ"
       },
       "url": {
         "desc": "Geben Sie Ihre MCP-Server-Streamable-HTTP-Adresse ein, die nicht mit /sse endet",
-        "label": "HTTP Endpoint-URL"
+        "invalid": "Bitte geben Sie eine gültige URL ein",
+        "label": "HTTP Endpoint-URL",
+        "required": "Bitte geben Sie die MCP-Dienst-URL ein"
       }
     },
     "meta": {
@@ -96,12 +117,14 @@
         "label": "Kennung",
         "pattenErrorMessage": "Es können nur Buchstaben, Zahlen, - und _ eingegeben werden"
       },
+      "lobe": "{{appName}} Plugin",
       "manifest": {
         "desc": "{{appName}} wird das Plugin über diesen Link installieren.",
         "label": "Plugin-Beschreibungsdatei (Manifest) URL",
         "preview": "Vorschau des Manifests",
         "refresh": "Aktualisieren"
       },
+      "openai": "OpenAI Plugin",
       "title": {
         "desc": "Plugin-Titel",
         "label": "Titel",
@@ -143,6 +166,7 @@
     "noManifest": "Manifest nicht vorhanden",
     "openAPIInvalid": "Fehler beim Parsen von OpenAPI. Fehler: \n\n {{error}}",
     "reinstallError": "Fehler beim Aktualisieren des Plugins {{name}}.",
+    "testConnectionFailed": "Manifest konnte nicht abgerufen werden: {{error}}",
     "urlError": "Der Link hat keine JSON-Format-Inhalte zurückgegeben. Stellen Sie sicher, dass der Link gültig ist."
   },
   "inspector": {
@@ -221,5 +245,6 @@
     },
     "title": "Plugin-Shop"
   },
+  "unknownError": "Unbekannter Fehler",
   "unknownPlugin": "Unbekanntes Plugin"
 }

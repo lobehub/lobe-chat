@@ -7,6 +7,7 @@
     "payload": "plug-in payload",
     "pluginState": "Pluginstatus",
     "response": "Reactie",
+    "title": "Plugin Details",
     "tool_call": "Tool-oproepverzoek"
   },
   "detailModal": {
@@ -50,12 +51,13 @@
         "desc": "Lijst van parameters die aan het STDIO-commando worden doorgegeven",
         "label": "Commando-parameters",
         "placeholder": "Bijvoorbeeld: --port 8080 --debug",
-        "tooltip": "Druk op enter of gebruik een komma/spatie om de parameters te scheiden na invoer"
+        "required": "Voer de opstartparameters in"
       },
       "command": {
         "desc": "Uitvoerbaar bestand of script om de MCP STDIO-plugin te starten",
         "label": "Commando",
-        "placeholder": "Bijvoorbeeld: python main.py of /path/to/executable"
+        "placeholder": "Bijvoorbeeld: python main.py of /path/to/executable",
+        "required": "Voer het opstartcommando in"
       },
       "endpoint": {
         "desc": "Voer het adres van je MCP Streamable HTTP Server in",
@@ -65,15 +67,29 @@
         "desc": "Geef je MCP-plugin een naam, gebruik Engelse karakters",
         "invalid": "Alleen Engelse karakters, cijfers, - en _ zijn toegestaan",
         "label": "MCP Plugin Naam",
-        "placeholder": "Bijvoorbeeld: my-mcp-plugin"
+        "placeholder": "Bijvoorbeeld: my-mcp-plugin",
+        "required": "Voer de MCP service-identificator in"
       },
+      "previewManifest": "Voorbeeld van het plugin beschrijvingsbestand",
+      "testConnection": "Test verbinding",
+      "testConnectionTip": "De MCP plugin kan pas normaal worden gebruikt na een succesvolle verbindingstest",
       "type": {
         "desc": "Kies de communicatiemethode voor de MCP-plugin, de webversie ondersteunt alleen Streamable HTTP",
-        "label": "MCP Plugin Type"
+        "httpFeature1": "Compatibel met web- en desktopversies",
+        "httpFeature2": "Verbind met een externe MCP-server, zonder extra installatie of configuratie",
+        "httpShortDesc": "Communicatieprotocol op basis van streaming HTTP",
+        "label": "MCP Plugin Type",
+        "stdioFeature1": "Lagere communicatietijd, geschikt voor lokale uitvoering",
+        "stdioFeature2": "MCP-server moet lokaal worden geïnstalleerd en uitgevoerd",
+        "stdioNotAvailable": "STDIO-modus is alleen beschikbaar in de desktopversie",
+        "stdioShortDesc": "Communicatieprotocol op basis van standaardinvoer en -uitvoer",
+        "title": "MCP-plugintype"
       },
       "url": {
         "desc": "Voer je MCP Server Streamable HTTP-adres in, dit eindigt niet op /sse",
-        "label": "HTTP Endpoint URL"
+        "invalid": "Voer een geldige URL in",
+        "label": "HTTP Endpoint URL",
+        "required": "Voer de MCP service URL in"
       }
     },
     "meta": {
@@ -101,12 +117,14 @@
         "label": "Identificatie",
         "pattenErrorMessage": "Alleen alfanumerieke tekens, koppelteken - en underscore _ zijn toegestaan"
       },
+      "lobe": "{{appName}} plugin",
       "manifest": {
         "desc": "{{appName}} zal de plugin installeren via deze link",
         "label": "Plug-in Beschrijving (Manifest) URL",
         "preview": "Voorbeeld",
         "refresh": "Vernieuwen"
       },
+      "openai": "OpenAI plugin",
       "title": {
         "desc": "De titel van de plug-in",
         "label": "Titel",
@@ -148,6 +166,7 @@
     "noManifest": "Geen manifest beschikbaar",
     "openAPIInvalid": "OpenAPI-analyse mislukt. Fout: \n\n {{error}}",
     "reinstallError": "Vernieuwen van de plugin {{name}} is mislukt.",
+    "testConnectionFailed": "Manifest ophalen mislukt: {{error}}",
     "urlError": "De link retourneert geen JSON-indeling. Zorg ervoor dat het een geldige link is."
   },
   "inspector": {
@@ -226,5 +245,6 @@
     },
     "title": "Pluginwinkel"
   },
+  "unknownError": "Onbekende fout",
   "unknownPlugin": "onbekende plugin"
 }
