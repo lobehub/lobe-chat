@@ -7,6 +7,7 @@
     "payload": "carico del plugin",
     "pluginState": "Stato del plugin",
     "response": "Risposta",
+    "title": "Dettagli del plugin",
     "tool_call": "richiesta di chiamata dello strumento"
   },
   "detailModal": {
@@ -49,12 +50,14 @@
       "args": {
         "desc": "Elenco dei parametri da passare al comando STDIO",
         "label": "Parametri del comando",
-        "placeholder": "Ad esempio: --port 8080 --debug"
+        "placeholder": "Ad esempio: --port 8080 --debug",
+        "required": "Inserisci i parametri di avvio"
       },
       "command": {
         "desc": "File eseguibile o script per avviare il plugin MCP STDIO",
         "label": "Comando",
-        "placeholder": "Ad esempio: python main.py o /path/to/executable"
+        "placeholder": "Ad esempio: python main.py o /path/to/executable",
+        "required": "Inserisci il comando di avvio"
       },
       "endpoint": {
         "desc": "Inserisci l'indirizzo del tuo server HTTP Streamable MCP",
@@ -64,8 +67,12 @@
         "desc": "Assegna un nome al tuo plugin MCP, deve utilizzare caratteri inglesi",
         "invalid": "Puoi inserire solo caratteri inglesi, numeri, e i simboli - e _",
         "label": "Nome del plugin MCP",
-        "placeholder": "Ad esempio: my-mcp-plugin"
+        "placeholder": "Ad esempio: my-mcp-plugin",
+        "required": "Inserisci l'identificatore del servizio MCP"
       },
+      "previewManifest": "Anteprima del file di descrizione del plugin",
+      "testConnection": "Test di connessione",
+      "testConnectionTip": "Il plugin MCP può essere utilizzato correttamente solo dopo un test di connessione riuscito",
       "type": {
         "desc": "Scegli il metodo di comunicazione del plugin MCP, la versione web supporta solo Streamable HTTP",
         "httpFeature1": "Compatibile con la versione web e desktop",
@@ -80,7 +87,9 @@
       },
       "url": {
         "desc": "Inserisci l'indirizzo HTTP Streamable del tuo server MCP, che non deve terminare con /sse",
-        "label": "URL Endpoint HTTP"
+        "invalid": "Inserisci un URL valido",
+        "label": "URL Endpoint HTTP",
+        "required": "Inserisci l'URL del servizio MCP"
       }
     },
     "meta": {
@@ -108,12 +117,14 @@
         "label": "Identificatore",
         "pattenErrorMessage": "Puoi inserire solo caratteri alfanumerici, - e _"
       },
+      "lobe": "Plugin {{appName}}",
       "manifest": {
         "desc": "{{appName}} installerà il plugin tramite questo link",
         "label": "URL del file di descrizione del plugin (Manifest)",
         "preview": "Anteprima Manifest",
         "refresh": "Aggiorna"
       },
+      "openai": "Plugin OpenAI",
       "title": {
         "desc": "Titolo del plugin",
         "label": "Titolo",
@@ -155,6 +166,7 @@
     "noManifest": "Il file di descrizione non esiste",
     "openAPIInvalid": "Analisi dell'OpenAPI fallita. Errore: \n\n {{error}}",
     "reinstallError": "Ricaricamento del plugin {{name}} fallito",
+    "testConnectionFailed": "Impossibile ottenere il Manifest: {{error}}",
     "urlError": "Il collegamento non restituisce contenuti nel formato JSON. Assicurati che il collegamento sia valido"
   },
   "inspector": {
@@ -233,5 +245,6 @@
     },
     "title": "Negozio dei plugin"
   },
+  "unknownError": "Errore sconosciuto",
   "unknownPlugin": "Plugin sconosciuto"
 }

@@ -7,6 +7,7 @@
     "payload": "dane wejściowe wtyczki",
     "pluginState": "Stan wtyczki",
     "response": "Odpowiedź",
+    "title": "Szczegóły wtyczki",
     "tool_call": "żądanie wywołania narzędzia"
   },
   "detailModal": {
@@ -49,12 +50,14 @@
       "args": {
         "desc": "Lista argumentów przekazywanych do polecenia STDIO, zazwyczaj wpisz tutaj nazwę serwera MCP",
         "label": "Argumenty polecenia",
-        "placeholder": "Na przykład: mcp-hello-world"
+        "placeholder": "Na przykład: mcp-hello-world",
+        "required": "Proszę wprowadzić parametry uruchomienia"
       },
       "command": {
         "desc": "Wykonywalny plik lub skrypt do uruchomienia serwera MCP STDIO",
         "label": "Polecenie",
-        "placeholder": "Na przykład: npx / uv / docker itp."
+        "placeholder": "Na przykład: npx / uv / docker itp.",
+        "required": "Proszę wprowadzić polecenie uruchomienia"
       },
       "endpoint": {
         "desc": "Wprowadź adres swojego serwera MCP Streamable HTTP",
@@ -64,8 +67,12 @@
         "desc": "Nadaj nazwę swojej wtyczce MCP, używając znaków angielskich",
         "invalid": "Można wprowadzać tylko znaki angielskie, cyfry, oraz symbole - i _",
         "label": "Nazwa wtyczki MCP",
-        "placeholder": "Na przykład: my-mcp-plugin"
+        "placeholder": "Na przykład: my-mcp-plugin",
+        "required": "Proszę wprowadzić identyfikator usługi MCP"
       },
+      "previewManifest": "Podgląd pliku opisu wtyczki",
+      "testConnection": "Testuj połączenie",
+      "testConnectionTip": "Wtyczka MCP może być używana prawidłowo po pomyślnym teście połączenia",
       "type": {
         "desc": "Wybierz sposób komunikacji wtyczki MCP, wersja przeglądarkowa obsługuje tylko Streamable HTTP",
         "httpFeature1": "Kompatybilność z wersją przeglądarkową i desktopową",
@@ -80,7 +87,9 @@
       },
       "url": {
         "desc": "Wprowadź adres HTTP swojego serwera MCP Streamable, który nie kończy się na /sse",
-        "label": "URL punktu końcowego HTTP"
+        "invalid": "Proszę wprowadzić prawidłowy adres URL",
+        "label": "URL punktu końcowego HTTP",
+        "required": "Proszę wprowadzić adres URL usługi MCP"
       }
     },
     "meta": {
@@ -108,12 +117,14 @@
         "label": "Identyfikator",
         "pattenErrorMessage": "Dozwolone są tylko znaki alfanumeryczne, myślnik - i podkreślenie _"
       },
+      "lobe": "Wtyczka {{appName}}",
       "manifest": {
         "desc": "{{appName}} zainstaluje wtyczkę za pośrednictwem tego linku",
         "label": "Opis wtyczki (Manifest) URL",
         "preview": "Podgląd",
         "refresh": "Odśwież"
       },
+      "openai": "Wtyczka OpenAI",
       "title": {
         "desc": "Tytuł wtyczki",
         "label": "Tytuł",
@@ -155,6 +166,7 @@
     "noManifest": "Plik manifestu nie istnieje",
     "openAPIInvalid": "Analiza OpenAPI nie powiodła się. Błąd: \n\n {{error}}",
     "reinstallError": "Nie udało się odświeżyć wtyczki {{name}}",
+    "testConnectionFailed": "Nie udało się pobrać manifestu: {{error}}",
     "urlError": "Link nie zwrócił treści w formacie JSON. Upewnij się, że jest to poprawny link."
   },
   "inspector": {
@@ -233,5 +245,6 @@
     },
     "title": "Sklep wtyczek"
   },
+  "unknownError": "Nieznany błąd",
   "unknownPlugin": "nieznana wtyczka"
 }

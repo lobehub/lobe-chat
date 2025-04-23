@@ -79,7 +79,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
 
     // Check for duplicate identifier (only in create mode)
     if (!isEditMode && pluginIds.includes(identifier)) {
-      setPasteError(t('dev.meta.identifier.errorDuplicate', '插件 ID 重复'));
+      setPasteError(t('dev.meta.identifier.errorDuplicate'));
       // Update form fields even if duplicate, so user sees the pasted values
       form.setFieldsValue({
         // Update identifier field
@@ -112,7 +112,6 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
     let isValid = false;
     try {
       await form.validateFields([
-        'identifier',
         ...(mcpType === 'http' ? [HTTP_URL_KEY] : [STDIO_COMMAND, STDIO_ARGS]),
       ]);
       isValid = true;
@@ -131,11 +130,11 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
       let data: LobeChatPluginManifest;
 
       if (mcp.type === 'http') {
-        if (!mcp.url) throw new Error(t('dev.mcp.url.required', '请输入 MCP 服务 URL'));
+        if (!mcp.url) throw new Error(t('dev.mcp.url.required'));
         data = await mcpService.getStreamableMcpServerManifest(id, mcp.url);
       } else if (mcp.type === 'stdio') {
-        if (!mcp.command) throw new Error(t('dev.mcp.command.required', '请输入启动命令'));
-        if (!mcp.args) throw new Error(t('dev.mcp.args.required', '请输入启动参数'));
+        if (!mcp.command) throw new Error(t('dev.mcp.command.required'));
+        if (!mcp.args) throw new Error(t('dev.mcp.args.required'));
         data = await mcpService.getStdioMcpServerManifest(id, mcp.command, mcp.args);
       } else {
         throw new Error('Invalid MCP type'); // Internal error
@@ -152,14 +151,12 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
       const err = error as Error; // Assuming PluginInstallError or similar structure
       // Use the error message directly if it's a simple string error, otherwise try translation
       // highlight-start
-      const errorMessage = t(
-        `error.${err.message}`,
-        `获取 Manifest 失败: ${err.cause || err.message || '未知错误'}`,
-        { error: err.cause || err.message },
-      );
+      const errorMessage = t('error.testConnectionFailed', {
+        error: err.cause || err.message || t('unknownError'),
+      });
+      // highlight-end
 
       setConnectionError(errorMessage);
-      // highlight-end
     } finally {
       setIsTesting(false);
     }
@@ -169,7 +166,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
     <Form form={form} layout={'vertical'}>
       <Flexbox>
         <Form.Item
-          label={t('dev.mcp.type.title', 'MCP 服务类型')}
+          label={t('dev.mcp.type.title')}
           name={['customParams', 'mcp', 'type']}
           rules={[{ required: true }]}
         >
@@ -180,26 +177,26 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
           <Alert message={pasteError} showIcon style={{ marginBottom: 16 }} type="error" />
         )}
         <Form.Item
-          extra={t('dev.mcp.identifier.desc', '插件的唯一标识符，例如 plugin-name')}
-          label={t('dev.mcp.identifier.label', 'MCP 服务标识符')}
+          extra={t('dev.mcp.identifier.desc')}
+          label={t('dev.mcp.identifier.label')}
           name={'identifier'}
           rules={[
-            { message: t('dev.mcp.identifier.required', '请输入 MCP 服务标识符'), required: true },
+            { message: t('dev.mcp.identifier.required'), required: true },
             {
-              message: t('dev.mcp.identifier.invalid', '标识符只能包含字母、数字、连字符和下划线'),
+              message: t('dev.mcp.identifier.invalid'),
               pattern: /^[\w-]+$/,
             },
             isEditMode
               ? {}
               : {
-                  message: t('dev.meta.identifier.errorDuplicate', '插件 ID 重复'),
+                  message: t('dev.meta.identifier.errorDuplicate'),
                   validator: async (_, value) => {
                     if (
                       value &&
                       pluginIds.includes(value) && // If paste error for duplicate is already showing, let it be.
-                      pasteError !== t('dev.meta.identifier.errorDuplicate', '插件 ID 重复')
+                      pasteError !== t('dev.meta.identifier.errorDuplicate')
                     ) {
-                      throw new Error(t('dev.meta.identifier.errorDuplicate', '插件 ID 重复'));
+                      throw new Error(t('dev.meta.identifier.errorDuplicate'));
                     }
                   },
                 },
@@ -207,18 +204,18 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
         >
           <Input
             onChange={handleIdentifierChange}
-            placeholder={t('dev.mcp.identifier.placeholder', '例如 my-awesome-mcp-plugin')}
+            placeholder={t('dev.mcp.identifier.placeholder')}
           />
         </Form.Item>
 
         {mcpType === 'http' && (
           <Form.Item
-            extra={t('dev.mcp.url.desc', 'MCP 服务的 URL 地址')}
-            label={t('dev.mcp.url.label', 'MCP 服务 URL')}
+            extra={t('dev.mcp.url.desc')}
+            label={t('dev.mcp.url.label')}
             name={HTTP_URL_KEY}
             rules={[
-              { message: t('dev.mcp.url.required', '请输入 MCP 服务 URL'), required: true },
-              { message: t('dev.mcp.url.invalid', '请输入有效的 URL 地址'), type: 'url' },
+              { message: t('dev.mcp.url.required'), required: true },
+              { message: t('dev.mcp.url.invalid'), type: 'url' },
             ]}
           >
             <Input placeholder="https://mcp.higress.ai/mcp-github/xxxxx" />
@@ -228,10 +225,10 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
         {mcpType === 'stdio' && (
           <>
             <Form.Item
-              extra={t('dev.mcp.command.desc', '用于启动 MCP 服务的命令行指令')}
-              label={t('dev.mcp.command.label', '启动命令')}
+              extra={t('dev.mcp.command.desc')}
+              label={t('dev.mcp.command.label')}
               name={STDIO_COMMAND}
-              rules={[{ message: t('dev.mcp.command.required', '请输入启动命令'), required: true }]}
+              rules={[{ message: t('dev.mcp.command.required'), required: true }]}
             >
               <AutoComplete
                 options={STDIO_COMMAND_OPTIONS.map(({ value, icon: Icon, color }) => ({
@@ -243,34 +240,32 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
                   ),
                   value: value,
                 }))}
-                placeholder={t('dev.mcp.command.placeholder', '例如 python、node、docker run ...')}
+                placeholder={t('dev.mcp.command.placeholder')}
               />
             </Form.Item>
             <Form.Item
-              extra={t('dev.mcp.args.desc', '传递给启动命令的参数，使用空格分隔')}
-              label={t('dev.mcp.args.label', '启动参数')}
+              extra={t('dev.mcp.args.desc')}
+              label={t('dev.mcp.args.label')}
               name={STDIO_ARGS}
-              rules={[{ message: t('dev.mcp.args.required', '请输入启动参数'), required: true }]}
+              rules={[{ message: t('dev.mcp.args.required'), required: true }]}
             >
-              <ArgsInput
-                placeholder={t('dev.mcp.args.placeholder', '例如 main.py --port {{port}}')}
-              />
+              <ArgsInput placeholder={t('dev.mcp.args.placeholder')} />
             </Form.Item>
           </>
         )}
-        <Form.Item>
+        <Form.Item extra={t('dev.mcp.testConnectionTip')}>
           <Flexbox align={'center'} gap={8} horizontal>
             <Button
               loading={isTesting}
               onClick={handleTestConnection}
               type={!!mcpType ? 'primary' : undefined}
             >
-              {t('dev.mcp.testConnection', '测试连接')}
+              {t('dev.mcp.testConnection')}
             </Button>
             {manifest && !connectionError && !isTesting && (
               <ManifestPreviewer manifest={manifest}>
                 <Flexbox>
-                  <Button icon={<Icon icon={FileCode} />}>预览插件描述文件</Button>
+                  <Button icon={<Icon icon={FileCode} />}>{t('dev.mcp.previewManifest')}</Button>
                 </Flexbox>
               </ManifestPreviewer>
             )}
