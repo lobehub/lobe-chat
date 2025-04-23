@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
+import { isDesktop } from '@/const/version';
 import { mcpService } from '@/services/mcp';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
@@ -68,40 +69,38 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
 
     const parseResult = parseMcpInput(value);
 
-    switch (parseResult.status) {
-      case 'success': {
-        const { identifier, mcpConfig } = parseResult;
+    if (parseResult.status !== 'success') return;
 
-        // Check for duplicate identifier (only in create mode)
-        if (!isEditMode && pluginIds.includes(identifier)) {
-          setPasteError(t('dev.meta.identifier.errorDuplicate', '插件 ID 重复'));
-          // Update form fields even if duplicate, so user sees the pasted values
-          form.setFieldsValue({
-            // Update identifier field
-            customParams: {
-              mcp: mcpConfig, // Spread the parsed config (includes type)
-            },
-            identifier: identifier,
-          });
-          // Trigger validation to show Form.Item error
-          form.validateFields(['identifier']);
-          return;
-        }
+    const { identifier, mcpConfig } = parseResult;
 
-        // No duplicate or in edit mode, fill the form
-        form.setFieldsValue({
-          customParams: {
-            mcp: mcpConfig, // Spread the parsed config (includes type)
-          },
-          identifier: identifier,
-        });
-
-        // Clear potential old validation error on identifier
-        form.setFields([{ errors: [], name: 'identifier' }]);
-
-        break; // Success case handled
-      }
+    if (!isDesktop && mcpConfig.type === 'stdio') {
+      return;
     }
+
+    // Check for duplicate identifier (only in create mode)
+    if (!isEditMode && pluginIds.includes(identifier)) {
+      setPasteError(t('dev.meta.identifier.errorDuplicate', '插件 ID 重复'));
+      // Update form fields even if duplicate, so user sees the pasted values
+      form.setFieldsValue({
+        // Update identifier field
+        customParams: {
+          mcp: mcpConfig, // Spread the parsed config (includes type)
+        },
+        identifier: identifier,
+      });
+      // Trigger validation to show Form.Item error
+      form.validateFields(['identifier']);
+      return;
+    }
+
+    // No duplicate or in edit mode, fill the form
+    form.setFieldsValue({
+      customParams: { mcp: mcpConfig },
+      identifier: identifier,
+    });
+
+    // Clear potential old validation error on identifier
+    form.setFields([{ errors: [], name: 'identifier' }]);
   };
 
   const handleTestConnection = async () => {
