@@ -49,8 +49,7 @@
       "args": {
         "desc": "STDIO コマンドに渡すパラメータのリスト",
         "label": "コマンドパラメータ",
-        "placeholder": "例：--port 8080 --debug",
-        "tooltip": "パラメータを入力したら、Enter キーを押すか、カンマ/スペースで区切ってください"
+        "placeholder": "例：--port 8080 --debug"
       },
       "command": {
         "desc": "MCP STDIO プラグインを起動するための実行可能ファイルまたはスクリプト",
@@ -69,7 +68,15 @@
       },
       "type": {
         "desc": "MCP プラグインの通信方式を選択してください。ウェブ版は Streamable HTTP のみをサポートしています",
-        "label": "MCP プラグインタイプ"
+        "httpFeature1": "ウェブ版とデスクトップ版の互換性",
+        "httpFeature2": "追加のインストールや設定なしでリモートMCPサーバーに接続",
+        "httpShortDesc": "ストリーミングHTTPに基づく通信プロトコル",
+        "label": "MCP プラグインタイプ",
+        "stdioFeature1": "通信遅延が少なく、ローカル実行に適している",
+        "stdioFeature2": "ローカルにMCPサーバーをインストールして実行する必要がある",
+        "stdioNotAvailable": "STDIOモードはデスクトップ版でのみ利用可能",
+        "stdioShortDesc": "標準入力出力に基づく通信プロトコル",
+        "title": "MCPプラグインタイプ"
       },
       "url": {
         "desc": "あなたのMCPサーバーストリーミングHTTPアドレスを入力してください。/sseで終わることはありません",

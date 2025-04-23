@@ -69,11 +69,11 @@ export default {
       type: {
         desc: '选择 MCP 插件的通信方式，网页版只支持 Streamable HTTP',
         httpFeature1: '兼容网页版与桌面端',
-        httpFeature2: '连接远程 MCP 服务端, 无需额外安装配置',
+        httpFeature2: '连接远程 MCP 服务器, 无需额外安装配置',
         httpShortDesc: '基于流式 HTTP 的通信协议',
         label: 'MCP 插件类型',
         stdioFeature1: '更低的通信延迟, 适合本地执行',
-        stdioFeature2: '通过系统标准输入输出通信，需在本地安装运行 MCP 服务端',
+        stdioFeature2: '需在本地安装运行 MCP 服务器',
         stdioNotAvailable: 'STDIO 模式仅在桌面版可用',
         stdioShortDesc: '基于标准输入输出的通信协议',
         title: 'MCP 插件类型',

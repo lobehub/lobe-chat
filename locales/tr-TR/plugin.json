@@ -49,8 +49,7 @@
       "args": {
         "desc": "STDIO komutuna iletilecek parametreler listesi",
         "label": "Komut Parametreleri",
-        "placeholder": "Örneğin: --port 8080 --debug",
-        "tooltip": "Parametreleri girdikten sonra Enter'a basın veya virgül/boşluk ile ayırın"
+        "placeholder": "Örneğin: --port 8080 --debug"
       },
       "command": {
         "desc": "MCP STDIO eklentisini başlatmak için kullanılacak yürütülebilir dosya veya betik",
@@ -69,7 +68,15 @@
       },
       "type": {
         "desc": "MCP eklentisinin iletişim yöntemini seçin, web sürümü yalnızca Streamable HTTP'yi destekler",
-        "label": "MCP Eklenti Türü"
+        "httpFeature1": "Web ve masaüstü sürümü ile uyumlu",
+        "httpFeature2": "Ekstra kurulum ve yapılandırma gerektirmeden uzak MCP sunucusuna bağlanma",
+        "httpShortDesc": "Akış tabanlı HTTP iletişim protokolü",
+        "label": "MCP Eklenti Türü",
+        "stdioFeature1": "Daha düşük iletişim gecikmesi, yerel çalıştırma için uygundur",
+        "stdioFeature2": "Yerel olarak MCP sunucusunun kurulması ve çalıştırılması gerekir",
+        "stdioNotAvailable": "STDIO modu yalnızca masaüstü sürümünde mevcuttur",
+        "stdioShortDesc": "Standart giriş çıkış tabanlı iletişim protokolü",
+        "title": "MCP Eklenti Türü"
       },
       "url": {
         "desc": "MCP Sunucu Akış HTTP adresinizi girin, /sse ile bitmemelidir",

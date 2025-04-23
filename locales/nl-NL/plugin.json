@@ -49,8 +49,7 @@
       "args": {
         "desc": "Lijst van parameters die aan het STDIO-commando worden doorgegeven",
         "label": "Commando-parameters",
-        "placeholder": "Bijvoorbeeld: --port 8080 --debug",
-        "tooltip": "Druk op enter of gebruik een komma/spatie om de parameters te scheiden na invoer"
+        "placeholder": "Bijvoorbeeld: --port 8080 --debug"
       },
       "command": {
         "desc": "Uitvoerbaar bestand of script om de MCP STDIO-plugin te starten",
@@ -69,7 +68,15 @@
       },
       "type": {
         "desc": "Kies de communicatiemethode voor de MCP-plugin, de webversie ondersteunt alleen Streamable HTTP",
-        "label": "MCP Plugin Type"
+        "httpFeature1": "Compatibel met web- en desktopversies",
+        "httpFeature2": "Verbind met een externe MCP-server, zonder extra installatie of configuratie",
+        "httpShortDesc": "Communicatieprotocol op basis van streaming HTTP",
+        "label": "MCP Plugin Type",
+        "stdioFeature1": "Lagere communicatietijd, geschikt voor lokale uitvoering",
+        "stdioFeature2": "MCP-server moet lokaal worden geïnstalleerd en uitgevoerd",
+        "stdioNotAvailable": "STDIO-modus is alleen beschikbaar in de desktopversie",
+        "stdioShortDesc": "Communicatieprotocol op basis van standaardinvoer en -uitvoer",
+        "title": "MCP-plugintype"
       },
       "url": {
         "desc": "Voer je MCP Server Streamable HTTP-adres in, dit eindigt niet op /sse",

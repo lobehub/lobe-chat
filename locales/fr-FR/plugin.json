@@ -49,8 +49,7 @@
       "args": {
         "desc": "Liste des paramètres à passer à la commande STDIO",
         "label": "Paramètres de commande",
-        "placeholder": "Par exemple : --port 8080 --debug",
-        "tooltip": "Appuyez sur Entrée après avoir saisi les paramètres ou utilisez une virgule/un espace pour les séparer"
+        "placeholder": "Par exemple : --port 8080 --debug"
       },
       "command": {
         "desc": "Fichier exécutable ou script utilisé pour démarrer le plugin MCP STDIO",
@@ -69,7 +68,15 @@
       },
       "type": {
         "desc": "Choisissez le mode de communication du plugin MCP, la version web ne prend en charge que le HTTP Streamable",
-        "label": "Type de plugin MCP"
+        "httpFeature1": "Compatible avec la version web et de bureau",
+        "httpFeature2": "Connexion à un serveur MCP distant, sans installation ni configuration supplémentaires",
+        "httpShortDesc": "Protocole de communication basé sur HTTP en continu",
+        "label": "Type de plugin MCP",
+        "stdioFeature1": "Latence de communication réduite, adapté à l'exécution locale",
+        "stdioFeature2": "Nécessite l'installation et l'exécution d'un serveur MCP local",
+        "stdioNotAvailable": "Le mode STDIO n'est disponible que dans la version de bureau",
+        "stdioShortDesc": "Protocole de communication basé sur l'entrée/sortie standard",
+        "title": "Type de plugin MCP"
       },
       "url": {
         "desc": "Entrez l'adresse HTTP Streamable de votre serveur MCP, sans terminer par /sse",

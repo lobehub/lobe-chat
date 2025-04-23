@@ -47,10 +47,14 @@
     },
     "mcp": {
       "args": {
-        "label": "Command Parameters"
+        "desc": "A list of parameters passed to the STDIO command, typically enter the MCP server name here",
+        "label": "Command Parameters",
+        "placeholder": "For example: mcp-hello-world"
       },
       "command": {
-        "label": "Command"
+        "desc": "The executable file or script used to start the MCP STDIO Server",
+        "label": "Command",
+        "placeholder": "For example: npx / uv / docker, etc."
       },
       "endpoint": {
         "desc": "Enter the address of your MCP Streamable HTTP Server",
@@ -64,7 +68,15 @@
       },
       "type": {
         "desc": "Select the communication method for the MCP plugin; the web version only supports Streamable HTTP",
-        "label": "MCP Plugin Type"
+        "httpFeature1": "Compatible with both web and desktop versions",
+        "httpFeature2": "Connect to a remote MCP server without additional installation or configuration",
+        "httpShortDesc": "A streaming HTTP-based communication protocol",
+        "label": "MCP Plugin Type",
+        "stdioFeature1": "Lower communication latency, suitable for local execution",
+        "stdioFeature2": "Requires local installation and running of the MCP server",
+        "stdioNotAvailable": "STDIO mode is only available in the desktop version",
+        "stdioShortDesc": "A communication protocol based on standard input and output",
+        "title": "MCP Plugin Type"
       },
       "url": {
         "desc": "Enter your MCP Server Streamable HTTP address, which should not end with /sse",

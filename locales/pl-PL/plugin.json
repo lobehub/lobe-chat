@@ -47,10 +47,14 @@
     },
     "mcp": {
       "args": {
-        "label": "Argumenty polecenia"
+        "desc": "Lista argumentów przekazywanych do polecenia STDIO, zazwyczaj wpisz tutaj nazwę serwera MCP",
+        "label": "Argumenty polecenia",
+        "placeholder": "Na przykład: mcp-hello-world"
       },
       "command": {
-        "label": "Polecenie"
+        "desc": "Wykonywalny plik lub skrypt do uruchomienia serwera MCP STDIO",
+        "label": "Polecenie",
+        "placeholder": "Na przykład: npx / uv / docker itp."
       },
       "endpoint": {
         "desc": "Wprowadź adres swojego serwera MCP Streamable HTTP",
@@ -64,7 +68,15 @@
       },
       "type": {
         "desc": "Wybierz sposób komunikacji wtyczki MCP, wersja przeglądarkowa obsługuje tylko Streamable HTTP",
-        "label": "Typ wtyczki MCP"
+        "httpFeature1": "Kompatybilność z wersją przeglądarkową i desktopową",
+        "httpFeature2": "Połączenie zdalnego serwera MCP, bez potrzeby dodatkowej instalacji i konfiguracji",
+        "httpShortDesc": "Protokół komunikacyjny oparty na strumieniowym HTTP",
+        "label": "Typ wtyczki MCP",
+        "stdioFeature1": "Niższe opóźnienie komunikacji, odpowiednie do lokalnego wykonania",
+        "stdioFeature2": "Wymaga lokalnej instalacji i uruchomienia serwera MCP",
+        "stdioNotAvailable": "Tryb STDIO jest dostępny tylko w wersji desktopowej",
+        "stdioShortDesc": "Protokół komunikacyjny oparty na standardowym wejściu/wyjściu",
+        "title": "Typ wtyczki MCP"
       },
       "url": {
         "desc": "Wprowadź adres HTTP swojego serwera MCP Streamable, który nie kończy się na /sse",

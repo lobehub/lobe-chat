@@ -49,8 +49,7 @@
       "args": {
         "desc": "傳遞給 STDIO 命令的參數列表",
         "label": "命令參數",
-        "placeholder": "例如：--port 8080 --debug",
-        "tooltip": "輸入參數後按回車或使用逗號/空格分隔"
+        "placeholder": "例如：--port 8080 --debug"
       },
       "command": {
         "desc": "用於啟動 MCP STDIO 插件的可執行文件或腳本",
@@ -69,7 +68,15 @@
       },
       "type": {
         "desc": "選擇 MCP 插件的通信方式，網頁版只支持 Streamable HTTP",
-        "label": "MCP 插件類型"
+        "httpFeature1": "兼容網頁版與桌面端",
+        "httpFeature2": "連接遠端 MCP 伺服器, 無需額外安裝配置",
+        "httpShortDesc": "基於串流 HTTP 的通訊協議",
+        "label": "MCP 插件類型",
+        "stdioFeature1": "更低的通訊延遲, 適合本地執行",
+        "stdioFeature2": "需在本地安裝運行 MCP 伺服器",
+        "stdioNotAvailable": "STDIO 模式僅在桌面版可用",
+        "stdioShortDesc": "基於標準輸入輸出的通訊協議",
+        "title": "MCP 插件類型"
       },
       "url": {
         "desc": "輸入你的 MCP Server Streamable HTTP 地址，結尾不會有 /sse",
