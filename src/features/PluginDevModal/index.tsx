@@ -36,6 +36,10 @@ const DevModal = memo<DevModalProps>(
       form.setFieldsValue(value);
     }, []);
 
+    useEffect(() => {
+      if (mode === 'create' && !open) form.resetFields();
+    }, [open]);
+
     const buttonStyle = mobile ? { flex: 1 } : { margin: 0 };
 
     const footer = (
@@ -100,6 +104,7 @@ const DevModal = memo<DevModalProps>(
       >
         <Modal
           allowFullscreen
+          destroyOnClose
           footer={footer}
           okText={t('dev.save')}
           onCancel={(e) => {
