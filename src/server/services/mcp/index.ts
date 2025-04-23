@@ -151,6 +151,25 @@ class MCPService {
       type: 'mcp' as any,
     };
   }
+  async getStdioMcpServerManifest(
+    identifier: string,
+    command: string,
+    args: string[],
+  ): Promise<LobeChatPluginManifest> {
+    const tools = await this.listTools({ args, command, name: identifier, type: 'stdio' }); // Get client using params
+
+    return {
+      api: tools,
+      identifier,
+      meta: {
+        avatar: 'MCP_AVATAR',
+        description: `${identifier} MCP server has ${tools.length} tools, like "${tools[0]?.name}"`,
+        title: identifier,
+      },
+      // TODO: temporary
+      type: 'mcp' as any,
+    };
+  }
 }
 
 // Export a singleton instance

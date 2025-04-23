@@ -47,15 +47,10 @@
     },
     "mcp": {
       "args": {
-        "desc": "Lista argumentów przekazywanych do polecenia STDIO",
-        "label": "Argumenty polecenia",
-        "placeholder": "Na przykład: --port 8080 --debug",
-        "tooltip": "Naciśnij Enter po wprowadzeniu argumentów lub użyj przecinka/spacji jako separatora"
+        "label": "Argumenty polecenia"
       },
       "command": {
-        "desc": "Wykonywalny plik lub skrypt do uruchomienia wtyczki MCP STDIO",
-        "label": "Polecenie",
-        "placeholder": "Na przykład: python main.py lub /path/to/executable"
+        "label": "Polecenie"
       },
       "endpoint": {
         "desc": "Wprowadź adres swojego serwera MCP Streamable HTTP",
@@ -72,7 +67,7 @@
         "label": "Typ wtyczki MCP"
       },
       "url": {
-        "desc": "Wprowadź adres punktu końcowego swojej wtyczki MCP HTTP",
+        "desc": "Wprowadź adres HTTP swojego serwera MCP Streamable, który nie kończy się na /sse",
         "label": "URL punktu końcowego HTTP"
       }
     },
