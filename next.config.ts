@@ -1,5 +1,4 @@
 import analyzer from '@next/bundle-analyzer';
-import Clarity from '@microsoft/clarity';
 import { withSentryConfig } from '@sentry/nextjs';
 import withSerwistInit from '@serwist/next';
 import type { NextConfig } from 'next';
@@ -13,10 +12,6 @@ const isUsePglite = process.env.NEXT_PUBLIC_CLIENT_DB === 'pglite';
 
 
 
-// add
-const projectId = "r87mqlbn7m"
-
-Clarity.init(projectId);
 
 // if you need to proxy the api endpoint to remote server
 
