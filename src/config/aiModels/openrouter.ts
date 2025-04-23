@@ -20,7 +20,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     description:
       'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
     displayName: 'o3',
-    id: 'o3',
+    id: 'openai/o3',
     maxOutput: 100_000,
     pricing: {
       cachedInput: 2.5,
@@ -79,7 +79,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     description:
       'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
     displayName: 'GPT-4.1',
-    id: 'gpt-4.1',
+    id: 'openai/gpt-4.1',
     maxOutput: 32_768,
     pricing: {
       cachedInput: 0.5,
@@ -98,7 +98,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     description:
       'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
     displayName: 'GPT-4.1 mini',
-    id: 'gpt-4.1-mini',
+    id: 'openai/gpt-4.1-mini',
     maxOutput: 32_768,
     pricing: {
       cachedInput: 0.1,
@@ -117,7 +117,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     description:
       'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
     displayName: 'GPT-4.1 nano',
-    id: 'gpt-4.1-nano',
+    id: 'openai/gpt-4.1-nano',
     maxOutput: 32_768,
     pricing: {
       cachedInput: 0.025,
@@ -136,7 +136,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     description:
       'o3-mini 高推理等级版，在与 o1-mini 相同的成本和延迟目标下提供高智能。',
     displayName: 'o3-mini (high)',
-    id: 'o3-mini-high',
+    id: 'openai/o3-mini-high',
     maxOutput: 100_000,
     pricing: {
       cachedInput: 0.55,
@@ -155,7 +155,7 @@ const openrouterChatModels: AIChatModelCard[] = [
     description:
       'o3-mini 在与 o1-mini 相同的成本和延迟目标下提供高智能。',
     displayName: 'o3-mini',
-    id: 'o3-mini',
+    id: 'openai/o3-mini',
     maxOutput: 100_000,
     pricing: {
       cachedInput: 0.55,
