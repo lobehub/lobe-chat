@@ -3,6 +3,7 @@ import { Session, app, ipcMain, protocol } from 'electron';
 import { macOS, windows } from 'electron-is';
 import { join } from 'node:path';
 
+import { name } from '@/../../package.json';
 import { buildDir, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
@@ -356,7 +357,7 @@ export class App {
       };
     });
 
-    this.ipcServer = new ElectronIPCServer(ipcServerEvents);
+    this.ipcServer = new ElectronIPCServer(name, ipcServerEvents);
   }
 
   // 新增 before-quit 处理函数
